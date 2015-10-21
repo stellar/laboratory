@@ -1,0 +1,19 @@
+{
+  "accounts": {
+    "text": "Account",
+    "list": {
+      "all": {
+        "text": "All accounts",
+        "path": "/accounts"
+      },
+      "single": {
+        "text": "Single account",
+        "path": "/accounts/{address}"
+      }
+    }
+  },
+  "ledgers": {
+    "text": "Ledger",
+    "list": []
+  }
+}
