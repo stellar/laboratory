@@ -4,11 +4,13 @@
     "list": {
       "all": {
         "text": "All accounts",
-        "path": "/accounts"
+        "path": "/accounts",
+        "params": ["limit", "order"]
       },
       "single": {
         "text": "Single account",
-        "path": "/accounts/{address}"
+        "path": "/accounts/{address}",
+        "params": ["address"]
       }
     }
   },
@@ -17,11 +19,13 @@
     "list": {
       "all": {
         "text": "All ledgers",
-        "path": "/ledgers"
+        "path": "/ledgers",
+        "params": ["limit", "order"]
       },
       "single": {
         "text": "Single ledger",
-        "path": "/ledgers/{id}"
+        "path": "/ledgers/{id}",
+        "params": ["limit", "order"]
       }
     }
   }
