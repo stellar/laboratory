@@ -10,7 +10,7 @@ export let EndpointPicker = React.createClass({
   getState: function() {
     return {
       resources: EndpointsStore.getResources(),
-      endpoints: null
+      endpoints: EndpointsStore.getCurrentEndpoints()
     }
   },
   onChange: function() {
@@ -30,7 +30,7 @@ export let EndpointPicker = React.createClass({
       </div>
       <div>
         Select an endpoint:
-
+        <EndpointList endpoints={this.state.endpoints} />
       </div>
     </div>;
   }

@@ -27,6 +27,18 @@ class EndpointsStoreClass extends EventEmitter {
     }, []);
   }
 
+  getCurrentEndpoints() {
+    if (this.selectedResource) {
+      return _(this.selectedResource.list).reduce((result, endpoint, id) => {
+        endpoint.id = id;
+        result.push(endpoint);
+        return result;
+      }, []);
+    } else {
+      return [];
+    }
+  }
+
   addChangeListener(callback) {
     this.on(CHANGE_EVENT, callback);
   }
@@ -39,13 +51,30 @@ class EndpointsStoreClass extends EventEmitter {
     this.emit(CHANGE_EVENT);
   }
 
-  select(id) {
-    let endpoint = this.get(id);
-    if (endpoint) {
+  selectResource(id) {
+    let resource = this.get(id);
+    if (resource) {
       if (this.selectedResource) {
         this.selectedResource.selected = false;
       }
-      this.selectedResource = endpoint;
+      if (this.selectedEndpoint) {
+        this.selectedEndpoint.selected = false;
+      }
+      this.selectedResource = resource;
+      resource.selected = true;
+      this.emitChange();
+    } else {
+      throw new Error(`Resource "${id}" not found.`)
+    }
+  }
+
+  selectEndpoint(id) {
+    let endpoint = this.selectedResource.list[id];
+    if (endpoint) {
+      if (this.selectedEndpoint) {
+        this.selectedEndpoint.selected = false;
+      }
+      this.selectedEndpoint = endpoint;
       endpoint.selected = true;
       this.emitChange();
     } else {
@@ -59,7 +88,10 @@ export let EndpointsStore = new EndpointsStoreClass(endpoints);
 AppDispatcher.register(action => {
   switch(action.type) {
     case ExplorerConstants.RESOURCE_SELECT:
-      EndpointsStore.select(action.resourceId);
+      EndpointsStore.selectResource(action.resourceId);
+      break;
+    case ExplorerConstants.ENDPOINT_SELECT:
+      EndpointsStore.selectEndpoint(action.endpointId);
       break;
     default:
   }

@@ -8,10 +8,9 @@ export class ExplorerActions {
       resourceId: resourceId
     });
   }
-  static endpointSelect(resourceId, endpointId) {
+  static endpointSelect(endpointId) {
     AppDispatcher.dispatch({
-      type: ExplorerConstants.RESOURCE_SELECT,
-      resourceId: resourceId,
+      type: ExplorerConstants.ENDPOINT_SELECT,
       endpointId: endpointId
     });
   }
