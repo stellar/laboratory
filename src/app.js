@@ -3,9 +3,9 @@ require("./styles/main.scss");
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Explorer} from './components/Explorer';
+import {EndpointExplorer} from './components/EndpointExplorer';
 
 ReactDOM.render(
-  <Explorer />,
+  <EndpointExplorer />,
   document.getElementById('app')
 );
