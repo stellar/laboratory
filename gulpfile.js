@@ -2,7 +2,10 @@
 
 var bs          = require('browser-sync').create();
 var gulp        = require('gulp');
+var path        = require('path');
 var webpack     = require("webpack");
+
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 gulp.task('build', function(done) {
   var options = {
@@ -21,16 +24,20 @@ gulp.task('build', function(done) {
     },
     module: {
       loaders: [
-        { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader'},
-        { test: /\.json$/, loader: 'json'},
-        { test: /\.html/, loader: 'file?name=[name].html'},
-        { test: /\.(jpe?g|png|gif|svg)/, loader: 'file?name=images/[hash].[ext]'}
+        {test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader'},
+        {test: /\.json$/, loader: 'json'},
+        {test: /\.scss/, loader: ExtractTextPlugin.extract('css?sourceMap!sass?sourceMap')},
+        {test: /\.html$/, loader: 'file?name=[name].html'},
+        {test: /\.(jpe?g|png|gif|svg)$/, loader: 'file?name=images/[hash].[ext]'}
       ]
     },
     plugins: [
       // Ignore native modules (ed25519)
       new webpack.IgnorePlugin(/ed25519/),
-      new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.js")
+      new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.js"),
+      new ExtractTextPlugin('style.css', {
+        allChunks: true
+      })
     ]
   };
 

@@ -23,7 +23,7 @@ export let EndpointPicker = React.createClass({
     EndpointsStore.removeChangeListener(this.onChange);
   },
   render: function() {
-    return <div>
+    return <div className="endpoint-picker">
       <div>
         Select a resource:
         <ResourceList endpoints={this.state.resources} />
