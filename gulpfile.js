@@ -26,8 +26,7 @@ gulp.task('build', function(done) {
       loaders: [
         {test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader'},
         {test: /\.json$/, loader: 'json'},
-        {test: /\.scss/, loader: ExtractTextPlugin.extract('css?sourceMap!sass?sourceMap&' +
-          'includePaths[]=' + encodeURIComponent(path.resolve(__dirname, './node_modules')))},
+        {test: /\.scss/, loader: ExtractTextPlugin.extract('css?sourceMap!sass?sourceMap')},
         {test: /\.html$/, loader: 'file?name=[name].html'},
         {test: /\.(jpe?g|png|gif|svg)$/, loader: 'file?name=images/[hash].[ext]'}
       ]
