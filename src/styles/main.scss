@@ -6,9 +6,13 @@
 
 // Paired with react components
 @import 'PlaygroundChrome';
+  @import 'NetworkPicker';
+
 @import 'EndpointExplorer';
-@import 'EndpointPicker';
-@import 'NetworkPicker';
+  @import 'EndpointPicker';
+  @import 'EndpointResult';
+
+@import 'CodeBlock';
 
 // General css modules
 @import 'optionsTable';

@@ -1,0 +1,50 @@
+.EndpointResult {
+  border: 1px solid $s-color-neutral6;
+  border-radius: $s-var-radius;
+  // padding: 1em;
+}
+
+.EndpointResult__tabs {
+  @include S-flex-row;
+  border-bottom: 1px solid $s-color-neutral6;
+  padding: 0.5em 1em 0 1em;
+  background: $s-color-neutral8;
+}
+.EndpointResult__tabs:first-child {
+  border-radius: $s-var-radius $s-var-radius 0 0;
+}
+.EndpointResult__tabs__tab {
+  position: relative;
+  margin-right: 1em;
+  border: 1px solid transparent;
+  border-bottom: 0;
+  padding: $so-inputPadding;
+  background: transparent;
+  border-radius: $s-var-radius $s-var-radius 0 0;
+}
+.EndpointResult__tabs__tab:hover {
+  border: 1px solid $s-color-neutral6;
+  border-bottom: 0;
+  background: $s-color-neutral8;
+}
+.EndpointResult__tabs__tab.is-current {
+  border: 1px solid $s-color-neutral6;
+  border-bottom: 0;
+  background: $s-color-neutral9;
+}
+// removes the border under the tab
+// feel free to reconsider whether this vs negative margins is a better approach
+.EndpointResult__tabs__tab.is-current:after {
+  content: '';
+  display: block;
+  height: 1px;
+  background: $s-color-neutral9;
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+}
+
+.EndpointResult__content {
+  padding: 1em;
+}

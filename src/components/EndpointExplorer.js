@@ -1,7 +1,7 @@
 import React from 'react';
 import {EndpointPicker} from './EndpointPicker';
 import {EndpointSetup} from './EndpointSetup';
-import {ResponseViewer} from './ResponseViewer';
+import {EndpointResult} from './EndpointResult';
 
 export let EndpointExplorer = React.createClass({
   render: function() {
@@ -10,9 +10,13 @@ export let EndpointExplorer = React.createClass({
         <EndpointPicker />
       </div>
 
-      <EndpointSetup />
+      <div className="EndpointExplorer__setup">
+        <EndpointSetup />
+      </div>
 
-      <ResponseViewer />
+      <div className="EndpointExplorer__result">
+        <EndpointResult />
+      </div>
     </div>;
   }
 });
