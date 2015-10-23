@@ -11,7 +11,6 @@ export let EndpointResult = React.createClass({
     return <div className="EndpointResult">
       <div className="EndpointResult__tabs">
         <button className="EndpointResult__tabs__tab is-current">JSON Response</button>
-        <button className="EndpointResult__tabs__tab">Table view (coming soon)</button>
       </div>
       <div className="EndpointResult__content">
         <RawJsonResponseTab />
