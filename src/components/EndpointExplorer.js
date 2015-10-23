@@ -1,6 +1,7 @@
 import React from 'react';
 import {EndpointPicker} from './EndpointPicker';
 import {EndpointSetup} from './EndpointSetup';
+import {ResponseViewer} from './ResponseViewer';
 
 export let EndpointExplorer = React.createClass({
   render: function() {
@@ -10,6 +11,8 @@ export let EndpointExplorer = React.createClass({
       </div>
 
       <EndpointSetup />
+
+      <ResponseViewer />
     </div>;
   }
 });

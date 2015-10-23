@@ -105,6 +105,83 @@ class EndpointsStoreClass extends EventEmitter {
     this.emit(URL_CHANGE_EVENT);
   }
 
+  getResponse() {
+    return {
+      "_embedded": {
+        "records": [
+          {
+            "_links": {
+              "effects": {
+                "href": "/operations/1340931739488257/effects{?cursor,limit,order}",
+                "templated": true
+              },
+              "precedes": {
+                "href": "/operations?cursor=1340931739488257\u0026order=asc"
+              },
+              "self": {
+                "href": "/operations/1340931739488257"
+              },
+              "succeeds": {
+                "href": "/operations?cursor=1340931739488257\u0026order=desc"
+              },
+              "transaction": {
+                "href": "/transactions/50befb58d93b83a7a4de7fa5afe41f5b6032b7cb71a127919aa73f2c41a8d3d1"
+              }
+            },
+            "account": "GD3N7GTKAOIRB5QUJKMFU2OHJ7HJNF3O2FFQNLIO4X7YEB44HSCM3LQG",
+            "funder": "GBS43BF24ENNS3KPACUZVKK2VYPOZVBQO2CISGZ777RYGOPYC2FT6S3K",
+            "id": 1340931739488257,
+            "paging_token": "1340931739488257",
+            "source_account": "GBS43BF24ENNS3KPACUZVKK2VYPOZVBQO2CISGZ777RYGOPYC2FT6S3K",
+            "starting_balance": "10000.0",
+            "type": "create_account",
+            "type_i": 0
+          },
+          {
+            "_links": {
+              "effects": {
+                "href": "/operations/1337001844412417/effects{?cursor,limit,order}",
+                "templated": true
+              },
+              "precedes": {
+                "href": "/operations?cursor=1337001844412417\u0026order=asc"
+              },
+              "self": {
+                "href": "/operations/1337001844412417"
+              },
+              "succeeds": {
+                "href": "/operations?cursor=1337001844412417\u0026order=desc"
+              },
+              "transaction": {
+                "href": "/transactions/fe55a3714598af918d590c135b7ebd938d88e11f900df4b73f7e32d712780f1b"
+              }
+            },
+            "amount": "1.488",
+            "asset_type": "native",
+            "from": "GBEXWUM5OH45UJTUEF5AYCXKLASHCNKBLERZ47GO3UOMLRDCXQDOXJFZ",
+            "id": 1337001844412417,
+            "paging_token": "1337001844412417",
+            "source_account": "GBEXWUM5OH45UJTUEF5AYCXKLASHCNKBLERZ47GO3UOMLRDCXQDOXJFZ",
+            "to": "GCR4I6RAUIJBEFEMURYE3AD3CRFWX4H4AJA2KZWXOCH5WVWHS3IOOJWT",
+            "type": "payment",
+            "type_i": 1
+          }
+        ]
+      },
+      "_links": {
+        "next": {
+          "href": "/operations?order=desc\u0026limit=2\u0026cursor=1337001844412417"
+        },
+        "prev": {
+          "href": "/operations?order=asc\u0026limit=2\u0026cursor=1340931739488257"
+        },
+        "self": {
+          "href": "/operations?order=desc\u0026limit=2\u0026cursor="
+        }
+      }
+    };
+  }
+
   selectResource(id) {
     let resource = this.get(id);
     if (resource) {
