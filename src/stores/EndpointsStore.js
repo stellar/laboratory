@@ -184,6 +184,12 @@ class EndpointsStoreClass extends EventEmitter {
 
   selectResource(id) {
     let resource = this.get(id);
+
+    if (resource === this.selectedResource) {
+      // user selected the current endpoint. no action required
+      return;
+    }
+
     if (resource) {
       if (this.selectedResource) {
         this.selectedResource.selected = false;
@@ -202,6 +208,12 @@ class EndpointsStoreClass extends EventEmitter {
 
   selectEndpoint(id) {
     let endpoint = this.selectedResource.list[id];
+
+    if (endpoint === this.selectedEndpoint) {
+      // user selected the current endpoint. no action required
+      return;
+    }
+
     if (endpoint) {
       if (this.selectedEndpoint) {
         this.selectedEndpoint.selected = false;
