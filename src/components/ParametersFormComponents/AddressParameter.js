@@ -1,7 +1,7 @@
 import React from 'react';
 import {EndpointsStore} from '../../stores/EndpointsStore';
 
-export let Limit = React.createClass({
+export let AddressParameter = React.createClass({
   getInitialState: function() {
     return {value: ''};
   },
@@ -11,13 +11,13 @@ export let Limit = React.createClass({
   },
   render: function() {
     var value = this.state.value;
-    return <tr>
-      <td>
-        Limit
-      </td>
-      <td>
-        <input type="text" value={value} onChange={this.onChange} />
-      </td>
-    </tr>;
+    return <div className="optionsTable__pair">
+        <div className="optionsTable__pair__title">
+          Account ID
+        </div>
+        <div className="optionsTable__pair__content">
+          <input type="text" name="accountID" value={value} onChange={this.onChange}/>
+        </div>
+      </div>
   }
 });

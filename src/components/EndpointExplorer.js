@@ -1,12 +1,15 @@
 import React from 'react';
 import {EndpointPicker} from './EndpointPicker';
-import {ParametersForm} from './ParametersForm';
+import {EndpointSetup} from './EndpointSetup';
 
 export let EndpointExplorer = React.createClass({
   render: function() {
-    return <div>
-      <EndpointPicker />
-      <ParametersForm />
+    return <div className="EndpointExplorer">
+      <div className="EndpointExplorer__picker">
+        <EndpointPicker />
+      </div>
+
+      <EndpointSetup />
     </div>;
   }
 });

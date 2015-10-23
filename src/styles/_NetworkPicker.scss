@@ -1,0 +1,19 @@
+.NetworkPicker {
+  position: relative;
+  align-self: flex-start;
+}
+.NetworkPicker__buttonGroup {
+  // justify-content: flex-end;
+}
+.NetworkPicker__button {
+  font-size: $s-scale-5;
+  padding: 0.2em 1.5em;
+}
+.NetworkPicker__url {
+  position: absolute;
+  bottom: -26px;
+  right: 0;
+  white-space: nowrap;
+  font-size: $s-scale-5;
+  color: $s-color-neutral3;
+}

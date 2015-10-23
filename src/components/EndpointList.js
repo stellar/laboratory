@@ -8,12 +8,12 @@ export let EndpointList = React.createClass({
     ExplorerActions.endpointSelect(id);
   },
   render: function() {
-    return <ul>
+    return <nav className="s-buttonGroup s-buttonGroup--vertical">
       {this.props.endpoints.map(endpoint => {
         return <EndpointListItem key={endpoint.id}
                                  endpoint={endpoint}
                                  onSelect={this.onEndpointSelect} />
       })}
-    </ul>;
+    </nav>;
   }
 });

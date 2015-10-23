@@ -23,14 +23,14 @@ export let EndpointPicker = React.createClass({
     EndpointsStore.removeChangeListener(this.onChange);
   },
   render: function() {
-    return <div className="endpoint-picker">
-      <div>
-        Select a resource:
-        <ResourceList endpoints={this.state.resources} />
+    return <div className="EndpointPicker">
+      <div className="EndpointPicker__section">
+        <p className="EndpointPicker__section__title">1. Select a resource</p>
+          <ResourceList endpoints={this.state.resources} />
       </div>
-      <div>
-        Select an endpoint:
-        <EndpointList endpoints={this.state.endpoints} />
+      <div className="EndpointPicker__section">
+        <p className="EndpointPicker__section__title">2. Select an endpoint</p>
+          <EndpointList endpoints={this.state.endpoints} />
       </div>
     </div>;
   }

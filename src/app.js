@@ -3,9 +3,9 @@ require("./styles/main.scss");
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {EndpointExplorer} from './components/EndpointExplorer';
+import {PlaygroundChrome} from './components/PlaygroundChrome';
 
 ReactDOM.render(
-  <EndpointExplorer />,
+  <PlaygroundChrome />,
   document.getElementById('app')
 );

@@ -7,12 +7,12 @@ export let ResourceList = React.createClass({
     ExplorerActions.resourceSelect(id);
   },
   render: function() {
-    return <ul>
+    return <nav className="s-buttonGroup s-buttonGroup--vertical">
       {this.props.endpoints.map(endpoint => {
         return <EndpointListItem key={endpoint.id}
                                  endpoint={endpoint}
                                  onSelect={this.onResourceSelect} />
       })}
-    </ul>;
+    </nav>;
   }
 });
