@@ -3,6 +3,7 @@ import {AddressParameter} from './ParametersFormComponents/AddressParameter';
 import {LimitParameter} from './ParametersFormComponents/LimitParameter';
 import {OrderParameter} from './ParametersFormComponents/OrderParameter';
 import {EndpointsStore} from '../stores/EndpointsStore';
+import {EasySelect} from './EasySelect';
 
 export let EndpointSetup = React.createClass({
   getInitialState: function() {
@@ -42,7 +43,7 @@ export let EndpointSetup = React.createClass({
             })}
             <hr className="optionsTable__separator" />
             <div className="optionsTable__blank">
-              <span>{this.state.url}</span>
+              <EasySelect className="EndpointSetup__url">{this.state.url}</EasySelect>
             </div>
             <div className="optionsTable__blank">
               <button className="s-button">Submit</button>
