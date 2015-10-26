@@ -11,7 +11,7 @@ gulp.task('build', function(done) {
   var options = {
     entry: {
       app: "./src/app.js",
-      vendor: ["react", "react-dom", "lodash", "flux"]
+      vendor: ["axios", "react", "react-dom", "lodash", "flux", "stellar-sdk"]
     },
     devtool: "source-map",
     output: {

@@ -19,8 +19,7 @@ export let AddressParameter = React.createClass({
     ExplorerStore.setParam(this.props.param, value);
   },
   render: function() {
-    let value = this.state.value;
-    let error = this.state.error;
+    let {value, error} = this.state;
     return <div className="optionsTable__pair">
         <div className="optionsTable__pair__title">
           Account ID

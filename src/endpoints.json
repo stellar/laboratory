@@ -88,5 +88,55 @@
         "params": ["transaction", "limit", "order", "cursor"]
       }
     }
+  },
+  "payments": {
+    "text": "Payments",
+    "list": {
+      "all": {
+        "text": "All Payments",
+        "path": "/payments",
+        "params": ["limit", "order", "cursor"]
+      },
+      "for_account": {
+        "text": "Payments for Account",
+        "path": "/account/{address}/payments",
+        "params": ["address", "limit", "order", "cursor"]
+      },
+      "for_ledger": {
+        "text": "Payments for Ledger",
+        "path": "/ledger/{ledger}/payments",
+        "params": ["ledger", "limit", "order", "cursor"]
+      },
+      "for_transaction": {
+        "text": "Payments for Transaction",
+        "path": "/transaction/{transaction}/payments",
+        "params": ["transaction", "limit", "order", "cursor"]
+      }
+    }
+  },
+  "transactions": {
+    "text": "Transactions",
+    "list": {
+      "all": {
+        "text": "All Transactions",
+        "path": "/transactions",
+        "params": ["limit", "order", "cursor"]
+      },
+      "single": {
+        "text": "Single Transaction",
+        "path": "/transactions/{transaction}",
+        "params": ["transaction"]
+      },
+      "for_account": {
+        "text": "Transactions for Account",
+        "path": "/account/{address}/transactions",
+        "params": ["address", "limit", "order", "cursor"]
+      },
+      "for_ledger": {
+        "text": "Transactions for Ledger",
+        "path": "/ledger/{ledger}/transactions",
+        "params": ["ledger", "limit", "order", "cursor"]
+      }
+    }
   }
 }

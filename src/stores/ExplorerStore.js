@@ -135,6 +135,8 @@ class ExplorerStoreClass extends EventEmitter {
   }
 
   emitChange() {
+    this.response = null;
+    this.emit(RESPONSE_EVENT);
     this.emit(CHANGE_EVENT);
   }
 
@@ -142,8 +144,8 @@ class ExplorerStoreClass extends EventEmitter {
     this.emit(URL_CHANGE_EVENT);
   }
 
-  emitResponse(response) {
-    this.emit(RESPONSE_EVENT, {response});
+  emitResponse() {
+    this.emit(RESPONSE_EVENT);
   }
 
   getResponse() {
