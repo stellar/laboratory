@@ -1,16 +1,46 @@
 {
   "accounts": {
-    "text": "Account",
+    "text": "Accounts",
     "list": {
       "all": {
-        "text": "All accounts",
+        "text": "All Accounts",
         "path": "/accounts",
-        "params": ["limit", "order"]
+        "params": ["limit", "order", "cursor"]
       },
       "single": {
-        "text": "Single account",
+        "text": "Single Account",
         "path": "/accounts/{address}",
         "params": ["address"]
+      }
+    }
+  },
+  "effects": {
+    "text": "Effects",
+    "list": {
+      "all": {
+        "text": "All Effects",
+        "path": "/effects",
+        "params": ["limit", "order", "cursor"]
+      },
+      "for_account": {
+        "text": "Effects for Account",
+        "path": "/accounts/{address}/effects",
+        "params": ["address", "limit", "order", "cursor"]
+      },
+      "for_ledger": {
+        "text": "Effects for Ledger",
+        "path": "/ledger/{ledger}/effects",
+        "params": ["ledger", "limit", "order", "cursor"]
+      },
+      "for_operation": {
+        "text": "Effects for Operation",
+        "path": "/operation/{operation}/effects",
+        "params": ["operation", "limit", "order", "cursor"]
+      },
+      "for_transaction": {
+        "text": "Effects for Transaction",
+        "path": "/transaction/{transaction}/effects",
+        "params": ["transaction", "limit", "order", "cursor"]
       }
     }
   },
@@ -18,14 +48,44 @@
     "text": "Ledger",
     "list": {
       "all": {
-        "text": "All ledgers",
+        "text": "All Ledgers",
         "path": "/ledgers",
-        "params": ["limit", "order"]
+        "params": ["limit", "order", "cursor"]
       },
       "single": {
-        "text": "Single ledger",
-        "path": "/ledgers/{id}",
-        "params": ["limit", "order"]
+        "text": "Single Ledger",
+        "path": "/ledgers/{ledger}",
+        "params": ["ledger"]
+      }
+    }
+  },
+  "operations": {
+    "text": "Operations",
+    "list": {
+      "all": {
+        "text": "All Operations",
+        "path": "/operations",
+        "params": ["limit", "order", "cursor"]
+      },
+      "single": {
+        "text": "Single Operation",
+        "path": "/operations/{operation}",
+        "params": ["operation"]
+      },
+      "for_account": {
+        "text": "Operations for Account",
+        "path": "/account/{address}/operations",
+        "params": ["address", "limit", "order", "cursor"]
+      },
+      "for_ledger": {
+        "text": "Operations for Ledger",
+        "path": "/ledger/{ledger}/operations",
+        "params": ["ledger", "limit", "order", "cursor"]
+      },
+      "for_transaction": {
+        "text": "Operations for Transaction",
+        "path": "/transaction/{transaction}/operations",
+        "params": ["transaction", "limit", "order", "cursor"]
       }
     }
   }

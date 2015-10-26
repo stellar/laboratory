@@ -1,22 +1,35 @@
 import React from 'react';
-import {EndpointsStore} from '../../stores/EndpointsStore';
+import {Account} from 'stellar-sdk';
+import {ExplorerStore} from '../../stores/ExplorerStore';
 
 export let AddressParameter = React.createClass({
   getInitialState: function() {
-    return {value: ''};
+    return {value: '', error: null};
   },
   onChange: function(event) {
-    this.setState({value: event.target.value});
-    EndpointsStore.setParam(this.props.param, event.target.value);
+    let value = event.target.value;
+    let error;
+    if (value && !Account.isValidAddress(value)) {
+      error = 'Address is invalid.';
+      this.setState({value, error});
+      return;
+    }
+
+    this.setState({value, error});
+    ExplorerStore.setParam(this.props.param, value);
   },
   render: function() {
-    var value = this.state.value;
+    let value = this.state.value;
+    let error = this.state.error;
     return <div className="optionsTable__pair">
         <div className="optionsTable__pair__title">
           Account ID
         </div>
         <div className="optionsTable__pair__content">
-          <input type="text" name="accountID" value={value} onChange={this.onChange}/>
+          <input type="text" value={value} onChange={this.onChange}/>
+          {error ? <p className="optionsTable__pair__content__alert">
+            {error}
+          </p> : ''}
         </div>
       </div>
   }

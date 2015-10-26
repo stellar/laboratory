@@ -1,6 +1,6 @@
 import React from 'react';
 import {ExplorerActions} from '../actions/ExplorerActions';
-import {EndpointsStore} from '../stores/EndpointsStore';
+import {ExplorerStore} from '../stores/ExplorerStore';
 import {EndpointListItem} from './EndpointListItem';
 
 export let EndpointList = React.createClass({

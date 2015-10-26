@@ -1,5 +1,5 @@
 import React from 'react';
-import {EndpointsStore} from '../stores/EndpointsStore';
+import {ExplorerStore} from '../stores/ExplorerStore';
 import {CodeBlock} from './CodeBlock';
 
 export let RawJsonResponseTab = React.createClass({
@@ -7,22 +7,22 @@ export let RawJsonResponseTab = React.createClass({
     return this.getState();
   },
   getState: function() {
-    let response = EndpointsStore.getResponse();
+    let response = ExplorerStore.getResponse();
     if (response) {
       response = JSON.stringify(response, null, 2);
     }
     return {response};
   },
-  //onChange: function() {
-  //  this.setState(this.getState());
-  //},
-  //componentDidMount: function() {
-  //  EndpointsStore.addResponseChangeListener(this.onChange);
-  //},
-  //componentWillUnmount: function() {
-  //  EndpointsStore.removeResponseChangeListener(this.onChange);
-  //},
+  onChange: function() {
+    this.setState(this.getState());
+  },
+  componentDidMount: function() {
+    ExplorerStore.addResponseListener(this.onChange);
+  },
+  componentWillUnmount: function() {
+    ExplorerStore.removeResponseListener(this.onChange);
+  },
   render: function() {
-    return <CodeBlock code={"<script>alert('dANGEROUszzzzz')</script>" + this.state.response} language="json" />;
+    return <CodeBlock code={this.state.response} language="json" />;
   }
 });

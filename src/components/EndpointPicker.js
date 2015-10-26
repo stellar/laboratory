@@ -1,7 +1,7 @@
 import React from 'react';
 import {ResourceList} from './ResourceList';
 import {EndpointList} from './EndpointList';
-import {EndpointsStore} from '../stores/EndpointsStore';
+import {ExplorerStore} from '../stores/ExplorerStore';
 
 export let EndpointPicker = React.createClass({
   getInitialState: function() {
@@ -9,18 +9,18 @@ export let EndpointPicker = React.createClass({
   },
   getState: function() {
     return {
-      resources: EndpointsStore.getResources(),
-      endpoints: EndpointsStore.getCurrentEndpoints()
+      resources: ExplorerStore.getResources(),
+      endpoints: ExplorerStore.getCurrentEndpoints()
     }
   },
   onChange: function() {
     this.setState(this.getState());
   },
   componentDidMount: function() {
-    EndpointsStore.addChangeListener(this.onChange);
+    ExplorerStore.addChangeListener(this.onChange);
   },
   componentWillUnmount: function() {
-    EndpointsStore.removeChangeListener(this.onChange);
+    ExplorerStore.removeChangeListener(this.onChange);
   },
   render: function() {
     return <div className="EndpointPicker">

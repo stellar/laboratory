@@ -1,8 +1,12 @@
 import React from 'react';
 import {AddressParameter} from './ParametersFormComponents/AddressParameter';
+import {CursorParameter} from './ParametersFormComponents/CursorParameter';
+import {LedgerParameter} from './ParametersFormComponents/LedgerParameter';
 import {LimitParameter} from './ParametersFormComponents/LimitParameter';
+import {OperationParameter} from './ParametersFormComponents/OperationParameter';
 import {OrderParameter} from './ParametersFormComponents/OrderParameter';
-import {EndpointsStore} from '../stores/EndpointsStore';
+import {TransactionParameter} from './ParametersFormComponents/TransactionParameter';
+import {ExplorerStore} from '../stores/ExplorerStore';
 import {EasySelect} from './EasySelect';
 
 export let EndpointSetup = React.createClass({
@@ -10,20 +14,23 @@ export let EndpointSetup = React.createClass({
     return this.getState();
   },
   getState: function() {
-    let params = EndpointsStore.getCurrentEndpointParams();
-    let url = EndpointsStore.getCurrentUrl();
+    let params = ExplorerStore.getCurrentEndpointParams();
+    let url = ExplorerStore.getCurrentUrl();
     return {params, url};
   },
   onChange: function() {
     this.setState(this.getState());
   },
+  onSubmit: function() {
+    ExplorerStore.submitRequest();
+  },
   componentDidMount: function() {
-    EndpointsStore.addChangeListener(this.onChange);
-    EndpointsStore.addUrlChangeListener(this.onChange);
+    ExplorerStore.addChangeListener(this.onChange);
+    ExplorerStore.addUrlChangeListener(this.onChange);
   },
   componentWillUnmount: function() {
-    EndpointsStore.removeChangeListener(this.onChange);
-    EndpointsStore.removeUrlChangeListener(this.onChange);
+    ExplorerStore.removeChangeListener(this.onChange);
+    ExplorerStore.removeUrlChangeListener(this.onChange);
   },
   render: function() {
     if (this.state.params) {
@@ -33,11 +40,20 @@ export let EndpointSetup = React.createClass({
               switch (type) {
                 case 'address':
                   return <AddressParameter key={type} param={type} />;
+                case 'cursor':
+                  return <CursorParameter key={type} param={type} />;
+                case 'ledger':
+                  return <LedgerParameter key={type} param={type} />;
                 case 'limit':
                   return <LimitParameter key={type} param={type} />;
+                case 'operation':
+                  return <OperationParameter key={type} param={type} />;
                 case 'order':
                   return <OrderParameter key={type} param={type} />;
+                case 'transaction':
+                  return <TransactionParameter key={type} param={type} />;
                 default:
+                  throw new Error('Invalid param');
                   return;
               }
             })}
@@ -46,7 +62,7 @@ export let EndpointSetup = React.createClass({
               <EasySelect className="EndpointSetup__url">{this.state.url}</EasySelect>
             </div>
             <div className="optionsTable__blank">
-              <button className="s-button">Submit</button>
+              <button className="s-button" onClick={this.onSubmit}>Submit</button>
             </div>
           </div>
         </div>;

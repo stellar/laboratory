@@ -1,8 +1,14 @@
 import React from 'react';
+import {ExplorerStore} from '../../stores/ExplorerStore';
 
 export let OrderParameter = React.createClass({
-  onChange: {
-    //
+  getInitialState: function() {
+    return {value: null};
+  },
+  onChange: function(event) {
+    let value = event.target.value;
+    this.setState({value});
+    ExplorerStore.setParam(this.props.param, value);
   },
   render: function() {
     return <div className="optionsTable__pair">
@@ -12,15 +18,11 @@ export let OrderParameter = React.createClass({
       <div className="optionsTable__pair__content">
         <div className="s-buttonGroup">
           <label className="s-buttonGroup__wrapper">
-            <input type="radio" className="s-buttonGroup__radio" name={this.props.key} value="default" />
-            <span className="s-button s-button__light">default (asc)</span>
-          </label>
-          <label className="s-buttonGroup__wrapper">
-            <input type="radio" className="s-buttonGroup__radio" name={this.props.key} value="asc" />
+            <input type="radio" className="s-buttonGroup__radio" name={this.props.param} onChange={this.onChange} value="asc" />
             <span className="s-button s-button__light">asc</span>
           </label>
           <label className="s-buttonGroup__wrapper">
-            <input type="radio" className="s-buttonGroup__radio" name={this.props.key} value="desc" />
+            <input type="radio" className="s-buttonGroup__radio" name={this.props.param} onChange={this.onChange} value="desc" />
             <span className="s-button s-button__light">desc</span>
           </label>
         </div>
