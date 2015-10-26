@@ -16,19 +16,19 @@ class ExplorerStoreClass extends EventEmitter {
     this.endpoints = endpoints;
     this.params = {};
     this.response = null;
-    this.currentNetwork = 'public';
     this.horizonRoot = {
       test: 'https://horizon-testnet.stellar.org',
       public: 'https://horizon.stellar.org'
     };
+    this.usePublicNetwork();
   }
 
   usePublicNetwork() {
-    this.current = 'public';
+    this.currentNetwork = 'public';
   }
 
   useTestNetwork() {
-    this.current = 'test';
+    this.currentNetwork = 'test';
   }
 
   submitRequest() {
