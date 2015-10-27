@@ -9,6 +9,7 @@ import endpoints from '../endpoints.json'
 const CHANGE_EVENT = 'change';
 const URL_CHANGE_EVENT = 'url_change';
 const SUBMIT_DISABLED_EVENT = 'submit_disabled';
+const LOADING_EVENT = 'loading';
 const NETWORK_CHANGE = 'network_change';
 const RESPONSE_EVENT = 'response';
 
@@ -17,6 +18,7 @@ class ExplorerStoreClass extends EventEmitter {
     super();
     this.endpoints = endpoints;
     this.params = {};
+    this.loading = false;
     this.response = null;
     this.submitDisabled = false;
     this.horizonRoot = {
@@ -44,18 +46,33 @@ class ExplorerStoreClass extends EventEmitter {
     }
   }
 
+  setLoading(loading) {
+    this.loading = loading;
+    this.emit(LOADING_EVENT);
+  }
+
   submitRequest() {
+    this.setLoading(true);
     axios.get(ExplorerStore.getCurrentUrl())
       .then(response => {
-        this.response = response.data;
+        this.response = {
+          success: true,
+          data: response.data
+        };
         this.emitResponse();
       })
       .catch(response => {
+        let data;
         if (response instanceof Error) {
-          this.response = response.message;
+          data = response.message;
         } else {
-          this.response = response.data;
+          data = response.data;
         }
+
+        this.response = {
+          success: false,
+          data: data
+        };
         this.emitResponse();
       });
   }
@@ -178,6 +195,10 @@ class ExplorerStoreClass extends EventEmitter {
     this.on(SUBMIT_DISABLED_EVENT, callback);
   }
 
+  addLoadingListener(callback) {
+    this.on(LOADING_EVENT, callback);
+  }
+
   removeChangeListener(callback) {
     this.removeListener(CHANGE_EVENT, callback);
   }
@@ -198,6 +219,10 @@ class ExplorerStoreClass extends EventEmitter {
     this.removeListener(SUBMIT_DISABLED_EVENT, callback);
   }
 
+  removeLoadingListener(callback) {
+    this.removeListener(LOADING_EVENT, callback);
+  }
+
   emitChange() {
     this.response = null;
     this.emit(RESPONSE_EVENT);
@@ -209,11 +234,16 @@ class ExplorerStoreClass extends EventEmitter {
   }
 
   emitResponse() {
+    this.loading = false;
     this.emit(RESPONSE_EVENT);
   }
 
   getResponse() {
     return this.response;
+  }
+
+  getLoadingState() {
+    return this.loading;
   }
 
   selectResource(id) {
