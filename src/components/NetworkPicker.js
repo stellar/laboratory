@@ -17,7 +17,7 @@ export let NetworkPicker = React.createClass({
   onNetworkChange: function() {
     this.setState({
       networkState: ExplorerStore.horizonRoot[ExplorerStore.currentNetwork]
-    })
+    });
   },
   componentDidMount: function() {
     ExplorerStore.addNetworkChangeListener(this.onNetworkChange);

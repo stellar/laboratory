@@ -27,10 +27,12 @@ export let EndpointSetup = React.createClass({
   componentDidMount: function() {
     ExplorerStore.addChangeListener(this.onChange);
     ExplorerStore.addUrlChangeListener(this.onChange);
+    ExplorerStore.addNetworkChangeListener(this.onChange);
   },
   componentWillUnmount: function() {
     ExplorerStore.removeChangeListener(this.onChange);
     ExplorerStore.removeUrlChangeListener(this.onChange);
+    ExplorerStore.removeNetworkChangeListener(this.onChange);
   },
   render: function() {
     if (this.state.params) {
