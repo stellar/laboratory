@@ -21,16 +21,15 @@ class ExplorerStoreClass extends EventEmitter {
       test: 'https://horizon-testnet.stellar.org',
       public: 'https://horizon.stellar.org'
     };
-    this.usePublicNetwork();
+    this.setNetwork('test');
   }
 
-  usePublicNetwork() {
-    this.currentNetwork = 'public';
-    this.emitNetworkChange();
-  }
+  setNetwork(networkName) {
+    if (!(networkName in this.horizonRoot)) {
+      throw new Error('Invalid network name: ' + networkName);
+    }
 
-  useTestNetwork() {
-    this.currentNetwork = 'test';
+    this.currentNetwork = networkName;
     this.emitNetworkChange();
   }
 
