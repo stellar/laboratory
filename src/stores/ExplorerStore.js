@@ -8,6 +8,7 @@ import endpoints from '../endpoints.json'
 
 const CHANGE_EVENT = 'change';
 const URL_CHANGE_EVENT = 'url_change';
+const NETWORK_CHANGE = 'network_change';
 const RESPONSE_EVENT = 'response';
 
 class ExplorerStoreClass extends EventEmitter {
@@ -25,10 +26,12 @@ class ExplorerStoreClass extends EventEmitter {
 
   usePublicNetwork() {
     this.currentNetwork = 'public';
+    this.emitNetworkChange();
   }
 
   useTestNetwork() {
     this.currentNetwork = 'test';
+    this.emitNetworkChange();
   }
 
   submitRequest() {
@@ -118,6 +121,10 @@ class ExplorerStoreClass extends EventEmitter {
     this.on(URL_CHANGE_EVENT, callback);
   }
 
+  addNetworkChangeListener(callback) {
+    this.on(NETWORK_CHANGE, callback);
+  }
+
   addResponseListener(callback) {
     this.on(RESPONSE_EVENT, callback);
   }
@@ -128,6 +135,10 @@ class ExplorerStoreClass extends EventEmitter {
 
   removeUrlChangeListener(callback) {
     this.removeListener(URL_CHANGE_EVENT, callback);
+  }
+
+  removeNetworkChangeListener(callback) {
+    this.removeListener(NETWORK_CHANGE, callback);
   }
 
   removeResponseListener(callback) {
@@ -142,6 +153,10 @@ class ExplorerStoreClass extends EventEmitter {
 
   emitUrlChange() {
     this.emit(URL_CHANGE_EVENT);
+  }
+
+  emitNetworkChange() {
+    this.emit(NETWORK_CHANGE);
   }
 
   emitResponse() {

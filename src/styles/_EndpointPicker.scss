@@ -8,7 +8,7 @@
   font-size: $s-scale-3;
   margin: 0 1.5em .25em 1.5em;
 }
-@include r-media(l) {
+@include r-media(m) {
   .EndpointPicker {
     @include S-flex-row;
   }
