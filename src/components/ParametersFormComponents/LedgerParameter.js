@@ -8,14 +8,12 @@ export let LedgerParameter = React.createClass({
   onChange: function(event) {
     let value = event.target.value;
     let error;
-    if (value < 0 || value > 200) {
+    if (!value.match(/^[0-9]*$/g)) {
       error = 'Ledger ID is invalid.';
-      this.setState({value, error});
-      return;
     }
 
     this.setState({value, error});
-    ExplorerStore.setParam(this.props.param, value);
+    ExplorerStore.setParam(this.props.param, value, error);
   },
   render: function() {
     let {value, error} = this.state;

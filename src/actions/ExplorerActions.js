@@ -14,4 +14,18 @@ export class ExplorerActions {
       endpointId: endpointId
     });
   }
+  static networkSelect(network) {
+    AppDispatcher.dispatch({
+      type: ExplorerConstants.NETWORK_SELECT,
+      network: network
+    });
+  }
+  static parameterSet(key, value, error) {
+    AppDispatcher.dispatch({
+      type: ExplorerConstants.PARAMETER_SET,
+      key: key,
+      value: value,
+      error: error
+    });
+  }
 }

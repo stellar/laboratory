@@ -8,6 +8,7 @@ import endpoints from '../endpoints.json'
 
 const CHANGE_EVENT = 'change';
 const URL_CHANGE_EVENT = 'url_change';
+const SUBMIT_DISABLED_EVENT = 'submit_disabled';
 const NETWORK_CHANGE = 'network_change';
 const RESPONSE_EVENT = 'response';
 
@@ -17,6 +18,7 @@ class ExplorerStoreClass extends EventEmitter {
     this.endpoints = endpoints;
     this.params = {};
     this.response = null;
+    this.submitDisabled = false;
     this.horizonRoot = {
       test: 'https://horizon-testnet.stellar.org',
       public: 'https://horizon.stellar.org'
@@ -34,15 +36,27 @@ class ExplorerStoreClass extends EventEmitter {
     this.emitNetworkChange();
   }
 
+  useNetwork(network) {
+    if (network === 'public') {
+      this.usePublicNetwork();
+    } else {
+      this.useTestNetwork();
+    }
+  }
+
   submitRequest() {
     axios.get(ExplorerStore.getCurrentUrl())
       .then(response => {
         this.response = response.data;
         this.emitResponse();
       })
-      .catch(error => {
-        // TODO
-        throw new Error('Network error');
+      .catch(response => {
+        if (response instanceof Error) {
+          this.response = response.message;
+        } else {
+          this.response = response.data;
+        }
+        this.emitResponse();
       });
   }
 
@@ -81,20 +95,51 @@ class ExplorerStoreClass extends EventEmitter {
     }
   }
 
-  setParam(key, value) {
+  getSubmitDisabled() {
+    return this.submitDisabled;
+  }
+
+  setParam(key, value, error) {
     if (value) {
-      this.params[key] = value;
+      this.params[key] = {value, error};
     } else {
       delete this.params[key];
     }
-    this.emitUrlChange();
+
+    // Check if all required params are set and there
+    // are no errors and update `submitDisabled` state
+    let disabled = false;
+    let required;
+    if (this.selectedEndpoint.required) {
+      required = _.clone(this.selectedEndpoint.required);
+    } else {
+      required = [];
+    }
+
+    _.each(this.params, ({value, error}, key) => {
+      if (error) {
+        disabled = true;
+      } else {
+        required = _.remove(required, key);
+      }
+    });
+
+    // If there are not errors check if all required
+    // params are set
+    if (!disabled) {
+      disabled = required.length > 0;
+    }
+
+    this.submitDisabled = disabled;
+    this.emit(SUBMIT_DISABLED_EVENT);
+    this.emit(URL_CHANGE_EVENT);
   }
 
   getCurrentUrl() {
     let path = '';
-    let params = _.clone(this.params);
+    let params = _.cloneDeep(this.params);
     if (this.selectedEndpoint) {
-      path = _.reduce(params, (path, value, key) => {
+      path = _.reduce(params, (path, {value, error}, key) => {
         let oldPath = path;
         let newPath = path.replace(`{${key}}`, value);
         if (oldPath != newPath) {
@@ -104,7 +149,7 @@ class ExplorerStoreClass extends EventEmitter {
       }, this.selectedEndpoint.path);
     }
 
-    let query = querystring.stringify(params);
+    let query = querystring.stringify(_.mapValues(params, ({value, error}) => value));
     if (query) {
       query = `?${query}`;
     }
@@ -129,6 +174,10 @@ class ExplorerStoreClass extends EventEmitter {
     this.on(RESPONSE_EVENT, callback);
   }
 
+  addSubmitDisabledListener(callback) {
+    this.on(SUBMIT_DISABLED_EVENT, callback);
+  }
+
   removeChangeListener(callback) {
     this.removeListener(CHANGE_EVENT, callback);
   }
@@ -145,14 +194,14 @@ class ExplorerStoreClass extends EventEmitter {
     this.removeListener(RESPONSE_EVENT, callback);
   }
 
+  removeSubmitDisabledListener(callback) {
+    this.removeListener(SUBMIT_DISABLED_EVENT, callback);
+  }
+
   emitChange() {
     this.response = null;
     this.emit(RESPONSE_EVENT);
     this.emit(CHANGE_EVENT);
-  }
-
-  emitUrlChange() {
-    this.emit(URL_CHANGE_EVENT);
   }
 
   emitNetworkChange() {
@@ -205,6 +254,7 @@ class ExplorerStoreClass extends EventEmitter {
       }
       this.selectedEndpoint = endpoint;
       this.params = {};
+      this.submitDisabled = !!endpoint.required;
       endpoint.selected = true;
       this.emitChange();
     } else {
@@ -222,6 +272,12 @@ AppDispatcher.register(action => {
       break;
     case ExplorerConstants.ENDPOINT_SELECT:
       ExplorerStore.selectEndpoint(action.endpointId);
+      break;
+    case ExplorerConstants.NETWORK_SELECT:
+      ExplorerStore.useNetwork(action.network);
+      break;
+    case ExplorerConstants.PARAMETER_SET:
+      ExplorerStore.setParam(action.key, action.value, action.error);
       break;
     default:
   }

@@ -1,4 +1,5 @@
 import React from 'react';
+import {ExplorerActions} from '../../actions/ExplorerActions';
 import {ExplorerStore} from '../../stores/ExplorerStore';
 
 export let TransactionParameter = React.createClass({
@@ -10,12 +11,10 @@ export let TransactionParameter = React.createClass({
     let error;
     if (!value.match(/^[0-9a-f]{64}$/g)) {
       error = 'Transaction ID is invalid.';
-      this.setState({value, error});
-      return;
     }
 
     this.setState({value, error});
-    ExplorerStore.setParam(this.props.param, value);
+    ExplorerActions.parameterSet(this.props.param, value, error);
   },
   render: function() {
     let {value, error} = this.state;

@@ -1,4 +1,5 @@
 import React from 'react';
+import {ExplorerActions} from '../../actions/ExplorerActions';
 import {ExplorerStore} from '../../stores/ExplorerStore';
 
 export let LimitParameter = React.createClass({
@@ -8,14 +9,12 @@ export let LimitParameter = React.createClass({
   onChange: function(event) {
     let value = event.target.value;
     let error;
-    if (value < 0 || value > 200) {
+    if (!value.match(/^[0-9]*$/g) || value < 0 || value > 200) {
       error = 'Limit is invalid.';
-      this.setState({value, error});
-      return;
     }
 
     this.setState({value, error});
-    ExplorerStore.setParam(this.props.param, value);
+    ExplorerActions.parameterSet(this.props.param, value, error);
   },
   render: function() {
     let {value, error} = this.state;

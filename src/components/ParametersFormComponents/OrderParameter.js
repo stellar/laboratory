@@ -1,4 +1,5 @@
 import React from 'react';
+import {ExplorerActions} from '../../actions/ExplorerActions';
 import {ExplorerStore} from '../../stores/ExplorerStore';
 
 export let OrderParameter = React.createClass({
@@ -8,7 +9,7 @@ export let OrderParameter = React.createClass({
   onChange: function(event) {
     let value = event.target.value;
     this.setState({value});
-    ExplorerStore.setParam(this.props.param, value);
+    ExplorerActions.parameterSet(this.props.param, value);
   },
   render: function() {
     return <div className="optionsTable__pair">

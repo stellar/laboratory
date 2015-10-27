@@ -2,15 +2,15 @@ import React from 'react';
 import {ExplorerActions} from '../../actions/ExplorerActions';
 import {ExplorerStore} from '../../stores/ExplorerStore';
 
-export let OperationParameter = React.createClass({
+export let AssetCodeParameter = React.createClass({
   getInitialState: function() {
     return {value: '', error: null};
   },
   onChange: function(event) {
     let value = event.target.value;
-    let error;
-    if (!value.match(/^[0-9]*$/g)) {
-      error = 'Operation ID is invalid.';
+    let error = null;
+    if (value.length > 12) {
+      error = 'Asset code must be 12 characters at max.';
     }
 
     this.setState({value, error});
@@ -18,9 +18,20 @@ export let OperationParameter = React.createClass({
   },
   render: function() {
     let {value, error} = this.state;
+    let text;
+    switch (this.props.param) {
+      case 'selling_asset_code':
+        text = 'Selling Asset Code';
+        break;
+      case 'buying_asset_code':
+        text = 'Buying Asset Code';
+        break;
+      default:
+        text = 'Asset Code';
+    }
     return <div className="optionsTable__pair">
       <div className="optionsTable__pair__title">
-        Operation ID
+        {text}
       </div>
       <div className="optionsTable__pair__content">
         <input type="text" value={value} onChange={this.onChange}/>

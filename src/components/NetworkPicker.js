@@ -1,4 +1,5 @@
 import React from 'react';
+import {ExplorerActions} from '../actions/ExplorerActions';
 import {ExplorerStore} from '../stores/ExplorerStore';
 
 export let NetworkPicker = React.createClass({
@@ -8,11 +9,7 @@ export let NetworkPicker = React.createClass({
     };
   },
   onToggle: function(event) {
-    if (event.target.value === 'public') {
-      ExplorerStore.usePublicNetwork();
-    } else {
-      ExplorerStore.useTestNetwork();
-    }
+    ExplorerActions.networkSelect(event.target.value);
   },
   onNetworkChange: function() {
     this.setState({

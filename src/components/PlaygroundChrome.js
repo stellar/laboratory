@@ -11,7 +11,7 @@ export let PlaygroundChrome = React.createClass({
             <span className="so-logo">
               <a href="https://www.stellar.org/" className="so-logo__main">Stellar</a>
               <span className="so-logo__separator"> </span>
-              <a href="#check" className="so-logo__subSite">playground</a>
+              <a href="#check" className="so-logo__subSite">laboratory</a>
             </span>
             <NetworkPicker />
           </div>

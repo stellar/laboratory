@@ -1,4 +1,5 @@
 import React from 'react';
+import {ExplorerActions} from '../../actions/ExplorerActions';
 import {ExplorerStore} from '../../stores/ExplorerStore';
 
 export let CursorParameter = React.createClass({
@@ -8,14 +9,12 @@ export let CursorParameter = React.createClass({
   onChange: function(event) {
     let value = event.target.value;
     let error;
-    //if (!value) { // < TODO
-    //  error = 'Cursor is invalid.';
-    //  this.setState({value, error});
-    //  return;
-    //}
+    if (!value.match(/^[0-9]*$/g)) {
+      error = 'Cursor is invalid.';
+    }
 
     this.setState({value, error});
-    ExplorerStore.setParam(this.props.param, value);
+    ExplorerActions.parameterSet(this.props.param, value, error);
   },
   render: function() {
     let {value, error} = this.state;

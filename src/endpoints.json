@@ -10,7 +10,8 @@
       "single": {
         "text": "Single Account",
         "path": "/accounts/{address}",
-        "params": ["address"]
+        "params": ["address"],
+        "required": ["address"]
       }
     }
   },
@@ -25,22 +26,26 @@
       "for_account": {
         "text": "Effects for Account",
         "path": "/accounts/{address}/effects",
-        "params": ["address", "limit", "order", "cursor"]
+        "params": ["address", "limit", "order", "cursor"],
+        "required": ["address"]
       },
       "for_ledger": {
         "text": "Effects for Ledger",
         "path": "/ledger/{ledger}/effects",
-        "params": ["ledger", "limit", "order", "cursor"]
+        "params": ["ledger", "limit", "order", "cursor"],
+        "required": ["ledger"]
       },
       "for_operation": {
         "text": "Effects for Operation",
         "path": "/operation/{operation}/effects",
-        "params": ["operation", "limit", "order", "cursor"]
+        "params": ["operation", "limit", "order", "cursor"],
+        "required": ["operation"]
       },
       "for_transaction": {
         "text": "Effects for Transaction",
-        "path": "/transaction/{transaction}/effects",
-        "params": ["transaction", "limit", "order", "cursor"]
+        "path": "/transactions/{transaction}/effects",
+        "params": ["transaction", "limit", "order", "cursor"],
+        "required": ["transaction"]
       }
     }
   },
@@ -55,7 +60,19 @@
       "single": {
         "text": "Single Ledger",
         "path": "/ledgers/{ledger}",
-        "params": ["ledger"]
+        "params": ["ledger"],
+        "required": ["ledger"]
+      }
+    }
+  },
+  "offers": {
+    "text": "Offers",
+    "list": {
+      "for_account": {
+        "text": "Offers for Account",
+        "path": "/accounts/{address}/offers",
+        "params": ["address", "limit","order", "cursor"],
+        "required": ["address"]
       }
     }
   },
@@ -70,22 +87,40 @@
       "single": {
         "text": "Single Operation",
         "path": "/operations/{operation}",
-        "params": ["operation"]
+        "params": ["operation"],
+        "required": ["operation"]
       },
       "for_account": {
         "text": "Operations for Account",
-        "path": "/account/{address}/operations",
-        "params": ["address", "limit", "order", "cursor"]
+        "path": "/accounts/{address}/operations",
+        "params": ["address", "limit", "order", "cursor"],
+        "required": ["address"]
       },
       "for_ledger": {
         "text": "Operations for Ledger",
-        "path": "/ledger/{ledger}/operations",
-        "params": ["ledger", "limit", "order", "cursor"]
+        "path": "/ledgers/{ledger}/operations",
+        "params": ["ledger", "limit", "order", "cursor"],
+        "required": ["ledger"]
       },
       "for_transaction": {
         "text": "Operations for Transaction",
-        "path": "/transaction/{transaction}/operations",
-        "params": ["transaction", "limit", "order", "cursor"]
+        "path": "/transactions/{transaction}/operations",
+        "params": ["transaction", "limit", "order", "cursor"],
+        "required": ["transaction"]
+      }
+    }
+  },
+  "order_book": {
+    "text": "Order Book",
+    "list": {
+      "details": {
+        "text": "Details",
+        "path": "/order_book",
+        "params": [
+          "selling_asset_type", "selling_asset_code", "selling_asset_issuer",
+          "buying_asset_type",  "buying_asset_code",  "buying_asset_issuer"
+        ],
+        "required": ["selling_asset_type", "buying_asset_type"]
       }
     }
   },
@@ -99,18 +134,21 @@
       },
       "for_account": {
         "text": "Payments for Account",
-        "path": "/account/{address}/payments",
-        "params": ["address", "limit", "order", "cursor"]
+        "path": "/accounts/{address}/payments",
+        "params": ["address", "limit", "order", "cursor"],
+        "required": ["address"]
       },
       "for_ledger": {
         "text": "Payments for Ledger",
-        "path": "/ledger/{ledger}/payments",
-        "params": ["ledger", "limit", "order", "cursor"]
+        "path": "/ledgers/{ledger}/payments",
+        "params": ["ledger", "limit", "order", "cursor"],
+        "required": ["ledger"]
       },
       "for_transaction": {
         "text": "Payments for Transaction",
-        "path": "/transaction/{transaction}/payments",
-        "params": ["transaction", "limit", "order", "cursor"]
+        "path": "/transactions/{transaction}/payments",
+        "params": ["transaction", "limit", "order", "cursor"],
+        "required": ["transaction"]
       }
     }
   },
@@ -125,17 +163,20 @@
       "single": {
         "text": "Single Transaction",
         "path": "/transactions/{transaction}",
-        "params": ["transaction"]
+        "params": ["transaction"],
+        "required": ["transaction"]
       },
       "for_account": {
         "text": "Transactions for Account",
-        "path": "/account/{address}/transactions",
-        "params": ["address", "limit", "order", "cursor"]
+        "path": "/accounts/{address}/transactions",
+        "params": ["address", "limit", "order", "cursor"],
+        "required": ["address"]
       },
       "for_ledger": {
         "text": "Transactions for Ledger",
-        "path": "/ledger/{ledger}/transactions",
-        "params": ["ledger", "limit", "order", "cursor"]
+        "path": "/ledgers/{ledger}/transactions",
+        "params": ["ledger", "limit", "order", "cursor"],
+        "required": ["ledger"]
       }
     }
   }
