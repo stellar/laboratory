@@ -8,6 +8,7 @@ import endpoints from '../endpoints.json'
 
 const CHANGE_EVENT = 'change';
 const URL_CHANGE_EVENT = 'url_change';
+const PARAMETER_CHANGE_EVENT = 'parameter_change';
 const SUBMIT_DISABLED_EVENT = 'submit_disabled';
 const LOADING_EVENT = 'loading';
 const NETWORK_CHANGE = 'network_change';
@@ -137,7 +138,7 @@ class ExplorerStoreClass extends EventEmitter {
       if (error) {
         disabled = true;
       } else {
-        required = _.remove(required, key);
+        required = _.without(required, key);
       }
     });
 
@@ -147,7 +148,38 @@ class ExplorerStoreClass extends EventEmitter {
       disabled = required.length > 0;
     }
 
+    // Extra checks for `order_book`: selling_asset_type
+    if (this.params.selling_asset_type) {
+      if (this.params.selling_asset_type.value === 'native') {
+        delete this.params.selling_asset_code;
+        delete this.params.selling_asset_issuer;
+      } else {
+        if (!this.params.selling_asset_code || !this.params.selling_asset_code.value) {
+          disabled = true;
+        }
+        if (!this.params.selling_asset_issuer || !this.params.selling_asset_issuer.value) {
+          disabled = true;
+        }
+      }
+    }
+
+    // Extra checks for `order_book`: buying_asset_type
+    if (this.params.buying_asset_type) {
+      if (this.params.buying_asset_type.value === 'native') {
+        delete this.params.buying_asset_code;
+        delete this.params.buying_asset_issuer;
+      } else {
+        if (!this.params.buying_asset_code || !this.params.buying_asset_code.value) {
+          disabled = true;
+        }
+        if (!this.params.buying_asset_issuer || !this.params.buying_asset_issuer.value) {
+          disabled = true;
+        }
+      }
+    }
+
     this.submitDisabled = disabled;
+    this.emit(PARAMETER_CHANGE_EVENT, {key, value});
     this.emit(SUBMIT_DISABLED_EVENT);
     this.emit(URL_CHANGE_EVENT);
   }
@@ -199,6 +231,10 @@ class ExplorerStoreClass extends EventEmitter {
     this.on(LOADING_EVENT, callback);
   }
 
+  addParameterChangeListener(callback) {
+    this.on(PARAMETER_CHANGE_EVENT, callback);
+  }
+
   removeChangeListener(callback) {
     this.removeListener(CHANGE_EVENT, callback);
   }
@@ -221,6 +257,10 @@ class ExplorerStoreClass extends EventEmitter {
 
   removeLoadingListener(callback) {
     this.removeListener(LOADING_EVENT, callback);
+  }
+
+  removeParameterChangeListener(callback) {
+    this.removeListener(PARAMETER_CHANGE_EVENT, callback);
   }
 
   emitChange() {
