@@ -2,12 +2,27 @@
 
 }
 
+.EndpointResult__loading,
+.EndpointResult__error,
+.EndpointResult__content {
+  padding: 1em;
+}
+
+.EndpointResult__loading {
+  border: 1px solid $s-color-neutral6;
+  border-radius: $s-var-radius;
+}
+
+.EndpointResult__error {
+  border: 1px solid $s-color-alert;
+  border-radius: $s-var-radius;
+}
+
 .EndpointResult__tabs {
   @include S-flex-row;
   border: 1px solid $s-color-primary6;
   padding: 0.5em 1em 0 1em;
   background: $s-color-primary9;
-  border-radius: 0 0 $s-var-radius $s-var-radius;
 }
 .EndpointResult__tabs:first-child {
   border-radius: $s-var-radius $s-var-radius 0 0;

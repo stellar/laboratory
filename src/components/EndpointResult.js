@@ -22,6 +22,16 @@ export let EndpointResult = React.createClass({
   render: function() {
     if (this.state.response) {
       return <div className="EndpointResult">
+        <div className="EndpointResult__loading">Loading...</div>
+
+        <div className="EndpointResult__error">
+          Unable to reach <strong>https://somewhere.over.the.rainbow/</strong>
+        </div>
+
+        <div className="EndpointResult__error">
+          <RawJsonResponseTab />
+        </div>
+
         <div className="EndpointResult__tabs">
           <button className="EndpointResult__tabs__tab is-current">JSON Response</button>
         </div>
