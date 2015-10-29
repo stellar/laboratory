@@ -43,7 +43,7 @@ export let EndpointResult = React.createClass({
         }
       </div>;
     } else {
-      return <div></div>;
+      return null;
     }
   }
 });

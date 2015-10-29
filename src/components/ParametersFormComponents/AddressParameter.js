@@ -23,10 +23,9 @@ export let AddressParameter = React.createClass({
     ExplorerActions.parameterSet(this.props.param, value, error);
   },
   onParameterChange({key, value}) {
-    let hidden = value === 'native';
-    if (this.props.param === 'selling_asset_issuer' && key === 'selling_asset_type') {
-      this.setState(_.extend(this.state, {hidden}));
-    } else if (this.props.param === 'buying_asset_issuer' && key === 'buying_asset_type') {
+    if ((this.props.param === 'selling_asset_issuer' && key === 'selling_asset_type') ||
+        (this.props.param === 'buying_asset_issuer' && key === 'buying_asset_type')) {
+      let hidden = value === 'native';
       this.setState(_.extend(this.state, {hidden}));
     }
   },
@@ -50,7 +49,7 @@ export let AddressParameter = React.createClass({
         text = 'Account ID';
     }
     return hidden ?
-      <div></div>
+      null
       :
       <div className="optionsTable__pair">
         <div className="optionsTable__pair__title">

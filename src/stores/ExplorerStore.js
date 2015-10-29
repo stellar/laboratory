@@ -18,6 +18,7 @@ class ExplorerStoreClass extends EventEmitter {
   constructor(endpoints) {
     super();
     this.endpoints = endpoints;
+    this.currentEndpointId = null;
     this.params = {};
     this.loading = false;
     this.response = null;
@@ -103,6 +104,10 @@ class ExplorerStoreClass extends EventEmitter {
     } else {
       return [];
     }
+  }
+
+  getCurrentEndpointId() {
+    return this.currentEndpointId;
   }
 
   getCurrentEndpointParams() {
@@ -319,6 +324,7 @@ class ExplorerStoreClass extends EventEmitter {
     }
 
     if (endpoint) {
+      this.currentEndpointId = id;
       if (this.selectedEndpoint) {
         this.selectedEndpoint.selected = false;
       }
