@@ -40,11 +40,18 @@ export let AssetCodeParameter = React.createClass({
       this.onValidationContextChange();
     }
   },
+  onExternalError: function({param, error}) {
+    if (param === this.props.param && !this.state.error) {
+      this.setState(_.extend(this.state, {error}));
+    }
+  },
   componentDidMount: function() {
     ExplorerStore.addParameterChangeListener(this.onParameterChange);
+    ExplorerStore.addParameterErrorListener(this.onExternalError);
   },
   componentWillUnmount: function() {
     ExplorerStore.removeParameterChangeListener(this.onParameterChange);
+    ExplorerStore.removeParameterErrorListener(this.onExternalError);
   },
   render: function() {
     let {value, error, hidden} = this.state;

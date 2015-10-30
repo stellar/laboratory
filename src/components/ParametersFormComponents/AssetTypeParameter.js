@@ -4,16 +4,29 @@ import {ExplorerStore} from '../../stores/ExplorerStore';
 
 export let AssetTypeParameter = React.createClass({
   getInitialState: function() {
-    return {value: null};
+    return {value: null, error: null};
   },
   onChange: function(event) {
     let value = event.target.value;
-    this.setState({value});
+    this.setState({value, error: null});
     ExplorerActions.parameterSet(this.props.param, value);
   },
+  onExternalError: function({param, error}) {
+    if (param === this.props.param && !this.state.error) {
+      this.setState(_.extend(this.state, {error}));
+    }
+  },
+  componentDidMount: function() {
+    ExplorerStore.addParameterErrorListener(this.onExternalError);
+  },
+  componentWillUnmount: function() {
+    ExplorerStore.removeParameterErrorListener(this.onExternalError);
+  },
   render: function() {
+    let {error} = this.state;
+    let {param, optional} = this.props;
     let text;
-    switch (this.props.param) {
+    switch (param) {
       case 'selling_asset_type':
         text = 'Selling Asset Type';
         break;
@@ -26,6 +39,7 @@ export let AssetTypeParameter = React.createClass({
     return <div className="optionsTable__pair">
       <div className="optionsTable__pair__title">
         {text}
+        {optional && <span>optional</span>}
       </div>
       <div className="optionsTable__pair__content">
         <div className="s-buttonGroup">
@@ -42,6 +56,9 @@ export let AssetTypeParameter = React.createClass({
             <span className="s-button s-button__light">credit_alphanum12</span>
           </label>
         </div>
+        {error ? <p className="optionsTable__pair__content__alert">
+          {error}
+        </p> : ''}
       </div>
     </div>
   }
