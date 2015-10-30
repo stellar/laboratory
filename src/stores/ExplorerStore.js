@@ -9,6 +9,7 @@ import endpoints from '../endpoints.json'
 const CHANGE_EVENT = 'change';
 const URL_CHANGE_EVENT = 'url_change';
 const PARAMETER_CHANGE_EVENT = 'parameter_change';
+const PARAMETER_ERROR_EVENT = 'parameter_error';
 const SUBMIT_DISABLED_EVENT = 'submit_disabled';
 const LOADING_EVENT = 'loading';
 const NETWORK_CHANGE = 'network_change';
@@ -54,6 +55,15 @@ class ExplorerStoreClass extends EventEmitter {
   }
 
   submitRequest() {
+    // Check if all required fields are set
+    if (this.submitDisabled) {
+      // Show `Required field` error for all missing fields
+      _.each(this.requiredEmptyFields, param => {
+        this.emit(PARAMETER_ERROR_EVENT, {param, error: 'This is a required field.'});
+      });
+      return;
+    }
+
     this.setLoading(true);
     axios.get(ExplorerStore.getCurrentUrl())
       .then(response => {
@@ -118,8 +128,12 @@ class ExplorerStoreClass extends EventEmitter {
     }
   }
 
-  getSubmitDisabled() {
-    return this.submitDisabled;
+  getCurrentEndpointRequiredParams() {
+    if (this.selectedEndpoint) {
+      return this.selectedEndpoint.required;
+    } else {
+      return null;
+    }
   }
 
   setParam(key, value, error) {
@@ -132,25 +146,25 @@ class ExplorerStoreClass extends EventEmitter {
     // Check if all required params are set and there
     // are no errors and update `submitDisabled` state
     let disabled = false;
-    let required;
+    let requiredEmptyFields;
     if (this.selectedEndpoint.required) {
-      required = _.clone(this.selectedEndpoint.required);
+      requiredEmptyFields = _.clone(this.selectedEndpoint.required);
     } else {
-      required = [];
+      requiredEmptyFields = [];
     }
 
     _.each(this.params, ({value, error}, key) => {
       if (error) {
         disabled = true;
       } else {
-        required = _.without(required, key);
+        requiredEmptyFields = _.without(requiredEmptyFields, key);
       }
     });
 
     // If there are not errors check if all required
     // params are set
     if (!disabled) {
-      disabled = required.length > 0;
+      disabled = requiredEmptyFields.length > 0;
     }
 
     // Extra checks for `order_book`: selling_asset_type
@@ -160,9 +174,11 @@ class ExplorerStoreClass extends EventEmitter {
         delete this.params.selling_asset_issuer;
       } else {
         if (!this.params.selling_asset_code || !this.params.selling_asset_code.value) {
+          requiredEmptyFields.push('selling_asset_code');
           disabled = true;
         }
         if (!this.params.selling_asset_issuer || !this.params.selling_asset_issuer.value) {
+          requiredEmptyFields.push('selling_asset_issuer');
           disabled = true;
         }
       }
@@ -175,14 +191,17 @@ class ExplorerStoreClass extends EventEmitter {
         delete this.params.buying_asset_issuer;
       } else {
         if (!this.params.buying_asset_code || !this.params.buying_asset_code.value) {
+          requiredEmptyFields.push('buying_asset_code');
           disabled = true;
         }
         if (!this.params.buying_asset_issuer || !this.params.buying_asset_issuer.value) {
+          requiredEmptyFields.push('buying_asset_issuer');
           disabled = true;
         }
       }
     }
 
+    this.requiredEmptyFields = requiredEmptyFields;
     this.submitDisabled = disabled;
     this.emit(PARAMETER_CHANGE_EVENT, {key, value});
     this.emit(SUBMIT_DISABLED_EVENT);
@@ -228,16 +247,16 @@ class ExplorerStoreClass extends EventEmitter {
     this.on(RESPONSE_EVENT, callback);
   }
 
-  addSubmitDisabledListener(callback) {
-    this.on(SUBMIT_DISABLED_EVENT, callback);
-  }
-
   addLoadingListener(callback) {
     this.on(LOADING_EVENT, callback);
   }
 
   addParameterChangeListener(callback) {
     this.on(PARAMETER_CHANGE_EVENT, callback);
+  }
+
+  addParameterErrorListener(callback) {
+    this.on(PARAMETER_ERROR_EVENT, callback);
   }
 
   removeChangeListener(callback) {
@@ -256,16 +275,16 @@ class ExplorerStoreClass extends EventEmitter {
     this.removeListener(RESPONSE_EVENT, callback);
   }
 
-  removeSubmitDisabledListener(callback) {
-    this.removeListener(SUBMIT_DISABLED_EVENT, callback);
-  }
-
   removeLoadingListener(callback) {
     this.removeListener(LOADING_EVENT, callback);
   }
 
   removeParameterChangeListener(callback) {
     this.removeListener(PARAMETER_CHANGE_EVENT, callback);
+  }
+
+  removeParameterErrorListener(callback) {
+    this.removeListener(PARAMETER_ERROR_EVENT, callback);
   }
 
   emitChange() {
@@ -331,6 +350,7 @@ class ExplorerStoreClass extends EventEmitter {
       this.selectedEndpoint = endpoint;
       this.params = {};
       this.submitDisabled = !!endpoint.required;
+      this.requiredEmptyFields = endpoint.required;
       endpoint.selected = true;
       this.emitChange();
     } else {

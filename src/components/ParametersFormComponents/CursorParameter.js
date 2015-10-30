@@ -18,9 +18,11 @@ export let CursorParameter = React.createClass({
   },
   render: function() {
     let {value, error} = this.state;
+    let {optional} = this.props;
     return <div className="optionsTable__pair">
       <div className="optionsTable__pair__title">
         Cursor
+        {optional && <span className="optionsTable__pair__title__optional"> (optional)</span>}
       </div>
       <div className="optionsTable__pair__content">
         <input type="text" value={value} onChange={this.onChange}/>

@@ -29,14 +29,22 @@ export let AddressParameter = React.createClass({
       this.setState(_.extend(this.state, {hidden}));
     }
   },
+  onExternalError: function({param, error}) {
+    if (param === this.props.param && !this.state.error) {
+      this.setState(_.extend(this.state, {error}));
+    }
+  },
   componentDidMount: function() {
     ExplorerStore.addParameterChangeListener(this.onParameterChange);
+    ExplorerStore.addParameterErrorListener(this.onExternalError);
   },
   componentWillUnmount: function() {
     ExplorerStore.removeParameterChangeListener(this.onParameterChange);
+    ExplorerStore.removeParameterErrorListener(this.onExternalError);
   },
   render: function() {
     let {value, error, hidden} = this.state;
+    let {optional} = this.props;
     let text;
     switch (this.props.param) {
       case 'selling_asset_issuer':
@@ -54,6 +62,7 @@ export let AddressParameter = React.createClass({
       <div className="optionsTable__pair">
         <div className="optionsTable__pair__title">
           {text}
+          {optional && <span className="optionsTable__pair__title__optional"> (optional)</span>}
         </div>
         <div className="optionsTable__pair__content">
           <input type="text" value={value} onChange={this.onChange}/>
