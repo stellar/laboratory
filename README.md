@@ -7,6 +7,3 @@ npm install
 gulp build
 ```
 
-## Components
-
-![Components](docs/components.png)
