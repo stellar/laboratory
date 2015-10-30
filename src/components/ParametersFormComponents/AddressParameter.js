@@ -62,7 +62,7 @@ export let AddressParameter = React.createClass({
       <div className="optionsTable__pair">
         <div className="optionsTable__pair__title">
           {text}
-          {optional && <span>optional</span>}
+          {optional && <span className="optionsTable__pair__title__optional"> (optional)</span>}
         </div>
         <div className="optionsTable__pair__content">
           <input type="text" value={value} onChange={this.onChange}/>

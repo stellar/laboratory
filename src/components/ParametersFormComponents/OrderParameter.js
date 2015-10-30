@@ -16,7 +16,7 @@ export let OrderParameter = React.createClass({
     return <div className="optionsTable__pair">
       <div className="optionsTable__pair__title">
         Order
-        {optional && <span>optional</span>}
+        {optional && <span className="optionsTable__pair__title__optional"> (optional)</span>}
       </div>
       <div className="optionsTable__pair__content">
         <div className="s-buttonGroup">
