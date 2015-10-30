@@ -1,0 +1,46 @@
+.TransactionImport {
+  margin-bottom: 2em;
+}
+  .TransactionImport__input {
+    padding: 1em 0;
+  }
+    .TransactionImport__input__textarea {
+      display: block;
+      min-width: 36em;
+      max-width: 100%;
+      min-height: 10em;
+      margin-bottom: 0;
+    }
+  .TransactionImport__alert {
+    color: $s-color-alert;
+  }
+
+.TransactionAttributes {
+  margin-bottom: 1.5em;
+}
+
+.TransactionOp {
+  @include S-flex-row;
+  margin-bottom: 1.5em;
+}
+.TransactionOp__meta {
+  @include S-flexItem-noFlex;
+}
+.TransactionOp__config {
+  @include S-flexItem-share;
+}
+
+.TransactionOpMeta__order {
+  padding: 1.5em 1em 0.5em 1em;
+}
+  .TransactionOpMeta__order__input {
+    height: 72px;
+    width: 72px;
+    padding-left: 0;
+    padding-right: 0;
+    text-align: center;
+    font-size: $s-scale-a;
+  }
+.TransactionOpMeta__remove {
+  text-align: center;
+}
