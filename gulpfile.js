@@ -55,7 +55,7 @@ gulp.task('develop', function(done) {
   compiler.purgeInputFileSystem();
   compiler.watch(watchOptions, function(error, stats) {
     if (!bsInitialized) {
-      bs.watch(".tmp/**/*").on("change", bs.reload);
+      gulp.watch(".tmp/**/*").on("change", bs.reload);
       bs.init({
         notify: false,
         server: "./.tmp"
