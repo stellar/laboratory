@@ -146,25 +146,25 @@ class ExplorerStoreClass extends EventEmitter {
     // Check if all required params are set and there
     // are no errors and update `submitDisabled` state
     let disabled = false;
-    let required;
+    let requiredEmptyFields;
     if (this.selectedEndpoint.required) {
-      required = _.clone(this.selectedEndpoint.required);
+      requiredEmptyFields = _.clone(this.selectedEndpoint.required);
     } else {
-      required = [];
+      requiredEmptyFields = [];
     }
 
     _.each(this.params, ({value, error}, key) => {
       if (error) {
         disabled = true;
       } else {
-        required = _.without(required, key);
+        requiredEmptyFields = _.without(requiredEmptyFields, key);
       }
     });
 
     // If there are not errors check if all required
     // params are set
     if (!disabled) {
-      disabled = required.length > 0;
+      disabled = requiredEmptyFields.length > 0;
     }
 
     // Extra checks for `order_book`: selling_asset_type
@@ -174,11 +174,11 @@ class ExplorerStoreClass extends EventEmitter {
         delete this.params.selling_asset_issuer;
       } else {
         if (!this.params.selling_asset_code || !this.params.selling_asset_code.value) {
-          required.push('selling_asset_code');
+          requiredEmptyFields.push('selling_asset_code');
           disabled = true;
         }
         if (!this.params.selling_asset_issuer || !this.params.selling_asset_issuer.value) {
-          required.push('selling_asset_issuer');
+          requiredEmptyFields.push('selling_asset_issuer');
           disabled = true;
         }
       }
@@ -191,17 +191,17 @@ class ExplorerStoreClass extends EventEmitter {
         delete this.params.buying_asset_issuer;
       } else {
         if (!this.params.buying_asset_code || !this.params.buying_asset_code.value) {
-          required.push('buying_asset_code');
+          requiredEmptyFields.push('buying_asset_code');
           disabled = true;
         }
         if (!this.params.buying_asset_issuer || !this.params.buying_asset_issuer.value) {
-          required.push('buying_asset_issuer');
+          requiredEmptyFields.push('buying_asset_issuer');
           disabled = true;
         }
       }
     }
 
-    this.requiredEmptyFields = required;
+    this.requiredEmptyFields = requiredEmptyFields;
     this.submitDisabled = disabled;
     this.emit(PARAMETER_CHANGE_EVENT, {key, value});
     this.emit(SUBMIT_DISABLED_EVENT);
