@@ -7,7 +7,7 @@ var webpack     = require("webpack");
 
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-gulp.task('default', ['build']);
+gulp.task('default', ['develop']);
 
 var webpackOptions = {
   entry: {
