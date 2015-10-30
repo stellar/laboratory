@@ -1,4 +1,4 @@
-# stellar-playground
+# laboratory
 
 ## Developing
 
