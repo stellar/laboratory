@@ -26,11 +26,11 @@ export let NetworkPicker = React.createClass({
     return <div className="NetworkPicker">
       <form className="s-buttonGroup NetworkPicker__buttonGroup">
         <label className="s-buttonGroup__wrapper">
-          <input type="radio" className="s-buttonGroup__radio" name="network-toggle" onClick={this.onToggle} defaultChecked="checked" value="public" />
+          <input type="radio" className="s-buttonGroup__radio" name="network-toggle" onClick={this.onToggle} value="public" />
           <span className="s-button s-button__light NetworkPicker__button">public</span>
         </label>
         <label className="s-buttonGroup__wrapper">
-          <input type="radio" className="s-buttonGroup__radio" name="network-toggle" onClick={this.onToggle} value="test" />
+          <input type="radio" className="s-buttonGroup__radio" name="network-toggle" onClick={this.onToggle} defaultChecked="checked" value="test" />
           <span className="s-button s-button__light NetworkPicker__button">test</span>
         </label>
       </form>
