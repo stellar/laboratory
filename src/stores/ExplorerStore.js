@@ -27,7 +27,7 @@ class ExplorerStoreClass extends EventEmitter {
       test: 'https://horizon-testnet.stellar.org',
       public: 'https://horizon.stellar.org'
     };
-    this.usePublicNetwork();
+    this.useTestNetwork();
   }
 
   usePublicNetwork() {
