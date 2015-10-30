@@ -55,10 +55,10 @@ gulp.task('develop', function(done) {
   compiler.purgeInputFileSystem();
   compiler.watch(watchOptions, function(error, stats) {
     if (!bsInitialized) {
-      bs.watch("dist/**/*").on("change", bs.reload);
+      bs.watch(".tmp/**/*").on("change", bs.reload);
       bs.init({
         notify: false,
-        server: "./dist"
+        server: "./.tmp"
       });
       bsInitialized = true;
     }
