@@ -1,6 +1,7 @@
 import React from 'react';
-import {EndpointExplorer} from './EndpointExplorer';
 import {NetworkPicker} from './NetworkPicker';
+import {EndpointExplorer} from './EndpointExplorer';
+import {TransactionBuilder} from './TransactionBuilder';
 
 export let PlaygroundChrome = React.createClass({
   render: function() {
@@ -21,16 +22,16 @@ export let PlaygroundChrome = React.createClass({
         <div className="so-chunk">
           <nav className="s-buttonList">
             <a href="#" className="s-buttonList__item s-button s-button__min is-active">Endpoint Explorer</a>
-            <a className="s-buttonList__item s-button s-button__min">More coming soon</a>
+            <a className="s-buttonList__item s-button s-button__min">Transaction Builder</a>
           </nav>
         </div>
       </div>
       <div className="so-back">
         <div className="so-chunk">
           <EndpointExplorer />
+          <TransactionBuilder />
         </div>
       </div>
-
     </div>;
   }
 });
