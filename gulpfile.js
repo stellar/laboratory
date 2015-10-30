@@ -9,39 +9,41 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 gulp.task('default', ['build']);
 
-gulp.task('build', function(done) {
-  var options = {
-    entry: {
-      app: "./src/app.js",
-      vendor: ["axios", "react", "react-dom", "lodash", "flux", "stellar-sdk"]
-    },
-    devtool: "source-map",
-    output: {
-      filename: "[name].js",
-      path: './dist'
-    },
-    resolve: {
-      root: ['src'],
-      modulesDirectories: ["node_modules"]
-    },
-    module: {
-      loaders: [
-        {test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader'},
-        {test: /\.json$/, loader: 'json'},
-        {test: /\.scss/, loader: ExtractTextPlugin.extract('css?sourceMap!sass?sourceMap')},
-        {test: /\.html$/, loader: 'file?name=[name].html'},
-        {test: /\.(jpe?g|png|gif|svg)$/, loader: 'file?name=images/[hash].[ext]'}
-      ]
-    },
-    plugins: [
-      // Ignore native modules (ed25519)
-      new webpack.IgnorePlugin(/ed25519/),
-      new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.js"),
-      new ExtractTextPlugin('style.css', {
-        allChunks: true
-      })
+var webpackOptions = {
+  entry: {
+    app: "./src/app.js",
+    vendor: ["axios", "react", "react-dom", "lodash", "flux", "stellar-sdk"]
+  },
+  devtool: "source-map",
+  output: {
+    filename: "[name].js",
+    path: './dist'
+  },
+  resolve: {
+    root: ['src'],
+    modulesDirectories: ["node_modules"]
+  },
+  module: {
+    loaders: [
+      {test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader'},
+      {test: /\.json$/, loader: 'json'},
+      {test: /\.scss/, loader: ExtractTextPlugin.extract('css?sourceMap!sass?sourceMap')},
+      {test: /\.html$/, loader: 'file?name=[name].html'},
+      {test: /\.(jpe?g|png|gif|svg)$/, loader: 'file?name=images/[hash].[ext]'}
     ]
-  };
+  },
+  plugins: [
+    // Ignore native modules (ed25519)
+    new webpack.IgnorePlugin(/ed25519/),
+    new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.js"),
+    new ExtractTextPlugin('style.css', {
+      allChunks: true
+    })
+  ]
+};
+
+gulp.task('develop', function(done) {
+  webpackOptions.output.path = './.tmp';
 
   var watchOptions = {
     aggregateTimeout: 300
@@ -49,7 +51,7 @@ gulp.task('build', function(done) {
 
   var bsInitialized = false;
 
-  var compiler = webpack(options);
+  var compiler = webpack(webpackOptions);
   compiler.purgeInputFileSystem();
   compiler.watch(watchOptions, function(error, stats) {
     if (!bsInitialized) {
@@ -68,4 +70,14 @@ gulp.task('build', function(done) {
       colors: true
     }));
   });
+});
+
+gulp.task('build', function(done) {
+  webpackOptions.plugins.push(new webpack.optimize.DedupePlugin());
+  webpackOptions.plugins.push(new webpack.optimize.OccurenceOrderPlugin());
+  webpackOptions.plugins.push(new webpack.optimize.UglifyJsPlugin());
+
+  var compiler = webpack(webpackOptions);
+  compiler.purgeInputFileSystem();
+  compiler.run(done);
 });
