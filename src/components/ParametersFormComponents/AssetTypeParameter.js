@@ -33,6 +33,9 @@ export let AssetTypeParameter = React.createClass({
       case 'buying_asset_type':
         text = 'Buying Asset Type';
         break;
+      case 'destination_asset_type':
+        text = 'Destination Asset Type';
+        break;
       default:
         text = 'Asset Type';
     }

@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import React from 'react';
 import {AddressParameter} from './ParametersFormComponents/AddressParameter';
+import {AmountParameter} from './ParametersFormComponents/AmountParameter';
 import {AssetCodeParameter} from './ParametersFormComponents/AssetCodeParameter';
 import {AssetTypeParameter} from './ParametersFormComponents/AssetTypeParameter';
 import {CursorParameter} from './ParametersFormComponents/CursorParameter';
@@ -48,16 +49,23 @@ export let EndpointSetup = React.createClass({
             let optional = !_.contains(this.state.requiredParams, type);
             switch (type) {
               case 'address':
+              case 'source_account':
+              case 'destination_account':
                 return <AddressParameter key={key} param={type} optional={optional} />;
               case 'selling_asset_issuer':
               case 'buying_asset_issuer':
+              case 'destination_asset_issuer':
                 return <AddressParameter key={key} param={type} optional={false} />;
               case 'selling_asset_code':
               case 'buying_asset_code':
+              case 'destination_asset_code':
                 return <AssetCodeParameter key={key} param={type} optional={false} />;
               case 'selling_asset_type':
               case 'buying_asset_type':
+              case 'destination_asset_type':
                 return <AssetTypeParameter key={key} param={type} optional={optional} />;
+              case 'destination_amount':
+                return <AmountParameter key={key} param={type} optional={optional} />;
               case 'cursor':
                 return <CursorParameter key={key} param={type} optional={optional} />;
               case 'ledger':
@@ -71,7 +79,7 @@ export let EndpointSetup = React.createClass({
               case 'transaction':
                 return <TransactionParameter key={key} param={type} optional={optional} />;
               default:
-                throw new Error('Invalid param');
+                throw new Error(`Invalid param: ${type}`);
                 return;
             }
           })}

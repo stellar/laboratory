@@ -7,7 +7,7 @@ import {ExplorerStore} from '../../stores/ExplorerStore';
 export let AddressParameter = React.createClass({
   getInitialState: function() {
     let state = {value: '', error: null, hidden: false};
-    if (this.props.param !== 'address') {
+    if (_.contains(['selling_asset_issuer', 'buying_asset_issuer', 'destination_asset_issuer'], this.props.param)) {
       state.hidden = true;
     }
     return state;
@@ -24,7 +24,8 @@ export let AddressParameter = React.createClass({
   },
   onParameterChange({key, value}) {
     if ((this.props.param === 'selling_asset_issuer' && key === 'selling_asset_type') ||
-        (this.props.param === 'buying_asset_issuer' && key === 'buying_asset_type')) {
+        (this.props.param === 'buying_asset_issuer' && key === 'buying_asset_type') ||
+        (this.props.param === 'destination_asset_issuer' && key === 'destination_asset_type')) {
       let hidden = value === 'native';
       this.setState(_.extend(this.state, {hidden}));
     }
@@ -47,6 +48,15 @@ export let AddressParameter = React.createClass({
     let {optional} = this.props;
     let text;
     switch (this.props.param) {
+      case 'source_account':
+        text = 'Source Account';
+        break;
+      case 'destination_account':
+        text = 'Destination Account';
+        break;
+      case 'destination_asset_issuer':
+        text = 'Destination Asset Issuer';
+        break;
       case 'selling_asset_issuer':
         text = 'Selling Asset Issuer';
         break;

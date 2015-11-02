@@ -201,6 +201,23 @@ class ExplorerStoreClass extends EventEmitter {
       }
     }
 
+    // Extra checks for `paths`
+    if (this.params.destination_asset_type) {
+      if (this.params.destination_asset_type.value === 'native') {
+        delete this.params.destination_asset_code;
+        delete this.params.destination_asset_issuer;
+      } else {
+        if (!this.params.destination_asset_code || !this.params.destination_asset_code.value) {
+          requiredEmptyFields.push('destination_asset_code');
+          disabled = true;
+        }
+        if (!this.params.destination_asset_issuer || !this.params.destination_asset_issuer.value) {
+          requiredEmptyFields.push('destination_asset_issuer');
+          disabled = true;
+        }
+      }
+    }
+
     this.requiredEmptyFields = requiredEmptyFields;
     this.submitDisabled = disabled;
     this.emit(PARAMETER_CHANGE_EVENT, {key, value});
