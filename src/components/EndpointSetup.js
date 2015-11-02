@@ -76,8 +76,8 @@ export let EndpointSetup = React.createClass({
             }
           })}
           <hr className="optionsTable__separator" />
-          <div className="optionsTable__blank">
-            <EasySelect className="EndpointSetup__url">{this.state.url}</EasySelect>
+          <div className="optionsTable__blank EndpointSetup__url">
+            <EasySelect className="">{this.state.url}</EasySelect>
           </div>
           <div className="optionsTable__blank">
             <button className="s-button" onClick={this.onSubmit}>Submit</button>
