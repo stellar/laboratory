@@ -1,11 +1,13 @@
 'use strict';
 
+var _           = require('lodash');
 var bs          = require('browser-sync').create();
 var gulp        = require('gulp');
 var path        = require('path');
 var webpack     = require("webpack");
 
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 gulp.task('default', ['develop']);
 
@@ -15,10 +17,6 @@ var webpackOptions = {
     vendor: ["axios", "react", "react-dom", "lodash", "flux", "stellar-sdk"]
   },
   devtool: "source-map",
-  output: {
-    filename: "[name].js",
-    path: './dist'
-  },
   resolve: {
     root: ['src'],
     modulesDirectories: ["node_modules"]
@@ -35,15 +33,23 @@ var webpackOptions = {
   plugins: [
     // Ignore native modules (ed25519)
     new webpack.IgnorePlugin(/ed25519/),
-    new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.js"),
-    new ExtractTextPlugin('style.css', {
-      allChunks: true
+    new HtmlWebpackPlugin({
+      title: 'Stellar Laboratory'
     })
   ]
 };
 
 gulp.task('develop', function(done) {
-  webpackOptions.output.path = './.tmp';
+  var options = merge(webpackOptions, {
+    output: {
+      filename: "[name].js",
+      path: './.tmp'
+    },
+    plugins: [
+      new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.js"),
+      new ExtractTextPlugin('style.css', {allChunks: true})
+    ]
+  });
 
   var watchOptions = {
     aggregateTimeout: 300
@@ -51,7 +57,7 @@ gulp.task('develop', function(done) {
 
   var bsInitialized = false;
 
-  var compiler = webpack(webpackOptions);
+  var compiler = webpack(options);
   compiler.purgeInputFileSystem();
   compiler.watch(watchOptions, function(error, stats) {
     if (!bsInitialized) {
@@ -73,11 +79,30 @@ gulp.task('develop', function(done) {
 });
 
 gulp.task('build', function(done) {
-  webpackOptions.plugins.push(new webpack.optimize.DedupePlugin());
-  webpackOptions.plugins.push(new webpack.optimize.OccurenceOrderPlugin());
-  webpackOptions.plugins.push(new webpack.optimize.UglifyJsPlugin());
+  var options = merge(webpackOptions, {
+    output: {
+      filename: "[name]-[chunkhash].js",
+      path: './dist'
+    },
+    plugins: [
+      new webpack.optimize.CommonsChunkPlugin("vendor", "vendor-[chunkhash].js"),
+      new ExtractTextPlugin('style-[contenthash].css', {allChunks: true}),
+      new webpack.optimize.DedupePlugin(),
+      new webpack.optimize.OccurenceOrderPlugin(),
+      new webpack.optimize.UglifyJsPlugin()
+    ]
+  });
 
-  var compiler = webpack(webpackOptions);
+  var compiler = webpack(options);
   compiler.purgeInputFileSystem();
   compiler.run(done);
 });
+
+
+function merge(object1, object2) {
+  return _.merge(object1, object2, function(a, b) {
+    if (_.isArray(a)) {
+      return a.concat(b);
+    }
+  });
+}
