@@ -77,7 +77,7 @@ export let TransactionBuilder = React.createClass({
           Add Operation
         </div>
       </div>
-      <h3>TransactionEnvelope XDR:</h3>
+      <h3>Resulting TransactionEnvelope XDR:</h3>
       <pre className="TransactionXDR so-code"><code>AAAAAGXNhB2hIkbP//jgzn4os/AAAAZAB+BaLPAAA5Q/xL</code></pre>
       <button className="s-button">Sign this transaction</button>
     </div>;
