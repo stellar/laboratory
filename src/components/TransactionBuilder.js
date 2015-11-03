@@ -72,14 +72,13 @@ export let TransactionBuilder = React.createClass({
                                                             <AddressParameter param='address' />
                                                           </div>
                                                         </div>
-        <div className="TransactionOp"></div>
-        <div className="TransactionOp"></div>
 
-        <div className="TransactionOpAdd">
-        Add Operation
+        <div className="TransactionOpAdd s-button">
+          Add Operation
         </div>
       </div>
-      <div className="TransactionXDR"></div>
+      <h3>TransactionEnvelope XDR:</h3>
+      <pre className="TransactionXDR so-code"><code>AAAAAGXNhB2hIkbP//jgzn4os/AAAAZAB+BaLPAAA5Q/xL</code></pre>
       <button className="s-button">Sign this transaction</button>
     </div>;
   }

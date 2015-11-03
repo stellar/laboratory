@@ -1,3 +1,7 @@
+.TransactionBuilder {
+  padding-bottom: 2em;
+}
+
 .TransactionImport {
   margin-bottom: 2em;
 }
@@ -43,4 +47,13 @@
   }
 .TransactionOpMeta__remove {
   text-align: center;
+}
+
+.TransactionOpAdd {
+  width: 100%;
+  font-size: $s-scale-2;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  text-align: center;
+  margin-bottom: 1.5em;
 }
