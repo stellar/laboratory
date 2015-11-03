@@ -12,9 +12,11 @@ export let OrderParameter = React.createClass({
     ExplorerActions.parameterSet(this.props.param, value);
   },
   render: function() {
+    let {optional} = this.props;
     return <div className="optionsTable__pair">
       <div className="optionsTable__pair__title">
         Order
+        {optional && <span className="optionsTable__pair__title__optional"> (optional)</span>}
       </div>
       <div className="optionsTable__pair__content">
         <div className="s-buttonGroup">

@@ -6,7 +6,7 @@ import {ExplorerStore} from '../../stores/ExplorerStore';
 export let AssetCodeParameter = React.createClass({
   getInitialState: function() {
     let state = {value: '', error: null, hidden: false};
-    if (this.props.param !== 'address') {
+    if (_.contains(['selling_asset_code', 'buying_asset_code', 'destination_asset_code'], this.props.param)) {
       state.hidden = true;
     }
     return state;
@@ -32,7 +32,8 @@ export let AssetCodeParameter = React.createClass({
   },
   onParameterChange({key, value}) {
     if ((this.props.param === 'selling_asset_code' && key === 'selling_asset_type') ||
-        (this.props.param === 'buying_asset_code'  && key === 'buying_asset_type')) {
+        (this.props.param === 'buying_asset_code'  && key === 'buying_asset_type') ||
+        (this.props.param === 'destination_asset_code' && key === 'destination_asset_type')) {
       this.minLength = value === 'credit_alphanum4' ? 1 : 5;
       this.maxLength = value === 'credit_alphanum4' ? 4 : 12;
       let hidden = value === 'native';
@@ -40,11 +41,18 @@ export let AssetCodeParameter = React.createClass({
       this.onValidationContextChange();
     }
   },
+  onExternalError: function({param, error}) {
+    if (param === this.props.param && !this.state.error) {
+      this.setState(_.extend(this.state, {error}));
+    }
+  },
   componentDidMount: function() {
     ExplorerStore.addParameterChangeListener(this.onParameterChange);
+    ExplorerStore.addParameterErrorListener(this.onExternalError);
   },
   componentWillUnmount: function() {
     ExplorerStore.removeParameterChangeListener(this.onParameterChange);
+    ExplorerStore.removeParameterErrorListener(this.onExternalError);
   },
   render: function() {
     let {value, error, hidden} = this.state;
@@ -55,6 +63,9 @@ export let AssetCodeParameter = React.createClass({
         break;
       case 'buying_asset_code':
         text = 'Buying Asset Code';
+        break;
+      case 'destination_asset_code':
+        text = 'Destination Asset Code';
         break;
       default:
         text = 'Asset Code';

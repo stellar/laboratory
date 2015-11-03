@@ -133,6 +133,17 @@
       }
     }
   },
+  "paths": {
+    "text": "Paths",
+    "list": {
+      "all": {
+        "text": "All Paths",
+        "path": "/paths",
+        "params": ["source_account", "destination_account", "destination_amount", "destination_asset_type", "destination_asset_code", "destination_asset_issuer"],
+        "required": ["source_account", "destination_account", "destination_amount", "destination_asset_type"]
+      }
+    }
+  },
   "payments": {
     "text": "Payments",
     "list": {
