@@ -1,10 +1,33 @@
 import React from 'react';
+import classNames from 'classnames';
 import {NetworkPicker} from './NetworkPicker';
 import {EndpointExplorer} from './EndpointExplorer';
 import {TransactionBuilder} from './TransactionBuilder';
 
 export let PlaygroundChrome = React.createClass({
+  getInitialState: function() {
+    return {
+      tab: 'EndpointExplorer'
+    };
+  },
+  changeTab: function(tab) {
+    this.setState({tab})
+  },
   render: function() {
+    let activeTab;
+    switch (this.state.tab) {
+      case 'EndpointExplorer':
+        activeTab = <EndpointExplorer />;
+        break;
+      case 'TransactionBuilder':
+        activeTab = <TransactionBuilder />;
+        break;
+      default:
+        throw new Error(`Invalid tab: ${this.state.tab}`);
+    }
+
+    let defaultClasses = 'buttonList__item s-button s-button__min';
+
     return <div>
       <div className="so-back">
         <div className="so-chunk">
@@ -21,15 +44,22 @@ export let PlaygroundChrome = React.createClass({
       <div className="so-back PlaygroundChrome__siteNavBack">
         <div className="so-chunk">
           <nav className="s-buttonList">
-            <a href="#" className="s-buttonList__item s-button s-button__min is-active">Endpoint Explorer</a>
-            <a className="s-buttonList__item s-button s-button__min">Transaction Builder</a>
+            <a href="#"
+               onClick={this.changeTab.bind(this, 'EndpointExplorer')}
+               className={classNames(defaultClasses, {'is-active': this.state.tab === 'EndpointExplorer'})}>
+              Endpoint Explorer
+            </a>
+            <a href="#"
+               onClick={this.changeTab.bind(this, 'TransactionBuilder')}
+               className={classNames(defaultClasses, {'is-active': this.state.tab === 'TransactionBuilder'})}>
+              Transaction Builder
+            </a>
           </nav>
         </div>
       </div>
       <div className="so-back">
         <div className="so-chunk">
-          <EndpointExplorer />
-          <TransactionBuilder />
+          {activeTab}
         </div>
       </div>
     </div>;
