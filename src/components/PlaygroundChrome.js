@@ -7,7 +7,7 @@ import {TransactionBuilder} from './TransactionBuilder';
 export let PlaygroundChrome = React.createClass({
   getInitialState: function() {
     return {
-      tab: 'EndpointExplorer'
+      tab: 'TransactionBuilder'
     };
   },
   changeTab: function(tab) {
@@ -57,11 +57,8 @@ export let PlaygroundChrome = React.createClass({
           </nav>
         </div>
       </div>
-      <div className="so-back">
-        <div className="so-chunk">
-          {activeTab}
-        </div>
-      </div>
+
+      {activeTab}
     </div>;
   }
 });
