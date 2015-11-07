@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import {NetworkPicker} from './NetworkPicker';
 import {EndpointExplorer} from './EndpointExplorer';
-import {TransactionBuilder} from './TransactionBuilder';
+import TransactionBuilder from './TransactionBuilder';
 
 export let PlaygroundChrome = React.createClass({
   getInitialState: function() {
