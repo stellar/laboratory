@@ -9,7 +9,7 @@ export let LedgerParameter = React.createClass({
     let value = event.target.value;
     let error;
     if (!value.match(/^[0-9]*$/g)) {
-      error = 'Ledger ID is invalid.';
+      error = 'Ledger sequence is invalid.';
     }
 
     this.setState({value, error});
@@ -31,7 +31,7 @@ export let LedgerParameter = React.createClass({
     let {optional} = this.props;
     return <div className="optionsTable__pair">
       <div className="optionsTable__pair__title">
-        Ledger ID
+        Ledger sequence
         {optional && <span className="optionsTable__pair__title__optional"> (optional)</span>}
       </div>
       <div className="optionsTable__pair__content">
