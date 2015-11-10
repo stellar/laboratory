@@ -1,7 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
 import {Account} from 'stellar-sdk';
-import {ExplorerStore} from '../../stores/ExplorerStore';
 
 export let AddressParameter = React.createClass({
   getInitialState: function() {
@@ -35,12 +34,12 @@ export let AddressParameter = React.createClass({
     }
   },
   componentDidMount: function() {
-    ExplorerStore.addParameterChangeListener(this.onParameterChange);
-    ExplorerStore.addParameterErrorListener(this.onExternalError);
+    this.props.addParameterChangeListener(this.onParameterChange);
+    this.props.addParameterErrorListener(this.onExternalError);
   },
   componentWillUnmount: function() {
-    ExplorerStore.removeParameterChangeListener(this.onParameterChange);
-    ExplorerStore.removeParameterErrorListener(this.onExternalError);
+    this.props.removeParameterChangeListener(this.onParameterChange);
+    this.props.removeParameterErrorListener(this.onExternalError);
   },
   render: function() {
     let {value, error, hidden} = this.state;

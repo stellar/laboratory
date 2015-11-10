@@ -32,7 +32,6 @@ export let EndpointSetup = React.createClass({
     ExplorerStore.submitRequest();
   },
   formComponentUpdate: function(param, value, error) {
-    console.dir(arguments)
     ExplorerActions.parameterSet(param, value, error);
   },
   componentDidMount: function() {
@@ -47,42 +46,48 @@ export let EndpointSetup = React.createClass({
   },
   render: function() {
     if (this.state.params) {
+      let addParameterChangeListener = ExplorerStore.addParameterChangeListener.bind(ExplorerStore);
+      let removeParameterChangeListener = ExplorerStore.removeParameterChangeListener.bind(ExplorerStore);
+      let addParameterErrorListener = ExplorerStore.addParameterErrorListener.bind(ExplorerStore);
+      let removeParameterErrorListener = ExplorerStore.removeParameterErrorListener.bind(ExplorerStore);
+      console.log(addParameterChangeListener)
       return <div className="so-chunk">
         <div className="optionsTable">
           {this.state.params.map(type => {
+            console.log(addParameterChangeListener)
             let key = `${this.state.endpointId}.${type}`;
             let optional = !_.contains(this.state.requiredParams, type);
             switch (type) {
               case 'address':
               case 'source_account':
               case 'destination_account':
-                return <AddressParameter key={key} param={type} optional={optional} onUpdate={this.formComponentUpdate} />;
+                return <AddressParameter key={key} param={type} optional={optional} onUpdate={this.formComponentUpdate} addParameterChangeListener={addParameterChangeListener} removeParameterChangeListener={removeParameterChangeListener} addParameterErrorListener={addParameterErrorListener} removeParameterErrorListener={removeParameterErrorListener} />;
               case 'selling_asset_issuer':
               case 'buying_asset_issuer':
               case 'destination_asset_issuer':
-                return <AddressParameter key={key} param={type} optional={false} onUpdate={this.formComponentUpdate} />;
+                return <AddressParameter key={key} param={type} optional={false} onUpdate={this.formComponentUpdate} addParameterChangeListener={addParameterChangeListener} removeParameterChangeListener={removeParameterChangeListener} addParameterErrorListener={addParameterErrorListener} removeParameterErrorListener={removeParameterErrorListener} />;
               case 'selling_asset_code':
               case 'buying_asset_code':
               case 'destination_asset_code':
-                return <AssetCodeParameter key={key} param={type} optional={false} onUpdate={this.formComponentUpdate} />;
+                return <AssetCodeParameter key={key} param={type} optional={false} onUpdate={this.formComponentUpdate} addParameterChangeListener={addParameterChangeListener} removeParameterChangeListener={removeParameterChangeListener} addParameterErrorListener={addParameterErrorListener} removeParameterErrorListener={removeParameterErrorListener} />;
               case 'selling_asset_type':
               case 'buying_asset_type':
               case 'destination_asset_type':
-                return <AssetTypeParameter key={key} param={type} optional={optional} onUpdate={this.formComponentUpdate} />;
+                return <AssetTypeParameter key={key} param={type} optional={optional} onUpdate={this.formComponentUpdate} addParameterChangeListener={addParameterChangeListener} removeParameterChangeListener={removeParameterChangeListener} addParameterErrorListener={addParameterErrorListener} removeParameterErrorListener={removeParameterErrorListener} />;
               case 'destination_amount':
-                return <AmountParameter key={key} param={type} optional={optional} onUpdate={this.formComponentUpdate} />;
+                return <AmountParameter key={key} param={type} optional={optional} onUpdate={this.formComponentUpdate} addParameterChangeListener={addParameterChangeListener} removeParameterChangeListener={removeParameterChangeListener} addParameterErrorListener={addParameterErrorListener} removeParameterErrorListener={removeParameterErrorListener} />;
               case 'cursor':
-                return <CursorParameter key={key} param={type} optional={optional} onUpdate={this.formComponentUpdate} />;
+                return <CursorParameter key={key} param={type} optional={optional} onUpdate={this.formComponentUpdate} addParameterChangeListener={addParameterChangeListener} removeParameterChangeListener={removeParameterChangeListener} addParameterErrorListener={addParameterErrorListener} removeParameterErrorListener={removeParameterErrorListener} />;
               case 'ledger':
-                return <LedgerParameter key={key} param={type} optional={optional} onUpdate={this.formComponentUpdate} />;
+                return <LedgerParameter key={key} param={type} optional={optional} onUpdate={this.formComponentUpdate} addParameterChangeListener={addParameterChangeListener} removeParameterChangeListener={removeParameterChangeListener} addParameterErrorListener={addParameterErrorListener} removeParameterErrorListener={removeParameterErrorListener} />;
               case 'limit':
-                return <LimitParameter key={key} param={type} optional={optional} onUpdate={this.formComponentUpdate} />;
+                return <LimitParameter key={key} param={type} optional={optional} onUpdate={this.formComponentUpdate} addParameterChangeListener={addParameterChangeListener} removeParameterChangeListener={removeParameterChangeListener} addParameterErrorListener={addParameterErrorListener} removeParameterErrorListener={removeParameterErrorListener} />;
               case 'operation':
-                return <OperationParameter key={key} param={type} optional={optional} onUpdate={this.formComponentUpdate} />;
+                return <OperationParameter key={key} param={type} optional={optional} onUpdate={this.formComponentUpdate} addParameterChangeListener={addParameterChangeListener} removeParameterChangeListener={removeParameterChangeListener} addParameterErrorListener={addParameterErrorListener} removeParameterErrorListener={removeParameterErrorListener} />;
               case 'order':
-                return <OrderParameter key={key} param={type} optional={optional} onUpdate={this.formComponentUpdate} />;
+                return <OrderParameter key={key} param={type} optional={optional} onUpdate={this.formComponentUpdate} addParameterChangeListener={addParameterChangeListener} removeParameterChangeListener={removeParameterChangeListener} addParameterErrorListener={addParameterErrorListener} removeParameterErrorListener={removeParameterErrorListener} />;
               case 'transaction':
-                return <TransactionParameter key={key} param={type} optional={optional} onUpdate={this.formComponentUpdate} />;
+                return <TransactionParameter key={key} param={type} optional={optional} onUpdate={this.formComponentUpdate} addParameterChangeListener={addParameterChangeListener} removeParameterChangeListener={removeParameterChangeListener} addParameterErrorListener={addParameterErrorListener} removeParameterErrorListener={removeParameterErrorListener} />;
               default:
                 throw new Error(`Invalid param: ${type}`);
                 return;
