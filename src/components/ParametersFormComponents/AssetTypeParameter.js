@@ -1,5 +1,4 @@
 import React from 'react';
-import {ExplorerActions} from '../../actions/ExplorerActions';
 import {ExplorerStore} from '../../stores/ExplorerStore';
 
 export let AssetTypeParameter = React.createClass({
@@ -9,7 +8,7 @@ export let AssetTypeParameter = React.createClass({
   onChange: function(event) {
     let value = event.target.value;
     this.setState({value, error: null});
-    ExplorerActions.parameterSet(this.props.param, value);
+    this.props.onUpdate(this.props.param, value);
   },
   onExternalError: function({param, error}) {
     if (param === this.props.param && !this.state.error) {

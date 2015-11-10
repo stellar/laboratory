@@ -1,6 +1,5 @@
 import React from 'react';
 import _ from 'lodash';
-import {ExplorerActions} from '../../actions/ExplorerActions';
 import {ExplorerStore} from '../../stores/ExplorerStore';
 
 export let AssetCodeParameter = React.createClass({
@@ -15,7 +14,7 @@ export let AssetCodeParameter = React.createClass({
     let value = event.target.value;
     let error = this.validate(value);
     this.setState({value, error});
-    ExplorerActions.parameterSet(this.props.param, value, error);
+    this.props.onUpdate(this.props.param, value, error);
   },
   onValidationContextChange: function() {
     let error = this.validate(this.state.value);

@@ -1,5 +1,4 @@
 import React from 'react';
-import {ExplorerActions} from '../../actions/ExplorerActions';
 import {ExplorerStore} from '../../stores/ExplorerStore';
 
 export let LimitParameter = React.createClass({
@@ -14,7 +13,7 @@ export let LimitParameter = React.createClass({
     }
 
     this.setState({value, error});
-    ExplorerActions.parameterSet(this.props.param, value, error);
+    this.props.onUpdate(this.props.param, value, error);
   },
   render: function() {
     let {value, error} = this.state;

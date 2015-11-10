@@ -13,7 +13,7 @@ export let LedgerParameter = React.createClass({
     }
 
     this.setState({value, error});
-    ExplorerStore.setParam(this.props.param, value, error);
+    this.props.onUpdate(this.props.param, value, error);
   },
   onExternalError: function({param, error}) {
     if (param === this.props.param && !this.state.error) {

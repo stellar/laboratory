@@ -1,5 +1,4 @@
 import React from 'react';
-import {ExplorerActions} from '../../actions/ExplorerActions';
 import {ExplorerStore} from '../../stores/ExplorerStore';
 
 export let OrderParameter = React.createClass({
@@ -9,7 +8,7 @@ export let OrderParameter = React.createClass({
   onChange: function(event) {
     let value = event.target.value;
     this.setState({value});
-    ExplorerActions.parameterSet(this.props.param, value);
+    this.props.onUpdate(this.props.param, value);
   },
   render: function() {
     let {optional} = this.props;
