@@ -1,7 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
 import {Account} from 'stellar-sdk';
-import {ExplorerActions} from '../../actions/ExplorerActions';
 import {ExplorerStore} from '../../stores/ExplorerStore';
 
 export let AddressParameter = React.createClass({
@@ -20,7 +19,7 @@ export let AddressParameter = React.createClass({
     }
 
     this.setState({value, error});
-    ExplorerActions.parameterSet(this.props.param, value, error);
+    this.props.onUpdate(this.props.param, value, error);
   },
   onParameterChange({key, value}) {
     if ((this.props.param === 'selling_asset_issuer' && key === 'selling_asset_type') ||

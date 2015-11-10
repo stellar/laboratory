@@ -10,6 +10,7 @@ import {LimitParameter} from './ParametersFormComponents/LimitParameter';
 import {OperationParameter} from './ParametersFormComponents/OperationParameter';
 import {OrderParameter} from './ParametersFormComponents/OrderParameter';
 import {TransactionParameter} from './ParametersFormComponents/TransactionParameter';
+import {ExplorerActions} from '../actions/ExplorerActions';
 import {ExplorerStore} from '../stores/ExplorerStore';
 import {EasySelect} from './EasySelect';
 
@@ -29,6 +30,10 @@ export let EndpointSetup = React.createClass({
   },
   onSubmit: function() {
     ExplorerStore.submitRequest();
+  },
+  formComponentUpdate: function(param, value, error) {
+    console.dir(arguments)
+    ExplorerActions.parameterSet(param, value, error);
   },
   componentDidMount: function() {
     ExplorerStore.addChangeListener(this.onChange);
@@ -51,33 +56,33 @@ export let EndpointSetup = React.createClass({
               case 'address':
               case 'source_account':
               case 'destination_account':
-                return <AddressParameter key={key} param={type} optional={optional} />;
+                return <AddressParameter key={key} param={type} optional={optional} onUpdate={this.formComponentUpdate} />;
               case 'selling_asset_issuer':
               case 'buying_asset_issuer':
               case 'destination_asset_issuer':
-                return <AddressParameter key={key} param={type} optional={false} />;
+                return <AddressParameter key={key} param={type} optional={false} onUpdate={this.formComponentUpdate} />;
               case 'selling_asset_code':
               case 'buying_asset_code':
               case 'destination_asset_code':
-                return <AssetCodeParameter key={key} param={type} optional={false} />;
+                return <AssetCodeParameter key={key} param={type} optional={false} onUpdate={this.formComponentUpdate} />;
               case 'selling_asset_type':
               case 'buying_asset_type':
               case 'destination_asset_type':
-                return <AssetTypeParameter key={key} param={type} optional={optional} />;
+                return <AssetTypeParameter key={key} param={type} optional={optional} onUpdate={this.formComponentUpdate} />;
               case 'destination_amount':
-                return <AmountParameter key={key} param={type} optional={optional} />;
+                return <AmountParameter key={key} param={type} optional={optional} onUpdate={this.formComponentUpdate} />;
               case 'cursor':
-                return <CursorParameter key={key} param={type} optional={optional} />;
+                return <CursorParameter key={key} param={type} optional={optional} onUpdate={this.formComponentUpdate} />;
               case 'ledger':
-                return <LedgerParameter key={key} param={type} optional={optional} />;
+                return <LedgerParameter key={key} param={type} optional={optional} onUpdate={this.formComponentUpdate} />;
               case 'limit':
-                return <LimitParameter key={key} param={type} optional={optional} />;
+                return <LimitParameter key={key} param={type} optional={optional} onUpdate={this.formComponentUpdate} />;
               case 'operation':
-                return <OperationParameter key={key} param={type} optional={optional} />;
+                return <OperationParameter key={key} param={type} optional={optional} onUpdate={this.formComponentUpdate} />;
               case 'order':
-                return <OrderParameter key={key} param={type} optional={optional} />;
+                return <OrderParameter key={key} param={type} optional={optional} onUpdate={this.formComponentUpdate} />;
               case 'transaction':
-                return <TransactionParameter key={key} param={type} optional={optional} />;
+                return <TransactionParameter key={key} param={type} optional={optional} onUpdate={this.formComponentUpdate} />;
               default:
                 throw new Error(`Invalid param: ${type}`);
                 return;
