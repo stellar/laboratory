@@ -1,5 +1,4 @@
 import React from 'react';
-import {ExplorerStore} from '../../stores/ExplorerStore';
 
 export let AmountParameter = React.createClass({
   getInitialState: function() {
@@ -21,10 +20,10 @@ export let AmountParameter = React.createClass({
     }
   },
   componentDidMount: function() {
-    ExplorerStore.addParameterErrorListener(this.onExternalError);
+    this.props.addParameterErrorListener(this.onExternalError);
   },
   componentWillUnmount: function() {
-    ExplorerStore.removeParameterErrorListener(this.onExternalError);
+    this.props.removeParameterErrorListener(this.onExternalError);
   },
   render: function() {
     let {value, error} = this.state;

@@ -1,5 +1,4 @@
 import React from 'react';
-import {ExplorerStore} from '../../stores/ExplorerStore';
 
 export let OrderParameter = React.createClass({
   getInitialState: function() {
