@@ -22,14 +22,23 @@ class TxBuilderStoreClass extends EventEmitter {
     this._addOperation();
   }
 
+  /*
+    Getters
+  */
+  getTxAttributes() {
+    return _.cloneDeep(this._txAttributes);
+  }
+
   // Converts this._txOperations Object to an Array of the operations in order
   getOperationList() {
     return _.map(this._txOperationsOrder, (key, index) => {
-      return this._txOperations[key];
+      return _.cloneDeep(this._txOperations[key]);
     })
   }
 
-  // Internal helper methods
+  /*
+    Internal helper methods
+  */
   _getNextOperationKey() {
     this._nextOperationKey++;
     return this._nextOperationKey - 1;
@@ -49,12 +58,12 @@ class TxBuilderStoreClass extends EventEmitter {
     return opIndex;
   }
 
-  // Methods that respond to actions
+  /*
+    Action handling methods
+  */
   _updateAttributes(txAttributes) {
     // TODO: Validate source account
-    this._txAttributes.sourceAccount = txAttributes.sourceAccount;
-
-    // TODO: memo
+    this._txAttributes['source_account'] = txAttributes['source_account'];
   }
   _updateOperation(opKey, opAttributes) {
     this._keyIndex(opKey); // Check if key is valid
