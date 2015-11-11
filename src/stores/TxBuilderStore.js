@@ -5,16 +5,35 @@ import {AppDispatcher} from '../dispatcher/AppDispatcher';
 class TxBuilderStoreClass extends EventEmitter {
   constructor() {
     super();
-    this._txAttributes = {};
+    this._txAttributes = {
+      'source_account': ''
+    };
 
-    this._txOperations = {}; // Keys are the unique operation number
+    // Keys are the unique operation number taken from this.getNextOperationKey
+    // Value is the same as the opts passed to js-stellar-base Operation
+    this._txOperations = {};
+
+    // Array of numbers which represent the key of an operation in this._txOperations
     this._txOperationsOrder = [];
     this._nextOperationKey = 0;
+
+    // Pre-populate with the initial operation
+    this._addOperation({
+      type: 'payment', // TODO: type can be undefined meaning operation type not picked yet
+      destination: 'GAAAA',
+      asset: {
+        code: 'xlm',
+        issuer: undefined,
+      },
+      amount: '100'
+    });
   }
 
   // Converts this._txOperations Object to an Array of the operations in order
   getOperationList() {
-    return [];
+    return _.map(this._txOperationsOrder, (key, value) => {
+      return this._txOperations[key];
+    })
   }
 
   // Internal helper methods
@@ -38,13 +57,15 @@ class TxBuilderStoreClass extends EventEmitter {
 
     // TODO: memo
   }
-  _addOperation() {
-    this._txOperations[this._getNextOperationKey];
-    this._nextOperationKey++;
+  _addOperation(opts) {
+    let newOpKey = this._getNextOperationKey();
+    this._txOperations[newOpKey] = opts;
+    this._txOperationsOrder.push(newOpKey);
   }
 }
 
-export let TxBuilderStore = new TxBuilderStoreClass();
+let TxBuilderStore = new TxBuilderStoreClass();
+export default TxBuilderStore;
 
 AppDispatcher.register(action => {
   switch(action.type) {
@@ -58,7 +79,7 @@ AppDispatcher.register(action => {
       break;
     case TxBuilderConstants.ADD_OPERATION:
       // 1. When a new operation is created
-      TxBuilderStore._addOperation();
+      TxBuilderStore._addOperation(action.opts);
       break;
     // case TxBuilderConstants.REMOVE_OPERATION:
     //   // 1. When an operation is removed
