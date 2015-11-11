@@ -1,6 +1,7 @@
 import {EventEmitter} from 'events';
 import _ from 'lodash';
 import {AppDispatcher} from '../dispatcher/AppDispatcher';
+import TxBuilderConstants from '../constants/TxBuilderConstants';
 
 class TxBuilderStoreClass extends EventEmitter {
   constructor() {
@@ -62,6 +63,16 @@ class TxBuilderStoreClass extends EventEmitter {
     this._txOperations[newOpKey] = opts;
     this._txOperationsOrder.push(newOpKey);
   }
+  _removeOperation(key) {
+    let opIndex = this._txOperationsOrder.indexOf(key);
+    if (opIndex === -1) {
+      throw new Error('No operation with key ' + key + ' found when removing operation');
+      return;
+    }
+
+    this._txOperationsOrder.splice(opIndex, 1);
+    delete this._txOperations[key];
+  }
 }
 
 let TxBuilderStore = new TxBuilderStoreClass();
@@ -81,10 +92,10 @@ AppDispatcher.register(action => {
       // 1. When a new operation is created
       TxBuilderStore._addOperation(action.opts);
       break;
-    // case TxBuilderConstants.REMOVE_OPERATION:
-    //   // 1. When an operation is removed
-    //   TxBuilderStore._updateOperationList(action.operationList);
-    //   break;
+    case TxBuilderConstants.REMOVE_OPERATION:
+      // 1. When an operation is removed
+      TxBuilderStore._removeOperation(action.key);
+      break;
     // case TxBuilderConstants.ORDER_OPREATIONS:
     //   // 1. When operations are reordered
     //   TxBuilderStore._updateOperationList(action.operationList);
