@@ -1,6 +1,6 @@
 import React from 'react';
-import {AddressParameter} from './ParametersFormComponents/AddressParameter';
-import {AmountParameter} from './ParametersFormComponents/AmountParameter';
+import {AddressParameter} from './FormComponents/AddressParameter';
+import {AmountParameter} from './FormComponents/AmountParameter';
 
 export default class TxBuilderOperation extends React.Component {
   render() {

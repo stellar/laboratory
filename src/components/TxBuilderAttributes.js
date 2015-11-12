@@ -1,5 +1,5 @@
 import React from 'react';
-import {AddressParameter} from './ParametersFormComponents/AddressParameter';
+import {AddressParameter} from './FormComponents/AddressParameter';
 
 export default class TxBuilderAttributes extends React.Component {
   render() {
