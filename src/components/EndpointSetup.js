@@ -50,11 +50,9 @@ export let EndpointSetup = React.createClass({
       let removeParameterChangeListener = ExplorerStore.removeParameterChangeListener.bind(ExplorerStore);
       let addParameterErrorListener = ExplorerStore.addParameterErrorListener.bind(ExplorerStore);
       let removeParameterErrorListener = ExplorerStore.removeParameterErrorListener.bind(ExplorerStore);
-      console.log(addParameterChangeListener)
       return <div className="so-chunk">
         <div className="optionsTable">
           {this.state.params.map(type => {
-            console.log(addParameterChangeListener)
             let key = `${this.state.endpointId}.${type}`;
             let optional = !_.contains(this.state.requiredParams, type);
             switch (type) {

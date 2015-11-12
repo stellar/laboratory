@@ -1,5 +1,6 @@
 import React from 'react';
 import {AddressParameter} from './ParametersFormComponents/AddressParameter';
+import {AmountParameter} from './ParametersFormComponents/AmountParameter';
 
 export default class TxBuilderOperation extends React.Component {
   render() {
@@ -11,11 +12,8 @@ export default class TxBuilderOperation extends React.Component {
         <p className="TransactionOpMeta__remove"><a href="">remove</a></p>
       </div>
       <div className="TransactionOp__config TransactionOpConfig optionsTable">
-        <AddressParameter param='address' />
-        <AddressParameter param='address' />
-        <hr className="optionsTable__separator" />
-        <AddressParameter param='address' />
-        <AddressParameter param='address' />
+        <AddressParameter param='destination_account' />
+        <AmountParameter param='destination_amount' />
       </div>
     </div>
   }

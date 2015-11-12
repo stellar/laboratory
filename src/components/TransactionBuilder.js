@@ -7,6 +7,7 @@ import ImportXDR from './ImportXDR';
 import TxBuilderAttributes from './TxBuilderAttributes';
 import TxBuilderOperations from './TxBuilderOperations';
 import TxBuilderResult from './TxBuilderResult';
+import TxBuilderStore from '../stores/TxBuilderStore';
 
 export default class TransactionBuilder extends React.Component {
   render() {
@@ -14,8 +15,6 @@ export default class TransactionBuilder extends React.Component {
       <div className="so-back">
         <div className="so-chunk">
           <ImportXDR />
-          <TxBuilderAttributes />
-          <TxBuilderOperations />
         </div>
       </div>
       <div className="so-back TransactionBuilder__result">

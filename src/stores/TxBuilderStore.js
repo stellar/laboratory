@@ -24,6 +24,12 @@ class TxBuilderStoreClass extends EventEmitter {
 
     this._Xdr = '';
 
+    // pre-populate transaction overview
+    this._updateAttributes({
+      'source_account': 'GBEUMHGCNVEJCV7ZYNBOZ5IIRWP7FS2DNSZTJHJK3VYTCFALTGCNBEP2',
+      'sequence': '0',
+    })
+
     // Pre-populate with the initial operation
     this._addOperation();
 
@@ -96,6 +102,9 @@ class TxBuilderStoreClass extends EventEmitter {
       var transaction = new TransactionBuilder(account)
 
       _.each(this.getOperationList(), (op, index) => {
+        if (op.type === null) {
+          return;
+        }
         transaction = transaction.addOperation(Operation[op.type]({
           destination: op.destination,
           asset: Asset.native(),
