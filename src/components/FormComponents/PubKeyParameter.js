@@ -10,7 +10,7 @@ export default TextFormGenerator({
     'buying_asset_issuer': 'Buying Asset Issuer',
   },
   defaultLabel: 'Account ID',
-  validator: (value) => {
+  validator: value => {
     return Account.isValidAddress(value) ? null : 'Public key is invalid.';
   },
 });

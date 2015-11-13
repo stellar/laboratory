@@ -13,7 +13,7 @@ Sample config (with all the features)
     'buying_asset_issuer': 'Buying Asset Issuer',
   },
   defaultLabel: 'Account ID', // (required)
-  validator: (value) => { // This function should either return string (if errored) or null (if no errors)
+  validator: value => { // This function should either return string (if errored) or null (if no errors)
     return Account.isValidAddress(value) ? null : 'Public key is invalid.';
   },
 }
