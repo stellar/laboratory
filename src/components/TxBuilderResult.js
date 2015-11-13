@@ -1,5 +1,5 @@
 import React from 'react';
-import {AddressParameter} from './FormComponents/AddressParameter';
+import {PubKeyParameter} from './FormComponents/PubKeyParameter';
 import TxBuilderStore from '../stores/TxBuilderStore';
 
 export default class TxBuilderResult extends React.Component {

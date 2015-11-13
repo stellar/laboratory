@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 
-export let AssetCodeParameter = React.createClass({
+export default React.createClass({
   getInitialState: function() {
     let state = {value: '', error: null, hidden: false};
     if (_.contains(['selling_asset_code', 'buying_asset_code', 'destination_asset_code'], this.props.param)) {

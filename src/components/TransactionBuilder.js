@@ -2,7 +2,7 @@ import React from 'react';
 import {EndpointPicker} from './EndpointPicker';
 import {EndpointSetup} from './EndpointSetup';
 import {EndpointResult} from './EndpointResult';
-import {AddressParameter} from './FormComponents/AddressParameter';
+import {PubKeyParameter} from './FormComponents/PubKeyParameter';
 import ImportXDR from './ImportXDR';
 import TxBuilderAttributes from './TxBuilderAttributes';
 import TxBuilderOperations from './TxBuilderOperations';

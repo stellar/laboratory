@@ -1,6 +1,6 @@
 import React from 'react';
 
-export let AssetTypeParameter = React.createClass({
+export default React.createClass({
   getInitialState: function() {
     return {value: null, error: null};
   },
