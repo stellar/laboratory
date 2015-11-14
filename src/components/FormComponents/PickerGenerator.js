@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 export default function(config) {
   return React.createClass({
-    displayName: config.defaultLabel + 'Parameter',
+    displayName: config.defaultLabel + 'Picker',
     propTypes: {
       optional: React.PropTypes.bool.isRequired,
       forceError: React.PropTypes.string,
@@ -14,7 +14,7 @@ export default function(config) {
       config.fieldMap = {}; // not mutable another representation of the fields array; more accessible but unsorted
       _.each(config.fields, (field) => {
         if (field.name in config.fieldMap) {
-          throw new Error('FormComponentGenerator config.fields[].name must be unique');
+          throw new Error('PickerGenerator config.fields[].name must be unique');
         }
 
         fields[field.name] = {
@@ -111,7 +111,7 @@ export default function(config) {
                   formElement = <input type="text" value={this.state.fields[fieldConfig.name].value} placeholder={fieldConfig.placeholder} onChange={this.onChange.bind(this, fieldConfig.name)}/>
                   break;
                 default:
-                  throw new Error(`Unknown picker field type: ${fieldConfig.type}. Check the config object passed to FormComponentGenerator.`);
+                  throw new Error(`Unknown picker field type: ${fieldConfig.type}. Check the config object passed to PickerGenerator.`);
               }
               return <div key={fieldConfig.name}>
                 {formElement}

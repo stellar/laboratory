@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React from 'react';
 
-import FormFactory from './FormComponents/FormFactory';
+import Picker from './FormComponents/Picker';
 import {ExplorerActions} from '../actions/ExplorerActions';
 import {ExplorerStore} from '../stores/ExplorerStore';
 import {EasySelect} from './EasySelect';
@@ -51,7 +51,7 @@ export let EndpointSetup = React.createClass({
             let key = `${this.state.endpointId}.${type}`;
             let optional = !_.contains(this.state.requiredParams, type);
 
-            return FormFactory(type, {
+            return Picker(type, {
               key: key,
               param: type,
               optional: optional,

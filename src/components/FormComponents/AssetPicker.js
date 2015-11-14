@@ -1,7 +1,7 @@
-import FormComponentGenerator from './FormComponentGenerator';
+import PickerGenerator from './PickerGenerator';
 import {Account} from 'stellar-sdk';
 
-export default FormComponentGenerator({
+export default PickerGenerator({
   defaultLabel: 'Asset',
   labels: { // (optional) key is the form type. Value is the displayed text.
     'selling_asset': 'Selling Asset',

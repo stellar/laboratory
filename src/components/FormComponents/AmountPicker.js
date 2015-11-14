@@ -1,6 +1,6 @@
-import FormComponentGenerator from './FormComponentGenerator';
+import PickerGenerator from './PickerGenerator';
 
-export default FormComponentGenerator({
+export default PickerGenerator({
   defaultLabel: 'Amount',
   fields: [{
     type: 'text',

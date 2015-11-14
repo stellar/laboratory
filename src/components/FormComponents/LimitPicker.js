@@ -1,6 +1,6 @@
-import FormComponentGenerator from './FormComponentGenerator';
+import PickerGenerator from './PickerGenerator';
 
-export default FormComponentGenerator({
+export default PickerGenerator({
   defaultLabel: 'Limit',
   fields: [{
     type: 'text',

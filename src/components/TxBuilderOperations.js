@@ -1,5 +1,5 @@
 import React from 'react';
-import {PubKeyParameter} from './FormComponents/PubKeyParameter';
+import {PubKeyPicker} from './FormComponents/PubKeyPicker';
 import TxBuilderOperation from './TxBuilderOperation';
 
 export default class TxBuilderOperations extends React.Component {

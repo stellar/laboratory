@@ -1,6 +1,6 @@
 import React from 'react';
-import {PubKeyParameter} from './FormComponents/PubKeyParameter';
-import {AmountParameter} from './FormComponents/AmountParameter';
+import {PubKeyPicker} from './FormComponents/PubKeyPicker';
+import {AmountPicker} from './FormComponents/AmountPicker';
 
 export default class TxBuilderOperation extends React.Component {
   render() {
@@ -12,8 +12,8 @@ export default class TxBuilderOperation extends React.Component {
         <p className="TransactionOpMeta__remove"><a href="">remove</a></p>
       </div>
       <div className="TransactionOp__config TransactionOpConfig optionsTable">
-        <PubKeyParameter param='destination_account' />
-        <AmountParameter param='destination_amount' />
+        <PubKeyPicker param='destination_account' />
+        <AmountPicker param='destination_amount' />
       </div>
     </div>
   }
