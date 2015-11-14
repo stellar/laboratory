@@ -3,11 +3,6 @@ import {Account} from 'stellar-sdk';
 
 export default PickerGenerator({
   defaultLabel: 'Asset',
-  labels: { // (optional) key is the form type. Value is the displayed text.
-    'selling_asset': 'Selling Asset',
-    'buying_asset': 'Buying Asset',
-    'destination_asset': 'Destination Asset',
-  },
   fields: [
     {
       type: 'radio',

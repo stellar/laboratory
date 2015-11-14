@@ -2,7 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 
 export default function(config) {
-  config.fieldMap = {}; // not mutable another representation of the fields array; more accessible but unsorted
+  config.fieldMap = {}; // not mutable; another representation of the fields array; more accessible but unsorted
   _.each(config.fields, (configField) => {
     if (configField.name in config.fieldMap) {
       throw new Error('PickerGenerator config.fields[].name must be unique');
@@ -56,36 +56,28 @@ export default function(config) {
       })
     },
     onChange: function(fieldName, event) {
-      let fields =  _.assign({}, this.state.fields, {
-        [fieldName]: {
-          value: event.target.value,
-          dirty: true,
-        }
-      });
+      let fields =  _.assign({}, this.state.fields);
+      fields[fieldName] = {
+        value: event.target.value,
+        dirty: true,
+      };
+      this.setState({fields});
 
       // When optional, complete will be true (unless there is a forceRequire)
       let complete = _.reduce(this.validate(fields), (complete, fieldValidation) => {
         return complete && fieldValidation.complete;
       }, true);
-
       let values = _.mapValues(fields, fieldState => {
         return fieldState.value;
       });
-
-      this.setState({fields});
       this.props.onUpdate(this.props.type, values, complete);
     },
     render: function() {
-      let label = config.defaultLabel;
-      if (typeof config.labels !== 'undefined' && this.props.type in config.labels) {
-        // TODO: refactor labels since it doesn't belong here. A custom prop should just be passed to it
-        label = config.labels[this.props.type];
-      }
       let validation = this.validate(this.state.fields);
 
       return <div className="optionsTable__pair">
         <div className="optionsTable__pair__title">
-          {label}
+          {this.props.customLabel || config.defaultLabel}
           {this.props.optional && <span className="optionsTable__pair__title__optional"> (optional)</span>}
         </div>
         <div className="optionsTable__pair__content">

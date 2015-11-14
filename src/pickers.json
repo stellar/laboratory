@@ -1,0 +1,66 @@
+{
+  "pubkey": {
+    "component": "PubKeyPicker",
+    "label": "Public Key"
+  },
+  "account_id": {
+    "component": "PubKeyPicker",
+    "label": "Account ID"
+  },
+  "source_account": {
+    "component": "PubKeyPicker",
+    "label": "Source Account"
+  },
+  "destination_account": {
+    "component": "PubKeyPicker",
+    "label": "Destination Account"
+  },
+  "asset": {
+    "component": "AssetPicker",
+    "label": "Asset"
+  },
+  "buying_asset": {
+    "component": "AssetPicker",
+    "label": "Selling Asset"
+  },
+  "selling_asset": {
+    "component": "AssetPicker",
+    "label": "Buying Asset"
+  },
+  "destination_asset": {
+    "component": "AssetPicker",
+    "label": "Destination Asset"
+  },
+  "amount": {
+    "component": "AmountPicker",
+    "label": "Amount"
+  },
+  "destination_amount": {
+    "component": "AmountPicker",
+    "label": "Destination Amount"
+  },
+  "cursor": {
+    "component": "CursorPicker",
+    "label": "Cursor"
+  },
+  "ledger": {
+    "component": "LedgerPicker",
+    "label": "Ledger"
+  },
+  "limit": {
+    "component": "LimitPicker",
+    "label": "Limit"
+  },
+  "operation": {
+    "component": "OperationPicker",
+    "label": "Operation ID"
+  },
+  "order": {
+    "component": "OrderPicker",
+    "label": "Order"
+  },
+  "transaction": {
+    "component": "TransactionPicker",
+    "label": "Transation hash"
+  }
+}
