@@ -5,7 +5,7 @@ export default function(config) {
   return React.createClass({
     displayName: config.defaultLabel + 'Picker',
     propTypes: {
-      optional: React.PropTypes.bool.isRequired,
+      optional: React.PropTypes.bool,
       forceError: React.PropTypes.string,
       forceDirty: React.PropTypes.bool,
     },

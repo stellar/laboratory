@@ -1,11 +1,20 @@
 import React from 'react';
-import {PubKeyPicker} from './FormComponents/PubKeyPicker';
+import Picker from './FormComponents/Picker';
+import TxBuilderConstants from '../constants/TxBuilderConstants';
 
 export default class TxBuilderAttributes extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+    };
+  }
+  onUpdateHandler(type, values) {
+    console.log()
+  }
   render() {
     return <div className="TransactionAttributes">
       <div className="TransactionOp__config TransactionOpConfig optionsTable">
-        <PubKeyPicker param='source_account' />
+        {Picker('source_account', { onUpdate: this.onUpdateHandler})}
       </div>
     </div>
   }

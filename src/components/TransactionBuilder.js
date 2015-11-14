@@ -15,6 +15,8 @@ export default class TransactionBuilder extends React.Component {
       <div className="so-back">
         <div className="so-chunk">
           <ImportXDR />
+          <TxBuilderAttributes />
+          <TxBuilderOperations />
         </div>
       </div>
       <div className="so-back TransactionBuilder__result">

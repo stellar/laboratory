@@ -10,7 +10,21 @@ import OperationPicker from './OperationPicker';
 import OrderPicker from './OrderPicker';
 import TransactionPicker from './TransactionPicker';
 
+/**
+Required props:
+  onUpdate
+
+Optional props:
+  forceError
+  forceDirty
+  key
+
+**/
 export default function(type, props) {
+  if (!('key' in props)) {
+    props.key = type;
+  }
+  props.type = type;
   switch (type) {
     case 'pubkey':
     case 'account_id':

@@ -53,13 +53,9 @@ export let EndpointSetup = React.createClass({
 
             return Picker(type, {
               key: key,
-              param: type,
               optional: optional,
-              initialValue: {},
               onUpdate: this.onUpdateHandler,
-              forceError: null,
               forceDirty: this.state.formDirty,
-              pickerName: type,
             })
           })}
           <hr className="optionsTable__separator" />
