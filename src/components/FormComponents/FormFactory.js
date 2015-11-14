@@ -1,14 +1,14 @@
 import React from 'react';
 
-import PubKeyParameter from '../FormComponents/PubKeyParameter';
-import AmountParameter from '../FormComponents/AmountParameter';
-import AssetParameter from '../FormComponents/AssetParameter';
-import CursorParameter from '../FormComponents/CursorParameter';
-import LedgerParameter from '../FormComponents/LedgerParameter';
-import LimitParameter from '../FormComponents/LimitParameter';
-import OperationParameter from '../FormComponents/OperationParameter';
-import OrderParameter from '../FormComponents/OrderParameter';
-import TransactionParameter from '../FormComponents/TransactionParameter';
+import PubKeyParameter from './PubKeyParameter';
+import AmountParameter from './AmountParameter';
+import AssetParameter from './AssetParameter';
+import CursorParameter from './CursorParameter';
+import LedgerParameter from './LedgerParameter';
+import LimitParameter from './LimitParameter';
+import OperationParameter from './OperationParameter';
+import OrderParameter from './OrderParameter';
+import TransactionParameter from './TransactionParameter';
 
 export default function(type, props) {
   switch (type) {

@@ -1,4 +1,4 @@
-import FormComponentGenerator from '../lib/FormComponentGenerator';
+import FormComponentGenerator from './FormComponentGenerator';
 
 export default FormComponentGenerator({
   defaultLabel: 'Limit',

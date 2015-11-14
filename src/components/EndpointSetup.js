@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React from 'react';
 
-import FormFactory from './lib/FormFactory';
+import FormFactory from './FormComponents/FormFactory';
 import {ExplorerActions} from '../actions/ExplorerActions';
 import {ExplorerStore} from '../stores/ExplorerStore';
 import {EasySelect} from './EasySelect';

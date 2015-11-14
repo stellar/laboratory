@@ -1,4 +1,4 @@
-import FormComponentGenerator from '../lib/FormComponentGenerator';
+import FormComponentGenerator from './FormComponentGenerator';
 import {Account} from 'stellar-sdk';
 
 export default FormComponentGenerator({
