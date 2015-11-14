@@ -2,6 +2,14 @@ import React from 'react';
 import _ from 'lodash';
 
 export default function(config) {
+  config.fieldMap = {}; // not mutable another representation of the fields array; more accessible but unsorted
+  _.each(config.fields, (configField) => {
+    if (configField.name in config.fieldMap) {
+      throw new Error('PickerGenerator config.fields[].name must be unique');
+    }
+    config.fieldMap[configField.name] = configField;
+  });
+
   return React.createClass({
     displayName: config.defaultLabel + 'Picker',
     propTypes: {
@@ -11,57 +19,40 @@ export default function(config) {
     },
     getInitialState: function() {
       let fields = {}; // stateful
-      config.fieldMap = {}; // not mutable another representation of the fields array; more accessible but unsorted
-      _.each(config.fields, (field) => {
-        if (field.name in config.fieldMap) {
-          throw new Error('PickerGenerator config.fields[].name must be unique');
-        }
-
-        fields[field.name] = {
-          value: '',
+      let uniqueKey = '' + (+new Date()) + Math.random(); // ensures radiobuttons have a unique name attribute
+      _.each(config.fields, (configField) => {
+        fields[configField.name] = {
+          value: typeof configField.default === 'undefined' ? '' : configField.default,
           dirty: false,
         };
-        config.fieldMap[field.name] = field;
-        if (typeof field.default !== 'undefined') {
-          fields[field.name].value = field.default;
-        }
       });
-      let uniqueKey = '' + (+new Date()) + Math.random(); // ensures radiobuttons have a unique name attribute
 
-      return {fields, error: null, dirty: false, uniqueKey};
+      return {fields, uniqueKey};
     },
     validate: function(fields) { // expects something like this.state.field
       return _.mapValues(fields, (field, fieldName) => {
         let dirty = this.props.forceDirty || field.dirty;
-        let optional = this.props.optional || config.fieldMap[fieldName].optional;
+        let optional = !config.fieldMap[fieldName].forceRequired ||
+          this.props.optional || config.fieldMap[fieldName].optional;
         let showing = typeof config.fieldMap[fieldName].showIf === 'undefined' ||
           config.fieldMap[fieldName].showIf(fields);
 
         if (!showing) {
           return {message: null, complete: true}; // non-showing elements count as complete
         } else if (!dirty) {
-          if (field.forceRequired) {
-            return {message: 'This is a required field.', complete: false};
-          } else if (optional) {
+          if (optional) {
             return {message: null, complete: true};
-          } else {
-            return {message: null, complete: false};
           }
+          return {message: null, complete: false};
         } else if (field.value === '') {
-          if (config.fieldMap[fieldName].forceRequired) {
-            return {message: 'This is a required field.', complete: false};
-          } else if (optional) {
+          if (optional) {
             return {message: null, complete: true};
-          } else {
-            return {message: 'This is a required field.', complete: false};
           }
-        } else {
-          let validateMessage = config.fieldMap[fieldName].validator(field.value, fields);
-          if (validateMessage === null) {
-            return {message: null, complete: true}; // passed the validator
-          }
-          return {message: validateMessage, complete: false};
+          return {message: 'This is a required field.', complete: false};
         }
+
+        let validateMessage = config.fieldMap[fieldName].validator(field.value, fields);
+        return {message: validateMessage, complete: validateMessage === null};
       })
     },
     onChange: function(fieldName, event) {
@@ -79,7 +70,7 @@ export default function(config) {
 
       let values = _.mapValues(fields, fieldState => {
         return fieldState.value;
-      })
+      });
 
       this.setState({fields});
       this.props.onUpdate(this.props.type, values, complete);

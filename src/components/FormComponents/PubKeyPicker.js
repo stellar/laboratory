@@ -8,11 +8,9 @@ export default PickerGenerator({
     'destination_account': 'Destination Account',
   },
   defaultLabel: 'Public Key',
-  fields: [
-    {
-      type: 'text',
-      name: 'pubKey',
-      validator: (value) => Account.isValidAddress(value) ? null : 'Public key is invalid.',
-    },
-  ],
+  fields: [{
+    type: 'text',
+    name: 'pubKey',
+    validator: (value) => Account.isValidAddress(value) ? null : 'Public key is invalid.',
+  }],
 });
