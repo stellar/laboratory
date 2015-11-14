@@ -10,8 +10,8 @@
       "single": {
         "text": "Single Account",
         "path": "/accounts/{address}",
-        "params": ["address"],
-        "required": ["address"]
+        "params": ["account_id"],
+        "required": ["account_id"]
       }
     }
   },
@@ -26,8 +26,8 @@
       "for_account": {
         "text": "Effects for Account",
         "path": "/accounts/{address}/effects",
-        "params": ["address", "limit", "order", "cursor"],
-        "required": ["address"]
+        "params": ["account_id", "limit", "order", "cursor"],
+        "required": ["account_id"]
       },
       "for_ledger": {
         "text": "Effects for Ledger",
@@ -71,8 +71,8 @@
       "for_account": {
         "text": "Offers for Account",
         "path": "/accounts/{address}/offers",
-        "params": ["address", "limit", "order", "cursor"],
-        "required": ["address"]
+        "params": ["account_id", "limit", "order", "cursor"],
+        "required": ["account_id"]
       }
     }
   },
@@ -93,8 +93,8 @@
       "for_account": {
         "text": "Operations for Account",
         "path": "/accounts/{address}/operations",
-        "params": ["address", "limit", "order", "cursor"],
-        "required": ["address"]
+        "params": ["account_id", "limit", "order", "cursor"],
+        "required": ["account_id"]
       },
       "for_ledger": {
         "text": "Operations for Ledger",
@@ -117,19 +117,19 @@
         "text": "Details",
         "path": "/order_book",
         "params": [
-          "selling_asset_type", "selling_asset_code", "selling_asset_issuer",
-          "buying_asset_type",  "buying_asset_code",  "buying_asset_issuer"
+          "selling_asset",
+          "buying_asset"
         ],
-        "required": ["selling_asset_type", "buying_asset_type"]
+        "required": ["selling_asset", "buying_asset"]
       },
       "trades": {
         "text": "Trades",
         "path": "/order_book/trades",
         "params": [
-          "selling_asset_type", "selling_asset_code", "selling_asset_issuer",
-          "buying_asset_type",  "buying_asset_code",  "buying_asset_issuer"
+          "selling_asset",
+          "buying_asset"
         ],
-        "required": ["selling_asset_type", "buying_asset_type"]
+        "required": ["selling_asset", "buying_asset"]
       }
     }
   },
@@ -139,8 +139,8 @@
       "all": {
         "text": "All Paths",
         "path": "/paths",
-        "params": ["source_account", "destination_account", "destination_amount", "destination_asset_type", "destination_asset_code", "destination_asset_issuer"],
-        "required": ["source_account", "destination_account", "destination_amount", "destination_asset_type"]
+        "params": ["source_account", "destination_account", "destination_amount", "destination_asset"],
+        "required": ["source_account", "destination_account", "destination_amount", "destination_asset"]
       }
     }
   },
@@ -155,8 +155,8 @@
       "for_account": {
         "text": "Payments for Account",
         "path": "/accounts/{address}/payments",
-        "params": ["address", "limit", "order", "cursor"],
-        "required": ["address"]
+        "params": ["account_id", "limit", "order", "cursor"],
+        "required": ["account_id"]
       },
       "for_ledger": {
         "text": "Payments for Ledger",
@@ -189,8 +189,8 @@
       "for_account": {
         "text": "Transactions for Account",
         "path": "/accounts/{address}/transactions",
-        "params": ["address", "limit", "order", "cursor"],
-        "required": ["address"]
+        "params": ["account_id", "limit", "order", "cursor"],
+        "required": ["account_id"]
       },
       "for_ledger": {
         "text": "Transactions for Ledger",

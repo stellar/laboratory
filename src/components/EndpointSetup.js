@@ -30,7 +30,6 @@ export let EndpointSetup = React.createClass({
   },
   onError: function() {
     // there aren't any errors right now
-    console.log(arguments)
   },
   componentDidMount: function() {
     ExplorerStore.addChangeListener(this.onChange);
@@ -59,6 +58,8 @@ export let EndpointSetup = React.createClass({
               initialValue: {},
               onUpdate: this.onUpdateHandler,
               forceError: null,
+              forceDirty: this.state.formDirty,
+              pickerName: type,
             })
           })}
           <hr className="optionsTable__separator" />

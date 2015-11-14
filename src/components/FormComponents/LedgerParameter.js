@@ -1,8 +1,11 @@
-import TextFormGenerator from '../lib/TextFormGenerator';
+import FormComponentGenerator from '../lib/FormComponentGenerator';
 
-export default TextFormGenerator({
+export default FormComponentGenerator({
   defaultLabel: 'Ledger',
-  validator: value => {
-    return value.match(/^[0-9]*$/g) ? null : 'Ledger sequence is invalid.';
-  },
+  fields: [{
+    type: 'text',
+    name: 'ledger',
+    validator: (value) =>
+      value.match(/^[0-9]*$/g) ? null : 'Ledger sequence is invalid.'
+  }],
 });

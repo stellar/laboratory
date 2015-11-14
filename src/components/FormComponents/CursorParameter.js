@@ -1,8 +1,12 @@
-import TextFormGenerator from '../lib/TextFormGenerator';
+import FormComponentGenerator from '../lib/FormComponentGenerator';
 
-export default TextFormGenerator({
+export default FormComponentGenerator({
   defaultLabel: 'Cursor',
-  validator: value => {
-    return value.match(/^[0-9]*$/g) ? null : 'Cursor is invalid.';
-  },
+  fields: [
+    {
+      type: 'text',
+      name: 'cursor',
+      validator: (value) => value.match(/^[0-9]*$/g) ? null : 'Cursor is invalid.',
+    },
+  ],
 });

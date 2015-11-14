@@ -1,8 +1,11 @@
-import TextFormGenerator from '../lib/TextFormGenerator';
+import FormComponentGenerator from '../lib/FormComponentGenerator';
 
-export default TextFormGenerator({
+export default FormComponentGenerator({
   defaultLabel: 'Operation ID',
-  validator: value => {
-    return value.match(/^[0-9]*$/g) ? null : 'Operation ID is invalid.';
-  }
+  fields: [{
+    type: 'text',
+    name: 'operationId',
+    validator: (value) =>
+      value.match(/^[0-9]*$/g) ? null : 'Operation ID is invalid.'
+  }],
 });

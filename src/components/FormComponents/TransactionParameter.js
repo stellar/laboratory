@@ -1,8 +1,11 @@
-import TextFormGenerator from '../lib/TextFormGenerator';
+import FormComponentGenerator from '../lib/FormComponentGenerator';
 
-export default TextFormGenerator({
+export default FormComponentGenerator({
   defaultLabel: 'Transation hash',
-  validator: value => {
-    return value.match(/^[0-9a-f]{64}$/g) ? null : 'Transaction hash is invalid.';
-  },
+  fields: [{
+    type: 'text',
+    name: 'transaction',
+    validator: (value) =>
+      value.match(/^[0-9a-f]{64}$/g) ? null : 'Transaction hash is invalid.',
+  }],
 });

@@ -1,11 +1,11 @@
-import TextFormGenerator from '../lib/TextFormGenerator';
+import FormComponentGenerator from '../lib/FormComponentGenerator';
 
-export default TextFormGenerator({
+export default FormComponentGenerator({
   defaultLabel: 'Limit',
-  validator: (value) => {
-    if (!value.match(/^[0-9]*$/g) || value < 0 || value > 200) {
-      return 'Limit is invalid.';
-    }
-    return null;
-  },
+  fields: [{
+    type: 'text',
+    name: 'limit',
+    validator: (value) =>
+      (!value.match(/^[0-9]*$/g) || value < 0 || value > 200) ? 'Limit is invalid.' : null,
+  }],
 });
