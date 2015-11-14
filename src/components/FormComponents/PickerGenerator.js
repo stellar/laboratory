@@ -26,8 +26,9 @@ export default function(config) {
           fields[field.name].value = field.default;
         }
       });
+      let uniqueKey = '' + (+new Date()) + Math.random(); // ensures radiobuttons have a unique name attribute
 
-      return {fields, error: null, dirty: false};
+      return {fields, error: null, dirty: false, uniqueKey};
     },
     validate: function(fields) { // expects something like this.state.field
       return _.mapValues(fields, (field, fieldName) => {
@@ -71,19 +72,23 @@ export default function(config) {
         }
       });
 
-      // When optional,
+      // When optional, complete will be true (unless there is a forceRequire)
       let complete = _.reduce(this.validate(fields), (complete, fieldValidation) => {
         return complete && fieldValidation.complete;
       }, true);
 
+      let values = _.mapValues(fields, fieldState => {
+        return fieldState.value;
+      })
+
       this.setState({fields});
-      this.props.onUpdate(this.props.param, fields, complete);
+      this.props.onUpdate(this.props.type, values, complete);
     },
     render: function() {
       let label = config.defaultLabel;
-      if (typeof config.labels !== 'undefined' && this.props.param in config.labels) {
+      if (typeof config.labels !== 'undefined' && this.props.type in config.labels) {
         // TODO: refactor labels since it doesn't belong here. A custom prop should just be passed to it
-        label = config.labels[this.props.param];
+        label = config.labels[this.props.type];
       }
       let validation = this.validate(this.state.fields);
 
@@ -101,7 +106,7 @@ export default function(config) {
                   formElement = <div className="s-buttonGroup">
                     {_.map(fieldConfig.options, option => {
                       return <label key={option.name} className="s-buttonGroup__wrapper">
-                        <input type="radio" className="s-buttonGroup__radio" name={index + fieldConfig.name} onChange={this.onChange.bind(this, fieldConfig.name)} value={option.value} checked={this.state.fields[fieldConfig.name].value == option.value} />
+                        <input type="radio" className="s-buttonGroup__radio" name={this.state.uniqueKey + fieldConfig.name} onChange={this.onChange.bind(this, fieldConfig.name)} value={option.value} checked={this.state.fields[fieldConfig.name].value == option.value} />
                         <span className="s-button s-button__light">{option.label}</span>
                       </label>
                     })}
