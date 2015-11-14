@@ -117,6 +117,8 @@ class TxBuilderStoreClass extends EventEmitter {
     } catch(e) {
       console.error(e)
     }
+
+    this.emit(UPDATE_EVENT);
   }
 
   /*
@@ -145,6 +147,10 @@ class TxBuilderStoreClass extends EventEmitter {
     this._recalculate();
   }
   _removeOperation(key) {
+    if (this._txOperationsOrder.length === 1) {
+      return;
+    }
+
     let opIndex = this._keyIndex(key);
 
     this._txOperationsOrder.splice(opIndex, 1);

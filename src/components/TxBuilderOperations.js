@@ -1,29 +1,28 @@
 import React from 'react';
-import {PubKeyPicker} from './FormComponents/PubKeyPicker';
 import TxBuilderOperation from './TxBuilderOperation';
+import TxBuilderStore from '../stores/TxBuilderStore';
+import {AppDispatcher} from '../dispatcher/AppDispatcher';
+import TxBuilderConstants from '../constants/TxBuilderConstants';
 
 export default class TxBuilderOperations extends React.Component {
   constructor() {
     super()
-    this.state ={
-      operations: [{
-        key: 1
-      },{
-        key: 52973
-      },{
-        key: 25
-      }]
-    }
+  }
+  addOp() {
+    AppDispatcher.dispatch({
+      type: TxBuilderConstants.ADD_OPERATION,
+    });
   }
   render() {
+    let ops = TxBuilderStore.getOperationList()
     return <div className="TransactionOperations">
-      {this.state.operations.map((op, index) => {
+      {ops.map((op, index) => {
         return <TxBuilderOperation key={op.key} order={index} op={op} />
       })}
 
-      <div className="TransactionOperations__add s-button">
+      <button className="TransactionOperations__add s-button" onClick={this.addOp}>
         Add Operation
-      </div>
+      </button>
     </div>
   }
 }

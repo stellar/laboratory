@@ -10,11 +10,22 @@ import TxBuilderResult from './TxBuilderResult';
 import TxBuilderStore from '../stores/TxBuilderStore';
 
 export default class TransactionBuilder extends React.Component {
+  constructor() {
+    super()
+  }
+  onUpdate() {
+    this.forceUpdate();
+  }
+  componentDidMount() {
+    TxBuilderStore.addUpdateListener(this.onUpdate.bind(this));
+  }
+  componentWillUnmount() {
+    TxBuilderStore.removeUpdateListener(this.onUpdate);
+  }
   render() {
     return <div className="TransactionBuilder">
       <div className="so-back">
         <div className="so-chunk">
-          <ImportXDR />
           <TxBuilderAttributes />
           <TxBuilderOperations />
         </div>

@@ -3,15 +3,6 @@ import {PubKeyPicker} from './FormComponents/PubKeyPicker';
 import TxBuilderStore from '../stores/TxBuilderStore';
 
 export default class TxBuilderResult extends React.Component {
-  onUpdate() {
-    this.forceUpdate();
-  }
-  componentDidMount() {
-    TxBuilderStore.addUpdateListener(this.onUpdate);
-  }
-  componentWillUnmount() {
-    TxBuilderStore.removeUpdateListener(this.onUpdate);
-  }
   render() {
     let xdr = TxBuilderStore.getXdr();
     return <div className="TxBuilderResult">
