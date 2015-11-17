@@ -1,14 +1,14 @@
 {
   "accounts": {
-    "text": "Accounts",
-    "list": {
+    "label": "Accounts",
+    "endpoints": {
       "all": {
-        "text": "All Accounts",
+        "label": "All Accounts",
         "path": "/accounts",
         "params": ["limit", "order", "cursor"]
       },
       "single": {
-        "text": "Single Account",
+        "label": "Single Account",
         "path": "/accounts/{address}",
         "params": ["account_id"],
         "required": ["account_id"]
@@ -16,33 +16,33 @@
     }
   },
   "effects": {
-    "text": "Effects",
-    "list": {
+    "label": "Effects",
+    "endpoints": {
       "all": {
-        "text": "All Effects",
+        "label": "All Effects",
         "path": "/effects",
         "params": ["limit", "order", "cursor"]
       },
       "for_account": {
-        "text": "Effects for Account",
+        "label": "Effects for Account",
         "path": "/accounts/{address}/effects",
         "params": ["account_id", "limit", "order", "cursor"],
         "required": ["account_id"]
       },
       "for_ledger": {
-        "text": "Effects for Ledger",
+        "label": "Effects for Ledger",
         "path": "/ledger/{ledger}/effects",
         "params": ["ledger", "limit", "order", "cursor"],
         "required": ["ledger"]
       },
       "for_operation": {
-        "text": "Effects for Operation",
+        "label": "Effects for Operation",
         "path": "/operation/{operation}/effects",
         "params": ["operation", "limit", "order", "cursor"],
         "required": ["operation"]
       },
       "for_transaction": {
-        "text": "Effects for Transaction",
+        "label": "Effects for Transaction",
         "path": "/transactions/{transaction}/effects",
         "params": ["transaction", "limit", "order", "cursor"],
         "required": ["transaction"]
@@ -50,15 +50,15 @@
     }
   },
   "ledgers": {
-    "text": "Ledger",
-    "list": {
+    "label": "Ledger",
+    "endpoints": {
       "all": {
-        "text": "All Ledgers",
+        "label": "All Ledgers",
         "path": "/ledgers",
         "params": ["limit", "order", "cursor"]
       },
       "single": {
-        "text": "Single Ledger",
+        "label": "Single Ledger",
         "path": "/ledgers/{ledger}",
         "params": ["ledger"],
         "required": ["ledger"]
@@ -66,10 +66,10 @@
     }
   },
   "offers": {
-    "text": "Offers",
-    "list": {
+    "label": "Offers",
+    "endpoints": {
       "for_account": {
-        "text": "Offers for Account",
+        "label": "Offers for Account",
         "path": "/accounts/{address}/offers",
         "params": ["account_id", "limit", "order", "cursor"],
         "required": ["account_id"]
@@ -77,33 +77,33 @@
     }
   },
   "operations": {
-    "text": "Operations",
-    "list": {
+    "label": "Operations",
+    "endpoints": {
       "all": {
-        "text": "All Operations",
+        "label": "All Operations",
         "path": "/operations",
         "params": ["limit", "order", "cursor"]
       },
       "single": {
-        "text": "Single Operation",
+        "label": "Single Operation",
         "path": "/operations/{operation}",
         "params": ["operation"],
         "required": ["operation"]
       },
       "for_account": {
-        "text": "Operations for Account",
+        "label": "Operations for Account",
         "path": "/accounts/{address}/operations",
         "params": ["account_id", "limit", "order", "cursor"],
         "required": ["account_id"]
       },
       "for_ledger": {
-        "text": "Operations for Ledger",
+        "label": "Operations for Ledger",
         "path": "/ledgers/{ledger}/operations",
         "params": ["ledger", "limit", "order", "cursor"],
         "required": ["ledger"]
       },
       "for_transaction": {
-        "text": "Operations for Transaction",
+        "label": "Operations for Transaction",
         "path": "/transactions/{transaction}/operations",
         "params": ["transaction", "limit", "order", "cursor"],
         "required": ["transaction"]
@@ -111,10 +111,10 @@
     }
   },
   "order_book": {
-    "text": "Order Book",
-    "list": {
+    "label": "Order Book",
+    "endpoints": {
       "details": {
-        "text": "Details",
+        "label": "Details",
         "path": "/order_book",
         "params": [
           "selling_asset",
@@ -123,7 +123,7 @@
         "required": ["selling_asset", "buying_asset"]
       },
       "trades": {
-        "text": "Trades",
+        "label": "Trades",
         "path": "/order_book/trades",
         "params": [
           "selling_asset",
@@ -134,10 +134,10 @@
     }
   },
   "paths": {
-    "text": "Paths",
-    "list": {
+    "label": "Paths",
+    "endpoints": {
       "all": {
-        "text": "All Paths",
+        "label": "All Paths",
         "path": "/paths",
         "params": ["source_account", "destination_account", "destination_amount", "destination_asset"],
         "required": ["source_account", "destination_account", "destination_amount", "destination_asset"]
@@ -145,27 +145,27 @@
     }
   },
   "payments": {
-    "text": "Payments",
-    "list": {
+    "label": "Payments",
+    "endpoints": {
       "all": {
-        "text": "All Payments",
+        "label": "All Payments",
         "path": "/payments",
         "params": ["limit", "order", "cursor"]
       },
       "for_account": {
-        "text": "Payments for Account",
+        "label": "Payments for Account",
         "path": "/accounts/{address}/payments",
         "params": ["account_id", "limit", "order", "cursor"],
         "required": ["account_id"]
       },
       "for_ledger": {
-        "text": "Payments for Ledger",
+        "label": "Payments for Ledger",
         "path": "/ledgers/{ledger}/payments",
         "params": ["ledger", "limit", "order", "cursor"],
         "required": ["ledger"]
       },
       "for_transaction": {
-        "text": "Payments for Transaction",
+        "label": "Payments for Transaction",
         "path": "/transactions/{transaction}/payments",
         "params": ["transaction", "limit", "order", "cursor"],
         "required": ["transaction"]
@@ -173,27 +173,27 @@
     }
   },
   "transactions": {
-    "text": "Transactions",
-    "list": {
+    "label": "Transactions",
+    "endpoints": {
       "all": {
-        "text": "All Transactions",
+        "label": "All Transactions",
         "path": "/transactions",
         "params": ["limit", "order", "cursor"]
       },
       "single": {
-        "text": "Single Transaction",
+        "label": "Single Transaction",
         "path": "/transactions/{transaction}",
         "params": ["transaction"],
         "required": ["transaction"]
       },
       "for_account": {
-        "text": "Transactions for Account",
+        "label": "Transactions for Account",
         "path": "/accounts/{address}/transactions",
         "params": ["account_id", "limit", "order", "cursor"],
         "required": ["account_id"]
       },
       "for_ledger": {
-        "text": "Transactions for Ledger",
+        "label": "Transactions for Ledger",
         "path": "/ledgers/{ledger}/transactions",
         "params": ["ledger", "limit", "order", "cursor"],
         "required": ["ledger"]
