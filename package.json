@@ -23,6 +23,8 @@
     "node-sass": "^3.3.3",
     "react": "^0.14.0",
     "react-dom": "^0.14.0",
+    "react-redux": "^4.0.0",
+    "redux": "^3.0.4",
     "sass-loader": "^3.0.0",
     "solar-css": "git+https://github.com/stellar/solar#master",
     "solar-stellarorg": "git+https://github.com/stellar/solar-stellarorg#master",
