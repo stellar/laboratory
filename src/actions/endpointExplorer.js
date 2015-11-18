@@ -1,3 +1,4 @@
+import axios from 'axios';
 
 export const CHOOSE_ENDPOINT = "CHOOSE_ENDPOINT";
 export function chooseEndpoint(resource, endpoint) {
@@ -15,7 +16,13 @@ export function changePendingRequestProps(props) {
   }
 }
 
-export const SUBMIT_PENDING_REQUEST = "SUBMIT_PENDING_REQUEST"
-export function submitPendingRequest() {
-  return {type: SUBMIT_PENDING_REQUEST};
+export const START_REQUEST = "START_REQUEST"
+export const FINISH_REQUEST = "FINISH_REQUEST"
+export function submitRequest(request) {
+  return dispatch => {
+    dispatch({type: "START_REQUEST"});
+    axios.get(request.url)
+      .then(r => dispatch({type: "FINISH_REQUEST", payload: r}))
+      .catch(e => dispatch({type: "FINISH_REQUEST", error: e}));
+  }
 }

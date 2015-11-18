@@ -1,5 +1,5 @@
 import React from 'react';
-import {chooseEndpoint} from "../actions/endpointExplorer"
+import {chooseEndpoint, submitRequest} from "../actions/endpointExplorer"
 import {connect} from 'react-redux';
 import {EndpointPicker} from './EndpointPicker';
 import {EndpointSetup} from './EndpointSetup';
@@ -7,7 +7,12 @@ import {EndpointResult} from './EndpointResult';
 
 class EndpointExplorer extends React.Component {
   render() {
-    let {currentResource, currentEndpoint, dispatch} = this.props;
+    let {dispatch} = this.props;
+    let {currentResource, currentEndpoint} = this.props.state;
+
+    let request = {
+      url: this.props.baseURL,
+    };
 
     return <div className="so-back">
       <div className="so-chunk">
@@ -21,7 +26,7 @@ class EndpointExplorer extends React.Component {
           </div>
 
           <div className="EndpointExplorer__setup">
-            <EndpointSetup />
+            <EndpointSetup onSubmit={() => dispatch(submitRequest(request))} />
           </div>
 
           <div className="EndpointExplorer__result">
@@ -36,5 +41,8 @@ class EndpointExplorer extends React.Component {
 export default connect(chooseState)(EndpointExplorer)
 
 function chooseState(state) {
-  return state.endpointExplorer;
+  return {
+    state: state.endpointExplorer,
+    baseURL: state.network.available[state.network.current],
+  };
 }
