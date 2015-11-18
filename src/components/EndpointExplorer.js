@@ -8,7 +8,11 @@ import {EndpointResult} from './EndpointResult';
 class EndpointExplorer extends React.Component {
   render() {
     let {dispatch} = this.props;
-    let {currentResource, currentEndpoint} = this.props.state;
+    let {
+      currentResource,
+      currentEndpoint,
+      currentRequest,
+    } = this.props.state;
 
     let request = {
       url: this.props.baseURL,
@@ -30,7 +34,7 @@ class EndpointExplorer extends React.Component {
           </div>
 
           <div className="EndpointExplorer__result">
-            <EndpointResult />
+            <EndpointResult {...currentRequest} />
           </div>
         </div>
       </div>
