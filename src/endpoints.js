@@ -1,4 +1,18 @@
-{
+export function getEndpoint(resource, endpoint) {
+  let ep = endpointsMap[resource];
+  if (!ep) { return; }
+
+  return ep[resource];
+}
+
+export function getTemplate(...args) {
+  let ep = getEndpoint(...args)
+  if (!ep) { return; }
+
+  return ep.path;
+}
+
+export const endpointsMap = {
   "accounts": {
     "label": "Accounts",
     "endpoints": {
@@ -200,4 +214,4 @@
       }
     }
   }
-}
+};

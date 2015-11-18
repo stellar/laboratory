@@ -2,7 +2,7 @@ import React from 'react';
 import {ResourceList} from './ResourceList';
 import {EndpointList} from './EndpointList';
 import classNames from 'classnames';
-import endpointsMap from '../endpoints.json';
+import {endpointsMap} from '../endpoints';
 import {map, findIndex} from 'lodash';
 
 export function EndpointPicker(props) {
@@ -22,7 +22,6 @@ export function EndpointPicker(props) {
   let endpointPicker = null;
   if (currentResource !== "") {
     let endpoints = makeItems(endpointsMap[currentResource].endpoints);
-    console.log(endpoints);
     endpointPicker = <div className="EndpointPicker__section">
       <p className="EndpointPicker__section__title">2. Select an endpoint</p>
       <ButtonGroup

@@ -2,17 +2,17 @@ import {combineReducers} from "redux";
 import {
   CHOOSE_ENDPOINT,
   CHANGE_PENDING_REQUEST_PROPS,
-  SUBMIT_PENDING_REQUEST,
   START_REQUEST,
   FINISH_REQUEST,
 } from "../actions/endpointExplorer";
+import {getTemplate} from '../endpoints';
 
 const endpointExplorer = combineReducers({
   currentResource,
   currentEndpoint,
   pendingRequest: combineReducers({
-    template: identity(""),
-    props:    identity({}),
+    pendingRequestTemplate,
+    props: identity({}),
   }),
   currentRequest
 });
@@ -41,6 +41,15 @@ function identity(initial) {
   return (state=initial, action) => state;
 }
 
+function pendingRequestTemplate(state="", action) {
+  switch (action.type) {
+  case CHOOSE_ENDPOINT:
+    return getTemplate(action.resouce, action.endpoint) || "";
+  default:
+    return state;
+  }
+}
+
 function currentEndpoint(state="", action) {
   switch (action.type) {
   case CHOOSE_ENDPOINT:
@@ -56,7 +65,7 @@ function currentRequest(state={isLoading: false}, action) {
     return Object.assign({}, state, {isLoading: true});
   case FINISH_REQUEST:
     let {error, payload} = action;
-    
+
     return Object.assign({}, state, {isLoading: false, response: payload, error});
   default:
     return state;
