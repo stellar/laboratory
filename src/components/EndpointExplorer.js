@@ -1,26 +1,52 @@
 import React from 'react';
+import {chooseEndpoint, submitRequest} from "../actions/endpointExplorer"
+import {connect} from 'react-redux';
 import {EndpointPicker} from './EndpointPicker';
 import {EndpointSetup} from './EndpointSetup';
 import {EndpointResult} from './EndpointResult';
 
-export let EndpointExplorer = React.createClass({
-  render: function() {
+class EndpointExplorer extends React.Component {
+  render() {
+    let {dispatch} = this.props;
+    let {
+      currentResource,
+      currentEndpoint,
+      currentRequest,
+    } = this.props.state;
+
+    let request = {
+      url: this.props.baseURL,
+    };
+
     return <div className="so-back">
       <div className="so-chunk">
         <div className="EndpointExplorer">
           <div className="EndpointExplorer__picker">
-            <EndpointPicker />
+            <EndpointPicker
+              currentResource={currentResource}
+              currentEndpoint={currentEndpoint}
+              onChange={(r,e)=> dispatch(chooseEndpoint(r,e))}
+              />
           </div>
 
           <div className="EndpointExplorer__setup">
-            <EndpointSetup />
+            <EndpointSetup onSubmit={() => dispatch(submitRequest(request))} />
           </div>
 
           <div className="EndpointExplorer__result">
-            <EndpointResult />
+            <EndpointResult {...currentRequest} />
           </div>
         </div>
       </div>
     </div>
   }
-});
+}
+
+export default connect(chooseState)(EndpointExplorer)
+
+function chooseState(state) {
+  return {
+    state: state.endpointExplorer,
+    baseURL: state.network.available[state.network.current],
+  };
+}

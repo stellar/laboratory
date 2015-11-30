@@ -1,49 +1,35 @@
 import React from 'react';
-import {ExplorerStore} from '../stores/ExplorerStore';
-import {RawJsonResponseTab} from './RawJsonResponseTab';
+import {any} from 'lodash'
+import {CodeBlock} from './CodeBlock';
 
-export let EndpointResult = React.createClass({
-  getInitialState: function() {
-    return this.getState();
-  },
-  getState: function() {
-    let loading = ExplorerStore.getLoadingState();
-    let response = ExplorerStore.getResponse();
-    return {loading, response};
-  },
-  onChange: function() {
-    this.setState(this.getState());
-  },
-  componentDidMount: function() {
-    ExplorerStore.addLoadingListener(this.onChange);
-    ExplorerStore.addResponseListener(this.onChange);
-  },
-  componentWillUnmount: function() {
-    ExplorerStore.removeLoadingListener(this.onChange);
-    ExplorerStore.removeResponseListener(this.onChange);
-  },
-  render: function() {
-    // TODO
-    //<div className="EndpointResult__error">
-    //Unable to reach <strong>https://somewhere.over.the.rainbow/</strong>
-    //</div>
-    if (this.state.loading || this.state.response) {
-      return <div className="EndpointResult">
-        {this.state.loading ?
-          <div className="EndpointResult__loading">Loading...</div>
-          :
-          <div>
-            <div className="EndpointResult__tabs">
-              <button className="EndpointResult__tabs__tab is-current">JSON Response</button>
-            </div>
-            <div className={this.state.response.success ? 'EndpointResult__content' : 'EndpointResult__error'}>
-              <RawJsonResponseTab />
-            </div>
-          </div>
-        }
-      </div>;
-    } else {
+
+export class EndpointResult extends React.Component {
+  render() {
+    let {isLoading, error, response} = this.props;
+
+    if (!any([isLoading, error, response])) {
       return null;
     }
+
+    if (isLoading) {
+      return <Loading />;
+    }
+
+    return <div className="EndpointResult">
+      <div>
+        <div className="EndpointResult__tabs">
+          <button className="EndpointResult__tabs__tab is-current">JSON Response</button>
+        </div>
+        <div className='EndpointResult__content'>
+          <CodeBlock code={JSON.stringify(response.data, null, 2)} language="json" />
+        </div>
+      </div>
+    </div>;
   }
-});
+}
+
+let Loading = (props) => {
+  return <div className="EndpointResult">
+    <div className="EndpointResult__loading">Loading...</div>
+  </div>
+}
