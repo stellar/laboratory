@@ -1,8 +1,8 @@
 export function getEndpoint(resource, endpoint) {
-  let ep = endpointsMap[resource];
-  if (!ep) { return; }
+  let res = endpointsMap[resource];
+  if (!res) { return; }
 
-  return ep[resource];
+  return res.endpoints[endpoint];
 }
 
 export function getTemplate(...args) {

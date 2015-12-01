@@ -11,7 +11,7 @@ const endpointExplorer = combineReducers({
   currentResource,
   currentEndpoint,
   pendingRequest: combineReducers({
-    pendingRequestTemplate,
+    template: pendingRequestTemplate,
     props: identity({}),
   }),
   currentRequest
@@ -44,7 +44,7 @@ function identity(initial) {
 function pendingRequestTemplate(state="", action) {
   switch (action.type) {
   case CHOOSE_ENDPOINT:
-    return getTemplate(action.resouce, action.endpoint) || "";
+    return getTemplate(action.resource, action.endpoint) || "";
   default:
     return state;
   }

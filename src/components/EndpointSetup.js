@@ -5,12 +5,12 @@ import Picker from './FormComponents/Picker';
 import {EasySelect} from './EasySelect';
 
 export function EndpointSetup(props) {
-  let {onSubmit, url} = props;
+  let {onSubmit, request} = props;
 
   return <div className="so-chunk">
     <div className="optionsTable">
       <hr className="optionsTable__separator" />
-      <UrlRow url={url} />
+      <UrlRow url={request.url} />
       <SubmitRow onSubmit={onSubmit} />
     </div>
   </div>;

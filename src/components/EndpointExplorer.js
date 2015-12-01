@@ -15,7 +15,7 @@ class EndpointExplorer extends React.Component {
     } = this.props.state;
 
     let request = {
-      url: this.props.baseURL,
+      url: this.props.baseURL + this.props.state.pendingRequest.template,
     };
 
     return <div className="so-back">
@@ -30,7 +30,7 @@ class EndpointExplorer extends React.Component {
           </div>
 
           <div className="EndpointExplorer__setup">
-            <EndpointSetup onSubmit={() => dispatch(submitRequest(request))} />
+            <EndpointSetup request={request} onSubmit={() => dispatch(submitRequest(request))} />
           </div>
 
           <div className="EndpointExplorer__result">
