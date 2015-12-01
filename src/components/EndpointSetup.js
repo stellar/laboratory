@@ -17,7 +17,7 @@ export function EndpointSetup(props) {
       */
       _.map(params, (param) => {
         console.log(param);
-        return Picker(param.pickerType, {
+        return Picker(param.type, {
           onUpdate: (type, results, complete) => {
             console.log('Picker updated ',type, results, complete)
           },

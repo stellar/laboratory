@@ -43,24 +43,24 @@ export const endpointsMap = {
         'params': [
           {
             param: 'address',
-            pickerType: 'account_id',
+            type: 'PubKey',
             label: 'Account ID',
             required: true,
           },
           {
             param: 'limit',
-            pickerType: 'limit',
-            label: 'Limit'
+            type: 'Limit',
+            label: 'Limit',
           },
           {
             param: 'order',
-            pickerType: 'order',
-            label: 'Order'
+            type: 'Order',
+            label: 'Order',
           },
           {
             param: 'cursor',
-            pickerType: 'cursor',
-            label: 'Cursor'
+            type: 'Cursor',
+            label: 'Cursor',
           },
         ],
       },
