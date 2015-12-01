@@ -2,7 +2,7 @@ import PickerGenerator from './PickerGenerator';
 import {Account} from 'stellar-sdk';
 
 export default PickerGenerator({
-  defaultLabel: 'Public Key',
+  pickerName: 'PubKey',
   fields: [{
     type: 'text',
     name: 'pubKey',

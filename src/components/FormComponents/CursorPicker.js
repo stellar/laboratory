@@ -1,7 +1,7 @@
 import PickerGenerator from './PickerGenerator';
 
 export default PickerGenerator({
-  defaultLabel: 'Cursor',
+  pickerName: 'Cursor',
   fields: [
     {
       type: 'text',

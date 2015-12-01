@@ -1,7 +1,7 @@
 import PickerGenerator from './PickerGenerator';
 
 export default PickerGenerator({
-  defaultLabel: 'Transation hash',
+  pickerName: 'Transation',
   fields: [{
     type: 'text',
     name: 'transaction',

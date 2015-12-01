@@ -1,7 +1,7 @@
 import PickerGenerator from './PickerGenerator';
 
 export default PickerGenerator({
-  defaultLabel: 'Order',
+  pickerName: 'Order',
   fields: [{
     type: 'radio',
     options: [

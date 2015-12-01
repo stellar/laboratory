@@ -1,7 +1,7 @@
 import PickerGenerator from './PickerGenerator';
 
 export default PickerGenerator({
-  defaultLabel: 'Operation ID',
+  pickerName: 'Operation',
   fields: [{
     type: 'text',
     name: 'operationId',

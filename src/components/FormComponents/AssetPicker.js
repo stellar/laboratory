@@ -2,7 +2,7 @@ import PickerGenerator from './PickerGenerator';
 import {Account} from 'stellar-sdk';
 
 export default PickerGenerator({
-  defaultLabel: 'Asset',
+  pickerName: 'Asset',
   fields: [
     {
       type: 'radio',

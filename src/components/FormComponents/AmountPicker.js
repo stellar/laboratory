@@ -1,7 +1,7 @@
 import PickerGenerator from './PickerGenerator';
 
 export default PickerGenerator({
-  defaultLabel: 'Amount',
+  pickerName: 'Amount',
   fields: [{
     type: 'text',
     name: 'amount',

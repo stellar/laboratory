@@ -1,7 +1,7 @@
 import PickerGenerator from './PickerGenerator';
 
 export default PickerGenerator({
-  defaultLabel: 'Limit',
+  pickerName: 'Limit',
   fields: [{
     type: 'text',
     name: 'limit',

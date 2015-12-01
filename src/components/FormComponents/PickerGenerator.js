@@ -11,9 +11,10 @@ export default function(config) {
   });
 
   return React.createClass({
-    displayName: config.defaultLabel + 'Picker',
+    displayName: config.pickerName + 'Picker',
     propTypes: {
-      optional: React.PropTypes.bool,
+      label: React.PropTypes.string.isRequired,
+      required: React.PropTypes.bool,
       forceError: React.PropTypes.string,
       forceDirty: React.PropTypes.bool,
     },
@@ -33,7 +34,7 @@ export default function(config) {
       return _.mapValues(fields, (field, fieldName) => {
         let dirty = this.props.forceDirty || field.dirty;
         let optional = !config.fieldMap[fieldName].forceRequired ||
-          this.props.optional || config.fieldMap[fieldName].optional;
+          !this.props.required || !config.fieldMap[fieldName].required;
         let showing = typeof config.fieldMap[fieldName].showIf === 'undefined' ||
           config.fieldMap[fieldName].showIf(fields);
 
@@ -77,8 +78,8 @@ export default function(config) {
 
       return <div className="optionsTable__pair">
         <div className="optionsTable__pair__title">
-          {this.props.customLabel || config.defaultLabel}
-          {this.props.optional && <span className="optionsTable__pair__title__optional"> (optional)</span>}
+          {this.props.label}
+          {!this.props.required && <span className="optionsTable__pair__title__optional"> (optional)</span>}
         </div>
         <div className="optionsTable__pair__content">
           {_.map(config.fields, (fieldConfig, index) => {
