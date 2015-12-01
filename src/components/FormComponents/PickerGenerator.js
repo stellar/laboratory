@@ -33,23 +33,23 @@ export default function(config) {
     validate: function(fields) { // expects something like this.state.field
       return _.mapValues(fields, (field, fieldName) => {
         let dirty = this.props.forceDirty || field.dirty;
-        let optional = !config.fieldMap[fieldName].forceRequired ||
-          !this.props.required || !config.fieldMap[fieldName].required;
+        let required = config.fieldMap[fieldName].forceRequired ||
+          this.props.required || config.fieldMap[fieldName].required;
         let showing = typeof config.fieldMap[fieldName].showIf === 'undefined' ||
           config.fieldMap[fieldName].showIf(fields);
 
         if (!showing) {
           return {message: null, complete: true}; // non-showing elements count as complete
         } else if (!dirty) {
-          if (optional) {
-            return {message: null, complete: true};
+          if (required) {
+            return {message: null, complete: false};
           }
-          return {message: null, complete: false};
+          return {message: null, complete: true};
         } else if (field.value === '') {
-          if (optional) {
-            return {message: null, complete: true};
+          if (required) {
+            return {message: 'This is a required field.', complete: false};
           }
-          return {message: 'This is a required field.', complete: false};
+          return {message: null, complete: true};
         }
 
         let validateMessage = config.fieldMap[fieldName].validator(field.value, fields);
