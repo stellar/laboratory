@@ -5,13 +5,14 @@ import {
   START_REQUEST,
   FINISH_REQUEST,
 } from "../actions/endpointExplorer";
-import {getTemplate} from '../endpoints';
+import {getEndpoint, getTemplate} from '../endpoints';
 
 const endpointExplorer = combineReducers({
   currentResource,
   currentEndpoint,
   pendingRequest: combineReducers({
     template: pendingRequestTemplate,
+    params: pendingRequestParams,
     props: identity({}),
   }),
   currentRequest
@@ -45,6 +46,19 @@ function pendingRequestTemplate(state="", action) {
   switch (action.type) {
   case CHOOSE_ENDPOINT:
     return getTemplate(action.resource, action.endpoint) || "";
+  default:
+    return state;
+  }
+}
+
+function pendingRequestParams(state=[], action) {
+  switch (action.type) {
+  case CHOOSE_ENDPOINT:
+    let endpoint = getEndpoint(action.resource, action.endpoint);
+    if (!endpoint) {
+      return [];
+    }
+    return endpoint.params || [];
   default:
     return state;
   }

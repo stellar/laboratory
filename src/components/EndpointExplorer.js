@@ -12,6 +12,7 @@ class EndpointExplorer extends React.Component {
       currentResource,
       currentEndpoint,
       currentRequest,
+      pendingRequest,
     } = this.props.state;
 
     let request = {
@@ -30,7 +31,7 @@ class EndpointExplorer extends React.Component {
           </div>
 
           <div className="EndpointExplorer__setup">
-            <EndpointSetup request={request} onSubmit={() => dispatch(submitRequest(request))} />
+            <EndpointSetup request={request} params={pendingRequest.params} onSubmit={() => dispatch(submitRequest(request))} />
           </div>
 
           <div className="EndpointExplorer__result">

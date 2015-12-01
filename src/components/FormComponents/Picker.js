@@ -13,13 +13,18 @@ let pickerComponents = {
 }
 
 /**
+Usage example:
+  Picker('source_account', { onUpdate: this.onUpdateHandler, key: index })
+
 Required props:
   onUpdate
 
 Optional props:
   forceError
   forceDirty
+  optional (which needs to be renamed to required)
   key
+  customLabel
 
 **/
 export default function(type, props) {
@@ -36,5 +41,5 @@ export default function(type, props) {
   pickerType = pickers[type].component;
 
   let PickerComponent = pickerComponents[pickers[type].component];
-  return <PickerComponent {...props} customLabel={pickers[type].label} />;
+  return <PickerComponent {...props} customLabel={props.label} />;
 }
