@@ -13,9 +13,14 @@ let pickerComponents = {
 
 /**
 Usage example:
-  Picker('Amount', { onUpdate: this.onUpdateHandler, label: 'Foo' })
+  return Picker({
+    type: 'Amount',
+    onUpdate: this.props.onUpdateHandler,
+    label: 'Foo'
+  });
 
 Required props:
+  type
   onUpdate
   label
 
@@ -25,18 +30,17 @@ Optional props:
   required
   key
 **/
-export default function(type, props) {
+export default function(props) {
   if (!('key' in props)) {
-    props.key = type;
+    props.key = props.type;
   }
-  props.type = type;
 
   if (!('label' in props)) {
     throw new Error(`Missing label in Picker props. Check the code where you call the Picker function.`);
   }
 
   let pickerComponentName;
-  pickerComponentName = type + 'Picker';
+  pickerComponentName = props.type + 'Picker';
   let PickerComponent = pickerComponents[pickerComponentName];
 
   if (typeof PickerComponent === 'undefined') {

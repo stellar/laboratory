@@ -17,11 +17,14 @@ export function EndpointSetup(props) {
       */
       _.map(params, (param) => {
         console.log(param);
-        return Picker(param.type, {
+        return Picker({
+          type: param.type,
           onUpdate: (type, results, complete) => {
             console.log('Picker updated ',type, results, complete)
           },
+          required: param.required,
           label: param.label,
+          forceDirty: false,
         });
       })
       }
