@@ -4,6 +4,7 @@ import {
   CHANGE_PENDING_REQUEST_PROPS,
   START_REQUEST,
   FINISH_REQUEST,
+  UPDATE_VALUES,
 } from "../actions/endpointExplorer";
 import {getEndpoint, getTemplate} from '../endpoints';
 
@@ -13,6 +14,7 @@ const endpointExplorer = combineReducers({
   pendingRequest: combineReducers({
     template: pendingRequestTemplate,
     params: pendingRequestParams,
+    values: pendingRequestValues,
     props: identity({}),
   }),
   currentRequest
@@ -59,6 +61,17 @@ function pendingRequestParams(state=[], action) {
       return [];
     }
     return endpoint.params || [];
+  default:
+    return state;
+  }
+}
+
+function pendingRequestValues(state={}, action) {
+  switch (action.type) {
+  case UPDATE_VALUES:
+    return Object.assign({}, state, {
+      [action.param]: action.values
+    });
   default:
     return state;
   }

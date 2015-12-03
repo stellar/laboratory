@@ -42,23 +42,23 @@ export const endpointsMap = {
         'path': '/accounts/{address}/effects',
         'params': [
           {
-            param: 'address',
+            id: 'address',
             type: 'PubKey',
             label: 'Account ID',
             required: true,
           },
           {
-            param: 'limit',
+            id: 'limit',
             type: 'Limit',
             label: 'Limit',
           },
           {
-            param: 'order',
+            id: 'order',
             type: 'Order',
             label: 'Order',
           },
           {
-            param: 'cursor',
+            id: 'cursor',
             type: 'Cursor',
             label: 'Cursor',
           },
@@ -173,9 +173,40 @@ export const endpointsMap = {
     'endpoints': {
       'all': {
         'label': 'All Paths',
-        'path': '/paths',
-        'params': ['source_account', 'destination_account', 'destination_amount', 'destination_asset'],
-        'required': ['source_account', 'destination_account', 'destination_amount', 'destination_asset']
+        'path': {
+          template: '/paths{?destination_asset_type,destination_asset_code,destination_asset_issuer}',
+          'destination_asset_type': (params) => params['destination_asset'].type,
+          'destination_asset_code': (params) => params['destination_asset'].code,
+          'destination_asset_issuer': (params) => params['destination_asset'].issuer,
+        },
+        'params': [
+          {
+            id: 'source_account',
+            type: 'PubKey',
+            label: 'Source Account',
+            required: true,
+          },
+          {
+            id: 'destination_account',
+            type: 'PubKey',
+            label: 'Destination Account',
+            required: true,
+          },
+          {
+            id: 'destination_asset',
+            type: 'Asset',
+            label: 'Destination Asset',
+            required: true,
+          },
+          {
+            id: 'destination_amount',
+            type: 'PubKey',
+            label: 'Destination Amount',
+            required: true,
+          },
+        ],
+        // 'params': ['source_account', 'destination_account', 'destination_amount', 'destination_asset'],
+        // 'required': ['source_account', 'destination_account', 'destination_amount', 'destination_asset']
       }
     }
   },

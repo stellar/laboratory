@@ -1,5 +1,5 @@
 import React from 'react';
-import {chooseEndpoint, submitRequest} from "../actions/endpointExplorer"
+import {chooseEndpoint, submitRequest, updateValues} from "../actions/endpointExplorer"
 import {connect} from 'react-redux';
 import {EndpointPicker} from './EndpointPicker';
 import {EndpointSetup} from './EndpointSetup';
@@ -31,7 +31,12 @@ class EndpointExplorer extends React.Component {
           </div>
 
           <div className="EndpointExplorer__setup">
-            <EndpointSetup request={request} params={pendingRequest.params} onSubmit={() => dispatch(submitRequest(request))} />
+            <EndpointSetup
+              request={request}
+              params={pendingRequest.params}
+              onSubmit={() => dispatch(submitRequest(request))}
+              onUpdate={(param, values, complete) => dispatch(updateValues(param, values, complete))}
+              />
           </div>
 
           <div className="EndpointExplorer__result">

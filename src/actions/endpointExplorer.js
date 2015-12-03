@@ -16,6 +16,15 @@ export function changePendingRequestProps(props) {
   }
 }
 
+export const UPDATE_VALUES = "UPDATE_VALUES";
+export function updateValues(param, values) {
+  return {
+    type: UPDATE_VALUES,
+    param,
+    values,
+  }
+}
+
 export const START_REQUEST = "START_REQUEST"
 export const FINISH_REQUEST = "FINISH_REQUEST"
 export function submitRequest(request) {

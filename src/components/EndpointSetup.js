@@ -5,8 +5,7 @@ import Picker from './FormComponents/Picker';
 import {EasySelect} from './EasySelect';
 
 export function EndpointSetup(props) {
-  let {onSubmit, request, params} = props;
-  console.log(params)
+  let {onSubmit, onUpdate, request, params} = props;
 
   return <div className="so-chunk">
     <div className="optionsTable">
@@ -16,15 +15,13 @@ export function EndpointSetup(props) {
         expects the dom to be. When restyling, refactor this block to a function
       */
       _.map(params, (param) => {
-        console.log(param);
         return Picker({
           type: param.type,
-          onUpdate: (type, results, complete) => {
-            console.log('Picker updated ',type, results, complete)
-          },
+          onUpdate: onUpdate.bind(this, param.id),
           required: param.required,
           label: param.label,
           forceDirty: false,
+          key: param.id,
         });
       })
       }

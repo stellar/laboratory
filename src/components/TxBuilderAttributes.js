@@ -14,7 +14,10 @@ export default class TxBuilderAttributes extends React.Component {
   render() {
     return <div className="TransactionAttributes">
       <div className="TransactionOp__config TransactionOpConfig optionsTable">
-        {Picker('source_account', { onUpdate: this.onUpdateHandler})}
+        {Picker({
+          type: 'source_account',
+          onUpdate: this.onUpdateHandler,
+        })}
       </div>
     </div>
   }

@@ -2,7 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 
 export default function(config) {
-  config.fieldMap = {}; // not mutable; another representation of the fields array; more accessible but unsorted
+  config.fieldMap = {}; // do not mutate; another representation of the fields array; more accessible but unsorted
   _.each(config.fields, (configField) => {
     if (configField.name in config.fieldMap) {
       throw new Error('PickerGenerator config.fields[].name must be unique');
@@ -68,10 +68,18 @@ export default function(config) {
       let complete = _.reduce(this.validate(fields), (complete, fieldValidation) => {
         return complete && fieldValidation.complete;
       }, true);
-      let values = _.mapValues(fields, fieldState => {
-        return fieldState.value;
-      });
-      this.props.onUpdate(this.props.type, values, complete);
+
+      let values;
+      if (config.fields.length === 1) {
+        values = {
+          value: event.target.value
+        }
+      } else {
+        values = _.mapValues(fields, fieldState => {
+          return fieldState.value;
+        });
+      }
+      this.props.onUpdate(values, complete);
     },
     render: function() {
       let validation = this.validate(this.state.fields);
