@@ -174,10 +174,10 @@ export const endpointsMap = {
       'all': {
         'label': 'All Paths',
         'path': {
-          template: '/paths{?destination_asset_type,destination_asset_code,destination_asset_issuer}',
-          'destination_asset_type': (params) => params['destination_asset'].type,
-          'destination_asset_code': (params) => params['destination_asset'].code,
-          'destination_asset_issuer': (params) => params['destination_asset'].issuer,
+          template: '/{source_account}/paths{?destination_account,destination_asset_type}',
+          'destination_asset_type': 'destination_asset.assetType',
+          'destination_asset_code': 'destination_asset.code',
+          'destination_asset_issuer': 'destination_asset.issuer',
         },
         'params': [
           {

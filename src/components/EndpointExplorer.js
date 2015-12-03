@@ -4,6 +4,8 @@ import {connect} from 'react-redux';
 import {EndpointPicker} from './EndpointPicker';
 import {EndpointSetup} from './EndpointSetup';
 import {EndpointResult} from './EndpointResult';
+import {getEndpoint} from '../endpoints';
+import UriTemplates from 'uri-templates';
 
 class EndpointExplorer extends React.Component {
   render() {
@@ -15,8 +17,9 @@ class EndpointExplorer extends React.Component {
       pendingRequest,
     } = this.props.state;
 
+    let endpoint = getEndpoint(currentResource, currentEndpoint);
     let request = {
-      url: this.props.baseURL + this.props.state.pendingRequest.template,
+      url: buildRequestUrl(this.props.baseURL, endpoint, pendingRequest.values),
     };
 
     return <div className="so-back">
@@ -56,3 +59,41 @@ function chooseState(state) {
     baseURL: state.network.available[state.network.current],
   };
 }
+
+function buildRequestUrl (baseUrl, endpoint, values) {
+  if (typeof endpoint === 'undefined') {
+    return '';
+  }
+  let uriTemplate = baseUrl + endpoint.path.template;
+  let template = new UriTemplates(uriTemplate);
+
+  // uriParams contains what we want to fill the url with
+  let uriParams = {};
+  _.each(template.varNames, (varName) => {
+    let objectPath = (varName in endpoint.path) ?
+      endpoint.path[varName] : varName + '.value';
+    let value = _.get(values, objectPath);
+    if (typeof value !== 'undefined' && value !== '') {
+      uriParams[varName] = value;
+    }
+  });
+
+  // Fill in unfilled parameters with placeholders (like {source_account})
+  // Also create a map to unescape these placeholders
+  let unescapeMap = [];
+  _.each(template.fromUri(uriTemplate), (placeholder, param) => {
+    if (!(param in uriParams)) {
+      uriParams[param] = placeholder;
+      unescapeMap.push({
+        oldStr: encodeURIComponent(placeholder),
+        newStr: placeholder
+      });
+    }
+  });
+
+  let builtUrl = _.reduce(unescapeMap, (url, replacement) => {
+    return url.replace(replacement.oldStr, replacement.newStr);
+  }, template.fill(uriParams));
+
+  return builtUrl;
+};
