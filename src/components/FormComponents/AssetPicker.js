@@ -23,21 +23,20 @@ export default PickerGenerator({
           value: 'alphanum12',
         },
       ],
-      name: 'assetType',
-      default: 'native', // optional. matches with options[].value
+      name: 'type',
       validator: value => null,
     },
     {
       type: 'text',
-      name: 'assetCode',
+      name: 'code',
       placeholder: 'asset code',
       forceRequired: true, // If field is showing, it is required (even if picker is optional)
       showIf: fields => {
-        return fields.assetType.value !== 'native';
+        return fields.type.value !== 'native';
       },
       validator: (value, fields) => { // We rarely need the second argument to validator, but in this case, we do
         let minLength, maxLength;
-        if (fields.assetType.value === 'alphanum4') {
+        if (fields.type.value === 'alphanum4') {
           minLength = 1;
           maxLength = 4;
         } else if (fields.assetType.value === 'alphanum12') {
@@ -60,7 +59,7 @@ export default PickerGenerator({
       placeholder: 'issuer account ID',
       forceRequired: true, // If field is showing, it is required (even if picker is optional)
       showIf: fields => {
-        return fields.assetType.value !== 'native';
+        return fields.type.value !== 'native';
       },
       validator: (value) => Account.isValidAddress(value) ? null : 'Public key is invalid.',
     },
