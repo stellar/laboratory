@@ -196,7 +196,6 @@ export const endpointsMap = {
             label: 'Order',
           },
         ],
-        'required': ['transaction']
       }
     }
   },
@@ -315,7 +314,6 @@ export const endpointsMap = {
             required: true,
           },
         ],
-        'required': ['operation']
       },
       'for_account': {
         'label': 'Operations for Account',
@@ -412,17 +410,23 @@ export const endpointsMap = {
       'details': {
         'label': 'Details',
         'path': {
-          template: '/order_book{?selling_asset_type,selling_asset_code,selling_issuer,buying_asset_type,buying_asset_code,buying_issuer}',
+          template: '/order_book{?selling_asset_type,selling_asset_code,selling_asset_issuer,buying_asset_type,buying_asset_code,buying_asset_issuer}',
+          'selling_asset_type': 'selling_asset.type',
+          'selling_asset_code': 'selling_asset.code',
+          'selling_asset_issuer': 'selling_asset.issuer',
+          'buying_asset_type': 'buying_asset.type',
+          'buying_asset_code': 'buying_asset.code',
+          'buying_asset_issuer': 'buying_asset.issuer',
         },
         'params': [
           {
             id: 'selling_asset',
-            type: 'asset',
+            type: 'Asset',
             label: 'Selling Asset',
           },
           {
             id: 'buying_asset',
-            type: 'asset',
+            type: 'Asset',
             label: 'Buying Asset',
           },
         ],
@@ -430,18 +434,39 @@ export const endpointsMap = {
       'trades': {
         'label': 'Trades',
         'path': {
-          template: '/order_book/trades{?selling_asset_type,selling_asset_code,selling_issuer,buying_asset_type,buying_asset_code,buying_issuer}',
+          template: '/order_book/trades{?selling_asset_type,selling_asset_code,selling_asset_issuer,buying_asset_type,buying_asset_code,buying_asset_issuer,cursor,limit,order}',
+          'selling_asset_type': 'selling_asset.type',
+          'selling_asset_code': 'selling_asset.code',
+          'selling_asset_issuer': 'selling_asset.issuer',
+          'buying_asset_type': 'buying_asset.type',
+          'buying_asset_code': 'buying_asset.code',
+          'buying_asset_issuer': 'buying_asset.issuer',
         },
         'params': [
           {
             id: 'selling_asset',
-            type: 'asset',
+            type: 'Asset',
             label: 'Selling Asset',
           },
           {
             id: 'buying_asset',
-            type: 'asset',
+            type: 'Asset',
             label: 'Buying Asset',
+          },
+          {
+            id: 'cursor',
+            type: 'Cursor',
+            label: 'Cursor',
+          },
+          {
+            id: 'limit',
+            type: 'Limit',
+            label: 'Limit',
+          },
+          {
+            id: 'order',
+            type: 'Order',
+            label: 'Order',
           },
         ],
       }
@@ -484,8 +509,6 @@ export const endpointsMap = {
             required: true,
           },
         ],
-        // 'params': ['source_account', 'destination_account', 'destination_amount', 'destination_asset'],
-        // 'required': ['source_account', 'destination_account', 'destination_amount', 'destination_asset']
       }
     }
   },
@@ -518,26 +541,89 @@ export const endpointsMap = {
       'for_account': {
         'label': 'Payments for Account',
         'path': {
-          template: '/accounts/{address}/payments',
+          template: '/accounts/{account_id}/payments{?cursor,limit,order}',
         },
-        'params': ['account_id', 'limit', 'order', 'cursor'],
-        'required': ['account_id']
+        'params': [
+          {
+            id: 'account_id',
+            type: 'PubKey',
+            label: 'Account ID',
+            required: true,
+          },
+          {
+            id: 'cursor',
+            type: 'Cursor',
+            label: 'Cursor',
+          },
+          {
+            id: 'limit',
+            type: 'Limit',
+            label: 'Limit',
+          },
+          {
+            id: 'order',
+            type: 'Order',
+            label: 'Order',
+          },
+        ],
       },
       'for_ledger': {
         'label': 'Payments for Ledger',
         'path': {
-          template: '/ledgers/{ledger}/payments',
+          template: '/ledgers/{ledger}/payments{?cursor,limit,order}',
         },
-        'params': ['ledger', 'limit', 'order', 'cursor'],
-        'required': ['ledger']
+        'params': [
+          {
+            id: 'ledger',
+            type: 'PubKey',
+            label: 'Ledger Sequence',
+            required: true,
+          },
+          {
+            id: 'cursor',
+            type: 'Cursor',
+            label: 'Cursor',
+          },
+          {
+            id: 'limit',
+            type: 'Limit',
+            label: 'Limit',
+          },
+          {
+            id: 'order',
+            type: 'Order',
+            label: 'Order',
+          },
+        ],
       },
       'for_transaction': {
         'label': 'Payments for Transaction',
         'path': {
-          template: '/transactions/{transaction}/payments',
+          template: '/transactions/{transaction}/payments{?cursor,limit,order}',
         },
-        'params': ['transaction', 'limit', 'order', 'cursor'],
-        'required': ['transaction']
+        'params': [
+          {
+            id: 'transaction',
+            type: 'PubKey',
+            label: 'Transaction ID',
+            required: true,
+          },
+          {
+            id: 'cursor',
+            type: 'Cursor',
+            label: 'Cursor',
+          },
+          {
+            id: 'limit',
+            type: 'Limit',
+            label: 'Limit',
+          },
+          {
+            id: 'order',
+            type: 'Order',
+            label: 'Order',
+          },
+        ],
       }
     }
   },
@@ -572,24 +658,72 @@ export const endpointsMap = {
         'path': {
           template: '/transactions/{transaction}',
         },
-        'params': ['transaction'],
-        'required': ['transaction']
+        'params': [
+          {
+            id: 'transaction',
+            type: 'PubKey',
+            label: 'Transaction ID',
+            required: true,
+          },
+        ],
       },
       'for_account': {
         'label': 'Transactions for Account',
         'path': {
-          template: '/accounts/{address}/transactions',
+          template: '/accounts/{account_id}/transactions{?cursor,limit,order}',
         },
-        'params': ['account_id', 'limit', 'order', 'cursor'],
-        'required': ['account_id']
+        'params': [
+          {
+            id: 'account_id',
+            type: 'PubKey',
+            label: 'Account ID',
+            required: true,
+          },
+          {
+            id: 'cursor',
+            type: 'Cursor',
+            label: 'Cursor',
+          },
+          {
+            id: 'limit',
+            type: 'Limit',
+            label: 'Limit',
+          },
+          {
+            id: 'order',
+            type: 'Order',
+            label: 'Order',
+          },
+        ],
       },
       'for_ledger': {
         'label': 'Transactions for Ledger',
         'path': {
-          template: '/ledgers/{ledger}/transactions',
+          template: '/ledgers/{ledger}/transactions{?cursor,limit,order}',
         },
-        'params': ['ledger', 'limit', 'order', 'cursor'],
-        'required': ['ledger']
+        'params': [
+          {
+            id: 'ledger',
+            type: 'PubKey',
+            label: 'Ledger ID',
+            required: true,
+          },
+          {
+            id: 'cursor',
+            type: 'Cursor',
+            label: 'Cursor',
+          },
+          {
+            id: 'limit',
+            type: 'Limit',
+            label: 'Limit',
+          },
+          {
+            id: 'order',
+            type: 'Order',
+            label: 'Order',
+          },
+        ],
       }
     }
   }
