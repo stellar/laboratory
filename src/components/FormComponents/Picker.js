@@ -6,6 +6,8 @@ let pickerComponents = {
   CursorPicker: require('./CursorPicker'),
   LedgerPicker: require('./LedgerPicker'),
   LimitPicker: require('./LimitPicker'),
+  MemoPicker: require('./MemoPicker'),
+  SequencePicker: require('./SequencePicker'),
   OperationPicker: require('./OperationPicker'),
   OrderPicker: require('./OrderPicker'),
   TransactionPicker: require('./TransactionPicker'),

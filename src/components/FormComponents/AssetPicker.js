@@ -9,7 +9,7 @@ export default PickerGenerator({
       options: [
         {
           name: 'native', // Just used internally for keys. Must be unique within this set of options
-          label: 'native', // Displayed to the user (can't be used for keys in case of localzation)
+          label: 'native', // Displayed to the user (can't be used for keys in case of localization)
           value: 'native', // Must be non-empty string
         },
         {
@@ -46,9 +46,9 @@ export default PickerGenerator({
           return 'Asset code must consist of only letters and numbers.';
         } else if (value.length > maxLength || value.length < minLength) {
           return `Asset code must be between ${minLength} and ${maxLength} characters long.`;
-        } else {
-          return null;
         }
+
+        return null;
       },
     },
     {

@@ -6,6 +6,6 @@ export default PickerGenerator({
     type: 'text',
     name: 'limit',
     validator: (value) =>
-      (!value.match(/^[0-9]*$/g) || value < 0) ? 'Limit is invalid.' : null,
+      (!value.match(/^[0-9]*$/g) || value < 0) ? 'Limit is invalid. It must be a positive integer.' : null,
   }],
 });
