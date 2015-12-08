@@ -6,7 +6,7 @@ import {
   FINISH_REQUEST,
   UPDATE_VALUES,
 } from "../actions/endpointExplorer";
-import {getEndpoint, getTemplate} from '../endpoints';
+import {getEndpoint, getTemplate} from '../data/endpoints';
 
 const endpointExplorer = combineReducers({
   currentResource,

@@ -2,7 +2,7 @@ import React from 'react';
 import {ResourceList} from './ResourceList';
 import {EndpointList} from './EndpointList';
 import classNames from 'classnames';
-import {endpointsMap} from '../endpoints';
+import {endpointsMap} from '../data/endpoints';
 import {map, findIndex} from 'lodash';
 
 export function EndpointPicker(props) {

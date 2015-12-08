@@ -4,7 +4,7 @@ import querystring from 'querystring';
 import {EventEmitter} from 'events';
 import ExplorerConstants from '../constants/ExplorerConstants'
 import {AppDispatcher} from '../dispatcher/AppDispatcher';
-import {endpointsMap} from '../endpoints'
+import {endpointsMap} from '../data/endpoints';
 let endpoints = endpointsMap;
 
 const CHANGE_EVENT = 'change';
