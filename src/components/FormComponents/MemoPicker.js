@@ -46,13 +46,13 @@ export default PickerGenerator({
       },
       validator: (value, fields) => {
         // TODO: memo picker vlaidation
-        switch(fields.type.value) {
-        case: 'MEMO_TEXT':
+        switch (fields.type.value) {
+        case 'MEMO_TEXT':
           return 'text type';
-        case: 'MEMO_ID':
+        case 'MEMO_ID':
           return 'id type';
-        case: 'MEMO_HASH':
-        case: 'MEMO_RETURN':
+        case 'MEMO_HASH':
+        case 'MEMO_RETURN':
           return 'hash type';
         default:
           return null;
