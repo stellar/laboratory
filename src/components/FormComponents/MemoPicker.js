@@ -38,7 +38,7 @@ export default PickerGenerator({
     },
     {
       type: 'text',
-      name: 'code',
+      name: 'content',
       placeholder: 'memo content',
       forceRequired: true, // If field is showing, it is required (even if picker is optional)
       showIf: (fields) => {
@@ -48,12 +48,12 @@ export default PickerGenerator({
         // TODO: memo picker vlaidation
         switch (fields.type.value) {
         case 'MEMO_TEXT':
-          return 'text type';
+          return 'TEXT type';
         case 'MEMO_ID':
-          return 'id type';
+          return 'ID type';
         case 'MEMO_HASH':
         case 'MEMO_RETURN':
-          return 'hash type';
+          return 'HASH type';
         default:
           return null;
         }

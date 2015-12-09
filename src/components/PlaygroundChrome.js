@@ -44,12 +44,12 @@ export let PlaygroundChrome = React.createClass({
       <div className="so-back PlaygroundChrome__siteNavBack">
         <div className="so-chunk">
           <nav className="s-buttonList">
-            <a href="#"
+            <a
                onClick={this.changeTab.bind(this, 'EndpointExplorer')}
                className={classNames(defaultClasses, {'is-active': this.state.tab === 'EndpointExplorer'})}>
               Endpoint Explorer
             </a>
-            <a href="#"
+            <a
                onClick={this.changeTab.bind(this, 'TransactionBuilder')}
                className={classNames(defaultClasses, {'is-active': this.state.tab === 'TransactionBuilder'})}>
               Transaction Builder

@@ -3,20 +3,36 @@ import Picker from './FormComponents/Picker';
 import TxBuilderConstants from '../constants/TxBuilderConstants';
 
 export default class TxBuilderAttributes extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-    };
-  }
-  onUpdateHandler(type, values) {
-    console.log()
-  }
   render() {
+    let {onUpdate} = this.props;
     return <div className="TransactionAttributes">
       <div className="TransactionOp__config TransactionOpConfig optionsTable">
         {Picker({
-          type: 'source_account',
-          onUpdate: this.onUpdateHandler,
+          type: 'PubKey',
+          onUpdate: onUpdate.bind(this, 'sourceAccount'),
+          label: 'Source Account',
+          required: true,
+          key: 'sourceAccount',
+        })}
+        {Picker({
+          type: 'Sequence',
+          onUpdate: onUpdate.bind(this, 'sequence'),
+          label: 'Sequence number',
+          required: true,
+          key: 'sequence',
+        })}
+        {Picker({
+          type: 'Amount',
+          onUpdate: onUpdate.bind(this, 'fee'),
+          label: 'Transaction Fee',
+          required: true,
+          key: 'fee',
+        })}
+        {Picker({
+          type: 'Memo',
+          onUpdate: onUpdate.bind(this, 'memo'),
+          label: 'Memo',
+          key: 'memo',
         })}
       </div>
     </div>
