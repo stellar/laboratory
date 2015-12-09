@@ -13,6 +13,10 @@ export default PickerGenerator({
       //   label: 'default (asc)', // Displayed to the user (can't be used for keys in case of localzation)
       //   value: 'default', // Must be non-empty string
       // },
+
+      // TODO: Update: I am now of the opinion that there should be no default
+      // state in the pickers since that is the responsibility of the user of
+      // these components. It is a lot simpler without defaults.
       {
         name: 'asc',
         label: 'asc',

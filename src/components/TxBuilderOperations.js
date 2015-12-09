@@ -3,6 +3,7 @@ import TxBuilderOperation from './TxBuilderOperation';
 import TxBuilderStore from '../stores/TxBuilderStore';
 import {AppDispatcher} from '../dispatcher/AppDispatcher';
 import TxBuilderConstants from '../constants/TxBuilderConstants';
+import {getOperation} from '../data/operations';
 
 export default class TxBuilderOperations extends React.Component {
   constructor() {
@@ -15,6 +16,7 @@ export default class TxBuilderOperations extends React.Component {
           key={op.id}
           order={index}
           op={op}
+          opConfig={getOperation(op.type)}
           removable={this.props.operations.length === 1}
           onRemove={this.props.onRemove.bind(this, op.id)}
           />

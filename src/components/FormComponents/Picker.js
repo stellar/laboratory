@@ -9,6 +9,7 @@ let pickerComponents = {
   MemoPicker: require('./MemoPicker'),
   SequencePicker: require('./SequencePicker'),
   OperationPicker: require('./OperationPicker'),
+  OperationTypePicker: require('./OperationTypePicker'),
   OrderPicker: require('./OrderPicker'),
   TransactionPicker: require('./TransactionPicker'),
 }
