@@ -34,6 +34,7 @@ class TransactionBuilder extends React.Component {
           <TxBuilderOperations
             operations={operations}
             onAddOp={() => dispatch(addOperation())}
+            onRemove={(opId) => dispatch(removeOperation(opId))}
             />
         </div>
       </div>

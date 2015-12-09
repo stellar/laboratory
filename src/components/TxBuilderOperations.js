@@ -11,8 +11,13 @@ export default class TxBuilderOperations extends React.Component {
   render() {
     return <div className="TransactionOperations">
       {this.props.operations.map((op, index) => {
-        console.log(op)
-        return <TxBuilderOperation key={op.id} order={index} op={op} />
+        return <TxBuilderOperation
+          key={op.id}
+          order={index}
+          op={op}
+          removable={this.props.operations.length === 1}
+          onRemove={this.props.onRemove.bind(this, op.id)}
+          />
       })}
 
       <button className="TransactionOperations__add s-button" onClick={this.props.onAddOp}>

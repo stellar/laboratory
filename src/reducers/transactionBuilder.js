@@ -9,7 +9,11 @@ const transactionBuilder = combineReducers({
 
 export default transactionBuilder
 
-function operations(state = [], action) {
+function operations(state = [{
+    id: 0,
+    attributes: {},
+    type: '',
+  }], action) {
   switch (action.type) {
   case 'ADD_OPERATION':
     return Array.prototype.concat(state, {
@@ -18,12 +22,7 @@ function operations(state = [], action) {
       attributes: {},
     });
   case 'REMOVE_OPERATION':
-    return _(state)
-      .cloneDeep()
-      .remove({
-        opId: opId
-      })
-      .value();
+    return _.filter(state.slice(), (op) => op.id != action.opId);
   case 'UPDATE_OPERATION':
     let ops = _(state).cloneDeep();
     let targetOp = _.find(ops, { opId: action.opId });

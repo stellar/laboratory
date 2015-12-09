@@ -11,15 +11,18 @@ export default class TxBuilderOperation extends React.Component {
   onUpdateHandler() {
 
   }
-  removeOp() {
-  }
   render() {
+    let removeLink = (this.props.removable) ?
+      ''
+      :
+      <p className="TransactionOpMeta__remove"><a onClick={this.props.onRemove}>remove</a></p>;
+
     return <div className="TransactionOp">
       <div className="TransactionOp__meta TransactionOpMeta">
         <div className="TransactionOpMeta__order">
-          <input className="TransactionOpMeta__order__input" type="text" defaultValue={this.props.order} maxLength="2" />
+          <input className="TransactionOpMeta__order__input" type="text" value={this.props.order} maxLength="2" />
         </div>
-        <p className="TransactionOpMeta__remove"><a onClick={this.removeOp.bind(this)}>remove</a></p>
+        {removeLink}
       </div>
       <div className="TransactionOp__config TransactionOpConfig optionsTable">
       </div>

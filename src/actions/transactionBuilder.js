@@ -3,7 +3,6 @@ export const UPDATE_ATTRIBUTES = 'UPDATE_ATTRIBUTES';
 export function updateAttributes(newAttributes) {
   return {
     type: UPDATE_ATTRIBUTES,
-    b: UPDATE_ATTRIBUTES,
     newAttributes,
   }
 }
