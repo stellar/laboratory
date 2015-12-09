@@ -6,8 +6,14 @@ import {EndpointResult} from './EndpointResult';
 import {PubKeyPicker} from './FormComponents/PubKeyPicker';
 import ImportXDR from './ImportXDR';
 import TxBuilderAttributes from './TxBuilderAttributes';
-import {updateAttributes} from '../actions/transactionBuilder';
-// import TxBuilderOperations from './TxBuilderOperations';
+import {
+  updateAttributes,
+  addOperation,
+  removeOperation,
+  updateOperation,
+  reorderOperation,
+} from '../actions/transactionBuilder';
+import TxBuilderOperations from './TxBuilderOperations';
 // import TxBuilderResult from './TxBuilderResult';
 // import TxBuilderStore from '../stores/TxBuilderStore';
 
@@ -22,8 +28,13 @@ class TransactionBuilder extends React.Component {
     return <div className="TransactionBuilder">
       <div className="so-back">
         <div className="so-chunk">
-          <TxBuilderAttributes attributes={attributes} onUpdate={onAttributeUpdate.bind(this, dispatch)} />
-          {/*<TxBuilderOperations />*/}
+          <TxBuilderAttributes
+            attributes={attributes}
+            onUpdate={onAttributeUpdate.bind(this, dispatch)} />
+          <TxBuilderOperations
+            operations={operations}
+            onAddOp={() => dispatch(addOperation())}
+            />
         </div>
       </div>
       <div className="so-back TransactionBuilder__result">

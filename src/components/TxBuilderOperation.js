@@ -12,10 +12,6 @@ export default class TxBuilderOperation extends React.Component {
 
   }
   removeOp() {
-    AppDispatcher.dispatch({
-      type: TxBuilderConstants.REMOVE_OPERATION,
-      key: this.props.op.key
-    });
   }
   render() {
     return <div className="TransactionOp">
@@ -26,8 +22,6 @@ export default class TxBuilderOperation extends React.Component {
         <p className="TransactionOpMeta__remove"><a onClick={this.removeOp.bind(this)}>remove</a></p>
       </div>
       <div className="TransactionOp__config TransactionOpConfig optionsTable">
-        {Picker('pubkey', { onUpdate: this.onUpdateHandler})}
-        {Picker('amount', { onUpdate: this.onUpdateHandler})}
       </div>
     </div>
   }

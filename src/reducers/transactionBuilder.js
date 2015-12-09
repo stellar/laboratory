@@ -12,7 +12,7 @@ export default transactionBuilder
 function operations(state = [], action) {
   switch (action.type) {
   case 'ADD_OPERATION':
-    return _.cloneDeep(state).push({
+    return Array.prototype.concat(state, {
       id: action.opId,
       type: '',
       attributes: {},

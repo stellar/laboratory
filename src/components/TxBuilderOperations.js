@@ -8,19 +8,14 @@ export default class TxBuilderOperations extends React.Component {
   constructor() {
     super()
   }
-  addOp() {
-    AppDispatcher.dispatch({
-      type: TxBuilderConstants.ADD_OPERATION,
-    });
-  }
   render() {
-    let ops = TxBuilderStore.getOperationList()
     return <div className="TransactionOperations">
-      {ops.map((op, index) => {
-        return <TxBuilderOperation key={op.key} order={index} op={op} />
+      {this.props.operations.map((op, index) => {
+        console.log(op)
+        return <TxBuilderOperation key={op.id} order={index} op={op} />
       })}
 
-      <button className="TransactionOperations__add s-button" onClick={this.addOp}>
+      <button className="TransactionOperations__add s-button" onClick={this.props.onAddOp}>
         Add Operation
       </button>
     </div>
