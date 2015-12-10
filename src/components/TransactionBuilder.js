@@ -7,11 +7,8 @@ import {PubKeyPicker} from './FormComponents/PubKeyPicker';
 import ImportXDR from './ImportXDR';
 import TxBuilderAttributes from './TxBuilderAttributes';
 import {
-  updateAttributes,
   addOperation,
-  removeOperation,
-  updateOperation,
-  reorderOperation,
+  updateAttributes,
 } from '../actions/transactionBuilder';
 import OperationsBuilder from './OperationsBuilder';
 import {getOperation} from '../data/operations';

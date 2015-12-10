@@ -5,6 +5,13 @@ import TxBuilderStore from '../stores/TxBuilderStore';
 import {AppDispatcher} from '../dispatcher/AppDispatcher';
 import TxBuilderConstants from '../constants/TxBuilderConstants';
 import {getOperation} from '../data/operations';
+import {
+  addOperation,
+  removeOperation,
+  updateOperationType,
+  updateOperationAttributes,
+  reorderOperation,
+} from '../actions/transactionBuilder';
 
 class OperationsBuilder extends React.Component {
   constructor() {
@@ -13,21 +20,23 @@ class OperationsBuilder extends React.Component {
   render() {
     return <div className="TransactionOperations">
       {_.map(this.props.ops, (op, index) => {
-        return operation(this.props.ops, op, index);
+        return operation(this.props.ops, op, index, this.props.dispatch);
       })}
     </div>
   }
 }
 
 // takes in op state from the reducer
-function operation(ops, op, index) {
+function operation(ops, op, index, dispatch) {
   let opConfig = getOperation(op.name);
   let attributePickers;
   if (typeof opConfig !== 'undefined') {
     attributePickers = _.map(opConfig.params, (param, paramKey) => {
       return Picker({
         type: param.pickerType,
-        onUpdate: function() {},
+        onUpdate: ({value}) => {
+          dispatch(updateOperationAttributes(op.id, value))
+        },
         label: param.label,
         required: true,
         key: paramKey,
@@ -52,7 +61,9 @@ function operation(ops, op, index) {
     <div className="TransactionOp__config TransactionOpConfig optionsTable">
       {Picker({
         type: 'OperationType',
-        onUpdate: function() {},
+        onUpdate: ({value}) => {
+          dispatch(updateOperationType(op.id, value))
+        },
         label: 'Operation Type',
         required: true,
         key: 'operationType',

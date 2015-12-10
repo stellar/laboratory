@@ -19,7 +19,7 @@ function operations(state = [{
   case 'ADD_OPERATION':
     return Array.prototype.concat(state, {
       id: action.opId,
-      name: 'createAccount',
+      name: '',
       attributes: {},
     });
   case 'REMOVE_OPERATION':
@@ -41,7 +41,9 @@ function getAttributes(state, opId) {
   return _.find(ops, { opId: action.opId }).attributes;
 }
 function updateOperation(state, opId, newSource) {
-  let targetOpIndex = _.findIndex(ops, { opId: action.opId });
+  console.log('opId', opId)
+  let targetOpIndex = _.findIndex(state, { id: opId });
+  console.log('targetOpIndex', targetOpIndex)
   let newOps = state.slice();
   newOps[targetOpIndex] = _.assign({}, newOps[targetOpIndex], newSource);
   return newOps;
