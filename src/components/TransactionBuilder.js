@@ -13,7 +13,8 @@ import {
   updateOperation,
   reorderOperation,
 } from '../actions/transactionBuilder';
-import TxBuilderOperations from './TxBuilderOperations';
+import OperationsBuilder from './OperationsBuilder';
+import {getOperation} from '../data/operations';
 // import TxBuilderResult from './TxBuilderResult';
 // import TxBuilderStore from '../stores/TxBuilderStore';
 
@@ -31,11 +32,10 @@ class TransactionBuilder extends React.Component {
           <TxBuilderAttributes
             attributes={attributes}
             onUpdate={onAttributeUpdate.bind(this, dispatch)} />
-          <TxBuilderOperations
-            operations={operations}
-            onAddOp={() => dispatch(addOperation())}
-            onRemove={(opId) => dispatch(removeOperation(opId))}
-            />
+          <OperationsBuilder />
+          <button className="TransactionOperations__add s-button" onClick={() => dispatch(addOperation())}>
+            Add Operation
+          </button>
         </div>
       </div>
       <div className="so-back TransactionBuilder__result">

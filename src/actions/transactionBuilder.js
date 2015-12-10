@@ -29,12 +29,21 @@ export function removeOperation(opId) {
   };
 }
 
-export const UPDATE_OPERATION = 'UPDATE_OPERATION';
-export function updateOperation(opId, newContent) {
+export const UPDATE_OPERATION_TYPE = 'UPDATE_OPERATION_TYPE';
+export function updateOperationType(opId, newType) {
   return {
-    type: UPDATE_OPERATION,
+    type: UPDATE_OPERATION_TYPE,
     opId,
-    newContent,
+    newType,
+  };
+}
+
+export const UPDATE_OPERATION_ATTRIBUTES = 'UPDATE_OPERATION_ATTRIBUTES';
+export function updateOperationAttributes(opId, newAttributes) {
+  return {
+    type: UPDATE_OPERATION_ATTRIBUTES,
+    opId,
+    newAttributes,
   };
 }
 

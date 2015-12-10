@@ -12,26 +12,39 @@ export default transactionBuilder
 function operations(state = [{
     id: 0,
     attributes: {},
-    type: '',
+    name: '',
   }], action) {
+  let targetOpIndex, newOps;
   switch (action.type) {
   case 'ADD_OPERATION':
     return Array.prototype.concat(state, {
       id: action.opId,
-      type: '',
+      name: 'createAccount',
       attributes: {},
     });
   case 'REMOVE_OPERATION':
     return _.filter(state.slice(), (op) => op.id != action.opId);
-  case 'UPDATE_OPERATION':
-    let ops = _(state).cloneDeep();
-    let targetOp = _.find(ops, { opId: action.opId });
-    // TODO: interpret from picker
-    targetOp = Object.assign(targetOp, action.opAttributes);
-    return ops;
+  case 'UPDATE_OPERATION_TYPE':
+    return updateOperation(state, action.opId, {
+      name: action.newType,
+      action: {},
+    });
+  case 'UPDATE_OPERATION_ATTRIBUTES':
+    return updateOperation(state, action.opId, {
+      attributes: _.assign({}, getAttributes(action.opId), newAttributes),
+    });
   default:
     return state;
   }
+}
+function getAttributes(state, opId) {
+  return _.find(ops, { opId: action.opId }).attributes;
+}
+function updateOperation(state, opId, newSource) {
+  let targetOpIndex = _.findIndex(ops, { opId: action.opId });
+  let newOps = state.slice();
+  newOps[targetOpIndex] = _.assign({}, newOps[targetOpIndex], newSource);
+  return newOps;
 }
 
 function attributes(state = {

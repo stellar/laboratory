@@ -1,13 +1,13 @@
 import _ from 'lodash';
 
-export function getOperation(opId) {
-  return _.find(operationsMap, { id: opId });
+export function getOperation(opName) {
+  return _.find(operationsMap, { name: opName });
 }
 
 // Operations map documentation:
 // [ // In an array because we really want this to be ordered correctly (whereas for params, it is not as important)
 //   {
-//     id: 'createAccount', // Corresponds to the operation key in js-stellar-base.Operation
+//     name: 'createAccount', // Corresponds to the operation key in js-stellar-base.Operation
 //     label: 'Create Account', // Human friendly name for the operation
 //     params: { // In array format so that it can be ordered
 //       'destination': { // Corresponds to js-stellar-base.Operation[type] keys
@@ -20,7 +20,7 @@ export function getOperation(opId) {
 
 export const operationsMap = [
   {
-    id: 'createAccount',
+    name: 'createAccount',
     label: 'Create Account',
     params: {
       'destination': {
@@ -38,63 +38,63 @@ export const operationsMap = [
     },
   },
   {
-    id: 'payment',
+    name: 'payment',
     label: 'Payment',
     params: {
 
     },
   },
   {
-    id: 'pathPayment',
+    name: 'pathPayment',
     label: 'Path Payment',
     params: {
 
     },
   },
   {
-    id: 'manageOffer',
+    name: 'manageOffer',
     label: 'Manage Offer',
     params: {
 
     },
   },
   {
-    id: 'createPassiveOffer',
+    name: 'createPassiveOffer',
     label: 'Create Passive Offer',
     params: {
 
     },
   },
   {
-    id: 'setOptions',
+    name: 'setOptions',
     label: 'Set Options',
     params: {
 
     },
   },
   {
-    id: 'changeTrust',
+    name: 'changeTrust',
     label: 'Change Trust',
     params: {
 
     },
   },
   {
-    id: 'allowTrust',
+    name: 'allowTrust',
     label: 'Allow Trust',
     params: {
 
     },
   },
   {
-    id: 'accountMerge',
+    name: 'accountMerge',
     label: 'Account Merge',
     params: {
 
     },
   },
   {
-    id: 'inflation',
+    name: 'inflation',
     label: 'Inflation',
     params: {
 

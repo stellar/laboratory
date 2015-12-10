@@ -9,9 +9,9 @@ export default PickerGenerator({
     // TODO: Make this a select dropdown
     options: _.map(operationsMap, (op) => {
       return {
-        name: op.id,
+        name: op.name,
         label: op.label,
-        value: op.id,
+        value: op.name,
       };
     }),
     name: 'order',
