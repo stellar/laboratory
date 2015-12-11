@@ -42,6 +42,14 @@ function operation(ops, op, index, dispatch) {
         key: paramKey,
       })
     });
+    attributePickers.push(Picker({
+      type: 'PubKey',
+      onUpdate: ({value}) => {
+        dispatch(updateOperationAttributes(op.id, value))
+      },
+      label: 'Source Account',
+      key: 'source',
+    }))
   }
 
   let removeLink;

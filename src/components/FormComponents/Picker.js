@@ -11,6 +11,7 @@ let pickerComponents = {
   OperationPicker: require('./OperationPicker'),
   OperationTypePicker: require('./OperationTypePicker'),
   OrderPicker: require('./OrderPicker'),
+  OfferPicker: require('./OfferPicker'),
   TransactionPicker: require('./TransactionPicker'),
 }
 

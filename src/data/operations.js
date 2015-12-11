@@ -41,63 +41,123 @@ export const operationsMap = [
     name: 'payment',
     label: 'Payment',
     params: {
-
+      'destination': {
+        label: 'Destination',
+        pickerType: 'PubKey',
+      },
+      'asset': {
+        label: 'Asset',
+        pickerType: 'Asset',
+      },
+      'amount': {
+        label: 'Amount',
+        pickerType: 'Amount',
+      },
     },
   },
-  {
-    name: 'pathPayment',
-    label: 'Path Payment',
-    params: {
-
-    },
-  },
-  {
-    name: 'manageOffer',
-    label: 'Manage Offer',
-    params: {
-
-    },
-  },
-  {
-    name: 'createPassiveOffer',
-    label: 'Create Passive Offer',
-    params: {
-
-    },
-  },
-  {
-    name: 'setOptions',
-    label: 'Set Options',
-    params: {
-
-    },
-  },
-  {
-    name: 'changeTrust',
-    label: 'Change Trust',
-    params: {
-
-    },
-  },
-  {
-    name: 'allowTrust',
-    label: 'Allow Trust',
-    params: {
-
-    },
-  },
-  {
-    name: 'accountMerge',
-    label: 'Account Merge',
-    params: {
-
-    },
-  },
-  {
-    name: 'inflation',
-    label: 'Inflation',
-    params: {
-
-    },
-  },
+  // TODO: Other complex operations
+  // {
+  //   name: 'pathPayment',
+  //   label: 'Path Payment',
+  //   params: {
+  //
+  //   },
+  // },
+  // {
+  //   name: 'manageOffer',
+  //   label: 'Manage Offer',
+  //   params: {
+  //     'buying': {
+  //       label: 'Buying Asset',
+  //       pickerType: 'Asset',
+  //     },
+  //     'selling': {
+  //       label: 'Selling Asset',
+  //       pickerType: 'Asset',
+  //     },
+  //     'amount': {
+  //       label: 'Amount',
+  //       pickerType: 'Amount',
+  //     },
+  //     'price': {
+  //       label: 'Price',
+  //       pickerType: 'Amount',
+  //     },
+  //     'offerId': {
+  //       label: 'Offer ID',
+  //       pickerType: 'Offer',
+  //       optional: true,
+  //     }
+  //   },
+  // },
+  // {
+  //   name: 'createPassiveOffer',
+  //   label: 'Create Passive Offer',
+  //   params: {
+  //     'buying': {
+  //       label: 'Buying Asset',
+  //       pickerType: 'Asset',
+  //     },
+  //     'selling': {
+  //       label: 'Selling Asset',
+  //       pickerType: 'Asset',
+  //     },
+  //     'amount': {
+  //       label: 'Amount',
+  //       pickerType: 'Amount',
+  //     },
+  //     'price': {
+  //       label: 'Price',
+  //       pickerType: 'Amount',
+  //     },
+  //   },
+  // },
+  // {
+  //   name: 'setOptions',
+  //   label: 'Set Options',
+  //   params: {
+  //   },
+  // },
+  // {
+  //   name: 'changeTrust',
+  //   label: 'Change Trust',
+  //   params: {
+  //     'asset': {
+  //       label: 'Asset',
+  //       pickerType: 'Asset',
+  //     },
+  //     'amount': {
+  //       label: 'Trust Amount',
+  //       pickerType: 'Amount',
+  //     },
+  //   },
+  // },
+  // {
+  //   name: 'allowTrust',
+  //   label: 'Allow Trust',
+  //   params: {
+  //     'destination': {
+  //       label: 'Trustor',
+  //       pickerType: 'PubKey',
+  //     },
+  //     'asset': {
+  //       label: 'Asset',
+  //       pickerType: 'Asset',
+  //     },
+  //   },
+  // },
+  // {
+  //   name: 'accountMerge',
+  //   label: 'Account Merge',
+  //   params: {
+  //
+  //   },
+  // },
+  // {
+  //   name: 'inflation',
+  //   label: 'Inflation',
+  //   params: {
+  //
+  //   },
+  // },
 ]
