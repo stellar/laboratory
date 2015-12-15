@@ -61,7 +61,7 @@ let operation = (ops, index, dispatch) => {
   }
 
   let removeLink;
-  if (ops.length > 0) {
+  if (ops.length > 1) {
     removeLink = <p className="TransactionOpMeta__remove">
       <a onClick={() => dispatch(removeOperation(op.id))}>remove</a>
     </p>;
