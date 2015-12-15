@@ -110,7 +110,7 @@ export default function(config) {
                 default:
                   throw new Error(`Unknown picker field type: ${fieldConfig.type}. Check the config object passed to PickerGenerator.`);
               }
-              return <div key={fieldConfig.name}>
+              return <div key={fieldConfig.name} className="optionsTable__pair__content__field">
                 {formElement}
                 {validation[fieldConfig.name].message ? <p className="optionsTable__pair__content__alert">
                   {validation[fieldConfig.name].message}

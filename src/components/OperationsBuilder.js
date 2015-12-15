@@ -20,22 +20,30 @@ class OperationsBuilder extends React.Component {
   render() {
     return <div className="TransactionOperations">
       {_.map(this.props.ops, (op, index) => {
-        return operation(this.props.ops, op, index, this.props.dispatch);
+        return operation(this.props.ops, index, this.props.dispatch);
       })}
     </div>
   }
 }
 
 // takes in op state from the reducer
-function operation(ops, op, index, dispatch) {
+let operation = (ops, index, dispatch) => {
+  let op = ops[index];
   let opConfig = getOperation(op.name);
   let attributePickers;
   if (typeof opConfig !== 'undefined') {
     attributePickers = _.map(opConfig.params, (param, paramKey) => {
       return Picker({
         type: param.pickerType,
-        onUpdate: ({value}) => {
-          dispatch(updateOperationAttributes(op.id, value))
+        onUpdate: (values) => {
+          let actionValue = values;
+          if ('value' in values) {
+            actionValue = values.value;
+          }
+
+          dispatch(updateOperationAttributes(op.id, {
+            [paramKey]: actionValue
+          }))
         },
         label: param.label,
         required: true,
@@ -53,16 +61,20 @@ function operation(ops, op, index, dispatch) {
   }
 
   let removeLink;
-  if (true) {
+  if (ops.length > 0) {
     removeLink = <p className="TransactionOpMeta__remove">
-      <a>remove</a>
+      <a onClick={() => dispatch(removeOperation(op.id))}>remove</a>
     </p>;
   }
 
   return <div className="TransactionOp" key={op.id}>
     <div className="TransactionOp__meta TransactionOpMeta">
       <div className="TransactionOpMeta__order">
-        <input className="TransactionOpMeta__order__input" type="text" defaultValue={2} maxLength="2" />
+        <BlurNumberInput
+          value={index + 1}
+          onUpdate={(value) => dispatch(reorderOperation(op.id, value))}
+          maxLength="2"
+          className="TransactionOpMeta__order__input" />
       </div>
       {removeLink}
     </div>
@@ -88,3 +100,44 @@ function chooseState(state) {
     ops: state.transactionBuilder.operations,
   }
 }
+
+
+// BlurNumberInput is a controller input component that calls onUpdate only when
+// the user unfocuses the input
+class BlurNumberInput extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentValue: props.value,
+    }
+  }
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      currentValue: nextProps.value
+    });
+  }
+  onChange(event) {
+    this.setState({
+      currentValue: event.target.value
+    });
+  }
+  onBlur(event) {
+    this.props.onUpdate(this.state.currentValue);
+    this.setState({
+      currentValue: this.props.value
+    });
+  }
+  render() {
+    return <input
+      className={this.props.className}
+      type="text"
+      onChange={this.onChange.bind(this)}
+      onBlur={this.onBlur.bind(this)}
+      value={this.state.currentValue}
+      maxLength={this.props.maxLength} />
+  }
+}
+BlurNumberInput.propTypes = {
+  onUpdate: React.PropTypes.func.isRequired,
+  value: React.PropTypes.number.isRequired,
+};

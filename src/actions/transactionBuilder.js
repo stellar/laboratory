@@ -48,8 +48,10 @@ export function updateOperationAttributes(opId, newAttributes) {
 }
 
 export const REORDER_OPERATION = 'REORDER_OPERATION';
-export function reorderOperation() {
+export function reorderOperation(opId, toNth) {
   return {
     type: REORDER_OPERATION,
+    opId,
+    toNth,
   };
 }

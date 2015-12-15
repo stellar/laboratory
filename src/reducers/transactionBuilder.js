@@ -24,6 +24,8 @@ function operations(state = [{
     });
   case 'REMOVE_OPERATION':
     return _.filter(state.slice(), (op) => op.id != action.opId);
+  case 'REORDER_OPERATION':
+    return reorderOps(state, action.opId, action.toNth);
   case 'UPDATE_OPERATION_TYPE':
     return updateOperation(state, action.opId, {
       name: action.newType,
@@ -31,22 +33,34 @@ function operations(state = [{
     });
   case 'UPDATE_OPERATION_ATTRIBUTES':
     return updateOperation(state, action.opId, {
-      attributes: _.assign({}, getAttributes(action.opId), newAttributes),
+      attributes: _.assign({}, getAttributes(state, action.opId), action.newAttributes),
     });
   default:
     return state;
   }
 }
 function getAttributes(state, opId) {
-  return _.find(ops, { opId: action.opId }).attributes;
+  return _.find(state, { id: opId }).attributes;
 }
 function updateOperation(state, opId, newSource) {
-  console.log('opId', opId)
   let targetOpIndex = _.findIndex(state, { id: opId });
-  console.log('targetOpIndex', targetOpIndex)
   let newOps = state.slice();
   newOps[targetOpIndex] = _.assign({}, newOps[targetOpIndex], newSource);
   return newOps;
+}
+function reorderOps(state, opId, toNth) {
+  if (toNth < 1) {
+    toNth = 1;
+  }
+  if (toNth > state.length) {
+    toNth = state.length;
+  }
+  let ops = state.slice();
+  let targetOpIndex = _.findIndex(ops, { id: opId });
+  let targetOp = ops[targetOpIndex];
+  ops.splice(targetOpIndex, 1);
+  ops.splice(toNth - 1, 0, targetOp);
+  return ops;
 }
 
 function attributes(state = {
