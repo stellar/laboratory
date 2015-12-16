@@ -48,12 +48,9 @@ export default PickerGenerator({
         // TODO: memo picker vlaidation
         switch (fields.type.value) {
         case 'MEMO_TEXT':
-          return 'TEXT type';
         case 'MEMO_ID':
-          return 'ID type';
         case 'MEMO_HASH':
         case 'MEMO_RETURN':
-          return 'HASH type';
         default:
           return null;
         }
