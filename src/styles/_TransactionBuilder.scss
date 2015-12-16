@@ -4,7 +4,8 @@
 }
 
 .TransactionBuilder__result {
-  padding: 2em 0;
+  padding-top: 2em;
+  padding-bottom: 2em;
   border-top: 1px solid $s-color-neutral7;
   border-bottom: 1px solid $s-color-neutral7;
 
@@ -70,4 +71,5 @@
 
 .TransactionBuilderResult__code {
   background: $s-color-neutral9;
+  word-wrap: break-word;
 }

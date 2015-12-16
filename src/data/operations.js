@@ -27,12 +27,8 @@ export const operationsMap = [
         label: 'Destination',
         pickerType: 'PubKey',
       },
-      'asset': {
-        label: 'Asset',
-        pickerType: 'Asset',
-      },
-      'amount': {
-        label: 'Amount',
+      'startingBalance': {
+        label: 'Starting Balance',
         pickerType: 'Amount',
       },
     },

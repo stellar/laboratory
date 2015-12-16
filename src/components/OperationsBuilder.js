@@ -47,13 +47,15 @@ let operation = (ops, index, dispatch) => {
         },
         label: param.label,
         required: true,
-        key: paramKey,
+        key: op.name + '-' + paramKey,
       })
     });
     attributePickers.push(Picker({
       type: 'PubKey',
       onUpdate: ({value}) => {
-        dispatch(updateOperationAttributes(op.id, value))
+        dispatch(updateOperationAttributes(op.id, {
+          source: value
+        }))
       },
       label: 'Source Account',
       key: 'source',

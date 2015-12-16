@@ -12,8 +12,7 @@ import {
 } from '../actions/transactionBuilder';
 import OperationsBuilder from './OperationsBuilder';
 import {getOperation} from '../data/operations';
-// import TxBuilderResult from './TxBuilderResult';
-// import TxBuilderStore from '../stores/TxBuilderStore';
+import TxBuilderResult from './TxBuilderResult';
 
 class TransactionBuilder extends React.Component {
   render() {
@@ -37,7 +36,7 @@ class TransactionBuilder extends React.Component {
       </div>
       <div className="so-back TransactionBuilder__result">
         <div className="so-chunk">
-          {/*<TxBuilderResult />*/}
+          <TxBuilderResult />
         </div>
       </div>
     </div>

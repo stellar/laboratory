@@ -29,7 +29,7 @@ function operations(state = [{
   case 'UPDATE_OPERATION_TYPE':
     return updateOperation(state, action.opId, {
       name: action.newType,
-      action: {},
+      attributes: {},
     });
   case 'UPDATE_OPERATION_ATTRIBUTES':
     return updateOperation(state, action.opId, {
@@ -65,8 +65,8 @@ function reorderOps(state, opId, toNth) {
 
 function attributes(state = {
     sourceAccount: '',
-    sequence: 0,
-    fee: '0.0000100',
+    sequence: '',
+    fee: '', // TODO: set a default value
     memoType: 'MEMO_NONE',
     memoContent: '',
   }, action) {
