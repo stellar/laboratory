@@ -33,7 +33,7 @@ export default class TxBuilderResult extends React.Component {
         errorTitle = `Transaction building errors:`;
         finalResult = formatErrorList(transactionBuild.errors);
       } else {
-        errorTitle = `Transaction XDR result:`;
+        errorTitle = `Transaction Envelope XDR:`;
         finalResult = transactionBuild.xdr;
       }
     }
