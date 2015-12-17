@@ -13,7 +13,17 @@
   @import 'EndpointSetup';
   @import 'EndpointResult';
 
+
+
 @import 'TransactionBuilder';
+
+@import 'TransactionSigner';
+  @import 'TxSignerImport';
+  @import 'TxSignerOverview';
+  @import 'TxSignerKeys';
+  @import 'TxSignerResult';
+
+@import 'TransactionImporter';
 
 @import 'CodeBlock';
 @import 'EasySelect';

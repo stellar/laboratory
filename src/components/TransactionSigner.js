@@ -1,19 +1,19 @@
 import React from 'react';
+import Picker from './FormComponents/Picker';
+import TransactionImporter from './TransactionImporter';
 
 export default class TransactionSigner extends React.Component {
   render() {
-    return <div>
+    return <div className="TransactionSigner">
       <div className="so-back">
         <div className="so-chunk">
-          <div className="TxSignerImport">
+          <div className="TxSignerImport TransactionSigner__import">
             <h2 className="TxSignerImport__title">Import a transaction envelope in XDR format:</h2>
-            XdrPicker
-            <p className="TxSignerImport__error">Input is not a valid XDR Transaction Envelope.</p>
-            <button className="s-button">Import Transaction Envelope</button>
+            <TransactionImporter onImport={(xdr)=>{console.log('success',xdr)}}/>
           </div>
         </div>
         <div className="so-chunk">
-          <div className="TxSignerOverview">
+          <div className="TxSignerOverview TransactionSigner__overview">
             <div className="TxSignerOverview__reset">
               <button className="s-button s-button__light">Clear and start over</button>
             </div>
@@ -38,7 +38,7 @@ export default class TransactionSigner extends React.Component {
           </div>
         </div>
         <div className="so-chunk">
-          <div className="TxSignerKeys">
+          <div className="TxSignerKeys TransactionSigner__keys">
             <div className="TxSignerKeys__row">
               SecretKeyPicker
             </div>
@@ -57,7 +57,7 @@ export default class TransactionSigner extends React.Component {
           </div>
         </div>
       </div>
-      <div className="so-back TxSignerResult">
+      <div className="so-back TxSignerResult TransactionSigner__result">
         <div className="so-chunk">
           <p className="TxSignerResult__summary">1 signature added Transaction Unmodified</p>
           <pre className="TxSignerResult__xdr so-code so-code__wrap"><code>

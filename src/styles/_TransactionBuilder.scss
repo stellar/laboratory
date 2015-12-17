@@ -12,24 +12,6 @@
   background: $s-color-neutral8;
 }
 
-.TransactionImport {
-  margin-bottom: 2em;
-}
-  .TransactionImport__input {
-    padding-bottom: 1em;
-  }
-    .TransactionImport__input__textarea {
-      display: block;
-      min-width: 4em;
-      width: 36em;
-      max-width: 100%;
-      min-height: 10em;
-      margin-bottom: 0;
-    }
-  .TransactionImport__alert {
-    color: $s-color-alert;
-  }
-
 .TransactionAttributes {
   margin-bottom: 1.5em;
 }
