@@ -107,6 +107,9 @@ export default function(config) {
                 case 'text':
                   formElement = <input type="text" value={this.state.fields[fieldConfig.name].value} placeholder={fieldConfig.placeholder} onChange={this.onChange.bind(this, fieldConfig.name)}/>
                   break;
+                case 'textarea':
+                  formElement = <textarea value={this.state.fields[fieldConfig.name].value} placeholder={fieldConfig.placeholder} onChange={this.onChange.bind(this, fieldConfig.name)}></textarea>
+                  break;
                 default:
                   throw new Error(`Unknown picker field type: ${fieldConfig.type}. Check the config object passed to PickerGenerator.`);
               }
