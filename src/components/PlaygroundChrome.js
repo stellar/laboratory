@@ -3,14 +3,15 @@ import classNames from 'classnames';
 import NetworkPicker from './NetworkPicker';
 import EndpointExplorer from './EndpointExplorer';
 import TransactionBuilder from './TransactionBuilder';
+import TransactionSigner from './TransactionSigner';
 
 export let PlaygroundChrome = React.createClass({
   getInitialState: function() {
     return {
-      tab: 'TransactionBuilder'
+      tab: 'TransactionSigner'
     };
   },
-  changeTab: function(tab) {
+  setTab: function(tab) {
     this.setState({tab})
   },
   render: function() {
@@ -22,11 +23,25 @@ export let PlaygroundChrome = React.createClass({
       case 'TransactionBuilder':
         activeTab = <TransactionBuilder />;
         break;
+      case 'TransactionSigner':
+        activeTab = <TransactionSigner />;
+        break;
       default:
         throw new Error(`Invalid tab: ${this.state.tab}`);
     }
 
     let defaultClasses = 'buttonList__item s-button s-button__min';
+
+    let tabItem = (name, key) => {
+      return <a
+        onClick={() => {this.setTab(key)}}
+        className={classNames(
+          'buttonList__item s-button s-button__min',
+          {'is-active': this.state.tab === key})}
+        key={key}>
+        {name}
+      </a>
+    }
 
     return <div>
       <div className="so-back">
@@ -44,16 +59,9 @@ export let PlaygroundChrome = React.createClass({
       <div className="so-back PlaygroundChrome__siteNavBack">
         <div className="so-chunk">
           <nav className="s-buttonList">
-            <a
-               onClick={this.changeTab.bind(this, 'EndpointExplorer')}
-               className={classNames(defaultClasses, {'is-active': this.state.tab === 'EndpointExplorer'})}>
-              Endpoint Explorer
-            </a>
-            <a
-               onClick={this.changeTab.bind(this, 'TransactionBuilder')}
-               className={classNames(defaultClasses, {'is-active': this.state.tab === 'TransactionBuilder'})}>
-              Transaction Builder
-            </a>
+            {tabItem('Endpoint Explorer', 'EndpointExplorer')}
+            {tabItem('Transaction Builder', 'TransactionBuilder')}
+            {tabItem('Transaction Signer', 'TransactionSigner')}
           </nav>
         </div>
       </div>

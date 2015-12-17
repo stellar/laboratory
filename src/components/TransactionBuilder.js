@@ -4,7 +4,6 @@ import {EndpointPicker} from './EndpointPicker';
 import {EndpointSetup} from './EndpointSetup';
 import {EndpointResult} from './EndpointResult';
 import {PubKeyPicker} from './FormComponents/PubKeyPicker';
-import ImportXDR from './ImportXDR';
 import TxBuilderAttributes from './TxBuilderAttributes';
 import {
   addOperation,
