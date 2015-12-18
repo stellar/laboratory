@@ -8,7 +8,7 @@ import TransactionSigner from './TransactionSigner';
 export let PlaygroundChrome = React.createClass({
   getInitialState: function() {
     return {
-      tab: 'TransactionSigner'
+      tab: 'EndpointExplorer'
     };
   },
   setTab: function(tab) {
