@@ -47,6 +47,6 @@ function chooseState(state) {
   return {
     availableNames: Object.keys(state.network.available),
     currentName:    state.network.current,
-    currentURL:     state.network.available[state.network.current],
+    currentURL:     state.network.available[state.network.current].url,
   };
 }

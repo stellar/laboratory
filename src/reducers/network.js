@@ -2,11 +2,18 @@ import {combineReducers} from "redux";
 import {CHOOSE_NETWORK, SET_NETWORKS} from "../actions/network";
 
 const defaultNetworks = {
-  test: 'https://horizon-testnet.stellar.org',
-  public: 'https://horizon.stellar.org'
+  test: {
+    url: 'https://horizon-testnet.stellar.org',
+    useNetworkFunc: 'useTestNetwork',
+  },
+  public: {
+    url: 'https://horizon.stellar.org',
+    useNetworkFunc: 'usePublicNetwork',
+  }
 }
 
 const defaultNetworkName = 'test';
+const defaultUseNetworkFunc = 'useTestNetwork';
 
 const network = combineReducers({ current, available });
 

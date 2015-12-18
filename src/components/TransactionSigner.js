@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import Picker from './FormComponents/Picker';
-import {Transaction, Keypair} from 'stellar-sdk';
+import {Transaction, Keypair, Network} from 'stellar-sdk';
 import TransactionImporter from './TransactionImporter';
 import {
   importFromXdr,
@@ -25,16 +25,7 @@ class TransactionSigner extends React.Component {
         </div>
       </div>
     } else {
-      let xdrResult, resultTitle;
-      if (isValidSecret(signers.signer)) {
-        let newTx = new Transaction(tx.xdr);
-        newTx.sign(Keypair.fromSeed(signers.signer));
-
-        xdrResult = newTx.toEnvelope().toXDR('base64');
-        resultTitle = '1 signature added';
-      } else {
-        resultTitle = 'Signing key required';
-      }
+      let result = signTx(tx.xdr, signers.signer, this.props.useNetworkFunc);
 
       content = <div>
         <div className="so-back">
@@ -80,8 +71,8 @@ class TransactionSigner extends React.Component {
         </div>
         <div className="so-back TxSignerResult TransactionSigner__result">
           <div className="so-chunk">
-            <p className="TxSignerResult__summary">{resultTitle}</p>
-            <pre className="TxSignerResult__xdr so-code so-code__wrap"><code>{xdrResult}</code></pre>
+            <p className="TxSignerResult__summary">{result.message}</p>
+            <pre className="TxSignerResult__xdr so-code so-code__wrap"><code>{result.xdr}</code></pre>
           </div>
         </div>
       </div>
@@ -97,6 +88,7 @@ export default connect(chooseState)(TransactionSigner);
 function chooseState(state) {
   return {
     state: state.transactionSigner,
+    useNetworkFunc: state.network.available[state.network.current].useNetworkFunc,
   }
 }
 
@@ -107,4 +99,23 @@ function isValidSecret(key) {
     return false;
   }
   return true;
+}
+
+function signTx(xdr, signer, useNetworkFunc) {
+  Network[useNetworkFunc]();
+
+  if (isValidSecret(signer)) {
+    let newTx = new Transaction(xdr);
+    newTx.sign(Keypair.fromSeed(signer));
+
+    return {
+      xdr: newTx.toEnvelope().toXDR('base64'),
+      message: '1 signature added',
+    };
+  } else {
+    return {
+      xdr: xdr,
+      message: 'Signing key required'
+    };
+  }
 }

@@ -51,7 +51,6 @@ export default connect(chooseState)(TxBuilderResult);
 function chooseState(state) {
   return {
     state: state.transactionBuilder,
-    network: state.network
   }
 }
 
