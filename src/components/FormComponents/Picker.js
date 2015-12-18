@@ -1,6 +1,5 @@
 import React from 'react';
 let pickerComponents = {
-  PubKeyPicker: require('./PubKeyPicker'),
   AmountPicker: require('./AmountPicker'),
   AssetPicker: require('./AssetPicker'),
   CursorPicker: require('./CursorPicker'),
@@ -12,6 +11,8 @@ let pickerComponents = {
   OperationTypePicker: require('./OperationTypePicker'),
   OrderPicker: require('./OrderPicker'),
   OfferPicker: require('./OfferPicker'),
+  PubKeyPicker: require('./PubKeyPicker'),
+  SecretKeyPicker: require('./SecretKeyPicker'),
   TransactionPicker: require('./TransactionPicker'),
   XdrPicker: require('./XdrPicker'),
 }

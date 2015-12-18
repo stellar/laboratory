@@ -8,51 +8,46 @@ export default class TransactionSigner extends React.Component {
       <div className="so-back">
         <div className="so-chunk">
           <div className="TxSignerImport TransactionSigner__import">
-            <h2 className="TxSignerImport__title">Import a transaction envelope in XDR format:</h2>
+            <p className="TxSignerImport__title">Import a transaction envelope in XDR format:</p>
             <TransactionImporter onImport={(xdr)=>{console.log('success',xdr)}}/>
           </div>
         </div>
         <div className="so-chunk">
           <div className="TxSignerOverview TransactionSigner__overview">
-            <div className="TxSignerOverview__reset">
-              <button className="s-button s-button__light">Clear and start over</button>
+            <div className="TxSignerOverview__titleBar">
+              <p className="TxSignerOverview__titleBar__title">Transaction overview</p>
+              <a className="TxSignerOverview__titleBar__reset">Clear and start over</a>
             </div>
-            <div className="TxSignerOverview__table">
-              <div className="TxSignerOverview__table__row">
-                <div className="TxSignerOverview__table__row__label">XDR</div>
-                <div className="TxSignerOverview__table__row__content">
-                  <pre className="TxSignerOverview so-code so-code__wrap"><code>
+            <div className="simpleTable">
+              <div className="simpleTable__row">
+                <div className="simpleTable__row__label">Transaction Envelope XDR</div>
+                <div className="simpleTable__row__content">
+                  <pre className="so-code so-code__wrap"><code>
                     AAAAAAJ6JsqETD62vmfnwnunIbeHkngYuSSR622WfZmHpz9yAAAAyAAAAAAAAATTAAAAAAAAAAEAAAAGdGV3ZmRzAAAAAAACAAAAAQAAAAD5NMv6q1ZjBafbOC4BmHn5UNVYlacnl8kooX5xIOPpYgAAAAEAAAAArqW21g0d1YLqh1F/m+mzhXj5w6T0v0bHkxIwvVllnZEAAAACMjM1MjM0dwAAAAAAAAAAAAJ6JsqETD62vmfnwnunIbeHkngYuSSR622WfZmHpz9yAAAAAA9/IfAAAAAAAAAAAAAAAAACeibKhEw+tr5n58J7pyG3h5J4GLkkkettln2Zh6c/cgAAAAAAmJaAAAAAAAAAAAA=
                   </code></pre>
                 </div>
               </div>
-              <div className="TxSignerOverview__table__row">
-                <div className="TxSignerOverview__table__row__label">Source account</div>
-                <div className="TxSignerOverview__table__row__content">GAAAAAAAA</div>
+              <div className="simpleTable__row">
+                <div className="simpleTable__row__label">Source account</div>
+                <div className="simpleTable__row__content">GDEGHAHQ6EK7HT44KZV3KKXQ5W7SD7WN6TFMK6I2VNWFWNKHG3PSO7ZM</div>
               </div>
-              <div className="TxSignerOverview__table__row">
-                <div className="TxSignerOverview__table__row__label">Number of operations</div>
-                <div className="TxSignerOverview__table__row__content">3</div>
+              <div className="simpleTable__row">
+                <div className="simpleTable__row__label">Number of operations</div>
+                <div className="simpleTable__row__content">3</div>
               </div>
             </div>
           </div>
         </div>
         <div className="so-chunk">
           <div className="TxSignerKeys TransactionSigner__keys">
-            <div className="TxSignerKeys__row">
-              SecretKeyPicker
-            </div>
-            <div className="TxSignerKeys__row">
-              SecretKeyPicker
-            </div>
-            <div className="TxSignerKeys__row">
-              SecretKeyPicker
-            </div>
-            <div className="TxSignerKeys__row">
-              SecretKeyPicker
-            </div>
-            <div className="TxSignerKeys__row">
-              SecretKeyPicker
+            <p className="TxSignerKeys__title">Signatures</p>
+            <div className="optionsTable">
+              {Picker({
+                type: 'SecretKey',
+                onUpdate: ()=>{},
+                required: true,
+                label: 'Add Signer',
+              })}
             </div>
           </div>
         </div>

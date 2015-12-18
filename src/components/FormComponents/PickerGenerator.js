@@ -95,7 +95,7 @@ export default function(config) {
               let formElement;
               switch(fieldConfig.type) {
                 case 'radio':
-                  formElement = <div className="s-buttonGroup">
+                  formElement = <div className="s-buttonGroup picker picker--radio">
                     {_.map(fieldConfig.options, option => {
                       return <label key={option.name} className="s-buttonGroup__wrapper">
                         <input type="radio" className="s-buttonGroup__radio" name={this.state.uniqueKey + fieldConfig.name} onChange={this.onChange.bind(this, fieldConfig.name)} value={option.value} checked={this.state.fields[fieldConfig.name].value == option.value} />
@@ -105,10 +105,12 @@ export default function(config) {
                   </div>;
                   break;
                 case 'text':
-                  formElement = <input type="text" value={this.state.fields[fieldConfig.name].value} placeholder={fieldConfig.placeholder} onChange={this.onChange.bind(this, fieldConfig.name)}/>
+                  formElement = <input type="text" value={this.state.fields[fieldConfig.name].value} placeholder={fieldConfig.placeholder} onChange={this.onChange.bind(this, fieldConfig.name)}
+                  className="picker picker--textInput"/>
                   break;
                 case 'textarea':
-                  formElement = <textarea value={this.state.fields[fieldConfig.name].value} placeholder={fieldConfig.placeholder} onChange={this.onChange.bind(this, fieldConfig.name)}></textarea>
+                  formElement = <textarea value={this.state.fields[fieldConfig.name].value} placeholder={fieldConfig.placeholder} onChange={this.onChange.bind(this, fieldConfig.name)}
+                  className="picker picker--textArea"></textarea>
                   break;
                 default:
                   throw new Error(`Unknown picker field type: ${fieldConfig.type}. Check the config object passed to PickerGenerator.`);
