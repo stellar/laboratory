@@ -60,7 +60,7 @@ function buildTransaction(attributes, operations) {
   };
 
   try {
-    var account = new Account(attributes.sourceAccount, attributes.sequence);
+    var account = new Account(attributes.sourceAccount, attributes.sequence - 1);
 
     let opts = {};
     if (attributes.fee !== '') {
