@@ -38,9 +38,9 @@ export default class TxBuilderResult extends React.Component {
 
     return <div className="TxBuilderResult">
       <h3>{errorTitle}</h3>
-      <pre className="TransactionXDR so-code TransactionBuilderResult__code">
-        <code><EasySelect plain={true}>{finalResult}</EasySelect></code>
-      </pre>
+      <EasySelect plain={true}><pre className="TransactionXDR so-code TransactionBuilderResult__code">
+        <code>{finalResult}</code>
+      </pre></EasySelect>
       {/* TODO: Implement button signing (while refactoring routing)
       <button className="s-button">Sign this transaction</button>
       */}

@@ -30,7 +30,7 @@ class TransactionSigner extends React.Component {
       let transaction = new Transaction(tx.xdr);
 
       let infoTable = {
-        'Transaction Envelope XDR': <pre className="so-code so-code__wrap"><code><EasySelect plain={true}>{tx.xdr}</EasySelect></code></pre>,
+        'Transaction Envelope XDR': <EasySelect plain={true}><pre className="so-code so-code__wrap"><code>{tx.xdr}</code></pre></EasySelect>,
         'Source account': transaction.source,
         'Sequence number': transaction.sequence,
         'Transaction Fee (stroops)': transaction.fee,
@@ -75,7 +75,7 @@ class TransactionSigner extends React.Component {
         <div className="so-back TxSignerResult TransactionSigner__result">
           <div className="so-chunk">
             <p className="TxSignerResult__summary">{result.message}</p>
-            <pre className="TxSignerResult__xdr so-code so-code__wrap"><code><EasySelect plain={true}>{result.xdr}</EasySelect></code></pre>
+            <EasySelect plain={true}><pre className="TxSignerResult__xdr so-code so-code__wrap"><code>{result.xdr}</code></pre></EasySelect>
           </div>
         </div>
       </div>
