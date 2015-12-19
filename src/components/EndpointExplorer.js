@@ -22,6 +22,16 @@ class EndpointExplorer extends React.Component {
       url: buildRequestUrl(this.props.baseURL, endpoint, pendingRequest.values),
     };
 
+    let endpointSetup;
+    if (currentEndpoint !== '') {
+      endpointSetup = <EndpointSetup
+        request={request}
+        params={pendingRequest.params}
+        onSubmit={() => dispatch(submitRequest(request))}
+        onUpdate={(param, values, complete) => dispatch(updateValues(param, values, complete))}
+      />
+    }
+
     return <div className="so-back">
       <div className="so-chunk">
         <div className="EndpointExplorer">
@@ -34,12 +44,7 @@ class EndpointExplorer extends React.Component {
           </div>
 
           <div className="EndpointExplorer__setup">
-            <EndpointSetup
-              request={request}
-              params={pendingRequest.params}
-              onSubmit={() => dispatch(submitRequest(request))}
-              onUpdate={(param, values, complete) => dispatch(updateValues(param, values, complete))}
-              />
+            {endpointSetup}
           </div>
 
           <div className="EndpointExplorer__result">
