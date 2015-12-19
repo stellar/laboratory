@@ -8,7 +8,7 @@ import {Provider} from 'react-redux';
 
 import rootReducer from './reducers/root';
 import logging from "./middleware/logging";
-import {PlaygroundChrome} from './components/PlaygroundChrome';
+import PlaygroundChrome from './components/PlaygroundChrome';
 
 
 

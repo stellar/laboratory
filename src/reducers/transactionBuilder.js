@@ -1,19 +1,18 @@
 import {combineReducers} from 'redux';
 import {UPDATE_ATTRIBUTES} from '../actions/transactionBuilder';
+import {CHANGE_PAGE} from '../actions/routing';
 import _ from 'lodash';
 
-const transactionBuilder = combineReducers({
-  attributes,
-  operations,
-})
+const defaultOperations = [{
+  id: 0,
+  attributes: {},
+  name: '',
+}];
+function operations(state, action) {
+  if (typeof state === 'undefined') {
+    return defaultOperations;
+  }
 
-export default transactionBuilder
-
-function operations(state = [{
-    id: 0,
-    attributes: {},
-    name: '',
-  }], action) {
   let targetOpIndex, newOps;
   switch (action.type) {
   case 'ADD_OPERATION':
@@ -35,6 +34,8 @@ function operations(state = [{
     return updateOperation(state, action.opId, {
       attributes: _.assign({}, getAttributes(state, action.opId), action.newAttributes),
     });
+  case CHANGE_PAGE:
+    return defaultOperations;
   default:
     return state;
   }
@@ -63,15 +64,31 @@ function reorderOps(state, opId, toNth) {
   return ops;
 }
 
-function attributes(state = {
-    sourceAccount: '',
-    sequence: '',
-    fee: '', // TODO: set a default value
-    memoType: 'MEMO_NONE',
-    memoContent: '',
-  }, action) {
-  if (action.type == UPDATE_ATTRIBUTES) {
-    return Object.assign({}, state, action.newAttributes);
+const defaultAttributes = {
+  sourceAccount: '',
+  sequence: '',
+  fee: '',
+  memoType: 'MEMO_NONE',
+  memoContent: '',
+};
+function attributes(state, action) {
+  if (typeof state === 'undefined') {
+    return defaultAttributes;
   }
-  return state;
+
+  switch(action.type) {
+  case UPDATE_ATTRIBUTES:
+    return Object.assign({}, state, action.newAttributes);
+  case CHANGE_PAGE:
+    return defaultAttributes;
+  default:
+    return state;
+  }
 }
+
+const transactionBuilder = combineReducers({
+  attributes,
+  operations,
+})
+
+export default transactionBuilder

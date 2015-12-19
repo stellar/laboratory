@@ -1,17 +1,20 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import classNames from 'classnames';
 import NetworkPicker from './NetworkPicker';
 import EndpointExplorer from './EndpointExplorer';
 import TransactionBuilder from './TransactionBuilder';
 import TransactionSigner from './TransactionSigner';
+import {changePage} from '../actions/routing';
 
-export let PlaygroundChrome = React.createClass({
+let PlaygroundChrome = React.createClass({
   getInitialState: function() {
     return {
       tab: 'EndpointExplorer'
     };
   },
   setTab: function(tab) {
+    this.props.dispatch(changePage());
     this.setState({tab})
   },
   render: function() {
@@ -70,3 +73,8 @@ export let PlaygroundChrome = React.createClass({
     </div>;
   }
 });
+
+export default connect(chooseState)(PlaygroundChrome);
+function chooseState(state) {
+  return {}
+}
