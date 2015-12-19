@@ -2,6 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {PubKeyPicker} from './FormComponents/PubKeyPicker';
 import {Account, TransactionBuilder, Operation, Asset, Memo} from 'stellar-sdk';
+import {EasySelect} from './EasySelect';
 
 export default class TxBuilderResult extends React.Component {
   render() {
@@ -37,7 +38,9 @@ export default class TxBuilderResult extends React.Component {
 
     return <div className="TxBuilderResult">
       <h3>{errorTitle}</h3>
-      <pre className="TransactionXDR so-code TransactionBuilderResult__code"><code>{finalResult}</code></pre>
+      <pre className="TransactionXDR so-code TransactionBuilderResult__code">
+        <code><EasySelect plain={true}>{finalResult}</EasySelect></code>
+      </pre>
       {/* TODO: Implement button signing (while refactoring routing)
       <button className="s-button">Sign this transaction</button>
       */}

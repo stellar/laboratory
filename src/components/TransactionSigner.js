@@ -8,6 +8,7 @@ import {
   clearTransaction,
   setSecret,
 } from '../actions/transactionSigner';
+import {EasySelect} from './EasySelect';
 
 class TransactionSigner extends React.Component {
   render() {
@@ -29,7 +30,7 @@ class TransactionSigner extends React.Component {
       let transaction = new Transaction(tx.xdr);
 
       let infoTable = {
-        'Transaction Envelope XDR': <pre className="so-code so-code__wrap"><code>{tx.xdr}</code></pre>,
+        'Transaction Envelope XDR': <pre className="so-code so-code__wrap"><code><EasySelect plain={true}>{tx.xdr}</EasySelect></code></pre>,
         'Source account': transaction.source,
         'Sequence number': transaction.sequence,
         'Transaction Fee (stroops)': transaction.fee,
@@ -74,7 +75,7 @@ class TransactionSigner extends React.Component {
         <div className="so-back TxSignerResult TransactionSigner__result">
           <div className="so-chunk">
             <p className="TxSignerResult__summary">{result.message}</p>
-            <pre className="TxSignerResult__xdr so-code so-code__wrap"><code>{result.xdr}</code></pre>
+            <pre className="TxSignerResult__xdr so-code so-code__wrap"><code><EasySelect plain={true}>{result.xdr}</EasySelect></code></pre>
           </div>
         </div>
       </div>

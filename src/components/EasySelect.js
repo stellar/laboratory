@@ -9,6 +9,11 @@ export let EasySelect = React.createClass({
     window.getSelection().addRange(range);
   },
   render: function() {
-    return <span className="EasySelect" onClick={this.selectContents}>{this.props.children}</span>;
+    let className = 'EasySelect';
+    if (this.props.plain) {
+      className += ' EasySelect__plain'
+    }
+
+    return <span className={className} onClick={this.selectContents}>{this.props.children}</span>;
   }
 });
