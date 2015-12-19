@@ -26,6 +26,16 @@ class TransactionSigner extends React.Component {
       </div>
     } else {
       let result = signTx(tx.xdr, signers.signer, this.props.useNetworkFunc);
+      let transaction = new Transaction(tx.xdr);
+
+      let infoTable = {
+        'Transaction Envelope XDR': <pre className="so-code so-code__wrap"><code>{tx.xdr}</code></pre>,
+        'Source account': transaction.source,
+        'Sequence number': transaction.sequence,
+        'Transaction Fee (stroops)': transaction.fee,
+        'Number of operations': transaction.operations.length,
+        'Number of existing signatures': transaction.signatures.length,
+      };
 
       content = <div>
         <div className="so-back">
@@ -38,20 +48,12 @@ class TransactionSigner extends React.Component {
                   Clear and import new transaction</a>
               </div>
               <div className="simpleTable">
-                <div className="simpleTable__row">
-                  <div className="simpleTable__row__label">Transaction Envelope XDR</div>
-                  <div className="simpleTable__row__content">
-                    <pre className="so-code so-code__wrap"><code>{tx.xdr}</code></pre>
+                {_.map(infoTable, (content, label) => {
+                  return <div className="simpleTable__row" key={label}>
+                    <div className="simpleTable__row__label">{label}</div>
+                    <div className="simpleTable__row__content">{content}</div>
                   </div>
-                </div>
-                <div className="simpleTable__row">
-                  <div className="simpleTable__row__label">Source account</div>
-                  <div className="simpleTable__row__content">GDEGHAHQ6EK7HT44KZV3KKXQ5W7SD7WN6TFMK6I2VNWFWNKHG3PSO7ZM</div>
-                </div>
-                <div className="simpleTable__row">
-                  <div className="simpleTable__row__label">Number of operations</div>
-                  <div className="simpleTable__row__content">3</div>
-                </div>
+                })}
               </div>
             </div>
           </div>
