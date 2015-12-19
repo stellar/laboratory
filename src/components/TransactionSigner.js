@@ -108,15 +108,15 @@ function signTx(xdr, signer, useNetworkFunc) {
 
   if (isValidSecret(signer)) {
     let newTx = new Transaction(xdr);
+    let existingSigs = newTx.signatures.length;
     newTx.sign(Keypair.fromSeed(signer));
 
     return {
       xdr: newTx.toEnvelope().toXDR('base64'),
-      message: '1 signature added',
+      message: `${existingSigs} existing signature(s); 1 signature added; ${existingSigs + 1} signatures total`,
     };
   } else {
     return {
-      xdr: xdr,
       message: 'Signing key required'
     };
   }
