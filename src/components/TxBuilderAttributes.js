@@ -22,10 +22,10 @@ export default class TxBuilderAttributes extends React.Component {
           key: 'sequence',
         })}
         {Picker({
-          type: 'Amount',
+          type: 'Stroops',
           onUpdate: onUpdate.bind(this, 'fee'),
           label: 'Transaction Fee',
-          required: true,
+          required: false,
           key: 'fee',
         })}
         {Picker({

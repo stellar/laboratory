@@ -13,6 +13,7 @@ let pickerComponents = {
   OfferPicker: require('./OfferPicker'),
   PubKeyPicker: require('./PubKeyPicker'),
   SecretKeyPicker: require('./SecretKeyPicker'),
+  StroopsPicker: require('./StroopsPicker'),
   TransactionPicker: require('./TransactionPicker'),
   XdrPicker: require('./XdrPicker'),
 }

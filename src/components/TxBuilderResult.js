@@ -15,9 +15,6 @@ export default class TxBuilderResult extends React.Component {
     if (attributes.sequence === '') {
       validationErrors.push('Sequence number is a required field');
     }
-    if (attributes.fee === '') {
-      validationErrors.push('Transation fee is a required field');
-    }
     if (attributes.memoType !== 'MEMO_NONE' && attributes.memoContent === '') {
       validationErrors.push('Memo content is required if memo type is selected');
     }
@@ -64,7 +61,13 @@ function buildTransaction(attributes, operations) {
 
   try {
     var account = new Account(attributes.sourceAccount, attributes.sequence);
-    var transaction = new TransactionBuilder(account)
+
+    let opts = {};
+    if (attributes.fee !== '') {
+      opts.fee = attributes.fee;
+    }
+
+    var transaction = new TransactionBuilder(account, opts)
 
     if (attributes.memoType !== 'MEMO_NONE') {
       try {
