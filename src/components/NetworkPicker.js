@@ -1,40 +1,52 @@
 import React from 'react';
-import {ExplorerActions} from '../actions/ExplorerActions';
-import {ExplorerStore} from '../stores/ExplorerStore';
+import {connect} from 'react-redux';
+import {chooseNetwork} from "../actions/network";
 
-export let NetworkPicker = React.createClass({
-  getInitialState: function() {
-    return {
-      networkState: ExplorerStore.horizonRoot[ExplorerStore.currentNetwork]
-    };
-  },
-  onToggle: function(event) {
-    ExplorerActions.networkSelect(event.target.value);
-  },
-  onNetworkChange: function() {
-    this.setState({
-      networkState: ExplorerStore.horizonRoot[ExplorerStore.currentNetwork]
-    });
-  },
-  componentDidMount: function() {
-    ExplorerStore.addNetworkChangeListener(this.onNetworkChange);
-  },
-  componentWillUnmount: function() {
-    ExplorerStore.removeNetworkChangeListener(this.onNetworkChange);
-  },
-  render: function() {
+class NetworkPicker extends React.Component {
+  render() {
+    let {dispatch} = this.props;
+    let {currentName, currentURL, availableNames} = this.props;
+
+
+    let items = availableNames.map(n => {
+      return <NetworkToggle
+        name={n}
+        key={n}
+        selected={currentName === n}
+        onToggle={() => dispatch(chooseNetwork(n))}
+        />
+    })
+
+
     return <div className="NetworkPicker">
       <form className="s-buttonGroup NetworkPicker__buttonGroup">
-        <label className="s-buttonGroup__wrapper">
-          <input type="radio" className="s-buttonGroup__radio" name="network-toggle" onClick={this.onToggle} value="public" />
-          <span className="s-button s-button__light NetworkPicker__button">public</span>
-        </label>
-        <label className="s-buttonGroup__wrapper">
-          <input type="radio" className="s-buttonGroup__radio" name="network-toggle" onClick={this.onToggle} defaultChecked="checked" value="test" />
-          <span className="s-button s-button__light NetworkPicker__button">test</span>
-        </label>
+        {items}
       </form>
-      <span className="NetworkPicker__url">{this.state.networkState}</span>
+      <span className="NetworkPicker__url">{currentURL}</span>
     </div>
   }
-});
+}
+
+const NetworkToggle = (props) => {
+  let {name, onToggle, selected} = props;
+  return <label className="s-buttonGroup__wrapper">
+    <input
+      type="radio"
+      className="s-buttonGroup__radio"
+      name="network-toggle"
+      onChange={onToggle}
+      checked={selected}
+      value={name} />
+    <span className="s-button s-button__light NetworkPicker__button">{name}</span>
+  </label>
+}
+
+export default connect(chooseState)(NetworkPicker);
+
+function chooseState(state) {
+  return {
+    availableNames: Object.keys(state.network.available),
+    currentName:    state.network.current,
+    currentURL:     state.network.available[state.network.current].url,
+  };
+}

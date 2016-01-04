@@ -1,0 +1,20 @@
+.TransactionImporter {
+  margin-bottom: 2em;
+}
+  .TransactionImporter__input {
+    padding-bottom: 1em;
+  }
+    .TransactionImporter__input__textarea {
+      display: block;
+      min-width: 4em;
+      width: 36em;
+      max-width: 100%;
+      min-height: 12em;
+      margin-bottom: 0;
+    }
+  .TransactionImporter__alert {
+    color: $s-color-alert;
+  }
+  .TransactionImporter__success {
+    color: $s-color-success;
+  }

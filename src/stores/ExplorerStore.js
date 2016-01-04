@@ -4,7 +4,8 @@ import querystring from 'querystring';
 import {EventEmitter} from 'events';
 import ExplorerConstants from '../constants/ExplorerConstants'
 import {AppDispatcher} from '../dispatcher/AppDispatcher';
-import endpoints from '../endpoints.json'
+import {endpointsMap} from '../data/endpoints';
+let endpoints = endpointsMap;
 
 const CHANGE_EVENT = 'change';
 const URL_CHANGE_EVENT = 'url_change';

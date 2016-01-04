@@ -1,9 +1,51 @@
 import React from 'react';
-import {EndpointExplorer} from './EndpointExplorer';
-import {NetworkPicker} from './NetworkPicker';
+import {connect} from 'react-redux';
+import classNames from 'classnames';
+import NetworkPicker from './NetworkPicker';
+import EndpointExplorer from './EndpointExplorer';
+import TransactionBuilder from './TransactionBuilder';
+import TransactionSigner from './TransactionSigner';
+import {changePage} from '../actions/routing';
 
-export let PlaygroundChrome = React.createClass({
+let PlaygroundChrome = React.createClass({
+  getInitialState: function() {
+    return {
+      tab: 'EndpointExplorer'
+    };
+  },
+  setTab: function(tab) {
+    this.props.dispatch(changePage());
+    this.setState({tab})
+  },
   render: function() {
+    let activeTab;
+    switch (this.state.tab) {
+      case 'EndpointExplorer':
+        activeTab = <EndpointExplorer />;
+        break;
+      case 'TransactionBuilder':
+        activeTab = <TransactionBuilder />;
+        break;
+      case 'TransactionSigner':
+        activeTab = <TransactionSigner />;
+        break;
+      default:
+        throw new Error(`Invalid tab: ${this.state.tab}`);
+    }
+
+    let defaultClasses = 'buttonList__item s-button s-button__min';
+
+    let tabItem = (name, key) => {
+      return <a
+        onClick={() => {this.setTab(key)}}
+        className={classNames(
+          'buttonList__item s-button s-button__min',
+          {'is-active': this.state.tab === key})}
+        key={key}>
+        {name}
+      </a>
+    }
+
     return <div>
       <div className="so-back">
         <div className="so-chunk">
@@ -20,17 +62,19 @@ export let PlaygroundChrome = React.createClass({
       <div className="so-back PlaygroundChrome__siteNavBack">
         <div className="so-chunk">
           <nav className="s-buttonList">
-            <a href="#" className="s-buttonList__item s-button s-button__min is-active">Endpoint Explorer</a>
-            <a className="s-buttonList__item s-button s-button__min">More coming soon</a>
+            {tabItem('Endpoint Explorer', 'EndpointExplorer')}
+            {tabItem('Transaction Builder', 'TransactionBuilder')}
+            {tabItem('Transaction Signer', 'TransactionSigner')}
           </nav>
         </div>
       </div>
-      <div className="so-back">
-        <div className="so-chunk">
-          <EndpointExplorer />
-        </div>
-      </div>
 
+      {activeTab}
     </div>;
   }
 });
+
+export default connect(chooseState)(PlaygroundChrome);
+function chooseState(state) {
+  return {}
+}

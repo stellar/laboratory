@@ -10,6 +10,7 @@
     "babel-core": "^5.8.25",
     "babel-loader": "^5.3.2",
     "browser-sync": "^2.9.11",
+    "classnames": "^2.2.0",
     "css-loader": "^0.18.0",
     "extract-text-webpack-plugin": "^0.8.2",
     "file-loader": "^0.8.4",
@@ -22,10 +23,14 @@
     "node-sass": "^3.3.3",
     "react": "^0.14.0",
     "react-dom": "^0.14.0",
+    "react-redux": "^4.0.0",
+    "redux": "^3.0.4",
+    "redux-thunk": "^1.0.0",
     "sass-loader": "^3.0.0",
     "solar-css": "git+https://github.com/stellar/solar#master",
     "solar-stellarorg": "git+https://github.com/stellar/solar-stellarorg#master",
     "stellar-sdk": "^0.2.12",
+    "uri-templates": "^0.1.9",
     "webpack": "^1.12.2"
   }
 }

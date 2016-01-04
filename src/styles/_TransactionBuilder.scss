@@ -1,0 +1,57 @@
+.TransactionBuilder {
+  padding-top: 2em;
+  padding-bottom: 4em;
+}
+
+.TransactionBuilder__result {
+  padding-top: 2em;
+  padding-bottom: 2em;
+  border-top: 1px solid $s-color-neutral7;
+  border-bottom: 1px solid $s-color-neutral7;
+
+  background: $s-color-neutral8;
+}
+
+.TransactionAttributes {
+  margin-bottom: 1.5em;
+}
+
+.TransactionOp {
+  @include S-flex-row;
+  margin-bottom: 1.5em;
+}
+.TransactionOp__meta {
+  @include S-flexItem-noFlex;
+}
+.TransactionOp__config {
+  @include S-flexItem-share;
+}
+
+.TransactionOpMeta__order {
+  padding: 1.5em 1em 0.5em 1em;
+}
+  .TransactionOpMeta__order__input {
+    height: 72px;
+    width: 72px;
+    padding-left: 0;
+    padding-right: 0;
+    text-align: center;
+    font-size: $s-scale-a;
+  }
+.TransactionOpMeta__remove {
+  text-align: center;
+}
+
+.TransactionOperations__add {
+  width: 100%;
+  font-size: $s-scale-2;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  text-align: center;
+  margin-bottom: 1.5em;
+}
+
+.TransactionBuilderResult__code {
+  background: $s-color-neutral9;
+  word-wrap: break-word;
+}
