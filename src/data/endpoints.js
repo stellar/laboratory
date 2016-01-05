@@ -124,7 +124,7 @@ export const endpointsMap = {
           {
             id: 'ledger',
             type: 'Ledger',
-            label: 'Ledger',
+            label: 'Ledger Sequence',
             required: true,
           },
           {
@@ -397,7 +397,7 @@ export const endpointsMap = {
           {
             id: 'transaction',
             type: 'Transaction',
-            label: 'Transaction ID',
+            label: 'Transaction Hash',
             required: true,
           },
           {
@@ -522,7 +522,7 @@ export const endpointsMap = {
           },
           {
             id: 'destination_amount',
-            type: 'PubKey',
+            type: 'Amount',
             label: 'Destination Amount',
             required: true,
           },
@@ -596,7 +596,7 @@ export const endpointsMap = {
         'params': [
           {
             id: 'ledger',
-            type: 'PubKey',
+            type: 'Ledger',
             label: 'Ledger Sequence',
             required: true,
           },
@@ -626,8 +626,8 @@ export const endpointsMap = {
         'params': [
           {
             id: 'transaction',
-            type: 'PubKey',
-            label: 'Transaction ID',
+            type: 'Transaction',
+            label: 'Transaction Hash',
             required: true,
           },
           {
@@ -685,8 +685,8 @@ export const endpointsMap = {
         'params': [
           {
             id: 'transaction',
-            type: 'PubKey',
-            label: 'Transaction ID',
+            type: 'Transaction',
+            label: 'Transaction Hash',
             required: true,
           },
         ],
@@ -745,8 +745,8 @@ export const endpointsMap = {
         'params': [
           {
             id: 'ledger',
-            type: 'PubKey',
-            label: 'Ledger ID',
+            type: 'Ledger',
+            label: 'Ledger Sequence',
             required: true,
           },
           {
