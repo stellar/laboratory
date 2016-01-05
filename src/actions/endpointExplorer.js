@@ -30,8 +30,18 @@ export const FINISH_REQUEST = "FINISH_REQUEST"
 export function submitRequest(request) {
   return dispatch => {
     dispatch({type: "START_REQUEST"});
-    axios.get(request.url)
+    httpRequest(request)
       .then(r => dispatch({type: "FINISH_REQUEST", payload: r}))
       .catch(e => dispatch({type: "FINISH_REQUEST", error: e}));
   }
+}
+
+function httpRequest(request) {
+  if (request.method === 'POST') {
+    if (typeof request.formData !== 'string') {
+      throw new Error('Network POST requests require the form data to be in string format.');
+    }
+    return axios.post(request.url, request.formData);
+  }
+  return axios.get(request.url);
 }

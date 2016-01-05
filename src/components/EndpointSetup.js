@@ -26,21 +26,33 @@ export function EndpointSetup(props) {
       })
       }
       <hr className="optionsTable__separator" />
-      <UrlRow url={request.url} />
+      <UrlRow url={request.url} method={request.method} />
+      <PostDataRow formData={request.formData} />
       <SubmitRow onSubmit={onSubmit} />
     </div>
   </div>;
 }
 
 
+function UrlRow(props) {
+  return <div className="optionsTable__blank EndpointSetup__url">
+    <span className="EndpointSetup__url__method">{props.method}</span>
+    <span>&nbsp;</span>
+    <EasySelect>{props.url}</EasySelect>
+  </div>;
+}
+
+function PostDataRow({formData}) {
+  if (formData === '') {
+    return <div></div>
+  }
+  return <div className="optionsTable__blank EndpointSetup__url">
+    <span>{formData}</span>
+  </div>;
+}
+
 function SubmitRow(props) {
   return <div className="optionsTable__blank">
     <button className="s-button" onClick={props.onSubmit}>Submit</button>
   </div>
-}
-
-function UrlRow(props) {
-  return <div className="optionsTable__blank EndpointSetup__url">
-    <EasySelect>{props.url}</EasySelect>
-  </div>;
 }
