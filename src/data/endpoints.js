@@ -18,6 +18,7 @@ export const endpointsMap = {
     'endpoints': {
       'all': {
         'label': 'All Accounts',
+        'method': 'GET',
         'path': {
           template: '/accounts{?cursor,limit,order}',
         },
@@ -41,6 +42,7 @@ export const endpointsMap = {
       },
       'single': {
         'label': 'Single Account',
+        'method': 'GET',
         'path': {
           template: '/accounts/{account_id}',
         },
@@ -60,6 +62,7 @@ export const endpointsMap = {
     'endpoints': {
       'all': {
         'label': 'All Effects',
+        'method': 'GET',
         'path': {
           template: '/effects{?cursor,limit,order}',
         },
@@ -83,6 +86,7 @@ export const endpointsMap = {
       },
       'for_account': {
         'label': 'Effects for Account',
+        'method': 'GET',
         'path': {
           template: '/accounts/{account_id}/effects{?cursor,limit,order}',
         },
@@ -112,6 +116,7 @@ export const endpointsMap = {
       },
       'for_ledger': {
         'label': 'Effects for Ledger',
+        'method': 'GET',
         'path': {
           template: '/ledger/{ledger}/effects{?cursor,limit,order}',
         },
@@ -141,6 +146,7 @@ export const endpointsMap = {
       },
       'for_operation': {
         'label': 'Effects for Operation',
+        'method': 'GET',
         'path': {
           template: '/operation/{operation}/effects{?cursor,limit,order}',
         },
@@ -170,6 +176,7 @@ export const endpointsMap = {
       },
       'for_transaction': {
         'label': 'Effects for Transaction',
+        'method': 'GET',
         'path': {
           template: '/transactions/{transaction}/effects',
         },
@@ -204,6 +211,7 @@ export const endpointsMap = {
     'endpoints': {
       'all': {
         'label': 'All Ledgers',
+        'method': 'GET',
         'path': {
           template: '/ledgers{?cursor,limit,order}',
         },
@@ -227,6 +235,7 @@ export const endpointsMap = {
       },
       'single': {
         'label': 'Single Ledger',
+        'method': 'GET',
         'path': {
           template: '/ledgers/{ledger}',
         },
@@ -246,6 +255,7 @@ export const endpointsMap = {
     'endpoints': {
       'for_account': {
         'label': 'Offers for Account',
+        'method': 'GET',
         'path': {
           template: '/accounts/{account_id}/offers{?cursor,limit,order}',
         },
@@ -280,6 +290,7 @@ export const endpointsMap = {
     'endpoints': {
       'all': {
         'label': 'All Operations',
+        'method': 'GET',
         'path': {
           template: '/operations{?cursor,limit,order}',
         },
@@ -303,6 +314,7 @@ export const endpointsMap = {
       },
       'single': {
         'label': 'Single Operation',
+        'method': 'GET',
         'path': {
           template: '/operations/{operation}',
         },
@@ -317,6 +329,7 @@ export const endpointsMap = {
       },
       'for_account': {
         'label': 'Operations for Account',
+        'method': 'GET',
         'path': {
           template: '/accounts/{account_id}/operations{?cursor,limit,order}',
         },
@@ -346,6 +359,7 @@ export const endpointsMap = {
       },
       'for_ledger': {
         'label': 'Operations for Ledger',
+        'method': 'GET',
         'path': {
           template: '/ledgers/{ledger}/operations{?cursor,limit,order}',
         },
@@ -375,6 +389,7 @@ export const endpointsMap = {
       },
       'for_transaction': {
         'label': 'Operations for Transaction',
+        'method': 'GET',
         'path': {
           template: '/transactions/{transaction}/operations{?cursor,limit,order}',
         },
@@ -409,6 +424,7 @@ export const endpointsMap = {
     'endpoints': {
       'details': {
         'label': 'Details',
+        'method': 'GET',
         'path': {
           template: '/order_book{?selling_asset_type,selling_asset_code,selling_asset_issuer,buying_asset_type,buying_asset_code,buying_asset_issuer}',
           'selling_asset_type': 'selling_asset.type',
@@ -433,6 +449,7 @@ export const endpointsMap = {
       },
       'trades': {
         'label': 'Trades',
+        'method': 'GET',
         'path': {
           template: '/order_book/trades{?selling_asset_type,selling_asset_code,selling_asset_issuer,buying_asset_type,buying_asset_code,buying_asset_issuer,cursor,limit,order}',
           'selling_asset_type': 'selling_asset.type',
@@ -477,6 +494,7 @@ export const endpointsMap = {
     'endpoints': {
       'all': {
         'label': 'All Paths',
+        'method': 'GET',
         'path': {
           template: '/{source_account}/paths{?destination_account,destination_asset_type}',
           'destination_asset_type': 'destination_asset.type',
@@ -517,6 +535,7 @@ export const endpointsMap = {
     'endpoints': {
       'all': {
         'label': 'All Payments',
+        'method': 'GET',
         'path': {
           template: '/payments{?cursor,limit,order}',
         },
@@ -540,6 +559,7 @@ export const endpointsMap = {
       },
       'for_account': {
         'label': 'Payments for Account',
+        'method': 'GET',
         'path': {
           template: '/accounts/{account_id}/payments{?cursor,limit,order}',
         },
@@ -569,6 +589,7 @@ export const endpointsMap = {
       },
       'for_ledger': {
         'label': 'Payments for Ledger',
+        'method': 'GET',
         'path': {
           template: '/ledgers/{ledger}/payments{?cursor,limit,order}',
         },
@@ -598,6 +619,7 @@ export const endpointsMap = {
       },
       'for_transaction': {
         'label': 'Payments for Transaction',
+        'method': 'GET',
         'path': {
           template: '/transactions/{transaction}/payments{?cursor,limit,order}',
         },
@@ -632,6 +654,7 @@ export const endpointsMap = {
     'endpoints': {
       'all': {
         'label': 'All Transactions',
+        'method': 'GET',
         'path': {
           template: '/transactions{?cursor,limit,order}',
         },
@@ -655,6 +678,7 @@ export const endpointsMap = {
       },
       'single': {
         'label': 'Single Transaction',
+        'method': 'GET',
         'path': {
           template: '/transactions/{transaction}',
         },
@@ -667,8 +691,24 @@ export const endpointsMap = {
           },
         ],
       },
+      'create': {
+        'label': 'Post Transaction',
+        'method': 'POST',
+        'path': {
+          template: '/transactions',
+        },
+        'params': [
+          {
+            id: 'tx',
+            type: 'Xdr',
+            label: 'Transaction XDR',
+            required: true,
+          },
+        ],
+      },
       'for_account': {
         'label': 'Transactions for Account',
+        'method': 'GET',
         'path': {
           template: '/accounts/{account_id}/transactions{?cursor,limit,order}',
         },
@@ -698,6 +738,7 @@ export const endpointsMap = {
       },
       'for_ledger': {
         'label': 'Transactions for Ledger',
+        'method': 'GET',
         'path': {
           template: '/ledgers/{ledger}/transactions{?cursor,limit,order}',
         },

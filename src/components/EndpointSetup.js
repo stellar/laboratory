@@ -41,6 +41,8 @@ function SubmitRow(props) {
 
 function UrlRow(props) {
   return <div className="optionsTable__blank EndpointSetup__url">
+    <span className="EndpointSetup__url__method">GET</span>
+    <span>&nbsp;</span>
     <EasySelect>{props.url}</EasySelect>
   </div>;
 }
