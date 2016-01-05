@@ -1,6 +1,4 @@
 import React from 'react';
-import {ResourceList} from './ResourceList';
-import {EndpointList} from './EndpointList';
 import classNames from 'classnames';
 import {endpointsMap} from '../data/endpoints';
 import {map, findIndex} from 'lodash';
@@ -17,7 +15,6 @@ export function EndpointPicker(props) {
       selectedIndex={findIndex(resources, {id: currentResource})}
       />
   </div>
-
 
   let endpointPicker = null;
   if (currentResource !== "") {

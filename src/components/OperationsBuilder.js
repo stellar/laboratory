@@ -1,9 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import Picker from './FormComponents/Picker';
-import TxBuilderStore from '../stores/TxBuilderStore';
-import {AppDispatcher} from '../dispatcher/AppDispatcher';
-import TxBuilderConstants from '../constants/TxBuilderConstants';
 import {getOperation} from '../data/operations';
 import {
   addOperation,

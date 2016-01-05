@@ -7,7 +7,6 @@ class NetworkPicker extends React.Component {
     let {dispatch} = this.props;
     let {currentName, currentURL, availableNames} = this.props;
 
-
     let items = availableNames.map(n => {
       return <NetworkToggle
         name={n}
@@ -16,7 +15,6 @@ class NetworkPicker extends React.Component {
         onToggle={() => dispatch(chooseNetwork(n))}
         />
     })
-
 
     return <div className="NetworkPicker">
       <form className="s-buttonGroup NetworkPicker__buttonGroup">

@@ -1,6 +1,5 @@
 import React from 'react';
 import Picker from './FormComponents/Picker';
-import TxBuilderConstants from '../constants/TxBuilderConstants';
 
 export default class TxBuilderAttributes extends React.Component {
   render() {
@@ -17,7 +16,7 @@ export default class TxBuilderAttributes extends React.Component {
         {Picker({
           type: 'Sequence',
           onUpdate: onUpdate.bind(this, 'sequence'),
-          label: 'Sequence number',
+          label: 'Transaction sequence number',
           required: true,
           key: 'sequence',
         })}

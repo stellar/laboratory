@@ -7,7 +7,7 @@ import TransactionBuilder from './TransactionBuilder';
 import TransactionSigner from './TransactionSigner';
 import {changePage} from '../actions/routing';
 
-let PlaygroundChrome = React.createClass({
+let LaboratoryChrome = React.createClass({
   getInitialState: function() {
     return {
       tab: 'EndpointExplorer'
@@ -49,7 +49,7 @@ let PlaygroundChrome = React.createClass({
     return <div>
       <div className="so-back">
         <div className="so-chunk">
-          <div className="so-siteHeader PlaygroundChrome__header">
+          <div className="so-siteHeader LaboratoryChrome__header">
             <span className="so-logo">
               <a href="https://www.stellar.org/" className="so-logo__main">Stellar</a>
               <span className="so-logo__separator"> </span>
@@ -59,7 +59,7 @@ let PlaygroundChrome = React.createClass({
           </div>
         </div>
       </div>
-      <div className="so-back PlaygroundChrome__siteNavBack">
+      <div className="so-back LaboratoryChrome__siteNavBack">
         <div className="so-chunk">
           <nav className="s-buttonList">
             {tabItem('Endpoint Explorer', 'EndpointExplorer')}
@@ -74,7 +74,7 @@ let PlaygroundChrome = React.createClass({
   }
 });
 
-export default connect(chooseState)(PlaygroundChrome);
+export default connect(chooseState)(LaboratoryChrome);
 function chooseState(state) {
   return {}
 }
