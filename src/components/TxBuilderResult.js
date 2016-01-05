@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {PubKeyPicker} from './FormComponents/PubKeyPicker';
 import {Account, TransactionBuilder, Operation, Asset, Memo} from 'stellar-sdk';
+import {PubKeyPicker} from './FormComponents/PubKeyPicker';
 import {EasySelect} from './EasySelect';
 
 export default class TxBuilderResult extends React.Component {

@@ -8,7 +8,7 @@ import {Provider} from 'react-redux';
 
 import rootReducer from './reducers/root';
 import logging from "./middleware/logging";
-import PlaygroundChrome from './components/PlaygroundChrome';
+import LaboratoryChrome from './components/LaboratoryChrome';
 
 
 
@@ -17,14 +17,14 @@ document.write('<div id="app"></div>');
 
 let createStoreWithMiddleware = applyMiddleware(
   thunk,
-  logging,
+  logging
 )(createStore);
 
 let store = createStoreWithMiddleware(rootReducer);
 
 ReactDOM.render(
   <Provider store={store}>
-    <PlaygroundChrome />
+    <LaboratoryChrome />
   </Provider>,
   document.getElementById('app')
 );

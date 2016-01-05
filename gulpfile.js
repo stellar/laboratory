@@ -14,7 +14,7 @@ gulp.task('default', ['develop']);
 var webpackOptions = {
   entry: {
     app: "./src/app.js",
-    vendor: ["axios", "react", "react-dom", "lodash", "flux", "stellar-sdk"]
+    vendor: ["axios", "react", "react-dom", "lodash", "stellar-sdk"]
   },
   devtool: "source-map",
   resolve: {
