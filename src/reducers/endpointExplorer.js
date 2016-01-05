@@ -77,15 +77,6 @@ function pendingRequestValues(state={}, action) {
   }
 }
 
-function currentEndpoint(state="", action) {
-  switch (action.type) {
-  case CHOOSE_ENDPOINT:
-    return action.endpoint;
-  default:
-    return state;
-  }
-}
-
 function currentRequest(state={isLoading: false}, action) {
   switch (action.type) {
   case START_REQUEST:

@@ -26,7 +26,7 @@ export function EndpointSetup(props) {
       })
       }
       <hr className="optionsTable__separator" />
-      <UrlRow url={request.url} />
+      <UrlRow url={request.url} method={request.method} />
       <SubmitRow onSubmit={onSubmit} />
     </div>
   </div>;
@@ -41,7 +41,7 @@ function SubmitRow(props) {
 
 function UrlRow(props) {
   return <div className="optionsTable__blank EndpointSetup__url">
-    <span className="EndpointSetup__url__method">GET</span>
+    <span className="EndpointSetup__url__method">{props.method}</span>
     <span>&nbsp;</span>
     <EasySelect>{props.url}</EasySelect>
   </div>;

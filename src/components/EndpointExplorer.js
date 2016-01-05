@@ -21,6 +21,9 @@ class EndpointExplorer extends React.Component {
     let request = {
       url: buildRequestUrl(this.props.baseURL, endpoint, pendingRequest.values),
     };
+    if (typeof endpoint !== 'undefined') {
+      request.method = endpoint.method;
+    }
 
     let endpointSetup;
     if (currentEndpoint !== '') {
