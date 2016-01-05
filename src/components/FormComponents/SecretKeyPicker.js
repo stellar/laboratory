@@ -6,7 +6,7 @@ export default PickerGenerator({
   fields: [{
     type: 'text',
     name: 'secretKey',
-    placeholder: 'Example: SBZQZ4TOYR2VTU273FFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
+    placeholder: 'Example: SAEXAMPLE6TLGEF6ASOTVTLFUK7LE2K2PFVPFGTEZMMVHH7KLLBBROEQ',
     validator: (value) => {
       try{
         Keypair.fromSeed(value);
