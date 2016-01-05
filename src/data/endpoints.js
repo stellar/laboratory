@@ -701,7 +701,7 @@ export const endpointsMap = {
           {
             id: 'tx',
             type: 'Xdr',
-            label: 'Transaction XDR',
+            label: 'Transaction Envelope XDR',
             required: true,
           },
         ],

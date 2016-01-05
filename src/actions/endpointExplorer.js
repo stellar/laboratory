@@ -27,11 +27,21 @@ export function updateValues(param, values) {
 
 export const START_REQUEST = "START_REQUEST"
 export const FINISH_REQUEST = "FINISH_REQUEST"
-export function submitRequest(request) {
+export function submitRequest(url, method, formData) {
   return dispatch => {
     dispatch({type: "START_REQUEST"});
-    axios.get(request.url)
+    httpRequest(url, method, formData)
       .then(r => dispatch({type: "FINISH_REQUEST", payload: r}))
       .catch(e => dispatch({type: "FINISH_REQUEST", error: e}));
   }
+}
+
+function httpRequest(url, method, formData) {
+  if (method === 'POST') {
+    if (typeof formData !== 'string') {
+      throw new Error('Network POST requests require the form data to be in string format.');
+    }
+    return axios.post(url, formData);
+  }
+  return axios.get(url);
 }

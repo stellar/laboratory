@@ -6,6 +6,7 @@ import {EndpointSetup} from './EndpointSetup';
 import {EndpointResult} from './EndpointResult';
 import {getEndpoint} from '../data/endpoints';
 import UriTemplates from 'uri-templates';
+import querystring from 'querystring';
 
 class EndpointExplorer extends React.Component {
   render() {
@@ -18,19 +19,14 @@ class EndpointExplorer extends React.Component {
     } = this.props.state;
 
     let endpoint = getEndpoint(currentResource, currentEndpoint);
-    let request = {
-      url: buildRequestUrl(this.props.baseURL, endpoint, pendingRequest.values),
-    };
-    if (typeof endpoint !== 'undefined') {
-      request.method = endpoint.method;
-    }
+    let request = buildRequest(this.props.baseURL, endpoint, pendingRequest);
 
     let endpointSetup;
     if (currentEndpoint !== '') {
       endpointSetup = <EndpointSetup
         request={request}
         params={pendingRequest.params}
-        onSubmit={() => dispatch(submitRequest(request))}
+        onSubmit={() => dispatch(submitRequest(request.url, request.method, request.formData))}
         onUpdate={(param, values, complete) => dispatch(updateValues(param, values, complete))}
       />
     }
@@ -66,6 +62,32 @@ function chooseState(state) {
     state: state.endpointExplorer,
     baseURL: state.network.available[state.network.current].url,
   };
+}
+
+function buildRequest(baseUrl, endpoint, pendingRequest) {
+  let request = {
+    url: buildRequestUrl(baseUrl, endpoint, pendingRequest.values),
+    formData: '',
+  };
+
+  if (typeof endpoint !== 'undefined') {
+    request.method = endpoint.method;
+  }
+
+  if (request.method === 'POST') {
+    let postData = {};
+    _.each(pendingRequest.params, (param) => {
+      let paramValue = pendingRequest.values[param.id];
+      if (typeof paramValue === 'undefined') {
+        return;
+      }
+      postData[param.id] = paramValue.value;
+    });
+
+    request.formData = querystring.stringify(postData);
+  }
+
+  return request;
 }
 
 function buildRequestUrl (baseUrl, endpoint, values) {
