@@ -29,7 +29,7 @@ export default PickerGenerator({
     {
       type: 'text',
       name: 'code',
-      placeholder: 'asset code',
+      placeholder: 'Asset code',
       forceRequired: true, // If field is showing, it is required (even if picker is optional)
       showIf: isNonNativeAsset,
       validator: (value, fields) => { // We rarely need the second argument to validator, but in this case, we do
@@ -54,7 +54,7 @@ export default PickerGenerator({
     {
       type: 'text',
       name: 'issuer',
-      placeholder: 'issuer account ID',
+      placeholder: 'Issuer account ID',
       forceRequired: true, // If field is showing, it is required (even if picker is optional)
       showIf: isNonNativeAsset,
       validator: (value) => Account.isValidAccountId(value) ? null : 'Public key is invalid.',
