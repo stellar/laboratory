@@ -505,11 +505,13 @@ export const endpointsMap = {
     'label': 'Paths',
     'endpoints': {
       'all': {
-        'label': 'All Paths',
+        'label': 'Find Payment Paths',
         'method': 'GET',
         'path': {
-          template: '/{source_account}/paths{?destination_account,destination_asset_type}',
-          'destination_asset_type': 'destination_asset.type',
+          template: '/paths{?source_account,destination_account,destination_asset_type,destination_asset_code,destination_asset_issuer,destination_amount}',
+          'destination_asset_type': (values) =>
+            ((values.destination_asset.type === 'native') ? '' : 'credit_') +
+              values.destination_asset.type,
           'destination_asset_code': 'destination_asset.code',
           'destination_asset_issuer': 'destination_asset.issuer',
         },
