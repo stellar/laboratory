@@ -7,6 +7,6 @@ export default PickerGenerator({
     type: 'text',
     name: 'pubKey',
     placeholder: 'Example: GCEXAMPLE5HWNK4AYSTEQ4UWDKHTCKADVS2AHF3UI2ZMO3DPUSM6Q4UG',
-    validator: (value) => Account.isValidAddress(value) ? null : 'Public key is invalid.',
+    validator: (value) => Account.isValidAccountId(value) ? null : 'Public key is invalid.',
   }],
 });

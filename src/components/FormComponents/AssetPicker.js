@@ -57,7 +57,7 @@ export default PickerGenerator({
       placeholder: 'issuer account ID',
       forceRequired: true, // If field is showing, it is required (even if picker is optional)
       showIf: isNonNativeAsset,
-      validator: (value) => Account.isValidAddress(value) ? null : 'Public key is invalid.',
+      validator: (value) => Account.isValidAccountId(value) ? null : 'Public key is invalid.',
     },
   ],
 });
