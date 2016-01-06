@@ -427,10 +427,14 @@ export const endpointsMap = {
         'method': 'GET',
         'path': {
           template: '/order_book{?selling_asset_type,selling_asset_code,selling_asset_issuer,buying_asset_type,buying_asset_code,buying_asset_issuer}',
-          'selling_asset_type': 'selling_asset.type',
+          'selling_asset_type': (values) =>
+            ((values.selling_asset.type === 'native') ? '' : 'credit_') +
+              values.selling_asset.type,
           'selling_asset_code': 'selling_asset.code',
           'selling_asset_issuer': 'selling_asset.issuer',
-          'buying_asset_type': 'buying_asset.type',
+          'buying_asset_type': (values) =>
+            ((values.buying_asset.type === 'native') ? '' : 'credit_') +
+              values.buying_asset.type,
           'buying_asset_code': 'buying_asset.code',
           'buying_asset_issuer': 'buying_asset.issuer',
         },
@@ -439,11 +443,13 @@ export const endpointsMap = {
             id: 'selling_asset',
             type: 'Asset',
             label: 'Selling Asset',
+            required: 'true',
           },
           {
             id: 'buying_asset',
             type: 'Asset',
             label: 'Buying Asset',
+            required: 'true',
           },
         ],
       },
@@ -452,10 +458,14 @@ export const endpointsMap = {
         'method': 'GET',
         'path': {
           template: '/order_book/trades{?selling_asset_type,selling_asset_code,selling_asset_issuer,buying_asset_type,buying_asset_code,buying_asset_issuer,cursor,limit,order}',
-          'selling_asset_type': 'selling_asset.type',
+          'selling_asset_type': (values) =>
+            ((values.selling_asset.type === 'native') ? '' : 'credit_') +
+              values.selling_asset.type,
           'selling_asset_code': 'selling_asset.code',
           'selling_asset_issuer': 'selling_asset.issuer',
-          'buying_asset_type': 'buying_asset.type',
+          'buying_asset_type': (values) =>
+            ((values.buying_asset.type === 'native') ? '' : 'credit_') +
+              values.buying_asset.type,
           'buying_asset_code': 'buying_asset.code',
           'buying_asset_issuer': 'buying_asset.issuer',
         },
@@ -464,11 +474,13 @@ export const endpointsMap = {
             id: 'selling_asset',
             type: 'Asset',
             label: 'Selling Asset',
+            required: true,
           },
           {
             id: 'buying_asset',
             type: 'Asset',
             label: 'Buying Asset',
+            required: true,
           },
           {
             id: 'cursor',

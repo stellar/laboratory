@@ -102,7 +102,18 @@ function buildRequestUrl (baseUrl, endpoint, values) {
   _.each(template.varNames, (varName) => {
     let objectPath = (varName in endpoint.path) ?
       endpoint.path[varName] : varName + '.value';
-    let value = _.get(values, objectPath);
+    let value;
+
+    if (typeof objectPath === 'string') {
+      value = _.get(values, objectPath);
+    } else if (typeof objectPath === 'function') {
+      try {
+        value = objectPath(values);
+      } catch (e) {
+        console.log(`Extraction function in ${endpoint.label} path.${varName} failed`)
+        value = undefined;
+      }
+    }
     if (typeof value !== 'undefined' && value !== '') {
       uriParams[varName] = value;
     }
