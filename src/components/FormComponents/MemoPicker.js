@@ -1,4 +1,5 @@
 import PickerGenerator from './PickerGenerator';
+import {UnsignedHyper} from 'stellar-sdk';
 
 export default PickerGenerator({
   pickerName: 'Memo',
@@ -55,6 +56,10 @@ export default PickerGenerator({
         case 'MEMO_ID':
           if (!value.match(/^[0-9]*$/g) || value < 0) {
             return 'MEMO_ID accepts a positive integer.';
+          }
+          if (value !== UnsignedHyper.fromString(value).toString()) {
+            return `MEMO_ID is an unsigned 64-bit integer and the max valid
+                    value is ${UnsignedHyper.MAX_UNSIGNED_VALUE.toString()}`
           }
         break;
         case 'MEMO_HASH':
