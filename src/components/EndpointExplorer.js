@@ -102,8 +102,15 @@ function buildRequestUrl (baseUrl, endpoint, values) {
   _.each(template.varNames, (varName) => {
     let objectPath = (varName in endpoint.path) ?
       endpoint.path[varName] : varName + '.value';
-    let value = _.get(values, objectPath);
-    if (typeof value !== 'undefined' && value !== '') {
+    let value;
+
+    if (_.isString(objectPath)) {
+      value = _.get(values, objectPath);
+    } else if (typeof objectPath === 'function') {
+      value = objectPath(values);
+    }
+
+    if (_.isUndefined(value) && value !== '') {
       uriParams[varName] = value;
     }
   });

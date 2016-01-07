@@ -12,6 +12,15 @@ export function getTemplate(...args) {
   return ep.path;
 }
 
+// Helper functions for endpointsMap
+let creditPrepender = (path) => (values) => {
+  let value = _.get(values, path);
+  if (_.isUndefined(value) || value === 'native') {
+    return value;
+  }
+  return 'credit_' + value;
+}
+
 export const endpointsMap = {
   'accounts': {
     'label': 'Accounts',
@@ -124,7 +133,7 @@ export const endpointsMap = {
           {
             id: 'ledger',
             type: 'Ledger',
-            label: 'Ledger',
+            label: 'Ledger Sequence',
             required: true,
           },
           {
@@ -397,7 +406,7 @@ export const endpointsMap = {
           {
             id: 'transaction',
             type: 'Transaction',
-            label: 'Transaction ID',
+            label: 'Transaction Hash',
             required: true,
           },
           {
@@ -427,10 +436,10 @@ export const endpointsMap = {
         'method': 'GET',
         'path': {
           template: '/order_book{?selling_asset_type,selling_asset_code,selling_asset_issuer,buying_asset_type,buying_asset_code,buying_asset_issuer}',
-          'selling_asset_type': 'selling_asset.type',
+          'selling_asset_type': creditPrepender('selling_asset.type'),
           'selling_asset_code': 'selling_asset.code',
           'selling_asset_issuer': 'selling_asset.issuer',
-          'buying_asset_type': 'buying_asset.type',
+          'buying_asset_type': creditPrepender('buying_asset.type'),
           'buying_asset_code': 'buying_asset.code',
           'buying_asset_issuer': 'buying_asset.issuer',
         },
@@ -439,11 +448,13 @@ export const endpointsMap = {
             id: 'selling_asset',
             type: 'Asset',
             label: 'Selling Asset',
+            required: 'true',
           },
           {
             id: 'buying_asset',
             type: 'Asset',
             label: 'Buying Asset',
+            required: 'true',
           },
         ],
       },
@@ -452,10 +463,10 @@ export const endpointsMap = {
         'method': 'GET',
         'path': {
           template: '/order_book/trades{?selling_asset_type,selling_asset_code,selling_asset_issuer,buying_asset_type,buying_asset_code,buying_asset_issuer,cursor,limit,order}',
-          'selling_asset_type': 'selling_asset.type',
+          'selling_asset_type': creditPrepender('selling_asset.type'),
           'selling_asset_code': 'selling_asset.code',
           'selling_asset_issuer': 'selling_asset.issuer',
-          'buying_asset_type': 'buying_asset.type',
+          'buying_asset_type': creditPrepender('buying_asset.type'),
           'buying_asset_code': 'buying_asset.code',
           'buying_asset_issuer': 'buying_asset.issuer',
         },
@@ -464,11 +475,13 @@ export const endpointsMap = {
             id: 'selling_asset',
             type: 'Asset',
             label: 'Selling Asset',
+            required: true,
           },
           {
             id: 'buying_asset',
             type: 'Asset',
             label: 'Buying Asset',
+            required: true,
           },
           {
             id: 'cursor',
@@ -493,11 +506,11 @@ export const endpointsMap = {
     'label': 'Paths',
     'endpoints': {
       'all': {
-        'label': 'All Paths',
+        'label': 'Find Payment Paths',
         'method': 'GET',
         'path': {
-          template: '/{source_account}/paths{?destination_account,destination_asset_type}',
-          'destination_asset_type': 'destination_asset.type',
+          template: '/paths{?source_account,destination_account,destination_asset_type,destination_asset_code,destination_asset_issuer,destination_amount}',
+          'destination_asset_type': creditPrepender('destination_asset.type'),
           'destination_asset_code': 'destination_asset.code',
           'destination_asset_issuer': 'destination_asset.issuer',
         },
@@ -522,7 +535,7 @@ export const endpointsMap = {
           },
           {
             id: 'destination_amount',
-            type: 'PubKey',
+            type: 'Amount',
             label: 'Destination Amount',
             required: true,
           },
@@ -596,7 +609,7 @@ export const endpointsMap = {
         'params': [
           {
             id: 'ledger',
-            type: 'PubKey',
+            type: 'Ledger',
             label: 'Ledger Sequence',
             required: true,
           },
@@ -626,8 +639,8 @@ export const endpointsMap = {
         'params': [
           {
             id: 'transaction',
-            type: 'PubKey',
-            label: 'Transaction ID',
+            type: 'Transaction',
+            label: 'Transaction Hash',
             required: true,
           },
           {
@@ -685,8 +698,8 @@ export const endpointsMap = {
         'params': [
           {
             id: 'transaction',
-            type: 'PubKey',
-            label: 'Transaction ID',
+            type: 'Transaction',
+            label: 'Transaction Hash',
             required: true,
           },
         ],
@@ -745,8 +758,8 @@ export const endpointsMap = {
         'params': [
           {
             id: 'ledger',
-            type: 'PubKey',
-            label: 'Ledger ID',
+            type: 'Ledger',
+            label: 'Ledger Sequence',
             required: true,
           },
           {
