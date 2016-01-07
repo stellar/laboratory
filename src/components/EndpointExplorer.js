@@ -104,17 +104,13 @@ function buildRequestUrl (baseUrl, endpoint, values) {
       endpoint.path[varName] : varName + '.value';
     let value;
 
-    if (typeof objectPath === 'string') {
+    if (_.isString(objectPath)) {
       value = _.get(values, objectPath);
     } else if (typeof objectPath === 'function') {
-      try {
-        value = objectPath(values);
-      } catch (e) {
-        console.log(`Extraction function in ${endpoint.label} path.${varName} failed`)
-        value = undefined;
-      }
+      value = objectPath(values);
     }
-    if (typeof value !== 'undefined' && value !== '') {
+
+    if (_.isUndefined(value) && value !== '') {
       uriParams[varName] = value;
     }
   });
