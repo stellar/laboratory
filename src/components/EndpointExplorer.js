@@ -110,7 +110,7 @@ function buildRequestUrl (baseUrl, endpoint, values) {
       value = objectPath(values);
     }
 
-    if (_.isUndefined(value) && value !== '') {
+    if (!_.isUndefined(value) && value !== '') {
       uriParams[varName] = value;
     }
   });
