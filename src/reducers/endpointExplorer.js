@@ -4,7 +4,7 @@ import {
   CHANGE_PENDING_REQUEST_PROPS,
   START_REQUEST,
   FINISH_REQUEST,
-  UPDATE_VALUES,
+  UPDATE_VALUE,
 } from "../actions/endpointExplorer";
 import {getEndpoint, getTemplate} from '../data/endpoints';
 
@@ -68,7 +68,7 @@ function pendingRequestParams(state=[], action) {
 
 function pendingRequestValues(state={}, action) {
   switch (action.type) {
-  case UPDATE_VALUES:
+  case UPDATE_VALUE:
     return Object.assign({}, state, {
       [action.param]: action.value
     });

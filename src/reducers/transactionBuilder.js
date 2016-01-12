@@ -1,6 +1,5 @@
 import {combineReducers} from 'redux';
 import {UPDATE_ATTRIBUTES} from '../actions/transactionBuilder';
-import {CHANGE_PAGE} from '../actions/routing';
 import _ from 'lodash';
 
 const defaultOperations = [{
@@ -34,8 +33,6 @@ function operations(state, action) {
     return updateOperation(state, action.opId, {
       attributes: _.assign({}, getAttributes(state, action.opId), action.newAttributes),
     });
-  case CHANGE_PAGE:
-    return defaultOperations;
   default:
     return state;
   }
@@ -79,8 +76,6 @@ function attributes(state, action) {
   switch(action.type) {
   case UPDATE_ATTRIBUTES:
     return Object.assign({}, state, action.newAttributes);
-  case CHANGE_PAGE:
-    return defaultAttributes;
   default:
     return state;
   }

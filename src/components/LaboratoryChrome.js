@@ -5,7 +5,6 @@ import NetworkPicker from './NetworkPicker';
 import EndpointExplorer from './EndpointExplorer';
 import TransactionBuilder from './TransactionBuilder';
 import TransactionSigner from './TransactionSigner';
-import {changePage} from '../actions/routing';
 
 let LaboratoryChrome = React.createClass({
   getInitialState: function() {
@@ -14,7 +13,6 @@ let LaboratoryChrome = React.createClass({
     };
   },
   setTab: function(tab) {
-    this.props.dispatch(changePage());
     this.setState({tab})
   },
   render: function() {
