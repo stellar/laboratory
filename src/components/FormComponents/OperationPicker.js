@@ -1,12 +1,12 @@
-import PickerGenerator from './PickerGenerator';
+import React from 'react';
+import PositiveIntPicker from './PositiveIntPicker';
 
-export default PickerGenerator({
-  pickerName: 'Operation',
-  fields: [{
-    type: 'text',
-    name: 'operationId',
-    placeholder: 'Example: 55834578945',
-    validator: (value) =>
-      value.match(/^[0-9]*$/g) ? null : 'Operation ID is invalid.'
-  }],
-});
+export default function OperationPicker(props) {
+  let {value, onUpdate} = props;
+
+  return <PositiveIntPicker
+    value={value}
+    placeholder="Example: 55834578945"
+    onUpdate={(value) => onUpdate(value)}
+    />
+}

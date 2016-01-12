@@ -17,11 +17,11 @@ export function changePendingRequestProps(props) {
 }
 
 export const UPDATE_VALUES = "UPDATE_VALUES";
-export function updateValues(param, values) {
+export function updateValues(param, value) {
   return {
     type: UPDATE_VALUES,
     param,
-    values,
+    value,
   }
 }
 

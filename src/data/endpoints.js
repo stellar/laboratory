@@ -31,23 +31,7 @@ export const endpointsMap = {
         'path': {
           template: '/accounts{?cursor,limit,order}',
         },
-        'params': [
-          {
-            id: 'cursor',
-            type: 'Cursor',
-            label: 'Cursor',
-          },
-          {
-            id: 'limit',
-            type: 'Limit',
-            label: 'Limit',
-          },
-          {
-            id: 'order',
-            type: 'Order',
-            label: 'Order',
-          },
-        ],
+        'setupComponent': require('../components/SetupPanes/All'),
       },
       'single': {
         'label': 'Single Account',
@@ -55,14 +39,7 @@ export const endpointsMap = {
         'path': {
           template: '/accounts/{account_id}',
         },
-        'params': [
-          {
-            id: 'account_id',
-            type: 'PubKey',
-            label: 'Account ID',
-            required: true,
-          },
-        ],
+        'setupComponent': require('../components/SetupPanes/SingleAccount'),
       }
     }
   },
@@ -75,23 +52,7 @@ export const endpointsMap = {
         'path': {
           template: '/effects{?cursor,limit,order}',
         },
-        'params': [
-          {
-            id: 'cursor',
-            type: 'Cursor',
-            label: 'Cursor',
-          },
-          {
-            id: 'limit',
-            type: 'Limit',
-            label: 'Limit',
-          },
-          {
-            id: 'order',
-            type: 'Order',
-            label: 'Order',
-          },
-        ],
+        'setupComponent': require('../components/SetupPanes/All'),
       },
       'for_account': {
         'label': 'Effects for Account',
@@ -99,29 +60,7 @@ export const endpointsMap = {
         'path': {
           template: '/accounts/{account_id}/effects{?cursor,limit,order}',
         },
-        'params': [
-          {
-            id: 'account_id',
-            type: 'PubKey',
-            label: 'Account ID',
-            required: true,
-          },
-          {
-            id: 'cursor',
-            type: 'Cursor',
-            label: 'Cursor',
-          },
-          {
-            id: 'limit',
-            type: 'Limit',
-            label: 'Limit',
-          },
-          {
-            id: 'order',
-            type: 'Order',
-            label: 'Order',
-          },
-        ],
+        'setupComponent': require('../components/SetupPanes/ForAccount'),
       },
       'for_ledger': {
         'label': 'Effects for Ledger',
@@ -129,29 +68,7 @@ export const endpointsMap = {
         'path': {
           template: '/ledger/{ledger}/effects{?cursor,limit,order}',
         },
-        'params': [
-          {
-            id: 'ledger',
-            type: 'Ledger',
-            label: 'Ledger Sequence',
-            required: true,
-          },
-          {
-            id: 'cursor',
-            type: 'Cursor',
-            label: 'Cursor',
-          },
-          {
-            id: 'limit',
-            type: 'Limit',
-            label: 'Limit',
-          },
-          {
-            id: 'order',
-            type: 'Order',
-            label: 'Order',
-          },
-        ],
+        'setupComponent': require('../components/SetupPanes/ForLedger'),
       },
       'for_operation': {
         'label': 'Effects for Operation',
@@ -159,29 +76,7 @@ export const endpointsMap = {
         'path': {
           template: '/operation/{operation}/effects{?cursor,limit,order}',
         },
-        'params': [
-          {
-            id: 'operation',
-            type: 'Operation',
-            label: 'Operation',
-            required: true,
-          },
-          {
-            id: 'cursor',
-            type: 'Cursor',
-            label: 'Cursor',
-          },
-          {
-            id: 'limit',
-            type: 'Limit',
-            label: 'Limit',
-          },
-          {
-            id: 'order',
-            type: 'Order',
-            label: 'Order',
-          },
-        ],
+        'setupComponent': require('../components/SetupPanes/ForOperation'),
       },
       'for_transaction': {
         'label': 'Effects for Transaction',
@@ -189,29 +84,7 @@ export const endpointsMap = {
         'path': {
           template: '/transactions/{transaction}/effects',
         },
-        'params': [
-          {
-            id: 'transaction',
-            type: 'Transaction',
-            label: 'Transaction',
-            required: true,
-          },
-          {
-            id: 'cursor',
-            type: 'Cursor',
-            label: 'Cursor',
-          },
-          {
-            id: 'limit',
-            type: 'Limit',
-            label: 'Limit',
-          },
-          {
-            id: 'order',
-            type: 'Order',
-            label: 'Order',
-          },
-        ],
+        'setupComponent': require('../components/SetupPanes/ForTransaction'),
       }
     }
   },
@@ -224,23 +97,7 @@ export const endpointsMap = {
         'path': {
           template: '/ledgers{?cursor,limit,order}',
         },
-        'params': [
-          {
-            id: 'cursor',
-            type: 'Cursor',
-            label: 'Cursor',
-          },
-          {
-            id: 'limit',
-            type: 'Limit',
-            label: 'Limit',
-          },
-          {
-            id: 'order',
-            type: 'Order',
-            label: 'Order',
-          },
-        ],
+        'setupComponent': require('../components/SetupPanes/All'),
       },
       'single': {
         'label': 'Single Ledger',
@@ -248,14 +105,7 @@ export const endpointsMap = {
         'path': {
           template: '/ledgers/{ledger}',
         },
-        'params': [
-          {
-            id: 'ledger',
-            type: 'Ledger',
-            label: 'Ledger',
-            required: true,
-          },
-        ],
+        'setupComponent': require('../components/SetupPanes/SingleLedger'),
       }
     }
   },
@@ -268,29 +118,7 @@ export const endpointsMap = {
         'path': {
           template: '/accounts/{account_id}/offers{?cursor,limit,order}',
         },
-        'params': [
-          {
-            id: 'account_id',
-            type: 'PubKey',
-            label: 'Account ID',
-            required: true,
-          },
-          {
-            id: 'cursor',
-            type: 'Cursor',
-            label: 'Cursor',
-          },
-          {
-            id: 'limit',
-            type: 'Limit',
-            label: 'Limit',
-          },
-          {
-            id: 'order',
-            type: 'Order',
-            label: 'Order',
-          },
-        ],
+        'setupComponent': require('../components/SetupPanes/ForAccount'),
       }
     }
   },
@@ -303,23 +131,7 @@ export const endpointsMap = {
         'path': {
           template: '/operations{?cursor,limit,order}',
         },
-        'params': [
-          {
-            id: 'cursor',
-            type: 'Cursor',
-            label: 'Cursor',
-          },
-          {
-            id: 'limit',
-            type: 'Limit',
-            label: 'Limit',
-          },
-          {
-            id: 'order',
-            type: 'Order',
-            label: 'Order',
-          },
-        ],
+        'setupComponent': require('../components/SetupPanes/All'),
       },
       'single': {
         'label': 'Single Operation',
@@ -327,14 +139,7 @@ export const endpointsMap = {
         'path': {
           template: '/operations/{operation}',
         },
-        'params': [
-          {
-            id: 'operation',
-            type: 'Operation',
-            label: 'Operation ID',
-            required: true,
-          },
-        ],
+        'setupComponent': require('../components/SetupPanes/SingleOperation'),
       },
       'for_account': {
         'label': 'Operations for Account',
@@ -342,29 +147,7 @@ export const endpointsMap = {
         'path': {
           template: '/accounts/{account_id}/operations{?cursor,limit,order}',
         },
-        'params': [
-          {
-            id: 'account_id',
-            type: 'PubKey',
-            label: 'Account ID',
-            required: true,
-          },
-          {
-            id: 'cursor',
-            type: 'Cursor',
-            label: 'Cursor',
-          },
-          {
-            id: 'limit',
-            type: 'Limit',
-            label: 'Limit',
-          },
-          {
-            id: 'order',
-            type: 'Order',
-            label: 'Order',
-          },
-        ],
+        'setupComponent': require('../components/SetupPanes/ForAccount'),
       },
       'for_ledger': {
         'label': 'Operations for Ledger',
@@ -372,29 +155,7 @@ export const endpointsMap = {
         'path': {
           template: '/ledgers/{ledger}/operations{?cursor,limit,order}',
         },
-        'params': [
-          {
-            id: 'ledger',
-            type: 'Ledger',
-            label: 'Ledger Sequence',
-            required: true,
-          },
-          {
-            id: 'cursor',
-            type: 'Cursor',
-            label: 'Cursor',
-          },
-          {
-            id: 'limit',
-            type: 'Limit',
-            label: 'Limit',
-          },
-          {
-            id: 'order',
-            type: 'Order',
-            label: 'Order',
-          },
-        ],
+        'setupComponent': require('../components/SetupPanes/ForLedger'),
       },
       'for_transaction': {
         'label': 'Operations for Transaction',
@@ -402,29 +163,7 @@ export const endpointsMap = {
         'path': {
           template: '/transactions/{transaction}/operations{?cursor,limit,order}',
         },
-        'params': [
-          {
-            id: 'transaction',
-            type: 'Transaction',
-            label: 'Transaction Hash',
-            required: true,
-          },
-          {
-            id: 'cursor',
-            type: 'Cursor',
-            label: 'Cursor',
-          },
-          {
-            id: 'limit',
-            type: 'Limit',
-            label: 'Limit',
-          },
-          {
-            id: 'order',
-            type: 'Order',
-            label: 'Order',
-          },
-        ],
+        'setupComponent': require('../components/SetupPanes/ForTransaction'),
       }
     }
   },
@@ -443,20 +182,7 @@ export const endpointsMap = {
           'buying_asset_code': 'buying_asset.code',
           'buying_asset_issuer': 'buying_asset.issuer',
         },
-        'params': [
-          {
-            id: 'selling_asset',
-            type: 'Asset',
-            label: 'Selling Asset',
-            required: 'true',
-          },
-          {
-            id: 'buying_asset',
-            type: 'Asset',
-            label: 'Buying Asset',
-            required: 'true',
-          },
-        ],
+        'setupComponent': require('../components/SetupPanes/OrderBookDetails'),
       },
       'trades': {
         'label': 'Trades',
@@ -470,35 +196,7 @@ export const endpointsMap = {
           'buying_asset_code': 'buying_asset.code',
           'buying_asset_issuer': 'buying_asset.issuer',
         },
-        'params': [
-          {
-            id: 'selling_asset',
-            type: 'Asset',
-            label: 'Selling Asset',
-            required: true,
-          },
-          {
-            id: 'buying_asset',
-            type: 'Asset',
-            label: 'Buying Asset',
-            required: true,
-          },
-          {
-            id: 'cursor',
-            type: 'Cursor',
-            label: 'Cursor',
-          },
-          {
-            id: 'limit',
-            type: 'Limit',
-            label: 'Limit',
-          },
-          {
-            id: 'order',
-            type: 'Order',
-            label: 'Order',
-          },
-        ],
+        'setupComponent': require('../components/SetupPanes/OrderBookTrades'),
       }
     }
   },
@@ -514,32 +212,7 @@ export const endpointsMap = {
           'destination_asset_code': 'destination_asset.code',
           'destination_asset_issuer': 'destination_asset.issuer',
         },
-        'params': [
-          {
-            id: 'source_account',
-            type: 'PubKey',
-            label: 'Source Account',
-            required: true,
-          },
-          {
-            id: 'destination_account',
-            type: 'PubKey',
-            label: 'Destination Account',
-            required: true,
-          },
-          {
-            id: 'destination_asset',
-            type: 'Asset',
-            label: 'Destination Asset',
-            required: true,
-          },
-          {
-            id: 'destination_amount',
-            type: 'Amount',
-            label: 'Destination Amount',
-            required: true,
-          },
-        ],
+        'setupComponent': require('../components/SetupPanes/FindPaymentPaths'),
       }
     }
   },
@@ -552,23 +225,7 @@ export const endpointsMap = {
         'path': {
           template: '/payments{?cursor,limit,order}',
         },
-        'params': [
-          {
-            id: 'cursor',
-            type: 'Cursor',
-            label: 'Cursor',
-          },
-          {
-            id: 'limit',
-            type: 'Limit',
-            label: 'Limit',
-          },
-          {
-            id: 'order',
-            type: 'Order',
-            label: 'Order',
-          },
-        ],
+        'setupComponent': require('../components/SetupPanes/All'),
       },
       'for_account': {
         'label': 'Payments for Account',
@@ -576,29 +233,7 @@ export const endpointsMap = {
         'path': {
           template: '/accounts/{account_id}/payments{?cursor,limit,order}',
         },
-        'params': [
-          {
-            id: 'account_id',
-            type: 'PubKey',
-            label: 'Account ID',
-            required: true,
-          },
-          {
-            id: 'cursor',
-            type: 'Cursor',
-            label: 'Cursor',
-          },
-          {
-            id: 'limit',
-            type: 'Limit',
-            label: 'Limit',
-          },
-          {
-            id: 'order',
-            type: 'Order',
-            label: 'Order',
-          },
-        ],
+        'setupComponent': require('../components/SetupPanes/ForAccount'),
       },
       'for_ledger': {
         'label': 'Payments for Ledger',
@@ -606,29 +241,7 @@ export const endpointsMap = {
         'path': {
           template: '/ledgers/{ledger}/payments{?cursor,limit,order}',
         },
-        'params': [
-          {
-            id: 'ledger',
-            type: 'Ledger',
-            label: 'Ledger Sequence',
-            required: true,
-          },
-          {
-            id: 'cursor',
-            type: 'Cursor',
-            label: 'Cursor',
-          },
-          {
-            id: 'limit',
-            type: 'Limit',
-            label: 'Limit',
-          },
-          {
-            id: 'order',
-            type: 'Order',
-            label: 'Order',
-          },
-        ],
+        'setupComponent': require('../components/SetupPanes/ForLedger'),
       },
       'for_transaction': {
         'label': 'Payments for Transaction',
@@ -636,29 +249,7 @@ export const endpointsMap = {
         'path': {
           template: '/transactions/{transaction}/payments{?cursor,limit,order}',
         },
-        'params': [
-          {
-            id: 'transaction',
-            type: 'Transaction',
-            label: 'Transaction Hash',
-            required: true,
-          },
-          {
-            id: 'cursor',
-            type: 'Cursor',
-            label: 'Cursor',
-          },
-          {
-            id: 'limit',
-            type: 'Limit',
-            label: 'Limit',
-          },
-          {
-            id: 'order',
-            type: 'Order',
-            label: 'Order',
-          },
-        ],
+        'setupComponent': require('../components/SetupPanes/ForTransaction'),
       }
     }
   },
@@ -671,23 +262,7 @@ export const endpointsMap = {
         'path': {
           template: '/transactions{?cursor,limit,order}',
         },
-        'params': [
-          {
-            id: 'cursor',
-            type: 'Cursor',
-            label: 'Cursor',
-          },
-          {
-            id: 'limit',
-            type: 'Limit',
-            label: 'Limit',
-          },
-          {
-            id: 'order',
-            type: 'Order',
-            label: 'Order',
-          },
-        ],
+        'setupComponent': require('../components/SetupPanes/All'),
       },
       'single': {
         'label': 'Single Transaction',
@@ -695,14 +270,7 @@ export const endpointsMap = {
         'path': {
           template: '/transactions/{transaction}',
         },
-        'params': [
-          {
-            id: 'transaction',
-            type: 'Transaction',
-            label: 'Transaction Hash',
-            required: true,
-          },
-        ],
+        'setupComponent': require('../components/SetupPanes/SingleTransaction'),
       },
       'create': {
         'label': 'Post Transaction',
@@ -710,14 +278,7 @@ export const endpointsMap = {
         'path': {
           template: '/transactions',
         },
-        'params': [
-          {
-            id: 'tx',
-            type: 'Xdr',
-            label: 'Transaction Envelope XDR',
-            required: true,
-          },
-        ],
+        'setupComponent': require('../components/SetupPanes/PostTransaction'),
       },
       'for_account': {
         'label': 'Transactions for Account',
@@ -725,29 +286,7 @@ export const endpointsMap = {
         'path': {
           template: '/accounts/{account_id}/transactions{?cursor,limit,order}',
         },
-        'params': [
-          {
-            id: 'account_id',
-            type: 'PubKey',
-            label: 'Account ID',
-            required: true,
-          },
-          {
-            id: 'cursor',
-            type: 'Cursor',
-            label: 'Cursor',
-          },
-          {
-            id: 'limit',
-            type: 'Limit',
-            label: 'Limit',
-          },
-          {
-            id: 'order',
-            type: 'Order',
-            label: 'Order',
-          },
-        ],
+        'setupComponent': require('../components/SetupPanes/ForAccount'),
       },
       'for_ledger': {
         'label': 'Transactions for Ledger',
@@ -755,29 +294,7 @@ export const endpointsMap = {
         'path': {
           template: '/ledgers/{ledger}/transactions{?cursor,limit,order}',
         },
-        'params': [
-          {
-            id: 'ledger',
-            type: 'Ledger',
-            label: 'Ledger Sequence',
-            required: true,
-          },
-          {
-            id: 'cursor',
-            type: 'Cursor',
-            label: 'Cursor',
-          },
-          {
-            id: 'limit',
-            type: 'Limit',
-            label: 'Limit',
-          },
-          {
-            id: 'order',
-            type: 'Order',
-            label: 'Order',
-          },
-        ],
+        'setupComponent': require('../components/SetupPanes/ForLedger'),
       }
     }
   }

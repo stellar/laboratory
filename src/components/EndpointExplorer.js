@@ -26,8 +26,10 @@ class EndpointExplorer extends React.Component {
       endpointSetup = <EndpointSetup
         request={request}
         params={pendingRequest.params}
+        values={pendingRequest.values}
+        endpoint={endpoint}
         onSubmit={() => dispatch(submitRequest(request))}
-        onUpdate={(param, values, complete) => dispatch(updateValues(param, values, complete))}
+        onUpdate={(param, value) => dispatch(updateValues(param, value))}
       />
     }
 
@@ -81,7 +83,7 @@ function buildRequest(baseUrl, endpoint, pendingRequest) {
       if (typeof paramValue === 'undefined') {
         return;
       }
-      postData[param.id] = paramValue.value;
+      postData[param.id] = paramValue;
     });
 
     request.formData = querystring.stringify(postData);
@@ -100,14 +102,28 @@ function buildRequestUrl (baseUrl, endpoint, values) {
   // uriParams contains what we want to fill the url with
   let uriParams = {};
   _.each(template.varNames, (varName) => {
-    let objectPath = (varName in endpoint.path) ?
-      endpoint.path[varName] : varName + '.value';
+
+    // With the appropriate getter, extract/transform the relevant value from values
+    // 1. Simple value:
+    //      - no getter string in `endpoint.path`
+    // 2. String resolver: value is inside object in `values`
+    //      - getter string in `endpoint.path`
+    // 3. Function resolver:
+    //      - getter function in `endpoint.path`
+    //
+    // getter can only either be: `undefined`, `String`, or `Function`
+
+    let getterPresent = varName in endpoint.path;
+    let getter = endpoint.path[varName];
+    let getterIsFunc = _.isFunction(getter);
     let value;
 
-    if (_.isString(objectPath)) {
-      value = _.get(values, objectPath);
-    } else if (typeof objectPath === 'function') {
-      value = objectPath(values);
+    if (getterPresent && getterIsFunc) { // case 3
+      value = getter(values);
+    } else if (getterPresent && !getterIsFunc) { // case 2
+      value = _.get(values, getter);
+    } else { // case 1
+      value = values[varName];
     }
 
     if (!_.isUndefined(value) && value !== '') {

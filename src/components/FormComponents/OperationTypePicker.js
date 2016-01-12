@@ -1,20 +1,19 @@
-import PickerGenerator from './PickerGenerator';
-import {operationsMap} from '../../data/operations.js';
+import React from 'react';
 import _ from 'lodash';
+import {operationsMap} from '../../data/operations.js';
+import RadioButtonPicker from './RadioButtonPicker';
 
-export default PickerGenerator({
-  pickerName: 'OperationType',
-  fields: [{
-    type: 'radio',
-    // TODO: Make this a select dropdown
-    options: _.map(operationsMap, (op) => {
-      return {
-        name: op.name,
-        label: op.label,
-        value: op.name,
-      };
-    }),
-    name: 'order',
-    validator: value => null,
-  }],
-});
+let operationItemMap = {};
+_.each(operationsMap, (op) => {
+  operationItemMap[op.name] = op.label;
+})
+
+export default function OperationTypePicker(props) {
+  let {value, onUpdate} = props;
+
+  return <RadioButtonPicker
+    value={value}
+    onUpdate={onUpdate}
+    items={operationItemMap}
+    />
+}

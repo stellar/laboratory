@@ -1,12 +1,12 @@
-import PickerGenerator from './PickerGenerator';
+import React from 'react';
+import PositiveIntPicker from './PositiveIntPicker';
 
-export default PickerGenerator({
-  pickerName: 'Ledger',
-  fields: [{
-    type: 'text',
-    name: 'ledger',
-    placeholder: 'Example: 1714814',
-    validator: (value) =>
-      value.match(/^[0-9]*$/g) ? null : 'Ledger sequence is invalid. It must be a positive integer.'
-  }],
-});
+export default function LedgerPicker(props) {
+  let {value, onUpdate} = props;
+
+  return <PositiveIntPicker
+    value={value}
+    placeholder='Example: 1714814'
+    onUpdate={(value) => onUpdate(value)}
+    />
+}

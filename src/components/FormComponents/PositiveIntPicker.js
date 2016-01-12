@@ -1,17 +1,16 @@
 import React from 'react';
-import {Account} from 'stellar-sdk';
 import PickerError from './PickerError';
-import _ from 'lodash';
 
-export default function(props) {
+export default function PositiveIntPicker(props) {
   let {value, onUpdate} = props;
+
   return <div>
     <input type="text"
       value={value}
-      placeholder={props.placeholder || 'Example: GCEXAMPLE5HWNK4AYSTEQ4UWDKHTCKADVS2AHF3UI2ZMO3DPUSM6Q4UG'}
       onChange={(event) => {
         onUpdate(event.target.value);
       }}
+      placeholder={props.placeholder}
       className="picker picker--textInput" />
     <PickerError message={validator(value)} />
   </div>
@@ -21,7 +20,9 @@ function validator(value) {
   if (!_.isString(value) || value.length === 0) {
     return;
   }
-  if (!Account.isValidAccountId(value)) {
-    return 'Public key is invalid.';
+  if (value.charAt(0) === '-') {
+    return 'Expected a positive number.';
+  } else if (!value.match(/^[0-9]*$/g)) {
+    return 'Expected a whole number.';
   }
 }

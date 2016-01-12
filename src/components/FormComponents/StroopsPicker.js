@@ -1,19 +1,12 @@
-import PickerGenerator from './PickerGenerator';
+import React from 'react';
+import PositiveIntPicker from './PositiveIntPicker';
 
-export default PickerGenerator({
-  pickerName: 'Stroops',
-  fields: [{
-    type: 'text',
-    name: 'stroops',
-    placeholder: 'Amount in stroops (1 lumen = 10,000,000 stroops)',
-    validator: (value) => {
-      if (value.charAt(0) === '-') {
-        return 'Stroop amounts can only be a positive number.';
-      } else if (!value.match(/^[0-9]*$/g)) {
-        return 'Stroop amounts must be a whole number.';
-      }
+export default function SequencePicker(props) {
+  let {value, onUpdate} = props;
 
-      return null
-    }
-  }],
-});
+  return <PositiveIntPicker
+    value={value}
+    placeholder='Amount in stroops (1 lumen = 10,000,000 stroops)'
+    onUpdate={(value) => onUpdate(value)}
+    />
+}

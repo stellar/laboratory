@@ -1,30 +1,17 @@
 import _ from 'lodash';
 import React from 'react';
 
-import Picker from './FormComponents/Picker';
 import {EasySelect} from './EasySelect';
 
 export function EndpointSetup(props) {
-  let {onSubmit, onUpdate, request, params} = props;
+  let {onSubmit, onUpdate, request, params, endpoint, values} = props;
 
   return <div className="so-chunk">
     <div className="optionsTable">
-      {
-      /*
-        TODO: Currently can't be moved out due to a limitation of how the CSS
-        expects the dom to be. When restyling, refactor this block to a function
-      */
-      _.map(params, (param) => {
-        return Picker({
-          type: param.type,
-          onUpdate: onUpdate.bind(this, param.id),
-          required: param.required,
-          label: param.label,
-          forceDirty: false,
-          key: param.id,
-        });
-      })
-      }
+      <endpoint.setupComponent
+        onUpdate={onUpdate}
+        values={values}
+        />
       <hr className="optionsTable__separator" />
       <UrlRow url={request.url} method={request.method} />
       <PostDataRow formData={request.formData} />
@@ -32,7 +19,6 @@ export function EndpointSetup(props) {
     </div>
   </div>;
 }
-
 
 function UrlRow(props) {
   return <div className="optionsTable__blank EndpointSetup__url">

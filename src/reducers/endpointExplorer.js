@@ -70,7 +70,7 @@ function pendingRequestValues(state={}, action) {
   switch (action.type) {
   case UPDATE_VALUES:
     return Object.assign({}, state, {
-      [action.param]: action.values
+      [action.param]: action.value
     });
   default:
     return state;

@@ -1,67 +1,73 @@
-import PickerGenerator from './PickerGenerator';
-import {Account} from 'stellar-sdk';
+import React from 'react';
+import _ from 'lodash';
+import RadioButtonPicker from './RadioButtonPicker';
+import PubKeyPicker from './PubKeyPicker';
+import PickerError from './PickerError';
 
-export default PickerGenerator({
-  pickerName: 'Asset',
-  fields: [
-    {
-      type: 'radio',
-      options: [
-        {
-          name: 'native', // Just used internally for keys. Must be unique within this set of options
-          label: 'native', // Displayed to the user (can't be used for keys in case of localization)
-          value: 'native', // Must be non-empty string
-        },
-        {
-          name: 'alphanum4',
-          label: 'Alphanumeric 4',
-          value: 'alphanum4',
-        },
-        {
-          name: 'alphanum12',
-          label: 'Alphanumeric 12',
-          value: 'alphanum12',
-        },
-      ],
-      name: 'type',
-      validator: value => null,
-    },
-    {
-      type: 'text',
-      name: 'code',
-      placeholder: 'Asset code',
-      forceRequired: true, // If field is showing, it is required (even if picker is optional)
-      showIf: isNonNativeAsset,
-      validator: (value, fields) => { // We rarely need the second argument to validator, but in this case, we do
-        let minLength, maxLength;
-        if (fields.type.value === 'alphanum4') {
-          minLength = 1;
-          maxLength = 4;
-        } else if (fields.type.value === 'alphanum12') {
-          minLength = 5;
-          maxLength = 12;
-        }
+// Value is a string containing the currently selected id (or undefined)
+export default function AssetPicker(props) {
+  let {value, onUpdate} = props;
 
-        if (value && !value.match(/^[a-zA-Z0-9]+$/g)) {
-          return 'Asset code must consist of only letters and numbers.';
-        } else if (value.length < minLength || value.length > maxLength) {
-          return `Asset code must be between ${minLength} and ${maxLength} characters long.`;
-        }
+  value = _.assign({
+    type: '',
+    code: '',
+    issuer: '',
+  }, value);
 
-        return null;
-      },
-    },
-    {
-      type: 'text',
-      name: 'issuer',
-      placeholder: 'Issuer account ID',
-      forceRequired: true, // If field is showing, it is required (even if picker is optional)
-      showIf: isNonNativeAsset,
-      validator: (value) => Account.isValidAccountId(value) ? null : 'Public key is invalid.',
-    },
-  ],
-});
+  let codePicker, codePickerError, inputPicker;
+  if (value.type === 'alphanum4' || value.type === 'alphanum12') {
+    codePicker = <input type="text"
+      value={value.code}
+      onChange={(event) => onUpdate(_.assign({}, props.value, {
+        code: event.target.value,
+      }))}
+      placeholder="Asset Code"
+      className="picker picker--textInput" />
+    codePickerError = <PickerError message={codeValidator(value)} />
+    inputPicker = <PubKeyPicker
+      value={value.issuer}
+      onUpdate={(issuer) => onUpdate(_.assign({}, props.value, {
+        issuer: issuer,
+      }))}
+      placeholder="Issuer Account ID"
+      />
+  }
 
-function isNonNativeAsset(fields) {
-  return fields.type.value !== 'native' && fields.type.value !== '';
+  return <div>
+    <RadioButtonPicker
+      value={value.type}
+      onUpdate={(typeValue) => onUpdate(_.assign({}, props.value, {
+        type: typeValue,
+      }))}
+      items={{
+        'native': 'native',
+        'alphanum4': 'Alphanumeric 4',
+        'alphanum12': 'Alphanumeric 12',
+      }}
+      />
+    {codePicker}
+    {codePickerError}
+    {inputPicker}
+  </div>
+}
+
+function codeValidator(value) {
+  let minLength, maxLength;
+  if (value.type === 'alphanum4') {
+    minLength = 1;
+    maxLength = 4;
+  } else if (value.type === 'alphanum12') {
+    minLength = 5;
+    maxLength = 12;
+  } else {
+    return;
+  }
+
+  let code = value.code || '';
+
+  if (code && !code.match(/^[a-zA-Z0-9]+$/g)) {
+    return 'Asset code must consist of only letters and numbers.';
+  } else if (code.length < minLength || code.length > maxLength) {
+    return `Asset code must be between ${minLength} and ${maxLength} characters long.`;
+  }
 }

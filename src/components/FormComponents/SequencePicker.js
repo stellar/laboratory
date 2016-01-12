@@ -1,11 +1,12 @@
-import PickerGenerator from './PickerGenerator';
+import React from 'react';
+import PositiveIntPicker from './PositiveIntPicker';
 
-export default PickerGenerator({
-  pickerName: 'Sequence',
-  fields: [{
-    type: 'text',
-    name: 'sequence',
-    validator: (value) =>
-      (!value.match(/^[0-9]*$/g) || value < 0) ? 'Sequence number is invalid. It must be a positive integer.' : null,
-  }],
-});
+export default function SequencePicker(props) {
+  let {value, onUpdate} = props;
+
+  return <PositiveIntPicker
+    value={value}
+    placeholder='Example: 55834579143'
+    onUpdate={(value) => onUpdate(value)}
+    />
+}

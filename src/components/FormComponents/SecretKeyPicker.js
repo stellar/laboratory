@@ -1,19 +1,29 @@
-import PickerGenerator from './PickerGenerator';
+import React from 'react';
+import _ from 'lodash';
 import {Keypair} from 'stellar-sdk';
+import PickerError from './PickerError';
 
-export default PickerGenerator({
-  pickerName: 'SecretKey',
-  fields: [{
-    type: 'text',
-    name: 'secretKey',
-    placeholder: 'Example: SAEXAMPLE6TLGEF6ASOTVTLFUK7LE2K2PFVPFGTEZMMVHH7KLLBBROEQ',
-    validator: (value) => {
-      try{
-        Keypair.fromSeed(value);
-      } catch (err) {
-        return 'Invalid secret key.';
-      }
-      return null;
-    }
-  }],
-});
+export default function SecretKeyPicker(props) {
+  let {value, onUpdate} = props;
+  return <div>
+    <input type="text"
+      value={value}
+      placeholder={props.placeholder || 'Example: SAEXAMPLE6TLGEF6ASOTVTLFUK7LE2K2PFVPFGTEZMMVHH7KLLBBROEQ'}
+      onChange={(event) => {
+        onUpdate(event.target.value);
+      }}
+      className="picker picker--textInput" />
+    <PickerError message={validator(value)} />
+  </div>
+}
+
+function validator(value) {
+  if (!_.isString(value) || value.length === 0) {
+    return;
+  }
+  try {
+    Keypair.fromSeed(value);
+  } catch (err) {
+    return 'Invalid secret key.';
+  }
+}
