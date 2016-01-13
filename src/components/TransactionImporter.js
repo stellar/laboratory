@@ -28,9 +28,9 @@ export default class TransactionImporter extends React.Component {
 
     validation = validateXdr(this.state.input);
     if (validation.result === 'error') {
-      message = <p className="TransactionImporter__alert">{validation.message}</p>
+      message = <p className="TransactionImporter__message__alert">{validation.message}</p>
     } else if (validation.result === 'success') {
-      message = <p className="TransactionImporter__success">{validation.message}</p>
+      message = <p className="TransactionImporter__message__success">{validation.message}</p>
     }
 
     submitEnabled = validation.result === 'success';
@@ -42,14 +42,13 @@ export default class TransactionImporter extends React.Component {
           onChange={this.updateTextarea.bind(this)}
           placeholder="Example: AAAAAGXNhB2hIkbP//jgzn4os/AAAAZAB+BaLPAAA5Q/xL..."></textarea>
       </div>
-      {message}
+      <div className="TransactionImporter__message">
+        {message}
+      </div>
       <div className="s-buttonList">
         <button className="s-button"
           disabled={!submitEnabled} onClick={this.triggerImport.bind(this)}>
           Import Transaction</button>
-        {/* Support for Cancel button needed in TransactionBuilder import
-        <button className="s-button s-button__light">Cancel</button>
-        */}
       </div>
     </div>
   }
