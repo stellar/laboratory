@@ -1,23 +1,23 @@
 import React from 'react';
 import _ from 'lodash';
 import RadioButtonPicker from './RadioButtonPicker';
+import TextPicker from './TextPicker';
 import PickerError from './PickerError';
 import {UnsignedHyper} from 'stellar-sdk';
 
 export default function MemoPicker(props) {
   let {value, onUpdate} = props;
-
-  let contentPicker, contentPickerError;
+  let contentPicker;
 
   if (value.type !== 'MEMO_NONE') {
-    contentPicker = <input type="text"
+    contentPicker = <TextPicker
       value={value.content}
-      onChange={(event) => onUpdate(_.assign({}, props.value, {
-        content: event.target.value,
+      onUpdate={(contentValue) => onUpdate(_.assign({}, props.value, {
+        content: contentValue,
       }))}
       placeholder="Memo content"
-      className="picker picker--textInput" />
-    contentPickerError = <PickerError message={contentValidator(value)} />
+      validator={contentValidator.bind(null, value)} // Use entire Memo value and not just the content value
+    />;
   }
 
   return <div>
@@ -35,20 +35,15 @@ export default function MemoPicker(props) {
       }}
       />
     {contentPicker}
-    {contentPickerError}
   </div>
 }
 
 function contentValidator(value) {
-  if (!_.isUndefined(value.content) || !_.isString(value) || value.length === 0) {
-    return;
-  }
-
   switch (value.type) {
   case 'MEMO_TEXT':
     let memoTextBytes = Buffer.byteLength(value.content, 'utf8');
     if (memoTextBytes > 28) {
-      return `MEMO_TEXT accepts a string of up to 28-bytes. ${memoTextBytes} bytes entered.`
+      return `MEMO_TEXT accepts a string of up to 28 bytes. ${memoTextBytes} bytes entered.`
     }
   break;
   case 'MEMO_ID':

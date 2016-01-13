@@ -1,7 +1,16 @@
 import React from 'react';
+import _ from 'lodash';
+import PickerError from './PickerError';
 
 export default function TextPicker(props) {
-  let {value, onUpdate} = props;
+  let {value, onUpdate, validator} = props;
+  let errorMessage;
+
+  let validatorIsPresent = _.isFunction(validator);
+  let valueIsNonEmpty = _.isString(value) && value.length > 0;
+  if (validatorIsPresent && valueIsNonEmpty) {
+    errorMessage = validator(value);
+  }
 
   return <div>
     <input type="text"
@@ -11,5 +20,6 @@ export default function TextPicker(props) {
       }}
       placeholder={props.placeholder}
       className="picker picker--textInput" />
+    <PickerError message={errorMessage} />
   </div>
 }
