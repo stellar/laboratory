@@ -9,12 +9,7 @@ export function getOperation(opName) {
 //   {
 //     name: 'createAccount', // Corresponds to the operation key in js-stellar-base.Operation
 //     label: 'Create Account', // Human friendly name for the operation
-//     params: { // In array format so that it can be ordered
-//       'destination': { // Corresponds to js-stellar-base.Operation[type] keys
-//         label: 'Destination', // Shows up in the operation form
-//         pickerType: 'PubKey', // Name of the React Picker component (minus "Picker")
-//       },
-//     },
+//     operationPane: require('../components/OperationPanes/CreateAccount'), // React component that contains the multiple pickers for this operation
 //   },
 // ]
 
@@ -22,34 +17,12 @@ export const operationsMap = [
   {
     name: 'createAccount',
     label: 'Create Account',
-    params: {
-      'destination': {
-        label: 'Destination',
-        pickerType: 'PubKey',
-      },
-      'startingBalance': {
-        label: 'Starting Balance',
-        pickerType: 'Amount',
-      },
-    },
+    operationPane: require('../components/OperationPanes/CreateAccount'),
   },
   {
     name: 'payment',
     label: 'Payment',
-    params: {
-      'destination': {
-        label: 'Destination',
-        pickerType: 'PubKey',
-      },
-      'asset': {
-        label: 'Asset',
-        pickerType: 'Asset',
-      },
-      'amount': {
-        label: 'Amount',
-        pickerType: 'Amount',
-      },
-    },
+    operationPane: require('../components/OperationPanes/Payment'),
   },
   // TODO: Other complex operations
   // {

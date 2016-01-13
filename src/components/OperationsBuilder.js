@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import Picker from './FormComponents/Picker';
+import PubKeyPicker from './FormComponents/PubKeyPicker.js';
 import {getOperation} from '../data/operations';
 import {
   addOperation,
@@ -9,6 +9,8 @@ import {
   updateOperationAttributes,
   reorderOperation,
 } from '../actions/transactionBuilder';
+import OperationTypePicker from './FormComponents/OperationTypePicker';
+import OptionsTablePair from './OptionsTable/Pair';
 
 class OperationsBuilder extends React.Component {
   constructor() {
@@ -27,36 +29,19 @@ class OperationsBuilder extends React.Component {
 let operation = (ops, index, dispatch) => {
   let op = ops[index];
   let opConfig = getOperation(op.name);
-  let attributePickers;
+  let operationPane;
+  let separator;
   if (typeof opConfig !== 'undefined') {
-    attributePickers = _.map(opConfig.params, (param, paramKey) => {
-      return Picker({
-        type: param.pickerType,
-        onUpdate: (values) => {
-          let actionValue = values;
-          if ('value' in values) {
-            actionValue = values.value;
-          }
-
-          dispatch(updateOperationAttributes(op.id, {
-            [paramKey]: actionValue
-          }))
-        },
-        label: param.label,
-        required: true,
-        key: op.name + '-' + paramKey,
-      })
-    });
-    attributePickers.push(Picker({
-      type: 'PubKey',
-      onUpdate: ({value}) => {
+    operationPane = opConfig.operationPane({
+      onUpdate: (key, value) => {
         dispatch(updateOperationAttributes(op.id, {
-          source: value
+          [key]: value
         }))
       },
-      label: 'Source Account',
-      key: 'source',
-    }))
+      values: op.attributes
+    });
+
+    separator = <hr className="optionsTable__separator" />;
   }
 
   let removeLink;
@@ -78,16 +63,12 @@ let operation = (ops, index, dispatch) => {
       {removeLink}
     </div>
     <div className="TransactionOp__config TransactionOpConfig optionsTable">
-      {Picker({
-        type: 'OperationType',
-        onUpdate: ({value}) => {
+      <OptionsTablePair label="Operation Type">
+        <OperationTypePicker value={op.name} onUpdate={(value) => {
           dispatch(updateOperationType(op.id, value))
-        },
-        label: 'Operation Type',
-        required: true,
-        key: 'operationType',
-      })}
-      {attributePickers}
+        }} />
+      </OptionsTablePair>
+      {operationPane}
     </div>
   </div>;
 }

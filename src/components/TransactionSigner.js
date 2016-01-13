@@ -1,6 +1,5 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import Picker from './FormComponents/Picker';
 import {Transaction, Keypair, Network} from 'stellar-sdk';
 import TransactionImporter from './TransactionImporter';
 import {
@@ -9,6 +8,8 @@ import {
   setSecret,
 } from '../actions/transactionSigner';
 import {EasySelect} from './EasySelect';
+import OptionsTablePair from './OptionsTable/Pair';
+import SecretKeyPicker from './FormComponents/SecretKeyPicker';
 
 class TransactionSigner extends React.Component {
   render() {
@@ -62,12 +63,12 @@ class TransactionSigner extends React.Component {
             <div className="TxSignerKeys TransactionSigner__keys">
               <p className="TxSignerKeys__title">Signatures</p>
               <div className="optionsTable">
-                {Picker({
-                  type: 'SecretKey',
-                  onUpdate: (values) => dispatch(setSecret(values.value)),
-                  required: true,
-                  label: 'Add Signer',
-                })}
+                <OptionsTablePair label="Add Signer">
+                  <SecretKeyPicker
+                  value={signers.signer}
+                  onUpdate={(value) => dispatch(setSecret(value))}
+                  />
+                </OptionsTablePair>
               </div>
             </div>
           </div>

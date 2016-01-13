@@ -4,3 +4,20 @@
   .picker--textInput {
     width: 100%;
   }
+
+  .picker--textarea {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-height: 10em;
+  }
+
+  .picker--breakContent {
+    word-break: break-all;
+  }
+
+
+  .picker__errorMessage {
+    margin: 0.75em 0 0 0;
+    color: $s-color-alert;
+  }

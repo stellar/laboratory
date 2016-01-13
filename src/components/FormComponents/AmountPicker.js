@@ -1,11 +1,10 @@
-import PickerGenerator from './PickerGenerator';
+import React from 'react';
+import PositiveIntPicker from './PositiveIntPicker';
 
-export default PickerGenerator({
-  pickerName: 'Amount',
-  fields: [{
-    type: 'text',
-    name: 'amount',
-    validator: (value) => {
+export default function AmountPicker(props) {
+  return <PositiveIntPicker
+    {...props}
+    validator={(value) => {
       if (value.charAt(0) === '-') {
         return 'Amount can only be a positive number.';
       } else if (!value.match(/^[0-9]*(\.[0-9]+){0,1}$/g)) {
@@ -13,7 +12,6 @@ export default PickerGenerator({
       } else if (value.match(/\.([0-9]){8,}$/g)) {
         return 'Amount can only support a precision of 7 decimals.';
       }
-      return null
-    }
-  }],
-});
+    }}
+  />
+}

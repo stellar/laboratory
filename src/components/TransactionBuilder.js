@@ -50,21 +50,21 @@ function chooseState(state) {
   }
 }
 
-function onAttributeUpdate(dispatch, param, values) {
+function onAttributeUpdate(dispatch, param, value) {
   let newAttributes = {};
   switch(param) {
   case 'sourceAccount':
-    newAttributes.sourceAccount = values.value;
+    newAttributes.sourceAccount = value;
   break;
   case 'sequence':
-    newAttributes.sequence = values.value;
+    newAttributes.sequence = value;
     break;
   case 'fee':
-    newAttributes.fee = values.value;
+    newAttributes.fee = value;
   break;
   case 'memo':
-    newAttributes.memoType = values.type;
-    newAttributes.memoContent = values.content;
+    newAttributes.memoType = value.type;
+    newAttributes.memoContent = value.content;
   break;
   }
   dispatch(updateAttributes(newAttributes));
