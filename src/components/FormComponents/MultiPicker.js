@@ -1,30 +1,32 @@
 import React from 'react';
 import _ from 'lodash';
 
-// The value is extended so that at the end there is always an element that is null or undefined.
-// NOTE: The elements that are empty also include empty strings
+// Takes in a prop `value` that gets normalized to have one "empty" element at the end
 export default function MultiPicker(props) {
-  let {value, onUpdate, component} = props;
-  if (!_.isArray(value)) {
+  let {onUpdate, component} = props;
+  let rawValues = props.value;
+  if (!_.isArray(rawValues)) {
     return <div></div>;
   }
-  let lastItem = value[value.length - 1];
-  let extendedValue = value.slice();
 
-  while (extendedValue.length > 1 && arelastTwoEmpty(extendedValue)) {
-    extendedValue.pop();
-  }
+  // Create a new array that is normalized to have only one "empty" element
+  // defined as null, undefined, or '' at the last index of the array.
+  let normalizedValues = rawValues.slice();
 
-  if (!isEmpty(lastItem) || extendedValue.length === 0) {
-    extendedValue.push(null);
+  // Add a trailing "empty" element. May be removed in the next step
+  normalizedValues.push(null);
+
+  // Remove trailing "empty" elements until there is only one trailing "empty" element
+  while (normalizedValues.length > 1 && arelastTwoEmpty(normalizedValues)) {
+    normalizedValues.pop();
   }
 
   let SingleComponent = props.component;
   return <div>
-    {_.map(extendedValue, (value, index) => {
+    {_.map(normalizedValues, (value, index) => {
       return <SingleComponent
         onUpdate={(newValue) => {
-          let newFullValue = extendedValue.slice();
+          let newFullValue = normalizedValues.slice();
           newFullValue[index] = newValue;
           onUpdate(newFullValue);
         }}
@@ -41,6 +43,6 @@ MultiPicker.propTypes = {
 function isEmpty(value) {
   return value === null || _.isUndefined(value) || value === '';
 }
-function arelastTwoEmpty(value) {
-  return isEmpty(value[value.length - 1]) && isEmpty(value[value.length - 2]);
+function arelastTwoEmpty(values) {
+  return isEmpty(values[values.length - 1]) && isEmpty(values[values.length - 2]);
 }
