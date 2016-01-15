@@ -2,7 +2,6 @@
   margin-bottom: 2em;
 }
   .TransactionImporter__input {
-    padding-bottom: 1em;
   }
     .TransactionImporter__input__textarea {
       display: block;
@@ -12,9 +11,18 @@
       min-height: 12em;
       margin-bottom: 0;
     }
-  .TransactionImporter__alert {
-    color: $s-color-alert;
+
+  .TransactionImporter__message {
+    @include S-flex-row;
+    align-items: center;
+    min-height: 2em;
+    padding: 0.25em 0.25em;
   }
-  .TransactionImporter__success {
-    color: $s-color-success;
-  }
+    .TransactionImporter__message__alert {
+      color: $s-color-alert;
+      margin-bottom: 0;
+    }
+    .TransactionImporter__message__success {
+      color: $s-color-success;
+      margin-bottom: 0;
+    }

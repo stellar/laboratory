@@ -2,7 +2,7 @@ import {combineReducers} from 'redux';
 import {
   IMPORT_FROM_XDR,
   CLEAR_TRANSACTION,
-  SET_SECRET,
+  SET_SECRETS,
 } from '../actions/transactionSigner';
 import _ from 'lodash';
 
@@ -32,18 +32,12 @@ function tx(state = {
   return state;
 }
 
-function signers(state = {
-  signer: '', // TODO: multiple signers
-}, action) {
+function signers(state = [], action) {
   switch (action.type) {
   case CLEAR_TRANSACTION:
-    return {
-      signer: '',
-    }
-  case SET_SECRET:
-    return {
-      signer: action.key
-    }
+    return []
+  case SET_SECRETS:
+    return action.secrets
   }
   return state;
 }

@@ -13,10 +13,10 @@ export function clearTransaction() {
   }
 }
 
-export const SET_SECRET = 'SET_SECRET';
-export function setSecret(key) {
+export const SET_SECRETS = 'SET_SECRETS';
+export function setSecrets(secrets) {
   return {
-    type: SET_SECRET,
-    key,
+    type: SET_SECRETS,
+    secrets,
   }
 }

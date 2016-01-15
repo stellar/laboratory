@@ -5,11 +5,12 @@ import TransactionImporter from './TransactionImporter';
 import {
   importFromXdr,
   clearTransaction,
-  setSecret,
+  setSecrets,
 } from '../actions/transactionSigner';
 import {EasySelect} from './EasySelect';
 import OptionsTablePair from './OptionsTable/Pair';
 import SecretKeyPicker from './FormComponents/SecretKeyPicker';
+import MultiPicker from './FormComponents/MultiPicker';
 
 class TransactionSigner extends React.Component {
   render() {
@@ -27,7 +28,7 @@ class TransactionSigner extends React.Component {
         </div>
       </div>
     } else {
-      let result = signTx(tx.xdr, signers.signer, this.props.useNetworkFunc);
+      let result = signTx(tx.xdr, signers, this.props.useNetworkFunc);
       let transaction = new Transaction(tx.xdr);
 
       let infoTable = {
@@ -64,9 +65,10 @@ class TransactionSigner extends React.Component {
               <p className="TxSignerKeys__title">Signatures</p>
               <div className="optionsTable">
                 <OptionsTablePair label="Add Signer">
-                  <SecretKeyPicker
-                  value={signers.signer}
-                  onUpdate={(value) => dispatch(setSecret(value))}
+                  <MultiPicker
+                    component={SecretKeyPicker}
+                    value={signers}
+                    onUpdate={(value) => dispatch(setSecrets(value))}
                   />
                 </OptionsTablePair>
               </div>
@@ -76,7 +78,10 @@ class TransactionSigner extends React.Component {
         <div className="so-back TxSignerResult TransactionSigner__result">
           <div className="so-chunk">
             <p className="TxSignerResult__summary">{result.message}</p>
-            <EasySelect plain={true}><pre className="TxSignerResult__xdr so-code so-code__wrap"><code>{result.xdr}</code></pre></EasySelect>
+            {(!_.isUndefined(result.xdr)) ?
+              <EasySelect plain={true}><pre className="TxSignerResult__xdr so-code so-code__wrap"><code>{result.xdr}</code></pre></EasySelect>
+              : null
+            }
           </div>
         </div>
       </div>
@@ -105,21 +110,30 @@ function isValidSecret(key) {
   return true;
 }
 
-function signTx(xdr, signer, useNetworkFunc) {
+function signTx(xdr, signers, useNetworkFunc) {
   Network[useNetworkFunc]();
 
-  if (isValidSecret(signer)) {
-    let newTx = new Transaction(xdr);
-    let existingSigs = newTx.signatures.length;
-    newTx.sign(Keypair.fromSeed(signer));
-
-    return {
-      xdr: newTx.toEnvelope().toXDR('base64'),
-      message: `${existingSigs} existing signature(s); 1 signature added; ${existingSigs + 1} signatures total`,
-    };
-  } else {
-    return {
-      message: 'Signing key required'
-    };
+  let validSigners = [];
+  for (let i = 0; i < signers.length; i++) {
+    let signer = signers[i];
+    if (signer !== null && !_.isUndefined(signer) && signer !== '') {
+      if (!isValidSecret(signer)) {
+        return {
+          message: 'Valid secret keys are required to sign transaction'
+        }
+      }
+      validSigners.push(signer);
+    }
   }
+
+  let newTx = new Transaction(xdr);
+  let existingSigs = newTx.signatures.length;
+  _.each(validSigners, (signer) => {
+    newTx.sign(Keypair.fromSeed(signer));
+  })
+
+  return {
+    xdr: newTx.toEnvelope().toXDR('base64'),
+    message: `${validSigners.length} signature(s) added; ${existingSigs + validSigners.length} signature(s) total`,
+  };
 }
