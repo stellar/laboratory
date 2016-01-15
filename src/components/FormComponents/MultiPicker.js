@@ -24,14 +24,10 @@ export default function MultiPicker(props) {
 
   let SingleComponent = props.component;
   return <div>
-    {_.map(normalizedValues, (value, index) => {
+    {_.map(normalizedValues, (singleValue, index) => {
       return <SingleComponent
-        onUpdate={(newValue) => {
-          let newFullValue = normalizedValues.slice();
-          newFullValue[index] = newValue;
-          onUpdate(newFullValue);
-        }}
-        value={value}
+        onUpdate={(newValue) => onUpdate(updateValueAt(normalizedValues, index, newValue))}
+        value={singleValue}
         key={index}
       />
     })}
@@ -66,5 +62,13 @@ function adjustTrailingEmptyElements(values) {
     values.pop();
   }
 
+  return values;
+}
+
+// Updates a value of the array at a specific inde
+function updateValueAt(values, index, newValue) {
+  values = values.slice();
+  debugger;
+  values[index] = newValue;
   return values;
 }
