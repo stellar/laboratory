@@ -58,6 +58,8 @@ function pendingRequestValues(state={}, action) {
     return Object.assign({}, state, {
       [action.param]: action.value
     });
+  case CHOOSE_ENDPOINT:
+    return {};
   default:
     return state;
   }
