@@ -13,7 +13,6 @@ const endpointExplorer = combineReducers({
   currentEndpoint,
   pendingRequest: combineReducers({
     template: pendingRequestTemplate,
-    params: pendingRequestParams,
     values: pendingRequestValues,
     props: identity({}),
   }),
@@ -48,19 +47,6 @@ function pendingRequestTemplate(state="", action) {
   switch (action.type) {
   case CHOOSE_ENDPOINT:
     return getTemplate(action.resource, action.endpoint) || "";
-  default:
-    return state;
-  }
-}
-
-function pendingRequestParams(state=[], action) {
-  switch (action.type) {
-  case CHOOSE_ENDPOINT:
-    let endpoint = getEndpoint(action.resource, action.endpoint);
-    if (!endpoint) {
-      return [];
-    }
-    return endpoint.params || [];
   default:
     return state;
   }

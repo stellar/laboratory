@@ -25,7 +25,6 @@ class EndpointExplorer extends React.Component {
     if (currentEndpoint !== '') {
       endpointSetup = <EndpointSetup
         request={request}
-        params={pendingRequest.params}
         values={pendingRequest.values}
         endpoint={endpoint}
         onSubmit={() => dispatch(submitRequest(request))}
