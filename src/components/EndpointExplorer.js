@@ -25,7 +25,6 @@ class EndpointExplorer extends React.Component {
     if (currentEndpoint !== '') {
       endpointSetup = <EndpointSetup
         request={request}
-        params={pendingRequest.params}
         values={pendingRequest.values}
         endpoint={endpoint}
         onSubmit={() => dispatch(submitRequest(request))}
@@ -76,14 +75,11 @@ function buildRequest(baseUrl, endpoint, pendingRequest) {
     request.method = endpoint.method;
   }
 
+  // Currently, this only supports simple string values
   if (request.method === 'POST') {
     let postData = {};
-    _.each(pendingRequest.params, (param) => {
-      let paramValue = pendingRequest.values[param.id];
-      if (typeof paramValue === 'undefined') {
-        return;
-      }
-      postData[param.id] = paramValue;
+    _.each(pendingRequest.values, (value, id) => {
+      postData[id] = value;
     });
 
     request.formData = querystring.stringify(postData);
