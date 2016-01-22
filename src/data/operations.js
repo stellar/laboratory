@@ -24,6 +24,11 @@ export const operationsMap = [
     label: 'Payment',
     operationPane: require('../components/OperationPanes/Payment'),
   },
+  {
+    name: 'changeTrust',
+    label: 'Change Trust',
+    operationPane: require('../components/OperationPanes/ChangeTrust'),
+  },
   // TODO: Other complex operations
   // {
   //   name: 'pathPayment',
