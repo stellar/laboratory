@@ -29,6 +29,11 @@ export const operationsMap = [
     label: 'Change Trust',
     operationPane: require('../components/OperationPanes/ChangeTrust'),
   },
+  {
+    name: 'allowTrust',
+    label: 'Allow Trust',
+    operationPane: require('../components/OperationPanes/AllowTrust'),
+  },
   // TODO: Other complex operations
   // {
   //   name: 'pathPayment',

@@ -20,6 +20,18 @@ let assertNotEmpty = function(value, message) {
   }
 }
 
+// Converts a value into a boolean. String values are converted to their respective
+// boolean values since html forms can only output string values.
+let isLooseTruthy = function(value) {
+  if (value == 'true') {
+    return true;
+  }
+  if (value == 'false') {
+    return false;
+  }
+  return value == true;
+}
+
 let Libify = {};
 
 Libify.Asset = function(opts) {
@@ -85,5 +97,19 @@ Libify.Operation.changeTrust = function(opts) {
     source: opts.sourceAccount,
   })
 }
+
+Libify.Operation.allowTrust = function(opts) {
+  assertNotEmpty(opts.trustor, 'Allow Trust operation requires trustor');
+  assertNotEmpty(opts.assetCode, 'Allow Trust operation requires asset code');
+  assertNotEmpty(opts.authorize, 'Allow Trust operation requires authorization setting');
+  return Sdk.Operation.allowTrust({
+    trustor: opts.trustor,
+    assetCode: opts.assetCode,
+    authorize: isLooseTruthy(opts.authorize),
+    source: opts.sourceAccount,
+  })
+}
+
+
 
 export default Libify;
