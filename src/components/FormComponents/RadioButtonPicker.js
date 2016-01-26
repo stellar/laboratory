@@ -6,12 +6,13 @@ import React from 'react';
 // }
 export default function RadioButtonPicker(props) {
   let {value, onUpdate, items} = props;
+  let group = Math.random(); // Allows for tabbing and prevents radio button collisions
 
   return <div className="s-buttonGroup picker picker--radio">
     {_.map(items, (label, id) => {
       return <label className="s-buttonGroup__wrapper" key={id}>
         <input type="radio" className="s-buttonGroup__radio"
-          name={id}
+          name={group}
           onChange={onUpdate.bind(null, id)}
           value={id}
           checked={value === id} />
