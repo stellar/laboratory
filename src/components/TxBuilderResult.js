@@ -87,7 +87,7 @@ function buildTransaction(attributes, operations) {
           content: attributes.memoContent,
         }));
       } catch(e) {
-        console.log(e);
+        console.error(e);
         result.errors.push(`Memo: ${e.message}`);
       }
     }
@@ -104,7 +104,7 @@ function buildTransaction(attributes, operations) {
     transaction = transaction.build();
     result.xdr = transaction.toEnvelope().toXDR('base64');
   } catch(e) {
-    console.log(e);
+    console.error(e);
     result.errors.push(e.message);
   }
 

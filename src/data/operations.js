@@ -34,6 +34,11 @@ export const operationsMap = [
     label: 'Allow Trust',
     operationPane: require('../components/OperationPanes/AllowTrust'),
   },
+  {
+    name: 'accountMerge',
+    label: 'Account Merge',
+    operationPane: require('../components/OperationPanes/AccountMerge'),
+  },
   // TODO: Other complex operations
   // {
   //   name: 'pathPayment',

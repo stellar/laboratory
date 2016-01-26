@@ -110,6 +110,14 @@ Libify.Operation.allowTrust = function(opts) {
   })
 }
 
+Libify.Operation.accountMerge = function(opts) {
+  assertNotEmpty(opts.destination, 'Allow Trust operation requires destination');
+  return Sdk.Operation.accountMerge({
+    destination: opts.destination,
+    source: opts.sourceAccount,
+  })
+}
+
 
 
 export default Libify;
