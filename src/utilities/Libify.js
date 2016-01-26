@@ -147,4 +147,10 @@ Libify.Operation.createPassiveOffer = function(opts) {
   })
 }
 
+Libify.Operation.inflation = function(opts) {
+  return Sdk.Operation.inflation({
+    source: opts.sourceAccount,
+  })
+}
+
 export default Libify;

@@ -49,6 +49,11 @@ export const operationsMap = [
     label: 'Create Passive Offer',
     operationPane: require('../components/OperationPanes/GenericOffer'),
   },
+  {
+    name: 'inflation',
+    label: 'Inflation',
+    operationPane: () => [], // empty operation pane
+  },
   // TODO: Other complex operations
   // {
   //   name: 'pathPayment',
