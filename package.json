@@ -27,7 +27,7 @@
     "sass-loader": "^3.0.0",
     "solar-css": "git+https://github.com/stellar/solar#master",
     "solar-stellarorg": "git+https://github.com/stellar/solar-stellarorg#master",
-    "stellar-sdk": "^0.3.2",
+    "stellar-sdk": "^0.4.0",
     "uri-templates": "^0.1.9",
     "webpack": "^1.12.2"
   }
