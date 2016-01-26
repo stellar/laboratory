@@ -1,26 +1,28 @@
 import React from 'react';
 import _ from 'lodash';
 
-// Takes in a prop `value` that gets normalized to have one empty element at the end.
 // MultiPicker is a compound picker interface that ensures there is always
 // enough rows for the user to add more data. MultiPicker accomplishes this
 // by making sure there is only one consecutive empty picker at the end.
 //
 // An empty element is defined as null, undefined, or ''. This means that only
 // string value pickers (like PositiveIntPicker but not AssetPicker) can be
-// used inside the MultiPicker. In the future, support can be added for Pickers
-// with compound values.
-//
-// MultiPicker will also shrink the amount of pickers if there more than one
-// consecutive "empty pickers". This is so that if the user enters in many values
-// and deletes them all, there won't be an excess of extra
+// used inside the MultiPicker. For non string values with no way to empty the
+// value (such as radio buttons that can't be cleared), use ManualMultiPicker.
+
+
+// @param {array} props.value - Array of values. If empty or non array, then it
+//   will default to a one element array. The length of the array will be
+//   normalized to have one empty element at the end.
+// @param {function} props.onUpdate - Picker callback function called when the values change.
 export default function MultiPicker(props) {
   let {onUpdate, component} = props;
-  if (!_.isArray(props.value)) {
-    return <div></div>;
+  let value = props.value;
+  if (!_.isArray(value)) {
+    value = [];
   }
 
-  let normalizedValues = adjustTrailingEmptyElements(props.value);
+  let normalizedValues = adjustTrailingEmptyElements(value);
 
   let SingleComponent = props.component;
   return <div>
