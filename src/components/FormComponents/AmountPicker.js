@@ -1,6 +1,8 @@
 import React from 'react';
 import PositiveIntPicker from './PositiveIntPicker';
 
+// AmountPicker picks a positive amount. It extends the PositiveIntPicker and
+// adds validation rules IN ADDITION to the ones already present in PositiveIntPicker.
 export default function AmountPicker(props) {
   return <PositiveIntPicker
     {...props}
