@@ -65,10 +65,9 @@ function adjustTrailingEmptyElements(values) {
   return values;
 }
 
-// Updates a value of the array at a specific inde
+// Updates a value of the array at a specific index
 function updateValueAt(values, index, newValue) {
   values = values.slice();
-  debugger;
   values[index] = newValue;
   return values;
 }

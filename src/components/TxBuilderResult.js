@@ -1,6 +1,13 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {Account, TransactionBuilder, Operation, Asset, Memo} from 'stellar-sdk';
+import {
+  Account,
+  TransactionBuilder,
+  Operation,
+  Asset,
+  Memo,
+  UnsignedHyper,
+} from 'stellar-sdk';
 import {PubKeyPicker} from './FormComponents/PubKeyPicker';
 import {EasySelect} from './EasySelect';
 
@@ -63,7 +70,7 @@ function buildTransaction(attributes, operations) {
   };
 
   try {
-    var account = new Account(attributes.sourceAccount, attributes.sequence - 1);
+    var account = new Account(attributes.sourceAccount, UnsignedHyper.fromString(attributes.sequence).subtract(1).toString());
 
     let opts = {};
     if (attributes.fee !== '') {
