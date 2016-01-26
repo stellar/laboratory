@@ -39,6 +39,16 @@ export const operationsMap = [
     label: 'Account Merge',
     operationPane: require('../components/OperationPanes/AccountMerge'),
   },
+  {
+    name: 'manageOffer',
+    label: 'Manage Offer',
+    operationPane: require('../components/OperationPanes/ManageOffer'),
+  },
+  {
+    name: 'createPassiveOffer',
+    label: 'Create Passive Offer',
+    operationPane: require('../components/OperationPanes/GenericOffer'),
+  },
   // TODO: Other complex operations
   // {
   //   name: 'pathPayment',

@@ -118,6 +118,33 @@ Libify.Operation.accountMerge = function(opts) {
   })
 }
 
+Libify.Operation.manageOffer = function(opts) {
+  assertNotEmpty(opts.selling, 'Manage Offer operation requires selling asset');
+  assertNotEmpty(opts.buying, 'Manage Offer operation requires buying asset');
+  assertNotEmpty(opts.amount, 'Manage Offer operation requires amount');
+  assertNotEmpty(opts.price, 'Manage Offer operation requires price');
+  return Sdk.Operation.manageOffer({
+    selling: Libify.Asset(opts.selling),
+    buying: Libify.Asset(opts.buying),
+    amount: opts.amount,
+    price: opts.price,
+    offerId: opts.offerId,
+    source: opts.sourceAccount,
+  })
+}
 
+Libify.Operation.createPassiveOffer = function(opts) {
+  assertNotEmpty(opts.selling, 'Create Passive Offer operation requires selling asset');
+  assertNotEmpty(opts.buying, 'Create Passive Offer operation requires buying asset');
+  assertNotEmpty(opts.amount, 'Create Passive Offer operation requires amount');
+  assertNotEmpty(opts.price, 'Create Passive Offer operation requires price');
+  return Sdk.Operation.manageOffer({
+    selling: Libify.Asset(opts.selling),
+    buying: Libify.Asset(opts.buying),
+    amount: opts.amount,
+    price: opts.price,
+    source: opts.sourceAccount,
+  })
+}
 
 export default Libify;
