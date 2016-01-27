@@ -1,8 +1,9 @@
 import React from 'react';
 
-// Items is an object whose keys are id's and values are human readable labels
+// @param {object} props.items An object whose keys are the onUpdate values and
+//   object values are labels the user will see.
 // {
-//   'humanReadableLabel': 'Human Readable Label',
+//   'valueToBeStored': 'Human Readable Label',
 // }
 export default function RadioButtonPicker(props) {
   let {value, onUpdate, items} = props;
