@@ -89,6 +89,34 @@ Libify.Operation.payment = function(opts) {
   })
 }
 
+Libify.Operation.pathPayment = function(opts) {
+  assertNotEmpty(opts.sendAsset, 'Path Payment operation requires sending asset');
+  assertNotEmpty(opts.sendMax, 'Path Payment operation requires max send');
+  assertNotEmpty(opts.destination, 'Payment operation requires destination');
+  assertNotEmpty(opts.destAsset, 'Path Payment operation requires destination asset');
+  assertNotEmpty(opts.destAmount, 'Path Payment operation requires the destination amount');
+  if (!_.isArray(opts.path) || opts.path.length < 1) {
+    throw new Error('Path Payment operation requires one or more path hops');
+  }
+
+  let libifiedPath = _.map(opts.path, (hopAsset) => {
+    if (_.isUndefined(hopAsset.type)) {
+      throw new Error('All assets in path must be filled out');
+    }
+    return Libify.Asset(hopAsset);
+  })
+
+  return Sdk.Operation.pathPayment({
+    sendAsset: Libify.Asset(opts.sendAsset),
+    sendMax: opts.sendMax,
+    destination: opts.destination,
+    destAsset: Libify.Asset(opts.destAsset),
+    destAmount: opts.destAmount,
+    path: libifiedPath,
+    source: opts.sourceAccount,
+  })
+}
+
 Libify.Operation.changeTrust = function(opts) {
   assertNotEmpty(opts.asset, 'Change Trust operation requires asset');
   return Sdk.Operation.changeTrust({

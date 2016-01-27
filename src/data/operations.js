@@ -25,6 +25,11 @@ export const operationsMap = [
     operationPane: require('../components/OperationPanes/Payment'),
   },
   {
+    name: 'pathPayment',
+    label: 'Path Payment',
+    operationPane: require('../components/OperationPanes/PathPayment'),
+  },
+  {
     name: 'changeTrust',
     label: 'Change Trust',
     operationPane: require('../components/OperationPanes/ChangeTrust'),
@@ -63,100 +68,9 @@ export const operationsMap = [
   //   },
   // },
   // {
-  //   name: 'manageOffer',
-  //   label: 'Manage Offer',
-  //   params: {
-  //     'buying': {
-  //       label: 'Buying Asset',
-  //       pickerType: 'Asset',
-  //     },
-  //     'selling': {
-  //       label: 'Selling Asset',
-  //       pickerType: 'Asset',
-  //     },
-  //     'amount': {
-  //       label: 'Amount',
-  //       pickerType: 'Amount',
-  //     },
-  //     'price': {
-  //       label: 'Price',
-  //       pickerType: 'Amount',
-  //     },
-  //     'offerId': {
-  //       label: 'Offer ID',
-  //       pickerType: 'Offer',
-  //       optional: true,
-  //     }
-  //   },
-  // },
-  // {
-  //   name: 'createPassiveOffer',
-  //   label: 'Create Passive Offer',
-  //   params: {
-  //     'buying': {
-  //       label: 'Buying Asset',
-  //       pickerType: 'Asset',
-  //     },
-  //     'selling': {
-  //       label: 'Selling Asset',
-  //       pickerType: 'Asset',
-  //     },
-  //     'amount': {
-  //       label: 'Amount',
-  //       pickerType: 'Amount',
-  //     },
-  //     'price': {
-  //       label: 'Price',
-  //       pickerType: 'Amount',
-  //     },
-  //   },
-  // },
-  // {
   //   name: 'setOptions',
   //   label: 'Set Options',
   //   params: {
-  //   },
-  // },
-  // {
-  //   name: 'changeTrust',
-  //   label: 'Change Trust',
-  //   params: {
-  //     'asset': {
-  //       label: 'Asset',
-  //       pickerType: 'Asset',
-  //     },
-  //     'amount': {
-  //       label: 'Trust Amount',
-  //       pickerType: 'Amount',
-  //     },
-  //   },
-  // },
-  // {
-  //   name: 'allowTrust',
-  //   label: 'Allow Trust',
-  //   params: {
-  //     'destination': {
-  //       label: 'Trustor',
-  //       pickerType: 'PubKey',
-  //     },
-  //     'asset': {
-  //       label: 'Asset',
-  //       pickerType: 'Asset',
-  //     },
-  //   },
-  // },
-  // {
-  //   name: 'accountMerge',
-  //   label: 'Account Merge',
-  //   params: {
-  //
-  //   },
-  // },
-  // {
-  //   name: 'inflation',
-  //   label: 'Inflation',
-  //   params: {
-  //
   //   },
   // },
 ]
