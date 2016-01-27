@@ -139,7 +139,7 @@ Libify.Operation.changeTrust = function(opts) {
   assertNotEmpty(opts.asset, 'Change Trust operation requires asset');
   return Sdk.Operation.changeTrust({
     asset: Libify.Asset(opts.asset),
-    limit: opts.limit,
+    limit: (opts.limit === '') ? undefined : opts.limit,
     source: opts.sourceAccount,
   })
 }
