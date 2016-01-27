@@ -1,0 +1,29 @@
+.ManualMultiPicker {
+}
+  .ManualMultiPicker__item {
+    position: relative;
+    padding: 0 0.75em 0.75em 0.75em;
+    border-top: 1px solid $s-color-neutral7;
+    border-left: 1px solid $s-color-neutral7;
+    border-right: 1px solid $s-color-neutral7;
+  }
+  .ManualMultiPicker__item:first-child {
+    border-radius: $s-var-radius $s-var-radius 0 0;
+  }
+    .ManualMultiPicker__item--last {
+      border-bottom: 1px solid $s-color-neutral7;
+      border-radius: 0 0 $s-var-radius $s-var-radius;
+    }
+    .ManualMultiPicker__item__infobar {
+      @include S-flex-row;
+      padding: 0.5em 0;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .ManualMultiPicker__item__remove {
+      font-size: $s-scale-5;
+    }
+  .ManualMultiPicker__addNew {
+    margin-top: 0.75em;
+    font-size: $s-scale-5;
+  }

@@ -10,6 +10,7 @@ import {
 } from 'stellar-sdk';
 import {PubKeyPicker} from './FormComponents/PubKeyPicker';
 import {EasySelect} from './EasySelect';
+import Libify from '../utilities/Libify';
 
 export default class TxBuilderResult extends React.Component {
   render() {
@@ -81,41 +82,21 @@ function buildTransaction(attributes, operations) {
 
     if (attributes.memoType !== 'MEMO_NONE') {
       try {
-        transaction = transaction.addMemo(jsLibifyMemo({
+        transaction = transaction.addMemo(Libify.Memo({
           type: attributes.memoType,
           content: attributes.memoContent,
         }));
       } catch(e) {
+        console.error(e);
         result.errors.push(`Memo: ${e.message}`);
       }
     }
 
     _.each(operations, (op, index) => {
-      if (op.name === '') {
-        result.errors.push(`Operation #${index + 1}: operation type not selected`);
-        return;
-      }
-
       try {
-        let atts = op.attributes;
-        let opOpts = {};
-
-        opOpts.destination = atts.destination;
-        opOpts.asset = jsLibifyAsset(atts.asset);
-
-        // TODO: refactor this to somehow automatically jsLibify everything
-        if (op.name === 'payment') {
-          opOpts.amount = atts.amount;
-        } else if (op.name === 'createAccount') {
-          opOpts.startingBalance = atts.startingBalance;
-        }
-
-        if (typeof atts.source !== 'undefined' && atts.source !== '') {
-          opOpts.source = atts.source;
-        }
-
-        transaction = transaction.addOperation(Operation[op.name](opOpts))
+        transaction = transaction.addOperation(Libify.Operation(op.name, op.attributes));
       } catch(e) {
+        console.error(e);
         result.errors.push(`Operation #${index + 1}: ${e.message}`);
       }
     })
@@ -123,6 +104,7 @@ function buildTransaction(attributes, operations) {
     transaction = transaction.build();
     result.xdr = transaction.toEnvelope().toXDR('base64');
   } catch(e) {
+    console.error(e);
     result.errors.push(e.message);
   }
 
@@ -133,29 +115,4 @@ function formatErrorList(errors) {
   return _.reduce(errors, (result, error) => {
     return `${result}- ${error} \n`;
   }, '');
-}
-
-function jsLibifyAsset(opts) {
-  if (typeof opts === 'undefined') {
-    return Asset.native();
-  }
-
-  if (opts.type === '' || opts.type === 'native') {
-    return Asset.native();
-  }
-
-  return new Asset(opts.code, opts.issuer);
-}
-
-function jsLibifyMemo(opts) {
-  switch(opts.type) {
-  case 'MEMO_TEXT':
-    return Memo.text(opts.content);
-  case 'MEMO_ID':
-    return Memo.id(opts.content);
-  case 'MEMO_HASH':
-    return Memo.hash(opts.content);
-  case 'MEMO_RETURN':
-    return Memo.returnHash(opts.content);
-  }
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import {operationsMap} from '../../data/operations.js';
-import RadioButtonPicker from './RadioButtonPicker';
+import SelectPicker from './SelectPicker';
 
 let operationItemMap = {};
 _.each(operationsMap, (op) => {
@@ -11,7 +11,7 @@ _.each(operationsMap, (op) => {
 export default function OperationTypePicker(props) {
   let {value, onUpdate} = props;
 
-  return <RadioButtonPicker
+  return <SelectPicker
     value={value}
     onUpdate={onUpdate}
     items={operationItemMap}

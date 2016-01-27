@@ -29,17 +29,24 @@ class OperationsBuilder extends React.Component {
 let operation = (ops, index, dispatch) => {
   let op = ops[index];
   let opConfig = getOperation(op.name);
-  let operationPane;
-  let separator;
+  let operationPane, sourceAccountRow, separator;
+  let dispatchUpdateOpAtts = (key, value) => {
+    dispatch(updateOperationAttributes(op.id, {
+      [key]: value
+    }))
+  };
   if (typeof opConfig !== 'undefined') {
     operationPane = opConfig.operationPane({
-      onUpdate: (key, value) => {
-        dispatch(updateOperationAttributes(op.id, {
-          [key]: value
-        }))
-      },
+      onUpdate: dispatchUpdateOpAtts,
       values: op.attributes
     });
+
+    sourceAccountRow = <OptionsTablePair label="Source Account" optional={true} key="sourceAccount">
+      <PubKeyPicker
+        value={op.attributes['sourceAccount']}
+        onUpdate={(value) => dispatchUpdateOpAtts('sourceAccount', value)}
+        />
+    </OptionsTablePair>;
 
     separator = <hr className="optionsTable__separator" />;
   }
@@ -68,7 +75,9 @@ let operation = (ops, index, dispatch) => {
           dispatch(updateOperationType(op.id, value))
         }} />
       </OptionsTablePair>
+      {separator}
       {operationPane}
+      {sourceAccountRow}
     </div>
   </div>;
 }
