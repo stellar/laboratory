@@ -30,6 +30,11 @@ export const operationsMap = [
     operationPane: require('../components/OperationPanes/PathPayment'),
   },
   {
+    name: 'setOptions',
+    label: 'Set Options',
+    operationPane: require('../components/OperationPanes/SetOptions'),
+  },
+  {
     name: 'changeTrust',
     label: 'Change Trust',
     operationPane: require('../components/OperationPanes/ChangeTrust'),

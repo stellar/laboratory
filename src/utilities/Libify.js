@@ -5,7 +5,8 @@
 // will output better error messages in cases where helpful (instead of just
 // undefined error messages).
 //
-// Libify could also be used to generate source code from input.
+// Libify could also be used to generate source code from input but might not be
+// the best choice since source code differs based on content.
 
 import Sdk from 'stellar-sdk';
 import _ from 'lodash';
@@ -14,8 +15,16 @@ import _ from 'lodash';
 let isEmpty = function(value) {
   return _.isUndefined(value) || value === '' || value === null;
 }
+let isInt = function(value) {
+  return String(value).match(/^[0-9]*$/g);
+}
 let assertNotEmpty = function(value, message) {
   if (isEmpty(value)) {
+    throw new Error(message);
+  }
+}
+let assertIntOrEmpty = function(value, message) {
+  if (!isEmpty(value) && !isInt(value)) {
     throw new Error(message);
   }
 }
@@ -30,6 +39,15 @@ let isLooseTruthy = function(value) {
     return false;
   }
   return value == true;
+}
+
+// Will convert stringed numbers to native javascript Number. Non stringed integers
+// will just be ignored.
+let castStringToNumber = function(value) {
+  if (_.isString(value) && value.match(/^[0-9]*$/g)) {
+    return Number(value);
+  }
+  return;
 }
 
 let Libify = {};
@@ -177,6 +195,45 @@ Libify.Operation.createPassiveOffer = function(opts) {
 
 Libify.Operation.inflation = function(opts) {
   return Sdk.Operation.inflation({
+    source: opts.sourceAccount,
+  })
+}
+
+Libify.Operation.setOptions = function(opts) {
+  let signerPubKeyEmpty = isEmpty(opts.signerAddress);
+  let signerWeightEmpty = isEmpty(opts.signerWeight);
+  if (signerPubKeyEmpty && !signerWeightEmpty) {
+    throw new Error('Signer weight is required if signer public key is present');
+  }
+  if (!signerPubKeyEmpty && signerWeightEmpty) {
+    throw new Error('Signer public key is required if signer weight is present');
+  }
+
+  let signer;
+  if (!signerPubKeyEmpty && !signerWeightEmpty) {
+    signer = {
+      address: opts.signerAddress,
+      weight: castStringToNumber(opts.signerWeight),
+    }
+  }
+
+  assertIntOrEmpty(opts.clearFlags, 'Clear flags must be an integer');
+  assertIntOrEmpty(opts.setFlags, 'Set flags must be an integer');
+  assertIntOrEmpty(opts.masterWeight, 'Master Weight must be an integer');
+  assertIntOrEmpty(opts.lowThreshold, 'Low Threshold must be an integer');
+  assertIntOrEmpty(opts.medThreshold, 'Medium Threshold must be an integer');
+  assertIntOrEmpty(opts.highThreshold, 'High Threshold must be an integer');
+
+  return Sdk.Operation.setOptions({
+    inflationDest: opts.inflationDest,
+    clearFlags: castStringToNumber(opts.clearFlags),
+    setFlags: castStringToNumber(opts.setFlags),
+    masterWeight: castStringToNumber(opts.masterWeight),
+    lowThreshold: castStringToNumber(opts.lowThreshold),
+    medThreshold: castStringToNumber(opts.medThreshold),
+    highThreshold: castStringToNumber(opts.highThreshold),
+    signer: signer,
+    homeDomain: opts.homeDomain,
     source: opts.sourceAccount,
   })
 }
