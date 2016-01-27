@@ -33,17 +33,23 @@ export default function AssetPicker(props) {
       />
   }
 
+  let assetButtons = {
+    'native': 'native',
+    'alphanum4': 'Alphanumeric 4',
+    'alphanum12': 'Alphanumeric 12',
+  };
+
+  if (props.disableNative) {
+    delete assetButtons.native;
+  }
+
   return <div>
     <RadioButtonPicker
       value={value.type}
       onUpdate={(typeValue) => onUpdate(_.assign({}, props.value, {
         type: typeValue,
       }))}
-      items={{
-        'native': 'native',
-        'alphanum4': 'Alphanumeric 4',
-        'alphanum12': 'Alphanumeric 12',
-      }}
+      items={assetButtons}
       />
     {codePicker}
     {codePickerError}

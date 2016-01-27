@@ -9,6 +9,7 @@ export default function ChangeTrust(props) {
     <OptionsTablePair label="Asset" key="asset">
       <AssetPicker
         value={props.values['asset']}
+        disableNative={true}
         onUpdate={(value) => {props.onUpdate('asset', value)}}
         />
     </OptionsTablePair>,
