@@ -15,7 +15,7 @@ export default function MemoPicker(props) {
       onUpdate={(contentValue) => onUpdate(_.assign({}, props.value, {
         content: contentValue,
       }))}
-      placeholder="Memo content"
+      placeholder={memoPlaceholder(value.type)}
       validator={contentValidator.bind(null, value)} // Use entire Memo value and not just the content value
     />;
   }
@@ -45,7 +45,7 @@ function contentValidator(value) {
     if (memoTextBytes > 28) {
       return `MEMO_TEXT accepts a string of up to 28 bytes. ${memoTextBytes} bytes entered.`
     }
-  break;
+    break;
   case 'MEMO_ID':
     if (!value.content.match(/^[0-9]*$/g) || value < 0) {
       return 'MEMO_ID accepts a positive integer.';
@@ -54,12 +54,24 @@ function contentValidator(value) {
       return `MEMO_ID is an unsigned 64-bit integer and the max valid
               value is ${UnsignedHyper.MAX_UNSIGNED_VALUE.toString()}`
     }
-  break;
+    break;
   case 'MEMO_HASH':
   case 'MEMO_RETURN':
     if (!value.content.match(/^[0-9a-f]{64}$/g)) {
       return `${value.type} accepts a 32-byte hash in hexadecimal format (64 characters).`;
     }
-  break;
+    break;
+  }
+}
+
+function memoPlaceholder(type) {
+  switch (type) {
+  case 'MEMO_TEXT':
+    return `UTF-8 string of up to 28 bytes`;
+  case 'MEMO_ID':
+    return `Unsigned 64-bit integer`;
+  case 'MEMO_HASH':
+  case 'MEMO_RETURN':
+    return `32-byte hash in hexadecimal format (64 [0-9a-f] characters)`;
   }
 }

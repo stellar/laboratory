@@ -41,13 +41,14 @@ let isLooseTruthy = function(value) {
   return value == true;
 }
 
-// Will convert stringed numbers to native javascript Number. Non stringed integers
-// will just be ignored.
-let castStringToNumber = function(value) {
+// This function processes the value in two situations:
+// 1. Value contains just digits: will convert into JavaScript Number integer
+// 2. String is empty: converts to undefined (useful for optional arguments)
+let castIntOrUndefined = function(value) {
   if (_.isString(value) && value.match(/^[0-9]*$/g)) {
     return Number(value);
   }
-  return;
+  return undefined;
 }
 
 let Libify = {};
@@ -139,7 +140,7 @@ Libify.Operation.changeTrust = function(opts) {
   assertNotEmpty(opts.asset, 'Change Trust operation requires asset');
   return Sdk.Operation.changeTrust({
     asset: Libify.Asset(opts.asset),
-    limit: opts.limit,
+    limit: (opts.limit === '') ? undefined : opts.limit,
     source: opts.sourceAccount,
   })
 }
@@ -169,6 +170,7 @@ Libify.Operation.manageOffer = function(opts) {
   assertNotEmpty(opts.buying, 'Manage Offer operation requires buying asset');
   assertNotEmpty(opts.amount, 'Manage Offer operation requires amount');
   assertNotEmpty(opts.price, 'Manage Offer operation requires price');
+  assertNotEmpty(opts.offerId, 'Manage Offer operation requires Offer ID');
   return Sdk.Operation.manageOffer({
     selling: Libify.Asset(opts.selling),
     buying: Libify.Asset(opts.buying),
@@ -213,7 +215,7 @@ Libify.Operation.setOptions = function(opts) {
   if (!signerPubKeyEmpty && !signerWeightEmpty) {
     signer = {
       address: opts.signerAddress,
-      weight: castStringToNumber(opts.signerWeight),
+      weight: castIntOrUndefined(opts.signerWeight),
     }
   }
 
@@ -226,12 +228,12 @@ Libify.Operation.setOptions = function(opts) {
 
   return Sdk.Operation.setOptions({
     inflationDest: opts.inflationDest,
-    clearFlags: castStringToNumber(opts.clearFlags),
-    setFlags: castStringToNumber(opts.setFlags),
-    masterWeight: castStringToNumber(opts.masterWeight),
-    lowThreshold: castStringToNumber(opts.lowThreshold),
-    medThreshold: castStringToNumber(opts.medThreshold),
-    highThreshold: castStringToNumber(opts.highThreshold),
+    clearFlags: castIntOrUndefined(opts.clearFlags),
+    setFlags: castIntOrUndefined(opts.setFlags),
+    masterWeight: castIntOrUndefined(opts.masterWeight),
+    lowThreshold: castIntOrUndefined(opts.lowThreshold),
+    medThreshold: castIntOrUndefined(opts.medThreshold),
+    highThreshold: castIntOrUndefined(opts.highThreshold),
     signer: signer,
     homeDomain: opts.homeDomain,
     source: opts.sourceAccount,
