@@ -30,6 +30,16 @@ export const operationsMap = [
     operationPane: require('../components/OperationPanes/PathPayment'),
   },
   {
+    name: 'manageOffer',
+    label: 'Manage Offer',
+    operationPane: require('../components/OperationPanes/ManageOffer'),
+  },
+  {
+    name: 'createPassiveOffer',
+    label: 'Create Passive Offer',
+    operationPane: require('../components/OperationPanes/GenericOffer'),
+  },
+  {
     name: 'setOptions',
     label: 'Set Options',
     operationPane: require('../components/OperationPanes/SetOptions'),
@@ -50,32 +60,8 @@ export const operationsMap = [
     operationPane: require('../components/OperationPanes/AccountMerge'),
   },
   {
-    name: 'manageOffer',
-    label: 'Manage Offer',
-    operationPane: require('../components/OperationPanes/ManageOffer'),
-  },
-  {
-    name: 'createPassiveOffer',
-    label: 'Create Passive Offer',
-    operationPane: require('../components/OperationPanes/GenericOffer'),
-  },
-  {
     name: 'inflation',
     label: 'Inflation',
     operationPane: () => [], // empty operation pane
   },
-  // TODO: Other complex operations
-  // {
-  //   name: 'pathPayment',
-  //   label: 'Path Payment',
-  //   params: {
-  //
-  //   },
-  // },
-  // {
-  //   name: 'setOptions',
-  //   label: 'Set Options',
-  //   params: {
-  //   },
-  // },
 ]
