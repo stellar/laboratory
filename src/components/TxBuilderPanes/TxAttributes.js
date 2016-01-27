@@ -19,6 +19,7 @@ export default function TxAttributes(props) {
         value={props.values['sequence']}
         onUpdate={(value) => {props.onUpdate('sequence', value)}}
         />
+      <p className="optionsTable__pair__content__note">The transaction sequence number is usually one higher than current account sequence number.</p>
     </OptionsTablePair>
     <OptionsTablePair label="Transaction Fee" optional={true}>
       <StroopsPicker

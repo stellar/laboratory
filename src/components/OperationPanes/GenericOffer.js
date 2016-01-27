@@ -25,7 +25,7 @@ export default function GenericOffer(props) {
         value={props.values['amount']}
         onUpdate={(value) => {props.onUpdate('amount', value)}}
         />
-      <p>An amount of zero will delete the offer.</p>
+      <p className="optionsTable__pair__content__note">An amount of zero will delete the offer.</p>
     </OptionsTablePair>,
     <OptionsTablePair label="Price" key="price">
       <PositiveNumberPicker
