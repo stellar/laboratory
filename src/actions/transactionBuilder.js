@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 // Attributes
 export const UPDATE_ATTRIBUTES = 'UPDATE_ATTRIBUTES';
 export function updateAttributes(newAttributes) {
@@ -54,4 +56,19 @@ export function reorderOperation(opId, toNth) {
     opId,
     toNth,
   };
+}
+
+export const FETCH_SEQUENCE = 'FETCH_SEQUENCE';
+export const FETCH_SEQUENCE_START = 'FETCH_SEQUENCE_START';
+export const FETCH_SEQUENCE_FAIL = 'FETCH_SEQUENCE_FAIL';
+export const FETCH_SEQUENCE_SUCCESS = 'FETCH_SEQUENCE_SUCCESS';
+export function fetchSequence(accountId, horizonBaseUrl) {
+  return dispatch => {
+    dispatch({
+      type: FETCH_SEQUENCE_START,
+    });
+    axios.get(horizonBaseUrl + '/accounts/' + accountId)
+      .then(r => dispatch({type: FETCH_SEQUENCE_SUCCESS, sequence: r.data.sequence}))
+      .catch(r => dispatch({type: FETCH_SEQUENCE_FAIL, payload: r}))
+  }
 }

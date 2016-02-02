@@ -1,5 +1,10 @@
 import {combineReducers} from 'redux';
-import {UPDATE_ATTRIBUTES} from '../actions/transactionBuilder';
+import {
+  UPDATE_ATTRIBUTES,
+  FETCH_SEQUENCE_START,
+  FETCH_SEQUENCE_SUCCESS,
+  FETCH_SEQUENCE_FAIL,
+} from '../actions/transactionBuilder';
 import _ from 'lodash';
 
 const defaultOperations = [{
@@ -76,14 +81,34 @@ function attributes(state, action) {
   switch(action.type) {
   case UPDATE_ATTRIBUTES:
     return Object.assign({}, state, action.newAttributes);
+  case FETCH_SEQUENCE_SUCCESS:
+    return Object.assign({}, state, { sequence: action.sequence });
   default:
     return state;
   }
 }
 
+function sequenceFetcherError(state = '', action) {
+  let payload = action.payload;
+  if (action.type === FETCH_SEQUENCE_FAIL) {
+    if (payload.data.title === 'Resource Missing') {
+      return `Account not found. Make sure the correct network is selected and the account is funded/created.`;
+    }
+    if (payload.status === 0) {
+      return `Unable to reach server at ${payload.config.url}`;
+    }
+    return JSON.stringify(action.payload, null, 2);
+  }
+  if (action.type === FETCH_SEQUENCE_START) {
+    return '';
+  }
+  return state;
+}
+
 const transactionBuilder = combineReducers({
   attributes,
   operations,
+  sequenceFetcherError,
 })
 
 export default transactionBuilder
