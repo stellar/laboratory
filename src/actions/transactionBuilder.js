@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {UnsignedHyper} from 'stellar-sdk';
 
 // Attributes
 export const UPDATE_ATTRIBUTES = 'UPDATE_ATTRIBUTES';
@@ -62,13 +63,17 @@ export const FETCH_SEQUENCE = 'FETCH_SEQUENCE';
 export const FETCH_SEQUENCE_START = 'FETCH_SEQUENCE_START';
 export const FETCH_SEQUENCE_FAIL = 'FETCH_SEQUENCE_FAIL';
 export const FETCH_SEQUENCE_SUCCESS = 'FETCH_SEQUENCE_SUCCESS';
+// This is only meant to be used for fetching *next* sequence number for txbuilder
 export function fetchSequence(accountId, horizonBaseUrl) {
   return dispatch => {
     dispatch({
       type: FETCH_SEQUENCE_START,
     });
     axios.get(horizonBaseUrl + '/accounts/' + accountId)
-      .then(r => dispatch({type: FETCH_SEQUENCE_SUCCESS, sequence: r.data.sequence}))
+      .then(r => dispatch({
+        type: FETCH_SEQUENCE_SUCCESS,
+        sequence: UnsignedHyper.fromString(r.data.sequence).add(1).toString()
+      }))
       .catch(r => dispatch({type: FETCH_SEQUENCE_FAIL, payload: r}))
   }
 }
