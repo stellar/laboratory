@@ -5,6 +5,7 @@ import NetworkPicker from './NetworkPicker';
 import EndpointExplorer from './EndpointExplorer';
 import TransactionBuilder from './TransactionBuilder';
 import TransactionSigner from './TransactionSigner';
+import {RouterListener} from '../utilities/simpleRouter';
 
 let LaboratoryChrome = React.createClass({
   getInitialState: function() {
@@ -68,6 +69,7 @@ let LaboratoryChrome = React.createClass({
       </div>
 
       {activeTab}
+      <RouterListener />
     </div>;
   }
 });
