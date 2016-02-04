@@ -35,7 +35,7 @@ function LaboratoryChrome(props) {
     <div className="so-back LaboratoryChrome__siteNavBack">
       <div className="so-chunk">
         <nav className="s-buttonList">
-          {tabItem('Endpoint Explorer', 'endpoints')}
+          {tabItem('Endpoint Explorer', 'explorer')}
           {tabItem('Transaction Builder', 'txbuilder')}
           {tabItem('Transaction Signer', 'txsigner')}
         </nav>
@@ -51,7 +51,7 @@ function getContent(slug) {
   switch (slug) {
     case '':
       return <SimplePage><p>To begin, select a tool from above.</p></SimplePage>
-    case 'endpoints':
+    case 'explorer':
       return <EndpointExplorer />;
     case 'txbuilder':
       return <TransactionBuilder />;

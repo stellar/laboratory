@@ -25,7 +25,7 @@ export default endpointExplorer
 function currentResource(state="", action) {
   switch (action.type) {
     case LOAD_STATE:
-      if (action.slug === 'endpoints' && action.payload.resource) {
+      if (action.slug === 'explorer' && action.payload.resource) {
         return action.payload.resource;
       }
       break;
@@ -38,7 +38,7 @@ function currentResource(state="", action) {
 function currentEndpoint(state="", action) {
   switch (action.type) {
   case LOAD_STATE:
-    if (action.slug === 'endpoints' && action.payload.endpoint) {
+    if (action.slug === 'explorer' && action.payload.endpoint) {
       return action.payload.endpoint;
     }
     break;
@@ -64,7 +64,7 @@ function pendingRequestTemplate(state="", action) {
 function pendingRequestValues(state={}, action) {
   switch (action.type) {
   case LOAD_STATE:
-  if (action.slug === 'endpoints' && action.payload.values) {
+  if (action.slug === 'explorer' && action.payload.values) {
     return action.payload.values;
   }
   break;

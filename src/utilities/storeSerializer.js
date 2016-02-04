@@ -7,7 +7,7 @@ import {dehydrate, rehydrate} from './hydration';
 // The deserialization step happens in each of the reducers
 export function serializeStore(slug, state) {
   switch (slug) {
-    case 'endpoints':
+    case 'explorer':
       let endpointsResult = {};
       if (state.endpointExplorer.currentResource) {
         endpointsResult.resource = state.endpointExplorer.currentResource;
