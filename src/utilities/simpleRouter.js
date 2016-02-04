@@ -2,18 +2,25 @@ import {connect} from 'react-redux';
 import React from 'react';
 import url from 'url';
 import querystring from 'querystring';
-import {updateLocation, loadState} from '../actions/routing';
+import {updateLocation, loadState, LOAD_STATE} from '../actions/routing';
 import {serializeStore, deserializeQueryObj} from './storeSerializer';
 
 export const routerMiddleware = store => next => action => {
   let result = next(action);
   let state = store.getState();
 
+  if (action.type === LOAD_STATE) {
+    return result;
+  }
+
   let newUrlObj = parseUrlHash(window.location.hash);
   newUrlObj.query = serializeStore(state.routing.location, state);
   delete newUrlObj.search;
 
-  window.location.hash = '#' + url.format(newUrlObj);
+  // NOTE: We only replace state here since these are only for general state
+  // changes. By using history.replaceState, the routerListener won't pick up
+  // on these changes.
+  history.replaceState(null, null, '#' + url.format(newUrlObj));
   return result;
 }
 
