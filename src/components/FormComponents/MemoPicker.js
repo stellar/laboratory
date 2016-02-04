@@ -6,25 +6,26 @@ import PickerError from './PickerError';
 import {UnsignedHyper} from 'stellar-sdk';
 
 export default function MemoPicker(props) {
-  let {value, onUpdate} = props;
+  let {onUpdate} = props;
   let contentPicker;
-  let normalizedValue = (value.type === '') ? 'MEMO_NONE' : value.type;
+  let normalizedValue = _.assign({}, props.value);
+  normalizedValue.type = (props.value.type === '') ? 'MEMO_NONE' : props.value.type;
 
-  if (normalizedValue !== 'MEMO_NONE') {
+  if (normalizedValue.type !== 'MEMO_NONE') {
     contentPicker = <TextPicker
-      value={value.content}
-      onUpdate={(contentValue) => onUpdate(_.assign({}, props.value, {
+      value={normalizedValue.content}
+      onUpdate={(contentValue) => onUpdate(_.assign({}, normalizedValue, {
         content: contentValue,
       }))}
-      placeholder={memoPlaceholder(normalizedValue)}
-      validator={contentValidator.bind(null, value)} // Use entire Memo value and not just the content value
+      placeholder={memoPlaceholder(normalizedValue.type)}
+      validator={contentValidator.bind(null, normalizedValue)} // Use entire Memo value and not just the content value
     />;
   }
 
   return <div>
     <RadioButtonPicker
-      value={normalizedValue}
-      onUpdate={(typeValue) => onUpdate(_.assign({}, props.value, {
+      value={normalizedValue.type}
+      onUpdate={(typeValue) => onUpdate(_.assign({}, normalizedValue, {
         type: typeValue,
       }))}
       items={{
