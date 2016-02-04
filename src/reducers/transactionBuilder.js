@@ -21,10 +21,10 @@ function operations(state, action) {
   let targetOpIndex, newOps;
   switch (action.type) {
   case LOAD_STATE:
-  if (action.slug === 'txbuilder' && action.payload.operations) {
-    return action.payload.operations;
-  }
-  break;
+    if (action.slug === 'txbuilder' && action.payload.operations) {
+      return action.payload.operations;
+    }
+    break;
   case 'ADD_OPERATION':
     return Array.prototype.concat(state, {
       id: action.opId,
@@ -44,9 +44,8 @@ function operations(state, action) {
     return updateOperation(state, action.opId, {
       attributes: _.assign({}, getAttributes(state, action.opId), action.newAttributes),
     });
-  default:
-    return state;
   }
+  return state;
 }
 function getAttributes(state, opId) {
   return _.find(state, { id: opId }).attributes;
@@ -86,17 +85,16 @@ function attributes(state, action) {
 
   switch(action.type) {
   case LOAD_STATE:
-  if (action.slug === 'txbuilder' && action.payload.attributes) {
-    return action.payload.attributes;
-  }
-  break;
+    if (action.slug === 'txbuilder' && action.payload.attributes) {
+      return action.payload.attributes;
+    }
+    break;
   case UPDATE_ATTRIBUTES:
     return Object.assign({}, state, action.newAttributes);
   case FETCH_SEQUENCE_SUCCESS:
     return Object.assign({}, state, { sequence: action.sequence });
-  default:
-    return state;
   }
+  return state;
 }
 
 function sequenceFetcherError(state = '', action) {
