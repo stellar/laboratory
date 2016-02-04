@@ -8,21 +8,22 @@ import {UnsignedHyper} from 'stellar-sdk';
 export default function MemoPicker(props) {
   let {value, onUpdate} = props;
   let contentPicker;
+  let normalizedValue = (value.type === '') ? 'MEMO_NONE' : value.type;
 
-  if (value.type !== 'MEMO_NONE') {
+  if (normalizedValue !== 'MEMO_NONE') {
     contentPicker = <TextPicker
       value={value.content}
       onUpdate={(contentValue) => onUpdate(_.assign({}, props.value, {
         content: contentValue,
       }))}
-      placeholder={memoPlaceholder(value.type)}
+      placeholder={memoPlaceholder(normalizedValue)}
       validator={contentValidator.bind(null, value)} // Use entire Memo value and not just the content value
     />;
   }
 
   return <div>
     <RadioButtonPicker
-      value={value.type}
+      value={normalizedValue}
       onUpdate={(typeValue) => onUpdate(_.assign({}, props.value, {
         type: typeValue,
       }))}

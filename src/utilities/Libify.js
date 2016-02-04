@@ -64,6 +64,7 @@ Libify.Asset = function(opts) {
 
 Libify.Memo = function(opts) {
   switch(opts.type) {
+  case '':
   case 'MEMO_TEXT':
     return Sdk.Memo.text(opts.content);
   case 'MEMO_ID':

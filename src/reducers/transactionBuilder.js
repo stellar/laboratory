@@ -75,7 +75,7 @@ const defaultAttributes = {
   sourceAccount: '',
   sequence: '',
   fee: '',
-  memoType: 'MEMO_NONE',
+  memoType: '',
   memoContent: '',
 };
 function attributes(state, action) {
