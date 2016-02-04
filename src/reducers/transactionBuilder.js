@@ -5,6 +5,7 @@ import {
   FETCH_SEQUENCE_SUCCESS,
   FETCH_SEQUENCE_FAIL,
 } from '../actions/transactionBuilder';
+import {LOAD_STATE} from '../actions/routing';
 import _ from 'lodash';
 
 const defaultOperations = [{
@@ -19,6 +20,11 @@ function operations(state, action) {
 
   let targetOpIndex, newOps;
   switch (action.type) {
+  case LOAD_STATE:
+  if (action.slug === 'txbuilder' && action.payload.operations) {
+    return action.payload.operations;
+  }
+  break;
   case 'ADD_OPERATION':
     return Array.prototype.concat(state, {
       id: action.opId,
@@ -79,6 +85,11 @@ function attributes(state, action) {
   }
 
   switch(action.type) {
+  case LOAD_STATE:
+  if (action.slug === 'txbuilder' && action.payload.attributes) {
+    return action.payload.attributes;
+  }
+  break;
   case UPDATE_ATTRIBUTES:
     return Object.assign({}, state, action.newAttributes);
   case FETCH_SEQUENCE_SUCCESS:

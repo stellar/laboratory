@@ -40,18 +40,17 @@ export function serializeStore(slug, state) {
 // object is then passed to the reducers that apple the object to their store.
 export function deserializeQueryObj(slug, queryObj) {
   switch (slug) {
-    case 'endpoints':
+    case 'explorer':
       let endpointsResult = Object.assign({}, queryObj);
       if (endpointsResult.values) {
         endpointsResult.values = rehydrate(endpointsResult.values);
       }
       return endpointsResult;
     case 'txbuilder':
-      let txbuilderResult = Object.assign({}, queryObj);
-      if (txbuilderResult.params) {
-        txbuilderResult.params = rehydrate(txbuilderResult.params);
+      if (queryObj.params) {
+        return rehydrate(queryObj.params);
       }
-      return txbuilderResult;
+      return {};
     case 'txsigner':
       return queryObj;
     default:
