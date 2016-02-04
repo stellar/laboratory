@@ -2,9 +2,18 @@ import {connect} from 'react-redux';
 import React from 'react';
 import url from 'url';
 import {updateLocation} from '../actions/routing';
+import storeSerializer from './storeSerializer';
 
 export const routerMiddleware = store => next => action => {
-  return next(action);
+  let result = next(action);
+  let state = store.getState();
+
+  let newUrlObj = parseUrlHash(window.location.hash);
+  newUrlObj.query = storeSerializer(state.routing.location, state);
+  delete newUrlObj.search;
+
+  window.location.hash = '#' + url.format(newUrlObj);
+  return result;
 }
 
 class RouterHashListener extends React.Component {
@@ -16,12 +25,8 @@ class RouterHashListener extends React.Component {
     window.removeEventListener('hashchange', this.hashChangeHandler.bind(this), false);
   }
   hashChangeHandler(e) {
-    let oldUrlHash = url.parse(e.oldURL).hash || '';
-    let newUrlHash = url.parse(e.newURL).hash || '';
-
-    // The "real" url is inside the hash;
-    let oldUrl = url.parse(oldUrlHash.substr(1));
-    let newUrl = url.parse(newUrlHash.substr(1));
+    let oldUrl = parseUrlHash(e.oldURL);
+    let newUrl = parseUrlHash(e.newURL);
 
     if (oldUrl.pathname !== newUrl.pathname) {
       this.props.dispatch(updateLocation(newUrl.pathname));
@@ -30,6 +35,11 @@ class RouterHashListener extends React.Component {
   render() {
     return null;
   }
+}
+
+function parseUrlHash(input) {
+  let hash = url.parse(input).hash || '';
+  return url.parse(hash.substr(1));
 }
 
 export let RouterListener = connect(chooseState, dispatch => ({ dispatch }))((RouterHashListener));
