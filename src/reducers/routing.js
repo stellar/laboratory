@@ -8,11 +8,7 @@ const routing = combineReducers({
 
 export default routing;
 
-function location(state, action) {
-  if (typeof state === 'undefined') {
-    // During first load, we want to reduce FOUC by bootstrapping here
-    return url.parse(window.location.hash.substr(1)).pathname || '';
-  }
+function location(state = '', action) {
   if (action.type === UPDATE_LOCATION) {
     return action.location;
   }

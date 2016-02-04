@@ -2,9 +2,10 @@ import {connect} from 'react-redux';
 import React from 'react';
 import url from 'url';
 import querystring from 'querystring';
-import {updateLocation, loadState, LOAD_STATE} from '../actions/routing';
+import {updateLocation, loadState, LOAD_STATE, UPDATE_LOCATION} from '../actions/routing';
 import {serializeStore, deserializeQueryObj} from './storeSerializer';
 
+// One way data flow for routerMiddleware: redux -> url
 export const routerMiddleware = store => next => action => {
   let result = next(action);
   let state = store.getState();
@@ -24,6 +25,7 @@ export const routerMiddleware = store => next => action => {
   return result;
 }
 
+// One way data flow for RouterListener: url change -> redux
 class RouterHashListener extends React.Component {
     componentWillMount() {
     window.addEventListener('hashchange', this.hashChangeHandler.bind(this), false);
@@ -32,10 +34,15 @@ class RouterHashListener extends React.Component {
     // Just doing our duty of cleanup though it's really not necessary
     window.removeEventListener('hashchange', this.hashChangeHandler.bind(this), false);
   }
+  componentDidMount() {
+    this.changeProcessor(parseUrlHash(window.location.hash), {})
+  }
   hashChangeHandler(e) {
-    let oldUrl = parseUrlHash(e.oldURL);
-    let newUrl = parseUrlHash(e.newURL);
-
+    this.changeProcessor(parseUrlHash(e.newURL), parseUrlHash(e.oldURL))
+  }
+  // @param {UrlObj|object} newUrl - URL object (of the hash) from node `url`
+  // @param {UrlObj|object} oldUrl - URL object (of the hash) from node `url`. Can be empty object
+  changeProcessor(newUrl, oldUrl) {
     if (oldUrl.pathname !== newUrl.pathname) {
       this.props.dispatch(updateLocation(newUrl.pathname));
     }
