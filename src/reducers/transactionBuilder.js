@@ -21,8 +21,11 @@ function operations(state, action) {
   let targetOpIndex, newOps;
   switch (action.type) {
   case LOAD_STATE:
-    if (action.slug === 'txbuilder' && action.payload.operations) {
-      return action.payload.operations;
+    if (action.slug === 'txbuilder') {
+      if (action.payload.operations) {
+        return action.payload.operations;
+      }
+      return defaultOperations;
     }
     break;
   case 'ADD_OPERATION':
@@ -85,8 +88,8 @@ function attributes(state, action) {
 
   switch(action.type) {
   case LOAD_STATE:
-    if (action.slug === 'txbuilder' && action.payload.attributes) {
-      return action.payload.attributes;
+    if (action.payload.attributes) {
+      return _.assign({}, defaultAttributes, action.payload.attributes);
     }
     break;
   case UPDATE_ATTRIBUTES:

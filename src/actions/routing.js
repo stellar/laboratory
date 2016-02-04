@@ -1,8 +1,8 @@
 export const UPDATE_LOCATION = "UPDATE_LOCATION";
-export function updateLocation(location) {
+export function updateLocation(slug) {
   return {
     type: UPDATE_LOCATION,
-    location
+    slug
   }
 }
 

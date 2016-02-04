@@ -1,4 +1,5 @@
 import {dehydrate, rehydrate} from './hydration';
+import _ from 'lodash';
 
 // The store serializer is used to convert the store of a specific page into a
 // object of strings to be used in the url hash param.
@@ -16,12 +17,25 @@ export function serializeStore(slug, state) {
         endpointsResult.endpoint = state.endpointExplorer.currentEndpoint;
       }
       if (_.size(state.endpointExplorer.pendingRequest.values) > 0) {
-        endpointsResult.values = dehydrate(state.endpointExplorer.pendingRequest.values)
+        endpointsResult.values = dehydrate(state.endpointExplorer.pendingRequest.values);
       }
       return endpointsResult;
     case 'txbuilder':
+      let txbuilderResult = {};
+      let txbuilderAttributes = assignNonEmpty({}, state.transactionBuilder.attributes);
+      if (_.size(txbuilderAttributes) > 0) {
+        txbuilderResult.attributes = txbuilderAttributes;
+      }
+
+      let firstOpEmpty = state.transactionBuilder.operations[0].name === '';
+      if (state.transactionBuilder.operations.length > 1 || !firstOpEmpty) {
+        txbuilderResult.operations = state.transactionBuilder.operations;
+      }
+      if (_.size(txbuilderResult) === 0) {
+        return {};
+      }
       return {
-        params: dehydrate(state.transactionBuilder),
+        params: dehydrate(txbuilderResult),
       };
     case 'txsigner':
       // We only want to serialize the imported xdr and not the saved secret key
@@ -34,6 +48,19 @@ export function serializeStore(slug, state) {
     default:
       return {};
   }
+}
+
+// Similar to Object.assign except it doesn't copy over non-empty ones such
+// as '' or undefined
+function assignNonEmpty(targetObj, inputObj) {
+  _.each(inputObj, (value, key) => {
+    if (value === '' || value === undefined) {
+      return;
+    }
+    targetObj[key] = value;
+  })
+
+  return targetObj;
 }
 
 // This deserializes the query object into a simple object. This resulting simple

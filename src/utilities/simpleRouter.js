@@ -10,6 +10,7 @@ export const routerMiddleware = store => next => action => {
   let result = next(action);
   let state = store.getState();
 
+  // We will still process on UPDATE_LOCATION because it doesn't affect state
   if (action.type === LOAD_STATE) {
     return result;
   }
@@ -35,28 +36,25 @@ class RouterHashListener extends React.Component {
     window.removeEventListener('hashchange', this.hashChangeHandler.bind(this), false);
   }
   componentDidMount() {
-    this.changeProcessor(parseUrlHash(window.location.hash), {})
+    this.changeProcessor(parseUrlHash(window.location.hash), {}, true)
   }
   hashChangeHandler(e) {
     this.changeProcessor(parseUrlHash(e.newURL), parseUrlHash(e.oldURL))
   }
   // @param {UrlObj|object} newUrl - URL object (of the hash) from node `url`
   // @param {UrlObj|object} oldUrl - URL object (of the hash) from node `url`. Can be empty object
-  changeProcessor(newUrl, oldUrl) {
-    let pathnameChanged = oldUrl.pathname !== newUrl.pathname;
+  changeProcessor(newUrl, oldUrl, firstLoad) {
     let queryChanged = oldUrl.query !== newUrl.query;
-    if (pathnameChanged || queryChanged) {
+    let shouldLoadState = firstLoad || (queryChanged && newUrl.query !== null);
+
+    if (shouldLoadState) {
+      let newQueryObj = querystring.parse(newUrl.query);
+      let deserialized = deserializeQueryObj(newUrl.pathname, newQueryObj)
+      this.props.dispatch(loadState(newUrl.pathname, deserialized));
+      return;
+    } else {
       this.props.dispatch(updateLocation(newUrl.pathname));
     }
-
-    if (newUrl.query === null) {
-      // Don't disrupt/reset state if left out (e.g. when using top nav links)
-      return;
-    }
-
-    let newQueryObj = querystring.parse(newUrl.query);
-    let deserialized = deserializeQueryObj(newUrl.pathname, newQueryObj)
-    this.props.dispatch(loadState(newUrl.pathname, deserialized));
   }
   render() {
     return null;

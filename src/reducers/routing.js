@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux';
-import {UPDATE_LOCATION} from '../actions/routing';
+import {UPDATE_LOCATION, LOAD_STATE} from '../actions/routing';
 import url from 'url';
 
 const routing = combineReducers({
@@ -9,8 +9,10 @@ const routing = combineReducers({
 export default routing;
 
 function location(state = '', action) {
-  if (action.type === UPDATE_LOCATION) {
-    return action.location;
+  switch(action.type) {
+  case UPDATE_LOCATION:
+  case LOAD_STATE:
+    return action.slug;
   }
   return state;
 }
