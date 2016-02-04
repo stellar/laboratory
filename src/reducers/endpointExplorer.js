@@ -6,6 +6,7 @@ import {
   FINISH_REQUEST,
   UPDATE_VALUE,
 } from "../actions/endpointExplorer";
+import {LOAD_STATE} from '../actions/routing';
 import {getEndpoint, getTemplate} from '../data/endpoints';
 
 const endpointExplorer = combineReducers({
@@ -23,20 +24,28 @@ export default endpointExplorer
 
 function currentResource(state="", action) {
   switch (action.type) {
+    case LOAD_STATE:
+      if (action.slug === 'endpoints' && action.payload.resource) {
+        return action.payload.resource;
+      }
+      break;
     case CHOOSE_ENDPOINT:
       return action.resource;
-    default:
-      return state;
   }
+  return state;
 }
 
 function currentEndpoint(state="", action) {
   switch (action.type) {
+  case LOAD_STATE:
+    if (action.slug === 'endpoints' && action.payload.endpoint) {
+      return action.payload.endpoint;
+    }
+    break;
   case CHOOSE_ENDPOINT:
     return action.endpoint;
-  default:
-    return state;
   }
+  return state;
 }
 
 function identity(initial) {
@@ -54,15 +63,19 @@ function pendingRequestTemplate(state="", action) {
 
 function pendingRequestValues(state={}, action) {
   switch (action.type) {
+  case LOAD_STATE:
+  if (action.slug === 'endpoints' && action.payload.values) {
+    return action.payload.values;
+  }
+  break;
   case UPDATE_VALUE:
     return Object.assign({}, state, {
       [action.param]: action.value
     });
   case CHOOSE_ENDPOINT:
     return {};
-  default:
-    return state;
   }
+  return state;
 }
 
 function currentRequest(state={isLoading: false}, action) {

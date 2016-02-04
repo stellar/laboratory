@@ -5,3 +5,12 @@ export function updateLocation(location) {
     location
   }
 }
+
+export const LOAD_STATE = "LOAD_STATE";
+export function loadState(slug, payload) {
+  return {
+    type: LOAD_STATE,
+    slug,
+    payload
+  }
+}

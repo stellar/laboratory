@@ -1,15 +1,16 @@
 import {connect} from 'react-redux';
 import React from 'react';
 import url from 'url';
-import {updateLocation} from '../actions/routing';
-import storeSerializer from './storeSerializer';
+import querystring from 'querystring';
+import {updateLocation, loadState} from '../actions/routing';
+import {serializeStore, deserializeQueryObj} from './storeSerializer';
 
 export const routerMiddleware = store => next => action => {
   let result = next(action);
   let state = store.getState();
 
   let newUrlObj = parseUrlHash(window.location.hash);
-  newUrlObj.query = storeSerializer(state.routing.location, state);
+  newUrlObj.query = serializeStore(state.routing.location, state);
   delete newUrlObj.search;
 
   window.location.hash = '#' + url.format(newUrlObj);
@@ -31,6 +32,15 @@ class RouterHashListener extends React.Component {
     if (oldUrl.pathname !== newUrl.pathname) {
       this.props.dispatch(updateLocation(newUrl.pathname));
     }
+
+    if (newUrl.query === null) {
+      // Don't disrupt/reset state if left out (e.g. when using top nav links)
+      return;
+    }
+
+    let newQueryObj = querystring.parse(newUrl.query);
+    let deserialized = deserializeQueryObj(newUrl.pathname, newQueryObj)
+    this.props.dispatch(loadState(newUrl.pathname, deserialized));
   }
   render() {
     return null;

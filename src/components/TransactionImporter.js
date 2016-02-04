@@ -1,7 +1,7 @@
 import React from 'react';
-import {Transaction} from 'stellar-sdk';
 import classNames from 'classnames';
 import _ from 'lodash';
+import validateTxXdr from '../utilities/validateTxXdr';
 
 // TransactionImporter will call the onImport passed to it's props when the user
 // presses the import button and the input is valid
@@ -19,14 +19,14 @@ export default class TransactionImporter extends React.Component {
     })
   }
   triggerImport() {
-    if (validateXdr(this.state.input).result === 'success') {
+    if (validateTxXdr(this.state.input).result === 'success') {
       this.props.onImport(this.state.input);
     }
   }
   render() {
     let validation, message, submitEnabled;
 
-    validation = validateXdr(this.state.input);
+    validation = validateTxXdr(this.state.input);
     if (validation.result === 'error') {
       message = <p className="TransactionImporter__message__alert">{validation.message}</p>
     } else if (validation.result === 'success') {
@@ -56,31 +56,3 @@ export default class TransactionImporter extends React.Component {
 TransactionImporter.propTypes = {
   'onImport': React.PropTypes.func.isRequired,
 };
-
-function validateXdr(input) {
-  input = _.trim(input);
-
-  if (input === '') {
-    return {
-      result: 'empty',
-    };
-  }
-  if (input.match(/^[-A-Za-z0-9+\/=]*$/) === null) {
-    return {
-      result: 'error',
-      message: 'The input is not valid base64 (a-zA-Z0-9+/=).'
-    };
-  }
-  try {
-    new Transaction(input);
-    return {
-      result: 'success',
-      message: 'Valid Transaction Envelope XDR',
-    }
-  } catch (e) {
-    return {
-      result: 'error',
-      message: 'Unable to parse input XDR into Transaction Envelope',
-    };
-  }
-}
