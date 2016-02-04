@@ -43,7 +43,9 @@ class RouterHashListener extends React.Component {
   // @param {UrlObj|object} newUrl - URL object (of the hash) from node `url`
   // @param {UrlObj|object} oldUrl - URL object (of the hash) from node `url`. Can be empty object
   changeProcessor(newUrl, oldUrl) {
-    if (oldUrl.pathname !== newUrl.pathname) {
+    let pathnameChanged = oldUrl.pathname !== newUrl.pathname;
+    let queryChanged = oldUrl.query !== newUrl.query;
+    if (pathnameChanged || queryChanged) {
       this.props.dispatch(updateLocation(newUrl.pathname));
     }
 
