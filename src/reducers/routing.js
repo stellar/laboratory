@@ -12,6 +12,9 @@ function location(state = '', action) {
   switch(action.type) {
   case UPDATE_LOCATION:
   case LOAD_STATE:
+    if (action.slug === null) {
+      return '';
+    }
     return action.slug;
   }
   return state;
