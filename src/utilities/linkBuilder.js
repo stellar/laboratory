@@ -12,3 +12,19 @@ export function txSignerLink(xdr) {
 
   return hashBuilder('txsigner', query);
 }
+
+export function txPostLink(xdr) {
+  let query = serializeStore('explorer', {
+    endpointExplorer: {
+      currentEndpoint: 'create',
+      currentResource: 'transactions',
+      pendingRequest: {
+        values: {
+          tx: xdr,
+        },
+      },
+    },
+  });
+
+  return hashBuilder('explorer', query);
+}

@@ -11,6 +11,7 @@ import {EasySelect} from './EasySelect';
 import OptionsTablePair from './OptionsTable/Pair';
 import SecretKeyPicker from './FormComponents/SecretKeyPicker';
 import MultiPicker from './FormComponents/MultiPicker';
+import {txPostLink} from '../utilities/linkBuilder';
 
 class TransactionSigner extends React.Component {
   render() {
@@ -39,6 +40,16 @@ class TransactionSigner extends React.Component {
         'Number of operations': transaction.operations.length,
         'Number of existing signatures': transaction.signatures.length,
       };
+
+      let codeResult, postLink;
+
+      if (!_.isUndefined(result.xdr)) {
+        codeResult = <EasySelect plain={true}>
+          <pre className="TxSignerResult__xdr so-code so-code__wrap"><code>{result.xdr}</code></pre>
+        </EasySelect>;
+        postLink = <a className="s-button TxSignerResult__submit"
+          href={txPostLink(result.xdr)}>Submit this transaction to the network</a>;
+      }
 
       content = <div>
         <div className="so-back">
@@ -78,10 +89,8 @@ class TransactionSigner extends React.Component {
         <div className="so-back TxSignerResult TransactionSigner__result">
           <div className="so-chunk">
             <p className="TxSignerResult__summary">{result.message}</p>
-            {(!_.isUndefined(result.xdr)) ?
-              <EasySelect plain={true}><pre className="TxSignerResult__xdr so-code so-code__wrap"><code>{result.xdr}</code></pre></EasySelect>
-              : null
-            }
+            {codeResult}
+            {postLink}
           </div>
         </div>
       </div>
