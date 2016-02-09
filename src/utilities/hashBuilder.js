@@ -6,6 +6,8 @@
 //
 // Returns: #foo?happy=yes
 
+import url from 'url';
+
 export default function hashBuilder(slug, query) {
   let urlObj = {
     pathname: slug,

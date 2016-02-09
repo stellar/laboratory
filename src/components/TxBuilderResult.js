@@ -11,6 +11,7 @@ import {
 import {PubKeyPicker} from './FormComponents/PubKeyPicker';
 import {EasySelect} from './EasySelect';
 import Libify from '../utilities/Libify';
+import {txSignerLink} from '../utilities/linkBuilder';
 
 export default class TxBuilderResult extends React.Component {
   render() {
@@ -29,7 +30,7 @@ export default class TxBuilderResult extends React.Component {
       validationErrors.push('Memo content is required if memo type is selected');
     }
 
-    let finalResult, errorTitle;
+    let finalResult, errorTitle, signingLink;
     if (validationErrors.length > 0) {
       errorTitle = 'Form validation errors:';
       finalResult = formatErrorList(validationErrors);
@@ -42,6 +43,8 @@ export default class TxBuilderResult extends React.Component {
       } else {
         errorTitle = `Transaction Envelope XDR:`;
         finalResult = transactionBuild.xdr;
+        signingLink = <a className="s-button TransactionBuilderResult__sign"
+          href={txSignerLink(transactionBuild.xdr)}>Sign this transaction</a>
       }
     }
 
@@ -50,9 +53,7 @@ export default class TxBuilderResult extends React.Component {
       <EasySelect plain={true}><pre className="TransactionXDR so-code TransactionBuilderResult__code">
         <code>{finalResult}</code>
       </pre></EasySelect>
-      {/* TODO: Implement button signing (while refactoring routing)
-      <button className="s-button">Sign this transaction</button>
-      */}
+      {signingLink}
     </div>
   }
 }
