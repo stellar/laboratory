@@ -1,5 +1,5 @@
 import {serializeStore} from './storeSerializer';
-import hashBuilder from './hashBuilder';
+import url from 'url';
 
 export function txSignerLink(xdr) {
   let query = serializeStore('txsigner', {
@@ -27,4 +27,19 @@ export function txPostLink(xdr) {
   });
 
   return hashBuilder('explorer', query);
+}
+
+
+// Simply takes in a slug and a object and converts it into a hash url.
+// Example input:
+// slug: foo
+// query: {happy: 'yes'}
+//
+// Example returns: #foo?happy=yes
+function hashBuilder(slug, query) {
+  let urlObj = {
+    pathname: slug,
+    query: query,
+  };
+  return '#' + url.format(urlObj);
 }
