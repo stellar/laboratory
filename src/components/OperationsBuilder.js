@@ -62,7 +62,7 @@ let operation = (ops, index, dispatch) => {
     <div className="TransactionOp__meta TransactionOpMeta">
       <div className="TransactionOpMeta__order">
         <BlurNumberInput
-          value={index + 1}
+          value={Number(index) + 1}
           onUpdate={(value) => dispatch(reorderOperation(op.id, value))}
           maxLength="2"
           className="TransactionOpMeta__order__input" />

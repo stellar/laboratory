@@ -7,7 +7,8 @@ import thunk from 'redux-thunk';
 import {Provider} from 'react-redux';
 
 import rootReducer from './reducers/root';
-import logging from "./middleware/logging";
+import logging from './middleware/logging';
+import {routerMiddleware} from './utilities/simpleRouter';
 import LaboratoryChrome from './components/LaboratoryChrome';
 
 
@@ -17,6 +18,7 @@ document.write('<div id="app"></div>');
 
 let createStoreWithMiddleware = applyMiddleware(
   thunk,
+  routerMiddleware,
   logging
 )(createStore);
 

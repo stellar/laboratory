@@ -24,7 +24,8 @@ export default class TxBuilderResult extends React.Component {
     if (attributes.sequence === '') {
       validationErrors.push('Sequence number is a required field');
     }
-    if (attributes.memoType !== 'MEMO_NONE' && attributes.memoContent === '') {
+    let memoIsNone = attributes.memoType === 'MEMO_NONE' || attributes.memoType === '';
+    if (!memoIsNone && attributes.memoContent === '') {
       validationErrors.push('Memo content is required if memo type is selected');
     }
 
