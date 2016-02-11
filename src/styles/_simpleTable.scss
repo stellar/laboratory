@@ -1,32 +1,41 @@
+// In narrow viewports, this is just a sequence of divs that take up the whole row
+// In large viewports, this is a table
 .simpleTable {
   border: 1px solid $s-color-neutral6;
   border-radius: $s-var-radius;
 }
-  .simpleTable__row {
-    padding: 0.75em 1em;
-    border-bottom: 1px solid $s-color-neutral6;
-  }
-  .simpleTable__row:last-child {
+  .simpleTable__row:last-child .simpleTable__row__label,
+  .simpleTable__row:last-child .simpleTable__row__content {
     border-bottom: 0;
   }
     .simpleTable__row__label {
+      padding: 0.75em 1em 0 1em;
       font-weight: bold;
     }
     .simpleTable__row__content {
+      padding: 0.75em 1em;
+      border-bottom: 1px solid $s-color-neutral6;
       word-break: break-all;
     }
 
 @include r-media(l) {
+.simpleTable {
+  display: table;
+  width: 100%;
+  table-layout:fixed;
+}
   .simpleTable__row {
-    @include S-flex-row;
+    display: table-row;
   }
+    .simpleTable__row__label, .simpleTable__row__content {
+      display: table-cell;
+    }
     .simpleTable__row__label {
-      @include S-flex-row;
-      @include S-flexItem-1of4;
-      padding-right: 1em;
-      align-items: center;
+      width: 25%;
+      padding: 0.75em 1em;
+      border-bottom: 1px solid $s-color-neutral6;
     }
     .simpleTable__row__content {
-      @include S-flexItem-share;
+      width: 75%;
     }
 }
