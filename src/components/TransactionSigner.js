@@ -14,6 +14,8 @@ import MultiPicker from './FormComponents/MultiPicker';
 import {txPostLink} from '../utilities/linkBuilder';
 import HelpMark from './HelpMark';
 import clickToSelect from '../utilities/clickToSelect';
+import extrapolateFromXdr from '../utilities/extrapolateFromXdr';
+import TreeView from './TreeView';
 
 class TransactionSigner extends React.Component {
   render() {
@@ -51,6 +53,8 @@ class TransactionSigner extends React.Component {
         resultTitle = <h3 className="TxSignerResult__title">Transaction signed!</h3>;
         postInstructions = <p className="TxSignerResult__instructions">Now that this transaction is signed, you can submit it to the network. Horizon provides an endpoint called Post Transaction that will relay your transaction to the network and inform you of the result.</p>
       }
+
+      let treeView = <TreeView className="TransactionSigner__details__tree" nodes={extrapolateFromXdr(result.xdr, 'TransactionEnvelope')} />
 
       content = <div>
         <div className="so-back">
@@ -94,6 +98,12 @@ class TransactionSigner extends React.Component {
             {codeResult}
             {postInstructions}
             {postLink}
+          </div>
+        </div>
+        <div className="so-back TransactionSigner__details">
+          <div className="so-chunk">
+            <p className="TransactionSigner__details__title">Transaction result details</p>
+            {treeView}
           </div>
         </div>
       </div>

@@ -4,6 +4,11 @@
 // This turns a base64 encoded xdr object with it's type, and turns it into an
 // object with more detailed information suitable for use in the tree view.
 
+// Values can be one of three types:
+// - undefined
+// - string: simple values
+// - object: complex values always with a type and value `{type: 'code', value: 'Foo();'}`
+
 import {xdr, encodeCheck} from 'stellar-sdk';
 export default function extrapolateFromXdr(input, type) {
   // TODO: Check to see if type exists
@@ -27,7 +32,7 @@ function buildTreeFromObject(object, anchor, name) {
   if (_.isArray(object)) {
     parseArray(anchor, object);
   } else if (!hasChildren(object)) {
-    anchor.text = getValue(object, name);
+    anchor.value = getValue(object, name);
   } else if (object.switch) {
     parseArm(anchor, object)
   } else {
@@ -36,16 +41,16 @@ function buildTreeFromObject(object, anchor, name) {
 }
 
 function parseArray(anchor, object) {
-  anchor.length = object.length;
+  anchor.value = `Array[${object.length}]`;
   anchor.nodes = [];
   for (var i = 0; i < object.length; i++) {
     anchor.nodes.push({});
-    buildTreeFromObject(object[i], anchor.nodes[anchor.nodes.length-1], i);
+    buildTreeFromObject(object[i], anchor.nodes[anchor.nodes.length-1], '[' + i + ']');
   }
 }
 
 function parseArm(anchor, object) {
-  anchor.text += ' ['+object.switch().name+']';
+  anchor.value = '['+object.switch().name+']';
   if (_.isString(object.arm())) {
     anchor.nodes = [{}];
     buildTreeFromObject(object[object.arm()](), anchor.nodes[anchor.nodes.length-1], object.arm());
@@ -83,8 +88,7 @@ function hasChildren(object) {
 function getValue(object, name) {
   if (name === 'ed25519') {
     var address = encodeCheck("accountId", object);
-    var short = address.substr(0, 10);
-    return '<a href="https://horizon-testnet.stellar.org/accounts/'+address+'" title="'+address+'" target="_blank">'+short+'</a>';
+    return {type: 'code', value: address};
   }
 
   if (name === 'assetCode' || name === 'assetCode4' || name === 'assetCode12') {
@@ -93,7 +97,8 @@ function getValue(object, name) {
 
   var value = object;
   if (object && object._isBuffer) {
-    value = new Buffer(object).toString('base64');
+    value = {type: 'code', value: new Buffer(object).toString('base64')};
   }
+
   return value;
 }
