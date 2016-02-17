@@ -24,25 +24,22 @@ export default class TransactionImporter extends React.Component {
     }
   }
   render() {
-    let validation, message, submitEnabled;
+    let validation, message, submitEnabled, messageClass;
 
     validation = validateTxXdr(this.state.input);
-    if (validation.result === 'error') {
-      message = <p className="TransactionImporter__message__alert">{validation.message}</p>
-    } else if (validation.result === 'success') {
-      message = <p className="TransactionImporter__message__success">{validation.message}</p>
-    }
+    messageClass = validation.result === 'error' ? 'xdrInput__message__alert' : 'xdrInput__message__success';
+    message = <p className={messageClass}>{validation.message}</p>
 
     submitEnabled = validation.result === 'success';
 
-    return <div className="TransactionImporter">
-      <div className="TransactionImporter__input">
+    return <div className="xdrInput">
+      <div className="xdrInput__input">
         <textarea
-          className="TransactionImporter__input__textarea"
+          className="xdrInput__input__textarea"
           onChange={this.updateTextarea.bind(this)}
           placeholder="Example: AAAAAGXNhB2hIkbP//jgzn4os/AAAAZAB+BaLPAAA5Q/xL..."></textarea>
       </div>
-      <div className="TransactionImporter__message">
+      <div className="xdrInput__message">
         {message}
       </div>
       <div className="s-buttonList">
