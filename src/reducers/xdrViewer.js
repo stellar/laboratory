@@ -1,5 +1,6 @@
 import {combineReducers} from 'redux';
 import {UPDATE_XDR_INPUT, UPDATE_XDR_TYPE} from '../actions/xdrViewer';
+import {LOAD_STATE} from '../actions/routing';
 import url from 'url';
 
 const routing = combineReducers({
@@ -10,15 +11,29 @@ const routing = combineReducers({
 export default routing;
 
 function input(state = '', action) {
-  if (action.type === UPDATE_XDR_INPUT) {
+  switch (action.type) {
+  case LOAD_STATE:
+    if (action.slug === 'xdr-viewer' && action.payload.input) {
+      return action.payload.input;
+    }
+    break;
+  case UPDATE_XDR_INPUT:
     return action.input;
   }
+
   return state;
 }
 
 function type(state = 'TransactionEnvelope', action) {
-  if (action.type === UPDATE_XDR_TYPE) {
+  switch (action.type) {
+  case LOAD_STATE:
+    if (action.slug === 'xdr-viewer' && action.payload.type) {
+      return action.payload.type;
+    }
+    break;
+  case UPDATE_XDR_TYPE:
     return action.xdrType;
   }
+
   return state;
 }
