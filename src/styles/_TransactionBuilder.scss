@@ -52,6 +52,10 @@
 }
 
 .TransactionBuilderResult__code {
+  margin-top: 0.5em;
   background: $s-color-neutral9;
   word-wrap: break-word;
+}
+.TransactionBuilderResult__sign {
+  margin-top: 1em;
 }
