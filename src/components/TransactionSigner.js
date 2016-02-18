@@ -47,8 +47,16 @@ class TransactionSigner extends React.Component {
         codeResult = <EasySelect plain={true}>
           <pre className="TxSignerResult__xdr so-code so-code__wrap"><code>{result.xdr}</code></pre>
         </EasySelect>;
-        postLink = <a className="s-button TxSignerResult__submit"
-          href={txPostLink(result.xdr)}>Submit this transaction to the network</a>;
+
+        let postLinkProps = {
+          className: 's-button TxSignerResult__submit',
+        };
+        if (result.totalSignatures === 0) {
+          postLinkProps.className += ' is-disabled';
+        } else {
+          postLinkProps.href = txPostLink(result.xdr);
+        }
+        postLink = <a {...postLinkProps}>Submit this transaction to the network</a>;
       }
 
       content = <div>
@@ -144,5 +152,6 @@ function signTx(xdr, signers, useNetworkFunc) {
   return {
     xdr: newTx.toEnvelope().toXDR('base64'),
     message: `${validSigners.length} signature(s) added; ${existingSigs + validSigners.length} signature(s) total`,
+    totalSignatures: validSigners.length,
   };
 }
