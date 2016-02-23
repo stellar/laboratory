@@ -15,10 +15,24 @@ export function EndpointSetup(props) {
         values={values}
         />
       <hr className="optionsTable__separator" />
+      <StreamingRow onUpdate={onUpdate} checked={values.streaming}/>
+      <hr className="optionsTable__separator" />
       <UrlRow url={request.url} method={request.method} />
       <PostDataRow formData={request.formData} />
       <SubmitRow onSubmit={onSubmit} />
     </div>
+  </div>;
+}
+
+function StreamingRow(props) {
+  return <div className="optionsTable__blank EndpointSetup__streaming">
+    <label>
+      <input type="checkbox" className="EndpointSetup__streaming__checkbox"
+        onChange={(event) => {props.onUpdate('streaming', event.target.checked)}}
+        checked={props.checked}
+        />
+      <span className="EndpointSetup__streaming__title">Server-Sent Events (streaming) mode</span>
+    </label>
   </div>;
 }
 
