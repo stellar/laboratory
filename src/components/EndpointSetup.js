@@ -8,7 +8,7 @@ export function EndpointSetup(props) {
   let {onSubmit, onUpdate, request, params, endpoint, values} = props;
 
   return <div className="so-chunk">
-    <p className="EndpointSetup__title">{endpoint.label} <HelpMark href="#"/></p>
+    <p className="EndpointSetup__title">{endpoint.label} <HelpMark href={endpoint.helpUrl}/></p>
     <div className="optionsTable">
       <endpoint.setupComponent
         onUpdate={onUpdate}
