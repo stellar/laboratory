@@ -42,7 +42,7 @@ function RowValue(props) {
     value = String(node.value);
     separatorNeeded = true;
   } else if (typeof node.value !== 'undefined' && _.has(node.value, 'type')) {
-    value = convertComplexValue(node.value);
+    value = convertTypedValue(node.value);
     separatorNeeded = true;
   } else {
     if (typeof node.nodes !== 'undefined') {
@@ -59,9 +59,11 @@ function RowValue(props) {
   return <span><strong>{node.type}</strong>{separator}{value}</span>
 }
 
-function convertComplexValue(complex) {
-  let {type, value} = complex;
-
+// Types values are values that will be displayed with special formatting to
+// provide for a more rich experience other than just plain text.
+// "untyped" values are simply strings. They will be displayed as strings in the
+// tree node.
+function convertTypedValue({type, value}) {
   switch(type) {
   case 'code':
     return <EasySelect><code>{value}</code></EasySelect>;

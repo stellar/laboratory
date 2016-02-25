@@ -54,18 +54,15 @@ class TransactionSigner extends React.Component {
         postInstructions = <p className="TxSignerResult__instructions">Now that this transaction is signed, you can submit it to the network. Horizon provides an endpoint called Post Transaction that will relay your transaction to the network and inform you of the result.</p>
       }
 
-      let xdrNodes, txDetails;
-      try {
-        xdrNodes = extrapolateFromXdr(result.xdr, 'TransactionEnvelope');
+      let treeView, txDetails;
+      if (result.xdr) { // Only show tree view if xdr is valid and exists
         let treeView = <TreeView className="TransactionSigner__details__tree" nodes={extrapolateFromXdr(result.xdr, 'TransactionEnvelope')} />
-        txDetails = <div className="so-back TransactionSigner__details">
+        let txDetails = <div className="so-back TransactionSigner__details">
           <div className="so-chunk">
             <p className="TransactionSigner__details__title">Transaction result details</p>
             {treeView}
           </div>
         </div>
-      } catch (e) {
-        // Likely due to invalid secret key. Error messaging is handled in other sections
       }
 
       content = <div>

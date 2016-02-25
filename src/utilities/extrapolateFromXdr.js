@@ -6,8 +6,8 @@
 
 // Values can be one of three types:
 // - undefined
-// - string: simple values
-// - object: complex values always with a type and value `{type: 'code', value: 'Foo();'}`
+// - string: string values that appear as just plain text
+// - object: typed values always with a type and value `{type: 'code', value: 'Foo();'}`
 
 import {xdr, encodeCheck} from 'stellar-sdk';
 export default function extrapolateFromXdr(input, type) {
