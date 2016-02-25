@@ -33,7 +33,7 @@ export default function TxBuilderAttributes(props) {
           value={attributes['fee']}
           onUpdate={(value) => {onUpdate('fee', value)}}
           />
-        <p className="optionsTable__pair__content__note">The <a href="https://www.stellar.org/developers/learn/concepts/fees.html">network base fee</a> is currently set to 100 stroops (0.00001 XLM). Transaction fee is equal to base fee times number of operations in this transaction.</p>
+        <p className="optionsTable__pair__content__note">The <a href="https://www.stellar.org/developers/learn/concepts/fees.html">network base fee</a> is currently set to 100 stroops (0.00001 lumens). Transaction fee is equal to base fee times number of operations in this transaction.</p>
       </OptionsTablePair>
       <OptionsTablePair optional={true} label={<span>Memo <HelpMark href="https://www.stellar.org/developers/learn/concepts/transactions.html#memo" /></span>}>
         <MemoPicker
