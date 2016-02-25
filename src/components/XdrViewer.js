@@ -4,14 +4,14 @@ import _ from 'lodash';
 import SelectPicker from './FormComponents/SelectPicker';
 import extrapolateFromXdr from '../utilities/extrapolateFromXdr';
 import TreeView from './TreeView';
-import validateTxXdr from '../utilities/validateTxXdr';
+import validateBase64 from '../utilities/validateBase64';
 import {updateXdrInput, updateXdrType} from '../actions/xdrViewer';
 import StellarSdk from 'stellar-sdk';
 
 function XdrViewer(props) {
   let {dispatch, state} = props;
 
-  let validation = validateTxXdr('');
+  let validation = validateBase64(state.input);
   let messageClass = validation.result === 'error' ? 'xdrInput__message__alert' : 'xdrInput__message__success';
   let message = <p className={messageClass}>{validation.message}</p>
 
