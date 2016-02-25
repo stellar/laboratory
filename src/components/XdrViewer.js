@@ -15,17 +15,18 @@ function XdrViewer(props) {
   let messageClass = validation.result === 'error' ? 'xdrInput__message__alert' : 'xdrInput__message__success';
   let message = <p className={messageClass}>{validation.message}</p>
 
+  let xdrTypeIsValid = _.indexOf(xdrTypes, state.type) >= 0;
   let xdrNodes, treeView, errorMessage;
   if (state.input === '') {
     errorMessage = <p>Enter a base-64 encoded xdr blob to decode.</p>;
-  } else if (state.type === '' || !_.has(xdrTypes, state.type)) {
+  } else if (state.type === '' || !xdrTypeIsValid) {
     errorMessage = <p>Please select a xdr type</p>;
   } else {
     try {
       xdrNodes = extrapolateFromXdr(state.input, 'TransactionEnvelope');
       treeView = <TreeView nodes={extrapolateFromXdr(state.input, state.type)} />
     } catch (e) {
-      errorMessage = <p>Unable to decode xdr input as {state.type}</p>;
+      errorMessage = <p>Unable to decode input as {state.type}</p>;
     }
   }
 
