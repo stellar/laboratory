@@ -27,8 +27,12 @@
   @include S-flexItem-share;
 }
 
+.TransactionOpMeta {
+  width: 108px;
+  text-align: center;
+}
 .TransactionOpMeta__order {
-  padding: 1.5em 1em 0.5em 1em;
+  padding: 1.5em 0 0.5em 0;
 }
   .TransactionOpMeta__order__input {
     height: 72px;
@@ -44,11 +48,18 @@
 
 .TransactionOperations__add {
   width: 100%;
+  padding-left: 108px;
+  margin-bottom: 1.5em;
+}
+.TransactionOperations__add__button {
+  width: 100%;
   font-size: $s-scale-3;
   padding-top: 0.5em;
   padding-bottom: 0.5em;
   text-align: center;
-  margin-bottom: 1.5em;
+  color: $s-color-neutral2;
+  background: $s-color-neutral8;
+  border-color: $s-color-neutral6;
 }
 
 .TransactionBuilderResult__code {
