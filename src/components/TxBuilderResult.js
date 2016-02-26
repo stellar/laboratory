@@ -30,26 +30,30 @@ export default class TxBuilderResult extends React.Component {
       validationErrors.push('Memo content is required if memo type is selected');
     }
 
-    let finalResult, errorTitle, signingLink;
+    let finalResult, errorTitleText, successTitleText, signingLink;
     if (validationErrors.length > 0) {
-      errorTitle = 'Form validation errors:';
+      errorTitleText = 'Form validation errors:';
       finalResult = formatErrorList(validationErrors);
     } else {
       let transactionBuild = buildTransaction(attributes, operations);
 
       if (transactionBuild.errors.length > 0) {
-        errorTitle = `Transaction building errors:`;
+        errorTitleText = `Transaction building errors:`;
         finalResult = formatErrorList(transactionBuild.errors);
       } else {
-        errorTitle = `Transaction Envelope XDR:`;
+        successTitleText = `Success! Transaction Envelope XDR:`;
         finalResult = transactionBuild.xdr;
         signingLink = <a className="s-button TransactionBuilderResult__sign"
           href={txSignerLink(transactionBuild.xdr)}>Sign this transaction</a>
       }
     }
 
-    return <div className="TxBuilderResult">
-      <h3>{errorTitle}</h3>
+    let errorTitle = errorTitleText ? <h3 className="TransactionBuilderResult__error">{errorTitleText}</h3> : null
+    let successTitle = successTitleText ? <h3 className="TransactionBuilderResult__success">{successTitleText}</h3> : null
+
+    return <div className="TransactionBuilderResult">
+      {successTitle}
+      {errorTitle}
       <EasySelect plain={true}><pre className="TransactionXDR so-code TransactionBuilderResult__code">
         <code>{finalResult}</code>
       </pre></EasySelect>

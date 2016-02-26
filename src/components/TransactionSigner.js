@@ -60,6 +60,11 @@ class TransactionSigner extends React.Component {
         postLink = <a {...postLinkProps}>Submit this transaction to the network</a>;
       }
 
+      let resultTitle;
+      if (result.success) {
+        resultTitle = <h3 className="TxSignerResult__title">Transaction signed!</h3>
+      }
+
       content = <div>
         <div className="so-back">
           <div className="so-chunk">
@@ -97,6 +102,7 @@ class TransactionSigner extends React.Component {
         </div>
         <div className="so-back TxSignerResult TransactionSigner__result">
           <div className="so-chunk">
+            {resultTitle}
             <p className="TxSignerResult__summary">{result.message}</p>
             {codeResult}
             {postLink}
@@ -144,14 +150,22 @@ function signTx(xdr, signers, useNetworkFunc) {
     }
   }
 
+
   let newTx = new Transaction(xdr);
   let existingSigs = newTx.signatures.length;
   _.each(validSigners, (signer) => {
     newTx.sign(Keypair.fromSeed(signer));
   })
 
+  if (existingSigs + validSigners.length === 0) {
+    return {
+      message: 'Enter a secret key to sign message'
+    }
+  }
+
   return {
     xdr: newTx.toEnvelope().toXDR('base64'),
+    success: true,
     message: `${validSigners.length} signature(s) added; ${existingSigs + validSigners.length} signature(s) total`,
     totalSignatures: validSigners.length,
   };
