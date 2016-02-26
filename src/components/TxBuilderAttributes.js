@@ -6,7 +6,7 @@ import SequencePicker from './FormComponents/SequencePicker';
 import StroopsPicker from './FormComponents/StroopsPicker';
 import MemoPicker from './FormComponents/MemoPicker';
 import {connect} from 'react-redux';
-import {Account} from 'stellar-sdk';
+import {Keypair} from 'stellar-sdk';
 import {fetchSequence} from '../actions/transactionBuilder';
 
 export default function TxBuilderAttributes(props) {
@@ -54,7 +54,7 @@ class sequenceFetcherClass extends React.Component {
     let {attributes, sequenceFetcherError} = this.props.state;
     let dispatch = this.props.dispatch;
     let network = this.props.network;
-    if (!Account.isValidAccountId(attributes.sourceAccount)) {
+    if (!Keypair.isValidPublicKey(attributes.sourceAccount)) {
       return null;
     }
 
