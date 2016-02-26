@@ -49,15 +49,7 @@ class TransactionSigner extends React.Component {
           <pre className="TxSignerResult__xdr so-code so-code__wrap"><code>{result.xdr}</code></pre>
         </EasySelect>;
 
-        let postLinkProps = {
-          className: 's-button TxSignerResult__submit',
-        };
-        if (result.totalSignatures === 0) {
-          postLinkProps.className += ' is-disabled';
-        } else {
-          postLinkProps.href = txPostLink(result.xdr);
-        }
-        postLink = <a {...postLinkProps}>Submit this transaction to the network</a>;
+        postLink = <a className="s-button TxSignerResult__submit" href={txPostLink(result.xdr)}>Submit this transaction to the network</a>;
       }
 
       let resultTitle;
@@ -137,7 +129,7 @@ function isValidSecret(key) {
 function signTx(xdr, signers, useNetworkFunc) {
   Network[useNetworkFunc]();
 
-  let validSigners = [];
+  let validSecretKeys = [];
   for (let i = 0; i < signers.length; i++) {
     let signer = signers[i];
     if (signer !== null && !_.isUndefined(signer) && signer !== '') {
@@ -146,18 +138,18 @@ function signTx(xdr, signers, useNetworkFunc) {
           message: 'Valid secret keys are required to sign transaction'
         }
       }
-      validSigners.push(signer);
+      validSecretKeys.push(signer);
     }
   }
 
 
   let newTx = new Transaction(xdr);
   let existingSigs = newTx.signatures.length;
-  _.each(validSigners, (signer) => {
+  _.each(validSecretKeys, (signer) => {
     newTx.sign(Keypair.fromSeed(signer));
   })
 
-  if (existingSigs + validSigners.length === 0) {
+  if (validSecretKeys.length === 0) {
     return {
       message: 'Enter a secret key to sign message'
     }
@@ -166,7 +158,6 @@ function signTx(xdr, signers, useNetworkFunc) {
   return {
     xdr: newTx.toEnvelope().toXDR('base64'),
     success: true,
-    message: `${validSigners.length} signature(s) added; ${existingSigs + validSigners.length} signature(s) total`,
-    totalSignatures: validSigners.length,
+    message: `${validSecretKeys.length} signature(s) added; ${existingSigs + validSecretKeys.length} signature(s) total`,
   };
 }
