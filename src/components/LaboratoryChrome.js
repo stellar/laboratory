@@ -12,7 +12,7 @@ function LaboratoryChrome(props) {
     return <a
       href={'#' + slug}
       className={classNames(
-        'buttonList__item s-button s-button__min',
+        'buttonList__item s-button s-button--min',
         {'is-active': props.routing.location === slug})}
       key={slug}>
       {name}

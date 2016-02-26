@@ -55,7 +55,7 @@ function ButtonGroupButton(props) {
   let {selected, label, onChange, id} = props;
   let classes = classNames(
     's-button',
-    's-button__light',
+    's-button--light',
     {"is-active": selected},
   )
 

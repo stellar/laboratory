@@ -17,7 +17,7 @@ export default function RadioButtonPicker(props) {
           onChange={onUpdate.bind(null, id)}
           value={id}
           checked={value === id} />
-        <span className="s-button s-button__light">{label}</span>
+        <span className="s-button s-button--light">{label}</span>
       </label>
     })}
   </div>;
