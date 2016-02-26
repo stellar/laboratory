@@ -32,7 +32,8 @@ export function serializeStore(slug, state) {
         txbuilderResult.operations = state.transactionBuilder.operations;
       }
 
-      if (txbuilderResult.attributes.memoType === 'MEMO_NONE') {
+      if (_.has(txbuilderResult, 'attributes.memoType') &&
+          txbuilderResult.attributes.memoType === 'MEMO_NONE') {
         delete txbuilderResult.attributes.memoType;
       }
 
