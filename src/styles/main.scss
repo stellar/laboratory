@@ -29,9 +29,10 @@
 @import 'EasySelect';
 @import 'HelpMark';
 
-// General css modules
+// General css modules not tied to a React component. Should be lowercase
 @import 'optionsTable';
 @import 'simpleTable';
+@import 'pageIntro';
 
 @import 'picker';
   @import 'ManualMultiPicker';
