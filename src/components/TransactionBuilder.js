@@ -24,6 +24,11 @@ class TransactionBuilder extends React.Component {
     return <div className="TransactionBuilder">
       <div className="so-back">
         <div className="so-chunk">
+          <div className="pageIntro">
+            <p>
+              The transaction builder lets you build a new Stellar transaction no existing signatures.
+            </p>
+          </div>
           <TxBuilderAttributes
             attributes={attributes}
             onUpdate={onAttributeUpdate.bind(this, dispatch)} />

@@ -30,7 +30,7 @@ export default class TxBuilderResult extends React.Component {
       validationErrors.push('Memo content is required if memo type is selected');
     }
 
-    let finalResult, errorTitleText, successTitleText, signingLink;
+    let finalResult, errorTitleText, successTitleText, signingInstructions, signingLink;
     if (validationErrors.length > 0) {
       errorTitleText = 'Form validation errors:';
       finalResult = formatErrorList(validationErrors);
@@ -43,8 +43,15 @@ export default class TxBuilderResult extends React.Component {
       } else {
         successTitleText = `Success! Transaction Envelope XDR:`;
         finalResult = transactionBuild.xdr;
+        signingInstructions = <p className="TransactionBuilderResult__instructions">
+          In order for the transaction to make it into the ledger, a transaction must be successfully
+          signed and submitted to the network. The laboratory provides
+          the <a href="#txsigner">Transaction Signer</a> to for signing a
+          transaction, and the <a href="#explorer?resource=transactions&endpoint=create">Post Transaction endpoint</a> for
+          submitting one to the network.
+        </p>;
         signingLink = <a className="s-button TransactionBuilderResult__sign"
-          href={txSignerLink(transactionBuild.xdr)}>Sign this transaction</a>
+          href={txSignerLink(transactionBuild.xdr)}>Sign this transaction in the Transaction Signer</a>
       }
     }
 
@@ -57,6 +64,7 @@ export default class TxBuilderResult extends React.Component {
       <EasySelect plain={true}><pre className="TransactionXDR so-code TransactionBuilderResult__code">
         <code>{finalResult}</code>
       </pre></EasySelect>
+      {signingInstructions}
       {signingLink}
     </div>
   }
