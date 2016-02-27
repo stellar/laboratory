@@ -10,6 +10,9 @@
 
   background: $s-color-neutral8;
 }
+  .TransactionBuilder__result :last-child {
+    margin-bottom: 0;
+  }
 
 .TransactionAttributes {
   margin-bottom: 1.5em;

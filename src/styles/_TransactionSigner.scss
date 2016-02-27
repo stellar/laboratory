@@ -13,3 +13,6 @@
   .TransactionSigner__result {
     margin-bottom: 2em;
   }
+  .TransactionSigner__result :last-child {
+    margin-bottom: 0;
+  }
