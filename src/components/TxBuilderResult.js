@@ -12,6 +12,7 @@ import {PubKeyPicker} from './FormComponents/PubKeyPicker';
 import {EasySelect} from './EasySelect';
 import Libify from '../utilities/Libify';
 import {txSignerLink} from '../utilities/linkBuilder';
+import clickToSelect from '../utilities/clickToSelect';
 
 export default class TxBuilderResult extends React.Component {
   render() {
@@ -61,9 +62,9 @@ export default class TxBuilderResult extends React.Component {
     return <div className="TransactionBuilderResult">
       {successTitle}
       {errorTitle}
-      <EasySelect plain={true}><pre className="TransactionXDR so-code TransactionBuilderResult__code">
+      <pre className="TransactionXDR so-code TransactionBuilderResult__code" onClick={clickToSelect}>
         <code>{finalResult}</code>
-      </pre></EasySelect>
+      </pre>
       {signingInstructions}
       {signingLink}
     </div>
