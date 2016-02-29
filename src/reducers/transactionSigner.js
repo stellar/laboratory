@@ -7,6 +7,7 @@ import {
 import {LOAD_STATE} from '../actions/routing';
 import validateTxXdr from '../utilities/validateTxXdr';
 import _ from 'lodash';
+import SLUG from '../constants/slug';
 
 const transactionSigner = combineReducers({
   tx,
@@ -21,7 +22,7 @@ function tx(state = {
 }, action) {
   switch (action.type) {
   case LOAD_STATE:
-    if (action.slug === 'txsigner' && action.payload.xdr &&
+    if (action.slug === SLUG.TXSIGNER && action.payload.xdr &&
         validateTxXdr(action.payload.xdr).result === 'success') {
       return {
         xdr: action.payload.xdr,

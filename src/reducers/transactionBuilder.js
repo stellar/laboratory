@@ -7,6 +7,7 @@ import {
 } from '../actions/transactionBuilder';
 import {LOAD_STATE} from '../actions/routing';
 import _ from 'lodash';
+import SLUG from '../constants/slug';
 
 const defaultOperations = [{
   id: 0,
@@ -21,7 +22,7 @@ function operations(state, action) {
   let targetOpIndex, newOps;
   switch (action.type) {
   case LOAD_STATE:
-    if (action.slug === 'txbuilder') {
+    if (action.slug === SLUG.TXBUILDER) {
       if (action.payload.operations) {
         return action.payload.operations;
       }

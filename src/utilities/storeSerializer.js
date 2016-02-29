@@ -1,5 +1,6 @@
 import {dehydrate, rehydrate} from './hydration';
 import _ from 'lodash';
+import SLUG from '../constants/slug';
 
 // The store serializer is used to convert the store of a specific page into a
 // object of strings to be used in the url hash param.
@@ -8,7 +9,7 @@ import _ from 'lodash';
 // The deserialization step happens in each of the reducers
 export function serializeStore(slug, state) {
   switch (slug) {
-    case 'explorer':
+    case SLUG.EXPLORER:
       let endpointsResult = {};
       if (state.endpointExplorer.currentResource) {
         endpointsResult.resource = state.endpointExplorer.currentResource;
@@ -20,7 +21,7 @@ export function serializeStore(slug, state) {
         endpointsResult.values = dehydrate(state.endpointExplorer.pendingRequest.values);
       }
       return endpointsResult;
-    case 'txbuilder':
+    case SLUG.TXBUILDER:
       let txbuilderResult = {};
       let txbuilderAttributes = assignNonEmpty({}, state.transactionBuilder.attributes);
       if (_.size(txbuilderAttributes) > 0) {
@@ -47,7 +48,7 @@ export function serializeStore(slug, state) {
       return {
         params: dehydrate(txbuilderResult),
       };
-    case 'txsigner':
+    case SLUG.TXSIGNER:
       // We only want to serialize the imported xdr and not the saved secret key
       // to prevent sensitive data being stored in browser history.
       let txsignerResult = {};
@@ -77,18 +78,18 @@ function assignNonEmpty(targetObj, inputObj) {
 // object is then passed to the reducers that apple the object to their store.
 export function deserializeQueryObj(slug, queryObj) {
   switch (slug) {
-    case 'explorer':
+    case SLUG.EXPLORER:
       let endpointsResult = Object.assign({}, queryObj);
       if (endpointsResult.values) {
         endpointsResult.values = rehydrate(endpointsResult.values);
       }
       return endpointsResult;
-    case 'txbuilder':
+    case SLUG.TXBUILDER:
       if (queryObj.params) {
         return rehydrate(queryObj.params);
       }
       return {};
-    case 'txsigner':
+    case SLUG.TXSIGNER:
       return queryObj;
     default:
       return {};

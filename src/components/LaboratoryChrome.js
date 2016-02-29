@@ -6,6 +6,7 @@ import EndpointExplorer from './EndpointExplorer';
 import TransactionBuilder from './TransactionBuilder';
 import TransactionSigner from './TransactionSigner';
 import {RouterListener} from '../utilities/simpleRouter';
+import SLUG from '../constants/slug';
 
 function LaboratoryChrome(props) {
   let tabItem = (name, slug) => {
@@ -35,9 +36,9 @@ function LaboratoryChrome(props) {
     <div className="so-back LaboratoryChrome__siteNavBack">
       <div className="so-chunk">
         <nav className="s-buttonList">
-          {tabItem('Endpoint Explorer', 'explorer')}
-          {tabItem('Transaction Builder', 'txbuilder')}
-          {tabItem('Transaction Signer', 'txsigner')}
+          {tabItem('Endpoint Explorer', SLUG.EXPLORER)}
+          {tabItem('Transaction Builder', SLUG.TXBUILDER)}
+          {tabItem('Transaction Signer', SLUG.TXSIGNER)}
         </nav>
       </div>
     </div>
@@ -49,13 +50,13 @@ function LaboratoryChrome(props) {
 
 function getContent(slug) {
   switch (slug) {
-    case '':
+    case SLUG.HOME:
       return <SimplePage><p>To begin, select a tool from above.</p></SimplePage>
-    case 'explorer':
+    case SLUG.EXPLORER:
       return <EndpointExplorer />;
-    case 'txbuilder':
+    case SLUG.TXBUILDER:
       return <TransactionBuilder />;
-    case 'txsigner':
+    case SLUG.TXSIGNER:
       return <TransactionSigner />;
     default:
       return <SimplePage><p>Page "{slug}" not found</p></SimplePage>
