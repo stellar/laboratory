@@ -12,6 +12,7 @@ import OptionsTablePair from './OptionsTable/Pair';
 import SecretKeyPicker from './FormComponents/SecretKeyPicker';
 import MultiPicker from './FormComponents/MultiPicker';
 import {txPostLink} from '../utilities/linkBuilder';
+import HelpMark from './HelpMark';
 
 class TransactionSigner extends React.Component {
   render() {
@@ -81,7 +82,7 @@ class TransactionSigner extends React.Component {
           </div>
           <div className="so-chunk">
             <div className="TxSignerKeys TransactionSigner__keys">
-              <p className="TxSignerKeys__title">Signatures</p>
+              <p className="TxSignerKeys__title">Signatures <HelpMark href="https://www.stellar.org/developers/learn/concepts/multi-sig.html" /></p>
               <div className="optionsTable">
                 <OptionsTablePair label="Add Signer">
                   <MultiPicker

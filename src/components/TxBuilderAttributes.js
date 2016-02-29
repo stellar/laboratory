@@ -1,5 +1,6 @@
 import React from 'react';
 import OptionsTablePair from './OptionsTable/Pair';
+import HelpMark from './HelpMark';
 import PubKeyPicker from './FormComponents/PubKeyPicker';
 import SequencePicker from './FormComponents/SequencePicker';
 import StroopsPicker from './FormComponents/StroopsPicker';
@@ -10,15 +11,16 @@ import {fetchSequence} from '../actions/transactionBuilder';
 
 export default function TxBuilderAttributes(props) {
   let {onUpdate, attributes} = props;
+
   return <div className="TransactionAttributes">
     <div className="TransactionOp__config TransactionOpConfig optionsTable">
-      <OptionsTablePair label="Source Account">
+      <OptionsTablePair label={<span>Source Account <HelpMark href="https://www.stellar.org/developers/learn/concepts/accounts.html" /></span>}>
         <PubKeyPicker
           value={attributes['sourceAccount']}
           onUpdate={(value) => {onUpdate('sourceAccount', value)}}
           />
       </OptionsTablePair>
-      <OptionsTablePair label="Transaction Sequence Number">
+      <OptionsTablePair label={<span>Transaction Sequence Number <HelpMark href="https://www.stellar.org/developers/learn/concepts/transactions.html#sequence-number" /></span>}>
         <SequencePicker
           value={attributes['sequence']}
           onUpdate={(value) => {onUpdate('sequence', value)}}
@@ -26,14 +28,14 @@ export default function TxBuilderAttributes(props) {
         <p className="optionsTable__pair__content__note">The transaction sequence number is usually one higher than current account sequence number.</p>
         <SequenceFetcher />
       </OptionsTablePair>
-      <OptionsTablePair label="Base Fee" optional={true}>
+      <OptionsTablePair optional={true} label={<span>Base Fee <HelpMark href="https://www.stellar.org/developers/learn/concepts/transactions.html#memo" /></span>}>
         <StroopsPicker
           value={attributes['fee']}
           onUpdate={(value) => {onUpdate('fee', value)}}
           />
-        <p className="optionsTable__pair__content__note">The <a href="https://www.stellar.org/developers/learn/concepts/fees.html">network base fee</a> is currently set to 100 stroops (0.00001 XLM). Transaction fee is equal to base fee times number of operations in this transaction.</p>
+        <p className="optionsTable__pair__content__note">The <a href="https://www.stellar.org/developers/learn/concepts/fees.html">network base fee</a> is currently set to 100 stroops (0.00001 lumens). Transaction fee is equal to base fee times number of operations in this transaction.</p>
       </OptionsTablePair>
-      <OptionsTablePair label="Memo" optional={true}>
+      <OptionsTablePair optional={true} label={<span>Memo <HelpMark href="https://www.stellar.org/developers/learn/concepts/transactions.html#memo" /></span>}>
         <MemoPicker
           value={{
             type: attributes.memoType,

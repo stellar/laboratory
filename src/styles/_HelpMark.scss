@@ -1,0 +1,15 @@
+.HelpMark {
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+  vertical-align: middle;
+}
+.HelpMark__circle {
+  fill: $s-color-neutral6;
+}
+.HelpMark__questionMark {
+  fill: $s-color-neutral9;
+}
+.HelpMark:hover .HelpMark__circle {
+  fill: $s-color-primary4;
+}

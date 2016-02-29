@@ -11,6 +11,7 @@ import {
 } from '../actions/transactionBuilder';
 import OperationTypePicker from './FormComponents/OperationTypePicker';
 import OptionsTablePair from './OptionsTable/Pair';
+import HelpMark from './HelpMark';
 
 class OperationsBuilder extends React.Component {
   constructor() {
@@ -70,7 +71,7 @@ let operation = (ops, index, dispatch) => {
       {removeLink}
     </div>
     <div className="TransactionOp__config TransactionOpConfig optionsTable">
-      <OptionsTablePair label="Operation Type">
+      <OptionsTablePair label={<span>Operation Type <HelpMark href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html" /></span>}>
         <OperationTypePicker value={op.name} onUpdate={(value) => {
           dispatch(updateOperationType(op.id, value))
         }} />
