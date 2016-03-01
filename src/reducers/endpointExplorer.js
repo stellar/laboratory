@@ -8,6 +8,7 @@ import {
 } from "../actions/endpointExplorer";
 import {LOAD_STATE} from '../actions/routing';
 import {getEndpoint, getTemplate} from '../data/endpoints';
+import SLUG from '../constants/slug';
 
 const endpointExplorer = combineReducers({
   currentResource,
@@ -25,7 +26,7 @@ export default endpointExplorer
 function currentResource(state="", action) {
   switch (action.type) {
     case LOAD_STATE:
-      if (action.slug === 'explorer' && action.payload.resource) {
+      if (action.slug === SLUG.EXPLORER && action.payload.resource) {
         return action.payload.resource;
       }
       break;
@@ -38,7 +39,7 @@ function currentResource(state="", action) {
 function currentEndpoint(state="", action) {
   switch (action.type) {
   case LOAD_STATE:
-    if (action.slug === 'explorer' && action.payload.endpoint) {
+    if (action.slug === SLUG.EXPLORER && action.payload.endpoint) {
       return action.payload.endpoint;
     }
     break;
@@ -64,7 +65,7 @@ function pendingRequestTemplate(state="", action) {
 function pendingRequestValues(state={}, action) {
   switch (action.type) {
   case LOAD_STATE:
-  if (action.slug === 'explorer' && action.payload.values) {
+  if (action.slug === SLUG.EXPLORER && action.payload.values) {
     return action.payload.values;
   }
   break;

@@ -4,9 +4,24 @@
 @import '~solar-css/styles/index';
 @import '~solar-stellarorg/styles/index';
 
-// Paired with react components
+// General css modules (these go first to allow for low specificity overwriting for page components)
+@import 'optionsTable';
+@import 'simpleTable';
+@import 'pageIntro';
+
+@import 'picker';
+  @import 'ManualMultiPicker';
+
+// General React components
+@import 'CodeBlock';
+@import 'EasySelect';
+@import 'HelpMark';
+
+// Specific React components
 @import 'LaboratoryChrome';
   @import 'NetworkPicker';
+
+@import 'Introduction';
 
 @import 'EndpointExplorer';
   @import 'EndpointPicker';
@@ -24,17 +39,5 @@
   @import 'TxSignerResult';
 
 @import 'TransactionImporter';
-
-@import 'CodeBlock';
-@import 'EasySelect';
-@import 'HelpMark';
-
-// General css modules not tied to a React component. Should be lowercase
-@import 'optionsTable';
-@import 'simpleTable';
-@import 'pageIntro';
-
-@import 'picker';
-  @import 'ManualMultiPicker';
 
 // Unorganized stuffs below:

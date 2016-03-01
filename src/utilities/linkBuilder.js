@@ -1,8 +1,9 @@
 import {serializeStore} from './storeSerializer';
 import url from 'url';
+import SLUG from '../constants/slug';
 
 export function txSignerLink(xdr) {
-  let query = serializeStore('txsigner', {
+  let query = serializeStore(SLUG.TXSIGNER, {
     transactionSigner: {
       tx: {
         xdr: xdr,
@@ -10,11 +11,11 @@ export function txSignerLink(xdr) {
     },
   });
 
-  return hashBuilder('txsigner', query);
+  return hashBuilder(SLUG.TXSIGNER, query);
 }
 
 export function txPostLink(xdr) {
-  let query = serializeStore('explorer', {
+  let query = serializeStore(SLUG.EXPLORER, {
     endpointExplorer: {
       currentEndpoint: 'create',
       currentResource: 'transactions',
@@ -26,7 +27,7 @@ export function txPostLink(xdr) {
     },
   });
 
-  return hashBuilder('explorer', query);
+  return hashBuilder(SLUG.EXPLORER, query);
 }
 
 
