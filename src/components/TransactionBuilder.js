@@ -24,13 +24,21 @@ class TransactionBuilder extends React.Component {
     return <div className="TransactionBuilder">
       <div className="so-back">
         <div className="so-chunk">
+          <div className="pageIntro">
+            <p>The transaction builder lets you build a new Stellar transaction.</p>
+            <p>
+              This transaction will start out with no signatures. To make it into the ledger, this transaction will then need to be signed and submitted to the network.
+            </p>
+          </div>
           <TxBuilderAttributes
             attributes={attributes}
             onUpdate={onAttributeUpdate.bind(this, dispatch)} />
           <OperationsBuilder />
-          <button className="TransactionOperations__add s-button" onClick={() => dispatch(addOperation())}>
-            Add Operation
-          </button>
+          <div className="TransactionOperations__add">
+            <button className="TransactionOperations__add__button s-button" onClick={() => dispatch(addOperation())}>
+              + Add Operation
+            </button>
+          </div>
         </div>
       </div>
       <div className="so-back TransactionBuilder__result">

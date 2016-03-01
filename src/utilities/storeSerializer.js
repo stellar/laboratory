@@ -31,6 +31,16 @@ export function serializeStore(slug, state) {
       if (state.transactionBuilder.operations.length > 1 || !firstOpEmpty) {
         txbuilderResult.operations = state.transactionBuilder.operations;
       }
+
+      if (_.has(txbuilderResult, 'attributes.memoType') &&
+          txbuilderResult.attributes.memoType === 'MEMO_NONE') {
+        delete txbuilderResult.attributes.memoType;
+      }
+
+      if (_.size(txbuilderResult.attributes) === 0) {
+        delete txbuilderResult.attributes;
+      }
+
       if (_.size(txbuilderResult) === 0) {
         return {};
       }

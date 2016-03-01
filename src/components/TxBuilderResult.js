@@ -12,6 +12,7 @@ import {PubKeyPicker} from './FormComponents/PubKeyPicker';
 import {EasySelect} from './EasySelect';
 import Libify from '../utilities/Libify';
 import {txSignerLink} from '../utilities/linkBuilder';
+import clickToSelect from '../utilities/clickToSelect';
 
 export default class TxBuilderResult extends React.Component {
   render() {
@@ -30,29 +31,41 @@ export default class TxBuilderResult extends React.Component {
       validationErrors.push('Memo content is required if memo type is selected');
     }
 
-    let finalResult, errorTitle, signingLink;
+    let finalResult, errorTitleText, successTitleText, signingInstructions, signingLink;
     if (validationErrors.length > 0) {
-      errorTitle = 'Form validation errors:';
+      errorTitleText = 'Form validation errors:';
       finalResult = formatErrorList(validationErrors);
     } else {
       let transactionBuild = buildTransaction(attributes, operations);
 
       if (transactionBuild.errors.length > 0) {
-        errorTitle = `Transaction building errors:`;
+        errorTitleText = `Transaction building errors:`;
         finalResult = formatErrorList(transactionBuild.errors);
       } else {
-        errorTitle = `Transaction Envelope XDR:`;
+        successTitleText = `Success! Transaction Envelope XDR:`;
         finalResult = transactionBuild.xdr;
+        signingInstructions = <p className="TransactionBuilderResult__instructions">
+          In order for the transaction to make it into the ledger, a transaction must be successfully
+          signed and submitted to the network. The laboratory provides
+          the <a href="#txsigner">Transaction Signer</a> to for signing a
+          transaction, and the <a href="#explorer?resource=transactions&endpoint=create">Post Transaction endpoint</a> for
+          submitting one to the network.
+        </p>;
         signingLink = <a className="s-button TransactionBuilderResult__sign"
-          href={txSignerLink(transactionBuild.xdr)}>Sign this transaction</a>
+          href={txSignerLink(transactionBuild.xdr)}>Sign this transaction in the Transaction Signer</a>
       }
     }
 
-    return <div className="TxBuilderResult">
-      <h3>{errorTitle}</h3>
-      <EasySelect plain={true}><pre className="TransactionXDR so-code TransactionBuilderResult__code">
+    let errorTitle = errorTitleText ? <h3 className="TransactionBuilderResult__error">{errorTitleText}</h3> : null
+    let successTitle = successTitleText ? <h3 className="TransactionBuilderResult__success">{successTitleText}</h3> : null
+
+    return <div className="TransactionBuilderResult">
+      {successTitle}
+      {errorTitle}
+      <pre className="TransactionXDR so-code TransactionBuilderResult__code" onClick={clickToSelect}>
         <code>{finalResult}</code>
-      </pre></EasySelect>
+      </pre>
+      {signingInstructions}
       {signingLink}
     </div>
   }

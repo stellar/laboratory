@@ -13,6 +13,7 @@ import SecretKeyPicker from './FormComponents/SecretKeyPicker';
 import MultiPicker from './FormComponents/MultiPicker';
 import {txPostLink} from '../utilities/linkBuilder';
 import HelpMark from './HelpMark';
+import clickToSelect from '../utilities/clickToSelect';
 
 class TransactionSigner extends React.Component {
   render() {
@@ -42,22 +43,13 @@ class TransactionSigner extends React.Component {
         'Number of existing signatures': transaction.signatures.length,
       };
 
-      let codeResult, postLink;
+      let codeResult, postLink, resultTitle, postInstructions;
 
       if (!_.isUndefined(result.xdr)) {
-        codeResult = <EasySelect plain={true}>
-          <pre className="TxSignerResult__xdr so-code so-code__wrap"><code>{result.xdr}</code></pre>
-        </EasySelect>;
-
-        let postLinkProps = {
-          className: 's-button TxSignerResult__submit',
-        };
-        if (result.totalSignatures === 0) {
-          postLinkProps.className += ' is-disabled';
-        } else {
-          postLinkProps.href = txPostLink(result.xdr);
-        }
-        postLink = <a {...postLinkProps}>Submit this transaction to the network</a>;
+        codeResult = <pre className="TxSignerResult__xdr so-code so-code__wrap" onClick={clickToSelect}><code>{result.xdr}</code></pre>;
+        postLink = <a className="s-button TxSignerResult__submit" href={txPostLink(result.xdr)}>Submit this transaction using the Post Transaction endpoint</a>;
+        resultTitle = <h3 className="TxSignerResult__title">Transaction signed!</h3>;
+        postInstructions = <p className="TxSignerResult__instructions">Now that this transaction is signed, you can submit it to the network. Horizon provides an endpoint called Post Transaction that will relay your transaction to the network and inform you of the result.</p>
       }
 
       content = <div>
@@ -97,14 +89,29 @@ class TransactionSigner extends React.Component {
         </div>
         <div className="so-back TxSignerResult TransactionSigner__result">
           <div className="so-chunk">
+            {resultTitle}
             <p className="TxSignerResult__summary">{result.message}</p>
             {codeResult}
+            {postInstructions}
             {postLink}
           </div>
         </div>
       </div>
     }
     return <div className="TransactionSigner">
+      <div className="so-back">
+        <div className="so-chunk">
+          <div className="pageIntro">
+            <p>
+              The transaction signer lets you add signatures to a Stellar transaction. Signatures are used in the network to prove that the account is authorized to perform the operations in the transaction.
+            </p>
+            <p>
+              For simple transactions, you only need one signature from the correct account. Some advanced signatures may require more than one signature if there are multiple source accounts or signing keys.
+            </p>
+            <p><a href="https://www.stellar.org/developers/learn/concepts/multi-sig.html" target="_blank">Read more about signatures on the developer's site.</a></p>
+          </div>
+        </div>
+      </div>
       {content}
     </div>
   }
@@ -131,7 +138,7 @@ function isValidSecret(key) {
 function signTx(xdr, signers, useNetworkFunc) {
   Network[useNetworkFunc]();
 
-  let validSigners = [];
+  let validSecretKeys = [];
   for (let i = 0; i < signers.length; i++) {
     let signer = signers[i];
     if (signer !== null && !_.isUndefined(signer) && signer !== '') {
@@ -140,19 +147,25 @@ function signTx(xdr, signers, useNetworkFunc) {
           message: 'Valid secret keys are required to sign transaction'
         }
       }
-      validSigners.push(signer);
+      validSecretKeys.push(signer);
     }
   }
 
+
   let newTx = new Transaction(xdr);
   let existingSigs = newTx.signatures.length;
-  _.each(validSigners, (signer) => {
+  _.each(validSecretKeys, (signer) => {
     newTx.sign(Keypair.fromSeed(signer));
   })
 
+  if (validSecretKeys.length === 0) {
+    return {
+      message: 'Enter a secret key to sign message'
+    }
+  }
+
   return {
     xdr: newTx.toEnvelope().toXDR('base64'),
-    message: `${validSigners.length} signature(s) added; ${existingSigs + validSigners.length} signature(s) total`,
-    totalSignatures: validSigners.length,
+    message: `${validSecretKeys.length} signature(s) added; ${existingSigs + validSecretKeys.length} signature(s) total`,
   };
 }

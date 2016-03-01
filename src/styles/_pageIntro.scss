@@ -1,0 +1,11 @@
+.pageIntro {
+  margin-top: 2em;
+  margin-bottom: 2em;
+  padding: 1em;
+
+  background: $s-color-neutral8;
+  border-radius: $s-var-radius;
+}
+  .pageIntro :last-child {
+    margin-bottom: 0;
+  }

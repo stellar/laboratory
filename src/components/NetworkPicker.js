@@ -35,7 +35,7 @@ const NetworkToggle = (props) => {
       onChange={onToggle}
       checked={selected}
       value={name} />
-    <span className="s-button s-button__light NetworkPicker__button">{name}</span>
+    <span className="s-button s-button--light NetworkPicker__button">{name}</span>
   </label>
 }
 

@@ -13,13 +13,10 @@ export function updateAttributes(newAttributes) {
 // Operations
 export const ADD_OPERATION = 'ADD_OPERATION';
 export let addOperation = (() => {
-  let counter = 0;
-
   return () => {
-    counter++;
     return {
       type: ADD_OPERATION,
-      opId: counter
+      opId: Date.now(),
     };
   }
 })();
