@@ -19,7 +19,7 @@ function XdrViewer(props) {
   let treeView, errorMessage;
   if (state.input === '') {
     errorMessage = <p>Enter a base-64 encoded xdr blob to decode.</p>;
-  } else if (state.type === '' || !xdrTypeIsValid) {
+  } else if (!xdrTypeIsValid) {
     errorMessage = <p>Please select a xdr type</p>;
   } else {
     try {
