@@ -28,7 +28,7 @@ function LaboratoryChrome(props) {
           <span className="so-logo">
             <a href="https://www.stellar.org/" className="so-logo__main">Stellar</a>
             <span className="so-logo__separator"> </span>
-            <a href="https://www.stellar.org/laboratory/" className="so-logo__subSite">laboratory</a>
+            <a href="#" className="so-logo__subSite">laboratory</a>
           </span>
           <NetworkPicker />
         </div>
