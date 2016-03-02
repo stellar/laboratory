@@ -1,9 +1,9 @@
-.TransactionImporter {
+.xdrInput {
   margin-bottom: 2em;
 }
-  .TransactionImporter__input {
+  .xdrInput__input {
   }
-    .TransactionImporter__input__textarea {
+    .xdrInput__input__textarea {
       display: block;
       min-width: 4em;
       width: 36em;
@@ -12,17 +12,17 @@
       margin-bottom: 0;
     }
 
-  .TransactionImporter__message {
+  .xdrInput__message {
     @include S-flex-row;
     align-items: center;
     min-height: 2em;
     padding: 0.25em 0.25em;
   }
-    .TransactionImporter__message__alert {
+    .xdrInput__message__alert {
       color: $s-color-alert;
       margin-bottom: 0;
     }
-    .TransactionImporter__message__success {
+    .xdrInput__message__success {
       color: $s-color-success;
       margin-bottom: 0;
     }

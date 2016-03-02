@@ -1,19 +1,14 @@
 import {Transaction} from 'stellar-sdk';
+import validateBase64 from './validateBase64';
 
 export default function validateTxXdr(input) {
   input = _.trim(input);
 
-  if (input === '') {
-    return {
-      result: 'empty',
-    };
+  let base64Validation = validateBase64(input);
+  if (base64Validation.result !== 'success') {
+    return base64Validation;
   }
-  if (input.match(/^[-A-Za-z0-9+\/=]*$/) === null) {
-    return {
-      result: 'error',
-      message: 'The input is not valid base64 (a-zA-Z0-9+/=).'
-    };
-  }
+
   try {
     new Transaction(input);
     return {

@@ -8,11 +8,13 @@
 @import 'optionsTable';
 @import 'simpleTable';
 @import 'pageIntro';
+@import 'xdrInput';
 
 @import 'picker';
   @import 'ManualMultiPicker';
 
 // General React components
+@import 'TreeView';
 @import 'CodeBlock';
 @import 'EasySelect';
 @import 'HelpMark';
@@ -38,6 +40,6 @@
   @import 'TxSignerKeys';
   @import 'TxSignerResult';
 
-@import 'TransactionImporter';
+@import 'XdrViewer';
 
 // Unorganized stuffs below:

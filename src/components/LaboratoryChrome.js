@@ -6,6 +6,7 @@ import Introduction from './Introduction';
 import EndpointExplorer from './EndpointExplorer';
 import TransactionBuilder from './TransactionBuilder';
 import TransactionSigner from './TransactionSigner';
+import XdrViewer from './XdrViewer';
 import {RouterListener} from '../utilities/simpleRouter';
 import SLUG from '../constants/slug';
 
@@ -41,6 +42,7 @@ function LaboratoryChrome(props) {
           {tabItem('Endpoint Explorer', SLUG.EXPLORER)}
           {tabItem('Transaction Builder', SLUG.TXBUILDER)}
           {tabItem('Transaction Signer', SLUG.TXSIGNER)}
+          {tabItem('XDR Viewer', SLUG.XDRVIEWER)}
         </nav>
       </div>
     </div>
@@ -60,6 +62,8 @@ function getContent(slug) {
       return <TransactionBuilder />;
     case SLUG.TXSIGNER:
       return <TransactionSigner />;
+    case 'xdr-viewer':
+      return <XdrViewer />;
     default:
       return <SimplePage><p>Page "{slug}" not found</p></SimplePage>
   }

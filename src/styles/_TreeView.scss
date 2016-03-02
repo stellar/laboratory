@@ -1,0 +1,18 @@
+.TreeView {
+
+}
+  .TreeView__child {
+    border-left: 1em solid $s-color-primary9;
+  }
+  .TreeView__child:hover {
+    border-left-color: $s-color-primary7;
+  }
+  .TreeView__row {
+    padding: 0.15em 0.5em;
+  }
+  .TreeView__row:hover {
+    background: $s-color-neutral8;
+  }
+    .TreeView__row span {
+      word-break: break-all
+    }
