@@ -16,7 +16,6 @@ const endpointExplorer = combineReducers({
   pendingRequest: combineReducers({
     template: pendingRequestTemplate,
     values: pendingRequestValues,
-    props: identity({}),
   }),
   currentRequest
 });
@@ -47,10 +46,6 @@ function currentEndpoint(state="", action) {
     return action.endpoint;
   }
   return state;
-}
-
-function identity(initial) {
-  return (state=initial, action) => state;
 }
 
 function pendingRequestTemplate(state="", action) {
