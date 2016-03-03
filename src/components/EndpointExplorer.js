@@ -90,6 +90,10 @@ function buildRequest(baseUrl, endpoint, pendingRequest) {
     request.formData = querystring.stringify(postData);
   }
 
+  if (pendingRequest.values.streaming) {
+    request.streaming = true;
+  }
+
   return request;
 }
 

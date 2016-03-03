@@ -92,10 +92,10 @@ function results(state={id: null, available: false, body: []}, action) {
   }
 
   if (action.type === ERROR_REQUEST) {
-    let errorContent = action.error.status === 0 ?
+    let errorContent = action.errorStatus === 0 ?
       'Unable to reach Horizon server.'
       :
-      JSON.stringify(action.error.data, null, 2);
+      JSON.stringify(action.body, null, 2);
 
     return Object.assign({}, state, {
       isError: true,
@@ -105,7 +105,7 @@ function results(state={id: null, available: false, body: []}, action) {
 
   if (action.type === UPDATE_REQUEST) {
     return Object.assign({}, state, {
-      body: [].concat(state.body, JSON.stringify(action.payload.data, null, 2)),
+      body: [].concat(state.body, JSON.stringify(action.body, null, 2)),
     });
   }
 

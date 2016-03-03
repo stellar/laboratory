@@ -2,7 +2,6 @@ import React from 'react';
 import {any} from 'lodash'
 import {CodeBlock} from './CodeBlock';
 
-
 export class EndpointResult extends React.Component {
   render() {
     let {id, available, isError, body} = this.props;
@@ -32,7 +31,7 @@ function LoadingPane(props) {
 function ErrorPane(body) {
   return <div className="EndpointResult">
     <div className='EndpointResult__error'>
-      <CodeBlock code={body[0]} language="json" />
+      {BodyContent(body)}
     </div>
   </div>;
 }
@@ -44,8 +43,14 @@ function ResultPane(body) {
         <button className="EndpointResult__tabs__tab is-current">JSON Response</button>
       </div>
       <div className='EndpointResult__content'>
-        <CodeBlock code={body[0]} language="json" />
+        {BodyContent(body)}
       </div>
     </div>
   </div>;
+}
+
+function BodyContent(body) {
+  return _.map(body, (bodyEntry, index) => {
+    return <CodeBlock key={index} code={body[0]} language="json" />
+  });
 }

@@ -1,4 +1,5 @@
 import axios from 'axios';
+var EventSource = (typeof window === 'undefined') ? require('eventsource') : window.EventSource;
 
 export const CHOOSE_ENDPOINT = "CHOOSE_ENDPOINT";
 export function chooseEndpoint(resource, endpoint) {
@@ -37,19 +38,30 @@ export function submitRequest(request) {
       id,
     });
 
-    httpRequest(request)
-      .then(r => dispatch({
-        type: UPDATE_REQUEST,
-        id,
-        payload: r,
-      }))
-      .catch(e => {
+    if (request.streaming) {
+      streamingRequest(request.url, (message) => {
         dispatch({
-          type: ERROR_REQUEST,
+          type: UPDATE_REQUEST,
           id,
-          error: e,
+          body: JSON.parse(message.data),
         })
-      });
+      })
+    } else {
+      httpRequest(request)
+        .then(r => dispatch({
+          type: UPDATE_REQUEST,
+          id,
+          body: r.data,
+        }))
+        .catch(e => {
+          dispatch({
+            type: ERROR_REQUEST,
+            id,
+            errorStatus: e.status,
+            body: e.data,
+          })
+        });
+    }
   }
 }
 
@@ -61,4 +73,9 @@ function httpRequest(request) {
     return axios.post(request.url, request.formData);
   }
   return axios.get(request.url);
+}
+
+function streamingRequest(url, onmessage) {
+  var es = new EventSource(url);
+  es.onmessage = onmessage;
 }
