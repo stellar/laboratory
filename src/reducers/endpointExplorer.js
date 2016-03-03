@@ -17,7 +17,7 @@ const endpointExplorer = combineReducers({
     template: pendingRequestTemplate,
     values: pendingRequestValues,
   }),
-  currentRequest
+  results
 });
 
 export default endpointExplorer
@@ -74,7 +74,7 @@ function pendingRequestValues(state={}, action) {
   return state;
 }
 
-function currentRequest(state={isLoading: false}, action) {
+function results(state={isLoading: false}, action) {
   switch (action.type) {
   case START_REQUEST:
     return Object.assign({}, state, {isLoading: true});
