@@ -3,7 +3,8 @@ import {
   CHOOSE_ENDPOINT,
   CHANGE_PENDING_REQUEST_PROPS,
   START_REQUEST,
-  FINISH_REQUEST,
+  ERROR_REQUEST,
+  UPDATE_REQUEST,
   UPDATE_VALUE,
 } from "../actions/endpointExplorer";
 import {LOAD_STATE} from '../actions/routing';
@@ -74,15 +75,39 @@ function pendingRequestValues(state={}, action) {
   return state;
 }
 
-function results(state={isLoading: false}, action) {
-  switch (action.type) {
-  case START_REQUEST:
-    return Object.assign({}, state, {isLoading: true});
-  case FINISH_REQUEST:
-    let {error, payload} = action;
+function results(state={id: null, available: false, body: []}, action) {
+  if (action.type === START_REQUEST) {
+    return Object.assign({}, state, {
+      available: true,
+      id: action.id,
+      isError: false,
+      body: [],
+    });
+  }
 
-    return Object.assign({}, state, {isLoading: false, response: payload, error});
-  default:
+  if (action.id !== state.id) {
+    // This action has expired as we've moved on to a new request
+    // Or, this is likely an irrelevant action
     return state;
   }
+
+  if (action.type === ERROR_REQUEST) {
+    let errorContent = action.error.status === 0 ?
+      'Unable to reach Horizon server.'
+      :
+      JSON.stringify(action.error.data, null, 2);
+
+    return Object.assign({}, state, {
+      isError: true,
+      body: [errorContent],
+    });
+  }
+
+  if (action.type === UPDATE_REQUEST) {
+    return Object.assign({}, state, {
+      body: [].concat(state.body, JSON.stringify(action.payload.data, null, 2)),
+    });
+  }
+
+  return state;
 }

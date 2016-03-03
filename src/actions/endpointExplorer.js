@@ -26,13 +26,30 @@ export function updateValue(param, value) {
 }
 
 export const START_REQUEST = "START_REQUEST"
-export const FINISH_REQUEST = "FINISH_REQUEST"
+export const ERROR_REQUEST = "ERROR_REQUEST"
+export const UPDATE_REQUEST = "UPDATE_REQUEST"
+let resultIdNonce = 0;
 export function submitRequest(request) {
   return dispatch => {
-    dispatch({type: "START_REQUEST"});
+    let id = resultIdNonce++;
+    dispatch({
+      type: START_REQUEST,
+      id,
+    });
+
     httpRequest(request)
-      .then(r => dispatch({type: "FINISH_REQUEST", payload: r}))
-      .catch(e => dispatch({type: "FINISH_REQUEST", error: e}));
+      .then(r => dispatch({
+        type: UPDATE_REQUEST,
+        id,
+        payload: r,
+      }))
+      .catch(e => {
+        dispatch({
+          type: ERROR_REQUEST,
+          id,
+          error: e,
+        })
+      });
   }
 }
 
