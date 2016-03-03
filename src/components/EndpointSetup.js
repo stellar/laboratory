@@ -7,6 +7,14 @@ import {EasySelect} from './EasySelect';
 export function EndpointSetup(props) {
   let {onSubmit, onUpdate, request, params, endpoint, values} = props;
 
+  let streamingRow;
+  if (!endpoint.disableStreaming) {
+    streamingRow = [
+      <hr key={0} className="optionsTable__separator" />,
+      <StreamingRow key={1} onUpdate={onUpdate} checked={values.streaming}/>
+    ];
+  }
+
   return <div className="so-chunk">
     <p className="EndpointSetup__title">{endpoint.label} <HelpMark href={endpoint.helpUrl}/></p>
     <div className="optionsTable">
@@ -14,8 +22,7 @@ export function EndpointSetup(props) {
         onUpdate={onUpdate}
         values={values}
         />
-      <hr className="optionsTable__separator" />
-      <StreamingRow onUpdate={onUpdate} checked={values.streaming}/>
+      {streamingRow}
       <hr className="optionsTable__separator" />
       <UrlRow url={request.url} method={request.method} />
       <PostDataRow formData={request.formData} />

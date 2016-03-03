@@ -300,6 +300,7 @@ export const endpointsMap = {
         'label': 'Post Transaction',
         'helpUrl': 'https://www.stellar.org/developers/horizon/reference/transactions-create.html',
         'method': 'POST',
+        'disableStreaming': true,
         'path': {
           template: '/transactions',
         },
