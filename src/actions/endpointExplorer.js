@@ -30,8 +30,15 @@ export const START_REQUEST = "START_REQUEST"
 export const ERROR_REQUEST = "ERROR_REQUEST"
 export const UPDATE_REQUEST = "UPDATE_REQUEST"
 let resultIdNonce = 0;
+let openStream;
 export function submitRequest(request) {
   return dispatch => {
+    // Close old stream if it exists
+    if (typeof openStream === 'object') {
+      openStream.close();
+      openStream = null;
+    }
+
     let id = resultIdNonce++;
     dispatch({
       type: START_REQUEST,
@@ -39,7 +46,7 @@ export function submitRequest(request) {
     });
 
     if (request.streaming) {
-      streamingRequest(request.url, (message) => {
+      openStream = streamingRequest(request.url, (message) => {
         dispatch({
           type: UPDATE_REQUEST,
           id,
@@ -78,4 +85,5 @@ function httpRequest(request) {
 function streamingRequest(url, onmessage) {
   var es = new EventSource(url);
   es.onmessage = onmessage;
+  return es;
 }
