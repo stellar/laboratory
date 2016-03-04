@@ -51,6 +51,6 @@ function ResultPane(body) {
 
 function BodyContent(body) {
   return _.map(body, (bodyEntry, index) => {
-    return <CodeBlock key={index} code={body[0]} language="json" />
+    return <CodeBlock key={index} code={body[index]} language="json" />
   });
 }
