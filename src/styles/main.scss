@@ -4,6 +4,9 @@
 @import '~solar-css/styles/index';
 @import '~solar-stellarorg/styles/index';
 
+// External libraries
+@import 'prism';
+
 // General css modules (these go first to allow for low specificity overwriting for page components)
 @import 'optionsTable';
 @import 'simpleTable';
