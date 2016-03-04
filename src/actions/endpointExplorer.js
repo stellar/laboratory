@@ -34,7 +34,7 @@ let openStream;
 export function submitRequest(request) {
   return dispatch => {
     // Close old stream if it exists
-    if (typeof openStream === 'object') {
+    if (typeof _.get(openStream, 'close') === 'function') {
       openStream.close();
       openStream = null;
     }
