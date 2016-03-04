@@ -12,6 +12,7 @@
     "browser-sync": "^2.9.11",
     "classnames": "^2.2.0",
     "css-loader": "^0.18.0",
+    "eventsource": "^0.2.1",
     "extract-text-webpack-plugin": "^0.8.2",
     "file-loader": "^0.8.4",
     "gulp": "^3.9.0",

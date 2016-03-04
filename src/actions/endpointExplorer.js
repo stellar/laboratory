@@ -1,4 +1,5 @@
 import axios from 'axios';
+var EventSource = (typeof window === 'undefined') ? require('eventsource') : window.EventSource;
 
 export const CHOOSE_ENDPOINT = "CHOOSE_ENDPOINT";
 export function chooseEndpoint(resource, endpoint) {
@@ -26,13 +27,48 @@ export function updateValue(param, value) {
 }
 
 export const START_REQUEST = "START_REQUEST"
-export const FINISH_REQUEST = "FINISH_REQUEST"
+export const ERROR_REQUEST = "ERROR_REQUEST"
+export const UPDATE_REQUEST = "UPDATE_REQUEST"
+let resultIdNonce = 0;
+let openStream;
 export function submitRequest(request) {
   return dispatch => {
-    dispatch({type: "START_REQUEST"});
-    httpRequest(request)
-      .then(r => dispatch({type: "FINISH_REQUEST", payload: r}))
-      .catch(e => dispatch({type: "FINISH_REQUEST", error: e}));
+    // Close old stream if it exists
+    if (typeof openStream === 'object') {
+      openStream.close();
+      openStream = null;
+    }
+
+    let id = resultIdNonce++;
+    dispatch({
+      type: START_REQUEST,
+      id,
+    });
+
+    if (request.streaming) {
+      openStream = streamingRequest(request.url, (message) => {
+        dispatch({
+          type: UPDATE_REQUEST,
+          id,
+          body: JSON.parse(message.data),
+        })
+      })
+    } else {
+      httpRequest(request)
+        .then(r => dispatch({
+          type: UPDATE_REQUEST,
+          id,
+          body: r.data,
+        }))
+        .catch(e => {
+          dispatch({
+            type: ERROR_REQUEST,
+            id,
+            errorStatus: e.status,
+            body: e.data,
+          })
+        });
+    }
   }
 }
 
@@ -44,4 +80,10 @@ function httpRequest(request) {
     return axios.post(request.url, request.formData);
   }
   return axios.get(request.url);
+}
+
+function streamingRequest(url, onmessage) {
+  var es = new EventSource(url);
+  es.onmessage = onmessage;
+  return es;
 }

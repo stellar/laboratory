@@ -14,7 +14,7 @@ class EndpointExplorer extends React.Component {
     let {
       currentResource,
       currentEndpoint,
-      currentRequest,
+      results,
       pendingRequest,
     } = this.props.state;
 
@@ -53,7 +53,7 @@ class EndpointExplorer extends React.Component {
           </div>
 
           <div className="EndpointExplorer__result">
-            <EndpointResult {...currentRequest} />
+            <EndpointResult {...results} />
           </div>
         </div>
       </div>
@@ -88,6 +88,10 @@ function buildRequest(baseUrl, endpoint, pendingRequest) {
     });
 
     request.formData = querystring.stringify(postData);
+  }
+
+  if (pendingRequest.values.streaming) {
+    request.streaming = true;
   }
 
   return request;
