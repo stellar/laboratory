@@ -1,21 +1,32 @@
 import _ from 'lodash';
-import {xdrViewer} from './linkBuilder';
+import {xdrViewer, singleAccount} from './linkBuilder';
 
 // Map of functions specific to JSON property keys that creates urls for a given
-// value
+// value.
+// A function can also return undefined if it doesn't deem the value worthy of
+// linking (for example: invalid account ID or keys that have ambiguous names)
+let accountIdGenerator = (value) => {
+  if (value.length === 56) {
+    return singleAccount(value);
+  }
+};
 let valueUrlGenerator = {
-  href: function(value) {
-    return value;
-  },
-  'envelope_xdr': function(value) {
+  'envelope_xdr': (value) => {
     return xdrViewer(value, 'TransactionEnvelope');
   },
-  'result_xdr': function(value) {
+  'result_xdr': (value) => {
     return xdrViewer(value, 'TransactionResult');
   },
-  'result_meta_xdr': function(value) {
+  'result_meta_xdr': (value) => {
     return xdrViewer(value, 'TransactionMeta');
   },
+  'id': accountIdGenerator,
+  'public_key': accountIdGenerator,
+  'account_id': accountIdGenerator,
+  'funder': accountIdGenerator,
+  'account': accountIdGenerator,
+  'source_account': accountIdGenerator,
+  'destination_account': accountIdGenerator,
 };
 
 // linkHighlightedJson annotates and adds relevant links to json code highlighted
@@ -50,7 +61,11 @@ function annotatePropertyToken(propertyToken) {
     return;
   }
 
-  nodeToAnchor(valueToken, urlGenerator(unQuote(valueToken.innerHTML)));
+  let href = urlGenerator(unQuote(valueToken.innerHTML));
+  if (typeof href === 'undefined') {
+    return;
+  }
+  nodeToAnchor(valueToken, href);
 }
 
 // Converts a span into an anchor. Only preserves className
