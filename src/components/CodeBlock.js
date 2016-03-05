@@ -1,5 +1,6 @@
 import React from 'react';
 import Prism from '../utilities/prism.js';
+import linkHighlightedJson from '../utilities/linkHighlightedJson';
 
 // @param {string} language - key for the code language. available languages can
 //   be discovered by doing a console log on `Prism.languages`. More can be added
@@ -14,7 +15,11 @@ export let CodeBlock = React.createClass({
     return nextProps.code !== this.props.code || nextProps.language !== this.props.language;
   },
   getHighlightedCode: function() {
-    return Prism.highlight(this.props.code, Prism.languages[this.props.language]);
+    let highlightedCode = Prism.highlight(this.props.code, Prism.languages[this.props.language]);
+    if (this.props.language === 'json') {
+      return linkHighlightedJson(highlightedCode);
+    }
+    return highlightedCode;
   },
   render: function() {
     let className = 'CodeBlock__code language-' + this.props.language;
