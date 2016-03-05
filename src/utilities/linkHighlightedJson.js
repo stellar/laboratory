@@ -1,10 +1,20 @@
 import _ from 'lodash';
+import {xdrViewer} from './linkBuilder';
 
 // Map of functions specific to JSON property keys that creates urls for a given
 // value
 let valueUrlGenerator = {
   href: function(value) {
     return value;
+  },
+  'envelope_xdr': function(value) {
+    return xdrViewer(value, 'TransactionEnvelope');
+  },
+  'result_xdr': function(value) {
+    return xdrViewer(value, 'TransactionResult');
+  },
+  'result_meta_xdr': function(value) {
+    return xdrViewer(value, 'TransactionMeta');
   },
 };
 

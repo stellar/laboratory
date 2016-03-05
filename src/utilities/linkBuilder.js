@@ -10,7 +10,6 @@ export function txSignerLink(xdr) {
       },
     },
   });
-
   return hashBuilder(SLUG.TXSIGNER, query);
 }
 
@@ -26,8 +25,17 @@ export function txPostLink(xdr) {
       },
     },
   });
-
   return hashBuilder(SLUG.EXPLORER, query);
+}
+
+export function xdrViewer(xdr, type) {
+  let query = serializeStore(SLUG.XDRVIEWER, {
+    xdrViewer: {
+      input: xdr,
+      type,
+    },
+  });
+  return hashBuilder(SLUG.XDRVIEWER, query);
 }
 
 
