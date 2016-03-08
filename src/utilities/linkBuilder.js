@@ -41,7 +41,10 @@ export function xdrViewer(xdr, type) {
   return hashBuilder(SLUG.XDRVIEWER, query);
 }
 
-// explorerEndpoint is pretty low level. Do not use directly
+// explorerEndpoint is a helper function that generates a link from values
+// mirroring the structure of the endpointExplorer reducer. We should try to
+// abstract this with other functions with simpler arguments to reduce
+// complexity and dependence on understanding the reducers.
 function explorerEndpoint(resource, endpoint, values) {
   let query = serializeStore(SLUG.EXPLORER, {
     endpointExplorer: {
