@@ -11,18 +11,6 @@ import {LOAD_STATE} from '../actions/routing';
 import {getEndpoint, getTemplate} from '../data/endpoints';
 import SLUG from '../constants/slug';
 
-const endpointExplorer = combineReducers({
-  currentResource,
-  currentEndpoint,
-  pendingRequest: combineReducers({
-    template: pendingRequestTemplate,
-    values: pendingRequestValues,
-  }),
-  results
-});
-
-export default endpointExplorer
-
 function currentResource(state="", action) {
   switch (action.type) {
     case LOAD_STATE:
@@ -75,7 +63,28 @@ function pendingRequestValues(state={}, action) {
   return state;
 }
 
-function results(state={id: null, available: false, body: []}, action) {
+const blankResults = {
+  id: null,
+  available: false,
+  body: [],
+};
+function results(state, action) {
+  if (typeof state === 'undefined') {
+    return blankResults;
+  }
+
+  // Clear the results when a change to the explorer happens
+  switch (action.type) {
+    case LOAD_STATE:
+      if (action.slug === SLUG.EXPLORER) {
+        return blankResults;
+      }
+      return state;
+    case CHOOSE_ENDPOINT:
+    case UPDATE_VALUE:
+      return blankResults;
+  }
+
   if (action.type === START_REQUEST) {
     return Object.assign({}, state, {
       available: true,
@@ -113,3 +122,15 @@ function results(state={id: null, available: false, body: []}, action) {
 
   return state;
 }
+
+const endpointExplorer = combineReducers({
+  currentResource,
+  currentEndpoint,
+  pendingRequest: combineReducers({
+    template: pendingRequestTemplate,
+    values: pendingRequestValues,
+  }),
+  results
+});
+
+export default endpointExplorer
