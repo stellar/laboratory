@@ -48,7 +48,7 @@ export function submitRequest(request) {
 
     if (request.streaming) {
       openStream = streamingRequest(request.url, (message) => {
-        // dispatchObj is not needed for streaming since there is no catch here
+        // dispatchInNewContext is not needed for streaming since there is no catch here
         dispatch({
           type: UPDATE_REQUEST,
           id,
