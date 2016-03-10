@@ -28,6 +28,7 @@ export default function jsonLinkHighlighter(code) {
 // then we will turn the value node into a link.
 // @param {HTMLElement} propertyToken - The token element of property type (assigned by prism)
 function annotatePropertyToken(propertyToken) {
+  validatePropertyTokenSiblings(propertyToken);
   let valueToken = propertyToken.nextElementSibling.nextElementSibling;
   if (valueToken.className.indexOf('string') === -1) {
     return;
@@ -42,6 +43,27 @@ function annotatePropertyToken(propertyToken) {
     return;
   }
   nodeToAnchor(valueToken, href);
+}
+
+// Validate the siblings so that the highlighter will fail fast if some unexpected
+// changes happen such as the prism output changing.
+let validSecondSiblingClasses = {
+  'token punctuation': true,
+  'token string': true,
+  'token boolean': true,
+  'token number': true,
+}
+function validatePropertyTokenSiblings(propertyToken) {
+  let firstSibling = propertyToken.nextElementSibling;
+  let secondSibling = firstSibling.nextElementSibling;
+
+  if (firstSibling.className !== 'token operator') {
+    throw new Error('Prism jsonLinkHighlighter: Unexpected first sibling to property token with class: ' + firstSibling.className);
+  }
+
+  if (!_.has(validSecondSiblingClasses, secondSibling.className)) {
+    throw new Error('Prism jsonLinkHighlighter: Unexpected second sibling to property token with class: ' + secondSibling.className);
+  }
 }
 
 // Converts a span into an anchor. Only preserves className
