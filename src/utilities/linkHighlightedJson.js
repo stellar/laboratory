@@ -26,6 +26,7 @@ let valueUrlGenerator = {
   'funder': accountIdGenerator,
   'account': accountIdGenerator,
   'source_account': accountIdGenerator,
+  'destination_account': accountIdGenerator,
 };
 
 // linkHighlightedJson annotates and adds relevant links to json code highlighted
