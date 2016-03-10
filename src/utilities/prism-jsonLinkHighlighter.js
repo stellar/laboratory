@@ -27,10 +27,15 @@ export default function jsonLinkHighlighter(code) {
 // corresponding property (only string type supported) and the content is valid,
 // then we will turn the value node into a link.
 // @param {HTMLElement} propertyToken - The token element of property type (assigned by prism)
+let highlightableTokenClasses = {
+  'token string': true,
+  'token boolean': true,
+  'token number': true,
+}
 function annotatePropertyToken(propertyToken) {
   validatePropertyTokenSiblings(propertyToken);
   let valueToken = propertyToken.nextElementSibling.nextElementSibling;
-  if (valueToken.className.indexOf('string') === -1) {
+  if (!_.has(highlightableTokenClasses, valueToken.className)) {
     return;
   }
   let urlGenerator = linkHighlighterRules[unQuote(propertyToken.innerHTML)];
