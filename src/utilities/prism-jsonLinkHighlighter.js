@@ -38,12 +38,13 @@ function annotatePropertyToken(propertyToken) {
   if (!_.has(highlightableTokenClasses, valueToken.className)) {
     return;
   }
-  let urlGenerator = linkHighlighterRules[unQuote(propertyToken.innerHTML)];
+
+  let urlGenerator = linkHighlighterRules[unQuote(propertyToken.textContent)];
   if (typeof urlGenerator === 'undefined') {
     return;
   }
 
-  let href = urlGenerator(unQuote(valueToken.innerHTML));
+  let href = urlGenerator(unQuote(valueToken.textContent));
   if (typeof href === 'undefined') {
     return;
   }
