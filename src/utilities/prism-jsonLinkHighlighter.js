@@ -39,12 +39,13 @@ function annotatePropertyToken(propertyToken) {
     return;
   }
 
-  let urlGenerator = linkHighlighterRules[unQuote(propertyToken.textContent)];
+  let urlGenerator = linkHighlighterRules[unQuote(propertyToken.innerHTML)];
   if (typeof urlGenerator === 'undefined') {
     return;
   }
 
-  let href = urlGenerator(unQuote(valueToken.textContent));
+  let safeUnescapedValueText = valueToken.innerHTML.replace('&amp;','&');
+  let href = urlGenerator(unQuote(safeUnescapedValueText));
   if (typeof href === 'undefined') {
     return;
   }
