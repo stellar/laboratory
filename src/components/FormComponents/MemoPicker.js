@@ -59,7 +59,7 @@ function contentValidator(value) {
     break;
   case 'MEMO_HASH':
   case 'MEMO_RETURN':
-    if (!value.content.match(/^[0-9a-f]{64}$/g)) {
+    if (!value.content.match(/^[0-9a-f]{64}$/gi)) {
       return `${value.type} accepts a 32-byte hash in hexadecimal format (64 characters).`;
     }
     break;
