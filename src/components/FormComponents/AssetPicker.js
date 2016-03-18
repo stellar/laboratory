@@ -14,8 +14,10 @@ export default function AssetPicker(props) {
     issuer: '',
   }, value);
 
+  let isCredit = value.type === 'credit_alphanum4' || value.type === 'credit_alphanum12';
+
   let codePicker, codePickerError, inputPicker;
-  if (value.type === 'credit_alphanum4' || value.type === 'credit_alphanum12') {
+  if (isCredit) {
     codePicker = <input type="text"
       value={value.code}
       onChange={(event) => onUpdate(_.assign({}, props.value, {
@@ -49,6 +51,7 @@ export default function AssetPicker(props) {
       onUpdate={(typeValue) => onUpdate(_.assign({}, props.value, {
         type: typeValue,
       }))}
+      className={(isCredit) ? 'picker--spaceBottom' : ''}
       items={assetButtons}
       />
     {codePicker}
