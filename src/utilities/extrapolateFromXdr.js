@@ -95,10 +95,18 @@ function getValue(object, name) {
     return object.toString();
   }
 
-  var value = object;
   if (object && object._isBuffer) {
-    value = {type: 'code', value: new Buffer(object).toString('base64')};
+    return {type: 'code', value: new Buffer(object).toString('base64')};
   }
 
-  return value;
+  // getValue is a leaf in the recursive xdr extrapolating function meaning that
+  // whatever this function returns will be in the final result as-is.
+  // Therefore, we want them in string format so that it displayable in React.
+  // One example of why we need this is that UnsignedHyper values won't get
+  // displayed unless we convert it to a string.
+  if (typeof object.toString === 'function') {
+    return object.toString();
+  }
+
+  throw new Error('Internal laboratory bug: Encountered value type in XDR viewer that does not have a toString method');
 }
