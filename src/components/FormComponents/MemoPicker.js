@@ -28,6 +28,7 @@ export default function MemoPicker(props) {
       onUpdate={(typeValue) => onUpdate(_.assign({}, normalizedValue, {
         type: typeValue,
       }))}
+      className="picker--spaceBottom"
       items={{
         'MEMO_NONE': 'None',
         'MEMO_TEXT': 'Text',

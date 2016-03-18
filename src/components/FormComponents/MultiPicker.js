@@ -30,6 +30,7 @@ export default function MultiPicker(props) {
       return <SingleComponent
         onUpdate={(newValue) => onUpdate(updateValueAt(normalizedValues, index, newValue))}
         value={singleValue}
+        className="picker--spaceBottom"
         key={index}
       />
     })}
