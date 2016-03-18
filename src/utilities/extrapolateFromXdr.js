@@ -99,6 +99,10 @@ function getValue(object, name) {
     return {type: 'code', value: new Buffer(object).toString('base64')};
   }
 
+  if (typeof object === 'undefined') {
+    return;
+  }
+
   // getValue is a leaf in the recursive xdr extrapolating function meaning that
   // whatever this function returns will be in the final result as-is.
   // Therefore, we want them in string format so that it displayable in React.
