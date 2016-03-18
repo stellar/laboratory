@@ -51,6 +51,13 @@ let castIntOrUndefined = function(value) {
   return undefined;
 }
 
+let castStringOrNull = function(value) {
+  if (!_.isString(value) || value === '') {
+    return null;
+  }
+  return String(value);
+}
+
 let Libify = {};
 
 Libify.Asset = function(opts) {
@@ -238,6 +245,15 @@ Libify.Operation.setOptions = function(opts) {
     signer: signer,
     homeDomain: opts.homeDomain,
     source: opts.sourceAccount,
+  })
+}
+
+Libify.Operation.manageData = function(opts) {
+  assertNotEmpty(opts.name, 'Manage Data operation requires entry name');
+
+  return Sdk.Operation.manageData({
+    name: opts.name,
+    value: castStringOrNull(opts.value),
   })
 }
 

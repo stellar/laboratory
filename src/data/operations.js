@@ -64,4 +64,9 @@ export const operationsMap = [
     label: 'Inflation',
     operationPane: () => [], // empty operation pane
   },
+  {
+    name: 'manageData',
+    label: 'Manage Data',
+    operationPane: require('../components/OperationPanes/ManageData'),
+  },
 ]
