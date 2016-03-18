@@ -1,9 +1,13 @@
 import {serializeStore} from './storeSerializer';
 import url from 'url';
 import SLUG from '../constants/slug';
+import horizonUrlParser from './horizonUrlParser';
 
 // The linkBuilder attempts to abstract the specific details of the store so that
 // consumers of linkBuilder need to know very little to be able to generate a link.
+
+// These functions will return `undefined` if a link could not be producted with
+// the given info
 
 export function txSignerLink(xdr) {
   let query = serializeStore(SLUG.TXSIGNER, {
@@ -64,6 +68,14 @@ export function singleAccount(accountId) {
   });
 }
 
+export function horizonUrlToExplorerLink(horizonUrl) {
+  let urlInfo = horizonUrlParser(horizonUrl);
+  if (typeof urlInfo === 'undefined') {
+    return;
+  }
+
+  return explorerEndpoint(urlInfo.resource, urlInfo.endpoint, urlInfo.params);
+}
 
 // Simply takes in a slug and a object and converts it into a hash url.
 // Example input:

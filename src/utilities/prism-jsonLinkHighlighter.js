@@ -38,12 +38,14 @@ function annotatePropertyToken(propertyToken) {
   if (!_.has(highlightableTokenClasses, valueToken.className)) {
     return;
   }
+
   let urlGenerator = linkHighlighterRules[unQuote(propertyToken.innerHTML)];
   if (typeof urlGenerator === 'undefined') {
     return;
   }
 
-  let href = urlGenerator(unQuote(valueToken.innerHTML));
+  let safeUnescapedValueText = valueToken.innerHTML.replace('&amp;','&');
+  let href = urlGenerator(unQuote(safeUnescapedValueText));
   if (typeof href === 'undefined') {
     return;
   }
@@ -57,6 +59,7 @@ let validSecondSiblingClasses = {
   'token string': true,
   'token boolean': true,
   'token number': true,
+  'token property': true, // Prism.js incorrectly parses strings with escape sequences
 }
 function validatePropertyTokenSiblings(propertyToken) {
   let firstSibling = propertyToken.nextElementSibling;

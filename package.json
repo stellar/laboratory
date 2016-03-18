@@ -25,6 +25,7 @@
     "react-redux": "^4.0.0",
     "redux": "^3.0.4",
     "redux-thunk": "^1.0.0",
+    "route-recognizer": "^0.1.9",
     "sass-loader": "^3.0.0",
     "solar-css": "git+https://github.com/stellar/solar#master",
     "solar-stellarorg": "git+https://github.com/stellar/solar-stellarorg#master",

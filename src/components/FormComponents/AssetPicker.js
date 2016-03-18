@@ -15,7 +15,7 @@ export default function AssetPicker(props) {
   }, value);
 
   let codePicker, codePickerError, inputPicker;
-  if (value.type === 'alphanum4' || value.type === 'alphanum12') {
+  if (value.type === 'credit_alphanum4' || value.type === 'credit_alphanum12') {
     codePicker = <input type="text"
       value={value.code}
       onChange={(event) => onUpdate(_.assign({}, props.value, {
@@ -35,8 +35,8 @@ export default function AssetPicker(props) {
 
   let assetButtons = {
     'native': 'native',
-    'alphanum4': 'Alphanumeric 4',
-    'alphanum12': 'Alphanumeric 12',
+    'credit_alphanum4': 'Alphanumeric 4',
+    'credit_alphanum12': 'Alphanumeric 12',
   };
 
   if (props.disableNative) {
@@ -59,10 +59,10 @@ export default function AssetPicker(props) {
 
 function codeValidator(value) {
   let minLength, maxLength;
-  if (value.type === 'alphanum4') {
+  if (value.type === 'credit_alphanum4') {
     minLength = 1;
     maxLength = 4;
-  } else if (value.type === 'alphanum12') {
+  } else if (value.type === 'credit_alphanum12') {
     minLength = 5;
     maxLength = 12;
   } else {
