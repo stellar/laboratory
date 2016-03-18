@@ -62,7 +62,7 @@ export default class TxBuilderResult extends React.Component {
     return <div className="TransactionBuilderResult">
       {successTitle}
       {errorTitle}
-      <pre className="TransactionXDR so-code TransactionBuilderResult__code" onClick={clickToSelect}>
+      <pre className="TransactionXDR so-code so-code__wrap TransactionBuilderResult__code" onClick={clickToSelect}>
         <code>{finalResult}</code>
       </pre>
       {signingInstructions}
