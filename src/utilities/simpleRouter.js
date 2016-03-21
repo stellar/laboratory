@@ -22,7 +22,12 @@ export const routerMiddleware = store => next => action => {
   // NOTE: We only replace state here since these are only for general state
   // changes. By using history.replaceState, the routerListener won't pick up
   // on these changes.
-  history.replaceState(null, null, '#' + url.format(newUrlObj));
+  let newUrlHash = '#' + url.format(newUrlObj);
+  if (newUrlHash === '#') {
+    newUrlHash = window.location.pathname;
+  }
+  history.replaceState(null, null, newUrlHash);
+
   return result;
 }
 
