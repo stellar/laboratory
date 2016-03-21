@@ -19,7 +19,7 @@ export default function TextPicker(props) {
         onUpdate(event.target.value);
       }}
       placeholder={props.placeholder}
-      className="picker picker--textInput" />
+      className={`picker picker--textInput ${props.className}`} />
     <PickerError message={errorMessage} />
   </div>
 }

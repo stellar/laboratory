@@ -13,5 +13,6 @@ export default function SecretKeyPicker(props) {
         return 'Invalid secret key.';
       }
     }}
+    className={props.className}
   />
 }

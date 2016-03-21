@@ -9,7 +9,7 @@ export default function RadioButtonPicker(props) {
   let {value, onUpdate, items} = props;
   let group = Math.random(); // Allows for tabbing and prevents radio button collisions
 
-  return <div className="s-buttonGroup picker picker--radio">
+  return <div className={`s-buttonGroup picker picker--radio ${props.className}`}>
     {_.map(items, (label, id) => {
       return <label className="s-buttonGroup__wrapper" key={id}>
         <input type="radio" className="s-buttonGroup__radio"
