@@ -44,7 +44,7 @@ function annotatePropertyToken(propertyToken) {
     return;
   }
 
-  let safeUnescapedValueText = valueToken.innerHTML.replace('&amp;','&');
+  let safeUnescapedValueText = valueToken.innerHTML.replace(/\&amp;/g, '&');
   let href = urlGenerator(unQuote(safeUnescapedValueText));
   if (typeof href === 'undefined') {
     return;
