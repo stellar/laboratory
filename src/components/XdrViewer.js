@@ -18,9 +18,9 @@ function XdrViewer(props) {
   let xdrTypeIsValid = _.indexOf(xdrTypes, state.type) >= 0;
   let treeView, errorMessage;
   if (state.input === '') {
-    errorMessage = <p>Enter a base-64 encoded xdr blob to decode.</p>;
+    errorMessage = <p>Enter a base-64 encoded XDR blob to decode.</p>;
   } else if (!xdrTypeIsValid) {
-    errorMessage = <p>Please select a xdr type</p>;
+    errorMessage = <p>Please select a XDR type</p>;
   } else {
     try {
       treeView = <TreeView nodes={extrapolateFromXdr(state.input, state.type)} />
@@ -33,7 +33,7 @@ function XdrViewer(props) {
   return <div>
     <div className="XdrViewer__setup so-back">
       <div className="so-chunk">
-        <p className="XdrViewer__label">Input base-64 encoded xdr blob:</p>
+        <p className="XdrViewer__label">Input base-64 encoded XDR blob:</p>
         <div className="xdrInput__input">
           <textarea
             value={state.input}
@@ -45,7 +45,7 @@ function XdrViewer(props) {
           {message}
         </div>
 
-        <p className="XdrViewer__label">Xdr type:</p>
+        <p className="XdrViewer__label">XDR type:</p>
         <SelectPicker
           value={state.type}
           onUpdate={(input) => dispatch(updateXdrType(input))}
