@@ -57,7 +57,7 @@ export function submitRequest(request) {
         })
       })
     } else {
-      // dispatchObj will only be called at most one time.
+      // dispatchInNewStack will only be called at most one time.
       httpRequest(request)
         .then(r => {
           dispatchInNewStack(dispatch, {
