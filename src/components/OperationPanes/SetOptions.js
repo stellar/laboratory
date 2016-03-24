@@ -4,7 +4,14 @@ import OptionsTablePair from '../OptionsTable/Pair';
 import PubKeyPicker from '../FormComponents/PubKeyPicker';
 import PositiveIntPicker from '../FormComponents/PositiveIntPicker';
 import TextPicker from '../FormComponents/TextPicker';
+import BitfieldPicker from '../FormComponents/BitfieldPicker';
 import Unsigned8bitIntPicker from '../FormComponents/Unsigned8bitIntPicker';
+
+const accountFlagsBitfieldItems = {
+  1: 'Authorization required',
+  2: 'Authorization revocable',
+  4: 'Authorization immutable',
+};
 
 export default function SetOptions(props) {
   return [
@@ -14,17 +21,21 @@ export default function SetOptions(props) {
         onUpdate={(value) => {props.onUpdate('inflationDest', value)}}
         />
     </OptionsTablePair>,
-    <OptionsTablePair label="Clear Flags" optional={true} key="clearFlags">
-      <PositiveIntPicker
-        value={props.values['clearFlags']}
-        onUpdate={(value) => {props.onUpdate('clearFlags', value)}}
-        />
-    </OptionsTablePair>,
     <OptionsTablePair label="Set Flags" optional={true} key="setFlags">
-      <PositiveIntPicker
+      <BitfieldPicker
         value={props.values['setFlags']}
+        items={accountFlagsBitfieldItems}
         onUpdate={(value) => {props.onUpdate('setFlags', value)}}
         />
+      <p className="optionsTable__pair__content__note">Selected flags mean to add selected flags in addition to flags already present on the account.</p>
+    </OptionsTablePair>,
+    <OptionsTablePair label="Clear Flags" optional={true} key="clearFlags">
+      <BitfieldPicker
+        value={props.values['clearFlags']}
+        items={accountFlagsBitfieldItems}
+        onUpdate={(value) => {props.onUpdate('clearFlags', value)}}
+        />
+      <p className="optionsTable__pair__content__note">Selected flags mean to remove selected flags already present on the account.</p>
     </OptionsTablePair>,
     <OptionsTablePair label="Master Weight" optional={true} key="masterWeight">
       <Unsigned8bitIntPicker
