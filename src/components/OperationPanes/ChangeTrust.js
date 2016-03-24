@@ -18,7 +18,11 @@ export default function ChangeTrust(props) {
         value={props.values['limit']}
         onUpdate={(value) => {props.onUpdate('limit', value)}}
         />
-      <p className="optionsTable__pair__content__note">If empty, will default to the max int64.</p>
+      <p className="optionsTable__pair__content__note">
+        Leave empty to default to the max int64.
+        <br />
+        Set to 0 to remove the trust line.
+      </p>
     </OptionsTablePair>,
   ];
 }

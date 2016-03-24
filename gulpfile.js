@@ -36,7 +36,10 @@ var webpackOptions = {
     new HtmlWebpackPlugin({
       title: 'Stellar Laboratory'
     })
-  ]
+  ],
+  node: {
+    fs: 'empty'
+  }
 };
 
 gulp.task('develop', function(done) {
