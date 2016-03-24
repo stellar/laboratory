@@ -32,7 +32,7 @@ export default function SetOptions(props) {
         items={accountFlagsBitfieldItems}
         onUpdate={(value) => {props.onUpdate('setFlags', value)}}
         />
-      <p className="optionsTable__pair__content__note">Selected flags mean to add selected flags in addition to flags already present on the account.</p>
+      <p className="optionsTable__pair__content__note">Selected <a href="https://en.wikipedia.org/wiki/Flag_field" target="_blank">flags</a> mean to add selected flags in addition to flags already present on the account.</p>
     </OptionsTablePair>,
     <OptionsTablePair
       label={<span>Clear Flags <HelpMark href="https://www.stellar.org/developers/learn/concepts/accounts.html#flags" /></span>}
@@ -42,7 +42,7 @@ export default function SetOptions(props) {
         items={accountFlagsBitfieldItems}
         onUpdate={(value) => {props.onUpdate('clearFlags', value)}}
         />
-      <p className="optionsTable__pair__content__note">Selected flags mean to remove selected flags already present on the account.</p>
+      <p className="optionsTable__pair__content__note">Selected <a href="https://en.wikipedia.org/wiki/Flag_field" target="_blank">flags</a> mean to remove selected flags already present on the account.</p>
     </OptionsTablePair>,
     <OptionsTablePair
       label={<span>Master Weight <HelpMark href="https://www.stellar.org/developers/learn/concepts/accounts.html#thresholds" /></span>}
