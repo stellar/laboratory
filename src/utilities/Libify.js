@@ -41,10 +41,14 @@ let isLooseTruthy = function(value) {
   return value == true;
 }
 
-// This function processes the value in two situations:
-// 1. Value contains just digits: will convert into JavaScript Number integer
-// 2. String is empty: converts to undefined (useful for optional arguments)
+// This function processes the value in three situations:
+// 1. Is a number: return as is
+// 2. String contains just digits: will convert into JavaScript Number integer
+// 3. String is empty: converts to undefined (useful for optional arguments)
 let castIntOrUndefined = function(value) {
+  if (typeof value === 'number') {
+    return value;
+  }
   if (_.isString(value) && value.match(/^[0-9]*$/g)) {
     return Number(value);
   }
