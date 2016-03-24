@@ -10,7 +10,7 @@ import _ from 'lodash';
 // {
 //   1: 'Human Readable Label',
 // }
-export default function BitfieldPicker(props) {
+export default function FlagfieldPicker(props) {
   let {value, onUpdate, items} = props;
   let group = Math.random(); // Allows for tabbing and prevents checkbox collisions
 

@@ -4,11 +4,11 @@ import OptionsTablePair from '../OptionsTable/Pair';
 import PubKeyPicker from '../FormComponents/PubKeyPicker';
 import PositiveIntPicker from '../FormComponents/PositiveIntPicker';
 import TextPicker from '../FormComponents/TextPicker';
-import BitfieldPicker from '../FormComponents/BitfieldPicker';
+import FlagfieldPicker from '../FormComponents/FlagfieldPicker';
 import Unsigned8bitIntPicker from '../FormComponents/Unsigned8bitIntPicker';
 import HelpMark from '../HelpMark';
 
-const accountFlagsBitfieldItems = {
+const accountFlagFields = {
   1: 'Authorization required',
   2: 'Authorization revocable',
   4: 'Authorization immutable',
@@ -27,9 +27,9 @@ export default function SetOptions(props) {
     <OptionsTablePair
       label={<span>Set Flags <HelpMark href="https://www.stellar.org/developers/learn/concepts/accounts.html#flags" /></span>}
       optional={true} key="setFlags">
-      <BitfieldPicker
+      <FlagfieldPicker
         value={props.values['setFlags']}
-        items={accountFlagsBitfieldItems}
+        items={accountFlagFields}
         onUpdate={(value) => {props.onUpdate('setFlags', value)}}
         />
       <p className="optionsTable__pair__content__note">Selected <a href="https://en.wikipedia.org/wiki/Flag_field" target="_blank">flags</a> mean to add selected flags in addition to flags already present on the account.</p>
@@ -37,9 +37,9 @@ export default function SetOptions(props) {
     <OptionsTablePair
       label={<span>Clear Flags <HelpMark href="https://www.stellar.org/developers/learn/concepts/accounts.html#flags" /></span>}
       optional={true} key="clearFlags">
-      <BitfieldPicker
+      <FlagfieldPicker
         value={props.values['clearFlags']}
-        items={accountFlagsBitfieldItems}
+        items={accountFlagFields}
         onUpdate={(value) => {props.onUpdate('clearFlags', value)}}
         />
       <p className="optionsTable__pair__content__note">Selected <a href="https://en.wikipedia.org/wiki/Flag_field" target="_blank">flags</a> mean to remove selected flags already present on the account.</p>
