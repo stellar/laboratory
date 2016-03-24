@@ -16,7 +16,7 @@ export default function FlagfieldPicker(props) {
 
   let parsedValue = parseInt(value);
   let pickerValue = [];
-  if (_.isInteger(parsedValue)) {
+  if (isInteger(parsedValue)) {
     pickerValue = intToExistenceArray(parsedValue);
   }
 
@@ -64,4 +64,8 @@ function existenceArrayToInt(existenceArray) {
   return _.reduce(existenceArray, (result, intValue) => {
     return result | parseInt(intValue);
   }, 0);
+}
+
+function isInteger(input) {
+  return String(input).match(/^[0-9]*$/g);
 }
