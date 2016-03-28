@@ -16,7 +16,7 @@ export default function FlagfieldPicker(props) {
 
   let parsedValue = parseInt(value);
   let pickerValue = [];
-  if (_.isInteger(parsedValue)) {
+  if (isInteger(parsedValue)) {
     pickerValue = intToExistenceArray(parsedValue);
   }
 
@@ -51,9 +51,10 @@ export default function FlagfieldPicker(props) {
 function intToExistenceArray(inputInt) {
   let existenceArray = [];
   // iterate through binary representation of number
-  _.each(_.reverse(inputInt.toString(2).split('')), (binaryValue, index) => {
+  let binaryArray = inputInt.toString(2).split('');
+  _.each(binaryArray, (binaryValue, index) => {
     if (binaryValue === '1') {
-      existenceArray.push(String(Math.pow(2, index)));
+      existenceArray.push(String(Math.pow(2, binaryArray.length - 1 - index))); // calculate decimal representation of bit in specific index
     }
   });
   return existenceArray;
@@ -64,4 +65,8 @@ function existenceArrayToInt(existenceArray) {
   return _.reduce(existenceArray, (result, intValue) => {
     return result | parseInt(intValue);
   }, 0);
+}
+
+function isInteger(input) {
+  return String(input).match(/^[0-9]*$/g);
 }
