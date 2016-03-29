@@ -13,9 +13,9 @@ import classNames from 'classnames';
 // @param {object|string} [props.default] - This is the default value for new elements that are added
 // @param {function} props.onUpdate - Picker callback function called when the values change.
 // @param {stromg} (props.addNewLabel) - Custom label for the `add new` button.
-export default function MultiPicker(props) {
+export default function ManualMultiPicker(props) {
   let {onUpdate, component} = props;
-  let values = _.isArray(values) ? values : props.value;
+  let values = _.isArray(props.value) ? props.value : [props.default];
   let addNewLabel = props.addNewLabel || 'Add new';
 
   return <div className="ManualMultiPicker">
