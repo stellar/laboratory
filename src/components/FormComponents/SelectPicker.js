@@ -22,12 +22,14 @@ export default function SelectPicker(props) {
       return <option key={index} value={index}>{value}</option>
     })
   }
-  return <select
-    className="picker picker--select"
-    value={value}
-    onChange={(event) => onUpdate(event.target.value)}
-    >
-    <option value=""></option>
-    {optionsList}
-  </select>;
+  return <div className="so-dropdown">
+    <select
+      className="picker picker--select so-dropdown__select"
+      value={value}
+      onChange={(event) => onUpdate(event.target.value)}
+      >
+      <option value=""></option>
+      {optionsList}
+    </select>
+  </div>
 }
