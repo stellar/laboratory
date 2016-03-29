@@ -36,11 +36,17 @@ let operation = (ops, index, dispatch) => {
       [key]: value
     }))
   };
-  if (typeof opConfig !== 'undefined') {
+  let helpNote, docsLink;
+  if (opConfig !== undefined) {
     operationPane = opConfig.operationPane({
       onUpdate: dispatchUpdateOpAtts,
       values: op.attributes
     });
+
+    helpNote = <p className="optionsTable__pair__content__note">{opConfig.helpNote}</p>;
+    docsLink = <p className="optionsTable__pair__content__note">
+      <a href={opConfig.docsUrl} target="_blank">See documentation for {opConfig.label}</a>
+    </p>;
 
     sourceAccountRow = <OptionsTablePair label="Source Account" optional={true} key="sourceAccount">
       <PubKeyPicker
@@ -75,6 +81,8 @@ let operation = (ops, index, dispatch) => {
         <OperationTypePicker value={op.name} onUpdate={(value) => {
           dispatch(updateOperationType(op.id, value))
         }} />
+        {helpNote}
+        {docsLink}
       </OptionsTablePair>
       {separator}
       {operationPane}
