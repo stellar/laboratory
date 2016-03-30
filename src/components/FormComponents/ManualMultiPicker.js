@@ -8,24 +8,22 @@ import classNames from 'classnames';
 // the number of items are more precise (like payment paths) or the picker has a
 // compound value (AssetPicker values are objects).
 
-// @param {array} props.value - Array of values. If empty or non array, then it will default to a one element array
+// @param {array} props.value - Array of values. If empty or non array, then it will default to a zero element array
 // @param {Picker|function} props.component - A React Picker component function to be repeated
 // @param {object|string} [props.default] - This is the default value for new elements that are added
 // @param {function} props.onUpdate - Picker callback function called when the values change.
-export default function MultiPicker(props) {
+// @param {stromg} (props.addNewLabel) - Custom label for the `add new` button.
+export default function ManualMultiPicker(props) {
   let {onUpdate, component} = props;
-  let values = props.value;
-  if (!_.isArray(values)) {
-    values = [props.default];
-  }
+  let values = _.isArray(props.value) ? props.value : [props.default];
+  let addNewLabel = props.addNewLabel || 'Add new';
 
-  let SingleComponent = props.component;
   return <div className="ManualMultiPicker">
     {_.map(values, (singleValue, index) => {
       return <div key={index} className={classNames(
-        'ManualMultiPicker__item',
-        {'ManualMultiPicker__item--last': index === values.length - 1},
-      )}>
+          'ManualMultiPicker__item',
+          {'ManualMultiPicker__item--last': index === values.length - 1},
+        )}>
         <div className="ManualMultiPicker__item__infobar">
           <span><strong>#{index + 1}</strong></span>
           <button
@@ -35,7 +33,7 @@ export default function MultiPicker(props) {
           </button>
         </div>
 
-        <SingleComponent
+        <props.component
           onUpdate={(newValue) => onUpdate(updateValueAt(values, index, newValue))}
           value={singleValue}
         />
@@ -43,7 +41,7 @@ export default function MultiPicker(props) {
     })}
     <div className="ManualMultiPicker__addNew">
       <button className="s-button" onClick={() => onUpdate(values.concat(props.default))}>
-        Add new
+        {addNewLabel}
       </button>
     </div>
   </div>
