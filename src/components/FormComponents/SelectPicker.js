@@ -22,13 +22,19 @@ export default function SelectPicker(props) {
       return <option key={index} value={index}>{value}</option>
     })
   }
+
+  let selectPlaceholderClass;
+  if (value === '') {
+    selectPlaceholderClass = 'so-dropdown__select--placeholder'
+  }
+
   return <div className="so-dropdown">
     <select
-      className="picker picker--select so-dropdown__select"
+      className={'picker picker--select so-dropdown__select ' + selectPlaceholderClass}
       value={value}
       onChange={(event) => onUpdate(event.target.value)}
       >
-      <option value=""></option>
+      <option value="">{props.placeholder}</option>
       {optionsList}
     </select>
   </div>
