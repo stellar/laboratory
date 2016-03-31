@@ -1,6 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {chooseNetwork} from "../actions/network";
+import NETWORK from '../constants/network';
 
 class NetworkPicker extends React.Component {
   render() {
@@ -43,8 +44,8 @@ export default connect(chooseState)(NetworkPicker);
 
 function chooseState(state) {
   return {
-    availableNames: Object.keys(state.network.available),
+    availableNames: Object.keys(NETWORK.available),
     currentName:    state.network.current,
-    currentURL:     state.network.available[state.network.current].url,
+    currentURL:     NETWORK.available[state.network.current].url,
   };
 }

@@ -18,6 +18,7 @@ import scrollOnAnchorOpen from '../utilities/scrollOnAnchorOpen';
 import extrapolateFromXdr from '../utilities/extrapolateFromXdr';
 import validateTxXdr from '../utilities/validateTxXdr';
 import TreeView from './TreeView';
+import NETWORK from '../constants/network';
 
 class TransactionSigner extends React.Component {
   render() {
@@ -148,7 +149,7 @@ export default connect(chooseState)(TransactionSigner);
 function chooseState(state) {
   return {
     state: state.transactionSigner,
-    useNetworkFunc: state.network.available[state.network.current].useNetworkFunc,
+    useNetworkFunc: NETWORK.available[state.network.current].useNetworkFunc,
   }
 }
 

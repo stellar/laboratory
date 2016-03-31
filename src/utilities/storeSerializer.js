@@ -1,7 +1,7 @@
 import {dehydrate, rehydrate} from './hydration';
 import _ from 'lodash';
 import SLUG from '../constants/slug';
-import {defaultNetworkName} from '../reducers/network';
+import NETWORK from '../constants/network';
 
 // The store serializer converts the state relevant to a specific page into an object.
 // This object is then used to build the routing url.
@@ -14,7 +14,7 @@ export function serializeStore(slug, state) {
 }
 
 function serializeNetworkStore(state) {
-  if (state.network.current !== defaultNetworkName) {
+  if (state.network.current !== NETWORK.defaultName) {
     return {
       network: state.network.current,
     }
@@ -130,6 +130,6 @@ function deserializePageSpecificQueryObj(slug, queryObj) {
 
 function deserializeNetworkQueryObj(queryObj) {
   return {
-    network: queryObj.network === undefined ? defaultNetworkName : queryObj.network,
+    network: queryObj.network === undefined ? NETWORK.defaultName : queryObj.network,
   }
 }
