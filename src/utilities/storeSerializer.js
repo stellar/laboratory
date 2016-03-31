@@ -1,13 +1,28 @@
 import {dehydrate, rehydrate} from './hydration';
 import _ from 'lodash';
 import SLUG from '../constants/slug';
+import {defaultNetworkName} from '../reducers/network';
 
-// The store serializer is used to convert the store of a specific page into a
-// object of strings to be used in the url hash param.
-// It takes in a page slug and will return the string for that specific store.
+// The store serializer converts the state relevant to a specific page into an object.
+// This object is then used to build the routing url.
 
-// The deserialization step happens in each of the reducers
 export function serializeStore(slug, state) {
+  return _.assign({},
+    serializePageSpecificStore(slug, state),
+    serializeNetworkStore(state),
+  );
+}
+
+function serializeNetworkStore(state) {
+  if (state.network.current !== defaultNetworkName) {
+    return {
+      network: state.network.current,
+    }
+  }
+  return {};
+}
+
+function serializePageSpecificStore(slug, state) {
   switch (slug) {
     case SLUG.EXPLORER:
       let endpointsResult = {};
@@ -84,8 +99,14 @@ function assignNonEmpty(targetObj, inputObj) {
 }
 
 // This deserializes the query object into a simple object. This resulting simple
-// object is then passed to the reducers that apple the object to their store.
+// object is then passed to the reducers that apply the object to their store.
 export function deserializeQueryObj(slug, queryObj) {
+  return _.assign({},
+    deserializePageSpecificQueryObj(slug, queryObj),
+    deserializeNetworkQueryObj(queryObj),
+  );
+}
+function deserializePageSpecificQueryObj(slug, queryObj) {
   switch (slug) {
     case SLUG.EXPLORER:
       let endpointsResult = Object.assign({}, queryObj);
@@ -104,5 +125,11 @@ export function deserializeQueryObj(slug, queryObj) {
       return queryObj;
     default:
       return {};
+  }
+}
+
+function deserializeNetworkQueryObj(queryObj) {
+  return {
+    network: queryObj.network === undefined ? defaultNetworkName : queryObj.network,
   }
 }
