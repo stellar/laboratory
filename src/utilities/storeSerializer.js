@@ -6,6 +6,9 @@ import NETWORK from '../constants/network';
 // The store serializer converts the state relevant to a specific page into an object.
 // This object is then used to build the routing url.
 
+// IMPORTANT: The state that gets passed here may be an incomplete one.
+// Incomplete ones are useful because it lets us build URLs without needing the
+// whole state tree (such as in ../utilities/linkBuilder.js).
 export function serializeStore(slug, state) {
   return _.assign({},
     serializePageSpecificStore(slug, state),
@@ -14,7 +17,8 @@ export function serializeStore(slug, state) {
 }
 
 function serializeNetworkStore(state) {
-  if (state.network.current !== NETWORK.defaultName) {
+  // Only return something if we were passed the current network
+  if (_.has(state, 'network.current')) {
     return {
       network: state.network.current,
     }
@@ -129,7 +133,10 @@ function deserializePageSpecificQueryObj(slug, queryObj) {
 }
 
 function deserializeNetworkQueryObj(queryObj) {
-  return {
-    network: queryObj.network === undefined ? NETWORK.defaultName : queryObj.network,
+  if (queryObj.network) {
+    return {
+      network: queryObj.network,
+    }
   }
+  return {};
 }

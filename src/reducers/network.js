@@ -10,7 +10,7 @@ export default network;
 function current(state=NETWORK.defaultName, action) {
   switch(action.type) {
     case LOAD_STATE:
-      if (NETWORK.available[action.payload.network]) {
+      if (action.payload.network && NETWORK.available[action.payload.network]) {
         return action.payload.network;
       }
       return state;
