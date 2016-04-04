@@ -8,7 +8,7 @@ import _ from 'lodash';
 // }
 //
 // For array values, the UI label and onUpdate values are the same.
-// The benefits array bring is that it can contain duplicate items.
+// The benefit of using an array is that it can contain duplicate items.
 export default function SelectPicker(props) {
   let {value, onUpdate, items} = props;
 
@@ -22,13 +22,19 @@ export default function SelectPicker(props) {
       return <option key={index} value={index}>{value}</option>
     })
   }
+
+  let selectPlaceholderClass;
+  if (value === '') {
+    selectPlaceholderClass = 'so-dropdown__select--placeholder'
+  }
+
   return <div className="so-dropdown">
     <select
-      className="picker picker--select so-dropdown__select"
+      className={'picker picker--select so-dropdown__select ' + selectPlaceholderClass}
       value={value}
       onChange={(event) => onUpdate(event.target.value)}
       >
-      <option value=""></option>
+      <option value="">{props.placeholder}</option>
       {optionsList}
     </select>
   </div>

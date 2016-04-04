@@ -14,6 +14,7 @@ export default function OperationTypePicker(props) {
   return <SelectPicker
     value={value}
     onUpdate={onUpdate}
+    placeholder="Select operation type"
     items={operationItemMap}
     />
 }

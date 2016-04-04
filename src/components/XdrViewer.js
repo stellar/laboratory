@@ -52,6 +52,7 @@ function XdrViewer(props) {
         <p className="XdrViewer__label">XDR type:</p>
         <SelectPicker
           value={state.type}
+          placeholder="Select XDR type"
           onUpdate={(input) => dispatch(updateXdrType(input))}
           items={xdrTypes}
         />
