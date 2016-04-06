@@ -11,7 +11,7 @@ import {EasySelect} from './EasySelect';
 import OptionsTablePair from './OptionsTable/Pair';
 import SecretKeyPicker from './FormComponents/SecretKeyPicker';
 import MultiPicker from './FormComponents/MultiPicker';
-import {txPostLink} from '../utilities/linkBuilder';
+import {txPostLink, xdrViewer} from '../utilities/linkBuilder';
 import HelpMark from './HelpMark';
 import clickToSelect from '../utilities/clickToSelect';
 import extrapolateFromXdr from '../utilities/extrapolateFromXdr';
@@ -45,11 +45,12 @@ class TransactionSigner extends React.Component {
         'Number of existing signatures': transaction.signatures.length,
       };
 
-      let codeResult, postLink, resultTitle, postInstructions;
+      let codeResult, postLink, xdrLink, resultTitle, postInstructions;
 
       if (!_.isUndefined(result.xdr)) {
         codeResult = <pre className="TxSignerResult__xdr so-code so-code__wrap" onClick={clickToSelect}><code>{result.xdr}</code></pre>;
-        postLink = <a className="s-button TxSignerResult__submit" href={txPostLink(result.xdr)}>Submit this transaction using the Post Transaction endpoint</a>;
+        postLink = <a className="s-button TxSignerResult__submit" href={txPostLink(result.xdr)}>Submit to Post Transaction endpoint</a>;
+        xdrLink = <a className="s-button TxSignerResult__submit" href={xdrViewer(result.xdr, 'TransactionEnvelope')}>View in XDR Viewer</a>;
         resultTitle = <h3 className="TxSignerResult__title">Transaction signed!</h3>;
         postInstructions = <p className="TxSignerResult__instructions">Now that this transaction is signed, you can submit it to the network. Horizon provides an endpoint called Post Transaction that will relay your transaction to the network and inform you of the result.</p>
       }
@@ -105,7 +106,7 @@ class TransactionSigner extends React.Component {
             <p className="TxSignerResult__summary">{result.message}</p>
             {codeResult}
             {postInstructions}
-            {postLink}
+            {postLink} {xdrLink}
           </div>
         </div>
         {txDetails}
