@@ -22,18 +22,20 @@ function tx(state = {
 }, action) {
   switch (action.type) {
   case LOAD_STATE:
-    if (action.slug === SLUG.TXSIGNER && action.payload.xdr &&
-        validateTxXdr(action.payload.xdr).result === 'success') {
-      return {
-        xdr: action.payload.xdr,
-        loaded: true,
+    if (action.slug === SLUG.TXSIGNER && action.payload.xdr) {
+      if (validateTxXdr(action.payload.xdr).result === 'success') {
+        return {
+          xdr: action.payload.xdr,
+          loaded: true,
+        }
       }
+      // If invalid xdr in the url, then we go back to step zero
+      return {
+        xdr: '',
+        loaded: false,
+      };
     }
-    // If invalid xdr in the url, then we go back to step zero
-    return {
-      xdr: '',
-      loaded: false,
-    };
+    return state;
   case IMPORT_FROM_XDR:
     return {
       xdr: action.xdr,
