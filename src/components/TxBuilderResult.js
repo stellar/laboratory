@@ -11,7 +11,7 @@ import {
 import {PubKeyPicker} from './FormComponents/PubKeyPicker';
 import {EasySelect} from './EasySelect';
 import Libify from '../utilities/Libify';
-import {txSignerLink} from '../utilities/linkBuilder';
+import {txSignerLink, xdrViewer} from '../utilities/linkBuilder';
 import clickToSelect from '../utilities/clickToSelect';
 
 export default class TxBuilderResult extends React.Component {
@@ -31,7 +31,7 @@ export default class TxBuilderResult extends React.Component {
       validationErrors.push('Memo content is required if memo type is selected');
     }
 
-    let finalResult, errorTitleText, successTitleText, signingInstructions, signingLink;
+    let finalResult, errorTitleText, successTitleText, signingInstructions, signingLink, xdrLink;
     if (validationErrors.length > 0) {
       errorTitleText = 'Form validation errors:';
       finalResult = formatErrorList(validationErrors);
@@ -51,8 +51,10 @@ export default class TxBuilderResult extends React.Component {
           transaction, and the <a href="#explorer?resource=transactions&endpoint=create">Post Transaction endpoint</a> for
           submitting one to the network.
         </p>;
-        signingLink = <a className="s-button TransactionBuilderResult__sign"
-          href={txSignerLink(transactionBuild.xdr)}>Sign this transaction in the Transaction Signer</a>
+        signingLink = <a className="s-button"
+          href={txSignerLink(transactionBuild.xdr)}>Sign in Transaction Signer</a>
+        xdrLink = <a className="s-button"
+          href={xdrViewer(transactionBuild.xdr, 'TransactionEnvelope')}>View in XDR Viewer</a>
       }
     }
 
@@ -66,7 +68,7 @@ export default class TxBuilderResult extends React.Component {
         <code>{finalResult}</code>
       </pre>
       {signingInstructions}
-      {signingLink}
+      {signingLink} {xdrLink}
     </div>
   }
 }
