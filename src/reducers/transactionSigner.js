@@ -52,6 +52,7 @@ function tx(state = {
 
 function signers(state = [], action) {
   switch (action.type) {
+  case IMPORT_FROM_XDR:
   case CLEAR_TRANSACTION:
     return []
   case SET_SECRETS:
