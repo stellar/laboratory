@@ -5,47 +5,32 @@ import {
   SET_SECRETS,
 } from '../actions/transactionSigner';
 import {LOAD_STATE} from '../actions/routing';
-import validateTxXdr from '../utilities/validateTxXdr';
 import _ from 'lodash';
+import validateTxXdr from '../utilities/validateTxXdr';
 import SLUG from '../constants/slug';
 
 const transactionSigner = combineReducers({
-  tx,
+  xdr,
   signers,
 })
 
 export default transactionSigner;
 
-function tx(state = {
-  xdr: '',
-  loaded: false,
-}, action) {
+function xdr(state = '', action) {
   switch (action.type) {
   case LOAD_STATE:
     if (action.slug === SLUG.TXSIGNER && action.payload.xdr) {
       if (validateTxXdr(action.payload.xdr).result === 'success') {
-        return {
-          xdr: action.payload.xdr,
-          loaded: true,
-        }
+        return action.payload.xdr;
       }
       // If invalid xdr in the url, then we go back to step zero
-      return {
-        xdr: '',
-        loaded: false,
-      };
+      return '';
     }
     return state;
   case IMPORT_FROM_XDR:
-    return {
-      xdr: action.xdr,
-      loaded: true,
-    }
+    return action.xdr;
   case CLEAR_TRANSACTION:
-    return {
-      xdr: '',
-      loaded: false,
-    }
+    return '';
   }
   return state;
 }

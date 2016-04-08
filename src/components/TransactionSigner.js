@@ -15,15 +15,16 @@ import {txPostLink, xdrViewer} from '../utilities/linkBuilder';
 import HelpMark from './HelpMark';
 import clickToSelect from '../utilities/clickToSelect';
 import extrapolateFromXdr from '../utilities/extrapolateFromXdr';
+import validateTxXdr from '../utilities/validateTxXdr';
 import TreeView from './TreeView';
 
 class TransactionSigner extends React.Component {
   render() {
     let {dispatch} = this.props;
-    let {tx, signers} = this.props.state;
+    let {xdr, signers} = this.props.state;
     let content;
 
-    if (!tx.loaded) {
+    if (validateTxXdr(xdr).result !== 'success') {
       content = <div className="so-back">
         <div className="so-chunk">
           <div className="TxSignerImport TransactionSigner__import">
@@ -33,11 +34,11 @@ class TransactionSigner extends React.Component {
         </div>
       </div>
     } else {
-      let result = signTx(tx.xdr, signers, this.props.useNetworkFunc);
-      let transaction = new Transaction(tx.xdr);
+      let result = signTx(xdr, signers, this.props.useNetworkFunc);
+      let transaction = new Transaction(xdr);
 
       let infoTable = {
-        'Transaction Envelope XDR': <EasySelect plain={true}><pre className="so-code so-code__wrap"><code>{tx.xdr}</code></pre></EasySelect>,
+        'Transaction Envelope XDR': <EasySelect plain={true}><pre className="so-code so-code__wrap"><code>{xdr}</code></pre></EasySelect>,
         'Source account': transaction.source,
         'Sequence number': transaction.sequence,
         'Transaction Fee (stroops)': transaction.fee,
