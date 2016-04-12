@@ -1,12 +1,14 @@
+import {Network, Networks} from 'stellar-sdk';
+
 const NETWORK = {
   available: {
     test: {
       url: 'https://horizon-testnet.stellar.org',
-      useNetworkFunc: 'useTestNetwork',
+      networkObj: new Network(Networks.TESTNET),
     },
     public: {
       url: 'https://horizon.stellar.org',
-      useNetworkFunc: 'usePublicNetwork',
+      networkObj: new Network(Networks.PUBLIC),
     }
   },
   defaultName: 'test',

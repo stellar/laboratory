@@ -22,7 +22,7 @@ import NETWORK from '../constants/network';
 
 class TransactionSigner extends React.Component {
   render() {
-    let {dispatch} = this.props;
+    let {dispatch, networkObj} = this.props;
     let {xdr, signers} = this.props.state;
     let content;
 
@@ -36,7 +36,7 @@ class TransactionSigner extends React.Component {
         </div>
       </div>
     } else {
-      let result = signTx(xdr, signers, this.props.useNetworkFunc);
+      let result = signTx(xdr, signers, networkObj);
       let transaction = new Transaction(xdr);
 
       let infoTable = {
@@ -149,7 +149,7 @@ export default connect(chooseState)(TransactionSigner);
 function chooseState(state) {
   return {
     state: state.transactionSigner,
-    useNetworkFunc: NETWORK.available[state.network.current].useNetworkFunc,
+    networkObj: NETWORK.available[state.network.current].networkObj,
   }
 }
 
@@ -162,8 +162,8 @@ function isValidSecret(key) {
   return true;
 }
 
-function signTx(xdr, signers, useNetworkFunc) {
-  Network[useNetworkFunc]();
+function signTx(xdr, signers, networkObj) {
+  Network.use(networkObj);
 
   let validSecretKeys = [];
   for (let i = 0; i < signers.length; i++) {
