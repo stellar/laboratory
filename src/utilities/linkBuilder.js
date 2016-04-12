@@ -12,9 +12,7 @@ import horizonUrlParser from './horizonUrlParser';
 export function txSignerLink(xdr) {
   let query = serializeStore(SLUG.TXSIGNER, {
     transactionSigner: {
-      tx: {
-        xdr: xdr,
-      },
+      xdr: xdr,
     },
   });
   return hashBuilder(SLUG.TXSIGNER, query);
