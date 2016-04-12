@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import {chooseEndpoint, submitRequest, updateValue} from "../actions/endpointExplorer"
 import {connect} from 'react-redux';
 import {EndpointPicker} from './EndpointPicker';
@@ -84,7 +85,7 @@ function buildRequest(baseUrl, endpoint, pendingRequest) {
   if (request.method === 'POST') {
     let postData = {};
     _.each(pendingRequest.values, (value, id) => {
-      postData[id] = value;
+      postData[id] = _.trim(value);
     });
 
     request.formData = querystring.stringify(postData);
@@ -132,7 +133,10 @@ function buildRequestUrl (baseUrl, endpoint, values) {
     }
 
     if (!_.isUndefined(value) && value !== '') {
-      uriParams[varName] = value;
+      if (!_.isString(value)) {
+        throw new Error('Endpoint explorer value must be a string');
+      }
+      uriParams[varName] = _.trim(value);
     }
   });
 
