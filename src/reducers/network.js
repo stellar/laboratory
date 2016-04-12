@@ -1,38 +1,22 @@
 import {combineReducers} from "redux";
-import {CHOOSE_NETWORK, SET_NETWORKS} from "../actions/network";
+import {CHOOSE_NETWORK} from "../actions/network";
+import NETWORK from '../constants/network';
+import {LOAD_STATE} from '../actions/routing';
 
-const defaultNetworks = {
-  test: {
-    url: 'https://horizon-testnet.stellar.org',
-    useNetworkFunc: 'useTestNetwork',
-  },
-  public: {
-    url: 'https://horizon.stellar.org',
-    useNetworkFunc: 'usePublicNetwork',
-  }
-}
-
-const defaultNetworkName = 'test';
-const defaultUseNetworkFunc = 'useTestNetwork';
-
-const network = combineReducers({ current, available });
+const network = combineReducers({ current });
 
 export default network;
 
-function current(state=defaultNetworkName, action) {
+function current(state=NETWORK.defaultName, action) {
   switch(action.type) {
+    case LOAD_STATE:
+      if (action.payload.network && NETWORK.available[action.payload.network]) {
+        return action.payload.network;
+      }
+      return state;
     case CHOOSE_NETWORK:
       return action.name;
     default:
       return state;
-  }
-}
-
-function available(state=defaultNetworks, action) {
-  switch(action.type) {
-  case SET_NETWORKS:
-    return action.networks;
-  default:
-    return state;
   }
 }

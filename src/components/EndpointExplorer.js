@@ -6,6 +6,7 @@ import {EndpointPicker} from './EndpointPicker';
 import {EndpointSetup} from './EndpointSetup';
 import {EndpointResult} from './EndpointResult';
 import {getEndpoint} from '../data/endpoints';
+import NETWORK from '../constants/network';
 import UriTemplates from 'uri-templates';
 import querystring from 'querystring';
 
@@ -67,7 +68,7 @@ export default connect(chooseState)(EndpointExplorer)
 function chooseState(state) {
   return {
     state: state.endpointExplorer,
-    baseURL: state.network.available[state.network.current].url,
+    baseURL: NETWORK.available[state.network.current].url,
   };
 }
 
