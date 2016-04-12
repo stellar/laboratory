@@ -52,8 +52,8 @@ export function serializeStore(slug, state) {
       // We only want to serialize the imported xdr and not the saved secret key
       // to prevent sensitive data being stored in browser history.
       let txsignerResult = {};
-      if (state.transactionSigner.tx.xdr.length > 0) {
-        txsignerResult.xdr = state.transactionSigner.tx.xdr;
+      if (state.transactionSigner.xdr.length > 0) {
+        txsignerResult.xdr = state.transactionSigner.xdr;
       }
       return txsignerResult;
     case 'xdr-viewer':

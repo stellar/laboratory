@@ -25,7 +25,6 @@ export default class TransactionImporter extends React.Component {
   }
   render() {
     let validation, message, submitEnabled, messageClass;
-
     validation = validateTxXdr(this.state.input);
     messageClass = validation.result === 'error' ? 'xdrInput__message__alert' : 'xdrInput__message__success';
     message = <p className={messageClass}>{validation.message}</p>
