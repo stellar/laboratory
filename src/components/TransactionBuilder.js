@@ -12,6 +12,7 @@ import {
 import OperationsBuilder from './OperationsBuilder';
 import {getOperation} from '../data/operations';
 import TxBuilderResult from './TxBuilderResult';
+import {resetTxbuilder} from '../actions/transactionBuilder';
 
 class TransactionBuilder extends React.Component {
   render() {
@@ -30,6 +31,10 @@ class TransactionBuilder extends React.Component {
               This transaction will start out with no signatures. To make it into the ledger, this transaction will then need to be signed and submitted to the network.
             </p>
           </div>
+          <p className="TransactionBuilder__clearBar">
+            <a className="TransactionBuilder__clearBar__link"
+            onClick={() => dispatch(resetTxbuilder())}>Clear form contents and start over</a>
+          </p>
           <TxBuilderAttributes
             attributes={attributes}
             onUpdate={onAttributeUpdate.bind(this, dispatch)} />

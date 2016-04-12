@@ -4,6 +4,7 @@ import {
   FETCH_SEQUENCE_START,
   FETCH_SEQUENCE_SUCCESS,
   FETCH_SEQUENCE_FAIL,
+  RESET_TXBUILDER,
 } from '../actions/transactionBuilder';
 import {LOAD_STATE} from '../actions/routing';
 import _ from 'lodash';
@@ -48,6 +49,8 @@ function operations(state, action) {
     return updateOperation(state, action.opId, {
       attributes: _.assign({}, getAttributes(state, action.opId), action.newAttributes),
     });
+  case RESET_TXBUILDER:
+    return defaultOperations;
   }
   return state;
 }
@@ -97,6 +100,8 @@ function attributes(state, action) {
     return Object.assign({}, state, action.newAttributes);
   case FETCH_SEQUENCE_SUCCESS:
     return Object.assign({}, state, { sequence: action.sequence });
+  case RESET_TXBUILDER:
+    return defaultAttributes;
   }
   return state;
 }

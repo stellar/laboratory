@@ -8,12 +8,9 @@
     font-size: $s-scale-3;
     margin-bottom: 0.5em;
   }
-  .TxSignerOverview__titleBar__reset {
-  }
   @include r-media(l) {
     .TxSignerOverview__titleBar {
       @include S-flex-row;
-      align-items: center;
     }
     .TxSignerOverview__titleBar__title {
       @include S-flexItem-share;

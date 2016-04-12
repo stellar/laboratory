@@ -1,6 +1,14 @@
 .TransactionBuilder {
   padding-bottom: 4em;
 }
+  .TransactionBuilder__clearBar {
+    margin-bottom: 0.5em;
+  }
+  @include r-media(l) {
+    .TransactionBuilder__clearBar {
+      text-align: right;
+    }
+  }
 
 .TransactionBuilder__result {
   padding-top: 2em;
