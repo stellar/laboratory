@@ -12,6 +12,7 @@ import {PubKeyPicker} from './FormComponents/PubKeyPicker';
 import {EasySelect} from './EasySelect';
 import Libify from '../utilities/Libify';
 import {txSignerLink, xdrViewer} from '../utilities/linkBuilder';
+import scrollOnAnchorOpen from '../utilities/scrollOnAnchorOpen';
 import clickToSelect from '../utilities/clickToSelect';
 
 export default class TxBuilderResult extends React.Component {
@@ -52,9 +53,11 @@ export default class TxBuilderResult extends React.Component {
           submitting one to the network.
         </p>;
         signingLink = <a className="s-button"
-          href={txSignerLink(transactionBuild.xdr)}>Sign in Transaction Signer</a>
+          href={txSignerLink(transactionBuild.xdr)}
+          onClick={scrollOnAnchorOpen}>Sign in Transaction Signer</a>
         xdrLink = <a className="s-button"
-          href={xdrViewer(transactionBuild.xdr, 'TransactionEnvelope')}>View in XDR Viewer</a>
+          href={xdrViewer(transactionBuild.xdr, 'TransactionEnvelope')}
+          onClick={scrollOnAnchorOpen}>View in XDR Viewer</a>
       }
     }
 
