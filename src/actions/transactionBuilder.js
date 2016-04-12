@@ -1,6 +1,14 @@
 import axios from 'axios';
 import {UnsignedHyper} from 'stellar-sdk';
 
+// Resets everything to it's default state
+export const RESET_TXBUILDER = 'RESET_TXBUILDER';
+export function resetTxbuilder() {
+  return {
+    type: RESET_TXBUILDER,
+  }
+}
+
 // Attributes
 export const UPDATE_ATTRIBUTES = 'UPDATE_ATTRIBUTES';
 export function updateAttributes(newAttributes) {
