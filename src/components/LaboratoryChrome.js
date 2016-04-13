@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import classNames from 'classnames';
 import NetworkPicker from './NetworkPicker';
 import Introduction from './Introduction';
+import AccountCreator from './AccountCreator';
 import EndpointExplorer from './EndpointExplorer';
 import TransactionBuilder from './TransactionBuilder';
 import TransactionSigner from './TransactionSigner';
@@ -39,6 +40,7 @@ function LaboratoryChrome(props) {
       <div className="so-chunk">
         <nav className="s-buttonList">
           {tabItem('Introduction', SLUG.HOME)}
+          {tabItem('Account Creator', SLUG.ACCOUNT_CREATOR)}
           {tabItem('Endpoint Explorer', SLUG.EXPLORER)}
           {tabItem('Transaction Builder', SLUG.TXBUILDER)}
           {tabItem('Transaction Signer', SLUG.TXSIGNER)}
@@ -56,6 +58,8 @@ function getContent(slug) {
   switch (slug) {
     case SLUG.HOME:
       return <Introduction />
+    case SLUG.ACCOUNT_CREATOR:
+      return <AccountCreator />;
     case SLUG.EXPLORER:
       return <EndpointExplorer />;
     case SLUG.TXBUILDER:

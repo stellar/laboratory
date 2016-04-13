@@ -4,7 +4,7 @@ import {
   UPDATE_FRIENDBOT_TARGET,
   START_FRIENDBOT_REQUEST,
   FINISH_FRIENDBOT_REQUEST,
-} from '../actions/introSetup';
+} from '../actions/accountCreator';
 import _ from 'lodash';
 
 function keypairGeneratorResult(state='', action) {
@@ -46,10 +46,10 @@ function friendbotStatus(state, action) {
   return state;
 }
 
-const introSetup = combineReducers({
+const accountCreator = combineReducers({
   keypairGeneratorResult,
   keypairGeneratorPubKey,
   friendbotTarget,
   friendbotStatus,
 })
-export default introSetup
+export default accountCreator
