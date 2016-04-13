@@ -7,9 +7,12 @@ import {
 } from '../actions/accountCreator';
 import _ from 'lodash';
 
-function keypairGeneratorResult(state='', action) {
+function keypairGeneratorResult(state=null, action) {
   if (action.type === GENERATE_NEW_KEYPAIR) {
-    return action.result;
+    return {
+      pubKey: action.pubKey,
+      secretKey: action.secretKey,
+    };
   }
   return state;
 }
@@ -29,18 +32,23 @@ function friendbotTarget(state='', action) {
 const defaultRequestState = {
   message: '',
   code: '',
+  status: 'inital',
 }
 function friendbotStatus(state, action) {
   if (state === undefined) {
     return defaultRequestState;
   }
   if (action.type === START_FRIENDBOT_REQUEST) {
-    return _.assign({}, defaultRequestState, {message: action.message});
+    return _.assign({}, defaultRequestState, {
+      message: action.message,
+      status: action.status,
+    });
   }
   if (action.type === FINISH_FRIENDBOT_REQUEST) {
     return {
       message: action.message,
       code: action.code,
+      status: action.status,
     }
   }
   return state;

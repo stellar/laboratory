@@ -7,12 +7,8 @@ export function generateNewKeypair() {
   let keypair = Keypair.random();
   return {
     type: GENERATE_NEW_KEYPAIR,
-    result: '' +
-      '{\n' +
-      '  "public key": "' + keypair.accountId() + '",\n' +
-      '  "secret key": "' + keypair.seed() + '"\n' +
-      '}',
     pubKey: keypair.accountId(),
+    secretKey: keypair.seed(),
   }
 }
 
@@ -31,16 +27,17 @@ export function startFriendbotRequest(target) {
     dispatch({
       type: START_FRIENDBOT_REQUEST,
       message: 'Loading...',
+      status: 'loading',
     });
 
     axios.get('https://horizon-testnet.stellar.org/friendbot?addr=' + target)
       .then(r => {
-        console.log(r)
         dispatchInNewStack(dispatch, {
           type: FINISH_FRIENDBOT_REQUEST,
           target,
           message: `Successfully funded ${target} on the test network`,
-          code: JSON.stringify(r.data, null, 2),
+          status: 'success',
+          code: '',
         })
       })
       .catch(e => {
@@ -57,6 +54,7 @@ export function startFriendbotRequest(target) {
           type: FINISH_FRIENDBOT_REQUEST,
           target,
           message,
+          status: 'failure',
           code,
         })
       })
