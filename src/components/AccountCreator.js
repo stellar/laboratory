@@ -15,7 +15,7 @@ class AccountCreator extends React.Component {
     if (state.keypairGeneratorResult !== null) {
       keypairTable = <div className="simpleTable AccountCreator__generator__table">
         <div className="simpleTable__row">
-          <div className="simpleTable__row__label">Account ID</div>
+          <div className="simpleTable__row__label">Public Key</div>
           <div className="simpleTable__row__content">{state.keypairGeneratorResult.pubKey}</div>
         </div>
         <div className="simpleTable__row">
