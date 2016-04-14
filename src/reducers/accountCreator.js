@@ -34,10 +34,7 @@ const defaultRequestState = {
   code: '',
   status: 'inital',
 }
-function friendbotStatus(state, action) {
-  if (state === undefined) {
-    return defaultRequestState;
-  }
+function friendbotStatus(state = defaultRequestState, action) {
   if (action.type === START_FRIENDBOT_REQUEST) {
     return _.assign({}, defaultRequestState, {
       message: action.message,
