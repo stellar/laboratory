@@ -25,7 +25,7 @@ export let CodeBlock = React.createClass({
   render: function() {
     let className = 'CodeBlock__code language-' + this.props.language;
     let innerHtml = { __html: this.getHighlightedCode() };
-    return <pre className="CodeBlock" onClick={scrollOnAnchorOpen}>
+    return <pre className={'CodeBlock ' + this.props.className} onClick={scrollOnAnchorOpen}>
       <code className={className} dangerouslySetInnerHTML={innerHtml}></code>
     </pre>;
   }

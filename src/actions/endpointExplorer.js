@@ -1,5 +1,6 @@
 import axios from 'axios';
 import _ from 'lodash';
+import dispatchInNewStack from '../utilities/dispatchInNewStack';
 var EventSource = (typeof window === 'undefined') ? require('eventsource') : window.EventSource;
 
 export const CHOOSE_ENDPOINT = "CHOOSE_ENDPOINT";
@@ -48,7 +49,7 @@ export function submitRequest(request) {
 
     if (request.streaming) {
       openStream = streamingRequest(request.url, (message) => {
-        // dispatchInNewContext is not needed for streaming since there is no catch here
+        // dispatchInNewStack is not needed for streaming since there is no catch here
         dispatch({
           type: UPDATE_REQUEST,
           id,
@@ -56,17 +57,17 @@ export function submitRequest(request) {
         })
       })
     } else {
-      // dispatchObj will only be called at most one time.
+      // dispatchInNewStack will only be called at most one time.
       httpRequest(request)
         .then(r => {
-          dispatchInNewContext(dispatch, {
+          dispatchInNewStack(dispatch, {
             type: UPDATE_REQUEST,
             id,
             body: r.data,
           });
         })
         .catch(e => {
-          dispatchInNewContext(dispatch, {
+          dispatchInNewStack(dispatch, {
             type: ERROR_REQUEST,
             id,
             errorStatus: e.status,
@@ -75,16 +76,6 @@ export function submitRequest(request) {
         });
     }
   }
-}
-
-// Calling `dispatch` inside the `.catch` of `httpRequest` causes problems
-// because it silently hides errors down the stack including all the React
-// re-rendering happening due to the dispatch.
-// By dispatching in a new context, the dispatch function won't be caught
-function dispatchInNewContext(dispatch, dispatchObj) {
-  setTimeout(() => {
-    dispatch(dispatchObj);
-  }, 0);
 }
 
 function httpRequest(request) {

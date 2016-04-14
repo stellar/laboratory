@@ -15,11 +15,7 @@ const defaultOperations = [{
   attributes: {},
   name: '',
 }];
-function operations(state, action) {
-  if (typeof state === 'undefined') {
-    return defaultOperations;
-  }
-
+function operations(state = defaultOperations, action) {
   let targetOpIndex, newOps;
   switch (action.type) {
   case LOAD_STATE:
@@ -85,11 +81,7 @@ const defaultAttributes = {
   memoType: '',
   memoContent: '',
 };
-function attributes(state, action) {
-  if (typeof state === 'undefined') {
-    return defaultAttributes;
-  }
-
+function attributes(state = defaultAttributes, action) {
   switch(action.type) {
   case LOAD_STATE:
     if (action.payload.attributes) {
