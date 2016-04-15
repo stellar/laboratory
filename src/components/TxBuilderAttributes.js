@@ -20,7 +20,7 @@ export default function TxBuilderAttributes(props) {
           value={attributes['sourceAccount']}
           onUpdate={(value) => {onUpdate('sourceAccount', value)}}
           />
-        <p className="optionsTable__pair__content__note">If you don't have an account yet, you can create a test network account using the <a href="https://www.stellar.org/developers/#friendbot" target="_blank">quick start tutorial</a>.</p>
+        <p className="optionsTable__pair__content__note">If you don't have an account yet, you can create and fund a test net account with the <a href="#account-creator">account creator</a>.</p>
       </OptionsTablePair>
       <OptionsTablePair label={<span>Transaction Sequence Number <HelpMark href="https://www.stellar.org/developers/learn/concepts/transactions.html#sequence-number" /></span>}>
         <SequencePicker
