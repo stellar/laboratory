@@ -9,6 +9,8 @@ var webpack     = require("webpack");
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
+var mocha = require('gulp-mocha');
+
 gulp.task('default', ['develop']);
 
 var webpackOptions = {
@@ -109,3 +111,10 @@ function merge(object1, object2) {
     }
   });
 }
+
+gulp.task('test:unit', function(done) {
+  return gulp.src(['test/test-helper.js', 'test/unit/**/*.js'], {read: false})
+    .pipe(mocha())
+});
+
+gulp.task('test', ['test:unit'], function() {});
