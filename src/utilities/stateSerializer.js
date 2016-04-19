@@ -3,20 +3,29 @@ import _ from 'lodash';
 import SLUG from '../constants/slug';
 import NETWORK from '../constants/network';
 
-// The store serializer converts the state relevant to a specific page into an object.
+// The state serializer converts the state relevant to a specific page into an object.
 // This object is then used to build the routing url.
 
-// IMPORTANT: The state that gets passed here may be an incomplete one.
+// It is optional in that if a feature was implemented in just the reducer, it
+// can work without needing a state serializer implemented. Without the state
+// serializer implemented, the url hash state params will be empty.
+
+// This does two parts of the 3 part cycle of routing:
+// (state) --->[stateToQueryObj()]---> (queryObj)
+// (queryObj) --->[queryObjToLoadStatePayload()]---> (loadStateObj)
+// (loadStateObj) --->[LOAD_STATE action]--->[redux reducers]---> (state)
+
+// The state that gets passed here may be an incomplete one.
 // Incomplete ones are useful because it lets us build URLs without needing the
 // whole state tree (such as in ../utilities/linkBuilder.js).
-export function serializeStore(slug, state) {
+export function stateToQueryObj(slug, state) {
   return _.assign({},
-    serializePageSpecificStore(slug, state),
-    serializeNetworkStore(state),
+    serializePageSpecificState(slug, state),
+    serializeNetworkState(state),
   );
 }
 
-function serializeNetworkStore(state) {
+function serializeNetworkState(state) {
   // Only return something if we were passed the current network
   if (_.has(state, 'network.current')) {
     return {
@@ -26,7 +35,7 @@ function serializeNetworkStore(state) {
   return {};
 }
 
-function serializePageSpecificStore(slug, state) {
+function serializePageSpecificState(slug, state) {
   switch (slug) {
     case SLUG.EXPLORER:
       let endpointsResult = {};
@@ -103,8 +112,8 @@ function assignNonEmpty(targetObj, inputObj) {
 }
 
 // This deserializes the query object into a simple object. This resulting simple
-// object is then passed to the reducers that apply the object to their store.
-export function deserializeQueryObj(slug, queryObj) {
+// object is then passed to the reducers in a LOAD_STATE action.
+export function queryObjToLoadStatePayload(slug, queryObj) {
   return _.assign({},
     deserializePageSpecificQueryObj(slug, queryObj),
     deserializeNetworkQueryObj(queryObj),
