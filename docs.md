@@ -34,11 +34,6 @@ Although these events are user initiated, these are considered "inbound" changes
 ## Routing actions and reducer
 The only code creating actions for routing.js should be the routerListener.
 
-## Store Serializer
-The store serializer serializes and deserializes specific parts of a branch in the reducer.
-
-It is optional in that if a feature was implemented in just the reducer, it can work without needing a store serializer implemented. Without the store serializer implemented, the url hash state params will be empty.
-
 ## Link builder
 Within the laboratory, tools are interconnected and will want to link to each other. For example, in Transaction Builder, it is convenient to have a button to sign the built transaction.
 
