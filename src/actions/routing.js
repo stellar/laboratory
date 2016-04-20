@@ -7,10 +7,10 @@ export function updateLocation(slug) {
 }
 
 export const LOAD_STATE = "LOAD_STATE";
-export function loadState(slug, payload) {
+export function loadState(slug, queryObj) {
   return {
     type: LOAD_STATE,
     slug,
-    payload
+    queryObj
   }
 }

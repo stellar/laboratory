@@ -13,8 +13,8 @@ export default routing;
 function input(state = '', action) {
   switch (action.type) {
   case LOAD_STATE:
-    if (action.slug === 'xdr-viewer' && action.payload.input) {
-      return action.payload.input;
+    if (action.slug === 'xdr-viewer' && action.queryObj.input) {
+      return action.queryObj.input;
     }
     break;
   case UPDATE_XDR_INPUT:
@@ -27,8 +27,8 @@ function input(state = '', action) {
 function type(state = 'TransactionEnvelope', action) {
   switch (action.type) {
   case LOAD_STATE:
-    if (action.slug === 'xdr-viewer' && action.payload.type) {
-      return action.payload.type;
+    if (action.slug === 'xdr-viewer' && action.queryObj.type) {
+      return action.queryObj.type;
     }
     break;
   case UPDATE_XDR_TYPE:
