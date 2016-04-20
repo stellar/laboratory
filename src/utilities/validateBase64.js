@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export default function validateBase64(input) {
   input = _.trim(input);
 
