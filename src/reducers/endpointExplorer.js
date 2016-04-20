@@ -9,13 +9,14 @@ import {
 } from "../actions/endpointExplorer";
 import {LOAD_STATE} from '../actions/routing';
 import {getEndpoint, getTemplate} from '../data/endpoints';
+import {rehydrate} from '../utilities/hydration';
 import SLUG from '../constants/slug';
 
 function currentResource(state="", action) {
   switch (action.type) {
     case LOAD_STATE:
-      if (action.slug === SLUG.EXPLORER && action.payload.resource) {
-        return action.payload.resource;
+      if (action.slug === SLUG.EXPLORER && action.queryObj.resource) {
+        return action.queryObj.resource;
       }
       break;
     case CHOOSE_ENDPOINT:
@@ -27,8 +28,8 @@ function currentResource(state="", action) {
 function currentEndpoint(state="", action) {
   switch (action.type) {
   case LOAD_STATE:
-    if (action.slug === SLUG.EXPLORER && action.payload.endpoint) {
-      return action.payload.endpoint;
+    if (action.slug === SLUG.EXPLORER && action.queryObj.endpoint) {
+      return action.queryObj.endpoint;
     }
     break;
   case CHOOSE_ENDPOINT:
@@ -49,8 +50,8 @@ function pendingRequestTemplate(state="", action) {
 function pendingRequestValues(state={}, action) {
   switch (action.type) {
   case LOAD_STATE:
-  if (action.slug === SLUG.EXPLORER && action.payload.values) {
-    return action.payload.values;
+  if (action.slug === SLUG.EXPLORER && action.queryObj.values) {
+    return rehydrate(action.queryObj.values);
   }
   break;
   case UPDATE_VALUE:

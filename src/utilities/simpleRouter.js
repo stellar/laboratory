@@ -54,8 +54,7 @@ class RouterHashListener extends React.Component {
 
     if (shouldLoadState) {
       let newQueryObj = querystring.parse(newUrl.query);
-      let loadStateObj = queryObjToLoadStatePayload(newUrl.pathname, newQueryObj)
-      this.props.dispatch(loadState(newUrl.pathname, loadStateObj));
+      this.props.dispatch(loadState(newUrl.pathname, newQueryObj));
       return;
     } else {
       this.props.dispatch(updateLocation(newUrl.pathname));
