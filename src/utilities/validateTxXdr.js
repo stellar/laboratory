@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {Transaction} from 'stellar-sdk';
 import validateBase64 from './validateBase64';
 
