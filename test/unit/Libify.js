@@ -7,7 +7,7 @@ describe('Libify-built', () => {
     let simpleTransaction = Libify.buildTransaction({
       sourceAccount: 'GCNZ6DLRLBDUUTXMGKHMCIG44I6VSZ4U6ACY6CSICK5DFVRATYJTAEVT',
       sequence: '321',
-      fee: '',
+      fee: '42',
       memoType: '',
       memoContent: ''
     }, [
@@ -28,6 +28,10 @@ describe('Libify-built', () => {
 
     it('contains specified sequence number', () => {
       expect(decodedTx.sequence).to.equal('321');
+    });
+
+    it('contains specified fee', () => {
+      expect(decodedTx.fee).to.equal(42);
     });
 
     it('contains no memo', () => {
