@@ -277,7 +277,7 @@ Libify.buildTransaction = function(attributes, operations) {
 
     var transaction = new Sdk.TransactionBuilder(account, opts)
 
-    if (attributes.memoType !== 'MEMO_NONE') {
+    if (attributes.memoType !== 'MEMO_NONE' && attributes.memoType !== '') {
       try {
         transaction = transaction.addMemo(Libify.Memo({
           type: attributes.memoType,
