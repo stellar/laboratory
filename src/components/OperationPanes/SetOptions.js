@@ -78,10 +78,10 @@ export default function SetOptions(props) {
     </OptionsTablePair>,
     <OptionsTablePair
       label={<span>Signer Public Key <HelpMark href="https://www.stellar.org/developers/learn/concepts/multi-sig.html#additional-signing-keys" /></span>}
-      optional={true} key="signerAddress">
+      optional={true} key="signerPubKey">
       <PubKeyPicker
-        value={props.values['signerAddress']}
-        onUpdate={(value) => {props.onUpdate('signerAddress', value)}}
+        value={props.values['signerPubKey']}
+        onUpdate={(value) => {props.onUpdate('signerPubKey', value)}}
         />
       <p className="optionsTable__pair__content__note">Used to add/remove or adjust weight of an additional signer on the account.</p>
     </OptionsTablePair>,

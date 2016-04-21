@@ -211,7 +211,7 @@ Libify.Operation.inflation = function(opts) {
 }
 
 Libify.Operation.setOptions = function(opts) {
-  let signerPubKeyEmpty = isEmpty(opts.signerAddress);
+  let signerPubKeyEmpty = isEmpty(opts.signerPubKey);
   let signerWeightEmpty = isEmpty(opts.signerWeight);
   if (signerPubKeyEmpty && !signerWeightEmpty) {
     throw new Error('Signer weight is required if signer public key is present');
@@ -223,7 +223,7 @@ Libify.Operation.setOptions = function(opts) {
   let signer;
   if (!signerPubKeyEmpty && !signerWeightEmpty) {
     signer = {
-      address: opts.signerAddress,
+      pubKey: opts.signerPubKey,
       weight: castIntOrUndefined(opts.signerWeight),
     }
   }
