@@ -10,6 +10,7 @@
     "babel-core": "^5.8.25",
     "babel-loader": "^5.3.2",
     "browser-sync": "^2.9.11",
+    "chai": "^3.5.0",
     "classnames": "^2.2.0",
     "css-loader": "^0.18.0",
     "eventsource": "^0.2.1",
