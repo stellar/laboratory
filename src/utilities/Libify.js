@@ -258,4 +258,53 @@ Libify.Operation.manageData = function(opts) {
   })
 }
 
+// buildTransaction is not something found js-stellar libs but acts as an
+// abstraction to building a transaction with input data in the same format
+// as the reducers
+Libify.buildTransaction = function(attributes, operations) {
+  let result = {
+    errors: [],
+    xdr: '',
+  };
+
+  try {
+    var account = new Sdk.Account(attributes.sourceAccount, Sdk.UnsignedHyper.fromString(attributes.sequence).subtract(1).toString());
+
+    let opts = {};
+    if (attributes.fee !== '') {
+      opts.fee = attributes.fee;
+    }
+
+    var transaction = new Sdk.TransactionBuilder(account, opts)
+
+    if (attributes.memoType !== 'MEMO_NONE') {
+      try {
+        transaction = transaction.addMemo(Libify.Memo({
+          type: attributes.memoType,
+          content: attributes.memoContent,
+        }));
+      } catch(e) {
+        result.errors.push(`Memo: ${e.message}`);
+      }
+    }
+
+    _.each(operations, (op, index) => {
+      try {
+        transaction = transaction.addOperation(Libify.Operation(op.name, op.attributes));
+      } catch(e) {
+        result.errors.push(`Operation #${index + 1}: ${e.message}`);
+      }
+    })
+
+    transaction = transaction.build();
+    result.xdr = transaction.toEnvelope().toXDR('base64');
+  } catch(e) {
+    result.errors.push(e.message);
+  }
+
+  return result;
+}
+
+
+
 export default Libify;
