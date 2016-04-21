@@ -85,6 +85,7 @@ gulp.task('develop', function(done) {
 
 gulp.task('build', function(done) {
   var options = merge(webpackOptions, {
+    bail: true,
     output: {
       filename: "[name]-[chunkhash].js",
       path: './dist'
