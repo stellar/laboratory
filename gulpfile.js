@@ -113,9 +113,9 @@ function merge(object1, object2) {
   });
 }
 
-gulp.task('test:unit', function(done) {
-  return gulp.src(['test/test-helper.js', 'test/unit/**/*.js'], {read: false})
+gulp.task('test:mocha', function(done) {
+  return gulp.src(['test/test-helper.js', 'test/{unit,smoke}/**/*.js'], {read: false})
     .pipe(mocha())
 });
 
-gulp.task('test', ['test:unit'], function() {});
+gulp.task('test', ['test:mocha'], function() {});
