@@ -3,7 +3,7 @@ import _ from 'lodash';
 import RadioButtonPicker from './RadioButtonPicker';
 import TextPicker from './TextPicker';
 import PickerError from './PickerError';
-import {UnsignedHyper} from 'stellar-sdk';
+import {UnsignedHyper} from 'stellar-base';
 
 export default function MemoPicker(props) {
   let {onUpdate} = props;

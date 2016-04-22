@@ -1,14 +1,14 @@
 // Libify is a utility that converts a wide variety of inputs into their stricter
-// representations in Stellar libraries such as js-stellar-base and js-stellar-sdk.
+// representations in Stellar libraries such as js-stellar-base and js-stellar-Base.
 //
-// The Libify api aims to look similar to that of js-stellar-base and sdk. It
+// The Libify api aims to look similar to that of js-stellar-base and Base. It
 // will output better error messages in cases where helpful (instead of just
 // undefined error messages).
 //
 // Libify could also be used to generate source code from input but might not be
 // the best choice since source code differs based on content.
 
-import Sdk from 'stellar-sdk';
+import Base from 'stellar-base';
 import _ from 'lodash';
 
 // Helpers
@@ -66,24 +66,24 @@ let Libify = {};
 
 Libify.Asset = function(opts) {
   if (isEmpty(opts) || opts.type === 'native') {
-    return Sdk.Asset.native();
+    return Base.Asset.native();
   }
 
   assertNotEmpty(opts.code, 'Asset requires asset code');
-  return new Sdk.Asset(opts.code, opts.issuer);
+  return new Base.Asset(opts.code, opts.issuer);
 }
 
 Libify.Memo = function(opts) {
   switch(opts.type) {
   case '':
   case 'MEMO_TEXT':
-    return Sdk.Memo.text(opts.content);
+    return Base.Memo.text(opts.content);
   case 'MEMO_ID':
-    return Sdk.Memo.id(opts.content);
+    return Base.Memo.id(opts.content);
   case 'MEMO_HASH':
-    return Sdk.Memo.hash(opts.content);
+    return Base.Memo.hash(opts.content);
   case 'MEMO_RETURN':
-    return Sdk.Memo.returnHash(opts.content);
+    return Base.Memo.returnHash(opts.content);
   }
 }
 
@@ -101,7 +101,7 @@ Libify.Operation = function(type, opts) {
 Libify.Operation.createAccount = function(opts) {
   assertNotEmpty(opts.destination, 'Create Account operation requires destination');
   assertNotEmpty(opts.startingBalance, 'Create Account operation requires starting balance');
-  return Sdk.Operation.createAccount({
+  return Base.Operation.createAccount({
     destination: opts.destination,
     startingBalance: opts.startingBalance,
     source: opts.sourceAccount,
@@ -112,7 +112,7 @@ Libify.Operation.payment = function(opts) {
   assertNotEmpty(opts.destination, 'Payment operation requires destination');
   assertNotEmpty(opts.asset, 'Payment operation requires asset');
   assertNotEmpty(opts.amount, 'Payment operation requires amount');
-  return Sdk.Operation.payment({
+  return Base.Operation.payment({
     destination: opts.destination,
     asset: Libify.Asset(opts.asset),
     amount: opts.amount,
@@ -134,7 +134,7 @@ Libify.Operation.pathPayment = function(opts) {
     return Libify.Asset(hopAsset);
   })
 
-  return Sdk.Operation.pathPayment({
+  return Base.Operation.pathPayment({
     sendAsset: Libify.Asset(opts.sendAsset),
     sendMax: opts.sendMax,
     destination: opts.destination,
@@ -147,7 +147,7 @@ Libify.Operation.pathPayment = function(opts) {
 
 Libify.Operation.changeTrust = function(opts) {
   assertNotEmpty(opts.asset, 'Change Trust operation requires asset');
-  return Sdk.Operation.changeTrust({
+  return Base.Operation.changeTrust({
     asset: Libify.Asset(opts.asset),
     limit: (opts.limit === '') ? undefined : opts.limit,
     source: opts.sourceAccount,
@@ -158,7 +158,7 @@ Libify.Operation.allowTrust = function(opts) {
   assertNotEmpty(opts.trustor, 'Allow Trust operation requires trustor');
   assertNotEmpty(opts.assetCode, 'Allow Trust operation requires asset code');
   assertNotEmpty(opts.authorize, 'Allow Trust operation requires authorization setting');
-  return Sdk.Operation.allowTrust({
+  return Base.Operation.allowTrust({
     trustor: opts.trustor,
     assetCode: opts.assetCode,
     authorize: isLooseTruthy(opts.authorize),
@@ -168,7 +168,7 @@ Libify.Operation.allowTrust = function(opts) {
 
 Libify.Operation.accountMerge = function(opts) {
   assertNotEmpty(opts.destination, 'Allow Trust operation requires destination');
-  return Sdk.Operation.accountMerge({
+  return Base.Operation.accountMerge({
     destination: opts.destination,
     source: opts.sourceAccount,
   })
@@ -180,7 +180,7 @@ Libify.Operation.manageOffer = function(opts) {
   assertNotEmpty(opts.amount, 'Manage Offer operation requires amount');
   assertNotEmpty(opts.price, 'Manage Offer operation requires price');
   assertNotEmpty(opts.offerId, 'Manage Offer operation requires Offer ID');
-  return Sdk.Operation.manageOffer({
+  return Base.Operation.manageOffer({
     selling: Libify.Asset(opts.selling),
     buying: Libify.Asset(opts.buying),
     amount: opts.amount,
@@ -195,7 +195,7 @@ Libify.Operation.createPassiveOffer = function(opts) {
   assertNotEmpty(opts.buying, 'Create Passive Offer operation requires buying asset');
   assertNotEmpty(opts.amount, 'Create Passive Offer operation requires amount');
   assertNotEmpty(opts.price, 'Create Passive Offer operation requires price');
-  return Sdk.Operation.manageOffer({
+  return Base.Operation.manageOffer({
     selling: Libify.Asset(opts.selling),
     buying: Libify.Asset(opts.buying),
     amount: opts.amount,
@@ -205,7 +205,7 @@ Libify.Operation.createPassiveOffer = function(opts) {
 }
 
 Libify.Operation.inflation = function(opts) {
-  return Sdk.Operation.inflation({
+  return Base.Operation.inflation({
     source: opts.sourceAccount,
   })
 }
@@ -235,7 +235,7 @@ Libify.Operation.setOptions = function(opts) {
   assertIntOrEmpty(opts.medThreshold, 'Medium Threshold must be an integer');
   assertIntOrEmpty(opts.highThreshold, 'High Threshold must be an integer');
 
-  return Sdk.Operation.setOptions({
+  return Base.Operation.setOptions({
     inflationDest: opts.inflationDest,
     clearFlags: castIntOrUndefined(opts.clearFlags),
     setFlags: castIntOrUndefined(opts.setFlags),
@@ -252,7 +252,7 @@ Libify.Operation.setOptions = function(opts) {
 Libify.Operation.manageData = function(opts) {
   assertNotEmpty(opts.name, 'Manage Data operation requires entry name');
 
-  return Sdk.Operation.manageData({
+  return Base.Operation.manageData({
     name: opts.name,
     value: castStringOrNull(opts.value),
   })
@@ -268,14 +268,14 @@ Libify.buildTransaction = function(attributes, operations) {
   };
 
   try {
-    var account = new Sdk.Account(attributes.sourceAccount, Sdk.UnsignedHyper.fromString(attributes.sequence).subtract(1).toString());
+    var account = new Base.Account(attributes.sourceAccount, Base.UnsignedHyper.fromString(attributes.sequence).subtract(1).toString());
 
     let opts = {};
     if (attributes.fee !== '') {
       opts.fee = attributes.fee;
     }
 
-    var transaction = new Sdk.TransactionBuilder(account, opts)
+    var transaction = new Base.TransactionBuilder(account, opts)
 
     if (attributes.memoType !== 'MEMO_NONE' && attributes.memoType !== '') {
       try {
@@ -306,5 +306,47 @@ Libify.buildTransaction = function(attributes, operations) {
 }
 
 
+Libify.signTransaction = function(txXdr, signers, networkObj) {
+  Base.Network.use(networkObj);
+
+  let validSecretKeys = [];
+  for (let i = 0; i < signers.length; i++) {
+    let signer = signers[i];
+    if (signer !== null && !_.isUndefined(signer) && signer !== '') {
+      if (!Libify.isValidSecret(signer)) {
+        return {
+          message: 'Valid secret keys are required to sign transaction'
+        }
+      }
+      validSecretKeys.push(signer);
+    }
+  }
+
+  let newTx = new Base.Transaction(txXdr);
+  let existingSigs = newTx.signatures.length;
+  _.each(validSecretKeys, (signer) => {
+    newTx.sign(Base.Keypair.fromSeed(signer));
+  })
+
+  if (validSecretKeys.length === 0) {
+    return {
+      message: 'Enter a secret key to sign message'
+    }
+  }
+
+  return {
+    xdr: newTx.toEnvelope().toXDR('base64'),
+    message: `${validSecretKeys.length} signature(s) added; ${existingSigs + validSecretKeys.length} signature(s) total`,
+  };
+}
+
+Libify.isValidSecret = function(key) {
+  try{
+    Base.Keypair.fromSeed(key);
+  } catch (err) {
+    return false;
+  }
+  return true;
+}
 
 export default Libify;

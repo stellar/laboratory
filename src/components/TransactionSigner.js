@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {Transaction, Keypair, Network} from 'stellar-sdk';
+import {Transaction, Keypair, Network} from 'stellar-base';
 import TransactionImporter from './TransactionImporter';
 import {
   importFromXdr,
@@ -19,6 +19,7 @@ import extrapolateFromXdr from '../utilities/extrapolateFromXdr';
 import validateTxXdr from '../utilities/validateTxXdr';
 import TreeView from './TreeView';
 import NETWORK from '../constants/network';
+import {signTransaction} from '../utilities/Libify';
 
 class TransactionSigner extends React.Component {
   render() {
@@ -36,7 +37,7 @@ class TransactionSigner extends React.Component {
         </div>
       </div>
     } else {
-      let result = signTx(xdr, signers, networkObj);
+      let result = signTransaction(xdr, signers, networkObj);
       let transaction = new Transaction(xdr);
 
       let infoTable = {
@@ -153,46 +154,4 @@ function chooseState(state) {
   }
 }
 
-function isValidSecret(key) {
-  try{
-    Keypair.fromSeed(key);
-  } catch (err) {
-    return false;
-  }
-  return true;
-}
 
-function signTx(xdr, signers, networkObj) {
-  Network.use(networkObj);
-
-  let validSecretKeys = [];
-  for (let i = 0; i < signers.length; i++) {
-    let signer = signers[i];
-    if (signer !== null && !_.isUndefined(signer) && signer !== '') {
-      if (!isValidSecret(signer)) {
-        return {
-          message: 'Valid secret keys are required to sign transaction'
-        }
-      }
-      validSecretKeys.push(signer);
-    }
-  }
-
-
-  let newTx = new Transaction(xdr);
-  let existingSigs = newTx.signatures.length;
-  _.each(validSecretKeys, (signer) => {
-    newTx.sign(Keypair.fromSeed(signer));
-  })
-
-  if (validSecretKeys.length === 0) {
-    return {
-      message: 'Enter a secret key to sign message'
-    }
-  }
-
-  return {
-    xdr: newTx.toEnvelope().toXDR('base64'),
-    message: `${validSecretKeys.length} signature(s) added; ${existingSigs + validSecretKeys.length} signature(s) total`,
-  };
-}

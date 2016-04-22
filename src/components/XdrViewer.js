@@ -7,7 +7,7 @@ import TreeView from './TreeView';
 import validateBase64 from '../utilities/validateBase64';
 import {updateXdrInput, updateXdrType, fetchLatestTx} from '../actions/xdrViewer';
 import NETWORK from '../constants/network';
-import StellarSdk from 'stellar-sdk';
+import {xdr} from 'stellar-base';
 
 function XdrViewer(props) {
   let {dispatch, state, baseURL} = props;
@@ -80,5 +80,5 @@ function chooseState(state) {
 
 // Array of all the xdr types. Then, the most common ones appear at the top
 // again for convenience
-let xdrTypes = _(StellarSdk.xdr).functions().sort().value();
+let xdrTypes = _(xdr).functions().sort().value();
 xdrTypes = ['TransactionEnvelope', 'TransactionResult', 'TransactionMeta', '---'].concat(xdrTypes)

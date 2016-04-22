@@ -1,5 +1,5 @@
 import React from 'react';
-import {xdr, Transaction, Operation} from 'stellar-sdk';
+import {xdr, Transaction, Operation} from 'stellar-base';
 import Libify from '../../src/utilities/Libify';
 
 describe('Libify.buildTransaction', () => {
@@ -253,7 +253,7 @@ describe('Libify.buildTransaction', () => {
         expect(opAtIndex(5).clearFlags).to.equal(6)
       })
       it('contains specified signer pubKey', () => {
-        expect(opAtIndex(5).signer.address).to.equal('GA2IKCQR3WNN5W5446MU5UZZW7UIHWQN6UVJCAXRMRH4JV3QSOABQXI4')
+        expect(opAtIndex(5).signer.pubKey).to.equal('GA2IKCQR3WNN5W5446MU5UZZW7UIHWQN6UVJCAXRMRH4JV3QSOABQXI4')
       })
       it('contains specified homeDomain', () => {
         expect(opAtIndex(5).homeDomain).to.equal('example.com')
