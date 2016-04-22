@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {Transaction, Keypair, Network} from 'stellar-sdk';
+import {Transaction, Keypair, Network} from 'stellar-base';
 import TransactionImporter from './TransactionImporter';
 import {
   importFromXdr,
