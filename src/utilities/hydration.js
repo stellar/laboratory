@@ -1,9 +1,14 @@
+let errorMessage = 'Unable to parse values passed in url query parameters';
+
 export const rehydrate = function(obj) {
   try {
     return JSON.parse(new Buffer(obj, 'base64').toString());
   } catch (e) {
-    alert('Unable to parse values passed in url query parameters');
-    console.error(e);
+    if (typeof alert !== 'undefined') {
+      alert(errorMessage);
+    } else {
+      console.error(errorMessage);
+    }
     return {}
   }
 }

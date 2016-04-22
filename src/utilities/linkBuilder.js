@@ -1,4 +1,4 @@
-import {serializeStore} from './storeSerializer';
+import {stateToQueryObj} from './stateSerializer';
 import url from 'url';
 import SLUG from '../constants/slug';
 import horizonUrlParser from './horizonUrlParser';
@@ -10,7 +10,7 @@ import horizonUrlParser from './horizonUrlParser';
 // the given info
 
 export function txSignerLink(xdr) {
-  let query = serializeStore(SLUG.TXSIGNER, {
+  let query = stateToQueryObj(SLUG.TXSIGNER, {
     transactionSigner: {
       xdr: xdr,
     },
@@ -19,7 +19,7 @@ export function txSignerLink(xdr) {
 }
 
 export function txPostLink(xdr) {
-  let query = serializeStore(SLUG.EXPLORER, {
+  let query = stateToQueryObj(SLUG.EXPLORER, {
     endpointExplorer: {
       currentEndpoint: 'create',
       currentResource: 'transactions',
@@ -34,7 +34,7 @@ export function txPostLink(xdr) {
 }
 
 export function xdrViewer(xdr, type) {
-  let query = serializeStore(SLUG.XDRVIEWER, {
+  let query = stateToQueryObj(SLUG.XDRVIEWER, {
     xdrViewer: {
       input: xdr,
       type,
@@ -48,7 +48,7 @@ export function xdrViewer(xdr, type) {
 // abstract this with other functions with simpler arguments to reduce
 // complexity and dependence on understanding the reducers.
 function explorerEndpoint(resource, endpoint, values) {
-  let query = serializeStore(SLUG.EXPLORER, {
+  let query = stateToQueryObj(SLUG.EXPLORER, {
     endpointExplorer: {
       currentResource: resource,
       currentEndpoint: endpoint,

@@ -8,6 +8,7 @@ import {
 } from '../actions/transactionBuilder';
 import {LOAD_STATE} from '../actions/routing';
 import _ from 'lodash';
+import {rehydrate} from '../utilities/hydration';
 import SLUG from '../constants/slug';
 
 const defaultOperations = [{
@@ -20,8 +21,9 @@ function operations(state = defaultOperations, action) {
   switch (action.type) {
   case LOAD_STATE:
     if (action.slug === SLUG.TXBUILDER) {
-      if (action.payload.operations) {
-        return action.payload.operations;
+      if (action.queryObj.params) {
+        // TODO: validate that this is actually a valid operations object
+        return rehydrate(action.queryObj.params).operations;
       }
       return defaultOperations;
     }
@@ -84,8 +86,8 @@ const defaultAttributes = {
 function attributes(state = defaultAttributes, action) {
   switch(action.type) {
   case LOAD_STATE:
-    if (action.payload.attributes) {
-      return _.assign({}, defaultAttributes, action.payload.attributes);
+    if (action.queryObj.params) {
+      return _.assign({}, defaultAttributes, rehydrate(action.queryObj.params).attributes);
     }
     break;
   case UPDATE_ATTRIBUTES:

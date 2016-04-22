@@ -19,10 +19,8 @@ export function updateXdrType(xdrType) {
 export const FETCH_LATEST_TX = 'FETCH_LATEST_TX';
 export function fetchLatestTx(horizonBaseUrl) {
   return dispatch => {
-    console.log(horizonBaseUrl + '/transactions?limit=1&order=desc')
     axios.get(horizonBaseUrl + '/transactions?limit=1&order=desc')
       .then(r => {
-        console.dir(r.data._embedded.records[0].envelope_xdr)
         dispatch(updateXdrInput(r.data._embedded.records[0].envelope_xdr))
         dispatch(updateXdrType('TransactionEnvelope'))
       })

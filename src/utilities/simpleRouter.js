@@ -3,7 +3,7 @@ import React from 'react';
 import url from 'url';
 import querystring from 'querystring';
 import {updateLocation, loadState, LOAD_STATE, UPDATE_LOCATION} from '../actions/routing';
-import {serializeStore, deserializeQueryObj} from './storeSerializer';
+import {stateToQueryObj, queryObjToLoadStatePayload} from './stateSerializer';
 
 // One way data flow for routerMiddleware: redux -> url
 export const routerMiddleware = store => next => action => {
@@ -16,7 +16,7 @@ export const routerMiddleware = store => next => action => {
   }
 
   let newUrlObj = parseUrlHash(window.location.hash);
-  newUrlObj.query = serializeStore(state.routing.location, state);
+  newUrlObj.query = stateToQueryObj(state.routing.location, state);
   delete newUrlObj.search;
 
   // NOTE: We only replace state here since these are only for general state
@@ -54,8 +54,7 @@ class RouterHashListener extends React.Component {
 
     if (shouldLoadState) {
       let newQueryObj = querystring.parse(newUrl.query);
-      let deserialized = deserializeQueryObj(newUrl.pathname, newQueryObj)
-      this.props.dispatch(loadState(newUrl.pathname, deserialized));
+      this.props.dispatch(loadState(newUrl.pathname, newQueryObj));
       return;
     } else {
       this.props.dispatch(updateLocation(newUrl.pathname));

@@ -9,12 +9,14 @@ var webpack     = require("webpack");
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
+var mocha = require('gulp-mocha');
+
 gulp.task('default', ['develop']);
 
 var webpackOptions = {
   entry: {
     app: "./src/app.js",
-    vendor: ["axios", "react", "react-dom", "lodash", "stellar-sdk"]
+    vendor: ["axios", "react", "react-dom", "lodash", "stellar-base"]
   },
   devtool: "source-map",
   resolve: {
@@ -83,6 +85,7 @@ gulp.task('develop', function(done) {
 
 gulp.task('build', function(done) {
   var options = merge(webpackOptions, {
+    bail: true,
     output: {
       filename: "[name]-[chunkhash].js",
       path: './dist'
@@ -109,3 +112,10 @@ function merge(object1, object2) {
     }
   });
 }
+
+gulp.task('test:mocha', function(done) {
+  return gulp.src(['test/test-helper.js', 'test/{unit,smoke}/**/*.js'], {read: false})
+    .pipe(mocha())
+});
+
+gulp.task('test', ['test:mocha'], function() {});

@@ -1,0 +1,14 @@
+language: node_js
+sudo: required # to install newer g++ :(
+node_js: "0.10"
+script: gulp test && gulp build
+env:
+  global:
+    - CXX=g++-4.8 # node bindings in 4.0.0
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - gcc-4.8
+    - g++-4.8
