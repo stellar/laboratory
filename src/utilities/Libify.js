@@ -306,5 +306,47 @@ Libify.buildTransaction = function(attributes, operations) {
 }
 
 
+Libify.signTransaction = function(txXdr, signers, networkObj) {
+  Base.Network.use(networkObj);
+
+  let validSecretKeys = [];
+  for (let i = 0; i < signers.length; i++) {
+    let signer = signers[i];
+    if (signer !== null && !_.isUndefined(signer) && signer !== '') {
+      if (!Libify.isValidSecret(signer)) {
+        return {
+          message: 'Valid secret keys are required to sign transaction'
+        }
+      }
+      validSecretKeys.push(signer);
+    }
+  }
+
+  let newTx = new Base.Transaction(txXdr);
+  let existingSigs = newTx.signatures.length;
+  _.each(validSecretKeys, (signer) => {
+    newTx.sign(Base.Keypair.fromSeed(signer));
+  })
+
+  if (validSecretKeys.length === 0) {
+    return {
+      message: 'Enter a secret key to sign message'
+    }
+  }
+
+  return {
+    xdr: newTx.toEnvelope().toXDR('base64'),
+    message: `${validSecretKeys.length} signature(s) added; ${existingSigs + validSecretKeys.length} signature(s) total`,
+  };
+}
+
+Libify.isValidSecret = function(key) {
+  try{
+    Base.Keypair.fromSeed(key);
+  } catch (err) {
+    return false;
+  }
+  return true;
+}
 
 export default Libify;
