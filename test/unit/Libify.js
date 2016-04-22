@@ -2,8 +2,8 @@ import React from 'react';
 import {xdr, Transaction, Operation} from 'stellar-sdk';
 import Libify from '../../src/utilities/Libify';
 
-describe('Libify-built', () => {
-  describe('simple transaction', () => {
+describe('Libify.buildTransaction', () => {
+  context('when building a simple transaction', () => {
     let simpleTransaction = Libify.buildTransaction({
       sourceAccount: 'GCNZ6DLRLBDUUTXMGKHMCIG44I6VSZ4U6ACY6CSICK5DFVRATYJTAEVT',
       sequence: '321',
@@ -43,7 +43,7 @@ describe('Libify-built', () => {
     });
   })
 
-  describe('large transaction', () => {
+  context('when building a large transaction', () => {
     let largeTransaction = Libify.buildTransaction({
       sourceAccount: 'GCNZ6DLRLBDUUTXMGKHMCIG44I6VSZ4U6ACY6CSICK5DFVRATYJTAEVT',
       sequence: '1',
@@ -190,7 +190,7 @@ describe('Libify-built', () => {
       return Operation.operationToObject(decodedTx._attributes.tx._attributes.operations[index]);
     };
 
-    describe('1st operation', () => {
+    describe('createAccount operation at index 0', () => {
       it('is of type createAccount', () => {
         expect(opAtIndex(0).type).to.equal('createAccount');
       })
@@ -202,7 +202,7 @@ describe('Libify-built', () => {
       })
     })
 
-    describe('2nd operation', () => {
+    describe('payment operation at index 1', () => {
       it('is of type payment', () => {
         expect(opAtIndex(1).type).to.equal('payment');
       })
@@ -215,7 +215,7 @@ describe('Libify-built', () => {
       })
     })
 
-    describe('3rd operation', () => {
+    describe('pathPayment operation at index 2', () => {
       it('is of type pathPayment', () => {
         expect(opAtIndex(2).type).to.equal('pathPayment');
       })
@@ -227,7 +227,7 @@ describe('Libify-built', () => {
       })
     })
 
-    describe('4th operation', () => {
+    describe('manageOffer operation at index 3', () => {
       it('is of type manageOffer', () => {
         expect(opAtIndex(3).type).to.equal('manageOffer');
       })
@@ -236,7 +236,7 @@ describe('Libify-built', () => {
       })
     })
 
-    describe('5th operation', () => {
+    describe('manageOffer operation at index 4', () => {
       it('is of type manageOffer', () => {
         expect(opAtIndex(4).type).to.equal('manageOffer');
       })
@@ -245,7 +245,7 @@ describe('Libify-built', () => {
       })
     })
 
-    describe('6th operation', () => {
+    describe('setOptions operation at index 5', () => {
       it('is of type setOptions', () => {
         expect(opAtIndex(5).type).to.equal('setOptions');
       })
@@ -263,7 +263,7 @@ describe('Libify-built', () => {
       })
     })
 
-    describe('7th operation', () => {
+    describe('changeTrust operation at index 6', () => {
       it('is of type changeTrust', () => {
         expect(opAtIndex(6).type).to.equal('changeTrust');
       })
@@ -272,7 +272,7 @@ describe('Libify-built', () => {
       })
     })
 
-    describe('8th operation', () => {
+    describe('allowTrust operation at index 7', () => {
       it('is of type allowTrust', () => {
         expect(opAtIndex(7).type).to.equal('allowTrust');
       })
@@ -281,7 +281,7 @@ describe('Libify-built', () => {
       })
     })
 
-    describe('9th operation', () => {
+    describe('accountMerge operation at index 8', () => {
       it('is of type accountMerge', () => {
         expect(opAtIndex(8).type).to.equal('accountMerge');
       })
@@ -290,13 +290,13 @@ describe('Libify-built', () => {
       })
     })
 
-    describe('10th operation', () => {
+    describe('inflation operation at index 9', () => {
       it('is of type inflation', () => {
         expect(opAtIndex(9).type).to.equal('inflation');
       })
     })
 
-    describe('11th operation', () => {
+    describe('manageData operation at index 10', () => {
       it('is of type manageData', () => {
         expect(opAtIndex(10).type).to.equal('manageData');
       })
