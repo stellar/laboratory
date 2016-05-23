@@ -89,6 +89,6 @@ export const operationsMap = [
     label: 'Manage Data',
     operationPane: require('../components/OperationPanes/ManageData'),
     helpNote: 'Sets, modifies, or deletes a Data Entry (name/value pair).',
-    docsUrl: 'https://www.stellar.org/developers/learn/concepts/list-of-operations.html#account-merge',
+    docsUrl: 'https://www.stellar.org/developers/learn/concepts/list-of-operations.html#manage-data',
   },
 ]
