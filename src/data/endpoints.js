@@ -16,15 +16,6 @@ export const endpointsMap = {
   'accounts': {
     'label': 'Accounts',
     'endpoints': {
-      'all': {
-        'label': 'All Accounts',
-        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/accounts-all.html',
-        'method': 'GET',
-        'path': {
-          template: '/accounts{?cursor,limit,order}',
-        },
-        'setupComponent': require('../components/SetupPanes/All'),
-      },
       'single': {
         'label': 'Single Account',
         'helpUrl': 'https://www.stellar.org/developers/horizon/reference/accounts-single.html',
