@@ -20,7 +20,6 @@ let routeTable = {
   '/ledgers/:ledger/effects': {r: 'effects', e: 'for_ledger'},
 
   // account actions
-  '/accounts': {r: 'accounts', e: 'all'},
   '/accounts/:account_id': {r: 'accounts', e: 'single'},
   '/accounts/:account_id/transactions': {r: 'transactions', e: 'for_account'},
   '/accounts/:account_id/operations': {r: 'operations', e: 'for_account'},
