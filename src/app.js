@@ -11,7 +11,11 @@ import logging from './middleware/logging';
 import {routerMiddleware} from './utilities/simpleRouter';
 import LaboratoryChrome from './components/LaboratoryChrome';
 
+import StellarBase from 'stellar-base'
 
+if (typeof window !== "undefined") {
+  window.StellarBase = StellarBase;
+}
 
 document.write('<div id="app"></div>');
 
