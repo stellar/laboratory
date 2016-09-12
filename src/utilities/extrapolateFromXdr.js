@@ -9,7 +9,7 @@
 // - string: string values that appear as just plain text
 // - object: typed values always with a type and value `{type: 'code', value: 'Foo();'}`
 
-import {xdr, encodeCheck, Operation} from 'stellar-base';
+import {xdr, encodeCheck, Keypair, Operation} from 'stellar-base';
 export default function extrapolateFromXdr(input, type) {
   // TODO: Check to see if type exists
   // TODO: input validation
@@ -96,6 +96,18 @@ function getValue(object, name) {
         raw: object.toString()
       }
     };
+  }
+
+  if (name === 'hint') {
+    let hintBytes = new Buffer(object, 'base64');
+    let partialPublicKey = Buffer.concat([new Buffer(28).fill(0), hintBytes]);
+    let keypair = new Keypair({publicKey: partialPublicKey});
+    let partialPublicKeyString =
+      'G'+
+      (new Buffer(46).fill('_').toString())+
+      keypair.accountId().substr(47, 4)+
+      (new Buffer(5).fill('_').toString());
+    return {type: 'code', value: partialPublicKeyString};
   }
 
   if (name === 'ed25519') {
