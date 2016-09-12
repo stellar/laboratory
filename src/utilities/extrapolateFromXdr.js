@@ -9,7 +9,7 @@
 // - string: string values that appear as just plain text
 // - object: typed values always with a type and value `{type: 'code', value: 'Foo();'}`
 
-import {xdr, encodeCheck} from 'stellar-base';
+import {xdr, encodeCheck, Operation} from 'stellar-base';
 export default function extrapolateFromXdr(input, type) {
   // TODO: Check to see if type exists
   // TODO: input validation
@@ -85,7 +85,19 @@ function hasChildren(object) {
   return true;
 }
 
+const amountFields = ['amount', 'startingBalance', 'sendMax', 'destAmount', 'limit'];
+
 function getValue(object, name) {
+  if (_.includes(amountFields, name)) {
+    return {
+      type: 'amount',
+      value: {
+        parsed: Operation._fromXDRAmount(object),
+        raw: object.toString()
+      }
+    };
+  }
+
   if (name === 'ed25519') {
     var address = encodeCheck("accountId", object);
     return {type: 'code', value: address};

@@ -67,5 +67,7 @@ function convertTypedValue({type, value}) {
   switch(type) {
   case 'code':
     return <EasySelect><code>{value}</code></EasySelect>;
+  case 'amount':
+    return <span>{value.parsed} (raw: <code>{value.raw}</code>)</span>;
   }
 }
