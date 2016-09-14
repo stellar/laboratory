@@ -1,5 +1,5 @@
 import React from 'react';
-import {xdr, Transaction, Operation} from 'stellar-base';
+import {xdr, Transaction, Operation} from 'stellar-sdk';
 import Libify from '../../src/utilities/Libify';
 
 describe('Libify.buildTransaction', () => {
