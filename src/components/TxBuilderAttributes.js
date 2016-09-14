@@ -6,7 +6,7 @@ import SequencePicker from './FormComponents/SequencePicker';
 import StroopsPicker from './FormComponents/StroopsPicker';
 import MemoPicker from './FormComponents/MemoPicker';
 import {connect} from 'react-redux';
-import {Keypair} from 'stellar-base';
+import {Keypair} from 'stellar-sdk';
 import NETWORK from '../constants/network';
 import {fetchSequence} from '../actions/transactionBuilder';
 

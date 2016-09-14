@@ -7,7 +7,7 @@ export function getOperation(opName) {
 // Operations map documentation:
 // [ // In an array because we really want this to be ordered correctly (whereas for params, it is not as important)
 //   {
-//     name: 'createAccount', // Corresponds to the operation key in js-stellar-base.Operation
+//     name: 'createAccount', // Corresponds to the operation key in js-stellar-sdk.Operation
 //     label: 'Create Account', // Human friendly name for the operation
 //     operationPane: require('../components/OperationPanes/CreateAccount'), // React component that contains the multiple pickers for this operation
 //   },

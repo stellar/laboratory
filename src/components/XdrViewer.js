@@ -7,7 +7,7 @@ import TreeView from './TreeView';
 import validateBase64 from '../utilities/validateBase64';
 import {updateXdrInput, updateXdrType, fetchLatestTx} from '../actions/xdrViewer';
 import NETWORK from '../constants/network';
-import {xdr} from 'stellar-base';
+import {xdr} from 'stellar-sdk';
 
 function XdrViewer(props) {
   let {dispatch, state, baseURL} = props;

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {UnsignedHyper} from 'stellar-base';
+import {UnsignedHyper} from 'stellar-sdk';
 
 // Resets everything to it's default state
 export const RESET_TXBUILDER = 'RESET_TXBUILDER';

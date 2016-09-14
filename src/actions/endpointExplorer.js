@@ -1,7 +1,8 @@
 import axios from 'axios';
 import _ from 'lodash';
 import dispatchInNewStack from '../utilities/dispatchInNewStack';
-var EventSource = (typeof window === 'undefined') ? require('eventsource') : window.EventSource;
+import {CallBuilder} from 'stellar-sdk/lib/call_builder';
+import URI from 'urijs';
 
 export const CHOOSE_ENDPOINT = "CHOOSE_ENDPOINT";
 export function chooseEndpoint(resource, endpoint) {
@@ -32,13 +33,13 @@ export const START_REQUEST = "START_REQUEST"
 export const ERROR_REQUEST = "ERROR_REQUEST"
 export const UPDATE_REQUEST = "UPDATE_REQUEST"
 let resultIdNonce = 0;
-let openStream;
+let closeStreamFn;
 export function submitRequest(request) {
   return dispatch => {
     // Close old stream if it exists
-    if (typeof _.get(openStream, 'close') === 'function') {
-      openStream.close();
-      openStream = null;
+    if (typeof closeStreamFn === 'function') {
+      closeStreamFn();
+      closeStreamFn = null;
     }
 
     let id = resultIdNonce++;
@@ -48,12 +49,12 @@ export function submitRequest(request) {
     });
 
     if (request.streaming) {
-      openStream = streamingRequest(request.url, (message) => {
+      closeStreamFn = streamingRequest(request.url, (message) => {
         // dispatchInNewStack is not needed for streaming since there is no catch here
         dispatch({
           type: UPDATE_REQUEST,
           id,
-          body: JSON.parse(message.data),
+          body: message,
         })
       })
     } else {
@@ -89,7 +90,7 @@ function httpRequest(request) {
 }
 
 function streamingRequest(url, onmessage) {
-  var es = new EventSource(url);
-  es.onmessage = onmessage;
-  return es;
+  var callBuilder = new CallBuilder();
+  callBuilder.url = URI(url);
+  return callBuilder.stream({onmessage});
 }

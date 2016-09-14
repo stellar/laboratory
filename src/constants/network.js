@@ -1,4 +1,4 @@
-import {Network, Networks} from 'stellar-base';
+import {Network, Networks} from 'stellar-sdk';
 
 const NETWORK = {
   available: {

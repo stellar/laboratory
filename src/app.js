@@ -11,10 +11,10 @@ import logging from './middleware/logging';
 import {routerMiddleware} from './utilities/simpleRouter';
 import LaboratoryChrome from './components/LaboratoryChrome';
 
-import StellarBase from 'stellar-base'
+import StellarSdk from 'stellar-sdk'
 
 if (typeof window !== "undefined") {
-  window.StellarBase = StellarBase;
+  window.StellarSdk = StellarSdk;
 }
 
 document.write('<div id="app"></div>');

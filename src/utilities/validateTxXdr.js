@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {Transaction} from 'stellar-base';
+import {Transaction} from 'stellar-sdk';
 import validateBase64 from './validateBase64';
 
 export default function validateTxXdr(input) {
