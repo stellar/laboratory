@@ -5,6 +5,7 @@ import PubKeyPicker from './FormComponents/PubKeyPicker';
 import SequencePicker from './FormComponents/SequencePicker';
 import StroopsPicker from './FormComponents/StroopsPicker';
 import MemoPicker from './FormComponents/MemoPicker';
+import TimeBoundsPicker from './FormComponents/TimeBoundsPicker';
 import {connect} from 'react-redux';
 import {Keypair} from 'stellar-sdk';
 import NETWORK from '../constants/network';
@@ -45,6 +46,16 @@ export default function TxBuilderAttributes(props) {
           }}
           onUpdate={(value) => {onUpdate('memo', value)}}
           />
+      </OptionsTablePair>
+      <OptionsTablePair optional={true} label={<span>Time Bounds <HelpMark href="https://www.stellar.org/developers/guides/concepts/transactions.html#time-bounds" /></span>}>
+        <TimeBoundsPicker
+          value={{
+            minTime: attributes.minTime,
+            maxTime: attributes.maxTime
+          }}
+          onUpdate={(value) => {onUpdate('timebounds', value)}}
+          />
+        <p className="optionsTable__pair__content__note">Enter <a href="http://www.epochconverter.com/" target="_blank">unix timestamp</a> values of time bounds when this transaction will be valid.</p>
       </OptionsTablePair>
     </div>
   </div>

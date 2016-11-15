@@ -82,6 +82,8 @@ const defaultAttributes = {
   fee: '',
   memoType: '',
   memoContent: '',
+  minTime: '',
+  maxTime: '',
 };
 function attributes(state = defaultAttributes, action) {
   switch(action.type) {

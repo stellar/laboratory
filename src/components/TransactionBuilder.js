@@ -78,6 +78,9 @@ function onAttributeUpdate(dispatch, param, value) {
   case 'memo':
     newAttributes.memoType = value.type;
     newAttributes.memoContent = value.content;
+  case 'timebounds':
+    newAttributes.minTime = value.minTime;
+    newAttributes.maxTime = value.maxTime;
   break;
   }
   dispatch(updateAttributes(newAttributes));

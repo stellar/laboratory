@@ -275,6 +275,23 @@ Libify.buildTransaction = function(attributes, operations) {
       opts.fee = attributes.fee;
     }
 
+    let timebounds = {};
+
+    if (attributes.minTime !== '') {
+      timebounds.minTime = attributes.minTime;
+    }
+
+    if (attributes.maxTime !== '') {
+      timebounds.maxTime = attributes.maxTime;
+    }
+
+    if (!_.isEmpty(timebounds)) {
+      opts.timebounds = _.defaults(timebounds, {
+        minTime: '0',
+        maxTime: '0'
+      });
+    }
+
     var transaction = new Sdk.TransactionBuilder(account, opts)
 
     if (attributes.memoType !== 'MEMO_NONE' && attributes.memoType !== '') {
