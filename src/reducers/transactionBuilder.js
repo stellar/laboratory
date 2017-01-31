@@ -61,6 +61,12 @@ function updateOperation(state, opId, newSource) {
   newOps[targetOpIndex] = _.assign({}, newOps[targetOpIndex], newSource);
   return newOps;
 }
+function updateSigner(state, opId, newSource) {
+  let targetOpIndex = _.findIndex(state, { id: opId });
+  let newOps = state.slice();
+  newOps[targetOpIndex] = _.assign({}, newOps[targetOpIndex], newSource);
+  return newOps;
+}
 function reorderOps(state, opId, toNth) {
   if (toNth < 1) {
     toNth = 1;

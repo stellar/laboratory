@@ -28,7 +28,7 @@ export default function SelectPicker(props) {
     selectPlaceholderClass = 'so-dropdown__select--placeholder'
   }
 
-  return <div className="so-dropdown">
+  return <div className={`so-dropdown ${props.className}`}>
     <select
       className={'picker picker--select so-dropdown__select ' + selectPlaceholderClass}
       value={value}

@@ -7,7 +7,7 @@ export function generateNewKeypair() {
   let keypair = Keypair.random();
   return {
     type: GENERATE_NEW_KEYPAIR,
-    pubKey: keypair.accountId(),
+    pubKey: keypair.publicKey(),
     secretKey: keypair.seed(),
   }
 }

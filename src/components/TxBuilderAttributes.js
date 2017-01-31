@@ -7,7 +7,7 @@ import StroopsPicker from './FormComponents/StroopsPicker';
 import MemoPicker from './FormComponents/MemoPicker';
 import TimeBoundsPicker from './FormComponents/TimeBoundsPicker';
 import {connect} from 'react-redux';
-import {Keypair} from 'stellar-sdk';
+import {StrKey} from 'stellar-sdk';
 import NETWORK from '../constants/network';
 import {fetchSequence} from '../actions/transactionBuilder';
 
@@ -66,7 +66,7 @@ class sequenceFetcherClass extends React.Component {
     let {attributes, sequenceFetcherError} = this.props.state;
     let dispatch = this.props.dispatch;
     let currentNetwork = this.props.currentNetwork;
-    if (!Keypair.isValidPublicKey(attributes.sourceAccount)) {
+    if (!StrKey.isValidEd25519PublicKey(attributes.sourceAccount)) {
       return null;
     }
 

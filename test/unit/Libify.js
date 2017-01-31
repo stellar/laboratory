@@ -138,8 +138,11 @@ describe('Libify.buildTransaction', () => {
           masterWeight: '1',
           lowThreshold: '2',
           medThreshold: '3',
-          signerPubKey: 'GA2IKCQR3WNN5W5446MU5UZZW7UIHWQN6UVJCAXRMRH4JV3QSOABQXI4',
-          signerWeight: '5',
+          signer: {
+            type: 'ed25519PublicKey',
+            content: 'GA2IKCQR3WNN5W5446MU5UZZW7UIHWQN6UVJCAXRMRH4JV3QSOABQXI4',
+            weight: '5'
+          },
           homeDomain: 'example.com'
         }
       },
@@ -253,7 +256,7 @@ describe('Libify.buildTransaction', () => {
         expect(opAtIndex(5).clearFlags).to.equal(6)
       })
       it('contains specified signer pubKey', () => {
-        expect(opAtIndex(5).signer.pubKey).to.equal('GA2IKCQR3WNN5W5446MU5UZZW7UIHWQN6UVJCAXRMRH4JV3QSOABQXI4')
+        expect(opAtIndex(5).signer.ed25519PublicKey).to.equal('GA2IKCQR3WNN5W5446MU5UZZW7UIHWQN6UVJCAXRMRH4JV3QSOABQXI4')
       })
       it('contains specified homeDomain', () => {
         expect(opAtIndex(5).homeDomain).to.equal('example.com')

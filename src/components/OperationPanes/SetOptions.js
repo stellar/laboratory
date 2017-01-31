@@ -3,6 +3,7 @@ import React from 'react';
 import OptionsTablePair from '../OptionsTable/Pair';
 import PubKeyPicker from '../FormComponents/PubKeyPicker';
 import PositiveIntPicker from '../FormComponents/PositiveIntPicker';
+import SignerPicker from '../FormComponents/SignerPicker';
 import TextPicker from '../FormComponents/TextPicker';
 import FlagfieldPicker from '../FormComponents/FlagfieldPicker';
 import Unsigned8bitIntPicker from '../FormComponents/Unsigned8bitIntPicker';
@@ -77,22 +78,13 @@ export default function SetOptions(props) {
         />
     </OptionsTablePair>,
     <OptionsTablePair
-      label={<span>Signer Public Key <HelpMark href="https://www.stellar.org/developers/learn/concepts/multi-sig.html#additional-signing-keys" /></span>}
-      optional={true} key="signerPubKey">
-      <PubKeyPicker
-        value={props.values['signerPubKey']}
-        onUpdate={(value) => {props.onUpdate('signerPubKey', value)}}
+      label={<span>Signer Type <HelpMark href="https://www.stellar.org/developers/learn/concepts/multi-sig.html#additional-signing-keys" /></span>}
+      optional={true} key="signer">
+      <SignerPicker
+        value={props.values['signer']}
+        onUpdate={(value) => {props.onUpdate('signer', value)}}
         />
       <p className="optionsTable__pair__content__note">Used to add/remove or adjust weight of an additional signer on the account.</p>
-    </OptionsTablePair>,
-    <OptionsTablePair
-      label={<span>Signer Weight <HelpMark href="https://www.stellar.org/developers/learn/concepts/multi-sig.html#additional-signing-keys" /></span>}
-      optional={true} key="signerWeight">
-      <Unsigned8bitIntPicker
-        value={props.values['signerWeight']}
-        onUpdate={(value) => {props.onUpdate('signerWeight', value)}}
-        />
-      <p className="optionsTable__pair__content__note">Signer will be removed from account if this weight is 0.</p>
     </OptionsTablePair>,
     <OptionsTablePair
       label={<span>Home Domain <HelpMark href="https://www.stellar.org/developers/learn/concepts/multi-sig.html#additional-signing-keys" /></span>}

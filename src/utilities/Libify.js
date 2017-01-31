@@ -211,20 +211,34 @@ Libify.Operation.inflation = function(opts) {
 }
 
 Libify.Operation.setOptions = function(opts) {
-  let signerPubKeyEmpty = isEmpty(opts.signerPubKey);
-  let signerWeightEmpty = isEmpty(opts.signerWeight);
-  if (signerPubKeyEmpty && !signerWeightEmpty) {
-    throw new Error('Signer weight is required if signer public key is present');
-  }
-  if (!signerPubKeyEmpty && signerWeightEmpty) {
-    throw new Error('Signer public key is required if signer weight is present');
-  }
-
   let signer;
-  if (!signerPubKeyEmpty && !signerWeightEmpty) {
-    signer = {
-      pubKey: opts.signerPubKey,
-      weight: castIntOrUndefined(opts.signerWeight),
+  if (opts.signer && opts.signer.type) {
+    let signerPubKeyEmpty = isEmpty(opts.signer.content);
+    let signerWeightEmpty = isEmpty(opts.signer.weight);
+    if (signerPubKeyEmpty && !signerWeightEmpty) {
+      throw new Error('Signer weight is required if signer key is present');
+    }
+    if (!signerPubKeyEmpty && signerWeightEmpty) {
+      throw new Error('Signer key is required if signer weight is present');
+    }
+
+    if (!signerPubKeyEmpty && !signerWeightEmpty) {
+      signer = {
+        weight: castIntOrUndefined(opts.signer.weight)
+      };
+      switch (opts.signer.type) {
+        case "ed25519PublicKey":
+          signer.ed25519PublicKey = opts.signer.content;
+          break;
+        case "sha256Hash":
+        case "preAuthTx":
+          signer[opts.signer.type] = Buffer.from(opts.signer.content, "hex");
+          break;
+        default:
+          throw new Error('Invalid signer type');
+      }
+    } else {
+      throw new Error('Enter signer key and weight');
     }
   }
 
@@ -327,25 +341,40 @@ Libify.signTransaction = function(txXdr, signers, networkObj) {
   Sdk.Network.use(networkObj);
 
   let validSecretKeys = [];
+  let validPreimages = [];
   for (let i = 0; i < signers.length; i++) {
     let signer = signers[i];
     if (signer !== null && !_.isUndefined(signer) && signer !== '') {
-      if (!Libify.isValidSecret(signer)) {
-        return {
-          message: 'Valid secret keys are required to sign transaction'
+      // Signer
+      if (signer.charAt(0) == 'S') {
+        if (!Sdk.StrKey.isValidEd25519SecretSeed(signer)) {
+          return {
+            message: 'One of secret keys is invalid'
+          }
         }
+        validSecretKeys.push(signer);
+      } else {
+        // Hash preimage
+        if (!signer.match(/^[0-9a-f]{2,128}$/gi) && signer.length % 2 != 0) {
+          return {
+            message: 'Hash preimage is invalid'
+          }
+        }
+        validPreimages.push(signer);
       }
-      validSecretKeys.push(signer);
     }
   }
 
   let newTx = new Sdk.Transaction(txXdr);
   let existingSigs = newTx.signatures.length;
   _.each(validSecretKeys, (signer) => {
-    newTx.sign(Sdk.Keypair.fromSeed(signer));
+    newTx.sign(Sdk.Keypair.fromSecret(signer));
+  })
+  _.each(validPreimages, (signer) => {
+    newTx.signHashX(Buffer.from(signer, 'hex'));
   })
 
-  if (validSecretKeys.length === 0) {
+  if (validSecretKeys.length + validPreimages.length === 0) {
     return {
       message: 'Enter a secret key to sign message'
     }
@@ -355,15 +384,6 @@ Libify.signTransaction = function(txXdr, signers, networkObj) {
     xdr: newTx.toEnvelope().toXDR('base64'),
     message: `${validSecretKeys.length} signature(s) added; ${existingSigs + validSecretKeys.length} signature(s) total`,
   };
-}
-
-Libify.isValidSecret = function(key) {
-  try{
-    Sdk.Keypair.fromSeed(key);
-  } catch (err) {
-    return false;
-  }
-  return true;
 }
 
 export default Libify;

@@ -48,7 +48,8 @@ gulp.task('develop', function(done) {
   var options = merge(webpackOptions, {
     output: {
       filename: "[name].js",
-      path: './.tmp'
+      path: './.tmp',
+      publicPath: ''
     },
     plugins: [
       new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.js"),
