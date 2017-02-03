@@ -355,7 +355,7 @@ Libify.signTransaction = function(txXdr, signers, networkObj) {
         validSecretKeys.push(signer);
       } else {
         // Hash preimage
-        if (!signer.match(/^[0-9a-f]{2,128}$/gi) && signer.length % 2 != 0) {
+        if (!signer.match(/^[0-9a-f]{2,128}$/gi) || signer.length % 2 == 1) {
           return {
             message: 'Hash preimage is invalid'
           }
