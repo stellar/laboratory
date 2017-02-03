@@ -8,7 +8,7 @@ export function generateNewKeypair() {
   return {
     type: GENERATE_NEW_KEYPAIR,
     pubKey: keypair.publicKey(),
-    secretKey: keypair.seed(),
+    secretKey: keypair.secret(),
   }
 }
 
