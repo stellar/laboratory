@@ -18,6 +18,9 @@ var webpackOptions = {
     app: "./src/app.js",
     vendor: ["axios", "react", "react-dom", "lodash", "stellar-sdk"]
   },
+  output: {
+    publicPath: ''
+  },
   devtool: "source-map",
   resolve: {
     root: ['src'],
@@ -48,8 +51,7 @@ gulp.task('develop', function(done) {
   var options = merge(webpackOptions, {
     output: {
       filename: "[name].js",
-      path: './.tmp',
-      publicPath: ''
+      path: './.tmp'
     },
     plugins: [
       new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.js"),
