@@ -6,6 +6,7 @@ import Libify from '../utilities/Libify';
 import {txSignerLink, xdrViewer} from '../utilities/linkBuilder';
 import scrollOnAnchorOpen from '../utilities/scrollOnAnchorOpen';
 import clickToSelect from '../utilities/clickToSelect';
+import NETWORK from '../constants/network';
 
 export default class TxBuilderResult extends React.Component {
   render() {
@@ -29,14 +30,19 @@ export default class TxBuilderResult extends React.Component {
       errorTitleText = 'Form validation errors:';
       finalResult = formatErrorList(validationErrors);
     } else {
-      let transactionBuild = Libify.buildTransaction(attributes, operations);
+      let transactionBuild = Libify.buildTransaction(attributes, operations, this.props.networkObj);
 
       if (transactionBuild.errors.length > 0) {
         errorTitleText = `Transaction building errors:`;
         finalResult = formatErrorList(transactionBuild.errors);
       } else {
         successTitleText = `Success! Transaction Envelope XDR:`;
-        finalResult = transactionBuild.xdr;
+        finalResult = <div>
+          Hash:<br />
+          {transactionBuild.hash}<br />
+          XDR:<br />
+          {transactionBuild.xdr}
+          </div>
         signingInstructions = <p className="TransactionBuilderResult__instructions">
           In order for the transaction to make it into the ledger, a transaction must be successfully
           signed and submitted to the network. The laboratory provides
@@ -73,6 +79,7 @@ export default connect(chooseState)(TxBuilderResult);
 function chooseState(state) {
   return {
     state: state.transactionBuilder,
+    networkObj: NETWORK.available[state.network.current].networkObj,
   }
 }
 

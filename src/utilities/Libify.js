@@ -275,7 +275,8 @@ Libify.Operation.manageData = function(opts) {
 // buildTransaction is not something found js-stellar libs but acts as an
 // abstraction to building a transaction with input data in the same format
 // as the reducers
-Libify.buildTransaction = function(attributes, operations) {
+Libify.buildTransaction = function(attributes, operations, networkObj) {
+  Sdk.Network.use(networkObj);
   let result = {
     errors: [],
     xdr: '',
@@ -329,6 +330,7 @@ Libify.buildTransaction = function(attributes, operations) {
 
     transaction = transaction.build();
     result.xdr = transaction.toEnvelope().toXDR('base64');
+    result.hash = transaction.hash().toString('hex');
   } catch(e) {
     result.errors.push(e.message);
   }
