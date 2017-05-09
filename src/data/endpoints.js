@@ -53,7 +53,7 @@ export const endpointsMap = {
         'helpUrl': 'https://www.stellar.org/developers/horizon/reference/effects-for-ledger.html',
         'method': 'GET',
         'path': {
-          template: '/ledger/{ledger}/effects{?cursor,limit,order}',
+          template: '/ledgers/{ledger}/effects{?cursor,limit,order}',
         },
         'setupComponent': require('../components/SetupPanes/ForLedger'),
       },
