@@ -35,7 +35,7 @@ describe('Libify.buildTransaction', () => {
     });
 
     it('contains no memo', () => {
-      expect(decodedTx.memo._switch.name).to.equal('memoNone');
+      expect(decodedTx.memo._type).to.equal('none');
     });
 
     it('contains one operation', () => {
@@ -190,7 +190,7 @@ describe('Libify.buildTransaction', () => {
     ]);
     let decodedTx = xdr.TransactionEnvelope.fromXDR(largeTransaction.xdr, 'base64');
     let opAtIndex = (index) => {
-      return Operation.operationToObject(decodedTx._attributes.tx._attributes.operations[index]);
+      return Operation.fromXDRObject(decodedTx._attributes.tx._attributes.operations[index]);
     };
 
     describe('createAccount operation at index 0', () => {
