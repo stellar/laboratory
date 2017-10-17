@@ -31,7 +31,7 @@ export default function TxBuilderAttributes(props) {
         <p className="optionsTable__pair__content__note">The transaction sequence number is usually one higher than current account sequence number.</p>
         <SequenceFetcher />
       </OptionsTablePair>
-      <OptionsTablePair optional={true} label={<span>Base Fee <HelpMark href="https://www.stellar.org/developers/learn/concepts/transactions.html#memo" /></span>}>
+      <OptionsTablePair optional={true} label={<span>Base Fee <HelpMark href="https://www.stellar.org/developers/learn/concepts/transactions.html#fee" /></span>}>
         <StroopsPicker
           value={attributes['fee']}
           onUpdate={(value) => {onUpdate('fee', value)}}
