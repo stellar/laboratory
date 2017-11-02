@@ -132,7 +132,7 @@ function getValue(object, name) {
     //
     let hintBytes = new Buffer(object, 'base64');
     let partialPublicKey = Buffer.concat([new Buffer(28).fill(0), hintBytes]);
-    let keypair = new Keypair({publicKey: partialPublicKey});
+    let keypair = new Keypair({type: 'ed25519', publicKey: partialPublicKey});
     let partialPublicKeyString =
       'G'+
       (new Buffer(46).fill('_').toString())+
