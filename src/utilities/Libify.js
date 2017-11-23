@@ -339,7 +339,7 @@ Libify.buildTransaction = function(attributes, operations, networkObj) {
 }
 
 
-Libify.signTransaction = function(txXdr, signers, networkObj) {
+Libify.signTransaction = function(txXdr, signers, networkObj, ledgerWalletSigs) {
   Sdk.Network.use(networkObj);
 
   let validSecretKeys = [];
@@ -369,14 +369,23 @@ Libify.signTransaction = function(txXdr, signers, networkObj) {
 
   let newTx = new Sdk.Transaction(txXdr);
   let existingSigs = newTx.signatures.length;
-  _.each(validSecretKeys, (signer) => {
-    newTx.sign(Sdk.Keypair.fromSecret(signer));
-  })
-  _.each(validPreimages, (signer) => {
-    newTx.signHashX(Buffer.from(signer, 'hex'));
-  })
+  let addedSigs = 0;
 
-  if (validSecretKeys.length + validPreimages.length === 0) {
+  _.each(validSecretKeys, (signer) => {
+    addedSigs++;
+    newTx.sign(Sdk.Keypair.fromSecret(signer));
+  });
+  _.each(validPreimages, (signer) => {
+    addedSigs++;    
+    newTx.signHashX(Buffer.from(signer, 'hex'));
+  });
+  _.each(ledgerWalletSigs, (ledgerSig) => {
+    addedSigs++;    
+    newTx.signatures.push(ledgerSig);
+  });
+
+
+  if (addedSigs < 1) {
     return {
       message: 'Enter a secret key to sign message'
     }
@@ -384,7 +393,7 @@ Libify.signTransaction = function(txXdr, signers, networkObj) {
 
   return {
     xdr: newTx.toEnvelope().toXDR('base64'),
-    message: `${validSecretKeys.length} signature(s) added; ${existingSigs + validSecretKeys.length} signature(s) total`,
+    message: `${addedSigs} signature(s) added; ${existingSigs + addedSigs} signature(s) total`,
   };
 }
 

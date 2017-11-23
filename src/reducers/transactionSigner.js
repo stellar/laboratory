@@ -3,6 +3,9 @@ import {
   IMPORT_FROM_XDR,
   CLEAR_TRANSACTION,
   SET_SECRETS,
+  LEDGER_WALLET_SIGN_START,
+  LEDGER_WALLET_SIGN_ERROR,
+  LEDGER_WALLET_SIGN_SUCCESS,
 } from '../actions/transactionSigner';
 import {LOAD_STATE} from '../actions/routing';
 import _ from 'lodash';
@@ -12,6 +15,7 @@ import SLUG from '../constants/slug';
 const transactionSigner = combineReducers({
   xdr,
   signers,
+  ledgerwalletStatus,
 })
 
 export default transactionSigner;
@@ -42,6 +46,31 @@ function signers(state = [], action) {
     return []
   case SET_SECRETS:
     return action.secrets
+  }
+  return state;
+}
+
+function ledgerwalletStatus(state = {}, action) {
+  switch (action.type) {
+  case IMPORT_FROM_XDR:    
+  case CLEAR_TRANSACTION:
+    return {};
+  case LEDGER_WALLET_SIGN_START:
+    return Object.assign({}, state, {
+      status: 'loading',
+      message: 'Waiting for wallet',
+    });
+  case LEDGER_WALLET_SIGN_ERROR:
+    return Object.assign({}, state,  {
+      status: 'failure',
+      message: 'Error:' + JSON.stringify(action.error),
+    });
+  case LEDGER_WALLET_SIGN_SUCCESS:
+    return Object.assign({}, state,  {
+      status: 'success',
+      message: 'Success!',
+      signatures: [action.signature]
+    });
   }
   return state;
 }
