@@ -40,6 +40,14 @@ export function signWithLedger(txXDR) {
     let transaction = new Transaction(txXDR);
 
     let onError = err => {
+      if (err.message) {
+        err = err.message;
+      } else if (err.errorCode == 2) {
+        err = `Couldn't connect to Ledger device. Connection can only be established using a secure connection.`;
+      } else if (err.errorCode == 5) {
+        err = `Connection timeout.`;
+      }
+
       dispatch({ 
         type: LEDGER_WALLET_SIGN_ERROR,
         error: err,
@@ -47,7 +55,6 @@ export function signWithLedger(txXDR) {
     };
 
     let onConnect = () => {
-      console.log(Promise)
       BP.all([
         ledgerApi.getPublicKey_async(DEFAULT_BIP),
         ledgerApi.signTx_async(DEFAULT_BIP, transaction),
