@@ -6,6 +6,7 @@ import {
   importFromXdr,
   clearTransaction,
   setSecrets,
+  signWithLedger,
 } from '../actions/transactionSigner';
 import {EasySelect} from './EasySelect';
 import OptionsTablePair from './OptionsTable/Pair';
@@ -24,7 +25,7 @@ import {signTransaction} from '../utilities/Libify';
 class TransactionSigner extends React.Component {
   render() {
     let {dispatch, networkObj} = this.props;
-    let {xdr, signers} = this.props.state;
+    let {xdr, signers, ledgerwalletStatus} = this.props.state;
     let content;
 
     if (validateTxXdr(xdr).result !== 'success') {
@@ -37,7 +38,8 @@ class TransactionSigner extends React.Component {
         </div>
       </div>
     } else {
-      let result = signTransaction(xdr, signers, networkObj);
+      let ledgerSigs = ledgerwalletStatus.signatures;
+      let result = signTransaction(xdr, signers, networkObj, ledgerSigs);
       let transaction = new Transaction(xdr);
 
       let infoTable = {
@@ -79,6 +81,25 @@ class TransactionSigner extends React.Component {
         </div>
       }
 
+      let ledgerwalletMessage;
+      if (ledgerwalletStatus.message) {
+  
+        let messageAlertType;
+        if (ledgerwalletStatus.status === 'loading') {
+          messageAlertType = 's-alert--info';
+        } else if (ledgerwalletStatus.status === 'success') {
+          messageAlertType = 's-alert--success';
+        } else if (ledgerwalletStatus.status === 'failure') {
+          messageAlertType = 's-alert--alert';
+        }
+  
+        ledgerwalletMessage = <div>
+          <br />
+          <div className={`s-alert TxSignerKeys__ledgerwallet_message ${messageAlertType}`}> {ledgerwalletStatus.message} </div>
+        </div>
+      }
+  
+
       content = <div>
         <div className="so-back">
           <div className="so-chunk">
@@ -110,7 +131,15 @@ class TransactionSigner extends React.Component {
                     onUpdate={(value) => dispatch(setSecrets(value))}
                   />
                 </OptionsTablePair>
+                <OptionsTablePair label="Ledger Wallet">
+                  <button  
+                    className="s-button" 
+                    onClick={() => {dispatch(signWithLedger(xdr))}}
+                  >Sign with Default BIP Path</button>
+                  {ledgerwalletMessage}
+                </OptionsTablePair>
               </div>
+
             </div>
           </div>
         </div>

@@ -11,7 +11,7 @@ import logging from './middleware/logging';
 import {routerMiddleware} from './utilities/simpleRouter';
 import LaboratoryChrome from './components/LaboratoryChrome';
 
-import StellarSdk from 'stellar-sdk'
+import StellarSdk from 'stellar-sdk';
 
 if (typeof window !== "undefined") {
   window.StellarSdk = StellarSdk;
