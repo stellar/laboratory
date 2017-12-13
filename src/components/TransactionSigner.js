@@ -44,6 +44,7 @@ class TransactionSigner extends React.Component {
 
       let infoTable = {
         'Transaction Envelope XDR': <EasySelect plain={true}><pre className="so-code so-code__wrap"><code>{xdr}</code></pre></EasySelect>,
+        'Transaction Hash': <EasySelect plain={true}><pre className="so-code so-code__wrap"><code>{transaction.hash().toString('hex')}</code></pre></EasySelect>,
         'Source account': transaction.source,
         'Sequence number': transaction.sequence,
         'Transaction Fee (stroops)': transaction.fee,
