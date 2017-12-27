@@ -8,32 +8,37 @@ import OrderPicker from '../FormComponents/OrderPicker.js';
 
 export default function Trades(props) {
   return <div>
-    <OptionsTablePair label="Selling Asset">
+    <OptionsTablePair label="Base Asset" optional={true}>
       <AssetPicker
-      value={props.values['selling_asset']}
-      onUpdate={(value) => {props.onUpdate('selling_asset', value)}}
+      value={props.values['base_asset']}
+      onUpdate={(value) => {props.onUpdate('base_asset', value)}}
       />
     </OptionsTablePair>
-    <OptionsTablePair label="Buying Asset">
+    <OptionsTablePair label="Counter Asset" optional={true}>
       <AssetPicker
-      value={props.values['buying_asset']}
-      onUpdate={(value) => {props.onUpdate('buying_asset', value)}}
+      value={props.values['counter_asset']}
+      onUpdate={(value) => {props.onUpdate('counter_asset', value)}}
       />
     </OptionsTablePair>
-
+    <OptionsTablePair label="Offer id" optional={true}>
+      <TextPicker
+          value={props.values['offer_id']}
+          onUpdate={(value) => {props.onUpdate('offer_id', value)}}
+      />
+    </OptionsTablePair>
     <OptionsTablePair label="Cursor" optional={true}>
       <TextPicker
         value={props.values['cursor']}
         onUpdate={(value) => {props.onUpdate('cursor', value)}}
         />
     </OptionsTablePair>
-    <OptionsTablePair label="Limit">
+    <OptionsTablePair label="Limit" optional={true}>
       <PositiveIntPicker
       value={props.values['limit']}
         onUpdate={(value) => {props.onUpdate('limit', value)}}
         />
     </OptionsTablePair>
-    <OptionsTablePair label="Order">
+    <OptionsTablePair label="Order" optional={true}>
       <OrderPicker
         value={props.values['order']}
         onUpdate={(value) => {props.onUpdate('order', value)}}

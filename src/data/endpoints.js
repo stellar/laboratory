@@ -181,21 +181,6 @@ export const endpointsMap = {
           'buying_asset_issuer': 'buying_asset.issuer',
         },
         'setupComponent': require('../components/SetupPanes/OrderBookDetails'),
-      },
-      'trades': {
-        'label': 'Trades',
-        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/trades-for-orderbook.html',
-        'method': 'GET',
-        'path': {
-          template: '/order_book/trades{?selling_asset_type,selling_asset_code,selling_asset_issuer,buying_asset_type,buying_asset_code,buying_asset_issuer,cursor,limit,order}',
-          'selling_asset_type': 'selling_asset.type',
-          'selling_asset_code': 'selling_asset.code',
-          'selling_asset_issuer': 'selling_asset.issuer',
-          'buying_asset_type': 'buying_asset.type',
-          'buying_asset_code': 'buying_asset.code',
-          'buying_asset_issuer': 'buying_asset.issuer',
-        },
-        'setupComponent': require('../components/SetupPanes/OrderBookTrades'),
       }
     }
   },
@@ -214,6 +199,27 @@ export const endpointsMap = {
         },
         'setupComponent': require('../components/SetupPanes/FindPaymentPaths'),
       }
+    }
+  },
+  'trades': {
+    'label': 'Trades',
+    'endpoints': {
+      'all': {
+        'label': 'All Trades',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/endpoints/trades.html',
+        'method': 'GET',
+        'path': {
+          template: '/trades{?base_asset_type,base_asset_code,base_asset_issuer,counter_asset_type,counter_asset_code,counter_asset_issuer,offer_id,cursor,limit,order}',
+          'base_asset_type': 'base_asset.type',
+          'base_asset_code': 'base_asset.code',
+          'base_asset_issuer': 'base_asset.issuer',
+          'counter_asset_type': 'counter_asset.type',
+          'counter_asset_code': 'counter_asset.code',
+          'counter_asset_issuer': 'counter_asset.issuer',
+          'offer_id': 'offer_id'
+        },
+        'setupComponent': require('../components/SetupPanes/Trades'),
+      },
     }
   },
   'payments': {
