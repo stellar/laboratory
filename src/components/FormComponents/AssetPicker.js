@@ -48,9 +48,14 @@ export default function AssetPicker(props) {
   return <div>
     <RadioButtonPicker
       value={value.type}
-      onUpdate={(typeValue) => onUpdate(_.assign({}, props.value, {
-        type: typeValue,
-      }))}
+      onUpdate={(typeValue) => {
+        const newTypeValue = value.type === typeValue? "" : typeValue;
+        onUpdate(_.assign({}, props.value, {
+          type: newTypeValue,
+          code: newTypeValue ? "" : value.code,
+          issuer: newTypeValue ? "" : value.issuer
+        }))
+      }}
       className={(isCredit) ? 'picker--spaceBottom' : ''}
       items={assetButtons}
       />
