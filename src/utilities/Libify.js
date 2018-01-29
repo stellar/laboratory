@@ -83,7 +83,7 @@ Libify.Memo = function(opts) {
   case 'MEMO_HASH':
     return Sdk.Memo.hash(opts.content);
   case 'MEMO_RETURN':
-    return Sdk.Memo.returnHash(opts.content);
+    return Sdk.Memo.return(opts.content);
   }
 }
 
