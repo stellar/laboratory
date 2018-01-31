@@ -3,6 +3,7 @@ import React from 'react';
 import All from './All';
 import TextPicker from '../FormComponents/TextPicker.js';
 import OptionsTablePair from '../OptionsTable/Pair';
+import PubKeyPicker from '../FormComponents/PubKeyPicker.js';
 
 export default function AllAssets(props) {
   return <div>
@@ -14,7 +15,7 @@ export default function AllAssets(props) {
     </OptionsTablePair>
 
     <OptionsTablePair label="Asset Issuer" optional={true}>
-      <TextPicker
+      <PubKeyPicker
         value={props.values['asset_issuer']}
         onUpdate={(value) => {props.onUpdate('asset_issuer', value)}}
         />
