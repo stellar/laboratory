@@ -201,6 +201,29 @@ export const endpointsMap = {
       }
     }
   },
+  'trade_aggregations': {
+    'label': 'Trade Aggregations',
+    'endpoints': {
+      'all': {
+        'label': 'Trade Aggregations',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/endpoints/trade_aggregations.html',
+        'method': 'GET',
+        'path': {
+          template: '/trade_aggregations{?base_asset_type,base_asset_code,base_asset_issuer,counter_asset_type,counter_asset_code,counter_asset_issuer,start_time,end_time,resolution,limit,order}',
+          'base_asset_type': 'base_asset.type',
+          'base_asset_code': 'base_asset.code',
+          'base_asset_issuer': 'base_asset.issuer',
+          'counter_asset_type': 'counter_asset.type',
+          'counter_asset_code': 'counter_asset.code',
+          'counter_asset_issuer': 'counter_asset.issuer',
+          'start_time': 'start_time',
+          'end_time': 'end_time',
+          'resolution': 'resolution'
+        },
+        'setupComponent': require('../components/SetupPanes/TradeAggregations'),
+      },
+    }
+  },
   'trades': {
     'label': 'Trades',
     'endpoints': {
