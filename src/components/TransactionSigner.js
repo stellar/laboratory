@@ -134,15 +134,13 @@ class TransactionSigner extends React.Component {
                     onUpdate={(value) => dispatch(setSecrets(value))}
                   />
                 </OptionsTablePair>
-                <OptionsTablePair label="BIP Path">
+                <OptionsTablePair label="Ledger Wallet">
                   <BipPathPicker
                     value={bipPath}
                     onUpdate={(value) => dispatch(setBIPPath(value))}
                   />
-                </OptionsTablePair>
-                <OptionsTablePair label="Ledger Wallet">
                   <button  
-                    className="s-button" 
+                    className="s-button TxSignerKeys__signBipPath"
                     onClick={() => {dispatch(signWithLedger(xdr, bipPath))}}
                   >Sign with BIP Path</button>
                   {ledgerwalletMessage}
