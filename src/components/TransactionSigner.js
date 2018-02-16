@@ -6,12 +6,14 @@ import {
   importFromXdr,
   clearTransaction,
   setSecrets,
+  setBIPPath,
   signWithLedger,
 } from '../actions/transactionSigner';
 import {EasySelect} from './EasySelect';
 import OptionsTablePair from './OptionsTable/Pair';
 import SecretKeyPicker from './FormComponents/SecretKeyPicker';
 import MultiPicker from './FormComponents/MultiPicker';
+import BipPathPicker from './FormComponents/BipPathPicker';
 import {txPostLink, xdrViewer} from '../utilities/linkBuilder';
 import HelpMark from './HelpMark';
 import clickToSelect from '../utilities/clickToSelect';
@@ -25,7 +27,7 @@ import {signTransaction} from '../utilities/Libify';
 class TransactionSigner extends React.Component {
   render() {
     let {dispatch, networkObj} = this.props;
-    let {xdr, signers, ledgerwalletStatus} = this.props.state;
+    let {xdr, signers, bipPath, ledgerwalletStatus} = this.props.state;
     let content;
 
     if (validateTxXdr(xdr).result !== 'success') {
@@ -132,11 +134,17 @@ class TransactionSigner extends React.Component {
                     onUpdate={(value) => dispatch(setSecrets(value))}
                   />
                 </OptionsTablePair>
+                <OptionsTablePair label="BIP Path">
+                  <BipPathPicker
+                    value={bipPath}
+                    onUpdate={(value) => dispatch(setBIPPath(value))}
+                  />
+                </OptionsTablePair>
                 <OptionsTablePair label="Ledger Wallet">
                   <button  
                     className="s-button" 
-                    onClick={() => {dispatch(signWithLedger(xdr))}}
-                  >Sign with Default BIP Path</button>
+                    onClick={() => {dispatch(signWithLedger(xdr, bipPath))}}
+                  >Sign with BIP Path</button>
                   {ledgerwalletMessage}
                 </OptionsTablePair>
               </div>

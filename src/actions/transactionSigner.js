@@ -26,13 +26,19 @@ export function setSecrets(secrets) {
   };
 }
 
+export const SET_BIP_PATH = 'SET_BIP_PATH';
+export function setBIPPath(bipPath) {
+  return {
+    type: SET_BIP_PATH,
+    bipPath,
+  };
+}
+
 export const LEDGER_WALLET_SIGN_START = 'LEDGER_WALLET_SIGN_START';
 export const LEDGER_WALLET_SIGN_SUCCESS = 'LEDGER_WALLET_SIGN_SUCCESS';
 export const LEDGER_WALLET_SIGN_ERROR = 'LEDGER_WALLET_SIGN_ERROR';
 
-const DEFAULT_BIP = "44'/148'/0'";
-
-export function signWithLedger(txXDR) {
+export function signWithLedger(txXDR, bipPath) {
   return dispatch => {
     dispatch({ type: LEDGER_WALLET_SIGN_START });
 
@@ -56,8 +62,8 @@ export function signWithLedger(txXDR) {
 
     let onConnect = () => {
       BP.all([
-        ledgerApi.getPublicKey_async(DEFAULT_BIP),
-        ledgerApi.signTx_async(DEFAULT_BIP, transaction),
+        ledgerApi.getPublicKey_async(bipPath),
+        ledgerApi.signTx_async(bipPath, transaction),
       ]).then(results => {
         let {publicKey} = results[0];
         let {signature} = results[1];
