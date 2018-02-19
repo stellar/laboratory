@@ -3,6 +3,7 @@ import {
   IMPORT_FROM_XDR,
   CLEAR_TRANSACTION,
   SET_SECRETS,
+  SET_BIP_PATH,
   LEDGER_WALLET_SIGN_START,
   LEDGER_WALLET_SIGN_ERROR,
   LEDGER_WALLET_SIGN_SUCCESS,
@@ -15,6 +16,7 @@ import SLUG from '../constants/slug';
 const transactionSigner = combineReducers({
   xdr,
   signers,
+  bipPath,
   ledgerwalletStatus,
 })
 
@@ -46,6 +48,18 @@ function signers(state = [], action) {
     return []
   case SET_SECRETS:
     return action.secrets
+  }
+  return state;
+}
+
+function bipPath(state = [], action) {
+  switch (action.type) {
+  case LOAD_STATE:
+  case IMPORT_FROM_XDR:
+  case CLEAR_TRANSACTION:
+    return "44'/148'/0'"
+  case SET_BIP_PATH:
+    return action.bipPath
   }
   return state;
 }
