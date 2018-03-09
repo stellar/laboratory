@@ -1,4 +1,5 @@
-import StellarLedger from 'stellar-ledger-api';
+import LedgerTransport from '@ledgerhq/hw-transport-u2f';
+import LedgerStr from '@ledgerhq/hw-app-str';
 import {Transaction, Keypair, xdr} from 'stellar-sdk';
 
 var BP = require("bluebird");
@@ -42,7 +43,6 @@ export function signWithLedger(txXDR, bipPath) {
   return dispatch => {
     dispatch({ type: LEDGER_WALLET_SIGN_START });
 
-    let ledgerApi = new StellarLedger.Api(new StellarLedger.comm(120));
     let transaction = new Transaction(txXDR);
 
     let onError = err => {
@@ -60,10 +60,10 @@ export function signWithLedger(txXDR, bipPath) {
        }); 
     };
 
-    let onConnect = () => {
+    let onConnect = (ledgerApi) => {
       BP.all([
-        ledgerApi.getPublicKey_async(bipPath),
-        ledgerApi.signTx_async(bipPath, transaction),
+        ledgerApi.getPublicKey(bipPath),
+        ledgerApi.signTransaction(bipPath, transaction.signatureBase()),
       ]).then(results => {
         let {publicKey} = results[0];
         let {signature} = results[1];
@@ -78,7 +78,11 @@ export function signWithLedger(txXDR, bipPath) {
       }).catch(onError);
     };
 
-    ledgerApi.connect(onConnect, onError);
+    const openTimeout = 60 * 1000;
+    LedgerTransport.create(openTimeout).then((transport) => {
+      transport.setDebugMode(true);
+      onConnect(new LedgerStr(transport));
+    }).catch(onError);
   };
 }
 
