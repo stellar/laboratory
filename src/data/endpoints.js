@@ -27,6 +27,20 @@ export const endpointsMap = {
       }
     }
   },
+  'assets': {
+    'label': 'Assets',
+    'endpoints': {
+      'single': {
+        'label': 'All Assets',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/endpoints/assets-all.html',
+        'method': 'GET',
+        'path': {
+          template: '/assets{?asset_code,asset_issuer,cursor,order,limit}',
+        },
+        'setupComponent': require('../components/SetupPanes/AllAssets'),
+      }
+    }
+  },
   'effects': {
     'label': 'Effects',
     'endpoints': {

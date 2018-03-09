@@ -1,4 +1,5 @@
-import StellarLedger from 'stellar-ledger-api';
+import LedgerTransport from '@ledgerhq/hw-transport-u2f';
+import LedgerStr from '@ledgerhq/hw-app-str';
 import {Transaction, Keypair, xdr} from 'stellar-sdk';
 
 var BP = require("bluebird");
@@ -26,17 +27,22 @@ export function setSecrets(secrets) {
   };
 }
 
+export const SET_BIP_PATH = 'SET_BIP_PATH';
+export function setBIPPath(bipPath) {
+  return {
+    type: SET_BIP_PATH,
+    bipPath,
+  };
+}
+
 export const LEDGER_WALLET_SIGN_START = 'LEDGER_WALLET_SIGN_START';
 export const LEDGER_WALLET_SIGN_SUCCESS = 'LEDGER_WALLET_SIGN_SUCCESS';
 export const LEDGER_WALLET_SIGN_ERROR = 'LEDGER_WALLET_SIGN_ERROR';
 
-const DEFAULT_BIP = "44'/148'/0'";
-
-export function signWithLedger(txXDR) {
+export function signWithLedger(txXDR, bipPath) {
   return dispatch => {
     dispatch({ type: LEDGER_WALLET_SIGN_START });
 
-    let ledgerApi = new StellarLedger.Api(new StellarLedger.comm(120));
     let transaction = new Transaction(txXDR);
 
     let onError = err => {
@@ -54,10 +60,10 @@ export function signWithLedger(txXDR) {
        }); 
     };
 
-    let onConnect = () => {
+    let onConnect = (ledgerApi) => {
       BP.all([
-        ledgerApi.getPublicKey_async(DEFAULT_BIP),
-        ledgerApi.signTx_async(DEFAULT_BIP, transaction),
+        ledgerApi.getPublicKey(bipPath),
+        ledgerApi.signTransaction(bipPath, transaction.signatureBase()),
       ]).then(results => {
         let {publicKey} = results[0];
         let {signature} = results[1];
@@ -72,7 +78,11 @@ export function signWithLedger(txXDR) {
       }).catch(onError);
     };
 
-    ledgerApi.connect(onConnect, onError);
+    const openTimeout = 60 * 1000;
+    LedgerTransport.create(openTimeout).then((transport) => {
+      transport.setDebugMode(true);
+      onConnect(new LedgerStr(transport));
+    }).catch(onError);
   };
 }
 
