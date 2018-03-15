@@ -30,7 +30,7 @@ export function startFriendbotRequest(target) {
       status: 'loading',
     });
 
-    axios.get('https://horizon-testnet.stellar.org/friendbot?addr=' + target)
+    axios.get('https://friendbot.stellar.org/?addr=' + target)
       .then(r => {
         dispatchInNewStack(dispatch, {
           type: FINISH_FRIENDBOT_REQUEST,
@@ -44,7 +44,7 @@ export function startFriendbotRequest(target) {
         let code, message;
         if (e.status === 0) {
           code = '';
-          message = 'Unable to reach Horizon server at https://horizon-testnet.stellar.org';
+          message = 'Unable to reach Frienbot server at https://friendbot.stellar.org';
         } else {
           code = JSON.stringify(e.data, null, 2);
           message = `Failed to fund ${target} on the test network`;
