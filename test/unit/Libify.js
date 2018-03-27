@@ -239,9 +239,9 @@ describe('Libify.buildTransaction', () => {
       })
     })
 
-    describe('manageOffer operation at index 4', () => {
-      it('is of type manageOffer', () => {
-        expect(opAtIndex(4).type).to.equal('manageOffer');
+    describe('createPassiveOffer operation at index 4', () => {
+      it('is of type createPassiveOffer', () => {
+        expect(opAtIndex(4).type).to.equal('createPassiveOffer');
       })
       it('contains specified amount', () => {
         expect(opAtIndex(4).amount).to.equal('5')
