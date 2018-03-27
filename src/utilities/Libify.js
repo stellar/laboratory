@@ -195,7 +195,7 @@ Libify.Operation.createPassiveOffer = function(opts) {
   assertNotEmpty(opts.buying, 'Create Passive Offer operation requires buying asset');
   assertNotEmpty(opts.amount, 'Create Passive Offer operation requires amount');
   assertNotEmpty(opts.price, 'Create Passive Offer operation requires price');
-  return Sdk.Operation.manageOffer({
+  return Sdk.Operation.createPassiveOffer({
     selling: Libify.Asset(opts.selling),
     buying: Libify.Asset(opts.buying),
     amount: opts.amount,
@@ -376,11 +376,11 @@ Libify.signTransaction = function(txXdr, signers, networkObj, ledgerWalletSigs) 
     newTx.sign(Sdk.Keypair.fromSecret(signer));
   });
   _.each(validPreimages, (signer) => {
-    addedSigs++;    
+    addedSigs++;
     newTx.signHashX(Buffer.from(signer, 'hex'));
   });
   _.each(ledgerWalletSigs, (ledgerSig) => {
-    addedSigs++;    
+    addedSigs++;
     newTx.signatures.push(ledgerSig);
   });
 
