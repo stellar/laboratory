@@ -85,7 +85,7 @@ export const endpointsMap = {
         'helpUrl': 'https://www.stellar.org/developers/horizon/reference/effects-for-transaction.html',
         'method': 'GET',
         'path': {
-          template: '/transactions/{transaction}/effects',
+          template: '/transactions/{transaction}/effects{?cursor,limit,order}',
         },
         'setupComponent': require('../components/SetupPanes/ForTransaction'),
       }
