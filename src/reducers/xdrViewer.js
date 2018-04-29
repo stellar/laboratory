@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {combineReducers} from 'redux';
 import {UPDATE_XDR_INPUT, UPDATE_XDR_TYPE_FILTER, UPDATE_XDR_TYPE} from '../actions/xdrViewer';
 import {LOAD_STATE} from '../actions/routing';
