@@ -2,12 +2,12 @@ import React from 'react';
 import {connect} from 'react-redux';
 import _ from 'lodash';
 import SelectPicker from './FormComponents/SelectPicker';
+import TextPicker from './FormComponents/TextPicker.js';
 import extrapolateFromXdr from '../utilities/extrapolateFromXdr';
 import TreeView from './TreeView';
 import validateBase64 from '../utilities/validateBase64';
-import {updateXdrInput, updateXdrType, fetchLatestTx} from '../actions/xdrViewer';
+import {updateXdrInput, updateXdrTypeFilter, updateXdrType, fetchLatestTx} from '../actions/xdrViewer';
 import NETWORK from '../constants/network';
-import {xdr} from 'stellar-sdk';
 
 function XdrViewer(props) {
   let {dispatch, state, baseURL} = props;
@@ -16,7 +16,7 @@ function XdrViewer(props) {
   let messageClass = validation.result === 'error' ? 'xdrInput__message__alert' : 'xdrInput__message__success';
   let message = <p className={messageClass}>{validation.message}</p>
 
-  let xdrTypeIsValid = _.indexOf(xdrTypes, state.type) >= 0;
+  let xdrTypeIsValid = _.indexOf(state.types, state.type) >= 0;
   let treeView, errorMessage;
   if (state.input === '') {
     errorMessage = <p>Enter a base-64 encoded XDR blob to decode.</p>;
@@ -53,11 +53,17 @@ function XdrViewer(props) {
         </div>
 
         <p className="XdrViewer__label">XDR type:</p>
+        <TextPicker
+          value={state.typeSearch}
+          placeholder="Search"
+          onUpdate={(value) => dispatch(updateXdrTypeFilter(value))}
+          className="XdrViewer__type_search"
+          />
         <SelectPicker
           value={state.type}
-          placeholder="Select XDR type"
+          placeholder={"Select XDR type"}
           onUpdate={(input) => dispatch(updateXdrType(input))}
-          items={xdrTypes}
+          items={state.types}
         />
       </div>
     </div>
@@ -77,8 +83,3 @@ function chooseState(state) {
     baseURL: NETWORK.available[state.network.current].url,
   }
 }
-
-// Array of all the xdr types. Then, the most common ones appear at the top
-// again for convenience
-let xdrTypes = _(xdr).functions().sort().value();
-xdrTypes = ['TransactionEnvelope', 'TransactionResult', 'TransactionMeta', '---'].concat(xdrTypes)

@@ -8,6 +8,14 @@ export function updateXdrInput(input) {
   }
 }
 
+export const UPDATE_XDR_TYPE_FILTER = 'UPDATE_XDR_TYPE_FILTER';
+export function updateXdrTypeFilter(filter) {
+  return {
+    type: UPDATE_XDR_TYPE_FILTER,
+    filter,
+  }
+}
+
 export const UPDATE_XDR_TYPE = 'UPDATE_XDR_TYPE';
 export function updateXdrType(xdrType) {
   return {
