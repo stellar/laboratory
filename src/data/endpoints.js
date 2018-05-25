@@ -257,6 +257,15 @@ export const endpointsMap = {
         },
         'setupComponent': require('../components/SetupPanes/Trades'),
       },
+      'for_account': {
+        'label': 'Trades for Account',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/trades-for-account.html',
+        'method': 'GET',
+        'path': {
+          template: '/accounts/{account_id}/trades{?cursor,limit,order}',
+        },
+        'setupComponent': require('../components/SetupPanes/ForAccount'),
+      },
     }
   },
   'payments': {
