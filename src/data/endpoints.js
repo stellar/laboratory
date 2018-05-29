@@ -76,7 +76,7 @@ export const endpointsMap = {
         'helpUrl': 'https://www.stellar.org/developers/horizon/reference/effects-for-operation.html',
         'method': 'GET',
         'path': {
-          template: '/operation/{operation}/effects{?cursor,limit,order}',
+          template: '/operations/{operation}/effects{?cursor,limit,order}',
         },
         'setupComponent': require('../components/SetupPanes/ForOperation'),
       },
