@@ -19,6 +19,9 @@ let linkHighlighterRules = {
   'result_meta_xdr': (value) => {
     return xdrViewer(value, 'TransactionMeta');
   },
+  'fee_meta_xdr': (value) => {
+    return xdrViewer(value, 'OperationMeta');
+  },
   'id': accountIdGenerator,
   'public_key': accountIdGenerator,
   'account_id': accountIdGenerator,
