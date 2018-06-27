@@ -269,6 +269,7 @@ Libify.Operation.manageData = function(opts) {
   return Sdk.Operation.manageData({
     name: opts.name,
     value: castStringOrNull(opts.value),
+    source: opts.sourceAccount,
   })
 }
 
