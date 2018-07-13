@@ -3,12 +3,12 @@ import {Network, Networks} from 'stellar-sdk';
 const NETWORK = {
   available: {
     test: {
-      url: 'https://horizon-testnet.stellar.org',
-      networkObj: new Network(Networks.TESTNET),
+      horizonURL: 'https://horizon-testnet.stellar.org',
+      networkPassphrase: Networks.TESTNET
     },
     public: {
-      url: 'https://horizon.stellar.org',
-      networkObj: new Network(Networks.PUBLIC),
+      horizonURL: 'https://horizon.stellar.org',
+      networkPassphrase: Networks.PUBLIC
     }
   },
   defaultName: 'test',

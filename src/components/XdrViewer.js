@@ -74,7 +74,7 @@ export default connect(chooseState)(XdrViewer);
 function chooseState(state) {
   return {
     state: state.xdrViewer,
-    baseURL: NETWORK.available[state.network.current].url,
+    baseURL: state.network.current.horizonURL,
   }
 }
 

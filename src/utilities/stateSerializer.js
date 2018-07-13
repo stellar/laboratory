@@ -27,10 +27,16 @@ export function stateToQueryObj(slug, state) {
 
 function serializeNetworkState(state) {
   // Only return something if we were passed the current network
-  if (_.has(state, 'network.current')) {
-    return {
-      network: state.network.current,
+  if (_.has(state, 'network')) {
+    if (state.network.current.name == "custom") {
+      return {
+        network: state.network.current.name,
+        horizonURL: state.network.current.horizonURL,
+        networkPassphrase: state.network.current.networkPassphrase
+      }
     }
+
+    return {network: state.network.current.name}
   }
   return {};
 }

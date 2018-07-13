@@ -26,9 +26,11 @@ import {signTransaction} from '../utilities/Libify';
 
 class TransactionSigner extends React.Component {
   render() {
-    let {dispatch, networkObj} = this.props;
+    let {dispatch, networkPassphrase} = this.props;
     let {xdr, signers, bipPath, ledgerwalletStatus} = this.props.state;
     let content;
+
+    let networkObj = new Network(networkPassphrase)
 
     if (validateTxXdr(xdr).result !== 'success') {
       content = <div className="so-back">
@@ -45,6 +47,7 @@ class TransactionSigner extends React.Component {
       let transaction = new Transaction(xdr);
 
       let infoTable = {
+        'Signing for': <pre className="so-code so-code__wrap"><code>{networkPassphrase}</code></pre>,
         'Transaction Envelope XDR': <EasySelect plain={true}><pre className="so-code so-code__wrap"><code>{xdr}</code></pre></EasySelect>,
         'Transaction Hash': <EasySelect plain={true}><pre className="so-code so-code__wrap"><code>{transaction.hash().toString('hex')}</code></pre></EasySelect>,
         'Source account': transaction.source,
@@ -186,7 +189,7 @@ export default connect(chooseState)(TransactionSigner);
 function chooseState(state) {
   return {
     state: state.transactionSigner,
-    networkObj: NETWORK.available[state.network.current].networkObj,
+    networkPassphrase: state.network.current.networkPassphrase,
   }
 }
 
