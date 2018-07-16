@@ -68,7 +68,7 @@ export default connect(chooseState)(EndpointExplorer)
 function chooseState(state) {
   return {
     state: state.endpointExplorer,
-    baseURL: NETWORK.available[state.network.current].url,
+    baseURL: state.network.current.horizonURL,
   };
 }
 

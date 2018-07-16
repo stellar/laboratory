@@ -65,7 +65,7 @@ class sequenceFetcherClass extends React.Component {
   render() {
     let {attributes, sequenceFetcherError} = this.props.state;
     let dispatch = this.props.dispatch;
-    let currentNetwork = this.props.currentNetwork;
+    let horizonURL = this.props.horizonURL;
     if (!StrKey.isValidEd25519PublicKey(attributes.sourceAccount)) {
       return null;
     }
@@ -83,10 +83,11 @@ class sequenceFetcherClass extends React.Component {
       <a
         className="s-button"
         onClick={() => dispatch(
-          fetchSequence(attributes.sourceAccount, NETWORK.available[currentNetwork].url)
+          fetchSequence(attributes.sourceAccount, horizonURL)
         )}
         >Fetch next sequence number for account starting with "{truncatedAccountId}"</a>
       <br />
+      <small>Fetching from: <code>{horizonURL}</code></small><br />
       {sequenceErrorMessage}
     </p>
   }
@@ -96,6 +97,6 @@ let SequenceFetcher = connect(chooseState)(sequenceFetcherClass);
 function chooseState(state) {
   return {
     state: state.transactionBuilder,
-    currentNetwork: state.network.current,
+    horizonURL: state.network.current.horizonURL,
   }
 }
