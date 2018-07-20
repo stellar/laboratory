@@ -55,6 +55,16 @@ let castIntOrUndefined = function(value) {
   return undefined;
 }
 
+// This function processes the value in three situations:
+// 1. Is a string: return as is
+// 2. String is empty: converts to undefined (useful for optional arguments)
+let castStringOrUndefined = function(value) {
+  if (!_.isString(value) || value === '') {
+    return undefined;
+  }
+  return String(value);
+}
+
 let castStringOrNull = function(value) {
   if (!_.isString(value) || value === '') {
     return null;
@@ -258,7 +268,7 @@ Libify.Operation.setOptions = function(opts) {
     medThreshold: castIntOrUndefined(opts.medThreshold),
     highThreshold: castIntOrUndefined(opts.highThreshold),
     signer: signer,
-    homeDomain: opts.homeDomain,
+    homeDomain: castStringOrUndefined(opts.homeDomain),
     source: opts.sourceAccount,
   })
 }
