@@ -40,7 +40,7 @@ function StreamingRow(props) {
         />
       <span className="EndpointSetup__streaming__title">Server-Sent Events (streaming) mode</span>
       &nbsp;
-      <HelpMark href="https://www.stellar.org/developers/horizon/learn/responses.html#streaming" />
+      <HelpMark href="https://www.stellar.org/developers/horizon/reference/streaming.html" />
     </label>
   </div>;
 }
