@@ -215,6 +215,47 @@ export const endpointsMap = {
       }
     }
   },
+  'payments': {
+    'label': 'Payments',
+    'endpoints': {
+      'all': {
+        'label': 'All Payments',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/payments-all.html',
+        'method': 'GET',
+        'path': {
+          template: '/payments{?cursor,limit,order}',
+        },
+        'setupComponent': require('../components/SetupPanes/All'),
+      },
+      'for_account': {
+        'label': 'Payments for Account',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/payments-for-account.html',
+        'method': 'GET',
+        'path': {
+          template: '/accounts/{account_id}/payments{?cursor,limit,order}',
+        },
+        'setupComponent': require('../components/SetupPanes/ForAccount'),
+      },
+      'for_ledger': {
+        'label': 'Payments for Ledger',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/payments-for-ledger.html',
+        'method': 'GET',
+        'path': {
+          template: '/ledgers/{ledger}/payments{?cursor,limit,order}',
+        },
+        'setupComponent': require('../components/SetupPanes/ForLedger'),
+      },
+      'for_transaction': {
+        'label': 'Payments for Transaction',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/payments-for-transaction.html',
+        'method': 'GET',
+        'path': {
+          template: '/transactions/{transaction}/payments{?cursor,limit,order}',
+        },
+        'setupComponent': require('../components/SetupPanes/ForTransaction'),
+      }
+    }
+  },
   'trade_aggregations': {
     'label': 'Trade Aggregations',
     'endpoints': {
@@ -266,47 +307,6 @@ export const endpointsMap = {
         },
         'setupComponent': require('../components/SetupPanes/ForAccount'),
       },
-    }
-  },
-  'payments': {
-    'label': 'Payments',
-    'endpoints': {
-      'all': {
-        'label': 'All Payments',
-        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/payments-all.html',
-        'method': 'GET',
-        'path': {
-          template: '/payments{?cursor,limit,order}',
-        },
-        'setupComponent': require('../components/SetupPanes/All'),
-      },
-      'for_account': {
-        'label': 'Payments for Account',
-        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/payments-for-account.html',
-        'method': 'GET',
-        'path': {
-          template: '/accounts/{account_id}/payments{?cursor,limit,order}',
-        },
-        'setupComponent': require('../components/SetupPanes/ForAccount'),
-      },
-      'for_ledger': {
-        'label': 'Payments for Ledger',
-        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/payments-for-ledger.html',
-        'method': 'GET',
-        'path': {
-          template: '/ledgers/{ledger}/payments{?cursor,limit,order}',
-        },
-        'setupComponent': require('../components/SetupPanes/ForLedger'),
-      },
-      'for_transaction': {
-        'label': 'Payments for Transaction',
-        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/payments-for-transaction.html',
-        'method': 'GET',
-        'path': {
-          template: '/transactions/{transaction}/payments{?cursor,limit,order}',
-        },
-        'setupComponent': require('../components/SetupPanes/ForTransaction'),
-      }
     }
   },
   'transactions': {
