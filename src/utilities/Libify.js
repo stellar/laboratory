@@ -283,6 +283,14 @@ Libify.Operation.manageData = function(opts) {
   })
 }
 
+Libify.Operation.bumpSequence = function(opts) {
+  assertNotEmpty(opts.bumpTo, 'Sequence number should be set');
+  return Sdk.Operation.bumpSequence({
+    bumpTo: opts.bumpTo,
+    source: opts.sourceAccount,
+  })
+}
+
 // buildTransaction is not something found js-stellar libs but acts as an
 // abstraction to building a transaction with input data in the same format
 // as the reducers
