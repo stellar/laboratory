@@ -91,4 +91,11 @@ export const operationsMap = [
     helpNote: 'Sets, modifies, or deletes a Data Entry (name/value pair).',
     docsUrl: 'https://www.stellar.org/developers/learn/concepts/list-of-operations.html#manage-data',
   },
+  {
+    name: 'bumpSequence',
+    label: 'Bump Sequence',
+    operationPane: require('../components/OperationPanes/BumpSequence'),
+    helpNote: 'Bumps sequence number.',
+    docsUrl: 'https://www.stellar.org/developers/guides/concepts/list-of-operations.html#bump-sequence',
+  },
 ]
