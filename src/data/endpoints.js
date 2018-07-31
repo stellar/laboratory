@@ -307,6 +307,15 @@ export const endpointsMap = {
         },
         'setupComponent': require('../components/SetupPanes/ForAccount'),
       },
+      'for_offer': {
+        'label': 'Trades for Offer',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/trades-for-offer.html',
+        'method': 'GET',
+        'path': {
+          template: '/offers/{offer_id}/trades{?cursor,limit,order}',
+        },
+        'setupComponent': require('../components/SetupPanes/ForOffer'),
+      },
     }
   },
   'transactions': {
