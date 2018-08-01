@@ -306,6 +306,11 @@ Libify.buildTransaction = function(attributes, operations, networkObj) {
 
     let opts = {};
     if (attributes.fee !== '') {
+      const MAX_UINT32 = Math.pow( 2, 32 ) - 1;
+      if (parseInt(attributes.fee) > MAX_UINT32) {
+        throw Error(`Base Fee: too large (invalid 32-bit unisigned integer)`);
+      }
+      
       opts.fee = attributes.fee;
     }
 
