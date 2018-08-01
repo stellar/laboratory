@@ -9,10 +9,15 @@ import FlagfieldPicker from '../FormComponents/FlagfieldPicker';
 import Unsigned8bitIntPicker from '../FormComponents/Unsigned8bitIntPicker';
 import HelpMark from '../HelpMark';
 
-const accountFlagFields = {
+const accountFlagFieldsSet = {
   1: 'Authorization required',
   2: 'Authorization revocable',
   4: 'Authorization immutable',
+};
+
+const accountFlagFieldsClear = {
+  1: 'Authorization required',
+  2: 'Authorization revocable',
 };
 
 export default function SetOptions(props) {
@@ -30,7 +35,7 @@ export default function SetOptions(props) {
       optional={true} key="setFlags">
       <FlagfieldPicker
         value={props.values['setFlags']}
-        items={accountFlagFields}
+        items={accountFlagFieldsSet}
         onUpdate={(value) => {props.onUpdate('setFlags', value)}}
         />
       <p className="optionsTable__pair__content__note">Selected <a href="https://en.wikipedia.org/wiki/Flag_field" target="_blank">flags</a> mean to add selected flags in addition to flags already present on the account.</p>
@@ -40,7 +45,7 @@ export default function SetOptions(props) {
       optional={true} key="clearFlags">
       <FlagfieldPicker
         value={props.values['clearFlags']}
-        items={accountFlagFields}
+        items={accountFlagFieldsClear}
         onUpdate={(value) => {props.onUpdate('clearFlags', value)}}
         />
       <p className="optionsTable__pair__content__note">Selected <a href="https://en.wikipedia.org/wiki/Flag_field" target="_blank">flags</a> mean to remove selected flags already present on the account.</p>
