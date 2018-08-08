@@ -90,7 +90,6 @@ function httpRequest(request) {
 }
 
 function streamingRequest(url, onmessage) {
-  var callBuilder = new CallBuilder();
-  callBuilder.url = URI(url);
+  var callBuilder = new CallBuilder(URI(url));
   return callBuilder.stream({onmessage});
 }
