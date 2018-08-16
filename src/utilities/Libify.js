@@ -49,7 +49,7 @@ let castIntOrUndefined = function(value) {
   if (typeof value === 'number') {
     return value;
   }
-  if (value !== '' && _.isString(value) && value.match(/^[0-9]*$/g)) {
+  if (_.isString(value) && value.match(/^[0-9]+$/g)) {
     return Number(value);
   }
   return undefined;
