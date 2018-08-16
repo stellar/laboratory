@@ -426,12 +426,6 @@ babel-polyfill@^6.26.0:
     core-js "^2.5.0"
     regenerator-runtime "^0.10.5"
 
-babel-runtime@^4.7.16:
-  version "4.7.16"
-  resolved "https://registry.yarnpkg.com/babel-runtime/-/babel-runtime-4.7.16.tgz#7a3995ad8c9eb5b4d0dd35febf170d0d1420262b"
-  dependencies:
-    core-js "^0.6.1"
-
 babel-runtime@^6.26.0:
   version "6.26.0"
   resolved "https://registry.yarnpkg.com/babel-runtime/-/babel-runtime-6.26.0.tgz#965c7058668e82b55d7bfe04ff2337bc8b5647fe"
@@ -1033,10 +1027,6 @@ cookie@0.3.1:
 copy-descriptor@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/copy-descriptor/-/copy-descriptor-0.1.1.tgz#676f6eb3c39997c2ee1ac3a924fd6124748f578d"
-
-core-js@^0.6.1:
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-0.6.1.tgz#1b4970873e8101bf8c435af095faa9024f4b9b58"
 
 core-js@^1.0.0:
   version "1.2.7"
@@ -2652,11 +2642,10 @@ js-tokens@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-1.0.1.tgz#cc435a5c8b94ad15acb7983140fc80182c89aeae"
 
-js-xdr@^1.0.0:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/js-xdr/-/js-xdr-1.0.3.tgz#7ae0aba03969771a28dfe423ffc9e9d02d9301d7"
+js-xdr@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/js-xdr/-/js-xdr-1.0.4.tgz#a76e292ec3053f190dcd1dae9215274aae6a138d"
   dependencies:
-    babel-runtime "^4.7.16"
     cursor "^0.1.5"
     lodash "^4.17.5"
     long "^2.2.3"
@@ -4829,30 +4818,30 @@ stdout-stream@^1.4.0:
   dependencies:
     readable-stream "^2.0.1"
 
-stellar-base@^0.8.0:
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/stellar-base/-/stellar-base-0.8.0.tgz#98ca471c588ec44200ec113632d35729477b3f8c"
+stellar-base@^0.8.3:
+  version "0.8.3"
+  resolved "https://registry.yarnpkg.com/stellar-base/-/stellar-base-0.8.3.tgz#0403a538fdb5e7e247bb23e64eeabfa754323f72"
   dependencies:
     base32.js "~0.1.0"
     bignumber.js "^4.0.0"
     crc "3.5.0"
-    js-xdr "^1.0.0"
+    js-xdr "^1.0.4"
     lodash "^4.17.10"
     sha.js "^2.3.6"
     tweetnacl "^1.0.0"
   optionalDependencies:
     ed25519 "0.0.4"
 
-stellar-sdk@^0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/stellar-sdk/-/stellar-sdk-0.10.0.tgz#7ff96e299ea1b8c30d60a9c2af482aa7085c3dab"
+stellar-sdk@^0.10.3:
+  version "0.10.3"
+  resolved "https://registry.yarnpkg.com/stellar-sdk/-/stellar-sdk-0.10.3.tgz#91ce5eba56bcde69f398dd95df63a137e2aea74c"
   dependencies:
     axios "^0.18.0"
     es6-promise "^4.2.4"
     event-source-polyfill "0.0.12"
     eventsource "^1.0.5"
     lodash "^4.17.10"
-    stellar-base "^0.8.0"
+    stellar-base "^0.8.3"
     toml "^2.3.0"
     urijs "1.19.1"
 
