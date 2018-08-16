@@ -64,7 +64,7 @@ function intToExistenceArray(inputInt) {
 function existenceArrayToInt(existenceArray) {
   return _.reduce(existenceArray, (result, intValue) => {
     return result | parseInt(intValue);
-  }, 0);
+  }, undefined);
 }
 
 function isInteger(input) {
