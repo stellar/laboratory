@@ -150,8 +150,9 @@ function getValue(object, name) {
     return object.toString();
   }
 
+
   if (object && object._isBuffer) {
-    return {type: 'code', value: new Buffer(object).toString('base64')};
+    return {type: 'code', raw: object, value: new Buffer(object).toString('base64')};
   }
 
   if (typeof object === 'undefined') {
