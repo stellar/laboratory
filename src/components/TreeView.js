@@ -59,7 +59,10 @@ function RowValue(props) {
     separator = ': ';
   }
 
-  if (position === 'TransactionEnvelope.signatures') {
+  // Fix for: https://github.com/stellar/laboratory/issues/355
+  // Checks that fetchedSigners state is set, or that this transaction envelope
+  // originates from the xdr viewer page.
+  if (position === 'TransactionEnvelope.signatures' && fetchedSigners !== undefined) {
     checkSignatures(node, fetchedSigners);
     return formatSignatureCheckState(node, separator)
   }
