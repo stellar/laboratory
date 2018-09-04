@@ -20,7 +20,6 @@ import clickToSelect from '../utilities/clickToSelect';
 import scrollOnAnchorOpen from '../utilities/scrollOnAnchorOpen';
 import extrapolateFromXdr from '../utilities/extrapolateFromXdr';
 import validateTxXdr from '../utilities/validateTxXdr';
-import TreeView from './TreeView';
 import NETWORK from '../constants/network';
 import {signTransaction} from '../utilities/Libify';
 
@@ -75,16 +74,6 @@ class TransactionSigner extends React.Component {
         submitInstructions = <p className="TxSignerResult__instructions">
           Now that this transaction is signed, you can submit it to the network. Horizon provides an endpoint called Post Transaction that will relay your transaction to the network and inform you of the result.
         </p>
-      }
-
-      let txDetails;
-      if (result.xdr) { // Only show tree view if xdr is valid and exists
-        txDetails = <div className="so-back TransactionSigner__details">
-          <div className="so-chunk">
-            <p className="TransactionSigner__details__title">Transaction result details</p>
-            <TreeView className="TransactionSigner__details__tree" nodes={extrapolateFromXdr(result.xdr, 'TransactionEnvelope')} />
-          </div>
-        </div>
       }
 
       let ledgerwalletMessage;
@@ -162,7 +151,6 @@ class TransactionSigner extends React.Component {
             {submitLink} {xdrLink}
           </div>
         </div>
-        {txDetails}
       </div>
     }
     return <div className="TransactionSigner">
