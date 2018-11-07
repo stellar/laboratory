@@ -109,7 +109,7 @@ gulp.task('build', function(done) {
 
 
 function merge(object1, object2) {
-  return _.merge(object1, object2, function(a, b) {
+  return _.mergeWith(object1, object2, function(a, b) {
     if (_.isArray(a)) {
       return a.concat(b);
     }
