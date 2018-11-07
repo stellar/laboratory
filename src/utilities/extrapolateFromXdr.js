@@ -59,7 +59,7 @@ function parseArm(anchor, object) {
 
 function parseNormal(anchor, object) {
   anchor.nodes = [];
-  _(object).functionsIn().without('toXDR', 'ext').value().forEach(function(name) {
+  _(object).functionsIn().without('toXDR').value().forEach(function(name) {
     anchor.nodes.push({});
     buildTreeFromObject(object[name](), anchor.nodes[anchor.nodes.length-1], name);
   });
