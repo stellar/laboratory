@@ -68,6 +68,15 @@ function RowValue(props) {
     return formatSignature(node, separator);
   }
 
+  // Buffers with possible text representation
+  if (position === 'TransactionEnvelope.tx.memo.text' ||
+    position.match(/^TransactionEnvelope\.tx.operations\[[0-9]+\]\.body.manageDataOp.data.*$/) ||
+    position.match(/^TransactionEnvelope\.tx.operations\[[0-9]+\]\.body.setOptionsOp.homeDomain$/)) {
+    return <span>
+      <strong>{node.type}</strong>{separator}<code>{node.value.raw.toString()}</code> [hex: {value}]
+    </span>
+  }
+
   return <span><strong>{node.type}</strong>{separator}{value}</span>
 }
 
