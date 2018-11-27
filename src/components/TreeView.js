@@ -69,9 +69,11 @@ function RowValue(props) {
   }
 
   // Buffers with possible text representation
-  if (position === 'TransactionEnvelope.tx.memo.text' ||
-    position.match(/^TransactionEnvelope\.tx.operations\[[0-9]+\]\.body.manageDataOp.data.*$/) ||
-    position.match(/^TransactionEnvelope\.tx.operations\[[0-9]+\]\.body.setOptionsOp.homeDomain$/)) {
+  if (node.value &&
+    (position === 'TransactionEnvelope.tx.memo.text' ||
+     position.match(/^TransactionEnvelope\.tx.operations\[[0-9]+\]\.body.manageDataOp.data.*$/) ||
+     position.match(/^TransactionEnvelope\.tx.operations\[[0-9]+\]\.body.setOptionsOp.homeDomain$/)
+    )) {
     return <span>
       <strong>{node.type}</strong>{separator}<code>{node.value.raw.toString()}</code> [hex: {value}]
     </span>
