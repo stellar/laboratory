@@ -66,7 +66,7 @@ class AccountCreator extends React.Component {
       <div className="so-back AccountCreator__section">
         <div className="so-chunk">
           <h3>2. Friendbot: Fund a test network account</h3>
-          <p>The friendbot is a horizon API endpoint that will fund an account with 10,000 lumens on the test network.</p>
+          <p>The friendbot is a horizon API endpoint that will fund an account with 10,000 kin on the test network.</p>
 
           <PubKeyPicker
             className="picker--spaceBottom"
@@ -77,7 +77,7 @@ class AccountCreator extends React.Component {
           <button className="s-button"
             disabled={state.friendbotTarget.length === 0}
             onClick={() => dispatch(startFriendbotRequest(state.friendbotTarget))}
-            >Get test network lumens</button>
+            >Get test network kin</button>
           {friendbotMessage}
           {friendbotResultCodeblock}
         </div>
