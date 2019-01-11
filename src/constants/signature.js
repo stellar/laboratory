@@ -1,9 +1,9 @@
 // This standardizes all the signature verification states
 // into a single map.
 const SIGNATURE = {
-    NOT_VERIFIED_YET: 0,
-    INVALID: 1,
-    VALID: 2,
+    NOT_VERIFIED_YET: 'NOT_VERIFIED_YET',
+    INVALID: 'INVALID',
+    VALID: 'VALID',
   };
   export default SIGNATURE;
   

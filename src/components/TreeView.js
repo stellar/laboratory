@@ -5,6 +5,7 @@ import React from 'react';
 import _ from 'lodash';
 import {EasySelect} from './EasySelect';
 import SIGNATURE from '../constants/signature';
+import FETCHED_SIGNERS from '../constants/fetched_signers';
 
 // @param {array} props.nodes - Array of TreeView compatible nodes
 export default class TreeView extends React.Component {
@@ -84,19 +85,15 @@ function RowValue(props) {
 
 function checkSignatures(signatures, fetchedSigners) {
   // catch fetch signature errors
-  if (fetchedSigners === null || fetchedSigners === "PENDING") {
-    signatures.state = SIGNATURE.NOT_VERIFIED_YET;
-    return
-  } else if (fetchedSigners === "ERROR") {
-    signatures.state = SIGNATURE.INVALID;
-    return
+  signatures.state = fetchedSigners.state;
+
+  if (fetchedSigners.state !== FETCHED_SIGNERS.SUCCESS) {
+    return;
   }
-  
-  signatures.state = SIGNATURE.VALID;
 
   for (var i = 0; i < signatures.nodes.length; i ++) {
     const sig = signatures.nodes[i].nodes.find(n => n.type == 'signature');
-    const fetchedSignature = fetchedSigners.find(x => x.sig.equals(sig.value.raw));
+    const fetchedSignature = fetchedSigners.data.find(x => x.sig.equals(sig.value.raw));
     
     let isValid = SIGNATURE.NOT_VERIFIED_YET;
     if (fetchedSignature) {
@@ -150,15 +147,24 @@ function formatSignature(node, separator) {
   return <span style={style}><strong>{node.type}</strong>{separator}{node.value.value} {symbol}</span>
 }
 
-// Signature fetch may exist in three different states so it requires 
+// Signature fetch may exist in different states so it requires
 // richer formating with ternary based coloring based on whether the
-// state is valid (VALID), is pending (NOT_VERIFIED_YET), or has errored (INVALID).
+// state is NONE, SUCCCESS, PENDING, FAIL or NOT_EXIST.
 function formatSignatureCheckState(node, separator) {
   let message = "";
-  if (node.state === SIGNATURE.INVALID) {
-    message = <span style={{color: "red"}}> Error checking signatures...</span>;
-  } else if (node.state === SIGNATURE.NOT_VERIFIED_YET) {
-    message = <span style={{fontStyle: "italic"}}> Checking signatures...</span>;
+  switch (node.state) {
+    case FETCHED_SIGNERS.SUCCESS:
+      message = <span style={{fontStyle: "italic"}}> Signatures checked!</span>;
+      break;
+    case FETCHED_SIGNERS.PENDING:
+      message = <span style={{fontStyle: "italic"}}> Checking signatures...</span>;
+      break;
+    case FETCHED_SIGNERS.FAIL:
+      message = <span style={{color: "red"}}> Error checking signatures...</span>;
+      break;
+    case FETCHED_SIGNERS.NOT_EXIST:
+      message = <span style={{color: "red"}}> Some source accounts does not exist...</span>;
+      break;
   }
-  return <span><strong>{node.type}</strong>{separator}{node.value}{message}</span>
+  return <span><strong>{node.type}</strong>{separator}{node.value}{message}</span>;
 }

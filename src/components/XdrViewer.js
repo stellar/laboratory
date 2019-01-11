@@ -1,6 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import _ from 'lodash';
+import FETCHED_SIGNERS from '../constants/fetched_signers';
 import SelectPicker from './FormComponents/SelectPicker';
 import extrapolateFromXdr from '../utilities/extrapolateFromXdr';
 import TreeView from './TreeView';
@@ -31,7 +32,7 @@ function XdrViewer(props) {
   }
 
   // Fetch signers on initial load
-  if (state.type === "TransactionEnvelope" && state.fetchedSigners === null) {
+  if (state.type === "TransactionEnvelope" && state.fetchedSigners.state === FETCHED_SIGNERS.NONE) {
     dispatch(fetchSigners(state.input, baseURL, networkPassphrase))
   }
 

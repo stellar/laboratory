@@ -1,5 +1,6 @@
 import {combineReducers} from 'redux';
-import {UPDATE_XDR_INPUT, UPDATE_XDR_TYPE, FETCHED_SIGNERS_SUCCESS, FETCHED_SIGNERS_FAIL, FETCHED_SIGNERS_START} from '../actions/xdrViewer';
+import {UPDATE_XDR_INPUT, UPDATE_XDR_TYPE} from '../actions/xdrViewer';
+import FETCHED_SIGNERS from '../constants/fetched_signers';
 import {LOAD_STATE} from '../actions/routing';
 import {SET_PARAMS} from "../actions/network";
 
@@ -39,16 +40,21 @@ function type(state = 'TransactionEnvelope', action) {
   return state;
 }
 
-function fetchedSigners(state = null, action) {
+function fetchedSigners(state = {state: FETCHED_SIGNERS.NONE}, action) {
   switch (action.type) {
-  case FETCHED_SIGNERS_SUCCESS:
-    return action.result;
-  case FETCHED_SIGNERS_FAIL:
-    return "ERROR";
-  case FETCHED_SIGNERS_START:
-    return "PENDING";
-  case SET_PARAMS:
-    return null;
+    case FETCHED_SIGNERS.SUCCESS:
+      return {
+        state: FETCHED_SIGNERS.SUCCESS,
+        data: action.result
+      };
+    case FETCHED_SIGNERS.NONE:
+    case FETCHED_SIGNERS.PENDING:
+    case FETCHED_SIGNERS.FAIL:
+    case FETCHED_SIGNERS.NOT_EXIST:
+      return {state: action.type};
+    case SET_PARAMS:
+      return {state: FETCHED_SIGNERS.NONE};
+    default:
+      return state;
   }
-  return state;
 }
