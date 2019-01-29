@@ -4840,9 +4840,9 @@ stellar-base@morleyzhi/js-stellar-base#24caa57b837cdc44d06f9b78ac3d2fc6773d556c:
   optionalDependencies:
     ed25519 "0.0.4"
 
-stellar-sdk@morleyzhi/js-stellar-sdk#d9bc8ce95ee5c3bb60a50e3ce98f64ad79f98ccd:
+stellar-sdk@morleyzhi/js-stellar-sdk#8751c627642867fab90e107d50996d73f10ed256:
   version "0.12.0"
-  resolved "https://codeload.github.com/morleyzhi/js-stellar-sdk/tar.gz/d9bc8ce95ee5c3bb60a50e3ce98f64ad79f98ccd"
+  resolved "https://codeload.github.com/morleyzhi/js-stellar-sdk/tar.gz/8751c627642867fab90e107d50996d73f10ed256"
   dependencies:
     axios "^0.18.0"
     es6-promise "^4.2.4"

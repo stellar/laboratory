@@ -39,7 +39,7 @@
     "sass-loader": "^3.2.3",
     "solar-css": "git+https://github.com/stellar/solar#master",
     "solar-stellarorg": "git+https://github.com/stellar/solar-stellarorg#master",
-    "stellar-sdk": "morleyzhi/js-stellar-sdk#d9bc8ce95ee5c3bb60a50e3ce98f64ad79f98ccd",
+    "stellar-sdk": "morleyzhi/js-stellar-sdk#8751c627642867fab90e107d50996d73f10ed256",
     "uri-templates": "^0.1.9",
     "urijs": "^1.16.0",
     "webpack": "^1.13.2"
