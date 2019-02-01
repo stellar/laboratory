@@ -247,7 +247,7 @@ describe('Libify.buildTransaction', () => {
         expect(opAtIndex(4).type).to.equal('createPassiveOffer');
       })
       it('contains specified amount', () => {
-        expect(opAtIndex(4).amount).to.equal('5')
+        expect(opAtIndex(4).amount).to.equal('5.0000000')
       })
     })
 
