@@ -1,8 +1,10 @@
 import React from 'react';
-import {xdr, Transaction, Operation} from 'stellar-sdk';
+import {xdr, Transaction, Operation, Network, Networks} from 'stellar-sdk';
 import Libify from '../../src/utilities/Libify';
 
 describe('Libify.buildTransaction', () => {
+  beforeEach(() => Network.useTestNetwork());
+
   context('when building a simple transaction', () => {
     let simpleTransaction = Libify.buildTransaction({
       sourceAccount: 'GCNZ6DLRLBDUUTXMGKHMCIG44I6VSZ4U6ACY6CSICK5DFVRATYJTAEVT',
@@ -19,7 +21,8 @@ describe('Libify.buildTransaction', () => {
         },
         name: 'createAccount'
       }
-    ]);
+    ], new Network(Networks.TESTNET));
+    expect(simpleTransaction.errors).to.deep.equal([]);
     let decodedTx = new Transaction(simpleTransaction.xdr);
 
     it('contains specified source account', () => {
