@@ -56,6 +56,14 @@ export default function TxBuilderAttributes(props) {
           onUpdate={(value) => {onUpdate('timebounds', value)}}
           />
         <p className="optionsTable__pair__content__note">Enter <a href="http://www.epochconverter.com/" target="_blank">unix timestamp</a> values of time bounds when this transaction will be valid.</p>
+        <p className="optionsTable__pair__content__note">For regular transactions, it is highly recommended to set <code>max_time</code> to get <a href="https://github.com/stellar/stellar-core/issues/1811" target="_blank">a final result</a> of a transaction in a defined time.</p>
+        <p className="optionsTable__pair__content__note">
+          <a
+            className="s-button"
+            onClick={() => onUpdate('timebounds', {maxTime: Math.ceil(new Date().getTime()/1000) + 5*60})}
+            >Set to 5 minutes from now</a>
+          <br />
+        </p>
       </OptionsTablePair>
     </div>
   </div>

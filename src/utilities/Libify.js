@@ -333,6 +333,10 @@ Libify.buildTransaction = function(attributes, operations, networkObj) {
 
     var transaction = new Sdk.TransactionBuilder(account, opts)
 
+    if (_.isEmpty(timebounds)) {
+      transaction.setTimeout(transaction.setTimeout(Sdk.TimeoutInfinite));
+    }
+
     if (attributes.memoType !== 'MEMO_NONE' && attributes.memoType !== '') {
       try {
         transaction = transaction.addMemo(Libify.Memo({
