@@ -1,6 +1,7 @@
 import {xdr, hash, StrKey, Network, Keypair} from 'stellar-sdk';
 import axios from 'axios';
 import SIGNATURE from '../constants/signature';
+import FETCHED_SIGNERS from '../constants/fetched_signers';
 
 export const UPDATE_XDR_INPUT = 'UPDATE_XDR_INPUT';
 export function updateXdrInput(input) {
@@ -32,12 +33,9 @@ export function fetchLatestTx(horizonBaseUrl, networkPassphrase) {
   }
 }
 
-export const FETCHED_SIGNERS_SUCCESS = 'FETCHED_SIGNERS_SUCCESS';
-export const FETCHED_SIGNERS_FAIL = 'FETCHED_SIGNERS_FAIL';
-export const FETCHED_SIGNERS_START = 'FETCHED_SIGNERS_START';
 export function fetchSigners(input, horizonBaseUrl, networkPassphrase) {
   return dispatch => {
-    dispatch({ type: FETCHED_SIGNERS_START });
+    dispatch({ type: FETCHED_SIGNERS.PENDING });
     try {
       // Capture network for determining signature base
       StellarSdk.Network.use(new Network(networkPassphrase));
@@ -102,17 +100,21 @@ export function fetchSigners(input, horizonBaseUrl, networkPassphrase) {
           sigObj.isValid = isValid ? SIGNATURE.VALID : SIGNATURE.INVALID;
         }
         dispatch({
-          type: FETCHED_SIGNERS_SUCCESS,
+          type: FETCHED_SIGNERS.SUCCESS,
           result: signatures,
         });
       })
       .catch(e => {
         console.error(e);
-        dispatch({ type: FETCHED_SIGNERS_FAIL })
+        if (e.status == 404) {
+          dispatch({ type: FETCHED_SIGNERS.NOT_EXIST });
+        } else {
+          dispatch({ type: FETCHED_SIGNERS.FAIL });
+        }
       });
     } catch(e) {
       console.error(e);
-      dispatch({ type: FETCHED_SIGNERS_FAIL });
+      dispatch({ type: FETCHED_SIGNERS.FAIL });
     }
   };
 }
