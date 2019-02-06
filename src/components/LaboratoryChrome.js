@@ -24,6 +24,14 @@ function LaboratoryChrome(props) {
   }
 
   return <div>
+    {props.currentNetwork.name == "test" ?
+      <div className="LaboratoryChrome__network_reset_alert s-alert">
+        <div className="so-chunk">
+          The test network will be reset on February 27th, 2019 at 0900 UTC. Please see our <a href="https://www.stellar.org/developers/guides/concepts/test-net.html#best-practices-for-using-testnet">testnet best practices</a> for more information.
+        </div>
+      </div> :
+      null
+    }
     <div className="so-back">
       <div className="so-chunk">
         <div className="so-siteHeader LaboratoryChrome__header">
@@ -84,6 +92,7 @@ function SimplePage(props) {
 export default connect(chooseState)(LaboratoryChrome);
 function chooseState(state) {
   return {
-    routing: state.routing
+    routing: state.routing,
+    currentNetwork: state.network.current
   }
 }
