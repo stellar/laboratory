@@ -1,5 +1,6 @@
 'use strict';
 
+require('dotenv').config()
 var _           = require('lodash');
 var bs          = require('browser-sync').create();
 var gulp        = require('gulp');
@@ -36,6 +37,11 @@ var webpackOptions = {
     ]
   },
   plugins: [
+    new webpack.DefinePlugin({
+      "process.env": {
+        AMPLITUDE_KEY: JSON.stringify(process.env.AMPLITUDE_KEY)
+      }
+    }),
     // Ignore native modules (ed25519)
     new webpack.IgnorePlugin(/ed25519/),
     new HtmlWebpackPlugin({

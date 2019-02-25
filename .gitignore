@@ -3,3 +3,4 @@
 /.tmp
 .idea
 yarn-error.log
+.env
