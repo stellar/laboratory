@@ -13,6 +13,10 @@ import OperationsBuilder from './OperationsBuilder';
 import {getOperation} from '../data/operations';
 import TxBuilderResult from './TxBuilderResult';
 import {resetTxbuilder} from '../actions/transactionBuilder';
+import {addEventHandler} from '../utilities/metrics'
+import transactionBuilderMetrics from '../metricsHandlers/transactionBuilder'
+
+addEventHandler(transactionBuilderMetrics)
 
 class TransactionBuilder extends React.Component {
   render() {
