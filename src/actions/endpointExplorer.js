@@ -46,6 +46,7 @@ export function submitRequest(request) {
     dispatch({
       type: START_REQUEST,
       id,
+      isStreaming: Boolean(request.streaming)
     });
 
     if (request.streaming) {
@@ -55,6 +56,7 @@ export function submitRequest(request) {
           type: UPDATE_REQUEST,
           id,
           body: message,
+          isStreaming: true
         })
       })
     } else {
