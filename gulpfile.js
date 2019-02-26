@@ -37,11 +37,6 @@ var webpackOptions = {
     ]
   },
   plugins: [
-    new webpack.DefinePlugin({
-      "process.env": {
-        AMPLITUDE_KEY: JSON.stringify(process.env.AMPLITUDE_KEY)
-      }
-    }),
     // Ignore native modules (ed25519)
     new webpack.IgnorePlugin(/ed25519/),
     new HtmlWebpackPlugin({
@@ -60,6 +55,12 @@ gulp.task('develop', function(done) {
       path: './.tmp'
     },
     plugins: [
+      new webpack.DefinePlugin({
+        "process.env": {
+          AMPLITUDE_KEY: JSON.stringify(process.env.AMPLITUDE_KEY),
+          NODE_ENV: JSON.stringify('development')
+        }
+      }),
       new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.js"),
       new ExtractTextPlugin('style.css', {allChunks: true})
     ]
@@ -100,6 +101,12 @@ gulp.task('build', function(done) {
       path: './dist'
     },
     plugins: [
+      new webpack.DefinePlugin({
+        "process.env": {
+          AMPLITUDE_KEY: JSON.stringify(process.env.AMPLITUDE_KEY),
+          NODE_ENV: JSON.stringify('production')
+        }
+      }),
       new webpack.optimize.CommonsChunkPlugin("vendor", "vendor-[chunkhash].js"),
       new ExtractTextPlugin('style-[contenthash].css', {allChunks: true}),
       new webpack.optimize.DedupePlugin(),
