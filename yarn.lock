@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@amplitude/ua-parser-js@0.7.11":
+  version "0.7.11"
+  resolved "https://registry.yarnpkg.com/@amplitude/ua-parser-js/-/ua-parser-js-0.7.11.tgz#e3e411912aa88b1832ce3fb4dd4996839bd39243"
+  integrity sha512-uBYLbl5dRh0w7yWATTiKwfzae4EU6B/jHK6xsY8vRgbNEfwJZLG44Z18B1sBGjeaUYCk2nP8lWNehKGeQf3jgw==
+
 "@ledgerhq/hw-app-str@^4.14.0":
   version "4.15.0"
   resolved "https://registry.yarnpkg.com/@ledgerhq/hw-app-str/-/hw-app-str-4.15.0.tgz#95f0d676b9ac7a6f4e598662a4553ec60b339b60"
@@ -75,6 +80,16 @@ alter@~0.2.0:
 amdefine@>=0.0.4:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
+
+amplitude-js@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/amplitude-js/-/amplitude-js-4.6.0.tgz#861c084c4fefffefcc0ac91f5db61659b5b426d4"
+  integrity sha512-uCennfDgk/4nzncMSN+AeljmRqtvUxBpuOClP4YY4pLTWi3s36Za6EzwKO5EyxHMPupKqjAsDvY3NtVAbyEztQ==
+  dependencies:
+    "@amplitude/ua-parser-js" "0.7.11"
+    blueimp-md5 "^2.10.0"
+    json3 "^3.3.2"
+    query-string "5"
 
 ansi-gray@^0.1.1:
   version "0.1.1"
@@ -536,6 +551,11 @@ bluebird@^2.9.33:
 bluebird@^3.0.5, bluebird@^3.5.1:
   version "3.5.1"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.1.tgz#d9551f9de98f1fcda1e683d17ee91a0602ee2eb9"
+
+blueimp-md5@^2.10.0:
+  version "2.10.0"
+  resolved "https://registry.yarnpkg.com/blueimp-md5/-/blueimp-md5-2.10.0.tgz#02f0843921f90dca14f5b8920a38593201d6964d"
+  integrity sha512-EkNUOi7tpV68TqjpiUz9D9NcT8um2+qtgntmMbi5UKssVX2m/2PLqotcric0RE63pB3HPN/fjf3cKHN2ufGSUQ==
 
 blueimp-tmpl@^2.5.5:
   version "2.5.7"
@@ -2695,6 +2715,11 @@ json-stringify-safe@~5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz#1296a2d58fd45f19a0f6ce01d65701e2c735b6eb"
 
+json3@^3.3.2:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/json3/-/json3-3.3.2.tgz#3c0434743df93e2f5c42aee7b19bcb483575f4e1"
+  integrity sha1-PAQ0dD35Pi9cQq7nsZvLSDV19OE=
+
 json5@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/json5/-/json5-0.4.0.tgz#054352e4c4c80c86c0923877d449de176a732c8d"
@@ -3996,6 +4021,15 @@ qs@~6.3.0:
 qs@~6.4.0:
   version "6.4.0"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.4.0.tgz#13e26d28ad6b0ffaa91312cd3bf708ed351e7233"
+
+query-string@5:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/query-string/-/query-string-5.1.1.tgz#a78c012b71c17e05f2e3fa2319dd330682efb3cb"
+  integrity sha512-gjWOsm2SoGlgLEdAGt7a6slVOk9mGiXmPFMqrEhLQ68rhQuBnpfs3+EmlvqKyxnCo9/PPlF+9MtY02S1aFg+Jw==
+  dependencies:
+    decode-uri-component "^0.2.0"
+    object-assign "^4.1.0"
+    strict-uri-encode "^1.0.0"
 
 query-string@^4.1.0:
   version "4.3.4"
