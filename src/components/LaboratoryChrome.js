@@ -10,6 +10,10 @@ import TransactionSigner from './TransactionSigner';
 import XdrViewer from './XdrViewer';
 import {RouterListener} from '../utilities/simpleRouter';
 import SLUG from '../constants/slug';
+import {addEventHandler} from '../utilities/metrics'
+import routingMetrics from '../metricsHandlers/routing'
+
+addEventHandler(routingMetrics)
 
 function LaboratoryChrome(props) {
   let tabItem = (name, slug) => {
