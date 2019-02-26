@@ -22,6 +22,10 @@ import extrapolateFromXdr from '../utilities/extrapolateFromXdr';
 import validateTxXdr from '../utilities/validateTxXdr';
 import NETWORK from '../constants/network';
 import {signTransaction} from '../utilities/Libify';
+import {addEventHandler} from '../utilities/metrics'
+import transactionSignerMetrics from '../metricsHandlers/transactionSigner'
+
+addEventHandler(transactionSignerMetrics)
 
 class TransactionSigner extends React.Component {
   render() {
@@ -78,7 +82,7 @@ class TransactionSigner extends React.Component {
 
       let ledgerwalletMessage;
       if (ledgerwalletStatus.message) {
-  
+
         let messageAlertType;
         if (ledgerwalletStatus.status === 'loading') {
           messageAlertType = 's-alert--info';
@@ -87,13 +91,13 @@ class TransactionSigner extends React.Component {
         } else if (ledgerwalletStatus.status === 'failure') {
           messageAlertType = 's-alert--alert';
         }
-  
+
         ledgerwalletMessage = <div>
           <br />
           <div className={`s-alert TxSignerKeys__ledgerwallet_message ${messageAlertType}`}> {ledgerwalletStatus.message} </div>
         </div>
       }
-  
+
 
       content = <div>
         <div className="so-back">
@@ -131,7 +135,7 @@ class TransactionSigner extends React.Component {
                     value={bipPath}
                     onUpdate={(value) => dispatch(setBIPPath(value))}
                   />
-                  <button  
+                  <button
                     className="s-button TxSignerKeys__signBipPath"
                     onClick={() => {dispatch(signWithLedger(xdr, bipPath))}}
                   >Sign with BIP Path</button>
