@@ -3,6 +3,10 @@ import {connect} from 'react-redux';
 import {chooseNetwork, setModalVisibility, updateModal, setCustomParams} from "../actions/network";
 import NETWORK from '../constants/network';
 import TextPicker from './FormComponents/TextPicker.js';
+import {addEventHandler} from '../utilities/metrics'
+import networkMetrics from '../metricsHandlers/network'
+
+addEventHandler(networkMetrics)
 
 class NetworkPicker extends React.Component {
   render() {

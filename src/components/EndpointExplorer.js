@@ -9,6 +9,10 @@ import {getEndpoint} from '../data/endpoints';
 import NETWORK from '../constants/network';
 import UriTemplates from 'uri-templates';
 import querystring from 'querystring';
+import {addEventHandler} from '../utilities/metrics'
+import endpointExplorerMetrics from '../metricsHandlers/endpointExplorer'
+
+addEventHandler(endpointExplorerMetrics)
 
 class EndpointExplorer extends React.Component {
   render() {

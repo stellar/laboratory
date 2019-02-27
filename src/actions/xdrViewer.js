@@ -22,6 +22,7 @@ export function updateXdrType(xdrType) {
 export const FETCH_LATEST_TX = 'FETCH_LATEST_TX';
 export function fetchLatestTx(horizonBaseUrl, networkPassphrase) {
   return dispatch => {
+    dispatch({type: FETCH_LATEST_TX})
     axios.get(horizonBaseUrl + '/transactions?limit=1&order=desc')
       .then(r => {
         const xdr = r.data._embedded.records[0].envelope_xdr;
@@ -48,10 +49,10 @@ export function fetchSigners(input, horizonBaseUrl, networkPassphrase) {
 
       // Extract all source accounts from transaction (base transaction and all operations)
       let sourceAccounts = {};
-  
+
       let baseAccountId = tx.source;
       sourceAccounts[baseAccountId] = true;
-      
+
       tx.operations.forEach(op => {
         if (op.source) {
           sourceAccounts[op.source] = true;
@@ -67,7 +68,7 @@ export function fetchSigners(input, horizonBaseUrl, networkPassphrase) {
         response.forEach(r => r.data.signers.forEach(signer => allSigners[signer.key] = signer));
 
         allSigners = Object.values(allSigners);
-        
+
         // We are only interested in checking if each of the signatures can be verified for some valid
         // signer for any of the source accounts in the transaction -- we are not taking into account
         // weights, or even if this signer makes sense.
@@ -77,7 +78,7 @@ export function fetchSigners(input, horizonBaseUrl, networkPassphrase) {
 
           for (var j = 0; j < allSigners.length; j ++) {
             const signer = allSigners[j];
-            
+
             // By nature of pre-authorized transaction, we won't ever receive a pre-auth
             // tx hash in signatures array, so we can ignore pre-authorized transactions here.
             switch (signer.type) {

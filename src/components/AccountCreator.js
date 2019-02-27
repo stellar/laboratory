@@ -7,6 +7,10 @@ import {
   startFriendbotRequest,
 } from '../actions/accountCreator';
 import {CodeBlock} from './CodeBlock';
+import {addEventHandler} from '../utilities/metrics'
+import accountCreatorMetrics from '../metricsHandlers/accountCreator'
+
+addEventHandler(accountCreatorMetrics)
 
 class AccountCreator extends React.Component {
   render() {
