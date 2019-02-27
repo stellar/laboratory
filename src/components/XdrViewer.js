@@ -8,6 +8,15 @@ import TreeView from './TreeView';
 import validateBase64 from '../utilities/validateBase64';
 import {updateXdrInput, updateXdrType, fetchLatestTx, fetchSigners} from '../actions/xdrViewer';
 import {xdr} from 'stellar-sdk';
+import {addEventHandler, logEvent} from '../utilities/metrics'
+import xdrViewerMetrics, {metricsEvents} from '../metricsHandlers/xdrViewer'
+
+// XDR decoding doesn't happen in redux, but is pretty much the only thing on
+// this page that we care about. Log metrics from the component as well.
+addEventHandler(xdrViewerMetrics)
+
+const tLogEvent = _.debounce(logEvent, 1000)
+
 
 function XdrViewer(props) {
   let {dispatch, state, baseURL, networkPassphrase} = props;
@@ -18,15 +27,17 @@ function XdrViewer(props) {
 
   let xdrTypeIsValid = _.indexOf(xdrTypes, state.type) >= 0;
   let treeView, errorMessage;
-  if (state.input === '') { 
+  if (state.input === '') {
     errorMessage = <p>Enter a base-64 encoded XDR blob to decode.</p>;
   } else if (!xdrTypeIsValid) {
     errorMessage = <p>Please select a XDR type</p>;
   } else {
     try {
       treeView = <TreeView nodes={extrapolateFromXdr(state.input, state.type)} fetchedSigners={state.fetchedSigners} />
+      tLogEvent(metricsEvents.decodeSuccess, {type: state.type})
     } catch (e) {
       console.error(e)
+      tLogEvent(metricsEvents.decodeFailed, {type: state.type})
       errorMessage = <p>Unable to decode input as {state.type}</p>;
     }
   }
