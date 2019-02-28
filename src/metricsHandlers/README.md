@@ -47,6 +47,9 @@ For purposes of improving the tools we provide our users, we track some metrics 
   * detail
   * extras
   * status
+* clicked internal link
+  * resource
+  * endpoint
 
 ## Transaction builder
 

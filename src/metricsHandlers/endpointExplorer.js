@@ -4,6 +4,7 @@ import {
   UPDATE_REQUEST,
   ERROR_REQUEST
 } from '../actions/endpointExplorer'
+import {LOAD_STATE} from '../actions/routing';
 import {logEvent} from '../utilities/metrics'
 
 const metricsEvents = {
@@ -65,6 +66,17 @@ export default function endpointExplorerMetrics(state, action) {
         status
       })
       return;
+    }
+
+    case LOAD_STATE: {
+      // If we're on the txbuilder and loading state, we might be transitioning
+      // to another feature with a complete transaction.
+      if (payload.slug === "explorer") {
+        logEvent(metricsEvents.signTransaction, {
+          endpoint: payload.endpoint,
+          resource: payload.resource
+        });
+      }
     }
   }
 }
