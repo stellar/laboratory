@@ -59,6 +59,9 @@ For purposes of improving the tools we provide our users, we track some metrics 
   * (no properties)
 * removed operation
   * (no properties)
+* changed operation attributes
+  * changedAttributes
+  * operationType
 * began signing transaction
   * operations
 * view XDR
