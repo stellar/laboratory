@@ -1,11 +1,11 @@
 import React from 'react';
 
 import OptionsTablePair from '../OptionsTable/Pair';
-import ForLedger from './ForLedger';
+import ForTransaction from './ForTransaction';
 import BooleanPicker from '../FormComponents/BooleanPicker';
 
-export default function TransactionsForLedger(props) {
-  return <ForLedger {...props}>
+export default function ForTransactionWithFailed(props) {
+  return <ForTransaction {...props}>
     <OptionsTablePair label="Include failed">
       <BooleanPicker
         value={props.values['include_failed']}
@@ -13,5 +13,5 @@ export default function TransactionsForLedger(props) {
         key="include_failed"
         />
     </OptionsTablePair>
-  </ForLedger>
+  </ForTransaction>
 }

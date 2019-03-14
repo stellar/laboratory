@@ -6,7 +6,7 @@ import PositiveIntPicker from '../FormComponents/PositiveIntPicker.js';
 import OrderPicker from '../FormComponents/OrderPicker.js';
 import BooleanPicker from '../FormComponents/BooleanPicker';
 
-export default function All(props) {
+export default function AllWithFailed(props) {
   return <div>
     <OptionsTablePair label="Cursor" optional={true}>
       <TextPicker

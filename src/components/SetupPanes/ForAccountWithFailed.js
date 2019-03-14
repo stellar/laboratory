@@ -4,7 +4,7 @@ import OptionsTablePair from '../OptionsTable/Pair';
 import ForAccount from './ForAccount';
 import BooleanPicker from '../FormComponents/BooleanPicker';
 
-export default function TransactionsForAccount(props) {
+export default function ForAccountWithFailed(props) {
   return <ForAccount {...props}>
     <OptionsTablePair label="Include failed">
       <BooleanPicker
