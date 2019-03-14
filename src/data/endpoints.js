@@ -172,9 +172,9 @@ export const endpointsMap = {
         'helpUrl': 'https://www.stellar.org/developers/horizon/reference/operations-for-transaction.html',
         'method': 'GET',
         'path': {
-          template: '/transactions/{transaction}/operations{?cursor,limit,order,include_failed}',
+          template: '/transactions/{transaction}/operations{?cursor,limit,order}',
         },
-        'setupComponent': require('../components/SetupPanes/ForTransactionWithFailed'),
+        'setupComponent': require('../components/SetupPanes/ForTransaction'),
       }
     }
   },
@@ -250,9 +250,9 @@ export const endpointsMap = {
         'helpUrl': 'https://www.stellar.org/developers/horizon/reference/payments-for-transaction.html',
         'method': 'GET',
         'path': {
-          template: '/transactions/{transaction}/payments{?cursor,limit,order,include_failed}',
+          template: '/transactions/{transaction}/payments{?cursor,limit,order}',
         },
-        'setupComponent': require('../components/SetupPanes/ForTransactionWithFailed'),
+        'setupComponent': require('../components/SetupPanes/ForTransaction'),
       }
     }
   },
