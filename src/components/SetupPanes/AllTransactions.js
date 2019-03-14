@@ -4,23 +4,10 @@ import OptionsTablePair from '../OptionsTable/Pair';
 import TextPicker from '../FormComponents/TextPicker.js';
 import PositiveIntPicker from '../FormComponents/PositiveIntPicker.js';
 import OrderPicker from '../FormComponents/OrderPicker.js';
+import BooleanPicker from '../FormComponents/BooleanPicker';
 
-// Helper that generates any of the other For SetupPanes.
-// Adds the new option row at the top with cursor, limit, and order below.
-
-// Required props:
-// - onUpdate
-// - values
-// - label
-// - optional
-// - content
-
-export default function For(props) {
+export default function All(props) {
   return <div>
-    <OptionsTablePair label={props.label} optional={props.optional}>
-      {props.content}
-    </OptionsTablePair>
-
     <OptionsTablePair label="Cursor" optional={true}>
       <TextPicker
         value={props.values['cursor']}
@@ -44,6 +31,13 @@ export default function For(props) {
         key="order"
         />
     </OptionsTablePair>
-    {props.children}
+
+    <OptionsTablePair label="Include failed">
+      <BooleanPicker
+        value={props.values['include_failed']}
+        onUpdate={(value) => {props.onUpdate('include_failed', value)}}
+        key="include_failed"
+        />
+    </OptionsTablePair>
   </div>
 }

@@ -326,9 +326,9 @@ export const endpointsMap = {
         'helpUrl': 'https://www.stellar.org/developers/horizon/reference/transactions-all.html',
         'method': 'GET',
         'path': {
-          template: '/transactions{?cursor,limit,order}',
+          template: '/transactions{?cursor,limit,order,include_failed}',
         },
-        'setupComponent': require('../components/SetupPanes/All'),
+        'setupComponent': require('../components/SetupPanes/AllTransactions'),
       },
       'single': {
         'label': 'Single Transaction',
@@ -354,18 +354,18 @@ export const endpointsMap = {
         'helpUrl': 'https://www.stellar.org/developers/horizon/reference/transactions-for-account.html',
         'method': 'GET',
         'path': {
-          template: '/accounts/{account_id}/transactions{?cursor,limit,order}',
+          template: '/accounts/{account_id}/transactions{?cursor,limit,order,include_failed}',
         },
-        'setupComponent': require('../components/SetupPanes/ForAccount'),
+        'setupComponent': require('../components/SetupPanes/TransactionForAccount'),
       },
       'for_ledger': {
         'label': 'Transactions for Ledger',
         'helpUrl': 'https://www.stellar.org/developers/horizon/reference/transactions-for-ledger.html',
         'method': 'GET',
         'path': {
-          template: '/ledgers/{ledger}/transactions{?cursor,limit,order}',
+          template: '/ledgers/{ledger}/transactions{?cursor,limit,order,include_failed}',
         },
-        'setupComponent': require('../components/SetupPanes/ForLedger'),
+        'setupComponent': require('../components/SetupPanes/TransactionForLedger'),
       }
     }
   }
