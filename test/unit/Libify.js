@@ -191,7 +191,7 @@ describe('Libify.buildTransaction', () => {
         }
       },
       {
-        id: 10,
+        id: 12,
         name: 'manageBuyOffer',
         attributes: {
           selling: {
@@ -259,7 +259,7 @@ describe('Libify.buildTransaction', () => {
       })
     })
 
-    describe('manageBuyOffer operation at index 11', () => {
+    describe('manageBuyOffer operation at index 12', () => {
       it('is of type manageBuyOffer', () => {
         expect(opAtIndex(11).type).to.equal('manageBuyOffer');
       })
