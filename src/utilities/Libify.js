@@ -201,11 +201,11 @@ Libify.Operation.manageSellOffer = function(opts) {
 }
 
 Libify.Operation.manageBuyOffer = function(opts) {
-  assertNotEmpty(opts.selling, 'Manage Sell Offer operation requires selling asset');
-  assertNotEmpty(opts.buying, 'Manage Sell Offer operation requires buying asset');
-  assertNotEmpty(opts.buyAmount, 'Manage Sell Offer operation requires amount');
-  assertNotEmpty(opts.price, 'Manage Sell Offer operation requires price');
-  assertNotEmpty(opts.offerId, 'Manage Sell Offer operation requires Offer ID');
+  assertNotEmpty(opts.selling, 'Manage Buy Offer operation requires selling asset');
+  assertNotEmpty(opts.buying, 'Manage Buy Offer operation requires buying asset');
+  assertNotEmpty(opts.buyAmount, 'Manage Buy Offer operation requires buyAmount');
+  assertNotEmpty(opts.price, 'Manage Buy Offer operation requires price');
+  assertNotEmpty(opts.offerId, 'Manage Buy Offer operation requires Offer ID');
   return Sdk.Operation.manageBuyOffer({
     selling: Libify.Asset(opts.selling),
     buying: Libify.Asset(opts.buying),
