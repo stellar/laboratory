@@ -2,10 +2,9 @@ import React from 'react';
 
 import OptionsTablePair from '../OptionsTable/Pair';
 import GenericOffer from './GenericOffer';
-import PubKeyPicker from '../FormComponents/PubKeyPicker.js';
 import PositiveIntPicker from '../FormComponents/PositiveIntPicker.js';
 
-export default function ManageOffer(props) {
+export default function ManageSellOffer(props) {
   let GenericOfferPickers = GenericOffer(props);
   return GenericOfferPickers.concat(
     <OptionsTablePair label="Offer ID" key="offerId">

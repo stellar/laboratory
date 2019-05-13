@@ -43,6 +43,13 @@ export const operationsMap = [
     docsUrl: 'https://www.stellar.org/developers/learn/concepts/list-of-operations.html#manage-offer',
   },
   {
+    name: 'manageBuyOffer',
+    label: 'Manage Buy Offer',
+    operationPane: require('../components/OperationPanes/ManageBuyOffer'),
+    helpNote: 'Creates, updates, or deletes an offer.',
+    docsUrl: 'https://www.stellar.org/developers/learn/concepts/list-of-operations.html#manage-offer',
+  },
+  {
     name: 'createPassiveSellOffer',
     label: 'Create Passive Sell Offer',
     operationPane: require('../components/OperationPanes/GenericOffer'),

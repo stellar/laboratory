@@ -20,14 +20,17 @@ export default function GenericOffer(props) {
         onUpdate={(value) => {props.onUpdate('buying', value)}}
         />
     </OptionsTablePair>,
-    <OptionsTablePair label="Amount you are selling" key="amount">
+    <OptionsTablePair 
+      label={props.isManageBuyOffer ? "Amount you are buying" : "Amount you are selling"} 
+      key={props.isManageBuyOffer ? "buyAmount" : "amount"}
+    >
       <AmountPicker
-        value={props.values['amount']}
-        onUpdate={(value) => {props.onUpdate('amount', value)}}
+        value={props.values[props.isManageBuyOffer ? "buyAmount" : 'amount']}
+        onUpdate={(value) => {props.onUpdate(props.isManageBuyOffer ? "buyAmount" : 'amount', value)}}
         />
       <p className="optionsTable__pair__content__note">An amount of zero will delete the offer.</p>
     </OptionsTablePair>,
-    <OptionsTablePair label="Price of 1 unit of asset for sale" key="price">
+    <OptionsTablePair label="Price of 1 unit of asset sold in terms of asset bought" key="price">
       <PositiveNumberPicker
         value={props.values['price']}
         onUpdate={(value) => {props.onUpdate('price', value)}}

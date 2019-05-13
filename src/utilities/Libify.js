@@ -200,6 +200,22 @@ Libify.Operation.manageSellOffer = function(opts) {
   })
 }
 
+Libify.Operation.manageBuyOffer = function(opts) {
+  assertNotEmpty(opts.selling, 'Manage Sell Offer operation requires selling asset');
+  assertNotEmpty(opts.buying, 'Manage Sell Offer operation requires buying asset');
+  assertNotEmpty(opts.buyAmount, 'Manage Sell Offer operation requires amount');
+  assertNotEmpty(opts.price, 'Manage Sell Offer operation requires price');
+  assertNotEmpty(opts.offerId, 'Manage Sell Offer operation requires Offer ID');
+  return Sdk.Operation.manageBuyOffer({
+    selling: Libify.Asset(opts.selling),
+    buying: Libify.Asset(opts.buying),
+    buyAmount: opts.buyAmount,
+    price: opts.price,
+    offerId: opts.offerId,
+    source: opts.sourceAccount,
+  })
+}
+
 Libify.Operation.createPassiveSellOffer = function(opts) {
   assertNotEmpty(opts.selling, 'Create Passive Sell Offer operation requires selling asset');
   assertNotEmpty(opts.buying, 'Create Passive Sell Offer operation requires buying asset');

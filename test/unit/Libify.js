@@ -189,6 +189,23 @@ describe('Libify.buildTransaction', () => {
           name: 'wow',
           value: 'such test'
         }
+      },
+      {
+        id: 10,
+        name: 'manageBuyOffer',
+        attributes: {
+          selling: {
+            type: 'native'
+          },
+          buying: {
+            type: 'credit_alphanum12',
+            code: 'ALLTHETHINGS',
+            issuer: 'GCVUWFL4USUCGHCPCOLPMORYCI5F37IM3CEIQM55IQ3ZNDSYCQIE2534'
+          },
+          buyAmount: '0',
+          price: '4.417',
+          offerId: '0'
+        }
       }
     ]);
     let decodedTx = xdr.TransactionEnvelope.fromXDR(largeTransaction.xdr, 'base64');
@@ -239,6 +256,15 @@ describe('Libify.buildTransaction', () => {
       })
       it('contains specified price', () => {
         expect(opAtIndex(3).price).to.equal('4.417')
+      })
+    })
+
+    describe('manageBuyOffer operation at index 11', () => {
+      it('is of type manageBuyOffer', () => {
+        expect(opAtIndex(11).type).to.equal('manageBuyOffer');
+      })
+      it('contains specified price', () => {
+        expect(opAtIndex(11).price).to.equal('4.417')
       })
     })
 
