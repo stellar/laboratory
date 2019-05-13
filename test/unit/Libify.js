@@ -100,7 +100,7 @@ describe('Libify.buildTransaction', () => {
       },
       {
         id: 3,
-        name: 'manageOffer',
+        name: 'manageSellOffer',
         attributes: {
           selling: {
             type: 'native'
@@ -117,7 +117,7 @@ describe('Libify.buildTransaction', () => {
       },
       {
         id: 4,
-        name: 'createPassiveOffer',
+        name: 'createPassiveSellOffer',
         attributes: {
           selling: {
             type: 'native'
@@ -189,6 +189,23 @@ describe('Libify.buildTransaction', () => {
           name: 'wow',
           value: 'such test'
         }
+      },
+      {
+        id: 12,
+        name: 'manageBuyOffer',
+        attributes: {
+          selling: {
+            type: 'native'
+          },
+          buying: {
+            type: 'credit_alphanum12',
+            code: 'ALLTHETHINGS',
+            issuer: 'GCVUWFL4USUCGHCPCOLPMORYCI5F37IM3CEIQM55IQ3ZNDSYCQIE2534'
+          },
+          buyAmount: '0',
+          price: '4.417',
+          offerId: '0'
+        }
       }
     ]);
     let decodedTx = xdr.TransactionEnvelope.fromXDR(largeTransaction.xdr, 'base64');
@@ -233,18 +250,27 @@ describe('Libify.buildTransaction', () => {
       })
     })
 
-    describe('manageOffer operation at index 3', () => {
-      it('is of type manageOffer', () => {
-        expect(opAtIndex(3).type).to.equal('manageOffer');
+    describe('manageSellOffer operation at index 3', () => {
+      it('is of type manageSellOffer', () => {
+        expect(opAtIndex(3).type).to.equal('manageSellOffer');
       })
       it('contains specified price', () => {
         expect(opAtIndex(3).price).to.equal('4.417')
       })
     })
 
-    describe('createPassiveOffer operation at index 4', () => {
-      it('is of type createPassiveOffer', () => {
-        expect(opAtIndex(4).type).to.equal('createPassiveOffer');
+    describe('manageBuyOffer operation at index 12', () => {
+      it('is of type manageBuyOffer', () => {
+        expect(opAtIndex(11).type).to.equal('manageBuyOffer');
+      })
+      it('contains specified price', () => {
+        expect(opAtIndex(11).price).to.equal('4.417')
+      })
+    })
+
+    describe('createPassiveSellOffer operation at index 4', () => {
+      it('is of type createPassiveSellOffer', () => {
+        expect(opAtIndex(4).type).to.equal('createPassiveSellOffer');
       })
       it('contains specified amount', () => {
         expect(opAtIndex(4).amount).to.equal('5.0000000')
