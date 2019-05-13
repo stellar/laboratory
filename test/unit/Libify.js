@@ -100,7 +100,7 @@ describe('Libify.buildTransaction', () => {
       },
       {
         id: 3,
-        name: 'manageOffer',
+        name: 'manageSellOffer',
         attributes: {
           selling: {
             type: 'native'
@@ -117,7 +117,7 @@ describe('Libify.buildTransaction', () => {
       },
       {
         id: 4,
-        name: 'createPassiveOffer',
+        name: 'createPassiveSellOffer',
         attributes: {
           selling: {
             type: 'native'
@@ -233,18 +233,18 @@ describe('Libify.buildTransaction', () => {
       })
     })
 
-    describe('manageOffer operation at index 3', () => {
-      it('is of type manageOffer', () => {
-        expect(opAtIndex(3).type).to.equal('manageOffer');
+    describe('manageSellOffer operation at index 3', () => {
+      it('is of type manageSellOffer', () => {
+        expect(opAtIndex(3).type).to.equal('manageSellOffer');
       })
       it('contains specified price', () => {
         expect(opAtIndex(3).price).to.equal('4.417')
       })
     })
 
-    describe('createPassiveOffer operation at index 4', () => {
-      it('is of type createPassiveOffer', () => {
-        expect(opAtIndex(4).type).to.equal('createPassiveOffer');
+    describe('createPassiveSellOffer operation at index 4', () => {
+      it('is of type createPassiveSellOffer', () => {
+        expect(opAtIndex(4).type).to.equal('createPassiveSellOffer');
       })
       it('contains specified amount', () => {
         expect(opAtIndex(4).amount).to.equal('5.0000000')
