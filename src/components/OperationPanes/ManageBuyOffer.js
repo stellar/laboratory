@@ -5,7 +5,7 @@ import GenericOffer from './GenericOffer';
 import PositiveIntPicker from '../FormComponents/PositiveIntPicker.js';
 
 export default function ManageBuyOffer(props) {
-  let GenericOfferPickers = GenericOffer(Object.assign({}, props, { isBuy: true }));
+  let GenericOfferPickers = GenericOffer(props, true);
   return GenericOfferPickers.concat(
     <OptionsTablePair label="Offer ID" key="offerId">
       <PositiveIntPicker

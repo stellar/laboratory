@@ -1,12 +1,11 @@
 import React from 'react';
 
 import OptionsTablePair from '../OptionsTable/Pair';
-import PubKeyPicker from '../FormComponents/PubKeyPicker.js';
 import PositiveNumberPicker from '../FormComponents/PositiveNumberPicker.js';
 import AmountPicker from '../FormComponents/AmountPicker.js';
 import AssetPicker from '../FormComponents/AssetPicker.js';
 
-export default function GenericOffer(props) {
+export default function GenericOffer(props, isBuy) {
   return [
     <OptionsTablePair label="Selling" key="selling">
       <AssetPicker
@@ -21,12 +20,12 @@ export default function GenericOffer(props) {
         />
     </OptionsTablePair>,
     <OptionsTablePair 
-      label={props.isBuy ? "Amount you are buying" : "Amount you are selling"} 
-      key={props.isBuy ? "buyAmount" : "amount"}
+      label={isBuy ? "Amount you are buying" : "Amount you are selling"} 
+      key={isBuy ? "buyAmount" : "amount"}
     >
       <AmountPicker
-        value={props.values[props.isBuy ? "buyAmount" : 'amount']}
-        onUpdate={(value) => {props.onUpdate(props.isBuy ? "buyAmount" : 'amount', value)}}
+        value={props.values[isBuy ? "buyAmount" : 'amount']}
+        onUpdate={(value) => {props.onUpdate(isBuy ? "buyAmount" : 'amount', value)}}
         />
       <p className="optionsTable__pair__content__note">An amount of zero will delete the offer.</p>
     </OptionsTablePair>,
