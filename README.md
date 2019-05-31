@@ -10,8 +10,7 @@ yarn install
 
 ## Building for production
 ```
-yarn
-install
+yarn install
 ./node_modules/.bin/gulp build
 ```
 
