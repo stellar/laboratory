@@ -33,7 +33,7 @@ var webpackOptions = {
       {test: /\.json$/, loader: 'json'},
       {test: /\.scss/, loader: ExtractTextPlugin.extract('css?sourceMap!sass?sourceMap')},
       {test: /\.html$/, loader: 'file?name=[name].html'},
-      {test: /\.(jpe?g|png|gif|svg)$/, loader: 'file?name=images/[hash].[ext]'}
+      {test: /\.(jpe?g|png|gif|svg|woff2?)$/, loader: 'file?name=images/[hash].[ext]'}
     ]
   },
   plugins: [
