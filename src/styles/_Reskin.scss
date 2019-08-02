@@ -18,18 +18,6 @@ input, textarea, select, .so-dropdown__select {
   border-color: $gray;
 }
 
-.LaboratoryChrome__siteNavBack,
-.pageIntro,
-.optionsTable__pair,
-.CodeBlock {
-  background-color: $lightestGray;
-  border-color: transparent;
-}
-.LaboratoryChrome__network_reset_alert {
-  background-color: $black;
-  color: $white;
-}
-
 .buttonList__item.buttonList__item {
   background-color: transparent;
   border-color: transparent;
@@ -101,25 +89,4 @@ input, textarea, select, .so-dropdown__select {
 }
 .is-active.is-active {
   border-color: #CCCCCC;
-}
-
-.TreeView__child.TreeView__child {
-  border-left-color: #f2f2f2;
-
-  &:hover {
-    border-left-color: $lightPurple;
-  }
-}
-
-.EndpointResult__tabs {
-  background-color: $lightPurple;
-  border-color: $purple;
-}
-.EndpointResult__tabs__tab.is-current {
-  border-color: $purple;
-}
-
-.NetworkPicker .overlay .modal {
-  border-radius: .5rem;
-  border: none;
 }

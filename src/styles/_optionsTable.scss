@@ -12,7 +12,7 @@
     border-radius: $s-var-radius;
     @include S-flex-row;
     margin: 0.75em 1em;
-    background: $s-color-neutral8;
+    background: $lightestGray;
     border: 1px solid transparent;
   }
   .optionsTable__pair__title {

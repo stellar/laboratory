@@ -9,7 +9,7 @@
 }
 
 .EndpointResult__loading {
-  border: 1px solid $s-color-neutral6;
+  border: 1px solid $gray;
   border-radius: $s-var-radius;
 }
 
@@ -20,9 +20,9 @@
 
 .EndpointResult__tabs {
   @include S-flex-row;
-  border: 1px solid $s-color-primary6;
+  border: 1px solid $gray;
   padding: 0.5em 1em 0 1em;
-  background: $s-color-primary9;
+  background: $lightestGray;
 }
 .EndpointResult__tabs:first-child {
   border-radius: $s-var-radius $s-var-radius 0 0;
@@ -42,7 +42,7 @@
   background: $s-color-primary9;
 }
 .EndpointResult__tabs__tab.is-current {
-  border: 1px solid $s-color-primary6;
+  border: 1px solid $gray;
   border-bottom: 0;
   background: $s-color-neutral9;
 }
@@ -60,7 +60,7 @@
 }
 
 .EndpointResult__content {
-  border: 1px solid $s-color-neutral6;
+  border: 1px solid $gray;
   border-top: 0;
   border-radius: 0 0 $s-var-radius $s-var-radius;
   padding: 1em;
