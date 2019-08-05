@@ -5,11 +5,16 @@ code, kbd, pre, samp {
   font-family: 'suisse-mono', monospace;
 }
 
-.so-logo__main svg {
-  margin: -1rem 0 -1.2rem 0;
+.so-logo {
+  align-items: center;
+}
+.so-logo__main {
+  margin: -12px 0 -7px;
+  line-height: 0;
 }
 .so-logo__separator {
   height: 1em;
+  border-color: $gray;
 }
 .so-back {
   padding-bottom: 1rem;
