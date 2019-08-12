@@ -95,3 +95,8 @@ input, textarea, select, .so-dropdown__select {
 .is-active.is-active {
   border-color: #CCCCCC;
 }
+
+.s-alert--info {
+  background-color: $lightPurple;
+  border-color: $purple;
+}
