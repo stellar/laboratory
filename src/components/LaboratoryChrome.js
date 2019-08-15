@@ -12,12 +12,6 @@ import {RouterListener} from '../utilities/simpleRouter';
 import SLUG from '../constants/slug';
 import {addEventHandler} from '../utilities/metrics'
 import routingMetrics from '../metricsHandlers/routing'
-import regularWoff from '../assets/suisseintl-regular-webfont.woff';
-import regularWoff2 from '../assets/suisseintl-regular-webfont.woff2';
-import semiboldWoff from '../assets/suisseintl-semibold-webfont.woff';
-import semiboldWoff2 from '../assets/suisseintl-semibold-webfont.woff2';
-import monoWoff from '../assets/suisseintlmono-regular-webfont.woff'
-import monoWoff2 from '../assets/suisseintlmono-regular-webfont.woff2'
 
 addEventHandler(routingMetrics)
 
@@ -34,33 +28,6 @@ function LaboratoryChrome(props) {
   }
 
   return <div>
-    <style dangerouslySetInnerHTML={{__html: `
-      @font-face {
-        font-display: block;
-        font-family: suisse;
-        src:
-          url('${regularWoff}') format("woff"),
-          url('${regularWoff2}') format("woff2");
-        font-weight: 400;
-      }
-      @font-face {
-        font-display: block;
-        font-family: suisse;
-        src:
-          url('${semiboldWoff}') format("woff"),
-          url('${semiboldWoff2}') format("woff2");
-        font-weight: 500;
-      }
-
-      @font-face {
-        font-display: swap;
-        font-family: suisse-mono;
-        src:
-          url('${monoWoff}') format("woff"),
-          url('${monoWoff2}') format("woff2");
-        font-weight: 400;
-      }`}}
-    />
     {props.currentNetwork.name == "test" ?
       <div className="LaboratoryChrome__network_reset_alert s-alert">
         <div className="so-chunk">

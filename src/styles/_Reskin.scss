@@ -1,3 +1,29 @@
+@font-face {
+  font-display: block;
+  font-family: suisse;
+  src:
+    url('../assets/suisseintl-regular-webfont.woff') format("woff"),
+    url('../assets/suisseintl-regular-webfont.woff2') format("woff2");
+  font-weight: 400;
+}
+@font-face {
+  font-display: block;
+  font-family: suisse;
+  src:
+    url('../assets/suisseintl-semibold-webfont.woff') format("woff"),
+    url('../assets/suisseintl-semibold-webfont.woff2') format("woff2");
+  font-weight: 500;
+}
+
+@font-face {
+  font-display: swap;
+  font-family: suisse-mono;
+  src:
+    url('../assets/suisseintlmono-regular-webfont.woff') format("woff"),
+    url('../assets/suisseintlmono-regular-webfont.woff') format("woff2");
+  font-weight: 400;
+}
+
 body {
   font-family: 'suisse', sans-serif;
 }
