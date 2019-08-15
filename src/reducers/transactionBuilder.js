@@ -1,4 +1,5 @@
 import {combineReducers} from 'redux';
+import {BASE_FEE} from 'stellar-sdk'
 import {
   UPDATE_ATTRIBUTES,
   FETCH_SEQUENCE_START,
@@ -85,7 +86,7 @@ function reorderOps(state, opId, toNth) {
 const defaultAttributes = {
   sourceAccount: '',
   sequence: '',
-  fee: '',
+  fee: BASE_FEE,
   memoType: '',
   memoContent: '',
   minTime: '',
