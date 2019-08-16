@@ -24,7 +24,7 @@ function operations(state = defaultOperations, action) {
     if (action.slug === SLUG.TXBUILDER) {
       if (action.queryObj.params) {
         // TODO: validate that this is actually a valid operations object
-        return rehydrate(action.queryObj.params).operations;
+        return rehydrate(action.queryObj.params).operations || defaultOperations;
       }
       return defaultOperations;
     }
@@ -86,7 +86,7 @@ function reorderOps(state, opId, toNth) {
 const defaultAttributes = {
   sourceAccount: '',
   sequence: '',
-  fee: BASE_FEE,
+  fee: String(BASE_FEE),
   memoType: '',
   memoContent: '',
   minTime: '',
