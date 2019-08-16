@@ -20,7 +20,7 @@ var webpackOptions = {
     vendor: ["axios", "react", "react-dom", "lodash", "stellar-sdk"]
   },
   output: {
-    publicPath: ''
+    publicPath: '/laboratory'
   },
   devtool: "source-map",
   resolve: {
@@ -52,7 +52,7 @@ gulp.task('develop', function(done) {
   var options = merge(webpackOptions, {
     output: {
       filename: "[name].js",
-      path: './.tmp'
+      path: './.tmp/laboratory'
     },
     plugins: [
       new webpack.DefinePlugin({
@@ -76,10 +76,11 @@ gulp.task('develop', function(done) {
   compiler.purgeInputFileSystem();
   compiler.watch(watchOptions, function(error, stats) {
     if (!bsInitialized) {
-      gulp.watch(".tmp/**/*").on("change", bs.reload);
+      gulp.watch(".tmp/laboratory/**/*").on("change", bs.reload);
       bs.init({
         notify: false,
-        server: "./.tmp"
+        server: "./.tmp",
+        startPath: '/laboratory'
       });
       bsInitialized = true;
     }
