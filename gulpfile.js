@@ -40,7 +40,8 @@ var webpackOptions = {
     // Ignore native modules (ed25519)
     new webpack.IgnorePlugin(/ed25519/),
     new HtmlWebpackPlugin({
-      title: 'Stellar Laboratory'
+      template: 'src/index.html',
+      inject: true,
     })
   ],
   node: {
