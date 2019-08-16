@@ -3,14 +3,13 @@
 }
 
 .LaboratoryChrome__siteNavBack {
-  border-top: 1px solid $s-color-neutral7;
-  border-bottom: 1px solid $s-color-neutral7;
   padding-top: 1.5em;
   padding-bottom: 1.5em;
-  background: $s-color-neutral8;
+  background: $lightestGray;
 }
 
 .LaboratoryChrome__network_reset_alert {
-  background: #e8f0ff;
+  background-color: $black;
+  color: $white;
   border-radius: 0;
 }

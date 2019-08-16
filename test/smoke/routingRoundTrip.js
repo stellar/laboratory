@@ -56,6 +56,9 @@ describe('routing system', () => {
     describe('in a default scenario', () => {
       itCircularlyConvertsState(SLUG.TXBUILDER, {
         network: 'test',
+        params: dehydrate({
+          attributes: {fee: '100'}
+        })
       });
     });
 
@@ -66,6 +69,7 @@ describe('routing system', () => {
           attributes: {
             sourceAccount: 'somewhere',
             sequence: 'over',
+            fee: '100',
             memoType: 'MEMO_TEXT',
             memoContent: 'the'
           },

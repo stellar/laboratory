@@ -1,5 +1,5 @@
 .optionsTable {
-  border: 1px solid $s-color-neutral6;
+  border: 1px solid $gray;
   border-radius: $s-var-radius;
 }
   .optionsTable__pair, .optionsTable__separator, .optionsTable__blank {
@@ -12,11 +12,8 @@
     border-radius: $s-var-radius;
     @include S-flex-row;
     margin: 0.75em 1em;
-    background: $s-color-neutral8;
+    background: $lightestGray;
     border: 1px solid transparent;
-  }
-  .optionsTable__pair:hover {
-    border: 1px solid $s-color-neutral7;
   }
   .optionsTable__pair__title {
     min-width: 8em;
@@ -53,5 +50,5 @@
     height: 1px;
     margin: 0;
     border: 0;
-    background: $s-color-neutral7;
+    background: $gray;
   }

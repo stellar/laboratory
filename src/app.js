@@ -1,3 +1,4 @@
+require("./redirect");
 require("./styles/main.scss");
 
 import React from 'react';
