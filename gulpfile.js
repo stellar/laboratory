@@ -20,7 +20,7 @@ var webpackOptions = {
     vendor: ["axios", "react", "react-dom", "lodash", "stellar-sdk"]
   },
   output: {
-    publicPath: '/laboratory'
+    publicPath: '/laboratory/'
   },
   devtool: "source-map",
   resolve: {
