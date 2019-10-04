@@ -2,8 +2,6 @@ import LedgerTransport from '@ledgerhq/hw-transport-u2f';
 import LedgerStr from '@ledgerhq/hw-app-str';
 import {Transaction, Keypair, xdr} from 'stellar-sdk';
 
-var BP = require("bluebird");
-
 export const IMPORT_FROM_XDR = 'IMPORT_FROM_XDR';
 export function importFromXdr(xdr) {
   return {
@@ -54,10 +52,10 @@ export function signWithLedger(txXDR, bipPath) {
         err = `Connection timeout.`;
       }
 
-      dispatch({ 
+      dispatch({
         type: LEDGER_WALLET_SIGN_ERROR,
         error: err,
-       }); 
+       });
     };
 
     let onConnect = (ledgerApi) => {

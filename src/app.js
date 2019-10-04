@@ -1,3 +1,4 @@
+import 'regenerator-runtime/runtime';
 require("./styles/main.scss");
 
 import React from 'react';
