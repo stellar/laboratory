@@ -21,9 +21,11 @@ import scrollOnAnchorOpen from '../utilities/scrollOnAnchorOpen';
 import extrapolateFromXdr from '../utilities/extrapolateFromXdr';
 import validateTxXdr from '../utilities/validateTxXdr';
 import NETWORK from '../constants/network';
-import {signTransaction} from '../utilities/Libify';
+import Libify from '../utilities/Libify';
 import {addEventHandler} from '../utilities/metrics'
 import transactionSignerMetrics from '../metricsHandlers/transactionSigner'
+
+const {signTransaction} = Libify
 
 addEventHandler(transactionSignerMetrics)
 
