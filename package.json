@@ -10,20 +10,21 @@
     "build": "gulp build"
   },
   "dependencies": {
+    "@babel/core": "^7.6.2",
+    "@babel/preset-env": "^7.6.2",
+    "@babel/preset-react": "^7.0.0",
     "@ledgerhq/hw-app-str": "^4.14.0",
     "@ledgerhq/hw-transport-u2f": "^4.13.0",
     "amplitude-js": "^4.6.0",
     "axios": "^0.8.1",
-    "babel-core": "^5.8.25",
-    "babel-loader": "^5.3.2",
-    "babel-polyfill": "^6.26.0",
+    "babel-loader": "^8.0.6",
     "browser-sync": "^2.9.11",
     "chai": "^3.5.0",
     "classnames": "^2.2.0",
     "css-loader": "^0.18.0",
     "dotenv": "^6.2.0",
     "ejs-loader": "^0.3.5",
-    "extract-text-webpack-plugin": "^0.8.2",
+    "extract-text-webpack-plugin": "^2",
     "file-loader": "^0.8.4",
     "gulp": "^3.9.0",
     "gulp-mocha": "^2.2.0",
@@ -45,7 +46,7 @@
     "stellar-sdk": "^2.0.0-rc.2",
     "uri-templates": "^0.1.9",
     "urijs": "^1.16.0",
-    "webpack": "^1.13.2",
+    "webpack": "^3",
     "webpack-dev-server": "^1.16.0"
   }
 }

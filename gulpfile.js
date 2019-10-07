@@ -24,17 +24,12 @@ var webpackOptions = {
     publicPath: '/laboratory/'
   },
   devtool: "source-map",
-  resolve: {
-    root: ['src'],
-    modulesDirectories: ["node_modules"]
-  },
   module: {
-    loaders: [
+    rules: [
       {test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader'},
-      {test: /\.json$/, loader: 'json'},
-      {test: /\.scss/, loader: ExtractTextPlugin.extract('css?sourceMap!sass?sourceMap')},
-      {test: /\.html$/, loader: 'file?name=[name].html'},
-      {test: /\.(jpe?g|png|gif|svg|woff2?)$/, loader: 'file?name=images/[hash].[ext]'}
+      {test: /\.scss/, loader: ExtractTextPlugin.extract(['css-loader','sass-loader'])},
+      {test: /\.html$/, loader: 'file-loader?name=[name].html'},
+      {test: /\.(jpe?g|png|gif|svg|woff2?)$/, loader: 'file-loader?name=images/[hash].[ext]'}
     ]
   },
   plugins: [
@@ -70,8 +65,8 @@ gulp.task('develop', function(done) {
           NODE_ENV: JSON.stringify('development')
         }
       }),
-      new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.js"),
-      new ExtractTextPlugin('style.css', {allChunks: true})
+      new webpack.optimize.CommonsChunkPlugin({ name: 'vendor', filename: 'vendor.bundle.js' }),
+      new ExtractTextPlugin({ filename: 'style.css', allChunks: true})
     ]
   });
 
@@ -91,8 +86,9 @@ gulp.task('build', function(done) {
   var options = merge(webpackOptions, {
     bail: true,
     output: {
+      ...webpackOptions.output,
       filename: "[name]-[chunkhash].js",
-      path: './dist'
+      path: path.resolve('./dist')
     },
     plugins: [
       new webpack.DefinePlugin({
@@ -101,10 +97,9 @@ gulp.task('build', function(done) {
           NODE_ENV: JSON.stringify('production')
         }
       }),
-      new webpack.optimize.CommonsChunkPlugin("vendor", "vendor-[chunkhash].js"),
-      new ExtractTextPlugin('style-[contenthash].css', {allChunks: true}),
+      new webpack.optimize.CommonsChunkPlugin({ name: 'vendor', filename: 'vendor.bundle.js' }),
+      new ExtractTextPlugin({filename: 'style-[contenthash].css', allChunks: true}),
       new webpack.optimize.DedupePlugin(),
-      new webpack.optimize.OccurenceOrderPlugin(),
       new webpack.optimize.UglifyJsPlugin()
     ]
   });
