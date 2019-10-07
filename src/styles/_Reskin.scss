@@ -53,6 +53,12 @@ input, textarea, select, .so-dropdown__select {
   border-color: $gray;
 }
 
+.so-dropdown__select {
+  option {
+    color: #3a3f43;
+  }
+}
+
 .buttonList__item.buttonList__item {
   background-color: transparent;
   border-color: transparent;
