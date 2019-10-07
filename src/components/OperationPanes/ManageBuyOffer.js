@@ -9,8 +9,8 @@ export default function ManageBuyOffer(props) {
   return GenericOfferPickers.concat(
     <OptionsTablePair label="Offer ID" key="offerId">
       <PositiveIntPicker
-        value={props.values['offerId']}
-        onUpdate={(value) => {props.onUpdate('offerId', value)}}
+        value={props.values['offerId'] || 0}
+        onUpdate={(value) => { props.onUpdate('offerId', value) }}
         />
       <p className="optionsTable__pair__content__note">If 0, will create a new offer. Existing offer id numbers can be found using the Offers for Account endpoint.</p>
     </OptionsTablePair>
