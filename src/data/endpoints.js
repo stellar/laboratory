@@ -18,7 +18,7 @@ export const endpointsMap = {
     'endpoints': {
       'single': {
         'label': 'Single Account',
-        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/accounts-single.html',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/endpoints/accounts-single.html',
         'method': 'GET',
         'path': {
           template: '/accounts/{account_id}',
@@ -46,7 +46,7 @@ export const endpointsMap = {
     'endpoints': {
       'all': {
         'label': 'All Effects',
-        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/effects-all.html',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/endpoints/effects-all.html',
         'method': 'GET',
         'path': {
           template: '/effects{?cursor,limit,order}',
@@ -55,7 +55,7 @@ export const endpointsMap = {
       },
       'for_account': {
         'label': 'Effects for Account',
-        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/effects-for-account.html',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/endpoints/effects-for-account.html',
         'method': 'GET',
         'path': {
           template: '/accounts/{account_id}/effects{?cursor,limit,order}',
@@ -64,7 +64,7 @@ export const endpointsMap = {
       },
       'for_ledger': {
         'label': 'Effects for Ledger',
-        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/effects-for-ledger.html',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/endpoints/effects-for-ledger.html',
         'method': 'GET',
         'path': {
           template: '/ledgers/{ledger}/effects{?cursor,limit,order}',
@@ -73,7 +73,7 @@ export const endpointsMap = {
       },
       'for_operation': {
         'label': 'Effects for Operation',
-        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/effects-for-operation.html',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/endpoints/effects-for-operation.html',
         'method': 'GET',
         'path': {
           template: '/operations/{operation}/effects{?cursor,limit,order}',
@@ -82,7 +82,7 @@ export const endpointsMap = {
       },
       'for_transaction': {
         'label': 'Effects for Transaction',
-        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/effects-for-transaction.html',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/endpoints/effects-for-transaction.html',
         'method': 'GET',
         'path': {
           template: '/transactions/{transaction}/effects{?cursor,limit,order}',
@@ -96,7 +96,7 @@ export const endpointsMap = {
     'endpoints': {
       'all': {
         'label': 'All Ledgers',
-        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/ledgers-all.html',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/endpoints/ledgers-all.html',
         'method': 'GET',
         'path': {
           template: '/ledgers{?cursor,limit,order}',
@@ -105,7 +105,7 @@ export const endpointsMap = {
       },
       'single': {
         'label': 'Single Ledger',
-        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/ledgers-single.html',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/endpoints/ledgers-single.html',
         'method': 'GET',
         'path': {
           template: '/ledgers/{ledger}',
@@ -119,7 +119,7 @@ export const endpointsMap = {
     'endpoints': {
       'for_account': {
         'label': 'Offers for Account',
-        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/offers-for-account.html',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/endpoints/offers-for-account.html',
         'method': 'GET',
         'path': {
           template: '/accounts/{account_id}/offers{?cursor,limit,order}',
@@ -133,7 +133,7 @@ export const endpointsMap = {
     'endpoints': {
       'all': {
         'label': 'All Operations',
-        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/operations-all.html',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/endpoints/operations-all.html',
         'method': 'GET',
         'path': {
           template: '/operations{?cursor,limit,order,include_failed}',
@@ -142,7 +142,7 @@ export const endpointsMap = {
       },
       'single': {
         'label': 'Single Operation',
-        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/operations-single.html',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/endpoints/operations-single.html',
         'method': 'GET',
         'path': {
           template: '/operations/{operation}',
@@ -151,7 +151,7 @@ export const endpointsMap = {
       },
       'for_account': {
         'label': 'Operations for Account',
-        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/operations-for-account.html',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/endpoints/operations-for-account.html',
         'method': 'GET',
         'path': {
           template: '/accounts/{account_id}/operations{?cursor,limit,order,include_failed}',
@@ -160,7 +160,7 @@ export const endpointsMap = {
       },
       'for_ledger': {
         'label': 'Operations for Ledger',
-        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/operations-for-ledger.html',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/endpoints/operations-for-ledger.html',
         'method': 'GET',
         'path': {
           template: '/ledgers/{ledger}/operations{?cursor,limit,order,include_failed}',
@@ -169,7 +169,7 @@ export const endpointsMap = {
       },
       'for_transaction': {
         'label': 'Operations for Transaction',
-        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/operations-for-transaction.html',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/endpoints/operations-for-transaction.html',
         'method': 'GET',
         'path': {
           template: '/transactions/{transaction}/operations{?cursor,limit,order}',
@@ -183,7 +183,7 @@ export const endpointsMap = {
     'endpoints': {
       'details': {
         'label': 'Details',
-        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/orderbook-details.html',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/endpoints/orderbook-details.html',
         'method': 'GET',
         'path': {
           template: '/order_book{?selling_asset_type,selling_asset_code,selling_asset_issuer,buying_asset_type,buying_asset_code,buying_asset_issuer}',
@@ -203,7 +203,7 @@ export const endpointsMap = {
     'endpoints': {
       'all': {
         'label': 'Find Payment Paths',
-        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/path-finding.html',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/endpoints/path-finding.html',
         'method': 'GET',
         'path': {
           template: '/paths{?source_account,destination_account,destination_asset_type,destination_asset_code,destination_asset_issuer,destination_amount}',
@@ -220,7 +220,7 @@ export const endpointsMap = {
     'endpoints': {
       'all': {
         'label': 'All Payments',
-        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/payments-all.html',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/endpoints/payments-all.html',
         'method': 'GET',
         'path': {
           template: '/payments{?cursor,limit,order,include_failed}',
@@ -229,7 +229,7 @@ export const endpointsMap = {
       },
       'for_account': {
         'label': 'Payments for Account',
-        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/payments-for-account.html',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/endpoints/payments-for-account.html',
         'method': 'GET',
         'path': {
           template: '/accounts/{account_id}/payments{?cursor,limit,order,include_failed}',
@@ -238,7 +238,7 @@ export const endpointsMap = {
       },
       'for_ledger': {
         'label': 'Payments for Ledger',
-        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/payments-for-ledger.html',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/endpoints/payments-for-ledger.html',
         'method': 'GET',
         'path': {
           template: '/ledgers/{ledger}/payments{?cursor,limit,order,include_failed}',
@@ -247,7 +247,7 @@ export const endpointsMap = {
       },
       'for_transaction': {
         'label': 'Payments for Transaction',
-        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/payments-for-transaction.html',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/endpoints/payments-for-transaction.html',
         'method': 'GET',
         'path': {
           template: '/transactions/{transaction}/payments{?cursor,limit,order}',
@@ -300,7 +300,7 @@ export const endpointsMap = {
       },
       'for_account': {
         'label': 'Trades for Account',
-        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/trades-for-account.html',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/endpoints/trades-for-account.html',
         'method': 'GET',
         'path': {
           template: '/accounts/{account_id}/trades{?cursor,limit,order}',
@@ -309,7 +309,7 @@ export const endpointsMap = {
       },
       'for_offer': {
         'label': 'Trades for Offer',
-        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/trades-for-offer.html',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/endpoints/trades-for-offer.html',
         'method': 'GET',
         'path': {
           template: '/offers/{offer_id}/trades{?cursor,limit,order}',
@@ -323,7 +323,7 @@ export const endpointsMap = {
     'endpoints': {
       'all': {
         'label': 'All Transactions',
-        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/transactions-all.html',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/endpoints/transactions-all.html',
         'method': 'GET',
         'path': {
           template: '/transactions{?cursor,limit,order,include_failed}',
@@ -332,7 +332,7 @@ export const endpointsMap = {
       },
       'single': {
         'label': 'Single Transaction',
-        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/transactions-single.html',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/endpoints/transactions-single.html',
         'method': 'GET',
         'path': {
           template: '/transactions/{transaction}',
@@ -341,7 +341,7 @@ export const endpointsMap = {
       },
       'create': {
         'label': 'Post Transaction',
-        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/transactions-create.html',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/endpoints/transactions-create.html',
         'method': 'POST',
         'disableStreaming': true,
         'path': {
@@ -351,7 +351,7 @@ export const endpointsMap = {
       },
       'for_account': {
         'label': 'Transactions for Account',
-        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/transactions-for-account.html',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/endpoints/transactions-for-account.html',
         'method': 'GET',
         'path': {
           template: '/accounts/{account_id}/transactions{?cursor,limit,order,include_failed}',
@@ -360,7 +360,7 @@ export const endpointsMap = {
       },
       'for_ledger': {
         'label': 'Transactions for Ledger',
-        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/transactions-for-ledger.html',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/endpoints/transactions-for-ledger.html',
         'method': 'GET',
         'path': {
           template: '/ledgers/{ledger}/transactions{?cursor,limit,order,include_failed}',
