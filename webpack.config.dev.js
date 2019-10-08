@@ -2,8 +2,7 @@ const webpack = require("webpack");
 const path = require("path");
 const baseConfig = require("./webpack.config.base");
 
-module.exports = {
-  ...baseConfig,
+module.exports = Object.assign({}, baseConfig, {
   devServer: {
     inline: true,
     host: "localhost",
@@ -11,13 +10,11 @@ module.exports = {
     open: true,
     openPage: "laboratory/",
   },
-  output: {
-    ...baseConfig.output,
+  output: Object.assign({}, baseConfig.output, {
     filename: "[name].js",
     path: path.resolve("./.tmp"),
-  },
-  plugins: [
-    ...baseConfig.plugins,
+  }),
+  plugins: baseConfig.plugins.concat([
     new webpack.DefinePlugin({
       "process.env.NODE_ENV": JSON.stringify("development"),
     }),
@@ -25,5 +22,5 @@ module.exports = {
       name: "vendor",
       filename: "vendor.bundle.js",
     }),
-  ],
-};
+  ]),
+});

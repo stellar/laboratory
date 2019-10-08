@@ -3,16 +3,13 @@ const UglifyJs = require("uglifyjs-webpack-plugin");
 const path = require("path");
 const baseConfig = require("./webpack.config.base");
 
-module.exports = {
-  ...baseConfig,
+module.exports = Object.assign({}, baseConfig, {
   bail: true,
-  output: {
-    ...baseConfig.output,
+  output: Object.assign({}, baseConfig.output, {
     filename: "[name]-[chunkhash].js",
     path: path.resolve("./dist"),
-  },
-  plugins: [
-    ...baseConfig.plugins,
+  }),
+  plugins: baseConfig.plugins.concat([
     new UglifyJs({}),
     new webpack.DefinePlugin({
       "process.env.NODE_ENV": JSON.stringify("production"),
@@ -21,5 +18,5 @@ module.exports = {
       name: "vendor",
       filename: "vendor.bundle.js",
     }),
-  ],
-};
+  ]),
+});
