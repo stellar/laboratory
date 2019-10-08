@@ -6,8 +6,8 @@
   "author": "Stellar Development Foundation <stellar@stellar.org>",
   "license": "Apache-2.0",
   "scripts": {
-    "start": "gulp develop",
-    "build": "gulp build"
+    "start": "webpack-dev-server --config ./webpack.config.dev.js",
+    "build": "webpack -p --config webpack.config.prod.js"
   },
   "dependencies": {
     "@babel/core": "^7.6.2",
@@ -47,6 +47,7 @@
     "uri-templates": "^0.1.9",
     "urijs": "^1.16.0",
     "webpack": "^3",
-    "webpack-dev-server": "^1.16.0"
+    "webpack-cli": "^3",
+    "webpack-dev-server": "^2"
   }
 }
