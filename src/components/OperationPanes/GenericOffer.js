@@ -29,7 +29,7 @@ export default function GenericOffer(props, isBuy) {
         />
       <p className="optionsTable__pair__content__note">An amount of zero will delete the offer.</p>
     </OptionsTablePair>,
-    <OptionsTablePair label="Price of 1 unit of asset sold in terms of asset bought" key="price">
+    <OptionsTablePair label={isBuy ? "Price of 1 unit of buying in terms of selling" : "Price of 1 unit of selling in terms of buying"} key="price">
       <PositiveNumberPicker
         value={props.values['price']}
         onUpdate={(value) => {props.onUpdate('price', value)}}
