@@ -6,6 +6,7 @@ var bs          = require('browser-sync').create();
 var gulp        = require('gulp');
 var path        = require('path');
 var webpack     = require("webpack");
+var webpackDevServer = require("webpack-dev-server");
 
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -40,6 +41,7 @@ var webpackOptions = {
     // Ignore native modules (ed25519)
     new webpack.IgnorePlugin(/ed25519/),
     new HtmlWebpackPlugin({
+      template: "!!ejs-loader!./src/index.ejs",
       title: 'Stellar Laboratory'
     })
   ],
@@ -50,9 +52,16 @@ var webpackOptions = {
 
 gulp.task('develop', function(done) {
   var options = merge(webpackOptions, {
+    devServer: {
+      inline: true,
+      host: "localhost",
+      port: 3000,
+      open: true,
+    },
     output: {
+      ...webpackOptions.output,
       filename: "[name].js",
-      path: './.tmp/laboratory'
+      path: path.resolve("./.tmp"),
     },
     plugins: [
       new webpack.DefinePlugin({
@@ -66,32 +75,16 @@ gulp.task('develop', function(done) {
     ]
   });
 
-  var watchOptions = {
-    aggregateTimeout: 300
-  };
-
-  var bsInitialized = false;
-
   var compiler = webpack(options);
   compiler.purgeInputFileSystem();
-  compiler.watch(watchOptions, function(error, stats) {
-    if (!bsInitialized) {
-      gulp.watch(".tmp/laboratory/**/*").on("change", bs.reload);
-      bs.init({
-        notify: false,
-        server: "./.tmp",
-        startPath: '/laboratory'
-      });
-      bsInitialized = true;
-    }
-    console.log(stats.toString({
-      hash: false,
-      version: false,
-      timings: true,
+  var server = new webpackDevServer(compiler, {
+    publicPath: options.output.publicPath,
+    stats: {
+      colors: true,
       chunks: false,
-      colors: true
-    }));
+    },
   });
+  server.listen(3000);
 });
 
 gulp.task('build', function(done) {
