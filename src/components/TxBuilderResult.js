@@ -9,7 +9,7 @@ import scrollOnAnchorOpen from '../utilities/scrollOnAnchorOpen';
 import clickToSelect from '../utilities/clickToSelect';
 import NETWORK from '../constants/network';
 
-export default class TxBuilderResult extends React.Component {
+class TxBuilderResult extends React.Component {
   render() {
     let {attributes, operations} = this.props.state;
     let xdrResult, buildError;
