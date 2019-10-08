@@ -1,4 +1,5 @@
 const webpack = require("webpack");
+const UglifyJs = require("uglifyjs-webpack-plugin");
 const path = require("path");
 const baseConfig = require("./webpack.config.base");
 
@@ -12,6 +13,7 @@ module.exports = {
   },
   plugins: [
     ...baseConfig.plugins,
+    new UglifyJs({}),
     new webpack.DefinePlugin({
       "process.env.NODE_ENV": JSON.stringify("production"),
     }),
