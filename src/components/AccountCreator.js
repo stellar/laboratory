@@ -32,7 +32,7 @@ class AccountCreator extends React.Component {
         </div>
       </div>
     }
-    if (state.keypairGeneratorPubKey !== '') {
+    if (state.keypairGeneratorPubKey !== '' && IS_TESTNET) {
       keypairGeneratorLink = <a onClick={() => dispatch(updateFriendbotTarget(state.keypairGeneratorPubKey))}>Fund this account on the test network using the friendbot tool below</a>
     }
     if (state.friendbotStatus.code) {
