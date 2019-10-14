@@ -1,3 +1,23 @@
+import All from '../components/SetupPanes/All'
+import AllAssets from '../components/SetupPanes/AllAssets'
+import AllWithFailed from '../components/SetupPanes/AllWithFailed'
+import FindPaymentPaths from '../components/SetupPanes/FindPaymentPaths'
+import ForAccount from '../components/SetupPanes/ForAccount'
+import ForAccountWithFailed from '../components/SetupPanes/ForAccountWithFailed'
+import ForLedger from '../components/SetupPanes/ForLedger'
+import ForLedgerWithFailed from '../components/SetupPanes/ForLedgerWithFailed'
+import ForOffer from '../components/SetupPanes/ForOffer'
+import ForOperation from '../components/SetupPanes/ForOperation'
+import ForTransaction from '../components/SetupPanes/ForTransaction'
+import OrderBookDetails from '../components/SetupPanes/OrderBookDetails'
+import PostTransaction from '../components/SetupPanes/PostTransaction'
+import SingleAccount from '../components/SetupPanes/SingleAccount'
+import SingleLedger from '../components/SetupPanes/SingleLedger'
+import SingleOperation from '../components/SetupPanes/SingleOperation'
+import SingleTransaction from '../components/SetupPanes/SingleTransaction'
+import TradeAggregations from '../components/SetupPanes/TradeAggregations'
+import Trades from '../components/SetupPanes/Trades'
+
 export function getEndpoint(resource, endpoint) {
   let res = endpointsMap[resource];
   if (!res) { return; }
@@ -23,7 +43,7 @@ export const endpointsMap = {
         'path': {
           template: '/accounts/{account_id}',
         },
-        'setupComponent': require('../components/SetupPanes/SingleAccount'),
+        'setupComponent': SingleAccount,
       }
     }
   },
@@ -37,7 +57,7 @@ export const endpointsMap = {
         'path': {
           template: '/assets{?asset_code,asset_issuer,cursor,order,limit}',
         },
-        'setupComponent': require('../components/SetupPanes/AllAssets'),
+        'setupComponent': AllAssets,
       }
     }
   },
@@ -51,7 +71,7 @@ export const endpointsMap = {
         'path': {
           template: '/effects{?cursor,limit,order}',
         },
-        'setupComponent': require('../components/SetupPanes/All'),
+        'setupComponent': All,
       },
       'for_account': {
         'label': 'Effects for Account',
@@ -60,7 +80,7 @@ export const endpointsMap = {
         'path': {
           template: '/accounts/{account_id}/effects{?cursor,limit,order}',
         },
-        'setupComponent': require('../components/SetupPanes/ForAccount'),
+        'setupComponent': ForAccount,
       },
       'for_ledger': {
         'label': 'Effects for Ledger',
@@ -69,7 +89,7 @@ export const endpointsMap = {
         'path': {
           template: '/ledgers/{ledger}/effects{?cursor,limit,order}',
         },
-        'setupComponent': require('../components/SetupPanes/ForLedger'),
+        'setupComponent': ForLedger,
       },
       'for_operation': {
         'label': 'Effects for Operation',
@@ -78,7 +98,7 @@ export const endpointsMap = {
         'path': {
           template: '/operations/{operation}/effects{?cursor,limit,order}',
         },
-        'setupComponent': require('../components/SetupPanes/ForOperation'),
+        'setupComponent': ForOperation,
       },
       'for_transaction': {
         'label': 'Effects for Transaction',
@@ -87,7 +107,7 @@ export const endpointsMap = {
         'path': {
           template: '/transactions/{transaction}/effects{?cursor,limit,order}',
         },
-        'setupComponent': require('../components/SetupPanes/ForTransaction'),
+        'setupComponent': ForTransaction,
       }
     }
   },
@@ -101,7 +121,7 @@ export const endpointsMap = {
         'path': {
           template: '/ledgers{?cursor,limit,order}',
         },
-        'setupComponent': require('../components/SetupPanes/All'),
+        'setupComponent': All,
       },
       'single': {
         'label': 'Single Ledger',
@@ -110,7 +130,7 @@ export const endpointsMap = {
         'path': {
           template: '/ledgers/{ledger}',
         },
-        'setupComponent': require('../components/SetupPanes/SingleLedger'),
+        'setupComponent': SingleLedger,
       }
     }
   },
@@ -124,7 +144,7 @@ export const endpointsMap = {
         'path': {
           template: '/accounts/{account_id}/offers{?cursor,limit,order}',
         },
-        'setupComponent': require('../components/SetupPanes/ForAccount'),
+        'setupComponent': ForAccount,
       }
     }
   },
@@ -138,7 +158,7 @@ export const endpointsMap = {
         'path': {
           template: '/operations{?cursor,limit,order,include_failed}',
         },
-        'setupComponent': require('../components/SetupPanes/AllWithFailed'),
+        'setupComponent': AllWithFailed,
       },
       'single': {
         'label': 'Single Operation',
@@ -147,7 +167,7 @@ export const endpointsMap = {
         'path': {
           template: '/operations/{operation}',
         },
-        'setupComponent': require('../components/SetupPanes/SingleOperation'),
+        'setupComponent': SingleOperation,
       },
       'for_account': {
         'label': 'Operations for Account',
@@ -156,7 +176,7 @@ export const endpointsMap = {
         'path': {
           template: '/accounts/{account_id}/operations{?cursor,limit,order,include_failed}',
         },
-        'setupComponent': require('../components/SetupPanes/ForAccountWithFailed'),
+        'setupComponent': ForAccountWithFailed,
       },
       'for_ledger': {
         'label': 'Operations for Ledger',
@@ -165,7 +185,7 @@ export const endpointsMap = {
         'path': {
           template: '/ledgers/{ledger}/operations{?cursor,limit,order,include_failed}',
         },
-        'setupComponent': require('../components/SetupPanes/ForLedgerWithFailed'),
+        'setupComponent': ForLedgerWithFailed,
       },
       'for_transaction': {
         'label': 'Operations for Transaction',
@@ -174,7 +194,7 @@ export const endpointsMap = {
         'path': {
           template: '/transactions/{transaction}/operations{?cursor,limit,order}',
         },
-        'setupComponent': require('../components/SetupPanes/ForTransaction'),
+        'setupComponent': ForTransaction,
       }
     }
   },
@@ -194,7 +214,7 @@ export const endpointsMap = {
           'buying_asset_code': 'buying_asset.code',
           'buying_asset_issuer': 'buying_asset.issuer',
         },
-        'setupComponent': require('../components/SetupPanes/OrderBookDetails'),
+        'setupComponent': OrderBookDetails,
       }
     }
   },
@@ -211,7 +231,7 @@ export const endpointsMap = {
           'destination_asset_code': 'destination_asset.code',
           'destination_asset_issuer': 'destination_asset.issuer',
         },
-        'setupComponent': require('../components/SetupPanes/FindPaymentPaths'),
+        'setupComponent': FindPaymentPaths,
       }
     }
   },
@@ -225,7 +245,7 @@ export const endpointsMap = {
         'path': {
           template: '/payments{?cursor,limit,order,include_failed}',
         },
-        'setupComponent': require('../components/SetupPanes/AllWithFailed'),
+        'setupComponent': AllWithFailed,
       },
       'for_account': {
         'label': 'Payments for Account',
@@ -234,7 +254,7 @@ export const endpointsMap = {
         'path': {
           template: '/accounts/{account_id}/payments{?cursor,limit,order,include_failed}',
         },
-        'setupComponent': require('../components/SetupPanes/ForAccountWithFailed'),
+        'setupComponent': ForAccountWithFailed,
       },
       'for_ledger': {
         'label': 'Payments for Ledger',
@@ -243,7 +263,7 @@ export const endpointsMap = {
         'path': {
           template: '/ledgers/{ledger}/payments{?cursor,limit,order,include_failed}',
         },
-        'setupComponent': require('../components/SetupPanes/ForLedgerWithFailed'),
+        'setupComponent': ForLedgerWithFailed,
       },
       'for_transaction': {
         'label': 'Payments for Transaction',
@@ -252,7 +272,7 @@ export const endpointsMap = {
         'path': {
           template: '/transactions/{transaction}/payments{?cursor,limit,order}',
         },
-        'setupComponent': require('../components/SetupPanes/ForTransaction'),
+        'setupComponent': ForTransaction,
       }
     }
   },
@@ -275,7 +295,7 @@ export const endpointsMap = {
           'end_time': 'end_time',
           'resolution': 'resolution'
         },
-        'setupComponent': require('../components/SetupPanes/TradeAggregations'),
+        'setupComponent': TradeAggregations,
       },
     }
   },
@@ -296,7 +316,7 @@ export const endpointsMap = {
           'counter_asset_issuer': 'counter_asset.issuer',
           'offer_id': 'offer_id'
         },
-        'setupComponent': require('../components/SetupPanes/Trades'),
+        'setupComponent': Trades,
       },
       'for_account': {
         'label': 'Trades for Account',
@@ -305,7 +325,7 @@ export const endpointsMap = {
         'path': {
           template: '/accounts/{account_id}/trades{?cursor,limit,order}',
         },
-        'setupComponent': require('../components/SetupPanes/ForAccount'),
+        'setupComponent': ForAccount,
       },
       'for_offer': {
         'label': 'Trades for Offer',
@@ -314,7 +334,7 @@ export const endpointsMap = {
         'path': {
           template: '/offers/{offer_id}/trades{?cursor,limit,order}',
         },
-        'setupComponent': require('../components/SetupPanes/ForOffer'),
+        'setupComponent': ForOffer,
       },
     }
   },
@@ -328,7 +348,7 @@ export const endpointsMap = {
         'path': {
           template: '/transactions{?cursor,limit,order,include_failed}',
         },
-        'setupComponent': require('../components/SetupPanes/AllWithFailed'),
+        'setupComponent': AllWithFailed,
       },
       'single': {
         'label': 'Single Transaction',
@@ -337,7 +357,7 @@ export const endpointsMap = {
         'path': {
           template: '/transactions/{transaction}',
         },
-        'setupComponent': require('../components/SetupPanes/SingleTransaction'),
+        'setupComponent': SingleTransaction,
       },
       'create': {
         'label': 'Post Transaction',
@@ -347,7 +367,7 @@ export const endpointsMap = {
         'path': {
           template: '/transactions',
         },
-        'setupComponent': require('../components/SetupPanes/PostTransaction'),
+        'setupComponent': PostTransaction,
       },
       'for_account': {
         'label': 'Transactions for Account',
@@ -356,7 +376,7 @@ export const endpointsMap = {
         'path': {
           template: '/accounts/{account_id}/transactions{?cursor,limit,order,include_failed}',
         },
-        'setupComponent': require('../components/SetupPanes/ForAccountWithFailed'),
+        'setupComponent': ForAccountWithFailed,
       },
       'for_ledger': {
         'label': 'Transactions for Ledger',
@@ -365,7 +385,7 @@ export const endpointsMap = {
         'path': {
           template: '/ledgers/{ledger}/transactions{?cursor,limit,order,include_failed}',
         },
-        'setupComponent': require('../components/SetupPanes/ForLedgerWithFailed'),
+        'setupComponent': ForLedgerWithFailed,
       }
     }
   }
