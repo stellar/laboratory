@@ -43,28 +43,36 @@ export default class TestnetBanner extends React.Component {
 
     return (
       <div>
-        {maintenance.map((m) => {
-          const date = new Date(m.scheduled_for);
-          return (
-            <div
-              key={m.id}
-              className="LaboratoryChrome__network_reset_alert s-alert"
-            >
-              <div className="so-chunk">
-                <a href={`https://status.stellar.org/incidents/${m.id}`}>
-                  {m.name}
-                </a>{" "}
-                on {date.toDateString()} at {date.toTimeString()}
-                {m.incident_updates.map((update) => (
-                  <div
-                    key={update.id}
-                    dangerouslySetInnerHTML={{ __html: update.body }}
-                  />
-                ))}
-              </div>
+        {maintenance && maintenance.length === 0 ? (
+          <div className="LaboratoryChrome__network_reset_alert s-alert">
+            <div className="so-chunk">
+              The next testnet reset has not yet been scheduled.
             </div>
-          );
-        })}
+          </div>
+        ) : (
+          maintenance.map((m) => {
+            const date = new Date(m.scheduled_for);
+            return (
+              <div
+                key={m.id}
+                className="LaboratoryChrome__network_reset_alert s-alert"
+              >
+                <div className="so-chunk">
+                  <a href={`https://status.stellar.org/incidents/${m.id}`}>
+                    {m.name}
+                  </a>{" "}
+                  on {date.toDateString()} at {date.toTimeString()}
+                  {m.incident_updates.map((update) => (
+                    <div
+                      key={update.id}
+                      dangerouslySetInnerHTML={{ __html: update.body }}
+                    />
+                  ))}
+                </div>
+              </div>
+            );
+          })
+        )}
       </div>
     );
   }
