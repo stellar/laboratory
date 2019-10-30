@@ -50,6 +50,6 @@
     "urijs": "^1.16.0",
     "webpack": "^3",
     "webpack-cli": "^3",
-    "webpack-dev-server": "^2"
+    "webpack-dev-server": "^3"
   }
 }
