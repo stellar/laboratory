@@ -1,56 +1,79 @@
-import React from 'react'
-
-const formatDate = date => `${
-    date.toLocaleString(navigator.language, {dateStyle: 'long'})
-  } ${String(date.getUTCHours()).padStart(2, '0').padEnd(4, '0')}UTC`
+import React from "react";
 
 export default class TestnetBanner extends React.Component {
   constructor() {
-    super()
+    super();
     this.state = {
-      nextReset: null,
+      maintenance: false,
       error: null,
-    }
+    };
   }
   getNextMaintenance(schedule) {
-    const nextMaintenance = schedule.sort(
-      (a, b) => new Date(a) - new Date(b)
-    )[0].scheduled_for;
+    const maintenance = schedule.sort(
+      (a, b) => new Date(a.scheduled_for) - new Date(b.scheduled_for),
+    );
 
-    this.setState({ error: null, nextReset: new Date(nextMaintenance) })
+    this.setState({ error: null, maintenance });
   }
   componentDidMount() {
     fetch("https://9sl3dhr1twv1.statuspage.io/api/v2/summary.json")
-      .then(res => res.json())
-      .then(data => this.getNextMaintenance(data.scheduled_maintenances))
-      .catch(e => {
+      .then((res) => res.json())
+      .then((data) => {
+        this.getNextMaintenance(data.scheduled_maintenances);
+      })
+      .catch((e) => {
         console.error(e);
         this.setState({
-          nextReset: null,
+          maintenance: null,
           error: "Failed to fetch testnet reset date.",
         });
       });
   }
   render() {
-    const { nextReset, error } = this.state;
-    return (
-      <div className="LaboratoryChrome__network_reset_alert s-alert">
-        <div className="so-chunk">
-          {nextReset ? (
-            <div>
-              The test network will be reset on{" "}
-              {formatDate(nextReset)}. Please see our{" "}
-              <a href="https://www.stellar.org/developers/guides/concepts/test-net.html#best-practices-for-using-testnet">
-                testnet best practices
-              </a>{" "}
-              for more information.
-            </div>
-          ) : error ?
-            error : (
-            "Loading next testnet reset date…"
-          )}
+    const { maintenance, error } = this.state;
+    if (maintenance === false) {
+      return error ? (
+        error
+      ) : (
+        <div className="LaboratoryChrome__network_reset_alert s-alert">
+          <div className="so-chunk">Loading testnet information…</div>
         </div>
+      );
+    }
+
+    return (
+      <div>
+        {maintenance && maintenance.length === 0 ? (
+          <div className="LaboratoryChrome__network_reset_alert s-alert">
+            <div className="so-chunk">
+              The next testnet reset has not yet been scheduled.
+            </div>
+          </div>
+        ) : (
+          maintenance.map((m) => {
+            const date = new Date(m.scheduled_for);
+            return (
+              <div
+                key={m.id}
+                className="LaboratoryChrome__network_reset_alert s-alert"
+              >
+                <div className="so-chunk">
+                  <a href={`https://status.stellar.org/incidents/${m.id}`}>
+                    {m.name}
+                  </a>{" "}
+                  on {date.toDateString()} at {date.toTimeString()}
+                  {m.incident_updates.map((update) => (
+                    <div
+                      key={update.id}
+                      dangerouslySetInnerHTML={{ __html: update.body }}
+                    />
+                  ))}
+                </div>
+              </div>
+            );
+          })
+        )}
       </div>
-    )
+    );
   }
 }
