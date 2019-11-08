@@ -85,7 +85,7 @@ function hasChildren(object) {
   return true;
 }
 
-const amountFields = ['amount', 'startingBalance', 'sendMax', 'destAmount', 'limit'];
+const amountFields = ['amount', 'startingBalance', 'sendMax', 'sendAmount', 'destMin', 'destAmount', 'limit'];
 
 function getValue(object, name) {
   if (_.includes(amountFields, name)) {

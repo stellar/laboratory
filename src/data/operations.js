@@ -8,7 +8,8 @@ import GenericOffer from '../components/OperationPanes/GenericOffer'
 import ManageBuyOffer from '../components/OperationPanes/ManageBuyOffer'
 import ManageData from '../components/OperationPanes/ManageData'
 import ManageSellOffer from '../components/OperationPanes/ManageSellOffer'
-import PathPayment from '../components/OperationPanes/PathPayment'
+import PathPaymentStrictReceive from '../components/OperationPanes/PathPaymentStrictReceive'
+import PathPaymentStrictSend from '../components/OperationPanes/PathPaymentStrictSend'
 import Payment from '../components/OperationPanes/Payment'
 import SetOptions from '../components/OperationPanes/SetOptions'
 
@@ -41,11 +42,18 @@ export const operationsMap = [
     docsUrl: 'https://www.stellar.org/developers/learn/concepts/list-of-operations.html#payment',
   },
   {
-    name: 'pathPayment',
-    label: 'Path Payment',
-    operationPane: PathPayment,
-    helpNote: 'Sends an amount in a specific asset to a destination account through a path of offers. This allows the asset sent (e.g., 450 XLM) to be different from the asset received (e.g, 6 BTC).',
-    docsUrl: 'https://www.stellar.org/developers/learn/concepts/list-of-operations.html#path-payment',
+    name: 'pathPaymentStrictSend',
+    label: 'Path Payment Strict Send',
+    operationPane: PathPaymentStrictSend,
+    helpNote: 'Sends an amount in a specific asset to a destination account through a path of offers. This allows the asset sent (e.g., 450 XLM) to be different from the asset received (e.g, 6 BTC). A Path Payment Strict Send allows a user to specify the amount of the asset to send. The amount received will vary based on offers in the order books',
+    docsUrl: 'https://www.stellar.org/developers/learn/concepts/list-of-operations.html#path-payment-strict-send',
+  },
+  {
+    name: 'pathPaymentStrictReceive',
+    label: 'Path Payment Strict Receive',
+    operationPane: PathPaymentStrictReceive,
+    helpNote: 'Sends an amount in a specific asset to a destination account through a path of offers. This allows the asset sent (e.g., 450 XLM) to be different from the asset received (e.g, 6 BTC). A Path Payment Strict Receive allows a user to specify the amount of the asset received. The amount sent varies based on offers in the order books.',
+    docsUrl: 'https://www.stellar.org/developers/learn/concepts/list-of-operations.html#path-payment-strict-receive',
   },
   {
     name: 'manageSellOffer',
