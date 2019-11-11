@@ -201,11 +201,6 @@ describe('Libify.buildTransaction', () => {
       },
       {
         id: 10,
-        name: 'inflation',
-        attributes: {}
-      },
-      {
-        id: 11,
         name: 'manageData',
         attributes: {
           name: 'wow',
@@ -213,7 +208,7 @@ describe('Libify.buildTransaction', () => {
         }
       },
       {
-        id: 12,
+        id: 11,
         name: 'manageBuyOffer',
         attributes: {
           selling: {
@@ -293,12 +288,12 @@ describe('Libify.buildTransaction', () => {
       })
     })
 
-    describe('manageBuyOffer operation at index 12', () => {
+    describe('manageBuyOffer operation at index 11', () => {
       it('is of type manageBuyOffer', () => {
-        expect(opAtIndex(12).type).to.equal('manageBuyOffer');
+        expect(opAtIndex(11).type).to.equal('manageBuyOffer');
       })
       it('contains specified price', () => {
-        expect(opAtIndex(12).price).to.equal('4.417')
+        expect(opAtIndex(11).price).to.equal('4.417')
       })
     })
 
@@ -356,18 +351,12 @@ describe('Libify.buildTransaction', () => {
       })
     })
 
-    describe('inflation operation at index 10', () => {
-      it('is of type inflation', () => {
-        expect(opAtIndex(10).type).to.equal('inflation');
-      })
-    })
-
-    describe('manageData operation at index 11', () => {
+    describe('manageData operation at index 10', () => {
       it('is of type manageData', () => {
-        expect(opAtIndex(11).type).to.equal('manageData');
+        expect(opAtIndex(10).type).to.equal('manageData');
       })
       it('contains specified value in manageData value', () => {
-        expect(opAtIndex(11).value.toString()).to.equal('such test')
+        expect(opAtIndex(10).value.toString()).to.equal('such test')
       })
     })
   })
