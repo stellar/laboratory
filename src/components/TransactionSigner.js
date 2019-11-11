@@ -49,7 +49,7 @@ class TransactionSigner extends React.Component {
     } else {
       let ledgerSigs = ledgerwalletStatus.signatures;
       let result = signTransaction(xdr, signers, networkObj, ledgerSigs);
-      let transaction = new Transaction(xdr);
+      let transaction = new Transaction(xdr, networkObj);
 
       let infoTable = {
         'Signing for': <pre className="so-code so-code__wrap"><code>{networkPassphrase}</code></pre>,

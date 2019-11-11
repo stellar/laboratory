@@ -130,12 +130,12 @@ Libify.Operation.payment = function(opts) {
   })
 }
 
-Libify.Operation.pathPayment = function(opts) {
-  assertNotEmpty(opts.sendAsset, 'Path Payment operation requires sending asset');
-  assertNotEmpty(opts.sendMax, 'Path Payment operation requires max send');
-  assertNotEmpty(opts.destination, 'Payment operation requires destination');
-  assertNotEmpty(opts.destAsset, 'Path Payment operation requires destination asset');
-  assertNotEmpty(opts.destAmount, 'Path Payment operation requires the destination amount');
+Libify.Operation.pathPaymentStrictSend = function(opts) {
+  assertNotEmpty(opts.sendAsset, 'Path Payment Strict Send operation requires sending asset');
+  assertNotEmpty(opts.sendAmount, 'Path Payment Strict Send operation requires send amount');
+  assertNotEmpty(opts.destination, 'Path Payment Strict Send operation requires destination');
+  assertNotEmpty(opts.destAsset, 'Path Payment Strict Send operation requires destination asset');
+  assertNotEmpty(opts.destMin, 'Path Payment Strict Send operation requires the minimum destination amount');
 
   let libifiedPath = _.map(opts.path, (hopAsset) => {
     if (_.isUndefined(hopAsset.type)) {
@@ -144,7 +144,32 @@ Libify.Operation.pathPayment = function(opts) {
     return Libify.Asset(hopAsset);
   })
 
-  return Sdk.Operation.pathPayment({
+  return Sdk.Operation.pathPaymentStrictSend({
+    sendAsset: Libify.Asset(opts.sendAsset),
+    sendAmount: opts.sendAmount,
+    destination: opts.destination,
+    destAsset: Libify.Asset(opts.destAsset),
+    destMin: opts.destMin,
+    path: libifiedPath,
+    source: opts.sourceAccount,
+  })
+}
+
+Libify.Operation.pathPaymentStrictReceive = function(opts) {
+  assertNotEmpty(opts.sendAsset, 'Path Payment Strict Receive operation requires sending asset');
+  assertNotEmpty(opts.sendMax, 'Path Payment Strict Receive operation requires max send');
+  assertNotEmpty(opts.destination, 'Path Payment Strict Receive operation requires destination');
+  assertNotEmpty(opts.destAsset, 'Path Payment Strict Receive operation requires destination asset');
+  assertNotEmpty(opts.destAmount, 'Path Payment Strict Receive operation requires the destination amount');
+
+  let libifiedPath = _.map(opts.path, (hopAsset) => {
+    if (_.isUndefined(hopAsset.type)) {
+      throw new Error('All assets in path must be filled out');
+    }
+    return Libify.Asset(hopAsset);
+  })
+
+  return Sdk.Operation.pathPaymentStrictReceive({
     sendAsset: Libify.Asset(opts.sendAsset),
     sendMax: opts.sendMax,
     destination: opts.destination,
