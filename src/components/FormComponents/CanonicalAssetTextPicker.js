@@ -1,24 +1,25 @@
-import React from 'react';
-import TextPicker from './TextPicker';
-import {StrKey} from 'stellar-sdk';
+import React from "react";
+import TextPicker from "./TextPicker";
+import { StrKey } from "stellar-sdk";
 
-export default function PubKeyPicker(props) {
-  return <TextPicker
-    {...props}
-    placeholder={props.placeholder || 'Example: native'}
-    validator={(value) => {
+export default function CanonicalAssetTextPicker(props) {
+  return (
+    <TextPicker
+      {...props}
+      placeholder={props.placeholder || "Example: native"}
+      validator={(value) => {
         let err;
-        value.split(',').some(asset => {
-          if (asset != 'native') {
-            let parts = asset.split(':');
+        value.split(",").some((asset) => {
+          if (asset != "native") {
+            let parts = asset.split(":");
             if (parts.length != 2) {
-                 err = `Invalid Asset: ${asset}`;
-                 return true;
+              err = `Invalid Asset: ${asset}`;
+              return true;
             }
 
             const minLength = 1;
             const maxLength = 12;
-    
+
             let code = parts[0];
             if (code && !code.match(/^[a-zA-Z0-9]+$/g)) {
               err = `Asset code must consist of only letters and numbers: ${asset}`;
@@ -30,12 +31,13 @@ export default function PubKeyPicker(props) {
 
             const issuer = parts[1];
             if (!StrKey.isValidEd25519PublicKey(issuer)) {
-                err = `Invalid Asset: Public key is invalid ${asset}`;
-                return true;
+              err = `Invalid Asset: Public key is invalid ${asset}`;
+              return true;
             }
           }
         });
         return err;
-    }}
-  />
+      }}
+    />
+  );
 }
