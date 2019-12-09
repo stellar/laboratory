@@ -3,6 +3,7 @@ import AllAssets from '../components/SetupPanes/AllAssets'
 import AllWithFailed from '../components/SetupPanes/AllWithFailed'
 import FindPaymentPaths from '../components/SetupPanes/FindPaymentPaths'
 import FindStrictSendPaymentPaths from '../components/SetupPanes/FindStrictSendPaymentPaths'
+import FindStrictReceivePaymentPaths from '../components/SetupPanes/FindStrictReceivePaymentPaths'
 import ForAccount from '../components/SetupPanes/ForAccount'
 import ForAccountWithFailed from '../components/SetupPanes/ForAccountWithFailed'
 import ForLedger from '../components/SetupPanes/ForLedger'
@@ -233,6 +234,18 @@ export const endpointsMap = {
           'destination_asset_issuer': 'destination_asset.issuer',
         },
         'setupComponent': FindPaymentPaths,
+      },
+      'strict_receive': {
+        'label': 'Find Strict Receive Payment Paths',
+        'helpUrl': 'https://www.stellar.org/developers/horizon/reference/endpoints/path-finding-strict-receive.html',
+        'method': 'GET',
+        'path': {
+          template: '/paths/strict-receive{?source_assets,source_account,destination_account,destination_asset_type,destination_asset_issuer,destination_asset_code,destination_amount}',
+          'destination_asset_type': 'destination_asset.type',
+          'destination_asset_code': 'destination_asset.code',
+          'destination_asset_issuer': 'destination_asset.issuer',
+        },
+        'setupComponent': FindStrictReceivePaymentPaths,
       },
       'strict_send': {
         'label': 'Find Strict Send Payment Paths',
