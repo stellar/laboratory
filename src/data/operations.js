@@ -105,13 +105,6 @@ export const operationsMap = [
     docsUrl: 'https://www.stellar.org/developers/learn/concepts/list-of-operations.html#account-merge',
   },
   {
-    name: 'inflation',
-    label: 'Inflation',
-    operationPane: () => [], // empty operation pane
-    helpNote: 'Runs the weekly inflation',
-    docsUrl: 'https://www.stellar.org/developers/learn/concepts/list-of-operations.html#inflation',
-  },
-  {
     name: 'manageData',
     label: 'Manage Data',
     operationPane: ManageData,

@@ -255,12 +255,6 @@ Libify.Operation.createPassiveSellOffer = function(opts) {
   })
 }
 
-Libify.Operation.inflation = function(opts) {
-  return Sdk.Operation.inflation({
-    source: opts.sourceAccount,
-  })
-}
-
 Libify.Operation.setOptions = function(opts) {
   let signer;
   if (opts.signer && opts.signer.type) {
