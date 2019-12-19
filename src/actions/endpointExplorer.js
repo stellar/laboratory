@@ -73,8 +73,8 @@ export function submitRequest(request) {
           dispatchInNewStack(dispatch, {
             type: ERROR_REQUEST,
             id,
-            errorStatus: e.status,
-            body: e.data,
+            errorStatus: e.response.status,
+            body: e.response.data,
           })
         });
     }
