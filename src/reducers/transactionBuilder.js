@@ -112,7 +112,7 @@ function attributes(state = defaultAttributes, action) {
 function sequenceFetcherError(state = '', action) {
   let payload = action.payload;
   if (action.type === FETCH_SEQUENCE_FAIL) {
-    if (payload.data.title === 'Resource Missing') {
+    if (payload.response.data.title === 'Resource Missing') {
       return `Account not found. Make sure the correct network is selected and the account is funded/created.`;
     }
     if (payload.status === 0) {
