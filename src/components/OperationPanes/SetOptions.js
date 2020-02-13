@@ -83,7 +83,7 @@ export default function SetOptions(props) {
         />
     </OptionsTablePair>,
     <OptionsTablePair
-      label={<span>Signer Type <HelpMark href="https://www.stellar.org/developers/learn/concepts/multi-sig.html#additional-signing-keys" /></span>}
+      label={<span>Signer Type <HelpMark href="https://www.stellar.org/developers/guides/concepts/multi-sig.html#additional-signing-keys" /></span>}
       optional={true} key="signer">
       <SignerPicker
         value={props.values['signer']}
@@ -92,7 +92,7 @@ export default function SetOptions(props) {
       <p className="optionsTable__pair__content__note">Used to add/remove or adjust weight of an additional signer on the account.</p>
     </OptionsTablePair>,
     <OptionsTablePair
-      label={<span>Home Domain <HelpMark href="https://www.stellar.org/developers/learn/concepts/multi-sig.html#additional-signing-keys" /></span>}
+      label={<span>Home Domain <HelpMark href="https://www.stellar.org/developers/guides/concepts/multi-sig.html#additional-signing-keys" /></span>}
       optional={true} key="homeDomain">
       <TextPicker
         value={props.values['homeDomain']}
