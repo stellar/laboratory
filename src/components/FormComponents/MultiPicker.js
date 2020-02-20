@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 // MultiPicker is a compound picker interface that ensures there is always
@@ -37,7 +38,7 @@ export default function MultiPicker(props) {
   </div>
 }
 MultiPicker.propTypes = {
-  value: React.PropTypes.array.isRequired
+  value: PropTypes.array.isRequired
 }
 
 function isEmpty(value) {

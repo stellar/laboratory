@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import _ from 'lodash';
 import validateTxXdr from '../utilities/validateTxXdr';
@@ -50,5 +51,5 @@ export default class TransactionImporter extends React.Component {
   }
 }
 TransactionImporter.propTypes = {
-  'onImport': React.PropTypes.func.isRequired,
+  'onImport': PropTypes.func.isRequired,
 };
