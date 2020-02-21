@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 // @param {string} props.href - Url that the help mark links to. Currently required
 function HelpMark(props) {
@@ -10,7 +11,7 @@ function HelpMark(props) {
   </a>
 };
 HelpMark.propTypes = {
-  href: React.PropTypes.string.isRequired,
+  href: PropTypes.string.isRequired,
 };
 
 export default HelpMark;

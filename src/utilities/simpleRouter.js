@@ -33,14 +33,12 @@ export const routerMiddleware = store => next => action => {
 
 // One way data flow for RouterListener: url change -> redux
 class RouterHashListener extends React.Component {
-    componentWillMount() {
-    window.addEventListener('hashchange', this.hashChangeHandler.bind(this), false);
-  }
   componentWillUnmount() {
     // Just doing our duty of cleanup though it's really not necessary
     window.removeEventListener('hashchange', this.hashChangeHandler.bind(this), false);
   }
   componentDidMount() {
+    window.addEventListener('hashchange', this.hashChangeHandler.bind(this), false);
     this.changeProcessor(parseUrlHash(window.location.hash), {}, true)
   }
   hashChangeHandler(e) {

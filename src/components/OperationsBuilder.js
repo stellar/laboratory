@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import PubKeyPicker from './FormComponents/PubKeyPicker.js';
 import {getOperation} from '../data/operations';
@@ -109,7 +110,7 @@ class BlurNumberInput extends React.Component {
       currentValue: props.value,
     }
   }
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState({
       currentValue: nextProps.value
     });
@@ -136,6 +137,6 @@ class BlurNumberInput extends React.Component {
   }
 }
 BlurNumberInput.propTypes = {
-  onUpdate: React.PropTypes.func.isRequired,
-  value: React.PropTypes.number.isRequired,
+  onUpdate: PropTypes.func.isRequired,
+  value: PropTypes.number.isRequired,
 };
