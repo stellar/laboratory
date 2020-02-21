@@ -4,40 +4,47 @@ import OptionsTablePair from "../OptionsTable/Pair";
 import PubKeyPicker from "../FormComponents/PubKeyPicker.js";
 import AssetPicker from "../FormComponents/AssetPicker.js";
 import AmountPicker from "../FormComponents/AmountPicker.js";
-import CanonicalAssetTextPicker from "../FormComponents/CanonicalAssetTextPicker.js";
+import AssetMultiPicker from "../FormComponents/AssetMultiPicker.js";
 
-export default function FindStrictReceivePaymentPaths(props) {
+export default function FindStrictReceivePaymentPaths({ values, onUpdate }) {
   return (
     <div>
       <OptionsTablePair label="Source Account">
         <PubKeyPicker
-          value={props.values["source_account"]}
+          value={values["source_account"]}
           onUpdate={(value) => {
-            props.onUpdate("source_account", value);
+            onUpdate("source_account", value);
           }}
         />
       </OptionsTablePair>
       <OptionsTablePair label="Source Assets">
-        <CanonicalAssetTextPicker
-          value={props.values["source_assets"]}
+        <AssetMultiPicker
+          stringForm
+          value={
+            values["source_assets"] === undefined
+              ? []
+              : // Filter out empty strings from resulting array.
+                // ''.split(',') produces ['']
+                values["source_assets"].split(",").filter(Boolean)
+          }
           onUpdate={(value) => {
-            props.onUpdate("source_assets", value);
+            onUpdate("source_assets", value.join(","));
           }}
         />
       </OptionsTablePair>
       <OptionsTablePair label="Destination Amount">
         <AmountPicker
-          value={props.values["destination_amount"]}
+          value={values["destination_amount"]}
           onUpdate={(value) => {
-            props.onUpdate("destination_amount", value);
+            onUpdate("destination_amount", value);
           }}
         />
       </OptionsTablePair>
       <OptionsTablePair label="Destination Asset">
         <AssetPicker
-          value={props.values["destination_asset"]}
+          value={values["destination_asset"]}
           onUpdate={(value) => {
-            props.onUpdate("destination_asset", value);
+            onUpdate("destination_asset", value);
           }}
         />
       </OptionsTablePair>
