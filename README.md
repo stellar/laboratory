@@ -10,6 +10,18 @@ Stellar network. See it in action:
 yarn start
 ```
 
+Testing hardware wallets requires an HTTPS connection to enable U2F. The
+recommended way to do this is with [`ngrok`](https://ngrok.com/). Once
+downloaded and authenticated, start ngrok, and tell the laboratory to start with
+a public URL.
+
+```bash
+./ngrok http 3000
+# in a separate terminal
+# the subdomain will appear in ngrok's output
+yarn start --public randomsubdomain.ngrok.io
+```
+
 ## Building for production
 
 ```sh
