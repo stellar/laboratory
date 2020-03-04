@@ -10,7 +10,7 @@ import AssetPicker from "../FormComponents/AssetPicker.js";
 export default function SingleAccount({ onUpdate, values }) {
   return (
     <>
-      <OptionsTablePair label="Signer" optional={true}>
+      <OptionsTablePair label="Signer" optional>
         <PubKeyPicker
           value={values.signer}
           onUpdate={(value) => {
@@ -18,10 +18,10 @@ export default function SingleAccount({ onUpdate, values }) {
           }}
         />
       </OptionsTablePair>
-      <OptionsTablePair label="Asset" optional={true}>
+      <OptionsTablePair label="Asset" optional>
         <AssetPicker
           stringForm
-          optional={true}
+          optional
           value={values.asset}
           onUpdate={(value) => {
             onUpdate("asset", value);
@@ -29,7 +29,7 @@ export default function SingleAccount({ onUpdate, values }) {
         />
       </OptionsTablePair>
 
-      <OptionsTablePair label="Cursor" optional={true}>
+      <OptionsTablePair label="Cursor" optional>
         <TextPicker
           value={values.cursor}
           onUpdate={(value) => {
@@ -38,7 +38,7 @@ export default function SingleAccount({ onUpdate, values }) {
         />
       </OptionsTablePair>
 
-      <OptionsTablePair label="Limit" optional={true}>
+      <OptionsTablePair label="Limit" optional>
         <PositiveIntPicker
           value={values.limit}
           onUpdate={(value) => {
@@ -47,7 +47,7 @@ export default function SingleAccount({ onUpdate, values }) {
         />
       </OptionsTablePair>
 
-      <OptionsTablePair label="Order" optional={true}>
+      <OptionsTablePair label="Order" optional>
         <OrderPicker
           value={values.order}
           onUpdate={(value) => {

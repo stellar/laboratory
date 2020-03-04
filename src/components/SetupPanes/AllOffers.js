@@ -8,63 +8,63 @@ import PositiveIntPicker from "../FormComponents/PositiveIntPicker.js";
 import OrderPicker from "../FormComponents/OrderPicker.js";
 import AssetPicker from "../FormComponents/AssetPicker.js";
 
-export default function AllOffers(props) {
+export default function AllOffers({ values, onUpdate }) {
   return (
     <>
-      <OptionsTablePair label="Seller" optional={true}>
+      <OptionsTablePair label="Seller" optional>
         <PubKeyPicker
-          value={props.values["seller"]}
+          value={values.seller}
           onUpdate={(value) => {
-            props.onUpdate("seller", value);
+            onUpdate("seller", value);
           }}
         />
       </OptionsTablePair>
 
-      <OptionsTablePair label="Selling" optional={true}>
+      <OptionsTablePair label="Selling" optional>
         <AssetPicker
           stringForm
           optional
-          value={props.values["selling"] || ""}
+          value={values.selling}
           onUpdate={(value) => {
-            props.onUpdate("selling", value);
+            onUpdate("selling", value);
           }}
         />
       </OptionsTablePair>
 
-      <OptionsTablePair label="Buying" optional={true}>
+      <OptionsTablePair label="Buying" optional>
         <AssetPicker
           stringForm
           optional
-          value={props.values["buying"] || ""}
+          value={values.buying}
           onUpdate={(value) => {
-            props.onUpdate("buying", value);
+            onUpdate("buying", value);
           }}
         />
       </OptionsTablePair>
 
-      <OptionsTablePair label="Cursor" optional={true}>
+      <OptionsTablePair label="Cursor" optional>
         <TextPicker
-          value={props.values["cursor"]}
+          value={values.cursor}
           onUpdate={(value) => {
-            props.onUpdate("cursor", value);
+            onUpdate("cursor", value);
           }}
         />
       </OptionsTablePair>
 
-      <OptionsTablePair label="Limit">
+      <OptionsTablePair label="Limit" optional>
         <PositiveIntPicker
-          value={props.values["limit"]}
+          value={values.limit}
           onUpdate={(value) => {
-            props.onUpdate("limit", value);
+            onUpdate("limit", value);
           }}
         />
       </OptionsTablePair>
 
-      <OptionsTablePair label="Order">
+      <OptionsTablePair label="Order" optional>
         <OrderPicker
-          value={props.values["order"]}
+          value={values.order}
           onUpdate={(value) => {
-            props.onUpdate("order", value);
+            onUpdate("order", value);
           }}
         />
       </OptionsTablePair>
