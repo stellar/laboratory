@@ -107,7 +107,7 @@ const optionalOptions = {
   [ASSET_TYPES.none]: "None",
   ...stringFormRadioOptions,
 };
-function getAssetType(assetString) {
+function getAssetType(assetString = "") {
   if (assetString === "native") {
     return "native";
   }
