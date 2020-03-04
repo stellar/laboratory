@@ -1,4 +1,5 @@
 import All from "../components/SetupPanes/All";
+import Accounts from "../components/SetupPanes/Accounts";
 import AllAssets from "../components/SetupPanes/AllAssets";
 import AllOffers from "../components/SetupPanes/AllOffers";
 import AllWithFailed from "../components/SetupPanes/AllWithFailed";
@@ -44,6 +45,16 @@ export const endpointsMap = {
   accounts: {
     label: "Accounts",
     endpoints: {
+      multiple: {
+        label: "Accounts",
+        helpUrl:
+          "https://www.stellar.org/developers/horizon/reference/endpoints/accounts.html",
+        method: "GET",
+        path: {
+          template: "/accounts/{?signer,asset,cursor,limit,order}",
+        },
+        setupComponent: Accounts,
+      },
       single: {
         label: "Single Account",
         helpUrl:
