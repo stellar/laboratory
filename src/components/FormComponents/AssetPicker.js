@@ -94,21 +94,51 @@ function codeValidator(value, ignoreType = false) {
   }
 }
 
-const stringFormRadioOptions = { native: "Native", issued: "Issued" };
-function AssetStringPicker({ value, onUpdate, ...props }) {
-  const isNative = !value.includes(":");
+const ASSET_TYPES = {
+  none: "none",
+  native: "native",
+  issued: "issued",
+};
+const stringFormRadioOptions = {
+  [ASSET_TYPES.native]: "Native",
+  [ASSET_TYPES.issued]: "Issued",
+};
+const optionalOptions = {
+  [ASSET_TYPES.none]: "None",
+  ...stringFormRadioOptions,
+};
+function getAssetType(assetString = "") {
+  if (assetString === "native") {
+    return "native";
+  }
+  if (assetString.includes(":")) {
+    return "issued";
+  }
+  return "none";
+}
+function AssetStringPicker({ value, onUpdate, optional, ...props }) {
+  const assetType = getAssetType(value);
 
   return (
     <div {...props}>
       <RadioButtonPicker
-        value={isNative ? "native" : "issued"}
-        onUpdate={() => {
-          onUpdate(isNative ? ":" : "native");
+        value={getAssetType(value)}
+        onUpdate={(value) => {
+          switch (value) {
+            case ASSET_TYPES.none:
+              return onUpdate("");
+            case ASSET_TYPES.issued:
+              return onUpdate(":");
+            case ASSET_TYPES.native:
+              return onUpdate("native");
+          }
         }}
-        className={!isNative ? "picker--spaceBottom" : ""}
-        items={stringFormRadioOptions}
+        className={
+          assetType === ASSET_TYPES.issued ? "picker--spaceBottom" : ""
+        }
+        items={optional ? optionalOptions : stringFormRadioOptions}
       />
-      {!isNative &&
+      {assetType === ASSET_TYPES.issued &&
         (() => {
           const [code, issuer] = value.split(":");
           return (
@@ -140,13 +170,24 @@ function AssetStringPicker({ value, onUpdate, ...props }) {
 export default function AssetPicker({
   stringForm = false,
   value,
+  optional,
   onUpdate,
   ...props
 }) {
   return stringForm ? (
-    <AssetStringPicker value={value} onUpdate={onUpdate} {...props} />
+    <AssetStringPicker
+      optional={optional}
+      value={value}
+      onUpdate={onUpdate}
+      {...props}
+    />
   ) : (
-    <AssetObjectPicker value={value} onUpdate={onUpdate} {...props} />
+    <AssetObjectPicker
+      optional={optional}
+      value={value}
+      onUpdate={onUpdate}
+      {...props}
+    />
   );
 }
 
