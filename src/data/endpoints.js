@@ -1,5 +1,6 @@
 import All from "../components/SetupPanes/All";
 import AllAssets from "../components/SetupPanes/AllAssets";
+import AllOffers from "../components/SetupPanes/AllOffers";
 import AllWithFailed from "../components/SetupPanes/AllWithFailed";
 import FindPaymentPaths from "../components/SetupPanes/FindPaymentPaths";
 import FindStrictSendPaymentPaths from "../components/SetupPanes/FindStrictSendPaymentPaths";
@@ -16,6 +17,7 @@ import PostTransaction from "../components/SetupPanes/PostTransaction";
 import SingleAccount from "../components/SetupPanes/SingleAccount";
 import SingleLedger from "../components/SetupPanes/SingleLedger";
 import SingleOperation from "../components/SetupPanes/SingleOperation";
+import SingleOffer from "../components/SetupPanes/SingleOffer";
 import SingleTransaction from "../components/SetupPanes/SingleTransaction";
 import TradeAggregations from "../components/SetupPanes/TradeAggregations";
 import Trades from "../components/SetupPanes/Trades";
@@ -152,15 +154,26 @@ export const endpointsMap = {
   offers: {
     label: "Offers",
     endpoints: {
-      for_account: {
-        label: "Offers for Account",
+      all: {
+        label: "All Offers",
         helpUrl:
-          "https://www.stellar.org/developers/horizon/reference/endpoints/offers-for-account.html",
+          "https://www.stellar.org/developers/horizon/reference/endpoints/offers.html",
         method: "GET",
         path: {
-          template: "/accounts/{account_id}/offers{?cursor,limit,order}",
+          template:
+            "https://horizon-testnet.stellar.org/offers{?selling,buying,seller,cursor,limit,order}",
         },
-        setupComponent: ForAccount,
+        setupComponent: AllOffers,
+      },
+      single: {
+        label: "Single Offer",
+        helpUrl:
+          "https://www.stellar.org/developers/horizon/reference/endpoints/offer-details.html",
+        method: "GET",
+        path: {
+          template: "https://horizon-testnet.stellar.org/offers/{offer_id}",
+        },
+        setupComponent: SingleOffer,
       },
       for_account: {
         label: "Offers for Account",
