@@ -42,9 +42,9 @@ class TxBuilderResult extends React.Component {
           Network Passphrase:<br />
           {this.props.networkPassphrase}<br />
           Hash:<br />
-          {transactionBuild.hash}<br />
+          <EasySelect>{transactionBuild.hash}</EasySelect><br />
           XDR:<br />
-          {transactionBuild.xdr}
+          <EasySelect>{transactionBuild.xdr}</EasySelect>
           </div>
         signingInstructions = <p className="TransactionBuilderResult__instructions">
           In order for the transaction to make it into the ledger, a transaction must be successfully
@@ -68,7 +68,7 @@ class TxBuilderResult extends React.Component {
     return <div className="TransactionBuilderResult">
       {successTitle}
       {errorTitle}
-      <pre className="TransactionXDR so-code so-code__wrap TransactionBuilderResult__code" onClick={clickToSelect}>
+      <pre className="TransactionXDR so-code so-code__wrap TransactionBuilderResult__code">
         <code>{finalResult}</code>
       </pre>
       {signingInstructions}
