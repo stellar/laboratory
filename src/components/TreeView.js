@@ -104,7 +104,10 @@ function checkSignatures(signatures, fetchedSigners) {
   }
 }
 
-const formatter = new Intl.NumberFormat();
+const formatter = new Intl.NumberFormat('en-US', {
+  minimumFractionDigits: 1,
+  maximumFractionDigits: 7,
+});
 // Types values are values that will be displayed with special formatting to
 // provide for a more rich experience other than just plain text.
 // "untyped" values are simply strings. They will be displayed as strings in the
