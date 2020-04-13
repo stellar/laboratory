@@ -182,7 +182,7 @@ export const endpointsMap = {
           "https://www.stellar.org/developers/horizon/reference/endpoints/offer-details.html",
         method: "GET",
         path: {
-          template: "https://horizon-testnet.stellar.org/offers/{offer_id}",
+          template: "/offers/{offer_id}",
         },
         setupComponent: SingleOffer,
       },
