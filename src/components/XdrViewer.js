@@ -51,7 +51,7 @@ function XdrViewer(props) {
     <div className="XdrViewer__setup so-back">
       <div className="so-chunk">
         <div className="pageIntro">
-          <p><a href="https://www.stellar.org/developers/horizon/guides/xdr.html">External Data Representation (XDR)</a> is a standardized protocol that the Stellar network uses to encode data.</p>
+          <p><a href="https://www.stellar.org/developers/guides/concepts/xdr.html">External Data Representation (XDR)</a> is a standardized protocol that the Stellar network uses to encode data.</p>
           <p>The XDR Viewer is a tool that displays contents of a Stellar XDR blob in a human readable format.</p>
         </div>
         <p className="XdrViewer__label">
