@@ -329,8 +329,7 @@ Libify.Operation.bumpSequence = function(opts) {
 // buildTransaction is not something found js-stellar libs but acts as an
 // abstraction to building a transaction with input data in the same format
 // as the reducers
-Libify.buildTransaction = function(attributes, operations, networkObj) {
-  Sdk.Network.use(networkObj);
+Libify.buildTransaction = function(attributes, operations, networkPassphrase) {
   let result = {
     errors: [],
     xdr: '',
@@ -339,7 +338,9 @@ Libify.buildTransaction = function(attributes, operations, networkObj) {
   try {
     var account = new Sdk.Account(attributes.sourceAccount, Sdk.UnsignedHyper.fromString(attributes.sequence).subtract(1).toString());
 
-    let opts = {};
+    let opts = {
+      networkPassphrase
+    };
     if (attributes.fee !== '') {
       const MAX_UINT32 = Math.pow( 2, 32 ) - 1;
       if (parseInt(attributes.fee) > MAX_UINT32) {
@@ -403,9 +404,7 @@ Libify.buildTransaction = function(attributes, operations, networkObj) {
 }
 
 
-Libify.signTransaction = function(txXdr, signers, networkObj, ledgerWalletSigs) {
-  Sdk.Network.use(networkObj);
-
+Libify.signTransaction = function(txXdr, signers, networkPassphrase, ledgerWalletSigs) {
   let validSecretKeys = [];
   let validPreimages = [];
   for (let i = 0; i < signers.length; i++) {
@@ -431,7 +430,7 @@ Libify.signTransaction = function(txXdr, signers, networkObj, ledgerWalletSigs) 
     }
   }
 
-  let newTx = new Sdk.Transaction(txXdr);
+  let newTx = Sdk.TransactionBuilder.fromXDR(txXdr, networkPassphrase);
   let existingSigs = newTx.signatures.length;
   let addedSigs = 0;
 

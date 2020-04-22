@@ -1,8 +1,8 @@
 import _ from 'lodash';
-import {Transaction} from 'stellar-sdk';
+import { TransactionBuilder } from 'stellar-sdk';
 import validateBase64 from './validateBase64';
 
-export default function validateTxXdr(input) {
+export default function validateTxXdr(input, networkPassphrase) {
   input = _.trim(input);
 
   let base64Validation = validateBase64(input);
@@ -11,7 +11,7 @@ export default function validateTxXdr(input) {
   }
 
   try {
-    new Transaction(input);
+    TransactionBuilder.fromXDR(input, networkPassphrase);
     return {
       result: 'success',
       message: 'Valid Transaction Envelope XDR',

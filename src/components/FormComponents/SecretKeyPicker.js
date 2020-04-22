@@ -1,6 +1,6 @@
 import React from 'react';
 import TextPicker from './TextPicker';
-import {StrKey, Keypair} from 'stellar-sdk';
+import {StrKey} from 'stellar-sdk';
 
 export default function SecretKeyPicker(props) {
   return <TextPicker

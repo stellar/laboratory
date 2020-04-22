@@ -20,13 +20,13 @@ export default class TransactionImporter extends React.Component {
     })
   }
   triggerImport() {
-    if (validateTxXdr(this.state.input).result === 'success') {
+    if (validateTxXdr(this.state.input, this.props.networkPassphrase).result === 'success') {
       this.props.onImport(this.state.input);
     }
   }
   render() {
     let validation, message, submitEnabled, messageClass;
-    validation = validateTxXdr(this.state.input);
+    validation = validateTxXdr(this.state.input, this.props.networkPassphrase);
     messageClass = validation.result === 'error' ? 'xdrInput__message__alert' : 'xdrInput__message__success';
     message = <p className={messageClass}>{validation.message}</p>
 
@@ -51,5 +51,6 @@ export default class TransactionImporter extends React.Component {
   }
 }
 TransactionImporter.propTypes = {
-  'onImport': PropTypes.func.isRequired,
+  onImport: PropTypes.func.isRequired,
+  networkPassphrase: PropTypes.string.isRequired,
 };

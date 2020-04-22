@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {Transaction, Keypair, Network} from 'stellar-sdk';
+import {Transaction} from 'stellar-sdk';
 import TransactionImporter from './TransactionImporter';
 import {
   importFromXdr,
@@ -35,20 +35,18 @@ class TransactionSigner extends React.Component {
     let {xdr, signers, bipPath, ledgerwalletStatus} = this.props.state;
     let content;
 
-    let networkObj = new Network(networkPassphrase)
-
-    if (validateTxXdr(xdr).result !== 'success') {
+    if (validateTxXdr(xdr, networkPassphrase).result !== 'success') {
       content = <div className="so-back">
         <div className="so-chunk">
           <div className="TxSignerImport TransactionSigner__import">
             <p className="TxSignerImport__title">Import a transaction envelope in XDR format:</p>
-            <TransactionImporter onImport={(xdr) => dispatch(importFromXdr(xdr))}/>
+            <TransactionImporter networkPassphrase={networkPassphrase} onImport={(xdr) => dispatch(importFromXdr(xdr))}/>
           </div>
         </div>
       </div>
     } else {
       let ledgerSigs = ledgerwalletStatus.signatures;
-      let result = signTransaction(xdr, signers, networkObj, ledgerSigs);
+      let result = signTransaction(xdr, signers, networkPassphrase, ledgerSigs);
       let transaction = new Transaction(xdr, networkPassphrase);
 
       let infoTable = {
@@ -139,7 +137,7 @@ class TransactionSigner extends React.Component {
                   />
                   <button
                     className="s-button TxSignerKeys__signBipPath"
-                    onClick={() => {dispatch(signWithLedger(xdr, bipPath))}}
+                    onClick={() => {dispatch(signWithLedger(xdr, bipPath, networkPassphrase))}}
                   >Sign with BIP Path</button>
                   {ledgerwalletMessage}
                 </OptionsTablePair>

@@ -37,11 +37,11 @@ export const LEDGER_WALLET_SIGN_START = 'LEDGER_WALLET_SIGN_START';
 export const LEDGER_WALLET_SIGN_SUCCESS = 'LEDGER_WALLET_SIGN_SUCCESS';
 export const LEDGER_WALLET_SIGN_ERROR = 'LEDGER_WALLET_SIGN_ERROR';
 
-export function signWithLedger(txXDR, bipPath) {
+export function signWithLedger(txXDR, bipPath, networkPassphrase) {
   return dispatch => {
     dispatch({ type: LEDGER_WALLET_SIGN_START });
 
-    let transaction = new Transaction(txXDR);
+    let transaction = new Transaction(txXDR, networkPassphrase);
 
     let onError = err => {
       if (err.message) {

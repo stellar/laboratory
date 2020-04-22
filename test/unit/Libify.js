@@ -1,9 +1,8 @@
 import React from 'react';
-import {xdr, Transaction, Operation, Network, Networks} from 'stellar-sdk';
+import {xdr, Transaction, Operation, Networks} from 'stellar-sdk';
 import Libify from '../../src/utilities/Libify';
 
 describe('Libify.buildTransaction', () => {
-  beforeEach(() => Network.useTestNetwork());
 
   context('when building a simple transaction', () => {
     let simpleTransaction = Libify.buildTransaction({
@@ -21,9 +20,9 @@ describe('Libify.buildTransaction', () => {
         },
         name: 'createAccount'
       }
-    ], new Network(Networks.TESTNET));
+    ], Networks.TESTNET);
     expect(simpleTransaction.errors).to.deep.equal([]);
-    let decodedTx = new Transaction(simpleTransaction.xdr);
+    let decodedTx = new Transaction(simpleTransaction.xdr, Networks.TESTNET);
 
     it('contains specified source account', () => {
       expect(decodedTx.source).to.equal('GCNZ6DLRLBDUUTXMGKHMCIG44I6VSZ4U6ACY6CSICK5DFVRATYJTAEVT');
@@ -34,7 +33,7 @@ describe('Libify.buildTransaction', () => {
     });
 
     it('contains specified fee', () => {
-      expect(decodedTx.fee).to.equal(42);
+      expect(decodedTx.fee).to.equal("42");
     });
 
     it('contains no memo', () => {
@@ -224,10 +223,11 @@ describe('Libify.buildTransaction', () => {
           offerId: '0'
         }
       }
-    ]);
+    ], Networks.TESTNET);
     let decodedTx = xdr.TransactionEnvelope.fromXDR(largeTransaction.xdr, 'base64');
+    const operations = decodedTx.value().tx().operations();
     let opAtIndex = (index) => {
-      return Operation.fromXDRObject(decodedTx._attributes.tx._attributes.operations[index]);
+      return Operation.fromXDRObject(operations[index]);
     };
 
     describe('createAccount operation at index 0', () => {
@@ -338,7 +338,7 @@ describe('Libify.buildTransaction', () => {
         expect(opAtIndex(8).type).to.equal('allowTrust');
       })
       it('contains true authorize flag', () => {
-        expect(opAtIndex(8).authorize).to.equal(true)
+        expect(opAtIndex(8).authorize).to.equal(1)
       })
     })
 

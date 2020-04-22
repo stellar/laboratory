@@ -1,4 +1,4 @@
-import {xdr, hash, StrKey, Network, Keypair} from 'stellar-sdk';
+import {xdr, hash, StrKey, Keypair} from 'stellar-sdk';
 import axios from 'axios';
 import SIGNATURE from '../constants/signature';
 import FETCHED_SIGNERS from '../constants/fetched_signers';
@@ -38,10 +38,7 @@ export function fetchSigners(input, horizonBaseUrl, networkPassphrase) {
   return dispatch => {
     dispatch({ type: FETCHED_SIGNERS.PENDING });
     try {
-      // Capture network for determining signature base
-      StellarSdk.Network.use(new Network(networkPassphrase));
-
-      let tx = new StellarSdk.Transaction(input);
+      let tx = new StellarSdk.Transaction(input, networkPassphrase);
       const hashedSignatureBase = hash(tx.signatureBase());
 
       // Extract all signatures on transaction

@@ -1,6 +1,5 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {Network} from 'stellar-sdk';
 import {PubKeyPicker} from './FormComponents/PubKeyPicker';
 import {EasySelect} from './EasySelect';
 import Libify from '../utilities/Libify';
@@ -31,7 +30,7 @@ class TxBuilderResult extends React.Component {
       errorTitleText = 'Form validation errors:';
       finalResult = formatErrorList(validationErrors);
     } else {
-      let transactionBuild = Libify.buildTransaction(attributes, operations, new Network(this.props.networkPassphrase));
+      let transactionBuild = Libify.buildTransaction(attributes, operations, this.props.networkPassphrase);
 
       if (transactionBuild.errors.length > 0) {
         errorTitleText = `Transaction building errors:`;
