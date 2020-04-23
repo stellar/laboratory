@@ -141,7 +141,7 @@ function getValue(object, name) {
     return {type: 'code', value: partialPublicKeyString};
   }
 
-  if (name === 'ed25519') {
+  if (name === 'ed25519' || name === 'sourceAccountEd25519') {
     var address = StrKey.encodeEd25519PublicKey(object);
     return {type: 'code', value: address};
   }
