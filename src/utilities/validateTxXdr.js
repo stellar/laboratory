@@ -20,6 +20,7 @@ export default function validateTxXdr(input, networkPassphrase) {
     return {
       result: 'error',
       message: 'Unable to parse input XDR into Transaction Envelope',
+      originalError: e
     };
   }
 }
