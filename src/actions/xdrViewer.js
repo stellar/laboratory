@@ -2,6 +2,7 @@ import {xdr, hash, StrKey, Keypair, FeeBumpTransaction} from 'stellar-sdk';
 import axios from 'axios';
 import SIGNATURE from '../constants/signature';
 import FETCHED_SIGNERS from '../constants/fetched_signers';
+import convertMuxedAccountToEd25519Account from  '../utilities/convertMuxedAccountToEd25519Account';
 
 export const UPDATE_XDR_INPUT = 'UPDATE_XDR_INPUT';
 export function updateXdrInput(input) {
@@ -48,7 +49,7 @@ export function fetchSigners(input, horizonBaseUrl, networkPassphrase) {
       let groupedSignatures = [];
 
       if (tx instanceof FeeBumpTransaction) {
-        sourceAccounts[tx.feeSource] = true;
+        sourceAccounts[convertMuxedAccountToEd25519Account(tx.feeSource)] = true;
         groupedSignatures.push([
           tx.signatures.map(x => ({ sig: x.signature() })),
           tx.hash()
@@ -57,10 +58,10 @@ export function fetchSigners(input, horizonBaseUrl, networkPassphrase) {
         tx = tx.innerTransaction;
       }
 
-      sourceAccounts[tx.source] = true;
+      sourceAccounts[convertMuxedAccountToEd25519Account(tx.source)] = true;
       tx.operations.forEach(op => {
         if (op.source) {
-          sourceAccounts[op.source] = true;
+          sourceAccounts[convertMuxedAccountToEd25519Account(op.source)] = true;
         }
       });
 
