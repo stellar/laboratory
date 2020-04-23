@@ -18,7 +18,7 @@ export default class TreeView extends React.Component {
         let childNodes;
 
         let position = getPosition(node, parent);
-        
+
         if (typeof node.nodes !== 'undefined') {
           childNodes = <div className="TreeView__child">
            <TreeView nodes={node.nodes} fetchedSigners={fetchedSigners} parent={position} />
@@ -60,20 +60,20 @@ function RowValue(props) {
     separator = ': ';
   }
 
-  if (position === 'TransactionEnvelope.signatures') {
+  if (position.match(/^TransactionEnvelope\.(\w+\.)+signatures$/)) {
     checkSignatures(node, fetchedSigners);
     return formatSignatureCheckState(node, separator)
   }
 
-  if (position.match(/^TransactionEnvelope\.signatures\[[0-9]+\]\.signature$/)) {
+  if (position.match(/^TransactionEnvelope\.(\w+\.)+signatures\[[0-9]+\]\.signature$/)) {
     return formatSignature(node, separator);
   }
 
   // Buffers with possible text representation
   if (node.value &&
-    (position === 'TransactionEnvelope.tx.memo.text' ||
-     position.match(/^TransactionEnvelope\.tx.operations\[[0-9]+\]\.body.manageDataOp.data.*$/) ||
-     position.match(/^TransactionEnvelope\.tx.operations\[[0-9]+\]\.body.setOptionsOp.homeDomain$/)
+    (position.match(/^TransactionEnvelope\.(\w+\.)+tx.memo.text$/) ||
+     position.match(/^TransactionEnvelope\.(\w+\.)+tx.operations\[[0-9]+\]\.body.manageDataOp.data.*$/) ||
+     position.match(/^TransactionEnvelope\.(\w+\.)+tx.operations\[[0-9]+\]\.body.setOptionsOp.homeDomain$/)
     )) {
     return <span>
       <strong>{node.type}</strong>{separator}<code>{node.value.raw.toString()}</code> [hex: {value}]
@@ -94,7 +94,7 @@ function checkSignatures(signatures, fetchedSigners) {
   for (var i = 0; i < signatures.nodes.length; i ++) {
     const sig = signatures.nodes[i].nodes.find(n => n.type == 'signature');
     const fetchedSignature = fetchedSigners.data.find(x => x.sig.equals(sig.value.raw));
-    
+
     let isValid = SIGNATURE.NOT_VERIFIED_YET;
     if (fetchedSignature) {
       isValid = fetchedSignature.isValid;
@@ -134,7 +134,7 @@ function getPosition(node, parent) {
   return (parent ? parent + sep : '') + node.type;
 }
 
-// Signatures have a special verification feature, so they require a 
+// Signatures have a special verification feature, so they require a
 // richer formating with ternary based coloring based on whether the
 // signature is valid for one of the signers related to the transaction
 // envelope.
