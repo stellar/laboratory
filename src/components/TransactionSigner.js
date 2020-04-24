@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {Transaction, Keypair, Network} from 'stellar-sdk';
+import {TransactionBuilder, FeeBumpTransaction} from 'stellar-sdk';
 import TransactionImporter from './TransactionImporter';
 import {
   importFromXdr,
@@ -35,32 +35,53 @@ class TransactionSigner extends React.Component {
     let {xdr, signers, bipPath, ledgerwalletStatus} = this.props.state;
     let content;
 
-    let networkObj = new Network(networkPassphrase)
-
-    if (validateTxXdr(xdr).result !== 'success') {
+    if (validateTxXdr(xdr, networkPassphrase).result !== 'success') {
       content = <div className="so-back">
         <div className="so-chunk">
           <div className="TxSignerImport TransactionSigner__import">
             <p className="TxSignerImport__title">Import a transaction envelope in XDR format:</p>
-            <TransactionImporter onImport={(xdr) => dispatch(importFromXdr(xdr))}/>
+            <TransactionImporter networkPassphrase={networkPassphrase} onImport={(xdr) => dispatch(importFromXdr(xdr))}/>
           </div>
         </div>
       </div>
     } else {
       let ledgerSigs = ledgerwalletStatus.signatures;
-      let result = signTransaction(xdr, signers, networkObj, ledgerSigs);
-      let transaction = new Transaction(xdr, networkPassphrase);
+      let result = signTransaction(xdr, signers, networkPassphrase, ledgerSigs);
+      let transaction = TransactionBuilder.fromXDR(xdr, networkPassphrase);
 
       let infoTable = {
         'Signing for': <pre className="so-code so-code__wrap"><code>{networkPassphrase}</code></pre>,
         'Transaction Envelope XDR': <EasySelect plain={true}><pre className="so-code so-code__wrap"><code>{xdr}</code></pre></EasySelect>,
         'Transaction Hash': <EasySelect plain={true}><pre className="so-code so-code__wrap"><code>{transaction.hash().toString('hex')}</code></pre></EasySelect>,
-        'Source account': transaction.source,
-        'Sequence number': transaction.sequence,
-        'Transaction Fee (stroops)': transaction.fee,
-        'Number of operations': transaction.operations.length,
-        'Number of existing signatures': transaction.signatures.length,
       };
+
+      if (transaction instanceof FeeBumpTransaction) {
+        infoTable = { 
+          ...infoTable,
+          ...{
+            'Fee source account': transaction.feeSource,
+            'Transaction Fee (stroops)': transaction.fee,            
+            'Number of existing signatures': transaction.signatures.length,
+            'Inner transaction hash': <EasySelect plain={true}><pre className="so-code so-code__wrap"><code>{transaction.innerTransaction.hash().toString('hex')}</code></pre></EasySelect>,
+            'Inner transaction source account': transaction.innerTransaction.source,
+            'Inner transaction sequence number': transaction.innerTransaction.sequence,
+            'Inner transaction fee (stroops)': transaction.innerTransaction.fee,
+            'Inner transaction number of operations': transaction.innerTransaction.operations.length,
+            'Inner transaction number of existing signatures': transaction.innerTransaction.signatures.length,
+          }
+        };
+      } else {
+        infoTable = { 
+          ...infoTable,
+          ...{
+            'Source account': transaction.source,
+            'Sequence number': transaction.sequence,
+            'Transaction Fee (stroops)': transaction.fee,
+            'Number of operations': transaction.operations.length,
+            'Number of existing signatures': transaction.signatures.length,
+          }
+        };
+      }
 
       let codeResult, submitLink, xdrLink, resultTitle, submitInstructions;
 
@@ -139,7 +160,7 @@ class TransactionSigner extends React.Component {
                   />
                   <button
                     className="s-button TxSignerKeys__signBipPath"
-                    onClick={() => {dispatch(signWithLedger(xdr, bipPath))}}
+                    onClick={() => {dispatch(signWithLedger(xdr, bipPath, networkPassphrase))}}
                   >Sign with BIP Path</button>
                   {ledgerwalletMessage}
                 </OptionsTablePair>

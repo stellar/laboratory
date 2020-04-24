@@ -26,9 +26,11 @@ function xdr(state = '', action) {
   switch (action.type) {
   case LOAD_STATE:
     if (action.slug === SLUG.TXSIGNER && action.queryObj.xdr) {
-      if (validateTxXdr(action.queryObj.xdr).result === 'success') {
+      const validationResult = validateTxXdr(action.queryObj.xdr)
+      if (validationResult.result === 'success') {
         return action.queryObj.xdr;
       }
+      console.error(validationResult.message, validationResult.originalError)
       // If invalid xdr in the url, then we go back to step zero
       return '';
     }
@@ -66,7 +68,7 @@ function bipPath(state = [], action) {
 
 function ledgerwalletStatus(state = {}, action) {
   switch (action.type) {
-  case IMPORT_FROM_XDR:    
+  case IMPORT_FROM_XDR:
   case CLEAR_TRANSACTION:
     return {};
   case LEDGER_WALLET_SIGN_START:

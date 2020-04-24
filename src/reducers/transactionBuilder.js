@@ -86,7 +86,7 @@ function reorderOps(state, opId, toNth) {
 const defaultAttributes = {
   sourceAccount: '',
   sequence: '',
-  fee: String(BASE_FEE),
+  fee: BASE_FEE,
   memoType: '',
   memoContent: '',
   minTime: '',
