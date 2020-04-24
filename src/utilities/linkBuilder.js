@@ -33,11 +33,12 @@ export function txPostLink(xdr) {
   return hashBuilder(SLUG.EXPLORER, query);
 }
 
-export function xdrViewer(xdr, type) {
+export function xdrViewer(xdr, type, canSubmit = false) {
   let query = stateToQueryObj(SLUG.XDRVIEWER, {
     xdrViewer: {
       input: xdr,
       type,
+      canSubmit
     },
   });
   return hashBuilder(SLUG.XDRVIEWER, query);

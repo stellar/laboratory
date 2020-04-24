@@ -8,9 +8,19 @@ const routing = combineReducers({
   input,
   type,
   fetchedSigners,
+  canSubmit,
 });
 
 export default routing;
+
+function canSubmit(state = false, action) {
+  switch (action.type) {
+    case LOAD_STATE:
+      return action.queryObj.canSubmit || false
+    default:
+      return state
+  }
+}
 
 function input(state = '', action) {
   switch (action.type) {
