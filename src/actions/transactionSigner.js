@@ -1,6 +1,6 @@
 import LedgerTransport from '@ledgerhq/hw-transport-u2f';
 import LedgerStr from '@ledgerhq/hw-app-str';
-import {Transaction, Keypair, xdr} from 'stellar-sdk';
+import {TransactionBuilder, Keypair, xdr} from 'stellar-sdk';
 
 export const IMPORT_FROM_XDR = 'IMPORT_FROM_XDR';
 export function importFromXdr(xdr) {
@@ -41,7 +41,7 @@ export function signWithLedger(txXDR, bipPath, networkPassphrase) {
   return dispatch => {
     dispatch({ type: LEDGER_WALLET_SIGN_START });
 
-    let transaction = new Transaction(txXDR, networkPassphrase);
+    let transaction = TransactionBuilder.fromXDR(txXDR, networkPassphrase);
 
     let onError = err => {
       if (err.message) {
