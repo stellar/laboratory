@@ -1,11 +1,38 @@
 .XdrViewer__results {
   padding-top: 2em;
-  padding-bottom: 2em;
 }
-.XdrViewer__setup {
+.XdrViewer__type.so-back {
   border-bottom: 1px solid $gray;
   padding-bottom: 2em;
 }
-  .XdrViewer__label {
-    margin-bottom: 0.2em;
+.XdrViewer__label {
+  margin-bottom: 0.2em;
+}
+
+.TransactionSubmitter {
+  margin: 0.75em 0;
+  max-width: 100%;
+
+  .TransactionSubmitter__result {
+    padding-top: 2em;
+    padding-bottom: 2em;
+    border-top: 1px solid $s-color-neutral7;
+    border-bottom: 1px solid $s-color-neutral7;
+    background: $s-color-neutral8;
+
   }
+
+  .collapsible {
+    max-height: 100vh;
+    overflow: hidden;
+    transition: max-height .4s;
+  }
+  .closed {
+    max-height: 0vh;
+  }
+
+  .TransactionSubmitter__code {
+    background: $s-color-neutral9;
+    word-wrap: break-word;
+  }
+}
