@@ -10,6 +10,7 @@ import {updateXdrInput, updateXdrType, fetchLatestTx, fetchSigners} from '../act
 import {xdr} from 'stellar-sdk';
 import {addEventHandler, logEvent} from '../utilities/metrics'
 import xdrViewerMetrics, {metricsEvents} from '../metricsHandlers/xdrViewer'
+import { TxSubmitterResult } from './TxSubmitterResult';
 
 // XDR decoding doesn't happen in redux, but is pretty much the only thing on
 // this page that we care about. Log metrics from the component as well.
@@ -19,7 +20,7 @@ const tLogEvent = _.debounce(logEvent, 1000)
 
 
 function XdrViewer(props) {
-  let {dispatch, state, baseURL, networkPassphrase} = props;
+  let { dispatch, state, baseURL, networkPassphrase, horizonURL } = props;
 
   let validation = validateBase64(state.input);
   let messageClass = validation.result === 'error' ? 'xdrInput__message__alert' : 'xdrInput__message__success';
@@ -69,9 +70,24 @@ function XdrViewer(props) {
             }}
             placeholder="Example: AAAAAGXNhB2hIkbP//jgzn4os/AAAAZAB+BaLPAAA5Q/xL..."></textarea>
         </div>
+      </div>
+    </div>
+    {state.type === 'TransactionEnvelope' && state.canSubmit &&
+      <TxSubmitterResult
+        txXdr={state.input}
+        networkPassphrase={networkPassphrase}
+        horizonURL={horizonURL}
+      />
+    }
+    <div className="XdrViewer__submit so-back">
+      <div className="so-chunk">
         <div className="xdrInput__message">
           {message}
         </div>
+      </div>
+    </div>
+    <div className="XdrViewer__type so-back">
+      <div className="so-chunk">
 
         <p className="XdrViewer__label">XDR type:</p>
         <SelectPicker
@@ -96,7 +112,8 @@ function chooseState(state) {
   return {
     state: state.xdrViewer,
     baseURL: state.network.current.horizonURL,
-    networkPassphrase: state.network.current.networkPassphrase
+    networkPassphrase: state.network.current.networkPassphrase,
+    horizonURL: state.network.current.horizonURL,
   }
 }
 

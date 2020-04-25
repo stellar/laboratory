@@ -56,11 +56,11 @@ class TransactionSigner extends React.Component {
       };
 
       if (transaction instanceof FeeBumpTransaction) {
-        infoTable = { 
+        infoTable = {
           ...infoTable,
           ...{
             'Fee source account': transaction.feeSource,
-            'Transaction Fee (stroops)': transaction.fee,            
+            'Transaction Fee (stroops)': transaction.fee,
             'Number of existing signatures': transaction.signatures.length,
             'Inner transaction hash': <EasySelect plain={true}><pre className="so-code so-code__wrap"><code>{transaction.innerTransaction.hash().toString('hex')}</code></pre></EasySelect>,
             'Inner transaction source account': transaction.innerTransaction.source,
@@ -71,7 +71,7 @@ class TransactionSigner extends React.Component {
           }
         };
       } else {
-        infoTable = { 
+        infoTable = {
           ...infoTable,
           ...{
             'Source account': transaction.source,
@@ -83,20 +83,15 @@ class TransactionSigner extends React.Component {
         };
       }
 
-      let codeResult, submitLink, xdrLink, resultTitle, submitInstructions;
+      let codeResult, submitLink, resultTitle, submitInstructions;
 
       if (!_.isUndefined(result.xdr)) {
         codeResult = <pre className="TxSignerResult__xdr so-code so-code__wrap" onClick={clickToSelect}><code>{result.xdr}</code></pre>;
         submitLink = <a
           className="s-button TxSignerResult__submit"
-          href={txPostLink(result.xdr)}
+          href={xdrViewer(result.xdr, 'TransactionEnvelope', true)}
           onClick={scrollOnAnchorOpen}
-          >Submit to Post Transaction endpoint</a>;
-        xdrLink = <a
-          className="s-button TxSignerResult__submit"
-          href={xdrViewer(result.xdr, 'TransactionEnvelope')}
-          onClick={scrollOnAnchorOpen}
-          >View in XDR Viewer</a>;
+          >View and Submit in XDR Viewer</a>;
         resultTitle = <h3 className="TxSignerResult__title">Transaction signed!</h3>;
         submitInstructions = <p className="TxSignerResult__instructions">
           Now that this transaction is signed, you can submit it to the network. Horizon provides an endpoint called Post Transaction that will relay your transaction to the network and inform you of the result.
@@ -175,7 +170,7 @@ class TransactionSigner extends React.Component {
             <p className="TxSignerResult__summary">{result.message}</p>
             {codeResult}
             {submitInstructions}
-            {submitLink} {xdrLink}
+            {submitLink}
           </div>
         </div>
       </div>
