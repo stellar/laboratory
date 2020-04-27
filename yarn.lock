@@ -7000,10 +7000,10 @@ stdout-stream@^1.4.0:
   dependencies:
     readable-stream "^2.0.1"
 
-stellar-base@3.0.0-alpha.1:
-  version "3.0.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/stellar-base/-/stellar-base-3.0.0-alpha.1.tgz#f368091b3a4f4b0303d10aa76bb6442a014c5bd2"
-  integrity sha512-sS39a4RY/W7hgyv41JWuoFLCSXee2rylW2S17omXZ1Mg7ktRETTfF97RSmjOjZx5wRjNy35h8mPwTT6jhdkAjQ==
+stellar-base@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/stellar-base/-/stellar-base-3.0.0.tgz#ff1629ca8877b76267a4e4f7688b210f01a00a7f"
+  integrity sha512-81dzdEqoiqiW2kgzRAPaYoQDKZNFhGPMk+GDlksvs9jGfjgqW6ueawSwR5dGJEz8S5VFr3wiW33elQU48RjKFQ==
   dependencies:
     base32.js "^0.1.0"
     bignumber.js "^4.0.0"
@@ -7015,10 +7015,10 @@ stellar-base@3.0.0-alpha.1:
   optionalDependencies:
     sodium-native "^2.3.0"
 
-stellar-sdk@5.0.0-alpha.2:
-  version "5.0.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/stellar-sdk/-/stellar-sdk-5.0.0-alpha.2.tgz#b3a1ee0445c2fdd9f88d668e4218346e119b920b"
-  integrity sha512-Y0z02j3JpUK56cxivd8XQ9Vl6JTJ+TCSLMpCevlfcaF6GLCNx2PLTM9sH9w4vP12RBQ3bKpBQz/5fIBgBzD7ug==
+stellar-sdk@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/stellar-sdk/-/stellar-sdk-5.0.0.tgz#c9cfd36ed9871142cc3ec9a9bbcd5efc834ec9c0"
+  integrity sha512-/D4OPnUnIXARkNwhnV9fFTBlDdulf/uAM/Gtb3l6T/0ERq8kiBbnI1GEKzlSNi1hWVAPulzpa9hw5NZWUdz4BQ==
   dependencies:
     "@types/eventsource" "^1.1.2"
     "@types/node" ">= 8"
@@ -7031,7 +7031,7 @@ stellar-sdk@5.0.0-alpha.2:
     eventsource "^1.0.7"
     lodash "^4.17.11"
     randombytes "^2.1.0"
-    stellar-base "3.0.0-alpha.1"
+    stellar-base "^3.0.0"
     toml "^2.3.0"
     tslib "^1.10.0"
     urijs "^1.19.1"
