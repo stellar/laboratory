@@ -1,6 +1,7 @@
 import React from "react";
 import { Server, TransactionBuilder } from "stellar-sdk";
 import { EasySelect } from "./EasySelect";
+import { Collapsible } from "./Collapsible";
 
 const NETWORK_STATES = {
   idle: "idle",
@@ -15,50 +16,25 @@ const ACTIONS = {
 };
 const initialState = {
   state: NETWORK_STATES.idle,
-  // state: NETWORK_STATES.success,
   response: null,
-  actualresponse: {
-    id: "93ec75f754a3735efc2483bd0628b9473416651b05850a77c7d773e9f7c2ce09",
-    paging_token: "5884612001693696",
-    successful: true,
-    hash: "93ec75f754a3735efc2483bd0628b9473416651b05850a77c7d773e9f7c2ce09",
-    ledger: 1370118,
-    created_at: "2020-04-24T20:27:03Z",
-    source_account: "GDK75HHCRZRZFLBYIQJHVUNPQQI3JN33ZHQNFCRZ4LXOMPYAK47WARLK",
-    source_account_sequence: "5762067994771457",
-    fee_account: "GDK75HHCRZRZFLBYIQJHVUNPQQI3JN33ZHQNFCRZ4LXOMPYAK47WARLK",
-    fee_charged: 100,
-    max_fee: 100,
-    operation_count: 1,
-    envelope_xdr:
-      "AAAAANX+nOKOY5KsOEQSetGvhBG0t3vJ4NKKOeLu5j8AVz9gAAAAZAAUeJIAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAABAAAAANX+nOKOY5KsOEQSetGvhBG0t3vJ4NKKOeLu5j8AVz9gAAAAAAAAAAAC+vCAAAAAAAAAAAEAVz9gAAAAQEuiI52qNVssmiJDRFfXKQ/mrRbkRbE2+0QEPhWt6vRe3QRurJ4dMX9Tv/zmOHp5cDWEyO9AVYIJbswbVnt7gQ4=",
-    result_xdr: "AAAAAAAAAGQAAAAAAAAAAQAAAAAAAAABAAAAAAAAAAA=",
-    result_meta_xdr:
-      "AAAAAQAAAAIAAAADABToBgAAAAAAAAAA1f6c4o5jkqw4RBJ60a+EEbS3e8ng0oo54u7mPwBXP2AAAAAXSHbnnAAUeJIAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAABABToBgAAAAAAAAAA1f6c4o5jkqw4RBJ60a+EEbS3e8ng0oo54u7mPwBXP2AAAAAXSHbnnAAUeJIAAAABAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA==",
-    fee_meta_xdr:
-      "AAAAAgAAAAMAFHiSAAAAAAAAAADV/pzijmOSrDhEEnrRr4QRtLd7yeDSijni7uY/AFc/YAAAABdIdugAABR4kgAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAEAFOgGAAAAAAAAAADV/pzijmOSrDhEEnrRr4QRtLd7yeDSijni7uY/AFc/YAAAABdIduecABR4kgAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA==",
-    memo_type: "none",
-    signatures: [
-      "S6Ijnao1WyyaIkNEV9cpD+atFuRFsTb7RAQ+Fa3q9F7dBG6snh0xf1O//OY4enlwNYTI70BVggluzBtWe3uBDg==",
-    ],
-    valid_after: "1970-01-01T00:00:00Z",
-  },
   error: null,
 };
 
+const reducer = (state, action) => {
+  switch (action.type) {
+    case ACTIONS.submit:
+      return { ...initialState, state: NETWORK_STATES.pending };
+    case ACTIONS.success:
+      return { ...state, error: null, response: action.payload };
+    case ACTIONS.fail:
+      return { ...state, response: null, error: action.payload };
+    default:
+      return state;
+  }
+};
+
 export const TxSubmitterResult = ({ txXdr, networkPassphrase, horizonURL }) => {
-  const [submission, dispatch] = React.useReducer((state, action) => {
-    switch (action.type) {
-      case ACTIONS.submit:
-        return { ...initialState, state: NETWORK_STATES.pending };
-      case ACTIONS.success:
-        return { ...state, error: null, response: action.payload };
-      case ACTIONS.fail:
-        return { ...state, response: null, error: action.payload };
-      default:
-        return state;
-    }
-  }, initialState);
+  const [submission, dispatch] = React.useReducer(reducer, initialState);
 
   const isIdle = submission.state === NETWORK_STATES.idle;
 
@@ -76,13 +52,9 @@ export const TxSubmitterResult = ({ txXdr, networkPassphrase, horizonURL }) => {
                 networkPassphrase,
               );
               const server = new Server(horizonURL, { appName: "Laboratory" });
-              // server.submitTransaction(transaction).then(
-              Promise.resolve().then(
+              server.submitTransaction(transaction).then(
                 (res) => {
-                  dispatch({
-                    type: ACTIONS.success,
-                    payload: initialState.actualresponse,
-                  });
+                  dispatch({ type: ACTIONS.success, payload: res });
                 },
                 (err) => {
                   dispatch({ type: ACTIONS.fail, payload: err });
@@ -94,11 +66,12 @@ export const TxSubmitterResult = ({ txXdr, networkPassphrase, horizonURL }) => {
           </button>
         </div>
       </div>
-      <div className={`collapsible ${isIdle ? "closed" : ""}`}>
+      <Collapsible isOpen={!isIdle}>
         {!isIdle && submission.response && (
           <Response {...submission.response} />
         )}
-      </div>
+        {!isIdle && submission.error && <Error error={submission.error} />}
+      </Collapsible>
     </div>
   );
 };
@@ -115,7 +88,7 @@ const Response = ({
 }) => (
   <div className="XdrViewer__submit so-back TransactionSubmitter__result">
     <div className="so-chunk">
-      <h3 className="TxSignerResult__title">Transaction submitted!</h3>
+      <h3 className="ResultTitle__success">Transaction submitted!</h3>
       <p>
         Transaction {successful ? "succeeded" : "failed"} with {operation_count}{" "}
         operation(s).
@@ -141,3 +114,31 @@ const Response = ({
     </div>
   </div>
 );
+const Error = ({ error }) => {
+  const { message } = error;
+  const { extras } = error.response?.data;
+  return (
+    <div className="XdrViewer__submit so-back TransactionSubmitter__result">
+      <div className="so-chunk">
+        <h3 className="ResultTitle__failure">Transaction failed!</h3>
+        <p>{message}</p>
+        {extras && (
+          <pre className="so-code TransactionSubmitter__code">
+            <code>
+              <div>
+                extras.result_codes:
+                <br />{" "}
+                <EasySelect>
+                  {JSON.stringify(extras.result_codes)}
+                </EasySelect>{" "}
+                <br />
+                Result XDR:
+                <br /> <EasySelect>{extras.result_xdr}</EasySelect> <br />
+              </div>
+            </code>
+          </pre>
+        )}
+      </div>
+    </div>
+  );
+};

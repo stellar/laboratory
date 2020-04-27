@@ -13,6 +13,13 @@
   margin: 0.75em 0;
   max-width: 100%;
 
+  .ResultTitle__success {
+    color: $s-color-success;
+  }
+  .ResultTitle__failure {
+    color: $s-color-alert;
+  }
+
   .TransactionSubmitter__result {
     padding-top: 2em;
     padding-bottom: 2em;
