@@ -19,16 +19,6 @@
     border-top: 1px solid $s-color-neutral7;
     border-bottom: 1px solid $s-color-neutral7;
     background: $s-color-neutral8;
-
-  }
-
-  .collapsible {
-    max-height: 100vh;
-    overflow: hidden;
-    transition: max-height .4s;
-  }
-  .closed {
-    max-height: 0vh;
   }
 
   .TransactionSubmitter__code {
