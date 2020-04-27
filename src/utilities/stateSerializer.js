@@ -98,7 +98,7 @@ function serializePageSpecificState(slug, state) {
       if (state.xdrViewer.type !== '') {
         xdrViewer.type = state.xdrViewer.type;
       }
-      if (state.xdrViewer.canSubmit !== '') {
+      if (state.xdrViewer.canSubmit) {
         xdrViewer.canSubmit = state.xdrViewer.canSubmit;
       }
       return xdrViewer;
