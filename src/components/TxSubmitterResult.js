@@ -1,5 +1,10 @@
 import React from "react";
-import { Server, TransactionBuilder } from "stellar-sdk";
+import {
+  Server,
+  TransactionBuilder,
+  AccountRequiresMemoError,
+  BadResponseError,
+} from "stellar-sdk";
 import { EasySelect } from "./EasySelect";
 import { Collapsible } from "./Collapsible";
 
@@ -127,8 +132,39 @@ const Response = ({
   </div>
 );
 const Error = ({ error }) => {
-  const { message } = error;
-  const { extras } = error.response?.data;
+  let message = "",
+    extras = null;
+  if (error instanceof AccountRequiresMemoError) {
+    message = "This destination requires a memo.";
+    extras = <React.Fragment>
+        Destination account:
+        <br /> <EasySelect>{error.accountId}</EasySelect> <br />
+        Operation index:
+        <br /> <EasySelect>{error.operationIndex}</EasySelect> <br />
+        </React.Fragment>
+  } else if (error instanceof BadResponseError) {
+    message = "An unknown error occurred";
+    extras = (
+      <React.Fragment>
+        original error:
+        <br />
+        <EasySelect>{JSON.stringify(error, null, 2)}</EasySelect>
+        <br />
+      </React.Fragment>
+    );
+  } else {
+    const { result_codes, result_xdr } = error?.response.data?.extras || {};
+    message = error.message;
+    extras = (
+      <React.Fragment>
+        extras.result_codes:
+        <br /> <EasySelect>{JSON.stringify(result_codes)}</EasySelect> <br />
+        Result XDR:
+        <br /> <EasySelect>{result_xdr}</EasySelect> <br />
+      </React.Fragment>
+    );
+  }
+
   return (
     <div className="XdrViewer__submit so-back TransactionSubmitter__result">
       <div className="so-chunk">
@@ -136,18 +172,7 @@ const Error = ({ error }) => {
         <p>{message}</p>
         {extras && (
           <pre className="so-code TransactionSubmitter__code">
-            <code>
-              <div>
-                extras.result_codes:
-                <br />{" "}
-                <EasySelect>
-                  {JSON.stringify(extras.result_codes)}
-                </EasySelect>{" "}
-                <br />
-                Result XDR:
-                <br /> <EasySelect>{extras.result_xdr}</EasySelect> <br />
-              </div>
-            </code>
+            <code>{extras}</code>
           </pre>
         )}
       </div>
