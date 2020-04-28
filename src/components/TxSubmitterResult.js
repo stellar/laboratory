@@ -7,7 +7,7 @@ const NETWORK_STATES = {
   idle: "idle",
   pending: "pending",
   success: "success",
-  failed: "failed",
+  fail: "failed",
 };
 const ACTIONS = {
   submit: "submit",
@@ -25,9 +25,19 @@ const reducer = (state, action) => {
     case ACTIONS.submit:
       return { ...initialState, state: NETWORK_STATES.pending };
     case ACTIONS.success:
-      return { ...state, error: null, response: action.payload };
+      return {
+        ...state,
+        error: null,
+        response: action.payload,
+        state: NETWORK_STATES.success,
+      };
     case ACTIONS.fail:
-      return { ...state, response: null, error: action.payload };
+      return {
+        ...state,
+        response: null,
+        error: action.payload,
+        state: NETWORK_STATES.fail,
+      };
     default:
       return state;
   }
@@ -62,7 +72,9 @@ export const TxSubmitterResult = ({ txXdr, networkPassphrase, horizonURL }) => {
               );
             }}
           >
-            Submit Transaction
+            {submission.state === NETWORK_STATES.pending
+              ? "Submitting to the network…"
+              : "Submit Transaction"}
           </button>
         </div>
       </div>
