@@ -51,7 +51,7 @@ function LaboratoryChrome(props) {
         <nav className="s-buttonList">
           {tabItem('Introduction', SLUG.HOME)}
           {tabItem('Create Account', SLUG.ACCOUNT_CREATOR)}
-          {tabItem('Explore Endpoint', SLUG.EXPLORER)}
+          {tabItem('Explore Endpoints', SLUG.EXPLORER)}
           {tabItem('Build Transaction', SLUG.TXBUILDER)}
           {tabItem('Sign Transaction', SLUG.TXSIGNER)}
           {tabItem('Submit Transaction', SLUG.TXSUBMITTER)}

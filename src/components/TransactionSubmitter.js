@@ -36,19 +36,19 @@ function TransactionSubmitter(props) {
       }
       try {
         return {
-          nodes: extrapolateFromXdr(state.input, "TransactionEnvelope"),
           error: null,
+          nodes: extrapolateFromXdr(state.input, "TransactionEnvelope"),
         };
       } catch (e) {
         console.error(e);
-        tLogEvent(metricsEvents.decodeFailed, { type: state.type });
+        tLogEvent(metricsEvents.decodeFailed, { type: "TransactionEnvelope" });
         return {
           error: `Unable to decode input as TransactionEnvelope`,
           nodes: null,
         };
       }
     }
-  });
+  }, [state.input]);
 
   // Fetch signers on initial load
   if (state.fetchedSigners.state === FETCHED_SIGNERS.NONE) {
