@@ -91,7 +91,7 @@ class TransactionSigner extends React.Component {
           className="s-button TxSignerResult__submit"
           href={txPostLink(result.xdr)}
           onClick={scrollOnAnchorOpen}
-          >Submit to Post Transaction endpoint</a>;
+          >Submit in Transaction Submitter</a>;
         xdrLink = <a
           className="s-button TxSignerResult__submit"
           href={xdrViewer(result.xdr, 'TransactionEnvelope')}

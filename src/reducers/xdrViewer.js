@@ -3,6 +3,7 @@ import {UPDATE_XDR_INPUT, UPDATE_XDR_TYPE} from '../actions/xdrViewer';
 import FETCHED_SIGNERS from '../constants/fetched_signers';
 import {LOAD_STATE, } from '../actions/routing';
 import {SET_PARAMS} from "../actions/network";
+import SLUG from '../constants/slug';
 
 const routing = combineReducers({
   input,
@@ -15,7 +16,10 @@ export default routing;
 function input(state = '', action) {
   switch (action.type) {
   case LOAD_STATE:
-    if (action.slug === 'xdr-viewer' && action.queryObj.input) {
+    if (
+      (action.slug === SLUG.XDRVIEWER || action.slug === SLUG.TXSUBMITTER) &&
+      action.queryObj.input
+    ) {
       return action.queryObj.input;
     }
     break;

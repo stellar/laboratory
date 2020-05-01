@@ -9,6 +9,7 @@ import TestnetBanner from './TestnetBanner';
 import TransactionBuilder from './TransactionBuilder';
 import TransactionSigner from './TransactionSigner';
 import XdrViewer from './XdrViewer';
+import TransactionSubmitter from './TransactionSubmitter';
 import {RouterListener} from '../utilities/simpleRouter';
 import SLUG from '../constants/slug';
 import {addEventHandler} from '../utilities/metrics'
@@ -49,11 +50,12 @@ function LaboratoryChrome(props) {
       <div className="so-chunk">
         <nav className="s-buttonList">
           {tabItem('Introduction', SLUG.HOME)}
-          {tabItem('Account Creator', SLUG.ACCOUNT_CREATOR)}
-          {tabItem('Endpoint Explorer', SLUG.EXPLORER)}
-          {tabItem('Transaction Builder', SLUG.TXBUILDER)}
-          {tabItem('Transaction Signer', SLUG.TXSIGNER)}
-          {tabItem('XDR Viewer', SLUG.XDRVIEWER)}
+          {tabItem('Create Account', SLUG.ACCOUNT_CREATOR)}
+          {tabItem('Explore Endpoint', SLUG.EXPLORER)}
+          {tabItem('Build Transaction', SLUG.TXBUILDER)}
+          {tabItem('Sign Transaction', SLUG.TXSIGNER)}
+          {tabItem('Submit Transaction', SLUG.TXSUBMITTER)}
+          {tabItem('View XDR', SLUG.XDRVIEWER)}
         </nav>
       </div>
     </div>
@@ -75,8 +77,10 @@ function getContent(slug) {
       return <TransactionBuilder />;
     case SLUG.TXSIGNER:
       return <TransactionSigner />;
-    case 'xdr-viewer':
+    case SLUG.XDRVIEWER:
       return <XdrViewer />;
+    case SLUG.TXSUBMITTER:
+      return <TransactionSubmitter />;
     default:
       return <SimplePage><p>Page "{slug}" not found</p></SimplePage>
   }
