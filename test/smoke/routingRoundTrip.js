@@ -117,15 +117,6 @@ describe('routing system', () => {
         input: 'AAAAAOviDWZdAxfxZ83i1Dx6ZGbnSM8pxoPMrtc5VuSJSBKsAAAAZAAAAAAAAAABAAAAAAAAAAEAAAAAAAAAAQAAAAAAAAAJAAAAAAAAAAA=',
       });
     });
-
-    describe('when submitting', () => {
-      itCircularlyConvertsState(SLUG.XDRVIEWER, {
-        network: 'test',
-        type: 'TransactionEnvelope',
-        input: 'AAAAAOviDWZdAxfxZ83i1Dx6ZGbnSM8pxoPMrtc5VuSJSBKsAAAAZAAAAAAAAAABAAAAAAAAAAEAAAAAAAAAAQAAAAAAAAAJAAAAAAAAAAA=',
-        canSubmit: true
-      });
-    });
   });
 
   describe('for any page', () => {

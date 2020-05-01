@@ -11,7 +11,7 @@ describe('linkBuilder', () => {
   describe('txPostLink()', () => {
     it('returns the correct url', () => {
       expect(linkBuilder.txPostLink('AG/eK0AAAAAAA='))
-        .to.equal('#explorer?resource=transactions&endpoint=create&values=eyJ0eCI6IkFHL2VLMEFBQUFBQUE9In0%3D');
+        .to.equal('#txsubmitter?input=AG%2FeK0AAAAAAA%3D');
     });
   });
 

@@ -1,39 +1,25 @@
 import {combineReducers} from 'redux';
 import {UPDATE_XDR_INPUT, UPDATE_XDR_TYPE} from '../actions/xdrViewer';
 import FETCHED_SIGNERS from '../constants/fetched_signers';
-import {LOAD_STATE, UPDATE_LOCATION} from '../actions/routing';
+import {LOAD_STATE, } from '../actions/routing';
 import {SET_PARAMS} from "../actions/network";
+import SLUG from '../constants/slug';
 
 const routing = combineReducers({
   input,
   type,
   fetchedSigners,
-  canSubmit,
 });
 
 export default routing;
 
-function canSubmit(state = false, action) {
-  switch (action.type) {
-    case UPDATE_LOCATION:
-      if (action.slug === 'xdr-viewer' && state) {
-        return true
-      }
-      return false;
-    case LOAD_STATE:
-      if (action.slug === 'xdr-viewer' && action.queryObj.canSubmit) {
-        return action.queryObj.canSubmit;
-      }
-      return false;
-    default:
-      return state
-  }
-}
-
 function input(state = '', action) {
   switch (action.type) {
   case LOAD_STATE:
-    if (action.slug === 'xdr-viewer' && action.queryObj.input) {
+    if (
+      (action.slug === SLUG.XDRVIEWER || action.slug === SLUG.TXSUBMITTER) &&
+      action.queryObj.input
+    ) {
       return action.queryObj.input;
     }
     break;

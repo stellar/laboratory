@@ -52,6 +52,7 @@ export const TxSubmitterResult = ({ txXdr, networkPassphrase, horizonURL }) => {
   const [submission, dispatch] = React.useReducer(reducer, initialState);
 
   const isIdle = submission.state === NETWORK_STATES.idle;
+  const isDisabled = !txXdr || !isIdle;
 
   return (
     <div className="TransactionSubmitter">
@@ -59,7 +60,7 @@ export const TxSubmitterResult = ({ txXdr, networkPassphrase, horizonURL }) => {
         <div className="so-chunk">
           <button
             className="s-button"
-            disabled={submission.state !== NETWORK_STATES.idle}
+            disabled={isDisabled}
             onClick={() => {
               dispatch({ type: ACTIONS.submit });
               const transaction = TransactionBuilder.fromXDR(
@@ -136,12 +137,14 @@ const Error = ({ error }) => {
     extras = null;
   if (error instanceof AccountRequiresMemoError) {
     message = "This destination requires a memo.";
-    extras = <React.Fragment>
+    extras = (
+      <React.Fragment>
         Destination account:
         <br /> <EasySelect>{error.accountId}</EasySelect> <br />
         Operation index:
         <br /> <EasySelect>{error.operationIndex}</EasySelect> <br />
-        </React.Fragment>
+      </React.Fragment>
+    );
   } else if (error instanceof BadResponseError) {
     message = "An unknown error occurred";
     extras = (
