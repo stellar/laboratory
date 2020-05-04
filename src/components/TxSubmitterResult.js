@@ -145,18 +145,8 @@ const Error = ({ error }) => {
         <br /> <EasySelect>{error.operationIndex}</EasySelect> <br />
       </React.Fragment>
     );
-  } else if (error instanceof BadResponseError) {
-    message = "An unknown error occurred";
-    extras = (
-      <React.Fragment>
-        original error:
-        <br />
-        <EasySelect>{JSON.stringify(error, null, 2)}</EasySelect>
-        <br />
-      </React.Fragment>
-    );
-  } else {
-    const { result_codes, result_xdr } = error?.response.data?.extras || {};
+  } else if (error?.response) {
+    const { result_codes, result_xdr } = error.response.data?.extras || {};
     message = error.message;
     extras = (
       <React.Fragment>
@@ -164,6 +154,19 @@ const Error = ({ error }) => {
         <br /> <EasySelect>{JSON.stringify(result_codes)}</EasySelect> <br />
         Result XDR:
         <br /> <EasySelect>{result_xdr}</EasySelect> <br />
+      </React.Fragment>
+    );
+  } else {
+    message =
+      error instanceof BadResponseError
+        ? "Received a bad response when submitting."
+        : "An unknown error occurred.";
+    extras = (
+      <React.Fragment>
+        original error:
+        <br />
+        <EasySelect>{JSON.stringify(error, null, 2)}</EasySelect>
+        <br />
       </React.Fragment>
     );
   }
