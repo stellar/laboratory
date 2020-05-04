@@ -13,7 +13,6 @@ const metricsEvents = {
   ledgerSignFailed: "transaction signer: ledger signature: failed",
   addSecret: "transaction signer: add secret",
   submitTransaction: "transaction signer: begin submitting transaction",
-  viewXdr: "transaction signer: view signed XDR envelope"
 };
 
 export default function networkMetrics(state, action) {
@@ -42,14 +41,8 @@ export default function networkMetrics(state, action) {
       // If we're on the txsigner and loading state, we might be transitioning
       // to another feature with a complete transaction.
       if (location === "txsigner") {
-        if (
-          payload.slug === "explorer" &&
-          payload.queryObj.resource === "transactions" &&
-          payload.queryObj.endpoint === "create"
-        ) {
+        if (payload.slug === "xdr-viewer") {
           logEvent(metricsEvents.submitTransaction);
-        } else if (payload.slug === "xdr-viewer") {
-          logEvent(metricsEvents.viewXdr);
         }
       }
     }

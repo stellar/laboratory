@@ -56,11 +56,11 @@ class TransactionSigner extends React.Component {
       };
 
       if (transaction instanceof FeeBumpTransaction) {
-        infoTable = { 
+        infoTable = {
           ...infoTable,
           ...{
             'Fee source account': transaction.feeSource,
-            'Transaction Fee (stroops)': transaction.fee,            
+            'Transaction Fee (stroops)': transaction.fee,
             'Number of existing signatures': transaction.signatures.length,
             'Inner transaction hash': <EasySelect plain={true}><pre className="so-code so-code__wrap"><code>{transaction.innerTransaction.hash().toString('hex')}</code></pre></EasySelect>,
             'Inner transaction source account': transaction.innerTransaction.source,
@@ -71,7 +71,7 @@ class TransactionSigner extends React.Component {
           }
         };
       } else {
-        infoTable = { 
+        infoTable = {
           ...infoTable,
           ...{
             'Source account': transaction.source,
@@ -91,7 +91,7 @@ class TransactionSigner extends React.Component {
           className="s-button TxSignerResult__submit"
           href={txPostLink(result.xdr)}
           onClick={scrollOnAnchorOpen}
-          >Submit to Post Transaction endpoint</a>;
+          >Submit in Transaction Submitter</a>;
         xdrLink = <a
           className="s-button TxSignerResult__submit"
           href={xdrViewer(result.xdr, 'TransactionEnvelope')}

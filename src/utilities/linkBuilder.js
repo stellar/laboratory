@@ -19,18 +19,12 @@ export function txSignerLink(xdr) {
 }
 
 export function txPostLink(xdr) {
-  let query = stateToQueryObj(SLUG.EXPLORER, {
-    endpointExplorer: {
-      currentEndpoint: 'create',
-      currentResource: 'transactions',
-      pendingRequest: {
-        values: {
-          tx: xdr,
-        },
-      },
+  let query = stateToQueryObj(SLUG.TXSUBMITTER, {
+    xdrViewer: {
+      input: xdr,
     },
   });
-  return hashBuilder(SLUG.EXPLORER, query);
+  return hashBuilder(SLUG.TXSUBMITTER, query);
 }
 
 export function xdrViewer(xdr, type) {

@@ -1,0 +1,9 @@
+.Collapsible {
+  max-height: 100vh;
+  overflow: hidden;
+  transition: max-height 0.4s;
+
+  &.Collapsible__closed {
+    max-height: 0vh;
+  }
+}

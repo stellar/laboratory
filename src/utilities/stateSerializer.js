@@ -90,7 +90,7 @@ function serializePageSpecificState(slug, state) {
         txsignerResult.xdr = state.transactionSigner.xdr;
       }
       return txsignerResult;
-    case 'xdr-viewer':
+    case SLUG.XDRVIEWER:
       let xdrViewer = {};
       if (state.xdrViewer.input !== '') {
         xdrViewer.input = state.xdrViewer.input;
@@ -99,6 +99,12 @@ function serializePageSpecificState(slug, state) {
         xdrViewer.type = state.xdrViewer.type;
       }
       return xdrViewer;
+      case SLUG.TXSUBMITTER:
+      let txsubmitter = {};
+      if (state.xdrViewer.input !== '') {
+        txsubmitter.input = state.xdrViewer.input;
+      }
+      return txsubmitter;
     default:
       return {};
   }
