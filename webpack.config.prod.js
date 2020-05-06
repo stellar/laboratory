@@ -16,7 +16,7 @@ module.exports = Object.assign({}, baseConfig, {
     }),
     new webpack.optimize.CommonsChunkPlugin({
       name: "vendor",
-      filename: "vendor.bundle.js",
+      filename: "vendor-[chunkhash].bundle.js",
     }),
   ]),
 });
