@@ -1,22 +1,17 @@
 const webpack = require("webpack");
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   entry: {
     app: "./src/app.js",
-    vendor: ["axios", "react", "react-dom", "lodash", "stellar-sdk"],
   },
-  output: {
-    publicPath: "/laboratory/",
-  },
-  devtool: "source-map",
   module: {
     rules: [
       { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" },
       {
         test: /\.scss/,
-        loader: ExtractTextPlugin.extract(["css-loader", "sass-loader"]),
+        loader: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
       },
       { test: /\.html$/, loader: "file-loader?name=[name].html" },
       {
@@ -32,9 +27,9 @@ module.exports = {
       template: "!!ejs-loader!./src/index.ejs",
       title: "Stellar Laboratory",
     }),
-    new ExtractTextPlugin({
-      filename: "style-[contenthash].css",
-      allChunks: true,
+    new MiniCssExtractPlugin({
+      filename: "[name].[contenthash].css",
+      chunkFilename: "[id].[contenthash].css",
     }),
     new webpack.DefinePlugin({
       "process.env": {
@@ -44,5 +39,16 @@ module.exports = {
   ],
   node: {
     fs: "empty",
+  },
+  stats: {
+    all: false,
+    assets: true,
+    errors: true,
+    warnings: true,
+  },
+  optimization: {
+    splitChunks: {
+      chunks: "all",
+    },
   },
 };
