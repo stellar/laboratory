@@ -8,6 +8,7 @@
   "scripts": {
     "start": "webpack-dev-server --config webpack.config.dev.js",
     "build": "webpack-cli --config webpack.config.prod.js",
+    "analyze": "webpack-cli --config webpack.config.analyze.js",
     "build:netlify": "yarn build; mkdir out; mkdir out/laboratory; mv dist/* out/laboratory; cp _redirects out/_redirects",
     "test": "mocha './test/**/*.js'"
   },
@@ -51,6 +52,7 @@
     "uri-templates": "^0.1.9",
     "urijs": "^1.16.0",
     "webpack": "^4.43.0",
+    "webpack-bundle-analyzer": "^3.7.0",
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.10.3"
   }
