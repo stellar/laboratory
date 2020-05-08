@@ -1,12 +1,12 @@
 import React from 'react';
-import _ from 'lodash';
+import extend from 'lodash/extend';
 import PubKeyPicker from './PubKeyPicker';
 import SelectPicker from './SelectPicker';
 import TextPicker from './TextPicker';
 import Unsigned8bitIntPicker from './Unsigned8bitIntPicker';
 
 export default function SignerPicker(props) {
-  let value = _.extend({type: null, content: '', weight: null}, props.value);
+  let value = extend({type: null, content: '', weight: null}, props.value);
 
   const items = {
     ed25519PublicKey: "Ed25519 Public Key",
@@ -20,12 +20,12 @@ export default function SignerPicker(props) {
       // When changing type clean content.
       val.content = '';
     }
-    value = _.extend(value, val);
+    value = extend(value, val);
     props.onUpdate(value);
   }
 
   let input = null;
-  let weight = null; 
+  let weight = null;
 
   switch (value.type) {
     case "ed25519PublicKey":

@@ -1,10 +1,10 @@
 import React from 'react';
-import _ from 'lodash';
+import each from 'lodash/each';
 import {operationsMap} from '../../data/operations.js';
 import SelectPicker from './SelectPicker';
 
 let operationItemMap = {};
-_.each(operationsMap, (op) => {
+each(operationsMap, (op) => {
   operationItemMap[op.name] = op.label;
 })
 

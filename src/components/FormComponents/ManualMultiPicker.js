@@ -1,5 +1,6 @@
 import React from 'react';
-import _ from 'lodash';
+import isArray from 'lodash/isArray';
+import map from 'lodash/map';
 import classNames from 'classnames';
 
 // ManualMultiPicker is a compound picker interface that displays multiple
@@ -15,11 +16,11 @@ import classNames from 'classnames';
 // @param {stromg} (props.addNewLabel) - Custom label for the `add new` button.
 export default function ManualMultiPicker(props) {
   let {onUpdate, component} = props;
-  let values = _.isArray(props.value) ? props.value : [props.default];
+  let values = isArray(props.value) ? props.value : [props.default];
   let addNewLabel = props.addNewLabel || 'Add new';
 
   return <div className="ManualMultiPicker">
-    {_.map(values, (singleValue, index) => {
+    {map(values, (singleValue, index) => {
       return <div key={index} className={classNames(
           'ManualMultiPicker__item',
           {'ManualMultiPicker__item--last': index === values.length - 1},

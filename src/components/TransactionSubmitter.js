@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import _ from "lodash";
+import debounce from "lodash/debounce";
+import functions from "lodash/functions";
 import FETCHED_SIGNERS from "../constants/fetched_signers";
 import extrapolateFromXdr from "../utilities/extrapolateFromXdr";
 import TreeView from "./TreeView";
@@ -15,7 +16,7 @@ import { TxSubmitterResult } from "./TxSubmitterResult";
 // this page that we care about. Log metrics from the component as well.
 addEventHandler(xdrViewerMetrics);
 
-const tLogEvent = _.debounce(logEvent, 1000);
+const tLogEvent = debounce(logEvent, 1000);
 
 function TransactionSubmitter(props) {
   let { dispatch, state, baseURL, networkPassphrase, horizonURL } = props;
@@ -110,10 +111,8 @@ function chooseState(state) {
 
 // Array of all the xdr types. Then, the most common ones appear at the top
 // again for convenience
-let xdrTypes = _(xdr)
-  .functions()
+let xdrTypes = functions(xdr)
   .sort()
-  .value();
 xdrTypes = [
   "TransactionEnvelope",
   "TransactionResult",

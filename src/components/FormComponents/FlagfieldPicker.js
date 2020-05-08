@@ -1,6 +1,7 @@
 import React from 'react';
 import CheckboxButtonPicker from './CheckboxButtonPicker';
-import _ from 'lodash';
+import each from 'lodash/each';
+import reduce from 'lodash/reduce';
 
 // When all the items are empty, then this picker should be equal to ''
 
@@ -23,7 +24,7 @@ export default function FlagfieldPicker(props) {
   let statusLine;
   if (pickerValue.length > 0) {
     let sumItems = [], total = 0;
-    _.each(pickerValue, (bitValue) => {
+    each(pickerValue, (bitValue) => {
       sumItems.push(`${items[bitValue]} (${bitValue})`);
       total += parseInt(bitValue);
     });
@@ -52,7 +53,7 @@ function intToExistenceArray(inputInt) {
   let existenceArray = [];
   // iterate through binary representation of number
   let binaryArray = inputInt.toString(2).split('');
-  _.each(binaryArray, (binaryValue, index) => {
+  each(binaryArray, (binaryValue, index) => {
     if (binaryValue === '1') {
       existenceArray.push(String(Math.pow(2, binaryArray.length - 1 - index))); // calculate decimal representation of bit in specific index
     }
@@ -62,7 +63,7 @@ function intToExistenceArray(inputInt) {
 
 // The reverse of intToExistenceArray
 function existenceArrayToInt(existenceArray) {
-  return _.reduce(existenceArray, (result, intValue) => {
+  return reduce(existenceArray, (result, intValue) => {
     return result | parseInt(intValue);
   }, undefined);
 }

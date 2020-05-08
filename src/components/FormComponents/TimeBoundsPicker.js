@@ -1,5 +1,5 @@
 import React from 'react';
-import _ from 'lodash';
+import assign from 'lodash/assign';
 import TimestampPicker from './TimestampPicker';
 
 export default function TimeBoundsPicker(props) {
@@ -9,14 +9,14 @@ export default function TimeBoundsPicker(props) {
       <TimestampPicker
         value={value.minTime}
         placeholder='Lower time bound unix timestamp. Example: 1479151713'
-        onUpdate={(minTimeValue) => onUpdate(_.assign({}, value, {
+        onUpdate={(minTimeValue) => onUpdate(assign({}, value, {
           minTime: minTimeValue,
         }))}
       />
       <TimestampPicker
         value={value.maxTime}
         placeholder='Upper time bound unix timestamp.  Example: 1479151713'
-        onUpdate={(maxTimeValue) => onUpdate(_.assign({}, value, {
+        onUpdate={(maxTimeValue) => onUpdate(assign({}, value, {
           maxTime: maxTimeValue,
         }))}
         />

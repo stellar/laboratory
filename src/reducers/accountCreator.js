@@ -1,11 +1,11 @@
 import {combineReducers} from 'redux';
+import assign from 'lodash/assign';
 import {
   GENERATE_NEW_KEYPAIR,
   UPDATE_FRIENDBOT_TARGET,
   START_FRIENDBOT_REQUEST,
   FINISH_FRIENDBOT_REQUEST,
 } from '../actions/accountCreator';
-import _ from 'lodash';
 
 function keypairGeneratorResult(state=null, action) {
   if (action.type === GENERATE_NEW_KEYPAIR) {
@@ -36,7 +36,7 @@ const defaultRequestState = {
 }
 function friendbotStatus(state = defaultRequestState, action) {
   if (action.type === START_FRIENDBOT_REQUEST) {
-    return _.assign({}, defaultRequestState, {
+    return assign({}, defaultRequestState, {
       message: action.message,
       status: action.status,
     });

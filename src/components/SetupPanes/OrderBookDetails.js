@@ -1,5 +1,4 @@
 import React from 'react';
-import _ from 'lodash';
 import OptionsTablePair from '../OptionsTable/Pair';
 import AssetPicker from '../FormComponents/AssetPicker.js';
 

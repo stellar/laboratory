@@ -1,4 +1,8 @@
 import {combineReducers} from 'redux';
+import assign from 'lodash/assign'
+import filter from 'lodash/filter'
+import find from 'lodash/find'
+import findIndex from 'lodash/findIndex'
 import {BASE_FEE} from 'stellar-sdk'
 import {
   UPDATE_ATTRIBUTES,
@@ -8,7 +12,6 @@ import {
   RESET_TXBUILDER,
 } from '../actions/transactionBuilder';
 import {LOAD_STATE} from '../actions/routing';
-import _ from 'lodash';
 import {rehydrate} from '../utilities/hydration';
 import SLUG from '../constants/slug';
 
@@ -36,7 +39,7 @@ function operations(state = defaultOperations, action) {
       attributes: {},
     });
   case 'REMOVE_OPERATION':
-    return _.filter(state.slice(), (op) => op.id != action.opId);
+    return filter(state.slice(), (op) => op.id != action.opId);
   case 'REORDER_OPERATION':
     return reorderOps(state, action.opId, action.toNth);
   case 'UPDATE_OPERATION_TYPE':
@@ -46,7 +49,7 @@ function operations(state = defaultOperations, action) {
     });
   case 'UPDATE_OPERATION_ATTRIBUTES':
     return updateOperation(state, action.opId, {
-      attributes: _.assign({}, getAttributes(state, action.opId), action.newAttributes),
+      attributes: assign({}, getAttributes(state, action.opId), action.newAttributes),
     });
   case RESET_TXBUILDER:
     return defaultOperations;
@@ -54,18 +57,18 @@ function operations(state = defaultOperations, action) {
   return state;
 }
 function getAttributes(state, opId) {
-  return _.find(state, { id: opId }).attributes;
+  return find(state, { id: opId }).attributes;
 }
 function updateOperation(state, opId, newSource) {
-  let targetOpIndex = _.findIndex(state, { id: opId });
+  let targetOpIndex = findIndex(state, { id: opId });
   let newOps = state.slice();
-  newOps[targetOpIndex] = _.assign({}, newOps[targetOpIndex], newSource);
+  newOps[targetOpIndex] = assign({}, newOps[targetOpIndex], newSource);
   return newOps;
 }
 function updateSigner(state, opId, newSource) {
-  let targetOpIndex = _.findIndex(state, { id: opId });
+  let targetOpIndex = findIndex(state, { id: opId });
   let newOps = state.slice();
-  newOps[targetOpIndex] = _.assign({}, newOps[targetOpIndex], newSource);
+  newOps[targetOpIndex] = assign({}, newOps[targetOpIndex], newSource);
   return newOps;
 }
 function reorderOps(state, opId, toNth) {
@@ -76,7 +79,7 @@ function reorderOps(state, opId, toNth) {
     toNth = state.length;
   }
   let ops = state.slice();
-  let targetOpIndex = _.findIndex(ops, { id: opId });
+  let targetOpIndex = findIndex(ops, { id: opId });
   let targetOp = ops[targetOpIndex];
   ops.splice(targetOpIndex, 1);
   ops.splice(toNth - 1, 0, targetOp);
@@ -96,7 +99,7 @@ function attributes(state = defaultAttributes, action) {
   switch(action.type) {
   case LOAD_STATE:
     if (action.queryObj.params) {
-      return _.assign({}, defaultAttributes, rehydrate(action.queryObj.params).attributes);
+      return assign({}, defaultAttributes, rehydrate(action.queryObj.params).attributes);
     }
     break;
   case UPDATE_ATTRIBUTES:

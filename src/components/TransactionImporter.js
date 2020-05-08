@@ -1,7 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
-import _ from 'lodash';
 import validateTxXdr from '../utilities/validateTxXdr';
 
 // TransactionImporter will call the onImport passed to it's props when the user

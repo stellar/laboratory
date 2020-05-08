@@ -1,12 +1,17 @@
 import React from 'react';
-import _ from 'lodash';
+import each from 'lodash/each';
+import get from 'lodash/get';
+import isFunction from 'lodash/isFunction';
+import isString from 'lodash/isString';
+import isUndefined from 'lodash/isUndefined';
+import reduce from 'lodash/reduce';
+import trim from 'lodash/trim';
 import {chooseEndpoint, submitRequest, updateValue} from "../actions/endpointExplorer"
 import {connect} from 'react-redux';
 import {EndpointPicker} from './EndpointPicker';
 import {EndpointSetup} from './EndpointSetup';
 import {EndpointResult} from './EndpointResult';
 import {getEndpoint} from '../data/endpoints';
-import NETWORK from '../constants/network';
 import UriTemplates from 'uri-templates';
 import querystring from 'querystring';
 import {addEventHandler} from '../utilities/metrics'
@@ -89,8 +94,8 @@ function buildRequest(baseUrl, endpoint, pendingRequest) {
   // Currently, this only supports simple string values
   if (request.method === 'POST') {
     let postData = {};
-    _.each(pendingRequest.values, (value, id) => {
-      postData[id] = _.trim(value);
+    each(pendingRequest.values, (value, id) => {
+      postData[id] = trim(value);
     });
 
     request.formData = querystring.stringify(postData);
@@ -112,7 +117,7 @@ function buildRequestUrl (baseUrl, endpoint, values) {
 
   // uriParams contains what we want to fill the url with
   let uriParams = {};
-  _.each(template.varNames, (varName) => {
+  each(template.varNames, (varName) => {
 
     // With the appropriate getter, extract/transform the relevant value from values
     // 1. Simple value:
@@ -126,29 +131,29 @@ function buildRequestUrl (baseUrl, endpoint, values) {
 
     let getterPresent = varName in endpoint.path;
     let getter = endpoint.path[varName];
-    let getterIsFunc = _.isFunction(getter);
+    let getterIsFunc = isFunction(getter);
     let value;
 
     if (getterPresent && getterIsFunc) { // case 3
       value = getter(values);
     } else if (getterPresent && !getterIsFunc) { // case 2
-      value = _.get(values, getter);
+      value = get(values, getter);
     } else { // case 1
       value = values[varName];
     }
 
-    if (!_.isUndefined(value) && value !== '') {
-      if (!_.isString(value)) {
+    if (!isUndefined(value) && value !== '') {
+      if (!isString(value)) {
         throw new Error('Endpoint explorer value must be a string');
       }
-      uriParams[varName] = _.trim(value);
+      uriParams[varName] = trim(value);
     }
   });
 
   // Fill in unfilled parameters with placeholders (like {source_account})
   // Also create a map to unescape these placeholders
   let unescapeMap = [];
-  _.each(template.fromUri(uriTemplate), (placeholder, param) => {
+  each(template.fromUri(uriTemplate), (placeholder, param) => {
     if (!(param in uriParams)) {
       uriParams[param] = placeholder;
       unescapeMap.push({
@@ -158,7 +163,7 @@ function buildRequestUrl (baseUrl, endpoint, values) {
     }
   });
 
-  let builtUrl = _.reduce(unescapeMap, (url, replacement) => {
+  let builtUrl = reduce(unescapeMap, (url, replacement) => {
     return url.replace(replacement.oldStr, replacement.newStr);
   }, template.fill(uriParams));
 

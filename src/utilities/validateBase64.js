@@ -1,7 +1,7 @@
-import _ from 'lodash';
+import trim from 'lodash/trim';
 
 export default function validateBase64(input) {
-  input = _.trim(input);
+  input = trim(input);
 
   if (input === '') {
     return {

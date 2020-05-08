@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import _ from "lodash";
+import assign from "lodash/assign";
 import RadioButtonPicker from "./RadioButtonPicker";
 import PubKeyPicker from "./PubKeyPicker";
 import PickerError from "./PickerError";
@@ -8,7 +8,7 @@ import TextPicker from "./TextPicker";
 
 // Value is a string containing the currently selected id (or undefined)
 function AssetObjectPicker({ value, onUpdate, disableNative, ...props }) {
-  const localValue = _.assign({ type: "", code: "", issuer: "" }, value);
+  const localValue = assign({ type: "", code: "", issuer: "" }, value);
 
   let isCredit =
     localValue.type === "credit_alphanum4" ||
@@ -31,7 +31,7 @@ function AssetObjectPicker({ value, onUpdate, disableNative, ...props }) {
         onUpdate={(typeValue) => {
           const newTypeValue = localValue.type === typeValue ? "" : typeValue;
           onUpdate(
-            _.assign({}, value, {
+            assign({}, value, {
               type: newTypeValue,
               code: newTypeValue ? "" : localValue.code,
               issuer: newTypeValue ? "" : localValue.issuer,
@@ -48,7 +48,7 @@ function AssetObjectPicker({ value, onUpdate, disableNative, ...props }) {
             value={value.code}
             onChange={(event) =>
               onUpdate(
-                _.assign({}, value, {
+                assign({}, value, {
                   code: event.target.value,
                 }),
               )
@@ -60,7 +60,7 @@ function AssetObjectPicker({ value, onUpdate, disableNative, ...props }) {
           <PubKeyPicker
             value={value.issuer}
             onUpdate={(issuer) =>
-              onUpdate(_.assign({}, value, { issuer: issuer }))
+              onUpdate(assign({}, value, { issuer: issuer }))
             }
             placeholder="Issuer Account ID"
           />

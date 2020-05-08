@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import {stateToQueryObj, queryObjToLoadStatePayload} from '../../src/utilities/stateSerializer';
 import SLUG from '../../src/constants/slug';
 import rootReducer from '../../src/reducers/root';

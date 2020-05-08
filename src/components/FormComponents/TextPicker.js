@@ -1,13 +1,14 @@
 import React from 'react';
-import _ from 'lodash';
+import isFunction from 'lodash/isFunction';
+import isString from 'lodash/isString';
 import PickerError from './PickerError';
 
 export default function TextPicker(props) {
   let {value, onUpdate, validator} = props;
   let errorMessage;
 
-  let validatorIsPresent = _.isFunction(validator);
-  let valueIsNonEmpty = _.isString(value) && value.length > 0;
+  let validatorIsPresent = isFunction(validator);
+  let valueIsNonEmpty = isString(value) && value.length > 0;
   if (validatorIsPresent && valueIsNonEmpty) {
     errorMessage = validator(value);
   }

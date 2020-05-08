@@ -1,4 +1,5 @@
 import React from 'react';
+import isString from 'lodash/isString'
 import PickerError from './PickerError';
 
 export default function TransactionPicker(props) {
@@ -17,7 +18,7 @@ export default function TransactionPicker(props) {
 }
 
 function validator(value) {
-  if (!_.isString(value) || value.length === 0) {
+  if (!isString(value) || value.length === 0) {
     return;
   }
   if (value.match(/^[0-9a-f]{64}$/g) === null) {

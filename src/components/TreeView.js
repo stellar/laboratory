@@ -2,7 +2,8 @@
 // It takes data from extrapolateFromXdr and formats it in a more user friendly way
 
 import React from 'react';
-import _ from 'lodash';
+import has from 'lodash/has';
+import map from 'lodash/map';
 import {EasySelect} from './EasySelect';
 import SIGNATURE from '../constants/signature';
 import FETCHED_SIGNERS from '../constants/fetched_signers';
@@ -14,7 +15,7 @@ export default class TreeView extends React.Component {
     let rootClass = 'TreeView ' + (className) ? className : '';
 
     let result = <div className={rootClass}>
-      {_.map(Array.prototype.slice.call(nodes), (node, index) => {
+      {map(Array.prototype.slice.call(nodes), (node, index) => {
         let childNodes;
 
         let position = getPosition(node, parent);
@@ -45,7 +46,7 @@ function RowValue(props) {
   if (typeof node.value === 'string') {
     value = String(node.value);
     separatorNeeded = true;
-  } else if (typeof node.value !== 'undefined' && _.has(node.value, 'type')) {
+  } else if (typeof node.value !== 'undefined' && has(node.value, 'type')) {
     value = convertTypedValue(node.value);
     separatorNeeded = true;
   } else {

@@ -1,5 +1,5 @@
 import React from 'react';
-import _ from 'lodash';
+import isString from 'lodash/isString';
 import PickerError from './PickerError';
 
 export default function XdrPicker(props) {
@@ -18,7 +18,7 @@ export default function XdrPicker(props) {
 }
 
 function validator(value) {
-  if (_.isString(value) && value.match(/^[-A-Za-z0-9+\/=]*$/) === null) {
+  if (isString(value) && value.match(/^[-A-Za-z0-9+\/=]*$/) === null) {
     return 'Input is not valid base64';
   }
 }

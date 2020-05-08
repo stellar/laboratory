@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import find from 'lodash/find';
 import AccountMerge from '../components/OperationPanes/AccountMerge'
 import AllowTrust from '../components/OperationPanes/AllowTrust'
 import BumpSequence from '../components/OperationPanes/BumpSequence'
@@ -14,7 +14,7 @@ import Payment from '../components/OperationPanes/Payment'
 import SetOptions from '../components/OperationPanes/SetOptions'
 
 export function getOperation(opName) {
-  return _.find(operationsMap, { name: opName });
+  return find(operationsMap, { name: opName });
 }
 
 // Operations map documentation:

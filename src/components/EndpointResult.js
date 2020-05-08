@@ -1,5 +1,5 @@
 import React from 'react';
-import {any} from 'lodash'
+import map from 'lodash/map';
 import {CodeBlock} from './CodeBlock';
 
 export class EndpointResult extends React.Component {
@@ -50,7 +50,7 @@ function ResultPane(body) {
 }
 
 function BodyContent(body) {
-  return _.map(body, (bodyEntry, index) => {
+  return map(body, (bodyEntry, index) => {
     return <CodeBlock key={index} code={body[index]} language="json" />
   });
 }
