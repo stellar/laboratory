@@ -9,12 +9,15 @@
 // the best choice since source code differs based on content.
 
 import Sdk from 'stellar-sdk';
-import _ from 'lodash';
+import defaults from 'lodash/defaults';
+import each from 'lodash/each';
+import has from 'lodash/has';
+import isEmpty from 'lodash/isEmpty';
+import isString from 'lodash/isString';
+import isUndefined from 'lodash/isUndefined';
+import map from 'lodash/map';
 
 // Helpers
-let isEmpty = function(value) {
-  return _.isUndefined(value) || value === '' || value === null;
-}
 let isInt = function(value) {
   return String(value).match(/^[0-9]*$/g);
 }
@@ -49,7 +52,7 @@ let castIntOrUndefined = function(value) {
   if (typeof value === 'number') {
     return value;
   }
-  if (_.isString(value) && value.match(/^[0-9]+$/g)) {
+  if (isString(value) && value.match(/^[0-9]+$/g)) {
     return Number(value);
   }
   return undefined;
@@ -59,14 +62,14 @@ let castIntOrUndefined = function(value) {
 // 1. Is a string: return as is
 // 2. String is empty: converts to undefined (useful for optional arguments)
 let castStringOrUndefined = function(value) {
-  if (!_.isString(value) || value === '') {
+  if (!isString(value) || value === '') {
     return undefined;
   }
   return String(value);
 }
 
 let castStringOrNull = function(value) {
-  if (!_.isString(value) || value === '') {
+  if (!isString(value) || value === '') {
     return null;
   }
   return String(value);
@@ -102,7 +105,7 @@ Libify.Memo = function(opts) {
 Libify.Operation = function(type, opts) {
   assertNotEmpty(type, 'Operation type is required');
   let opFunction = Libify.Operation[type];
-  if (typeof opFunction === 'undefined' || _.has(Libify.Operation, 'opFunction')) {
+  if (typeof opFunction === 'undefined' || has(Libify.Operation, 'opFunction')) {
     throw new Error('Unknown operation type: ' + type);
   }
   return opFunction(opts);
@@ -137,8 +140,8 @@ Libify.Operation.pathPaymentStrictSend = function(opts) {
   assertNotEmpty(opts.destAsset, 'Path Payment Strict Send operation requires destination asset');
   assertNotEmpty(opts.destMin, 'Path Payment Strict Send operation requires the minimum destination amount');
 
-  let libifiedPath = _.map(opts.path, (hopAsset) => {
-    if (_.isUndefined(hopAsset.type)) {
+  let libifiedPath = map(opts.path, (hopAsset) => {
+    if (isUndefined(hopAsset.type)) {
       throw new Error('All assets in path must be filled out');
     }
     return Libify.Asset(hopAsset);
@@ -162,8 +165,8 @@ Libify.Operation.pathPaymentStrictReceive = function(opts) {
   assertNotEmpty(opts.destAsset, 'Path Payment Strict Receive operation requires destination asset');
   assertNotEmpty(opts.destAmount, 'Path Payment Strict Receive operation requires the destination amount');
 
-  let libifiedPath = _.map(opts.path, (hopAsset) => {
-    if (_.isUndefined(hopAsset.type)) {
+  let libifiedPath = map(opts.path, (hopAsset) => {
+    if (isUndefined(hopAsset.type)) {
       throw new Error('All assets in path must be filled out');
     }
     return Libify.Asset(hopAsset);
@@ -346,7 +349,7 @@ Libify.buildTransaction = function(attributes, operations, networkPassphrase) {
       if (parseInt(attributes.fee) > MAX_UINT32) {
         throw Error(`Base Fee: too large (invalid 32-bit unisigned integer)`);
       }
-      
+
       opts.fee = attributes.fee;
     }
 
@@ -360,8 +363,8 @@ Libify.buildTransaction = function(attributes, operations, networkPassphrase) {
       timebounds.maxTime = attributes.maxTime;
     }
 
-    if (!_.isEmpty(timebounds)) {
-      opts.timebounds = _.defaults(timebounds, {
+    if (!isEmpty(timebounds)) {
+      opts.timebounds = defaults(timebounds, {
         minTime: '0',
         maxTime: '0'
       });
@@ -369,7 +372,7 @@ Libify.buildTransaction = function(attributes, operations, networkPassphrase) {
 
     var transaction = new Sdk.TransactionBuilder(account, opts)
 
-    if (_.isEmpty(timebounds) ||
+    if (isEmpty(timebounds) ||
       (opts.timebounds && opts.timebounds.maxTime == 0)) {
       transaction.setTimeout(transaction.setTimeout(Sdk.TimeoutInfinite));
     }
@@ -385,7 +388,7 @@ Libify.buildTransaction = function(attributes, operations, networkPassphrase) {
       }
     }
 
-    _.each(operations, (op, index) => {
+    each(operations, (op, index) => {
       try {
         transaction = transaction.addOperation(Libify.Operation(op.name, op.attributes));
       } catch(e) {
@@ -409,7 +412,7 @@ Libify.signTransaction = function(txXdr, signers, networkPassphrase, ledgerWalle
   let validPreimages = [];
   for (let i = 0; i < signers.length; i++) {
     let signer = signers[i];
-    if (signer !== null && !_.isUndefined(signer) && signer !== '') {
+    if (signer !== null && !isUndefined(signer) && signer !== '') {
       // Signer
       if (signer.charAt(0) == 'S') {
         if (!Sdk.StrKey.isValidEd25519SecretSeed(signer)) {
@@ -434,15 +437,15 @@ Libify.signTransaction = function(txXdr, signers, networkPassphrase, ledgerWalle
   let existingSigs = newTx.signatures.length;
   let addedSigs = 0;
 
-  _.each(validSecretKeys, (signer) => {
+  each(validSecretKeys, (signer) => {
     addedSigs++;
     newTx.sign(Sdk.Keypair.fromSecret(signer));
   });
-  _.each(validPreimages, (signer) => {
+  each(validPreimages, (signer) => {
     addedSigs++;
     newTx.signHashX(Buffer.from(signer, 'hex'));
   });
-  _.each(ledgerWalletSigs, (ledgerSig) => {
+  each(ledgerWalletSigs, (ledgerSig) => {
     addedSigs++;
     newTx.signatures.push(ledgerSig);
   });

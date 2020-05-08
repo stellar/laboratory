@@ -1,20 +1,19 @@
 import React from 'react';
-import _ from 'lodash';
+import assign from 'lodash/assign';
 import RadioButtonPicker from './RadioButtonPicker';
 import TextPicker from './TextPicker';
-import PickerError from './PickerError';
 import {UnsignedHyper} from 'stellar-sdk';
 
 export default function MemoPicker(props) {
   let {onUpdate} = props;
   let contentPicker;
-  let normalizedValue = _.assign({}, props.value);
+  let normalizedValue = assign({}, props.value);
   normalizedValue.type = (props.value.type === '') ? 'MEMO_NONE' : props.value.type;
 
   if (normalizedValue.type !== 'MEMO_NONE') {
     contentPicker = <TextPicker
       value={normalizedValue.content}
-      onUpdate={(contentValue) => onUpdate(_.assign({}, normalizedValue, {
+      onUpdate={(contentValue) => onUpdate(assign({}, normalizedValue, {
         content: contentValue,
       }))}
       placeholder={memoPlaceholder(normalizedValue.type)}
@@ -25,7 +24,7 @@ export default function MemoPicker(props) {
   return <div>
     <RadioButtonPicker
       value={normalizedValue.type}
-      onUpdate={(typeValue) => onUpdate(_.assign({}, normalizedValue, {
+      onUpdate={(typeValue) => onUpdate(assign({}, normalizedValue, {
         type: typeValue,
       }))}
       className="picker--spaceBottom"

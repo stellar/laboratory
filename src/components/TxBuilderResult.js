@@ -1,17 +1,14 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {PubKeyPicker} from './FormComponents/PubKeyPicker';
+import reduce from 'lodash/reduce'
 import {EasySelect} from './EasySelect';
 import Libify from '../utilities/Libify';
 import {txSignerLink, xdrViewer} from '../utilities/linkBuilder';
 import scrollOnAnchorOpen from '../utilities/scrollOnAnchorOpen';
-import clickToSelect from '../utilities/clickToSelect';
-import NETWORK from '../constants/network';
 
 class TxBuilderResult extends React.Component {
   render() {
     let {attributes, operations} = this.props.state;
-    let xdrResult, buildError;
     let validationErrors = [];
 
     if (attributes.sourceAccount === '') {
@@ -86,7 +83,7 @@ function chooseState(state) {
 }
 
 function formatErrorList(errors) {
-  return _.reduce(errors, (result, error) => {
+  return reduce(errors, (result, error) => {
     return `${result}- ${error} \n`;
   }, '');
 }

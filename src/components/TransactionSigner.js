@@ -1,6 +1,8 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {TransactionBuilder, FeeBumpTransaction} from 'stellar-sdk';
+import isUndefined from 'lodash/isUndefined'
+import map from 'lodash/map'
 import TransactionImporter from './TransactionImporter';
 import {
   importFromXdr,
@@ -85,7 +87,7 @@ class TransactionSigner extends React.Component {
 
       let codeResult, submitLink, xdrLink, resultTitle, submitInstructions;
 
-      if (!_.isUndefined(result.xdr)) {
+      if (!isUndefined(result.xdr)) {
         codeResult = <pre className="TxSignerResult__xdr so-code so-code__wrap" onClick={clickToSelect}><code>{result.xdr}</code></pre>;
         submitLink = <a
           className="s-button TxSignerResult__submit"
@@ -133,7 +135,7 @@ class TransactionSigner extends React.Component {
                   Clear and import new transaction</a>
               </div>
               <div className="simpleTable">
-                {_.map(infoTable, (content, label) => {
+                {map(infoTable, (content, label) => {
                   return <div className="simpleTable__row" key={label}>
                     <div className="simpleTable__row__label">{label}</div>
                     <div className="simpleTable__row__content">{content}</div>

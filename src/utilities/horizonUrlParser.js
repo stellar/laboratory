@@ -1,6 +1,8 @@
 import routeRecognizer from 'route-recognizer';
 import url from 'url';
-import _ from 'lodash';
+import each from 'lodash/each';
+import assign from 'lodash/assign';
+import has from 'lodash/has';
 
 // routeTable is derived from Horizon init_web.go. `routeTable` is intended to
 // look similar to Horizon's code for routing requests.
@@ -59,7 +61,7 @@ let routeTable = {
 };
 
 let router = new routeRecognizer();
-_.each(routeTable, (resourceEndpoint, template) => {
+each(routeTable, (resourceEndpoint, template) => {
   router.add([{ path: template, handler: resourceEndpoint }]);
 })
 
@@ -79,7 +81,7 @@ function horizonUrlParser(inputUrl) {
   }
 
   // Path params shadow and take higher precedence than query params
-  let params = _.assign({}, recognizeResult.queryParams, recognizeResult[0].params)
+  let params = assign({}, recognizeResult.queryParams, recognizeResult[0].params)
   laboratorifyParams(params);
 
   return {
@@ -115,10 +117,10 @@ function laboratorifyParams(params) {
 // @param {string} destObj - object to move into. Will be created if not exist
 // @param {string} destKey - key name to move source into
 function assignToParam(params, source, destObj, destKey) {
-  if (!_.has(params, source)) {
+  if (!has(params, source)) {
     return;
   }
-  if (!_.has(params, destObj)) {
+  if (!has(params, destObj)) {
     params[destObj] = {};
   } else if (typeof params[destObj] !== 'object') {
     console.error('Non object already exists in key. This is likely due to tampering of the values in the url')

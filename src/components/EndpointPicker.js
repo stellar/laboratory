@@ -1,7 +1,8 @@
 import React from 'react';
 import classNames from 'classnames';
 import {endpointsMap} from '../data/endpoints';
-import {map, findIndex} from 'lodash';
+import map from 'lodash/map';
+import findIndex from 'lodash/findIndex';
 
 export function EndpointPicker(props) {
   let {onChange, currentResource, currentEndpoint} = props;

@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import _ from "lodash";
+import debounce from "lodash/debounce";
 import FETCHED_SIGNERS from "../constants/fetched_signers";
 import extrapolateFromXdr from "../utilities/extrapolateFromXdr";
 import TreeView from "./TreeView";
@@ -15,7 +15,7 @@ import { TxSubmitterResult } from "./TxSubmitterResult";
 // this page that we care about. Log metrics from the component as well.
 addEventHandler(xdrViewerMetrics);
 
-const tLogEvent = _.debounce(logEvent, 1000);
+const tLogEvent = debounce(logEvent, 1000);
 
 function TransactionSubmitter(props) {
   let { dispatch, state, baseURL, networkPassphrase, horizonURL } = props;

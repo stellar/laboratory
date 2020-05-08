@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
+import map from 'lodash/map'
 import PubKeyPicker from './FormComponents/PubKeyPicker.js';
 import {getOperation} from '../data/operations';
 import {
-  addOperation,
   removeOperation,
   updateOperationType,
   updateOperationAttributes,
@@ -20,7 +20,7 @@ class OperationsBuilder extends React.Component {
   }
   render() {
     return <div className="TransactionOperations">
-      {_.map(this.props.ops, (op, index) => {
+      {map(this.props.ops, (op, index) => {
         return operation(this.props.ops, index, this.props.dispatch);
       })}
     </div>

@@ -1,9 +1,9 @@
-import _ from 'lodash';
+import trim from 'lodash/trim';
 import { xdr } from 'stellar-sdk';
 import validateBase64 from './validateBase64';
 
 export default function validateTxXdr(input, networkPassphrase) {
-  input = _.trim(input);
+  input = trim(input);
 
   let base64Validation = validateBase64(input);
   if (base64Validation.result !== 'success') {

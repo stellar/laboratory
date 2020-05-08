@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 import {
   GENERATE_NEW_KEYPAIR,
   START_FRIENDBOT_REQUEST,

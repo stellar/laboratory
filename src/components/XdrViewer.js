@@ -1,6 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import _ from 'lodash';
+import debounce from 'lodash/debounce';
+import indexOf from 'lodash/indexOf';
 import FETCHED_SIGNERS from '../constants/fetched_signers';
 import SelectPicker from './FormComponents/SelectPicker';
 import extrapolateFromXdr from '../utilities/extrapolateFromXdr';
@@ -15,7 +16,7 @@ import xdrViewerMetrics, {metricsEvents} from '../metricsHandlers/xdrViewer'
 // this page that we care about. Log metrics from the component as well.
 addEventHandler(xdrViewerMetrics)
 
-const tLogEvent = _.debounce(logEvent, 1000)
+const tLogEvent = debounce(logEvent, 1000)
 
 
 function XdrViewer(props) {
@@ -25,7 +26,7 @@ function XdrViewer(props) {
   let messageClass = validation.result === 'error' ? 'xdrInput__message__alert' : 'xdrInput__message__success';
   let message = <p className={messageClass}>{validation.message}</p>
 
-  let xdrTypeIsValid = _.indexOf(xdrTypes, state.type) >= 0;
+  let xdrTypeIsValid = indexOf(xdrTypes, state.type) >= 0;
   let treeView, errorMessage;
   if (state.input === '') {
     errorMessage = <p>Enter a base-64 encoded XDR blob to decode.</p>;

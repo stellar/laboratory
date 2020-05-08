@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import isArray from 'lodash/isArray';
+import map from 'lodash/map';
+import isUndefined from 'lodash/isUndefined';
 
 // MultiPicker is a compound picker interface that ensures there is always
 // enough rows for the user to add more data. MultiPicker accomplishes this
@@ -19,7 +21,7 @@ import _ from 'lodash';
 export default function MultiPicker(props) {
   let {onUpdate, component} = props;
   let value = props.value;
-  if (!_.isArray(value)) {
+  if (!isArray(value)) {
     value = [];
   }
 
@@ -27,7 +29,7 @@ export default function MultiPicker(props) {
 
   let SingleComponent = props.component;
   return <div>
-    {_.map(normalizedValues, (singleValue, index) => {
+    {map(normalizedValues, (singleValue, index) => {
       return <SingleComponent
         onUpdate={(newValue) => onUpdate(updateValueAt(normalizedValues, index, newValue))}
         value={singleValue}
@@ -42,7 +44,7 @@ MultiPicker.propTypes = {
 }
 
 function isEmpty(value) {
-  return value === null || _.isUndefined(value) || value === '';
+  return value === null || isUndefined(value) || value === '';
 }
 function arelastTwoEmpty(values) {
   return isEmpty(values[values.length - 1]) && isEmpty(values[values.length - 2]);

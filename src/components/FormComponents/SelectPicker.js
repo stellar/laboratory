@@ -1,5 +1,6 @@
 import React from 'react';
-import _ from 'lodash';
+import isArray from 'lodash/isArray';
+import map from 'lodash/map';
 
 // @param {object|array} props.items An object whose keys are the onUpdate values and
 //   object values are labels the user will see.
@@ -13,12 +14,12 @@ export default function SelectPicker(props) {
   let {value, onUpdate, items} = props;
 
   let optionsList;
-  if (_.isArray(items)) {
-    optionsList = _.map(items, (value, index) => {
+  if (isArray(items)) {
+    optionsList = map(items, (value, index) => {
       return <option key={index} value={value}>{value}</option>
     })
   } else {
-    optionsList = _.map(items, (value, index) => {
+    optionsList = map(items, (value, index) => {
       return <option key={index} value={index}>{value}</option>
     })
   }

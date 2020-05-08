@@ -9,7 +9,6 @@ import {
   LEDGER_WALLET_SIGN_SUCCESS,
 } from '../actions/transactionSigner';
 import {LOAD_STATE} from '../actions/routing';
-import _ from 'lodash';
 import validateTxXdr from '../utilities/validateTxXdr';
 import SLUG from '../constants/slug';
 

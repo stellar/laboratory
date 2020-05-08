@@ -10,6 +10,10 @@
 // - object: typed values always with a type and value `{type: 'code', value: 'Foo();'}`
 
 import {xdr, StrKey, Keypair, Operation} from 'stellar-sdk';
+import isArray from 'lodash/isArray'
+import isString from 'lodash/isString'
+import functionsIn from 'lodash/functionsIn'
+import includes from 'lodash/includes'
 export default function extrapolateFromXdr(input, type) {
   // TODO: Check to see if type exists
   // TODO: input validation
@@ -29,7 +33,7 @@ export default function extrapolateFromXdr(input, type) {
 function buildTreeFromObject(object, anchor, name) {
   anchor.type = name;
 
-  if (_.isArray(object)) {
+  if (isArray(object)) {
     parseArray(anchor, object);
   } else if (!hasChildren(object)) {
     anchor.value = getValue(object, name);
@@ -51,7 +55,7 @@ function parseArray(anchor, object) {
 
 function parseArm(anchor, object) {
   anchor.value = '['+object.switch().name+']';
-  if (_.isString(object.arm())) {
+  if (isString(object.arm())) {
     anchor.nodes = [{}];
     buildTreeFromObject(object[object.arm()](), anchor.nodes[anchor.nodes.length-1], object.arm());
   }
@@ -67,19 +71,19 @@ function parseNormal(anchor, object) {
 
 function hasChildren(object) {
   // string
-  if (_.isString(object)) {
+  if (isString(object)) {
     return false;
   }
   // node buffer
   if (object && object._isBuffer) {
     return false;
   }
-  var functions = _.functionsIn(object);
+  var functions = functionsIn(object);
   if (functions.length == 0) {
     return false;
   }
   // int64
-  if (_.includes(functions, 'getLowBits') && _.includes(functions, 'getHighBits')) {
+  if (includes(functions, 'getLowBits') && includes(functions, 'getHighBits')) {
     return false;
   }
   return true;
@@ -88,7 +92,7 @@ function hasChildren(object) {
 const amountFields = ['amount', 'startingBalance', 'sendMax', 'sendAmount', 'destMin', 'destAmount', 'limit'];
 
 function getValue(object, name) {
-  if (_.includes(amountFields, name)) {
+  if (includes(amountFields, name)) {
     return {
       type: 'amount',
       value: {
