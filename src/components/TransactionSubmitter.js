@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import debounce from "lodash/debounce";
+import functions from "lodash/functions";
 import FETCHED_SIGNERS from "../constants/fetched_signers";
 import extrapolateFromXdr from "../utilities/extrapolateFromXdr";
 import TreeView from "./TreeView";
@@ -110,10 +111,8 @@ function chooseState(state) {
 
 // Array of all the xdr types. Then, the most common ones appear at the top
 // again for convenience
-let xdrTypes = _(xdr)
-  .functions()
+let xdrTypes = functions(xdr)
   .sort()
-  .value();
 xdrTypes = [
   "TransactionEnvelope",
   "TransactionResult",

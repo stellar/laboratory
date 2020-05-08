@@ -14,6 +14,7 @@ import isArray from 'lodash/isArray'
 import isString from 'lodash/isString'
 import functionsIn from 'lodash/functionsIn'
 import includes from 'lodash/includes'
+import without from 'lodash/without'
 export default function extrapolateFromXdr(input, type) {
   // TODO: Check to see if type exists
   // TODO: input validation
@@ -63,7 +64,7 @@ function parseArm(anchor, object) {
 
 function parseNormal(anchor, object) {
   anchor.nodes = [];
-  _(object).functionsIn().without('toXDR').value().forEach(function(name) {
+  without(functionsIn(object), 'toXDR').forEach(function(name) {
     anchor.nodes.push({});
     buildTreeFromObject(object[name](), anchor.nodes[anchor.nodes.length-1], name);
   });

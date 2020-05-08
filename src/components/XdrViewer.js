@@ -1,6 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import debounce from 'lodash/debounce';
+import functions from 'lodash/functions';
 import indexOf from 'lodash/indexOf';
 import FETCHED_SIGNERS from '../constants/fetched_signers';
 import SelectPicker from './FormComponents/SelectPicker';
@@ -44,7 +45,7 @@ function XdrViewer(props) {
   }
 
   // Fetch signers on initial load
-  if (state.type === "TransactionEnvelope" && state.fetchedSigners.state === FETCHED_SIGNERS.NONE) {
+  if (state.input !== '' && state.type === "TransactionEnvelope" && state.fetchedSigners.state === FETCHED_SIGNERS.NONE) {
     dispatch(fetchSigners(state.input, baseURL, networkPassphrase))
   }
 
@@ -103,5 +104,5 @@ function chooseState(state) {
 
 // Array of all the xdr types. Then, the most common ones appear at the top
 // again for convenience
-let xdrTypes = _(xdr).functions().sort().value();
+let xdrTypes = functions(xdr).sort();
 xdrTypes = ['TransactionEnvelope', 'TransactionResult', 'TransactionMeta', '---'].concat(xdrTypes)
