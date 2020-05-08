@@ -79,6 +79,7 @@ const Loading = ({ pastDelay, retry, error }) => {
       <div className="so-back">
         <div className="so-chunk">
           Error! <button onClick={retry}>Retry</button>
+          <pre>{error.stack}</pre>
         </div>
       </div>
     );
