@@ -1,3 +1,6 @@
+/**
+ * @prettier
+ */
 import React from "react";
 
 export default class TestnetBanner extends React.Component {
@@ -33,7 +36,9 @@ export default class TestnetBanner extends React.Component {
     const { maintenance, error } = this.state;
     if (maintenance === false) {
       return error ? (
-        error
+        <div className="LaboratoryChrome__network_reset_alert s-alert">
+          <div className="so-chunk">{error}</div>
+        </div>
       ) : (
         <div className="LaboratoryChrome__network_reset_alert s-alert">
           <div className="so-chunk">Loading testnet information…</div>
@@ -41,38 +46,38 @@ export default class TestnetBanner extends React.Component {
       );
     }
 
-    return (
-      <div>
-        {maintenance && maintenance.length === 0 ? (
-          <div className="LaboratoryChrome__network_reset_alert s-alert">
-            <div className="so-chunk">
-              The next testnet reset has not yet been scheduled.
-            </div>
+    if (maintenance.length === 0) {
+      return (
+        <div className="LaboratoryChrome__network_reset_alert s-alert">
+          <div className="so-chunk">
+            The next testnet reset has not yet been scheduled.
           </div>
-        ) : (
-          maintenance.map((m) => {
-            const date = new Date(m.scheduled_for);
-            return (
-              <div
-                key={m.id}
-                className="LaboratoryChrome__network_reset_alert s-alert"
-              >
-                <div className="so-chunk">
-                  <a href={`https://status.stellar.org/incidents/${m.id}`}>
-                    {m.name}
-                  </a>{" "}
-                  on {date.toDateString()} at {date.toTimeString()}
-                  {m.incident_updates.map((update) => (
-                    <div
-                      key={update.id}
-                      dangerouslySetInnerHTML={{ __html: update.body }}
-                    />
-                  ))}
-                </div>
-              </div>
-            );
-          })
-        )}
+        </div>
+      );
+    }
+
+    const nextMaintenance = maintenance[0];
+    const date = new Date(nextMaintenance.scheduled_for);
+
+    return (
+      <div
+        key={nextMaintenance.id}
+        className="LaboratoryChrome__network_reset_alert s-alert"
+      >
+        <div className="so-chunk">
+          <a
+            href={`https://status.stellar.org/incidents/${nextMaintenance.id}`}
+          >
+            {nextMaintenance.name}
+          </a>{" "}
+          on {date.toDateString()} at {date.toTimeString()}
+          {nextMaintenance.incident_updates.map((update) => (
+            <div
+              key={update.id}
+              dangerouslySetInnerHTML={{ __html: update.body }}
+            />
+          ))}
+        </div>
       </div>
     );
   }
