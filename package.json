@@ -19,6 +19,7 @@
     "@babel/register": "^7.6.2",
     "@ledgerhq/hw-app-str": "^5.9.0",
     "@ledgerhq/hw-transport-u2f": "^5.9.0",
+    "@stellar/prettier-config": "^1.0.1",
     "amplitude-js": "^4.6.0",
     "axios": "^0.18.1",
     "babel-loader": "^8.1.0",
