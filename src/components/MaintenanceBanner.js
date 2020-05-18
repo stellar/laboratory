@@ -3,6 +3,20 @@
  */
 import React from "react";
 
+// If we're on the test network, we care about all scheduled maintenance. If
+// we're on the public network, we only care about public network maintenance
+const isMaintenanceRelevant = (allMaintenance, currentNetwork) =>
+  allMaintenance.filter((m) =>
+    m.components.some((c) =>
+      currentNetwork === "test" ? true : c.name === "Stellar Public Network",
+    ),
+  );
+
+const getNextMaintenance = (schedule) =>
+  schedule.sort(
+    (a, b) => new Date(a.scheduled_for) - new Date(b.scheduled_for),
+  );
+
 export default class TestnetBanner extends React.Component {
   constructor() {
     super();
@@ -11,18 +25,14 @@ export default class TestnetBanner extends React.Component {
       error: null,
     };
   }
-  getNextMaintenance(schedule) {
-    const maintenance = schedule.sort(
-      (a, b) => new Date(a.scheduled_for) - new Date(b.scheduled_for),
-    );
-
-    this.setState({ error: null, maintenance });
-  }
   componentDidMount() {
     fetch("https://9sl3dhr1twv1.statuspage.io/api/v2/summary.json")
       .then((res) => res.json())
       .then((data) => {
-        this.getNextMaintenance(data.scheduled_maintenances);
+        this.setState({
+          error: null,
+          maintenance: getNextMaintenance(data.scheduled_maintenances),
+        });
       })
       .catch((e) => {
         console.error(e);
@@ -34,6 +44,8 @@ export default class TestnetBanner extends React.Component {
   }
   render() {
     const { maintenance, error } = this.state;
+    const { currentNetwork } = this.props;
+
     if (maintenance === false) {
       return error ? (
         <div className="LaboratoryChrome__network_reset_alert s-alert">
@@ -46,17 +58,24 @@ export default class TestnetBanner extends React.Component {
       );
     }
 
-    if (maintenance.length === 0) {
-      return (
-        <div className="LaboratoryChrome__network_reset_alert s-alert">
-          <div className="so-chunk">
-            The next testnet reset has not yet been scheduled.
-          </div>
-        </div>
-      );
-    }
+    const relevantMaintenance = isMaintenanceRelevant(
+      maintenance,
+      currentNetwork,
+    );
 
-    const nextMaintenance = maintenance[0];
+    if (relevantMaintenance.length === 0) {
+      if (currentNetwork === "test") {
+        return (
+          <div className="LaboratoryChrome__network_reset_alert s-alert">
+            <div className="so-chunk">
+              The next testnet reset has not yet been scheduled.
+            </div>
+          </div>
+        );
+      }
+      return null;
+    }
+    const nextMaintenance = relevantMaintenance[0];
     const date = new Date(nextMaintenance.scheduled_for);
 
     return (

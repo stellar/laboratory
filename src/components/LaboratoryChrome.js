@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import classNames from "classnames";
 import Loadable from "react-loadable";
 import NetworkPicker from "./NetworkPicker";
-import TestnetBanner from "./TestnetBanner";
+import MaintenanceBanner from "./MaintenanceBanner";
 import Introduction from "./Introduction";
 import { RouterListener } from "../utilities/simpleRouter";
 import SLUG from "../constants/slug";
@@ -29,7 +29,7 @@ function LaboratoryChrome(props) {
 
   return (
     <div>
-      {props.currentNetwork.name == "test" ? <TestnetBanner /> : null}
+      <MaintenanceBanner currentNetwork={props.currentNetwork.name} />
       <div className="so-back">
         <div className="so-chunk">
           <div className="so-siteHeader LaboratoryChrome__header">
