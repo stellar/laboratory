@@ -168,7 +168,7 @@ function formatSignatureCheckState(node, separator) {
       message = <span style={{color: "red"}}> Error checking signatures...</span>;
       break;
     case FETCHED_SIGNERS.NOT_EXIST:
-      message = <span style={{color: "red"}}> Some source accounts does not exist...</span>;
+      message = <span style={{color: "red"}}> Some source accounts don't exist. Are you on the right network?</span>;
       break;
   }
   return <span><strong>{node.type}</strong>{separator}{node.value}{message}</span>;
