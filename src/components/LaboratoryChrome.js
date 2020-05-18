@@ -29,7 +29,7 @@ function LaboratoryChrome(props) {
 
   return (
     <div>
-      {props.currentNetwork.name == "test" ? <TestnetBanner /> : null}
+      <TestnetBanner currentNetwork={props.currentNetwork.name} />
       <div className="so-back">
         <div className="so-chunk">
           <div className="so-siteHeader LaboratoryChrome__header">
