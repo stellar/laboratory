@@ -3,6 +3,11 @@
  */
 import React from "react";
 
+const getNextMaintenance = (schedule) =>
+  schedule.sort(
+    (a, b) => new Date(a.scheduled_for) - new Date(b.scheduled_for),
+  );
+
 export default class TestnetBanner extends React.Component {
   constructor() {
     super();
@@ -11,18 +16,14 @@ export default class TestnetBanner extends React.Component {
       error: null,
     };
   }
-  getNextMaintenance(schedule) {
-    const maintenance = schedule.sort(
-      (a, b) => new Date(a.scheduled_for) - new Date(b.scheduled_for),
-    );
-
-    this.setState({ error: null, maintenance });
-  }
   componentDidMount() {
     fetch("https://9sl3dhr1twv1.statuspage.io/api/v2/summary.json")
       .then((res) => res.json())
       .then((data) => {
-        this.getNextMaintenance(data.scheduled_maintenances);
+        this.setState({
+          error: null,
+          maintenance: getNextMaintenance(data.scheduled_maintenances),
+        });
       })
       .catch((e) => {
         console.error(e);
