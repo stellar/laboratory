@@ -127,7 +127,7 @@ export function fetchSigners(input, horizonBaseUrl, networkPassphrase) {
       })
       .catch(e => {
         console.error(e);
-        if (e.status == 404) {
+        if (e.response.status == 404) {
           dispatch({ type: FETCHED_SIGNERS.NOT_EXIST });
         } else {
           dispatch({ type: FETCHED_SIGNERS.FAIL });
