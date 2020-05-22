@@ -11,11 +11,34 @@ import {StrKey} from 'stellar-sdk';
 import NETWORK from '../constants/network';
 import {fetchSequence} from '../actions/transactionBuilder';
 
+const ConnectWithLyra = ({ onUpdate }) => {
+
+
+  const connectLyra = async() => {
+  let response = "";
+
+  try {
+    response = await window.lyra.connect();
+  } catch (e) {
+    console.error(e);
+  }
+  const { publicKey, error } = response;
+  onUpdate('sourceAccount', publicKey);
+  }
+
+
+  return (
+    <button className="s-button" type="button" onClick={connectLyra}>Connect Source Account with Lyra</button>
+  )
+}
+
 export default function TxBuilderAttributes(props) {
   let {onUpdate, attributes} = props;
 
   return <div className="TransactionAttributes">
     <div className="TransactionOp__config TransactionOpConfig optionsTable">
+        {window.lyra ? <ConnectWithLyra onUpdate={onUpdate} /> : null}
+
       <OptionsTablePair label={<span>Source Account <HelpMark href="https://www.stellar.org/developers/guides/concepts/accounts.html" /></span>}>
         <PubKeyPicker
           value={attributes['sourceAccount']}

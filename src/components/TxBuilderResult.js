@@ -5,11 +5,13 @@ import {EasySelect} from './EasySelect';
 import Libify from '../utilities/Libify';
 import {txSignerLink, xdrViewer} from '../utilities/linkBuilder';
 import scrollOnAnchorOpen from '../utilities/scrollOnAnchorOpen';
+import TxLyraSign from './TxLyraSign';
 
 class TxBuilderResult extends React.Component {
   render() {
     let {attributes, operations} = this.props.state;
     let validationErrors = [];
+    let transactionBuild;
 
     if (attributes.sourceAccount === '') {
       validationErrors.push('Source account ID is a required field');
@@ -27,7 +29,7 @@ class TxBuilderResult extends React.Component {
       errorTitleText = 'Form validation errors:';
       finalResult = formatErrorList(validationErrors);
     } else {
-      let transactionBuild = Libify.buildTransaction(attributes, operations, this.props.networkPassphrase);
+      transactionBuild = Libify.buildTransaction(attributes, operations, this.props.networkPassphrase);
 
       if (transactionBuild.errors.length > 0) {
         errorTitleText = `Transaction building errors:`;
@@ -69,6 +71,7 @@ class TxBuilderResult extends React.Component {
       </pre>
       {signingInstructions}
       {signingLink} {xdrLink}
+      { window.lyra && transactionBuild ? <TxLyraSign xdr={transactionBuild.xdr} /> : null }
     </div>
   }
 }
