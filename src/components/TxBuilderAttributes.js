@@ -18,7 +18,7 @@ const ConnectWithLyra = ({ onUpdate }) => {
   let response = "";
 
   try {
-    response = await window.lyra.connect();
+    response = await window.lyra.getPublicKey();
   } catch (e) {
     console.error(e);
   }

@@ -4,11 +4,12 @@ const signWithLyra = async (xdr, setTxResult) => {
       let res = {transactionStatus: "" };
 
     try {
-      res = await window.lyra.submitTransaction({
+      res = await window.lyra.requestSignature({
         transactionXdr: xdr,
       });
     } catch (e) {
       res = e;
+      console.error(e);
     }
 
     setTxResult(res.transactionStatus);
