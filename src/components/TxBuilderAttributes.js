@@ -12,10 +12,10 @@ import NETWORK from '../constants/network';
 import {fetchSequence, fetchBaseFee} from '../actions/transactionBuilder';
 
 function TxBuilderAttributes(props) {
-  let {onUpdate, attributes} = props;
+  let {onUpdate, attributes, horizonURL} = props;
 
   useEffect(() => {
-    props.dispatch(fetchBaseFee(props.horizonURL))
+    props.dispatch(fetchBaseFee(horizonURL))
   }, [])
   
   return <div className="TransactionAttributes">
