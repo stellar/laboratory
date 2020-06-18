@@ -110,9 +110,9 @@ function attributes(state = defaultAttributes, action) {
   case FETCH_SEQUENCE_SUCCESS:
     return Object.assign({}, state, { sequence: action.sequence });
   case FETCH_BASE_FEE_SUCCESS:
-    return Object.assign({}, state, {fee: action.base_fee});
+    return Object.assign({}, state, { fee: action.base_fee });
   case FETCH_BASE_FEE_FAIL:
-    return Object.assign({}, state, {fee: defaultAttributes.fee});
+    return Object.assign({}, state, { fee: defaultAttributes.fee });
   case RESET_TXBUILDER:
     return defaultAttributes;
   }
