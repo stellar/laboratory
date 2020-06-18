@@ -10,6 +10,8 @@ import {
   FETCH_SEQUENCE_SUCCESS,
   FETCH_SEQUENCE_FAIL,
   RESET_TXBUILDER,
+  FETCH_BASE_FEE_SUCCESS,
+  FETCH_BASE_FEE_FAIL
 } from '../actions/transactionBuilder';
 import {LOAD_STATE} from '../actions/routing';
 import {rehydrate} from '../utilities/hydration';
@@ -95,6 +97,7 @@ const defaultAttributes = {
   minTime: '',
   maxTime: '',
 };
+
 function attributes(state = defaultAttributes, action) {
   switch(action.type) {
   case LOAD_STATE:
@@ -106,6 +109,10 @@ function attributes(state = defaultAttributes, action) {
     return Object.assign({}, state, action.newAttributes);
   case FETCH_SEQUENCE_SUCCESS:
     return Object.assign({}, state, { sequence: action.sequence });
+  case FETCH_BASE_FEE_SUCCESS:
+    return Object.assign({}, state, { fee: action.base_fee });
+  case FETCH_BASE_FEE_FAIL:
+    return Object.assign({}, state, { fee: defaultAttributes.fee });
   case RESET_TXBUILDER:
     return defaultAttributes;
   }
