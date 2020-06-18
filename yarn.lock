@@ -6718,7 +6718,7 @@ stellar-base@^3.0.3:
   optionalDependencies:
     sodium-native "^2.3.0"
 
-stellar-sdk@^5.0.0:
+stellar-sdk@^5.0.3:
   version "5.0.3"
   resolved "https://registry.yarnpkg.com/stellar-sdk/-/stellar-sdk-5.0.3.tgz#9eb329f8645090d3b794998f9afd82f7516ae5b4"
   integrity sha512-gPcw3xbwPvsRQ1GDQtsfXkKdaW2Qp9BaUtgmqzWyqyk+gEClQg2Q9pQlGYKXttaE/RJmsCcZDIFe5x51AK92bg==
