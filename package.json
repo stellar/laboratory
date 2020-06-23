@@ -10,7 +10,10 @@
     "build": "webpack-cli --config webpack.config.prod.js",
     "analyze": "webpack-cli --config webpack.config.analyze.js",
     "build:netlify": "yarn build; mkdir out; mkdir out/laboratory; mv dist/* out/laboratory; cp _redirects out/_redirects",
-    "test": "mocha './test/**/*.js'"
+    "test": "mocha './test/**/*.js'",
+    "prod:build": "docker image build --build-arg AMPLITUDE_KEY=$AMPLITUDE_KEY -t lab:localbuild .",
+    "prod:serve": "docker run -p 8000:80 lab:localbuild",
+    "production": "yarn prod:build && yarn prod:serve"
   },
   "dependencies": {
     "@babel/core": "^7.6.2",
@@ -48,7 +51,7 @@
     "sass-loader": "^8.0.2",
     "solar-css": "git+https://github.com/stellar/solar#master",
     "solar-stellarorg": "git+https://github.com/stellar/solar-stellarorg#master",
-    "stellar-sdk": "^5.0.0",
+    "stellar-sdk": "^5.0.3",
     "uglifyjs-webpack-plugin": "^1",
     "uri-templates": "^0.1.9",
     "urijs": "^1.16.0",

@@ -28,6 +28,17 @@ yarn start --public randomsubdomain.ngrok.io
 yarn build
 ```
 
+A complete production build, including nginx and docker image, can be build and run as well.
+
+```sh
+yarn production
+# or
+yarn prod:build
+yarn prod:serve
+```
+
+Production uses Amplify to emit metrics, so to fully emulate a production build, you'll need to set an `AMPLITUDE_KEY` environment variable in the shell you start a build from.
+
 ## Internal documentation
 
 The [docs.md](./docs.md) file contains code documentation on the laboratory. The

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import OptionsTablePair from './OptionsTable/Pair';
 import HelpMark from './HelpMark';
 import PubKeyPicker from './FormComponents/PubKeyPicker';
@@ -9,7 +9,7 @@ import TimeBoundsPicker from './FormComponents/TimeBoundsPicker';
 import {connect} from 'react-redux';
 import {StrKey} from 'stellar-sdk';
 import NETWORK from '../constants/network';
-import {fetchSequence} from '../actions/transactionBuilder';
+import {fetchSequence, fetchBaseFee} from '../actions/transactionBuilder';
 
 const ConnectWithLyra = ({ onUpdate }) => {
 
@@ -32,9 +32,13 @@ const ConnectWithLyra = ({ onUpdate }) => {
   )
 }
 
-export default function TxBuilderAttributes(props) {
-  let {onUpdate, attributes} = props;
+function TxBuilderAttributes(props) {
+  let {onUpdate, attributes, horizonURL} = props;
 
+  useEffect(() => {
+    props.dispatch(fetchBaseFee(horizonURL))
+  }, [])
+  
   return <div className="TransactionAttributes">
     <div className="TransactionOp__config TransactionOpConfig optionsTable">
         {window.lyra ? <ConnectWithLyra onUpdate={onUpdate} /> : null}
@@ -59,7 +63,7 @@ export default function TxBuilderAttributes(props) {
           value={attributes['fee']}
           onUpdate={(value) => {onUpdate('fee', value)}}
           />
-        <p className="optionsTable__pair__content__note">The <a href="https://www.stellar.org/developers/guides/concepts/fees.html">network base fee</a> is currently set to 100 stroops (0.00001 lumens). Transaction fee is equal to base fee times number of operations in this transaction.</p>
+        <p className="optionsTable__pair__content__note">The <a href="https://www.stellar.org/developers/guides/concepts/fees.html">network base fee</a> is currently set to {attributes['fee']} stroops ({attributes['fee'] / 1e7} lumens). Transaction fee is equal to base fee times number of operations in this transaction.</p>
       </OptionsTablePair>
       <OptionsTablePair optional={true} label={<span>Memo <HelpMark href="https://www.stellar.org/developers/guides/concepts/transactions.html#memo" /></span>}>
         <MemoPicker
@@ -91,6 +95,8 @@ export default function TxBuilderAttributes(props) {
     </div>
   </div>
 }
+
+export default connect(chooseState)(TxBuilderAttributes);
 
 class sequenceFetcherClass extends React.Component {
   render() {

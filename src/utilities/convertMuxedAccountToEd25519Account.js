@@ -1,12 +1,11 @@
 import {xdr, StrKey} from 'stellar-sdk';
 
-// converts string keys representing muxed accounts `M...` to their ED25519 public account `G..`
+// This function was meant to convert string keys representing muxed accounts
+// `M...` to their ED25519 public account `G..` However since SEP23 hasn't been
+// rolled out yet, we'll show whatever value we receive without doing any type
+// of conversion. Once SEP23 is included in stellar-base, we can update this
+// code to show the inner G account of muxed accounts, in the meantime we'll
+// just return the same value we receive.
 export default function convertMuxedAccountToEd25519Account(muxedAccount) {
-    if (muxedAccount.startsWith('G')) {
-        return muxedAccount;
-    }
-
-    const raw = StrKey.decodeMuxedAccount(muxedAccount)
-    const muxed = xdr.MuxedAccount.fromXDR(raw)
-    return StrKey.encodeEd25519PublicKey(muxed.med25519().ed25519())
+    return muxedAccount;
 }
