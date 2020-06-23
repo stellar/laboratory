@@ -2,8 +2,6 @@ FROM ubuntu:16.04 as build
 
 MAINTAINER SDF Ops Team <ops@stellar.org>
 
-ADD . /app/src
-
 WORKDIR /app/src
 
 RUN apt-get update && apt-get install -y curl git make apt-transport-https && \
@@ -13,7 +11,14 @@ RUN apt-get update && apt-get install -y curl git make apt-transport-https && \
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
     apt-get update && apt-get install -y nodejs yarn && apt-get clean
 
-RUN yarn install && yarn build
+COPY package.json yarn.lock /app/src/
+RUN yarn install
+
+ADD .babelrc webpack.config.base.js webpack.config.prod.js /app/src/
+ADD src /app/src/src
+
+ARG AMPLITUDE_KEY
+RUN yarn build
 
 FROM nginx:1.17
 
@@ -21,4 +26,4 @@ COPY --from=build /app/src/dist/ /usr/share/nginx/html/
 
 # We're removing /laboratory/ prefix. To allow for transition
 # period we'll support /laboratory/ links using rewrites
-COPY --from=build /app/src/nginx_default.conf /etc/nginx/conf.d/default.conf
+COPY nginx_default.conf /etc/nginx/conf.d/default.conf
