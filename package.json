@@ -10,7 +10,10 @@
     "build": "webpack-cli --config webpack.config.prod.js",
     "analyze": "webpack-cli --config webpack.config.analyze.js",
     "build:netlify": "yarn build; mkdir out; mkdir out/laboratory; mv dist/* out/laboratory; cp _redirects out/_redirects",
-    "test": "mocha './test/**/*.js'"
+    "test": "mocha './test/**/*.js'",
+    "prod:build": "docker image build --build-arg AMPLITUDE_KEY=$AMPLITUDE_KEY -t lab:localbuild .",
+    "prod:serve": "docker run -p 8000:80 lab:localbuild",
+    "production": "yarn prod:build && yarn prod:serve"
   },
   "dependencies": {
     "@babel/core": "^7.6.2",
