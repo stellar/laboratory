@@ -28,8 +28,15 @@ yarn start --public randomsubdomain.ngrok.io
 yarn build
 ```
 
-A complete production build, including nginx and docker image, can be build and run as well.
+To build a production docker image using a clean docker build environment:
 
+```sh
+make docker-build
+# or directly with docker
+docker build --build-arg AMPLITUDE_KEY=${AMPLITUDE_KEY} -t lab:localbuild .
+```
+
+To build and run production build locally:
 ```sh
 yarn production
 # or
