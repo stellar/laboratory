@@ -8,26 +8,53 @@ import scrollOnAnchorOpen from '../utilities/scrollOnAnchorOpen';
 
 class TxBuilderResult extends React.Component {
   render() {
-    let {attributes, operations} = this.props.state;
-    let validationErrors = [];
 
-    if (attributes.sourceAccount === '') {
-      validationErrors.push('Source account ID is a required field');
-    }
-    if (attributes.sequence === '') {
-      validationErrors.push('Sequence number is a required field');
-    }
-    let memoIsNone = attributes.memoType === 'MEMO_NONE' || attributes.memoType === '';
-    if (!memoIsNone && attributes.memoContent === '') {
-      validationErrors.push('Memo content is required if memo type is selected');
+    let {attributes, operations, feeBumpAttributes, txType} = this.props.state;
+
+    const getRegularTxValidationErrors = () => {
+      const errors = [];
+      if (attributes.sourceAccount === '') {
+        errors.push('Source account ID is a required field');
+      }
+      if (attributes.sequence === '') {
+        errors.push('Sequence number is a required field');
+      }
+      let memoIsNone = attributes.memoType === 'MEMO_NONE' || attributes.memoType === '';
+      if (!memoIsNone && attributes.memoContent === '') {
+        errors.push('Memo content is required if memo type is selected');
+      }
+      return errors;
     }
 
+    const getFeeBumpTxValidationErrors = () => {
+      const errors = [];
+      if (feeBumpAttributes.sourceAccount === '') {
+        errors.push('Source Account is a required field');
+      }
+      if (feeBumpAttributes.maxFee === '') {
+        errors.push('Base Fee is a required field');
+      }
+      if (feeBumpAttributes.innerTxXDR === '') {
+        errors.push('Inner Transaction is a required field');
+      }
+      return errors;
+    }
+
+    let validationErrors;
+    // TODO ALEC - constants
+    if (txType === 'FEE_BUMP_TX') {
+      validationErrors = getFeeBumpTxValidationErrors()
+    } else {
+      validationErrors = getRegularTxValidationErrors()
+    }
+    
     let finalResult, errorTitleText, successTitleText, signingInstructions, signingLink, xdrLink;
     if (validationErrors.length > 0) {
       errorTitleText = 'Form validation errors:';
       finalResult = formatErrorList(validationErrors);
     } else {
-      let transactionBuild = Libify.buildTransaction(attributes, operations, this.props.networkPassphrase);
+      let transactionBuild = txType == 'FEE_BUMP_TX' ? Libify.buildFeeBumpTransaction(feeBumpAttributes, this.props.networkPassphrase) :
+       Libify.buildTransaction(attributes, operations, this.props.networkPassphrase);
 
       if (transactionBuild.errors.length > 0) {
         errorTitleText = `Transaction building errors:`;

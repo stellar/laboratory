@@ -31,7 +31,7 @@ function TxBuilderAttributes(props) {
         />
       </OptionsTablePair>
       {/* TODO ALEC - change to constants */}
-      {txType == 'REGULAR_TX' &&
+      {txType === 'REGULAR_TX' &&
       <React.Fragment>
       <OptionsTablePair label={<span>Source Account <HelpMark href="https://www.stellar.org/developers/guides/concepts/accounts.html" /></span>}>
         <PubKeyPicker
@@ -84,7 +84,7 @@ function TxBuilderAttributes(props) {
       </OptionsTablePair>
       </React.Fragment>
     }
-    {txType == 'FEE_BUMP_TX' &&
+    {txType === 'FEE_BUMP_TX' &&
       <React.Fragment>
       <OptionsTablePair label={<span>Source Account <HelpMark href="https://www.stellar.org/developers/guides/concepts/accounts.html" /></span>}>
         <PubKeyPicker 
@@ -95,7 +95,7 @@ function TxBuilderAttributes(props) {
       <OptionsTablePair label={<span>Base Fee <HelpMark href="https://www.stellar.org/developers/guides/concepts/transactions.html#fee" /></span>}>
         <StroopsPicker
           value={feeBumpAttributes['maxFee']}
-          onUpdate={(value) => {dispatch(updateFeeBumpAttribute({'sourceAccount': value}))}}
+          onUpdate={(value) => {dispatch(updateFeeBumpAttribute({'maxFee': value}))}}
           />
         <p className="optionsTable__pair__content__note">The <a href="https://www.stellar.org/developers/guides/concepts/fees.html">network base fee</a> is currently set to {attributes['fee']} stroops ({attributes['fee'] / 1e7} lumens). Transaction fee is equal to base fee times number of operations in this transaction.</p>
       </OptionsTablePair>
