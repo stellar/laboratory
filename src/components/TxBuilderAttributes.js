@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import OptionsTablePair from './OptionsTable/Pair';
 import HelpMark from './HelpMark';
+import TxTypePicker from './FormComponents/TxTypePicker';
 import PubKeyPicker from './FormComponents/PubKeyPicker';
 import SequencePicker from './FormComponents/SequencePicker';
 import StroopsPicker from './FormComponents/StroopsPicker';
@@ -9,17 +10,29 @@ import TimeBoundsPicker from './FormComponents/TimeBoundsPicker';
 import {connect} from 'react-redux';
 import {StrKey} from 'stellar-sdk';
 import NETWORK from '../constants/network';
-import {fetchSequence, fetchBaseFee} from '../actions/transactionBuilder';
+import {fetchSequence, fetchBaseFee, updateTxType, updateFeeBumpAttribute} from '../actions/transactionBuilder';
+import TransactionImporter from './TransactionImporter';
 
 function TxBuilderAttributes(props) {
-  let {onUpdate, attributes, horizonURL} = props;
+  let {onUpdate, attributes, horizonURL, dispatch, feeBumpAttributes} = props;
+  const { txType } = props.state;
 
   useEffect(() => {
-    props.dispatch(fetchBaseFee(horizonURL))
+    dispatch(fetchBaseFee(horizonURL))
   }, [])
   
   return <div className="TransactionAttributes">
     <div className="TransactionOp__config TransactionOpConfig optionsTable">
+
+      <OptionsTablePair label={<span>Transaction Type <HelpMark href="https://developers.stellar.org/docs/glossary/fee-bumps" /></span>}>
+        <TxTypePicker
+          value={txType}
+          onUpdate={(value) => {dispatch(updateTxType(value))}}
+        />
+      </OptionsTablePair>
+      {/* TODO ALEC - change to constants */}
+      {txType == 'REGULAR_TX' &&
+      <React.Fragment>
       <OptionsTablePair label={<span>Source Account <HelpMark href="https://www.stellar.org/developers/guides/concepts/accounts.html" /></span>}>
         <PubKeyPicker
           value={attributes['sourceAccount']}
@@ -69,6 +82,29 @@ function TxBuilderAttributes(props) {
           <br />
         </p>
       </OptionsTablePair>
+      </React.Fragment>
+    }
+    {txType == 'FEE_BUMP_TX' &&
+      <React.Fragment>
+      <OptionsTablePair label={<span>Source Account <HelpMark href="https://www.stellar.org/developers/guides/concepts/accounts.html" /></span>}>
+        <PubKeyPicker 
+          value={feeBumpAttributes['sourceAccount']}
+          onUpdate={(value) => {dispatch(updateFeeBumpAttribute({'sourceAccount': value}))}}
+        />
+      </OptionsTablePair>
+      <OptionsTablePair label={<span>Base Fee <HelpMark href="https://www.stellar.org/developers/guides/concepts/transactions.html#fee" /></span>}>
+        <StroopsPicker
+          value={feeBumpAttributes['maxFee']}
+          onUpdate={(value) => {dispatch(updateFeeBumpAttribute({'sourceAccount': value}))}}
+          />
+        <p className="optionsTable__pair__content__note">The <a href="https://www.stellar.org/developers/guides/concepts/fees.html">network base fee</a> is currently set to {attributes['fee']} stroops ({attributes['fee'] / 1e7} lumens). Transaction fee is equal to base fee times number of operations in this transaction.</p>
+      </OptionsTablePair>
+      <OptionsTablePair label={<span>Inner Transaction <HelpMark/></span>}>
+      <TransactionImporter networkPassphrase={networkPassphrase} onImport={(value) => dispatch(updateFeeBumpAttribute('innerTxXDR', xdr))}/>
+        
+      </OptionsTablePair>
+      </React.Fragment>
+    }
     </div>
   </div>
 }

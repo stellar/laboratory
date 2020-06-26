@@ -24,7 +24,9 @@ class TransactionBuilder extends React.Component {
     let {
       attributes,
       operations,
+      feeBumpAttributes,
     } = this.props.state;
+    
 
     return <div className="TransactionBuilder">
       <div className="so-back">
@@ -41,6 +43,7 @@ class TransactionBuilder extends React.Component {
           </p>
           <TxBuilderAttributes
             attributes={attributes}
+            feeBumpAttributes={feeBumpAttributes}
             onUpdate={onAttributeUpdate.bind(this, dispatch)} />
           <OperationsBuilder />
           <div className="TransactionOperations__add">

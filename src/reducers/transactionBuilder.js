@@ -11,7 +11,10 @@ import {
   FETCH_SEQUENCE_FAIL,
   RESET_TXBUILDER,
   FETCH_BASE_FEE_SUCCESS,
-  FETCH_BASE_FEE_FAIL
+  FETCH_BASE_FEE_FAIL,
+  REGULAR_TX,
+  UPDATE_TX_TYPE,
+  UPDATE_FEE_BUMP_ATTRIBUTE,
 } from '../actions/transactionBuilder';
 import {LOAD_STATE} from '../actions/routing';
 import {rehydrate} from '../utilities/hydration';
@@ -119,6 +122,29 @@ function attributes(state = defaultAttributes, action) {
   return state;
 }
 
+// TODO ALEC - make sure these fields are correct
+const defaultFeeBumpAttributes = {
+  sourceAccount: '',
+  maxFee: BASE_FEE,
+  innerTxXDR: '',
+}
+
+function feeBumpAttributes(state = defaultFeeBumpAttributes, action) {
+  switch(action.type) {
+    case UPDATE_FEE_BUMP_ATTRIBUTE:
+      return Object.assign({}, state, action.newAttribute)
+  }
+  return state;
+}
+
+function txType(state = REGULAR_TX, action) {
+  switch(action.type) {
+    case UPDATE_TX_TYPE:
+      return action.txType;
+  }
+  return state;
+}
+
 function sequenceFetcherError(state = '', action) {
   let payload = action.payload;
   if (action.type === FETCH_SEQUENCE_FAIL) {
@@ -140,6 +166,8 @@ const transactionBuilder = combineReducers({
   attributes,
   operations,
   sequenceFetcherError,
+  txType,
+  feeBumpAttributes,
 })
 
 export default transactionBuilder
