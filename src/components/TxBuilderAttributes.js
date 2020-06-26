@@ -14,8 +14,8 @@ import {fetchSequence, fetchBaseFee, updateTxType, updateFeeBumpAttribute} from 
 import TransactionImporter from './TransactionImporter';
 
 function TxBuilderAttributes(props) {
-  let {onUpdate, attributes, horizonURL, dispatch, feeBumpAttributes} = props;
-  const { txType } = props.state;
+  let {onUpdate, attributes, horizonURL, dispatch, feeBumpAttributes, networkPassphrase} = props;
+  const { txType, network } = props.state;
 
   useEffect(() => {
     dispatch(fetchBaseFee(horizonURL))
@@ -99,9 +99,11 @@ function TxBuilderAttributes(props) {
           />
         <p className="optionsTable__pair__content__note">The <a href="https://www.stellar.org/developers/guides/concepts/fees.html">network base fee</a> is currently set to {attributes['fee']} stroops ({attributes['fee'] / 1e7} lumens). Transaction fee is equal to base fee times number of operations in this transaction.</p>
       </OptionsTablePair>
-      <OptionsTablePair label={<span>Inner Transaction <HelpMark/></span>}>
-      <TransactionImporter networkPassphrase={networkPassphrase} onImport={(value) => dispatch(updateFeeBumpAttribute('innerTxXDR', xdr))}/>
-        
+      <OptionsTablePair label={<span>Inner Transaction XDR <HelpMark href="https://www.stellar.org/developers/guides/concepts/transactions.html#transaction-envelopes"/></span>}>
+      <TransactionImporter
+        networkPassphrase={networkPassphrase}
+        onUpdate={(value) => {dispatch(updateFeeBumpAttribute({'innerTxXDR': value}))}}
+      />
       </OptionsTablePair>
       </React.Fragment>
     }
@@ -148,5 +150,6 @@ function chooseState(state) {
   return {
     state: state.transactionBuilder,
     horizonURL: state.network.current.horizonURL,
+    networkPassphrase: state.network.current.networkPassphrase,
   }
 }

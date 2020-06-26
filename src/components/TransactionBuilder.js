@@ -25,6 +25,7 @@ class TransactionBuilder extends React.Component {
       attributes,
       operations,
       feeBumpAttributes,
+      txType,
     } = this.props.state;
     
 
@@ -45,12 +46,17 @@ class TransactionBuilder extends React.Component {
             attributes={attributes}
             feeBumpAttributes={feeBumpAttributes}
             onUpdate={onAttributeUpdate.bind(this, dispatch)} />
-          <OperationsBuilder />
-          <div className="TransactionOperations__add">
-            <button className="TransactionOperations__add__button s-button" onClick={() => dispatch(addOperation())}>
-              + Add Operation
-            </button>
-          </div>
+          {/* TODO ALEC - constant */}
+          {txType == 'REGULAR_TX' && 
+          <React.Fragment>
+            <OperationsBuilder />
+            <div className="TransactionOperations__add">
+              <button className="TransactionOperations__add__button s-button" onClick={() => dispatch(addOperation())}>
+                + Add Operation
+              </button>
+            </div>
+          </React.Fragment>
+          }
         </div>
       </div>
       <div className="so-back TransactionBuilder__result">
