@@ -416,7 +416,7 @@ Libify.buildFeeBumpTransaction = function(attributes, networkPassphrase) {
   try {
     innerTx = new Sdk.TransactionBuilder.fromXDR(innerTxXDR, networkPassphrase);
   } catch(e) {
-    result.errors.push(e.message);
+    result.errors.push('Invalid inner transaction XDR.');
     return result;
   }
 

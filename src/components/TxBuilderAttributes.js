@@ -91,6 +91,7 @@ function TxBuilderAttributes(props) {
           value={feeBumpAttributes['sourceAccount']}
           onUpdate={(value) => {dispatch(updateFeeBumpAttribute({'sourceAccount': value}))}}
         />
+        <p className="optionsTable__pair__content__note">The account responsible for paying the transaction fee.</p>
       </OptionsTablePair>
       <OptionsTablePair label={<span>Base Fee <HelpMark href="https://www.stellar.org/developers/guides/concepts/transactions.html#fee" /></span>}>
         <StroopsPicker

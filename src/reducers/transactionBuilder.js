@@ -122,7 +122,6 @@ function attributes(state = defaultAttributes, action) {
   return state;
 }
 
-// TODO ALEC - make sure these fields are correct
 const defaultFeeBumpAttributes = {
   sourceAccount: '',
   maxFee: BASE_FEE,

@@ -10,7 +10,6 @@ export default class TransactionImporter extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // TODO ALEC - test to make sure doesn't break in other places
       input: props.value ? props.value : '',
     };
   }
