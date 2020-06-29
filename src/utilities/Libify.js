@@ -422,6 +422,11 @@ Libify.buildFeeBumpTransaction = function(attributes, networkPassphrase) {
     return result;
   }
 
+  if (typeof innerTx.operations === 'undefined') {
+    result.errors.push('Inner transaction must be a regular transaction.')
+    return result;
+  }
+
   let keyPair;
   try {
     keyPair = Sdk.Keypair.fromPublicKey(sourceAccount)
