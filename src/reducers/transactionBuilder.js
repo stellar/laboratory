@@ -135,6 +135,7 @@ function feeBumpAttributes(state = defaultFeeBumpAttributes, action) {
       if (action.queryObj.params) {
         return assign({}, defaultFeeBumpAttributes, rehydrate(action.queryObj.params).feeBumpAttributes);
       }
+      break;
     case UPDATE_FEE_BUMP_ATTRIBUTE:
       return Object.assign({}, state, action.newAttribute)
   }
@@ -147,8 +148,9 @@ function txType(state = REGULAR_TX, action) {
       if (action.queryObj.params) {
         const prevTxType = rehydrate(action.queryObj.params).txType;
         // TODO ALEC - constants
-        return prevTxType && ["REGULAR_TX", "FEE_BUMP_TX"].indexOf(prevTxType) > -1 ? prevTxType : REGULAR_TX;
+        return ["REGULAR_TX", "FEE_BUMP_TX"].indexOf(prevTxType) > -1 ? prevTxType : REGULAR_TX;
       }
+      break;
     case UPDATE_TX_TYPE:
       return action.txType;
   }

@@ -37,6 +37,19 @@ export function xdrViewer(xdr, type) {
   return hashBuilder(SLUG.XDRVIEWER, query);
 }
 
+export function feeBumpTxLink(xdr) {
+  let query = stateToQueryObj(SLUG.TXBUILDER, {
+    transactionBuilder: {
+      feeBumpAttributes: {
+        innerTxXDR: xdr,
+      },
+      // TODO ALEC - constant
+      txType: 'FEE_BUMP_TX'
+    }
+  });
+  return hashBuilder(SLUG.TXBUILDER, query);
+}
+
 // explorerEndpoint is a helper function that generates a link from values
 // mirroring the structure of the endpointExplorer reducer. We should try to
 // abstract this with other functions with simpler arguments to reduce

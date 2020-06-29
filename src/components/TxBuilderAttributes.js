@@ -101,6 +101,7 @@ function TxBuilderAttributes(props) {
       </OptionsTablePair>
       <OptionsTablePair label={<span>Inner Transaction XDR <HelpMark href="https://www.stellar.org/developers/guides/concepts/transactions.html#transaction-envelopes"/></span>}>
       <TransactionImporter
+        value={feeBumpAttributes['innerTxXDR']}
         networkPassphrase={networkPassphrase}
         onUpdate={(value) => {dispatch(updateFeeBumpAttribute({'innerTxXDR': value}))}}
       />

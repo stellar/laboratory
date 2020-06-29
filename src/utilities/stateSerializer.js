@@ -74,9 +74,11 @@ function serializePageSpecificState(slug, state) {
         txbuilderResult.txType = state.transactionBuilder.txType;
       }
 
-      let firstOpEmpty = state.transactionBuilder.operations[0].name === '';
-      if (state.transactionBuilder.operations.length > 1 || !firstOpEmpty) {
-        txbuilderResult.operations = state.transactionBuilder.operations;
+      if (state.transactionBuilder.operations){
+        let firstOpEmpty = state.transactionBuilder.operations[0].name === '';
+        if (state.transactionBuilder.operations.length > 1 || !firstOpEmpty) {
+          txbuilderResult.operations = state.transactionBuilder.operations;
+        }
       }
 
       if (has(txbuilderResult, 'attributes.memoType') &&

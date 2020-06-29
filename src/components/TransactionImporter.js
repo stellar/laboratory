@@ -7,10 +7,11 @@ import validateTxXdr from '../utilities/validateTxXdr';
 // If no onImport function given, button is hidden and can trigger an update using onUpdate instead
 
 export default class TransactionImporter extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      input: '',
+      // TODO ALEC - test to make sure doesn't break in other places
+      input: props.value ? props.value : '',
     };
   }
   updateTextarea(event) {
@@ -37,9 +38,11 @@ export default class TransactionImporter extends React.Component {
     return <div className="xdrInput">
       <div className="xdrInput__input">
         <textarea
+          value={this.state.input}
           className="xdrInput__input__textarea"
           onChange={this.updateTextarea.bind(this)}
           placeholder="Example: AAAAAGXNhB2hIkbP//jgzn4os/AAAAZAB+BaLPAAA5Q/xL..."></textarea>
+      
       </div>
       <div className="xdrInput__message">
         {message}
