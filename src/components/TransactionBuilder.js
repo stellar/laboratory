@@ -13,8 +13,9 @@ import OperationsBuilder from './OperationsBuilder';
 import {getOperation} from '../data/operations';
 import TxBuilderResult from './TxBuilderResult';
 import {resetTxbuilder} from '../actions/transactionBuilder';
-import {addEventHandler} from '../utilities/metrics'
-import transactionBuilderMetrics from '../metricsHandlers/transactionBuilder'
+import {addEventHandler} from '../utilities/metrics';
+import transactionBuilderMetrics from '../metricsHandlers/transactionBuilder';
+import TX_TYPES from '../constants/transaction_types';
 
 addEventHandler(transactionBuilderMetrics)
 
@@ -28,7 +29,6 @@ class TransactionBuilder extends React.Component {
       txType,
     } = this.props.state;
     
-
     return <div className="TransactionBuilder">
       <div className="so-back">
         <div className="so-chunk">
@@ -46,8 +46,7 @@ class TransactionBuilder extends React.Component {
             attributes={attributes}
             feeBumpAttributes={feeBumpAttributes}
             onUpdate={onAttributeUpdate.bind(this, dispatch)} />
-          {/* TODO ALEC - constant */}
-          {txType == 'REGULAR_TX' && 
+          {txType === TX_TYPES.REGULAR && 
           <React.Fragment>
             <OperationsBuilder />
             <div className="TransactionOperations__add">

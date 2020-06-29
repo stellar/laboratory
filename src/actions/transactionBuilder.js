@@ -101,8 +101,6 @@ export function fetchBaseFee(horizonBaseUrl) {
   }
 }
 
-export const REGULAR_TX = 'REGULAR_TX';
-export const FEE_BUMP_TX = 'FEE_BUMP_TX';
 export const UPDATE_TX_TYPE = 'UPDATE_TX_TYPE';
 export function updateTxType(txType) {
   return {

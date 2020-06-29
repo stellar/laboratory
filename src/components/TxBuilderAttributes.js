@@ -12,6 +12,7 @@ import {StrKey} from 'stellar-sdk';
 import NETWORK from '../constants/network';
 import {fetchSequence, fetchBaseFee, updateTxType, updateFeeBumpAttribute} from '../actions/transactionBuilder';
 import TransactionImporter from './TransactionImporter';
+import TX_TYPES from '../constants/transaction_types';
 
 function TxBuilderAttributes(props) {
   let {onUpdate, attributes, horizonURL, dispatch, feeBumpAttributes, networkPassphrase} = props;
@@ -30,8 +31,7 @@ function TxBuilderAttributes(props) {
           onUpdate={(value) => {dispatch(updateTxType(value))}}
         />
       </OptionsTablePair>
-      {/* TODO ALEC - change to constants */}
-      {txType === 'REGULAR_TX' &&
+      {txType === TX_TYPES.REGULAR &&
       <React.Fragment>
       <OptionsTablePair label={<span>Source Account <HelpMark href="https://www.stellar.org/developers/guides/concepts/accounts.html" /></span>}>
         <PubKeyPicker
@@ -84,7 +84,7 @@ function TxBuilderAttributes(props) {
       </OptionsTablePair>
       </React.Fragment>
     }
-    {txType === 'FEE_BUMP_TX' &&
+    {txType === TX_TYPES.FEE_BUMP &&
       <React.Fragment>
       <OptionsTablePair label={<span>Source Account <HelpMark href="https://www.stellar.org/developers/guides/concepts/accounts.html" /></span>}>
         <PubKeyPicker 

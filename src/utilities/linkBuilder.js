@@ -2,6 +2,7 @@ import {stateToQueryObj} from './stateSerializer';
 import url from 'url';
 import SLUG from '../constants/slug';
 import horizonUrlParser from './horizonUrlParser';
+import TX_TYPES from '../constants/transaction_types';
 
 // The linkBuilder attempts to abstract the specific details of the store so that
 // consumers of linkBuilder need to know very little to be able to generate a link.
@@ -43,8 +44,7 @@ export function feeBumpTxLink(xdr) {
       feeBumpAttributes: {
         innerTxXDR: xdr,
       },
-      // TODO ALEC - constant
-      txType: 'FEE_BUMP_TX'
+      txType: TX_TYPES.FEE_BUMP,
     }
   });
   return hashBuilder(SLUG.TXBUILDER, query);

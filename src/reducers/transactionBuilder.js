@@ -12,13 +12,13 @@ import {
   RESET_TXBUILDER,
   FETCH_BASE_FEE_SUCCESS,
   FETCH_BASE_FEE_FAIL,
-  REGULAR_TX,
   UPDATE_TX_TYPE,
   UPDATE_FEE_BUMP_ATTRIBUTE,
 } from '../actions/transactionBuilder';
 import {LOAD_STATE} from '../actions/routing';
 import {rehydrate} from '../utilities/hydration';
 import SLUG from '../constants/slug';
+import TX_TYPES from '../constants/transaction_types';
 
 const defaultOperations = [{
   id: 0,
@@ -142,13 +142,12 @@ function feeBumpAttributes(state = defaultFeeBumpAttributes, action) {
   return state;
 }
 
-function txType(state = REGULAR_TX, action) {
+function txType(state = TX_TYPES.REGULAR, action) {
   switch(action.type) {
     case LOAD_STATE:
       if (action.queryObj.params) {
         const prevTxType = rehydrate(action.queryObj.params).txType;
-        // TODO ALEC - constants
-        return ["REGULAR_TX", "FEE_BUMP_TX"].indexOf(prevTxType) > -1 ? prevTxType : REGULAR_TX;
+        return [TX_TYPES.REGULAR, TX_TYPES.FEE_BUMP].indexOf(prevTxType) > -1 ? prevTxType : TX_TYPES.REGULAR;
       }
       break;
     case UPDATE_TX_TYPE:

@@ -4,6 +4,8 @@ import has from 'lodash/has';
 import size from 'lodash/size';
 import {dehydrate} from './hydration';
 import SLUG from '../constants/slug';
+import TX_TYPES from '../constants/transaction_types';
+
 
 // The state serializer converts the state relevant to a specific page into an object.
 // This object is then used to build the routing url.
@@ -69,8 +71,7 @@ function serializePageSpecificState(slug, state) {
         txbuilderResult.feeBumpAttributes = feeBumpAttributes;
       }
 
-      // TODO ALEC - constant
-      if (state.transactionBuilder.txType !== "REGULAR_TX") {
+      if (state.transactionBuilder.txType !== TX_TYPES.REGULAR) {
         txbuilderResult.txType = state.transactionBuilder.txType;
       }
 

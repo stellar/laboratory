@@ -5,6 +5,7 @@ import {EasySelect} from './EasySelect';
 import Libify from '../utilities/Libify';
 import {txSignerLink, xdrViewer} from '../utilities/linkBuilder';
 import scrollOnAnchorOpen from '../utilities/scrollOnAnchorOpen';
+import TX_TYPES from '../constants/transaction_types';
 
 class TxBuilderResult extends React.Component {
   render() {
@@ -41,8 +42,7 @@ class TxBuilderResult extends React.Component {
     }
 
     let validationErrors;
-    // TODO ALEC - constants
-    if (txType === 'FEE_BUMP_TX') {
+    if (txType === TX_TYPES.FEE_BUMP) {
       validationErrors = getFeeBumpTxValidationErrors()
     } else {
       validationErrors = getRegularTxValidationErrors()
@@ -53,7 +53,7 @@ class TxBuilderResult extends React.Component {
       errorTitleText = 'Form validation errors:';
       finalResult = formatErrorList(validationErrors);
     } else {
-      let transactionBuild = txType == 'FEE_BUMP_TX' ? Libify.buildFeeBumpTransaction(feeBumpAttributes, this.props.networkPassphrase) :
+      let transactionBuild = txType === TX_TYPES.FEE_BUMP ? Libify.buildFeeBumpTransaction(feeBumpAttributes, this.props.networkPassphrase) :
        Libify.buildTransaction(attributes, operations, this.props.networkPassphrase);
 
       if (transactionBuild.errors.length > 0) {
