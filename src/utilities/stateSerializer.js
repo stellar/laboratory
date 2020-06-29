@@ -64,6 +64,16 @@ function serializePageSpecificState(slug, state) {
         txbuilderResult.attributes = txbuilderAttributes;
       }
 
+      let feeBumpAttributes = assignNonEmpty({}, state.transactionBuilder.feeBumpAttributes);
+      if (size(feeBumpAttributes) > 0) {
+        txbuilderResult.feeBumpAttributes = feeBumpAttributes;
+      }
+
+      // TODO ALEC - constant
+      if (state.transactionBuilder.txType !== "REGULAR_TX") {
+        txbuilderResult.txType = state.transactionBuilder.txType;
+      }
+
       let firstOpEmpty = state.transactionBuilder.operations[0].name === '';
       if (state.transactionBuilder.operations.length > 1 || !firstOpEmpty) {
         txbuilderResult.operations = state.transactionBuilder.operations;
