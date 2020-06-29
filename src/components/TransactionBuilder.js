@@ -28,7 +28,7 @@ class TransactionBuilder extends React.Component {
       feeBumpAttributes,
       txType,
     } = this.props.state;
-    
+
     return <div className="TransactionBuilder">
       <div className="so-back">
         <div className="so-chunk">
@@ -47,14 +47,14 @@ class TransactionBuilder extends React.Component {
             feeBumpAttributes={feeBumpAttributes}
             onUpdate={onAttributeUpdate.bind(this, dispatch)} />
           {txType === TX_TYPES.REGULAR && 
-          <React.Fragment>
-            <OperationsBuilder />
-            <div className="TransactionOperations__add">
-              <button className="TransactionOperations__add__button s-button" onClick={() => dispatch(addOperation())}>
-                + Add Operation
-              </button>
-            </div>
-          </React.Fragment>
+            <React.Fragment>
+              <OperationsBuilder />
+              <div className="TransactionOperations__add">
+                <button className="TransactionOperations__add__button s-button" onClick={() => dispatch(addOperation())}>
+                  + Add Operation
+                </button>
+              </div>
+            </React.Fragment>
           }
         </div>
       </div>

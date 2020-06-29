@@ -6,7 +6,6 @@ import {dehydrate} from './hydration';
 import SLUG from '../constants/slug';
 import TX_TYPES from '../constants/transaction_types';
 
-
 // The state serializer converts the state relevant to a specific page into an object.
 // This object is then used to build the routing url.
 
@@ -74,7 +73,7 @@ function serializePageSpecificState(slug, state) {
       if (state.transactionBuilder.txType !== TX_TYPES.REGULAR) {
         txbuilderResult.txType = state.transactionBuilder.txType;
       }
-
+      
       if (state.transactionBuilder.operations){
         let firstOpEmpty = state.transactionBuilder.operations[0].name === '';
         if (state.transactionBuilder.operations.length > 1 || !firstOpEmpty) {

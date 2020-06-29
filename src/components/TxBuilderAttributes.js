@@ -24,7 +24,6 @@ function TxBuilderAttributes(props) {
   
   return <div className="TransactionAttributes">
     <div className="TransactionOp__config TransactionOpConfig optionsTable">
-
       <OptionsTablePair label={<span>Transaction Type <HelpMark href="https://developers.stellar.org/docs/glossary/fee-bumps" /></span>}>
         <TxTypePicker
           value={txType}
