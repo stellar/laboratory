@@ -406,8 +406,6 @@ Libify.buildTransaction = function(attributes, operations, networkPassphrase) {
 }
 
 Libify.buildFeeBumpTransaction = function(attributes, networkPassphrase) {
-  // TODO ALEC - check validation errors again? Above method does ... needed?
-  // Add custom error messages
   const result = {
     errors: [],
     xdr: '',
