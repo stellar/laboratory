@@ -402,7 +402,49 @@ Libify.buildTransaction = function(attributes, operations, networkPassphrase) {
   } catch(e) {
     result.errors.push(e.message);
   }
+  return result;
+}
 
+Libify.buildFeeBumpTransaction = function(attributes, networkPassphrase) {
+  const result = {
+    errors: [],
+    xdr: '',
+  }
+
+  const { innerTxXDR, maxFee, sourceAccount } = attributes;
+  let innerTx;
+  try {
+    innerTx = new Sdk.TransactionBuilder.fromXDR(innerTxXDR, networkPassphrase);
+  } catch(e) {
+    result.errors.push('Invalid inner transaction XDR.');
+    return result;
+  }
+
+  if (typeof innerTx.operations === 'undefined') {
+    result.errors.push('Inner transaction must be a regular transaction.')
+    return result;
+  }
+
+  let keyPair;
+  try {
+    keyPair = Sdk.Keypair.fromPublicKey(sourceAccount)
+  } catch(e){
+    result.errors.push(e.message);
+    return result;
+  }
+
+  let feeBumpTx;
+  try {
+    feeBumpTx = new Sdk.TransactionBuilder.buildFeeBumpTransaction(
+      keyPair,
+      maxFee,
+      innerTx,
+      networkPassphrase
+    );
+    result.xdr = feeBumpTx.toEnvelope().toXDR('base64');
+  } catch(e){
+    result.errors.push(e.message);
+  }
   return result;
 }
 

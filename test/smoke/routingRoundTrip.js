@@ -56,7 +56,8 @@ describe('routing system', () => {
       itCircularlyConvertsState(SLUG.TXBUILDER, {
         network: 'test',
         params: dehydrate({
-          attributes: {fee: '100'}
+          attributes: {fee: '100'},
+          feeBumpAttributes:{'maxFee':'100'},
         })
       });
     });
@@ -72,13 +73,15 @@ describe('routing system', () => {
             memoType: 'MEMO_TEXT',
             memoContent: 'the'
           },
+          feeBumpAttributes:{'maxFee':'100'},
+          txType: 'FEE_BUMP',
           operations: [{
             id: 0,
             attributes: {
               destination: 'rainbow'
             },
             name: 'payment'
-          }]
+          }],
         }),
       });
     });
