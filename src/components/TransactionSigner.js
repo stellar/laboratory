@@ -146,7 +146,7 @@ class TransactionSigner extends React.Component {
           </div>
           <div className="so-chunk">
             <div className="TxSignerKeys TransactionSigner__keys">
-              <p className="TxSignerKeys__title">Signatures <HelpMark href="https://www.stellar.org/developers/guides/concepts/multi-sig.html" /></p>
+              <p className="TxSignerKeys__title">Signatures <HelpMark href="https://developers.stellar.org/docs/glossary/multisig/" /></p>
               <div className="optionsTable">
                 <OptionsTablePair label="Add Signer">
                   <MultiPicker
@@ -192,7 +192,7 @@ class TransactionSigner extends React.Component {
             <p>
               For simple transactions, you only need one signature from the correct account. Some advanced signatures may require more than one signature if there are multiple source accounts or signing keys.
             </p>
-            <p><a href="https://www.stellar.org/developers/guides/concepts/multi-sig.html" target="_blank">Read more about signatures on the developer's site.</a></p>
+            <p><a href="https://developers.stellar.org/docs/glossary/multisig/" target="_blank">Read more about signatures on the developer's site.</a></p>
           </div>
         </div>
       </div>
