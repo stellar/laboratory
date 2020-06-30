@@ -1,7 +1,6 @@
 /**
  * @prettier
  */
-
 import React from "react";
 import RadioButtonPicker from "./RadioButtonPicker";
 import TX_TYPES from "../../constants/transaction_types";
