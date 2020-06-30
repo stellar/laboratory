@@ -11,6 +11,7 @@ import {StrKey} from 'stellar-sdk';
 import NETWORK from '../constants/network';
 import {fetchSequence, fetchBaseFee} from '../actions/transactionBuilder';
 
+
 function TxBuilderAttributes(props) {
   let {onUpdate, attributes, horizonURL, dispatch} = props;
   const [networkBaseFee, setNetworkBaseFee] = useState(attributes['fee']);
