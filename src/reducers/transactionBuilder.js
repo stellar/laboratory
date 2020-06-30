@@ -137,6 +137,8 @@ function feeBumpAttributes(state = defaultFeeBumpAttributes, action) {
       break;
     case UPDATE_FEE_BUMP_ATTRIBUTE:
       return Object.assign({}, state, action.newAttribute)
+    case RESET_TXBUILDER:
+      return defaultFeeBumpAttributes;
   }
   return state;
 }
@@ -151,6 +153,8 @@ function txType(state = TX_TYPES.REGULAR, action) {
       break;
     case UPDATE_TX_TYPE:
       return action.txType;
+    case RESET_TXBUILDER:
+      return TX_TYPES.REGULAR;
   }
   return state;
 }
