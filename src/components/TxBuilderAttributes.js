@@ -14,9 +14,7 @@ import {fetchSequence, fetchBaseFee, updateTxType, updateFeeBumpAttribute} from 
 import TransactionImporter from './TransactionImporter';
 import TX_TYPES from '../constants/transaction_types';
 
-
 function TxBuilderAttributes(props) {
-
   let {onUpdate, attributes, horizonURL, dispatch, feeBumpAttributes, networkPassphrase} = props;
   const { txType, network } = props.state;
   const [networkBaseFee, setNetworkBaseFee] = useState(attributes['fee']);
