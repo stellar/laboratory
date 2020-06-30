@@ -11,11 +11,14 @@ import {
   FETCH_SEQUENCE_FAIL,
   RESET_TXBUILDER,
   FETCH_BASE_FEE_SUCCESS,
-  FETCH_BASE_FEE_FAIL
+  FETCH_BASE_FEE_FAIL,
+  UPDATE_TX_TYPE,
+  UPDATE_FEE_BUMP_ATTRIBUTE,
 } from '../actions/transactionBuilder';
 import {LOAD_STATE} from '../actions/routing';
 import {rehydrate} from '../utilities/hydration';
 import SLUG from '../constants/slug';
+import TX_TYPES from '../constants/transaction_types';
 
 const defaultOperations = [{
   id: 0,
@@ -119,6 +122,39 @@ function attributes(state = defaultAttributes, action) {
   return state;
 }
 
+const defaultFeeBumpAttributes = {
+  sourceAccount: '',
+  maxFee: BASE_FEE,
+  innerTxXDR: '',
+}
+
+function feeBumpAttributes(state = defaultFeeBumpAttributes, action) {
+  switch(action.type) {
+    case LOAD_STATE:
+      if (action.queryObj.params) {
+        return assign({}, defaultFeeBumpAttributes, rehydrate(action.queryObj.params).feeBumpAttributes);
+      }
+      break;
+    case UPDATE_FEE_BUMP_ATTRIBUTE:
+      return Object.assign({}, state, action.newAttribute)
+  }
+  return state;
+}
+
+function txType(state = TX_TYPES.REGULAR, action) {
+  switch(action.type) {
+    case LOAD_STATE:
+      if (action.queryObj.params) {
+        const prevTxType = rehydrate(action.queryObj.params).txType;
+        return [TX_TYPES.REGULAR, TX_TYPES.FEE_BUMP].indexOf(prevTxType) > -1 ? prevTxType : TX_TYPES.REGULAR;
+      }
+      break;
+    case UPDATE_TX_TYPE:
+      return action.txType;
+  }
+  return state;
+}
+
 function sequenceFetcherError(state = '', action) {
   let payload = action.payload;
   if (action.type === FETCH_SEQUENCE_FAIL) {
@@ -140,6 +176,8 @@ const transactionBuilder = combineReducers({
   attributes,
   operations,
   sequenceFetcherError,
+  txType,
+  feeBumpAttributes,
 })
 
 export default transactionBuilder
