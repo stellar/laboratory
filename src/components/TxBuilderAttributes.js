@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import OptionsTablePair from './OptionsTable/Pair';
 import HelpMark from './HelpMark';
 import PubKeyPicker from './FormComponents/PubKeyPicker';
@@ -12,10 +12,12 @@ import NETWORK from '../constants/network';
 import {fetchSequence, fetchBaseFee} from '../actions/transactionBuilder';
 
 function TxBuilderAttributes(props) {
-  let {onUpdate, attributes, horizonURL} = props;
+  let {onUpdate, attributes, horizonURL, dispatch} = props;
+  const [networkBaseFee, setNetworkBaseFee] = useState(attributes['fee']);
 
   useEffect(() => {
-    props.dispatch(fetchBaseFee(horizonURL))
+    dispatch(fetchBaseFee(horizonURL));
+    setNetworkBaseFee(attributes['fee']);
   }, [])
   
   return <div className="TransactionAttributes">
@@ -40,7 +42,7 @@ function TxBuilderAttributes(props) {
           value={attributes['fee']}
           onUpdate={(value) => {onUpdate('fee', value)}}
           />
-        <p className="optionsTable__pair__content__note">The <a href="https://www.stellar.org/developers/guides/concepts/fees.html">network base fee</a> is currently set to {attributes['fee']} stroops ({attributes['fee'] / 1e7} lumens). Transaction fee is equal to base fee times number of operations in this transaction.</p>
+        <p className="optionsTable__pair__content__note">The <a href="https://www.stellar.org/developers/guides/concepts/fees.html">network base fee</a> is currently set to {networkBaseFee} stroops ({networkBaseFee / 1e7} lumens). Transaction fee is equal to base fee times number of operations in this transaction.</p>
       </OptionsTablePair>
       <OptionsTablePair optional={true} label={<span>Memo <HelpMark href="https://www.stellar.org/developers/guides/concepts/transactions.html#memo" /></span>}>
         <MemoPicker
