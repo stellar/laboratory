@@ -5,3 +5,4 @@
 yarn-error.log
 .env
 out
+src/.DS_Store
