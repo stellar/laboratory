@@ -19,7 +19,7 @@ function TxBuilderAttributes(props) {
     dispatch(fetchBaseFee(horizonURL));
     setNetworkBaseFee(attributes['fee']);
   }, [])
-  
+
   return <div className="TransactionAttributes">
     <div className="TransactionOp__config TransactionOpConfig optionsTable">
       <OptionsTablePair label={<span>Source Account <HelpMark href="https://www.stellar.org/developers/guides/concepts/accounts.html" /></span>}>
