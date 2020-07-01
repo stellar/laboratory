@@ -78,7 +78,7 @@ let operation = (ops, index, dispatch) => {
       {removeLink}
     </div>
     <div className="TransactionOp__config TransactionOpConfig optionsTable">
-      <OptionsTablePair label={<span>Operation Type <HelpMark href="https://www.stellar.org/developers/guides/concepts/list-of-operations.html" /></span>}>
+      <OptionsTablePair label={<span>Operation Type <HelpMark href="https://developers.stellar.org/docs/start/list-of-operations/" /></span>}>
         <OperationTypePicker value={op.name} onUpdate={(value) => {
           dispatch(updateOperationType(op.id, value))
         }} />

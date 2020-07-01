@@ -23,7 +23,7 @@ function TxBuilderAttributes(props) {
     dispatch(fetchBaseFee(horizonURL));
     setNetworkBaseFee(attributes['fee']);
   }, [])
-  
+
   return <div className="TransactionAttributes">
     <div className="TransactionOp__config TransactionOpConfig optionsTable">
       <OptionsTablePair label={<span>Transaction Type <HelpMark href="https://developers.stellar.org/docs/glossary/fee-bumps" /></span>}>
@@ -34,14 +34,14 @@ function TxBuilderAttributes(props) {
       </OptionsTablePair>
       {txType === TX_TYPES.REGULAR &&
       <React.Fragment>
-      <OptionsTablePair label={<span>Source Account <HelpMark href="https://www.stellar.org/developers/guides/concepts/accounts.html" /></span>}>
+      <OptionsTablePair label={<span>Source Account <HelpMark href="https://developers.stellar.org/docs/glossary/accounts/" /></span>}>
         <PubKeyPicker
           value={attributes['sourceAccount']}
           onUpdate={(value) => {onUpdate('sourceAccount', value)}}
           />
         <p className="optionsTable__pair__content__note">If you don't have an account yet, you can create and fund a test net account with the <a href="#account-creator">account creator</a>.</p>
       </OptionsTablePair>
-      <OptionsTablePair label={<span>Transaction Sequence Number <HelpMark href="https://www.stellar.org/developers/guides/concepts/transactions.html#sequence-number" /></span>}>
+      <OptionsTablePair label={<span>Transaction Sequence Number <HelpMark href="https://developers.stellar.org/docs/glossary/transactions/#sequence-number" /></span>}>
         <SequencePicker
           value={attributes['sequence']}
           onUpdate={(value) => {onUpdate('sequence', value)}}
@@ -49,14 +49,14 @@ function TxBuilderAttributes(props) {
         <p className="optionsTable__pair__content__note">The transaction sequence number is usually one higher than current account sequence number.</p>
         <SequenceFetcher />
       </OptionsTablePair>
-      <OptionsTablePair label={<span>Base Fee <HelpMark href="https://www.stellar.org/developers/guides/concepts/transactions.html#fee" /></span>}>
+      <OptionsTablePair label={<span>Base Fee <HelpMark href="https://developers.stellar.org/docs/glossary/transactions/#fee" /></span>}>
         <StroopsPicker
           value={attributes['fee']}
           onUpdate={(value) => {onUpdate('fee', value)}}
           />
-        <p className="optionsTable__pair__content__note">The <a href="https://www.stellar.org/developers/guides/concepts/fees.html">network base fee</a> is currently set to {networkBaseFee} stroops ({networkBaseFee / 1e7} lumens). Transaction fee is equal to base fee times number of operations in this transaction.</p>
+        <p className="optionsTable__pair__content__note">The <a href="https://developers.stellar.org/docs/glossary/fees/">network base fee</a> is currently set to {networkBaseFee} stroops ({networkBaseFee / 1e7} lumens). Transaction fee is equal to base fee times number of operations in this transaction.</p>
       </OptionsTablePair>
-      <OptionsTablePair optional={true} label={<span>Memo <HelpMark href="https://www.stellar.org/developers/guides/concepts/transactions.html#memo" /></span>}>
+      <OptionsTablePair optional={true} label={<span>Memo <HelpMark href="https://developers.stellar.org/docs/glossary/transactions/#memo" /></span>}>
         <MemoPicker
           value={{
             type: attributes.memoType,
@@ -65,7 +65,7 @@ function TxBuilderAttributes(props) {
           onUpdate={(value) => {onUpdate('memo', value)}}
           />
       </OptionsTablePair>
-      <OptionsTablePair optional={true} label={<span>Time Bounds <HelpMark href="https://www.stellar.org/developers/guides/concepts/transactions.html#time-bounds" /></span>}>
+      <OptionsTablePair optional={true} label={<span>Time Bounds <HelpMark href="https://developers.stellar.org/docs/glossary/transactions/#time-bounds" /></span>}>
         <TimeBoundsPicker
           value={{
             minTime: attributes.minTime,
@@ -87,21 +87,21 @@ function TxBuilderAttributes(props) {
     }
     {txType === TX_TYPES.FEE_BUMP &&
       <React.Fragment>
-      <OptionsTablePair label={<span>Source Account <HelpMark href="https://www.stellar.org/developers/guides/concepts/accounts.html" /></span>}>
-        <PubKeyPicker 
+      <OptionsTablePair label={<span>Source Account <HelpMark href="https://developers.stellar.org/docs/glossary/accounts/" /></span>}>
+        <PubKeyPicker
           value={feeBumpAttributes['sourceAccount']}
           onUpdate={(value) => {dispatch(updateFeeBumpAttribute({'sourceAccount': value}))}}
         />
         <p className="optionsTable__pair__content__note">The account responsible for paying the transaction fee.</p>
       </OptionsTablePair>
-      <OptionsTablePair label={<span>Base Fee <HelpMark href="https://www.stellar.org/developers/guides/concepts/transactions.html#fee" /></span>}>
+      <OptionsTablePair label={<span>Base Fee <HelpMark href="https://developers.stellar.org/docs/glossary/transactions/#fee" /></span>}>
         <StroopsPicker
           value={feeBumpAttributes['maxFee']}
           onUpdate={(value) => {dispatch(updateFeeBumpAttribute({'maxFee': value}))}}
           />
-        <p className="optionsTable__pair__content__note">The <a href="https://www.stellar.org/developers/guides/concepts/fees.html">network base fee</a> is currently set to {attributes['fee']} stroops ({attributes['fee'] / 1e7} lumens). Transaction fee is equal to base fee times number of operations in this transaction.</p>
+        <p className="optionsTable__pair__content__note">The <a href="https://developers.stellar.org/docs/glossary/fees/">network base fee</a> is currently set to {attributes['fee']} stroops ({attributes['fee'] / 1e7} lumens). Transaction fee is equal to base fee times number of operations in this transaction.</p>
       </OptionsTablePair>
-      <OptionsTablePair label={<span>Inner Transaction XDR <HelpMark href="https://www.stellar.org/developers/guides/concepts/transactions.html#transaction-envelopes"/></span>}>
+      <OptionsTablePair label={<span>Inner Transaction XDR <HelpMark href="https://developers.stellar.org/docs/glossary/transactions/#transaction-envelopes"/></span>}>
       <TransactionImporter
         value={feeBumpAttributes['innerTxXDR']}
         networkPassphrase={networkPassphrase}
