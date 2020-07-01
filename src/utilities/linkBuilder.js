@@ -2,6 +2,7 @@ import {stateToQueryObj} from './stateSerializer';
 import url from 'url';
 import SLUG from '../constants/slug';
 import horizonUrlParser from './horizonUrlParser';
+import TX_TYPES from '../constants/transaction_types';
 
 // The linkBuilder attempts to abstract the specific details of the store so that
 // consumers of linkBuilder need to know very little to be able to generate a link.
@@ -35,6 +36,18 @@ export function xdrViewer(xdr, type) {
     },
   });
   return hashBuilder(SLUG.XDRVIEWER, query);
+}
+
+export function feeBumpTxLink(xdr) {
+  let query = stateToQueryObj(SLUG.TXBUILDER, {
+    transactionBuilder: {
+      feeBumpAttributes: {
+        innerTxXDR: xdr,
+      },
+      txType: TX_TYPES.FEE_BUMP,
+    }
+  });
+  return hashBuilder(SLUG.TXBUILDER, query);
 }
 
 // explorerEndpoint is a helper function that generates a link from values
