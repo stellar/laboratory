@@ -60,6 +60,7 @@ let validSecondSiblingClasses = {
   'token string': true,
   'token boolean': true,
   'token number': true,
+  'token null': true,
   'token property': true, // Prism.js incorrectly parses strings with escape sequences
 }
 function validatePropertyTokenSiblings(propertyToken) {
