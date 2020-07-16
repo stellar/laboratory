@@ -21,6 +21,7 @@ const signWithLyra = async (xdr, setTxResult) => {
 
 const TxLyraSign = ({ xdr }) => {
   const [txResult, setTxResult] = React.useState();
+
   return (
     <div>
       <hr />
@@ -35,7 +36,7 @@ const TxLyraSign = ({ xdr }) => {
         <div>
           <h1>Result: {txResult.successful ? "Success!" : "Failed!"}</h1>
           <h3>Full results:</h3>
-          <textarea readonly value={JSON.stringify(txResult)} />
+          <textarea readOnly value={JSON.stringify(txResult)} />
         </div>
       ) : null}
     </div>

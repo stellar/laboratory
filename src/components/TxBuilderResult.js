@@ -109,7 +109,7 @@ class TxBuilderResult extends React.Component {
     ) : null;
 
     const txBuilderHasErrors =
-      transactionBuild && transactionBuild.errors.length > 0;
+      transactionBuild && !transactionBuild.errors.length;
 
     return (
       <div className="TransactionBuilderResult">
@@ -120,7 +120,7 @@ class TxBuilderResult extends React.Component {
         </pre>
         {signingInstructions}
         {signingLink} {xdrLink}
-        {window.lyra && !txBuilderHasErrors ? (
+        {window.lyra && transactionBuild ? (
           <TxLyraSign xdr={transactionBuild.xdr} />
         ) : null}
       </div>
