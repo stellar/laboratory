@@ -4,6 +4,8 @@
 
 import React from "react";
 
+import { CodeBlock } from "./CodeBlock";
+
 const signWithLyra = async (xdr, setTxResult) => {
   let res = { transactionStatus: "" };
 
@@ -34,9 +36,18 @@ const TxLyraSign = ({ xdr }) => {
       </button>
       {txResult ? (
         <div>
-          <h1>Result: {txResult.successful ? "Success!" : "Failed!"}</h1>
-          <h3>Full results:</h3>
-          <textarea readOnly value={JSON.stringify(txResult)} />
+          <div
+            className={`AccountCreator__spaceTop s-alert ${
+              txResult.successful ? "s-alert--success" : "s-alert--alert"
+            }`}
+          >
+            Result: {txResult.successful ? "Success!" : "Failed!"}
+          </div>
+          <CodeBlock
+            className="AccountCreator__spaceTop"
+            code={JSON.stringify(txResult, null, 2)}
+            language="json"
+          />
         </div>
       ) : null}
     </div>
