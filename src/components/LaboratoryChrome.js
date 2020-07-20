@@ -72,6 +72,16 @@ function LaboratoryChrome(props) {
 
       {renamed(props.routing.location)}
       <RouterListener />
+
+      <div className="so-back LaboratoryChrome__terms">
+        <div className="so-chunk ">
+          <a href="https://www.stellar.org/terms-of-service">
+            Terms of Service
+          </a>
+          <span className="spacer" />
+          <a href="https://www.stellar.org/privacy-policy">Privacy Policy</a>
+        </div>
+      </div>
     </div>
   );
 }
