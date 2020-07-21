@@ -48,7 +48,7 @@ export const endpointsMap = {
       multiple: {
         label: "Accounts",
         helpUrl:
-          "https://www.stellar.org/developers/horizon/reference/endpoints/accounts.html",
+          "https://developers.stellar.org/docs/glossary/accounts/",
         method: "GET",
         path: {
           template: "/accounts/{?signer,asset,cursor,limit,order}",
@@ -58,7 +58,7 @@ export const endpointsMap = {
       single: {
         label: "Single Account",
         helpUrl:
-          "https://www.stellar.org/developers/horizon/reference/endpoints/accounts-single.html",
+          "https://developers.stellar.org/api/resources/accounts/single/",
         method: "GET",
         path: {
           template: "/accounts/{account_id}",
@@ -73,7 +73,7 @@ export const endpointsMap = {
       single: {
         label: "All Assets",
         helpUrl:
-          "https://www.stellar.org/developers/horizon/reference/endpoints/assets-all.html",
+          "https://developers.stellar.org/api/resources/assets/",
         method: "GET",
         path: {
           template: "/assets{?asset_code,asset_issuer,cursor,order,limit}",
@@ -88,7 +88,7 @@ export const endpointsMap = {
       all: {
         label: "All Effects",
         helpUrl:
-          "https://www.stellar.org/developers/horizon/reference/endpoints/effects-all.html",
+          "https://developers.stellar.org/api/resources/effects/list/",
         method: "GET",
         path: {
           template: "/effects{?cursor,limit,order}",
@@ -98,7 +98,7 @@ export const endpointsMap = {
       for_account: {
         label: "Effects for Account",
         helpUrl:
-          "https://www.stellar.org/developers/horizon/reference/endpoints/effects-for-account.html",
+          "https://developers.stellar.org/api/resources/accounts/effects/",
         method: "GET",
         path: {
           template: "/accounts/{account_id}/effects{?cursor,limit,order}",
@@ -108,7 +108,8 @@ export const endpointsMap = {
       for_ledger: {
         label: "Effects for Ledger",
         helpUrl:
-          "https://www.stellar.org/developers/horizon/reference/endpoints/effects-for-ledger.html",
+        // TODO: vcarl Replace this with a glossary link. This one 404s: https://developers.stellar.org/docs/glossary/effects/
+          "https://developers.stellar.org/api/resources/effects/",
         method: "GET",
         path: {
           template: "/ledgers/{ledger}/effects{?cursor,limit,order}",
@@ -118,7 +119,7 @@ export const endpointsMap = {
       for_operation: {
         label: "Effects for Operation",
         helpUrl:
-          "https://www.stellar.org/developers/horizon/reference/endpoints/effects-for-operation.html",
+          "https://developers.stellar.org/api/resources/operations/effects/",
         method: "GET",
         path: {
           template: "/operations/{operation}/effects{?cursor,limit,order}",
@@ -128,7 +129,7 @@ export const endpointsMap = {
       for_transaction: {
         label: "Effects for Transaction",
         helpUrl:
-          "https://www.stellar.org/developers/horizon/reference/endpoints/effects-for-transaction.html",
+          "https://developers.stellar.org/api/resources/transactions/effects/",
         method: "GET",
         path: {
           template: "/transactions/{transaction}/effects{?cursor,limit,order}",
@@ -143,7 +144,7 @@ export const endpointsMap = {
       all: {
         label: "All Ledgers",
         helpUrl:
-          "https://www.stellar.org/developers/horizon/reference/endpoints/ledgers-all.html",
+          "https://developers.stellar.org/api/resources/ledgers/",
         method: "GET",
         path: {
           template: "/ledgers{?cursor,limit,order}",
@@ -153,7 +154,7 @@ export const endpointsMap = {
       single: {
         label: "Single Ledger",
         helpUrl:
-          "https://www.stellar.org/developers/horizon/reference/endpoints/ledgers-single.html",
+          "https://developers.stellar.org/api/resources/ledgers/single/",
         method: "GET",
         path: {
           template: "/ledgers/{ledger}",
@@ -168,7 +169,7 @@ export const endpointsMap = {
       all: {
         label: "All Offers",
         helpUrl:
-          "https://www.stellar.org/developers/horizon/reference/endpoints/offers.html",
+          "https://developers.stellar.org/api/resources/offers/list/",
         method: "GET",
         path: {
           template:
@@ -179,7 +180,7 @@ export const endpointsMap = {
       single: {
         label: "Single Offer",
         helpUrl:
-          "https://www.stellar.org/developers/horizon/reference/endpoints/offer-details.html",
+          "https://developers.stellar.org/api/resources/offers/",
         method: "GET",
         path: {
           template: "/offers/{offer_id}",
@@ -189,7 +190,7 @@ export const endpointsMap = {
       for_account: {
         label: "Offers for Account",
         helpUrl:
-          "https://www.stellar.org/developers/horizon/reference/endpoints/offers-for-account.html",
+          "https://developers.stellar.org/api/resources/accounts/offers/",
         method: "GET",
         path: {
           template: "/accounts/{account_id}/offers{?cursor,limit,order}",
@@ -204,7 +205,7 @@ export const endpointsMap = {
       all: {
         label: "All Operations",
         helpUrl:
-          "https://www.stellar.org/developers/horizon/reference/endpoints/operations-all.html",
+          "https://developers.stellar.org/api/resources/operations/",
         method: "GET",
         path: {
           template: "/operations{?cursor,limit,order,include_failed}",
@@ -214,7 +215,7 @@ export const endpointsMap = {
       single: {
         label: "Single Operation",
         helpUrl:
-          "https://www.stellar.org/developers/horizon/reference/endpoints/operations-single.html",
+          "https://developers.stellar.org/api/resources/operations/single/",
         method: "GET",
         path: {
           template: "/operations/{operation}",
@@ -224,7 +225,7 @@ export const endpointsMap = {
       for_account: {
         label: "Operations for Account",
         helpUrl:
-          "https://www.stellar.org/developers/horizon/reference/endpoints/operations-for-account.html",
+          "https://developers.stellar.org/api/resources/accounts/operations/",
         method: "GET",
         path: {
           template:
@@ -235,7 +236,7 @@ export const endpointsMap = {
       for_ledger: {
         label: "Operations for Ledger",
         helpUrl:
-          "https://www.stellar.org/developers/horizon/reference/endpoints/operations-for-ledger.html",
+          "https://developers.stellar.org/api/resources/ledgers/operations/",
         method: "GET",
         path: {
           template:
@@ -246,7 +247,7 @@ export const endpointsMap = {
       for_transaction: {
         label: "Operations for Transaction",
         helpUrl:
-          "https://www.stellar.org/developers/horizon/reference/endpoints/operations-for-transaction.html",
+          "https://developers.stellar.org/api/resources/transactions/operations/",
         method: "GET",
         path: {
           template:
@@ -262,7 +263,7 @@ export const endpointsMap = {
       details: {
         label: "Details",
         helpUrl:
-          "https://www.stellar.org/developers/horizon/reference/endpoints/orderbook-details.html",
+          "https://developers.stellar.org/api/aggregations/order-books/",
         method: "GET",
         path: {
           template:
@@ -284,7 +285,7 @@ export const endpointsMap = {
       all: {
         label: "Find Payment Paths",
         helpUrl:
-          "https://www.stellar.org/developers/horizon/reference/endpoints/path-finding.html",
+          "https://developers.stellar.org/api/aggregations/paths/",
         method: "GET",
         path: {
           template:
@@ -298,7 +299,7 @@ export const endpointsMap = {
       strict_receive: {
         label: "Find Strict Receive Payment Paths",
         helpUrl:
-          "https://www.stellar.org/developers/horizon/reference/endpoints/path-finding-strict-receive.html",
+          "https://developers.stellar.org/api/aggregations/paths/strict-receive/",
         method: "GET",
         path: {
           template:
@@ -312,7 +313,7 @@ export const endpointsMap = {
       strict_send: {
         label: "Find Strict Send Payment Paths",
         helpUrl:
-          "https://www.stellar.org/developers/horizon/reference/endpoints/path-finding-strict-send.html",
+          "https://developers.stellar.org/api/aggregations/paths/strict-send/",
         method: "GET",
         path: {
           template:
@@ -331,6 +332,7 @@ export const endpointsMap = {
       all: {
         label: "All Payments",
         helpUrl:
+          // TODO: vcarl This doesn't have a replacement page yet
           "https://www.stellar.org/developers/horizon/reference/endpoints/payments-all.html",
         method: "GET",
         path: {
@@ -341,6 +343,7 @@ export const endpointsMap = {
       for_account: {
         label: "Payments for Account",
         helpUrl:
+          // TODO: vcarl This doesn't have a replacement page yet
           "https://www.stellar.org/developers/horizon/reference/endpoints/payments-for-account.html",
         method: "GET",
         path: {
@@ -352,7 +355,7 @@ export const endpointsMap = {
       for_ledger: {
         label: "Payments for Ledger",
         helpUrl:
-          "https://www.stellar.org/developers/horizon/reference/endpoints/payments-for-ledger.html",
+          "https://developers.stellar.org/api/resources/ledgers/payments/",
         method: "GET",
         path: {
           template:
@@ -363,6 +366,7 @@ export const endpointsMap = {
       for_transaction: {
         label: "Payments for Transaction",
         helpUrl:
+          // TODO: vcarl This doesn't have a replacement page yet
           "https://www.stellar.org/developers/horizon/reference/endpoints/payments-for-transaction.html",
         method: "GET",
         path: {
@@ -378,7 +382,7 @@ export const endpointsMap = {
       all: {
         label: "Trade Aggregations",
         helpUrl:
-          "https://www.stellar.org/developers/horizon/reference/endpoints/trade_aggregations.html",
+          "https://developers.stellar.org/api/aggregations/trade-aggregations/",
         method: "GET",
         path: {
           template:
@@ -403,7 +407,7 @@ export const endpointsMap = {
       all: {
         label: "All Trades",
         helpUrl:
-          "https://www.stellar.org/developers/horizon/reference/endpoints/trades.html",
+          "https://developers.stellar.org/api/resources/trades/",
         method: "GET",
         path: {
           template:
@@ -421,7 +425,7 @@ export const endpointsMap = {
       for_account: {
         label: "Trades for Account",
         helpUrl:
-          "https://www.stellar.org/developers/horizon/reference/endpoints/trades-for-account.html",
+          "https://developers.stellar.org/api/resources/accounts/trades/",
         method: "GET",
         path: {
           template: "/accounts/{account_id}/trades{?cursor,limit,order}",
@@ -431,6 +435,7 @@ export const endpointsMap = {
       for_offer: {
         label: "Trades for Offer",
         helpUrl:
+          // TODO: vcarl This doesn't have a replacement page yet
           "https://www.stellar.org/developers/horizon/reference/endpoints/trades-for-offer.html",
         method: "GET",
         path: {
@@ -446,7 +451,7 @@ export const endpointsMap = {
       all: {
         label: "All Transactions",
         helpUrl:
-          "https://www.stellar.org/developers/horizon/reference/endpoints/transactions-all.html",
+          "https://developers.stellar.org/api/resources/transactions/list/",
         method: "GET",
         path: {
           template: "/transactions{?cursor,limit,order,include_failed}",
@@ -456,7 +461,7 @@ export const endpointsMap = {
       single: {
         label: "Single Transaction",
         helpUrl:
-          "https://www.stellar.org/developers/horizon/reference/endpoints/transactions-single.html",
+          "https://developers.stellar.org/api/resources/transactions/single/",
         method: "GET",
         path: {
           template: "/transactions/{transaction}",
@@ -466,6 +471,7 @@ export const endpointsMap = {
       create: {
         label: "Post Transaction",
         helpUrl:
+          // TODO: vcarl This doesn't have a replacement page yet
           "https://www.stellar.org/developers/horizon/reference/endpoints/transactions-create.html",
         method: "POST",
         disableStreaming: true,
@@ -477,7 +483,7 @@ export const endpointsMap = {
       for_account: {
         label: "Transactions for Account",
         helpUrl:
-          "https://www.stellar.org/developers/horizon/reference/endpoints/transactions-for-account.html",
+          "https://developers.stellar.org/api/resources/accounts/transactions/",
         method: "GET",
         path: {
           template:
@@ -488,7 +494,7 @@ export const endpointsMap = {
       for_ledger: {
         label: "Transactions for Ledger",
         helpUrl:
-          "https://www.stellar.org/developers/horizon/reference/endpoints/transactions-for-ledger.html",
+          "https://developers.stellar.org/api/resources/ledgers/transactions/",
         method: "GET",
         path: {
           template:

@@ -4,6 +4,7 @@ import has from 'lodash/has';
 import size from 'lodash/size';
 import {dehydrate} from './hydration';
 import SLUG from '../constants/slug';
+import TX_TYPES from '../constants/transaction_types';
 
 // The state serializer converts the state relevant to a specific page into an object.
 // This object is then used to build the routing url.
@@ -64,9 +65,20 @@ function serializePageSpecificState(slug, state) {
         txbuilderResult.attributes = txbuilderAttributes;
       }
 
-      let firstOpEmpty = state.transactionBuilder.operations[0].name === '';
-      if (state.transactionBuilder.operations.length > 1 || !firstOpEmpty) {
-        txbuilderResult.operations = state.transactionBuilder.operations;
+      let feeBumpAttributes = assignNonEmpty({}, state.transactionBuilder.feeBumpAttributes);
+      if (size(feeBumpAttributes) > 0) {
+        txbuilderResult.feeBumpAttributes = feeBumpAttributes;
+      }
+
+      if (state.transactionBuilder.txType !== TX_TYPES.REGULAR) {
+        txbuilderResult.txType = state.transactionBuilder.txType;
+      }
+      
+      if (state.transactionBuilder.operations){
+        let firstOpEmpty = state.transactionBuilder.operations[0].name === '';
+        if (state.transactionBuilder.operations.length > 1 || !firstOpEmpty) {
+          txbuilderResult.operations = state.transactionBuilder.operations;
+        }
       }
 
       if (has(txbuilderResult, 'attributes.memoType') &&

@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import OptionsTablePair from './OptionsTable/Pair';
 import HelpMark from './HelpMark';
+import TxTypePicker from './FormComponents/TxTypePicker';
 import PubKeyPicker from './FormComponents/PubKeyPicker';
 import SequencePicker from './FormComponents/SequencePicker';
 import StroopsPicker from './FormComponents/StroopsPicker';
@@ -9,7 +10,9 @@ import TimeBoundsPicker from './FormComponents/TimeBoundsPicker';
 import {connect} from 'react-redux';
 import {StrKey} from 'stellar-sdk';
 import NETWORK from '../constants/network';
-import {fetchSequence, fetchBaseFee} from '../actions/transactionBuilder';
+import {fetchSequence, fetchBaseFee, updateTxType, updateFeeBumpAttribute} from '../actions/transactionBuilder';
+import TransactionImporter from './TransactionImporter';
+import TX_TYPES from '../constants/transaction_types';
 
 const ConnectWithLyra = ({ onUpdate }) => {
 
@@ -33,24 +36,34 @@ const ConnectWithLyra = ({ onUpdate }) => {
 }
 
 function TxBuilderAttributes(props) {
-  let {onUpdate, attributes, horizonURL} = props;
+  let {onUpdate, attributes, horizonURL, dispatch, feeBumpAttributes, networkPassphrase} = props;
+  const {txType, network} = props.state;
+  const [networkBaseFee, setNetworkBaseFee] = useState(attributes['fee']);
 
   useEffect(() => {
-    props.dispatch(fetchBaseFee(horizonURL))
+    dispatch(fetchBaseFee(horizonURL));
+    setNetworkBaseFee(attributes['fee']);
   }, [])
-  
+
   return <div className="TransactionAttributes">
     <div className="TransactionOp__config TransactionOpConfig optionsTable">
-        {window.lyra ? <ConnectWithLyra onUpdate={onUpdate} /> : null}
-
-      <OptionsTablePair label={<span>Source Account <HelpMark href="https://www.stellar.org/developers/guides/concepts/accounts.html" /></span>}>
+      {window.lyra ? <ConnectWithLyra onUpdate={onUpdate} /> : null}
+      <OptionsTablePair label={<span>Transaction Type <HelpMark href="https://developers.stellar.org/docs/glossary/fee-bumps" /></span>}>
+        <TxTypePicker
+          value={txType}
+          onUpdate={(value) => {dispatch(updateTxType(value))}}
+        />
+      </OptionsTablePair>
+      {txType === TX_TYPES.REGULAR &&
+      <React.Fragment>
+      <OptionsTablePair label={<span>Source Account <HelpMark href="https://developers.stellar.org/docs/glossary/accounts/" /></span>}>
         <PubKeyPicker
           value={attributes['sourceAccount']}
           onUpdate={(value) => {onUpdate('sourceAccount', value)}}
           />
         <p className="optionsTable__pair__content__note">If you don't have an account yet, you can create and fund a test net account with the <a href="#account-creator">account creator</a>.</p>
       </OptionsTablePair>
-      <OptionsTablePair label={<span>Transaction Sequence Number <HelpMark href="https://www.stellar.org/developers/guides/concepts/transactions.html#sequence-number" /></span>}>
+      <OptionsTablePair label={<span>Transaction Sequence Number <HelpMark href="https://developers.stellar.org/docs/glossary/transactions/#sequence-number" /></span>}>
         <SequencePicker
           value={attributes['sequence']}
           onUpdate={(value) => {onUpdate('sequence', value)}}
@@ -58,14 +71,14 @@ function TxBuilderAttributes(props) {
         <p className="optionsTable__pair__content__note">The transaction sequence number is usually one higher than current account sequence number.</p>
         <SequenceFetcher />
       </OptionsTablePair>
-      <OptionsTablePair label={<span>Base Fee <HelpMark href="https://www.stellar.org/developers/guides/concepts/transactions.html#fee" /></span>}>
+      <OptionsTablePair label={<span>Base Fee <HelpMark href="https://developers.stellar.org/docs/glossary/transactions/#fee" /></span>}>
         <StroopsPicker
           value={attributes['fee']}
           onUpdate={(value) => {onUpdate('fee', value)}}
           />
-        <p className="optionsTable__pair__content__note">The <a href="https://www.stellar.org/developers/guides/concepts/fees.html">network base fee</a> is currently set to {attributes['fee']} stroops ({attributes['fee'] / 1e7} lumens). Transaction fee is equal to base fee times number of operations in this transaction.</p>
+        <p className="optionsTable__pair__content__note">The <a href="https://developers.stellar.org/docs/glossary/fees/">network base fee</a> is currently set to {networkBaseFee} stroops ({networkBaseFee / 1e7} lumens). Transaction fee is equal to base fee times number of operations in this transaction.</p>
       </OptionsTablePair>
-      <OptionsTablePair optional={true} label={<span>Memo <HelpMark href="https://www.stellar.org/developers/guides/concepts/transactions.html#memo" /></span>}>
+      <OptionsTablePair optional={true} label={<span>Memo <HelpMark href="https://developers.stellar.org/docs/glossary/transactions/#memo" /></span>}>
         <MemoPicker
           value={{
             type: attributes.memoType,
@@ -74,7 +87,7 @@ function TxBuilderAttributes(props) {
           onUpdate={(value) => {onUpdate('memo', value)}}
           />
       </OptionsTablePair>
-      <OptionsTablePair optional={true} label={<span>Time Bounds <HelpMark href="https://www.stellar.org/developers/guides/concepts/transactions.html#time-bounds" /></span>}>
+      <OptionsTablePair optional={true} label={<span>Time Bounds <HelpMark href="https://developers.stellar.org/docs/glossary/transactions/#time-bounds" /></span>}>
         <TimeBoundsPicker
           value={{
             minTime: attributes.minTime,
@@ -92,6 +105,33 @@ function TxBuilderAttributes(props) {
           <br />
         </p>
       </OptionsTablePair>
+      </React.Fragment>
+    }
+    {txType === TX_TYPES.FEE_BUMP &&
+      <React.Fragment>
+      <OptionsTablePair label={<span>Source Account <HelpMark href="https://developers.stellar.org/docs/glossary/accounts/" /></span>}>
+        <PubKeyPicker
+          value={feeBumpAttributes['sourceAccount']}
+          onUpdate={(value) => {dispatch(updateFeeBumpAttribute({'sourceAccount': value}))}}
+        />
+        <p className="optionsTable__pair__content__note">The account responsible for paying the transaction fee.</p>
+      </OptionsTablePair>
+      <OptionsTablePair label={<span>Base Fee <HelpMark href="https://developers.stellar.org/docs/glossary/transactions/#fee" /></span>}>
+        <StroopsPicker
+          value={feeBumpAttributes['maxFee']}
+          onUpdate={(value) => {dispatch(updateFeeBumpAttribute({'maxFee': value}))}}
+          />
+        <p className="optionsTable__pair__content__note">The <a href="https://developers.stellar.org/docs/glossary/fees/">network base fee</a> is currently set to {attributes['fee']} stroops ({attributes['fee'] / 1e7} lumens). Transaction fee is equal to base fee times number of operations in this transaction.</p>
+      </OptionsTablePair>
+      <OptionsTablePair label={<span>Inner Transaction XDR <HelpMark href="https://developers.stellar.org/docs/glossary/transactions/#transaction-envelopes"/></span>}>
+      <TransactionImporter
+        value={feeBumpAttributes['innerTxXDR']}
+        networkPassphrase={networkPassphrase}
+        onUpdate={(value) => {dispatch(updateFeeBumpAttribute({'innerTxXDR': value}))}}
+      />
+      </OptionsTablePair>
+      </React.Fragment>
+    }
     </div>
   </div>
 }
@@ -135,5 +175,6 @@ function chooseState(state) {
   return {
     state: state.transactionBuilder,
     horizonURL: state.network.current.horizonURL,
+    networkPassphrase: state.network.current.networkPassphrase,
   }
 }

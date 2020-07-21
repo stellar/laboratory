@@ -22,6 +22,13 @@ describe('linkBuilder', () => {
     });
   });
 
+  describe('feeBumpTxLink()', () => {
+    it('returns the correct url', () => {
+      expect(linkBuilder.feeBumpTxLink('AG/eK0AAAAAAA='))
+        .to.equal('#txbuilder?params=eyJmZWVCdW1wQXR0cmlidXRlcyI6eyJpbm5lclR4WERSIjoiQUcvZUswQUFBQUFBQT0ifSwidHhUeXBlIjoiRkVFX0JVTVAifQ%3D%3D')
+    });
+  });
+
   describe('singleAccount()', () => {
     it('returns the correct url', () => {
       expect(linkBuilder.singleAccount('GAKRI33OWJLTCVGOPKAGTBUOLCRNF2GRX54K2OFNZWPX5Y3LQC2Q77IN'))

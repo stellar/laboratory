@@ -16,7 +16,7 @@ import OptionsTablePair from './OptionsTable/Pair';
 import SecretKeyPicker from './FormComponents/SecretKeyPicker';
 import MultiPicker from './FormComponents/MultiPicker';
 import BipPathPicker from './FormComponents/BipPathPicker';
-import {txPostLink, xdrViewer} from '../utilities/linkBuilder';
+import {txPostLink, xdrViewer, feeBumpTxLink} from '../utilities/linkBuilder';
 import HelpMark from './HelpMark';
 import clickToSelect from '../utilities/clickToSelect';
 import scrollOnAnchorOpen from '../utilities/scrollOnAnchorOpen';
@@ -85,7 +85,7 @@ class TransactionSigner extends React.Component {
         };
       }
 
-      let codeResult, submitLink, xdrLink, resultTitle, submitInstructions;
+      let codeResult, submitLink, xdrLink, resultTitle, submitInstructions, feeBumpLink;
 
       if (!isUndefined(result.xdr)) {
         codeResult = <pre className="TxSignerResult__xdr so-code so-code__wrap" onClick={clickToSelect}><code>{result.xdr}</code></pre>;
@@ -99,6 +99,11 @@ class TransactionSigner extends React.Component {
           href={xdrViewer(result.xdr, 'TransactionEnvelope')}
           onClick={scrollOnAnchorOpen}
           >View in XDR Viewer</a>;
+        feeBumpLink = <a
+          className="s-button TxSignerResult__submit"
+          href={feeBumpTxLink(result.xdr)}
+          onClick={scrollOnAnchorOpen}
+        >Wrap with Fee Bump</a>
         resultTitle = <h3 className="TxSignerResult__title">Transaction signed!</h3>;
         submitInstructions = <p className="TxSignerResult__instructions">
           Now that this transaction is signed, you can submit it to the network. Horizon provides an endpoint called Post Transaction that will relay your transaction to the network and inform you of the result.
@@ -146,7 +151,7 @@ class TransactionSigner extends React.Component {
           </div>
           <div className="so-chunk">
             <div className="TxSignerKeys TransactionSigner__keys">
-              <p className="TxSignerKeys__title">Signatures <HelpMark href="https://www.stellar.org/developers/guides/concepts/multi-sig.html" /></p>
+              <p className="TxSignerKeys__title">Signatures <HelpMark href="https://developers.stellar.org/docs/glossary/multisig/" /></p>
               <div className="optionsTable">
                 <OptionsTablePair label="Add Signer">
                   <MultiPicker
@@ -177,7 +182,7 @@ class TransactionSigner extends React.Component {
             <p className="TxSignerResult__summary">{result.message}</p>
             {codeResult}
             {submitInstructions}
-            {submitLink} {xdrLink}
+            {submitLink} {xdrLink} {feeBumpLink}
           </div>
         </div>
       </div>
@@ -192,7 +197,7 @@ class TransactionSigner extends React.Component {
             <p>
               For simple transactions, you only need one signature from the correct account. Some advanced signatures may require more than one signature if there are multiple source accounts or signing keys.
             </p>
-            <p><a href="https://www.stellar.org/developers/guides/concepts/multi-sig.html" target="_blank">Read more about signatures on the developer's site.</a></p>
+            <p><a href="https://developers.stellar.org/docs/glossary/multisig/" target="_blank">Read more about signatures on the developer's site.</a></p>
           </div>
         </div>
       </div>

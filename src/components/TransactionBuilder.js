@@ -13,8 +13,9 @@ import OperationsBuilder from './OperationsBuilder';
 import {getOperation} from '../data/operations';
 import TxBuilderResult from './TxBuilderResult';
 import {resetTxbuilder} from '../actions/transactionBuilder';
-import {addEventHandler} from '../utilities/metrics'
-import transactionBuilderMetrics from '../metricsHandlers/transactionBuilder'
+import {addEventHandler} from '../utilities/metrics';
+import transactionBuilderMetrics from '../metricsHandlers/transactionBuilder';
+import TX_TYPES from '../constants/transaction_types';
 
 addEventHandler(transactionBuilderMetrics)
 
@@ -24,6 +25,8 @@ class TransactionBuilder extends React.Component {
     let {
       attributes,
       operations,
+      feeBumpAttributes,
+      txType,
     } = this.props.state;
 
     return <div className="TransactionBuilder">
@@ -41,13 +44,18 @@ class TransactionBuilder extends React.Component {
           </p>
           <TxBuilderAttributes
             attributes={attributes}
+            feeBumpAttributes={feeBumpAttributes}
             onUpdate={onAttributeUpdate.bind(this, dispatch)} />
-          <OperationsBuilder />
-          <div className="TransactionOperations__add">
-            <button className="TransactionOperations__add__button s-button" onClick={() => dispatch(addOperation())}>
-              + Add Operation
-            </button>
-          </div>
+          {txType === TX_TYPES.REGULAR && 
+            <React.Fragment>
+              <OperationsBuilder />
+              <div className="TransactionOperations__add">
+                <button className="TransactionOperations__add__button s-button" onClick={() => dispatch(addOperation())}>
+                  + Add Operation
+                </button>
+              </div>
+            </React.Fragment>
+          }
         </div>
       </div>
       <div className="so-back TransactionBuilder__result">

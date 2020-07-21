@@ -5,7 +5,7 @@ SUDO := $(shell docker version >/dev/null 2>&1 || echo "sudo")
 TAG ?= stellar/laboratory:$(shell git rev-parse --short HEAD)$(and $(shell git status -s),-dirty-$(shell id -u -n))
 
 docker-build:
-	$(SUDO) docker build -t $(TAG) .
+	$(SUDO) docker build --build-arg AMPLITUDE_KEY=$(AMPLITUDE_KEY) -t $(TAG) .
 
 docker-push:
 	$(SUDO) docker push $(TAG)
