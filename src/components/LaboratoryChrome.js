@@ -1,3 +1,6 @@
+/**
+ * @prettier
+ */
 import React from "react";
 import { connect } from "react-redux";
 import classNames from "classnames";
@@ -69,17 +72,53 @@ function LaboratoryChrome(props) {
 
       {renamed(props.routing.location)}
       <RouterListener />
+
+      <div className="so-back LaboratoryChrome__terms">
+        <div className="so-chunk ">
+          <a
+            rel="noreferrer"
+            target="_blank"
+            href="https://www.stellar.org/terms-of-service"
+          >
+            Terms of Service
+          </a>
+          <span className="spacer" />
+          <a
+            rel="noreferrer"
+            target="_blank"
+            href="https://www.stellar.org/privacy-policy"
+          >
+            Privacy Policy
+          </a>
+        </div>
+      </div>
     </div>
   );
 }
 
-const Loading = ({ pastDelay, retry, error }) => {
+const Loading = ({ pastDelay, error }) => {
   if (error) {
     return (
       <div className="so-back">
-        <div className="so-chunk">
-          Error! <button onClick={retry}>Retry</button>
-          <pre>{error.stack}</pre>
+        <div className="so-chunk Introduction">
+          <p>
+            There was a problem loading this page. If your network connection is
+            still working, try reloading.
+          </p>
+          <p>
+            <button
+              className="s-button"
+              onClick={() => {
+                window.history.go(0);
+              }}
+            >
+              Reload
+            </button>
+          </p>
+          <details>
+            <summary>View stack trace</summary>
+            <pre>{error.stack}</pre>
+          </details>
         </div>
       </div>
     );

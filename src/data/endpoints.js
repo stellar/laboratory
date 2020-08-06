@@ -173,7 +173,7 @@ export const endpointsMap = {
         method: "GET",
         path: {
           template:
-            "https://horizon-testnet.stellar.org/offers{?selling,buying,seller,cursor,limit,order}",
+            "/offers{?selling,buying,seller,cursor,limit,order}",
         },
         setupComponent: AllOffers,
       },

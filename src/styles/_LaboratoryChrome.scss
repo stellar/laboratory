@@ -1,3 +1,6 @@
+/**
+ * @prettier
+ */
 .LaboratoryChrome__header {
   justify-content: space-between;
 }
@@ -14,4 +17,19 @@
   border-radius: 0;
   border-bottom: 1px solid $white;
   margin-bottom: -1px;
+}
+
+.spacer {
+  display: inline-block;
+  width: 2rem;
+  height: 1px;
+}
+
+.LaboratoryChrome__terms {
+  padding: 4rem 0;
+
+  a {
+    text-decoration: none;
+    color: $s-color-neutral3;
+  }
 }
