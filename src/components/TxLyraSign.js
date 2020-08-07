@@ -3,14 +3,15 @@
  */
 
 import React from "react";
+import lyraApi from "@stellar/lyra-api";
 
 import { CodeBlock } from "./CodeBlock";
 
 const signWithLyra = async (xdr, setTxResult) => {
-  let res = { transactionStatus: "" };
+  let res = { signedTransaction: "" };
 
   try {
-    res = await window.lyra.requestSignature({
+    res = await lyraApi.signTransaction({
       transactionXdr: xdr,
     });
   } catch (e) {
@@ -18,7 +19,7 @@ const signWithLyra = async (xdr, setTxResult) => {
     console.error(e);
   }
 
-  setTxResult(res.transactionStatus);
+  setTxResult(res.signedTransaction);
 };
 
 const TxLyraSign = ({ xdr }) => {
@@ -36,13 +37,6 @@ const TxLyraSign = ({ xdr }) => {
       </button>
       {txResult ? (
         <div>
-          <div
-            className={`AccountCreator__spaceTop s-alert ${
-              txResult.successful ? "s-alert--success" : "s-alert--alert"
-            }`}
-          >
-            Result: {txResult.successful ? "Success!" : "Failed!"}
-          </div>
           <CodeBlock
             className="AccountCreator__spaceTop"
             code={JSON.stringify(txResult, null, 2)}
