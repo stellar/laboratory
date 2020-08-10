@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import lyraApi from "@stellar/lyra-api";
 import OptionsTablePair from './OptionsTable/Pair';
 import HelpMark from './HelpMark';
 import TxTypePicker from './FormComponents/TxTypePicker';
@@ -21,7 +22,7 @@ const ConnectWithLyra = ({ onUpdate }) => {
   let response = "";
 
   try {
-    response = await window.lyra.getPublicKey();
+    response = await lyraApi.getPublicKey();
   } catch (e) {
     console.error(e);
   }
@@ -47,7 +48,7 @@ function TxBuilderAttributes(props) {
 
   return <div className="TransactionAttributes">
     <div className="TransactionOp__config TransactionOpConfig optionsTable">
-      {window.lyra ? <ConnectWithLyra onUpdate={onUpdate} /> : null}
+      {lyraApi.isConnected() ? <ConnectWithLyra onUpdate={onUpdate} /> : null}
       <OptionsTablePair label={<span>Transaction Type <HelpMark href="https://developers.stellar.org/docs/glossary/fee-bumps" /></span>}>
         <TxTypePicker
           value={txType}

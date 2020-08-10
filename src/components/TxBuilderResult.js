@@ -1,5 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import lyraApi from "@stellar/lyra-api";
 import reduce from 'lodash/reduce'
 import {EasySelect} from './EasySelect';
 import Libify from '../utilities/Libify';
@@ -50,12 +51,12 @@ class TxBuilderResult extends React.Component {
       validationErrors = getRegularTxValidationErrors()
     }
     
-    let finalResult, errorTitleText, successTitleText, signingInstructions, signingLink, xdrLink;
+    let finalResult, errorTitleText, successTitleText, signingInstructions, signingLink, xdrLink, transactionBuild;
     if (validationErrors.length > 0) {
       errorTitleText = "Form validation errors:";
       finalResult = formatErrorList(validationErrors);
     } else {
-      let transactionBuild = txType === TX_TYPES.FEE_BUMP ? Libify.buildFeeBumpTransaction(feeBumpAttributes, this.props.networkPassphrase) :
+      transactionBuild = txType === TX_TYPES.FEE_BUMP ? Libify.buildFeeBumpTransaction(feeBumpAttributes, this.props.networkPassphrase) :
        Libify.buildTransaction(attributes, operations, this.props.networkPassphrase);
 
       if (transactionBuild.errors.length > 0) {
@@ -128,7 +129,7 @@ class TxBuilderResult extends React.Component {
         </pre>
         {signingInstructions}
         {signingLink} {xdrLink}
-        {window.lyra && transactionBuild && !transactionBuild.errors.length ? (
+        {lyraApi.isConnected() && transactionBuild && !transactionBuild.errors.length ? (
           <TxLyraSign xdr={transactionBuild.xdr} />
         ) : null}
       </div>

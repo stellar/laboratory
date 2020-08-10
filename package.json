@@ -23,6 +23,7 @@
     "@ledgerhq/hw-app-str": "^5.9.0",
     "@ledgerhq/hw-transport-u2f": "^5.9.0",
     "@stellar/prettier-config": "^1.0.1",
+    "@stellar/lyra-api": "1.0.0-alpha.2",
     "axios": "^0.18.1",
     "babel-loader": "^8.1.0",
     "browser-sync": "^2.9.11",
