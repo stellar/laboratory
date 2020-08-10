@@ -12,7 +12,6 @@ import TxLyraSign from "./TxLyraSign";
 
 class TxBuilderResult extends React.Component {
   render() {
-
     let {attributes, operations, feeBumpAttributes, txType} = this.props.state;
 
     const getRegularTxValidationErrors = () => {
