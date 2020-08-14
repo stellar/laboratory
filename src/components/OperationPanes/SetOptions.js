@@ -20,6 +20,13 @@ const accountFlagFieldsClear = {
   2: 'Authorization revocable',
 };
 
+function WarningMessage() {
+  return <>
+    <p className="optionsTable__pair__content__note optionsTable__pair__content__note--alert">This can result in a permanently locked account. Are you sure you know what you're doing?</p>
+    <p className="optionsTable__pair__content__note"><a href="https://developers.stellar.org/docs/glossary/multisig/" target="_blank">See documentation for multisignature accounts</a></p>
+  </>
+};
+
 export default function SetOptions(props) {
   return [
     <OptionsTablePair
@@ -57,6 +64,7 @@ export default function SetOptions(props) {
         value={props.values['masterWeight']}
         onUpdate={(value) => {props.onUpdate('masterWeight', value)}}
         />
+        <WarningMessage />
     </OptionsTablePair>,
     <OptionsTablePair
       label={<span>Low Threshold <HelpMark href="https://developers.stellar.org/docs/glossary/accounts/#thresholds" /></span>}
@@ -73,6 +81,7 @@ export default function SetOptions(props) {
         value={props.values['medThreshold']}
         onUpdate={(value) => {props.onUpdate('medThreshold', value)}}
         />
+      <WarningMessage />
     </OptionsTablePair>,
     <OptionsTablePair
       label={<span>High Threshold <HelpMark href="https://developers.stellar.org/docs/glossary/accounts/#thresholds" /></span>}
@@ -81,6 +90,7 @@ export default function SetOptions(props) {
         value={props.values['highThreshold']}
         onUpdate={(value) => {props.onUpdate('highThreshold', value)}}
         />
+      <WarningMessage />
     </OptionsTablePair>,
     <OptionsTablePair
       label={<span>Signer Type <HelpMark href="https://developers.stellar.org/docs/glossary/multisig/#additional-signing-keys" /></span>}
