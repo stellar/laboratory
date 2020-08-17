@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import lyraApi from "@stellar/lyra-api";
+import { isConnected } from "@stellar/lyra-api";
 import reduce from 'lodash/reduce'
 import {EasySelect} from './EasySelect';
 import Libify from '../utilities/Libify';
@@ -129,7 +129,7 @@ class TxBuilderResult extends React.Component {
         </pre>
         {signingInstructions}
         {signingLink} {xdrLink}
-        {lyraApi.isConnected() && transactionBuild && !transactionBuild.errors.length ? (
+        {isConnected() && transactionBuild && !transactionBuild.errors.length ? (
           <TxLyraSign xdr={transactionBuild.xdr} />
         ) : null}
       </div>
