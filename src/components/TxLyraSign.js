@@ -3,7 +3,7 @@
  */
 
 import React from "react";
-import lyraApi from "@stellar/lyra-api";
+import { signTransaction } from "@stellar/lyra-api";
 
 import { CodeBlock } from "./CodeBlock";
 
@@ -11,7 +11,7 @@ const signWithLyra = async (xdr, setTxResult) => {
   let res = { signedTransaction: "" };
 
   try {
-    res = await lyraApi.signTransaction({
+    res = await signTransaction({
       transactionXdr: xdr,
     });
   } catch (e) {
