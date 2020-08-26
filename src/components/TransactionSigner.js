@@ -1,6 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {TransactionBuilder, FeeBumpTransaction} from 'stellar-sdk';
+import { isConnected } from "@stellar/lyra-api";
 import isUndefined from 'lodash/isUndefined'
 import map from 'lodash/map'
 import TransactionImporter from './TransactionImporter';
@@ -171,6 +172,18 @@ class TransactionSigner extends React.Component {
                   >Sign with BIP Path</button>
                   {ledgerwalletMessage}
                 </OptionsTablePair>
+                {isConnected() && <OptionsTablePair label="Lyra">
+                  <button
+                    className="s-button TxSignerKeys__signLyra"
+                    onClick={() => {
+                      // TODO: dispatch(signWithLyra(xdr, networkPassphrase))
+                      console.log(new Error('not implemented'))
+                    }}
+                  >
+                    Sign with Lyra
+                  </button>
+                  {ledgerwalletMessage}
+                </OptionsTablePair>}
               </div>
 
             </div>
