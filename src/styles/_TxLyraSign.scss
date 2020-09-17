@@ -1,0 +1,56 @@
+.TxLyraSign__result {
+    padding: 15px 0;
+
+    .CodeBlock {
+        background: $white;
+    }
+    .CodeBlock__code, code {
+        padding: 0;
+    }
+    .token.string {
+        white-space: break-spaces;
+        word-break: break-all;
+    }
+}
+
+.TxLyraSign__result-error {
+    code {
+        color: red;
+    }
+}
+
+.s-button__dropdown-icon, .s-button__dropdown-icon--right {
+  position: relative;
+  padding-left: 20px;
+  padding-top: 5px;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+
+  &:before, &:after {
+    content: '';
+    position: absolute;
+    right:0;
+    top:0;
+    bottom:0;
+    z-index:0;
+    width: 3rem;
+  }
+
+  &:after {
+    top: calc(50% - 4px);
+    left:0;
+    width: 0; 
+    height: 0; 
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 9px solid $black;
+    transform: rotate(150deg);
+  }
+}
+
+.s-button__dropdown-icon--right {
+  &:after {
+    transform: rotate(0deg);
+  }
+}

@@ -27,6 +27,7 @@ import NETWORK from '../constants/network';
 import Libify from '../utilities/Libify';
 import {addEventHandler} from '../utilities/metrics'
 import transactionSignerMetrics from '../metricsHandlers/transactionSigner'
+import TxLyraSign from "./TxLyraSign";
 
 const {signTransaction} = Libify
 
@@ -172,18 +173,11 @@ class TransactionSigner extends React.Component {
                   >Sign with BIP Path</button>
                   {ledgerwalletMessage}
                 </OptionsTablePair>
-                {isConnected() && <OptionsTablePair label="Lyra">
-                  <button
-                    className="s-button TxSignerKeys__signLyra"
-                    onClick={() => {
-                      // TODO: dispatch(signWithLyra(xdr, networkPassphrase))
-                      console.log(new Error('not implemented'))
-                    }}
-                  >
-                    Sign with Lyra
-                  </button>
-                  {ledgerwalletMessage}
-                </OptionsTablePair>}
+                {isConnected() && (
+                    <OptionsTablePair label="Lyra">
+                      <TxLyraSign xdr={xdr} />
+                    </OptionsTablePair>
+                  )}
               </div>
 
             </div>
