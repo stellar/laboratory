@@ -28,31 +28,6 @@ const signWithLyra = async (xdr, setTxResultMessage, setErrorStatus) => {
   }
 };
 
-const ErrorResultDetails = ({ resultMessage, hasError }) => {
-  const [isClicked, setOnClick] = React.useState(false);
-
-  let arrowIconType = isClicked
-    ? "s-button__dropdown-icon--right"
-    : "s-button__dropdown-icon";
-
-  return (
-    <div>
-      <button
-        type="button"
-        className={arrowIconType}
-        onClick={() => setOnClick(!isClicked)}
-      >
-        Details
-      </button>
-      {isClicked ? (
-        <div className="TxLyraSign__result-error">
-          <code>{resultMessage}</code>
-        </div>
-      ) : null}
-    </div>
-  );
-};
-
 const TxLyraSign = ({ xdr }) => {
   const [txResultMessage, setTxResultMessage] = React.useState("");
   const [hasError, setErrorStatus] = React.useState(false);
@@ -70,10 +45,9 @@ const TxLyraSign = ({ xdr }) => {
         hasError ? (
           <div className="TxLyraSign__result">
             There was an error signing the transaction:
-            <ErrorResultDetails
-              resultMessage={txResultMessage}
-              hasError={hasError}
-            />
+            <div className="TxLyraSign__result-error">
+              <code>{txResultMessage}</code>
+            </div>
           </div>
         ) : (
           <div className="TxLyraSign__result">
