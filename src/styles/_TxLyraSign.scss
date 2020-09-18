@@ -1,0 +1,23 @@
+.TxLyraSign__result {
+    padding: 15px 0;
+
+    .CodeBlock {
+        background: $white;
+    }
+    .CodeBlock__code, code {
+        padding: 0;
+    }
+    .token.string {
+        white-space: break-spaces;
+        word-break: break-all;
+    }
+}
+
+.TxLyraSign__result-error {
+  display: inline-block;
+  padding-left: 10px;
+
+    code {
+        color: red;
+    }
+}

@@ -7,8 +7,8 @@ import { signTransaction } from "@stellar/lyra-api";
 
 import { CodeBlock } from "./CodeBlock";
 
-const signWithLyra = async (xdr, setTxResult) => {
-  let res = { signedTransaction: "" };
+const signWithLyra = async (xdr, setTxResultMessage, setErrorStatus) => {
+  let res = { signedTransaction: "", error: "" };
 
   try {
     res = await signTransaction({
@@ -19,30 +19,46 @@ const signWithLyra = async (xdr, setTxResult) => {
     console.error(e);
   }
 
-  setTxResult(res.signedTransaction);
+  if (res.error) {
+    setTxResultMessage(res.error);
+    setErrorStatus(true);
+  } else {
+    setTxResultMessage(res.signedTransaction);
+    setErrorStatus(false);
+  }
 };
 
 const TxLyraSign = ({ xdr }) => {
-  const [txResult, setTxResult] = React.useState();
+  const [txResultMessage, setTxResultMessage] = React.useState("");
+  const [hasError, setErrorStatus] = React.useState(false);
 
   return (
     <div>
-      <hr />
       <button
         className="s-button"
         type="button"
-        onClick={() => signWithLyra(xdr, setTxResult)}
+        onClick={() => signWithLyra(xdr, setTxResultMessage, setErrorStatus)}
       >
-        Sign with Lyra
+        {txResultMessage ? "Sign again" : "Sign with Lyra"}
       </button>
-      {txResult ? (
-        <div>
-          <CodeBlock
-            className="AccountCreator__spaceTop"
-            code={JSON.stringify(txResult, null, 2)}
-            language="json"
-          />
-        </div>
+      {txResultMessage ? (
+        hasError ? (
+          <div className="TxLyraSign__result">
+            There was an error signing the transaction:
+            <div className="TxLyraSign__result-error">
+              <code>{txResultMessage}</code>
+            </div>
+          </div>
+        ) : (
+          <div className="TxLyraSign__result">
+            Successfully signed!
+            <CodeBlock
+              className="AccountCreator__spaceTop so-code so-code__wrap"
+              code={JSON.stringify(txResultMessage, null, 2)}
+              language="json"
+            />
+          </div>
+        )
       ) : null}
     </div>
   );

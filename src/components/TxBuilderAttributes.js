@@ -16,8 +16,6 @@ import TransactionImporter from './TransactionImporter';
 import TX_TYPES from '../constants/transaction_types';
 
 const ConnectWithLyra = ({ onUpdate }) => {
-
-
   const connectLyra = async() => {
   let response = "";
 

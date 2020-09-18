@@ -130,7 +130,10 @@ class TxBuilderResult extends React.Component {
         {signingInstructions}
         {signingLink} {xdrLink}
         {isConnected() && transactionBuild && !transactionBuild.errors.length ? (
+          <>
+          <hr />
           <TxLyraSign xdr={transactionBuild.xdr} />
+          </>
         ) : null}
       </div>
     );
