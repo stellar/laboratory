@@ -4,7 +4,7 @@ import { StrKey } from "stellar-sdk";
 
 import TextPicker from "./TextPicker";
 import { ImportMark } from "../ImportMark";
-import { useLyra } from "../../utilities/useLyra";
+import { useLyra, lyraGetPublicKey } from "../../utilities/useLyra";
 
 export default function PubKeyPicker({
   placeholder,
@@ -33,10 +33,7 @@ export default function PubKeyPicker({
       {hasLyra && (
         <button
           type="button"
-          onClick={() => {
-            // TODO
-            console.log(new Error("not implemented"));
-          }}
+          onClick={() => lyraGetPublicKey(onUpdate)}
           className="s-button__icon PubKeyPicker__activator"
         >
           <ImportMark width={24} />

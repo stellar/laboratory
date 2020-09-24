@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { isConnected, getPublicKey } from "@stellar/lyra-api";
 import OptionsTablePair from './OptionsTable/Pair';
 import HelpMark from './HelpMark';
 import TxTypePicker from './FormComponents/TxTypePicker';
@@ -15,25 +14,6 @@ import {fetchSequence, fetchBaseFee, updateTxType, updateFeeBumpAttribute} from 
 import TransactionImporter from './TransactionImporter';
 import TX_TYPES from '../constants/transaction_types';
 
-const ConnectWithLyra = ({ onUpdate }) => {
-  const connectLyra = async() => {
-  let response = "";
-
-  try {
-    response = await getPublicKey();
-  } catch (e) {
-    console.error(e);
-  }
-  const { publicKey, error } = response;
-  onUpdate('sourceAccount', publicKey);
-  }
-
-
-  return (
-    <button className="s-button" type="button" onClick={connectLyra}>Connect Source Account with Lyra</button>
-  )
-}
-
 function TxBuilderAttributes(props) {
   let {onUpdate, attributes, horizonURL, dispatch, feeBumpAttributes, networkPassphrase} = props;
   const {txType, network} = props.state;
@@ -46,7 +26,6 @@ function TxBuilderAttributes(props) {
 
   return <div className="TransactionAttributes">
     <div className="TransactionOp__config TransactionOpConfig optionsTable">
-      {isConnected() ? <ConnectWithLyra onUpdate={onUpdate} /> : null}
       <OptionsTablePair label={<span>Transaction Type <HelpMark href="https://developers.stellar.org/docs/glossary/fee-bumps" /></span>}>
         <TxTypePicker
           value={txType}
