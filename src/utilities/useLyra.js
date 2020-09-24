@@ -12,14 +12,15 @@ export const useLyra = () => {
 };
 
 export const lyraGetPublicKey = async (onUpdate) => {
+  let lyraPublicKey = "";
+  let error = "";
+
   try {
     const lyraResponse = await getPublicKey();
-
-    if (lyraResponse.error) {
-      return lyraResponse.error;
-    }
-    return onUpdate(lyraResponse.publicKey);
+    lyraPublicKey = lyraResponse.publicKey;
   } catch (e) {
-    console.log("error while getting a public key: ", e);
+    error = e;
   }
+
+  return onUpdate(lyraPublicKey || error);
 };
