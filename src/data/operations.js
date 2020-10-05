@@ -3,6 +3,7 @@ import AccountMerge from '../components/OperationPanes/AccountMerge';
 import AllowTrust from '../components/OperationPanes/AllowTrust';
 import BumpSequence from '../components/OperationPanes/BumpSequence';
 import ChangeTrust from '../components/OperationPanes/ChangeTrust';
+import ClaimClaimableBalance from '../components/OperationPanes/ClaimClaimableBalance';
 import CreateAccount from '../components/OperationPanes/CreateAccount';
 import CreateClaimableBalance from '../components/OperationPanes/CreateClaimableBalance';
 import GenericOffer from '../components/OperationPanes/GenericOffer';
@@ -125,5 +126,12 @@ export const operationsMap = [
     operationPane: CreateClaimableBalance,
     helpNote: 'Creates a new claimable balance.',
     docsUrl: 'https://developers.stellar.org/docs/start/list-of-operations/#create-claimable-balance',
+  },
+  {
+    name: 'claimClaimableBalance',
+    label: 'Claim Claimable Balance',
+    operationPane: ClaimClaimableBalance,
+    helpNote: 'Claims a claimable balance.',
+    docsUrl: 'https://developers.stellar.org/docs/start/list-of-operations/#claim-claimable-balance',
   },
 ]

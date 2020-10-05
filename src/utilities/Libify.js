@@ -333,6 +333,15 @@ Libify.Operation.bumpSequence = function(opts) {
   })
 }
 
+Libify.Operation.claimClaimableBalance = function(opts) {
+  assertNotEmpty(opts.balanceId, 'Claim Claimable Balance operation requires claimable balance ID');
+
+  return Sdk.Operation.claimClaimableBalance({
+    balanceId: opts.balanceId,
+    claimant: opts.sourceAccount,
+  });
+}
+
 Libify.Operation.createClaimableBalance = function(opts) {
   assertNotEmpty(opts.asset, 'Create Claimable Balance operation requires asset');
   assertNotEmpty(opts.amount, 'Create Claimable Balance operation requires amount');
@@ -349,7 +358,7 @@ Libify.Operation.createClaimableBalance = function(opts) {
     amount: opts.amount,
     claimants: libifiedClaimants,
     source: opts.sourceAccount,
-  })
+  });
 }
 
 // buildTransaction is not something found js-stellar libs but acts as an
