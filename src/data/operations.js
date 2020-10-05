@@ -1,17 +1,18 @@
 import find from 'lodash/find';
-import AccountMerge from '../components/OperationPanes/AccountMerge'
-import AllowTrust from '../components/OperationPanes/AllowTrust'
-import BumpSequence from '../components/OperationPanes/BumpSequence'
-import ChangeTrust from '../components/OperationPanes/ChangeTrust'
-import CreateAccount from '../components/OperationPanes/CreateAccount'
-import GenericOffer from '../components/OperationPanes/GenericOffer'
-import ManageBuyOffer from '../components/OperationPanes/ManageBuyOffer'
-import ManageData from '../components/OperationPanes/ManageData'
-import ManageSellOffer from '../components/OperationPanes/ManageSellOffer'
-import PathPaymentStrictReceive from '../components/OperationPanes/PathPaymentStrictReceive'
-import PathPaymentStrictSend from '../components/OperationPanes/PathPaymentStrictSend'
-import Payment from '../components/OperationPanes/Payment'
-import SetOptions from '../components/OperationPanes/SetOptions'
+import AccountMerge from '../components/OperationPanes/AccountMerge';
+import AllowTrust from '../components/OperationPanes/AllowTrust';
+import BumpSequence from '../components/OperationPanes/BumpSequence';
+import ChangeTrust from '../components/OperationPanes/ChangeTrust';
+import CreateAccount from '../components/OperationPanes/CreateAccount';
+import CreateClaimableBalance from '../components/OperationPanes/CreateClaimableBalance';
+import GenericOffer from '../components/OperationPanes/GenericOffer';
+import ManageBuyOffer from '../components/OperationPanes/ManageBuyOffer';
+import ManageData from '../components/OperationPanes/ManageData';
+import ManageSellOffer from '../components/OperationPanes/ManageSellOffer';
+import PathPaymentStrictReceive from '../components/OperationPanes/PathPaymentStrictReceive';
+import PathPaymentStrictSend from '../components/OperationPanes/PathPaymentStrictSend';
+import Payment from '../components/OperationPanes/Payment';
+import SetOptions from '../components/OperationPanes/SetOptions';
 
 export function getOperation(opName) {
   return find(operationsMap, { name: opName });
@@ -117,5 +118,12 @@ export const operationsMap = [
     operationPane: BumpSequence,
     helpNote: 'Bumps sequence number.',
     docsUrl: 'https://developers.stellar.org/docs/start/list-of-operations/#bump-sequence',
+  },
+  {
+    name: 'createClaimableBalance',
+    label: 'Create Claimable Balance',
+    operationPane: CreateClaimableBalance,
+    helpNote: 'Creates a new claimable balance.',
+    docsUrl: 'https://developers.stellar.org/docs/start/list-of-operations/#create-claimable-balance',
   },
 ]

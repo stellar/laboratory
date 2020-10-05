@@ -100,6 +100,10 @@ Libify.Memo = function(opts) {
   }
 }
 
+Libify.Claimant = function(opts) {
+  return new Sdk.Claimant(opts);
+}
+
 // Takes in a type and a pile of options and attempts to turn it into a valid
 // js-stellar-sdk operation. If not, it will throw an error.
 Libify.Operation = function(type, opts) {
@@ -325,6 +329,25 @@ Libify.Operation.bumpSequence = function(opts) {
   assertNotEmpty(opts.bumpTo, 'Sequence number should be set');
   return Sdk.Operation.bumpSequence({
     bumpTo: opts.bumpTo,
+    source: opts.sourceAccount,
+  })
+}
+
+Libify.Operation.createClaimableBalance = function(opts) {
+  assertNotEmpty(opts.asset, 'Create Claimable Balance operation requires asset');
+  assertNotEmpty(opts.amount, 'Create Claimable Balance operation requires amount');
+
+  let libifiedClaimants = map(opts.claimants, (claimant) => {
+    if (!claimant) {
+      throw new Error('Create Claimable Balance operation requires claimant destination');
+    }
+    return Libify.Claimant(claimant);
+  });
+
+  return Sdk.Operation.createClaimableBalance({
+    asset: Libify.Asset(opts.asset),
+    amount: opts.amount,
+    claimants: libifiedClaimants,
     source: opts.sourceAccount,
   })
 }
