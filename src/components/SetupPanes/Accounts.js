@@ -10,6 +10,15 @@ import AssetPicker from "../FormComponents/AssetPicker.js";
 export default function SingleAccount({ onUpdate, values }) {
   return (
     <>
+      <OptionsTablePair label="Sponsor" optional>
+        <PubKeyPicker
+          value={values.sponsor}
+          onUpdate={(value) => {
+            onUpdate("sponsor", value);
+          }}
+        />
+      </OptionsTablePair>
+
       <OptionsTablePair label="Signer" optional>
         <PubKeyPicker
           value={values.signer}
@@ -18,6 +27,7 @@ export default function SingleAccount({ onUpdate, values }) {
           }}
         />
       </OptionsTablePair>
+
       <OptionsTablePair label="Asset" optional>
         <AssetPicker
           stringForm
