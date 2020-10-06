@@ -1,9 +1,11 @@
 import find from 'lodash/find';
 import AccountMerge from '../components/OperationPanes/AccountMerge'
 import AllowTrust from '../components/OperationPanes/AllowTrust'
+import BeginSponsoringFutureReserves from '../components/OperationPanes/BeginSponsoringFutureReserves'
 import BumpSequence from '../components/OperationPanes/BumpSequence'
 import ChangeTrust from '../components/OperationPanes/ChangeTrust'
 import CreateAccount from '../components/OperationPanes/CreateAccount'
+import EndSponsoringFutureReserves from '../components/OperationPanes/EndSponsoringFutureReserves'
 import GenericOffer from '../components/OperationPanes/GenericOffer'
 import ManageBuyOffer from '../components/OperationPanes/ManageBuyOffer'
 import ManageData from '../components/OperationPanes/ManageData'
@@ -117,5 +119,19 @@ export const operationsMap = [
     operationPane: BumpSequence,
     helpNote: 'Bumps sequence number.',
     docsUrl: 'https://developers.stellar.org/docs/start/list-of-operations/#bump-sequence',
+  },
+  {
+    name: 'beginSponsoringFutureReserves',
+    label: 'Begin Sponsoring Future Reserves',
+    operationPane: BeginSponsoringFutureReserves,
+    helpNote: 'Initiate a sponsorship.',
+    docsUrl: 'https://developers.stellar.org/api/resources/operations/object/begin-sponsoring-future-reserves',
+  },
+  {
+    name: 'endSponsoringFutureReserves',
+    label: 'End Sponsoring Future Reserves',
+    operationPane: EndSponsoringFutureReserves,
+    helpNote: 'End a sponsorship.',
+    docsUrl: 'https://developers.stellar.org/api/resources/operations/object/end-sponsoring-future-reserves/',
   },
 ]

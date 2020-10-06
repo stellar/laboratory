@@ -329,6 +329,18 @@ Libify.Operation.bumpSequence = function(opts) {
   })
 }
 
+Libify.Operation.beginSponsoringFutureReserves = function(opts) {
+  assertNotEmpty(opts.sponsoredId, 'Sponsored ID should be set');
+  return Sdk.Operation.beginSponsoringFutureReserves({
+    sponsoredId: opts.sponsoredId,
+  })
+}
+
+Libify.Operation.endSponsoringFutureReserves = function(opts) {
+  // assertNotEmpty(opts.beginSponsor, 'Begin Sponsor should be set');
+  return Sdk.Operation.endSponsoringFutureReserves({})
+}
+
 // buildTransaction is not something found js-stellar libs but acts as an
 // abstraction to building a transaction with input data in the same format
 // as the reducers
