@@ -4,7 +4,7 @@ import OptionsTablePair from '../OptionsTable/Pair';
 import ManualMultiPicker from '../FormComponents/ManualMultiPicker.js';
 import AmountPicker from '../FormComponents/AmountPicker.js';
 import AssetPicker from '../FormComponents/AssetPicker.js';
-import PubKeyPicker from '../FormComponents/PubKeyPicker.js';
+import ClaimantPicker from '../FormComponents/ClaimantPicker.js';
 
 export default function CreateClaimableBalance(props) {
   return [
@@ -22,7 +22,7 @@ export default function CreateClaimableBalance(props) {
     </OptionsTablePair>,
     <OptionsTablePair label="Claimants" key="claimants">
       <ManualMultiPicker
-        component={PubKeyPicker}
+        component={ClaimantPicker}
         value={props.values['claimants']}
         default={""}
         addNewLabel="Add new claimant"

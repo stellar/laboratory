@@ -101,7 +101,12 @@ Libify.Memo = function(opts) {
 }
 
 Libify.Claimant = function(opts) {
-  return new Sdk.Claimant(opts);
+  if (opts.predicateType === "unconditional") {
+    return new Sdk.Claimant(opts.destination);
+  }
+
+  // TODO: handle conditional options
+  throw new Error('IMPLEMENT CONDITIONAL CHECKS');
 }
 
 // Takes in a type and a pile of options and attempts to turn it into a valid
@@ -345,11 +350,15 @@ Libify.Operation.claimClaimableBalance = function(opts) {
 Libify.Operation.createClaimableBalance = function(opts) {
   assertNotEmpty(opts.asset, 'Create Claimable Balance operation requires asset');
   assertNotEmpty(opts.amount, 'Create Claimable Balance operation requires amount');
+  assertNotEmpty(opts.claimants, 'Create Claimable Balance operation requires at least one claimant');
 
   let libifiedClaimants = map(opts.claimants, (claimant) => {
-    if (!claimant) {
+    if (!claimant || !claimant.destination) {
       throw new Error('Create Claimable Balance operation requires claimant destination');
+    } else if (!claimant.predicateType) {
+      throw new Error('Create Claimable Balance operation requires claimant predicate');
     }
+
     return Libify.Claimant(claimant);
   });
 
