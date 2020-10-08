@@ -136,6 +136,5 @@ export const operationsMap = [
     operationPane: EndSponsoringFutureReserves,
     helpNote: 'End a sponsorship.',
     docsUrl: 'https://developers.stellar.org/api/resources/operations/object/end-sponsoring-future-reserves/',
-    excludeAccountSource: true,
   },
 ]

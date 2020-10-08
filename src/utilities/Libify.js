@@ -333,11 +333,11 @@ Libify.Operation.beginSponsoringFutureReserves = function(opts) {
   assertNotEmpty(opts.sponsoredId, 'Sponsored ID should be set');
   return Sdk.Operation.beginSponsoringFutureReserves({
     sponsoredId: opts.sponsoredId,
+    source: opts.sourceAccount,
   })
 }
 
 Libify.Operation.endSponsoringFutureReserves = function(opts) {
-  assertNotEmpty(opts.sourceAccount, 'Source Account should be set');
   return Sdk.Operation.endSponsoringFutureReserves({
     source: opts.sourceAccount
   })

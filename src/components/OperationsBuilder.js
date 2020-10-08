@@ -49,7 +49,7 @@ let operation = (ops, index, dispatch) => {
       <a href={opConfig.docsUrl} target="_blank">See documentation for {opConfig.label}</a>
     </p>;
 
-    sourceAccountRow = opConfig.excludeAccountSource ? null : <OptionsTablePair label="Source Account" optional={true} key="sourceAccount">
+    sourceAccountRow = <OptionsTablePair label="Source Account" optional={true} key="sourceAccount">
       <PubKeyPicker
         value={op.attributes['sourceAccount']}
         onUpdate={(value) => dispatchUpdateOpAtts('sourceAccount', value)}
