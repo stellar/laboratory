@@ -27,7 +27,6 @@ export function getOperation(opName) {
 //     operationPane: require('../components/OperationPanes/CreateAccount'), // React component that contains the multiple pickers for this operation
 //     helpNote: "" // Operation description or note
 //     docsUrl: "" // Link to docs
-//     excludeAccountSource: boolean // if don't want to include optional Account Source
 //   },
 // ]
 
