@@ -25,6 +25,9 @@ export function getOperation(opName) {
 //     name: 'createAccount', // Corresponds to the operation key in js-stellar-sdk.Operation
 //     label: 'Create Account', // Human friendly name for the operation
 //     operationPane: require('../components/OperationPanes/CreateAccount'), // React component that contains the multiple pickers for this operation
+//     helpNote: "" // Operation description or note
+//     docsUrl: "" // Link to docs
+//     excludeAccountSource: boolean // if don't want to include optional Account Source
 //   },
 // ]
 
@@ -124,7 +127,7 @@ export const operationsMap = [
     name: 'beginSponsoringFutureReserves',
     label: 'Begin Sponsoring Future Reserves',
     operationPane: BeginSponsoringFutureReserves,
-    helpNote: 'Initiate a sponsorship.',
+    helpNote: 'Initiate a sponsorship. There must be a corresponding End Sponsoring Future Reserves operation in the same transaction.',
     docsUrl: 'https://developers.stellar.org/api/resources/operations/object/begin-sponsoring-future-reserves',
   },
   {
@@ -133,5 +136,6 @@ export const operationsMap = [
     operationPane: EndSponsoringFutureReserves,
     helpNote: 'End a sponsorship.',
     docsUrl: 'https://developers.stellar.org/api/resources/operations/object/end-sponsoring-future-reserves/',
+    excludeAccountSource: true,
   },
 ]

@@ -87,7 +87,7 @@ let operation = (ops, index, dispatch) => {
       </OptionsTablePair>
       {separator}
       {operationPane}
-      {sourceAccountRow}
+      {!opConfig.excludeAccountSource && sourceAccountRow}
     </div>
   </div>;
 }

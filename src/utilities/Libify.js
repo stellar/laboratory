@@ -337,8 +337,10 @@ Libify.Operation.beginSponsoringFutureReserves = function(opts) {
 }
 
 Libify.Operation.endSponsoringFutureReserves = function(opts) {
-  // assertNotEmpty(opts.beginSponsor, 'Begin Sponsor should be set');
-  return Sdk.Operation.endSponsoringFutureReserves({})
+  assertNotEmpty(opts.sourceAccount, 'Source Account should be set');
+  return Sdk.Operation.endSponsoringFutureReserves({
+    source: opts.sourceAccount
+  })
 }
 
 // buildTransaction is not something found js-stellar libs but acts as an
