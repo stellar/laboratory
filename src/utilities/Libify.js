@@ -196,10 +196,11 @@ Libify.Operation.allowTrust = function(opts) {
   assertNotEmpty(opts.trustor, 'Allow Trust operation requires trustor');
   assertNotEmpty(opts.assetCode, 'Allow Trust operation requires asset code');
   assertNotEmpty(opts.authorize, 'Allow Trust operation requires authorization setting');
+
   return Sdk.Operation.allowTrust({
     trustor: opts.trustor,
     assetCode: opts.assetCode,
-    authorize: isLooseTruthy(opts.authorize),
+    authorize: Number(opts.authorize),
     source: opts.sourceAccount,
   })
 }

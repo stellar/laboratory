@@ -3,7 +3,7 @@ import React from 'react';
 import OptionsTablePair from '../OptionsTable/Pair';
 import PubKeyPicker from '../FormComponents/PubKeyPicker.js';
 import TextPicker from '../FormComponents/TextPicker.js';
-import BooleanPicker from '../FormComponents/BooleanPicker.js';
+import RadioButtonPicker from '../FormComponents/RadioButtonPicker.js';
 
 export default function AllowTrust(props) {
   return [
@@ -20,10 +20,15 @@ export default function AllowTrust(props) {
         />
     </OptionsTablePair>,
     <OptionsTablePair label="Authorize" key="authorize">
-      <BooleanPicker
+      <RadioButtonPicker
         value={props.values['authorize']}
         onUpdate={(value) => {props.onUpdate('authorize', value)}}
-        />
+        items={{
+          0: "unauthorized",
+          1: "authorized",
+          2: "authorized to maintain liabilities",
+        }}
+      />
     </OptionsTablePair>,
   ];
 }
