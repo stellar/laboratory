@@ -13,6 +13,7 @@ import ManageSellOffer from '../components/OperationPanes/ManageSellOffer'
 import PathPaymentStrictReceive from '../components/OperationPanes/PathPaymentStrictReceive'
 import PathPaymentStrictSend from '../components/OperationPanes/PathPaymentStrictSend'
 import Payment from '../components/OperationPanes/Payment'
+import RevokeSponsorship from '../components/OperationPanes/RevokeSponsorship'
 import SetOptions from '../components/OperationPanes/SetOptions'
 
 export function getOperation(opName) {
@@ -134,6 +135,13 @@ export const operationsMap = [
     label: 'End Sponsoring Future Reserves',
     operationPane: EndSponsoringFutureReserves,
     helpNote: 'End a sponsorship.',
-    docsUrl: 'https://developers.stellar.org/api/resources/operations/object/end-sponsoring-future-reserves/',
+    docsUrl: 'https://developers.stellar.org/api/resources/operations/object/end-sponsoring-future-reserves',
+  },
+  {
+    name: 'revokeSponsorship',
+    label: 'Revoke Sponsorship',
+    operationPane: RevokeSponsorship,
+    helpNote: 'Revoke sponsorship of a ledger entry.',
+    docsUrl: 'https://developers.stellar.org/api/resources/operations/object/revoke-sponsorship',
   },
 ]
