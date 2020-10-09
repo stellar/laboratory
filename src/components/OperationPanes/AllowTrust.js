@@ -24,9 +24,9 @@ export default function AllowTrust(props) {
         value={props.values['authorize']}
         onUpdate={(value) => {props.onUpdate('authorize', value)}}
         items={{
-          0: "unauthorized",
-          1: "authorized",
-          2: "authorized to maintain liabilities",
+          "0": "unauthorized",
+          "1": "authorized",
+          "2": "authorized to maintain liabilities",
         }}
       />
     </OptionsTablePair>,
