@@ -45,7 +45,7 @@ export default function SignerPicker(props) {
       break;
   }
 
-  if (!props.hideWeight && value.type) {
+  if (!props.disableWeight && value.type) {
     weight = <div>
       <Unsigned8bitIntPicker
         value={value.weight}

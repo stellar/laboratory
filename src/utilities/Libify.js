@@ -380,6 +380,7 @@ Libify.Operation.revokeSponsorship = function(opts) {
       });
     case "data":
       assertNotEmpty(opts.revoke.fields.account, 'Account should be set');
+      assertNotEmpty(opts.revoke.fields.name, 'Name should be set');
 
       return Sdk.Operation.revokeDataSponsorship({
         account: opts.revoke.fields.account,

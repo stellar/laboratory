@@ -84,6 +84,7 @@ export default function RevokeSponsorshipPicker({ value, onUpdate, ...props }) {
             <AssetPicker
               value={localValue.fields["asset"]}
               onUpdate={(value) => handleUpdate(value, "asset")}
+              disableNative
             />
           </OptionsTablePair>
         </>;
@@ -111,7 +112,7 @@ export default function RevokeSponsorshipPicker({ value, onUpdate, ...props }) {
               onUpdate={(value) => handleUpdate(value, "account")}
             />
           </OptionsTablePair>
-          <OptionsTablePair label="Name" key="name" optional>
+          <OptionsTablePair label="Name" key="name">
             <TextPicker
               value={localValue.fields["name"]}
               onUpdate={(value) => handleUpdate(value, "name")}
@@ -137,7 +138,7 @@ export default function RevokeSponsorshipPicker({ value, onUpdate, ...props }) {
             <SignerPicker
               value={localValue.fields["signer"]}
               onUpdate={(value) => handleUpdate(value, "signer")}
-              hideWeight
+              disableWeight
             />
           </OptionsTablePair>
         </>;
