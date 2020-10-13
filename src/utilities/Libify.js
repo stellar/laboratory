@@ -388,7 +388,7 @@ Libify.Operation.revokeSponsorship = function(opts) {
         source: opts.sourceAccount
       });
     case "claimableBalance":
-      assertNotEmpty(opts.revoke.fields.balanceId, 'Balance ID should be set');
+      assertNotEmpty(opts.revoke.fields.balanceId, 'Claimable balance ID should be set');
 
       return Sdk.Operation.revokeClaimableBalanceSponsorship({
         balanceId: opts.revoke.fields.balanceId,

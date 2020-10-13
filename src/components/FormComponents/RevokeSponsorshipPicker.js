@@ -120,7 +120,7 @@ export default function RevokeSponsorshipPicker({ value, onUpdate, ...props }) {
           </OptionsTablePair>
         </>;
       case "claimableBalance":
-        return <OptionsTablePair label="Balance ID" key="balanceId">
+        return <OptionsTablePair label="Claimable balance ID" key="balanceId">
           <TextPicker
             value={localValue.fields["balanceId"]}
             onUpdate={(value) => handleUpdate(value, "balanceId")}
