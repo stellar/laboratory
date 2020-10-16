@@ -105,7 +105,7 @@ Libify.Claimant = function(opts) {
     return new Sdk.Claimant(opts.destination);
   }
 
-  // TODO: handle conditional options
+  // TODO: handle conditional options + validation
   throw new Error('IMPLEMENT CONDITIONAL CHECKS');
 }
 
