@@ -6,6 +6,7 @@ import OptionsTablePair from "../OptionsTable/Pair";
 import RadioButtonPicker from "./RadioButtonPicker";
 import PubKeyPicker from "./PubKeyPicker";
 import TextPicker from "./TextPicker";
+import TimestampPicker from './TimestampPicker';
 
 // Value is a string containing the currently selected id (or undefined)
 function ClaimantObjectPicker({ value, onUpdate, disableNative, ...props }) {
@@ -263,8 +264,14 @@ function PredicateTimeValue({ parentPath, nodeValue, onUpdate }) {
   return (
     <>
       <OptionsTablePair label="Time Value" key="predicateTimeValue">
-        {inputType === "absolute" && <TextPicker value={nodeValue} onUpdate={handleUpdate} />}
-        {inputType === "relative" && <TextPicker value={nodeValue} onUpdate={handleUpdate} />}
+        {inputType === "absolute" && <>
+          <TextPicker placeholder="Example: 2020-12-21T16:34:04Z" value={nodeValue} onUpdate={handleUpdate} />
+          <p className="optionsTable__pair__content__note">An ISO 8601 formatted string representing a deadline for when the claimable balance can be claimed.</p>
+        </>}
+        {inputType === "relative" && <>
+          <TimestampPicker placeholder="Example: 1479151713" value={nodeValue} onUpdate={handleUpdate} />
+          <p className="optionsTable__pair__content__note">A relative deadline for when the claimable balance can be claimed.</p>
+        </>}
       </OptionsTablePair>
     </>
   );
