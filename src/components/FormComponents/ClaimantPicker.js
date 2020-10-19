@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { assign, set, isEmpty, get, unset } from "lodash";
+import { assign, set, isEmpty, unset } from "lodash";
 import { transformPredicateDataForRender, addPathDelimiter } from "../../utilities/transformPredicateDataForRender";
 import OptionsTablePair from "../OptionsTable/Pair";
 import RadioButtonPicker from "./RadioButtonPicker";
@@ -33,8 +33,6 @@ function ClaimantObjectPicker({ value, onUpdate, disableNative, ...props }) {
     }));
   }
 
-  // TODO: handle max level 3
-
   return (
     <div {...props}>
       <OptionsTablePair label="Destination" key="destination">
@@ -62,6 +60,31 @@ function ClaimantObjectPicker({ value, onUpdate, disableNative, ...props }) {
 function getLastItemFromPath(path, size = 1) {
   const pathArray = path.split(".");
   return pathArray[pathArray.length - size];
+}
+
+function getNestingLevel(str) {
+  const regex = /(conditional|unconditional)/g;
+  return ((str || '').match(regex) || []).length;
+}
+
+function getParentLabel(parentPath) {
+  return getNestingLevel(parentPath) >= 2 ? `${parentPath.split(".")[1].toUpperCase()} > ` : "";
+}
+
+function getChildValue(val) {
+  switch(val) {
+    case "and":
+    case "or":
+      return [{}, {}];
+    case "not":
+    case "time":
+      return {};
+    case "absolute":
+    case "relative":
+      return "";
+    default:
+      return null;
+  }
 }
 
 function getComponent(type, parentPath) {
@@ -136,9 +159,20 @@ function Predicate({ parentPath, type, nodeValue, onUpdate }) {
 
   const isConditional = type === "conditional";
 
+  let label;
+  let parentType = getLastItemFromPath(parentPath);
+
+  if (!parentType) {
+    label = "Predicate";
+  } else if (!isNaN(parentType)) {
+    label = `${getLastItemFromPath(parentPath, 2).toUpperCase()} Predicate ${++parentType}`;
+  } else {
+    label = `${parentType.toUpperCase()} Predicate`;
+  }
+
   return (
-    <>
-      <OptionsTablePair label="Predicate" key="predicate">
+    <div className="predicateWrapper">
+      <OptionsTablePair label={`${getParentLabel(parentPath)}${label}`} key="predicate">
         <RadioButtonPicker
           value={type}
           onUpdate={(val) => onUpdate({
@@ -151,28 +185,11 @@ function Predicate({ parentPath, type, nodeValue, onUpdate }) {
         />
       </OptionsTablePair>
       {isConditional && renderComponent({ nodes: nodeValue, onUpdate })}
-    </>
+    </div>
   );
 }
 
-function getChildValue(val) {
-  switch(val) {
-    case "and":
-    case "or":
-      return [{}, {}];
-    case "not":
-    case "time":
-      return {};
-    case "absolute":
-    case "relative":
-      return "";
-    default:
-      return null;
-  }
-}
-
 function PredicateType({ parentPath, type, nodeValue, onUpdate }) {
-  // TODO: disable AND, OR, NOT when parentIndex === 3
   const predicateTypeButtons = {
     time: "Time",
     and: "AND",
@@ -180,8 +197,15 @@ function PredicateType({ parentPath, type, nodeValue, onUpdate }) {
     not: "NOT",
   };
 
+  let disabledPredicateTypeButtons;
+  const hasMaxNestingLevel = getNestingLevel(parentPath) >= 3;
+
+  if (hasMaxNestingLevel) {
+    disabledPredicateTypeButtons = ["and", "or", "not"];
+  }
+
   return (
-    <>
+    <div className="predicateTypeWrapper">
       <OptionsTablePair label="Predicate Type" key="predicateType">
         <RadioButtonPicker
           value={type}
@@ -192,10 +216,12 @@ function PredicateType({ parentPath, type, nodeValue, onUpdate }) {
             })
           }
           items={predicateTypeButtons}
+          disabledItems={disabledPredicateTypeButtons}
         />
+        {hasMaxNestingLevel && <p className="optionsTable__pair__content__note">Deeper nesting is not allowed.</p>}
       </OptionsTablePair>
       {nodeValue && nodeValue.length > 0 && renderComponent({ nodes: nodeValue, onUpdate })}
-    </>
+    </div>
   );
 }
 
@@ -261,6 +287,5 @@ export default function ClaimantPicker({
 
 ClaimantPicker.propTypes = {
   onUpdate: PropTypes.func.isRequired,
-  // TODO: update type
-  value: PropTypes.any,
+  value: PropTypes.shape({}),
 };
