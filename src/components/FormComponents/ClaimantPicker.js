@@ -68,7 +68,7 @@ function getNestingLevel(str) {
 }
 
 function getParentLabel(parentPath) {
-  return getNestingLevel(parentPath) >= 2 ? `${parentPath.split(".")[1].toUpperCase()} > ` : "";
+  return getNestingLevel(parentPath) >= 2 ? `${parentPath.split(".")[1].toUpperCase()}: ` : "";
 }
 
 function getChildValue(val) {
@@ -264,12 +264,12 @@ function PredicateTimeValue({ parentPath, nodeValue, onUpdate }) {
     <>
       <OptionsTablePair label="Time Value" key="predicateTimeValue">
         {inputType === "absolute" && <>
-          <TextPicker placeholder="Example: 2020-12-21T16:34:04Z" value={nodeValue} onUpdate={handleUpdate} />
-          <p className="optionsTable__pair__content__note">An ISO 8601 formatted string representing a deadline for when the claimable balance can be claimed.</p>
+          <TextPicker placeholder="Example: 1603303504267" value={nodeValue} onUpdate={handleUpdate} />
+          <p className="optionsTable__pair__content__note">Unix epoch as a string representing a deadline for when the claimable balance can be claimed. If the balance is claimed before the date then this clause of the condition is satisfied.</p>
         </>}
         {inputType === "relative" && <>
           <TimestampPicker placeholder="Example: 1479151713" value={nodeValue} onUpdate={handleUpdate} />
-          <p className="optionsTable__pair__content__note">A relative deadline for when the claimable balance can be claimed.</p>
+          <p className="optionsTable__pair__content__note">A relative deadline for when the claimable balance can be claimed. The value represents the number of seconds since the close time of the ledger which created the claimable balance.</p>
         </>}
       </OptionsTablePair>
     </>
