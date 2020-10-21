@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { assign, set, isEmpty, unset } from "lodash";
-import { transformPredicateDataForRender, addPathDelimiter } from "../../utilities/transformPredicateDataForRender";
+import { transformPredicateDataForRender, addPathDelimiter } from "../../utilities/claimantHelpers";
 import OptionsTablePair from "../OptionsTable/Pair";
 import RadioButtonPicker from "./RadioButtonPicker";
 import PubKeyPicker from "./PubKeyPicker";
@@ -12,7 +12,6 @@ import TimestampPicker from './TimestampPicker';
 function ClaimantObjectPicker({ value, onUpdate, disableNative, ...props }) {
   const localValue = assign({
     destination: "",
-    predicateType: "",
     predicate: {},
   }, value);
 
@@ -294,5 +293,5 @@ export default function ClaimantPicker({
 
 ClaimantPicker.propTypes = {
   onUpdate: PropTypes.func.isRequired,
-  value: PropTypes.shape({}),
+  value: PropTypes.any,
 };

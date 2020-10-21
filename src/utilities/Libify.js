@@ -16,6 +16,7 @@ import isEmpty from 'lodash/isEmpty';
 import isString from 'lodash/isString';
 import isUndefined from 'lodash/isUndefined';
 import map from 'lodash/map';
+import { createPredicate } from "../utilities/claimantHelpers";
 
 // Helpers
 let isInt = function(value) {
@@ -101,12 +102,12 @@ Libify.Memo = function(opts) {
 }
 
 Libify.Claimant = function(opts) {
-  if (opts.predicateType === "unconditional") {
+  if (opts.predicate && opts.predicate.unconditional) {
     return new Sdk.Claimant(opts.destination);
   }
 
-  // TODO: handle conditional options + validation
-  throw new Error('IMPLEMENT CONDITIONAL CHECKS');
+  // Predicate validation is handled in createPredicate()
+  return new Sdk.Claimant(opts.destination, createPredicate(opts.predicate));
 }
 
 // Takes in a type and a pile of options and attempts to turn it into a valid
@@ -355,7 +356,7 @@ Libify.Operation.createClaimableBalance = function(opts) {
   let libifiedClaimants = map(opts.claimants, (claimant) => {
     if (!claimant || !claimant.destination) {
       throw new Error('Create Claimable Balance operation requires claimant destination');
-    } else if (!claimant.predicateType) {
+    } else if (!claimant.predicate) {
       throw new Error('Create Claimable Balance operation requires claimant predicate');
     }
 
