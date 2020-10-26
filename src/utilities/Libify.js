@@ -16,6 +16,7 @@ import isEmpty from 'lodash/isEmpty';
 import isString from 'lodash/isString';
 import isUndefined from 'lodash/isUndefined';
 import map from 'lodash/map';
+import { createPredicate } from "../utilities/claimantHelpers";
 
 // Helpers
 let isInt = function(value) {
@@ -98,6 +99,15 @@ Libify.Memo = function(opts) {
   case 'MEMO_RETURN':
     return Sdk.Memo.return(opts.content);
   }
+}
+
+Libify.Claimant = function(opts) {
+  if (opts.predicate && opts.predicate.unconditional) {
+    return new Sdk.Claimant(opts.destination);
+  }
+
+  // Predicate validation is handled in createPredicate()
+  return new Sdk.Claimant(opts.destination, createPredicate(opts.predicate));
 }
 
 // Takes in a type and a pile of options and attempts to turn it into a valid
@@ -328,6 +338,38 @@ Libify.Operation.bumpSequence = function(opts) {
     bumpTo: opts.bumpTo,
     source: opts.sourceAccount,
   })
+}
+
+Libify.Operation.claimClaimableBalance = function(opts) {
+  assertNotEmpty(opts.balanceId, 'Claim Claimable Balance operation requires claimable balance ID');
+
+  return Sdk.Operation.claimClaimableBalance({
+    balanceId: opts.balanceId,
+    claimant: opts.sourceAccount,
+  });
+}
+
+Libify.Operation.createClaimableBalance = function(opts) {
+  assertNotEmpty(opts.asset, 'Create Claimable Balance operation requires asset');
+  assertNotEmpty(opts.amount, 'Create Claimable Balance operation requires amount');
+  assertNotEmpty(opts.claimants, 'Create Claimable Balance operation requires at least one claimant');
+
+  let libifiedClaimants = map(opts.claimants, (claimant) => {
+    if (!claimant || !claimant.destination) {
+      throw new Error('Create Claimable Balance operation requires claimant destination');
+    } else if (!claimant.predicate) {
+      throw new Error('Create Claimable Balance operation requires claimant predicate');
+    }
+
+    return Libify.Claimant(claimant);
+  });
+
+  return Sdk.Operation.createClaimableBalance({
+    asset: Libify.Asset(opts.asset),
+    amount: opts.amount,
+    claimants: libifiedClaimants,
+    source: opts.sourceAccount,
+  });
 }
 
 Libify.Operation.beginSponsoringFutureReserves = function(opts) {

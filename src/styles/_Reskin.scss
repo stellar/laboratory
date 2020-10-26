@@ -103,7 +103,7 @@ input, textarea, select, .so-dropdown__select {
 }
 .s-button.is-disabled, .s-button:disabled{
   background: $gray;
-  border: $gray;
+  border-color: $gray;
 }
 .s-button:not(.buttonList__item) {
   border-radius: 4rem;
