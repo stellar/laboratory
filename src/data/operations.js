@@ -1,11 +1,13 @@
 import find from 'lodash/find';
 import AccountMerge from '../components/OperationPanes/AccountMerge';
 import AllowTrust from '../components/OperationPanes/AllowTrust';
+import BeginSponsoringFutureReserves from '../components/OperationPanes/BeginSponsoringFutureReserves'
 import BumpSequence from '../components/OperationPanes/BumpSequence';
 import ChangeTrust from '../components/OperationPanes/ChangeTrust';
 import ClaimClaimableBalance from '../components/OperationPanes/ClaimClaimableBalance';
 import CreateAccount from '../components/OperationPanes/CreateAccount';
 import CreateClaimableBalance from '../components/OperationPanes/CreateClaimableBalance';
+import EndSponsoringFutureReserves from '../components/OperationPanes/EndSponsoringFutureReserves'
 import GenericOffer from '../components/OperationPanes/GenericOffer';
 import ManageBuyOffer from '../components/OperationPanes/ManageBuyOffer';
 import ManageData from '../components/OperationPanes/ManageData';
@@ -13,6 +15,7 @@ import ManageSellOffer from '../components/OperationPanes/ManageSellOffer';
 import PathPaymentStrictReceive from '../components/OperationPanes/PathPaymentStrictReceive';
 import PathPaymentStrictSend from '../components/OperationPanes/PathPaymentStrictSend';
 import Payment from '../components/OperationPanes/Payment';
+import RevokeSponsorship from '../components/OperationPanes/RevokeSponsorship';
 import SetOptions from '../components/OperationPanes/SetOptions';
 
 export function getOperation(opName) {
@@ -25,6 +28,8 @@ export function getOperation(opName) {
 //     name: 'createAccount', // Corresponds to the operation key in js-stellar-sdk.Operation
 //     label: 'Create Account', // Human friendly name for the operation
 //     operationPane: require('../components/OperationPanes/CreateAccount'), // React component that contains the multiple pickers for this operation
+//     helpNote: "" // Operation description or note
+//     docsUrl: "" // Link to docs
 //   },
 // ]
 
@@ -133,5 +138,26 @@ export const operationsMap = [
     operationPane: ClaimClaimableBalance,
     helpNote: 'Claims a claimable balance.',
     docsUrl: 'https://developers.stellar.org/docs/start/list-of-operations/#claim-claimable-balance',
+  },
+  {
+    name: 'beginSponsoringFutureReserves',
+    label: 'Begin Sponsoring Future Reserves',
+    operationPane: BeginSponsoringFutureReserves,
+    helpNote: 'Initiate a sponsorship. There must be a corresponding End Sponsoring Future Reserves operation in the same transaction.',
+    docsUrl: 'https://developers.stellar.org/api/resources/operations/object/begin-sponsoring-future-reserves',
+  },
+  {
+    name: 'endSponsoringFutureReserves',
+    label: 'End Sponsoring Future Reserves',
+    operationPane: EndSponsoringFutureReserves,
+    helpNote: 'End a sponsorship.',
+    docsUrl: 'https://developers.stellar.org/api/resources/operations/object/end-sponsoring-future-reserves',
+  },
+  {
+    name: 'revokeSponsorship',
+    label: 'Revoke Sponsorship',
+    operationPane: RevokeSponsorship,
+    helpNote: 'Revoke sponsorship of a ledger entry.',
+    docsUrl: 'https://developers.stellar.org/api/resources/operations/object/revoke-sponsorship',
   },
 ]

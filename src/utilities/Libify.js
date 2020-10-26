@@ -206,10 +206,11 @@ Libify.Operation.allowTrust = function(opts) {
   assertNotEmpty(opts.trustor, 'Allow Trust operation requires trustor');
   assertNotEmpty(opts.assetCode, 'Allow Trust operation requires asset code');
   assertNotEmpty(opts.authorize, 'Allow Trust operation requires authorization setting');
+
   return Sdk.Operation.allowTrust({
     trustor: opts.trustor,
     assetCode: opts.assetCode,
-    authorize: isLooseTruthy(opts.authorize),
+    authorize: Number(opts.authorize),
     source: opts.sourceAccount,
   })
 }
@@ -369,6 +370,93 @@ Libify.Operation.createClaimableBalance = function(opts) {
     claimants: libifiedClaimants,
     source: opts.sourceAccount,
   });
+}
+
+Libify.Operation.beginSponsoringFutureReserves = function(opts) {
+  assertNotEmpty(opts.sponsoredId, 'Sponsored ID should be set');
+  return Sdk.Operation.beginSponsoringFutureReserves({
+    sponsoredId: opts.sponsoredId,
+    source: opts.sourceAccount,
+  })
+}
+
+Libify.Operation.endSponsoringFutureReserves = function(opts) {
+  return Sdk.Operation.endSponsoringFutureReserves({
+    source: opts.sourceAccount
+  })
+}
+
+Libify.Operation.revokeSponsorship = function(opts) {
+  if (!(opts.revoke && opts.revoke.type && opts.revoke.fields)) {
+    throw new Error("Revoke Sponsorship Type should be selected");
+  }
+
+  switch(opts.revoke.type) {
+    case "account":
+      assertNotEmpty(opts.revoke.fields.account, 'Account should be set');
+
+      return Sdk.Operation.revokeAccountSponsorship({
+        account: opts.revoke.fields.account,
+        source: opts.sourceAccount,
+      });
+    case "trustline":
+      assertNotEmpty(opts.revoke.fields.account, 'Account should be set');
+      assertNotEmpty(opts.revoke.fields.asset, 'Asset should be set');
+
+      return Sdk.Operation.revokeTrustlineSponsorship({
+        account: opts.revoke.fields.account,
+        asset: Libify.Asset(opts.revoke.fields.asset),
+        source: opts.sourceAccount
+      });
+    case "offer":
+      assertNotEmpty(opts.revoke.fields.seller, 'Seller should be set');
+      assertNotEmpty(opts.revoke.fields.offerId, 'Offer ID should be set');
+
+      if (opts.revoke.fields.offerId && isNaN(opts.revoke.fields.offerId)) {
+        throw new Error("Offer ID should be a number");
+      }
+
+      return Sdk.Operation.revokeOfferSponsorship({
+        seller: opts.revoke.fields.seller,
+        offerId: opts.revoke.fields.offerId,
+        source: opts.sourceAccount
+      });
+    case "data":
+      assertNotEmpty(opts.revoke.fields.account, 'Account should be set');
+      assertNotEmpty(opts.revoke.fields.name, 'Name should be set');
+
+      return Sdk.Operation.revokeDataSponsorship({
+        account: opts.revoke.fields.account,
+        name: opts.revoke.fields.name,
+        source: opts.sourceAccount
+      });
+    case "claimableBalance":
+      assertNotEmpty(opts.revoke.fields.balanceId, 'Claimable balance ID should be set');
+
+      return Sdk.Operation.revokeClaimableBalanceSponsorship({
+        balanceId: opts.revoke.fields.balanceId,
+        source: opts.sourceAccount
+      });
+    case "signer":
+      const signer = opts.revoke.fields.signer;
+
+      assertNotEmpty(opts.revoke.fields.account, 'Account should be set');
+      assertNotEmpty(signer, 'Signer should be set');
+
+      if (signer) {
+        assertNotEmpty(signer.content, 'Signer content should be set');
+      }
+
+      return Sdk.Operation.revokeSignerSponsorship({
+        account: opts.revoke.fields.account,
+        signer: {
+          [signer.type]: signer.content
+        },
+        source: opts.sourceAccount
+      });
+    default:
+      return;
+  }
 }
 
 // buildTransaction is not something found js-stellar libs but acts as an
