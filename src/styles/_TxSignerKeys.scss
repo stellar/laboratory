@@ -5,4 +5,13 @@
 
 .TxSignerKeys__signBipPath {
   margin-top: 0.5em;
+  background-color: white !important;
+  border-color: gray !important;
+  color: black;
+}
+
+.TxSignerKeys__signBipPath:hover {
+  border-color: black !important;
+  background-color: white !important;
+  color: black !important;
 }

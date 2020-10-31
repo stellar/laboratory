@@ -90,7 +90,7 @@ class TransactionSigner extends React.Component {
       if (!isUndefined(result.xdr)) {
         codeResult = <pre className="TxSignerResult__xdr so-code so-code__wrap" onClick={clickToSelect}><code>{result.xdr}</code></pre>;
         submitLink = <a
-          className="s-button TxSignerResult__submit"
+          className="s-button TxSignerResult__primary"
           href={txPostLink(result.xdr)}
           onClick={scrollOnAnchorOpen}
           >Submit in Transaction Submitter</a>;
