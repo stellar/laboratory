@@ -16,4 +16,15 @@
   }
   .TxSignerResult__submit {
     margin-top: 1em;
+    background-color: #009688    !important; 
+    border: 1px solid #00897b !important; 
+  }
+  .TxSignerResult__submit:hover {
+    margin-top: 1em;
+    background-color: #00897b !important; 
+    border: 1px solid #00897b !important; 
+  }
+  .TxSignerResult__primary {
+    margin-top: 1em;
+
   }
