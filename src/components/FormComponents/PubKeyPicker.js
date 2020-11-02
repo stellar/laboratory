@@ -4,7 +4,10 @@ import { StrKey } from "stellar-sdk";
 
 import TextPicker from "./TextPicker";
 import { ImportMark } from "../ImportMark";
-import { useLyra, lyraGetPublicKey } from "../../utilities/useLyra";
+import {
+  useFreighter,
+  freighterGetPublicKey,
+} from "../../utilities/useFreighter";
 
 export default function PubKeyPicker({
   placeholder,
@@ -12,7 +15,8 @@ export default function PubKeyPicker({
   onUpdate,
   ...props
 }) {
-  const hasLyra = useLyra();
+  const hasFreighter = useFreighter();
+  console.log(hasFreighter);
 
   return (
     <div className="PubKeyPicker">
@@ -30,10 +34,10 @@ export default function PubKeyPicker({
           }
         }}
       />
-      {hasLyra && (
+      {hasFreighter && (
         <button
           type="button"
-          onClick={() => lyraGetPublicKey(onUpdate)}
+          onClick={() => freighterGetPublicKey(onUpdate)}
           className="s-button__icon PubKeyPicker__activator"
         >
           <ImportMark width={24} />

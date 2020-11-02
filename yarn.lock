@@ -935,10 +935,10 @@
   resolved "https://registry.yarnpkg.com/@ledgerhq/logs/-/logs-5.17.0.tgz#a3e946d915abf9c1f168bfba357a4c18a5431bfe"
   integrity sha512-cY3aL9hLdQONFJihQDaO3szmyo53nLdMYisVLfjxJ2SBH5SOyoAtg6Utwz4u6Y3Cf464BJ0wZu3/SlVO0kboBQ==
 
-"@stellar/lyra-api@^1.0.0-alpha.2":
-  version "1.0.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@stellar/lyra-api/-/lyra-api-1.0.0-alpha.2.tgz#8863998dd9588c946e17449a35bba4bfd8f21092"
-  integrity sha512-1Y3a2KSpCL3Cg/qHJYHRe5kRA4gz8JnQedRPwwUp9q+Bd6UaTPOmgKVUMRrYRTAaLx87JtZUQObHTPc4owcJQg==
+"@stellar/freighter-api@1.0.0-beta.0":
+  version "1.0.0-beta.0"
+  resolved "https://registry.yarnpkg.com/@stellar/freighter-api/-/freighter-api-1.0.0-beta.0.tgz#08c3f4ebb4d1b8c3e92039242ca5c877814864b4"
+  integrity sha512-wngITwqu9h4yfgqXvJS27VEkrlPh/u6uTDOPI2Ct8pZzde3fVPYGK+42izhGAe5oOvbziZQqHkHIPh+rkl7YHg==
 
 "@stellar/prettier-config@^1.0.1":
   version "1.0.1"

@@ -3,32 +3,25 @@
  */
 
 import React from "react";
-import { signTransaction } from "@stellar/lyra-api";
+import { signTransaction } from "@stellar/freighter-api";
 
 import { CodeBlock } from "./CodeBlock";
 
-const signWithLyra = async (xdr, setTxResultMessage, setErrorStatus) => {
+const signWithFreighter = async (xdr, setTxResultMessage, setErrorStatus) => {
   let res = { signedTransaction: "", error: "" };
 
   try {
-    res = await signTransaction({
-      transactionXdr: xdr,
-    });
+    res = await signTransaction(xdr);
   } catch (e) {
-    res = e;
-    console.error(e);
+    setTxResultMessage(e);
+    setErrorStatus(true);
   }
 
-  if (res.error) {
-    setTxResultMessage(res.error);
-    setErrorStatus(true);
-  } else {
-    setTxResultMessage(res.signedTransaction);
-    setErrorStatus(false);
-  }
+  setTxResultMessage(res);
+  setErrorStatus(false);
 };
 
-const TxLyraSign = ({ xdr }) => {
+const TxFreighterSign = ({ xdr }) => {
   const [txResultMessage, setTxResultMessage] = React.useState("");
   const [hasError, setErrorStatus] = React.useState(false);
 
@@ -37,20 +30,22 @@ const TxLyraSign = ({ xdr }) => {
       <button
         className="s-button"
         type="button"
-        onClick={() => signWithLyra(xdr, setTxResultMessage, setErrorStatus)}
+        onClick={() =>
+          signWithFreighter(xdr, setTxResultMessage, setErrorStatus)
+        }
       >
-        {txResultMessage ? "Sign again" : "Sign with Lyra"}
+        {txResultMessage ? "Sign again" : "Sign with Freighter"}
       </button>
       {txResultMessage ? (
         hasError ? (
-          <div className="TxLyraSign__result">
+          <div className="TxFreighterSign__result">
             There was an error signing the transaction:
-            <div className="TxLyraSign__result-error">
+            <div className="TxFreighterSign__result-error">
               <code>{txResultMessage}</code>
             </div>
           </div>
         ) : (
-          <div className="TxLyraSign__result">
+          <div className="TxFreighterSign__result">
             Successfully signed!
             <CodeBlock
               className="AccountCreator__spaceTop so-code so-code__wrap"
@@ -64,4 +59,4 @@ const TxLyraSign = ({ xdr }) => {
   );
 };
 
-export default TxLyraSign;
+export default TxFreighterSign;

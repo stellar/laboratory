@@ -1,13 +1,13 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import { isConnected } from "@stellar/lyra-api";
+import { isConnected } from "@stellar/freighter-api";
 import reduce from 'lodash/reduce'
 import {EasySelect} from './EasySelect';
 import Libify from '../utilities/Libify';
 import {txSignerLink, xdrViewer} from '../utilities/linkBuilder';
 import scrollOnAnchorOpen from '../utilities/scrollOnAnchorOpen';
 import TX_TYPES from '../constants/transaction_types';
-import TxLyraSign from "./TxLyraSign";
+import TxFreighterSign from "./TxFreighterSign";
 
 
 class TxBuilderResult extends React.Component {
@@ -132,7 +132,7 @@ class TxBuilderResult extends React.Component {
         {isConnected() && transactionBuild && !transactionBuild.errors.length ? (
           <>
           <hr />
-          <TxLyraSign xdr={transactionBuild.xdr} />
+          <TxFreighterSign xdr={transactionBuild.xdr} />
           </>
         ) : null}
       </div>
