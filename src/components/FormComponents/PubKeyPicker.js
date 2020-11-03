@@ -16,7 +16,6 @@ export default function PubKeyPicker({
   ...props
 }) {
   const hasFreighter = useFreighter();
-  console.log(hasFreighter);
 
   return (
     <div className="PubKeyPicker">

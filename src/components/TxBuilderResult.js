@@ -84,7 +84,7 @@ class TxBuilderResult extends React.Component {
             In order for the transaction to make it into the ledger, a
             transaction must be successfully signed and submitted to the
             network. The laboratory provides the{" "}
-            <a href="#txsigner">Transaction Signer</a> to for signing a
+            <a href="#txsigner">Transaction Signer</a> for signing a
             transaction, and the{" "}
             <a href="#explorer?resource=transactions&endpoint=create">
               Post Transaction endpoint

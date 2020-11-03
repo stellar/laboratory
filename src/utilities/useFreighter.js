@@ -4,7 +4,6 @@ import { isConnected, getPublicKey } from "@stellar/freighter-api";
 
 export const useFreighter = () => {
   const [hasFreighter, setHasFreighter] = React.useState(false);
-  console.log(isConnected());
 
   React.useEffect(() => {
     setHasFreighter(isConnected());
