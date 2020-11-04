@@ -1,6 +1,7 @@
 import LedgerTransport from '@ledgerhq/hw-transport-u2f';
 import LedgerStr from '@ledgerhq/hw-app-str';
 import {TransactionBuilder, Keypair, xdr} from 'stellar-sdk';
+import { signTransaction } from "@stellar/freighter-api";
 
 export const IMPORT_FROM_XDR = 'IMPORT_FROM_XDR';
 export function importFromXdr(xdr) {
@@ -36,6 +37,9 @@ export function setBIPPath(bipPath) {
 export const LEDGER_WALLET_SIGN_START = 'LEDGER_WALLET_SIGN_START';
 export const LEDGER_WALLET_SIGN_SUCCESS = 'LEDGER_WALLET_SIGN_SUCCESS';
 export const LEDGER_WALLET_SIGN_ERROR = 'LEDGER_WALLET_SIGN_ERROR';
+export const FREIGHTER_WALLET_SIGN_START = 'FREIGHTER_WALLET_SIGN_START';
+export const FREIGHTER_WALLET_SIGN_SUCCESS = 'FREIGHTER_WALLET_SIGN_SUCCESS';
+export const FREIGHTER_WALLET_SIGN_ERROR = 'FREIGHTER_WALLET_SIGN_ERROR';
 
 export function signWithLedger(txXDR, bipPath, networkPassphrase) {
   return dispatch => {
@@ -81,6 +85,26 @@ export function signWithLedger(txXDR, bipPath, networkPassphrase) {
       transport.setDebugMode(true);
       onConnect(new LedgerStr(transport));
     }).catch(onError);
+  };
+}
+
+export function signWithFreighter(txXDR) {
+  return dispatch => {
+    dispatch({ type: FREIGHTER_WALLET_SIGN_START });
+
+    signTransaction(txXDR)
+      .then(signedTx => {
+        dispatch({
+          type: FREIGHTER_WALLET_SIGN_SUCCESS,
+          signedTx,
+        });
+      })
+      .catch(e => {
+        dispatch({
+          type: FREIGHTER_WALLET_SIGN_ERROR,
+          error: e,
+        });
+      });
   };
 }
 

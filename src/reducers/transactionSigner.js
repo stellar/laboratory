@@ -7,6 +7,9 @@ import {
   LEDGER_WALLET_SIGN_START,
   LEDGER_WALLET_SIGN_ERROR,
   LEDGER_WALLET_SIGN_SUCCESS,
+  FREIGHTER_WALLET_SIGN_START,
+  FREIGHTER_WALLET_SIGN_ERROR,
+  FREIGHTER_WALLET_SIGN_SUCCESS,
 } from '../actions/transactionSigner';
 import {LOAD_STATE} from '../actions/routing';
 import validateTxXdr from '../utilities/validateTxXdr';
@@ -17,6 +20,7 @@ const transactionSigner = combineReducers({
   signers,
   bipPath,
   ledgerwalletStatus,
+  freighterwalletStatus,
 })
 
 export default transactionSigner;
@@ -76,15 +80,40 @@ function ledgerwalletStatus(state = {}, action) {
       message: 'Waiting for wallet',
     });
   case LEDGER_WALLET_SIGN_ERROR:
-    return Object.assign({}, state,  {
+    return Object.assign({}, state, {
       status: 'failure',
       message: 'Error:' + JSON.stringify(action.error),
     });
   case LEDGER_WALLET_SIGN_SUCCESS:
-    return Object.assign({}, state,  {
+    return Object.assign({}, state, {
       status: 'success',
       message: 'Success!',
       signatures: [action.signature]
+    });
+  }
+  return state;
+}
+
+function freighterwalletStatus(state = {}, action) {
+  switch (action.type) {
+  case IMPORT_FROM_XDR:
+  case CLEAR_TRANSACTION:
+    return {};
+  case FREIGHTER_WALLET_SIGN_START:
+    return Object.assign({}, state, {
+      status: 'loading',
+      message: 'Waiting for wallet',
+    });
+  case FREIGHTER_WALLET_SIGN_ERROR:
+    return Object.assign({}, state, {
+      status: 'failure',
+      message: 'Error:' + JSON.stringify(action.error),
+    });
+  case FREIGHTER_WALLET_SIGN_SUCCESS:
+    return Object.assign({}, state, {
+      status: 'success',
+      message: 'Success!',
+      signedTx: action.signedTx,
     });
   }
   return state;

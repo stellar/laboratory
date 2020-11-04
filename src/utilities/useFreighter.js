@@ -22,7 +22,5 @@ export const freighterGetPublicKey = async (onUpdate) => {
     error = e;
   }
 
-  debugger;
-
   return onUpdate(freighterPublicKey || error);
 };

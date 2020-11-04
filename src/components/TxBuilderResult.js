@@ -7,11 +7,9 @@ import Libify from '../utilities/Libify';
 import {txSignerLink, xdrViewer} from '../utilities/linkBuilder';
 import scrollOnAnchorOpen from '../utilities/scrollOnAnchorOpen';
 import TX_TYPES from '../constants/transaction_types';
-import TxFreighterSign from "./TxFreighterSign";
-
 
 class TxBuilderResult extends React.Component {
-  
+
   render() {
     let {attributes, operations, feeBumpAttributes, txType} = this.props.state;
 
@@ -50,7 +48,7 @@ class TxBuilderResult extends React.Component {
     } else {
       validationErrors = getRegularTxValidationErrors()
     }
-    
+
     let finalResult, errorTitleText, successTitleText, signingInstructions, signingLink, xdrLink, transactionBuild;
     if (validationErrors.length > 0) {
       errorTitleText = "Form validation errors:";
@@ -129,12 +127,6 @@ class TxBuilderResult extends React.Component {
         </pre>
         {signingInstructions}
         {signingLink} {xdrLink}
-        {isConnected() && transactionBuild && !transactionBuild.errors.length ? (
-          <>
-          <hr />
-          <TxFreighterSign xdr={transactionBuild.xdr} />
-          </>
-        ) : null}
       </div>
     );
   }
