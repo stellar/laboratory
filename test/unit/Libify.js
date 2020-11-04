@@ -187,7 +187,7 @@ describe('Libify.buildTransaction', () => {
         attributes: {
           trustor: 'GB6I3Y3F24UMOJ326W3Z4AHRI3VKXNEFSDPZ7CCSHHYD5ML7RDEJYHJR',
           assetCode: '456',
-          authorize: 'true'
+          authorize: '1'
         }
       },
       {

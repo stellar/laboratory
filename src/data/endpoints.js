@@ -3,6 +3,7 @@ import Accounts from "../components/SetupPanes/Accounts";
 import AllAssets from "../components/SetupPanes/AllAssets";
 import AllOffers from "../components/SetupPanes/AllOffers";
 import AllWithFailed from "../components/SetupPanes/AllWithFailed";
+import ClaimableBalances from "../components/SetupPanes/ClaimableBalances";
 import FindPaymentPaths from "../components/SetupPanes/FindPaymentPaths";
 import FindStrictSendPaymentPaths from "../components/SetupPanes/FindStrictSendPaymentPaths";
 import FindStrictReceivePaymentPaths from "../components/SetupPanes/FindStrictReceivePaymentPaths";
@@ -16,6 +17,7 @@ import ForTransaction from "../components/SetupPanes/ForTransaction";
 import OrderBookDetails from "../components/SetupPanes/OrderBookDetails";
 import PostTransaction from "../components/SetupPanes/PostTransaction";
 import SingleAccount from "../components/SetupPanes/SingleAccount";
+import SingleClaimableBalance from "../components/SetupPanes/SingleClaimableBalance";
 import SingleLedger from "../components/SetupPanes/SingleLedger";
 import SingleOperation from "../components/SetupPanes/SingleOperation";
 import SingleOffer from "../components/SetupPanes/SingleOffer";
@@ -51,7 +53,7 @@ export const endpointsMap = {
           "https://developers.stellar.org/docs/glossary/accounts/",
         method: "GET",
         path: {
-          template: "/accounts/{?signer,asset,cursor,limit,order}",
+          template: "/accounts/{?sponsor,signer,asset,cursor,limit,order}",
         },
         setupComponent: Accounts,
       },
@@ -79,6 +81,33 @@ export const endpointsMap = {
           template: "/assets{?asset_code,asset_issuer,cursor,order,limit}",
         },
         setupComponent: AllAssets,
+      },
+    },
+  },
+  claimable_balances: {
+    label: "Claimable Balances",
+    endpoints: {
+      multiple: {
+        label: "All Claimable Balances",
+        helpUrl:
+          "https://developers.stellar.org/api/resources/claimablebalances/list/",
+        method: "GET",
+        disableStreaming: true,
+        path: {
+          template: "/claimable_balances/{?sponsor,asset,claimant,cursor,limit,order}",
+        },
+        setupComponent: ClaimableBalances,
+      },
+      single: {
+        label: "Single Claimable Balance",
+        helpUrl:
+          "https://developers.stellar.org/api/resources/claimablebalances/single/",
+        method: "GET",
+        disableStreaming: true,
+        path: {
+          template: "/claimable_balances/{claimable_balance_id}",
+        },
+        setupComponent: SingleClaimableBalance,
       },
     },
   },
@@ -173,7 +202,7 @@ export const endpointsMap = {
         method: "GET",
         path: {
           template:
-            "/offers{?selling,buying,seller,cursor,limit,order}",
+            "/offers{?sponsor,selling,buying,seller,cursor,limit,order}",
         },
         setupComponent: AllOffers,
       },

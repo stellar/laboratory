@@ -1,0 +1,41 @@
+.predicateTypeWrapper {
+  display: flex;
+  flex-wrap: wrap;
+
+  .optionsTable__pair {
+    width: calc(100% - 2em);
+  }
+
+  .predicateWrapper {
+    width: 50%;
+
+    .optionsTable__pair {
+      display: block;
+      margin-top: 0;
+      margin-bottom: 0;
+
+      .optionsTable__pair__title,
+      .optionsTable__pair__content {
+        max-width: 100%;
+      }
+
+      .optionsTable__pair__title {
+        padding-bottom: 0;
+      }
+    }
+  }
+
+  .predicateWrapper:nth-child(2) {
+    border-right: 1px solid $gray;
+  }
+
+  .predicateTypeWrapper {
+    .predicateWrapper {
+      width: 100%;
+      border-right: none;
+      border-top: 1px solid $gray;
+      margin-top: 1em;
+      // margin: 1em 0.75em;
+    }
+  }
+}
