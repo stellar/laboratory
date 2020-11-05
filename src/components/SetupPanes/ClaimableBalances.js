@@ -1,14 +1,13 @@
 import React from "react";
 
 import PubKeyPicker from "../FormComponents/PubKeyPicker.js";
-
 import OptionsTablePair from "../OptionsTable/Pair";
 import TextPicker from "../FormComponents/TextPicker.js";
 import PositiveIntPicker from "../FormComponents/PositiveIntPicker.js";
 import OrderPicker from "../FormComponents/OrderPicker.js";
 import AssetPicker from "../FormComponents/AssetPicker.js";
 
-export default function AllOffers({ values, onUpdate }) {
+export default function ClaimableBalances({ onUpdate, values }) {
   return (
     <>
       <OptionsTablePair label="Sponsor" optional>
@@ -20,33 +19,22 @@ export default function AllOffers({ values, onUpdate }) {
         />
       </OptionsTablePair>
 
-      <OptionsTablePair label="Seller" optional>
+      <OptionsTablePair label="Asset" optional>
+        <AssetPicker
+          stringForm
+          optional
+          value={values.asset}
+          onUpdate={(value) => {
+            onUpdate("asset", value);
+          }}
+        />
+      </OptionsTablePair>
+
+      <OptionsTablePair label="Claimant" optional>
         <PubKeyPicker
-          value={values.seller}
+          value={values.claimant}
           onUpdate={(value) => {
-            onUpdate("seller", value);
-          }}
-        />
-      </OptionsTablePair>
-
-      <OptionsTablePair label="Selling" optional>
-        <AssetPicker
-          stringForm
-          optional
-          value={values.selling}
-          onUpdate={(value) => {
-            onUpdate("selling", value);
-          }}
-        />
-      </OptionsTablePair>
-
-      <OptionsTablePair label="Buying" optional>
-        <AssetPicker
-          stringForm
-          optional
-          value={values.buying}
-          onUpdate={(value) => {
-            onUpdate("buying", value);
+            onUpdate("claimant", value);
           }}
         />
       </OptionsTablePair>

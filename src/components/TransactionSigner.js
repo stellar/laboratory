@@ -11,6 +11,7 @@ import {
   setSecrets,
   setBIPPath,
   signWithLedger,
+  signWithFreighter,
 } from '../actions/transactionSigner';
 import { EasySelect } from './EasySelect';
 import OptionsTablePair from './OptionsTable/Pair';
@@ -27,7 +28,6 @@ import NETWORK from '../constants/network';
 import Libify from '../utilities/Libify';
 import { addEventHandler } from '../utilities/metrics'
 import transactionSignerMetrics from '../metricsHandlers/transactionSigner'
-import TxFreighterSign from "./TxFreighterSign";
 
 const { signTransaction } = Libify
 
@@ -36,7 +36,13 @@ addEventHandler(transactionSignerMetrics)
 class TransactionSigner extends React.Component {
   render() {
     let { dispatch, networkPassphrase } = this.props;
-    let { xdr, signers, bipPath, ledgerwalletStatus } = this.props.state;
+    let {
+      xdr,
+      signers,
+      bipPath,
+      ledgerwalletStatus,
+      freighterwalletStatus,
+    } = this.props.state;
     let content;
 
     if (validateTxXdr(xdr, networkPassphrase).result !== 'success') {
@@ -89,21 +95,23 @@ class TransactionSigner extends React.Component {
 
       let codeResult, submitLink, xdrLink, resultTitle, submitInstructions, feeBumpLink;
 
-      if (!isUndefined(result.xdr)) {
-        codeResult = <pre className="TxSignerResult__xdr so-code so-code__wrap" onClick={clickToSelect}><code>{result.xdr}</code></pre>;
+      const signedXdr = freighterwalletStatus.signedTx || result.xdr;
+
+      if (!isUndefined(signedXdr)) {
+        codeResult = <pre className="TxSignerResult__xdr so-code so-code__wrap" onClick={clickToSelect}><code>{signedXdr}</code></pre>;
         submitLink = <a
           className="s-button TxSignerResult__submit"
-          href={txPostLink(result.xdr)}
+          href={txPostLink(signedXdr)}
           onClick={scrollOnAnchorOpen}
         >Submit in Transaction Submitter</a>;
         xdrLink = <a
           className="s-button TxSignerResult__submit"
-          href={xdrViewer(result.xdr, 'TransactionEnvelope')}
+          href={xdrViewer(signedXdr, 'TransactionEnvelope')}
           onClick={scrollOnAnchorOpen}
         >View in XDR Viewer</a>;
         feeBumpLink = <a
           className="s-button TxSignerResult__submit"
-          href={feeBumpTxLink(result.xdr)}
+          href={feeBumpTxLink(signedXdr)}
           onClick={scrollOnAnchorOpen}
         >Wrap with Fee Bump</a>
         resultTitle = <h3 className="TxSignerResult__title">Transaction signed!</h3>;
@@ -127,6 +135,24 @@ class TransactionSigner extends React.Component {
         ledgerwalletMessage = <div>
           <br />
           <div className={`s-alert TxSignerKeys__ledgerwallet_message ${messageAlertType}`}> {ledgerwalletStatus.message} </div>
+        </div>
+      }
+
+      let freighterwalletMessage;
+      if (freighterwalletStatus.message) {
+
+        let messageAlertType;
+        if (freighterwalletStatus.status === 'loading') {
+          messageAlertType = 's-alert--info';
+        } else if (freighterwalletStatus.status === 'success') {
+          messageAlertType = 's-alert--success';
+        } else if (freighterwalletStatus.status === 'failure') {
+          messageAlertType = 's-alert--alert';
+        }
+
+        freighterwalletMessage = <div>
+          <br />
+          <div className={`s-alert TxSignerKeys__ledgerwallet_message ${messageAlertType}`}> {freighterwalletStatus.message} </div>
         </div>
       }
 
@@ -175,7 +201,11 @@ class TransactionSigner extends React.Component {
                 </OptionsTablePair>
                 {isConnected() && (
                   <OptionsTablePair label="Freighter">
-                    <TxFreighterSign xdr={xdr} />
+                    <button
+                      className="s-button"
+                      onClick={() => { dispatch(signWithFreighter(xdr)) }}
+                    >Sign with Freighter</button>
+                    {freighterwalletMessage}
                   </OptionsTablePair>
                 )}
               </div>
