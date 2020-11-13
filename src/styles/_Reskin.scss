@@ -101,6 +101,10 @@ input, textarea, select, .so-dropdown__select {
   background: $white;
   border-color: $gray;
 }
+.s-button__icon {
+  background: none;
+  border: none;
+}
 .s-button.is-disabled, .s-button:disabled{
   background: $gray;
   border-color: $gray;

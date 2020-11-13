@@ -1,6 +1,7 @@
 import React from 'react';
-import {connect} from 'react-redux';
-import {TransactionBuilder, FeeBumpTransaction} from 'stellar-sdk';
+import { connect } from 'react-redux';
+import { TransactionBuilder, FeeBumpTransaction } from 'stellar-sdk';
+import { isConnected } from "@stellar/freighter-api";
 import isUndefined from 'lodash/isUndefined'
 import map from 'lodash/map'
 import TransactionImporter from './TransactionImporter';
@@ -10,13 +11,14 @@ import {
   setSecrets,
   setBIPPath,
   signWithLedger,
+  signWithFreighter,
 } from '../actions/transactionSigner';
-import {EasySelect} from './EasySelect';
+import { EasySelect } from './EasySelect';
 import OptionsTablePair from './OptionsTable/Pair';
 import SecretKeyPicker from './FormComponents/SecretKeyPicker';
 import MultiPicker from './FormComponents/MultiPicker';
 import BipPathPicker from './FormComponents/BipPathPicker';
-import {txPostLink, xdrViewer, feeBumpTxLink} from '../utilities/linkBuilder';
+import { txPostLink, xdrViewer, feeBumpTxLink } from '../utilities/linkBuilder';
 import HelpMark from './HelpMark';
 import clickToSelect from '../utilities/clickToSelect';
 import scrollOnAnchorOpen from '../utilities/scrollOnAnchorOpen';
@@ -24,17 +26,23 @@ import extrapolateFromXdr from '../utilities/extrapolateFromXdr';
 import validateTxXdr from '../utilities/validateTxXdr';
 import NETWORK from '../constants/network';
 import Libify from '../utilities/Libify';
-import {addEventHandler} from '../utilities/metrics'
+import { addEventHandler } from '../utilities/metrics'
 import transactionSignerMetrics from '../metricsHandlers/transactionSigner'
 
-const {signTransaction} = Libify
+const { signTransaction } = Libify
 
 addEventHandler(transactionSignerMetrics)
 
 class TransactionSigner extends React.Component {
   render() {
-    let {dispatch, networkPassphrase} = this.props;
-    let {xdr, signers, bipPath, ledgerwalletStatus} = this.props.state;
+    let { dispatch, networkPassphrase } = this.props;
+    let {
+      xdr,
+      signers,
+      bipPath,
+      ledgerwalletStatus,
+      freighterwalletStatus,
+    } = this.props.state;
     let content;
 
     if (validateTxXdr(xdr, networkPassphrase).result !== 'success') {
@@ -42,7 +50,7 @@ class TransactionSigner extends React.Component {
         <div className="so-chunk">
           <div className="TxSignerImport TransactionSigner__import">
             <p className="TxSignerImport__title">Import a transaction envelope in XDR format:</p>
-            <TransactionImporter networkPassphrase={networkPassphrase} onImport={(xdr) => dispatch(importFromXdr(xdr))}/>
+            <TransactionImporter networkPassphrase={networkPassphrase} onImport={(xdr) => dispatch(importFromXdr(xdr))} />
           </div>
         </div>
       </div>
@@ -87,21 +95,23 @@ class TransactionSigner extends React.Component {
 
       let codeResult, submitLink, xdrLink, resultTitle, submitInstructions, feeBumpLink;
 
-      if (!isUndefined(result.xdr)) {
-        codeResult = <pre className="TxSignerResult__xdr so-code so-code__wrap" onClick={clickToSelect}><code>{result.xdr}</code></pre>;
+      const signedXdr = freighterwalletStatus.signedTx || result.xdr;
+
+      if (!isUndefined(signedXdr)) {
+        codeResult = <pre className="TxSignerResult__xdr so-code so-code__wrap" onClick={clickToSelect}><code>{signedXdr}</code></pre>;
         submitLink = <a
           className="s-button TxSignerResult__submit"
-          href={txPostLink(result.xdr)}
+          href={txPostLink(signedXdr)}
           onClick={scrollOnAnchorOpen}
-          >Submit in Transaction Submitter</a>;
+        >Submit in Transaction Submitter</a>;
         xdrLink = <a
           className="s-button TxSignerResult__submit"
-          href={xdrViewer(result.xdr, 'TransactionEnvelope')}
+          href={xdrViewer(signedXdr, 'TransactionEnvelope')}
           onClick={scrollOnAnchorOpen}
-          >View in XDR Viewer</a>;
+        >View in XDR Viewer</a>;
         feeBumpLink = <a
           className="s-button TxSignerResult__submit"
-          href={feeBumpTxLink(result.xdr)}
+          href={feeBumpTxLink(signedXdr)}
           onClick={scrollOnAnchorOpen}
         >Wrap with Fee Bump</a>
         resultTitle = <h3 className="TxSignerResult__title">Transaction signed!</h3>;
@@ -125,6 +135,24 @@ class TransactionSigner extends React.Component {
         ledgerwalletMessage = <div>
           <br />
           <div className={`s-alert TxSignerKeys__ledgerwallet_message ${messageAlertType}`}> {ledgerwalletStatus.message} </div>
+        </div>
+      }
+
+      let freighterwalletMessage;
+      if (freighterwalletStatus.message) {
+
+        let messageAlertType;
+        if (freighterwalletStatus.status === 'loading') {
+          messageAlertType = 's-alert--info';
+        } else if (freighterwalletStatus.status === 'success') {
+          messageAlertType = 's-alert--success';
+        } else if (freighterwalletStatus.status === 'failure') {
+          messageAlertType = 's-alert--alert';
+        }
+
+        freighterwalletMessage = <div>
+          <br />
+          <div className={`s-alert TxSignerKeys__ledgerwallet_message ${messageAlertType}`}> {freighterwalletStatus.message} </div>
         </div>
       }
 
@@ -167,10 +195,19 @@ class TransactionSigner extends React.Component {
                   />
                   <button
                     className="s-button TxSignerKeys__signBipPath"
-                    onClick={() => {dispatch(signWithLedger(xdr, bipPath, networkPassphrase))}}
+                    onClick={() => { dispatch(signWithLedger(xdr, bipPath, networkPassphrase)) }}
                   >Sign with BIP Path</button>
                   {ledgerwalletMessage}
                 </OptionsTablePair>
+                {isConnected() && (
+                  <OptionsTablePair label="Freighter">
+                    <button
+                      className="s-button"
+                      onClick={() => { dispatch(signWithFreighter(xdr)) }}
+                    >Sign with Freighter</button>
+                    {freighterwalletMessage}
+                  </OptionsTablePair>
+                )}
               </div>
 
             </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import { isConnected } from "@stellar/freighter-api";
 import reduce from 'lodash/reduce'
 import {EasySelect} from './EasySelect';
 import Libify from '../utilities/Libify';
@@ -8,8 +9,8 @@ import scrollOnAnchorOpen from '../utilities/scrollOnAnchorOpen';
 import TX_TYPES from '../constants/transaction_types';
 
 class TxBuilderResult extends React.Component {
-  render() {
 
+  render() {
     let {attributes, operations, feeBumpAttributes, txType} = this.props.state;
 
     const getRegularTxValidationErrors = () => {
@@ -47,13 +48,13 @@ class TxBuilderResult extends React.Component {
     } else {
       validationErrors = getRegularTxValidationErrors()
     }
-    
-    let finalResult, errorTitleText, successTitleText, signingInstructions, signingLink, xdrLink;
+
+    let finalResult, errorTitleText, successTitleText, signingInstructions, signingLink, xdrLink, transactionBuild;
     if (validationErrors.length > 0) {
-      errorTitleText = 'Form validation errors:';
+      errorTitleText = "Form validation errors:";
       finalResult = formatErrorList(validationErrors);
     } else {
-      let transactionBuild = txType === TX_TYPES.FEE_BUMP ? Libify.buildFeeBumpTransaction(feeBumpAttributes, this.props.networkPassphrase) :
+      transactionBuild = txType === TX_TYPES.FEE_BUMP ? Libify.buildFeeBumpTransaction(feeBumpAttributes, this.props.networkPassphrase) :
        Libify.buildTransaction(attributes, operations, this.props.networkPassphrase);
 
       if (transactionBuild.errors.length > 0) {
@@ -61,42 +62,73 @@ class TxBuilderResult extends React.Component {
         finalResult = formatErrorList(transactionBuild.errors);
       } else {
         successTitleText = `Success! Transaction Envelope XDR:`;
-        finalResult = <div>
-          Network Passphrase:<br />
-          {this.props.networkPassphrase}<br />
-          Hash:<br />
-          <EasySelect>{transactionBuild.hash}</EasySelect><br />
-          XDR:<br />
-          <EasySelect>{transactionBuild.xdr}</EasySelect>
+        finalResult = (
+          <div>
+            Network Passphrase:
+            <br />
+            {this.props.networkPassphrase}
+            <br />
+            Hash:
+            <br />
+            <EasySelect>{transactionBuild.hash}</EasySelect>
+            <br />
+            XDR:
+            <br />
+            <EasySelect>{transactionBuild.xdr}</EasySelect>
           </div>
-        signingInstructions = <p className="TransactionBuilderResult__instructions">
-          In order for the transaction to make it into the ledger, a transaction must be successfully
-          signed and submitted to the network. The laboratory provides
-          the <a href="#txsigner">Transaction Signer</a> to for signing a
-          transaction, and the <a href="#explorer?resource=transactions&endpoint=create">Post Transaction endpoint</a> for
-          submitting one to the network.
-        </p>;
-        signingLink = <a className="s-button"
-          href={txSignerLink(transactionBuild.xdr)}
-          onClick={scrollOnAnchorOpen}>Sign in Transaction Signer</a>
-        xdrLink = <a className="s-button"
-          href={xdrViewer(transactionBuild.xdr, 'TransactionEnvelope')}
-          onClick={scrollOnAnchorOpen}>View in XDR Viewer</a>
+        );
+        signingInstructions = (
+          <p className="TransactionBuilderResult__instructions">
+            In order for the transaction to make it into the ledger, a
+            transaction must be successfully signed and submitted to the
+            network. The laboratory provides the{" "}
+            <a href="#txsigner">Transaction Signer</a> for signing a
+            transaction, and the{" "}
+            <a href="#explorer?resource=transactions&endpoint=create">
+              Post Transaction endpoint
+            </a>{" "}
+            for submitting one to the network.
+          </p>
+        );
+        signingLink = (
+          <a
+            className="s-button"
+            href={txSignerLink(transactionBuild.xdr)}
+            onClick={scrollOnAnchorOpen}
+          >
+            Sign in Transaction Signer
+          </a>
+        );
+        xdrLink = (
+          <a
+            className="s-button"
+            href={xdrViewer(transactionBuild.xdr, "TransactionEnvelope")}
+            onClick={scrollOnAnchorOpen}
+          >
+            View in XDR Viewer
+          </a>
+        );
       }
     }
 
-    let errorTitle = errorTitleText ? <h3 className="TransactionBuilderResult__error">{errorTitleText}</h3> : null
-    let successTitle = successTitleText ? <h3 className="TransactionBuilderResult__success">{successTitleText}</h3> : null
+    let errorTitle = errorTitleText ? (
+      <h3 className="TransactionBuilderResult__error">{errorTitleText}</h3>
+    ) : null;
+    let successTitle = successTitleText ? (
+      <h3 className="TransactionBuilderResult__success">{successTitleText}</h3>
+    ) : null;
 
-    return <div className="TransactionBuilderResult">
-      {successTitle}
-      {errorTitle}
-      <pre className="TransactionXDR so-code so-code__wrap TransactionBuilderResult__code">
-        <code>{finalResult}</code>
-      </pre>
-      {signingInstructions}
-      {signingLink} {xdrLink}
-    </div>
+    return (
+      <div className="TransactionBuilderResult">
+        {successTitle}
+        {errorTitle}
+        <pre className="TransactionXDR so-code so-code__wrap TransactionBuilderResult__code">
+          <code>{finalResult}</code>
+        </pre>
+        {signingInstructions}
+        {signingLink} {xdrLink}
+      </div>
+    );
   }
 }
 
@@ -106,11 +138,15 @@ function chooseState(state) {
   return {
     state: state.transactionBuilder,
     networkPassphrase: state.network.current.networkPassphrase,
-  }
+  };
 }
 
 function formatErrorList(errors) {
-  return reduce(errors, (result, error) => {
-    return `${result}- ${error} \n`;
-  }, '');
+  return reduce(
+    errors,
+    (result, error) => {
+      return `${result}- ${error} \n`;
+    },
+    "",
+  );
 }
