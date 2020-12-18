@@ -51,6 +51,7 @@
     "sass-loader": "^8.0.2",
     "solar-css": "git+https://github.com/stellar/solar#master",
     "solar-stellarorg": "git+https://github.com/stellar/solar-stellarorg#master",
+    "stellar-base": "^4.0.2",
     "stellar-sdk": "^6.1.0",
     "uglifyjs-webpack-plugin": "^1",
     "uri-templates": "^0.1.9",
