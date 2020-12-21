@@ -17,12 +17,17 @@ import TX_TYPES from '../constants/transaction_types';
 function TxBuilderAttributes(props) {
   let {onUpdate, attributes, horizonURL, dispatch, feeBumpAttributes, networkPassphrase} = props;
   const {txType, network} = props.state;
-  const [networkBaseFee, setNetworkBaseFee] = useState(attributes['fee']);
+  const [networkBaseFee, setNetworkBaseFee] = useState(attributes['baseFee']);
+  const [networkMinFee, setNetworkMinFee] = useState(attributes['minFee']);
 
   useEffect(() => {
     dispatch(fetchBaseFee(horizonURL));
-    setNetworkBaseFee(attributes['fee']);
   }, [])
+
+  useEffect(() => {
+    setNetworkBaseFee(attributes['baseFee']);
+    setNetworkMinFee(attributes['minFee']);
+  }, [attributes['baseFee'], attributes['minFee']])
 
   return <div className="TransactionAttributes">
     <div className="TransactionOp__config TransactionOpConfig optionsTable">
@@ -54,7 +59,7 @@ function TxBuilderAttributes(props) {
           value={attributes['fee']}
           onUpdate={(value) => {onUpdate('fee', value)}}
           />
-        <p className="optionsTable__pair__content__note">The <a href="https://developers.stellar.org/docs/glossary/fees/">network base fee</a> is currently set to {networkBaseFee} stroops ({networkBaseFee / 1e7} lumens). Transaction fee is equal to base fee times number of operations in this transaction.</p>
+        <p className="optionsTable__pair__content__note">The <a href="https://developers.stellar.org/docs/glossary/fees/">network base fee</a> is currently set to {networkBaseFee} stroops ({networkBaseFee / 1e7} lumens). Based on current network activity, we suggest setting it to {networkMinFee} stroops. Final transaction fee is equal to base fee times number of operations in this transaction.</p>
       </OptionsTablePair>
       <OptionsTablePair optional={true} label={<span>Memo <HelpMark href="https://developers.stellar.org/docs/glossary/transactions/#memo" /></span>}>
         <MemoPicker
@@ -99,7 +104,7 @@ function TxBuilderAttributes(props) {
           value={feeBumpAttributes['maxFee']}
           onUpdate={(value) => {dispatch(updateFeeBumpAttribute({'maxFee': value}))}}
           />
-        <p className="optionsTable__pair__content__note">The <a href="https://developers.stellar.org/docs/glossary/fees/">network base fee</a> is currently set to {attributes['fee']} stroops ({attributes['fee'] / 1e7} lumens). Transaction fee is equal to base fee times number of operations in this transaction.</p>
+        <p className="optionsTable__pair__content__note">The <a href="https://developers.stellar.org/docs/glossary/fees/">network base fee</a> is currently set to {networkBaseFee} stroops ({networkBaseFee / 1e7} lumens). Based on current network activity, we suggest setting it to {networkMinFee} stroops. Final transaction fee is equal to base fee times number of operations in this transaction.</p>
       </OptionsTablePair>
       <OptionsTablePair label={<span>Inner Transaction XDR <HelpMark href="https://developers.stellar.org/docs/glossary/transactions/#transaction-envelopes"/></span>}>
       <TransactionImporter
