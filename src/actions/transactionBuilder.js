@@ -95,7 +95,8 @@ export function fetchBaseFee(horizonBaseUrl) {
     axios.get(horizonBaseUrl + '/fee_stats')
       .then(r => dispatch({
         type: FETCH_BASE_FEE_SUCCESS,
-        base_fee: r.data.fee_charged.mode
+        min_fee: r.data.fee_charged.min,
+        base_fee: r.data.last_ledger_base_fee,
       }))
       .catch(r => dispatch({type: FETCH_BASE_FEE_FAIL, payload: r}))
   }

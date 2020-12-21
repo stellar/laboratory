@@ -94,7 +94,11 @@ function reorderOps(state, opId, toNth) {
 const defaultAttributes = {
   sourceAccount: '',
   sequence: '',
+  // fee is used to track value in the form. User can change it.
   fee: BASE_FEE,
+  // baseFee and minFee are fetched from fee_stats. User cannot change them.
+  baseFee: BASE_FEE,
+  minFee: BASE_FEE,
   memoType: '',
   memoContent: '',
   minTime: '',
@@ -113,9 +117,17 @@ function attributes(state = defaultAttributes, action) {
   case FETCH_SEQUENCE_SUCCESS:
     return Object.assign({}, state, { sequence: action.sequence });
   case FETCH_BASE_FEE_SUCCESS:
-    return Object.assign({}, state, { fee: action.base_fee });
+    return Object.assign({}, state, {
+      fee: action.min_fee,
+      minFee: action.min_fee,
+      baseFee: action.base_fee
+    });
   case FETCH_BASE_FEE_FAIL:
-    return Object.assign({}, state, { fee: defaultAttributes.fee });
+    return Object.assign({}, state, {
+      fee: defaultAttributes.fee,
+      minFee: defaultAttributes.fee,
+      baseFee: defaultAttributes.baseFee
+    });
   case RESET_TXBUILDER:
     return defaultAttributes;
   }
@@ -137,6 +149,14 @@ function feeBumpAttributes(state = defaultFeeBumpAttributes, action) {
       break;
     case UPDATE_FEE_BUMP_ATTRIBUTE:
       return Object.assign({}, state, action.newAttribute);
+    case FETCH_BASE_FEE_SUCCESS:
+      return Object.assign({}, state, {
+        maxFee: action.min_fee
+      });
+    case FETCH_BASE_FEE_FAIL:
+      return Object.assign({}, state, {
+        maxFee: defaultFeeBumpAttributes.maxFee,
+      });
     case RESET_TXBUILDER:
       return defaultFeeBumpAttributes;
   }
