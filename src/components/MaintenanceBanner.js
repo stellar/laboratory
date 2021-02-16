@@ -73,8 +73,15 @@ export default class TestnetBanner extends React.Component {
         return (
           <div className="LaboratoryChrome__network_reset_alert s-alert">
             <div className="so-chunk">
-              Failed to fetch testnet reset date. Your browser extension may be
-              blocking the call.
+              Failed to fetch testnet reset date. Check status{" "}
+              <a
+                href="https://9sl3dhr1twv1.statuspage.io/"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                here
+              </a>
+              .
             </div>
           </div>
         );
