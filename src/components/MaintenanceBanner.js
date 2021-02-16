@@ -5,12 +5,17 @@ import React from "react";
 
 // If we're on the test network, we care about all scheduled maintenance. If
 // we're on the public network, we only care about public network maintenance
-const isMaintenanceRelevant = (allMaintenance, currentNetwork) =>
-  allMaintenance.filter((m) =>
+const isMaintenanceRelevant = (allMaintenance, currentNetwork) => {
+  if (!allMaintenance) {
+    return null;
+  }
+
+  return allMaintenance.filter((m) =>
     m.components.some((c) =>
       currentNetwork === "test" ? true : c.name === "Stellar Public Network",
     ),
   );
+};
 
 const getNextMaintenance = (schedule) =>
   schedule.sort(
@@ -62,6 +67,20 @@ export default class TestnetBanner extends React.Component {
       maintenance,
       currentNetwork,
     );
+
+    if (!relevantMaintenance) {
+      if (currentNetwork === "test") {
+        return (
+          <div className="LaboratoryChrome__network_reset_alert s-alert">
+            <div className="so-chunk">
+              Failed to fetch testnet reset date. Your browser extension may be
+              blocking the call.
+            </div>
+          </div>
+        );
+      }
+      return null;
+    }
 
     if (relevantMaintenance.length === 0) {
       if (currentNetwork === "test") {
