@@ -2,6 +2,7 @@
  * @prettier
  */
 import React from "react";
+import sanitizeHtml from "../utilities/sanitizeHtml";
 
 // If we're on the test network, we care about all scheduled maintenance. If
 // we're on the public network, we only care about public network maintenance
@@ -91,10 +92,7 @@ export default class TestnetBanner extends React.Component {
           </a>{" "}
           on {date.toDateString()} at {date.toTimeString()}
           {nextMaintenance.incident_updates.map((update) => (
-            <div
-              key={update.id}
-              dangerouslySetInnerHTML={{ __html: update.body }}
-            />
+            <div key={update.id}>{sanitizeHtml(update.body)}</div>
           ))}
         </div>
       </div>
