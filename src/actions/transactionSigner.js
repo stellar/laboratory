@@ -88,11 +88,11 @@ export function signWithLedger(txXDR, bipPath, networkPassphrase) {
   };
 }
 
-export function signWithFreighter(txXDR) {
+export function signWithFreighter(txXDR, txNetwork) {
   return dispatch => {
     dispatch({ type: FREIGHTER_WALLET_SIGN_START });
 
-    signTransaction(txXDR)
+    signTransaction(txXDR, txNetwork)
       .then(signedTx => {
         dispatch({
           type: FREIGHTER_WALLET_SIGN_SUCCESS,

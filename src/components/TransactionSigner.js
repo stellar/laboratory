@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { TransactionBuilder, FeeBumpTransaction } from 'stellar-sdk';
+import { TransactionBuilder, FeeBumpTransaction, Networks } from 'stellar-sdk';
 import { isConnected } from "@stellar/freighter-api";
 import isUndefined from 'lodash/isUndefined'
 import map from 'lodash/map'
@@ -203,7 +203,7 @@ class TransactionSigner extends React.Component {
                   <OptionsTablePair label="Freighter">
                     <button
                       className="s-button"
-                      onClick={() => { dispatch(signWithFreighter(xdr)) }}
+                      onClick={() => { dispatch(signWithFreighter(xdr, networkPassphrase === Networks.TESTNET ? "TESTNET" : "PUBLIC")) }}
                     >Sign with Freighter</button>
                     {freighterwalletMessage}
                   </OptionsTablePair>
