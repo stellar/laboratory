@@ -942,10 +942,10 @@
   resolved "https://registry.yarnpkg.com/@ledgerhq/logs/-/logs-5.36.0.tgz#78721347162fb834d90effa1123b363dc46e3a52"
   integrity sha512-HnD/hByteUL1MsJu1lMinY9bNq8++5mWJ8qHCW9dLC9LbsvWIqwLwmZiGcW0D2tX9p0/C5ESuIpJ9B/d2dReuw==
 
-"@stellar/freighter-api@1.0.0-beta.0":
-  version "1.0.0-beta.0"
-  resolved "https://registry.yarnpkg.com/@stellar/freighter-api/-/freighter-api-1.0.0-beta.0.tgz#08c3f4ebb4d1b8c3e92039242ca5c877814864b4"
-  integrity sha512-wngITwqu9h4yfgqXvJS27VEkrlPh/u6uTDOPI2Ct8pZzde3fVPYGK+42izhGAe5oOvbziZQqHkHIPh+rkl7YHg==
+"@stellar/freighter-api@1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@stellar/freighter-api/-/freighter-api-1.0.1.tgz#7ab8fa448fb8b2ad3f9e410fe1c156db3e8ce6c9"
+  integrity sha512-X6EV3R56vE78PWc1VPgRqr4LeIJZ13F1g9awztEALCvFVYZJBEUA8DQjpvG3H5VchABQ03tpihAOoHlrqtNSUA==
 
 "@stellar/prettier-config@^1.0.1":
   version "1.0.1"
