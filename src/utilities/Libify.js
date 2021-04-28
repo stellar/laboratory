@@ -471,6 +471,14 @@ Libify.Operation.clawback = function(opts) {
   })
 }
 
+Libify.Operation.clawbackClaimableBalance = function(opts) {
+  assertNotEmpty(opts.balanceId, 'Clawback Claimable Balance operation requires claimable balance ID');
+
+  return Sdk.Operation.clawbackClaimableBalance({
+    balanceId: opts.balanceId,
+  });
+}
+
 // buildTransaction is not something found js-stellar libs but acts as an
 // abstraction to building a transaction with input data in the same format
 // as the reducers

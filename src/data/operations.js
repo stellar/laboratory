@@ -6,6 +6,7 @@ import BumpSequence from '../components/OperationPanes/BumpSequence';
 import ChangeTrust from '../components/OperationPanes/ChangeTrust';
 import ClaimClaimableBalance from '../components/OperationPanes/ClaimClaimableBalance';
 import Clawback from '../components/OperationPanes/Clawback';
+import ClawbackClaimableBalance from '../components/OperationPanes/ClawbackClaimableBalance';
 import CreateAccount from '../components/OperationPanes/CreateAccount';
 import CreateClaimableBalance from '../components/OperationPanes/CreateClaimableBalance';
 import EndSponsoringFutureReserves from '../components/OperationPanes/EndSponsoringFutureReserves'
@@ -167,6 +168,15 @@ export const operationsMap = [
     operationPane: Clawback,
     // TODO: update
     helpNote: 'Clawback operation',
+    // TODO: update
+    docsUrl: 'https://developers.stellar.org/docs/start/list-of-operations/',
+  },
+  {
+    name: 'clawbackClaimableBalance',
+    label: 'Clawback Claimable Balance',
+    operationPane: ClawbackClaimableBalance,
+    // TODO: update
+    helpNote: 'Clawback Claimable Balance operation',
     // TODO: update
     docsUrl: 'https://developers.stellar.org/docs/start/list-of-operations/',
   },
