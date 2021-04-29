@@ -19,6 +19,7 @@ import PathPaymentStrictSend from '../components/OperationPanes/PathPaymentStric
 import Payment from '../components/OperationPanes/Payment';
 import RevokeSponsorship from '../components/OperationPanes/RevokeSponsorship';
 import SetOptions from '../components/OperationPanes/SetOptions';
+import SetTrustLineFlags from '../components/OperationPanes/SetTrustLineFlags';
 
 export function getOperation(opName) {
   return find(operationsMap, { name: opName });
@@ -166,8 +167,7 @@ export const operationsMap = [
     name: 'clawback',
     label: 'Clawback',
     operationPane: Clawback,
-    // TODO: update
-    helpNote: 'Clawback operation',
+    helpNote: 'Creates a clawback operation.',
     // TODO: update
     docsUrl: 'https://developers.stellar.org/docs/start/list-of-operations/',
   },
@@ -175,8 +175,15 @@ export const operationsMap = [
     name: 'clawbackClaimableBalance',
     label: 'Clawback Claimable Balance',
     operationPane: ClawbackClaimableBalance,
+    helpNote: 'Creates a clawback operation for a claimable balance.',
     // TODO: update
-    helpNote: 'Clawback Claimable Balance operation',
+    docsUrl: 'https://developers.stellar.org/docs/start/list-of-operations/',
+  },
+  {
+    name: 'setTrustLineFlags',
+    label: 'Set Trust Line Flags',
+    operationPane: SetTrustLineFlags,
+    helpNote: 'Creates a trustline flag configuring operation.',
     // TODO: update
     docsUrl: 'https://developers.stellar.org/docs/start/list-of-operations/',
   },

@@ -479,6 +479,48 @@ Libify.Operation.clawbackClaimableBalance = function(opts) {
   });
 }
 
+Libify.Operation.setTrustLineFlags = function(opts) {
+  assertNotEmpty(opts.asset, 'Set Trust Line Flags operation requires asset');
+  assertNotEmpty(opts.trustor, 'Set Trust Line Flags operation requires trustor');
+
+  if (
+    !(opts.setFlags && opts.setFlags.length) &&
+    !(opts.clearFlags && opts.clearFlags.length)
+  ) {
+    throw new Error(
+      "Set Trust Line Flags operation requires at least one flag to be selected"
+    );
+  }
+
+  const flagLabels = {
+    authorized: "Authorized",
+    authorizedToMaintainLiabilities: "Authorized to maintain liabilites",
+    clawbackEnabled: "Clawback enabled",
+  };
+
+  let flags = (opts.setFlags || []).reduce(
+    (setFlagsResult, flag) => ({ ...setFlagsResult, [flag]: true }),
+    {}
+  );
+
+  flags = (opts.clearFlags || []).reduce((clearFlagsResult, flag) => {
+    if (clearFlagsResult[flag]) {
+      throw new Error(
+        `Set Trust Line Flags operation cannot set and clear the same flag (${flagLabels[flag]})`
+      );
+    }
+
+    return { ...clearFlagsResult, [flag]: false };
+  }, flags);
+
+  return Sdk.Operation.setTrustLineFlags({
+    asset: Libify.Asset(opts.asset),
+    trustor: opts.trustor,
+    flags,
+    source: opts.sourceAccount,
+  });
+}
+
 // buildTransaction is not something found js-stellar libs but acts as an
 // abstraction to building a transaction with input data in the same format
 // as the reducers
