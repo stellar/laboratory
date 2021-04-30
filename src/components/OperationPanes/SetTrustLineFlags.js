@@ -34,8 +34,7 @@ export default function SetTrustLineFlags(props) {
         />
     </OptionsTablePair>,
     <OptionsTablePair
-      // TODO: update link
-      label={<span>Set Flags <HelpMark href="https://developers.stellar.org/docs/glossary/accounts/#flags" /></span>}
+      label={<span>Set Flags</span>}
       optional={true} key="setFlags">
       <CheckboxButtonPicker
         className=""
@@ -45,8 +44,7 @@ export default function SetTrustLineFlags(props) {
         />
     </OptionsTablePair>,
     <OptionsTablePair
-    // TODO: update link
-    label={<span>Clear Flags <HelpMark href="https://developers.stellar.org/docs/glossary/accounts/#flags" /></span>}
+    label={<span>Clear Flags</span>}
     optional={true} key="clearFlags">
     <CheckboxButtonPicker
       className=""

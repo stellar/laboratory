@@ -168,23 +168,20 @@ export const operationsMap = [
     label: 'Clawback',
     operationPane: Clawback,
     helpNote: 'Creates a clawback operation.',
-    // TODO: update
-    docsUrl: 'https://developers.stellar.org/docs/start/list-of-operations/',
+    docsUrl: 'https://developers.stellar.org/docs/start/list-of-operations/#clawback',
   },
   {
     name: 'clawbackClaimableBalance',
     label: 'Clawback Claimable Balance',
     operationPane: ClawbackClaimableBalance,
     helpNote: 'Creates a clawback operation for a claimable balance.',
-    // TODO: update
-    docsUrl: 'https://developers.stellar.org/docs/start/list-of-operations/',
+    docsUrl: 'https://developers.stellar.org/docs/start/list-of-operations/#clawback-claimable-balance',
   },
   {
     name: 'setTrustLineFlags',
     label: 'Set Trust Line Flags',
     operationPane: SetTrustLineFlags,
     helpNote: 'Creates a trustline flag configuring operation.',
-    // TODO: update
-    docsUrl: 'https://developers.stellar.org/docs/start/list-of-operations/',
+    docsUrl: 'https://developers.stellar.org/docs/start/list-of-operations/#set-trustline-flags',
   },
 ]
