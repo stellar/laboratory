@@ -13,11 +13,13 @@ const accountFlagFieldsSet = {
   1: 'Authorization required',
   2: 'Authorization revocable',
   4: 'Authorization immutable',
+  8: 'Authorization clawback enabled',
 };
 
 const accountFlagFieldsClear = {
   1: 'Authorization required',
   2: 'Authorization revocable',
+  8: 'Authorization clawback enabled',
 };
 
 function WarningMessage() {

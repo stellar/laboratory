@@ -7,7 +7,12 @@ import FlagfieldPicker from '../FormComponents/FlagfieldPicker';
 import CheckboxButtonPicker from "../FormComponents/CheckboxButtonPicker";
 import HelpMark from '../HelpMark';
 
-const flags = {
+const flagsSet = {
+  'authorized': 'Authorized',
+  'authorizedToMaintainLiabilities': 'Authorized to maintain liabilites',
+};
+
+const flagsClear = {
   'authorized': 'Authorized',
   'authorizedToMaintainLiabilities': 'Authorized to maintain liabilites',
   'clawbackEnabled': 'Clawback enabled',
@@ -36,7 +41,7 @@ export default function SetTrustLineFlags(props) {
         className=""
         value={props.values['setFlags'] || []}
         onUpdate={(value) => {props.onUpdate('setFlags', value)}}
-        items={flags}
+        items={flagsSet}
         />
     </OptionsTablePair>,
     <OptionsTablePair
@@ -47,7 +52,7 @@ export default function SetTrustLineFlags(props) {
       className=""
       value={props.values['clearFlags'] || []}
       onUpdate={(value) => {props.onUpdate('clearFlags', value)}}
-      items={flags}
+      items={flagsClear}
       />
   </OptionsTablePair>,
   ];
