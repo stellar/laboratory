@@ -5,6 +5,8 @@ import BeginSponsoringFutureReserves from '../components/OperationPanes/BeginSpo
 import BumpSequence from '../components/OperationPanes/BumpSequence';
 import ChangeTrust from '../components/OperationPanes/ChangeTrust';
 import ClaimClaimableBalance from '../components/OperationPanes/ClaimClaimableBalance';
+import Clawback from '../components/OperationPanes/Clawback';
+import ClawbackClaimableBalance from '../components/OperationPanes/ClawbackClaimableBalance';
 import CreateAccount from '../components/OperationPanes/CreateAccount';
 import CreateClaimableBalance from '../components/OperationPanes/CreateClaimableBalance';
 import EndSponsoringFutureReserves from '../components/OperationPanes/EndSponsoringFutureReserves'
@@ -17,6 +19,7 @@ import PathPaymentStrictSend from '../components/OperationPanes/PathPaymentStric
 import Payment from '../components/OperationPanes/Payment';
 import RevokeSponsorship from '../components/OperationPanes/RevokeSponsorship';
 import SetOptions from '../components/OperationPanes/SetOptions';
+import SetTrustLineFlags from '../components/OperationPanes/SetTrustLineFlags';
 
 export function getOperation(opName) {
   return find(operationsMap, { name: opName });
@@ -144,20 +147,41 @@ export const operationsMap = [
     label: 'Begin Sponsoring Future Reserves',
     operationPane: BeginSponsoringFutureReserves,
     helpNote: 'Initiate a sponsorship. There must be a corresponding End Sponsoring Future Reserves operation in the same transaction.',
-    docsUrl: 'https://developers.stellar.org/api/resources/operations/object/begin-sponsoring-future-reserves',
+    docsUrl: 'https://developers.stellar.org/docs/start/list-of-operations/#begin-sponsoring-future-reserves',
   },
   {
     name: 'endSponsoringFutureReserves',
     label: 'End Sponsoring Future Reserves',
     operationPane: EndSponsoringFutureReserves,
     helpNote: 'End a sponsorship.',
-    docsUrl: 'https://developers.stellar.org/api/resources/operations/object/end-sponsoring-future-reserves',
+    docsUrl: 'https://developers.stellar.org/docs/start/list-of-operations/#end-sponsoring-future-reserves',
   },
   {
     name: 'revokeSponsorship',
     label: 'Revoke Sponsorship',
     operationPane: RevokeSponsorship,
     helpNote: 'Revoke sponsorship of a ledger entry.',
-    docsUrl: 'https://developers.stellar.org/api/resources/operations/object/revoke-sponsorship',
+    docsUrl: 'https://developers.stellar.org/docs/start/list-of-operations/#revoke-sponsorship',
+  },
+  {
+    name: 'clawback',
+    label: 'Clawback',
+    operationPane: Clawback,
+    helpNote: 'Creates a clawback operation.',
+    docsUrl: 'https://developers.stellar.org/docs/start/list-of-operations/#clawback',
+  },
+  {
+    name: 'clawbackClaimableBalance',
+    label: 'Clawback Claimable Balance',
+    operationPane: ClawbackClaimableBalance,
+    helpNote: 'Creates a clawback operation for a claimable balance.',
+    docsUrl: 'https://developers.stellar.org/docs/start/list-of-operations/#clawback-claimable-balance',
+  },
+  {
+    name: 'setTrustLineFlags',
+    label: 'Set Trust Line Flags',
+    operationPane: SetTrustLineFlags,
+    helpNote: 'Creates a trustline flag configuring operation.',
+    docsUrl: 'https://developers.stellar.org/docs/start/list-of-operations/#set-trustline-flags',
   },
 ]
