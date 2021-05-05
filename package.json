@@ -24,7 +24,7 @@
     "@ledgerhq/hw-transport-u2f": "^5.9.0",
     "@stellar/freighter-api": "1.0.1",
     "@stellar/prettier-config": "^1.0.1",
-    "axios": "^0.18.1",
+    "axios": "^0.21.1",
     "babel-loader": "^8.1.0",
     "browser-sync": "^2.9.11",
     "chai": "^4.2.0",
