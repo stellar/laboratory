@@ -3,6 +3,7 @@ import {
   START_FRIENDBOT_REQUEST,
   FINISH_FRIENDBOT_REQUEST,
   GENERATE_MUXED_ACCOUNT,
+  PARSE_MUXED_ACCOUNT,
 } from '../actions/accountCreator';
 
 import { logEvent} from '../utilities/metrics'
@@ -13,6 +14,7 @@ const metricsEvents = {
   fundAccountSuccess: 'account creator: funded test account: success',
   fundAccountError: 'account creator: funded test account: failed',
   generateMuxedAccount: 'account creator: generated new muxed account',
+  parseMuxedAccount: 'account creator: parsed muxed account',
 }
 
 export default function accountCreatorMetrics(state, action) {
@@ -37,6 +39,10 @@ export default function accountCreatorMetrics(state, action) {
     }
     case GENERATE_MUXED_ACCOUNT: {
       logEvent(metricsEvents.generateMuxedAccount)
+      return;
+    }
+    case PARSE_MUXED_ACCOUNT: {
+      logEvent(metricsEvents.parseMuxedAccount)
       return;
     }
 
