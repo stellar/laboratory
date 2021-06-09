@@ -5,6 +5,8 @@ import {
   UPDATE_FRIENDBOT_TARGET,
   START_FRIENDBOT_REQUEST,
   FINISH_FRIENDBOT_REQUEST,
+  GENERATE_MUXED_ACCOUNT,
+  UPDATE_GENERATE_MUXED_ACCOUNT_INPUT,
 } from '../actions/accountCreator';
 
 function keypairGeneratorResult(state=null, action) {
@@ -25,6 +27,30 @@ function keypairGeneratorPubKey(state='', action) {
 function friendbotTarget(state='', action) {
   if (action.type === UPDATE_FRIENDBOT_TARGET) {
     return action.target;
+  }
+  return state;
+}
+
+const initialMuxedAccountState = {
+  gAddress: "",
+  mAccountId: "",
+  mAddress: "",
+  errorMessage: "",
+};
+function muxedAccountGenerated(state = initialMuxedAccountState, action) {
+  if (action.type === GENERATE_MUXED_ACCOUNT) {
+    return {
+      ...state,
+      mAddress: action.mAddress,
+      errorMessage: action.errorMessage || "",
+    }
+  }
+  if (action.type === UPDATE_GENERATE_MUXED_ACCOUNT_INPUT) {
+    return {
+      ...state,
+      ...action.input,
+      errorMessage: "",
+    }
   }
   return state;
 }
@@ -56,5 +82,6 @@ const accountCreator = combineReducers({
   keypairGeneratorPubKey,
   friendbotTarget,
   friendbotStatus,
+  muxedAccountGenerated,
 })
 export default accountCreator

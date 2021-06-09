@@ -1,10 +1,13 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import PubKeyPicker from './FormComponents/PubKeyPicker';
+import PositiveIntPicker from "./FormComponents/PositiveIntPicker"
 import {
   generateNewKeypair,
   updateFriendbotTarget,
   startFriendbotRequest,
+  generateMuxedAccount,
+  updateGenerateMuxedAccountInput
 } from '../actions/accountCreator';
 import NETWORK from '../constants/network';
 import {CodeBlock} from './CodeBlock';
@@ -92,6 +95,58 @@ class AccountCreator extends React.Component {
           </div>
         </div>
       )}
+
+      <div className="so-back AccountCreator__separator"></div>
+      <div className="so-back AccountCreator__section">
+        <div className="so-chunk">
+          <h3>Muxed Accounts (experimental)</h3>
+          <p>A muxed (or multiplexed) account (defined in <a href="https://stellar.org/protocol/cap-27" target="_blank" rel="noreferrer">CAP-27</a> and briefly <a href="https://stellar.org/protocol/sep-23" target="_blank" rel="noreferrer">SEP-23</a>) is one that resolves a single Stellar G...account to many different underlying IDs.</p>
+
+          <h4 className="picker--spaceBottom">Create muxed account</h4>
+
+          <div className="picker--spaceBottom">
+            <p className="AccountCreator__label">Base account public address:</p>
+            <PubKeyPicker
+              value={state.muxedAccountGenerated.gAddress}
+              onUpdate={(gAddress) => {
+                dispatch(updateGenerateMuxedAccountInput({ gAddress }))
+              }} />
+          </div>
+
+          <div className="picker--spaceBottom">
+            <p className="AccountCreator__label">Muxed account ID:</p>
+            <PositiveIntPicker
+              value={state.muxedAccountGenerated.mAccountId}
+              onUpdate={(mAccountId) => {
+                dispatch(updateGenerateMuxedAccountInput({ mAccountId }))
+              }} />
+          </div>
+
+          <button className="s-button" disabled={!(state.muxedAccountGenerated.gAddress && state.muxedAccountGenerated.mAccountId)} onClick={() => {dispatch(
+            generateMuxedAccount(
+              state.muxedAccountGenerated.gAddress,
+              state.muxedAccountGenerated.mAccountId,
+              this.props.baseURL,
+            ))}}>Create</button>
+
+          {state.muxedAccountGenerated.errorMessage ? <p className="picker__errorMessage">{state.muxedAccountGenerated.errorMessage}</p> : null}
+
+          {state.muxedAccountGenerated.mAddress ? <div className="simpleTable AccountCreator__generator__table">
+            <div className="simpleTable__row">
+              <div className="simpleTable__row__label">Base account public address</div>
+              <div className="simpleTable__row__content">{state.muxedAccountGenerated.gAddress}</div>
+            </div>
+            <div className="simpleTable__row">
+              <div className="simpleTable__row__label">Muxed account ID</div>
+              <div className="simpleTable__row__content">{state.muxedAccountGenerated.mAccountId}</div>
+            </div>
+            <div className="simpleTable__row">
+              <div className="simpleTable__row__label">Muxed account address</div>
+              <div className="simpleTable__row__content">{state.muxedAccountGenerated.mAddress}</div>
+            </div>
+          </div> : null }
+        </div>
+      </div>
     </div>
   }
 }
