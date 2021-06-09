@@ -62,25 +62,20 @@ export function startFriendbotRequest(target) {
 }
 
 export const GENERATE_MUXED_ACCOUNT = 'GENERATE_MUXED_ACCOUNT';
-export function generateMuxedAccount(publicKey, muxedAccountId, horizonURL) {
-  const server = new Server(horizonURL);
+export function generateMuxedAccount(publicKey, muxedAccountId) {
+  try {
+    const muxedAccount = new MuxedAccount(new Account(publicKey, "0"), muxedAccountId);
 
-  // TODO: can this be simplified?
-  return dispatch => server.accounts().accountId(publicKey).call().then(accountInfo => {
-    const { sequence } = accountInfo;
-    const baseAccount = new Account(publicKey, sequence);
-    const muxedAccount = new MuxedAccount(baseAccount, muxedAccountId);
-
-    dispatch({
+    return {
       type: GENERATE_MUXED_ACCOUNT,
       mAddress: muxedAccount.accountId(),
-    });
-  }).catch(e => {
-    dispatch({
+    }
+  } catch (e) {
+    return {
       type: GENERATE_MUXED_ACCOUNT,
       errorMessage: `Something went wrong. ${e.toString()}`
-    });
-  });
+    }
+  }
 }
 
 export const UPDATE_GENERATE_MUXED_ACCOUNT_INPUT = 'UPDATE_GENERATE_MUXED_ACCOUNT_INPUT';

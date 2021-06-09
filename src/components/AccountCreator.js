@@ -129,8 +129,7 @@ class AccountCreator extends React.Component {
             <button className="s-button" disabled={!(state.muxedAccountGenerated.gAddress && state.muxedAccountGenerated.mAccountId)} onClick={() => {dispatch(
               generateMuxedAccount(
                 state.muxedAccountGenerated.gAddress,
-                state.muxedAccountGenerated.mAccountId,
-                this.props.baseURL,
+                state.muxedAccountGenerated.mAccountId
               ))}}>Create</button>
 
             {state.muxedAccountGenerated.errorMessage ? <p className="picker__errorMessage">{state.muxedAccountGenerated.errorMessage}</p> : null}
