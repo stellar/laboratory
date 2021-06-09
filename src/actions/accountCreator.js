@@ -65,6 +65,7 @@ export const GENERATE_MUXED_ACCOUNT = 'GENERATE_MUXED_ACCOUNT';
 export function generateMuxedAccount(publicKey, muxedAccountId, horizonURL) {
   const server = new Server(horizonURL);
 
+  // TODO: can this be simplified?
   return dispatch => server.accounts().accountId(publicKey).call().then(accountInfo => {
     const { sequence } = accountInfo;
     const baseAccount = new Account(publicKey, sequence);
@@ -87,5 +88,41 @@ export function updateGenerateMuxedAccountInput(input) {
   return {
     type: UPDATE_GENERATE_MUXED_ACCOUNT_INPUT,
     input,
+  }
+}
+
+export const PARSE_MUXED_ACCOUNT = 'PARSE_MUXED_ACCOUNT';
+export function parseMuxedAccount(muxedAccountAddress) {
+  try {
+    const muxedAccount = new MuxedAccount.fromAddress(muxedAccountAddress, "0");
+    const gAddress = muxedAccount.baseAccount().accountId();
+    const mAccountId = muxedAccount.id();
+
+    if (!gAddress) {
+      throw new Error("Base account for this muxed account was not found.");
+    }
+
+    if (!mAccountId) {
+      throw new Error("Muxed account ID for this muxed account was not found.");
+    }
+
+    return {
+      type: PARSE_MUXED_ACCOUNT,
+      gAddress,
+      mAccountId,
+    }
+  } catch (e) {
+    return {
+      type: PARSE_MUXED_ACCOUNT,
+      errorMessage: `Something went wrong. ${e.toString()}`
+    }
+  }
+}
+
+export const UPDATE_PARSE_MUXED_ACCOUNT_INPUT = 'UPDATE_PARSE_MUXED_ACCOUNT_INPUT';
+export function updateParseMuxedAccountInput(mAddress) {
+  return {
+    type: UPDATE_PARSE_MUXED_ACCOUNT_INPUT,
+    mAddress,
   }
 }
