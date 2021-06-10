@@ -28,7 +28,11 @@ export default function PubKeyPicker({
           "Example: GCEXAMPLE5HWNK4AYSTEQ4UWDKHTCKADVS2AHF3UI2ZMO3DPUSM6Q4UG"
         }
         validator={(value) => {
-          if (!StrKey.isValidEd25519PublicKey(value)) {
+          if (value.startsWith("M")) {
+            if (value.length !== 69) {
+              return "Muxed account address is invalid.";
+            }
+          } else if (!StrKey.isValidEd25519PublicKey(value)) {
             return "Public key is invalid.";
           }
         }}
