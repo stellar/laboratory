@@ -17,7 +17,13 @@ import {CodeBlock} from './CodeBlock';
 import {addEventHandler} from '../utilities/metrics'
 import accountCreatorMetrics from '../metricsHandlers/accountCreator'
 
-addEventHandler(accountCreatorMetrics)
+addEventHandler(accountCreatorMetrics);
+
+const muxedAccountLabel = {
+  "muxedAccountBaseAddress": "Base Account G Address",
+  "muxedAccountId": "Muxed Account ID",
+  "muxedAccountAddress": "Muxed Account M Address",
+};
 
 class AccountCreator extends React.Component {
   render() {
@@ -102,14 +108,17 @@ class AccountCreator extends React.Component {
       <div className="so-back AccountCreator__separator"></div>
       <div className="so-back AccountCreator__section">
         <div className="so-chunk">
-          <h3>3. Muxed Accounts (experimental)</h3>
+          <h3>3. Muxed Account</h3>
+
+          <p className="AccountCreator__note--alert">Muxed Account types are not yet widely adopted. Don’t use in a production environment unless you know what you’re doing.</p>
+
           <p>A muxed (or multiplexed) account (defined in <a href="https://stellar.org/protocol/cap-27" target="_blank" rel="noreferrer">CAP-27</a> and briefly <a href="https://stellar.org/protocol/sep-23" target="_blank" rel="noreferrer">SEP-23</a>) is one that resolves a single Stellar G...account to many different underlying IDs.</p>
 
           <div className="AccountCreator__spaceTop">
-            <h4 className="picker--spaceBottom">Create muxed account</h4>
+            <h4 className="picker--spaceBottom">Create Multiplexed Account</h4>
 
             <div className="picker--spaceBottom">
-              <p className="AccountCreator__label">Base account public address:</p>
+              <p className="AccountCreator__label">{muxedAccountLabel.muxedAccountBaseAddress}:</p>
               <PubKeyPicker
                 value={state.muxedAccountGenerated.gAddress}
                 onUpdate={(gAddress) => {
@@ -118,7 +127,7 @@ class AccountCreator extends React.Component {
             </div>
 
             <div className="picker--spaceBottom">
-              <p className="AccountCreator__label">Muxed account ID:</p>
+              <p className="AccountCreator__label">{muxedAccountLabel.muxedAccountId}:</p>
               <PositiveIntPicker
                 value={state.muxedAccountGenerated.mAccountId}
                 onUpdate={(mAccountId) => {
@@ -136,25 +145,24 @@ class AccountCreator extends React.Component {
 
             {state.muxedAccountGenerated.mAddress ? <div className="simpleTable AccountCreator__generator__table">
               <div className="simpleTable__row">
-                <div className="simpleTable__row__label">Base account public address</div>
+                <div className="simpleTable__row__label">{muxedAccountLabel.muxedAccountBaseAddress}</div>
                 <div className="simpleTable__row__content">{state.muxedAccountGenerated.gAddress}</div>
               </div>
               <div className="simpleTable__row">
-                <div className="simpleTable__row__label">Muxed account ID</div>
+                <div className="simpleTable__row__label">{muxedAccountLabel.muxedAccountId}</div>
                 <div className="simpleTable__row__content">{state.muxedAccountGenerated.mAccountId}</div>
               </div>
               <div className="simpleTable__row">
-                <div className="simpleTable__row__label">Muxed account address</div>
+                <div className="simpleTable__row__label">{muxedAccountLabel.muxedAccountAddress}</div>
                 <div className="simpleTable__row__content">{state.muxedAccountGenerated.mAddress}</div>
               </div>
             </div> : null }
           </div>
 
           <div className="AccountCreator__spaceTop">
-            <h4 className="picker--spaceBottom">Parse muxed account</h4>
+            <h4 className="picker--spaceBottom">Get Muxed Account from M address</h4>
 
             <div className="picker--spaceBottom">
-              <p className="AccountCreator__label">Muxed account address:</p>
               <MuxedKeyPicker
                 value={state.muxedAccountParsed.mAddress}
                 onUpdate={(mAddress) => {
@@ -169,15 +177,15 @@ class AccountCreator extends React.Component {
 
             {state.muxedAccountParsed.gAddress && state.muxedAccountParsed.mAccountId ? <div className="simpleTable AccountCreator__generator__table">
               <div className="simpleTable__row">
-                <div className="simpleTable__row__label">Muxed account address</div>
+                <div className="simpleTable__row__label">{muxedAccountLabel.muxedAccountAddress}</div>
                 <div className="simpleTable__row__content">{state.muxedAccountParsed.mAddress}</div>
               </div>
               <div className="simpleTable__row">
-                <div className="simpleTable__row__label">Base account public address</div>
+                <div className="simpleTable__row__label">{muxedAccountLabel.muxedAccountBaseAddress}</div>
                 <div className="simpleTable__row__content">{state.muxedAccountParsed.gAddress}</div>
               </div>
               <div className="simpleTable__row">
-                <div className="simpleTable__row__label">Muxed account ID</div>
+                <div className="simpleTable__row__label">{muxedAccountLabel.muxedAccountId}</div>
                 <div className="simpleTable__row__content">{state.muxedAccountParsed.mAccountId}</div>
               </div>
             </div> : null }
