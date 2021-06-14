@@ -70,7 +70,7 @@ class AccountCreator extends React.Component {
     return <div className="AccountCreator">
       <div className="so-back AccountCreator__section">
         <div className="so-chunk">
-          <h3>1. Keypair generator</h3>
+          <h3>Keypair generator</h3>
 
           <p>These keypairs can be used on the Stellar network where one is required. For example, it can be used as an account master key, account signer, and/or as a stellar-core node key.</p>
 
@@ -85,7 +85,7 @@ class AccountCreator extends React.Component {
           <div className="so-back AccountCreator__separator"></div>
           <div className="so-back AccountCreator__section">
             <div className="so-chunk">
-              <h3>2. Friendbot: Fund a test network account</h3>
+              <h3>Friendbot: Fund a test network account</h3>
               <p>The friendbot is a horizon API endpoint that will fund an account with 10,000 lumens on the test network.</p>
 
               <PubKeyPicker
@@ -108,7 +108,7 @@ class AccountCreator extends React.Component {
       <div className="so-back AccountCreator__separator"></div>
       <div className="so-back AccountCreator__section">
         <div className="so-chunk">
-          <h3>3. Muxed Account</h3>
+          <h3>Muxed Account</h3>
 
           <p className="AccountCreator__note--alert">Muxed Account types are not yet widely adopted. Don’t use in a production environment unless you know what you’re doing.</p>
 

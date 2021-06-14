@@ -535,10 +535,18 @@ Libify.buildTransaction = function(attributes, operations, networkPassphrase) {
   };
 
   try {
-    var account = new Sdk.Account(attributes.sourceAccount, Sdk.UnsignedHyper.fromString(attributes.sequence).subtract(1).toString());
+    let account;
+    const sequence = Sdk.UnsignedHyper.fromString(attributes.sequence).subtract(1).toString();
+
+    if (attributes.sourceAccount.startsWith("M")) {
+      account = new Sdk.MuxedAccount.fromAddress(attributes.sourceAccount, sequence);
+    } else {
+      account = new Sdk.Account(attributes.sourceAccount, sequence);
+    }
 
     let opts = {
-      networkPassphrase
+      networkPassphrase,
+      withMuxing: true,
     };
     if (attributes.fee !== '') {
       const MAX_UINT32 = Math.pow( 2, 32 ) - 1;

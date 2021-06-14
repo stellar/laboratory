@@ -8,11 +8,12 @@ import StroopsPicker from './FormComponents/StroopsPicker';
 import MemoPicker from './FormComponents/MemoPicker';
 import TimeBoundsPicker from './FormComponents/TimeBoundsPicker';
 import {connect} from 'react-redux';
-import {StrKey} from 'stellar-sdk';
+import {StrKey, MuxedAccount} from 'stellar-sdk';
 import NETWORK from '../constants/network';
 import {fetchSequence, fetchBaseFee, updateTxType, updateFeeBumpAttribute} from '../actions/transactionBuilder';
 import TransactionImporter from './TransactionImporter';
 import TX_TYPES from '../constants/transaction_types';
+import isValidMAddress from "../utilities/isValidMAddress"
 
 function TxBuilderAttributes(props) {
   let {onUpdate, attributes, horizonURL, dispatch, feeBumpAttributes, networkPassphrase} = props;
@@ -126,8 +127,19 @@ class sequenceFetcherClass extends React.Component {
     let {attributes, sequenceFetcherError} = this.props.state;
     let dispatch = this.props.dispatch;
     let horizonURL = this.props.horizonURL;
-    if (!StrKey.isValidEd25519PublicKey(attributes.sourceAccount)) {
+    if (
+      !StrKey.isValidEd25519PublicKey(attributes.sourceAccount) &&
+      !isValidMAddress(attributes.sourceAccount)
+    ) {
       return null;
+    }
+
+    const isMAddress = isValidMAddress(attributes.sourceAccount);
+    let sourceAccount = attributes.sourceAccount;
+
+    if (isMAddress) {
+      const muxedAccount = new MuxedAccount.fromAddress(attributes.sourceAccount, "0");
+      sourceAccount = muxedAccount.baseAccount().accountId();
     }
 
     let sequenceErrorMessage;
@@ -137,19 +149,22 @@ class sequenceFetcherClass extends React.Component {
       </span>
     }
 
-    let truncatedAccountId = attributes.sourceAccount.substr(0,10);
+    let truncatedAccountId = sourceAccount.substr(0,10);
 
-    return <p className="optionsTable__pair__content__note">
-      <a
-        className="s-button"
-        onClick={() => dispatch(
-          fetchSequence(attributes.sourceAccount, horizonURL)
-        )}
-        >Fetch next sequence number for account starting with "{truncatedAccountId}"</a>
-      <br />
-      <small>Fetching from: <code>{horizonURL}</code></small><br />
+    return <>
+      {isMAddress ? <p className="optionsTable__pair__content__note">Source account is M address, use base account’s G address to get the sequence number.</p> : null}
       {sequenceErrorMessage}
-    </p>
+      <p className="optionsTable__pair__content__note">
+        <a
+          className="s-button"
+          onClick={() => dispatch(
+            fetchSequence(sourceAccount, horizonURL)
+          )}
+          >Fetch next sequence number for account starting with "{truncatedAccountId}"</a>
+        <br />
+        <small>Fetching from: <code>{horizonURL}</code></small><br />
+      </p>
+    </>
   }
 }
 
