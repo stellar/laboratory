@@ -9,7 +9,7 @@ import {
   freighterGetPublicKey,
 } from "../../utilities/useFreighter";
 
-export default function PubKeyPicker({
+export default function MuxedKeyPicker({
   placeholder,
   value,
   onUpdate,
@@ -25,15 +25,11 @@ export default function PubKeyPicker({
         onUpdate={onUpdate}
         placeholder={
           placeholder ||
-          "Example: GCEXAMPLE5HWNK4AYSTEQ4UWDKHTCKADVS2AHF3UI2ZMO3DPUSM6Q4UG"
+          "Example: MBRWSVNURRYVIYSWLRFQ5AAAUWPKOZZNZVVVIXHFGUSGIRVKLVIDYAAAAAAAAAAD5GJ4U"
         }
         validator={(value) => {
-          if (value.startsWith("M")) {
-            if (value.length !== 69) {
-              return "Muxed account address is invalid.";
-            }
-          } else if (!StrKey.isValidEd25519PublicKey(value)) {
-            return "Public key is invalid.";
+          if (!value.startsWith("M") || value.length !== 69) {
+            return "Muxed account address is invalid.";
           }
         }}
       />

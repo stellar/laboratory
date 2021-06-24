@@ -140,6 +140,7 @@ Libify.Operation.payment = function(opts) {
     asset: Libify.Asset(opts.asset),
     amount: opts.amount,
     source: opts.sourceAccount,
+    withMuxing: true,
   })
 }
 
@@ -165,6 +166,7 @@ Libify.Operation.pathPaymentStrictSend = function(opts) {
     destMin: opts.destMin,
     path: libifiedPath,
     source: opts.sourceAccount,
+    withMuxing: true,
   })
 }
 
@@ -190,6 +192,7 @@ Libify.Operation.pathPaymentStrictReceive = function(opts) {
     destAmount: opts.destAmount,
     path: libifiedPath,
     source: opts.sourceAccount,
+    withMuxing: true,
   })
 }
 
@@ -220,6 +223,7 @@ Libify.Operation.accountMerge = function(opts) {
   return Sdk.Operation.accountMerge({
     destination: opts.destination,
     source: opts.sourceAccount,
+    withMuxing: true,
   })
 }
 
@@ -531,10 +535,18 @@ Libify.buildTransaction = function(attributes, operations, networkPassphrase) {
   };
 
   try {
-    var account = new Sdk.Account(attributes.sourceAccount, Sdk.UnsignedHyper.fromString(attributes.sequence).subtract(1).toString());
+    let account;
+    const sequence = Sdk.UnsignedHyper.fromString(attributes.sequence).subtract(1).toString();
+
+    if (attributes.sourceAccount.startsWith("M")) {
+      account = new Sdk.MuxedAccount.fromAddress(attributes.sourceAccount, sequence);
+    } else {
+      account = new Sdk.Account(attributes.sourceAccount, sequence);
+    }
 
     let opts = {
-      networkPassphrase
+      networkPassphrase,
+      withMuxing: true,
     };
     if (attributes.fee !== '') {
       const MAX_UINT32 = Math.pow( 2, 32 ) - 1;
