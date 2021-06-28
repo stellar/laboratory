@@ -64,6 +64,7 @@ export function signWithLedger(txXDR, bipPath, networkPassphrase) {
 
     let onConnect = (ledgerApi) => {
       let publicKey;
+
       ledgerApi.getPublicKey(bipPath).then(result => publicKey = result.publicKey)
         .then(() => ledgerApi.signTransaction(bipPath, transaction.signatureBase()))
         .then(result => {
