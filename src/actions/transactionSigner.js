@@ -1,4 +1,4 @@
-import LedgerTransportWebUSB from "@ledgerhq/hw-transport-webusb";
+import LedgerTransport from '@ledgerhq/hw-transport-u2f';
 import LedgerStr from '@ledgerhq/hw-app-str';
 import {TransactionBuilder, Keypair, xdr} from 'stellar-sdk';
 import { signTransaction } from "@stellar/freighter-api";
@@ -81,7 +81,9 @@ export function signWithLedger(txXDR, bipPath, networkPassphrase) {
         .catch(onError);
     };
 
-    LedgerTransportWebUSB.request().then((transport) => {
+    const openTimeout = 60 * 1000;
+    LedgerTransport.create(openTimeout).then((transport) => {
+      transport.setDebugMode(true);
       onConnect(new LedgerStr(transport));
     }).catch(onError);
   };
