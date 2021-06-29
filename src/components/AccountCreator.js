@@ -31,6 +31,7 @@ class AccountCreator extends React.Component {
     let keypairTable, keypairGeneratorLink, friendbotResultCodeblock;
 
     const IS_TESTNET = this.props.baseURL === NETWORK.available.test.horizonURL;
+    const IS_PUBNET = this.props.baseURL === NETWORK.available.public.horizonURL;
 
     if (state.keypairGeneratorResult !== null) {
       keypairTable = <div className="simpleTable AccountCreator__generator__table">
@@ -105,93 +106,95 @@ class AccountCreator extends React.Component {
         </div>
       )}
 
-      <div className="so-back AccountCreator__separator"></div>
-      <div className="so-back AccountCreator__section">
-        <div className="so-chunk">
-          <h3>Muxed Account</h3>
+      {!IS_PUBNET && (<>
+        <div className="so-back AccountCreator__separator"></div>
+        <div className="so-back AccountCreator__section">
+          <div className="so-chunk">
+            <h3>Muxed Account</h3>
 
-          <p className="AccountCreator__note--alert">Muxed Account types are not yet widely adopted. Don’t use in a production environment unless you know what you’re doing.</p>
+            <p className="AccountCreator__note--alert">Muxed Account types are not yet widely adopted. Don’t use in a production environment unless you know what you’re doing.</p>
 
-          <p>A muxed (or multiplexed) account (defined in <a href="https://stellar.org/protocol/cap-27" target="_blank" rel="noreferrer">CAP-27</a> and briefly <a href="https://stellar.org/protocol/sep-23" target="_blank" rel="noreferrer">SEP-23</a>) is one that resolves a single Stellar G...account to many different underlying IDs.</p>
+            <p>A muxed (or multiplexed) account (defined in <a href="https://stellar.org/protocol/cap-27" target="_blank" rel="noreferrer">CAP-27</a> and briefly <a href="https://stellar.org/protocol/sep-23" target="_blank" rel="noreferrer">SEP-23</a>) is one that resolves a single Stellar G...account to many different underlying IDs.</p>
 
-          <div className="AccountCreator__spaceTop">
-            <h4 className="picker--spaceBottom">Create Multiplexed Account</h4>
+            <div className="AccountCreator__spaceTop">
+              <h4 className="picker--spaceBottom">Create Multiplexed Account</h4>
 
-            <div className="picker--spaceBottom">
-              <p className="AccountCreator__label">{muxedAccountLabel.muxedAccountBaseAddress}:</p>
-              <PubKeyPicker
-                value={state.muxedAccountGenerated.gAddress}
-                onUpdate={(gAddress) => {
-                  dispatch(updateGenerateMuxedAccountInput({ gAddress }))
-                }} />
+              <div className="picker--spaceBottom">
+                <p className="AccountCreator__label">{muxedAccountLabel.muxedAccountBaseAddress}:</p>
+                <PubKeyPicker
+                  value={state.muxedAccountGenerated.gAddress}
+                  onUpdate={(gAddress) => {
+                    dispatch(updateGenerateMuxedAccountInput({ gAddress }))
+                  }} />
+              </div>
+
+              <div className="picker--spaceBottom">
+                <p className="AccountCreator__label">{muxedAccountLabel.muxedAccountId}:</p>
+                <PositiveIntPicker
+                  value={state.muxedAccountGenerated.mAccountId}
+                  onUpdate={(mAccountId) => {
+                    dispatch(updateGenerateMuxedAccountInput({ mAccountId }))
+                  }} />
+              </div>
+
+              <button className="s-button" disabled={!(state.muxedAccountGenerated.gAddress && state.muxedAccountGenerated.mAccountId)} onClick={() => {dispatch(
+                generateMuxedAccount(
+                  state.muxedAccountGenerated.gAddress,
+                  state.muxedAccountGenerated.mAccountId
+                ))}}>Create</button>
+
+              {state.muxedAccountGenerated.errorMessage ? <p className="picker__errorMessage">{state.muxedAccountGenerated.errorMessage}</p> : null}
+
+              {state.muxedAccountGenerated.mAddress ? <div className="simpleTable AccountCreator__generator__table">
+                <div className="simpleTable__row">
+                  <div className="simpleTable__row__label">{muxedAccountLabel.muxedAccountBaseAddress}</div>
+                  <div className="simpleTable__row__content">{state.muxedAccountGenerated.gAddress}</div>
+                </div>
+                <div className="simpleTable__row">
+                  <div className="simpleTable__row__label">{muxedAccountLabel.muxedAccountId}</div>
+                  <div className="simpleTable__row__content">{state.muxedAccountGenerated.mAccountId}</div>
+                </div>
+                <div className="simpleTable__row">
+                  <div className="simpleTable__row__label">{muxedAccountLabel.muxedAccountAddress}</div>
+                  <div className="simpleTable__row__content">{state.muxedAccountGenerated.mAddress}</div>
+                </div>
+              </div> : null }
             </div>
 
-            <div className="picker--spaceBottom">
-              <p className="AccountCreator__label">{muxedAccountLabel.muxedAccountId}:</p>
-              <PositiveIntPicker
-                value={state.muxedAccountGenerated.mAccountId}
-                onUpdate={(mAccountId) => {
-                  dispatch(updateGenerateMuxedAccountInput({ mAccountId }))
-                }} />
+            <div className="AccountCreator__spaceTop">
+              <h4 className="picker--spaceBottom">Get Muxed Account from M address</h4>
+
+              <div className="picker--spaceBottom">
+                <MuxedKeyPicker
+                  value={state.muxedAccountParsed.mAddress}
+                  onUpdate={(mAddress) => {
+                    dispatch(updateParseMuxedAccountInput(mAddress))
+                  }} />
+              </div>
+
+              <button className="s-button" disabled={!state.muxedAccountParsed.mAddress} onClick={() => {dispatch(
+                parseMuxedAccount(state.muxedAccountParsed.mAddress))}}>Parse</button>
+
+              {state.muxedAccountParsed.errorMessage ? <p className="picker__errorMessage">{state.muxedAccountParsed.errorMessage}</p> : null}
+
+              {state.muxedAccountParsed.gAddress && state.muxedAccountParsed.mAccountId ? <div className="simpleTable AccountCreator__generator__table">
+                <div className="simpleTable__row">
+                  <div className="simpleTable__row__label">{muxedAccountLabel.muxedAccountAddress}</div>
+                  <div className="simpleTable__row__content">{state.muxedAccountParsed.mAddress}</div>
+                </div>
+                <div className="simpleTable__row">
+                  <div className="simpleTable__row__label">{muxedAccountLabel.muxedAccountBaseAddress}</div>
+                  <div className="simpleTable__row__content">{state.muxedAccountParsed.gAddress}</div>
+                </div>
+                <div className="simpleTable__row">
+                  <div className="simpleTable__row__label">{muxedAccountLabel.muxedAccountId}</div>
+                  <div className="simpleTable__row__content">{state.muxedAccountParsed.mAccountId}</div>
+                </div>
+              </div> : null }
             </div>
-
-            <button className="s-button" disabled={!(state.muxedAccountGenerated.gAddress && state.muxedAccountGenerated.mAccountId)} onClick={() => {dispatch(
-              generateMuxedAccount(
-                state.muxedAccountGenerated.gAddress,
-                state.muxedAccountGenerated.mAccountId
-              ))}}>Create</button>
-
-            {state.muxedAccountGenerated.errorMessage ? <p className="picker__errorMessage">{state.muxedAccountGenerated.errorMessage}</p> : null}
-
-            {state.muxedAccountGenerated.mAddress ? <div className="simpleTable AccountCreator__generator__table">
-              <div className="simpleTable__row">
-                <div className="simpleTable__row__label">{muxedAccountLabel.muxedAccountBaseAddress}</div>
-                <div className="simpleTable__row__content">{state.muxedAccountGenerated.gAddress}</div>
-              </div>
-              <div className="simpleTable__row">
-                <div className="simpleTable__row__label">{muxedAccountLabel.muxedAccountId}</div>
-                <div className="simpleTable__row__content">{state.muxedAccountGenerated.mAccountId}</div>
-              </div>
-              <div className="simpleTable__row">
-                <div className="simpleTable__row__label">{muxedAccountLabel.muxedAccountAddress}</div>
-                <div className="simpleTable__row__content">{state.muxedAccountGenerated.mAddress}</div>
-              </div>
-            </div> : null }
-          </div>
-
-          <div className="AccountCreator__spaceTop">
-            <h4 className="picker--spaceBottom">Get Muxed Account from M address</h4>
-
-            <div className="picker--spaceBottom">
-              <MuxedKeyPicker
-                value={state.muxedAccountParsed.mAddress}
-                onUpdate={(mAddress) => {
-                  dispatch(updateParseMuxedAccountInput(mAddress))
-                }} />
-            </div>
-
-            <button className="s-button" disabled={!state.muxedAccountParsed.mAddress} onClick={() => {dispatch(
-              parseMuxedAccount(state.muxedAccountParsed.mAddress))}}>Parse</button>
-
-            {state.muxedAccountParsed.errorMessage ? <p className="picker__errorMessage">{state.muxedAccountParsed.errorMessage}</p> : null}
-
-            {state.muxedAccountParsed.gAddress && state.muxedAccountParsed.mAccountId ? <div className="simpleTable AccountCreator__generator__table">
-              <div className="simpleTable__row">
-                <div className="simpleTable__row__label">{muxedAccountLabel.muxedAccountAddress}</div>
-                <div className="simpleTable__row__content">{state.muxedAccountParsed.mAddress}</div>
-              </div>
-              <div className="simpleTable__row">
-                <div className="simpleTable__row__label">{muxedAccountLabel.muxedAccountBaseAddress}</div>
-                <div className="simpleTable__row__content">{state.muxedAccountParsed.gAddress}</div>
-              </div>
-              <div className="simpleTable__row">
-                <div className="simpleTable__row__label">{muxedAccountLabel.muxedAccountId}</div>
-                <div className="simpleTable__row__content">{state.muxedAccountParsed.mAccountId}</div>
-              </div>
-            </div> : null }
           </div>
         </div>
-      </div>
+      </>)}
     </div>
   }
 }
