@@ -17,6 +17,7 @@ import isString from 'lodash/isString';
 import isUndefined from 'lodash/isUndefined';
 import map from 'lodash/map';
 import { createPredicate } from "../utilities/claimantHelpers";
+import isValidMAddress from "../utilities/isValidMAddress"
 
 // Helpers
 let isInt = function(value) {
@@ -140,7 +141,7 @@ Libify.Operation.payment = function(opts) {
     asset: Libify.Asset(opts.asset),
     amount: opts.amount,
     source: opts.sourceAccount,
-    withMuxing: true,
+    withMuxing: isValidMAddress(opts.destination),
   })
 }
 
@@ -166,7 +167,7 @@ Libify.Operation.pathPaymentStrictSend = function(opts) {
     destMin: opts.destMin,
     path: libifiedPath,
     source: opts.sourceAccount,
-    withMuxing: true,
+    withMuxing: isValidMAddress(opts.destination),
   })
 }
 
@@ -192,7 +193,7 @@ Libify.Operation.pathPaymentStrictReceive = function(opts) {
     destAmount: opts.destAmount,
     path: libifiedPath,
     source: opts.sourceAccount,
-    withMuxing: true,
+    withMuxing: isValidMAddress(opts.destination),
   })
 }
 
@@ -223,7 +224,7 @@ Libify.Operation.accountMerge = function(opts) {
   return Sdk.Operation.accountMerge({
     destination: opts.destination,
     source: opts.sourceAccount,
-    withMuxing: true,
+    withMuxing: isValidMAddress(opts.destination),
   })
 }
 
@@ -537,8 +538,9 @@ Libify.buildTransaction = function(attributes, operations, networkPassphrase) {
   try {
     let account;
     const sequence = Sdk.UnsignedHyper.fromString(attributes.sequence).subtract(1).toString();
+    const isMAddress = isValidMAddress(attributes.sourceAccount);
 
-    if (attributes.sourceAccount.startsWith("M")) {
+    if (isMAddress) {
       account = new Sdk.MuxedAccount.fromAddress(attributes.sourceAccount, sequence);
     } else {
       account = new Sdk.Account(attributes.sourceAccount, sequence);
@@ -546,7 +548,7 @@ Libify.buildTransaction = function(attributes, operations, networkPassphrase) {
 
     let opts = {
       networkPassphrase,
-      withMuxing: true,
+      withMuxing: isMAddress,
     };
     if (attributes.fee !== '') {
       const MAX_UINT32 = Math.pow( 2, 32 ) - 1;
