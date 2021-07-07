@@ -11,6 +11,7 @@ import {
   setSecrets,
   setBIPPath,
   signWithLedger,
+  signWithTrezor,
   signWithFreighter,
 } from '../actions/transactionSigner';
 import { EasySelect } from './EasySelect';
@@ -40,7 +41,7 @@ class TransactionSigner extends React.Component {
       xdr,
       signers,
       bipPath,
-      ledgerwalletStatus,
+      hardwarewalletStatus,
       freighterwalletStatus,
     } = this.props.state;
     let content;
@@ -55,8 +56,8 @@ class TransactionSigner extends React.Component {
         </div>
       </div>
     } else {
-      let ledgerSigs = ledgerwalletStatus.signatures;
-      let result = signTransaction(xdr, signers, networkPassphrase, ledgerSigs);
+      let walletSigs = hardwarewalletStatus.signatures;
+      let result = signTransaction(xdr, signers, networkPassphrase, walletSigs);
       let transaction = TransactionBuilder.fromXDR(xdr, networkPassphrase);
 
       let infoTable = {
@@ -120,21 +121,21 @@ class TransactionSigner extends React.Component {
         </p>
       }
 
-      let ledgerwalletMessage;
-      if (ledgerwalletStatus.message) {
+      let hardwarewalletMessage;
+      if (hardwarewalletStatus.message) {
 
         let messageAlertType;
-        if (ledgerwalletStatus.status === 'loading') {
+        if (hardwarewalletStatus.status === 'loading') {
           messageAlertType = 's-alert--info';
-        } else if (ledgerwalletStatus.status === 'success') {
+        } else if (hardwarewalletStatus.status === 'success') {
           messageAlertType = 's-alert--success';
-        } else if (ledgerwalletStatus.status === 'failure') {
+        } else if (hardwarewalletStatus.status === 'failure') {
           messageAlertType = 's-alert--alert';
         }
 
-        ledgerwalletMessage = <div>
+        hardwarewalletMessage = <div>
           <br />
-          <div className={`s-alert TxSignerKeys__ledgerwallet_message ${messageAlertType}`}> {ledgerwalletStatus.message} </div>
+          <div className={`s-alert TxSignerKeys__ledgerwallet_message ${messageAlertType}`}> {hardwarewalletStatus.message} </div>
         </div>
       }
 
@@ -188,16 +189,22 @@ class TransactionSigner extends React.Component {
                     onUpdate={(value) => dispatch(setSecrets(value))}
                   />
                 </OptionsTablePair>
-                <OptionsTablePair label="Ledger Wallet">
+                <OptionsTablePair label="BIP Path">
                   <BipPathPicker
                     value={bipPath}
                     onUpdate={(value) => dispatch(setBIPPath(value))}
                   />
-                  <button
-                    className="s-button TxSignerKeys__signBipPath"
-                    onClick={() => { dispatch(signWithLedger(xdr, bipPath, networkPassphrase)) }}
-                  >Sign with BIP Path</button>
-                  {ledgerwalletMessage}
+                  <div className="TxSignerKeys__signBipPath">
+                    <button
+                      className="s-button"
+                      onClick={() => { dispatch(signWithLedger(xdr, bipPath, networkPassphrase)) }}
+                    >Sign with Ledger</button>
+                    <button
+                      className="s-button"
+                      onClick={() => { dispatch(signWithTrezor(xdr, bipPath, networkPassphrase)) }}
+                    >Sign with Trezor</button>
+                  </div>
+                  {hardwarewalletMessage}
                 </OptionsTablePair>
                 {isConnected() && (
                   <OptionsTablePair label="Freighter">

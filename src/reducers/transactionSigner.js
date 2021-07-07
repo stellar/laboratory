@@ -7,6 +7,9 @@ import {
   LEDGER_WALLET_SIGN_START,
   LEDGER_WALLET_SIGN_ERROR,
   LEDGER_WALLET_SIGN_SUCCESS,
+  TREZOR_WALLET_SIGN_START,
+  TREZOR_WALLET_SIGN_ERROR,
+  TREZOR_WALLET_SIGN_SUCCESS,
   FREIGHTER_WALLET_SIGN_START,
   FREIGHTER_WALLET_SIGN_ERROR,
   FREIGHTER_WALLET_SIGN_SUCCESS,
@@ -19,7 +22,7 @@ const transactionSigner = combineReducers({
   xdr,
   signers,
   bipPath,
-  ledgerwalletStatus,
+  hardwarewalletStatus,
   freighterwalletStatus,
 })
 
@@ -69,22 +72,25 @@ function bipPath(state = [], action) {
   return state;
 }
 
-function ledgerwalletStatus(state = {}, action) {
+function hardwarewalletStatus(state = {}, action) {
   switch (action.type) {
   case IMPORT_FROM_XDR:
   case CLEAR_TRANSACTION:
     return {};
   case LEDGER_WALLET_SIGN_START:
+  case TREZOR_WALLET_SIGN_START:
     return Object.assign({}, state, {
       status: 'loading',
       message: 'Waiting for wallet',
     });
   case LEDGER_WALLET_SIGN_ERROR:
+  case TREZOR_WALLET_SIGN_ERROR:
     return Object.assign({}, state, {
       status: 'failure',
       message: 'Error:' + JSON.stringify(action.error),
     });
   case LEDGER_WALLET_SIGN_SUCCESS:
+  case TREZOR_WALLET_SIGN_SUCCESS:
     return Object.assign({}, state, {
       status: 'success',
       message: 'Success!',
