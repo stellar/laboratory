@@ -1,7 +1,7 @@
 import LedgerTransportWebUSB from "@ledgerhq/hw-transport-webusb";
 import LedgerStr from '@ledgerhq/hw-app-str';
 import TrezorConnect from "trezor-connect";
-import { TransactionBuilder, Keypair, xdr } from 'stellar-sdk';
+import { TransactionBuilder, Keypair, xdr, StrKey } from 'stellar-sdk';
 import { signTransaction } from "@stellar/freighter-api";
 import { transformTransaction } from "../utilities/trezorTransformTransaction"
 
@@ -109,29 +109,19 @@ export function signWithTrezor(txXDR, bipPath, networkPassphrase) {
     };
 
     let onConnect = (trezorResponse) => {
-
       if (trezorResponse.success) {
-        const publicKey = trezorResponse.payload.address;
-        const trezorParams = transformTransaction(path, transaction);
+        const signature = Buffer.from(trezorResponse.payload.signature, "hex");
+        const publicKeyBytes = Buffer.from(trezorResponse.payload.publicKey, "hex");
+        const encodedPublicKey = StrKey.encodeEd25519PublicKey(publicKeyBytes);
 
-        TrezorConnect.stellarSignTransaction(trezorParams)
-          .then(response => {
-            if (response.success) {
-              const signature = Buffer.from(response.payload.signature, "hex");
+        let keyPair = Keypair.fromPublicKey(encodedPublicKey);
+        let hint = keyPair.signatureHint();
+        let decorated = new xdr.DecoratedSignature({ hint, signature });
 
-              let keyPair = Keypair.fromPublicKey(publicKey);
-              let hint = keyPair.signatureHint();
-              let decorated = new xdr.DecoratedSignature({hint, signature});
-
-              dispatch({
-                type: TREZOR_WALLET_SIGN_SUCCESS,
-                signature: decorated,
-              });
-            } else {
-              onError(response.payload.error);
-            }
-          })
-          .catch(e => onError(e.message));
+        dispatch({
+          type: TREZOR_WALLET_SIGN_SUCCESS,
+          signature: decorated,
+        });
       } else {
         onError(trezorResponse.payload.error);
       }
@@ -142,7 +132,9 @@ export function signWithTrezor(txXDR, bipPath, networkPassphrase) {
       appUrl: "https://laboratory.stellar.org/",
     });
 
-    TrezorConnect.stellarGetAddress({ path })
+    const trezorParams = transformTransaction(path, transaction);
+
+    TrezorConnect.stellarSignTransaction(trezorParams)
       .then(onConnect)
       .catch(onError)
   };

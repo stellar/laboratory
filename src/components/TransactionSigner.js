@@ -204,6 +204,7 @@ class TransactionSigner extends React.Component {
                       onClick={() => { dispatch(signWithTrezor(xdr, bipPath, networkPassphrase)) }}
                     >Sign with Trezor</button>
                   </div>
+                  <p className="optionsTable__pair__content__note">NOTE: Trezor devices require upper time bounds to be set (non-zero), otherwise the signature will not be verified.</p>
                   {hardwarewalletMessage}
                 </OptionsTablePair>
                 {isConnected() && (
