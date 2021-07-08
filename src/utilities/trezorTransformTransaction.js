@@ -94,7 +94,7 @@ const transformTimebounds = (timebounds) => {
 /**
  * Transforms StellarSdk.Transaction to TrezorConnect.StellarTransaction
  */
-export const transformTransaction = (path, transaction) => {
+export const trezorTransformTransaction = (path, transaction) => {
   const amounts = [
     "amount",
     "sendMax",
