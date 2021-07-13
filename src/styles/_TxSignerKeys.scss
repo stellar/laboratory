@@ -5,4 +5,10 @@
 
 .TxSignerKeys__signBipPath {
   margin-top: 0.5em;
+
+  button {
+    &:not(:last-child) {
+      margin-right: 0.5em;
+    }
+  }
 }

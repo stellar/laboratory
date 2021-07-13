@@ -862,6 +862,13 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
+"@babel/runtime@^7.12.5":
+  version "7.14.6"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.14.6.tgz#535203bc0892efc7dec60bdc27b2ecf6e409062d"
+  integrity sha512-/PCB2uJ7oM44tz8YhC4Z/6PeOKXp4K588f+5M3clr1M4zbqztlo0XEfJ2LEzj/FgwfgGcIdl8n7YYjTCI0BYwg==
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
 "@babel/template@^7.12.13":
   version "7.12.13"
   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.12.13.tgz#530265be8a2589dbb37523844c5bcb55947fb327"
@@ -3084,7 +3091,7 @@ eventemitter3@^4.0.0:
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-4.0.7.tgz#2de9b68f6528d5644ef5c59526a1b4a07306169f"
   integrity sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==
 
-events@^3.0.0, events@^3.3.0:
+events@^3.0.0, events@^3.2.0, events@^3.3.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/events/-/events-3.3.0.tgz#31a95ad0a924e2d2c419a813aeb2c4e878ea7400"
   integrity sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==
@@ -6878,10 +6885,10 @@ stellar-base@^5.2.1:
   optionalDependencies:
     sodium-native "^2.3.0"
 
-stellar-sdk@^8.2.2:
-  version "8.2.2"
-  resolved "https://registry.yarnpkg.com/stellar-sdk/-/stellar-sdk-8.2.2.tgz#fd52bbf09992a60c38548c4ca97d9e14e98bab82"
-  integrity sha512-TCE69NV1/sZXfwGO3a7aGoskR/9Src7JNZMOli8jO8wTWi+JOzMhJi/SLj3qHp6xvMKI4Oonqz5HiRf0b0fsSQ==
+stellar-sdk@^8.2.3:
+  version "8.2.3"
+  resolved "https://registry.yarnpkg.com/stellar-sdk/-/stellar-sdk-8.2.3.tgz#2970211877937e487b4e1f88021200cf0ddf8603"
+  integrity sha512-RlrR6DD+706vgA1iVDXteU/x3bdqFDthf+4M3C19D/owmF0GCR/FoRQpnPqqRJ0C/rbbdZ6YjAyKO6Q0GSbDWw==
   dependencies:
     "@types/eventsource" "^1.1.2"
     "@types/node" ">= 8"
@@ -7242,6 +7249,15 @@ tough-cookie@~2.5.0:
   dependencies:
     psl "^1.1.28"
     punycode "^2.1.1"
+
+trezor-connect@^8.1.27:
+  version "8.1.27"
+  resolved "https://registry.yarnpkg.com/trezor-connect/-/trezor-connect-8.1.27.tgz#7e45839d26e4c859a3ddd69213e8c7f00ba5525e"
+  integrity sha512-U6vP8kehQ5enCTY0k01R6jR3EORC+GIzTl4pM80lu9gJB5e988sM5YwK1hED6KZx7LJvFjWuOxB2J3W0pwv7lw==
+  dependencies:
+    "@babel/runtime" "^7.12.5"
+    events "^3.2.0"
+    whatwg-fetch "^3.5.0"
 
 trim-newlines@^1.0.0:
   version "1.0.0"
@@ -7716,6 +7732,11 @@ websocket-extensions@>=0.1.1:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/websocket-extensions/-/websocket-extensions-0.1.4.tgz#7f8473bc839dfd87608adb95d7eb075211578a42"
   integrity sha512-OqedPIGOfsDlo31UNwYbCFMSaO9m9G/0faIHj5/dZFDMFqPTcx6UwqyOy3COEaEOg/9VsGIpdqn62W5KhoKSpg==
+
+whatwg-fetch@^3.5.0:
+  version "3.6.2"
+  resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-3.6.2.tgz#dced24f37f2624ed0281725d51d0e2e3fe677f8c"
+  integrity sha512-bJlen0FcuU/0EMLrdbJ7zOnW6ITZLrZMIarMUVmdKtsGvZna8vxKYaexICWPfZ8qwf9fzNq+UEIZrnSaApt6RA==
 
 which-boxed-primitive@^1.0.2:
   version "1.0.2"
