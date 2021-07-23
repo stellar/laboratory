@@ -569,18 +569,12 @@ Libify.buildTransaction = function(attributes, operations, networkPassphrase) {
       timebounds.maxTime = attributes.maxTime;
     }
 
-    if (!isEmpty(timebounds)) {
-      opts.timebounds = defaults(timebounds, {
-        minTime: '0',
-        maxTime: '0'
-      });
-    }
+    opts.timebounds = defaults(timebounds, {
+      minTime: '0',
+      maxTime: '0'
+    });
 
     var transaction = new Sdk.TransactionBuilder(account, opts);
-
-    if (isEmpty(timebounds)) {
-      transaction.setTimeout(Sdk.TimeoutInfinite);
-    }
 
     if (attributes.memoType !== 'MEMO_NONE' && attributes.memoType !== '') {
       try {
