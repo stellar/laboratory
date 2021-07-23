@@ -576,11 +576,10 @@ Libify.buildTransaction = function(attributes, operations, networkPassphrase) {
       });
     }
 
-    var transaction = new Sdk.TransactionBuilder(account, opts)
+    var transaction = new Sdk.TransactionBuilder(account, opts);
 
-    if (isEmpty(timebounds) ||
-      (opts.timebounds && opts.timebounds.maxTime == 0)) {
-      transaction.setTimeout(transaction.setTimeout(Sdk.TimeoutInfinite));
+    if (isEmpty(timebounds)) {
+      transaction.setTimeout(Sdk.TimeoutInfinite);
     }
 
     if (attributes.memoType !== 'MEMO_NONE' && attributes.memoType !== '') {
