@@ -54,11 +54,17 @@
   }
 .TransactionOpMeta__duplicate {
   text-align: center;
-  width: 100%;
+  width: 72px;
+  padding: 0.35em 0;
+  font-size: $s-scale-down1;
+  margin: 0.25em 0;
 }
 .TransactionOpMeta__remove {
   text-align: center;
-  width: 100%;
+  width: 72px;
+  padding: 0.35em 0;
+  font-size: $s-scale-down1;
+  margin: 0.25em 0;
 }
 
 .TransactionOperations__add {

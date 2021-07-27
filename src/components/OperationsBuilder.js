@@ -82,7 +82,7 @@ let operation = (ops, index, dispatch) => {
           maxLength="2"
           className="TransactionOpMeta__order__input" />
       </div>
-      <div className="s-buttonGroup--vertical">
+      <div>
       {removeLink}
       {duplicateLink}
       </div>
