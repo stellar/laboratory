@@ -52,8 +52,13 @@
     text-align: center;
     font-size: $s-scale-a;
   }
+.TransactionOpMeta__duplicate {
+  text-align: center;
+  width: 100%;
+}
 .TransactionOpMeta__remove {
   text-align: center;
+  width: 100%;
 }
 
 .TransactionOperations__add {
