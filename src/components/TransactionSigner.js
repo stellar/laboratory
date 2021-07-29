@@ -46,7 +46,6 @@ class TransactionSigner extends React.Component {
       freighterwalletStatus,
       albedowalletStatus
     } = this.props.state;
-    console.log(this.props.state)
     let content;
 
     if (validateTxXdr(xdr, networkPassphrase).result !== 'success') {
