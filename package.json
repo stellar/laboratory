@@ -16,6 +16,7 @@
     "production": "yarn prod:build && yarn prod:serve"
   },
   "dependencies": {
+    "@albedo-link/intent": "^0.11.2",
     "@babel/core": "^7.6.2",
     "@babel/preset-env": "^7.6.2",
     "@babel/preset-react": "^7.0.0",

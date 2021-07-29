@@ -13,6 +13,7 @@ import {
   signWithLedger,
   signWithTrezor,
   signWithFreighter,
+  signWithAlbedo,
 } from '../actions/transactionSigner';
 import { EasySelect } from './EasySelect';
 import OptionsTablePair from './OptionsTable/Pair';
@@ -43,7 +44,9 @@ class TransactionSigner extends React.Component {
       bipPath,
       hardwarewalletStatus,
       freighterwalletStatus,
+      albedowalletStatus
     } = this.props.state;
+    console.log(this.props.state)
     let content;
 
     if (validateTxXdr(xdr, networkPassphrase).result !== 'success') {
@@ -96,7 +99,7 @@ class TransactionSigner extends React.Component {
 
       let codeResult, submitLink, xdrLink, resultTitle, submitInstructions, feeBumpLink;
 
-      const signedXdr = freighterwalletStatus.signedTx || result.xdr;
+      const signedXdr = freighterwalletStatus.signedTx || albedowalletStatus.signedTx || result.xdr;
 
       if (!isUndefined(signedXdr)) {
         codeResult = <pre className="TxSignerResult__xdr so-code so-code__wrap" onClick={clickToSelect}><code>{signedXdr}</code></pre>;
@@ -157,6 +160,23 @@ class TransactionSigner extends React.Component {
         </div>
       }
 
+      let albedowalletMessage;
+      if (albedowalletStatus.message) {
+
+        let messageAlertType;
+        if (albedowalletStatus.status === 'loading') {
+          messageAlertType = 's-alert--info';
+        } else if (albedowalletStatus.status === 'success') {
+          messageAlertType = 's-alert--success';
+        } else if (albedowalletStatus.status === 'failure') {
+          messageAlertType = 's-alert--alert';
+        }
+
+        albedowalletMessage = <div>
+          <br />
+          <div className={`s-alert TxSignerKeys__ledgerwallet_message ${messageAlertType}`}> {albedowalletStatus.message} </div>
+        </div>
+      }
 
       content = <div>
         <div className="so-back">
@@ -216,6 +236,13 @@ class TransactionSigner extends React.Component {
                     {freighterwalletMessage}
                   </OptionsTablePair>
                 )}
+                <OptionsTablePair label="Albedo">
+                    <button
+                      className="s-button"
+                      onClick={() => { dispatch(signWithAlbedo(xdr, networkPassphrase === Networks.TESTNET ? "TESTNET" : "PUBLIC")) }}
+                    >Sign with Albedo</button>
+                    {albedowalletMessage}
+                  </OptionsTablePair>
               </div>
 
             </div>

@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@albedo-link/intent@^0.11.2":
+  version "0.11.2"
+  resolved "https://registry.yarnpkg.com/@albedo-link/intent/-/intent-0.11.2.tgz#af1e8cb2556a846712c87fdd9c0eb21705f177a0"
+  integrity sha512-RBlbP79zFhboPoHplsiPW4/FsYEvw58Nnz5CQMm8peNCGmWgx5dIiFDmqcgGY5KEbmMGlRTGEFn+XAyka9L9ig==
+
 "@babel/code-frame@^7.12.13":
   version "7.12.13"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.12.13.tgz#dcfc826beef65e75c50e21d3837d7d95798dd658"
