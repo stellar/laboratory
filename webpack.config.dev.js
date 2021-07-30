@@ -13,6 +13,7 @@ module.exports = Object.assign({}, baseConfig, {
   output: Object.assign({}, baseConfig.output, {
     filename: "[name].js",
     path: path.resolve("./.tmp"),
+    // libraryTarget: "umd",
   }),
   plugins: baseConfig.plugins.concat([
     new webpack.DefinePlugin({

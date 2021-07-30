@@ -8,15 +8,30 @@ module.exports = {
   },
   module: {
     rules: [
-      { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: "babel-loader"
+      },
       {
         test: /\.scss/,
-        loader: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              esModule: false,
+            },
+          },
+          "css-loader",
+          "sass-loader"],
       },
-      { test: /\.html$/, loader: "file-loader?name=[name].html" },
+      {
+        test: /\.html$/,
+        use: "file-loader?name=[name].html"
+      },
       {
         test: /\.(jpe?g|png|gif|svg|woff2?)$/,
-        loader: "file-loader?name=images/[hash].[ext]",
+        use: "file-loader?name=images/[hash].[ext]",
       },
     ],
   },
@@ -24,8 +39,7 @@ module.exports = {
     // Ignore native modules (ed25519)
     new webpack.IgnorePlugin(/ed25519/),
     new HtmlWebpackPlugin({
-      template: "!!ejs-loader!./src/index.ejs",
-      title: "Stellar Laboratory",
+      template: "!!raw-loader!./src/index.ejs",
     }),
     new MiniCssExtractPlugin({
       filename: "[name].[contenthash].css",
@@ -37,8 +51,13 @@ module.exports = {
       },
     }),
   ],
-  node: {
-    fs: "empty",
+  resolve: {
+    fallback: {
+      fs: false,
+      http: false,
+      https: false,
+      util: false
+    }
   },
   stats: {
     all: false,
