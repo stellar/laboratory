@@ -1,5 +1,6 @@
 {
   "presets": [
+    "@babel/preset-typescript",
     ["@babel/preset-env", { "targets": "> 1%" }],
     "@babel/preset-react"
   ]
