@@ -964,6 +964,11 @@
   resolved "https://registry.yarnpkg.com/@stellar/prettier-config/-/prettier-config-1.0.1.tgz#498a66dc13c66859e3787dabdf958233ddbe9253"
   integrity sha512-w9OPycQp1XGfmHC2VUHe5shpZjNFRlmsRBaK7IHvOvVpglzV2QNJsVFh8RdLREWA0mzF59AWvQbyUCCJLPfdWw==
 
+"@stellar/tsconfig@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@stellar/tsconfig/-/tsconfig-1.0.2.tgz#18e9b1a1d6076e116bb405d11fc034401155292d"
+  integrity sha512-lC51QSlYRM8K3oGe0/WGPq+p9+u+yPzwZXSKrZXKOe4sq79vzfiqFbQyp5enOffFzXlahcDyTgY67mBOkJytfw==
+
 "@types/eventsource@^1.1.2":
   version "1.1.5"
   resolved "https://registry.yarnpkg.com/@types/eventsource/-/eventsource-1.1.5.tgz#408e9b45efb176c8bea672ab58c81e7ab00d24bc"
@@ -7325,6 +7330,11 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
+
+typescript@^4.3.5:
+  version "4.3.5"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.3.5.tgz#4d1c37cc16e893973c45a06886b7113234f119f4"
+  integrity sha512-DqQgihaQ9cUrskJo9kIyW/+g0Vxsk8cDtZ52a3NGh0YNTfpUSArXSohyUGnvbPazEPLu398C0UxmKSOrPumUzA==
 
 ua-parser-js@^0.7.18:
   version "0.7.28"
