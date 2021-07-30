@@ -183,9 +183,8 @@ export function signWithAlbedo(txXDR, txNetwork) {
           type: ALBEDO_WALLET_SIGN_ERROR,
           error: e.message,
         });
-      })
-
-  }
+      });
+  };
 }
 
 

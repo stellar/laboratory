@@ -236,12 +236,12 @@ class TransactionSigner extends React.Component {
                   </OptionsTablePair>
                 )}
                 <OptionsTablePair label="Albedo">
-                    <button
-                      className="s-button"
-                      onClick={() => { dispatch(signWithAlbedo(xdr, networkPassphrase === Networks.TESTNET ? "TESTNET" : "PUBLIC")) }}
-                    >Sign with Albedo</button>
-                    {albedowalletMessage}
-                  </OptionsTablePair>
+                  <button
+                    className="s-button"
+                    onClick={() => { dispatch(signWithAlbedo(xdr, networkPassphrase === Networks.TESTNET ? "TESTNET" : "PUBLIC")) }}
+                  >Sign with Albedo</button>
+                  {albedowalletMessage}
+                </OptionsTablePair>
               </div>
 
             </div>
