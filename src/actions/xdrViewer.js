@@ -1,139 +1,157 @@
-import {xdr, hash, StrKey, Keypair, FeeBumpTransaction} from 'stellar-sdk';
-import axios from 'axios';
-import SIGNATURE from '../constants/signature';
-import FETCHED_SIGNERS from '../constants/fetched_signers';
-import convertMuxedAccountToEd25519Account from  '../utilities/convertMuxedAccountToEd25519Account';
+import StellarSdk, {
+  hash,
+  StrKey,
+  Keypair,
+  FeeBumpTransaction,
+} from "stellar-sdk";
+import axios from "axios";
+import SIGNATURE from "../constants/signature";
+import FETCHED_SIGNERS from "../constants/fetched_signers";
+import convertMuxedAccountToEd25519Account from "../utilities/convertMuxedAccountToEd25519Account";
+import { FETCH_SEQUENCE_FAIL } from "actions/transactionBuilder";
 
-export const UPDATE_XDR_INPUT = 'UPDATE_XDR_INPUT';
+export const UPDATE_XDR_INPUT = "UPDATE_XDR_INPUT";
 export function updateXdrInput(input) {
   return {
     type: UPDATE_XDR_INPUT,
     input,
-  }
+  };
 }
 
-export const UPDATE_XDR_TYPE = 'UPDATE_XDR_TYPE';
+export const UPDATE_XDR_TYPE = "UPDATE_XDR_TYPE";
 export function updateXdrType(xdrType) {
   return {
     type: UPDATE_XDR_TYPE,
     xdrType,
-  }
+  };
 }
 
-export const FETCH_LATEST_TX = 'FETCH_LATEST_TX';
+export const FETCH_LATEST_TX = "FETCH_LATEST_TX";
 export function fetchLatestTx(horizonBaseUrl, networkPassphrase) {
-  return dispatch => {
-    dispatch({type: FETCH_LATEST_TX})
-    axios.get(horizonBaseUrl + '/transactions?limit=1&order=desc')
-      .then(r => {
+  return (dispatch) => {
+    dispatch({ type: FETCH_LATEST_TX });
+    axios
+      .get(horizonBaseUrl + "/transactions?limit=1&order=desc")
+      .then((r) => {
         const xdr = r.data._embedded.records[0].envelope_xdr;
-        dispatch(updateXdrInput(xdr))
-        dispatch(updateXdrType('TransactionEnvelope'))
-        dispatch(fetchSigners(xdr, horizonBaseUrl, networkPassphrase))
+        dispatch(updateXdrInput(xdr));
+        dispatch(updateXdrType("TransactionEnvelope"));
+        dispatch(fetchSigners(xdr, horizonBaseUrl, networkPassphrase));
       })
-      .catch(r => dispatch({type: FETCH_SEQUENCE_FAIL, payload: r}))
-  }
+      .catch((r) => dispatch({ type: FETCH_SEQUENCE_FAIL, payload: r }));
+  };
 }
 
 export function fetchSigners(input, horizonBaseUrl, networkPassphrase) {
-  return dispatch => {
+  return (dispatch) => {
     dispatch({ type: FETCHED_SIGNERS.PENDING });
     try {
-      let tx = new StellarSdk.TransactionBuilder.fromXDR(input, networkPassphrase);
-      
+      let tx = new StellarSdk.TransactionBuilder.fromXDR(
+        input,
+        networkPassphrase,
+      );
+
       // Extract all source accounts from transaction (base transaction, and all operations)
       let sourceAccounts = {};
-      
+
       // tuple of signatures and transaction hash. This is needed to handle
       // inner signatures in a fee bump transaction
       let groupedSignatures = [];
 
       if (tx instanceof FeeBumpTransaction) {
-        sourceAccounts[convertMuxedAccountToEd25519Account(tx.feeSource)] = true;
+        sourceAccounts[
+          convertMuxedAccountToEd25519Account(tx.feeSource)
+        ] = true;
         groupedSignatures.push([
-          tx.signatures.map(x => ({ sig: x.signature() })),
-          tx.hash()
+          tx.signatures.map((x) => ({ sig: x.signature() })),
+          tx.hash(),
         ]);
-        
+
         tx = tx.innerTransaction;
       }
 
       sourceAccounts[convertMuxedAccountToEd25519Account(tx.source)] = true;
-      tx.operations.forEach(op => {
+      tx.operations.forEach((op) => {
         if (op.source) {
           sourceAccounts[convertMuxedAccountToEd25519Account(op.source)] = true;
         }
       });
 
       groupedSignatures.push([
-        tx.signatures.map(x => ({ sig: x.signature() })),
-        tx.hash()
+        tx.signatures.map((x) => ({ sig: x.signature() })),
+        tx.hash(),
       ]);
 
       // Get all signers per source account - array of promises
-      sourceAccounts = Object.keys(sourceAccounts).map(accountID => axios.get(horizonBaseUrl + '/accounts/' + accountID));
+      sourceAccounts = Object.keys(sourceAccounts).map((accountID) =>
+        axios.get(horizonBaseUrl + "/accounts/" + accountID),
+      );
       const signatures = [];
 
       Promise.all(sourceAccounts)
-      .then(response => {
-        let allSigners = {};
-        response.forEach(r => r.data.signers.forEach(signer => allSigners[signer.key] = signer));
+        .then((response) => {
+          let allSigners = {};
+          response.forEach((r) =>
+            r.data.signers.forEach(
+              (signer) => (allSigners[signer.key] = signer),
+            ),
+          );
 
-        allSigners = Object.values(allSigners);
+          allSigners = Object.values(allSigners);
 
-        groupedSignatures.forEach(group => {
-          const sigs = group[0];
-          const txHash = group[1];
+          groupedSignatures.forEach((group) => {
+            const sigs = group[0];
+            const txHash = group[1];
 
-          // We are only interested in checking if each of the signatures can be verified for some valid
-          // signer for any of the source accounts in the transaction -- we are not taking into account
-          // weights, or even if this signer makes sense.
-          for (var i = 0; i < sigs.length; i ++) {
-            const sigObj = sigs[i];
-            let isValid = false;
-  
-            for (var j = 0; j < allSigners.length; j ++) {
-              const signer = allSigners[j];
-  
-              // By nature of pre-authorized transaction, we won't ever receive a pre-auth
-              // tx hash in signatures array, so we can ignore pre-authorized transactions here.
-              switch (signer.type) {
-                case 'sha256_hash':
-                  const hashXSigner = StrKey.decodeSha256Hash(signer.key);
-                  const hashXSignature = hash(sigObj.sig);
-                  isValid = hashXSigner.equals(hashXSignature);
+            // We are only interested in checking if each of the signatures can be verified for some valid
+            // signer for any of the source accounts in the transaction -- we are not taking into account
+            // weights, or even if this signer makes sense.
+            for (var i = 0; i < sigs.length; i++) {
+              const sigObj = sigs[i];
+              let isValid = false;
+
+              for (var j = 0; j < allSigners.length; j++) {
+                const signer = allSigners[j];
+
+                // By nature of pre-authorized transaction, we won't ever receive a pre-auth
+                // tx hash in signatures array, so we can ignore pre-authorized transactions here.
+                switch (signer.type) {
+                  case "sha256_hash":
+                    const hashXSigner = StrKey.decodeSha256Hash(signer.key);
+                    const hashXSignature = hash(sigObj.sig);
+                    isValid = hashXSigner.equals(hashXSignature);
+                    break;
+                  case "ed25519_public_key":
+                    const keypair = Keypair.fromPublicKey(signer.key);
+                    isValid = keypair.verify(txHash, sigObj.sig);
+                    break;
+                }
+
+                if (isValid) {
                   break;
-                case 'ed25519_public_key':
-                  const keypair = Keypair.fromPublicKey(signer.key);
-                  isValid = keypair.verify(txHash, sigObj.sig);
-                  break;
+                }
               }
-  
-              if (isValid) {
-                break;
-              }
+
+              sigObj.isValid = isValid ? SIGNATURE.VALID : SIGNATURE.INVALID;
+
+              signatures.push(sigObj);
             }
-  
-            sigObj.isValid = isValid ? SIGNATURE.VALID : SIGNATURE.INVALID;
+          });
 
-            signatures.push(sigObj);
+          dispatch({
+            type: FETCHED_SIGNERS.SUCCESS,
+            result: signatures,
+          });
+        })
+        .catch((e) => {
+          console.error(e);
+          if (e.response.status == 404) {
+            dispatch({ type: FETCHED_SIGNERS.NOT_EXIST });
+          } else {
+            dispatch({ type: FETCHED_SIGNERS.FAIL });
           }
         });
-
-        dispatch({
-          type: FETCHED_SIGNERS.SUCCESS,
-          result: signatures,
-        });
-      })
-      .catch(e => {
-        console.error(e);
-        if (e.response.status == 404) {
-          dispatch({ type: FETCHED_SIGNERS.NOT_EXIST });
-        } else {
-          dispatch({ type: FETCHED_SIGNERS.FAIL });
-        }
-      });
-    } catch(e) {
+    } catch (e) {
       console.error(e);
       dispatch({ type: FETCHED_SIGNERS.FAIL });
     }
