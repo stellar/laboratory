@@ -10,7 +10,7 @@ import sanitizeHtml from "../utilities/sanitizeHtml";
 //   in the prism.js
 
 export class CodeBlock extends React.Component {
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps) {
     return (
       nextProps.code !== this.props.code ||
       nextProps.language !== this.props.language

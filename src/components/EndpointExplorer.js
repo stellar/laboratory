@@ -6,18 +6,18 @@ import isString from "lodash/isString";
 import isUndefined from "lodash/isUndefined";
 import reduce from "lodash/reduce";
 import trim from "lodash/trim";
+import { connect } from "react-redux";
+import UriTemplates from "uri-templates";
+import querystring from "querystring";
 import {
   chooseEndpoint,
   submitRequest,
   updateValue,
 } from "../actions/endpointExplorer";
-import { connect } from "react-redux";
 import { EndpointPicker } from "./EndpointPicker";
 import { EndpointSetup } from "./EndpointSetup";
 import { EndpointResult } from "./EndpointResult";
 import { getEndpoint } from "../data/endpoints";
-import UriTemplates from "uri-templates";
-import querystring from "querystring";
 import { addEventHandler } from "../utilities/metrics";
 import endpointExplorerMetrics from "../metricsHandlers/endpointExplorer";
 
@@ -53,6 +53,7 @@ class EndpointExplorer extends React.Component {
               This tool can be used to run queries against the{" "}
               <a
                 href="https://developers.stellar.org/api/introduction/"
+                rel="noreferrer"
                 target="_blank"
               >
                 REST API endpoints

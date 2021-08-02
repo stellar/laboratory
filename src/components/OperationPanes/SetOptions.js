@@ -32,6 +32,7 @@ function WarningMessage() {
       <p className="optionsTable__pair__content__note">
         <a
           href="https://developers.stellar.org/docs/glossary/multisig/"
+          rel="noreferrer"
           target="_blank"
         >
           See documentation for multisignature accounts
@@ -79,7 +80,11 @@ export default function SetOptions(props) {
       />
       <p className="optionsTable__pair__content__note">
         Selected{" "}
-        <a href="https://en.wikipedia.org/wiki/Flag_field" target="_blank">
+        <a
+          href="https://en.wikipedia.org/wiki/Flag_field"
+          rel="noreferrer"
+          target="_blank"
+        >
           flags
         </a>{" "}
         mean to add selected flags in addition to flags already present on the
@@ -105,7 +110,11 @@ export default function SetOptions(props) {
       />
       <p className="optionsTable__pair__content__note">
         Selected{" "}
-        <a href="https://en.wikipedia.org/wiki/Flag_field" target="_blank">
+        <a
+          href="https://en.wikipedia.org/wiki/Flag_field"
+          rel="noreferrer"
+          target="_blank"
+        >
           flags
         </a>{" "}
         mean to remove selected flags already present on the account.

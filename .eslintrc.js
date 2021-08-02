@@ -60,5 +60,13 @@ module.exports = {
     "no-nested-ternary": "off",
     "func-names": "off",
     "prefer-arrow-callback": "off",
+    "react/no-array-index-key": "off",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "react-hooks/exhaustive-deps": "off",
+    "prefer-object-spread": "off",
+    "no-alert": "off",
+    "react/sort-comp": "off",
+    "valid-jsdoc": "off",
   },
 };

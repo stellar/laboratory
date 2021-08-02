@@ -363,6 +363,7 @@ class TransactionSigner extends React.Component {
               <p>
                 <a
                   href="https://developers.stellar.org/docs/glossary/multisig/"
+                  rel="noreferrer"
                   target="_blank"
                 >
                   Read more about signatures on the developer's site.

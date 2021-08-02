@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { xdr } from "stellar-sdk";
 import debounce from "lodash/debounce";
 import functions from "lodash/functions";
 import indexOf from "lodash/indexOf";
@@ -14,7 +15,6 @@ import {
   fetchLatestTx,
   fetchSigners,
 } from "../actions/xdrViewer";
-import { xdr } from "stellar-sdk";
 import { addEventHandler, logEvent } from "../utilities/metrics";
 import xdrViewerMetrics, { metricsEvents } from "../metricsHandlers/xdrViewer";
 

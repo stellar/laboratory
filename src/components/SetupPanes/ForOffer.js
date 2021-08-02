@@ -11,7 +11,7 @@ export default function ForOffer(props) {
       onUpdate={(value) => {
         props.onUpdate("offer_id", value);
       }}
-      placeholder={"Example: 323223"}
+      placeholder="Example: 323223"
     />
   );
 

@@ -28,7 +28,7 @@ export default function CreateClaimableBalance(props) {
       <ManualMultiPicker
         component={ClaimantPicker}
         value={props.values["claimants"]}
-        default={""}
+        default=""
         addNewLabel="Add new claimant"
         onUpdate={(value) => {
           props.onUpdate("claimants", value);

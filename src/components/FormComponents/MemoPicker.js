@@ -1,8 +1,8 @@
 import React from "react";
 import assign from "lodash/assign";
+import { UnsignedHyper } from "stellar-sdk";
 import RadioButtonPicker from "./RadioButtonPicker";
 import TextPicker from "./TextPicker";
-import { UnsignedHyper } from "stellar-sdk";
 
 export default function MemoPicker(props) {
   let { onUpdate } = props;

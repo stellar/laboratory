@@ -1,5 +1,5 @@
-import { stateToQueryObj } from "./stateSerializer";
 import url from "url";
+import { stateToQueryObj } from "./stateSerializer";
 import SLUG from "../constants/slug";
 import horizonUrlParser from "./horizonUrlParser";
 import TX_TYPES from "../constants/transaction_types";

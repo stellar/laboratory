@@ -1,7 +1,7 @@
 import React from "react";
-import CheckboxButtonPicker from "./CheckboxButtonPicker";
 import each from "lodash/each";
 import reduce from "lodash/reduce";
+import CheckboxButtonPicker from "./CheckboxButtonPicker";
 
 // When all the items are empty, then this picker should be equal to ''
 
@@ -13,6 +13,7 @@ import reduce from "lodash/reduce";
 // }
 export default function FlagfieldPicker(props) {
   let { value, onUpdate, items } = props;
+  // eslint-disable-next-line no-unused-vars
   let group = Math.random(); // Allows for tabbing and prevents checkbox collisions
 
   let parsedValue = parseInt(value);

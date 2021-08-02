@@ -1,9 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import { EndpointPicker } from "./EndpointPicker";
-import { EndpointSetup } from "./EndpointSetup";
-import { EndpointResult } from "./EndpointResult";
-import { PubKeyPicker } from "./FormComponents/PubKeyPicker";
 import TxBuilderAttributes from "./TxBuilderAttributes";
 import {
   addOperation,
@@ -11,7 +7,6 @@ import {
   resetTxbuilder,
 } from "../actions/transactionBuilder";
 import OperationsBuilder from "./OperationsBuilder";
-import { getOperation } from "../data/operations";
 import TxBuilderResult from "./TxBuilderResult";
 import { addEventHandler } from "../utilities/metrics";
 import transactionBuilderMetrics from "../metricsHandlers/transactionBuilder";
@@ -22,8 +17,7 @@ addEventHandler(transactionBuilderMetrics);
 class TransactionBuilder extends React.Component {
   render() {
     let { dispatch } = this.props;
-    let { attributes, operations, feeBumpAttributes, txType } =
-      this.props.state;
+    let { attributes, feeBumpAttributes, txType } = this.props.state;
 
     return (
       <div className="TransactionBuilder">

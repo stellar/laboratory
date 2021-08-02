@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 // @param {string} props.href - Url that the help mark links to. Currently required
 function HelpMark(props) {
   return (
-    <a href={props.href} className="HelpMark" target="_blank">
+    <a href={props.href} className="HelpMark" rel="noreferrer" target="_blank">
       <svg
         width="20"
         height="20"

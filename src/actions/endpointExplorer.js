@@ -1,7 +1,7 @@
 import axios from "axios";
-import dispatchInNewStack from "../utilities/dispatchInNewStack";
 import { CallBuilder } from "stellar-sdk/lib/call_builder";
 import URI from "urijs";
+import dispatchInNewStack from "../utilities/dispatchInNewStack";
 
 export const CHOOSE_ENDPOINT = "CHOOSE_ENDPOINT";
 export function chooseEndpoint(resource, endpoint) {

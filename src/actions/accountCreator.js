@@ -1,6 +1,6 @@
 import axios from "axios";
+import { Keypair, Account, MuxedAccount } from "stellar-sdk";
 import dispatchInNewStack from "../utilities/dispatchInNewStack";
-import { Keypair, Account, MuxedAccount, Server } from "stellar-sdk";
 
 export const GENERATE_NEW_KEYPAIR = "GENERATE_NEW_KEYPAIR";
 export function generateNewKeypair() {
@@ -32,7 +32,7 @@ export function startFriendbotRequest(target) {
 
     axios
       .get("https://friendbot.stellar.org/?addr=" + target)
-      .then((r) => {
+      .then(() => {
         dispatchInNewStack(dispatch, {
           type: FINISH_FRIENDBOT_REQUEST,
           target,

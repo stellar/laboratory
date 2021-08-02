@@ -12,7 +12,7 @@ import TextPicker from "./TextPicker";
 import TimestampPicker from "./TimestampPicker";
 
 // Value is a string containing the currently selected id (or undefined)
-function ClaimantObjectPicker({ value, onUpdate, disableNative, ...props }) {
+function ClaimantObjectPicker({ value, onUpdate, ...props }) {
   const localValue = assign(
     {
       destination: "",

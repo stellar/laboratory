@@ -53,7 +53,7 @@ let operation = (ops, index, dispatch) => {
     );
     docsLink = (
       <p className="optionsTable__pair__content__note">
-        <a href={opConfig.docsUrl} target="_blank">
+        <a href={opConfig.docsUrl} rel="noreferrer" target="_blank">
           See documentation for {opConfig.label}
         </a>
       </p>

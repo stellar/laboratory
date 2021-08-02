@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
+import { StrKey, MuxedAccount } from "stellar-sdk";
 import OptionsTablePair from "./OptionsTable/Pair";
 import HelpMark from "./HelpMark";
 import TxTypePicker from "./FormComponents/TxTypePicker";
@@ -7,8 +9,6 @@ import SequencePicker from "./FormComponents/SequencePicker";
 import StroopsPicker from "./FormComponents/StroopsPicker";
 import MemoPicker from "./FormComponents/MemoPicker";
 import TimeBoundsPicker from "./FormComponents/TimeBoundsPicker";
-import { connect } from "react-redux";
-import { StrKey, MuxedAccount } from "stellar-sdk";
 import NETWORK from "../constants/network";
 import {
   fetchSequence,
@@ -167,7 +167,11 @@ function TxBuilderAttributes(props) {
               />
               <p className="optionsTable__pair__content__note">
                 Enter{" "}
-                <a href="http://www.epochconverter.com/" target="_blank">
+                <a
+                  href="http://www.epochconverter.com/"
+                  rel="noreferrer"
+                  target="_blank"
+                >
                   unix timestamp
                 </a>{" "}
                 values of time bounds when this transaction will be valid.
@@ -177,6 +181,7 @@ function TxBuilderAttributes(props) {
                 <code>max_time</code> to get{" "}
                 <a
                   href="https://github.com/stellar/stellar-core/issues/1811"
+                  rel="noreferrer"
                   target="_blank"
                 >
                   a final result
