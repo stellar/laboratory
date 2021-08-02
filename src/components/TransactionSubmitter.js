@@ -2,12 +2,12 @@ import React from "react";
 import { connect } from "react-redux";
 import debounce from "lodash/debounce";
 import functions from "lodash/functions";
+import { xdr } from "stellar-sdk";
 import FETCHED_SIGNERS from "../constants/fetched_signers";
 import extrapolateFromXdr from "../utilities/extrapolateFromXdr";
 import TreeView from "./TreeView";
 import validateBase64 from "../utilities/validateBase64";
 import { updateXdrInput, fetchSigners } from "../actions/xdrViewer";
-import { xdr } from "stellar-sdk";
 import { addEventHandler, logEvent } from "../utilities/metrics";
 import xdrViewerMetrics, { metricsEvents } from "../metricsHandlers/xdrViewer";
 import { TxSubmitterResult } from "./TxSubmitterResult";
@@ -111,8 +111,7 @@ function chooseState(state) {
 
 // Array of all the xdr types. Then, the most common ones appear at the top
 // again for convenience
-let xdrTypes = functions(xdr)
-  .sort()
+let xdrTypes = functions(xdr).sort();
 xdrTypes = [
   "TransactionEnvelope",
   "TransactionResult",

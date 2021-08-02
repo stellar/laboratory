@@ -1,78 +1,89 @@
-import React from 'react';
-import each from 'lodash/each';
-import get from 'lodash/get';
-import isFunction from 'lodash/isFunction';
-import isString from 'lodash/isString';
-import isUndefined from 'lodash/isUndefined';
-import reduce from 'lodash/reduce';
-import trim from 'lodash/trim';
-import {chooseEndpoint, submitRequest, updateValue} from "../actions/endpointExplorer"
-import {connect} from 'react-redux';
-import {EndpointPicker} from './EndpointPicker';
-import {EndpointSetup} from './EndpointSetup';
-import {EndpointResult} from './EndpointResult';
-import {getEndpoint} from '../data/endpoints';
-import UriTemplates from 'uri-templates';
-import querystring from 'querystring';
-import {addEventHandler} from '../utilities/metrics'
-import endpointExplorerMetrics from '../metricsHandlers/endpointExplorer'
+import React from "react";
+import each from "lodash/each";
+import get from "lodash/get";
+import isFunction from "lodash/isFunction";
+import isString from "lodash/isString";
+import isUndefined from "lodash/isUndefined";
+import reduce from "lodash/reduce";
+import trim from "lodash/trim";
+import { connect } from "react-redux";
+import UriTemplates from "uri-templates";
+import querystring from "querystring";
+import {
+  chooseEndpoint,
+  submitRequest,
+  updateValue,
+} from "../actions/endpointExplorer";
+import { EndpointPicker } from "./EndpointPicker";
+import { EndpointSetup } from "./EndpointSetup";
+import { EndpointResult } from "./EndpointResult";
+import { getEndpoint } from "../data/endpoints";
+import { addEventHandler } from "../utilities/metrics";
+import endpointExplorerMetrics from "../metricsHandlers/endpointExplorer";
 
-addEventHandler(endpointExplorerMetrics)
+addEventHandler(endpointExplorerMetrics);
 
 class EndpointExplorer extends React.Component {
   render() {
-    let {dispatch} = this.props;
-    let {
-      currentResource,
-      currentEndpoint,
-      results,
-      pendingRequest,
-    } = this.props.state;
+    let { dispatch } = this.props;
+    let { currentResource, currentEndpoint, results, pendingRequest } =
+      this.props.state;
 
     let endpoint = getEndpoint(currentResource, currentEndpoint);
     let request = buildRequest(this.props.baseURL, endpoint, pendingRequest);
 
     let endpointSetup;
-    if (currentEndpoint !== '') {
-      endpointSetup = <EndpointSetup
-        request={request}
-        values={pendingRequest.values}
-        endpoint={endpoint}
-        onSubmit={() => dispatch(submitRequest(request))}
-        onUpdate={(param, value) => dispatch(updateValue(param, value))}
-      />
+    if (currentEndpoint !== "") {
+      endpointSetup = (
+        <EndpointSetup
+          request={request}
+          values={pendingRequest.values}
+          endpoint={endpoint}
+          onSubmit={() => dispatch(submitRequest(request))}
+          onUpdate={(param, value) => dispatch(updateValue(param, value))}
+        />
+      );
     }
 
-    return <div className="so-back">
-      <div className="so-chunk">
-        <div className="pageIntro">
-          <p>
-            This tool can be used to run queries against the <a href="https://developers.stellar.org/api/introduction/" target="_blank">REST API endpoints</a> on the
-            Horizon server. Horizon is the client facing library for the Stellar ecosystem.</p>
-        </div>
-        <div className="EndpointExplorer">
-          <div className="EndpointExplorer__picker">
-            <EndpointPicker
-              currentResource={currentResource}
-              currentEndpoint={currentEndpoint}
-              onChange={(r,e)=> dispatch(chooseEndpoint(r,e))}
+    return (
+      <div className="so-back">
+        <div className="so-chunk">
+          <div className="pageIntro">
+            <p>
+              This tool can be used to run queries against the{" "}
+              <a
+                href="https://developers.stellar.org/api/introduction/"
+                rel="noreferrer"
+                target="_blank"
+              >
+                REST API endpoints
+              </a>{" "}
+              on the Horizon server. Horizon is the client facing library for
+              the Stellar ecosystem.
+            </p>
+          </div>
+          <div className="EndpointExplorer">
+            <div className="EndpointExplorer__picker">
+              <EndpointPicker
+                currentResource={currentResource}
+                currentEndpoint={currentEndpoint}
+                onChange={(r, e) => dispatch(chooseEndpoint(r, e))}
               />
-          </div>
+            </div>
 
-          <div className="EndpointExplorer__setup">
-            {endpointSetup}
-          </div>
+            <div className="EndpointExplorer__setup">{endpointSetup}</div>
 
-          <div className="EndpointExplorer__result">
-            <EndpointResult {...results} />
+            <div className="EndpointExplorer__result">
+              <EndpointResult {...results} />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    );
   }
 }
 
-export default connect(chooseState)(EndpointExplorer)
+export default connect(chooseState)(EndpointExplorer);
 
 function chooseState(state) {
   return {
@@ -84,15 +95,15 @@ function chooseState(state) {
 function buildRequest(baseUrl, endpoint, pendingRequest) {
   let request = {
     url: buildRequestUrl(baseUrl, endpoint, pendingRequest.values),
-    formData: '',
+    formData: "",
   };
 
-  if (typeof endpoint !== 'undefined') {
+  if (typeof endpoint !== "undefined") {
     request.method = endpoint.method;
   }
 
   // Currently, this only supports simple string values
-  if (request.method === 'POST') {
+  if (request.method === "POST") {
     let postData = {};
     each(pendingRequest.values, (value, id) => {
       postData[id] = trim(value);
@@ -108,9 +119,9 @@ function buildRequest(baseUrl, endpoint, pendingRequest) {
   return request;
 }
 
-function buildRequestUrl (baseUrl, endpoint, values) {
-  if (typeof endpoint === 'undefined') {
-    return '';
+function buildRequestUrl(baseUrl, endpoint, values) {
+  if (typeof endpoint === "undefined") {
+    return "";
   }
   let uriTemplate = baseUrl + endpoint.path.template;
   let template = new UriTemplates(uriTemplate);
@@ -118,7 +129,6 @@ function buildRequestUrl (baseUrl, endpoint, values) {
   // uriParams contains what we want to fill the url with
   let uriParams = {};
   each(template.varNames, (varName) => {
-
     // With the appropriate getter, extract/transform the relevant value from values
     // 1. Simple value:
     //      - no getter string in `endpoint.path`
@@ -134,17 +144,20 @@ function buildRequestUrl (baseUrl, endpoint, values) {
     let getterIsFunc = isFunction(getter);
     let value;
 
-    if (getterPresent && getterIsFunc) { // case 3
+    if (getterPresent && getterIsFunc) {
+      // case 3
       value = getter(values);
-    } else if (getterPresent && !getterIsFunc) { // case 2
+    } else if (getterPresent && !getterIsFunc) {
+      // case 2
       value = get(values, getter);
-    } else { // case 1
+    } else {
+      // case 1
       value = values[varName];
     }
 
-    if (!isUndefined(value) && value !== '') {
+    if (!isUndefined(value) && value !== "") {
       if (!isString(value)) {
-        throw new Error('Endpoint explorer value must be a string');
+        throw new Error("Endpoint explorer value must be a string");
       }
       uriParams[varName] = trim(value);
     }
@@ -158,14 +171,18 @@ function buildRequestUrl (baseUrl, endpoint, values) {
       uriParams[param] = placeholder;
       unescapeMap.push({
         oldStr: encodeURIComponent(placeholder),
-        newStr: placeholder
+        newStr: placeholder,
       });
     }
   });
 
-  let builtUrl = reduce(unescapeMap, (url, replacement) => {
-    return url.replace(replacement.oldStr, replacement.newStr);
-  }, template.fill(uriParams));
+  let builtUrl = reduce(
+    unescapeMap,
+    (url, replacement) => {
+      return url.replace(replacement.oldStr, replacement.newStr);
+    },
+    template.fill(uriParams),
+  );
 
   return builtUrl;
-};
+}

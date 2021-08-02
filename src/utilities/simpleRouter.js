@@ -1,12 +1,12 @@
-import {connect} from 'react-redux';
-import React from 'react';
-import url from 'url';
-import querystring from 'querystring';
-import {updateLocation, loadState, LOAD_STATE, UPDATE_LOCATION} from '../actions/routing';
-import {stateToQueryObj, queryObjToLoadStatePayload} from './stateSerializer';
+import { connect } from "react-redux";
+import React from "react";
+import url from "url";
+import querystring from "querystring";
+import { updateLocation, loadState, LOAD_STATE } from "../actions/routing";
+import { stateToQueryObj } from "./stateSerializer";
 
 // One way data flow for routerMiddleware: redux -> url
-export const routerMiddleware = store => next => action => {
+export const routerMiddleware = (store) => (next) => (action) => {
   let result = next(action);
   let state = store.getState();
 
@@ -22,27 +22,36 @@ export const routerMiddleware = store => next => action => {
   // NOTE: We only replace state here since these are only for general state
   // changes. By using history.replaceState, the routerListener won't pick up
   // on these changes.
-  let newUrlHash = '#' + url.format(newUrlObj);
-  if (newUrlHash === '#') {
+  let newUrlHash = "#" + url.format(newUrlObj);
+  if (newUrlHash === "#") {
     newUrlHash = window.location.pathname;
   }
+  // eslint-disable-next-line no-restricted-globals
   history.replaceState(null, null, newUrlHash);
 
   return result;
-}
+};
 
 // One way data flow for RouterListener: url change -> redux
 class RouterHashListener extends React.Component {
   componentWillUnmount() {
     // Just doing our duty of cleanup though it's really not necessary
-    window.removeEventListener('hashchange', this.hashChangeHandler.bind(this), false);
+    window.removeEventListener(
+      "hashchange",
+      this.hashChangeHandler.bind(this),
+      false,
+    );
   }
   componentDidMount() {
-    window.addEventListener('hashchange', this.hashChangeHandler.bind(this), false);
-    this.changeProcessor(parseUrlHash(window.location.hash), {}, true)
+    window.addEventListener(
+      "hashchange",
+      this.hashChangeHandler.bind(this),
+      false,
+    );
+    this.changeProcessor(parseUrlHash(window.location.hash), {}, true);
   }
   hashChangeHandler(e) {
-    this.changeProcessor(parseUrlHash(e.newURL), parseUrlHash(e.oldURL))
+    this.changeProcessor(parseUrlHash(e.newURL), parseUrlHash(e.oldURL));
   }
   // @param {UrlObj|object} newUrl - URL object (of the hash) from node `url`
   // @param {UrlObj|object} oldUrl - URL object (of the hash) from node `url`. Can be empty object
@@ -64,13 +73,15 @@ class RouterHashListener extends React.Component {
 }
 
 function parseUrlHash(input) {
-  let hash = url.parse(input).hash || '';
+  let hash = url.parse(input).hash || "";
   return url.parse(hash.substr(1));
 }
 
-export let RouterListener = connect(chooseState, dispatch => ({ dispatch }))((RouterHashListener));
+export let RouterListener = connect(chooseState, (dispatch) => ({ dispatch }))(
+  RouterHashListener,
+);
 function chooseState(state) {
   return {
-    routing: state.routing
+    routing: state.routing,
   };
 }

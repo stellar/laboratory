@@ -86,7 +86,9 @@ const transformMemo = (memo) => {
  * TrezorConnect.StellarTransaction.timebounds
  */
 const transformTimebounds = (timebounds) => {
-  if (!timebounds) return undefined;
+  if (!timebounds) {
+    return undefined;
+  }
   // those values are defined in Trezor firmware messages as numbers
   return {
     minTime: Number.parseInt(timebounds.minTime, 10),
@@ -146,7 +148,7 @@ export const trezorTransformTransaction = (path, transaction) => {
     if (operation.type === "allowTrust") {
       const allowTrustAsset = new StellarSdk.Asset(
         operation.assetCode,
-        operation.trustor
+        operation.trustor,
       );
       operation.assetType = transformAsset(allowTrustAsset).type;
     }

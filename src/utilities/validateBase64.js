@@ -1,19 +1,19 @@
-import trim from 'lodash/trim';
+import trim from "lodash/trim";
 
 export default function validateBase64(input) {
   input = trim(input);
 
-  if (input === '') {
+  if (input === "") {
     return {
-      result: 'empty',
+      result: "empty",
     };
   }
   if (input.match(/^[-A-Za-z0-9+\/=]*$/) === null) {
     return {
-      result: 'error',
-      message: 'The input is not valid base64 (a-zA-Z0-9+/=).'
+      result: "error",
+      message: "The input is not valid base64 (a-zA-Z0-9+/=).",
     };
   }
 
-  return {result: 'success'};
+  return { result: "success" };
 }

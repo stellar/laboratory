@@ -1,8 +1,8 @@
-import {stateToQueryObj} from './stateSerializer';
-import url from 'url';
-import SLUG from '../constants/slug';
-import horizonUrlParser from './horizonUrlParser';
-import TX_TYPES from '../constants/transaction_types';
+import url from "url";
+import { stateToQueryObj } from "./stateSerializer";
+import SLUG from "../constants/slug";
+import horizonUrlParser from "./horizonUrlParser";
+import TX_TYPES from "../constants/transaction_types";
 
 // The linkBuilder attempts to abstract the specific details of the store so that
 // consumers of linkBuilder need to know very little to be able to generate a link.
@@ -45,7 +45,7 @@ export function feeBumpTxLink(xdr) {
         innerTxXDR: xdr,
       },
       txType: TX_TYPES.FEE_BUMP,
-    }
+    },
   });
   return hashBuilder(SLUG.TXBUILDER, query);
 }
@@ -68,14 +68,14 @@ function explorerEndpoint(resource, endpoint, values) {
 }
 
 export function singleAccount(accountId) {
-  return explorerEndpoint('accounts', 'single', {
-    'account_id': accountId,
+  return explorerEndpoint("accounts", "single", {
+    account_id: accountId,
   });
 }
 
 export function horizonUrlToExplorerLink(horizonUrl) {
   let urlInfo = horizonUrlParser(horizonUrl);
-  if (typeof urlInfo === 'undefined') {
+  if (typeof urlInfo === "undefined") {
     return;
   }
 
@@ -93,5 +93,5 @@ function hashBuilder(slug, query) {
     pathname: slug,
     query: query,
   };
-  return '#' + url.format(urlObj);
+  return "#" + url.format(urlObj);
 }

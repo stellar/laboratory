@@ -1,8 +1,8 @@
-import {broadcastEvent} from '../utilities/metrics'
+import { broadcastEvent } from "../utilities/metrics";
 
-const metrics = store => next => action => {
-  broadcastEvent(store.getState(), action)
-  return next(action)
-}
+const metrics = (store) => (next) => (action) => {
+  broadcastEvent(store.getState(), action);
+  return next(action);
+};
 
-export default metrics
+export default metrics;

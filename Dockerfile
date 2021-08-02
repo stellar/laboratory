@@ -2,28 +2,26 @@ FROM ubuntu:20.04 as build
 
 MAINTAINER SDF Ops Team <ops@stellar.org>
 
-WORKDIR /app/src
+RUN mkdir -p /app
+WORKDIR /app
 
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install --no-install-recommends -y gpg curl git make ca-certificates apt-transport-https && \
     curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key|gpg --dearmor >/etc/apt/trusted.gpg.d/nodesource.gpg && \
-    echo "deb https://deb.nodesource.com/node_10.x focal main" | tee /etc/apt/sources.list.d/nodesource.list && \
+    echo "deb https://deb.nodesource.com/node_14.x focal main" | tee /etc/apt/sources.list.d/nodesource.list && \
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg |gpg --dearmor >/etc/apt/trusted.gpg.d/yarnpkg.gpg && \
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
     apt-get update && apt-get install -y nodejs yarn && apt-get clean
 
-COPY package.json yarn.lock /app/src/
+COPY . /app/
 RUN yarn install
-
-ADD .babelrc webpack.config.base.js webpack.config.prod.js /app/src/
-ADD src /app/src/src
 
 ARG AMPLITUDE_KEY
 RUN yarn build
 
 FROM nginx:1.17
 
-COPY --from=build /app/src/dist/ /usr/share/nginx/html/
+COPY --from=build /app/build/ /usr/share/nginx/html/
 
 # We're removing /laboratory/ prefix. To allow for transition
 # period we'll support /laboratory/ links using rewrites

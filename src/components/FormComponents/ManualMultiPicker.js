@@ -1,7 +1,7 @@
-import React from 'react';
-import isArray from 'lodash/isArray';
-import map from 'lodash/map';
-import classNames from 'classnames';
+import React from "react";
+import isArray from "lodash/isArray";
+import map from "lodash/map";
+import classNames from "classnames";
 
 // ManualMultiPicker is a compound picker interface that displays multiple
 // instances of a Picker. It is manual in that the user uses to add or reduce
@@ -15,37 +15,51 @@ import classNames from 'classnames';
 // @param {function} props.onUpdate - Picker callback function called when the values change.
 // @param {stromg} (props.addNewLabel) - Custom label for the `add new` button.
 export default function ManualMultiPicker(props) {
-  let {onUpdate, component} = props;
+  let { onUpdate, component } = props;
   let values = isArray(props.value) ? props.value : [props.default];
-  let addNewLabel = props.addNewLabel || 'Add new';
+  let addNewLabel = props.addNewLabel || "Add new";
 
-  return <div className="ManualMultiPicker">
-    {map(values, (singleValue, index) => {
-      return <div key={index} className={classNames(
-          'ManualMultiPicker__item',
-          {'ManualMultiPicker__item--last': index === values.length - 1},
-        )}>
-        <div className="ManualMultiPicker__item__infobar">
-          <span><strong>#{index + 1}</strong></span>
-          <button
-            className="s-button ManualMultiPicker__item__remove"
-            onClick={() => onUpdate(removeValueAt(values, index))}>
-            remove
-          </button>
-        </div>
+  return (
+    <div className="ManualMultiPicker">
+      {map(values, (singleValue, index) => {
+        return (
+          <div
+            key={index}
+            className={classNames("ManualMultiPicker__item", {
+              "ManualMultiPicker__item--last": index === values.length - 1,
+            })}
+          >
+            <div className="ManualMultiPicker__item__infobar">
+              <span>
+                <strong>#{index + 1}</strong>
+              </span>
+              <button
+                className="s-button ManualMultiPicker__item__remove"
+                onClick={() => onUpdate(removeValueAt(values, index))}
+              >
+                remove
+              </button>
+            </div>
 
-        <props.component
-          onUpdate={(newValue) => onUpdate(updateValueAt(values, index, newValue))}
-          value={singleValue}
-        />
+            <props.component
+              onUpdate={(newValue) =>
+                onUpdate(updateValueAt(values, index, newValue))
+              }
+              value={singleValue}
+            />
+          </div>
+        );
+      })}
+      <div className="ManualMultiPicker__addNew">
+        <button
+          className="s-button"
+          onClick={() => onUpdate(values.concat(props.default))}
+        >
+          {addNewLabel}
+        </button>
       </div>
-    })}
-    <div className="ManualMultiPicker__addNew">
-      <button className="s-button" onClick={() => onUpdate(values.concat(props.default))}>
-        {addNewLabel}
-      </button>
     </div>
-  </div>
+  );
 }
 
 // Removes a item in specific area of index

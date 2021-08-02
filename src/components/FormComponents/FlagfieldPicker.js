@@ -1,7 +1,7 @@
-import React from 'react';
-import CheckboxButtonPicker from './CheckboxButtonPicker';
-import each from 'lodash/each';
-import reduce from 'lodash/reduce';
+import React from "react";
+import each from "lodash/each";
+import reduce from "lodash/reduce";
+import CheckboxButtonPicker from "./CheckboxButtonPicker";
 
 // When all the items are empty, then this picker should be equal to ''
 
@@ -12,7 +12,8 @@ import reduce from 'lodash/reduce';
 //   1: 'Human Readable Label',
 // }
 export default function FlagfieldPicker(props) {
-  let {value, onUpdate, items} = props;
+  let { value, onUpdate, items } = props;
+  // eslint-disable-next-line no-unused-vars
   let group = Math.random(); // Allows for tabbing and prevents checkbox collisions
 
   let parsedValue = parseInt(value);
@@ -23,26 +24,29 @@ export default function FlagfieldPicker(props) {
 
   let statusLine;
   if (pickerValue.length > 0) {
-    let sumItems = [], total = 0;
+    let sumItems = [],
+      total = 0;
     each(pickerValue, (bitValue) => {
       sumItems.push(`${items[bitValue]} (${bitValue})`);
       total += parseInt(bitValue);
     });
-    statusLine = sumItems.join(' + ') + ` = ${total}`;
+    statusLine = sumItems.join(" + ") + ` = ${total}`;
   }
 
-  return <div>
-    <div className={`s-buttonGroup picker picker--radio ${props.className}`}>
-      <CheckboxButtonPicker
-        className={statusLine === undefined ? '' : 'picker--spaceBottom'}
-        value={pickerValue}
-        onUpdate={(valueArray) => onUpdate(existenceArrayToInt(valueArray))}
-        items={items}
-      />
-    </div>
+  return (
+    <div>
+      <div className={`s-buttonGroup picker picker--radio ${props.className}`}>
+        <CheckboxButtonPicker
+          className={statusLine === undefined ? "" : "picker--spaceBottom"}
+          value={pickerValue}
+          onUpdate={(valueArray) => onUpdate(existenceArrayToInt(valueArray))}
+          items={items}
+        />
+      </div>
 
-    {statusLine}
-  </div>;
+      {statusLine}
+    </div>
+  );
 }
 
 // Converts an integer to an array of strings with decimal representations of the number
@@ -52,9 +56,9 @@ export default function FlagfieldPicker(props) {
 function intToExistenceArray(inputInt) {
   let existenceArray = [];
   // iterate through binary representation of number
-  let binaryArray = inputInt.toString(2).split('');
+  let binaryArray = inputInt.toString(2).split("");
   each(binaryArray, (binaryValue, index) => {
-    if (binaryValue === '1') {
+    if (binaryValue === "1") {
       existenceArray.push(String(Math.pow(2, binaryArray.length - 1 - index))); // calculate decimal representation of bit in specific index
     }
   });
@@ -63,9 +67,13 @@ function intToExistenceArray(inputInt) {
 
 // The reverse of intToExistenceArray
 function existenceArrayToInt(existenceArray) {
-  return reduce(existenceArray, (result, intValue) => {
-    return result | parseInt(intValue);
-  }, undefined);
+  return reduce(
+    existenceArray,
+    (result, intValue) => {
+      return result | parseInt(intValue);
+    },
+    undefined,
+  );
 }
 
 function isInteger(input) {

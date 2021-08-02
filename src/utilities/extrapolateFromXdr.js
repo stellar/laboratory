@@ -9,21 +9,22 @@
 // - string: string values that appear as just plain text
 // - object: typed values always with a type and value `{type: 'code', value: 'Foo();'}`
 
-import {xdr, StrKey, Keypair, Operation} from 'stellar-sdk';
-import isArray from 'lodash/isArray'
-import isString from 'lodash/isString'
-import functionsIn from 'lodash/functionsIn'
-import includes from 'lodash/includes'
-import without from 'lodash/without'
+import { xdr, StrKey, Keypair, Operation } from "stellar-sdk";
+import isArray from "lodash/isArray";
+import isString from "lodash/isString";
+import functionsIn from "lodash/functionsIn";
+import includes from "lodash/includes";
+import without from "lodash/without";
+
 export default function extrapolateFromXdr(input, type) {
   // TODO: Check to see if type exists
   // TODO: input validation
 
   let xdrObject;
   try {
-    xdrObject = xdr[type].fromXDR(input, 'base64');
-  } catch(error) {
-    throw new Error('Input XDR could not be parsed');
+    xdrObject = xdr[type].fromXDR(input, "base64");
+  } catch (error) {
+    throw new Error("Input XDR could not be parsed");
   }
 
   let tree = [{}];
@@ -39,9 +40,9 @@ function buildTreeFromObject(object, anchor, name) {
   } else if (!hasChildren(object)) {
     anchor.value = getValue(object, name);
   } else if (object.switch) {
-    parseArm(anchor, object)
+    parseArm(anchor, object);
   } else {
-    parseNormal(anchor, object)
+    parseNormal(anchor, object);
   }
 }
 
@@ -50,23 +51,35 @@ function parseArray(anchor, object) {
   anchor.nodes = [];
   for (var i = 0; i < object.length; i++) {
     anchor.nodes.push({});
-    buildTreeFromObject(object[i], anchor.nodes[anchor.nodes.length-1], '[' + i + ']');
+    buildTreeFromObject(
+      object[i],
+      anchor.nodes[anchor.nodes.length - 1],
+      "[" + i + "]",
+    );
   }
 }
 
 function parseArm(anchor, object) {
-  anchor.value = '['+object.switch().name+']';
+  anchor.value = "[" + object.switch().name + "]";
   if (isString(object.arm())) {
     anchor.nodes = [{}];
-    buildTreeFromObject(object[object.arm()](), anchor.nodes[anchor.nodes.length-1], object.arm());
+    buildTreeFromObject(
+      object[object.arm()](),
+      anchor.nodes[anchor.nodes.length - 1],
+      object.arm(),
+    );
   }
 }
 
 function parseNormal(anchor, object) {
   anchor.nodes = [];
-  without(functionsIn(object), 'toXDR').forEach(function(name) {
+  without(functionsIn(object), "toXDR").forEach(function (name) {
     anchor.nodes.push({});
-    buildTreeFromObject(object[name](), anchor.nodes[anchor.nodes.length-1], name);
+    buildTreeFromObject(
+      object[name](),
+      anchor.nodes[anchor.nodes.length - 1],
+      name,
+    );
   });
 }
 
@@ -84,26 +97,34 @@ function hasChildren(object) {
     return false;
   }
   // int64
-  if (includes(functions, 'getLowBits') && includes(functions, 'getHighBits')) {
+  if (includes(functions, "getLowBits") && includes(functions, "getHighBits")) {
     return false;
   }
   return true;
 }
 
-const amountFields = ['amount', 'startingBalance', 'sendMax', 'sendAmount', 'destMin', 'destAmount', 'limit'];
+const amountFields = [
+  "amount",
+  "startingBalance",
+  "sendMax",
+  "sendAmount",
+  "destMin",
+  "destAmount",
+  "limit",
+];
 
 function getValue(object, name) {
   if (includes(amountFields, name)) {
     return {
-      type: 'amount',
+      type: "amount",
       value: {
         parsed: Operation._fromXDRAmount(object),
-        raw: object.toString()
-      }
+        raw: object.toString(),
+      },
     };
   }
 
-  if (name === 'hint') {
+  if (name === "hint") {
     // strkey encoding is using base32 encoding. Encoded public key consists of:
     //
     //  * 1 byte version byte (0x30 encoded as `G`)
@@ -135,32 +156,35 @@ function getValue(object, name) {
     // byte 34:                                                                            # 54### 55
     // byte 35:                                                                                      ### 56###
     //
-    let hintBytes = new Buffer(object, 'base64');
+    let hintBytes = new Buffer(object, "base64");
     let partialPublicKey = Buffer.concat([new Buffer(28).fill(0), hintBytes]);
-    let keypair = new Keypair({type: 'ed25519', publicKey: partialPublicKey});
+    let keypair = new Keypair({ type: "ed25519", publicKey: partialPublicKey });
     let partialPublicKeyString =
-      'G'+
-      (new Buffer(46).fill('_').toString())+
-      keypair.publicKey().substr(47, 5)+
-      (new Buffer(4).fill('_').toString());
-    return {type: 'code', value: partialPublicKeyString};
+      "G" +
+      new Buffer(46).fill("_").toString() +
+      keypair.publicKey().substr(47, 5) +
+      new Buffer(4).fill("_").toString();
+    return { type: "code", value: partialPublicKeyString };
   }
 
-  if (name === 'ed25519' || name === 'sourceAccountEd25519') {
+  if (name === "ed25519" || name === "sourceAccountEd25519") {
     var address = StrKey.encodeEd25519PublicKey(object);
-    return {type: 'code', value: address};
+    return { type: "code", value: address };
   }
 
-  if (name === 'assetCode' || name === 'assetCode4' || name === 'assetCode12') {
+  if (name === "assetCode" || name === "assetCode4" || name === "assetCode12") {
     return object.toString();
   }
 
-
   if (object && object._isBuffer) {
-    return {type: 'code', raw: object, value: new Buffer(object).toString('base64')};
+    return {
+      type: "code",
+      raw: object,
+      value: new Buffer(object).toString("base64"),
+    };
   }
 
-  if (typeof object === 'undefined') {
+  if (typeof object === "undefined") {
     return;
   }
 
@@ -169,9 +193,11 @@ function getValue(object, name) {
   // Therefore, we want them in string format so that it displayable in React.
   // One example of why we need this is that UnsignedHyper values won't get
   // displayed unless we convert it to a string.
-  if (typeof object.toString === 'function') {
+  if (typeof object.toString === "function") {
     return object.toString();
   }
 
-  throw new Error('Internal laboratory bug: Encountered value type in XDR viewer that does not have a toString method');
+  throw new Error(
+    "Internal laboratory bug: Encountered value type in XDR viewer that does not have a toString method",
+  );
 }

@@ -1,6 +1,6 @@
-import Sdk from 'stellar-sdk';
-import flatten from 'lodash/flatten';
-import flowRight from 'lodash/flowRight';
+import Sdk from "stellar-sdk";
+import flatten from "lodash/flatten";
+import flowRight from "lodash/flowRight";
 import isArray from "lodash/isArray";
 import isEmpty from "lodash/isEmpty";
 
@@ -70,13 +70,15 @@ export function transformPredicateDataForRender(data) {
             value.map((v, i) => {
               // If there is no value yet, return default.
               return isEmpty(v)
-                ? [{
-                  parentPath: addPathDelimiter(parentPath, `${key}.${i}`),
-                  type: "",
-                  value: []
-                }]
+                ? [
+                    {
+                      parentPath: addPathDelimiter(parentPath, `${key}.${i}`),
+                      type: "",
+                      value: [],
+                    },
+                  ]
                 : loop(v, addPathDelimiter(parentPath, `${key}.${i}`));
-            })
+            }),
           ),
         };
       } else {
@@ -88,13 +90,16 @@ export function transformPredicateDataForRender(data) {
           type: key,
           // If value is empty or type string (it means time value is set and
           // we need to stop), we return default or value.
-          value: isEmpty(value) || isValueString
-            ? [{
-              parentPath: addPathDelimiter(parentPath, key),
-              type: "",
-              value: isTimeValue ? (isValueString ? value : "") : []
-            }]
-            : loop(value, addPathDelimiter(parentPath, key)),
+          value:
+            isEmpty(value) || isValueString
+              ? [
+                  {
+                    parentPath: addPathDelimiter(parentPath, key),
+                    type: "",
+                    value: isTimeValue ? (isValueString ? value : "") : [],
+                  },
+                ]
+              : loop(value, addPathDelimiter(parentPath, key)),
         };
       }
     });
@@ -105,7 +110,7 @@ export function transformPredicateDataForRender(data) {
 }
 
 function getPredicateMethod(type) {
-  switch(type) {
+  switch (type) {
     case "unconditional":
       return Sdk.Claimant.predicateUnconditional;
     case "and":
@@ -138,22 +143,30 @@ function getPredicateMethod(type) {
 // giving an array of parent functions.
 export function createPredicate(data) {
   function loop(items, callbacksArray = []) {
-    return flatten(Object.entries(items).map((item) => {
-      const [key, value] = item;
+    return flatten(
+      Object.entries(items).map((item) => {
+        const [key, value] = item;
 
-      if (typeof value === "string") {
-        const callback = flowRight([...callbacksArray, getPredicateMethod(key)]);
-        return callback(value);
-      } else {
-        if (isArray(value)) {
-          const predicates = flatten(value.map(v => loop(v)));
-          const callback = flowRight([...callbacksArray, getPredicateMethod(key)]);
-          return callback(...predicates);
+        if (typeof value === "string") {
+          const callback = flowRight([
+            ...callbacksArray,
+            getPredicateMethod(key),
+          ]);
+          return callback(value);
         } else {
-          return loop(value, [...callbacksArray, getPredicateMethod(key)]);
+          if (isArray(value)) {
+            const predicates = flatten(value.map((v) => loop(v)));
+            const callback = flowRight([
+              ...callbacksArray,
+              getPredicateMethod(key),
+            ]);
+            return callback(...predicates);
+          } else {
+            return loop(value, [...callbacksArray, getPredicateMethod(key)]);
+          }
         }
-      }
-    }));
+      }),
+    );
   }
 
   // Return value is an array, but we need to return an object.
@@ -172,7 +185,7 @@ function validatePredicateValue(value, key, index) {
       return;
     }
 
-    switch(key) {
+    switch (key) {
       case "conditional":
         message = "Conditional predicate is required.";
         break;
@@ -236,7 +249,7 @@ function sanitizePredicateOpts(opts) {
               }
             : getValue(value, key);
         }
-      })
+      }),
     );
   }
 

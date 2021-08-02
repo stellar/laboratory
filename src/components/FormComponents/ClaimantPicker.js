@@ -1,19 +1,25 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { assign, set, isEmpty, unset } from "lodash";
-import { transformPredicateDataForRender, addPathDelimiter } from "../../utilities/claimantHelpers";
+import {
+  transformPredicateDataForRender,
+  addPathDelimiter,
+} from "../../utilities/claimantHelpers";
 import OptionsTablePair from "../OptionsTable/Pair";
 import RadioButtonPicker from "./RadioButtonPicker";
 import PubKeyPicker from "./PubKeyPicker";
 import TextPicker from "./TextPicker";
-import TimestampPicker from './TimestampPicker';
+import TimestampPicker from "./TimestampPicker";
 
 // Value is a string containing the currently selected id (or undefined)
-function ClaimantObjectPicker({ value, onUpdate, disableNative, ...props }) {
-  const localValue = assign({
-    destination: "",
-    predicate: {},
-  }, value);
+function ClaimantObjectPicker({ value, onUpdate, ...props }) {
+  const localValue = assign(
+    {
+      destination: "",
+      predicate: {},
+    },
+    value,
+  );
 
   function handleUpdate({ parentPath, type, childValue }) {
     const path = type ? addPathDelimiter(parentPath, type) : parentPath;
@@ -28,9 +34,11 @@ function ClaimantObjectPicker({ value, onUpdate, disableNative, ...props }) {
       unset(updatedPredicate, parentPath);
     }
 
-    onUpdate(assign({}, value, {
-      predicate: set(updatedPredicate, path, childValue)
-    }));
+    onUpdate(
+      assign({}, value, {
+        predicate: set(updatedPredicate, path, childValue),
+      }),
+    );
   }
 
   return (
@@ -43,16 +51,14 @@ function ClaimantObjectPicker({ value, onUpdate, disableNative, ...props }) {
           }
         />
       </OptionsTablePair>
-      {isEmpty(localValue.predicate)
-        ? <Predicate
-            key={0}
-            parentPath=""
-            onUpdate={handleUpdate}
-          />
-        : renderComponent({
-            nodes: transformPredicateDataForRender(localValue.predicate),
-            onUpdate: handleUpdate
-          })}
+      {isEmpty(localValue.predicate) ? (
+        <Predicate key={0} parentPath="" onUpdate={handleUpdate} />
+      ) : (
+        renderComponent({
+          nodes: transformPredicateDataForRender(localValue.predicate),
+          onUpdate: handleUpdate,
+        })
+      )}
     </div>
   );
 }
@@ -64,15 +70,17 @@ function getLastItemFromPath(path, size = 1) {
 
 function getNestingLevel(str) {
   const regex = /(conditional|unconditional)/g;
-  return ((str || '').match(regex) || []).length;
+  return ((str || "").match(regex) || []).length;
 }
 
 function getParentLabel(parentPath) {
-  return getNestingLevel(parentPath) >= 2 ? `${parentPath.split(".")[1].toUpperCase()}: ` : "";
+  return getNestingLevel(parentPath) >= 2
+    ? `${parentPath.split(".")[1].toUpperCase()}: `
+    : "";
 }
 
 function getChildValue(val) {
-  switch(val) {
+  switch (val) {
     case "and":
     case "or":
       return [{}, {}];
@@ -90,7 +98,7 @@ function getChildValue(val) {
 function getComponent(type, parentPath) {
   if (type) {
     // Parent component
-    switch(type) {
+    switch (type) {
       case "conditional":
       case "unconditional":
         return Predicate;
@@ -116,7 +124,7 @@ function getComponent(type, parentPath) {
   }
 
   // Child component
-  switch(parentType) {
+  switch (parentType) {
     case "conditional":
       return PredicateType;
     case "and":
@@ -165,20 +173,27 @@ function Predicate({ parentPath, type, nodeValue, onUpdate }) {
   if (!parentType) {
     label = "Predicate";
   } else if (!isNaN(parentType)) {
-    label = `${getLastItemFromPath(parentPath, 2).toUpperCase()} Predicate ${++parentType}`;
+    label = `${getLastItemFromPath(
+      parentPath,
+      2,
+    ).toUpperCase()} Predicate ${++parentType}`;
   } else {
     label = `${parentType.toUpperCase()} Predicate`;
   }
 
   return (
     <div className="predicateWrapper">
-      <OptionsTablePair label={`${getParentLabel(parentPath)}${label}`} key="predicate">
+      <OptionsTablePair
+        label={`${getParentLabel(parentPath)}${label}`}
+        key="predicate"
+      >
         <RadioButtonPicker
           value={type}
-          onUpdate={(val) => onUpdate({
+          onUpdate={(val) =>
+            onUpdate({
               parentPath,
               type: val,
-              childValue: {}
+              childValue: {},
             })
           }
           items={predicateButtons}
@@ -209,18 +224,25 @@ function PredicateType({ parentPath, type, nodeValue, onUpdate }) {
       <OptionsTablePair label="Predicate Type" key="predicateType">
         <RadioButtonPicker
           value={type}
-          onUpdate={(val) => onUpdate({
+          onUpdate={(val) =>
+            onUpdate({
               parentPath,
               type: val,
-              childValue: getChildValue(val)
+              childValue: getChildValue(val),
             })
           }
           items={predicateTypeButtons}
           disabledItems={disabledPredicateTypeButtons}
         />
-        {hasMaxNestingLevel && <p className="optionsTable__pair__content__note">Deeper nesting is not allowed.</p>}
+        {hasMaxNestingLevel && (
+          <p className="optionsTable__pair__content__note">
+            Deeper nesting is not allowed.
+          </p>
+        )}
       </OptionsTablePair>
-      {nodeValue && nodeValue.length > 0 && renderComponent({ nodes: nodeValue, onUpdate })}
+      {nodeValue &&
+        nodeValue.length > 0 &&
+        renderComponent({ nodes: nodeValue, onUpdate })}
     </div>
   );
 }
@@ -236,16 +258,19 @@ function PredicateTimeType({ parentPath, type, nodeValue, onUpdate }) {
       <OptionsTablePair label="Time Type" key="predicateTimeType">
         <RadioButtonPicker
           value={type}
-          onUpdate={(val) => onUpdate({
+          onUpdate={(val) =>
+            onUpdate({
               parentPath,
               type: val,
-              childValue: getChildValue(val)
+              childValue: getChildValue(val),
             })
           }
           items={predicateTimeTypeButtons}
         />
       </OptionsTablePair>
-      {nodeValue && nodeValue.length > 0 && renderComponent({ nodes: nodeValue, onUpdate })}
+      {nodeValue &&
+        nodeValue.length > 0 &&
+        renderComponent({ nodes: nodeValue, onUpdate })}
     </>
   );
 }
@@ -256,21 +281,41 @@ function PredicateTimeValue({ parentPath, nodeValue, onUpdate }) {
   function handleUpdate(val) {
     onUpdate({
       parentPath,
-      childValue: val
-    })
+      childValue: val,
+    });
   }
 
   return (
     <>
       <OptionsTablePair label="Time Value" key="predicateTimeValue">
-        {inputType === "absolute" && <>
-          <TextPicker placeholder="Example: 1603303504267" value={nodeValue} onUpdate={handleUpdate} />
-          <p className="optionsTable__pair__content__note">Unix epoch as a string representing a deadline for when the claimable balance can be claimed. If the balance is claimed before the date then this clause of the condition is satisfied.</p>
-        </>}
-        {inputType === "relative" && <>
-          <TimestampPicker placeholder="Example: 1479151713" value={nodeValue} onUpdate={handleUpdate} />
-          <p className="optionsTable__pair__content__note">A relative deadline for when the claimable balance can be claimed. The value represents the number of seconds since the close time of the ledger which created the claimable balance.</p>
-        </>}
+        {inputType === "absolute" && (
+          <>
+            <TextPicker
+              placeholder="Example: 1603303504267"
+              value={nodeValue}
+              onUpdate={handleUpdate}
+            />
+            <p className="optionsTable__pair__content__note">
+              Unix epoch as a string representing a deadline for when the
+              claimable balance can be claimed. If the balance is claimed before
+              the date then this clause of the condition is satisfied.
+            </p>
+          </>
+        )}
+        {inputType === "relative" && (
+          <>
+            <TimestampPicker
+              placeholder="Example: 1479151713"
+              value={nodeValue}
+              onUpdate={handleUpdate}
+            />
+            <p className="optionsTable__pair__content__note">
+              A relative deadline for when the claimable balance can be claimed.
+              The value represents the number of seconds since the close time of
+              the ledger which created the claimable balance.
+            </p>
+          </>
+        )}
       </OptionsTablePair>
     </>
   );
@@ -283,12 +328,14 @@ export default function ClaimantPicker({
   onUpdate,
   ...props
 }) {
-  return <ClaimantObjectPicker
-    optional={optional}
-    value={value}
-    onUpdate={onUpdate}
-    {...props}
-  />
+  return (
+    <ClaimantObjectPicker
+      optional={optional}
+      value={value}
+      onUpdate={onUpdate}
+      {...props}
+    />
+  );
 }
 
 ClaimantPicker.propTypes = {
