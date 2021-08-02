@@ -4,47 +4,46 @@ import {
   FINISH_FRIENDBOT_REQUEST,
   GENERATE_MUXED_ACCOUNT,
   PARSE_MUXED_ACCOUNT,
-} from '../actions/accountCreator';
+} from "../actions/accountCreator";
 
-import { logEvent} from '../utilities/metrics'
+import { logEvent } from "../utilities/metrics";
 
 const metricsEvents = {
-  newAccount: 'account creator: generated new account',
-  fundAccountStart: 'account creator: funded test account: begin',
-  fundAccountSuccess: 'account creator: funded test account: success',
-  fundAccountError: 'account creator: funded test account: failed',
-  generateMuxedAccount: 'account creator: generated new muxed account',
-  parseMuxedAccount: 'account creator: parsed muxed account',
-}
+  newAccount: "account creator: generated new account",
+  fundAccountStart: "account creator: funded test account: begin",
+  fundAccountSuccess: "account creator: funded test account: success",
+  fundAccountError: "account creator: funded test account: failed",
+  generateMuxedAccount: "account creator: generated new muxed account",
+  parseMuxedAccount: "account creator: parsed muxed account",
+};
 
 export default function accountCreatorMetrics(state, action) {
-  const {type, ...actionBody} = action
+  const { type, ...actionBody } = action;
   switch (type) {
     case GENERATE_NEW_KEYPAIR: {
-      logEvent(metricsEvents.newAccount)
+      logEvent(metricsEvents.newAccount);
       return;
     }
     case START_FRIENDBOT_REQUEST: {
-      logEvent(metricsEvents.fundAccountStart)
+      logEvent(metricsEvents.fundAccountStart);
       return;
     }
     case FINISH_FRIENDBOT_REQUEST: {
-      if (actionBody.status === 'success'){
-        logEvent(metricsEvents.fundAccountSuccess)
-        return
+      if (actionBody.status === "success") {
+        logEvent(metricsEvents.fundAccountSuccess);
+        return;
       }
-      const {message, code} = actionBody
-      logEvent(metricsEvents.fundAccountError, {message, code})
+      const { message, code } = actionBody;
+      logEvent(metricsEvents.fundAccountError, { message, code });
       return;
     }
     case GENERATE_MUXED_ACCOUNT: {
-      logEvent(metricsEvents.generateMuxedAccount)
+      logEvent(metricsEvents.generateMuxedAccount);
       return;
     }
     case PARSE_MUXED_ACCOUNT: {
-      logEvent(metricsEvents.parseMuxedAccount)
+      logEvent(metricsEvents.parseMuxedAccount);
       return;
     }
-
   }
 }

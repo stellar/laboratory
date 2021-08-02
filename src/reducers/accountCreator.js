@@ -1,5 +1,5 @@
-import {combineReducers} from 'redux';
-import assign from 'lodash/assign';
+import { combineReducers } from "redux";
+import assign from "lodash/assign";
 import {
   GENERATE_NEW_KEYPAIR,
   UPDATE_FRIENDBOT_TARGET,
@@ -8,10 +8,10 @@ import {
   GENERATE_MUXED_ACCOUNT,
   UPDATE_GENERATE_MUXED_ACCOUNT_INPUT,
   PARSE_MUXED_ACCOUNT,
-  UPDATE_PARSE_MUXED_ACCOUNT_INPUT
-} from '../actions/accountCreator';
+  UPDATE_PARSE_MUXED_ACCOUNT_INPUT,
+} from "../actions/accountCreator";
 
-function keypairGeneratorResult(state=null, action) {
+function keypairGeneratorResult(state = null, action) {
   if (action.type === GENERATE_NEW_KEYPAIR) {
     return {
       pubKey: action.pubKey,
@@ -20,13 +20,13 @@ function keypairGeneratorResult(state=null, action) {
   }
   return state;
 }
-function keypairGeneratorPubKey(state='', action) {
+function keypairGeneratorPubKey(state = "", action) {
   if (action.type === GENERATE_NEW_KEYPAIR) {
     return action.pubKey;
   }
   return state;
 }
-function friendbotTarget(state='', action) {
+function friendbotTarget(state = "", action) {
   if (action.type === UPDATE_FRIENDBOT_TARGET) {
     return action.target;
   }
@@ -45,7 +45,7 @@ function muxedAccountGenerated(state = initialMuxedAccountState, action) {
       ...state,
       mAddress: action.mAddress,
       errorMessage: action.errorMessage || "",
-    }
+    };
   }
   if (action.type === UPDATE_GENERATE_MUXED_ACCOUNT_INPUT) {
     return {
@@ -53,7 +53,7 @@ function muxedAccountGenerated(state = initialMuxedAccountState, action) {
       ...action.input,
       errorMessage: "",
       mAddress: "",
-    }
+    };
   }
   return state;
 }
@@ -64,7 +64,7 @@ function muxedAccountParsed(state = initialMuxedAccountState, action) {
       gAddress: action.gAddress,
       mAccountId: action.mAccountId,
       errorMessage: action.errorMessage || "",
-    }
+    };
   }
   if (action.type === UPDATE_PARSE_MUXED_ACCOUNT_INPUT) {
     return {
@@ -73,16 +73,16 @@ function muxedAccountParsed(state = initialMuxedAccountState, action) {
       errorMessage: "",
       gAddress: "",
       mAccountId: "",
-    }
+    };
   }
   return state;
 }
 
 const defaultRequestState = {
-  message: '',
-  code: '',
-  status: 'inital',
-}
+  message: "",
+  code: "",
+  status: "inital",
+};
 function friendbotStatus(state = defaultRequestState, action) {
   if (action.type === START_FRIENDBOT_REQUEST) {
     return assign({}, defaultRequestState, {
@@ -95,7 +95,7 @@ function friendbotStatus(state = defaultRequestState, action) {
       message: action.message,
       code: action.code,
       status: action.status,
-    }
+    };
   }
   return state;
 }
@@ -107,5 +107,5 @@ const accountCreator = combineReducers({
   friendbotStatus,
   muxedAccountGenerated,
   muxedAccountParsed,
-})
-export default accountCreator
+});
+export default accountCreator;

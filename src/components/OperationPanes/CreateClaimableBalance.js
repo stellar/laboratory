@@ -1,33 +1,39 @@
-import React from 'react';
+import React from "react";
 
-import OptionsTablePair from '../OptionsTable/Pair';
-import ManualMultiPicker from '../FormComponents/ManualMultiPicker.js';
-import AmountPicker from '../FormComponents/AmountPicker.js';
-import AssetPicker from '../FormComponents/AssetPicker.js';
-import ClaimantPicker from '../FormComponents/ClaimantPicker.js';
+import OptionsTablePair from "../OptionsTable/Pair";
+import ManualMultiPicker from "../FormComponents/ManualMultiPicker.js";
+import AmountPicker from "../FormComponents/AmountPicker.js";
+import AssetPicker from "../FormComponents/AssetPicker.js";
+import ClaimantPicker from "../FormComponents/ClaimantPicker.js";
 
 export default function CreateClaimableBalance(props) {
   return [
     <OptionsTablePair label="Asset" key="asset">
       <AssetPicker
-        value={props.values['asset']}
-        onUpdate={(value) => {props.onUpdate('asset', value)}}
-        />
+        value={props.values["asset"]}
+        onUpdate={(value) => {
+          props.onUpdate("asset", value);
+        }}
+      />
     </OptionsTablePair>,
     <OptionsTablePair label="Amount" key="amount">
       <AmountPicker
-        value={props.values['amount']}
-        onUpdate={(value) => {props.onUpdate('amount', value)}}
-        />
+        value={props.values["amount"]}
+        onUpdate={(value) => {
+          props.onUpdate("amount", value);
+        }}
+      />
     </OptionsTablePair>,
     <OptionsTablePair label="Claimants" key="claimants">
       <ManualMultiPicker
         component={ClaimantPicker}
-        value={props.values['claimants']}
+        value={props.values["claimants"]}
         default={""}
         addNewLabel="Add new claimant"
-        onUpdate={(value) => {props.onUpdate('claimants', value)}}
-        />
+        onUpdate={(value) => {
+          props.onUpdate("claimants", value);
+        }}
+      />
     </OptionsTablePair>,
   ];
 }

@@ -5,7 +5,7 @@ import {
   TREZOR_WALLET_SIGN_START,
   TREZOR_WALLET_SIGN_SUCCESS,
   TREZOR_WALLET_SIGN_ERROR,
-  SET_SECRETS
+  SET_SECRETS,
 } from "../actions/transactionSigner";
 import { logEvent } from "../utilities/metrics";
 import { LOAD_STATE } from "../actions/routing";
@@ -50,7 +50,7 @@ export default function networkMetrics(state, action) {
     }
     case SET_SECRETS: {
       logEvent(metricsEvents.addSecret, {
-        secretCount: payload.secrets.length
+        secretCount: payload.secrets.length,
       });
       return;
     }

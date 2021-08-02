@@ -1,50 +1,52 @@
-import axios from 'axios';
-import dispatchInNewStack from '../utilities/dispatchInNewStack';
-import {Keypair, Account, MuxedAccount, Server} from 'stellar-sdk';
+import axios from "axios";
+import dispatchInNewStack from "../utilities/dispatchInNewStack";
+import { Keypair, Account, MuxedAccount, Server } from "stellar-sdk";
 
-export const GENERATE_NEW_KEYPAIR = 'GENERATE_NEW_KEYPAIR';
+export const GENERATE_NEW_KEYPAIR = "GENERATE_NEW_KEYPAIR";
 export function generateNewKeypair() {
   let keypair = Keypair.random();
   return {
     type: GENERATE_NEW_KEYPAIR,
     pubKey: keypair.publicKey(),
     secretKey: keypair.secret(),
-  }
+  };
 }
 
-export const UPDATE_FRIENDBOT_TARGET = 'UPDATE_FRIENDBOT_TARGET';
+export const UPDATE_FRIENDBOT_TARGET = "UPDATE_FRIENDBOT_TARGET";
 export function updateFriendbotTarget(target) {
   return {
     type: UPDATE_FRIENDBOT_TARGET,
     target,
-  }
+  };
 }
 
-export const START_FRIENDBOT_REQUEST = 'START_FRIENDBOT_REQUEST';
-export const FINISH_FRIENDBOT_REQUEST = 'FINISH_FRIENDBOT_REQUEST';
+export const START_FRIENDBOT_REQUEST = "START_FRIENDBOT_REQUEST";
+export const FINISH_FRIENDBOT_REQUEST = "FINISH_FRIENDBOT_REQUEST";
 export function startFriendbotRequest(target) {
-  return dispatch => {
+  return (dispatch) => {
     dispatch({
       type: START_FRIENDBOT_REQUEST,
-      message: 'Loading...',
-      status: 'loading',
+      message: "Loading...",
+      status: "loading",
     });
 
-    axios.get('https://friendbot.stellar.org/?addr=' + target)
-      .then(r => {
+    axios
+      .get("https://friendbot.stellar.org/?addr=" + target)
+      .then((r) => {
         dispatchInNewStack(dispatch, {
           type: FINISH_FRIENDBOT_REQUEST,
           target,
           message: `Successfully funded ${target} on the test network`,
-          status: 'success',
-          code: '',
-        })
+          status: "success",
+          code: "",
+        });
       })
-      .catch(e => {
+      .catch((e) => {
         let code, message;
         if (e.response.status === 0) {
-          code = '';
-          message = 'Unable to reach Friendbot server at https://friendbot.stellar.org';
+          code = "";
+          message =
+            "Unable to reach Friendbot server at https://friendbot.stellar.org";
         } else {
           code = JSON.stringify(e.response.data, null, 2);
           message = `Failed to fund ${target} on the test network`;
@@ -54,39 +56,43 @@ export function startFriendbotRequest(target) {
           type: FINISH_FRIENDBOT_REQUEST,
           target,
           message,
-          status: 'failure',
+          status: "failure",
           code,
-        })
-      })
-  }
+        });
+      });
+  };
 }
 
-export const GENERATE_MUXED_ACCOUNT = 'GENERATE_MUXED_ACCOUNT';
+export const GENERATE_MUXED_ACCOUNT = "GENERATE_MUXED_ACCOUNT";
 export function generateMuxedAccount(publicKey, muxedAccountId) {
   try {
-    const muxedAccount = new MuxedAccount(new Account(publicKey, "0"), muxedAccountId);
+    const muxedAccount = new MuxedAccount(
+      new Account(publicKey, "0"),
+      muxedAccountId,
+    );
 
     return {
       type: GENERATE_MUXED_ACCOUNT,
       mAddress: muxedAccount.accountId(),
-    }
+    };
   } catch (e) {
     return {
       type: GENERATE_MUXED_ACCOUNT,
-      errorMessage: `Something went wrong. ${e.toString()}`
-    }
+      errorMessage: `Something went wrong. ${e.toString()}`,
+    };
   }
 }
 
-export const UPDATE_GENERATE_MUXED_ACCOUNT_INPUT = 'UPDATE_GENERATE_MUXED_ACCOUNT_INPUT';
+export const UPDATE_GENERATE_MUXED_ACCOUNT_INPUT =
+  "UPDATE_GENERATE_MUXED_ACCOUNT_INPUT";
 export function updateGenerateMuxedAccountInput(input) {
   return {
     type: UPDATE_GENERATE_MUXED_ACCOUNT_INPUT,
     input,
-  }
+  };
 }
 
-export const PARSE_MUXED_ACCOUNT = 'PARSE_MUXED_ACCOUNT';
+export const PARSE_MUXED_ACCOUNT = "PARSE_MUXED_ACCOUNT";
 export function parseMuxedAccount(muxedAccountAddress) {
   try {
     const muxedAccount = new MuxedAccount.fromAddress(muxedAccountAddress, "0");
@@ -105,19 +111,20 @@ export function parseMuxedAccount(muxedAccountAddress) {
       type: PARSE_MUXED_ACCOUNT,
       gAddress,
       mAccountId,
-    }
+    };
   } catch (e) {
     return {
       type: PARSE_MUXED_ACCOUNT,
-      errorMessage: `Something went wrong. ${e.toString()}`
-    }
+      errorMessage: `Something went wrong. ${e.toString()}`,
+    };
   }
 }
 
-export const UPDATE_PARSE_MUXED_ACCOUNT_INPUT = 'UPDATE_PARSE_MUXED_ACCOUNT_INPUT';
+export const UPDATE_PARSE_MUXED_ACCOUNT_INPUT =
+  "UPDATE_PARSE_MUXED_ACCOUNT_INPUT";
 export function updateParseMuxedAccountInput(mAddress) {
   return {
     type: UPDATE_PARSE_MUXED_ACCOUNT_INPUT,
     mAddress,
-  }
+  };
 }

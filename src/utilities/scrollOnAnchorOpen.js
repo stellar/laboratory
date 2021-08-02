@@ -10,15 +10,21 @@
 
 export default function scrollOnAnchorOpen(event) {
   if (isScrollEligible(event)) {
-    window.scrollTo(0,0);
+    window.scrollTo(0, 0);
     event.target.blur();
   }
 }
 
 function isScrollEligible(event, initialWindowLocation) {
-  if (event.target.tagName !== 'A') { return false; } // not A tag
-  if (event.target.target !== '') { return false; } // non-empty target attr (such as _blank)
-  if (typeof event.target.href !== 'string') { return false; } // target anchor has no href
+  if (event.target.tagName !== "A") {
+    return false;
+  } // not A tag
+  if (event.target.target !== "") {
+    return false;
+  } // non-empty target attr (such as _blank)
+  if (typeof event.target.href !== "string") {
+    return false;
+  } // target anchor has no href
 
   // If user used any keyboard modifiers, then they might be opening in a new
   // tab or window.. Won't be completely accurate but it should improve the
@@ -29,7 +35,9 @@ function isScrollEligible(event, initialWindowLocation) {
   // changes before and after. This works great except that links that go to the
   // current page also get detected as "not changed". This gets really confusing
   // since the click doesn't scroll the window.
-  if (event.metaKey || event.shiftKey || event.ctrlKey) { return false; }
+  if (event.metaKey || event.shiftKey || event.ctrlKey) {
+    return false;
+  }
 
   return true;
 }

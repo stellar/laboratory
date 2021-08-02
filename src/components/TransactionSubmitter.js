@@ -111,8 +111,7 @@ function chooseState(state) {
 
 // Array of all the xdr types. Then, the most common ones appear at the top
 // again for convenience
-let xdrTypes = functions(xdr)
-  .sort()
+let xdrTypes = functions(xdr).sort();
 xdrTypes = [
   "TransactionEnvelope",
   "TransactionResult",

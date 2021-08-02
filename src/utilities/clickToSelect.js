@@ -7,4 +7,4 @@ export default function clickToSelect(event) {
   range.selectNodeContents(event.target);
   window.getSelection().removeAllRanges();
   window.getSelection().addRange(range);
-};
+}

@@ -1,22 +1,22 @@
-import axios from 'axios';
-import dispatchInNewStack from '../utilities/dispatchInNewStack';
-import {CallBuilder} from 'stellar-sdk/lib/call_builder';
-import URI from 'urijs';
+import axios from "axios";
+import dispatchInNewStack from "../utilities/dispatchInNewStack";
+import { CallBuilder } from "stellar-sdk/lib/call_builder";
+import URI from "urijs";
 
 export const CHOOSE_ENDPOINT = "CHOOSE_ENDPOINT";
 export function chooseEndpoint(resource, endpoint) {
   return {
     type: CHOOSE_ENDPOINT,
     resource,
-    endpoint
-  }
+    endpoint,
+  };
 }
 export const CHANGE_PENDING_REQUEST_PROPS = "CHANGE_PENDING_REQUEST_PROPS";
 export function changePendingRequestProps(props) {
   return {
     type: CHANGE_PENDING_REQUEST_PROPS,
     props,
-  }
+  };
 }
 
 export const UPDATE_VALUE = "UPDATE_VALUE";
@@ -25,18 +25,18 @@ export function updateValue(param, value) {
     type: UPDATE_VALUE,
     param,
     value,
-  }
+  };
 }
 
-export const START_REQUEST = "START_REQUEST"
-export const ERROR_REQUEST = "ERROR_REQUEST"
-export const UPDATE_REQUEST = "UPDATE_REQUEST"
+export const START_REQUEST = "START_REQUEST";
+export const ERROR_REQUEST = "ERROR_REQUEST";
+export const UPDATE_REQUEST = "UPDATE_REQUEST";
 let resultIdNonce = 0;
 let closeStreamFn;
 export function submitRequest(request) {
-  return dispatch => {
+  return (dispatch) => {
     // Close old stream if it exists
-    if (typeof closeStreamFn === 'function') {
+    if (typeof closeStreamFn === "function") {
       closeStreamFn();
       closeStreamFn = null;
     }
@@ -45,7 +45,7 @@ export function submitRequest(request) {
     dispatch({
       type: START_REQUEST,
       id,
-      isStreaming: Boolean(request.streaming)
+      isStreaming: Boolean(request.streaming),
     });
 
     if (request.streaming) {
@@ -55,35 +55,37 @@ export function submitRequest(request) {
           type: UPDATE_REQUEST,
           id,
           body: message,
-          isStreaming: true
-        })
-      })
+          isStreaming: true,
+        });
+      });
     } else {
       // dispatchInNewStack will only be called at most one time.
       httpRequest(request)
-        .then(r => {
+        .then((r) => {
           dispatchInNewStack(dispatch, {
             type: UPDATE_REQUEST,
             id,
             body: r.data,
           });
         })
-        .catch(e => {
+        .catch((e) => {
           dispatchInNewStack(dispatch, {
             type: ERROR_REQUEST,
             id,
             errorStatus: e.response.status,
             body: e.response.data,
-          })
+          });
         });
     }
-  }
+  };
 }
 
 function httpRequest(request) {
-  if (request.method === 'POST') {
-    if (typeof request.formData !== 'string') {
-      throw new Error('Network POST requests require the form data to be in string format.');
+  if (request.method === "POST") {
+    if (typeof request.formData !== "string") {
+      throw new Error(
+        "Network POST requests require the form data to be in string format.",
+      );
     }
     return axios.post(request.url, request.formData);
   }
@@ -92,5 +94,5 @@ function httpRequest(request) {
 
 function streamingRequest(url, onmessage) {
   var callBuilder = new CallBuilder(URI(url));
-  return callBuilder.stream({onmessage});
+  return callBuilder.stream({ onmessage });
 }
