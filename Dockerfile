@@ -23,7 +23,7 @@ RUN yarn build
 
 FROM nginx:1.17
 
-COPY --from=build /app/src/dist/ /usr/share/nginx/html/
+COPY --from=build /app/src/build/ /usr/share/nginx/html/
 
 # We're removing /laboratory/ prefix. To allow for transition
 # period we'll support /laboratory/ links using rewrites

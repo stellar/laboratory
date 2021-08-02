@@ -9,7 +9,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
-    "build:netlify": "yarn build; mkdir out; mkdir out/laboratory; mv dist/* out/laboratory; cp _redirects out/_redirects",
+    "build:netlify": "yarn build; mkdir out; mkdir out/laboratory; mv build/* out/laboratory; cp _redirects out/_redirects",
     "test": "mocha './test/**/*.js'",
     "prod:build": "docker image build --build-arg AMPLITUDE_KEY=$AMPLITUDE_KEY -t lab:localbuild .",
     "prod:serve": "docker run -p 8000:80 lab:localbuild",
