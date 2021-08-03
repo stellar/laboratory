@@ -13,6 +13,9 @@ import {
   FREIGHTER_WALLET_SIGN_START,
   FREIGHTER_WALLET_SIGN_ERROR,
   FREIGHTER_WALLET_SIGN_SUCCESS,
+  ALBEDO_WALLET_SIGN_START,
+  ALBEDO_WALLET_SIGN_SUCCESS,
+  ALBEDO_WALLET_SIGN_ERROR,
 } from "../actions/transactionSigner";
 import { LOAD_STATE } from "../actions/routing";
 import validateTxXdr from "../helpers/validateTxXdr";
@@ -24,6 +27,7 @@ const transactionSigner = combineReducers({
   bipPath,
   hardwarewalletStatus,
   freighterwalletStatus,
+  albedowalletStatus,
 });
 
 export default transactionSigner;
@@ -116,6 +120,31 @@ function freighterwalletStatus(state = {}, action) {
         message: "Error:" + JSON.stringify(action.error),
       });
     case FREIGHTER_WALLET_SIGN_SUCCESS:
+      return Object.assign({}, state, {
+        status: "success",
+        message: "Success!",
+        signedTx: action.signedTx,
+      });
+  }
+  return state;
+}
+
+function albedowalletStatus(state = {}, action) {
+  switch (action.type) {
+    case IMPORT_FROM_XDR:
+    case CLEAR_TRANSACTION:
+      return {};
+    case ALBEDO_WALLET_SIGN_START:
+      return Object.assign({}, state, {
+        status: "loading",
+        message: "Waiting for wallet",
+      });
+    case ALBEDO_WALLET_SIGN_ERROR:
+      return Object.assign({}, state, {
+        status: "failure",
+        message: "Error:" + JSON.stringify(action.error),
+      });
+    case ALBEDO_WALLET_SIGN_SUCCESS:
       return Object.assign({}, state, {
         status: "success",
         message: "Success!",

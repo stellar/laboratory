@@ -3,6 +3,7 @@ import LedgerStr from "@ledgerhq/hw-app-str";
 import TrezorConnect from "trezor-connect";
 import { TransactionBuilder, Keypair, xdr, StrKey } from "stellar-sdk";
 import { signTransaction } from "@stellar/freighter-api";
+import albedo from "@albedo-link/intent";
 import { trezorTransformTransaction } from "../helpers/trezorTransformTransaction";
 
 export const IMPORT_FROM_XDR = "IMPORT_FROM_XDR";
@@ -45,6 +46,9 @@ export const TREZOR_WALLET_SIGN_ERROR = "TREZOR_WALLET_SIGN_ERROR";
 export const FREIGHTER_WALLET_SIGN_START = "FREIGHTER_WALLET_SIGN_START";
 export const FREIGHTER_WALLET_SIGN_SUCCESS = "FREIGHTER_WALLET_SIGN_SUCCESS";
 export const FREIGHTER_WALLET_SIGN_ERROR = "FREIGHTER_WALLET_SIGN_ERROR";
+export const ALBEDO_WALLET_SIGN_START = "ALBEDO_WALLET_SIGN_START";
+export const ALBEDO_WALLET_SIGN_SUCCESS = "ALBEDO_WALLET_SIGN_SUCCESS";
+export const ALBEDO_WALLET_SIGN_ERROR = "ALBEDO_WALLET_SIGN_ERROR";
 
 export function signWithLedger(txXDR, bipPath, networkPassphrase) {
   return (dispatch) => {
@@ -164,6 +168,30 @@ export function signWithFreighter(txXDR, txNetwork) {
         dispatch({
           type: FREIGHTER_WALLET_SIGN_ERROR,
           error: e,
+        });
+      });
+  };
+}
+
+export function signWithAlbedo(txXDR, txNetwork) {
+  return (dispatch) => {
+    dispatch({ type: ALBEDO_WALLET_SIGN_START });
+
+    albedo
+      .tx({
+        xdr: txXDR,
+        network: txNetwork,
+      })
+      .then((result) => {
+        dispatch({
+          type: ALBEDO_WALLET_SIGN_SUCCESS,
+          signedTx: result.signed_envelope_xdr,
+        });
+      })
+      .catch((e) => {
+        dispatch({
+          type: ALBEDO_WALLET_SIGN_ERROR,
+          error: e.message,
         });
       });
   };
