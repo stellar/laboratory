@@ -8,9 +8,9 @@ import Loadable from "react-loadable";
 import NetworkPicker from "./NetworkPicker";
 import MaintenanceBanner from "./MaintenanceBanner";
 import Introduction from "./Introduction";
-import { RouterListener } from "../utilities/simpleRouter";
+import { RouterListener } from "../helpers/simpleRouter";
 import SLUG from "../constants/slug";
-import { addEventHandler } from "../utilities/metrics";
+import { addEventHandler } from "../helpers/metrics";
 import routingMetrics from "../metricsHandlers/routing";
 
 addEventHandler(routingMetrics);

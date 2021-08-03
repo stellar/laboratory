@@ -3,7 +3,7 @@ import LedgerStr from "@ledgerhq/hw-app-str";
 import TrezorConnect from "trezor-connect";
 import { TransactionBuilder, Keypair, xdr, StrKey } from "stellar-sdk";
 import { signTransaction } from "@stellar/freighter-api";
-import { trezorTransformTransaction } from "../utilities/trezorTransformTransaction";
+import { trezorTransformTransaction } from "../helpers/trezorTransformTransaction";
 
 export const IMPORT_FROM_XDR = "IMPORT_FROM_XDR";
 export function importFromXdr(xdr) {

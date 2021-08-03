@@ -8,7 +8,7 @@ import axios from "axios";
 import { FETCH_SEQUENCE_FAIL } from "actions/transactionBuilder";
 import SIGNATURE from "../constants/signature";
 import FETCHED_SIGNERS from "../constants/fetched_signers";
-import convertMuxedAccountToEd25519Account from "../utilities/convertMuxedAccountToEd25519Account";
+import convertMuxedAccountToEd25519Account from "../helpers/convertMuxedAccountToEd25519Account";
 
 export const UPDATE_XDR_INPUT = "UPDATE_XDR_INPUT";
 export function updateXdrInput(input) {

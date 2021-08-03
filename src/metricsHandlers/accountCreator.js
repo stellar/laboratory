@@ -6,7 +6,7 @@ import {
   PARSE_MUXED_ACCOUNT,
 } from "../actions/accountCreator";
 
-import { logEvent } from "../utilities/metrics";
+import { logEvent } from "../helpers/metrics";
 
 const metricsEvents = {
   newAccount: "account creator: generated new account",

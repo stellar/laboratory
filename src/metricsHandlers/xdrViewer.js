@@ -1,5 +1,5 @@
 import { FETCH_LATEST_TX } from "../actions/xdrViewer";
-import { logEvent } from "../utilities/metrics";
+import { logEvent } from "../helpers/metrics";
 
 export const metricsEvents = {
   fetchLatestTx: "xdr viewer: fetch latest transaction",

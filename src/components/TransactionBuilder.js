@@ -8,7 +8,7 @@ import {
 } from "../actions/transactionBuilder";
 import OperationsBuilder from "./OperationsBuilder";
 import TxBuilderResult from "./TxBuilderResult";
-import { addEventHandler } from "../utilities/metrics";
+import { addEventHandler } from "../helpers/metrics";
 import transactionBuilderMetrics from "../metricsHandlers/transactionBuilder";
 import TX_TYPES from "../constants/transaction_types";
 

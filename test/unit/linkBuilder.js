@@ -5,7 +5,7 @@ import {
   xdrViewer,
   singleAccount,
   horizonUrlToExplorerLink,
-} from "../../src/utilities/linkBuilder";
+} from "../../src/helpers/linkBuilder";
 
 describe("linkBuilder", () => {
   describe("txSignerLink()", () => {

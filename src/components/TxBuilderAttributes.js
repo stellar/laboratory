@@ -18,7 +18,7 @@ import {
 } from "../actions/transactionBuilder";
 import TransactionImporter from "./TransactionImporter";
 import TX_TYPES from "../constants/transaction_types";
-import isValidMAddress from "../utilities/isValidMAddress";
+import isValidMAddress from "../helpers/isValidMAddress";
 
 function TxBuilderAttributes(props) {
   let {

@@ -9,7 +9,7 @@ import {
 } from "../actions/endpointExplorer";
 import { LOAD_STATE } from "../actions/routing";
 import { getEndpoint, getTemplate } from "../data/endpoints";
-import { rehydrate } from "../utilities/hydration";
+import { rehydrate } from "../helpers/hydration";
 import SLUG from "../constants/slug";
 
 function currentResource(state = "", action) {

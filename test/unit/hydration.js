@@ -1,4 +1,4 @@
-import { rehydrate, dehydrate } from "../../src/utilities/hydration";
+import { rehydrate, dehydrate } from "../../src/helpers/hydration";
 
 describe("hydration utility", () => {
   describe("rehydrate()", () => {

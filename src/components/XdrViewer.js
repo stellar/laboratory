@@ -6,16 +6,16 @@ import functions from "lodash/functions";
 import indexOf from "lodash/indexOf";
 import FETCHED_SIGNERS from "../constants/fetched_signers";
 import SelectPicker from "./FormComponents/SelectPicker";
-import extrapolateFromXdr from "../utilities/extrapolateFromXdr";
+import extrapolateFromXdr from "../helpers/extrapolateFromXdr";
 import TreeView from "./TreeView";
-import validateBase64 from "../utilities/validateBase64";
+import validateBase64 from "../helpers/validateBase64";
 import {
   updateXdrInput,
   updateXdrType,
   fetchLatestTx,
   fetchSigners,
 } from "../actions/xdrViewer";
-import { addEventHandler, logEvent } from "../utilities/metrics";
+import { addEventHandler, logEvent } from "../helpers/metrics";
 import xdrViewerMetrics, { metricsEvents } from "../metricsHandlers/xdrViewer";
 
 // XDR decoding doesn't happen in redux, but is pretty much the only thing on

@@ -16,7 +16,7 @@ import {
   UPDATE_FEE_BUMP_ATTRIBUTE,
 } from "../actions/transactionBuilder";
 import { LOAD_STATE } from "../actions/routing";
-import { rehydrate } from "../utilities/hydration";
+import { rehydrate } from "../helpers/hydration";
 import SLUG from "../constants/slug";
 import TX_TYPES from "../constants/transaction_types";
 

@@ -4,7 +4,7 @@ import { assign, set, isEmpty, unset } from "lodash";
 import {
   transformPredicateDataForRender,
   addPathDelimiter,
-} from "../../utilities/claimantHelpers";
+} from "../../helpers/claimantHelpers";
 import OptionsTablePair from "../OptionsTable/Pair";
 import RadioButtonPicker from "./RadioButtonPicker";
 import PubKeyPicker from "./PubKeyPicker";

@@ -5,7 +5,7 @@ import {
   UPDATE_OPERATION_TYPE,
   UPDATE_OPERATION_ATTRIBUTES,
 } from "../actions/transactionBuilder";
-import { logEvent } from "../utilities/metrics";
+import { logEvent } from "../helpers/metrics";
 import { LOAD_STATE } from "../actions/routing";
 
 const metricsEvents = {

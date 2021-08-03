@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import validateTxXdr from "../utilities/validateTxXdr";
+import validateTxXdr from "../helpers/validateTxXdr";
 
 // TransactionImporter will call the onImport passed to it's props when the user
 // presses the import button and the input is valid

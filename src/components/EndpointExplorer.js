@@ -18,7 +18,7 @@ import { EndpointPicker } from "./EndpointPicker";
 import { EndpointSetup } from "./EndpointSetup";
 import { EndpointResult } from "./EndpointResult";
 import { getEndpoint } from "../data/endpoints";
-import { addEventHandler } from "../utilities/metrics";
+import { addEventHandler } from "../helpers/metrics";
 import endpointExplorerMetrics from "../metricsHandlers/endpointExplorer";
 
 addEventHandler(endpointExplorerMetrics);

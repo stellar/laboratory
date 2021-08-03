@@ -2,7 +2,7 @@
  * @prettier
  */
 import React from "react";
-import sanitizeHtml from "../utilities/sanitizeHtml";
+import sanitizeHtml from "../helpers/sanitizeHtml";
 
 // If we're on the test network, we care about all scheduled maintenance. If
 // we're on the public network, we only care about public network maintenance
