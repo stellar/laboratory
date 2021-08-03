@@ -4,7 +4,7 @@ import { TransactionBuilder, FeeBumpTransaction, Networks } from "stellar-sdk";
 import { isConnected } from "@stellar/freighter-api";
 import isUndefined from "lodash/isUndefined";
 import map from "lodash/map";
-import TransactionImporter from "./TransactionImporter";
+import TransactionImporter from "components/TransactionImporter";
 import {
   importFromXdr,
   clearTransaction,
@@ -14,22 +14,22 @@ import {
   signWithTrezor,
   signWithFreighter,
   signWithAlbedo,
-} from "../actions/transactionSigner";
-import { EasySelect } from "./EasySelect";
-import OptionsTablePair from "./OptionsTable/Pair";
-import SecretKeyPicker from "./FormComponents/SecretKeyPicker";
-import MultiPicker from "./FormComponents/MultiPicker";
-import BipPathPicker from "./FormComponents/BipPathPicker";
-import { txPostLink, xdrViewer, feeBumpTxLink } from "../helpers/linkBuilder";
-import HelpMark from "./HelpMark";
-import clickToSelect from "../helpers/clickToSelect";
-import scrollOnAnchorOpen from "../helpers/scrollOnAnchorOpen";
-import extrapolateFromXdr from "../helpers/extrapolateFromXdr";
-import validateTxXdr from "../helpers/validateTxXdr";
-import NETWORK from "../constants/network";
-import Libify from "../helpers/Libify";
-import { addEventHandler } from "../helpers/metrics";
-import transactionSignerMetrics from "../metricsHandlers/transactionSigner";
+} from "actions/transactionSigner";
+import { EasySelect } from "components/EasySelect";
+import OptionsTablePair from "components/OptionsTable/Pair";
+import SecretKeyPicker from "components/FormComponents/SecretKeyPicker";
+import MultiPicker from "components/FormComponents/MultiPicker";
+import BipPathPicker from "components/FormComponents/BipPathPicker";
+import { txPostLink, xdrViewer, feeBumpTxLink } from "helpers/linkBuilder";
+import HelpMark from "components/HelpMark";
+import clickToSelect from "helpers/clickToSelect";
+import scrollOnAnchorOpen from "helpers/scrollOnAnchorOpen";
+import extrapolateFromXdr from "helpers/extrapolateFromXdr";
+import validateTxXdr from "helpers/validateTxXdr";
+import NETWORK from "constants/network";
+import Libify from "helpers/Libify";
+import { addEventHandler } from "helpers/metrics";
+import transactionSignerMetrics from "metricsHandlers/transactionSigner";
 
 const { signTransaction } = Libify;
 

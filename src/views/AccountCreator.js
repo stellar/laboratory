@@ -1,8 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
-import MuxedKeyPicker from "./FormComponents/MuxedKeyPicker";
-import PubKeyPicker from "./FormComponents/PubKeyPicker";
-import PositiveIntPicker from "./FormComponents/PositiveIntPicker";
+import MuxedKeyPicker from "components/FormComponents/MuxedKeyPicker";
+import PubKeyPicker from "components/FormComponents/PubKeyPicker";
+import PositiveIntPicker from "components/FormComponents/PositiveIntPicker";
 import {
   generateNewKeypair,
   updateFriendbotTarget,
@@ -11,11 +11,11 @@ import {
   updateGenerateMuxedAccountInput,
   parseMuxedAccount,
   updateParseMuxedAccountInput,
-} from "../actions/accountCreator";
-import NETWORK from "../constants/network";
-import { CodeBlock } from "./CodeBlock";
-import { addEventHandler } from "../helpers/metrics";
-import accountCreatorMetrics from "../metricsHandlers/accountCreator";
+} from "actions/accountCreator";
+import NETWORK from "constants/network";
+import { CodeBlock } from "components/CodeBlock";
+import { addEventHandler } from "helpers/metrics";
+import accountCreatorMetrics from "metricsHandlers/accountCreator";
 
 addEventHandler(accountCreatorMetrics);
 

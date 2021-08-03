@@ -1,24 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { StrKey, MuxedAccount } from "stellar-sdk";
-import OptionsTablePair from "./OptionsTable/Pair";
-import HelpMark from "./HelpMark";
-import TxTypePicker from "./FormComponents/TxTypePicker";
-import PubKeyPicker from "./FormComponents/PubKeyPicker";
-import SequencePicker from "./FormComponents/SequencePicker";
-import StroopsPicker from "./FormComponents/StroopsPicker";
-import MemoPicker from "./FormComponents/MemoPicker";
-import TimeBoundsPicker from "./FormComponents/TimeBoundsPicker";
-import NETWORK from "../constants/network";
+import OptionsTablePair from "components/OptionsTable/Pair";
+import HelpMark from "components/HelpMark";
+import TxTypePicker from "components/FormComponents/TxTypePicker";
+import PubKeyPicker from "components/FormComponents/PubKeyPicker";
+import SequencePicker from "components/FormComponents/SequencePicker";
+import StroopsPicker from "components/FormComponents/StroopsPicker";
+import MemoPicker from "components/FormComponents/MemoPicker";
+import TimeBoundsPicker from "components/FormComponents/TimeBoundsPicker";
+import NETWORK from "constants/network";
 import {
   fetchSequence,
   fetchBaseFee,
   updateTxType,
   updateFeeBumpAttribute,
-} from "../actions/transactionBuilder";
-import TransactionImporter from "./TransactionImporter";
-import TX_TYPES from "../constants/transaction_types";
-import isValidMAddress from "../helpers/isValidMAddress";
+} from "actions/transactionBuilder";
+import TransactionImporter from "components/TransactionImporter";
+import TX_TYPES from "constants/transaction_types";
+import isValidMAddress from "helpers/isValidMAddress";
 
 function TxBuilderAttributes(props) {
   let {

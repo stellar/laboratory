@@ -5,13 +5,13 @@ import React from "react";
 import { connect } from "react-redux";
 import classNames from "classnames";
 import Loadable from "react-loadable";
-import NetworkPicker from "./NetworkPicker";
-import MaintenanceBanner from "./MaintenanceBanner";
-import Introduction from "./Introduction";
-import { RouterListener } from "../helpers/simpleRouter";
-import SLUG from "../constants/slug";
-import { addEventHandler } from "../helpers/metrics";
-import routingMetrics from "../metricsHandlers/routing";
+import NetworkPicker from "views/NetworkPicker";
+import MaintenanceBanner from "components/MaintenanceBanner";
+import Introduction from "components/Introduction";
+import { RouterListener } from "helpers/simpleRouter";
+import SLUG from "constants/slug";
+import { addEventHandler } from "helpers/metrics";
+import routingMetrics from "metricsHandlers/routing";
 
 addEventHandler(routingMetrics);
 

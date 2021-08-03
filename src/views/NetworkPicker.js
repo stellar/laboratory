@@ -5,11 +5,11 @@ import {
   setModalVisibility,
   updateModal,
   setCustomParams,
-} from "../actions/network";
-import NETWORK from "../constants/network";
-import TextPicker from "./FormComponents/TextPicker.js";
-import { addEventHandler } from "../helpers/metrics";
-import networkMetrics from "../metricsHandlers/network";
+} from "actions/network";
+import NETWORK from "constants/network";
+import TextPicker from "components/FormComponents/TextPicker.js";
+import { addEventHandler } from "helpers/metrics";
+import networkMetrics from "metricsHandlers/network";
 
 addEventHandler(networkMetrics);
 

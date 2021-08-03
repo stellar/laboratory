@@ -4,19 +4,19 @@ import { xdr } from "stellar-sdk";
 import debounce from "lodash/debounce";
 import functions from "lodash/functions";
 import indexOf from "lodash/indexOf";
-import FETCHED_SIGNERS from "../constants/fetched_signers";
-import SelectPicker from "./FormComponents/SelectPicker";
-import extrapolateFromXdr from "../helpers/extrapolateFromXdr";
-import TreeView from "./TreeView";
-import validateBase64 from "../helpers/validateBase64";
+import FETCHED_SIGNERS from "constants/fetched_signers";
+import SelectPicker from "components/FormComponents/SelectPicker";
+import extrapolateFromXdr from "helpers/extrapolateFromXdr";
+import TreeView from "components/TreeView";
+import validateBase64 from "helpers/validateBase64";
 import {
   updateXdrInput,
   updateXdrType,
   fetchLatestTx,
   fetchSigners,
-} from "../actions/xdrViewer";
-import { addEventHandler, logEvent } from "../helpers/metrics";
-import xdrViewerMetrics, { metricsEvents } from "../metricsHandlers/xdrViewer";
+} from "actions/xdrViewer";
+import { addEventHandler, logEvent } from "helpers/metrics";
+import xdrViewerMetrics, { metricsEvents } from "metricsHandlers/xdrViewer";
 
 // XDR decoding doesn't happen in redux, but is pretty much the only thing on
 // this page that we care about. Log metrics from the component as well.
