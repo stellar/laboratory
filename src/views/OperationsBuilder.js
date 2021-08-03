@@ -2,17 +2,17 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import map from "lodash/map";
-import PubKeyPicker from "./FormComponents/PubKeyPicker.js";
-import { getOperation } from "../data/operations";
+import PubKeyPicker from "components/FormComponents/PubKeyPicker.js";
+import { getOperation } from "data/operations";
 import {
   removeOperation,
   updateOperationType,
   updateOperationAttributes,
   reorderOperation,
-} from "../actions/transactionBuilder";
-import OperationTypePicker from "./FormComponents/OperationTypePicker";
-import OptionsTablePair from "./OptionsTable/Pair";
-import HelpMark from "./HelpMark";
+} from "actions/transactionBuilder";
+import OperationTypePicker from "components/FormComponents/OperationTypePicker";
+import OptionsTablePair from "components/OptionsTable/Pair";
+import HelpMark from "components/HelpMark";
 
 class OperationsBuilder extends React.Component {
   constructor() {

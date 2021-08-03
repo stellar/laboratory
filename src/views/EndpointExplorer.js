@@ -13,13 +13,13 @@ import {
   chooseEndpoint,
   submitRequest,
   updateValue,
-} from "../actions/endpointExplorer";
-import { EndpointPicker } from "./EndpointPicker";
-import { EndpointSetup } from "./EndpointSetup";
-import { EndpointResult } from "./EndpointResult";
-import { getEndpoint } from "../data/endpoints";
-import { addEventHandler } from "../helpers/metrics";
-import endpointExplorerMetrics from "../metricsHandlers/endpointExplorer";
+} from "actions/endpointExplorer";
+import { EndpointPicker } from "components/EndpointPicker";
+import { EndpointSetup } from "components/EndpointSetup";
+import { EndpointResult } from "components/EndpointResult";
+import { getEndpoint } from "data/endpoints";
+import { addEventHandler } from "helpers/metrics";
+import endpointExplorerMetrics from "metricsHandlers/endpointExplorer";
 
 addEventHandler(endpointExplorerMetrics);
 

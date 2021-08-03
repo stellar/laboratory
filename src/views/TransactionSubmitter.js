@@ -3,14 +3,14 @@ import { connect } from "react-redux";
 import debounce from "lodash/debounce";
 import functions from "lodash/functions";
 import { xdr } from "stellar-sdk";
-import FETCHED_SIGNERS from "../constants/fetched_signers";
-import extrapolateFromXdr from "../helpers/extrapolateFromXdr";
-import TreeView from "./TreeView";
-import validateBase64 from "../helpers/validateBase64";
-import { updateXdrInput, fetchSigners } from "../actions/xdrViewer";
-import { addEventHandler, logEvent } from "../helpers/metrics";
-import xdrViewerMetrics, { metricsEvents } from "../metricsHandlers/xdrViewer";
-import { TxSubmitterResult } from "./TxSubmitterResult";
+import FETCHED_SIGNERS from "constants/fetched_signers";
+import extrapolateFromXdr from "helpers/extrapolateFromXdr";
+import TreeView from "components/TreeView";
+import validateBase64 from "helpers/validateBase64";
+import { updateXdrInput, fetchSigners } from "actions/xdrViewer";
+import { addEventHandler, logEvent } from "helpers/metrics";
+import xdrViewerMetrics, { metricsEvents } from "metricsHandlers/xdrViewer";
+import { TxSubmitterResult } from "components/TxSubmitterResult";
 
 // XDR decoding doesn't happen in redux, but is pretty much the only thing on
 // this page that we care about. Log metrics from the component as well.

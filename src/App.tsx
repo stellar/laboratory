@@ -8,7 +8,7 @@ import rootReducer from "./reducers/root";
 import logging from "./middleware/logging";
 import metrics from "./middleware/metrics";
 import { routerMiddleware } from "./helpers/simpleRouter";
-import LaboratoryChrome from "./components/LaboratoryChrome";
+import LaboratoryChrome from "./views/LaboratoryChrome";
 import { loadState, saveState } from "./localStorage";
 
 import "styles/main.scss";

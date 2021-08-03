@@ -2,11 +2,11 @@ import React from "react";
 import { connect } from "react-redux";
 import { isConnected } from "@stellar/freighter-api";
 import reduce from "lodash/reduce";
-import { EasySelect } from "./EasySelect";
-import Libify from "../helpers/Libify";
-import { txSignerLink, xdrViewer } from "../helpers/linkBuilder";
-import scrollOnAnchorOpen from "../helpers/scrollOnAnchorOpen";
-import TX_TYPES from "../constants/transaction_types";
+import { EasySelect } from "components/EasySelect";
+import Libify from "helpers/Libify";
+import { txSignerLink, xdrViewer } from "helpers/linkBuilder";
+import scrollOnAnchorOpen from "helpers/scrollOnAnchorOpen";
+import TX_TYPES from "constants/transaction_types";
 
 class TxBuilderResult extends React.Component {
   render() {
