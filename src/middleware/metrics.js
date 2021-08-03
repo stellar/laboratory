@@ -1,4 +1,4 @@
-import { broadcastEvent } from "../utilities/metrics";
+import { broadcastEvent } from "../helpers/metrics";
 
 const metrics = (store) => (next) => (action) => {
   broadcastEvent(store.getState(), action);

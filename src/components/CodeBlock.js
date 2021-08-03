@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Prism from "../utilities/prism.js";
-import jsonLinkHighlighter from "../utilities/prism-jsonLinkHighlighter";
-import scrollOnAnchorOpen from "../utilities/scrollOnAnchorOpen";
-import sanitizeHtml from "../utilities/sanitizeHtml";
+import Prism from "../helpers/prism.js";
+import jsonLinkHighlighter from "../helpers/prism-jsonLinkHighlighter";
+import scrollOnAnchorOpen from "../helpers/scrollOnAnchorOpen";
+import sanitizeHtml from "../helpers/sanitizeHtml";
 
 // @param {string} language - key for the code language. available languages can
 //   be discovered by doing a console log on `Prism.languages`. More can be added

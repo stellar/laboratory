@@ -4,11 +4,11 @@ import debounce from "lodash/debounce";
 import functions from "lodash/functions";
 import { xdr } from "stellar-sdk";
 import FETCHED_SIGNERS from "../constants/fetched_signers";
-import extrapolateFromXdr from "../utilities/extrapolateFromXdr";
+import extrapolateFromXdr from "../helpers/extrapolateFromXdr";
 import TreeView from "./TreeView";
-import validateBase64 from "../utilities/validateBase64";
+import validateBase64 from "../helpers/validateBase64";
 import { updateXdrInput, fetchSigners } from "../actions/xdrViewer";
-import { addEventHandler, logEvent } from "../utilities/metrics";
+import { addEventHandler, logEvent } from "../helpers/metrics";
 import xdrViewerMetrics, { metricsEvents } from "../metricsHandlers/xdrViewer";
 import { TxSubmitterResult } from "./TxSubmitterResult";
 

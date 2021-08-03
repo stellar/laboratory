@@ -1,5 +1,5 @@
 import { SET_PARAMS } from "../actions/network";
-import { logEvent } from "../utilities/metrics";
+import { logEvent } from "../helpers/metrics";
 
 const metricsEvents = {
   changeNetwork: "pick network: changed horizon url",

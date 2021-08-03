@@ -1,8 +1,8 @@
-import { stateToQueryObj } from "../../src/utilities/stateSerializer";
+import { stateToQueryObj } from "../../src/helpers/stateSerializer";
 import SLUG from "../../src/constants/slug";
 import rootReducer from "../../src/reducers/root";
 import { loadState } from "../../src/actions/routing";
-import { dehydrate } from "../../src/utilities/hydration";
+import { dehydrate } from "../../src/helpers/hydration";
 
 // The routing system converts the state into a url, which gets converted back
 // into the state thus forming an infinite loop. In general, the starting state

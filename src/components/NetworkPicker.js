@@ -8,7 +8,7 @@ import {
 } from "../actions/network";
 import NETWORK from "../constants/network";
 import TextPicker from "./FormComponents/TextPicker.js";
-import { addEventHandler } from "../utilities/metrics";
+import { addEventHandler } from "../helpers/metrics";
 import networkMetrics from "../metricsHandlers/network";
 
 addEventHandler(networkMetrics);

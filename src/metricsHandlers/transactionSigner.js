@@ -7,7 +7,7 @@ import {
   TREZOR_WALLET_SIGN_ERROR,
   SET_SECRETS,
 } from "../actions/transactionSigner";
-import { logEvent } from "../utilities/metrics";
+import { logEvent } from "../helpers/metrics";
 import { LOAD_STATE } from "../actions/routing";
 
 const metricsEvents = {

@@ -7,7 +7,7 @@ import throttle from "lodash/throttle";
 import rootReducer from "./reducers/root";
 import logging from "./middleware/logging";
 import metrics from "./middleware/metrics";
-import { routerMiddleware } from "./utilities/simpleRouter";
+import { routerMiddleware } from "./helpers/simpleRouter";
 import LaboratoryChrome from "./components/LaboratoryChrome";
 import { loadState, saveState } from "./localStorage";
 

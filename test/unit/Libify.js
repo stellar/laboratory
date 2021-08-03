@@ -1,5 +1,5 @@
 import { xdr, Transaction, Operation, Networks } from "stellar-sdk";
-import Libify from "../../src/utilities/Libify";
+import Libify from "../../src/helpers/Libify";
 
 describe("Libify.buildTransaction", () => {
   // eslint-disable-next-line no-undef

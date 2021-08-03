@@ -18,7 +18,7 @@ import {
   ALBEDO_WALLET_SIGN_ERROR,
 } from "../actions/transactionSigner";
 import { LOAD_STATE } from "../actions/routing";
-import validateTxXdr from "../utilities/validateTxXdr";
+import validateTxXdr from "../helpers/validateTxXdr";
 import SLUG from "../constants/slug";
 
 const transactionSigner = combineReducers({

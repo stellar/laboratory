@@ -20,7 +20,7 @@ import TX_TYPES from "../constants/transaction_types";
 
 // The state that gets passed here may be an incomplete one.
 // Incomplete ones are useful because it lets us build URLs without needing the
-// whole state tree (such as in ../utilities/linkBuilder.js).
+// whole state tree (such as in ../helpers/linkBuilder.js).
 export function stateToQueryObj(slug, state) {
   return assign(
     {},

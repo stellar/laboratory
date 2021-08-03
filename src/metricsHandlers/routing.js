@@ -1,5 +1,5 @@
 import { UPDATE_LOCATION } from "../actions/routing";
-import { logEvent } from "../utilities/metrics";
+import { logEvent } from "../helpers/metrics";
 
 const metricsEvents = {
   navigate: "routing: changed page",

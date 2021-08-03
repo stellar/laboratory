@@ -14,7 +14,7 @@ import {
 } from "../actions/accountCreator";
 import NETWORK from "../constants/network";
 import { CodeBlock } from "./CodeBlock";
-import { addEventHandler } from "../utilities/metrics";
+import { addEventHandler } from "../helpers/metrics";
 import accountCreatorMetrics from "../metricsHandlers/accountCreator";
 
 addEventHandler(accountCreatorMetrics);

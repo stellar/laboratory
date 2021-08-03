@@ -5,7 +5,7 @@ import {
   ERROR_REQUEST,
 } from "../actions/endpointExplorer";
 import { LOAD_STATE } from "../actions/routing";
-import { logEvent } from "../utilities/metrics";
+import { logEvent } from "../helpers/metrics";
 
 const metricsEvents = {
   changeResource: "endpoint explorer: changed resource",
