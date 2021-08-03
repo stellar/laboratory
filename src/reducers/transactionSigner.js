@@ -36,7 +36,7 @@ function xdr(state = '', action) {
   switch (action.type) {
   case LOAD_STATE:
     if (action.slug === SLUG.TXSIGNER && action.queryObj.xdr) {
-      const validationResult = validateTxXdr(action.queryObj.xdr)
+      const validationResult = validateTxXdr(action.queryObj.xdr);
       if (validationResult.result === 'success') {
         return action.queryObj.xdr;
       }
@@ -57,9 +57,9 @@ function signers(state = [], action) {
   switch (action.type) {
   case IMPORT_FROM_XDR:
   case CLEAR_TRANSACTION:
-    return []
+    return [];
   case SET_SECRETS:
-    return action.secrets
+    return action.secrets;
   }
   return state;
 }
@@ -69,9 +69,9 @@ function bipPath(state = [], action) {
   case LOAD_STATE:
   case IMPORT_FROM_XDR:
   case CLEAR_TRANSACTION:
-    return "44'/148'/0'"
+    return "44'/148'/0'";
   case SET_BIP_PATH:
-    return action.bipPath
+    return action.bipPath;
   }
   return state;
 }
@@ -98,7 +98,7 @@ function hardwarewalletStatus(state = {}, action) {
     return Object.assign({}, state, {
       status: 'success',
       message: 'Success!',
-      signatures: [action.signature]
+      signatures: [action.signature],
     });
   }
   return state;

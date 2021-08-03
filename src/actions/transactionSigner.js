@@ -78,7 +78,7 @@ export function signWithLedger(txXDR, bipPath, networkPassphrase) {
         .getPublicKey(bipPath)
         .then((result) => (publicKey = result.publicKey))
         .then(() =>
-          ledgerApi.signTransaction(bipPath, transaction.signatureBase())
+          ledgerApi.signTransaction(bipPath, transaction.signatureBase()),
         )
         .then((result) => {
           let { signature } = result;
@@ -123,7 +123,7 @@ export function signWithTrezor(txXDR, bipPath, networkPassphrase) {
         const signature = Buffer.from(trezorResponse.payload.signature, "hex");
         const publicKeyBytes = Buffer.from(
           trezorResponse.payload.publicKey,
-          "hex"
+          "hex",
         );
         const encodedPublicKey = StrKey.encodeEd25519PublicKey(publicKeyBytes);
 
