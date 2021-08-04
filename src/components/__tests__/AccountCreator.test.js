@@ -22,7 +22,5 @@ test("it should generate a codepair", async () => {
     const publicKeyresult = await screen.getByTestId("publicKey");
 
     expect(publicKeyresult).toHaveTextContent(PUBLIC_KEY);
-    expect(screen.getByTestId("secretKey")).toHaveTextContent(SECRET_KEY);
-
-  
-})
+    expect(screen.getByTestId("secretKey")).toHaveTextContent(SECRET_KEY);  
+});

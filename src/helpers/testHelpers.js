@@ -16,8 +16,8 @@ export const render = (
     ...renderOptions
   } = {}
 ) => {
-  function Wrapper({ children }) {
+  const Wrapper = ({ children }) => {
     return <Provider store={store}>{children}</Provider>
   }
   return rtlRender(ui, { wrapper: Wrapper, ...renderOptions })
-}
+};
