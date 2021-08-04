@@ -62,13 +62,13 @@ let operation = (ops, index, dispatch) => {
 
   let removeLink;
   if (ops.length > 1) {
-    removeLink = <button className="TransactionOpMeta__remove s-button " onClick={() => dispatch(removeOperation(op.id))}>
+    removeLink = <button className="TransactionOpMeta__tally__button s-button" onClick={() => dispatch(removeOperation(op.id))}>
       remove
     </button>;
   }
   let duplicateLink;
   if (ops.length >= 1) {
-    duplicateLink = <button className="TransactionOpMeta__duplicate s-button" onClick={() => dispatch(duplicateOperation(op.id))}>
+    duplicateLink = <button className="TransactionOpMeta__tally__button s-button" onClick={() => dispatch(duplicateOperation(op.id))}>
       duplicate
     </button>;
   }
@@ -82,9 +82,9 @@ let operation = (ops, index, dispatch) => {
           maxLength="2"
           className="TransactionOpMeta__order__input" />
       </div>
-      <div>
-      {removeLink}
+      <div className="TransactionOpMeta__tally">
       {duplicateLink}
+      {removeLink}
       </div>
     </div>
     <div className="TransactionOp__config TransactionOpConfig optionsTable">

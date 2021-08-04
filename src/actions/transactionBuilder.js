@@ -30,10 +30,10 @@ export let addOperation = (() => {
 })();
 
 export const DUPLICATE_OPERATION = 'DUPLICATE_OPERATION';
-export function duplicateOperation(opId) {
+export function duplicateOperation(sourceOpId) {
   return {
     type: DUPLICATE_OPERATION,
-    sourceOpId: opId,
+    sourceOpId: sourceOpId,
     opId: Date.now(),
   };
 }

@@ -44,7 +44,7 @@ function operations(state = defaultOperations, action) {
       attributes: {},
     });
   case 'REMOVE_OPERATION':
-    return filter(state.slice(), (op) => op.id != action.opId);
+    return filter(state.slice(), (op) => op.id !== action.opId);
   case 'DUPLICATE_OPERATION':
     let sourceOp = state.find(op => op.id === action.sourceOpId);
     if (undefined === sourceOp) return state;

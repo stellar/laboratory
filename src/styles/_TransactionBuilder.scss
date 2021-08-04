@@ -52,21 +52,13 @@
     text-align: center;
     font-size: $s-scale-a;
   }
-.TransactionOpMeta__duplicate {
+.TransactionOpMeta__tally__button {
   text-align: center;
   width: 72px;
   padding: 0.35em 0;
   font-size: $s-scale-down1;
   margin: 0.25em 0;
 }
-.TransactionOpMeta__remove {
-  text-align: center;
-  width: 72px;
-  padding: 0.35em 0;
-  font-size: $s-scale-down1;
-  margin: 0.25em 0;
-}
-
 .TransactionOperations__add {
   width: 100%;
   padding-left: 108px;
