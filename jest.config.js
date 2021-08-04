@@ -1,4 +1,4 @@
 module.exports = {
-  setupFiles: ["./test/setupJest.js"],
+  setupFiles: ["./setupJest.js"],
   setupFilesAfterEnv: ["@testing-library/jest-dom"]
 }

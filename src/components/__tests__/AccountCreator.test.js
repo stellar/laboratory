@@ -9,7 +9,7 @@ import { render } from "../../helpers/testHelpers";
 
 jest.mock('stellar-sdk');
 
-test("it should generate a codepair", async () => {
+test("it should generate a keypair", async () => {
     const PUBLIC_KEY = "foo";
     const SECRET_KEY = "bar";
     render(<AccountCreator />);
@@ -22,7 +22,5 @@ test("it should generate a codepair", async () => {
     const publicKeyresult = await screen.getByTestId("publicKey");
 
     expect(publicKeyresult).toHaveTextContent(PUBLIC_KEY);
-    expect(screen.getByTestId("secretKey")).toHaveTextContent(SECRET_KEY);
-
-  
-})
+    expect(screen.getByTestId("secretKey")).toHaveTextContent(SECRET_KEY);  
+});
