@@ -37,13 +37,13 @@ class AccountCreator extends React.Component {
         <div className="simpleTable AccountCreator__generator__table">
           <div className="simpleTable__row">
             <div className="simpleTable__row__label">Public Key</div>
-            <div className="simpleTable__row__content">
+            <div data-testid="publicKey" className="simpleTable__row__content">
               {state.keypairGeneratorResult.pubKey}
             </div>
           </div>
           <div className="simpleTable__row">
             <div className="simpleTable__row__label">Secret Key</div>
-            <div className="simpleTable__row__content">
+            <div data-testid="secretKey" className="simpleTable__row__content">
               {state.keypairGeneratorResult.secretKey}
             </div>
           </div>

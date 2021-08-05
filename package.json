@@ -11,6 +11,7 @@
     "eject": "react-scripts eject",
     "build:netlify": "yarn build; mkdir out; mkdir out/laboratory; mv build/* out/laboratory; cp _redirects out/_redirects",
     "test": "mocha './test/**/*.js'",
+    "test:jest": "jest",
     "prod:build": "docker image build --build-arg AMPLITUDE_KEY=$AMPLITUDE_KEY -t lab:localbuild .",
     "prod:serve": "docker run -p 8000:80 lab:localbuild",
     "production": "yarn prod:build && yarn prod:serve"
@@ -31,8 +32,8 @@
     ]
   },
   "dependencies": {
-    "@babel/register": "^7.14.5",
     "@albedo-link/intent": "^0.11.2",
+    "@babel/register": "^7.14.5",
     "@ledgerhq/hw-app-str": "^6.0.2",
     "@ledgerhq/hw-transport-webusb": "^6.0.2",
     "@stellar/freighter-api": "1.0.1",
@@ -67,7 +68,11 @@
     "urijs": "^1.16.0"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.14.9",
+    "@babel/preset-react": "^7.14.5",
     "@stellar/eslint-config": "^2.1.1",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^12.0.0",
     "@types/lodash": "^4.14.171",
     "@types/node": "^16.0.1",
     "@types/react": "^17.0.14",
@@ -80,6 +85,7 @@
     "eslint-config-react": "^1.1.7",
     "eslint-plugin-jsdoc": "^36.0.6",
     "eslint-plugin-prefer-arrow": "^1.2.3",
+    "jest-fetch-mock": "^3.0.3",
     "sass": "^1.36.0"
   }
 }
