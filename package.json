@@ -85,7 +85,6 @@
     "eslint-config-react": "^1.1.7",
     "eslint-plugin-jsdoc": "^36.0.6",
     "eslint-plugin-prefer-arrow": "^1.2.3",
-    "jest": "^27.0.6",
     "jest-fetch-mock": "^3.0.3",
     "sass": "^1.36.0"
   }
