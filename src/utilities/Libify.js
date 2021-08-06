@@ -349,7 +349,7 @@ Libify.Operation.claimClaimableBalance = function(opts) {
 
   return Sdk.Operation.claimClaimableBalance({
     balanceId: opts.balanceId,
-    claimant: opts.sourceAccount,
+    source: opts.sourceAccount
   });
 }
 
