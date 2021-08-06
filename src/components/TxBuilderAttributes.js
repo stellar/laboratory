@@ -13,7 +13,6 @@ import NETWORK from '../constants/network';
 import {fetchSequence, fetchBaseFee, updateTxType, updateFeeBumpAttribute} from '../actions/transactionBuilder';
 import TransactionImporter from './TransactionImporter';
 import TX_TYPES from '../constants/transaction_types';
-import isValidMAddress from "../utilities/isValidMAddress"
 
 function TxBuilderAttributes(props) {
   let {onUpdate, attributes, horizonURL, dispatch, feeBumpAttributes, networkPassphrase} = props;
@@ -127,14 +126,14 @@ class sequenceFetcherClass extends React.Component {
     let {attributes, sequenceFetcherError} = this.props.state;
     let dispatch = this.props.dispatch;
     let horizonURL = this.props.horizonURL;
+    const isMAddress = StrKey.isValidMed25519PublicKey(attributes.sourceAccount);
     if (
       !StrKey.isValidEd25519PublicKey(attributes.sourceAccount) &&
-      !isValidMAddress(attributes.sourceAccount)
+      !isMAddress
     ) {
       return null;
     }
 
-    const isMAddress = isValidMAddress(attributes.sourceAccount);
     let sourceAccount = attributes.sourceAccount;
 
     if (isMAddress) {
