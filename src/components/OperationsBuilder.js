@@ -5,6 +5,7 @@ import map from 'lodash/map'
 import PubKeyPicker from './FormComponents/PubKeyPicker.js';
 import {getOperation} from '../data/operations';
 import {
+  duplicateOperation,
   removeOperation,
   updateOperationType,
   updateOperationAttributes,
@@ -61,9 +62,15 @@ let operation = (ops, index, dispatch) => {
 
   let removeLink;
   if (ops.length > 1) {
-    removeLink = <p className="TransactionOpMeta__remove">
-      <a onClick={() => dispatch(removeOperation(op.id))}>remove</a>
-    </p>;
+    removeLink = <button className="TransactionOpMeta__tally__button s-button" onClick={() => dispatch(removeOperation(op.id))}>
+      remove
+    </button>;
+  }
+  let duplicateLink;
+  if (ops.length >= 1) {
+    duplicateLink = <button className="TransactionOpMeta__tally__button s-button" onClick={() => dispatch(duplicateOperation(op.id))}>
+      duplicate
+    </button>;
   }
 
   return <div className="TransactionOp" key={op.id}>
@@ -75,7 +82,10 @@ let operation = (ops, index, dispatch) => {
           maxLength="2"
           className="TransactionOpMeta__order__input" />
       </div>
+      <div className="TransactionOpMeta__tally">
+      {duplicateLink}
       {removeLink}
+      </div>
     </div>
     <div className="TransactionOp__config TransactionOpConfig optionsTable">
       <OptionsTablePair label={<span>Operation Type <HelpMark href="https://developers.stellar.org/docs/start/list-of-operations/" /></span>}>

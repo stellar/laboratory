@@ -29,6 +29,15 @@ export let addOperation = (() => {
   }
 })();
 
+export const DUPLICATE_OPERATION = 'DUPLICATE_OPERATION';
+export function duplicateOperation(sourceOpId) {
+  return {
+    type: DUPLICATE_OPERATION,
+    sourceOpId: sourceOpId,
+    opId: Date.now(),
+  };
+}
+
 export const REMOVE_OPERATION = 'REMOVE_OPERATION';
 export function removeOperation(opId) {
   return {

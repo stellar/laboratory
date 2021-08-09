@@ -44,7 +44,15 @@ function operations(state = defaultOperations, action) {
       attributes: {},
     });
   case 'REMOVE_OPERATION':
-    return filter(state.slice(), (op) => op.id != action.opId);
+    return filter(state.slice(), (op) => op.id !== action.opId);
+  case 'DUPLICATE_OPERATION':
+    let sourceOp = state.find(op => op.id === action.sourceOpId);
+    if (undefined === sourceOp) return state;
+    return Array.prototype.concat(state, {
+      id: action.opId,
+      name: sourceOp.name,
+      attributes: sourceOp.attributes,
+    });
   case 'REORDER_OPERATION':
     return reorderOps(state, action.opId, action.toNth);
   case 'UPDATE_OPERATION_TYPE':
