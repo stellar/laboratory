@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import OptionsTablePair from "./OptionsTable/Pair";
-import HelpMark from "./HelpMark";
-import TxTypePicker from "./FormComponents/TxTypePicker";
-import PubKeyPicker from "./FormComponents/PubKeyPicker";
-import SequencePicker from "./FormComponents/SequencePicker";
-import StroopsPicker from "./FormComponents/StroopsPicker";
-import MemoPicker from "./FormComponents/MemoPicker";
-import TimeBoundsPicker from "./FormComponents/TimeBoundsPicker";
 import { connect } from "react-redux";
 import { StrKey, MuxedAccount } from "stellar-sdk";
+import OptionsTablePair from "../components/OptionsTable/Pair";
+import HelpMark from "../components/HelpMark";
+import TxTypePicker from "../components/FormComponents/TxTypePicker";
+import PubKeyPicker from "../components/FormComponents/PubKeyPicker";
+import SequencePicker from "../components/FormComponents/SequencePicker";
+import StroopsPicker from "../components/FormComponents/StroopsPicker";
+import MemoPicker from "../components/FormComponents/MemoPicker";
+import TimeBoundsPicker from "../components/FormComponents/TimeBoundsPicker";
 import NETWORK from "../constants/network";
 import {
   fetchSequence,
@@ -16,7 +16,7 @@ import {
   updateTxType,
   updateFeeBumpAttribute,
 } from "../actions/transactionBuilder";
-import TransactionImporter from "./TransactionImporter";
+import TransactionImporter from "../components/TransactionImporter";
 import TX_TYPES from "../constants/transaction_types";
 
 function TxBuilderAttributes(props) {
@@ -166,7 +166,11 @@ function TxBuilderAttributes(props) {
               />
               <p className="optionsTable__pair__content__note">
                 Enter{" "}
-                <a href="http://www.epochconverter.com/" target="_blank">
+                <a
+                  href="http://www.epochconverter.com/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   unix timestamp
                 </a>{" "}
                 values of time bounds when this transaction will be valid.
@@ -177,6 +181,7 @@ function TxBuilderAttributes(props) {
                 <a
                   href="https://github.com/stellar/stellar-core/issues/1811"
                   target="_blank"
+                  rel="noreferrer"
                 >
                   a final result
                 </a>{" "}

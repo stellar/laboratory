@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import map from "lodash/map";
-import PubKeyPicker from "./FormComponents/PubKeyPicker.js";
+import PubKeyPicker from "../components/FormComponents/PubKeyPicker.js";
 import { getOperation } from "../data/operations";
 import {
   duplicateOperation,
@@ -11,9 +11,9 @@ import {
   updateOperationAttributes,
   reorderOperation,
 } from "../actions/transactionBuilder";
-import OperationTypePicker from "./FormComponents/OperationTypePicker";
-import OptionsTablePair from "./OptionsTable/Pair";
-import HelpMark from "./HelpMark";
+import OperationTypePicker from "../components/FormComponents/OperationTypePicker";
+import OptionsTablePair from "../components/OptionsTable/Pair";
+import HelpMark from "../components/HelpMark";
 
 class OperationsBuilder extends React.Component {
   constructor() {
@@ -54,7 +54,7 @@ let operation = (ops, index, dispatch) => {
     );
     docsLink = (
       <p className="optionsTable__pair__content__note">
-        <a href={opConfig.docsUrl} target="_blank">
+        <a href={opConfig.docsUrl} target="_blank" rel="noreferrer">
           See documentation for {opConfig.label}
         </a>
       </p>
