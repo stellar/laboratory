@@ -19,6 +19,7 @@ test("it should generate a keypair", async () => {
   });
   fireEvent.click(screen.getByText(/Generate keypair/i));
 
+  // eslint-disable-next-line @typescript-eslint/await-thenable
   const publicKeyresult = await screen.getByTestId("publicKey");
 
   expect(publicKeyresult).toHaveTextContent(PUBLIC_KEY);

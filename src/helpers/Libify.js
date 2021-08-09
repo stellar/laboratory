@@ -16,8 +16,7 @@ import isEmpty from "lodash/isEmpty";
 import isString from "lodash/isString";
 import isUndefined from "lodash/isUndefined";
 import map from "lodash/map";
-import { createPredicate } from "./claimantHelpers";
-import isValidMAddress from "./isValidMAddress";
+import { createPredicate } from "../utilities/claimantHelpers";
 
 // Helpers
 let isInt = function (value) {
@@ -150,7 +149,7 @@ Libify.Operation.payment = function (opts) {
     asset: Libify.Asset(opts.asset),
     amount: opts.amount,
     source: opts.sourceAccount,
-    withMuxing: isValidMAddress(opts.destination),
+    withMuxing: true,
   });
 };
 
@@ -191,7 +190,7 @@ Libify.Operation.pathPaymentStrictSend = function (opts) {
     destMin: opts.destMin,
     path: libifiedPath,
     source: opts.sourceAccount,
-    withMuxing: isValidMAddress(opts.destination),
+    withMuxing: true,
   });
 };
 
@@ -232,7 +231,7 @@ Libify.Operation.pathPaymentStrictReceive = function (opts) {
     destAmount: opts.destAmount,
     path: libifiedPath,
     source: opts.sourceAccount,
-    withMuxing: isValidMAddress(opts.destination),
+    withMuxing: true,
   });
 };
 
@@ -269,7 +268,7 @@ Libify.Operation.accountMerge = function (opts) {
   return Sdk.Operation.accountMerge({
     destination: opts.destination,
     source: opts.sourceAccount,
-    withMuxing: isValidMAddress(opts.destination),
+    withMuxing: true,
   });
 };
 
@@ -425,7 +424,7 @@ Libify.Operation.claimClaimableBalance = function (opts) {
 
   return Sdk.Operation.claimClaimableBalance({
     balanceId: opts.balanceId,
-    claimant: opts.sourceAccount,
+    source: opts.sourceAccount,
   });
 };
 
@@ -640,9 +639,8 @@ Libify.buildTransaction = function (attributes, operations, networkPassphrase) {
     const sequence = Sdk.UnsignedHyper.fromString(attributes.sequence)
       .subtract(1)
       .toString();
-    const isMAddress = isValidMAddress(attributes.sourceAccount);
 
-    if (isMAddress) {
+    if (Sdk.StrKey.isValidMed25519PublicKey(attributes.sourceAccount)) {
       account = new Sdk.MuxedAccount.fromAddress(
         attributes.sourceAccount,
         sequence,
@@ -653,7 +651,7 @@ Libify.buildTransaction = function (attributes, operations, networkPassphrase) {
 
     let opts = {
       networkPassphrase,
-      withMuxing: isMAddress,
+      withMuxing: true,
     };
     if (attributes.fee !== "") {
       const MAX_UINT32 = Math.pow(2, 32) - 1;
@@ -748,6 +746,7 @@ Libify.buildFeeBumpTransaction = function (attributes, networkPassphrase) {
       maxFee,
       innerTx,
       networkPassphrase,
+      true, // withMuxing
     );
     result.xdr = feeBumpTx.toEnvelope().toXDR("base64");
   } catch (e) {

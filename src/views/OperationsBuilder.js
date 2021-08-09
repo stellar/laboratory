@@ -2,17 +2,18 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import map from "lodash/map";
-import PubKeyPicker from "components/FormComponents/PubKeyPicker.js";
-import { getOperation } from "data/operations";
+import PubKeyPicker from "./FormComponents/PubKeyPicker.js";
+import { getOperation } from "../data/operations";
 import {
+  duplicateOperation,
   removeOperation,
   updateOperationType,
   updateOperationAttributes,
   reorderOperation,
-} from "actions/transactionBuilder";
-import OperationTypePicker from "components/FormComponents/OperationTypePicker";
-import OptionsTablePair from "components/OptionsTable/Pair";
-import HelpMark from "components/HelpMark";
+} from "../actions/transactionBuilder";
+import OperationTypePicker from "./FormComponents/OperationTypePicker";
+import OptionsTablePair from "./OptionsTable/Pair";
+import HelpMark from "./HelpMark";
 
 class OperationsBuilder extends React.Component {
   constructor() {
@@ -53,7 +54,7 @@ let operation = (ops, index, dispatch) => {
     );
     docsLink = (
       <p className="optionsTable__pair__content__note">
-        <a href={opConfig.docsUrl} rel="noreferrer" target="_blank">
+        <a href={opConfig.docsUrl} target="_blank">
           See documentation for {opConfig.label}
         </a>
       </p>
@@ -78,9 +79,23 @@ let operation = (ops, index, dispatch) => {
   let removeLink;
   if (ops.length > 1) {
     removeLink = (
-      <p className="TransactionOpMeta__remove">
-        <a onClick={() => dispatch(removeOperation(op.id))}>remove</a>
-      </p>
+      <button
+        className="TransactionOpMeta__tally__button s-button"
+        onClick={() => dispatch(removeOperation(op.id))}
+      >
+        remove
+      </button>
+    );
+  }
+  let duplicateLink;
+  if (ops.length >= 1) {
+    duplicateLink = (
+      <button
+        className="TransactionOpMeta__tally__button s-button"
+        onClick={() => dispatch(duplicateOperation(op.id))}
+      >
+        duplicate
+      </button>
     );
   }
 
@@ -95,7 +110,10 @@ let operation = (ops, index, dispatch) => {
             className="TransactionOpMeta__order__input"
           />
         </div>
-        {removeLink}
+        <div className="TransactionOpMeta__tally">
+          {duplicateLink}
+          {removeLink}
+        </div>
       </div>
       <div className="TransactionOp__config TransactionOpConfig optionsTable">
         <OptionsTablePair
