@@ -1,4 +1,4 @@
-import convert from  '../../src/utilities/convertMuxedAccountToEd25519Account';
+import convert from  '../../src/helpers/convertMuxedAccountToEd25519Account';
 
 describe('convertMuxedAccountToEd25519Account', () => {
     it('returns M accounts for now', () => {

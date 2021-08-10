@@ -1,4 +1,4 @@
-import {combineReducers} from "redux";
+import { combineReducers } from "redux";
 import {
   CHOOSE_ENDPOINT,
   CHANGE_PENDING_REQUEST_PROPS,
@@ -7,12 +7,12 @@ import {
   UPDATE_REQUEST,
   UPDATE_VALUE,
 } from "../actions/endpointExplorer";
-import {LOAD_STATE} from '../actions/routing';
-import {getEndpoint, getTemplate} from '../data/endpoints';
-import {rehydrate} from '../utilities/hydration';
-import SLUG from '../constants/slug';
+import { LOAD_STATE } from "../actions/routing";
+import { getEndpoint, getTemplate } from "../data/endpoints";
+import { rehydrate } from "../helpers/hydration";
+import SLUG from "../constants/slug";
 
-function currentResource(state="", action) {
+function currentResource(state = "", action) {
   switch (action.type) {
     case LOAD_STATE:
       if (action.slug === SLUG.EXPLORER && action.queryObj.resource) {
@@ -25,41 +25,41 @@ function currentResource(state="", action) {
   return state;
 }
 
-function currentEndpoint(state="", action) {
+function currentEndpoint(state = "", action) {
   switch (action.type) {
-  case LOAD_STATE:
-    if (action.slug === SLUG.EXPLORER && action.queryObj.endpoint) {
-      return action.queryObj.endpoint;
-    }
-    break;
-  case CHOOSE_ENDPOINT:
-    return action.endpoint;
+    case LOAD_STATE:
+      if (action.slug === SLUG.EXPLORER && action.queryObj.endpoint) {
+        return action.queryObj.endpoint;
+      }
+      break;
+    case CHOOSE_ENDPOINT:
+      return action.endpoint;
   }
   return state;
 }
 
-function pendingRequestTemplate(state="", action) {
+function pendingRequestTemplate(state = "", action) {
   switch (action.type) {
-  case CHOOSE_ENDPOINT:
-    return getTemplate(action.resource, action.endpoint) || "";
-  default:
-    return state;
+    case CHOOSE_ENDPOINT:
+      return getTemplate(action.resource, action.endpoint) || "";
+    default:
+      return state;
   }
 }
 
-function pendingRequestValues(state={}, action) {
+function pendingRequestValues(state = {}, action) {
   switch (action.type) {
-  case LOAD_STATE:
-  if (action.slug === SLUG.EXPLORER && action.queryObj.values) {
-    return rehydrate(action.queryObj.values);
-  }
-  break;
-  case UPDATE_VALUE:
-    return Object.assign({}, state, {
-      [action.param]: action.value
-    });
-  case CHOOSE_ENDPOINT:
-    return {};
+    case LOAD_STATE:
+      if (action.slug === SLUG.EXPLORER && action.queryObj.values) {
+        return rehydrate(action.queryObj.values);
+      }
+      break;
+    case UPDATE_VALUE:
+      return Object.assign({}, state, {
+        [action.param]: action.value,
+      });
+    case CHOOSE_ENDPOINT:
+      return {};
   }
   return state;
 }
@@ -70,7 +70,7 @@ const blankResults = {
   body: [],
 };
 function results(state, action) {
-  if (typeof state === 'undefined') {
+  if (typeof state === "undefined") {
     return blankResults;
   }
 
@@ -104,7 +104,7 @@ function results(state, action) {
   if (action.type === ERROR_REQUEST) {
     let errorContent;
     if (action.errorStatus === 0) {
-      errorContent = 'Unable to reach Horizon server.';
+      errorContent = "Unable to reach Horizon server.";
     } else {
       errorContent = JSON.stringify(action.body, null, 2);
     }
@@ -131,7 +131,7 @@ const endpointExplorer = combineReducers({
     template: pendingRequestTemplate,
     values: pendingRequestValues,
   }),
-  results
+  results,
 });
 
-export default endpointExplorer
+export default endpointExplorer;

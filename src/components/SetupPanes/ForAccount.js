@@ -6,7 +6,7 @@ import PubKeyPicker from "../FormComponents/PubKeyPicker.js";
 export default function ForAccount(props) {
   return (
     <For
-      label={"Account ID"}
+      label="Account ID"
       content={
         <PubKeyPicker
           value={props.values["account_id"]}

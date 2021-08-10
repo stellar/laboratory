@@ -1,8 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import isArray from 'lodash/isArray';
-import map from 'lodash/map';
-import isUndefined from 'lodash/isUndefined';
+import React from "react";
+import PropTypes from "prop-types";
+import isArray from "lodash/isArray";
+import map from "lodash/map";
+import isUndefined from "lodash/isUndefined";
 
 // MultiPicker is a compound picker interface that ensures there is always
 // enough rows for the user to add more data. MultiPicker accomplishes this
@@ -13,13 +13,12 @@ import isUndefined from 'lodash/isUndefined';
 // used inside the MultiPicker. For non string values with no way to empty the
 // value (such as radio buttons that can't be cleared), use ManualMultiPicker.
 
-
 // @param {array} props.value - Array of values. If empty or non array, then it
 //   will default to a one element array. The length of the array will be
 //   normalized to have one empty element at the end.
 // @param {function} props.onUpdate - Picker callback function called when the values change.
 export default function MultiPicker(props) {
-  let {onUpdate, component} = props;
+  let { onUpdate, component } = props;
   let value = props.value;
   if (!isArray(value)) {
     value = [];
@@ -28,26 +27,34 @@ export default function MultiPicker(props) {
   let normalizedValues = adjustTrailingEmptyElements(value);
 
   let SingleComponent = props.component;
-  return <div>
-    {map(normalizedValues, (singleValue, index) => {
-      return <SingleComponent
-        onUpdate={(newValue) => onUpdate(updateValueAt(normalizedValues, index, newValue))}
-        value={singleValue}
-        className="picker--spaceBottom"
-        key={index}
-      />
-    })}
-  </div>
+  return (
+    <div>
+      {map(normalizedValues, (singleValue, index) => {
+        return (
+          <SingleComponent
+            onUpdate={(newValue) =>
+              onUpdate(updateValueAt(normalizedValues, index, newValue))
+            }
+            value={singleValue}
+            className="picker--spaceBottom"
+            key={index}
+          />
+        );
+      })}
+    </div>
+  );
 }
 MultiPicker.propTypes = {
-  value: PropTypes.array.isRequired
-}
+  value: PropTypes.array.isRequired,
+};
 
 function isEmpty(value) {
-  return value === null || isUndefined(value) || value === '';
+  return value === null || isUndefined(value) || value === "";
 }
 function arelastTwoEmpty(values) {
-  return isEmpty(values[values.length - 1]) && isEmpty(values[values.length - 2]);
+  return (
+    isEmpty(values[values.length - 1]) && isEmpty(values[values.length - 2])
+  );
 }
 
 // Makes sure there is only one consecutive trailing element in the value array.

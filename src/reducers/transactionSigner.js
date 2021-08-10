@@ -1,4 +1,4 @@
-import {combineReducers} from 'redux';
+import { combineReducers } from "redux";
 import {
   IMPORT_FROM_XDR,
   CLEAR_TRANSACTION,
@@ -16,10 +16,10 @@ import {
   ALBEDO_WALLET_SIGN_START,
   ALBEDO_WALLET_SIGN_SUCCESS,
   ALBEDO_WALLET_SIGN_ERROR,
-} from '../actions/transactionSigner';
-import {LOAD_STATE} from '../actions/routing';
-import validateTxXdr from '../utilities/validateTxXdr';
-import SLUG from '../constants/slug';
+} from "../actions/transactionSigner";
+import { LOAD_STATE } from "../actions/routing";
+import validateTxXdr from "../helpers/validateTxXdr";
+import SLUG from "../constants/slug";
 
 const transactionSigner = combineReducers({
   xdr,
@@ -27,129 +27,129 @@ const transactionSigner = combineReducers({
   bipPath,
   hardwarewalletStatus,
   freighterwalletStatus,
-  albedowalletStatus
-})
+  albedowalletStatus,
+});
 
 export default transactionSigner;
 
-function xdr(state = '', action) {
+function xdr(state = "", action) {
   switch (action.type) {
-  case LOAD_STATE:
-    if (action.slug === SLUG.TXSIGNER && action.queryObj.xdr) {
-      const validationResult = validateTxXdr(action.queryObj.xdr)
-      if (validationResult.result === 'success') {
-        return action.queryObj.xdr;
+    case LOAD_STATE:
+      if (action.slug === SLUG.TXSIGNER && action.queryObj.xdr) {
+        const validationResult = validateTxXdr(action.queryObj.xdr);
+        if (validationResult.result === "success") {
+          return action.queryObj.xdr;
+        }
+        console.error(validationResult.message, validationResult.originalError);
+        // If invalid xdr in the url, then we go back to step zero
+        return "";
       }
-      console.error(validationResult.message, validationResult.originalError)
-      // If invalid xdr in the url, then we go back to step zero
-      return '';
-    }
-    return state;
-  case IMPORT_FROM_XDR:
-    return action.xdr;
-  case CLEAR_TRANSACTION:
-    return '';
+      return state;
+    case IMPORT_FROM_XDR:
+      return action.xdr;
+    case CLEAR_TRANSACTION:
+      return "";
   }
   return state;
 }
 
 function signers(state = [], action) {
   switch (action.type) {
-  case IMPORT_FROM_XDR:
-  case CLEAR_TRANSACTION:
-    return []
-  case SET_SECRETS:
-    return action.secrets
+    case IMPORT_FROM_XDR:
+    case CLEAR_TRANSACTION:
+      return [];
+    case SET_SECRETS:
+      return action.secrets;
   }
   return state;
 }
 
 function bipPath(state = [], action) {
   switch (action.type) {
-  case LOAD_STATE:
-  case IMPORT_FROM_XDR:
-  case CLEAR_TRANSACTION:
-    return "44'/148'/0'"
-  case SET_BIP_PATH:
-    return action.bipPath
+    case LOAD_STATE:
+    case IMPORT_FROM_XDR:
+    case CLEAR_TRANSACTION:
+      return "44'/148'/0'";
+    case SET_BIP_PATH:
+      return action.bipPath;
   }
   return state;
 }
 
 function hardwarewalletStatus(state = {}, action) {
   switch (action.type) {
-  case IMPORT_FROM_XDR:
-  case CLEAR_TRANSACTION:
-    return {};
-  case LEDGER_WALLET_SIGN_START:
-  case TREZOR_WALLET_SIGN_START:
-    return Object.assign({}, state, {
-      status: 'loading',
-      message: 'Waiting for wallet',
-    });
-  case LEDGER_WALLET_SIGN_ERROR:
-  case TREZOR_WALLET_SIGN_ERROR:
-    return Object.assign({}, state, {
-      status: 'failure',
-      message: 'Error:' + JSON.stringify(action.error),
-    });
-  case LEDGER_WALLET_SIGN_SUCCESS:
-  case TREZOR_WALLET_SIGN_SUCCESS:
-    return Object.assign({}, state, {
-      status: 'success',
-      message: 'Success!',
-      signatures: [action.signature]
-    });
+    case IMPORT_FROM_XDR:
+    case CLEAR_TRANSACTION:
+      return {};
+    case LEDGER_WALLET_SIGN_START:
+    case TREZOR_WALLET_SIGN_START:
+      return Object.assign({}, state, {
+        status: "loading",
+        message: "Waiting for wallet",
+      });
+    case LEDGER_WALLET_SIGN_ERROR:
+    case TREZOR_WALLET_SIGN_ERROR:
+      return Object.assign({}, state, {
+        status: "failure",
+        message: "Error:" + JSON.stringify(action.error),
+      });
+    case LEDGER_WALLET_SIGN_SUCCESS:
+    case TREZOR_WALLET_SIGN_SUCCESS:
+      return Object.assign({}, state, {
+        status: "success",
+        message: "Success!",
+        signatures: [action.signature],
+      });
   }
   return state;
 }
 
 function freighterwalletStatus(state = {}, action) {
   switch (action.type) {
-  case IMPORT_FROM_XDR:
-  case CLEAR_TRANSACTION:
-    return {};
-  case FREIGHTER_WALLET_SIGN_START:
-    return Object.assign({}, state, {
-      status: 'loading',
-      message: 'Waiting for wallet',
-    });
-  case FREIGHTER_WALLET_SIGN_ERROR:
-    return Object.assign({}, state, {
-      status: 'failure',
-      message: 'Error:' + JSON.stringify(action.error),
-    });
-  case FREIGHTER_WALLET_SIGN_SUCCESS:
-    return Object.assign({}, state, {
-      status: 'success',
-      message: 'Success!',
-      signedTx: action.signedTx,
-    });
+    case IMPORT_FROM_XDR:
+    case CLEAR_TRANSACTION:
+      return {};
+    case FREIGHTER_WALLET_SIGN_START:
+      return Object.assign({}, state, {
+        status: "loading",
+        message: "Waiting for wallet",
+      });
+    case FREIGHTER_WALLET_SIGN_ERROR:
+      return Object.assign({}, state, {
+        status: "failure",
+        message: "Error:" + JSON.stringify(action.error),
+      });
+    case FREIGHTER_WALLET_SIGN_SUCCESS:
+      return Object.assign({}, state, {
+        status: "success",
+        message: "Success!",
+        signedTx: action.signedTx,
+      });
   }
   return state;
 }
 
 function albedowalletStatus(state = {}, action) {
   switch (action.type) {
-  case IMPORT_FROM_XDR:
-  case CLEAR_TRANSACTION:
-    return {};
-  case ALBEDO_WALLET_SIGN_START:
-    return Object.assign({}, state, {
-      status: 'loading',
-      message: 'Waiting for wallet',
-    });
-  case ALBEDO_WALLET_SIGN_ERROR:
-    return Object.assign({}, state, {
-      status: 'failure',
-      message: 'Error:' + JSON.stringify(action.error),
-    });
-  case ALBEDO_WALLET_SIGN_SUCCESS:
-    return Object.assign({}, state, {
-      status: 'success',
-      message: 'Success!',
-      signedTx: action.signedTx,
-    });
+    case IMPORT_FROM_XDR:
+    case CLEAR_TRANSACTION:
+      return {};
+    case ALBEDO_WALLET_SIGN_START:
+      return Object.assign({}, state, {
+        status: "loading",
+        message: "Waiting for wallet",
+      });
+    case ALBEDO_WALLET_SIGN_ERROR:
+      return Object.assign({}, state, {
+        status: "failure",
+        message: "Error:" + JSON.stringify(action.error),
+      });
+    case ALBEDO_WALLET_SIGN_SUCCESS:
+      return Object.assign({}, state, {
+        status: "success",
+        message: "Success!",
+        signedTx: action.signedTx,
+      });
   }
   return state;
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import clickToSelect from "../utilities/clickToSelect";
+import clickToSelect from "../helpers/clickToSelect";
 
 // Clicking an EasySelect element will select the contents
 export class EasySelect extends React.Component {

@@ -1,10 +1,10 @@
-import React from 'react';
-import map from 'lodash/map';
-import {CodeBlock} from './CodeBlock';
+import React from "react";
+import map from "lodash/map";
+import { CodeBlock } from "./CodeBlock";
 
 export class EndpointResult extends React.Component {
   render() {
-    let {id, available, isError, body} = this.props;
+    let { id, available, isError, body } = this.props;
 
     if (!available) {
       return null;
@@ -23,34 +23,38 @@ export class EndpointResult extends React.Component {
 }
 
 function LoadingPane(props) {
-  return <div className="EndpointResult">
-    <div className="EndpointResult__loading">Loading...</div>
-  </div>
+  return (
+    <div className="EndpointResult">
+      <div className="EndpointResult__loading">Loading...</div>
+    </div>
+  );
 }
 
 function ErrorPane(body) {
-  return <div className="EndpointResult">
-    <div className='EndpointResult__error'>
-      {BodyContent(body)}
+  return (
+    <div className="EndpointResult">
+      <div className="EndpointResult__error">{BodyContent(body)}</div>
     </div>
-  </div>;
+  );
 }
 
 function ResultPane(body) {
-  return <div className="EndpointResult">
-    <div>
-      <div className="EndpointResult__tabs">
-        <button className="EndpointResult__tabs__tab is-current">JSON Response</button>
-      </div>
-      <div className='EndpointResult__content'>
-        {BodyContent(body)}
+  return (
+    <div className="EndpointResult">
+      <div>
+        <div className="EndpointResult__tabs">
+          <button className="EndpointResult__tabs__tab is-current">
+            JSON Response
+          </button>
+        </div>
+        <div className="EndpointResult__content">{BodyContent(body)}</div>
       </div>
     </div>
-  </div>;
+  );
 }
 
 function BodyContent(body) {
   return map(body, (bodyEntry, index) => {
-    return <CodeBlock key={index} code={body[index]} language="json" />
+    return <CodeBlock key={index} code={body[index]} language="json" />;
   });
 }

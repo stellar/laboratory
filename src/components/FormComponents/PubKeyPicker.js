@@ -7,7 +7,7 @@ import { ImportMark } from "../ImportMark";
 import {
   useFreighter,
   freighterGetPublicKey,
-} from "../../utilities/useFreighter";
+} from "../../helpers/useFreighter";
 
 export default function PubKeyPicker({
   placeholder,
