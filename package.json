@@ -36,6 +36,7 @@
     "@babel/register": "^7.14.5",
     "@ledgerhq/hw-app-str": "^6.0.2",
     "@ledgerhq/hw-transport-webusb": "^6.0.2",
+    "@reduxjs/toolkit": "^1.6.1",
     "@stellar/freighter-api": "1.0.1",
     "@stellar/prettier-config": "^1.0.1",
     "@stellar/tsconfig": "^1.0.2",
