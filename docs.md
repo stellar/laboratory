@@ -1,6 +1,6 @@
 This file contains information about the laboratory itself and design choices inside.
 
-# Simple Router
+# Simple Router update
 The laboratory uses a simple routing system with no outside dependencies. The simple router is stateless. Components do not need to know about the router since everything is handled.
 
 ## Dataflow: Two possible events
