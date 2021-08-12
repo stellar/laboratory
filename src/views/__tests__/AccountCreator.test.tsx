@@ -1,7 +1,6 @@
 /**
  * @jest-environment jsdom
  */
-import React from "react";
 import { fireEvent, screen } from "@testing-library/react";
 import StellarSdk from "stellar-sdk";
 import { render } from "helpers/testHelpers";

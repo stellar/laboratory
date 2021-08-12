@@ -23,7 +23,7 @@ const loggerMiddleware =
     return dispatchedAction;
   };
 
-const reducers = combineReducers({
+export const reducers = combineReducers({
   accountCreator,
   endpointExplorer,
   transactionBuilder,
