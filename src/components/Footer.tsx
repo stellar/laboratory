@@ -1,5 +1,5 @@
 export const Footer = () => (
-  <div className="so-back LaboratoryChrome__terms">
+  <div className="so-back LaboratoryChrome__terms" data-testid="page-footer">
     <div className="so-chunk ">
       <a
         rel="noreferrer"

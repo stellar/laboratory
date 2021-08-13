@@ -38,7 +38,10 @@ export const Navigation = () => {
   // TODO: add test for active nav item
 
   return (
-    <div className="so-back LaboratoryChrome__siteNavBack">
+    <div
+      className="so-back LaboratoryChrome__siteNavBack"
+      data-testid="page-navigation"
+    >
       <div className="so-chunk">
         <nav className="s-buttonList">
           {navItems.map((item) => (
@@ -48,6 +51,7 @@ export const Navigation = () => {
                 routing.location === item.slug ? "is-active" : ""
               }`}
               key={item.slug}
+              data-testid="page-navigation-link"
             >
               {item.label}
             </a>

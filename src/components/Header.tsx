@@ -1,7 +1,7 @@
 import NetworkPicker from "views/NetworkPicker";
 
 export const Header = () => (
-  <div className="so-back">
+  <div className="so-back" data-testid="page-header">
     <div className="so-chunk">
       <div className="so-siteHeader LaboratoryChrome__header">
         <span className="so-logo">
