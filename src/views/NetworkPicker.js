@@ -10,13 +10,39 @@ import NETWORK from "constants/network";
 import TextPicker from "components/FormComponents/TextPicker.js";
 import { addEventHandler } from "helpers/metrics";
 import networkMetrics from "metricsHandlers/network";
+import {
+  networkLocalStorageSaveValue,
+  networkLocalStorageGetValue,
+} from "helpers/networkLocalStorage";
 
 addEventHandler(networkMetrics);
 
 class NetworkPicker extends React.Component {
+  componentDidMount() {
+    const savedValues = networkLocalStorageGetValue();
+
+    if (savedValues) {
+      if (savedValues.name === "custom") {
+        this.props.dispatch(setCustomParams(savedValues));
+      } else {
+        this.props.dispatch(chooseNetwork(savedValues.name));
+      }
+    }
+  }
+
   render() {
     let { dispatch } = this.props;
     let { current, modal } = this.props;
+
+    const setAndSaveNetwork = (network) => {
+      dispatch(chooseNetwork(network));
+      networkLocalStorageSaveValue({ name: network });
+    };
+
+    const saveAndSetCustomNetwork = (values) => {
+      dispatch(setCustomParams(values));
+      networkLocalStorageSaveValue(values);
+    };
 
     let items = Object.keys(NETWORK.available).map((n) => {
       return (
@@ -24,7 +50,7 @@ class NetworkPicker extends React.Component {
           name={n}
           key={n}
           selected={current.name === n}
-          onToggle={() => dispatch(chooseNetwork(n))}
+          onToggle={() => setAndSaveNetwork(n)}
         />
       );
     });
@@ -65,7 +91,7 @@ class NetworkPicker extends React.Component {
                 <button
                   className="s-button"
                   disabled={false}
-                  onClick={() => dispatch(setCustomParams(modal.values))}
+                  onClick={() => saveAndSetCustomNetwork(modal.values)}
                 >
                   Use network
                 </button>
