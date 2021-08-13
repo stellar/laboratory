@@ -9,5 +9,5 @@ jobs:
         with:
           node-version: 14
       - run: yarn install
-      # - run: yarn test
+      - run: yarn test:jest
       - run: yarn build
