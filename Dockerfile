@@ -6,6 +6,8 @@ RUN mkdir -p /app
 WORKDIR /app
 
 ENV DEBIAN_FRONTEND=noninteractive
+# https://create-react-app.dev/docs/advanced-configuration/
+ENV INLINE_RUNTIME_CHUNK=false
 RUN apt-get update && apt-get install --no-install-recommends -y gpg curl git make ca-certificates apt-transport-https && \
     curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key|gpg --dearmor >/etc/apt/trusted.gpg.d/nodesource.gpg && \
     echo "deb https://deb.nodesource.com/node_14.x focal main" | tee /etc/apt/sources.list.d/nodesource.list && \
