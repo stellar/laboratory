@@ -3,7 +3,7 @@ import { Footer } from "components/Footer";
 import { Header } from "components/Header";
 import Introduction from "components/Introduction";
 import { LoadingView } from "components/LoadingView";
-import MaintenanceBanner from "components/MaintenanceBanner";
+import { MaintenanceBanner } from "components/MaintenanceBanner";
 import { Navigation } from "components/Navigation";
 import { NotFoundPage } from "components/NotFoundPage";
 import SLUG from "constants/slug";
@@ -69,12 +69,11 @@ const routeSwitch = (slug: string) => {
 // used directly there).
 
 export const AppContent = () => {
-  const { network, routing } = useRedux("network", "routing");
+  const { routing } = useRedux("network", "routing");
 
   return (
     <div>
-      {/* TODO: MaintenanceBanner: handle state locally */}
-      <MaintenanceBanner currentNetwork={network.current.name} />
+      <MaintenanceBanner />
       <Header />
       <Navigation />
       {routeSwitch(routing.location)}
