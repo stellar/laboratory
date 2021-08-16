@@ -1,17 +1,16 @@
-import * as React from "react";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
 import { render as rtlRender } from "@testing-library/react";
 
-import rootReducer from "../reducers/root";
+import { reducers } from "config/store";
 
 /* @testing-library/react helpers */
 
 export const render = (
-  ui,
-  { preloadedState, store = createStore(rootReducer), ...renderOptions } = {},
+  ui: React.ReactElement,
+  { preloadedState, store = createStore(reducers), ...renderOptions }: any = {},
 ) => {
-  const Wrapper = ({ children }) => {
+  const Wrapper = ({ children }: { children: React.ReactNode }) => {
     return <Provider store={store}>{children}</Provider>;
   };
   return rtlRender(ui, { wrapper: Wrapper, ...renderOptions });
