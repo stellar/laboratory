@@ -69,7 +69,7 @@ const routeSwitch = (slug: string) => {
 // used directly there).
 
 export const AppContent = () => {
-  const { routing } = useRedux("network", "routing");
+  const { routing } = useRedux("routing");
 
   return (
     <div>

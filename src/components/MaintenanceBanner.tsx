@@ -14,9 +14,9 @@ const sortMaintenanceSchedule = (schedule: StatusPageScheduled[]) =>
 export const MaintenanceBanner = () => {
   const { network } = useRedux("network");
   const currentNetwork = network.current.name;
-  const [maintenance, setMaintenance] = useState<StatusPageScheduled[] | null>(
-    null,
-  );
+  const [maintenance, setMaintenance] = useState<
+    StatusPageScheduled[] | null
+  >();
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -43,7 +43,7 @@ export const MaintenanceBanner = () => {
     </div>
   );
 
-  if (maintenance === null) {
+  if (maintenance === undefined) {
     return renderBanner(error ?? "Loading testnet information…");
   }
 
