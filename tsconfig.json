@@ -8,7 +8,10 @@
     "moduleResolution": "node",
     "noEmit": true,
     "jsx": "react-jsx",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "isolatedModules": true
   },
   "include": ["src", "test"]
 }
