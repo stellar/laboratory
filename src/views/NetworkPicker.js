@@ -56,9 +56,9 @@ class NetworkPicker extends React.Component {
     });
 
     return (
-      <div className="NetworkPicker">
+      <div className="NetworkPicker" data-testid="network-picker">
         {modal.visible ? (
-          <div className="overlay">
+          <div className="overlay" data-testid="network-picker-custom-modal">
             <div className="modal">
               <div className="right">
                 <a

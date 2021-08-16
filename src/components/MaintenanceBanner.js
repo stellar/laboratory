@@ -4,6 +4,8 @@
 import React from "react";
 import sanitizeHtml from "../helpers/sanitizeHtml";
 
+const TEST_ID = "maintenance-banner";
+
 // If we're on the test network, we care about all scheduled maintenance. If
 // we're on the public network, we only care about public network maintenance
 const isMaintenanceRelevant = (allMaintenance, currentNetwork) => {
@@ -54,11 +56,17 @@ export default class TestnetBanner extends React.Component {
 
     if (maintenance === false) {
       return error ? (
-        <div className="LaboratoryChrome__network_reset_alert s-alert">
+        <div
+          className="LaboratoryChrome__network_reset_alert s-alert"
+          data-testid={TEST_ID}
+        >
           <div className="so-chunk">{error}</div>
         </div>
       ) : (
-        <div className="LaboratoryChrome__network_reset_alert s-alert">
+        <div
+          className="LaboratoryChrome__network_reset_alert s-alert"
+          data-testid={TEST_ID}
+        >
           <div className="so-chunk">Loading testnet information…</div>
         </div>
       );
@@ -72,7 +80,10 @@ export default class TestnetBanner extends React.Component {
     if (!relevantMaintenance) {
       if (currentNetwork === "test") {
         return (
-          <div className="LaboratoryChrome__network_reset_alert s-alert">
+          <div
+            className="LaboratoryChrome__network_reset_alert s-alert"
+            data-testid={TEST_ID}
+          >
             <div className="so-chunk">
               Failed to fetch testnet reset date. Check status{" "}
               <a
@@ -93,7 +104,10 @@ export default class TestnetBanner extends React.Component {
     if (relevantMaintenance.length === 0) {
       if (currentNetwork === "test") {
         return (
-          <div className="LaboratoryChrome__network_reset_alert s-alert">
+          <div
+            className="LaboratoryChrome__network_reset_alert s-alert"
+            data-testid={TEST_ID}
+          >
             <div className="so-chunk">
               The next testnet reset has not yet been scheduled.
             </div>
@@ -109,6 +123,7 @@ export default class TestnetBanner extends React.Component {
       <div
         key={nextMaintenance.id}
         className="LaboratoryChrome__network_reset_alert s-alert"
+        data-testid={TEST_ID}
       >
         <div className="so-chunk">
           <a

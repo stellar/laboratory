@@ -1,6 +1,13 @@
 {
   "presets": [
     ["@babel/preset-env", { "targets": "> 1%" }],
-    "@babel/preset-react"
+    [
+      "@babel/preset-react",
+      // Needed to handle new JSX transform in React 17+
+      {
+        "runtime": "automatic"
+      }
+    ],
+    "@babel/preset-flow"
   ]
 }
