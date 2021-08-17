@@ -1,7 +1,6 @@
 import Loadable from "react-loadable";
 import { Footer } from "components/Footer";
 import { Header } from "components/Header";
-import Introduction from "components/Introduction";
 import { LoadingView } from "components/LoadingView";
 import { MaintenanceBanner } from "components/MaintenanceBanner";
 import { Navigation } from "components/Navigation";
@@ -11,6 +10,7 @@ import { RouterListener } from "helpers/simpleRouter";
 import { addEventHandler } from "helpers/metrics";
 import { useRedux } from "hooks/useRedux";
 import routingMetrics from "metricsHandlers/routing";
+import { Introduction } from "views/Introduction";
 
 addEventHandler(routingMetrics);
 
@@ -21,22 +21,23 @@ const makeAsync = (loader: any) =>
   });
 
 const AsyncAccountCreator = makeAsync(
-  () => import(/* webpackChunkName: 'Creator' */ "./AccountCreator"),
+  () => import(/* webpackChunkName: 'Creator' */ "views/AccountCreator"),
 );
 const AsyncEndpointExplorer = makeAsync(
-  () => import(/* webpackChunkName: 'Explorer' */ "./EndpointExplorer"),
+  () => import(/* webpackChunkName: 'Explorer' */ "views/EndpointExplorer"),
 );
 const AsyncTransactionBuilder = makeAsync(
-  () => import(/* webpackChunkName: 'Builder' */ "./TransactionBuilder"),
+  () => import(/* webpackChunkName: 'Builder' */ "views/TransactionBuilder"),
 );
 const AsyncTransactionSigner = makeAsync(
-  () => import(/* webpackChunkName: 'Signer' */ "./TransactionSigner"),
+  () => import(/* webpackChunkName: 'Signer' */ "views/TransactionSigner"),
 );
 const AsyncXdrViewer = makeAsync(
-  () => import(/* webpackChunkName: 'Viewer' */ "./XdrViewer"),
+  () => import(/* webpackChunkName: 'Viewer' */ "views/XdrViewer"),
 );
 const AsyncTransactionSubmitter = makeAsync(
-  () => import(/* webpackChunkName: 'Submitter' */ "./TransactionSubmitter"),
+  () =>
+    import(/* webpackChunkName: 'Submitter' */ "views/TransactionSubmitter"),
 );
 
 const routeSwitch = (slug: string) => {
