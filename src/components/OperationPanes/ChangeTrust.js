@@ -2,7 +2,7 @@ import React from "react";
 
 import OptionsTablePair from "../OptionsTable/Pair";
 import AssetPicker from "../FormComponents/AssetPicker.js";
-import PositiveIntPicker from "../FormComponents/PositiveIntPicker.js";
+import PositiveNumberPicker from "../FormComponents/PositiveNumberPicker.js";
 
 export default function ChangeTrust(props) {
   return [
@@ -16,7 +16,7 @@ export default function ChangeTrust(props) {
       />
     </OptionsTablePair>,
     <OptionsTablePair label="Trust Limit" optional="true" key="limit">
-      <PositiveIntPicker
+      <PositiveNumberPicker
         value={props.values["limit"]}
         onUpdate={(value) => {
           props.onUpdate("limit", value);
