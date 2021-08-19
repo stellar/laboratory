@@ -92,7 +92,7 @@ class AccountCreator extends React.Component {
     }
 
     return (
-      <div className="AccountCreator">
+      <div className="AccountCreator" data-testid="page-account-creator">
         <div className="so-back AccountCreator__section">
           <div className="so-chunk">
             <h3>Keypair generator</h3>
@@ -119,7 +119,10 @@ class AccountCreator extends React.Component {
         {IS_TESTNET && (
           <div>
             <div className="so-back AccountCreator__separator"></div>
-            <div className="so-back AccountCreator__section">
+            <div
+              className="so-back AccountCreator__section"
+              data-testid="page-friendbot"
+            >
               <div className="so-chunk">
                 <h3>Friendbot: Fund a test network account</h3>
                 <p>
@@ -133,6 +136,7 @@ class AccountCreator extends React.Component {
                   onUpdate={(accountId) => {
                     dispatch(updateFriendbotTarget(accountId));
                   }}
+                  data-testid="friendbot-test-account"
                 />
                 <button
                   className="s-button"
@@ -151,7 +155,10 @@ class AccountCreator extends React.Component {
         )}
 
         <div className="so-back AccountCreator__separator"></div>
-        <div className="so-back AccountCreator__section">
+        <div
+          className="so-back AccountCreator__section"
+          data-testid="page-muxed-account"
+        >
           <div className="so-chunk">
             <h3>Muxed Account</h3>
 
@@ -195,6 +202,7 @@ class AccountCreator extends React.Component {
                   onUpdate={(gAddress) => {
                     dispatch(updateGenerateMuxedAccountInput({ gAddress }));
                   }}
+                  data-testid="muxed-create-g-address"
                 />
               </div>
 
@@ -207,6 +215,7 @@ class AccountCreator extends React.Component {
                   onUpdate={(mAccountId) => {
                     dispatch(updateGenerateMuxedAccountInput({ mAccountId }));
                   }}
+                  data-testid="muxed-create-m-id"
                 />
               </div>
 
@@ -226,6 +235,7 @@ class AccountCreator extends React.Component {
                     ),
                   );
                 }}
+                data-testid="muxed-create-button"
               >
                 Create
               </button>
@@ -277,6 +287,7 @@ class AccountCreator extends React.Component {
                   onUpdate={(mAddress) => {
                     dispatch(updateParseMuxedAccountInput(mAddress));
                   }}
+                  data-testid="muxed-parse-m-address"
                 />
               </div>
 
@@ -288,6 +299,7 @@ class AccountCreator extends React.Component {
                     parseMuxedAccount(state.muxedAccountParsed.mAddress),
                   );
                 }}
+                data-testid="muxed-parse-button"
               >
                 Parse
               </button>
