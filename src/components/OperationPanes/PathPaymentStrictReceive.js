@@ -3,7 +3,7 @@ import React from "react";
 import OptionsTablePair from "../OptionsTable/Pair";
 import AssetPicker from "../FormComponents/AssetPicker.js";
 import AmountPicker from "../FormComponents/AmountPicker.js";
-import PubKeyPicker from "../FormComponents/PubKeyPicker.js";
+import PubKeyPicker from "../FormComponents/PubKeyPicker";
 import ManualMultiPicker from "../FormComponents/ManualMultiPicker.js";
 
 export default function PathPayment(props) {

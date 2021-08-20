@@ -13,6 +13,8 @@ export default function TextPicker(props) {
     errorMessage = validator(value);
   }
 
+  const testId = props["data-testid"];
+
   return (
     <div>
       <input
@@ -23,6 +25,7 @@ export default function TextPicker(props) {
         }}
         placeholder={props.placeholder}
         className={`picker picker--textInput ${props.className}`}
+        {...(testId ? { "data-testid": testId } : {})}
       />
       <PickerError message={errorMessage} />
     </div>

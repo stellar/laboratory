@@ -3,7 +3,7 @@ import React from "react";
 import All from "./All";
 import TextPicker from "../FormComponents/TextPicker.js";
 import OptionsTablePair from "../OptionsTable/Pair";
-import PubKeyPicker from "../FormComponents/PubKeyPicker.js";
+import PubKeyPicker from "../FormComponents/PubKeyPicker";
 
 export default function AllAssets(props) {
   return (

@@ -1,7 +1,7 @@
 import React from "react";
 
 import For from "./For";
-import PubKeyPicker from "../FormComponents/PubKeyPicker.js";
+import PubKeyPicker from "../FormComponents/PubKeyPicker";
 
 export default function ForAccount(props) {
   return (
