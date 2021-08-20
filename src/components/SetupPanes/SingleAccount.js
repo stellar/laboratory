@@ -1,6 +1,6 @@
 import React from "react";
 import OptionsTablePair from "../OptionsTable/Pair";
-import PubKeyPicker from "../FormComponents/PubKeyPicker.js";
+import PubKeyPicker from "../FormComponents/PubKeyPicker";
 
 export default function SingleAccount(props) {
   return (

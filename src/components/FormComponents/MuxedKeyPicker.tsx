@@ -1,20 +1,22 @@
-/** @format */
-import React from "react";
 import { StrKey } from "stellar-sdk";
 
-import TextPicker from "./TextPicker";
-import { ImportMark } from "../ImportMark";
-import {
-  useFreighter,
-  freighterGetPublicKey,
-} from "../../helpers/useFreighter";
+import TextPicker from "components/FormComponents/TextPicker";
+import { ImportMark } from "components/ImportMark";
+import { useFreighter, freighterGetPublicKey } from "helpers/useFreighter";
+
+interface MuxedKeyPickerProps {
+  [key: string]: any;
+  placeholder?: string;
+  value: string;
+  onUpdate: (value: string) => void;
+}
 
 export default function MuxedKeyPicker({
   placeholder,
   value,
   onUpdate,
   ...props
-}) {
+}: MuxedKeyPickerProps) {
   const hasFreighter = useFreighter();
 
   return (
@@ -27,12 +29,17 @@ export default function MuxedKeyPicker({
           placeholder ||
           "Example: MBRWSVNURRYVIYSWLRFQ5AAAUWPKOZZNZVVVIXHFGUSGIRVKLVIDYAAAAAAAAAAD5GJ4U"
         }
-        validator={(value) => {
-          if (!value.startsWith("M") || value.length !== 69) {
+        validator={(value: string) => {
+          // TODO: remove when type is added to stellar-sdk
+          // @ts-ignore
+          if (!StrKey.isValidMed25519PublicKey(value)) {
             return "Muxed account address is invalid.";
           }
+
+          return null;
         }}
       />
+
       {hasFreighter && (
         <button
           type="button"

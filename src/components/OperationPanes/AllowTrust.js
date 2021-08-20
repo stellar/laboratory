@@ -1,7 +1,7 @@
 import React from "react";
 
 import OptionsTablePair from "../OptionsTable/Pair";
-import PubKeyPicker from "../FormComponents/PubKeyPicker.js";
+import PubKeyPicker from "../FormComponents/PubKeyPicker";
 import TextPicker from "../FormComponents/TextPicker.js";
 import RadioButtonPicker from "../FormComponents/RadioButtonPicker.js";
 

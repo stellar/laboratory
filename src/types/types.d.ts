@@ -4,6 +4,12 @@ export enum Network {
   CUSTOM = "custom",
 }
 
+export enum ActionStatus {
+  LOADING = "loading",
+  SUCCESS = "success",
+  FAILURE = "failure",
+}
+
 interface StatusPageComponent {
   [key: string]: any;
   id: string;

@@ -1,20 +1,22 @@
-/** @format */
-import React from "react";
 import { StrKey } from "stellar-sdk";
 
-import TextPicker from "./TextPicker";
-import { ImportMark } from "../ImportMark";
-import {
-  useFreighter,
-  freighterGetPublicKey,
-} from "../../helpers/useFreighter";
+import TextPicker from "components/FormComponents/TextPicker";
+import { ImportMark } from "components/ImportMark";
+import { useFreighter, freighterGetPublicKey } from "helpers/useFreighter";
+
+interface PubKeyPickerProps {
+  [key: string]: any;
+  placeholder?: string;
+  value: string;
+  onUpdate: (value: string) => void;
+}
 
 export default function PubKeyPicker({
   placeholder,
   value,
   onUpdate,
   ...props
-}) {
+}: PubKeyPickerProps) {
   const hasFreighter = useFreighter();
 
   return (
@@ -27,16 +29,21 @@ export default function PubKeyPicker({
           placeholder ||
           "Example: GCEXAMPLE5HWNK4AYSTEQ4UWDKHTCKADVS2AHF3UI2ZMO3DPUSM6Q4UG"
         }
-        validator={(value) => {
+        validator={(value: string) => {
           if (value.startsWith("M")) {
-            if (value.length !== 69) {
+            // TODO: remove when type is added to stellar-sdk
+            // @ts-ignore
+            if (!StrKey.isValidMed25519PublicKey(value)) {
               return "Muxed account address is invalid.";
             }
           } else if (!StrKey.isValidEd25519PublicKey(value)) {
             return "Public key is invalid.";
           }
+
+          return null;
         }}
       />
+
       {hasFreighter && (
         <button
           type="button"
