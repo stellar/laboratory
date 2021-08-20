@@ -14,14 +14,27 @@ import { Introduction } from "views/Introduction";
 
 addEventHandler(routingMetrics);
 
-const makeAsync = (loader: any) =>
-  Loadable({
+const makeAsync = (loader: any, namedExport?: string) => {
+  if (namedExport) {
+    return Loadable({
+      loader,
+      loading: LoadingView,
+      render(loaded: any, props: any) {
+        const Component = loaded[namedExport];
+        return <Component {...props} />;
+      },
+    });
+  }
+
+  return Loadable({
     loader,
     loading: LoadingView,
   });
+};
 
 const AsyncAccountCreator = makeAsync(
   () => import(/* webpackChunkName: 'Creator' */ "views/AccountCreator"),
+  "AccountCreator",
 );
 const AsyncEndpointExplorer = makeAsync(
   () => import(/* webpackChunkName: 'Explorer' */ "views/EndpointExplorer"),

@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import map from "lodash/map";
-import PubKeyPicker from "../components/FormComponents/PubKeyPicker.js";
+import PubKeyPicker from "../components/FormComponents/PubKeyPicker";
 import { getOperation } from "../data/operations";
 import {
   duplicateOperation,

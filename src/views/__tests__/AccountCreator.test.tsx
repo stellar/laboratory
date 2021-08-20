@@ -6,7 +6,7 @@ import StellarSdk from "stellar-sdk";
 import { rest } from "msw";
 import { setupServer } from "msw/node";
 import { render } from "helpers/testHelpers";
-import AccountCreator from "views/AccountCreator";
+import { AccountCreator } from "views/AccountCreator";
 
 const PUBLIC_KEY = "foo";
 const SECRET_KEY = "bar";
