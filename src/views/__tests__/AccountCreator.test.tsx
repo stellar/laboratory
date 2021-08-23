@@ -82,13 +82,11 @@ test("friendbot: account funded successfully", async () => {
     within(friendbotContainer).queryByText(/loading/i);
   });
 
-  await waitFor(() => {
-    within(friendbotContainer).queryByText(/successfully funded/i);
-  });
-
-  expect(
-    within(friendbotContainer).getByText(/successfully funded/i),
-  ).toBeInTheDocument();
+  await waitFor(() =>
+    expect(
+      within(friendbotContainer).getByText(/successfully funded/i),
+    ).toBeInTheDocument(),
+  );
 });
 
 test("muxed account: renders on the page", async () => {
