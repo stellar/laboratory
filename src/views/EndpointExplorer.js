@@ -46,7 +46,7 @@ class EndpointExplorer extends React.Component {
     }
 
     return (
-      <div className="so-back">
+      <div className="so-back" data-testid="page-endpoint-explorer">
         <div className="so-chunk">
           <div className="pageIntro">
             <p>
