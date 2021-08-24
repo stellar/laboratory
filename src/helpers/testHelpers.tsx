@@ -25,7 +25,10 @@ export const render = (
 
 enum ENDPOINT_RESPONSE {
   accounts = "accounts mock response",
-  account_single = "single account mock response",
+  single_account = "single account mock response",
+  assets_all = "all assets mock response",
+  all_claimable_balances = "all claimable balances mock response",
+  single_claimable_balance = "single claimable balance mock response",
 }
 
 const server = setupServer(
@@ -34,22 +37,43 @@ const server = setupServer(
     return res(ctx.status(200));
   }),
   // Endpoints: accounts > accounts
-  rest.get(
-    "https://horizon-testnet.stellar.org/accounts/",
-    (_req, res, ctx) => {
-      return res(
-        ctx.status(200),
-        ctx.json({ test: ENDPOINT_RESPONSE.accounts }),
-      );
-    },
-  ),
+  rest.get("https://horizon-testnet.stellar.org/accounts", (_req, res, ctx) => {
+    return res(ctx.status(200), ctx.json({ test: ENDPOINT_RESPONSE.accounts }));
+  }),
   // Endpoints: accounts > single account
   rest.get(
     "https://horizon-testnet.stellar.org/accounts/:accountId",
     (_req, res, ctx) => {
       return res(
         ctx.status(200),
-        ctx.json({ test: ENDPOINT_RESPONSE.account_single }),
+        ctx.json({ test: ENDPOINT_RESPONSE.single_account }),
+      );
+    },
+  ),
+  // Endpoints: assets > all assets
+  rest.get("https://horizon-testnet.stellar.org/assets", (_req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({ test: ENDPOINT_RESPONSE.assets_all }),
+    );
+  }),
+  // Endpoints: claimable balances > all claimable balances
+  rest.get(
+    "https://horizon-testnet.stellar.org/claimable_balances",
+    (_req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({ test: ENDPOINT_RESPONSE.all_claimable_balances }),
+      );
+    },
+  ),
+  // Endpoints: claimable balances > single claimable balance
+  rest.get(
+    "https://horizon-testnet.stellar.org/claimable_balances/:claimableBalanceId",
+    (_req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({ test: ENDPOINT_RESPONSE.single_claimable_balance }),
       );
     },
   ),
