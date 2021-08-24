@@ -4,7 +4,7 @@
 import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 
 import { render, ENDPOINT_RESPONSE } from "helpers/testHelpers";
-import EndpointExplorer from "views/EndpointExplorer";
+import { EndpointExplorer } from "views/EndpointExplorer";
 
 let resourceContainer: HTMLElement;
 

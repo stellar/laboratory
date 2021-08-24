@@ -38,6 +38,7 @@ const AsyncAccountCreator = makeAsync(
 );
 const AsyncEndpointExplorer = makeAsync(
   () => import(/* webpackChunkName: 'Explorer' */ "views/EndpointExplorer"),
+  "EndpointExplorer",
 );
 const AsyncTransactionBuilder = makeAsync(
   () => import(/* webpackChunkName: 'Builder' */ "views/TransactionBuilder"),
