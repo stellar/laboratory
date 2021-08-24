@@ -53,6 +53,14 @@ enum ENDPOINT_RESPONSE {
   payments_for_ledger = "payments for ledger mock response",
   payments_for_transaction = "payments for transaction mock response",
   trade_aggregations = "trade aggregations mock response",
+  all_trades = "all trades mock response",
+  trades_for_account = "trades for account mock response",
+  trades_for_offer = "trades for offer mock response",
+  all_transactions = "all transactions mock response",
+  single_transaction = "single transaction mock response",
+  post_transaction = "post transaction mock response",
+  transactions_for_account = "transactions for account mock response",
+  transactions_for_ledger = "transactions for ledger mock response",
 }
 
 const server = setupServer(
@@ -334,6 +342,87 @@ const server = setupServer(
       return res(
         ctx.status(200),
         ctx.json({ test: ENDPOINT_RESPONSE.trade_aggregations }),
+      );
+    },
+  ),
+  // Endpoints: trades > all trades
+  rest.get("https://horizon-testnet.stellar.org/trades", (_req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({ test: ENDPOINT_RESPONSE.all_trades }),
+    );
+  }),
+  // Endpoints: trades > trades for account
+  rest.get(
+    // TODO: fix URL to have only one / at the end
+    "https://horizon-testnet.stellar.org/accounts//trades",
+    (_req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({ test: ENDPOINT_RESPONSE.trades_for_account }),
+      );
+    },
+  ),
+  // Endpoints: trades > trades for offer
+  rest.get(
+    // TODO: fix URL to have only one / at the end
+    "https://horizon-testnet.stellar.org/offers//trades",
+    (_req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({ test: ENDPOINT_RESPONSE.trades_for_offer }),
+      );
+    },
+  ),
+  // Endpoints: transactions > all transactions
+  rest.get(
+    "https://horizon-testnet.stellar.org/transactions",
+    (_req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({ test: ENDPOINT_RESPONSE.all_transactions }),
+      );
+    },
+  ),
+  // Endpoints: transactions > single transaction
+  rest.get(
+    "https://horizon-testnet.stellar.org/transactions/:transaction",
+    (_req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({ test: ENDPOINT_RESPONSE.single_transaction }),
+      );
+    },
+  ),
+  // Endpoints: transactions > post transaction
+  rest.post(
+    "https://horizon-testnet.stellar.org/transactions",
+    (_req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({ test: ENDPOINT_RESPONSE.post_transaction }),
+      );
+    },
+  ),
+  // Endpoints: transactions > transactions for account
+  rest.get(
+    // TODO: fix URL to have only one / at the end
+    "https://horizon-testnet.stellar.org/accounts//transactions",
+    (_req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({ test: ENDPOINT_RESPONSE.transactions_for_account }),
+      );
+    },
+  ),
+  // Endpoints: transactions > transactions for ledger
+  rest.get(
+    // TODO: fix URL to have only one / at the end
+    "https://horizon-testnet.stellar.org/ledgers//transactions",
+    (_req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({ test: ENDPOINT_RESPONSE.transactions_for_ledger }),
       );
     },
   ),
