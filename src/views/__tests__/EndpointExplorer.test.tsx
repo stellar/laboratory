@@ -979,3 +979,209 @@ describe("operations", () => {
     ).toBeInTheDocument();
   });
 });
+
+describe("order book", () => {
+  const RESOURCE_LINK_LABEL = "order book";
+  const SUBMIT_LABEL = "submit";
+  let orderBookEndpointsContainer: HTMLElement;
+  let orderBookEndpointInputs: HTMLElement;
+  let orderBookEndpointSubmitButton: HTMLElement;
+  let orderBookEndpointResponse: HTMLElement;
+
+  // select resource
+  beforeEach(async () => {
+    fireEvent.click(
+      within(resourceContainer).getByText(RegExp(RESOURCE_LINK_LABEL, "i")),
+    );
+    await waitFor(() => {
+      orderBookEndpointsContainer = screen.getByTestId(TEST_ID_ENDPOINT);
+    });
+  });
+
+  // resource endpoint links
+  test("renders all endpoint links", () => {
+    expect(
+      within(orderBookEndpointsContainer).getAllByRole("link"),
+    ).toHaveLength(1);
+  });
+
+  // render resource input form with submit + submit response
+  test("resource: details submit with response", async () => {
+    const detailsButton = within(orderBookEndpointsContainer).getByText(
+      /details/i,
+    );
+
+    expect(detailsButton).toBeInTheDocument();
+    fireEvent.click(detailsButton);
+
+    await waitFor(() => {
+      orderBookEndpointInputs = screen.getByTestId(TEST_ID_INPUTS);
+    });
+    expect(orderBookEndpointInputs).toBeInTheDocument();
+
+    await waitFor(() => {
+      orderBookEndpointSubmitButton = within(orderBookEndpointInputs).getByText(
+        RegExp(SUBMIT_LABEL, "i"),
+      );
+    });
+    expect(orderBookEndpointSubmitButton).toBeInTheDocument();
+
+    fireEvent.click(orderBookEndpointSubmitButton);
+
+    await waitFor(() =>
+      expect(screen.getByTestId(TEST_ID_RESULT_LOADING)).toBeInTheDocument(),
+    );
+
+    await waitFor(() => {
+      orderBookEndpointResponse = screen.getByTestId(TEST_ID_RESULT_RESPONSE);
+    });
+
+    expect(orderBookEndpointResponse).toBeInTheDocument();
+    expect(
+      within(orderBookEndpointResponse).getByText(
+        RegExp(ENDPOINT_RESPONSE.order_book_details, "i"),
+      ),
+    ).toBeInTheDocument();
+  });
+});
+
+describe("paths", () => {
+  const RESOURCE_LINK_LABEL = "paths";
+  const SUBMIT_LABEL = "submit";
+  let pathsEndpointsContainer: HTMLElement;
+  let pathsEndpointInputs: HTMLElement;
+  let pathsEndpointSubmitButton: HTMLElement;
+  let pathsEndpointResponse: HTMLElement;
+
+  // select resource
+  beforeEach(async () => {
+    fireEvent.click(
+      within(resourceContainer).getByText(RegExp(RESOURCE_LINK_LABEL, "i")),
+    );
+    await waitFor(() => {
+      pathsEndpointsContainer = screen.getByTestId(TEST_ID_ENDPOINT);
+    });
+  });
+
+  // resource endpoint links
+  test("renders all endpoint links", () => {
+    expect(within(pathsEndpointsContainer).getAllByRole("link")).toHaveLength(
+      3,
+    );
+  });
+
+  // render resource input form with submit + submit response
+  test("resource: find payment paths submit with response", async () => {
+    const findPaymentPathsButton = within(pathsEndpointsContainer).getByText(
+      /find payment paths/i,
+    );
+
+    expect(findPaymentPathsButton).toBeInTheDocument();
+    fireEvent.click(findPaymentPathsButton);
+
+    await waitFor(() => {
+      pathsEndpointInputs = screen.getByTestId(TEST_ID_INPUTS);
+    });
+    expect(pathsEndpointInputs).toBeInTheDocument();
+
+    await waitFor(() => {
+      pathsEndpointSubmitButton = within(pathsEndpointInputs).getByText(
+        RegExp(SUBMIT_LABEL, "i"),
+      );
+    });
+    expect(pathsEndpointSubmitButton).toBeInTheDocument();
+
+    fireEvent.click(pathsEndpointSubmitButton);
+
+    await waitFor(() =>
+      expect(screen.getByTestId(TEST_ID_RESULT_LOADING)).toBeInTheDocument(),
+    );
+
+    await waitFor(() => {
+      pathsEndpointResponse = screen.getByTestId(TEST_ID_RESULT_RESPONSE);
+    });
+
+    expect(pathsEndpointResponse).toBeInTheDocument();
+    expect(
+      within(pathsEndpointResponse).getByText(
+        RegExp(ENDPOINT_RESPONSE.find_payment_paths, "i"),
+      ),
+    ).toBeInTheDocument();
+  });
+
+  test("resource: find strict receive payment paths submit with response", async () => {
+    const findReceivePaymentPathsButton = within(
+      pathsEndpointsContainer,
+    ).getByText(/find strict receive payment paths/i);
+
+    expect(findReceivePaymentPathsButton).toBeInTheDocument();
+    fireEvent.click(findReceivePaymentPathsButton);
+
+    await waitFor(() => {
+      pathsEndpointInputs = screen.getByTestId(TEST_ID_INPUTS);
+    });
+    expect(pathsEndpointInputs).toBeInTheDocument();
+
+    await waitFor(() => {
+      pathsEndpointSubmitButton = within(pathsEndpointInputs).getByText(
+        RegExp(SUBMIT_LABEL, "i"),
+      );
+    });
+    expect(pathsEndpointSubmitButton).toBeInTheDocument();
+
+    fireEvent.click(pathsEndpointSubmitButton);
+
+    await waitFor(() =>
+      expect(screen.getByTestId(TEST_ID_RESULT_LOADING)).toBeInTheDocument(),
+    );
+
+    await waitFor(() => {
+      pathsEndpointResponse = screen.getByTestId(TEST_ID_RESULT_RESPONSE);
+    });
+
+    expect(pathsEndpointResponse).toBeInTheDocument();
+    expect(
+      within(pathsEndpointResponse).getByText(
+        RegExp(ENDPOINT_RESPONSE.find_strict_receive_payment_paths, "i"),
+      ),
+    ).toBeInTheDocument();
+  });
+
+  test("resource: find strict send payment paths submit with response", async () => {
+    const findSendPaymentPathsButton = within(
+      pathsEndpointsContainer,
+    ).getByText(/find strict send payment paths/i);
+
+    expect(findSendPaymentPathsButton).toBeInTheDocument();
+    fireEvent.click(findSendPaymentPathsButton);
+
+    await waitFor(() => {
+      pathsEndpointInputs = screen.getByTestId(TEST_ID_INPUTS);
+    });
+    expect(pathsEndpointInputs).toBeInTheDocument();
+
+    await waitFor(() => {
+      pathsEndpointSubmitButton = within(pathsEndpointInputs).getByText(
+        RegExp(SUBMIT_LABEL, "i"),
+      );
+    });
+    expect(pathsEndpointSubmitButton).toBeInTheDocument();
+
+    fireEvent.click(pathsEndpointSubmitButton);
+
+    await waitFor(() =>
+      expect(screen.getByTestId(TEST_ID_RESULT_LOADING)).toBeInTheDocument(),
+    );
+
+    await waitFor(() => {
+      pathsEndpointResponse = screen.getByTestId(TEST_ID_RESULT_RESPONSE);
+    });
+
+    expect(pathsEndpointResponse).toBeInTheDocument();
+    expect(
+      within(pathsEndpointResponse).getByText(
+        RegExp(ENDPOINT_RESPONSE.find_strict_send_payment_paths, "i"),
+      ),
+    ).toBeInTheDocument();
+  });
+});

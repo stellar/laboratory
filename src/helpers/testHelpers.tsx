@@ -44,6 +44,10 @@ enum ENDPOINT_RESPONSE {
   operations_for_account = "operations for account mock response",
   operations_for_ledger = "operations for ledger mock response",
   operations_for_transaction = "operations for transaction mock response",
+  order_book_details = "order book details mock response",
+  find_payment_paths = "find payment paths mock response",
+  find_strict_receive_payment_paths = "find strict receive payments paths mock response",
+  find_strict_send_payment_paths = "find strict send payments paths mock response",
 }
 
 const server = setupServer(
@@ -238,6 +242,43 @@ const server = setupServer(
       return res(
         ctx.status(200),
         ctx.json({ test: ENDPOINT_RESPONSE.operations_for_transaction }),
+      );
+    },
+  ),
+  // Endpoints: order book > details
+  rest.get(
+    "https://horizon-testnet.stellar.org/order_book",
+    (_req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({ test: ENDPOINT_RESPONSE.order_book_details }),
+      );
+    },
+  ),
+  // Endpoints: paths > find payment paths
+  rest.get("https://horizon-testnet.stellar.org/paths", (_req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({ test: ENDPOINT_RESPONSE.find_payment_paths }),
+    );
+  }),
+  // Endpoints: paths > find strict receive payment paths
+  rest.get(
+    "https://horizon-testnet.stellar.org/paths/strict-receive",
+    (_req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({ test: ENDPOINT_RESPONSE.find_strict_receive_payment_paths }),
+      );
+    },
+  ),
+  // Endpoints: paths > find strict send payment paths
+  rest.get(
+    "https://horizon-testnet.stellar.org/paths/strict-send",
+    (_req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({ test: ENDPOINT_RESPONSE.find_strict_send_payment_paths }),
       );
     },
   ),
