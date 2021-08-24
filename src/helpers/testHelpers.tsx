@@ -63,45 +63,41 @@ enum ENDPOINT_RESPONSE {
   transactions_for_ledger = "transactions for ledger mock response",
 }
 
+const HORIZON_URL = "https://horizon-testnet.stellar.org";
+
 const server = setupServer(
   // Friendbot
   rest.get("https://friendbot.stellar.org", (_req, res, ctx) => {
     return res(ctx.status(200));
   }),
   // Endpoints: accounts > accounts
-  rest.get("https://horizon-testnet.stellar.org/accounts", (_req, res, ctx) => {
+  rest.get(`${HORIZON_URL}/accounts`, (_req, res, ctx) => {
     return res(ctx.status(200), ctx.json({ test: ENDPOINT_RESPONSE.accounts }));
   }),
   // Endpoints: accounts > single account
-  rest.get(
-    "https://horizon-testnet.stellar.org/accounts/:accountId",
-    (_req, res, ctx) => {
-      return res(
-        ctx.status(200),
-        ctx.json({ test: ENDPOINT_RESPONSE.single_account }),
-      );
-    },
-  ),
+  rest.get(`${HORIZON_URL}/accounts/:accountId`, (_req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({ test: ENDPOINT_RESPONSE.single_account }),
+    );
+  }),
   // Endpoints: assets > all assets
-  rest.get("https://horizon-testnet.stellar.org/assets", (_req, res, ctx) => {
+  rest.get(`${HORIZON_URL}/assets`, (_req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({ test: ENDPOINT_RESPONSE.all_assets }),
     );
   }),
   // Endpoints: claimable balances > all claimable balances
-  rest.get(
-    "https://horizon-testnet.stellar.org/claimable_balances",
-    (_req, res, ctx) => {
-      return res(
-        ctx.status(200),
-        ctx.json({ test: ENDPOINT_RESPONSE.all_claimable_balances }),
-      );
-    },
-  ),
+  rest.get(`${HORIZON_URL}/claimable_balances`, (_req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({ test: ENDPOINT_RESPONSE.all_claimable_balances }),
+    );
+  }),
   // Endpoints: claimable balances > single claimable balance
   rest.get(
-    "https://horizon-testnet.stellar.org/claimable_balances/:claimableBalanceId",
+    `${HORIZON_URL}/claimable_balances/:claimableBalanceId`,
     (_req, res, ctx) => {
       return res(
         ctx.status(200),
@@ -110,7 +106,7 @@ const server = setupServer(
     },
   ),
   // Endpoints: effects > all effects
-  rest.get("https://horizon-testnet.stellar.org/effects", (_req, res, ctx) => {
+  rest.get(`${HORIZON_URL}/effects`, (_req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({ test: ENDPOINT_RESPONSE.all_effects }),
@@ -119,7 +115,7 @@ const server = setupServer(
   // Endpoints: effects > effects for account
   rest.get(
     // TODO: fix URL to have only one / at the end
-    "https://horizon-testnet.stellar.org/accounts//effects",
+    `${HORIZON_URL}/accounts//effects`,
     (_req, res, ctx) => {
       return res(
         ctx.status(200),
@@ -130,7 +126,7 @@ const server = setupServer(
   // Endpoints: effects > effects for ledger
   rest.get(
     // TODO: fix URL to have only one / at the end
-    "https://horizon-testnet.stellar.org/ledgers//effects",
+    `${HORIZON_URL}/ledgers//effects`,
     (_req, res, ctx) => {
       return res(
         ctx.status(200),
@@ -141,7 +137,7 @@ const server = setupServer(
   // Endpoints: effects > effects for operation
   rest.get(
     // TODO: fix URL to have only one / at the end
-    "https://horizon-testnet.stellar.org/operations//effects",
+    `${HORIZON_URL}/operations//effects`,
     (_req, res, ctx) => {
       return res(
         ctx.status(200),
@@ -152,7 +148,7 @@ const server = setupServer(
   // Endpoints: effects > effects for transaction
   rest.get(
     // TODO: fix URL to have only one / at the end
-    "https://horizon-testnet.stellar.org/transactions//effects",
+    `${HORIZON_URL}/transactions//effects`,
     (_req, res, ctx) => {
       return res(
         ctx.status(200),
@@ -161,43 +157,37 @@ const server = setupServer(
     },
   ),
   // Endpoints: ledger > all ledgers
-  rest.get("https://horizon-testnet.stellar.org/ledgers", (_req, res, ctx) => {
+  rest.get(`${HORIZON_URL}/ledgers`, (_req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({ test: ENDPOINT_RESPONSE.all_ledgers }),
     );
   }),
   // Endpoints: ledger > single ledger
-  rest.get(
-    "https://horizon-testnet.stellar.org/ledgers/:ledger",
-    (_req, res, ctx) => {
-      return res(
-        ctx.status(200),
-        ctx.json({ test: ENDPOINT_RESPONSE.single_ledger }),
-      );
-    },
-  ),
+  rest.get(`${HORIZON_URL}/ledgers/:ledger`, (_req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({ test: ENDPOINT_RESPONSE.single_ledger }),
+    );
+  }),
   // Endpoints: offers > all offers
-  rest.get("https://horizon-testnet.stellar.org/offers", (_req, res, ctx) => {
+  rest.get(`${HORIZON_URL}/offers`, (_req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({ test: ENDPOINT_RESPONSE.all_offers }),
     );
   }),
   // Endpoints: offers > single offer
-  rest.get(
-    "https://horizon-testnet.stellar.org/offers/:offerId",
-    (_req, res, ctx) => {
-      return res(
-        ctx.status(200),
-        ctx.json({ test: ENDPOINT_RESPONSE.single_offer }),
-      );
-    },
-  ),
+  rest.get(`${HORIZON_URL}/offers/:offerId`, (_req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({ test: ENDPOINT_RESPONSE.single_offer }),
+    );
+  }),
   // Endpoints: offers > offers for account
   rest.get(
     // TODO: fix URL to have only one / at the end
-    "https://horizon-testnet.stellar.org/accounts//offers",
+    `${HORIZON_URL}/accounts//offers`,
     (_req, res, ctx) => {
       return res(
         ctx.status(200),
@@ -206,29 +196,23 @@ const server = setupServer(
     },
   ),
   // Endpoints: operations > all operations
-  rest.get(
-    "https://horizon-testnet.stellar.org/operations",
-    (_req, res, ctx) => {
-      return res(
-        ctx.status(200),
-        ctx.json({ test: ENDPOINT_RESPONSE.all_operations }),
-      );
-    },
-  ),
+  rest.get(`${HORIZON_URL}/operations`, (_req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({ test: ENDPOINT_RESPONSE.all_operations }),
+    );
+  }),
   // Endpoints: operations > single operation
-  rest.get(
-    "https://horizon-testnet.stellar.org/operations/:operation",
-    (_req, res, ctx) => {
-      return res(
-        ctx.status(200),
-        ctx.json({ test: ENDPOINT_RESPONSE.single_operation }),
-      );
-    },
-  ),
+  rest.get(`${HORIZON_URL}/operations/:operation`, (_req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({ test: ENDPOINT_RESPONSE.single_operation }),
+    );
+  }),
   // Endpoints: operations > operations for account
   rest.get(
     // TODO: fix URL to have only one / at the end
-    "https://horizon-testnet.stellar.org/accounts//operations",
+    `${HORIZON_URL}/accounts//operations`,
     (_req, res, ctx) => {
       return res(
         ctx.status(200),
@@ -239,7 +223,7 @@ const server = setupServer(
   // Endpoints: operations > operations for ledger
   rest.get(
     // TODO: fix URL to have only one / at the end
-    "https://horizon-testnet.stellar.org/ledgers//operations",
+    `${HORIZON_URL}/ledgers//operations`,
     (_req, res, ctx) => {
       return res(
         ctx.status(200),
@@ -250,7 +234,7 @@ const server = setupServer(
   // Endpoints: operations > operations for transaction
   rest.get(
     // TODO: fix URL to have only one / at the end
-    "https://horizon-testnet.stellar.org/transactions//operations",
+    `${HORIZON_URL}/transactions//operations`,
     (_req, res, ctx) => {
       return res(
         ctx.status(200),
@@ -259,44 +243,35 @@ const server = setupServer(
     },
   ),
   // Endpoints: order book > details
-  rest.get(
-    "https://horizon-testnet.stellar.org/order_book",
-    (_req, res, ctx) => {
-      return res(
-        ctx.status(200),
-        ctx.json({ test: ENDPOINT_RESPONSE.order_book_details }),
-      );
-    },
-  ),
+  rest.get(`${HORIZON_URL}/order_book`, (_req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({ test: ENDPOINT_RESPONSE.order_book_details }),
+    );
+  }),
   // Endpoints: paths > find payment paths
-  rest.get("https://horizon-testnet.stellar.org/paths", (_req, res, ctx) => {
+  rest.get(`${HORIZON_URL}/paths`, (_req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({ test: ENDPOINT_RESPONSE.find_payment_paths }),
     );
   }),
   // Endpoints: paths > find strict receive payment paths
-  rest.get(
-    "https://horizon-testnet.stellar.org/paths/strict-receive",
-    (_req, res, ctx) => {
-      return res(
-        ctx.status(200),
-        ctx.json({ test: ENDPOINT_RESPONSE.find_strict_receive_payment_paths }),
-      );
-    },
-  ),
+  rest.get(`${HORIZON_URL}/paths/strict-receive`, (_req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({ test: ENDPOINT_RESPONSE.find_strict_receive_payment_paths }),
+    );
+  }),
   // Endpoints: paths > find strict send payment paths
-  rest.get(
-    "https://horizon-testnet.stellar.org/paths/strict-send",
-    (_req, res, ctx) => {
-      return res(
-        ctx.status(200),
-        ctx.json({ test: ENDPOINT_RESPONSE.find_strict_send_payment_paths }),
-      );
-    },
-  ),
+  rest.get(`${HORIZON_URL}/paths/strict-send`, (_req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({ test: ENDPOINT_RESPONSE.find_strict_send_payment_paths }),
+    );
+  }),
   // Endpoints: payments > all payments
-  rest.get("https://horizon-testnet.stellar.org/payments", (_req, res, ctx) => {
+  rest.get(`${HORIZON_URL}/payments`, (_req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({ test: ENDPOINT_RESPONSE.all_payments }),
@@ -305,7 +280,7 @@ const server = setupServer(
   // Endpoints: payments > payments for account
   rest.get(
     // TODO: fix URL to have only one / at the end
-    "https://horizon-testnet.stellar.org/accounts//payments",
+    `${HORIZON_URL}/accounts//payments`,
     (_req, res, ctx) => {
       return res(
         ctx.status(200),
@@ -316,7 +291,7 @@ const server = setupServer(
   // Endpoints: payments > payments for ledger
   rest.get(
     // TODO: fix URL to have only one / at the end
-    "https://horizon-testnet.stellar.org/ledgers//payments",
+    `${HORIZON_URL}/ledgers//payments`,
     (_req, res, ctx) => {
       return res(
         ctx.status(200),
@@ -327,7 +302,7 @@ const server = setupServer(
   // Endpoints: payments > payments for transaction
   rest.get(
     // TODO: fix URL to have only one / at the end
-    "https://horizon-testnet.stellar.org/transactions//payments",
+    `${HORIZON_URL}/transactions//payments`,
     (_req, res, ctx) => {
       return res(
         ctx.status(200),
@@ -336,17 +311,14 @@ const server = setupServer(
     },
   ),
   // Endpoints: trade aggregations > trade aggregations
-  rest.get(
-    "https://horizon-testnet.stellar.org/trade_aggregations",
-    (_req, res, ctx) => {
-      return res(
-        ctx.status(200),
-        ctx.json({ test: ENDPOINT_RESPONSE.trade_aggregations }),
-      );
-    },
-  ),
+  rest.get(`${HORIZON_URL}/trade_aggregations`, (_req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({ test: ENDPOINT_RESPONSE.trade_aggregations }),
+    );
+  }),
   // Endpoints: trades > all trades
-  rest.get("https://horizon-testnet.stellar.org/trades", (_req, res, ctx) => {
+  rest.get(`${HORIZON_URL}/trades`, (_req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({ test: ENDPOINT_RESPONSE.all_trades }),
@@ -355,7 +327,7 @@ const server = setupServer(
   // Endpoints: trades > trades for account
   rest.get(
     // TODO: fix URL to have only one / at the end
-    "https://horizon-testnet.stellar.org/accounts//trades",
+    `${HORIZON_URL}/accounts//trades`,
     (_req, res, ctx) => {
       return res(
         ctx.status(200),
@@ -366,7 +338,7 @@ const server = setupServer(
   // Endpoints: trades > trades for offer
   rest.get(
     // TODO: fix URL to have only one / at the end
-    "https://horizon-testnet.stellar.org/offers//trades",
+    `${HORIZON_URL}/offers//trades`,
     (_req, res, ctx) => {
       return res(
         ctx.status(200),
@@ -375,39 +347,30 @@ const server = setupServer(
     },
   ),
   // Endpoints: transactions > all transactions
-  rest.get(
-    "https://horizon-testnet.stellar.org/transactions",
-    (_req, res, ctx) => {
-      return res(
-        ctx.status(200),
-        ctx.json({ test: ENDPOINT_RESPONSE.all_transactions }),
-      );
-    },
-  ),
+  rest.get(`${HORIZON_URL}/transactions`, (_req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({ test: ENDPOINT_RESPONSE.all_transactions }),
+    );
+  }),
   // Endpoints: transactions > single transaction
-  rest.get(
-    "https://horizon-testnet.stellar.org/transactions/:transaction",
-    (_req, res, ctx) => {
-      return res(
-        ctx.status(200),
-        ctx.json({ test: ENDPOINT_RESPONSE.single_transaction }),
-      );
-    },
-  ),
+  rest.get(`${HORIZON_URL}/transactions/:transaction`, (_req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({ test: ENDPOINT_RESPONSE.single_transaction }),
+    );
+  }),
   // Endpoints: transactions > post transaction
-  rest.post(
-    "https://horizon-testnet.stellar.org/transactions",
-    (_req, res, ctx) => {
-      return res(
-        ctx.status(200),
-        ctx.json({ test: ENDPOINT_RESPONSE.post_transaction }),
-      );
-    },
-  ),
+  rest.post(`${HORIZON_URL}/transactions`, (_req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({ test: ENDPOINT_RESPONSE.post_transaction }),
+    );
+  }),
   // Endpoints: transactions > transactions for account
   rest.get(
     // TODO: fix URL to have only one / at the end
-    "https://horizon-testnet.stellar.org/accounts//transactions",
+    `${HORIZON_URL}/accounts//transactions`,
     (_req, res, ctx) => {
       return res(
         ctx.status(200),
@@ -418,7 +381,7 @@ const server = setupServer(
   // Endpoints: transactions > transactions for ledger
   rest.get(
     // TODO: fix URL to have only one / at the end
-    "https://horizon-testnet.stellar.org/ledgers//transactions",
+    `${HORIZON_URL}/ledgers//transactions`,
     (_req, res, ctx) => {
       return res(
         ctx.status(200),
