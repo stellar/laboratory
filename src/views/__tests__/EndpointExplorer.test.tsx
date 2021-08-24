@@ -301,3 +301,323 @@ describe("claimable balances", () => {
     ).toBeInTheDocument();
   });
 });
+
+describe("effects", () => {
+  const RESOURCE_LINK_LABEL = "effects";
+  const SUBMIT_LABEL = "submit";
+  let effectsEndpointsContainer: HTMLElement;
+  let effectsEndpointInputs: HTMLElement;
+  let effectsEndpointSubmitButton: HTMLElement;
+  let effectsEndpointResponse: HTMLElement;
+
+  // select resource
+  beforeEach(async () => {
+    fireEvent.click(
+      within(resourceContainer).getByText(RegExp(RESOURCE_LINK_LABEL, "i")),
+    );
+    await waitFor(() => {
+      effectsEndpointsContainer = screen.getByTestId(TEST_ID_ENDPOINT);
+    });
+  });
+
+  // resource endpoint links
+  test("renders all endpoint links", () => {
+    expect(within(effectsEndpointsContainer).getAllByRole("link")).toHaveLength(
+      5,
+    );
+  });
+
+  // render resource input form with submit + submit response
+  test("resource: all effects submit with response", async () => {
+    const allEffectsButton = within(effectsEndpointsContainer).getByText(
+      /all effects/i,
+    );
+
+    expect(allEffectsButton).toBeInTheDocument();
+    fireEvent.click(allEffectsButton);
+
+    await waitFor(() => {
+      effectsEndpointInputs = screen.getByTestId(TEST_ID_INPUTS);
+    });
+    expect(effectsEndpointInputs).toBeInTheDocument();
+
+    await waitFor(() => {
+      effectsEndpointSubmitButton = within(effectsEndpointInputs).getByText(
+        RegExp(SUBMIT_LABEL, "i"),
+      );
+    });
+    expect(effectsEndpointSubmitButton).toBeInTheDocument();
+
+    fireEvent.click(effectsEndpointSubmitButton);
+
+    await waitFor(() =>
+      expect(screen.getByTestId(TEST_ID_RESULT_LOADING)).toBeInTheDocument(),
+    );
+
+    await waitFor(() => {
+      effectsEndpointResponse = screen.getByTestId(TEST_ID_RESULT_RESPONSE);
+    });
+
+    expect(effectsEndpointResponse).toBeInTheDocument();
+    expect(
+      within(effectsEndpointResponse).getByText(
+        RegExp(ENDPOINT_RESPONSE.all_effects, "i"),
+      ),
+    ).toBeInTheDocument();
+  });
+
+  test("resource: effects for account submit with response", async () => {
+    const effectsForAccountButton = within(effectsEndpointsContainer).getByText(
+      /effects for account/i,
+    );
+
+    expect(effectsForAccountButton).toBeInTheDocument();
+    fireEvent.click(effectsForAccountButton);
+
+    await waitFor(() => {
+      effectsEndpointInputs = screen.getByTestId(TEST_ID_INPUTS);
+    });
+    expect(effectsEndpointInputs).toBeInTheDocument();
+
+    await waitFor(() => {
+      effectsEndpointSubmitButton = within(effectsEndpointInputs).getByText(
+        RegExp(SUBMIT_LABEL, "i"),
+      );
+    });
+    expect(effectsEndpointSubmitButton).toBeInTheDocument();
+
+    fireEvent.click(effectsEndpointSubmitButton);
+
+    await waitFor(() =>
+      expect(screen.getByTestId(TEST_ID_RESULT_LOADING)).toBeInTheDocument(),
+    );
+
+    await waitFor(() => {
+      effectsEndpointResponse = screen.getByTestId(TEST_ID_RESULT_RESPONSE);
+    });
+
+    expect(effectsEndpointResponse).toBeInTheDocument();
+    expect(
+      within(effectsEndpointResponse).getByText(
+        RegExp(ENDPOINT_RESPONSE.effects_for_account, "i"),
+      ),
+    ).toBeInTheDocument();
+  });
+
+  test("resource: effects for ledger submit with response", async () => {
+    const effectsForLedgerButton = within(effectsEndpointsContainer).getByText(
+      /effects for ledger/i,
+    );
+
+    expect(effectsForLedgerButton).toBeInTheDocument();
+    fireEvent.click(effectsForLedgerButton);
+
+    await waitFor(() => {
+      effectsEndpointInputs = screen.getByTestId(TEST_ID_INPUTS);
+    });
+    expect(effectsEndpointInputs).toBeInTheDocument();
+
+    await waitFor(() => {
+      effectsEndpointSubmitButton = within(effectsEndpointInputs).getByText(
+        RegExp(SUBMIT_LABEL, "i"),
+      );
+    });
+    expect(effectsEndpointSubmitButton).toBeInTheDocument();
+
+    fireEvent.click(effectsEndpointSubmitButton);
+
+    await waitFor(() =>
+      expect(screen.getByTestId(TEST_ID_RESULT_LOADING)).toBeInTheDocument(),
+    );
+
+    await waitFor(() => {
+      effectsEndpointResponse = screen.getByTestId(TEST_ID_RESULT_RESPONSE);
+    });
+
+    expect(effectsEndpointResponse).toBeInTheDocument();
+    expect(
+      within(effectsEndpointResponse).getByText(
+        RegExp(ENDPOINT_RESPONSE.effects_for_ledger, "i"),
+      ),
+    ).toBeInTheDocument();
+  });
+
+  test("resource: effects for operation submit with response", async () => {
+    const effectsForOperationButton = within(
+      effectsEndpointsContainer,
+    ).getByText(/effects for operation/i);
+
+    expect(effectsForOperationButton).toBeInTheDocument();
+    fireEvent.click(effectsForOperationButton);
+
+    await waitFor(() => {
+      effectsEndpointInputs = screen.getByTestId(TEST_ID_INPUTS);
+    });
+    expect(effectsEndpointInputs).toBeInTheDocument();
+
+    await waitFor(() => {
+      effectsEndpointSubmitButton = within(effectsEndpointInputs).getByText(
+        RegExp(SUBMIT_LABEL, "i"),
+      );
+    });
+    expect(effectsEndpointSubmitButton).toBeInTheDocument();
+
+    fireEvent.click(effectsEndpointSubmitButton);
+
+    await waitFor(() =>
+      expect(screen.getByTestId(TEST_ID_RESULT_LOADING)).toBeInTheDocument(),
+    );
+
+    await waitFor(() => {
+      effectsEndpointResponse = screen.getByTestId(TEST_ID_RESULT_RESPONSE);
+    });
+
+    expect(effectsEndpointResponse).toBeInTheDocument();
+    expect(
+      within(effectsEndpointResponse).getByText(
+        RegExp(ENDPOINT_RESPONSE.effects_for_operation, "i"),
+      ),
+    ).toBeInTheDocument();
+  });
+
+  test("resource: effects for transaction submit with response", async () => {
+    const effectsForTransactionButton = within(
+      effectsEndpointsContainer,
+    ).getByText(/effects for transaction/i);
+
+    expect(effectsForTransactionButton).toBeInTheDocument();
+    fireEvent.click(effectsForTransactionButton);
+
+    await waitFor(() => {
+      effectsEndpointInputs = screen.getByTestId(TEST_ID_INPUTS);
+    });
+    expect(effectsEndpointInputs).toBeInTheDocument();
+
+    await waitFor(() => {
+      effectsEndpointSubmitButton = within(effectsEndpointInputs).getByText(
+        RegExp(SUBMIT_LABEL, "i"),
+      );
+    });
+    expect(effectsEndpointSubmitButton).toBeInTheDocument();
+
+    fireEvent.click(effectsEndpointSubmitButton);
+
+    await waitFor(() =>
+      expect(screen.getByTestId(TEST_ID_RESULT_LOADING)).toBeInTheDocument(),
+    );
+
+    await waitFor(() => {
+      effectsEndpointResponse = screen.getByTestId(TEST_ID_RESULT_RESPONSE);
+    });
+
+    expect(effectsEndpointResponse).toBeInTheDocument();
+    expect(
+      within(effectsEndpointResponse).getByText(
+        RegExp(ENDPOINT_RESPONSE.effects_for_transaction, "i"),
+      ),
+    ).toBeInTheDocument();
+  });
+});
+
+describe("ledger", () => {
+  const RESOURCE_LINK_LABEL = "ledger";
+  const SUBMIT_LABEL = "submit";
+  let ledgerEndpointsContainer: HTMLElement;
+  let ledgerEndpointInputs: HTMLElement;
+  let ledgerEndpointSubmitButton: HTMLElement;
+  let ledgerEndpointResponse: HTMLElement;
+
+  // select resource
+  beforeEach(async () => {
+    fireEvent.click(
+      within(resourceContainer).getByText(RegExp(RESOURCE_LINK_LABEL, "i")),
+    );
+    await waitFor(() => {
+      ledgerEndpointsContainer = screen.getByTestId(TEST_ID_ENDPOINT);
+    });
+  });
+
+  // resource endpoint links
+  test("renders all endpoint links", () => {
+    expect(within(ledgerEndpointsContainer).getAllByRole("link")).toHaveLength(
+      2,
+    );
+  });
+
+  // render resource input form with submit + submit response
+  test("resource: all ledgers submit with response", async () => {
+    const allLedgersButton = within(ledgerEndpointsContainer).getByText(
+      /all ledgers/i,
+    );
+
+    expect(allLedgersButton).toBeInTheDocument();
+    fireEvent.click(allLedgersButton);
+
+    await waitFor(() => {
+      ledgerEndpointInputs = screen.getByTestId(TEST_ID_INPUTS);
+    });
+    expect(ledgerEndpointInputs).toBeInTheDocument();
+
+    await waitFor(() => {
+      ledgerEndpointSubmitButton = within(ledgerEndpointInputs).getByText(
+        RegExp(SUBMIT_LABEL, "i"),
+      );
+    });
+    expect(ledgerEndpointSubmitButton).toBeInTheDocument();
+
+    fireEvent.click(ledgerEndpointSubmitButton);
+
+    await waitFor(() =>
+      expect(screen.getByTestId(TEST_ID_RESULT_LOADING)).toBeInTheDocument(),
+    );
+
+    await waitFor(() => {
+      ledgerEndpointResponse = screen.getByTestId(TEST_ID_RESULT_RESPONSE);
+    });
+
+    expect(ledgerEndpointResponse).toBeInTheDocument();
+    expect(
+      within(ledgerEndpointResponse).getByText(
+        RegExp(ENDPOINT_RESPONSE.all_ledgers, "i"),
+      ),
+    ).toBeInTheDocument();
+  });
+
+  test("resource: single ledger submit with response", async () => {
+    const singleLedgerButton = within(ledgerEndpointsContainer).getByText(
+      /single ledger/i,
+    );
+
+    expect(singleLedgerButton).toBeInTheDocument();
+    fireEvent.click(singleLedgerButton);
+
+    await waitFor(() => {
+      ledgerEndpointInputs = screen.getByTestId(TEST_ID_INPUTS);
+    });
+    expect(ledgerEndpointInputs).toBeInTheDocument();
+
+    await waitFor(() => {
+      ledgerEndpointSubmitButton = within(ledgerEndpointInputs).getByText(
+        RegExp(SUBMIT_LABEL, "i"),
+      );
+    });
+    expect(ledgerEndpointSubmitButton).toBeInTheDocument();
+
+    fireEvent.click(ledgerEndpointSubmitButton);
+
+    await waitFor(() =>
+      expect(screen.getByTestId(TEST_ID_RESULT_LOADING)).toBeInTheDocument(),
+    );
+
+    await waitFor(() => {
+      ledgerEndpointResponse = screen.getByTestId(TEST_ID_RESULT_RESPONSE);
+    });
+
+    expect(ledgerEndpointResponse).toBeInTheDocument();
+    expect(
+      within(ledgerEndpointResponse).getByText(
+        RegExp(ENDPOINT_RESPONSE.single_ledger, "i"),
+      ),
+    ).toBeInTheDocument();
+  });
+});

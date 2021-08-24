@@ -29,6 +29,13 @@ enum ENDPOINT_RESPONSE {
   assets_all = "all assets mock response",
   all_claimable_balances = "all claimable balances mock response",
   single_claimable_balance = "single claimable balance mock response",
+  all_effects = "all effects mock response",
+  effects_for_account = "effects for account mock response",
+  effects_for_ledger = "effects for ledger mock response",
+  effects_for_operation = "effects for operation mock response",
+  effects_for_transaction = "effects for transaction mock response",
+  all_ledgers = "all ledgers mock response",
+  single_ledger = "single ledger mock response",
 }
 
 const server = setupServer(
@@ -74,6 +81,74 @@ const server = setupServer(
       return res(
         ctx.status(200),
         ctx.json({ test: ENDPOINT_RESPONSE.single_claimable_balance }),
+      );
+    },
+  ),
+  // Endpoints: effects > all effects
+  rest.get("https://horizon-testnet.stellar.org/effects", (_req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({ test: ENDPOINT_RESPONSE.all_effects }),
+    );
+  }),
+  // Endpoints: effects > effects for account
+  rest.get(
+    // TODO: fix URL to have only one / at the end
+    "https://horizon-testnet.stellar.org/accounts//effects",
+    (_req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({ test: ENDPOINT_RESPONSE.effects_for_account }),
+      );
+    },
+  ),
+  // Endpoints: effects > effects for ledger
+  rest.get(
+    // TODO: fix URL to have only one / at the end
+    "https://horizon-testnet.stellar.org/ledgers//effects",
+    (_req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({ test: ENDPOINT_RESPONSE.effects_for_ledger }),
+      );
+    },
+  ),
+  // Endpoints: effects > effects for operation
+  rest.get(
+    // TODO: fix URL to have only one / at the end
+    "https://horizon-testnet.stellar.org/operations//effects",
+    (_req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({ test: ENDPOINT_RESPONSE.effects_for_operation }),
+      );
+    },
+  ),
+  // Endpoints: effects > effects for transaction
+  rest.get(
+    // TODO: fix URL to have only one / at the end
+    "https://horizon-testnet.stellar.org/transactions//effects",
+    (_req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({ test: ENDPOINT_RESPONSE.effects_for_transaction }),
+      );
+    },
+  ),
+  // Endpoints: ledger > all ledgers
+  rest.get("https://horizon-testnet.stellar.org/ledgers", (_req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({ test: ENDPOINT_RESPONSE.all_ledgers }),
+    );
+  }),
+  // Endpoints: ledger > single ledger
+  rest.get(
+    "https://horizon-testnet.stellar.org/ledgers/:ledger",
+    (_req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({ test: ENDPOINT_RESPONSE.single_ledger }),
       );
     },
   ),
