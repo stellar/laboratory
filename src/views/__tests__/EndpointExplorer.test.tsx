@@ -1185,3 +1185,250 @@ describe("paths", () => {
     ).toBeInTheDocument();
   });
 });
+
+describe("payments", () => {
+  const RESOURCE_LINK_LABEL = "payments";
+  const SUBMIT_LABEL = "submit";
+  let paymentsEndpointsContainer: HTMLElement;
+  let paymentsEndpointInputs: HTMLElement;
+  let paymentsEndpointSubmitButton: HTMLElement;
+  let paymentsEndpointResponse: HTMLElement;
+
+  // select resource
+  beforeEach(async () => {
+    fireEvent.click(
+      within(resourceContainer).getByText(RegExp(RESOURCE_LINK_LABEL, "i")),
+    );
+    await waitFor(() => {
+      paymentsEndpointsContainer = screen.getByTestId(TEST_ID_ENDPOINT);
+    });
+  });
+
+  // resource endpoint links
+  test("renders all endpoint links", () => {
+    expect(
+      within(paymentsEndpointsContainer).getAllByRole("link"),
+    ).toHaveLength(4);
+  });
+
+  // render resource input form with submit + submit response
+  test("resource: all payments submit with response", async () => {
+    const allPaymentsButton = within(paymentsEndpointsContainer).getByText(
+      /all payments/i,
+    );
+
+    expect(allPaymentsButton).toBeInTheDocument();
+    fireEvent.click(allPaymentsButton);
+
+    await waitFor(() => {
+      paymentsEndpointInputs = screen.getByTestId(TEST_ID_INPUTS);
+    });
+    expect(paymentsEndpointInputs).toBeInTheDocument();
+
+    await waitFor(() => {
+      paymentsEndpointSubmitButton = within(paymentsEndpointInputs).getByText(
+        RegExp(SUBMIT_LABEL, "i"),
+      );
+    });
+    expect(paymentsEndpointSubmitButton).toBeInTheDocument();
+
+    fireEvent.click(paymentsEndpointSubmitButton);
+
+    await waitFor(() =>
+      expect(screen.getByTestId(TEST_ID_RESULT_LOADING)).toBeInTheDocument(),
+    );
+
+    await waitFor(() => {
+      paymentsEndpointResponse = screen.getByTestId(TEST_ID_RESULT_RESPONSE);
+    });
+
+    expect(paymentsEndpointResponse).toBeInTheDocument();
+    expect(
+      within(paymentsEndpointResponse).getByText(
+        RegExp(ENDPOINT_RESPONSE.all_payments, "i"),
+      ),
+    ).toBeInTheDocument();
+  });
+
+  test("resource: payments for account submit with response", async () => {
+    const paymentsForAccountButton = within(
+      paymentsEndpointsContainer,
+    ).getByText(/payments for account/i);
+
+    expect(paymentsForAccountButton).toBeInTheDocument();
+    fireEvent.click(paymentsForAccountButton);
+
+    await waitFor(() => {
+      paymentsEndpointInputs = screen.getByTestId(TEST_ID_INPUTS);
+    });
+    expect(paymentsEndpointInputs).toBeInTheDocument();
+
+    await waitFor(() => {
+      paymentsEndpointSubmitButton = within(paymentsEndpointInputs).getByText(
+        RegExp(SUBMIT_LABEL, "i"),
+      );
+    });
+    expect(paymentsEndpointSubmitButton).toBeInTheDocument();
+
+    fireEvent.click(paymentsEndpointSubmitButton);
+
+    await waitFor(() =>
+      expect(screen.getByTestId(TEST_ID_RESULT_LOADING)).toBeInTheDocument(),
+    );
+
+    await waitFor(() => {
+      paymentsEndpointResponse = screen.getByTestId(TEST_ID_RESULT_RESPONSE);
+    });
+
+    expect(paymentsEndpointResponse).toBeInTheDocument();
+    expect(
+      within(paymentsEndpointResponse).getByText(
+        RegExp(ENDPOINT_RESPONSE.payments_for_account, "i"),
+      ),
+    ).toBeInTheDocument();
+  });
+
+  test("resource: payments for ledger submit with response", async () => {
+    const paymentsForLedgerButton = within(
+      paymentsEndpointsContainer,
+    ).getByText(/payments for ledger/i);
+
+    expect(paymentsForLedgerButton).toBeInTheDocument();
+    fireEvent.click(paymentsForLedgerButton);
+
+    await waitFor(() => {
+      paymentsEndpointInputs = screen.getByTestId(TEST_ID_INPUTS);
+    });
+    expect(paymentsEndpointInputs).toBeInTheDocument();
+
+    await waitFor(() => {
+      paymentsEndpointSubmitButton = within(paymentsEndpointInputs).getByText(
+        RegExp(SUBMIT_LABEL, "i"),
+      );
+    });
+    expect(paymentsEndpointSubmitButton).toBeInTheDocument();
+
+    fireEvent.click(paymentsEndpointSubmitButton);
+
+    await waitFor(() =>
+      expect(screen.getByTestId(TEST_ID_RESULT_LOADING)).toBeInTheDocument(),
+    );
+
+    await waitFor(() => {
+      paymentsEndpointResponse = screen.getByTestId(TEST_ID_RESULT_RESPONSE);
+    });
+
+    expect(paymentsEndpointResponse).toBeInTheDocument();
+    expect(
+      within(paymentsEndpointResponse).getByText(
+        RegExp(ENDPOINT_RESPONSE.payments_for_ledger, "i"),
+      ),
+    ).toBeInTheDocument();
+  });
+
+  test("resource: payments for transaction submit with response", async () => {
+    const paymentsForTransactionButton = within(
+      paymentsEndpointsContainer,
+    ).getByText(/payments for transaction/i);
+
+    expect(paymentsForTransactionButton).toBeInTheDocument();
+    fireEvent.click(paymentsForTransactionButton);
+
+    await waitFor(() => {
+      paymentsEndpointInputs = screen.getByTestId(TEST_ID_INPUTS);
+    });
+    expect(paymentsEndpointInputs).toBeInTheDocument();
+
+    await waitFor(() => {
+      paymentsEndpointSubmitButton = within(paymentsEndpointInputs).getByText(
+        RegExp(SUBMIT_LABEL, "i"),
+      );
+    });
+    expect(paymentsEndpointSubmitButton).toBeInTheDocument();
+
+    fireEvent.click(paymentsEndpointSubmitButton);
+
+    await waitFor(() =>
+      expect(screen.getByTestId(TEST_ID_RESULT_LOADING)).toBeInTheDocument(),
+    );
+
+    await waitFor(() => {
+      paymentsEndpointResponse = screen.getByTestId(TEST_ID_RESULT_RESPONSE);
+    });
+
+    expect(paymentsEndpointResponse).toBeInTheDocument();
+    expect(
+      within(paymentsEndpointResponse).getByText(
+        RegExp(ENDPOINT_RESPONSE.payments_for_transaction, "i"),
+      ),
+    ).toBeInTheDocument();
+  });
+});
+
+describe("trade aggregations", () => {
+  const RESOURCE_LINK_LABEL = "trade aggregations";
+  const SUBMIT_LABEL = "submit";
+  let tradeAggregationsEndpointsContainer: HTMLElement;
+  let tradeAggregationsEndpointInputs: HTMLElement;
+  let tradeAggregationsEndpointSubmitButton: HTMLElement;
+  let tradeAggregationsEndpointResponse: HTMLElement;
+
+  // select resource
+  beforeEach(async () => {
+    fireEvent.click(
+      within(resourceContainer).getByText(RegExp(RESOURCE_LINK_LABEL, "i")),
+    );
+    await waitFor(() => {
+      tradeAggregationsEndpointsContainer =
+        screen.getByTestId(TEST_ID_ENDPOINT);
+    });
+  });
+
+  // resource endpoint links
+  test("renders all endpoint links", () => {
+    expect(
+      within(tradeAggregationsEndpointsContainer).getAllByRole("link"),
+    ).toHaveLength(1);
+  });
+
+  // render resource input form with submit + submit response
+  test("resource: trade aggregations submit with response", async () => {
+    const tradeAggregationsButton = within(
+      tradeAggregationsEndpointsContainer,
+    ).getByText(/trade aggregations/i);
+
+    expect(tradeAggregationsButton).toBeInTheDocument();
+    fireEvent.click(tradeAggregationsButton);
+
+    await waitFor(() => {
+      tradeAggregationsEndpointInputs = screen.getByTestId(TEST_ID_INPUTS);
+    });
+    expect(tradeAggregationsEndpointInputs).toBeInTheDocument();
+
+    await waitFor(() => {
+      tradeAggregationsEndpointSubmitButton = within(
+        tradeAggregationsEndpointInputs,
+      ).getByText(RegExp(SUBMIT_LABEL, "i"));
+    });
+    expect(tradeAggregationsEndpointSubmitButton).toBeInTheDocument();
+
+    fireEvent.click(tradeAggregationsEndpointSubmitButton);
+
+    await waitFor(() =>
+      expect(screen.getByTestId(TEST_ID_RESULT_LOADING)).toBeInTheDocument(),
+    );
+
+    await waitFor(() => {
+      tradeAggregationsEndpointResponse = screen.getByTestId(
+        TEST_ID_RESULT_RESPONSE,
+      );
+    });
+
+    expect(tradeAggregationsEndpointResponse).toBeInTheDocument();
+    expect(
+      within(tradeAggregationsEndpointResponse).getByText(
+        RegExp(ENDPOINT_RESPONSE.trade_aggregations, "i"),
+      ),
+    ).toBeInTheDocument();
+  });
+});
