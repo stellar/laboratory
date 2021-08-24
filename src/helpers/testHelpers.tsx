@@ -26,7 +26,7 @@ export const render = (
 enum ENDPOINT_RESPONSE {
   accounts = "accounts mock response",
   single_account = "single account mock response",
-  assets_all = "all assets mock response",
+  all_assets = "all assets mock response",
   all_claimable_balances = "all claimable balances mock response",
   single_claimable_balance = "single claimable balance mock response",
   all_effects = "all effects mock response",
@@ -36,6 +36,14 @@ enum ENDPOINT_RESPONSE {
   effects_for_transaction = "effects for transaction mock response",
   all_ledgers = "all ledgers mock response",
   single_ledger = "single ledger mock response",
+  all_offers = "all offers mock response",
+  single_offer = "single offer mock response",
+  offers_for_account = "offers for account mock response",
+  all_operations = "all operations mock response",
+  single_operation = "single operation mock response",
+  operations_for_account = "operations for account mock response",
+  operations_for_ledger = "operations for ledger mock response",
+  operations_for_transaction = "operations for transaction mock response",
 }
 
 const server = setupServer(
@@ -61,7 +69,7 @@ const server = setupServer(
   rest.get("https://horizon-testnet.stellar.org/assets", (_req, res, ctx) => {
     return res(
       ctx.status(200),
-      ctx.json({ test: ENDPOINT_RESPONSE.assets_all }),
+      ctx.json({ test: ENDPOINT_RESPONSE.all_assets }),
     );
   }),
   // Endpoints: claimable balances > all claimable balances
@@ -149,6 +157,87 @@ const server = setupServer(
       return res(
         ctx.status(200),
         ctx.json({ test: ENDPOINT_RESPONSE.single_ledger }),
+      );
+    },
+  ),
+  // Endpoints: offers > all offers
+  rest.get("https://horizon-testnet.stellar.org/offers", (_req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({ test: ENDPOINT_RESPONSE.all_offers }),
+    );
+  }),
+  // Endpoints: offers > single offer
+  rest.get(
+    "https://horizon-testnet.stellar.org/offers/:offerId",
+    (_req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({ test: ENDPOINT_RESPONSE.single_offer }),
+      );
+    },
+  ),
+  // Endpoints: offers > offers for account
+  rest.get(
+    // TODO: fix URL to have only one / at the end
+    "https://horizon-testnet.stellar.org/accounts//offers",
+    (_req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({ test: ENDPOINT_RESPONSE.offers_for_account }),
+      );
+    },
+  ),
+  // Endpoints: operations > all operations
+  rest.get(
+    "https://horizon-testnet.stellar.org/operations",
+    (_req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({ test: ENDPOINT_RESPONSE.all_operations }),
+      );
+    },
+  ),
+  // Endpoints: operations > single operation
+  rest.get(
+    "https://horizon-testnet.stellar.org/operations/:operation",
+    (_req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({ test: ENDPOINT_RESPONSE.single_operation }),
+      );
+    },
+  ),
+  // Endpoints: operations > operations for account
+  rest.get(
+    // TODO: fix URL to have only one / at the end
+    "https://horizon-testnet.stellar.org/accounts//operations",
+    (_req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({ test: ENDPOINT_RESPONSE.operations_for_account }),
+      );
+    },
+  ),
+  // Endpoints: operations > operations for ledger
+  rest.get(
+    // TODO: fix URL to have only one / at the end
+    "https://horizon-testnet.stellar.org/ledgers//operations",
+    (_req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({ test: ENDPOINT_RESPONSE.operations_for_ledger }),
+      );
+    },
+  ),
+  // Endpoints: operations > operations for transaction
+  rest.get(
+    // TODO: fix URL to have only one / at the end
+    "https://horizon-testnet.stellar.org/transactions//operations",
+    (_req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({ test: ENDPOINT_RESPONSE.operations_for_transaction }),
       );
     },
   ),

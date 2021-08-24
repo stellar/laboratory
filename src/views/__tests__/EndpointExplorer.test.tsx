@@ -193,7 +193,7 @@ describe("assets", () => {
     expect(assetsEndpointResponse).toBeInTheDocument();
     expect(
       within(assetsEndpointResponse).getByText(
-        RegExp(ENDPOINT_RESPONSE.assets_all, "i"),
+        RegExp(ENDPOINT_RESPONSE.all_assets, "i"),
       ),
     ).toBeInTheDocument();
   });
@@ -617,6 +617,364 @@ describe("ledger", () => {
     expect(
       within(ledgerEndpointResponse).getByText(
         RegExp(ENDPOINT_RESPONSE.single_ledger, "i"),
+      ),
+    ).toBeInTheDocument();
+  });
+});
+
+describe("offers", () => {
+  const RESOURCE_LINK_LABEL = "offers";
+  const SUBMIT_LABEL = "submit";
+  let offersEndpointsContainer: HTMLElement;
+  let offersEndpointInputs: HTMLElement;
+  let offersEndpointSubmitButton: HTMLElement;
+  let offersEndpointResponse: HTMLElement;
+
+  // select resource
+  beforeEach(async () => {
+    fireEvent.click(
+      within(resourceContainer).getByText(RegExp(RESOURCE_LINK_LABEL, "i")),
+    );
+    await waitFor(() => {
+      offersEndpointsContainer = screen.getByTestId(TEST_ID_ENDPOINT);
+    });
+  });
+
+  // resource endpoint links
+  test("renders all endpoint links", () => {
+    expect(within(offersEndpointsContainer).getAllByRole("link")).toHaveLength(
+      3,
+    );
+  });
+
+  // render resource input form with submit + submit response
+  test("resource: all offers submit with response", async () => {
+    const allOffersButton = within(offersEndpointsContainer).getByText(
+      /all offers/i,
+    );
+
+    expect(allOffersButton).toBeInTheDocument();
+    fireEvent.click(allOffersButton);
+
+    await waitFor(() => {
+      offersEndpointInputs = screen.getByTestId(TEST_ID_INPUTS);
+    });
+    expect(offersEndpointInputs).toBeInTheDocument();
+
+    await waitFor(() => {
+      offersEndpointSubmitButton = within(offersEndpointInputs).getByText(
+        RegExp(SUBMIT_LABEL, "i"),
+      );
+    });
+    expect(offersEndpointSubmitButton).toBeInTheDocument();
+
+    fireEvent.click(offersEndpointSubmitButton);
+
+    await waitFor(() =>
+      expect(screen.getByTestId(TEST_ID_RESULT_LOADING)).toBeInTheDocument(),
+    );
+
+    await waitFor(() => {
+      offersEndpointResponse = screen.getByTestId(TEST_ID_RESULT_RESPONSE);
+    });
+
+    expect(offersEndpointResponse).toBeInTheDocument();
+    expect(
+      within(offersEndpointResponse).getByText(
+        RegExp(ENDPOINT_RESPONSE.all_offers, "i"),
+      ),
+    ).toBeInTheDocument();
+  });
+
+  test("resource: single offer submit with response", async () => {
+    const singleOfferButton = within(offersEndpointsContainer).getByText(
+      /single offer/i,
+    );
+
+    expect(singleOfferButton).toBeInTheDocument();
+    fireEvent.click(singleOfferButton);
+
+    await waitFor(() => {
+      offersEndpointInputs = screen.getByTestId(TEST_ID_INPUTS);
+    });
+    expect(offersEndpointInputs).toBeInTheDocument();
+
+    await waitFor(() => {
+      offersEndpointSubmitButton = within(offersEndpointInputs).getByText(
+        RegExp(SUBMIT_LABEL, "i"),
+      );
+    });
+    expect(offersEndpointSubmitButton).toBeInTheDocument();
+
+    fireEvent.click(offersEndpointSubmitButton);
+
+    await waitFor(() =>
+      expect(screen.getByTestId(TEST_ID_RESULT_LOADING)).toBeInTheDocument(),
+    );
+
+    await waitFor(() => {
+      offersEndpointResponse = screen.getByTestId(TEST_ID_RESULT_RESPONSE);
+    });
+
+    expect(offersEndpointResponse).toBeInTheDocument();
+    expect(
+      within(offersEndpointResponse).getByText(
+        RegExp(ENDPOINT_RESPONSE.single_offer, "i"),
+      ),
+    ).toBeInTheDocument();
+  });
+
+  test("resource: offers for account submit with response", async () => {
+    const offersForAccountButton = within(offersEndpointsContainer).getByText(
+      /offers for account/i,
+    );
+
+    expect(offersForAccountButton).toBeInTheDocument();
+    fireEvent.click(offersForAccountButton);
+
+    await waitFor(() => {
+      offersEndpointInputs = screen.getByTestId(TEST_ID_INPUTS);
+    });
+    expect(offersEndpointInputs).toBeInTheDocument();
+
+    await waitFor(() => {
+      offersEndpointSubmitButton = within(offersEndpointInputs).getByText(
+        RegExp(SUBMIT_LABEL, "i"),
+      );
+    });
+    expect(offersEndpointSubmitButton).toBeInTheDocument();
+
+    fireEvent.click(offersEndpointSubmitButton);
+
+    await waitFor(() =>
+      expect(screen.getByTestId(TEST_ID_RESULT_LOADING)).toBeInTheDocument(),
+    );
+
+    await waitFor(() => {
+      offersEndpointResponse = screen.getByTestId(TEST_ID_RESULT_RESPONSE);
+    });
+
+    expect(offersEndpointResponse).toBeInTheDocument();
+    expect(
+      within(offersEndpointResponse).getByText(
+        RegExp(ENDPOINT_RESPONSE.offers_for_account, "i"),
+      ),
+    ).toBeInTheDocument();
+  });
+});
+
+describe("operations", () => {
+  const RESOURCE_LINK_LABEL = "operations";
+  const SUBMIT_LABEL = "submit";
+  let operationsEndpointsContainer: HTMLElement;
+  let operationsEndpointInputs: HTMLElement;
+  let operationsEndpointSubmitButton: HTMLElement;
+  let operationsEndpointResponse: HTMLElement;
+
+  // select resource
+  beforeEach(async () => {
+    fireEvent.click(
+      within(resourceContainer).getByText(RegExp(RESOURCE_LINK_LABEL, "i")),
+    );
+    await waitFor(() => {
+      operationsEndpointsContainer = screen.getByTestId(TEST_ID_ENDPOINT);
+    });
+  });
+
+  // resource endpoint links
+  test("renders all endpoint links", () => {
+    expect(
+      within(operationsEndpointsContainer).getAllByRole("link"),
+    ).toHaveLength(5);
+  });
+
+  // render resource input form with submit + submit response
+  test("resource: all operations submit with response", async () => {
+    const allOperationsButton = within(operationsEndpointsContainer).getByText(
+      /all operations/i,
+    );
+
+    expect(allOperationsButton).toBeInTheDocument();
+    fireEvent.click(allOperationsButton);
+
+    await waitFor(() => {
+      operationsEndpointInputs = screen.getByTestId(TEST_ID_INPUTS);
+    });
+    expect(operationsEndpointInputs).toBeInTheDocument();
+
+    await waitFor(() => {
+      operationsEndpointSubmitButton = within(
+        operationsEndpointInputs,
+      ).getByText(RegExp(SUBMIT_LABEL, "i"));
+    });
+    expect(operationsEndpointSubmitButton).toBeInTheDocument();
+
+    fireEvent.click(operationsEndpointSubmitButton);
+
+    await waitFor(() =>
+      expect(screen.getByTestId(TEST_ID_RESULT_LOADING)).toBeInTheDocument(),
+    );
+
+    await waitFor(() => {
+      operationsEndpointResponse = screen.getByTestId(TEST_ID_RESULT_RESPONSE);
+    });
+
+    expect(operationsEndpointResponse).toBeInTheDocument();
+    expect(
+      within(operationsEndpointResponse).getByText(
+        RegExp(ENDPOINT_RESPONSE.all_operations, "i"),
+      ),
+    ).toBeInTheDocument();
+  });
+
+  test("resource: single operation submit with response", async () => {
+    const singleOperationButton = within(
+      operationsEndpointsContainer,
+    ).getByText(/single operation/i);
+
+    expect(singleOperationButton).toBeInTheDocument();
+    fireEvent.click(singleOperationButton);
+
+    await waitFor(() => {
+      operationsEndpointInputs = screen.getByTestId(TEST_ID_INPUTS);
+    });
+    expect(operationsEndpointInputs).toBeInTheDocument();
+
+    await waitFor(() => {
+      operationsEndpointSubmitButton = within(
+        operationsEndpointInputs,
+      ).getByText(RegExp(SUBMIT_LABEL, "i"));
+    });
+    expect(operationsEndpointSubmitButton).toBeInTheDocument();
+
+    fireEvent.click(operationsEndpointSubmitButton);
+
+    await waitFor(() =>
+      expect(screen.getByTestId(TEST_ID_RESULT_LOADING)).toBeInTheDocument(),
+    );
+
+    await waitFor(() => {
+      operationsEndpointResponse = screen.getByTestId(TEST_ID_RESULT_RESPONSE);
+    });
+
+    expect(operationsEndpointResponse).toBeInTheDocument();
+    expect(
+      within(operationsEndpointResponse).getByText(
+        RegExp(ENDPOINT_RESPONSE.single_operation, "i"),
+      ),
+    ).toBeInTheDocument();
+  });
+
+  test("resource: operations for account submit with response", async () => {
+    const operationsForAccountButton = within(
+      operationsEndpointsContainer,
+    ).getByText(/operations for account/i);
+
+    expect(operationsForAccountButton).toBeInTheDocument();
+    fireEvent.click(operationsForAccountButton);
+
+    await waitFor(() => {
+      operationsEndpointInputs = screen.getByTestId(TEST_ID_INPUTS);
+    });
+    expect(operationsEndpointInputs).toBeInTheDocument();
+
+    await waitFor(() => {
+      operationsEndpointSubmitButton = within(
+        operationsEndpointInputs,
+      ).getByText(RegExp(SUBMIT_LABEL, "i"));
+    });
+    expect(operationsEndpointSubmitButton).toBeInTheDocument();
+
+    fireEvent.click(operationsEndpointSubmitButton);
+
+    await waitFor(() =>
+      expect(screen.getByTestId(TEST_ID_RESULT_LOADING)).toBeInTheDocument(),
+    );
+
+    await waitFor(() => {
+      operationsEndpointResponse = screen.getByTestId(TEST_ID_RESULT_RESPONSE);
+    });
+
+    expect(operationsEndpointResponse).toBeInTheDocument();
+    expect(
+      within(operationsEndpointResponse).getByText(
+        RegExp(ENDPOINT_RESPONSE.operations_for_account, "i"),
+      ),
+    ).toBeInTheDocument();
+  });
+
+  test("resource: operations for ledger submit with response", async () => {
+    const operationsForLedgerButton = within(
+      operationsEndpointsContainer,
+    ).getByText(/operations for ledger/i);
+
+    expect(operationsForLedgerButton).toBeInTheDocument();
+    fireEvent.click(operationsForLedgerButton);
+
+    await waitFor(() => {
+      operationsEndpointInputs = screen.getByTestId(TEST_ID_INPUTS);
+    });
+    expect(operationsEndpointInputs).toBeInTheDocument();
+
+    await waitFor(() => {
+      operationsEndpointSubmitButton = within(
+        operationsEndpointInputs,
+      ).getByText(RegExp(SUBMIT_LABEL, "i"));
+    });
+    expect(operationsEndpointSubmitButton).toBeInTheDocument();
+
+    fireEvent.click(operationsEndpointSubmitButton);
+
+    await waitFor(() =>
+      expect(screen.getByTestId(TEST_ID_RESULT_LOADING)).toBeInTheDocument(),
+    );
+
+    await waitFor(() => {
+      operationsEndpointResponse = screen.getByTestId(TEST_ID_RESULT_RESPONSE);
+    });
+
+    expect(operationsEndpointResponse).toBeInTheDocument();
+    expect(
+      within(operationsEndpointResponse).getByText(
+        RegExp(ENDPOINT_RESPONSE.operations_for_ledger, "i"),
+      ),
+    ).toBeInTheDocument();
+  });
+
+  test("resource: operations for transaction submit with response", async () => {
+    const operationsForTransactionButton = within(
+      operationsEndpointsContainer,
+    ).getByText(/operations for transaction/i);
+
+    expect(operationsForTransactionButton).toBeInTheDocument();
+    fireEvent.click(operationsForTransactionButton);
+
+    await waitFor(() => {
+      operationsEndpointInputs = screen.getByTestId(TEST_ID_INPUTS);
+    });
+    expect(operationsEndpointInputs).toBeInTheDocument();
+
+    await waitFor(() => {
+      operationsEndpointSubmitButton = within(
+        operationsEndpointInputs,
+      ).getByText(RegExp(SUBMIT_LABEL, "i"));
+    });
+    expect(operationsEndpointSubmitButton).toBeInTheDocument();
+
+    fireEvent.click(operationsEndpointSubmitButton);
+
+    await waitFor(() =>
+      expect(screen.getByTestId(TEST_ID_RESULT_LOADING)).toBeInTheDocument(),
+    );
+
+    await waitFor(() => {
+      operationsEndpointResponse = screen.getByTestId(TEST_ID_RESULT_RESPONSE);
+    });
+
+    expect(operationsEndpointResponse).toBeInTheDocument();
+    expect(
+      within(operationsEndpointResponse).getByText(
+        RegExp(ENDPOINT_RESPONSE.operations_for_transaction, "i"),
       ),
     ).toBeInTheDocument();
   });
