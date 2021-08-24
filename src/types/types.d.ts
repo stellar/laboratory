@@ -47,11 +47,12 @@ interface EndpointItemEndpoint {
   label: string;
   helpUrl: string;
   method: RequestMethod;
+  disableStreaming?: boolean;
   path: {
     // TODO: make it one type only if possible (remove function type)
     [key: string]: string | any;
   };
-  setupComponent: React.ReactElement;
+  setupComponent: React.ReactNode;
 }
 
 interface EndpointItemProps {

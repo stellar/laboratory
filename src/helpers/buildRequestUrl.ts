@@ -12,7 +12,7 @@ import { EndpointItemEndpoint, AnyObject } from "types/types.d";
 
 export const buildRequestUrl = (
   baseUrl: string,
-  endpoint: EndpointItemEndpoint,
+  endpoint: EndpointItemEndpoint | undefined,
   values: AnyObject,
 ) => {
   if (typeof endpoint === "undefined") {

@@ -7,7 +7,7 @@ import {
 import { EndpointPicker } from "components/EndpointPicker";
 import { EndpointSetup } from "components/EndpointSetup";
 import { EndpointResult } from "components/EndpointResult";
-import { getEndpoint } from "data/endpoints";
+import { getResourceEndpoints } from "helpers/getResourceEndpoints";
 import { addEventHandler } from "helpers/metrics";
 import { buildRequest } from "helpers/buildRequest";
 import { useRedux } from "hooks/useRedux";
@@ -22,7 +22,7 @@ export const EndpointExplorer = () => {
     endpointExplorer;
 
   const dispatch = useDispatch();
-  const endpoint = getEndpoint(currentResource, currentEndpoint);
+  const endpoint = getResourceEndpoints(currentResource, currentEndpoint);
   const request = buildRequest(baseUrl, endpoint, pendingRequest);
 
   return (

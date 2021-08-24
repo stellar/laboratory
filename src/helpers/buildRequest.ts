@@ -5,7 +5,7 @@ import { AnyObject, EndpointItemEndpoint, RequestMethod } from "types/types.d";
 
 export const buildRequest = (
   baseUrl: string,
-  endpoint: EndpointItemEndpoint,
+  endpoint: EndpointItemEndpoint | undefined,
   pendingRequest: AnyObject,
 ) => {
   type BuildRequest = {
