@@ -60,7 +60,7 @@ export const EndpointExplorer = () => {
                 values={pendingRequest.values}
                 endpoint={endpoint}
                 onSubmit={() => dispatch(submitRequest(request))}
-                onUpdate={(param: string, value: string) =>
+                onUpdate={(param: string, value: string | boolean) =>
                   dispatch(updateValue(param, value))
                 }
               />

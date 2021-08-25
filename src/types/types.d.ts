@@ -52,7 +52,7 @@ interface EndpointItemEndpoint {
     // TODO: make it one type only if possible (remove function type)
     [key: string]: string | any;
   };
-  setupComponent: React.ReactNode;
+  setupComponent: JSX.ElementElement;
 }
 
 interface EndpointItemProps {
@@ -60,4 +60,11 @@ interface EndpointItemProps {
   endpoints: {
     [key: string]: EndpointItemEndpoint;
   };
+}
+
+interface EndpointBuildRequest {
+  url: string;
+  formData: string;
+  method?: RequestMethod;
+  streaming?: boolean;
 }

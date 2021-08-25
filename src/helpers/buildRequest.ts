@@ -1,21 +1,18 @@
 import { each, trim } from "lodash";
 import querystring from "querystring";
 import { buildRequestUrl } from "helpers/buildRequestUrl";
-import { AnyObject, EndpointItemEndpoint, RequestMethod } from "types/types.d";
+import {
+  AnyObject,
+  EndpointItemEndpoint,
+  EndpointBuildRequest,
+} from "types/types.d";
 
 export const buildRequest = (
   baseUrl: string,
   endpoint: EndpointItemEndpoint | undefined,
   pendingRequest: AnyObject,
 ) => {
-  type BuildRequest = {
-    url: string;
-    formData: string;
-    method?: RequestMethod;
-    streaming?: boolean;
-  };
-
-  const request: BuildRequest = {
+  const request: EndpointBuildRequest = {
     url: buildRequestUrl(baseUrl, endpoint, pendingRequest.values),
     formData: "",
   };
