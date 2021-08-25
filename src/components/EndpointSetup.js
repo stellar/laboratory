@@ -15,7 +15,7 @@ export function EndpointSetup(props) {
   }
 
   return (
-    <div className="so-chunk">
+    <div className="so-chunk" data-testid="page-endpoint-inputs">
       <p className="EndpointSetup__title">
         {endpoint.label} <HelpMark href={endpoint.helpUrl} />
       </p>

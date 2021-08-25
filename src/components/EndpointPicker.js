@@ -9,7 +9,10 @@ export function EndpointPicker(props) {
   let resources = makeItems(endpointsMap);
 
   let resourcePicker = (
-    <div className="EndpointPicker__section">
+    <div
+      className="EndpointPicker__section"
+      data-testid="endpoint-explorer-resource"
+    >
       <p className="EndpointPicker__section__title">1. Select a resource</p>
       <ButtonGroup
         items={resources}
@@ -23,7 +26,10 @@ export function EndpointPicker(props) {
   if (currentResource !== "") {
     let endpoints = makeItems(endpointsMap[currentResource].endpoints);
     endpointPicker = (
-      <div className="EndpointPicker__section">
+      <div
+        className="EndpointPicker__section"
+        data-testid="endpoint-explorer-endpoint"
+      >
         <p className="EndpointPicker__section__title">2. Select an endpoint</p>
         <ButtonGroup
           items={endpoints}
@@ -67,7 +73,7 @@ function ButtonGroupButton(props) {
   });
 
   return (
-    <li className={classes} onClick={() => onChange(id)}>
+    <li role="link" className={classes} onClick={() => onChange(id)}>
       {label}
     </li>
   );

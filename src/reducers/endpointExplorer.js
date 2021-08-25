@@ -8,7 +8,7 @@ import {
   UPDATE_VALUE,
 } from "../actions/endpointExplorer";
 import { LOAD_STATE } from "../actions/routing";
-import { getEndpoint, getTemplate } from "../data/endpoints";
+import { getEndpointTemplate } from "../helpers/getEndpointTemplate";
 import { rehydrate } from "../helpers/hydration";
 import SLUG from "../constants/slug";
 
@@ -41,7 +41,7 @@ function currentEndpoint(state = "", action) {
 function pendingRequestTemplate(state = "", action) {
   switch (action.type) {
     case CHOOSE_ENDPOINT:
-      return getTemplate(action.resource, action.endpoint) || "";
+      return getEndpointTemplate(action.resource, action.endpoint) || "";
     default:
       return state;
   }
