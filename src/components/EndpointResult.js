@@ -24,7 +24,7 @@ export class EndpointResult extends React.Component {
 
 function LoadingPane(props) {
   return (
-    <div className="EndpointResult">
+    <div className="EndpointResult" data-testid="page-endpoint-result-loading">
       <div className="EndpointResult__loading">Loading...</div>
     </div>
   );
@@ -32,7 +32,7 @@ function LoadingPane(props) {
 
 function ErrorPane(body) {
   return (
-    <div className="EndpointResult">
+    <div className="EndpointResult" data-testid="page-endpoint-result-error">
       <div className="EndpointResult__error">{BodyContent(body)}</div>
     </div>
   );
@@ -40,7 +40,7 @@ function ErrorPane(body) {
 
 function ResultPane(body) {
   return (
-    <div className="EndpointResult">
+    <div className="EndpointResult" data-testid="page-endpoint-result-response">
       <div>
         <div className="EndpointResult__tabs">
           <button className="EndpointResult__tabs__tab is-current">

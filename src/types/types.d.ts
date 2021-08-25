@@ -1,3 +1,5 @@
+import React from "react";
+
 export enum Network {
   PUBLIC = "public",
   TEST = "test",
@@ -8,6 +10,15 @@ export enum ActionStatus {
   LOADING = "loading",
   SUCCESS = "success",
   FAILURE = "failure",
+}
+
+export enum RequestMethod {
+  GET = "GET",
+  POST = "POST",
+}
+
+interface AnyObject {
+  [key: string]: any;
 }
 
 interface StatusPageComponent {
@@ -30,4 +41,23 @@ interface StatusPageScheduled {
   scheduled_for: string;
   components: StatusPageComponent[];
   incident_updates: StatusPageIncident[];
+}
+
+interface EndpointItemEndpoint {
+  label: string;
+  helpUrl: string;
+  method: RequestMethod;
+  disableStreaming?: boolean;
+  path: {
+    // TODO: make it one type only if possible (remove function type)
+    [key: string]: string | any;
+  };
+  setupComponent: React.ReactNode;
+}
+
+interface EndpointItemProps {
+  label: string;
+  endpoints: {
+    [key: string]: EndpointItemEndpoint;
+  };
 }

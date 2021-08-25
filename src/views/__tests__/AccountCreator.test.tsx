@@ -3,8 +3,6 @@
  */
 import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 import StellarSdk from "stellar-sdk";
-import { rest } from "msw";
-import { setupServer } from "msw/node";
 import { render } from "helpers/testHelpers";
 import { AccountCreator } from "views/AccountCreator";
 
@@ -13,20 +11,6 @@ const SECRET_KEY = "bar";
 const MUXED_ACCOUNT_ID = 1;
 const MUXED_ACCOUNT_CREATED = "baz-1";
 const MUXED_ACCOUNT_PARSED = "baz-2";
-
-const server = setupServer(
-  rest.get("https://friendbot.stellar.org/", (_req, res, ctx) => {
-    return res(ctx.status(200));
-  }),
-  // fallback
-  rest.get("*", (req, res, ctx) => {
-    console.error(`No request handler for ${req.url.toString()}`);
-    return res(
-      ctx.status(500),
-      ctx.json({ error: "Must add request handler" }),
-    );
-  }),
-);
 
 jest.mock("stellar-sdk");
 
@@ -49,10 +33,6 @@ StellarSdk.MuxedAccount.fromAddress.mockImplementation(() => {
     id: jest.fn(() => MUXED_ACCOUNT_ID),
   };
 });
-
-beforeAll(() => server.listen());
-afterAll(() => server.close());
-afterEach(() => server.resetHandlers());
 
 beforeEach(() => {
   render(<AccountCreator />);
@@ -102,13 +82,11 @@ test("friendbot: account funded successfully", async () => {
     within(friendbotContainer).queryByText(/loading/i);
   });
 
-  await waitFor(() => {
-    within(friendbotContainer).queryByText(/successfully funded/i);
-  });
-
-  expect(
-    within(friendbotContainer).getByText(/successfully funded/i),
-  ).toBeInTheDocument();
+  await waitFor(() =>
+    expect(
+      within(friendbotContainer).getByText(/successfully funded/i),
+    ).toBeInTheDocument(),
+  );
 });
 
 test("muxed account: renders on the page", async () => {
