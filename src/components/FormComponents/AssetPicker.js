@@ -191,6 +191,24 @@ export default function AssetPicker({
   );
 }
 
+export function AssetPickerWithoutNative({
+  stringForm = false,
+  value,
+  optional,
+  onUpdate,
+  ...props
+}) {
+  return (
+    <AssetObjectPicker
+      optional={optional}
+      value={value}
+      onUpdate={onUpdate}
+      disableNative
+      {...props}
+    />
+  );
+}
+
 AssetPicker.propTypes = {
   stringForm: PropTypes.bool,
   onUpdate: PropTypes.func.isRequired,

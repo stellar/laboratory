@@ -1,6 +1,7 @@
 import All from "components/SetupPanes/All";
 import Accounts from "components/SetupPanes/Accounts";
 import AllAssets from "components/SetupPanes/AllAssets";
+import AllLiquidityPools from "components/SetupPanes/AllLiquidityPools";
 import AllOffers from "components/SetupPanes/AllOffers";
 import AllWithFailed from "components/SetupPanes/AllWithFailed";
 import ClaimableBalances from "components/SetupPanes/ClaimableBalances";
@@ -21,6 +22,7 @@ import PostTransaction from "components/SetupPanes/PostTransaction";
 import SingleAccount from "components/SetupPanes/SingleAccount";
 import SingleClaimableBalance from "components/SetupPanes/SingleClaimableBalance";
 import SingleLedger from "components/SetupPanes/SingleLedger";
+import SingleLiquidityPool from "components/SetupPanes/SingleLiquidityPool";
 import SingleOperation from "components/SetupPanes/SingleOperation";
 import SingleOffer from "components/SetupPanes/SingleOffer";
 import SingleTransaction from "components/SetupPanes/SingleTransaction";
@@ -185,6 +187,30 @@ export const endpointsMap: EndpointsMap = {
           template: "/ledgers/{ledger}",
         },
         setupComponent: SingleLedger,
+      },
+    },
+  },
+  liquidity_pools: {
+    label: "Liquidity Pools",
+    endpoints: {
+      all: {
+        label: "All Liquidity Pools",
+        helpUrl: "https://developers.stellar.org/api/resources/liquiditypools/",
+        method: RequestMethod.GET,
+        path: {
+          template: "/liquidity_pools{?reserves,cursor,limit,order}",
+        },
+        setupComponent: AllLiquidityPools,
+      },
+      single: {
+        label: "Single Liquidity Pool",
+        helpUrl:
+          "https://developers.stellar.org/api/resources/liquiditypools/single/",
+        method: RequestMethod.GET,
+        path: {
+          template: "/liquidity_pools/{liquidity_pool_id}",
+        },
+        setupComponent: SingleLiquidityPool,
       },
     },
   },

@@ -37,6 +37,8 @@ enum ENDPOINT_RESPONSE {
   effects_for_transaction = "effects for transaction mock response",
   all_ledgers = "all ledgers mock response",
   single_ledger = "single ledger mock response",
+  all_liquidity_pools = "all liquidity pools mock response",
+  single_liquidity_pool = "single liquidity pool mock response",
   all_offers = "all offers mock response",
   single_offer = "single offer mock response",
   offers_for_account = "offers for account mock response",
@@ -184,6 +186,23 @@ const server = setupServer(
       ctx.json({ test: ENDPOINT_RESPONSE.single_ledger }),
     );
   }),
+  // Endpoints: liquidity pools > all liquidity pools
+  rest.get(`${HORIZON_URL}/liquidity_pools`, (_req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({ test: ENDPOINT_RESPONSE.all_liquidity_pools }),
+    );
+  }),
+  // Endpoints: liquidity pools > single liquidity pool
+  rest.get(
+    `${HORIZON_URL}/liquidity_pools/:liquidity_pool_id`,
+    (_req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({ test: ENDPOINT_RESPONSE.single_liquidity_pool }),
+      );
+    },
+  ),
   // Endpoints: offers > all offers
   rest.get(`${HORIZON_URL}/offers`, (_req, res, ctx) => {
     return res(
