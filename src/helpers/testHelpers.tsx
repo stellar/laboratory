@@ -32,6 +32,7 @@ enum ENDPOINT_RESPONSE {
   all_effects = "all effects mock response",
   effects_for_account = "effects for account mock response",
   effects_for_ledger = "effects for ledger mock response",
+  effects_for_liquidity_pool = "effects for liquidity pool mock response",
   effects_for_operation = "effects for operation mock response",
   effects_for_transaction = "effects for transaction mock response",
   all_ledgers = "all ledgers mock response",
@@ -43,6 +44,7 @@ enum ENDPOINT_RESPONSE {
   single_operation = "single operation mock response",
   operations_for_account = "operations for account mock response",
   operations_for_ledger = "operations for ledger mock response",
+  operations_for_liquidity_pool = "operations for liquidity pool mock response",
   operations_for_transaction = "operations for transaction mock response",
   order_book_details = "order book details mock response",
   find_payment_paths = "find payment paths mock response",
@@ -61,6 +63,7 @@ enum ENDPOINT_RESPONSE {
   post_transaction = "post transaction mock response",
   transactions_for_account = "transactions for account mock response",
   transactions_for_ledger = "transactions for ledger mock response",
+  transactions_for_liquidity_pool = "transactions for liquidity pool mock response",
 }
 
 const HORIZON_URL = "https://horizon-testnet.stellar.org";
@@ -114,7 +117,7 @@ const server = setupServer(
   }),
   // Endpoints: effects > effects for account
   rest.get(
-    // TODO: fix URL to have only one / at the end
+    // TODO: fix URL to have only one / at the end (missing param)
     `${HORIZON_URL}/accounts//effects`,
     (_req, res, ctx) => {
       return res(
@@ -125,7 +128,7 @@ const server = setupServer(
   ),
   // Endpoints: effects > effects for ledger
   rest.get(
-    // TODO: fix URL to have only one / at the end
+    // TODO: fix URL to have only one / at the end (missing param)
     `${HORIZON_URL}/ledgers//effects`,
     (_req, res, ctx) => {
       return res(
@@ -134,9 +137,20 @@ const server = setupServer(
       );
     },
   ),
+  // Endpoints: effects > effects for liquidity pool
+  rest.get(
+    // TODO: fix URL to have only one / at the end (missing param)
+    `${HORIZON_URL}/liquidity_pools//effects`,
+    (_req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({ test: ENDPOINT_RESPONSE.effects_for_liquidity_pool }),
+      );
+    },
+  ),
   // Endpoints: effects > effects for operation
   rest.get(
-    // TODO: fix URL to have only one / at the end
+    // TODO: fix URL to have only one / at the end (missing param)
     `${HORIZON_URL}/operations//effects`,
     (_req, res, ctx) => {
       return res(
@@ -147,7 +161,7 @@ const server = setupServer(
   ),
   // Endpoints: effects > effects for transaction
   rest.get(
-    // TODO: fix URL to have only one / at the end
+    // TODO: fix URL to have only one / at the end (missing param)
     `${HORIZON_URL}/transactions//effects`,
     (_req, res, ctx) => {
       return res(
@@ -186,7 +200,7 @@ const server = setupServer(
   }),
   // Endpoints: offers > offers for account
   rest.get(
-    // TODO: fix URL to have only one / at the end
+    // TODO: fix URL to have only one / at the end (missing param)
     `${HORIZON_URL}/accounts//offers`,
     (_req, res, ctx) => {
       return res(
@@ -211,7 +225,7 @@ const server = setupServer(
   }),
   // Endpoints: operations > operations for account
   rest.get(
-    // TODO: fix URL to have only one / at the end
+    // TODO: fix URL to have only one / at the end (missing param)
     `${HORIZON_URL}/accounts//operations`,
     (_req, res, ctx) => {
       return res(
@@ -222,7 +236,7 @@ const server = setupServer(
   ),
   // Endpoints: operations > operations for ledger
   rest.get(
-    // TODO: fix URL to have only one / at the end
+    // TODO: fix URL to have only one / at the end (missing param)
     `${HORIZON_URL}/ledgers//operations`,
     (_req, res, ctx) => {
       return res(
@@ -231,9 +245,20 @@ const server = setupServer(
       );
     },
   ),
+  // Endpoints: operations > operations for liquidity pool
+  rest.get(
+    // TODO: fix URL to have only one / at the end (missing param)
+    `${HORIZON_URL}/liquidity_pools//operations`,
+    (_req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({ test: ENDPOINT_RESPONSE.operations_for_liquidity_pool }),
+      );
+    },
+  ),
   // Endpoints: operations > operations for transaction
   rest.get(
-    // TODO: fix URL to have only one / at the end
+    // TODO: fix URL to have only one / at the end (missing param)
     `${HORIZON_URL}/transactions//operations`,
     (_req, res, ctx) => {
       return res(
@@ -279,7 +304,7 @@ const server = setupServer(
   }),
   // Endpoints: payments > payments for account
   rest.get(
-    // TODO: fix URL to have only one / at the end
+    // TODO: fix URL to have only one / at the end (missing param)
     `${HORIZON_URL}/accounts//payments`,
     (_req, res, ctx) => {
       return res(
@@ -290,7 +315,7 @@ const server = setupServer(
   ),
   // Endpoints: payments > payments for ledger
   rest.get(
-    // TODO: fix URL to have only one / at the end
+    // TODO: fix URL to have only one / at the end (missing param)
     `${HORIZON_URL}/ledgers//payments`,
     (_req, res, ctx) => {
       return res(
@@ -301,7 +326,7 @@ const server = setupServer(
   ),
   // Endpoints: payments > payments for transaction
   rest.get(
-    // TODO: fix URL to have only one / at the end
+    // TODO: fix URL to have only one / at the end (missing param)
     `${HORIZON_URL}/transactions//payments`,
     (_req, res, ctx) => {
       return res(
@@ -326,7 +351,7 @@ const server = setupServer(
   }),
   // Endpoints: trades > trades for account
   rest.get(
-    // TODO: fix URL to have only one / at the end
+    // TODO: fix URL to have only one / at the end (missing param)
     `${HORIZON_URL}/accounts//trades`,
     (_req, res, ctx) => {
       return res(
@@ -337,7 +362,7 @@ const server = setupServer(
   ),
   // Endpoints: trades > trades for offer
   rest.get(
-    // TODO: fix URL to have only one / at the end
+    // TODO: fix URL to have only one / at the end (missing param)
     `${HORIZON_URL}/offers//trades`,
     (_req, res, ctx) => {
       return res(
@@ -369,7 +394,7 @@ const server = setupServer(
   }),
   // Endpoints: transactions > transactions for account
   rest.get(
-    // TODO: fix URL to have only one / at the end
+    // TODO: fix URL to have only one / at the end (missing param)
     `${HORIZON_URL}/accounts//transactions`,
     (_req, res, ctx) => {
       return res(
@@ -380,12 +405,23 @@ const server = setupServer(
   ),
   // Endpoints: transactions > transactions for ledger
   rest.get(
-    // TODO: fix URL to have only one / at the end
+    // TODO: fix URL to have only one / at the end (missing param)
     `${HORIZON_URL}/ledgers//transactions`,
     (_req, res, ctx) => {
       return res(
         ctx.status(200),
         ctx.json({ test: ENDPOINT_RESPONSE.transactions_for_ledger }),
+      );
+    },
+  ),
+  // Endpoints: transactions > transactions for liquidity pool
+  rest.get(
+    // TODO: fix URL to have only one / at the end (missing param)
+    `${HORIZON_URL}/liquidity_pools//transactions`,
+    (_req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({ test: ENDPOINT_RESPONSE.transactions_for_liquidity_pool }),
       );
     },
   ),

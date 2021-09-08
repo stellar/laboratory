@@ -323,7 +323,7 @@ describe("effects", () => {
   // resource endpoint links
   test("renders all endpoint links", () => {
     expect(within(effectsEndpointsContainer).getAllByRole("link")).toHaveLength(
-      5,
+      6,
     );
   });
 
@@ -438,6 +438,44 @@ describe("effects", () => {
     expect(
       within(effectsEndpointResponse).getByText(
         RegExp(ENDPOINT_RESPONSE.effects_for_ledger, "i"),
+      ),
+    ).toBeInTheDocument();
+  });
+
+  test("resource: effects for liquidity pool submit with response", async () => {
+    const effectsForLiquidityPoolButton = within(
+      effectsEndpointsContainer,
+    ).getByText(/effects for liquidity pool/i);
+
+    expect(effectsForLiquidityPoolButton).toBeInTheDocument();
+    fireEvent.click(effectsForLiquidityPoolButton);
+
+    await waitFor(() => {
+      effectsEndpointInputs = screen.getByTestId(TEST_ID_INPUTS);
+    });
+    expect(effectsEndpointInputs).toBeInTheDocument();
+
+    await waitFor(() => {
+      effectsEndpointSubmitButton = within(effectsEndpointInputs).getByText(
+        RegExp(SUBMIT_LABEL, "i"),
+      );
+    });
+    expect(effectsEndpointSubmitButton).toBeInTheDocument();
+
+    fireEvent.click(effectsEndpointSubmitButton);
+
+    await waitFor(() =>
+      expect(screen.getByTestId(TEST_ID_RESULT_LOADING)).toBeInTheDocument(),
+    );
+
+    await waitFor(() => {
+      effectsEndpointResponse = screen.getByTestId(TEST_ID_RESULT_RESPONSE);
+    });
+
+    expect(effectsEndpointResponse).toBeInTheDocument();
+    expect(
+      within(effectsEndpointResponse).getByText(
+        RegExp(ENDPOINT_RESPONSE.effects_for_liquidity_pool, "i"),
       ),
     ).toBeInTheDocument();
   });
@@ -785,7 +823,7 @@ describe("operations", () => {
   test("renders all endpoint links", () => {
     expect(
       within(operationsEndpointsContainer).getAllByRole("link"),
-    ).toHaveLength(5);
+    ).toHaveLength(6);
   });
 
   // render resource input form with submit + submit response
@@ -937,6 +975,44 @@ describe("operations", () => {
     expect(
       within(operationsEndpointResponse).getByText(
         RegExp(ENDPOINT_RESPONSE.operations_for_ledger, "i"),
+      ),
+    ).toBeInTheDocument();
+  });
+
+  test("resource: operations for liquidity pool submit with response", async () => {
+    const operationsForLiquidityPoolButton = within(
+      operationsEndpointsContainer,
+    ).getByText(/operations for liquidity pool/i);
+
+    expect(operationsForLiquidityPoolButton).toBeInTheDocument();
+    fireEvent.click(operationsForLiquidityPoolButton);
+
+    await waitFor(() => {
+      operationsEndpointInputs = screen.getByTestId(TEST_ID_INPUTS);
+    });
+    expect(operationsEndpointInputs).toBeInTheDocument();
+
+    await waitFor(() => {
+      operationsEndpointSubmitButton = within(
+        operationsEndpointInputs,
+      ).getByText(RegExp(SUBMIT_LABEL, "i"));
+    });
+    expect(operationsEndpointSubmitButton).toBeInTheDocument();
+
+    fireEvent.click(operationsEndpointSubmitButton);
+
+    await waitFor(() =>
+      expect(screen.getByTestId(TEST_ID_RESULT_LOADING)).toBeInTheDocument(),
+    );
+
+    await waitFor(() => {
+      operationsEndpointResponse = screen.getByTestId(TEST_ID_RESULT_RESPONSE);
+    });
+
+    expect(operationsEndpointResponse).toBeInTheDocument();
+    expect(
+      within(operationsEndpointResponse).getByText(
+        RegExp(ENDPOINT_RESPONSE.operations_for_liquidity_pool, "i"),
       ),
     ).toBeInTheDocument();
   });
@@ -1596,7 +1672,7 @@ describe("transactions", () => {
   test("renders all endpoint links", () => {
     expect(
       within(transactionsEndpointsContainer).getAllByRole("link"),
-    ).toHaveLength(5);
+    ).toHaveLength(6);
   });
 
   // render resource input form with submit + submit response
@@ -1796,6 +1872,46 @@ describe("transactions", () => {
     expect(
       within(transactionsEndpointResponse).getByText(
         RegExp(ENDPOINT_RESPONSE.transactions_for_ledger, "i"),
+      ),
+    ).toBeInTheDocument();
+  });
+
+  test("resource: transactions for liquidity pool submit with response", async () => {
+    const transactionsForLiquidityPoolButton = within(
+      transactionsEndpointsContainer,
+    ).getByText(/transactions for liquidity pool/i);
+
+    expect(transactionsForLiquidityPoolButton).toBeInTheDocument();
+    fireEvent.click(transactionsForLiquidityPoolButton);
+
+    await waitFor(() => {
+      transactionsEndpointInputs = screen.getByTestId(TEST_ID_INPUTS);
+    });
+    expect(transactionsEndpointInputs).toBeInTheDocument();
+
+    await waitFor(() => {
+      transactionsEndpointSubmitButton = within(
+        transactionsEndpointInputs,
+      ).getByText(RegExp(SUBMIT_LABEL, "i"));
+    });
+    expect(transactionsEndpointSubmitButton).toBeInTheDocument();
+
+    fireEvent.click(transactionsEndpointSubmitButton);
+
+    await waitFor(() =>
+      expect(screen.getByTestId(TEST_ID_RESULT_LOADING)).toBeInTheDocument(),
+    );
+
+    await waitFor(() => {
+      transactionsEndpointResponse = screen.getByTestId(
+        TEST_ID_RESULT_RESPONSE,
+      );
+    });
+
+    expect(transactionsEndpointResponse).toBeInTheDocument();
+    expect(
+      within(transactionsEndpointResponse).getByText(
+        RegExp(ENDPOINT_RESPONSE.transactions_for_liquidity_pool, "i"),
       ),
     ).toBeInTheDocument();
   });
