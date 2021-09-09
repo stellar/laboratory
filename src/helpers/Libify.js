@@ -625,6 +625,88 @@ Libify.Operation.setTrustLineFlags = function (opts) {
   });
 };
 
+Libify.Operation.liquidityPoolDeposit = function (opts) {
+  assertNotEmpty(
+    opts.liquidityPoolId,
+    "Liquidity Pool Deposit operation requires Liquidity Pool ID",
+  );
+
+  assertNotEmpty(
+    opts.maxAmountA,
+    "Liquidity Pool Deposit operation requires Max Amount A",
+  );
+
+  assertNotEmpty(
+    opts.maxAmountB,
+    "Liquidity Pool Deposit operation requires Max Amount B",
+  );
+
+  assertNotEmpty(
+    opts.minPrice,
+    "Liquidity Pool Deposit operation requires Min Price",
+  );
+
+  if (opts.minPrice && typeof opts.minPrice === "object") {
+    if (!(opts.minPrice.n && opts.minPrice.d)) {
+      throw new Error(
+        "Liquidity Pool Deposit operation requires both numerator and denominator for Min Price fraction",
+      );
+    }
+  }
+
+  assertNotEmpty(
+    opts.maxPrice,
+    "Liquidity Pool Deposit operation requires Max Price",
+  );
+
+  if (opts.maxPrice && typeof opts.maxPrice === "object") {
+    if (!(opts.maxPrice.n && opts.maxPrice.d)) {
+      throw new Error(
+        "Liquidity Pool Deposit operation requires both numerator and denominator for Max Price fraction",
+      );
+    }
+  }
+
+  return Sdk.Operation.liquidityPoolDeposit({
+    liquidityPoolId: opts.liquidityPoolId,
+    maxAmountA: opts.maxAmountA,
+    maxAmountB: opts.maxAmountB,
+    minPrice: opts.minPrice,
+    maxPrice: opts.maxPrice,
+    source: opts.sourceAccount,
+  });
+};
+
+Libify.Operation.liquidityPoolWithdraw = function (opts) {
+  assertNotEmpty(
+    opts.liquidityPoolId,
+    "Liquidity Pool Withdraw operation requires Liquidity Pool ID",
+  );
+
+  assertNotEmpty(
+    opts.amount,
+    "Liquidity Pool Withdraw operation requires amount",
+  );
+
+  assertNotEmpty(
+    opts.minAmountA,
+    "Liquidity Pool Withdraw operation requires Min Amount A",
+  );
+
+  assertNotEmpty(
+    opts.minAmountB,
+    "Liquidity Pool Withdraw operation requires Min Amount B",
+  );
+
+  return Sdk.Operation.liquidityPoolWithdraw({
+    liquidityPoolId: opts.liquidityPoolId,
+    amount: opts.amount,
+    minAmountA: opts.minAmountA,
+    minAmountB: opts.minAmountB,
+    source: opts.sourceAccount,
+  });
+};
+
 // buildTransaction is not something found js-stellar libs but acts as an
 // abstraction to building a transaction with input data in the same format
 // as the reducers

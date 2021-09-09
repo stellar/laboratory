@@ -68,3 +68,8 @@ interface EndpointBuildRequest {
   method?: RequestMethod;
   streaming?: boolean;
 }
+
+interface NumberFractionValue {
+  n: number;
+  d: number;
+}
