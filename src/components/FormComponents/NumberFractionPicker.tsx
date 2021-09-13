@@ -34,7 +34,7 @@ export const NumberFractionPicker = (props: NumberFractionPickerProps) => {
   };
 
   const renderInputs = () => {
-    if (numberType === "FRACTION") {
+    if (numberType === NumberType.FRACTION) {
       return (
         <div className="NumberFractionPicker__fraction">
           <AmountPicker

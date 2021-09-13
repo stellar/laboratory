@@ -1,7 +1,7 @@
 import All from "components/SetupPanes/All";
 import Accounts from "components/SetupPanes/Accounts";
 import AllAssets from "components/SetupPanes/AllAssets";
-import AllLiquidityPools from "components/SetupPanes/AllLiquidityPools";
+import { AllLiquidityPools } from "components/SetupPanes/AllLiquidityPools";
 import AllOffers from "components/SetupPanes/AllOffers";
 import AllWithFailed from "components/SetupPanes/AllWithFailed";
 import ClaimableBalances from "components/SetupPanes/ClaimableBalances";
@@ -11,8 +11,8 @@ import FindStrictReceivePaymentPaths from "components/SetupPanes/FindStrictRecei
 import ForAccount from "components/SetupPanes/ForAccount";
 import ForAccountWithFailed from "components/SetupPanes/ForAccountWithFailed";
 import ForLedger from "components/SetupPanes/ForLedger";
-import ForLiquidityPool from "components/SetupPanes/ForLiquidityPool";
-import ForLiquidityPoolWithFailed from "components/SetupPanes/ForLiquidityPoolWithFailed";
+import { ForLiquidityPool } from "components/SetupPanes/ForLiquidityPool";
+import { ForLiquidityPoolWithFailed } from "components/SetupPanes/ForLiquidityPoolWithFailed";
 import ForLedgerWithFailed from "components/SetupPanes/ForLedgerWithFailed";
 import ForOffer from "components/SetupPanes/ForOffer";
 import ForOperation from "components/SetupPanes/ForOperation";
@@ -22,7 +22,7 @@ import PostTransaction from "components/SetupPanes/PostTransaction";
 import SingleAccount from "components/SetupPanes/SingleAccount";
 import SingleClaimableBalance from "components/SetupPanes/SingleClaimableBalance";
 import SingleLedger from "components/SetupPanes/SingleLedger";
-import SingleLiquidityPool from "components/SetupPanes/SingleLiquidityPool";
+import { SingleLiquidityPool } from "components/SetupPanes/SingleLiquidityPool";
 import SingleOperation from "components/SetupPanes/SingleOperation";
 import SingleOffer from "components/SetupPanes/SingleOffer";
 import SingleTransaction from "components/SetupPanes/SingleTransaction";
