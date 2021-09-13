@@ -1637,7 +1637,7 @@ describe("trades", () => {
   // resource endpoint links
   test("renders all endpoint links", () => {
     expect(within(tradesEndpointsContainer).getAllByRole("link")).toHaveLength(
-      3,
+      4,
     );
   });
 
@@ -1714,6 +1714,44 @@ describe("trades", () => {
     expect(
       within(tradesEndpointResponse).getByText(
         RegExp(ENDPOINT_RESPONSE.trades_for_account, "i"),
+      ),
+    ).toBeInTheDocument();
+  });
+
+  test("resource: trades for liquidity pool submit with response", async () => {
+    const tradesForLiquidityPoolButton = within(
+      tradesEndpointsContainer,
+    ).getByText(/trades for liquidity pool/i);
+
+    expect(tradesForLiquidityPoolButton).toBeInTheDocument();
+    fireEvent.click(tradesForLiquidityPoolButton);
+
+    await waitFor(() => {
+      tradesEndpointInputs = screen.getByTestId(TEST_ID_INPUTS);
+    });
+    expect(tradesEndpointInputs).toBeInTheDocument();
+
+    await waitFor(() => {
+      tradesEndpointSubmitButton = within(tradesEndpointInputs).getByText(
+        RegExp(SUBMIT_LABEL, "i"),
+      );
+    });
+    expect(tradesEndpointSubmitButton).toBeInTheDocument();
+
+    fireEvent.click(tradesEndpointSubmitButton);
+
+    await waitFor(() =>
+      expect(screen.getByTestId(TEST_ID_RESULT_LOADING)).toBeInTheDocument(),
+    );
+
+    await waitFor(() => {
+      tradesEndpointResponse = screen.getByTestId(TEST_ID_RESULT_RESPONSE);
+    });
+
+    expect(tradesEndpointResponse).toBeInTheDocument();
+    expect(
+      within(tradesEndpointResponse).getByText(
+        RegExp(ENDPOINT_RESPONSE.trades_for_liquidity_pool, "i"),
       ),
     ).toBeInTheDocument();
   });

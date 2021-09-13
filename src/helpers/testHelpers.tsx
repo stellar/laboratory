@@ -59,6 +59,7 @@ enum ENDPOINT_RESPONSE {
   trade_aggregations = "trade aggregations mock response",
   all_trades = "all trades mock response",
   trades_for_account = "trades for account mock response",
+  trades_for_liquidity_pool = "trades for liquidity pool mock response",
   trades_for_offer = "trades for offer mock response",
   all_transactions = "all transactions mock response",
   single_transaction = "single transaction mock response",
@@ -376,6 +377,17 @@ const server = setupServer(
       return res(
         ctx.status(200),
         ctx.json({ test: ENDPOINT_RESPONSE.trades_for_account }),
+      );
+    },
+  ),
+  // Endpoints: trades > trades for liquidity pool
+  rest.get(
+    // TODO: fix URL to have only one / at the end (missing param)
+    `${HORIZON_URL}/liquidity_pools//trades`,
+    (_req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({ test: ENDPOINT_RESPONSE.trades_for_liquidity_pool }),
       );
     },
   ),

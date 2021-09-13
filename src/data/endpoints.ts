@@ -488,6 +488,18 @@ export const endpointsMap: EndpointsMap = {
         },
         setupComponent: ForAccount,
       },
+      for_liquidity_pool: {
+        label: "Trades for Liquidity Pool",
+        // TODO: need docs
+        helpUrl:
+          "https://developers.stellar.org/api/resources/liquiditypools/trades/",
+        method: RequestMethod.GET,
+        path: {
+          template:
+            "/liquidity_pools/{liquidity_pool_id}/trades{?cursor,limit,order}",
+        },
+        setupComponent: ForLiquidityPool,
+      },
       for_offer: {
         label: "Trades for Offer",
         helpUrl:
