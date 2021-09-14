@@ -5,7 +5,7 @@ interface LiquidityPoolIdProps {
   onUpdate: (key: string, value: string) => void;
 }
 
-// TODO: ??? validate Liquidity Pool ID
+// TODO: Do we need to validate Liquidity Pool ID?
 export const LiquidityPoolId = ({ value, onUpdate }: LiquidityPoolIdProps) => (
   <TextPicker
     value={value}
