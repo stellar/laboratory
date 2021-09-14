@@ -83,7 +83,53 @@ Libify.Asset = function (opts) {
     return Sdk.Asset.native();
   }
 
+  if (opts.type === "liquidity_pool_shares") {
+    const lp = opts.liquidity_pool;
+    let assetA;
+    let assetB;
+
+    if (!lp.assetA) {
+      throw new Error("Liquidity pool asset requires Asset A");
+    }
+
+    if (lp.assetA.type === "native") {
+      assetA = Sdk.Asset.native();
+    } else {
+      assertNotEmpty(
+        lp.assetA.code,
+        "Liquidity pool Asset A requires asset code",
+      );
+      assertNotEmpty(
+        lp.assetA.issuer,
+        "Liquidity pool Asset A requires asset issuer",
+      );
+      assetA = new Sdk.Asset(lp.assetA.code, lp.assetA.issuer);
+    }
+
+    if (!lp.assetB) {
+      throw new Error("Liquidity pool asset requires Asset B");
+    }
+
+    if (lp.assetB.type === "native") {
+      assetB = Sdk.Asset.native();
+    } else {
+      assertNotEmpty(
+        lp.assetB.code,
+        "Liquidity pool Asset B requires asset code",
+      );
+      assertNotEmpty(
+        lp.assetB.issuer,
+        "Liquidity pool Asset B requires asset issuer",
+      );
+      assetB = new Sdk.Asset(lp.assetB.code, lp.assetB.issuer);
+    }
+
+    return new Sdk.LiquidityPoolAsset(assetA, assetB, lp.fee);
+  }
+
   assertNotEmpty(opts.code, "Asset requires asset code");
+  assertNotEmpty(opts.issuer, "Asset requires asset issuer");
+
   return new Sdk.Asset(opts.code, opts.issuer);
 };
 

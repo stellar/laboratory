@@ -13,6 +13,7 @@ export default function ChangeTrust(props) {
         onUpdate={(value) => {
           props.onUpdate("asset", value);
         }}
+        includeLiquidityPoolShares
       />
     </OptionsTablePair>,
     <OptionsTablePair label="Trust Limit" optional="true" key="limit">
