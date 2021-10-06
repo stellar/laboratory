@@ -859,18 +859,10 @@ Libify.buildFeeBumpTransaction = function (attributes, networkPassphrase) {
     return result;
   }
 
-  let keyPair;
-  try {
-    keyPair = Sdk.Keypair.fromPublicKey(sourceAccount);
-  } catch (e) {
-    result.errors.push(e.message);
-    return result;
-  }
-
   let feeBumpTx;
   try {
     feeBumpTx = new Sdk.TransactionBuilder.buildFeeBumpTransaction(
-      keyPair,
+      sourceAccount,
       maxFee,
       innerTx,
       networkPassphrase,
