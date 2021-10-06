@@ -1,14 +1,14 @@
 .TransactionBuilder {
   padding-bottom: 4em;
 }
+.TransactionBuilder__clearBar {
+  margin-bottom: 0.5em;
+}
+@include r-media(l) {
   .TransactionBuilder__clearBar {
-    margin-bottom: 0.5em;
+    text-align: right;
   }
-  @include r-media(l) {
-    .TransactionBuilder__clearBar {
-      text-align: right;
-    }
-  }
+}
 
 .TransactionBuilder__result {
   padding-top: 2em;
@@ -18,9 +18,9 @@
 
   background: $s-color-neutral8;
 }
-  .TransactionBuilder__result :last-child {
-    margin-bottom: 0;
-  }
+.TransactionBuilder__result :last-child {
+  margin-bottom: 0;
+}
 
 .TransactionAttributes {
   margin-bottom: 1.5em;
@@ -44,14 +44,14 @@
 .TransactionOpMeta__order {
   padding-bottom: 0.5em;
 }
-  .TransactionOpMeta__order__input {
-    height: 72px;
-    width: 72px;
-    padding-left: 0;
-    padding-right: 0;
-    text-align: center;
-    font-size: $s-scale-a;
-  }
+.TransactionOpMeta__order__input {
+  height: 72px;
+  width: 72px;
+  padding-left: 0;
+  padding-right: 0;
+  text-align: center;
+  font-size: $s-scale-a;
+}
 .TransactionOpMeta__tally__button {
   text-align: center;
   width: 72px;
@@ -84,4 +84,27 @@
 }
 .TransactionBuilderResult__instructions {
   margin-bottom: 1em;
+}
+
+.NumberFractionPicker__fraction {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+
+  & > div {
+    flex: 1;
+  }
+}
+
+.LiquidityPoolAssetPicker {
+  margin-top: 0.5em;
+}
+
+.LiquidityPoolAssetPicker__item {
+  margin-bottom: 1em;
+  padding-left: 1em;
+}
+
+.LiquidityPoolAssetPicker__label {
+  margin-bottom: 0.25em;
 }

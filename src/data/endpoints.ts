@@ -1,6 +1,7 @@
 import All from "components/SetupPanes/All";
 import Accounts from "components/SetupPanes/Accounts";
 import AllAssets from "components/SetupPanes/AllAssets";
+import { AllLiquidityPools } from "components/SetupPanes/AllLiquidityPools";
 import AllOffers from "components/SetupPanes/AllOffers";
 import AllWithFailed from "components/SetupPanes/AllWithFailed";
 import ClaimableBalances from "components/SetupPanes/ClaimableBalances";
@@ -10,6 +11,8 @@ import FindStrictReceivePaymentPaths from "components/SetupPanes/FindStrictRecei
 import ForAccount from "components/SetupPanes/ForAccount";
 import ForAccountWithFailed from "components/SetupPanes/ForAccountWithFailed";
 import ForLedger from "components/SetupPanes/ForLedger";
+import { ForLiquidityPool } from "components/SetupPanes/ForLiquidityPool";
+import { ForLiquidityPoolWithFailed } from "components/SetupPanes/ForLiquidityPoolWithFailed";
 import ForLedgerWithFailed from "components/SetupPanes/ForLedgerWithFailed";
 import ForOffer from "components/SetupPanes/ForOffer";
 import ForOperation from "components/SetupPanes/ForOperation";
@@ -19,6 +22,7 @@ import PostTransaction from "components/SetupPanes/PostTransaction";
 import SingleAccount from "components/SetupPanes/SingleAccount";
 import SingleClaimableBalance from "components/SetupPanes/SingleClaimableBalance";
 import SingleLedger from "components/SetupPanes/SingleLedger";
+import { SingleLiquidityPool } from "components/SetupPanes/SingleLiquidityPool";
 import SingleOperation from "components/SetupPanes/SingleOperation";
 import SingleOffer from "components/SetupPanes/SingleOffer";
 import SingleTransaction from "components/SetupPanes/SingleTransaction";
@@ -130,6 +134,17 @@ export const endpointsMap: EndpointsMap = {
         },
         setupComponent: ForLedger,
       },
+      for_liquidity_pool: {
+        label: "Effects for Liquidity Pool",
+        helpUrl:
+          "https://developers.stellar.org/api/resources/liquiditypools/effects/",
+        method: RequestMethod.GET,
+        path: {
+          template:
+            "/liquidity_pools/{liquidity_pool_id}/effects{?cursor,limit,order}",
+        },
+        setupComponent: ForLiquidityPool,
+      },
       for_operation: {
         label: "Effects for Operation",
         helpUrl:
@@ -172,6 +187,30 @@ export const endpointsMap: EndpointsMap = {
           template: "/ledgers/{ledger}",
         },
         setupComponent: SingleLedger,
+      },
+    },
+  },
+  liquidity_pools: {
+    label: "Liquidity Pools",
+    endpoints: {
+      all: {
+        label: "All Liquidity Pools",
+        helpUrl: "https://developers.stellar.org/api/resources/liquiditypools/",
+        method: RequestMethod.GET,
+        path: {
+          template: "/liquidity_pools{?reserves,cursor,limit,order}",
+        },
+        setupComponent: AllLiquidityPools,
+      },
+      single: {
+        label: "Single Liquidity Pool",
+        helpUrl:
+          "https://developers.stellar.org/api/resources/liquiditypools/single/",
+        method: RequestMethod.GET,
+        path: {
+          template: "/liquidity_pools/{liquidity_pool_id}",
+        },
+        setupComponent: SingleLiquidityPool,
       },
     },
   },
@@ -252,6 +291,17 @@ export const endpointsMap: EndpointsMap = {
             "/ledgers/{ledger}/operations{?cursor,limit,order,include_failed}",
         },
         setupComponent: ForLedgerWithFailed,
+      },
+      for_liquidity_pool: {
+        label: "Operations for Liquidity Pool",
+        helpUrl:
+          "https://developers.stellar.org/api/resources/liquiditypools/operations/",
+        method: RequestMethod.GET,
+        path: {
+          template:
+            "/liquidity_pools/{liquidity_pool_id}/operations{?cursor,limit,order,include_failed}",
+        },
+        setupComponent: ForLiquidityPoolWithFailed,
       },
       for_transaction: {
         label: "Operations for Transaction",
@@ -438,6 +488,18 @@ export const endpointsMap: EndpointsMap = {
         },
         setupComponent: ForAccount,
       },
+      for_liquidity_pool: {
+        label: "Trades for Liquidity Pool",
+        // TODO: need docs
+        helpUrl:
+          "https://developers.stellar.org/api/resources/liquiditypools/trades/",
+        method: RequestMethod.GET,
+        path: {
+          template:
+            "/liquidity_pools/{liquidity_pool_id}/trades{?cursor,limit,order}",
+        },
+        setupComponent: ForLiquidityPool,
+      },
       for_offer: {
         label: "Trades for Offer",
         helpUrl:
@@ -507,6 +569,17 @@ export const endpointsMap: EndpointsMap = {
             "/ledgers/{ledger}/transactions{?cursor,limit,order,include_failed}",
         },
         setupComponent: ForLedgerWithFailed,
+      },
+      for_liquidity_pool: {
+        label: "Transactions for Liquidity Pool",
+        helpUrl:
+          "https://developers.stellar.org/api/resources/liquiditypools/transactions/",
+        method: RequestMethod.GET,
+        path: {
+          template:
+            "/liquidity_pools/{liquidity_pool_id}/transactions{?cursor,limit,order,include_failed}",
+        },
+        setupComponent: ForLiquidityPoolWithFailed,
       },
     },
   },

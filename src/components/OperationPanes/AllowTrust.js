@@ -4,9 +4,13 @@ import OptionsTablePair from "../OptionsTable/Pair";
 import PubKeyPicker from "../FormComponents/PubKeyPicker";
 import TextPicker from "../FormComponents/TextPicker.js";
 import RadioButtonPicker from "../FormComponents/RadioButtonPicker.js";
+import PickerError from "../FormComponents/PickerError";
 
 export default function AllowTrust(props) {
   return [
+    <OptionsTablePair>
+      <PickerError message="This operation is deprecated as of Protocol 17. Prefer SetTrustLineFlags instead." />
+    </OptionsTablePair>,
     <OptionsTablePair label="Trustor" key="trustor">
       <PubKeyPicker
         value={props.values["trustor"]}

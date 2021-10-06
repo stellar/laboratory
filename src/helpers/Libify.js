@@ -83,7 +83,53 @@ Libify.Asset = function (opts) {
     return Sdk.Asset.native();
   }
 
+  if (opts.type === "liquidity_pool_shares") {
+    const lp = opts.liquidity_pool;
+    let assetA;
+    let assetB;
+
+    if (!lp.assetA) {
+      throw new Error("Liquidity pool asset requires Asset A");
+    }
+
+    if (lp.assetA.type === "native") {
+      assetA = Sdk.Asset.native();
+    } else {
+      assertNotEmpty(
+        lp.assetA.code,
+        "Liquidity pool Asset A requires asset code",
+      );
+      assertNotEmpty(
+        lp.assetA.issuer,
+        "Liquidity pool Asset A requires asset issuer",
+      );
+      assetA = new Sdk.Asset(lp.assetA.code, lp.assetA.issuer);
+    }
+
+    if (!lp.assetB) {
+      throw new Error("Liquidity pool asset requires Asset B");
+    }
+
+    if (lp.assetB.type === "native") {
+      assetB = Sdk.Asset.native();
+    } else {
+      assertNotEmpty(
+        lp.assetB.code,
+        "Liquidity pool Asset B requires asset code",
+      );
+      assertNotEmpty(
+        lp.assetB.issuer,
+        "Liquidity pool Asset B requires asset issuer",
+      );
+      assetB = new Sdk.Asset(lp.assetB.code, lp.assetB.issuer);
+    }
+
+    return new Sdk.LiquidityPoolAsset(assetA, assetB, lp.fee);
+  }
+
   assertNotEmpty(opts.code, "Asset requires asset code");
+  assertNotEmpty(opts.issuer, "Asset requires asset issuer");
+
   return new Sdk.Asset(opts.code, opts.issuer);
 };
 
@@ -621,6 +667,88 @@ Libify.Operation.setTrustLineFlags = function (opts) {
     asset: Libify.Asset(opts.asset),
     trustor: opts.trustor,
     flags,
+    source: opts.sourceAccount,
+  });
+};
+
+Libify.Operation.liquidityPoolDeposit = function (opts) {
+  assertNotEmpty(
+    opts.liquidityPoolId,
+    "Liquidity Pool Deposit operation requires Liquidity Pool ID",
+  );
+
+  assertNotEmpty(
+    opts.maxAmountA,
+    "Liquidity Pool Deposit operation requires Max Amount A",
+  );
+
+  assertNotEmpty(
+    opts.maxAmountB,
+    "Liquidity Pool Deposit operation requires Max Amount B",
+  );
+
+  assertNotEmpty(
+    opts.minPrice,
+    "Liquidity Pool Deposit operation requires Min Price",
+  );
+
+  if (opts.minPrice && typeof opts.minPrice === "object") {
+    if (!(opts.minPrice.n && opts.minPrice.d)) {
+      throw new Error(
+        "Liquidity Pool Deposit operation requires both numerator and denominator for Min Price fraction",
+      );
+    }
+  }
+
+  assertNotEmpty(
+    opts.maxPrice,
+    "Liquidity Pool Deposit operation requires Max Price",
+  );
+
+  if (opts.maxPrice && typeof opts.maxPrice === "object") {
+    if (!(opts.maxPrice.n && opts.maxPrice.d)) {
+      throw new Error(
+        "Liquidity Pool Deposit operation requires both numerator and denominator for Max Price fraction",
+      );
+    }
+  }
+
+  return Sdk.Operation.liquidityPoolDeposit({
+    liquidityPoolId: opts.liquidityPoolId,
+    maxAmountA: opts.maxAmountA,
+    maxAmountB: opts.maxAmountB,
+    minPrice: opts.minPrice,
+    maxPrice: opts.maxPrice,
+    source: opts.sourceAccount,
+  });
+};
+
+Libify.Operation.liquidityPoolWithdraw = function (opts) {
+  assertNotEmpty(
+    opts.liquidityPoolId,
+    "Liquidity Pool Withdraw operation requires Liquidity Pool ID",
+  );
+
+  assertNotEmpty(
+    opts.amount,
+    "Liquidity Pool Withdraw operation requires amount",
+  );
+
+  assertNotEmpty(
+    opts.minAmountA,
+    "Liquidity Pool Withdraw operation requires Min Amount A",
+  );
+
+  assertNotEmpty(
+    opts.minAmountB,
+    "Liquidity Pool Withdraw operation requires Min Amount B",
+  );
+
+  return Sdk.Operation.liquidityPoolWithdraw({
+    liquidityPoolId: opts.liquidityPoolId,
+    amount: opts.amount,
+    minAmountA: opts.minAmountA,
+    minAmountB: opts.minAmountB,
     source: opts.sourceAccount,
   });
 };

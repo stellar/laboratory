@@ -11,6 +11,8 @@ import CreateAccount from "../components/OperationPanes/CreateAccount";
 import CreateClaimableBalance from "../components/OperationPanes/CreateClaimableBalance";
 import EndSponsoringFutureReserves from "../components/OperationPanes/EndSponsoringFutureReserves";
 import GenericOffer from "../components/OperationPanes/GenericOffer";
+import { LiquidityPoolDeposit } from "../components/OperationPanes/LiquidityPoolDeposit";
+import { LiquidityPoolWithdraw } from "../components/OperationPanes/LiquidityPoolWithdraw";
 import ManageBuyOffer from "../components/OperationPanes/ManageBuyOffer";
 import ManageData from "../components/OperationPanes/ManageData";
 import ManageSellOffer from "../components/OperationPanes/ManageSellOffer";
@@ -210,5 +212,21 @@ export const operationsMap = [
     helpNote: "Creates a trustline flag configuring operation.",
     docsUrl:
       "https://developers.stellar.org/docs/start/list-of-operations/#set-trustline-flags",
+  },
+  {
+    name: "liquidityPoolDeposit",
+    label: "Liquidity Pool Deposit",
+    operationPane: LiquidityPoolDeposit,
+    helpNote: "Deposits assets into a liquidity pool.",
+    docsUrl:
+      "https://developers.stellar.org/docs/start/list-of-operations/#liquidity-pool-deposit",
+  },
+  {
+    name: "liquidityPoolWithdraw",
+    label: "Liquidity Pool Withdraw",
+    operationPane: LiquidityPoolWithdraw,
+    helpNote: "Withdraw assets from a liquidity pool.",
+    docsUrl:
+      "https://developers.stellar.org/docs/start/list-of-operations/#liquidity-pool-withdraw",
   },
 ];

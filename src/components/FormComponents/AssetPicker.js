@@ -1,47 +1,64 @@
 import React from "react";
 import PropTypes from "prop-types";
 import assign from "lodash/assign";
-import RadioButtonPicker from "./RadioButtonPicker";
-import PubKeyPicker from "./PubKeyPicker";
-import PickerError from "./PickerError";
-import TextPicker from "./TextPicker";
+import RadioButtonPicker from "components/FormComponents/RadioButtonPicker";
+import PubKeyPicker from "components/FormComponents/PubKeyPicker";
+import PickerError from "components/FormComponents/PickerError";
+import TextPicker from "components/FormComponents/TextPicker";
+import { LiquidityPoolAssetPicker } from "components/FormComponents/LiquidityPoolAssetPicker";
 
 // Value is a string containing the currently selected id (or undefined)
-function AssetObjectPicker({ value, onUpdate, disableNative, ...props }) {
-  const localValue = assign({ type: "", code: "", issuer: "" }, value);
+function AssetObjectPicker({
+  value,
+  onUpdate,
+  disableNative,
+  includeLiquidityPoolShares,
+  ...props
+}) {
+  const initialLiquidityPoolValue = {
+    liquidity_pool: {
+      assetA: {
+        type: "",
+        code: "",
+        issuer: "",
+      },
+      assetB: {
+        type: "",
+        code: "",
+        issuer: "",
+      },
+      fee: 30,
+    },
+  };
 
-  let isCredit =
+  const localValue = assign(
+    {
+      type: "",
+      code: "",
+      issuer: "",
+      ...(includeLiquidityPoolShares ? initialLiquidityPoolValue : {}),
+    },
+    value,
+  );
+
+  const isCredit =
     localValue.type === "credit_alphanum4" ||
     localValue.type === "credit_alphanum12";
 
-  let assetButtons = {
-    native: "native",
+  const isLiquidityPool = localValue.type === "liquidity_pool_shares";
+
+  const assetButtons = {
+    ...(!disableNative && { native: "native" }),
     credit_alphanum4: "Alphanumeric 4",
     credit_alphanum12: "Alphanumeric 12",
+    ...(includeLiquidityPoolShares && {
+      liquidity_pool_shares: "Liquidity pool shares",
+    }),
   };
 
-  if (disableNative) {
-    delete assetButtons.native;
-  }
-
-  return (
-    <div {...props}>
-      <RadioButtonPicker
-        value={localValue.type}
-        onUpdate={(typeValue) => {
-          const newTypeValue = localValue.type === typeValue ? "" : typeValue;
-          onUpdate(
-            assign({}, value, {
-              type: newTypeValue,
-              code: newTypeValue ? "" : localValue.code,
-              issuer: newTypeValue ? "" : localValue.issuer,
-            }),
-          );
-        }}
-        className={isCredit ? "picker--spaceBottom" : ""}
-        items={assetButtons}
-      />
-      {isCredit && (
+  const renderAssetInputs = () => {
+    if (isCredit) {
+      return (
         <>
           <input
             type="text"
@@ -65,7 +82,47 @@ function AssetObjectPicker({ value, onUpdate, disableNative, ...props }) {
             placeholder="Issuer Account ID"
           />
         </>
-      )}
+      );
+    }
+
+    if (isLiquidityPool) {
+      return (
+        <LiquidityPoolAssetPicker
+          value={value.liquidity_pool}
+          onUpdate={(lpValue) => {
+            onUpdate(
+              assign({}, value, {
+                ...value,
+                liquidity_pool: lpValue,
+              }),
+            );
+          }}
+        />
+      );
+    }
+
+    return null;
+  };
+
+  return (
+    <div {...props}>
+      <RadioButtonPicker
+        value={localValue.type}
+        onUpdate={(typeValue) => {
+          const newTypeValue = localValue.type === typeValue ? "" : typeValue;
+          onUpdate(
+            assign({}, value, {
+              type: newTypeValue,
+              code: newTypeValue ? "" : localValue.code,
+              issuer: newTypeValue ? "" : localValue.issuer,
+              ...(includeLiquidityPoolShares ? initialLiquidityPoolValue : {}),
+            }),
+          );
+        }}
+        className={isCredit ? "picker--spaceBottom" : ""}
+        items={assetButtons}
+      />
+      {renderAssetInputs()}
     </div>
   );
 }
@@ -191,6 +248,24 @@ export default function AssetPicker({
   );
 }
 
+export function AssetPickerWithoutNative({
+  stringForm = false,
+  value,
+  optional,
+  onUpdate,
+  ...props
+}) {
+  return (
+    <AssetObjectPicker
+      optional={optional}
+      value={value}
+      onUpdate={onUpdate}
+      disableNative
+      {...props}
+    />
+  );
+}
+
 AssetPicker.propTypes = {
   stringForm: PropTypes.bool,
   onUpdate: PropTypes.func.isRequired,
@@ -198,8 +273,21 @@ AssetPicker.propTypes = {
     PropTypes.string,
     PropTypes.shape({
       type: PropTypes.string.isRequired,
-      code: PropTypes.string.isRequired,
-      issuer: PropTypes.string.isRequired,
+      code: PropTypes.string,
+      issuer: PropTypes.string,
+      liquidity_pool: PropTypes.shape({
+        assetA: PropTypes.shape({
+          type: PropTypes.string,
+          code: PropTypes.string,
+          issuer: PropTypes.string,
+        }),
+        assetB: PropTypes.shape({
+          type: PropTypes.string,
+          code: PropTypes.string,
+          issuer: PropTypes.string,
+        }),
+        fee: PropTypes.number,
+      }),
     }),
   ]),
 };
