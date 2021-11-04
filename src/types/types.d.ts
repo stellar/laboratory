@@ -78,3 +78,7 @@ interface Asset {
   code: string;
   issuer: string;
 }
+
+interface AssetWithType extends Asset {
+  type: string;
+}

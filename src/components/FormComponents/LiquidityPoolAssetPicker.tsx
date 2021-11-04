@@ -1,15 +1,11 @@
 import { useState, useEffect } from "react";
 import AssetPicker from "components/FormComponents/AssetPicker";
 import PositiveNumberPicker from "components/FormComponents/PositiveNumberPicker";
-import { Asset, AnyObject } from "types/types.d";
-
-interface LiquidityPoolAsset extends Asset {
-  type: string;
-}
+import { AssetWithType, AnyObject } from "types/types.d";
 
 interface LiquidityPoolValue {
-  assetA: LiquidityPoolAsset;
-  assetB: LiquidityPoolAsset;
+  assetA: AssetWithType;
+  assetB: AssetWithType;
   fee: number;
 }
 
@@ -45,7 +41,7 @@ export const LiquidityPoolAssetPicker = ({
       <div className="LiquidityPoolAssetPicker__item">
         <AssetPicker
           value={localState.assetA}
-          onUpdate={(assetAValue: LiquidityPoolAsset) => {
+          onUpdate={(assetAValue: AssetWithType) => {
             updateKeyValue("assetA", assetAValue);
           }}
           optional={optional}
@@ -56,7 +52,7 @@ export const LiquidityPoolAssetPicker = ({
       <div className="LiquidityPoolAssetPicker__item">
         <AssetPicker
           value={localState.assetB}
-          onUpdate={(assetBValue: LiquidityPoolAsset) => {
+          onUpdate={(assetBValue: AssetWithType) => {
             updateKeyValue("assetB", assetBValue);
           }}
           optional={optional}
