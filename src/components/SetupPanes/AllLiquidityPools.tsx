@@ -1,13 +1,15 @@
 import { useEffect } from "react";
 import All from "components/SetupPanes/All";
 import OptionsTablePair from "components/OptionsTable/Pair";
-import { AssetPickerWithoutNative } from "components/FormComponents/AssetPicker";
+import AssetPicker from "components/FormComponents/AssetPicker";
 import ManualMultiPicker from "components/FormComponents/ManualMultiPicker";
-import { Asset } from "types/types.d";
+import { AssetWithType } from "types/types.d";
+
+const NATIVE_TYPE = "native";
 
 interface AllLiquidityPoolsProps {
   values: {
-    reserves_assets: Asset[];
+    reserves_assets: AssetWithType[];
   };
   onUpdate: (key: string, value: string) => void;
 }
@@ -20,8 +22,12 @@ export const AllLiquidityPools = (props: AllLiquidityPoolsProps) => {
 
     return props.values.reserves_assets
       .reduce((result: string[], current) => {
-        if (current?.code && current?.issuer) {
-          result.push(`${current.code}:${current.issuer}`);
+        if (current.type === NATIVE_TYPE) {
+          result.push(NATIVE_TYPE);
+        } else {
+          if (current?.code && current?.issuer) {
+            result.push(`${current.code}:${current.issuer}`);
+          }
         }
 
         return result;
@@ -37,7 +43,7 @@ export const AllLiquidityPools = (props: AllLiquidityPoolsProps) => {
     <div>
       <OptionsTablePair label="Reserves" optional>
         <ManualMultiPicker
-          component={AssetPickerWithoutNative}
+          component={AssetPicker}
           value={props.values["reserves_assets"]}
           default=""
           addNewLabel="Add reserve"
