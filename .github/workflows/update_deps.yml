@@ -1,0 +1,27 @@
+name: Monthly dependency updates
+on:
+  schedule:
+    # First of every month
+    - cron: 0 0 1 * *
+
+jobs:
+  create_issue:
+    name: Update dependencies
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Update dependencies
+        uses: imjohnbo/issue-bot@7e438653c0da13f4f79678a56bb9ecbd9dcc26ac
+        with:
+          title: "Update dependencies"
+          body: |
+            Update all project dependencies.
+            ```
+            yarn upgrade-interactive --latest
+            ```
+            Make sure there are no issues in the code editor, code compiles, and it runs without issues in the browser.
+          pinned: false
+          close-previous: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
