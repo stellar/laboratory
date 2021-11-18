@@ -13,7 +13,7 @@ export const render = (
   ui: React.ReactElement,
   {
     preloadedState,
-    store = createStore(reducers, applyMiddleware(thunk)),
+    store = createStore(reducers, preloadedState, applyMiddleware(thunk)),
     ...renderOptions
   }: any = {},
 ) => {

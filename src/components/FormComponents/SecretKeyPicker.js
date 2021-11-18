@@ -22,6 +22,7 @@ export default function SecretKeyPicker(props) {
         }
       }}
       className={props.className}
+      data-testid="secret-key-picker"
     />
   );
 }
