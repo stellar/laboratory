@@ -1,3 +1,5 @@
+import { tour } from "constants/tour";
+
 export const Introduction = () => {
   return (
     <div className="Introduction" data-testid="page-introduction">
@@ -19,7 +21,12 @@ export const Introduction = () => {
               </a>
               .
             </p>
-
+            <p>
+              If you need a quick tour to find you way around Laboratory, we got you covered!
+              <button onClick={tour.start}>
+                Start Tour
+              </button>
+            </p>
             <p>
               For Stellar docs, take a look at the{" "}
               <a href="https://developers.stellar.org/">
