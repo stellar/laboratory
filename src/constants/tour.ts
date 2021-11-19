@@ -38,7 +38,7 @@ const awaitElementExistence = (selector: string) => {
 };
 
 /**
- * The other Hackaround. 
+ * The other Hackaround.
  * Could probably be replaced by manipulating state-management directly.
  */
 const click = (selector: string) => {
@@ -52,11 +52,11 @@ const click = (selector: string) => {
 const steps: Step.StepOptions[] = [
     {
         title: 'Welcome in Laboratories Tour!',
-        text: 'In the next few minutes you\'ll go through the Steps on how to explore state on the Stellar Network, create Transactions and more.',
+        text: 'In the next few minutes you\'ll go through the Steps on how to explore the state of the Stellar Network, create Transactions and more.',
     },
     {
         title: 'The network selector',
-        text: 'This is the network selector, there are multiple Stellar Networks. You can even run your own and connect to it via the "custom" button. The most used networks are the public network and the SDF testnet. For now we\'ll stay on testnet.',
+        text: 'This is the network selector. There are multiple Stellar Networks. You can even run your own and connect to it via the "custom" button. The most used networks are the public network and the SDF testnet. For now we\'ll stay on testnet.',
         attachTo: {
             element: '.NetworkPicker',
             on: 'bottom-end',
@@ -75,7 +75,7 @@ const steps: Step.StepOptions[] = [
     },
     {
         title: 'Account creation',
-        text: 'Before you can start making transactions on the network, you need a keypair and fund an account. On testnet you can do both under the "Create account" tab.',
+        text: 'Before you can start making transactions on the network, you need a keypair to an account and you need to fund that account. On testnet you can do both under the "Create account" tab.',
         attachTo: {
             element: '[href="#account-creator"]',
             on: 'bottom',
@@ -98,7 +98,7 @@ const steps: Step.StepOptions[] = [
     },
     {
         title: 'Friendbot',
-        text: 'To fund an account on testnet, you can utilise Friendbot! Just paste your public key and friendbot will give you a few testnet XLM.',
+        text: 'To fund an account on testnet, you can utilise Friendbot! Just paste the generated public key and friendbot will give you a few XLM to use on the testnet.',
         attachTo: {
             element: '[data-testid="page-friendbot"]',
             on: 'bottom',
@@ -106,7 +106,7 @@ const steps: Step.StepOptions[] = [
     },
     {
         title: 'Explore Endpoints',
-        text: 'The "Explore Endpoints" tab allows you to query Horizon for different resources on the network.',
+        text: 'The "Explore Endpoints" tab allows you to query Horizon for information about different resources on the network.',
         when: {
             show() {
                 // TODO: think how to make this workaround less hacky
@@ -139,7 +139,7 @@ const steps: Step.StepOptions[] = [
     },
     {
         title: 'Resources',
-        text: 'For most resource (e.g. accounts in this case) you can select if you want to query a specific resource by its id or if you want to list multiple. In any case Laboratory will show you fields and options you can (or need to) specify to get a result that matches your needs.',
+        text: 'For most resources (e.g. accounts in this case) you can select if you want to query a specific resource by its id or if you want to list multiple. In any case Laboratory will show you fields and options you can (or need to) specify to get a result that matches your needs.',
         attachTo: {
             element: '.EndpointExplorer__picker div:nth-child(2) nav',
             on: 'bottom',
@@ -147,7 +147,7 @@ const steps: Step.StepOptions[] = [
     },
     {
         title: 'Build Transaction',
-        text: 'Laboratories Transaction Builder lets you compose transactions without writing a single line of code.',
+        text: 'Laboratory\'s "Transaction Builder" tab lets you compose transactions without writing a single line of code. This is often the easiest way to learn how Stellar transactions work.',
         attachTo: {
             element: '[href="#txbuilder"]',
             on: 'bottom',
@@ -164,7 +164,7 @@ const steps: Step.StepOptions[] = [
         text: 'This form allows you to set general transaction parameters like the source account, sequence number or memo.',
         attachTo: {
             element: '.TransactionOp__config',
-            on: 'top', 
+            on: 'top',
         },
     },
     {
@@ -176,7 +176,7 @@ const steps: Step.StepOptions[] = [
         scrollTo: true,
     },
     {
-        text: 'Laboratory shows you the result of building your transaction here. This can be either error messages if some of your parameters didn\'t match basic validation or the build transaction XDR and buttons to sign or view it.',
+        text: 'Laboratory shows you the result of building your transaction here. This can be either error messages (if some of your parameters didn\'t match basic validation), or the transaction XDR you\'ve built along with buttons to sign or view it.',
         attachTo: {
             element: '.TransactionBuilder__result',
             on: 'top',
@@ -185,7 +185,7 @@ const steps: Step.StepOptions[] = [
     },
     {
         title: 'Sign Transaction',
-        text: 'In most cases you\'ll want to sign your transaction after building it. Laboratories "Sign Transaction" tab got you covered for that.',
+        text: 'In most cases you\'ll want to sign your transaction after building it. Laboratory\'s "Sign Transaction" tab has got you covered for that.',
         attachTo: {
             element: '[href="#txsigner"]',
             on: 'bottom',
@@ -200,7 +200,7 @@ const steps: Step.StepOptions[] = [
         // TODO: either "live create" XDR in a transaction builder tutorial or include example XDR to import.
         beforeShowPromise: () => awaitElementExistence('.TransactionSigner'),
         title: 'Signing Transactions',
-        text: 'To import your transaction, you can either click the button on the "Build Transaction" tab or paste it into this text field. Once the tranaaction got imported, you got multiple options to sign it. For example directly with a secret key, using a hardware wallet or with browser extension wallets like albedo or freighter.',
+        text: 'To import your transaction, you can either click the "Sign in Transaction Signer" button on the "Build Transaction" tab or paste it into this text field. Once the transaction has been imported, you have multiple options to sign it. For example directly with a secret key, using a hardware wallet or with browser extension wallets like albedo or freighter.',
         attachTo: {
             element: '.xdrInput__input__textarea',
             on: 'top',
@@ -209,7 +209,7 @@ const steps: Step.StepOptions[] = [
     {
         // TODO: include example XDR to show.
         title: 'View XDR',
-        text: 'Sometimes you want to know what XDR you got does. This can be helpful when for example your tranaction returned errors when you tried to submit it. The result XDR can show you what went wrong.',
+        text: 'Sometimes you want to know what the XDR you have is actually doing. This can be very helpful, for example your tranaction may have returned errors when you tried to submit it. The result XDR you receive from the network can show you what went wrong.',
         attachTo: {
             element: '[href="#xdr-viewer"]',
             on: 'bottom',
@@ -223,7 +223,7 @@ const steps: Step.StepOptions[] = [
     {
         beforeShowPromise: () => awaitElementExistence('.xdrInput__input__textarea'),
         title: 'View XDR',
-        text: 'Here you can enter your XDR but pasting it. You may also get here page by clicking XDR (or related buttons) at some of Laboratories sections, for example by clicking XDR in Horizons responses in the "Explore Endpoints" tab.',
+        text: 'Here you can enter your XDR by pasting it. You may also arrive here by clicking XDR (or related buttons) contained in some of Laboratory\'s sections, for example by clicking XDR in Horizon\'s responses in the "Explore Endpoints" tab.',
         attachTo: {
             element: '.xdrInput__input__textarea',
             on: 'right',
@@ -231,7 +231,7 @@ const steps: Step.StepOptions[] = [
     },
     {
         title: 'View XDR',
-        text: 'When you entered your XDR you may need to change the type of the XDR. You can find the most commonly viewed types at the top of the list.',
+        text: 'When you have entered your XDR, you may need to change the type of the XDR. You can find the most commonly viewed types at the top of this list.',
         attachTo: {
             element: '.XdrViewer__setup .so-dropdown',
             on: 'right',
