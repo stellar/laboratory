@@ -465,6 +465,7 @@ class TransactionSigner extends React.Component {
         </div>
       );
     }
+
     return (
       <div className="TransactionSigner" data-testid="page-transaction-signer">
         <div className="so-back">
