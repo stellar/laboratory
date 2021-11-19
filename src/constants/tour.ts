@@ -10,6 +10,7 @@ const options: Tour.TourOptions = {
         },
         buttons: [
             {
+                classes: 's-button',
                 text: 'Continue',
                 action() {
                     this.next();
@@ -37,6 +38,17 @@ const awaitElementExistence = (selector: string) => {
     });
 };
 
+/**
+ * The other Hackaround. 
+ * Could probably be replaced by manipulating state-management directly.
+ */
+const click = (selector: string) => {
+    const element = document.querySelector(selector);
+    if (element instanceof HTMLElement) {
+        element.click();
+    }
+};
+
 
 const steps: Step.StepOptions[] = [
     {
@@ -52,10 +64,11 @@ const steps: Step.StepOptions[] = [
         },
         buttons: [
             {
+                classes: 's-button',
                 text: 'Continue',
                 action() {
                     // TODO: think how to make this workaround less hacky
-                    (document.querySelector('.NetworkPicker .s-buttonGroup__wrapper:first-child') as HTMLElement).click();
+                    click('.NetworkPicker .s-buttonGroup__wrapper:first-child');
                     this.next();
                 },
             },
@@ -71,7 +84,7 @@ const steps: Step.StepOptions[] = [
         when: {
             show() {
                 // TODO: think how to make this workaround less hacky
-                (document.querySelector('[href="#account-creator"]') as HTMLElement).click();
+                click('[href="#account-creator"]');
             },
         },
     },
@@ -98,7 +111,7 @@ const steps: Step.StepOptions[] = [
         when: {
             show() {
                 // TODO: think how to make this workaround less hacky
-                (document.querySelector('[href="#explorer"]') as HTMLElement).click();
+                click('[href="#explorer"]');
             },
         },
         attachTo: {
@@ -116,9 +129,10 @@ const steps: Step.StepOptions[] = [
         },
         buttons: [
             {
+                classes: 's-button',
                 text: 'Continue',
                 action() {
-                    (document.querySelector('.EndpointPicker__section nav li:first-child') as HTMLElement).click();
+                    click('.EndpointPicker__section nav li:first-child');
                     this.next();
                 },
             },
@@ -141,7 +155,7 @@ const steps: Step.StepOptions[] = [
         },
         when: {
             show() {
-                (document.querySelector('[href="#txbuilder"]') as HTMLElement).click();
+                click('[href="#txbuilder"]');
             },
         },
     },
@@ -179,7 +193,7 @@ const steps: Step.StepOptions[] = [
         },
         when: {
             show() {
-                (document.querySelector('[href="#txsigner"]') as HTMLElement).click();
+                click('[href="#txsigner"]');
             },
         },
     },
@@ -203,7 +217,7 @@ const steps: Step.StepOptions[] = [
         },
         when: {
             show() {
-                (document.querySelector('[href="#xdr-viewer"]') as HTMLElement).click();
+                click('[href="#xdr-viewer"]');
             },
         },
     },

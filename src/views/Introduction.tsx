@@ -23,10 +23,10 @@ export const Introduction = () => {
             </p>
             <p>
               If you need a quick tour to find you way around Laboratory, we got you covered!
-              <button onClick={tour.start}>
-                Start Tour
-              </button>
             </p>
+            <button onClick={tour.start} className="s-button">
+              Start Tour
+            </button>
             <p>
               For Stellar docs, take a look at the{" "}
               <a href="https://developers.stellar.org/">
