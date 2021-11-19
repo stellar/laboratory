@@ -197,7 +197,6 @@ class TransactionSigner extends React.Component {
         resultTitle,
         submitInstructions,
         feeBumpLink;
-
       const signedXdr =
         freighterwalletStatus.signedTx ||
         albedowalletStatus.signedTx ||
