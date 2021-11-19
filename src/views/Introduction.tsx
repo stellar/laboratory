@@ -1,4 +1,8 @@
-import { tour } from "constants/tour";
+// helper to import the tour and it's dependencies 
+// only when it's needed and not on every page load
+const startTour = () => {
+  import("constants/tour").then(module => module.tour.start());
+};
 
 export const Introduction = () => {
   return (
@@ -24,7 +28,7 @@ export const Introduction = () => {
             <p>
               If you need a quick tour to find you way around Laboratory, we got you covered!
             </p>
-            <button onClick={tour.start} className="s-button">
+            <button onClick={startTour} className="s-button">
               Start Tour
             </button>
             <p>

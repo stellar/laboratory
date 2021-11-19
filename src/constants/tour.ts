@@ -1,7 +1,6 @@
 import Shepherd from 'shepherd.js';
 import type Tour from 'shepherd.js/src/types/tour';
 import type Step from 'shepherd.js/src/types/step';
-import "shepherd.js/dist/css/shepherd.css";
 
 const options: Tour.TourOptions = {
     defaultStepOptions: {
@@ -169,20 +168,20 @@ const steps: Step.StepOptions[] = [
         },
     },
     {
-        title: 'Operations',
         text: 'For your transactions to do anything, you need to add operations. Laboratory will show you added operations and fields depending on the type of operation here.',
         attachTo: {
             element: '.TransactionOperations',
             on: 'top',
         },
+        scrollTo: true,
     },
     {
-        title: 'Transaction',
-        text: 'Laboratory shows you the result of building your transaction here. This can be either error messages if some of your parameters didn\'t match basic validation or the build transaction XDR and button to sign or view it.',
+        text: 'Laboratory shows you the result of building your transaction here. This can be either error messages if some of your parameters didn\'t match basic validation or the build transaction XDR and buttons to sign or view it.',
         attachTo: {
             element: '.TransactionBuilder__result',
             on: 'top',
         },
+        scrollTo: true,
     },
     {
         title: 'Sign Transaction',
@@ -201,7 +200,7 @@ const steps: Step.StepOptions[] = [
         // TODO: either "live create" XDR in a transaction builder tutorial or include example XDR to import.
         beforeShowPromise: () => awaitElementExistence('.TransactionSigner'),
         title: 'Signing Transactions',
-        text: 'To import your transaction, you can either click the button on the "Build Transaction" tab or paste it into this text field. Once the tranaaction got imported, you got multiple options to sign it. For example directly with the secret key, using a hardware wallet like Ledger or with albedo.',
+        text: 'To import your transaction, you can either click the button on the "Build Transaction" tab or paste it into this text field. Once the tranaaction got imported, you got multiple options to sign it. For example directly with a secret key, using a hardware wallet or with browser extension wallets like albedo or freighter.',
         attachTo: {
             element: '.xdrInput__input__textarea',
             on: 'top',
