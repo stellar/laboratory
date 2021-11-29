@@ -2,7 +2,7 @@ import trim from "lodash/trim";
 import { xdr } from "stellar-sdk";
 import validateBase64 from "./validateBase64";
 
-export default function validateTxXdr(input, networkPassphrase) {
+export const validateTxXdr = (input: string) => {
   input = trim(input);
 
   let base64Validation = validateBase64(input);
@@ -23,4 +23,4 @@ export default function validateTxXdr(input, networkPassphrase) {
       originalError: e,
     };
   }
-}
+};

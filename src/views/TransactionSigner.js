@@ -25,7 +25,7 @@ import HelpMark from "components/HelpMark";
 import clickToSelect from "helpers/clickToSelect";
 import scrollOnAnchorOpen from "helpers/scrollOnAnchorOpen";
 import extrapolateFromXdr from "helpers/extrapolateFromXdr";
-import validateTxXdr from "helpers/validateTxXdr";
+import { validateTxXdr } from "helpers/validateTxXdr";
 import NETWORK from "constants/network";
 import Libify from "helpers/Libify";
 import { addEventHandler } from "helpers/metrics";
@@ -71,20 +71,29 @@ class TransactionSigner extends React.Component {
 
       let infoTable = {
         "Signing for": (
-          <pre className="so-code so-code__wrap">
+          <pre
+            className="so-code so-code__wrap"
+            data-testid="transaction-signer-network"
+          >
             <code>{networkPassphrase}</code>
           </pre>
         ),
         "Transaction Envelope XDR": (
           <EasySelect plain={true}>
-            <pre className="so-code so-code__wrap">
+            <pre
+              className="so-code so-code__wrap"
+              data-testid="transaction-signer-xdr"
+            >
               <code>{xdr}</code>
             </pre>
           </EasySelect>
         ),
         "Transaction Hash": (
           <EasySelect plain={true}>
-            <pre className="so-code so-code__wrap">
+            <pre
+              className="so-code so-code__wrap"
+              data-testid="transaction-signer-hash"
+            >
               <code>{transaction.hash().toString("hex")}</code>
             </pre>
           </EasySelect>
@@ -95,38 +104,89 @@ class TransactionSigner extends React.Component {
         infoTable = {
           ...infoTable,
           ...{
-            "Fee source account": transaction.feeSource,
-            "Transaction Fee (stroops)": transaction.fee,
-            "Number of existing signatures": transaction.signatures.length,
+            "Fee source account": (
+              <span data-testid="transaction-signer-fee-source">
+                {transaction.feeSource}
+              </span>
+            ),
+            "Transaction Fee (stroops)": (
+              <span data-testid="transaction-signer-transaction-fee">
+                {transaction.fee}
+              </span>
+            ),
+            "Number of existing signatures": (
+              <span data-testid="transaction-signer-fee-sig-length">
+                {transaction.signatures.length}
+              </span>
+            ),
             "Inner transaction hash": (
               <EasySelect plain={true}>
-                <pre className="so-code so-code__wrap">
+                <pre
+                  className="so-code so-code__wrap"
+                  data-testid="transaction-signer-inner-hash"
+                >
                   <code>
                     {transaction.innerTransaction.hash().toString("hex")}
                   </code>
                 </pre>
               </EasySelect>
             ),
-            "Inner transaction source account":
-              transaction.innerTransaction.source,
-            "Inner transaction sequence number":
-              transaction.innerTransaction.sequence,
-            "Inner transaction fee (stroops)": transaction.innerTransaction.fee,
-            "Inner transaction number of operations":
-              transaction.innerTransaction.operations.length,
-            "Inner transaction number of existing signatures":
-              transaction.innerTransaction.signatures.length,
+            "Inner transaction source account": (
+              <span data-testid="transaction-signer-inner-source">
+                {transaction.innerTransaction.source}
+              </span>
+            ),
+            "Inner transaction sequence number": (
+              <span data-testid="transaction-signer-inner-sequence">
+                {transaction.innerTransaction.sequence}
+              </span>
+            ),
+            "Inner transaction fee (stroops)": (
+              <span data-testid="transaction-signer-inner-fee">
+                {transaction.innerTransaction.fee}
+              </span>
+            ),
+            "Inner transaction number of operations": (
+              <span data-testid="transaction-signer-inner-op-length">
+                {transaction.innerTransaction.operations.length}
+              </span>
+            ),
+            "Inner transaction number of existing signatures": (
+              <span data-testid="transaction-signer-inner-sig-length">
+                {transaction.innerTransaction.signatures.length}
+              </span>
+            ),
           },
         };
       } else {
         infoTable = {
           ...infoTable,
           ...{
-            "Source account": transaction.source,
-            "Sequence number": transaction.sequence,
-            "Transaction Fee (stroops)": transaction.fee,
-            "Number of operations": transaction.operations.length,
-            "Number of existing signatures": transaction.signatures.length,
+            "Source account": (
+              <span data-testid="transaction-signer-source">
+                {transaction.source}
+              </span>
+            ),
+            "Sequence number": (
+              <span data-testid="transaction-signer-sequence">
+                {transaction.sequence}
+              </span>
+            ),
+            "Transaction Fee (stroops)": (
+              <span data-testid="transaction-signer-fee">
+                {transaction.fee}
+              </span>
+            ),
+            "Number of operations": (
+              <span data-testid="transaction-signer-op-length">
+                {transaction.operations.length}
+              </span>
+            ),
+            "Number of existing signatures": (
+              <span data-testid="transaction-signer-sig-length">
+                {transaction.signatures.length}
+              </span>
+            ),
           },
         };
       }
@@ -137,7 +197,6 @@ class TransactionSigner extends React.Component {
         resultTitle,
         submitInstructions,
         feeBumpLink;
-
       const signedXdr =
         freighterwalletStatus.signedTx ||
         albedowalletStatus.signedTx ||
@@ -147,6 +206,7 @@ class TransactionSigner extends React.Component {
         codeResult = (
           <pre
             className="TxSignerResult__xdr so-code so-code__wrap"
+            data-testid="transaction-signer-result"
             onClick={clickToSelect}
           >
             <code>{signedXdr}</code>
@@ -280,7 +340,10 @@ class TransactionSigner extends React.Component {
                     Clear and import new transaction
                   </a>
                 </div>
-                <div className="simpleTable">
+                <div
+                  className="simpleTable"
+                  data-testid="transaction-signer-transaction-overview"
+                >
                   {map(infoTable, (content, label) => {
                     return (
                       <div className="simpleTable__row" key={label}>
@@ -295,7 +358,10 @@ class TransactionSigner extends React.Component {
               </div>
             </div>
             <div className="so-chunk">
-              <div className="TxSignerKeys TransactionSigner__keys">
+              <div
+                className="TxSignerKeys TransactionSigner__keys"
+                data-testid="transaction-signer-signatures"
+              >
                 <p className="TxSignerKeys__title">
                   Signatures{" "}
                   <HelpMark href="https://developers.stellar.org/docs/glossary/multisig/" />
@@ -316,6 +382,7 @@ class TransactionSigner extends React.Component {
                     <div className="TxSignerKeys__signBipPath">
                       <button
                         className="s-button"
+                        data-testid="transaction-signer-ledger-sign-button"
                         onClick={() => {
                           dispatch(
                             signWithLedger(xdr, bipPath, networkPassphrase),
@@ -326,6 +393,7 @@ class TransactionSigner extends React.Component {
                       </button>
                       <button
                         className="s-button"
+                        data-testid="transaction-signer-trezor-sign-button"
                         onClick={() => {
                           dispatch(
                             signWithTrezor(xdr, bipPath, networkPassphrase),
@@ -345,6 +413,7 @@ class TransactionSigner extends React.Component {
                     <OptionsTablePair label="Freighter">
                       <button
                         className="s-button"
+                        data-testid="transaction-signer-freighter-sign-button"
                         onClick={() => {
                           dispatch(
                             signWithFreighter(
@@ -395,8 +464,9 @@ class TransactionSigner extends React.Component {
         </div>
       );
     }
+
     return (
-      <div className="TransactionSigner">
+      <div className="TransactionSigner" data-testid="page-transaction-signer">
         <div className="so-back">
           <div className="so-chunk">
             <div className="pageIntro">

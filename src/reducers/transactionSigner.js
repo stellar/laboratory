@@ -18,7 +18,7 @@ import {
   ALBEDO_WALLET_SIGN_ERROR,
 } from "../actions/transactionSigner";
 import { LOAD_STATE } from "../actions/routing";
-import validateTxXdr from "../helpers/validateTxXdr";
+import { validateTxXdr } from "../helpers/validateTxXdr";
 import SLUG from "../constants/slug";
 
 const transactionSigner = combineReducers({
@@ -53,11 +53,11 @@ function xdr(state = "", action) {
   return state;
 }
 
-function signers(state = [], action) {
+function signers(state = [""], action) {
   switch (action.type) {
     case IMPORT_FROM_XDR:
     case CLEAR_TRANSACTION:
-      return [];
+      return [""];
     case SET_SECRETS:
       return action.secrets;
   }
