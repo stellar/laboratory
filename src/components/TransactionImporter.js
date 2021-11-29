@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import validateTxXdr from "../helpers/validateTxXdr";
+import { validateTxXdr } from "../helpers/validateTxXdr";
 
 // TransactionImporter will call the onImport passed to it's props when the user
 // presses the import button and the input is valid
@@ -44,6 +44,7 @@ export default class TransactionImporter extends React.Component {
       <div className="xdrInput">
         <div className="xdrInput__input">
           <textarea
+            data-testid="transaction-importer-input"
             value={this.state.input}
             className="xdrInput__input__textarea"
             onChange={this.updateTextarea.bind(this)}
@@ -55,6 +56,7 @@ export default class TransactionImporter extends React.Component {
           <div className="s-buttonList">
             <button
               className="s-button"
+              data-testid="transaction-importer-button"
               disabled={!submitEnabled}
               onClick={this.triggerImport.bind(this)}
             >
