@@ -1,8 +1,7 @@
-import React from "react";
-import PropTypes from "prop-types";
 import isArray from "lodash/isArray";
-import map from "lodash/map";
 import isUndefined from "lodash/isUndefined";
+import map from "lodash/map";
+import React from "react";
 
 // MultiPicker is a compound picker interface that ensures there is always
 // enough rows for the user to add more data. MultiPicker accomplishes this
@@ -17,22 +16,74 @@ import isUndefined from "lodash/isUndefined";
 //   will default to a one element array. The length of the array will be
 //   normalized to have one empty element at the end.
 // @param {function} props.onUpdate - Picker callback function called when the values change.
-export default function MultiPicker(props) {
-  let { onUpdate, component } = props;
-  let value = props.value;
+
+type Value = string | undefined;
+
+type Values = Value[];
+
+// Updates a value of the array at a specific index
+const updateValueAt = (values: Values, index: number, newValue: Value) => {
+  values = values.slice();
+  values[index] = newValue;
+  return values;
+};
+
+function isEmpty(value: Value) {
+  return value === null || isUndefined(value) || value === "";
+}
+function arelastTwoEmpty(values: Values) {
+  return (
+    isEmpty(values[values.length - 1]) && isEmpty(values[values.length - 2])
+  );
+}
+
+// Makes sure there is only one consecutive trailing element in the value array.
+// Does not mutate value.
+const adjustTrailingEmptyElements = (values: Values) => {
+  values = values.slice();
+
+  // Add a trailing empty element. May be removed in the next step
+  // This is to ensure that we have at least one trailing empty element. In many
+  // cases, this will cause two trailing empty elements, but it will be removed
+  // in the next step.
+  values.push("");
+
+  // Remove trailing empty elements until there is only one trailing empty element.
+  // This makes sure we will only have one consecutive trailing element (especially)
+  // remove the defensive one we just added before.
+  while (values.length > 1 && arelastTwoEmpty(values)) {
+    values.pop();
+  }
+
+  return values;
+};
+
+interface MultiPickerProps {
+  component: React.ComponentType<
+    { onUpdate: (val: Value) => void } & React.InputHTMLAttributes<"input">
+  >;
+  onUpdate: (val: any) => void;
+  value: string[];
+}
+
+export const MultiPicker = ({
+  component,
+  onUpdate,
+  value,
+}: MultiPickerProps) => {
   if (!isArray(value)) {
     value = [];
   }
 
   let normalizedValues = adjustTrailingEmptyElements(value);
+  const SingleComponent = component;
 
-  let SingleComponent = props.component;
   return (
     <div>
       {map(normalizedValues, (singleValue, index) => {
         return (
           <SingleComponent
-            onUpdate={(newValue) =>
+            onUpdate={(newValue: Value) =>
               onUpdate(updateValueAt(normalizedValues, index, newValue))
             }
             value={singleValue}
@@ -43,44 +94,4 @@ export default function MultiPicker(props) {
       })}
     </div>
   );
-}
-MultiPicker.propTypes = {
-  value: PropTypes.array.isRequired,
 };
-
-function isEmpty(value) {
-  return value === null || isUndefined(value) || value === "";
-}
-function arelastTwoEmpty(values) {
-  return (
-    isEmpty(values[values.length - 1]) && isEmpty(values[values.length - 2])
-  );
-}
-
-// Makes sure there is only one consecutive trailing element in the value array.
-// Does not mutate value.
-function adjustTrailingEmptyElements(values) {
-  values = values.slice();
-
-  // Add a trailing empty element. May be removed in the next step
-  // This is to ensure that we have at least one trailing empty element. In many
-  // cases, this will cause two trailing empty elements, but it will be removed
-  // in the next step.
-  values.push(null);
-
-  // Remove trailing empty elements until there is only one trailing empty element.
-  // This makes sure we will only have one consecutive trailing element (especially)
-  // remove the defensive one we just added before.
-  while (values.length > 1 && arelastTwoEmpty(values)) {
-    values.pop();
-  }
-
-  return values;
-}
-
-// Updates a value of the array at a specific index
-function updateValueAt(values, index, newValue) {
-  values = values.slice();
-  values[index] = newValue;
-  return values;
-}

@@ -6,7 +6,7 @@ import { fireEvent, waitFor, screen } from "@testing-library/react";
 import * as freighterApi from "@stellar/freighter-api";
 import albedo from "@albedo-link/intent";
 import { render } from "helpers/testHelpers";
-import TransactionSigner from "views/TransactionSigner";
+import { TransactionSigner } from "views/TransactionSigner";
 import Libify from "helpers/Libify";
 import * as transactionSignerActions from "actions/transactionSigner";
 
