@@ -3,11 +3,8 @@
  */
 import { Networks, TransactionBuilder } from "stellar-sdk";
 import { fireEvent, waitFor, screen } from "@testing-library/react";
-import * as freighterApi from "@stellar/freighter-api";
-import albedo from "@albedo-link/intent";
 import { render } from "helpers/testHelpers";
 import { TransactionSigner } from "views/TransactionSigner";
-import Libify from "helpers/Libify";
 import * as transactionSignerActions from "actions/transactionSigner";
 
 jest.mock("@stellar/freighter-api", () => ({
@@ -188,12 +185,16 @@ test("sign transaction with Ledger", () => {
     Networks.TESTNET,
   ).signatures[0];
 
-  transactionSignerActions.signWithLedger = jest
-    .fn()
-    .mockImplementation(() => ({
-      type: transactionSignerActions.LEDGER_WALLET_SIGN_SUCCESS,
-      signature,
-    }));
+  jest
+    .spyOn(transactionSignerActions, "signWithLedger")
+    .mockImplementation(() => {
+      return (dispatch) => {
+        return dispatch({
+          type: transactionSignerActions.LEDGER_WALLET_SIGN_SUCCESS,
+          signature,
+        });
+      };
+    });
 
   render(<TransactionSigner />, {
     preloadedState: { transactionSigner: { xdr: TRANSACTION_XDR } },
@@ -212,12 +213,16 @@ test("sign transaction with Trezor", () => {
     Networks.TESTNET,
   ).signatures[0];
 
-  transactionSignerActions.signWithTrezor = jest
-    .fn()
-    .mockImplementation(() => ({
-      type: transactionSignerActions.TREZOR_WALLET_SIGN_SUCCESS,
-      signature,
-    }));
+  jest
+    .spyOn(transactionSignerActions, "signWithTrezor")
+    .mockImplementation(() => {
+      return (dispatch) => {
+        return dispatch({
+          type: transactionSignerActions.TREZOR_WALLET_SIGN_SUCCESS,
+          signature,
+        });
+      };
+    });
 
   render(<TransactionSigner />, {
     preloadedState: { transactionSigner: { xdr: TRANSACTION_XDR } },
