@@ -185,16 +185,13 @@ test("sign transaction with Ledger", () => {
     Networks.TESTNET,
   ).signatures[0];
 
-  jest
-    .spyOn(transactionSignerActions, "signWithLedger")
-    .mockImplementation(() => {
-      return (dispatch) => {
-        return dispatch({
-          type: transactionSignerActions.LEDGER_WALLET_SIGN_SUCCESS,
-          signature,
-        });
-      };
-    });
+  jest.spyOn(transactionSignerActions, "signWithLedger").mockImplementation(
+    () => (dispatch) =>
+      dispatch({
+        type: transactionSignerActions.LEDGER_WALLET_SIGN_SUCCESS,
+        signature,
+      }),
+  );
 
   render(<TransactionSigner />, {
     preloadedState: { transactionSigner: { xdr: TRANSACTION_XDR } },
@@ -213,16 +210,13 @@ test("sign transaction with Trezor", () => {
     Networks.TESTNET,
   ).signatures[0];
 
-  jest
-    .spyOn(transactionSignerActions, "signWithTrezor")
-    .mockImplementation(() => {
-      return (dispatch) => {
-        return dispatch({
-          type: transactionSignerActions.TREZOR_WALLET_SIGN_SUCCESS,
-          signature,
-        });
-      };
-    });
+  jest.spyOn(transactionSignerActions, "signWithTrezor").mockImplementation(
+    () => (dispatch) =>
+      dispatch({
+        type: transactionSignerActions.TREZOR_WALLET_SIGN_SUCCESS,
+        signature,
+      }),
+  );
 
   render(<TransactionSigner />, {
     preloadedState: { transactionSigner: { xdr: TRANSACTION_XDR } },
