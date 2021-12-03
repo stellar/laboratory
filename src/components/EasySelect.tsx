@@ -9,7 +9,7 @@ interface EasySelectProps {
 export const EasySelect = ({ children, plain }: EasySelectProps) => {
   let className = "EasySelect";
   if (plain) {
-    className += " EasySelect__plain";
+    className = `${className} EasySelect__plain`;
   }
 
   return (

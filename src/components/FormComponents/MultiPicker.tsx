@@ -28,14 +28,11 @@ const updateValueAt = (values: Values, index: number, newValue: Value) => {
   return values;
 };
 
-function isEmpty(value: Value) {
-  return value === null || isUndefined(value) || value === "";
-}
-function arelastTwoEmpty(values: Values) {
-  return (
-    isEmpty(values[values.length - 1]) && isEmpty(values[values.length - 2])
-  );
-}
+const isEmpty = (value: Value) =>
+  value === null || isUndefined(value) || value === "";
+
+const arelastTwoEmpty = (values: Values) =>
+  isEmpty(values[values.length - 1]) && isEmpty(values[values.length - 2]);
 
 // Makes sure there is only one consecutive trailing element in the value array.
 // Does not mutate value.
@@ -62,7 +59,7 @@ interface MultiPickerProps {
   component: React.ComponentType<
     { onUpdate: (val: Value) => void } & React.InputHTMLAttributes<"input">
   >;
-  onUpdate: (val: any) => void;
+  onUpdate: (val: Values) => void;
   value: string[];
 }
 
@@ -75,7 +72,7 @@ export const MultiPicker = ({
     value = [];
   }
 
-  let normalizedValues = adjustTrailingEmptyElements(value);
+  const normalizedValues = adjustTrailingEmptyElements(value);
   const SingleComponent = component;
 
   return (

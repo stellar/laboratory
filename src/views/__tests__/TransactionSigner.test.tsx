@@ -6,16 +6,18 @@ import { fireEvent, waitFor, screen } from "@testing-library/react";
 import { render } from "helpers/testHelpers";
 import { TransactionSigner } from "views/TransactionSigner";
 import * as transactionSignerActions from "actions/transactionSigner";
+import { MOCK_SIGNED_TRANSACTION } from "./__mocks__/transactions";
 
 jest.mock("@stellar/freighter-api", () => ({
   isConnected: () => new Promise((resolve) => resolve(true)),
-  signTransaction: () => new Promise((resolve) => resolve(SIGNED_TRANSACTION)),
+  signTransaction: () =>
+    new Promise((resolve) => resolve(MOCK_SIGNED_TRANSACTION)),
 }));
 
 jest.mock("@albedo-link/intent", () => ({
   tx: () =>
     new Promise((resolve) =>
-      resolve({ signed_envelope_xdr: SIGNED_TRANSACTION }),
+      resolve({ signed_envelope_xdr: MOCK_SIGNED_TRANSACTION }),
     ),
 }));
 
@@ -30,8 +32,6 @@ const TRANSACTION = {
   sequence: "27423366184971",
 };
 const SECRET_KEY = "SB3NTRERB67ZPAFLLP3G6ZFUHYKFEQXX2D7RDWSRUZ5PSHRB7QJVASUU";
-const SIGNED_TRANSACTION =
-  "AAAAAgAAAADYMr0vKfmdLXQTWwns9YavTU2ZCDzl7+L/dWEqn05dqQAAAGQAABjxAAAACwAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAABQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABNWx3HwAAAEA9lwXxqMqkvo4obKnTR4K6lxycn7NoBQ2oFY1HT/nJJcQvxz6DgY3yHlxJRNIovwX1JoEBIX9B7tegdl+bJYoF";
 
 test("renders TransactionSigner page", async () => {
   render(<TransactionSigner />);
@@ -175,13 +175,13 @@ test("adds manual signer to transaction", () => {
   });
   expect(screen.getByTestId("transaction-signer-result")).toBeInTheDocument();
   expect(screen.getByTestId("transaction-signer-result")).toHaveTextContent(
-    SIGNED_TRANSACTION,
+    MOCK_SIGNED_TRANSACTION,
   );
 });
 
 test("sign transaction with Ledger", () => {
   const signature = TransactionBuilder.fromXDR(
-    SIGNED_TRANSACTION,
+    MOCK_SIGNED_TRANSACTION,
     Networks.TESTNET,
   ).signatures[0];
 
@@ -200,13 +200,13 @@ test("sign transaction with Ledger", () => {
   fireEvent.click(screen.getByTestId("transaction-signer-ledger-sign-button"));
   expect(screen.getByTestId("transaction-signer-result")).toBeInTheDocument();
   expect(screen.getByTestId("transaction-signer-result")).toHaveTextContent(
-    SIGNED_TRANSACTION,
+    MOCK_SIGNED_TRANSACTION,
   );
 });
 
 test("sign transaction with Trezor", () => {
   const signature = TransactionBuilder.fromXDR(
-    SIGNED_TRANSACTION,
+    MOCK_SIGNED_TRANSACTION,
     Networks.TESTNET,
   ).signatures[0];
 
@@ -225,7 +225,7 @@ test("sign transaction with Trezor", () => {
   fireEvent.click(screen.getByTestId("transaction-signer-trezor-sign-button"));
   expect(screen.getByTestId("transaction-signer-result")).toBeInTheDocument();
   expect(screen.getByTestId("transaction-signer-result")).toHaveTextContent(
-    SIGNED_TRANSACTION,
+    MOCK_SIGNED_TRANSACTION,
   );
 });
 
@@ -239,7 +239,7 @@ test("sign transaction with Freighter", async () => {
   );
   await waitFor(() => screen.getByTestId("transaction-signer-result"));
   expect(screen.getByTestId("transaction-signer-result")).toHaveTextContent(
-    SIGNED_TRANSACTION,
+    MOCK_SIGNED_TRANSACTION,
   );
 });
 
@@ -253,6 +253,6 @@ test("sign transaction with Albedo", async () => {
   );
   await waitFor(() => screen.getByTestId("transaction-signer-result"));
   expect(screen.getByTestId("transaction-signer-result")).toHaveTextContent(
-    SIGNED_TRANSACTION,
+    MOCK_SIGNED_TRANSACTION,
   );
 });
