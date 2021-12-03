@@ -45,6 +45,7 @@ const AsyncTransactionBuilder = makeAsync(
 );
 const AsyncTransactionSigner = makeAsync(
   () => import(/* webpackChunkName: 'Signer' */ "views/TransactionSigner"),
+  "TransactionSigner",
 );
 const AsyncXdrViewer = makeAsync(
   () => import(/* webpackChunkName: 'Viewer' */ "views/XdrViewer"),
