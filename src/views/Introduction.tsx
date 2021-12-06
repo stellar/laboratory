@@ -1,7 +1,7 @@
 // helper to import the tour and it's dependencies
 // only when it's needed and not on every page load
 const startTour = () => {
-  import("constants/tour").then(module => module.tour.start());
+  import("./Tour").then(module => module.tour.start());
 };
 
 export const Introduction = () => {

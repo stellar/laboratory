@@ -15,15 +15,18 @@ const options: Tour.TourOptions = {
                     this.next();
                 },
             },
+            // We should probably add a previous step button
+            // but that would require UI state to be changed 
+            // "backwarts" for most steps navigating between pages
         ],
     },
     useModalOverlay: true,
 };
 
 /**
- * required to wait for async loaded chunks and let the tour pause until we got content
- * TODO: dig into labs statemanagement to find out if the state is mapped internally
- * and without dirty hacks
+ * Hackaround/helper required to wait for async rendered content.
+ * The tour encounters this when navigating between pages as most pages 
+ * import() their chunk when needed.
  */
 const awaitElementExistence = (selector: string) => {
     return new Promise<void>(res => {
@@ -38,8 +41,10 @@ const awaitElementExistence = (selector: string) => {
 };
 
 /**
- * The other Hackaround.
- * Could probably be replaced by manipulating state-management directly.
+ * The workaround/helper used to navigate / modify UI state.
+ * 99.9% of this could be replaced by manipulating the store directly.
+ * But this may introduce behaviour changes when buttons are changed without updating the tour,
+ * so I'm not sure if faking the bahavior via store or relying on click-listeners is uglier. 
  */
 const click = (selector: string) => {
     const element = document.querySelector(selector);
@@ -66,7 +71,6 @@ const steps: Step.StepOptions[] = [
                 classes: 's-button',
                 text: 'Continue',
                 action() {
-                    // TODO: think how to make this workaround less hacky
                     click('.NetworkPicker .s-buttonGroup__wrapper:first-child');
                     this.next();
                 },
@@ -82,7 +86,6 @@ const steps: Step.StepOptions[] = [
         },
         when: {
             show() {
-                // TODO: think how to make this workaround less hacky
                 click('[href="#account-creator"]');
             },
         },
@@ -109,7 +112,6 @@ const steps: Step.StepOptions[] = [
         text: 'The "Explore Endpoints" tab allows you to query Horizon for information about different resources on the network.',
         when: {
             show() {
-                // TODO: think how to make this workaround less hacky
                 click('[href="#explorer"]');
             },
         },
@@ -197,7 +199,6 @@ const steps: Step.StepOptions[] = [
         },
     },
     {
-        // TODO: either "live create" XDR in a transaction builder tutorial or include example XDR to import.
         beforeShowPromise: () => awaitElementExistence('.TransactionSigner'),
         title: 'Signing Transactions',
         text: 'To import your transaction, you can either click the "Sign in Transaction Signer" button on the "Build Transaction" tab or paste it into this text field. Once the transaction has been imported, you have multiple options to sign it. For example directly with a secret key, using a hardware wallet or with browser extension wallets like albedo or freighter.',
@@ -207,7 +208,7 @@ const steps: Step.StepOptions[] = [
         },
     },
     {
-        // TODO: include example XDR to show.
+        // Would be awsome to either build or include some example XDR to show in the following steps
         title: 'View XDR',
         text: 'Sometimes you want to know what the XDR you have is actually doing. This can be very helpful, for example your tranaction may have returned errors when you tried to submit it. The result XDR you receive from the network can show you what went wrong.',
         attachTo: {
