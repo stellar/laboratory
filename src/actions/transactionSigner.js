@@ -1,10 +1,10 @@
 import LedgerTransportWebUSB from "@ledgerhq/hw-transport-webusb";
 import LedgerStr from "@ledgerhq/hw-app-str";
 import TrezorConnect from "trezor-connect";
+import transformTransaction from "trezor-connect/lib/plugins/stellar/plugin";
 import { TransactionBuilder, Keypair, xdr, StrKey } from "stellar-sdk";
 import { signTransaction } from "@stellar/freighter-api";
 import albedo from "@albedo-link/intent";
-import { trezorTransformTransaction } from "../helpers/trezorTransformTransaction";
 
 export const IMPORT_FROM_XDR = "IMPORT_FROM_XDR";
 export function importFromXdr(xdr) {
@@ -145,7 +145,7 @@ export function signWithTrezor(txXDR, bipPath, networkPassphrase) {
       appUrl: "https://laboratory.stellar.org/",
     });
 
-    const trezorParams = trezorTransformTransaction(path, transaction);
+    const trezorParams = transformTransaction(path, transaction);
 
     TrezorConnect.stellarSignTransaction(trezorParams)
       .then(onConnect)
