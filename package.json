@@ -64,7 +64,7 @@
     "route-recognizer": "^0.3.4",
     "solar-stellarorg": "git+https://github.com/stellar/solar-stellarorg#master",
     "stellar-sdk": "^9.0.0-beta.0",
-    "trezor-connect": "^8.1.27",
+    "trezor-connect": "8.2.4-extended",
     "typescript": "^4.3.5",
     "uri-templates": "^0.2.0",
     "urijs": "^1.16.0"
