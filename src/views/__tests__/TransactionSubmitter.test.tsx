@@ -254,7 +254,7 @@ describe("valid signature path", () => {
     // @ts-ignore
     StellarSdk.Server.mockImplementation(() => ({
       submitTransaction: () =>
-        new Promise((reject) =>
+        new Promise((_resolve, reject) =>
           reject(
             new StellarSdk.AccountRequiresMemoError("memoError", "account1", 2),
           ),
@@ -289,7 +289,7 @@ describe("valid signature path", () => {
     // @ts-ignore
     StellarSdk.Server.mockImplementation(() => ({
       submitTransaction: () =>
-        new Promise((reject) =>
+        new Promise((_resolve, reject) =>
           reject(
             new StellarSdk.BadResponseError("badResponseMsg", {
               data: {
@@ -328,7 +328,7 @@ describe("valid signature path", () => {
     // @ts-ignore
     StellarSdk.Server.mockImplementation(() => ({
       submitTransaction: () =>
-        new Promise((reject) => reject(new Error("noResponseMsg"))),
+        new Promise((_resolve, reject) => reject(new Error("noResponseMsg"))),
     }));
 
     render(<TransactionSubmitter />);
@@ -356,7 +356,7 @@ describe("valid signature path", () => {
     // @ts-ignore
     StellarSdk.Server.mockImplementation(() => ({
       submitTransaction: () =>
-        new Promise((reject) =>
+        new Promise((_resolve, reject) =>
           reject(new StellarSdk.BadResponseError("noResponseMsg", "")),
         ),
     }));
