@@ -138,8 +138,6 @@ export function fetchSigners(input, horizonBaseUrl, networkPassphrase) {
             }
           });
 
-          console.log(signatures);
-
           dispatch({
             type: FETCHED_SIGNERS.SUCCESS,
             result: signatures,

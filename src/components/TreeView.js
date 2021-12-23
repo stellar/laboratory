@@ -193,7 +193,7 @@ function formatSignature(node, separator) {
     symbol = " ✅ ";
   }
   return (
-    <span style={style}>
+    <span style={style} data-testid="tree-view-signature">
       <strong>{node.type}</strong>
       {separator}
       {node.value.value} {symbol}
