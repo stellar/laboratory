@@ -6,32 +6,39 @@ import { fireEvent, waitFor, screen } from "@testing-library/react";
 import { render } from "helpers/testHelpers";
 import { TransactionSigner } from "views/TransactionSigner";
 import * as transactionSignerActions from "actions/transactionSigner";
+import { MOCK_SIGNED_TRANSACTION } from "./__mocks__/transactions";
 
 jest.mock("@stellar/freighter-api", () => ({
   isConnected: () => new Promise((resolve) => resolve(true)),
-  signTransaction: () => new Promise((resolve) => resolve(SIGNED_TRANSACTION)),
+  signTransaction: () =>
+    new Promise((resolve) => resolve(MOCK_SIGNED_TRANSACTION)),
 }));
 
 jest.mock("@albedo-link/intent", () => ({
   tx: () =>
     new Promise((resolve) =>
-      resolve({ signed_envelope_xdr: SIGNED_TRANSACTION }),
+      resolve({ signed_envelope_xdr: MOCK_SIGNED_TRANSACTION }),
     ),
 }));
 
+const SOURCE_KEYPAIR = {
+  publicKey: "GCQ5VP5V7JP3SCLPZVNWINFWDEY4YDQ2UVI2BSNSGENLPKNTUMK42QUN",
+  secretKey: "SDBJANOEQHXOC2LWPP2CVYUJK4VR7MXS2ONKKSHHADOCEBAPOGTT4WHP",
+};
+const SIGNER_KEYPAIR = {
+  publicKey: "GDR34X73SODUQJYO4E7IFWPRGGVQMLJFEWISAAIMEEX3LOGBFCDO735C",
+  secretKey: "SA6QM7HQFTQGI5FRQJVP2Q2URI4W2SIEWPUY2XFDAV4BQD3L5JWJJRQN",
+};
 const TRANSACTION_XDR =
-  "AAAAAgAAAADYMr0vKfmdLXQTWwns9YavTU2ZCDzl7+L/dWEqn05dqQAAAGQAABjxAAAACwAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAABQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+  "AAAAAgAAAACh2r+1+l+5CW/NW2Q0thkxzA4apVGgybIxGreps6MVzQAAAGQAAWl8AAAAAgAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAABQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 const FEE_BUMP_XDR =
-  "AAAABQAAAACafGsfMQylseeF9Du5owr05nhq/IDVl47HGz6PHGwWfwAAAAAAAADIAAAAAgAAAADYMr0vKfmdLXQTWwns9YavTU2ZCDzl7+L/dWEqn05dqQAAAGQAABjxAAAACwAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAABQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+  "AAAABQAAAADjvl/7k4dIJw7hPoLZ8TGrBi0lJZEgAQwhL7W4wSiG7wAAAAAAAADIAAAAAgAAAACh2r+1+l+5CW/NW2Q0thkxzA4apVGgybIxGreps6MVzQAAAGQAAWl8AAAAAgAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAABQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
 const TRANSACTION = {
   network: Networks.TESTNET,
-  hash: "00f6f2a06f339bcfca7a530d10edb014983c8e752fced4d4a0d8a274c5ddb416",
-  source: "GDMDFPJPFH4Z2LLUCNNQT3HVQ2XU2TMZBA6OL37C752WCKU7JZO2S52R",
-  sequence: "27423366184971",
+  hash: "41720fd1171ffd0a14c5fd9d62e6b47105f9dcda180d5c91065d45fc79bdf670",
+  source: SOURCE_KEYPAIR.publicKey,
+  sequence: "397456273571842",
 };
-const SECRET_KEY = "SB3NTRERB67ZPAFLLP3G6ZFUHYKFEQXX2D7RDWSRUZ5PSHRB7QJVASUU";
-const SIGNED_TRANSACTION =
-  "AAAAAgAAAADYMr0vKfmdLXQTWwns9YavTU2ZCDzl7+L/dWEqn05dqQAAAGQAABjxAAAACwAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAABQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABNWx3HwAAAEA9lwXxqMqkvo4obKnTR4K6lxycn7NoBQ2oFY1HT/nJJcQvxz6DgY3yHlxJRNIovwX1JoEBIX9B7tegdl+bJYoF";
 
 test("renders TransactionSigner page", async () => {
   render(<TransactionSigner />);
@@ -89,7 +96,7 @@ test("renders fee bump transaction from  xdr in url param", async () => {
     TRANSACTION.hash,
   );
   expect(screen.getByTestId("transaction-signer-fee-source")).toHaveTextContent(
-    "GCNHY2Y7GEGKLMPHQX2DXONDBL2OM6DK7SANLF4OY4NT5DY4NQLH7TGC",
+    SIGNER_KEYPAIR.publicKey,
   );
   expect(
     screen.getByTestId("transaction-signer-transaction-fee"),
@@ -98,7 +105,7 @@ test("renders fee bump transaction from  xdr in url param", async () => {
     screen.getByTestId("transaction-signer-fee-sig-length"),
   ).toHaveTextContent("0");
   expect(screen.getByTestId("transaction-signer-inner-hash")).toHaveTextContent(
-    "00f6f2a06f339bcfca7a530d10edb014983c8e752fced4d4a0d8a274c5ddb416",
+    TRANSACTION.hash,
   );
   expect(
     screen.getByTestId("transaction-signer-inner-source"),
@@ -171,17 +178,17 @@ test("adds manual signer to transaction", () => {
     screen.queryByText("submit in transaction submitter"),
   ).not.toBeInTheDocument();
   fireEvent.change(screen.getByTestId("secret-key-picker"), {
-    target: { value: SECRET_KEY },
+    target: { value: SOURCE_KEYPAIR.secretKey },
   });
   expect(screen.getByTestId("transaction-signer-result")).toBeInTheDocument();
   expect(screen.getByTestId("transaction-signer-result")).toHaveTextContent(
-    SIGNED_TRANSACTION,
+    MOCK_SIGNED_TRANSACTION,
   );
 });
 
 test("sign transaction with Ledger", () => {
   const signature = TransactionBuilder.fromXDR(
-    SIGNED_TRANSACTION,
+    MOCK_SIGNED_TRANSACTION,
     Networks.TESTNET,
   ).signatures[0];
 
@@ -200,13 +207,13 @@ test("sign transaction with Ledger", () => {
   fireEvent.click(screen.getByTestId("transaction-signer-ledger-sign-button"));
   expect(screen.getByTestId("transaction-signer-result")).toBeInTheDocument();
   expect(screen.getByTestId("transaction-signer-result")).toHaveTextContent(
-    SIGNED_TRANSACTION,
+    MOCK_SIGNED_TRANSACTION,
   );
 });
 
 test("sign transaction with Trezor", () => {
   const signature = TransactionBuilder.fromXDR(
-    SIGNED_TRANSACTION,
+    MOCK_SIGNED_TRANSACTION,
     Networks.TESTNET,
   ).signatures[0];
 
@@ -225,7 +232,7 @@ test("sign transaction with Trezor", () => {
   fireEvent.click(screen.getByTestId("transaction-signer-trezor-sign-button"));
   expect(screen.getByTestId("transaction-signer-result")).toBeInTheDocument();
   expect(screen.getByTestId("transaction-signer-result")).toHaveTextContent(
-    SIGNED_TRANSACTION,
+    MOCK_SIGNED_TRANSACTION,
   );
 });
 
@@ -239,7 +246,7 @@ test("sign transaction with Freighter", async () => {
   );
   await waitFor(() => screen.getByTestId("transaction-signer-result"));
   expect(screen.getByTestId("transaction-signer-result")).toHaveTextContent(
-    SIGNED_TRANSACTION,
+    MOCK_SIGNED_TRANSACTION,
   );
 });
 
@@ -253,6 +260,6 @@ test("sign transaction with Albedo", async () => {
   );
   await waitFor(() => screen.getByTestId("transaction-signer-result"));
   expect(screen.getByTestId("transaction-signer-result")).toHaveTextContent(
-    SIGNED_TRANSACTION,
+    MOCK_SIGNED_TRANSACTION,
   );
 });
