@@ -57,7 +57,7 @@ function TransactionSubmitter(props) {
   }
 
   return (
-    <div>
+    <div data-testid="page-transaction-submitter">
       <div className="XdrViewer__setup so-back">
         <div className="so-chunk">
           <p className="XdrViewer__label" style={{ marginTop: "2em" }}>
@@ -67,6 +67,7 @@ function TransactionSubmitter(props) {
             <textarea
               value={state.input || ""}
               className="xdrInput__input__textarea"
+              data-testid="transaction-submitter-input"
               onChange={(event) => {
                 dispatch(updateXdrInput(event.target.value));
                 dispatch(
@@ -87,7 +88,12 @@ function TransactionSubmitter(props) {
         <div className="so-chunk">
           {error && (
             <div className="xdrInput__message">
-              <p className="xdrInput__message__alert">{error}</p>
+              <p
+                className="xdrInput__message__alert"
+                data-testid="transaction-submitter-alert"
+              >
+                {error}
+              </p>
             </div>
           )}
           {nodes && (

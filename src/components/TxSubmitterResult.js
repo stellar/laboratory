@@ -60,6 +60,7 @@ export const TxSubmitterResult = ({ txXdr, networkPassphrase, horizonURL }) => {
         <div className="so-chunk">
           <button
             className="s-button"
+            data-testid="transaction-submitter-submit-btn"
             disabled={isDisabled}
             onClick={() => {
               dispatch({ type: ACTIONS.submit });
@@ -106,8 +107,13 @@ const Response = ({
 }) => (
   <div className="XdrViewer__submit so-back TransactionSubmitter__result">
     <div className="so-chunk">
-      <h3 className="ResultTitle__success">Transaction submitted!</h3>
-      <p>
+      <h3
+        className="ResultTitle__success"
+        data-testid="transaction-submitter-response-success"
+      >
+        Transaction submitted!
+      </h3>
+      <p data-testid="transaction-submitter-response-status">
         Transaction {successful ? "succeeded" : "failed"} with {operation_count}{" "}
         operation(s).
       </p>
@@ -115,17 +121,40 @@ const Response = ({
         <code>
           <div>
             Hash:
-            <br /> <EasySelect>{hash}</EasySelect> <br />
+            <br />{" "}
+            <EasySelect data-testid="transaction-submitter-response-hash">
+              {hash}
+            </EasySelect>{" "}
+            <br />
             Ledger number:
-            <br /> <EasySelect>{ledger}</EasySelect> <br />
+            <br />{" "}
+            <EasySelect data-testid="transaction-submitter-response-ledger">
+              {ledger}
+            </EasySelect>{" "}
+            <br />
             Paging token:
-            <br /> <EasySelect>{paging_token}</EasySelect> <br />
+            <br />{" "}
+            <EasySelect data-testid="transaction-submitter-response-token">
+              {paging_token}
+            </EasySelect>{" "}
+            <br />
             Result XDR:
-            <br /> <EasySelect>{result_xdr}</EasySelect> <br />
+            <br />{" "}
+            <EasySelect data-testid="transaction-submitter-response-result-xdr">
+              {result_xdr}
+            </EasySelect>{" "}
+            <br />
             Result Meta XDR:
-            <br /> <EasySelect>{result_meta_xdr}</EasySelect> <br />
+            <br />{" "}
+            <EasySelect data-testid="transaction-submitter-response-result-meta-xdr">
+              {result_meta_xdr}
+            </EasySelect>{" "}
+            <br />
             Fee Meta XDR:
-            <br /> <EasySelect>{fee_meta_xdr}</EasySelect>
+            <br />{" "}
+            <EasySelect data-testid="transaction-submitter-response-fee-meta-xdr">
+              {fee_meta_xdr}
+            </EasySelect>
           </div>
         </code>
       </pre>
@@ -140,9 +169,17 @@ const Error = ({ error }) => {
     extras = (
       <React.Fragment>
         Destination account:
-        <br /> <EasySelect>{error.accountId}</EasySelect> <br />
+        <br />{" "}
+        <EasySelect data-testid="transaction-submitter-error-account-id">
+          {error.accountId}
+        </EasySelect>{" "}
+        <br />
         Operation index:
-        <br /> <EasySelect>{error.operationIndex}</EasySelect> <br />
+        <br />{" "}
+        <EasySelect data-testid="transaction-submitter-error-op-index">
+          {error.operationIndex}
+        </EasySelect>{" "}
+        <br />
       </React.Fragment>
     );
   } else if (error?.response) {
@@ -151,9 +188,17 @@ const Error = ({ error }) => {
     extras = (
       <React.Fragment>
         extras.result_codes:
-        <br /> <EasySelect>{JSON.stringify(result_codes)}</EasySelect> <br />
+        <br />{" "}
+        <EasySelect data-testid="transaction-submitter-error-code">
+          {JSON.stringify(result_codes)}
+        </EasySelect>{" "}
+        <br />
         Result XDR:
-        <br /> <EasySelect>{result_xdr}</EasySelect> <br />
+        <br />{" "}
+        <EasySelect data-testid="transaction-submitter-error-xdr">
+          {result_xdr}
+        </EasySelect>{" "}
+        <br />
       </React.Fragment>
     );
   } else {
@@ -165,7 +210,9 @@ const Error = ({ error }) => {
       <React.Fragment>
         original error:
         <br />
-        <EasySelect>{JSON.stringify(error, null, 2)}</EasySelect>
+        <EasySelect data-testid="transaction-submitter-error-original">
+          {JSON.stringify(error, null, 2)}
+        </EasySelect>
         <br />
       </React.Fragment>
     );
@@ -174,8 +221,13 @@ const Error = ({ error }) => {
   return (
     <div className="XdrViewer__submit so-back TransactionSubmitter__result">
       <div className="so-chunk">
-        <h3 className="ResultTitle__failure">Transaction failed!</h3>
-        <p>{message}</p>
+        <h3
+          className="ResultTitle__failure"
+          data-testid="transaction-submitter-response-error"
+        >
+          Transaction failed!
+        </h3>
+        <p data-testid="transaction-submitter-error-message">{message}</p>
         {extras && (
           <pre className="so-code TransactionSubmitter__code">
             <code>{extras}</code>
