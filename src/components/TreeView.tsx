@@ -28,14 +28,13 @@ export const TreeView = ({
   nodes,
   parent,
 }: TreeViewProps) => {
-  let rootClass = "TreeView " + className ? className : "";
+  const rootClass = "TreeView " + className ? className : "";
 
-  let result = (
+  const result = (
     <div className={rootClass}>
       {map(Array.prototype.slice.call(nodes), (node, index) => {
+        const position = getPosition(node, parent);
         let childNodes;
-
-        let position = getPosition(node, parent);
 
         if (typeof node.nodes !== "undefined") {
           childNodes = (
@@ -75,7 +74,9 @@ interface RowValueProps {
 }
 
 const RowValue = ({ node, position, fetchedSigners }: RowValueProps) => {
-  let value, separatorNeeded, separator;
+  let value;
+  let separatorNeeded;
+  let separator;
 
   if (typeof node.value === "string") {
     value = String(node.value);
@@ -222,6 +223,7 @@ const getPosition = (node: TransactionNode, parent: string | undefined) => {
 const formatSignature = (node: any, separator?: string) => {
   let style = { color: "black" };
   let symbol = "";
+
   if (node.value.isValid === SIGNATURE.INVALID) {
     style = { color: "red" };
     symbol = " ❌ ";

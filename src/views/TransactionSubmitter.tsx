@@ -30,7 +30,8 @@ export const TransactionSubmitter = () => {
         nodes: null,
       };
     } else {
-      let validation = validateBase64(input);
+      const validation = validateBase64(input);
+
       if (validation.result === "error") {
         return {
           error: validation.message,
