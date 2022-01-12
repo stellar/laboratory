@@ -1,61 +1,81 @@
 // TreeView is a recursive tree view
 // It takes data from extrapolateFromXdr and formats it in a more user friendly way
 
-import React from "react";
 import has from "lodash/has";
 import map from "lodash/map";
+import { FETCHED_SIGNERS } from "constants/fetched_signers";
+import { SIGNATURE } from "constants/signature";
+import { TransactionNode, TransactionNodeValue } from "types/types";
 import { EasySelect } from "./EasySelect";
-import SIGNATURE from "../constants/signature";
-import FETCHED_SIGNERS from "../constants/fetched_signers";
 
-// @param {array} props.nodes - Array of TreeView compatible nodes
-export default class TreeView extends React.Component {
-  render() {
-    let { nodes, className, fetchedSigners, parent } = this.props;
-    let rootClass = "TreeView " + className ? className : "";
+// TODO: Move this to FetchedSigners reducer
+type FetchedSignersState = {
+  state: FETCHED_SIGNERS;
+  data: [{ sig: any; isValid: string }];
+};
 
-    let result = (
-      <div className={rootClass}>
-        {map(Array.prototype.slice.call(nodes), (node, index) => {
-          let childNodes;
-
-          let position = getPosition(node, parent);
-
-          if (typeof node.nodes !== "undefined") {
-            childNodes = (
-              <div className="TreeView__child">
-                <TreeView
-                  nodes={node.nodes}
-                  fetchedSigners={fetchedSigners}
-                  parent={position}
-                />
-              </div>
-            );
-          }
-
-          return (
-            <div className="TreeView__set" key={index}>
-              <div className="TreeView__row" key={index + node.type}>
-                <RowValue
-                  node={node}
-                  position={position}
-                  fetchedSigners={fetchedSigners}
-                />
-              </div>
-              {childNodes}
-            </div>
-          );
-        })}
-      </div>
-    );
-
-    return result;
-  }
+interface TreeViewProps {
+  className?: string;
+  fetchedSigners: FetchedSignersState;
+  nodes: TransactionNode[];
+  parent?: string;
 }
 
-function RowValue(props) {
+// @param {array} props.nodes - Array of TreeView compatible nodes
+export const TreeView = ({
+  className,
+  fetchedSigners,
+  nodes,
+  parent,
+}: TreeViewProps) => {
+  let rootClass = "TreeView " + className ? className : "";
+
+  let result = (
+    <div className={rootClass}>
+      {map(Array.prototype.slice.call(nodes), (node, index) => {
+        let childNodes;
+
+        let position = getPosition(node, parent);
+
+        if (typeof node.nodes !== "undefined") {
+          childNodes = (
+            <div className="TreeView__child">
+              <TreeView
+                nodes={node.nodes}
+                fetchedSigners={fetchedSigners}
+                parent={position}
+              />
+            </div>
+          );
+        }
+
+        return (
+          <div className="TreeView__set" key={index}>
+            <div className="TreeView__row" key={index + node.type}>
+              <RowValue
+                node={node}
+                position={position}
+                fetchedSigners={fetchedSigners}
+              />
+            </div>
+            {childNodes}
+          </div>
+        );
+      })}
+    </div>
+  );
+
+  return result;
+};
+
+interface RowValueProps {
+  node: TransactionNode;
+  position: string;
+  fetchedSigners: FetchedSignersState;
+}
+
+const RowValue = ({ node, position, fetchedSigners }: RowValueProps) => {
   let value, separatorNeeded, separator;
-  let { node, position, fetchedSigners } = props;
 
   if (typeof node.value === "string") {
     value = String(node.value);
@@ -115,9 +135,12 @@ function RowValue(props) {
       {value}
     </span>
   );
-}
+};
 
-function checkSignatures(signatures, fetchedSigners) {
+const checkSignatures = (
+  signatures: TransactionNode,
+  fetchedSigners: FetchedSignersState,
+) => {
   // catch fetch signature errors
   signatures.state = fetchedSigners.state;
 
@@ -126,7 +149,14 @@ function checkSignatures(signatures, fetchedSigners) {
   }
 
   for (var i = 0; i < signatures.nodes.length; i++) {
-    const sig = signatures.nodes[i].nodes.find((n) => n.type == "signature");
+    const sig = signatures.nodes[i].nodes.find(
+      (n: any) => n.type == "signature",
+    );
+    if (!sig) {
+      /* eslint-disable no-continue */
+      continue;
+      /* eslint-enable no-continue */
+    }
     const fetchedSignature = fetchedSigners.data.find((x) =>
       x.sig.equals(sig.value.raw),
     );
@@ -138,17 +168,22 @@ function checkSignatures(signatures, fetchedSigners) {
 
     sig.value.isValid = isValid;
   }
-}
+};
 
 const formatter = new Intl.NumberFormat("en-US", {
   minimumFractionDigits: 1,
   maximumFractionDigits: 7,
 });
+
+interface ConvertTypedValue {
+  type: string;
+  value: TransactionNodeValue;
+}
 // Types values are values that will be displayed with special formatting to
 // provide for a more rich experience other than just plain text.
 // "untyped" values are simply strings. They will be displayed as strings in the
 // tree node.
-function convertTypedValue({ type, value }) {
+const convertTypedValue = ({ type, value }: ConvertTypedValue) => {
   switch (type) {
     case "code":
       return (
@@ -162,27 +197,29 @@ function convertTypedValue({ type, value }) {
           {formatter.format(value.parsed)} (raw: <code>{value.raw}</code>)
         </span>
       );
+    default:
+      return <></>;
   }
-}
+};
 
 // Calculating position within xdr tree allows for awareness of location.
 // This is useful for many things, for example, adding visual indicators for
 // signature verification.
-function getPosition(node, parent) {
+const getPosition = (node: TransactionNode, parent: string | undefined) => {
   let sep = ".";
 
   if (!parent || node.type.charAt(0) == "[") {
     sep = "";
   }
 
-  return (parent ? parent + sep : "") + node.type;
-}
+  return `${parent ? `${parent}${sep}` : ""}${node.type}`;
+};
 
 // Signatures have a special verification feature, so they require a
 // richer formating with ternary based coloring based on whether the
 // signature is valid for one of the signers related to the transaction
 // envelope.
-function formatSignature(node, separator) {
+const formatSignature = (node: any, separator?: string) => {
   let style = { color: "black" };
   let symbol = "";
   if (node.value.isValid === SIGNATURE.INVALID) {
@@ -199,13 +236,16 @@ function formatSignature(node, separator) {
       {node.value.value} {symbol}
     </span>
   );
-}
+};
 
 // Signature fetch may exist in different states so it requires
 // richer formating with ternary based coloring based on whether the
 // state is NONE, SUCCCESS, PENDING, FAIL or NOT_EXIST.
-function formatSignatureCheckState(node, separator) {
-  let message = "";
+const formatSignatureCheckState = (
+  node: TransactionNode,
+  separator?: string,
+) => {
+  let message = <span></span>;
   switch (node.state) {
     case FETCHED_SIGNERS.SUCCESS:
       message = (
@@ -239,4 +279,4 @@ function formatSignatureCheckState(node, separator) {
       {message}
     </span>
   );
-}
+};

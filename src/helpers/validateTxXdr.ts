@@ -1,6 +1,6 @@
 import trim from "lodash/trim";
 import { xdr } from "stellar-sdk";
-import validateBase64 from "./validateBase64";
+import { validateBase64 } from "./validateBase64";
 
 export const validateTxXdr = (input: string) => {
   input = trim(input);

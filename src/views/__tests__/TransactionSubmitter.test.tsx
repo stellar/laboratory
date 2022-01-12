@@ -5,11 +5,11 @@
 import { fireEvent, waitFor, screen } from "@testing-library/react";
 import * as StellarSdk from "stellar-sdk";
 import { render } from "helpers/testHelpers";
-import TransactionSubmitter from "views/TransactionSubmitter";
+import { TransactionSubmitter } from "views/TransactionSubmitter";
 import * as extrapolateFromXdr from "helpers/extrapolateFromXdr";
 import * as xdrViewerActions from "actions/xdrViewer";
-import FETCHED_SIGNERS from "constants/fetched_signers";
-import SIGNATURE from "constants/signature";
+import { FETCHED_SIGNERS } from "constants/fetched_signers";
+import { SIGNATURE } from "constants/signature";
 import { MOCK_SIGNED_TRANSACTION } from "./__mocks__/transactions";
 
 const MOCK_SERVER_RESPONSE_SUCCESS = {

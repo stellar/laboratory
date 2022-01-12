@@ -1,9 +1,11 @@
-import React from "react";
+import { useReducer } from "react";
 import {
   Server,
   TransactionBuilder,
   AccountRequiresMemoError,
   BadResponseError,
+  NetworkError,
+  Horizon,
 } from "stellar-sdk";
 import { EasySelect } from "./EasySelect";
 import { Collapsible } from "./Collapsible";
@@ -14,18 +16,21 @@ const NETWORK_STATES = {
   success: "success",
   fail: "failed",
 };
-const ACTIONS = {
-  submit: "submit",
-  success: "success",
-  fail: "fail",
-};
+enum ACTIONS {
+  submit = "submit",
+  success = "success",
+  fail = "fail",
+}
 const initialState = {
   state: NETWORK_STATES.idle,
   response: null,
   error: null,
 };
 
-const reducer = (state, action) => {
+const reducer = (
+  state: any,
+  action: { type: ACTIONS; payload?: Horizon.SubmitTransactionResponse },
+) => {
   switch (action.type) {
     case ACTIONS.submit:
       return { ...initialState, state: NETWORK_STATES.pending };
@@ -48,8 +53,18 @@ const reducer = (state, action) => {
   }
 };
 
-export const TxSubmitterResult = ({ txXdr, networkPassphrase, horizonURL }) => {
-  const [submission, dispatch] = React.useReducer(reducer, initialState);
+interface TxSubmitterResultProps {
+  txXdr: string;
+  networkPassphrase: string;
+  horizonURL: string;
+}
+
+export const TxSubmitterResult = ({
+  txXdr,
+  networkPassphrase,
+  horizonURL,
+}: TxSubmitterResultProps) => {
+  const [submission, dispatch] = useReducer(reducer, initialState);
 
   const isIdle = submission.state === NETWORK_STATES.idle;
   const isDisabled = !txXdr || !isIdle;
@@ -95,6 +110,10 @@ export const TxSubmitterResult = ({ txXdr, networkPassphrase, horizonURL }) => {
   );
 };
 
+interface ResponseProps {
+  successful: boolean;
+}
+
 const Response = ({
   operation_count,
   successful,
@@ -104,7 +123,7 @@ const Response = ({
   result_xdr,
   result_meta_xdr,
   fee_meta_xdr,
-}) => (
+}: ResponseProps & Horizon.TransactionResponse) => (
   <div className="XdrViewer__submit so-back TransactionSubmitter__result">
     <div className="so-chunk">
       <h3
@@ -161,13 +180,28 @@ const Response = ({
     </div>
   </div>
 );
-const Error = ({ error }) => {
+
+interface ErrorProps {
+  // TODO: result_codes and result_xdr don't appear to be on the NetworkError type. Perhaps this code is outdated
+  error: NetworkError & {
+    response: {
+      data: {
+        extras: {
+          result_codes: string;
+          result_xdr: string;
+        };
+      };
+    };
+  };
+}
+
+const Error = ({ error }: ErrorProps) => {
   let message = "",
     extras = null;
   if (error instanceof AccountRequiresMemoError) {
     message = "This destination requires a memo.";
     extras = (
-      <React.Fragment>
+      <>
         Destination account:
         <br />{" "}
         <EasySelect data-testid="transaction-submitter-error-account-id">
@@ -180,13 +214,13 @@ const Error = ({ error }) => {
           {error.operationIndex}
         </EasySelect>{" "}
         <br />
-      </React.Fragment>
+      </>
     );
   } else if (error?.response) {
     const { result_codes, result_xdr } = error.response.data?.extras || {};
     message = error.message;
     extras = (
-      <React.Fragment>
+      <>
         extras.result_codes:
         <br />{" "}
         <EasySelect data-testid="transaction-submitter-error-code">
@@ -199,7 +233,7 @@ const Error = ({ error }) => {
           {result_xdr}
         </EasySelect>{" "}
         <br />
-      </React.Fragment>
+      </>
     );
   } else {
     message =
@@ -207,14 +241,14 @@ const Error = ({ error }) => {
         ? "Received a bad response when submitting."
         : "An unknown error occurred.";
     extras = (
-      <React.Fragment>
+      <>
         original error:
         <br />
         <EasySelect data-testid="transaction-submitter-error-original">
           {JSON.stringify(error, null, 2)}
         </EasySelect>
         <br />
-      </React.Fragment>
+      </>
     );
   }
 
