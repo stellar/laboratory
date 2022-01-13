@@ -1,16 +1,16 @@
-import React from "react";
-import { connect } from "react-redux";
+import { useMemo } from "react";
+import { useDispatch } from "react-redux";
 import debounce from "lodash/debounce";
-import functions from "lodash/functions";
-import { xdr } from "stellar-sdk";
-import FETCHED_SIGNERS from "constants/fetched_signers";
+import { FETCHED_SIGNERS } from "constants/fetched_signers";
 import extrapolateFromXdr from "helpers/extrapolateFromXdr";
-import TreeView from "components/TreeView";
-import validateBase64 from "helpers/validateBase64";
-import { updateXdrInput, fetchSigners } from "actions/xdrViewer";
+import { validateBase64 } from "helpers/validateBase64";
 import { addEventHandler, logEvent } from "helpers/metrics";
+import { useRedux } from "hooks/useRedux";
 import xdrViewerMetrics, { metricsEvents } from "metricsHandlers/xdrViewer";
+import { TreeView } from "components/TreeView";
 import { TxSubmitterResult } from "components/TxSubmitterResult";
+import { updateXdrInput, fetchSigners } from "actions/xdrViewer";
+import { TransactionNode } from "types/types";
 
 // XDR decoding doesn't happen in redux, but is pretty much the only thing on
 // this page that we care about. Log metrics from the component as well.
@@ -18,17 +18,20 @@ addEventHandler(xdrViewerMetrics);
 
 const tLogEvent = debounce(logEvent, 1000);
 
-function TransactionSubmitter(props) {
-  let { dispatch, state, baseURL, networkPassphrase, horizonURL } = props;
-
-  const { error, nodes } = React.useMemo(() => {
-    if (state.input === "") {
+export const TransactionSubmitter = () => {
+  const dispatch = useDispatch();
+  const { xdrViewer, network } = useRedux("xdrViewer", "network");
+  const { fetchedSigners, input } = xdrViewer;
+  const { horizonURL, networkPassphrase } = network.current;
+  const { error, nodes } = useMemo(() => {
+    if (input === "") {
       return {
         error: `Enter a base-64 encoded XDR blob to decode.`,
         nodes: null,
       };
     } else {
-      let validation = validateBase64(state.input);
+      const validation = validateBase64(input);
+
       if (validation.result === "error") {
         return {
           error: validation.message,
@@ -38,7 +41,7 @@ function TransactionSubmitter(props) {
       try {
         return {
           error: null,
-          nodes: extrapolateFromXdr(state.input, "TransactionEnvelope"),
+          nodes: extrapolateFromXdr(input, "TransactionEnvelope"),
         };
       } catch (e) {
         console.error(e);
@@ -49,11 +52,11 @@ function TransactionSubmitter(props) {
         };
       }
     }
-  }, [state.input]);
+  }, [input]);
 
   // Fetch signers on initial load
-  if (state.fetchedSigners.state === FETCHED_SIGNERS.NONE) {
-    dispatch(fetchSigners(state.input, baseURL, networkPassphrase));
+  if (fetchedSigners.state === FETCHED_SIGNERS.NONE) {
+    dispatch(fetchSigners(input, horizonURL, networkPassphrase));
   }
 
   return (
@@ -65,13 +68,17 @@ function TransactionSubmitter(props) {
           </p>
           <div className="xdrInput__input">
             <textarea
-              value={state.input || ""}
+              value={input || ""}
               className="xdrInput__input__textarea"
               data-testid="transaction-submitter-input"
               onChange={(event) => {
                 dispatch(updateXdrInput(event.target.value));
                 dispatch(
-                  fetchSigners(event.target.value, baseURL, networkPassphrase),
+                  fetchSigners(
+                    event.target.value,
+                    horizonURL,
+                    networkPassphrase,
+                  ),
                 );
               }}
               placeholder="Example: AAAAAGXNhB2hIkbP//jgzn4os/AAAAZAB+BaLPAAA5Q/xL..."
@@ -80,7 +87,7 @@ function TransactionSubmitter(props) {
         </div>
       </div>
       <TxSubmitterResult
-        txXdr={state.input}
+        txXdr={input}
         networkPassphrase={networkPassphrase}
         horizonURL={horizonURL}
       />
@@ -97,30 +104,13 @@ function TransactionSubmitter(props) {
             </div>
           )}
           {nodes && (
-            <TreeView nodes={nodes} fetchedSigners={state.fetchedSigners} />
+            <TreeView
+              nodes={nodes as TransactionNode[]}
+              fetchedSigners={fetchedSigners}
+            />
           )}
         </div>
       </div>
     </div>
   );
-}
-
-export default connect(chooseState)(TransactionSubmitter);
-function chooseState(state) {
-  return {
-    state: state.xdrViewer,
-    baseURL: state.network.current.horizonURL,
-    networkPassphrase: state.network.current.networkPassphrase,
-    horizonURL: state.network.current.horizonURL,
-  };
-}
-
-// Array of all the xdr types. Then, the most common ones appear at the top
-// again for convenience
-let xdrTypes = functions(xdr).sort();
-xdrTypes = [
-  "TransactionEnvelope",
-  "TransactionResult",
-  "TransactionMeta",
-  "---",
-].concat(xdrTypes);
+};

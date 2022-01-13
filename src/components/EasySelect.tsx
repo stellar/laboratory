@@ -2,7 +2,7 @@ import { clickToSelect } from "../helpers/clickToSelect";
 
 interface EasySelectProps {
   children: React.ReactNode;
-  plain: boolean;
+  plain?: boolean;
 }
 
 // Clicking an EasySelect element will select the contents
