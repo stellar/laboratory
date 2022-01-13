@@ -82,3 +82,18 @@ interface Asset {
 interface AssetWithType extends Asset {
   type: string;
 }
+
+export type TransactionNodeValue = {
+  parsed: number;
+  raw: Uint8Array;
+  type: string;
+  value: TransactionNodeValue;
+  isValid: string;
+};
+
+export type TransactionNode = {
+  state: string;
+  type: string;
+  value: TransactionNodeValue;
+  nodes: TransactionNode[];
+};

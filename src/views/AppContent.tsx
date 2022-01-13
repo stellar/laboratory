@@ -53,6 +53,7 @@ const AsyncXdrViewer = makeAsync(
 const AsyncTransactionSubmitter = makeAsync(
   () =>
     import(/* webpackChunkName: 'Submitter' */ "views/TransactionSubmitter"),
+  "TransactionSubmitter",
 );
 
 const routeSwitch = (slug: string) => {

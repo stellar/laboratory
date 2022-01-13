@@ -1,6 +1,6 @@
 import trim from "lodash/trim";
 
-export default function validateBase64(input) {
+export const validateBase64 = (input: string) => {
   input = trim(input);
 
   if (input === "") {
@@ -16,4 +16,4 @@ export default function validateBase64(input) {
   }
 
   return { result: "success" };
-}
+};

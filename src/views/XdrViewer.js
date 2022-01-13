@@ -4,11 +4,11 @@ import { xdr } from "stellar-sdk";
 import debounce from "lodash/debounce";
 import functions from "lodash/functions";
 import indexOf from "lodash/indexOf";
-import FETCHED_SIGNERS from "constants/fetched_signers";
+import { FETCHED_SIGNERS } from "constants/fetched_signers";
 import SelectPicker from "components/FormComponents/SelectPicker";
 import extrapolateFromXdr from "helpers/extrapolateFromXdr";
-import TreeView from "components/TreeView";
-import validateBase64 from "helpers/validateBase64";
+import { TreeView } from "components/TreeView";
+import { validateBase64 } from "helpers/validateBase64";
 import {
   updateXdrInput,
   updateXdrType,

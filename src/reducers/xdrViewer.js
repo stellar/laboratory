@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
 import { UPDATE_XDR_INPUT, UPDATE_XDR_TYPE } from "../actions/xdrViewer";
-import FETCHED_SIGNERS from "../constants/fetched_signers";
+import { FETCHED_SIGNERS } from "../constants/fetched_signers";
 import { LOAD_STATE } from "../actions/routing";
 import { SET_PARAMS } from "../actions/network";
 import SLUG from "../constants/slug";
