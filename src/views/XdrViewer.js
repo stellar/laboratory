@@ -66,7 +66,7 @@ function XdrViewer(props) {
   }
 
   return (
-    <div>
+    <div data-testid="page-xdr-viewer">
       <div className="XdrViewer__setup so-back">
         <div className="so-chunk">
           <div className="pageIntro">
@@ -95,6 +95,7 @@ function XdrViewer(props) {
           </p>
           <div className="xdrInput__input">
             <textarea
+              data-testid="xdr-viewer-input"
               value={state.input}
               className="xdrInput__input__textarea"
               onChange={(event) => {
@@ -124,7 +125,7 @@ function XdrViewer(props) {
         </div>
       </div>
       <div className="XdrViewer__results so-back">
-        <div className="so-chunk">
+        <div className="so-chunk" data-testid="xdr-viewer-results">
           {errorMessage}
           {treeView}
         </div>
