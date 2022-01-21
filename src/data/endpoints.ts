@@ -181,7 +181,6 @@ export const endpointsMap: EndpointsMap = {
       },
     },
   },
-
   ledgers: {
     label: "Ledger",
     endpoints: {

@@ -576,7 +576,6 @@ describe("fee_stats", () => {
       feeStatsEndpointsContainer = screen.getByTestId(TEST_ID_ENDPOINT);
     });
   });
-
   
   // resource endpoint links
   test("renders all endpoint links", () => {
@@ -584,7 +583,6 @@ describe("fee_stats", () => {
       1,
     );
   });
-
 
   // render resource input form with submit + submit response
   test("resource: all fee_stats submit with response", async () => {
@@ -620,10 +618,6 @@ describe("fee_stats", () => {
     ).toBeInTheDocument();
   });
 });
-
-
-})
-
 
 describe("ledger", () => {
   const RESOURCE_LINK_LABEL = "ledger";
@@ -727,8 +721,6 @@ describe("ledger", () => {
     ).toBeInTheDocument();
   });
 });
-
-
 
 describe("liquidity pools", () => {
   const RESOURCE_LINK_LABEL = "liquidity pools";
