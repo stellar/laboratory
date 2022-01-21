@@ -5,6 +5,7 @@ import { AllLiquidityPools } from "components/SetupPanes/AllLiquidityPools";
 import AllOffers from "components/SetupPanes/AllOffers";
 import AllWithFailed from "components/SetupPanes/AllWithFailed";
 import ClaimableBalances from "components/SetupPanes/ClaimableBalances";
+import Fees from "components/SetupPanes/Fees";
 import FindPaymentPaths from "components/SetupPanes/FindPaymentPaths";
 import FindStrictSendPaymentPaths from "components/SetupPanes/FindStrictSendPaymentPaths";
 import FindStrictReceivePaymentPaths from "components/SetupPanes/FindStrictReceivePaymentPaths";
@@ -177,7 +178,7 @@ export const endpointsMap: EndpointsMap = {
         path: {
             template: "/fee_stats",
         },
-        setupComponent: All,
+        setupComponent: Fees,
       },
     },
   },
