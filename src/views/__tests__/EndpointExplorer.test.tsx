@@ -302,6 +302,8 @@ describe("claimable balances", () => {
   });
 });
 
+
+
 describe("effects", () => {
   const RESOURCE_LINK_LABEL = "effects";
   const SUBMIT_LABEL = "submit";
@@ -557,6 +559,72 @@ describe("effects", () => {
   });
 });
 
+describe("fee_stats", () => {
+  const RESOURCE_LINK_LABEL = "fee_stats";
+  const SUBMIT_LABEL = "submit";
+  let feeStatsEndpointsContainer: HTMLElement;
+  let feeStatsEndpointInputs: HTMLElement;
+  let feeStatsEndpointSubmitButton: HTMLElement;
+  let feeStatsEndpointResponse: HTMLElement;
+
+  // select resource
+  beforeEach(async () => {
+    fireEvent.click(
+      within(resourceContainer).getByText(RegExp(RESOURCE_LINK_LABEL, "i")),
+    );
+    await waitFor(() => {
+      feeStatsEndpointsContainer = screen.getByTestId(TEST_ID_ENDPOINT);
+    });
+  });
+
+  
+  // resource endpoint links
+  test("renders all endpoint links", () => {
+    expect(within(feeStatsEndpointsContainer).getAllByRole("link")).toHaveLength(
+      1,
+    );
+  });
+
+
+  // render resource input form with submit + submit response
+  test("resource: all fee_stats submit with response", async () => {
+    const allFee_statsButton = within(feeStatsEndpointsContainer).getByText(
+      /all fee_stats/i,
+    );
+
+    expect(allFee_statsButton).toBeInTheDocument();
+    fireEvent.click(allFee_statsButton);
+
+    await waitFor(() => {
+      feeStatsEndpointSubmitButton = within(feeStatsEndpointInputs).getByText(
+        RegExp(SUBMIT_LABEL, "i"),
+      );
+    });
+    expect(feeStatsEndpointSubmitButton).toBeInTheDocument();
+
+    fireEvent.click(feeStatsEndpointSubmitButton);
+
+    await waitFor(() =>
+      expect(screen.getByTestId(TEST_ID_RESULT_LOADING)).toBeInTheDocument(),
+    );
+
+    await waitFor(() => {
+      feeStatsEndpointResponse = screen.getByTestId(TEST_ID_RESULT_RESPONSE);
+    });
+
+    expect(feeStatsEndpointResponse).toBeInTheDocument();
+    expect(
+      within(feeStatsEndpointResponse).getByText(
+        RegExp(ENDPOINT_RESPONSE.all_fee_stats, "i"),
+      ),
+    ).toBeInTheDocument();
+  });
+});
+
+
+})
+
+
 describe("ledger", () => {
   const RESOURCE_LINK_LABEL = "ledger";
   const SUBMIT_LABEL = "submit";
@@ -659,6 +727,8 @@ describe("ledger", () => {
     ).toBeInTheDocument();
   });
 });
+
+
 
 describe("liquidity pools", () => {
   const RESOURCE_LINK_LABEL = "liquidity pools";

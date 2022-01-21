@@ -167,6 +167,21 @@ export const endpointsMap: EndpointsMap = {
       },
     },
   },
+  fee_stats: {
+    label: "Fee Stats",
+    endpoints: {
+      all: {
+        label: "Fee Stats",
+        helpUrl: "https://developers.stellar.org/api/aggregations/fee-stats/object/",
+        method: RequestMethod.GET,
+        path: {
+            template: "/fee_stats",
+        },
+        setupComponent: All,
+      },
+    },
+  },
+
   ledgers: {
     label: "Ledger",
     endpoints: {
