@@ -171,7 +171,7 @@ export const endpointsMap: EndpointsMap = {
     label: "Fee Stats",
     endpoints: {
       all: {
-        label: "Fee Stats",
+        label: "All Fee Stats",
         helpUrl: "https://developers.stellar.org/api/aggregations/fee-stats/object/",
         method: RequestMethod.GET,
         path: {
