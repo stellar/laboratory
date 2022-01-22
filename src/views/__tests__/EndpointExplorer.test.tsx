@@ -28,7 +28,7 @@ test("renders endpoint explorer page", async () => {
 
 test("renders all resource links", () => {
   expect(resourceContainer).toBeInTheDocument();
-  expect(within(resourceContainer).getAllByRole("link")).toHaveLength(14);
+  expect(within(resourceContainer).getAllByRole("link")).toHaveLength(15);
 });
 
 describe("accounts", () => {
@@ -302,8 +302,6 @@ describe("claimable balances", () => {
   });
 });
 
-
-
 describe("effects", () => {
   const RESOURCE_LINK_LABEL = "effects";
   const SUBMIT_LABEL = "submit";
@@ -560,7 +558,7 @@ describe("effects", () => {
 });
 
 describe("fee_stats", () => {
-  const RESOURCE_LINK_LABEL = "fee_stats";
+  const RESOURCE_LINK_LABEL = "Fee Stats";
   const SUBMIT_LABEL = "submit";
   let feeStatsEndpointsContainer: HTMLElement;
   let feeStatsEndpointInputs: HTMLElement;
@@ -586,12 +584,17 @@ describe("fee_stats", () => {
 
   // render resource input form with submit + submit response
   test("resource: all fee_stats submit with response", async () => {
-    const allFee_statsButton = within(feeStatsEndpointsContainer).getByText(
-      /all fee_stats/i,
+    const allFee_StatsButton = within(feeStatsEndpointsContainer).getByText(
+      /Fee Stats/i,
     );
 
-    expect(allFee_statsButton).toBeInTheDocument();
-    fireEvent.click(allFee_statsButton);
+    expect(allFee_StatsButton).toBeInTheDocument();
+    fireEvent.click(allFee_StatsButton);
+
+    await waitFor(() => {
+      feeStatsEndpointInputs = screen.getByTestId(TEST_ID_INPUTS);
+    });
+    expect(feeStatsEndpointInputs).toBeInTheDocument();
 
     await waitFor(() => {
       feeStatsEndpointSubmitButton = within(feeStatsEndpointInputs).getByText(
