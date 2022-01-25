@@ -35,6 +35,7 @@ enum ENDPOINT_RESPONSE {
   effects_for_liquidity_pool = "effects for liquidity pool mock response",
   effects_for_operation = "effects for operation mock response",
   effects_for_transaction = "effects for transaction mock response",
+  all_fee_stats = "all fee stats mock response",
   all_ledgers = "all ledgers mock response",
   single_ledger = "single ledger mock response",
   all_liquidity_pools = "all liquidity pools mock response",
@@ -173,6 +174,13 @@ const server = setupServer(
       );
     },
   ),
+  // Endpoints: fee_stats > all fee_stats
+  rest.get(`${HORIZON_URL}/fee_stats`, (_req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({ test: ENDPOINT_RESPONSE.all_fee_stats }),
+    );
+  }),
   // Endpoints: ledger > all ledgers
   rest.get(`${HORIZON_URL}/ledgers`, (_req, res, ctx) => {
     return res(

@@ -28,7 +28,7 @@ test("renders endpoint explorer page", async () => {
 
 test("renders all resource links", () => {
   expect(resourceContainer).toBeInTheDocument();
-  expect(within(resourceContainer).getAllByRole("link")).toHaveLength(14);
+  expect(within(resourceContainer).getAllByRole("link")).toHaveLength(15);
 });
 
 describe("accounts", () => {
@@ -552,6 +552,71 @@ describe("effects", () => {
     expect(
       within(effectsEndpointResponse).getByText(
         RegExp(ENDPOINT_RESPONSE.effects_for_transaction, "i"),
+      ),
+    ).toBeInTheDocument();
+  });
+});
+
+describe("fee_stats", () => {
+  const RESOURCE_LINK_LABEL = "Fee Stats";
+  const SUBMIT_LABEL = "submit";
+  let feeStatsEndpointsContainer: HTMLElement;
+  let feeStatsEndpointInputs: HTMLElement;
+  let feeStatsEndpointSubmitButton: HTMLElement;
+  let feeStatsEndpointResponse: HTMLElement;
+
+  // select resource
+  beforeEach(async () => {
+    fireEvent.click(
+      within(resourceContainer).getByText(RegExp(RESOURCE_LINK_LABEL, "i")),
+    );
+    await waitFor(() => {
+      feeStatsEndpointsContainer = screen.getByTestId(TEST_ID_ENDPOINT);
+    });
+  });
+  
+  // resource endpoint links
+  test("renders all endpoint links", () => {
+    expect(within(feeStatsEndpointsContainer).getAllByRole("link")).toHaveLength(
+      1,
+    );
+  });
+
+  // render resource input form with submit + submit response
+  test("resource: all fee_stats submit with response", async () => {
+    const allFee_StatsButton = within(feeStatsEndpointsContainer).getByText(
+      /Fee Stats/i,
+    );
+
+    expect(allFee_StatsButton).toBeInTheDocument();
+    fireEvent.click(allFee_StatsButton);
+
+    await waitFor(() => {
+      feeStatsEndpointInputs = screen.getByTestId(TEST_ID_INPUTS);
+    });
+    expect(feeStatsEndpointInputs).toBeInTheDocument();
+
+    await waitFor(() => {
+      feeStatsEndpointSubmitButton = within(feeStatsEndpointInputs).getByText(
+        RegExp(SUBMIT_LABEL, "i"),
+      );
+    });
+    expect(feeStatsEndpointSubmitButton).toBeInTheDocument();
+
+    fireEvent.click(feeStatsEndpointSubmitButton);
+
+    await waitFor(() =>
+      expect(screen.getByTestId(TEST_ID_RESULT_LOADING)).toBeInTheDocument(),
+    );
+
+    await waitFor(() => {
+      feeStatsEndpointResponse = screen.getByTestId(TEST_ID_RESULT_RESPONSE);
+    });
+
+    expect(feeStatsEndpointResponse).toBeInTheDocument();
+    expect(
+      within(feeStatsEndpointResponse).getByText(
+        RegExp(ENDPOINT_RESPONSE.all_fee_stats, "i"),
       ),
     ).toBeInTheDocument();
   });
