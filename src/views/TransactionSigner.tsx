@@ -477,7 +477,7 @@ export const TransactionSigner = () => {
             </p>
             <p>
               For simple transactions, you only need one signature from the
-              correct account. Some advanced signatures may require more than
+              correct account. Some advanced transactions may require more than
               one signature if there are multiple source accounts or signing
               keys.
             </p>
