@@ -40,6 +40,8 @@
     "@stellar/freighter-api": "1.1.2",
     "@stellar/prettier-config": "^1.0.1",
     "@stellar/tsconfig": "^1.0.2",
+    "@trezor/connect-plugin-stellar": "^9.0.0",
+    "@trezor/connect-web": "^9.0.2",
     "axios": "^0.25.0",
     "browser-sync": "^2.27.7",
     "chai": "^4.3.6",
@@ -63,7 +65,6 @@
     "route-recognizer": "^0.3.4",
     "solar-stellarorg": "git+https://github.com/stellar/solar-stellarorg#master",
     "stellar-sdk": "^10.1.0",
-    "trezor-connect": "8.2.6-extended",
     "typescript": "^4.5.5",
     "uri-templates": "^0.2.0",
     "urijs": "^1.16.0"

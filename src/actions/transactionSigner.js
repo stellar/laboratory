@@ -1,7 +1,7 @@
 import LedgerTransportWebUSB from "@ledgerhq/hw-transport-webusb";
 import LedgerStr from "@ledgerhq/hw-app-str";
-import TrezorConnect from "trezor-connect";
-import transformTransaction from "trezor-connect/lib/plugins/stellar/plugin";
+import TrezorConnect from "@trezor/connect-web";
+import transformTransaction from "@trezor/connect-plugin-stellar";
 import { TransactionBuilder, Keypair, xdr, StrKey } from "stellar-sdk";
 import { signTransaction } from "@stellar/freighter-api";
 import albedo from "@albedo-link/intent";
