@@ -216,7 +216,7 @@ export default function SetOptions(props) {
       label={
         <span>
           Home Domain{" "}
-          <HelpMark href="https://developers.stellar.org/docs/glossary/multisig/#additional-signing-keys" />
+          <HelpMark href="https://developers.stellar.org/docs/glossary/accounts#home-domain" />
         </span>
       }
       optional={true}
