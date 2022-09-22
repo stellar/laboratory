@@ -1,13 +1,13 @@
-import React from "react";
-import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
 import { xdr } from "stellar-sdk";
 import debounce from "lodash/debounce";
 import functions from "lodash/functions";
 import indexOf from "lodash/indexOf";
 import { FETCHED_SIGNERS } from "constants/fetched_signers";
-import SelectPicker from "components/FormComponents/SelectPicker";
+import { SelectPicker } from "components/FormComponents/SelectPicker";
 import extrapolateFromXdr from "helpers/extrapolateFromXdr";
 import { TreeView } from "components/TreeView";
+import { useRedux } from "hooks/useRedux";
 import { validateBase64 } from "helpers/validateBase64";
 import {
   updateXdrInput,
@@ -17,6 +17,7 @@ import {
 } from "actions/xdrViewer";
 import { addEventHandler, logEvent } from "helpers/metrics";
 import xdrViewerMetrics, { metricsEvents } from "metricsHandlers/xdrViewer";
+import { TransactionNode } from "types/types";
 
 // XDR decoding doesn't happen in redux, but is pretty much the only thing on
 // this page that we care about. Log metrics from the component as well.
@@ -24,19 +25,23 @@ addEventHandler(xdrViewerMetrics);
 
 const tLogEvent = debounce(logEvent, 1000);
 
-function XdrViewer(props) {
-  let { dispatch, state, baseURL, networkPassphrase } = props;
-
-  let validation = validateBase64(state.input);
-  let messageClass =
+export const XdrViewer = () => {
+  const dispatch = useDispatch();
+  const { xdrViewer, network } = useRedux("xdrViewer", "network");
+  const { fetchedSigners, input, type } = xdrViewer;
+  const { baseURL, networkPassphrase } = network.current;
+  const validation = validateBase64(input);
+  const messageClass =
     validation.result === "error"
       ? "xdrInput__message__alert"
       : "xdrInput__message__success";
-  let message = <p className={messageClass}>{validation.message}</p>;
+  const message = <p className={messageClass}>{validation.message}</p>;
+  const xdrTypeIsValid = indexOf(xdrTypes, type) >= 0;
 
-  let xdrTypeIsValid = indexOf(xdrTypes, state.type) >= 0;
-  let treeView, errorMessage;
-  if (state.input === "") {
+  let treeView;
+  let errorMessage;
+
+  if (input === "") {
     errorMessage = <p>Enter a base-64 encoded XDR blob to decode.</p>;
   } else if (!xdrTypeIsValid) {
     errorMessage = <p>Please select a XDR type</p>;
@@ -44,25 +49,25 @@ function XdrViewer(props) {
     try {
       treeView = (
         <TreeView
-          nodes={extrapolateFromXdr(state.input, state.type)}
-          fetchedSigners={state.fetchedSigners}
+          nodes={extrapolateFromXdr(input, type) as TransactionNode[]}
+          fetchedSigners={fetchedSigners}
         />
       );
-      tLogEvent(metricsEvents.decodeSuccess, { type: state.type });
+      tLogEvent(metricsEvents.decodeSuccess, { type });
     } catch (e) {
       console.error(e);
-      tLogEvent(metricsEvents.decodeFailed, { type: state.type });
-      errorMessage = <p>Unable to decode input as {state.type}</p>;
+      tLogEvent(metricsEvents.decodeFailed, { type });
+      errorMessage = <p>Unable to decode input as {type}</p>;
     }
   }
 
   // Fetch signers on initial load
   if (
-    state.input !== "" &&
-    state.type === "TransactionEnvelope" &&
-    state.fetchedSigners.state === FETCHED_SIGNERS.NONE
+    input !== "" &&
+    type === "TransactionEnvelope" &&
+    fetchedSigners.state === FETCHED_SIGNERS.NONE
   ) {
-    dispatch(fetchSigners(state.input, baseURL, networkPassphrase));
+    dispatch(fetchSigners(input, baseURL, networkPassphrase));
   }
 
   return (
@@ -96,11 +101,11 @@ function XdrViewer(props) {
           <div className="xdrInput__input">
             <textarea
               data-testid="xdr-viewer-input"
-              value={state.input}
+              value={input}
               className="xdrInput__input__textarea"
               onChange={(event) => {
                 dispatch(updateXdrInput(event.target.value));
-                if (state.type === "TransactionEnvelope") {
+                if (type === "TransactionEnvelope") {
                   dispatch(
                     fetchSigners(
                       event.target.value,
@@ -117,9 +122,9 @@ function XdrViewer(props) {
 
           <p className="XdrViewer__label">XDR type:</p>
           <SelectPicker
-            value={state.type}
+            value={type}
             placeholder="Select XDR type"
-            onUpdate={(input) => dispatch(updateXdrType(input))}
+            onUpdate={(input: string) => dispatch(updateXdrType(input))}
             items={xdrTypes}
           />
         </div>
@@ -132,16 +137,7 @@ function XdrViewer(props) {
       </div>
     </div>
   );
-}
-
-export default connect(chooseState)(XdrViewer);
-function chooseState(state) {
-  return {
-    state: state.xdrViewer,
-    baseURL: state.network.current.horizonURL,
-    networkPassphrase: state.network.current.networkPassphrase,
-  };
-}
+};
 
 // Array of all the xdr types. Then, the most common ones appear at the top
 // again for convenience

@@ -11,7 +11,7 @@ import {
   updateOperationAttributes,
   reorderOperation,
 } from "../actions/transactionBuilder";
-import OperationTypePicker from "../components/FormComponents/OperationTypePicker";
+import { OperationTypePicker } from "../components/FormComponents/OperationTypePicker";
 import OptionsTablePair from "../components/OptionsTable/Pair";
 import HelpMark from "../components/HelpMark";
 

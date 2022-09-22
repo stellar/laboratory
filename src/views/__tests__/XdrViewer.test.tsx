@@ -4,7 +4,7 @@
 
 import { fireEvent, waitFor, screen } from "@testing-library/react";
 import { render } from "helpers/testHelpers";
-import XdrViewer from "views/XdrViewer";
+import { XdrViewer } from "views/XdrViewer";
 import * as extrapolateFromXdr from "helpers/extrapolateFromXdr";
 import { MOCK_SIGNED_TRANSACTION } from "./__mocks__/transactions";
 
