@@ -29,7 +29,7 @@ export const XdrViewer = () => {
   const dispatch = useDispatch();
   const { xdrViewer, network } = useRedux("xdrViewer", "network");
   const { fetchedSigners, input, type } = xdrViewer;
-  const { baseURL, networkPassphrase } = network.current;
+  const { horizonURL, networkPassphrase } = network.current;
   const validation = validateBase64(input);
   const messageClass =
     validation.result === "error"
@@ -67,7 +67,7 @@ export const XdrViewer = () => {
     type === "TransactionEnvelope" &&
     fetchedSigners.state === FETCHED_SIGNERS.NONE
   ) {
-    dispatch(fetchSigners(input, baseURL, networkPassphrase));
+    dispatch(fetchSigners(input, horizonURL, networkPassphrase));
   }
 
   return (
@@ -91,7 +91,7 @@ export const XdrViewer = () => {
             Input a base-64 encoded XDR blob, or{" "}
             <a
               onClick={() =>
-                dispatch(fetchLatestTx(baseURL, networkPassphrase))
+                dispatch(fetchLatestTx(horizonURL, networkPassphrase))
               }
             >
               fetch the latest transaction to try it out
@@ -109,7 +109,7 @@ export const XdrViewer = () => {
                   dispatch(
                     fetchSigners(
                       event.target.value,
-                      baseURL,
+                      horizonURL,
                       networkPassphrase,
                     ),
                   );
