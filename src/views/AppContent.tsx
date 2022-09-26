@@ -49,6 +49,7 @@ const AsyncTransactionSigner = makeAsync(
 );
 const AsyncXdrViewer = makeAsync(
   () => import(/* webpackChunkName: 'Viewer' */ "views/XdrViewer"),
+  "XdrViewer",
 );
 const AsyncTransactionSubmitter = makeAsync(
   () =>
