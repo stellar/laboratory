@@ -1,4 +1,3 @@
-import React from "react";
 import isArray from "lodash/isArray";
 import map from "lodash/map";
 
@@ -10,10 +9,23 @@ import map from "lodash/map";
 //
 // For array values, the UI label and onUpdate values are the same.
 // The benefit of using an array is that it can contain duplicate items.
-export default function SelectPicker(props) {
-  let { value, onUpdate, items } = props;
+interface SelectPickerProps {
+  className?: string;
+  items: string[] | Record<string, string>;
+  onUpdate: (input: string) => void;
+  placeholder?: string;
+  value: string;
+}
 
+export const SelectPicker = ({
+  className,
+  items,
+  onUpdate,
+  placeholder,
+  value,
+}: SelectPickerProps) => {
   let optionsList;
+
   if (isArray(items)) {
     optionsList = map(items, (value, index) => {
       return (
@@ -33,12 +45,13 @@ export default function SelectPicker(props) {
   }
 
   let selectPlaceholderClass;
+
   if (value === "") {
     selectPlaceholderClass = "so-dropdown__select--placeholder";
   }
 
   return (
-    <div className={`so-dropdown ${props.className}`}>
+    <div className={`so-dropdown ${className}`}>
       <select
         className={
           "picker picker--select so-dropdown__select " + selectPlaceholderClass
@@ -46,9 +59,9 @@ export default function SelectPicker(props) {
         value={value}
         onChange={(event) => onUpdate(event.target.value)}
       >
-        <option value="">{props.placeholder}</option>
+        <option value="">{placeholder}</option>
         {optionsList}
       </select>
     </div>
   );
-}
+};
