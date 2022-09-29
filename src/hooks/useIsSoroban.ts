@@ -1,5 +1,6 @@
 import { useRedux } from "hooks/useRedux";
 
+const futureNetUrl = "https://horizon-futurenet.stellar.org";
 const futureNetPassphrase = "Test SDF Future Network ; October 2022";
 
 export const useIsSoroban = () => {
@@ -8,8 +9,7 @@ export const useIsSoroban = () => {
 
   let isOnFuturenet = false;
   if (
-    // TODO - use futurenet url
-    horizonURL === "https://horizon-testnet.stellar.org" &&
+    horizonURL === futureNetUrl &&
     networkPassphrase === futureNetPassphrase
   ) {
     isOnFuturenet = true;
