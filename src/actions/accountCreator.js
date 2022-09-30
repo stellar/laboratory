@@ -24,7 +24,7 @@ export const START_FRIENDBOT_REQUEST = "START_FRIENDBOT_REQUEST";
 export const FINISH_FRIENDBOT_REQUEST = "FINISH_FRIENDBOT_REQUEST";
 export function startFriendbotRequest(target, isSoroban = false) {
   const freindbotURL = isSoroban
-    ? "http://friendbot-futurenet.stellar.org"
+    ? "https://friendbot-futurenet.stellar.org"
     : "https://friendbot.stellar.org";
   return (dispatch) => {
     dispatch({
