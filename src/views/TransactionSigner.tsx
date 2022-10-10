@@ -1,6 +1,5 @@
 import { useDispatch } from "react-redux";
-import StellarSdk from "stellar-sdk";
-import SorobanSdk from "soroban-sdk";
+import { TransactionBuilder, FeeBumpTransaction, Networks } from "stellar-sdk";
 import { isConnected } from "@stellar/freighter-api";
 import isUndefined from "lodash/isUndefined";
 import map from "lodash/map";
@@ -29,7 +28,6 @@ import { validateTxXdr } from "helpers/validateTxXdr";
 import Libify from "helpers/Libify";
 import { addEventHandler } from "helpers/metrics";
 import transactionSignerMetrics from "metricsHandlers/transactionSigner";
-import { useIsSoroban } from "hooks/useIsSoroban";
 
 const { signTransaction } = Libify;
 
@@ -42,18 +40,6 @@ export const TransactionSigner = () => {
     "network",
   );
   const networkPassphrase = network.current.networkPassphrase;
-  const isSoroban = useIsSoroban();
-
-  let TransactionBuilder, FeeBumpTransaction, Networks;
-  if (isSoroban) {
-    TransactionBuilder = SorobanSdk.TransactionBuilder;
-    FeeBumpTransaction = SorobanSdk.FeeBumpTransaction;
-    Networks = SorobanSdk.Networks;
-  } else {
-    TransactionBuilder = StellarSdk.TransactionBuilder;
-    FeeBumpTransaction = StellarSdk.FeeBumpTransaction;
-    Networks = StellarSdk.Networks;
-  }
 
   const {
     xdr,
@@ -65,7 +51,7 @@ export const TransactionSigner = () => {
   } = transactionSigner;
   let content;
 
-  if (validateTxXdr(xdr, isSoroban).result !== "success") {
+  if (validateTxXdr(xdr).result !== "success") {
     content = (
       <div className="so-back">
         <div className="so-chunk">
@@ -83,13 +69,7 @@ export const TransactionSigner = () => {
     );
   } else {
     let walletSigs = hardwarewalletStatus.signatures;
-    let result = signTransaction(
-      xdr,
-      signers,
-      networkPassphrase,
-      walletSigs,
-      isSoroban,
-    );
+    let result = signTransaction(xdr, signers, networkPassphrase, walletSigs);
     let transaction = TransactionBuilder.fromXDR(xdr, networkPassphrase);
 
     let infoTable = {
