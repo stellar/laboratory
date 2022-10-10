@@ -1,5 +1,7 @@
-import NETWORK from "constants/network";
 import { useRedux } from "hooks/useRedux";
+
+const futureNetUrl = "https://horizon-futurenet.stellar.org";
+const futureNetPassphrase = "Test SDF Future Network ; October 2022";
 
 export const useIsSoroban = () => {
   const { network } = useRedux("network", "routing");
@@ -8,8 +10,8 @@ export const useIsSoroban = () => {
 
   let isOnFuturenet = false;
   if (
-    url.origin === NETWORK.available.futurenet.horizonURL &&
-    networkPassphrase === NETWORK.available.futurenet.networkPassphrase
+    url.origin === futureNetUrl &&
+    networkPassphrase === futureNetPassphrase
   ) {
     isOnFuturenet = true;
   }
