@@ -6,7 +6,6 @@ import extrapolateFromXdr from "helpers/extrapolateFromXdr";
 import { validateBase64 } from "helpers/validateBase64";
 import { addEventHandler, logEvent } from "helpers/metrics";
 import { useRedux } from "hooks/useRedux";
-import { useIsSoroban } from "hooks/useIsSoroban";
 import xdrViewerMetrics, { metricsEvents } from "metricsHandlers/xdrViewer";
 import { TreeView } from "components/TreeView";
 import { TxSubmitterResult } from "components/TxSubmitterResult";
@@ -24,7 +23,6 @@ export const TransactionSubmitter = () => {
   const { xdrViewer, network } = useRedux("xdrViewer", "network");
   const { fetchedSigners, input } = xdrViewer;
   const { horizonURL, networkPassphrase } = network.current;
-  const isSoroban = useIsSoroban();
   const { error, nodes } = useMemo(() => {
     if (input === "") {
       return {
@@ -43,7 +41,7 @@ export const TransactionSubmitter = () => {
       try {
         return {
           error: null,
-          nodes: extrapolateFromXdr(input, "TransactionEnvelope", isSoroban),
+          nodes: extrapolateFromXdr(input, "TransactionEnvelope"),
         };
       } catch (e) {
         console.error(e);
@@ -58,7 +56,7 @@ export const TransactionSubmitter = () => {
 
   // Fetch signers on initial load
   if (fetchedSigners.state === FETCHED_SIGNERS.NONE) {
-    dispatch(fetchSigners(input, horizonURL, networkPassphrase, isSoroban));
+    dispatch(fetchSigners(input, horizonURL, networkPassphrase));
   }
 
   return (
@@ -80,7 +78,6 @@ export const TransactionSubmitter = () => {
                     event.target.value,
                     horizonURL,
                     networkPassphrase,
-                    isSoroban,
                   ),
                 );
               }}

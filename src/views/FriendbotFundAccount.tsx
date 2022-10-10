@@ -7,7 +7,6 @@ import { CodeBlock } from "components/CodeBlock";
 import PubKeyPicker from "components/FormComponents/PubKeyPicker";
 import NETWORK from "constants/network";
 import { useRedux } from "hooks/useRedux";
-import { useIsSoroban } from "hooks/useIsSoroban";
 import { ActionStatus } from "types/types.d";
 
 export const FriendbotFundAccount = () => {
@@ -15,7 +14,6 @@ export const FriendbotFundAccount = () => {
   const { friendbotStatus, friendbotTarget } = accountCreator;
   const baseURL = network.current.horizonURL;
   const IS_TESTNET = baseURL === NETWORK.available.test.horizonURL;
-  const isSoroban = useIsSoroban();
 
   const dispatch = useDispatch();
 
@@ -60,19 +58,17 @@ export const FriendbotFundAccount = () => {
     return null;
   };
 
-  if (IS_TESTNET || isSoroban) {
+  if (IS_TESTNET) {
     return (
       <div
         className="so-back AccountCreator__section"
         data-testid="page-friendbot"
       >
         <div className="so-chunk">
-          <h3>
-            Friendbot: Fund a {isSoroban ? "Soroban" : "test"} network account
-          </h3>
+          <h3>Friendbot: Fund a test network account</h3>
           <p>
             The friendbot is a horizon API endpoint that will fund an account
-            with 10,000 lumens on the {isSoroban ? "Soroban " : "test"} network.
+            with 10,000 lumens on the test network.
           </p>
 
           <PubKeyPicker
@@ -87,9 +83,7 @@ export const FriendbotFundAccount = () => {
           <button
             className="s-button"
             disabled={friendbotTarget.length === 0}
-            onClick={() =>
-              dispatch(startFriendbotRequest(friendbotTarget, isSoroban))
-            }
+            onClick={() => dispatch(startFriendbotRequest(friendbotTarget))}
           >
             Get test network lumens
           </button>
