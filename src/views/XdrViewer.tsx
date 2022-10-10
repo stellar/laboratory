@@ -8,7 +8,6 @@ import { SelectPicker } from "components/FormComponents/SelectPicker";
 import extrapolateFromXdr from "helpers/extrapolateFromXdr";
 import { TreeView } from "components/TreeView";
 import { useRedux } from "hooks/useRedux";
-import { useIsSoroban } from "hooks/useIsSoroban";
 import { validateBase64 } from "helpers/validateBase64";
 import {
   updateXdrInput,
@@ -38,7 +37,6 @@ export const XdrViewer = () => {
       : "xdrInput__message__success";
   const message = <p className={messageClass}>{validation.message}</p>;
   const xdrTypeIsValid = indexOf(xdrTypes, type) >= 0;
-  const isSoroban = useIsSoroban();
 
   let treeView;
   let errorMessage;
@@ -51,9 +49,7 @@ export const XdrViewer = () => {
     try {
       treeView = (
         <TreeView
-          nodes={
-            extrapolateFromXdr(input, type, isSoroban) as TransactionNode[]
-          }
+          nodes={extrapolateFromXdr(input, type) as TransactionNode[]}
           fetchedSigners={fetchedSigners}
         />
       );
