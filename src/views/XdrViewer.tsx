@@ -1,6 +1,5 @@
 import { useDispatch } from "react-redux";
-import StellarSdk from "stellar-sdk";
-import SorobanSdk from "soroban-sdk";
+import { xdr } from "stellar-sdk";
 import debounce from "lodash/debounce";
 import functions from "lodash/functions";
 import indexOf from "lodash/indexOf";
@@ -32,17 +31,6 @@ export const XdrViewer = () => {
   const { xdrViewer, network } = useRedux("xdrViewer", "network");
   const { fetchedSigners, input, type } = xdrViewer;
   const { horizonURL, networkPassphrase } = network.current;
-  const isSoroban = useIsSoroban();
-  const sdk = isSoroban ? SorobanSdk : StellarSdk;
-  // Array of all the xdr types. Then, the most common ones appear at the top
-  // again for convenience
-  let xdrTypes = functions(sdk.xdr).sort();
-  xdrTypes = [
-    "TransactionEnvelope",
-    "TransactionResult",
-    "TransactionMeta",
-    "---",
-  ].concat(xdrTypes);
   const validation = validateBase64(input);
   const messageClass =
     validation.result === "error"
@@ -50,6 +38,7 @@ export const XdrViewer = () => {
       : "xdrInput__message__success";
   const message = <p className={messageClass}>{validation.message}</p>;
   const xdrTypeIsValid = indexOf(xdrTypes, type) >= 0;
+  const isSoroban = useIsSoroban();
 
   let treeView;
   let errorMessage;
@@ -82,7 +71,7 @@ export const XdrViewer = () => {
     type === "TransactionEnvelope" &&
     fetchedSigners.state === FETCHED_SIGNERS.NONE
   ) {
-    dispatch(fetchSigners(input, horizonURL, networkPassphrase, isSoroban));
+    dispatch(fetchSigners(input, horizonURL, networkPassphrase));
   }
 
   return (
@@ -126,7 +115,6 @@ export const XdrViewer = () => {
                       event.target.value,
                       horizonURL,
                       networkPassphrase,
-                      isSoroban,
                     ),
                   );
                 }
@@ -154,3 +142,13 @@ export const XdrViewer = () => {
     </div>
   );
 };
+
+// Array of all the xdr types. Then, the most common ones appear at the top
+// again for convenience
+let xdrTypes = functions(xdr).sort();
+xdrTypes = [
+  "TransactionEnvelope",
+  "TransactionResult",
+  "TransactionMeta",
+  "---",
+].concat(xdrTypes);

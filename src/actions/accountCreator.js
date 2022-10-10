@@ -22,10 +22,7 @@ export function updateFriendbotTarget(target) {
 
 export const START_FRIENDBOT_REQUEST = "START_FRIENDBOT_REQUEST";
 export const FINISH_FRIENDBOT_REQUEST = "FINISH_FRIENDBOT_REQUEST";
-export function startFriendbotRequest(target, isSoroban = false) {
-  const friendbotURL = isSoroban
-    ? "https://friendbot-futurenet.stellar.org"
-    : "https://friendbot.stellar.org";
+export function startFriendbotRequest(target) {
   return (dispatch) => {
     dispatch({
       type: START_FRIENDBOT_REQUEST,
@@ -34,7 +31,7 @@ export function startFriendbotRequest(target, isSoroban = false) {
     });
 
     axios
-      .get(friendbotURL + "/?addr=" + target)
+      .get("https://friendbot.stellar.org/?addr=" + target)
       .then(() => {
         dispatchInNewStack(dispatch, {
           type: FINISH_FRIENDBOT_REQUEST,
@@ -48,7 +45,8 @@ export function startFriendbotRequest(target, isSoroban = false) {
         let code, message;
         if (e.response.status === 0) {
           code = "";
-          message = "Unable to reach Friendbot server at " + friendbotURL;
+          message =
+            "Unable to reach Friendbot server at https://friendbot.stellar.org";
         } else {
           code = JSON.stringify(e.response.data, null, 2);
           message = `Failed to fund ${target} on the test network`;
