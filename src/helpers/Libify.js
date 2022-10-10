@@ -883,7 +883,12 @@ Libify.signTransaction = function (
   ledgerWalletSigs,
   isSoroban = false,
 ) {
-  const sdk = isSoroban ? SorobanSdk : Sdk;
+  let sdk;
+  if (isSoroban) {
+    sdk = SorobanSdk;
+  } else {
+    sdk = Sdk;
+  }
   let validSecretKeys = [];
   let validPreimages = [];
   for (let i = 0; i < signers.length; i++) {
