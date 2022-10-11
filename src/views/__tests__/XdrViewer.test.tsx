@@ -65,6 +65,7 @@ test("extrapolate XDR on input change", async () => {
   expect(extrapolateFromXdrSpy).toHaveBeenCalledWith(
     MOCK_SIGNED_TRANSACTION,
     "TransactionEnvelope",
+    false,
   );
   expect(fetchSignersSpy).toHaveBeenCalledWith(
     MOCK_SIGNED_TRANSACTION,
