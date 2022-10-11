@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import StellarSdk from "stellar-sdk";
-import SorobanSdk from "soroban-sdk";
+import SorobanSdk from "soroban-client";
 import { isConnected } from "@stellar/freighter-api";
 import isUndefined from "lodash/isUndefined";
 import map from "lodash/map";
