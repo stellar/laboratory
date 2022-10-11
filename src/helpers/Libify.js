@@ -9,6 +9,7 @@
 // the best choice since source code differs based on content.
 
 import Sdk from "stellar-sdk";
+import SorobanSdk from "soroban-sdk";
 import defaults from "lodash/defaults";
 import each from "lodash/each";
 import has from "lodash/has";
@@ -880,7 +881,14 @@ Libify.signTransaction = function (
   signers,
   networkPassphrase,
   ledgerWalletSigs,
+  isSoroban = false,
 ) {
+  let sdk;
+  if (isSoroban) {
+    sdk = SorobanSdk;
+  } else {
+    sdk = Sdk;
+  }
   let validSecretKeys = [];
   let validPreimages = [];
   for (let i = 0; i < signers.length; i++) {
@@ -888,7 +896,7 @@ Libify.signTransaction = function (
     if (signer !== null && !isUndefined(signer) && signer !== "") {
       // Signer
       if (signer.charAt(0) == "S") {
-        if (!Sdk.StrKey.isValidEd25519SecretSeed(signer)) {
+        if (!sdk.StrKey.isValidEd25519SecretSeed(signer)) {
           return {
             message: "One of secret keys is invalid",
           };
@@ -906,13 +914,13 @@ Libify.signTransaction = function (
     }
   }
 
-  let newTx = Sdk.TransactionBuilder.fromXDR(txXdr, networkPassphrase);
+  let newTx = sdk.TransactionBuilder.fromXDR(txXdr, networkPassphrase);
   let existingSigs = newTx.signatures.length;
   let addedSigs = 0;
 
   each(validSecretKeys, (signer) => {
     addedSigs++;
-    newTx.sign(Sdk.Keypair.fromSecret(signer));
+    newTx.sign(sdk.Keypair.fromSecret(signer));
   });
   each(validPreimages, (signer) => {
     addedSigs++;
