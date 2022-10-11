@@ -71,5 +71,6 @@ test("extrapolate XDR on input change", async () => {
     MOCK_SIGNED_TRANSACTION,
     testNetwork.horizonURL,
     testNetwork.networkPassphrase,
+    false
   );
 });
