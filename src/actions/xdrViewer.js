@@ -1,5 +1,5 @@
 import StellarSdk from "stellar-sdk";
-import SorobanSdk from "soroban-sdk";
+import SorobanSdk from "soroban-client";
 import axios from "axios";
 import { FETCH_SEQUENCE_FAIL } from "actions/transactionBuilder";
 import { SIGNATURE } from "../constants/signature";

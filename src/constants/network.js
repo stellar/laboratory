@@ -1,5 +1,5 @@
 import { Networks } from "stellar-sdk";
-import { Networks as SorobanNetworks } from "soroban-sdk";
+import { Networks as SorobanNetworks } from "soroban-client";
 
 const NETWORK = {
   available: {

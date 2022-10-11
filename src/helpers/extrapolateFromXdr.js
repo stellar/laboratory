@@ -10,7 +10,7 @@
 // - object: typed values always with a type and value `{type: 'code', value: 'Foo();'}`
 
 import StellarSdk from "stellar-sdk";
-import SorobanSdk from "soroban-sdk";
+import SorobanSdk from "soroban-client";
 import isArray from "lodash/isArray";
 import isString from "lodash/isString";
 import functionsIn from "lodash/functionsIn";
