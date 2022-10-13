@@ -31,7 +31,7 @@ function WarningMessage() {
       </p>
       <p className="optionsTable__pair__content__note">
         <a
-          href="https://developers.stellar.org/docs/glossary/multisig/"
+          href="https://developers.stellar.org/docs/encyclopedia/signatures-multisig"
           rel="noreferrer"
           target="_blank"
         >
@@ -48,7 +48,7 @@ export default function SetOptions(props) {
       label={
         <span>
           Inflation Destination{" "}
-          <HelpMark href="https://developers.stellar.org/docs/glossary/inflation/" />
+          <HelpMark href="https://developers.stellar.org/docs/encyclopedia/inflation" />
         </span>
       }
       optional={true}
@@ -65,7 +65,7 @@ export default function SetOptions(props) {
       label={
         <span>
           Set Flags{" "}
-          <HelpMark href="https://developers.stellar.org/docs/glossary/accounts/#flags" />
+          <HelpMark href="https://developers.stellar.org/docs/encyclopedia/flags" />
         </span>
       }
       optional={true}
@@ -95,7 +95,7 @@ export default function SetOptions(props) {
       label={
         <span>
           Clear Flags{" "}
-          <HelpMark href="https://developers.stellar.org/docs/glossary/accounts/#flags" />
+          <HelpMark href="https://developers.stellar.org/docs/encyclopedia/flags" />
         </span>
       }
       optional={true}
@@ -124,7 +124,7 @@ export default function SetOptions(props) {
       label={
         <span>
           Master Weight{" "}
-          <HelpMark href="https://developers.stellar.org/docs/glossary/accounts/#thresholds" />
+          <HelpMark href="https://developers.stellar.org/docs/encyclopedia/signatures-multisig#thresholds" />
         </span>
       }
       optional={true}
@@ -142,7 +142,7 @@ export default function SetOptions(props) {
       label={
         <span>
           Low Threshold{" "}
-          <HelpMark href="https://developers.stellar.org/docs/glossary/accounts/#thresholds" />
+          <HelpMark href="https://developers.stellar.org/docs/encyclopedia/signatures-multisig#thresholds" />
         </span>
       }
       optional={true}
@@ -159,7 +159,7 @@ export default function SetOptions(props) {
       label={
         <span>
           Medium Threshold{" "}
-          <HelpMark href="https://developers.stellar.org/docs/glossary/accounts/#thresholds" />
+          <HelpMark href="https://developers.stellar.org/docs/encyclopedia/signatures-multisig#thresholds" />
         </span>
       }
       optional={true}
@@ -177,7 +177,7 @@ export default function SetOptions(props) {
       label={
         <span>
           High Threshold{" "}
-          <HelpMark href="https://developers.stellar.org/docs/glossary/accounts/#thresholds" />
+          <HelpMark href="https://developers.stellar.org/docs/encyclopedia/signatures-multisig#thresholds" />
         </span>
       }
       optional={true}
@@ -195,7 +195,7 @@ export default function SetOptions(props) {
       label={
         <span>
           Signer Type{" "}
-          <HelpMark href="https://developers.stellar.org/docs/glossary/multisig/#additional-signing-keys" />
+          <HelpMark href="https://developers.stellar.org/docs/encyclopedia/signatures-multisig#multisig" />
         </span>
       }
       optional={true}
@@ -216,7 +216,7 @@ export default function SetOptions(props) {
       label={
         <span>
           Home Domain{" "}
-          <HelpMark href="https://developers.stellar.org/docs/glossary/accounts#home-domain" />
+          <HelpMark href="https://developers.stellar.org/docs/glossary#home-domain" />
         </span>
       }
       optional={true}
