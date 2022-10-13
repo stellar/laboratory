@@ -503,7 +503,7 @@ export const TransactionSigner = () => {
             </p>
             <p>
               <a
-                href="https://developers.stellar.org/docs/glossary/multisig/"
+                href="https://developers.stellar.org/docs/encyclopedia/signatures-multisig"
                 rel="noreferrer"
                 target="_blank"
               >
