@@ -11,6 +11,7 @@ export const KeypairGenerator = () => {
   const { keypairGeneratorResult, keypairGeneratorPubKey } = accountCreator;
   const baseURL = network.current.horizonURL;
   const IS_TESTNET = baseURL === NETWORK.available.test.horizonURL;
+  const IS_FUTURENET = baseURL === NETWORK.available.futurenet.horizonURL;
 
   const dispatch = useDispatch();
 
@@ -39,7 +40,7 @@ export const KeypairGenerator = () => {
   };
 
   const renderKeypairGeneratorLink = () => {
-    if (IS_TESTNET && keypairGeneratorPubKey !== "") {
+    if ((IS_TESTNET || IS_FUTURENET) && keypairGeneratorPubKey !== "") {
       return (
         <a
           onClick={() =>
