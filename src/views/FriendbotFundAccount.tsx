@@ -9,12 +9,14 @@ import NETWORK from "constants/network";
 import { useRedux } from "hooks/useRedux";
 import { useIsSoroban } from "hooks/useIsSoroban";
 import { ActionStatus } from "types/types.d";
+import { networkLocalStorageGetValue } from "helpers/networkLocalStorage";
 
 export const FriendbotFundAccount = () => {
   const { accountCreator, network } = useRedux("accountCreator", "network");
   const { friendbotStatus, friendbotTarget } = accountCreator;
   const baseURL = network.current.horizonURL;
   const IS_TESTNET = baseURL === NETWORK.available.test.horizonURL;
+  const IS_CUSTOM = networkLocalStorageGetValue().name === "custom";
   const isSoroban = useIsSoroban();
 
   const dispatch = useDispatch();
@@ -60,7 +62,7 @@ export const FriendbotFundAccount = () => {
     return null;
   };
 
-  if (IS_TESTNET || isSoroban) {
+  if (IS_TESTNET || isSoroban || IS_CUSTOM) {
     return (
       <div
         className="so-back AccountCreator__section"
@@ -88,7 +90,7 @@ export const FriendbotFundAccount = () => {
             className="s-button"
             disabled={friendbotTarget.length === 0}
             onClick={() =>
-              dispatch(startFriendbotRequest(friendbotTarget, isSoroban))
+              dispatch(startFriendbotRequest(friendbotTarget, isSoroban, IS_CUSTOM))
             }
           >
             Get test network lumens

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { Keypair, Account, MuxedAccount } from "stellar-sdk";
+import { networkLocalStorageGetValue } from "helpers/networkLocalStorage";
 import dispatchInNewStack from "../helpers/dispatchInNewStack";
 
 export const GENERATE_NEW_KEYPAIR = "GENERATE_NEW_KEYPAIR";
@@ -22,10 +23,10 @@ export function updateFriendbotTarget(target) {
 
 export const START_FRIENDBOT_REQUEST = "START_FRIENDBOT_REQUEST";
 export const FINISH_FRIENDBOT_REQUEST = "FINISH_FRIENDBOT_REQUEST";
-export function startFriendbotRequest(target, isSoroban = false) {
-  const friendbotURL = isSoroban
-    ? "https://friendbot-futurenet.stellar.org"
-    : "https://friendbot.stellar.org";
+export function startFriendbotRequest(target, isSoroban = false, isCustom = false) {
+  const friendbotURL = isCustom ? (networkLocalStorageGetValue().horizonURL + "/friendbot"): (isSoroban
+    ? "https://friendbot-futurenet.stellar.org/"
+    : "https://friendbot.stellar.org/");
   return (dispatch) => {
     dispatch({
       type: START_FRIENDBOT_REQUEST,
@@ -34,7 +35,7 @@ export function startFriendbotRequest(target, isSoroban = false) {
     });
 
     axios
-      .get(friendbotURL + "/?addr=" + target)
+      .get(friendbotURL + "?addr=" + target)
       .then(() => {
         dispatchInNewStack(dispatch, {
           type: FINISH_FRIENDBOT_REQUEST,

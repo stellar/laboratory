@@ -5,6 +5,7 @@ import {
 } from "actions/accountCreator";
 import NETWORK from "constants/network";
 import { useRedux } from "hooks/useRedux";
+import { networkLocalStorageGetValue } from "helpers/networkLocalStorage";
 
 export const KeypairGenerator = () => {
   const { accountCreator, network } = useRedux("accountCreator", "network");
@@ -12,6 +13,7 @@ export const KeypairGenerator = () => {
   const baseURL = network.current.horizonURL;
   const IS_TESTNET = baseURL === NETWORK.available.test.horizonURL;
   const IS_FUTURENET = baseURL === NETWORK.available.futurenet.horizonURL;
+  const IS_CUSTOM = networkLocalStorageGetValue().name === "custom";
 
   const dispatch = useDispatch();
 
@@ -40,7 +42,7 @@ export const KeypairGenerator = () => {
   };
 
   const renderKeypairGeneratorLink = () => {
-    if ((IS_TESTNET || IS_FUTURENET) && keypairGeneratorPubKey !== "") {
+    if ((IS_TESTNET || IS_FUTURENET || IS_CUSTOM) && keypairGeneratorPubKey !== "") {
       return (
         <a
           onClick={() =>

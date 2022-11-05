@@ -1,4 +1,5 @@
 import NETWORK from "constants/network";
+import { networkLocalStorageGetValue } from "helpers/networkLocalStorage";
 import { useRedux } from "hooks/useRedux";
 
 export const useIsSoroban = () => {
@@ -13,5 +14,8 @@ export const useIsSoroban = () => {
   ) {
     isOnFuturenet = true;
   }
-  return isOnFuturenet;
+
+  let isOnCustom = networkLocalStorageGetValue().name === "custom";
+
+  return isOnFuturenet || isOnCustom;
 };
