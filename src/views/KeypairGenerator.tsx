@@ -13,7 +13,7 @@ export const KeypairGenerator = () => {
   const baseURL = network.current.horizonURL;
   const IS_TESTNET = baseURL === NETWORK.available.test.horizonURL;
   const IS_FUTURENET = baseURL === NETWORK.available.futurenet.horizonURL;
-  const IS_CUSTOM = networkLocalStorageGetValue().name === "custom";
+  const IS_CUSTOM = networkLocalStorageGetValue()?.name === "custom";
 
   const dispatch = useDispatch();
 

@@ -16,7 +16,7 @@ export const FriendbotFundAccount = () => {
   const { friendbotStatus, friendbotTarget } = accountCreator;
   const baseURL = network.current.horizonURL;
   const IS_TESTNET = baseURL === NETWORK.available.test.horizonURL;
-  const IS_CUSTOM = networkLocalStorageGetValue().name === "custom";
+  const IS_CUSTOM = networkLocalStorageGetValue()?.name === "custom";
   const isSoroban = useIsSoroban();
 
   const dispatch = useDispatch();

@@ -24,7 +24,7 @@ export function updateFriendbotTarget(target) {
 export const START_FRIENDBOT_REQUEST = "START_FRIENDBOT_REQUEST";
 export const FINISH_FRIENDBOT_REQUEST = "FINISH_FRIENDBOT_REQUEST";
 export function startFriendbotRequest(target, isSoroban = false, isCustom = false) {
-  const friendbotURL = isCustom ? (networkLocalStorageGetValue().horizonURL + "/friendbot"): (isSoroban
+  const friendbotURL = isCustom ? (networkLocalStorageGetValue()?.horizonURL + "/friendbot"): (isSoroban
     ? "https://friendbot-futurenet.stellar.org/"
     : "https://friendbot.stellar.org/");
   return (dispatch) => {

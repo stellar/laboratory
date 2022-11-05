@@ -15,7 +15,7 @@ export const useIsSoroban = () => {
     isOnFuturenet = true;
   }
 
-  let isOnCustom = networkLocalStorageGetValue().name === "custom";
+  let isOnCustom = networkLocalStorageGetValue()?.name === "custom";
 
   return isOnFuturenet || isOnCustom;
 };
