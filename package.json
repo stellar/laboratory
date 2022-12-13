@@ -62,7 +62,7 @@
     "regenerator-runtime": "^0.13.9",
     "route-recognizer": "^0.3.4",
     "solar-stellarorg": "git+https://github.com/stellar/solar-stellarorg#master",
-    "soroban-client": "^0.1.2",
+    "soroban-client": "^0.2.1",
     "stellar-sdk": "^10.1.0",
     "trezor-connect": "8.2.6-extended",
     "typescript": "^4.5.5",
