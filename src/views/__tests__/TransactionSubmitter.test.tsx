@@ -10,7 +10,10 @@ import * as extrapolateFromXdr from "helpers/extrapolateFromXdr";
 import * as xdrViewerActions from "actions/xdrViewer";
 import { FETCHED_SIGNERS } from "constants/fetched_signers";
 import { SIGNATURE } from "constants/signature";
-import { MOCK_SIGNED_TRANSACTION } from "./__mocks__/transactions";
+import {
+  MOCK_SIGNED_TRANSACTION,
+  MOCK_SIGNATURE_BUFFER,
+} from "./__mocks__/transactions";
 
 const MOCK_SERVER_RESPONSE_SUCCESS = {
   fee_meta_xdr: "fooMetaXdr",
@@ -34,13 +37,6 @@ jest.mock("stellar-sdk", () => ({
   engines handle Buffers.
   Until it can be refactored to work across engines, we manually mock an extrapolated `MOCK_SIGNED_TRANSACTION` that uses a Buffer for a signature 
   instead of Uint8Array. */
-
-const signatureBuffer = Buffer.from([
-  46, 253, 199, 156, 17, 188, 168, 226, 198, 130, 225, 215, 47, 104, 27, 254,
-  49, 73, 2, 12, 158, 153, 41, 113, 157, 254, 5, 120, 177, 196, 134, 135, 223,
-  221, 84, 62, 213, 221, 183, 85, 201, 56, 102, 171, 119, 67, 64, 169, 91, 207,
-  50, 45, 105, 181, 254, 66, 141, 250, 64, 30, 123, 254, 167, 6,
-]);
 
 const MOCK_EXTRAPOLATED_SIGNED_TRANSACTION = [
   {
@@ -131,7 +127,7 @@ const MOCK_EXTRAPOLATED_SIGNED_TRANSACTION = [
                     type: "signature",
                     value: {
                       type: "code",
-                      raw: signatureBuffer,
+                      raw: MOCK_SIGNATURE_BUFFER,
                       value:
                         "Lv3HnBG8qOLGguHXL2gb/jFJAgyemSlxnf4FeLHEhoff3VQ+1d23Vck4Zqt3Q0CpW88yLWm1/kKN+kAee/6nBg==",
                     },
@@ -180,7 +176,7 @@ describe("valid signature path", () => {
           result: [
             {
               isValid: SIGNATURE.VALID,
-              sig: signatureBuffer,
+              sig: MOCK_SIGNATURE_BUFFER,
             },
           ],
         }),

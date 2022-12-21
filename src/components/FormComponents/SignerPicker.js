@@ -1,7 +1,7 @@
 import React from "react";
 import extend from "lodash/extend";
 import PubKeyPicker from "./PubKeyPicker";
-import SelectPicker from "./SelectPicker";
+import { SelectPicker } from "./SelectPicker";
 import TextPicker from "./TextPicker";
 import Unsigned8bitIntPicker from "./Unsigned8bitIntPicker";
 

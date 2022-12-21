@@ -3,6 +3,7 @@ import { Footer } from "components/Footer";
 import { Header } from "components/Header";
 import { LoadingView } from "components/LoadingView";
 import { MaintenanceBanner } from "components/MaintenanceBanner";
+import { SorobanBanner } from "components/SorobanBanner";
 import { Navigation } from "components/Navigation";
 import { NotFoundPage } from "components/NotFoundPage";
 import SLUG from "constants/slug";
@@ -49,6 +50,7 @@ const AsyncTransactionSigner = makeAsync(
 );
 const AsyncXdrViewer = makeAsync(
   () => import(/* webpackChunkName: 'Viewer' */ "views/XdrViewer"),
+  "XdrViewer",
 );
 const AsyncTransactionSubmitter = makeAsync(
   () =>
@@ -91,6 +93,7 @@ export const AppContent = () => {
   return (
     <div>
       <MaintenanceBanner />
+      <SorobanBanner />
       <Header />
       <Navigation />
       {routeSwitch(routing.location)}
