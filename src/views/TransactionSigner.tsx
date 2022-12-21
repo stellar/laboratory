@@ -434,14 +434,7 @@ export const TransactionSigner = () => {
                       className="s-button"
                       data-testid="transaction-signer-freighter-sign-button"
                       onClick={() => {
-                        dispatch(
-                          signWithFreighter(
-                            xdr,
-                            networkPassphrase === Networks.TESTNET
-                              ? "TESTNET"
-                              : "PUBLIC",
-                          ),
-                        );
+                        dispatch(signWithFreighter(xdr, { networkPassphrase }));
                       }}
                     >
                       Sign with Freighter
