@@ -382,7 +382,7 @@ export const TransactionSigner = () => {
             >
               <p className="TxSignerKeys__title">
                 Signatures{" "}
-                <HelpMark href="https://developers.stellar.org/docs/glossary/multisig/" />
+                <HelpMark href="https://developers.stellar.org/docs/encyclopedia/signatures-multisig" />
               </p>
               <div className="optionsTable">
                 <OptionsTablePair label="Add Signer">
@@ -496,7 +496,7 @@ export const TransactionSigner = () => {
             </p>
             <p>
               <a
-                href="https://developers.stellar.org/docs/glossary/multisig/"
+                href="https://developers.stellar.org/docs/encyclopedia/signatures-multisig"
                 rel="noreferrer"
                 target="_blank"
               >

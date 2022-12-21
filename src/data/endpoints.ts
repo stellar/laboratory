@@ -40,7 +40,7 @@ export const endpointsMap: EndpointsMap = {
     endpoints: {
       multiple: {
         label: "Accounts",
-        helpUrl: "https://developers.stellar.org/docs/glossary/accounts/",
+        helpUrl: "https://developers.stellar.org/docs/fundamentals-and-concepts/stellar-data-structures/accounts",
         method: RequestMethod.GET,
         path: {
           template: "/accounts/{?sponsor,signer,asset,cursor,limit,order}",

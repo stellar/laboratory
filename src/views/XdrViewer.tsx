@@ -91,7 +91,7 @@ export const XdrViewer = () => {
         <div className="so-chunk">
           <div className="pageIntro">
             <p>
-              <a href="https://developers.stellar.org/docs/glossary/xdr/">
+              <a href="https://developers.stellar.org/docs/encyclopedia/xdr">
                 External Data Representation (XDR)
               </a>{" "}
               is a standardized protocol that the Stellar network uses to encode

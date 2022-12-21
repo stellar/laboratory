@@ -48,7 +48,7 @@ function TxBuilderAttributes(props) {
           label={
             <span>
               Transaction Type{" "}
-              <HelpMark href="https://developers.stellar.org/docs/glossary/fee-bumps" />
+              <HelpMark href="https://developers.stellar.org/docs/encyclopedia/fee-bump-transactions" />
             </span>
           }
         >
@@ -65,7 +65,7 @@ function TxBuilderAttributes(props) {
               label={
                 <span>
                   Source Account{" "}
-                  <HelpMark href="https://developers.stellar.org/docs/glossary/accounts/" />
+                  <HelpMark href="https://developers.stellar.org/docs/fundamentals-and-concepts/stellar-data-structures/accounts" />
                 </span>
               }
             >
@@ -85,7 +85,7 @@ function TxBuilderAttributes(props) {
               label={
                 <span>
                   Transaction Sequence Number{" "}
-                  <HelpMark href="https://developers.stellar.org/docs/glossary/transactions/#sequence-number" />
+                  <HelpMark href="https://developers.stellar.org/docs/glossary#sequence-number" />
                 </span>
               }
             >
@@ -105,7 +105,7 @@ function TxBuilderAttributes(props) {
               label={
                 <span>
                   Base Fee{" "}
-                  <HelpMark href="https://developers.stellar.org/docs/glossary/transactions/#fee" />
+                  <HelpMark href="https://developers.stellar.org/docs/encyclopedia/fees-surge-pricing-fee-strategies" />
                 </span>
               }
             >
@@ -117,7 +117,7 @@ function TxBuilderAttributes(props) {
               />
               <p className="optionsTable__pair__content__note">
                 The{" "}
-                <a href="https://developers.stellar.org/docs/glossary/fees/">
+                <a href="https://developers.stellar.org/docs/glossary#base-fee">
                   network base fee
                 </a>{" "}
                 is currently set to {networkBaseFee} stroops (
@@ -132,7 +132,7 @@ function TxBuilderAttributes(props) {
               label={
                 <span>
                   Memo{" "}
-                  <HelpMark href="https://developers.stellar.org/docs/glossary/transactions/#memo" />
+                  <HelpMark href="https://developers.stellar.org/docs/encyclopedia/memos" />
                 </span>
               }
             >
@@ -151,7 +151,7 @@ function TxBuilderAttributes(props) {
               label={
                 <span>
                   Time Bounds{" "}
-                  <HelpMark href="https://developers.stellar.org/docs/glossary/transactions/#time-bounds" />
+                  <HelpMark href="https://developers.stellar.org/docs/fundamentals-and-concepts/stellar-data-structures/operations-and-transactions#time-bounds" />
                 </span>
               }
             >
@@ -209,7 +209,7 @@ function TxBuilderAttributes(props) {
               label={
                 <span>
                   Source Account{" "}
-                  <HelpMark href="https://developers.stellar.org/docs/glossary/accounts/" />
+                  <HelpMark href="https://developers.stellar.org/docs/fundamentals-and-concepts/stellar-data-structures/accounts" />
                 </span>
               }
             >
@@ -227,7 +227,7 @@ function TxBuilderAttributes(props) {
               label={
                 <span>
                   Base Fee{" "}
-                  <HelpMark href="https://developers.stellar.org/docs/glossary/transactions/#fee" />
+                  <HelpMark href="https://developers.stellar.org/docs/encyclopedia/fees-surge-pricing-fee-strategies" />
                 </span>
               }
             >
@@ -239,7 +239,7 @@ function TxBuilderAttributes(props) {
               />
               <p className="optionsTable__pair__content__note">
                 The{" "}
-                <a href="https://developers.stellar.org/docs/glossary/fees/">
+                <a href="https://developers.stellar.org/docs/glossary#base-fee">
                   network base fee
                 </a>{" "}
                 is currently set to {networkBaseFee} stroops (
@@ -253,7 +253,7 @@ function TxBuilderAttributes(props) {
               label={
                 <span>
                   Inner Transaction XDR{" "}
-                  <HelpMark href="https://developers.stellar.org/docs/glossary/transactions/#transaction-envelopes" />
+                  <HelpMark href="https://developers.stellar.org/docs/encyclopedia/fee-bump-transactions#existing-transaction-envelope-inner-transaction" />
                 </span>
               }
             >
