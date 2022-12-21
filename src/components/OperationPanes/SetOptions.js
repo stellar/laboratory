@@ -65,7 +65,7 @@ export default function SetOptions(props) {
       label={
         <span>
           Set Flags{" "}
-          <HelpMark href="https://developers.stellar.org/docs/encyclopedia/flags" />
+          <HelpMark href="https://developers.stellar.org/docs/glossary/#flags" />
         </span>
       }
       optional={true}
@@ -95,7 +95,7 @@ export default function SetOptions(props) {
       label={
         <span>
           Clear Flags{" "}
-          <HelpMark href="https://developers.stellar.org/docs/encyclopedia/flags" />
+          <HelpMark href="https://developers.stellar.org/docs/glossary/#flags" />
         </span>
       }
       optional={true}
