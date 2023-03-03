@@ -33,7 +33,11 @@ function TxBuilderAttributes(props) {
   const [networkMinFee, setNetworkMinFee] = useState(attributes["minFee"]);
 
   useEffect(() => {
-    dispatch(fetchBaseFee(horizonURL));
+    // Don't fetch base fee again if txn has a sequence number (when returning
+    // to Build Transaction tab). Refetching base fee resets previously set fee.
+    if (!attributes.sequence) {
+      dispatch(fetchBaseFee(horizonURL));
+    }
   }, []);
 
   useEffect(() => {
