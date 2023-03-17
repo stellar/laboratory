@@ -12,7 +12,7 @@
     "build:netlify": "yarn build; mkdir out; mkdir out/laboratory; mv build/* out/laboratory; cp _redirects out/_redirects",
     "test": "mocha './test/**/*.js'",
     "test:jest": "jest",
-    "prod:build": "docker image build --build-arg AMPLITUDE_KEY=$AMPLITUDE_KEY -t lab:localbuild .",
+    "prod:build": "docker image build -t lab:localbuild .",
     "prod:serve": "docker run -p 8000:80 lab:localbuild",
     "production": "yarn prod:build && yarn prod:serve"
   },

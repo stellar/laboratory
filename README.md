@@ -33,7 +33,7 @@ To build a production docker image using a clean docker build environment:
 ```sh
 make docker-build
 # or directly with docker
-docker build --build-arg AMPLITUDE_KEY=${AMPLITUDE_KEY} -t lab:localbuild .
+docker build -t lab:localbuild .
 ```
 
 To build and run production build locally:
@@ -44,7 +44,7 @@ yarn prod:build
 yarn prod:serve
 ```
 
-Production uses Amplify to emit metrics, so to fully emulate a production build, you'll need to set an `AMPLITUDE_KEY` environment variable in the shell you start a build from.
+Production uses Amplitude to emit metrics, so to fully emulate a production build, you'll need to set an `AMPLITUDE_API_KEY` variable in `/public/settings/env-config.js` file.
 
 ## Internal documentation
 
