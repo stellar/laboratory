@@ -37,7 +37,7 @@
     "@ledgerhq/hw-app-str": "^6.24.1",
     "@ledgerhq/hw-transport-webusb": "^6.24.1",
     "@reduxjs/toolkit": "^1.7.2",
-    "@stellar/freighter-api": "^1.3.1",
+    "@stellar/freighter-api": "^1.4.0",
     "@stellar/prettier-config": "^1.0.1",
     "@stellar/tsconfig": "^1.0.2",
     "@trezor/connect-plugin-stellar": "^9.0.0",
