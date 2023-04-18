@@ -9,7 +9,7 @@ if (typeof window !== "undefined") {
   // @ts-ignore
   window.StellarSdk = StellarSdk;
 }
-
+console.log("test ");
 export const App = () => (
   <Provider store={store}>
     <AppContent />
