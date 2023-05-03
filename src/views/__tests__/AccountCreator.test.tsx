@@ -45,7 +45,7 @@ test("renders create account page", async () => {
 
 test("keypair generator: generates a keypair on testnet", async () => {
   fireEvent.click(screen.getByText(/generate keypair/i));
-  await waitFor(() => screen.queryByTestId("publicKey"));
+  await waitFor(() => screen.queryByTestId("publicKey1"));
 
   expect(screen.getByTestId("publicKey")).toHaveTextContent(PUBLIC_KEY);
   expect(screen.getByTestId("secretKey")).toHaveTextContent(SECRET_KEY);
