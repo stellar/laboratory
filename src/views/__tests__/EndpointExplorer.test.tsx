@@ -14,7 +14,6 @@ const TEST_ID_RESULT_LOADING = "page-endpoint-result-loading";
 const TEST_ID_RESULT_RESPONSE = "page-endpoint-result-response";
 
 beforeEach(async () => {
-  console.log("this test starts");
   render(<EndpointExplorer />);
 
   await waitFor(() => screen.queryByTestId("endpoint-explorer-resource"));
