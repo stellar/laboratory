@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import StellarSdk from "stellar-sdk";
-import SorobanSdk from "soroban-client";
+import * as SorobanSdk from "soroban-client";
 import debounce from "lodash/debounce";
 import functions from "lodash/functions";
 import indexOf from "lodash/indexOf";
