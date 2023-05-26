@@ -9,7 +9,7 @@
 // the best choice since source code differs based on content.
 
 import Sdk from "stellar-sdk";
-import SorobanSdk from "soroban-client";
+import * as SorobanSdk from "soroban-client";
 import defaults from "lodash/defaults";
 import each from "lodash/each";
 import has from "lodash/has";
