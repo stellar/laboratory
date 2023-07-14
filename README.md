@@ -22,7 +22,7 @@ a public URL.
 yarn start --public randomsubdomain.ngrok.io
 ```
 
-## Building for production
+## Building for production:
 
 ```sh
 yarn build
