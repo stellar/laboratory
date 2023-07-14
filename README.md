@@ -4,7 +4,7 @@ The Stellar Laboratory is a suite of tools to help one learn about exploring the
 Stellar network. See it in action:
 [https://www.stellar.org/laboratory/](https://www.stellar.org/laboratory/).
 
-## Developing
+## Developing:
 
 ```sh
 yarn start
@@ -45,7 +45,9 @@ yarn prod:build
 yarn prod:serve
 ```
 
-Production uses Amplitude to emit metrics, so to fully emulate a production build, you'll need to set an `AMPLITUDE_API_KEY` variable in `/public/settings/env-config.js` file.
+Production uses Amplitude to emit metrics, so to fully emulate a production
+build, you'll need to set an `AMPLITUDE_API_KEY` variable in
+`/public/settings/env-config.js` file.
 
 ## Internal documentation
 
