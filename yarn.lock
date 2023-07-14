@@ -9122,10 +9122,10 @@ js-xdr@^1.1.3:
     lodash "^4.17.5"
     long "^2.2.3"
 
-js-xdr@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/js-xdr/-/js-xdr-2.0.0.tgz#ef24ea27369ab60217c001fd0e27301f6981ba0a"
-  integrity sha512-4mctWHR47ejNcfpE8/Xl3l2wYqO1Qy09d1pveZRmarUz2BcuU/M8grzadxV6PoN/X0ywOb6cy6117qYUWkfeBA==
+js-xdr@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/js-xdr/-/js-xdr-3.0.0.tgz#fb74275de0ed3cec61269721140a576edf6fca7e"
+  integrity sha512-tSt6UKJ2L7t+yaQURGkHo9kop9qnVbChTlCu62zNiDbDZQoZb/YjUj2iFJ3lgelhfg9p5bhO2o/QX+g36TPsSQ==
 
 js-yaml@4.1.0:
   version "4.1.0"
@@ -13078,19 +13078,20 @@ sodium-native@^4.0.1:
   version "0.2.0"
   resolved "git+https://github.com/stellar/solar-stellarorg#78ce86e856d21e77fab77b3767c1a224bfb7e9fe"
 
-soroban-client@^0.7.2:
-  version "0.7.2"
-  resolved "https://registry.yarnpkg.com/soroban-client/-/soroban-client-0.7.2.tgz#b710cdf6d6a66480f8b21d4ae623fb33a2e8701d"
-  integrity sha512-RCYFIrPkhLHogMQZRUDWFXG5i897BL+YjM1XQgIAim/MwwQiyoaxZEipzQU0z78UXIjCxMIUWiE203otdrGIbw==
+soroban-client@^0.9.1:
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/soroban-client/-/soroban-client-0.9.1.tgz#aeaf19ccb8258661dd9b5821090ea1b6c5960dae"
+  integrity sha512-wAxu8Z15vBirjizdGG5BnUtZDtf/+ul37q84xHqUUHS7t7sL8CBeTdM6bFYmlEVLjpfFtAhdB/yJBQU7Bo4kBQ==
   dependencies:
     axios "^1.4.0"
     bignumber.js "^9.1.1"
+    buffer "^6.0.3"
     detect-node "^2.0.4"
     es6-promise "^4.2.4"
     eventsource "^2.0.2"
     lodash "^4.17.21"
     randombytes "^2.1.0"
-    stellar-base "^9.0.0-soroban.1"
+    stellar-base "10.0.0-soroban.3"
     toml "^3.0.0"
     urijs "^1.19.1"
 
@@ -13288,6 +13289,22 @@ statuses@~1.4.0:
   resolved "https://registry.yarnpkg.com/statuses/-/statuses-1.4.0.tgz#bb73d446da2796106efcc1b601a253d6c46bd087"
   integrity sha512-zhSCtt8v2NDrRlPQpCNtw/heZLtfUDqxBM1udqikb/Hbk52LK4nQSwr10u77iopCW5LsyHpuXS0GnEc48mLeew==
 
+stellar-base@10.0.0-soroban.3:
+  version "10.0.0-soroban.3"
+  resolved "https://registry.yarnpkg.com/stellar-base/-/stellar-base-10.0.0-soroban.3.tgz#76dade3cf9ed8969a8d9cc37c78c8a61406b2470"
+  integrity sha512-XixwHHggxuWHQYY2CiVIzXLCGwaphS6pKF1GFyTC4QNIouR7IRWn/fzbXkYmzIbJTq6gM4mORO3kaLwl4bd7yA==
+  dependencies:
+    base32.js "^0.1.0"
+    bignumber.js "^9.1.1"
+    buffer "^6.0.3"
+    crc "^4.3.2"
+    crypto-browserify "^3.12.0"
+    js-xdr "^3.0.0"
+    sha.js "^2.3.6"
+    tweetnacl "^1.0.3"
+  optionalDependencies:
+    sodium-native "^4.0.1"
+
 stellar-base@^8.0.0:
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/stellar-base/-/stellar-base-8.0.0.tgz#619e5fb7951fa8abb26322e51e611169a5d1cf62"
@@ -13302,22 +13319,6 @@ stellar-base@^8.0.0:
     tweetnacl "^1.0.3"
   optionalDependencies:
     sodium-native "^3.3.0"
-
-stellar-base@^9.0.0-soroban.1:
-  version "9.0.0-soroban.1"
-  resolved "https://registry.yarnpkg.com/stellar-base/-/stellar-base-9.0.0-soroban.1.tgz#92a1879329f79190d3f242ac8163be712be90704"
-  integrity sha512-oLqE3kNFMo6Hhd9VgBN8jMfaw9RypVqYmdCDDn3NufxIZW92bP7Jq0oPf28N/YO7DYOT7oqptqf7+DVDcwvfZg==
-  dependencies:
-    base32.js "^0.1.0"
-    bignumber.js "^9.1.1"
-    crc "^4.3.2"
-    crypto-browserify "^3.12.0"
-    js-xdr "^2.0.0"
-    lodash "^4.17.21"
-    sha.js "^2.3.6"
-    tweetnacl "^1.0.3"
-  optionalDependencies:
-    sodium-native "^4.0.1"
 
 stellar-sdk@^10.1.0:
   version "10.1.0"
