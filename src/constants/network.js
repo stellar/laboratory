@@ -15,10 +15,6 @@ const NETWORK = {
       horizonURL: "https://horizon.stellar.org",
       networkPassphrase: Networks.PUBLIC,
     },
-    bullionFx: {
-      horizonURL: "https://stellar.bullionfx.com",
-      networkPassphrase: Networks.BULLION,
-    },
   },
   defaultName: "test",
 };
