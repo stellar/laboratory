@@ -136,8 +136,10 @@ class TxBuilderResult extends React.Component {
 
     return (
       <div className="TransactionBuilderResult">
-        {successTitle}
-        {errorTitle}
+        <div>
+          {successTitle}
+          {errorTitle}
+        </div>
         <pre className="TransactionXDR so-code so-code__wrap TransactionBuilderResult__code">
           <code>{finalResult}</code>
         </pre>
