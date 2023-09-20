@@ -1,5 +1,4 @@
 import axios from "axios";
-import { UnsignedHyper } from "stellar-sdk";
 
 // Resets everything to it's default state
 export const RESET_TXBUILDER = "RESET_TXBUILDER";
@@ -88,7 +87,7 @@ export function fetchSequence(accountId, horizonBaseUrl) {
       .then((r) =>
         dispatch({
           type: FETCH_SEQUENCE_SUCCESS,
-          sequence: UnsignedHyper.fromString(r.data.sequence).add(1).toString(),
+          sequence: (Number(r.data.sequence) + 1).toString(),
         }),
       )
       .catch((r) => dispatch({ type: FETCH_SEQUENCE_FAIL, payload: r }));
