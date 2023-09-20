@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import { fireEvent, screen, waitFor, within } from "@testing-library/react";
-import StellarSdk from "stellar-sdk";
+import * as StellarSdk from "stellar-sdk";
 import { render } from "helpers/testHelpers";
 import { AccountCreator } from "views/AccountCreator";
 

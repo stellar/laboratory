@@ -9,7 +9,7 @@
 // - string: string values that appear as just plain text
 // - object: typed values always with a type and value `{type: 'code', value: 'Foo();'}`
 
-import StellarSdk from "stellar-sdk";
+import * as StellarSdk from "stellar-sdk";
 import * as SorobanSdk from "soroban-client";
 import isArray from "lodash/isArray";
 import isString from "lodash/isString";
