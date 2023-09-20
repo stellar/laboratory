@@ -8,7 +8,7 @@
 // Libify could also be used to generate source code from input but might not be
 // the best choice since source code differs based on content.
 
-import Sdk from "stellar-sdk";
+import * as Sdk from "stellar-sdk";
 import * as SorobanSdk from "soroban-client";
 import defaults from "lodash/defaults";
 import each from "lodash/each";
@@ -765,9 +765,7 @@ Libify.buildTransaction = function (attributes, operations, networkPassphrase) {
 
   try {
     let account;
-    const sequence = Sdk.UnsignedHyper.fromString(attributes.sequence)
-      .subtract(1)
-      .toString();
+    const sequence = (BigInt(attributes.sequence) - BigInt(1)).toString();
 
     if (Sdk.StrKey.isValidMed25519PublicKey(attributes.sourceAccount)) {
       account = new Sdk.MuxedAccount.fromAddress(
