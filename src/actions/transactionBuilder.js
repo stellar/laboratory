@@ -87,7 +87,7 @@ export function fetchSequence(accountId, horizonBaseUrl) {
       .then((r) =>
         dispatch({
           type: FETCH_SEQUENCE_SUCCESS,
-          sequence: (Number(r.data.sequence) + 1).toString(),
+          sequence: (BigInt(r.data.sequence) + BigInt(1)).toString(),
         }),
       )
       .catch((r) => dispatch({ type: FETCH_SEQUENCE_FAIL, payload: r }));

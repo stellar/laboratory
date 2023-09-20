@@ -69,7 +69,7 @@ function contentValidator(value) {
         value.content !== UnsignedHyper.fromString(value.content).toString()
       ) {
         return `MEMO_ID is an unsigned 64-bit integer and the max valid
-              value is ${UnsignedHyper.MAX_UNSIGNED_VALUE.toString()}`;
+              value is 18446744073709551615`;
       }
       break;
     case "MEMO_HASH":

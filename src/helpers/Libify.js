@@ -765,7 +765,7 @@ Libify.buildTransaction = function (attributes, operations, networkPassphrase) {
 
   try {
     let account;
-    const sequence = (Number(attributes.sequence) - 1).toString();
+    const sequence = (BigInt(attributes.sequence) - BigInt(1)).toString();
 
     if (Sdk.StrKey.isValidMed25519PublicKey(attributes.sourceAccount)) {
       account = new Sdk.MuxedAccount.fromAddress(
