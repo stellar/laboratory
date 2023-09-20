@@ -1,4 +1,4 @@
-import StellarSdk from "stellar-sdk";
+import * as StellarSdk from "stellar-sdk";
 import * as SorobanSdk from "soroban-client";
 import axios from "axios";
 import { FETCH_SEQUENCE_FAIL } from "actions/transactionBuilder";

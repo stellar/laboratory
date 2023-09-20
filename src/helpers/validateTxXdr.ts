@@ -1,5 +1,5 @@
 import trim from "lodash/trim";
-import StellarSdk from "stellar-sdk";
+import * as StellarSdk from "stellar-sdk";
 import * as SorobanSdk from "soroban-client";
 import { validateBase64 } from "./validateBase64";
 
