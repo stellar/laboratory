@@ -1,8 +1,8 @@
 name: Monthly dependency updates
 on:
   schedule:
-    # First of every month
-    - cron: 0 0 1 * *
+    # First of January, April, July, and October
+    - cron: 0 0 1 */3 *
 
 jobs:
   create_issue:
@@ -12,7 +12,7 @@ jobs:
       issues: write
     steps:
       - name: Update dependencies
-        uses: imjohnbo/issue-bot@7e438653c0da13f4f79678a56bb9ecbd9dcc26ac
+        uses: imjohnbo/issue-bot@3bee265982b87e730cf6c8dab7f86b68c92f8ef1
         with:
           title: "Update dependencies"
           body: |
@@ -22,6 +22,7 @@ jobs:
             ```
             Make sure there are no issues in the code editor, code compiles, and it runs without issues in the browser.
           pinned: false
-          close-previous: false
+          close-previous: true
+          labels: "dependencies"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
