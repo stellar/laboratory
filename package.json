@@ -64,8 +64,7 @@
     "regenerator-runtime": "^0.13.9",
     "route-recognizer": "^0.3.4",
     "solar-stellarorg": "git+https://github.com/stellar/solar-stellarorg#master",
-    "soroban-client": "^1.0.0-beta.2",
-    "stellar-sdk": "^11.0.0-beta.4",
+    "stellar-sdk": "^11.0.0-beta.6",
     "typescript": "^4.5.5",
     "uri-templates": "^0.2.0",
     "urijs": "^1.16.0"

@@ -1,6 +1,5 @@
 import { useReducer } from "react";
 import {
-  Server,
   TransactionBuilder,
   AccountRequiresMemoError,
   BadResponseError,
@@ -29,7 +28,10 @@ const initialState = {
 
 const reducer = (
   state: any,
-  action: { type: ACTIONS; payload?: Horizon.SubmitTransactionResponse },
+  action: {
+    type: ACTIONS;
+    payload?: Horizon.HorizonApi.SubmitTransactionResponse;
+  },
 ) => {
   switch (action.type) {
     case ACTIONS.submit:
@@ -83,7 +85,9 @@ export const TxSubmitterResult = ({
                 txXdr,
                 networkPassphrase,
               );
-              const server = new Server(horizonURL, { appName: "Laboratory" });
+              const server = new Horizon.Server(horizonURL, {
+                appName: "Laboratory",
+              });
               server.submitTransaction(transaction).then(
                 (res) => {
                   dispatch({ type: ACTIONS.success, payload: res });
@@ -123,7 +127,7 @@ const Response = ({
   result_xdr,
   result_meta_xdr,
   fee_meta_xdr,
-}: ResponseProps & Horizon.TransactionResponse) => (
+}: ResponseProps & Horizon.HorizonApi.TransactionResponse) => (
   <div className="XdrViewer__submit so-back TransactionSubmitter__result">
     <div className="so-chunk">
       <h3

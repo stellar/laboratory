@@ -1,6 +1,5 @@
 import { useDispatch } from "react-redux";
 import * as StellarSdk from "stellar-sdk";
-import * as SorobanSdk from "soroban-client";
 import debounce from "lodash/debounce";
 import functions from "lodash/functions";
 import indexOf from "lodash/indexOf";
@@ -33,10 +32,9 @@ export const XdrViewer = () => {
   const { fetchedSigners, input, type } = xdrViewer;
   const { horizonURL, networkPassphrase } = network.current;
   const isSoroban = useIsSoroban();
-  const sdk = isSoroban ? SorobanSdk : StellarSdk;
   // Array of all the xdr types. Then, the most common ones appear at the top
   // again for convenience
-  let xdrTypes = functions(sdk.xdr).sort();
+  let xdrTypes = functions(StellarSdk.xdr).sort();
   xdrTypes = [
     "TransactionEnvelope",
     "TransactionResult",

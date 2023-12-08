@@ -1,6 +1,5 @@
 import { useDispatch } from "react-redux";
 import * as StellarSdk from "stellar-sdk";
-import * as SorobanSdk from "soroban-client";
 import { isConnected } from "@stellar/freighter-api";
 import isUndefined from "lodash/isUndefined";
 import map from "lodash/map";
@@ -44,16 +43,10 @@ export const TransactionSigner = () => {
   const networkPassphrase = network.current.networkPassphrase;
   const isSoroban = useIsSoroban();
 
-  let TransactionBuilder, FeeBumpTransaction, Networks;
-  if (isSoroban) {
-    TransactionBuilder = SorobanSdk.TransactionBuilder;
-    FeeBumpTransaction = SorobanSdk.FeeBumpTransaction;
-    Networks = SorobanSdk.Networks;
-  } else {
-    TransactionBuilder = StellarSdk.TransactionBuilder;
-    FeeBumpTransaction = StellarSdk.FeeBumpTransaction;
-    Networks = StellarSdk.Networks;
-  }
+  let TransactionBuilder, FeeBumpTransaction, Networks: any;
+  TransactionBuilder = StellarSdk.TransactionBuilder;
+  FeeBumpTransaction = StellarSdk.FeeBumpTransaction;
+  Networks = StellarSdk.Networks;
 
   const {
     xdr,
@@ -65,7 +58,7 @@ export const TransactionSigner = () => {
   } = transactionSigner;
   let content;
 
-  if (validateTxXdr(xdr, isSoroban).result !== "success") {
+  if (validateTxXdr(xdr).result !== "success") {
     content = (
       <div className="so-back">
         <div className="so-chunk">
@@ -389,7 +382,7 @@ export const TransactionSigner = () => {
                   <MultiPicker
                     component={SecretKeyPicker}
                     value={signers}
-                    onUpdate={(value: string) => dispatch(setSecrets(value))}
+                    onUpdate={(value) => dispatch(setSecrets(value))}
                   />
                 </OptionsTablePair>
                 <OptionsTablePair label="BIP Path">
