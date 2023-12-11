@@ -8,8 +8,10 @@ export const useIsSoroban = () => {
 
   let isOnFuturenet = false;
   if (
-    url.origin === NETWORK.available.futurenet.horizonURL &&
-    networkPassphrase === NETWORK.available.futurenet.networkPassphrase
+    (url.origin === NETWORK.available.futurenet.horizonURL &&
+      networkPassphrase === NETWORK.available.futurenet.networkPassphrase) ||
+    (url.origin === NETWORK.available.test.horizonURL &&
+      networkPassphrase === NETWORK.available.test.networkPassphrase)
   ) {
     isOnFuturenet = true;
   }
