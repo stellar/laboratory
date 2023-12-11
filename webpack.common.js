@@ -159,4 +159,7 @@ module.exports = {
       exclude: "node_modules",
     }),
   ],
+  watchOptions: {
+    ignored: /node_modules/,
+  },
 };
