@@ -8,7 +8,6 @@ import { SelectPicker } from "components/FormComponents/SelectPicker";
 import extrapolateFromXdr from "helpers/extrapolateFromXdr.js";
 import { TreeView } from "components/TreeView";
 import { useRedux } from "hooks/useRedux";
-import { useIsSoroban } from "hooks/useIsSoroban";
 import { validateBase64 } from "helpers/validateBase64";
 import {
   updateXdrInput,
@@ -31,7 +30,6 @@ export const XdrViewer = () => {
   const { xdrViewer, network } = useRedux("xdrViewer", "network");
   const { fetchedSigners, input, type } = xdrViewer;
   const { horizonURL, networkPassphrase } = network.current;
-  const isSoroban = useIsSoroban();
   // Array of all the xdr types. Then, the most common ones appear at the top
   // again for convenience
   let xdrTypes = functions(StellarSdk.xdr).sort();
@@ -60,9 +58,7 @@ export const XdrViewer = () => {
     try {
       treeView = (
         <TreeView
-          nodes={
-            extrapolateFromXdr(input, type, isSoroban) as TransactionNode[]
-          }
+          nodes={extrapolateFromXdr(input, type) as TransactionNode[]}
           fetchedSigners={fetchedSigners}
         />
       );
@@ -80,7 +76,7 @@ export const XdrViewer = () => {
     type === "TransactionEnvelope" &&
     fetchedSigners.state === FETCHED_SIGNERS.NONE
   ) {
-    dispatch(fetchSigners(input, horizonURL, networkPassphrase, isSoroban));
+    dispatch(fetchSigners(input, horizonURL, networkPassphrase));
   }
 
   return (
@@ -124,7 +120,6 @@ export const XdrViewer = () => {
                       event.target.value,
                       horizonURL,
                       networkPassphrase,
-                      isSoroban,
                     ),
                   );
                 }

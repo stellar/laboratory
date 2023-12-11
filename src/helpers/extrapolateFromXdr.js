@@ -16,7 +16,7 @@ import functionsIn from "lodash/functionsIn";
 import includes from "lodash/includes";
 import without from "lodash/without";
 
-export default function extrapolateFromXdr(input, type, isSoroban = false) {
+export default function extrapolateFromXdr(input, type) {
   // TODO: Check to see if type exists
   // TODO: input validation
 

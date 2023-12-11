@@ -37,12 +37,7 @@ export function fetchLatestTx(horizonBaseUrl, networkPassphrase) {
   };
 }
 
-export function fetchSigners(
-  input,
-  horizonBaseUrl,
-  networkPassphrase,
-  isSoroban = false,
-) {
+export function fetchSigners(input, horizonBaseUrl, networkPassphrase) {
   return (dispatch) => {
     dispatch({ type: FETCHED_SIGNERS.PENDING });
     try {
