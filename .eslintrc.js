@@ -70,5 +70,6 @@ module.exports = {
     "valid-jsdoc": "off",
     "@typescript-eslint/no-unsafe-argument": "off",
     "@typescript-eslint/no-unnecessary-type-constraint": "off",
+    "jsdoc/newline-after-description": "off",
   },
 };
