@@ -6,11 +6,11 @@ import { MaintenanceBanner } from "components/MaintenanceBanner";
 import { SorobanBanner } from "components/SorobanBanner";
 import { Navigation } from "components/Navigation";
 import { NotFoundPage } from "components/NotFoundPage";
-import SLUG from "constants/slug";
-import { RouterListener } from "helpers/simpleRouter";
-import { addEventHandler } from "helpers/metrics";
+import SLUG from "constants/slug.js";
+import { RouterListener } from "helpers/simpleRouter.js";
+import { addEventHandler } from "helpers/metrics.js";
 import { useRedux } from "hooks/useRedux";
-import routingMetrics from "metricsHandlers/routing";
+import routingMetrics from "metricsHandlers/routing.js";
 import { Introduction } from "views/Introduction";
 
 addEventHandler(routingMetrics);
@@ -42,7 +42,7 @@ const AsyncEndpointExplorer = makeAsync(
   "EndpointExplorer",
 );
 const AsyncTransactionBuilder = makeAsync(
-  () => import(/* webpackChunkName: 'Builder' */ "views/TransactionBuilder"),
+  () => import(/* webpackChunkName: 'Builder' */ "views/TransactionBuilder.js"),
 );
 const AsyncTransactionSigner = makeAsync(
   () => import(/* webpackChunkName: 'Signer' */ "views/TransactionSigner"),

@@ -1,5 +1,3 @@
-import React from "react";
-
 export enum Network {
   PUBLIC = "public",
   TEST = "test",
@@ -17,24 +15,24 @@ export enum RequestMethod {
   POST = "POST",
 }
 
-interface AnyObject {
+export interface AnyObject {
   [key: string]: any;
 }
 
-interface StatusPageComponent {
+export interface StatusPageComponent {
   [key: string]: any;
   id: string;
   name: string;
 }
 
-interface StatusPageIncident {
+export interface StatusPageIncident {
   [key: string]: any;
   id: string;
   name: string;
   body: string;
 }
 
-interface StatusPageScheduled {
+export interface StatusPageScheduled {
   [key: string]: any;
   id: string;
   name: string;
@@ -43,7 +41,7 @@ interface StatusPageScheduled {
   incident_updates: StatusPageIncident[];
 }
 
-interface EndpointItemEndpoint {
+export interface EndpointItemEndpoint {
   label: string;
   helpUrl: string;
   method: RequestMethod;
@@ -52,34 +50,34 @@ interface EndpointItemEndpoint {
     // TODO: make it one type only if possible (remove function type)
     [key: string]: string | any;
   };
-  setupComponent: JSX.ElementElement;
+  setupComponent: React.ElementType;
 }
 
-interface EndpointItemProps {
+export interface EndpointItemProps {
   label: string;
   endpoints: {
     [key: string]: EndpointItemEndpoint;
   };
 }
 
-interface EndpointBuildRequest {
+export interface EndpointBuildRequest {
   url: string;
   formData: string;
   method?: RequestMethod;
   streaming?: boolean;
 }
 
-interface NumberFractionValue {
+export interface NumberFractionValue {
   n: number;
   d: number;
 }
 
-interface Asset {
+export interface Asset {
   code: string;
   issuer: string;
 }
 
-interface AssetWithType extends Asset {
+export interface AssetWithType extends Asset {
   type: string;
 }
 

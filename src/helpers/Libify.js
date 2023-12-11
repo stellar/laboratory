@@ -17,7 +17,7 @@ import isEmpty from "lodash/isEmpty";
 import isString from "lodash/isString";
 import isUndefined from "lodash/isUndefined";
 import map from "lodash/map";
-import { createPredicate } from "helpers/claimantHelpers";
+import { createPredicate } from "helpers/claimantHelpers.js";
 
 // Helpers
 let isInt = function (value) {

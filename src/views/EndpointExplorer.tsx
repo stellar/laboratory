@@ -3,15 +3,15 @@ import {
   chooseEndpoint,
   submitRequest,
   updateValue,
-} from "actions/endpointExplorer";
+} from "actions/endpointExplorer.js";
 import { EndpointPicker } from "components/EndpointPicker";
 import { EndpointSetup } from "components/EndpointSetup";
 import { EndpointResult } from "components/EndpointResult";
 import { getResourceEndpoints } from "helpers/getResourceEndpoints";
-import { addEventHandler } from "helpers/metrics";
+import { addEventHandler } from "helpers/metrics.js";
 import { buildRequest } from "helpers/buildRequest";
 import { useRedux } from "hooks/useRedux";
-import endpointExplorerMetrics from "metricsHandlers/endpointExplorer";
+import endpointExplorerMetrics from "metricsHandlers/endpointExplorer.js";
 
 addEventHandler(endpointExplorerMetrics);
 

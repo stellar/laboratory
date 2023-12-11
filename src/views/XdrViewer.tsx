@@ -6,7 +6,7 @@ import functions from "lodash/functions";
 import indexOf from "lodash/indexOf";
 import { FETCHED_SIGNERS } from "constants/fetched_signers";
 import { SelectPicker } from "components/FormComponents/SelectPicker";
-import extrapolateFromXdr from "helpers/extrapolateFromXdr";
+import extrapolateFromXdr from "helpers/extrapolateFromXdr.js";
 import { TreeView } from "components/TreeView";
 import { useRedux } from "hooks/useRedux";
 import { useIsSoroban } from "hooks/useIsSoroban";
@@ -16,9 +16,9 @@ import {
   updateXdrType,
   fetchLatestTx,
   fetchSigners,
-} from "actions/xdrViewer";
-import { addEventHandler, logEvent } from "helpers/metrics";
-import xdrViewerMetrics, { metricsEvents } from "metricsHandlers/xdrViewer";
+} from "actions/xdrViewer.js";
+import { addEventHandler, logEvent } from "helpers/metrics.js";
+import xdrViewerMetrics, { metricsEvents } from "metricsHandlers/xdrViewer.js";
 import { TransactionNode } from "types/types";
 
 // XDR decoding doesn't happen in redux, but is pretty much the only thing on

@@ -1,10 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import assign from "lodash/assign";
-import RadioButtonPicker from "components/FormComponents/RadioButtonPicker";
+import RadioButtonPicker from "components/FormComponents/RadioButtonPicker.js";
 import PubKeyPicker from "components/FormComponents/PubKeyPicker";
-import PickerError from "components/FormComponents/PickerError";
-import TextPicker from "components/FormComponents/TextPicker";
+import PickerError from "components/FormComponents/PickerError.js";
+import TextPicker from "components/FormComponents/TextPicker.js";
 import { LiquidityPoolAssetPicker } from "components/FormComponents/LiquidityPoolAssetPicker";
 
 // Value is a string containing the currently selected id (or undefined)

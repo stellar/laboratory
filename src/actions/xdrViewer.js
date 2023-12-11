@@ -1,7 +1,7 @@
 import * as StellarSdk from "stellar-sdk";
 import * as SorobanSdk from "soroban-client";
 import axios from "axios";
-import { FETCH_SEQUENCE_FAIL } from "actions/transactionBuilder";
+import { FETCH_SEQUENCE_FAIL } from "actions/transactionBuilder.js";
 import { SIGNATURE } from "../constants/signature";
 import { FETCHED_SIGNERS } from "../constants/fetched_signers";
 import convertMuxedAccountToEd25519Account from "../helpers/convertMuxedAccountToEd25519Account";

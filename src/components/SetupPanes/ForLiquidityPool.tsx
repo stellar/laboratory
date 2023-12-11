@@ -1,6 +1,6 @@
-import For from "components/SetupPanes/For";
+import For from "components/SetupPanes/For.js";
 import { LiquidityPoolId } from "components/FormComponents/LiquidityPoolId";
-import { AnyObject } from "types/types.d";
+import { AnyObject } from "types/types";
 
 interface ForLiquidityPoolProps {
   values: AnyObject;

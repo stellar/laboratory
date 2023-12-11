@@ -3,10 +3,10 @@ import { connect } from "react-redux";
 import { isConnected } from "@stellar/freighter-api";
 import reduce from "lodash/reduce";
 import { EasySelect } from "components/EasySelect";
-import Libify from "helpers/Libify";
-import { txSignerLink, xdrViewer } from "helpers/linkBuilder";
-import scrollOnAnchorOpen from "helpers/scrollOnAnchorOpen";
-import TX_TYPES from "constants/transaction_types";
+import Libify from "helpers/Libify.js";
+import { txSignerLink, xdrViewer } from "helpers/linkBuilder.js";
+import scrollOnAnchorOpen from "helpers/scrollOnAnchorOpen.js";
+import TX_TYPES from "constants/transaction_types.js";
 
 class TxBuilderResult extends React.Component {
   render() {

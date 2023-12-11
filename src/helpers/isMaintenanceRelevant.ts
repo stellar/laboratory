@@ -1,4 +1,4 @@
-import { Network, StatusPageScheduled } from "types/types.d";
+import { Network, StatusPageScheduled } from "types/types";
 
 // If we’re on the test network, we care about all scheduled maintenance. If
 // we’re on the public network, we only care about public network maintenance.

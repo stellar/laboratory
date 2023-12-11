@@ -1,4 +1,4 @@
-import NETWORK from "constants/network";
+import NETWORK from "constants/network.js";
 import { useRedux } from "hooks/useRedux";
 
 export const useIsSoroban = () => {

@@ -1,4 +1,4 @@
-import NetworkPicker from "views/NetworkPicker";
+import NetworkPicker from "views/NetworkPicker.js";
 
 export const Header = () => (
   <div className="so-back" data-testid="page-header">

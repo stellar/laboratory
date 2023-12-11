@@ -1,6 +1,6 @@
 import Prism from "helpers/prism.js";
-import jsonLinkHighlighter from "helpers/prism-jsonLinkHighlighter";
-import scrollOnAnchorOpen from "helpers/scrollOnAnchorOpen";
+import jsonLinkHighlighter from "helpers/prism-jsonLinkHighlighter.js";
+import scrollOnAnchorOpen from "helpers/scrollOnAnchorOpen.js";
 import { sanitizeHtml } from "helpers/sanitizeHtml";
 
 interface CodeBlockProps {

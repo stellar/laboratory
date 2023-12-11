@@ -2,15 +2,15 @@ import { useMemo } from "react";
 import { useDispatch } from "react-redux";
 import debounce from "lodash/debounce";
 import { FETCHED_SIGNERS } from "constants/fetched_signers";
-import extrapolateFromXdr from "helpers/extrapolateFromXdr";
+import extrapolateFromXdr from "helpers/extrapolateFromXdr.js";
 import { validateBase64 } from "helpers/validateBase64";
-import { addEventHandler, logEvent } from "helpers/metrics";
+import { addEventHandler, logEvent } from "helpers/metrics.js";
 import { useRedux } from "hooks/useRedux";
 import { useIsSoroban } from "hooks/useIsSoroban";
-import xdrViewerMetrics, { metricsEvents } from "metricsHandlers/xdrViewer";
+import xdrViewerMetrics, { metricsEvents } from "metricsHandlers/xdrViewer.js";
 import { TreeView } from "components/TreeView";
 import { TxSubmitterResult } from "components/TxSubmitterResult";
-import { updateXdrInput, fetchSigners } from "actions/xdrViewer";
+import { updateXdrInput, fetchSigners } from "actions/xdrViewer.js";
 import { TransactionNode } from "types/types";
 
 // XDR decoding doesn't happen in redux, but is pretty much the only thing on

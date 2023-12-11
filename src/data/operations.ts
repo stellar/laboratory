@@ -23,7 +23,7 @@ import RevokeSponsorship from "../components/OperationPanes/RevokeSponsorship";
 import SetOptions from "../components/OperationPanes/SetOptions";
 import SetTrustLineFlags from "../components/OperationPanes/SetTrustLineFlags";
 
-export function getOperation(opName) {
+export function getOperation(opName: any) {
   return find(operationsMap, { name: opName });
 }
 
@@ -38,7 +38,7 @@ export function getOperation(opName) {
 //   },
 // ]
 
-export const operationsMap = [
+export const operationsMap: any = [
   {
     name: "createAccount",
     label: "Create Account",
