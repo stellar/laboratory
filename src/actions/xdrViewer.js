@@ -1,7 +1,6 @@
 import * as StellarSdk from "stellar-sdk";
-import * as SorobanSdk from "soroban-client";
 import axios from "axios";
-import { FETCH_SEQUENCE_FAIL } from "actions/transactionBuilder";
+import { FETCH_SEQUENCE_FAIL } from "actions/transactionBuilder.js";
 import { SIGNATURE } from "../constants/signature";
 import { FETCHED_SIGNERS } from "../constants/fetched_signers";
 import convertMuxedAccountToEd25519Account from "../helpers/convertMuxedAccountToEd25519Account";
@@ -38,18 +37,14 @@ export function fetchLatestTx(horizonBaseUrl, networkPassphrase) {
   };
 }
 
-export function fetchSigners(
-  input,
-  horizonBaseUrl,
-  networkPassphrase,
-  isSoroban = false,
-) {
-  const sdk = isSoroban ? SorobanSdk : StellarSdk;
-
+export function fetchSigners(input, horizonBaseUrl, networkPassphrase) {
   return (dispatch) => {
     dispatch({ type: FETCHED_SIGNERS.PENDING });
     try {
-      let tx = new sdk.TransactionBuilder.fromXDR(input, networkPassphrase);
+      let tx = new StellarSdk.TransactionBuilder.fromXDR(
+        input,
+        networkPassphrase,
+      );
 
       // Extract all source accounts from transaction (base transaction, and all operations)
       let sourceAccounts = {};
@@ -58,7 +53,7 @@ export function fetchSigners(
       // inner signatures in a fee bump transaction
       let groupedSignatures = [];
 
-      if (tx instanceof sdk.FeeBumpTransaction) {
+      if (tx instanceof StellarSdk.FeeBumpTransaction) {
         sourceAccounts[
           convertMuxedAccountToEd25519Account(tx.feeSource)
         ] = true;
@@ -117,12 +112,16 @@ export function fetchSigners(
                 // tx hash in signatures array, so we can ignore pre-authorized transactions here.
                 switch (signer.type) {
                   case "sha256_hash":
-                    const hashXSigner = sdk.StrKey.decodeSha256Hash(signer.key);
-                    const hashXSignature = sdk.hash(sigObj.sig);
+                    const hashXSigner = StellarSdk.StrKey.decodeSha256Hash(
+                      signer.key,
+                    );
+                    const hashXSignature = StellarSdk.hash(sigObj.sig);
                     isValid = hashXSigner.equals(hashXSignature);
                     break;
                   case "ed25519_public_key":
-                    const keypair = sdk.Keypair.fromPublicKey(signer.key);
+                    const keypair = StellarSdk.Keypair.fromPublicKey(
+                      signer.key,
+                    );
                     isValid = keypair.verify(txHash, sigObj.sig);
                     break;
                 }

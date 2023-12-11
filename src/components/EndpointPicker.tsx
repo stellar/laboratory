@@ -1,6 +1,6 @@
 import { findIndex } from "lodash";
 import { endpointsMap } from "data/endpoints";
-import { EndpointItemProps, EndpointItemEndpoint } from "types/types.d";
+import { EndpointItemProps, EndpointItemEndpoint } from "types/types";
 
 interface EndpointPickerProps {
   onChange: (resource: string, endpoint: string) => void;

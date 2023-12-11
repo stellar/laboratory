@@ -5,7 +5,7 @@ import {
   AnyObject,
   EndpointItemEndpoint,
   EndpointBuildRequest,
-} from "types/types.d";
+} from "types/types";
 
 export const buildRequest = (
   baseUrl: string,

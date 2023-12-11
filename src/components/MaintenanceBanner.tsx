@@ -3,7 +3,7 @@ import { fetchMaintenanceData } from "helpers/fetchMaintenanceData";
 import { isMaintenanceRelevant } from "helpers/isMaintenanceRelevant";
 import { sanitizeHtml } from "helpers/sanitizeHtml";
 import { useRedux } from "hooks/useRedux";
-import { Network, StatusPageScheduled } from "types/types.d";
+import { Network, StatusPageScheduled } from "types/types";
 
 const sortMaintenanceSchedule = (schedule: StatusPageScheduled[]) =>
   schedule.sort(

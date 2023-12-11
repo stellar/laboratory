@@ -1,24 +1,22 @@
 import { useDispatch } from "react-redux";
 import * as StellarSdk from "stellar-sdk";
-import * as SorobanSdk from "soroban-client";
 import debounce from "lodash/debounce";
 import functions from "lodash/functions";
 import indexOf from "lodash/indexOf";
 import { FETCHED_SIGNERS } from "constants/fetched_signers";
 import { SelectPicker } from "components/FormComponents/SelectPicker";
-import extrapolateFromXdr from "helpers/extrapolateFromXdr";
+import extrapolateFromXdr from "helpers/extrapolateFromXdr.js";
 import { TreeView } from "components/TreeView";
 import { useRedux } from "hooks/useRedux";
-import { useIsSoroban } from "hooks/useIsSoroban";
 import { validateBase64 } from "helpers/validateBase64";
 import {
   updateXdrInput,
   updateXdrType,
   fetchLatestTx,
   fetchSigners,
-} from "actions/xdrViewer";
-import { addEventHandler, logEvent } from "helpers/metrics";
-import xdrViewerMetrics, { metricsEvents } from "metricsHandlers/xdrViewer";
+} from "actions/xdrViewer.js";
+import { addEventHandler, logEvent } from "helpers/metrics.js";
+import xdrViewerMetrics, { metricsEvents } from "metricsHandlers/xdrViewer.js";
 import { TransactionNode } from "types/types";
 
 // XDR decoding doesn't happen in redux, but is pretty much the only thing on
@@ -32,11 +30,9 @@ export const XdrViewer = () => {
   const { xdrViewer, network } = useRedux("xdrViewer", "network");
   const { fetchedSigners, input, type } = xdrViewer;
   const { horizonURL, networkPassphrase } = network.current;
-  const isSoroban = useIsSoroban();
-  const sdk = isSoroban ? SorobanSdk : StellarSdk;
   // Array of all the xdr types. Then, the most common ones appear at the top
   // again for convenience
-  let xdrTypes = functions(sdk.xdr).sort();
+  let xdrTypes = functions(StellarSdk.xdr).sort();
   xdrTypes = [
     "TransactionEnvelope",
     "TransactionResult",
@@ -62,9 +58,7 @@ export const XdrViewer = () => {
     try {
       treeView = (
         <TreeView
-          nodes={
-            extrapolateFromXdr(input, type, isSoroban) as TransactionNode[]
-          }
+          nodes={extrapolateFromXdr(input, type) as TransactionNode[]}
           fetchedSigners={fetchedSigners}
         />
       );
@@ -82,7 +76,7 @@ export const XdrViewer = () => {
     type === "TransactionEnvelope" &&
     fetchedSigners.state === FETCHED_SIGNERS.NONE
   ) {
-    dispatch(fetchSigners(input, horizonURL, networkPassphrase, isSoroban));
+    dispatch(fetchSigners(input, horizonURL, networkPassphrase));
   }
 
   return (
@@ -126,7 +120,6 @@ export const XdrViewer = () => {
                       event.target.value,
                       horizonURL,
                       networkPassphrase,
-                      isSoroban,
                     ),
                   );
                 }

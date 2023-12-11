@@ -1,16 +1,16 @@
 import React from "react";
 import { connect } from "react-redux";
-import TxBuilderAttributes from "views/TxBuilderAttributes";
+import TxBuilderAttributes from "views/TxBuilderAttributes.js";
 import {
   addOperation,
   updateAttributes,
   resetTxbuilder,
-} from "actions/transactionBuilder";
-import OperationsBuilder from "views/OperationsBuilder";
-import TxBuilderResult from "views/TxBuilderResult";
-import { addEventHandler } from "helpers/metrics";
-import transactionBuilderMetrics from "metricsHandlers/transactionBuilder";
-import TX_TYPES from "constants/transaction_types";
+} from "actions/transactionBuilder.js";
+import OperationsBuilder from "views/OperationsBuilder.js";
+import TxBuilderResult from "views/TxBuilderResult.js";
+import { addEventHandler } from "helpers/metrics.js";
+import transactionBuilderMetrics from "metricsHandlers/transactionBuilder.js";
+import TX_TYPES from "constants/transaction_types.js";
 
 addEventHandler(transactionBuilderMetrics);
 

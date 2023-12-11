@@ -1,6 +1,5 @@
 import { useDispatch } from "react-redux";
 import * as StellarSdk from "stellar-sdk";
-import * as SorobanSdk from "soroban-client";
 import { isConnected } from "@stellar/freighter-api";
 import isUndefined from "lodash/isUndefined";
 import map from "lodash/map";
@@ -13,22 +12,22 @@ import {
   signWithTrezor,
   signWithFreighter,
   signWithAlbedo,
-} from "actions/transactionSigner";
-import TransactionImporter from "components/TransactionImporter";
+} from "actions/transactionSigner.js";
+import TransactionImporter from "components/TransactionImporter.js";
 import { EasySelect } from "components/EasySelect";
-import OptionsTablePair from "components/OptionsTable/Pair";
-import SecretKeyPicker from "components/FormComponents/SecretKeyPicker";
+import OptionsTablePair from "components/OptionsTable/Pair.js";
+import SecretKeyPicker from "components/FormComponents/SecretKeyPicker.js";
 import { MultiPicker } from "components/FormComponents/MultiPicker";
 import { BipPathPicker } from "components/FormComponents/BipPathPicker";
-import HelpMark from "components/HelpMark";
-import { txPostLink, xdrViewer, feeBumpTxLink } from "helpers/linkBuilder";
+import HelpMark from "components/HelpMark.js";
+import { txPostLink, xdrViewer, feeBumpTxLink } from "helpers/linkBuilder.js";
 import { useRedux } from "hooks/useRedux";
 import { clickToSelect } from "helpers/clickToSelect";
-import scrollOnAnchorOpen from "helpers/scrollOnAnchorOpen";
+import scrollOnAnchorOpen from "helpers/scrollOnAnchorOpen.js";
 import { validateTxXdr } from "helpers/validateTxXdr";
-import Libify from "helpers/Libify";
-import { addEventHandler } from "helpers/metrics";
-import transactionSignerMetrics from "metricsHandlers/transactionSigner";
+import Libify from "helpers/Libify.js";
+import { addEventHandler } from "helpers/metrics.js";
+import transactionSignerMetrics from "metricsHandlers/transactionSigner.js";
 import { useIsSoroban } from "hooks/useIsSoroban";
 
 const { signTransaction } = Libify;
@@ -44,16 +43,10 @@ export const TransactionSigner = () => {
   const networkPassphrase = network.current.networkPassphrase;
   const isSoroban = useIsSoroban();
 
-  let TransactionBuilder, FeeBumpTransaction, Networks;
-  if (isSoroban) {
-    TransactionBuilder = SorobanSdk.TransactionBuilder;
-    FeeBumpTransaction = SorobanSdk.FeeBumpTransaction;
-    Networks = SorobanSdk.Networks;
-  } else {
-    TransactionBuilder = StellarSdk.TransactionBuilder;
-    FeeBumpTransaction = StellarSdk.FeeBumpTransaction;
-    Networks = StellarSdk.Networks;
-  }
+  let TransactionBuilder, FeeBumpTransaction, Networks: any;
+  TransactionBuilder = StellarSdk.TransactionBuilder;
+  FeeBumpTransaction = StellarSdk.FeeBumpTransaction;
+  Networks = StellarSdk.Networks;
 
   const {
     xdr,
@@ -65,7 +58,7 @@ export const TransactionSigner = () => {
   } = transactionSigner;
   let content;
 
-  if (validateTxXdr(xdr, isSoroban).result !== "success") {
+  if (validateTxXdr(xdr).result !== "success") {
     content = (
       <div className="so-back">
         <div className="so-chunk">
@@ -389,7 +382,7 @@ export const TransactionSigner = () => {
                   <MultiPicker
                     component={SecretKeyPicker}
                     value={signers}
-                    onUpdate={(value: string) => dispatch(setSecrets(value))}
+                    onUpdate={(value) => dispatch(setSecrets(value))}
                   />
                 </OptionsTablePair>
                 <OptionsTablePair label="BIP Path">

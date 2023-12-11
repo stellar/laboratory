@@ -2,16 +2,20 @@
   "extends": "@stellar/tsconfig",
   "compilerOptions": {
     "baseUrl": "src/",
+    "outDir": "./build/",
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "module": "esnext",
     "moduleResolution": "node",
-    "noEmit": true,
+    // "noEmit": true,
     "jsx": "react-jsx",
     "allowSyntheticDefaultImports": true,
     "declaration": true,
-    "emitDeclarationOnly": true,
-    "isolatedModules": true
+    // "emitDeclarationOnly": true,
+    "isolatedModules": true,
+    "allowJs": true,
+    "esModuleInterop": true
   },
-  "include": ["src", "test"]
+  "include": ["src", "test"],
+  "exclude": ["node_modules", "build"]
 }

@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import All from "components/SetupPanes/All";
-import OptionsTablePair from "components/OptionsTable/Pair";
-import AssetPicker from "components/FormComponents/AssetPicker";
-import ManualMultiPicker from "components/FormComponents/ManualMultiPicker";
-import { AssetWithType } from "types/types.d";
+import All from "components/SetupPanes/All.js";
+import OptionsTablePair from "components/OptionsTable/Pair.js";
+import AssetPicker from "components/FormComponents/AssetPicker.js";
+import ManualMultiPicker from "components/FormComponents/ManualMultiPicker.js";
+import { AssetWithType } from "types/types";
 
 const NATIVE_TYPE = "native";
 

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CallBuilder } from "stellar-sdk/lib/call_builder";
+import { CallBuilder } from "stellar-sdk";
 import URI from "urijs";
 import dispatchInNewStack from "../helpers/dispatchInNewStack";
 

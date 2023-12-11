@@ -1,7 +1,7 @@
-import OptionsTablePair from "components/OptionsTable/Pair";
+import OptionsTablePair from "components/OptionsTable/Pair.js";
 import { ForLiquidityPool } from "components/SetupPanes/ForLiquidityPool";
-import BooleanPicker from "components/FormComponents/BooleanPicker";
-import { AnyObject } from "types/types.d";
+import BooleanPicker from "components/FormComponents/BooleanPicker.js";
+import { AnyObject } from "types/types";
 
 interface ForLiquidityPoolWithFailedProps {
   values: AnyObject;

@@ -2,13 +2,13 @@ import { useDispatch } from "react-redux";
 import {
   updateFriendbotTarget,
   startFriendbotRequest,
-} from "actions/accountCreator";
+} from "actions/accountCreator.js";
 import { CodeBlock } from "components/CodeBlock";
 import PubKeyPicker from "components/FormComponents/PubKeyPicker";
-import NETWORK from "constants/network";
+import NETWORK from "constants/network.js";
 import { useRedux } from "hooks/useRedux";
 import { useIsSoroban } from "hooks/useIsSoroban";
-import { ActionStatus } from "types/types.d";
+import { ActionStatus } from "types/types";
 
 export const FriendbotFundAccount = () => {
   const { accountCreator, network } = useRedux("accountCreator", "network");

@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import { fireEvent, screen, waitFor, within } from "@testing-library/react";
-import * as StellarSdk from "stellar-sdk";
+// import * as StellarSdk from "stellar-sdk";
 import { render } from "helpers/testHelpers";
 import { AccountCreator } from "views/AccountCreator";
 
@@ -14,25 +14,25 @@ const MUXED_ACCOUNT_PARSED = "baz-2";
 
 jest.mock("stellar-sdk");
 
-StellarSdk.Keypair.random.mockReturnValue({
-  publicKey: () => PUBLIC_KEY,
-  secret: () => SECRET_KEY,
-});
+// StellarSdk.Keypair.random.mockReturnValue({
+//   publicKey: () => PUBLIC_KEY,
+//   secret: () => SECRET_KEY,
+// });
 
-StellarSdk.MuxedAccount.mockImplementation(() => {
-  return {
-    accountId: jest.fn(() => MUXED_ACCOUNT_CREATED),
-  };
-});
+// StellarSdk.MuxedAccount.mockImplementation(() => {
+//   return {
+//     accountId: jest.fn(() => MUXED_ACCOUNT_CREATED),
+//   };
+// });
 
-StellarSdk.MuxedAccount.fromAddress.mockImplementation(() => {
-  return {
-    baseAccount: jest.fn(() => ({
-      accountId: jest.fn(() => MUXED_ACCOUNT_PARSED),
-    })),
-    id: jest.fn(() => MUXED_ACCOUNT_ID),
-  };
-});
+// StellarSdk.MuxedAccount.fromAddress.mockImplementation(() => {
+//   return {
+//     baseAccount: jest.fn(() => ({
+//       accountId: jest.fn(() => MUXED_ACCOUNT_PARSED),
+//     })),
+//     id: jest.fn(() => MUXED_ACCOUNT_ID),
+//   };
+// });
 
 beforeEach(() => {
   render(<AccountCreator />);

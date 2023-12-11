@@ -1,6 +1,6 @@
-import OptionsTablePair from "components/OptionsTable/Pair";
+import OptionsTablePair from "components/OptionsTable/Pair.js";
 import { LiquidityPoolId } from "components/FormComponents/LiquidityPoolId";
-import { AnyObject } from "types/types.d";
+import { AnyObject } from "types/types";
 
 interface SingleLiquidityPoolProps {
   values: AnyObject;

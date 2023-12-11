@@ -1,5 +1,5 @@
-import { addEventHandler } from "helpers/metrics";
-import accountCreatorMetrics from "metricsHandlers/accountCreator";
+import { addEventHandler } from "helpers/metrics.js";
+import accountCreatorMetrics from "metricsHandlers/accountCreator.js";
 import { KeypairGenerator } from "views/KeypairGenerator";
 import { FriendbotFundAccount } from "views/FriendbotFundAccount";
 import { MuxedAccount } from "views/MuxedAccount";

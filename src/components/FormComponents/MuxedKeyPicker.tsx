@@ -1,8 +1,8 @@
 import { StrKey } from "stellar-sdk";
 
-import TextPicker from "components/FormComponents/TextPicker";
-import { ImportMark } from "components/ImportMark";
-import { useFreighter, freighterGetPublicKey } from "helpers/useFreighter";
+import TextPicker from "components/FormComponents/TextPicker.js";
+import { ImportMark } from "components/ImportMark.js";
+import { useFreighter, freighterGetPublicKey } from "helpers/useFreighter.js";
 
 interface MuxedKeyPickerProps {
   [key: string]: any;

@@ -1,8 +1,8 @@
-import OptionsTablePair from "components/OptionsTable/Pair";
-import TextPicker from "components/FormComponents/TextPicker";
-import AmountPicker from "components/FormComponents/AmountPicker";
+import OptionsTablePair from "components/OptionsTable/Pair.js";
+import TextPicker from "components/FormComponents/TextPicker.js";
+import AmountPicker from "components/FormComponents/AmountPicker.js";
 import { NumberFractionPicker } from "components/FormComponents/NumberFractionPicker";
-import { NumberFractionValue } from "types/types.d";
+import { NumberFractionValue } from "types/types";
 
 interface LiquidityPoolDepositProps {
   values: {
