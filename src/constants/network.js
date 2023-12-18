@@ -1,11 +1,10 @@
 import { Networks } from "stellar-sdk";
-import { Networks as SorobanNetworks } from "soroban-client";
 
 const NETWORK = {
   available: {
     futurenet: {
       horizonURL: "https://horizon-futurenet.stellar.org",
-      networkPassphrase: SorobanNetworks.FUTURENET,
+      networkPassphrase: Networks.FUTURENET,
     },
     test: {
       horizonURL: "https://horizon-testnet.stellar.org",

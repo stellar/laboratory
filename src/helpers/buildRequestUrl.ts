@@ -8,7 +8,7 @@ import {
   reduce,
 } from "lodash";
 import UriTemplates from "uri-templates";
-import { EndpointItemEndpoint, AnyObject } from "types/types.d";
+import { EndpointItemEndpoint, AnyObject } from "types/types";
 
 export const buildRequestUrl = (
   baseUrl: string,

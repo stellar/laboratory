@@ -1,4 +1,4 @@
-import TextPicker from "components/FormComponents/TextPicker";
+import TextPicker from "components/FormComponents/TextPicker.js";
 
 interface LiquidityPoolIdProps {
   value: string;

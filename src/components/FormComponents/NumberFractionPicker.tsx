@@ -1,7 +1,7 @@
 import { useState } from "react";
-import RadioButtonPicker from "components/FormComponents/RadioButtonPicker";
-import AmountPicker from "components/FormComponents/AmountPicker";
-import { NumberFractionValue } from "types/types.d";
+import RadioButtonPicker from "components/FormComponents/RadioButtonPicker.js";
+import AmountPicker from "components/FormComponents/AmountPicker.js";
+import { NumberFractionValue } from "types/types";
 
 enum NumberType {
   NUMBER = "NUMBER",

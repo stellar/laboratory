@@ -1,5 +1,5 @@
 import each from "lodash/each";
-import { operationsMap } from "../../data/operations.js";
+import { operationsMap } from "../../data/operations";
 import { SelectPicker } from "./SelectPicker";
 
 let operationItemMap: Record<string, string> = {};

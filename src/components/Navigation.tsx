@@ -1,4 +1,4 @@
-import SLUG from "constants/slug";
+import SLUG from "constants/slug.js";
 import { useRedux } from "hooks/useRedux";
 
 const navItems = [

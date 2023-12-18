@@ -9,7 +9,6 @@
 // the best choice since source code differs based on content.
 
 import * as Sdk from "stellar-sdk";
-import * as SorobanSdk from "soroban-client";
 import defaults from "lodash/defaults";
 import each from "lodash/each";
 import has from "lodash/has";
@@ -17,7 +16,7 @@ import isEmpty from "lodash/isEmpty";
 import isString from "lodash/isString";
 import isUndefined from "lodash/isUndefined";
 import map from "lodash/map";
-import { createPredicate } from "helpers/claimantHelpers";
+import { createPredicate } from "helpers/claimantHelpers.js";
 
 // Helpers
 let isInt = function (value) {
@@ -881,7 +880,6 @@ Libify.signTransaction = function (
   ledgerWalletSigs,
   isSoroban = false,
 ) {
-  const sdk = isSoroban ? SorobanSdk : Sdk;
   let validSecretKeys = [];
   let validPreimages = [];
   for (let i = 0; i < signers.length; i++) {
@@ -889,7 +887,7 @@ Libify.signTransaction = function (
     if (signer !== null && !isUndefined(signer) && signer !== "") {
       // Signer
       if (signer.charAt(0) == "S") {
-        if (!sdk.StrKey.isValidEd25519SecretSeed(signer)) {
+        if (!Sdk.StrKey.isValidEd25519SecretSeed(signer)) {
           return {
             message: "One of secret keys is invalid",
           };
@@ -907,13 +905,13 @@ Libify.signTransaction = function (
     }
   }
 
-  let newTx = sdk.TransactionBuilder.fromXDR(txXdr, networkPassphrase);
+  let newTx = Sdk.TransactionBuilder.fromXDR(txXdr, networkPassphrase);
   let existingSigs = newTx.signatures.length;
   let addedSigs = 0;
 
   each(validSecretKeys, (signer) => {
     addedSigs++;
-    newTx.sign(sdk.Keypair.fromSecret(signer));
+    newTx.sign(Sdk.Keypair.fromSecret(signer));
   });
   each(validPreimages, (signer) => {
     addedSigs++;

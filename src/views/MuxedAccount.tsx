@@ -4,10 +4,10 @@ import {
   updateGenerateMuxedAccountInput,
   parseMuxedAccount,
   updateParseMuxedAccountInput,
-} from "actions/accountCreator";
+} from "actions/accountCreator.js";
 import MuxedKeyPicker from "components/FormComponents/MuxedKeyPicker";
 import PubKeyPicker from "components/FormComponents/PubKeyPicker";
-import PositiveIntPicker from "components/FormComponents/PositiveIntPicker";
+import PositiveIntPicker from "components/FormComponents/PositiveIntPicker.js";
 import { useRedux } from "hooks/useRedux";
 
 const muxedAccountLabel = {

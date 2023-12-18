@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import AssetPicker from "components/FormComponents/AssetPicker";
-import PositiveNumberPicker from "components/FormComponents/PositiveNumberPicker";
-import { AssetWithType, AnyObject } from "types/types.d";
+import AssetPicker from "components/FormComponents/AssetPicker.js";
+import PositiveNumberPicker from "components/FormComponents/PositiveNumberPicker.js";
+import { AssetWithType, AnyObject } from "types/types";
 
 interface LiquidityPoolValue {
   assetA: AssetWithType;

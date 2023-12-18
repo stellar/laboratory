@@ -1,13 +1,9 @@
 import trim from "lodash/trim";
 import * as StellarSdk from "stellar-sdk";
-import * as SorobanSdk from "soroban-client";
 import { validateBase64 } from "./validateBase64";
 
-export const validateTxXdr = (input: string, isSoroban = false) => {
+export const validateTxXdr = (input: string) => {
   let xdr = StellarSdk.xdr;
-  if (isSoroban) {
-    xdr = SorobanSdk.xdr;
-  }
   input = trim(input);
 
   let base64Validation = validateBase64(input);

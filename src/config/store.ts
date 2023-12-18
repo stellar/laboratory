@@ -2,16 +2,16 @@ import { configureStore, createAction, CombinedState } from "@reduxjs/toolkit";
 import { combineReducers, Action } from "redux";
 
 import { RESET_STORE_ACTION_TYPE } from "constants/settings";
-import metrics from "middleware/metrics";
-import { routerMiddleware } from "helpers/simpleRouter";
+import metrics from "middleware/metrics.js";
+import { routerMiddleware } from "helpers/simpleRouter.js";
 
-import accountCreator from "reducers/accountCreator";
-import endpointExplorer from "reducers/endpointExplorer";
-import transactionBuilder from "reducers/transactionBuilder";
-import transactionSigner from "reducers/transactionSigner";
-import xdrViewer from "reducers/xdrViewer";
-import network from "reducers/network";
-import routing from "reducers/routing";
+import accountCreator from "reducers/accountCreator.js";
+import endpointExplorer from "reducers/endpointExplorer.js";
+import transactionBuilder from "reducers/transactionBuilder.js";
+import transactionSigner from "reducers/transactionSigner.js";
+import xdrViewer from "reducers/xdrViewer.js";
+import network from "reducers/network.js";
+import routing from "reducers/routing.js";
 
 export type RootState = ReturnType<typeof store.getState>;
 

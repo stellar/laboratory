@@ -1,10 +1,10 @@
-import HelpMark from "components/HelpMark";
+import HelpMark from "components/HelpMark.js";
 import { EasySelect } from "components/EasySelect";
 import {
   EndpointBuildRequest,
   EndpointItemEndpoint,
   RequestMethod,
-} from "types/types.d";
+} from "types/types";
 
 interface EndpointSetupProps {
   onSubmit: () => void;

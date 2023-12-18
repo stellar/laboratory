@@ -1,4 +1,4 @@
-import { StatusPageScheduled } from "types/types.d";
+import { StatusPageScheduled } from "types/types";
 
 export const fetchMaintenanceData = async (): Promise<
   StatusPageScheduled[]

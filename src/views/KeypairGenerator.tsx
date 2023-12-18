@@ -2,8 +2,8 @@ import { useDispatch } from "react-redux";
 import {
   generateNewKeypair,
   updateFriendbotTarget,
-} from "actions/accountCreator";
-import NETWORK from "constants/network";
+} from "actions/accountCreator.js";
+import NETWORK from "constants/network.js";
 import { useRedux } from "hooks/useRedux";
 
 export const KeypairGenerator = () => {

@@ -10,29 +10,22 @@
 // - object: typed values always with a type and value `{type: 'code', value: 'Foo();'}`
 
 import * as StellarSdk from "stellar-sdk";
-import * as SorobanSdk from "soroban-client";
 import isArray from "lodash/isArray";
 import isString from "lodash/isString";
 import functionsIn from "lodash/functionsIn";
 import includes from "lodash/includes";
 import without from "lodash/without";
 
-export default function extrapolateFromXdr(input, type, isSoroban = false) {
+export default function extrapolateFromXdr(input, type) {
   // TODO: Check to see if type exists
   // TODO: input validation
 
   let xdr, StrKey, Keypair, Operation;
-  if (isSoroban) {
-    xdr = SorobanSdk.xdr;
-    StrKey = SorobanSdk.StrKey;
-    Keypair = SorobanSdk.Keypair;
-    Operation = SorobanSdk.Operation;
-  } else {
-    xdr = StellarSdk.xdr;
-    StrKey = StellarSdk.StrKey;
-    Keypair = StellarSdk.Keypair;
-    Operation = StellarSdk.Operation;
-  }
+
+  xdr = StellarSdk.xdr;
+  StrKey = StellarSdk.StrKey;
+  Keypair = StellarSdk.Keypair;
+  Operation = StellarSdk.Operation;
 
   function buildTreeFromObject(object, anchor, name) {
     anchor.type = name;

@@ -1,34 +1,34 @@
-import All from "components/SetupPanes/All";
-import Accounts from "components/SetupPanes/Accounts";
-import AllAssets from "components/SetupPanes/AllAssets";
+import All from "components/SetupPanes/All.js";
+import Accounts from "components/SetupPanes/Accounts.js";
+import AllAssets from "components/SetupPanes/AllAssets.js";
 import { AllLiquidityPools } from "components/SetupPanes/AllLiquidityPools";
-import AllOffers from "components/SetupPanes/AllOffers";
-import AllWithFailed from "components/SetupPanes/AllWithFailed";
-import ClaimableBalances from "components/SetupPanes/ClaimableBalances";
-import FindPaymentPaths from "components/SetupPanes/FindPaymentPaths";
-import FindStrictSendPaymentPaths from "components/SetupPanes/FindStrictSendPaymentPaths";
-import FindStrictReceivePaymentPaths from "components/SetupPanes/FindStrictReceivePaymentPaths";
-import ForAccount from "components/SetupPanes/ForAccount";
-import ForAccountWithFailed from "components/SetupPanes/ForAccountWithFailed";
-import ForLedger from "components/SetupPanes/ForLedger";
+import AllOffers from "components/SetupPanes/AllOffers.js";
+import AllWithFailed from "components/SetupPanes/AllWithFailed.js";
+import ClaimableBalances from "components/SetupPanes/ClaimableBalances.js";
+import FindPaymentPaths from "components/SetupPanes/FindPaymentPaths.js";
+import FindStrictSendPaymentPaths from "components/SetupPanes/FindStrictSendPaymentPaths.js";
+import FindStrictReceivePaymentPaths from "components/SetupPanes/FindStrictReceivePaymentPaths.js";
+import ForAccount from "components/SetupPanes/ForAccount.js";
+import ForAccountWithFailed from "components/SetupPanes/ForAccountWithFailed.js";
+import ForLedger from "components/SetupPanes/ForLedger.js";
 import { ForLiquidityPool } from "components/SetupPanes/ForLiquidityPool";
 import { ForLiquidityPoolWithFailed } from "components/SetupPanes/ForLiquidityPoolWithFailed";
-import ForLedgerWithFailed from "components/SetupPanes/ForLedgerWithFailed";
-import ForOffer from "components/SetupPanes/ForOffer";
-import ForOperation from "components/SetupPanes/ForOperation";
-import ForTransaction from "components/SetupPanes/ForTransaction";
-import OrderBookDetails from "components/SetupPanes/OrderBookDetails";
-import PostTransaction from "components/SetupPanes/PostTransaction";
-import SingleAccount from "components/SetupPanes/SingleAccount";
-import SingleClaimableBalance from "components/SetupPanes/SingleClaimableBalance";
-import SingleLedger from "components/SetupPanes/SingleLedger";
+import ForLedgerWithFailed from "components/SetupPanes/ForLedgerWithFailed.js";
+import ForOffer from "components/SetupPanes/ForOffer.js";
+import ForOperation from "components/SetupPanes/ForOperation.js";
+import ForTransaction from "components/SetupPanes/ForTransaction.js";
+import OrderBookDetails from "components/SetupPanes/OrderBookDetails.js";
+import PostTransaction from "components/SetupPanes/PostTransaction.js";
+import SingleAccount from "components/SetupPanes/SingleAccount.js";
+import SingleClaimableBalance from "components/SetupPanes/SingleClaimableBalance.js";
+import SingleLedger from "components/SetupPanes/SingleLedger.js";
 import { SingleLiquidityPool } from "components/SetupPanes/SingleLiquidityPool";
-import SingleOperation from "components/SetupPanes/SingleOperation";
-import SingleOffer from "components/SetupPanes/SingleOffer";
-import SingleTransaction from "components/SetupPanes/SingleTransaction";
-import TradeAggregations from "components/SetupPanes/TradeAggregations";
-import Trades from "components/SetupPanes/Trades";
-import { EndpointItemProps, RequestMethod } from "types/types.d";
+import SingleOperation from "components/SetupPanes/SingleOperation.js";
+import SingleOffer from "components/SetupPanes/SingleOffer.js";
+import SingleTransaction from "components/SetupPanes/SingleTransaction.js";
+import TradeAggregations from "components/SetupPanes/TradeAggregations.js";
+import Trades from "components/SetupPanes/Trades.js";
+import { EndpointItemProps, RequestMethod } from "types/types";
 
 type EndpointsMap = {
   [key: string]: EndpointItemProps;
@@ -40,7 +40,8 @@ export const endpointsMap: EndpointsMap = {
     endpoints: {
       multiple: {
         label: "Accounts",
-        helpUrl: "https://developers.stellar.org/docs/fundamentals-and-concepts/stellar-data-structures/accounts",
+        helpUrl:
+          "https://developers.stellar.org/docs/fundamentals-and-concepts/stellar-data-structures/accounts",
         method: RequestMethod.GET,
         path: {
           template: "/accounts/{?sponsor,signer,asset,cursor,limit,order}",
@@ -172,10 +173,11 @@ export const endpointsMap: EndpointsMap = {
     endpoints: {
       all: {
         label: "All Fee Stats",
-        helpUrl: "https://developers.stellar.org/api/aggregations/fee-stats/object/",
+        helpUrl:
+          "https://developers.stellar.org/api/aggregations/fee-stats/object/",
         method: RequestMethod.GET,
         path: {
-            template: "/fee_stats",
+          template: "/fee_stats",
         },
         setupComponent: () => null,
       },

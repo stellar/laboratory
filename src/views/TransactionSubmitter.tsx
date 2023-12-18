@@ -2,15 +2,14 @@ import { useMemo } from "react";
 import { useDispatch } from "react-redux";
 import debounce from "lodash/debounce";
 import { FETCHED_SIGNERS } from "constants/fetched_signers";
-import extrapolateFromXdr from "helpers/extrapolateFromXdr";
+import extrapolateFromXdr from "helpers/extrapolateFromXdr.js";
 import { validateBase64 } from "helpers/validateBase64";
-import { addEventHandler, logEvent } from "helpers/metrics";
+import { addEventHandler, logEvent } from "helpers/metrics.js";
 import { useRedux } from "hooks/useRedux";
-import { useIsSoroban } from "hooks/useIsSoroban";
-import xdrViewerMetrics, { metricsEvents } from "metricsHandlers/xdrViewer";
+import xdrViewerMetrics, { metricsEvents } from "metricsHandlers/xdrViewer.js";
 import { TreeView } from "components/TreeView";
 import { TxSubmitterResult } from "components/TxSubmitterResult";
-import { updateXdrInput, fetchSigners } from "actions/xdrViewer";
+import { updateXdrInput, fetchSigners } from "actions/xdrViewer.js";
 import { TransactionNode } from "types/types";
 
 // XDR decoding doesn't happen in redux, but is pretty much the only thing on
@@ -24,7 +23,6 @@ export const TransactionSubmitter = () => {
   const { xdrViewer, network } = useRedux("xdrViewer", "network");
   const { fetchedSigners, input } = xdrViewer;
   const { horizonURL, networkPassphrase } = network.current;
-  const isSoroban = useIsSoroban();
   const { error, nodes } = useMemo(() => {
     if (input === "") {
       return {
@@ -43,7 +41,7 @@ export const TransactionSubmitter = () => {
       try {
         return {
           error: null,
-          nodes: extrapolateFromXdr(input, "TransactionEnvelope", isSoroban),
+          nodes: extrapolateFromXdr(input, "TransactionEnvelope"),
         };
       } catch (e) {
         console.error(e);
@@ -58,7 +56,7 @@ export const TransactionSubmitter = () => {
 
   // Fetch signers on initial load
   if (fetchedSigners.state === FETCHED_SIGNERS.NONE) {
-    dispatch(fetchSigners(input, horizonURL, networkPassphrase, isSoroban));
+    dispatch(fetchSigners(input, horizonURL, networkPassphrase));
   }
 
   return (
@@ -80,7 +78,6 @@ export const TransactionSubmitter = () => {
                     event.target.value,
                     horizonURL,
                     networkPassphrase,
-                    isSoroban,
                   ),
                 );
               }}
