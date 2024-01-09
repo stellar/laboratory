@@ -1,0 +1,4 @@
+.prettierignore
+public/
+.gitignore
+.husky/
