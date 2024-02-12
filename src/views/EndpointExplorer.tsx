@@ -32,7 +32,7 @@ export const EndpointExplorer = () => {
           <p>
             This tool can be used to run queries against the{" "}
             <a
-              href="https://developers.stellar.org/api/introduction/"
+              href="https://developers.stellar.org/api/horizon"
               rel="noreferrer"
               target="_blank"
             >
