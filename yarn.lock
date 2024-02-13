@@ -168,10 +168,10 @@
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.6.1.tgz#9ab8f811930d7af3e3d549183a50884f9eb83f36"
   integrity sha512-UY+FGM/2jjMkzQLn8pxcHGMaVLh9aEitG3zY2CiY7XHdLiz3bZOwa6oDxNqEMv7zZkV+cj5DOdz0cQ1BP5Hjgw==
 
-"@stellar/design-system@^1.1.2":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@stellar/design-system/-/design-system-1.1.2.tgz#09f27c13fef69975c6d9a214e770e419985c0b8e"
-  integrity sha512-Vge1vYGE2QrGO9ASVyW/o68bK7/e7+TthS4MjaQ6KZB8F2VNEhgTsyOPfCIKs2iewim0jYetHA5PIBs//tapZQ==
+"@stellar/design-system@^2.0.0-beta.1":
+  version "2.0.0-beta.1"
+  resolved "https://registry.yarnpkg.com/@stellar/design-system/-/design-system-2.0.0-beta.1.tgz#ac4a73459f2bee5fd2b0f5839d02dccf1decd532"
+  integrity sha512-0q4FI2E7BrzyjBxGb3y2KuLVfEyqD+/jcAwDIImkwDyN25fb2pw0AXuZNPbSSU+3hE6Vt89n4lGXnBp/sPEVBw==
   dependencies:
     "@floating-ui/dom" "^1.5.3"
     bignumber.js "^9.1.1"
