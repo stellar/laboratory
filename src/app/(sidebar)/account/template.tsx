@@ -1,7 +1,6 @@
 "use client";
 
-import { Icon } from "@stellar/design-system";
-import { LayoutSidebarContent } from "@/components/LayoutSidebarContent";
+import { LayoutSidebarContent } from "@/components/layout/LayoutSidebarContent";
 import { Routes } from "@/constants/routes";
 
 export default function AccountTemplate({
@@ -20,14 +19,6 @@ export default function AccountTemplate({
           {
             route: Routes.FUND_ACCOUNT,
             label: "Fund Account",
-          },
-          {
-            route: Routes.CREATE_MUXED_ACCOUNT,
-            label: "Create Muxed Account",
-          },
-          {
-            route: Routes.PARSE_MUXED_ACCOUNT,
-            label: "Parse Muxed Account",
           },
         ],
       }}

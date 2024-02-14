@@ -136,6 +136,13 @@
       flex-direction: column;
       gap: pxToRem(8px);
     }
+
+    &__instruction {
+      font-size: pxToRem(12px);
+      line-height: pxToRem(18px);
+      font-weight: var(--sds-fw-medium);
+      margin-bottom: pxToRem(4px);
+    }
   }
 }
 

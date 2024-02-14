@@ -1,9 +1,5 @@
-import { LayoutSidebar } from "@/components/LayoutSidebar";
+import { LayoutWithSidebar } from "@/components/layout/LayoutWithSidebar";
 
-export default function LayoutWithSidebar({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return <LayoutSidebar>{children}</LayoutSidebar>;
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return <LayoutWithSidebar>{children}</LayoutWithSidebar>;
 }

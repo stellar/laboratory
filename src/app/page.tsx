@@ -1,11 +1,11 @@
 "use client";
 
+import { LayoutContentContainer } from "@/components/layout/LayoutContentContainer";
+
 export default function Introduction() {
   return (
-    <div className="LabLayout__container">
-      <div className="LabLayout__content">
-        <div>Introduction</div>
-      </div>
-    </div>
+    <LayoutContentContainer>
+      <div>Introduction</div>
+    </LayoutContentContainer>
   );
 }

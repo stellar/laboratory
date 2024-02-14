@@ -1,7 +1,7 @@
-import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 
 import { Routes } from "@/constants/routes";
+import { NextLink } from "@/components/NextLink";
 
 type NavLink = {
   href: Routes | string;
@@ -23,7 +23,7 @@ const primaryNavLinks: NavLink[] = [
   },
 ];
 
-const secondaryNavLinks = [
+const secondaryNavLinks: NavLink[] = [
   {
     href: "https://developers.stellar.org/docs",
     label: "View Documentation",
@@ -32,14 +32,6 @@ const secondaryNavLinks = [
 
 export const MainNav = () => {
   const pathname = usePathname();
-
-  const externalLinkProps = (href: string) => {
-    const isExternalLink = href?.startsWith("http") || href?.startsWith("//");
-
-    return isExternalLink
-      ? { rel: "noreferrer noopener", target: "_blank" }
-      : {};
-  };
 
   const isActiveRoute = (link: string) => {
     if (link.startsWith("http")) {
@@ -53,7 +45,6 @@ export const MainNav = () => {
     <NextLink
       href={link.href}
       className={`NavLink ${isActiveRoute(link.href) ? "NavLink--active" : ""}`}
-      {...externalLinkProps(link.href)}
     >
       {link.label}
     </NextLink>

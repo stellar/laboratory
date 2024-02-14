@@ -2,9 +2,9 @@
 
 import { ReactNode } from "react";
 import { usePathname } from "next/navigation";
-import NextLink from "next/link";
-import { Routes } from "@/constants/routes";
 import { Icon } from "@stellar/design-system";
+import { Routes } from "@/constants/routes";
+import { NextLink } from "@/components/NextLink";
 
 export type SidebarLink = {
   route: Routes | string;
@@ -43,9 +43,13 @@ export const LayoutSidebarContent = ({
     <>
       <div className="LabLayout__sidebar">
         <div className="LabLayout__sidebar--top">
-          {/* TODO: add instruction */}
-          {/* TODO: render nested items */}
+          {sidebar.instruction ? (
+            <div className="LabLayout__sidebar__instruction">
+              {sidebar.instruction}
+            </div>
+          ) : null}
 
+          {/* TODO: render nested items */}
           {sidebar.navItems.map((item) => (
             <Link key={item.route} item={item} />
           ))}
