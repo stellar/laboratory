@@ -6,6 +6,7 @@ import { Routes } from "@/constants/routes";
 import { LayoutContentContainer } from "@/components/layout/LayoutContentContainer";
 
 // TODO: update 404
+// TODO: keep searchParams
 export default function NotFound() {
   return (
     <LayoutContentContainer>

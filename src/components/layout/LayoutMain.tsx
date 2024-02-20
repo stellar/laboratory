@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ProjectLogo, ThemeSwitch } from "@stellar/design-system";
 
 import { MainNav } from "@/components/MainNav";
+import { NetworkSelector } from "@/components/NetworkSelector";
 
 export const LayoutMain = ({ children }: { children: ReactNode }) => {
   return (
@@ -20,6 +21,7 @@ export const LayoutMain = ({ children }: { children: ReactNode }) => {
 
           <div className="LabLayout__header__settings">
             <ThemeSwitch storageKeyId="stellarTheme:Laboratory" />
+            <NetworkSelector />
           </div>
         </header>
         <MainNav />
