@@ -1,7 +1,11 @@
 "use client";
 
-import { Layout } from "@stellar/design-system";
+import { LayoutContentContainer } from "@/components/layout/LayoutContentContainer";
 
-export default function Home() {
-  return <Layout.Inset>Page</Layout.Inset>;
+export default function Introduction() {
+  return (
+    <LayoutContentContainer>
+      <div>Introduction</div>
+    </LayoutContentContainer>
+  );
 }

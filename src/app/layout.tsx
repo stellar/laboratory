@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 
-import { MainLayout } from "./ui/MainLayout";
+import { LayoutMain } from "@/components/layout/LayoutMain";
 
 import "@stellar/design-system/build/styles.min.css";
-import "./globals.scss";
+import "@/styles/globals.scss";
 
+// TODO: update metadata
 export const metadata: Metadata = {
   title: "Laboratory - Stellar",
   description: "",
@@ -18,8 +19,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <div id="root">
-          <MainLayout>{children}</MainLayout>
+        <div id="root" className="LabLayout">
+          <LayoutMain>{children}</LayoutMain>
         </div>
       </body>
     </html>
