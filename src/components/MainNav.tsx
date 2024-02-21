@@ -34,6 +34,7 @@ export const MainNav = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  // TODO: remove after testing
   console.log(">>> pathname: ", pathname);
   console.log(">>> searchParams: ", searchParams.toString());
 

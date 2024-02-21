@@ -15,9 +15,12 @@
   },
   "dependencies": {
     "@stellar/design-system": "^2.0.0-beta.1",
+    "immer": "^10.0.3",
     "next": "14.0.4",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "zustand": "^4.5.0",
+    "zustand-querystring": "^0.0.19"
   },
   "devDependencies": {
     "@types/node": "^20",
