@@ -1,0 +1,155 @@
+@use "../utils.scss" as *;
+
+#root {
+  .Select {
+    // Color
+    --Select-color-background: var(--sds-clr-gray-01);
+    --Select-color-background-option: var(--sds-clr-gray-01);
+    --Select-color-border: var(--sds-clr-gray-06);
+    --Select-color-border-hover: var(--sds-clr-gray-06);
+    --Select-color-border-focus: var(--sds-clr-gray-06);
+    --Select-color-text: var(--sds-clr-gray-12);
+    --Select-color-icon: var(--sds-clr-gray-09);
+
+    --Select-box-shadow-size: 0;
+    --Select-box-shadow-color: var(--sds-input-box-shadow-color-default);
+
+    // Size
+    --Select-font-size: #{pxToRem(12px)};
+    --Select-line-height: #{pxToRem(18px)};
+    --Select-padding-vertical: #{pxToRem(4px)};
+    --Select-padding-horizontal: #{pxToRem(10px)};
+    --Select-gap: #{pxToRem(6px)};
+    --Select-border-radius: #{pxToRem(4px)};
+
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--Select-gap);
+
+    &--sm {
+      --Select-font-size: #{pxToRem(12px)};
+      --Select-line-height: #{pxToRem(18px)};
+      --Select-padding-vertical: #{pxToRem(4px)};
+      --Select-padding-horizontal: #{pxToRem(10px)};
+      --Select-gap: #{pxToRem(6px)};
+    }
+
+    &--md {
+      --Select-font-size: #{pxToRem(14px)};
+      --Select-line-height: #{pxToRem(20px)};
+      --Select-padding-vertical: #{pxToRem(6px)};
+      --Select-padding-horizontal: #{pxToRem(12px)};
+      --Select-gap: #{pxToRem(6px)};
+    }
+
+    &--lg {
+      --Select-font-size: #{pxToRem(16px)};
+      --Select-line-height: #{pxToRem(24px)};
+      --Select-padding-vertical: #{pxToRem(8px)};
+      --Select-padding-horizontal: #{pxToRem(14px)};
+      --Select-gap: #{pxToRem(8px)};
+    }
+
+    &__container {
+      position: relative;
+      font-family: var(--sds-ff-base);
+      background-color: var(--Select-color-background);
+      border: 1px solid var(--Select-color-border);
+      color: var(--Select-color-text);
+      border-radius: var(--Select-border-radius);
+      box-shadow: 0 0 0 var(--Select-box-shadow-size)
+        var(--Select-box-shadow-color);
+      transition:
+        border-color var(--sds-anim-transition-default),
+        box-shadow var(--sds-anim-transition-default);
+
+      select {
+        appearance: none;
+        display: block;
+        width: 100%;
+        color: currentColor;
+        border: none;
+        background-color: transparent;
+        overflow: hidden;
+        border-radius: var(--Select-border-radius);
+        padding: var(--Select-padding-vertical) var(--Select-padding-horizontal);
+        font-size: var(--Select-font-size);
+        line-height: var(--Select-line-height);
+        font-weight: var(--sds-fw-regular);
+
+        option {
+          background-color: var(--Select-color-background-option);
+          color: var(--Select-color-text);
+        }
+      }
+
+      &:has(select:focus-visible) {
+        --Select-box-shadow-size: #{pxToRem(4px)};
+      }
+
+      @media (hover: hover) {
+        &:hover {
+          border-color: var(--Select-color-border-hover);
+        }
+      }
+    }
+
+    &__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      width: calc(var(--Select-font-size) + pxToRem(4px));
+      height: 100%;
+      top: 0;
+      right: var(--Select-padding-horizontal);
+      pointer-events: none;
+
+      svg {
+        stroke: var(--Select-color-icon);
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    &--error {
+      --Select-color-background: var(--sds-input-color-background-error);
+      --Select-color-border: var(--sds-input-color-border-error);
+      --Select-color-text: var(--sds-input-color-text-default);
+
+      .Select__container {
+        &:has(select:focus-visible) {
+          --Select-color-border-focus: var(
+            --sds-input-color-border-error-focus
+          );
+          --Select-box-shadow-color: var(--sds-input-box-shadow-color-error);
+        }
+
+        @media (hover: hover) {
+          &:hover {
+            --Select-color-border-hover: var(
+              --sds-input-color-border-error-hover
+            );
+          }
+        }
+      }
+    }
+
+    &--disabled {
+      --Select-color-background: var(--sds-input-color-background-disabled);
+      --Select-color-border: var(--sds-input-color-border-disabled);
+      --Select-color-text: var(--sds-input-color-text-disabled);
+
+      select {
+        cursor: not-allowed;
+
+        @media (hover: hover) {
+          &:hover {
+            border-color: var(--sds-input-color-border-disabled);
+          }
+        }
+      }
+    }
+  }
+}

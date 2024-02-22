@@ -1,0 +1,128 @@
+@use "../../styles/utils.scss" as *;
+
+.NetworkSelector {
+  --NetworkSelector-color-background-default: var(--sds-clr-gray-01);
+  --NetworkSelector-color-border: var(--sds-clr-gray-06);
+
+  --NetworkSelector-color-background-hover: var(--sds-clr-gray-02);
+  --NetworkSelector-color-background-active: var(--sds-clr-gray-02);
+  --NetworkSelector-box-shadow-color: var(--sds-clr-gray-05);
+
+  --NetworkSelector-border-radius: #{pxToRem(6px)};
+  --NetworkSelector-padding-vertical: #{pxToRem(6px)};
+  --NetworkSelector-padding-horizontal: #{pxToRem(10px)};
+  --NetworkSelector-box-shadow-size: 0;
+
+  position: relative;
+
+  // Button
+  &__button {
+    display: flex;
+    align-items: center;
+    gap: pxToRem(8px);
+
+    transition: background-color var(--sds-anim-transition-default);
+    padding: var(--NetworkSelector-padding-vertical)
+      var(--NetworkSelector-padding-horizontal);
+    background-color: var(--NetworkSelector-color-background-default);
+    border: 1px solid var(--NetworkSelector-color-border);
+    border-radius: var(--NetworkSelector-border-radius);
+    cursor: pointer;
+
+    @media (hover: hover) {
+      &:hover {
+        background-color: var(--NetworkSelector-color-background-hover);
+      }
+    }
+
+    svg {
+      display: block;
+      width: pxToRem(14px);
+      height: pxToRem(14px);
+      stroke: var(--sds-clr-gray-09);
+    }
+
+    .NetworkIndicator {
+      font-weight: var(--sds-fw-semi-bold);
+    }
+  }
+
+  // Floater
+  &__floater {
+    top: calc(100% + 0.5rem);
+    right: 0;
+    left: auto;
+    bottom: auto;
+    transform: none;
+
+    &[data-is-visible="true"] {
+      display: block;
+      opacity: 1;
+    }
+  }
+
+  // Body
+  &__body {
+    padding: pxToRem(4px);
+
+    &__links {
+      display: flex;
+      flex-direction: column;
+      gap: pxToRem(4px);
+    }
+
+    &__link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: pxToRem(24px);
+      padding: pxToRem(6px) pxToRem(8px);
+      cursor: pointer;
+      background-color: transparent;
+      border-radius: pxToRem(4px);
+      transition: background-color var(--sds-anim-transition-default);
+
+      @media (hover: hover) {
+        &:hover {
+          background-color: var(--sds-clr-gray-03);
+        }
+      }
+
+      &[data-is-active="true"] {
+        background-color: var(--sds-clr-gray-03);
+        cursor: default;
+      }
+
+      &__url {
+        font-size: pxToRem(12px);
+        line-height: pxToRem(18px);
+        color: var(--sds-clr-gray-11);
+        font-weight: var(--sds-fw-medium);
+        text-wrap: nowrap;
+        text-align: right;
+      }
+    }
+
+    &__inputs {
+      padding: pxToRem(6px) pxToRem(8px);
+      background-color: transparent;
+      border-radius: pxToRem(4px);
+      transition: background-color var(--sds-anim-transition-default);
+      margin-top: pxToRem(-4px);
+
+      &[data-is-active="true"] {
+        background-color: var(--sds-clr-gray-03);
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: pxToRem(12px);
+        background-color: var(--sds-clr-gray-01);
+        border-radius: pxToRem(6px);
+        border: 1px solid var(--sds-clr-gray-06);
+        padding: pxToRem(12px);
+      }
+    }
+  }
+}
