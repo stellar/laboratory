@@ -54,9 +54,14 @@
     left: auto;
     bottom: auto;
     transform: none;
+    display: none;
+    opacity: 0;
+
+    &[data-is-active="true"] {
+      display: block;
+    }
 
     &[data-is-visible="true"] {
-      display: block;
       opacity: 1;
     }
   }
@@ -108,11 +113,6 @@
       background-color: transparent;
       border-radius: pxToRem(4px);
       transition: background-color var(--sds-anim-transition-default);
-      margin-top: pxToRem(-4px);
-
-      &[data-is-active="true"] {
-        background-color: var(--sds-clr-gray-03);
-      }
 
       form {
         display: flex;
