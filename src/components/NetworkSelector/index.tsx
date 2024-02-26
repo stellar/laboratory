@@ -224,6 +224,16 @@ export const NetworkSelector = () => {
     }
   };
 
+  const rpcValue = isCustomNetwork
+    ? customNetwork.rpcUrl
+    : getNetworkById(activeNetworkId)?.rpcUrl;
+  const horizonValue = isCustomNetwork
+    ? customNetwork.horizonUrl
+    : getNetworkById(activeNetworkId)?.horizonUrl;
+  const passphraseValue = isCustomNetwork
+    ? customNetwork.passphrase
+    : getNetworkById(activeNetworkId)?.passphrase;
+
   return (
     <div className="NetworkSelector">
       <button
@@ -254,9 +264,11 @@ export const NetworkSelector = () => {
                 tabIndex={0}
               >
                 <NetworkIndicator networkId={op.id} networkLabel={op.label} />
-                <div className="NetworkSelector__body__link__url">
-                  {op.horizonUrl}
-                </div>
+                {op.id === activeNetworkId ? (
+                  <div className="NetworkSelector__body__link__note">
+                    Selected
+                  </div>
+                ) : null}
               </div>
             ))}
           </div>
@@ -267,11 +279,8 @@ export const NetworkSelector = () => {
                 id="rpc-url"
                 fieldSize="sm"
                 label="RPC URL"
-                value={
-                  isCustomNetwork
-                    ? customNetwork.rpcUrl
-                    : getNetworkById(activeNetworkId)?.rpcUrl
-                }
+                value={rpcValue}
+                title={rpcValue}
                 disabled={!isCustomNetwork}
                 onChange={(e) =>
                   setCustomNetwork({
@@ -289,11 +298,8 @@ export const NetworkSelector = () => {
                 id="network-url"
                 fieldSize="sm"
                 label="Horizon URL"
-                value={
-                  isCustomNetwork
-                    ? customNetwork.horizonUrl
-                    : getNetworkById(activeNetworkId)?.horizonUrl
-                }
+                value={horizonValue}
+                title={horizonValue}
                 disabled={!isCustomNetwork}
                 onChange={(e) =>
                   setCustomNetwork({
@@ -311,11 +317,8 @@ export const NetworkSelector = () => {
                 id="network-passphrase"
                 fieldSize="sm"
                 label="Network Passphrase"
-                value={
-                  isCustomNetwork
-                    ? customNetwork.passphrase
-                    : getNetworkById(activeNetworkId)?.passphrase
-                }
+                value={passphraseValue}
+                title={passphraseValue}
                 disabled={!isCustomNetwork}
                 onChange={(e) =>
                   setCustomNetwork({
