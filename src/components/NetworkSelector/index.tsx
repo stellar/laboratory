@@ -14,31 +14,33 @@ import { Network, NetworkType } from "@/types/types";
 
 import "./styles.scss";
 
-// TODO: update input
-
 const NetworkOptions: Network[] = [
   {
     id: "futurenet",
     label: "Futurenet",
-    url: "https://horizon-futurenet.stellar.org",
+    horizonUrl: "https://horizon-futurenet.stellar.org",
+    rpcUrl: "https://rpc-futurenet.stellar.org",
     passphrase: "Test SDF Future Network ; October 2022",
   },
   {
     id: "mainnet",
     label: "Mainnet",
-    url: "https://horizon.stellar.org",
+    horizonUrl: "https://horizon.stellar.org",
+    rpcUrl: "",
     passphrase: "Public Global Stellar Network ; September 2015",
   },
   {
     id: "testnet",
     label: "Testnet",
-    url: "https://horizon-testnet.stellar.org",
+    horizonUrl: "https://horizon-testnet.stellar.org",
+    rpcUrl: "https://soroban-testnet.stellar.org",
     passphrase: "Test SDF Network ; September 2015",
   },
   {
     id: "custom",
     label: "Custom",
-    url: "",
+    horizonUrl: "",
+    rpcUrl: "",
     passphrase: "",
   },
 ];
@@ -51,7 +53,8 @@ export const NetworkSelector = () => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
   const initialCustomState = {
-    url: network.id === "custom" ? network.url : "",
+    horizonUrl: network.id === "custom" ? network.horizonUrl : "",
+    rpcUrl: network.id === "custom" ? network.rpcUrl : "",
     passphrase: network.id === "custom" ? network.passphrase : "",
   };
 
@@ -62,9 +65,11 @@ export const NetworkSelector = () => {
   const isSameNetwork = () => {
     if (activeNetworkId === "custom") {
       return (
-        network.url &&
+        network.horizonUrl &&
+        network.rpcUrl &&
         network.passphrase &&
-        customNetwork.url === network.url &&
+        customNetwork.horizonUrl === network.horizonUrl &&
+        customNetwork.rpcUrl === network.rpcUrl &&
         customNetwork.passphrase === network.passphrase
       );
     }
@@ -72,13 +77,13 @@ export const NetworkSelector = () => {
     return activeNetworkId === network.id;
   };
 
-  const isNetworkUrlInvalid = () => {
-    if (activeNetworkId !== "custom" || !customNetwork.url) {
+  const isNetworkUrlInvalid = (url: string) => {
+    if (activeNetworkId !== "custom" || !url) {
       return "";
     }
 
     try {
-      new URL(customNetwork.url);
+      new URL(url);
       return "";
     } catch (e) {
       return "Value is not a valid URL";
@@ -88,8 +93,10 @@ export const NetworkSelector = () => {
   const isSubmitDisabled =
     isSameNetwork() ||
     (activeNetworkId === "custom" &&
-      !(customNetwork.url && customNetwork.passphrase)) ||
-    Boolean(customNetwork.url && isNetworkUrlInvalid());
+      !(customNetwork.horizonUrl && customNetwork.passphrase)) ||
+    Boolean(
+      customNetwork.horizonUrl && isNetworkUrlInvalid(customNetwork.horizonUrl),
+    );
 
   const isCustomNetwork = activeNetworkId === "custom";
 
@@ -136,11 +143,12 @@ export const NetworkSelector = () => {
       toggleDropdown(false);
       setActiveNetworkId(network.id);
       setCustomNetwork({
-        url: network.url ?? "",
+        horizonUrl: network.horizonUrl ?? "",
+        rpcUrl: network.rpcUrl ?? "",
         passphrase: network.passphrase ?? "",
       });
     },
-    [network.id, network.passphrase, network.url],
+    [network.id, network.horizonUrl, network.rpcUrl, network.passphrase],
   );
 
   // Close dropdown when clicked outside
@@ -246,7 +254,9 @@ export const NetworkSelector = () => {
                 tabIndex={0}
               >
                 <NetworkIndicator networkId={op.id} networkLabel={op.label} />
-                <div className="NetworkSelector__body__link__url">{op.url}</div>
+                <div className="NetworkSelector__body__link__url">
+                  {op.horizonUrl}
+                </div>
               </div>
             ))}
           </div>
@@ -254,20 +264,48 @@ export const NetworkSelector = () => {
           <div className="NetworkSelector__body__inputs">
             <form onSubmit={handleSelectNetwork}>
               <Input
+                id="rpc-url"
+                fieldSize="sm"
+                label="RPC URL"
+                value={
+                  isCustomNetwork
+                    ? customNetwork.rpcUrl
+                    : getNetworkById(activeNetworkId)?.rpcUrl
+                }
+                disabled={!isCustomNetwork}
+                onChange={(e) =>
+                  setCustomNetwork({
+                    ...customNetwork,
+                    rpcUrl: e.target.value,
+                  })
+                }
+                error={isNetworkUrlInvalid(customNetwork.rpcUrl)}
+                tabIndex={0}
+                copyButton={{
+                  position: "right",
+                }}
+              />
+              <Input
                 id="network-url"
                 fieldSize="sm"
                 label="Horizon URL"
                 value={
                   isCustomNetwork
-                    ? customNetwork.url
-                    : getNetworkById(activeNetworkId)?.url
+                    ? customNetwork.horizonUrl
+                    : getNetworkById(activeNetworkId)?.horizonUrl
                 }
                 disabled={!isCustomNetwork}
                 onChange={(e) =>
-                  setCustomNetwork({ ...customNetwork, url: e.target.value })
+                  setCustomNetwork({
+                    ...customNetwork,
+                    horizonUrl: e.target.value,
+                  })
                 }
-                error={isNetworkUrlInvalid()}
+                error={isNetworkUrlInvalid(customNetwork.horizonUrl)}
                 tabIndex={0}
+                copyButton={{
+                  position: "right",
+                }}
               />
               <Input
                 id="network-passphrase"
@@ -286,6 +324,9 @@ export const NetworkSelector = () => {
                   })
                 }
                 tabIndex={0}
+                copyButton={{
+                  position: "right",
+                }}
               />
               <Button
                 size="sm"
