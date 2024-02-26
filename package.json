@@ -14,7 +14,7 @@
     "git-info": "rm -rf src/generated/ && mkdir src/generated/ && echo export default \"{\\\"commitHash\\\": \\\"$(git rev-parse --short HEAD)\\\", \\\"version\\\": \\\"$(git describe --tags --always)\\\"};\" > src/generated/gitInfo.ts"
   },
   "dependencies": {
-    "@stellar/design-system": "^2.0.0-beta.1",
+    "@stellar/design-system": "^2.0.0-beta.4",
     "immer": "^10.0.3",
     "next": "14.0.4",
     "react": "^18",

@@ -1,14 +1,7 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { querystring } from "zustand-querystring";
-import { EmptyObj } from "@/types/types";
-
-type Network = {
-  id: string;
-  label: string;
-  url: string;
-  passphrase: string;
-};
+import { EmptyObj, Network } from "@/types/types";
 
 export interface Store {
   // Shared
