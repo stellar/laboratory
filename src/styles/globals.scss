@@ -21,6 +21,24 @@
   color: var(--sds-clr-gray-11);
   background-color: var(--sds-clr-gray-02);
 
+  // ===========================================================================
+  // Generic
+  // ===========================================================================
+
+  .Heading,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--sds-clr-gray-12);
+  }
+
+  // ===========================================================================
+  // Layout
+  // ===========================================================================
+
   // Header
   &__header {
     background-color: var(--sds-clr-gray-01);
@@ -147,7 +165,6 @@
   }
 }
 
-// TODO: update name
 .NavLink {
   --Nav-navLink-color: var(--sds-clr-gray-11);
   --Nav-navLink-border-color: transparent;
@@ -159,6 +176,7 @@
     color var(--sds-anim-transition-default),
     border-color var(--sds-anim-transition-default);
   border-bottom: 2px solid var(--Nav-navLink-border-color);
+  white-space: nowrap;
 
   @media (hover: hover) {
     &:hover {
@@ -207,5 +225,37 @@
     --SidebarLink-color: var(--sds-clr-lilac-11);
     cursor: default;
     font-weight: var(--sds-fw-semi-bold);
+  }
+}
+
+// =============================================================================
+// Pages
+// =============================================================================
+
+// Introduction
+.CardText {
+  display: flex;
+  flex-direction: column;
+  gap: pxToRem(12px);
+
+  p {
+    margin-bottom: 0 !important;
+  }
+}
+
+.IntroCards {
+  display: grid;
+  gap: pxToRem(12px);
+  grid-template-columns: 1fr 1fr;
+
+  .Card {
+    display: flex;
+    flex-direction: column;
+    gap: pxToRem(8px);
+    justify-content: space-between;
+
+    :nth-child(2) {
+      flex: 1;
+    }
   }
 }
