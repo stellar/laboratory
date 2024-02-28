@@ -21,6 +21,18 @@ const primaryNavLinks: NavLink[] = [
     href: Routes.EXPLORE_ENDPOINTS,
     label: "Explore Endpoints",
   },
+  {
+    href: Routes.BUILD_TRANSACTION,
+    label: "Transactions",
+  },
+  {
+    href: Routes.VIEW_XDR,
+    label: "View XDR",
+  },
+  {
+    href: Routes.SOROBAN_CONTRACT_EXPLORER,
+    label: "Soroban",
+  },
 ];
 
 const secondaryNavLinks: NavLink[] = [

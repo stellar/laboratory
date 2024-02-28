@@ -1,7 +1,9 @@
 import { ComponentProps } from "react";
 import Link from "next/link";
 
-type LinkProps = ComponentProps<typeof Link>;
+type LinkProps = ComponentProps<typeof Link> & {
+  "sds-variant"?: "primary" | "secondary" | "error" | "success" | "warning";
+};
 
 /** `NextLink` is extended `next/link`. */
 export const NextLink = (props: LinkProps) => {
@@ -13,5 +15,13 @@ export const NextLink = (props: LinkProps) => {
       : {};
   };
 
-  return <Link {...props} {...externalLinkProps(props.href.toString())} />;
+  return (
+    <Link
+      {...props}
+      className={`${props.className || ""} ${
+        props["sds-variant"] ? `Link Link--${props["sds-variant"]}` : ""
+      }`}
+      {...externalLinkProps(props.href.toString())}
+    />
+  );
 };
