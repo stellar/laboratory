@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { LayoutMain } from "@/components/layout/LayoutMain";
+import { QueryProvider } from "@/query/QueryProvider";
 import { StoreProvider } from "@/store/StoreProvider";
 
 import "@stellar/design-system/build/styles.min.css";
@@ -20,9 +21,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <div id="root" className="LabLayout">
+        <div id="root">
           <StoreProvider>
-            <LayoutMain>{children}</LayoutMain>
+            <QueryProvider>
+              <LayoutMain>{children}</LayoutMain>
+            </QueryProvider>
           </StoreProvider>
         </div>
       </body>
