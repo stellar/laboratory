@@ -9,23 +9,24 @@
 // - string: string values that appear as just plain text
 // - object: typed values always with a type and value `{type: 'code', value: 'Foo();'}`
 
-import * as StellarSdk from "stellar-sdk";
+import {
+  xdr,
+  StrKey,
+  Keypair,
+  Operation,
+  scValToNative,
+  nativeToScVal,
+} from "stellar-sdk";
 import isArray from "lodash/isArray";
 import isString from "lodash/isString";
 import functionsIn from "lodash/functionsIn";
 import includes from "lodash/includes";
 import without from "lodash/without";
+import { scValByType } from "helpers/sorobanXdrUtils";
 
 export default function extrapolateFromXdr(input, type) {
   // TODO: Check to see if type exists
   // TODO: input validation
-
-  let xdr, StrKey, Keypair, Operation;
-
-  xdr = StellarSdk.xdr;
-  StrKey = StellarSdk.StrKey;
-  Keypair = StellarSdk.Keypair;
-  Operation = StellarSdk.Operation;
 
   function buildTreeFromObject(object, anchor, name) {
     anchor.type = name;
@@ -59,7 +60,8 @@ export default function extrapolateFromXdr(input, type) {
     if (isString(object.arm())) {
       anchor.nodes = [{}];
       buildTreeFromObject(
-        object[object.arm()](),
+        // Soroban or Classic
+        scValByType(object) ?? object[object.arm()](),
         anchor.nodes[anchor.nodes.length - 1],
         object.arm(),
       );
@@ -179,6 +181,18 @@ export default function extrapolateFromXdr(input, type) {
       name === "assetCode12"
     ) {
       return object.toString();
+    }
+
+    if (name === "contractId") {
+      return StrKey.encodeContract(object);
+    }
+
+    if (name === "functionName" || name === "sym") {
+      return object.toString();
+    }
+
+    if (name === "durability") {
+      return JSON.stringify(object);
     }
 
     if (object && object._isBuffer) {
