@@ -264,6 +264,7 @@ export const NetworkSelector = () => {
                 role="button"
                 onClick={() => handleSelectActive(op.id)}
                 tabIndex={0}
+                data-testid="networkSelector-option"
               >
                 <NetworkIndicator networkId={op.id} networkLabel={op.label} />
                 {op.id === activeNetworkId ? (

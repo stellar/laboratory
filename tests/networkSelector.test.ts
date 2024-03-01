@@ -21,7 +21,7 @@ test.describe("Network selector", () => {
     await expect(
       page
         .getByTestId("networkSelector-dropdown")
-        .locator(".NetworkSelector__body__link"),
+        .getByTestId("networkSelector-option"),
     ).toContainText(["Futurenet", "Mainnet", "Testnet", "Custom"]);
   });
 
@@ -35,7 +35,7 @@ test.describe("Network selector", () => {
     await expect(
       page
         .getByTestId("networkSelector-dropdown")
-        .locator(".NetworkSelector__body__link")
+        .getByTestId("networkSelector-option")
         .filter({ has: page.getByText("Testnet") }),
     ).toContainText("Selected");
 
@@ -79,7 +79,7 @@ test.describe("Network selector", () => {
     // Selected Futurenet
     await page
       .getByTestId("networkSelector-dropdown")
-      .locator(".NetworkSelector__body__link")
+      .getByTestId("networkSelector-option")
       .filter({ has: page.getByText("Futurenet") })
       .click();
 
@@ -132,7 +132,7 @@ test.describe("Network selector", () => {
     // Selected Custom network
     await page
       .getByTestId("networkSelector-dropdown")
-      .locator(".NetworkSelector__body__link")
+      .getByTestId("networkSelector-option")
       .filter({ has: page.getByText("Custom") })
       .click();
 
