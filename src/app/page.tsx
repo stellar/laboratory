@@ -109,6 +109,8 @@ export default function Introduction() {
           </Card>
         ))}
       </div>
+
+      {/* TODO: add TOS and Privacy */}
     </LayoutContentContainer>
   );
 }

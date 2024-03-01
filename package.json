@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test": "playwright test",
     "install-if-package-changed": "git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD | grep --quiet yarn.lock && npm install || exit 0",
     "prepare": "husky",
     "pre-commit": "concurrently 'lint-staged'",
@@ -27,6 +28,7 @@
     "zustand-querystring": "^0.0.19"
   },
   "devDependencies": {
+    "@playwright/test": "^1.42.0",
     "@types/dompurify": "^3.0.5",
     "@types/node": "^20.11.23",
     "@types/react": "^18.2.61",

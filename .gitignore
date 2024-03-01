@@ -40,3 +40,7 @@ next-env.d.ts
 
 # generated Git info
 /src/generated/gitInfo.ts
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
