@@ -241,6 +241,7 @@ export const NetworkSelector = () => {
         ref={buttonRef}
         onClick={() => toggleDropdown(!isDropdownVisible)}
         tabIndex={0}
+        data-testid="networkSelector-button"
       >
         <NetworkIndicator networkId={network.id} networkLabel={network.label} />
         <Icon.ChevronDown />
@@ -251,6 +252,7 @@ export const NetworkSelector = () => {
         data-is-visible={isDropdownVisible}
         ref={dropdownRef}
         tabIndex={0}
+        data-testid="networkSelector-dropdown"
       >
         <div className="NetworkSelector__body">
           <div className="NetworkSelector__body__links">
@@ -262,6 +264,7 @@ export const NetworkSelector = () => {
                 role="button"
                 onClick={() => handleSelectActive(op.id)}
                 tabIndex={0}
+                data-testid="networkSelector-option"
               >
                 <NetworkIndicator networkId={op.id} networkLabel={op.label} />
                 {op.id === activeNetworkId ? (
@@ -337,6 +340,7 @@ export const NetworkSelector = () => {
                 type="submit"
                 disabled={isSubmitDisabled}
                 tabIndex={0}
+                data-testid="networkSelector-submit-button"
               >
                 {getButtonLabel()}
               </Button>

@@ -1,4 +1,4 @@
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 import { Routes } from "@/constants/routes";
 import { NextLink } from "@/components/NextLink";
@@ -44,11 +44,6 @@ const secondaryNavLinks: NavLink[] = [
 
 export const MainNav = () => {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-  // TODO: remove after testing
-  console.log(">>> pathname: ", pathname);
-  console.log(">>> searchParams: ", searchParams.toString());
 
   const isActiveRoute = (link: string) => {
     if (link.startsWith("http")) {
