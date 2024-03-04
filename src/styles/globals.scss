@@ -309,3 +309,27 @@
   font-size: pxToRem(14px);
   line-height: pxToRem(20px);
 }
+
+.IntroCards {
+  display: grid;
+  gap: pxToRem(12px);
+  grid-template-columns: 1fr 1fr;
+
+  .Card {
+    display: flex;
+    flex-direction: column;
+    gap: pxToRem(8px);
+    justify-content: space-between;
+
+    :nth-child(2) {
+      flex: 1;
+    }
+  }
+}
+
+// =============================================================================
+// Margin | Padding
+// =============================================================================
+.padding-top-30 {
+  padding-top: pxToRem(30px);
+}
