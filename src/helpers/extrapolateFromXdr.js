@@ -183,7 +183,7 @@ export default function extrapolateFromXdr(input, type) {
       return object.toString();
     }
 
-    if (name === "contractId") {
+    if (name === "contractId" && object) {
       return StrKey.encodeContract(object);
     }
 
@@ -192,6 +192,10 @@ export default function extrapolateFromXdr(input, type) {
     }
 
     if (name === "durability") {
+      return JSON.stringify(object);
+    }
+
+    if (name === "type") {
       return JSON.stringify(object);
     }
 
