@@ -51,7 +51,6 @@ export const scValByType = (scVal: xdr.ScVal) => {
       return scVal.value();
     }
 
-    case xdr.ScValType.scvVec():
     case xdr.ScValType.scvMap(): {
       return JSON.stringify(
         scValToNative(scVal),
