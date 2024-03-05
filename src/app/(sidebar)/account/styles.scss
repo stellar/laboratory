@@ -1,0 +1,7 @@
+@use "../../../styles/utils.scss" as *;
+
+.Account {
+    .CardText__button{
+        padding-top: pxToRem(30px);
+    }
+}
