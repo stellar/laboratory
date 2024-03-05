@@ -125,8 +125,14 @@
       padding-bottom: pxToRem(16px);
       display: flex;
       flex-direction: column;
-      gap: pxToRem(8px);
+      gap: pxToRem(24px);
       flex: 1;
+    }
+
+    &__section {
+      display: flex;
+      flex-direction: column;
+      gap: pxToRem(8px);
     }
 
     &--bottom {
@@ -221,10 +227,61 @@
     }
   }
 
-  &--active {
+  &[data-is-active="true"] {
     --SidebarLink-color: var(--sds-clr-lilac-11);
     cursor: default;
     font-weight: var(--sds-fw-semi-bold);
+  }
+
+  &__toggle {
+    --SidebarLink-rotate: 0;
+    cursor: pointer;
+
+    svg {
+      transition: transform var(--sds-anim-transition-default);
+      transform: rotate(var(--SidebarLink-rotate));
+    }
+
+    // Highlight if nested link is selected
+    &:has(
+        ~ .SidebarLink__nestedItemsWrapper
+          > .SidebarLink__nestedItems
+          > [data-is-active="true"]
+      ) {
+      --SidebarLink-color: var(--sds-clr-gray-12);
+      font-weight: var(--sds-fw-semi-bold);
+    }
+
+    // Rotate chevron when expanded
+    &:has(~ [data-is-expanded="true"]) {
+      --SidebarLink-rotate: 90deg;
+    }
+  }
+
+  &--nested,
+  &__nestedItems {
+    display: flex;
+    flex-direction: column;
+    gap: pxToRem(8px);
+  }
+
+  &__nestedItemsWrapper {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition:
+      grid-template-rows 0.5s ease-out,
+      margin-top 0.5s ease-out;
+    margin-left: pxToRem(24px);
+    margin-top: pxToRem(-8px);
+
+    &[data-is-expanded="true"] {
+      grid-template-rows: 1fr;
+      margin-top: pxToRem(0);
+    }
+  }
+
+  &__nestedItems {
+    overflow: hidden;
   }
 }
 
