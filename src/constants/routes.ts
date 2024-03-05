@@ -1,10 +1,10 @@
 export enum Routes {
   ROOT = "/",
   // Account
-  CREATE_ACCOUNT = "/account/create",
-  FUND_ACCOUNT = "/account/fund",
-  CREATE_MUXED_ACCOUNT = "/account/muxed-create",
-  PARSE_MUXED_ACCOUNT = "/account/muxed-parse",
+  ACCOUNT_CREATE = "/account/create",
+  ACCOUNT_FUND = "/account/fund",
+  ACCOUNT_CREATE_MUXED = "/account/muxed-create",
+  ACCOUNT_PARSE_MUXED = "/account/muxed-parse",
   // Explore Endpoints
   EXPLORE_ENDPOINTS = "/explore-endpoints",
   EXPLORE_ENDPOINTS_ACCOUNTS = "/explore-endpoints/accounts",
