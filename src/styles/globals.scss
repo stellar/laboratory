@@ -106,6 +106,7 @@
     display: flex;
     flex-direction: column;
     gap: pxToRem(12px);
+    min-height: 100%;
   }
 
   // Sideber
@@ -298,4 +299,13 @@
   p {
     margin-bottom: 0 !important;
   }
+}
+
+.IntroFooter {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  gap: pxToRem(12px);
+  font-size: pxToRem(14px);
+  line-height: pxToRem(20px);
 }
