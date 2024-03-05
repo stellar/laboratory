@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Icon } from "@stellar/design-system";
 import { Routes } from "@/constants/routes";
@@ -24,46 +24,48 @@ export const LayoutSidebarContent = ({
   sidebar,
 }: {
   children: ReactNode;
-  sidebar: Sidebar;
+  sidebar: Sidebar | Sidebar[];
 }) => {
   const pathname = usePathname();
 
-  const Link = ({ item }: { item: SidebarLink }) => (
-    <NextLink
-      href={item.route}
-      className={`SidebarLink ${
-        pathname === item.route ? "SidebarLink--active" : ""
-      }`}
-    >
-      {item.icon ?? null} {item.label}
-    </NextLink>
-  );
+  const sidebarArray = Array.isArray(sidebar) ? sidebar : [sidebar];
+  const bottomItems = sidebarArray?.reduce((res, cur) => {
+    if (cur.bottomItems?.length) {
+      return [...res, ...cur.bottomItems];
+    }
+
+    return res;
+  }, [] as SidebarLink[]);
 
   return (
     <>
       <div className="LabLayout__sidebar">
         <div className="LabLayout__sidebar--top">
-          {sidebar.instruction ? (
-            <div className="LabLayout__sidebar__instruction">
-              {sidebar.instruction}
-            </div>
-          ) : null}
+          {sidebarArray.map((sidebar, index) => (
+            <div
+              className="LabLayout__sidebar__section"
+              key={`sidebar-${index}`}
+            >
+              {sidebar.instruction ? (
+                <div className="LabLayout__sidebar__instruction">
+                  {sidebar.instruction}
+                </div>
+              ) : null}
 
-          {/* TODO: render nested items */}
-          {sidebar.navItems.map((item) => (
-            <Link key={item.route} item={item} />
+              {sidebar.navItems.map((item) => (
+                <Link key={item.route} item={item} pathname={pathname} />
+              ))}
+            </div>
           ))}
         </div>
         <div
           className={`LabLayout__sidebar--bottom ${
-            sidebar.bottomItems?.length
-              ? "LabLayout__sidebar--bottom--border"
-              : ""
+            bottomItems?.length ? "LabLayout__sidebar--bottom--border" : ""
           }`}
         >
           <div className="LabLayout__sidebar__wrapper">
-            {sidebar.bottomItems?.map((bi) => (
-              <Link key={bi.route} item={bi} />
+            {bottomItems?.map((bi) => (
+              <Link key={bi.route} item={bi} pathname={pathname} />
             ))}
           </div>
           <div className="LabLayout__sidebar__wrapper">
@@ -77,5 +79,59 @@ export const LayoutSidebarContent = ({
         <div className="LabLayout__content">{children}</div>
       </div>
     </>
+  );
+};
+
+const Link = ({ item, pathname }: { item: SidebarLink; pathname: string }) => {
+  const isSelectedParent = item.nestedItems?.length
+    ? pathname?.split(Routes.EXPLORE_ENDPOINTS)?.[1]?.split("/")?.[1] ===
+      item.route?.split(Routes.EXPLORE_ENDPOINTS)?.[1]?.split("/")?.[1]
+    : false;
+
+  const [isExpanded, setIsExpanded] = useState(isSelectedParent);
+
+  if (item.nestedItems?.length) {
+    return (
+      <div className="SidebarLink--nested">
+        <div
+          className="SidebarLink SidebarLink__toggle"
+          onClick={() => {
+            setIsExpanded(!isExpanded);
+          }}
+        >
+          <Icon.ChevronRight /> {item.label}
+        </div>
+
+        {item.nestedItems?.length ? (
+          <div
+            className="SidebarLink__nestedItemsWrapper"
+            data-is-expanded={isExpanded}
+          >
+            <div className="SidebarLink__nestedItems">
+              {item.nestedItems.map((nested) => (
+                <NextLink
+                  key={`nested-${nested.route}`}
+                  href={nested.route}
+                  className="SidebarLink"
+                  data-is-active={pathname === nested.route}
+                >
+                  {nested.label}
+                </NextLink>
+              ))}
+            </div>
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+
+  return (
+    <NextLink
+      href={item.route}
+      className="SidebarLink"
+      data-is-active={pathname === item.route}
+    >
+      {item.icon ?? null} {item.label}
+    </NextLink>
   );
 };
