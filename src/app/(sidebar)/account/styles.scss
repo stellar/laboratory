@@ -1,7 +1,13 @@
 @use "../../../styles/utils.scss" as *;
 
 .Account {
-    .CardText__button{
-        padding-top: pxToRem(30px);
-    }
+  &__Card {
+    display: flex;
+    flex-direction: column;
+    gap: pxToRem(24px);
+  }
+
+  .CardText__button {
+    align-self: flex-start;
+  }
 }
