@@ -31,3 +31,12 @@ export type StatusPageScheduled = {
   components: StatusPageComponent[];
   incident_updates: StatusPageIncident[];
 };
+
+export type InfoCard = {
+  id: string;
+  title: string;
+  description: string;
+  buttonLabel: string;
+  buttonIcon?: React.ReactNode;
+  buttonAction: () => void;
+};

@@ -1,10 +1,11 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Card, Link, Text, Button, Icon } from "@stellar/design-system";
+import { Card, Link, Text, Icon } from "@stellar/design-system";
 
 import { NextLink } from "@/components/NextLink";
 import { LayoutContentContainer } from "@/components/layout/LayoutContentContainer";
+import { InfoCards } from "@/components/InfoCards";
 import { Routes } from "@/constants/routes";
 
 export default function Introduction() {
@@ -85,30 +86,7 @@ export default function Introduction() {
         </div>
       </Card>
 
-      <div className="IntroCards">
-        {infoCards.map((c) => (
-          <Card key={c.id}>
-            <Text size="md" as="h2" weight="medium">
-              {c.title}
-            </Text>
-
-            <Text size="sm" as="p">
-              {c.description}
-            </Text>
-
-            <div>
-              <Button
-                variant="secondary"
-                size="md"
-                icon={c.buttonIcon}
-                onClick={c.buttonAction}
-              >
-                {c.buttonLabel}
-              </Button>
-            </div>
-          </Card>
-        ))}
-      </div>
+      <InfoCards infoCards={infoCards} />
 
       {/* TODO: add TOS and Privacy */}
     </LayoutContentContainer>
