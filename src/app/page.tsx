@@ -6,6 +6,7 @@ import { Card, Link, Text, Icon } from "@stellar/design-system";
 import { NextLink } from "@/components/NextLink";
 import { LayoutContentContainer } from "@/components/layout/LayoutContentContainer";
 import { InfoCards } from "@/components/InfoCards";
+import { SdsLink } from "@/components/SdsLink";
 import { Routes } from "@/constants/routes";
 
 export default function Introduction() {
@@ -88,7 +89,20 @@ export default function Introduction() {
 
       <InfoCards infoCards={infoCards} />
 
-      {/* TODO: add TOS and Privacy */}
+      <div className="IntroFooter">
+        <SdsLink
+          href="https://www.stellar.org/privacy-policy"
+          variant="secondary"
+        >
+          Privacy Policy
+        </SdsLink>
+        <SdsLink
+          href="https://www.stellar.org/terms-of-service"
+          variant="secondary"
+        >
+          Terms of Service
+        </SdsLink>
+      </div>
     </LayoutContentContainer>
   );
 }

@@ -20,7 +20,7 @@ const infoCards = [
     id: "horizon",
     title: "Horizon Endpoints",
     description: "TODO: add text",
-    buttonLabel: "Go to docs",
+    buttonLabel: "See docs",
     buttonIcon: <Icon.LinkExternal01 />,
     buttonAction: () =>
       window.open(
