@@ -20,6 +20,14 @@ export default function AccountTemplate({
             route: Routes.FUND_ACCOUNT,
             label: "Fund Account",
           },
+          {
+            route: Routes.CREATE_MUXED_ACCOUNT,
+            label: "Create Muxed Account",
+          },
+          {
+            route: Routes.PARSE_MUXED_ACCOUNT,
+            label: "Parse Muxed Account",
+          },
         ],
       }}
     >
