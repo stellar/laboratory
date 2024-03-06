@@ -179,8 +179,7 @@
   color: var(--Nav-navLink-color);
   text-decoration: none;
   padding: pxToRem(12px) 0;
-  transition:
-    color var(--sds-anim-transition-default),
+  transition: color var(--sds-anim-transition-default),
     border-color var(--sds-anim-transition-default);
   border-bottom: 2px solid var(--Nav-navLink-border-color);
   white-space: nowrap;
@@ -206,8 +205,7 @@
   line-height: pxToRem(20px);
   font-weight: var(--sds-fw-medium);
   color: var(--SidebarLink-color);
-  transition:
-    color var(--sds-anim-transition-default),
+  transition: color var(--sds-anim-transition-default),
     font-weight var(--sds-anim-transition-default);
   text-decoration: none;
   display: flex;
@@ -244,11 +242,9 @@
     }
 
     // Highlight if nested link is selected
-    &:has(
-        ~ .SidebarLink__nestedItemsWrapper
-          > .SidebarLink__nestedItems
-          > [data-is-active="true"]
-      ) {
+    &:has(~ .SidebarLink__nestedItemsWrapper
+        > .SidebarLink__nestedItems
+        > [data-is-active="true"]) {
       --SidebarLink-color: var(--sds-clr-gray-12);
       font-weight: var(--sds-fw-semi-bold);
     }
@@ -269,9 +265,7 @@
   &__nestedItemsWrapper {
     display: grid;
     grid-template-rows: 0fr;
-    transition:
-      grid-template-rows 0.5s ease-out,
-      margin-top 0.5s ease-out;
+    transition: grid-template-rows 0.5s ease-out, margin-top 0.5s ease-out;
     margin-left: pxToRem(24px);
     margin-top: pxToRem(-8px);
 
