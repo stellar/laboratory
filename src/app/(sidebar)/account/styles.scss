@@ -1,7 +1,7 @@
 @use "../../../styles/utils.scss" as *;
 
 .Account {
-  &__Card {
+  &__card {
     display: flex;
     flex-direction: column;
     gap: pxToRem(24px);

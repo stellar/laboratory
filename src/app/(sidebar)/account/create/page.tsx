@@ -8,7 +8,7 @@ export default function CreateAccount() {
   return (
     <div className="Account">
       <Card>
-        <div className="Account__Card">
+        <div className="Account__card">
           <div className="CardText">
             <Text size="lg" as="h1" weight="medium">
               Keypair Generator
@@ -24,7 +24,6 @@ export default function CreateAccount() {
             <Button size="md" variant="tertiary">
               Generate keypair
             </Button>
-            <div>hai</div>
           </div>
         </div>
       </Card>
