@@ -1,45 +1,69 @@
 import { Label } from "@stellar/design-system";
+import { AssetType } from "@/types/types";
 import "./styles.scss";
 
-interface RadioPickerProps {
+interface RadioPickerProps<TOptionValue = string> {
+  id: string;
+  selectedOption: string | undefined;
   label?: string | React.ReactNode;
-  // TODO: add labelSuffix once SDS is updated
-  value: string | undefined;
-  onChange: (optionId: string | undefined) => void;
+  labelSuffix?: string | React.ReactNode;
+  onChange: (
+    optionId: AssetType | undefined,
+    optionValue?: TOptionValue,
+  ) => void;
   options: {
     id: string;
     label: string;
+    value?: TOptionValue;
   }[];
+  fitContent?: boolean;
 }
 
-export const RadioPicker = ({
+export const RadioPicker = <TOptionValue,>({
+  id,
+  selectedOption,
   label,
-  value,
+  labelSuffix,
   onChange,
   options,
-}: RadioPickerProps) => {
+  fitContent,
+}: RadioPickerProps<TOptionValue>) => {
+  const customStyle = {
+    ...(fitContent ? { "--RadioPicker-width": "fit-content" } : {}),
+  } as React.CSSProperties;
+
   return (
-    <div className="RadioPicker">
+    <div className="RadioPicker" style={customStyle}>
       {label ? (
-        <Label size="md" htmlFor="">
+        <Label size="md" htmlFor="" labelSuffix={labelSuffix}>
           {label}
         </Label>
       ) : null}
       <div className="RadioPicker__options">
-        {options.map((o) => (
-          <div key={o.id} className="RadioPicker__item">
-            <input
-              type="radio"
-              id={o.id}
-              checked={o.id === value}
-              onClick={() => {
-                // Clear selection if selected the same
-                onChange(o.id !== value ? o.id : undefined);
-              }}
-            />
-            <label htmlFor={o.id}>{o.label}</label>
-          </div>
-        ))}
+        {options.map((o) => {
+          const opId = `${o.id}-${id}`;
+          const curId = opId.split("-")[0];
+
+          return (
+            <div key={o.id} className="RadioPicker__item">
+              <input
+                type="radio"
+                id={opId}
+                checked={curId === selectedOption}
+                onChange={() => {
+                  onChange(o.id as AssetType, o.value);
+                }}
+                onClick={() => {
+                  if (curId === selectedOption) {
+                    // Clear selection if selected the same
+                    onChange(undefined);
+                  }
+                }}
+              />
+              <label htmlFor={opId}>{o.label}</label>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

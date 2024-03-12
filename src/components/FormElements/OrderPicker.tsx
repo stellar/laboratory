@@ -1,21 +1,29 @@
 import { RadioPicker } from "@/components/RadioPicker";
 
-export const OrderPicker = ({
-  value,
-  onChange,
-}: {
+type OrderPickerProps = {
+  id: string;
+  selectedOption: string | undefined;
   value: string | undefined;
-  onChange: (optionId: string | undefined) => void;
-}) => {
-  // TODO: add optional suffix to the label
+  onChange: (optionId: string | undefined, optionValue?: string) => void;
+  labelSuffix?: string | React.ReactNode;
+};
+
+export const OrderPicker = ({
+  id,
+  selectedOption,
+  onChange,
+  labelSuffix,
+}: OrderPickerProps) => {
   return (
     <RadioPicker
+      id={id}
+      selectedOption={selectedOption}
       label="Order"
-      value={value}
+      labelSuffix={labelSuffix}
       onChange={onChange}
       options={[
-        { id: "asc", label: "Asc" },
-        { id: "desc", label: "Desc" },
+        { id: "asc", label: "Asc", value: "asc" },
+        { id: "desc", label: "Desc", value: "desc" },
       ]}
     />
   );

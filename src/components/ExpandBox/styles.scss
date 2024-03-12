@@ -1,0 +1,13 @@
+.ExpandBox {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.5s ease-out;
+
+  &[data-is-expanded="true"] {
+    grid-template-rows: 1fr;
+  }
+
+  &__inset {
+    overflow: hidden;
+  }
+}

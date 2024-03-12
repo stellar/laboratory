@@ -1,21 +1,29 @@
 import { RadioPicker } from "@/components/RadioPicker";
 
+type IncludeFailedPickerProps = {
+  id: string;
+  selectedOption: string | undefined;
+  value: boolean | undefined;
+  onChange: (optionId: string | undefined, optionValue?: boolean) => void;
+  labelSuffix?: string | React.ReactNode;
+};
+
 export const IncludeFailedPicker = ({
-  value,
+  id,
+  selectedOption,
   onChange,
-}: {
-  value: string | undefined;
-  onChange: (optionId: string | undefined) => void;
-}) => {
-  // TODO: add optional suffix to the label
+  labelSuffix,
+}: IncludeFailedPickerProps) => {
   return (
     <RadioPicker
+      id={id}
+      selectedOption={selectedOption}
       label="Include failed"
-      value={value}
+      labelSuffix={labelSuffix}
       onChange={onChange}
       options={[
-        { id: "true", label: "True" },
-        { id: "false", label: "False" },
+        { id: "true", label: "True", value: true },
+        { id: "false", label: "False", value: false },
       ]}
     />
   );
