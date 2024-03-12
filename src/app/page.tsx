@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, Link, Text, Icon } from "@stellar/design-system";
 
@@ -8,28 +7,11 @@ import { NextLink } from "@/components/NextLink";
 import { LayoutContentContainer } from "@/components/layout/LayoutContentContainer";
 import { InfoCards } from "@/components/InfoCards";
 import { SdsLink } from "@/components/SdsLink";
-import { AssetPicker } from "@/components/FormElements/AssetPicker";
 
 import { Routes } from "@/constants/routes";
-import { AssetType } from "@/types/types";
-import { IncludeFailedPicker } from "@/components/FormElements/IncludeFailedPicker";
-import { OrderPicker } from "@/components/FormElements/OrderPicker";
 
 export default function Introduction() {
   const router = useRouter();
-
-  const [stringAssetId, setStringAssetId] = useState<AssetType | undefined>(
-    "issued",
-  );
-  const [stringAssetValue, setStringAssetValue] = useState<any>("aaa:bbb");
-
-  const [objectAssetId, setObjectAssetId] = useState<AssetType | undefined>(
-    "credit_alphanum4",
-  );
-  const [objectAssetValue, setObjectAssetValue] = useState<any>({
-    code: "ccc",
-    issuer: "ddd",
-  });
 
   const infoCards = [
     {
@@ -73,50 +55,6 @@ export default function Introduction() {
 
   return (
     <LayoutContentContainer>
-      {/* TODO: remove, for testing only */}
-      <Card>
-        <div style={{ display: "grid", gap: 30 }}>
-          <AssetPicker
-            label="Asset"
-            id="test"
-            variant="string"
-            selectedOption={stringAssetId}
-            includeNone
-            value={stringAssetValue}
-            onChange={(opId, opValue) => {
-              setStringAssetId(opId);
-              setStringAssetValue(opValue);
-            }}
-          />
-
-          <AssetPicker
-            label="Base Asset"
-            id="test-1"
-            variant="object"
-            selectedOption={undefined}
-            value={objectAssetValue}
-            onChange={(opId, opValue) => {
-              setObjectAssetId(opId);
-              setObjectAssetValue(opValue);
-            }}
-          />
-
-          <IncludeFailedPicker
-            id="failed"
-            selectedOption=""
-            value={false}
-            onChange={() => {}}
-          />
-
-          <OrderPicker
-            id="order"
-            selectedOption=""
-            value="asc"
-            onChange={() => {}}
-          />
-        </div>
-      </Card>
-
       <Card>
         <div className="CardText">
           <Text size="lg" as="h1" weight="medium">
