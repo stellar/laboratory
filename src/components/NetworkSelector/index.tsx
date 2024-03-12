@@ -23,18 +23,18 @@ const NetworkOptions: Network[] = [
     passphrase: "Test SDF Future Network ; October 2022",
   },
   {
-    id: "mainnet",
-    label: "Mainnet",
-    horizonUrl: "https://horizon.stellar.org",
-    rpcUrl: "",
-    passphrase: "Public Global Stellar Network ; September 2015",
-  },
-  {
     id: "testnet",
     label: "Testnet",
     horizonUrl: "https://horizon-testnet.stellar.org",
     rpcUrl: "https://soroban-testnet.stellar.org",
     passphrase: "Test SDF Network ; September 2015",
+  },
+  {
+    id: "mainnet",
+    label: "Mainnet",
+    horizonUrl: "https://horizon.stellar.org",
+    rpcUrl: "",
+    passphrase: "Public Global Stellar Network ; September 2015",
   },
   {
     id: "custom",
