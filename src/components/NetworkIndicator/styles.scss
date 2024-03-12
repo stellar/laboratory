@@ -24,8 +24,7 @@
     }
 
     &[data-network="testnet"] {
-      // TODO: update color
-      --NetworkSelector-dot-color: var(--sds-clr-gray-09);
+      --NetworkSelector-dot-color: var(--sds-clr-sky-09);
     }
 
     &[data-network="mainnet"] {
