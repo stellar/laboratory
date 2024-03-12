@@ -1,3 +1,9 @@
+// helper to import the tour and it's dependencies
+// only when it's needed and not on every page load
+const startTour = () => {
+  import("./Tour").then(module => module.tour.start());
+};
+
 export const Introduction = () => {
   return (
     <div className="Introduction" data-testid="page-introduction">
@@ -19,7 +25,12 @@ export const Introduction = () => {
               </a>
               .
             </p>
-
+            <p>
+              If you need a quick tour to find your way around Laboratory, we got you covered!
+            </p>
+            <button onClick={startTour} className="s-button">
+              Start Tour
+            </button>
             <p>
               For Stellar docs, take a look at the{" "}
               <a href="https://developers.stellar.org/">
