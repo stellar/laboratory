@@ -3,7 +3,6 @@ import { RadioPicker } from "@/components/RadioPicker";
 type OrderPickerProps = {
   id: string;
   selectedOption: string | undefined;
-  value: string | undefined;
   onChange: (optionId: string | undefined, optionValue?: string) => void;
   labelSuffix?: string | React.ReactNode;
 };

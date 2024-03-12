@@ -7,6 +7,12 @@
     grid-template-rows: 1fr;
   }
 
+  &[data-is-open="true"] {
+    .ExpandBox__inset {
+      overflow: visible;
+    }
+  }
+
   &__inset {
     overflow: hidden;
   }

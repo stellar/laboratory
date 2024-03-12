@@ -3,7 +3,6 @@ import { RadioPicker } from "@/components/RadioPicker";
 type IncludeFailedPickerProps = {
   id: string;
   selectedOption: string | undefined;
-  value: boolean | undefined;
   onChange: (optionId: string | undefined, optionValue?: boolean) => void;
   labelSuffix?: string | React.ReactNode;
 };

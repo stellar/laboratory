@@ -7,7 +7,6 @@ import { NextLink } from "@/components/NextLink";
 import { LayoutContentContainer } from "@/components/layout/LayoutContentContainer";
 import { InfoCards } from "@/components/InfoCards";
 import { SdsLink } from "@/components/SdsLink";
-
 import { Routes } from "@/constants/routes";
 
 export default function Introduction() {
