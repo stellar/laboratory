@@ -2,6 +2,8 @@
 
 import { Card, Link, Text, Button, Icon } from "@stellar/design-system";
 
+import { GenerateKeypair } from "@/components/GenerateKeypair";
+
 import "../styles.scss";
 
 export default function CreateAccount() {
@@ -21,9 +23,7 @@ export default function CreateAccount() {
             </Text>
           </div>
           <div className="Account__CTA">
-            <Button size="md" variant="tertiary">
-              Generate keypair
-            </Button>
+            <GenerateKeypair />
           </div>
         </div>
       </Card>

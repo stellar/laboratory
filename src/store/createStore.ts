@@ -11,14 +11,14 @@ export interface Store {
   // Account
   account: {
     value: string;
-    nestedObject: {
-      nestedValue1: string;
-      nestedValue2: number;
+    keypair: {
+      publicKey: string;
+      secretKey: string;
     };
     update: (value: string) => void;
-    updateNested: (nestedVal: {
-      nestedValue1: string;
-      nestedValue2: number;
+    updateKeypair: (nestedVal: {
+      publicKey: string;
+      secretKey: string;
     }) => void;
     reset: () => void;
   };
@@ -40,20 +40,20 @@ export const createStore = (options: CreateStoreOptions) =>
           }),
         account: {
           value: "",
-          nestedObject: {
-            nestedValue1: "",
-            nestedValue2: 0,
+          keypair: {
+            publicKey: "",
+            secretKey: "",
           },
           update: (value: string) =>
             set((state) => {
               state.account.value = value;
             }),
-          updateNested: (nestedVal: {
-            nestedValue1: string;
-            nestedValue2: number;
+          updateKeypair: (nestedVal: {
+            publicKey: string;
+            secretKey: string;
           }) =>
             set((state) => {
-              state.account.nestedObject = nestedVal;
+              state.account.keypair = nestedVal;
             }),
           reset: () =>
             set((state) => {

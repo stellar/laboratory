@@ -10,4 +10,15 @@
   .CardText__button {
     align-self: flex-start;
   }
+
+  &__keypair {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: pxToRem(16px);
+
+    .Input__side-element--right {
+      cursor: pointer;
+    }
+  }
 }
