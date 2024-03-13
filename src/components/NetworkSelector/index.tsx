@@ -5,7 +5,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { Button, Icon, Input } from "@stellar/design-system";
+import { Button, Icon, Input, Notification } from "@stellar/design-system";
 
 import { NetworkIndicator } from "@/components/NetworkIndicator";
 import { localStorageSavedNetwork } from "@/helpers/localStorageSavedNetwork";
@@ -23,18 +23,18 @@ const NetworkOptions: Network[] = [
     passphrase: "Test SDF Future Network ; October 2022",
   },
   {
-    id: "mainnet",
-    label: "Mainnet",
-    horizonUrl: "https://horizon.stellar.org",
-    rpcUrl: "",
-    passphrase: "Public Global Stellar Network ; September 2015",
-  },
-  {
     id: "testnet",
     label: "Testnet",
     horizonUrl: "https://horizon-testnet.stellar.org",
     rpcUrl: "https://soroban-testnet.stellar.org",
     passphrase: "Test SDF Network ; September 2015",
+  },
+  {
+    id: "mainnet",
+    label: "Mainnet",
+    horizonUrl: "https://horizon.stellar.org",
+    rpcUrl: "",
+    passphrase: "Public Global Stellar Network ; September 2015",
   },
   {
     id: "custom",
@@ -277,6 +277,17 @@ export const NetworkSelector = () => {
           </div>
 
           <div className="NetworkSelector__body__inputs">
+            {activeNetworkId === "futurenet" ? (
+              <Notification
+                variant="warning"
+                title="Warning"
+                icon={<Icon.AlertTriangle />}
+              >
+                Futurenet is an unstable network. We recommend using Testnet for
+                your development purposes.
+              </Notification>
+            ) : null}
+
             <form onSubmit={handleSelectNetwork}>
               <Input
                 id="rpc-url"

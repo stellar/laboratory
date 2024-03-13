@@ -22,7 +22,7 @@ test.describe("Network selector", () => {
       page
         .getByTestId("networkSelector-dropdown")
         .getByTestId("networkSelector-option"),
-    ).toContainText(["Futurenet", "Mainnet", "Testnet", "Custom"]);
+    ).toContainText(["Futurenet", "Testnet", "Mainnet", "Custom"]);
   });
 
   test("Shows correct network data for the selected network", async ({

@@ -23,6 +23,10 @@
       --NetworkSelector-dot-color: var(--sds-clr-lilac-09);
     }
 
+    &[data-network="testnet"] {
+      --NetworkSelector-dot-color: var(--sds-clr-sky-09);
+    }
+
     &[data-network="mainnet"] {
       --NetworkSelector-dot-color: var(--sds-clr-green-09);
     }
