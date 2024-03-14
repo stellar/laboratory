@@ -14,7 +14,7 @@ const primaryNavLinks: NavLink[] = [
     label: "Introduction",
   },
   {
-    href: Routes.CREATE_ACCOUNT,
+    href: Routes.ACCOUNT_CREATE,
     label: "Account",
   },
   {

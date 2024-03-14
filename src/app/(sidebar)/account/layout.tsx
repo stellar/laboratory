@@ -13,12 +13,20 @@ export default function AccountTemplate({
       sidebar={{
         navItems: [
           {
-            route: Routes.CREATE_ACCOUNT,
+            route: Routes.ACCOUNT_CREATE,
             label: "Create Account",
           },
           {
-            route: Routes.FUND_ACCOUNT,
+            route: Routes.ACCOUNT_FUND,
             label: "Fund Account",
+          },
+          {
+            route: Routes.ACCOUNT_CREATE_MUXED,
+            label: "Create Muxed Account",
+          },
+          {
+            route: Routes.ACCOUNT_PARSE_MUXED,
+            label: "Parse Muxed Account",
           },
         ],
       }}

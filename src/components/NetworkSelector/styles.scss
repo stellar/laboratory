@@ -109,6 +109,8 @@
     }
 
     &__inputs {
+      display: grid;
+      gap: pxToRem(8px);
       padding: pxToRem(6px) pxToRem(8px);
       background-color: transparent;
       border-radius: pxToRem(4px);
