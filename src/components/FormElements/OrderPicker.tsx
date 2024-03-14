@@ -12,18 +12,16 @@ export const OrderPicker = ({
   selectedOption,
   onChange,
   labelSuffix,
-}: OrderPickerProps) => {
-  return (
-    <RadioPicker
-      id={id}
-      selectedOption={selectedOption}
-      label="Order"
-      labelSuffix={labelSuffix}
-      onChange={onChange}
-      options={[
-        { id: "asc", label: "Asc", value: "asc" },
-        { id: "desc", label: "Desc", value: "desc" },
-      ]}
-    />
-  );
-};
+}: OrderPickerProps) => (
+  <RadioPicker
+    id={id}
+    selectedOption={selectedOption}
+    label="Order"
+    labelSuffix={labelSuffix}
+    onChange={onChange}
+    options={[
+      { id: "asc", label: "Asc", value: "asc" },
+      { id: "desc", label: "Desc", value: "desc" },
+    ]}
+  />
+);

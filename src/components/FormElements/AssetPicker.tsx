@@ -285,27 +285,25 @@ type AssetPickerFieldsProps = {
   };
 };
 
-const AssetPickerFields = ({ id, code, issuer }: AssetPickerFieldsProps) => {
-  return (
-    <div className="RadioPicker__inset">
-      <Input
-        id={`${id}-code`}
-        fieldSize="md"
-        label="Asset Code"
-        value={code.value}
-        onChange={code.onChange}
-        onBlur={code.onBlur}
-        error={code.error}
-      />
-      <PubKeyPicker
-        id={`${id}-issuer`}
-        label="Issuer Account ID"
-        placeholder="Example: GCEXAMPLE5HWNK4AYSTEQ4UWDKHTCKADVS2AHF3UI2ZMO3DPUSM6Q4UG"
-        value={issuer.value}
-        onChange={issuer.onChange}
-        onBlur={issuer.onBlur}
-        error={issuer.error}
-      />
-    </div>
-  );
-};
+const AssetPickerFields = ({ id, code, issuer }: AssetPickerFieldsProps) => (
+  <div className="RadioPicker__inset">
+    <Input
+      id={`${id}-code`}
+      fieldSize="md"
+      label="Asset Code"
+      value={code.value}
+      onChange={code.onChange}
+      onBlur={code.onBlur}
+      error={code.error}
+    />
+    <PubKeyPicker
+      id={`${id}-issuer`}
+      label="Issuer Account ID"
+      placeholder="Example: GCEXAMPLE5HWNK4AYSTEQ4UWDKHTCKADVS2AHF3UI2ZMO3DPUSM6Q4UG"
+      value={issuer.value}
+      onChange={issuer.onChange}
+      onBlur={issuer.onBlur}
+      error={issuer.error}
+    />
+  </div>
+);

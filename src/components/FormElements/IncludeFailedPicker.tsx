@@ -12,18 +12,16 @@ export const IncludeFailedPicker = ({
   selectedOption,
   onChange,
   labelSuffix,
-}: IncludeFailedPickerProps) => {
-  return (
-    <RadioPicker
-      id={id}
-      selectedOption={selectedOption}
-      label="Include failed"
-      labelSuffix={labelSuffix}
-      onChange={onChange}
-      options={[
-        { id: "true", label: "True", value: true },
-        { id: "false", label: "False", value: false },
-      ]}
-    />
-  );
-};
+}: IncludeFailedPickerProps) => (
+  <RadioPicker
+    id={id}
+    selectedOption={selectedOption}
+    label="Include failed"
+    labelSuffix={labelSuffix}
+    onChange={onChange}
+    options={[
+      { id: "true", label: "True", value: true },
+      { id: "false", label: "False", value: false },
+    ]}
+  />
+);
