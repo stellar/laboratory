@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 export enum Routes {
   ROOT = "/",
   // Account
