@@ -1,7 +1,13 @@
 import { Icon, Input } from "@stellar/design-system";
 import { useStore } from "@/store/useStore";
 
-export const GenerateKeypair = ({ secretKey }: { secretKey: string }) => {
+export const GenerateKeypair = ({
+  publicKey,
+  secretKey,
+}: {
+  publicKey: string;
+  secretKey: string;
+}) => {
   const { account } = useStore();
 
   return (

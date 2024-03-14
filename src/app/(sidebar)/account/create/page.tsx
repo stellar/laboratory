@@ -40,7 +40,7 @@ export default function CreateAccount() {
             </Text>
           </div>
           <div className="Account__CTA">
-            <Button size="md" variant="tertiary" onClick={generateKeypair}>
+            <Button size="md" variant="secondary" onClick={generateKeypair}>
               Generate keypair
             </Button>
 
@@ -54,7 +54,10 @@ export default function CreateAccount() {
           </div>
         </div>
         <ExpandBox isExpanded={Boolean(account.publicKey && secretKey)}>
-          <GenerateKeypair secretKey={secretKey} />
+          <GenerateKeypair
+            publicKey={account.publicKey}
+            secretKey={secretKey}
+          />
         </ExpandBox>
       </Card>
     </div>
