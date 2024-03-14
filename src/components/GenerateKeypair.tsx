@@ -1,38 +1,35 @@
 import { Icon, Input } from "@stellar/design-system";
 import { useStore } from "@/store/useStore";
 
-export const GenerateKeypair = () => {
+export const GenerateKeypair = ({ secretKey }: { secretKey: string }) => {
   const { account } = useStore();
 
   return (
     <div className="Account__keypair">
-      {account.keypair.publicKey && (
+      {account.publicKey && (
         <Input
           readOnly
           id="generate-keypair-publickey"
           fieldSize="md"
           label="Public Key"
-          value={account.keypair.publicKey}
+          value={account.publicKey}
           copyButton={{
             position: "right",
           }}
         />
       )}
 
-      {account.keypair.secretKey && (
+      {secretKey && (
         <Input
           readOnly
           id="generate-keypair-secretkey"
           fieldSize="md"
           label="Secret Key"
-          value={account.keypair.secretKey}
-          rightElement={
-            <Icon.Copy01
-              onClick={() => {
-                navigator.clipboard.writeText(account.keypair.secretKey);
-              }}
-            />
-          }
+          value={secretKey}
+          isPassword
+          copyButton={{
+            position: "right",
+          }}
         />
       )}
     </div>

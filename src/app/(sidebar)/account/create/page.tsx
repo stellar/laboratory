@@ -1,25 +1,27 @@
 "use client";
+
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, Text, Button } from "@stellar/design-system";
 import { Keypair } from "stellar-sdk";
 
-import { GenerateKeypair } from "@/components/GenerateKeypair";
 import { Routes } from "@/constants/routes";
 import { useStore } from "@/store/useStore";
+import { GenerateKeypair } from "@/components/GenerateKeypair";
+import { ExpandBox } from "@/components/ExpandBox";
 
 import "../styles.scss";
 
 export default function CreateAccount() {
   const { account } = useStore();
   const router = useRouter();
+  const [secretKey, setSecretKey] = useState("");
 
   const generateKeypair = () => {
     let keypair = Keypair.random();
 
-    account.updateKeypair({
-      publicKey: keypair.publicKey(),
-      secretKey: keypair.secret(),
-    });
+    account.update(keypair.publicKey());
+    setSecretKey(keypair.secret());
   };
 
   return (
@@ -51,7 +53,9 @@ export default function CreateAccount() {
             </Button>
           </div>
 
-          <GenerateKeypair />
+          <ExpandBox isExpanded={Boolean(account.publicKey && secretKey)}>
+            <GenerateKeypair secretKey={secretKey} />
+          </ExpandBox>
         </div>
       </Card>
     </div>
