@@ -27,13 +27,9 @@ export const GenerateKeypair = () => {
           fieldSize="md"
           label="Public Key"
           value={account.keypair.publicKey}
-          rightElement={
-            <Icon.Copy01
-              onClick={() => {
-                navigator.clipboard.writeText(account.keypair.publicKey);
-              }}
-            />
-          }
+          copyButton={{
+            position: "right",
+          }}
         />
       )}
 
