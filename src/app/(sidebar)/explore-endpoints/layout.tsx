@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { LayoutSidebarContent } from "@/components/layout/LayoutSidebarContent";
 import { Routes } from "@/constants/routes";
 
