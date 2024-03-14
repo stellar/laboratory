@@ -11,6 +11,10 @@
     align-self: flex-start;
   }
 
+  &__CTA {
+    display: flex;
+    gap: pxToRem(18px);
+  }
   &__keypair {
     display: flex;
     align-items: flex-start;

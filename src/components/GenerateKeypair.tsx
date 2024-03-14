@@ -36,6 +36,7 @@ export const GenerateKeypair = () => {
           }
         />
       )}
+
       {account.keypair.secretKey && (
         <Input
           readOnly

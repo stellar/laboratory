@@ -1,12 +1,15 @@
 "use client";
-
-import { Card, Link, Text, Button, Icon } from "@stellar/design-system";
+import { useRouter } from "next/navigation";
+import { Card, Text, Button } from "@stellar/design-system";
 
 import { GenerateKeypair } from "@/components/GenerateKeypair";
+import { Routes } from "@/constants/routes";
 
 import "../styles.scss";
 
 export default function CreateAccount() {
+  const router = useRouter();
+
   return (
     <div className="Account">
       <Card>
@@ -24,6 +27,14 @@ export default function CreateAccount() {
           </div>
           <div className="Account__CTA">
             <GenerateKeypair />
+
+            <Button
+              size="md"
+              variant="tertiary"
+              onClick={() => router.push(Routes.ACCOUNT_FUND)}
+            >
+              Fund account with Friendbot
+            </Button>
           </div>
         </div>
       </Card>
