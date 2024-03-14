@@ -19,6 +19,7 @@
     display: flex;
     align-items: flex-start;
     flex-direction: column;
+    margin-top: pxToRem(24px);
     gap: pxToRem(16px);
 
     .Input__side-element--right {

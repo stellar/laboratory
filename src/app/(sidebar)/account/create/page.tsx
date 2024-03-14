@@ -52,11 +52,10 @@ export default function CreateAccount() {
               Fund account with Friendbot
             </Button>
           </div>
-
-          <ExpandBox isExpanded={Boolean(account.publicKey && secretKey)}>
-            <GenerateKeypair secretKey={secretKey} />
-          </ExpandBox>
         </div>
+        <ExpandBox isExpanded={Boolean(account.publicKey && secretKey)}>
+          <GenerateKeypair secretKey={secretKey} />
+        </ExpandBox>
       </Card>
     </div>
   );
