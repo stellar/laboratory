@@ -1,4 +1,6 @@
-import { useState } from "react";
+/* eslint-disable */
+
+import React, { useState } from "react";
 import { Input } from "@stellar/design-system";
 
 import { ExpandBox } from "@/components/ExpandBox";

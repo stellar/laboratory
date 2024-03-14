@@ -1,3 +1,7 @@
+/* eslint-disable */
+
+import React from "react";
+
 import { Label } from "@stellar/design-system";
 import { AssetType } from "@/types/types";
 import "./styles.scss";

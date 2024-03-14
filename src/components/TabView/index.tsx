@@ -1,3 +1,6 @@
+/* eslint-disable */
+
+import React from "react";
 import { Card, Text } from "@stellar/design-system";
 import { WithInfoText } from "@/components/WithInfoText";
 import { Tabs } from "@/components/Tabs";

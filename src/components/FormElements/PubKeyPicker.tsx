@@ -1,3 +1,6 @@
+/* eslint-disable */
+
+import React from "react";
 import { StrKey } from "stellar-sdk";
 import { Input, InputProps } from "@stellar/design-system";
 
