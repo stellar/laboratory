@@ -1,5 +1,4 @@
 import { Icon, Input } from "@stellar/design-system";
-import { useStore } from "@/store/useStore";
 
 export const GenerateKeypair = ({
   publicKey,
@@ -8,17 +7,15 @@ export const GenerateKeypair = ({
   publicKey: string;
   secretKey: string;
 }) => {
-  const { account } = useStore();
-
   return (
     <div className="Account__keypair">
-      {account.publicKey && (
+      {publicKey && (
         <Input
           readOnly
           id="generate-keypair-publickey"
           fieldSize="md"
           label="Public Key"
-          value={account.publicKey}
+          value={publicKey}
           copyButton={{
             position: "right",
           }}
