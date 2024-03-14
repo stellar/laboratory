@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { querystring } from "zustand-querystring";

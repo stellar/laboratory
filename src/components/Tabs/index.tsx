@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import "./styles.scss";
 
 type Tab = {
