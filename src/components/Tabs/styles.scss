@@ -1,0 +1,37 @@
+@use "../../styles/utils.scss" as *;
+
+.Tabs {
+  --Tabs-default-text: var(--sds-clr-gray-11);
+  --Tabs-default-background: transparent;
+
+  display: flex;
+  align-items: center;
+  gap: pxToRem(8px);
+
+  .Tab {
+    font-size: pxToRem(14px);
+    line-height: pxToRem(20px);
+    font-weight: var(--sds-fw-medium);
+    color: var(--Tabs-default-text);
+    background-color: var(--Tabs-default-background);
+    border-radius: pxToRem(6px);
+    padding: pxToRem(6px) pxToRem(10px);
+    cursor: pointer;
+    transition:
+      color var(--sds-anim-transition-default),
+      background-color var(--sds-anim-transition-default);
+
+    @media (hover: hover) {
+      &:hover {
+        --Tabs-default-text: var(--sds-clr-lilac-11);
+        --Tabs-default-background: var(--sds-clr-lilac-04);
+      }
+    }
+
+    &[data-is-active="true"] {
+      --Tabs-default-text: var(--sds-clr-lilac-11);
+      --Tabs-default-background: var(--sds-clr-lilac-04);
+      cursor: default;
+    }
+  }
+}

@@ -1,5 +1,11 @@
+// =============================================================================
+// Generic
+// =============================================================================
 export type EmptyObj = Record<PropertyKey, never>;
 
+// =============================================================================
+// Network
+// =============================================================================
 export type NetworkType = "testnet" | "mainnet" | "futurenet" | "custom";
 
 export type Network = {
@@ -32,6 +38,38 @@ export type StatusPageScheduled = {
   incident_updates: StatusPageIncident[];
 };
 
+// =============================================================================
+// Asset
+// =============================================================================
+export type AssetType =
+  | "none"
+  | "native"
+  | "issued"
+  | "credit_alphanum4"
+  | "credit_alphanum12"
+  | "liquidity_pool_shares";
+
+export type AssetString = {
+  id: AssetType;
+  label: string;
+  value: string | undefined;
+};
+
+export type AssetObjectValue = {
+  type: AssetType | undefined;
+  code: string;
+  issuer: string;
+};
+
+export type AssetObject = {
+  id: AssetType;
+  label: string;
+  value: AssetObjectValue;
+};
+
+// =============================================================================
+// Component
+// =============================================================================
 export type InfoCard = {
   id: string;
   title: string;

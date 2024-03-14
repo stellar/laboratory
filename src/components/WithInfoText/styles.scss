@@ -1,0 +1,34 @@
+@use "../../styles/utils.scss" as *;
+
+.WithInfoText {
+  --WithInfoText-icon-color: var(--sds-clr-gray-08);
+
+  display: inline-flex;
+  gap: pxToRem(2px);
+  align-items: center;
+
+  &__button {
+    display: block;
+
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: pxToRem(2px);
+    margin: 0;
+
+    svg {
+      display: block;
+      width: pxToRem(12px);
+      height: pxToRem(12px);
+      transition: stroke var(--sds-anim-transition-default);
+      stroke: var(--WithInfoText-icon-color);
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        --WithInfoText-icon-color: var(--sds-clr-gray-11);
+      }
+    }
+  }
+}
