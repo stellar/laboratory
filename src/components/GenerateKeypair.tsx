@@ -1,25 +1,11 @@
-import { Button, Icon, Input } from "@stellar/design-system";
-import { Keypair } from "stellar-sdk";
+import { Icon, Input } from "@stellar/design-system";
 import { useStore } from "@/store/useStore";
 
 export const GenerateKeypair = () => {
   const { account } = useStore();
 
-  const generateKeypair = () => {
-    let keypair = Keypair.random();
-
-    account.updateKeypair({
-      publicKey: keypair.publicKey(),
-      secretKey: keypair.secret(),
-    });
-  };
-
   return (
     <div className="Account__keypair">
-      <Button size="md" variant="tertiary" onClick={generateKeypair}>
-        Generate keypair
-      </Button>
-
       {account.keypair.publicKey && (
         <Input
           readOnly

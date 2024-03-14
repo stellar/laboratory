@@ -13,7 +13,7 @@
 
   &__CTA {
     display: flex;
-    gap: pxToRem(18px);
+    gap: pxToRem(18px) pxToRem(8px);
   }
   &__keypair {
     display: flex;
