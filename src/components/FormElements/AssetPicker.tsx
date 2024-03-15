@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import React, { useState } from "react";
 import { Input } from "@stellar/design-system";
 
@@ -21,7 +19,9 @@ type AssetPickerProps = (
       includeNone?: boolean;
       includeNative?: undefined;
       onChange: (
+        // eslint-disable-next-line no-unused-vars
         optionId: AssetType | undefined,
+        // eslint-disable-next-line no-unused-vars
         optionValue: string | undefined,
       ) => void;
     }
@@ -31,7 +31,9 @@ type AssetPickerProps = (
       includeNone?: undefined;
       includeNative?: boolean;
       onChange: (
+        // eslint-disable-next-line no-unused-vars
         optionId: AssetType | undefined,
+        // eslint-disable-next-line no-unused-vars
         optionValue: AssetObjectValue | undefined,
       ) => void;
     }
@@ -276,13 +278,17 @@ type AssetPickerFieldsProps = {
   code: {
     value: string;
     error: string;
+    // eslint-disable-next-line no-unused-vars
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    // eslint-disable-next-line no-unused-vars
     onBlur: (e: React.ChangeEvent<HTMLInputElement>) => void;
   };
   issuer: {
     value: string;
     error: string;
+    // eslint-disable-next-line no-unused-vars
     onChange: (value: string, issuerError: string) => void;
+    // eslint-disable-next-line no-unused-vars
     onBlur: (value: string, issuerError: string) => void;
   };
 };
