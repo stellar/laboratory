@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import {
   Alert,
@@ -19,10 +19,115 @@ import { SdsLink } from "@/components/SdsLink";
 import { Routes } from "@/constants/routes";
 import { WithInfoText } from "@/components/WithInfoText";
 
+import { useStore } from "@/store/useStore";
+import { validate } from "@/validate";
+import { isEmptyObject } from "@/helpers/isEmptyObject";
+import { AnyObject, Network } from "@/types/types";
+
+// TODO: build URL with valid params
+// TODO: render fields based on route
+// TODO: add streaming
+
 export default function ExploreEndpoints() {
   const pathname = usePathname();
 
+  const { exploreEndpoints, network } = useStore();
+  const {
+    params,
+    currentEndpoint,
+    network: endpointNetwork,
+    updateParams,
+    updateCurrentEndpoint,
+    updateNetwork,
+    resetParams,
+  } = exploreEndpoints;
+
+  const requiredFields = ["sponsor"];
+
+  // TODO: fields to validate
+  const paramValidation = {
+    sponsor: validate.publicKey,
+    signer: validate.publicKey,
+    asset: validate.asset,
+  };
+
+  // TODO:
+  // const formParams = {
+  //   sponsor: "",
+  //   signer: "",
+  //   // asset: "",
+  //   cursor: "",
+  //   limit: "",
+  //   // order: "",
+  // };
+
   const [activeTab, setActiveTab] = useState("endpoints-tab-params");
+  const [formError, setFormError] = useState<AnyObject>({});
+  const currentPage = pathname.split(Routes.EXPLORE_ENDPOINTS)?.[1];
+
+  const isSubmitEnabled = () => {
+    const missingReqFields = requiredFields.reduce((res, cur) => {
+      if (!params[cur]) {
+        return [...res, cur];
+      }
+
+      return res;
+    }, [] as string[]);
+
+    if (missingReqFields.length !== 0) {
+      return false;
+    }
+
+    return isEmptyObject(formError);
+  };
+
+  useEffect(() => {
+    // Validate saved params when the page loads
+    const paramErrors = () => {
+      return Object.keys(params).reduce((res, param) => {
+        const error = (paramValidation as any)?.[param](
+          params[param],
+          requiredFields.includes(param),
+        );
+
+        if (error) {
+          return { ...res, [param]: error };
+        }
+
+        return res;
+      }, {});
+    };
+
+    setFormError(paramErrors());
+
+    // We want to check this only when the page mounts for the first time
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (currentPage) {
+      updateCurrentEndpoint(currentPage);
+    }
+
+    // Clear form and errors if navigating to another endpoint page. We don't
+    // want to keep previous form values.
+    if (currentEndpoint && currentEndpoint !== currentPage) {
+      resetParams();
+      setFormError({});
+    }
+  }, [currentPage, currentEndpoint, updateCurrentEndpoint, resetParams]);
+
+  useEffect(() => {
+    // Save network for endpoints if we don't have it yet.
+    if (network.id && !endpointNetwork.id) {
+      updateNetwork(network as Network);
+      // When network changes, clear saved params and errors.
+    } else if (network.id && network.id !== endpointNetwork.id) {
+      resetParams();
+      setFormError({});
+      updateNetwork(network as Network);
+    }
+  }, [endpointNetwork.id, network, resetParams, updateNetwork]);
 
   if (pathname === Routes.EXPLORE_ENDPOINTS) {
     return <ExploreEndpointsLandingPage />;
@@ -46,8 +151,12 @@ export default function ExploreEndpoints() {
           // TODO: set request type
           leftElement={<div className="Endpoints__input__requestType">GET</div>}
         />
-        {/* TODO: disable if can't submit */}
-        <Button size="md" variant="secondary" type="submit">
+        <Button
+          size="md"
+          variant="secondary"
+          type="submit"
+          disabled={!isSubmitEnabled()}
+        >
           Submit
         </Button>
         {/* TODO: add text to copy */}
@@ -64,6 +173,58 @@ export default function ExploreEndpoints() {
         <div className="Endpoints__content__inputs">
           {/* TODO: render fields for path */}
           {`Explore Endpoints: ${pathname}`}
+
+          <div>
+            <Input
+              label="Sponsor"
+              id="sponsor"
+              fieldSize="md"
+              value={params.sponsor || ""}
+              onChange={(e) => {
+                updateParams({ [e.target.id]: e.target.value });
+                const error = paramValidation.sponsor(
+                  e.target.value,
+                  requiredFields.includes(e.target.id),
+                );
+
+                if (error) {
+                  setFormError({ ...formError, [e.target.id]: error });
+                } else {
+                  if (formError[e.target.id]) {
+                    const updatedErrors = { ...formError };
+                    delete updatedErrors[e.target.id];
+                    setFormError(updatedErrors);
+                  }
+                }
+              }}
+              error={formError.sponsor}
+            />
+
+            <Input
+              label="Signer"
+              id="signer"
+              fieldSize="md"
+              value={params.signer || ""}
+              onChange={(e) => {
+                updateParams({ [e.target.id]: e.target.value });
+                const error = paramValidation.signer(
+                  e.target.value,
+                  requiredFields.includes(e.target.id),
+                );
+
+                if (error) {
+                  setFormError({ ...formError, [e.target.id]: error });
+                } else {
+                  if (formError[e.target.id]) {
+                    const updatedErrors = { ...formError };
+                    delete updatedErrors[e.target.id];
+                    setFormError(updatedErrors);
+                  }
+                }
+              }}
+              error={formError.signer}
+            />
+          </div>
         </div>
 
         <WithInfoText href="https://developers.stellar.org/network/horizon/structure/streaming">
