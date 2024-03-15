@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { querystring } from "zustand-querystring";
@@ -8,11 +6,13 @@ import { EmptyObj, Network } from "@/types/types";
 export interface Store {
   // Shared
   network: Network | EmptyObj;
+  // eslint-disable-next-line no-unused-vars
   selectNetwork: (network: Network) => void;
 
   // Account
   account: {
     publicKey: string;
+    // eslint-disable-next-line no-unused-vars
     update: (value: string) => void;
     reset: () => void;
   };

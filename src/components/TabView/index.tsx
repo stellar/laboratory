@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import React from "react";
 import { Card, Text } from "@stellar/design-system";
 import { WithInfoText } from "@/components/WithInfoText";
@@ -20,6 +18,7 @@ type TabViewProps = {
   tab4?: Tab;
   tab5?: Tab;
   tab6?: Tab;
+  // eslint-disable-next-line no-unused-vars
   onTabChange: (id: string) => void;
   activeTabId: string;
   staticTop?: React.ReactNode;
