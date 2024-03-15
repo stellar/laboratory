@@ -1,4 +1,4 @@
-import { Icon, Input } from "@stellar/design-system";
+import { Input } from "@stellar/design-system";
 
 export const GenerateKeypair = ({
   publicKey,

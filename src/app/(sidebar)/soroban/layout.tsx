@@ -1,5 +1,7 @@
 "use client";
 
+import React from "react";
+
 import { LayoutSidebarContent } from "@/components/layout/LayoutSidebarContent";
 
 export default function TransactionTemplate({

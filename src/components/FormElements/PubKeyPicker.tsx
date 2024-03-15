@@ -1,3 +1,4 @@
+import React from "react";
 import { StrKey } from "stellar-sdk";
 import { Input, InputProps } from "@stellar/design-system";
 
@@ -9,7 +10,9 @@ interface PubKeyPickerProps extends Omit<InputProps, "fieldSize"> {
   placeholder?: string;
   value: string;
   error: string | "";
+  // eslint-disable-next-line no-unused-vars
   onChange: (value: string, error: string) => void;
+  // eslint-disable-next-line no-unused-vars
   onBlur: (value: string, error: string) => void;
 }
 
