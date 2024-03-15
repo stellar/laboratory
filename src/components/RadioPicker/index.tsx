@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import React from "react";
 
 import { Label } from "@stellar/design-system";
@@ -12,7 +10,9 @@ interface RadioPickerProps<TOptionValue = string> {
   label?: string | React.ReactNode;
   labelSuffix?: string | React.ReactNode;
   onChange: (
+    // eslint-disable-next-line no-unused-vars
     optionId: AssetType | undefined,
+    // eslint-disable-next-line no-unused-vars
     optionValue?: TOptionValue,
   ) => void;
   options: {

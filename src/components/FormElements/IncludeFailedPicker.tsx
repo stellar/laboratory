@@ -1,11 +1,10 @@
-/* eslint-disable */
-
 import React from "react";
 import { RadioPicker } from "@/components/RadioPicker";
 
 type IncludeFailedPickerProps = {
   id: string;
   selectedOption: string | undefined;
+  // eslint-disable-next-line no-unused-vars
   onChange: (optionId: string | undefined, optionValue?: boolean) => void;
   labelSuffix?: string | React.ReactNode;
 };
