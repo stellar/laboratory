@@ -6,6 +6,7 @@ import React, {
   useState,
 } from "react";
 import { Button, Icon, Input, Notification } from "@stellar/design-system";
+import { Networks } from "stellar-sdk";
 
 import { NetworkIndicator } from "@/components/NetworkIndicator";
 import { localStorageSavedNetwork } from "@/helpers/localStorageSavedNetwork";
@@ -20,21 +21,21 @@ const NetworkOptions: Network[] = [
     label: "Futurenet",
     horizonUrl: "https://horizon-futurenet.stellar.org",
     rpcUrl: "https://rpc-futurenet.stellar.org",
-    passphrase: "Test SDF Future Network ; October 2022",
+    passphrase: Networks.FUTURENET,
   },
   {
     id: "testnet",
     label: "Testnet",
     horizonUrl: "https://horizon-testnet.stellar.org",
     rpcUrl: "https://soroban-testnet.stellar.org",
-    passphrase: "Test SDF Network ; September 2015",
+    passphrase: Networks.TESTNET,
   },
   {
     id: "mainnet",
     label: "Mainnet",
     horizonUrl: "https://horizon.stellar.org",
     rpcUrl: "",
-    passphrase: "Public Global Stellar Network ; September 2015",
+    passphrase: Networks.PUBLIC,
   },
   {
     id: "custom",

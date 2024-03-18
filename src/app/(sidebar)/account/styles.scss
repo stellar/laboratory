@@ -11,6 +11,14 @@
     align-self: flex-start;
   }
 
+  .Text--dark {
+    color: var(--sds-clr-gray-12);
+  }
+
+  .Text--purple {
+    color: var(--sds-clr-lilac-11);
+  }
+
   &__CTA {
     display: flex;
     gap: pxToRem(18px) pxToRem(8px);
@@ -24,6 +32,35 @@
 
     .Input__side-element--right {
       cursor: pointer;
+    }
+  }
+
+  &__alertbox {
+    display: flex;
+    padding: pxToRem(12px);
+    gap: pxToRem(12px);
+
+    .Text {
+      margin-bottom: 0;
+    }
+
+    &__content {
+      display: flex;
+      flex-direction: column;
+      gap: pxToRem(12px);
+    }
+
+    &__icon {
+      padding: pxToRem(9.5px);
+      background-color: var(--sds-clr-gray-02);
+      border: 1px solid var(--sds-clr-gray-06);
+      border-radius: 6px;
+      align-self: flex-start;
+    }
+
+    &__CTA {
+      display: flex;
+      gap: pxToRem(12px);
     }
   }
 }

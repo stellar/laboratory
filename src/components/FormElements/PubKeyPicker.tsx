@@ -1,6 +1,6 @@
 import React from "react";
-import { StrKey } from "stellar-sdk";
 import { Input, InputProps } from "@stellar/design-system";
+import { validatePublicKey } from "@/helpers/validatePublicKey";
 
 interface PubKeyPickerProps extends Omit<InputProps, "fieldSize"> {
   id: string;
@@ -27,41 +27,23 @@ export const PubKeyPicker = ({
   onChange,
   onBlur,
   ...props
-}: PubKeyPickerProps) => {
-  const validatePublicKey = (issuer: string) => {
-    if (!issuer) {
-      return "Asset issuer is required.";
-    }
-
-    if (issuer.startsWith("M")) {
-      if (!StrKey.isValidMed25519PublicKey(issuer)) {
-        return "Muxed account address is invalid.";
-      }
-    } else if (!StrKey.isValidEd25519PublicKey(issuer)) {
-      return "Public key is invalid.";
-    }
-
-    return "";
-  };
-
-  return (
-    <Input
-      id={id}
-      fieldSize={fieldSize}
-      label={label}
-      labelSuffix={labelSuffix}
-      placeholder={placeholder}
-      value={value}
-      onChange={(e) => {
-        const error = validatePublicKey(e.target.value);
-        onChange(e.target.value, error);
-      }}
-      onBlur={(e) => {
-        const error = validatePublicKey(e.target.value);
-        onBlur(e.target.value, error);
-      }}
-      error={error}
-      {...props}
-    />
-  );
-};
+}: PubKeyPickerProps) => (
+  <Input
+    id={id}
+    fieldSize={fieldSize}
+    label={label}
+    labelSuffix={labelSuffix}
+    placeholder={placeholder}
+    value={value}
+    onChange={(e) => {
+      const error = validatePublicKey(e.target.value);
+      onChange(e.target.value, error);
+    }}
+    onBlur={(e) => {
+      const error = validatePublicKey(e.target.value);
+      onBlur(e.target.value, error);
+    }}
+    error={error}
+    {...props}
+  />
+);
