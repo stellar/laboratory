@@ -15,21 +15,4 @@
       stroke: var(--sds-clr-gray-09);
     }
   }
-  // display: grid;
-  // grid-template-rows: 0fr;
-  // transition: grid-template-rows 200ms ease-out;
-
-  // &[data-is-expanded="true"] {
-  //   grid-template-rows: 1fr;
-  // }
-
-  // &[data-is-open="true"] {
-  //   .ExpandBox__inset {
-  //     overflow: visible;
-  //   }
-  // }
-
-  // &__inset {
-  //   overflow: hidden;
-  // }
 }
