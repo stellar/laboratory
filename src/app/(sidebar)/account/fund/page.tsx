@@ -31,7 +31,7 @@ const callFriendBot = async ({
     network === "futurenet"
       ? "https://friendbot-futurenet.stellar.org"
       : "https://friendbot.stellar.org";
-  const response = await fetch(friendbotURL + "/?addr=" + publicKey);
+  const response = await fetch(`${friendbotURL}/?addr=${publicKey}`);
 
   return response;
 };
