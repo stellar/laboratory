@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 import {
   Card,
@@ -82,12 +83,12 @@ export default function FundAccount() {
         <div className="Account__card">
           <div className="CardText">
             <Text size="lg" as="h1" weight="medium">
-              Friendbot: fund a futurenet network account
+              Friendbot: fund a {network.id} network account
             </Text>
 
             <Text size="sm" as="p">
               The friendbot is a horizon API endpoint that will fund an account
-              with 10,000 lumens on the futurenet network.
+              with 10,000 lumens on the {network.id} network.
             </Text>
           </div>
 
@@ -112,7 +113,6 @@ export default function FundAccount() {
               isLoading={isLoading}
               onClick={() => {
                 const error = validatePublicKey(generatedPublicKey);
-
                 setErrorMessage(error);
 
                 if (!error) {
@@ -153,7 +153,7 @@ export default function FundAccount() {
                 addlClassName="Text--dark"
               >
                 Successfully funded {shortenStellarAddress(account.publicKey)}{" "}
-                on Futurenet
+                on {network.id}
               </Text>
               <div className="Account__alertbox__CTA">
                 <Text size="md" as="span" weight="semi-bold">
@@ -165,7 +165,15 @@ export default function FundAccount() {
                   weight="semi-bold"
                   addlClassName="Text--purple"
                 >
-                  View on stellar.expert
+                  <Link
+                    href={`https://stellar.expert/explorer/${network.id}/account/${account.publicKey}`}
+                    passHref
+                    legacyBehavior
+                  >
+                    <a target="_blank" rel="noopener noreferrer">
+                      View on stellar.expert
+                    </a>
+                  </Link>
                 </Text>
               </div>
             </div>
