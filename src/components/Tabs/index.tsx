@@ -12,6 +12,7 @@ export const Tabs = ({
 }: {
   tabs: Tab[];
   activeTabId: string;
+  // eslint-disable-next-line no-unused-vars
   onChange: (id: string) => void;
 }) => {
   return (

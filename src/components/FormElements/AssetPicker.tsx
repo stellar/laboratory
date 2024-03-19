@@ -1,3 +1,4 @@
+import React from "react";
 import { Input } from "@stellar/design-system";
 
 import { ExpandBox } from "@/components/ExpandBox";
@@ -12,6 +13,7 @@ type AssetPickerProps = {
   labelSuffix?: string | React.ReactNode;
   value: AssetObjectValue | undefined;
   error: { code: string | undefined; issuer: string | undefined } | undefined;
+  // eslint-disable-next-line no-unused-vars
   onChange: (asset: AssetObjectValue | undefined) => void;
   assetInput: "issued" | "alphanumeric";
   fitContent?: boolean;
@@ -150,11 +152,13 @@ type AssetPickerFieldsProps = {
   code: {
     value: string;
     error: string;
+    // eslint-disable-next-line no-unused-vars
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   };
   issuer: {
     value: string;
     error: string;
+    // eslint-disable-next-line no-unused-vars
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   };
 };

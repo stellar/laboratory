@@ -1,3 +1,4 @@
+import React from "react";
 import { Banner, Link } from "@stellar/design-system";
 
 import { getRelevantMaintenanceMsg } from "@/helpers/getRelevantMaintenanceMsg";

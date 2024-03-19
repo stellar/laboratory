@@ -1,3 +1,4 @@
+import React from "react";
 import { Input, InputProps } from "@stellar/design-system";
 
 interface LimitPickerProps extends Omit<InputProps, "fieldSize"> {
@@ -7,6 +8,7 @@ interface LimitPickerProps extends Omit<InputProps, "fieldSize"> {
   placeholder?: string;
   value: string;
   error: string | undefined;
+  // eslint-disable-next-line no-unused-vars
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 

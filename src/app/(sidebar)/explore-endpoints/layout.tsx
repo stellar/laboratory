@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { LayoutSidebarContent } from "@/components/layout/LayoutSidebarContent";
 import { EXPLORE_ENDPOINTS_PAGES_HORIZON } from "@/constants/exploreEndpointsPages";
 

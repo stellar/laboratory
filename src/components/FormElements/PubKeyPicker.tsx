@@ -1,3 +1,4 @@
+import React from "react";
 import { Input, InputProps } from "@stellar/design-system";
 
 interface PubKeyPickerProps extends Omit<InputProps, "fieldSize"> {
@@ -8,6 +9,7 @@ interface PubKeyPickerProps extends Omit<InputProps, "fieldSize"> {
   placeholder?: string;
   value: string;
   error: string | undefined;
+  // eslint-disable-next-line no-unused-vars
   onChange: (e: React.ChangeEvent<any>) => void;
 }
 

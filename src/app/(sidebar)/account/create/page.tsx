@@ -1,10 +1,29 @@
 "use client";
 
-import { Card, Link, Text, Button, Icon } from "@stellar/design-system";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Card, Text, Button } from "@stellar/design-system";
+import { Keypair } from "stellar-sdk";
+
+import { Routes } from "@/constants/routes";
+import { useStore } from "@/store/useStore";
+import { GenerateKeypair } from "@/components/GenerateKeypair";
+import { ExpandBox } from "@/components/ExpandBox";
 
 import "../styles.scss";
 
 export default function CreateAccount() {
+  const { account } = useStore();
+  const router = useRouter();
+  const [secretKey, setSecretKey] = useState("");
+
+  const generateKeypair = () => {
+    let keypair = Keypair.random();
+
+    account.update(keypair.publicKey());
+    setSecretKey(keypair.secret());
+  };
+
   return (
     <div className="Account">
       <Card>
@@ -21,11 +40,25 @@ export default function CreateAccount() {
             </Text>
           </div>
           <div className="Account__CTA">
-            <Button size="md" variant="tertiary">
+            <Button size="md" variant="secondary" onClick={generateKeypair}>
               Generate keypair
+            </Button>
+
+            <Button
+              size="md"
+              variant="tertiary"
+              onClick={() => router.push(Routes.ACCOUNT_FUND)}
+            >
+              Fund account with Friendbot
             </Button>
           </div>
         </div>
+        <ExpandBox isExpanded={Boolean(account.publicKey && secretKey)}>
+          <GenerateKeypair
+            publicKey={account.publicKey}
+            secretKey={secretKey}
+          />
+        </ExpandBox>
       </Card>
     </div>
   );

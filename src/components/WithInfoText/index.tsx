@@ -1,3 +1,4 @@
+import React from "react";
 import { Icon, Tooltip } from "@stellar/design-system";
 import { NextLink } from "@/components/NextLink";
 import "./styles.scss";

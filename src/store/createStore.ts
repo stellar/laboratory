@@ -8,21 +8,15 @@ import { AnyObject, EmptyObj, Network } from "@/types/types";
 export interface Store {
   // Shared
   network: Network | EmptyObj;
+  // eslint-disable-next-line no-unused-vars
   selectNetwork: (network: Network) => void;
   resetStoredData: () => void;
 
   // Account
   account: {
-    value: string;
-    nestedObject: {
-      nestedValue1: string;
-      nestedValue2: number;
-    };
+    publicKey: string;
+    // eslint-disable-next-line no-unused-vars
     update: (value: string) => void;
-    updateNested: (nestedVal: {
-      nestedValue1: string;
-      nestedValue2: number;
-    }) => void;
     reset: () => void;
   };
 
@@ -32,8 +26,11 @@ export interface Store {
     currentEndpoint: string | undefined;
     params: AnyObject;
     isStreaming: boolean;
+    // eslint-disable-next-line no-unused-vars
     updateNetwork: (network: Network) => void;
+    // eslint-disable-next-line no-unused-vars
     updateCurrentEndpoint: (endpoint: string) => void;
+    // eslint-disable-next-line no-unused-vars
     updateParams: (params: AnyObject) => void;
     resetParams: () => void;
     reset: () => void;
@@ -74,25 +71,14 @@ export const createStore = (options: CreateStoreOptions) =>
           }),
         // Account
         account: {
-          value: "",
-          nestedObject: {
-            nestedValue1: "",
-            nestedValue2: 0,
-          },
+          publicKey: "",
           update: (value: string) =>
             set((state) => {
-              state.account.value = value;
-            }),
-          updateNested: (nestedVal: {
-            nestedValue1: string;
-            nestedValue2: number;
-          }) =>
-            set((state) => {
-              state.account.nestedObject = nestedVal;
+              state.account.publicKey = value;
             }),
           reset: () =>
             set((state) => {
-              state.account.value = "";
+              state.account.publicKey = "";
             }),
         },
         // Explore Endpoints
@@ -132,7 +118,7 @@ export const createStore = (options: CreateStoreOptions) =>
         select() {
           return {
             network: true,
-            account: true,
+            account: false,
             exploreEndpoints: {
               params: true,
               isStreaming: true,
