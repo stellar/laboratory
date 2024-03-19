@@ -147,10 +147,6 @@ export default function ExploreEndpoints() {
           return "native";
         }
 
-        if (value.type === "none") {
-          return false;
-        }
-
         return `${value.code}:${value.issuer}`;
       }
 

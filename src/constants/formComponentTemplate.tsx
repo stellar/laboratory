@@ -71,7 +71,6 @@ export const formComponentTemplate = (
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={parseJsonString(templ.value)}
             error={templ.error}
-            includeNone={custom?.includeNone}
             includeNative={custom?.includeNative}
             onChange={templ.onChange}
           />

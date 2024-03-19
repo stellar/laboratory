@@ -47,7 +47,6 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
             custom: {
               asset: {
                 assetInput: "issued",
-                includeNone: true,
                 includeNative: true,
               },
             },

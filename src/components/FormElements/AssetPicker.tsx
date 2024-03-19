@@ -17,7 +17,6 @@ type AssetPickerProps = {
   onChange: (asset: AssetObjectValue | undefined) => void;
   assetInput: "issued" | "alphanumeric";
   fitContent?: boolean;
-  includeNone?: boolean;
   includeNative?: boolean;
 };
 
@@ -30,7 +29,6 @@ export const AssetPicker = ({
   onChange,
   assetInput,
   fitContent,
-  includeNone,
   includeNative = true,
 }: AssetPickerProps) => {
   let options: AssetObject[] = [];
@@ -42,21 +40,6 @@ export const AssetPicker = ({
         label: "Native",
         value: {
           type: "native",
-          code: "",
-          issuer: "",
-        },
-      },
-      ...options,
-    ];
-  }
-
-  if (includeNone) {
-    options = [
-      {
-        id: "none",
-        label: "None",
-        value: {
-          type: "none",
           code: "",
           issuer: "",
         },

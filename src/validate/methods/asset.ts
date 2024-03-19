@@ -7,7 +7,7 @@ export const asset = (
   asset: AssetObjectValue | undefined,
   isRequired?: boolean,
 ) => {
-  if (asset?.type && ["none", "native"].includes(asset.type)) {
+  if (asset?.type && asset.type === "native") {
     return false;
   }
 

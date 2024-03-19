@@ -45,7 +45,6 @@ export type StatusPageScheduled = {
 // Asset
 // =============================================================================
 export type AssetType =
-  | "none"
   | "native"
   | "issued"
   | "credit_alphanum4"
