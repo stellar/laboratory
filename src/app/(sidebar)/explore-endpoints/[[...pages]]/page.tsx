@@ -16,7 +16,6 @@ import {
 import { InfoCards } from "@/components/InfoCards";
 import { TabView } from "@/components/TabView";
 import { SdsLink } from "@/components/SdsLink";
-import { Routes } from "@/constants/routes";
 import { WithInfoText } from "@/components/WithInfoText";
 
 import { useStore } from "@/store/useStore";
@@ -25,6 +24,7 @@ import { sanitizeArray } from "@/helpers/sanitizeArray";
 import { sanitizeObject } from "@/helpers/sanitizeObject";
 import { parseJsonString } from "@/helpers/parseJsonString";
 
+import { Routes } from "@/constants/routes";
 import { EXPLORE_ENDPOINTS_PAGES_HORIZON } from "@/constants/exploreEndpointsPages";
 import { formComponentTemplate } from "@/constants/formComponentTemplate";
 import { AnyObject, AssetObject, Network } from "@/types/types";
