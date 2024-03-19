@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import {
   Alert,
@@ -20,16 +20,29 @@ import { Routes } from "@/constants/routes";
 import { WithInfoText } from "@/components/WithInfoText";
 
 import { useStore } from "@/store/useStore";
-import { validate } from "@/validate";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
-import { AnyObject, Network } from "@/types/types";
+import { sanitizeArray } from "@/helpers/sanitizeArray";
+import { sanitizeObject } from "@/helpers/sanitizeObject";
+import { parseJsonString } from "@/helpers/parseJsonString";
 
-// TODO: build URL with valid params
-// TODO: render fields based on route
-// TODO: add streaming
+import { EXPLORE_ENDPOINTS_PAGES_HORIZON } from "@/constants/exploreEndpointsPages";
+import { formComponentTemplate } from "@/constants/formComponentTemplate";
+import { AnyObject, AssetObject, Network } from "@/types/types";
+
+// TODO: handle streaming
 
 export default function ExploreEndpoints() {
   const pathname = usePathname();
+  const currentPage = pathname.split(Routes.EXPLORE_ENDPOINTS)?.[1];
+
+  const page = EXPLORE_ENDPOINTS_PAGES_HORIZON.navItems
+    .find((page) => pathname.includes(page.route))
+    ?.nestedItems?.find((i) => i.route === pathname);
+
+  const pageData = page?.form;
+  const requiredFields = sanitizeArray(
+    pageData?.requiredParams?.split(",") || [],
+  );
 
   const { exploreEndpoints, network } = useStore();
   const {
@@ -42,28 +55,9 @@ export default function ExploreEndpoints() {
     resetParams,
   } = exploreEndpoints;
 
-  const requiredFields = ["sponsor"];
-
-  // TODO: fields to validate
-  const paramValidation = {
-    sponsor: validate.publicKey,
-    signer: validate.publicKey,
-    asset: validate.asset,
-  };
-
-  // TODO:
-  // const formParams = {
-  //   sponsor: "",
-  //   signer: "",
-  //   // asset: "",
-  //   cursor: "",
-  //   limit: "",
-  //   // order: "",
-  // };
-
   const [activeTab, setActiveTab] = useState("endpoints-tab-params");
   const [formError, setFormError] = useState<AnyObject>({});
-  const currentPage = pathname.split(Routes.EXPLORE_ENDPOINTS)?.[1];
+  const [requestUrl, setRequestUrl] = useState<string>("");
 
   const isSubmitEnabled = () => {
     const missingReqFields = requiredFields.reduce((res, cur) => {
@@ -85,8 +79,8 @@ export default function ExploreEndpoints() {
     // Validate saved params when the page loads
     const paramErrors = () => {
       return Object.keys(params).reduce((res, param) => {
-        const error = (paramValidation as any)?.[param](
-          params[param],
+        const error = formComponentTemplate(param)?.validate?.(
+          parseJsonString(params[param]),
           requiredFields.includes(param),
         );
 
@@ -129,9 +123,62 @@ export default function ExploreEndpoints() {
     }
   }, [endpointNetwork.id, network, resetParams, updateNetwork]);
 
-  if (pathname === Routes.EXPLORE_ENDPOINTS) {
-    return <ExploreEndpointsLandingPage />;
-  }
+  const buildUrl = useCallback(() => {
+    const mapPathParamToValue = (pathParams: string[]) => {
+      return pathParams.map((pp) => params[pp] ?? pp).join("/");
+    };
+
+    const endpointPath = `/accounts${pageData?.endpointPathParams ? `/${mapPathParamToValue(pageData.endpointPathParams.split(","))}` : ""}`;
+    const endpointParams = pageData?.endpointParams;
+
+    const baseUrl = `${endpointNetwork.horizonUrl}${endpointPath}`;
+    const searchParams = new URLSearchParams();
+    const templateParams = endpointParams?.split(",");
+
+    const getParamRequestValue = (param: string) => {
+      const value = parseJsonString(params[param]);
+
+      if (!value) {
+        return false;
+      }
+
+      if (param === "asset") {
+        if (value.type === "native") {
+          return "native";
+        }
+
+        if (value.type === "none") {
+          return false;
+        }
+
+        return `${value.code}:${value.issuer}`;
+      }
+
+      return value;
+    };
+
+    // Build search params keeping the same params order
+    templateParams?.forEach((p) => {
+      const paramVal = getParamRequestValue(p);
+
+      if (paramVal) {
+        searchParams.set(p, paramVal);
+      }
+    });
+
+    const searchParamString = searchParams.toString();
+
+    return `${baseUrl}${searchParamString ? `?${searchParamString}` : ""}`;
+  }, [
+    endpointNetwork.horizonUrl,
+    pageData?.endpointParams,
+    pageData?.endpointPathParams,
+    params,
+  ]);
+
+  useEffect(() => {
+    setRequestUrl(buildUrl());
+  }, [buildUrl]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -139,17 +186,23 @@ export default function ExploreEndpoints() {
   };
 
   const renderEndpointUrl = () => {
+    if (!pageData) {
+      return null;
+    }
+
     return (
       <div className="Endpoints__urlBar">
         <Input
           id="endpoint-url"
           fieldSize="md"
-          // TODO: update URL
-          value="https://"
+          value={requestUrl}
           readOnly
           disabled
-          // TODO: set request type
-          leftElement={<div className="Endpoints__input__requestType">GET</div>}
+          leftElement={
+            <div className="Endpoints__input__requestType">
+              {pageData.requestMethod}
+            </div>
+          }
         />
         <Button
           size="md"
@@ -159,8 +212,7 @@ export default function ExploreEndpoints() {
         >
           Submit
         </Button>
-        {/* TODO: add text to copy */}
-        <CopyText textToCopy="">
+        <CopyText textToCopy={requestUrl}>
           <Button size="md" variant="tertiary" icon={<Icon.Copy01 />}></Button>
         </CopyText>
       </div>
@@ -168,81 +220,125 @@ export default function ExploreEndpoints() {
   };
 
   const renderFields = () => {
+    if (!pageData) {
+      return null;
+    }
+
+    const allFields = sanitizeArray([
+      ...pageData.endpointPathParams.split(","),
+      ...pageData.endpointParams.split(","),
+    ]);
+
     return (
       <div className="Endpoints__content">
         <div className="Endpoints__content__inputs">
-          {/* TODO: render fields for path */}
-          {`Explore Endpoints: ${pathname}`}
+          {allFields.map((f) => {
+            const component = formComponentTemplate(f, pageData.custom?.[f]);
 
-          <div>
-            <Input
-              label="Sponsor"
-              id="sponsor"
-              fieldSize="md"
-              value={params.sponsor || ""}
-              onChange={(e) => {
-                updateParams({ [e.target.id]: e.target.value });
-                const error = paramValidation.sponsor(
-                  e.target.value,
-                  requiredFields.includes(e.target.id),
-                );
+            if (component) {
+              const isRequired = requiredFields.includes(f);
 
-                if (error) {
-                  setFormError({ ...formError, [e.target.id]: error });
-                } else {
-                  if (formError[e.target.id]) {
-                    const updatedErrors = { ...formError };
-                    delete updatedErrors[e.target.id];
-                    setFormError(updatedErrors);
-                  }
-                }
-              }}
-              error={formError.sponsor}
-            />
+              switch (f) {
+                case "asset":
+                  return component.render({
+                    value: params[f],
+                    error: formError[f],
+                    isRequired,
+                    onChange: (assetObj: AssetObject) => {
+                      updateParams({
+                        [f]: isEmptyObject(sanitizeObject(assetObj || {}))
+                          ? undefined
+                          : JSON.stringify(assetObj),
+                      });
+                      const error = component.validate?.(assetObj, isRequired);
 
-            <Input
-              label="Signer"
-              id="signer"
-              fieldSize="md"
-              value={params.signer || ""}
-              onChange={(e) => {
-                updateParams({ [e.target.id]: e.target.value });
-                const error = paramValidation.signer(
-                  e.target.value,
-                  requiredFields.includes(e.target.id),
-                );
+                      if (error) {
+                        setFormError({ ...formError, [f]: error });
+                      } else {
+                        if (formError[f]) {
+                          const updatedErrors = { ...formError };
+                          delete updatedErrors[f];
+                          setFormError(updatedErrors);
+                        }
+                      }
+                    },
+                  });
+                case "order":
+                  return component.render({
+                    value: params[f],
+                    error: formError[f],
+                    isRequired,
+                    onChange: (optionId: string | undefined) => {
+                      updateParams({ [f]: optionId });
+                      const error = component.validate?.(optionId, isRequired);
 
-                if (error) {
-                  setFormError({ ...formError, [e.target.id]: error });
-                } else {
-                  if (formError[e.target.id]) {
-                    const updatedErrors = { ...formError };
-                    delete updatedErrors[e.target.id];
-                    setFormError(updatedErrors);
-                  }
-                }
-              }}
-              error={formError.signer}
-            />
-          </div>
+                      if (error) {
+                        setFormError({ ...formError, [f]: error });
+                      } else {
+                        if (formError[f]) {
+                          const updatedErrors = { ...formError };
+                          delete updatedErrors[f];
+                          setFormError(updatedErrors);
+                        }
+                      }
+                    },
+                  });
+                default:
+                  return component.render({
+                    value: params[f],
+                    error: formError[f],
+                    isRequired,
+                    onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                      updateParams({ [f]: e.target.value });
+                      const error = component.validate?.(
+                        e.target.value,
+                        isRequired,
+                      );
+
+                      if (error) {
+                        setFormError({ ...formError, [f]: error });
+                      } else {
+                        if (formError[f]) {
+                          const updatedErrors = { ...formError };
+                          delete updatedErrors[f];
+                          setFormError(updatedErrors);
+                        }
+                      }
+                    },
+                  });
+              }
+            }
+
+            return null;
+          })}
         </div>
 
-        <WithInfoText href="https://developers.stellar.org/network/horizon/structure/streaming">
-          <Checkbox
-            id="streaming-mode"
-            label="Server-Sent Events (streaming mode)"
-            fieldSize="md"
-          />
-        </WithInfoText>
+        {pageData.isStreaming ? (
+          <WithInfoText href="https://developers.stellar.org/network/horizon/structure/streaming">
+            <Checkbox
+              id="streaming-mode"
+              label="Server-Sent Events (streaming mode)"
+              fieldSize="md"
+            />
+          </WithInfoText>
+        ) : null}
       </div>
     );
   };
+
+  if (pathname === Routes.EXPLORE_ENDPOINTS) {
+    return <ExploreEndpointsLandingPage />;
+  }
+
+  if (!pageData) {
+    return <>{`${page?.label} page is coming soon.`}</>;
+  }
 
   return (
     <>
       <form onSubmit={handleSubmit}>
         <TabView
-          heading={{ title: "Heading title", href: "http://stellar.org" }}
+          heading={{ title: page.label, href: pageData.info }}
           staticTop={renderEndpointUrl()}
           tab1={{
             id: "endpoints-tab-params",

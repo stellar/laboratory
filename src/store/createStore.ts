@@ -2,8 +2,8 @@ import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { querystring } from "zustand-querystring";
 
-import { AnyObject, EmptyObj, Network } from "@/types/types";
 import { sanitizeObject } from "@/helpers/sanitizeObject";
+import { AnyObject, EmptyObj, Network } from "@/types/types";
 
 export interface Store {
   // Shared
@@ -28,12 +28,9 @@ export interface Store {
 
   // Explore Endpoints
   exploreEndpoints: {
-    // TODO: do we need this?
     network: Network | EmptyObj;
     currentEndpoint: string | undefined;
-    // TODO: ??? type every endpoint and use that type here
     params: AnyObject;
-    // TODO: move to params?
     isStreaming: boolean;
     updateNetwork: (network: Network) => void;
     updateCurrentEndpoint: (endpoint: string) => void;

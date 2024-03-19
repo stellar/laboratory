@@ -1,51 +1,19 @@
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { assetCode } from "./assetCode";
 import { publicKey } from "./publicKey";
-
-// TODO: remove once other PR is merged
-type AssetType =
-  | "none"
-  | "native"
-  | "issued"
-  | "credit_alphanum4"
-  | "credit_alphanum12"
-  | "liquidity_pool_shares";
-
-type AssetObjectValue = {
-  type: AssetType | undefined;
-  code: string;
-  issuer: string;
-};
+import { AssetObjectValue } from "@/types/types";
 
 export const asset = (
-  asset: string | AssetObjectValue,
+  asset: AssetObjectValue | undefined,
   isRequired?: boolean,
 ) => {
-  let code;
-  let issuer;
-  let type;
-
-  if (typeof asset === "string") {
-    // No need to validate native asset
-    if (asset === "native") {
-      return false;
-    }
-
-    [code, issuer] = asset.split(":");
-  } else {
-    // No need to validate native asset
-    if (asset.type === "native") {
-      return false;
-    }
-
-    code = asset?.code;
-    issuer = asset?.issuer;
-    type = asset?.type;
+  if (asset?.type && ["none", "native"].includes(asset.type)) {
+    return false;
   }
 
   const invalid = Object.entries({
-    code: assetCode(code, type, isRequired),
-    issuer: publicKey(issuer, isRequired),
+    code: assetCode(asset?.code || "", asset?.type, isRequired),
+    issuer: publicKey(asset?.issuer || "", isRequired),
   }).reduce((res, cur) => {
     const [key, value] = cur;
 

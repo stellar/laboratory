@@ -5,8 +5,8 @@ export const assetCode = (
   assetType: AssetType | undefined,
   isRequired?: boolean,
 ) => {
-  if (isRequired && !code) {
-    return "Asset code is required.";
+  if (!code) {
+    return isRequired ? "Asset code is required." : false;
   }
 
   let minLength;
