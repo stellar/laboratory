@@ -53,7 +53,7 @@ export default function CreateAccount() {
             </Button>
           </div>
         </div>
-        <ExpandBox isExpanded={Boolean(account.publicKey && secretKey)}>
+        <ExpandBox isExpanded={Boolean(account.publicKey)}>
           <GenerateKeypair
             publicKey={account.publicKey}
             secretKey={secretKey}
