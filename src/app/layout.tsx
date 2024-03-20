@@ -8,6 +8,8 @@ import { StoreProvider } from "@/store/StoreProvider";
 import "@stellar/design-system/build/styles.min.css";
 import "@/styles/globals.scss";
 
+export const dynamic = "force-dynamic";
+
 // TODO: update metadata
 export const metadata: Metadata = {
   title: "Laboratory - Stellar",

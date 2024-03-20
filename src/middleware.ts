@@ -5,8 +5,10 @@ export function middleware(request: NextRequest) {
   const cspHeader = `
     default-src 'self';
     connect-src 'self' https://9sl3dhr1twv1.statuspage.io/api/v2/;
-    script-src 'self' 'nonce-${nonce}' 'strict-dynamic' ${process.env.NODE_ENV === "production" ? "" : `'unsafe-eval'`};
-    style-src 'self' https://fonts.googleapis.com 'unsafe-inline';
+    script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: http: 'unsafe-inline' ${
+      process.env.NODE_ENV === "production" ? "" : `'unsafe-eval'`
+    };
+    style-src 'self' https://fonts.googleapis.com 'strict-dynamic' https: http: 'unsafe-inline';
     img-src 'self' blob: data:;
     font-src 'self' https://fonts.gstatic.com/;
     object-src 'none';
@@ -60,9 +62,3 @@ export const config = {
     },
   ],
 };
-
-// https://fonts.googleapis.com
-
-// script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: http: 'unsafe-inline' ${
-//   process.env.NODE_ENV === "production" ? "" : `'unsafe-eval'`
-// };
