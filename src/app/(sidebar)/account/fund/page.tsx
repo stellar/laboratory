@@ -75,7 +75,7 @@ export default function FundAccount() {
             </Button>
 
             <Button
-              disabled={!account.publicKey}
+              disabled={!account.publicKey || isLoading}
               size="md"
               variant="tertiary"
               onClick={() => {
