@@ -1,6 +1,10 @@
 @use "../../../styles/utils.scss" as *;
 
 .Account {
+  display: flex;
+  flex-direction: column;
+  gap: pxToRem(12px);
+
   &__card {
     display: flex;
     flex-direction: column;

@@ -1,81 +1,45 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-
-import {
-  Card,
-  Icon,
-  IconButton,
-  Input,
-  Text,
-  Button,
-} from "@stellar/design-system";
+import { useEffect, useState } from "react";
+import { Alert, Card, Input, Text, Button } from "@stellar/design-system";
 
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import { validatePublicKey } from "@/helpers/validatePublicKey";
+import { useFriendBot } from "@/query/useFriendBot";
 import { useStore } from "@/store/useStore";
 
-import { AlertBox } from "@/components/AlertBox";
-
 import "../styles.scss";
-
-const callFriendBot = async ({
-  network,
-  publicKey,
-}: {
-  network: string;
-  publicKey: string;
-}) => {
-  const friendbotURL =
-    network === "futurenet"
-      ? "https://friendbot-futurenet.stellar.org"
-      : "https://friendbot.stellar.org";
-  const response = await fetch(`${friendbotURL}/?addr=${publicKey}`);
-
-  return response;
-};
 
 export default function FundAccount() {
   const { account, network } = useStore();
 
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [generatedPublicKey, setGeneratedPublicKey] = useState<string>("");
+  const [inlineErrorMessage, setInlineErrorMessage] = useState<string | null>(
+    null,
+  );
 
-  const [generatedPublicKey, setGeneratedPublicKey] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const { error, isError, isLoading, isSuccess, refetch, isFetchedAfterMount } =
+    useFriendBot({
+      network: network.id,
+      publicKey: generatedPublicKey,
+    });
 
-  const fundAccount = async () => {
-    try {
-      setIsLoading(true);
-      setError("");
-
-      const data = await callFriendBot({
-        network: network.id,
-        publicKey: account.publicKey,
-      });
-
-      if (!data.ok) {
-        const errorBody = await data.json();
-
-        throw new Error(errorBody.status || "An error occurred");
-      }
-
-      setIsSuccess(true);
-    } catch (error: any) {
-      let errorMessage = "";
-
-      if (error.status === 0) {
-        errorMessage = `Unable to reach Friendbot server at ${network.id}`;
-      } else {
-        errorMessage = `Failed to fund ${account.publicKey} on the ${network.id}`;
-      }
-      setError(errorMessage);
-    } finally {
-      setIsLoading(false);
+  useEffect(() => {
+    if (isError || isSuccess) {
+      setShowAlert(true);
     }
-  };
+  }, [isError, isSuccess]);
+
+  useEffect(() => {
+    if (generatedPublicKey) {
+      const error = validatePublicKey(generatedPublicKey);
+
+      if (!error) {
+        setInlineErrorMessage("");
+      }
+    }
+  }, [generatedPublicKey]);
 
   return (
     <div className="Account">
@@ -99,24 +63,25 @@ export default function FundAccount() {
             value={generatedPublicKey}
             onChange={(e) => {
               setGeneratedPublicKey(e.target.value);
+
+              const error = validatePublicKey(e.target.value);
+              setInlineErrorMessage(error);
             }}
             placeholder="Ex: GCEXAMPLE5HWNK4AYSTEQ4UWDKHTCKADVS2AHF3UI2ZMO3DPUSM6Q4UG"
-            rightElement={<Icon.Wallet03 />}
-            error={errorMessage}
+            error={inlineErrorMessage}
           />
 
           <div className="Account__CTA">
             <Button
-              disabled={!generatedPublicKey}
+              disabled={
+                inlineErrorMessage === null || Boolean(inlineErrorMessage)
+              }
               size="md"
-              variant={error ? "error" : "secondary"}
+              variant={isFetchedAfterMount && isError ? "error" : "secondary"}
               isLoading={isLoading}
               onClick={() => {
-                const error = validatePublicKey(generatedPublicKey);
-                setErrorMessage(error);
-
-                if (!error) {
-                  fundAccount();
+                if (!inlineErrorMessage) {
+                  refetch();
                 }
               }}
             >
@@ -135,50 +100,34 @@ export default function FundAccount() {
         </div>
       </Card>
 
-      {isSuccess && (
-        <AlertBox>
-          <div className="Account__alertbox">
-            <div className="Account__alertbox__icon">
-              <IconButton
-                altText="Info"
-                icon={<Icon.InfoCircle />}
-                variant="success"
-              />
-            </div>
-            <div className="Account__alertbox__content">
-              <Text
-                size="md"
-                as="span"
-                weight="medium"
-                addlClassName="Text--dark"
-              >
-                Successfully funded {shortenStellarAddress(account.publicKey)}{" "}
-                on {network.id}
-              </Text>
-              <div className="Account__alertbox__CTA">
-                <Text size="md" as="span" weight="semi-bold">
-                  Dismiss
-                </Text>
-                <Text
-                  size="md"
-                  as="span"
-                  weight="semi-bold"
-                  addlClassName="Text--purple"
-                >
-                  <Link
-                    href={`https://stellar.expert/explorer/${network.id}/account/${account.publicKey}`}
-                    passHref
-                    legacyBehavior
-                  >
-                    <a target="_blank" rel="noopener noreferrer">
-                      View on stellar.expert
-                    </a>
-                  </Link>
-                </Text>
-              </div>
-            </div>
-          </div>
-        </AlertBox>
+      {showAlert && isFetchedAfterMount && isSuccess && (
+        <Alert
+          placement="inline"
+          variant="primary"
+          actionLabel="View on stellar.expert"
+          actionLink={`https://stellar.expert/explorer/${network.id}/account/${account.publicKey}`}
+          onClose={() => {
+            setShowAlert(false);
+          }}
+        >
+          <Text size="md" as="span" weight="medium" addlClassName="Text--dark">
+            Successfully funded {shortenStellarAddress(account.publicKey)} on{" "}
+            {network.id}
+          </Text>
+        </Alert>
+      )}
+      {showAlert && isFetchedAfterMount && isError && (
+        <Alert
+          placement="inline"
+          variant="error"
+          onClose={() => {
+            setShowAlert(false);
+          }}
+        >
+          <Text size="md" as="span" weight="medium" addlClassName="Text--dark">
+            {error.message}
+          </Text>
+        </Alert>
       )}
     </div>
   );
