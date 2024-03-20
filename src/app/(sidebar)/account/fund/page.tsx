@@ -15,9 +15,7 @@ export default function FundAccount() {
 
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [generatedPublicKey, setGeneratedPublicKey] = useState<string>("");
-  const [inlineErrorMessage, setInlineErrorMessage] = useState<string | null>(
-    null,
-  );
+  const [inlineErrorMessage, setInlineErrorMessage] = useState<string>("");
 
   const { error, isError, isLoading, isSuccess, refetch, isFetchedAfterMount } =
     useFriendBot({
@@ -30,16 +28,6 @@ export default function FundAccount() {
       setShowAlert(true);
     }
   }, [isError, isSuccess]);
-
-  useEffect(() => {
-    if (generatedPublicKey) {
-      const error = validatePublicKey(generatedPublicKey);
-
-      if (!error) {
-        setInlineErrorMessage("");
-      }
-    }
-  }, [generatedPublicKey]);
 
   return (
     <div className="Account">
@@ -73,9 +61,7 @@ export default function FundAccount() {
 
           <div className="Account__CTA">
             <Button
-              disabled={
-                inlineErrorMessage === null || Boolean(inlineErrorMessage)
-              }
+              disabled={!generatedPublicKey || Boolean(inlineErrorMessage)}
               size="md"
               variant={isFetchedAfterMount && isError ? "error" : "secondary"}
               isLoading={isLoading}
@@ -92,7 +78,10 @@ export default function FundAccount() {
               disabled={!account.publicKey}
               size="md"
               variant="tertiary"
-              onClick={() => setGeneratedPublicKey(account.publicKey)}
+              onClick={() => {
+                setInlineErrorMessage("");
+                setGeneratedPublicKey(account.publicKey);
+              }}
             >
               Fill in with generated key
             </Button>
@@ -110,7 +99,7 @@ export default function FundAccount() {
             setShowAlert(false);
           }}
         >
-          <Text size="md" as="span" weight="medium" addlClassName="Text--dark">
+          <Text size="md" as="span" weight="medium">
             Successfully funded {shortenStellarAddress(account.publicKey)} on{" "}
             {network.id}
           </Text>
@@ -124,7 +113,7 @@ export default function FundAccount() {
             setShowAlert(false);
           }}
         >
-          <Text size="md" as="span" weight="medium" addlClassName="Text--dark">
+          <Text size="md" as="span" weight="medium">
             {error.message}
           </Text>
         </Alert>
