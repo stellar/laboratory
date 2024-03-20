@@ -234,6 +234,25 @@ export default function ExploreEndpoints() {
             if (component) {
               const isRequired = requiredFields.includes(f);
 
+              // storeValue is saved in the store and may need special
+              // formatting (sanitizing object or array, for exmaple).
+              // Error check needs the original value.
+              const handleChange = (value: any, storeValue: any) => {
+                updateParams({
+                  [f]: storeValue,
+                });
+
+                const error = component.validate?.(value, isRequired);
+
+                if (error) {
+                  setFormError({ ...formError, [f]: error });
+                } else if (formError[f]) {
+                  const updatedErrors = { ...formError };
+                  delete updatedErrors[f];
+                  setFormError(updatedErrors);
+                }
+              };
+
               switch (f) {
                 case "asset":
                   return component.render({
@@ -241,22 +260,12 @@ export default function ExploreEndpoints() {
                     error: formError[f],
                     isRequired,
                     onChange: (assetObj: AssetObject) => {
-                      updateParams({
-                        [f]: isEmptyObject(sanitizeObject(assetObj || {}))
+                      handleChange(
+                        assetObj,
+                        isEmptyObject(sanitizeObject(assetObj || {}))
                           ? undefined
                           : JSON.stringify(assetObj),
-                      });
-                      const error = component.validate?.(assetObj, isRequired);
-
-                      if (error) {
-                        setFormError({ ...formError, [f]: error });
-                      } else {
-                        if (formError[f]) {
-                          const updatedErrors = { ...formError };
-                          delete updatedErrors[f];
-                          setFormError(updatedErrors);
-                        }
-                      }
+                      );
                     },
                   });
                 case "order":
@@ -265,18 +274,7 @@ export default function ExploreEndpoints() {
                     error: formError[f],
                     isRequired,
                     onChange: (optionId: string | undefined) => {
-                      updateParams({ [f]: optionId });
-                      const error = component.validate?.(optionId, isRequired);
-
-                      if (error) {
-                        setFormError({ ...formError, [f]: error });
-                      } else {
-                        if (formError[f]) {
-                          const updatedErrors = { ...formError };
-                          delete updatedErrors[f];
-                          setFormError(updatedErrors);
-                        }
-                      }
+                      handleChange(optionId, optionId);
                     },
                   });
                 default:
@@ -285,21 +283,7 @@ export default function ExploreEndpoints() {
                     error: formError[f],
                     isRequired,
                     onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-                      updateParams({ [f]: e.target.value });
-                      const error = component.validate?.(
-                        e.target.value,
-                        isRequired,
-                      );
-
-                      if (error) {
-                        setFormError({ ...formError, [f]: error });
-                      } else {
-                        if (formError[f]) {
-                          const updatedErrors = { ...formError };
-                          delete updatedErrors[f];
-                          setFormError(updatedErrors);
-                        }
-                      }
+                      handleChange(e.target.value, e.target.value);
                     },
                   });
               }
