@@ -60,6 +60,11 @@ export default function ExploreEndpoints() {
   const [requestUrl, setRequestUrl] = useState<string>("");
 
   const isSubmitEnabled = () => {
+    let isValidReqFields = true;
+    let isValidReqAssetFields = true;
+    let isValid = true;
+
+    // Checking if all required fields have values
     const missingReqFields = requiredFields.reduce((res, cur) => {
       if (!params[cur]) {
         return [...res, cur];
@@ -68,11 +73,25 @@ export default function ExploreEndpoints() {
       return res;
     }, [] as string[]);
 
-    if (missingReqFields.length !== 0) {
-      return false;
+    isValidReqFields = missingReqFields.length === 0;
+
+    // Checking if there are any errors
+    isValid = isEmptyObject(formError);
+
+    // When non-native asset is selected, code and issuer fields are required
+    if (params.asset) {
+      const assetObj = parseJsonString(params.asset);
+
+      if (
+        ["issued", "credit_alphanum4", "credit_alphanum12"].includes(
+          assetObj.type,
+        )
+      ) {
+        isValidReqAssetFields = Boolean(assetObj.code && assetObj.issuer);
+      }
     }
 
-    return isEmptyObject(formError);
+    return isValidReqAssetFields && isValidReqFields && isValid;
   };
 
   useEffect(() => {
