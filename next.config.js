@@ -10,12 +10,10 @@ const nextConfig = {
 const cspHeader = `
     default-src 'self';
     connect-src 'self' https://9sl3dhr1twv1.statuspage.io/api/v2/;
-    script-src 'self' 'strict-dynamic' ${
-      process.env.NODE_ENV === "production"
-        ? ""
-        : `'unsafe-eval' 'unsafe-inline'`
+    script-src 'self' 'unsafe-inline' ${
+      process.env.NODE_ENV === "production" ? "" : `'unsafe-eval'`
     };
-    style-src 'self' https://fonts.googleapis.com ${process.env.NODE_ENV === "production" ? "" : `'unsafe-inline'`};
+    style-src 'self' https://fonts.googleapis.com 'unsafe-inline';
     img-src 'self' blob: data:;
     font-src 'self' https://fonts.gstatic.com/;
     object-src 'none';
