@@ -24,31 +24,34 @@ export default function Introduction() {
     },
     {
       id: "tools",
-      title: "Tools",
+      title: "Developer Tools",
       description:
-        "Tools for reading and interacting with Soroban smart contracts on the Stellar Network",
+        "Tools, like the Stellar CLI, for reading and interacting with smart contracts on the Stellar Network",
       buttonLabel: "See tools",
       buttonIcon: undefined,
       buttonAction: () => router.push(Routes.SOROBAN_CONTRACT_EXPLORER),
     },
     {
-      id: "soroban-rpc",
-      title: "Learn about the Soroban RPC",
-      description: "Learn about the Soroban RPC, a RPC gateway to Stellar",
+      id: "stellar-rpc",
+      title: "Stellar RPC",
+      description: "Learn about the Stellar RPC, a RPC gateway to Stellar",
       buttonLabel: "Go to docs",
       buttonIcon: <Icon.LinkExternal01 />,
       buttonAction: () =>
-        window.open("https://soroban.stellar.org/docs/reference/rpc", "_blank"),
+        window.open(
+          "https://developers.stellar.org/network/soroban-rpc",
+          "_blank",
+        ),
     },
     {
       id: "horizon",
-      title: "Learn about Horizon",
+      title: "Horizon",
       description:
         "Learn about the Horizon for interacting with the Stellar network",
       buttonLabel: "Go to docs",
       buttonIcon: <Icon.LinkExternal01 />,
       buttonAction: () =>
-        window.open("https://developers.stellar.org/api/horizon", "_blank"),
+        window.open("https://developers.stellar.org/network/horizon", "_blank"),
     },
   ];
 
@@ -62,7 +65,7 @@ export default function Introduction() {
 
           <Text size="sm" as="p">
             The Stellar Laboratory is a set of tools that enables people to try
-            out and learn about the Stellar network. The laboratory can{" "}
+            out and learn about the Stellar network. The Laboratory can{" "}
             <NextLink href={Routes.BUILD_TRANSACTION} sds-variant="primary">
               build transactions
             </NextLink>
@@ -74,7 +77,8 @@ export default function Introduction() {
             <NextLink href={Routes.SUBMIT_TRANSACTION} sds-variant="primary">
               submit them to the network
             </NextLink>
-            . It can also make requests to any of the Horizon endpoints.
+            . It can also make requests to RPC and Horizon endpoints. You can
+            save your transactions and runbooks for future use.
           </Text>
 
           <Text size="sm" as="p">

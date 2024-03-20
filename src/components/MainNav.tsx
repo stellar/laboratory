@@ -37,7 +37,7 @@ const primaryNavLinks: NavLink[] = [
 
 const secondaryNavLinks: NavLink[] = [
   {
-    href: "https://developers.stellar.org/docs",
+    href: "https://developers.stellar.org/network",
     label: "View Documentation",
   },
 ];

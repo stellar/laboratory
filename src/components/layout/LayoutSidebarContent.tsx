@@ -69,7 +69,10 @@ export const LayoutSidebarContent = ({
             ))}
           </div>
           <div className="LabLayout__sidebar__wrapper">
-            <NextLink href="https://stellar.org" className="SidebarLink">
+            <NextLink
+              href="https://github.com/stellar/laboratory/issues"
+              className="SidebarLink"
+            >
               <Icon.MessageTextSquare02 /> Got product feedback?
             </NextLink>
           </div>

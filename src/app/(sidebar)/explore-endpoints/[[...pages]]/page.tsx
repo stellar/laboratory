@@ -10,6 +10,7 @@ import {
   CopyText,
   Icon,
   Input,
+  Link,
   Text,
 } from "@stellar/design-system";
 
@@ -17,6 +18,7 @@ import { InfoCards } from "@/components/InfoCards";
 import { TabView } from "@/components/TabView";
 import { SdsLink } from "@/components/SdsLink";
 import { WithInfoText } from "@/components/WithInfoText";
+import { NextLink } from "@/components/NextLink";
 
 import { useStore } from "@/store/useStore";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
@@ -357,7 +359,7 @@ export default function ExploreEndpoints() {
       </form>
       <Alert variant="primary" placement="inline">
         This tool can be used to run queries against the{" "}
-        <SdsLink href="https://developers.stellar.org/network/horizon">
+        <SdsLink href="https://developers.stellar.org/network/horizon/resources">
           REST API endpoints
         </SdsLink>{" "}
         on the Horizon server. Horizon is the client facing library for the
@@ -370,23 +372,26 @@ export default function ExploreEndpoints() {
 const ExploreEndpointsLandingPage = () => {
   const infoCards = [
     {
-      id: "soroban-rpc",
-      title: "RPC Endpoints",
-      description: "TODO: add text",
-      buttonLabel: "See docs",
-      buttonIcon: <Icon.LinkExternal01 />,
-      buttonAction: () =>
-        window.open("https://soroban.stellar.org/api/methods", "_blank"),
-    },
-    {
-      id: "horizon",
-      title: "Horizon Endpoints",
-      description: "TODO: add text",
+      id: "stellar-rpc",
+      title: "Stellar RPC Endpoints",
+      description: "Learn about the RPC endpoints in our Developer Docs.",
       buttonLabel: "See docs",
       buttonIcon: <Icon.LinkExternal01 />,
       buttonAction: () =>
         window.open(
-          "https://developers.stellar.org/api/horizon/resources/",
+          "https://developers.stellar.org/network/soroban-rpc/methods",
+          "_blank",
+        ),
+    },
+    {
+      id: "horizon",
+      title: "Horizon Endpoints",
+      description: "Learn about the Horizon endpoints in our Developer Docs.",
+      buttonLabel: "See docs",
+      buttonIcon: <Icon.LinkExternal01 />,
+      buttonAction: () =>
+        window.open(
+          "https://developers.stellar.org/network/horizon/resources",
           "_blank",
         ),
     },
@@ -397,11 +402,34 @@ const ExploreEndpointsLandingPage = () => {
       <Card>
         <div className="CardText">
           <Text size="lg" as="h1" weight="medium">
-            Endpoints
+            Explore Endpoints
           </Text>
 
           <Text size="sm" as="p">
-            TODO: add text
+            The Stellar Laboratory is a set of tools that enables people to try
+            out and learn about the Stellar network. The Laboratory can{" "}
+            <NextLink href={Routes.BUILD_TRANSACTION} sds-variant="primary">
+              build transactions
+            </NextLink>
+            ,{" "}
+            <NextLink href={Routes.SIGN_TRANSACTION} sds-variant="primary">
+              sign them
+            </NextLink>
+            , and{" "}
+            <NextLink href={Routes.SUBMIT_TRANSACTION} sds-variant="primary">
+              submit them to the network
+            </NextLink>
+            . In this section of the Laboratory, you can explore the various
+            endpoints from the RPC and Horizon, make requests to these
+            endpoints, and save them for future use.
+          </Text>
+
+          <Text size="sm" as="p">
+            For Stellar docs, take a look at the{" "}
+            <Link href="https://developers.stellar.org/docs">
+              Stellar developers site
+            </Link>
+            .
           </Text>
         </div>
       </Card>
