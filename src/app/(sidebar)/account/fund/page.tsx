@@ -98,11 +98,10 @@ export default function FundAccount() {
           onClose={() => {
             setShowAlert(false);
           }}
+          title={`Successfully funded ${shortenStellarAddress(account.publicKey)} on 
+          ${network.id}`}
         >
-          <Text size="md" as="span" weight="medium">
-            Successfully funded {shortenStellarAddress(account.publicKey)} on{" "}
-            {network.id}
-          </Text>
+          {""}
         </Alert>
       )}
       {showAlert && isFetchedAfterMount && isError && (
@@ -112,10 +111,9 @@ export default function FundAccount() {
           onClose={() => {
             setShowAlert(false);
           }}
+          title={error?.message}
         >
-          <Text size="md" as="span" weight="medium">
-            {error.message}
-          </Text>
+          {""}
         </Alert>
       )}
     </div>
