@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 export function middleware(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
   const cspHeader = `
-    default-src 'self';
+    default-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: http: 'unsafe-inline';
     connect-src 'self' https://9sl3dhr1twv1.statuspage.io/api/v2/;
     script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: http: 'unsafe-inline' ${
       process.env.NODE_ENV === "production" ? "" : `'unsafe-eval'`
