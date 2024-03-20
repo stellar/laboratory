@@ -12,9 +12,9 @@ test.describe("Network selector", () => {
   test("Renders info cards", async ({ page }) => {
     await expect(page.locator("h2")).toHaveText([
       "Stellar Quest",
-      "Tools",
-      "Learn about the Soroban RPC",
-      "Learn about Horizon",
+      "Developer Tools",
+      "Stellar RPC",
+      "Horizon",
     ]);
   });
 });
