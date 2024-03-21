@@ -3,6 +3,7 @@ import React from "react";
 // =============================================================================
 // Generic
 // =============================================================================
+export type AnyObject = { [key: string]: any };
 export type EmptyObj = Record<PropertyKey, never>;
 
 // =============================================================================
@@ -44,7 +45,6 @@ export type StatusPageScheduled = {
 // Asset
 // =============================================================================
 export type AssetType =
-  | "none"
   | "native"
   | "issued"
   | "credit_alphanum4"
