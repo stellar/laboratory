@@ -8,6 +8,7 @@ import { StoreProvider } from "@/store/StoreProvider";
 import "@stellar/design-system/build/styles.min.css";
 import "@/styles/globals.scss";
 
+// Needed for CSP
 export const dynamic = "force-dynamic";
 
 // TODO: update metadata
