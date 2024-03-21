@@ -8,7 +8,11 @@ export function middleware(request: NextRequest) {
     script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: http: 'unsafe-inline' ${
       process.env.NODE_ENV === "production" ? "" : `'unsafe-eval'`
     };
-    style-src 'self' 'nonce-${nonce}';
+    style-src 'self' https://fonts.googleapis.com ${
+      process.env.NODE_ENV === "production"
+        ? `'nonce-${nonce}'`
+        : `'unsafe-inline'`
+    };
     img-src 'self' blob: data:;
     connect-src 'self' https://9sl3dhr1twv1.statuspage.io/api/v2/;
     font-src 'self' https://fonts.gstatic.com/;
