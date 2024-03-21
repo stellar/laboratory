@@ -15,6 +15,7 @@ export interface Store {
   // Account
   account: {
     publicKey: string;
+    muxedAccount: { id: string; address: string };
     // eslint-disable-next-line no-unused-vars
     update: (value: string) => void;
     reset: () => void;
@@ -70,6 +71,17 @@ export const createStore = (options: CreateStoreOptions) =>
         // Account
         account: {
           publicKey: "",
+          muxedAccount: {
+            id: "",
+            address: "",
+          },
+          updateMuxed: (params: AnyObject) =>
+            set((state) => {
+              state.account.muxedAccount = sanitizeObject({
+                ...state.muxedAccount,
+                ...params,
+              });
+            }),
           update: (value: string) =>
             set((state) => {
               state.account.publicKey = value;

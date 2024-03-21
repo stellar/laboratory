@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import { Alert, Card, Input, Text, Button } from "@stellar/design-system";
 
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
-import { validatePublicKey } from "@/helpers/validatePublicKey";
 import { useFriendBot } from "@/query/useFriendBot";
 import { useStore } from "@/store/useStore";
+
+import { validate } from "@/validate";
 
 import "../styles.scss";
 
@@ -15,7 +16,9 @@ export default function FundAccount() {
 
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [generatedPublicKey, setGeneratedPublicKey] = useState<string>("");
-  const [inlineErrorMessage, setInlineErrorMessage] = useState<string>("");
+  const [inlineErrorMessage, setInlineErrorMessage] = useState<
+    string | boolean
+  >("");
 
   const { error, isError, isLoading, isSuccess, refetch, isFetchedAfterMount } =
     useFriendBot({
@@ -52,7 +55,7 @@ export default function FundAccount() {
             onChange={(e) => {
               setGeneratedPublicKey(e.target.value);
 
-              const error = validatePublicKey(e.target.value);
+              const error = validate.publicKey(e.target.value);
               setInlineErrorMessage(error);
             }}
             placeholder="Ex: GCEXAMPLE5HWNK4AYSTEQ4UWDKHTCKADVS2AHF3UI2ZMO3DPUSM6Q4UG"

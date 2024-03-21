@@ -5,7 +5,7 @@ export const publicKey = (publicKey: string, isRequired?: boolean) => {
     if (isRequired) {
       return "Asset issuer is required.";
     } else {
-      return false;
+      return "";
     }
   }
 
@@ -17,5 +17,5 @@ export const publicKey = (publicKey: string, isRequired?: boolean) => {
     return "Public key is invalid.";
   }
 
-  return false;
+  return "";
 };
