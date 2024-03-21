@@ -2,14 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
+
   const cspHeader = `
-    default-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: http: 'unsafe-inline';
-    connect-src 'self' https://9sl3dhr1twv1.statuspage.io/api/v2/;
+    default-src 'self';
     script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: http: 'unsafe-inline' ${
       process.env.NODE_ENV === "production" ? "" : `'unsafe-eval'`
     };
-    style-src 'self' https://fonts.googleapis.com 'strict-dynamic' https: http: 'unsafe-inline';
+    style-src 'self' 'nonce-${nonce}';
     img-src 'self' blob: data:;
+    connect-src 'self' https://9sl3dhr1twv1.statuspage.io/api/v2/;
     font-src 'self' https://fonts.gstatic.com/;
     object-src 'none';
     base-uri 'self';
