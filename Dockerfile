@@ -8,4 +8,4 @@ RUN yarn install
 RUN yarn build
 # Run on port 80 for compatibility with laboratory v1
 EXPOSE 80
-CMD ["npm", "start"]
+CMD ["yarn", "start"]
