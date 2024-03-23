@@ -1,7 +1,7 @@
 import React from "react";
 import { Input, InputProps } from "@stellar/design-system";
 
-interface PubKeyPickerProps extends Omit<InputProps, "fieldSize"> {
+interface MuxedKeyPickerProps extends Omit<InputProps, "fieldSize"> {
   id: string;
   fieldSize?: "sm" | "md" | "lg";
   label: string;
@@ -9,22 +9,22 @@ interface PubKeyPickerProps extends Omit<InputProps, "fieldSize"> {
   placeholder?: string;
   readOnly?: boolean;
   value: string;
-  error: string | undefined;
+  error: string | undefined | false;
   // eslint-disable-next-line no-unused-vars
   onChange?: (e: React.ChangeEvent<any>) => void;
 }
 
-export const PubKeyPicker = ({
+export const MuxedKeyPicker = ({
   id,
   fieldSize = "md",
   label,
   labelSuffix,
-  placeholder = "Ex: GCEXAMPLE5HWNK4AYSTEQ4UWDKHTCKADVS2AHF3UI2ZMO3DPUSM6Q4UG",
+  placeholder = "Ex: MBRWSVNURRYVIYSWLRFQ5AAAUWPKOZZNZVVVIXHFGUSGIRVKLVIDYAAAAAAAAAAD5GJ4U",
   value,
   error,
   onChange,
   ...props
-}: PubKeyPickerProps) => (
+}: MuxedKeyPickerProps) => (
   <Input
     id={id}
     fieldSize={fieldSize}

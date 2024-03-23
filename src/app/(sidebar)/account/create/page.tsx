@@ -20,7 +20,7 @@ export default function CreateAccount() {
   const generateKeypair = () => {
     let keypair = Keypair.random();
 
-    account.update(keypair.publicKey());
+    account.updatePublicKey(keypair.publicKey());
     setSecretKey(keypair.secret());
   };
 

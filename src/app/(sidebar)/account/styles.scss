@@ -30,4 +30,19 @@
       cursor: pointer;
     }
   }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: pxToRem(24px);
+
+    &__inputs {
+      display: flex;
+      flex-direction: column;
+      gap: pxToRem(16px);
+      padding: pxToRem(16px);
+      background-color: var(--sds-clr-gray-03);
+      border-radius: pxToRem(8px);
+    }
+  }
 }

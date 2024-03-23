@@ -3,7 +3,7 @@ import { immer } from "zustand/middleware/immer";
 import { querystring } from "zustand-querystring";
 
 import { sanitizeObject } from "@/helpers/sanitizeObject";
-import { AnyObject, EmptyObj, Network } from "@/types/types";
+import { AnyObject, EmptyObj, Network, MuxedAccount } from "@/types/types";
 
 export interface Store {
   // Shared
@@ -15,9 +15,12 @@ export interface Store {
   // Account
   account: {
     publicKey: string;
-    muxedAccount: { id: string; address: string };
+    generatedMuxedAccount: MuxedAccount;
+    parsedMuxedAccount: MuxedAccount;
     // eslint-disable-next-line no-unused-vars
-    update: (value: string) => void;
+    updatePublicKey: (value: string) => void;
+    updateGeneratedMuxedAccount: (value: MuxedAccount) => void;
+    updateParsedMuxedAccount: (value: MuxedAccount) => void;
     reset: () => void;
   };
 
@@ -71,18 +74,31 @@ export const createStore = (options: CreateStoreOptions) =>
         // Account
         account: {
           publicKey: "",
-          muxedAccount: {
+          generatedMuxedAccount: {
             id: "",
-            address: "",
+            baseAddress: "",
+            muxedAddress: "",
           },
-          updateMuxed: (params: AnyObject) =>
+          parsedMuxedAccount: {
+            id: "",
+            baseAddress: "",
+            muxedAddress: "",
+          },
+          updateGeneratedMuxedAccount: (newMuxedAccount: MuxedAccount) =>
             set((state) => {
-              state.account.muxedAccount = sanitizeObject({
-                ...state.muxedAccount,
-                ...params,
-              });
+              state.account.generatedMuxedAccount = {
+                ...state.account.generatedMuxedAccount,
+                ...newMuxedAccount,
+              };
             }),
-          update: (value: string) =>
+          updateParsedMuxedAccount: (newMuxedAccount: MuxedAccount) =>
+            set((state) => {
+              state.account.parsedMuxedAccount = {
+                ...state.account.parsedMuxedAccount,
+                ...newMuxedAccount,
+              };
+            }),
+          updatePublicKey: (value: string) =>
             set((state) => {
               state.account.publicKey = value;
             }),
