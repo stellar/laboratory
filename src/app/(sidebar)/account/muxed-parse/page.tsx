@@ -107,7 +107,7 @@ export default function ParseMuxedAccount() {
                 id="muxed-public-key-result"
                 label="Base Account G Address"
                 value={account.parsedMuxedAccount.baseAddress}
-                error={false}
+                error=""
                 readOnly={true}
                 copyButton={{
                   position: "right",
@@ -118,7 +118,7 @@ export default function ParseMuxedAccount() {
                 id="muxed-account-id-result"
                 label="Muxed Account Id"
                 value={account.parsedMuxedAccount.id}
-                error={false}
+                error=""
                 readOnly={true}
                 copyButton={{
                   position: "right",
@@ -129,7 +129,7 @@ export default function ParseMuxedAccount() {
                 id="muxed-account-address-result"
                 label="Muxed Account M Address"
                 value={account.parsedMuxedAccount.muxedAddress}
-                error={false}
+                error=""
                 readOnly={true}
                 copyButton={{
                   position: "right",
