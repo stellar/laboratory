@@ -44,10 +44,13 @@ export type StatusPageScheduled = {
 // =============================================================================
 // Account
 // =============================================================================
-export type MuxedAccountFieldType = {
+export type MuxedAccount = {
   id: string;
   baseAddress: string;
   muxedAddress: string;
+};
+
+export type MuxedAccountFieldType = MuxedAccount & {
   error: string | boolean;
 };
 

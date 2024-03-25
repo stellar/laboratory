@@ -109,7 +109,7 @@ export default function ParseMuxedAccount() {
                 id="muxed-public-key-result"
                 label="Base Account G Address"
                 value={account.parsedMuxedAccount.baseAddress}
-                error={undefined}
+                error={false}
                 readOnly={true}
                 copyButton={{
                   position: "right",

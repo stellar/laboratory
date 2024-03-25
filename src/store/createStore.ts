@@ -19,7 +19,9 @@ export interface Store {
     parsedMuxedAccount: MuxedAccount;
     // eslint-disable-next-line no-unused-vars
     updatePublicKey: (value: string) => void;
+    // eslint-disable-next-line no-unused-vars
     updateGeneratedMuxedAccount: (value: MuxedAccount) => void;
+    // eslint-disable-next-line no-unused-vars
     updateParsedMuxedAccount: (value: MuxedAccount) => void;
     reset: () => void;
   };
