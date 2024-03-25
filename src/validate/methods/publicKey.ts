@@ -1,4 +1,4 @@
-import { StrKey } from "stellar-sdk";
+import { StrKey } from "@stellar/stellar-sdk";
 
 export const publicKey = (publicKey: string, isRequired?: boolean) => {
   if (!publicKey) {
