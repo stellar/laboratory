@@ -12,7 +12,7 @@ import { AnyObject, AssetObjectValue } from "@/types/types";
 
 type TemplateRenderProps = {
   value: string | undefined;
-  error: string | undefined;
+  error: string | boolean;
   // eslint-disable-next-line no-unused-vars
   onChange: (val: any) => void;
   isRequired?: boolean;
@@ -20,7 +20,7 @@ type TemplateRenderProps = {
 
 type TemplateRenderAssetProps = {
   value: AssetObjectValue | undefined;
-  error: { code: string | undefined; issuer: string | undefined } | undefined;
+  error: { code: string | undefined; issuer: string | undefined } | boolean;
   // eslint-disable-next-line no-unused-vars
   onChange: (asset: AssetObjectValue | undefined) => void;
   isRequired?: boolean;
