@@ -22,9 +22,9 @@ export default function ParseMuxedAccount() {
 
   const [muxedAddress, setMuxedAddress] = useState<string>("");
 
-  const [muxedFieldErrorMessage, setMuxedFieldErrorMessage] = useState<
-    string | false
-  >("");
+  const [muxedFieldError, setMuxedFieldError] = useState<string | boolean>(
+    false,
+  );
   const [sdkError, setSdkError] = useState<string | boolean>("");
 
   const [isReset, setReset] = useState<boolean>(false);
@@ -34,7 +34,7 @@ export default function ParseMuxedAccount() {
       muxedAddress,
     });
 
-    const { errorMessage, id, baseAddress } = result;
+    const { error, id, baseAddress } = result;
 
     if (baseAddress && id) {
       setReset(false);
@@ -48,8 +48,8 @@ export default function ParseMuxedAccount() {
       return;
     }
 
-    if (errorMessage) {
-      setSdkError(errorMessage);
+    if (error) {
+      setSdkError(error);
       return;
     }
   };
@@ -69,7 +69,7 @@ export default function ParseMuxedAccount() {
               id="muxed-account-address"
               label="Muxed Account M Address"
               value={muxedAddress}
-              error={undefined}
+              error={muxedFieldError}
               copyButton={{
                 position: "right",
               }}
@@ -78,13 +78,13 @@ export default function ParseMuxedAccount() {
                 setMuxedAddress(e.target.value);
 
                 const error = validate.publicKey(e.target.value);
-                setMuxedFieldErrorMessage(error);
+                setMuxedFieldError(error);
               }}
             />
 
             <div className="Account__CTA">
               <Button
-                disabled={!muxedAddress || Boolean(muxedFieldErrorMessage)}
+                disabled={!muxedAddress || Boolean(muxedFieldError)}
                 size="md"
                 variant={"secondary"}
                 onClick={parseMuxedAccount}
@@ -120,7 +120,7 @@ export default function ParseMuxedAccount() {
                 id="muxed-account-id-result"
                 label="Muxed Account Id"
                 value={account.parsedMuxedAccount.id}
-                error={undefined}
+                error={false}
                 readOnly={true}
                 copyButton={{
                   position: "right",
@@ -131,7 +131,7 @@ export default function ParseMuxedAccount() {
                 id="muxed-account-address-result"
                 label="Muxed Account M Address"
                 value={account.parsedMuxedAccount.muxedAddress}
-                error={undefined}
+                error={false}
                 readOnly={true}
                 copyButton={{
                   position: "right",

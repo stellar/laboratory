@@ -22,11 +22,12 @@ export default function CreateMuxedAccount() {
   const [baseAddress, setBaseAddress] = useState<string>("");
   const [muxedId, setMuxedId] = useState<string>("");
 
-  const [baseFieldErrorMessage, setBaseFieldErrorMessage] =
-    useState<string>("");
-  const [muxedFieldErrorMessage, setMuxedFieldErrorMessage] = useState<
-    string | false
-  >("");
+  const [baseFieldErrorMessage, setBaseFieldErrorMessage] = useState<
+    string | boolean
+  >(false);
+  const [muxedFieldError, setMuxedFieldError] = useState<string | boolean>(
+    false,
+  );
   const [sdkError, setSdkError] = useState<string | boolean>("");
 
   const [isReset, setReset] = useState<boolean>(false);
@@ -37,7 +38,7 @@ export default function CreateMuxedAccount() {
       muxedAccountId: muxedId,
     });
 
-    const { errorMessage, muxedAddress } = result;
+    const { error, muxedAddress } = result;
 
     if (muxedAddress) {
       setReset(false);
@@ -51,8 +52,8 @@ export default function CreateMuxedAccount() {
       return;
     }
 
-    if (errorMessage) {
-      setSdkError(errorMessage);
+    if (error) {
+      setSdkError(error);
       return;
     }
   };
@@ -90,7 +91,7 @@ export default function CreateMuxedAccount() {
                 setBaseAddress(e.target.value);
 
                 const error = validate.publicKey(e.target.value);
-                console.log("error: ", error);
+
                 setBaseFieldErrorMessage(error);
               }}
               error={baseFieldErrorMessage}
@@ -108,9 +109,9 @@ export default function CreateMuxedAccount() {
                 setMuxedId(e.target.value);
 
                 const error = validate.positiveInt(e.target.value);
-                setMuxedFieldErrorMessage(error);
+                setMuxedFieldError(error);
               }}
-              error={muxedFieldErrorMessage}
+              error={muxedFieldError}
               copyButton={{
                 position: "right",
               }}
@@ -138,7 +139,7 @@ export default function CreateMuxedAccount() {
                 id="muxed-public-key-result"
                 label="Base Account G Address"
                 value={account.generatedMuxedAccount.baseAddress}
-                error={undefined}
+                error={false}
                 readOnly={true}
                 copyButton={{
                   position: "right",
@@ -149,7 +150,7 @@ export default function CreateMuxedAccount() {
                 id="muxed-account-id-result"
                 label="Muxed Account Id"
                 value={account.generatedMuxedAccount.id}
-                error={undefined}
+                error={false}
                 readOnly={true}
                 copyButton={{
                   position: "right",
@@ -160,7 +161,7 @@ export default function CreateMuxedAccount() {
                 id="muxed-account-address-result"
                 label="Muxed Account M Address"
                 value={account.generatedMuxedAccount.muxedAddress}
-                error={undefined}
+                error={false}
                 readOnly={true}
                 copyButton={{
                   position: "right",

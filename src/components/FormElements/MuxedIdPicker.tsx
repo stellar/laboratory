@@ -9,7 +9,7 @@ interface MuxedIdPickerProps extends Omit<InputProps, "fieldSize"> {
   placeholder?: string;
   readOnly?: boolean;
   value: string;
-  error: string | undefined | false;
+  error: string | boolean;
   // eslint-disable-next-line no-unused-vars
   onChange?: (e: React.ChangeEvent<any>) => void;
 }
@@ -21,7 +21,7 @@ export const MuxedIdPicker = ({
   labelSuffix,
   placeholder = "Ex: 1",
   value,
-  error,
+  error = false,
   onChange,
   ...props
 }: MuxedIdPickerProps) => (

@@ -48,7 +48,7 @@ export type MuxedAccountFieldType = {
   id: string;
   baseAddress: string;
   muxedAddress: string;
-  errorMessage: string;
+  error: string | boolean;
 };
 
 // =============================================================================

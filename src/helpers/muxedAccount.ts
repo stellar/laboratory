@@ -17,12 +17,12 @@ export const muxedAccount = {
       );
       return {
         muxedAddress: muxedAccount.accountId(),
-        errorMessage: "",
+        error: false,
       };
     } catch (e: any) {
       return {
         muxedAddress: "",
-        errorMessage: `Something went wrong. ${e.toString()}`,
+        error: `Something went wrong. ${e.toString()}`,
       };
     }
   },
@@ -49,13 +49,13 @@ export const muxedAccount = {
       return {
         id: muxedAccountId,
         baseAddress,
-        errorMessage: "",
+        error: false,
       };
     } catch (e: any) {
       return {
         id: "",
         baseAddress: "",
-        errorMessage: `Something went wrong. ${e.toString()}`,
+        error: `Something went wrong. ${e.toString()}`,
       };
     }
   },
