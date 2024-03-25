@@ -136,7 +136,7 @@ export default function CreateMuxedAccount() {
                 id="muxed-public-key-result"
                 label="Base Account G Address"
                 value={account.generatedMuxedAccount.baseAddress}
-                error={false}
+                error=""
                 readOnly={true}
                 copyButton={{
                   position: "right",
@@ -147,7 +147,7 @@ export default function CreateMuxedAccount() {
                 id="muxed-account-id-result"
                 label="Muxed Account Id"
                 value={account.generatedMuxedAccount.id}
-                error={false}
+                error=""
                 readOnly={true}
                 copyButton={{
                   position: "right",
@@ -158,7 +158,7 @@ export default function CreateMuxedAccount() {
                 id="muxed-account-address-result"
                 label="Muxed Account M Address"
                 value={account.generatedMuxedAccount.muxedAddress}
-                error={false}
+                error=""
                 readOnly={true}
                 copyButton={{
                   position: "right",
