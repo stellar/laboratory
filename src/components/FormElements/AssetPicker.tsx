@@ -12,7 +12,7 @@ type AssetPickerProps = {
   label: string;
   labelSuffix?: string | React.ReactNode;
   value: AssetObjectValue | undefined;
-  error: { code: string | undefined; issuer: string | undefined } | boolean;
+  error: { code: string | undefined; issuer: string | undefined } | undefined;
   // eslint-disable-next-line no-unused-vars
   onChange: (asset: AssetObjectValue | undefined) => void;
   assetInput: "issued" | "alphanumeric";

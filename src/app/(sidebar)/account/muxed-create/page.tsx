@@ -22,13 +22,10 @@ export default function CreateMuxedAccount() {
   const [baseAddress, setBaseAddress] = useState<string>("");
   const [muxedId, setMuxedId] = useState<string>("");
 
-  const [baseFieldErrorMessage, setBaseFieldErrorMessage] = useState<
-    string | boolean
-  >(false);
-  const [muxedFieldError, setMuxedFieldError] = useState<string | boolean>(
-    false,
-  );
-  const [sdkError, setSdkError] = useState<string | boolean>("");
+  const [baseFieldErrorMessage, setBaseFieldErrorMessage] =
+    useState<string>("");
+  const [muxedFieldError, setMuxedFieldError] = useState<string>("");
+  const [sdkError, setSdkError] = useState<string>("");
 
   const [isReset, setReset] = useState<boolean>(false);
 
@@ -92,7 +89,7 @@ export default function CreateMuxedAccount() {
 
                 const error = validate.publicKey(e.target.value);
 
-                setBaseFieldErrorMessage(error);
+                setBaseFieldErrorMessage(error || "");
               }}
               error={baseFieldErrorMessage}
               copyButton={{
@@ -109,7 +106,7 @@ export default function CreateMuxedAccount() {
                 setMuxedId(e.target.value);
 
                 const error = validate.positiveInt(e.target.value);
-                setMuxedFieldError(error);
+                setMuxedFieldError(error || "");
               }}
               error={muxedFieldError}
               copyButton={{
@@ -185,7 +182,7 @@ export default function CreateMuxedAccount() {
           placement="inline"
           variant="error"
           onClose={() => {
-            setSdkError(false);
+            setSdkError("");
           }}
           title={sdkError}
         >

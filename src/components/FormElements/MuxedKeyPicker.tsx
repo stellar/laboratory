@@ -9,7 +9,7 @@ interface MuxedKeyPickerProps extends Omit<InputProps, "fieldSize"> {
   placeholder?: string;
   readOnly?: boolean;
   value: string;
-  error: string | boolean;
+  error: string | undefined;
   // eslint-disable-next-line no-unused-vars
   onChange?: (e: React.ChangeEvent<any>) => void;
 }
@@ -21,7 +21,7 @@ export const MuxedKeyPicker = ({
   labelSuffix,
   placeholder = "Ex: MBRWSVNURRYVIYSWLRFQ5AAAUWPKOZZNZVVVIXHFGUSGIRVKLVIDYAAAAAAAAAAD5GJ4U",
   value,
-  error = false,
+  error,
   onChange,
   ...props
 }: MuxedKeyPickerProps) => (

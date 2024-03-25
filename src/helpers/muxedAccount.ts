@@ -17,7 +17,7 @@ export const muxedAccount = {
       );
       return {
         muxedAddress: muxedAccount.accountId(),
-        error: false,
+        error: "",
       };
     } catch (e: any) {
       return {
@@ -49,7 +49,7 @@ export const muxedAccount = {
       return {
         id: muxedAccountId,
         baseAddress,
-        error: false,
+        error: "",
       };
     } catch (e: any) {
       return {

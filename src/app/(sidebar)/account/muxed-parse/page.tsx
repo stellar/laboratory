@@ -22,10 +22,8 @@ export default function ParseMuxedAccount() {
 
   const [muxedAddress, setMuxedAddress] = useState<string>("");
 
-  const [muxedFieldError, setMuxedFieldError] = useState<string | boolean>(
-    false,
-  );
-  const [sdkError, setSdkError] = useState<string | boolean>("");
+  const [muxedFieldError, setMuxedFieldError] = useState<string>("");
+  const [sdkError, setSdkError] = useState<string>("");
 
   const [isReset, setReset] = useState<boolean>(false);
 
@@ -78,7 +76,7 @@ export default function ParseMuxedAccount() {
                 setMuxedAddress(e.target.value);
 
                 const error = validate.publicKey(e.target.value);
-                setMuxedFieldError(error);
+                setMuxedFieldError(error || "");
               }}
             />
 
@@ -155,7 +153,7 @@ export default function ParseMuxedAccount() {
           placement="inline"
           variant="error"
           onClose={() => {
-            setSdkError(false);
+            setSdkError("");
           }}
           title={sdkError}
         >

@@ -51,7 +51,7 @@ export type MuxedAccount = {
 };
 
 export type MuxedAccountFieldType = MuxedAccount & {
-  error: string | boolean;
+  error: string;
 };
 
 // =============================================================================

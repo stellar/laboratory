@@ -16,9 +16,7 @@ export default function FundAccount() {
 
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [generatedPublicKey, setGeneratedPublicKey] = useState<string>("");
-  const [inlineErrorMessage, setInlineErrorMessage] = useState<
-    string | boolean
-  >("");
+  const [inlineErrorMessage, setInlineErrorMessage] = useState<string>("");
 
   const { error, isError, isLoading, isSuccess, refetch, isFetchedAfterMount } =
     useFriendBot({
@@ -56,7 +54,7 @@ export default function FundAccount() {
               setGeneratedPublicKey(e.target.value);
 
               const error = validate.publicKey(e.target.value);
-              setInlineErrorMessage(error);
+              setInlineErrorMessage(error || "");
             }}
             placeholder="Ex: GCEXAMPLE5HWNK4AYSTEQ4UWDKHTCKADVS2AHF3UI2ZMO3DPUSM6Q4UG"
             error={inlineErrorMessage}

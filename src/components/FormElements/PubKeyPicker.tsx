@@ -9,7 +9,7 @@ interface PubKeyPickerProps extends Omit<InputProps, "fieldSize"> {
   placeholder?: string;
   readOnly?: boolean;
   value: string;
-  error: string | boolean;
+  error: string | undefined;
   // eslint-disable-next-line no-unused-vars
   onChange?: (e: React.ChangeEvent<any>) => void;
 }
@@ -21,7 +21,7 @@ export const PubKeyPicker = ({
   labelSuffix,
   placeholder = "Ex: GCEXAMPLE5HWNK4AYSTEQ4UWDKHTCKADVS2AHF3UI2ZMO3DPUSM6Q4UG",
   value,
-  error = false,
+  error,
   onChange,
   ...props
 }: PubKeyPickerProps) => (

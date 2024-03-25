@@ -7,7 +7,7 @@ interface CursorPickerProps extends Omit<InputProps, "fieldSize"> {
   labelSuffix?: string | React.ReactNode;
   placeholder?: string;
   value: string;
-  error: string | boolean;
+  error: string | undefined;
   // eslint-disable-next-line no-unused-vars
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
