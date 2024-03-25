@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, Text, Button } from "@stellar/design-system";
-import { Keypair } from "stellar-sdk";
+import { Keypair } from "@stellar/stellar-sdk";
 
 import { Routes } from "@/constants/routes";
 import { useStore } from "@/store/useStore";
