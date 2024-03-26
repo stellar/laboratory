@@ -222,6 +222,19 @@
   optionalDependencies:
     sodium-native "^4.0.10"
 
+"@stellar/stellar-sdk@^11.3.0":
+  version "11.3.0"
+  resolved "https://registry.yarnpkg.com/@stellar/stellar-sdk/-/stellar-sdk-11.3.0.tgz#7cb010651846a07e1853e0fe30e430ece4da340b"
+  integrity sha512-i+heopibJNRA7iM8rEPz0AXphBPYvy2HDo8rxbDwWpozwCfw8kglP9cLkkhgJe8YicgLrdExz/iQZaLpqLC+6w==
+  dependencies:
+    "@stellar/stellar-base" "^11.0.1"
+    axios "^1.6.8"
+    bignumber.js "^9.1.2"
+    eventsource "^2.0.2"
+    randombytes "^2.1.0"
+    toml "^3.0.0"
+    urijs "^1.19.1"
+
 "@swc/helpers@0.5.2":
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/@swc/helpers/-/helpers-0.5.2.tgz#85ea0c76450b61ad7d10a37050289eded783c27d"
@@ -2758,19 +2771,6 @@ spawn-command@0.0.2:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/spawn-command/-/spawn-command-0.0.2.tgz#9544e1a43ca045f8531aac1a48cb29bdae62338e"
   integrity sha512-zC8zGoGkmc8J9ndvml8Xksr1Amk9qBujgbF0JAIWO7kXr43w0h/0GJNM/Vustixu+YE8N/MTrQ7N31FvHUACxQ==
-
-stellar-sdk@^11.3.0:
-  version "11.3.0"
-  resolved "https://registry.yarnpkg.com/stellar-sdk/-/stellar-sdk-11.3.0.tgz#385105eac694bb469ec3924e79e796d5766ba7cd"
-  integrity sha512-xOp2zpQm5TIbgJi7wJhAmJh+Uy0ew5GbGtj1kZv6HEWHgSvW95xYMxGaw6MWM9r2YPUSQySboE6JwDc9jdx53A==
-  dependencies:
-    "@stellar/stellar-base" "^11.0.1"
-    axios "^1.6.8"
-    bignumber.js "^9.1.2"
-    eventsource "^2.0.2"
-    randombytes "^2.1.0"
-    toml "^3.0.0"
-    urijs "^1.19.1"
 
 streamsearch@^1.1.0:
   version "1.1.0"

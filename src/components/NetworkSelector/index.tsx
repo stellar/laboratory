@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 import { Button, Icon, Input, Notification } from "@stellar/design-system";
-import { Networks } from "stellar-sdk";
+import { Networks } from "@stellar/stellar-sdk";
 
 import { NetworkIndicator } from "@/components/NetworkIndicator";
 import { localStorageSavedNetwork } from "@/helpers/localStorageSavedNetwork";
