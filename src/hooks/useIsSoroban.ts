@@ -2,7 +2,7 @@ import NETWORK from "constants/network.js";
 import { useRedux } from "hooks/useRedux";
 
 export const useIsSoroban = () => {
-  const { network } = useRedux("network", "routing");
+  const { network } = useRedux("network");
   const { horizonURL, networkPassphrase } = network.current;
   const url = new URL(horizonURL);
 
