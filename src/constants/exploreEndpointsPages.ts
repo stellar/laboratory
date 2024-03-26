@@ -67,7 +67,7 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
             endpointPathParams: "account_id",
             endpointParams: "",
             requiredParams: "account_id",
-            isStreaming: false,
+            isStreaming: true,
           },
         },
       ],

@@ -6,7 +6,6 @@ import {
   Alert,
   Button,
   Card,
-  Checkbox,
   CopyText,
   Icon,
   Input,
@@ -17,7 +16,6 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import { InfoCards } from "@/components/InfoCards";
 import { SdsLink } from "@/components/SdsLink";
-import { WithInfoText } from "@/components/WithInfoText";
 import { NextLink } from "@/components/NextLink";
 import { formComponentTemplate } from "@/components/formComponentTemplate";
 import { PrettyJson } from "@/components/PrettyJson";
@@ -32,8 +30,6 @@ import { Routes } from "@/constants/routes";
 import { EXPLORE_ENDPOINTS_PAGES_HORIZON } from "@/constants/exploreEndpointsPages";
 import { useExploreEndpoint } from "@/query/useExploreEndpoint";
 import { AnyObject, AssetObject, Network } from "@/types/types";
-
-// TODO: handle streaming
 
 export default function ExploreEndpoints() {
   const pathname = usePathname();
@@ -110,6 +106,15 @@ export default function ExploreEndpoints() {
     return isValidReqAssetFields && isValidReqFields && isValid;
   };
 
+  const resetStates = useCallback(() => {
+    resetParams();
+    setFormError({});
+    queryClient.resetQueries({
+      queryKey: ["exploreEndpoint", "response"],
+      exact: true,
+    });
+  }, [queryClient, resetParams]);
+
   useEffect(() => {
     // Validate saved params when the page loads
     const paramErrors = () => {
@@ -141,20 +146,9 @@ export default function ExploreEndpoints() {
     // Clear form and errors if navigating to another endpoint page. We don't
     // want to keep previous form values.
     if (currentEndpoint && currentEndpoint !== currentPage) {
-      resetParams();
-      setFormError({});
-      queryClient.resetQueries({
-        queryKey: ["exploreEndpoint", "response"],
-        exact: true,
-      });
+      resetStates();
     }
-  }, [
-    currentPage,
-    currentEndpoint,
-    updateCurrentEndpoint,
-    resetParams,
-    queryClient,
-  ]);
+  }, [currentEndpoint, currentPage, resetStates, updateCurrentEndpoint]);
 
   useEffect(() => {
     // Save network for endpoints if we don't have it yet.
@@ -162,11 +156,10 @@ export default function ExploreEndpoints() {
       updateNetwork(network as Network);
       // When network changes, clear saved params and errors.
     } else if (network.id && network.id !== endpointNetwork.id) {
-      resetParams();
-      setFormError({});
+      resetStates();
       updateNetwork(network as Network);
     }
-  }, [endpointNetwork.id, network, resetParams, updateNetwork]);
+  }, [endpointNetwork.id, network, resetStates, updateNetwork]);
 
   // Scroll to response
   useEffect(() => {
@@ -345,16 +338,6 @@ export default function ExploreEndpoints() {
             return null;
           })}
         </div>
-
-        {pageData.isStreaming ? (
-          <WithInfoText href="https://developers.stellar.org/network/horizon/structure/streaming">
-            <Checkbox
-              id="streaming-mode"
-              label="Server-Sent Events (streaming mode)"
-              fieldSize="md"
-            />
-          </WithInfoText>
-        ) : null}
       </div>
     );
   };
@@ -380,7 +363,6 @@ export default function ExploreEndpoints() {
       </div>
 
       <Card>
-        {/* TODO: disable form inputs when in progress */}
         <form className="PageBody" onSubmit={handleSubmit}>
           {renderEndpointUrl()}
           {renderFields()}
