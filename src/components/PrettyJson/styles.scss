@@ -1,0 +1,33 @@
+@use "../../styles/utils.scss" as *;
+
+.PrettyJson {
+  font-family: var(--sds-ff-monospace);
+  font-size: pxToRem(14px);
+  line-height: pxToRem(20px);
+  font-weight: var(--sds-fw-medium);
+  letter-spacing: -0.5px;
+
+  &__nested {
+    padding-left: pxToRem(16px);
+  }
+
+  &__inline {
+    display: flex;
+    gap: pxToRem(4px);
+  }
+
+  &__key {
+    color: var(--sds-clr-gray-11);
+  }
+
+  &__value {
+    color: var(--sds-clr-gray-11);
+    white-space: nowrap;
+  }
+
+  &__comma,
+  &__quotes,
+  &__bracket {
+    color: var(--sds-clr-gray-11);
+  }
+}

@@ -11,7 +11,8 @@ type ExploreEndpointsPagesProps = {
       label: string;
       form:
         | {
-            info: string;
+            docsUrl: string;
+            docsLabel?: string;
             requestMethod: "GET" | "POST";
             endpointPath: string;
             endpointPathParams: string;
@@ -37,7 +38,9 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
           route: Routes.EXPLORE_ENDPOINTS_ACCOUNTS,
           label: "All Accounts",
           form: {
-            info: "https://developers.stellar.org/docs/fundamentals-and-concepts/stellar-data-structures/accounts",
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/list-all-accounts",
+            docsLabel: "accounts",
             requestMethod: "GET",
             endpointPath: "/accounts",
             endpointPathParams: "",
@@ -56,7 +59,9 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
           route: Routes.EXPLORE_ENDPOINTS_ACCOUNTS_SINGLE,
           label: "Single Account",
           form: {
-            info: "https://developers.stellar.org/api/resources/accounts/single/",
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/retrieve-an-account",
+            docsLabel: "account",
             requestMethod: "GET",
             endpointPath: "/accounts",
             endpointPathParams: "account_id",
