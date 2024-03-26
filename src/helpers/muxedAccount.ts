@@ -10,21 +10,21 @@ export const muxedAccount = {
     baseAddress: string;
     muxedAccountId: string;
   }): Partial<MuxedAccountFieldType> => {
+    let muxedAddress = "";
+    let error = "";
+    
     try {
       const muxedAccount = new MuxedAccount(
         new Account(baseAddress, "0"),
         muxedAccountId,
       );
-      return {
-        muxedAddress: muxedAccount.accountId(),
-        error: "",
-      };
+      
+      muxedAddress = muxedAccount.accountId();
     } catch (e: any) {
-      return {
-        muxedAddress: "",
-        error: `Something went wrong. ${e.toString()}`,
-      };
+      error = `Something went wrong. ${e.toString()}`;
     }
+    
+    return { muxedAddress, error }
   },
   parse: ({
     muxedAddress,
