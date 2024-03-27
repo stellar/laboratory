@@ -82,21 +82,10 @@ export const createStore = (options: CreateStoreOptions) =>
         // Account
         account: {
           publicKey: "",
-          generatedMuxedAccountInput: {
-            id: undefined,
-            baseAddress: undefined,
-          },
-          generatedMuxedAccount: {
-            id: undefined,
-            baseAddress: undefined,
-            muxedAddress: undefined,
-          },
+          generatedMuxedAccountInput: undefined,
+          generatedMuxedAccount: undefined,
           parsedMuxedAccountInput: undefined,
-          parsedMuxedAccount: {
-            id: undefined,
-            baseAddress: undefined,
-            muxedAddress: undefined,
-          },
+          parsedMuxedAccount: undefined,
           updateGeneratedMuxedAccountInput: (value: Partial<MuxedAccount>) =>
             set((state) => {
               state.account.generatedMuxedAccountInput = {
