@@ -107,6 +107,8 @@ export const AssetPicker = ({
               value.type,
             ),
         )}
+        offsetTop="custom"
+        customValue="0"
       >
         <AssetPickerFields
           id={id}

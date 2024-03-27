@@ -1,10 +1,38 @@
 .ExpandBox {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows 100ms ease-out;
+  transition:
+    grid-template-rows 100ms ease-out,
+    margin-top 100ms ease-out;
+  margin-top: 0;
+
+  &--xs {
+    margin-top: calc(var(--sds-gap-xs) * -1);
+  }
+
+  &--sm {
+    margin-top: calc(var(--sds-gap-sm) * -1);
+  }
+
+  &--md {
+    margin-top: calc(var(--sds-gap-md) * -1);
+  }
+
+  &--lg {
+    margin-top: calc(var(--sds-gap-lg) * -1);
+  }
+
+  &--xl {
+    margin-top: calc(var(--sds-gap-xl) * -1);
+  }
+
+  &--xxl {
+    margin-top: calc(var(--sds-gap-xxl) * -1);
+  }
 
   &[data-is-expanded="true"] {
     grid-template-rows: 1fr;
+    margin-top: 0;
   }
 
   &[data-is-open="true"] {

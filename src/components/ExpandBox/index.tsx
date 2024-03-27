@@ -4,7 +4,15 @@ import "./styles.scss";
 export const ExpandBox = ({
   children,
   isExpanded,
-}: {
+  offsetTop,
+  customValue,
+}: (
+  | {
+      offsetTop: "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
+      customValue?: undefined;
+    }
+  | { offsetTop: "custom"; customValue: string }
+) & {
   children: React.ReactNode;
   isExpanded: boolean;
 }) => {
@@ -24,7 +32,8 @@ export const ExpandBox = ({
 
   return (
     <div
-      className="ExpandBox"
+      className={`ExpandBox ExpandBox--${offsetTop}`}
+      {...(offsetTop === "custom" ? { marginTop: customValue } : {})}
       data-is-expanded={isExpanded}
       data-is-open={isOpen}
     >

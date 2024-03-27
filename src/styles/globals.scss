@@ -3,6 +3,16 @@
 // Fonts for SDS
 @import url("https://fonts.googleapis.com/css2?family=Inter+Tight&family=Inter:wght@400;500;600&family=Roboto+Mono&display=swap");
 
+// TODO: move to SDS when ready
+:root {
+  --sds-gap-xs: #{pxToRem(4px)};
+  --sds-gap-sm: #{pxToRem(8px)};
+  --sds-gap-md: #{pxToRem(12px)};
+  --sds-gap-lg: #{pxToRem(16px)};
+  --sds-gap-xl: #{pxToRem(24px)};
+  --sds-gap-xxl: #{pxToRem(32px)};
+}
+
 // Layout
 #root {
   min-width: auto !important;

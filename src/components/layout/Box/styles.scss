@@ -1,0 +1,28 @@
+.Box {
+  display: flex;
+  flex-direction: column;
+
+  &--xs {
+    gap: var(--sds-gap-xs);
+  }
+
+  &--sm {
+    gap: var(--sds-gap-sm);
+  }
+
+  &--md {
+    gap: var(--sds-gap-md);
+  }
+
+  &--lg {
+    gap: var(--sds-gap-lg);
+  }
+
+  &--xl {
+    gap: var(--sds-gap-xl);
+  }
+
+  &--xxl {
+    gap: var(--sds-gap-xxl);
+  }
+}
