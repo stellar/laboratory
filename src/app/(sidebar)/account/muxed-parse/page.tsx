@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Alert, Card, Input, Text, Button } from "@stellar/design-system";
+import { Alert, Card, Text, Button } from "@stellar/design-system";
 
 import { useStore } from "@/store/useStore";
 
