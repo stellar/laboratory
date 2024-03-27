@@ -27,32 +27,30 @@ export default function CreateAccount() {
   return (
     <div className="Account">
       <Card>
-        <div className="Account__content">
-          <div className="Account__card">
-            <div className="CardText">
-              <Text size="lg" as="h1" weight="medium">
-                Keypair Generator
-              </Text>
+        <div className="Account__card">
+          <div className="CardText">
+            <Text size="lg" as="h1" weight="medium">
+              Keypair Generator
+            </Text>
 
-              <Text size="sm" as="p">
-                These keypairs can be used on the Stellar network where one is
-                required. For example, it can be used as an account master key,
-                account signer, and/or as a stellar-core node key.
-              </Text>
-            </div>
-            <div className="Account__CTA">
-              <Button size="md" variant="secondary" onClick={generateKeypair}>
-                Generate keypair
-              </Button>
+            <Text size="sm" as="p">
+              These keypairs can be used on the Stellar network where one is
+              required. For example, it can be used as an account master key,
+              account signer, and/or as a stellar-core node key.
+            </Text>
+          </div>
+          <div className="Account__CTA">
+            <Button size="md" variant="secondary" onClick={generateKeypair}>
+              Generate keypair
+            </Button>
 
-              <Button
-                size="md"
-                variant="tertiary"
-                onClick={() => router.push(Routes.ACCOUNT_FUND)}
-              >
-                Fund account with Friendbot
-              </Button>
-            </div>
+            <Button
+              size="md"
+              variant="tertiary"
+              onClick={() => router.push(Routes.ACCOUNT_FUND)}
+            >
+              Fund account with Friendbot
+            </Button>
           </div>
 
           <ExpandBox isExpanded={Boolean(account.publicKey)} offsetTop="xl">

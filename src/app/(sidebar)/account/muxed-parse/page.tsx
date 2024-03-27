@@ -7,6 +7,7 @@ import { useStore } from "@/store/useStore";
 
 import { ExpandBox } from "@/components/ExpandBox";
 import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
+import { MuxedAccountResult } from "@/components/MuxedAccountResult";
 
 import { muxedAccount } from "@/helpers/muxedAccount";
 
@@ -56,100 +57,62 @@ export default function ParseMuxedAccount() {
   return (
     <div className="Account">
       <Card>
-        <div className="Account__content">
-          <div className="Account__card">
-            <div className="CardText">
-              <Text size="lg" as="h1" weight="medium">
-                Get Muxed Account from M address
-              </Text>
-            </div>
-
-            <PubKeyPicker
-              id="muxed-account-address"
-              label="Muxed Account M Address"
-              placeholder="Ex: MBRWSVNURRYVIYSWLRFQ5AAAUWPKOZZNZVVVIXHFGUSGIRVKLVIDYAAAAAAAAAAD5GJ4U"
-              value={muxedAddress}
-              error={muxedFieldError}
-              copyButton={{
-                position: "right",
-              }}
-              onChange={(e) => {
-                setReset(true);
-                setMuxedAddress(e.target.value);
-
-                let error = "";
-
-                if (e.target.value.startsWith("G")) {
-                  error = "Muxed account address should start with M";
-                } else {
-                  error = validate.publicKey(e.target.value) || "";
-                }
-
-                setMuxedFieldError(error);
-              }}
-            />
-
-            <div className="Account__CTA">
-              <Button
-                disabled={!muxedAddress || Boolean(muxedFieldError)}
-                size="md"
-                variant={"secondary"}
-                onClick={parseMuxedAccount}
-              >
-                Parse
-              </Button>
-            </div>
+        <div className="Account__card">
+          <div className="CardText">
+            <Text size="lg" as="h1" weight="medium">
+              Get Muxed Account from M address
+            </Text>
           </div>
 
-          <ExpandBox
-            isExpanded={
-              !isReset &&
-              Boolean(
-                parsedMuxedAccount.baseAddress &&
-                  parsedMuxedAccount.id &&
-                  parsedMuxedAccount.muxedAddress,
-              )
-            }
-          >
-            <div className="Account__content__inputs">
-              <PubKeyPicker
-                id="muxed-public-key-result"
-                label="Base Account G Address"
-                value={account.parsedMuxedAccount.baseAddress || ""}
-                error=""
-                readOnly={true}
-                copyButton={{
-                  position: "right",
-                }}
-              />
+          <PubKeyPicker
+            id="muxed-account-address"
+            label="Muxed Account M Address"
+            placeholder="Ex: MBRWSVNURRYVIYSWLRFQ5AAAUWPKOZZNZVVVIXHFGUSGIRVKLVIDYAAAAAAAAAAD5GJ4U"
+            value={muxedAddress}
+            error={muxedFieldError}
+            copyButton={{
+              position: "right",
+            }}
+            onChange={(e) => {
+              setReset(true);
+              setMuxedAddress(e.target.value);
 
-              <Input
-                id="muxed-account-id-result"
-                fieldSize="md"
-                label="Muxed Account Id"
-                placeholder="Ex: 1"
-                value={account.parsedMuxedAccount.id}
-                error=""
-                readOnly={true}
-                copyButton={{
-                  position: "right",
-                }}
-              />
+              let error = "";
 
-              <Input
-                id="muxed-account-address-result"
-                fieldSize="md"
-                label="Muxed Account M Address"
-                value={account.parsedMuxedAccount.muxedAddress}
-                error=""
-                readOnly={true}
-                copyButton={{
-                  position: "right",
-                }}
-              />
-            </div>
-          </ExpandBox>
+              if (!e.target.value.startsWith("M")) {
+                error = "Muxed account address should start with M";
+              } else {
+                error = validate.publicKey(e.target.value) || "";
+              }
+
+              setMuxedFieldError(error);
+            }}
+          />
+
+          <div className="Account__CTA">
+            <Button
+              disabled={!muxedAddress || Boolean(muxedFieldError)}
+              size="md"
+              variant={"secondary"}
+              onClick={parseMuxedAccount}
+            >
+              Parse
+            </Button>
+          </div>
         </div>
+
+        <ExpandBox
+          isExpanded={
+            !isReset &&
+            Boolean(
+              parsedMuxedAccount?.baseAddress &&
+                parsedMuxedAccount?.id &&
+                parsedMuxedAccount?.muxedAddress,
+            )
+          }
+        >
+          <MuxedAccountResult />
+        </ExpandBox>
       </Card>
 
       <Alert

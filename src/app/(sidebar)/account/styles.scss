@@ -31,16 +31,13 @@
     }
   }
 
-  &__content__inputs {
+  &__result {
     display: flex;
     flex-direction: column;
     gap: pxToRem(16px);
     margin-top: pxToRem(24px);
-
-    &--grey {
-      background-color: var(--sds-clr-gray-03);
-      border-radius: pxToRem(8px);
-      padding: pxToRem(16px);
-    }
+    background-color: var(--sds-clr-gray-03);
+    border-radius: pxToRem(8px);
+    padding: pxToRem(16px);
   }
 }

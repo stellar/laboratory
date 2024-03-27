@@ -6,8 +6,10 @@ import { Alert, Button, Card, Input, Text } from "@stellar/design-system";
 import { useStore } from "@/store/useStore";
 
 import { ExpandBox } from "@/components/ExpandBox";
+import { MuxedAccountResult } from "@/components/MuxedAccountResult";
 import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
 import { SdsLink } from "@/components/SdsLink";
+
 import { muxedAccount } from "@/helpers/muxedAccount";
 
 import { validate } from "@/validate";
@@ -95,7 +97,7 @@ export default function CreateMuxedAccount() {
 
                 let error = "";
 
-                if (e.target.value.startsWith("M")) {
+                if (!e.target.value.startsWith("G")) {
                   error = "Base account address should start with G";
                 } else {
                   error = validate.publicKey(e.target.value) || "";
@@ -150,41 +152,7 @@ export default function CreateMuxedAccount() {
             !isReset && Boolean(account.generatedMuxedAccount.muxedAddress)
           }
         >
-          <div className="Account__content__inputs Account__content__inputs--grey">
-            <PubKeyPicker
-              id="muxed-public-key-result"
-              label="Base Account G Address"
-              value={account.generatedMuxedAccount.baseAddress || ""}
-              error=""
-              readOnly={true}
-              copyButton={{
-                position: "right",
-              }}
-            />
-
-            <Input
-              id="muxed-account-id-result"
-              fieldSize="md"
-              label="Muxed Account ID"
-              value={account.generatedMuxedAccount.id}
-              error=""
-              readOnly={true}
-              copyButton={{
-                position: "right",
-              }}
-            />
-
-            <PubKeyPicker
-              id="muxed-account-address-result"
-              label="Muxed Account M Address"
-              value={account.generatedMuxedAccount.muxedAddress || ""}
-              error=""
-              readOnly={true}
-              copyButton={{
-                position: "right",
-              }}
-            />
-          </div>
+          <MuxedAccountResult />
         </ExpandBox>
       </Card>
 

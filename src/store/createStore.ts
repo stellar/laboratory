@@ -15,10 +15,10 @@ export interface Store {
   // Account
   account: {
     publicKey: string;
-    generatedMuxedAccountInput: Partial<MuxedAccount>;
-    generatedMuxedAccount: MuxedAccount;
+    generatedMuxedAccountInput: Partial<MuxedAccount> | EmptyObj;
     parsedMuxedAccountInput: string | undefined;
-    parsedMuxedAccount: MuxedAccount;
+    generatedMuxedAccount: MuxedAccount | EmptyObj;
+    parsedMuxedAccount: MuxedAccount | EmptyObj;
     // eslint-disable-next-line no-unused-vars
     updatePublicKey: (value: string) => void;
     // eslint-disable-next-line no-unused-vars
@@ -82,10 +82,10 @@ export const createStore = (options: CreateStoreOptions) =>
         // Account
         account: {
           publicKey: "",
-          generatedMuxedAccountInput: undefined,
-          generatedMuxedAccount: undefined,
+          generatedMuxedAccountInput: {},
           parsedMuxedAccountInput: undefined,
-          parsedMuxedAccount: undefined,
+          generatedMuxedAccount: {},
+          parsedMuxedAccount: {},
           updateGeneratedMuxedAccountInput: (value: Partial<MuxedAccount>) =>
             set((state) => {
               state.account.generatedMuxedAccountInput = {
@@ -97,18 +97,18 @@ export const createStore = (options: CreateStoreOptions) =>
             set((state) => {
               state.account.parsedMuxedAccountInput = value;
             }),
-          updateGeneratedMuxedAccount: (newMuxedAccount: MuxedAccount) =>
+          updateGeneratedMuxedAccount: (value: MuxedAccount) =>
             set((state) => {
               state.account.generatedMuxedAccount = {
                 ...state.account.generatedMuxedAccount,
-                ...newMuxedAccount,
+                ...value,
               };
             }),
-          updateParsedMuxedAccount: (newMuxedAccount: MuxedAccount) =>
+          updateParsedMuxedAccount: (value: MuxedAccount) =>
             set((state) => {
               state.account.parsedMuxedAccount = {
                 ...state.account.parsedMuxedAccount,
-                ...newMuxedAccount,
+                ...value,
               };
             }),
           updatePublicKey: (value: string) =>
