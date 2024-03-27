@@ -1,13 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Alert, Card, Text, Button } from "@stellar/design-system";
+import { Alert, Button, Card, Input, Text } from "@stellar/design-system";
 
 import { useStore } from "@/store/useStore";
 
 import { ExpandBox } from "@/components/ExpandBox";
-import { MuxedIdPicker } from "@/components/FormElements/MuxedIdPicker";
-import { MuxedKeyPicker } from "@/components/FormElements/MuxedKeyPicker";
 import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
 import { SdsLink } from "@/components/SdsLink";
 import { muxedAccount } from "@/helpers/muxedAccount";
@@ -87,9 +85,15 @@ export default function CreateMuxedAccount() {
                 setReset(true);
                 setBaseAddress(e.target.value);
 
-                const error = validate.publicKey(e.target.value);
+                let error = "";
 
-                setBaseFieldErrorMessage(error || "");
+                if (e.target.value.startsWith("M")) {
+                  error = "Base account address should start with G";
+                } else {
+                  error = validate.publicKey(e.target.value) || "";
+                }
+
+                setBaseFieldErrorMessage(error);
               }}
               error={baseFieldErrorMessage}
               copyButton={{
@@ -97,9 +101,11 @@ export default function CreateMuxedAccount() {
               }}
             />
 
-            <MuxedIdPicker
-              id="muxed-account-id"
-              label="Muxed Account Id"
+            <Input
+              id="muxed-account-iD"
+              fieldSize="md"
+              placeholder="Ex: 1"
+              label="Muxed Account ID"
               value={muxedId}
               onChange={(e) => {
                 setReset(true);
@@ -116,7 +122,11 @@ export default function CreateMuxedAccount() {
 
             <div className="Account__CTA">
               <Button
-                disabled={!baseAddress || Boolean(baseFieldErrorMessage)}
+                disabled={
+                  !baseAddress ||
+                  !muxedId ||
+                  Boolean(baseFieldErrorMessage || muxedFieldError)
+                }
                 size="md"
                 variant={"secondary"}
                 onClick={generateMuxedAccount}
@@ -125,48 +135,49 @@ export default function CreateMuxedAccount() {
               </Button>
             </div>
           </div>
-
-          <ExpandBox
-            isExpanded={
-              !isReset && Boolean(account.generatedMuxedAccount.muxedAddress)
-            }
-          >
-            <div className="Account__content__inputs">
-              <PubKeyPicker
-                id="muxed-public-key-result"
-                label="Base Account G Address"
-                value={account.generatedMuxedAccount.baseAddress}
-                error=""
-                readOnly={true}
-                copyButton={{
-                  position: "right",
-                }}
-              />
-
-              <MuxedIdPicker
-                id="muxed-account-id-result"
-                label="Muxed Account Id"
-                value={account.generatedMuxedAccount.id}
-                error=""
-                readOnly={true}
-                copyButton={{
-                  position: "right",
-                }}
-              />
-
-              <MuxedKeyPicker
-                id="muxed-account-address-result"
-                label="Muxed Account M Address"
-                value={account.generatedMuxedAccount.muxedAddress}
-                error=""
-                readOnly={true}
-                copyButton={{
-                  position: "right",
-                }}
-              />
-            </div>
-          </ExpandBox>
         </div>
+
+        <ExpandBox
+          isExpanded={
+            !isReset && Boolean(account.generatedMuxedAccount.muxedAddress)
+          }
+        >
+          <div className="Account__content__inputs Account__content__inputs--grey">
+            <PubKeyPicker
+              id="muxed-public-key-result"
+              label="Base Account G Address"
+              value={account.generatedMuxedAccount.baseAddress || ""}
+              error=""
+              readOnly={true}
+              copyButton={{
+                position: "right",
+              }}
+            />
+
+            <Input
+              id="muxed-account-id-result"
+              fieldSize="md"
+              label="Muxed Account ID"
+              value={account.generatedMuxedAccount.id}
+              error=""
+              readOnly={true}
+              copyButton={{
+                position: "right",
+              }}
+            />
+
+            <PubKeyPicker
+              id="muxed-account-address-result"
+              label="Muxed Account M Address"
+              value={account.generatedMuxedAccount.muxedAddress || ""}
+              error=""
+              readOnly={true}
+              copyButton={{
+                position: "right",
+              }}
+            />
+          </div>
+        </ExpandBox>
       </Card>
 
       <Alert

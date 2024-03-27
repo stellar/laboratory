@@ -1,13 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Alert, Card, Text, Button } from "@stellar/design-system";
+import { Alert, Card, Input, Text, Button } from "@stellar/design-system";
 
 import { useStore } from "@/store/useStore";
 
 import { ExpandBox } from "@/components/ExpandBox";
-import { MuxedIdPicker } from "@/components/FormElements/MuxedIdPicker";
-import { MuxedKeyPicker } from "@/components/FormElements/MuxedKeyPicker";
 import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
 
 import { muxedAccount } from "@/helpers/muxedAccount";
@@ -63,9 +61,10 @@ export default function ParseMuxedAccount() {
               </Text>
             </div>
 
-            <MuxedKeyPicker
+            <PubKeyPicker
               id="muxed-account-address"
               label="Muxed Account M Address"
+              placeholder="Ex: MBRWSVNURRYVIYSWLRFQ5AAAUWPKOZZNZVVVIXHFGUSGIRVKLVIDYAAAAAAAAAAD5GJ4U"
               value={muxedAddress}
               error={muxedFieldError}
               copyButton={{
@@ -75,8 +74,15 @@ export default function ParseMuxedAccount() {
                 setReset(true);
                 setMuxedAddress(e.target.value);
 
-                const error = validate.publicKey(e.target.value);
-                setMuxedFieldError(error || "");
+                let error = "";
+
+                if (e.target.value.startsWith("G")) {
+                  error = "Muxed account address should start with M";
+                } else {
+                  error = validate.publicKey(e.target.value) || "";
+                }
+
+                setMuxedFieldError(error);
               }}
             />
 
@@ -106,7 +112,7 @@ export default function ParseMuxedAccount() {
               <PubKeyPicker
                 id="muxed-public-key-result"
                 label="Base Account G Address"
-                value={account.parsedMuxedAccount.baseAddress}
+                value={account.parsedMuxedAccount.baseAddress || ""}
                 error=""
                 readOnly={true}
                 copyButton={{
@@ -114,9 +120,11 @@ export default function ParseMuxedAccount() {
                 }}
               />
 
-              <MuxedIdPicker
+              <Input
                 id="muxed-account-id-result"
+                fieldSize="md"
                 label="Muxed Account Id"
+                placeholder="Ex: 1"
                 value={account.parsedMuxedAccount.id}
                 error=""
                 readOnly={true}
@@ -125,8 +133,9 @@ export default function ParseMuxedAccount() {
                 }}
               />
 
-              <MuxedIdPicker
+              <Input
                 id="muxed-account-address-result"
+                fieldSize="md"
                 label="Muxed Account M Address"
                 value={account.parsedMuxedAccount.muxedAddress}
                 error=""

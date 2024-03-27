@@ -77,14 +77,14 @@ export const createStore = (options: CreateStoreOptions) =>
         account: {
           publicKey: "",
           generatedMuxedAccount: {
-            id: "",
-            baseAddress: "",
-            muxedAddress: "",
+            id: undefined,
+            baseAddress: undefined,
+            muxedAddress: undefined,
           },
           parsedMuxedAccount: {
-            id: "",
-            baseAddress: "",
-            muxedAddress: "",
+            id: undefined,
+            baseAddress: undefined,
+            muxedAddress: undefined,
           },
           updateGeneratedMuxedAccount: (newMuxedAccount: MuxedAccount) =>
             set((state) => {
