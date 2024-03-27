@@ -18,7 +18,9 @@ export default function ParseMuxedAccount() {
   const { account } = useStore();
   const parsedMuxedAccount = account.parsedMuxedAccount;
 
-  const [muxedAddress, setMuxedAddress] = useState<string>("");
+  const [muxedAddress, setMuxedAddress] = useState<string>(
+    account.parsedMuxedAccountInput || "",
+  );
 
   const [muxedFieldError, setMuxedFieldError] = useState<string>("");
   const [sdkError, setSdkError] = useState<string>("");
@@ -39,6 +41,7 @@ export default function ParseMuxedAccount() {
         baseAddress,
         muxedAddress,
       });
+      account.updateParsedMuxedAccountInput(muxedAddress);
 
       setSdkError("");
       return;

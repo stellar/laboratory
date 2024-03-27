@@ -17,9 +17,12 @@ import "../styles.scss";
 export default function CreateMuxedAccount() {
   const { account } = useStore();
 
-  const [baseAddress, setBaseAddress] = useState<string>("");
-  const [muxedId, setMuxedId] = useState<string>("");
-
+  const [baseAddress, setBaseAddress] = useState<string>(
+    account.generatedMuxedAccountInput.baseAddress || "",
+  );
+  const [muxedId, setMuxedId] = useState<string>(
+    account.generatedMuxedAccountInput.id || "",
+  );
   const [baseFieldErrorMessage, setBaseFieldErrorMessage] =
     useState<string>("");
   const [muxedFieldError, setMuxedFieldError] = useState<string>("");
@@ -41,6 +44,11 @@ export default function CreateMuxedAccount() {
         id: muxedId,
         baseAddress,
         muxedAddress,
+      });
+
+      account.updateGeneratedMuxedAccountInput({
+        id: muxedId,
+        baseAddress,
       });
 
       setSdkError("");

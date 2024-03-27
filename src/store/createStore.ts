@@ -15,10 +15,16 @@ export interface Store {
   // Account
   account: {
     publicKey: string;
+    generatedMuxedAccountInput: Partial<MuxedAccount>;
     generatedMuxedAccount: MuxedAccount;
+    parsedMuxedAccountInput: string | undefined;
     parsedMuxedAccount: MuxedAccount;
     // eslint-disable-next-line no-unused-vars
     updatePublicKey: (value: string) => void;
+    // eslint-disable-next-line no-unused-vars
+    updateGeneratedMuxedAccountInput: (value: Partial<MuxedAccount>) => void;
+    // eslint-disable-next-line no-unused-vars
+    updateParsedMuxedAccountInput: (value: string) => void;
     // eslint-disable-next-line no-unused-vars
     updateGeneratedMuxedAccount: (value: MuxedAccount) => void;
     // eslint-disable-next-line no-unused-vars
@@ -76,16 +82,32 @@ export const createStore = (options: CreateStoreOptions) =>
         // Account
         account: {
           publicKey: "",
+          generatedMuxedAccountInput: {
+            id: undefined,
+            baseAddress: undefined,
+          },
           generatedMuxedAccount: {
             id: undefined,
             baseAddress: undefined,
             muxedAddress: undefined,
           },
+          parsedMuxedAccountInput: undefined,
           parsedMuxedAccount: {
             id: undefined,
             baseAddress: undefined,
             muxedAddress: undefined,
           },
+          updateGeneratedMuxedAccountInput: (value: Partial<MuxedAccount>) =>
+            set((state) => {
+              state.account.generatedMuxedAccountInput = {
+                ...state.account.generatedMuxedAccountInput,
+                ...value,
+              };
+            }),
+          updateParsedMuxedAccountInput: (value: string) =>
+            set((state) => {
+              state.account.parsedMuxedAccountInput = value;
+            }),
           updateGeneratedMuxedAccount: (newMuxedAccount: MuxedAccount) =>
             set((state) => {
               state.account.generatedMuxedAccount = {
