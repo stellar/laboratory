@@ -25,7 +25,6 @@ export interface Store {
     network: Network | EmptyObj;
     currentEndpoint: string | undefined;
     params: AnyObject;
-    isStreaming: boolean;
     // eslint-disable-next-line no-unused-vars
     updateNetwork: (network: Network) => void;
     // eslint-disable-next-line no-unused-vars
@@ -46,7 +45,6 @@ const initExploreEndpointState = {
   network: {},
   currentEndpoint: undefined,
   params: {},
-  isStreaming: false,
 };
 
 // Store

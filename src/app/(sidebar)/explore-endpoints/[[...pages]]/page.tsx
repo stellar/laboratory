@@ -1,24 +1,24 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import {
   Alert,
   Button,
   Card,
-  Checkbox,
   CopyText,
   Icon,
   Input,
   Link,
   Text,
 } from "@stellar/design-system";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { InfoCards } from "@/components/InfoCards";
-import { TabView } from "@/components/TabView";
 import { SdsLink } from "@/components/SdsLink";
-import { WithInfoText } from "@/components/WithInfoText";
 import { NextLink } from "@/components/NextLink";
+import { formComponentTemplate } from "@/components/formComponentTemplate";
+import { PrettyJson } from "@/components/PrettyJson";
 
 import { useStore } from "@/store/useStore";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
@@ -28,10 +28,8 @@ import { parseJsonString } from "@/helpers/parseJsonString";
 
 import { Routes } from "@/constants/routes";
 import { EXPLORE_ENDPOINTS_PAGES_HORIZON } from "@/constants/exploreEndpointsPages";
-import { formComponentTemplate } from "@/constants/formComponentTemplate";
+import { useExploreEndpoint } from "@/query/useExploreEndpoint";
 import { AnyObject, AssetObject, Network } from "@/types/types";
-
-// TODO: handle streaming
 
 export default function ExploreEndpoints() {
   const pathname = usePathname();
@@ -57,9 +55,21 @@ export default function ExploreEndpoints() {
     resetParams,
   } = exploreEndpoints;
 
-  const [activeTab, setActiveTab] = useState("endpoints-tab-params");
   const [formError, setFormError] = useState<AnyObject>({});
   const [requestUrl, setRequestUrl] = useState<string>("");
+
+  const queryClient = useQueryClient();
+  const {
+    data: endpointData,
+    isLoading,
+    isFetching,
+    error: endpointError,
+    refetch,
+    isSuccess,
+    isError,
+  } = useExploreEndpoint(requestUrl);
+
+  const responseEl = useRef<HTMLDivElement | null>(null);
 
   const isSubmitEnabled = () => {
     let isValidReqFields = true;
@@ -96,6 +106,21 @@ export default function ExploreEndpoints() {
     return isValidReqAssetFields && isValidReqFields && isValid;
   };
 
+  const resetQuery = useCallback(
+    () =>
+      queryClient.resetQueries({
+        queryKey: ["exploreEndpoint", "response"],
+        exact: true,
+      }),
+    [queryClient],
+  );
+
+  const resetStates = useCallback(() => {
+    resetParams();
+    setFormError({});
+    resetQuery();
+  }, [resetParams, resetQuery]);
+
   useEffect(() => {
     // Validate saved params when the page loads
     const paramErrors = () => {
@@ -127,10 +152,9 @@ export default function ExploreEndpoints() {
     // Clear form and errors if navigating to another endpoint page. We don't
     // want to keep previous form values.
     if (currentEndpoint && currentEndpoint !== currentPage) {
-      resetParams();
-      setFormError({});
+      resetStates();
     }
-  }, [currentPage, currentEndpoint, updateCurrentEndpoint, resetParams]);
+  }, [currentEndpoint, currentPage, resetStates, updateCurrentEndpoint]);
 
   useEffect(() => {
     // Save network for endpoints if we don't have it yet.
@@ -138,11 +162,17 @@ export default function ExploreEndpoints() {
       updateNetwork(network as Network);
       // When network changes, clear saved params and errors.
     } else if (network.id && network.id !== endpointNetwork.id) {
-      resetParams();
-      setFormError({});
+      resetStates();
       updateNetwork(network as Network);
     }
-  }, [endpointNetwork.id, network, resetParams, updateNetwork]);
+  }, [endpointNetwork.id, network, resetStates, updateNetwork]);
+
+  // Scroll to response
+  useEffect(() => {
+    if (isSuccess || isError) {
+      responseEl?.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [isSuccess, isError]);
 
   const buildUrl = useCallback(() => {
     const mapPathParamToValue = (pathParams: string[]) => {
@@ -199,7 +229,18 @@ export default function ExploreEndpoints() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // TODO: handle submit
+
+    // Adding a bit of a delay to make sure reset doesn't affect refetch
+    const delay = isError || isSuccess ? 100 : 0;
+
+    if (delay) {
+      resetQuery();
+    }
+
+    const t = setTimeout(() => {
+      refetch();
+      clearTimeout(t);
+    }, delay);
   };
 
   const renderEndpointUrl = () => {
@@ -226,6 +267,7 @@ export default function ExploreEndpoints() {
           variant="secondary"
           type="submit"
           disabled={!isSubmitEnabled()}
+          isLoading={isLoading || isFetching}
         >
           Submit
         </Button>
@@ -248,7 +290,7 @@ export default function ExploreEndpoints() {
 
     return (
       <div className="Endpoints__content">
-        <div className="Endpoints__content__inputs">
+        <div className="PageBody__content">
           {allFields.map((f) => {
             const component = formComponentTemplate(f, pageData.custom?.[f]);
 
@@ -259,6 +301,8 @@ export default function ExploreEndpoints() {
               // formatting (sanitizing object or array, for exmaple).
               // Error check needs the original value.
               const handleChange = (value: any, storeValue: any) => {
+                resetQuery();
+
                 updateParams({
                   [f]: storeValue,
                 });
@@ -313,16 +357,6 @@ export default function ExploreEndpoints() {
             return null;
           })}
         </div>
-
-        {pageData.isStreaming ? (
-          <WithInfoText href="https://developers.stellar.org/network/horizon/structure/streaming">
-            <Checkbox
-              id="streaming-mode"
-              label="Server-Sent Events (streaming mode)"
-              fieldSize="md"
-            />
-          </WithInfoText>
-        ) : null}
       </div>
     );
   };
@@ -337,26 +371,77 @@ export default function ExploreEndpoints() {
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
-        <TabView
-          heading={{ title: page.label, href: pageData.info }}
-          staticTop={renderEndpointUrl()}
-          tab1={{
-            id: "endpoints-tab-params",
-            label: "Params",
-            content: renderFields(),
-          }}
-          tab2={{
-            id: "endpoints-tab-json",
-            label: "JSON Response",
-            content: <div>TODO: render JSON</div>,
-          }}
-          onTabChange={(id) => {
-            setActiveTab(id);
-          }}
-          activeTabId={activeTab}
-        />
-      </form>
+      <div className="PageHeader">
+        <Text size="md" as="h1" weight="medium">
+          {page.label}
+        </Text>
+
+        <SdsLink href={pageData.docsUrl} icon={<Icon.LinkExternal01 />}>
+          {`View ${pageData.docsLabel ? `${pageData.docsLabel} ` : ""}documentation`}
+        </SdsLink>
+      </div>
+
+      <Card>
+        <form className="PageBody" onSubmit={handleSubmit}>
+          {renderEndpointUrl()}
+          {renderFields()}
+        </form>
+      </Card>
+
+      {endpointData || endpointError ? (
+        <div ref={responseEl}>
+          {endpointError ? (
+            <Alert placement="inline" variant="error" title="Error">
+              {`${endpointError}`}
+            </Alert>
+          ) : null}
+
+          {endpointData ? (
+            <Card>
+              <div className="PageBody">
+                <Text
+                  size="sm"
+                  as="h2"
+                  weight="semi-bold"
+                  addlClassName="PageBody__title"
+                >
+                  JSON Response
+                  {endpointData.isError ? (
+                    <span className="PageBody__title__icon">
+                      <Icon.AlertTriangle />
+                    </span>
+                  ) : null}
+                </Text>
+
+                <div
+                  className={`PageBody__content PageBody__scrollable ${endpointData.isError ? "PageBody__content--error" : ""}`}
+                >
+                  <PrettyJson json={endpointData.json} />
+                </div>
+
+                <div className="PageFooter">
+                  <div>{/* TODO: add conditional StellarExpert link */}</div>
+                  <div>
+                    <CopyText
+                      textToCopy={JSON.stringify(endpointData.json, null, 2)}
+                    >
+                      <Button
+                        size="md"
+                        variant="tertiary"
+                        icon={<Icon.Copy01 />}
+                        iconPosition="left"
+                      >
+                        Copy JSON
+                      </Button>
+                    </CopyText>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          ) : null}
+        </div>
+      ) : null}
+
       <Alert variant="primary" placement="inline">
         This tool can be used to run queries against the{" "}
         <SdsLink href="https://developers.stellar.org/network/horizon/resources">

@@ -290,6 +290,66 @@
 // Pages
 // =============================================================================
 
+.PageHeader,
+.PageFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: pxToRem(16px);
+}
+
+.PageHeader {
+  .Link {
+    --Link-icon-size: pxToRem(14px);
+    font-size: pxToRem(14px);
+    font-weight: var(--sds-fw-semi-bold);
+  }
+}
+
+.PageBody {
+  display: flex;
+  flex-direction: column;
+  gap: pxToRem(16px);
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: pxToRem(4px);
+
+    &__icon {
+      display: block;
+      width: pxToREm(14px);
+      height: pxToREm(14px);
+
+      svg {
+        display: block;
+        width: 100%;
+        height: 100%;
+        stroke: var(--sds-clr-red-09);
+      }
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: pxToRem(16px);
+    padding: pxToRem(16px);
+    background-color: var(--sds-clr-gray-03);
+    border-radius: pxToRem(8px);
+
+    &--error {
+      border: 1px solid var(--sds-clr-red-06);
+    }
+  }
+
+  &__scrollable {
+    max-width: 100%;
+    max-height: pxToRem(600px);
+    overflow: auto;
+  }
+}
+
 // Introduction
 .CardText {
   display: flex;
@@ -342,15 +402,6 @@
     display: flex;
     flex-direction: column;
     gap: pxToRem(12px);
-
-    &__inputs {
-      display: flex;
-      flex-direction: column;
-      gap: pxToRem(16px);
-      padding: pxToRem(16px);
-      background-color: var(--sds-clr-gray-03);
-      border-radius: pxToRem(8px);
-    }
   }
 
   .Input--disabled {
