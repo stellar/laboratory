@@ -36,17 +36,19 @@ export const PrettyJson = ({ json }: { json: AnyObject }) => {
     </span>
   );
 
-  const render = (item: any): React.ReactElement => {
+  const render = (item: any, parentKey?: string): React.ReactElement => {
     switch (typeof item) {
       case "object":
         return (
-          <>
+          <React.Fragment key={parentKey}>
             {Object.entries(item).map(([key, value]) => {
+              const keyProp = parentKey ? `${parentKey}-${key}` : key;
+
               if (typeof value === "object") {
                 if (Array.isArray(value)) {
                   if (value.length === 0) {
                     return (
-                      <div key={key} className="PrettyJson__inline">
+                      <div key={keyProp} className="PrettyJson__inline">
                         <div className="PrettyJson__nested">
                           <Key>{key}</Key>
                         </div>
@@ -59,12 +61,12 @@ export const PrettyJson = ({ json }: { json: AnyObject }) => {
                   }
 
                   return (
-                    <div key={key} className="PrettyJson__nested">
+                    <div key={keyProp} className="PrettyJson__nested">
                       <div className="PrettyJson__inline">
                         <Key>{key}</Key>
                         <Bracket char="[" />
                       </div>
-                      <div>{value.map((v) => render(v))}</div>
+                      <div>{value.map((v) => render(v, key))}</div>
                       <div>
                         <Bracket char="]" />
                         <Comma />
@@ -75,7 +77,7 @@ export const PrettyJson = ({ json }: { json: AnyObject }) => {
 
                 if (value && isEmptyObject(value)) {
                   return (
-                    <div key={key} className="PrettyJson__inline">
+                    <div key={keyProp} className="PrettyJson__inline">
                       <div className="PrettyJson__nested">
                         <Key>{key}</Key>
                       </div>
@@ -88,12 +90,12 @@ export const PrettyJson = ({ json }: { json: AnyObject }) => {
                 }
 
                 return (
-                  <div key={key} className="PrettyJson__nested">
+                  <div key={keyProp} className="PrettyJson__nested">
                     <div className="PrettyJson__inline">
                       <Key>{key}</Key>
                       <Bracket char="{" />
                     </div>
-                    <div>{render(value)}</div>
+                    <div>{render(value, key)}</div>
                     <div>
                       <Bracket char="}" />
                       <Comma />
@@ -103,15 +105,15 @@ export const PrettyJson = ({ json }: { json: AnyObject }) => {
               }
 
               return (
-                <div key={key} className="PrettyJson__inline">
+                <div key={keyProp} className="PrettyJson__inline">
                   <div className="PrettyJson__nested">
                     <Key>{key}</Key>
                   </div>
-                  {render(value)}
+                  {render(value, key)}
                 </div>
               );
             })}
-          </>
+          </React.Fragment>
         );
       case "string":
         return (

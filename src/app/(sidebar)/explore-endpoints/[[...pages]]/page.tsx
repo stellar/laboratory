@@ -106,14 +106,20 @@ export default function ExploreEndpoints() {
     return isValidReqAssetFields && isValidReqFields && isValid;
   };
 
+  const resetQuery = useCallback(
+    () =>
+      queryClient.resetQueries({
+        queryKey: ["exploreEndpoint", "response"],
+        exact: true,
+      }),
+    [queryClient],
+  );
+
   const resetStates = useCallback(() => {
     resetParams();
     setFormError({});
-    queryClient.resetQueries({
-      queryKey: ["exploreEndpoint", "response"],
-      exact: true,
-    });
-  }, [queryClient, resetParams]);
+    resetQuery();
+  }, [resetParams, resetQuery]);
 
   useEffect(() => {
     // Validate saved params when the page loads
@@ -223,7 +229,18 @@ export default function ExploreEndpoints() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    refetch();
+
+    // Adding a bit of a delay to make sure reset doesn't affect refetch
+    const delay = isError || isSuccess ? 100 : 0;
+
+    if (delay) {
+      resetQuery();
+    }
+
+    const t = setTimeout(() => {
+      refetch();
+      clearTimeout(t);
+    }, delay);
   };
 
   const renderEndpointUrl = () => {
@@ -284,6 +301,8 @@ export default function ExploreEndpoints() {
               // formatting (sanitizing object or array, for exmaple).
               // Error check needs the original value.
               const handleChange = (value: any, storeValue: any) => {
+                resetQuery();
+
                 updateParams({
                   [f]: storeValue,
                 });

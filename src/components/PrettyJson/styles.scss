@@ -16,10 +16,6 @@
     gap: pxToRem(4px);
   }
 
-  &__key {
-    color: var(--sds-clr-gray-11);
-  }
-
   &__value {
     color: var(--sds-clr-gray-11);
     white-space: nowrap;
@@ -27,7 +23,8 @@
 
   &__comma,
   &__quotes,
-  &__bracket {
+  &__bracket,
+  &__key {
     color: var(--sds-clr-gray-11);
   }
 }
