@@ -54,10 +54,12 @@ export default function CreateAccount() {
           </div>
 
           <ExpandBox isExpanded={Boolean(account.publicKey)} offsetTop="xl">
-            <GenerateKeypair
-              publicKey={account.publicKey}
-              secretKey={secretKey}
-            />
+            <div className="Account__result">
+              <GenerateKeypair
+                publicKey={account.publicKey}
+                secretKey={secretKey}
+              />
+            </div>
           </ExpandBox>
         </div>
       </Card>

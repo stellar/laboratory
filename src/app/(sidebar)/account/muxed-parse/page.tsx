@@ -99,20 +99,21 @@ export default function ParseMuxedAccount() {
               Parse
             </Button>
           </div>
-        </div>
 
-        <ExpandBox
-          isExpanded={
-            !isReset &&
-            Boolean(
-              parsedMuxedAccount?.baseAddress &&
-                parsedMuxedAccount?.id &&
-                parsedMuxedAccount?.muxedAddress,
-            )
-          }
-        >
-          <MuxedAccountResult />
-        </ExpandBox>
+          <ExpandBox
+            offsetTop="xl"
+            isExpanded={
+              !isReset &&
+              Boolean(
+                parsedMuxedAccount?.baseAddress &&
+                  parsedMuxedAccount?.id &&
+                  parsedMuxedAccount?.muxedAddress,
+              )
+            }
+          >
+            <MuxedAccountResult />
+          </ExpandBox>
+        </div>
       </Card>
 
       <Alert
