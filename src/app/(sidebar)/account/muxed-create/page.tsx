@@ -20,10 +20,10 @@ export default function CreateMuxedAccount() {
   const { account } = useStore();
 
   const [baseAddress, setBaseAddress] = useState<string>(
-    account.generatedMuxedAccountInput.baseAddress || "",
+    account.generatedMuxedAccountInput?.baseAddress || "",
   );
   const [muxedId, setMuxedId] = useState<string>(
-    account.generatedMuxedAccountInput.id || "",
+    account.generatedMuxedAccountInput?.id || "",
   );
   const [baseFieldErrorMessage, setBaseFieldErrorMessage] =
     useState<string>("");
@@ -150,7 +150,11 @@ export default function CreateMuxedAccount() {
               !isReset && Boolean(account.generatedMuxedAccount.muxedAddress)
             }
           >
-            <MuxedAccountResult />
+            <MuxedAccountResult
+              baseAddress={account.generatedMuxedAccount.baseAddress ?? ""}
+              muxedAddress={account.generatedMuxedAccount.muxedAddress ?? ""}
+              muxedId={account.generatedMuxedAccount.id ?? ""}
+            />
           </ExpandBox>
         </div>
       </Card>

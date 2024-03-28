@@ -111,7 +111,11 @@ export default function ParseMuxedAccount() {
               )
             }
           >
-            <MuxedAccountResult />
+            <MuxedAccountResult
+              baseAddress={parsedMuxedAccount.baseAddress ?? ""}
+              muxedId={parsedMuxedAccount.id ?? ""}
+              muxedAddress={parsedMuxedAccount.muxedAddress ?? ""}
+            />
           </ExpandBox>
         </div>
       </Card>
