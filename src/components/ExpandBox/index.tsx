@@ -33,7 +33,7 @@ export const ExpandBox = ({
   return (
     <div
       className={`ExpandBox ExpandBox--${offsetTop}`}
-      {...(offsetTop === "custom" ? { marginTop: customValue } : {})}
+      {...(offsetTop === "custom" ? { style: { marginTop: customValue } } : {})}
       data-is-expanded={isExpanded}
       data-is-open={isOpen}
     >
