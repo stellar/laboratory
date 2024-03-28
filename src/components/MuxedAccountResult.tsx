@@ -22,7 +22,7 @@ export const MuxedAccountResult = () => {
       <Input
         id="muxed-account-id-result"
         fieldSize="md"
-        label="Muxed Account Id"
+        label="Muxed Account ID"
         value={account.parsedMuxedAccount?.id}
         error=""
         readOnly={true}
