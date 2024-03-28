@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:20-alpine
 
 ENV NEXT_TELEMETRY_DISABLED 1
 ENV PORT 80
