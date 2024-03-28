@@ -188,9 +188,9 @@
     playwright "1.42.1"
 
 "@rushstack/eslint-patch@^1.3.3":
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.8.0.tgz#c5545e6a5d2bd5c26b4021c357177a28698c950e"
-  integrity sha512-0HejFckBN2W+ucM6cUOlwsByTKt9/+0tWhqUffNIcHqCXkthY/mZ7AuYPK/2IIaGWhdl0h+tICDO0ssLMd6XMQ==
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.10.0.tgz#b88671c367284bb50b1cb6a842d7e0d98e9f4e55"
+  integrity sha512-ih6xH1dOGBTP/RNc/QbnVLLa/s80SkXydI7tnyq+a2eIdd7gDsmSpD1Jz7T1oCa+GIsVTyQCR3cW0tlYB97iFg==
 
 "@stellar/design-system@^2.0.0-beta.8":
   version "2.0.0-beta.8"
@@ -290,10 +290,10 @@
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.12.tgz#12bb1e2be27293c1406acb6af1c3f3a1481d98c6"
   integrity sha512-5zvhXYtRNRluoE/jAp4GVsSduVUzNWKkOZrCDBWYtE7biZywwdC2AcEzg+cSMLFRfVgeAFqpfNabiPjxFddV1Q==
 
-"@types/react-dom@^18.2.22":
-  version "18.2.22"
-  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-18.2.22.tgz#d332febf0815403de6da8a97e5fe282cbe609bae"
-  integrity sha512-fHkBXPeNtfvri6gdsMYyW+dW7RXFo6Ad09nLFK0VQWR7yGLai/Cyvyj696gbwYvBnhGtevUG9cET0pmUbMtoPQ==
+"@types/react-dom@^18.2.23":
+  version "18.2.23"
+  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-18.2.23.tgz#112338760f622a16d64271b408355f2f27f6302c"
+  integrity sha512-ZQ71wgGOTmDYpnav2knkjr3qXdAFu0vsk8Ci5w3pGAIdj7/kKAyn+VsQDhXsmzzzepAiI9leWMmubXz690AI/A==
   dependencies:
     "@types/react" "*"
 
@@ -1623,15 +1623,15 @@ html-dom-parser@5.0.8:
     domhandler "5.0.3"
     htmlparser2 "9.1.0"
 
-html-react-parser@^5.1.9:
-  version "5.1.9"
-  resolved "https://registry.yarnpkg.com/html-react-parser/-/html-react-parser-5.1.9.tgz#7a8eb3a0b243bddf68f1a77bba5e423933b64161"
-  integrity sha512-MP0MQDEGlzkJT0OwY//tKYrgIzBM1frYLxx9RF7ALdIjI+MCMumydcNovXDX4X/iDi1zfgaU28VxoNXZn7EPjQ==
+html-react-parser@^5.1.10:
+  version "5.1.10"
+  resolved "https://registry.yarnpkg.com/html-react-parser/-/html-react-parser-5.1.10.tgz#e65bf68df9b505756680d2cae842f7add3da5305"
+  integrity sha512-gV22PvLij4wdEdtrZbGVC7Zy2OVWnQ0bYhX63S196ZRSx4+K0TuutCreHSXr+saUia8KeKB+2TYziVfijpH4Tw==
   dependencies:
     domhandler "5.0.3"
     html-dom-parser "5.0.8"
     react-property "2.0.2"
-    style-to-js "1.1.11"
+    style-to-js "1.1.12"
 
 htmlparser2@9.1.0:
   version "9.1.0"
@@ -1699,10 +1699,10 @@ inherits@2, inherits@^2.0.1:
   resolved "https://registry.yarnpkg.com/inherits/-/inherits-2.0.4.tgz#0fa2c64f932917c3433a0ded55363aae37416b7c"
   integrity sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==
 
-inline-style-parser@0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/inline-style-parser/-/inline-style-parser-0.2.2.tgz#d498b4e6de0373458fc610ff793f6b14ebf45633"
-  integrity sha512-EcKzdTHVe8wFVOGEYXiW9WmJXPjqi1T+234YpJr98RiFYKHV3cdy1+3mkTE+KHTHxFFLH51SfaGOoUdW+v7ViQ==
+inline-style-parser@0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/inline-style-parser/-/inline-style-parser-0.2.3.tgz#e35c5fb45f3a83ed7849fe487336eb7efa25971c"
+  integrity sha512-qlD8YNDqyTKTyuITrDOffsl6Tdhv+UC4hcdAVuQsK4IMQ99nSgd1MIA/Q+jQYoh9r3hVUXhYh7urSRmXPkW04g==
 
 internal-slot@^1.0.7:
   version "1.0.7"
@@ -2086,17 +2086,17 @@ loose-envify@^1.1.0, loose-envify@^1.4.0:
   dependencies:
     js-tokens "^3.0.0 || ^4.0.0"
 
+lru-cache@^10.2.0:
+  version "10.2.0"
+  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-10.2.0.tgz#0bd445ca57363465900f4d1f9bd8db343a4d95c3"
+  integrity sha512-2bIM8x+VAf6JT4bKAljS1qUWgMsqZRPGJS6FSahIMPVvctcNhyVp7AJu7quxOW9jwkryBReKZY5tY5JYv2n/7Q==
+
 lru-cache@^6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-6.0.0.tgz#6d6fe6570ebd96aaf90fcad1dafa3b2566db3a94"
   integrity sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==
   dependencies:
     yallist "^4.0.0"
-
-"lru-cache@^9.1.1 || ^10.0.0":
-  version "10.2.0"
-  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-10.2.0.tgz#0bd445ca57363465900f4d1f9bd8db343a4d95c3"
-  integrity sha512-2bIM8x+VAf6JT4bKAljS1qUWgMsqZRPGJS6FSahIMPVvctcNhyVp7AJu7quxOW9jwkryBReKZY5tY5JYv2n/7Q==
 
 merge-stream@^2.0.0:
   version "2.0.0"
@@ -2373,11 +2373,11 @@ path-parse@^1.0.7:
   integrity sha512-LDJzPVEEEPR+y48z93A0Ed0yXb8pAByGWo/k5YYdYgpY2/2EsOsksJrq7lOHxryrVOn1ejG6oAp8ahvOIQD8sw==
 
 path-scurry@^1.10.1:
-  version "1.10.1"
-  resolved "https://registry.yarnpkg.com/path-scurry/-/path-scurry-1.10.1.tgz#9ba6bf5aa8500fe9fd67df4f0d9483b2b0bfc698"
-  integrity sha512-MkhCqzzBEpPvxxQ71Md0b1Kk51W01lrYvlMzSUaIzNsODdd7mqhiimSZlr+VegAz5Z6Vzt9Xg2ttE//XBhH3EQ==
+  version "1.10.2"
+  resolved "https://registry.yarnpkg.com/path-scurry/-/path-scurry-1.10.2.tgz#8f6357eb1239d5fa1da8b9f70e9c080675458ba7"
+  integrity sha512-7xTavNy5RQXnsjANvVvMkEjvloOinkAjv/Z6Ildz9v2RinZ4SBKTWFOVRbaF8p0vpHnyjV/UwNDdKuUv6M5qcA==
   dependencies:
-    lru-cache "^9.1.1 || ^10.0.0"
+    lru-cache "^10.2.0"
     minipass "^5.0.0 || ^6.0.2 || ^7.0.0"
 
 path-type@^4.0.0:
@@ -2878,19 +2878,19 @@ strip-json-comments@^3.1.1:
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-3.1.1.tgz#31f1281b3832630434831c310c01cccda8cbe006"
   integrity sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==
 
-style-to-js@1.1.11:
-  version "1.1.11"
-  resolved "https://registry.yarnpkg.com/style-to-js/-/style-to-js-1.1.11.tgz#7ba66214cab556fdded4786e80de0baccfa0e942"
-  integrity sha512-yHpYzXzEkx7iDjGEmE8Eyl4K/hWIm36FXPdRsl2NHEpbigLeawLVsv6tcYp+2xNhfpCrut4w08dYqeCxWMdRxw==
+style-to-js@1.1.12:
+  version "1.1.12"
+  resolved "https://registry.yarnpkg.com/style-to-js/-/style-to-js-1.1.12.tgz#112dd054231e71643514013a4475d4649bb2b581"
+  integrity sha512-tv+/FkgNYHI2fvCoBMsqPHh5xovwiw+C3X0Gfnss/Syau0Nr3IqGOJ9XiOYXoPnToHVbllKFf5qCNFJGwFg5mg==
   dependencies:
-    style-to-object "1.0.5"
+    style-to-object "1.0.6"
 
-style-to-object@1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/style-to-object/-/style-to-object-1.0.5.tgz#5e918349bc3a39eee3a804497d97fcbbf2f0d7c0"
-  integrity sha512-rDRwHtoDD3UMMrmZ6BzOW0naTjMsVZLIjsGleSKS/0Oz+cgCfAPRspaqJuE8rDzpKha/nEvnM0IF4seEAZUTKQ==
+style-to-object@1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/style-to-object/-/style-to-object-1.0.6.tgz#0c28aed8be1813d166c60d962719b2907c26547b"
+  integrity sha512-khxq+Qm3xEyZfKd/y9L3oIWQimxuc4STrQKtQn8aSDRHb8mFgpukgX1hdzfrMEW6JCjyJ8p89x+IUMVnCBI1PA==
   dependencies:
-    inline-style-parser "0.2.2"
+    inline-style-parser "0.2.3"
 
 styled-jsx@5.1.1:
   version "5.1.1"
