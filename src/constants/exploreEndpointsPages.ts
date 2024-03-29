@@ -340,32 +340,85 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
         {
           route: Routes.EXPLORE_ENDPOINTS_OPERATIONS,
           label: "All Operations",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/operations",
+            docsLabel: "operations",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/operations{?cursor,limit,order,include_failed}",
+            requiredParams: "",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_OPERATIONS_SINGLE,
           label: "Single Operation",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/retrieve-an-operation",
+            docsLabel: "operation",
+            requestMethod: "GET",
+            endpointUrlTemplate: "/operations/{operation}",
+            requiredParams: "operation",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_OPERATIONS_ACCOUNT,
           label: "Operations for Account",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/get-operations-by-account-id",
+            docsLabel: "operations for account",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/accounts/{account_id}/operations{?cursor,limit,order,include_failed}",
+            requiredParams: "account_id",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_OPERATIONS_LEDGER,
           label: "Operations for Ledger",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/retrieve-a-ledgers-operations",
+            docsLabel: "operations for ledger",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/ledgers/{ledger}/operations{?cursor,limit,order,include_failed}",
+            requiredParams: "ledger",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_OPERATIONS_LIQUIDITY_POOL,
           label: "Operations for Liquidity Pool",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/lp-retrieve-related-operations",
+            docsLabel: "operations for liquidity pool",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/liquidity_pools/{liquidity_pool_id}/operations{?cursor,limit,order,include_failed}",
+            requiredParams: "liquidity_pool_id",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_OPERATIONS_TRANSACTION,
           label: "Operations for Transaction",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/retrieve-a-transactions-operations",
+            docsLabel: "operations for transaction",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/transactions/{transaction}/operations{?cursor,limit,order}",
+            requiredParams: "transaction",
+            isStreaming: true,
+          },
         },
       ],
     },

@@ -254,7 +254,7 @@ export default function ExploreEndpoints() {
     const getParamRequestValue = (param: string) => {
       const value = parseJsonString(params[param]);
 
-      if (!value) {
+      if (!value && typeof value !== "boolean") {
         return false;
       }
 
@@ -266,7 +266,7 @@ export default function ExploreEndpoints() {
         return `${value.code}:${value.issuer}`;
       }
 
-      return value;
+      return `${value}`;
     };
 
     // Build search params keeping the same params order
@@ -398,6 +398,7 @@ export default function ExploreEndpoints() {
                     },
                   });
                 case "order":
+                case "include_failed":
                   return component.render({
                     value: params[f],
                     error: formError[f],

@@ -11,6 +11,7 @@ import { validate } from "@/validate";
 import { AnyObject, AssetObjectValue } from "@/types/types";
 import { TextPicker } from "./FormElements/TextPicker";
 import { PositiveIntPicker } from "./FormElements/PositiveIntPicker";
+import { IncludeFailedPicker } from "./FormElements/IncludeFailedPicker";
 
 type TemplateRenderProps = {
   value: string | undefined;
@@ -32,6 +33,13 @@ type TemplateRenderOrderProps = {
   value: string | undefined;
   // eslint-disable-next-line no-unused-vars
   onChange: (optionId: string | undefined, optionValue?: string) => void;
+  isRequired?: boolean;
+};
+
+type TemplateRenderIncludeFailedProps = {
+  value: string | undefined;
+  // eslint-disable-next-line no-unused-vars
+  onChange: (optionId: string | undefined, optionValue?: boolean) => void;
   isRequired?: boolean;
 };
 
@@ -165,6 +173,19 @@ export const formComponentTemplate = (
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={templ.value || ""}
             error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: null,
+      };
+    case "include_failed":
+      return {
+        render: (templ: TemplateRenderIncludeFailedProps) => (
+          <IncludeFailedPicker
+            key={id}
+            id={id}
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            selectedOption={templ.value}
             onChange={templ.onChange}
           />
         ),
