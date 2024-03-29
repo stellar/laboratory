@@ -235,12 +235,28 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
         {
           route: Routes.EXPLORE_ENDPOINTS_LEDGERS,
           label: "All Ledgers",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/ledgers",
+            docsLabel: "ledgers",
+            requestMethod: "GET",
+            endpointUrlTemplate: "/ledgers{?cursor,limit,order}",
+            requiredParams: "",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_LEDGERS_SINGLE,
           label: "Single Ledger",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/retrieve-a-ledger",
+            docsLabel: "ledger",
+            requestMethod: "GET",
+            endpointUrlTemplate: "/ledgers/{ledger}",
+            requiredParams: "ledger",
+            isStreaming: true,
+          },
         },
       ],
     },
