@@ -341,14 +341,14 @@ export default function ExploreEndpoints() {
   };
 
   const renderFields = () => {
-    if (!pageData) {
-      return null;
-    }
-
     const allFields = sanitizeArray([
       ...urlPathParams.split(","),
       ...urlParams.split(","),
     ]);
+
+    if (!pageData || allFields.length === 0) {
+      return null;
+    }
 
     return (
       <div className="Endpoints__content">

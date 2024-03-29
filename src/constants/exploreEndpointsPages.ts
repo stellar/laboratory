@@ -216,7 +216,15 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
         {
           route: Routes.EXPLORE_ENDPOINTS_FEE_STATS,
           label: "All Fee Stats",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/aggregations/fee-stats/object",
+            docsLabel: "fee stats",
+            requestMethod: "GET",
+            endpointUrlTemplate: "/fee_stats",
+            requiredParams: "",
+            isStreaming: true,
+          },
         },
       ],
     },
