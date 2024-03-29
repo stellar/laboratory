@@ -15,7 +15,8 @@
     "install-if-package-changed": "git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD | grep --quiet yarn.lock && yarn install || exit 0",
     "lint:ts": "tsc --noEmit",
     "prepare": "husky",
-    "pre-commit": "concurrently 'lint-staged' 'yarn lint:ts'",
+    "pre-commit": "yarn lint-staged",
+    "pre-push": "yarn lint:ts",
     "git-info": "rm -rf src/generated/ && mkdir src/generated/ && echo export default \"{\\\"commitHash\\\": \\\"$(git rev-parse --short HEAD)\\\", \\\"version\\\": \\\"$(git describe --tags --always)\\\"};\" > src/generated/gitInfo.ts"
   },
   "dependencies": {
