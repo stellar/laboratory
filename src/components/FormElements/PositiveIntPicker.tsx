@@ -1,7 +1,7 @@
 import React from "react";
 import { Input, InputProps } from "@stellar/design-system";
 
-interface TextPickerProps extends Omit<InputProps, "fieldSize"> {
+interface PositiveIntPickerProps extends Omit<InputProps, "fieldSize"> {
   id: string;
   fieldSize?: "sm" | "md" | "lg";
   labelSuffix?: string | React.ReactNode;
@@ -13,7 +13,7 @@ interface TextPickerProps extends Omit<InputProps, "fieldSize"> {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const TextPicker = ({
+export const PositiveIntPicker = ({
   id,
   fieldSize = "md",
   labelSuffix,
@@ -22,7 +22,7 @@ export const TextPicker = ({
   error,
   onChange,
   ...props
-}: TextPickerProps) => {
+}: PositiveIntPickerProps) => {
   return (
     <Input
       id={id}

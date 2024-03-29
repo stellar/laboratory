@@ -10,6 +10,7 @@ import { parseJsonString } from "@/helpers/parseJsonString";
 import { validate } from "@/validate";
 import { AnyObject, AssetObjectValue } from "@/types/types";
 import { TextPicker } from "./FormElements/TextPicker";
+import { PositiveIntPicker } from "./FormElements/PositiveIntPicker";
 
 type TemplateRenderProps = {
   value: string | undefined;
@@ -152,12 +153,60 @@ export const formComponentTemplate = (
         ),
         validate: null,
       };
+    case "ledger":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <PositiveIntPicker
+            key={id}
+            id={id}
+            label="Ledger Sequence"
+            placeholder="Ex: 1714814"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.positiveInt,
+      };
     case "limit":
       return {
         render: (templ: TemplateRenderProps) => (
           <LimitPicker
             key={id}
             id={id}
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.positiveInt,
+      };
+    case "liquidity_pool_id":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <TextPicker
+            key={id}
+            id={id}
+            label="Liquidity Pool ID"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            placeholder="Ex: 67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9"
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: null,
+      };
+    case "operation":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <PositiveIntPicker
+            key={id}
+            id={id}
+            label="Operation ID"
+            placeholder="Ex: 55834578945"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={templ.value || ""}
             error={templ.error}
@@ -208,6 +257,22 @@ export const formComponentTemplate = (
           />
         ),
         validate: validate.publicKey,
+      };
+    case "transaction":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <TextPicker
+            key={id}
+            id={id}
+            label="Transaction Hash"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            placeholder="Ex: 3389e9f0f1a65f19736cacf544c2e825313e8447f569233bb8db39aa607c8889"
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.transactionHash,
       };
     default:
       return null;

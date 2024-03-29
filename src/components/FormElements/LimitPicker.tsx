@@ -6,6 +6,7 @@ interface LimitPickerProps extends Omit<InputProps, "fieldSize"> {
   fieldSize?: "sm" | "md" | "lg";
   labelSuffix?: string | React.ReactNode;
   value: string;
+  placeholder?: string;
   error: string | undefined;
   // eslint-disable-next-line no-unused-vars
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
