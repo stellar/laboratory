@@ -283,17 +283,53 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
         {
           route: Routes.EXPLORE_ENDPOINTS_OFFERS,
           label: "All Offers",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/offers",
+            docsLabel: "offers",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/offers{?sponsor,seller,selling,buying,cursor,limit,order}",
+            requiredParams: "",
+            isStreaming: true,
+            custom: {
+              selling: {
+                assetInput: "issued",
+                includeNative: true,
+              },
+              buying: {
+                assetInput: "issued",
+                includeNative: true,
+              },
+            },
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_OFFERS_SINGLE,
           label: "Single Offer",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/get-offer-by-offer-id",
+            docsLabel: "offer",
+            requestMethod: "GET",
+            endpointUrlTemplate: "/offers/{offer_id}",
+            requiredParams: "offer_id",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_OFFERS_ACCOUNT,
           label: "Offers for Account",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/get-offers-by-account-id",
+            docsLabel: "offers for account",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/accounts/{account_id}/offers{?cursor,limit,order}",
+            requiredParams: "account_id",
+            isStreaming: true,
+          },
         },
       ],
     },

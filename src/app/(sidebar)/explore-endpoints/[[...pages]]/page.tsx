@@ -258,7 +258,7 @@ export default function ExploreEndpoints() {
         return false;
       }
 
-      if (param === "asset") {
+      if (["asset", "selling", "buying"].includes(param)) {
         if (value.type === "native") {
           return "native";
         }
@@ -382,6 +382,8 @@ export default function ExploreEndpoints() {
 
               switch (f) {
                 case "asset":
+                case "selling":
+                case "buying":
                   return component.render({
                     value: params[f],
                     error: formError[f],

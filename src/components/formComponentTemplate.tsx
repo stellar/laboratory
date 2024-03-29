@@ -109,6 +109,23 @@ export const formComponentTemplate = (
         ),
         validate: validate.publicKey,
       };
+    case "buying":
+      return {
+        render: (templ: TemplateRenderAssetProps) => (
+          <AssetPicker
+            key={id}
+            assetInput={custom?.assetInput}
+            id="buying"
+            label="Buying"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={parseJsonString(templ.value)}
+            error={templ.error}
+            includeNative={custom?.includeNative}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.asset,
+      };
     case "claimable_balance_id":
       return {
         render: (templ: TemplateRenderProps) => (
@@ -199,6 +216,21 @@ export const formComponentTemplate = (
         ),
         validate: null,
       };
+    case "offer_id":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <TextPicker
+            key={id}
+            id={id}
+            label="Offer ID"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: null,
+      };
     case "operation":
       return {
         render: (templ: TemplateRenderProps) => (
@@ -227,6 +259,38 @@ export const formComponentTemplate = (
           />
         ),
         validate: null,
+      };
+    case "seller":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <PubKeyPicker
+            key={id}
+            id={id}
+            label="Seller"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.publicKey,
+      };
+    case "selling":
+      return {
+        render: (templ: TemplateRenderAssetProps) => (
+          <AssetPicker
+            key={id}
+            assetInput={custom?.assetInput}
+            id="selling"
+            label="Selling"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={parseJsonString(templ.value)}
+            error={templ.error}
+            includeNative={custom?.includeNative}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.asset,
       };
     case "signer":
       return {
