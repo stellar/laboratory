@@ -108,6 +108,36 @@ export const formComponentTemplate = (
         ),
         validate: validate.publicKey,
       };
+    case "claimable_balance_id":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <TextPicker
+            key={id}
+            id={id}
+            label="Claimable Balance ID"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: null,
+      };
+    case "claimant":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <PubKeyPicker
+            key={id}
+            id={id}
+            label="Claimant"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.publicKey,
+      };
     case "cursor":
       return {
         render: (templ: TemplateRenderProps) => (

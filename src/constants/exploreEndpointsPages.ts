@@ -100,12 +100,32 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
         {
           route: Routes.EXPLORE_ENDPOINTS_CLAIMABLE_BALANCES,
           label: "All Claimable Balances",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/list-all-claimable-balances",
+            docsLabel: "claimable balances",
+            requestMethod: "GET",
+            endpointPath: "/claimable_balances",
+            endpointPathParams: "",
+            endpointParams: "sponsor,asset,claimant,cursor,limit,order",
+            requiredParams: "",
+            isStreaming: false,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_CLAIMABLE_BALANCES_SINGLE,
           label: "Single Claimable Balance",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/retrieve-a-claimable-balance",
+            docsLabel: "claimable balances",
+            requestMethod: "GET",
+            endpointPath: "/claimable_balances",
+            endpointPathParams: "claimable_balance_id",
+            endpointParams: "",
+            requiredParams: "claimable_balance_id",
+            isStreaming: false,
+          },
         },
       ],
     },

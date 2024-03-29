@@ -219,6 +219,7 @@ export default function ExploreEndpoints() {
   }, [
     endpointNetwork.horizonUrl,
     pageData?.endpointParams,
+    pageData?.endpointPath,
     pageData?.endpointPathParams,
     params,
   ]);
