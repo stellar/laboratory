@@ -79,7 +79,17 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
         {
           route: Routes.EXPLORE_ENDPOINTS_ASSETS,
           label: "All Assets",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/list-all-assets",
+            docsLabel: "assets",
+            requestMethod: "GET",
+            endpointPath: "/assets",
+            endpointPathParams: "",
+            endpointParams: "asset_code,asset_issuer,cursor,order,limit",
+            requiredParams: "",
+            isStreaming: true,
+          },
         },
       ],
     },

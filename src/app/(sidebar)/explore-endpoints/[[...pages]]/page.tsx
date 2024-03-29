@@ -179,7 +179,7 @@ export default function ExploreEndpoints() {
       return pathParams.map((pp) => params[pp] ?? pp).join("/");
     };
 
-    const endpointPath = `/accounts${pageData?.endpointPathParams ? `/${mapPathParamToValue(pageData.endpointPathParams.split(","))}` : ""}`;
+    const endpointPath = `${pageData?.endpointPath}${pageData?.endpointPathParams ? `/${mapPathParamToValue(pageData.endpointPathParams.split(","))}` : ""}`;
     const endpointParams = pageData?.endpointParams;
 
     const baseUrl = `${endpointNetwork.horizonUrl}${endpointPath}`;

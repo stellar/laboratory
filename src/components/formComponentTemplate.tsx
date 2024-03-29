@@ -9,6 +9,7 @@ import { LimitPicker } from "@/components/FormElements/LimitPicker";
 import { parseJsonString } from "@/helpers/parseJsonString";
 import { validate } from "@/validate";
 import { AnyObject, AssetObjectValue } from "@/types/types";
+import { TextPicker } from "./FormElements/TextPicker";
 
 type TemplateRenderProps = {
   value: string | undefined;
@@ -76,6 +77,36 @@ export const formComponentTemplate = (
           />
         ),
         validate: validate.asset,
+      };
+    case "asset_code":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <TextPicker
+            key={id}
+            id={id}
+            label="Asset Code"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.assetCode,
+      };
+    case "asset_issuer":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <PubKeyPicker
+            key={id}
+            id={id}
+            label="Asset Issuer"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.publicKey,
       };
     case "cursor":
       return {
