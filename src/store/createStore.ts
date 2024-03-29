@@ -3,7 +3,7 @@ import { immer } from "zustand/middleware/immer";
 import { querystring } from "zustand-querystring";
 
 import { sanitizeObject } from "@/helpers/sanitizeObject";
-import { AnyObject, EmptyObj, Network } from "@/types/types";
+import { AnyObject, EmptyObj, Network, MuxedAccount } from "@/types/types";
 
 export interface Store {
   // Shared
@@ -15,8 +15,20 @@ export interface Store {
   // Account
   account: {
     publicKey: string;
+    generatedMuxedAccountInput: Partial<MuxedAccount> | EmptyObj;
+    parsedMuxedAccountInput: string | undefined;
+    generatedMuxedAccount: MuxedAccount | EmptyObj;
+    parsedMuxedAccount: MuxedAccount | EmptyObj;
     // eslint-disable-next-line no-unused-vars
-    update: (value: string) => void;
+    updatePublicKey: (value: string) => void;
+    // eslint-disable-next-line no-unused-vars
+    updateGeneratedMuxedAccountInput: (value: Partial<MuxedAccount>) => void;
+    // eslint-disable-next-line no-unused-vars
+    updateParsedMuxedAccountInput: (value: string) => void;
+    // eslint-disable-next-line no-unused-vars
+    updateGeneratedMuxedAccount: (value: MuxedAccount) => void;
+    // eslint-disable-next-line no-unused-vars
+    updateParsedMuxedAccount: (value: MuxedAccount) => void;
     reset: () => void;
   };
 
@@ -70,7 +82,36 @@ export const createStore = (options: CreateStoreOptions) =>
         // Account
         account: {
           publicKey: "",
-          update: (value: string) =>
+          generatedMuxedAccountInput: {},
+          parsedMuxedAccountInput: undefined,
+          generatedMuxedAccount: {},
+          parsedMuxedAccount: {},
+          updateGeneratedMuxedAccountInput: (value: Partial<MuxedAccount>) =>
+            set((state) => {
+              state.account.generatedMuxedAccountInput = {
+                ...state.account.generatedMuxedAccountInput,
+                ...value,
+              };
+            }),
+          updateParsedMuxedAccountInput: (value: string) =>
+            set((state) => {
+              state.account.parsedMuxedAccountInput = value;
+            }),
+          updateGeneratedMuxedAccount: (value: MuxedAccount) =>
+            set((state) => {
+              state.account.generatedMuxedAccount = {
+                ...state.account.generatedMuxedAccount,
+                ...value,
+              };
+            }),
+          updateParsedMuxedAccount: (value: MuxedAccount) =>
+            set((state) => {
+              state.account.parsedMuxedAccount = {
+                ...state.account.parsedMuxedAccount,
+                ...value,
+              };
+            }),
+          updatePublicKey: (value: string) =>
             set((state) => {
               state.account.publicKey = value;
             }),
