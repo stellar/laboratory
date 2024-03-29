@@ -10,8 +10,7 @@ interface PubKeyPickerProps extends Omit<InputProps, "fieldSize"> {
   readOnly?: boolean;
   value: string;
   error: string | undefined;
-  // eslint-disable-next-line no-unused-vars
-  onChange?: (e: React.ChangeEvent<any>) => void;
+  onChange: (_e: React.ChangeEvent<any>) => void;
 }
 
 export const PubKeyPicker = ({

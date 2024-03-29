@@ -8,8 +8,7 @@ interface CursorPickerProps extends Omit<InputProps, "fieldSize"> {
   placeholder?: string;
   value: string;
   error: string | undefined;
-  // eslint-disable-next-line no-unused-vars
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (_e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const CursorPicker = ({

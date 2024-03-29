@@ -4,8 +4,7 @@ import { RadioPicker } from "@/components/RadioPicker";
 type OrderPickerProps = {
   id: string;
   selectedOption: string | undefined;
-  // eslint-disable-next-line no-unused-vars
-  onChange: (optionId: string | undefined, optionValue?: string) => void;
+  onChange: (_optionId: string | undefined, _optionValue?: string) => void;
   labelSuffix?: string | React.ReactNode;
 };
 

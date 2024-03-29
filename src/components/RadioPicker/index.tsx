@@ -10,10 +10,8 @@ interface RadioPickerProps<TOptionValue = string> {
   label?: string | React.ReactNode;
   labelSuffix?: string | React.ReactNode;
   onChange: (
-    // eslint-disable-next-line no-unused-vars
-    optionId: AssetType | undefined,
-    // eslint-disable-next-line no-unused-vars
-    optionValue?: TOptionValue,
+    _optionId: AssetType | undefined,
+    _optionValue?: TOptionValue,
   ) => void;
   options: {
     id: string;
