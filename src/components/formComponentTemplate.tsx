@@ -5,13 +5,14 @@ import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
 import { OrderPicker } from "@/components/FormElements/OrderPicker";
 import { CursorPicker } from "@/components/FormElements/CursorPicker";
 import { LimitPicker } from "@/components/FormElements/LimitPicker";
+import { TextPicker } from "@/components/FormElements/TextPicker";
+import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
+import { IncludeFailedPicker } from "@/components/FormElements/IncludeFailedPicker";
+import { XdrPicker } from "@/components/FormElements/XdrPicker";
 
 import { parseJsonString } from "@/helpers/parseJsonString";
 import { validate } from "@/validate";
 import { AnyObject, AssetObjectValue } from "@/types/types";
-import { TextPicker } from "./FormElements/TextPicker";
-import { PositiveIntPicker } from "./FormElements/PositiveIntPicker";
-import { IncludeFailedPicker } from "./FormElements/IncludeFailedPicker";
 
 type TemplateRenderProps = {
   value: string | undefined;
@@ -358,6 +359,21 @@ export const formComponentTemplate = (
           />
         ),
         validate: validate.transactionHash,
+      };
+    case "tx":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <XdrPicker
+            key={id}
+            id={id}
+            label="Transaction Envelope XDR"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.xdr,
       };
     default:
       return null;

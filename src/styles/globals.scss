@@ -18,6 +18,11 @@
   min-width: auto !important;
   min-height: auto !important;
   display: block !important;
+
+  // TODO: remove once fixed in SDS
+  .Textarea textarea {
+    outline: none;
+  }
 }
 
 .LabLayout {
@@ -417,6 +422,12 @@
   .Input--disabled {
     input:read-only {
       cursor: default;
+    }
+  }
+
+  &__txTextarea {
+    .Textarea textarea {
+      word-break: break-all;
     }
   }
 }

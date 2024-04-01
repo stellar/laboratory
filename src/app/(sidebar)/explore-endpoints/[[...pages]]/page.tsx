@@ -11,6 +11,7 @@ import {
   Input,
   Link,
   Text,
+  Textarea,
 } from "@stellar/design-system";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -115,7 +116,12 @@ export default function ExploreEndpoints() {
     refetch,
     isSuccess,
     isError,
-  } = useExploreEndpoint(requestUrl);
+  } = useExploreEndpoint(
+    requestUrl,
+    // There is only one endpoint request for POST, using params directly for
+    // simplicity.
+    pageData?.requestMethod === "POST" ? { tx: params.tx ?? "" } : undefined,
+  );
 
   const responseEl = useRef<HTMLDivElement | null>(null);
 
@@ -248,6 +254,11 @@ export default function ExploreEndpoints() {
     };
 
     const baseUrl = `${endpointNetwork.horizonUrl}${parseUrlPath(urlPath)}`;
+
+    if (pageData?.requestMethod === "POST") {
+      return baseUrl;
+    }
+
     const searchParams = new URLSearchParams();
     const templateParams = urlParams?.split(",");
 
@@ -305,38 +316,65 @@ export default function ExploreEndpoints() {
     }, delay);
   };
 
+  const renderPostPayload = () => {
+    if (pageData?.requestMethod === "POST") {
+      return (
+        <div className="Endpoints__txTextarea">
+          <Textarea
+            id="tx"
+            fieldSize="md"
+            label="Payload"
+            value={JSON.stringify({ tx: params.tx ?? "" }, null, 2)}
+            rows={5}
+            disabled
+            spellCheck={false}
+          />
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   const renderEndpointUrl = () => {
     if (!pageData) {
       return null;
     }
 
     return (
-      <div className="Endpoints__urlBar">
-        <Input
-          id="endpoint-url"
-          fieldSize="md"
-          value={requestUrl}
-          readOnly
-          disabled
-          leftElement={
-            <div className="Endpoints__input__requestType">
-              {pageData.requestMethod}
-            </div>
-          }
-        />
-        <Button
-          size="md"
-          variant="secondary"
-          type="submit"
-          disabled={!isSubmitEnabled()}
-          isLoading={isLoading || isFetching}
-        >
-          Submit
-        </Button>
-        <CopyText textToCopy={requestUrl}>
-          <Button size="md" variant="tertiary" icon={<Icon.Copy01 />}></Button>
-        </CopyText>
-      </div>
+      <>
+        <div className="Endpoints__urlBar">
+          <Input
+            id="endpoint-url"
+            fieldSize="md"
+            value={requestUrl}
+            readOnly
+            disabled
+            leftElement={
+              <div className="Endpoints__input__requestType">
+                {pageData.requestMethod}
+              </div>
+            }
+          />
+          <Button
+            size="md"
+            variant="secondary"
+            type="submit"
+            disabled={!isSubmitEnabled()}
+            isLoading={isLoading || isFetching}
+          >
+            Submit
+          </Button>
+          <CopyText textToCopy={requestUrl}>
+            <Button
+              size="md"
+              variant="tertiary"
+              icon={<Icon.Copy01 />}
+              type="button"
+            ></Button>
+          </CopyText>
+        </div>
+      </>
     );
   };
 
@@ -353,6 +391,8 @@ export default function ExploreEndpoints() {
     return (
       <div className="Endpoints__content">
         <div className="PageBody__content">
+          {renderPostPayload()}
+
           {allFields.map((f) => {
             const component = formComponentTemplate(f, pageData.custom?.[f]);
 

@@ -561,32 +561,84 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
         {
           route: Routes.EXPLORE_ENDPOINTS_TRANSACTIONS,
           label: "All Transactions",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/transactions",
+            docsLabel: "transactions",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/transactions{?cursor,limit,order,include_failed}",
+            requiredParams: "",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_TRANSACTIONS_SINGLE,
           label: "Single Transaction",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/retrieve-a-transaction",
+            docsLabel: "transaction",
+            requestMethod: "GET",
+            endpointUrlTemplate: "/transactions/{transaction}",
+            requiredParams: "transaction",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_TRANSACTIONS_POST,
           label: "Post Transaction",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/submit-a-transaction",
+            docsLabel: "post transaction",
+            requestMethod: "POST",
+            endpointUrlTemplate: "/transactions{?tx}",
+            requiredParams: "tx",
+            isStreaming: false,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_TRANSACTIONS_ACCOUNT,
           label: "Transactions for Account",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/get-transactions-by-account-id",
+            docsLabel: "transactions for account",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/accounts/{account_id}/transactions{?cursor,limit,order,include_failed}",
+            requiredParams: "account_id",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_TRANSACTIONS_LEDGER,
           label: "Transactions for Ledger",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/retrieve-a-ledgers-transactions",
+            docsLabel: "transactions for ledger",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/ledgers/{ledger}/transactions{?cursor,limit,order,include_failed}",
+            requiredParams: "ledger",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_TRANSACTIONS_LIQUIDITY_POOL,
           label: "Transactions for Liquidity Pool",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/lp-retrieve-related-transactions",
+            docsLabel: "transactions for liquidity pool",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/liquidity_pools/{liquidity_pool_id}/transactions{?cursor,limit,order,include_failed}",
+            requiredParams: "liquidity_pool_id",
+            isStreaming: true,
+          },
         },
       ],
     },
