@@ -461,22 +461,59 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
         {
           route: Routes.EXPLORE_ENDPOINTS_PAYMENTS,
           label: "All Payments",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/list-all-payments",
+            docsLabel: "payments",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/payments{?cursor,limit,order,include_failed}",
+            requiredParams: "",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_PAYMENTS_ACCOUNT,
           label: "Payments for Account",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/get-payments-by-account-id",
+            docsLabel: "payments for account",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/accounts/{account_id}/payments{?cursor,limit,order,include_failed}",
+            requiredParams: "account_id",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_PAYMENTS_LEDGER,
           label: "Payments for Ledger",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/retrieve-a-ledgers-payments",
+            docsLabel: "payments for ledger",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/ledgers/{ledger}/payments{?cursor,limit,order,include_failed}",
+            requiredParams: "ledger",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_PAYMENTS_TRANSACTION,
           label: "Payments for Transaction",
-          form: undefined,
+          form: {
+            docsUrl:
+              // TODO: no link in the docs for payments for transaction
+              "https://developers.stellar.org/network/horizon/resources/transactions",
+            docsLabel: "payments for transaction",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/transactions/{transaction}/payments{?cursor,limit,order}",
+            requiredParams: "transaction",
+            isStreaming: true,
+          },
         },
       ],
     },
