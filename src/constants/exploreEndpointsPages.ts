@@ -436,7 +436,7 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
             requestMethod: "GET",
             endpointUrlTemplate:
               "/order_book{?selling_asset_type,selling_asset_code,selling_asset_issuer,buying_asset_type,buying_asset_code,buying_asset_issuer}",
-            requiredParams: "",
+            requiredParams: "selling_asset,buying_asset",
             isStreaming: true,
             custom: {
               renderComponents: ["selling_asset", "buying_asset"],
@@ -552,7 +552,35 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
         {
           route: Routes.EXPLORE_ENDPOINTS_TRADE_AGGREGATIONS,
           label: "All Trade Aggregations",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/aggregations/trade-aggregations/list",
+            docsLabel: "trade aggregations",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/trade_aggregations{?base_asset_type,base_asset_code,base_asset_issuer,counter_asset_type,counter_asset_code,counter_asset_issuer,resolution,start_time,end_time,limit,order}",
+            requiredParams: "base_asset,counter_asset,resolution",
+            isStreaming: true,
+            custom: {
+              renderComponents: ["base_asset", "counter_asset"],
+              paramMapping: {
+                base_asset_type: "base_asset.type",
+                base_asset_code: "base_asset.code",
+                base_asset_issuer: "base_asset.issuer",
+                counter_asset_type: "counter_asset.type",
+                counter_asset_code: "counter_asset.code",
+                counter_asset_issuer: "counter_asset.issuer",
+              },
+              base_asset: {
+                assetInput: "alphanumeric",
+                includeNative: true,
+              },
+              counter_asset: {
+                assetInput: "alphanumeric",
+                includeNative: true,
+              },
+            },
+          },
         },
       ],
     },

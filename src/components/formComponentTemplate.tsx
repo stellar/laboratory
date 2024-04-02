@@ -118,6 +118,23 @@ export const formComponentTemplate = (
         ),
         validate: validate.publicKey,
       };
+    case "base_asset":
+      return {
+        render: (templ: TemplateRenderAssetProps) => (
+          <AssetPicker
+            key={id}
+            assetInput={custom?.assetInput}
+            id="base_asset"
+            label="Base Asset"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={parseJsonString(templ.value)}
+            error={templ.error}
+            includeNative={custom?.includeNative}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.asset,
+      };
     case "buying":
       return {
         render: (templ: TemplateRenderAssetProps) => (
@@ -182,12 +199,44 @@ export const formComponentTemplate = (
         ),
         validate: validate.publicKey,
       };
+    case "counter_asset":
+      return {
+        render: (templ: TemplateRenderAssetProps) => (
+          <AssetPicker
+            key={id}
+            assetInput={custom?.assetInput}
+            id="counter_asset"
+            label="Counter Asset"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={parseJsonString(templ.value)}
+            error={templ.error}
+            includeNative={custom?.includeNative}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.asset,
+      };
     case "cursor":
       return {
         render: (templ: TemplateRenderProps) => (
           <CursorPicker
             key={id}
             id={id}
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: null,
+      };
+    case "end_time":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <TextPicker
+            key={id}
+            id={id}
+            label="End Time"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={templ.value || ""}
             error={templ.error}
@@ -299,6 +348,21 @@ export const formComponentTemplate = (
         ),
         validate: null,
       };
+    case "resolution":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <TextPicker
+            key={id}
+            id={id}
+            label="Resolution"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: null,
+      };
     case "seller":
       return {
         render: (templ: TemplateRenderProps) => (
@@ -377,6 +441,21 @@ export const formComponentTemplate = (
           />
         ),
         validate: validate.publicKey,
+      };
+    case "start_time":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <TextPicker
+            key={id}
+            id={id}
+            label="Start Time"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: null,
       };
     case "transaction":
       return {

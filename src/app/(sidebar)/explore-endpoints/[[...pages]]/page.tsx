@@ -149,6 +149,8 @@ export default function ExploreEndpoints() {
       params.asset,
       params.selling_asset,
       params.buying_asset,
+      params.base_asset,
+      params.counter_asset,
     ];
 
     assetParams.forEach((aParam) => {
@@ -423,8 +425,8 @@ export default function ExploreEndpoints() {
   const renderFields = () => {
     const allFields = sanitizeArray([
       ...urlPathParams.split(","),
-      ...urlParams.split(","),
       ...(pageData?.custom?.renderComponents || []),
+      ...urlParams.split(","),
     ]);
 
     if (!pageData || allFields.length === 0) {
@@ -488,6 +490,8 @@ export default function ExploreEndpoints() {
                 case "selling_asset":
                 case "buying":
                 case "buying_asset":
+                case "base_asset":
+                case "counter_asset":
                   return component.render({
                     value: params[f],
                     error: formError[f],
