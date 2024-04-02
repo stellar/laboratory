@@ -591,22 +591,77 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
         {
           route: Routes.EXPLORE_ENDPOINTS_TRADES,
           label: "All Trades",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/get-all-trades",
+            docsLabel: "trades",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/trades{?base_asset_type,base_asset_code,base_asset_issuer,counter_asset_type,counter_asset_code,counter_asset_issuer,offer_id,cursor,limit,order}",
+            requiredParams: "",
+            isStreaming: true,
+            custom: {
+              renderComponents: ["base_asset", "counter_asset"],
+              paramMapping: {
+                base_asset_type: "base_asset.type",
+                base_asset_code: "base_asset.code",
+                base_asset_issuer: "base_asset.issuer",
+                counter_asset_type: "counter_asset.type",
+                counter_asset_code: "counter_asset.code",
+                counter_asset_issuer: "counter_asset.issuer",
+              },
+              base_asset: {
+                assetInput: "alphanumeric",
+                includeNative: true,
+              },
+              counter_asset: {
+                assetInput: "alphanumeric",
+                includeNative: true,
+              },
+            },
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_TRADES_ACCOUNT,
           label: "Trades for Account",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/get-trades-by-account-id",
+            docsLabel: "trades for account",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/accounts/{account_id}/trades{?cursor,limit,order}",
+            requiredParams: "account_id",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_TRADES_LIQUIDITY_POOL,
           label: "Trades for Liquidity Pool",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/retrieve-related-trades",
+            docsLabel: "trades for liquidity pool",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/liquidity_pools/{liquidity_pool_id}/trades{?cursor,limit,order}",
+            requiredParams: "liquidity_pool_id",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_TRADES_OFFER,
           label: "Trades for Offer",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/get-trades-by-offer-id",
+            docsLabel: "trades for offer",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/offers/{offer_id}/trades{?cursor,limit,order}",
+            requiredParams: "offer_id",
+            isStreaming: true,
+          },
         },
       ],
     },
