@@ -18,11 +18,6 @@
   min-width: auto !important;
   min-height: auto !important;
   display: block !important;
-
-  // TODO: remove once fixed in SDS
-  .Textarea textarea {
-    outline: none;
-  }
 }
 
 .LabLayout {
