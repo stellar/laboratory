@@ -10,8 +10,8 @@ interface RadioPickerProps<TOptionValue = string> {
   label?: string | React.ReactNode;
   labelSuffix?: string | React.ReactNode;
   onChange: (
-    _optionId: AssetType | undefined,
-    _optionValue?: TOptionValue,
+    optionId: AssetType | undefined,
+    optionValue?: TOptionValue,
   ) => void;
   options: {
     id: string;

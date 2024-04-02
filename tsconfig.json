@@ -1,4 +1,5 @@
 {
+  "extends": "@stellar/tsconfig",
   "compilerOptions": {
     "target": "es5",
     "lib": [
@@ -36,6 +37,6 @@
     "build/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
   ]
 }

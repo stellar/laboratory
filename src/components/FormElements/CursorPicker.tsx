@@ -8,7 +8,7 @@ interface CursorPickerProps extends Omit<InputProps, "fieldSize"> {
   placeholder?: string;
   value: string;
   error: string | undefined;
-  onChange: (_e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const CursorPicker = ({

@@ -4,7 +4,7 @@ import { RadioPicker } from "@/components/RadioPicker";
 type IncludeFailedPickerProps = {
   id: string;
   selectedOption: string | undefined;
-  onChange: (_optionId: string | undefined, _optionValue?: boolean) => void;
+  onChange: (optionId: string | undefined, optionValue?: boolean) => void;
   labelSuffix?: string | React.ReactNode;
 };
 

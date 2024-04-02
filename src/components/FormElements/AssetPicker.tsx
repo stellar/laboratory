@@ -13,7 +13,7 @@ type AssetPickerProps = {
   labelSuffix?: string | React.ReactNode;
   value: AssetObjectValue | undefined;
   error: { code: string | undefined; issuer: string | undefined } | undefined;
-  onChange: (_asset: AssetObjectValue | undefined) => void;
+  onChange: (asset: AssetObjectValue | undefined) => void;
   assetInput: "issued" | "alphanumeric";
   fitContent?: boolean;
   includeNative?: boolean;
@@ -136,12 +136,12 @@ type AssetPickerFieldsProps = {
   code: {
     value: string;
     error: string;
-    onChange: (_e: React.ChangeEvent<HTMLInputElement>) => void;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   };
   issuer: {
     value: string;
     error: string;
-    onChange: (_e: React.ChangeEvent<HTMLInputElement>) => void;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   };
 };
 

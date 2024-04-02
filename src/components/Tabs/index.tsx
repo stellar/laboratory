@@ -12,7 +12,7 @@ export const Tabs = ({
 }: {
   tabs: Tab[];
   activeTabId: string;
-  onChange: (_id: string) => void;
+  onChange: (id: string) => void;
 }) => {
   return (
     <div className="Tabs">

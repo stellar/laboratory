@@ -8,7 +8,7 @@ import { AnyObject, EmptyObj, Network, MuxedAccount } from "@/types/types";
 export interface Store {
   // Shared
   network: Network | EmptyObj;
-  selectNetwork: (_network: Network) => void;
+  selectNetwork: (network: Network) => void;
   resetStoredData: () => void;
 
   // Account
@@ -18,11 +18,11 @@ export interface Store {
     parsedMuxedAccountInput: string | undefined;
     generatedMuxedAccount: MuxedAccount | EmptyObj;
     parsedMuxedAccount: MuxedAccount | EmptyObj;
-    updatePublicKey: (_value: string) => void;
-    updateGeneratedMuxedAccountInput: (_value: Partial<MuxedAccount>) => void;
-    updateParsedMuxedAccountInput: (_value: string) => void;
-    updateGeneratedMuxedAccount: (_value: MuxedAccount) => void;
-    updateParsedMuxedAccount: (_value: MuxedAccount) => void;
+    updatePublicKey: (value: string) => void;
+    updateGeneratedMuxedAccountInput: (value: Partial<MuxedAccount>) => void;
+    updateParsedMuxedAccountInput: (value: string) => void;
+    updateGeneratedMuxedAccount: (value: MuxedAccount) => void;
+    updateParsedMuxedAccount: (value: MuxedAccount) => void;
     reset: () => void;
   };
 
@@ -31,9 +31,9 @@ export interface Store {
     network: Network | EmptyObj;
     currentEndpoint: string | undefined;
     params: AnyObject;
-    updateNetwork: (_network: Network) => void;
-    updateCurrentEndpoint: (_endpoint: string) => void;
-    updateParams: (_params: AnyObject) => void;
+    updateNetwork: (network: Network) => void;
+    updateCurrentEndpoint: (endpoint: string) => void;
+    updateParams: (params: AnyObject) => void;
     resetParams: () => void;
     reset: () => void;
   };

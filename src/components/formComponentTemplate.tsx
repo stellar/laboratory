@@ -13,26 +13,26 @@ import { AnyObject, AssetObjectValue } from "@/types/types";
 type TemplateRenderProps = {
   value: string | undefined;
   error: string | undefined;
-  onChange: (_val: any) => void;
+  onChange: (val: any) => void;
   isRequired?: boolean;
 };
 
 type TemplateRenderAssetProps = {
   value: AssetObjectValue | undefined;
   error: { code: string | undefined; issuer: string | undefined } | undefined;
-  onChange: (_asset: AssetObjectValue | undefined) => void;
+  onChange: (asset: AssetObjectValue | undefined) => void;
   isRequired?: boolean;
 };
 
 type TemplateRenderOrderProps = {
   value: string | undefined;
-  onChange: (_optionId: string | undefined, _optionValue?: string) => void;
+  onChange: (optionId: string | undefined, optionValue?: string) => void;
   isRequired?: boolean;
 };
 
 type FormComponentTemplate = {
-  render: (..._args: any[]) => JSX.Element;
-  validate: ((..._args: any[]) => any) | null;
+  render: (...args: any[]) => JSX.Element;
+  validate: ((...args: any[]) => any) | null;
 };
 
 export const formComponentTemplate = (
