@@ -135,6 +135,23 @@ export const formComponentTemplate = (
         ),
         validate: validate.asset,
       };
+    case "buying_asset":
+      return {
+        render: (templ: TemplateRenderAssetProps) => (
+          <AssetPicker
+            key={id}
+            assetInput={custom?.assetInput}
+            id="buying_asset"
+            label="Buying Asset"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={parseJsonString(templ.value)}
+            error={templ.error}
+            includeNative={custom?.includeNative}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.asset,
+      };
     case "claimable_balance_id":
       return {
         render: (templ: TemplateRenderProps) => (
@@ -305,6 +322,23 @@ export const formComponentTemplate = (
             assetInput={custom?.assetInput}
             id="selling"
             label="Selling"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={parseJsonString(templ.value)}
+            error={templ.error}
+            includeNative={custom?.includeNative}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.asset,
+      };
+    case "selling_asset":
+      return {
+        render: (templ: TemplateRenderAssetProps) => (
+          <AssetPicker
+            key={id}
+            assetInput={custom?.assetInput}
+            id="selling_asset"
+            label="Selling Asset"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={parseJsonString(templ.value)}
             error={templ.error}

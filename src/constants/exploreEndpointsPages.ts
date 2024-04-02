@@ -429,7 +429,35 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
         {
           route: Routes.EXPLORE_ENDPOINTS_ORDER_BOOK_DETAILS,
           label: "Details",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/aggregations/order-books/single",
+            docsLabel: "order book",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/order_book{?selling_asset_type,selling_asset_code,selling_asset_issuer,buying_asset_type,buying_asset_code,buying_asset_issuer}",
+            requiredParams: "",
+            isStreaming: true,
+            custom: {
+              renderComponents: ["selling_asset", "buying_asset"],
+              paramMapping: {
+                selling_asset_type: "selling_asset.type",
+                selling_asset_code: "selling_asset.code",
+                selling_asset_issuer: "selling_asset.issuer",
+                buying_asset_type: "buying_asset.type",
+                buying_asset_code: "buying_asset.code",
+                buying_asset_issuer: "buying_asset.issuer",
+              },
+              selling_asset: {
+                assetInput: "alphanumeric",
+                includeNative: true,
+              },
+              buying_asset: {
+                assetInput: "alphanumeric",
+                includeNative: true,
+              },
+            },
+          },
         },
       ],
     },

@@ -144,18 +144,32 @@ export default function ExploreEndpoints() {
     // Checking if there are any errors
     isValid = isEmptyObject(formError);
 
-    // When non-native asset is selected, code and issuer fields are required
-    if (params.asset) {
-      const assetObj = parseJsonString(params.asset);
+    // Asset components
+    const assetParams = [
+      params.asset,
+      params.selling_asset,
+      params.buying_asset,
+    ];
 
-      if (
-        ["issued", "credit_alphanum4", "credit_alphanum12"].includes(
-          assetObj.type,
-        )
-      ) {
-        isValidReqAssetFields = Boolean(assetObj.code && assetObj.issuer);
+    assetParams.forEach((aParam) => {
+      // No need to keep checking if one field is invalid
+      if (!isValidReqAssetFields) {
+        return;
       }
-    }
+
+      // When non-native asset is selected, code and issuer fields are required
+      if (aParam) {
+        const assetObj = parseJsonString(aParam);
+
+        if (
+          ["issued", "credit_alphanum4", "credit_alphanum12"].includes(
+            assetObj.type,
+          )
+        ) {
+          isValidReqAssetFields = Boolean(assetObj.code && assetObj.issuer);
+        }
+      }
+    });
 
     return isValidReqAssetFields && isValidReqFields && isValid;
   };
@@ -164,7 +178,6 @@ export default function ExploreEndpoints() {
     () =>
       queryClient.resetQueries({
         queryKey: ["exploreEndpoint", "response"],
-        exact: true,
       }),
     [queryClient],
   );
@@ -195,6 +208,35 @@ export default function ExploreEndpoints() {
     setFormError(paramErrors());
 
     // We want to check this only when the page mounts for the first time
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const mapParamToValue = (key: string, value: string) => {
+    const [param, prop] = (value as string)?.split(".") || [];
+    const mappedValue = parseJsonString(params?.[param])?.[prop];
+
+    return mappedValue ? { [key]: mappedValue } : {};
+  };
+
+  // Persist mapped custom template props to params
+  useEffect(() => {
+    const paramMapping = pageData?.custom?.paramMapping;
+
+    if (paramMapping) {
+      const mappedParams = Object.entries(paramMapping).reduce(
+        (res, [key, value]) => {
+          const mappedVal = mapParamToValue(key, value as string);
+
+          return { ...res, ...mappedVal };
+        },
+        {} as AnyObject,
+      );
+
+      if (!isEmptyObject(mappedParams)) {
+        updateParams(mappedParams);
+      }
+    }
+    // Run this only once when page loads
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -382,6 +424,7 @@ export default function ExploreEndpoints() {
     const allFields = sanitizeArray([
       ...urlPathParams.split(","),
       ...urlParams.split(","),
+      ...(pageData?.custom?.renderComponents || []),
     ]);
 
     if (!pageData || allFields.length === 0) {
@@ -403,10 +446,29 @@ export default function ExploreEndpoints() {
               // formatting (sanitizing object or array, for exmaple).
               // Error check needs the original value.
               const handleChange = (value: any, storeValue: any) => {
-                resetQuery();
+                if (isSuccess || isError) {
+                  resetQuery();
+                }
+
+                // Mapping custom value to template params
+                const mappedParams = pageData?.custom?.paramMapping
+                  ? Object.entries(pageData.custom.paramMapping).reduce(
+                      (res, [key, val]) => {
+                        const [param, prop] = (val as string)?.split(".") || [];
+
+                        if (param === f) {
+                          return { ...res, [key]: value?.[prop] };
+                        }
+
+                        return res;
+                      },
+                      {} as AnyObject,
+                    )
+                  : {};
 
                 updateParams({
                   [f]: storeValue,
+                  ...mappedParams,
                 });
 
                 const error = component.validate?.(value, isRequired);
@@ -423,7 +485,9 @@ export default function ExploreEndpoints() {
               switch (f) {
                 case "asset":
                 case "selling":
+                case "selling_asset":
                 case "buying":
+                case "buying_asset":
                   return component.render({
                     value: params[f],
                     error: formError[f],
