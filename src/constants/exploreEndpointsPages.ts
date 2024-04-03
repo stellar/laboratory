@@ -9,18 +9,15 @@ type ExploreEndpointsPagesProps = {
     nestedItems: {
       route: Routes;
       label: string;
-      form:
-        | {
-            docsUrl: string;
-            docsLabel?: string;
-            requestMethod: "GET" | "POST";
-            endpointUrlTemplate: string;
-            requiredParams: string;
-            isStreaming?: boolean;
-            custom?: AnyObject;
-          }
-        // TODO: remove once all pages are filled
-        | undefined;
+      form: {
+        docsUrl: string;
+        docsLabel?: string;
+        requestMethod: "GET" | "POST";
+        endpointUrlTemplate: string;
+        requiredParams: string;
+        isStreaming?: boolean;
+        custom?: AnyObject;
+      };
     }[];
   }[];
 };
