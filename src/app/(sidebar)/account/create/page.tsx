@@ -18,7 +18,7 @@ export default function CreateAccount() {
   const [secretKey, setSecretKey] = useState("");
 
   const generateKeypair = () => {
-    let keypair = Keypair.random();
+    const keypair = Keypair.random();
 
     account.updatePublicKey(keypair.publicKey());
     setSecretKey(keypair.secret());
