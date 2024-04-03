@@ -462,23 +462,88 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
       ],
     },
     {
-      route: Routes.EXPLORE_ENDPOINTS_PATHS_PAYMENT,
+      route: Routes.EXPLORE_ENDPOINTS_PATHS,
       label: "Paths",
       nestedItems: [
         {
-          route: Routes.EXPLORE_ENDPOINTS_PATHS_PAYMENT,
+          route: Routes.EXPLORE_ENDPOINTS_PATHS,
           label: "Find Payment Paths",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/aggregations/paths",
+            docsLabel: "payment paths",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/paths{?destination_asset_type,destination_asset_code,destination_asset_issuer,destination_amount,destination_account,source_account}",
+            requiredParams:
+              "source_account,destination_asset,destination_amount",
+            isStreaming: true,
+            custom: {
+              renderComponents: ["destination_asset"],
+              paramMapping: {
+                destination_asset_type: "destination_asset.type",
+                destination_asset_code: "destination_asset.code",
+                destination_asset_issuer: "destination_asset.issuer",
+              },
+              destination_asset: {
+                assetInput: "alphanumeric",
+                includeNative: true,
+              },
+            },
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_PATHS_STRICT_RECEIVE,
           label: "Find Strict Receive Payment Paths",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/aggregations/paths/strict-receive",
+            docsLabel: "strict receive payment paths",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/paths/strict-receive{?,destination_asset_type,destination_asset_issuer,destination_asset_code,destination_amount,destination_account,source_account,source_assets}",
+            requiredParams:
+              "source_account,destination_asset,destination_amount",
+            isStreaming: true,
+            custom: {
+              renderComponents: ["destination_asset"],
+              paramMapping: {
+                destination_asset_type: "destination_asset.type",
+                destination_asset_code: "destination_asset.code",
+                destination_asset_issuer: "destination_asset.issuer",
+              },
+              destination_asset: {
+                assetInput: "alphanumeric",
+                includeNative: true,
+              },
+            },
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_PATHS_STRICT_SEND,
           label: "Find Strict Send Payment Paths",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/aggregations/paths/strict-send",
+            docsLabel: "strict send payment paths",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/paths/strict-send{?source_amount,destination_account,destination_assets,source_asset_type,source_asset_issuer,source_asset_code}",
+            requiredParams: "source_asset,source_amount",
+            isStreaming: true,
+            custom: {
+              renderComponents: ["source_asset"],
+              paramMapping: {
+                source_asset_type: "source_asset.type",
+                source_asset_code: "source_asset.code",
+                source_asset_issuer: "source_asset.issuer",
+              },
+              source_asset: {
+                assetInput: "alphanumeric",
+                includeNative: true,
+              },
+            },
+          },
         },
       ],
     },

@@ -35,7 +35,7 @@ export enum Routes {
   EXPLORE_ENDPOINTS_OPERATIONS_LIQUIDITY_POOL = "/explore-endpoints/operations/liquidity-pool",
   EXPLORE_ENDPOINTS_OPERATIONS_TRANSACTION = "/explore-endpoints/operations/transaction",
   EXPLORE_ENDPOINTS_ORDER_BOOK_DETAILS = "/explore-endpoints/order-book/details",
-  EXPLORE_ENDPOINTS_PATHS_PAYMENT = "/explore-endpoints/paths/payment",
+  EXPLORE_ENDPOINTS_PATHS = "/explore-endpoints/paths",
   EXPLORE_ENDPOINTS_PATHS_STRICT_RECEIVE = "/explore-endpoints/paths/strict-receive",
   EXPLORE_ENDPOINTS_PATHS_STRICT_SEND = "/explore-endpoints/paths/strict-send",
   EXPLORE_ENDPOINTS_PAYMENTS = "/explore-endpoints/payments",

@@ -13,6 +13,7 @@ import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { parseJsonString } from "@/helpers/parseJsonString";
 import { validate } from "@/validate";
 import { AnyObject, AssetObjectValue } from "@/types/types";
+import { AssetMultiPicker } from "./FormElements/AssetMultiPicker";
 
 type TemplateRenderProps = {
   value: string | undefined;
@@ -27,6 +28,14 @@ type TemplateRenderAssetProps = {
   error: { code: string | undefined; issuer: string | undefined } | undefined;
   // eslint-disable-next-line no-unused-vars
   onChange: (asset: AssetObjectValue | undefined) => void;
+  isRequired?: boolean;
+};
+
+type TemplateRenderAssetMultiProps = {
+  values: AssetObjectValue[] | undefined;
+  error: { code: string | undefined; issuer: string | undefined }[] | undefined;
+  // eslint-disable-next-line no-unused-vars
+  onChange: (asset: AssetObjectValue[] | undefined) => void;
   isRequired?: boolean;
 };
 
@@ -230,6 +239,69 @@ export const formComponentTemplate = (
         ),
         validate: null,
       };
+    case "destination_account":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <PubKeyPicker
+            key={id}
+            id={id}
+            label="Destination Account"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.publicKey,
+      };
+    case "destination_amount":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <TextPicker
+            key={id}
+            id={id}
+            label="Destination Amount"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.amount,
+      };
+    case "destination_asset":
+      return {
+        render: (templ: TemplateRenderAssetProps) => (
+          <AssetPicker
+            key={id}
+            assetInput={custom?.assetInput}
+            id="destination_asset"
+            label="Destination Asset"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={parseJsonString(templ.value)}
+            error={templ.error}
+            includeNative={custom?.includeNative}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.asset,
+      };
+    case "destination_assets":
+      return {
+        render: (templ: TemplateRenderAssetMultiProps) => (
+          <AssetMultiPicker
+            key={id}
+            id={id}
+            label="Destination Assets"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            assetInput="issued"
+            values={templ.values}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.assetMulti,
+      };
     case "end_time":
       return {
         render: (templ: TemplateRenderProps) => (
@@ -426,6 +498,69 @@ export const formComponentTemplate = (
           />
         ),
         validate: validate.publicKey,
+      };
+    case "source_account":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <PubKeyPicker
+            key={id}
+            id={id}
+            label="Source Account"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.publicKey,
+      };
+    case "source_amount":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <TextPicker
+            key={id}
+            id={id}
+            label="Source Amount"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.amount,
+      };
+    case "source_asset":
+      return {
+        render: (templ: TemplateRenderAssetProps) => (
+          <AssetPicker
+            key={id}
+            assetInput={custom?.assetInput}
+            id="destination_asset"
+            label="Source Asset"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={parseJsonString(templ.value)}
+            error={templ.error}
+            includeNative={custom?.includeNative}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.asset,
+      };
+    case "source_assets":
+      return {
+        render: (templ: TemplateRenderAssetMultiProps) => (
+          <AssetMultiPicker
+            key={id}
+            id={id}
+            label="Source Assets"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            assetInput="issued"
+            values={templ.values}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.assetMulti,
       };
     case "sponsor":
       return {

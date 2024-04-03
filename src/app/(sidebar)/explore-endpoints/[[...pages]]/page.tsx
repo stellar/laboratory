@@ -30,7 +30,12 @@ import { parseJsonString } from "@/helpers/parseJsonString";
 import { Routes } from "@/constants/routes";
 import { EXPLORE_ENDPOINTS_PAGES_HORIZON } from "@/constants/exploreEndpointsPages";
 import { useExploreEndpoint } from "@/query/useExploreEndpoint";
-import { AnyObject, AssetObject, Network } from "@/types/types";
+import {
+  AnyObject,
+  AssetObject,
+  AssetObjectValue,
+  Network,
+} from "@/types/types";
 
 export default function ExploreEndpoints() {
   const pathname = usePathname();
@@ -151,6 +156,8 @@ export default function ExploreEndpoints() {
       params.buying_asset,
       params.base_asset,
       params.counter_asset,
+      params.destination_asset,
+      params.source_asset,
     ];
 
     assetParams.forEach((aParam) => {
@@ -162,18 +169,43 @@ export default function ExploreEndpoints() {
       // When non-native asset is selected, code and issuer fields are required
       if (aParam) {
         const assetObj = parseJsonString(aParam);
-
-        if (
-          ["issued", "credit_alphanum4", "credit_alphanum12"].includes(
-            assetObj.type,
-          )
-        ) {
-          isValidReqAssetFields = Boolean(assetObj.code && assetObj.issuer);
-        }
+        isValidReqAssetFields = validateAssetObj(assetObj);
       }
     });
 
-    return isValidReqAssetFields && isValidReqFields && isValid;
+    let isAssetMultiValid = true;
+
+    const assetMulti = [params.source_assets, params.destination_assets];
+
+    assetMulti.forEach((a) => {
+      if (a) {
+        const saParams = parseJsonString(a);
+
+        saParams.forEach((sa: AssetObjectValue) => {
+          if (!isAssetMultiValid) {
+            return;
+          }
+
+          isValidReqAssetFields = validateAssetObj(sa);
+        });
+      }
+    });
+
+    return (
+      isValidReqAssetFields && isValidReqFields && isValid && isAssetMultiValid
+    );
+  };
+
+  const validateAssetObj = (asset: AssetObjectValue) => {
+    if (
+      ["issued", "credit_alphanum4", "credit_alphanum12"].includes(
+        asset.type as string,
+      )
+    ) {
+      return Boolean(asset.code && asset.issuer);
+    }
+
+    return true;
   };
 
   const resetQuery = useCallback(
@@ -280,6 +312,14 @@ export default function ExploreEndpoints() {
     }
   }, [isSuccess, isError]);
 
+  const createAssetString = (asset: AssetObjectValue) => {
+    if (asset.type === "native") {
+      return "native";
+    }
+
+    return `${asset.code}:${asset.issuer}`;
+  };
+
   const buildUrl = useCallback(() => {
     const parseUrlPath = (path: string) => {
       const pathArr: string[] = [];
@@ -309,16 +349,23 @@ export default function ExploreEndpoints() {
     const getParamRequestValue = (param: string) => {
       const value = parseJsonString(params[param]);
 
+      // Boolean values
       if (!value && typeof value !== "boolean") {
         return false;
       }
 
+      // Asset string
       if (["asset", "selling", "buying"].includes(param)) {
-        if (value.type === "native") {
-          return "native";
-        }
+        return createAssetString(value);
+      }
 
-        return `${value.code}:${value.issuer}`;
+      // Comma separated assets string
+      if (["source_assets", "destination_assets"].includes(param)) {
+        return sanitizeArray(
+          value.map((v: AssetObjectValue) =>
+            isEmptyObject(sanitizeObject(v)) ? undefined : createAssetString(v),
+          ),
+        ).join(",");
       }
 
       return `${value}`;
@@ -492,6 +539,8 @@ export default function ExploreEndpoints() {
                 case "buying_asset":
                 case "base_asset":
                 case "counter_asset":
+                case "destination_asset":
+                case "source_asset":
                   return component.render({
                     value: params[f],
                     error: formError[f],
@@ -502,6 +551,19 @@ export default function ExploreEndpoints() {
                         isEmptyObject(sanitizeObject(assetObj || {}))
                           ? undefined
                           : JSON.stringify(assetObj),
+                      );
+                    },
+                  });
+                case "source_assets":
+                case "destination_assets":
+                  return component.render({
+                    values: parseJsonString(params[f]),
+                    error: formError[f],
+                    isRequired,
+                    onChange: (assetArr: AssetObject[]) => {
+                      handleChange(
+                        assetArr,
+                        assetArr ? JSON.stringify(assetArr) : undefined,
                       );
                     },
                   });

@@ -14,7 +14,8 @@
   width: var(--RadioPicker-width);
 
   &__inset {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     gap: pxToRem(8px);
   }
 
