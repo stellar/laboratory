@@ -14,9 +14,7 @@ type ExploreEndpointsPagesProps = {
             docsUrl: string;
             docsLabel?: string;
             requestMethod: "GET" | "POST";
-            endpointPath: string;
-            endpointPathParams: string;
-            endpointParams: string;
+            endpointUrlTemplate: string;
             requiredParams: string;
             isStreaming?: boolean;
             custom?: AnyObject;
@@ -42,9 +40,8 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
               "https://developers.stellar.org/network/horizon/resources/list-all-accounts",
             docsLabel: "accounts",
             requestMethod: "GET",
-            endpointPath: "/accounts",
-            endpointPathParams: "",
-            endpointParams: "sponsor,signer,asset,cursor,limit,order",
+            endpointUrlTemplate:
+              "/accounts/{?sponsor,signer,asset,cursor,limit,order}",
             requiredParams: "",
             isStreaming: true,
             custom: {
@@ -63,9 +60,7 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
               "https://developers.stellar.org/network/horizon/resources/retrieve-an-account",
             docsLabel: "account",
             requestMethod: "GET",
-            endpointPath: "/accounts",
-            endpointPathParams: "account_id",
-            endpointParams: "",
+            endpointUrlTemplate: "/accounts/{account_id}",
             requiredParams: "account_id",
             isStreaming: true,
           },
@@ -79,7 +74,16 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
         {
           route: Routes.EXPLORE_ENDPOINTS_ASSETS,
           label: "All Assets",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/list-all-assets",
+            docsLabel: "assets",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/assets{?asset_code,asset_issuer,cursor,order,limit}",
+            requiredParams: "",
+            isStreaming: true,
+          },
         },
       ],
     },
@@ -90,12 +94,29 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
         {
           route: Routes.EXPLORE_ENDPOINTS_CLAIMABLE_BALANCES,
           label: "All Claimable Balances",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/list-all-claimable-balances",
+            docsLabel: "claimable balance",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/claimable_balances/{?sponsor,asset,claimant,cursor,limit,order}",
+            requiredParams: "",
+            isStreaming: false,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_CLAIMABLE_BALANCES_SINGLE,
           label: "Single Claimable Balance",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/retrieve-a-claimable-balance",
+            docsLabel: "claimable balances",
+            requestMethod: "GET",
+            endpointUrlTemplate: "/claimable_balances/{claimable_balance_id}",
+            requiredParams: "claimable_balance_id",
+            isStreaming: false,
+          },
         },
       ],
     },
@@ -106,32 +127,85 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
         {
           route: Routes.EXPLORE_ENDPOINTS_EFFECTS,
           label: "All Effects",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/list-all-effects",
+            docsLabel: "effects",
+            requestMethod: "GET",
+            endpointUrlTemplate: "/effects{?cursor,limit,order}",
+            requiredParams: "",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_EFFECTS_ACCOUNT,
           label: "Effects for Account",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/get-effects-by-account-id",
+            docsLabel: "effects for account",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/accounts/{account_id}/effects{?cursor,limit,order}",
+            requiredParams: "account_id",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_EFFECTS_LEDGER,
           label: "Effects for Ledger",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/retrieve-a-ledgers-effects",
+            docsLabel: "effects for ledger",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/ledgers/{ledger}/effects{?cursor,limit,order}",
+            requiredParams: "ledger",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_EFFECTS_LIQUIDITY_POOL,
           label: "Effects for Liquidity Pool",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/retrieve-related-effects",
+            docsLabel: "effects for liquidity pool",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/liquidity_pools/{liquidity_pool_id}/effects{?cursor,limit,order}",
+            requiredParams: "liquidity_pool_id",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_EFFECTS_OPERATION,
           label: "Effects for Operation",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/retrieve-an-operations-effects",
+            docsLabel: "effects for operation",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/operations/{operation}/effects{?cursor,limit,order}",
+            requiredParams: "operation",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_EFFECTS_TRANSACTION,
           label: "Effects for Transaction",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/retrieve-a-transactions-effects",
+            docsLabel: "effects for transaction",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/transactions/{transaction}/effects{?cursor,limit,order}",
+            requiredParams: "transaction",
+            isStreaming: true,
+          },
         },
       ],
     },
@@ -142,7 +216,15 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
         {
           route: Routes.EXPLORE_ENDPOINTS_FEE_STATS,
           label: "All Fee Stats",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/aggregations/fee-stats/object",
+            docsLabel: "fee stats",
+            requestMethod: "GET",
+            endpointUrlTemplate: "/fee_stats",
+            requiredParams: "",
+            isStreaming: true,
+          },
         },
       ],
     },
@@ -153,12 +235,28 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
         {
           route: Routes.EXPLORE_ENDPOINTS_LEDGERS,
           label: "All Ledgers",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/ledgers",
+            docsLabel: "ledgers",
+            requestMethod: "GET",
+            endpointUrlTemplate: "/ledgers{?cursor,limit,order}",
+            requiredParams: "",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_LEDGERS_SINGLE,
           label: "Single Ledger",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/retrieve-a-ledger",
+            docsLabel: "ledger",
+            requestMethod: "GET",
+            endpointUrlTemplate: "/ledgers/{ledger}",
+            requiredParams: "ledger",
+            isStreaming: true,
+          },
         },
       ],
     },
@@ -185,17 +283,53 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
         {
           route: Routes.EXPLORE_ENDPOINTS_OFFERS,
           label: "All Offers",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/offers",
+            docsLabel: "offers",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/offers{?sponsor,seller,selling,buying,cursor,limit,order}",
+            requiredParams: "",
+            isStreaming: true,
+            custom: {
+              selling: {
+                assetInput: "issued",
+                includeNative: true,
+              },
+              buying: {
+                assetInput: "issued",
+                includeNative: true,
+              },
+            },
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_OFFERS_SINGLE,
           label: "Single Offer",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/get-offer-by-offer-id",
+            docsLabel: "offer",
+            requestMethod: "GET",
+            endpointUrlTemplate: "/offers/{offer_id}",
+            requiredParams: "offer_id",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_OFFERS_ACCOUNT,
           label: "Offers for Account",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/get-offers-by-account-id",
+            docsLabel: "offers for account",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/accounts/{account_id}/offers{?cursor,limit,order}",
+            requiredParams: "account_id",
+            isStreaming: true,
+          },
         },
       ],
     },
@@ -206,32 +340,85 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
         {
           route: Routes.EXPLORE_ENDPOINTS_OPERATIONS,
           label: "All Operations",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/operations",
+            docsLabel: "operations",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/operations{?cursor,limit,order,include_failed}",
+            requiredParams: "",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_OPERATIONS_SINGLE,
           label: "Single Operation",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/retrieve-an-operation",
+            docsLabel: "operation",
+            requestMethod: "GET",
+            endpointUrlTemplate: "/operations/{operation}",
+            requiredParams: "operation",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_OPERATIONS_ACCOUNT,
           label: "Operations for Account",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/get-operations-by-account-id",
+            docsLabel: "operations for account",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/accounts/{account_id}/operations{?cursor,limit,order,include_failed}",
+            requiredParams: "account_id",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_OPERATIONS_LEDGER,
           label: "Operations for Ledger",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/retrieve-a-ledgers-operations",
+            docsLabel: "operations for ledger",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/ledgers/{ledger}/operations{?cursor,limit,order,include_failed}",
+            requiredParams: "ledger",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_OPERATIONS_LIQUIDITY_POOL,
           label: "Operations for Liquidity Pool",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/lp-retrieve-related-operations",
+            docsLabel: "operations for liquidity pool",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/liquidity_pools/{liquidity_pool_id}/operations{?cursor,limit,order,include_failed}",
+            requiredParams: "liquidity_pool_id",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_OPERATIONS_TRANSACTION,
           label: "Operations for Transaction",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/retrieve-a-transactions-operations",
+            docsLabel: "operations for transaction",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/transactions/{transaction}/operations{?cursor,limit,order}",
+            requiredParams: "transaction",
+            isStreaming: true,
+          },
         },
       ],
     },

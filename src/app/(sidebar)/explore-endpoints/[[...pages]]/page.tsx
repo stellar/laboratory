@@ -55,8 +55,56 @@ export default function ExploreEndpoints() {
     resetParams,
   } = exploreEndpoints;
 
+  const REGEX_TEMPLATE_SEARCH_PARAMS = /\{\?.+?\}/;
+  const REGEX_TEMPLATE_SEARCH_PARAMS_VALUE = /(?<=\{\?).+?(?=\})/;
+  const REGEX_TEMPLATE_PATH_PARAM_VALUE = /(?<=\{).+?(?=\})/;
+
+  // Parse page URL from the template to get path and search params
+  const parseTemplate = useCallback((templateString: string | undefined) => {
+    let template = templateString;
+    let templateParams = "";
+
+    if (template) {
+      const matchSearchParams = template.match(
+        REGEX_TEMPLATE_SEARCH_PARAMS,
+      )?.[0];
+
+      if (matchSearchParams) {
+        template = template.replace(matchSearchParams, "");
+        templateParams =
+          matchSearchParams.match(REGEX_TEMPLATE_SEARCH_PARAMS_VALUE)?.[0] ??
+          "";
+      }
+    }
+
+    // Getting path params
+    if (template) {
+      const urlPathParamArr: string[] = [];
+
+      template.split("/").forEach((p) => {
+        const param = p.match(REGEX_TEMPLATE_PATH_PARAM_VALUE)?.[0];
+
+        if (param) {
+          return urlPathParamArr.push(param);
+        }
+      });
+
+      setUrlPathparams(urlPathParamArr.join(","));
+    }
+
+    return {
+      templatePath: template ?? "",
+      templateParams: templateParams ?? "",
+    };
+    // Not including RegEx const
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const [formError, setFormError] = useState<AnyObject>({});
   const [requestUrl, setRequestUrl] = useState<string>("");
+  const [urlPath, setUrlPath] = useState("");
+  const [urlPathParams, setUrlPathparams] = useState("");
+  const [urlParams, setUrlParams] = useState("");
 
   const queryClient = useQueryClient();
   const {
@@ -157,6 +205,14 @@ export default function ExploreEndpoints() {
   }, [currentEndpoint, currentPage, resetStates, updateCurrentEndpoint]);
 
   useEffect(() => {
+    const { templatePath, templateParams } = parseTemplate(
+      pageData?.endpointUrlTemplate,
+    );
+    setUrlPath(templatePath);
+    setUrlParams(templateParams);
+  }, [pageData?.endpointUrlTemplate, parseTemplate]);
+
+  useEffect(() => {
     // Save network for endpoints if we don't have it yet.
     if (network.id && !endpointNetwork.id) {
       updateNetwork(network as Network);
@@ -175,25 +231,34 @@ export default function ExploreEndpoints() {
   }, [isSuccess, isError]);
 
   const buildUrl = useCallback(() => {
-    const mapPathParamToValue = (pathParams: string[]) => {
-      return pathParams.map((pp) => params[pp] ?? pp).join("/");
+    const parseUrlPath = (path: string) => {
+      const pathArr: string[] = [];
+
+      path.split("/").forEach((p) => {
+        const param = p.match(REGEX_TEMPLATE_PATH_PARAM_VALUE)?.[0];
+
+        if (param) {
+          return pathArr.push(params[param] ?? "");
+        }
+
+        return pathArr.push(p);
+      });
+
+      return pathArr.join("/");
     };
 
-    const endpointPath = `/accounts${pageData?.endpointPathParams ? `/${mapPathParamToValue(pageData.endpointPathParams.split(","))}` : ""}`;
-    const endpointParams = pageData?.endpointParams;
-
-    const baseUrl = `${endpointNetwork.horizonUrl}${endpointPath}`;
+    const baseUrl = `${endpointNetwork.horizonUrl}${parseUrlPath(urlPath)}`;
     const searchParams = new URLSearchParams();
-    const templateParams = endpointParams?.split(",");
+    const templateParams = urlParams?.split(",");
 
     const getParamRequestValue = (param: string) => {
       const value = parseJsonString(params[param]);
 
-      if (!value) {
+      if (!value && typeof value !== "boolean") {
         return false;
       }
 
-      if (param === "asset") {
+      if (["asset", "selling", "buying"].includes(param)) {
         if (value.type === "native") {
           return "native";
         }
@@ -201,7 +266,7 @@ export default function ExploreEndpoints() {
         return `${value.code}:${value.issuer}`;
       }
 
-      return value;
+      return `${value}`;
     };
 
     // Build search params keeping the same params order
@@ -216,12 +281,9 @@ export default function ExploreEndpoints() {
     const searchParamString = searchParams.toString();
 
     return `${baseUrl}${searchParamString ? `?${searchParamString}` : ""}`;
-  }, [
-    endpointNetwork.horizonUrl,
-    pageData?.endpointParams,
-    pageData?.endpointPathParams,
-    params,
-  ]);
+    // Not including RegEx const
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [endpointNetwork.horizonUrl, params, urlParams, urlPath]);
 
   useEffect(() => {
     setRequestUrl(buildUrl());
@@ -279,14 +341,14 @@ export default function ExploreEndpoints() {
   };
 
   const renderFields = () => {
-    if (!pageData) {
+    const allFields = sanitizeArray([
+      ...urlPathParams.split(","),
+      ...urlParams.split(","),
+    ]);
+
+    if (!pageData || allFields.length === 0) {
       return null;
     }
-
-    const allFields = sanitizeArray([
-      ...pageData.endpointPathParams.split(","),
-      ...pageData.endpointParams.split(","),
-    ]);
 
     return (
       <div className="Endpoints__content">
@@ -320,6 +382,8 @@ export default function ExploreEndpoints() {
 
               switch (f) {
                 case "asset":
+                case "selling":
+                case "buying":
                   return component.render({
                     value: params[f],
                     error: formError[f],
@@ -334,6 +398,7 @@ export default function ExploreEndpoints() {
                     },
                   });
                 case "order":
+                case "include_failed":
                   return component.render({
                     value: params[f],
                     error: formError[f],

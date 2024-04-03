@@ -1,10 +1,11 @@
 import React from "react";
 import { Input, InputProps } from "@stellar/design-system";
 
-interface LimitPickerProps extends Omit<InputProps, "fieldSize"> {
+interface TextPickerProps extends Omit<InputProps, "fieldSize"> {
   id: string;
   fieldSize?: "sm" | "md" | "lg";
   labelSuffix?: string | React.ReactNode;
+  label: string;
   value: string;
   placeholder?: string;
   error: string | undefined;
@@ -12,20 +13,21 @@ interface LimitPickerProps extends Omit<InputProps, "fieldSize"> {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const LimitPicker = ({
+export const TextPicker = ({
   id,
   fieldSize = "md",
   labelSuffix,
+  label,
   value,
   error,
   onChange,
   ...props
-}: LimitPickerProps) => {
+}: TextPickerProps) => {
   return (
     <Input
       id={id}
       fieldSize={fieldSize}
-      label="Limit"
+      label={label}
       labelSuffix={labelSuffix}
       value={value}
       error={error}
