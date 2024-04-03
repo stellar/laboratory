@@ -8,7 +8,6 @@ import { AnyObject, EmptyObj, Network, MuxedAccount } from "@/types/types";
 export interface Store {
   // Shared
   network: Network | EmptyObj;
-  // eslint-disable-next-line no-unused-vars
   selectNetwork: (network: Network) => void;
   resetStoredData: () => void;
 
@@ -19,15 +18,10 @@ export interface Store {
     parsedMuxedAccountInput: string | undefined;
     generatedMuxedAccount: MuxedAccount | EmptyObj;
     parsedMuxedAccount: MuxedAccount | EmptyObj;
-    // eslint-disable-next-line no-unused-vars
     updatePublicKey: (value: string) => void;
-    // eslint-disable-next-line no-unused-vars
     updateGeneratedMuxedAccountInput: (value: Partial<MuxedAccount>) => void;
-    // eslint-disable-next-line no-unused-vars
     updateParsedMuxedAccountInput: (value: string) => void;
-    // eslint-disable-next-line no-unused-vars
     updateGeneratedMuxedAccount: (value: MuxedAccount) => void;
-    // eslint-disable-next-line no-unused-vars
     updateParsedMuxedAccount: (value: MuxedAccount) => void;
     reset: () => void;
   };
@@ -37,11 +31,8 @@ export interface Store {
     network: Network | EmptyObj;
     currentEndpoint: string | undefined;
     params: AnyObject;
-    // eslint-disable-next-line no-unused-vars
     updateNetwork: (network: Network) => void;
-    // eslint-disable-next-line no-unused-vars
     updateCurrentEndpoint: (endpoint: string) => void;
-    // eslint-disable-next-line no-unused-vars
     updateParams: (params: AnyObject) => void;
     resetParams: () => void;
     reset: () => void;
