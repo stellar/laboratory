@@ -420,6 +420,23 @@ export const formComponentTemplate = (
         ),
         validate: null,
       };
+    case "reserves":
+      return {
+        render: (templ: TemplateRenderAssetMultiProps) => (
+          <AssetMultiPicker
+            key={id}
+            id={id}
+            label="Reserves"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            assetInput="issued"
+            values={templ.values}
+            error={templ.error}
+            onChange={templ.onChange}
+            customButtonLabel="reserve"
+          />
+        ),
+        validate: validate.assetMulti,
+      };
     case "resolution":
       return {
         render: (templ: TemplateRenderProps) => (

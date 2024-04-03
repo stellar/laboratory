@@ -267,12 +267,29 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
         {
           route: Routes.EXPLORE_ENDPOINTS_LIQUIDITY_POOLS,
           label: "All Liquidity Pools",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/list-liquidity-pools",
+            docsLabel: "liquidity pools",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/liquidity_pools{?reserves,cursor,limit,order}",
+            requiredParams: "",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_LIQUIDITY_POOLS_SINGLE,
           label: "Single Liquidity Pool",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/retrieve-a-liquidity-pool",
+            docsLabel: "liquidity pool",
+            requestMethod: "GET",
+            endpointUrlTemplate: "/liquidity_pools/{liquidity_pool_id}",
+            requiredParams: "liquidity_pool_id",
+            isStreaming: true,
+          },
         },
       ],
     },

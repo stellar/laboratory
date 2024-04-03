@@ -175,7 +175,11 @@ export default function ExploreEndpoints() {
 
     let isAssetMultiValid = true;
 
-    const assetMulti = [params.source_assets, params.destination_assets];
+    const assetMulti = [
+      params.source_assets,
+      params.destination_assets,
+      params.reserves,
+    ];
 
     assetMulti.forEach((a) => {
       if (a) {
@@ -360,7 +364,7 @@ export default function ExploreEndpoints() {
       }
 
       // Comma separated assets string
-      if (["source_assets", "destination_assets"].includes(param)) {
+      if (["source_assets", "destination_assets", "reserves"].includes(param)) {
         return sanitizeArray(
           value.map((v: AssetObjectValue) =>
             isEmptyObject(sanitizeObject(v)) ? undefined : createAssetString(v),
@@ -556,6 +560,7 @@ export default function ExploreEndpoints() {
                   });
                 case "source_assets":
                 case "destination_assets":
+                case "reserves":
                   return component.render({
                     values: parseJsonString(params[f]),
                     error: formError[f],

@@ -18,6 +18,7 @@ type AssetMultiPickerProps = {
   onChange: (asset: AssetObjectValue[] | undefined) => void;
   assetInput: "issued" | "alphanumeric";
   includeNative?: boolean;
+  customButtonLabel?: string;
 };
 
 export const AssetMultiPicker = ({
@@ -29,6 +30,7 @@ export const AssetMultiPicker = ({
   onChange,
   assetInput,
   includeNative = true,
+  customButtonLabel = "asset",
 }: AssetMultiPickerProps) => {
   let options: AssetObject[] = [];
 
@@ -189,7 +191,9 @@ export const AssetMultiPicker = ({
             }}
             type="button"
           >
-            {values.length === 0 ? "Add asset" : "Add another asset"}
+            {values.length === 0
+              ? `Add ${customButtonLabel}`
+              : `Add another ${customButtonLabel}`}
           </Button>
         </div>
       </>
