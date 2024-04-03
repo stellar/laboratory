@@ -86,7 +86,7 @@ export default function ExploreEndpoints() {
         const param = p.match(REGEX_TEMPLATE_PATH_PARAM_VALUE)?.[0];
 
         if (param) {
-          return urlPathParamArr.push(param);
+          urlPathParamArr.push(param);
         }
       });
 
