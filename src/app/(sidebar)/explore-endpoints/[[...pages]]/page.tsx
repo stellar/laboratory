@@ -91,7 +91,7 @@ export default function ExploreEndpoints() {
         const param = p.match(REGEX_TEMPLATE_PATH_PARAM_VALUE)?.[0];
 
         if (param) {
-          return urlPathParamArr.push(param);
+          urlPathParamArr.push(param);
         }
       });
 
@@ -173,7 +173,7 @@ export default function ExploreEndpoints() {
       }
     });
 
-    let isAssetMultiValid = true;
+    const isAssetMultiValid = true;
 
     const assetMulti = [
       params.source_assets,

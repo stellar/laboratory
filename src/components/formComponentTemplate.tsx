@@ -9,16 +9,15 @@ import { TextPicker } from "@/components/FormElements/TextPicker";
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 import { IncludeFailedPicker } from "@/components/FormElements/IncludeFailedPicker";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
+import { AssetMultiPicker } from "@/components/FormElements/AssetMultiPicker";
 
 import { parseJsonString } from "@/helpers/parseJsonString";
 import { validate } from "@/validate";
 import { AnyObject, AssetObjectValue } from "@/types/types";
-import { AssetMultiPicker } from "./FormElements/AssetMultiPicker";
 
 type TemplateRenderProps = {
   value: string | undefined;
   error: string | undefined;
-  // eslint-disable-next-line no-unused-vars
   onChange: (val: any) => void;
   isRequired?: boolean;
 };
@@ -26,7 +25,6 @@ type TemplateRenderProps = {
 type TemplateRenderAssetProps = {
   value: AssetObjectValue | undefined;
   error: { code: string | undefined; issuer: string | undefined } | undefined;
-  // eslint-disable-next-line no-unused-vars
   onChange: (asset: AssetObjectValue | undefined) => void;
   isRequired?: boolean;
 };
@@ -41,22 +39,18 @@ type TemplateRenderAssetMultiProps = {
 
 type TemplateRenderOrderProps = {
   value: string | undefined;
-  // eslint-disable-next-line no-unused-vars
   onChange: (optionId: string | undefined, optionValue?: string) => void;
   isRequired?: boolean;
 };
 
 type TemplateRenderIncludeFailedProps = {
   value: string | undefined;
-  // eslint-disable-next-line no-unused-vars
   onChange: (optionId: string | undefined, optionValue?: boolean) => void;
   isRequired?: boolean;
 };
 
 type FormComponentTemplate = {
-  // eslint-disable-next-line no-unused-vars
   render: (...args: any[]) => JSX.Element;
-  // eslint-disable-next-line no-unused-vars
   validate: ((...args: any[]) => any) | null;
 };
 
