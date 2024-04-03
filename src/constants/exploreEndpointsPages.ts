@@ -429,7 +429,35 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
         {
           route: Routes.EXPLORE_ENDPOINTS_ORDER_BOOK_DETAILS,
           label: "Details",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/aggregations/order-books/single",
+            docsLabel: "order book",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/order_book{?selling_asset_type,selling_asset_code,selling_asset_issuer,buying_asset_type,buying_asset_code,buying_asset_issuer}",
+            requiredParams: "selling_asset,buying_asset",
+            isStreaming: true,
+            custom: {
+              renderComponents: ["selling_asset", "buying_asset"],
+              paramMapping: {
+                selling_asset_type: "selling_asset.type",
+                selling_asset_code: "selling_asset.code",
+                selling_asset_issuer: "selling_asset.issuer",
+                buying_asset_type: "buying_asset.type",
+                buying_asset_code: "buying_asset.code",
+                buying_asset_issuer: "buying_asset.issuer",
+              },
+              selling_asset: {
+                assetInput: "alphanumeric",
+                includeNative: true,
+              },
+              buying_asset: {
+                assetInput: "alphanumeric",
+                includeNative: true,
+              },
+            },
+          },
         },
       ],
     },
@@ -461,22 +489,59 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
         {
           route: Routes.EXPLORE_ENDPOINTS_PAYMENTS,
           label: "All Payments",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/list-all-payments",
+            docsLabel: "payments",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/payments{?cursor,limit,order,include_failed}",
+            requiredParams: "",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_PAYMENTS_ACCOUNT,
           label: "Payments for Account",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/get-payments-by-account-id",
+            docsLabel: "payments for account",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/accounts/{account_id}/payments{?cursor,limit,order,include_failed}",
+            requiredParams: "account_id",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_PAYMENTS_LEDGER,
           label: "Payments for Ledger",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/retrieve-a-ledgers-payments",
+            docsLabel: "payments for ledger",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/ledgers/{ledger}/payments{?cursor,limit,order,include_failed}",
+            requiredParams: "ledger",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_PAYMENTS_TRANSACTION,
           label: "Payments for Transaction",
-          form: undefined,
+          form: {
+            docsUrl:
+              // TODO: no link in the docs for payments for transaction
+              "https://developers.stellar.org/network/horizon/resources/transactions",
+            docsLabel: "payments for transaction",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/transactions/{transaction}/payments{?cursor,limit,order}",
+            requiredParams: "transaction",
+            isStreaming: true,
+          },
         },
       ],
     },
@@ -487,7 +552,35 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
         {
           route: Routes.EXPLORE_ENDPOINTS_TRADE_AGGREGATIONS,
           label: "All Trade Aggregations",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/aggregations/trade-aggregations/list",
+            docsLabel: "trade aggregations",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/trade_aggregations{?base_asset_type,base_asset_code,base_asset_issuer,counter_asset_type,counter_asset_code,counter_asset_issuer,resolution,start_time,end_time,limit,order}",
+            requiredParams: "base_asset,counter_asset,resolution",
+            isStreaming: true,
+            custom: {
+              renderComponents: ["base_asset", "counter_asset"],
+              paramMapping: {
+                base_asset_type: "base_asset.type",
+                base_asset_code: "base_asset.code",
+                base_asset_issuer: "base_asset.issuer",
+                counter_asset_type: "counter_asset.type",
+                counter_asset_code: "counter_asset.code",
+                counter_asset_issuer: "counter_asset.issuer",
+              },
+              base_asset: {
+                assetInput: "alphanumeric",
+                includeNative: true,
+              },
+              counter_asset: {
+                assetInput: "alphanumeric",
+                includeNative: true,
+              },
+            },
+          },
         },
       ],
     },
@@ -498,22 +591,77 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
         {
           route: Routes.EXPLORE_ENDPOINTS_TRADES,
           label: "All Trades",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/get-all-trades",
+            docsLabel: "trades",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/trades{?base_asset_type,base_asset_code,base_asset_issuer,counter_asset_type,counter_asset_code,counter_asset_issuer,offer_id,cursor,limit,order}",
+            requiredParams: "",
+            isStreaming: true,
+            custom: {
+              renderComponents: ["base_asset", "counter_asset"],
+              paramMapping: {
+                base_asset_type: "base_asset.type",
+                base_asset_code: "base_asset.code",
+                base_asset_issuer: "base_asset.issuer",
+                counter_asset_type: "counter_asset.type",
+                counter_asset_code: "counter_asset.code",
+                counter_asset_issuer: "counter_asset.issuer",
+              },
+              base_asset: {
+                assetInput: "alphanumeric",
+                includeNative: true,
+              },
+              counter_asset: {
+                assetInput: "alphanumeric",
+                includeNative: true,
+              },
+            },
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_TRADES_ACCOUNT,
           label: "Trades for Account",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/get-trades-by-account-id",
+            docsLabel: "trades for account",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/accounts/{account_id}/trades{?cursor,limit,order}",
+            requiredParams: "account_id",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_TRADES_LIQUIDITY_POOL,
           label: "Trades for Liquidity Pool",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/retrieve-related-trades",
+            docsLabel: "trades for liquidity pool",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/liquidity_pools/{liquidity_pool_id}/trades{?cursor,limit,order}",
+            requiredParams: "liquidity_pool_id",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_TRADES_OFFER,
           label: "Trades for Offer",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/get-trades-by-offer-id",
+            docsLabel: "trades for offer",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/offers/{offer_id}/trades{?cursor,limit,order}",
+            requiredParams: "offer_id",
+            isStreaming: true,
+          },
         },
       ],
     },
@@ -524,32 +672,84 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
         {
           route: Routes.EXPLORE_ENDPOINTS_TRANSACTIONS,
           label: "All Transactions",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/transactions",
+            docsLabel: "transactions",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/transactions{?cursor,limit,order,include_failed}",
+            requiredParams: "",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_TRANSACTIONS_SINGLE,
           label: "Single Transaction",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/retrieve-a-transaction",
+            docsLabel: "transaction",
+            requestMethod: "GET",
+            endpointUrlTemplate: "/transactions/{transaction}",
+            requiredParams: "transaction",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_TRANSACTIONS_POST,
           label: "Post Transaction",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/submit-a-transaction",
+            docsLabel: "post transaction",
+            requestMethod: "POST",
+            endpointUrlTemplate: "/transactions{?tx}",
+            requiredParams: "tx",
+            isStreaming: false,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_TRANSACTIONS_ACCOUNT,
           label: "Transactions for Account",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/get-transactions-by-account-id",
+            docsLabel: "transactions for account",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/accounts/{account_id}/transactions{?cursor,limit,order,include_failed}",
+            requiredParams: "account_id",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_TRANSACTIONS_LEDGER,
           label: "Transactions for Ledger",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/retrieve-a-ledgers-transactions",
+            docsLabel: "transactions for ledger",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/ledgers/{ledger}/transactions{?cursor,limit,order,include_failed}",
+            requiredParams: "ledger",
+            isStreaming: true,
+          },
         },
         {
           route: Routes.EXPLORE_ENDPOINTS_TRANSACTIONS_LIQUIDITY_POOL,
           label: "Transactions for Liquidity Pool",
-          form: undefined,
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/network/horizon/resources/lp-retrieve-related-transactions",
+            docsLabel: "transactions for liquidity pool",
+            requestMethod: "GET",
+            endpointUrlTemplate:
+              "/liquidity_pools/{liquidity_pool_id}/transactions{?cursor,limit,order,include_failed}",
+            requiredParams: "liquidity_pool_id",
+            isStreaming: true,
+          },
         },
       ],
     },

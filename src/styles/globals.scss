@@ -419,4 +419,10 @@
       cursor: default;
     }
   }
+
+  &__txTextarea {
+    .Textarea textarea {
+      word-break: break-all;
+    }
+  }
 }

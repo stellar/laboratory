@@ -11,6 +11,7 @@ import {
   Input,
   Link,
   Text,
+  Textarea,
 } from "@stellar/design-system";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -85,7 +86,7 @@ export default function ExploreEndpoints() {
         const param = p.match(REGEX_TEMPLATE_PATH_PARAM_VALUE)?.[0];
 
         if (param) {
-          return urlPathParamArr.push(param);
+          urlPathParamArr.push(param);
         }
       });
 
@@ -115,7 +116,12 @@ export default function ExploreEndpoints() {
     refetch,
     isSuccess,
     isError,
-  } = useExploreEndpoint(requestUrl);
+  } = useExploreEndpoint(
+    requestUrl,
+    // There is only one endpoint request for POST, using params directly for
+    // simplicity.
+    pageData?.requestMethod === "POST" ? { tx: params.tx ?? "" } : undefined,
+  );
 
   const responseEl = useRef<HTMLDivElement | null>(null);
 
@@ -138,18 +144,34 @@ export default function ExploreEndpoints() {
     // Checking if there are any errors
     isValid = isEmptyObject(formError);
 
-    // When non-native asset is selected, code and issuer fields are required
-    if (params.asset) {
-      const assetObj = parseJsonString(params.asset);
+    // Asset components
+    const assetParams = [
+      params.asset,
+      params.selling_asset,
+      params.buying_asset,
+      params.base_asset,
+      params.counter_asset,
+    ];
 
-      if (
-        ["issued", "credit_alphanum4", "credit_alphanum12"].includes(
-          assetObj.type,
-        )
-      ) {
-        isValidReqAssetFields = Boolean(assetObj.code && assetObj.issuer);
+    assetParams.forEach((aParam) => {
+      // No need to keep checking if one field is invalid
+      if (!isValidReqAssetFields) {
+        return;
       }
-    }
+
+      // When non-native asset is selected, code and issuer fields are required
+      if (aParam) {
+        const assetObj = parseJsonString(aParam);
+
+        if (
+          ["issued", "credit_alphanum4", "credit_alphanum12"].includes(
+            assetObj.type,
+          )
+        ) {
+          isValidReqAssetFields = Boolean(assetObj.code && assetObj.issuer);
+        }
+      }
+    });
 
     return isValidReqAssetFields && isValidReqFields && isValid;
   };
@@ -158,7 +180,6 @@ export default function ExploreEndpoints() {
     () =>
       queryClient.resetQueries({
         queryKey: ["exploreEndpoint", "response"],
-        exact: true,
       }),
     [queryClient],
   );
@@ -189,6 +210,35 @@ export default function ExploreEndpoints() {
     setFormError(paramErrors());
 
     // We want to check this only when the page mounts for the first time
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const mapParamToValue = (key: string, value: string) => {
+    const [param, prop] = (value as string)?.split(".") || [];
+    const mappedValue = parseJsonString(params?.[param])?.[prop];
+
+    return mappedValue ? { [key]: mappedValue } : {};
+  };
+
+  // Persist mapped custom template props to params
+  useEffect(() => {
+    const paramMapping = pageData?.custom?.paramMapping;
+
+    if (paramMapping) {
+      const mappedParams = Object.entries(paramMapping).reduce(
+        (res, [key, value]) => {
+          const mappedVal = mapParamToValue(key, value as string);
+
+          return { ...res, ...mappedVal };
+        },
+        {} as AnyObject,
+      );
+
+      if (!isEmptyObject(mappedParams)) {
+        updateParams(mappedParams);
+      }
+    }
+    // Run this only once when page loads
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -248,6 +298,11 @@ export default function ExploreEndpoints() {
     };
 
     const baseUrl = `${endpointNetwork.horizonUrl}${parseUrlPath(urlPath)}`;
+
+    if (pageData?.requestMethod === "POST") {
+      return baseUrl;
+    }
+
     const searchParams = new URLSearchParams();
     const templateParams = urlParams?.split(",");
 
@@ -305,44 +360,72 @@ export default function ExploreEndpoints() {
     }, delay);
   };
 
+  const renderPostPayload = () => {
+    if (pageData?.requestMethod === "POST") {
+      return (
+        <div className="Endpoints__txTextarea">
+          <Textarea
+            id="tx"
+            fieldSize="md"
+            label="Payload"
+            value={JSON.stringify({ tx: params.tx ?? "" }, null, 2)}
+            rows={5}
+            disabled
+            spellCheck={false}
+          />
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   const renderEndpointUrl = () => {
     if (!pageData) {
       return null;
     }
 
     return (
-      <div className="Endpoints__urlBar">
-        <Input
-          id="endpoint-url"
-          fieldSize="md"
-          value={requestUrl}
-          readOnly
-          disabled
-          leftElement={
-            <div className="Endpoints__input__requestType">
-              {pageData.requestMethod}
-            </div>
-          }
-        />
-        <Button
-          size="md"
-          variant="secondary"
-          type="submit"
-          disabled={!isSubmitEnabled()}
-          isLoading={isLoading || isFetching}
-        >
-          Submit
-        </Button>
-        <CopyText textToCopy={requestUrl}>
-          <Button size="md" variant="tertiary" icon={<Icon.Copy01 />}></Button>
-        </CopyText>
-      </div>
+      <>
+        <div className="Endpoints__urlBar">
+          <Input
+            id="endpoint-url"
+            fieldSize="md"
+            value={requestUrl}
+            readOnly
+            disabled
+            leftElement={
+              <div className="Endpoints__input__requestType">
+                {pageData.requestMethod}
+              </div>
+            }
+          />
+          <Button
+            size="md"
+            variant="secondary"
+            type="submit"
+            disabled={!isSubmitEnabled()}
+            isLoading={isLoading || isFetching}
+          >
+            Submit
+          </Button>
+          <CopyText textToCopy={requestUrl}>
+            <Button
+              size="md"
+              variant="tertiary"
+              icon={<Icon.Copy01 />}
+              type="button"
+            ></Button>
+          </CopyText>
+        </div>
+      </>
     );
   };
 
   const renderFields = () => {
     const allFields = sanitizeArray([
       ...urlPathParams.split(","),
+      ...(pageData?.custom?.renderComponents || []),
       ...urlParams.split(","),
     ]);
 
@@ -353,6 +436,8 @@ export default function ExploreEndpoints() {
     return (
       <div className="Endpoints__content">
         <div className="PageBody__content">
+          {renderPostPayload()}
+
           {allFields.map((f) => {
             const component = formComponentTemplate(f, pageData.custom?.[f]);
 
@@ -363,10 +448,29 @@ export default function ExploreEndpoints() {
               // formatting (sanitizing object or array, for exmaple).
               // Error check needs the original value.
               const handleChange = (value: any, storeValue: any) => {
-                resetQuery();
+                if (isSuccess || isError) {
+                  resetQuery();
+                }
+
+                // Mapping custom value to template params
+                const mappedParams = pageData?.custom?.paramMapping
+                  ? Object.entries(pageData.custom.paramMapping).reduce(
+                      (res, [key, val]) => {
+                        const [param, prop] = (val as string)?.split(".") || [];
+
+                        if (param === f) {
+                          return { ...res, [key]: value?.[prop] };
+                        }
+
+                        return res;
+                      },
+                      {} as AnyObject,
+                    )
+                  : {};
 
                 updateParams({
                   [f]: storeValue,
+                  ...mappedParams,
                 });
 
                 const error = component.validate?.(value, isRequired);
@@ -383,7 +487,11 @@ export default function ExploreEndpoints() {
               switch (f) {
                 case "asset":
                 case "selling":
+                case "selling_asset":
                 case "buying":
+                case "buying_asset":
+                case "base_asset":
+                case "counter_asset":
                   return component.render({
                     value: params[f],
                     error: formError[f],

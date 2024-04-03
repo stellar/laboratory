@@ -66,7 +66,29 @@ export const PrettyJson = ({ json }: { json: AnyObject }) => {
                         <Key>{key}</Key>
                         <Bracket char="[" />
                       </div>
-                      <div>{value.map((v) => render(v, key))}</div>
+                      <div>
+                        {value.map((v, index) => {
+                          if (typeof v === "object") {
+                            return (
+                              <div
+                                key={`${keyProp}-${index}`}
+                                className="PrettyJson__nested"
+                              >
+                                <div className="PrettyJson__inline">
+                                  <Bracket char="{" />
+                                </div>
+                                <div>{render(v)}</div>
+                                <div>
+                                  <Bracket char="}" />
+                                  <Comma />
+                                </div>
+                              </div>
+                            );
+                          }
+
+                          return render(v, key);
+                        })}
+                      </div>
                       <div>
                         <Bracket char="]" />
                         <Comma />

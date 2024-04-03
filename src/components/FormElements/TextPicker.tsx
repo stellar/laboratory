@@ -9,7 +9,6 @@ interface TextPickerProps extends Omit<InputProps, "fieldSize"> {
   value: string;
   placeholder?: string;
   error: string | undefined;
-  // eslint-disable-next-line no-unused-vars
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
