@@ -36,7 +36,6 @@ type TemplateRenderOrderProps = {
 
 type TemplateRenderIncludeFailedProps = {
   value: string | undefined;
-  // eslint-disable-next-line no-unused-vars
   onChange: (optionId: string | undefined, optionValue?: boolean) => void;
   isRequired?: boolean;
 };
