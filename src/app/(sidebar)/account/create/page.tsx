@@ -39,13 +39,8 @@ export default function CreateAccount() {
               account signer, and/or as a stellar-core node key.
             </Text>
           </div>
-          <div className="Account__CTA">
-            <Button
-              size="md"
-              variant="secondary"
-              onClick={generateKeypair}
-              data-testid="keypairGenerate-button"
-            >
+          <div className="Account__CTA" data-testid="createAccount-buttons">
+            <Button size="md" variant="secondary" onClick={generateKeypair}>
               Generate keypair
             </Button>
 
@@ -53,7 +48,6 @@ export default function CreateAccount() {
               size="md"
               variant="tertiary"
               onClick={() => router.push(Routes.ACCOUNT_FUND)}
-              data-testid="keypairFund-button"
             >
               Fund account with Friendbot
             </Button>

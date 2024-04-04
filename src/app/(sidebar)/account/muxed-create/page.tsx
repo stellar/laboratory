@@ -111,7 +111,7 @@ export default function CreateMuxedAccount() {
           />
 
           <Input
-            id="muxed-account-iD"
+            id="muxed-account-id"
             fieldSize="md"
             placeholder="Ex: 1"
             label="Muxed Account ID"

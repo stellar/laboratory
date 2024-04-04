@@ -1,7 +1,5 @@
 import { test, expect } from "@playwright/test";
 
-import { Keypair } from "@stellar/stellar-sdk";
-
 test.describe("Fund Account Page", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("http://localhost:3000/account/fund");
@@ -64,7 +62,7 @@ test.describe("Fund Account Page", () => {
     await expect(fillInButton).toBeDisabled();
   });
 
-  test("I see an error when I type in an invalid string in 'Public Key' input field", async ({
+  test("Gets an error with an invalid public key in 'Public Key' field", async ({
     page,
   }) => {
     const publicKeyInput = page.locator("#generate-keypair-publickey");
@@ -82,9 +80,8 @@ test.describe("Fund Account Page", () => {
     page,
   }) => {
     // Get a new public key
-    const keypair = Keypair.random();
-    const publicKey = keypair.publicKey();
-
+    const publicKey =
+      "GDVOT2ALMUF3G54RBHNJUEV6LOAZCQQCARHEVNUPKGMVPWFC4PFN33QR";
     const publicKeyInput = page.locator("#generate-keypair-publickey");
     const getLumenButton = page
       .getByTestId("fundAccount-buttons")
@@ -96,8 +93,31 @@ test.describe("Fund Account Page", () => {
     await expect(publicKeyInput).toHaveAttribute("aria-invalid", "false");
     await expect(getLumenButton).toBeEnabled();
 
+    // Mock the friendbot api call
+    await page.route("**/*", async (route, request) => {
+      if (request.url().includes("?addr=")) {
+        await route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify({}),
+        });
+      } else {
+        await route.continue();
+      }
+    });
+
+    // Ensure the listener is set up before the action that triggers the request
+    const responsePromise = page.waitForResponse(
+      (response) =>
+        response.url().includes("?addr=") && response.status() === 200,
+    );
+
     await getLumenButton.click();
 
+    // Wait for the mocked response
+    await responsePromise;
+
+    // Success <Alert/> is visible
     const alertBox = page.getByText(/Successfully funded/);
     await expect(alertBox).toBeVisible();
   });
