@@ -32,7 +32,6 @@ type TemplateRenderAssetProps = {
 type TemplateRenderAssetMultiProps = {
   values: AssetObjectValue[] | undefined;
   error: { code: string | undefined; issuer: string | undefined }[] | undefined;
-  // eslint-disable-next-line no-unused-vars
   onChange: (asset: AssetObjectValue[] | undefined) => void;
   isRequired?: boolean;
 };

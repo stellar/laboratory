@@ -14,7 +14,6 @@ type AssetMultiPickerProps = {
   labelSuffix?: string | React.ReactNode;
   values: AssetObjectValue[] | undefined;
   error: { code: string | undefined; issuer: string | undefined }[] | undefined;
-  // eslint-disable-next-line no-unused-vars
   onChange: (asset: AssetObjectValue[] | undefined) => void;
   assetInput: "issued" | "alphanumeric";
   includeNative?: boolean;
@@ -206,13 +205,11 @@ type AssetPickerFieldsProps = {
   code: {
     value: string;
     error: string;
-    // eslint-disable-next-line no-unused-vars
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   };
   issuer: {
     value: string;
     error: string;
-    // eslint-disable-next-line no-unused-vars
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   };
 };
