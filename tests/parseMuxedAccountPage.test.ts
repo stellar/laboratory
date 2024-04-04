@@ -26,7 +26,7 @@ test.describe("Parse Muxed Account Page", () => {
 
     await expect(publicKeyInput).toHaveAttribute("aria-invalid", "true");
     await expect(
-      page.getByText(/Muxed account address should start with M/),
+      page.getByText("Muxed account address should start with M"),
     ).toBeVisible();
   });
 });

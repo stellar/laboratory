@@ -26,7 +26,7 @@ test.describe("Create Muxed Account Page", () => {
 
     await expect(publicKeyInput).toHaveAttribute("aria-invalid", "true");
     await expect(
-      page.getByText(/Base account address should start with G/),
+      page.getByText("Base account address should start with G"),
     ).toBeVisible();
   });
 
@@ -38,7 +38,7 @@ test.describe("Create Muxed Account Page", () => {
     await muxedAccountIdInput.fill("XLKDSFJLSKDJF");
 
     await expect(muxedAccountIdInput).toHaveAttribute("aria-invalid", "true");
-    await expect(page.getByText(/Expected a whole number/)).toBeVisible();
+    await expect(page.getByText("Expected a whole number")).toBeVisible();
   });
 
   test("Successfully creates a muxed account", async ({ page }) => {
@@ -47,9 +47,8 @@ test.describe("Create Muxed Account Page", () => {
     const publicKeyInput = page.locator("#muxed-public-key");
     await publicKeyInput.fill(publicKey);
 
-    const muxedAccountIdInput = page.locator("#muxed-account-iD");
-    const fakeWholeNumber = Math.floor(Math.random() * 10000);
-    await muxedAccountIdInput.fill(`${fakeWholeNumber}`);
+    const muxedAccountIdInput = page.locator("#muxed-account-id");
+    await muxedAccountIdInput.fill("2");
 
     const createButton = page.getByRole("button").getByText("Create");
 
