@@ -40,7 +40,12 @@ export default function CreateAccount() {
             </Text>
           </div>
           <div className="Account__CTA">
-            <Button size="md" variant="secondary" onClick={generateKeypair}>
+            <Button
+              size="md"
+              variant="secondary"
+              onClick={generateKeypair}
+              data-testid="keypairGenerate-button"
+            >
               Generate keypair
             </Button>
 
@@ -48,6 +53,7 @@ export default function CreateAccount() {
               size="md"
               variant="tertiary"
               onClick={() => router.push(Routes.ACCOUNT_FUND)}
+              data-testid="keypairFund-button"
             >
               Fund account with Friendbot
             </Button>

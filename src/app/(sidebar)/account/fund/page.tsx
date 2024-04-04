@@ -60,7 +60,7 @@ export default function FundAccount() {
             error={inlineErrorMessage}
           />
 
-          <div className="Account__CTA">
+          <div className="Account__CTA" data-testid="fundAccount-buttons">
             <Button
               disabled={!generatedPublicKey || Boolean(inlineErrorMessage)}
               size="md"
