@@ -26,6 +26,7 @@ import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { sanitizeArray } from "@/helpers/sanitizeArray";
 import { sanitizeObject } from "@/helpers/sanitizeObject";
 import { parseJsonString } from "@/helpers/parseJsonString";
+import { openUrl } from "@/helpers/openUrl";
 
 import { Routes } from "@/constants/routes";
 import { EXPLORE_ENDPOINTS_PAGES_HORIZON } from "@/constants/exploreEndpointsPages";
@@ -712,10 +713,7 @@ const ExploreEndpointsLandingPage = () => {
       buttonLabel: "See docs",
       buttonIcon: <Icon.LinkExternal01 />,
       buttonAction: () =>
-        window.open(
-          "https://developers.stellar.org/network/soroban-rpc/methods",
-          "_blank",
-        ),
+        openUrl("https://developers.stellar.org/network/soroban-rpc/methods"),
     },
     {
       id: "horizon",
@@ -724,10 +722,7 @@ const ExploreEndpointsLandingPage = () => {
       buttonLabel: "See docs",
       buttonIcon: <Icon.LinkExternal01 />,
       buttonAction: () =>
-        window.open(
-          "https://developers.stellar.org/network/horizon/resources",
-          "_blank",
-        ),
+        openUrl("https://developers.stellar.org/network/horizon/resources"),
     },
   ];
 

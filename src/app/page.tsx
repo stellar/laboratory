@@ -7,6 +7,7 @@ import { LayoutContentContainer } from "@/components/layout/LayoutContentContain
 import { InfoCards } from "@/components/InfoCards";
 import { SdsLink } from "@/components/SdsLink";
 import { Routes } from "@/constants/routes";
+import { openUrl } from "@/helpers/openUrl";
 
 export default function Introduction() {
   const infoCards = [
@@ -17,7 +18,7 @@ export default function Introduction() {
         "Learn to build world-class applications on the Stellar network in a gamified experience",
       buttonLabel: "Go to site",
       buttonIcon: <Icon.LinkExternal01 />,
-      buttonAction: () => window.open("https://quest.stellar.org/", "_blank"),
+      buttonAction: () => openUrl("https://quest.stellar.org/"),
     },
     {
       id: "tools",
@@ -27,7 +28,7 @@ export default function Introduction() {
       buttonLabel: "See tools",
       buttonIcon: undefined,
       buttonAction: () =>
-        window.open("https://developers.stellar.org/docs/tools/sdks", "_blank"),
+        openUrl("https://developers.stellar.org/docs/tools/sdks"),
     },
     {
       id: "stellar-rpc",
@@ -36,10 +37,7 @@ export default function Introduction() {
       buttonLabel: "Go to docs",
       buttonIcon: <Icon.LinkExternal01 />,
       buttonAction: () =>
-        window.open(
-          "https://developers.stellar.org/network/soroban-rpc",
-          "_blank",
-        ),
+        openUrl("https://developers.stellar.org/network/soroban-rpc"),
     },
     {
       id: "horizon",
@@ -49,7 +47,7 @@ export default function Introduction() {
       buttonLabel: "Go to docs",
       buttonIcon: <Icon.LinkExternal01 />,
       buttonAction: () =>
-        window.open("https://developers.stellar.org/network/horizon", "_blank"),
+        openUrl("https://developers.stellar.org/network/horizon"),
     },
   ];
 
