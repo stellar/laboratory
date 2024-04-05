@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { Card, Link, Text, Icon } from "@stellar/design-system";
 
 import { NextLink } from "@/components/NextLink";
@@ -8,10 +7,9 @@ import { LayoutContentContainer } from "@/components/layout/LayoutContentContain
 import { InfoCards } from "@/components/InfoCards";
 import { SdsLink } from "@/components/SdsLink";
 import { Routes } from "@/constants/routes";
+import { openUrl } from "@/helpers/openUrl";
 
 export default function Introduction() {
-  const router = useRouter();
-
   const infoCards = [
     {
       id: "stellar-quest",
@@ -20,7 +18,7 @@ export default function Introduction() {
         "Learn to build world-class applications on the Stellar network in a gamified experience",
       buttonLabel: "Go to site",
       buttonIcon: <Icon.LinkExternal01 />,
-      buttonAction: () => window.open("https://quest.stellar.org/", "_blank"),
+      buttonAction: () => openUrl("https://quest.stellar.org/"),
     },
     {
       id: "tools",
@@ -29,7 +27,8 @@ export default function Introduction() {
         "Tools, like the Stellar CLI, for reading and interacting with smart contracts on the Stellar Network",
       buttonLabel: "See tools",
       buttonIcon: undefined,
-      buttonAction: () => router.push(Routes.SOROBAN_CONTRACT_EXPLORER),
+      buttonAction: () =>
+        openUrl("https://developers.stellar.org/docs/tools/sdks"),
     },
     {
       id: "stellar-rpc",
@@ -38,10 +37,7 @@ export default function Introduction() {
       buttonLabel: "Go to docs",
       buttonIcon: <Icon.LinkExternal01 />,
       buttonAction: () =>
-        window.open(
-          "https://developers.stellar.org/network/soroban-rpc",
-          "_blank",
-        ),
+        openUrl("https://developers.stellar.org/network/soroban-rpc"),
     },
     {
       id: "horizon",
@@ -51,7 +47,7 @@ export default function Introduction() {
       buttonLabel: "Go to docs",
       buttonIcon: <Icon.LinkExternal01 />,
       buttonAction: () =>
-        window.open("https://developers.stellar.org/network/horizon", "_blank"),
+        openUrl("https://developers.stellar.org/network/horizon"),
     },
   ];
 
@@ -83,7 +79,7 @@ export default function Introduction() {
 
           <Text size="sm" as="p">
             For Stellar docs, take a look at the{" "}
-            <Link href="https://developers.stellar.org/docs">
+            <Link href="https://developers.stellar.org/">
               Stellar developers site
             </Link>
             .

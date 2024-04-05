@@ -94,7 +94,7 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/list-all-claimable-balances",
-            docsLabel: "claimable balance",
+            docsLabel: "claimable balances",
             requestMethod: "GET",
             endpointUrlTemplate:
               "/claimable_balances/{?sponsor,asset,claimant,cursor,limit,order}",
@@ -108,7 +108,7 @@ export const EXPLORE_ENDPOINTS_PAGES_HORIZON: ExploreEndpointsPagesProps = {
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/retrieve-a-claimable-balance",
-            docsLabel: "claimable balances",
+            docsLabel: "claimable balance",
             requestMethod: "GET",
             endpointUrlTemplate: "/claimable_balances/{claimable_balance_id}",
             requiredParams: "claimable_balance_id",
