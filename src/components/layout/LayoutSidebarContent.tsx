@@ -91,8 +91,8 @@ export const LayoutSidebarContent = ({
 
 const Link = ({ item, pathname }: { item: SidebarLink; pathname: string }) => {
   const isSelectedParent = item.nestedItems?.length
-    ? pathname?.split(Routes.EXPLORE_ENDPOINTS)?.[1]?.split("/")?.[1] ===
-      item.route?.split(Routes.EXPLORE_ENDPOINTS)?.[1]?.split("/")?.[1]
+    ? pathname?.split(Routes.ENDPOINTS)?.[1]?.split("/")?.[1] ===
+      item.route?.split(Routes.ENDPOINTS)?.[1]?.split("/")?.[1]
     : false;
 
   const [isExpanded, setIsExpanded] = useState(isSelectedParent);

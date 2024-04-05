@@ -2,9 +2,9 @@
 
 import React from "react";
 import { LayoutSidebarContent } from "@/components/layout/LayoutSidebarContent";
-import { EXPLORE_ENDPOINTS_PAGES_HORIZON } from "@/constants/exploreEndpointsPages";
+import { ENDPOINTS_PAGES_HORIZON } from "@/constants/endpointsPages";
 
-export default function ExploreEndpointsTemplate({
+export default function EndpointsTemplate({
   children,
 }: {
   children: React.ReactNode;
@@ -12,7 +12,7 @@ export default function ExploreEndpointsTemplate({
   return (
     // TODO: add saved endpoints
     // TODO: add RPC endpoints
-    <LayoutSidebarContent sidebar={[EXPLORE_ENDPOINTS_PAGES_HORIZON]}>
+    <LayoutSidebarContent sidebar={[ENDPOINTS_PAGES_HORIZON]}>
       {children}
     </LayoutSidebarContent>
   );

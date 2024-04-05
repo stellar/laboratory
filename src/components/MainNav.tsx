@@ -18,8 +18,8 @@ const primaryNavLinks: NavLink[] = [
     label: "Account",
   },
   {
-    href: Routes.EXPLORE_ENDPOINTS,
-    label: "Explore Endpoints",
+    href: Routes.ENDPOINTS,
+    label: "Endpoints",
   },
   {
     href: Routes.BUILD_TRANSACTION,
