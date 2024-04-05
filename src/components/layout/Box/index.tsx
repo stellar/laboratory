@@ -12,7 +12,7 @@ export const Box = ({
 ) & { children: React.ReactElement; addlClassName?: string }) => {
   return (
     <div
-      className={`Box Box--${gap} ${addlClassName}`}
+      className={`Box Box--${gap} ${addlClassName ?? ""}`}
       {...(gap === "custom" ? { gap: customValue } : {})}
     >
       {children}
