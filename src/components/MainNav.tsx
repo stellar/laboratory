@@ -27,7 +27,7 @@ const primaryNavLinks: NavLink[] = [
   },
   {
     href: Routes.VIEW_XDR,
-    label: "View XDR",
+    label: "XDR",
   },
   {
     href: Routes.SOROBAN_CONTRACT_EXPLORER,
