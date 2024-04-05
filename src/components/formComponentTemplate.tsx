@@ -79,7 +79,7 @@ export const formComponentTemplate = (
           <AssetPicker
             key={id}
             assetInput={custom?.assetInput}
-            id="asset"
+            id={id}
             label="Asset"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={parseJsonString(templ.value)}
@@ -126,7 +126,7 @@ export const formComponentTemplate = (
           <AssetPicker
             key={id}
             assetInput={custom?.assetInput}
-            id="base_asset"
+            id={id}
             label="Base Asset"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={parseJsonString(templ.value)}
@@ -143,7 +143,7 @@ export const formComponentTemplate = (
           <AssetPicker
             key={id}
             assetInput={custom?.assetInput}
-            id="buying"
+            id={id}
             label="Buying"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={parseJsonString(templ.value)}
@@ -160,7 +160,7 @@ export const formComponentTemplate = (
           <AssetPicker
             key={id}
             assetInput={custom?.assetInput}
-            id="buying_asset"
+            id={id}
             label="Buying Asset"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={parseJsonString(templ.value)}
@@ -207,7 +207,7 @@ export const formComponentTemplate = (
           <AssetPicker
             key={id}
             assetInput={custom?.assetInput}
-            id="counter_asset"
+            id={id}
             label="Counter Asset"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={parseJsonString(templ.value)}
@@ -268,7 +268,7 @@ export const formComponentTemplate = (
           <AssetPicker
             key={id}
             assetInput={custom?.assetInput}
-            id="destination_asset"
+            id={id}
             label="Destination Asset"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={parseJsonString(templ.value)}
@@ -466,7 +466,7 @@ export const formComponentTemplate = (
           <AssetPicker
             key={id}
             assetInput={custom?.assetInput}
-            id="selling"
+            id={id}
             label="Selling"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={parseJsonString(templ.value)}
@@ -483,7 +483,7 @@ export const formComponentTemplate = (
           <AssetPicker
             key={id}
             assetInput={custom?.assetInput}
-            id="selling_asset"
+            id={id}
             label="Selling Asset"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={parseJsonString(templ.value)}
@@ -545,7 +545,7 @@ export const formComponentTemplate = (
           <AssetPicker
             key={id}
             assetInput={custom?.assetInput}
-            id="destination_asset"
+            id={id}
             label="Source Asset"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={parseJsonString(templ.value)}
