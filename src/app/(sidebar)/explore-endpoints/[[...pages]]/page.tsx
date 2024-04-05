@@ -440,13 +440,17 @@ export default function ExploreEndpoints() {
       <>
         <div className="Endpoints__urlBar">
           <Input
+            data-testid="endpoints-url"
             id="endpoint-url"
             fieldSize="md"
             value={requestUrl}
             readOnly
             disabled
             leftElement={
-              <div className="Endpoints__input__requestType">
+              <div
+                className="Endpoints__input__requestType"
+                data-testid="endpoints-url-method"
+              >
                 {pageData.requestMethod}
               </div>
             }
@@ -457,6 +461,7 @@ export default function ExploreEndpoints() {
             type="submit"
             disabled={!isSubmitEnabled()}
             isLoading={isLoading || isFetching}
+            data-testid="endpoints-submitBtn"
           >
             Submit
           </Button>
@@ -486,7 +491,7 @@ export default function ExploreEndpoints() {
 
     return (
       <div className="Endpoints__content">
-        <div className="PageBody__content">
+        <div className="PageBody__content" data-testid="endpoints-pageContent">
           {renderPostPayload()}
 
           {allFields.map((f) => {
@@ -616,7 +621,11 @@ export default function ExploreEndpoints() {
           {page.label}
         </Text>
 
-        <SdsLink href={pageData.docsUrl} icon={<Icon.LinkExternal01 />}>
+        <SdsLink
+          href={pageData.docsUrl}
+          icon={<Icon.LinkExternal01 />}
+          data-testid="endpoints-docsLink"
+        >
           {`View ${pageData.docsLabel ? `${pageData.docsLabel} ` : ""}documentation`}
         </SdsLink>
       </div>
@@ -751,7 +760,7 @@ const ExploreEndpointsLandingPage = () => {
 
           <Text size="sm" as="p">
             For Stellar docs, take a look at the{" "}
-            <Link href="https://developers.stellar.org/docs">
+            <Link href="https://developers.stellar.org/">
               Stellar developers site
             </Link>
             .

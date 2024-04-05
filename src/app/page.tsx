@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { Card, Link, Text, Icon } from "@stellar/design-system";
 
 import { NextLink } from "@/components/NextLink";
@@ -10,8 +9,6 @@ import { SdsLink } from "@/components/SdsLink";
 import { Routes } from "@/constants/routes";
 
 export default function Introduction() {
-  const router = useRouter();
-
   const infoCards = [
     {
       id: "stellar-quest",
@@ -29,7 +26,8 @@ export default function Introduction() {
         "Tools, like the Stellar CLI, for reading and interacting with smart contracts on the Stellar Network",
       buttonLabel: "See tools",
       buttonIcon: undefined,
-      buttonAction: () => router.push(Routes.SOROBAN_CONTRACT_EXPLORER),
+      buttonAction: () =>
+        window.open("https://developers.stellar.org/docs/tools/sdks", "_blank"),
     },
     {
       id: "stellar-rpc",
@@ -83,7 +81,7 @@ export default function Introduction() {
 
           <Text size="sm" as="p">
             For Stellar docs, take a look at the{" "}
-            <Link href="https://developers.stellar.org/docs">
+            <Link href="https://developers.stellar.org/">
               Stellar developers site
             </Link>
             .

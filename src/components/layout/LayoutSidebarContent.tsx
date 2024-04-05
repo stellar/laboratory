@@ -45,9 +45,13 @@ export const LayoutSidebarContent = ({
             <div
               className="LabLayout__sidebar__section"
               key={`sidebar-${index}`}
+              data-testid="endpoints-sidebar-section"
             >
               {sidebar.instruction ? (
-                <div className="LabLayout__sidebar__instruction">
+                <div
+                  className="LabLayout__sidebar__instruction"
+                  data-testid="endpoints-sidebar-subtitle"
+                >
                   {sidebar.instruction}
                 </div>
               ) : null}
@@ -95,12 +99,16 @@ const Link = ({ item, pathname }: { item: SidebarLink; pathname: string }) => {
 
   if (item.nestedItems?.length) {
     return (
-      <div className="SidebarLink--nested">
+      <div
+        className="SidebarLink--nested"
+        data-testid={`endpoints-sidebar${item.route}`}
+      >
         <div
           className="SidebarLink SidebarLink__toggle"
           onClick={() => {
             setIsExpanded(!isExpanded);
           }}
+          data-testid="endpoints-sidebar-linkToggle"
         >
           <Icon.ChevronRight /> {item.label}
         </div>
@@ -109,6 +117,7 @@ const Link = ({ item, pathname }: { item: SidebarLink; pathname: string }) => {
           <div
             className="SidebarLink__nestedItemsWrapper"
             data-is-expanded={isExpanded}
+            data-testid="endpoints-sidebar-linksContainer"
           >
             <div className="SidebarLink__nestedItems">
               {item.nestedItems.map((nested) => (
@@ -117,6 +126,7 @@ const Link = ({ item, pathname }: { item: SidebarLink; pathname: string }) => {
                   href={nested.route}
                   className="SidebarLink"
                   data-is-active={pathname === nested.route}
+                  data-testid="endpoints-sidebar-link"
                 >
                   {nested.label}
                 </NextLink>
