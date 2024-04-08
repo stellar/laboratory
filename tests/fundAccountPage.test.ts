@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-test.describe("Fund Account Page", () => {
+test.describe("[futurenet/testnet] Fund Account Page", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("http://localhost:3000/account/fund");
   });
@@ -94,17 +94,16 @@ test.describe("Fund Account Page", () => {
     await expect(getLumenButton).toBeEnabled();
 
     // Mock the friendbot api call
-    await page.route("**/*", async (route, request) => {
-      if (request.url().includes("?addr=")) {
+    await page.route(
+      "*/**/?addr=GDVOT2ALMUF3G54RBHNJUEV6LOAZCQQCARHEVNUPKGMVPWFC4PFN33QR",
+      async (route) => {
         await route.fulfill({
           status: 200,
           contentType: "application/json",
           body: JSON.stringify({}),
         });
-      } else {
-        await route.continue();
-      }
-    });
+      },
+    );
 
     // Ensure the listener is set up before the action that triggers the request
     const responsePromise = page.waitForResponse(
@@ -122,7 +121,7 @@ test.describe("Fund Account Page", () => {
     await expect(alertBox).toBeVisible();
   });
 
-  test("Gets an error when submitting 'Get lumens' button twice with a valid public key", async ({
+  test("Gets an error when submitting 'Get lumens' with a public key that's already been funded", async ({
     page,
   }) => {
     const publicKeyInput = page.locator("#generate-keypair-publickey");
@@ -138,11 +137,96 @@ test.describe("Fund Account Page", () => {
     await expect(publicKeyInput).toHaveAttribute("aria-invalid", "false");
     await expect(getLumenButton).toBeEnabled();
 
+    // Mock the friendbot api call
+    await page.route(
+      "*/**/?addr=GDVOT2ALMUF3G54RBHNJUEV6LOAZCQQCARHEVNUPKGMVPWFC4PFN33QR",
+      async (route) => {
+        await route.fulfill({
+          status: 400,
+          contentType: "application/json",
+          body: JSON.stringify({}),
+        });
+      },
+    );
+
+    // Ensure the listener is set up before the action that triggers the request
+    const responsePromise = page.waitForResponse(
+      (response) =>
+        response.url().includes("?addr=") && response.status() === 400,
+    );
+
     await getLumenButton.click();
-    // Funding the same account twice to get an error alert
-    await getLumenButton.click();
+
+    await responsePromise;
 
     const alertBox = page.getByText(/Unable to fund/);
     await expect(alertBox).toBeVisible();
+  });
+
+  test("if I switch to 'mainnet' network, I should see 'Not Found' page and no 'Fund account' sidebar", async ({
+    page,
+  }) => {
+    // Click network selector dropdown button
+    await page.getByTestId("networkSelector-button").click();
+    await expect(page.getByTestId("networkSelector-dropdown")).toBeVisible();
+
+    // Select Mainnet in the dropdown list
+    await page
+      .getByTestId("networkSelector-dropdown")
+      .getByTestId("networkSelector-option")
+      .filter({ has: page.getByText("Mainnet") })
+      .click();
+
+    // Network Submit button
+    const submitButton = page.getByTestId("networkSelector-submit-button");
+
+    // Select 'Mainnet' in the network dropdown list
+    await expect(submitButton).toHaveText("Switch to Mainnet");
+    await expect(submitButton).toBeEnabled();
+
+    // Click 'Switch to Mainnet' button
+    await submitButton.click();
+
+    await expect(page.getByTestId("networkSelector-button")).toHaveText(
+      "Mainnet",
+    );
+    await expect(page.locator("h2")).toHaveText("Not Found");
+
+    await expect(page.getByTestId("endpoints-sidebar-section")).toHaveText(
+      "Create Account Create Muxed Account Parse Muxed Account",
+    );
+  });
+});
+
+test.describe("[mainnet] Fund Account Page", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto("http://localhost:3000/account");
+
+    // Switch to mainnet network
+    await page.getByTestId("networkSelector-button").click();
+    await expect(page.getByTestId("networkSelector-dropdown")).toBeVisible();
+
+    // Select Mainnet in the dropdown list
+    await page
+      .getByTestId("networkSelector-dropdown")
+      .getByTestId("networkSelector-option")
+      .filter({ has: page.getByText("Mainnet") })
+      .click();
+
+    // Network Submit button
+    const submitButton = page.getByTestId("networkSelector-submit-button");
+
+    // Click 'Switch to Mainnet' button
+    await submitButton.click();
+
+    await expect(page.getByTestId("networkSelector-button")).toHaveText(
+      "Mainnet",
+    );
+  });
+
+  test("I should see 'Not Found' on /account/fund", async ({ page }) => {
+    await page.goto("http://localhost:3000/account/fund");
+
+    await expect(page.locator("h2")).toHaveText("Not Found");
   });
 });

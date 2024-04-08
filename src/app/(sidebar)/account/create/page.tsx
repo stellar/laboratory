@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Card, Text, Button } from "@stellar/design-system";
 import { Keypair } from "@stellar/stellar-sdk";
 
+import { useIsTestingNetwork } from "@/hooks/useIsTestingNetwork";
 import { Routes } from "@/constants/routes";
 import { useStore } from "@/store/useStore";
 import { GenerateKeypair } from "@/components/GenerateKeypair";
@@ -16,6 +17,8 @@ export default function CreateAccount() {
   const { account } = useStore();
   const router = useRouter();
   const [secretKey, setSecretKey] = useState("");
+
+  const IS_TESTING_NETWORK = useIsTestingNetwork();
 
   const generateKeypair = () => {
     const keypair = Keypair.random();
@@ -43,14 +46,15 @@ export default function CreateAccount() {
             <Button size="md" variant="secondary" onClick={generateKeypair}>
               Generate keypair
             </Button>
-
-            <Button
-              size="md"
-              variant="tertiary"
-              onClick={() => router.push(Routes.ACCOUNT_FUND)}
-            >
-              Fund account with Friendbot
-            </Button>
+            {IS_TESTING_NETWORK ? (
+              <Button
+                size="md"
+                variant="tertiary"
+                onClick={() => router.push(Routes.ACCOUNT_FUND)}
+              >
+                Fund account with Friendbot
+              </Button>
+            ) : null}
           </div>
 
           <ExpandBox isExpanded={Boolean(account.publicKey)} offsetTop="xl">

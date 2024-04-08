@@ -10,6 +10,7 @@ export type SidebarLink = {
   route: Routes | string;
   label: string;
   icon?: ReactNode;
+  isTestnetOnly?: boolean;
   nestedItems?: SidebarLink[];
 };
 

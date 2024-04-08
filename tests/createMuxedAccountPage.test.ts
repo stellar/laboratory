@@ -1,5 +1,7 @@
 import { test, expect } from "@playwright/test";
 
+import { Account, MuxedAccount } from "@stellar/stellar-sdk";
+
 test.describe("Create Muxed Account Page", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("http://localhost:3000/account/muxed-create");
@@ -44,11 +46,12 @@ test.describe("Create Muxed Account Page", () => {
   test("Successfully creates a muxed account", async ({ page }) => {
     const publicKey =
       "GDVOT2ALMUF3G54RBHNJUEV6LOAZCQQCARHEVNUPKGMVPWFC4PFN33QR";
+    const muxedId = "2";
     const publicKeyInput = page.locator("#muxed-public-key");
     await publicKeyInput.fill(publicKey);
 
     const muxedAccountIdInput = page.locator("#muxed-account-id");
-    await muxedAccountIdInput.fill("2");
+    await muxedAccountIdInput.fill(muxedId);
 
     const createButton = page.getByRole("button").getByText("Create");
 
@@ -59,5 +62,11 @@ test.describe("Create Muxed Account Page", () => {
     await createButton.click();
 
     await expect(page.getByTestId("createAccount-success")).toBeVisible();
+
+    const muxedValue = page.locator("input[id='muxed-account-address-result']");
+
+    const muxedAccount = new MuxedAccount(new Account(publicKey, "0"), muxedId);
+
+    await expect(muxedValue).toHaveValue(muxedAccount.accountId());
   });
 });

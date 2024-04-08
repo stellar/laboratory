@@ -13,8 +13,8 @@ test.describe("Create Account Page", () => {
     page,
   }) => {
     const buttonContainer = page.getByTestId("createAccount-buttons");
-    await expect(buttonContainer.getByText("Generate keypair")).toBeVisible;
-    await expect(buttonContainer.getByText("Fund account with Friendbot"))
+    expect(buttonContainer.getByText("Generate keypair")).toBeVisible;
+    expect(buttonContainer.getByText("Fund account with Friendbot"))
       .toBeVisible;
   });
 
@@ -34,6 +34,6 @@ test.describe("Create Account Page", () => {
       .getByRole("button", { name: "Fund account with Friendbot" })
       .click();
 
-    await page.goto("http://localhost:3000/account/fund");
+    await expect(page).toHaveURL(/.*\/account\/fund/);
   });
 });
