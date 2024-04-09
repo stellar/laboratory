@@ -328,8 +328,8 @@
 
     &__icon {
       display: block;
-      width: pxToREm(14px);
-      height: pxToREm(14px);
+      width: pxToRem(14px);
+      height: pxToRem(14px);
 
       svg {
         display: block;
@@ -404,6 +404,38 @@
   &__txTextarea {
     .Textarea textarea {
       word-break: break-all;
+    }
+  }
+}
+
+.SignTx {
+  display: flex;
+  flex-direction: column;
+  gap: pxToRem(12px);
+
+  &__xdr {
+    display: flex;
+    flex-direction: column;
+    gap: pxToRem(16px);
+
+    .Text {
+      display: flex;
+      align-items: center;
+      gap: pxToRem(4px);
+      color: var(--sds-clr-gray-12);
+    }
+  }
+
+  &__icon {
+    display: inline-block;
+    width: pxToRem(14px);
+    height: pxToRem(14px);
+
+    svg {
+      display: inline-block;
+      width: 100%;
+      height: 100%;
+      stroke: var(--sds-clr-gray-08);
     }
   }
 }
