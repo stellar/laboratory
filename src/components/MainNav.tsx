@@ -18,8 +18,8 @@ const primaryNavLinks: NavLink[] = [
     label: "Account",
   },
   {
-    href: Routes.EXPLORE_ENDPOINTS,
-    label: "Explore Endpoints",
+    href: Routes.ENDPOINTS,
+    label: "Endpoints",
   },
   {
     href: Routes.BUILD_TRANSACTION,
@@ -27,7 +27,7 @@ const primaryNavLinks: NavLink[] = [
   },
   {
     href: Routes.VIEW_XDR,
-    label: "View XDR",
+    label: "XDR",
   },
   {
     href: Routes.SOROBAN_CONTRACT_EXPLORER,

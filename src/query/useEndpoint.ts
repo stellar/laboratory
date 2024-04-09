@@ -1,12 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { AnyObject } from "@/types/types";
 
-export const useExploreEndpoint = (
-  requestUrl: string,
-  postData?: AnyObject,
-) => {
+export const useEndpoint = (requestUrl: string, postData?: AnyObject) => {
   const query = useQuery({
-    queryKey: ["exploreEndpoint", "response", postData],
+    queryKey: ["endpoint", "response", postData],
     queryFn: async () => {
       const endpointResponse = await fetch(
         requestUrl,

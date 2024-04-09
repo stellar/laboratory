@@ -29,8 +29,8 @@ import { parseJsonString } from "@/helpers/parseJsonString";
 import { openUrl } from "@/helpers/openUrl";
 
 import { Routes } from "@/constants/routes";
-import { EXPLORE_ENDPOINTS_PAGES_HORIZON } from "@/constants/exploreEndpointsPages";
-import { useExploreEndpoint } from "@/query/useExploreEndpoint";
+import { ENDPOINTS_PAGES_HORIZON } from "@/constants/endpointsPages";
+import { useEndpoint } from "@/query/useEndpoint";
 import {
   AnyObject,
   AssetObject,
@@ -38,11 +38,11 @@ import {
   Network,
 } from "@/types/types";
 
-export default function ExploreEndpoints() {
+export default function Endpoints() {
   const pathname = usePathname();
-  const currentPage = pathname.split(Routes.EXPLORE_ENDPOINTS)?.[1];
+  const currentPage = pathname.split(Routes.ENDPOINTS)?.[1];
 
-  const page = EXPLORE_ENDPOINTS_PAGES_HORIZON.navItems
+  const page = ENDPOINTS_PAGES_HORIZON.navItems
     .find((page) => pathname.includes(page.route))
     ?.nestedItems?.find((i) => i.route === pathname);
 
@@ -51,7 +51,7 @@ export default function ExploreEndpoints() {
     pageData?.requiredParams?.split(",") || [],
   );
 
-  const { exploreEndpoints, network } = useStore();
+  const { endpoints, network } = useStore();
   const {
     params,
     currentEndpoint,
@@ -60,7 +60,7 @@ export default function ExploreEndpoints() {
     updateCurrentEndpoint,
     updateNetwork,
     resetParams,
-  } = exploreEndpoints;
+  } = endpoints;
 
   const REGEX_TEMPLATE_SEARCH_PARAMS = /\{\?.+?\}/;
   const REGEX_TEMPLATE_SEARCH_PARAMS_VALUE = /(?<=\{\?).+?(?=\})/;
@@ -122,7 +122,7 @@ export default function ExploreEndpoints() {
     refetch,
     isSuccess,
     isError,
-  } = useExploreEndpoint(
+  } = useEndpoint(
     requestUrl,
     // There is only one endpoint request for POST, using params directly for
     // simplicity.
@@ -216,7 +216,7 @@ export default function ExploreEndpoints() {
   const resetQuery = useCallback(
     () =>
       queryClient.resetQueries({
-        queryKey: ["exploreEndpoint", "response"],
+        queryKey: ["endpoint", "response"],
       }),
     [queryClient],
   );
@@ -607,8 +607,8 @@ export default function ExploreEndpoints() {
     );
   };
 
-  if (pathname === Routes.EXPLORE_ENDPOINTS) {
-    return <ExploreEndpointsLandingPage />;
+  if (pathname === Routes.ENDPOINTS) {
+    return <EndpointsLandingPage />;
   }
 
   if (!pageData) {
@@ -704,7 +704,7 @@ export default function ExploreEndpoints() {
   );
 }
 
-const ExploreEndpointsLandingPage = () => {
+const EndpointsLandingPage = () => {
   const infoCards = [
     {
       id: "stellar-rpc",
@@ -731,7 +731,7 @@ const ExploreEndpointsLandingPage = () => {
       <Card>
         <div className="CardText">
           <Text size="lg" as="h1" weight="medium">
-            Explore Endpoints
+            Endpoints
           </Text>
 
           <Text size="sm" as="p">

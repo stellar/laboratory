@@ -26,8 +26,8 @@ export interface Store {
     reset: () => void;
   };
 
-  // Explore Endpoints
-  exploreEndpoints: {
+  // Endpoints
+  endpoints: {
     network: Network | EmptyObj;
     currentEndpoint: string | undefined;
     params: AnyObject;
@@ -44,7 +44,7 @@ interface CreateStoreOptions {
 }
 
 // Initial states
-const initExploreEndpointState = {
+const initEndpointState = {
   network: {},
   currentEndpoint: undefined,
   params: {},
@@ -65,9 +65,9 @@ export const createStore = (options: CreateStoreOptions) =>
         resetStoredData: () =>
           set((state) => {
             // Add stores that need global reset
-            state.exploreEndpoints = {
-              ...state.exploreEndpoints,
-              ...initExploreEndpointState,
+            state.endpoints = {
+              ...state.endpoints,
+              ...initEndpointState,
             };
           }),
         // Account
@@ -111,33 +111,33 @@ export const createStore = (options: CreateStoreOptions) =>
               state.account.publicKey = "";
             }),
         },
-        // Explore Endpoints
-        exploreEndpoints: {
-          ...initExploreEndpointState,
+        // Endpoints
+        endpoints: {
+          ...initEndpointState,
           updateNetwork: (network: Network) =>
             set((state) => {
-              state.exploreEndpoints.network = network;
+              state.endpoints.network = network;
             }),
           updateCurrentEndpoint: (endpoint: string) =>
             set((state) => {
-              state.exploreEndpoints.currentEndpoint = endpoint;
+              state.endpoints.currentEndpoint = endpoint;
             }),
           updateParams: (params: AnyObject) =>
             set((state) => {
-              state.exploreEndpoints.params = sanitizeObject({
-                ...state.exploreEndpoints.params,
+              state.endpoints.params = sanitizeObject({
+                ...state.endpoints.params,
                 ...params,
               });
             }),
           resetParams: () =>
             set((state) => {
-              state.exploreEndpoints.params = {};
+              state.endpoints.params = {};
             }),
           reset: () =>
             set((state) => {
-              state.exploreEndpoints = {
-                ...state.exploreEndpoints,
-                ...initExploreEndpointState,
+              state.endpoints = {
+                ...state.endpoints,
+                ...initEndpointState,
               };
             }),
         },
@@ -149,7 +149,7 @@ export const createStore = (options: CreateStoreOptions) =>
           return {
             network: true,
             account: false,
-            exploreEndpoints: {
+            endpoints: {
               params: true,
               isStreaming: true,
             },

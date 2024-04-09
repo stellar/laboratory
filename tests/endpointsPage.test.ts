@@ -2,11 +2,11 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Endpoints page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:3000/explore-endpoints");
+    await page.goto("http://localhost:3000/endpoints");
   });
 
   test("Loads", async ({ page }) => {
-    await expect(page.locator("h1")).toHaveText("Explore Endpoints");
+    await expect(page.locator("h1")).toHaveText("Endpoints");
   });
 
   test("Renders info cards", async ({ page }) => {
@@ -53,7 +53,7 @@ test.describe("Endpoints page", () => {
         .filter({ hasText: "Accounts" });
 
       const parent = sidebar.getByTestId(
-        "endpoints-sidebar/explore-endpoints/accounts",
+        "endpoints-sidebar/endpoints/accounts",
       );
       await expect(parent).toBeVisible();
 
@@ -73,13 +73,13 @@ test.describe("Endpoints page", () => {
         linksContainer
           .getByTestId("endpoints-sidebar-link")
           .filter({ hasText: "All Accounts" }),
-      ).toHaveAttribute("href", "/explore-endpoints/accounts");
+      ).toHaveAttribute("href", "/endpoints/accounts");
     });
   });
 
   test.describe("All Accounts", () => {
     test.beforeEach(async ({ page }) => {
-      await page.goto("http://localhost:3000/explore-endpoints/accounts");
+      await page.goto("http://localhost:3000/endpoints/accounts");
     });
 
     test("Page loads with correct title and view docs link", async ({
@@ -125,9 +125,7 @@ test.describe("Endpoints page", () => {
 
   test.describe("Effects for Account", () => {
     test.beforeEach(async ({ page }) => {
-      await page.goto(
-        "http://localhost:3000/explore-endpoints/effects/account",
-      );
+      await page.goto("http://localhost:3000/endpoints/effects/account");
     });
 
     test("Page loads with correct title and view docs link", async ({
