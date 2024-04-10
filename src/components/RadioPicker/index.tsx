@@ -1,7 +1,5 @@
 import React from "react";
-
 import { Label } from "@stellar/design-system";
-import { AssetType } from "@/types/types";
 import "./styles.scss";
 
 interface RadioPickerProps<TOptionValue = string> {
@@ -9,10 +7,7 @@ interface RadioPickerProps<TOptionValue = string> {
   selectedOption: string | undefined;
   label?: string | React.ReactNode;
   labelSuffix?: string | React.ReactNode;
-  onChange: (
-    optionId: AssetType | undefined,
-    optionValue?: TOptionValue,
-  ) => void;
+  onChange: (optionId: any | undefined, optionValue?: TOptionValue) => void;
   options: {
     id: string;
     label: string;
@@ -53,7 +48,7 @@ export const RadioPicker = <TOptionValue,>({
                 id={opId}
                 checked={curId === selectedOption}
                 onChange={() => {
-                  onChange(o.id as AssetType, o.value);
+                  onChange(o.id, o.value);
                 }}
                 onClick={() => {
                   if (curId === selectedOption) {

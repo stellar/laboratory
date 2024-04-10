@@ -20,6 +20,7 @@ import { SdsLink } from "@/components/SdsLink";
 import { NextLink } from "@/components/NextLink";
 import { formComponentTemplate } from "@/components/formComponentTemplate";
 import { PrettyJson } from "@/components/PrettyJson";
+import { InputSideElement } from "@/components/InputSideElement";
 
 import { useStore } from "@/store/useStore";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
@@ -448,12 +449,13 @@ export default function Endpoints() {
             readOnly
             disabled
             leftElement={
-              <div
-                className="Endpoints__input__requestType"
+              <InputSideElement
+                variant="text"
+                placement="left"
                 data-testid="endpoints-url-method"
               >
                 {pageData.requestMethod}
-              </div>
+              </InputSideElement>
             }
           />
           <Button
