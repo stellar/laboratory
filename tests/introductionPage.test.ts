@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-test.describe("Network selector", () => {
+test.describe("Introduction Page", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("http://localhost:3000/");
   });

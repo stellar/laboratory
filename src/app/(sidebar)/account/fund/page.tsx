@@ -2,8 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { Alert, Card, Input, Text, Button } from "@stellar/design-system";
+import Link from "next/link";
+import { Routes } from "@/constants/routes";
 
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
+import { useIsTestingNetwork } from "@/hooks/useIsTestingNetwork";
 import { useFriendBot } from "@/query/useFriendBot";
 import { useStore } from "@/store/useStore";
 
@@ -18,6 +21,8 @@ export default function FundAccount() {
   const [generatedPublicKey, setGeneratedPublicKey] = useState<string>("");
   const [inlineErrorMessage, setInlineErrorMessage] = useState<string>("");
 
+  const IS_TESTING_NETWORK = useIsTestingNetwork();
+
   const { error, isError, isLoading, isSuccess, refetch, isFetchedAfterMount } =
     useFriendBot({
       network: network.id,
@@ -30,6 +35,15 @@ export default function FundAccount() {
     }
   }, [isError, isSuccess]);
 
+  if (!IS_TESTING_NETWORK) {
+    return (
+      <div className="Account">
+        <h2>Not Found</h2>
+        <p>Could not find requested resource</p>
+        <Link href={Routes.ROOT}>Return Home</Link>
+      </div>
+    );
+  }
   return (
     <div className="Account">
       <Card>
@@ -60,7 +74,7 @@ export default function FundAccount() {
             error={inlineErrorMessage}
           />
 
-          <div className="Account__CTA">
+          <div className="Account__CTA" data-testid="fundAccount-buttons">
             <Button
               disabled={!generatedPublicKey || Boolean(inlineErrorMessage)}
               size="md"

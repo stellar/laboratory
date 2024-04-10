@@ -11,7 +11,7 @@ export const MuxedAccountResult = ({
   muxedId: string;
   muxedAddress: string;
 }) => (
-  <div className="Account__result">
+  <div className="Account__result" data-testid="createAccount-success">
     <PubKeyPicker
       id="muxed-public-key-result"
       label="Base Account G Address"
