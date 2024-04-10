@@ -3,40 +3,29 @@
 import { useState } from "react";
 import { Alert, Card, Icon, Text, Button } from "@stellar/design-system";
 
-import { useStore } from "@/store/useStore";
-
-import { ExpandBox } from "@/components/ExpandBox";
-import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
-import { MuxedAccountResult } from "@/components/MuxedAccountResult";
-import { SdsLink } from "@/components/SdsLink";
-
-import { muxedAccount } from "@/helpers/muxedAccount";
-
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
-
 import { validate } from "@/validate";
-import { collapseTextChangeRangesAcrossMultipleVersions } from "typescript";
-import { unescape } from "querystring";
 
 export default function SignTransaction() {
   const [txInput, setTxInput] = useState<string>("");
   const [isTxValid, setIsTxValid] = useState<boolean | undefined>(undefined);
-
-  const [muxedFieldError, setMuxedFieldError] = useState<string>("");
-  const [sdkError, setSdkError] = useState<string>("");
+  const [txError, setTxError] = useState<string>("");
 
   const onChange = (value: string) => {
+    setTxError("");
     setTxInput(value);
 
-    const isValid = Boolean(validate.xdr(txInput));
+    if (value.length > 0) {
+      const validatedXDR = validate.xdr(value);
 
-    console.log("**LOG** validate.xdr(txInput): ", validate.xdr(txInput));
-    console.log("**LOG** isValid: ", isValid);
-
-    setIsTxValid(isValid);
+      if (validatedXDR.result === "success") {
+        setIsTxValid(true);
+      } else if (validatedXDR.result === "error") {
+        setIsTxValid(false);
+        setTxError(validatedXDR.message);
+      }
+    }
   };
-
-  console.log("**LOG** txInput: ", txInput);
 
   return (
     <div className="SignTx">
@@ -53,13 +42,13 @@ export default function SignTransaction() {
               </Text>
             }
             value={txInput || ""}
-            error={sdkError}
+            error={txError}
             onChange={(e) => onChange(e.target.value)}
           />
 
           <div className="SignTx__CTA">
             <Button
-              // disabled={!muxedAddress || Boolean(muxedFieldError)}
+              disabled={!txInput || !isTxValid}
               size="md"
               variant={"secondary"}
               // onClick={parseMuxedAccount}
