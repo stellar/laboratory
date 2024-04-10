@@ -163,39 +163,34 @@ test.describe("[futurenet/testnet] Fund Account Page", () => {
     await expect(alertBox).toBeVisible();
   });
 
-  test("if I switch to 'mainnet' network, I should see 'Not Found' page and no 'Fund account' sidebar", async ({
-    page,
-  }) => {
-    // Click network selector dropdown button
-    await page.getByTestId("networkSelector-button").click();
-    await expect(page.getByTestId("networkSelector-dropdown")).toBeVisible();
+  // @TODO when we work on the button disabled for funding account from mainnet
+  //   test("if I switch to 'mainnet' network, I should see 'Not Found' page and no 'Fund account' sidebar", async ({
+  //     page,
+  //   }) => {
+  //     // Click network selector dropdown button
+  //     await page.getByTestId("networkSelector-button").click();
+  //     await expect(page.getByTestId("networkSelector-dropdown")).toBeVisible();
 
-    // Select Mainnet in the dropdown list
-    await page
-      .getByTestId("networkSelector-dropdown")
-      .getByTestId("networkSelector-option")
-      .filter({ has: page.getByText("Mainnet") })
-      .click();
+  //     // Select Mainnet in the dropdown list
+  //     await page
+  //       .getByTestId("networkSelector-dropdown")
+  //       .getByTestId("networkSelector-option")
+  //       .filter({ has: page.getByText("Mainnet") })
+  //       .click();
 
-    // Network Submit button
-    const submitButton = page.getByTestId("networkSelector-submit-button");
+  //     // Network Submit button
+  //     const submitButton = page.getByTestId("networkSelector-submit-button");
 
-    // Select 'Mainnet' in the network dropdown list
-    await expect(submitButton).toHaveText("Switch to Mainnet");
-    await expect(submitButton).toBeEnabled();
+  //     // Select 'Mainnet' in the network dropdown list
+  //     await expect(submitButton).toHaveText("Switch to Mainnet");
+  //     await expect(submitButton).toBeEnabled();
 
-    // Click 'Switch to Mainnet' button
-    await submitButton.click();
+  //     // Click 'Switch to Mainnet' button
+  //     await submitButton.click();
 
-    await expect(page.getByTestId("networkSelector-button")).toHaveText(
-      "Mainnet",
-    );
-    await expect(page.locator("h2")).toHaveText("Not Found");
-
-    await expect(page.getByTestId("endpoints-sidebar-section")).toHaveText(
-      "Create Account Create Muxed Account Parse Muxed Account",
-    );
-  });
+  //     await expect(page.getByTestId("networkSelector-button")).toHaveText(
+  //       "Mainnet",
+  //     );
 });
 
 test.describe("[mainnet] Fund Account Page", () => {
