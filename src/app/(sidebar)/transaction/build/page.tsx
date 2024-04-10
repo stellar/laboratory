@@ -145,7 +145,7 @@ export default function BuildTransaction() {
                       updateBuildActiveTab("operations");
                     }}
                   >
-                    Go To Operations
+                    Add Operations
                   </Button>
                 </div>
               </>
