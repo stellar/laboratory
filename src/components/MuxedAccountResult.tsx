@@ -17,7 +17,7 @@ export const MuxedAccountResult = ({
       label="Base Account G Address"
       value={baseAddress || ""}
       error=""
-      readOnly={true}
+      readOnly
       copyButton={{
         position: "right",
       }}
@@ -29,7 +29,7 @@ export const MuxedAccountResult = ({
       label="Muxed Account ID"
       value={muxedId || ""}
       error=""
-      readOnly={true}
+      readOnly
       copyButton={{
         position: "right",
       }}
@@ -41,7 +41,7 @@ export const MuxedAccountResult = ({
       label="Muxed Account M Address"
       value={muxedAddress || ""}
       error=""
-      readOnly={true}
+      readOnly
       copyButton={{
         position: "right",
       }}

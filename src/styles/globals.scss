@@ -45,6 +45,10 @@
     color: var(--sds-clr-gray-12);
   }
 
+  .success-message {
+    color: var(--sds-clr-green-11) !important;
+  }
+
   // ===========================================================================
   // Layout
   // ===========================================================================
@@ -436,6 +440,26 @@
       width: 100%;
       height: 100%;
       stroke: var(--sds-clr-gray-08);
+    }
+  }
+
+  &__FieldViewer {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: pxToRem(16px);
+
+    .Textarea textarea,
+    .Input__container,
+    input {
+      background: var(--sds-clr-gray-03);
+    }
+
+    .half-width {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .full-width {
+      grid-column: 1 / 3;
     }
   }
 }

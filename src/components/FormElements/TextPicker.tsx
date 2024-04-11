@@ -8,8 +8,9 @@ interface TextPickerProps extends Omit<InputProps, "fieldSize"> {
   label: string;
   value: string;
   placeholder?: string;
-  error: string | undefined;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  error?: string | undefined;
+  readOnly?: boolean;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const TextPicker = ({
@@ -19,19 +20,19 @@ export const TextPicker = ({
   label,
   value,
   error,
+  readOnly,
   onChange,
   ...props
-}: TextPickerProps) => {
-  return (
-    <Input
-      id={id}
-      fieldSize={fieldSize}
-      label={label}
-      labelSuffix={labelSuffix}
-      value={value}
-      error={error}
-      onChange={onChange}
-      {...props}
-    />
-  );
-};
+}: TextPickerProps) => (
+  <Input
+    id={id}
+    fieldSize={fieldSize}
+    label={label}
+    labelSuffix={labelSuffix}
+    value={value}
+    error={error}
+    readOnly={readOnly}
+    onChange={onChange}
+    {...props}
+  />
+);
