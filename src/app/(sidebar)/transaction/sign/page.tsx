@@ -2,18 +2,22 @@
 
 import { useState } from "react";
 import { Alert, Card, Icon, Text, Button } from "@stellar/design-system";
+import { TransactionBuilder } from "@stellar/stellar-sdk";
+
+import { useStore } from "@/store/useStore";
 
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { validate } from "@/validate";
 
 export default function SignTransaction() {
-  const [txInput, setTxInput] = useState<string>("");
+  const { network } = useStore();
+  const [txEnv, setTxEnv] = useState<string>("");
   const [isTxValid, setIsTxValid] = useState<boolean | undefined>(undefined);
   const [txError, setTxError] = useState<string>("");
 
   const onChange = (value: string) => {
     setTxError("");
-    setTxInput(value);
+    setTxEnv(value);
 
     if (value.length > 0) {
       const validatedXDR = validate.xdr(value);
@@ -25,6 +29,12 @@ export default function SignTransaction() {
         setTxError(validatedXDR.message);
       }
     }
+  };
+
+  const onImport = () => {
+    let transaction = TransactionBuilder.fromXDR(txEnv, network.passphrase);
+
+    console.log("[onImport] transaction: ", transaction);
   };
 
   return (
@@ -41,17 +51,17 @@ export default function SignTransaction() {
                 </span>
               </Text>
             }
-            value={txInput || ""}
+            value={txEnv || ""}
             error={txError}
             onChange={(e) => onChange(e.target.value)}
           />
 
           <div className="SignTx__CTA">
             <Button
-              disabled={!txInput || !isTxValid}
+              disabled={!txEnv || !isTxValid}
               size="md"
               variant={"secondary"}
-              // onClick={parseMuxedAccount}
+              onClick={onImport}
             >
               Import transaction
             </Button>
