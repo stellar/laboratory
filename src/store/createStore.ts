@@ -37,6 +37,23 @@ export interface Store {
     resetParams: () => void;
     reset: () => void;
   };
+
+  // Transaction
+  transaction: {
+    build: {
+      activeTab: string;
+      params: AnyObject;
+      operations: AnyObject[];
+    };
+    // TODO: update as needed
+    // sign: AnyObject;
+    // simulate: AnyObject;
+    // submit: AnyObject;
+    // feeBump: AnyObject;
+    // Transaction actions
+    updateBuildActiveTab: (tabId: string) => void;
+    resetBuild: () => void;
+  };
 }
 
 interface CreateStoreOptions {
@@ -48,6 +65,14 @@ const initEndpointState = {
   network: {},
   currentEndpoint: undefined,
   params: {},
+};
+
+const initTransactionState = {
+  build: {
+    activeTab: "params",
+    params: {},
+    operations: [],
+  },
 };
 
 // Store
@@ -141,6 +166,18 @@ export const createStore = (options: CreateStoreOptions) =>
               };
             }),
         },
+        // Transaction
+        transaction: {
+          ...initTransactionState,
+          updateBuildActiveTab: (tabId: string) =>
+            set((state) => {
+              state.transaction.build.activeTab = tabId;
+            }),
+          resetBuild: () =>
+            set((state) => {
+              state.transaction.build = initTransactionState.build;
+            }),
+        },
       })),
       {
         url: options.url,
@@ -152,6 +189,9 @@ export const createStore = (options: CreateStoreOptions) =>
             endpoints: {
               params: true,
               isStreaming: true,
+            },
+            transaction: {
+              build: true,
             },
           };
         },

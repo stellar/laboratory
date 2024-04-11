@@ -1,0 +1,52 @@
+@use "../../styles/utils.scss" as *;
+
+.InputSideElement {
+  flex-shrink: 0;
+  flex-grow: 0;
+
+  &--text {
+    font-size: pxToRem(14px);
+    line-height: pxToRem(20px);
+    font-weight: var(--sds-fw-semi-bold);
+    color: var(--sds-clr-gray-12);
+    background-color: var(--sds-clr-gray-01);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    flex-grow: 0;
+    padding: pxToRem(6px) pxToRem(10px);
+  }
+
+  &--left {
+    border-right: 1px solid var(--Input-color-border);
+    margin-left: calc(var(--Input-padding-horizontal) * -1);
+    border-top-left-radius: var(--Input-border-radius);
+    border-bottom-left-radius: var(--Input-border-radius);
+
+    .Button {
+      border-top-left-radius: var(--Input-border-radius);
+      border-bottom-left-radius: var(--Input-border-radius);
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+
+  &--right {
+    border-left: 1px solid var(--Input-color-border);
+    margin-right: calc(var(--Input-padding-horizontal) * -1);
+    border-top-right-radius: var(--Input-border-radius);
+    border-bottom-right-radius: var(--Input-border-radius);
+
+    .Button {
+      border-top-right-radius: var(--Input-border-radius);
+      border-bottom-right-radius: var(--Input-border-radius);
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
+
+  .Button {
+    border: none;
+  }
+}
