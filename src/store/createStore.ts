@@ -42,7 +42,7 @@ export interface Store {
   transaction: {
     build: {
       activeTab: string;
-      attributes: AnyObject;
+      params: AnyObject;
       operations: AnyObject[];
     };
     // TODO: update as needed
@@ -69,8 +69,8 @@ const initEndpointState = {
 
 const initTransactionState = {
   build: {
-    activeTab: "attributes",
-    attributes: {},
+    activeTab: "params",
+    params: {},
     operations: [],
   },
 };

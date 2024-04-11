@@ -40,7 +40,7 @@ export default function BuildTransaction() {
   // TODO: add info links
   // TODO: use store values
   // TODO: validation
-  const renderAttributes = () => {
+  const renderParams = () => {
     return (
       <Box gap="md">
         <>
@@ -172,9 +172,9 @@ export default function BuildTransaction() {
       <TabView
         heading={{ title: "Build Transaction" }}
         tab1={{
-          id: "attributes",
-          label: "Attributes",
-          content: renderAttributes(),
+          id: "params",
+          label: "Params",
+          content: renderParams(),
         }}
         tab2={{
           id: "operations",
