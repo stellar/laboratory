@@ -10,8 +10,8 @@ interface XdrPickerProps extends Omit<TextareaProps, "fieldSize"> {
   placeholder?: string;
   error?: string | undefined;
   note?: string | React.ReactNode;
-  readOnly?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  readOnly?: boolean;
 }
 
 export const XdrPicker = ({
@@ -22,8 +22,8 @@ export const XdrPicker = ({
   value,
   error,
   note,
-  readOnly,
   onChange,
+  readOnly,
   ...props
 }: XdrPickerProps) => (
   <Textarea
@@ -36,8 +36,8 @@ export const XdrPicker = ({
     error={error}
     rows={5}
     note={note}
-    readOnly={readOnly}
     onChange={onChange}
+    readOnly={readOnly}
     {...props}
   />
 );

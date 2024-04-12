@@ -27,9 +27,7 @@ export default function SignTransaction() {
   const [tx, setTx] = useState<FeeBumpTransaction | Transaction | undefined>(
     undefined,
   );
-  const [isTxImported, setIsTxImported] = useState<boolean | undefined>(
-    undefined,
-  );
+  const [isTxImported, setIsTxImported] = useState<boolean>(false);
 
   const onChange = (value: string) => {
     setTxErrMsg("");
@@ -42,7 +40,7 @@ export default function SignTransaction() {
       if (validatedXDR.result === "success") {
         setIsTxValid(true);
         setTxSuccessMsg(validatedXDR.message);
-      } else if (validatedXDR.result === "error") {
+      } else {
         setIsTxValid(false);
         setTxErrMsg(validatedXDR.message);
       }
@@ -56,11 +54,11 @@ export default function SignTransaction() {
       setTx(transaction);
     } catch (e) {
       setIsTxImported(false);
-      setTxErrMsg("Unable to parse input XDR into Transaction Envelope");
+      setTxErrMsg("Unable to import a transaction envelope");
     }
   };
 
-  const rendeDefaultView = () => {
+  const rendeImportView = () => {
     return (
       <>
         <Card>
@@ -194,7 +192,7 @@ export default function SignTransaction() {
           {isTxImported ? "Transaction Overview" : "Sign Transaction"}
         </Text>
       </div>
-      {isTxValid && tx ? renderOverviewView() : rendeDefaultView()}
+      {isTxValid && tx ? renderOverviewView() : rendeImportView()}
     </div>
   );
 }

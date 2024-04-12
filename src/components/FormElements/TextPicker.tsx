@@ -20,8 +20,8 @@ export const TextPicker = ({
   label,
   value,
   error,
-  readOnly,
   onChange,
+  readOnly,
   ...props
 }: TextPickerProps) => (
   <Input
@@ -31,8 +31,8 @@ export const TextPicker = ({
     labelSuffix={labelSuffix}
     value={value}
     error={error}
-    readOnly={readOnly}
     onChange={onChange}
+    readOnly={readOnly}
     {...props}
   />
 );
