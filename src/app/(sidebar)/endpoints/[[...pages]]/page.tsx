@@ -47,8 +47,6 @@ export default function Endpoints() {
     .find((page) => pathname.includes(page.route))
     ?.nestedItems?.find((i) => i.route === pathname);
 
-  console.log("page: ", page);
-
   const pageData = page?.form;
   const requiredFields = sanitizeArray(
     pageData?.requiredParams?.split(",") || [],

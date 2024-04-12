@@ -55,7 +55,8 @@ export default function SignTransaction() {
       setIsTxImported(true);
       setTx(transaction);
     } catch (e) {
-      console.log("e:", e);
+      setIsTxImported(false);
+      setTxErrMsg("Unable to parse input XDR into Transaction Envelope");
     }
   };
 
