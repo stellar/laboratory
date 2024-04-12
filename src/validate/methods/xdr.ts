@@ -13,8 +13,8 @@ const validateBase64 = (value: string) => {
 };
 
 export const xdr = (value: string) => {
-  let sanitizedXdr = trim(value);
-  let base64Validation = validateBase64(sanitizedXdr);
+  const sanitizedXdr = trim(value);
+  const base64Validation = validateBase64(sanitizedXdr);
 
   if (base64Validation.result !== "success") {
     return base64Validation;
