@@ -16,7 +16,7 @@ export default function AccountTemplate({
         navItems: [
           {
             route: Routes.ACCOUNT_CREATE,
-            label: "Create Account",
+            label: "Create Account Keypair",
           },
           {
             route: Routes.ACCOUNT_FUND,

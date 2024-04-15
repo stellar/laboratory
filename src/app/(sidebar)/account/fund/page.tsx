@@ -107,7 +107,7 @@ export default function FundAccount() {
       {showAlert && isFetchedAfterMount && isSuccess && (
         <Alert
           placement="inline"
-          variant="primary"
+          variant="success"
           actionLabel="View on stellar.expert"
           actionLink={`https://stellar.expert/explorer/${network.id}/account/${account.publicKey}`}
           onClose={() => {
