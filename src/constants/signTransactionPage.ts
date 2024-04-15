@@ -11,7 +11,7 @@ export const FEE_BUMP_TX_FIELDS = (feeBumpTx: FeeBumpTransaction) => [
   },
   {
     label: "Number of existing signatures",
-    value: feeBumpTx.signatures.length,
+    value: feeBumpTx.signatures?.length,
   },
   {
     label: "Inner transaction hash",
