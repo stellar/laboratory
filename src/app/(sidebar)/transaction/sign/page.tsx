@@ -119,7 +119,7 @@ export default function SignTransaction() {
 
   const renderOverviewView = () => {
     if (!tx) {
-      return;
+      return null;
     }
 
     const REQUIRED_FIELDS = [
