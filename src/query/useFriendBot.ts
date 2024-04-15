@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { EmptyObj, Network } from "@/types/types";
 
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 
@@ -6,19 +7,20 @@ export const useFriendBot = ({
   network,
   publicKey,
 }: {
-  network: string;
+  network: Network | EmptyObj;
   publicKey: string;
 }) => {
-  const friendbotURL =
-    network === "futurenet"
-      ? "https://friendbot-futurenet.stellar.org"
-      : "https://friendbot.stellar.org";
-
   const query = useQuery({
     queryKey: ["friendBot"],
     queryFn: async () => {
+      if (!network.horizonUrl) {
+        throw new Error(`Please use a network that supports Horizon`);
+      }
+
       try {
-        const response = await fetch(`${friendbotURL}/?addr=${publicKey}`);
+        const response = await fetch(
+          `${network.horizonUrl}/friendbot?addr=${publicKey}`,
+        );
 
         if (!response.ok) {
           const errorBody = await response.json();

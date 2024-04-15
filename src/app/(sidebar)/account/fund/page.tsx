@@ -25,9 +25,19 @@ export default function FundAccount() {
 
   const { error, isError, isLoading, isSuccess, refetch, isFetchedAfterMount } =
     useFriendBot({
-      network: network.id,
+      network,
       publicKey: generatedPublicKey,
     });
+
+  useEffect(() => {
+    if (
+      account.registeredNetwork?.id &&
+      account.registeredNetwork.id !== network.id
+    ) {
+      account.reset();
+      setShowAlert(false);
+    }
+  }, [account.registeredNetwork, network.id]);
 
   useEffect(() => {
     if (isError || isSuccess) {
@@ -66,7 +76,6 @@ export default function FundAccount() {
             value={generatedPublicKey}
             onChange={(e) => {
               setGeneratedPublicKey(e.target.value);
-
               const error = validate.publicKey(e.target.value);
               setInlineErrorMessage(error || "");
             }}
@@ -95,7 +104,7 @@ export default function FundAccount() {
               variant="tertiary"
               onClick={() => {
                 setInlineErrorMessage("");
-                setGeneratedPublicKey(account.publicKey);
+                setGeneratedPublicKey(account.publicKey!);
               }}
             >
               Fill in with generated key
@@ -104,7 +113,7 @@ export default function FundAccount() {
         </div>
       </Card>
 
-      {showAlert && isFetchedAfterMount && isSuccess && (
+      {showAlert && isFetchedAfterMount && isSuccess && account.publicKey && (
         <Alert
           placement="inline"
           variant="success"
