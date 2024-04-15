@@ -99,6 +99,7 @@ export default function CreateAccount() {
                 disabled={!account.publicKey || isLoading}
                 variant="tertiary"
                 onClick={() => refetch()}
+                data-testid="fundAccount-button"
               >
                 Fund account with Friendbot
               </Button>
