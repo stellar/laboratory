@@ -21,6 +21,7 @@ export const PubKeyPicker = ({
   placeholder = "Ex: GCEXAMPLE5HWNK4AYSTEQ4UWDKHTCKADVS2AHF3UI2ZMO3DPUSM6Q4UG",
   value,
   error,
+  readOnly,
   onChange,
   ...props
 }: PubKeyPickerProps) => (
@@ -32,6 +33,7 @@ export const PubKeyPicker = ({
     placeholder={placeholder}
     value={value}
     error={error}
+    readOnly={readOnly}
     onChange={onChange}
     {...props}
   />
