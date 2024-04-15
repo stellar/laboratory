@@ -42,7 +42,7 @@ test.describe("Create Account Page", () => {
 
     // Mock the friendbot api call
     await page.route(
-      "*/**/?addr=GDVOT2ALMUF3G54RBHNJUEV6LOAZCQQCARHEVNUPKGMVPWFC4PFN33QR",
+      "*/**/?addr=GA4X4QMSTEUKWAXXX3TBFRMGWI3O5X5IUUHPKAIH5XKNQ4IBTQ6YSVV3",
       async (route) => {
         await route.fulfill({
           status: 200,

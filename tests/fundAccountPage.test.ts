@@ -81,7 +81,7 @@ test.describe("[futurenet/testnet] Fund Account Page", () => {
   }) => {
     // Get a new public key
     const publicKey =
-      "GA4X4QMSTEUKWAXXX3TBFRMGWI3O5X5IUUHPKAIH5XKNQ4IBTQ6YSVV3";
+      "GDVOT2ALMUF3G54RBHNJUEV6LOAZCQQCARHEVNUPKGMVPWFC4PFN33QR";
     const publicKeyInput = page.locator("#generate-keypair-publickey");
     const getLumenButton = page
       .getByTestId("fundAccount-buttons")
