@@ -75,7 +75,7 @@ export default function SignTransaction() {
               }
               value={txEnv || ""}
               error={txErrMsg}
-              note={
+              success={
                 <Text size="xs" as="span" addlClassName="success-message">
                   {txSuccessMsg}
                 </Text>
@@ -174,6 +174,9 @@ export default function SignTransaction() {
                       id={field.label}
                       label={field.label}
                       value={field.value.toString()}
+                      copyButton={{
+                        position: "right",
+                      }}
                     />
                   </div>
                 );
