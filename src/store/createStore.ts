@@ -137,9 +137,8 @@ export const createStore = (options: CreateStoreOptions) =>
             }),
           updateKeypair: (publicKey: string, secretKey?: string) =>
             set((state) => {
-              const defaultSecretKey = secretKey || "";
               state.account.publicKey = publicKey;
-              state.account.secretKey = defaultSecretKey;
+              state.account.secretKey = secretKey || "";
               state.account.registeredNetwork = state.network;
             }),
           reset: () =>
