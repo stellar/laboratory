@@ -25,15 +25,17 @@ export const useFriendBot = ({
         if (!response.ok) {
           const errorBody = await response.json();
 
-          throw new Error(errorBody.status);
+          console.log("errorBody: ", errorBody);
+          throw new Error("there was an error", { cause: errorBody });
         }
         return response;
       } catch (e: any) {
-        if (e.status === 0) {
+        if (e.cause.status === 0) {
           throw new Error(`Unable to reach Friendbot server at ${network}`);
         } else {
           throw new Error(
-            `Unable to fund ${shortenStellarAddress(publicKey)} on the test network`,
+            `Unable to fund ${shortenStellarAddress(publicKey)} on the test network. Details: ${e.cause.detail}`,
+            { cause: e },
           );
         }
       }

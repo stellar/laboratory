@@ -1,18 +1,19 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Alert, Card, Text, Button } from "@stellar/design-system";
+import { Card, Text, Button } from "@stellar/design-system";
 import { Keypair } from "@stellar/stellar-sdk";
 
 import { useStore } from "@/store/useStore";
 import { useFriendBot } from "@/query/useFriendBot";
 import { useQueryClient } from "@tanstack/react-query";
 
-import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import { useIsTestingNetwork } from "@/hooks/useIsTestingNetwork";
 
 import { GenerateKeypair } from "@/components/GenerateKeypair";
 import { ExpandBox } from "@/components/ExpandBox";
+import { SuccessMsg } from "@/components/FriendBot/SuccessMsg";
+import { ErrorMsg } from "@/components/FriendBot/ErrorMsg";
 
 import "../styles.scss";
 
@@ -62,6 +63,8 @@ export default function CreateAccount() {
   }, [account.registeredNetwork, network.id]);
 
   const generateKeypair = () => {
+    resetStates();
+
     const keypair = Keypair.random();
 
     if (IS_TESTING_NETWORK) {
@@ -98,6 +101,7 @@ export default function CreateAccount() {
                 size="md"
                 disabled={!account.publicKey || isLoading}
                 variant="tertiary"
+                isLoading={isLoading}
                 onClick={() => refetch()}
                 data-testid="fundAccount-button"
               >
@@ -119,34 +123,22 @@ export default function CreateAccount() {
         </div>
       </Card>
 
-      {showAlert && isFetchedAfterMount && isSuccess && account.publicKey && (
-        <Alert
-          placement="inline"
-          variant="success"
-          actionLabel="View on stellar.expert"
-          actionLink={`https://stellar.expert/explorer/${network.id}/account/${account.publicKey}`}
-          onClose={() => {
-            setShowAlert(false);
-          }}
-          title={`Successfully funded ${shortenStellarAddress(account.publicKey)} on 
-          ${network.id}`}
-        >
-          {""}
-        </Alert>
-      )}
+      <SuccessMsg
+        isVisible={Boolean(
+          showAlert && isFetchedAfterMount && isSuccess && account.publicKey,
+        )}
+        onClose={() => {
+          setShowAlert(false);
+        }}
+      />
 
-      {showAlert && isFetchedAfterMount && isError && (
-        <Alert
-          placement="inline"
-          variant="error"
-          onClose={() => {
-            setShowAlert(false);
-          }}
-          title={error?.message}
-        >
-          {""}
-        </Alert>
-      )}
+      <ErrorMsg
+        isVisible={Boolean(showAlert && isFetchedAfterMount && isError)}
+        errorMsg={error?.message}
+        onClose={() => {
+          setShowAlert(false);
+        }}
+      />
     </div>
   );
 }

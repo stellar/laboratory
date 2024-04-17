@@ -1,16 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Alert, Card, Input, Text, Button } from "@stellar/design-system";
+import { Card, Input, Text, Button } from "@stellar/design-system";
 import Link from "next/link";
 import { Routes } from "@/constants/routes";
 
-import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import { useIsTestingNetwork } from "@/hooks/useIsTestingNetwork";
 import { useFriendBot } from "@/query/useFriendBot";
 import { useStore } from "@/store/useStore";
 
 import { validate } from "@/validate";
+
+import { SuccessMsg } from "@/components/FriendBot/SuccessMsg";
+import { ErrorMsg } from "@/components/FriendBot/ErrorMsg";
 
 import "../styles.scss";
 
@@ -113,33 +115,22 @@ export default function FundAccount() {
         </div>
       </Card>
 
-      {showAlert && isFetchedAfterMount && isSuccess && account.publicKey && (
-        <Alert
-          placement="inline"
-          variant="success"
-          actionLabel="View on stellar.expert"
-          actionLink={`https://stellar.expert/explorer/${network.id}/account/${account.publicKey}`}
-          onClose={() => {
-            setShowAlert(false);
-          }}
-          title={`Successfully funded ${shortenStellarAddress(account.publicKey)} on 
-          ${network.id}`}
-        >
-          {""}
-        </Alert>
-      )}
-      {showAlert && isFetchedAfterMount && isError && (
-        <Alert
-          placement="inline"
-          variant="error"
-          onClose={() => {
-            setShowAlert(false);
-          }}
-          title={error?.message}
-        >
-          {""}
-        </Alert>
-      )}
+      <SuccessMsg
+        isVisible={Boolean(
+          showAlert && isFetchedAfterMount && isSuccess && account.publicKey,
+        )}
+        onClose={() => {
+          setShowAlert(false);
+        }}
+      />
+
+      <ErrorMsg
+        isVisible={Boolean(showAlert && isFetchedAfterMount && isError)}
+        errorMsg={error?.message}
+        onClose={() => {
+          setShowAlert(false);
+        }}
+      />
     </div>
   );
 }
