@@ -5,6 +5,10 @@ const buildEslintCommand = (filenames) =>
     .map((f) => path.relative(process.cwd(), f))
     .join(" --file ")}`;
 
+const ignoredFiles = ["temp/**/*"];
+
+const eslintPattern = `!(${ignoredFiles.join(",")})*.{js,ts,jsx,tsx}`;
+
 module.exports = {
-  "*.{js,jsx,ts,tsx}": [buildEslintCommand],
+  [eslintPattern]: [buildEslintCommand],
 };

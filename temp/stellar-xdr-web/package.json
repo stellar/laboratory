@@ -1,0 +1,14 @@
+{
+  "name": "bindings-js",
+  "version": "0.0.0",
+  "files": [
+    "stellar-xdr_bg.wasm",
+    "stellar-xdr.js",
+    "stellar-xdr.d.ts"
+  ],
+  "module": "stellar-xdr.js",
+  "types": "stellar-xdr.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
