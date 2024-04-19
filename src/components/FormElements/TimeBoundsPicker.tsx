@@ -3,17 +3,22 @@ import { SdsLink } from "@/components/SdsLink";
 import { InputSideElement } from "@/components/InputSideElement";
 import { PositiveIntPicker } from "./PositiveIntPicker";
 
-type TimeBoundValue = { min: string; max: string };
+type TimeBoundValue = {
+  min_time: string | undefined;
+  max_time: string | undefined;
+};
 
 type TimeBoundsPickerProps = {
-  value: TimeBoundValue | undefined;
+  id: string;
+  value: TimeBoundValue;
   labelSuffix?: string | React.ReactNode;
   onChange: (value: TimeBoundValue) => void;
-  error: { min: string | false; max: string | false } | undefined;
+  error: { min_time: string | false; max_time: string | false } | undefined;
 };
 
 export const TimeBoundsPicker = ({
-  value = { min: "", max: "" },
+  id,
+  value = { min_time: undefined, max_time: undefined },
   labelSuffix,
   onChange,
   error,
@@ -24,24 +29,34 @@ export const TimeBoundsPicker = ({
         <Box gap="xs">
           <>
             <PositiveIntPicker
-              id="timebounds-min"
+              id={`${id}-min-time`}
               label="Time Bounds"
               labelSuffix={labelSuffix}
               placeholder="Lower time bound unix timestamp. Ex: 1479151713"
-              value={value.min}
-              error={error?.min ? `Lower time bound: ${error.min}` : ""}
+              value={value?.min_time?.toString() || ""}
+              error={
+                error?.min_time ? `Lower time bound: ${error.min_time}` : ""
+              }
               onChange={(e) => {
-                onChange({ ...value, min: e.target.value });
+                onChange({
+                  ...value,
+                  min_time: e.target.value,
+                });
               }}
             />
             <PositiveIntPicker
-              id="timebounds-max"
+              id={`${id}-max-time`}
               label=""
               placeholder="Upper time bound unix timestamp. Ex: 1479151713"
-              value={value.max}
-              error={error?.max ? `Upper time bound: ${error.max}` : ""}
+              value={value?.max_time?.toString() || ""}
+              error={
+                error?.max_time ? `Upper time bound: ${error.max_time}` : ""
+              }
               onChange={(e) => {
-                onChange({ ...value, max: e.target.value });
+                onChange({
+                  ...value,
+                  max_time: e.target.value,
+                });
               }}
               rightElement={
                 <InputSideElement
@@ -50,7 +65,7 @@ export const TimeBoundsPicker = ({
                   onClick={() => {
                     onChange({
                       ...value,
-                      max: (
+                      max_time: (
                         Math.ceil(new Date().getTime() / 1000) +
                         5 * 60
                       ).toString(),

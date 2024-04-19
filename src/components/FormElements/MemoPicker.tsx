@@ -4,12 +4,16 @@ import { Input } from "@stellar/design-system";
 
 import { RadioPicker } from "@/components/RadioPicker";
 import { ExpandBox } from "@/components/ExpandBox";
+import { EmptyObj } from "@/types/types";
 
-type MemoPickerValue = { type: MemoType; value: MemoValue | undefined };
+export type MemoPickerValue = {
+  type: MemoType | string | undefined;
+  value: MemoValue | string | undefined;
+};
 
 type MemoPickerProps = {
   id: string;
-  value: MemoPickerValue | undefined;
+  value: MemoPickerValue | EmptyObj;
   onChange: (
     optionId: string | undefined,
     optionValue?: MemoPickerValue,
@@ -25,7 +29,7 @@ export const MemoPicker = ({
   labelSuffix,
   error,
 }: MemoPickerProps) => {
-  const memoValuePlaceholder = (type?: MemoType) => {
+  const memoValuePlaceholder = (type?: MemoType | string) => {
     if (!type) {
       return "";
     }

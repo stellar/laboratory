@@ -17,6 +17,7 @@ type InputSideElementProps = (
 ) & {
   children: string;
   placement: "left" | "right";
+  isLoading?: boolean;
 };
 
 export const InputSideElement = ({
@@ -26,6 +27,7 @@ export const InputSideElement = ({
   disabled,
   title,
   placement = "right",
+  isLoading,
   ...props
 }: InputSideElementProps) => {
   if (variant === "text") {
@@ -50,6 +52,7 @@ export const InputSideElement = ({
         onClick={onClick}
         disabled={disabled}
         title={title}
+        isLoading={isLoading}
       >
         {children}
       </Button>
