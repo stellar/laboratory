@@ -2,4 +2,4 @@
 public/
 .gitignore
 .husky/
-temp/
+src/temp/stellar-xdr-web/

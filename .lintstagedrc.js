@@ -5,10 +5,10 @@ const buildEslintCommand = (filenames) =>
     .map((f) => path.relative(process.cwd(), f))
     .join(" --file ")}`;
 
-const ignoredFiles = ["src/temp/**/*"];
+const ignoredFiles = ["./src/temp/stellar-xdr-web/**/*"];
 
 const eslintPattern = `!(${ignoredFiles.join(",")})*.{js,ts,jsx,tsx}`;
 
 module.exports = {
-  [eslintPattern]: [buildEslintCommand],
+  "*.{js,jsx,ts,tsx}": [buildEslintCommand],
 };
