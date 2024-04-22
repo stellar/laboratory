@@ -11,5 +11,5 @@
     "@typescript-eslint/no-explicit-any": "off",
     "import/named": "off"
   },
-  "ignorePatterns": ["./temp/*"]
+  "ignorePatterns": ["./src/temp/*"]
 }
