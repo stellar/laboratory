@@ -40,7 +40,7 @@ export default function CreateAccount() {
     resetQuery();
   }, [resetQuery]);
 
-  const { error, isError, isLoading, isSuccess, refetch, isFetchedAfterMount } =
+  const { error, isError, isFetching, isLoading, isSuccess, refetch } =
     useFriendBot({
       network,
       publicKey: account.publicKey!,
@@ -101,8 +101,11 @@ export default function CreateAccount() {
                 size="md"
                 disabled={!account.publicKey || isLoading}
                 variant="tertiary"
-                isLoading={isLoading}
-                onClick={() => refetch()}
+                isLoading={isLoading || isFetching}
+                onClick={() => {
+                  resetQuery();
+                  refetch();
+                }}
                 data-testid="fundAccount-button"
               >
                 Fund account with Friendbot
@@ -124,16 +127,14 @@ export default function CreateAccount() {
       </Card>
 
       <SuccessMsg
-        isVisible={Boolean(
-          showAlert && isFetchedAfterMount && isSuccess && account.publicKey,
-        )}
+        isVisible={Boolean(showAlert && isSuccess && account.publicKey)}
         onClose={() => {
           setShowAlert(false);
         }}
       />
 
       <ErrorMsg
-        isVisible={Boolean(showAlert && isFetchedAfterMount && isError)}
+        isVisible={Boolean(showAlert && isError)}
         errorMsg={error?.message}
         onClose={() => {
           setShowAlert(false);

@@ -95,7 +95,7 @@ test.describe("[futurenet/testnet] Fund Account Page", () => {
 
     // Mock the friendbot api call
     await page.route(
-      "*/**/friendbot?addr=GDVOT2ALMUF3G54RBHNJUEV6LOAZCQQCARHEVNUPKGMVPWFC4PFN33QR",
+      "*/**/?addr=GDVOT2ALMUF3G54RBHNJUEV6LOAZCQQCARHEVNUPKGMVPWFC4PFN33QR",
       async (route) => {
         await route.fulfill({
           status: 200,
@@ -118,7 +118,6 @@ test.describe("[futurenet/testnet] Fund Account Page", () => {
 
     // Success <Alert/> is visible
     const alertBox = page.getByText(/Successfully funded/);
-    console.log("alertBox: ", alertBox);
     await expect(alertBox).toBeVisible();
   });
 
@@ -160,7 +159,7 @@ test.describe("[futurenet/testnet] Fund Account Page", () => {
 
     await responsePromise;
 
-    const alertBox = page.getByText(/Unable to fund/);
+    const alertBox = page.getByText(/This account is already funded/);
     await expect(alertBox).toBeVisible();
   });
 

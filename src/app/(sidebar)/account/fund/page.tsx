@@ -25,11 +25,18 @@ export default function FundAccount() {
 
   const IS_TESTING_NETWORK = useIsTestingNetwork();
 
-  const { error, isError, isLoading, isSuccess, refetch, isFetchedAfterMount } =
-    useFriendBot({
-      network,
-      publicKey: generatedPublicKey,
-    });
+  const {
+    error,
+    isError,
+    isFetching,
+    isLoading,
+    isSuccess,
+    refetch,
+    isFetchedAfterMount,
+  } = useFriendBot({
+    network,
+    publicKey: generatedPublicKey,
+  });
 
   useEffect(() => {
     if (
@@ -89,8 +96,8 @@ export default function FundAccount() {
             <Button
               disabled={!generatedPublicKey || Boolean(inlineErrorMessage)}
               size="md"
-              variant={isFetchedAfterMount && isError ? "error" : "secondary"}
-              isLoading={isLoading}
+              variant="secondary"
+              isLoading={isLoading || isFetching}
               onClick={() => {
                 if (!inlineErrorMessage) {
                   refetch();
@@ -101,7 +108,7 @@ export default function FundAccount() {
             </Button>
 
             <Button
-              disabled={!account.publicKey || isLoading}
+              disabled={!account.publicKey || isLoading || isFetching}
               size="md"
               variant="tertiary"
               onClick={() => {
