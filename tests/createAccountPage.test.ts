@@ -34,15 +34,15 @@ test.describe("Create Account Page", () => {
   }) => {
     await page.getByRole("button", { name: "Generate keypair" }).click();
 
-    const getLumenButton = page
+    const fundButton = page
       .getByTestId("fundAccount-button")
       .getByText("Fund account with Friendbot");
 
-    await expect(getLumenButton).toBeEnabled();
+    await expect(fundButton).toBeEnabled();
 
     // Mock the friendbot api call
     await page.route(
-      "*/**/friendbot?addr=GA4X4QMSTEUKWAXXX3TBFRMGWI3O5X5IUUHPKAIH5XKNQ4IBTQ6YSVV3",
+      "*/**/?addr=GA4X4QMSTEUKWAXXX3TBFRMGWI3O5X5IUUHPKAIH5XKNQ4IBTQ6YSVV3",
       async (route) => {
         await route.fulfill({
           status: 200,
@@ -58,7 +58,7 @@ test.describe("Create Account Page", () => {
         response.url().includes("?addr=") && response.status() === 200,
     );
 
-    await getLumenButton.click();
+    await fundButton.click();
 
     // Wait for the mocked response
     await responsePromise;
