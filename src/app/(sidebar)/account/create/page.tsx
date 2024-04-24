@@ -92,7 +92,12 @@ export default function CreateAccount() {
             </Text>
           </div>
           <div className="Account__CTA" data-testid="createAccount-buttons">
-            <Button size="md" variant="secondary" onClick={generateKeypair}>
+            <Button
+              disabled={isLoading || isFetching}
+              size="md"
+              variant="secondary"
+              onClick={generateKeypair}
+            >
               Generate keypair
             </Button>
 

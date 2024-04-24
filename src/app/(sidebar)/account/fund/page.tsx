@@ -79,7 +79,7 @@ export default function FundAccount() {
           </div>
 
           <Input
-            id="generate-keypair-publickey"
+            id="fund-public-key-input"
             fieldSize="md"
             label="Public Key"
             value={generatedPublicKey}
@@ -123,9 +123,8 @@ export default function FundAccount() {
       </Card>
 
       <SuccessMsg
-        isVisible={Boolean(
-          showAlert && isFetchedAfterMount && isSuccess && account.publicKey,
-        )}
+        isVisible={Boolean(showAlert && isFetchedAfterMount && isSuccess)}
+        publicKey={generatedPublicKey}
         onClose={() => {
           setShowAlert(false);
         }}

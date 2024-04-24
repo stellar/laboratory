@@ -6,12 +6,14 @@ import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 
 export const SuccessMsg = ({
   onClose,
+  publicKey,
   isVisible,
 }: {
   onClose: () => void | undefined;
+  publicKey: string;
   isVisible: boolean;
 }) => {
-  const { account, network } = useStore();
+  const { network } = useStore();
   const IS_STELLAR_EXPERT_ENABLED =
     network.id === "testnet" || network.id === "mainnet";
 
@@ -24,11 +26,11 @@ export const SuccessMsg = ({
       }
       actionLink={
         IS_STELLAR_EXPERT_ENABLED
-          ? `https://stellar.expert/explorer/${network.id}/account/${account.publicKey}`
+          ? `https://stellar.expert/explorer/${network.id}/account/${publicKey}`
           : undefined
       }
       onClose={onClose}
-      title={`Successfully funded ${shortenStellarAddress(account.publicKey!)} on 
+      title={`Successfully funded ${shortenStellarAddress(publicKey)} on 
     ${network.id}`}
     >
       {""}

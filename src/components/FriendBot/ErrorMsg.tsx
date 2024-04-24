@@ -8,8 +8,8 @@ export const ErrorMsg = ({
   onClose: () => void | undefined;
   isVisible: boolean;
   errorMsg: string | undefined;
-}) => {
-  return isVisible ? (
+}) =>
+  isVisible ? (
     <Alert
       placement="inline"
       variant="error"
@@ -19,4 +19,3 @@ export const ErrorMsg = ({
       {""}
     </Alert>
   ) : null;
-};
