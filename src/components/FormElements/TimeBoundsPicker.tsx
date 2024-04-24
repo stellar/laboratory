@@ -4,8 +4,8 @@ import { InputSideElement } from "@/components/InputSideElement";
 import { PositiveIntPicker } from "./PositiveIntPicker";
 
 type TimeBoundValue = {
-  min_time: string | undefined;
-  max_time: string | undefined;
+  min_time: string;
+  max_time: string;
 };
 
 type TimeBoundsPickerProps = {
@@ -18,7 +18,7 @@ type TimeBoundsPickerProps = {
 
 export const TimeBoundsPicker = ({
   id,
-  value = { min_time: undefined, max_time: undefined },
+  value = { min_time: "", max_time: "" },
   labelSuffix,
   onChange,
   error,

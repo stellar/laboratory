@@ -6,14 +6,14 @@ import { MemoType } from "@stellar/stellar-sdk";
 import { sanitizeObject } from "@/helpers/sanitizeObject";
 import { AnyObject, EmptyObj, Network, MuxedAccount } from "@/types/types";
 
-type TransactionBuildParams = {
+export type TransactionBuildParams = {
   source_account: string;
-  fee: number | undefined;
-  seq_num: number | undefined;
+  fee: string;
+  seq_num: string;
   cond: {
     time: {
-      min_time: number | undefined;
-      max_time: number | undefined;
+      min_time: string;
+      max_time: string;
     };
   };
   memo:
@@ -96,12 +96,12 @@ const initTransactionState = {
     activeTab: "params",
     params: {
       source_account: "",
-      fee: undefined,
-      seq_num: undefined,
+      fee: "",
+      seq_num: "",
       cond: {
         time: {
-          min_time: undefined,
-          max_time: undefined,
+          min_time: "",
+          max_time: "",
         },
       },
       memo: {},

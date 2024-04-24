@@ -2,7 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { Alert, Button, Card } from "@stellar/design-system";
+import { MemoValue } from "@stellar/stellar-sdk";
 import { get, omit, set } from "lodash";
+import { stringify } from "lossless-json";
+
 import * as StellarXdr from "@/helpers/StellarXdr";
 
 import { TabView } from "@/components/TabView";
@@ -19,13 +22,13 @@ import { InputSideElement } from "@/components/InputSideElement";
 
 import { sanitizeObject } from "@/helpers/sanitizeObject";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
-import { inputNumberValue } from "@/helpers/inputNumberValue";
 
 import { useStore } from "@/store/useStore";
+import { TransactionBuildParams } from "@/store/createStore";
 import { Routes } from "@/constants/routes";
 import { useAccountSequenceNumber } from "@/query/useAccountSequenceNumber";
 import { validate } from "@/validate";
-import { AnyObject, EmptyObj } from "@/types/types";
+import { EmptyObj, KeysOfUnion } from "@/types/types";
 
 export default function BuildTransaction() {
   const { transaction, network } = useStore();
@@ -33,9 +36,15 @@ export default function BuildTransaction() {
   const { updateBuildActiveTab, updateBuildParams } = transaction;
 
   const [isReady, setIsReady] = useState(false);
-  const [paramsError, setParamsError] = useState<AnyObject>({});
+  const [paramsError, setParamsError] = useState<ParamsError>({});
 
   const requiredParams = ["source_account", "seq_num", "fee"] as const;
+  type RequiredParamsField = (typeof requiredParams)[number];
+  type ParamsField = KeysOfUnion<typeof txnParams>;
+
+  type ParamsError = {
+    [K in keyof TransactionBuildParams]?: any;
+  };
 
   const {
     data: sequenceNumberData,
@@ -62,23 +71,80 @@ export default function BuildTransaction() {
     }
   };
 
-  // Need this to make sure the page doesn't render before we get the store data
+  const validateParam = (param: ParamsField, value: any) => {
+    switch (param) {
+      case "cond":
+        return validate.timeBounds(value?.time || value);
+      case "fee":
+        return validate.positiveInt(value);
+      case "memo":
+        if (!value || isEmptyObject(value)) {
+          return false;
+        }
+
+        // Memo in store is in transaction format { memoType: memoValue }
+        if (value.type) {
+          return validate.memo(value);
+        } else {
+          // Changing it to { type, value } format if needed
+          const [type, val] = Object.entries(value)[0];
+          return validate.memo({ type, value: val as MemoValue });
+        }
+
+      case "seq_num":
+        return validate.positiveInt(value);
+      case "source_account":
+        return validate.publicKey(value);
+      default:
+        return false;
+    }
+  };
+
   useEffect(() => {
+    // Stellar XDR init
     const init = async () => {
       await StellarXdr.init();
     };
 
     init();
+    // Need this to make sure the page doesn't render before we get the store data
     setIsReady(true);
   }, []);
 
-  // TODO: validate fields on page load
+  useEffect(() => {
+    Object.entries(txnParams).forEach(([key, val]) => {
+      if (val) {
+        validateParam(key as ParamsField, val);
+      }
+    });
+
+    const validationError = Object.entries(txnParams).reduce((res, param) => {
+      const key = param[0] as ParamsField;
+      const val = param[1];
+
+      if (val) {
+        const error = validateParam(key, val);
+
+        if (error) {
+          res[key] = key === "cond" ? { time: error } : error;
+        }
+      }
+
+      return res;
+    }, {} as ParamsError);
+
+    if (!isEmptyObject(validationError)) {
+      setParamsError(validationError);
+    }
+    // Run this only when page loads
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (sequenceNumberData || sequenceNumberError) {
       const id = "seq_num";
 
-      handleParamChange(id, inputNumberValue(sequenceNumberData));
+      handleParamChange(id, sequenceNumberData);
       handleError(id, sequenceNumberError);
     }
     // Not inlcuding handleParamChange and handleError
@@ -118,16 +184,45 @@ export default function BuildTransaction() {
       }
 
       return res;
-    }, [] as string[]);
+    }, [] as RequiredParamsField[]);
   };
 
-  const renderTempXdr = () => {
-    const missingParams = missingRequiredParams();
+  const getFieldLabel = (field: ParamsField) => {
+    switch (field) {
+      case "fee":
+        return "Base Fee";
+      case "seq_num":
+        return "Transaction Sequence Number";
+      case "source_account":
+        return "Source Account";
+      case "cond":
+        return "Time Bounds";
+      case "memo":
+        return "Memo";
+      default:
+        return "";
+    }
+  };
 
+  const getParamsError = () => {
+    const allErrorMessages: string[] = [];
+    const errors = Object.keys(paramsError);
+
+    // Make sure we don't show multiple errors for the same field
+    const missingParams = missingRequiredParams().filter(
+      (m) => !errors.includes(m),
+    );
+
+    // Missing params
     if (missingParams.length > 0) {
-      return <div>{`Required fields: ${missingParams.join(", ")}.`}</div>;
+      const missingParamsMsg = missingParams.reduce((res, cur) => {
+        return [...res, `${getFieldLabel(cur)} is a required field`];
+      }, [] as string[]);
+
+      allErrorMessages.push(...missingParamsMsg);
     }
 
+    // Memo value
     const memoValue = txnParams.memo;
 
     if (
@@ -135,57 +230,81 @@ export default function BuildTransaction() {
       !isEmptyObject(memoValue) &&
       !Object.values(memoValue)[0]
     ) {
-      return <div>Need memo value</div>;
+      allErrorMessages.push(
+        "Memo value is required when memo type is selected",
+      );
     }
 
+    // Fields with errors
     if (!isEmptyObject(paramsError)) {
-      return <div>There are errors</div>;
+      const fieldErrors = errors.reduce((res, cur) => {
+        return [
+          ...res,
+          `${getFieldLabel(cur as ParamsField)} field has an error`,
+        ];
+      }, [] as string[]);
+
+      allErrorMessages.push(...fieldErrors);
+    }
+
+    return allErrorMessages;
+  };
+
+  const txnJsonToXdr = () => {
+    if (getParamsError().length !== 0) {
+      return {};
     }
 
     try {
+      // TODO: remove this formatter once Stellar XDR supports strings for numbers.
       // Format values to meet XDR requirements
-      const prepTxnParams = Object.entries(txnParams).reduce(
-        (res, [key, value]) => {
-          let val;
+      const prepTxnParams = Object.entries(txnParams).reduce((res, param) => {
+        const key = param[0] as ParamsField;
+        // Casting to any type for simplicity
+        const value = param[1] as any;
 
-          switch (key) {
-            case "seq_num":
-              val = Number(value);
-              break;
-            case "fee":
-              val = Number(value);
-              break;
-            case "cond":
-              val = {
-                time: {
-                  min_time: (value as any)?.time?.min_time
-                    ? Number((value as any)?.time?.min_time)
-                    : 0,
-                  max_time: (value as any)?.time?.max_time
-                    ? Number((value as any)?.time?.max_time)
-                    : 0,
-                },
-              };
-              break;
-            case "memo":
-              if ((value as any)?.id) {
-                val = { id: Number((value as any).id) };
-              } else {
-                val =
-                  typeof value === "object" && isEmptyObject(value)
-                    ? "none"
-                    : value;
-              }
+        let val;
 
-              break;
-            default:
-              val = value;
-          }
+        switch (key) {
+          case "seq_num":
+            val = BigInt(value);
+            break;
+          case "fee":
+            val = BigInt(value);
+            break;
+          case "cond":
+            // eslint-disable-next-line no-case-declarations
+            const minTime = value?.time?.min_time;
+            // eslint-disable-next-line no-case-declarations
+            const maxTime = value?.time?.max_time;
 
-          return { ...res, [key]: val };
-        },
-        {},
-      );
+            val = {
+              time: {
+                min_time: minTime ? BigInt(minTime) : 0,
+                max_time: maxTime ? BigInt(maxTime) : 0,
+              },
+            };
+            break;
+          case "memo":
+            // eslint-disable-next-line no-case-declarations
+            const memoId = value?.id;
+
+            if (memoId) {
+              val = { id: BigInt(memoId) };
+            } else {
+              val =
+                typeof value === "object" && isEmptyObject(value)
+                  ? "none"
+                  : value;
+            }
+
+            break;
+          default:
+            val = value;
+        }
+
+        return { ...res, [key]: val };
+      }, {});
 
       const txnJson = {
         tx: {
@@ -195,20 +314,38 @@ export default function BuildTransaction() {
             operations: [],
             ext: "v0",
           },
-          // TODO: add signatures
           signatures: [],
         },
       };
 
-      const xdr = StellarXdr.encode(
-        "TransactionEnvelope",
-        JSON.stringify(txnJson),
-      );
+      // TODO: Temp fix until Stellar XDR supports strings for big numbers
+      // const jsonString = JSON.stringify(txnJson);
+      const jsonString = stringify(txnJson);
 
-      return <div style={{ wordWrap: "break-word" }}>{`XDR: ${xdr}`}</div>;
+      return {
+        xdr: StellarXdr.encode("TransactionEnvelope", jsonString || ""),
+      };
     } catch (e) {
-      return <div>{`XDR error: ${e}`}</div>;
+      return { error: `XDR error: ${e}` };
     }
+  };
+
+  const BuildingError = ({ errorList }: { errorList: string[] }) => {
+    if (errorList.length === 0) {
+      return null;
+    }
+
+    // TODO: style
+    return (
+      <Card>
+        <div>Transaction building errors:</div>
+        <ul>
+          {errorList.map((e, i) => (
+            <li key={`e-${i}`}>{e}</li>
+          ))}
+        </ul>
+      </Card>
+    );
   };
 
   // TODO: add info links
@@ -225,9 +362,9 @@ export default function BuildTransaction() {
                   value={txnParams.source_account}
                   error={paramsError.source_account}
                   onChange={(e) => {
-                    const id = e.target.id;
+                    const id = "source_account";
                     handleParamChange(id, e.target.value);
-                    handleError(id, validate.publicKey(e.target.value));
+                    handleError(id, validateParam(id, e.target.value));
                   }}
                   note={
                     <>
@@ -245,24 +382,21 @@ export default function BuildTransaction() {
                   id="seq_num"
                   label="Transaction Sequence Number"
                   placeholder="Ex: 559234806710273"
-                  value={txnParams.seq_num?.toString() || ""}
+                  value={txnParams.seq_num}
                   error={paramsError.seq_num}
                   onChange={(e) => {
-                    const id = e.target.id;
-                    handleParamChange(id, inputNumberValue(e.target.value));
-                    handleError(id, validate.positiveInt(e.target.value));
-                  }}
-                  onBlur={(e) => {
-                    handleError(
-                      e.target.id,
-                      validate.positiveInt(e.target.value),
-                    );
+                    const id = "seq_num";
+                    handleParamChange(id, e.target.value);
+                    handleError(id, validateParam(id, e.target.value));
                   }}
                   note="The transaction sequence number is usually one higher than current account sequence number."
                   rightElement={
                     <InputSideElement
                       variant="button"
-                      onClick={() => fetchSequenceNumber()}
+                      onClick={() => {
+                        handleParamChange("seq_num", "");
+                        fetchSequenceNumber();
+                      }}
                       placement="right"
                       disabled={
                         !txnParams.source_account || paramsError.source_account
@@ -279,18 +413,12 @@ export default function BuildTransaction() {
                 <PositiveIntPicker
                   id="fee"
                   label="Base Fee"
-                  value={txnParams.fee?.toString() || ""}
+                  value={txnParams.fee}
                   error={paramsError.fee}
                   onChange={(e) => {
-                    const id = e.target.id;
-                    handleParamChange(id, inputNumberValue(e.target.value));
-                    handleError(id, validate.positiveInt(e.target.value));
-                  }}
-                  onBlur={(e) => {
-                    handleError(
-                      e.target.id,
-                      validate.positiveInt(e.target.value),
-                    );
+                    const id = "fee";
+                    handleParamChange(id, e.target.value);
+                    handleError(id, validateParam(id, e.target.value));
                   }}
                   note={
                     <>
@@ -314,22 +442,22 @@ export default function BuildTransaction() {
                   onChange={(_, memo) => {
                     const id = "memo";
                     handleParamChange(id, getMemoValue(memo));
-                    handleError(id, validate.memo(memo));
+                    handleError(id, validateParam(id, memo));
                   }}
                 />
 
                 <TimeBoundsPicker
                   id="time"
                   value={{
-                    min_time: txnParams.cond?.time?.min_time?.toString(),
-                    max_time: txnParams.cond?.time?.max_time?.toString(),
+                    min_time: txnParams.cond?.time?.min_time,
+                    max_time: txnParams.cond?.time?.max_time,
                   }}
                   labelSuffix="optional"
                   error={paramsError.cond?.time}
                   onChange={(timeBounds) => {
                     const id = "cond.time";
                     handleParamChange(id, timeBounds);
-                    handleError(id, validate.timeBounds(timeBounds));
+                    handleError(id, validateParam("cond", timeBounds));
                   }}
                 />
 
@@ -355,7 +483,7 @@ export default function BuildTransaction() {
             submitted to the network.
           </Alert>
 
-          {renderTempXdr()}
+          <BuildingError errorList={getParamsError()} />
         </>
       </Box>
     );
@@ -363,7 +491,15 @@ export default function BuildTransaction() {
 
   // TODO: render operations
   const renderOperations = () => {
-    return <Card>Operations</Card>;
+    const txnXdr = txnJsonToXdr();
+
+    return (
+      <Card>
+        Operations
+        {/* TODO: style XDR and handle error */}
+        <div>{txnXdr.xdr ?? null}</div>
+      </Card>
+    );
   };
 
   if (!isReady) {

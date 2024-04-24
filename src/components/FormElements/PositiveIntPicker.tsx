@@ -10,7 +10,6 @@ interface PositiveIntPickerProps extends Omit<InputProps, "fieldSize"> {
   placeholder?: string;
   error: string | undefined;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onBlur?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const PositiveIntPicker = ({
@@ -21,7 +20,6 @@ export const PositiveIntPicker = ({
   value,
   error,
   onChange,
-  onBlur,
   ...props
 }: PositiveIntPickerProps) => {
   return (
@@ -33,7 +31,6 @@ export const PositiveIntPicker = ({
       value={value}
       error={error}
       onChange={onChange}
-      onBlur={onBlur}
       {...props}
     />
   );

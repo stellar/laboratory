@@ -1,3 +1,4 @@
+import { MuxedAccount, StrKey } from "@stellar/stellar-sdk";
 import { useQuery } from "@tanstack/react-query";
 
 export const useAccountSequenceNumber = ({
@@ -10,7 +11,14 @@ export const useAccountSequenceNumber = ({
   const query = useQuery({
     queryKey: ["useAccountSequenceNumber", { publicKey }],
     queryFn: async () => {
-      const response = await fetch(`${horizonUrl}/accounts/${publicKey}`);
+      let sourceAccount = publicKey;
+
+      if (StrKey.isValidMed25519PublicKey(publicKey)) {
+        const muxedAccount = MuxedAccount.fromAddress(publicKey, "0");
+        sourceAccount = muxedAccount.baseAccount().accountId();
+      }
+
+      const response = await fetch(`${horizonUrl}/accounts/${sourceAccount}`);
       const responseJson = await response.json();
 
       if (responseJson?.status === 0) {
