@@ -132,6 +132,7 @@ export default function CreateAccount() {
       </Card>
 
       <SuccessMsg
+        publicKey={account.publicKey!}
         isVisible={Boolean(showAlert && isSuccess && account.publicKey)}
         onClose={() => {
           setShowAlert(false);
