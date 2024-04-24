@@ -4,8 +4,8 @@ export const GenerateKeypair = ({
   publicKey,
   secretKey,
 }: {
-  publicKey: string;
-  secretKey: string;
+  publicKey: string | undefined;
+  secretKey: string | undefined;
 }) => {
   return (
     <div className="Account__keypair">

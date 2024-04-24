@@ -49,7 +49,7 @@ test.describe("[futurenet/testnet] Fund Account Page", () => {
   test("By default, 'Public Key' input field is empty and buttons are disabled", async ({
     page,
   }) => {
-    await expect(page.locator("#generate-keypair-publickey")).toHaveValue("");
+    await expect(page.locator("#fund-public-key-input")).toHaveValue("");
 
     const getLumenButton = page
       .getByTestId("fundAccount-buttons")
@@ -65,7 +65,7 @@ test.describe("[futurenet/testnet] Fund Account Page", () => {
   test("Gets an error with an invalid public key in 'Public Key' field", async ({
     page,
   }) => {
-    const publicKeyInput = page.locator("#generate-keypair-publickey");
+    const publicKeyInput = page.locator("#fund-public-key-input");
 
     // Type in an invalid string in 'Public Key' input field
     await publicKeyInput.fill("XLKDSFJLSKDJF");
@@ -79,28 +79,25 @@ test.describe("[futurenet/testnet] Fund Account Page", () => {
   test("Successfully funds an account when clicking 'Get lumens' with a valid public key", async ({
     page,
   }) => {
-    // Get a new public key
-    const publicKey =
-      "GDVOT2ALMUF3G54RBHNJUEV6LOAZCQQCARHEVNUPKGMVPWFC4PFN33QR";
-    const publicKeyInput = page.locator("#generate-keypair-publickey");
+    const publicKeyInput = page.locator("#fund-public-key-input");
     const getLumenButton = page
       .getByTestId("fundAccount-buttons")
       .getByText("Get lumens");
 
-    // Type in an invalid string in 'Public Key' input field
-    await publicKeyInput.fill(publicKey);
+    await publicKeyInput.fill(
+      "GB6D5E2HRVBD6QIOXCE6ILMUFQT45LMSZSKRZUCL4ZK6Q6GCNMTJ2E3C",
+    );
 
     await expect(publicKeyInput).toHaveAttribute("aria-invalid", "false");
     await expect(getLumenButton).toBeEnabled();
 
     // Mock the friendbot api call
     await page.route(
-      "*/**/?addr=GDVOT2ALMUF3G54RBHNJUEV6LOAZCQQCARHEVNUPKGMVPWFC4PFN33QR",
+      "*/**/?addr=GB6D5E2HRVBD6QIOXCE6ILMUFQT45LMSZSKRZUCL4ZK6Q6GCNMTJ2E3C",
       async (route) => {
         await route.fulfill({
           status: 200,
-          contentType: "application/json",
-          body: JSON.stringify({}),
+          contentType: "application/hal+json",
         });
       },
     );
@@ -113,10 +110,8 @@ test.describe("[futurenet/testnet] Fund Account Page", () => {
 
     await getLumenButton.click();
 
-    // Wait for the mocked response
     await responsePromise;
 
-    // Success <Alert/> is visible
     const alertBox = page.getByText(/Successfully funded/);
     await expect(alertBox).toBeVisible();
   });
@@ -124,7 +119,7 @@ test.describe("[futurenet/testnet] Fund Account Page", () => {
   test("Gets an error when submitting 'Get lumens' with a public key that's already been funded", async ({
     page,
   }) => {
-    const publicKeyInput = page.locator("#generate-keypair-publickey");
+    const publicKeyInput = page.locator("#fund-public-key-input");
     const getLumenButton = page
       .getByTestId("fundAccount-buttons")
       .getByText("Get lumens");
@@ -139,12 +134,12 @@ test.describe("[futurenet/testnet] Fund Account Page", () => {
 
     // Mock the friendbot api call
     await page.route(
-      "*/**/?addr=GDVOT2ALMUF3G54RBHNJUEV6LOAZCQQCARHEVNUPKGMVPWFC4PFN33QR",
+      "*/**/?addr=GBX6W44ISK6XTBDDJ5ND6KTJHLYEYHMR4SDG635NRARYVJ3G2YXGDT6Y",
       async (route) => {
         await route.fulfill({
           status: 400,
-          contentType: "application/json",
-          body: JSON.stringify({}),
+          contentType: "application/problem+json",
+          body: JSON.stringify({ detail: "createAccountAlreadyExist" }),
         });
       },
     );
@@ -159,7 +154,7 @@ test.describe("[futurenet/testnet] Fund Account Page", () => {
 
     await responsePromise;
 
-    const alertBox = page.getByText(/Unable to fund/);
+    const alertBox = page.getByText(/This account is already funded/);
     await expect(alertBox).toBeVisible();
   });
 

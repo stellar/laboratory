@@ -29,11 +29,42 @@ test.describe("Create Account Page", () => {
     ).toHaveValue(/^S/);
   });
 
-  test("Test 'Fund account' button", async ({ page }) => {
-    await page
-      .getByRole("button", { name: "Fund account with Friendbot" })
-      .click();
+  test("Successfully funds an account when clicking 'Fund account' with a valid public key", async ({
+    page,
+  }) => {
+    await page.getByRole("button", { name: "Generate keypair" }).click();
 
-    await expect(page).toHaveURL(/.*\/account\/fund/);
+    const fundButton = page
+      .getByTestId("fundAccount-button")
+      .getByText("Fund account with Friendbot");
+
+    await expect(fundButton).toBeEnabled();
+
+    // Mock the friendbot api call
+    await page.route(
+      "*/**/?addr=GA4X4QMSTEUKWAXXX3TBFRMGWI3O5X5IUUHPKAIH5XKNQ4IBTQ6YSVV3",
+      async (route) => {
+        await route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify({}),
+        });
+      },
+    );
+
+    // Ensure the listener is set up before the action that triggers the request
+    const responsePromise = page.waitForResponse(
+      (response) =>
+        response.url().includes("?addr=") && response.status() === 200,
+    );
+
+    await fundButton.click();
+
+    // Wait for the mocked response
+    await responsePromise;
+
+    // Success <Alert/> is visible
+    const alertBox = page.getByText(/Successfully funded/);
+    await expect(alertBox).toBeVisible();
   });
 });
