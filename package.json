@@ -25,7 +25,6 @@
     "@tanstack/react-query": "^5.28.8",
     "@tanstack/react-query-devtools": "^5.28.8",
     "@typescript-eslint/eslint-plugin": "^7.5.0",
-    "bignumber.js": "^9.1.2",
     "bindings-js": "file:./src/temp/stellar-xdr-web",
     "dompurify": "^3.0.11",
     "html-react-parser": "^5.1.10",
