@@ -1,7 +1,7 @@
 name: Build the app and run Playwright Tests
 on: [push, pull_request]
 jobs:
-  build_and_test:
+  build:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
