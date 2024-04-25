@@ -1,0 +1,16 @@
+@use "../../styles/utils.scss" as *;
+
+.ErrorListCard {
+  font-size: pxToRem(14px);
+  line-height: pxToRem(20px);
+  color: var(--sds-clr-gray-12);
+
+  ul.ErrorListCard__errors {
+    font-size: inherit;
+    line-height: inherit;
+    padding: pxToRem(16px);
+    padding-left: pxToRem(32px);
+    font-family: var(--sds-ff-monospace);
+    font-weight: var(--sds-fw-medium);
+  }
+}

@@ -19,6 +19,7 @@ import {
 } from "@/components/FormElements/MemoPicker";
 import { TimeBoundsPicker } from "@/components/FormElements/TimeBoundsPicker";
 import { InputSideElement } from "@/components/InputSideElement";
+import { ErrorListCard } from "@/components/ErrorListCard";
 
 import { sanitizeObject } from "@/helpers/sanitizeObject";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
@@ -335,16 +336,11 @@ export default function BuildTransaction() {
       return null;
     }
 
-    // TODO: style
     return (
-      <Card>
-        <div>Transaction building errors:</div>
-        <ul>
-          {errorList.map((e, i) => (
-            <li key={`e-${i}`}>{e}</li>
-          ))}
-        </ul>
-      </Card>
+      <ErrorListCard
+        title="Transaction building errors:"
+        errorList={errorList}
+      />
     );
   };
 
