@@ -20,11 +20,11 @@
     background-color: var(--NetworkSelector-dot-color);
 
     &[data-network="futurenet"] {
-      --NetworkSelector-dot-color: var(--sds-clr-lilac-09);
+      --NetworkSelector-dot-color: var(--sds-clr-mint-09);
     }
 
     &[data-network="testnet"] {
-      --NetworkSelector-dot-color: var(--sds-clr-sky-09);
+      --NetworkSelector-dot-color: var(--sds-clr-pink-09);
     }
 
     &[data-network="mainnet"] {

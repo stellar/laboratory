@@ -20,6 +20,13 @@ export const PrettyJson = ({ json }: { json: AnyObject }) => {
   const Value = ({ children }: { children: React.ReactNode }) => (
     <div className="PrettyJson__value">{children}</div>
   );
+  const ValueType = ({
+    children,
+    type,
+  }: {
+    children: React.ReactNode;
+    type: string;
+  }) => <span className={`PrettyJson__value--${type}`}>{children}</span>;
   const Quotes = () => <span className="PrettyJson__quotes">{'"'}</span>;
   const Colon = () => <span className="PrettyJson__colon">{":"}</span>;
   const Comma = () => <span className="PrettyJson__comma">{","}</span>;
@@ -147,7 +154,13 @@ export const PrettyJson = ({ json }: { json: AnyObject }) => {
                 <Quotes />
               </>
             ) : (
-              `"${item}"`
+              <>
+                <Quotes />
+                <ValueType type={isNaN(Number(item)) ? "string" : "number"}>
+                  {item}
+                </ValueType>
+                <Quotes />
+              </>
             )}
             <Comma />
           </Value>
@@ -162,7 +175,7 @@ export const PrettyJson = ({ json }: { json: AnyObject }) => {
       default:
         return (
           <Value>
-            {`${item}`}
+            <ValueType type={typeof item}>{`${item}`}</ValueType>
             <Comma />
           </Value>
         );

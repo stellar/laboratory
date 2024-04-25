@@ -36,12 +36,14 @@ export interface Store {
 
   // Account
   account: {
-    publicKey: string;
+    publicKey: string | undefined;
+    secretKey: string | undefined;
+    registeredNetwork: Network | EmptyObj;
     generatedMuxedAccountInput: Partial<MuxedAccount> | EmptyObj;
     parsedMuxedAccountInput: string | undefined;
     generatedMuxedAccount: MuxedAccount | EmptyObj;
     parsedMuxedAccount: MuxedAccount | EmptyObj;
-    updatePublicKey: (value: string) => void;
+    updateKeypair: (publicKey: string, secretKey?: string) => void;
     updateGeneratedMuxedAccountInput: (value: Partial<MuxedAccount>) => void;
     updateParsedMuxedAccountInput: (value: string) => void;
     updateGeneratedMuxedAccount: (value: MuxedAccount) => void;
@@ -110,6 +112,16 @@ const initTransactionState = {
   },
 };
 
+const initAccountState = {
+  publicKey: undefined,
+  secretKey: undefined,
+  registeredNetwork: {},
+  generatedMuxedAccountInput: {},
+  parsedMuxedAccountInput: undefined,
+  generatedMuxedAccount: {},
+  parsedMuxedAccount: {},
+};
+
 // Store
 export const createStore = (options: CreateStoreOptions) =>
   create<Store>()(
@@ -132,11 +144,7 @@ export const createStore = (options: CreateStoreOptions) =>
           }),
         // Account
         account: {
-          publicKey: "",
-          generatedMuxedAccountInput: {},
-          parsedMuxedAccountInput: undefined,
-          generatedMuxedAccount: {},
-          parsedMuxedAccount: {},
+          ...initAccountState,
           updateGeneratedMuxedAccountInput: (value: Partial<MuxedAccount>) =>
             set((state) => {
               state.account.generatedMuxedAccountInput = {
@@ -162,13 +170,15 @@ export const createStore = (options: CreateStoreOptions) =>
                 ...value,
               };
             }),
-          updatePublicKey: (value: string) =>
+          updateKeypair: (publicKey: string, secretKey?: string) =>
             set((state) => {
-              state.account.publicKey = value;
+              state.account.publicKey = publicKey;
+              state.account.secretKey = secretKey || "";
+              state.account.registeredNetwork = state.network;
             }),
           reset: () =>
             set((state) => {
-              state.account.publicKey = "";
+              state.account = { ...state.account, ...initAccountState };
             }),
         },
         // Endpoints
