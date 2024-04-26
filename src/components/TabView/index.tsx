@@ -43,29 +43,27 @@ export const TabView = ({
 
   return (
     <Box gap="md" addlClassName="TabView">
-      <>
-        <div className="TabView__heading">
-          <TabViewHeading {...heading} />
+      <div className="TabView__heading">
+        <TabViewHeading {...heading} />
 
-          <div className="TabView__tabContainer">
-            <Tabs
-              tabs={tabItems}
-              activeTabId={activeTabId}
-              onChange={onTabChange}
-            />
-          </div>
+        <div className="TabView__tabContainer">
+          <Tabs
+            tabs={tabItems}
+            activeTabId={activeTabId}
+            onChange={onTabChange}
+          />
         </div>
+      </div>
 
-        <Box gap="md">
-          <div className="TabView__content">
-            {tabContent.map((tc) => (
-              <div key={tc.id} data-is-active={activeTabId === tc.id}>
-                {tc.content}
-              </div>
-            ))}
-          </div>
-        </Box>
-      </>
+      <Box gap="md">
+        <div className="TabView__content">
+          {tabContent.map((tc) => (
+            <div key={tc.id} data-is-active={activeTabId === tc.id}>
+              {tc.content}
+            </div>
+          ))}
+        </div>
+      </Box>
     </Box>
   );
 };

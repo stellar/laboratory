@@ -1,6 +1,12 @@
 .Box {
+  --Box-direction: column;
+  --Box-justify: left;
+  --Box-align: stretch;
+
   display: flex;
-  flex-direction: column;
+  flex-direction: var(--Box-direction);
+  justify-content: var(--Box-justify);
+  align-items: var(--Box-align);
 
   &--xs {
     gap: var(--sds-gap-xs);

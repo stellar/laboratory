@@ -11,10 +11,10 @@ export const ErrorListCard = ({ title, errorList }: ErrorListCardProps) => {
   return (
     <Card>
       <Box gap="xs" addlClassName="ErrorListCard">
+        <Text as="div" size="sm" weight="medium">
+          {title}
+        </Text>
         <>
-          <Text as="div" size="sm" weight="medium">
-            {title}
-          </Text>
           {errorList.length > 0 ? (
             <Card variant="secondary" noPadding>
               <ul className="ErrorListCard__errors">

@@ -78,6 +78,7 @@ export interface Store {
     // Transaction actions
     updateBuildActiveTab: (tabId: string) => void;
     updateBuildParams: (params: TransactionBuildParamsObj) => void;
+    resetBuildParams: () => void;
     resetBuild: () => void;
   };
 }
@@ -93,21 +94,23 @@ const initEndpointState = {
   params: {},
 };
 
+const initTransactionParamsState = {
+  source_account: "",
+  fee: "",
+  seq_num: "",
+  cond: {
+    time: {
+      min_time: "",
+      max_time: "",
+    },
+  },
+  memo: {},
+};
+
 const initTransactionState = {
   build: {
     activeTab: "params",
-    params: {
-      source_account: "",
-      fee: "",
-      seq_num: "",
-      cond: {
-        time: {
-          min_time: "",
-          max_time: "",
-        },
-      },
-      memo: {},
-    },
+    params: initTransactionParamsState,
     operations: [],
   },
 };
@@ -224,6 +227,10 @@ export const createStore = (options: CreateStoreOptions) =>
                 ...state.transaction.build.params,
                 ...params,
               };
+            }),
+          resetBuildParams: () =>
+            set((state) => {
+              state.transaction.build.params = initTransactionParamsState;
             }),
           resetBuild: () =>
             set((state) => {

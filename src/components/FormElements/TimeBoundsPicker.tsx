@@ -25,80 +25,70 @@ export const TimeBoundsPicker = ({
 }: TimeBoundsPickerProps) => {
   return (
     <Box gap="sm">
-      <>
-        <Box gap="xs">
-          <>
-            <PositiveIntPicker
-              id={`${id}-min-time`}
-              label="Time Bounds"
-              labelSuffix={labelSuffix}
-              placeholder="Lower time bound unix timestamp. Ex: 1479151713"
-              value={value?.min_time?.toString() || ""}
-              error={
-                error?.min_time ? `Lower time bound: ${error.min_time}` : ""
-              }
-              onChange={(e) => {
+      <Box gap="xs">
+        <PositiveIntPicker
+          id={`${id}-min-time`}
+          label="Time Bounds"
+          labelSuffix={labelSuffix}
+          placeholder="Lower time bound unix timestamp. Ex: 1479151713"
+          value={value?.min_time?.toString() || ""}
+          error={error?.min_time ? `Lower time bound: ${error.min_time}` : ""}
+          onChange={(e) => {
+            onChange({
+              ...value,
+              min_time: e.target.value,
+            });
+          }}
+        />
+        <PositiveIntPicker
+          id={`${id}-max-time`}
+          label=""
+          placeholder="Upper time bound unix timestamp. Ex: 1479151713"
+          value={value?.max_time?.toString() || ""}
+          error={error?.max_time ? `Upper time bound: ${error.max_time}` : ""}
+          onChange={(e) => {
+            onChange({
+              ...value,
+              max_time: e.target.value,
+            });
+          }}
+          rightElement={
+            <InputSideElement
+              variant="button"
+              placement="right"
+              onClick={() => {
                 onChange({
                   ...value,
-                  min_time: e.target.value,
+                  max_time: (
+                    Math.ceil(new Date().getTime() / 1000) +
+                    5 * 60
+                  ).toString(),
                 });
               }}
-            />
-            <PositiveIntPicker
-              id={`${id}-max-time`}
-              label=""
-              placeholder="Upper time bound unix timestamp. Ex: 1479151713"
-              value={value?.max_time?.toString() || ""}
-              error={
-                error?.max_time ? `Upper time bound: ${error.max_time}` : ""
-              }
-              onChange={(e) => {
-                onChange({
-                  ...value,
-                  max_time: e.target.value,
-                });
-              }}
-              rightElement={
-                <InputSideElement
-                  variant="button"
-                  placement="right"
-                  onClick={() => {
-                    onChange({
-                      ...value,
-                      max_time: (
-                        Math.ceil(new Date().getTime() / 1000) +
-                        5 * 60
-                      ).toString(),
-                    });
-                  }}
-                >
-                  Set to 5 min from now
-                </InputSideElement>
-              }
-            />
-          </>
-        </Box>
-        <Box gap="xs" addlClassName="FieldNote FieldNote--note FieldNote--md">
-          <>
-            <div>
-              Enter{" "}
-              <SdsLink href="http://www.epochconverter.com/">
-                unix timestamp
-              </SdsLink>{" "}
-              values of time bounds when this transaction will be valid.
-            </div>
+            >
+              Set to 5 min from now
+            </InputSideElement>
+          }
+        />
+      </Box>
+      <Box gap="xs" addlClassName="FieldNote FieldNote--note FieldNote--md">
+        <div>
+          Enter{" "}
+          <SdsLink href="http://www.epochconverter.com/">
+            unix timestamp
+          </SdsLink>{" "}
+          values of time bounds when this transaction will be valid.
+        </div>
 
-            <div>
-              For regular transactions, it is highly recommended to set the
-              upper time bound to get a{" "}
-              <SdsLink href="https://github.com/stellar/stellar-core/issues/1811">
-                final result
-              </SdsLink>{" "}
-              of a transaction in a defined time.
-            </div>
-          </>
-        </Box>
-      </>
+        <div>
+          For regular transactions, it is highly recommended to set the upper
+          time bound to get a{" "}
+          <SdsLink href="https://github.com/stellar/stellar-core/issues/1811">
+            final result
+          </SdsLink>{" "}
+          of a transaction in a defined time.
+        </div>
+      </Box>
     </Box>
   );
 };

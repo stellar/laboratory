@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Alert, Button, Card } from "@stellar/design-system";
+import { Alert, Button, Card, Icon } from "@stellar/design-system";
 import { MemoValue } from "@stellar/stellar-sdk";
 import { get, omit, set } from "lodash";
 import { stringify } from "lossless-json";
@@ -34,7 +34,8 @@ import { EmptyObj, KeysOfUnion } from "@/types/types";
 export default function BuildTransaction() {
   const { transaction, network } = useStore();
   const { activeTab, params: txnParams } = transaction.build;
-  const { updateBuildActiveTab, updateBuildParams } = transaction;
+  const { updateBuildActiveTab, updateBuildParams, resetBuildParams } =
+    transaction;
 
   const [isReady, setIsReady] = useState(false);
   const [paramsError, setParamsError] = useState<ParamsError>({});
@@ -348,139 +349,152 @@ export default function BuildTransaction() {
   const renderParams = () => {
     return (
       <Box gap="md">
-        <>
-          <Card>
-            <Box gap="lg">
-              <>
-                <PubKeyPicker
-                  id="source_account"
-                  label="Source Account"
-                  value={txnParams.source_account}
-                  error={paramsError.source_account}
-                  onChange={(e) => {
-                    const id = "source_account";
-                    handleParamChange(id, e.target.value);
-                    handleError(id, validateParam(id, e.target.value));
+        <Card>
+          <Box gap="lg">
+            <PubKeyPicker
+              id="source_account"
+              label="Source Account"
+              value={txnParams.source_account}
+              error={paramsError.source_account}
+              onChange={(e) => {
+                const id = "source_account";
+                handleParamChange(id, e.target.value);
+                handleError(id, validateParam(id, e.target.value));
+              }}
+              note={
+                <>
+                  If you don’t have an account yet, you can create and fund a
+                  test net account with the{" "}
+                  <SdsLink href={Routes.ACCOUNT_CREATE}>
+                    account creator
+                  </SdsLink>
+                  .
+                </>
+              }
+            />
+
+            <PositiveIntPicker
+              id="seq_num"
+              label="Transaction Sequence Number"
+              placeholder="Ex: 559234806710273"
+              value={txnParams.seq_num}
+              error={paramsError.seq_num}
+              onChange={(e) => {
+                const id = "seq_num";
+                handleParamChange(id, e.target.value);
+                handleError(id, validateParam(id, e.target.value));
+              }}
+              note="The transaction sequence number is usually one higher than current account sequence number."
+              rightElement={
+                <InputSideElement
+                  variant="button"
+                  onClick={() => {
+                    handleParamChange("seq_num", "");
+                    fetchSequenceNumber();
                   }}
-                  note={
-                    <>
-                      If you don’t have an account yet, you can create and fund
-                      a test net account with the{" "}
-                      <SdsLink href={Routes.ACCOUNT_CREATE}>
-                        account creator
-                      </SdsLink>
-                      .
-                    </>
+                  placement="right"
+                  disabled={
+                    !txnParams.source_account || paramsError.source_account
                   }
-                />
-
-                <PositiveIntPicker
-                  id="seq_num"
-                  label="Transaction Sequence Number"
-                  placeholder="Ex: 559234806710273"
-                  value={txnParams.seq_num}
-                  error={paramsError.seq_num}
-                  onChange={(e) => {
-                    const id = "seq_num";
-                    handleParamChange(id, e.target.value);
-                    handleError(id, validateParam(id, e.target.value));
-                  }}
-                  note="The transaction sequence number is usually one higher than current account sequence number."
-                  rightElement={
-                    <InputSideElement
-                      variant="button"
-                      onClick={() => {
-                        handleParamChange("seq_num", "");
-                        fetchSequenceNumber();
-                      }}
-                      placement="right"
-                      disabled={
-                        !txnParams.source_account || paramsError.source_account
-                      }
-                      isLoading={
-                        isFetchingSequenceNumber || isLoadingSequenceNumber
-                      }
-                    >
-                      Fetch next sequence
-                    </InputSideElement>
+                  isLoading={
+                    isFetchingSequenceNumber || isLoadingSequenceNumber
                   }
-                />
+                >
+                  Fetch next sequence
+                </InputSideElement>
+              }
+            />
 
-                <PositiveIntPicker
-                  id="fee"
-                  label="Base Fee"
-                  value={txnParams.fee}
-                  error={paramsError.fee}
-                  onChange={(e) => {
-                    const id = "fee";
-                    handleParamChange(id, e.target.value);
-                    handleError(id, validateParam(id, e.target.value));
-                  }}
-                  note={
-                    <>
-                      The{" "}
-                      <SdsLink href="https://developers.stellar.org/docs/learn/glossary#base-fee">
-                        network base fee
-                      </SdsLink>{" "}
-                      is currently set to 100 stroops (0.00001 lumens). Based on
-                      current network activity, we suggest setting it to 100
-                      stroops. Final transaction fee is equal to base fee times
-                      number of operations in this transaction.
-                    </>
-                  }
-                />
+            <PositiveIntPicker
+              id="fee"
+              label="Base Fee"
+              value={txnParams.fee}
+              error={paramsError.fee}
+              onChange={(e) => {
+                const id = "fee";
+                handleParamChange(id, e.target.value);
+                handleError(id, validateParam(id, e.target.value));
+              }}
+              note={
+                <>
+                  The{" "}
+                  <SdsLink href="https://developers.stellar.org/docs/learn/glossary#base-fee">
+                    network base fee
+                  </SdsLink>{" "}
+                  is currently set to 100 stroops (0.00001 lumens). Based on
+                  current network activity, we suggest setting it to 100
+                  stroops. Final transaction fee is equal to base fee times
+                  number of operations in this transaction.
+                </>
+              }
+            />
 
-                <MemoPicker
-                  id="memo"
-                  value={getMemoPickerValue()}
-                  labelSuffix="optional"
-                  error={paramsError.memo}
-                  onChange={(_, memo) => {
-                    const id = "memo";
-                    handleParamChange(id, getMemoValue(memo));
-                    handleError(id, validateParam(id, memo));
-                  }}
-                />
+            <MemoPicker
+              id="memo"
+              value={getMemoPickerValue()}
+              labelSuffix="optional"
+              error={paramsError.memo}
+              onChange={(_, memo) => {
+                const id = "memo";
+                handleParamChange(id, getMemoValue(memo));
+                handleError(id, validateParam(id, memo));
+              }}
+            />
 
-                <TimeBoundsPicker
-                  id="time"
-                  value={{
-                    min_time: txnParams.cond?.time?.min_time,
-                    max_time: txnParams.cond?.time?.max_time,
-                  }}
-                  labelSuffix="optional"
-                  error={paramsError.cond?.time}
-                  onChange={(timeBounds) => {
-                    const id = "cond.time";
-                    handleParamChange(id, timeBounds);
-                    handleError(id, validateParam("cond", timeBounds));
-                  }}
-                />
+            <TimeBoundsPicker
+              id="time"
+              value={{
+                min_time: txnParams.cond?.time?.min_time,
+                max_time: txnParams.cond?.time?.max_time,
+              }}
+              labelSuffix="optional"
+              error={paramsError.cond?.time}
+              onChange={(timeBounds) => {
+                const id = "cond.time";
+                handleParamChange(id, timeBounds);
+                handleError(id, validateParam("cond", timeBounds));
+              }}
+            />
 
-                <div>
-                  <Button
-                    size="md"
-                    variant="secondary"
-                    onClick={() => {
-                      updateBuildActiveTab("operations");
-                    }}
-                  >
-                    Add Operations
-                  </Button>
-                </div>
-              </>
+            <Box
+              gap="md"
+              direction="row"
+              align="center"
+              justify="space-between"
+            >
+              <Button
+                size="md"
+                variant="secondary"
+                onClick={() => {
+                  updateBuildActiveTab("operations");
+                }}
+              >
+                Add Operations
+              </Button>
+
+              <Button
+                size="md"
+                variant="error"
+                onClick={() => {
+                  resetBuildParams();
+                  setParamsError({});
+                }}
+                icon={<Icon.RefreshCw01 />}
+              >
+                Clear Params
+              </Button>
             </Box>
-          </Card>
+          </Box>
+        </Card>
 
-          <Alert variant="primary" placement="inline">
-            The transaction builder lets you build a new Stellar transaction.
-            This transaction will start out with no signatures. To make it into
-            the ledger, this transaction will then need to be signed and
-            submitted to the network.
-          </Alert>
+        <Alert variant="primary" placement="inline">
+          The transaction builder lets you build a new Stellar transaction. This
+          transaction will start out with no signatures. To make it into the
+          ledger, this transaction will then need to be signed and submitted to
+          the network.
+        </Alert>
 
-          <BuildingError errorList={getParamsError()} />
-        </>
+        <BuildingError errorList={getParamsError()} />
       </Box>
     );
   };
