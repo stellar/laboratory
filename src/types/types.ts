@@ -7,6 +7,12 @@ export type AnyObject = { [key: string]: any };
 export type EmptyObj = Record<PropertyKey, never>;
 
 // =============================================================================
+// Helpers
+// =============================================================================
+// Key union type from object keys
+export type KeysOfUnion<T> = T extends infer P ? keyof P : never;
+
+// =============================================================================
 // Network
 // =============================================================================
 export type NetworkType = "testnet" | "mainnet" | "futurenet" | "custom";
@@ -80,6 +86,14 @@ export type AssetObject = {
   id: AssetType;
   label: string;
   value: AssetObjectValue;
+};
+
+// =============================================================================
+// Transaction
+// =============================================================================
+export type TimeBoundsValue = {
+  min_time: number | string | undefined;
+  max_time: number | string | undefined;
 };
 
 // =============================================================================

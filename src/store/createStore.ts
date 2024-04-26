@@ -1,9 +1,32 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { querystring } from "zustand-querystring";
+import { MemoType } from "@stellar/stellar-sdk";
 
 import { sanitizeObject } from "@/helpers/sanitizeObject";
 import { AnyObject, EmptyObj, Network, MuxedAccount } from "@/types/types";
+
+export type TransactionBuildParams = {
+  source_account: string;
+  fee: string;
+  seq_num: string;
+  cond: {
+    time: {
+      min_time: string;
+      max_time: string;
+    };
+  };
+  memo:
+    | string
+    | {
+        [T in Exclude<MemoType, "none">]?: string;
+      }
+    | EmptyObj;
+};
+
+type TransactionBuildParamsObj = {
+  [K in keyof TransactionBuildParams]?: TransactionBuildParams[K];
+};
 
 export interface Store {
   // Shared
@@ -44,7 +67,7 @@ export interface Store {
   transaction: {
     build: {
       activeTab: string;
-      params: AnyObject;
+      params: TransactionBuildParams;
       operations: AnyObject[];
     };
     // TODO: update as needed
@@ -54,6 +77,7 @@ export interface Store {
     // feeBump: AnyObject;
     // Transaction actions
     updateBuildActiveTab: (tabId: string) => void;
+    updateBuildParams: (params: TransactionBuildParamsObj) => void;
     resetBuild: () => void;
   };
 }
@@ -72,7 +96,18 @@ const initEndpointState = {
 const initTransactionState = {
   build: {
     activeTab: "params",
-    params: {},
+    params: {
+      source_account: "",
+      fee: "",
+      seq_num: "",
+      cond: {
+        time: {
+          min_time: "",
+          max_time: "",
+        },
+      },
+      memo: {},
+    },
     operations: [],
   },
 };
@@ -182,6 +217,13 @@ export const createStore = (options: CreateStoreOptions) =>
           updateBuildActiveTab: (tabId: string) =>
             set((state) => {
               state.transaction.build.activeTab = tabId;
+            }),
+          updateBuildParams: (params: TransactionBuildParamsObj) =>
+            set((state) => {
+              state.transaction.build.params = {
+                ...state.transaction.build.params,
+                ...params,
+              };
             }),
           resetBuild: () =>
             set((state) => {
