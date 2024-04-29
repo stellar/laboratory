@@ -12,6 +12,7 @@ import { useStore } from "@/store/useStore";
 
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { TextPicker } from "@/components/FormElements/TextPicker";
+import { WithInfoText } from "@/components/WithInfoText";
 import { validate } from "@/validate";
 
 import { FEE_BUMP_TX_FIELDS, TX_FIELDS } from "@/constants/signTransactionPage";
@@ -27,7 +28,9 @@ export default function SignTransaction() {
   const [tx, setTx] = useState<FeeBumpTransaction | Transaction | undefined>(
     undefined,
   );
-  const [isTxImported, setIsTxImported] = useState<boolean>(false);
+
+  const [signer, setSigner] = useState<string>("");
+  const [signerErrorMsg, setSignerErrorMsg] = useState<string>("");
 
   const onChange = (value: string) => {
     setTxErrMsg("");
@@ -50,17 +53,21 @@ export default function SignTransaction() {
   const onImport = () => {
     try {
       const transaction = TransactionBuilder.fromXDR(txEnv, network.passphrase);
-      setIsTxImported(true);
+
       setTx(transaction);
     } catch (e) {
-      setIsTxImported(false);
       setTxErrMsg("Unable to import a transaction envelope");
     }
   };
 
-  const rendeImportView = () => {
+  const renderImportView = () => {
     return (
-      <>
+      <div className="SignTx__Overview">
+        <div className="PageHeader">
+          <Text size="md" as="h1" weight="medium">
+            Sign Transaction
+          </Text>
+        </div>
         <Card>
           <div className="SignTx__xdr">
             <XdrPicker
@@ -113,7 +120,7 @@ export default function SignTransaction() {
             one signature if there are multiple source accounts or signing keys.
           </Text>
         </Alert>
-      </>
+      </div>
     );
   };
 
@@ -147,55 +154,151 @@ export default function SignTransaction() {
 
     return (
       <>
-        <Card>
-          <div className="SignTx__FieldViewer">
-            {mergedFields.map((field) => {
-              const className =
-                field.value.toString().length >= MIN_LENGTH_FOR_FULL_WIDTH_FIELD
-                  ? "full-width"
-                  : "half-width";
-
-              if (field.label.includes("XDR")) {
-                return (
-                  <div className={className} key={field.label}>
-                    <XdrPicker
-                      readOnly
-                      id={field.label}
-                      label={field.label}
-                      value={field.value.toString()}
-                    />
-                  </div>
-                );
-              } else {
-                return (
-                  <div className={className} key={field.label}>
-                    <TextPicker
-                      readOnly
-                      id={field.label}
-                      label={field.label}
-                      value={field.value.toString()}
-                      copyButton={{
-                        position: "right",
-                      }}
-                    />
-                  </div>
-                );
-              }
-            })}
+        <div className="SignTx__Overview">
+          <div className="PageHeader">
+            <Text size="md" as="h1" weight="medium">
+              Transaction Overview
+            </Text>
+            <Button
+              size="md"
+              variant="error"
+              icon={<Icon.RefreshCw01 />}
+              iconPosition="right"
+            >
+              Clear and import new
+            </Button>
           </div>
-        </Card>
+
+          <Card>
+            <div className="SignTx__FieldViewer">
+              {mergedFields.map((field) => {
+                const className =
+                  field.value.toString().length >=
+                  MIN_LENGTH_FOR_FULL_WIDTH_FIELD
+                    ? "full-width"
+                    : "half-width";
+
+                if (field.label.includes("XDR")) {
+                  return (
+                    <div className={className} key={field.label}>
+                      <XdrPicker
+                        readOnly
+                        id={field.label}
+                        label={field.label}
+                        value={field.value.toString()}
+                      />
+                    </div>
+                  );
+                } else {
+                  return (
+                    <div className={className} key={field.label}>
+                      <TextPicker
+                        readOnly
+                        id={field.label}
+                        label={field.label}
+                        value={field.value.toString()}
+                        copyButton={{
+                          position: "right",
+                        }}
+                      />
+                    </div>
+                  );
+                }
+              })}
+            </div>
+          </Card>
+        </div>
+        <div className="SignTx__Signs">
+          <div className="PageHeader">
+            <WithInfoText href="https://developers.stellar.org/docs/learn/encyclopedia/signatures-multisig">
+              <Text size="md" as="h1" weight="medium">
+                Signatures
+              </Text>
+            </WithInfoText>
+          </div>
+
+          <Card>
+            <div className="SignTx__Field">
+              <div className="full-width">
+                <TextPicker
+                  id="signer"
+                  label="Add Signer"
+                  placeholder="Secret ket (starting with S) or hash preimage (in hex)"
+                  onChange={(e) => {
+                    setSigner(e.target.value);
+
+                    const error = validate.secretKey(e.target.value);
+
+                    if (error) {
+                      setSignerErrorMsg(error);
+                    }
+                  }}
+                  error={signerErrorMsg}
+                  value={signer}
+                />
+              </div>
+
+              <div className="full-width">
+                <TextPicker
+                  id="bip-path"
+                  label="BIP Path"
+                  placeholder="BIP path in format: 44'/148'/0'"
+                  onChange={(e) => {
+                    setSigner(e.target.value);
+
+                    const error = validate.secretKey(e.target.value);
+
+                    if (error) {
+                      setSignerErrorMsg(error);
+                    }
+                  }}
+                  error={signerErrorMsg}
+                  value={signer}
+                  note="Note: Trezor devices require upper time bounds to be set (non-zero), otherwise the signature will not be verified"
+                />
+              </div>
+
+              <div className="SignTx__Buttons">
+                <div>
+                  <Button
+                    // disabled={isLoading || isFetching}
+                    size="md"
+                    variant="secondary"
+                    // onClick={}
+                  >
+                    Sign with secret key
+                  </Button>
+
+                  <Button
+                    // disabled={isLoading || isFetching}
+                    size="md"
+                    variant="secondary"
+                    // onClick={}
+                  >
+                    Sign with wallet and submit
+                  </Button>
+                </div>
+                <div>
+                  <Button
+                    // disabled={isLoading || isFetching}
+                    size="md"
+                    variant="tertiary"
+                    // onClick={}
+                  >
+                    Add signature
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </Card>
+        </div>
       </>
     );
   };
 
   return (
     <div className="SignTx">
-      <div className="PageHeader">
-        <Text size="md" as="h1" weight="medium">
-          {isTxImported ? "Transaction Overview" : "Sign Transaction"}
-        </Text>
-      </div>
-      {isTxValid && tx ? renderOverviewView() : rendeImportView()}
+      {isTxValid && tx ? renderOverviewView() : renderImportView()}
     </div>
   );
 }
