@@ -405,6 +405,17 @@ export const TransactionSigner = () => {
                     </button>
                     <button
                       className="s-button"
+                      data-testid="transaction-signer-ledger-sign-button"
+                      onClick={() => {
+                        dispatch(
+                          signWithLedger(xdr, bipPath, networkPassphrase, true),
+                        );
+                      }}
+                    >
+                      Sign hash with Ledger
+                    </button>
+                    <button
+                      className="s-button"
                       data-testid="transaction-signer-trezor-sign-button"
                       onClick={() => {
                         dispatch(
