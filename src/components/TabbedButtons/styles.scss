@@ -1,0 +1,39 @@
+@use "../../styles/utils.scss" as *;
+
+.TabbedButtons {
+  display: flex;
+  flex-direction: row;
+
+  .Button {
+    border-radius: 0;
+
+    &:first-child {
+      border-top-left-radius: var(--Button-border-radius);
+      border-bottom-left-radius: var(--Button-border-radius);
+    }
+
+    &:last-child {
+      border-top-right-radius: var(--Button-border-radius);
+      border-bottom-right-radius: var(--Button-border-radius);
+    }
+
+    &:not(:first-child) {
+      border-left-color: transparent;
+    }
+
+    &:focus {
+      --Button-box-shadow-size: #{pxToRem(2px)};
+      z-index: 1;
+
+      &:not(:first-child) {
+        border-left-color: var(--Button-color-border-active);
+      }
+    }
+
+    &[data-variant="error"] {
+      --Button-color-icon-default: var(--sds-clr-red-09);
+      --Button-color-icon-hover: var(--sds-clr-red-09);
+      --Button-color-icon-active: var(--sds-clr-red-09);
+    }
+  }
+}
