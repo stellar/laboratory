@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Alert, Button, Card, Icon } from "@stellar/design-system";
+import { Alert, Badge, Button, Card, Icon } from "@stellar/design-system";
 import { MemoValue } from "@stellar/stellar-sdk";
 import { get, omit, set } from "lodash";
 import { stringify } from "lossless-json";
@@ -20,16 +20,18 @@ import {
 import { TimeBoundsPicker } from "@/components/FormElements/TimeBoundsPicker";
 import { InputSideElement } from "@/components/InputSideElement";
 import { ErrorListCard } from "@/components/ErrorListCard";
+import { TabbedButtons } from "@/components/TabbedButtons";
 
 import { sanitizeObject } from "@/helpers/sanitizeObject";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
+import { arrayItem } from "@/helpers/arrayItem";
 
 import { useStore } from "@/store/useStore";
 import { TransactionBuildParams } from "@/store/createStore";
 import { Routes } from "@/constants/routes";
 import { useAccountSequenceNumber } from "@/query/useAccountSequenceNumber";
 import { validate } from "@/validate";
-import { EmptyObj, KeysOfUnion } from "@/types/types";
+import { AnyObject, EmptyObj, KeysOfUnion } from "@/types/types";
 
 export default function BuildTransaction() {
   const { transaction, network } = useStore();
@@ -39,6 +41,13 @@ export default function BuildTransaction() {
 
   const [isReady, setIsReady] = useState(false);
   const [paramsError, setParamsError] = useState<ParamsError>({});
+
+  const INITIAL_OPERATION = {
+    id: 1,
+    label: `Label 1`,
+  };
+
+  const [txnOps, setTxnOps] = useState<AnyObject[]>([INITIAL_OPERATION]);
 
   const requiredParams = ["source_account", "seq_num", "fee"] as const;
   type RequiredParamsField = (typeof requiredParams)[number];
@@ -499,16 +508,147 @@ export default function BuildTransaction() {
     );
   };
 
-  // TODO: render operations
+  const OperationTabbedButtons = ({
+    index,
+    isUpDisabled,
+    isDownDisabled,
+    isDeleteDisabled,
+  }: {
+    index: number;
+    isUpDisabled: boolean;
+    isDownDisabled: boolean;
+    isDeleteDisabled: boolean;
+  }) => {
+    return (
+      <TabbedButtons
+        size="md"
+        buttons={[
+          {
+            id: "moveUp",
+            hoverTitle: "Move up",
+            icon: <Icon.ArrowUp />,
+            // TODO: move up operation
+            onClick: () => setTxnOps(arrayItem.move(txnOps, index, "before")),
+            isDisabled: isUpDisabled,
+          },
+          {
+            id: "moveDown",
+            hoverTitle: "Move down",
+            icon: <Icon.ArrowDown />,
+            // TODO: move down operation
+            onClick: () => setTxnOps(arrayItem.move(txnOps, index, "after")),
+            isDisabled: isDownDisabled,
+          },
+          {
+            id: "duplicate",
+            hoverTitle: "Duplicate",
+            icon: <Icon.Copy07 />,
+            // TODO: duplicate operation
+            onClick: () => setTxnOps(arrayItem.duplicate(txnOps, index)),
+          },
+          {
+            id: "delete",
+            hoverTitle: "Delete",
+            icon: <Icon.Trash01 />,
+            isError: true,
+            isDisabled: isDeleteDisabled,
+            // TODO: delete operation
+            onClick: () => setTxnOps(arrayItem.delete(txnOps, index)),
+          },
+        ]}
+      />
+    );
+  };
+
   const renderOperations = () => {
     const txnXdr = txnJsonToXdr();
 
     return (
-      <Card>
-        Operations
-        {/* TODO: style XDR and handle error */}
-        <div>{txnXdr.xdr ?? null}</div>
-      </Card>
+      <Box gap="md">
+        <Card>
+          <Box gap="lg">
+            {/* Operations */}
+            <>
+              {txnOps.map((op, idx) => (
+                <Box
+                  key={`op-${idx}`}
+                  gap="lg"
+                  addlClassName="PageBody__content"
+                >
+                  {/* Operation label and action buttons */}
+                  <Box
+                    gap="lg"
+                    direction="row"
+                    align="center"
+                    justify="space-between"
+                  >
+                    <Badge
+                      size="md"
+                      variant="primary"
+                    >{`Operation ${idx + 1}`}</Badge>
+
+                    <OperationTabbedButtons
+                      index={idx}
+                      isUpDisabled={idx === 0}
+                      isDownDisabled={idx === txnOps.length - 1}
+                      isDeleteDisabled={txnOps.length === 1}
+                    />
+                  </Box>
+
+                  {/* TODO: Operation fields */}
+                  <div>{op.label}</div>
+                </Box>
+              ))}
+            </>
+
+            {/* Operations bottom buttons */}
+            <Box
+              gap="lg"
+              direction="row"
+              align="center"
+              justify="space-between"
+            >
+              <Box gap="sm" direction="row" align="center">
+                <Button
+                  size="md"
+                  variant="secondary"
+                  icon={<Icon.PlusCircle />}
+                  onClick={() => {
+                    // TODO: add operation
+                    setTxnOps(
+                      arrayItem.add(txnOps, {
+                        id: txnOps.length + 1,
+                        label: `Label ${txnOps.length + 1}`,
+                      }),
+                    );
+                  }}
+                >
+                  Add Operation
+                </Button>
+
+                {/* TODO: add share and save buttons */}
+              </Box>
+
+              <Button
+                size="md"
+                variant="error"
+                icon={<Icon.RefreshCw01 />}
+                onClick={() => {
+                  // TODO: reset store
+                  setTxnOps([INITIAL_OPERATION]);
+                }}
+              >
+                Clear Operations
+              </Button>
+            </Box>
+          </Box>
+        </Card>
+
+        <Card>
+          {/* TODO: style XDR and handle error */}
+          <div>{txnXdr.xdr ?? null}</div>
+        </Card>
+      </Box>
     );
   };
 
@@ -516,7 +656,6 @@ export default function BuildTransaction() {
     return null;
   }
 
-  // TODO: ??? clear form button
   return (
     <div>
       <TabView
