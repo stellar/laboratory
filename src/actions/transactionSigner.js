@@ -50,7 +50,7 @@ export const ALBEDO_WALLET_SIGN_START = "ALBEDO_WALLET_SIGN_START";
 export const ALBEDO_WALLET_SIGN_SUCCESS = "ALBEDO_WALLET_SIGN_SUCCESS";
 export const ALBEDO_WALLET_SIGN_ERROR = "ALBEDO_WALLET_SIGN_ERROR";
 
-export function signWithLedger(txXDR, bipPath, networkPassphrase) {
+export function signWithLedger(txXDR, bipPath, networkPassphrase, isHash) {
   return (dispatch) => {
     dispatch({ type: LEDGER_WALLET_SIGN_START });
 
@@ -77,9 +77,15 @@ export function signWithLedger(txXDR, bipPath, networkPassphrase) {
       ledgerApi
         .getPublicKey(bipPath)
         .then((result) => (publicKey = result.publicKey))
-        .then(() =>
-          ledgerApi.signTransaction(bipPath, transaction.signatureBase()),
-        )
+        .then(() => {
+          if (isHash) {
+            return ledgerApi.signHash(bipPath, transaction.hash());
+          }
+          return ledgerApi.signTransaction(
+            bipPath,
+            transaction.signatureBase(),
+          );
+        })
         .then((result) => {
           let { signature } = result;
           let keyPair = Keypair.fromPublicKey(publicKey);
