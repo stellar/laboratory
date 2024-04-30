@@ -1,7 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Alert, Badge, Button, Card, Icon } from "@stellar/design-system";
+import {
+  Alert,
+  Badge,
+  Button,
+  Card,
+  Icon,
+  Select,
+} from "@stellar/design-system";
 import { MemoValue } from "@stellar/stellar-sdk";
 import { get, omit, set } from "lodash";
 import { stringify } from "lossless-json";
@@ -31,23 +38,29 @@ import { TransactionBuildParams } from "@/store/createStore";
 import { Routes } from "@/constants/routes";
 import { useAccountSequenceNumber } from "@/query/useAccountSequenceNumber";
 import { validate } from "@/validate";
-import { AnyObject, EmptyObj, KeysOfUnion } from "@/types/types";
+import { EmptyObj, KeysOfUnion, TxnOperation } from "@/types/types";
 
 export default function BuildTransaction() {
   const { transaction, network } = useStore();
-  const { activeTab, params: txnParams } = transaction.build;
-  const { updateBuildActiveTab, updateBuildParams, resetBuildParams } =
-    transaction;
+  const {
+    activeTab,
+    params: txnParams,
+    operations: txnOperations,
+  } = transaction.build;
+  const {
+    updateBuildActiveTab,
+    updateBuildParams,
+    updateBuildOperations,
+    updateBuildSingleOperation,
+    resetBuildParams,
+  } = transaction;
 
-  const [isReady, setIsReady] = useState(false);
   const [paramsError, setParamsError] = useState<ParamsError>({});
 
-  const INITIAL_OPERATION = {
-    id: 1,
-    label: `Label 1`,
+  const INITIAL_OPERATION: TxnOperation = {
+    operationType: "",
+    params: [],
   };
-
-  const [txnOps, setTxnOps] = useState<AnyObject[]>([INITIAL_OPERATION]);
 
   const requiredParams = ["source_account", "seq_num", "fee"] as const;
   type RequiredParamsField = (typeof requiredParams)[number];
@@ -118,8 +131,14 @@ export default function BuildTransaction() {
     };
 
     init();
-    // Need this to make sure the page doesn't render before we get the store data
-    setIsReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (txnOperations.length === 0) {
+      updateBuildOperations([INITIAL_OPERATION]);
+    }
+    // Check this only when mounts, don't need to check any dependencies
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -531,24 +550,28 @@ export default function BuildTransaction() {
             id: "moveUp",
             hoverTitle: "Move up",
             icon: <Icon.ArrowUp />,
-            // TODO: move up operation
-            onClick: () => setTxnOps(arrayItem.move(txnOps, index, "before")),
+            onClick: () =>
+              updateBuildOperations(
+                arrayItem.move(txnOperations, index, "before"),
+              ),
             isDisabled: isUpDisabled,
           },
           {
             id: "moveDown",
             hoverTitle: "Move down",
             icon: <Icon.ArrowDown />,
-            // TODO: move down operation
-            onClick: () => setTxnOps(arrayItem.move(txnOps, index, "after")),
+            onClick: () =>
+              updateBuildOperations(
+                arrayItem.move(txnOperations, index, "after"),
+              ),
             isDisabled: isDownDisabled,
           },
           {
             id: "duplicate",
             hoverTitle: "Duplicate",
             icon: <Icon.Copy07 />,
-            // TODO: duplicate operation
-            onClick: () => setTxnOps(arrayItem.duplicate(txnOps, index)),
+            onClick: () =>
+              updateBuildOperations(arrayItem.duplicate(txnOperations, index)),
           },
           {
             id: "delete",
@@ -556,11 +579,76 @@ export default function BuildTransaction() {
             icon: <Icon.Trash01 />,
             isError: true,
             isDisabled: isDeleteDisabled,
-            // TODO: delete operation
-            onClick: () => setTxnOps(arrayItem.delete(txnOps, index)),
+            onClick: () =>
+              updateBuildOperations(arrayItem.delete(txnOperations, index)),
           },
         ]}
       />
+    );
+  };
+
+  const OperationTypeSelector = ({
+    index,
+    operationType,
+  }: {
+    index: number;
+    operationType: string;
+  }) => {
+    return (
+      <Select
+        fieldSize="md"
+        id={`${index}-operationType`}
+        label="Operation type"
+        value={operationType}
+        infoLink="https://developers.stellar.org/docs/start/list-of-operations/"
+        onChange={(e) => {
+          const op = txnOperations[index];
+
+          updateBuildSingleOperation(index, {
+            ...op,
+            operationType: e.target.value,
+          });
+        }}
+      >
+        <option value="">Select operation type</option>
+        <option value="create_account">Create Account</option>
+        <option value="payment">Payment</option>
+        <option value="path_payment_strict_send">
+          Path Payment Strict Send
+        </option>
+        <option value="path_payment_strict_receive">
+          Path Payment Strict Receive
+        </option>
+        <option value="manage_sell_offer">Manage Sell Offer</option>
+        <option value="manage_buy_offer">Manage Buy Offer</option>
+        <option value="create_passive_sell_offer">
+          Create Passive Sell Offer
+        </option>
+        <option value="set_options">Set Options</option>
+        <option value="change_trust">Change Trust</option>
+        <option value="allow_trust">Allow Trust</option>
+        <option value="account_merge">Account Merge</option>
+        <option value="manage_data">Manage Data</option>
+        <option value="bump_sequence">Bump Sequence</option>
+        <option value="create_claimable_balance">
+          Create Claimable Balance
+        </option>
+        <option value="claim_claimable_balance">Claim Claimable Balance</option>
+        <option value="begin_sponsoring_future_reserves">
+          Begin Sponsoring Future Reserves
+        </option>
+        <option value="end_sponsoring_future_reserves">
+          End Sponsoring Future Reserves
+        </option>
+        <option value="revoke_sponsorship">Revoke Sponsorship</option>
+        <option value="clawback">Clawback</option>
+        <option value="clawback_claimable_balance">
+          Clawback Claimable Balance
+        </option>
+        <option value="set_trust_line_flags">Set Trust Line Flags</option>
+        <option value="liquidity_pool_deposit">Liquidity Pool Deposit</option>
+        <option value="liquidity_pool_withdraw">Liquidity Pool Withdraw</option>
+      </Select>
     );
   };
 
@@ -573,7 +661,7 @@ export default function BuildTransaction() {
           <Box gap="lg">
             {/* Operations */}
             <>
-              {txnOps.map((op, idx) => (
+              {txnOperations.map((op, idx) => (
                 <Box
                   key={`op-${idx}`}
                   gap="lg"
@@ -594,13 +682,16 @@ export default function BuildTransaction() {
                     <OperationTabbedButtons
                       index={idx}
                       isUpDisabled={idx === 0}
-                      isDownDisabled={idx === txnOps.length - 1}
-                      isDeleteDisabled={txnOps.length === 1}
+                      isDownDisabled={idx === txnOperations.length - 1}
+                      isDeleteDisabled={txnOperations.length === 1}
                     />
                   </Box>
 
                   {/* TODO: Operation fields */}
-                  <div>{op.label}</div>
+                  <OperationTypeSelector
+                    index={idx}
+                    operationType={op.operationType}
+                  />
                 </Box>
               ))}
             </>
@@ -618,12 +709,8 @@ export default function BuildTransaction() {
                   variant="secondary"
                   icon={<Icon.PlusCircle />}
                   onClick={() => {
-                    // TODO: add operation
-                    setTxnOps(
-                      arrayItem.add(txnOps, {
-                        id: txnOps.length + 1,
-                        label: `Label ${txnOps.length + 1}`,
-                      }),
+                    updateBuildOperations(
+                      arrayItem.add(txnOperations, INITIAL_OPERATION),
                     );
                   }}
                 >
@@ -638,8 +725,7 @@ export default function BuildTransaction() {
                 variant="error"
                 icon={<Icon.RefreshCw01 />}
                 onClick={() => {
-                  // TODO: reset store
-                  setTxnOps([INITIAL_OPERATION]);
+                  updateBuildOperations([INITIAL_OPERATION]);
                 }}
               >
                 Clear Operations
@@ -655,10 +741,6 @@ export default function BuildTransaction() {
       </Box>
     );
   };
-
-  if (!isReady) {
-    return null;
-  }
 
   return (
     <div>

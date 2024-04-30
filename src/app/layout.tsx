@@ -2,6 +2,7 @@ import React from "react";
 import type { Metadata } from "next";
 
 import { LayoutMain } from "@/components/layout/LayoutMain";
+import { Hydration } from "@/components/Hydration";
 import { QueryProvider } from "@/query/QueryProvider";
 import { StoreProvider } from "@/store/StoreProvider";
 
@@ -25,7 +26,9 @@ export default function RootLayout({
         <div id="root">
           <StoreProvider>
             <QueryProvider>
-              <LayoutMain>{children}</LayoutMain>
+              <Hydration>
+                <LayoutMain>{children}</LayoutMain>
+              </Hydration>
             </QueryProvider>
           </StoreProvider>
         </div>

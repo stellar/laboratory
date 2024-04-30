@@ -4,7 +4,13 @@ import { querystring } from "zustand-querystring";
 import { MemoType } from "@stellar/stellar-sdk";
 
 import { sanitizeObject } from "@/helpers/sanitizeObject";
-import { AnyObject, EmptyObj, Network, MuxedAccount } from "@/types/types";
+import {
+  AnyObject,
+  EmptyObj,
+  Network,
+  MuxedAccount,
+  TxnOperation,
+} from "@/types/types";
 
 export type TransactionBuildParams = {
   source_account: string;
@@ -68,7 +74,7 @@ export interface Store {
     build: {
       activeTab: string;
       params: TransactionBuildParams;
-      operations: AnyObject[];
+      operations: TxnOperation[];
     };
     // TODO: update as needed
     // sign: AnyObject;
@@ -78,6 +84,11 @@ export interface Store {
     // Transaction actions
     updateBuildActiveTab: (tabId: string) => void;
     updateBuildParams: (params: TransactionBuildParamsObj) => void;
+    updateBuildOperations: (operations: TxnOperation[]) => void;
+    updateBuildSingleOperation: (
+      index: number,
+      operation: TxnOperation,
+    ) => void;
     resetBuildParams: () => void;
     resetBuild: () => void;
   };
@@ -227,6 +238,14 @@ export const createStore = (options: CreateStoreOptions) =>
                 ...state.transaction.build.params,
                 ...params,
               };
+            }),
+          updateBuildOperations: (operations) =>
+            set((state) => {
+              state.transaction.build.operations = operations;
+            }),
+          updateBuildSingleOperation: (index, operation) =>
+            set((state) => {
+              state.transaction.build.operations[index] = operation;
             }),
           resetBuildParams: () =>
             set((state) => {
