@@ -20,7 +20,7 @@
     "git-info": "rm -rf src/generated/ && mkdir src/generated/ && echo export default \"{\\\"commitHash\\\": \\\"$(git rev-parse --short HEAD)\\\", \\\"version\\\": \\\"$(git describe --tags --always)\\\"};\" > src/generated/gitInfo.ts"
   },
   "dependencies": {
-    "@stellar/design-system": "^2.0.0-beta.10",
+    "@stellar/design-system": "^2.0.0-beta.13",
     "@stellar/stellar-sdk": "^11.3.0",
     "@tanstack/react-query": "^5.28.8",
     "@tanstack/react-query-devtools": "^5.28.8",

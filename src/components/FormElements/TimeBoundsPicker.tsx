@@ -14,6 +14,8 @@ type TimeBoundsPickerProps = {
   labelSuffix?: string | React.ReactNode;
   onChange: (value: TimeBoundValue) => void;
   error: { min_time: string | false; max_time: string | false } | undefined;
+  infoLink?: string;
+  infoText?: string | React.ReactNode;
 };
 
 export const TimeBoundsPicker = ({
@@ -22,6 +24,8 @@ export const TimeBoundsPicker = ({
   labelSuffix,
   onChange,
   error,
+  infoLink,
+  infoText,
 }: TimeBoundsPickerProps) => {
   return (
     <Box gap="sm">
@@ -39,6 +43,8 @@ export const TimeBoundsPicker = ({
               min_time: e.target.value,
             });
           }}
+          infoLink={infoLink}
+          infoText={infoText}
         />
         <PositiveIntPicker
           id={`${id}-max-time`}

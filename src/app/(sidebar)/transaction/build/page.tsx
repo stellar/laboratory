@@ -354,7 +354,6 @@ export default function BuildTransaction() {
     );
   };
 
-  // TODO: add info links
   const renderParams = () => {
     return (
       <Box gap="md">
@@ -380,6 +379,7 @@ export default function BuildTransaction() {
                   .
                 </>
               }
+              infoLink="https://developers.stellar.org/docs/learn/glossary#source-account"
             />
 
             <PositiveIntPicker
@@ -412,6 +412,7 @@ export default function BuildTransaction() {
                   Fetch next sequence
                 </InputSideElement>
               }
+              infoLink="https://developers.stellar.org/docs/glossary#sequence-number"
             />
 
             <PositiveIntPicker
@@ -427,7 +428,7 @@ export default function BuildTransaction() {
               note={
                 <>
                   The{" "}
-                  <SdsLink href="https://developers.stellar.org/docs/learn/glossary#base-fee">
+                  <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/fees-resource-limits-metering">
                     network base fee
                   </SdsLink>{" "}
                   is currently set to 100 stroops (0.00001 lumens). Based on
@@ -436,6 +437,7 @@ export default function BuildTransaction() {
                   number of operations in this transaction.
                 </>
               }
+              infoLink="https://developers.stellar.org/docs/learn/glossary#base-fee"
             />
 
             <MemoPicker
@@ -448,6 +450,7 @@ export default function BuildTransaction() {
                 handleParamChange(id, getMemoValue(memo));
                 handleError(id, validateParam(id, memo));
               }}
+              infoLink="https://developers.stellar.org/docs/encyclopedia/memos"
             />
 
             <TimeBoundsPicker
@@ -463,6 +466,7 @@ export default function BuildTransaction() {
                 handleParamChange(id, timeBounds);
                 handleError(id, validateParam("cond", timeBounds));
               }}
+              infoLink="https://developers.stellar.org/docs/learn/glossary#time-bounds"
             />
 
             <Box
