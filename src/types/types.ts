@@ -97,8 +97,9 @@ export type TimeBoundsValue = {
 };
 
 export type TxnOperation = {
-  operationType: string;
-  params: AnyObject[];
+  operation_type: string;
+  params: AnyObject;
+  source_account?: string;
 };
 
 // =============================================================================

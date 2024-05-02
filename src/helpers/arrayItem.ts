@@ -62,9 +62,21 @@ const moveItem = (
   return itemArray;
 };
 
+const updateItem = (array: any[], itemIndex: number, newItem: any) => {
+  if (!isValidItemIndex(array, itemIndex)) {
+    return array;
+  }
+
+  const itemArray = [...array];
+  itemArray[itemIndex] = newItem;
+
+  return itemArray;
+};
+
 export const arrayItem = {
   add: addItem,
   delete: deleteItem,
   duplicate: duplicateItem,
   move: moveItem,
+  update: updateItem,
 };
