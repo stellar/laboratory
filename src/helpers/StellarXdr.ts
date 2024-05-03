@@ -1,3 +1,4 @@
+// TODO: replace with package once published
 import wasm, { decode, encode } from "bindings-js";
 
 declare global {

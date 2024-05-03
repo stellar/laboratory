@@ -215,6 +215,7 @@
     cursor: default;
     --Nav-navLink-color: var(--sds-clr-lilac-11);
     --Nav-navLink-border-color: var(--sds-clr-lilac-09);
+    pointer-events: none;
   }
 }
 
@@ -251,6 +252,7 @@
     --SidebarLink-color: var(--sds-clr-lilac-11);
     cursor: default;
     font-weight: var(--sds-fw-semi-bold);
+    pointer-events: none;
   }
 
   &__toggle {

@@ -75,6 +75,10 @@ export interface Store {
       activeTab: string;
       params: TransactionBuildParams;
       operations: TxnOperation[];
+      isValid: {
+        params: boolean;
+        operations: boolean;
+      };
     };
     // TODO: update as needed
     // sign: AnyObject;
@@ -89,6 +93,13 @@ export interface Store {
       index: number,
       operation: TxnOperation,
     ) => void;
+    updateBuildIsValid: ({
+      params,
+      operations,
+    }: {
+      params?: boolean;
+      operations?: boolean;
+    }) => void;
     resetBuildParams: () => void;
     resetBuild: () => void;
   };
@@ -123,6 +134,10 @@ const initTransactionState = {
     activeTab: "params",
     params: initTransactionParamsState,
     operations: [],
+    isValid: {
+      params: false,
+      operations: false,
+    },
   },
 };
 
@@ -246,6 +261,21 @@ export const createStore = (options: CreateStoreOptions) =>
           updateBuildSingleOperation: (index, operation) =>
             set((state) => {
               state.transaction.build.operations[index] = operation;
+            }),
+          updateBuildIsValid: ({
+            params,
+            operations,
+          }: {
+            params?: boolean;
+            operations?: boolean;
+          }) =>
+            set((state) => {
+              if (params !== undefined) {
+                state.transaction.build.isValid.params = params;
+              }
+              if (operations !== undefined) {
+                state.transaction.build.isValid.operations = operations;
+              }
             }),
           resetBuildParams: () =>
             set((state) => {

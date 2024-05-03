@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { Alert, Button, Card, Icon } from "@stellar/design-system";
 import { MemoValue } from "@stellar/stellar-sdk";
@@ -14,6 +16,7 @@ import {
   MemoPickerValue,
 } from "@/components/FormElements/MemoPicker";
 import { TimeBoundsPicker } from "@/components/FormElements/TimeBoundsPicker";
+import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 
 import { sanitizeObject } from "@/helpers/sanitizeObject";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
@@ -24,19 +27,17 @@ import { useAccountSequenceNumber } from "@/query/useAccountSequenceNumber";
 import { validate } from "@/validate";
 import { EmptyObj, KeysOfUnion } from "@/types/types";
 
-import { BuildingError } from "./BuildingError";
+export const Params = () => {
+  const requiredParams = ["source_account", "seq_num", "fee"] as const;
 
-export const Params = ({
-  validateParams,
-}: {
-  validateParams: (isValid: boolean) => void;
-}) => {
   const { transaction, network } = useStore();
   const { params: txnParams } = transaction.build;
-  const { updateBuildActiveTab, updateBuildParams, resetBuildParams } =
-    transaction;
-
-  const requiredParams = ["source_account", "seq_num", "fee"] as const;
+  const {
+    updateBuildActiveTab,
+    updateBuildParams,
+    updateBuildIsValid,
+    resetBuildParams,
+  } = transaction;
 
   const [paramsError, setParamsError] = useState<ParamsError>({});
 
@@ -62,6 +63,7 @@ export const Params = ({
     horizonUrl: network.horizonUrl,
   });
 
+  // Preserve values and validate inputs when components mounts
   useEffect(() => {
     Object.entries(txnParams).forEach(([key, val]) => {
       if (val) {
@@ -91,6 +93,7 @@ export const Params = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Handle fetch sequence number response
   useEffect(() => {
     if (sequenceNumberData || sequenceNumberError) {
       const id = "seq_num";
@@ -240,10 +243,12 @@ export const Params = ({
     }
 
     // Callback to the parent component
-    validateParams(allErrorMessages.length === 0);
+    updateBuildIsValid({ params: allErrorMessages.length === 0 });
 
     return allErrorMessages;
   };
+
+  const formErrors = getParamsError();
 
   return (
     <Box gap="md">
@@ -387,7 +392,21 @@ export const Params = ({
         the network.
       </Alert>
 
-      <BuildingError errorList={getParamsError()} />
+      <>
+        {formErrors.length > 0 ? (
+          <ValidationResponseCard
+            variant="primary"
+            title="Transaction building errors:"
+            response={
+              <ul>
+                {formErrors.map((e, i) => (
+                  <li key={`e-${i}`}>{e}</li>
+                ))}
+              </ul>
+            }
+          />
+        ) : null}
+      </>
     </Box>
   );
 };
