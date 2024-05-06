@@ -1,4 +1,4 @@
-import { StrKey, scValToNative, xdr } from "stellar-sdk";
+import { StrKey, scValToNative, xdr } from "@stellar/stellar-sdk";
 
 export const scValByType = (scVal: xdr.ScVal) => {
   switch (scVal.switch()) {

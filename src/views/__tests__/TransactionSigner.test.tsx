@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import { Networks, TransactionBuilder } from "stellar-sdk";
+import { Networks, TransactionBuilder } from "@stellar/stellar-sdk";
 import { fireEvent, waitFor, screen } from "@testing-library/react";
 import { render } from "helpers/testHelpers";
 import { TransactionSigner } from "views/TransactionSigner";

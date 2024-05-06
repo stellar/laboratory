@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import * as StellarSdk from "stellar-sdk";
+import * as StellarSdk from "@stellar/stellar-sdk";
 import { isConnected } from "@stellar/freighter-api";
 import isUndefined from "lodash/isUndefined";
 import map from "lodash/map";

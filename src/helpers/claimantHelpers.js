@@ -1,4 +1,4 @@
-import * as Sdk from "stellar-sdk";
+import * as Sdk from "@stellar/stellar-sdk";
 import flatten from "lodash/flatten";
 import flowRight from "lodash/flowRight";
 import isArray from "lodash/isArray";

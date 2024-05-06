@@ -1,6 +1,6 @@
 import React from "react";
 import assign from "lodash/assign";
-import { UnsignedHyper } from "stellar-sdk";
+import { UnsignedHyper } from "@stellar/stellar-sdk";
 import RadioButtonPicker from "./RadioButtonPicker";
 import TextPicker from "./TextPicker";
 

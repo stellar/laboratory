@@ -3,7 +3,7 @@ import assign from "lodash/assign";
 import filter from "lodash/filter";
 import find from "lodash/find";
 import findIndex from "lodash/findIndex";
-import { BASE_FEE } from "stellar-sdk";
+import { BASE_FEE } from "@stellar/stellar-sdk";
 import {
   UPDATE_ATTRIBUTES,
   FETCH_SEQUENCE_START,

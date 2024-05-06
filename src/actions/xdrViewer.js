@@ -1,4 +1,4 @@
-import * as StellarSdk from "stellar-sdk";
+import * as StellarSdk from "@stellar/stellar-sdk";
 import axios from "axios";
 import { FETCH_SEQUENCE_FAIL } from "actions/transactionBuilder.js";
 import { SIGNATURE } from "../constants/signature";

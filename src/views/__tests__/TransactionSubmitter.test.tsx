@@ -3,7 +3,7 @@
  */
 
 import { fireEvent, waitFor, screen } from "@testing-library/react";
-import * as StellarSdk from "stellar-sdk";
+import * as StellarSdk from "@stellar/stellar-sdk";
 import { render } from "helpers/testHelpers";
 import { TransactionSubmitter } from "views/TransactionSubmitter";
 import * as extrapolateFromXdr from "helpers/extrapolateFromXdr";
@@ -26,16 +26,16 @@ const MOCK_SERVER_RESPONSE_SUCCESS = {
   successful: true,
 };
 
-jest.mock("stellar-sdk", () => ({
-  ...jest.requireActual("stellar-sdk"),
+jest.mock("@stellar/stellar-sdk", () => ({
+  ...jest.requireActual("@stellar/stellar-sdk"),
   Server: jest.fn().mockImplementation(() => ({
     submitTransaction: () => new Promise((resolve) => resolve({})),
   })),
 }));
 
-/* extrapolatedFromXdr doesn't work in @react/testing-library (seemingly) because of the difference in the way the browser and node's 
+/* extrapolatedFromXdr doesn't work in @react/testing-library (seemingly) because of the difference in the way the browser and node's
   engines handle Buffers.
-  Until it can be refactored to work across engines, we manually mock an extrapolated `MOCK_SIGNED_TRANSACTION` that uses a Buffer for a signature 
+  Until it can be refactored to work across engines, we manually mock an extrapolated `MOCK_SIGNED_TRANSACTION` that uses a Buffer for a signature
   instead of Uint8Array. */
 
 const MOCK_EXTRAPOLATED_SIGNED_TRANSACTION = [

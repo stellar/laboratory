@@ -1,4 +1,4 @@
-import { StrKey } from "stellar-sdk";
+import { StrKey } from "@stellar/stellar-sdk";
 
 import TextPicker from "components/FormComponents/TextPicker.js";
 import { ImportMark } from "components/ImportMark.js";

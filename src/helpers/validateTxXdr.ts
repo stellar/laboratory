@@ -1,5 +1,5 @@
 import trim from "lodash/trim";
-import * as StellarSdk from "stellar-sdk";
+import * as StellarSdk from "@stellar/stellar-sdk";
 import { validateBase64 } from "./validateBase64";
 
 export const validateTxXdr = (input: string) => {
