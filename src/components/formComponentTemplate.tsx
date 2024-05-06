@@ -232,6 +232,21 @@ export const formComponentTemplate = (
         ),
         validate: null,
       };
+    case "destination":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <PubKeyPicker
+            key={id}
+            id={id}
+            label="Destination"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.publicKey,
+      };
     case "destination_account":
       return {
         render: (templ: TemplateRenderProps) => (
@@ -586,6 +601,21 @@ export const formComponentTemplate = (
           />
         ),
         validate: validate.publicKey,
+      };
+    case "starting_balance":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <TextPicker
+            key={id}
+            id={id}
+            label="Starting Balance"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.amount,
       };
     case "start_time":
       return {

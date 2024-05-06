@@ -4,7 +4,13 @@ import { querystring } from "zustand-querystring";
 import { MemoType } from "@stellar/stellar-sdk";
 
 import { sanitizeObject } from "@/helpers/sanitizeObject";
-import { AnyObject, EmptyObj, Network, MuxedAccount } from "@/types/types";
+import {
+  AnyObject,
+  EmptyObj,
+  Network,
+  MuxedAccount,
+  TxnOperation,
+} from "@/types/types";
 
 export type TransactionBuildParams = {
   source_account: string;
@@ -68,7 +74,11 @@ export interface Store {
     build: {
       activeTab: string;
       params: TransactionBuildParams;
-      operations: AnyObject[];
+      operations: TxnOperation[];
+      isValid: {
+        params: boolean;
+        operations: boolean;
+      };
     };
     // TODO: update as needed
     // sign: AnyObject;
@@ -78,6 +88,18 @@ export interface Store {
     // Transaction actions
     updateBuildActiveTab: (tabId: string) => void;
     updateBuildParams: (params: TransactionBuildParamsObj) => void;
+    updateBuildOperations: (operations: TxnOperation[]) => void;
+    updateBuildSingleOperation: (
+      index: number,
+      operation: TxnOperation,
+    ) => void;
+    updateBuildIsValid: ({
+      params,
+      operations,
+    }: {
+      params?: boolean;
+      operations?: boolean;
+    }) => void;
     resetBuildParams: () => void;
     resetBuild: () => void;
   };
@@ -112,6 +134,10 @@ const initTransactionState = {
     activeTab: "params",
     params: initTransactionParamsState,
     operations: [],
+    isValid: {
+      params: false,
+      operations: false,
+    },
   },
 };
 
@@ -227,6 +253,29 @@ export const createStore = (options: CreateStoreOptions) =>
                 ...state.transaction.build.params,
                 ...params,
               };
+            }),
+          updateBuildOperations: (operations) =>
+            set((state) => {
+              state.transaction.build.operations = operations;
+            }),
+          updateBuildSingleOperation: (index, operation) =>
+            set((state) => {
+              state.transaction.build.operations[index] = operation;
+            }),
+          updateBuildIsValid: ({
+            params,
+            operations,
+          }: {
+            params?: boolean;
+            operations?: boolean;
+          }) =>
+            set((state) => {
+              if (params !== undefined) {
+                state.transaction.build.isValid.params = params;
+              }
+              if (operations !== undefined) {
+                state.transaction.build.isValid.operations = operations;
+              }
             }),
           resetBuildParams: () =>
             set((state) => {

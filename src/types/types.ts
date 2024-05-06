@@ -96,6 +96,12 @@ export type TimeBoundsValue = {
   max_time: number | string | undefined;
 };
 
+export type TxnOperation = {
+  operation_type: string;
+  params: AnyObject;
+  source_account?: string;
+};
+
 // =============================================================================
 // Component
 // =============================================================================

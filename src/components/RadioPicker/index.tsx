@@ -14,6 +14,8 @@ interface RadioPickerProps<TOptionValue = string> {
     value?: TOptionValue;
   }[];
   fitContent?: boolean;
+  infoLink?: string;
+  infoText?: string | React.ReactNode;
 }
 
 export const RadioPicker = <TOptionValue,>({
@@ -24,6 +26,8 @@ export const RadioPicker = <TOptionValue,>({
   onChange,
   options,
   fitContent,
+  infoLink,
+  infoText,
 }: RadioPickerProps<TOptionValue>) => {
   const customStyle = {
     ...(fitContent ? { "--RadioPicker-width": "fit-content" } : {}),
@@ -32,7 +36,13 @@ export const RadioPicker = <TOptionValue,>({
   return (
     <div className="RadioPicker" style={customStyle}>
       {label ? (
-        <Label size="md" htmlFor="" labelSuffix={labelSuffix}>
+        <Label
+          size="md"
+          htmlFor=""
+          labelSuffix={labelSuffix}
+          infoLink={infoLink}
+          infoText={infoText}
+        >
           {label}
         </Label>
       ) : null}

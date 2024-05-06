@@ -20,6 +20,8 @@ type MemoPickerProps = {
   ) => void;
   labelSuffix?: string | React.ReactNode;
   error: string | undefined;
+  infoLink?: string;
+  infoText?: string | React.ReactNode;
 };
 
 export const MemoPicker = ({
@@ -28,6 +30,8 @@ export const MemoPicker = ({
   onChange,
   labelSuffix,
   error,
+  infoLink,
+  infoText,
 }: MemoPickerProps) => {
   const memoValuePlaceholder = (type?: MemoType | string) => {
     if (!type) {
@@ -67,6 +71,8 @@ export const MemoPicker = ({
             value: { type: "return", value: "" },
           },
         ]}
+        infoLink={infoLink}
+        infoText={infoText}
       />
 
       <ExpandBox

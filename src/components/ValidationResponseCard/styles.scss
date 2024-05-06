@@ -1,0 +1,39 @@
+@use "../../styles/utils.scss" as *;
+
+.ValidationResponseCard {
+  --ValidationResponseCard-title-color: var(--sds-clr-gray-12);
+
+  &[data-variant="success"] {
+    --ValidationResponseCard-title-color: var(--sds-clr-green-11);
+  }
+  &[data-variant="error"] {
+    --ValidationResponseCard-title-color: var(--sds-clr-red-11);
+  }
+
+  &__title {
+    color: var(--ValidationResponseCard-title-color);
+  }
+
+  &__subtitle,
+  &__note {
+    color: var(--sds-clr-gray-11);
+  }
+
+  &__content {
+    font-size: pxToRem(14px);
+    line-height: pxToRem(20px);
+    color: var(--sds-clr-gray-12);
+    font-family: var(--sds-ff-monospace);
+    font-weight: var(--sds-fw-medium);
+    padding: pxToRem(16px);
+    word-wrap: break-word;
+
+    ul {
+      font-size: inherit;
+      line-height: inherit;
+      font-family: var(--sds-ff-monospace);
+      font-weight: var(--sds-fw-medium);
+      padding-left: pxToRem(16px);
+    }
+  }
+}

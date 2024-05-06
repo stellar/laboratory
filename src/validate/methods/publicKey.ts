@@ -3,7 +3,7 @@ import { StrKey } from "@stellar/stellar-sdk";
 export const publicKey = (publicKey: string, isRequired?: boolean) => {
   if (!publicKey) {
     if (isRequired) {
-      return "Asset issuer is required.";
+      return "Public key is required.";
     } else {
       return false;
     }

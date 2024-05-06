@@ -9,6 +9,7 @@ export const Box = ({
   direction = "column",
   justify = "baseline",
   align = "stretch",
+  ...props
 }: (
   | { gap: "xs" | "sm" | "md" | "lg" | "xl" | "xxl"; customValue?: undefined }
   | { gap: "custom"; customValue: string }
@@ -37,6 +38,7 @@ export const Box = ({
       className={`Box Box--${gap} ${addlClassName ?? ""}`}
       {...(gap === "custom" ? { gap: customValue } : {})}
       style={customStyle}
+      {...props}
     >
       {children}
     </div>
