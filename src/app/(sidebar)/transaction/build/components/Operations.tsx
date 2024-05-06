@@ -13,6 +13,7 @@ import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { TRANSACTION_OPERATIONS } from "@/constants/transactionOperations";
 import { useStore } from "@/store/useStore";
 import { TxnOperation } from "@/types/types";
+import { SdsLink } from "@/components/SdsLink";
 
 export const Operations = () => {
   const { transaction } = useStore();
@@ -406,109 +407,123 @@ export const Operations = () => {
   }: {
     index: number;
     operationType: string;
-  }) => (
-    <Select
-      fieldSize="md"
-      id={`${index}-operationType`}
-      label="Operation type"
-      value={operationType}
-      infoLink="https://developers.stellar.org/docs/start/list-of-operations/"
-      onChange={(e) => {
-        updateBuildSingleOperation(index, {
-          operation_type: e.target.value,
-          params: [],
-          source_account: "",
-        });
+  }) => {
+    const opInfo =
+      (operationType && TRANSACTION_OPERATIONS[operationType]) || null;
 
-        let initParamError: OperationError = EMPTY_OPERATION_ERROR;
+    return (
+      <Select
+        fieldSize="md"
+        id={`${index}-operationType`}
+        label="Operation type"
+        value={operationType}
+        infoLink="https://developers.stellar.org/docs/start/list-of-operations/"
+        onChange={(e) => {
+          updateBuildSingleOperation(index, {
+            operation_type: e.target.value,
+            params: [],
+            source_account: "",
+          });
 
-        // Get operation required fields if there is operation type
-        if (e.target.value) {
-          initParamError = {
-            ...initParamError,
-            missingFields: [
-              ...(TRANSACTION_OPERATIONS[e.target.value]?.requiredParams || []),
-            ],
-            operationType: e.target.value,
-          };
+          let initParamError: OperationError = EMPTY_OPERATION_ERROR;
+
+          // Get operation required fields if there is operation type
+          if (e.target.value) {
+            initParamError = {
+              ...initParamError,
+              missingFields: [
+                ...(TRANSACTION_OPERATIONS[e.target.value]?.requiredParams ||
+                  []),
+              ],
+              operationType: e.target.value,
+            };
+          }
+
+          setOperationsError([
+            ...arrayItem.update(operationsError, index, initParamError),
+          ]);
+        }}
+        note={
+          opInfo ? (
+            <>
+              {opInfo.description}{" "}
+              <SdsLink href={opInfo.docsUrl}>See documentation</SdsLink>.
+            </>
+          ) : null
         }
-
-        setOperationsError([
-          ...arrayItem.update(operationsError, index, initParamError),
-        ]);
-      }}
-    >
-      <option value="">Select operation type</option>
-      <option value="create_account">Create Account</option>
-      {/* TODO: remove disabled attribute when operation is implemented */}
-      <option value="payment" disabled>
-        Payment
-      </option>
-      <option value="path_payment_strict_send" disabled>
-        Path Payment Strict Send
-      </option>
-      <option value="path_payment_strict_receive" disabled>
-        Path Payment Strict Receive
-      </option>
-      <option value="manage_sell_offer" disabled>
-        Manage Sell Offer
-      </option>
-      <option value="manage_buy_offer" disabled>
-        Manage Buy Offer
-      </option>
-      <option value="create_passive_sell_offer" disabled>
-        Create Passive Sell Offer
-      </option>
-      <option value="set_options" disabled>
-        Set Options
-      </option>
-      <option value="change_trust" disabled>
-        Change Trust
-      </option>
-      <option value="allow_trust" disabled>
-        Allow Trust
-      </option>
-      <option value="account_merge" disabled>
-        Account Merge
-      </option>
-      <option value="manage_data" disabled>
-        Manage Data
-      </option>
-      <option value="bump_sequence" disabled>
-        Bump Sequence
-      </option>
-      <option value="create_claimable_balance" disabled>
-        Create Claimable Balance
-      </option>
-      <option value="claim_claimable_balance" disabled>
-        Claim Claimable Balance
-      </option>
-      <option value="begin_sponsoring_future_reserves" disabled>
-        Begin Sponsoring Future Reserves
-      </option>
-      <option value="end_sponsoring_future_reserves" disabled>
-        End Sponsoring Future Reserves
-      </option>
-      <option value="revoke_sponsorship" disabled>
-        Revoke Sponsorship
-      </option>
-      <option value="clawback" disabled>
-        Clawback
-      </option>
-      <option value="clawback_claimable_balance" disabled>
-        Clawback Claimable Balance
-      </option>
-      <option value="set_trust_line_flags" disabled>
-        Set Trust Line Flags
-      </option>
-      <option value="liquidity_pool_deposit" disabled>
-        Liquidity Pool Deposit
-      </option>
-      <option value="liquidity_pool_withdraw" disabled>
-        Liquidity Pool Withdraw
-      </option>
-    </Select>
-  );
+      >
+        <option value="">Select operation type</option>
+        <option value="create_account">Create Account</option>
+        {/* TODO: remove disabled attribute when operation is implemented */}
+        <option value="payment" disabled>
+          Payment
+        </option>
+        <option value="path_payment_strict_send" disabled>
+          Path Payment Strict Send
+        </option>
+        <option value="path_payment_strict_receive" disabled>
+          Path Payment Strict Receive
+        </option>
+        <option value="manage_sell_offer" disabled>
+          Manage Sell Offer
+        </option>
+        <option value="manage_buy_offer" disabled>
+          Manage Buy Offer
+        </option>
+        <option value="create_passive_sell_offer" disabled>
+          Create Passive Sell Offer
+        </option>
+        <option value="set_options" disabled>
+          Set Options
+        </option>
+        <option value="change_trust" disabled>
+          Change Trust
+        </option>
+        <option value="allow_trust" disabled>
+          Allow Trust
+        </option>
+        <option value="account_merge" disabled>
+          Account Merge
+        </option>
+        <option value="manage_data" disabled>
+          Manage Data
+        </option>
+        <option value="bump_sequence" disabled>
+          Bump Sequence
+        </option>
+        <option value="create_claimable_balance" disabled>
+          Create Claimable Balance
+        </option>
+        <option value="claim_claimable_balance" disabled>
+          Claim Claimable Balance
+        </option>
+        <option value="begin_sponsoring_future_reserves" disabled>
+          Begin Sponsoring Future Reserves
+        </option>
+        <option value="end_sponsoring_future_reserves" disabled>
+          End Sponsoring Future Reserves
+        </option>
+        <option value="revoke_sponsorship" disabled>
+          Revoke Sponsorship
+        </option>
+        <option value="clawback" disabled>
+          Clawback
+        </option>
+        <option value="clawback_claimable_balance" disabled>
+          Clawback Claimable Balance
+        </option>
+        <option value="set_trust_line_flags" disabled>
+          Set Trust Line Flags
+        </option>
+        <option value="liquidity_pool_deposit" disabled>
+          Liquidity Pool Deposit
+        </option>
+        <option value="liquidity_pool_withdraw" disabled>
+          Liquidity Pool Withdraw
+        </option>
+      </Select>
+    );
+  };
 
   return (
     <Box gap="md">
