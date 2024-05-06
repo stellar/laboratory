@@ -16,4 +16,13 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     params: ["destination", "starting_balance"],
     requiredParams: ["destination", "starting_balance"],
   },
+  payment: {
+    label: "Payment",
+    description:
+      "Sends an amount in a specific asset to a destination account.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#payment",
+    params: ["destination", "asset", "amount"],
+    requiredParams: ["destination", "asset", "amount"],
+  },
 };

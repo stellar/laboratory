@@ -3,17 +3,17 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { Badge, Button, Card, Icon, Select } from "@stellar/design-system";
 
-import { formComponentTemplate } from "@/components/formComponentTemplate";
+import { formComponentTemplateTxnOps } from "@/components/formComponentTemplateTxnOps";
 import { Box } from "@/components/layout/Box";
 import { TabbedButtons } from "@/components/TabbedButtons";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
+import { SdsLink } from "@/components/SdsLink";
 
 import { arrayItem } from "@/helpers/arrayItem";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { TRANSACTION_OPERATIONS } from "@/constants/transactionOperations";
 import { useStore } from "@/store/useStore";
-import { TxnOperation } from "@/types/types";
-import { SdsLink } from "@/components/SdsLink";
+import { AssetObjectValue, TxnOperation } from "@/types/types";
 
 export const Operations = () => {
   const { transaction } = useStore();
@@ -188,7 +188,7 @@ export const Operations = () => {
     opParamError?: OperationError;
     opType: string;
   }): OperationError => {
-    const validateFn = formComponentTemplate(opParam)?.validate;
+    const validateFn = formComponentTemplateTxnOps(opParam)?.validate;
 
     const opError =
       opParamError || operationsError[opIndex] || EMPTY_OPERATION_ERROR;
@@ -335,7 +335,7 @@ export const Operations = () => {
   };
 
   const formErrors = getOperationsError();
-  const sourceAccountComponent = formComponentTemplate("source_account");
+  const sourceAccountComponent = formComponentTemplateTxnOps("source_account");
 
   const OperationTabbedButtons = ({
     index,
@@ -452,12 +452,10 @@ export const Operations = () => {
           ) : null
         }
       >
+        {/* TODO: remove disabled attribute when operation is implemented */}
         <option value="">Select operation type</option>
         <option value="create_account">Create Account</option>
-        {/* TODO: remove disabled attribute when operation is implemented */}
-        <option value="payment" disabled>
-          Payment
-        </option>
+        <option value="payment">Payment</option>
         <option value="path_payment_strict_send" disabled>
           Path Payment Strict Send
         </option>
@@ -562,25 +560,66 @@ export const Operations = () => {
                 <>
                   {TRANSACTION_OPERATIONS[op.operation_type]?.params.map(
                     (input) => {
-                      const component = formComponentTemplate(input);
+                      const component = formComponentTemplateTxnOps(input);
+                      const baseProps = {
+                        value: txnOperations[idx]?.params[input],
+                        error: operationsError[idx]?.error?.[input],
+                        isRequired:
+                          TRANSACTION_OPERATIONS[
+                            op.operation_type
+                          ].requiredParams.includes(input),
+                      };
 
                       if (component) {
-                        return component.render({
-                          value: txnOperations[idx]?.params[input],
-                          error: operationsError[idx]?.error?.[input],
-                          isRequired:
-                            TRANSACTION_OPERATIONS[
-                              op.operation_type
-                            ].requiredParams.includes(input),
-                          onChange: (e: ChangeEvent<HTMLInputElement>) => {
-                            handleOperationParamChange({
-                              opIndex: idx,
-                              opParam: input,
-                              opValue: e.target.value,
-                              opType: op.operation_type,
+                        switch (input) {
+                          case "asset":
+                            return component.render({
+                              ...baseProps,
+                              onChange: (assetValue: AssetObjectValue) => {
+                                let asset;
+
+                                if (assetValue.type === "native") {
+                                  asset = "native";
+                                } else if (
+                                  assetValue.type &&
+                                  [
+                                    "credit_alphanum4",
+                                    "credit_alphanum12",
+                                  ].includes(assetValue.type)
+                                ) {
+                                  asset = {
+                                    [assetValue.type]: {
+                                      asset_code: assetValue.code,
+                                      issuer: assetValue.issuer,
+                                    },
+                                  };
+                                }
+
+                                if (!asset) {
+                                  return;
+                                }
+
+                                handleOperationParamChange({
+                                  opIndex: idx,
+                                  opParam: input,
+                                  opValue: asset,
+                                  opType: op.operation_type,
+                                });
+                              },
                             });
-                          },
-                        });
+                          default:
+                            return component.render({
+                              ...baseProps,
+                              onChange: (e: ChangeEvent<HTMLInputElement>) => {
+                                handleOperationParamChange({
+                                  opIndex: idx,
+                                  opParam: input,
+                                  opValue: e.target.value,
+                                  opType: op.operation_type,
+                                });
+                              },
+                            });
+                        }
                       }
 
                       return null;

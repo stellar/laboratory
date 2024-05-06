@@ -18,7 +18,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { InfoCards } from "@/components/InfoCards";
 import { SdsLink } from "@/components/SdsLink";
 import { NextLink } from "@/components/NextLink";
-import { formComponentTemplate } from "@/components/formComponentTemplate";
+import { formComponentTemplateEndpoints } from "@/components/formComponentTemplateEndpoints";
 import { PrettyJson } from "@/components/PrettyJson";
 import { InputSideElement } from "@/components/InputSideElement";
 
@@ -232,7 +232,7 @@ export default function Endpoints() {
     // Validate saved params when the page loads
     const paramErrors = () => {
       return Object.keys(params).reduce((res, param) => {
-        const error = formComponentTemplate(param)?.validate?.(
+        const error = formComponentTemplateEndpoints(param)?.validate?.(
           parseJsonString(params[param]),
           requiredFields.includes(param),
         );
@@ -498,7 +498,10 @@ export default function Endpoints() {
           {renderPostPayload()}
 
           {allFields.map((f) => {
-            const component = formComponentTemplate(f, pageData.custom?.[f]);
+            const component = formComponentTemplateEndpoints(
+              f,
+              pageData.custom?.[f],
+            );
 
             if (component) {
               const isRequired = requiredFields.includes(f);

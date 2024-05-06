@@ -11,6 +11,8 @@ import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { Box } from "@/components/layout/Box";
 
 import { isEmptyObject } from "@/helpers/isEmptyObject";
+import { amount } from "@/helpers/amount";
+
 import { useStore } from "@/store/useStore";
 import { Routes } from "@/constants/routes";
 import { AnyObject, KeysOfUnion } from "@/types/types";
@@ -100,8 +102,8 @@ export const TransactionXdr = () => {
       }) => {
         return Object.entries(params).reduce((res, [key, val]) => {
           res[key] = amountParams.includes(key)
-            ? // Multiplying to create raw XDR amount
-              BigInt(val) * BigInt(10000000)
+            ? // XDR amount in stroops
+              amount.toStroops(val)
             : val;
 
           return res;
@@ -113,7 +115,7 @@ export const TransactionXdr = () => {
         body: {
           [op.operation_type]: parseOpParams({
             params: op.params,
-            amountParams: ["starting_balance"],
+            amountParams: ["amount", "starting_balance"],
           }),
         },
       }));

@@ -48,15 +48,15 @@ type TemplateRenderIncludeFailedProps = {
   isRequired?: boolean;
 };
 
-type FormComponentTemplate = {
+type FormComponentTemplateEndpointsProps = {
   render: (...args: any[]) => JSX.Element;
   validate: ((...args: any[]) => any) | null;
 };
 
-export const formComponentTemplate = (
+export const formComponentTemplateEndpoints = (
   id: string,
   custom?: AnyObject,
-): FormComponentTemplate | null => {
+): FormComponentTemplateEndpointsProps | null => {
   switch (id) {
     case "account_id":
       return {
