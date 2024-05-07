@@ -92,7 +92,6 @@ export default function SignTransaction() {
       networkPassphrase,
     });
 
-    console.log("signTxWithSecretKeys xdr:", xdr);
     if (xdr) {
       setSignedXdr(xdr);
     }
