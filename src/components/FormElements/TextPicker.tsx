@@ -5,7 +5,7 @@ interface TextPickerProps extends Omit<InputProps, "fieldSize"> {
   id: string;
   fieldSize?: "sm" | "md" | "lg";
   labelSuffix?: string | React.ReactNode;
-  label: string;
+  label?: string;
   value: string;
   placeholder?: string;
   error?: string | undefined;

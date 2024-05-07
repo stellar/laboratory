@@ -10,18 +10,24 @@ import {
 
 import { useStore } from "@/store/useStore";
 
-import { XdrPicker } from "@/components/FormElements/XdrPicker";
-import { TextPicker } from "@/components/FormElements/TextPicker";
-import { WithInfoText } from "@/components/WithInfoText";
+import { transactionSigner } from "@/helpers/transactionSigner";
+
 import { validate } from "@/validate";
 
 import { FEE_BUMP_TX_FIELDS, TX_FIELDS } from "@/constants/signTransactionPage";
+
+import { XdrPicker } from "@/components/FormElements/XdrPicker";
+import { TextPicker } from "@/components/FormElements/TextPicker";
+import { MultiPicker } from "@/components/FormElements/MultiPicker";
+import { ValidationResponseCard } from "@/components/ValidationResponseCard";
+import { WithInfoText } from "@/components/WithInfoText";
+import { Box } from "@/components/layout/Box";
 
 const MIN_LENGTH_FOR_FULL_WIDTH_FIELD = 30;
 
 export default function SignTransaction() {
   const { network } = useStore();
-  const [txEnv, setTxEnv] = useState<string>("");
+  const [txXdr, setTxXdr] = useState<string>("");
   const [isTxValid, setIsTxValid] = useState<boolean | undefined>(undefined);
   const [txErrMsg, setTxErrMsg] = useState<string>("");
   const [txSuccessMsg, setTxSuccessMsg] = useState<string>("");
@@ -29,13 +35,20 @@ export default function SignTransaction() {
     undefined,
   );
 
-  const [signer, setSigner] = useState<string>("");
-  const [signerErrorMsg, setSignerErrorMsg] = useState<string>("");
+  const [bipPath, setBipPath] = useState<string>("");
+  const [bipPathErrorMsg, setBipPathErrorMsg] = useState<string>("");
+
+  const [secretInputs, setSecretInputs] = useState<string[]>([""]);
+
+  const [signedXdr, setSignedXdr] = useState<string>("");
+  const [signedTxSuccessMsg, setSignedTxSuccessMsg] = useState<string>("");
+
+  const IS_NOT_EMPTY_INPUTS = secretInputs.some((input) => input !== "");
 
   const onChange = (value: string) => {
     setTxErrMsg("");
     setTxSuccessMsg("");
-    setTxEnv(value);
+    setTxXdr(value);
 
     if (value.length > 0) {
       const validatedXDR = validate.xdr(value);
@@ -52,12 +65,38 @@ export default function SignTransaction() {
 
   const onImport = () => {
     try {
-      const transaction = TransactionBuilder.fromXDR(txEnv, network.passphrase);
+      const transaction = TransactionBuilder.fromXDR(txXdr, network.passphrase);
 
       setTx(transaction);
     } catch (e) {
       setTxErrMsg("Unable to import a transaction envelope");
     }
+  };
+
+  const onUpdateSecretInputs = (val: string[]) => {
+    setSecretInputs(val);
+    setSignedXdr("");
+  };
+  const addSignature = () => {
+    setSecretInputs([...secretInputs, ""]);
+  };
+
+  const signTxWithSecretKeys = (
+    txXdr: string,
+    signers: string[],
+    networkPassphrase: string,
+  ) => {
+    const { xdr, message } = transactionSigner.secretKeys({
+      txXdr,
+      signers,
+      networkPassphrase,
+    });
+
+    console.log("signTxWithSecretKeys xdr:", xdr);
+    if (xdr) {
+      setSignedXdr(xdr);
+    }
+    setSignedTxSuccessMsg(message);
   };
 
   const renderImportView = () => {
@@ -80,7 +119,7 @@ export default function SignTransaction() {
                   </span>
                 </Text>
               }
-              value={txEnv || ""}
+              value={txXdr || ""}
               error={txErrMsg}
               success={
                 <Text size="xs" as="span" addlClassName="success-message">
@@ -92,7 +131,7 @@ export default function SignTransaction() {
 
             <div className="SignTx__CTA">
               <Button
-                disabled={!txEnv || !isTxValid}
+                disabled={!txXdr || !isTxValid}
                 size="md"
                 variant={"secondary"}
                 onClick={onImport}
@@ -136,7 +175,7 @@ export default function SignTransaction() {
       },
       {
         label: "Transaction Envelope XDR",
-        value: txEnv,
+        value: txXdr,
       },
       {
         label: "Transaction Hash",
@@ -220,21 +259,13 @@ export default function SignTransaction() {
           <Card>
             <div className="SignTx__Field">
               <div className="full-width">
-                <TextPicker
+                <MultiPicker
                   id="signer"
                   label="Add Signer"
-                  placeholder="Secret ket (starting with S) or hash preimage (in hex)"
-                  onChange={(e) => {
-                    setSigner(e.target.value);
-
-                    const error = validate.secretKey(e.target.value);
-
-                    if (error) {
-                      setSignerErrorMsg(error);
-                    }
-                  }}
-                  error={signerErrorMsg}
-                  value={signer}
+                  value={secretInputs}
+                  onUpdate={onUpdateSecretInputs}
+                  validate={validate.secretKey}
+                  placeholder="Secret key (starting with S) or hash preimage (in hex)"
                 />
               </div>
 
@@ -244,16 +275,16 @@ export default function SignTransaction() {
                   label="BIP Path"
                   placeholder="BIP path in format: 44'/148'/0'"
                   onChange={(e) => {
-                    setSigner(e.target.value);
+                    setBipPath(e.target.value);
 
-                    const error = validate.secretKey(e.target.value);
+                    const error = validate.bipPath(e.target.value);
 
                     if (error) {
-                      setSignerErrorMsg(error);
+                      setBipPathErrorMsg(error);
                     }
                   }}
-                  error={signerErrorMsg}
-                  value={signer}
+                  error={bipPathErrorMsg}
+                  value={bipPath}
                   note="Note: Trezor devices require upper time bounds to be set (non-zero), otherwise the signature will not be verified"
                 />
               </div>
@@ -261,10 +292,16 @@ export default function SignTransaction() {
               <div className="SignTx__Buttons">
                 <div>
                   <Button
-                    // disabled={isLoading || isFetching}
+                    disabled={!IS_NOT_EMPTY_INPUTS}
                     size="md"
                     variant="secondary"
-                    // onClick={}
+                    onClick={() =>
+                      signTxWithSecretKeys(
+                        txXdr,
+                        secretInputs,
+                        network.passphrase,
+                      )
+                    }
                   >
                     Sign with secret key
                   </Button>
@@ -280,10 +317,9 @@ export default function SignTransaction() {
                 </div>
                 <div>
                   <Button
-                    // disabled={isLoading || isFetching}
                     size="md"
                     variant="tertiary"
-                    // onClick={}
+                    onClick={() => addSignature()}
                   >
                     Add signature
                   </Button>
@@ -291,6 +327,62 @@ export default function SignTransaction() {
               </div>
             </div>
           </Card>
+
+          {signedXdr ? (
+            <ValidationResponseCard
+              variant="success"
+              title="Transaction signed!"
+              subtitle={signedTxSuccessMsg}
+              response={
+                <Box gap="xs">
+                  <div>
+                    <div>{signedXdr}</div>
+                  </div>
+                </Box>
+              }
+              note={
+                <>
+                  Now that this transaction is signed, you can submit it to the
+                  network. Horizon provides an endpoint called Post Transaction
+                  that will relay your transaction to the network and inform you
+                  of the result.
+                </>
+              }
+              footerLeftEl={
+                <Button
+                  size="md"
+                  variant="secondary"
+                  onClick={() => {
+                    alert("TODO: handle sign transaction flow");
+                  }}
+                >
+                  Submit in Transaction Submitter
+                </Button>
+              }
+              footerRightEl={
+                <div className="SignTx__Buttons">
+                  <Button
+                    size="md"
+                    variant="tertiary"
+                    onClick={() => {
+                      alert("TODO: handle view in xdr flow");
+                    }}
+                  >
+                    View in XDR viewer
+                  </Button>
+                  <Button
+                    size="md"
+                    variant="tertiary"
+                    onClick={() => {
+                      alert("TODO: handle view in fee bump");
+                    }}
+                  >
+                    Wrap with Fee Bump
+                  </Button>
+                </div>
+              }
+            />
+          ) : null}
         </div>
       </>
     );
