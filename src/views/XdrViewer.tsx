@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import * as StellarSdk from "stellar-sdk";
+import * as StellarSdk from "@stellar/stellar-sdk";
 import debounce from "lodash/debounce";
 import functions from "lodash/functions";
 import indexOf from "lodash/indexOf";

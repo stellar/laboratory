@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Keypair, Account, MuxedAccount } from "stellar-sdk";
+import { Keypair, Account, MuxedAccount } from "@stellar/stellar-sdk";
 import dispatchInNewStack from "../helpers/dispatchInNewStack";
 
 export const GENERATE_NEW_KEYPAIR = "GENERATE_NEW_KEYPAIR";

@@ -1,4 +1,4 @@
-import * as StellarSdk from "stellar-sdk";
+import * as StellarSdk from "@stellar/stellar-sdk";
 import { Provider } from "react-redux";
 import { store } from "config/store";
 import { AppContent } from "views/AppContent";

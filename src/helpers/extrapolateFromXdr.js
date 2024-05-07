@@ -16,7 +16,7 @@ import {
   Operation,
   scValToNative,
   nativeToScVal,
-} from "stellar-sdk";
+} from "@stellar/stellar-sdk";
 import isArray from "lodash/isArray";
 import isString from "lodash/isString";
 import functionsIn from "lodash/functionsIn";

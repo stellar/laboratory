@@ -8,7 +8,7 @@
 // Libify could also be used to generate source code from input but might not be
 // the best choice since source code differs based on content.
 
-import * as Sdk from "stellar-sdk";
+import * as Sdk from "@stellar/stellar-sdk";
 import defaults from "lodash/defaults";
 import each from "lodash/each";
 import has from "lodash/has";

@@ -1,4 +1,4 @@
-import {xdr, StrKey} from 'stellar-sdk';
+import { xdr, StrKey } from "@stellar/stellar-sdk";
 
 // This function was meant to convert string keys representing muxed accounts
 // `M...` to their ED25519 public account `G..` However since SEP23 hasn't been
@@ -7,5 +7,5 @@ import {xdr, StrKey} from 'stellar-sdk';
 // code to show the inner G account of muxed accounts, in the meantime we'll
 // just return the same value we receive.
 export default function convertMuxedAccountToEd25519Account(muxedAccount) {
-    return muxedAccount;
+  return muxedAccount;
 }

@@ -2,7 +2,6 @@
  * @jest-environment jsdom
  */
 import { fireEvent, screen, waitFor, within } from "@testing-library/react";
-// import * as StellarSdk from "stellar-sdk";
 import { render } from "helpers/testHelpers";
 import { AccountCreator } from "views/AccountCreator";
 
@@ -12,7 +11,7 @@ const MUXED_ACCOUNT_ID = 1;
 const MUXED_ACCOUNT_CREATED = "baz-1";
 const MUXED_ACCOUNT_PARSED = "baz-2";
 
-jest.mock("stellar-sdk");
+jest.mock("@stellar/stellar-sdk");
 
 // StellarSdk.Keypair.random.mockReturnValue({
 //   publicKey: () => PUBLIC_KEY,

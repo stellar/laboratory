@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { StrKey, MuxedAccount } from "stellar-sdk";
+import { StrKey, MuxedAccount } from "@stellar/stellar-sdk";
 import OptionsTablePair from "../components/OptionsTable/Pair";
 import HelpMark from "../components/HelpMark";
 import TxTypePicker from "../components/FormComponents/TxTypePicker";

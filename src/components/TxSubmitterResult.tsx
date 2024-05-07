@@ -5,7 +5,7 @@ import {
   BadResponseError,
   NetworkError,
   Horizon,
-} from "stellar-sdk";
+} from "@stellar/stellar-sdk";
 import { EasySelect } from "./EasySelect";
 import { Collapsible } from "./Collapsible";
 
