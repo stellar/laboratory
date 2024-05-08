@@ -548,9 +548,7 @@ export const Operations = () => {
         <option value="allow_trust" disabled>
           Allow Trust
         </option>
-        <option value="account_merge" disabled>
-          Account Merge
-        </option>
+        <option value="account_merge">Account Merge</option>
         <option value="manage_data" disabled>
           Manage Data
         </option>
@@ -608,7 +606,7 @@ export const Operations = () => {
                 >
                   <Badge
                     size="md"
-                    variant="primary"
+                    variant="secondary"
                   >{`Operation ${idx + 1}`}</Badge>
 
                   <OperationTabbedButtons

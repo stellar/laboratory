@@ -111,7 +111,17 @@ export const TransactionXdr = () => {
         }
       };
 
-      const parseOpParams = ({ params }: { params: AnyObject }) => {
+      const parseOpParams = ({
+        opType,
+        params,
+      }: {
+        opType: string;
+        params: AnyObject;
+      }) => {
+        if (opType === "account_merge") {
+          return Object.values(params)[0];
+        }
+
         return Object.entries(params).reduce((res, [key, val]) => {
           res[key] = getXdrVal(key, val);
 
@@ -123,6 +133,7 @@ export const TransactionXdr = () => {
         source_account: op.source_account || null,
         body: {
           [op.operation_type]: parseOpParams({
+            opType: op.operation_type,
             params: op.params,
           }),
         },

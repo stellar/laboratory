@@ -86,4 +86,13 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
       },
     },
   },
+  account_merge: {
+    label: "Account Merge",
+    description:
+      "Transfers the native balance (the amount of XLM an account holds) to another account and removes the source account from the ledger.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#account-merge",
+    params: ["destination"],
+    requiredParams: ["destination"],
+  },
 };
