@@ -256,7 +256,10 @@ export const Operations = () => {
       // If param is not in missing fields and has not value, add the param to
       // missing fields. If there is value, nothing to do.
     } else {
-      if (!opValue) {
+      if (
+        !opValue &&
+        TRANSACTION_OPERATIONS[opType].requiredParams.includes(opParam)
+      ) {
         opParamMissingFields = [...opParamMissingFields, opParam];
       }
     }
@@ -549,9 +552,7 @@ export const Operations = () => {
           Allow Trust
         </option>
         <option value="account_merge">Account Merge</option>
-        <option value="manage_data" disabled>
-          Manage Data
-        </option>
+        <option value="manage_data">Manage Data</option>
         <option value="bump_sequence" disabled>
           Bump Sequence
         </option>

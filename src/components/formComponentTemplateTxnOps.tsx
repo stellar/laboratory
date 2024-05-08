@@ -117,6 +117,47 @@ export const formComponentTemplateTxnOps = ({
         ),
         validate: validate.assetJson,
       };
+    case "data_name":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <TextPicker
+            key={id}
+            id={id}
+            label="Entry name"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.dataName,
+      };
+    case "data_value":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <TextPicker
+            key={id}
+            id={id}
+            label="Entry value"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+            note={
+              custom?.note && custom?.note_add ? (
+                <>
+                  {custom.note}
+                  <br />
+                  {custom.note_add}
+                </>
+              ) : (
+                custom?.note
+              )
+            }
+          />
+        ),
+        validate: validate.dataValue,
+      };
     case "destination":
       return {
         render: (templ: TemplateRenderProps) => (

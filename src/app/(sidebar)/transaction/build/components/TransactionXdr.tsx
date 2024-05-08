@@ -106,6 +106,8 @@ export const TransactionXdr = () => {
           // Price
           case "price":
             return xdrUtils.toPrice(val);
+          case "data_value":
+            return Buffer.from(val).toString("hex");
           default:
             return val;
         }

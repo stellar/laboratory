@@ -95,4 +95,19 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     params: ["destination"],
     requiredParams: ["destination"],
   },
+  manage_data: {
+    label: "Manage Data",
+    description: "Sets, modifies, or deletes a Data Entry (name/value pair).",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#manage-data",
+    params: ["data_name", "data_value"],
+    requiredParams: ["data_name"],
+    custom: {
+      data_value: {
+        note: "If empty, will delete the data entry named in this operation.",
+        // Use "note_add" to show another note below "note"
+        note_add: "Note: The laboratory only supports strings.",
+      },
+    },
+  },
 };
