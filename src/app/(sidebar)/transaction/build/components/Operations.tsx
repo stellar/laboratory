@@ -11,6 +11,8 @@ import { SdsLink } from "@/components/SdsLink";
 
 import { arrayItem } from "@/helpers/arrayItem";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
+import { sanitizeObject } from "@/helpers/sanitizeObject";
+
 import { TRANSACTION_OPERATIONS } from "@/constants/transactionOperations";
 import { useStore } from "@/store/useStore";
 import { AssetObjectValue, TxnOperation } from "@/types/types";
@@ -175,6 +177,38 @@ export const Operations = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const missingSelectedAssetFields = (
+    param: string,
+    value: any,
+  ): { isAssetField: boolean; missingAssetFields: string[] } => {
+    const assetInputs = ["asset", "selling", "buying"];
+    const isAssetField = assetInputs.includes(param);
+
+    const initialValues = {
+      isAssetField,
+      missingAssetFields: [],
+    };
+
+    if (isAssetField) {
+      if (!value || value === "native") {
+        return initialValues;
+      }
+
+      const assetInputs = (Object.values(value)[0] || {}) as {
+        asset_code: string;
+        issuer: string;
+      };
+
+      return {
+        isAssetField,
+        missingAssetFields:
+          assetInputs.asset_code && assetInputs.issuer ? [] : [param],
+      };
+    }
+
+    return initialValues;
+  };
+
   const validateOperationParam = ({
     opIndex,
     opParam,
@@ -188,13 +222,18 @@ export const Operations = () => {
     opParamError?: OperationError;
     opType: string;
   }): OperationError => {
-    const validateFn = formComponentTemplateTxnOps(opParam)?.validate;
+    const validateFn = formComponentTemplateTxnOps({
+      param: opParam,
+      opType,
+      index: opIndex,
+    })?.validate;
 
     const opError =
       opParamError || operationsError[opIndex] || EMPTY_OPERATION_ERROR;
     const opParamErrorFields = { ...opError.error };
     let opParamMissingFields = [...opError.missingFields];
 
+    //==== Handle input validation for entered value
     if (validateFn) {
       const error = validateFn(opValue);
 
@@ -205,6 +244,7 @@ export const Operations = () => {
       }
     }
 
+    //==== Handle missing required fields
     // If param needs value and there is value entered, remove param from
     // missing fields. If there is no value, nothing to do.
     if (opParamMissingFields.includes(opParam)) {
@@ -217,6 +257,20 @@ export const Operations = () => {
       // missing fields. If there is value, nothing to do.
     } else {
       if (!opValue) {
+        opParamMissingFields = [...opParamMissingFields, opParam];
+      }
+    }
+
+    //==== Handle selected asset with missing fields
+    const missingAsset = missingSelectedAssetFields(opParam, opValue);
+
+    if (
+      missingAsset.isAssetField &&
+      missingAsset.missingAssetFields.length > 0
+    ) {
+      // If there is a missing asset value and the param is not in required
+      // fields, add it to the missing fields
+      if (!opParamMissingFields.includes(opParam)) {
         opParamMissingFields = [...opParamMissingFields, opParam];
       }
     }
@@ -243,10 +297,10 @@ export const Operations = () => {
 
     updateBuildSingleOperation(opIndex, {
       ...op,
-      params: {
+      params: sanitizeObject({
         ...op?.params,
         [opParam]: opValue,
-      },
+      }),
     });
 
     const validatedOpParam = validateOperationParam({
@@ -335,7 +389,25 @@ export const Operations = () => {
   };
 
   const formErrors = getOperationsError();
-  const sourceAccountComponent = formComponentTemplateTxnOps("source_account");
+
+  const renderSourceAccount = (opType: string, index: number) => {
+    const sourceAccountComponent = formComponentTemplateTxnOps({
+      param: "source_account",
+      opType,
+      index,
+    });
+
+    return opType && sourceAccountComponent
+      ? sourceAccountComponent.render({
+          value: txnOperations[index].source_account,
+          error: operationsError[index]?.error?.["source_account"],
+          isRequired: false,
+          onChange: (e: ChangeEvent<HTMLInputElement>) => {
+            handleOperationSourceAccountChange(index, e.target.value, opType);
+          },
+        })
+      : null;
+  };
 
   const OperationTabbedButtons = ({
     index,
@@ -462,12 +534,8 @@ export const Operations = () => {
         <option value="path_payment_strict_receive" disabled>
           Path Payment Strict Receive
         </option>
-        <option value="manage_sell_offer" disabled>
-          Manage Sell Offer
-        </option>
-        <option value="manage_buy_offer" disabled>
-          Manage Buy Offer
-        </option>
+        <option value="manage_sell_offer">Manage Sell Offer</option>
+        <option value="manage_buy_offer">Manage Buy Offer</option>
         <option value="create_passive_sell_offer" disabled>
           Create Passive Sell Offer
         </option>
@@ -560,7 +628,15 @@ export const Operations = () => {
                 <>
                   {TRANSACTION_OPERATIONS[op.operation_type]?.params.map(
                     (input) => {
-                      const component = formComponentTemplateTxnOps(input);
+                      const component = formComponentTemplateTxnOps({
+                        param: input,
+                        opType: op.operation_type,
+                        index: idx,
+                        custom:
+                          TRANSACTION_OPERATIONS[op.operation_type].custom?.[
+                            input
+                          ],
+                      });
                       const baseProps = {
                         value: txnOperations[idx]?.params[input],
                         error: operationsError[idx]?.error?.[input],
@@ -573,6 +649,8 @@ export const Operations = () => {
                       if (component) {
                         switch (input) {
                           case "asset":
+                          case "buying":
+                          case "selling":
                             return component.render({
                               ...baseProps,
                               onChange: (assetValue: AssetObjectValue) => {
@@ -593,10 +671,6 @@ export const Operations = () => {
                                       issuer: assetValue.issuer,
                                     },
                                   };
-                                }
-
-                                if (!asset) {
-                                  return;
                                 }
 
                                 handleOperationParamChange({
@@ -628,22 +702,7 @@ export const Operations = () => {
                 </>
 
                 {/* Optional source account for all operations */}
-                <>
-                  {op.operation_type && sourceAccountComponent
-                    ? sourceAccountComponent.render({
-                        value: txnOperations[idx].source_account,
-                        error: operationsError[idx]?.error?.["source_account"],
-                        isRequired: false,
-                        onChange: (e: ChangeEvent<HTMLInputElement>) => {
-                          handleOperationSourceAccountChange(
-                            idx,
-                            e.target.value,
-                            op.operation_type,
-                          );
-                        },
-                      })
-                    : null}
-                </>
+                <>{renderSourceAccount(op.operation_type, idx)}</>
               </Box>
             ))}
           </>

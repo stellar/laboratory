@@ -1,7 +1,7 @@
 import { isEmptyObject } from "@/helpers/isEmptyObject";
+import { AssetObjectValue } from "@/types/types";
 import { assetCode } from "./assetCode";
 import { publicKey } from "./publicKey";
-import { AssetObjectValue } from "@/types/types";
 
 export const asset = (asset: AssetObjectValue | undefined) => {
   if (asset?.type && asset.type === "native") {

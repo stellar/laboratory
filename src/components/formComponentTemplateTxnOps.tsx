@@ -3,9 +3,10 @@ import { JSX } from "react";
 import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
 import { TextPicker } from "@/components/FormElements/TextPicker";
 import { AssetPicker } from "@/components/FormElements/AssetPicker";
+import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 
 import { validate } from "@/validate";
-import { AssetObjectValue } from "@/types/types";
+import { AnyObject, AssetObjectValue, JsonAsset } from "@/types/types";
 
 // Types
 type TemplateRenderProps = {
@@ -16,7 +17,7 @@ type TemplateRenderProps = {
 };
 
 type TemplateRenderAssetProps = {
-  value: AssetPickerInput | undefined;
+  value: JsonAsset | undefined;
   error: { code: string | undefined; issuer: string | undefined } | undefined;
   onChange: (asset: AssetObjectValue | undefined) => void;
   isRequired?: boolean;
@@ -27,23 +28,8 @@ type FormComponentTemplateTxnOpsProps = {
   validate: ((...args: any[]) => any) | null;
 };
 
-type AssetPickerInput =
-  | "native"
-  | {
-      credit_alphanum4: {
-        asset_code: string;
-        issuer: string;
-      };
-    }
-  | {
-      credit_alphanum12: {
-        asset_code: string;
-        issuer: string;
-      };
-    };
-
 const assetPickerValue = (
-  value: AssetPickerInput | undefined,
+  value: JsonAsset | undefined,
 ): AssetObjectValue | undefined => {
   if (!value) {
     return undefined;
@@ -66,21 +52,33 @@ const assetPickerValue = (
   };
 };
 
-export const formComponentTemplateTxnOps = (
-  id: string,
-): FormComponentTemplateTxnOpsProps | null => {
-  switch (id) {
+export const formComponentTemplateTxnOps = ({
+  param,
+  opType,
+  index,
+  custom,
+}: {
+  param: string;
+  opType: string;
+  index: number;
+  custom?: AnyObject;
+}): FormComponentTemplateTxnOpsProps | null => {
+  const id = `${index}-${opType}-${param}`;
+
+  switch (param) {
     case "amount":
+    case "buy_amount":
       return {
         render: (templ: TemplateRenderProps) => (
           <TextPicker
             key={id}
             id={id}
-            label="Amount"
+            label={custom?.label || "Amount"}
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={templ.value || ""}
             error={templ.error}
             onChange={templ.onChange}
+            note={custom?.note}
           />
         ),
         validate: validate.amount,
@@ -100,7 +98,24 @@ export const formComponentTemplateTxnOps = (
             onChange={templ.onChange}
           />
         ),
-        validate: validate.asset,
+        validate: validate.assetJson,
+      };
+    case "buying":
+      return {
+        render: (templ: TemplateRenderAssetProps) => (
+          <AssetPicker
+            key={id}
+            assetInput="alphanumeric"
+            id={id}
+            label="Buying"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={assetPickerValue(templ.value)}
+            error={templ.error}
+            includeNative
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.assetJson,
       };
     case "destination":
       return {
@@ -116,6 +131,54 @@ export const formComponentTemplateTxnOps = (
           />
         ),
         validate: validate.publicKey,
+      };
+    case "offer_id":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <PositiveIntPicker
+            key={id}
+            id={id}
+            label={custom?.label || "Offer ID"}
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+            note={custom?.note}
+          />
+        ),
+        validate: validate.positiveInt,
+      };
+    case "price":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <TextPicker
+            key={id}
+            id={id}
+            label={custom?.label || "Price"}
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.positiveNumber,
+      };
+    case "selling":
+      return {
+        render: (templ: TemplateRenderAssetProps) => (
+          <AssetPicker
+            key={id}
+            assetInput="alphanumeric"
+            id={id}
+            label="Selling"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={assetPickerValue(templ.value)}
+            error={templ.error}
+            includeNative
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.assetJson,
       };
     case "source_account":
       return {

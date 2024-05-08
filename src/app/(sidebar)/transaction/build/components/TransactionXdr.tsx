@@ -11,7 +11,7 @@ import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { Box } from "@/components/layout/Box";
 
 import { isEmptyObject } from "@/helpers/isEmptyObject";
-import { amount } from "@/helpers/amount";
+import { xdrUtils } from "@/helpers/xdr/utils";
 
 import { useStore } from "@/store/useStore";
 import { Routes } from "@/constants/routes";
@@ -57,7 +57,7 @@ export const TransactionXdr = () => {
             val = BigInt(value);
             break;
           case "fee":
-            val = BigInt(value);
+            val = BigInt(value) * BigInt(txnOperations.length);
             break;
           case "cond":
             // eslint-disable-next-line no-case-declarations
@@ -93,18 +93,27 @@ export const TransactionXdr = () => {
         return { ...res, [key]: val };
       }, {});
 
-      const parseOpParams = ({
-        params,
-        amountParams,
-      }: {
-        params: AnyObject;
-        amountParams: string[];
-      }) => {
+      const getXdrVal = (key: string, val: any) => {
+        switch (key) {
+          // Amount
+          case "amount":
+          case "buy_amount":
+          case "starting_balance":
+            return xdrUtils.toAmount(val);
+          // Number
+          case "offer_id":
+            return BigInt(val);
+          // Price
+          case "price":
+            return xdrUtils.toPrice(val);
+          default:
+            return val;
+        }
+      };
+
+      const parseOpParams = ({ params }: { params: AnyObject }) => {
         return Object.entries(params).reduce((res, [key, val]) => {
-          res[key] = amountParams.includes(key)
-            ? // XDR amount in stroops
-              amount.toStroops(val)
-            : val;
+          res[key] = getXdrVal(key, val);
 
           return res;
         }, {} as AnyObject);
@@ -115,7 +124,6 @@ export const TransactionXdr = () => {
         body: {
           [op.operation_type]: parseOpParams({
             params: op.params,
-            amountParams: ["amount", "starting_balance"],
           }),
         },
       }));
