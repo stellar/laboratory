@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import { Card, Icon, Text, Button } from "@stellar/design-system";
 import { FeeBumpTransaction } from "@stellar/stellar-sdk";
 
+import { FEE_BUMP_TX_FIELDS, TX_FIELDS } from "@/constants/signTransactionPage";
+
 import { useStore } from "@/store/useStore";
 
 import { transactionSigner } from "@/helpers/transactionSigner";
 
 import { validate } from "@/validate";
-
-import { FEE_BUMP_TX_FIELDS, TX_FIELDS } from "@/constants/signTransactionPage";
 
 import { Box } from "@/components/layout/Box";
 import { MultiPicker } from "@/components/FormElements/MultiPicker";
@@ -26,9 +26,9 @@ export const Overview = () => {
   const { sign, updateSignActiveView, updateSignedTx, resetSign } = transaction;
 
   const [secretInputs, setSecretInputs] = useState<string[]>([""]);
-
   const [signedTxSuccessMsg, setSignedTxSuccessMsg] = useState<string>("");
 
+  // @TODO bip path
   const [bipPath, setBipPath] = useState<string>("");
   const [bipPathErrorMsg, setBipPathErrorMsg] = useState<string>("");
 
@@ -96,6 +96,7 @@ export const Overview = () => {
           <Text size="md" as="h1" weight="medium">
             Transaction Overview
           </Text>
+
           <Button
             size="md"
             variant="error"
@@ -111,11 +112,7 @@ export const Overview = () => {
 
         <Card>
           <div className="SignTx__FieldViewer">
-            {mergedFields?.map((field) => {
-              console.log(
-                "field.value.toString().length: ",
-                field.value.toString().length,
-              );
+            {mergedFields!.map((field) => {
               const className =
                 field.value.toString().length >= MIN_LENGTH_FOR_FULL_WIDTH_FIELD
                   ? "full-width"

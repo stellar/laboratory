@@ -14,11 +14,14 @@ export const Import = () => {
   const { network, transaction } = useStore();
   const { updateSignActiveView, updateSignImportXdr, updateSignImportTx } =
     transaction;
+
   const [txXdr, setTxXdr] = useState<string>("");
   const [txErrMsg, setTxErrMsg] = useState<string>("");
   const [txSuccessMsg, setTxSuccessMsg] = useState<string>("");
 
+  // on textarea onChange for 'import tx xdr'
   const onChange = (value: string) => {
+    // reset messages onChange
     setTxErrMsg("");
     setTxSuccessMsg("");
     setTxXdr(value);
@@ -40,6 +43,8 @@ export const Import = () => {
 
       updateSignImportTx(transaction);
       updateSignImportXdr(txXdr);
+
+      // change to 'overview' view when successfully imported
       updateSignActiveView("overview");
     } catch (e) {
       setTxErrMsg("Unable to import a transaction envelope");
