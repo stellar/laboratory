@@ -1,3 +1,4 @@
+// XDR helpers from js-stellar-base
 import { xdr } from "@stellar/stellar-sdk";
 import BigNumber from "bignumber.js";
 import { best_r } from "./fraction";
@@ -5,7 +6,8 @@ import { best_r } from "./fraction";
 const ONE = 10000000;
 
 function toXDRAmount(value: string) {
-  return BigInt(value.toString()) * BigInt(ONE);
+  // Using BigNumber to handle decimal point values
+  return BigInt(new BigNumber(value).times(ONE).toString());
 }
 
 function fromXDRAmount(value: string) {

@@ -32,7 +32,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     label: "Manage Sell Offer",
     description: "Creates, updates, or deletes an offer.",
     docsUrl:
-      "https://developers.stellar.org/docs/start/list-of-operations/#manage-sell-offer",
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#manage-sell-offer",
     params: ["selling", "buying", "amount", "price", "offer_id"],
     requiredParams: ["selling", "buying", "amount", "price", "offer_id"],
     custom: {
@@ -52,7 +52,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     label: "Manage Buy Offer",
     description: "Creates, updates, or deletes an offer.",
     docsUrl:
-      "https://developers.stellar.org/docs/start/list-of-operations/#manage-buy-offer",
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#manage-buy-offer",
     params: ["selling", "buying", "buy_amount", "price", "offer_id"],
     requiredParams: ["selling", "buying", "buy_amount", "price", "offer_id"],
     custom: {
@@ -65,6 +65,24 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
       },
       offer_id: {
         note: "If 0, will create a new offer. Existing offer id numbers can be found using the Offers for Account endpoint.",
+      },
+    },
+  },
+  create_passive_sell_offer: {
+    label: "Create Passive Sell Offer",
+    description:
+      "Creates an offer that does not take another offer of equal price when created.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#create-passive-sell-offer",
+    params: ["selling", "buying", "amount", "price"],
+    requiredParams: ["selling", "buying", "amount", "price"],
+    custom: {
+      amount: {
+        label: "Amount you are selling",
+        note: "An amount of zero will delete the offer.",
+      },
+      price: {
+        label: "Price of 1 unit of selling in terms of buying",
       },
     },
   },

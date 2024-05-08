@@ -536,7 +536,7 @@ export const Operations = () => {
         </option>
         <option value="manage_sell_offer">Manage Sell Offer</option>
         <option value="manage_buy_offer">Manage Buy Offer</option>
-        <option value="create_passive_sell_offer" disabled>
+        <option value="create_passive_sell_offer">
           Create Passive Sell Offer
         </option>
         <option value="set_options" disabled>
