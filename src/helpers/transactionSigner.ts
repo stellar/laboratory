@@ -27,7 +27,7 @@ const secretKeys = ({
       }
 
       if (!error) {
-        if (signer.charAt(0) == "S") {
+        if (signer.charAt(0) === "S") {
           // Secret keys
           validSecretKeys.push(signer);
         } else {
