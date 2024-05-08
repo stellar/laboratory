@@ -100,6 +100,21 @@ export const formComponentTemplateTxnOps = ({
         ),
         validate: validate.assetJson,
       };
+    case "bump_to":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <PositiveIntPicker
+            key={id}
+            id={id}
+            label="Bump To"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.positiveInt,
+      };
     case "buying":
       return {
         render: (templ: TemplateRenderAssetProps) => (

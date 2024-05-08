@@ -101,6 +101,7 @@ export const TransactionXdr = () => {
           case "starting_balance":
             return xdrUtils.toAmount(val);
           // Number
+          case "bump_to":
           case "offer_id":
             return BigInt(val);
           // Price

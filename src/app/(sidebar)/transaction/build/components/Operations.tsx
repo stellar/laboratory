@@ -553,9 +553,7 @@ export const Operations = () => {
         </option>
         <option value="account_merge">Account Merge</option>
         <option value="manage_data">Manage Data</option>
-        <option value="bump_sequence" disabled>
-          Bump Sequence
-        </option>
+        <option value="bump_sequence">Bump Sequence</option>
         <option value="create_claimable_balance" disabled>
           Create Claimable Balance
         </option>

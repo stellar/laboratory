@@ -110,4 +110,12 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
       },
     },
   },
+  bump_sequence: {
+    label: "Bump Sequence",
+    description: "Bumps sequence number.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#bump-sequence",
+    params: ["bump_to"],
+    requiredParams: ["bump_to"],
+  },
 };
