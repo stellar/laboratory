@@ -3,6 +3,7 @@ import { asset } from "./methods/asset";
 import { assetCode } from "./methods/assetCode";
 import { assetJson } from "./methods/assetJson";
 import { assetMulti } from "./methods/assetMulti";
+import { claimableBalanceId } from "./methods/claimableBalanceId";
 import { dataName } from "./methods/dataName";
 import { dataValue } from "./methods/dataValue";
 import { memo } from "./methods/memo";
@@ -19,6 +20,7 @@ export const validate = {
   assetCode,
   assetJson,
   assetMulti,
+  claimableBalanceId,
   dataName,
   dataValue,
   memo,

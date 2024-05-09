@@ -100,6 +100,21 @@ export const formComponentTemplateTxnOps = ({
         ),
         validate: validate.assetJson,
       };
+    case "balance_id":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <TextPicker
+            key={id}
+            id={id}
+            label="Claimable Balance ID"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.claimableBalanceId,
+      };
     case "bump_to":
       return {
         render: (templ: TemplateRenderProps) => (

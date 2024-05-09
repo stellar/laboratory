@@ -118,4 +118,12 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     params: ["bump_to"],
     requiredParams: ["bump_to"],
   },
+  claim_claimable_balance: {
+    label: "Claim Claimable Balance",
+    description: "Claims a claimable balance.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#claim-claimable-balance",
+    params: ["balance_id"],
+    requiredParams: ["balance_id"],
+  },
 };

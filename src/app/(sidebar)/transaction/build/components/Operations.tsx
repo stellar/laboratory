@@ -557,9 +557,7 @@ export const Operations = () => {
         <option value="create_claimable_balance" disabled>
           Create Claimable Balance
         </option>
-        <option value="claim_claimable_balance" disabled>
-          Claim Claimable Balance
-        </option>
+        <option value="claim_claimable_balance">Claim Claimable Balance</option>
         <option value="begin_sponsoring_future_reserves" disabled>
           Begin Sponsoring Future Reserves
         </option>
