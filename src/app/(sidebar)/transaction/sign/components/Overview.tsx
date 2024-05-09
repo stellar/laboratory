@@ -27,12 +27,16 @@ export const Overview = () => {
 
   const [secretInputs, setSecretInputs] = useState<string[]>([""]);
   const [signedTxSuccessMsg, setSignedTxSuccessMsg] = useState<string>("");
+  const [signedTxErrorMsg, setSignedTxErrorMsg] = useState<string>("");
 
   // @TODO bip path
   const [bipPath, setBipPath] = useState<string>("");
   const [bipPathErrorMsg, setBipPathErrorMsg] = useState<string>("");
 
   const HAS_SECRET_KEYS = secretInputs.some((input) => input !== "");
+  const HAS_INVALID_SECRET_KEYS = secretInputs.some((input) =>
+    validate.secretKey(input),
+  );
 
   useEffect(() => {
     if (!sign.importTx) {
@@ -60,10 +64,12 @@ export const Overview = () => {
       networkPassphrase,
     });
 
-    if (xdr) {
+    if (xdr && message) {
       updateSignedTx(xdr);
+      setSignedTxSuccessMsg(message);
+    } else if (!xdr && message) {
+      setSignedTxErrorMsg(message);
     }
-    setSignedTxSuccessMsg(message);
   };
 
   const REQUIRED_FIELDS = [
@@ -91,7 +97,7 @@ export const Overview = () => {
 
   return (
     <>
-      <div className="SignTx__Overview">
+      <Box gap="md">
         <div className="PageHeader">
           <Text size="md" as="h1" weight="medium">
             Transaction Overview
@@ -112,7 +118,7 @@ export const Overview = () => {
 
         <Card>
           <div className="SignTx__FieldViewer">
-            {mergedFields!.map((field) => {
+            {mergedFields?.map((field) => {
               const className =
                 field.value.toString().length >= MIN_LENGTH_FOR_FULL_WIDTH_FIELD
                   ? "full-width"
@@ -147,7 +153,7 @@ export const Overview = () => {
             })}
           </div>
         </Card>
-      </div>
+      </Box>
 
       <div className="SignTx__Signs">
         <div className="PageHeader">
@@ -194,7 +200,7 @@ export const Overview = () => {
             <div className="SignTx__Buttons">
               <div>
                 <Button
-                  disabled={!HAS_SECRET_KEYS}
+                  disabled={!HAS_SECRET_KEYS || HAS_INVALID_SECRET_KEYS}
                   size="md"
                   variant="secondary"
                   onClick={() =>
@@ -278,6 +284,14 @@ export const Overview = () => {
                 </Button>
               </div>
             }
+          />
+        ) : null}
+
+        {signedTxErrorMsg ? (
+          <ValidationResponseCard
+            variant="error"
+            title="Transaction Sign Error:"
+            response={signedTxErrorMsg}
           />
         ) : null}
       </div>

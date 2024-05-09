@@ -443,12 +443,6 @@
   flex-direction: column;
   gap: pxToRem(24px);
 
-  &__Overview {
-    display: flex;
-    flex-direction: column;
-    gap: pxToRem(12px);
-  }
-
   &__xdr {
     display: flex;
     flex-direction: column;

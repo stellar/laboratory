@@ -22,6 +22,7 @@ const secretKeys = ({
 
       if (error) {
         return {
+          xdr: undefined,
           message: error,
         };
       }

@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Alert, Card, Icon, Text, Button } from "@stellar/design-system";
+import { Alert, Card, Text, Button } from "@stellar/design-system";
 import { TransactionBuilder } from "@stellar/stellar-sdk";
 
 import { useStore } from "@/store/useStore";
 
 import { validate } from "@/validate";
 
+import { Box } from "@/components/layout/Box";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 
 export const Import = () => {
@@ -53,7 +54,7 @@ export const Import = () => {
   };
 
   return (
-    <div className="SignTx__Overview">
+    <Box gap="md">
       <div className="PageHeader">
         <Text size="md" as="h1" weight="medium">
           Sign Transaction
@@ -63,21 +64,10 @@ export const Import = () => {
         <div className="SignTx__xdr">
           <XdrPicker
             id="sign-transaction-xdr"
-            label={
-              <Text size="xs" as="span" weight="medium">
-                Import a transaction envelope in XDR format
-                <span className="SignTx__icon">
-                  <Icon.AlertCircle />
-                </span>
-              </Text>
-            }
+            label="Import a transaction envelope in XDR format"
             value={txXdr || ""}
             error={txErrMsg}
-            success={
-              <Text size="xs" as="span" addlClassName="success-message">
-                {txSuccessMsg}
-              </Text>
-            }
+            success={txSuccessMsg}
             onChange={(e) => onChange(e.target.value)}
           />
 
@@ -111,6 +101,6 @@ export const Import = () => {
           signature if there are multiple source accounts or signing keys.
         </Text>
       </Alert>
-    </div>
+    </Box>
   );
 };
