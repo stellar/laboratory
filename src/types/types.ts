@@ -88,6 +88,21 @@ export type AssetObject = {
   value: AssetObjectValue;
 };
 
+export type JsonAsset =
+  | "native"
+  | {
+      credit_alphanum4: {
+        asset_code: string;
+        issuer: string;
+      };
+    }
+  | {
+      credit_alphanum12: {
+        asset_code: string;
+        issuer: string;
+      };
+    };
+
 // =============================================================================
 // Transaction
 // =============================================================================

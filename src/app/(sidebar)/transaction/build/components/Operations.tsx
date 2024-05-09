@@ -3,16 +3,19 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { Badge, Button, Card, Icon, Select } from "@stellar/design-system";
 
-import { formComponentTemplate } from "@/components/formComponentTemplate";
+import { formComponentTemplateTxnOps } from "@/components/formComponentTemplateTxnOps";
 import { Box } from "@/components/layout/Box";
 import { TabbedButtons } from "@/components/TabbedButtons";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
+import { SdsLink } from "@/components/SdsLink";
 
 import { arrayItem } from "@/helpers/arrayItem";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
+import { sanitizeObject } from "@/helpers/sanitizeObject";
+
 import { TRANSACTION_OPERATIONS } from "@/constants/transactionOperations";
 import { useStore } from "@/store/useStore";
-import { TxnOperation } from "@/types/types";
+import { AssetObjectValue, TxnOperation } from "@/types/types";
 
 export const Operations = () => {
   const { transaction } = useStore();
@@ -174,6 +177,38 @@ export const Operations = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const missingSelectedAssetFields = (
+    param: string,
+    value: any,
+  ): { isAssetField: boolean; missingAssetFields: string[] } => {
+    const assetInputs = ["asset", "selling", "buying"];
+    const isAssetField = assetInputs.includes(param);
+
+    const initialValues = {
+      isAssetField,
+      missingAssetFields: [],
+    };
+
+    if (isAssetField) {
+      if (!value || value === "native") {
+        return initialValues;
+      }
+
+      const assetInputs = (Object.values(value)[0] || {}) as {
+        asset_code: string;
+        issuer: string;
+      };
+
+      return {
+        isAssetField,
+        missingAssetFields:
+          assetInputs.asset_code && assetInputs.issuer ? [] : [param],
+      };
+    }
+
+    return initialValues;
+  };
+
   const validateOperationParam = ({
     opIndex,
     opParam,
@@ -187,13 +222,18 @@ export const Operations = () => {
     opParamError?: OperationError;
     opType: string;
   }): OperationError => {
-    const validateFn = formComponentTemplate(opParam)?.validate;
+    const validateFn = formComponentTemplateTxnOps({
+      param: opParam,
+      opType,
+      index: opIndex,
+    })?.validate;
 
     const opError =
       opParamError || operationsError[opIndex] || EMPTY_OPERATION_ERROR;
     const opParamErrorFields = { ...opError.error };
     let opParamMissingFields = [...opError.missingFields];
 
+    //==== Handle input validation for entered value
     if (validateFn) {
       const error = validateFn(opValue);
 
@@ -204,6 +244,7 @@ export const Operations = () => {
       }
     }
 
+    //==== Handle missing required fields
     // If param needs value and there is value entered, remove param from
     // missing fields. If there is no value, nothing to do.
     if (opParamMissingFields.includes(opParam)) {
@@ -216,6 +257,20 @@ export const Operations = () => {
       // missing fields. If there is value, nothing to do.
     } else {
       if (!opValue) {
+        opParamMissingFields = [...opParamMissingFields, opParam];
+      }
+    }
+
+    //==== Handle selected asset with missing fields
+    const missingAsset = missingSelectedAssetFields(opParam, opValue);
+
+    if (
+      missingAsset.isAssetField &&
+      missingAsset.missingAssetFields.length > 0
+    ) {
+      // If there is a missing asset value and the param is not in required
+      // fields, add it to the missing fields
+      if (!opParamMissingFields.includes(opParam)) {
         opParamMissingFields = [...opParamMissingFields, opParam];
       }
     }
@@ -242,10 +297,10 @@ export const Operations = () => {
 
     updateBuildSingleOperation(opIndex, {
       ...op,
-      params: {
+      params: sanitizeObject({
         ...op?.params,
         [opParam]: opValue,
-      },
+      }),
     });
 
     const validatedOpParam = validateOperationParam({
@@ -334,7 +389,25 @@ export const Operations = () => {
   };
 
   const formErrors = getOperationsError();
-  const sourceAccountComponent = formComponentTemplate("source_account");
+
+  const renderSourceAccount = (opType: string, index: number) => {
+    const sourceAccountComponent = formComponentTemplateTxnOps({
+      param: "source_account",
+      opType,
+      index,
+    });
+
+    return opType && sourceAccountComponent
+      ? sourceAccountComponent.render({
+          value: txnOperations[index].source_account,
+          error: operationsError[index]?.error?.["source_account"],
+          isRequired: false,
+          onChange: (e: ChangeEvent<HTMLInputElement>) => {
+            handleOperationSourceAccountChange(index, e.target.value, opType);
+          },
+        })
+      : null;
+  };
 
   const OperationTabbedButtons = ({
     index,
@@ -406,109 +479,117 @@ export const Operations = () => {
   }: {
     index: number;
     operationType: string;
-  }) => (
-    <Select
-      fieldSize="md"
-      id={`${index}-operationType`}
-      label="Operation type"
-      value={operationType}
-      infoLink="https://developers.stellar.org/docs/start/list-of-operations/"
-      onChange={(e) => {
-        updateBuildSingleOperation(index, {
-          operation_type: e.target.value,
-          params: [],
-          source_account: "",
-        });
+  }) => {
+    const opInfo =
+      (operationType && TRANSACTION_OPERATIONS[operationType]) || null;
 
-        let initParamError: OperationError = EMPTY_OPERATION_ERROR;
+    return (
+      <Select
+        fieldSize="md"
+        id={`${index}-operationType`}
+        label="Operation type"
+        value={operationType}
+        infoLink="https://developers.stellar.org/docs/start/list-of-operations/"
+        onChange={(e) => {
+          updateBuildSingleOperation(index, {
+            operation_type: e.target.value,
+            params: [],
+            source_account: "",
+          });
 
-        // Get operation required fields if there is operation type
-        if (e.target.value) {
-          initParamError = {
-            ...initParamError,
-            missingFields: [
-              ...(TRANSACTION_OPERATIONS[e.target.value]?.requiredParams || []),
-            ],
-            operationType: e.target.value,
-          };
+          let initParamError: OperationError = EMPTY_OPERATION_ERROR;
+
+          // Get operation required fields if there is operation type
+          if (e.target.value) {
+            initParamError = {
+              ...initParamError,
+              missingFields: [
+                ...(TRANSACTION_OPERATIONS[e.target.value]?.requiredParams ||
+                  []),
+              ],
+              operationType: e.target.value,
+            };
+          }
+
+          setOperationsError([
+            ...arrayItem.update(operationsError, index, initParamError),
+          ]);
+        }}
+        note={
+          opInfo ? (
+            <>
+              {opInfo.description}{" "}
+              <SdsLink href={opInfo.docsUrl}>See documentation</SdsLink>.
+            </>
+          ) : null
         }
-
-        setOperationsError([
-          ...arrayItem.update(operationsError, index, initParamError),
-        ]);
-      }}
-    >
-      <option value="">Select operation type</option>
-      <option value="create_account">Create Account</option>
-      {/* TODO: remove disabled attribute when operation is implemented */}
-      <option value="payment" disabled>
-        Payment
-      </option>
-      <option value="path_payment_strict_send" disabled>
-        Path Payment Strict Send
-      </option>
-      <option value="path_payment_strict_receive" disabled>
-        Path Payment Strict Receive
-      </option>
-      <option value="manage_sell_offer" disabled>
-        Manage Sell Offer
-      </option>
-      <option value="manage_buy_offer" disabled>
-        Manage Buy Offer
-      </option>
-      <option value="create_passive_sell_offer" disabled>
-        Create Passive Sell Offer
-      </option>
-      <option value="set_options" disabled>
-        Set Options
-      </option>
-      <option value="change_trust" disabled>
-        Change Trust
-      </option>
-      <option value="allow_trust" disabled>
-        Allow Trust
-      </option>
-      <option value="account_merge" disabled>
-        Account Merge
-      </option>
-      <option value="manage_data" disabled>
-        Manage Data
-      </option>
-      <option value="bump_sequence" disabled>
-        Bump Sequence
-      </option>
-      <option value="create_claimable_balance" disabled>
-        Create Claimable Balance
-      </option>
-      <option value="claim_claimable_balance" disabled>
-        Claim Claimable Balance
-      </option>
-      <option value="begin_sponsoring_future_reserves" disabled>
-        Begin Sponsoring Future Reserves
-      </option>
-      <option value="end_sponsoring_future_reserves" disabled>
-        End Sponsoring Future Reserves
-      </option>
-      <option value="revoke_sponsorship" disabled>
-        Revoke Sponsorship
-      </option>
-      <option value="clawback" disabled>
-        Clawback
-      </option>
-      <option value="clawback_claimable_balance" disabled>
-        Clawback Claimable Balance
-      </option>
-      <option value="set_trust_line_flags" disabled>
-        Set Trust Line Flags
-      </option>
-      <option value="liquidity_pool_deposit" disabled>
-        Liquidity Pool Deposit
-      </option>
-      <option value="liquidity_pool_withdraw" disabled>
-        Liquidity Pool Withdraw
-      </option>
-    </Select>
-  );
+      >
+        {/* TODO: remove disabled attribute when operation is implemented */}
+        <option value="">Select operation type</option>
+        <option value="create_account">Create Account</option>
+        <option value="payment">Payment</option>
+        <option value="path_payment_strict_send" disabled>
+          Path Payment Strict Send
+        </option>
+        <option value="path_payment_strict_receive" disabled>
+          Path Payment Strict Receive
+        </option>
+        <option value="manage_sell_offer">Manage Sell Offer</option>
+        <option value="manage_buy_offer">Manage Buy Offer</option>
+        <option value="create_passive_sell_offer">
+          Create Passive Sell Offer
+        </option>
+        <option value="set_options" disabled>
+          Set Options
+        </option>
+        <option value="change_trust" disabled>
+          Change Trust
+        </option>
+        <option value="allow_trust" disabled>
+          Allow Trust
+        </option>
+        <option value="account_merge" disabled>
+          Account Merge
+        </option>
+        <option value="manage_data" disabled>
+          Manage Data
+        </option>
+        <option value="bump_sequence" disabled>
+          Bump Sequence
+        </option>
+        <option value="create_claimable_balance" disabled>
+          Create Claimable Balance
+        </option>
+        <option value="claim_claimable_balance" disabled>
+          Claim Claimable Balance
+        </option>
+        <option value="begin_sponsoring_future_reserves" disabled>
+          Begin Sponsoring Future Reserves
+        </option>
+        <option value="end_sponsoring_future_reserves" disabled>
+          End Sponsoring Future Reserves
+        </option>
+        <option value="revoke_sponsorship" disabled>
+          Revoke Sponsorship
+        </option>
+        <option value="clawback" disabled>
+          Clawback
+        </option>
+        <option value="clawback_claimable_balance" disabled>
+          Clawback Claimable Balance
+        </option>
+        <option value="set_trust_line_flags" disabled>
+          Set Trust Line Flags
+        </option>
+        <option value="liquidity_pool_deposit" disabled>
+          Liquidity Pool Deposit
+        </option>
+        <option value="liquidity_pool_withdraw" disabled>
+          Liquidity Pool Withdraw
+        </option>
+      </Select>
+    );
+  };
 
   return (
     <Box gap="md">
@@ -547,25 +628,72 @@ export const Operations = () => {
                 <>
                   {TRANSACTION_OPERATIONS[op.operation_type]?.params.map(
                     (input) => {
-                      const component = formComponentTemplate(input);
+                      const component = formComponentTemplateTxnOps({
+                        param: input,
+                        opType: op.operation_type,
+                        index: idx,
+                        custom:
+                          TRANSACTION_OPERATIONS[op.operation_type].custom?.[
+                            input
+                          ],
+                      });
+                      const baseProps = {
+                        value: txnOperations[idx]?.params[input],
+                        error: operationsError[idx]?.error?.[input],
+                        isRequired:
+                          TRANSACTION_OPERATIONS[
+                            op.operation_type
+                          ].requiredParams.includes(input),
+                      };
 
                       if (component) {
-                        return component.render({
-                          value: txnOperations[idx]?.params[input],
-                          error: operationsError[idx]?.error?.[input],
-                          isRequired:
-                            TRANSACTION_OPERATIONS[
-                              op.operation_type
-                            ].requiredParams.includes(input),
-                          onChange: (e: ChangeEvent<HTMLInputElement>) => {
-                            handleOperationParamChange({
-                              opIndex: idx,
-                              opParam: input,
-                              opValue: e.target.value,
-                              opType: op.operation_type,
+                        switch (input) {
+                          case "asset":
+                          case "buying":
+                          case "selling":
+                            return component.render({
+                              ...baseProps,
+                              onChange: (assetValue: AssetObjectValue) => {
+                                let asset;
+
+                                if (assetValue.type === "native") {
+                                  asset = "native";
+                                } else if (
+                                  assetValue.type &&
+                                  [
+                                    "credit_alphanum4",
+                                    "credit_alphanum12",
+                                  ].includes(assetValue.type)
+                                ) {
+                                  asset = {
+                                    [assetValue.type]: {
+                                      asset_code: assetValue.code,
+                                      issuer: assetValue.issuer,
+                                    },
+                                  };
+                                }
+
+                                handleOperationParamChange({
+                                  opIndex: idx,
+                                  opParam: input,
+                                  opValue: asset,
+                                  opType: op.operation_type,
+                                });
+                              },
                             });
-                          },
-                        });
+                          default:
+                            return component.render({
+                              ...baseProps,
+                              onChange: (e: ChangeEvent<HTMLInputElement>) => {
+                                handleOperationParamChange({
+                                  opIndex: idx,
+                                  opParam: input,
+                                  opValue: e.target.value,
+                                  opType: op.operation_type,
+                                });
+                              },
+                            });
+                        }
                       }
 
                       return null;
@@ -574,22 +702,7 @@ export const Operations = () => {
                 </>
 
                 {/* Optional source account for all operations */}
-                <>
-                  {op.operation_type && sourceAccountComponent
-                    ? sourceAccountComponent.render({
-                        value: txnOperations[idx].source_account,
-                        error: operationsError[idx]?.error?.["source_account"],
-                        isRequired: false,
-                        onChange: (e: ChangeEvent<HTMLInputElement>) => {
-                          handleOperationSourceAccountChange(
-                            idx,
-                            e.target.value,
-                            op.operation_type,
-                          );
-                        },
-                      })
-                    : null}
-                </>
+                <>{renderSourceAccount(op.operation_type, idx)}</>
               </Box>
             ))}
           </>
