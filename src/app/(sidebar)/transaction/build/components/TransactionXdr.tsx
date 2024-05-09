@@ -15,7 +15,7 @@ import { xdrUtils } from "@/helpers/xdr/utils";
 
 import { useStore } from "@/store/useStore";
 import { Routes } from "@/constants/routes";
-import { AnyObject, KeysOfUnion } from "@/types/types";
+import { AnyObject, KeysOfUnion, TxnOperation } from "@/types/types";
 
 export const TransactionXdr = () => {
   const { transaction, network } = useStore();
@@ -136,14 +136,22 @@ export const TransactionXdr = () => {
         }, {} as AnyObject);
       };
 
-      const prepTxnOps = txnOperations.map((op) => ({
-        source_account: op.source_account || null,
-        body: {
+      const renderTxnBody = (op: TxnOperation) => {
+        if (op.operation_type === "end_sponsoring_future_reserves") {
+          return "end_sponsoring_future_reserves";
+        }
+
+        return {
           [op.operation_type]: parseOpParams({
             opType: op.operation_type,
             params: op.params,
           }),
-        },
+        };
+      };
+
+      const prepTxnOps = txnOperations.map((op) => ({
+        source_account: op.source_account || null,
+        body: renderTxnBody(op),
       }));
 
       const txnJson = {

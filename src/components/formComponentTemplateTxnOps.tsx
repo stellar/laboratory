@@ -266,6 +266,21 @@ export const formComponentTemplateTxnOps = ({
         ),
         validate: validate.publicKey,
       };
+    case "sponsored_id":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <PubKeyPicker
+            key={id}
+            id={id}
+            label="Sponsored ID"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.publicKey,
+      };
     case "starting_balance":
       return {
         render: (templ: TemplateRenderProps) => (

@@ -126,4 +126,21 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     params: ["balance_id"],
     requiredParams: ["balance_id"],
   },
+  begin_sponsoring_future_reserves: {
+    label: "Begin Sponsoring Future Reserves",
+    description:
+      "Initiate a sponsorship. There must be a corresponding End Sponsoring Future Reserves operation in the same transaction.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#begin-sponsoring-future-reserves",
+    params: ["sponsored_id"],
+    requiredParams: ["sponsored_id"],
+  },
+  end_sponsoring_future_reserves: {
+    label: "End Sponsoring Future Reserves",
+    description: "End a sponsorship.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#end-sponsoring-future-reserves",
+    params: [],
+    requiredParams: [],
+  },
 };
