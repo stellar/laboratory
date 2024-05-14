@@ -568,7 +568,7 @@ export const Operations = () => {
           Revoke Sponsorship
         </option>
         <option value="clawback">Clawback</option>
-        <option value="clawback_claimable_balance" disabled>
+        <option value="clawback_claimable_balance">
           Clawback Claimable Balance
         </option>
         <option value="set_trust_line_flags" disabled>

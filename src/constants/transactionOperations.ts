@@ -156,4 +156,12 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
       },
     },
   },
+  clawback_claimable_balance: {
+    label: "Clawback Claimable Balance",
+    description: "Creates a clawback operation for a claimable balance.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#clawback-claimable-balance",
+    params: ["balance_id"],
+    requiredParams: ["balance_id"],
+  },
 };
