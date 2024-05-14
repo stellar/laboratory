@@ -143,4 +143,17 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     params: [],
     requiredParams: [],
   },
+  clawback: {
+    label: "Clawback",
+    description: "Creates a clawback operation.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#clawback",
+    params: ["asset", "from", "amount"],
+    requiredParams: ["asset", "from", "amount"],
+    custom: {
+      asset: {
+        includeNative: false,
+      },
+    },
+  },
 };

@@ -567,9 +567,7 @@ export const Operations = () => {
         <option value="revoke_sponsorship" disabled>
           Revoke Sponsorship
         </option>
-        <option value="clawback" disabled>
-          Clawback
-        </option>
+        <option value="clawback">Clawback</option>
         <option value="clawback_claimable_balance" disabled>
           Clawback Claimable Balance
         </option>

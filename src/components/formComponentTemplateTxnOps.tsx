@@ -94,7 +94,11 @@ export const formComponentTemplateTxnOps = ({
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={assetPickerValue(templ.value)}
             error={templ.error}
-            includeNative
+            includeNative={
+              typeof custom?.includeNative === "undefined"
+                ? true
+                : custom?.includeNative
+            }
             onChange={templ.onChange}
           />
         ),
@@ -195,6 +199,21 @@ export const formComponentTemplateTxnOps = ({
             key={id}
             id={id}
             label="Destination"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.publicKey,
+      };
+    case "from":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <PubKeyPicker
+            key={id}
+            id={id}
+            label="From"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={templ.value || ""}
             error={templ.error}
