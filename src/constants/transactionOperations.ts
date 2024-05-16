@@ -28,6 +28,44 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     params: ["destination", "asset", "amount"],
     requiredParams: ["destination", "asset", "amount"],
   },
+  path_payment_strict_send: {
+    label: "Path Payment Strict Send",
+    description:
+      "Sends an amount in a specific asset to a destination account through a path of offers. This allows the asset sent (e.g., 450 XLM) to be different from the asset received (e.g, 6 BTC). A Path Payment Strict Send allows a user to specify the amount of the asset to send. The amount received will vary based on offers in the order books.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#path-payment-strict-send",
+    params: [
+      "destination",
+      "send_asset",
+      "send_amount",
+      "path",
+      "dest_asset",
+      "dest_min",
+    ],
+    requiredParams: [
+      "destination",
+      "send_asset",
+      "send_amount",
+      "dest_asset",
+      "dest_min",
+    ],
+    custom: {
+      send_asset: {
+        label: "Sending Asset",
+        note: "The asset to be deduced from the sender's account.",
+      },
+      send_amount: {
+        label: "Send Amount",
+      },
+      dest_asset: {
+        label: "Destination Asset",
+        note: "The minimum amount the destination can receive.",
+      },
+      dest_min: {
+        label: "Minimum Destination Amount",
+      },
+    },
+  },
   manage_sell_offer: {
     label: "Manage Sell Offer",
     description: "Creates, updates, or deletes an offer.",

@@ -4,6 +4,7 @@ import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
 import { TextPicker } from "@/components/FormElements/TextPicker";
 import { AssetPicker } from "@/components/FormElements/AssetPicker";
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
+import { AssetMultiPicker } from "@/components/FormElements/AssetMultiPicker";
 
 import { validate } from "@/validate";
 import { AnyObject, AssetObjectValue, JsonAsset } from "@/types/types";
@@ -20,6 +21,13 @@ type TemplateRenderAssetProps = {
   value: JsonAsset | undefined;
   error: { code: string | undefined; issuer: string | undefined } | undefined;
   onChange: (asset: AssetObjectValue | undefined) => void;
+  isRequired?: boolean;
+};
+
+type TemplateRenderAssetMultiProps = {
+  value: AssetObjectValue[];
+  error: { code: string | undefined; issuer: string | undefined }[];
+  onChange: (asset: AssetObjectValue[] | undefined) => void;
   isRequired?: boolean;
 };
 
@@ -68,6 +76,8 @@ export const formComponentTemplateTxnOps = ({
   switch (param) {
     case "amount":
     case "buy_amount":
+    case "send_amount":
+    case "dest_min":
       return {
         render: (templ: TemplateRenderProps) => (
           <TextPicker
@@ -84,16 +94,19 @@ export const formComponentTemplateTxnOps = ({
         validate: validate.amount,
       };
     case "asset":
+    case "send_asset":
+    case "dest_asset":
       return {
         render: (templ: TemplateRenderAssetProps) => (
           <AssetPicker
             key={id}
             assetInput="alphanumeric"
             id={id}
-            label="Asset"
+            label={custom?.label ?? "Asset"}
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={assetPickerValue(templ.value)}
             error={templ.error}
+            note={custom?.note}
             includeNative={
               typeof custom?.includeNative === "undefined"
                 ? true
@@ -237,6 +250,23 @@ export const formComponentTemplateTxnOps = ({
           />
         ),
         validate: validate.positiveInt,
+      };
+    case "path":
+      return {
+        render: (templ: TemplateRenderAssetMultiProps) => (
+          <AssetMultiPicker
+            key={id}
+            id={id}
+            label="Intermediate Path"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            assetInput="alphanumeric"
+            values={templ.value}
+            error={templ.error}
+            onChange={templ.onChange}
+            customButtonLabel="intermediate asset"
+          />
+        ),
+        validate: validate.assetMulti,
       };
     case "price":
       return {

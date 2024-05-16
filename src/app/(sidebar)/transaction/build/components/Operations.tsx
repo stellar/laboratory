@@ -15,7 +15,7 @@ import { sanitizeObject } from "@/helpers/sanitizeObject";
 
 import { TRANSACTION_OPERATIONS } from "@/constants/transactionOperations";
 import { useStore } from "@/store/useStore";
-import { AssetObjectValue, TxnOperation } from "@/types/types";
+import { AssetObject, AssetObjectValue, TxnOperation } from "@/types/types";
 
 export const Operations = () => {
   const { transaction } = useStore();
@@ -181,7 +181,13 @@ export const Operations = () => {
     param: string,
     value: any,
   ): { isAssetField: boolean; missingAssetFields: string[] } => {
-    const assetInputs = ["asset", "selling", "buying"];
+    const assetInputs = [
+      "asset",
+      "selling",
+      "buying",
+      "send_asset",
+      "dest_asset",
+    ];
     const isAssetField = assetInputs.includes(param);
 
     const initialValues = {
@@ -204,6 +210,34 @@ export const Operations = () => {
         missingAssetFields:
           assetInputs.asset_code && assetInputs.issuer ? [] : [param],
       };
+    }
+
+    // Multi-asset
+    if (param === "path") {
+      const missingValues = value
+        .map((v: AssetObjectValue) => {
+          if (!v.type) {
+            return true;
+          }
+
+          if (v.type === "native") {
+            return false;
+          }
+
+          if (v.code && v.issuer) {
+            return false;
+          }
+
+          return true;
+        })
+        .filter((b: boolean) => b);
+
+      if (missingValues.length > 0) {
+        return {
+          isAssetField: true,
+          missingAssetFields: [param],
+        };
+      }
     }
 
     return initialValues;
@@ -531,7 +565,7 @@ export const Operations = () => {
         <option value="">Select operation type</option>
         <option value="create_account">Create Account</option>
         <option value="payment">Payment</option>
-        <option value="path_payment_strict_send" disabled>
+        <option value="path_payment_strict_send">
           Path Payment Strict Send
         </option>
         <option value="path_payment_strict_receive" disabled>
@@ -644,6 +678,8 @@ export const Operations = () => {
                           case "asset":
                           case "buying":
                           case "selling":
+                          case "send_asset":
+                          case "dest_asset":
                             return component.render({
                               ...baseProps,
                               onChange: (assetValue: AssetObjectValue) => {
@@ -670,6 +706,18 @@ export const Operations = () => {
                                   opIndex: idx,
                                   opParam: input,
                                   opValue: asset,
+                                  opType: op.operation_type,
+                                });
+                              },
+                            });
+                          case "path":
+                            return component.render({
+                              ...baseProps,
+                              onChange: (path: AssetObject[]) => {
+                                handleOperationParamChange({
+                                  opIndex: idx,
+                                  opParam: input,
+                                  opValue: path,
                                   opType: op.operation_type,
                                 });
                               },
