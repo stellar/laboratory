@@ -371,6 +371,25 @@
   }
 }
 
+// Maintenance Banner
+.MaintenanceBanner {
+  .Banner__message {
+    max-width: 100%;
+  }
+
+  .Banner--primary .Banner__content a {
+    color: var(--sds-clr-lilac-11);
+    text-decoration: none;
+    transition: color var(--sds-anim-transition-default);
+
+    @media (hover: hover) {
+      &:hover {
+        color: var(--sds-clr-lilac-12);
+      }
+    }
+  }
+}
+
 // Introduction
 .CardText {
   display: flex;
