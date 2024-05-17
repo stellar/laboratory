@@ -129,6 +129,8 @@ export const TransactionXdr = () => {
           case "starting_balance":
           case "send_amount":
           case "dest_min":
+          case "send_max":
+          case "dest_amount":
             return xdrUtils.toAmount(val);
           // Number
           case "bump_to":
@@ -175,7 +177,11 @@ export const TransactionXdr = () => {
           return "end_sponsoring_future_reserves";
         }
 
-        if (op.operation_type === "path_payment_strict_send") {
+        if (
+          ["path_payment_strict_send", "path_payment_strict_receive"].includes(
+            op.operation_type,
+          )
+        ) {
           if (!op.params.path) {
             op.params = { ...op.params, path: [] };
           }

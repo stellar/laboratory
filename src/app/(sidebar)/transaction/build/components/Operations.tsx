@@ -568,7 +568,7 @@ export const Operations = () => {
         <option value="path_payment_strict_send">
           Path Payment Strict Send
         </option>
-        <option value="path_payment_strict_receive" disabled>
+        <option value="path_payment_strict_receive">
           Path Payment Strict Receive
         </option>
         <option value="manage_sell_offer">Manage Sell Offer</option>

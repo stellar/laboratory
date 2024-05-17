@@ -78,6 +78,8 @@ export const formComponentTemplateTxnOps = ({
     case "buy_amount":
     case "send_amount":
     case "dest_min":
+    case "send_max":
+    case "dest_amount":
       return {
         render: (templ: TemplateRenderProps) => (
           <TextPicker
