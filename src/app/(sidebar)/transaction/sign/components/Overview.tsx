@@ -141,6 +141,7 @@ export const Overview = () => {
           <div className="SignTx__FieldViewer">
             {mergedFields?.map((field) => {
               const className =
+                field.value &&
                 field.value.toString().length >= MIN_LENGTH_FOR_FULL_WIDTH_FIELD
                   ? "full-width"
                   : "half-width";
@@ -152,7 +153,7 @@ export const Overview = () => {
                       readOnly
                       id={field.label}
                       label={field.label}
-                      value={field.value.toString()}
+                      value={field.value ? field.value.toString() : ""}
                     />
                   </div>
                 );
@@ -163,7 +164,7 @@ export const Overview = () => {
                       readOnly
                       id={field.label}
                       label={field.label}
-                      value={field.value.toString()}
+                      value={field.value ? field.value.toString() : ""}
                       copyButton={{
                         position: "right",
                       }}
