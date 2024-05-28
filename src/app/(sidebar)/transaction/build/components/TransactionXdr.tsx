@@ -15,7 +15,12 @@ import { xdrUtils } from "@/helpers/xdr/utils";
 
 import { useStore } from "@/store/useStore";
 import { Routes } from "@/constants/routes";
-import { AnyObject, KeysOfUnion, TxnOperation } from "@/types/types";
+import {
+  AnyObject,
+  AssetObjectValue,
+  KeysOfUnion,
+  TxnOperation,
+} from "@/types/types";
 
 export const TransactionXdr = () => {
   const { transaction, network } = useStore();
@@ -93,12 +98,39 @@ export const TransactionXdr = () => {
         return { ...res, [key]: val };
       }, {});
 
+      const formatAssetMultiValue = (assets: AssetObjectValue[]) => {
+        return assets.reduce((res, cur) => {
+          if (cur.type === "native") {
+            return [...res, "native"];
+          } else if (
+            cur.type &&
+            ["credit_alphanum4", "credit_alphanum12"].includes(cur.type)
+          ) {
+            return [
+              ...res,
+              {
+                [cur.type]: {
+                  asset_code: cur.code,
+                  issuer: cur.issuer,
+                },
+              },
+            ];
+          }
+
+          return res;
+        }, [] as any[]);
+      };
+
       const getXdrVal = (key: string, val: any) => {
         switch (key) {
           // Amount
           case "amount":
           case "buy_amount":
           case "starting_balance":
+          case "send_amount":
+          case "dest_min":
+          case "send_max":
+          case "dest_amount":
             return xdrUtils.toAmount(val);
           // Number
           case "bump_to":
@@ -113,6 +145,8 @@ export const TransactionXdr = () => {
             return {
               claimable_balance_id_type_v0: val.replace(/^(00000000)/, ""),
             };
+          case "path":
+            return formatAssetMultiValue(val);
           default:
             return val;
         }
@@ -136,9 +170,21 @@ export const TransactionXdr = () => {
         }, {} as AnyObject);
       };
 
-      const renderTxnBody = (op: TxnOperation) => {
+      const renderTxnBody = (txnOp: TxnOperation) => {
+        const op = { ...txnOp };
+
         if (op.operation_type === "end_sponsoring_future_reserves") {
           return "end_sponsoring_future_reserves";
+        }
+
+        if (
+          ["path_payment_strict_send", "path_payment_strict_receive"].includes(
+            op.operation_type,
+          )
+        ) {
+          if (!op.params.path) {
+            op.params = { ...op.params, path: [] };
+          }
         }
 
         return {
