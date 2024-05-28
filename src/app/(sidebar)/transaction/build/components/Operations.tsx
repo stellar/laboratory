@@ -256,7 +256,10 @@ export const Operations = () => {
       // If param is not in missing fields and has not value, add the param to
       // missing fields. If there is value, nothing to do.
     } else {
-      if (!opValue) {
+      if (
+        !opValue &&
+        TRANSACTION_OPERATIONS[opType].requiredParams.includes(opParam)
+      ) {
         opParamMissingFields = [...opParamMissingFields, opParam];
       }
     }
@@ -548,25 +551,17 @@ export const Operations = () => {
         <option value="allow_trust" disabled>
           Allow Trust
         </option>
-        <option value="account_merge" disabled>
-          Account Merge
-        </option>
-        <option value="manage_data" disabled>
-          Manage Data
-        </option>
-        <option value="bump_sequence" disabled>
-          Bump Sequence
-        </option>
+        <option value="account_merge">Account Merge</option>
+        <option value="manage_data">Manage Data</option>
+        <option value="bump_sequence">Bump Sequence</option>
         <option value="create_claimable_balance" disabled>
           Create Claimable Balance
         </option>
-        <option value="claim_claimable_balance" disabled>
-          Claim Claimable Balance
-        </option>
-        <option value="begin_sponsoring_future_reserves" disabled>
+        <option value="claim_claimable_balance">Claim Claimable Balance</option>
+        <option value="begin_sponsoring_future_reserves">
           Begin Sponsoring Future Reserves
         </option>
-        <option value="end_sponsoring_future_reserves" disabled>
+        <option value="end_sponsoring_future_reserves">
           End Sponsoring Future Reserves
         </option>
         <option value="revoke_sponsorship" disabled>
@@ -608,7 +603,7 @@ export const Operations = () => {
                 >
                   <Badge
                     size="md"
-                    variant="primary"
+                    variant="secondary"
                   >{`Operation ${idx + 1}`}</Badge>
 
                   <OperationTabbedButtons

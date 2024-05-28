@@ -15,7 +15,7 @@ import { xdrUtils } from "@/helpers/xdr/utils";
 
 import { useStore } from "@/store/useStore";
 import { Routes } from "@/constants/routes";
-import { AnyObject, KeysOfUnion } from "@/types/types";
+import { AnyObject, KeysOfUnion, TxnOperation } from "@/types/types";
 
 export const TransactionXdr = () => {
   const { transaction, network } = useStore();
@@ -101,17 +101,34 @@ export const TransactionXdr = () => {
           case "starting_balance":
             return xdrUtils.toAmount(val);
           // Number
+          case "bump_to":
           case "offer_id":
             return BigInt(val);
           // Price
           case "price":
             return xdrUtils.toPrice(val);
+          case "data_value":
+            return Buffer.from(val).toString("hex");
+          case "balance_id":
+            return {
+              claimable_balance_id_type_v0: val.replace(/^(00000000)/, ""),
+            };
           default:
             return val;
         }
       };
 
-      const parseOpParams = ({ params }: { params: AnyObject }) => {
+      const parseOpParams = ({
+        opType,
+        params,
+      }: {
+        opType: string;
+        params: AnyObject;
+      }) => {
+        if (opType === "account_merge") {
+          return Object.values(params)[0];
+        }
+
         return Object.entries(params).reduce((res, [key, val]) => {
           res[key] = getXdrVal(key, val);
 
@@ -119,13 +136,22 @@ export const TransactionXdr = () => {
         }, {} as AnyObject);
       };
 
-      const prepTxnOps = txnOperations.map((op) => ({
-        source_account: op.source_account || null,
-        body: {
+      const renderTxnBody = (op: TxnOperation) => {
+        if (op.operation_type === "end_sponsoring_future_reserves") {
+          return "end_sponsoring_future_reserves";
+        }
+
+        return {
           [op.operation_type]: parseOpParams({
+            opType: op.operation_type,
             params: op.params,
           }),
-        },
+        };
+      };
+
+      const prepTxnOps = txnOperations.map((op) => ({
+        source_account: op.source_account || null,
+        body: renderTxnBody(op),
       }));
 
       const txnJson = {

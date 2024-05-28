@@ -100,6 +100,36 @@ export const formComponentTemplateTxnOps = ({
         ),
         validate: validate.assetJson,
       };
+    case "balance_id":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <TextPicker
+            key={id}
+            id={id}
+            label="Claimable Balance ID"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.claimableBalanceId,
+      };
+    case "bump_to":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <PositiveIntPicker
+            key={id}
+            id={id}
+            label="Bump To"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.positiveInt,
+      };
     case "buying":
       return {
         render: (templ: TemplateRenderAssetProps) => (
@@ -116,6 +146,47 @@ export const formComponentTemplateTxnOps = ({
           />
         ),
         validate: validate.assetJson,
+      };
+    case "data_name":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <TextPicker
+            key={id}
+            id={id}
+            label="Entry name"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.dataName,
+      };
+    case "data_value":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <TextPicker
+            key={id}
+            id={id}
+            label="Entry value"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+            note={
+              custom?.note && custom?.note_add ? (
+                <>
+                  {custom.note}
+                  <br />
+                  {custom.note_add}
+                </>
+              ) : (
+                custom?.note
+              )
+            }
+          />
+        ),
+        validate: validate.dataValue,
       };
     case "destination":
       return {
@@ -187,6 +258,21 @@ export const formComponentTemplateTxnOps = ({
             key={id}
             id={id}
             label="Source Account"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.publicKey,
+      };
+    case "sponsored_id":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <PubKeyPicker
+            key={id}
+            id={id}
+            label="Sponsored ID"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={templ.value || ""}
             error={templ.error}

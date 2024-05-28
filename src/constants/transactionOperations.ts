@@ -86,4 +86,61 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
       },
     },
   },
+  account_merge: {
+    label: "Account Merge",
+    description:
+      "Transfers the native balance (the amount of XLM an account holds) to another account and removes the source account from the ledger.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#account-merge",
+    params: ["destination"],
+    requiredParams: ["destination"],
+  },
+  manage_data: {
+    label: "Manage Data",
+    description: "Sets, modifies, or deletes a Data Entry (name/value pair).",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#manage-data",
+    params: ["data_name", "data_value"],
+    requiredParams: ["data_name"],
+    custom: {
+      data_value: {
+        note: "If empty, will delete the data entry named in this operation.",
+        // Use "note_add" to show another note below "note"
+        note_add: "Note: The laboratory only supports strings.",
+      },
+    },
+  },
+  bump_sequence: {
+    label: "Bump Sequence",
+    description: "Bumps sequence number.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#bump-sequence",
+    params: ["bump_to"],
+    requiredParams: ["bump_to"],
+  },
+  claim_claimable_balance: {
+    label: "Claim Claimable Balance",
+    description: "Claims a claimable balance.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#claim-claimable-balance",
+    params: ["balance_id"],
+    requiredParams: ["balance_id"],
+  },
+  begin_sponsoring_future_reserves: {
+    label: "Begin Sponsoring Future Reserves",
+    description:
+      "Initiate a sponsorship. There must be a corresponding End Sponsoring Future Reserves operation in the same transaction.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#begin-sponsoring-future-reserves",
+    params: ["sponsored_id"],
+    requiredParams: ["sponsored_id"],
+  },
+  end_sponsoring_future_reserves: {
+    label: "End Sponsoring Future Reserves",
+    description: "End a sponsorship.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#end-sponsoring-future-reserves",
+    params: [],
+    requiredParams: [],
+  },
 };
