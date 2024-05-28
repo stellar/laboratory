@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Card, Icon, Text, Button } from "@stellar/design-system";
-import { FeeBumpTransaction } from "@stellar/stellar-sdk";
+import { FeeBumpTransaction, TransactionBuilder } from "@stellar/stellar-sdk";
 
 import { FEE_BUMP_TX_FIELDS, TX_FIELDS } from "@/constants/signTransactionPage";
 
@@ -23,7 +23,13 @@ const MIN_LENGTH_FOR_FULL_WIDTH_FIELD = 30;
 
 export const Overview = () => {
   const { network, transaction } = useStore();
-  const { sign, updateSignActiveView, updateSignedTx, resetSign } = transaction;
+  const {
+    sign,
+    updateSignActiveView,
+    updateSignImportTx,
+    updateSignedTx,
+    resetSign,
+  } = transaction;
 
   const [secretInputs, setSecretInputs] = useState<string[]>([""]);
   const [signedTxSuccessMsg, setSignedTxSuccessMsg] = useState<string>("");
@@ -40,9 +46,24 @@ export const Overview = () => {
 
   useEffect(() => {
     if (!sign.importTx) {
-      updateSignActiveView("import");
+      if (!sign.importXdr) {
+        updateSignActiveView("import");
+      } else {
+        const transaction = TransactionBuilder.fromXDR(
+          sign.importXdr,
+          network.passphrase,
+        );
+
+        updateSignImportTx(transaction);
+      }
     }
-  }, []);
+  }, [
+    network.passphrase,
+    sign.importTx,
+    sign.importXdr,
+    updateSignActiveView,
+    updateSignImportTx,
+  ]);
 
   const onUpdateSecretInputs = (val: string[]) => {
     setSecretInputs(val);
@@ -83,7 +104,7 @@ export const Overview = () => {
     },
     {
       label: "Transaction Hash",
-      value: sign.importTx!.hash().toString("hex"),
+      value: sign.importTx?.hash().toString("hex"),
     },
   ];
 

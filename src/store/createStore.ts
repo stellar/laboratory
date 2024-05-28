@@ -341,6 +341,10 @@ export const createStore = (options: CreateStoreOptions) =>
             },
             transaction: {
               build: true,
+              sign: {
+                activeView: true,
+                importXdr: true,
+              },
             },
           };
         },
