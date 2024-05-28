@@ -13,7 +13,9 @@ export const MaintenanceBanner = () => {
   const relevantMaintenance = getRelevantMaintenanceMsg(network.id, data);
 
   const renderBanner = (message: React.ReactNode) => (
-    <Banner variant="primary">{message}</Banner>
+    <div className="MaintenanceBanner">
+      <Banner variant="primary">{message}</Banner>
+    </div>
   );
 
   if (error) {
