@@ -49,6 +49,7 @@ export const Overview = () => {
       if (!sign.importXdr) {
         updateSignActiveView("import");
       } else {
+        // used to persist page data when accessed by query string
         const transaction = TransactionBuilder.fromXDR(
           sign.importXdr,
           network.passphrase,
