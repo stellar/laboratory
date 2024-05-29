@@ -49,6 +49,7 @@ export const Import = () => {
       updateSignActiveView("overview");
     } catch (e) {
       setTxErrMsg("Unable to import a transaction envelope");
+      updateSignImportXdr("");
       updateSignActiveView("import");
     }
   };
