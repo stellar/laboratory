@@ -128,3 +128,18 @@ export type InfoCard = {
   buttonIcon?: React.ReactNode;
   buttonAction: () => void;
 };
+
+// =============================================================================
+// Operations
+// =============================================================================
+export type OptionFlag = {
+  id: string;
+  label: string;
+  value: number;
+};
+
+export type OptionSigner = {
+  type: string;
+  key: string | undefined;
+  weight: string | undefined;
+};

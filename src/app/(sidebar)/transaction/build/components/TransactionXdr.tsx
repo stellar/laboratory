@@ -12,13 +12,21 @@ import { Box } from "@/components/layout/Box";
 
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { xdrUtils } from "@/helpers/xdr/utils";
+import { optionsFlagDetails } from "@/helpers/optionsFlagDetails";
 
 import { useStore } from "@/store/useStore";
 import { Routes } from "@/constants/routes";
 import {
+  OPERATION_CLEAR_FLAGS,
+  OPERATION_SET_FLAGS,
+} from "@/constants/settings";
+
+import {
   AnyObject,
   AssetObjectValue,
   KeysOfUnion,
+  OptionFlag,
+  OptionSigner,
   TxnOperation,
 } from "@/types/types";
 
@@ -121,6 +129,39 @@ export const TransactionXdr = () => {
         }, [] as any[]);
       };
 
+      const flagTotal = (val: string[], operations: OptionFlag[]) => {
+        const total = optionsFlagDetails(operations, val).total;
+
+        return total > 0 ? BigInt(total) : null;
+      };
+
+      const formatSignerValue = (val: OptionSigner | undefined) => {
+        if (!val) {
+          return null;
+        }
+
+        const weight = val?.weight ? BigInt(val.weight) : "";
+        let key: string | any = "";
+
+        switch (val.type) {
+          case "ed25519PublicKey":
+            key = val.key || "";
+            break;
+          case "sha256Hash":
+            // TODO: format value
+            key = val.key;
+            break;
+          case "preAuthTx":
+            // TODO: format value
+            key = val.key;
+            break;
+          default:
+          // do nothing
+        }
+
+        return { key, weight };
+      };
+
       const getXdrVal = (key: string, val: any) => {
         switch (key) {
           // Amount
@@ -135,6 +176,10 @@ export const TransactionXdr = () => {
           // Number
           case "bump_to":
           case "offer_id":
+          case "master_weight":
+          case "low_threshold":
+          case "med_threshold":
+          case "high_threshold":
             return BigInt(val);
           // Price
           case "price":
@@ -145,8 +190,17 @@ export const TransactionXdr = () => {
             return {
               claimable_balance_id_type_v0: val.replace(/^(00000000)/, ""),
             };
+          // Path
           case "path":
             return formatAssetMultiValue(val);
+          // Flags
+          case "clear_flags":
+            return flagTotal(val, OPERATION_CLEAR_FLAGS);
+          case "set_flags":
+            return flagTotal(val, OPERATION_SET_FLAGS);
+          // Signer
+          case "signer":
+            return formatSignerValue(val);
           default:
             return val;
         }
