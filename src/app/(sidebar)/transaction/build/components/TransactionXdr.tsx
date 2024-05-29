@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "@stellar/design-system";
 import { stringify } from "lossless-json";
-import { TransactionBuilder } from "@stellar/stellar-sdk";
+import { StrKey, TransactionBuilder } from "@stellar/stellar-sdk";
 import * as StellarXdr from "@/helpers/StellarXdr";
 
 import { SdsLink } from "@/components/SdsLink";
@@ -148,12 +148,10 @@ export const TransactionXdr = () => {
             key = val.key || "";
             break;
           case "sha256Hash":
-            // TODO: format value
-            key = val.key;
+            key = StrKey.encodeSha256Hash(Buffer.from(val.key || "", "hex"));
             break;
           case "preAuthTx":
-            // TODO: format value
-            key = val.key;
+            key = StrKey.encodePreAuthTx(Buffer.from(val.key || "", "hex"));
             break;
           default:
           // do nothing
