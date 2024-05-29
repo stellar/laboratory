@@ -28,6 +28,83 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     params: ["destination", "asset", "amount"],
     requiredParams: ["destination", "asset", "amount"],
   },
+  path_payment_strict_send: {
+    label: "Path Payment Strict Send",
+    description:
+      "Sends an amount in a specific asset to a destination account through a path of offers. This allows the asset sent (e.g., 450 XLM) to be different from the asset received (e.g, 6 BTC). A Path Payment Strict Send allows a user to specify the amount of the asset to send. The amount received will vary based on offers in the order books.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#path-payment-strict-send",
+    params: [
+      "destination",
+      "send_asset",
+      "send_amount",
+      "path",
+      "dest_asset",
+      "dest_min",
+    ],
+    requiredParams: [
+      "destination",
+      "send_asset",
+      "send_amount",
+      "dest_asset",
+      "dest_min",
+    ],
+    custom: {
+      send_asset: {
+        label: "Sending Asset",
+        note: "The asset to be deduced from the sender's account.",
+      },
+      send_amount: {
+        label: "Send Amount",
+      },
+      dest_asset: {
+        label: "Destination Asset",
+        note: "The asset to be received by the destination account.",
+      },
+      dest_min: {
+        label: "Minimum Destination Amount",
+        note: "The minimum amount the destination can receive.",
+      },
+    },
+  },
+  path_payment_strict_receive: {
+    label: "Path Payment Strict Receive",
+    description:
+      "Sends an amount in a specific asset to a destination account through a path of offers. This allows the asset sent (e.g., 450 XLM) to be different from the asset received (e.g, 6 BTC). A Path Payment Strict Receive allows a user to specify the amount of the asset received. The amount sent varies based on offers in the order books.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#path-payment-strict-receive",
+    params: [
+      "destination",
+      "send_asset",
+      "send_max",
+      "path",
+      "dest_asset",
+      "dest_amount",
+    ],
+    requiredParams: [
+      "destination",
+      "send_asset",
+      "send_max",
+      "dest_asset",
+      "dest_amount",
+    ],
+    custom: {
+      send_asset: {
+        label: "Sending Asset",
+        note: "The asset to be deduced from the sender's account.",
+      },
+      send_max: {
+        label: "Maximum send amount",
+      },
+      dest_asset: {
+        label: "Destination Asset",
+        note: "The asset to be received by the destination account.",
+      },
+      dest_amount: {
+        label: "Destination Amount",
+      },
+    },
+  },
   manage_sell_offer: {
     label: "Manage Sell Offer",
     description: "Creates, updates, or deletes an offer.",
@@ -142,5 +219,26 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
       "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#end-sponsoring-future-reserves",
     params: [],
     requiredParams: [],
+  },
+  clawback: {
+    label: "Clawback",
+    description: "Creates a clawback operation.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#clawback",
+    params: ["asset", "from", "amount"],
+    requiredParams: ["asset", "from", "amount"],
+    custom: {
+      asset: {
+        includeNative: false,
+      },
+    },
+  },
+  clawback_claimable_balance: {
+    label: "Clawback Claimable Balance",
+    description: "Creates a clawback operation for a claimable balance.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#clawback-claimable-balance",
+    params: ["balance_id"],
+    requiredParams: ["balance_id"],
   },
 };

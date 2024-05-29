@@ -13,6 +13,7 @@ type AssetPickerProps = {
   labelSuffix?: string | React.ReactNode;
   value: AssetObjectValue | undefined;
   error: { code: string | undefined; issuer: string | undefined } | undefined;
+  note?: React.ReactNode;
   onChange: (asset: AssetObjectValue | undefined) => void;
   assetInput: "issued" | "alphanumeric";
   fitContent?: boolean;
@@ -25,6 +26,7 @@ export const AssetPicker = ({
   labelSuffix,
   value = { type: undefined, code: "", issuer: "" },
   error,
+  note,
   onChange,
   assetInput,
   fitContent,
@@ -126,6 +128,10 @@ export const AssetPicker = ({
           }}
         />
       </ExpandBox>
+
+      {note ? (
+        <div className="FieldNote FieldNote--note FieldNote--md">{note}</div>
+      ) : null}
     </div>
   );
 };
