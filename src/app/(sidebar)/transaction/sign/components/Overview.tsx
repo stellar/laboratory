@@ -19,6 +19,8 @@ import { WithInfoText } from "@/components/WithInfoText";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 
+import { SignWithWallet } from "./SignWithWallet";
+
 const MIN_LENGTH_FOR_FULL_WIDTH_FIELD = 30;
 
 export const Overview = () => {
@@ -237,9 +239,7 @@ export const Overview = () => {
                   Sign with secret key
                 </Button>
 
-                <Button size="md" variant="secondary">
-                  Sign with wallet and submit
-                </Button>
+                <SignWithWallet />
               </div>
               <div>
                 <Button
