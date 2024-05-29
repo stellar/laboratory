@@ -1,7 +1,11 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { querystring } from "zustand-querystring";
-import { MemoType } from "@stellar/stellar-sdk";
+import {
+  MemoType,
+  FeeBumpTransaction,
+  Transaction,
+} from "@stellar/stellar-sdk";
 
 import { sanitizeObject } from "@/helpers/sanitizeObject";
 import {
@@ -80,12 +84,17 @@ export interface Store {
         operations: boolean;
       };
     };
+    sign: {
+      activeView: string;
+      importTx: FeeBumpTransaction | Transaction | undefined;
+      importXdr: string;
+      signedTx: string;
+    };
     // TODO: update as needed
-    // sign: AnyObject;
     // simulate: AnyObject;
     // submit: AnyObject;
     // feeBump: AnyObject;
-    // Transaction actions
+    // [Transaction] Build Transaction actions
     updateBuildActiveTab: (tabId: string) => void;
     updateBuildParams: (params: TransactionBuildParamsObj) => void;
     updateBuildOperations: (operations: TxnOperation[]) => void;
@@ -102,6 +111,12 @@ export interface Store {
     }) => void;
     resetBuildParams: () => void;
     resetBuild: () => void;
+    // [Transaction] Sign Transaction actions
+    updateSignActiveView: (viewId: string) => void;
+    updateSignImportTx: (tx: FeeBumpTransaction | Transaction) => void;
+    updateSignImportXdr: (xdr: string) => void;
+    updateSignedTx: (tx: string) => void;
+    resetSign: () => void;
   };
 }
 
@@ -138,6 +153,12 @@ const initTransactionState = {
       params: false,
       operations: false,
     },
+  },
+  sign: {
+    activeView: "import",
+    importTx: undefined,
+    importXdr: "",
+    signedTx: "",
   },
 };
 
@@ -285,6 +306,26 @@ export const createStore = (options: CreateStoreOptions) =>
             set((state) => {
               state.transaction.build = initTransactionState.build;
             }),
+          updateSignActiveView: (viewId: string) =>
+            set((state) => {
+              state.transaction.sign.activeView = viewId;
+            }),
+          updateSignImportTx: (tx: FeeBumpTransaction | Transaction) =>
+            set((state) => {
+              state.transaction.sign.importTx = tx;
+            }),
+          updateSignImportXdr: (xdr: string) =>
+            set((state) => {
+              state.transaction.sign.importXdr = xdr;
+            }),
+          updateSignedTx: (tx: string) =>
+            set((state) => {
+              state.transaction.sign.signedTx = tx;
+            }),
+          resetSign: () =>
+            set((state) => {
+              state.transaction.sign = initTransactionState.sign;
+            }),
         },
       })),
       {
@@ -300,6 +341,10 @@ export const createStore = (options: CreateStoreOptions) =>
             },
             transaction: {
               build: true,
+              sign: {
+                activeView: true,
+                importXdr: true,
+              },
             },
           };
         },
