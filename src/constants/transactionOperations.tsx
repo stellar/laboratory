@@ -1,3 +1,4 @@
+import { SdsLink } from "@/components/SdsLink";
 import { AnyObject } from "@/types/types";
 
 type TransactionOperation = {
@@ -160,6 +161,64 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
       },
       price: {
         label: "Price of 1 unit of selling in terms of buying",
+      },
+    },
+  },
+  set_options: {
+    label: "Set Options",
+    description: "Sets various configuration options for an account.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#set-options",
+    params: [
+      "inflation_dest",
+      "set_flags",
+      "clear_flags",
+      "master_weight",
+      "low_threshold",
+      "med_threshold",
+      "high_threshold",
+      "signer",
+      "home_domain",
+    ],
+    requiredParams: [],
+    custom: {
+      master_weight: {
+        label: "Master Weight",
+        infoLink:
+          "https://developers.stellar.org/docs/encyclopedia/signatures-multisig#thresholds",
+        note: (
+          <SdsLink href="https://developers.stellar.org/docs/encyclopedia/signatures-multisig">
+            See documentation for multisignature accounts
+          </SdsLink>
+        ),
+        showWarning: true,
+      },
+      low_threshold: {
+        label: "Low Threshold",
+        infoLink:
+          "https://developers.stellar.org/docs/encyclopedia/signatures-multisig#thresholds",
+      },
+      med_threshold: {
+        label: "Medium Threshold",
+        infoLink:
+          "https://developers.stellar.org/docs/encyclopedia/signatures-multisig#thresholds",
+        note: (
+          <SdsLink href="https://developers.stellar.org/docs/encyclopedia/signatures-multisig">
+            See documentation for multisignature accounts
+          </SdsLink>
+        ),
+        showWarning: true,
+      },
+      high_threshold: {
+        label: "High Threshold",
+        infoLink:
+          "https://developers.stellar.org/docs/encyclopedia/signatures-multisig#thresholds",
+        note: (
+          <SdsLink href="https://developers.stellar.org/docs/encyclopedia/signatures-multisig">
+            See documentation for multisignature accounts
+          </SdsLink>
+        ),
+        showWarning: true,
       },
     },
   },

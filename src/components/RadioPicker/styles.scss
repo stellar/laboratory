@@ -21,7 +21,7 @@
 
   &__options {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: stretch;
   }
 
@@ -34,7 +34,7 @@
       z-index: -1;
 
       &:checked + label {
-        --RadioPicker-color-text: var(--sds-clr-base-00);
+        --RadioPicker-color-text: var(--sds-clr-white);
         --RadioPicker-color-background: var(--sds-clr-lilac-09);
         --RadioPicker-color-border: var(--sds-clr-lilac-09);
       }
@@ -47,7 +47,10 @@
 
     label {
       position: relative;
-      display: block;
+      display: flex;
+      min-height: 100%;
+      align-items: center;
+      justify-content: center;
       font-size: pxToRem(12px);
       line-height: pxToRem(18px);
       font-weight: var(--sds-fw-semi-bold);

@@ -1,13 +1,27 @@
 import { JSX } from "react";
 
+import { Box } from "@/components/layout/Box";
+import { SdsLink } from "@/components/SdsLink";
+
 import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
 import { TextPicker } from "@/components/FormElements/TextPicker";
 import { AssetPicker } from "@/components/FormElements/AssetPicker";
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 import { AssetMultiPicker } from "@/components/FormElements/AssetMultiPicker";
+import { FlagFieldPicker } from "@/components/FormElements/FlagFieldPicker";
+import { SignerPicker } from "@/components/FormElements/SignerPicker";
 
+import {
+  OPERATION_CLEAR_FLAGS,
+  OPERATION_SET_FLAGS,
+} from "@/constants/settings";
 import { validate } from "@/validate";
-import { AnyObject, AssetObjectValue, JsonAsset } from "@/types/types";
+import {
+  AnyObject,
+  AssetObjectValue,
+  JsonAsset,
+  OptionSigner,
+} from "@/types/types";
 
 // Types
 type TemplateRenderProps = {
@@ -28,6 +42,19 @@ type TemplateRenderAssetMultiProps = {
   value: AssetObjectValue[];
   error: { code: string | undefined; issuer: string | undefined }[];
   onChange: (asset: AssetObjectValue[] | undefined) => void;
+  isRequired?: boolean;
+};
+
+type TemplateRenderFlagFieldProps = {
+  value: string[];
+  onChange: (val: string[]) => void;
+  isRequired?: boolean;
+};
+
+type TemplateRenderSignerProps = {
+  value: OptionSigner | undefined;
+  error: { key: string | undefined; weight: string | undefined } | undefined;
+  onChange: (val: OptionSigner | undefined) => void;
   isRequired?: boolean;
 };
 
@@ -166,6 +193,30 @@ export const formComponentTemplateTxnOps = ({
         ),
         validate: validate.assetJson,
       };
+    case "clear_flags":
+      return {
+        render: (templ: TemplateRenderFlagFieldProps) => (
+          <FlagFieldPicker
+            key={id}
+            id={id}
+            selectedOptions={templ.value || []}
+            label="Clear Flags"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            note={
+              <>
+                Selected{" "}
+                <SdsLink href="https://en.wikipedia.org/wiki/Flag_field">
+                  flags
+                </SdsLink>{" "}
+                mean to remove selected flags already present on the account.
+              </>
+            }
+            onChange={templ.onChange}
+            options={OPERATION_CLEAR_FLAGS}
+          />
+        ),
+        validate: null,
+      };
     case "data_name":
       return {
         render: (templ: TemplateRenderProps) => (
@@ -237,6 +288,70 @@ export const formComponentTemplateTxnOps = ({
         ),
         validate: validate.publicKey,
       };
+    case "home_domain":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <TextPicker
+            key={id}
+            id={id}
+            label="Home Domain"
+            placeholder="Ex: example.com"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+            infoLink="https://developers.stellar.org/docs/glossary#home-domain"
+          />
+        ),
+        validate: null,
+      };
+    case "inflation_dest":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <PubKeyPicker
+            key={id}
+            id={id}
+            label="Inflation Destination"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+            infoLink="https://developers.stellar.org/docs/learn/encyclopedia/inflation"
+          />
+        ),
+        validate: validate.publicKey,
+      };
+    case "master_weight":
+    case "low_threshold":
+    case "med_threshold":
+    case "high_threshold":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <Box gap="xs">
+            <PositiveIntPicker
+              key={id}
+              id={id}
+              label={custom?.label || "Threshold"}
+              labelSuffix={!templ.isRequired ? "optional" : undefined}
+              placeholder="0 - 255"
+              value={templ.value || ""}
+              error={templ.error}
+              onChange={templ.onChange}
+              note={custom?.note}
+              infoLink={custom?.infoLink}
+            />
+            <>
+              {custom?.showWarning ? (
+                <div className="FieldNote FieldNote--error FieldNote--md">
+                  This can result in a permanently locked account. Are you sure
+                  you know what you’re doing?
+                </div>
+              ) : null}
+            </>
+          </Box>
+        ),
+        validate: validate.accountThreshold,
+      };
     case "offer_id":
       return {
         render: (templ: TemplateRenderProps) => (
@@ -301,6 +416,48 @@ export const formComponentTemplateTxnOps = ({
           />
         ),
         validate: validate.assetJson,
+      };
+    case "set_flags":
+      return {
+        render: (templ: TemplateRenderFlagFieldProps) => (
+          <FlagFieldPicker
+            key={id}
+            id={id}
+            selectedOptions={templ.value || []}
+            label="Set Flags"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            note={
+              <>
+                Selected{" "}
+                <SdsLink href="https://en.wikipedia.org/wiki/Flag_field">
+                  flags
+                </SdsLink>{" "}
+                mean to add selected flags in addition to flags already present
+                on the account.
+              </>
+            }
+            onChange={templ.onChange}
+            options={OPERATION_SET_FLAGS}
+          />
+        ),
+        validate: null,
+      };
+    case "signer":
+      return {
+        render: (templ: TemplateRenderSignerProps) => (
+          <SignerPicker
+            key={id}
+            id={id}
+            label="Signer Type"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value}
+            error={templ.error}
+            onChange={templ.onChange}
+            note="Used to add/remove or adjust weight of an additional signer on the account."
+            infoLink="https://developers.stellar.org/docs/encyclopedia/signatures-multisig#multisig"
+          />
+        ),
+        validate: validate.optionsSigner,
       };
     case "source_account":
       return {
