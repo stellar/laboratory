@@ -499,6 +499,12 @@
     gap: pxToRem(12px);
   }
 
+  &__ButtonsWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: pxToRem(6px);
+  }
+
   &__Buttons {
     display: flex;
     flex-direction: row;

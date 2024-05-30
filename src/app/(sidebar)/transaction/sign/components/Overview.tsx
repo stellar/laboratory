@@ -36,6 +36,7 @@ export const Overview = () => {
   const [secretInputs, setSecretInputs] = useState<string[]>([""]);
   const [signedTxSuccessMsg, setSignedTxSuccessMsg] = useState<string>("");
   const [signedTxErrorMsg, setSignedTxErrorMsg] = useState<string>("");
+  const [signError, setSignError] = useState<string>("");
 
   // @TODO bip path
   const [bipPath, setBipPath] = useState<string>("");
@@ -222,34 +223,46 @@ export const Overview = () => {
               />
             </div>
 
-            <div className="SignTx__Buttons">
-              <div>
-                <Button
-                  disabled={!HAS_SECRET_KEYS || HAS_INVALID_SECRET_KEYS}
-                  size="md"
-                  variant="secondary"
-                  onClick={() =>
-                    signTxWithSecretKeys(
-                      sign.importXdr,
-                      secretInputs,
-                      network.passphrase,
-                    )
-                  }
-                >
-                  Sign with secret key
-                </Button>
+            <div className="SignTx__ButtonsWrapper full-width">
+              <div className="SignTx__Buttons">
+                <div>
+                  <Button
+                    disabled={!HAS_SECRET_KEYS || HAS_INVALID_SECRET_KEYS}
+                    size="md"
+                    variant="secondary"
+                    onClick={() =>
+                      signTxWithSecretKeys(
+                        sign.importXdr,
+                        secretInputs,
+                        network.passphrase,
+                      )
+                    }
+                  >
+                    Sign with secret key
+                  </Button>
 
-                <SignWithWallet />
+                  <SignWithWallet setSignError={setSignError} />
+                </div>
+                <div>
+                  <Button
+                    size="md"
+                    variant="tertiary"
+                    onClick={() => addSignature()}
+                  >
+                    Add signature
+                  </Button>
+                </div>
               </div>
-              <div>
-                <Button
-                  size="md"
-                  variant="tertiary"
-                  onClick={() => addSignature()}
+              {signError ? (
+                <Text
+                  as="div"
+                  size="xs"
+                  weight="regular"
+                  addlClassName="FieldNote--error"
                 >
-                  Add signature
-                </Button>
-              </div>
+                  {signError}
+                </Text>
+              ) : null}
             </div>
           </div>
         </Card>
