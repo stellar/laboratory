@@ -237,6 +237,14 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
       },
     },
   },
+  allow_trust: {
+    label: "Allow Trust",
+    description: "Updates the authorized flag of an existing trustline.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#allow-trust",
+    params: ["trustor", "assetCode", "authorize"],
+    requiredParams: ["trustor", "assetCode", "authorize"],
+  },
   account_merge: {
     label: "Account Merge",
     description:

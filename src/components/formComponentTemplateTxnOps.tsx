@@ -10,6 +10,7 @@ import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 import { AssetMultiPicker } from "@/components/FormElements/AssetMultiPicker";
 import { FlagFieldPicker } from "@/components/FormElements/FlagFieldPicker";
 import { SignerPicker } from "@/components/FormElements/SignerPicker";
+import { AuthorizePicker } from "@/components/FormElements/AuthorizePicker";
 
 import {
   OPERATION_CLEAR_FLAGS,
@@ -123,6 +124,35 @@ export const formComponentTemplateTxnOps = ({
           />
         ),
         validate: validate.asset,
+      };
+    case "assetCode":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <TextPicker
+            key={id}
+            id={id}
+            label="Asset Code"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+            note={custom?.note}
+          />
+        ),
+        validate: validate.assetCode,
+      };
+    case "authorize":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <AuthorizePicker
+            key={id}
+            id={id}
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            onChange={templ.onChange}
+            selectedOption={templ.value}
+          />
+        ),
+        validate: null,
       };
     case "balance_id":
       return {
@@ -527,6 +557,21 @@ export const formComponentTemplateTxnOps = ({
           />
         ),
         validate: validate.amount,
+      };
+    case "trustor":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <PubKeyPicker
+            key={id}
+            id={id}
+            label="Trustor"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.publicKey,
       };
     default:
       return null;

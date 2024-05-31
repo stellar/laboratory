@@ -232,6 +232,7 @@ export const TransactionXdr = () => {
           case "low_threshold":
           case "med_threshold":
           case "high_threshold":
+          case "authorize":
             return BigInt(val);
           // Price
           case "price":
@@ -304,6 +305,16 @@ export const TransactionXdr = () => {
               opType: op.operation_type,
               params: { ...op.params, limit: op.params.limit ?? MAX_INT64 },
             }),
+          };
+        }
+
+        if (op.operation_type === "allow_trust") {
+          return {
+            [op.operation_type]: {
+              trustor: op.params.trustor,
+              asset: op.params.assetCode,
+              authorize: BigInt(op.params.authorize),
+            },
           };
         }
 
