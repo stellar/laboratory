@@ -15,7 +15,12 @@ import { sanitizeObject } from "@/helpers/sanitizeObject";
 
 import { TRANSACTION_OPERATIONS } from "@/constants/transactionOperations";
 import { useStore } from "@/store/useStore";
-import { AssetObject, AssetObjectValue, TxnOperation } from "@/types/types";
+import {
+  AssetObject,
+  AssetObjectValue,
+  OptionSigner,
+  TxnOperation,
+} from "@/types/types";
 
 export const Operations = () => {
   const { transaction } = useStore();
@@ -243,6 +248,21 @@ export const Operations = () => {
     return initialValues;
   };
 
+  const isMissingSelectedSignerFields = (
+    param: string,
+    value: OptionSigner | undefined,
+  ) => {
+    if (param === "signer") {
+      if (!value?.type) {
+        return false;
+      }
+
+      return !(value.key && value.weight);
+    }
+
+    return false;
+  };
+
   const validateOperationParam = ({
     opIndex,
     opParam,
@@ -310,6 +330,13 @@ export const Operations = () => {
       if (!opParamMissingFields.includes(opParam)) {
         opParamMissingFields = [...opParamMissingFields, opParam];
       }
+    }
+
+    //==== Handle selected signer type
+    const missingSigner = isMissingSelectedSignerFields(opParam, opValue);
+
+    if (missingSigner && !opParamMissingFields.includes(opParam)) {
+      opParamMissingFields = [...opParamMissingFields, opParam];
     }
 
     return {
@@ -576,9 +603,7 @@ export const Operations = () => {
         <option value="create_passive_sell_offer">
           Create Passive Sell Offer
         </option>
-        <option value="set_options" disabled>
-          Set Options
-        </option>
+        <option value="set_options">Set Options</option>
         <option value="change_trust" disabled>
           Change Trust
         </option>
@@ -718,6 +743,31 @@ export const Operations = () => {
                                   opIndex: idx,
                                   opParam: input,
                                   opValue: path,
+                                  opType: op.operation_type,
+                                });
+                              },
+                            });
+                          case "clear_flags":
+                          case "set_flags":
+                            return component.render({
+                              ...baseProps,
+                              onChange: (value: string[]) => {
+                                handleOperationParamChange({
+                                  opIndex: idx,
+                                  opParam: input,
+                                  opValue: value,
+                                  opType: op.operation_type,
+                                });
+                              },
+                            });
+                          case "signer":
+                            return component.render({
+                              ...baseProps,
+                              onChange: (value: OptionSigner | undefined) => {
+                                handleOperationParamChange({
+                                  opIndex: idx,
+                                  opParam: input,
+                                  opValue: value,
                                   opType: op.operation_type,
                                 });
                               },
