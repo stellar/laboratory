@@ -232,7 +232,6 @@ export const TransactionXdr = () => {
           case "low_threshold":
           case "med_threshold":
           case "high_threshold":
-          case "authorize":
             return BigInt(val);
           // Price
           case "price":
