@@ -223,7 +223,7 @@ export const Overview = () => {
               />
             </div>
 
-            <div className="SignTx__ButtonsWrapper full-width">
+            <Box gap="xs" addlClassName="full-width">
               <div className="SignTx__Buttons">
                 <div>
                   <Button
@@ -253,17 +253,19 @@ export const Overview = () => {
                   </Button>
                 </div>
               </div>
-              {signError ? (
-                <Text
-                  as="div"
-                  size="xs"
-                  weight="regular"
-                  addlClassName="FieldNote--error"
-                >
-                  {signError}
-                </Text>
-              ) : null}
-            </div>
+              <div>
+                {signError ? (
+                  <Text
+                    as="div"
+                    size="xs"
+                    weight="regular"
+                    addlClassName="FieldNote--error"
+                  >
+                    {signError}
+                  </Text>
+                ) : null}
+              </div>
+            </Box>
           </div>
         </Card>
 
