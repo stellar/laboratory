@@ -82,26 +82,28 @@ export type AssetObjectValue = {
   issuer: string;
 };
 
+export type AssetPoolShareObjectValue = {
+  type: AssetType | undefined;
+  asset_a: AssetObjectValue;
+  asset_b: AssetObjectValue;
+  fee: string;
+};
+
 export type AssetObject = {
   id: AssetType;
   label: string;
-  value: AssetObjectValue;
+  value: AssetObjectValue | AssetPoolShareObjectValue;
 };
 
-export type JsonAsset =
-  | "native"
-  | {
-      credit_alphanum4: {
-        asset_code: string;
-        issuer: string;
-      };
-    }
-  | {
-      credit_alphanum12: {
-        asset_code: string;
-        issuer: string;
-      };
-    };
+export type AssetError = {
+  code?: string;
+  issuer?: string;
+};
+
+export type AssetPoolShareError = {
+  asset_a?: AssetError;
+  asset_b?: AssetError;
+};
 
 // =============================================================================
 // Transaction

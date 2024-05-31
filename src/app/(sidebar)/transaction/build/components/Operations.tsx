@@ -18,6 +18,7 @@ import { useStore } from "@/store/useStore";
 import {
   AssetObject,
   AssetObjectValue,
+  AssetPoolShareObjectValue,
   OptionSigner,
   TxnOperation,
 } from "@/types/types";
@@ -192,6 +193,7 @@ export const Operations = () => {
       "buying",
       "send_asset",
       "dest_asset",
+      "line",
     ];
     const isAssetField = assetInputs.includes(param);
 
@@ -201,19 +203,26 @@ export const Operations = () => {
     };
 
     if (isAssetField) {
-      if (!value || value === "native") {
+      if (!value || value.type === "native") {
         return initialValues;
       }
 
-      const assetInputs = (Object.values(value)[0] || {}) as {
-        asset_code: string;
-        issuer: string;
-      };
+      if (value.type === "liquidity_pool_shares") {
+        const validateAsset = (asset: AssetObjectValue) =>
+          asset.type === "native" || Boolean(asset.code && asset.issuer);
+
+        return {
+          isAssetField: true,
+          missingAssetFields:
+            validateAsset(value.asset_a) && validateAsset(value.asset_b)
+              ? []
+              : [param],
+        };
+      }
 
       return {
         isAssetField,
-        missingAssetFields:
-          assetInputs.asset_code && assetInputs.issuer ? [] : [param],
+        missingAssetFields: value.code && value.issuer ? [] : [param],
       };
     }
 
@@ -604,9 +613,7 @@ export const Operations = () => {
           Create Passive Sell Offer
         </option>
         <option value="set_options">Set Options</option>
-        <option value="change_trust" disabled>
-          Change Trust
-        </option>
+        <option value="change_trust">Change Trust</option>
         <option value="allow_trust" disabled>
           Allow Trust
         </option>
@@ -708,29 +715,26 @@ export const Operations = () => {
                             return component.render({
                               ...baseProps,
                               onChange: (assetValue: AssetObjectValue) => {
-                                let asset;
-
-                                if (assetValue.type === "native") {
-                                  asset = "native";
-                                } else if (
-                                  assetValue.type &&
-                                  [
-                                    "credit_alphanum4",
-                                    "credit_alphanum12",
-                                  ].includes(assetValue.type)
-                                ) {
-                                  asset = {
-                                    [assetValue.type]: {
-                                      asset_code: assetValue.code,
-                                      issuer: assetValue.issuer,
-                                    },
-                                  };
-                                }
-
                                 handleOperationParamChange({
                                   opIndex: idx,
                                   opParam: input,
-                                  opValue: asset,
+                                  opValue: assetValue,
+                                  opType: op.operation_type,
+                                });
+                              },
+                            });
+                          case "line":
+                            return component.render({
+                              ...baseProps,
+                              onChange: (
+                                assetValue:
+                                  | AssetObjectValue
+                                  | AssetPoolShareObjectValue,
+                              ) => {
+                                handleOperationParamChange({
+                                  opIndex: idx,
+                                  opParam: input,
+                                  opValue: assetValue,
                                   opType: op.operation_type,
                                 });
                               },

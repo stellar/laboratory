@@ -19,7 +19,7 @@ import { validate } from "@/validate";
 import {
   AnyObject,
   AssetObjectValue,
-  JsonAsset,
+  AssetPoolShareObjectValue,
   OptionSigner,
 } from "@/types/types";
 
@@ -32,9 +32,11 @@ type TemplateRenderProps = {
 };
 
 type TemplateRenderAssetProps = {
-  value: JsonAsset | undefined;
+  value: AssetObjectValue | undefined;
   error: { code: string | undefined; issuer: string | undefined } | undefined;
-  onChange: (asset: AssetObjectValue | undefined) => void;
+  onChange: (
+    asset: AssetObjectValue | AssetPoolShareObjectValue | undefined,
+  ) => void;
   isRequired?: boolean;
 };
 
@@ -61,30 +63,6 @@ type TemplateRenderSignerProps = {
 type FormComponentTemplateTxnOpsProps = {
   render: (...args: any[]) => JSX.Element;
   validate: ((...args: any[]) => any) | null;
-};
-
-const assetPickerValue = (
-  value: JsonAsset | undefined,
-): AssetObjectValue | undefined => {
-  if (!value) {
-    return undefined;
-  }
-
-  if (value === "native") {
-    return { type: "native", code: "", issuer: "" };
-  }
-
-  const type = Object.keys(value)[0] as keyof typeof value;
-  const val = value[type] as {
-    asset_code: string;
-    issuer: string;
-  };
-
-  return {
-    type,
-    code: val.asset_code,
-    issuer: val.issuer,
-  };
 };
 
 export const formComponentTemplateTxnOps = ({
@@ -133,7 +111,7 @@ export const formComponentTemplateTxnOps = ({
             id={id}
             label={custom?.label ?? "Asset"}
             labelSuffix={!templ.isRequired ? "optional" : undefined}
-            value={assetPickerValue(templ.value)}
+            value={templ.value}
             error={templ.error}
             note={custom?.note}
             includeNative={
@@ -144,7 +122,7 @@ export const formComponentTemplateTxnOps = ({
             onChange={templ.onChange}
           />
         ),
-        validate: validate.assetJson,
+        validate: validate.asset,
       };
     case "balance_id":
       return {
@@ -185,13 +163,13 @@ export const formComponentTemplateTxnOps = ({
             id={id}
             label="Buying"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
-            value={assetPickerValue(templ.value)}
+            value={templ.value}
             error={templ.error}
             includeNative
             onChange={templ.onChange}
           />
         ),
-        validate: validate.assetJson,
+        validate: validate.asset,
       };
     case "clear_flags":
       return {
@@ -321,6 +299,52 @@ export const formComponentTemplateTxnOps = ({
         ),
         validate: validate.publicKey,
       };
+    case "limit":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <PositiveIntPicker
+            key={id}
+            id={id}
+            label={custom?.label || "Trust Limit"}
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+            note={
+              custom?.note && custom?.note_add ? (
+                <>
+                  {custom.note}
+                  <br />
+                  {custom.note_add}
+                </>
+              ) : (
+                custom?.note
+              )
+            }
+            infoLink={custom?.infoLink}
+          />
+        ),
+        validate: validate.positiveNumber,
+      };
+    case "line":
+      return {
+        render: (templ: TemplateRenderAssetProps) => (
+          <AssetPicker
+            key={id}
+            assetInput="alphanumeric"
+            id={id}
+            label="Asset"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value}
+            error={templ.error}
+            includeNative={false}
+            includeLiquidityPoolShares
+            onChange={templ.onChange}
+          />
+        ),
+        // TODO: update validation
+        validate: validate.asset,
+      };
     case "master_weight":
     case "low_threshold":
     case "med_threshold":
@@ -409,13 +433,13 @@ export const formComponentTemplateTxnOps = ({
             id={id}
             label="Selling"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
-            value={assetPickerValue(templ.value)}
+            value={templ.value}
             error={templ.error}
             includeNative
             onChange={templ.onChange}
           />
         ),
-        validate: validate.assetJson,
+        validate: validate.asset,
       };
     case "set_flags":
       return {

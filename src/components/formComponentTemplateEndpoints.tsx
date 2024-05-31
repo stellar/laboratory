@@ -13,7 +13,11 @@ import { AssetMultiPicker } from "@/components/FormElements/AssetMultiPicker";
 
 import { parseJsonString } from "@/helpers/parseJsonString";
 import { validate } from "@/validate";
-import { AnyObject, AssetObjectValue } from "@/types/types";
+import {
+  AnyObject,
+  AssetObjectValue,
+  AssetPoolShareObjectValue,
+} from "@/types/types";
 
 type TemplateRenderProps = {
   value: string | undefined;
@@ -25,7 +29,9 @@ type TemplateRenderProps = {
 type TemplateRenderAssetProps = {
   value: AssetObjectValue | undefined;
   error: { code: string | undefined; issuer: string | undefined } | undefined;
-  onChange: (asset: AssetObjectValue | undefined) => void;
+  onChange: (
+    asset: AssetObjectValue | AssetPoolShareObjectValue | undefined,
+  ) => void;
   isRequired?: boolean;
 };
 

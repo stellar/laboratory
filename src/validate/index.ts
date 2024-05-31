@@ -2,7 +2,6 @@ import { accountThreshold } from "./methods/accountThreshold";
 import { amount } from "./methods/amount";
 import { asset } from "./methods/asset";
 import { assetCode } from "./methods/assetCode";
-import { assetJson } from "./methods/assetJson";
 import { assetMulti } from "./methods/assetMulti";
 import { claimableBalanceId } from "./methods/claimableBalanceId";
 import { dataName } from "./methods/dataName";
@@ -23,7 +22,6 @@ export const validate = {
   amount,
   asset,
   assetCode,
-  assetJson,
   assetMulti,
   claimableBalanceId,
   dataName,

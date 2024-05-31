@@ -222,6 +222,21 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
       },
     },
   },
+  change_trust: {
+    label: "Change Trust",
+    description: "Creates, updates, or deletes a trustline.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#change-trust",
+    params: ["line", "limit"],
+    requiredParams: ["line"],
+    custom: {
+      limit: {
+        note: "Leave empty to default to the max int64.",
+        // Use "note_add" to show another note below "note"
+        note_add: "Set to 0 to remove the trust line.",
+      },
+    },
+  },
   account_merge: {
     label: "Account Merge",
     description:

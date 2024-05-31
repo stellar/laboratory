@@ -4,20 +4,30 @@ import { Input } from "@stellar/design-system";
 import { ExpandBox } from "@/components/ExpandBox";
 import { RadioPicker } from "@/components/RadioPicker";
 import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
+import { LiquidityPoolShares } from "@/components/FormElements/LiquidityPoolShares";
 
-import { AssetObject, AssetObjectValue } from "@/types/types";
+import {
+  AssetError,
+  AssetObject,
+  AssetObjectValue,
+  AssetPoolShareError,
+  AssetPoolShareObjectValue,
+} from "@/types/types";
 
 type AssetPickerProps = {
   id: string;
   label: string;
   labelSuffix?: string | React.ReactNode;
-  value: AssetObjectValue | undefined;
-  error: { code: string | undefined; issuer: string | undefined } | undefined;
+  value: AssetObjectValue | AssetPoolShareObjectValue | undefined;
+  error: AssetError | AssetPoolShareError | undefined;
   note?: React.ReactNode;
-  onChange: (asset: AssetObjectValue | undefined) => void;
+  onChange: (
+    asset: AssetObjectValue | AssetPoolShareObjectValue | undefined,
+  ) => void;
   assetInput: "issued" | "alphanumeric";
   fitContent?: boolean;
   includeNative?: boolean;
+  includeLiquidityPoolShares?: boolean;
 };
 
 export const AssetPicker = ({
@@ -31,8 +41,21 @@ export const AssetPicker = ({
   assetInput,
   fitContent,
   includeNative = true,
+  includeLiquidityPoolShares,
 }: AssetPickerProps) => {
   let options: AssetObject[] = [];
+
+  const initAssetValue = {
+    code: "",
+    issuer: "",
+  };
+
+  const initPoolSharesValue: AssetPoolShareObjectValue = {
+    type: "liquidity_pool_shares",
+    asset_a: { ...initAssetValue, type: undefined },
+    asset_b: { ...initAssetValue, type: undefined },
+    fee: "30",
+  };
 
   if (includeNative) {
     options = [
@@ -40,9 +63,8 @@ export const AssetPicker = ({
         id: "native",
         label: "Native",
         value: {
+          ...initAssetValue,
           type: "native",
-          code: "",
-          issuer: "",
         },
       },
       ...options,
@@ -56,22 +78,27 @@ export const AssetPicker = ({
         id: "credit_alphanum4",
         label: "Alphanumeric 4",
         value: {
+          ...initAssetValue,
           type: "credit_alphanum4",
-          code: "",
-          issuer: "",
         },
       },
       {
         id: "credit_alphanum12",
         label: "Alphanumeric 12",
         value: {
+          ...initAssetValue,
           type: "credit_alphanum12",
-          code: "",
-          issuer: "",
         },
       },
-      // TODO: add Liquidity Pool shares (for Change Trust operation)
     ];
+
+    if (includeLiquidityPoolShares) {
+      options.push({
+        id: "liquidity_pool_shares",
+        label: "Liquidity pool shares",
+        value: initPoolSharesValue,
+      });
+    }
   } else {
     options = [
       ...options,
@@ -79,13 +106,53 @@ export const AssetPicker = ({
         id: "issued",
         label: "Issued",
         value: {
+          ...initAssetValue,
           type: "issued",
-          code: "",
-          issuer: "",
         },
       },
     ];
   }
+
+  const renderPickerFields = () => {
+    if (value.type === "liquidity_pool_shares") {
+      const poolShareValue = value as AssetPoolShareObjectValue;
+      const poolShareError = error as AssetPoolShareError;
+
+      return (
+        <LiquidityPoolShares
+          id={`${id}-lp`}
+          value={poolShareValue}
+          error={poolShareError}
+          onChange={(poolShare: AssetPoolShareObjectValue | undefined) => {
+            onChange(poolShare);
+          }}
+        />
+      );
+    }
+
+    const assetValue = value as AssetObjectValue;
+    const assetError = error as AssetError;
+
+    return (
+      <AssetPickerFields
+        id={id}
+        code={{
+          value: assetValue.code,
+          onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+            onChange({ ...assetValue, code: e.target.value });
+          },
+          error: assetError?.code || "",
+        }}
+        issuer={{
+          value: assetValue.issuer,
+          onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+            onChange({ ...assetValue, issuer: e.target.value });
+          },
+          error: assetError?.issuer || "",
+        }}
+      />
+    );
+  };
 
   return (
     <div className="RadioPicker__inset">
@@ -95,7 +162,15 @@ export const AssetPicker = ({
         label={label}
         labelSuffix={labelSuffix}
         onChange={(optionId) => {
-          onChange({ type: optionId, code: "", issuer: "" });
+          const val =
+            optionId === "liquidity_pool_shares"
+              ? {
+                  ...initPoolSharesValue,
+                  type: optionId,
+                }
+              : { ...initAssetValue, type: optionId };
+
+          onChange(val);
         }}
         options={options}
         fitContent={fitContent}
@@ -104,29 +179,16 @@ export const AssetPicker = ({
       <ExpandBox
         isExpanded={Boolean(
           value.type &&
-            ["issued", "credit_alphanum4", "credit_alphanum12"].includes(
-              value.type,
-            ),
+            [
+              "issued",
+              "credit_alphanum4",
+              "credit_alphanum12",
+              "liquidity_pool_shares",
+            ].includes(value.type),
         )}
         offsetTop="sm"
       >
-        <AssetPickerFields
-          id={id}
-          code={{
-            value: value.code,
-            onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-              onChange({ ...value, code: e.target.value });
-            },
-            error: error?.code || "",
-          }}
-          issuer={{
-            value: value.issuer,
-            onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-              onChange({ ...value, issuer: e.target.value });
-            },
-            error: error?.issuer || "",
-          }}
-        />
+        {renderPickerFields()}
       </ExpandBox>
 
       {note ? (
