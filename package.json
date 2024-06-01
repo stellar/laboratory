@@ -71,6 +71,7 @@
     "redux-thunk": "^2.4.1",
     "regenerator-runtime": "^0.13.9",
     "route-recognizer": "^0.3.4",
+    "shepherd.js": "^8.3.1",
     "solar-stellarorg": "git+https://github.com/stellar/solar-stellarorg#master",
     "stream-browserify": "^3.0.0",
     "stream-http": "^3.2.0",
