@@ -26,6 +26,7 @@ import {
   AssetObjectValue,
   AssetPoolShareObjectValue,
   KeysOfUnion,
+  NumberFractionValue,
   OptionFlag,
   OptionSigner,
   TxnOperation,
@@ -207,6 +208,21 @@ export const TransactionXdr = () => {
         return xdrUtils.toAmount(val);
       };
 
+      const formatNumberFraction = (val: NumberFractionValue) => {
+        if (typeof val.value === "string") {
+          return xdrUtils.toPrice(val.value);
+        }
+
+        if (!val.value?.n || !val.value?.d) {
+          return null;
+        }
+
+        return {
+          n: BigInt(val.value.n),
+          d: BigInt(val.value.d),
+        };
+      };
+
       const getXdrVal = (key: string, val: any) => {
         switch (key) {
           // Amount
@@ -217,6 +233,10 @@ export const TransactionXdr = () => {
           case "dest_min":
           case "send_max":
           case "dest_amount":
+          case "max_amount_a":
+          case "max_amount_b":
+          case "min_amount_a":
+          case "min_amount_b":
             return xdrUtils.toAmount(val);
           // Asset
           case "asset":
@@ -258,6 +278,9 @@ export const TransactionXdr = () => {
             return formatAssetValue(val);
           case "limit":
             return formatLimit(val);
+          case "min_price":
+          case "max_price":
+            return formatNumberFraction(val);
           default:
             return val;
         }

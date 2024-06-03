@@ -323,4 +323,61 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     params: ["balance_id"],
     requiredParams: ["balance_id"],
   },
+  liquidity_pool_deposit: {
+    label: "Liquidity Pool Deposit",
+    description: "Deposits assets into a liquidity pool.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#liquidity-pool-deposit",
+    params: [
+      "liquidity_pool_id",
+      "max_amount_a",
+      "max_amount_b",
+      "min_price",
+      "max_price",
+    ],
+    requiredParams: [
+      "liquidity_pool_id",
+      "max_amount_a",
+      "max_amount_b",
+      "min_price",
+      "max_price",
+    ],
+    custom: {
+      max_amount_a: {
+        label: "Max Amount A",
+      },
+      max_amount_b: {
+        label: "Max Amount B",
+      },
+      min_price: {
+        label: "Min Price",
+        note: "Minimum depositA/depositB price.",
+      },
+      max_price: {
+        label: "Max Price",
+        note: "Maximum depositA/depositB price.",
+      },
+    },
+  },
+  liquidity_pool_withdraw: {
+    label: "Liquidity Pool Withdraw",
+    description: "Withdraw assets from a liquidity pool.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#liquidity-pool-withdraw",
+    params: ["liquidity_pool_id", "amount", "min_amount_a", "min_amount_b"],
+    requiredParams: [
+      "liquidity_pool_id",
+      "amount",
+      "min_amount_a",
+      "min_amount_b",
+    ],
+    custom: {
+      min_amount_a: {
+        label: "Min Amount A",
+      },
+      min_amount_b: {
+        label: "Min Amount B",
+      },
+    },
+  },
 };

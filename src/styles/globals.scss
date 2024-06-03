@@ -438,6 +438,13 @@
   }
 }
 
+// Operations
+.NumberFractionPicker__fraction__divider {
+  padding-top: pxToRem(22px);
+  color: var(--sds-clr-gray-09);
+}
+
+// Sign Transaction
 .SignTx {
   display: flex;
   flex-direction: column;

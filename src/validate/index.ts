@@ -8,6 +8,7 @@ import { dataName } from "./methods/dataName";
 import { dataValue } from "./methods/dataValue";
 import { bipPath } from "./methods/bipPath";
 import { memo } from "./methods/memo";
+import { numberFraction } from "./methods/numberFraction";
 import { optionsSigner } from "./methods/optionsSigner";
 import { positiveInt } from "./methods/positiveInt";
 import { positiveNumber } from "./methods/positiveNumber";
@@ -28,6 +29,7 @@ export const validate = {
   dataValue,
   bipPath,
   memo,
+  numberFraction,
   optionsSigner,
   positiveInt,
   positiveNumber,

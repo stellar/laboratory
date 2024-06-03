@@ -26,6 +26,7 @@ import {
   AssetObject,
   AssetObjectValue,
   AssetPoolShareObjectValue,
+  NumberFractionValue,
   OptionSigner,
   TxnOperation,
 } from "@/types/types";
@@ -279,6 +280,23 @@ export const Operations = () => {
     return false;
   };
 
+  const isMissingNumberFractionFields = (
+    param: string,
+    value: NumberFractionValue | undefined,
+  ) => {
+    if (["min_price", "max_price"].includes(param)) {
+      if (!value?.type || !value.value) {
+        return true;
+      }
+
+      return typeof value.value === "string"
+        ? !value.value
+        : !(value.value?.n && value.value.d);
+    }
+
+    return false;
+  };
+
   const validateOperationParam = ({
     opIndex,
     opParam,
@@ -352,6 +370,16 @@ export const Operations = () => {
     const missingSigner = isMissingSelectedSignerFields(opParam, opValue);
 
     if (missingSigner && !opParamMissingFields.includes(opParam)) {
+      opParamMissingFields = [...opParamMissingFields, opParam];
+    }
+
+    //==== Handle number fraction (liquidity pool deposit)
+    const missingFractionFields = isMissingNumberFractionFields(
+      opParam,
+      opValue,
+    );
+
+    if (missingFractionFields && !opParamMissingFields.includes(opParam)) {
       opParamMissingFields = [...opParamMissingFields, opParam];
     }
 
@@ -661,10 +689,8 @@ export const Operations = () => {
           <option value="set_trust_line_flags" disabled>
             Set Trust Line Flags
           </option>
-          <option value="liquidity_pool_deposit" disabled>
-            Liquidity Pool Deposit
-          </option>
-          <option value="liquidity_pool_withdraw" disabled>
+          <option value="liquidity_pool_deposit">Liquidity Pool Deposit</option>
+          <option value="liquidity_pool_withdraw">
             Liquidity Pool Withdraw
           </option>
         </Select>
@@ -771,6 +797,19 @@ export const Operations = () => {
                                   opIndex: idx,
                                   opParam: input,
                                   opValue: assetValue,
+                                  opType: op.operation_type,
+                                });
+                              },
+                            });
+                          case "min_price":
+                          case "max_price":
+                            return component.render({
+                              ...baseProps,
+                              onChange: (value: NumberFractionValue) => {
+                                handleOperationParamChange({
+                                  opIndex: idx,
+                                  opParam: input,
+                                  opValue: value,
                                   opType: op.operation_type,
                                 });
                               },

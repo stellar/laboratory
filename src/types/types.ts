@@ -145,3 +145,13 @@ export type OptionSigner = {
   key: string | undefined;
   weight: string | undefined;
 };
+
+export type NumberFractionValue = {
+  type: string | undefined;
+  value: string | FractionValue | undefined;
+};
+
+export type FractionValue = {
+  n: string | undefined;
+  d: string | undefined;
+};
