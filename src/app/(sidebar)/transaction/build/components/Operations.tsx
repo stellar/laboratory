@@ -1,7 +1,14 @@
 "use client";
 
 import { ChangeEvent, useEffect, useState } from "react";
-import { Badge, Button, Card, Icon, Select } from "@stellar/design-system";
+import {
+  Badge,
+  Button,
+  Card,
+  Icon,
+  Select,
+  Notification,
+} from "@stellar/design-system";
 
 import { formComponentTemplateTxnOps } from "@/components/formComponentTemplateTxnOps";
 import { Box } from "@/components/layout/Box";
@@ -546,6 +553,19 @@ export const Operations = () => {
     );
   };
 
+  const renderCustom = (operationType: string) => {
+    if (operationType === "allow_trust") {
+      return (
+        <Notification variant="error" title="Deprecated">
+          This operation is deprecated as of Protocol 17. Prefer
+          SetTrustLineFlags instead.
+        </Notification>
+      );
+    }
+
+    return null;
+  };
+
   const OperationTypeSelector = ({
     index,
     operationType,
@@ -557,96 +577,100 @@ export const Operations = () => {
       (operationType && TRANSACTION_OPERATIONS[operationType]) || null;
 
     return (
-      <Select
-        fieldSize="md"
-        id={`${index}-operationType`}
-        label="Operation type"
-        value={operationType}
-        infoLink="https://developers.stellar.org/docs/start/list-of-operations/"
-        onChange={(e) => {
-          updateBuildSingleOperation(index, {
-            operation_type: e.target.value,
-            params: [],
-            source_account: "",
-          });
+      <>
+        <Select
+          fieldSize="md"
+          id={`${index}-operationType`}
+          label="Operation type"
+          value={operationType}
+          infoLink="https://developers.stellar.org/docs/start/list-of-operations/"
+          onChange={(e) => {
+            updateBuildSingleOperation(index, {
+              operation_type: e.target.value,
+              params: [],
+              source_account: "",
+            });
 
-          let initParamError: OperationError = EMPTY_OPERATION_ERROR;
+            let initParamError: OperationError = EMPTY_OPERATION_ERROR;
 
-          // Get operation required fields if there is operation type
-          if (e.target.value) {
-            initParamError = {
-              ...initParamError,
-              missingFields: [
-                ...(TRANSACTION_OPERATIONS[e.target.value]?.requiredParams ||
-                  []),
-              ],
-              operationType: e.target.value,
-            };
+            // Get operation required fields if there is operation type
+            if (e.target.value) {
+              initParamError = {
+                ...initParamError,
+                missingFields: [
+                  ...(TRANSACTION_OPERATIONS[e.target.value]?.requiredParams ||
+                    []),
+                ],
+                operationType: e.target.value,
+              };
+            }
+
+            setOperationsError([
+              ...arrayItem.update(operationsError, index, initParamError),
+            ]);
+          }}
+          note={
+            opInfo ? (
+              <>
+                {opInfo.description}{" "}
+                <SdsLink href={opInfo.docsUrl}>See documentation</SdsLink>.
+              </>
+            ) : null
           }
+        >
+          {/* TODO: remove disabled attribute when operation is implemented */}
+          <option value="">Select operation type</option>
+          <option value="create_account">Create Account</option>
+          <option value="payment">Payment</option>
+          <option value="path_payment_strict_send">
+            Path Payment Strict Send
+          </option>
+          <option value="path_payment_strict_receive">
+            Path Payment Strict Receive
+          </option>
+          <option value="manage_sell_offer">Manage Sell Offer</option>
+          <option value="manage_buy_offer">Manage Buy Offer</option>
+          <option value="create_passive_sell_offer">
+            Create Passive Sell Offer
+          </option>
+          <option value="set_options">Set Options</option>
+          <option value="change_trust">Change Trust</option>
+          <option value="allow_trust">Allow Trust</option>
+          <option value="account_merge">Account Merge</option>
+          <option value="manage_data">Manage Data</option>
+          <option value="bump_sequence">Bump Sequence</option>
+          <option value="create_claimable_balance" disabled>
+            Create Claimable Balance
+          </option>
+          <option value="claim_claimable_balance">
+            Claim Claimable Balance
+          </option>
+          <option value="begin_sponsoring_future_reserves">
+            Begin Sponsoring Future Reserves
+          </option>
+          <option value="end_sponsoring_future_reserves">
+            End Sponsoring Future Reserves
+          </option>
+          <option value="revoke_sponsorship" disabled>
+            Revoke Sponsorship
+          </option>
+          <option value="clawback">Clawback</option>
+          <option value="clawback_claimable_balance">
+            Clawback Claimable Balance
+          </option>
+          <option value="set_trust_line_flags" disabled>
+            Set Trust Line Flags
+          </option>
+          <option value="liquidity_pool_deposit" disabled>
+            Liquidity Pool Deposit
+          </option>
+          <option value="liquidity_pool_withdraw" disabled>
+            Liquidity Pool Withdraw
+          </option>
+        </Select>
 
-          setOperationsError([
-            ...arrayItem.update(operationsError, index, initParamError),
-          ]);
-        }}
-        note={
-          opInfo ? (
-            <>
-              {opInfo.description}{" "}
-              <SdsLink href={opInfo.docsUrl}>See documentation</SdsLink>.
-            </>
-          ) : null
-        }
-      >
-        {/* TODO: remove disabled attribute when operation is implemented */}
-        <option value="">Select operation type</option>
-        <option value="create_account">Create Account</option>
-        <option value="payment">Payment</option>
-        <option value="path_payment_strict_send">
-          Path Payment Strict Send
-        </option>
-        <option value="path_payment_strict_receive">
-          Path Payment Strict Receive
-        </option>
-        <option value="manage_sell_offer">Manage Sell Offer</option>
-        <option value="manage_buy_offer">Manage Buy Offer</option>
-        <option value="create_passive_sell_offer">
-          Create Passive Sell Offer
-        </option>
-        <option value="set_options">Set Options</option>
-        <option value="change_trust">Change Trust</option>
-        <option value="allow_trust" disabled>
-          Allow Trust
-        </option>
-        <option value="account_merge">Account Merge</option>
-        <option value="manage_data">Manage Data</option>
-        <option value="bump_sequence">Bump Sequence</option>
-        <option value="create_claimable_balance" disabled>
-          Create Claimable Balance
-        </option>
-        <option value="claim_claimable_balance">Claim Claimable Balance</option>
-        <option value="begin_sponsoring_future_reserves">
-          Begin Sponsoring Future Reserves
-        </option>
-        <option value="end_sponsoring_future_reserves">
-          End Sponsoring Future Reserves
-        </option>
-        <option value="revoke_sponsorship" disabled>
-          Revoke Sponsorship
-        </option>
-        <option value="clawback">Clawback</option>
-        <option value="clawback_claimable_balance">
-          Clawback Claimable Balance
-        </option>
-        <option value="set_trust_line_flags" disabled>
-          Set Trust Line Flags
-        </option>
-        <option value="liquidity_pool_deposit" disabled>
-          Liquidity Pool Deposit
-        </option>
-        <option value="liquidity_pool_withdraw" disabled>
-          Liquidity Pool Withdraw
-        </option>
-      </Select>
+        {renderCustom(operationType)}
+      </>
     );
   };
 
@@ -719,6 +743,18 @@ export const Operations = () => {
                                   opIndex: idx,
                                   opParam: input,
                                   opValue: assetValue,
+                                  opType: op.operation_type,
+                                });
+                              },
+                            });
+                          case "authorize":
+                            return component.render({
+                              ...baseProps,
+                              onChange: (selected: string | undefined) => {
+                                handleOperationParamChange({
+                                  opIndex: idx,
+                                  opParam: input,
+                                  opValue: selected,
                                   opType: op.operation_type,
                                 });
                               },

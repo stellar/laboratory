@@ -307,6 +307,16 @@ export const TransactionXdr = () => {
           };
         }
 
+        if (op.operation_type === "allow_trust") {
+          return {
+            [op.operation_type]: {
+              trustor: op.params.trustor,
+              asset: op.params.assetCode,
+              authorize: BigInt(op.params.authorize),
+            },
+          };
+        }
+
         return {
           [op.operation_type]: parseOpParams({
             opType: op.operation_type,
