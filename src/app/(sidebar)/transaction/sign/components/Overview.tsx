@@ -19,6 +19,8 @@ import { WithInfoText } from "@/components/WithInfoText";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 
+import { SignWithWallet } from "./SignWithWallet";
+
 const MIN_LENGTH_FOR_FULL_WIDTH_FIELD = 30;
 
 export const Overview = () => {
@@ -34,6 +36,7 @@ export const Overview = () => {
   const [secretInputs, setSecretInputs] = useState<string[]>([""]);
   const [signedTxSuccessMsg, setSignedTxSuccessMsg] = useState<string>("");
   const [signedTxErrorMsg, setSignedTxErrorMsg] = useState<string>("");
+  const [signError, setSignError] = useState<string>("");
 
   // @TODO bip path
   const [bipPath, setBipPath] = useState<string>("");
@@ -220,37 +223,49 @@ export const Overview = () => {
               />
             </div>
 
-            <div className="SignTx__Buttons">
-              <div>
-                <Button
-                  disabled={!HAS_SECRET_KEYS || HAS_INVALID_SECRET_KEYS}
-                  size="md"
-                  variant="secondary"
-                  onClick={() =>
-                    signTxWithSecretKeys(
-                      sign.importXdr,
-                      secretInputs,
-                      network.passphrase,
-                    )
-                  }
-                >
-                  Sign with secret key
-                </Button>
+            <Box gap="xs" addlClassName="full-width">
+              <div className="SignTx__Buttons">
+                <div>
+                  <Button
+                    disabled={!HAS_SECRET_KEYS || HAS_INVALID_SECRET_KEYS}
+                    size="md"
+                    variant="secondary"
+                    onClick={() =>
+                      signTxWithSecretKeys(
+                        sign.importXdr,
+                        secretInputs,
+                        network.passphrase,
+                      )
+                    }
+                  >
+                    Sign with secret key
+                  </Button>
 
-                <Button size="md" variant="secondary">
-                  Sign with wallet and submit
-                </Button>
+                  <SignWithWallet setSignError={setSignError} />
+                </div>
+                <div>
+                  <Button
+                    size="md"
+                    variant="tertiary"
+                    onClick={() => addSignature()}
+                  >
+                    Add signature
+                  </Button>
+                </div>
               </div>
               <div>
-                <Button
-                  size="md"
-                  variant="tertiary"
-                  onClick={() => addSignature()}
-                >
-                  Add signature
-                </Button>
+                {signError ? (
+                  <Text
+                    as="div"
+                    size="xs"
+                    weight="regular"
+                    addlClassName="FieldNote--error"
+                  >
+                    {signError}
+                  </Text>
+                ) : null}
               </div>
-            </div>
+            </Box>
           </div>
         </Card>
 
