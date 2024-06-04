@@ -35,7 +35,8 @@
     margin-top: 0;
   }
 
-  &[data-is-open="true"] {
+  // Don't want to affect nested ExpandBox
+  &[data-is-open="true"]:not(:is(.ExpandBox)) {
     .ExpandBox__inset {
       overflow: visible;
     }

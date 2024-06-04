@@ -24,11 +24,14 @@ import {
 import {
   AnyObject,
   AssetObjectValue,
+  AssetPoolShareObjectValue,
   KeysOfUnion,
   OptionFlag,
   OptionSigner,
   TxnOperation,
 } from "@/types/types";
+
+const MAX_INT64 = "9223372036854775807";
 
 export const TransactionXdr = () => {
   const { transaction, network } = useStore();
@@ -106,6 +109,42 @@ export const TransactionXdr = () => {
         return { ...res, [key]: val };
       }, {});
 
+      const formatAssetValue = (
+        asset: AssetObjectValue | AssetPoolShareObjectValue,
+      ): any => {
+        let formattedAsset;
+
+        if (asset.type === "native") {
+          formattedAsset = "native";
+        } else if (
+          asset.type &&
+          ["credit_alphanum4", "credit_alphanum12"].includes(asset.type)
+        ) {
+          const assetValue = asset as AssetObjectValue;
+
+          formattedAsset = {
+            [asset.type]: {
+              asset_code: assetValue.code,
+              issuer: assetValue.issuer,
+            },
+          };
+        } else if (asset.type === "liquidity_pool_shares") {
+          const assetPoolShareValue = asset as AssetPoolShareObjectValue;
+
+          formattedAsset = {
+            pool_share: {
+              liquidity_pool_constant_product: {
+                asset_a: formatAssetValue(assetPoolShareValue.asset_a),
+                asset_b: formatAssetValue(assetPoolShareValue.asset_b),
+                fee: 30,
+              },
+            },
+          };
+        }
+
+        return formattedAsset;
+      };
+
       const formatAssetMultiValue = (assets: AssetObjectValue[]) => {
         return assets.reduce((res, cur) => {
           if (cur.type === "native") {
@@ -160,6 +199,14 @@ export const TransactionXdr = () => {
         return { key, weight };
       };
 
+      const formatLimit = (val: string) => {
+        if (val === MAX_INT64) {
+          return BigInt(val);
+        }
+
+        return xdrUtils.toAmount(val);
+      };
+
       const getXdrVal = (key: string, val: any) => {
         switch (key) {
           // Amount
@@ -171,6 +218,13 @@ export const TransactionXdr = () => {
           case "send_max":
           case "dest_amount":
             return xdrUtils.toAmount(val);
+          // Asset
+          case "asset":
+          case "send_asset":
+          case "dest_asset":
+          case "buying":
+          case "selling":
+            return formatAssetValue(val);
           // Number
           case "bump_to":
           case "offer_id":
@@ -199,6 +253,11 @@ export const TransactionXdr = () => {
           // Signer
           case "signer":
             return formatSignerValue(val);
+          // Trust line
+          case "line":
+            return formatAssetValue(val);
+          case "limit":
+            return formatLimit(val);
           default:
             return val;
         }
@@ -237,6 +296,25 @@ export const TransactionXdr = () => {
           if (!op.params.path) {
             op.params = { ...op.params, path: [] };
           }
+        }
+
+        if (op.operation_type === "change_trust") {
+          return {
+            [op.operation_type]: parseOpParams({
+              opType: op.operation_type,
+              params: { ...op.params, limit: op.params.limit ?? MAX_INT64 },
+            }),
+          };
+        }
+
+        if (op.operation_type === "allow_trust") {
+          return {
+            [op.operation_type]: {
+              trustor: op.params.trustor,
+              asset: op.params.assetCode,
+              authorize: BigInt(op.params.authorize),
+            },
+          };
         }
 
         return {
@@ -288,67 +366,79 @@ export const TransactionXdr = () => {
   }
 
   if (txnXdr.xdr) {
-    const txnHash = TransactionBuilder.fromXDR(txnXdr.xdr, network.passphrase)
-      .hash()
-      .toString("hex");
+    try {
+      const txnHash = TransactionBuilder.fromXDR(txnXdr.xdr, network.passphrase)
+        .hash()
+        .toString("hex");
 
-    return (
-      <ValidationResponseCard
-        variant="success"
-        title="Success! Transaction Envelope XDR:"
-        response={
-          <Box gap="xs">
-            <div>
-              <div>Network Passphrase:</div>
-              <div>{network.passphrase}</div>
-            </div>
-            <div>
-              <div>Hash:</div>
-              <div>{txnHash}</div>
-            </div>
-            <div>
-              <div>XDR:</div>
-              <div>{txnXdr.xdr}</div>
-            </div>
-          </Box>
-        }
-        note={
-          <>
-            In order for the transaction to make it into the ledger, a
-            transaction must be successfully signed and submitted to the
-            network. The laboratory provides the{" "}
-            <SdsLink href={Routes.SIGN_TRANSACTION}>Transaction Signer</SdsLink>{" "}
-            for signing a transaction, and the{" "}
-            <SdsLink href={Routes.SUBMIT_TRANSACTION}>
-              Post Transaction endpoint
-            </SdsLink>{" "}
-            for submitting one to the network.
-          </>
-        }
-        footerLeftEl={
-          <>
-            <Button
-              size="md"
-              variant="secondary"
-              onClick={() => {
-                alert("TODO: handle sign transaction flow");
-              }}
-            >
-              Sign in Transaction Signer
-            </Button>
-            <Button
-              size="md"
-              variant="tertiary"
-              onClick={() => {
-                alert("TODO: handle view in xdr flow");
-              }}
-            >
-              View in XDR viewer
-            </Button>
-          </>
-        }
-      />
-    );
+      return (
+        <ValidationResponseCard
+          variant="success"
+          title="Success! Transaction Envelope XDR:"
+          response={
+            <Box gap="xs">
+              <div>
+                <div>Network Passphrase:</div>
+                <div>{network.passphrase}</div>
+              </div>
+              <div>
+                <div>Hash:</div>
+                <div>{txnHash}</div>
+              </div>
+              <div>
+                <div>XDR:</div>
+                <div>{txnXdr.xdr}</div>
+              </div>
+            </Box>
+          }
+          note={
+            <>
+              In order for the transaction to make it into the ledger, a
+              transaction must be successfully signed and submitted to the
+              network. The laboratory provides the{" "}
+              <SdsLink href={Routes.SIGN_TRANSACTION}>
+                Transaction Signer
+              </SdsLink>{" "}
+              for signing a transaction, and the{" "}
+              <SdsLink href={Routes.SUBMIT_TRANSACTION}>
+                Post Transaction endpoint
+              </SdsLink>{" "}
+              for submitting one to the network.
+            </>
+          }
+          footerLeftEl={
+            <>
+              <Button
+                size="md"
+                variant="secondary"
+                onClick={() => {
+                  alert("TODO: handle sign transaction flow");
+                }}
+              >
+                Sign in Transaction Signer
+              </Button>
+              <Button
+                size="md"
+                variant="tertiary"
+                onClick={() => {
+                  alert("TODO: handle view in xdr flow");
+                }}
+              >
+                View in XDR viewer
+              </Button>
+            </>
+          }
+        />
+      );
+    } catch (e: any) {
+      return (
+        <ValidationResponseCard
+          variant="error"
+          title="Transaction Error:"
+          response={e.toString()}
+        />
+      );
+    }
   }
 
   return null;
