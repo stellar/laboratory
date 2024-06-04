@@ -9,7 +9,7 @@ interface FlagFieldProps {
   label?: string | React.ReactNode;
   labelSuffix?: string | React.ReactNode;
   onChange: (value: string[]) => void;
-  options: OptionFlag[];
+  options?: OptionFlag[];
   infoLink?: string;
   infoText?: string | React.ReactNode;
   note?: React.ReactNode;
@@ -26,6 +26,10 @@ export const FlagFieldPicker = ({
   infoText,
   note,
 }: FlagFieldProps) => {
+  if (!options || options.length === 0) {
+    return null;
+  }
+
   const details = optionsFlagDetails(options, selectedOptions);
 
   return (

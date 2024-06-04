@@ -13,10 +13,6 @@ import { SignerPicker } from "@/components/FormElements/SignerPicker";
 import { AuthorizePicker } from "@/components/FormElements/AuthorizePicker";
 import { NumberFractionPicker } from "@/components/FormElements/NumberFractionPicker";
 
-import {
-  OPERATION_CLEAR_FLAGS,
-  OPERATION_SET_FLAGS,
-} from "@/constants/settings";
 import { validate } from "@/validate";
 import {
   AnyObject,
@@ -233,7 +229,7 @@ export const formComponentTemplateTxnOps = ({
               </>
             }
             onChange={templ.onChange}
-            options={OPERATION_CLEAR_FLAGS}
+            options={custom?.options}
           />
         ),
         validate: null,
@@ -536,7 +532,7 @@ export const formComponentTemplateTxnOps = ({
               </>
             }
             onChange={templ.onChange}
-            options={OPERATION_SET_FLAGS}
+            options={custom?.options}
           />
         ),
         validate: null,

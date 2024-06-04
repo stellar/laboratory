@@ -686,9 +686,7 @@ export const Operations = () => {
           <option value="clawback_claimable_balance">
             Clawback Claimable Balance
           </option>
-          <option value="set_trust_line_flags" disabled>
-            Set Trust Line Flags
-          </option>
+          <option value="set_trust_line_flags">Set Trust Line Flags</option>
           <option value="liquidity_pool_deposit">Liquidity Pool Deposit</option>
           <option value="liquidity_pool_withdraw">
             Liquidity Pool Withdraw

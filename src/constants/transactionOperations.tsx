@@ -1,4 +1,10 @@
 import { SdsLink } from "@/components/SdsLink";
+import {
+  OPERATION_CLEAR_FLAGS,
+  OPERATION_SET_FLAGS,
+  OPERATION_TRUSTLINE_CLEAR_FLAGS,
+  OPERATION_TRUSTLINE_SET_FLAGS,
+} from "@/constants/settings";
 import { AnyObject } from "@/types/types";
 
 type TransactionOperation = {
@@ -220,6 +226,12 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
         ),
         showWarning: true,
       },
+      set_flags: {
+        options: OPERATION_SET_FLAGS,
+      },
+      clear_flags: {
+        options: OPERATION_CLEAR_FLAGS,
+      },
     },
   },
   change_trust: {
@@ -322,6 +334,25 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
       "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#clawback-claimable-balance",
     params: ["balance_id"],
     requiredParams: ["balance_id"],
+  },
+  set_trust_line_flags: {
+    label: "Set Trust Line Flags",
+    description: "Creates a trustline flag configuring operation.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#set-trustline-flags",
+    params: ["asset", "trustor", "set_flags", "clear_flags"],
+    requiredParams: ["asset", "trustor"],
+    custom: {
+      asset: {
+        includeNative: false,
+      },
+      set_flags: {
+        options: OPERATION_TRUSTLINE_SET_FLAGS,
+      },
+      clear_flags: {
+        options: OPERATION_TRUSTLINE_CLEAR_FLAGS,
+      },
+    },
   },
   liquidity_pool_deposit: {
     label: "Liquidity Pool Deposit",

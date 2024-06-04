@@ -19,6 +19,8 @@ import { Routes } from "@/constants/routes";
 import {
   OPERATION_CLEAR_FLAGS,
   OPERATION_SET_FLAGS,
+  OPERATION_TRUSTLINE_CLEAR_FLAGS,
+  OPERATION_TRUSTLINE_SET_FLAGS,
 } from "@/constants/settings";
 
 import {
@@ -169,8 +171,16 @@ export const TransactionXdr = () => {
         }, [] as any[]);
       };
 
-      const flagTotal = (val: string[], operations: OptionFlag[]) => {
+      const flagTotal = (
+        val: string[],
+        operations: OptionFlag[],
+        op?: string,
+      ) => {
         const total = optionsFlagDetails(operations, val).total;
+
+        if (op === "set_trust_line_flags") {
+          return BigInt(total);
+        }
 
         return total > 0 ? BigInt(total) : null;
       };
@@ -223,7 +233,7 @@ export const TransactionXdr = () => {
         };
       };
 
-      const getXdrVal = (key: string, val: any) => {
+      const getXdrVal = (key: string, val: any, op?: string) => {
         switch (key) {
           // Amount
           case "amount":
@@ -267,9 +277,21 @@ export const TransactionXdr = () => {
             return formatAssetMultiValue(val);
           // Flags
           case "clear_flags":
-            return flagTotal(val, OPERATION_CLEAR_FLAGS);
+            return flagTotal(
+              val,
+              op === "set_trust_line_flags"
+                ? OPERATION_TRUSTLINE_CLEAR_FLAGS
+                : OPERATION_CLEAR_FLAGS,
+              op,
+            );
           case "set_flags":
-            return flagTotal(val, OPERATION_SET_FLAGS);
+            return flagTotal(
+              val,
+              op === "set_trust_line_flags"
+                ? OPERATION_TRUSTLINE_SET_FLAGS
+                : OPERATION_SET_FLAGS,
+              op,
+            );
           // Signer
           case "signer":
             return formatSignerValue(val);
@@ -298,7 +320,7 @@ export const TransactionXdr = () => {
         }
 
         return Object.entries(params).reduce((res, [key, val]) => {
-          res[key] = getXdrVal(key, val);
+          res[key] = getXdrVal(key, val, opType);
 
           return res;
         }, {} as AnyObject);
