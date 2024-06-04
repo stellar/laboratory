@@ -64,7 +64,7 @@ export const LiquidityPoolShares = ({
         id={`${id}-fee`}
         label="Fee"
         fieldSize="md"
-        value={"30"}
+        value="30"
         error={""}
         note="For now the only fee supported is 30."
         onChange={() => {
