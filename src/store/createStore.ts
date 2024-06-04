@@ -15,6 +15,7 @@ import {
   MuxedAccount,
   TxnOperation,
 } from "@/types/types";
+import { bipPath } from "@/validate/methods/bipPath";
 
 export type TransactionBuildParams = {
   source_account: string;
@@ -89,6 +90,7 @@ export interface Store {
       importTx: FeeBumpTransaction | Transaction | undefined;
       importXdr: string;
       signedTx: string;
+      bipPath: string;
     };
     // TODO: update as needed
     // simulate: AnyObject;
@@ -116,6 +118,7 @@ export interface Store {
     updateSignImportTx: (tx: FeeBumpTransaction | Transaction) => void;
     updateSignImportXdr: (xdr: string) => void;
     updateSignedTx: (tx: string) => void;
+    updateBipPath: (bipPath: string) => void;
     resetSign: () => void;
   };
 }
@@ -159,6 +162,7 @@ const initTransactionState = {
     importTx: undefined,
     importXdr: "",
     signedTx: "",
+    bipPath: "",
   },
 };
 
@@ -321,6 +325,10 @@ export const createStore = (options: CreateStoreOptions) =>
           updateSignedTx: (tx: string) =>
             set((state) => {
               state.transaction.sign.signedTx = tx;
+            }),
+          updateBipPath: (bipPath: string) =>
+            set((state) => {
+              state.transaction.sign.bipPath = bipPath;
             }),
           resetSign: () =>
             set((state) => {

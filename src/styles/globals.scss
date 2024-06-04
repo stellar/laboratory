@@ -511,4 +511,16 @@
       gap: pxToRem(8px);
     }
   }
+
+  .Input__buttons {
+    .Input__container {
+      padding-right: 0;
+    }
+    .hardware-button {
+      border-left: 1px solid var(--Input-color-border);
+    }
+    .Button {
+      border: 0;
+    }
+  }
 }

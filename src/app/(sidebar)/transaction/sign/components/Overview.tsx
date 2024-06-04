@@ -20,6 +20,7 @@ import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 
 import { SignWithWallet } from "./SignWithWallet";
+import { SignWithTrezor } from "./SignWithTrezor";
 
 const MIN_LENGTH_FOR_FULL_WIDTH_FIELD = 30;
 
@@ -30,6 +31,7 @@ export const Overview = () => {
     updateSignActiveView,
     updateSignImportTx,
     updateSignedTx,
+    updateBipPath,
     resetSign,
   } = transaction;
 
@@ -41,6 +43,8 @@ export const Overview = () => {
   // @TODO bip path
   const [bipPath, setBipPath] = useState<string>("");
   const [bipPathErrorMsg, setBipPathErrorMsg] = useState<string>("");
+
+  console.log("bipPathErrorMsg: ", !bipPathErrorMsg);
 
   const HAS_SECRET_KEYS = secretInputs.some((input) => input !== "");
   const HAS_INVALID_SECRET_KEYS = secretInputs.some((input) =>
@@ -203,23 +207,50 @@ export const Overview = () => {
               />
             </div>
 
-            <div className="full-width">
+            <div className="Input__buttons full-width">
               <TextPicker
                 id="bip-path"
                 label="BIP Path"
                 placeholder="BIP path in format: 44'/148'/0'"
                 onChange={(e) => {
-                  setBipPath(e.target.value);
+                  updateBipPath(e.target.value);
 
                   const error = validate.bipPath(e.target.value);
 
                   if (error) {
                     setBipPathErrorMsg(error);
+                  } else {
+                    setBipPathErrorMsg("");
                   }
                 }}
                 error={bipPathErrorMsg}
-                value={bipPath}
+                value={sign.bipPath}
                 note="Note: Trezor devices require upper time bounds to be set (non-zero), otherwise the signature will not be verified"
+                rightElement={
+                  <>
+                    <div className="hardware-button">
+                      <Button
+                        size="md"
+                        variant="tertiary"
+                        onClick={() =>
+                          signTxWithSecretKeys(
+                            sign.importXdr,
+                            secretInputs,
+                            network.passphrase,
+                          )
+                        }
+                      >
+                        Sign with Ledger
+                      </Button>
+                    </div>
+                    <div className="hardware-button">
+                      <SignWithTrezor
+                        bipPathErrorMsg={bipPathErrorMsg}
+                        setSignError={setSignError}
+                      />
+                    </div>
+                  </>
+                }
               />
             </div>
 

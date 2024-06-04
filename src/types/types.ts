@@ -1,5 +1,7 @@
 import React from "react";
 
+import { StellarSignedTx } from "@trezor/connect-web";
+
 // =============================================================================
 // Generic
 // =============================================================================
@@ -117,6 +119,11 @@ export type TxnOperation = {
   operation_type: string;
   params: AnyObject;
   source_account?: string;
+};
+
+export type TrezorResponse = {
+  success: boolean;
+  payload: StellarSignedTx | { error: string };
 };
 
 // =============================================================================
