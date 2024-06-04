@@ -28,6 +28,7 @@ import {
   AssetPoolShareObjectValue,
   NumberFractionValue,
   OptionSigner,
+  RevokeSponsorshipValue,
   TxnOperation,
 } from "@/types/types";
 
@@ -297,6 +298,45 @@ export const Operations = () => {
     return false;
   };
 
+  const isMissingRevokeSponsorshipFields = (
+    param: string,
+    value: RevokeSponsorshipValue | undefined,
+  ) => {
+    if (param === "revokeSponsorship") {
+      if (!value?.type || !value.data) {
+        return false;
+      }
+
+      switch (value.type) {
+        case "account":
+          return !value.data.account_id;
+        case "trustline":
+          return !(
+            value.data.account_id &&
+            value.data.asset?.code &&
+            value.data.asset?.issuer
+          );
+
+        case "offer":
+          return !(value.data.seller_id && value.data.offer_id);
+        case "data":
+          return !(value.data.account_id && value.data.data_name);
+        case "claimable_balance":
+          return !value.data.balance_id;
+        case "signer":
+          return !(
+            value.data.account_id &&
+            value.data.signer?.type &&
+            value.data.signer?.key
+          );
+        default:
+          return false;
+      }
+    }
+
+    return false;
+  };
+
   const validateOperationParam = ({
     opIndex,
     opParam,
@@ -380,6 +420,19 @@ export const Operations = () => {
     );
 
     if (missingFractionFields && !opParamMissingFields.includes(opParam)) {
+      opParamMissingFields = [...opParamMissingFields, opParam];
+    }
+
+    //==== Handle revoke sponsorship
+    const missingRevokeSponsorshipFields = isMissingRevokeSponsorshipFields(
+      opParam,
+      opValue,
+    );
+
+    if (
+      missingRevokeSponsorshipFields &&
+      !opParamMissingFields.includes(opParam)
+    ) {
       opParamMissingFields = [...opParamMissingFields, opParam];
     }
 
@@ -679,9 +732,7 @@ export const Operations = () => {
           <option value="end_sponsoring_future_reserves">
             End Sponsoring Future Reserves
           </option>
-          <option value="revoke_sponsorship" disabled>
-            Revoke Sponsorship
-          </option>
+          <option value="revoke_sponsorship">Revoke Sponsorship</option>
           <option value="clawback">Clawback</option>
           <option value="clawback_claimable_balance">
             Clawback Claimable Balance
@@ -820,6 +871,20 @@ export const Operations = () => {
                                   opIndex: idx,
                                   opParam: input,
                                   opValue: path,
+                                  opType: op.operation_type,
+                                });
+                              },
+                            });
+                          case "revokeSponsorship":
+                            return component.render({
+                              ...baseProps,
+                              onChange: (
+                                value: RevokeSponsorshipValue | undefined,
+                              ) => {
+                                handleOperationParamChange({
+                                  opIndex: idx,
+                                  opParam: input,
+                                  opValue: value,
                                   opType: op.operation_type,
                                 });
                               },

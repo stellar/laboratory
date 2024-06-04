@@ -12,6 +12,7 @@ import { FlagFieldPicker } from "@/components/FormElements/FlagFieldPicker";
 import { SignerPicker } from "@/components/FormElements/SignerPicker";
 import { AuthorizePicker } from "@/components/FormElements/AuthorizePicker";
 import { NumberFractionPicker } from "@/components/FormElements/NumberFractionPicker";
+import { RevokeSponsorshipPicker } from "@/components/FormElements/RevokeSponsorshipPicker";
 
 import { validate } from "@/validate";
 import {
@@ -20,6 +21,7 @@ import {
   AssetPoolShareObjectValue,
   NumberFractionValue,
   OptionSigner,
+  RevokeSponsorshipValue,
 } from "@/types/types";
 
 // Types
@@ -63,6 +65,13 @@ type TemplateRenderNumberFractionProps = {
   value: NumberFractionValue | undefined;
   error: string | undefined;
   onChange: (val: NumberFractionValue | undefined) => void;
+  isRequired?: boolean;
+};
+
+type TemplateRenderRevokeSponsorshipProps = {
+  value: RevokeSponsorshipValue | undefined;
+  error: AnyObject | undefined;
+  onChange: (val: RevokeSponsorshipValue | undefined) => void;
   isRequired?: boolean;
 };
 
@@ -494,6 +503,20 @@ export const formComponentTemplateTxnOps = ({
           />
         ),
         validate: validate.positiveNumber,
+      };
+    // Custom operation
+    case "revokeSponsorship":
+      return {
+        render: (templ: TemplateRenderRevokeSponsorshipProps) => (
+          <RevokeSponsorshipPicker
+            key={id}
+            id={id}
+            value={templ.value}
+            onChange={templ.onChange}
+            error={templ.error}
+          />
+        ),
+        validate: validate.revokeSponsorship,
       };
     case "selling":
       return {

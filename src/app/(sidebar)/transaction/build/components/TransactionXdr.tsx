@@ -319,6 +319,32 @@ export const TransactionXdr = () => {
           return Object.values(params)[0];
         }
 
+        if (opType === "revoke_sponsorship") {
+          const { type, data } = params.revokeSponsorship;
+
+          const formattedData = Object.entries(data).reduce((res, cur) => {
+            const [key, val] = cur;
+
+            return { ...res, [key]: getXdrVal(key, val) };
+          }, {} as AnyObject);
+
+          // Signer has different structure
+          if (type === "signer") {
+            return {
+              [type]: {
+                account_id: data.account_id,
+                signer_key: formatSignerValue(data.signer)?.key,
+              },
+            };
+          }
+
+          return {
+            ledger_entry: {
+              [type]: formattedData,
+            },
+          };
+        }
+
         return Object.entries(params).reduce((res, [key, val]) => {
           res[key] = getXdrVal(key, val, opType);
 

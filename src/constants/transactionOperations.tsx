@@ -327,6 +327,14 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
       },
     },
   },
+  revoke_sponsorship: {
+    label: "Revoke Sponsorship",
+    description: "Revoke sponsorship of a ledger entry.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#revoke-sponsorship",
+    params: ["revokeSponsorship"],
+    requiredParams: ["revokeSponsorship"],
+  },
   clawback_claimable_balance: {
     label: "Clawback Claimable Balance",
     description: "Creates a clawback operation for a claimable balance.",
