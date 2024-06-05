@@ -28,7 +28,7 @@ export const SignWithTrezor = ({
   setSignSuccess: Dispatch<SetStateAction<boolean>>;
 }) => {
   const { network, transaction } = useStore();
-  const { sign, updateSignedTx, updateHardWalletSigners } = transaction;
+  const { sign, updateSignedTx, updateHardWalletSigs } = transaction;
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -67,7 +67,7 @@ export const SignWithTrezor = ({
         const hint = keyPair.signatureHint();
         const decorated = new xdr.DecoratedSignature({ hint, signature });
 
-        updateHardWalletSigners([decorated]);
+        updateHardWalletSigs([decorated]);
         setSignSuccess(true);
       } else {
         const errorPayload = trezorResponse.payload as { error: string };

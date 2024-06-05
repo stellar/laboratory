@@ -6,12 +6,12 @@ const signTx = ({
   txXdr,
   signers,
   networkPassphrase,
-  hardWalletSigners,
+  hardWalletSigs,
 }: {
   txXdr: string;
   signers: string[];
   networkPassphrase: string;
-  hardWalletSigners?: xdr.DecoratedSignature[];
+  hardWalletSigs?: xdr.DecoratedSignature[];
 }) => {
   const validSecretKeys = [];
   const validPreimages = [];
@@ -53,7 +53,7 @@ const signTx = ({
     addedSigs++;
     newTx.signHashX(Buffer.from(signer, "hex"));
   });
-  hardWalletSigners?.forEach((signer) => {
+  hardWalletSigs?.forEach((signer) => {
     addedSigs++;
     newTx.signatures.push(signer);
   });

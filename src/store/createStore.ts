@@ -91,7 +91,7 @@ export interface Store {
       importXdr: string;
       signedTx: string;
       bipPath: string;
-      hardWalletSigners: xdr.DecoratedSignature[] | undefined;
+      hardWalletSigs: xdr.DecoratedSignature[] | undefined;
     };
     // TODO: update as needed
     // simulate: AnyObject;
@@ -120,7 +120,7 @@ export interface Store {
     updateSignImportXdr: (xdr: string) => void;
     updateSignedTx: (tx: string) => void;
     updateBipPath: (bipPath: string) => void;
-    updateHardWalletSigners: (signer: xdr.DecoratedSignature[]) => void;
+    updateHardWalletSigs: (signer: xdr.DecoratedSignature[]) => void;
     resetSign: () => void;
   };
 }
@@ -165,7 +165,7 @@ const initTransactionState = {
     importXdr: "",
     signedTx: "",
     bipPath: "",
-    hardWalletSigners: undefined,
+    hardWalletSigs: undefined,
   },
 };
 
@@ -333,9 +333,9 @@ export const createStore = (options: CreateStoreOptions) =>
             set((state) => {
               state.transaction.sign.bipPath = bipPath;
             }),
-          updateHardWalletSigners: (signer: xdr.DecoratedSignature[]) =>
+          updateHardWalletSigs: (signer: xdr.DecoratedSignature[]) =>
             set((state) => {
-              state.transaction.sign.hardWalletSigners = signer;
+              state.transaction.sign.hardWalletSigs = signer;
             }),
           resetSign: () =>
             set((state) => {

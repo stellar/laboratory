@@ -92,13 +92,13 @@ export const Overview = () => {
     txXdr: string,
     signers: string[],
     networkPassphrase: string,
-    hardWalletSigners?: xdr.DecoratedSignature[],
+    hardWalletSigs?: xdr.DecoratedSignature[],
   ) => {
     const { xdr, message } = transactionSigner.signTx({
       txXdr,
       signers,
       networkPassphrase,
-      hardWalletSigners,
+      hardWalletSigs,
     });
 
     if (xdr && message) {
@@ -270,7 +270,7 @@ export const Overview = () => {
                   <Button
                     disabled={
                       (!HAS_SECRET_KEYS || HAS_INVALID_SECRET_KEYS) &&
-                      !sign.hardWalletSigners?.length
+                      !sign.hardWalletSigs?.length
                     }
                     size="md"
                     variant="secondary"
@@ -279,7 +279,7 @@ export const Overview = () => {
                         sign.importXdr,
                         secretInputs,
                         network.passphrase,
-                        sign.hardWalletSigners,
+                        sign.hardWalletSigs,
                       )
                     }
                   >

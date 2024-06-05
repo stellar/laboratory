@@ -29,7 +29,7 @@ export const SignWithLedger = ({
   setSignSuccess: Dispatch<SetStateAction<boolean>>;
 }) => {
   const { network, transaction } = useStore();
-  const { sign, updateSignedTx, updateHardWalletSigners } = transaction;
+  const { sign, updateSignedTx, updateHardWalletSigs } = transaction;
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -69,9 +69,10 @@ export const SignWithLedger = ({
         .getPublicKey(sign.bipPath)
         .then((result: { publicKey: string }) => (publicKey = result.publicKey))
         .then(() => {
-          if (isHash) {
-            return ledgerApi.signHash(sign.bipPath, transaction.hash());
-          }
+          // @TODO waiting on design
+          // if (isHash) {
+          //   return ledgerApi.signHash(sign.bipPath, transaction.hash());
+          // }
           return ledgerApi.signTransaction(
             sign.bipPath,
             transaction.signatureBase(),
@@ -85,7 +86,7 @@ export const SignWithLedger = ({
           const hint = keyPair.signatureHint();
           const decorated = new xdr.DecoratedSignature({ hint, signature });
 
-          updateHardWalletSigners([decorated]);
+          updateHardWalletSigs([decorated]);
           setSignSuccess(true);
         })
         .catch(onError);
