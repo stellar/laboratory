@@ -1,15 +1,17 @@
-import { Keypair, TransactionBuilder } from "@stellar/stellar-sdk";
+import { Keypair, TransactionBuilder, xdr } from "@stellar/stellar-sdk";
 
 import { validate } from "@/validate";
 
-const secretKeys = ({
+const signTx = ({
   txXdr,
   signers,
   networkPassphrase,
+  hardWalletSigners,
 }: {
   txXdr: string;
   signers: string[];
   networkPassphrase: string;
+  hardWalletSigners?: xdr.DecoratedSignature[];
 }) => {
   const validSecretKeys = [];
   const validPreimages = [];
@@ -51,7 +53,10 @@ const secretKeys = ({
     addedSigs++;
     newTx.signHashX(Buffer.from(signer, "hex"));
   });
-
+  hardWalletSigners?.forEach((signer) => {
+    addedSigs++;
+    newTx.signatures.push(signer);
+  });
   return {
     xdr: newTx.toEnvelope().toXDR("base64"),
     message: `${addedSigs} signature(s) added; ${
@@ -61,5 +66,5 @@ const secretKeys = ({
 };
 
 export const transactionSigner = {
-  secretKeys,
+  signTx,
 };

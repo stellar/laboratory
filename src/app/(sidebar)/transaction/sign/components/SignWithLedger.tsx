@@ -1,87 +1,112 @@
 "use client";
 
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
+import LedgerTransportWebUSB from "@ledgerhq/hw-transport-webusb";
+import LedgerStr from "@ledgerhq/hw-app-str";
 import { Button } from "@stellar/design-system";
-import {
-  StellarWalletsKit,
-  WalletNetwork,
-  allowAllModules,
-  ISupportedWallet,
-  FREIGHTER_ID,
-} from "@creit.tech/stellar-wallets-kit";
+import { Keypair, TransactionBuilder, xdr } from "@stellar/stellar-sdk";
 
 import { useStore } from "@/store/useStore";
 
-import { NetworkType } from "@/types/types";
+import { LedgerErrorResponse } from "@/types/types";
 
-const getWalletNetwork = (network: NetworkType) => {
-  switch (network) {
-    case "testnet":
-      return WalletNetwork.TESTNET;
-    case "mainnet":
-      return WalletNetwork.PUBLIC;
-    case "futurenet":
-      return WalletNetwork.FUTURENET;
-    // @TODO: stellar wallets kit doesn't support CUSTOM
-    //   case "custom":
-    default:
-      return WalletNetwork.TESTNET;
-  }
-};
+interface LedgerApi {
+  getPublicKey(path: string): Promise<{ publicKey: string }>;
+  signHash(path: string, hash: Buffer): Promise<{ signature: Buffer }>;
+  signTransaction(
+    path: string,
+    transaction: Buffer,
+  ): Promise<{ signature: Buffer }>;
+}
 
 export const SignWithLedger = ({
+  isDisabled,
   setSignError,
+  setSignSuccess,
 }: {
+  isDisabled: boolean;
   setSignError: Dispatch<SetStateAction<string>>;
+  setSignSuccess: Dispatch<SetStateAction<boolean>>;
 }) => {
   const { network, transaction } = useStore();
-  const { sign, updateSignedTx } = transaction;
+  const { sign, updateSignedTx, updateHardWalletSigners } = transaction;
 
-  const kit: StellarWalletsKit = new StellarWalletsKit({
-    network: getWalletNetwork(network.id),
-    selectedWalletId: FREIGHTER_ID,
-    modules: allowAllModules(),
-  });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const onSignWithWallet = async () => {
-    // remove the previously signed tx from the display
+  const onSignWithLedger = async () => {
+    // reset the previously returned status values
     updateSignedTx("");
+    setSignError("");
+    setSignSuccess(false);
 
-    await kit.openModal({
-      onWalletSelected: async (option: ISupportedWallet) => {
-        try {
-          kit.setWallet(option.id);
-          const publicKey = await kit.getPublicKey();
-          const networkType = getWalletNetwork(network.id);
+    setIsLoading(true);
 
-          const { result } = await kit.signTx({
-            xdr: sign.importXdr,
-            // You could send multiple public keys in case the wallet needs to handle multi signatures
-            publicKeys: [publicKey],
-            network: networkType,
-          });
+    const transaction = TransactionBuilder.fromXDR(
+      sign.importXdr,
+      network.passphrase,
+    );
 
-          updateSignedTx(result);
-        } catch (error: any) {
-          // the error for the following wallets:
-          // xbull
-          // albedo
-          // freighter
-          if (
-            error?.message?.includes("denied") ||
-            error?.error?.code === -4 ||
-            error?.includes("User declined access")
-          ) {
-            setSignError(`User declined access to ${option.id}`);
+    const onError = (err: LedgerErrorResponse) => {
+      setIsLoading(false);
+
+      let error;
+
+      if (err.message) {
+        error = err.message;
+      } else if (err.errorCode == 2) {
+        error = `Couldn't connect to Ledger device. Connection can only be established using a secure connection.`;
+      } else if (err.errorCode == 5) {
+        error = `Connection timeout.`;
+      }
+
+      setSignError(error || "");
+    };
+
+    const onConnect = (ledgerApi: LedgerApi) => {
+      let publicKey: string;
+
+      ledgerApi
+        .getPublicKey(sign.bipPath)
+        .then((result: { publicKey: string }) => (publicKey = result.publicKey))
+        .then(() => {
+          if (isHash) {
+            return ledgerApi.signHash(sign.bipPath, transaction.hash());
           }
-        }
-      },
-    });
+          return ledgerApi.signTransaction(
+            sign.bipPath,
+            transaction.signatureBase(),
+          );
+        })
+        .then((result: { signature: Buffer }) => {
+          setIsLoading(false);
+
+          const { signature } = result;
+          const keyPair = Keypair.fromPublicKey(publicKey);
+          const hint = keyPair.signatureHint();
+          const decorated = new xdr.DecoratedSignature({ hint, signature });
+
+          updateHardWalletSigners([decorated]);
+          setSignSuccess(true);
+        })
+        .catch(onError);
+    };
+
+    LedgerTransportWebUSB.request()
+      .then((transport) => {
+        onConnect(new LedgerStr(transport));
+      })
+      .catch(onError);
   };
 
   return (
-    <Button size="md" variant="secondary" onClick={onSignWithWallet}>
-      Sign with wallet
+    <Button
+      disabled={isDisabled}
+      isLoading={isLoading}
+      onClick={onSignWithLedger}
+      size="md"
+      variant="tertiary"
+    >
+      Sign with Ledger
     </Button>
   );
 };

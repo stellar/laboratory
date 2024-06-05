@@ -5,6 +5,7 @@ import {
   MemoType,
   FeeBumpTransaction,
   Transaction,
+  xdr,
 } from "@stellar/stellar-sdk";
 
 import { sanitizeObject } from "@/helpers/sanitizeObject";
@@ -15,7 +16,6 @@ import {
   MuxedAccount,
   TxnOperation,
 } from "@/types/types";
-import { bipPath } from "@/validate/methods/bipPath";
 
 export type TransactionBuildParams = {
   source_account: string;
@@ -91,6 +91,7 @@ export interface Store {
       importXdr: string;
       signedTx: string;
       bipPath: string;
+      hardWalletSigners: xdr.DecoratedSignature[] | undefined;
     };
     // TODO: update as needed
     // simulate: AnyObject;
@@ -119,6 +120,7 @@ export interface Store {
     updateSignImportXdr: (xdr: string) => void;
     updateSignedTx: (tx: string) => void;
     updateBipPath: (bipPath: string) => void;
+    updateHardWalletSigners: (signer: xdr.DecoratedSignature[]) => void;
     resetSign: () => void;
   };
 }
@@ -163,6 +165,7 @@ const initTransactionState = {
     importXdr: "",
     signedTx: "",
     bipPath: "",
+    hardWalletSigners: undefined,
   },
 };
 
@@ -329,6 +332,10 @@ export const createStore = (options: CreateStoreOptions) =>
           updateBipPath: (bipPath: string) =>
             set((state) => {
               state.transaction.sign.bipPath = bipPath;
+            }),
+          updateHardWalletSigners: (signer: xdr.DecoratedSignature[]) =>
+            set((state) => {
+              state.transaction.sign.hardWalletSigners = signer;
             }),
           resetSign: () =>
             set((state) => {
