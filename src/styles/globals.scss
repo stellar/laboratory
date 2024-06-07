@@ -512,6 +512,12 @@
     }
   }
 
+  .Input__container {
+    .Select__container {
+      border: 0;
+      // border-left: 1px solid var(--Input-color-border);
+    }
+  }
   .Input__buttons {
     .Input__container {
       padding-right: 0;

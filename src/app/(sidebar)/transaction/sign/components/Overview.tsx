@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, Icon, Text, Button } from "@stellar/design-system";
+import { Card, Icon, Text, Button, Select } from "@stellar/design-system";
 import {
   FeeBumpTransaction,
+  Transaction,
   TransactionBuilder,
   xdr,
 } from "@stellar/stellar-sdk";
@@ -24,8 +25,6 @@ import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 
 import { SignWithWallet } from "./SignWithWallet";
-import { SignWithLedger } from "./SignWithLedger";
-import { SignWithTrezor } from "./SignWithTrezor";
 
 const MIN_LENGTH_FOR_FULL_WIDTH_FIELD = 30;
 
@@ -33,6 +32,7 @@ export const Overview = () => {
   const { network, transaction } = useStore();
   const {
     sign,
+    updateHardWalletSigs,
     updateSignActiveView,
     updateSignImportTx,
     updateSignedTx,
@@ -46,6 +46,8 @@ export const Overview = () => {
   const [bipPathErrorMsg, setBipPathErrorMsg] = useState<string>("");
   const [hardwareSigSuccess, setHardwareSigSuccess] = useState<boolean>(false);
   const [hardwareSigErrorMsg, setHardwareSigErrorMsg] = useState<string>("");
+
+  const [selectedHardware, setSelectedHardware] = useState<string>("");
 
   // Sign tx status related
   const [signedTxSuccessMsg, setSignedTxSuccessMsg] = useState<string>("");
@@ -106,6 +108,58 @@ export const Overview = () => {
       setSignedTxSuccessMsg(message);
     } else if (!xdr && message) {
       setSignedTxErrorMsg(message);
+    }
+  };
+
+  const signWithHardware = async () => {
+    setHardwareSigSuccess(false);
+
+    let hardwareSign;
+    let hardwareSignError;
+
+    try {
+      if (selectedHardware === "ledger") {
+        const { signature, error } = await transactionSigner.signWithLedger({
+          bipPath: sign.bipPath,
+          transaction: sign.importTx as FeeBumpTransaction | Transaction,
+          isHash: false,
+        });
+
+        hardwareSign = signature;
+        hardwareSignError = error;
+      }
+
+      if (selectedHardware === "ledger_hash") {
+        const { signature, error } = await transactionSigner.signWithLedger({
+          bipPath: sign.bipPath,
+          transaction: sign.importTx as FeeBumpTransaction | Transaction,
+          isHash: true,
+        });
+
+        hardwareSign = signature;
+        hardwareSignError = error;
+      }
+
+      if (selectedHardware === "trezor") {
+        const path = `m/${sign.bipPath}`;
+
+        const { signature, error } = await transactionSigner.signWithTrezor({
+          bipPath: path,
+          transaction: sign.importTx as Transaction,
+        });
+
+        hardwareSign = signature;
+        hardwareSignError = error;
+      }
+
+      if (hardwareSign) {
+        updateHardWalletSigs(hardwareSign);
+        setHardwareSigSuccess(true);
+      } else if (hardwareSignError) {
+        setHardwareSigErrorMsg(hardwareSignError);
+      }
+    } catch (err) {
+      setHardwareSigErrorMsg(`An unexpected error occurred: ${err}`);
     }
   };
 
@@ -214,7 +268,15 @@ export const Overview = () => {
                 placeholder="Secret key (starting with S) or hash preimage (in hex)"
               />
             </div>
-
+            <div>
+              <Button
+                size="md"
+                variant="tertiary"
+                onClick={() => addSignature()}
+              >
+                Add signature
+              </Button>
+            </div>
             <div className="Input__buttons full-width">
               <TextPicker
                 id="bip-path"
@@ -242,22 +304,33 @@ export const Overview = () => {
                 rightElement={
                   <>
                     <div className="hardware-button">
-                      <SignWithLedger
-                        isDisabled={
-                          Boolean(bipPathErrorMsg) || Boolean(!sign.bipPath)
-                        }
-                        setSignSuccess={setHardwareSigSuccess}
-                        setSignError={setHardwareSigErrorMsg}
-                      />
+                      <Select
+                        fieldSize="md"
+                        id="hardware-wallet-select"
+                        // value={value?.type}
+                        onChange={(
+                          event: React.ChangeEvent<HTMLSelectElement>,
+                        ) => {
+                          setSelectedHardware(event.target.value);
+                        }}
+                      >
+                        <option value="">Select operation type</option>
+                        <option value="ledger">Ledger</option>
+                        <option value="ledger_hash">Hash with Ledger</option>
+                        <option value="trezor">Trezor</option>
+                      </Select>
                     </div>
+
                     <div className="hardware-button">
-                      <SignWithTrezor
-                        isDisabled={
-                          Boolean(bipPathErrorMsg) || Boolean(!sign.bipPath)
-                        }
-                        setSignSuccess={setHardwareSigSuccess}
-                        setSignError={setHardwareSigErrorMsg}
-                      />
+                      <Button
+                        disabled={!selectedHardware}
+                        // isLoading={isLoading}
+                        onClick={signWithHardware}
+                        size="md"
+                        variant="tertiary"
+                      >
+                        Sign
+                      </Button>
                     </div>
                   </>
                 }
@@ -287,15 +360,6 @@ export const Overview = () => {
                   </Button>
 
                   <SignWithWallet setSignError={setSignError} />
-                </div>
-                <div>
-                  <Button
-                    size="md"
-                    variant="tertiary"
-                    onClick={() => addSignature()}
-                  >
-                    Add signature
-                  </Button>
                 </div>
               </div>
               <div>
