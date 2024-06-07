@@ -122,6 +122,7 @@ export interface Store {
     updateBipPath: (bipPath: string) => void;
     updateHardWalletSigs: (signer: xdr.DecoratedSignature[]) => void;
     resetSign: () => void;
+    resetSignHardWalletSigs: () => void;
   };
 }
 
@@ -165,7 +166,7 @@ const initTransactionState = {
     importXdr: "",
     signedTx: "",
     bipPath: "",
-    hardWalletSigs: undefined,
+    hardWalletSigs: [],
   },
 };
 
@@ -340,6 +341,11 @@ export const createStore = (options: CreateStoreOptions) =>
           resetSign: () =>
             set((state) => {
               state.transaction.sign = initTransactionState.sign;
+            }),
+          resetSignHardWalletSigs: () =>
+            set((state) => {
+              state.transaction.sign.hardWalletSigs =
+                initTransactionState.sign.hardWalletSigs;
             }),
         },
       })),

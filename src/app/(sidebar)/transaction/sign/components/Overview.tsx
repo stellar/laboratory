@@ -38,6 +38,7 @@ export const Overview = () => {
     updateSignedTx,
     updateBipPath,
     resetSign,
+    resetSignHardWalletSigs,
   } = transaction;
 
   const [secretInputs, setSecretInputs] = useState<string[]>([""]);
@@ -197,7 +198,7 @@ export const Overview = () => {
   }
 
   const resetHardwareSign = () => {
-    updateHardWalletSigs("");
+    resetSignHardWalletSigs();
     setHardwareSigSuccess(false);
     setHardwareSigErrorMsg("");
   };
