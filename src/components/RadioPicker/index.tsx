@@ -16,6 +16,7 @@ interface RadioPickerProps<TOptionValue = string> {
   fitContent?: boolean;
   infoLink?: string;
   infoText?: string | React.ReactNode;
+  disabledOptions?: string[];
 }
 
 export const RadioPicker = <TOptionValue,>({
@@ -28,6 +29,7 @@ export const RadioPicker = <TOptionValue,>({
   fitContent,
   infoLink,
   infoText,
+  disabledOptions,
 }: RadioPickerProps<TOptionValue>) => {
   const customStyle = {
     ...(fitContent ? { "--RadioPicker-width": "fit-content" } : {}),
@@ -51,8 +53,15 @@ export const RadioPicker = <TOptionValue,>({
           const opId = `${o.id}-${id}`;
           const curId = opId.split("-")[0];
 
+          const isDisabled =
+            disabledOptions?.length && disabledOptions.includes(o.id);
+
           return (
-            <div key={o.id} className="RadioPicker__item">
+            <div
+              key={o.id}
+              className="RadioPicker__item"
+              {...(isDisabled ? { ["data-disabled"]: true } : {})}
+            >
               <input
                 type="radio"
                 id={opId}

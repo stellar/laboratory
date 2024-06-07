@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@stellar/design-system";
 import { stringify } from "lossless-json";
 import { StrKey, TransactionBuilder } from "@stellar/stellar-sdk";
+import { set } from "lodash";
 import * as StellarXdr from "@/helpers/StellarXdr";
 
 import { SdsLink } from "@/components/SdsLink";
@@ -169,6 +170,62 @@ export const TransactionXdr = () => {
 
           return res;
         }, [] as any[]);
+      };
+
+      const formatPredicate = (predicate: AnyObject) => {
+        const loop = (
+          item: AnyObject,
+          result: AnyObject,
+          parent: string | undefined,
+        ): AnyObject => {
+          const params = Object.entries(item);
+
+          const key = params[0][0];
+          const val = params[0][1];
+
+          const getPath = (parent: string | undefined) =>
+            `${parent ? `${parent}.` : ""}`;
+
+          switch (key) {
+            case "unconditional":
+              result[`${parent || ""}`] = "unconditional";
+              break;
+            case "conditional":
+              loop(val, result, parent);
+              break;
+            case "and":
+            case "or":
+              val.forEach((v: any, idx: number) =>
+                loop(v, result, `${getPath(parent)}${key}[${idx}]`),
+              );
+              break;
+            case "not":
+              loop(val, result, `${getPath(parent)}${key}`);
+              break;
+            case "time":
+              loop(val, result, parent);
+              break;
+            case "relative":
+              result[`${getPath(parent)}before_relative_time`] = BigInt(val);
+              break;
+            case "absolute":
+              result[`${getPath(parent)}before_absolute_time`] = BigInt(val);
+              break;
+            default:
+            // Do nothing
+          }
+
+          return result;
+        };
+
+        const formattedPredicate = loop(predicate, {}, undefined);
+
+        return Object.entries(formattedPredicate).reduce((res, entry) => {
+          const [path, value] = entry;
+          res = path ? set(res, path, value) : value;
+
+          return res;
+        }, {} as AnyObject);
       };
 
       const flagTotal = (
@@ -342,6 +399,21 @@ export const TransactionXdr = () => {
             ledger_entry: {
               [type]: formattedData,
             },
+          };
+        }
+
+        if (opType === "create_claimable_balance") {
+          return {
+            asset: formatAssetValue(params.asset),
+            amount: xdrUtils.toAmount(params.amount),
+            claimants: params.claimants.map((cl: AnyObject) => {
+              return {
+                claimant_type_v0: {
+                  destination: cl.destination,
+                  predicate: formatPredicate(cl.predicate),
+                },
+              };
+            }),
           };
         }
 

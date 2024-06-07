@@ -13,6 +13,7 @@ import { SignerPicker } from "@/components/FormElements/SignerPicker";
 import { AuthorizePicker } from "@/components/FormElements/AuthorizePicker";
 import { NumberFractionPicker } from "@/components/FormElements/NumberFractionPicker";
 import { RevokeSponsorshipPicker } from "@/components/FormElements/RevokeSponsorshipPicker";
+import { ClaimantsPicker } from "@/components/FormElements/ClaimantsPicker";
 
 import { validate } from "@/validate";
 import {
@@ -72,6 +73,13 @@ type TemplateRenderRevokeSponsorshipProps = {
   value: RevokeSponsorshipValue | undefined;
   error: AnyObject | undefined;
   onChange: (val: RevokeSponsorshipValue | undefined) => void;
+  isRequired?: boolean;
+};
+
+type TemplateRenderClaimantsProps = {
+  value: AnyObject[] | undefined;
+  error: (AnyObject | undefined)[] | undefined;
+  onChange: (val: AnyObject[] | undefined) => void;
   isRequired?: boolean;
 };
 
@@ -218,6 +226,19 @@ export const formComponentTemplateTxnOps = ({
           />
         ),
         validate: validate.asset,
+      };
+    case "claimants":
+      return {
+        render: (templ: TemplateRenderClaimantsProps) => (
+          <ClaimantsPicker
+            id={id}
+            key={id}
+            claimants={templ.value}
+            onChange={templ.onChange}
+            error={templ.error}
+          />
+        ),
+        validate: validate.claimaints,
       };
     case "clear_flags":
       return {

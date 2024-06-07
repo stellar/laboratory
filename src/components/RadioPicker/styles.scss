@@ -90,6 +90,19 @@
       }
     }
 
+    &[data-disabled="true"] {
+      pointer-events: none;
+      cursor: default;
+
+      input[type="radio"] {
+        & + label {
+          --RadioPicker-color-text: var(--sds-clr-gray-09);
+          --RadioPicker-color-background: var(--sds-clr-gray-03);
+          --RadioPicker-color-border: var(--sds-clr-gray-06);
+        }
+      }
+    }
+
     @media (hover: hover) {
       &:hover {
         --RadioPicker-color-text: var(--sds-clr-base-01);

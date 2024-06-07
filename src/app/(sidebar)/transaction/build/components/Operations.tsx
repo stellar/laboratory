@@ -23,6 +23,7 @@ import { sanitizeObject } from "@/helpers/sanitizeObject";
 import { TRANSACTION_OPERATIONS } from "@/constants/transactionOperations";
 import { useStore } from "@/store/useStore";
 import {
+  AnyObject,
   AssetObject,
   AssetObjectValue,
   AssetPoolShareObjectValue,
@@ -337,6 +338,72 @@ export const Operations = () => {
     return false;
   };
 
+  const isMissingClaimantFields = (
+    param: string,
+    value: AnyObject[] | undefined,
+  ) => {
+    if (param === "claimants") {
+      if (!value || value.length === 0) {
+        return false;
+      }
+
+      let missing = false;
+
+      (value || []).forEach((val) => {
+        if (
+          !val.destination ||
+          !val.predicate ||
+          isEmptyObject(val.predicate)
+        ) {
+          missing = true;
+        }
+
+        // Check only if nothing is missing yet
+        if (!missing) {
+          const missingPredicate = loopPredicate(val.predicate, []);
+
+          missing = Boolean(missingPredicate && missingPredicate?.length > 0);
+        }
+      });
+
+      return missing;
+    }
+
+    return false;
+  };
+
+  const loopPredicate = (
+    predicate: AnyObject = {},
+    missingArray: boolean[],
+  ) => {
+    if (isEmptyObject(predicate)) {
+      missingArray.push(true);
+    }
+
+    Object.entries(predicate).forEach(([key, val]) => {
+      if (["relative", "absolute"].includes(key) && typeof val === "string") {
+        if (!val) {
+          missingArray.push(true);
+        }
+      }
+
+      if (Array.isArray(val)) {
+        val.forEach((v) => loopPredicate(v, missingArray));
+      } else if (typeof val === "object") {
+        if (isEmptyObject(val)) {
+          if (key !== "unconditional") {
+            missingArray.push(true);
+          }
+        } else {
+          loopPredicate(val, missingArray);
+        }
+      }
+      // }
+    });
+
+    return missingArray;
+  };
+
   const validateOperationParam = ({
     opIndex,
     opParam,
@@ -433,6 +500,15 @@ export const Operations = () => {
       missingRevokeSponsorshipFields &&
       !opParamMissingFields.includes(opParam)
     ) {
+      opParamMissingFields = [...opParamMissingFields, opParam];
+    }
+
+    //==== Handle claimable balance claimants
+    const missingClaimantFields = isMissingClaimantFields(opParam, opValue);
+
+    console.log(">>> missingClaimantFields: ", missingClaimantFields);
+
+    if (missingClaimantFields && !opParamMissingFields.includes(opParam)) {
       opParamMissingFields = [...opParamMissingFields, opParam];
     }
 
@@ -699,7 +775,6 @@ export const Operations = () => {
             ) : null
           }
         >
-          {/* TODO: remove disabled attribute when operation is implemented */}
           <option value="">Select operation type</option>
           <option value="create_account">Create Account</option>
           <option value="payment">Payment</option>
@@ -720,7 +795,7 @@ export const Operations = () => {
           <option value="account_merge">Account Merge</option>
           <option value="manage_data">Manage Data</option>
           <option value="bump_sequence">Bump Sequence</option>
-          <option value="create_claimable_balance" disabled>
+          <option value="create_claimable_balance">
             Create Claimable Balance
           </option>
           <option value="claim_claimable_balance">
@@ -830,6 +905,19 @@ export const Operations = () => {
                                   opIndex: idx,
                                   opParam: input,
                                   opValue: selected,
+                                  opType: op.operation_type,
+                                });
+                              },
+                            });
+                          case "claimants":
+                            return component.render({
+                              ...baseProps,
+                              // TODO: update type
+                              onChange: (claimants: any | undefined) => {
+                                handleOperationParamChange({
+                                  opIndex: idx,
+                                  opParam: input,
+                                  opValue: claimants,
                                   opType: op.operation_type,
                                 });
                               },
