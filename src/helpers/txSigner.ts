@@ -33,7 +33,7 @@ const signTx = ({
   txXdr: string;
   signers: string[];
   networkPassphrase: string;
-  hardWalletSigs?: xdr.DecoratedSignature[];
+  hardWalletSigs: xdr.DecoratedSignature[] | [];
 }) => {
   const validSecretKeys = [];
   const validPreimages = [];
@@ -75,10 +75,11 @@ const signTx = ({
     addedSigs++;
     newTx.signHashX(Buffer.from(signer, "hex"));
   });
-  hardWalletSigs?.forEach((signer) => {
+  hardWalletSigs.forEach((signer) => {
     addedSigs++;
     newTx.signatures.push(signer);
   });
+
   return {
     xdr: newTx.toEnvelope().toXDR("base64"),
     message: `${addedSigs} signature(s) added; ${
@@ -218,7 +219,7 @@ const getTrezorDecoratedSignature = (
   return [decorated];
 };
 
-export const transactionSigner = {
+export const txSigner = {
   signTx,
   signWithLedger,
   signWithTrezor,

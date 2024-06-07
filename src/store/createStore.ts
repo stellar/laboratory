@@ -91,7 +91,7 @@ export interface Store {
       importXdr: string;
       signedTx: string;
       bipPath: string;
-      hardWalletSigs: xdr.DecoratedSignature[] | undefined;
+      hardWalletSigs: xdr.DecoratedSignature[] | [];
     };
     // TODO: update as needed
     // simulate: AnyObject;

@@ -13,7 +13,7 @@ import { FEE_BUMP_TX_FIELDS, TX_FIELDS } from "@/constants/signTransactionPage";
 
 import { useStore } from "@/store/useStore";
 
-import { transactionSigner } from "@/helpers/transactionSigner";
+import { txSigner } from "@/helpers/txSigner";
 
 import { validate } from "@/validate";
 
@@ -46,6 +46,7 @@ export const Overview = () => {
   const [bipPathErrorMsg, setBipPathErrorMsg] = useState<string>("");
   const [hardwareSigSuccess, setHardwareSigSuccess] = useState<boolean>(false);
   const [hardwareSigErrorMsg, setHardwareSigErrorMsg] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [selectedHardware, setSelectedHardware] = useState<string>("");
 
@@ -55,9 +56,12 @@ export const Overview = () => {
   const [signError, setSignError] = useState<string>("");
 
   const HAS_SECRET_KEYS = secretInputs.some((input) => input !== "");
-  const HAS_INVALID_SECRET_KEYS = secretInputs.some((input) =>
-    validate.secretKey(input),
-  );
+  const HAS_INVALID_SECRET_KEYS = secretInputs.some((input) => {
+    if (input.length) {
+      return validate.secretKey(input);
+    }
+    return false;
+  });
 
   useEffect(() => {
     if (!sign.importTx) {
@@ -94,13 +98,13 @@ export const Overview = () => {
     txXdr: string,
     signers: string[],
     networkPassphrase: string,
-    hardWalletSigs?: xdr.DecoratedSignature[],
+    hardWalletSigs: xdr.DecoratedSignature[],
   ) => {
-    const { xdr, message } = transactionSigner.signTx({
+    const { xdr, message } = txSigner.signTx({
       txXdr,
       signers,
       networkPassphrase,
-      hardWalletSigs,
+      hardWalletSigs: hardWalletSigs || [],
     });
 
     if (xdr && message) {
@@ -113,13 +117,16 @@ export const Overview = () => {
 
   const signWithHardware = async () => {
     setHardwareSigSuccess(false);
+    updateSignedTx("");
+
+    setIsLoading(true);
 
     let hardwareSign;
     let hardwareSignError;
 
     try {
       if (selectedHardware === "ledger") {
-        const { signature, error } = await transactionSigner.signWithLedger({
+        const { signature, error } = await txSigner.signWithLedger({
           bipPath: sign.bipPath,
           transaction: sign.importTx as FeeBumpTransaction | Transaction,
           isHash: false,
@@ -130,7 +137,7 @@ export const Overview = () => {
       }
 
       if (selectedHardware === "ledger_hash") {
-        const { signature, error } = await transactionSigner.signWithLedger({
+        const { signature, error } = await txSigner.signWithLedger({
           bipPath: sign.bipPath,
           transaction: sign.importTx as FeeBumpTransaction | Transaction,
           isHash: true,
@@ -143,7 +150,7 @@ export const Overview = () => {
       if (selectedHardware === "trezor") {
         const path = `m/${sign.bipPath}`;
 
-        const { signature, error } = await transactionSigner.signWithTrezor({
+        const { signature, error } = await txSigner.signWithTrezor({
           bipPath: path,
           transaction: sign.importTx as Transaction,
         });
@@ -152,6 +159,8 @@ export const Overview = () => {
         hardwareSignError = error;
       }
 
+      setIsLoading(false);
+
       if (hardwareSign) {
         updateHardWalletSigs(hardwareSign);
         setHardwareSigSuccess(true);
@@ -159,6 +168,7 @@ export const Overview = () => {
         setHardwareSigErrorMsg(hardwareSignError);
       }
     } catch (err) {
+      setIsLoading(false);
       setHardwareSigErrorMsg(`An unexpected error occurred: ${err}`);
     }
   };
@@ -185,6 +195,12 @@ export const Overview = () => {
   } else if (sign.importTx) {
     mergedFields = [...REQUIRED_FIELDS, ...TX_FIELDS(sign.importTx)];
   }
+
+  const resetHardwareSign = () => {
+    updateHardWalletSigs("");
+    setHardwareSigSuccess(false);
+    setHardwareSigErrorMsg("");
+  };
 
   return (
     <>
@@ -307,10 +323,10 @@ export const Overview = () => {
                       <Select
                         fieldSize="md"
                         id="hardware-wallet-select"
-                        // value={value?.type}
                         onChange={(
                           event: React.ChangeEvent<HTMLSelectElement>,
                         ) => {
+                          resetHardwareSign();
                           setSelectedHardware(event.target.value);
                         }}
                       >
@@ -323,8 +339,8 @@ export const Overview = () => {
 
                     <div className="hardware-button">
                       <Button
-                        disabled={!selectedHardware}
-                        // isLoading={isLoading}
+                        disabled={!selectedHardware || !sign.bipPath}
+                        isLoading={isLoading}
                         onClick={signWithHardware}
                         size="md"
                         variant="tertiary"
