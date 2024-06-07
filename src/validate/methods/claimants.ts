@@ -1,9 +1,10 @@
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { sanitizeObject } from "@/helpers/sanitizeObject";
+import { sanitizeArray } from "@/helpers/sanitizeArray";
 import { AnyObject } from "@/types/types";
+
 import { publicKey } from "./publicKey";
 import { positiveInt } from "./positiveInt";
-import { sanitizeArray } from "@/helpers/sanitizeArray";
 
 export const claimaints = (val: AnyObject[]) => {
   if (!val || val.length === 0) {

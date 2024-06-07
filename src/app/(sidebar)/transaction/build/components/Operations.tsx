@@ -506,8 +506,6 @@ export const Operations = () => {
     //==== Handle claimable balance claimants
     const missingClaimantFields = isMissingClaimantFields(opParam, opValue);
 
-    console.log(">>> missingClaimantFields: ", missingClaimantFields);
-
     if (missingClaimantFields && !opParamMissingFields.includes(opParam)) {
       opParamMissingFields = [...opParamMissingFields, opParam];
     }
@@ -912,8 +910,9 @@ export const Operations = () => {
                           case "claimants":
                             return component.render({
                               ...baseProps,
-                              // TODO: update type
-                              onChange: (claimants: any | undefined) => {
+                              onChange: (
+                                claimants: AnyObject[] | undefined,
+                              ) => {
                                 handleOperationParamChange({
                                   opIndex: idx,
                                   opParam: input,
