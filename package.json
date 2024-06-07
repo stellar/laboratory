@@ -20,6 +20,7 @@
     "git-info": "rm -rf src/generated/ && mkdir src/generated/ && echo export default \"{\\\"commitHash\\\": \\\"$(git rev-parse --short HEAD)\\\", \\\"version\\\": \\\"$(git describe --tags --always)\\\"};\" > src/generated/gitInfo.ts"
   },
   "dependencies": {
+    "@babel/core": "^7.0.0",
     "@creit.tech/stellar-wallets-kit": "^0.8.2",
     "@ledgerhq/hw-app-str": "^6.28.6",
     "@ledgerhq/hw-transport-webusb": "^6.28.6",
