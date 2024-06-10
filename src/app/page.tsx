@@ -11,8 +11,6 @@ import { Box } from "@/components/layout/Box";
 import { Routes } from "@/constants/routes";
 import { openUrl } from "@/helpers/openUrl";
 
-import { gitInfo } from "@/generated/gitInfo";
-
 export default function Introduction() {
   const infoCards = [
     {
@@ -109,8 +107,8 @@ export default function Introduction() {
           </SdsLink>
         </Box>
 
-        {gitInfo?.commitHash ? (
-          <div>{`Commit hash: ${gitInfo.commitHash}`}</div>
+        {process.env.NEXT_PUBLIC_COMMIT_HASH ? (
+          <div>{`Commit hash: ${process.env.NEXT_PUBLIC_COMMIT_HASH}`}</div>
         ) : null}
       </div>
     </LayoutContentContainer>
