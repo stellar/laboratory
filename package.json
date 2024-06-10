@@ -7,9 +7,9 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "dev": "yarn git-commit-hash && next dev",
+    "build": "yarn git-commit-hash && next build",
+    "start": "yarn git-commit-hash && next start",
     "lint": "next lint",
     "lint:ts": "tsc --noEmit",
     "test": "playwright test",
