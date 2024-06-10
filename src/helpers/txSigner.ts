@@ -8,7 +8,7 @@ import {
 } from "@stellar/stellar-sdk";
 import LedgerTransportWebUSB from "@ledgerhq/hw-transport-webusb";
 import LedgerStr from "@ledgerhq/hw-app-str";
-import TrezorConnect, { StellarSignedTx } from "@trezor/connect-web";
+// import TrezorConnect, { StellarSignedTx } from "@trezor/connect-web";
 import transformTransaction from "@trezor/connect-plugin-stellar";
 
 import { LedgerErrorResponse } from "@/types/types";
@@ -175,18 +175,24 @@ const signWithTrezor = async ({
   signature: xdr.DecoratedSignature[] | undefined;
   error: string | undefined;
 }> => {
-  TrezorConnect.manifest({
-    email: "accounts+trezor@stellar.org",
-    appUrl: "https://laboratory.stellar.org/",
-  });
+  // TrezorConnect.manifest({
+  //   email: "accounts+trezor@stellar.org",
+  //   appUrl: "https://laboratory.stellar.org/",
+  // });
 
   try {
     const trezorParams = transformTransaction(bipPath, transaction);
-    const response = await TrezorConnect.stellarSignTransaction(trezorParams);
+    // const response = await TrezorConnect.stellarSignTransaction(trezorParams);
+    const response = {
+      success: false,
+      payload: {
+        error: "testing",
+      },
+    };
 
     if (response.success) {
       return {
-        signature: getTrezorDecoratedSignature(response.payload),
+        signature: undefined,
         error: undefined,
       };
     } else {
@@ -205,19 +211,19 @@ const signWithTrezor = async ({
   }
 };
 
-const getTrezorDecoratedSignature = (
-  payload: StellarSignedTx,
-): xdr.DecoratedSignature[] => {
-  const signature = Buffer.from(payload.signature, "hex");
-  const publicKeyBytes = Buffer.from(payload.publicKey, "hex");
-  const encodedPublicKey = StrKey.encodeEd25519PublicKey(publicKeyBytes);
+// const getTrezorDecoratedSignature = (
+//   payload: StellarSignedTx,
+// ): xdr.DecoratedSignature[] => {
+//   const signature = Buffer.from(payload.signature, "hex");
+//   const publicKeyBytes = Buffer.from(payload.publicKey, "hex");
+//   const encodedPublicKey = StrKey.encodeEd25519PublicKey(publicKeyBytes);
 
-  const keyPair = Keypair.fromPublicKey(encodedPublicKey);
-  const hint = keyPair.signatureHint();
-  const decorated = new xdr.DecoratedSignature({ hint, signature });
+//   const keyPair = Keypair.fromPublicKey(encodedPublicKey);
+//   const hint = keyPair.signatureHint();
+//   const decorated = new xdr.DecoratedSignature({ hint, signature });
 
-  return [decorated];
-};
+//   return [decorated];
+// };
 
 export const txSigner = {
   signTx,
