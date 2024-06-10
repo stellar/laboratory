@@ -7,8 +7,8 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "dev": "yarn git-info && next dev",
-    "build": "yarn git-info && next build",
+    "dev": "export NEXT_PUBLIC_COMMIT_HASH=$(git rev-parse --short HEAD) && next dev",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "lint:ts": "tsc --noEmit",
