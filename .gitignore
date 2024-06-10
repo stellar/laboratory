@@ -41,6 +41,8 @@ next-env.d.ts
 
 # generated Git info
 /src/generated/gitInfo.ts
+
+# test files
 /test-results/
 /playwright-report/
 /blob-report/
