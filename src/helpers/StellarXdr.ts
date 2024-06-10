@@ -1,6 +1,6 @@
-// TODO: replace with package once published
-import wasm, { decode, encode } from "bindings-js";
+import wasm, { decode, encode } from "@stellar/stellar-xdr-json-web";
 
+// A wrapper for the Stellar XDR JSON
 declare global {
   interface Window {
     __STELLAR_XDR_INIT__?: boolean;
