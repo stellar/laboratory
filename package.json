@@ -7,9 +7,9 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "dev": "yarn git-commit-hash && next dev",
-    "build": "yarn git-commit-hash && next build",
-    "start": "yarn git-commit-hash && next start",
+    "dev": "yarn git-info && next dev",
+    "build": "yarn git-info && next build",
+    "start": "next start",
     "lint": "next lint",
     "lint:ts": "tsc --noEmit",
     "test": "playwright test",
@@ -17,8 +17,7 @@
     "prepare": "husky",
     "pre-commit": "yarn lint-staged",
     "pre-push": "yarn lint:ts && yarn test",
-    "git-info": "rm -rf src/generated/ && mkdir src/generated/ && echo \"export const gitInfo = { commitHash: \\\"$(git rev-parse --short HEAD)\\\", version: \\\"$(git describe --tags --always)\\\" };\" > src/generated/gitInfo.ts",
-    "git-commit-hash": "rm -f .env.local && echo NEXT_PUBLIC_COMMIT_HASH=$(git rev-parse --short HEAD) >> .env.local"
+    "git-info": "rm -rf src/generated/ && mkdir src/generated/ && echo \"export const gitInfo = { commitHash: \\\"$(git rev-parse --short HEAD)\\\", version: \\\"$(git describe --tags --always)\\\" };\" >> src/generated/gitInfo.ts"
   },
   "dependencies": {
     "@creit.tech/stellar-wallets-kit": "^0.8.2",

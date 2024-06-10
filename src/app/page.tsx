@@ -11,6 +11,8 @@ import { Box } from "@/components/layout/Box";
 import { Routes } from "@/constants/routes";
 import { openUrl } from "@/helpers/openUrl";
 
+import { gitInfo } from "@/generated/gitInfo";
+
 export default function Introduction() {
   const infoCards = [
     {
@@ -52,6 +54,8 @@ export default function Introduction() {
         openUrl("https://developers.stellar.org/network/horizon"),
     },
   ];
+
+  console.log(">>> gitInfo: ", gitInfo);
 
   return (
     <LayoutContentContainer>
@@ -107,8 +111,8 @@ export default function Introduction() {
           </SdsLink>
         </Box>
 
-        {process.env.NEXT_PUBLIC_COMMIT_HASH ? (
-          <div>{`Commit hash: ${process.env.NEXT_PUBLIC_COMMIT_HASH}`}</div>
+        {gitInfo?.commitHash ? (
+          <div>{`Commit hash: ${gitInfo.commitHash}`}</div>
         ) : null}
       </div>
     </LayoutContentContainer>
