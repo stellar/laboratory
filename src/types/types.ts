@@ -119,6 +119,11 @@ export type TxnOperation = {
   source_account?: string;
 };
 
+export type LedgerErrorResponse = {
+  message: string;
+  errorCode: number;
+};
+
 // =============================================================================
 // Component
 // =============================================================================

@@ -511,4 +511,33 @@
       gap: pxToRem(8px);
     }
   }
+
+  .Input__container {
+    .Select__container {
+      border: 0;
+    }
+    input {
+      flex-shrink: 1;
+    }
+    .Input__side-element {
+      flex: 1 0;
+    }
+  }
+  .Input__buttons {
+    .Input__container {
+      padding-right: 0;
+    }
+    .hardware-button {
+      flex-grow: 1;
+      border-left: 1px solid var(--Input-color-border);
+    }
+    .hardware-sign-button {
+      .Button {
+        margin-top: pxToRem(25px);
+      }
+    }
+    .Button {
+      border: 0;
+    }
+  }
 }
