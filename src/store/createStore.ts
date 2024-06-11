@@ -165,7 +165,7 @@ const initTransactionState = {
     importTx: undefined,
     importXdr: "",
     signedTx: "",
-    bipPath: "",
+    bipPath: "44'/148'/0'",
     hardWalletSigs: [],
   },
 };
@@ -365,6 +365,7 @@ export const createStore = (options: CreateStoreOptions) =>
               sign: {
                 activeView: true,
                 importXdr: true,
+                bipPath: true,
               },
             },
           };

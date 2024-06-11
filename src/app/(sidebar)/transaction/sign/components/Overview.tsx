@@ -44,6 +44,7 @@ export const Overview = () => {
   const [secretInputs, setSecretInputs] = useState<string[]>([""]);
 
   // Adding hardware wallets sig (signatures) related
+
   const [bipPathErrorMsg, setBipPathErrorMsg] = useState<string>("");
   const [hardwareSigSuccess, setHardwareSigSuccess] = useState<boolean>(false);
   const [hardwareSigErrorMsg, setHardwareSigErrorMsg] = useState<string>("");
@@ -295,63 +296,64 @@ export const Overview = () => {
               </Button>
             </div>
             <div className="Input__buttons full-width">
-              <TextPicker
-                id="bip-path"
-                label="BIP Path"
-                placeholder="BIP path in format: 44'/148'/0'"
-                onChange={(e) => {
-                  updateBipPath(e.target.value);
+              <Box gap="sm" direction="row">
+                <TextPicker
+                  id="bip-path"
+                  label="BIP Path"
+                  placeholder="BIP path in format: 44'/148'/0'"
+                  onChange={(e) => {
+                    updateBipPath(e.target.value);
 
-                  const error = validate.bipPath(e.target.value);
+                    const error = validate.bipPath(e.target.value);
 
-                  if (error) {
-                    setBipPathErrorMsg(error);
-                  } else {
-                    setBipPathErrorMsg("");
+                    if (error) {
+                      setBipPathErrorMsg(error);
+                    } else {
+                      setBipPathErrorMsg("");
+                    }
+                  }}
+                  error={bipPathErrorMsg || hardwareSigErrorMsg}
+                  value={sign.bipPath}
+                  success={
+                    hardwareSigSuccess
+                      ? "Successfully added a hardware wallet signature"
+                      : ""
                   }
-                }}
-                error={bipPathErrorMsg || hardwareSigErrorMsg}
-                value={sign.bipPath}
-                success={
-                  hardwareSigSuccess
-                    ? "Successfully added a hardware wallet signature"
-                    : ""
-                }
-                note="Note: Trezor devices require upper time bounds to be set (non-zero), otherwise the signature will not be verified"
-                rightElement={
-                  <>
-                    <div className="hardware-button">
-                      <Select
-                        fieldSize="md"
-                        id="hardware-wallet-select"
-                        onChange={(
-                          event: React.ChangeEvent<HTMLSelectElement>,
-                        ) => {
-                          resetHardwareSign();
-                          setSelectedHardware(event.target.value);
-                        }}
-                      >
-                        <option value="">Select operation type</option>
-                        <option value="ledger">Ledger</option>
-                        <option value="ledger_hash">Hash with Ledger</option>
-                        <option value="trezor">Trezor</option>
-                      </Select>
-                    </div>
-
-                    <div className="hardware-button">
-                      <Button
-                        disabled={!selectedHardware || !sign.bipPath}
-                        isLoading={isLoading}
-                        onClick={signWithHardware}
-                        size="md"
-                        variant="tertiary"
-                      >
-                        Sign
-                      </Button>
-                    </div>
-                  </>
-                }
-              />
+                  note="Note: Trezor devices require upper time bounds to be set (non-zero), otherwise the signature will not be verified"
+                  rightElement={
+                    <>
+                      <div className="hardware-button">
+                        <Select
+                          fieldSize="md"
+                          id="hardware-wallet-select"
+                          onChange={(
+                            event: React.ChangeEvent<HTMLSelectElement>,
+                          ) => {
+                            resetHardwareSign();
+                            setSelectedHardware(event.target.value);
+                          }}
+                        >
+                          <option value="">Select operation type</option>
+                          <option value="ledger">Ledger</option>
+                          <option value="ledger_hash">Hash with Ledger</option>
+                          <option value="trezor">Trezor</option>
+                        </Select>
+                      </div>
+                    </>
+                  }
+                />
+                <div className="hardware-sign-button">
+                  <Button
+                    disabled={!selectedHardware || !sign.bipPath}
+                    isLoading={isLoading}
+                    onClick={signWithHardware}
+                    size="md"
+                    variant="tertiary"
+                  >
+                    Sign
+                  </Button>
+                </div>
+              </Box>
             </div>
 
             <Box gap="xs" addlClassName="full-width">
