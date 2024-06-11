@@ -53,11 +53,6 @@ export default function Introduction() {
     },
   ];
 
-  console.log(
-    ">>> process.env.NEXT_PUBLIC_COMMIT_HASH: ",
-    process.env.NEXT_PUBLIC_COMMIT_HASH,
-  );
-
   return (
     <LayoutContentContainer>
       <Card>
