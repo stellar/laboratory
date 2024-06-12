@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@stellar/design-system";
 import { stringify } from "lossless-json";
 import { StrKey, TransactionBuilder } from "@stellar/stellar-sdk";
+import { set } from "lodash";
 import * as StellarXdr from "@/helpers/StellarXdr";
 
 import { SdsLink } from "@/components/SdsLink";
@@ -19,6 +20,8 @@ import { Routes } from "@/constants/routes";
 import {
   OPERATION_CLEAR_FLAGS,
   OPERATION_SET_FLAGS,
+  OPERATION_TRUSTLINE_CLEAR_FLAGS,
+  OPERATION_TRUSTLINE_SET_FLAGS,
 } from "@/constants/settings";
 
 import {
@@ -26,6 +29,7 @@ import {
   AssetObjectValue,
   AssetPoolShareObjectValue,
   KeysOfUnion,
+  NumberFractionValue,
   OptionFlag,
   OptionSigner,
   TxnOperation,
@@ -168,8 +172,72 @@ export const TransactionXdr = () => {
         }, [] as any[]);
       };
 
-      const flagTotal = (val: string[], operations: OptionFlag[]) => {
+      const formatPredicate = (predicate: AnyObject) => {
+        const loop = (
+          item: AnyObject,
+          result: AnyObject,
+          parent: string | undefined,
+        ): AnyObject => {
+          const params = Object.entries(item);
+
+          const key = params[0][0];
+          const val = params[0][1];
+
+          const getPath = (parent: string | undefined) =>
+            `${parent ? `${parent}.` : ""}`;
+
+          switch (key) {
+            case "unconditional":
+              result[`${parent || ""}`] = "unconditional";
+              break;
+            case "conditional":
+              loop(val, result, parent);
+              break;
+            case "and":
+            case "or":
+              val.forEach((v: any, idx: number) =>
+                loop(v, result, `${getPath(parent)}${key}[${idx}]`),
+              );
+              break;
+            case "not":
+              loop(val, result, `${getPath(parent)}${key}`);
+              break;
+            case "time":
+              loop(val, result, parent);
+              break;
+            case "relative":
+              result[`${getPath(parent)}before_relative_time`] = BigInt(val);
+              break;
+            case "absolute":
+              result[`${getPath(parent)}before_absolute_time`] = BigInt(val);
+              break;
+            default:
+            // Do nothing
+          }
+
+          return result;
+        };
+
+        const formattedPredicate = loop(predicate, {}, undefined);
+
+        return Object.entries(formattedPredicate).reduce((res, entry) => {
+          const [path, value] = entry;
+          res = path ? set(res, path, value) : value;
+
+          return res;
+        }, {} as AnyObject);
+      };
+
+      const flagTotal = (
+        val: string[],
+        operations: OptionFlag[],
+        op?: string,
+      ) => {
         const total = optionsFlagDetails(operations, val).total;
+
+        if (op === "set_trust_line_flags") {
+          return BigInt(total);
+        }
 
         return total > 0 ? BigInt(total) : null;
       };
@@ -207,7 +275,22 @@ export const TransactionXdr = () => {
         return xdrUtils.toAmount(val);
       };
 
-      const getXdrVal = (key: string, val: any) => {
+      const formatNumberFraction = (val: NumberFractionValue) => {
+        if (typeof val.value === "string") {
+          return xdrUtils.toPrice(val.value);
+        }
+
+        if (!val.value?.n || !val.value?.d) {
+          return null;
+        }
+
+        return {
+          n: BigInt(val.value.n),
+          d: BigInt(val.value.d),
+        };
+      };
+
+      const getXdrVal = (key: string, val: any, op?: string) => {
         switch (key) {
           // Amount
           case "amount":
@@ -217,6 +300,10 @@ export const TransactionXdr = () => {
           case "dest_min":
           case "send_max":
           case "dest_amount":
+          case "max_amount_a":
+          case "max_amount_b":
+          case "min_amount_a":
+          case "min_amount_b":
             return xdrUtils.toAmount(val);
           // Asset
           case "asset":
@@ -247,9 +334,21 @@ export const TransactionXdr = () => {
             return formatAssetMultiValue(val);
           // Flags
           case "clear_flags":
-            return flagTotal(val, OPERATION_CLEAR_FLAGS);
+            return flagTotal(
+              val,
+              op === "set_trust_line_flags"
+                ? OPERATION_TRUSTLINE_CLEAR_FLAGS
+                : OPERATION_CLEAR_FLAGS,
+              op,
+            );
           case "set_flags":
-            return flagTotal(val, OPERATION_SET_FLAGS);
+            return flagTotal(
+              val,
+              op === "set_trust_line_flags"
+                ? OPERATION_TRUSTLINE_SET_FLAGS
+                : OPERATION_SET_FLAGS,
+              op,
+            );
           // Signer
           case "signer":
             return formatSignerValue(val);
@@ -258,6 +357,9 @@ export const TransactionXdr = () => {
             return formatAssetValue(val);
           case "limit":
             return formatLimit(val);
+          case "min_price":
+          case "max_price":
+            return formatNumberFraction(val);
           default:
             return val;
         }
@@ -274,8 +376,49 @@ export const TransactionXdr = () => {
           return Object.values(params)[0];
         }
 
+        if (opType === "revoke_sponsorship") {
+          const { type, data } = params.revokeSponsorship;
+
+          const formattedData = Object.entries(data).reduce((res, cur) => {
+            const [key, val] = cur;
+
+            return { ...res, [key]: getXdrVal(key, val) };
+          }, {} as AnyObject);
+
+          // Signer has different structure
+          if (type === "signer") {
+            return {
+              [type]: {
+                account_id: data.account_id,
+                signer_key: formatSignerValue(data.signer)?.key,
+              },
+            };
+          }
+
+          return {
+            ledger_entry: {
+              [type]: formattedData,
+            },
+          };
+        }
+
+        if (opType === "create_claimable_balance") {
+          return {
+            asset: formatAssetValue(params.asset),
+            amount: xdrUtils.toAmount(params.amount),
+            claimants: params.claimants.map((cl: AnyObject) => {
+              return {
+                claimant_type_v0: {
+                  destination: cl.destination,
+                  predicate: formatPredicate(cl.predicate),
+                },
+              };
+            }),
+          };
+        }
+
         return Object.entries(params).reduce((res, [key, val]) => {
-          res[key] = getXdrVal(key, val);
+          res[key] = getXdrVal(key, val, opType);
 
           return res;
         }, {} as AnyObject);

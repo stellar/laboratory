@@ -40,3 +40,34 @@ export const OPERATION_CLEAR_FLAGS = [
     value: 8,
   },
 ];
+
+export const OPERATION_TRUSTLINE_SET_FLAGS = [
+  {
+    id: "trustline-set-authorized",
+    label: "Authorized",
+    value: 1,
+  },
+  {
+    id: "trustline-set-liabilites",
+    label: "Authorized to maintain liabilites",
+    value: 2,
+  },
+];
+
+export const OPERATION_TRUSTLINE_CLEAR_FLAGS = [
+  {
+    id: "trustline-clear-authorized",
+    label: "Authorized",
+    value: 1,
+  },
+  {
+    id: "trustline-clear-liabilites",
+    label: "Authorized to maintain liabilites",
+    value: 2,
+  },
+  {
+    id: "trustline-clear-clawback",
+    label: "Clawback enabled",
+    value: 4,
+  },
+];

@@ -150,3 +150,26 @@ export type OptionSigner = {
   key: string | undefined;
   weight: string | undefined;
 };
+
+export type NumberFractionValue = {
+  type: string | undefined;
+  value: string | FractionValue | undefined;
+};
+
+export type FractionValue = {
+  n: string | undefined;
+  d: string | undefined;
+};
+
+export type RevokeSponsorshipValue = {
+  type: SponsorshipType | string;
+  data: AnyObject;
+};
+
+export type SponsorshipType =
+  | "account"
+  | "trustline"
+  | "offer"
+  | "data"
+  | "claimable_balance"
+  | "signer";

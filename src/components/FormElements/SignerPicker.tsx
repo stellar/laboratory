@@ -15,6 +15,7 @@ type SignerPickerProps = {
   infoLink?: string;
   infoText?: string | React.ReactNode;
   note?: React.ReactNode;
+  excludeWeight?: boolean;
 };
 
 export const SignerPicker = ({
@@ -27,6 +28,7 @@ export const SignerPicker = ({
   infoLink,
   infoText,
   note,
+  excludeWeight,
 }: SignerPickerProps) => {
   const renderKey = () => {
     const keyId = `${id}-${value?.type}`;
@@ -101,17 +103,20 @@ export const SignerPicker = ({
         {value?.type ? (
           <>
             {renderKey()}
-            <PositiveIntPicker
-              id={`${id}-weight`}
-              label="Weight"
-              placeholder="0 - 255"
-              value={value?.weight || ""}
-              error={error?.weight}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                onChange({ ...value, weight: event.target.value });
-              }}
-              note="Signer will be removed from account if this weight is 0."
-            />
+
+            {!excludeWeight ? (
+              <PositiveIntPicker
+                id={`${id}-weight`}
+                label="Weight"
+                placeholder="0 - 255"
+                value={value?.weight || ""}
+                error={error?.weight}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  onChange({ ...value, weight: event.target.value });
+                }}
+                note="Signer will be removed from account if this weight is 0."
+              />
+            ) : null}
           </>
         ) : null}
 

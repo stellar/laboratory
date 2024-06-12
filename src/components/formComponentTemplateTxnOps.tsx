@@ -11,17 +11,18 @@ import { AssetMultiPicker } from "@/components/FormElements/AssetMultiPicker";
 import { FlagFieldPicker } from "@/components/FormElements/FlagFieldPicker";
 import { SignerPicker } from "@/components/FormElements/SignerPicker";
 import { AuthorizePicker } from "@/components/FormElements/AuthorizePicker";
+import { NumberFractionPicker } from "@/components/FormElements/NumberFractionPicker";
+import { RevokeSponsorshipPicker } from "@/components/FormElements/RevokeSponsorshipPicker";
+import { ClaimantsPicker } from "@/components/FormElements/ClaimantsPicker";
 
-import {
-  OPERATION_CLEAR_FLAGS,
-  OPERATION_SET_FLAGS,
-} from "@/constants/settings";
 import { validate } from "@/validate";
 import {
   AnyObject,
   AssetObjectValue,
   AssetPoolShareObjectValue,
+  NumberFractionValue,
   OptionSigner,
+  RevokeSponsorshipValue,
 } from "@/types/types";
 
 // Types
@@ -61,6 +62,27 @@ type TemplateRenderSignerProps = {
   isRequired?: boolean;
 };
 
+type TemplateRenderNumberFractionProps = {
+  value: NumberFractionValue | undefined;
+  error: string | undefined;
+  onChange: (val: NumberFractionValue | undefined) => void;
+  isRequired?: boolean;
+};
+
+type TemplateRenderRevokeSponsorshipProps = {
+  value: RevokeSponsorshipValue | undefined;
+  error: AnyObject | undefined;
+  onChange: (val: RevokeSponsorshipValue | undefined) => void;
+  isRequired?: boolean;
+};
+
+type TemplateRenderClaimantsProps = {
+  value: AnyObject[] | undefined;
+  error: (AnyObject | undefined)[] | undefined;
+  onChange: (val: AnyObject[] | undefined) => void;
+  isRequired?: boolean;
+};
+
 type FormComponentTemplateTxnOpsProps = {
   render: (...args: any[]) => JSX.Element;
   validate: ((...args: any[]) => any) | null;
@@ -86,6 +108,10 @@ export const formComponentTemplateTxnOps = ({
     case "dest_min":
     case "send_max":
     case "dest_amount":
+    case "max_amount_a":
+    case "max_amount_b":
+    case "min_amount_a":
+    case "min_amount_b":
       return {
         render: (templ: TemplateRenderProps) => (
           <TextPicker
@@ -201,6 +227,19 @@ export const formComponentTemplateTxnOps = ({
         ),
         validate: validate.asset,
       };
+    case "claimants":
+      return {
+        render: (templ: TemplateRenderClaimantsProps) => (
+          <ClaimantsPicker
+            id={id}
+            key={id}
+            claimants={templ.value}
+            onChange={templ.onChange}
+            error={templ.error}
+          />
+        ),
+        validate: validate.claimaints,
+      };
     case "clear_flags":
       return {
         render: (templ: TemplateRenderFlagFieldProps) => (
@@ -220,7 +259,7 @@ export const formComponentTemplateTxnOps = ({
               </>
             }
             onChange={templ.onChange}
-            options={OPERATION_CLEAR_FLAGS}
+            options={custom?.options}
           />
         ),
         validate: null,
@@ -372,8 +411,23 @@ export const formComponentTemplateTxnOps = ({
             onChange={templ.onChange}
           />
         ),
-        // TODO: update validation
         validate: validate.asset,
+      };
+    case "liquidity_pool_id":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <TextPicker
+            key={id}
+            id={id}
+            label="Liquidity Pool ID"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            placeholder="Ex: 67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9"
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: null,
       };
     case "master_weight":
     case "low_threshold":
@@ -405,6 +459,23 @@ export const formComponentTemplateTxnOps = ({
           </Box>
         ),
         validate: validate.accountThreshold,
+      };
+    case "min_price":
+    case "max_price":
+      return {
+        render: (templ: TemplateRenderNumberFractionProps) => (
+          <NumberFractionPicker
+            key={id}
+            id={id}
+            label={custom?.label}
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || undefined}
+            error={templ.error}
+            onChange={templ.onChange}
+            note={custom?.note}
+          />
+        ),
+        validate: validate.numberFraction,
       };
     case "offer_id":
       return {
@@ -454,6 +525,20 @@ export const formComponentTemplateTxnOps = ({
         ),
         validate: validate.positiveNumber,
       };
+    // Custom operation
+    case "revokeSponsorship":
+      return {
+        render: (templ: TemplateRenderRevokeSponsorshipProps) => (
+          <RevokeSponsorshipPicker
+            key={id}
+            id={id}
+            value={templ.value}
+            onChange={templ.onChange}
+            error={templ.error}
+          />
+        ),
+        validate: validate.revokeSponsorship,
+      };
     case "selling":
       return {
         render: (templ: TemplateRenderAssetProps) => (
@@ -491,7 +576,7 @@ export const formComponentTemplateTxnOps = ({
               </>
             }
             onChange={templ.onChange}
-            options={OPERATION_SET_FLAGS}
+            options={custom?.options}
           />
         ),
         validate: null,
