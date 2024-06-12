@@ -1,14 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, Icon, Text, Button } from "@stellar/design-system";
-import { FeeBumpTransaction, TransactionBuilder } from "@stellar/stellar-sdk";
+import { Card, Icon, Text, Button, Select } from "@stellar/design-system";
+import {
+  FeeBumpTransaction,
+  Transaction,
+  TransactionBuilder,
+  xdr,
+} from "@stellar/stellar-sdk";
 
 import { FEE_BUMP_TX_FIELDS, TX_FIELDS } from "@/constants/signTransactionPage";
 
 import { useStore } from "@/store/useStore";
 
-import { transactionSigner } from "@/helpers/transactionSigner";
+import { txSigner } from "@/helpers/txSigner";
 
 import { validate } from "@/validate";
 
@@ -27,25 +32,38 @@ export const Overview = () => {
   const { network, transaction } = useStore();
   const {
     sign,
+    updateHardWalletSigs,
     updateSignActiveView,
     updateSignImportTx,
     updateSignedTx,
+    updateBipPath,
     resetSign,
+    resetSignHardWalletSigs,
   } = transaction;
 
   const [secretInputs, setSecretInputs] = useState<string[]>([""]);
+
+  // Adding hardware wallets sig (signatures) related
+
+  const [bipPathErrorMsg, setBipPathErrorMsg] = useState<string>("");
+  const [hardwareSigSuccess, setHardwareSigSuccess] = useState<boolean>(false);
+  const [hardwareSigErrorMsg, setHardwareSigErrorMsg] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const [selectedHardware, setSelectedHardware] = useState<string>("");
+
+  // Sign tx status related
   const [signedTxSuccessMsg, setSignedTxSuccessMsg] = useState<string>("");
   const [signedTxErrorMsg, setSignedTxErrorMsg] = useState<string>("");
   const [signError, setSignError] = useState<string>("");
 
-  // @TODO bip path
-  const [bipPath, setBipPath] = useState<string>("");
-  const [bipPathErrorMsg, setBipPathErrorMsg] = useState<string>("");
-
   const HAS_SECRET_KEYS = secretInputs.some((input) => input !== "");
-  const HAS_INVALID_SECRET_KEYS = secretInputs.some((input) =>
-    validate.secretKey(input),
-  );
+  const HAS_INVALID_SECRET_KEYS = secretInputs.some((input) => {
+    if (input.length) {
+      return validate.secretKey(input);
+    }
+    return false;
+  });
 
   useEffect(() => {
     if (!sign.importTx) {
@@ -78,15 +96,17 @@ export const Overview = () => {
     setSecretInputs([...secretInputs, ""]);
   };
 
-  const signTxWithSecretKeys = (
+  const signTransaction = (
     txXdr: string,
     signers: string[],
     networkPassphrase: string,
+    hardWalletSigs: xdr.DecoratedSignature[],
   ) => {
-    const { xdr, message } = transactionSigner.secretKeys({
+    const { xdr, message } = txSigner.signTx({
       txXdr,
       signers,
       networkPassphrase,
+      hardWalletSigs: hardWalletSigs || [],
     });
 
     if (xdr && message) {
@@ -94,6 +114,64 @@ export const Overview = () => {
       setSignedTxSuccessMsg(message);
     } else if (!xdr && message) {
       setSignedTxErrorMsg(message);
+    }
+  };
+
+  const signWithHardware = async () => {
+    setHardwareSigSuccess(false);
+    updateSignedTx("");
+
+    setIsLoading(true);
+
+    let hardwareSign;
+    let hardwareSignError;
+
+    try {
+      if (selectedHardware === "ledger") {
+        const { signature, error } = await txSigner.signWithLedger({
+          bipPath: sign.bipPath,
+          transaction: sign.importTx as FeeBumpTransaction | Transaction,
+          isHash: false,
+        });
+
+        hardwareSign = signature;
+        hardwareSignError = error;
+      }
+
+      if (selectedHardware === "ledger_hash") {
+        const { signature, error } = await txSigner.signWithLedger({
+          bipPath: sign.bipPath,
+          transaction: sign.importTx as FeeBumpTransaction | Transaction,
+          isHash: true,
+        });
+
+        hardwareSign = signature;
+        hardwareSignError = error;
+      }
+
+      if (selectedHardware === "trezor") {
+        const path = `m/${sign.bipPath}`;
+
+        const { signature, error } = await txSigner.signWithTrezor({
+          bipPath: path,
+          transaction: sign.importTx as Transaction,
+        });
+
+        hardwareSign = signature;
+        hardwareSignError = error;
+      }
+
+      setIsLoading(false);
+
+      if (hardwareSign) {
+        updateHardWalletSigs(hardwareSign);
+        setHardwareSigSuccess(true);
+      } else if (hardwareSignError) {
+        setHardwareSigErrorMsg(hardwareSignError);
+      }
+    } catch (err) {
+      setIsLoading(false);
+      setHardwareSigErrorMsg(`An unexpected error occurred: ${err}`);
     }
   };
 
@@ -119,6 +197,12 @@ export const Overview = () => {
   } else if (sign.importTx) {
     mergedFields = [...REQUIRED_FIELDS, ...TX_FIELDS(sign.importTx)];
   }
+
+  const resetHardwareSign = () => {
+    resetSignHardWalletSigs();
+    setHardwareSigSuccess(false);
+    setHardwareSigErrorMsg("");
+  };
 
   return (
     <>
@@ -202,55 +286,99 @@ export const Overview = () => {
                 placeholder="Secret key (starting with S) or hash preimage (in hex)"
               />
             </div>
+            <div>
+              <Button
+                size="md"
+                variant="tertiary"
+                onClick={() => addSignature()}
+              >
+                Add signature
+              </Button>
+            </div>
+            <div className="Input__buttons full-width">
+              <Box gap="sm" direction="row">
+                <TextPicker
+                  id="bip-path"
+                  label="BIP Path"
+                  placeholder="BIP path in format: 44'/148'/0'"
+                  onChange={(e) => {
+                    updateBipPath(e.target.value);
 
-            <div className="full-width">
-              <TextPicker
-                id="bip-path"
-                label="BIP Path"
-                placeholder="BIP path in format: 44'/148'/0'"
-                onChange={(e) => {
-                  setBipPath(e.target.value);
+                    const error = validate.bipPath(e.target.value);
 
-                  const error = validate.bipPath(e.target.value);
-
-                  if (error) {
-                    setBipPathErrorMsg(error);
+                    if (error) {
+                      setBipPathErrorMsg(error);
+                    } else {
+                      setBipPathErrorMsg("");
+                    }
+                  }}
+                  error={bipPathErrorMsg || hardwareSigErrorMsg}
+                  value={sign.bipPath}
+                  success={
+                    hardwareSigSuccess
+                      ? "Successfully added a hardware wallet signature"
+                      : ""
                   }
-                }}
-                error={bipPathErrorMsg}
-                value={bipPath}
-                note="Note: Trezor devices require upper time bounds to be set (non-zero), otherwise the signature will not be verified"
-              />
+                  note="Note: Trezor devices require upper time bounds to be set (non-zero), otherwise the signature will not be verified"
+                  rightElement={
+                    <>
+                      <div className="hardware-button">
+                        <Select
+                          fieldSize="md"
+                          id="hardware-wallet-select"
+                          onChange={(
+                            event: React.ChangeEvent<HTMLSelectElement>,
+                          ) => {
+                            resetHardwareSign();
+                            setSelectedHardware(event.target.value);
+                          }}
+                        >
+                          <option value="">Select operation type</option>
+                          <option value="ledger">Ledger</option>
+                          <option value="ledger_hash">Hash with Ledger</option>
+                          <option value="trezor">Trezor</option>
+                        </Select>
+                      </div>
+                    </>
+                  }
+                />
+                <div className="hardware-sign-button">
+                  <Button
+                    disabled={!selectedHardware || !sign.bipPath}
+                    isLoading={isLoading}
+                    onClick={signWithHardware}
+                    size="md"
+                    variant="tertiary"
+                  >
+                    Sign
+                  </Button>
+                </div>
+              </Box>
             </div>
 
             <Box gap="xs" addlClassName="full-width">
               <div className="SignTx__Buttons">
                 <div>
                   <Button
-                    disabled={!HAS_SECRET_KEYS || HAS_INVALID_SECRET_KEYS}
+                    disabled={
+                      (!HAS_SECRET_KEYS || HAS_INVALID_SECRET_KEYS) &&
+                      !sign.hardWalletSigs?.length
+                    }
                     size="md"
                     variant="secondary"
                     onClick={() =>
-                      signTxWithSecretKeys(
+                      signTransaction(
                         sign.importXdr,
                         secretInputs,
                         network.passphrase,
+                        sign.hardWalletSigs,
                       )
                     }
                   >
-                    Sign with secret key
+                    Sign transaction
                   </Button>
 
                   <SignWithWallet setSignError={setSignError} />
-                </div>
-                <div>
-                  <Button
-                    size="md"
-                    variant="tertiary"
-                    onClick={() => addSignature()}
-                  >
-                    Add signature
-                  </Button>
                 </div>
               </div>
               <div>
