@@ -444,6 +444,28 @@
   color: var(--sds-clr-gray-09);
 }
 
+// Create claimable balance
+.PredicateTypeWrapper {
+  .PredicateWrapper {
+    &__split {
+      display: grid;
+      grid-template-columns: 49% 49%;
+      gap: 2%;
+      overflow: hidden;
+
+      .PredicateWrapper__split {
+        display: flex;
+        gap: 0.5rem;
+
+        & > :nth-child(2) {
+          border-top: 1px solid var(--sds-clr-gray-06);
+          padding-top: 0.5rem;
+        }
+      }
+    }
+  }
+}
+
 // Sign Transaction
 .SignTx {
   display: flex;
