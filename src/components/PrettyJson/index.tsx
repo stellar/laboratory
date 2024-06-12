@@ -52,6 +52,20 @@ export const PrettyJson = ({ json }: { json: AnyObject }) => {
               const keyProp = parentKey ? `${parentKey}-${key}` : key;
 
               if (typeof value === "object") {
+                if (value === null) {
+                  return (
+                    <div key={keyProp} className="PrettyJson__inline">
+                      <div className="PrettyJson__nested">
+                        <Key>{key}</Key>
+                      </div>
+                      <Value>
+                        null
+                        <Comma />
+                      </Value>
+                    </div>
+                  );
+                }
+
                 if (Array.isArray(value)) {
                   if (value.length === 0) {
                     return (
