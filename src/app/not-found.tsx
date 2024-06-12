@@ -1,18 +1,45 @@
 "use client";
 
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Button, Card, Heading, Icon, Text } from "@stellar/design-system";
 
 import { Routes } from "@/constants/routes";
 import { LayoutContentContainer } from "@/components/layout/LayoutContentContainer";
+import { Box } from "@/components/layout/Box";
 
-// TODO: update 404
-// TODO: keep searchParams
 export default function NotFound() {
+  const router = useRouter();
+
+  const handleBackClick = () => {
+    router.push(Routes.ROOT);
+  };
+
   return (
     <LayoutContentContainer>
-      <h2>Not Found</h2>
-      <p>Could not find requested resource</p>
-      <Link href={Routes.ROOT}>Return Home</Link>
+      <Card>
+        <Box gap="xl" align="start">
+          <Box gap="md">
+            <Heading as="h2" size="xs" weight="medium">
+              Error 404 - Page not found
+            </Heading>
+
+            <Text size="sm" as="p">
+              Oops! The page you’re looking for doesn’t exist. It might have
+              been removed, had its name changed, or is temporarily unavailable.
+            </Text>
+          </Box>
+
+          <Button
+            size="sm"
+            variant="secondary"
+            icon={<Icon.ArrowLeft />}
+            iconPosition="left"
+            onClick={handleBackClick}
+          >
+            Back to home
+          </Button>
+        </Box>
+      </Card>
     </LayoutContentContainer>
   );
 }

@@ -6,6 +6,8 @@ import { NextLink } from "@/components/NextLink";
 import { LayoutContentContainer } from "@/components/layout/LayoutContentContainer";
 import { InfoCards } from "@/components/InfoCards";
 import { SdsLink } from "@/components/SdsLink";
+import { Box } from "@/components/layout/Box";
+
 import { Routes } from "@/constants/routes";
 import { openUrl } from "@/helpers/openUrl";
 
@@ -90,18 +92,24 @@ export default function Introduction() {
       <InfoCards infoCards={infoCards} />
 
       <div className="IntroFooter">
-        <SdsLink
-          href="https://www.stellar.org/privacy-policy"
-          variant="secondary"
-        >
-          Privacy Policy
-        </SdsLink>
-        <SdsLink
-          href="https://www.stellar.org/terms-of-service"
-          variant="secondary"
-        >
-          Terms of Service
-        </SdsLink>
+        <Box gap="sm" direction="row">
+          <SdsLink
+            href="https://www.stellar.org/privacy-policy"
+            variant="secondary"
+          >
+            Privacy Policy
+          </SdsLink>
+          <SdsLink
+            href="https://www.stellar.org/terms-of-service"
+            variant="secondary"
+          >
+            Terms of Service
+          </SdsLink>
+        </Box>
+
+        {process.env.NEXT_PUBLIC_COMMIT_HASH ? (
+          <div>{`Commit hash: ${process.env.NEXT_PUBLIC_COMMIT_HASH}`}</div>
+        ) : null}
       </div>
     </LayoutContentContainer>
   );
