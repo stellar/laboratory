@@ -155,3 +155,16 @@ export type FractionValue = {
   n: string | undefined;
   d: string | undefined;
 };
+
+export type RevokeSponsorshipValue = {
+  type: SponsorshipType | string;
+  data: AnyObject;
+};
+
+export type SponsorshipType =
+  | "account"
+  | "trustline"
+  | "offer"
+  | "data"
+  | "claimable_balance"
+  | "signer";

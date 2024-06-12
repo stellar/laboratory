@@ -4,6 +4,7 @@ import { asset } from "./methods/asset";
 import { assetCode } from "./methods/assetCode";
 import { assetMulti } from "./methods/assetMulti";
 import { claimableBalanceId } from "./methods/claimableBalanceId";
+import { claimaints } from "./methods/claimants";
 import { dataName } from "./methods/dataName";
 import { dataValue } from "./methods/dataValue";
 import { bipPath } from "./methods/bipPath";
@@ -13,6 +14,7 @@ import { optionsSigner } from "./methods/optionsSigner";
 import { positiveInt } from "./methods/positiveInt";
 import { positiveNumber } from "./methods/positiveNumber";
 import { publicKey } from "./methods/publicKey";
+import { revokeSponsorship } from "./methods/revokeSponsorship";
 import { secretKey } from "./methods/secretKey";
 import { timeBounds } from "./methods/timeBounds";
 import { transactionHash } from "./methods/transactionHash";
@@ -25,6 +27,7 @@ export const validate = {
   assetCode,
   assetMulti,
   claimableBalanceId,
+  claimaints,
   dataName,
   dataValue,
   bipPath,
@@ -34,6 +37,7 @@ export const validate = {
   positiveInt,
   positiveNumber,
   publicKey,
+  revokeSponsorship,
   secretKey,
   timeBounds,
   transactionHash,

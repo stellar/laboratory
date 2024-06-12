@@ -23,11 +23,13 @@ import { sanitizeObject } from "@/helpers/sanitizeObject";
 import { TRANSACTION_OPERATIONS } from "@/constants/transactionOperations";
 import { useStore } from "@/store/useStore";
 import {
+  AnyObject,
   AssetObject,
   AssetObjectValue,
   AssetPoolShareObjectValue,
   NumberFractionValue,
   OptionSigner,
+  RevokeSponsorshipValue,
   TxnOperation,
 } from "@/types/types";
 
@@ -297,6 +299,110 @@ export const Operations = () => {
     return false;
   };
 
+  const isMissingRevokeSponsorshipFields = (
+    param: string,
+    value: RevokeSponsorshipValue | undefined,
+  ) => {
+    if (param === "revokeSponsorship") {
+      if (!value?.type || !value.data) {
+        return false;
+      }
+
+      switch (value.type) {
+        case "account":
+          return !value.data.account_id;
+        case "trustline":
+          return !(
+            value.data.account_id &&
+            value.data.asset?.code &&
+            value.data.asset?.issuer
+          );
+
+        case "offer":
+          return !(value.data.seller_id && value.data.offer_id);
+        case "data":
+          return !(value.data.account_id && value.data.data_name);
+        case "claimable_balance":
+          return !value.data.balance_id;
+        case "signer":
+          return !(
+            value.data.account_id &&
+            value.data.signer?.type &&
+            value.data.signer?.key
+          );
+        default:
+          return false;
+      }
+    }
+
+    return false;
+  };
+
+  const isMissingClaimantFields = (
+    param: string,
+    value: AnyObject[] | undefined,
+  ) => {
+    if (param === "claimants") {
+      if (!value || value.length === 0) {
+        return false;
+      }
+
+      let missing = false;
+
+      (value || []).forEach((val) => {
+        if (
+          !val.destination ||
+          !val.predicate ||
+          isEmptyObject(val.predicate)
+        ) {
+          missing = true;
+        }
+
+        // Check only if nothing is missing yet
+        if (!missing) {
+          const missingPredicate = loopPredicate(val.predicate, []);
+
+          missing = Boolean(missingPredicate && missingPredicate?.length > 0);
+        }
+      });
+
+      return missing;
+    }
+
+    return false;
+  };
+
+  const loopPredicate = (
+    predicate: AnyObject = {},
+    missingArray: boolean[],
+  ) => {
+    if (isEmptyObject(predicate)) {
+      missingArray.push(true);
+    }
+
+    Object.entries(predicate).forEach(([key, val]) => {
+      if (["relative", "absolute"].includes(key) && typeof val === "string") {
+        if (!val) {
+          missingArray.push(true);
+        }
+      }
+
+      if (Array.isArray(val)) {
+        val.forEach((v) => loopPredicate(v, missingArray));
+      } else if (typeof val === "object") {
+        if (isEmptyObject(val)) {
+          if (key !== "unconditional") {
+            missingArray.push(true);
+          }
+        } else {
+          loopPredicate(val, missingArray);
+        }
+      }
+    });
+
+    return missingArray;
+  };
+
   const validateOperationParam = ({
     opIndex,
     opParam,
@@ -380,6 +486,26 @@ export const Operations = () => {
     );
 
     if (missingFractionFields && !opParamMissingFields.includes(opParam)) {
+      opParamMissingFields = [...opParamMissingFields, opParam];
+    }
+
+    //==== Handle revoke sponsorship
+    const missingRevokeSponsorshipFields = isMissingRevokeSponsorshipFields(
+      opParam,
+      opValue,
+    );
+
+    if (
+      missingRevokeSponsorshipFields &&
+      !opParamMissingFields.includes(opParam)
+    ) {
+      opParamMissingFields = [...opParamMissingFields, opParam];
+    }
+
+    //==== Handle claimable balance claimants
+    const missingClaimantFields = isMissingClaimantFields(opParam, opValue);
+
+    if (missingClaimantFields && !opParamMissingFields.includes(opParam)) {
       opParamMissingFields = [...opParamMissingFields, opParam];
     }
 
@@ -646,7 +772,6 @@ export const Operations = () => {
             ) : null
           }
         >
-          {/* TODO: remove disabled attribute when operation is implemented */}
           <option value="">Select operation type</option>
           <option value="create_account">Create Account</option>
           <option value="payment">Payment</option>
@@ -667,7 +792,7 @@ export const Operations = () => {
           <option value="account_merge">Account Merge</option>
           <option value="manage_data">Manage Data</option>
           <option value="bump_sequence">Bump Sequence</option>
-          <option value="create_claimable_balance" disabled>
+          <option value="create_claimable_balance">
             Create Claimable Balance
           </option>
           <option value="claim_claimable_balance">
@@ -679,16 +804,12 @@ export const Operations = () => {
           <option value="end_sponsoring_future_reserves">
             End Sponsoring Future Reserves
           </option>
-          <option value="revoke_sponsorship" disabled>
-            Revoke Sponsorship
-          </option>
+          <option value="revoke_sponsorship">Revoke Sponsorship</option>
           <option value="clawback">Clawback</option>
           <option value="clawback_claimable_balance">
             Clawback Claimable Balance
           </option>
-          <option value="set_trust_line_flags" disabled>
-            Set Trust Line Flags
-          </option>
+          <option value="set_trust_line_flags">Set Trust Line Flags</option>
           <option value="liquidity_pool_deposit">Liquidity Pool Deposit</option>
           <option value="liquidity_pool_withdraw">
             Liquidity Pool Withdraw
@@ -785,6 +906,20 @@ export const Operations = () => {
                                 });
                               },
                             });
+                          case "claimants":
+                            return component.render({
+                              ...baseProps,
+                              onChange: (
+                                claimants: AnyObject[] | undefined,
+                              ) => {
+                                handleOperationParamChange({
+                                  opIndex: idx,
+                                  opParam: input,
+                                  opValue: claimants,
+                                  opType: op.operation_type,
+                                });
+                              },
+                            });
                           case "line":
                             return component.render({
                               ...baseProps,
@@ -822,6 +957,20 @@ export const Operations = () => {
                                   opIndex: idx,
                                   opParam: input,
                                   opValue: path,
+                                  opType: op.operation_type,
+                                });
+                              },
+                            });
+                          case "revokeSponsorship":
+                            return component.render({
+                              ...baseProps,
+                              onChange: (
+                                value: RevokeSponsorshipValue | undefined,
+                              ) => {
+                                handleOperationParamChange({
+                                  opIndex: idx,
+                                  opParam: input,
+                                  opValue: value,
                                   opType: op.operation_type,
                                 });
                               },
