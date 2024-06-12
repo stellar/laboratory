@@ -8,6 +8,7 @@ import {
   TransactionBuilder,
   xdr,
 } from "@stellar/stellar-sdk";
+import { SignTxActiveView } from "@/store/createStore";
 
 import { FEE_BUMP_TX_FIELDS, TX_FIELDS } from "@/constants/signTransactionPage";
 
@@ -76,7 +77,7 @@ export const Overview = () => {
 
         updateSignImportTx(transaction);
       } else {
-        updateSignActiveView("import");
+        updateSignActiveView(SignTxActiveView.import);
       }
     }
   }, [

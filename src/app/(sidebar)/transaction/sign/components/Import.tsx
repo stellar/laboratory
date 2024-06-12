@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Alert, Card, Text, Button } from "@stellar/design-system";
 import { TransactionBuilder } from "@stellar/stellar-sdk";
 
+import { SignTxActiveView } from "@/store/createStore";
 import { useStore } from "@/store/useStore";
 
 import { validate } from "@/validate";
@@ -46,11 +47,11 @@ export const Import = () => {
       updateSignImportXdr(txXdr);
 
       // change to 'overview' view when successfully imported
-      updateSignActiveView("overview");
+      updateSignActiveView(SignTxActiveView.overview);
     } catch (e) {
       setTxErrMsg("Unable to import a transaction envelope");
       updateSignImportXdr("");
-      updateSignActiveView("import");
+      updateSignActiveView(SignTxActiveView.import);
     }
   };
 

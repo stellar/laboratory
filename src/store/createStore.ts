@@ -39,6 +39,11 @@ type TransactionBuildParamsObj = {
   [K in keyof TransactionBuildParams]?: TransactionBuildParams[K];
 };
 
+export enum SignTxActiveView {
+  import = "import",
+  overview = "overview",
+}
+
 export interface Store {
   // Shared
   network: Network | EmptyObj;
@@ -86,7 +91,7 @@ export interface Store {
       };
     };
     sign: {
-      activeView: string;
+      activeView: SignTxActiveView;
       importTx: FeeBumpTransaction | Transaction | undefined;
       importXdr: string;
       signedTx: string;
@@ -115,7 +120,7 @@ export interface Store {
     resetBuildParams: () => void;
     resetBuild: () => void;
     // [Transaction] Sign Transaction actions
-    updateSignActiveView: (viewId: string) => void;
+    updateSignActiveView: (viewId: SignTxActiveView) => void;
     updateSignImportTx: (tx: FeeBumpTransaction | Transaction) => void;
     updateSignImportXdr: (xdr: string) => void;
     updateSignedTx: (tx: string) => void;
@@ -314,7 +319,7 @@ export const createStore = (options: CreateStoreOptions) =>
             set((state) => {
               state.transaction.build = initTransactionState.build;
             }),
-          updateSignActiveView: (viewId: string) =>
+          updateSignActiveView: (viewId: SignTxActiveView) =>
             set((state) => {
               state.transaction.sign.activeView = viewId;
             }),
