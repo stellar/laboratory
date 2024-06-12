@@ -166,7 +166,7 @@ const initTransactionState = {
     },
   },
   sign: {
-    activeView: "import",
+    activeView: SignTxActiveView.import,
     importTx: undefined,
     importXdr: "",
     signedTx: "",
