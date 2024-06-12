@@ -5,6 +5,7 @@ import {
   MemoType,
   FeeBumpTransaction,
   Transaction,
+  xdr,
 } from "@stellar/stellar-sdk";
 
 import { sanitizeObject } from "@/helpers/sanitizeObject";
@@ -89,6 +90,8 @@ export interface Store {
       importTx: FeeBumpTransaction | Transaction | undefined;
       importXdr: string;
       signedTx: string;
+      bipPath: string;
+      hardWalletSigs: xdr.DecoratedSignature[] | [];
     };
     // TODO: update as needed
     // simulate: AnyObject;
@@ -116,7 +119,10 @@ export interface Store {
     updateSignImportTx: (tx: FeeBumpTransaction | Transaction) => void;
     updateSignImportXdr: (xdr: string) => void;
     updateSignedTx: (tx: string) => void;
+    updateBipPath: (bipPath: string) => void;
+    updateHardWalletSigs: (signer: xdr.DecoratedSignature[]) => void;
     resetSign: () => void;
+    resetSignHardWalletSigs: () => void;
   };
 }
 
@@ -159,6 +165,8 @@ const initTransactionState = {
     importTx: undefined,
     importXdr: "",
     signedTx: "",
+    bipPath: "44'/148'/0'",
+    hardWalletSigs: [],
   },
 };
 
@@ -322,9 +330,22 @@ export const createStore = (options: CreateStoreOptions) =>
             set((state) => {
               state.transaction.sign.signedTx = tx;
             }),
+          updateBipPath: (bipPath: string) =>
+            set((state) => {
+              state.transaction.sign.bipPath = bipPath;
+            }),
+          updateHardWalletSigs: (signer: xdr.DecoratedSignature[]) =>
+            set((state) => {
+              state.transaction.sign.hardWalletSigs = signer;
+            }),
           resetSign: () =>
             set((state) => {
               state.transaction.sign = initTransactionState.sign;
+            }),
+          resetSignHardWalletSigs: () =>
+            set((state) => {
+              state.transaction.sign.hardWalletSigs =
+                initTransactionState.sign.hardWalletSigs;
             }),
         },
       })),
@@ -344,6 +365,7 @@ export const createStore = (options: CreateStoreOptions) =>
               sign: {
                 activeView: true,
                 importXdr: true,
+                bipPath: true,
               },
             },
           };

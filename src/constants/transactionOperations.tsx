@@ -1,4 +1,10 @@
 import { SdsLink } from "@/components/SdsLink";
+import {
+  OPERATION_CLEAR_FLAGS,
+  OPERATION_SET_FLAGS,
+  OPERATION_TRUSTLINE_CLEAR_FLAGS,
+  OPERATION_TRUSTLINE_SET_FLAGS,
+} from "@/constants/settings";
 import { AnyObject } from "@/types/types";
 
 type TransactionOperation = {
@@ -220,6 +226,12 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
         ),
         showWarning: true,
       },
+      set_flags: {
+        options: OPERATION_SET_FLAGS,
+      },
+      clear_flags: {
+        options: OPERATION_CLEAR_FLAGS,
+      },
     },
   },
   change_trust: {
@@ -277,6 +289,14 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     params: ["bump_to"],
     requiredParams: ["bump_to"],
   },
+  create_claimable_balance: {
+    label: "Create Claimable Balance",
+    description: "Creates a new claimable balance.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#create-claimable-balance",
+    params: ["asset", "amount", "claimants"],
+    requiredParams: ["asset", "amount", "claimants"],
+  },
   claim_claimable_balance: {
     label: "Claim Claimable Balance",
     description: "Claims a claimable balance.",
@@ -315,6 +335,14 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
       },
     },
   },
+  revoke_sponsorship: {
+    label: "Revoke Sponsorship",
+    description: "Revoke sponsorship of a ledger entry.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#revoke-sponsorship",
+    params: ["revokeSponsorship"],
+    requiredParams: ["revokeSponsorship"],
+  },
   clawback_claimable_balance: {
     label: "Clawback Claimable Balance",
     description: "Creates a clawback operation for a claimable balance.",
@@ -322,5 +350,81 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
       "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#clawback-claimable-balance",
     params: ["balance_id"],
     requiredParams: ["balance_id"],
+  },
+  set_trust_line_flags: {
+    label: "Set Trust Line Flags",
+    description: "Creates a trustline flag configuring operation.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#set-trustline-flags",
+    params: ["asset", "trustor", "set_flags", "clear_flags"],
+    requiredParams: ["asset", "trustor"],
+    custom: {
+      asset: {
+        includeNative: false,
+      },
+      set_flags: {
+        options: OPERATION_TRUSTLINE_SET_FLAGS,
+      },
+      clear_flags: {
+        options: OPERATION_TRUSTLINE_CLEAR_FLAGS,
+      },
+    },
+  },
+  liquidity_pool_deposit: {
+    label: "Liquidity Pool Deposit",
+    description: "Deposits assets into a liquidity pool.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#liquidity-pool-deposit",
+    params: [
+      "liquidity_pool_id",
+      "max_amount_a",
+      "max_amount_b",
+      "min_price",
+      "max_price",
+    ],
+    requiredParams: [
+      "liquidity_pool_id",
+      "max_amount_a",
+      "max_amount_b",
+      "min_price",
+      "max_price",
+    ],
+    custom: {
+      max_amount_a: {
+        label: "Max Amount A",
+      },
+      max_amount_b: {
+        label: "Max Amount B",
+      },
+      min_price: {
+        label: "Min Price",
+        note: "Minimum depositA/depositB price.",
+      },
+      max_price: {
+        label: "Max Price",
+        note: "Maximum depositA/depositB price.",
+      },
+    },
+  },
+  liquidity_pool_withdraw: {
+    label: "Liquidity Pool Withdraw",
+    description: "Withdraw assets from a liquidity pool.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#liquidity-pool-withdraw",
+    params: ["liquidity_pool_id", "amount", "min_amount_a", "min_amount_b"],
+    requiredParams: [
+      "liquidity_pool_id",
+      "amount",
+      "min_amount_a",
+      "min_amount_b",
+    ],
+    custom: {
+      min_amount_a: {
+        label: "Min Amount A",
+      },
+      min_amount_b: {
+        label: "Min Amount B",
+      },
+    },
   },
 };
