@@ -66,7 +66,7 @@ export const Import = () => {
       <Card>
         <div className="SignTx__xdr">
           <XdrPicker
-            id="sign-transaction-xdr"
+            id="sign-tx-xdr"
             label="Import a transaction envelope in XDR format"
             value={txXdr || ""}
             error={txErrMsg}
