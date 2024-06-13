@@ -13,6 +13,10 @@ const validateBase64 = (value: string) => {
 };
 
 export const xdr = (value: string) => {
+  if (!value) {
+    return undefined;
+  }
+
   const sanitizedXdr = trim(value);
   const base64Validation = validateBase64(sanitizedXdr);
 

@@ -74,7 +74,7 @@ export default function ViewXdr() {
     } catch (e) {
       return {
         jsonString: "",
-        error: `Unable to decode input as ${xdr.type}`,
+        error: `Unable to decode input as ${xdr.type}: ${e}`,
       };
     }
   };

@@ -54,6 +54,15 @@ type TemplateRenderIncludeFailedProps = {
   isRequired?: boolean;
 };
 
+type TemplateRenderTxProps = {
+  value: string | undefined;
+  error:
+    | { result: string; message: "string"; originalError?: string }
+    | undefined;
+  onChange: (val: any) => void;
+  isRequired?: boolean;
+};
+
 type FormComponentTemplateEndpointsProps = {
   render: (...args: any[]) => JSX.Element;
   validate: ((...args: any[]) => any) | null;
@@ -656,14 +665,14 @@ export const formComponentTemplateEndpoints = (
       };
     case "tx":
       return {
-        render: (templ: TemplateRenderProps) => (
+        render: (templ: TemplateRenderTxProps) => (
           <XdrPicker
             key={id}
             id={id}
             label="Transaction Envelope XDR"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={templ.value || ""}
-            error={templ.error}
+            error={templ.error?.result === "error" ? templ.error?.message : ""}
             onChange={templ.onChange}
           />
         ),
