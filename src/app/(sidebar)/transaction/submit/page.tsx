@@ -1,23 +1,23 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Button, Card, Icon, Text } from "@stellar/design-system";
+import { useState } from "react";
+import { Button, Card, Text } from "@stellar/design-system";
 import { Horizon, TransactionBuilder } from "@stellar/stellar-sdk";
 
 import { useStore } from "@/store/useStore";
-
-import { validate } from "@/validate";
 
 import * as StellarXdr from "@/helpers/StellarXdr";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
-import { useSubmitTx } from "@/query/useSubmitTx";
+import { TransactionResponse, useSubmitTx } from "@/query/useSubmitTx";
 
 import { Box } from "@/components/layout/Box";
 import { PrettyJson } from "@/components/PrettyJson";
 import { Tabs } from "@/components/Tabs";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
+import { ValidationResponseCard } from "@/components/ValidationResponseCard";
+import { ErrorResponse } from "./components/ErrorResponse";
 
 export default function SubmitTransaction() {
   const { network, transaction } = useStore();
@@ -28,56 +28,28 @@ export default function SubmitTransaction() {
   const isXdrInit = useIsXdrInit();
 
   const [activeTab, setActiveTab] = useState<string>("json");
-  // const [txXdr, setTxXdr] = useState<string>("");
-  const [txErrMsg, setTxErrMsg] = useState<string>("");
-  const [txSuccessMsg, setTxSuccessMsg] = useState<string>("");
+  const [txErr, setTxErr] = useState<any | null>(null);
 
-  const { mutate, status } = useSubmitTx();
+  const [txResponse, setTxResponse] = useState<TransactionResponse | null>(
+    null,
+  );
 
-  // const onChange = (value: string) => {
-  //   // reset messages onChange
-  //   setTxErrMsg("");
-  //   setTxSuccessMsg("");
-  //   setTxXdr(value);
+  const submitTx = useSubmitTx();
 
-  //   updateXdrBlob(value);
+  const onSubmit = () => {
+    const transaction = TransactionBuilder.fromXDR(xdrBlob, network.passphrase);
 
-  //   if (value.length > 0) {
-  //     const validatedXDR = validate.xdr(value);
+    const server = new Horizon.Server(network.horizonUrl, {
+      appName: "Laboratory",
+    });
 
-  //     if (validatedXDR.result === "success") {
-  //       setTxSuccessMsg(validatedXDR.message);
-  //     } else {
-  //       setTxErrMsg(validatedXDR.message);
-  //     }
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (isLatestTxnSuccess && latestTxn) {
-  //     updateXdrBlob(latestTxn);
-  //     updateXdrType("TransactionEnvelope");
-  //   }
-  // }, [isLatestTxnSuccess, latestTxn, updateXdrBlob, updateXdrType]);
-
-  const onSubmit = async () => {
-    console.log("onSubmit");
-
-    try {
-      const transaction = TransactionBuilder.fromXDR(
-        xdrBlob,
-        network.passphrase,
-      );
-      // console.log("tx:")
-      const server = new Horizon.Server(network.horizonUrl, {
-        appName: "Laboratory",
-      });
-      const response = mutate(transaction, server);
-
-      console.log("response: ", response);
-    } catch (e) {
-      setTxErrMsg("Unable to import a transaction envelope");
-    }
+    submitTx.mutate(
+      { transaction, server },
+      {
+        onSuccess: (res) => setTxResponse(res),
+        onError: (res) => setTxErr(res),
+      },
+    );
   };
 
   const xdrDecodeJson = () => {
@@ -119,7 +91,6 @@ export default function SubmitTransaction() {
             label="Input a base-64 encoded TransactionEnvelope:"
             value={xdrBlob}
             error={xdrJsonDecoded?.error || ""}
-            success={txSuccessMsg}
             onChange={(e) => {
               updateXdrBlob(e.target.value);
             }}
@@ -130,6 +101,7 @@ export default function SubmitTransaction() {
           <div className="SignTx__CTA">
             <Button
               disabled={!xdrBlob || Boolean(xdrJsonDecoded?.error)}
+              isLoading={submitTx.status === "pending"}
               size="md"
               variant={"secondary"}
               onClick={onSubmit}
@@ -169,6 +141,60 @@ export default function SubmitTransaction() {
           </>
         </div>
       </Card>
+      <>
+        {submitTx.status === "success" && txResponse ? (
+          <ValidationResponseCard
+            variant="success"
+            title="Transaction submitted!"
+            subtitle={`Transaction succeeded with ${txResponse.operation_count} operation(s)`}
+            response={
+              <Box gap="xs">
+                <div>
+                  <div>Hash:</div>
+                  <div>{txResponse.hash}</div>
+                </div>
+                <div>
+                  <div>Ledger number:</div>
+                  <div>{txResponse.ledger}</div>
+                </div>
+                <div>
+                  <div>Paging token:</div>
+                  <div>{txResponse.paging_token}</div>
+                </div>
+                <div>
+                  <div>Result XDR:</div>
+                  <div>{txResponse.result_xdr}</div>
+                </div>
+                <div>
+                  <div>Result Meta XDR:</div>
+                  <div>{txResponse.result_meta_xdr}</div>
+                </div>
+                <div>
+                  <div>Fee Meta XDR:</div>
+                  <div>{txResponse.fee_meta_xdr}</div>
+                </div>
+              </Box>
+            }
+            note={<></>}
+            footerLeftEl={
+              <Button
+                size="md"
+                variant="tertiary"
+                onClick={() => {
+                  alert("TODO: handle sign transaction flow");
+                }}
+              >
+                View on stellar.expert
+              </Button>
+            }
+          />
+        ) : null}
+      </>
+      <>
+        {submitTx.status === "error" && txErr ? (
+          <ErrorResponse error={txErr} />
+        ) : null}
+      </>
     </Box>
   );
 }
