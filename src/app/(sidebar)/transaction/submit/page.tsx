@@ -29,7 +29,6 @@ export default function SubmitTransaction() {
 
   const [activeTab, setActiveTab] = useState<string>("json");
   const [txErr, setTxErr] = useState<any | null>(null);
-
   const [txResponse, setTxResponse] = useState<TransactionResponse | null>(
     null,
   );
@@ -175,18 +174,20 @@ export default function SubmitTransaction() {
                 </div>
               </Box>
             }
-            note={<></>}
-            footerLeftEl={
-              <Button
-                size="md"
-                variant="tertiary"
-                onClick={() => {
-                  alert("TODO: handle sign transaction flow");
-                }}
-              >
-                View on stellar.expert
-              </Button>
-            }
+            // @TODO: the current lab doesn't support displaying stellar.expert
+            // To confirm with Charles
+            // note={<></>}
+            // footerLeftEl={
+            //   <Button
+            //     size="md"
+            //     variant="tertiary"
+            //     onClick={() => {
+            //       alert("TODO: handle sign transaction flow");
+            //     }}
+            //   >
+            //     View on stellar.expert
+            //   </Button>
+            // }
           />
         ) : null}
       </>
