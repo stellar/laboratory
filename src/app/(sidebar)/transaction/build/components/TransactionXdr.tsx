@@ -6,6 +6,7 @@ import { stringify } from "lossless-json";
 import { StrKey, TransactionBuilder } from "@stellar/stellar-sdk";
 import { set } from "lodash";
 import * as StellarXdr from "@/helpers/StellarXdr";
+import { useRouter } from "next/navigation";
 
 import { SdsLink } from "@/components/SdsLink";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
@@ -39,11 +40,13 @@ const MAX_INT64 = "9223372036854775807";
 
 export const TransactionXdr = () => {
   const { transaction, network } = useStore();
+  const router = useRouter();
   const {
     params: txnParams,
     operations: txnOperations,
     isValid,
   } = transaction.build;
+  const { updateSignActiveView, updateSignImportXdr } = transaction;
 
   const [isReady, setIsReady] = useState(false);
 
@@ -555,7 +558,10 @@ export const TransactionXdr = () => {
                 size="md"
                 variant="secondary"
                 onClick={() => {
-                  alert("TODO: handle sign transaction flow");
+                  updateSignImportXdr(txnXdr.xdr);
+                  updateSignActiveView("overview");
+
+                  router.push("/transaction/sign");
                 }}
               >
                 Sign in Transaction Signer
