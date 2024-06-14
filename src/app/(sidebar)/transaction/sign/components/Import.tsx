@@ -30,10 +30,12 @@ export const Import = () => {
     if (value.length > 0) {
       const validatedXDR = validate.xdr(value);
 
-      if (validatedXDR.result === "success") {
-        setTxSuccessMsg(validatedXDR.message);
-      } else {
-        setTxErrMsg(validatedXDR.message);
+      if (validatedXDR?.result && validatedXDR.message) {
+        if (validatedXDR.result === "success") {
+          setTxSuccessMsg(validatedXDR.message);
+        } else {
+          setTxErrMsg(validatedXDR.message);
+        }
       }
     }
   };
