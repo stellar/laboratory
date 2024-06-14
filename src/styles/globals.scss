@@ -22,6 +22,11 @@
   // TODO: remove once fixed in SDS
   select {
     outline: none !important;
+
+    optgroup {
+      background-color: var(--Select-color-background-option);
+      color: var(--Select-color-text);
+    }
   }
 }
 

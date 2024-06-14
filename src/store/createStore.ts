@@ -95,10 +95,6 @@ export interface Store {
       bipPath: string;
       hardWalletSigs: xdr.DecoratedSignature[] | [];
     };
-    // TODO: update as needed
-    // simulate: AnyObject;
-    // submit: AnyObject;
-    // feeBump: AnyObject;
     // [Transaction] Build Transaction actions
     updateBuildActiveTab: (tabId: string) => void;
     updateBuildParams: (params: TransactionBuildParamsObj) => void;
@@ -125,6 +121,15 @@ export interface Store {
     updateHardWalletSigs: (signer: xdr.DecoratedSignature[]) => void;
     resetSign: () => void;
     resetSignHardWalletSigs: () => void;
+  };
+
+  // XDR
+  xdr: {
+    blob: string;
+    type: string;
+    updateXdrBlob: (blob: string) => void;
+    updateXdrType: (type: string) => void;
+    resetXdr: () => void;
   };
 }
 
@@ -180,6 +185,11 @@ const initAccountState = {
   parsedMuxedAccountInput: undefined,
   generatedMuxedAccount: {},
   parsedMuxedAccount: {},
+};
+
+const initXdrState = {
+  blob: "",
+  type: "TransactionEnvelope",
 };
 
 // Store
@@ -350,6 +360,22 @@ export const createStore = (options: CreateStoreOptions) =>
                 initTransactionState.sign.hardWalletSigs;
             }),
         },
+        xdr: {
+          ...initXdrState,
+          updateXdrBlob: (blob: string) =>
+            set((state) => {
+              state.xdr.blob = blob;
+            }),
+          updateXdrType: (type: string) =>
+            set((state) => {
+              state.xdr.type = type;
+            }),
+          resetXdr: () =>
+            set((state) => {
+              state.xdr.blob = initXdrState.blob;
+              state.xdr.type = initXdrState.type;
+            }),
+        },
       })),
       {
         url: options.url,
@@ -369,6 +395,10 @@ export const createStore = (options: CreateStoreOptions) =>
                 importXdr: true,
                 bipPath: true,
               },
+            },
+            xdr: {
+              blob: true,
+              type: true,
             },
           };
         },
