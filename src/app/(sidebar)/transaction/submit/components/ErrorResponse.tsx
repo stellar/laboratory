@@ -10,10 +10,10 @@ import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 interface ErrorProps {
   error: NetworkError & {
     response: {
-      data: {
-        extras: {
-          result_codes: string;
-          result_xdr: string;
+      data?: {
+        extras?: {
+          result_codes?: string;
+          result_xdr?: string;
         };
       };
     };
