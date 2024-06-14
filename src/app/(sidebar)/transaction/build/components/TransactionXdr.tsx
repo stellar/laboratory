@@ -7,7 +7,6 @@ import { StrKey, TransactionBuilder } from "@stellar/stellar-sdk";
 import { set } from "lodash";
 import * as StellarXdr from "@/helpers/StellarXdr";
 import { useRouter } from "next/navigation";
-import { SignTxActiveView } from "@/store/createStore";
 
 import { SdsLink } from "@/components/SdsLink";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
@@ -560,7 +559,7 @@ export const TransactionXdr = () => {
                 variant="secondary"
                 onClick={() => {
                   updateSignImportXdr(txnXdr.xdr);
-                  updateSignActiveView(SignTxActiveView.overview);
+                  updateSignActiveView("overview");
 
                   router.push("/transaction/sign");
                 }}

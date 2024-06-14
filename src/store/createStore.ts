@@ -39,10 +39,7 @@ type TransactionBuildParamsObj = {
   [K in keyof TransactionBuildParams]?: TransactionBuildParams[K];
 };
 
-export enum SignTxActiveView {
-  import = "import",
-  overview = "overview",
-}
+export type SignTxActiveView = "import" | "overview";
 
 export interface Store {
   // Shared
@@ -166,7 +163,7 @@ const initTransactionState = {
     },
   },
   sign: {
-    activeView: SignTxActiveView.import,
+    activeView: "import",
     importTx: undefined,
     importXdr: "",
     signedTx: "",

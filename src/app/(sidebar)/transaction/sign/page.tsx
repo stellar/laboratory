@@ -1,6 +1,5 @@
 "use client";
 
-import { SignTxActiveView } from "@/store/createStore";
 import { useStore } from "@/store/useStore";
 
 import { Import } from "./components/Import";
@@ -12,11 +11,7 @@ export default function SignTransaction() {
 
   return (
     <div className="SignTx">
-      {sign.activeView === SignTxActiveView.overview ? (
-        <Overview />
-      ) : (
-        <Import />
-      )}
+      {sign.activeView === "overview" ? <Overview /> : <Import />}
     </div>
   );
 }
