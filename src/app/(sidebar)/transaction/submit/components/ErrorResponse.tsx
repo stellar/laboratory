@@ -29,26 +29,42 @@ export const ErrorResponse = ({ error }: ErrorProps) => {
       <Box gap="xs">
         <div>
           <div>Destination account:</div>
-          <div>{error.accountId}</div>
+          <Box gap="sm" direction="row">
+            <div></div>
+            <div>{error.accountId}</div>
+          </Box>
         </div>
         <div>
           <div>Operation index:</div>
-          {error.operationIndex}
+          <Box gap="sm" direction="row">
+            <div></div>
+            <div>{error.operationIndex}</div>
+          </Box>
         </div>
       </Box>
     );
-  } else if (error?.response) {
-    const { result_codes, result_xdr } = error.response.data?.extras || {};
+  } else if (
+    error?.response &&
+    error.response.data?.extras?.result_codes &&
+    error.response.data?.extras.result_xdr
+  ) {
+    const { result_codes, result_xdr } = error.response.data.extras;
     message = error.message;
     extras = (
       <Box gap="xs">
-        <div>
-          <div>extras.result_codes:</div>
+        <div>extras.result_codes:</div>
+
+        <Box gap="sm" direction="row">
+          <div></div>
           <div>{JSON.stringify(result_codes)}</div>
-        </div>
+        </Box>
+
         <div>
           <div>Result XDR:</div>
-          <div>{result_xdr}</div>
+          <Box gap="sm" direction="row">
+            <div></div>
+            <div>{result_xdr}</div>
+          </Box>
         </div>
       </Box>
     );
@@ -61,7 +77,10 @@ export const ErrorResponse = ({ error }: ErrorProps) => {
       <Box gap="xs">
         <div>
           <div>original error:</div>
-          <div>{JSON.stringify(error, null, 2)}</div>
+          <Box gap="sm" direction="row">
+            <div></div>
+            <div>{JSON.stringify(error, null, 2)}</div>
+          </Box>
         </div>
       </Box>
     );

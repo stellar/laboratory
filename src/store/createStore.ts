@@ -95,9 +95,6 @@ export interface Store {
       bipPath: string;
       hardWalletSigs: xdr.DecoratedSignature[] | [];
     };
-    submit: {
-      xdrBlob: string;
-    };
     // [Transaction] Build Transaction actions
     updateBuildActiveTab: (tabId: string) => void;
     updateBuildParams: (params: TransactionBuildParamsObj) => void;
@@ -124,8 +121,6 @@ export interface Store {
     updateHardWalletSigs: (signer: xdr.DecoratedSignature[]) => void;
     resetSign: () => void;
     resetSignHardWalletSigs: () => void;
-    // [Transaction] Submit Transaction actions
-    updateXdrBlob: (blob: string) => void;
   };
 
   // XDR
@@ -179,9 +174,6 @@ const initTransactionState = {
     signedTx: "",
     bipPath: "44'/148'/0'",
     hardWalletSigs: [],
-  },
-  submit: {
-    xdrBlob: "",
   },
 };
 
@@ -366,10 +358,6 @@ export const createStore = (options: CreateStoreOptions) =>
             set((state) => {
               state.transaction.sign.hardWalletSigs =
                 initTransactionState.sign.hardWalletSigs;
-            }),
-          updateXdrBlob: (blob: string) =>
-            set((state) => {
-              state.transaction.submit.xdrBlob = blob;
             }),
         },
         xdr: {

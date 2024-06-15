@@ -14,29 +14,24 @@ import { TransactionResponse, useSubmitTx } from "@/query/useSubmitTx";
 
 import { Box } from "@/components/layout/Box";
 import { PrettyJson } from "@/components/PrettyJson";
-import { Tabs } from "@/components/Tabs";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { ErrorResponse } from "./components/ErrorResponse";
 
 export default function SubmitTransaction() {
-  const { network, transaction } = useStore();
-  const { updateXdrBlob, submit } = transaction;
+  const { network, xdr } = useStore();
+  const { blob, updateXdrBlob } = xdr;
 
-  const { xdrBlob } = submit;
-
-  const isXdrInit = useIsXdrInit();
-
-  const [activeTab, setActiveTab] = useState<string>("json");
   const [txErr, setTxErr] = useState<any | null>(null);
   const [txResponse, setTxResponse] = useState<TransactionResponse | null>(
     null,
   );
 
+  const isXdrInit = useIsXdrInit();
   const submitTx = useSubmitTx();
 
   const onSubmit = () => {
-    const transaction = TransactionBuilder.fromXDR(xdrBlob, network.passphrase);
+    const transaction = TransactionBuilder.fromXDR(blob, network.passphrase);
 
     const server = new Horizon.Server(network.horizonUrl, {
       appName: "Laboratory",
@@ -51,15 +46,15 @@ export default function SubmitTransaction() {
     );
   };
 
-  const xdrDecodeJson = () => {
+  const getXdrJson = () => {
     const xdrType = "TransactionEnvelope";
 
-    if (!(isXdrInit && xdrBlob)) {
+    if (!(isXdrInit && blob)) {
       return null;
     }
 
     try {
-      const xdrJson = StellarXdr.decode(xdrType, xdrBlob);
+      const xdrJson = StellarXdr.decode(xdrType, blob);
 
       return {
         jsonString: xdrJson,
@@ -68,13 +63,12 @@ export default function SubmitTransaction() {
     } catch (e) {
       return {
         jsonString: "",
-        error: `Unable to decode input as TransactionEnvelope`,
+        error: `Unable to decode input as ${xdrType}`,
       };
     }
   };
 
-  const xdrJsonDecoded = xdrDecodeJson();
-  const isXdrData = Boolean(xdrJsonDecoded?.jsonString);
+  const xdrJson = getXdrJson();
 
   return (
     <Box gap="md">
@@ -84,12 +78,12 @@ export default function SubmitTransaction() {
         </Text>
       </div>
       <Card>
-        <div className="SignTx__xdr">
+        <Box gap="md">
           <XdrPicker
             id="submit-tx-xdr"
             label="Input a base-64 encoded TransactionEnvelope:"
-            value={xdrBlob}
-            error={xdrJsonDecoded?.error || ""}
+            value={blob}
+            error={xdrJson?.error || ""}
             onChange={(e) => {
               updateXdrBlob(e.target.value);
             }}
@@ -99,7 +93,7 @@ export default function SubmitTransaction() {
 
           <div className="SignTx__CTA">
             <Button
-              disabled={!xdrBlob || Boolean(xdrJsonDecoded?.error)}
+              disabled={!blob || Boolean(xdrJson?.error)}
               isLoading={submitTx.status === "pending"}
               size="md"
               variant={"secondary"}
@@ -111,34 +105,24 @@ export default function SubmitTransaction() {
 
           <Box gap="lg" direction="row" align="center" justify="end">
             <div>
-              {isXdrData ? (
-                <Tabs
-                  tabs={[
-                    { id: "json", label: "JSON" },
-                    { id: "decoded", label: "Decoded XDR" },
-                  ]}
-                  activeTabId={activeTab}
-                  onChange={(id) => {
-                    setActiveTab(id);
-                  }}
-                />
+              {xdrJson?.jsonString ? (
+                <div className="Tabs">
+                  <div className="Tab" data-is-active="true">
+                    JSON
+                  </div>
+                </div>
               ) : null}
             </div>
           </Box>
-          <>
-            {activeTab === "json" && xdrJsonDecoded?.jsonString ? (
-              <div className="PageBody__content PageBody__scrollable">
-                <PrettyJson json={JSON.parse(xdrJsonDecoded.jsonString)} />
-              </div>
-            ) : null}
 
-            {activeTab === "decoded" ? (
+          <>
+            {xdrJson?.jsonString ? (
               <div className="PageBody__content PageBody__scrollable">
-                TODO: Decoded XDR
+                <PrettyJson json={JSON.parse(xdrJson.jsonString)} />
               </div>
             ) : null}
           </>
-        </div>
+        </Box>
       </Card>
       <>
         {submitTx.status === "success" && txResponse ? (
@@ -174,20 +158,6 @@ export default function SubmitTransaction() {
                 </div>
               </Box>
             }
-            // @TODO: the current lab doesn't support displaying stellar.expert
-            // To confirm with Charles
-            // note={<></>}
-            // footerLeftEl={
-            //   <Button
-            //     size="md"
-            //     variant="tertiary"
-            //     onClick={() => {
-            //       alert("TODO: handle sign transaction flow");
-            //     }}
-            //   >
-            //     View on stellar.expert
-            //   </Button>
-            // }
           />
         ) : null}
       </>
