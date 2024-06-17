@@ -3,11 +3,10 @@ import { NextRequest, NextResponse } from "next/server";
 export function middleware(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
 
+  // script-src 'unsafe-eval' is needed for XDR JSON WebAssembly scripts
   const cspHeader = `
     default-src 'self';
-    script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: 'unsafe-inline' ${
-      process.env.NODE_ENV === "production" ? "" : `'unsafe-eval'`
-    };
+    script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: 'unsafe-inline' 'unsafe-eval';
     style-src 'self' https://fonts.googleapis.com ${
       process.env.NODE_ENV === "production"
         ? `'nonce-${nonce}'`
