@@ -5,6 +5,7 @@ import {
 } from "@stellar/stellar-sdk";
 
 import { Box } from "@/components/layout/Box";
+import { TxResponse } from "@/components/TxResponse";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 
 interface ErrorProps {
@@ -27,20 +28,8 @@ export const ErrorResponse = ({ error }: ErrorProps) => {
     message = "This destination requires a memo.";
     extras = (
       <Box gap="xs">
-        <div>
-          <div>Destination account:</div>
-          <Box gap="sm" direction="row">
-            <div></div>
-            <div>{error.accountId}</div>
-          </Box>
-        </div>
-        <div>
-          <div>Operation index:</div>
-          <Box gap="sm" direction="row">
-            <div></div>
-            <div>{error.operationIndex}</div>
-          </Box>
-        </div>
+        <TxResponse label="Destination account:" value={error.accountId} />
+        <TxResponse label="Operation index:" value={error.operationIndex} />
       </Box>
     );
   } else if (
@@ -52,20 +41,12 @@ export const ErrorResponse = ({ error }: ErrorProps) => {
     message = error.message;
     extras = (
       <Box gap="xs">
-        <div>extras.result_codes:</div>
+        <TxResponse
+          label="extras.result_codes:"
+          value={JSON.stringify(result_codes)}
+        />
 
-        <Box gap="sm" direction="row">
-          <div></div>
-          <div>{JSON.stringify(result_codes)}</div>
-        </Box>
-
-        <div>
-          <div>Result XDR:</div>
-          <Box gap="sm" direction="row">
-            <div></div>
-            <div>{result_xdr}</div>
-          </Box>
-        </div>
+        <TxResponse label="Result XDR:" value={result_xdr} />
       </Box>
     );
   } else {
@@ -75,13 +56,10 @@ export const ErrorResponse = ({ error }: ErrorProps) => {
         : "An unknown error occurred.";
     extras = (
       <Box gap="xs">
-        <div>
-          <div>original error:</div>
-          <Box gap="sm" direction="row">
-            <div></div>
-            <div>{JSON.stringify(error, null, 2)}</div>
-          </Box>
-        </div>
+        <TxResponse
+          label="original error:"
+          value={JSON.stringify(error, null, 2)}
+        />
       </Box>
     );
   }

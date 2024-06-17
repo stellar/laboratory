@@ -1,0 +1,7 @@
+@use "../../styles/utils.scss" as *;
+
+.TxResponse {
+  &__value {
+    margin-left: calc(var(--sds-gap-sm));
+  }
+}

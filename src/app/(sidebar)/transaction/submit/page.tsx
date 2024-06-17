@@ -16,6 +16,7 @@ import { Box } from "@/components/layout/Box";
 import { PrettyJson } from "@/components/PrettyJson";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
+import { TxResponse } from "@/components/TxResponse";
 import { ErrorResponse } from "./components/ErrorResponse";
 
 export default function SubmitTransaction() {
@@ -132,30 +133,21 @@ export default function SubmitTransaction() {
             subtitle={`Transaction succeeded with ${txResponse.operation_count} operation(s)`}
             response={
               <Box gap="xs">
-                <div>
-                  <div>Hash:</div>
-                  <div>{txResponse.hash}</div>
-                </div>
-                <div>
-                  <div>Ledger number:</div>
-                  <div>{txResponse.ledger}</div>
-                </div>
-                <div>
-                  <div>Paging token:</div>
-                  <div>{txResponse.paging_token}</div>
-                </div>
-                <div>
-                  <div>Result XDR:</div>
-                  <div>{txResponse.result_xdr}</div>
-                </div>
-                <div>
-                  <div>Result Meta XDR:</div>
-                  <div>{txResponse.result_meta_xdr}</div>
-                </div>
-                <div>
-                  <div>Fee Meta XDR:</div>
-                  <div>{txResponse.fee_meta_xdr}</div>
-                </div>
+                <TxResponse label="Hash:" value={txResponse.hash} />
+                <TxResponse label="Ledger number:" value={txResponse.ledger} />
+                <TxResponse
+                  label="Paging token:"
+                  value={txResponse.paging_token}
+                />
+                <TxResponse label="Result XDR:" value={txResponse.result_xdr} />
+                <TxResponse
+                  label="Result Meta XDR:"
+                  value={txResponse.result_meta_xdr}
+                />
+                <TxResponse
+                  label="Fee Meta XDR:"
+                  value={txResponse.fee_meta_xdr}
+                />
               </Box>
             }
           />
