@@ -9,6 +9,7 @@ import {
   Loader,
   Button,
   Icon,
+  CopyText,
 } from "@stellar/design-system";
 import { useLatestTxn } from "@/query/useLatestTxn";
 import * as StellarXdr from "@/helpers/StellarXdr";
@@ -141,17 +142,31 @@ export default function ViewXdr() {
 
           <>
             {xdrJsonDecoded?.jsonString ? (
-              <div className="PageBody__content PageBody__scrollable">
-                <PrettyJson json={JSON.parse(xdrJsonDecoded.jsonString)} />
-              </div>
+              <Box gap="lg">
+                <div className="PageBody__content PageBody__scrollable">
+                  <PrettyJson json={JSON.parse(xdrJsonDecoded.jsonString)} />
+                </div>
+
+                <Box gap="md" direction="row" justify="end">
+                  <CopyText textToCopy={xdrJsonDecoded.jsonString}>
+                    <Button
+                      size="md"
+                      variant="tertiary"
+                      icon={<Icon.Copy01 />}
+                      iconPosition="left"
+                    >
+                      Copy JSON
+                    </Button>
+                  </CopyText>
+                </Box>
+              </Box>
             ) : null}
           </>
         </Box>
       </Card>
 
       <Alert variant="primary" placement="inline">
-        You can use use this tool to decode XDR into JSON and into
-        human-readable format of XDR (decoded XDR).{" "}
+        You can use use this tool to decode XDR into JSON.{" "}
         <SdsLink href="https://developers.stellar.org/docs/encyclopedia/xdr">
           External Data Representation
         </SdsLink>{" "}
