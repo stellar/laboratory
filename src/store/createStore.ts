@@ -402,7 +402,6 @@ export const createStore = (options: CreateStoreOptions) =>
             },
           };
         },
-        key: "||",
       },
     ),
   );
