@@ -22,15 +22,17 @@ import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { PrettyJson } from "@/components/PrettyJson";
 import { Tabs } from "@/components/Tabs";
 
+import { useIsXdrInit } from "@/hooks/useIsXdrInit";
+
 import { useStore } from "@/store/useStore";
 
 export default function ViewXdr() {
   const { xdr, network } = useStore();
   const { updateXdrBlob, updateXdrType, resetXdr } = xdr;
 
-  const [isReady, setIsReady] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("json");
 
+  const isXdrInit = useIsXdrInit();
   const {
     data: latestTxn,
     error: latestTxnError,
@@ -39,16 +41,6 @@ export default function ViewXdr() {
     isLoading: isLatestTxnLoading,
     refetch: fetchLatestTxn,
   } = useLatestTxn(network.horizonUrl);
-
-  useEffect(() => {
-    // Stellar XDR init
-    const init = async () => {
-      await StellarXdr.init();
-      setIsReady(true);
-    };
-
-    init();
-  }, []);
 
   useEffect(() => {
     if (isLatestTxnSuccess && latestTxn) {
@@ -60,7 +52,7 @@ export default function ViewXdr() {
   const isFetchingLatestTxn = isLatestTxnFetching || isLatestTxnLoading;
 
   const xdrDecodeJson = () => {
-    if (!(isReady && xdr.blob && xdr.type)) {
+    if (!(isXdrInit && xdr.blob && xdr.type)) {
       return null;
     }
 
