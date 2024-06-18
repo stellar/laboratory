@@ -38,15 +38,17 @@ export default function FundAccount() {
     publicKey: generatedPublicKey,
   });
 
+  const { reset } = account;
+
   useEffect(() => {
     if (
       account.registeredNetwork?.id &&
       account.registeredNetwork.id !== network.id
     ) {
-      account.reset();
+      reset();
       setShowAlert(false);
     }
-  }, [account.registeredNetwork, network.id]);
+  }, [account.registeredNetwork, network.id, reset]);
 
   useEffect(() => {
     if (isError || isSuccess) {
