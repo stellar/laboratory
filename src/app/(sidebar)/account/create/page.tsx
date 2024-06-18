@@ -35,10 +35,12 @@ export default function CreateAccount() {
     [queryClient],
   );
 
+  const { reset } = account;
+
   const resetStates = useCallback(() => {
-    account.reset();
+    reset();
     resetQuery();
-  }, [resetQuery]);
+  }, [reset, resetQuery]);
 
   const { error, isError, isFetching, isLoading, isSuccess, refetch } =
     useFriendBot({
@@ -60,7 +62,7 @@ export default function CreateAccount() {
       resetStates();
       setShowAlert(false);
     }
-  }, [account.registeredNetwork, network.id]);
+  }, [account.registeredNetwork, network.id, resetStates]);
 
   const generateKeypair = () => {
     resetStates();
