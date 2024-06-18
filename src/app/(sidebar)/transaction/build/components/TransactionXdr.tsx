@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Button } from "@stellar/design-system";
 import { stringify } from "lossless-json";
 import { StrKey, TransactionBuilder } from "@stellar/stellar-sdk";
@@ -15,6 +14,7 @@ import { Box } from "@/components/layout/Box";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { xdrUtils } from "@/helpers/xdr/utils";
 import { optionsFlagDetails } from "@/helpers/optionsFlagDetails";
+import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
 import { useStore } from "@/store/useStore";
 import { Routes } from "@/constants/routes";
@@ -48,19 +48,9 @@ export const TransactionXdr = () => {
   } = transaction.build;
   const { updateSignActiveView, updateSignImportXdr } = transaction;
 
-  const [isReady, setIsReady] = useState(false);
+  const isXdrInit = useIsXdrInit();
 
-  useEffect(() => {
-    // Stellar XDR init
-    const init = async () => {
-      await StellarXdr.init();
-      setIsReady(true);
-    };
-
-    init();
-  }, []);
-
-  if (!(isReady && isValid.params && isValid.operations)) {
+  if (!(isXdrInit && isValid.params && isValid.operations)) {
     return null;
   }
 
