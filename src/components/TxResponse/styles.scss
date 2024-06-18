@@ -2,6 +2,6 @@
 
 .TxResponse {
   &__value {
-    margin-left: calc(var(--sds-gap-sm));
+    margin-left: var(--sds-gap-sm);
   }
 }
