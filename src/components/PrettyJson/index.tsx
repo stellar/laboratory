@@ -90,6 +90,20 @@ export const PrettyJson = ({ json }: { json: AnyObject }) => {
                       <div>
                         {value.map((v, index) => {
                           if (typeof v === "object") {
+                            if (v === null) {
+                              return (
+                                <div
+                                  key={`${keyProp}-${index}`}
+                                  className="PrettyJson__nested"
+                                >
+                                  <Value>
+                                    null
+                                    <Comma />
+                                  </Value>
+                                </div>
+                              );
+                            }
+
                             return (
                               <div
                                 key={`${keyProp}-${index}`}

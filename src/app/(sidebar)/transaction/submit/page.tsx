@@ -79,7 +79,7 @@ export default function SubmitTransaction() {
         </Text>
       </div>
       <Card>
-        <Box gap="md">
+        <Box gap="lg">
           <XdrPicker
             id="submit-tx-xdr"
             label="Input a base-64 encoded TransactionEnvelope:"
@@ -103,18 +103,6 @@ export default function SubmitTransaction() {
               Submit transaction
             </Button>
           </div>
-
-          <Box gap="lg" direction="row" align="center" justify="end">
-            <div>
-              {xdrJson?.jsonString ? (
-                <div className="Tabs">
-                  <div className="Tab" data-is-active="true">
-                    JSON
-                  </div>
-                </div>
-              ) : null}
-            </div>
-          </Box>
 
           <>
             {xdrJson?.jsonString ? (

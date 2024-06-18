@@ -1,38 +1,34 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   Text,
   Card,
   Alert,
   Link,
-  Select,
   Loader,
   Button,
   Icon,
+  CopyText,
 } from "@stellar/design-system";
-import { xdr as sdkXdr } from "@stellar/stellar-sdk";
 import { useLatestTxn } from "@/query/useLatestTxn";
-import { functions } from "lodash";
 import * as StellarXdr from "@/helpers/StellarXdr";
 
 import { Box } from "@/components/layout/Box";
 import { SdsLink } from "@/components/SdsLink";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { PrettyJson } from "@/components/PrettyJson";
-import { Tabs } from "@/components/Tabs";
+import { XdrTypeSelect } from "@/components/XdrTypeSelect";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
-
 import { useStore } from "@/store/useStore";
 
 export default function ViewXdr() {
   const { xdr, network } = useStore();
   const { updateXdrBlob, updateXdrType, resetXdr } = xdr;
 
-  const [activeTab, setActiveTab] = useState<string>("json");
-
   const isXdrInit = useIsXdrInit();
+
   const {
     data: latestTxn,
     error: latestTxnError,
@@ -72,9 +68,6 @@ export default function ViewXdr() {
   };
 
   const xdrJsonDecoded = xdrDecodeJson();
-  const isXdrData = Boolean(xdrJsonDecoded?.jsonString);
-
-  const allXdrTypes = functions(sdkXdr).sort();
 
   return (
     <Box gap="md">
@@ -112,30 +105,7 @@ export default function ViewXdr() {
             disabled={isFetchingLatestTxn}
           />
 
-          <Select
-            id="view-xdr-type"
-            fieldSize="md"
-            label="XDR type"
-            value={xdr.type}
-            onChange={(e) => {
-              updateXdrType(e.target.value);
-            }}
-            error={xdrJsonDecoded?.error}
-          >
-            <option value="">Select XDR type</option>
-            <optgroup label="Popular">
-              <option value="TransactionEnvelope">TransactionEnvelope</option>
-              <option value="TransactionResult">TransactionResult</option>
-              <option value="TransactionMeta">TransactionMeta</option>
-            </optgroup>
-            <optgroup label="All">
-              {allXdrTypes.map((type) => (
-                <option value={type} key={`all-${type}`}>
-                  {type}
-                </option>
-              ))}
-            </optgroup>
-          </Select>
+          <XdrTypeSelect error={xdrJsonDecoded?.error} />
 
           <>
             {!xdr.blob || !xdr.type ? (
@@ -147,22 +117,7 @@ export default function ViewXdr() {
             ) : null}
           </>
 
-          <Box gap="lg" direction="row" align="center" justify="space-between">
-            <div>
-              {isXdrData ? (
-                <Tabs
-                  tabs={[
-                    { id: "json", label: "JSON" },
-                    { id: "decoded", label: "Decoded XDR" },
-                  ]}
-                  activeTabId={activeTab}
-                  onChange={(id) => {
-                    setActiveTab(id);
-                  }}
-                />
-              ) : null}
-            </div>
-
+          <Box gap="lg" direction="row" align="center" justify="end">
             <Button
               size="md"
               variant="error"
@@ -177,24 +132,32 @@ export default function ViewXdr() {
           </Box>
 
           <>
-            {activeTab === "json" && xdrJsonDecoded?.jsonString ? (
-              <div className="PageBody__content PageBody__scrollable">
-                <PrettyJson json={JSON.parse(xdrJsonDecoded.jsonString)} />
-              </div>
-            ) : null}
+            {xdrJsonDecoded?.jsonString ? (
+              <Box gap="lg">
+                <div className="PageBody__content PageBody__scrollable">
+                  <PrettyJson json={JSON.parse(xdrJsonDecoded.jsonString)} />
+                </div>
 
-            {activeTab === "decoded" ? (
-              <div className="PageBody__content PageBody__scrollable">
-                TODO: Decoded XDR
-              </div>
+                <Box gap="md" direction="row" justify="end">
+                  <CopyText textToCopy={xdrJsonDecoded.jsonString}>
+                    <Button
+                      size="md"
+                      variant="tertiary"
+                      icon={<Icon.Copy01 />}
+                      iconPosition="left"
+                    >
+                      Copy JSON
+                    </Button>
+                  </CopyText>
+                </Box>
+              </Box>
             ) : null}
           </>
         </Box>
       </Card>
 
       <Alert variant="primary" placement="inline">
-        You can use use this tool to decode XDR into JSON and into
-        human-readable format of XDR (decoded XDR).{" "}
+        You can use use this tool to decode XDR into JSON.{" "}
         <SdsLink href="https://developers.stellar.org/docs/encyclopedia/xdr">
           External Data Representation
         </SdsLink>{" "}
