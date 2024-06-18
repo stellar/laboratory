@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   Text,
   Card,
@@ -20,13 +20,14 @@ import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { PrettyJson } from "@/components/PrettyJson";
 import { XdrTypeSelect } from "@/components/XdrTypeSelect";
 
+import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { useStore } from "@/store/useStore";
 
 export default function ViewXdr() {
   const { xdr, network } = useStore();
   const { updateXdrBlob, updateXdrType, resetXdr } = xdr;
 
-  const [isReady, setIsReady] = useState(false);
+  const isXdrInit = useIsXdrInit();
 
   const {
     data: latestTxn,
@@ -38,16 +39,6 @@ export default function ViewXdr() {
   } = useLatestTxn(network.horizonUrl);
 
   useEffect(() => {
-    // Stellar XDR init
-    const init = async () => {
-      await StellarXdr.init();
-      setIsReady(true);
-    };
-
-    init();
-  }, []);
-
-  useEffect(() => {
     if (isLatestTxnSuccess && latestTxn) {
       updateXdrBlob(latestTxn);
       updateXdrType("TransactionEnvelope");
@@ -57,7 +48,7 @@ export default function ViewXdr() {
   const isFetchingLatestTxn = isLatestTxnFetching || isLatestTxnLoading;
 
   const xdrDecodeJson = () => {
-    if (!(isReady && xdr.blob && xdr.type)) {
+    if (!(isXdrInit && xdr.blob && xdr.type)) {
       return null;
     }
 

@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import {
   Text,
   Card,
@@ -16,26 +15,17 @@ import { SdsLink } from "@/components/SdsLink";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { XdrTypeSelect } from "@/components/XdrTypeSelect";
 
+import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { useStore } from "@/store/useStore";
 
 export default function ToXdr() {
   const { xdr } = useStore();
   const { updateJsonString, resetJsonString } = xdr;
 
-  const [isReady, setIsReady] = useState(false);
-
-  useEffect(() => {
-    // Stellar XDR init
-    const init = async () => {
-      await StellarXdr.init();
-      setIsReady(true);
-    };
-
-    init();
-  }, []);
+  const isXdrInit = useIsXdrInit();
 
   const jsonEncodeXdr = () => {
-    if (!(isReady && xdr.jsonString && xdr.type)) {
+    if (!(isXdrInit && xdr.jsonString && xdr.type)) {
       return null;
     }
 
