@@ -318,10 +318,6 @@ export const TransactionXdr = () => {
             return xdrUtils.toPrice(val);
           case "data_value":
             return Buffer.from(val).toString("hex");
-          case "balance_id":
-            return {
-              claimable_balance_id_type_v0: val.replace(/^(00000000)/, ""),
-            };
           // Path
           case "path":
             return formatAssetMultiValue(val);
