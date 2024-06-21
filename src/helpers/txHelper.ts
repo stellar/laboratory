@@ -22,7 +22,7 @@ export type FeeBumpedTxResponse = {
 };
 
 const buildFeeBumpTx = ({
-  innerTxXDR,
+  innerTxXdr,
   maxFee,
   sourceAccount,
   networkPassphrase,
