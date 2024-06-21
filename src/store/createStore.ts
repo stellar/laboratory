@@ -126,10 +126,13 @@ export interface Store {
   // XDR
   xdr: {
     blob: string;
+    jsonString: string;
     type: string;
     updateXdrBlob: (blob: string) => void;
+    updateJsonString: (jsonString: string) => void;
     updateXdrType: (type: string) => void;
     resetXdr: () => void;
+    resetJsonString: () => void;
   };
 }
 
@@ -189,6 +192,7 @@ const initAccountState = {
 
 const initXdrState = {
   blob: "",
+  jsonString: "",
   type: "TransactionEnvelope",
 };
 
@@ -366,6 +370,10 @@ export const createStore = (options: CreateStoreOptions) =>
             set((state) => {
               state.xdr.blob = blob;
             }),
+          updateJsonString: (jsonString: string) =>
+            set((state) => {
+              state.xdr.jsonString = jsonString;
+            }),
           updateXdrType: (type: string) =>
             set((state) => {
               state.xdr.type = type;
@@ -373,6 +381,11 @@ export const createStore = (options: CreateStoreOptions) =>
           resetXdr: () =>
             set((state) => {
               state.xdr.blob = initXdrState.blob;
+              state.xdr.type = initXdrState.type;
+            }),
+          resetJsonString: () =>
+            set((state) => {
+              state.xdr.jsonString = initXdrState.jsonString;
               state.xdr.type = initXdrState.type;
             }),
         },
@@ -398,6 +411,7 @@ export const createStore = (options: CreateStoreOptions) =>
             },
             xdr: {
               blob: true,
+              jsonString: true,
               type: true,
             },
           };
