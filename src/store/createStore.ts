@@ -95,6 +95,11 @@ export interface Store {
       bipPath: string;
       hardWalletSigs: xdr.DecoratedSignature[] | [];
     };
+    feeBump: {
+      source_account: string;
+      fee: string;
+      innerTxXdr: string;
+    };
     // [Transaction] Build Transaction actions
     updateBuildActiveTab: (tabId: string) => void;
     updateBuildParams: (params: TransactionBuildParamsObj) => void;
@@ -121,6 +126,10 @@ export interface Store {
     updateHardWalletSigs: (signer: xdr.DecoratedSignature[]) => void;
     resetSign: () => void;
     resetSignHardWalletSigs: () => void;
+    updateBaseFeeSource: (source: string) => void;
+    updateBaseFeeBase: (feeBase: string) => void;
+    updateBaseFeeInnerXdr: (xdr: string) => void;
+    resetBaseFee: () => void;
   };
 
   // XDR
@@ -177,6 +186,11 @@ const initTransactionState = {
     signedTx: "",
     bipPath: "44'/148'/0'",
     hardWalletSigs: [],
+  },
+  feeBump: {
+    source_account: "",
+    fee: "",
+    innerTxXdr: "",
   },
 };
 
@@ -363,6 +377,22 @@ export const createStore = (options: CreateStoreOptions) =>
               state.transaction.sign.hardWalletSigs =
                 initTransactionState.sign.hardWalletSigs;
             }),
+          updateBaseFeeSource: (source: string) =>
+            set((state) => {
+              state.transaction.feeBump.source_account = source;
+            }),
+          updateBaseFeeBase: (feeBase: string) =>
+            set((state) => {
+              state.transaction.feeBump.fee = feeBase;
+            }),
+          updateBaseFeeInnerXdr: (xdr: string) =>
+            set((state) => {
+              state.transaction.feeBump.innerTxXdr = xdr;
+            }),
+          resetBaseFee: () =>
+            set((state) => {
+              state.transaction.feeBump = initTransactionState.feeBump;
+            }),
         },
         xdr: {
           ...initXdrState,
@@ -408,6 +438,7 @@ export const createStore = (options: CreateStoreOptions) =>
                 importXdr: true,
                 bipPath: true,
               },
+              feeBump: true,
             },
             xdr: {
               blob: true,

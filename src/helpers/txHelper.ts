@@ -15,6 +15,66 @@ import { LedgerErrorResponse } from "@/types/types";
 
 import { validate } from "@/validate";
 
+/* Build Transaction related */
+export type FeeBumpedTxResponse = {
+  errors: string[];
+  xdr: string;
+};
+
+const buildFeeBumpTx = ({
+  innerTxXDR,
+  maxFee,
+  sourceAccount,
+  networkPassphrase,
+}: {
+  innerTxXDR: string;
+  maxFee: string;
+  sourceAccount: string;
+  networkPassphrase: string;
+}): FeeBumpedTxResponse => {
+  const result = {
+    errors: [] as string[],
+    xdr: "",
+  };
+
+  let innerTx: Transaction;
+
+  try {
+    innerTx = TransactionBuilder.fromXDR(
+      innerTxXDR,
+      networkPassphrase,
+    ) as Transaction;
+  } catch (e) {
+    result.errors.push("Invalid inner transaction XDR.");
+    return result;
+  }
+
+  if (typeof innerTx?.operations === "undefined") {
+    result.errors.push("Inner transaction must be a regular transaction.");
+    return result;
+  }
+
+  let feeBumpTx;
+
+  try {
+    feeBumpTx = TransactionBuilder.buildFeeBumpTransaction(
+      sourceAccount,
+      maxFee,
+      innerTx,
+      networkPassphrase,
+    );
+    result.xdr = feeBumpTx.toEnvelope().toXDR("base64");
+  } catch (err) {
+    if (err instanceof Error) {
+      result.errors.push(err.message);
+    } else {
+      result.errors.push("Unknown error in fee bump tx");
+    }
+  }
+  return result;
+};
+
+/* Sign Transaction related */
 interface LedgerApi {
   getPublicKey(path: string): Promise<{ publicKey: string }>;
   signHash(path: string, hash: Buffer): Promise<{ signature: Buffer }>;
@@ -219,7 +279,8 @@ const getTrezorDecoratedSignature = (
   return [decorated];
 };
 
-export const txSigner = {
+export const txHelper = {
+  buildFeeBumpTx,
   signTx,
   signWithLedger,
   signWithTrezor,
