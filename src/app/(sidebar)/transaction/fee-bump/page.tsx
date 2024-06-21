@@ -193,7 +193,7 @@ export default function FeeBumpTransaction() {
             title="Transaction Sign Error:"
             response={feeBumpedTx.errors}
           />
-        ) : null}{" "}
+        ) : null}
       </>
     </Box>
   );
