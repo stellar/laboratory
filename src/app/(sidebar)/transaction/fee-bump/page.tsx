@@ -103,7 +103,7 @@ export default function FeeBumpTransaction() {
               setSourceErrorMessage(error || "");
               updateBaseFeeSource(e.target.value);
             }}
-            note={<>The account responsible for paying the transaction fee.</>}
+            note="The account responsible for paying the transaction fee."
             infoLink="https://developers.stellar.org/docs/learn/glossary#source-account"
           />
 
