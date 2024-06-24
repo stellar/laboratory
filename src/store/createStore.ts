@@ -17,6 +17,16 @@ import {
   TxnOperation,
 } from "@/types/types";
 
+export type FeeBumpParams = {
+  source_account: string;
+  fee: string;
+  xdr: string;
+};
+
+type FeeBumpParamsObj = {
+  [K in keyof FeeBumpParams]?: FeeBumpParams[K];
+};
+
 export type TransactionBuildParams = {
   source_account: string;
   fee: string;
@@ -95,11 +105,7 @@ export interface Store {
       bipPath: string;
       hardWalletSigs: xdr.DecoratedSignature[] | [];
     };
-    feeBump: {
-      source_account: string;
-      fee: string;
-      innerTxXdr: string;
-    };
+    feeBump: FeeBumpParams;
     // [Transaction] Build Transaction actions
     updateBuildActiveTab: (tabId: string) => void;
     updateBuildParams: (params: TransactionBuildParamsObj) => void;
@@ -126,9 +132,7 @@ export interface Store {
     updateHardWalletSigs: (signer: xdr.DecoratedSignature[]) => void;
     resetSign: () => void;
     resetSignHardWalletSigs: () => void;
-    updateBaseFeeSource: (source: string) => void;
-    updateBaseFeeBase: (feeBase: string) => void;
-    updateBaseFeeInnerXdr: (xdr: string) => void;
+    updateFeeBumpParams: (params: FeeBumpParamsObj) => void;
     resetBaseFee: () => void;
   };
 
@@ -190,7 +194,7 @@ const initTransactionState = {
   feeBump: {
     source_account: "",
     fee: "",
-    innerTxXdr: "",
+    xdr: "",
   },
 };
 
@@ -377,17 +381,12 @@ export const createStore = (options: CreateStoreOptions) =>
               state.transaction.sign.hardWalletSigs =
                 initTransactionState.sign.hardWalletSigs;
             }),
-          updateBaseFeeSource: (source: string) =>
+          updateFeeBumpParams: (params: FeeBumpParamsObj) =>
             set((state) => {
-              state.transaction.feeBump.source_account = source;
-            }),
-          updateBaseFeeBase: (feeBase: string) =>
-            set((state) => {
-              state.transaction.feeBump.fee = feeBase;
-            }),
-          updateBaseFeeInnerXdr: (xdr: string) =>
-            set((state) => {
-              state.transaction.feeBump.innerTxXdr = xdr;
+              state.transaction.feeBump = {
+                ...state.transaction.feeBump,
+                ...params,
+              };
             }),
           resetBaseFee: () =>
             set((state) => {

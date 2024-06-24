@@ -27,7 +27,7 @@ const buildFeeBumpTx = ({
   sourceAccount,
   networkPassphrase,
 }: {
-  innerTxXDR: string;
+  innerTxXdr: string;
   maxFee: string;
   sourceAccount: string;
   networkPassphrase: string;
@@ -41,7 +41,7 @@ const buildFeeBumpTx = ({
 
   try {
     innerTx = TransactionBuilder.fromXDR(
-      innerTxXDR,
+      innerTxXdr,
       networkPassphrase,
     ) as Transaction;
   } catch (e) {
@@ -54,10 +54,8 @@ const buildFeeBumpTx = ({
     return result;
   }
 
-  let feeBumpTx;
-
   try {
-    feeBumpTx = TransactionBuilder.buildFeeBumpTransaction(
+    const feeBumpTx = TransactionBuilder.buildFeeBumpTransaction(
       sourceAccount,
       maxFee,
       innerTx,
