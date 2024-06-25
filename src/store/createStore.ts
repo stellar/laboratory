@@ -17,6 +17,16 @@ import {
   TxnOperation,
 } from "@/types/types";
 
+export type FeeBumpParams = {
+  source_account: string;
+  fee: string;
+  xdr: string;
+};
+
+type FeeBumpParamsObj = {
+  [K in keyof FeeBumpParams]?: FeeBumpParams[K];
+};
+
 export type TransactionBuildParams = {
   source_account: string;
   fee: string;
@@ -107,6 +117,7 @@ export interface Store {
       bipPath: string;
       hardWalletSigs: xdr.DecoratedSignature[] | [];
     };
+    feeBump: FeeBumpParams;
     // [Transaction] Build Transaction actions
     updateBuildActiveTab: (tabId: string) => void;
     updateBuildParams: (params: TransactionBuildParamsObj) => void;
@@ -133,6 +144,8 @@ export interface Store {
     updateHardWalletSigs: (signer: xdr.DecoratedSignature[]) => void;
     resetSign: () => void;
     resetSignHardWalletSigs: () => void;
+    updateFeeBumpParams: (params: FeeBumpParamsObj) => void;
+    resetBaseFee: () => void;
   };
 
   // XDR
@@ -192,6 +205,11 @@ const initTransactionState = {
     signedTx: "",
     bipPath: "44'/148'/0'",
     hardWalletSigs: [],
+  },
+  feeBump: {
+    source_account: "",
+    fee: "",
+    xdr: "",
   },
 };
 
@@ -400,6 +418,17 @@ export const createStore = (options: CreateStoreOptions) =>
               state.transaction.sign.hardWalletSigs =
                 initTransactionState.sign.hardWalletSigs;
             }),
+          updateFeeBumpParams: (params: FeeBumpParamsObj) =>
+            set((state) => {
+              state.transaction.feeBump = {
+                ...state.transaction.feeBump,
+                ...params,
+              };
+            }),
+          resetBaseFee: () =>
+            set((state) => {
+              state.transaction.feeBump = initTransactionState.feeBump;
+            }),
         },
         xdr: {
           ...initXdrState,
@@ -446,6 +475,7 @@ export const createStore = (options: CreateStoreOptions) =>
                 importXdr: true,
                 bipPath: true,
               },
+              feeBump: true,
             },
             xdr: {
               blob: true,
