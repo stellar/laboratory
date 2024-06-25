@@ -9,6 +9,7 @@ export enum Routes {
   ACCOUNT_PARSE_MUXED = "/account/muxed-parse",
   // Endpoints
   ENDPOINTS = "/endpoints",
+  ENDPOINTS_SAVED = "/endpoints/saved",
   ENDPOINTS_ACCOUNTS = "/endpoints/accounts",
   ENDPOINTS_ACCOUNTS_SINGLE = "/endpoints/accounts/single",
   ENDPOINTS_ASSETS = "/endpoints/assets",

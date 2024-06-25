@@ -6,48 +6,22 @@ import React, {
   useState,
 } from "react";
 import { Button, Icon, Input, Notification } from "@stellar/design-system";
-import { Networks } from "@stellar/stellar-sdk";
 
 import { NetworkIndicator } from "@/components/NetworkIndicator";
 import { localStorageSavedNetwork } from "@/helpers/localStorageSavedNetwork";
+import { NetworkOptions } from "@/constants/settings";
 import { useStore } from "@/store/useStore";
 import { Network, NetworkType } from "@/types/types";
 
 import "./styles.scss";
 
-const NetworkOptions: Network[] = [
-  {
-    id: "futurenet",
-    label: "Futurenet",
-    horizonUrl: "https://horizon-futurenet.stellar.org",
-    rpcUrl: "https://rpc-futurenet.stellar.org",
-    passphrase: Networks.FUTURENET,
-  },
-  {
-    id: "testnet",
-    label: "Testnet",
-    horizonUrl: "https://horizon-testnet.stellar.org",
-    rpcUrl: "https://soroban-testnet.stellar.org",
-    passphrase: Networks.TESTNET,
-  },
-  {
-    id: "mainnet",
-    label: "Mainnet",
-    horizonUrl: "https://horizon.stellar.org",
-    rpcUrl: "",
-    passphrase: Networks.PUBLIC,
-  },
-  {
-    id: "custom",
-    label: "Custom",
-    horizonUrl: "",
-    rpcUrl: "",
-    passphrase: "",
-  },
-];
-
 export const NetworkSelector = () => {
-  const { network, selectNetwork } = useStore();
+  const {
+    network,
+    isDynamicNetworkSelect,
+    selectNetwork,
+    updateIsDynamicNetworkSelect,
+  } = useStore();
 
   const [activeNetworkId, setActiveNetworkId] = useState(network.id);
   const [isDropdownActive, setIsDropdownActive] = useState(false);
@@ -118,6 +92,15 @@ export const NetworkSelector = () => {
     setNetwork();
   }, [setNetwork]);
 
+  useEffect(() => {
+    if (isDynamicNetworkSelect) {
+      setActiveNetworkId(network.id);
+      localStorageSavedNetwork.set(network as Network);
+    }
+    // Not including network
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDynamicNetworkSelect, network.id]);
+
   const handleKeyPress = useCallback(
     (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -187,6 +170,7 @@ export const NetworkSelector = () => {
       );
       localStorageSavedNetwork.set(data);
       toggleDropdown(false);
+      updateIsDynamicNetworkSelect(false);
     }
   };
 
