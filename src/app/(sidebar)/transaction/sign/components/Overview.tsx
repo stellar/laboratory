@@ -13,7 +13,7 @@ import { FEE_BUMP_TX_FIELDS, TX_FIELDS } from "@/constants/signTransactionPage";
 
 import { useStore } from "@/store/useStore";
 
-import { txSigner } from "@/helpers/txSigner";
+import { txHelper } from "@/helpers/txHelper";
 
 import { validate } from "@/validate";
 
@@ -102,7 +102,7 @@ export const Overview = () => {
     networkPassphrase: string,
     hardWalletSigs: xdr.DecoratedSignature[],
   ) => {
-    const { xdr, message } = txSigner.signTx({
+    const { xdr, message } = txHelper.signTx({
       txXdr,
       signers,
       networkPassphrase,
@@ -128,7 +128,7 @@ export const Overview = () => {
 
     try {
       if (selectedHardware === "ledger") {
-        const { signature, error } = await txSigner.signWithLedger({
+        const { signature, error } = await txHelper.signWithLedger({
           bipPath: sign.bipPath,
           transaction: sign.importTx as FeeBumpTransaction | Transaction,
           isHash: false,
@@ -139,7 +139,7 @@ export const Overview = () => {
       }
 
       if (selectedHardware === "ledger_hash") {
-        const { signature, error } = await txSigner.signWithLedger({
+        const { signature, error } = await txHelper.signWithLedger({
           bipPath: sign.bipPath,
           transaction: sign.importTx as FeeBumpTransaction | Transaction,
           isHash: true,
@@ -152,7 +152,7 @@ export const Overview = () => {
       if (selectedHardware === "trezor") {
         const path = `m/${sign.bipPath}`;
 
-        const { signature, error } = await txSigner.signWithTrezor({
+        const { signature, error } = await txHelper.signWithTrezor({
           bipPath: path,
           transaction: sign.importTx as Transaction,
         });
