@@ -106,6 +106,26 @@ export type AssetPoolShareError = {
 };
 
 // =============================================================================
+// Endpoints
+// =============================================================================
+export type SavedEndpointNetwork = {
+  id: NetworkType;
+  label: string;
+  horizonUrl?: string;
+  rpcUrl?: string;
+  passphrase?: string;
+};
+
+export type SavedEndpointHorizon = {
+  url: string;
+  method: string;
+  timestamp: number;
+  route: string;
+  params: AnyObject;
+  network: SavedEndpointNetwork;
+};
+
+// =============================================================================
 // Transaction
 // =============================================================================
 export type TimeBoundsValue = {

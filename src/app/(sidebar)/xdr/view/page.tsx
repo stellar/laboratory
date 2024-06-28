@@ -69,6 +69,15 @@ export default function ViewXdr() {
 
   const xdrJsonDecoded = xdrDecodeJson();
 
+  const prettifyJsonString = (jsonString: string): string => {
+    try {
+      const parsedJson = JSON.parse(jsonString);
+      return JSON.stringify(parsedJson, null, 2);
+    } catch (e) {
+      return jsonString;
+    }
+  };
+
   return (
     <Box gap="md">
       <div className="PageHeader">
@@ -139,7 +148,9 @@ export default function ViewXdr() {
                 </div>
 
                 <Box gap="md" direction="row" justify="end">
-                  <CopyText textToCopy={xdrJsonDecoded.jsonString}>
+                  <CopyText
+                    textToCopy={prettifyJsonString(xdrJsonDecoded.jsonString)}
+                  >
                     <Button
                       size="md"
                       variant="tertiary"

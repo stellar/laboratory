@@ -18,7 +18,8 @@ test.describe("Endpoints page", () => {
 
   test.describe("Sidebar", () => {
     test("Renders Horizon endpoints", async ({ page }) => {
-      const sidebar = page.getByTestId("endpoints-sidebar-section").first();
+      const sidebar = page.getByTestId("endpoints-sidebar-section");
+
       await expect(
         sidebar.getByTestId("endpoints-sidebar-subtitle"),
       ).toContainText("Horizon Endpoints");
@@ -47,7 +48,7 @@ test.describe("Endpoints page", () => {
     });
 
     test("Expands dropdown on click with correct links", async ({ page }) => {
-      const sidebar = page.getByTestId("endpoints-sidebar-section").first();
+      const sidebar = page.getByTestId("endpoints-sidebar-section");
       const accountsLink = sidebar
         .getByTestId("endpoints-sidebar-linkToggle")
         .filter({ hasText: "Accounts" });
