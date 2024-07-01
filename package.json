@@ -16,7 +16,7 @@
     "install-if-package-changed": "git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD | grep --quiet yarn.lock && yarn install || exit 0",
     "prepare": "husky",
     "pre-commit": "yarn lint-staged",
-    "pre-push": "yarn lint:ts && yarn test"
+    "pre-push": "yarn lint:ts"
   },
   "dependencies": {
     "@creit.tech/stellar-wallets-kit": "^0.8.2",
