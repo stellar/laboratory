@@ -24,7 +24,9 @@ import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { sanitizeArray } from "@/helpers/sanitizeArray";
 import { sanitizeObject } from "@/helpers/sanitizeObject";
 import { parseJsonString } from "@/helpers/parseJsonString";
-import { saveEndpointHorizon } from "@/helpers/saveEndpointHorizon";
+import { getSaveItemNetwork } from "@/helpers/getSaveItemNetwork";
+import { localStorageSavedEndpointsHorizon } from "@/helpers/localStorageSavedEndpointsHorizon";
+import { arrayItem } from "@/helpers/arrayItem";
 
 import { Routes } from "@/constants/routes";
 import { ENDPOINTS_PAGES_HORIZON } from "@/constants/endpointsPages";
@@ -493,31 +495,17 @@ export default function Endpoints() {
             icon={<Icon.Save01 />}
             type="button"
             onClick={() => {
-              saveEndpointHorizon({
-                url: requestUrl,
-                method: pageData.requestMethod,
-                timestamp: Date.now(),
-                route: pathname,
-                params,
-                network: {
-                  id: network.id,
-                  label: network.label,
-                  // Mainnet with custom RPC URL
-                  ...(network.id === "mainnet" && network.rpcUrl
-                    ? {
-                        rpcUrl: network.rpcUrl,
-                      }
-                    : {}),
-                  // Custom network
-                  ...(network.id === "custom"
-                    ? {
-                        horizonUrl: network.horizonUrl,
-                        rpcUrl: network.rpcUrl,
-                        passphrase: network.passphrase,
-                      }
-                    : {}),
-                },
-              });
+              const currentSaved = localStorageSavedEndpointsHorizon.get();
+              localStorageSavedEndpointsHorizon.set(
+                arrayItem.add(currentSaved, {
+                  url: requestUrl,
+                  method: pageData.requestMethod,
+                  timestamp: Date.now(),
+                  route: pathname,
+                  params,
+                  network: getSaveItemNetwork(network),
+                }),
+              );
             }}
           ></Button>
         </div>

@@ -60,6 +60,7 @@ export enum Routes {
   SIMULATE_TRANSACTION = "/transaction/simulate",
   SUBMIT_TRANSACTION = "/transaction/submit",
   FEE_BUMP_TRANSACTION = "/transaction/fee-bump",
+  SAVED_TRANSACTIONS = "/transaction/saved",
   // View XDR
   VIEW_XDR = "/xdr/view",
   TO_XDR = "/xdr/to",

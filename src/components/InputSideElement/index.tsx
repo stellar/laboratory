@@ -7,15 +7,17 @@ type InputSideElementProps = (
       onClick?: undefined;
       disabled?: undefined;
       title?: undefined;
+      icon?: undefined;
     }
   | {
       variant: "button";
       onClick: () => void;
       disabled?: boolean;
       title?: string;
+      icon?: React.ReactNode;
     }
 ) & {
-  children: string;
+  children?: string;
   placement: "left" | "right";
   isLoading?: boolean;
   addlClassName?: string;
@@ -30,6 +32,7 @@ export const InputSideElement = ({
   placement = "right",
   isLoading,
   addlClassName,
+  icon,
   ...props
 }: InputSideElementProps) => {
   if (variant === "text") {
@@ -55,6 +58,7 @@ export const InputSideElement = ({
         disabled={disabled}
         title={title}
         isLoading={isLoading}
+        icon={icon}
       >
         {children}
       </Button>

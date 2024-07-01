@@ -21,6 +21,7 @@ export const NextLink = (props: LinkProps) => {
       className={`${props.className || ""} ${
         props["sds-variant"] ? `Link Link--${props["sds-variant"]}` : ""
       }`}
+      prefetch={props.prefetch !== undefined ? props.prefetch : true}
       {...externalLinkProps(props.href.toString())}
     />
   );

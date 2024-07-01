@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { SdsLink } from "@/components/SdsLink";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { Box } from "@/components/layout/Box";
+import { ViewInXdrButton } from "@/components/ViewInXdrButton";
 
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { xdrUtils } from "@/helpers/xdr/utils";
@@ -547,20 +548,13 @@ export const TransactionXdr = () => {
                   updateSignImportXdr(txnXdr.xdr);
                   updateSignActiveView("overview");
 
-                  router.push("/transaction/sign");
+                  router.push(Routes.SIGN_TRANSACTION);
                 }}
               >
                 Sign in Transaction Signer
               </Button>
-              <Button
-                size="md"
-                variant="tertiary"
-                onClick={() => {
-                  alert("TODO: handle view in xdr flow");
-                }}
-              >
-                View in XDR viewer
-              </Button>
+
+              <ViewInXdrButton xdrBlob={txnXdr.xdr} />
             </>
           }
         />

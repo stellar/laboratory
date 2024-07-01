@@ -69,7 +69,6 @@ export const AssetMultiPicker = ({
           issuer: "",
         },
       },
-      // TODO: add Liquidity Pool shares (for Change Trust operation)
     ];
   } else {
     options = [

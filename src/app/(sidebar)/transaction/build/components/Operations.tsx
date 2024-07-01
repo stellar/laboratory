@@ -15,6 +15,7 @@ import { Box } from "@/components/layout/Box";
 import { TabbedButtons } from "@/components/TabbedButtons";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { SdsLink } from "@/components/SdsLink";
+import { SaveTransactionModal } from "@/components/SaveTransactionModal";
 
 import { arrayItem } from "@/helpers/arrayItem";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
@@ -52,6 +53,7 @@ export const Operations = () => {
   type OpBuildingError = { label?: string; errorList?: string[] };
 
   const [operationsError, setOperationsError] = useState<OperationError[]>([]);
+  const [isSaveTxnModalVisible, setIsSaveTxnModalVisible] = useState(false);
 
   const INITIAL_OPERATION: TxnOperation = {
     operation_type: "",
@@ -1043,7 +1045,15 @@ export const Operations = () => {
                 Add Operation
               </Button>
 
-              {/* TODO: add share and save buttons */}
+              <Button
+                size="md"
+                variant="tertiary"
+                icon={<Icon.Save01 />}
+                onClick={() => {
+                  setIsSaveTxnModalVisible(true);
+                }}
+                title="Save transaction"
+              ></Button>
             </Box>
 
             <Button
@@ -1086,6 +1096,14 @@ export const Operations = () => {
           />
         ) : null}
       </>
+
+      <SaveTransactionModal
+        type="save"
+        isVisible={isSaveTxnModalVisible}
+        onClose={() => {
+          setIsSaveTxnModalVisible(false);
+        }}
+      />
     </Box>
   );
 };

@@ -133,6 +133,7 @@ export interface Store {
       params?: boolean;
       operations?: boolean;
     }) => void;
+    setBuildParams: (params: TransactionBuildParamsObj) => void;
     resetBuildParams: () => void;
     resetBuild: () => void;
     // [Transaction] Sign Transaction actions
@@ -376,6 +377,13 @@ export const createStore = (options: CreateStoreOptions) =>
               if (operations !== undefined) {
                 state.transaction.build.isValid.operations = operations;
               }
+            }),
+          setBuildParams: (params: TransactionBuildParamsObj) =>
+            set((state) => {
+              state.transaction.build.params = {
+                ...initTransactionParamsState,
+                ...params,
+              };
             }),
           resetBuildParams: () =>
             set((state) => {

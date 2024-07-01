@@ -1,4 +1,5 @@
 import React from "react";
+import { TransactionBuildParams } from "@/store/createStore";
 
 // =============================================================================
 // Generic
@@ -45,6 +46,14 @@ export type StatusPageScheduled = {
   scheduled_for: string;
   components: StatusPageComponent[];
   incident_updates: StatusPageIncident[];
+};
+
+export type LocalStorageSavedNetwork = {
+  id: NetworkType;
+  label: string;
+  horizonUrl?: string;
+  rpcUrl?: string;
+  passphrase?: string;
 };
 
 // =============================================================================
@@ -108,21 +117,13 @@ export type AssetPoolShareError = {
 // =============================================================================
 // Endpoints
 // =============================================================================
-export type SavedEndpointNetwork = {
-  id: NetworkType;
-  label: string;
-  horizonUrl?: string;
-  rpcUrl?: string;
-  passphrase?: string;
-};
-
 export type SavedEndpointHorizon = {
   url: string;
   method: string;
   timestamp: number;
   route: string;
   params: AnyObject;
-  network: SavedEndpointNetwork;
+  network: LocalStorageSavedNetwork;
 };
 
 // =============================================================================
@@ -142,6 +143,14 @@ export type TxnOperation = {
 export type LedgerErrorResponse = {
   message: string;
   errorCode: number;
+};
+
+export type SavedTransaction = {
+  timestamp: number;
+  network: LocalStorageSavedNetwork;
+  params: TransactionBuildParams;
+  operations: TxnOperation[];
+  name: string;
 };
 
 // =============================================================================

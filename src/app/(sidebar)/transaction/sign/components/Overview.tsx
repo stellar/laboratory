@@ -23,6 +23,7 @@ import { TextPicker } from "@/components/FormElements/TextPicker";
 import { WithInfoText } from "@/components/WithInfoText";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
+import { ViewInXdrButton } from "@/components/ViewInXdrButton";
 
 import { SignWithWallet } from "./SignWithWallet";
 
@@ -284,6 +285,7 @@ export const Overview = () => {
                 onUpdate={onUpdateSecretInputs}
                 validate={validate.secretKey}
                 placeholder="Secret key (starting with S) or hash preimage (in hex)"
+                autocomplete="off"
               />
             </div>
             <div>
@@ -430,15 +432,8 @@ export const Overview = () => {
             }
             footerRightEl={
               <div className="SignTx__Buttons">
-                <Button
-                  size="md"
-                  variant="tertiary"
-                  onClick={() => {
-                    alert("TODO: handle view in xdr flow");
-                  }}
-                >
-                  View in XDR viewer
-                </Button>
+                <ViewInXdrButton xdrBlob={sign.signedTx} />
+
                 <Button
                   size="md"
                   variant="tertiary"
