@@ -61,7 +61,9 @@ export default function FundAccount() {
       <div className="Account">
         <h2>Not Found</h2>
         <p>Could not find requested resource</p>
-        <Link href={Routes.ROOT}>Return Home</Link>
+        <Link href={Routes.ROOT} prefetch={true}>
+          Return Home
+        </Link>
       </div>
     );
   }

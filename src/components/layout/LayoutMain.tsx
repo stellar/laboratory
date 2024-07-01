@@ -20,7 +20,7 @@ export const LayoutMain = ({ children }: { children: ReactNode }) => {
             <ProjectLogo
               title="Laboratory"
               link="/"
-              customAnchor={<Link href="/" />}
+              customAnchor={<Link href="/" prefetch={true} />}
             />
 
             <div className="LabLayout__header__settings">
