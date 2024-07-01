@@ -202,7 +202,7 @@ export const SavedEndpointsPage = () => {
         title="Looking for your saved transactions?"
         placement="inline"
       >
-        <NextLink href={`${Routes.SAVED_TRANSACTIONS}`} sds-variant="primary">
+        <NextLink href={Routes.SAVED_TRANSACTIONS} sds-variant="primary">
           See saved transactions
         </NextLink>
       </Alert>
