@@ -111,14 +111,17 @@ export const SavedEndpointsPage = () => {
       <Card>
         <Box gap="md">
           {savedEndpoints.map((e, idx) => (
-            <Box gap="xs" key={`horizon-${e.timestamp}`}>
+            <Box
+              gap="sm"
+              key={`horizon-${e.timestamp}`}
+              addlClassName="PageBody__content"
+            >
               <div className="Endpoints__urlBar">
                 <Input
                   id={`endpoint-url-${e.timestamp}`}
                   fieldSize="md"
                   value={e.url}
                   readOnly
-                  disabled
                   leftElement={
                     <InputSideElement
                       variant="text"
@@ -129,43 +132,54 @@ export const SavedEndpointsPage = () => {
                     </InputSideElement>
                   }
                 />
+              </div>
 
-                <Button
-                  size="md"
-                  variant="tertiary"
-                  type="button"
-                  onClick={() => handleViewHorizonEndpoint(e, idx)}
-                >
-                  View
-                </Button>
-
-                <CopyText textToCopy={e.url}>
+              <Box
+                gap="lg"
+                direction="row"
+                align="center"
+                justify="space-between"
+              >
+                <Box gap="sm" direction="row">
                   <Button
                     size="md"
                     variant="tertiary"
-                    icon={<Icon.Copy01 />}
                     type="button"
+                    onClick={() => handleViewHorizonEndpoint(e, idx)}
+                  >
+                    View
+                  </Button>
+
+                  <CopyText textToCopy={e.url}>
+                    <Button
+                      size="md"
+                      variant="tertiary"
+                      icon={<Icon.Copy01 />}
+                      type="button"
+                    ></Button>
+                  </CopyText>
+                </Box>
+
+                <Box gap="sm" direction="row" align="center" justify="end">
+                  <Text
+                    as="div"
+                    size="xs"
+                  >{`Last saved ${formatTimestamp(e.timestamp)}`}</Text>
+
+                  <Button
+                    size="md"
+                    variant="error"
+                    icon={<Icon.Trash01 />}
+                    type="button"
+                    onClick={() => {
+                      const updatedList = arrayItem.delete(savedEndpoints, idx);
+
+                      localStorageSavedEndpointsHorizon.set(updatedList);
+                      setSavedEndpoints(updatedList);
+                    }}
                   ></Button>
-                </CopyText>
-
-                <Button
-                  size="md"
-                  variant="error"
-                  icon={<Icon.Trash01 />}
-                  type="button"
-                  onClick={() => {
-                    const updatedList = arrayItem.delete(savedEndpoints, idx);
-
-                    localStorageSavedEndpointsHorizon.set(updatedList);
-                    setSavedEndpoints(updatedList);
-                  }}
-                ></Button>
-              </div>
-
-              <Text
-                as="div"
-                size="xs"
-              >{`Last saved ${formatTimestamp(e.timestamp)}`}</Text>
+                </Box>
+              </Box>
             </Box>
           ))}
         </Box>
