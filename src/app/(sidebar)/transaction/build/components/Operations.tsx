@@ -32,6 +32,7 @@ import {
   RevokeSponsorshipValue,
   TxnOperation,
 } from "@/types/types";
+import { SaveTransactionModal } from "@/components/SaveTransactionModal";
 
 export const Operations = () => {
   const { transaction } = useStore();
@@ -52,6 +53,7 @@ export const Operations = () => {
   type OpBuildingError = { label?: string; errorList?: string[] };
 
   const [operationsError, setOperationsError] = useState<OperationError[]>([]);
+  const [isSaveTxnModalVisible, setIsSaveTxnModalVisible] = useState(false);
 
   const INITIAL_OPERATION: TxnOperation = {
     operation_type: "",
@@ -822,270 +824,299 @@ export const Operations = () => {
   };
 
   return (
-    <Box gap="md">
-      <Card>
-        <Box gap="lg">
-          {/* Operations */}
-          <>
-            {txnOperations.map((op, idx) => (
-              <Box key={`op-${idx}`} gap="lg" addlClassName="PageBody__content">
-                {/* Operation label and action buttons */}
+    <>
+      <Box gap="md">
+        <Card>
+          <Box gap="lg">
+            {/* Operations */}
+            <>
+              {txnOperations.map((op, idx) => (
                 <Box
+                  key={`op-${idx}`}
                   gap="lg"
-                  direction="row"
-                  align="center"
-                  justify="space-between"
+                  addlClassName="PageBody__content"
                 >
-                  <Badge
-                    size="md"
-                    variant="secondary"
-                  >{`Operation ${idx + 1}`}</Badge>
+                  {/* Operation label and action buttons */}
+                  <Box
+                    gap="lg"
+                    direction="row"
+                    align="center"
+                    justify="space-between"
+                  >
+                    <Badge
+                      size="md"
+                      variant="secondary"
+                    >{`Operation ${idx + 1}`}</Badge>
 
-                  <OperationTabbedButtons
+                    <OperationTabbedButtons
+                      index={idx}
+                      isUpDisabled={idx === 0}
+                      isDownDisabled={idx === txnOperations.length - 1}
+                      isDeleteDisabled={txnOperations.length === 1}
+                    />
+                  </Box>
+
+                  <OperationTypeSelector
                     index={idx}
-                    isUpDisabled={idx === 0}
-                    isDownDisabled={idx === txnOperations.length - 1}
-                    isDeleteDisabled={txnOperations.length === 1}
+                    operationType={op.operation_type}
                   />
-                </Box>
 
-                <OperationTypeSelector
-                  index={idx}
-                  operationType={op.operation_type}
-                />
+                  {/* Operation params */}
+                  <>
+                    {TRANSACTION_OPERATIONS[op.operation_type]?.params.map(
+                      (input) => {
+                        const component = formComponentTemplateTxnOps({
+                          param: input,
+                          opType: op.operation_type,
+                          index: idx,
+                          custom:
+                            TRANSACTION_OPERATIONS[op.operation_type].custom?.[
+                              input
+                            ],
+                        });
+                        const baseProps = {
+                          value: txnOperations[idx]?.params[input],
+                          error: operationsError[idx]?.error?.[input],
+                          isRequired:
+                            TRANSACTION_OPERATIONS[
+                              op.operation_type
+                            ].requiredParams.includes(input),
+                        };
 
-                {/* Operation params */}
-                <>
-                  {TRANSACTION_OPERATIONS[op.operation_type]?.params.map(
-                    (input) => {
-                      const component = formComponentTemplateTxnOps({
-                        param: input,
-                        opType: op.operation_type,
-                        index: idx,
-                        custom:
-                          TRANSACTION_OPERATIONS[op.operation_type].custom?.[
-                            input
-                          ],
-                      });
-                      const baseProps = {
-                        value: txnOperations[idx]?.params[input],
-                        error: operationsError[idx]?.error?.[input],
-                        isRequired:
-                          TRANSACTION_OPERATIONS[
-                            op.operation_type
-                          ].requiredParams.includes(input),
-                      };
-
-                      if (component) {
-                        switch (input) {
-                          case "asset":
-                          case "buying":
-                          case "selling":
-                          case "send_asset":
-                          case "dest_asset":
-                            return component.render({
-                              ...baseProps,
-                              onChange: (assetValue: AssetObjectValue) => {
-                                handleOperationParamChange({
-                                  opIndex: idx,
-                                  opParam: input,
-                                  opValue: assetValue,
-                                  opType: op.operation_type,
-                                });
-                              },
-                            });
-                          case "authorize":
-                            return component.render({
-                              ...baseProps,
-                              onChange: (selected: string | undefined) => {
-                                handleOperationParamChange({
-                                  opIndex: idx,
-                                  opParam: input,
-                                  opValue: selected,
-                                  opType: op.operation_type,
-                                });
-                              },
-                            });
-                          case "claimants":
-                            return component.render({
-                              ...baseProps,
-                              onChange: (
-                                claimants: AnyObject[] | undefined,
-                              ) => {
-                                handleOperationParamChange({
-                                  opIndex: idx,
-                                  opParam: input,
-                                  opValue: claimants,
-                                  opType: op.operation_type,
-                                });
-                              },
-                            });
-                          case "line":
-                            return component.render({
-                              ...baseProps,
-                              onChange: (
-                                assetValue:
-                                  | AssetObjectValue
-                                  | AssetPoolShareObjectValue,
-                              ) => {
-                                handleOperationParamChange({
-                                  opIndex: idx,
-                                  opParam: input,
-                                  opValue: assetValue,
-                                  opType: op.operation_type,
-                                });
-                              },
-                            });
-                          case "min_price":
-                          case "max_price":
-                            return component.render({
-                              ...baseProps,
-                              onChange: (value: NumberFractionValue) => {
-                                handleOperationParamChange({
-                                  opIndex: idx,
-                                  opParam: input,
-                                  opValue: value,
-                                  opType: op.operation_type,
-                                });
-                              },
-                            });
-                          case "path":
-                            return component.render({
-                              ...baseProps,
-                              onChange: (path: AssetObject[]) => {
-                                handleOperationParamChange({
-                                  opIndex: idx,
-                                  opParam: input,
-                                  opValue: path,
-                                  opType: op.operation_type,
-                                });
-                              },
-                            });
-                          case "revokeSponsorship":
-                            return component.render({
-                              ...baseProps,
-                              onChange: (
-                                value: RevokeSponsorshipValue | undefined,
-                              ) => {
-                                handleOperationParamChange({
-                                  opIndex: idx,
-                                  opParam: input,
-                                  opValue: value,
-                                  opType: op.operation_type,
-                                });
-                              },
-                            });
-                          case "clear_flags":
-                          case "set_flags":
-                            return component.render({
-                              ...baseProps,
-                              onChange: (value: string[]) => {
-                                handleOperationParamChange({
-                                  opIndex: idx,
-                                  opParam: input,
-                                  opValue: value,
-                                  opType: op.operation_type,
-                                });
-                              },
-                            });
-                          case "signer":
-                            return component.render({
-                              ...baseProps,
-                              onChange: (value: OptionSigner | undefined) => {
-                                handleOperationParamChange({
-                                  opIndex: idx,
-                                  opParam: input,
-                                  opValue: value,
-                                  opType: op.operation_type,
-                                });
-                              },
-                            });
-                          default:
-                            return component.render({
-                              ...baseProps,
-                              onChange: (e: ChangeEvent<HTMLInputElement>) => {
-                                handleOperationParamChange({
-                                  opIndex: idx,
-                                  opParam: input,
-                                  opValue: e.target.value,
-                                  opType: op.operation_type,
-                                });
-                              },
-                            });
+                        if (component) {
+                          switch (input) {
+                            case "asset":
+                            case "buying":
+                            case "selling":
+                            case "send_asset":
+                            case "dest_asset":
+                              return component.render({
+                                ...baseProps,
+                                onChange: (assetValue: AssetObjectValue) => {
+                                  handleOperationParamChange({
+                                    opIndex: idx,
+                                    opParam: input,
+                                    opValue: assetValue,
+                                    opType: op.operation_type,
+                                  });
+                                },
+                              });
+                            case "authorize":
+                              return component.render({
+                                ...baseProps,
+                                onChange: (selected: string | undefined) => {
+                                  handleOperationParamChange({
+                                    opIndex: idx,
+                                    opParam: input,
+                                    opValue: selected,
+                                    opType: op.operation_type,
+                                  });
+                                },
+                              });
+                            case "claimants":
+                              return component.render({
+                                ...baseProps,
+                                onChange: (
+                                  claimants: AnyObject[] | undefined,
+                                ) => {
+                                  handleOperationParamChange({
+                                    opIndex: idx,
+                                    opParam: input,
+                                    opValue: claimants,
+                                    opType: op.operation_type,
+                                  });
+                                },
+                              });
+                            case "line":
+                              return component.render({
+                                ...baseProps,
+                                onChange: (
+                                  assetValue:
+                                    | AssetObjectValue
+                                    | AssetPoolShareObjectValue,
+                                ) => {
+                                  handleOperationParamChange({
+                                    opIndex: idx,
+                                    opParam: input,
+                                    opValue: assetValue,
+                                    opType: op.operation_type,
+                                  });
+                                },
+                              });
+                            case "min_price":
+                            case "max_price":
+                              return component.render({
+                                ...baseProps,
+                                onChange: (value: NumberFractionValue) => {
+                                  handleOperationParamChange({
+                                    opIndex: idx,
+                                    opParam: input,
+                                    opValue: value,
+                                    opType: op.operation_type,
+                                  });
+                                },
+                              });
+                            case "path":
+                              return component.render({
+                                ...baseProps,
+                                onChange: (path: AssetObject[]) => {
+                                  handleOperationParamChange({
+                                    opIndex: idx,
+                                    opParam: input,
+                                    opValue: path,
+                                    opType: op.operation_type,
+                                  });
+                                },
+                              });
+                            case "revokeSponsorship":
+                              return component.render({
+                                ...baseProps,
+                                onChange: (
+                                  value: RevokeSponsorshipValue | undefined,
+                                ) => {
+                                  handleOperationParamChange({
+                                    opIndex: idx,
+                                    opParam: input,
+                                    opValue: value,
+                                    opType: op.operation_type,
+                                  });
+                                },
+                              });
+                            case "clear_flags":
+                            case "set_flags":
+                              return component.render({
+                                ...baseProps,
+                                onChange: (value: string[]) => {
+                                  handleOperationParamChange({
+                                    opIndex: idx,
+                                    opParam: input,
+                                    opValue: value,
+                                    opType: op.operation_type,
+                                  });
+                                },
+                              });
+                            case "signer":
+                              return component.render({
+                                ...baseProps,
+                                onChange: (value: OptionSigner | undefined) => {
+                                  handleOperationParamChange({
+                                    opIndex: idx,
+                                    opParam: input,
+                                    opValue: value,
+                                    opType: op.operation_type,
+                                  });
+                                },
+                              });
+                            default:
+                              return component.render({
+                                ...baseProps,
+                                onChange: (
+                                  e: ChangeEvent<HTMLInputElement>,
+                                ) => {
+                                  handleOperationParamChange({
+                                    opIndex: idx,
+                                    opParam: input,
+                                    opValue: e.target.value,
+                                    opType: op.operation_type,
+                                  });
+                                },
+                              });
+                          }
                         }
-                      }
 
-                      return null;
-                    },
-                  )}
-                </>
+                        return null;
+                      },
+                    )}
+                  </>
 
-                {/* Optional source account for all operations */}
-                <>{renderSourceAccount(op.operation_type, idx)}</>
+                  {/* Optional source account for all operations */}
+                  <>{renderSourceAccount(op.operation_type, idx)}</>
+                </Box>
+              ))}
+            </>
+
+            {/* Operations bottom buttons */}
+            <Box
+              gap="lg"
+              direction="row"
+              align="center"
+              justify="space-between"
+            >
+              <Box gap="sm" direction="row" align="center">
+                <Button
+                  size="md"
+                  variant="secondary"
+                  icon={<Icon.PlusCircle />}
+                  onClick={() => {
+                    updateOptionParamAndError({
+                      type: "add",
+                      item: INITIAL_OPERATION,
+                    });
+                  }}
+                >
+                  Add Operation
+                </Button>
+
+                <Button
+                  size="md"
+                  variant="tertiary"
+                  icon={<Icon.Save01 />}
+                  onClick={() => {
+                    setIsSaveTxnModalVisible(true);
+                  }}
+                  title="Save transaction"
+                ></Button>
               </Box>
-            ))}
-          </>
 
-          {/* Operations bottom buttons */}
-          <Box gap="lg" direction="row" align="center" justify="space-between">
-            <Box gap="sm" direction="row" align="center">
               <Button
                 size="md"
-                variant="secondary"
-                icon={<Icon.PlusCircle />}
+                variant="error"
+                icon={<Icon.RefreshCw01 />}
                 onClick={() => {
-                  updateOptionParamAndError({
-                    type: "add",
-                    item: INITIAL_OPERATION,
-                  });
+                  updateOptionParamAndError({ type: "reset" });
                 }}
               >
-                Add Operation
+                Clear Operations
               </Button>
-
-              {/* TODO: add share and save buttons */}
             </Box>
-
-            <Button
-              size="md"
-              variant="error"
-              icon={<Icon.RefreshCw01 />}
-              onClick={() => {
-                updateOptionParamAndError({ type: "reset" });
-              }}
-            >
-              Clear Operations
-            </Button>
           </Box>
-        </Box>
-      </Card>
+        </Card>
 
-      <>
-        {formErrors.length > 0 ? (
-          <ValidationResponseCard
-            variant="primary"
-            title="Transaction building errors:"
-            response={
-              <Box gap="sm">
-                <>
-                  {formErrors.map((e, i) => (
-                    <Box gap="sm" key={`e-${i}`}>
-                      <>
-                        {e.label ? <div>{e.label}</div> : null}
-                        <ul>
-                          {e.errorList?.map((ee, ei) => (
-                            <li key={`e-${i}-${ei}`}>{ee}</li>
-                          ))}
-                        </ul>
-                      </>
-                    </Box>
-                  ))}
-                </>
-              </Box>
-            }
-          />
-        ) : null}
-      </>
-    </Box>
+        <>
+          {formErrors.length > 0 ? (
+            <ValidationResponseCard
+              variant="primary"
+              title="Transaction building errors:"
+              response={
+                <Box gap="sm">
+                  <>
+                    {formErrors.map((e, i) => (
+                      <Box gap="sm" key={`e-${i}`}>
+                        <>
+                          {e.label ? <div>{e.label}</div> : null}
+                          <ul>
+                            {e.errorList?.map((ee, ei) => (
+                              <li key={`e-${i}-${ei}`}>{ee}</li>
+                            ))}
+                          </ul>
+                        </>
+                      </Box>
+                    ))}
+                  </>
+                </Box>
+              }
+            />
+          ) : null}
+        </>
+      </Box>
+
+      <SaveTransactionModal
+        type="save"
+        isVisible={isSaveTxnModalVisible}
+        onClose={() => {
+          setIsSaveTxnModalVisible(false);
+        }}
+      />
+    </>
   );
 };

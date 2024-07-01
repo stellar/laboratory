@@ -453,6 +453,15 @@
   }
 }
 
+// Saved Transactions
+.SavedTransactions {
+  &__name {
+    &__postMethod {
+      color: var(--sds-clr-gold-11) !important;
+    }
+  }
+}
+
 // Operations
 .NumberFractionPicker__fraction__divider {
   padding-top: pxToRem(22px);

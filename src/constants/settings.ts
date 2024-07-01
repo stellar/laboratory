@@ -4,7 +4,10 @@ import { Network } from "@/types/types";
 export const LOCAL_STORAGE_SAVED_NETWORK = "stellar_lab_network";
 export const LOCAL_STORAGE_SAVED_ENDPOINTS_HORIZON =
   "stellar_lab_saved_horizon_endpoints";
-export const LOCAL_STORAGE_SAVED_ENDPOINTS_RPC = "rpc";
+export const LOCAL_STORAGE_SAVED_ENDPOINTS_RPC =
+  "stellar_lab_saved_rpc_endpoints";
+export const LOCAL_STORAGE_SAVED_TRANSACTIONS =
+  "stellar_lab_saved_transactions";
 
 export const NetworkOptions: Network[] = [
   {

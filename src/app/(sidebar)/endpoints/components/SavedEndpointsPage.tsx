@@ -1,6 +1,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
+  Alert,
   Button,
   Card,
   CopyText,
@@ -12,15 +13,18 @@ import {
 import { TabView } from "@/components/TabView";
 import { Box } from "@/components/layout/Box";
 import { InputSideElement } from "@/components/InputSideElement";
+import { NextLink } from "@/components/NextLink";
 
 import { NetworkOptions } from "@/constants/settings";
+import { Routes } from "@/constants/routes";
 import { localStorageSavedEndpointsHorizon } from "@/helpers/localStorageSavedEndpointsHorizon";
 import { arrayItem } from "@/helpers/arrayItem";
+import { formatTimestamp } from "@/helpers/formatTimestamp";
 import { useStore } from "@/store/useStore";
 import {
   Network,
   SavedEndpointHorizon,
-  SavedEndpointNetwork,
+  LocalStorageSavedNetwork,
 } from "@/types/types";
 
 export const SavedEndpointsPage = () => {
@@ -42,23 +46,8 @@ export const SavedEndpointsPage = () => {
     setSavedEndpoints(localStorageSavedEndpointsHorizon.get());
   }, []);
 
-  const formatTimestamp = (timestamp: number) => {
-    const date = new Date(timestamp);
-    const dateTimeFormatter = new Intl.DateTimeFormat("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-      hour: "numeric",
-      minute: "2-digit",
-      timeZone: "utc",
-      timeZoneName: "short",
-    });
-
-    return dateTimeFormatter.format(date);
-  };
-
   const getNetworkConfig = (
-    network: SavedEndpointNetwork,
+    network: LocalStorageSavedNetwork,
   ): Network | undefined => {
     const defaults = NetworkOptions.find((n) => n.id === network.id);
 
@@ -125,8 +114,7 @@ export const SavedEndpointsPage = () => {
             <Box gap="xs" key={`horizon-${e.timestamp}`}>
               <div className="Endpoints__urlBar">
                 <Input
-                  data-testid="endpoints-url"
-                  id="endpoint-url"
+                  id={`endpoint-url-${e.timestamp}`}
                   fieldSize="md"
                   value={e.url}
                   readOnly
@@ -135,7 +123,6 @@ export const SavedEndpointsPage = () => {
                     <InputSideElement
                       variant="text"
                       placement="left"
-                      data-testid="endpoints-url-method"
                       addlClassName="Endpoints__urlBar__requestMethod"
                     >
                       {e.method}
@@ -210,16 +197,15 @@ export const SavedEndpointsPage = () => {
         }}
       />
 
-      {/* TODO: Put back when save txn is ready */}
-      {/* <Alert
+      <Alert
         variant="primary"
         title="Looking for your saved transactions?"
         placement="inline"
       >
-        <SdsLink href="TODO: add saved txn link">
+        <NextLink href={`${Routes.SAVED_TRANSACTIONS}`} sds-variant="primary">
           See saved transactions
-        </SdsLink>
-      </Alert> */}
+        </NextLink>
+      </Alert>
 
       <Modal
         visible={
@@ -235,7 +221,7 @@ export const SavedEndpointsPage = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button
-            size="sm"
+            size="md"
             variant="tertiary"
             onClick={() => {
               setIsNetworkChangeModalVisible(false);
@@ -244,7 +230,7 @@ export const SavedEndpointsPage = () => {
             Cancel
           </Button>
           <Button
-            size="sm"
+            size="md"
             variant="primary"
             onClick={() => {
               const endpoint =
