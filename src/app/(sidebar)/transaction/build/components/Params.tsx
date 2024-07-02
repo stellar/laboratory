@@ -317,14 +317,16 @@ export const Params = () => {
             }}
             note={
               <>
-                The{" "}
-                <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/fees-resource-limits-metering">
-                  network base fee
+                The base inclusion fee is currently set to 100 stroops (0.00001
+                lumens). For more real time inclusion fee, please see{" "}
+                <SdsLink href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getFeeStats">
+                  getFeeStats
                 </SdsLink>{" "}
-                is currently set to 100 stroops (0.00001 lumens). Based on
-                current network activity, we suggest setting it to 100 stroops.
-                Final transaction fee is equal to base fee times number of
-                operations in this transaction.
+                from the RPC. To learn more about fees, please see{" "}
+                <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/fees-resource-limits-metering">
+                  Fees & Metering
+                </SdsLink>
+                .
               </>
             }
             infoLink="https://developers.stellar.org/docs/learn/glossary#base-fee"
