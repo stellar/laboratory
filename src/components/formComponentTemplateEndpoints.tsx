@@ -10,6 +10,7 @@ import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 import { IncludeFailedPicker } from "@/components/FormElements/IncludeFailedPicker";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { AssetMultiPicker } from "@/components/FormElements/AssetMultiPicker";
+import { FiltersPicker } from "@/components/FormElements/FiltersPicker";
 
 import { parseJsonString } from "@/helpers/parseJsonString";
 import { validate } from "@/validate";
@@ -676,6 +677,26 @@ export const formComponentTemplateEndpoints = (
             onChange={templ.onChange}
           />
         ),
+        validate: validate.xdr,
+      };
+    case "filters":
+      return {
+        render: (templ: TemplateRenderTxProps) => {
+          console.log("templ.onChange: ", templ.onChange);
+          return (
+            <FiltersPicker
+              key={id}
+              id={id}
+              label="Filters"
+              labelSuffix={!templ.isRequired ? "optional" : undefined}
+              value={templ.value || ""}
+              error={
+                templ.error?.result === "error" ? templ.error?.message : ""
+              }
+              onChange={templ.onChange}
+            />
+          );
+        },
         validate: validate.xdr,
       };
     default:
