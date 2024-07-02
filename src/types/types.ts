@@ -202,3 +202,11 @@ export type SponsorshipType =
   | "data"
   | "claimable_balance"
   | "signer";
+
+// =============================================================================
+// RPC
+// =============================================================================
+export type GetNetworkParams = {
+  contractIds: string[];
+  topics: string[][];
+};

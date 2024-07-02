@@ -29,7 +29,10 @@ import { localStorageSavedEndpointsHorizon } from "@/helpers/localStorageSavedEn
 import { arrayItem } from "@/helpers/arrayItem";
 
 import { Routes } from "@/constants/routes";
-import { ENDPOINTS_PAGES_HORIZON } from "@/constants/endpointsPages";
+import {
+  ENDPOINTS_PAGES_HORIZON,
+  ENDPOINTS_PAGES_RPC,
+} from "@/constants/endpointsPages";
 import { useEndpoint } from "@/query/useEndpoint";
 import {
   AnyObject,
@@ -43,13 +46,20 @@ import { SavedEndpointsPage } from "../components/SavedEndpointsPage";
 
 export default function Endpoints() {
   const pathname = usePathname();
+  const IS_RPC_ENDPOINT = pathname.includes(Routes.ENDPOINTS_RPC);
   const currentPage = pathname.split(Routes.ENDPOINTS)?.[1];
 
-  const page = ENDPOINTS_PAGES_HORIZON.navItems
+  const horizonPage = ENDPOINTS_PAGES_HORIZON.navItems
     .find((page) => pathname.includes(page.route))
     ?.nestedItems?.find((i) => i.route === pathname);
 
-  const pageData = page?.form;
+  const RpcPage = ENDPOINTS_PAGES_RPC.navItems.find((page) =>
+    pathname.includes(page.route),
+  );
+
+  const page = IS_RPC_ENDPOINT ? RpcPage : horizonPage;
+  const pageData = IS_RPC_ENDPOINT ? RpcPage?.form : horizonPage?.form;
+
   const requiredFields = sanitizeArray(
     pageData?.requiredParams?.split(",") || [],
   );
@@ -355,7 +365,9 @@ export default function Endpoints() {
       return pathArr.join("/");
     };
 
-    const baseUrl = `${endpointNetwork.horizonUrl}${parseUrlPath(urlPath)}`;
+    const baseUrl = IS_RPC_ENDPOINT
+      ? `${endpointNetwork.rpcUrl}${parseUrlPath(urlPath)}`
+      : `${endpointNetwork.horizonUrl}${parseUrlPath(urlPath)}`;
 
     if (pageData?.requestMethod === "POST") {
       return baseUrl;
@@ -524,6 +536,8 @@ export default function Endpoints() {
       return null;
     }
 
+    console.log("allFields: ", allFields);
+
     return (
       <div className="Endpoints__content">
         <div className="PageBody__content" data-testid="endpoints-pageContent">
@@ -578,6 +592,7 @@ export default function Endpoints() {
                 }
               };
 
+              console.log("f: ", f);
               switch (f) {
                 case "asset":
                 case "selling":
@@ -588,6 +603,7 @@ export default function Endpoints() {
                 case "counter_asset":
                 case "destination_asset":
                 case "source_asset":
+                case "filters":
                   return component.render({
                     value: params[f],
                     error: formError[f],
@@ -656,12 +672,15 @@ export default function Endpoints() {
     return <>{`${page?.label} page is coming soon.`}</>;
   }
 
+  console.log("page: ", page);
   return (
     <>
       <div className="PageHeader">
-        <Text size="md" as="h1" weight="medium">
-          {page.label}
-        </Text>
+        {page ? (
+          <Text size="md" as="h1" weight="medium">
+            {page.label}
+          </Text>
+        ) : null}
 
         <SdsLink
           href={pageData.docsUrl}
