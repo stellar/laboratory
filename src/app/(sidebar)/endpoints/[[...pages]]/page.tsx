@@ -40,8 +40,6 @@ import {
   AssetObjectValue,
   Network,
   FiltersObject,
-  FiltersObjectValue,
-  FiltersType,
 } from "@/types/types";
 
 import { EndpointsLandingPage } from "../components/EndpointsLandingPage";
@@ -77,8 +75,6 @@ export default function Endpoints() {
     updateNetwork,
     resetParams,
   } = endpoints;
-
-  console.log("params: ", params);
 
   const REGEX_TEMPLATE_SEARCH_PARAMS = /\{\?.+?\}/;
   const REGEX_TEMPLATE_SEARCH_PARAMS_VALUE = /(?<=\{\?).+?(?=\})/;
@@ -444,13 +440,36 @@ export default function Endpoints() {
 
   const renderPostPayload = () => {
     if (pageData?.requestMethod === "POST") {
+      let renderedProps;
+
+      if (pathname === Routes.ENDPOINTS_TRANSACTIONS_POST) {
+        renderedProps = { tx: params.tx ?? "" };
+      }
+
+      if (pathname === Routes.ENDPOINTS_GET_EVENTS) {
+        let filteredParams = params.filters ? JSON.parse(params.filters) : {};
+
+        renderedProps = {
+          startLedger: params.ledger ?? "",
+          cursor: params.cursor,
+          limit: params.limit,
+          filters: [
+            {
+              type: filteredParams.type ?? "",
+              contractIds: filteredParams.contract_ids ?? "",
+              topics: filteredParams.topics ?? "",
+            },
+          ],
+        };
+      }
+
       return (
         <div className="Endpoints__txTextarea">
           <Textarea
             id="tx"
             fieldSize="md"
             label="Payload"
-            value={JSON.stringify({ tx: params.tx ?? "" }, null, 2)}
+            value={JSON.stringify(renderedProps, null, 2)}
             rows={5}
             disabled
             spellCheck={false}
@@ -599,8 +618,6 @@ export default function Endpoints() {
                 }
               };
 
-              console.log("f: ", f);
-
               switch (f) {
                 case "asset":
                 case "selling":
@@ -649,21 +666,20 @@ export default function Endpoints() {
                     },
                   });
                 // Custom endpoint component
-                // case "filters":
-                //   return component.render({
-                //     value: params[f],
-                //     error: formError[f],
-                //     isRequired,
-                //     onChange: (filtersObject: FiltersObject) => {
-                //       console.log("[Endpoints] filtersObject: ", filtersObject);
-                //       handleChange(
-                //         filtersObject,
-                //         isEmptyObject(sanitizeObject(filtersObject || {}))
-                //           ? undefined
-                //           : JSON.stringify(filtersObject),
-                //       );
-                //     },
-                //   });
+                case "filters":
+                  return component.render({
+                    value: params[f],
+                    error: formError[f],
+                    isRequired,
+                    onChange: (filtersObject: FiltersObject) => {
+                      handleChange(
+                        filtersObject,
+                        isEmptyObject(sanitizeObject(filtersObject || {}))
+                          ? undefined
+                          : JSON.stringify(filtersObject),
+                      );
+                    },
+                  });
                 default:
                   return component.render({
                     value: params[f],

@@ -282,7 +282,7 @@ export const Overview = () => {
                 id="signer"
                 label="Add Signer"
                 value={secretInputs}
-                onUpdate={onUpdateSecretInputs}
+                onChange={onUpdateSecretInputs}
                 validate={validate.secretKey}
                 placeholder="Secret key (starting with S) or hash preimage (in hex)"
                 autocomplete="off"

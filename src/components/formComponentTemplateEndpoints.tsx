@@ -681,24 +681,15 @@ export const formComponentTemplateEndpoints = (
       };
     case "filters":
       return {
-        render: (templ: TemplateRenderTxProps) => {
-          console.log("[formComponentTemplateEndpoints] templ: ", templ);
-          console.log(
-            "[formComponentTemplateEndpoints] templ.value: ",
-            templ.value,
-          );
-
-          return (
-            <FiltersPicker
-              key={id}
-              id={id}
-              // labelSuffix={!templ.isRequired ? "optional" : undefined}
-              value={parseJsonString(templ.value)}
-              error={templ.error}
-              onChange={templ?.onChange}
-            />
-          );
-        },
+        render: (templ: TemplateRenderTxProps) => (
+          <FiltersPicker
+            key={id}
+            id={id}
+            value={parseJsonString(templ.value)}
+            error={templ.error}
+            onChange={templ?.onChange}
+          />
+        ),
         validate: null,
       };
     default:
