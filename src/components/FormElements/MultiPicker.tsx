@@ -17,6 +17,7 @@ type MultiPickerProps = {
   validate: (...args: any[]) => any;
   value: Values;
   autocomplete?: React.HTMLInputAutoCompleteAttribute;
+  rightElement?: React.ReactNode;
 };
 
 export const MultiPicker = ({
@@ -28,6 +29,7 @@ export const MultiPicker = ({
   validate,
   value,
   autocomplete,
+  rightElement,
 }: MultiPickerProps) => {
   if (!value || !value.length) {
     value = [];
@@ -55,6 +57,7 @@ export const MultiPicker = ({
                   error={errorMessage}
                   placeholder={placeholder}
                   autocomplete={autocomplete}
+                  rightElement={rightElement}
                 />
               );
             })

@@ -39,6 +39,9 @@ import {
   AssetObject,
   AssetObjectValue,
   Network,
+  FiltersObject,
+  FiltersObjectValue,
+  FiltersType,
 } from "@/types/types";
 
 import { EndpointsLandingPage } from "../components/EndpointsLandingPage";
@@ -74,6 +77,8 @@ export default function Endpoints() {
     updateNetwork,
     resetParams,
   } = endpoints;
+
+  console.log("params: ", params);
 
   const REGEX_TEMPLATE_SEARCH_PARAMS = /\{\?.+?\}/;
   const REGEX_TEMPLATE_SEARCH_PARAMS_VALUE = /(?<=\{\?).+?(?=\})/;
@@ -536,8 +541,6 @@ export default function Endpoints() {
       return null;
     }
 
-    console.log("allFields: ", allFields);
-
     return (
       <div className="Endpoints__content">
         <div className="PageBody__content" data-testid="endpoints-pageContent">
@@ -576,6 +579,10 @@ export default function Endpoints() {
                     )
                   : {};
 
+                console.log("[allFields] mappedParams: ", mappedParams);
+                console.log("[allFields] storeValue: ", storeValue);
+                console.log("[allFields] value: ", value);
+
                 updateParams({
                   [f]: storeValue,
                   ...mappedParams,
@@ -593,6 +600,7 @@ export default function Endpoints() {
               };
 
               console.log("f: ", f);
+
               switch (f) {
                 case "asset":
                 case "selling":
@@ -603,7 +611,6 @@ export default function Endpoints() {
                 case "counter_asset":
                 case "destination_asset":
                 case "source_asset":
-                case "filters":
                   return component.render({
                     value: params[f],
                     error: formError[f],
@@ -641,6 +648,22 @@ export default function Endpoints() {
                       handleChange(optionId, optionId);
                     },
                   });
+                // Custom endpoint component
+                // case "filters":
+                //   return component.render({
+                //     value: params[f],
+                //     error: formError[f],
+                //     isRequired,
+                //     onChange: (filtersObject: FiltersObject) => {
+                //       console.log("[Endpoints] filtersObject: ", filtersObject);
+                //       handleChange(
+                //         filtersObject,
+                //         isEmptyObject(sanitizeObject(filtersObject || {}))
+                //           ? undefined
+                //           : JSON.stringify(filtersObject),
+                //       );
+                //     },
+                //   });
                 default:
                   return component.render({
                     value: params[f],
@@ -672,7 +695,6 @@ export default function Endpoints() {
     return <>{`${page?.label} page is coming soon.`}</>;
   }
 
-  console.log("page: ", page);
   return (
     <>
       <div className="PageHeader">

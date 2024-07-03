@@ -5,6 +5,7 @@ import { assetCode } from "./methods/assetCode";
 import { assetMulti } from "./methods/assetMulti";
 import { claimableBalanceId } from "./methods/claimableBalanceId";
 import { claimaints } from "./methods/claimants";
+import { contractId } from "./methods/contractId";
 import { dataName } from "./methods/dataName";
 import { dataValue } from "./methods/dataValue";
 import { bipPath } from "./methods/bipPath";
@@ -28,6 +29,7 @@ export const validate = {
   assetMulti,
   claimableBalanceId,
   claimaints,
+  contractId,
   dataName,
   dataValue,
   bipPath,

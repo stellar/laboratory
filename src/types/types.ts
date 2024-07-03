@@ -206,7 +206,10 @@ export type SponsorshipType =
 // =============================================================================
 // RPC
 // =============================================================================
-export type GetNetworkParams = {
-  contractIds: string[];
-  topics: string[][];
+export type FiltersType = "system" | "contract" | "diagnostic";
+
+export type FiltersObject = {
+  type: FiltersType;
+  contract_ids: string[];
+  topics: string[];
 };
