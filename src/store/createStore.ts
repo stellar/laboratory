@@ -17,6 +17,16 @@ import {
   TxnOperation,
 } from "@/types/types";
 
+export type FeeBumpParams = {
+  source_account: string;
+  fee: string;
+  xdr: string;
+};
+
+type FeeBumpParamsObj = {
+  [K in keyof FeeBumpParams]?: FeeBumpParams[K];
+};
+
 export type TransactionBuildParams = {
   source_account: string;
   fee: string;
@@ -44,7 +54,14 @@ export type SignTxActiveView = "import" | "overview";
 export interface Store {
   // Shared
   network: Network | EmptyObj;
+  // isDynamicNetworkSelect flag to indicate network update outside of the dropdown
+  isDynamicNetworkSelect: boolean;
   selectNetwork: (network: Network) => void;
+  // updateIsDynamicNetworkSelect:
+  //   set to true when updating outside of the network dropdown;
+  //   set to false when changing network from the dropdown, no need to clear it
+  //     in other places because it will stay for the session (not saved in URL)
+  updateIsDynamicNetworkSelect: (isDynamic: boolean) => void;
   resetStoredData: () => void;
 
   // Account
@@ -69,9 +86,14 @@ export interface Store {
     network: Network | EmptyObj;
     currentEndpoint: string | undefined;
     params: AnyObject;
+    saved: {
+      activeTab: string;
+    };
     updateNetwork: (network: Network) => void;
     updateCurrentEndpoint: (endpoint: string) => void;
     updateParams: (params: AnyObject) => void;
+    updateSavedActiveTab: (tabId: string) => void;
+    setParams: (params: AnyObject) => void;
     resetParams: () => void;
     reset: () => void;
   };
@@ -95,6 +117,7 @@ export interface Store {
       bipPath: string;
       hardWalletSigs: xdr.DecoratedSignature[] | [];
     };
+    feeBump: FeeBumpParams;
     // [Transaction] Build Transaction actions
     updateBuildActiveTab: (tabId: string) => void;
     updateBuildParams: (params: TransactionBuildParamsObj) => void;
@@ -121,6 +144,8 @@ export interface Store {
     updateHardWalletSigs: (signer: xdr.DecoratedSignature[]) => void;
     resetSign: () => void;
     resetSignHardWalletSigs: () => void;
+    updateFeeBumpParams: (params: FeeBumpParamsObj) => void;
+    resetBaseFee: () => void;
   };
 
   // XDR
@@ -145,6 +170,9 @@ const initEndpointState = {
   network: {},
   currentEndpoint: undefined,
   params: {},
+  saved: {
+    activeTab: "horizon",
+  },
 };
 
 const initTransactionParamsState = {
@@ -178,6 +206,11 @@ const initTransactionState = {
     bipPath: "44'/148'/0'",
     hardWalletSigs: [],
   },
+  feeBump: {
+    source_account: "",
+    fee: "",
+    xdr: "",
+  },
 };
 
 const initAccountState = {
@@ -204,16 +237,30 @@ export const createStore = (options: CreateStoreOptions) =>
       immer((set) => ({
         // Shared
         network: {},
+        isDynamicNetworkSelect: false,
         selectNetwork: (network: Network) =>
           set((state) => {
             state.network = network;
           }),
+        updateIsDynamicNetworkSelect: (isDynamic: boolean) =>
+          set((state) => {
+            state.isDynamicNetworkSelect = isDynamic;
+          }),
         resetStoredData: () =>
           set((state) => {
             // Add stores that need global reset
+            state.account = { ...state.account, ...initAccountState };
             state.endpoints = {
               ...state.endpoints,
               ...initEndpointState,
+            };
+            state.transaction = {
+              ...state.transaction,
+              ...initTransactionState,
+            };
+            state.xdr = {
+              ...state.xdr,
+              ...initXdrState,
             };
           }),
         // Account
@@ -272,6 +319,14 @@ export const createStore = (options: CreateStoreOptions) =>
                 ...state.endpoints.params,
                 ...params,
               });
+            }),
+          updateSavedActiveTab: (tabId: string) =>
+            set((state) => {
+              state.endpoints.saved.activeTab = tabId;
+            }),
+          setParams: (params: AnyObject) =>
+            set((state) => {
+              state.endpoints.params = params;
             }),
           resetParams: () =>
             set((state) => {
@@ -363,6 +418,17 @@ export const createStore = (options: CreateStoreOptions) =>
               state.transaction.sign.hardWalletSigs =
                 initTransactionState.sign.hardWalletSigs;
             }),
+          updateFeeBumpParams: (params: FeeBumpParamsObj) =>
+            set((state) => {
+              state.transaction.feeBump = {
+                ...state.transaction.feeBump,
+                ...params,
+              };
+            }),
+          resetBaseFee: () =>
+            set((state) => {
+              state.transaction.feeBump = initTransactionState.feeBump;
+            }),
         },
         xdr: {
           ...initXdrState,
@@ -400,6 +466,7 @@ export const createStore = (options: CreateStoreOptions) =>
             endpoints: {
               params: true,
               isStreaming: true,
+              saved: true,
             },
             transaction: {
               build: true,
@@ -408,6 +475,7 @@ export const createStore = (options: CreateStoreOptions) =>
                 importXdr: true,
                 bipPath: true,
               },
+              feeBump: true,
             },
             xdr: {
               blob: true,

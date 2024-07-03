@@ -18,6 +18,7 @@ type InputSideElementProps = (
   children: string;
   placement: "left" | "right";
   isLoading?: boolean;
+  addlClassName?: string;
 };
 
 export const InputSideElement = ({
@@ -28,12 +29,13 @@ export const InputSideElement = ({
   title,
   placement = "right",
   isLoading,
+  addlClassName,
   ...props
 }: InputSideElementProps) => {
   if (variant === "text") {
     return (
       <div
-        className={`InputSideElement InputSideElement--text InputSideElement--${placement}`}
+        className={`InputSideElement InputSideElement--text InputSideElement--${placement} ${addlClassName || ""}`}
         {...props}
       >
         {children}
@@ -43,7 +45,7 @@ export const InputSideElement = ({
 
   return (
     <div
-      className={`InputSideElement InputSideElement--${placement}`}
+      className={`InputSideElement InputSideElement--${placement} ${addlClassName || ""}`}
       {...props}
     >
       <Button

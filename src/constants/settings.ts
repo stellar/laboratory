@@ -1,4 +1,41 @@
+import { Networks } from "@stellar/stellar-sdk";
+import { Network } from "@/types/types";
+
 export const LOCAL_STORAGE_SAVED_NETWORK = "stellar_lab_network";
+export const LOCAL_STORAGE_SAVED_ENDPOINTS_HORIZON =
+  "stellar_lab_saved_horizon_endpoints";
+export const LOCAL_STORAGE_SAVED_ENDPOINTS_RPC = "rpc";
+
+export const NetworkOptions: Network[] = [
+  {
+    id: "futurenet",
+    label: "Futurenet",
+    horizonUrl: "https://horizon-futurenet.stellar.org",
+    rpcUrl: "https://rpc-futurenet.stellar.org",
+    passphrase: Networks.FUTURENET,
+  },
+  {
+    id: "testnet",
+    label: "Testnet",
+    horizonUrl: "https://horizon-testnet.stellar.org",
+    rpcUrl: "https://soroban-testnet.stellar.org",
+    passphrase: Networks.TESTNET,
+  },
+  {
+    id: "mainnet",
+    label: "Mainnet",
+    horizonUrl: "https://horizon.stellar.org",
+    rpcUrl: "",
+    passphrase: Networks.PUBLIC,
+  },
+  {
+    id: "custom",
+    label: "Custom",
+    horizonUrl: "",
+    rpcUrl: "",
+    passphrase: "",
+  },
+];
 
 export const OPERATION_SET_FLAGS = [
   {

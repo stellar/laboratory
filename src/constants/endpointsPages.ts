@@ -1,12 +1,13 @@
+import { ReactNode } from "react";
 import { Routes } from "@/constants/routes";
 import { AnyObject } from "@/types/types";
 
-type EndpointsPagesProps = {
-  instruction: string;
+export type EndpointsPagesProps = {
+  instruction?: string;
   navItems: {
     route: Routes;
     label: string;
-    nestedItems: {
+    nestedItems?: {
       route: Routes;
       label: string;
       form: {
@@ -19,7 +20,9 @@ type EndpointsPagesProps = {
         custom?: AnyObject;
       };
     }[];
+    icon?: ReactNode;
   }[];
+  hasBottomDivider?: boolean;
 };
 
 export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {

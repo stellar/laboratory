@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Icon } from "@stellar/design-system";
 import { Routes } from "@/constants/routes";
@@ -17,6 +17,7 @@ export type Sidebar = {
   navItems: SidebarLink[];
   instruction?: string;
   bottomItems?: SidebarLink[];
+  hasBottomDivider?: boolean;
 };
 
 export const LayoutSidebarContent = ({
@@ -43,7 +44,7 @@ export const LayoutSidebarContent = ({
         <div className="LabLayout__sidebar--top">
           {sidebarArray.map((sidebar, index) => (
             <div
-              className="LabLayout__sidebar__section"
+              className={`LabLayout__sidebar__section ${sidebar.hasBottomDivider ? "LabLayout__sidebar__section--divider" : ""}`}
               key={`sidebar-${index}`}
               data-testid="endpoints-sidebar-section"
             >
@@ -94,6 +95,12 @@ const Link = ({ item, pathname }: { item: SidebarLink; pathname: string }) => {
     ? pathname?.split(Routes.ENDPOINTS)?.[1]?.split("/")?.[1] ===
       item.route?.split(Routes.ENDPOINTS)?.[1]?.split("/")?.[1]
     : false;
+
+  useEffect(() => {
+    if (isSelectedParent) {
+      setIsExpanded(isSelectedParent);
+    }
+  }, [isSelectedParent]);
 
   const [isExpanded, setIsExpanded] = useState(isSelectedParent);
 

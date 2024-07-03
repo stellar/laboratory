@@ -9,15 +9,12 @@ import {
   CopyText,
   Icon,
   Input,
-  Link,
   Text,
   Textarea,
 } from "@stellar/design-system";
 import { useQueryClient } from "@tanstack/react-query";
 
-import { InfoCards } from "@/components/InfoCards";
 import { SdsLink } from "@/components/SdsLink";
-import { NextLink } from "@/components/NextLink";
 import { formComponentTemplateEndpoints } from "@/components/formComponentTemplateEndpoints";
 import { PrettyJson } from "@/components/PrettyJson";
 import { InputSideElement } from "@/components/InputSideElement";
@@ -27,7 +24,7 @@ import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { sanitizeArray } from "@/helpers/sanitizeArray";
 import { sanitizeObject } from "@/helpers/sanitizeObject";
 import { parseJsonString } from "@/helpers/parseJsonString";
-import { openUrl } from "@/helpers/openUrl";
+import { saveEndpointHorizon } from "@/helpers/saveEndpointHorizon";
 
 import { Routes } from "@/constants/routes";
 import { ENDPOINTS_PAGES_HORIZON } from "@/constants/endpointsPages";
@@ -38,6 +35,9 @@ import {
   AssetObjectValue,
   Network,
 } from "@/types/types";
+
+import { EndpointsLandingPage } from "../components/EndpointsLandingPage";
+import { SavedEndpointsPage } from "../components/SavedEndpointsPage";
 
 export default function Endpoints() {
   const pathname = usePathname();
@@ -52,7 +52,7 @@ export default function Endpoints() {
     pageData?.requiredParams?.split(",") || [],
   );
 
-  const { endpoints, network } = useStore();
+  const { endpoints, network, isDynamicNetworkSelect } = useStore();
   const {
     params,
     currentEndpoint,
@@ -287,7 +287,7 @@ export default function Endpoints() {
 
     // Clear form and errors if navigating to another endpoint page. We don't
     // want to keep previous form values.
-    if (currentEndpoint && currentEndpoint !== currentPage) {
+    if (currentEndpoint && ![currentPage, "/saved"].includes(currentEndpoint)) {
       resetStates();
     }
   }, [currentEndpoint, currentPage, resetStates, updateCurrentEndpoint]);
@@ -305,11 +305,21 @@ export default function Endpoints() {
     if (network.id && !endpointNetwork.id) {
       updateNetwork(network as Network);
       // When network changes, clear saved params and errors.
-    } else if (network.id && network.id !== endpointNetwork.id) {
+    } else if (
+      network.id &&
+      network.id !== endpointNetwork.id &&
+      !isDynamicNetworkSelect
+    ) {
       resetStates();
       updateNetwork(network as Network);
     }
-  }, [endpointNetwork.id, network, resetStates, updateNetwork]);
+  }, [
+    endpointNetwork.id,
+    isDynamicNetworkSelect,
+    network,
+    resetStates,
+    updateNetwork,
+  ]);
 
   // Scroll to response
   useEffect(() => {
@@ -453,6 +463,7 @@ export default function Endpoints() {
                 variant="text"
                 placement="left"
                 data-testid="endpoints-url-method"
+                addlClassName="Endpoints__urlBar__requestMethod"
               >
                 {pageData.requestMethod}
               </InputSideElement>
@@ -476,6 +487,39 @@ export default function Endpoints() {
               type="button"
             ></Button>
           </CopyText>
+          <Button
+            size="md"
+            variant="tertiary"
+            icon={<Icon.Save01 />}
+            type="button"
+            onClick={() => {
+              saveEndpointHorizon({
+                url: requestUrl,
+                method: pageData.requestMethod,
+                timestamp: Date.now(),
+                route: pathname,
+                params,
+                network: {
+                  id: network.id,
+                  label: network.label,
+                  // Mainnet with custom RPC URL
+                  ...(network.id === "mainnet" && network.rpcUrl
+                    ? {
+                        rpcUrl: network.rpcUrl,
+                      }
+                    : {}),
+                  // Custom network
+                  ...(network.id === "custom"
+                    ? {
+                        horizonUrl: network.horizonUrl,
+                        rpcUrl: network.rpcUrl,
+                        passphrase: network.passphrase,
+                      }
+                    : {}),
+                },
+              });
+            }}
+          ></Button>
         </div>
       </>
     );
@@ -616,6 +660,10 @@ export default function Endpoints() {
     return <EndpointsLandingPage />;
   }
 
+  if (pathname === Routes.ENDPOINTS_SAVED) {
+    return <SavedEndpointsPage />;
+  }
+
   if (!pageData) {
     return <>{`${page?.label} page is coming soon.`}</>;
   }
@@ -708,66 +756,3 @@ export default function Endpoints() {
     </>
   );
 }
-
-const EndpointsLandingPage = () => {
-  const infoCards = [
-    {
-      id: "stellar-rpc",
-      title: "Stellar RPC Endpoints",
-      description: "Learn about the RPC endpoints in our Developer Docs.",
-      buttonLabel: "See docs",
-      buttonIcon: <Icon.LinkExternal01 />,
-      buttonAction: () =>
-        openUrl("https://developers.stellar.org/network/soroban-rpc/methods"),
-    },
-    {
-      id: "horizon",
-      title: "Horizon Endpoints",
-      description: "Learn about the Horizon endpoints in our Developer Docs.",
-      buttonLabel: "See docs",
-      buttonIcon: <Icon.LinkExternal01 />,
-      buttonAction: () =>
-        openUrl("https://developers.stellar.org/network/horizon/resources"),
-    },
-  ];
-
-  return (
-    <>
-      <Card>
-        <div className="CardText">
-          <Text size="lg" as="h1" weight="medium">
-            Endpoints
-          </Text>
-
-          <Text size="sm" as="p">
-            The Stellar Laboratory is a set of tools that enables people to try
-            out and learn about the Stellar network. The Laboratory can{" "}
-            <NextLink href={Routes.BUILD_TRANSACTION} sds-variant="primary">
-              build transactions
-            </NextLink>
-            ,{" "}
-            <NextLink href={Routes.SIGN_TRANSACTION} sds-variant="primary">
-              sign them
-            </NextLink>
-            , and{" "}
-            <NextLink href={Routes.SUBMIT_TRANSACTION} sds-variant="primary">
-              submit them to the network
-            </NextLink>
-            . In this section of the Laboratory, you can explore the various
-            endpoints from the RPC and Horizon, make requests to these
-            endpoints, and save them for future use.
-          </Text>
-
-          <Text size="sm" as="p">
-            For Stellar docs, take a look at the{" "}
-            <Link href="https://developers.stellar.org/">
-              Stellar developers site
-            </Link>
-            .
-          </Text>
-        </div>
-      </Card>
-      <InfoCards infoCards={infoCards} />
-    </>
-  );
-};
