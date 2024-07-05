@@ -692,6 +692,22 @@ export const formComponentTemplateEndpoints = (
         ),
         validate: null,
       };
+    case "resourceConfig":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <PositiveIntPicker
+            key={id}
+            id={id}
+            label="Resource Config - Instruction Leeway"
+            placeholder="Ex: 1714814"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.positiveInt,
+      };
     default:
       return null;
   }

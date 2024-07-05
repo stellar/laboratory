@@ -438,6 +438,84 @@ export default function Endpoints() {
     }, delay);
   };
 
+  const getRpcPostPayloadProps = (endpoint: string) => {
+    const defaultRpcRequestBody = {
+      jsonrpc: "2.0",
+      id: 8675309,
+      method: pageData?.rpcMethod,
+    };
+
+    switch (endpoint) {
+      case Routes.ENDPOINTS_GET_EVENTS: {
+        const filteredParams = params.filters ? JSON.parse(params.filters) : {};
+
+        return {
+          ...defaultRpcRequestBody,
+          params: {
+            startLedger: params.ledger ?? "",
+            cursor: params.cursor,
+            limit: params.limit,
+            filters: [
+              {
+                type: filteredParams.type ?? "",
+                contractIds: filteredParams.contract_ids ?? "",
+                topics: filteredParams.topics ?? "",
+              },
+            ],
+          },
+        };
+      }
+      case Routes.ENDPOINTS_GET_LEDGER_ENTRIES: {
+        return {
+          ...defaultRpcRequestBody,
+          params: {
+            keys: params.transaction ?? "",
+          },
+        };
+      }
+      case Routes.ENDPOINTS_GET_TRANSACTION: {
+        return {
+          ...defaultRpcRequestBody,
+          params: {
+            hash: params.transaction ?? "",
+          },
+        };
+      }
+      case Routes.ENDPOINTS_GET_TRANSACTIONS: {
+        return {
+          ...defaultRpcRequestBody,
+          params: {
+            startLedger: params.ledger ?? "",
+            cursor: params.cursor,
+            limit: params.limit,
+          },
+        };
+      }
+      case Routes.ENDPOINTS_SEND_TRANSACTION: {
+        return {
+          ...defaultRpcRequestBody,
+          params: {
+            transaction: params.transaction ?? "",
+          },
+        };
+      }
+      case Routes.ENDPOINTS_SIMULATE_TRANSACTION: {
+        return {
+          ...defaultRpcRequestBody,
+          params: {
+            transaction: params.transaction ?? "",
+            resourceConfig: {
+              instructionLeeway: params.resourceConfig,
+            },
+          },
+        };
+      }
+      default: {
+        return defaultRpcRequestBody;
+      }
+    }
+  };
+
   const renderPostPayload = () => {
     if (pageData?.requestMethod === "POST") {
       let renderedProps;
@@ -446,21 +524,8 @@ export default function Endpoints() {
         renderedProps = { tx: params.tx ?? "" };
       }
 
-      if (pathname === Routes.ENDPOINTS_GET_EVENTS) {
-        let filteredParams = params.filters ? JSON.parse(params.filters) : {};
-
-        renderedProps = {
-          startLedger: params.ledger ?? "",
-          cursor: params.cursor,
-          limit: params.limit,
-          filters: [
-            {
-              type: filteredParams.type ?? "",
-              contractIds: filteredParams.contract_ids ?? "",
-              topics: filteredParams.topics ?? "",
-            },
-          ],
-        };
+      if (IS_RPC_ENDPOINT) {
+        renderedProps = getRpcPostPayloadProps(pathname);
       }
 
       return (
@@ -556,7 +621,7 @@ export default function Endpoints() {
       ...urlParams.split(","),
     ]);
 
-    if (!pageData || allFields.length === 0) {
+    if (!pageData || (allFields.length === 0 && !IS_RPC_ENDPOINT)) {
       return null;
     }
 
@@ -597,10 +662,6 @@ export default function Endpoints() {
                       {} as AnyObject,
                     )
                   : {};
-
-                console.log("[allFields] mappedParams: ", mappedParams);
-                console.log("[allFields] storeValue: ", storeValue);
-                console.log("[allFields] value: ", value);
 
                 updateParams({
                   [f]: storeValue,
@@ -705,6 +766,16 @@ export default function Endpoints() {
 
   if (pathname === Routes.ENDPOINTS_SAVED) {
     return <SavedEndpointsPage />;
+  }
+
+  if (pathname === Routes.ENDPOINTS_RPC) {
+    return (
+      <div className="Endpoints__content">
+        <div className="PageBody__content" data-testid="endpoints-pageContent">
+          {renderPostPayload()}
+        </div>
+      </div>
+    );
   }
 
   if (!pageData) {

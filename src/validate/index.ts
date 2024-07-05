@@ -1,5 +1,6 @@
 import { accountThreshold } from "./methods/accountThreshold";
 import { amount } from "./methods/amount";
+import { arrayOfStrings } from "./methods/arrayOfStrings";
 import { asset } from "./methods/asset";
 import { assetCode } from "./methods/assetCode";
 import { assetMulti } from "./methods/assetMulti";
@@ -24,6 +25,7 @@ import { xdr } from "./methods/xdr";
 export const validate = {
   accountThreshold,
   amount,
+  arrayOfStrings,
   asset,
   assetCode,
   assetMulti,

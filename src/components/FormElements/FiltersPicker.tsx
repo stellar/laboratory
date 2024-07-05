@@ -17,12 +17,7 @@ type FiltersPickerProps = {
   error: AnyObject | undefined;
 };
 
-export const FiltersPicker = ({
-  id,
-  value,
-  onChange,
-  error,
-}: FiltersPickerProps) => {
+export const FiltersPicker = ({ id, value, onChange }: FiltersPickerProps) => {
   const filtersTypeFields: { id: string; label: string }[] = [
     {
       id: "system",
@@ -92,7 +87,7 @@ export const FiltersPicker = ({
             label="Topics (up to 5)"
             value={value?.topics}
             onChange={(val) => onUpdate(val, "topics")}
-            validate={validate.secretKey}
+            validate={validate.arrayOfStrings}
             placeholder="['AAAADwAAAAh0cmFuc2Zlcg==', '*', '*', '*']"
             limit={5}
           />

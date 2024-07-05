@@ -6,8 +6,9 @@ export type EndpointsPagesFormProps = {
   docsUrl: string;
   docsLabel?: string;
   requestMethod: "GET" | "POST";
-  endpointUrlTemplate: string;
+  endpointUrlTemplate?: string;
   requiredParams: string;
+  rpcMethod?: string;
   isStreaming?: boolean;
   custom?: AnyObject;
 };
@@ -38,9 +39,10 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
         docsUrl:
           "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getEvents",
         docsLabel: "getEvents",
+        endpointUrlTemplate: "/{?ledger,cursor,limit,filters}",
         requestMethod: "POST",
-        endpointUrlTemplate: "{?ledger,cursor,limit,filters}",
         requiredParams: "ledger,filters",
+        rpcMethod: "getEvents",
         isStreaming: false,
       },
     },
@@ -52,10 +54,9 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
           "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getFeeStats",
         docsLabel: "getFeeStats",
         requestMethod: "POST",
-        endpointUrlTemplate:
-          "/assets{?asset_code,asset_issuer,cursor,order,limit}",
         requiredParams: "",
-        isStreaming: true,
+        rpcMethod: "getFeeStats",
+        isStreaming: false,
       },
     },
     {
@@ -63,13 +64,12 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
       label: "getHealth",
       form: {
         docsUrl:
-          "https://developers.stellar.org/network/horizon/resources/list-all-assets",
-        docsLabel: "assets",
-        requestMethod: "GET",
-        endpointUrlTemplate:
-          "/assets{?asset_code,asset_issuer,cursor,order,limit}",
+          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getHealth",
+        docsLabel: "getHealth",
+        requestMethod: "POST",
         requiredParams: "",
-        isStreaming: true,
+        rpcMethod: "getHealth",
+        isStreaming: false,
       },
     },
     {
@@ -77,13 +77,12 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
       label: "getLatestLedger",
       form: {
         docsUrl:
-          "https://developers.stellar.org/network/horizon/resources/list-all-assets",
-        docsLabel: "assets",
-        requestMethod: "GET",
-        endpointUrlTemplate:
-          "/assets{?asset_code,asset_issuer,cursor,order,limit}",
+          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getLatestLedger",
+        docsLabel: "getLatestLedger",
+        requestMethod: "POST",
         requiredParams: "",
-        isStreaming: true,
+        rpcMethod: "getLatestLedger",
+        isStreaming: false,
       },
     },
     {
@@ -91,13 +90,13 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
       label: "getLedgerEntries",
       form: {
         docsUrl:
-          "https://developers.stellar.org/network/horizon/resources/list-all-assets",
-        docsLabel: "assets",
-        requestMethod: "GET",
-        endpointUrlTemplate:
-          "/assets{?asset_code,asset_issuer,cursor,order,limit}",
-        requiredParams: "",
-        isStreaming: true,
+          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getLedgerEntries",
+        docsLabel: "getLedgerEntries",
+        endpointUrlTemplate: "/{?transaction}",
+        requestMethod: "POST",
+        requiredParams: "transaction",
+        rpcMethod: "getLedgerEntries",
+        isStreaming: false,
       },
     },
     {
@@ -105,13 +104,12 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
       label: "getNetwork",
       form: {
         docsUrl:
-          "https://developers.stellar.org/network/horizon/resources/list-all-assets",
-        docsLabel: "assets",
-        requestMethod: "GET",
-        endpointUrlTemplate:
-          "/assets{?asset_code,asset_issuer,cursor,order,limit}",
+          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getNetwork",
+        docsLabel: "getNetwork",
+        requestMethod: "POST",
         requiredParams: "",
-        isStreaming: true,
+        rpcMethod: "getNetwork",
+        isStreaming: false,
       },
     },
     {
@@ -119,13 +117,13 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
       label: "getTransaction",
       form: {
         docsUrl:
-          "https://developers.stellar.org/network/horizon/resources/list-all-assets",
-        docsLabel: "assets",
-        requestMethod: "GET",
-        endpointUrlTemplate:
-          "/assets{?asset_code,asset_issuer,cursor,order,limit}",
-        requiredParams: "",
-        isStreaming: true,
+          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getTransaction",
+        docsLabel: "getTransaction",
+        endpointUrlTemplate: "/{?transaction}",
+        requestMethod: "POST",
+        requiredParams: "transaction",
+        rpcMethod: "getTransaction",
+        isStreaming: false,
       },
     },
     {
@@ -133,13 +131,13 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
       label: "getTransactions",
       form: {
         docsUrl:
-          "https://developers.stellar.org/network/horizon/resources/list-all-assets",
-        docsLabel: "assets",
-        requestMethod: "GET",
-        endpointUrlTemplate:
-          "/assets{?asset_code,asset_issuer,cursor,order,limit}",
-        requiredParams: "",
-        isStreaming: true,
+          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getTransactions",
+        docsLabel: "getTransactions",
+        requestMethod: "POST",
+        requiredParams: "ledger",
+        endpointUrlTemplate: "/{?ledger,cursor,limit}",
+        rpcMethod: "getTransactions",
+        isStreaming: false,
       },
     },
     {
@@ -147,13 +145,12 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
       label: "getVersionInfo",
       form: {
         docsUrl:
-          "https://developers.stellar.org/network/horizon/resources/list-all-assets",
-        docsLabel: "assets",
-        requestMethod: "GET",
-        endpointUrlTemplate:
-          "/assets{?asset_code,asset_issuer,cursor,order,limit}",
+          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getVersionInfo",
+        docsLabel: "getVersionInfo",
+        requestMethod: "POST",
         requiredParams: "",
-        isStreaming: true,
+        rpcMethod: "getVersionInfo",
+        isStreaming: false,
       },
     },
     {
@@ -161,13 +158,13 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
       label: "sendTransaction",
       form: {
         docsUrl:
-          "https://developers.stellar.org/network/horizon/resources/list-all-assets",
-        docsLabel: "assets",
-        requestMethod: "GET",
-        endpointUrlTemplate:
-          "/assets{?asset_code,asset_issuer,cursor,order,limit}",
-        requiredParams: "",
-        isStreaming: true,
+          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/sendTransaction",
+        docsLabel: "sendTransaction",
+        endpointUrlTemplate: "/{?transaction}",
+        requestMethod: "POST",
+        requiredParams: "/{?transaction}",
+        rpcMethod: "sendTransaction",
+        isStreaming: false,
       },
     },
     {
@@ -175,13 +172,13 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
       label: "simulateTransaction",
       form: {
         docsUrl:
-          "https://developers.stellar.org/network/horizon/resources/list-all-assets",
-        docsLabel: "assets",
-        requestMethod: "GET",
-        endpointUrlTemplate:
-          "/assets{?asset_code,asset_issuer,cursor,order,limit}",
-        requiredParams: "",
-        isStreaming: true,
+          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/simulateTransaction",
+        docsLabel: "simulateTransaction",
+        endpointUrlTemplate: "/{?transaction,resourceConfig}",
+        requestMethod: "POST",
+        requiredParams: "transaction",
+        rpcMethod: "simulateTransaction",
+        isStreaming: false,
       },
     },
   ],
