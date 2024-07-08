@@ -88,7 +88,7 @@ export const FiltersPicker = ({ id, value, onChange }: FiltersPickerProps) => {
             value={value?.topics}
             onChange={(val) => onUpdate(val, "topics")}
             validate={validate.arrayOfStrings}
-            placeholder="['AAAADwAAAAh0cmFuc2Zlcg==', '*', '*', '*']"
+            placeholder="Ex: ['AAAADwAAAAh0cmFuc2Zlcg==', '*', '*', '*']"
             limit={5}
           />
         </Box>
