@@ -127,6 +127,106 @@ export default function Endpoints() {
   const [urlPathParams, setUrlPathparams] = useState("");
   const [urlParams, setUrlParams] = useState("");
 
+  const getRpcPostPayloadProps = (endpoint: string) => {
+    const defaultRpcRequestBody = {
+      jsonrpc: "2.0",
+      id: 8675309,
+      method: pageData?.rpcMethod,
+    };
+
+    switch (endpoint) {
+      case Routes.ENDPOINTS_GET_EVENTS: {
+        const filteredParams = params.filters ? JSON.parse(params.filters) : {};
+
+        return {
+          ...defaultRpcRequestBody,
+          params: {
+            startLedger: params.ledger ?? "",
+            cursor: params.cursor,
+            limit: params.limit,
+            filters: [
+              {
+                type: filteredParams.type ?? "",
+                contractIds: filteredParams.contract_ids ?? "",
+                topics: filteredParams.topics ?? "",
+              },
+            ],
+          },
+        };
+      }
+
+      case Routes.ENDPOINTS_GET_LEDGER_ENTRIES: {
+        return {
+          ...defaultRpcRequestBody,
+          params: {
+            keys: params.transaction ?? "",
+          },
+        };
+      }
+
+      case Routes.ENDPOINTS_GET_TRANSACTION: {
+        return {
+          ...defaultRpcRequestBody,
+          params: {
+            hash: params.transaction ?? "",
+          },
+        };
+      }
+
+      case Routes.ENDPOINTS_GET_TRANSACTIONS: {
+        return {
+          ...defaultRpcRequestBody,
+          params: {
+            startLedger: params.ledger ?? "",
+            cursor: params.cursor,
+            limit: params.limit,
+          },
+        };
+      }
+
+      case Routes.ENDPOINTS_SEND_TRANSACTION: {
+        return {
+          ...defaultRpcRequestBody,
+          params: {
+            transaction: params.transaction ?? "",
+          },
+        };
+      }
+
+      case Routes.ENDPOINTS_SIMULATE_TRANSACTION: {
+        return {
+          ...defaultRpcRequestBody,
+          params: {
+            transaction: params.transaction ?? "",
+            resourceConfig: {
+              instructionLeeway: params.resourceConfig,
+            },
+          },
+        };
+      }
+
+      default: {
+        return defaultRpcRequestBody;
+      }
+    }
+  };
+
+  const getPostPayload = () => {
+    let payload;
+
+    if (pageData?.requestMethod === "POST") {
+      if (pathname === Routes.ENDPOINTS_TRANSACTIONS_POST) {
+        payload = { tx: params.tx ?? "" };
+      }
+
+      if (isRpcEndpoint) {
+        payload = getRpcPostPayloadProps(pathname);
+      }
+    }
+
+    return payload;
+  };
+
   const queryClient = useQueryClient();
   const {
     data: endpointData,
@@ -140,7 +240,7 @@ export default function Endpoints() {
     requestUrl,
     // There is only one endpoint request for POST, using params directly for
     // simplicity.
-    pageData?.requestMethod === "POST" ? { tx: params.tx ?? "" } : undefined,
+    pageData?.requestMethod === "POST" ? getPostPayload() : undefined,
   );
 
   const responseEl = useRef<HTMLDivElement | null>(null);
@@ -438,86 +538,8 @@ export default function Endpoints() {
     }, delay);
   };
 
-  const getRpcPostPayloadProps = (endpoint: string) => {
-    const defaultRpcRequestBody = {
-      jsonrpc: "2.0",
-      id: 8675309,
-      method: pageData?.rpcMethod,
-    };
-
-    switch (endpoint) {
-      case Routes.ENDPOINTS_GET_EVENTS: {
-        const filteredParams = params.filters ? JSON.parse(params.filters) : {};
-
-        return {
-          ...defaultRpcRequestBody,
-          params: {
-            startLedger: params.ledger ?? "",
-            cursor: params.cursor,
-            limit: params.limit,
-            filters: [
-              {
-                type: filteredParams.type ?? "",
-                contractIds: filteredParams.contract_ids ?? "",
-                topics: filteredParams.topics ?? "",
-              },
-            ],
-          },
-        };
-      }
-      case Routes.ENDPOINTS_GET_LEDGER_ENTRIES: {
-        return {
-          ...defaultRpcRequestBody,
-          params: {
-            keys: params.transaction ?? "",
-          },
-        };
-      }
-      case Routes.ENDPOINTS_GET_TRANSACTION: {
-        return {
-          ...defaultRpcRequestBody,
-          params: {
-            hash: params.transaction ?? "",
-          },
-        };
-      }
-      case Routes.ENDPOINTS_GET_TRANSACTIONS: {
-        return {
-          ...defaultRpcRequestBody,
-          params: {
-            startLedger: params.ledger ?? "",
-            cursor: params.cursor,
-            limit: params.limit,
-          },
-        };
-      }
-      case Routes.ENDPOINTS_SEND_TRANSACTION: {
-        return {
-          ...defaultRpcRequestBody,
-          params: {
-            transaction: params.transaction ?? "",
-          },
-        };
-      }
-      case Routes.ENDPOINTS_SIMULATE_TRANSACTION: {
-        return {
-          ...defaultRpcRequestBody,
-          params: {
-            transaction: params.transaction ?? "",
-            resourceConfig: {
-              instructionLeeway: params.resourceConfig,
-            },
-          },
-        };
-      }
-      default: {
-        return defaultRpcRequestBody;
-      }
-    }
-  };
-
   const renderPostPayload = () => {
-    let renderedProps;
+    let renderedProps = getPostPayload();
 
     if (pageData?.requestMethod === "POST") {
       if (pathname === Routes.ENDPOINTS_TRANSACTIONS_POST) {
