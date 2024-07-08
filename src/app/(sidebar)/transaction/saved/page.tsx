@@ -76,7 +76,7 @@ export default function SavedTransactions() {
                 setCurrentTxnTimestamp(txn.timestamp);
               }}
               icon={<Icon.Edit05 />}
-            ></InputSideElement>
+            />
           }
         />
 
