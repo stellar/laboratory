@@ -13,8 +13,6 @@ import { validate } from "@/validate";
 import { sanitizeObject } from "@/helpers/sanitizeObject";
 import { txHelper, FeeBumpedTxResponse } from "@/helpers/txHelper";
 
-import { KeysOfUnion } from "@/types/types";
-
 import { Box } from "@/components/layout/Box";
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
@@ -22,6 +20,10 @@ import { SdsLink } from "@/components/SdsLink";
 import { TxResponse } from "@/components/TxResponse";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
+import { ViewInXdrButton } from "@/components/ViewInXdrButton";
+
+import { Routes } from "@/constants/routes";
+import { KeysOfUnion } from "@/types/types";
 
 export default function FeeBumpTransaction() {
   const router = useRouter();
@@ -266,20 +268,13 @@ export default function FeeBumpTransaction() {
                     updateSignImportXdr(feeBumpedTx.xdr);
                     updateSignActiveView("overview");
 
-                    router.push("/transaction/sign");
+                    router.push(Routes.SIGN_TRANSACTION);
                   }}
                 >
                   Sign in Transaction Signer
                 </Button>
-                <Button
-                  size="md"
-                  variant="tertiary"
-                  onClick={() => {
-                    alert("TODO: handle view in xdr flow");
-                  }}
-                >
-                  View in XDR viewer
-                </Button>
+
+                <ViewInXdrButton xdrBlob={feeBumpedTx.xdr} />
               </>
             }
           />
