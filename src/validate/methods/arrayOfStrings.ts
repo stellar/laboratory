@@ -1,6 +1,6 @@
 export const arrayOfStrings = (value: string) => {
   if (typeof value !== "string") {
-    return "Expected strings of array.";
+    return "Expected an array of strings.";
   }
 
   try {
