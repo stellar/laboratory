@@ -78,7 +78,7 @@ export const FiltersPicker = ({ id, value, onChange }: FiltersPickerProps) => {
             value={value?.contract_ids}
             onChange={(val) => onUpdate(val, "contract_ids")}
             validate={validate.contractId}
-            placeholder="CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC"
+            placeholder="Ex: CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC"
             limit={5}
           />
 
