@@ -20,7 +20,7 @@ type MultiPickerProps = {
   autocomplete?: React.HTMLInputAutoCompleteAttribute;
   rightElement?: React.ReactNode;
   buttonLabel?: string;
-  limit?: Number;
+  limit?: number;
 };
 
 export const MultiPicker = ({
