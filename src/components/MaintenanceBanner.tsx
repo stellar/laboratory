@@ -1,5 +1,5 @@
 import React from "react";
-import { Banner, Link, Loader } from "@stellar/design-system";
+import { Banner, Link } from "@stellar/design-system";
 
 import { getRelevantMaintenanceMsg } from "@/helpers/getRelevantMaintenanceMsg";
 import { sanitizeHtml } from "@/helpers/sanitizeHtml";
@@ -19,7 +19,7 @@ export const MaintenanceBanner = () => {
   );
 
   if (isFetching || isLoading) {
-    return <Loader />;
+    return null;
   }
 
   if (error) {
