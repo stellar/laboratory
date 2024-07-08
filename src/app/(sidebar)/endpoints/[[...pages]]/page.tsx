@@ -47,7 +47,7 @@ import { SavedEndpointsPage } from "../components/SavedEndpointsPage";
 
 export default function Endpoints() {
   const pathname = usePathname();
-  const IS_RPC_ENDPOINT = pathname.includes(Routes.ENDPOINTS_RPC);
+  const isRpcEndpoint = pathname.includes(Routes.ENDPOINTS_RPC);
   const currentPage = pathname.split(Routes.ENDPOINTS)?.[1];
 
   const horizonPage = ENDPOINTS_PAGES_HORIZON.navItems
