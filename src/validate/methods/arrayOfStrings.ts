@@ -9,7 +9,7 @@ export const arrayOfStrings = (value: string) => {
     if (Array.isArray(parsedValue)) {
       for (const item of parsedValue) {
         if (typeof item !== "string") {
-          return "Expected a string.";
+          return "All values in the array must be a string.";
         }
       }
     }
