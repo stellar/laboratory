@@ -31,5 +31,5 @@ export const assetMulti = (
 
   const sanitized = sanitizeArray(errors || []);
 
-  return sanitized.length === 0 ? false : sanitized;
+  return sanitized.length === 0 ? false : errors;
 };
