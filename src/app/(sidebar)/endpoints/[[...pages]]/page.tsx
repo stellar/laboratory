@@ -58,8 +58,8 @@ export default function Endpoints() {
     pathname.includes(page.route),
   );
 
-  const page = IS_RPC_ENDPOINT ? RpcPage : horizonPage;
-  const pageData = IS_RPC_ENDPOINT ? RpcPage?.form : horizonPage?.form;
+  const page = isRpcEndpoint ? rpcPage : horizonPage;
+  const pageData = isRpcEndpoint ? rpcPage?.form : horizonPage?.form;
 
   const requiredFields = sanitizeArray(
     pageData?.requiredParams?.split(",") || [],
@@ -366,7 +366,7 @@ export default function Endpoints() {
       return pathArr.join("/");
     };
 
-    const baseUrl = IS_RPC_ENDPOINT
+    const baseUrl = isRpcEndpoint
       ? `${endpointNetwork.rpcUrl}${parseUrlPath(urlPath)}`
       : `${endpointNetwork.horizonUrl}${parseUrlPath(urlPath)}`;
 
@@ -517,17 +517,19 @@ export default function Endpoints() {
   };
 
   const renderPostPayload = () => {
-    if (pageData?.requestMethod === "POST") {
-      let renderedProps;
+    let renderedProps;
 
+    if (pageData?.requestMethod === "POST") {
       if (pathname === Routes.ENDPOINTS_TRANSACTIONS_POST) {
         renderedProps = { tx: params.tx ?? "" };
       }
 
-      if (IS_RPC_ENDPOINT) {
+      if (isRpcEndpoint) {
         renderedProps = getRpcPostPayloadProps(pathname);
       }
+    }
 
+    if (renderedProps) {
       return (
         <div className="Endpoints__txTextarea">
           <Textarea
@@ -542,7 +544,6 @@ export default function Endpoints() {
         </div>
       );
     }
-
     return null;
   };
 
@@ -621,7 +622,7 @@ export default function Endpoints() {
       ...urlParams.split(","),
     ]);
 
-    if (!pageData || (allFields.length === 0 && !IS_RPC_ENDPOINT)) {
+    if (!pageData || (allFields.length === 0 && !isRpcEndpoint)) {
       return null;
     }
 

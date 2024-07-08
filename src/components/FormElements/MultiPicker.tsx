@@ -72,7 +72,7 @@ export const MultiPicker = ({
         <Button
           disabled={value.length === limit}
           size="md"
-          variant="tertiary"
+          variant="secondary"
           onClick={(e) => {
             e.preventDefault();
             onChange([...value, ""]);

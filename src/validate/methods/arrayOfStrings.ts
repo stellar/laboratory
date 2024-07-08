@@ -4,12 +4,14 @@ export const arrayOfStrings = (value: string) => {
   }
 
   try {
-    const parsedValue = JSON.parse(value);
+    if (value.length > 0) {
+      const parsedValue = JSON.parse(value);
 
-    if (Array.isArray(parsedValue)) {
-      for (const item of parsedValue) {
-        if (typeof item !== "string") {
-          return "All values in the array must be a string.";
+      if (Array.isArray(parsedValue)) {
+        for (const item of parsedValue) {
+          if (typeof item !== "string") {
+            return "All values in the array must be a string.";
+          }
         }
       }
     }
