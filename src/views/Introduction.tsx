@@ -25,7 +25,7 @@ export const Introduction = () => {
               <a href="https://developers.stellar.org/">
                 Stellar developers site
               </a>
-              .
+              . v1 test
             </p>
           </div>
         </div>
