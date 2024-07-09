@@ -558,7 +558,7 @@ export default function Endpoints() {
             id="tx"
             fieldSize="md"
             label="Payload"
-            value={JSON.stringify(renderedProps, null, 2)}
+            value={renderedProps ? JSON.stringify(renderedProps, null, 2) : ""}
             rows={5}
             disabled
             spellCheck={false}
