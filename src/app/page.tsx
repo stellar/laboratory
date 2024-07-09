@@ -108,7 +108,7 @@ export default function Introduction() {
         </Box>
 
         {process.env.NEXT_PUBLIC_COMMIT_HASH ? (
-          <div>{`Commit hash: ${process.env.NEXT_PUBLIC_COMMIT_HASH}`}</div>
+          <div>{`Commit hash: ${process.env.NEXT_PUBLIC_COMMIT_HASH} beta-test v2`}</div>
         ) : null}
       </div>
     </LayoutContentContainer>
