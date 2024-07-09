@@ -8,7 +8,7 @@ import { useStore } from "@/store/useStore";
 
 export const MaintenanceBanner = () => {
   const { network } = useStore();
-  const { data, error } = useMaintenanceData();
+  const { data, error, isFetching, isLoading } = useMaintenanceData();
 
   const relevantMaintenance = getRelevantMaintenanceMsg(network.id, data);
 
@@ -17,6 +17,10 @@ export const MaintenanceBanner = () => {
       <Banner variant="primary">{message}</Banner>
     </div>
   );
+
+  if (isFetching || isLoading) {
+    return null;
+  }
 
   if (error) {
     return renderBanner(error.message);
