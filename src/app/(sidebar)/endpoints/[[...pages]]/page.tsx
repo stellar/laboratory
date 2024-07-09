@@ -151,7 +151,7 @@ export default function Endpoints() {
     isValidReqFields = missingReqFields.length === 0;
 
     // Checking if there are any errors
-    isValid = isEmptyObject(formError);
+    isValid = formError.tx?.result === "success" || isEmptyObject(formError);
 
     // Asset components
     const assetParams = [

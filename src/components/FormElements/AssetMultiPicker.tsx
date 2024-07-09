@@ -179,7 +179,7 @@ export const AssetMultiPicker = ({
 
         <div>
           <Button
-            variant="secondary"
+            variant="tertiary"
             size="md"
             onClick={() => {
               const arr = [...values];
