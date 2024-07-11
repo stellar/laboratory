@@ -690,7 +690,7 @@ export const formComponentTemplateEndpoints = (
             onChange={templ?.onChange}
           />
         ),
-        validate: null,
+        validate: validate.getEventsFilters,
       };
     case "resourceConfig":
       return {

@@ -4,12 +4,13 @@ import { arrayOfStrings } from "./methods/arrayOfStrings";
 import { asset } from "./methods/asset";
 import { assetCode } from "./methods/assetCode";
 import { assetMulti } from "./methods/assetMulti";
+import { bipPath } from "./methods/bipPath";
 import { claimableBalanceId } from "./methods/claimableBalanceId";
 import { claimaints } from "./methods/claimants";
 import { contractId } from "./methods/contractId";
 import { dataName } from "./methods/dataName";
 import { dataValue } from "./methods/dataValue";
-import { bipPath } from "./methods/bipPath";
+import { getEventsFilters } from "./methods/getEventsFilters";
 import { memo } from "./methods/memo";
 import { numberFraction } from "./methods/numberFraction";
 import { optionsSigner } from "./methods/optionsSigner";
@@ -29,12 +30,13 @@ export const validate = {
   asset,
   assetCode,
   assetMulti,
+  bipPath,
   claimableBalanceId,
   claimaints,
   contractId,
   dataName,
   dataValue,
-  bipPath,
+  getEventsFilters,
   memo,
   numberFraction,
   optionsSigner,
