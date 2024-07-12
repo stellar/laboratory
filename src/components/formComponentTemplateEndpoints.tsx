@@ -10,6 +10,7 @@ import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 import { IncludeFailedPicker } from "@/components/FormElements/IncludeFailedPicker";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { AssetMultiPicker } from "@/components/FormElements/AssetMultiPicker";
+import { FiltersPicker } from "@/components/FormElements/FiltersPicker";
 
 import { parseJsonString } from "@/helpers/parseJsonString";
 import { validate } from "@/validate";
@@ -677,6 +678,35 @@ export const formComponentTemplateEndpoints = (
           />
         ),
         validate: validate.xdr,
+      };
+    case "filters":
+      return {
+        render: (templ: TemplateRenderTxProps) => (
+          <FiltersPicker
+            key={id}
+            id={id}
+            value={parseJsonString(templ.value)}
+            error={templ.error}
+            onChange={templ?.onChange}
+          />
+        ),
+        validate: validate.getEventsFilters,
+      };
+    case "resourceConfig":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <PositiveIntPicker
+            key={id}
+            id={id}
+            label="Resource Config - Instruction Leeway"
+            placeholder="Ex: 1714814"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.positiveInt,
       };
     default:
       return null;

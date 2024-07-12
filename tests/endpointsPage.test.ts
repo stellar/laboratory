@@ -21,7 +21,11 @@ test.describe("Endpoints page", () => {
       const sidebar = page.getByTestId("endpoints-sidebar-section");
 
       await expect(
-        sidebar.getByTestId("endpoints-sidebar-subtitle"),
+        sidebar.getByTestId("endpoints-sidebar-subtitle").nth(0),
+      ).toContainText("RPC Endpoints");
+
+      await expect(
+        sidebar.getByTestId("endpoints-sidebar-subtitle").nth(1),
       ).toContainText("Horizon Endpoints");
 
       const linkToggles = sidebar.getByTestId("endpoints-sidebar-linkToggle");

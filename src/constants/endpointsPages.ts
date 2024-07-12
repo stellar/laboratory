@@ -2,27 +2,186 @@ import { ReactNode } from "react";
 import { Routes } from "@/constants/routes";
 import { AnyObject } from "@/types/types";
 
+export type EndpointsPagesFormProps = {
+  docsUrl: string;
+  docsLabel?: string;
+  requestMethod: "GET" | "POST";
+  endpointUrlTemplate?: string;
+  requiredParams: string;
+  rpcMethod?: string;
+  isStreaming?: boolean;
+  custom?: AnyObject;
+};
+
 export type EndpointsPagesProps = {
   instruction?: string;
   navItems: {
     route: Routes;
     label: string;
+    form?: EndpointsPagesFormProps;
     nestedItems?: {
       route: Routes;
       label: string;
-      form: {
-        docsUrl: string;
-        docsLabel?: string;
-        requestMethod: "GET" | "POST";
-        endpointUrlTemplate: string;
-        requiredParams: string;
-        isStreaming?: boolean;
-        custom?: AnyObject;
-      };
+      form: EndpointsPagesFormProps;
     }[];
     icon?: ReactNode;
   }[];
   hasBottomDivider?: boolean;
+};
+
+export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
+  instruction: "RPC Endpoints",
+  navItems: [
+    {
+      route: Routes.ENDPOINTS_GET_EVENTS,
+      label: "getEvents",
+      form: {
+        docsUrl:
+          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getEvents",
+        docsLabel: "getEvents",
+        endpointUrlTemplate: "/{?ledger,cursor,limit,filters}",
+        requestMethod: "POST",
+        requiredParams: "ledger,filters",
+        rpcMethod: "getEvents",
+        isStreaming: false,
+      },
+    },
+    {
+      route: Routes.ENDPOINTS_GET_FEE_STATS,
+      label: "getFeeStats",
+      form: {
+        docsUrl:
+          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getFeeStats",
+        docsLabel: "getFeeStats",
+        requestMethod: "POST",
+        requiredParams: "",
+        rpcMethod: "getFeeStats",
+        isStreaming: false,
+      },
+    },
+    {
+      route: Routes.ENDPOINTS_GET_HEALTH,
+      label: "getHealth",
+      form: {
+        docsUrl:
+          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getHealth",
+        docsLabel: "getHealth",
+        requestMethod: "POST",
+        requiredParams: "",
+        rpcMethod: "getHealth",
+        isStreaming: false,
+      },
+    },
+    {
+      route: Routes.ENDPOINTS_GET_LATEST_LEDGER,
+      label: "getLatestLedger",
+      form: {
+        docsUrl:
+          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getLatestLedger",
+        docsLabel: "getLatestLedger",
+        requestMethod: "POST",
+        requiredParams: "",
+        rpcMethod: "getLatestLedger",
+        isStreaming: false,
+      },
+    },
+    {
+      route: Routes.ENDPOINTS_GET_LEDGER_ENTRIES,
+      label: "getLedgerEntries",
+      form: {
+        docsUrl:
+          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getLedgerEntries",
+        docsLabel: "getLedgerEntries",
+        endpointUrlTemplate: "/{?transaction}",
+        requestMethod: "POST",
+        requiredParams: "transaction",
+        rpcMethod: "getLedgerEntries",
+        isStreaming: false,
+      },
+    },
+    {
+      route: Routes.ENDPOINTS_GET_NETWORK,
+      label: "getNetwork",
+      form: {
+        docsUrl:
+          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getNetwork",
+        docsLabel: "getNetwork",
+        requestMethod: "POST",
+        requiredParams: "",
+        rpcMethod: "getNetwork",
+        isStreaming: false,
+      },
+    },
+    {
+      route: Routes.ENDPOINTS_GET_TRANSACTION,
+      label: "getTransaction",
+      form: {
+        docsUrl:
+          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getTransaction",
+        docsLabel: "getTransaction",
+        endpointUrlTemplate: "/{?transaction}",
+        requestMethod: "POST",
+        requiredParams: "transaction",
+        rpcMethod: "getTransaction",
+        isStreaming: false,
+      },
+    },
+    {
+      route: Routes.ENDPOINTS_GET_TRANSACTIONS,
+      label: "getTransactions",
+      form: {
+        docsUrl:
+          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getTransactions",
+        docsLabel: "getTransactions",
+        requestMethod: "POST",
+        requiredParams: "ledger",
+        endpointUrlTemplate: "/{?ledger,cursor,limit}",
+        rpcMethod: "getTransactions",
+        isStreaming: false,
+      },
+    },
+    {
+      route: Routes.ENDPOINTS_GET_VERSION_INFO,
+      label: "getVersionInfo",
+      form: {
+        docsUrl:
+          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getVersionInfo",
+        docsLabel: "getVersionInfo",
+        requestMethod: "POST",
+        requiredParams: "",
+        rpcMethod: "getVersionInfo",
+        isStreaming: false,
+      },
+    },
+    {
+      route: Routes.ENDPOINTS_SEND_TRANSACTION,
+      label: "sendTransaction",
+      form: {
+        docsUrl:
+          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/sendTransaction",
+        docsLabel: "sendTransaction",
+        endpointUrlTemplate: "/{?transaction}",
+        requestMethod: "POST",
+        requiredParams: "/{?transaction}",
+        rpcMethod: "sendTransaction",
+        isStreaming: false,
+      },
+    },
+    {
+      route: Routes.ENDPOINTS_SIMULATE_TRANSACTION,
+      label: "simulateTransaction",
+      form: {
+        docsUrl:
+          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/simulateTransaction",
+        docsLabel: "simulateTransaction",
+        endpointUrlTemplate: "/{?transaction,resourceConfig}",
+        requestMethod: "POST",
+        requiredParams: "transaction",
+        rpcMethod: "simulateTransaction",
+        isStreaming: false,
+      },
+    },
+  ],
 };
 
 export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {

@@ -10,6 +10,8 @@ export enum Routes {
   // Endpoints
   ENDPOINTS = "/endpoints",
   ENDPOINTS_SAVED = "/endpoints/saved",
+  ENDPOINTS_RPC = "/endpoints/rpc",
+  // Endpoints Horizon
   ENDPOINTS_ACCOUNTS = "/endpoints/accounts",
   ENDPOINTS_ACCOUNTS_SINGLE = "/endpoints/accounts/single",
   ENDPOINTS_ASSETS = "/endpoints/assets",
@@ -54,6 +56,18 @@ export enum Routes {
   ENDPOINTS_TRANSACTIONS_ACCOUNT = "/endpoints/transactions/account",
   ENDPOINTS_TRANSACTIONS_LEDGER = "/endpoints/transactions/ledger",
   ENDPOINTS_TRANSACTIONS_LIQUIDITY_POOL = "/endpoints/transactions/liquidity-pool",
+  // Endpoints RPC
+  ENDPOINTS_GET_EVENTS = "/endpoints/rpc/get-events",
+  ENDPOINTS_GET_FEE_STATS = "/endpoints/rpc/get-fee-stats",
+  ENDPOINTS_GET_HEALTH = "/endpoints/rpc/get-health",
+  ENDPOINTS_GET_LATEST_LEDGER = "/endpoints/rpc/get-latest-ledger",
+  ENDPOINTS_GET_LEDGER_ENTRIES = "/endpoints/rpc/get-ledger-entries",
+  ENDPOINTS_GET_NETWORK = "/endpoints/rpc/get-network",
+  ENDPOINTS_GET_TRANSACTION = "/endpoints/rpc/get-transaction",
+  ENDPOINTS_GET_TRANSACTIONS = "/endpoints/rpc/get-transactions",
+  ENDPOINTS_GET_VERSION_INFO = "/endpoints/rpc/get-version-info",
+  ENDPOINTS_SEND_TRANSACTION = "/endpoints/rpc/send-transaction",
+  ENDPOINTS_SIMULATE_TRANSACTION = "/endpoints/rpc/simulate-transaction",
   // Transactions
   BUILD_TRANSACTION = "/transaction/build",
   SIGN_TRANSACTION = "/transaction/sign",
