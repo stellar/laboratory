@@ -128,7 +128,7 @@ export default function Endpoints() {
   const [urlParams, setUrlParams] = useState("");
 
   const getRpcPostPayloadProps = (endpoint: string) => {
-    const defaultRpcRequestBody = {
+    const defaultRpcRequestBody: any = {
       jsonrpc: "2.0",
       id: 8675309,
       method: pageData?.rpcMethod,
@@ -540,6 +540,7 @@ export default function Endpoints() {
 
   const renderPostPayload = () => {
     let renderedProps = getPostPayload();
+    const defaultRowsLength = 5;
 
     if (pageData?.requestMethod === "POST") {
       if (pathname === Routes.ENDPOINTS_TRANSACTIONS_POST) {
@@ -552,6 +553,13 @@ export default function Endpoints() {
     }
 
     if (renderedProps) {
+      const requiredParams = renderedProps.params
+        ? Object.values(renderedProps.params).filter((val) => val !== undefined)
+        : undefined;
+      const rows = requiredParams
+        ? requiredParams.length + defaultRowsLength + 2
+        : defaultRowsLength;
+
       return (
         <div className="Endpoints__txTextarea">
           <Textarea
@@ -559,7 +567,7 @@ export default function Endpoints() {
             fieldSize="md"
             label="Payload"
             value={renderedProps ? JSON.stringify(renderedProps, null, 2) : ""}
-            rows={5}
+            rows={rows}
             disabled
             spellCheck={false}
           />
