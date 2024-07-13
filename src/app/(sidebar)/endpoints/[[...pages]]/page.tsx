@@ -54,8 +54,8 @@ export default function Endpoints() {
     .find((page) => pathname.includes(page.route))
     ?.nestedItems?.find((i) => i.route === pathname);
 
-  const rpcPage = ENDPOINTS_PAGES_RPC.navItems.find((page) =>
-    pathname.includes(page.route),
+  const rpcPage = ENDPOINTS_PAGES_RPC.navItems.find(
+    (page) => pathname === page.route,
   );
 
   const page = isRpcEndpoint ? rpcPage : horizonPage;
