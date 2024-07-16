@@ -34,6 +34,7 @@ export const NetworkSelector = () => {
   };
 
   const [customNetwork, setCustomNetwork] = useState(initialCustomState);
+  const [mainnetRpc, setMainnetRpc] = useState("");
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -53,7 +54,7 @@ export const NetworkSelector = () => {
   };
 
   const isNetworkUrlInvalid = (url: string) => {
-    if (activeNetworkId !== "custom" || !url) {
+    if (!url) {
       return "";
     }
 
@@ -67,13 +68,20 @@ export const NetworkSelector = () => {
 
   const isSubmitDisabled =
     isSameNetwork() ||
+    // custom network
     (activeNetworkId === "custom" &&
       !(customNetwork.horizonUrl && customNetwork.passphrase)) ||
     Boolean(
       customNetwork.horizonUrl && isNetworkUrlInvalid(customNetwork.horizonUrl),
+    ) ||
+    // mainnnet ;
+    Boolean(
+      activeNetworkId === "mainnet" &&
+        Boolean(mainnetRpc && isNetworkUrlInvalid(mainnetRpc)),
     );
 
   const isCustomNetwork = activeNetworkId === "custom";
+  const isMainnetNetwork = activeNetworkId === "mainnet";
 
   const setNetwork = useCallback(() => {
     if (!network?.id) {
@@ -159,16 +167,23 @@ export const NetworkSelector = () => {
     const networkData = getNetworkById(activeNetworkId);
 
     if (networkData) {
-      const data =
-        networkData.id === "custom"
-          ? { ...networkData, ...customNetwork }
-          : networkData;
+      const getData = () => {
+        if (isCustomNetwork) {
+          return { ...networkData, ...customNetwork };
+        }
+        if (isMainnetNetwork) {
+          return { ...networkData, rpcUrl: mainnetRpc };
+        }
+        return networkData;
+      };
 
-      selectNetwork(data);
+      const latestData = getData();
+
+      selectNetwork(latestData);
       setCustomNetwork(
         networkData.id === "custom" ? customNetwork : initialCustomState,
       );
-      localStorageSavedNetwork.set(data);
+      localStorageSavedNetwork.set(latestData);
       toggleDropdown(false);
       updateIsDynamicNetworkSelect(false);
     }
@@ -209,9 +224,16 @@ export const NetworkSelector = () => {
     }
   };
 
-  const rpcValue = isCustomNetwork
-    ? customNetwork.rpcUrl
-    : getNetworkById(activeNetworkId)?.rpcUrl;
+  const getRpcValue = () => {
+    if (isCustomNetwork) {
+      return customNetwork.rpcUrl;
+    }
+    if (isMainnetNetwork) {
+      return mainnetRpc;
+    }
+    return getNetworkById(activeNetworkId)?.rpcUrl;
+  };
+
   const horizonValue = isCustomNetwork
     ? customNetwork.horizonUrl
     : getNetworkById(activeNetworkId)?.horizonUrl;
@@ -278,16 +300,25 @@ export const NetworkSelector = () => {
                 id="rpc-url"
                 fieldSize="sm"
                 label="RPC URL"
-                value={rpcValue}
-                title={rpcValue}
-                disabled={!isCustomNetwork}
-                onChange={(e) =>
-                  setCustomNetwork({
-                    ...customNetwork,
-                    rpcUrl: e.target.value,
-                  })
+                value={getRpcValue()}
+                title={getRpcValue()}
+                disabled={!isCustomNetwork && !isMainnetNetwork}
+                onChange={(e) => {
+                  if (isCustomNetwork) {
+                    setCustomNetwork({
+                      ...customNetwork,
+                      rpcUrl: e.target.value,
+                    });
+                  }
+                  if (isMainnetNetwork) {
+                    setMainnetRpc(e.target.value);
+                  }
+                }}
+                error={
+                  isMainnetNetwork
+                    ? isNetworkUrlInvalid(mainnetRpc)
+                    : isNetworkUrlInvalid(customNetwork.rpcUrl)
                 }
-                error={isNetworkUrlInvalid(customNetwork.rpcUrl)}
                 tabIndex={0}
                 copyButton={{
                   position: "right",
