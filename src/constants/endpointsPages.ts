@@ -162,7 +162,7 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
         docsLabel: "sendTransaction",
         endpointUrlTemplate: "{?tx}",
         requestMethod: "POST",
-        requiredParams: "/{?tx}",
+        requiredParams: "tx",
         rpcMethod: "sendTransaction",
         isStreaming: false,
       },

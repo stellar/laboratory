@@ -188,7 +188,7 @@ export default function Endpoints() {
         return {
           ...defaultRpcRequestBody,
           params: {
-            tx: params.tx ?? "",
+            transaction: params.tx ?? "",
           },
         };
       }
@@ -197,7 +197,7 @@ export default function Endpoints() {
         return {
           ...defaultRpcRequestBody,
           params: {
-            tx: params.tx ?? "",
+            transaction: params.tx ?? "",
             resourceConfig: {
               instructionLeeway: params.resourceConfig,
             },
