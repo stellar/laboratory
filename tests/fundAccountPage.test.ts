@@ -219,7 +219,7 @@ test.describe("[mainnet] Fund Account Page", () => {
   }) => {
     await page.goto("http://localhost:3000/account/fund");
 
-    await expect(page.locator("h2")).toHaveText(
+    await expect(page.locator("h1")).toHaveText(
       "Friendbot: fund a Futurenet or Testnet network account",
     );
   });
