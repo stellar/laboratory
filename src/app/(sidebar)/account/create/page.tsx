@@ -35,7 +35,7 @@ export default function CreateAccount() {
     [queryClient],
   );
 
-  const { reset } = account;
+  const { registeredNetwork, reset } = account;
 
   const resetStates = useCallback(() => {
     reset();
@@ -55,10 +55,7 @@ export default function CreateAccount() {
   }, [isError, isSuccess]);
 
   useEffect(() => {
-    if (
-      account.registeredNetwork?.id &&
-      account.registeredNetwork.id !== network.id
-    ) {
+    if (registeredNetwork?.id && registeredNetwork.id !== network.id) {
       resetStates();
       setShowAlert(false);
     }

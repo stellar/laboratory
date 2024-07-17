@@ -2,10 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Card, Input, Text, Button } from "@stellar/design-system";
-import Link from "next/link";
-import { Routes } from "@/constants/routes";
 
-import { useIsTestingNetwork } from "@/hooks/useIsTestingNetwork";
 import { useFriendBot } from "@/query/useFriendBot";
 import { useStore } from "@/store/useStore";
 
@@ -13,6 +10,8 @@ import { validate } from "@/validate";
 
 import { SuccessMsg } from "@/components/FriendBot/SuccessMsg";
 import { ErrorMsg } from "@/components/FriendBot/ErrorMsg";
+
+import { MainnetCard } from "./components/MainnetCard";
 
 import "../styles.scss";
 
@@ -22,8 +21,6 @@ export default function FundAccount() {
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [generatedPublicKey, setGeneratedPublicKey] = useState<string>("");
   const [inlineErrorMessage, setInlineErrorMessage] = useState<string>("");
-
-  const IS_TESTING_NETWORK = useIsTestingNetwork();
 
   const {
     error,
@@ -56,16 +53,8 @@ export default function FundAccount() {
     }
   }, [isError, isSuccess]);
 
-  if (!IS_TESTING_NETWORK) {
-    return (
-      <div className="Account">
-        <h2>Not Found</h2>
-        <p>Could not find requested resource</p>
-        <Link href={Routes.ROOT} prefetch={true}>
-          Return Home
-        </Link>
-      </div>
-    );
+  if (network.id === "mainnet") {
+    return <MainnetCard />;
   }
   return (
     <div className="Account">
