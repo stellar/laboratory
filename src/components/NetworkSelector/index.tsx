@@ -74,7 +74,7 @@ export const NetworkSelector = () => {
     Boolean(
       customNetwork.horizonUrl && isNetworkUrlInvalid(customNetwork.horizonUrl),
     ) ||
-    // mainnnet ;
+    // mainnet ;
     Boolean(
       activeNetworkId === "mainnet" &&
         Boolean(mainnetRpc && isNetworkUrlInvalid(mainnetRpc)),
