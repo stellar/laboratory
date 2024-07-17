@@ -110,7 +110,7 @@ export const ClaimantsPicker = ({
 
       <div>
         <Button
-          variant="tertiary"
+          variant="secondary"
           size="md"
           onClick={() => {
             onChange([

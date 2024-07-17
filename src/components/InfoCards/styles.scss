@@ -10,6 +10,8 @@
     flex-direction: column;
     gap: pxToRem(8px);
     justify-content: space-between;
+    // needed height: auto; to fix sizing issue on safari
+    height: auto;
 
     :nth-child(2) {
       flex: 1;
