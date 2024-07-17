@@ -334,6 +334,12 @@
     --Link-icon-size: pxToRem(14px);
     font-size: pxToRem(14px);
     font-weight: var(--sds-fw-semi-bold);
+
+    // to fix Safari only styling bug
+    .Link__icon {
+      width: pxToRem(14px);
+      width: pxToRem(14px);
+    }
   }
 }
 
@@ -592,5 +598,16 @@
     .Button {
       border: 0;
     }
+  }
+}
+
+// to fix Safari only styling bug
+.Input,
+.RadioPicker,
+.Select,
+.Box {
+  .Label__infoButton {
+    width: pxToRem(16px);
+    height: pxToRem(16px);
   }
 }
