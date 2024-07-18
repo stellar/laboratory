@@ -12,7 +12,7 @@ import { validate } from "@/validate";
 import { SuccessMsg } from "@/components/FriendBot/SuccessMsg";
 import { ErrorMsg } from "@/components/FriendBot/ErrorMsg";
 
-import { MainnetCard } from "./components/MainnetCard";
+import { SwitchNetwork } from "./components/SwitchNetwork";
 
 import "../styles.scss";
 
@@ -70,7 +70,7 @@ export default function FundAccount() {
   }, [isError, isSuccess]);
 
   if (network.id === "mainnet") {
-    return <MainnetCard />;
+    return <SwitchNetwork />;
   }
   return (
     <div className="Account">

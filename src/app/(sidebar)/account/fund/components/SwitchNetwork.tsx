@@ -9,7 +9,7 @@ import { NetworkType } from "@/types/types";
 
 import "../../styles.scss";
 
-export const MainnetCard = () => {
+export const SwitchNetwork = () => {
   const { selectNetwork, updateIsDynamicNetworkSelect } = useStore();
   const onSwitchNetwork = (network: NetworkType) => {
     const selectedNetwork = NetworkOptions.find((n) => n.id === network);
