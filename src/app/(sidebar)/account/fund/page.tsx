@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Card, Input, Text, Button } from "@stellar/design-system";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { useFriendBot } from "@/query/useFriendBot";
 import { useStore } from "@/store/useStore";
@@ -17,10 +18,13 @@ import "../styles.scss";
 
 export default function FundAccount() {
   const { account, network } = useStore();
+  const { reset } = account;
 
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [generatedPublicKey, setGeneratedPublicKey] = useState<string>("");
   const [inlineErrorMessage, setInlineErrorMessage] = useState<string>("");
+
+  const networkRef = useRef(network);
 
   const {
     error,
@@ -33,19 +37,31 @@ export default function FundAccount() {
   } = useFriendBot({
     network,
     publicKey: generatedPublicKey,
+    key: { type: "fund" },
   });
 
-  const { reset } = account;
+  const queryClient = useQueryClient();
+
+  const resetQuery = useCallback(
+    () =>
+      queryClient.resetQueries({
+        queryKey: ["friendBot", { type: "fund" }],
+      }),
+    [queryClient],
+  );
+
+  const resetStates = useCallback(() => {
+    reset();
+    resetQuery();
+  }, [reset, resetQuery]);
 
   useEffect(() => {
-    if (
-      account.registeredNetwork?.id &&
-      account.registeredNetwork.id !== network.id
-    ) {
-      reset();
-      setShowAlert(false);
+    // when switching network, reset the state
+    if (networkRef.current.id !== network.id) {
+      networkRef.current = network;
+      resetStates();
     }
-  }, [account.registeredNetwork, network.id, reset]);
+  }, [networkRef.current.id, network.id]);
 
   useEffect(() => {
     if (isError || isSuccess) {

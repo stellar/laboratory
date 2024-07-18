@@ -68,7 +68,7 @@ export interface Store {
   account: {
     publicKey: string | undefined;
     secretKey: string | undefined;
-    registeredNetwork: Network | EmptyObj;
+
     generatedMuxedAccountInput: Partial<MuxedAccount> | EmptyObj;
     parsedMuxedAccountInput: string | undefined;
     generatedMuxedAccount: MuxedAccount | EmptyObj;
@@ -217,7 +217,6 @@ const initTransactionState = {
 const initAccountState = {
   publicKey: undefined,
   secretKey: undefined,
-  registeredNetwork: {},
   generatedMuxedAccountInput: {},
   parsedMuxedAccountInput: undefined,
   generatedMuxedAccount: {},
@@ -296,7 +295,6 @@ export const createStore = (options: CreateStoreOptions) =>
             set((state) => {
               state.account.publicKey = publicKey;
               state.account.secretKey = secretKey || "";
-              state.account.registeredNetwork = state.network;
             }),
           reset: () =>
             set((state) => {

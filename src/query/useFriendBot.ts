@@ -6,9 +6,11 @@ import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 export const useFriendBot = ({
   network,
   publicKey,
+  key,
 }: {
   network: Network | EmptyObj;
   publicKey: string;
+  key: { type: string };
 }) => {
   const knownFriendbotURL =
     network.id === "futurenet"
@@ -16,7 +18,7 @@ export const useFriendBot = ({
       : "https://friendbot.stellar.org";
 
   const query = useQuery({
-    queryKey: ["friendBot"],
+    queryKey: ["friendBot", key],
     queryFn: async () => {
       if (!network.horizonUrl) {
         throw new Error(`Please use a network that supports Horizon`);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Card, Text, Button } from "@stellar/design-system";
 import { Keypair } from "@stellar/stellar-sdk";
 
@@ -19,6 +19,8 @@ import "../styles.scss";
 
 export default function CreateAccount() {
   const { account, network } = useStore();
+  const { reset } = account;
+
   const [secretKey, setSecretKey] = useState("");
   const [showAlert, setShowAlert] = useState<boolean>(false);
 
@@ -27,15 +29,15 @@ export default function CreateAccount() {
   const IS_CUSTOM_NETWORK_WITH_HORIZON =
     network.id === "custom" && network.horizonUrl;
 
+  const networkRef = useRef(network);
+
   const resetQuery = useCallback(
     () =>
       queryClient.resetQueries({
-        queryKey: ["friendBot"],
+        queryKey: ["friendBot", { type: "create" }],
       }),
     [queryClient],
   );
-
-  const { registeredNetwork, reset } = account;
 
   const resetStates = useCallback(() => {
     reset();
@@ -46,6 +48,7 @@ export default function CreateAccount() {
     useFriendBot({
       network,
       publicKey: account.publicKey!,
+      key: { type: "create" },
     });
 
   useEffect(() => {
@@ -55,11 +58,11 @@ export default function CreateAccount() {
   }, [isError, isSuccess]);
 
   useEffect(() => {
-    if (registeredNetwork?.id && registeredNetwork.id !== network.id) {
+    if (networkRef.current.id !== network.id) {
+      networkRef.current = network;
       resetStates();
-      setShowAlert(false);
     }
-  }, [account.registeredNetwork, network.id, resetStates]);
+  }, [networkRef.current.id, network.id]);
 
   const generateKeypair = () => {
     resetStates();
