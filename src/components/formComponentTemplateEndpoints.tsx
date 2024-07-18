@@ -291,7 +291,7 @@ export const formComponentTemplateEndpoints = (
             onChange={templ.onChange}
           />
         ),
-        validate: validate.amount,
+        validate: validate.getAmountError,
       };
     case "destination_asset":
       return {
@@ -568,7 +568,7 @@ export const formComponentTemplateEndpoints = (
             onChange={templ.onChange}
           />
         ),
-        validate: validate.amount,
+        validate: validate.getAmountError,
       };
     case "source_asset":
       return {
@@ -631,7 +631,7 @@ export const formComponentTemplateEndpoints = (
             onChange={templ.onChange}
           />
         ),
-        validate: validate.amount,
+        validate: validate.getAmountError,
       };
     case "start_time":
       return {
