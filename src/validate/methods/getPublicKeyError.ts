@@ -1,6 +1,6 @@
 import { StrKey } from "@stellar/stellar-sdk";
 
-export const publicKey = (publicKey: string, isRequired?: boolean) => {
+export const getPublicKeyError = (publicKey: string, isRequired?: boolean) => {
   if (!publicKey) {
     if (isRequired) {
       return "Public key is required.";

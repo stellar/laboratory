@@ -1,7 +1,7 @@
 import { capitalizeString } from "@/helpers/capitalizeString";
 import { MemoType, MemoValue, xdr } from "@stellar/stellar-sdk";
 
-export const memo = (
+export const getMemoError = (
   memo:
     | {
         type: MemoType | string | undefined;

@@ -1,9 +1,9 @@
 import { FiltersObject } from "@/types/types";
 
-import { arrayOfStrings } from "./arrayOfStrings";
-import { contractId } from "./contractId";
+import { getArrayOfStringsError } from "./getArrayOfStringsError";
+import { getContractIdError } from "./getContractIdError";
 
-export const getEventsFilters = (value: FiltersObject) => {
+export const getEventsFiltersError = (value: FiltersObject) => {
   const invalid = { contractId: false, topics: false };
 
   if (!value) {
@@ -27,14 +27,14 @@ export const getEventsFilters = (value: FiltersObject) => {
 
   value.contract_ids.forEach((val) => {
     if (val.length > 0) {
-      const is_invalid = Boolean(contractId(val));
+      const is_invalid = Boolean(getContractIdError(val));
       invalid.contractId = is_invalid;
     }
   });
 
   value.topics.forEach((val) => {
     if (val.length > 0) {
-      const is_invalid = Boolean(arrayOfStrings(val));
+      const is_invalid = Boolean(getArrayOfStringsError(val));
       invalid.topics = is_invalid;
     }
   });
