@@ -125,7 +125,7 @@ export const formComponentTemplateTxnOps = ({
             note={custom?.note}
           />
         ),
-        validate: validate.amount,
+        validate: validate.getAmountError,
       };
     case "asset":
     case "send_asset":
@@ -149,7 +149,7 @@ export const formComponentTemplateTxnOps = ({
             onChange={templ.onChange}
           />
         ),
-        validate: validate.asset,
+        validate: validate.getAssetError,
       };
     case "assetCode":
       return {
@@ -165,7 +165,7 @@ export const formComponentTemplateTxnOps = ({
             note={custom?.note}
           />
         ),
-        validate: validate.assetCode,
+        validate: validate.getAssetCodeError,
       };
     case "authorize":
       return {
@@ -193,7 +193,7 @@ export const formComponentTemplateTxnOps = ({
             onChange={templ.onChange}
           />
         ),
-        validate: validate.claimableBalanceId,
+        validate: validate.getClaimableBalanceIdError,
       };
     case "bump_to":
       return {
@@ -208,7 +208,7 @@ export const formComponentTemplateTxnOps = ({
             onChange={templ.onChange}
           />
         ),
-        validate: validate.positiveInt,
+        validate: validate.getPositiveIntError,
       };
     case "buying":
       return {
@@ -225,7 +225,7 @@ export const formComponentTemplateTxnOps = ({
             onChange={templ.onChange}
           />
         ),
-        validate: validate.asset,
+        validate: validate.getAssetError,
       };
     case "claimants":
       return {
@@ -238,7 +238,7 @@ export const formComponentTemplateTxnOps = ({
             error={templ.error}
           />
         ),
-        validate: validate.claimaints,
+        validate: validate.getClaimaintsError,
       };
     case "clear_flags":
       return {
@@ -277,7 +277,7 @@ export const formComponentTemplateTxnOps = ({
             onChange={templ.onChange}
           />
         ),
-        validate: validate.dataName,
+        validate: validate.getDataNameError,
       };
     case "data_value":
       return {
@@ -303,7 +303,7 @@ export const formComponentTemplateTxnOps = ({
             }
           />
         ),
-        validate: validate.dataValue,
+        validate: validate.getDataValueError,
       };
     case "destination":
       return {
@@ -318,7 +318,7 @@ export const formComponentTemplateTxnOps = ({
             onChange={templ.onChange}
           />
         ),
-        validate: validate.publicKey,
+        validate: validate.getPublicKeyError,
       };
     case "from":
       return {
@@ -333,7 +333,7 @@ export const formComponentTemplateTxnOps = ({
             onChange={templ.onChange}
           />
         ),
-        validate: validate.publicKey,
+        validate: validate.getPublicKeyError,
       };
     case "home_domain":
       return {
@@ -366,7 +366,7 @@ export const formComponentTemplateTxnOps = ({
             infoLink="https://developers.stellar.org/docs/learn/encyclopedia/inflation"
           />
         ),
-        validate: validate.publicKey,
+        validate: validate.getPublicKeyError,
       };
     case "limit":
       return {
@@ -393,7 +393,7 @@ export const formComponentTemplateTxnOps = ({
             infoLink={custom?.infoLink}
           />
         ),
-        validate: validate.positiveNumber,
+        validate: validate.getPositiveNumberError,
       };
     case "line":
       return {
@@ -411,7 +411,7 @@ export const formComponentTemplateTxnOps = ({
             onChange={templ.onChange}
           />
         ),
-        validate: validate.asset,
+        validate: validate.getAssetError,
       };
     case "liquidity_pool_id":
       return {
@@ -458,7 +458,7 @@ export const formComponentTemplateTxnOps = ({
             </>
           </Box>
         ),
-        validate: validate.accountThreshold,
+        validate: validate.getAccountThresholdError,
       };
     case "min_price":
     case "max_price":
@@ -475,7 +475,7 @@ export const formComponentTemplateTxnOps = ({
             note={custom?.note}
           />
         ),
-        validate: validate.numberFraction,
+        validate: validate.getNumberFractionError,
       };
     case "offer_id":
       return {
@@ -491,7 +491,7 @@ export const formComponentTemplateTxnOps = ({
             note={custom?.note}
           />
         ),
-        validate: validate.positiveInt,
+        validate: validate.getPositiveIntError,
       };
     case "path":
       return {
@@ -508,7 +508,7 @@ export const formComponentTemplateTxnOps = ({
             customButtonLabel="intermediate asset"
           />
         ),
-        validate: validate.assetMulti,
+        validate: validate.getAssetMultiError,
       };
     case "price":
       return {
@@ -523,7 +523,7 @@ export const formComponentTemplateTxnOps = ({
             onChange={templ.onChange}
           />
         ),
-        validate: validate.positiveNumber,
+        validate: validate.getPositiveNumberError,
       };
     // Custom operation
     case "revokeSponsorship":
@@ -537,7 +537,7 @@ export const formComponentTemplateTxnOps = ({
             error={templ.error}
           />
         ),
-        validate: validate.revokeSponsorship,
+        validate: validate.getRevokeSponsorshipError,
       };
     case "selling":
       return {
@@ -554,7 +554,7 @@ export const formComponentTemplateTxnOps = ({
             onChange={templ.onChange}
           />
         ),
-        validate: validate.asset,
+        validate: validate.getAssetError,
       };
     case "set_flags":
       return {
@@ -596,7 +596,7 @@ export const formComponentTemplateTxnOps = ({
             infoLink="https://developers.stellar.org/docs/encyclopedia/signatures-multisig#multisig"
           />
         ),
-        validate: validate.optionsSigner,
+        validate: validate.getOptionsSignerError,
       };
     case "source_account":
       return {
@@ -611,7 +611,7 @@ export const formComponentTemplateTxnOps = ({
             onChange={templ.onChange}
           />
         ),
-        validate: validate.publicKey,
+        validate: validate.getPublicKeyError,
       };
     case "sponsored_id":
       return {
@@ -626,7 +626,7 @@ export const formComponentTemplateTxnOps = ({
             onChange={templ.onChange}
           />
         ),
-        validate: validate.publicKey,
+        validate: validate.getPublicKeyError,
       };
     case "starting_balance":
       return {
@@ -641,7 +641,7 @@ export const formComponentTemplateTxnOps = ({
             onChange={templ.onChange}
           />
         ),
-        validate: validate.amount,
+        validate: validate.getAmountError,
       };
     case "trustor":
       return {
@@ -656,7 +656,7 @@ export const formComponentTemplateTxnOps = ({
             onChange={templ.onChange}
           />
         ),
-        validate: validate.publicKey,
+        validate: validate.getPublicKeyError,
       };
     default:
       return null;

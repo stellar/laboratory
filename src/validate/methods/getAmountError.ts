@@ -1,4 +1,4 @@
-export const amount = (value: string) => {
+export const getAmountError = (value: string) => {
   if (value.toString().charAt(0) === "-") {
     return "Amount can only be a positive number.";
   } else if (!value.toString().match(/^[0-9]*(\.[0-9]+){0,1}$/g)) {

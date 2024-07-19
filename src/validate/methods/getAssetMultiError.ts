@@ -1,10 +1,10 @@
 import { isEmptyObject } from "@/helpers/isEmptyObject";
-import { assetCode } from "./assetCode";
-import { publicKey } from "./publicKey";
+import { getAssetCodeError } from "./getAssetCodeError";
+import { getPublicKeyError } from "./getPublicKeyError";
 import { AssetObjectValue } from "@/types/types";
 import { sanitizeArray } from "@/helpers/sanitizeArray";
 
-export const assetMulti = (
+export const getAssetMultiError = (
   assets: AssetObjectValue[] | undefined,
   isRequired?: boolean,
 ) => {
@@ -14,8 +14,8 @@ export const assetMulti = (
     }
 
     const invalid = Object.entries({
-      code: assetCode(asset?.code || "", asset?.type, isRequired),
-      issuer: publicKey(asset?.issuer || "", isRequired),
+      code: getAssetCodeError(asset?.code || "", asset?.type, isRequired),
+      issuer: getPublicKeyError(asset?.issuer || "", isRequired),
     }).reduce((res, cur) => {
       const [key, value] = cur;
 

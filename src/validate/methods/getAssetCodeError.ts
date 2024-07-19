@@ -1,6 +1,6 @@
 import { AssetType } from "@/types/types";
 
-export const assetCode = (
+export const getAssetCodeError = (
   code: string,
   assetType: AssetType | undefined,
   isRequired?: boolean,

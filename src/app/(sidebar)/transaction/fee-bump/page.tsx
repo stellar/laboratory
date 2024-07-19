@@ -81,14 +81,14 @@ export default function FeeBumpTransaction() {
   const validateParam = (param: ParamsField, value: any) => {
     switch (param) {
       case "source_account":
-        return validate.publicKey(value);
+        return validate.getPublicKeyError(value);
       case "fee":
-        return validate.positiveInt(value);
+        return validate.getPositiveIntError(value);
       case "xdr":
-        if (validate.xdr(value)?.result === "success") {
+        if (validate.getXdrError(value)?.result === "success") {
           return false;
         }
-        return validate.xdr(value)?.message;
+        return validate.getXdrError(value)?.message;
       default:
         return false;
     }
