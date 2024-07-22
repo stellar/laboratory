@@ -61,7 +61,7 @@ export const Overview = () => {
   const HAS_SECRET_KEYS = secretInputs.some((input) => input !== "");
   const HAS_INVALID_SECRET_KEYS = secretInputs.some((input) => {
     if (input.length) {
-      return validate.secretKey(input);
+      return validate.getSecretKeyError(input);
     }
     return false;
   });
@@ -283,7 +283,7 @@ export const Overview = () => {
                 label="Add Signer"
                 value={secretInputs}
                 onChange={onUpdateSecretInputs}
-                validate={validate.secretKey}
+                validate={validate.getSecretKeyError}
                 placeholder="Secret key (starting with S) or hash preimage (in hex)"
                 autocomplete="off"
               />
@@ -306,7 +306,7 @@ export const Overview = () => {
                   onChange={(e) => {
                     updateBipPath(e.target.value);
 
-                    const error = validate.bipPath(e.target.value);
+                    const error = validate.getBipPathError(e.target.value);
 
                     if (error) {
                       setBipPathErrorMsg(error);

@@ -1,4 +1,4 @@
-export const arrayOfStrings = (value: string) => {
+export const getArrayOfStringsError = (value: string) => {
   if (typeof value !== "string") {
     return "Expected an array of strings.";
   }

@@ -82,7 +82,7 @@ export default function ParseMuxedAccount() {
               if (!e.target.value.startsWith("M")) {
                 error = "Muxed account address should start with M";
               } else {
-                error = validate.publicKey(e.target.value) || "";
+                error = validate.getPublicKeyError(e.target.value) || "";
               }
 
               setMuxedFieldError(error);

@@ -100,7 +100,7 @@ const signTx = ({
     const signer = signers[i];
 
     if (signer !== null && signer !== undefined && signer !== "") {
-      const error = validate.secretKey(signer);
+      const error = validate.getSecretKeyError(signer);
 
       if (error) {
         return {

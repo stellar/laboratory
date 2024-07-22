@@ -1,4 +1,4 @@
-export const bipPath = (value: string) => {
+export const getBipPathError = (value: string) => {
   const regexp = /44'\/148'\/(\d+)'/;
   const match = regexp.exec(value);
 

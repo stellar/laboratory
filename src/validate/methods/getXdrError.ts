@@ -12,7 +12,7 @@ const validateBase64 = (value: string) => {
   return { result: "success", message: "Valid Base64" };
 };
 
-export const xdr = (value: string) => {
+export const getXdrError = (value: string) => {
   if (!value) {
     return undefined;
   }

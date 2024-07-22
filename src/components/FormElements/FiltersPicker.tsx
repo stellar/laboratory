@@ -77,7 +77,7 @@ export const FiltersPicker = ({ id, value, onChange }: FiltersPickerProps) => {
             label="Contract IDs (up to 5)"
             value={value?.contract_ids}
             onChange={(val) => onUpdate(val, "contract_ids")}
-            validate={validate.contractId}
+            validate={validate.getContractIdError}
             placeholder="Ex: CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC"
             limit={5}
           />
@@ -87,7 +87,7 @@ export const FiltersPicker = ({ id, value, onChange }: FiltersPickerProps) => {
             label="Topics (up to 5)"
             value={value?.topics}
             onChange={(val) => onUpdate(val, "topics")}
-            validate={validate.arrayOfStrings}
+            validate={validate.getArrayOfStringsError}
             placeholder="Ex: ['AAAADwAAAAh0cmFuc2Zlcg==', '*', '*', '*']"
             limit={5}
           />

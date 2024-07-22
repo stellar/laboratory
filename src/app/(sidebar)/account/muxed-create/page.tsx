@@ -99,7 +99,7 @@ export default function CreateMuxedAccount() {
               if (!e.target.value.startsWith("G")) {
                 error = "Base account address should start with G";
               } else {
-                error = validate.publicKey(e.target.value) || "";
+                error = validate.getPublicKeyError(e.target.value) || "";
               }
 
               setBaseFieldErrorMessage(error);
@@ -120,7 +120,7 @@ export default function CreateMuxedAccount() {
               setReset(true);
               setMuxedId(e.target.value);
 
-              const error = validate.positiveInt(e.target.value);
+              const error = validate.getPositiveIntError(e.target.value);
               setMuxedFieldError(error || "");
             }}
             error={muxedFieldError}
