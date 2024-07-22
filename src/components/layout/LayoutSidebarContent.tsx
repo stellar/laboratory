@@ -49,25 +49,26 @@ export const LayoutSidebarContent = ({
               data-testid="endpoints-sidebar-section"
             >
               {sidebar.instruction ? (
-                <div
-                  className="LabLayout__sidebar__instruction"
-                  data-testid="endpoints-sidebar-subtitle"
-                >
-                  {sidebar.instruction}
-                </div>
-              ) : null}
-
-              {sidebar.navItems.map((item) => (
-                <Link key={item.route} item={item} pathname={pathname} />
-              ))}
+                <NestedNav
+                  instruction={sidebar.instruction}
+                  sidebar={sidebar}
+                  pathname={pathname}
+                />
+              ) : (
+                // <div
+                //   className="LabLayout__sidebar__instruction"
+                //   data-testid="endpoints-sidebar-subtitle"
+                // >
+                //   {sidebar.instruction}
+                // </div>
+                sidebar.navItems.map((item) => (
+                  <Link key={item.route} item={item} pathname={pathname} />
+                ))
+              )}
             </div>
           ))}
         </div>
-        <div
-          className={`LabLayout__sidebar--bottom ${
-            bottomItems?.length ? "LabLayout__sidebar--bottom--border" : ""
-          }`}
-        >
+        <div className="LabLayout__sidebar--bottom">
           <div className="LabLayout__sidebar__wrapper">
             {bottomItems?.map((bi) => (
               <Link key={bi.route} item={bi} pathname={pathname} />
@@ -87,6 +88,55 @@ export const LayoutSidebarContent = ({
         <div className="LabLayout__content">{children}</div>
       </div>
     </>
+  );
+};
+
+const NestedNav = ({
+  instruction,
+  pathname,
+  sidebar,
+}: {
+  instruction: string;
+  pathname: string;
+  sidebar: Sidebar;
+}) => {
+  // const isSelectedParent = pathname
+  //   ?.split(Routes.ENDPOINTS)?.[1]
+  //   ?.split("/")?.[1];
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  console.log("pathname: ", pathname);
+
+  return (
+    <div
+      className="LabLayout__sidebar__instruction"
+      data-testid="endpoints-sidebar-subtitle"
+    >
+      <div
+        className="SidebarLink SidebarLink__toggle"
+        onClick={() => {
+          setIsExpanded(!isExpanded);
+        }}
+        data-is-expanded={isExpanded}
+        data-testid="endpoints-sidebar-linkToggle"
+      >
+        {sidebar.instruction} <Icon.ChevronRight />
+      </div>
+
+      {sidebar.navItems?.length ? (
+        <div
+          className="SidebarLink__nestedItemsWrapper"
+          data-is-expanded={isExpanded}
+          data-testid="endpoints-sidebar-linksContainer"
+        >
+          <div className="SidebarLink__nestedItems">
+            {sidebar.navItems.map((item) => (
+              <Link key={item.route} item={item} pathname={pathname} />
+            ))}
+          </div>
+        </div>
+      ) : null}
+    </div>
   );
 };
 
@@ -117,7 +167,7 @@ const Link = ({ item, pathname }: { item: SidebarLink; pathname: string }) => {
           }}
           data-testid="endpoints-sidebar-linkToggle"
         >
-          <Icon.ChevronRight /> {item.label}
+          {item.label} <Icon.ChevronRight />
         </div>
 
         {item.nestedItems?.length ? (

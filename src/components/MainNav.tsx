@@ -1,4 +1,6 @@
+import { ReactNode } from "react";
 import { usePathname } from "next/navigation";
+import { Button, Icon } from "@stellar/design-system";
 
 import { Routes } from "@/constants/routes";
 import { NextLink } from "@/components/NextLink";
@@ -6,6 +8,7 @@ import { NextLink } from "@/components/NextLink";
 type NavLink = {
   href: Routes | string;
   label: string;
+  icon?: ReactNode;
 };
 
 const primaryNavLinks: NavLink[] = [
@@ -38,7 +41,8 @@ const primaryNavLinks: NavLink[] = [
 const secondaryNavLinks: NavLink[] = [
   {
     href: "https://developers.stellar.org/",
-    label: "View Documentation",
+    label: "View Docs",
+    icon: <Icon.LinkExternal01 />,
   },
 ];
 
@@ -59,6 +63,8 @@ export const MainNav = () => {
       className={`NavLink ${isActiveRoute(link.href) ? "NavLink--active" : ""}`}
     >
       {link.label}
+
+      {link.icon ? <span className="NavLink__icon">{link.icon}</span> : null}
     </NextLink>
   );
 

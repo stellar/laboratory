@@ -72,8 +72,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: pxToRem(16px);
-      padding: pxToRem(32px);
+      gap: pxToRem(24px);
+      padding: pxToRem(8px) pxToRem(32px);
     }
 
     &__settings {
@@ -89,7 +89,6 @@
       align-items: center;
       justify-content: space-between;
       gap: pxToRem(16px);
-      padding: 0 pxToRem(32px);
 
       font-size: pxToRem(14px);
       line-height: pxToRem(20px);
@@ -98,7 +97,7 @@
 
       & > div {
         display: flex;
-        gap: pxToRem(20px);
+        gap: pxToRem(16px);
         flex: 1;
       }
 
@@ -150,7 +149,7 @@
       padding-bottom: pxToRem(16px);
       display: flex;
       flex-direction: column;
-      gap: pxToRem(24px);
+      gap: pxToRem(12px);
       flex: 1;
     }
 
@@ -166,24 +165,18 @@
     }
 
     &--bottom {
-      --Sidebar-bottomItems-border-color: transparent;
-
       flex-grow: 1;
       flex-shrink: 0;
-      border-top: 1px solid var(--Sidebar-bottomItems-border-color);
+      border-top: 1px solid var(--sds-clr-gray-06);
       background-color: var(--sds-clr-gray-01);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: pxToRem(8px);
-      padding-top: pxToRem(16px);
-      padding-bottom: pxToRem(32px);
-      margin-left: pxToRem(32px);
-      margin-right: pxToRem(32px);
 
-      &--border {
-        --Sidebar-bottomItems-border-color: var(--sds-clr-gray-06);
-      }
+      padding-top: pxToRem(16px);
+      padding-bottom: pxToRem(16px);
+      padding-left: pxToRem(32px);
+      padding-right: pxToRem(32px);
     }
 
     &__wrapper {
@@ -193,7 +186,7 @@
     }
 
     &__instruction {
-      font-size: pxToRem(12px);
+      font-size: pxToRem(14px);
       line-height: pxToRem(18px);
       font-weight: var(--sds-fw-medium);
       margin-bottom: pxToRem(4px);
@@ -214,6 +207,10 @@
   border-bottom: 2px solid var(--Nav-navLink-border-color);
   white-space: nowrap;
 
+  display: flex;
+  align-items: center;
+  gap: pxToRem(4px);
+
   @media (hover: hover) {
     &:hover {
       --Nav-navLink-color: var(--sds-clr-lilac-11);
@@ -227,11 +224,20 @@
     --Nav-navLink-border-color: var(--sds-clr-lilac-09);
     pointer-events: none;
   }
+
+  &__icon {
+    display: flex;
+
+    // to fix Safari only styling bug
+    width: pxToRem(14px);
+    height: pxToRem(14px);
+  }
 }
 
 .SidebarLink {
   --SidebarLink-color: var(--sds-clr-gray-11);
 
+  justify-content: space-between;
   font-size: pxToRem(14px);
   line-height: pxToRem(20px);
   font-weight: var(--sds-fw-medium);
@@ -288,6 +294,10 @@
     &:has(~ [data-is-expanded="true"]) {
       --SidebarLink-rotate: 90deg;
     }
+
+    &[data-is-expanded="true"] {
+      margin-bottom: pxToRem(8);
+    }
   }
 
   &--nested,
@@ -303,8 +313,16 @@
     transition:
       grid-template-rows 100ms ease-out,
       margin-top 100ms ease-out;
-    margin-left: pxToRem(24px);
+    margin-left: pxToRem(16px);
     margin-top: pxToRem(-8px);
+
+    &:has(
+        .SidebarLink__nestedItemsWrapper
+          > .SidebarLink__nestedItems
+          > [data-is-active="true"]
+      ) {
+      background: yellow;
+    }
 
     &[data-is-expanded="true"] {
       grid-template-rows: 1fr;
@@ -338,7 +356,7 @@
     // to fix Safari only styling bug
     .Link__icon {
       width: pxToRem(14px);
-      width: pxToRem(14px);
+      height: pxToRem(14px);
     }
   }
 }
