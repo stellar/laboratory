@@ -1,6 +1,6 @@
 import { StrKey } from "@stellar/stellar-sdk";
 
-export const secretKey = (value: string) => {
+export const getSecretKeyError = (value: string) => {
   if (value.startsWith("S")) {
     if (!StrKey.isValidEd25519SecretSeed(value)) {
       return "Invalid secret key.";

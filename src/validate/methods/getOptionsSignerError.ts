@@ -2,22 +2,22 @@ import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { sanitizeObject } from "@/helpers/sanitizeObject";
 import { OptionSigner } from "@/types/types";
 
-import { accountThreshold } from "./accountThreshold";
-import { publicKey } from "./publicKey";
+import { getAccountThresholdError } from "./getAccountThresholdError";
+import { getPublicKeyError } from "./getPublicKeyError";
 
-export const optionsSigner = (signer: OptionSigner | undefined) => {
+export const getOptionsSignerError = (signer: OptionSigner | undefined) => {
   if (!signer || !signer?.type) {
     return false;
   }
 
   const error: { key: string | boolean; weight: string | boolean } = {
     key: "",
-    weight: accountThreshold(signer?.weight || ""),
+    weight: getAccountThresholdError(signer?.weight || ""),
   };
 
   switch (signer.type) {
     case "ed25519PublicKey":
-      error.key = signer.key ? publicKey(signer.key) : "";
+      error.key = signer.key ? getPublicKeyError(signer.key) : "";
       break;
     case "sha256Hash":
     case "preAuthTx":

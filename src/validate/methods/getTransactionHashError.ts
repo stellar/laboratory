@@ -1,4 +1,4 @@
-export const transactionHash = (hash: string | undefined) => {
+export const getTransactionHashError = (hash: string | undefined) => {
   if (!hash) {
     return false;
   }

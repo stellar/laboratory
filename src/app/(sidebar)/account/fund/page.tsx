@@ -94,7 +94,7 @@ export default function FundAccount() {
             value={generatedPublicKey}
             onChange={(e) => {
               setGeneratedPublicKey(e.target.value);
-              const error = validate.publicKey(e.target.value);
+              const error = validate.getPublicKeyError(e.target.value);
               setInlineErrorMessage(error || "");
             }}
             placeholder="Ex: GCEXAMPLE5HWNK4AYSTEQ4UWDKHTCKADVS2AHF3UI2ZMO3DPUSM6Q4UG"
