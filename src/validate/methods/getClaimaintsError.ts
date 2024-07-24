@@ -3,10 +3,10 @@ import { sanitizeObject } from "@/helpers/sanitizeObject";
 import { sanitizeArray } from "@/helpers/sanitizeArray";
 import { AnyObject } from "@/types/types";
 
-import { publicKey } from "./publicKey";
-import { positiveInt } from "./positiveInt";
+import { getPublicKeyError } from "./getPublicKeyError";
+import { getPositiveIntError } from "./getPositiveIntError";
 
-export const claimaints = (val: AnyObject[]) => {
+export const getClaimaintsError = (val: AnyObject[]) => {
   if (!val || val.length === 0) {
     return false;
   }
@@ -16,7 +16,7 @@ export const claimaints = (val: AnyObject[]) => {
   val.forEach((claimant) => {
     const validate = {
       destination: claimant.destination
-        ? publicKey(claimant.destination)
+        ? getPublicKeyError(claimant.destination)
         : false,
       predicate:
         claimant.predicate && !isEmptyObject(claimant.predicate)
@@ -54,7 +54,7 @@ const validateEntry = (
     const path = parent ? `${parent}.${key}` : key;
 
     if (typeof value === "string") {
-      const invalid = positiveInt(value);
+      const invalid = getPositiveIntError(value);
 
       if (invalid) {
         result[path] = invalid;

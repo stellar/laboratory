@@ -28,7 +28,7 @@ export const Import = () => {
     setTxXdr(value);
 
     if (value.length > 0) {
-      const validatedXDR = validate.xdr(value);
+      const validatedXDR = validate.getXdrError(value);
 
       if (validatedXDR?.result && validatedXDR.message) {
         if (validatedXDR.result === "success") {

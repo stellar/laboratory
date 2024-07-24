@@ -1,4 +1,4 @@
-export const dataValue = (value: string) => {
+export const getDataValueError = (value: string) => {
   const valueSize = Buffer.from(value).length;
 
   if (valueSize > 64) {

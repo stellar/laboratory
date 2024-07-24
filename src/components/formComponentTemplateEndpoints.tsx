@@ -10,6 +10,7 @@ import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 import { IncludeFailedPicker } from "@/components/FormElements/IncludeFailedPicker";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { AssetMultiPicker } from "@/components/FormElements/AssetMultiPicker";
+import { FiltersPicker } from "@/components/FormElements/FiltersPicker";
 
 import { parseJsonString } from "@/helpers/parseJsonString";
 import { validate } from "@/validate";
@@ -86,7 +87,7 @@ export const formComponentTemplateEndpoints = (
             onChange={templ.onChange}
           />
         ),
-        validate: validate.publicKey,
+        validate: validate.getPublicKeyError,
       };
     case "asset":
       return {
@@ -103,7 +104,7 @@ export const formComponentTemplateEndpoints = (
             onChange={templ.onChange}
           />
         ),
-        validate: validate.asset,
+        validate: validate.getAssetError,
       };
     case "asset_code":
       return {
@@ -118,7 +119,7 @@ export const formComponentTemplateEndpoints = (
             onChange={templ.onChange}
           />
         ),
-        validate: validate.assetCode,
+        validate: validate.getAssetCodeError,
       };
     case "asset_issuer":
       return {
@@ -133,7 +134,7 @@ export const formComponentTemplateEndpoints = (
             onChange={templ.onChange}
           />
         ),
-        validate: validate.publicKey,
+        validate: validate.getPublicKeyError,
       };
     case "base_asset":
       return {
@@ -150,7 +151,7 @@ export const formComponentTemplateEndpoints = (
             onChange={templ.onChange}
           />
         ),
-        validate: validate.asset,
+        validate: validate.getAssetError,
       };
     case "buying":
       return {
@@ -167,7 +168,7 @@ export const formComponentTemplateEndpoints = (
             onChange={templ.onChange}
           />
         ),
-        validate: validate.asset,
+        validate: validate.getAssetError,
       };
     case "buying_asset":
       return {
@@ -184,7 +185,7 @@ export const formComponentTemplateEndpoints = (
             onChange={templ.onChange}
           />
         ),
-        validate: validate.asset,
+        validate: validate.getAssetError,
       };
     case "claimable_balance_id":
       return {
@@ -214,7 +215,7 @@ export const formComponentTemplateEndpoints = (
             onChange={templ.onChange}
           />
         ),
-        validate: validate.publicKey,
+        validate: validate.getPublicKeyError,
       };
     case "counter_asset":
       return {
@@ -231,7 +232,7 @@ export const formComponentTemplateEndpoints = (
             onChange={templ.onChange}
           />
         ),
-        validate: validate.asset,
+        validate: validate.getAssetError,
       };
     case "cursor":
       return {
@@ -260,7 +261,7 @@ export const formComponentTemplateEndpoints = (
             onChange={templ.onChange}
           />
         ),
-        validate: validate.publicKey,
+        validate: validate.getPublicKeyError,
       };
     case "destination_account":
       return {
@@ -275,7 +276,7 @@ export const formComponentTemplateEndpoints = (
             onChange={templ.onChange}
           />
         ),
-        validate: validate.publicKey,
+        validate: validate.getPublicKeyError,
       };
     case "destination_amount":
       return {
@@ -290,7 +291,7 @@ export const formComponentTemplateEndpoints = (
             onChange={templ.onChange}
           />
         ),
-        validate: validate.amount,
+        validate: validate.getAmountError,
       };
     case "destination_asset":
       return {
@@ -307,7 +308,7 @@ export const formComponentTemplateEndpoints = (
             onChange={templ.onChange}
           />
         ),
-        validate: validate.asset,
+        validate: validate.getAssetError,
       };
     case "destination_assets":
       return {
@@ -323,7 +324,7 @@ export const formComponentTemplateEndpoints = (
             onChange={templ.onChange}
           />
         ),
-        validate: validate.assetMulti,
+        validate: validate.getAssetMultiError,
       };
     case "end_time":
       return {
@@ -367,7 +368,7 @@ export const formComponentTemplateEndpoints = (
             onChange={templ.onChange}
           />
         ),
-        validate: validate.positiveInt,
+        validate: validate.getPositiveIntError,
       };
     case "limit":
       return {
@@ -381,7 +382,7 @@ export const formComponentTemplateEndpoints = (
             onChange={templ.onChange}
           />
         ),
-        validate: validate.positiveInt,
+        validate: validate.getPositiveIntError,
       };
     case "liquidity_pool_id":
       return {
@@ -428,7 +429,7 @@ export const formComponentTemplateEndpoints = (
             onChange={templ.onChange}
           />
         ),
-        validate: validate.positiveInt,
+        validate: validate.getPositiveIntError,
       };
     case "order":
       return {
@@ -458,7 +459,7 @@ export const formComponentTemplateEndpoints = (
             customButtonLabel="reserve"
           />
         ),
-        validate: validate.assetMulti,
+        validate: validate.getAssetMultiError,
       };
     case "resolution":
       return {
@@ -488,7 +489,7 @@ export const formComponentTemplateEndpoints = (
             onChange={templ.onChange}
           />
         ),
-        validate: validate.publicKey,
+        validate: validate.getPublicKeyError,
       };
     case "selling":
       return {
@@ -505,7 +506,7 @@ export const formComponentTemplateEndpoints = (
             onChange={templ.onChange}
           />
         ),
-        validate: validate.asset,
+        validate: validate.getAssetError,
       };
     case "selling_asset":
       return {
@@ -522,7 +523,7 @@ export const formComponentTemplateEndpoints = (
             onChange={templ.onChange}
           />
         ),
-        validate: validate.asset,
+        validate: validate.getAssetError,
       };
     case "signer":
       return {
@@ -537,7 +538,7 @@ export const formComponentTemplateEndpoints = (
             onChange={templ.onChange}
           />
         ),
-        validate: validate.publicKey,
+        validate: validate.getPublicKeyError,
       };
     case "source_account":
       return {
@@ -552,7 +553,7 @@ export const formComponentTemplateEndpoints = (
             onChange={templ.onChange}
           />
         ),
-        validate: validate.publicKey,
+        validate: validate.getPublicKeyError,
       };
     case "source_amount":
       return {
@@ -567,7 +568,7 @@ export const formComponentTemplateEndpoints = (
             onChange={templ.onChange}
           />
         ),
-        validate: validate.amount,
+        validate: validate.getAmountError,
       };
     case "source_asset":
       return {
@@ -584,7 +585,7 @@ export const formComponentTemplateEndpoints = (
             onChange={templ.onChange}
           />
         ),
-        validate: validate.asset,
+        validate: validate.getAssetError,
       };
     case "source_assets":
       return {
@@ -600,7 +601,7 @@ export const formComponentTemplateEndpoints = (
             onChange={templ.onChange}
           />
         ),
-        validate: validate.assetMulti,
+        validate: validate.getAssetMultiError,
       };
     case "sponsor":
       return {
@@ -615,7 +616,7 @@ export const formComponentTemplateEndpoints = (
             onChange={templ.onChange}
           />
         ),
-        validate: validate.publicKey,
+        validate: validate.getPublicKeyError,
       };
     case "starting_balance":
       return {
@@ -630,7 +631,7 @@ export const formComponentTemplateEndpoints = (
             onChange={templ.onChange}
           />
         ),
-        validate: validate.amount,
+        validate: validate.getAmountError,
       };
     case "start_time":
       return {
@@ -661,7 +662,7 @@ export const formComponentTemplateEndpoints = (
             onChange={templ.onChange}
           />
         ),
-        validate: validate.transactionHash,
+        validate: validate.getTransactionHashError,
       };
     case "tx":
       return {
@@ -676,7 +677,36 @@ export const formComponentTemplateEndpoints = (
             onChange={templ.onChange}
           />
         ),
-        validate: validate.xdr,
+        validate: validate.getXdrError,
+      };
+    case "filters":
+      return {
+        render: (templ: TemplateRenderTxProps) => (
+          <FiltersPicker
+            key={id}
+            id={id}
+            value={parseJsonString(templ.value)}
+            error={templ.error}
+            onChange={templ?.onChange}
+          />
+        ),
+        validate: validate.getEventsFiltersError,
+      };
+    case "resourceConfig":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <PositiveIntPicker
+            key={id}
+            id={id}
+            label="Resource Config - Instruction Leeway"
+            placeholder="Ex: 1714814"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.getPositiveIntError,
       };
     default:
       return null;

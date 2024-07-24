@@ -4,6 +4,7 @@ import React from "react";
 import { Icon } from "@stellar/design-system";
 import { LayoutSidebarContent } from "@/components/layout/LayoutSidebarContent";
 import {
+  ENDPOINTS_PAGES_RPC,
   ENDPOINTS_PAGES_HORIZON,
   EndpointsPagesProps,
 } from "@/constants/endpointsPages";
@@ -26,9 +27,12 @@ export default function EndpointsTemplate({
   };
 
   return (
-    // TODO: add RPC endpoints
     <LayoutSidebarContent
-      sidebar={[ENDPOINTS_PAGES_SAVED, ENDPOINTS_PAGES_HORIZON]}
+      sidebar={[
+        ENDPOINTS_PAGES_SAVED,
+        ENDPOINTS_PAGES_RPC,
+        ENDPOINTS_PAGES_HORIZON,
+      ]}
     >
       {children}
     </LayoutSidebarContent>

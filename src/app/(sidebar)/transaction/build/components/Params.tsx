@@ -125,9 +125,9 @@ export const Params = () => {
   const validateParam = (param: ParamsField, value: any) => {
     switch (param) {
       case "cond":
-        return validate.timeBounds(value?.time || value);
+        return validate.getTimeBoundsError(value?.time || value);
       case "fee":
-        return validate.positiveInt(value);
+        return validate.getPositiveIntError(value);
       case "memo":
         if (!value || isEmptyObject(value)) {
           return false;
@@ -135,17 +135,17 @@ export const Params = () => {
 
         // Memo in store is in transaction format { memoType: memoValue }
         if (value.type) {
-          return validate.memo(value);
+          return validate.getMemoError(value);
         } else {
           // Changing it to { type, value } format if needed
           const [type, val] = Object.entries(value)[0];
-          return validate.memo({ type, value: val as MemoValue });
+          return validate.getMemoError({ type, value: val as MemoValue });
         }
 
       case "seq_num":
-        return validate.positiveInt(value);
+        return validate.getPositiveIntError(value);
       case "source_account":
-        return validate.publicKey(value);
+        return validate.getPublicKeyError(value);
       default:
         return false;
     }

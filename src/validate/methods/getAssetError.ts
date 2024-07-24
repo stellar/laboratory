@@ -5,10 +5,10 @@ import {
   AssetPoolShareError,
   AssetPoolShareObjectValue,
 } from "@/types/types";
-import { assetCode } from "./assetCode";
-import { publicKey } from "./publicKey";
+import { getAssetCodeError } from "./getAssetCodeError";
+import { getPublicKeyError } from "./getPublicKeyError";
 
-export const asset = (
+export const getAssetError = (
   asset: AssetObjectValue | AssetPoolShareObjectValue | undefined,
 ): AssetError | AssetPoolShareError | false => {
   if (!asset?.type) {
@@ -46,8 +46,8 @@ const validateAsset = (asset: AssetObjectValue) => {
   }
 
   return Object.entries({
-    code: assetCode(asset?.code || "", asset?.type),
-    issuer: publicKey(asset?.issuer || ""),
+    code: getAssetCodeError(asset?.code || "", asset?.type),
+    issuer: getPublicKeyError(asset?.issuer || ""),
   }).reduce((res, cur) => {
     const [key, value] = cur;
 

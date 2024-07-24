@@ -12,7 +12,7 @@ const validateBase64 = (value: string) => {
   return { result: "success", message: "Valid Base64" };
 };
 
-export const xdr = (value: string) => {
+export const getXdrError = (value: string) => {
   if (!value) {
     return undefined;
   }
@@ -27,6 +27,9 @@ export const xdr = (value: string) => {
   try {
     stellarXDR.TransactionEnvelope.fromXDR(sanitizedXdr, "base64");
 
+    // TODO: See, if we can make this response match all the other validations.
+    // This is the only exception and might cause issues if we don't remember to
+    // handle it.
     return {
       result: "success",
       message: "Valid Transaction Envelope XDR",

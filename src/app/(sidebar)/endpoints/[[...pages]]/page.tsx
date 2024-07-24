@@ -29,13 +29,17 @@ import { localStorageSavedEndpointsHorizon } from "@/helpers/localStorageSavedEn
 import { arrayItem } from "@/helpers/arrayItem";
 
 import { Routes } from "@/constants/routes";
-import { ENDPOINTS_PAGES_HORIZON } from "@/constants/endpointsPages";
+import {
+  ENDPOINTS_PAGES_HORIZON,
+  ENDPOINTS_PAGES_RPC,
+} from "@/constants/endpointsPages";
 import { useEndpoint } from "@/query/useEndpoint";
 import {
   AnyObject,
   AssetObject,
   AssetObjectValue,
   Network,
+  FiltersObject,
 } from "@/types/types";
 
 import { EndpointsLandingPage } from "../components/EndpointsLandingPage";
@@ -43,13 +47,20 @@ import { SavedEndpointsPage } from "../components/SavedEndpointsPage";
 
 export default function Endpoints() {
   const pathname = usePathname();
+  const isRpcEndpoint = pathname.includes(Routes.ENDPOINTS_RPC);
   const currentPage = pathname.split(Routes.ENDPOINTS)?.[1];
 
-  const page = ENDPOINTS_PAGES_HORIZON.navItems
+  const horizonPage = ENDPOINTS_PAGES_HORIZON.navItems
     .find((page) => pathname.includes(page.route))
     ?.nestedItems?.find((i) => i.route === pathname);
 
-  const pageData = page?.form;
+  const rpcPage = ENDPOINTS_PAGES_RPC.navItems.find((page) =>
+    pathname.includes(page.route),
+  );
+
+  const page = isRpcEndpoint ? rpcPage : horizonPage;
+  const pageData = isRpcEndpoint ? rpcPage?.form : horizonPage?.form;
+
   const requiredFields = sanitizeArray(
     pageData?.requiredParams?.split(",") || [],
   );
@@ -116,6 +127,106 @@ export default function Endpoints() {
   const [urlPathParams, setUrlPathparams] = useState("");
   const [urlParams, setUrlParams] = useState("");
 
+  const getRpcPostPayloadProps = (endpoint: string) => {
+    const defaultRpcRequestBody = {
+      jsonrpc: "2.0",
+      id: 8675309,
+      method: pageData?.rpcMethod,
+    };
+
+    switch (endpoint) {
+      case Routes.ENDPOINTS_GET_EVENTS: {
+        const filteredParams = params.filters ? JSON.parse(params.filters) : {};
+
+        return {
+          ...defaultRpcRequestBody,
+          params: {
+            startLedger: params.ledger ?? "",
+            cursor: params.cursor,
+            limit: params.limit,
+            filters: [
+              {
+                type: filteredParams.type ?? "",
+                contractIds: filteredParams.contract_ids ?? "",
+                topics: filteredParams.topics ?? "",
+              },
+            ],
+          },
+        };
+      }
+
+      case Routes.ENDPOINTS_GET_LEDGER_ENTRIES: {
+        return {
+          ...defaultRpcRequestBody,
+          params: {
+            keys: params.transaction ?? "",
+          },
+        };
+      }
+
+      case Routes.ENDPOINTS_GET_TRANSACTION: {
+        return {
+          ...defaultRpcRequestBody,
+          params: {
+            hash: params.transaction ?? "",
+          },
+        };
+      }
+
+      case Routes.ENDPOINTS_GET_TRANSACTIONS: {
+        return {
+          ...defaultRpcRequestBody,
+          params: {
+            startLedger: params.ledger ?? "",
+            cursor: params.cursor,
+            limit: params.limit,
+          },
+        };
+      }
+
+      case Routes.ENDPOINTS_SEND_TRANSACTION: {
+        return {
+          ...defaultRpcRequestBody,
+          params: {
+            transaction: params.transaction ?? "",
+          },
+        };
+      }
+
+      case Routes.ENDPOINTS_SIMULATE_TRANSACTION: {
+        return {
+          ...defaultRpcRequestBody,
+          params: {
+            transaction: params.transaction ?? "",
+            resourceConfig: {
+              instructionLeeway: params.resourceConfig,
+            },
+          },
+        };
+      }
+
+      default: {
+        return defaultRpcRequestBody;
+      }
+    }
+  };
+
+  const getPostPayload = () => {
+    let payload;
+
+    if (pageData?.requestMethod === "POST") {
+      if (pathname === Routes.ENDPOINTS_TRANSACTIONS_POST) {
+        payload = { tx: params.tx ?? "" };
+      }
+
+      if (isRpcEndpoint) {
+        payload = getRpcPostPayloadProps(pathname);
+      }
+    }
+
+    return payload;
+  };
+
   const queryClient = useQueryClient();
   const {
     data: endpointData,
@@ -129,7 +240,7 @@ export default function Endpoints() {
     requestUrl,
     // There is only one endpoint request for POST, using params directly for
     // simplicity.
-    pageData?.requestMethod === "POST" ? { tx: params.tx ?? "" } : undefined,
+    pageData?.requestMethod === "POST" ? getPostPayload() : undefined,
   );
 
   const responseEl = useRef<HTMLDivElement | null>(null);
@@ -151,7 +262,7 @@ export default function Endpoints() {
     isValidReqFields = missingReqFields.length === 0;
 
     // Checking if there are any errors
-    isValid = isEmptyObject(formError);
+    isValid = formError.tx?.result === "success" || isEmptyObject(formError);
 
     // Asset components
     const assetParams = [
@@ -355,7 +466,9 @@ export default function Endpoints() {
       return pathArr.join("/");
     };
 
-    const baseUrl = `${endpointNetwork.horizonUrl}${parseUrlPath(urlPath)}`;
+    const baseUrl = isRpcEndpoint
+      ? `${endpointNetwork.rpcUrl}${parseUrlPath(urlPath)}`
+      : `${endpointNetwork.horizonUrl}${parseUrlPath(urlPath)}`;
 
     if (pageData?.requestMethod === "POST") {
       return baseUrl;
@@ -426,14 +539,26 @@ export default function Endpoints() {
   };
 
   const renderPostPayload = () => {
+    let renderedProps = getPostPayload();
+
     if (pageData?.requestMethod === "POST") {
+      if (pathname === Routes.ENDPOINTS_TRANSACTIONS_POST) {
+        renderedProps = { tx: params.tx ?? "" };
+      }
+
+      if (isRpcEndpoint) {
+        renderedProps = getRpcPostPayloadProps(pathname);
+      }
+    }
+
+    if (renderedProps) {
       return (
         <div className="Endpoints__txTextarea">
           <Textarea
             id="tx"
             fieldSize="md"
             label="Payload"
-            value={JSON.stringify({ tx: params.tx ?? "" }, null, 2)}
+            value={renderedProps ? JSON.stringify(renderedProps, null, 2) : ""}
             rows={5}
             disabled
             spellCheck={false}
@@ -441,7 +566,6 @@ export default function Endpoints() {
         </div>
       );
     }
-
     return null;
   };
 
@@ -520,7 +644,7 @@ export default function Endpoints() {
       ...urlParams.split(","),
     ]);
 
-    if (!pageData || allFields.length === 0) {
+    if (!pageData || (allFields.length === 0 && !isRpcEndpoint)) {
       return null;
     }
 
@@ -625,6 +749,21 @@ export default function Endpoints() {
                       handleChange(optionId, optionId);
                     },
                   });
+                // Custom endpoint component
+                case "filters":
+                  return component.render({
+                    value: params[f],
+                    error: formError[f],
+                    isRequired,
+                    onChange: (filtersObject: FiltersObject) => {
+                      handleChange(
+                        filtersObject,
+                        isEmptyObject(sanitizeObject(filtersObject || {}))
+                          ? undefined
+                          : JSON.stringify(filtersObject),
+                      );
+                    },
+                  });
                 default:
                   return component.render({
                     value: params[f],
@@ -652,6 +791,16 @@ export default function Endpoints() {
     return <SavedEndpointsPage />;
   }
 
+  if (pathname === Routes.ENDPOINTS_RPC) {
+    return (
+      <div className="Endpoints__content">
+        <div className="PageBody__content" data-testid="endpoints-pageContent">
+          {renderPostPayload()}
+        </div>
+      </div>
+    );
+  }
+
   if (!pageData) {
     return <>{`${page?.label} page is coming soon.`}</>;
   }
@@ -659,9 +808,11 @@ export default function Endpoints() {
   return (
     <>
       <div className="PageHeader">
-        <Text size="md" as="h1" weight="medium">
-          {page.label}
-        </Text>
+        {page ? (
+          <Text size="md" as="h1" weight="medium">
+            {page.label}
+          </Text>
+        ) : null}
 
         <SdsLink
           href={pageData.docsUrl}
