@@ -141,9 +141,11 @@ export default function Endpoints() {
         return {
           ...defaultRpcRequestBody,
           params: {
-            startLedger: params.ledger ?? "",
-            cursor: params.cursor,
-            limit: params.limit,
+            startLedger: Number(params.ledger),
+            pagination: {
+              cursor: params.cursor,
+              limit: Number(params.limit) || undefined,
+            },
             filters: [
               {
                 type: filteredParams.type ?? "",
@@ -177,9 +179,11 @@ export default function Endpoints() {
         return {
           ...defaultRpcRequestBody,
           params: {
-            startLedger: params.ledger ?? "",
-            cursor: params.cursor,
-            limit: params.limit,
+            startLedger: Number(params.ledger),
+            pagination: {
+              cursor: params.cursor,
+              limit: Number(params.limit) || undefined,
+            },
           },
         };
       }
@@ -262,7 +266,7 @@ export default function Endpoints() {
     isValidReqFields = missingReqFields.length === 0;
 
     // Checking if there are any errors
-    isValid = formError.tx?.result === "success" || isEmptyObject(formError);
+    isValid = isEmptyObject(formError);
 
     // Asset components
     const assetParams = [
@@ -556,6 +560,7 @@ export default function Endpoints() {
       const requiredParams = renderedProps.params
         ? Object.values(renderedProps.params).filter((val) => val !== undefined)
         : undefined;
+
       const rows = requiredParams
         ? requiredParams.length + defaultRowsLength + 2
         : defaultRowsLength;
@@ -703,7 +708,7 @@ export default function Endpoints() {
 
                 const error = component.validate?.(value, isRequired);
 
-                if (error) {
+                if (error && error.result !== "success") {
                   setFormError({ ...formError, [f]: error });
                 } else if (formError[f]) {
                   const updatedErrors = { ...formError };
