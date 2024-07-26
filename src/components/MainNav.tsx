@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { usePathname } from "next/navigation";
-import { Button, Icon } from "@stellar/design-system";
+import { Icon } from "@stellar/design-system";
 
 import { Routes } from "@/constants/routes";
 import { NextLink } from "@/components/NextLink";
@@ -36,9 +36,6 @@ const primaryNavLinks: NavLink[] = [
     href: Routes.SOROBAN_CONTRACT_EXPLORER,
     label: "Soroban",
   },
-];
-
-const secondaryNavLinks: NavLink[] = [
   {
     href: "https://developers.stellar.org/",
     label: "View Docs",
@@ -70,16 +67,9 @@ export const MainNav = () => {
 
   return (
     <nav className="LabLayout__header__nav">
-      {/* Primary nav links */}
       <div className="LabLayout__header__nav--primary">
         {primaryNavLinks.map((l) => (
           <NavItem key={l.href} link={l} />
-        ))}
-      </div>
-      {/* Secondary nav links */}
-      <div className="LabLayout__header__nav--secondary">
-        {secondaryNavLinks.map((sl) => (
-          <NavItem key={sl.href} link={sl} />
         ))}
       </div>
     </nav>

@@ -49,18 +49,8 @@ export const LayoutSidebarContent = ({
               data-testid="endpoints-sidebar-section"
             >
               {sidebar.instruction ? (
-                <NestedNav
-                  instruction={sidebar.instruction}
-                  sidebar={sidebar}
-                  pathname={pathname}
-                />
+                <NestedNav sidebar={sidebar} pathname={pathname} />
               ) : (
-                // <div
-                //   className="LabLayout__sidebar__instruction"
-                //   data-testid="endpoints-sidebar-subtitle"
-                // >
-                //   {sidebar.instruction}
-                // </div>
                 sidebar.navItems.map((item) => (
                   <Link key={item.route} item={item} pathname={pathname} />
                 ))
@@ -92,20 +82,22 @@ export const LayoutSidebarContent = ({
 };
 
 const NestedNav = ({
-  instruction,
   pathname,
   sidebar,
 }: {
-  instruction: string;
   pathname: string;
   sidebar: Sidebar;
 }) => {
-  // const isSelectedParent = pathname
-  //   ?.split(Routes.ENDPOINTS)?.[1]
-  //   ?.split("/")?.[1];
+  const isSelectedParent = sidebar.navItems.some((item) =>
+    pathname.includes(item.route),
+  );
   const [isExpanded, setIsExpanded] = useState(false);
 
-  console.log("pathname: ", pathname);
+  useEffect(() => {
+    if (isSelectedParent) {
+      setIsExpanded(isSelectedParent);
+    }
+  }, [isSelectedParent]);
 
   return (
     <div

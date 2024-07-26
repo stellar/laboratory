@@ -38,10 +38,10 @@ export default function EndpointsTemplate({
   return (
     <LayoutSidebarContent
       sidebar={[
+        ENDPOINTS_PAGES_SAVED,
         ENDPOINTS_PAGES_INTRO,
         ENDPOINTS_PAGES_RPC,
         ENDPOINTS_PAGES_HORIZON,
-        ENDPOINTS_PAGES_SAVED,
       ]}
     >
       {children}

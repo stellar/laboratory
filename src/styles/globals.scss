@@ -65,6 +65,7 @@
 
   // Header
   &__header {
+    display: grid;
     background-color: var(--sds-clr-gray-01);
     border-bottom: 1px solid var(--sds-clr-gray-06);
 
@@ -139,9 +140,7 @@
     border-right: 1px solid var(--sds-clr-gray-06);
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows:
-      minmax(0, max-content)
-      1fr;
+    grid-template-rows: 1fr;
 
     &--top {
       overflow-x: auto;
@@ -150,7 +149,6 @@
       display: flex;
       flex-direction: column;
       gap: pxToRem(12px);
-      flex: 1;
     }
 
     &__section {
@@ -165,8 +163,6 @@
     }
 
     &--bottom {
-      flex-grow: 1;
-      flex-shrink: 0;
       border-top: 1px solid var(--sds-clr-gray-06);
       background-color: var(--sds-clr-gray-01);
       display: flex;
@@ -183,13 +179,6 @@
       display: flex;
       flex-direction: column;
       gap: pxToRem(8px);
-    }
-
-    &__instruction {
-      font-size: pxToRem(14px);
-      line-height: pxToRem(18px);
-      font-weight: var(--sds-fw-medium);
-      margin-bottom: pxToRem(4px);
     }
   }
 }
@@ -269,6 +258,7 @@
     cursor: default;
     font-weight: var(--sds-fw-semi-bold);
     pointer-events: none;
+    position: relative;
   }
 
   &__toggle {
@@ -296,7 +286,7 @@
     }
 
     &[data-is-expanded="true"] {
-      margin-bottom: pxToRem(8);
+      margin-bottom: pxToRem(12px);
     }
   }
 
@@ -304,7 +294,21 @@
   &__nestedItems {
     display: flex;
     flex-direction: column;
-    gap: pxToRem(8px);
+
+    .SidebarLink__nestedItemsWrapper {
+      margin-left: pxToRem(8px);
+    }
+  }
+
+  &--nested {
+    &:has(> [data-is-expanded="true"]) {
+      gap: pxToRem(12px);
+    }
+  }
+
+  &__nestedItems {
+    overflow: hidden;
+    gap: pxToRem(12px);
   }
 
   &__nestedItemsWrapper {
@@ -314,24 +318,11 @@
       grid-template-rows 100ms ease-out,
       margin-top 100ms ease-out;
     margin-left: pxToRem(16px);
-    margin-top: pxToRem(-8px);
-
-    &:has(
-        .SidebarLink__nestedItemsWrapper
-          > .SidebarLink__nestedItems
-          > [data-is-active="true"]
-      ) {
-      background: yellow;
-    }
 
     &[data-is-expanded="true"] {
       grid-template-rows: 1fr;
       margin-top: pxToRem(0);
     }
-  }
-
-  &__nestedItems {
-    overflow: hidden;
   }
 }
 
