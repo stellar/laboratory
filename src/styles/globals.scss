@@ -65,6 +65,7 @@
 
   // Header
   &__header {
+    display: grid;
     background-color: var(--sds-clr-gray-01);
     border-bottom: 1px solid var(--sds-clr-gray-06);
 
@@ -72,8 +73,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: pxToRem(16px);
-      padding: pxToRem(32px);
+      gap: pxToRem(24px);
+      padding: pxToRem(8px) pxToRem(32px);
     }
 
     &__settings {
@@ -89,7 +90,6 @@
       align-items: center;
       justify-content: space-between;
       gap: pxToRem(16px);
-      padding: 0 pxToRem(32px);
 
       font-size: pxToRem(14px);
       line-height: pxToRem(20px);
@@ -98,7 +98,7 @@
 
       & > div {
         display: flex;
-        gap: pxToRem(20px);
+        gap: pxToRem(16px);
         flex: 1;
       }
 
@@ -140,9 +140,7 @@
     border-right: 1px solid var(--sds-clr-gray-06);
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows:
-      minmax(0, max-content)
-      1fr;
+    grid-template-rows: 1fr;
 
     &--top {
       overflow-x: auto;
@@ -150,8 +148,7 @@
       padding-bottom: pxToRem(16px);
       display: flex;
       flex-direction: column;
-      gap: pxToRem(24px);
-      flex: 1;
+      gap: pxToRem(12px);
     }
 
     &__section {
@@ -166,23 +163,19 @@
     }
 
     &--bottom {
-      --Sidebar-bottomItems-border-color: transparent;
-
-      flex-grow: 1;
-      flex-shrink: 0;
-      border-top: 1px solid var(--Sidebar-bottomItems-border-color);
+      border-top: 1px solid var(--sds-clr-gray-06);
       background-color: var(--sds-clr-gray-01);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: pxToRem(8px);
-      padding-top: pxToRem(16px);
-      padding-bottom: pxToRem(32px);
-      margin-left: pxToRem(32px);
-      margin-right: pxToRem(32px);
 
-      &--border {
-        --Sidebar-bottomItems-border-color: var(--sds-clr-gray-06);
+      padding-top: pxToRem(16px);
+      padding-bottom: pxToRem(16px);
+      padding-left: pxToRem(32px);
+      padding-right: pxToRem(32px);
+
+      .SidebarLink {
+        justify-content: flex-start;
       }
     }
 
@@ -190,13 +183,6 @@
       display: flex;
       flex-direction: column;
       gap: pxToRem(8px);
-    }
-
-    &__instruction {
-      font-size: pxToRem(12px);
-      line-height: pxToRem(18px);
-      font-weight: var(--sds-fw-medium);
-      margin-bottom: pxToRem(4px);
     }
   }
 }
@@ -214,6 +200,10 @@
   border-bottom: 2px solid var(--Nav-navLink-border-color);
   white-space: nowrap;
 
+  display: flex;
+  align-items: center;
+  gap: pxToRem(4px);
+
   @media (hover: hover) {
     &:hover {
       --Nav-navLink-color: var(--sds-clr-lilac-11);
@@ -227,10 +217,19 @@
     --Nav-navLink-border-color: var(--sds-clr-lilac-09);
     pointer-events: none;
   }
+
+  &__icon {
+    display: flex;
+
+    // to fix Safari only styling bug
+    width: pxToRem(14px);
+    height: pxToRem(14px);
+  }
 }
 
 .SidebarLink {
   --SidebarLink-color: var(--sds-clr-gray-11);
+  justify-content: space-between;
 
   font-size: pxToRem(14px);
   line-height: pxToRem(20px);
@@ -263,6 +262,7 @@
     cursor: default;
     font-weight: var(--sds-fw-semi-bold);
     pointer-events: none;
+    position: relative;
   }
 
   &__toggle {
@@ -288,13 +288,31 @@
     &:has(~ [data-is-expanded="true"]) {
       --SidebarLink-rotate: 90deg;
     }
+
+    &[data-is-expanded="true"] {
+      margin-bottom: pxToRem(12px);
+    }
   }
 
   &--nested,
   &__nestedItems {
     display: flex;
     flex-direction: column;
-    gap: pxToRem(8px);
+
+    .SidebarLink__nestedItemsWrapper {
+      margin-left: pxToRem(8px);
+    }
+  }
+
+  &--nested {
+    &:has(> [data-is-expanded="true"]) {
+      gap: pxToRem(12px);
+    }
+  }
+
+  &__nestedItems {
+    overflow: hidden;
+    gap: pxToRem(12px);
   }
 
   &__nestedItemsWrapper {
@@ -303,17 +321,12 @@
     transition:
       grid-template-rows 100ms ease-out,
       margin-top 100ms ease-out;
-    margin-left: pxToRem(24px);
-    margin-top: pxToRem(-8px);
+    margin-left: pxToRem(16px);
 
     &[data-is-expanded="true"] {
       grid-template-rows: 1fr;
       margin-top: pxToRem(0);
     }
-  }
-
-  &__nestedItems {
-    overflow: hidden;
   }
 }
 
@@ -338,7 +351,7 @@
     // to fix Safari only styling bug
     .Link__icon {
       width: pxToRem(14px);
-      width: pxToRem(14px);
+      height: pxToRem(14px);
     }
   }
 }

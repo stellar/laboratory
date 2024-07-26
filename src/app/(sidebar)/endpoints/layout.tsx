@@ -15,6 +15,15 @@ export default function EndpointsTemplate({
 }: {
   children: React.ReactNode;
 }) {
+  const ENDPOINTS_PAGES_INTRO: EndpointsPagesProps = {
+    navItems: [
+      {
+        route: Routes.ENDPOINTS,
+        label: "About Endpoints",
+      },
+    ],
+    hasBottomDivider: false,
+  };
   const ENDPOINTS_PAGES_SAVED: EndpointsPagesProps = {
     navItems: [
       {
@@ -30,6 +39,7 @@ export default function EndpointsTemplate({
     <LayoutSidebarContent
       sidebar={[
         ENDPOINTS_PAGES_SAVED,
+        ENDPOINTS_PAGES_INTRO,
         ENDPOINTS_PAGES_RPC,
         ENDPOINTS_PAGES_HORIZON,
       ]}
