@@ -159,10 +159,6 @@
       &--divider {
         border-bottom: 1px solid var(--sds-clr-gray-06);
         padding-bottom: pxToRem(16px);
-
-        .SidebarLink {
-          justify-content: space-between;
-        }
       }
     }
 
@@ -177,6 +173,10 @@
       padding-bottom: pxToRem(16px);
       padding-left: pxToRem(32px);
       padding-right: pxToRem(32px);
+
+      .SidebarLink {
+        justify-content: flex-start;
+      }
     }
 
     &__wrapper {
@@ -229,6 +229,7 @@
 
 .SidebarLink {
   --SidebarLink-color: var(--sds-clr-gray-11);
+  justify-content: space-between;
 
   font-size: pxToRem(14px);
   line-height: pxToRem(20px);
