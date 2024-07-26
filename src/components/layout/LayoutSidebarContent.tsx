@@ -193,7 +193,7 @@ const Link = ({ item, pathname }: { item: SidebarLink; pathname: string }) => {
       className="SidebarLink"
       data-is-active={pathname === item.route}
     >
-      {item.icon ?? null} {item.label}
+      {item.label} {item.icon ?? null}
     </NextLink>
   );
 };

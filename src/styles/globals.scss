@@ -159,6 +159,10 @@
       &--divider {
         border-bottom: 1px solid var(--sds-clr-gray-06);
         padding-bottom: pxToRem(16px);
+
+        .SidebarLink {
+          justify-content: space-between;
+        }
       }
     }
 
@@ -226,7 +230,6 @@
 .SidebarLink {
   --SidebarLink-color: var(--sds-clr-gray-11);
 
-  justify-content: space-between;
   font-size: pxToRem(14px);
   line-height: pxToRem(20px);
   font-weight: var(--sds-fw-medium);
