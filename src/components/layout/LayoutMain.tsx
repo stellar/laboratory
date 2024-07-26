@@ -25,7 +25,9 @@ export const LayoutMain = ({ children }: { children: ReactNode }) => {
             <MainNav />
 
             <div className="LabLayout__header__settings">
-              <ThemeSwitch storageKeyId="stellarTheme:Laboratory" />
+              <Hydration>
+                <ThemeSwitch storageKeyId="stellarTheme:Laboratory" />
+              </Hydration>
               <NetworkSelector />
             </div>
           </header>
