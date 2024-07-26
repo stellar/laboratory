@@ -50,6 +50,15 @@ export const NetworkSelector = () => {
       );
     }
 
+    if (activeNetworkId === "mainnet") {
+      return (
+        network.horizonUrl &&
+        network.rpcUrl &&
+        network.passphrase &&
+        mainnetRpc === network.rpcUrl
+      );
+    }
+
     return activeNetworkId === network.id;
   };
 
