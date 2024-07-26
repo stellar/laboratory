@@ -30,7 +30,7 @@ test.describe("Endpoints page", () => {
 
       const linkToggles = sidebar.getByTestId("endpoints-sidebar-linkToggle");
 
-      await expect(linkToggles).toHaveCount(15);
+      await expect(linkToggles).toHaveCount(17);
 
       await expect(linkToggles).toContainText([
         "Accounts",
@@ -53,6 +53,12 @@ test.describe("Endpoints page", () => {
 
     test("Expands dropdown on click with correct links", async ({ page }) => {
       const sidebar = page.getByTestId("endpoints-sidebar-section");
+      const horizonDropdown = sidebar
+        .getByTestId("endpoints-sidebar-linkToggle")
+        .filter({ hasText: "Horizon Endpoints" });
+
+      await horizonDropdown.click();
+
       const accountsLink = sidebar
         .getByTestId("endpoints-sidebar-linkToggle")
         .filter({ hasText: "Accounts" });

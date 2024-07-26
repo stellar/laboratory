@@ -18,10 +18,11 @@ export const LayoutMain = ({ children }: { children: ReactNode }) => {
         <div className="LabLayout__header">
           <header className="LabLayout__header__main">
             <ProjectLogo
-              title="Laboratory"
+              title="Lab"
               link="/"
               customAnchor={<Link href="/" prefetch={true} />}
             />
+            <MainNav />
 
             <div className="LabLayout__header__settings">
               <Hydration>
@@ -30,7 +31,6 @@ export const LayoutMain = ({ children }: { children: ReactNode }) => {
               <NetworkSelector />
             </div>
           </header>
-          <MainNav />
         </div>
       </div>
 
