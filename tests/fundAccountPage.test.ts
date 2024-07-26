@@ -214,9 +214,13 @@ test.describe("[mainnet] Fund Account Page", () => {
     );
   });
 
-  test("I should see 'Not Found' on /account/fund", async ({ page }) => {
+  test("I should see 'Switch Network' page on /account/fund", async ({
+    page,
+  }) => {
     await page.goto("http://localhost:3000/account/fund");
 
-    await expect(page.locator("h2")).toHaveText("Not Found");
+    await expect(page.locator("h1")).toHaveText(
+      "Friendbot: fund a Futurenet or Testnet network account",
+    );
   });
 });
