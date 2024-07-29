@@ -163,11 +163,11 @@ export default function SavedTransactions() {
         </Card>
       </Box>
 
-      {/* TODO: use custom icon once SDS is updated */}
       <Alert
         variant="primary"
         title="Looking for your other saved transactions?"
         placement="inline"
+        icon={<Icon.Server06 />}
       >
         Switch your network in the top right to see your other saved
         transactions.
