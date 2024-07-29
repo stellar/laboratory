@@ -189,7 +189,6 @@
 
 .NavLink {
   --Nav-navLink-color: var(--sds-clr-gray-11);
-  --Nav-navLink-border-color: transparent;
 
   color: var(--Nav-navLink-color);
   text-decoration: none;
@@ -197,7 +196,6 @@
   transition:
     color var(--sds-anim-transition-default),
     border-color var(--sds-anim-transition-default);
-  border-bottom: 2px solid var(--Nav-navLink-border-color);
   white-space: nowrap;
 
   display: flex;
@@ -207,14 +205,12 @@
   @media (hover: hover) {
     &:hover {
       --Nav-navLink-color: var(--sds-clr-lilac-11);
-      --Nav-navLink-border-color: var(--sds-clr-lilac-09);
     }
   }
 
   &--active {
     cursor: default;
     --Nav-navLink-color: var(--sds-clr-lilac-11);
-    --Nav-navLink-border-color: var(--sds-clr-lilac-09);
     pointer-events: none;
   }
 
