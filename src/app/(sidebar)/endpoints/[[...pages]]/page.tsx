@@ -631,6 +631,8 @@ export default function Endpoints() {
                 }),
               );
             }}
+            showActionTooltip
+            actionTooltipText="Saved"
           ></Button>
         </div>
       </>
