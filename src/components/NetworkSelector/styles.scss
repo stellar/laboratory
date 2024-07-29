@@ -49,6 +49,7 @@
 
   // Floater
   &__floater {
+    z-index: 2;
     top: calc(100% + 0.5rem);
     right: 0;
     left: auto;
@@ -125,6 +126,23 @@
         border-radius: pxToRem(6px);
         border: 1px solid var(--sds-clr-gray-06);
         padding: pxToRem(12px);
+
+        // TODO: temp fix until SDS is fixed (tooltip overlap)
+        // Adjusting form element z-index to fix "Copied" tooltip overlap
+        & > * {
+          &:nth-child(1) {
+            z-index: 4;
+          }
+          &:nth-child(2) {
+            z-index: 3;
+          }
+          &:nth-child(3) {
+            z-index: 2;
+          }
+          &:nth-child(4) {
+            z-index: 1;
+          }
+        }
       }
     }
   }
