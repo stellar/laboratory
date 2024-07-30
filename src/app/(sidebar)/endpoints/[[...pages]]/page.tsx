@@ -656,7 +656,6 @@ export default function Endpoints() {
                 }),
               );
             }}
-            actionTooltipText="Saved"
           ></Button>
         </div>
       </>
