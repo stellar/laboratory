@@ -138,10 +138,20 @@ export default function Endpoints() {
       case Routes.ENDPOINTS_GET_EVENTS: {
         const filteredParams = params.filters ? JSON.parse(params.filters) : {};
 
+        // do not display the empty string unless its field is filled
+        const filteredContractIds = filteredParams.contract_ids.filter(
+          (topic: string) => topic.length,
+        );
+        // [filter] do not display the empty string unless its field is filled
+        // [map] Parse the JSON string to JSON
+        const filteredTopics = filteredParams.topics
+          .filter((topic: string) => topic.length)
+          .map((item: string) => JSON.parse(item));
+
         return {
           ...defaultRpcRequestBody,
           params: {
-            startLedger: Number(params.ledger),
+            startLedger: Number(params.startLedger),
             pagination: {
               cursor: params.cursor,
               limit: Number(params.limit) || undefined,
@@ -149,8 +159,8 @@ export default function Endpoints() {
             filters: [
               {
                 type: filteredParams.type ?? "",
-                contractIds: filteredParams.contract_ids ?? "",
-                topics: filteredParams.topics ?? "",
+                contractIds: filteredContractIds ?? "",
+                topics: filteredTopics ?? [],
               },
             ],
           },
@@ -179,7 +189,7 @@ export default function Endpoints() {
         return {
           ...defaultRpcRequestBody,
           params: {
-            startLedger: Number(params.ledger),
+            startLedger: Number(params.startLedger),
             pagination: {
               cursor: params.cursor,
               limit: Number(params.limit) || undefined,
@@ -203,7 +213,7 @@ export default function Endpoints() {
           params: {
             transaction: params.tx ?? "",
             resourceConfig: {
-              instructionLeeway: params.resourceConfig,
+              instructionLeeway: Number(params.resourceConfig) || undefined,
             },
           },
         };

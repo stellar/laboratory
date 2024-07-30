@@ -39,9 +39,9 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
         docsUrl:
           "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getEvents",
         docsLabel: "getEvents",
-        endpointUrlTemplate: "{?ledger,cursor,limit,filters}",
+        endpointUrlTemplate: "{?startLedger,cursor,limit,filters}",
         requestMethod: "POST",
-        requiredParams: "ledger,filters",
+        requiredParams: "startLedger,filters",
         rpcMethod: "getEvents",
         isStreaming: false,
       },
@@ -133,9 +133,9 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
         docsUrl:
           "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getTransactions",
         docsLabel: "getTransactions",
-        endpointUrlTemplate: "{?ledger,cursor,limit}",
+        endpointUrlTemplate: "{?startLedger,cursor,limit}",
         requestMethod: "POST",
-        requiredParams: "ledger",
+        requiredParams: "startLedger",
         rpcMethod: "getTransactions",
         isStreaming: false,
       },
