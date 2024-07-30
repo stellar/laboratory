@@ -167,6 +167,7 @@ export default function SavedTransactions() {
         variant="primary"
         title="Looking for your other saved transactions?"
         placement="inline"
+        icon={<Icon.Server06 />}
       >
         Switch your network in the top right to see your other saved
         transactions.

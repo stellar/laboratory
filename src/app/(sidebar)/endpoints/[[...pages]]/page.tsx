@@ -128,7 +128,7 @@ export default function Endpoints() {
   const [urlParams, setUrlParams] = useState("");
 
   const getRpcPostPayloadProps = (endpoint: string) => {
-    const defaultRpcRequestBody: any = {
+    const defaultRpcRequestBody: AnyObject = {
       jsonrpc: "2.0",
       id: 8675309,
       method: pageData?.rpcMethod,
@@ -656,6 +656,8 @@ export default function Endpoints() {
                 }),
               );
             }}
+            showActionTooltip
+            actionTooltipText="Saved"
           ></Button>
         </div>
       </>
