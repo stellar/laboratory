@@ -139,14 +139,16 @@ export default function Endpoints() {
         const filteredParams = params.filters ? JSON.parse(params.filters) : {};
 
         // do not display the empty string unless its field is filled
-        const filteredContractIds = filteredParams.contract_ids.filter(
-          (topic: string) => topic.length,
-        );
+        const filteredContractIds = filteredParams.contract_ids
+          ? filteredParams.contract_ids.filter((topic: string) => topic.length)
+          : [];
         // [filter] do not display the empty string unless its field is filled
         // [map] Parse the JSON string to JSON
         const filteredTopics = filteredParams.topics
-          .filter((topic: string) => topic.length)
-          .map((item: string) => JSON.parse(item));
+          ? filteredParams.topics
+              .filter((topic: string) => topic.length)
+              .map((item: string) => JSON.parse(item))
+          : [];
 
         return {
           ...defaultRpcRequestBody,
@@ -159,7 +161,7 @@ export default function Endpoints() {
             filters: [
               {
                 type: filteredParams.type ?? "",
-                contractIds: filteredContractIds ?? "",
+                contractIds: filteredContractIds ?? [],
                 topics: filteredTopics ?? [],
               },
             ],
