@@ -61,6 +61,8 @@ export default function FundAccount() {
       networkRef.current = network;
       resetStates();
     }
+    // Not including network object
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [networkRef.current.id, network.id]);
 
   useEffect(() => {

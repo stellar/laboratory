@@ -1,5 +1,6 @@
 import React from "react";
 import type { Metadata } from "next";
+import Script from "next/script";
 
 import { LayoutMain } from "@/components/layout/LayoutMain";
 import { QueryProvider } from "@/query/QueryProvider";
@@ -32,6 +33,8 @@ export default function RootLayout({
             </QueryProvider>
           </StoreProvider>
         </div>
+        {/* Env variables template script. Actual keys added on the server. */}
+        <Script src="/settings/env-config.js" />
       </body>
     </html>
   );
