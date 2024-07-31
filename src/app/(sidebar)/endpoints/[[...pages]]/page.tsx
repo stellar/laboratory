@@ -54,8 +54,8 @@ export default function Endpoints() {
     .find((page) => pathname.includes(page.route))
     ?.nestedItems?.find((i) => i.route === pathname);
 
-  const rpcPage = ENDPOINTS_PAGES_RPC.navItems.find((page) =>
-    pathname.includes(page.route),
+  const rpcPage = ENDPOINTS_PAGES_RPC.navItems.find(
+    (page) => pathname === page.route,
   );
 
   const page = isRpcEndpoint ? rpcPage : horizonPage;
@@ -128,7 +128,7 @@ export default function Endpoints() {
   const [urlParams, setUrlParams] = useState("");
 
   const getRpcPostPayloadProps = (endpoint: string) => {
-    const defaultRpcRequestBody = {
+    const defaultRpcRequestBody: AnyObject = {
       jsonrpc: "2.0",
       id: 8675309,
       method: pageData?.rpcMethod,
@@ -138,17 +138,31 @@ export default function Endpoints() {
       case Routes.ENDPOINTS_GET_EVENTS: {
         const filteredParams = params.filters ? JSON.parse(params.filters) : {};
 
+        // do not display the empty string unless its field is filled
+        const filteredContractIds = filteredParams.contract_ids
+          ? filteredParams.contract_ids.filter((topic: string) => topic.length)
+          : [];
+        // [filter] do not display the empty string unless its field is filled
+        // [map] Parse the JSON string to JSON
+        const filteredTopics = filteredParams.topics
+          ? filteredParams.topics
+              .filter((topic: string) => topic.length)
+              .map((item: string) => JSON.parse(item))
+          : [];
+
         return {
           ...defaultRpcRequestBody,
           params: {
-            startLedger: params.ledger ?? "",
-            cursor: params.cursor,
-            limit: params.limit,
+            startLedger: Number(params.startLedger),
+            pagination: {
+              cursor: params.cursor,
+              limit: Number(params.limit) || undefined,
+            },
             filters: [
               {
                 type: filteredParams.type ?? "",
-                contractIds: filteredParams.contract_ids ?? "",
-                topics: filteredParams.topics ?? "",
+                contractIds: filteredContractIds ?? [],
+                topics: filteredTopics ?? [],
               },
             ],
           },
@@ -159,7 +173,7 @@ export default function Endpoints() {
         return {
           ...defaultRpcRequestBody,
           params: {
-            keys: params.transaction ?? "",
+            keys: params.tx ?? "",
           },
         };
       }
@@ -177,9 +191,11 @@ export default function Endpoints() {
         return {
           ...defaultRpcRequestBody,
           params: {
-            startLedger: params.ledger ?? "",
-            cursor: params.cursor,
-            limit: params.limit,
+            startLedger: Number(params.startLedger),
+            pagination: {
+              cursor: params.cursor,
+              limit: Number(params.limit) || undefined,
+            },
           },
         };
       }
@@ -188,7 +204,7 @@ export default function Endpoints() {
         return {
           ...defaultRpcRequestBody,
           params: {
-            transaction: params.transaction ?? "",
+            transaction: params.tx ?? "",
           },
         };
       }
@@ -197,9 +213,9 @@ export default function Endpoints() {
         return {
           ...defaultRpcRequestBody,
           params: {
-            transaction: params.transaction ?? "",
+            transaction: params.tx ?? "",
             resourceConfig: {
-              instructionLeeway: params.resourceConfig,
+              instructionLeeway: Number(params.resourceConfig) || undefined,
             },
           },
         };
@@ -262,7 +278,7 @@ export default function Endpoints() {
     isValidReqFields = missingReqFields.length === 0;
 
     // Checking if there are any errors
-    isValid = formError.tx?.result === "success" || isEmptyObject(formError);
+    isValid = isEmptyObject(formError);
 
     // Asset components
     const assetParams = [
@@ -540,6 +556,7 @@ export default function Endpoints() {
 
   const renderPostPayload = () => {
     let renderedProps = getPostPayload();
+    const defaultRowsLength = 5;
 
     if (pageData?.requestMethod === "POST") {
       if (pathname === Routes.ENDPOINTS_TRANSACTIONS_POST) {
@@ -552,6 +569,14 @@ export default function Endpoints() {
     }
 
     if (renderedProps) {
+      const requiredParams = renderedProps.params
+        ? Object.values(renderedProps.params).filter((val) => val !== undefined)
+        : undefined;
+
+      const rows = requiredParams
+        ? requiredParams.length + defaultRowsLength + 2
+        : defaultRowsLength;
+
       return (
         <div className="Endpoints__txTextarea">
           <Textarea
@@ -559,7 +584,7 @@ export default function Endpoints() {
             fieldSize="md"
             label="Payload"
             value={renderedProps ? JSON.stringify(renderedProps, null, 2) : ""}
-            rows={5}
+            rows={rows}
             disabled
             spellCheck={false}
           />
@@ -695,7 +720,7 @@ export default function Endpoints() {
 
                 const error = component.validate?.(value, isRequired);
 
-                if (error) {
+                if (error && error.result !== "success") {
                   setFormError({ ...formError, [f]: error });
                 } else if (formError[f]) {
                   const updatedErrors = { ...formError };
