@@ -117,6 +117,9 @@ export interface Store {
       bipPath: string;
       hardWalletSigs: xdr.DecoratedSignature[] | [];
     };
+    simulate: {
+      instructionLeeway?: string;
+    };
     feeBump: FeeBumpParams;
     // [Transaction] Build Transaction actions
     updateBuildActiveTab: (tabId: string) => void;
@@ -147,6 +150,8 @@ export interface Store {
     resetSignHardWalletSigs: () => void;
     updateFeeBumpParams: (params: FeeBumpParamsObj) => void;
     resetBaseFee: () => void;
+    // [Transaction] Simulate Transaction actions
+    updateSimulateInstructionLeeway: (instrLeeway?: string) => void;
   };
 
   // XDR
@@ -206,6 +211,9 @@ const initTransactionState = {
     signedTx: "",
     bipPath: "44'/148'/0'",
     hardWalletSigs: [],
+  },
+  simulate: {
+    instructionLeeway: undefined,
   },
   feeBump: {
     source_account: "",
@@ -424,6 +432,10 @@ export const createStore = (options: CreateStoreOptions) =>
               state.transaction.sign.hardWalletSigs =
                 initTransactionState.sign.hardWalletSigs;
             }),
+          updateSimulateInstructionLeeway: (instrLeeway?: string) =>
+            set((state) => {
+              state.transaction.simulate.instructionLeeway = instrLeeway;
+            }),
           updateFeeBumpParams: (params: FeeBumpParamsObj) =>
             set((state) => {
               state.transaction.feeBump = {
@@ -481,6 +493,7 @@ export const createStore = (options: CreateStoreOptions) =>
                 importXdr: true,
                 bipPath: true,
               },
+              simulate: true,
               feeBump: true,
             },
             xdr: {
