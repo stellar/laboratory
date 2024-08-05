@@ -370,6 +370,22 @@ export const formComponentTemplateEndpoints = (
         ),
         validate: validate.getPositiveIntError,
       };
+    case "startLedger":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <PositiveIntPicker
+            key={id}
+            id={id}
+            label="Start Ledger Sequence"
+            placeholder="Ex: 1714814"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.getPositiveIntError,
+      };
     case "limit":
       return {
         render: (templ: TemplateRenderProps) => (
