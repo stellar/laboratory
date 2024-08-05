@@ -48,4 +48,15 @@ export enum TrackingEvent {
   ENDPOINTS_RPC_SUBMIT = "endpoints: rpc: submit",
   ENDPOINTS_RPC_COPY = "endpoints: rpc: copy",
   ENDPOINTS_RPC_SAVE = "endpoints: rpc: save",
+  // Transactions
+  TRANSACTION_BUILD_TAB = "transaction: build: tab",
+  TRANSACTION_BUILD_ADD_OPERATIONS = "transaction: build: add operations",
+  TRANSACTION_BUILD_CLEAR_PARAMS = "transaction: build: clear params",
+  TRANSACTION_BUILD_SAVE = "transaction: build: save",
+  TRANSACTION_BUILD_OPERATIONS_ADD = "transaction: build: operations: add",
+  TRANSACTION_BUILD_OPERATIONS_CLEAR = "transaction: build: operations: clear",
+  TRANSACTION_BUILD_OPERATIONS_ACTION_DUPLICATE = "transaction: build: operations: action: duplicate",
+  TRANSACTION_BUILD_OPERATIONS_ACTION_UP = "transaction: build: operations: action: up",
+  TRANSACTION_BUILD_OPERATIONS_ACTION_DOWN = "transaction: build: operations: action: down",
+  TRANSACTION_BUILD_OPERATIONS_ACTION_DELETE = "transaction: build: operations: action: delete",
 }

@@ -25,6 +25,7 @@ import { TransactionBuildParams } from "@/store/createStore";
 import { useStore } from "@/store/useStore";
 import { useAccountSequenceNumber } from "@/query/useAccountSequenceNumber";
 import { validate } from "@/validate";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 import { EmptyObj, KeysOfUnion } from "@/types/types";
 
 export const Params = () => {
@@ -367,6 +368,7 @@ export const Params = () => {
               variant="secondary"
               onClick={() => {
                 updateBuildActiveTab("operations");
+                trackEvent(TrackingEvent.TRANSACTION_BUILD_ADD_OPERATIONS);
               }}
             >
               Add Operations
@@ -378,6 +380,7 @@ export const Params = () => {
               onClick={() => {
                 resetBuildParams();
                 setParamsError({});
+                trackEvent(TrackingEvent.TRANSACTION_BUILD_CLEAR_PARAMS);
               }}
               icon={<Icon.RefreshCw01 />}
             >

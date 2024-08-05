@@ -23,6 +23,7 @@ import { sanitizeObject } from "@/helpers/sanitizeObject";
 
 import { TRANSACTION_OPERATIONS } from "@/constants/transactionOperations";
 import { useStore } from "@/store/useStore";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 import {
   AnyObject,
   AssetObject,
@@ -664,33 +665,43 @@ export const Operations = () => {
             id: "moveUp",
             hoverTitle: "Move up",
             icon: <Icon.ArrowUp />,
-            onClick: () =>
+            onClick: () => {
               updateOptionParamAndError({
                 type: "move-before",
                 index,
-              }),
+              });
+              trackEvent(TrackingEvent.TRANSACTION_BUILD_OPERATIONS_ACTION_UP);
+            },
             isDisabled: isUpDisabled,
           },
           {
             id: "moveDown",
             hoverTitle: "Move down",
             icon: <Icon.ArrowDown />,
-            onClick: () =>
+            onClick: () => {
               updateOptionParamAndError({
                 type: "move-after",
                 index,
-              }),
+              });
+              trackEvent(
+                TrackingEvent.TRANSACTION_BUILD_OPERATIONS_ACTION_DOWN,
+              );
+            },
             isDisabled: isDownDisabled,
           },
           {
             id: "duplicate",
             hoverTitle: "Duplicate",
             icon: <Icon.Copy07 />,
-            onClick: () =>
+            onClick: () => {
               updateOptionParamAndError({
                 type: "duplicate",
                 index,
-              }),
+              });
+              trackEvent(
+                TrackingEvent.TRANSACTION_BUILD_OPERATIONS_ACTION_DUPLICATE,
+              );
+            },
           },
           {
             id: "delete",
@@ -698,11 +709,15 @@ export const Operations = () => {
             icon: <Icon.Trash01 />,
             isError: true,
             isDisabled: isDeleteDisabled,
-            onClick: () =>
+            onClick: () => {
               updateOptionParamAndError({
                 type: "delete",
                 index,
-              }),
+              });
+              trackEvent(
+                TrackingEvent.TRANSACTION_BUILD_OPERATIONS_ACTION_DELETE,
+              );
+            },
           },
         ]}
       />
@@ -1040,6 +1055,7 @@ export const Operations = () => {
                     type: "add",
                     item: INITIAL_OPERATION,
                   });
+                  trackEvent(TrackingEvent.TRANSACTION_BUILD_OPERATIONS_ADD);
                 }}
               >
                 Add Operation
@@ -1051,6 +1067,7 @@ export const Operations = () => {
                 icon={<Icon.Save01 />}
                 onClick={() => {
                   setIsSaveTxnModalVisible(true);
+                  trackEvent(TrackingEvent.TRANSACTION_BUILD_SAVE);
                 }}
                 title="Save transaction"
               ></Button>
@@ -1062,6 +1079,7 @@ export const Operations = () => {
               icon={<Icon.RefreshCw01 />}
               onClick={() => {
                 updateOptionParamAndError({ type: "reset" });
+                trackEvent(TrackingEvent.TRANSACTION_BUILD_OPERATIONS_CLEAR);
               }}
             >
               Clear Operations
