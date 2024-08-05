@@ -7,6 +7,7 @@ import { TransactionBuilder } from "@stellar/stellar-sdk";
 import { useStore } from "@/store/useStore";
 
 import { validate } from "@/validate";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { Box } from "@/components/layout/Box";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
@@ -49,6 +50,8 @@ export const Import = () => {
 
       // change to 'overview' view when successfully imported
       updateSignActiveView("overview");
+
+      trackEvent(TrackingEvent.TRANSACTION_SIGN_IMPORT);
     } catch (e) {
       setTxErrMsg("Unable to import a transaction envelope");
       updateSignImportXdr("");

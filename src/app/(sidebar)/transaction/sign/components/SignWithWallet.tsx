@@ -31,8 +31,12 @@ const getWalletNetwork = (network: NetworkType) => {
 
 export const SignWithWallet = ({
   setSignError,
+  onSuccess,
+  onError,
 }: {
   setSignError: Dispatch<SetStateAction<string>>;
+  onSuccess?: () => void;
+  onError?: () => void;
 }) => {
   const { network, transaction } = useStore();
   const { sign, updateSignedTx } = transaction;
@@ -62,6 +66,9 @@ export const SignWithWallet = ({
           });
 
           updateSignedTx(result);
+          if (onSuccess) {
+            onSuccess();
+          }
         } catch (error: any) {
           // the error for the following wallets:
           // xbull
@@ -73,6 +80,10 @@ export const SignWithWallet = ({
             error?.includes("User declined access")
           ) {
             setSignError(`User declined access to ${option.id}`);
+
+            if (onError) {
+              onError();
+            }
           }
         }
       },
