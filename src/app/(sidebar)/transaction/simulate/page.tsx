@@ -63,7 +63,7 @@ export default function SimulateTransaction() {
         instructionLeeway: simulate.instructionLeeway,
       });
 
-      trackEvent(TrackingEvent.TRANSACTION_SIMULATE);
+      trackEvent(TrackingEvent.TRANSACTION_SIMULATE, { network: network.id });
     }
   };
 

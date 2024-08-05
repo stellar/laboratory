@@ -171,12 +171,14 @@ export const Overview = () => {
 
         trackEvent(TrackingEvent.TRANSACTION_SIGN_HARDWARE_SUCCESS, {
           wallet: selectedHardware,
+          network: network.id,
         });
       } else if (hardwareSignError) {
         setHardwareSigErrorMsg(hardwareSignError);
 
         trackEvent(TrackingEvent.TRANSACTION_SIGN_HARDWARE_ERROR, {
           wallet: selectedHardware,
+          network: network.id,
         });
       }
     } catch (err) {
@@ -185,6 +187,7 @@ export const Overview = () => {
 
       trackEvent(TrackingEvent.TRANSACTION_SIGN_HARDWARE_ERROR, {
         wallet: selectedHardware,
+        network: network.id,
       });
     }
   };
@@ -393,7 +396,9 @@ export const Overview = () => {
                         sign.hardWalletSigs,
                       );
 
-                      trackEvent(TrackingEvent.TRANSACTION_SIGN_TRANSACTION);
+                      trackEvent(TrackingEvent.TRANSACTION_SIGN_TRANSACTION, {
+                        network: network.id,
+                      });
                     }}
                   >
                     Sign transaction
@@ -402,10 +407,17 @@ export const Overview = () => {
                   <SignWithWallet
                     setSignError={setSignError}
                     onSuccess={() => {
-                      trackEvent(TrackingEvent.TRANSACTION_SIGN_WALLET_SUCCESS);
+                      trackEvent(
+                        TrackingEvent.TRANSACTION_SIGN_WALLET_SUCCESS,
+                        {
+                          network: network.id,
+                        },
+                      );
                     }}
                     onError={() => {
-                      trackEvent(TrackingEvent.TRANSACTION_SIGN_WALLET_ERROR);
+                      trackEvent(TrackingEvent.TRANSACTION_SIGN_WALLET_ERROR, {
+                        network: network.id,
+                      });
                     }}
                   />
                 </div>

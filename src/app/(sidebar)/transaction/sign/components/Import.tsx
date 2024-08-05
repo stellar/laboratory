@@ -51,7 +51,9 @@ export const Import = () => {
       // change to 'overview' view when successfully imported
       updateSignActiveView("overview");
 
-      trackEvent(TrackingEvent.TRANSACTION_SIGN_IMPORT);
+      trackEvent(TrackingEvent.TRANSACTION_SIGN_IMPORT, {
+        network: network.id,
+      });
     } catch (e) {
       setTxErrMsg("Unable to import a transaction envelope");
       updateSignImportXdr("");

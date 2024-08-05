@@ -80,7 +80,9 @@ export const SaveTransactionModal = ({
                 );
 
                 handleClose(true);
-                trackEvent(TrackingEvent.TRANSACTION_BUILD_SAVE_SAVE);
+                trackEvent(TrackingEvent.TRANSACTION_BUILD_SAVE_SAVE, {
+                  network: network.id,
+                });
               }
             }}
             disabled={!savedTxnName || savedTxnName === currentTxnName}

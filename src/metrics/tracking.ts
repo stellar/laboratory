@@ -92,4 +92,12 @@ export enum TrackingEvent {
   TRANSACTION_FEE_BUMP_SIGN_IN_TXN_SIGNER = "transaction: fee bump: sign in txn signer",
   TRANSACTION_FEE_BUMP_VIEW_XDR = "transaction: fee bump: view xdr",
   TRANSACTION_FEE_BUMP_CLEAR = "transaction: fee bump: clear",
+  // XDR
+  XDR_TO_JSON_SUCCESS = "xdr: to json: success",
+  XDR_TO_JSON_ERROR = "xdr: to json: error",
+  XDR_TO_JSON_FETCH_XDR = "xdr: to json: fetch xdr",
+  XDR_TO_JSON_CLEAR = "xdr: to json: clear",
+  XDR_FROM_JSON_SUCCESS = "xdr: from json: success",
+  XDR_FROM_JSON_ERROR = "xdr: from json: error",
+  XDR_FROM_JSON_CLEAR = "xdr: from json: clear",
 }

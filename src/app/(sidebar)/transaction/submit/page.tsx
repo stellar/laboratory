@@ -47,7 +47,7 @@ export default function SubmitTransaction() {
       },
     );
 
-    trackEvent(TrackingEvent.TRANSACTION_SUBMIT);
+    trackEvent(TrackingEvent.TRANSACTION_SUBMIT, { network: network.id });
   };
 
   const getXdrJson = () => {

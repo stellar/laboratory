@@ -23,8 +23,8 @@ import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { ViewInXdrButton } from "@/components/ViewInXdrButton";
 
 import { Routes } from "@/constants/routes";
-import { KeysOfUnion } from "@/types/types";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
+import { KeysOfUnion } from "@/types/types";
 
 export default function FeeBumpTransaction() {
   const router = useRouter();
@@ -272,6 +272,7 @@ export default function FeeBumpTransaction() {
 
                     trackEvent(
                       TrackingEvent.TRANSACTION_FEE_BUMP_SIGN_IN_TXN_SIGNER,
+                      { network: network.id },
                     );
 
                     router.push(Routes.SIGN_TRANSACTION);
