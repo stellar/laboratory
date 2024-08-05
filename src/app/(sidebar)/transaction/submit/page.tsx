@@ -11,6 +11,7 @@ import * as StellarXdr from "@/helpers/StellarXdr";
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
 import { TransactionResponse, useSubmitTx } from "@/query/useSubmitTx";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { Box } from "@/components/layout/Box";
 import { PrettyJson } from "@/components/PrettyJson";
@@ -45,6 +46,8 @@ export default function SubmitTransaction() {
         onError: (res) => setTxErr(res),
       },
     );
+
+    trackEvent(TrackingEvent.TRANSACTION_SUBMIT);
   };
 
   const getXdrJson = () => {

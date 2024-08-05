@@ -10,6 +10,7 @@ import { PrettyJson } from "@/components/PrettyJson";
 import { useStore } from "@/store/useStore";
 import { useSimulateTx } from "@/query/useSimulateTx";
 import { validate } from "@/validate";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 export default function SimulateTransaction() {
   const { xdr, transaction, network } = useStore();
@@ -61,6 +62,8 @@ export default function SimulateTransaction() {
         transactionXdr: xdr.blob,
         instructionLeeway: simulate.instructionLeeway,
       });
+
+      trackEvent(TrackingEvent.TRANSACTION_SIMULATE);
     }
   };
 

@@ -84,4 +84,12 @@ export enum TrackingEvent {
   TRANSACTION_SIGN_HARDWARE_ERROR = "transaction: sign: hardware: error",
   TRANSACTION_SIGN_WALLET_SUCCESS = "transaction: sign: wallet: success",
   TRANSACTION_SIGN_WALLET_ERROR = "transaction: sign: wallet: error",
+  // Transactions - simulate
+  TRANSACTION_SIMULATE = "transaction: simulate",
+  // Transactions - submit
+  TRANSACTION_SUBMIT = "transaction: submit",
+  // Transactions - fee bump
+  TRANSACTION_FEE_BUMP_SIGN_IN_TXN_SIGNER = "transaction: fee bump: sign in txn signer",
+  TRANSACTION_FEE_BUMP_VIEW_XDR = "transaction: fee bump: view xdr",
+  TRANSACTION_FEE_BUMP_CLEAR = "transaction: fee bump: clear",
 }
