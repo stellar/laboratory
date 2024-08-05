@@ -11,6 +11,7 @@ import { NetworkIndicator } from "@/components/NetworkIndicator";
 import { localStorageSavedNetwork } from "@/helpers/localStorageSavedNetwork";
 import { NetworkOptions } from "@/constants/settings";
 import { useStore } from "@/store/useStore";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 import { Network, NetworkType } from "@/types/types";
 
 import "./styles.scss";
@@ -195,6 +196,8 @@ export const NetworkSelector = () => {
       localStorageSavedNetwork.set(latestData);
       toggleDropdown(false);
       updateIsDynamicNetworkSelect(false);
+
+      trackEvent(TrackingEvent.NETWORK_SWITCH_TO, { to: networkData.id });
     }
   };
 

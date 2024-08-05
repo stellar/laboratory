@@ -10,6 +10,7 @@ import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
 import { MuxedAccountResult } from "@/components/MuxedAccountResult";
 
 import { muxedAccount } from "@/helpers/muxedAccount";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { validate } from "@/validate";
 
@@ -43,6 +44,8 @@ export default function ParseMuxedAccount() {
         muxedAddress,
       });
       account.updateParsedMuxedAccountInput(muxedAddress);
+
+      trackEvent(TrackingEvent.ACCOUNT_MUXED_PARSE);
 
       setSdkError("");
       return;

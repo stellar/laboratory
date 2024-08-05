@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import Link from "next/link";
 
 import { ProjectLogo, ThemeSwitch } from "@stellar/design-system";
@@ -10,7 +10,13 @@ import { NetworkSelector } from "@/components/NetworkSelector";
 import { MaintenanceBanner } from "@/components/MaintenanceBanner";
 import { Hydration } from "@/components/Hydration";
 
+import { initTracking } from "@/metrics/tracking";
+
 export const LayoutMain = ({ children }: { children: ReactNode }) => {
+  useEffect(() => {
+    initTracking();
+  }, []);
+
   return (
     <div className="LabLayout">
       <div>
