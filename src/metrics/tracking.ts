@@ -60,9 +60,7 @@ export enum TrackingEvent {
   TRANSACTION_BUILD_TAB = "transaction: build: tab",
   TRANSACTION_BUILD_ADD_OPERATIONS = "transaction: build: add operations",
   TRANSACTION_BUILD_CLEAR_PARAMS = "transaction: build: clear params",
-  TRANSACTION_BUILD_SAVE_POPUP = "transaction: build: save: popup",
   TRANSACTION_BUILD_SAVE_SAVE = "transaction: build: save: save",
-  TRANSACTION_BUILD_SAVE_CANCEL = "transaction: build: save: cancel",
   TRANSACTION_BUILD_OPERATIONS_ADD = "transaction: build: operations: add",
   TRANSACTION_BUILD_OPERATIONS_CLEAR = "transaction: build: operations: clear",
   TRANSACTION_BUILD_OPERATIONS_ACTION_DUPLICATE = "transaction: build: operations: action: duplicate",
@@ -72,9 +70,7 @@ export enum TrackingEvent {
   // Transactions - saved
   TRANSACTION_SAVED_VIEW_BUILDER = "transaction: saved: view in builder",
   TRANSACTION_SAVED_DELETE = "transaction: saved: delete",
-  TRANSACTION_SAVED_EDIT_POPUP = "transaction: saved: edit: popup",
   TRANSACTION_SAVED_EDIT_SAVE = "transaction: saved: edit: save",
-  TRANSACTION_SAVED_EDIT_CANCEL = "transaction: saved: edit: cancel",
   // Transactions - sign
   TRANSACTION_SIGN_IMPORT = "transaction: sign: import",
   TRANSACTION_SIGN_CLEAR = "transaction: sign: clear",

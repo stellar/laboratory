@@ -130,7 +130,9 @@ export const SaveTransactionModal = ({
               );
 
               handleClose();
-              trackEvent(TrackingEvent.TRANSACTION_SAVED_EDIT_SAVE);
+              trackEvent(TrackingEvent.TRANSACTION_SAVED_EDIT_SAVE, {
+                network: network.id,
+              });
             }}
             disabled={!savedTxnName}
           >
