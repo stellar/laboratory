@@ -4,6 +4,7 @@ import { arrayItem } from "@/helpers/arrayItem";
 import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransactions";
 import { getSaveItemNetwork } from "@/helpers/getSaveItemNetwork";
 import { useStore } from "@/store/useStore";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 type SaveTransactionModalProps = (
   | {
@@ -79,6 +80,7 @@ export const SaveTransactionModal = ({
                 );
 
                 handleClose(true);
+                trackEvent(TrackingEvent.TRANSACTION_BUILD_SAVE_SAVE);
               }
             }}
             disabled={!savedTxnName || savedTxnName === currentTxnName}
@@ -126,6 +128,7 @@ export const SaveTransactionModal = ({
               );
 
               handleClose();
+              trackEvent(TrackingEvent.TRANSACTION_SAVED_EDIT_SAVE);
             }}
             disabled={!savedTxnName}
           >

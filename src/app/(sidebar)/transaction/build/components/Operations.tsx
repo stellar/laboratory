@@ -1067,7 +1067,7 @@ export const Operations = () => {
                 icon={<Icon.Save01 />}
                 onClick={() => {
                   setIsSaveTxnModalVisible(true);
-                  trackEvent(TrackingEvent.TRANSACTION_BUILD_SAVE);
+                  trackEvent(TrackingEvent.TRANSACTION_BUILD_SAVE_POPUP);
                 }}
                 title="Save transaction"
               ></Button>
@@ -1120,6 +1120,7 @@ export const Operations = () => {
         isVisible={isSaveTxnModalVisible}
         onClose={() => {
           setIsSaveTxnModalVisible(false);
+          trackEvent(TrackingEvent.TRANSACTION_BUILD_SAVE_CANCEL);
         }}
       />
     </Box>

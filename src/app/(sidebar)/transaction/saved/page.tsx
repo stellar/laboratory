@@ -17,6 +17,7 @@ import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransa
 import { arrayItem } from "@/helpers/arrayItem";
 
 import { SavedTransaction } from "@/types/types";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 export default function SavedTransactions() {
   const { network, transaction } = useStore();
@@ -74,6 +75,7 @@ export default function SavedTransactions() {
               placement="right"
               onClick={() => {
                 setCurrentTxnTimestamp(txn.timestamp);
+                trackEvent(TrackingEvent.TRANSACTION_SAVED_EDIT_POPUP);
               }}
               icon={<Icon.Edit05 />}
             />
@@ -104,7 +106,10 @@ export default function SavedTransactions() {
               size="md"
               variant="tertiary"
               type="button"
-              onClick={() => handleViewInBuilder(txn.timestamp)}
+              onClick={() => {
+                handleViewInBuilder(txn.timestamp);
+                trackEvent(TrackingEvent.TRANSACTION_SAVED_VIEW_BUILDER);
+              }}
             >
               View in builder
             </Button>
@@ -132,6 +137,7 @@ export default function SavedTransactions() {
 
                   localStorageSavedTransactions.set(updatedList);
                   updateSavedTxns();
+                  trackEvent(TrackingEvent.TRANSACTION_SAVED_DELETE);
                 }
               }}
             ></Button>
@@ -192,6 +198,8 @@ export default function SavedTransactions() {
           if (isUpdate) {
             updateSavedTxns();
           }
+
+          trackEvent(TrackingEvent.TRANSACTION_SAVED_EDIT_CANCEL);
         }}
         txnTimestamp={currentTxnTimestamp}
       />
