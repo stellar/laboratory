@@ -7,6 +7,9 @@ import {
 import { Box } from "@/components/layout/Box";
 import { TxResponse } from "@/components/TxResponse";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
+import { PrettyJson } from "@/components/PrettyJson";
+
+import { SubmitRpcError, SubmitRpcErrorStatus } from "@/types/types";
 
 interface ErrorProps {
   error: NetworkError & {
@@ -70,6 +73,52 @@ export const ErrorResponse = ({ error }: ErrorProps) => {
       title="Transaction failed!"
       subtitle={message}
       response={extras}
+    />
+  );
+};
+
+export const RpcErrorResponse = ({ error }: { error: SubmitRpcError }) => {
+  const getTitle = (status: SubmitRpcErrorStatus) => {
+    switch (status) {
+      case "DUPLICATE":
+        return "Duplicate transaction";
+      case "TIMEOUT":
+        return "Transaction timed out";
+      case "TRY_AGAIN_LATER":
+      case "ERROR":
+      case "FAILED":
+      default:
+        return "Transaction failed";
+    }
+  };
+
+  const errorFields = () => {
+    const { hash, errorResult } = error.result;
+
+    return (
+      <>
+        {hash ? (
+          <Box gap="xs">
+            <TxResponse label="Transaction hash:" value={hash} />
+          </Box>
+        ) : null}
+        {errorResult ? (
+          <Box gap="xs">
+            <TxResponse
+              label="Error result:"
+              item={<PrettyJson json={errorResult} />}
+            />
+          </Box>
+        ) : null}
+      </>
+    );
+  };
+
+  return (
+    <ValidationResponseCard
+      variant="error"
+      title={getTitle(error.status)}
+      response={errorFields()}
     />
   );
 };

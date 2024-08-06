@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { Button, Card, Text } from "@stellar/design-system";
-import { Horizon, TransactionBuilder } from "@stellar/stellar-sdk";
+import { SorobanRpc } from "@stellar/stellar-sdk";
 
 import { useStore } from "@/store/useStore";
 
@@ -10,41 +9,44 @@ import * as StellarXdr from "@/helpers/StellarXdr";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
-import { TransactionResponse, useSubmitTx } from "@/query/useSubmitTx";
+import { useSubmitRpcTx } from "@/query/useSubmitRpcTx";
 
 import { Box } from "@/components/layout/Box";
 import { PrettyJson } from "@/components/PrettyJson";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { TxResponse } from "@/components/TxResponse";
-import { ErrorResponse } from "./components/ErrorResponse";
+
+import { RpcErrorResponse } from "./components/ErrorResponse";
 
 export default function SubmitTransaction() {
   const { network, xdr } = useStore();
   const { blob, updateXdrBlob } = xdr;
 
-  const [txErr, setTxErr] = useState<any | null>(null);
-  const [txResponse, setTxResponse] = useState<TransactionResponse | null>(
-    null,
-  );
-
   const isXdrInit = useIsXdrInit();
-  const submitTx = useSubmitTx();
 
-  const onSubmit = () => {
-    const transaction = TransactionBuilder.fromXDR(blob, network.passphrase);
+  const {
+    data: submitRpcResponse,
+    mutateAsync: submitRpc,
+    error: submitRpcError,
+    isPending: isSubmitRpcPending,
+    isSuccess: isSubmitRpcSuccess,
+  } = useSubmitRpcTx();
 
-    const server = new Horizon.Server(network.horizonUrl, {
-      appName: "Laboratory",
+  const rpcServer = network.rpcUrl
+    ? new SorobanRpc.Server(network.rpcUrl)
+    : null;
+
+  const onSubmitRpc = () => {
+    if (!rpcServer) {
+      return;
+    }
+
+    submitRpc({
+      rpcServer,
+      transactionXdr: blob,
+      networkPassphrase: network.passphrase,
     });
-
-    submitTx.mutate(
-      { transaction, server },
-      {
-        onSuccess: (res) => setTxResponse(res),
-        onError: (res) => setTxErr(res),
-      },
-    );
   };
 
   const getXdrJson = () => {
@@ -94,11 +96,11 @@ export default function SubmitTransaction() {
 
           <div className="SignTx__CTA">
             <Button
-              disabled={!blob || Boolean(xdrJson?.error)}
-              isLoading={submitTx.status === "pending"}
+              disabled={!network.rpcUrl || !blob || Boolean(xdrJson?.error)}
+              isLoading={isSubmitRpcPending}
               size="md"
               variant={"secondary"}
-              onClick={onSubmit}
+              onClick={onSubmitRpc}
             >
               Submit transaction
             </Button>
@@ -114,38 +116,43 @@ export default function SubmitTransaction() {
         </Box>
       </Card>
       <>
-        {submitTx.status === "success" && txResponse ? (
+        {isSubmitRpcSuccess && submitRpcResponse ? (
           <ValidationResponseCard
             variant="success"
             title="Transaction submitted!"
-            subtitle={`Transaction succeeded with ${txResponse.operation_count} operation(s)`}
+            subtitle={`Transaction succeeded with ${submitRpcResponse.operationCount} operation(s)`}
             response={
               <Box gap="xs">
-                <TxResponse label="Hash:" value={txResponse.hash} />
-                <TxResponse label="Ledger number:" value={txResponse.ledger} />
+                <TxResponse label="Hash:" value={submitRpcResponse.hash} />
                 <TxResponse
-                  label="Paging token:"
-                  value={txResponse.paging_token}
+                  label="Ledger number:"
+                  value={submitRpcResponse.result.ledger}
                 />
-                <TxResponse label="Result XDR:" value={txResponse.result_xdr} />
+                <TxResponse
+                  label="Envelope XDR:"
+                  value={submitRpcResponse.result.envelopeXdr
+                    .toXDR("base64")
+                    .toString()}
+                />
+                <TxResponse
+                  label="Result XDR:"
+                  value={submitRpcResponse.result.resultXdr
+                    .toXDR("base64")
+                    .toString()}
+                />
                 <TxResponse
                   label="Result Meta XDR:"
-                  value={txResponse.result_meta_xdr}
+                  value={submitRpcResponse.result.resultMetaXdr
+                    .toXDR("base64")
+                    .toString()}
                 />
-                <TxResponse
-                  label="Fee Meta XDR:"
-                  value={txResponse.fee_meta_xdr}
-                />
+                <TxResponse label="Fee:" value={submitRpcResponse.fee} />
               </Box>
             }
           />
         ) : null}
       </>
-      <>
-        {submitTx.status === "error" && txErr ? (
-          <ErrorResponse error={txErr} />
-        ) : null}
-      </>
+      <>{submitRpcError ? <RpcErrorResponse error={submitRpcError} /> : null}</>
     </Box>
   );
 }
