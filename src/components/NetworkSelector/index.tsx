@@ -102,7 +102,11 @@ export const NetworkSelector = () => {
         setActiveNetworkId(defaultNetwork.id);
       }
     }
-  }, [network?.id, selectNetwork]);
+
+    if (network.id === "mainnet") {
+      setMainnetRpc(network?.rpcUrl || "");
+    }
+  }, [network.id, network?.rpcUrl, selectNetwork]);
 
   // Set default network on launch
   useEffect(() => {
