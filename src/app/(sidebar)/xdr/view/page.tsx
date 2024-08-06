@@ -22,6 +22,7 @@ import { XdrTypeSelect } from "@/components/XdrTypeSelect";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { useStore } from "@/store/useStore";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 export default function ViewXdr() {
   const { xdr, network } = useStore();
@@ -55,11 +56,21 @@ export default function ViewXdr() {
     try {
       const xdrJson = StellarXdr.decode(xdr.type, xdr.blob);
 
+      trackEvent(TrackingEvent.XDR_TO_JSON_SUCCESS, {
+        network: network.id,
+        xdrType: xdr.type,
+      });
+
       return {
         jsonString: xdrJson,
         error: "",
       };
     } catch (e) {
+      trackEvent(TrackingEvent.XDR_TO_JSON_ERROR, {
+        network: network.id,
+        xdrType: xdr.type,
+      });
+
       return {
         jsonString: "",
         error: `Unable to decode input as ${xdr.type}: ${e}`,
@@ -99,6 +110,9 @@ export default function ViewXdr() {
                 <Link
                   onClick={() => {
                     fetchLatestTxn();
+                    trackEvent(TrackingEvent.XDR_TO_JSON_FETCH_XDR, {
+                      network: network.id,
+                    });
                   }}
                   isDisabled={isFetchingLatestTxn}
                   icon={isFetchingLatestTxn ? <Loader /> : null}
@@ -133,6 +147,7 @@ export default function ViewXdr() {
               icon={<Icon.RefreshCw01 />}
               onClick={() => {
                 resetXdr();
+                trackEvent(TrackingEvent.XDR_TO_JSON_CLEAR);
               }}
               disabled={!xdr.blob}
             >

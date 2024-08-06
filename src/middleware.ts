@@ -13,7 +13,7 @@ export function middleware(request: NextRequest) {
         : `'unsafe-inline'`
     };
     img-src 'self' blob: data:;
-    connect-src 'self' https://9sl3dhr1twv1.statuspage.io/api/v2/ *.stellar.org;
+    connect-src 'self' https://9sl3dhr1twv1.statuspage.io/api/v2/ *.stellar.org https://api2.amplitude.com/2/httpapi;
     font-src 'self' https://fonts.gstatic.com/;
     object-src 'none';
     base-uri 'self';

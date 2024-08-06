@@ -17,9 +17,10 @@ import { XdrTypeSelect } from "@/components/XdrTypeSelect";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { useStore } from "@/store/useStore";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 export default function ToXdr() {
-  const { xdr } = useStore();
+  const { xdr, network } = useStore();
   const { updateJsonString, resetJsonString } = xdr;
 
   const isXdrInit = useIsXdrInit();
@@ -41,11 +42,21 @@ export default function ToXdr() {
     try {
       const xdrString = StellarXdr.encode(xdr.type, xdr.jsonString);
 
+      trackEvent(TrackingEvent.XDR_FROM_JSON_SUCCESS, {
+        network: network.id,
+        xdrType: xdr.type,
+      });
+
       return {
         xdrString: xdrString,
         error: "",
       };
     } catch (e) {
+      trackEvent(TrackingEvent.XDR_FROM_JSON_ERROR, {
+        network: network.id,
+        xdrType: xdr.type,
+      });
+
       return {
         xdrString: "",
         error: `Unable to decode JSON as ${xdr.type}: ${e}`,
@@ -99,6 +110,7 @@ export default function ToXdr() {
               icon={<Icon.RefreshCw01 />}
               onClick={() => {
                 resetJsonString();
+                trackEvent(TrackingEvent.XDR_FROM_JSON_CLEAR);
               }}
               disabled={!xdr.jsonString}
             >

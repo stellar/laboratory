@@ -11,6 +11,7 @@ import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
 import { SdsLink } from "@/components/SdsLink";
 
 import { muxedAccount } from "@/helpers/muxedAccount";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { validate } from "@/validate";
 
@@ -52,6 +53,8 @@ export default function CreateMuxedAccount() {
         id: muxedId,
         baseAddress,
       });
+
+      trackEvent(TrackingEvent.ACCOUNT_MUXED_CREATE);
 
       setSdkError("");
       return;

@@ -3,6 +3,7 @@
 import { TabView } from "@/components/TabView";
 import { Box } from "@/components/layout/Box";
 import { useStore } from "@/store/useStore";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { Params } from "./components/Params";
 import { Operations } from "./components/Operations";
@@ -30,6 +31,7 @@ export default function BuildTransaction() {
         activeTabId={activeTab}
         onTabChange={(id) => {
           updateBuildActiveTab(id);
+          trackEvent(TrackingEvent.TRANSACTION_BUILD_TAB, { page: id });
         }}
       />
 

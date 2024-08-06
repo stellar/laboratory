@@ -9,6 +9,7 @@ import { useFriendBot } from "@/query/useFriendBot";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { useIsTestingNetwork } from "@/hooks/useIsTestingNetwork";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { GenerateKeypair } from "@/components/GenerateKeypair";
 import { ExpandBox } from "@/components/ExpandBox";
@@ -62,6 +63,8 @@ export default function CreateAccount() {
       networkRef.current = network;
       resetStates();
     }
+    // Not including network object
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [networkRef.current.id, network.id]);
 
   const generateKeypair = () => {
@@ -76,6 +79,8 @@ export default function CreateAccount() {
     }
 
     setSecretKey(keypair.secret());
+
+    trackEvent(TrackingEvent.ACCOUNT_CREATE_GENERATE_KEYPAIR);
   };
 
   return (
@@ -112,6 +117,7 @@ export default function CreateAccount() {
                 onClick={() => {
                   resetQuery();
                   refetch();
+                  trackEvent(TrackingEvent.ACCOUNT_CREATE_FUND_ACCOUNT);
                 }}
                 data-testid="fundAccount-button"
               >

@@ -34,6 +34,7 @@ import {
   ENDPOINTS_PAGES_RPC,
 } from "@/constants/endpointsPages";
 import { useEndpoint } from "@/query/useEndpoint";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 import {
   AnyObject,
   AssetObject,
@@ -550,6 +551,16 @@ export default function Endpoints() {
 
     const t = setTimeout(() => {
       refetch();
+      trackEvent(
+        isRpcEndpoint
+          ? TrackingEvent.ENDPOINTS_RPC_SUBMIT
+          : TrackingEvent.ENDPOINTS_HORIZON_SUBMIT,
+        {
+          path: urlPath,
+          network: network.id,
+        },
+      );
+
       clearTimeout(t);
     }, delay);
   };
@@ -630,6 +641,7 @@ export default function Endpoints() {
           >
             Submit
           </Button>
+          {/* TODO: tracking: add when SDS is updated */}
           <CopyText textToCopy={requestUrl}>
             <Button
               size="md"
@@ -645,6 +657,7 @@ export default function Endpoints() {
             type="button"
             onClick={() => {
               const currentSaved = localStorageSavedEndpointsHorizon.get();
+
               localStorageSavedEndpointsHorizon.set(
                 arrayItem.add(currentSaved, {
                   url: requestUrl,
@@ -654,6 +667,16 @@ export default function Endpoints() {
                   params,
                   network: getSaveItemNetwork(network),
                 }),
+              );
+
+              trackEvent(
+                isRpcEndpoint
+                  ? TrackingEvent.ENDPOINTS_RPC_SAVE
+                  : TrackingEvent.ENDPOINTS_HORIZON_SAVE,
+                {
+                  path: urlPath,
+                  network: network.id,
+                },
               );
             }}
             showActionTooltip

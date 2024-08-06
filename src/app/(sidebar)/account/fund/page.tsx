@@ -8,6 +8,7 @@ import { useFriendBot } from "@/query/useFriendBot";
 import { useStore } from "@/store/useStore";
 
 import { validate } from "@/validate";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { SuccessMsg } from "@/components/FriendBot/SuccessMsg";
 import { ErrorMsg } from "@/components/FriendBot/ErrorMsg";
@@ -61,6 +62,8 @@ export default function FundAccount() {
       networkRef.current = network;
       resetStates();
     }
+    // Not including network object
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [networkRef.current.id, network.id]);
 
   useEffect(() => {
@@ -110,6 +113,7 @@ export default function FundAccount() {
               onClick={() => {
                 if (!inlineErrorMessage) {
                   refetch();
+                  trackEvent(TrackingEvent.ACCOUNT_FUND_FUND_ACCOUNT);
                 }
               }}
             >
@@ -123,6 +127,7 @@ export default function FundAccount() {
               onClick={() => {
                 setInlineErrorMessage("");
                 setGeneratedPublicKey(account.publicKey!);
+                trackEvent(TrackingEvent.ACCOUNT_FUND_FILL);
               }}
             >
               Fill in with generated key
