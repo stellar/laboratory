@@ -27,7 +27,7 @@ export default function SubmitTransaction() {
 
   const {
     data: submitRpcResponse,
-    mutateAsync: submitRpc,
+    mutate: submitRpc,
     error: submitRpcError,
     isPending: isSubmitRpcPending,
     isSuccess: isSubmitRpcSuccess,

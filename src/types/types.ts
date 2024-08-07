@@ -183,6 +183,7 @@ export type SubmitRpcError = {
     resultXdr?: xdr.TransactionResult;
     resultMetaXdr?: xdr.TransactionMeta;
     errorResult?: xdr.TransactionResult;
+    diagnosticEvents?: xdr.DiagnosticEvent[];
   };
 };
 

@@ -93,7 +93,7 @@ export const RpcErrorResponse = ({ error }: { error: SubmitRpcError }) => {
   };
 
   const errorFields = () => {
-    const { hash, errorResult } = error.result;
+    const { hash, errorResult, diagnosticEvents } = error.result;
 
     return (
       <>
@@ -107,6 +107,14 @@ export const RpcErrorResponse = ({ error }: { error: SubmitRpcError }) => {
             <TxResponse
               label="Error result:"
               item={<PrettyJson json={errorResult} />}
+            />
+          </Box>
+        ) : null}
+        {diagnosticEvents ? (
+          <Box gap="xs">
+            <TxResponse
+              label="Diagnostic events:"
+              item={<PrettyJson json={diagnosticEvents} />}
             />
           </Box>
         ) : null}
