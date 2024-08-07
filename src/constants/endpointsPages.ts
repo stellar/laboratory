@@ -774,8 +774,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
           label: "Payments for Transaction",
           form: {
             docsUrl:
-              // TODO: no link in the docs for payments for transaction
-              "https://developers.stellar.org/network/horizon/resources/transactions",
+              "https://developers.stellar.org/docs/data/horizon/api-reference/retrieve-a-transactions-payments",
             docsLabel: "payments for transaction",
             requestMethod: "GET",
             endpointUrlTemplate:
