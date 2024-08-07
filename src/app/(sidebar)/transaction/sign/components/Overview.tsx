@@ -9,6 +9,7 @@ import {
   xdr,
 } from "@stellar/stellar-sdk";
 import { useRouter } from "next/navigation";
+import { set } from "lodash";
 
 import { FEE_BUMP_TX_FIELDS, TX_FIELDS } from "@/constants/signTransactionPage";
 import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
@@ -44,6 +45,7 @@ export const Overview = () => {
     updateBipPath,
     resetSign,
     resetSignHardWalletSigs,
+    updateFeeBumpParams,
   } = transaction;
 
   const router = useRouter();
@@ -114,7 +116,16 @@ export const Overview = () => {
   };
 
   const onWrapWithFeeBump = () => {
-    console.log(">>> TODO: view in XDR");
+    if (sign.signedTx) {
+      updateFeeBumpParams(set({}, "xdr", sign.signedTx));
+
+      delayedAction({
+        action: () => {
+          router.push(Routes.FEE_BUMP_TRANSACTION);
+        },
+        delay: 200,
+      });
+    }
   };
 
   const addSignature = () => {
