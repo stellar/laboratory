@@ -9,6 +9,7 @@ import { PrettyJson } from "@/components/PrettyJson";
 
 import { useStore } from "@/store/useStore";
 import { useSimulateTx } from "@/query/useSimulateTx";
+import { delayedAction } from "@/helpers/delayedAction";
 import { validate } from "@/validate";
 
 export default function SimulateTransaction() {
@@ -54,6 +55,20 @@ export default function SimulateTransaction() {
     }
   }, [simulate.instructionLeeway]);
 
+  useEffect(() => {
+    if (simulate.triggerOnLaunch) {
+      delayedAction({
+        action: () => {
+          onSimulate();
+        },
+        delay: 200,
+      });
+    }
+    // Do this only on page launch (used when Simulate button is clicked on
+    // another page).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const onSimulate = () => {
     if (network.rpcUrl && xdr.blob) {
       simulateTx({
@@ -61,6 +76,10 @@ export default function SimulateTransaction() {
         transactionXdr: xdr.blob,
         instructionLeeway: simulate.instructionLeeway,
       });
+
+      if (simulate.triggerOnLaunch) {
+        transaction.updateSimulateTriggerOnLaunch(false);
+      }
     }
   };
 

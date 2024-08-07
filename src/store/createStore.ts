@@ -8,6 +8,7 @@ import {
   xdr,
 } from "@stellar/stellar-sdk";
 
+import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
 import { sanitizeObject } from "@/helpers/sanitizeObject";
 import {
   AnyObject,
@@ -119,6 +120,7 @@ export interface Store {
     };
     simulate: {
       instructionLeeway?: string;
+      triggerOnLaunch?: boolean;
     };
     feeBump: FeeBumpParams;
     // [Transaction] Build Transaction actions
@@ -152,6 +154,7 @@ export interface Store {
     resetBaseFee: () => void;
     // [Transaction] Simulate Transaction actions
     updateSimulateInstructionLeeway: (instrLeeway?: string) => void;
+    updateSimulateTriggerOnLaunch: (trigger: boolean) => void;
   };
 
   // XDR
@@ -214,6 +217,7 @@ const initTransactionState = {
   },
   simulate: {
     instructionLeeway: undefined,
+    triggerOnLaunch: undefined,
   },
   feeBump: {
     source_account: "",
@@ -234,7 +238,7 @@ const initAccountState = {
 const initXdrState = {
   blob: "",
   jsonString: "",
-  type: "TransactionEnvelope",
+  type: XDR_TYPE_TRANSACTION_ENVELOPE,
 };
 
 // Store
@@ -435,6 +439,10 @@ export const createStore = (options: CreateStoreOptions) =>
           updateSimulateInstructionLeeway: (instrLeeway?: string) =>
             set((state) => {
               state.transaction.simulate.instructionLeeway = instrLeeway;
+            }),
+          updateSimulateTriggerOnLaunch: (trigger: boolean) =>
+            set((state) => {
+              state.transaction.simulate.triggerOnLaunch = trigger;
             }),
           updateFeeBumpParams: (params: FeeBumpParamsObj) =>
             set((state) => {

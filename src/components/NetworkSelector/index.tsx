@@ -9,6 +9,7 @@ import { Button, Icon, Input, Notification } from "@stellar/design-system";
 
 import { NetworkIndicator } from "@/components/NetworkIndicator";
 import { localStorageSavedNetwork } from "@/helpers/localStorageSavedNetwork";
+import { delayedAction } from "@/helpers/delayedAction";
 import { NetworkOptions } from "@/constants/settings";
 import { useStore } from "@/store/useStore";
 import { Network, NetworkType } from "@/types/types";
@@ -224,16 +225,20 @@ export const NetworkSelector = () => {
 
     if (show) {
       setIsDropdownActive(true);
-      const t = setTimeout(() => {
-        setIsDropdownVisible(true);
-        clearTimeout(t);
-      }, delay);
+      delayedAction({
+        action: () => {
+          setIsDropdownVisible(true);
+        },
+        delay,
+      });
     } else {
       setIsDropdownVisible(false);
-      const t = setTimeout(() => {
-        setIsDropdownActive(false);
-        clearTimeout(t);
-      }, delay);
+      delayedAction({
+        action: () => {
+          setIsDropdownActive(false);
+        },
+        delay,
+      });
     }
   };
 

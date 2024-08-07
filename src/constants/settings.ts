@@ -9,6 +9,8 @@ export const LOCAL_STORAGE_SAVED_ENDPOINTS_RPC =
 export const LOCAL_STORAGE_SAVED_TRANSACTIONS =
   "stellar_lab_saved_transactions";
 
+export const XDR_TYPE_TRANSACTION_ENVELOPE = "TransactionEnvelope";
+
 export const NetworkOptions: Network[] = [
   {
     id: "futurenet",
