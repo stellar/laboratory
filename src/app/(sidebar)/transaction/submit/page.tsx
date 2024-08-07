@@ -31,6 +31,7 @@ export default function SubmitTransaction() {
     error: submitRpcError,
     isPending: isSubmitRpcPending,
     isSuccess: isSubmitRpcSuccess,
+    reset: resetSubmitRpc,
   } = useSubmitRpcTx();
 
   const rpcServer = network.rpcUrl
@@ -89,6 +90,10 @@ export default function SubmitTransaction() {
             error={xdrJson?.error || ""}
             onChange={(e) => {
               updateXdrBlob(e.target.value);
+
+              if (submitRpcError || submitRpcResponse) {
+                resetSubmitRpc();
+              }
             }}
             note="Enter a base-64 encoded XDR blob to decode."
             hasCopyButton
