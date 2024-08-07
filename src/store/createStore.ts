@@ -119,6 +119,7 @@ export interface Store {
     };
     simulate: {
       instructionLeeway?: string;
+      triggerOnLaunch?: boolean;
     };
     feeBump: FeeBumpParams;
     // [Transaction] Build Transaction actions
@@ -152,6 +153,7 @@ export interface Store {
     resetBaseFee: () => void;
     // [Transaction] Simulate Transaction actions
     updateSimulateInstructionLeeway: (instrLeeway?: string) => void;
+    updateSimulateTriggerOnLaunch: (trigger: boolean) => void;
   };
 
   // XDR
@@ -214,6 +216,7 @@ const initTransactionState = {
   },
   simulate: {
     instructionLeeway: undefined,
+    triggerOnLaunch: undefined,
   },
   feeBump: {
     source_account: "",
@@ -435,6 +438,10 @@ export const createStore = (options: CreateStoreOptions) =>
           updateSimulateInstructionLeeway: (instrLeeway?: string) =>
             set((state) => {
               state.transaction.simulate.instructionLeeway = instrLeeway;
+            }),
+          updateSimulateTriggerOnLaunch: (trigger: boolean) =>
+            set((state) => {
+              state.transaction.simulate.triggerOnLaunch = trigger;
             }),
           updateFeeBumpParams: (params: FeeBumpParamsObj) =>
             set((state) => {

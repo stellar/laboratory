@@ -1,11 +1,13 @@
 "use client";
 
-import { Button, Card, Text } from "@stellar/design-system";
+import { Button, Card, Icon, Text } from "@stellar/design-system";
 import { SorobanRpc } from "@stellar/stellar-sdk";
+import { useRouter } from "next/navigation";
 
 import { useStore } from "@/store/useStore";
 
 import * as StellarXdr from "@/helpers/StellarXdr";
+import { Routes } from "@/constants/routes";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
@@ -20,10 +22,11 @@ import { TxResponse } from "@/components/TxResponse";
 import { RpcErrorResponse } from "./components/ErrorResponse";
 
 export default function SubmitTransaction() {
-  const { network, xdr } = useStore();
+  const { network, xdr, transaction } = useStore();
   const { blob, updateXdrBlob } = xdr;
 
   const isXdrInit = useIsXdrInit();
+  const router = useRouter();
 
   const {
     data: submitRpcResponse,
@@ -50,6 +53,20 @@ export default function SubmitTransaction() {
     });
   };
 
+  const onSimulateTx = () => {
+    transaction.updateSimulateTriggerOnLaunch(true);
+
+    // Adding delay to make sure the store will update
+    const t = setTimeout(() => {
+      router.push(Routes.SIMULATE_TRANSACTION);
+      clearTimeout(t);
+    }, 300);
+  };
+
+  const onSaveTx = () => {
+    console.log(">>> TODO: save");
+  };
+
   const getXdrJson = () => {
     const xdrType = "TransactionEnvelope";
 
@@ -73,6 +90,8 @@ export default function SubmitTransaction() {
   };
 
   const xdrJson = getXdrJson();
+
+  const isSubmitDisabled = !network.rpcUrl || !blob || Boolean(xdrJson?.error);
 
   return (
     <Box gap="md">
@@ -99,17 +118,40 @@ export default function SubmitTransaction() {
             hasCopyButton
           />
 
-          <div className="SignTx__CTA">
-            <Button
-              disabled={!network.rpcUrl || !blob || Boolean(xdrJson?.error)}
-              isLoading={isSubmitRpcPending}
-              size="md"
-              variant={"secondary"}
-              onClick={onSubmitRpc}
-            >
-              Submit transaction
-            </Button>
-          </div>
+          <Box gap="lg" direction="row" align="center" justify="space-between">
+            <div>
+              <Button
+                disabled={isSubmitDisabled}
+                isLoading={isSubmitRpcPending}
+                size="md"
+                variant={"secondary"}
+                onClick={onSubmitRpc}
+              >
+                Submit transaction
+              </Button>
+            </div>
+
+            <Box gap="sm" direction="row" align="center" justify="end">
+              <Button
+                disabled={isSubmitDisabled || isSubmitRpcPending}
+                size="md"
+                variant={"tertiary"}
+                onClick={onSimulateTx}
+              >
+                Simulate transaction
+              </Button>
+
+              <Button
+                disabled={isSubmitDisabled || isSubmitRpcPending}
+                size="md"
+                variant={"tertiary"}
+                onClick={onSaveTx}
+                icon={<Icon.Save01 />}
+              >
+                Save transaction
+              </Button>
+            </Box>
+          </Box>
 
           <>
             {xdrJson?.jsonString ? (

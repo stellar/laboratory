@@ -54,6 +54,18 @@ export default function SimulateTransaction() {
     }
   }, [simulate.instructionLeeway]);
 
+  useEffect(() => {
+    if (simulate.triggerOnLaunch) {
+      const t = setTimeout(() => {
+        onSimulate();
+        clearTimeout(t);
+      }, 300);
+    }
+    // Do this only on page launch (used when Simulate button is clicked on
+    // another page).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const onSimulate = () => {
     if (network.rpcUrl && xdr.blob) {
       simulateTx({
@@ -61,6 +73,10 @@ export default function SimulateTransaction() {
         transactionXdr: xdr.blob,
         instructionLeeway: simulate.instructionLeeway,
       });
+
+      if (simulate.triggerOnLaunch) {
+        transaction.updateSimulateTriggerOnLaunch(false);
+      }
     }
   };
 
