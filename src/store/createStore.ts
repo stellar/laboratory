@@ -8,6 +8,7 @@ import {
   xdr,
 } from "@stellar/stellar-sdk";
 
+import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
 import { sanitizeObject } from "@/helpers/sanitizeObject";
 import {
   AnyObject,
@@ -237,7 +238,7 @@ const initAccountState = {
 const initXdrState = {
   blob: "",
   jsonString: "",
-  type: "TransactionEnvelope",
+  type: XDR_TYPE_TRANSACTION_ENVELOPE,
 };
 
 // Store

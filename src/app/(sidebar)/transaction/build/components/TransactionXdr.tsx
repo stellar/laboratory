@@ -24,6 +24,7 @@ import {
   OPERATION_SET_FLAGS,
   OPERATION_TRUSTLINE_CLEAR_FLAGS,
   OPERATION_TRUSTLINE_SET_FLAGS,
+  XDR_TYPE_TRANSACTION_ENVELOPE,
 } from "@/constants/settings";
 
 import {
@@ -479,7 +480,7 @@ export const TransactionXdr = () => {
       const jsonString = stringify(txnJson);
 
       return {
-        xdr: StellarXdr.encode("TransactionEnvelope", jsonString || ""),
+        xdr: StellarXdr.encode(XDR_TYPE_TRANSACTION_ENVELOPE, jsonString || ""),
       };
     } catch (e) {
       return { error: `${e}` };

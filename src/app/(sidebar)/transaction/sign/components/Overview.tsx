@@ -8,12 +8,16 @@ import {
   TransactionBuilder,
   xdr,
 } from "@stellar/stellar-sdk";
+import { useRouter } from "next/navigation";
 
 import { FEE_BUMP_TX_FIELDS, TX_FIELDS } from "@/constants/signTransactionPage";
+import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
+import { Routes } from "@/constants/routes";
 
 import { useStore } from "@/store/useStore";
 
 import { txHelper } from "@/helpers/txHelper";
+import { delayedAction } from "@/helpers/delayedAction";
 
 import { validate } from "@/validate";
 
@@ -30,7 +34,7 @@ import { SignWithWallet } from "./SignWithWallet";
 const MIN_LENGTH_FOR_FULL_WIDTH_FIELD = 30;
 
 export const Overview = () => {
-  const { network, transaction } = useStore();
+  const { network, transaction, xdr } = useStore();
   const {
     sign,
     updateHardWalletSigs,
@@ -41,6 +45,8 @@ export const Overview = () => {
     resetSign,
     resetSignHardWalletSigs,
   } = transaction;
+
+  const router = useRouter();
 
   const [secretInputs, setSecretInputs] = useState<string[]>([""]);
 
@@ -91,6 +97,24 @@ export const Overview = () => {
   const onUpdateSecretInputs = (val: string[]) => {
     setSecretInputs(val);
     updateSignedTx("");
+  };
+
+  const onViewInXdr = () => {
+    if (sign.signedTx) {
+      xdr.updateXdrBlob(sign.signedTx);
+      xdr.updateXdrType(XDR_TYPE_TRANSACTION_ENVELOPE);
+
+      delayedAction({
+        action: () => {
+          router.push(Routes.VIEW_XDR);
+        },
+        delay: 200,
+      });
+    }
+  };
+
+  const onWrapWithFeeBump = () => {
+    console.log(">>> TODO: view in XDR");
   };
 
   const addSignature = () => {
@@ -420,13 +444,7 @@ export const Overview = () => {
               </>
             }
             footerLeftEl={
-              <Button
-                size="md"
-                variant="secondary"
-                onClick={() => {
-                  alert("TODO: handle sign transaction flow");
-                }}
-              >
+              <Button size="md" variant="secondary" onClick={onViewInXdr}>
                 Submit in Transaction Submitter
               </Button>
             }
@@ -437,9 +455,7 @@ export const Overview = () => {
                 <Button
                   size="md"
                   variant="tertiary"
-                  onClick={() => {
-                    alert("TODO: handle view in fee bump");
-                  }}
+                  onClick={onWrapWithFeeBump}
                 >
                   Wrap with Fee Bump
                 </Button>

@@ -9,6 +9,7 @@ import { PrettyJson } from "@/components/PrettyJson";
 
 import { useStore } from "@/store/useStore";
 import { useSimulateTx } from "@/query/useSimulateTx";
+import { delayedAction } from "@/helpers/delayedAction";
 import { validate } from "@/validate";
 
 export default function SimulateTransaction() {
@@ -56,10 +57,12 @@ export default function SimulateTransaction() {
 
   useEffect(() => {
     if (simulate.triggerOnLaunch) {
-      const t = setTimeout(() => {
-        onSimulate();
-        clearTimeout(t);
-      }, 300);
+      delayedAction({
+        action: () => {
+          onSimulate();
+        },
+        delay: 200,
+      });
     }
     // Do this only on page launch (used when Simulate button is clicked on
     // another page).

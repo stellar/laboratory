@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Icon, Input } from "@stellar/design-system";
 import { ALL_XDR_TYPES } from "@/constants/xdr";
+import { delayedAction } from "@/helpers/delayedAction";
 import { useStore } from "@/store/useStore";
 import "./styles.scss";
 
@@ -110,13 +111,15 @@ export const XdrTypeSelect = ({ error }: XdrTypeSelectProps) => {
             setIsOptionsVisible(true);
           }}
           onBlur={() => {
-            const t = setTimeout(() => {
-              if (isOptionsVisible) {
-                setIsOptionsVisible(false);
-                setSearchValue("");
-              }
-              clearTimeout(t);
-            }, 200);
+            if (isOptionsVisible) {
+              delayedAction({
+                action: () => {
+                  setIsOptionsVisible(false);
+                  setSearchValue("");
+                },
+                delay: 200,
+              });
+            }
           }}
           leftElement={<Icon.SearchSm />}
           rightElement={<Icon.ChevronDown />}

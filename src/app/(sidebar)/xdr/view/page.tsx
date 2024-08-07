@@ -11,8 +11,10 @@ import {
   Icon,
   CopyText,
 } from "@stellar/design-system";
+
 import { useLatestTxn } from "@/query/useLatestTxn";
 import * as StellarXdr from "@/helpers/StellarXdr";
+import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
 
 import { Box } from "@/components/layout/Box";
 import { SdsLink } from "@/components/SdsLink";
@@ -41,7 +43,7 @@ export default function ViewXdr() {
   useEffect(() => {
     if (isLatestTxnSuccess && latestTxn) {
       updateXdrBlob(latestTxn);
-      updateXdrType("TransactionEnvelope");
+      updateXdrType(XDR_TYPE_TRANSACTION_ENVELOPE);
     }
   }, [isLatestTxnSuccess, latestTxn, updateXdrBlob, updateXdrType]);
 

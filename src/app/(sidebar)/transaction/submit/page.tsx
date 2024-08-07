@@ -7,7 +7,9 @@ import { useRouter } from "next/navigation";
 import { useStore } from "@/store/useStore";
 
 import * as StellarXdr from "@/helpers/StellarXdr";
+import { delayedAction } from "@/helpers/delayedAction";
 import { Routes } from "@/constants/routes";
+import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
@@ -57,10 +59,12 @@ export default function SubmitTransaction() {
     transaction.updateSimulateTriggerOnLaunch(true);
 
     // Adding delay to make sure the store will update
-    const t = setTimeout(() => {
-      router.push(Routes.SIMULATE_TRANSACTION);
-      clearTimeout(t);
-    }, 300);
+    delayedAction({
+      action: () => {
+        router.push(Routes.SIMULATE_TRANSACTION);
+      },
+      delay: 200,
+    });
   };
 
   const onSaveTx = () => {
@@ -68,7 +72,7 @@ export default function SubmitTransaction() {
   };
 
   const getXdrJson = () => {
-    const xdrType = "TransactionEnvelope";
+    const xdrType = XDR_TYPE_TRANSACTION_ENVELOPE;
 
     if (!(isXdrInit && blob)) {
       return null;
