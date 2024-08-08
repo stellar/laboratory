@@ -17,6 +17,10 @@ const primaryNavLinks: NavLink[] = [
     label: "Introduction",
   },
   {
+    href: Routes.VIEW_XDR,
+    label: "XDR",
+  },
+  {
     href: Routes.ACCOUNT_CREATE,
     label: "Account",
   },
@@ -27,10 +31,6 @@ const primaryNavLinks: NavLink[] = [
   {
     href: Routes.BUILD_TRANSACTION,
     label: "Transactions",
-  },
-  {
-    href: Routes.VIEW_XDR,
-    label: "XDR",
   },
   {
     href: Routes.SOROBAN_CONTRACT_EXPLORER,
