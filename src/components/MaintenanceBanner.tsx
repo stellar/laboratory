@@ -38,9 +38,7 @@ export const MaintenanceBanner = () => {
   }
 
   if (relevantMaintenance.length === 0) {
-    return network.id === "testnet"
-      ? renderBanner("The next testnet reset has not yet been scheduled.")
-      : null;
+    return null;
   }
 
   const nextMaintenance = relevantMaintenance[0];

@@ -2,9 +2,10 @@
 
 import { ReactNode, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { Icon } from "@stellar/design-system";
+import { Icon, Logo } from "@stellar/design-system";
 import { Routes } from "@/constants/routes";
 import { NextLink } from "@/components/NextLink";
+import { GITHUB_URL } from "@/constants/settings";
 
 export type SidebarLink = {
   route: Routes | string;
@@ -65,11 +66,11 @@ export const LayoutSidebarContent = ({
             ))}
           </div>
           <div className="LabLayout__sidebar__wrapper">
-            <NextLink
-              href="https://github.com/stellar/laboratory/issues"
-              className="SidebarLink"
-            >
+            <NextLink href={`${GITHUB_URL}/issues`} className="SidebarLink">
               <Icon.MessageTextSquare02 /> Got product feedback?
+            </NextLink>
+            <NextLink href={GITHUB_URL} className="SidebarLink Link--withLogo">
+              <Logo.Github /> GitHub
             </NextLink>
           </div>
         </div>

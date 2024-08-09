@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, Link, Text, Icon } from "@stellar/design-system";
+import { Card, Link, Text, Icon, Logo } from "@stellar/design-system";
 
 import { NextLink } from "@/components/NextLink";
 import { LayoutContentContainer } from "@/components/layout/LayoutContentContainer";
@@ -9,6 +9,7 @@ import { SdsLink } from "@/components/SdsLink";
 import { Box } from "@/components/layout/Box";
 
 import { Routes } from "@/constants/routes";
+import { GITHUB_URL } from "@/constants/settings";
 import { openUrl } from "@/helpers/openUrl";
 
 export default function Introduction() {
@@ -107,9 +108,20 @@ export default function Introduction() {
           </SdsLink>
         </Box>
 
-        {process.env.NEXT_PUBLIC_COMMIT_HASH ? (
-          <div>{`Commit hash: ${process.env.NEXT_PUBLIC_COMMIT_HASH}`}</div>
-        ) : null}
+        <Box gap="sm" direction="row">
+          <>
+            {process.env.NEXT_PUBLIC_COMMIT_HASH ? (
+              <div>{`Commit hash: ${process.env.NEXT_PUBLIC_COMMIT_HASH}`}</div>
+            ) : null}
+
+            <SdsLink
+              addlClassName="Link--withLogo"
+              href={GITHUB_URL}
+              variant="secondary"
+              icon={<Logo.Github />}
+            />
+          </>
+        </Box>
       </div>
     </LayoutContentContainer>
   );

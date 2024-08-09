@@ -49,6 +49,17 @@
     color: var(--sds-clr-green-11) !important;
   }
 
+  // SDS logos have hard coded fill colors, adjusting that here for GitHub icon
+  .Link--withLogo {
+    svg {
+      stroke: transparent;
+
+      g > path {
+        fill: currentColor;
+      }
+    }
+  }
+
   // ===========================================================================
   // Layout
   // ===========================================================================

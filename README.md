@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Lab
 
-## Getting Started
+The Stellar Lab is a suite of tools to help one learn about exploring the
+Stellar network. See it in action:
+[https://lab.stellar.org/](https://lab.stellar.org/).
 
-First, run the development server:
+## Tech stack
 
-```bash
-npm run dev
-# or
+- [Next.js](https://nextjs.org/) framework (React)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Stellar Design System](https://design-system.stellar.org/) for UI
+- [Sass](https://sass-lang.com/) for CSS styling
+- [TanStack (React) Query](https://tanstack.com/query/latest) for API queries
+- [Zustand](https://docs.pmnd.rs/zustand/getting-started/introduction) for state
+  management
+- [Playwright](https://playwright.dev/) for e2e tests
+- [Yarn Classic (v1)](https://classic.yarnpkg.com/lang/en/docs/install/)
+
+## Developing
+
+```sh
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Testing hardware wallets requires an HTTPS connection to enable U2F. The
+recommended way to do this is with [`ngrok`](https://ngrok.com/). Once
+downloaded and authenticated, start ngrok, and tell the Lab to start with a
+public URL.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+./ngrok http 3000
+# in a separate terminal
+# the subdomain will appear in ngrok's output
+yarn start --public randomsubdomain.ngrok.io
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Building for production
 
-## Learn More
+```sh
+yarn build
+```
 
-To learn more about Next.js, take a look at the following resources:
+To build and run production build locally:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```sh
+yarn start
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Production uses [Amplitude](https://amplitude.com/) to emit metrics, so to fully
+emulate a production build, you’ll need to set an
+`NEXT_PUBLIC_AMPLITUDE_API_KEY` variable in `.env.local` file.
