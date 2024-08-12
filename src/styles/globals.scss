@@ -590,6 +590,10 @@
     }
     .Input__side-element {
       flex: 1 0;
+
+      &:has(.MultiPicker__delete) {
+        flex: 0;
+      }
     }
   }
   .Input__buttons {
