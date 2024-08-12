@@ -92,7 +92,7 @@ const NestedNav = ({
   const isSelectedParent = sidebar.navItems.some((item) =>
     pathname.includes(item.route),
   );
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
 
   useEffect(() => {
     if (isSelectedParent) {

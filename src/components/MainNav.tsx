@@ -18,7 +18,7 @@ const primaryNavLinks: NavLink[] = [
   },
   {
     href: Routes.VIEW_XDR,
-    label: "XDR",
+    label: "View XDR",
   },
   {
     href: Routes.ACCOUNT_CREATE,
@@ -33,8 +33,8 @@ const primaryNavLinks: NavLink[] = [
     label: "Transactions",
   },
   {
-    href: Routes.SOROBAN_CONTRACT_EXPLORER,
-    label: "Soroban",
+    href: Routes.SMART_CONTRACTS,
+    label: "Smart Contracts",
   },
   {
     href: "https://developers.stellar.org/",

@@ -78,6 +78,6 @@ export enum Routes {
   // View XDR
   VIEW_XDR = "/xdr/view",
   TO_XDR = "/xdr/to",
-  // Soroban
-  SOROBAN_CONTRACT_EXPLORER = "/soroban/contract-explorer",
+  // Smart Contracts
+  SMART_CONTRACTS = "/smart-contracts",
 }
