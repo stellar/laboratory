@@ -51,13 +51,8 @@ test.describe("Endpoints page", () => {
       ]);
     });
 
-    test("Expands dropdown on click with correct links", async ({ page }) => {
+    test("Dropdown shows correct links on page load", async ({ page }) => {
       const sidebar = page.getByTestId("endpoints-sidebar-section");
-      const horizonDropdown = sidebar
-        .getByTestId("endpoints-sidebar-linkToggle")
-        .filter({ hasText: "Horizon Endpoints" });
-
-      await horizonDropdown.click();
 
       const accountsLink = sidebar
         .getByTestId("endpoints-sidebar-linkToggle")
