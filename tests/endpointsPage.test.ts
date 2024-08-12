@@ -11,7 +11,7 @@ test.describe("Endpoints page", () => {
 
   test("Renders info cards", async ({ page }) => {
     await expect(page.locator("h2")).toHaveText([
-      "Stellar RPC Endpoints",
+      "Soroban RPC Endpoints",
       "Horizon Endpoints",
     ]);
   });
