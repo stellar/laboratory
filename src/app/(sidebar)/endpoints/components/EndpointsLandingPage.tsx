@@ -7,8 +7,8 @@ import { openUrl } from "@/helpers/openUrl";
 export const EndpointsLandingPage = () => {
   const infoCards = [
     {
-      id: "stellar-rpc",
-      title: "Stellar RPC Endpoints",
+      id: "soroban-rpc",
+      title: "Soroban RPC Endpoints",
       description: "Learn about the RPC endpoints in our Developer Docs.",
       buttonLabel: "See docs",
       buttonIcon: <Icon.LinkExternal01 />,
