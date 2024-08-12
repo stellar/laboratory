@@ -30,13 +30,12 @@ export default function Introduction() {
         "Tools, like the Stellar CLI, for reading and interacting with smart contracts on the Stellar Network",
       buttonLabel: "See tools",
       buttonIcon: undefined,
-      buttonAction: () =>
-        openUrl("https://developers.stellar.org/docs/tools/sdks"),
+      buttonAction: () => openUrl("https://developers.stellar.org/docs/tools"),
     },
     {
-      id: "stellar-rpc",
-      title: "Stellar RPC",
-      description: "Learn about the Stellar RPC, a RPC gateway to Stellar",
+      id: "soroban-rpc",
+      title: "Soroban RPC",
+      description: "Learn about the Soroban RPC, a RPC gateway to Stellar",
       buttonLabel: "Go to docs",
       buttonIcon: <Icon.LinkExternal01 />,
       buttonAction: () =>
