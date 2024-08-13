@@ -101,14 +101,14 @@ export const Overview = () => {
     updateSignedTx("");
   };
 
-  const onViewInXdr = () => {
+  const onViewSubmitTxn = () => {
     if (sign.signedTx) {
       xdr.updateXdrBlob(sign.signedTx);
       xdr.updateXdrType(XDR_TYPE_TRANSACTION_ENVELOPE);
 
       delayedAction({
         action: () => {
-          router.push(Routes.VIEW_XDR);
+          router.push(Routes.SUBMIT_TRANSACTION);
         },
         delay: 200,
       });
@@ -455,7 +455,7 @@ export const Overview = () => {
               </>
             }
             footerLeftEl={
-              <Button size="md" variant="secondary" onClick={onViewInXdr}>
+              <Button size="md" variant="secondary" onClick={onViewSubmitTxn}>
                 Submit in Transaction Submitter
               </Button>
             }

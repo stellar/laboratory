@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Button, Card, Icon, Text } from "@stellar/design-system";
 import { SorobanRpc } from "@stellar/stellar-sdk";
 import { useRouter } from "next/navigation";
@@ -20,6 +21,7 @@ import { PrettyJson } from "@/components/PrettyJson";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { TxResponse } from "@/components/TxResponse";
+import { SaveTransactionModal } from "@/components/SaveTransactionModal";
 
 import { RpcErrorResponse } from "./components/ErrorResponse";
 
@@ -29,6 +31,8 @@ export default function SubmitTransaction() {
 
   const isXdrInit = useIsXdrInit();
   const router = useRouter();
+
+  const [isSaveTxnModalVisible, setIsSaveTxnModalVisible] = useState(false);
 
   const {
     data: submitRpcResponse,
@@ -68,7 +72,7 @@ export default function SubmitTransaction() {
   };
 
   const onSaveTx = () => {
-    console.log(">>> TODO: save");
+    setIsSaveTxnModalVisible(true);
   };
 
   const getXdrJson = () => {
@@ -204,6 +208,16 @@ export default function SubmitTransaction() {
         ) : null}
       </>
       <>{submitRpcError ? <RpcErrorResponse error={submitRpcError} /> : null}</>
+
+      <SaveTransactionModal
+        type="save"
+        page="submit"
+        isVisible={isSaveTxnModalVisible}
+        onClose={() => {
+          setIsSaveTxnModalVisible(false);
+        }}
+        xdr={blob}
+      />
     </Box>
   );
 }
