@@ -92,9 +92,9 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
         docsUrl:
           "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getLedgerEntries",
         docsLabel: "getLedgerEntries",
-        endpointUrlTemplate: "{?tx}",
+        endpointUrlTemplate: "/get_ledger_entries{?ledgerXdrKey}",
         requestMethod: "POST",
-        requiredParams: "tx",
+        requiredParams: "ledgerXdrKey",
         rpcMethod: "getLedgerEntries",
         isStreaming: false,
       },

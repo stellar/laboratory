@@ -13,6 +13,7 @@ const validateBase64 = (value: string) => {
 };
 
 export const getXdrError = (value: string) => {
+  console.log("[getXdrError] value: ", value);
   if (!value) {
     return undefined;
   }

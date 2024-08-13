@@ -63,6 +63,8 @@ export default function Endpoints() {
   const page = isRpcEndpoint ? rpcPage : horizonPage;
   const pageData = isRpcEndpoint ? rpcPage?.form : horizonPage?.form;
 
+  console.log("[pageData]", pageData);
+
   const requiredFields = sanitizeArray(
     pageData?.requiredParams?.split(",") || [],
   );
@@ -149,7 +151,7 @@ export default function Endpoints() {
         const filteredTopics = filteredParams.topics
           ? filteredParams.topics
               .filter((topic: string) => topic.length)
-              .map((item: string) => JSON.parse(item))
+              .map((item: string) => (item ? JSON.parse(item) : []))
           : [];
 
         return {
@@ -675,6 +677,8 @@ export default function Endpoints() {
       ...urlParams.split(","),
     ]);
 
+    console.log("[allFields]: ", allFields);
+
     if (!pageData || (allFields.length === 0 && !isRpcEndpoint)) {
       return null;
     }
@@ -682,8 +686,6 @@ export default function Endpoints() {
     return (
       <div className="Endpoints__content">
         <div className="PageBody__content" data-testid="endpoints-pageContent">
-          {renderPostPayload()}
-
           {allFields.map((f) => {
             const component = formComponentTemplateEndpoints(
               f,
@@ -701,6 +703,9 @@ export default function Endpoints() {
                   resetQuery();
                 }
 
+                console.log("[page] storeValue: ", storeValue);
+                console.log("[page] value: ", value);
+
                 // Mapping custom value to template params
                 const mappedParams = pageData?.custom?.paramMapping
                   ? Object.entries(pageData.custom.paramMapping).reduce(
@@ -716,6 +721,8 @@ export default function Endpoints() {
                       {} as AnyObject,
                     )
                   : {};
+
+                console.log("[page] mappedParams: ", mappedParams);
 
                 updateParams({
                   [f]: storeValue,
@@ -809,6 +816,8 @@ export default function Endpoints() {
 
             return null;
           })}
+
+          {renderPostPayload()}
         </div>
       </div>
     );

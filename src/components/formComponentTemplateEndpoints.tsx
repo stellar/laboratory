@@ -11,6 +11,7 @@ import { IncludeFailedPicker } from "@/components/FormElements/IncludeFailedPick
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { AssetMultiPicker } from "@/components/FormElements/AssetMultiPicker";
 import { FiltersPicker } from "@/components/FormElements/FiltersPicker";
+import { XdrLedgerKeyPicker } from "@/components/FormElements/XdrLedgerKeyPicker";
 
 import { parseJsonString } from "@/helpers/parseJsonString";
 import { validate } from "@/validate";
@@ -691,6 +692,19 @@ export const formComponentTemplateEndpoints = (
             value={templ.value || ""}
             error={templ.error?.result === "error" ? templ.error?.message : ""}
             onChange={templ.onChange}
+          />
+        ),
+        validate: validate.getXdrError,
+      };
+    case "ledgerXdrKey":
+      return {
+        render: (templ: TemplateRenderTxProps) => (
+          <XdrLedgerKeyPicker
+            key={id}
+            id={id}
+            value={parseJsonString(templ.value)}
+            error={templ.error}
+            onChange={templ?.onChange}
           />
         ),
         validate: validate.getXdrError,
