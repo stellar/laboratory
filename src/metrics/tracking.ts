@@ -2,7 +2,14 @@ import * as amplitude from "@amplitude/analytics-browser";
 import { AnyObject } from "@/types/types";
 
 export const initTracking = () => {
-  console.log(">>> TRACKING : process.env ", process.env);
+  console.log(
+    ">>> process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY ",
+    process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY,
+  );
+  console.log(
+    ">>> process.env.NEXT_PUBLIC_COMMIT_HASH ",
+    process.env.NEXT_PUBLIC_COMMIT_HASH,
+  );
 
   if (!process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY) {
     return;
