@@ -23,7 +23,8 @@
       color: var(--sds-clr-navy-11);
     }
 
-    &--number {
+    &--number,
+    &--bigint {
       color: var(--sds-clr-lime-11);
     }
 

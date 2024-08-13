@@ -13,6 +13,7 @@ import {
   Textarea,
 } from "@stellar/design-system";
 import { useQueryClient } from "@tanstack/react-query";
+import { stringify } from "lossless-json";
 
 import { SdsLink } from "@/components/SdsLink";
 import { formComponentTemplateEndpoints } from "@/components/formComponentTemplateEndpoints";
@@ -892,7 +893,7 @@ export default function Endpoints() {
                   <div>{/* TODO: add conditional StellarExpert link */}</div>
                   <div>
                     <CopyText
-                      textToCopy={JSON.stringify(endpointData.json, null, 2)}
+                      textToCopy={stringify(endpointData.json, null, 2) || ""}
                     >
                       <Button
                         size="md"

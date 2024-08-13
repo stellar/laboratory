@@ -12,6 +12,7 @@ import {
   CopyText,
 } from "@stellar/design-system";
 import { useLatestTxn } from "@/query/useLatestTxn";
+import { stringify } from "lossless-json";
 import * as StellarXdr from "@/helpers/StellarXdr";
 
 import { Box } from "@/components/layout/Box";
@@ -20,6 +21,7 @@ import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { PrettyJson } from "@/components/PrettyJson";
 import { XdrTypeSelect } from "@/components/XdrTypeSelect";
 
+import { parseToLosslessJson } from "@/helpers/parseToLosslessJson";
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { useStore } from "@/store/useStore";
 
@@ -71,8 +73,8 @@ export default function ViewXdr() {
 
   const prettifyJsonString = (jsonString: string): string => {
     try {
-      const parsedJson = JSON.parse(jsonString);
-      return JSON.stringify(parsedJson, null, 2);
+      const parsedJson = parseToLosslessJson(jsonString);
+      return stringify(parsedJson, null, 2) || "";
     } catch (e) {
       return jsonString;
     }
@@ -144,7 +146,9 @@ export default function ViewXdr() {
             {xdrJsonDecoded?.jsonString ? (
               <Box gap="lg">
                 <div className="PageBody__content PageBody__scrollable">
-                  <PrettyJson json={JSON.parse(xdrJsonDecoded.jsonString)} />
+                  <PrettyJson
+                    json={parseToLosslessJson(xdrJsonDecoded.jsonString)}
+                  />
                 </div>
 
                 <Box gap="md" direction="row" justify="end">
