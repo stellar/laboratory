@@ -111,3 +111,5 @@ export const OPERATION_TRUSTLINE_CLEAR_FLAGS = [
     value: 4,
   },
 ];
+
+export const GITHUB_URL = "https://github.com/stellar/laboratory";

@@ -1,11 +1,12 @@
 import React from "react";
 
-import { Button, Label } from "@stellar/design-system";
+import { Button, Icon, Label } from "@stellar/design-system";
 
 import { arrayItem } from "@/helpers/arrayItem";
 
 import { TextPicker } from "@/components/FormElements/TextPicker";
 import { Box } from "@/components/layout/Box";
+import { InputSideElement } from "@/components/InputSideElement";
 
 type Values = string[];
 
@@ -18,7 +19,6 @@ type MultiPickerProps = {
   validate: (...args: any[]) => any;
   value: Values;
   autocomplete?: React.HTMLInputAutoCompleteAttribute;
-  rightElement?: React.ReactNode;
   buttonLabel?: string;
   limit?: number;
 };
@@ -32,7 +32,6 @@ export const MultiPicker = ({
   validate,
   value,
   autocomplete,
-  rightElement,
   buttonLabel = "Add additional",
   limit,
 }: MultiPickerProps) => {
@@ -62,7 +61,20 @@ export const MultiPicker = ({
                   error={errorMessage}
                   placeholder={placeholder}
                   autocomplete={autocomplete}
-                  rightElement={rightElement}
+                  rightElement={
+                    index !== 0 ? (
+                      <InputSideElement
+                        variant="button"
+                        onClick={() => {
+                          const val = arrayItem.delete(value, index);
+                          return onChange([...val]);
+                        }}
+                        placement="right"
+                        icon={<Icon.Trash01 />}
+                        addlClassName="MultiPicker__delete"
+                      />
+                    ) : null
+                  }
                 />
               );
             })
@@ -72,7 +84,7 @@ export const MultiPicker = ({
         <Button
           disabled={value.length === limit}
           size="md"
-          variant="secondary"
+          variant="tertiary"
           onClick={(e) => {
             e.preventDefault();
             onChange([...value, ""]);

@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, Link, Text, Icon } from "@stellar/design-system";
+import { Card, Link, Text, Icon, Logo } from "@stellar/design-system";
 
 import { NextLink } from "@/components/NextLink";
 import { LayoutContentContainer } from "@/components/layout/LayoutContentContainer";
@@ -9,6 +9,7 @@ import { SdsLink } from "@/components/SdsLink";
 import { Box } from "@/components/layout/Box";
 
 import { Routes } from "@/constants/routes";
+import { GITHUB_URL } from "@/constants/settings";
 import { openUrl } from "@/helpers/openUrl";
 
 export default function Introduction() {
@@ -29,13 +30,12 @@ export default function Introduction() {
         "Tools, like the Stellar CLI, for reading and interacting with smart contracts on the Stellar Network",
       buttonLabel: "See tools",
       buttonIcon: undefined,
-      buttonAction: () =>
-        openUrl("https://developers.stellar.org/docs/tools/sdks"),
+      buttonAction: () => openUrl("https://developers.stellar.org/docs/tools"),
     },
     {
-      id: "stellar-rpc",
-      title: "Stellar RPC",
-      description: "Learn about the Stellar RPC, a RPC gateway to Stellar",
+      id: "soroban-rpc",
+      title: "Soroban RPC",
+      description: "Learn about the Soroban RPC, a RPC gateway to Stellar",
       buttonLabel: "Go to docs",
       buttonIcon: <Icon.LinkExternal01 />,
       buttonAction: () =>
@@ -107,9 +107,20 @@ export default function Introduction() {
           </SdsLink>
         </Box>
 
-        {process.env.NEXT_PUBLIC_COMMIT_HASH ? (
-          <div>{`Commit hash: ${process.env.NEXT_PUBLIC_COMMIT_HASH}`}</div>
-        ) : null}
+        <Box gap="sm" direction="row">
+          <>
+            {process.env.NEXT_PUBLIC_COMMIT_HASH ? (
+              <div>{`Commit hash: ${process.env.NEXT_PUBLIC_COMMIT_HASH}`}</div>
+            ) : null}
+
+            <SdsLink
+              addlClassName="Link--withLogo"
+              href={GITHUB_URL}
+              variant="secondary"
+              icon={<Logo.Github />}
+            />
+          </>
+        </Box>
       </div>
     </LayoutContentContainer>
   );

@@ -13,7 +13,7 @@ test.describe("Introduction Page", () => {
     await expect(page.locator("h2")).toHaveText([
       "Stellar Quest",
       "Developer Tools",
-      "Stellar RPC",
+      "Soroban RPC",
       "Horizon",
     ]);
   });

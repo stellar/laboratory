@@ -57,7 +57,7 @@
     transform: none;
     display: none;
     opacity: 0;
-    min-width: pxToRem(320px);
+    min-width: pxToRem(360px);
 
     &[data-is-active="true"] {
       display: block;
