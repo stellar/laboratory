@@ -68,7 +68,7 @@ export default function ToXdr() {
           <Textarea
             id="to-xdr-json"
             fieldSize="md"
-            label="Transaction JSON"
+            label="JSON"
             rows={10}
             hasCopyButton
             value={xdr.jsonString}
@@ -110,7 +110,7 @@ export default function ToXdr() {
             {jsonXdrEncoded?.xdrString ? (
               <XdrPicker
                 id="to-xdr-encoded"
-                label="Transaction XDR"
+                label="Base-64 encoded XDR"
                 value={jsonXdrEncoded.xdrString}
                 hasCopyButton
                 readOnly
