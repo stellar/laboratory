@@ -16,6 +16,7 @@ import { useStore } from "@/store/useStore";
 import { txHelper } from "@/helpers/txHelper";
 
 import { validate } from "@/validate";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { Box } from "@/components/layout/Box";
 import { MultiPicker } from "@/components/FormElements/MultiPicker";
@@ -167,12 +168,27 @@ export const Overview = () => {
       if (hardwareSign) {
         updateHardWalletSigs(hardwareSign);
         setHardwareSigSuccess(true);
+
+        trackEvent(TrackingEvent.TRANSACTION_SIGN_HARDWARE_SUCCESS, {
+          wallet: selectedHardware,
+          network: network.id,
+        });
       } else if (hardwareSignError) {
         setHardwareSigErrorMsg(hardwareSignError);
+
+        trackEvent(TrackingEvent.TRANSACTION_SIGN_HARDWARE_ERROR, {
+          wallet: selectedHardware,
+          network: network.id,
+        });
       }
     } catch (err) {
       setIsLoading(false);
       setHardwareSigErrorMsg(`An unexpected error occurred: ${err}`);
+
+      trackEvent(TrackingEvent.TRANSACTION_SIGN_HARDWARE_ERROR, {
+        wallet: selectedHardware,
+        network: network.id,
+      });
     }
   };
 
@@ -220,6 +236,7 @@ export const Overview = () => {
             iconPosition="right"
             onClick={() => {
               resetSign();
+              trackEvent(TrackingEvent.TRANSACTION_SIGN_CLEAR);
             }}
           >
             Clear and import new
@@ -292,7 +309,10 @@ export const Overview = () => {
               <Button
                 size="md"
                 variant="tertiary"
-                onClick={() => addSignature()}
+                onClick={() => {
+                  addSignature();
+                  trackEvent(TrackingEvent.TRANSACTION_SIGN_SIGNATURE_ADD);
+                }}
               >
                 Add signature
               </Button>
@@ -368,19 +388,38 @@ export const Overview = () => {
                     }
                     size="md"
                     variant="secondary"
-                    onClick={() =>
+                    onClick={() => {
                       signTransaction(
                         sign.importXdr,
                         secretInputs,
                         network.passphrase,
                         sign.hardWalletSigs,
-                      )
-                    }
+                      );
+
+                      trackEvent(TrackingEvent.TRANSACTION_SIGN_TRANSACTION, {
+                        network: network.id,
+                      });
+                    }}
                   >
                     Sign transaction
                   </Button>
 
-                  <SignWithWallet setSignError={setSignError} />
+                  <SignWithWallet
+                    setSignError={setSignError}
+                    onSuccess={() => {
+                      trackEvent(
+                        TrackingEvent.TRANSACTION_SIGN_WALLET_SUCCESS,
+                        {
+                          network: network.id,
+                        },
+                      );
+                    }}
+                    onError={() => {
+                      trackEvent(TrackingEvent.TRANSACTION_SIGN_WALLET_ERROR, {
+                        network: network.id,
+                      });
+                    }}
+                  />
                 </div>
               </div>
               <div>
