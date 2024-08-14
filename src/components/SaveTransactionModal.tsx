@@ -4,15 +4,20 @@ import { arrayItem } from "@/helpers/arrayItem";
 import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransactions";
 import { getSaveItemNetwork } from "@/helpers/getSaveItemNetwork";
 import { useStore } from "@/store/useStore";
+import { SavedTransactionPage } from "@/types/types";
 
 type SaveTransactionModalProps = (
   | {
       type: "save";
       txnTimestamp?: undefined;
+      page: SavedTransactionPage;
+      xdr: string;
     }
   | {
       type: "editName";
       txnTimestamp: number | undefined;
+      page?: undefined;
+      xdr?: undefined;
     }
 ) & {
   isVisible: boolean;
@@ -21,6 +26,8 @@ type SaveTransactionModalProps = (
 
 export const SaveTransactionModal = ({
   type,
+  page,
+  xdr,
   isVisible,
   txnTimestamp,
   onClose,
@@ -119,9 +126,15 @@ export const SaveTransactionModal = ({
                 arrayItem.add(allTxns, {
                   timestamp: Date.now(),
                   network: getSaveItemNetwork(network),
-                  params: transaction.build.params,
-                  operations: transaction.build.operations,
                   name: savedTxnName,
+                  page,
+                  xdr,
+                  ...(page === "build"
+                    ? {
+                        params: transaction.build.params,
+                        operations: transaction.build.operations,
+                      }
+                    : {}),
                 }),
               );
 

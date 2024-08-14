@@ -36,7 +36,7 @@ import {
 
 export const Operations = () => {
   const { transaction } = useStore();
-  const { operations: txnOperations } = transaction.build;
+  const { operations: txnOperations, xdr: txnXdr } = transaction.build;
   const {
     updateBuildOperations,
     updateBuildSingleOperation,
@@ -1053,6 +1053,7 @@ export const Operations = () => {
                   setIsSaveTxnModalVisible(true);
                 }}
                 title="Save transaction"
+                disabled={!txnXdr}
               ></Button>
             </Box>
 
@@ -1099,10 +1100,12 @@ export const Operations = () => {
 
       <SaveTransactionModal
         type="save"
+        page="build"
         isVisible={isSaveTxnModalVisible}
         onClose={() => {
           setIsSaveTxnModalVisible(false);
         }}
+        xdr={txnXdr}
       />
     </Box>
   );

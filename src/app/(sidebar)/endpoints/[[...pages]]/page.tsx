@@ -28,6 +28,7 @@ import { parseJsonString } from "@/helpers/parseJsonString";
 import { getSaveItemNetwork } from "@/helpers/getSaveItemNetwork";
 import { localStorageSavedEndpointsHorizon } from "@/helpers/localStorageSavedEndpointsHorizon";
 import { arrayItem } from "@/helpers/arrayItem";
+import { delayedAction } from "@/helpers/delayedAction";
 
 import { Routes } from "@/constants/routes";
 import {
@@ -549,10 +550,12 @@ export default function Endpoints() {
       resetQuery();
     }
 
-    const t = setTimeout(() => {
-      refetch();
-      clearTimeout(t);
-    }, delay);
+    delayedAction({
+      action: () => {
+        refetch();
+      },
+      delay,
+    });
   };
 
   const renderPostPayload = () => {

@@ -1,11 +1,16 @@
 "use client";
 
-import { Button, Card, Text } from "@stellar/design-system";
+import { useState } from "react";
+import { Button, Card, Icon, Text } from "@stellar/design-system";
 import { SorobanRpc } from "@stellar/stellar-sdk";
+import { useRouter } from "next/navigation";
 
 import { useStore } from "@/store/useStore";
 
 import * as StellarXdr from "@/helpers/StellarXdr";
+import { delayedAction } from "@/helpers/delayedAction";
+import { Routes } from "@/constants/routes";
+import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
@@ -16,14 +21,18 @@ import { PrettyJson } from "@/components/PrettyJson";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { TxResponse } from "@/components/TxResponse";
+import { SaveTransactionModal } from "@/components/SaveTransactionModal";
 
 import { RpcErrorResponse } from "./components/ErrorResponse";
 
 export default function SubmitTransaction() {
-  const { network, xdr } = useStore();
+  const { network, xdr, transaction } = useStore();
   const { blob, updateXdrBlob } = xdr;
 
   const isXdrInit = useIsXdrInit();
+  const router = useRouter();
+
+  const [isSaveTxnModalVisible, setIsSaveTxnModalVisible] = useState(false);
 
   const {
     data: submitRpcResponse,
@@ -50,8 +59,24 @@ export default function SubmitTransaction() {
     });
   };
 
+  const onSimulateTx = () => {
+    transaction.updateSimulateTriggerOnLaunch(true);
+
+    // Adding delay to make sure the store will update
+    delayedAction({
+      action: () => {
+        router.push(Routes.SIMULATE_TRANSACTION);
+      },
+      delay: 200,
+    });
+  };
+
+  const onSaveTx = () => {
+    setIsSaveTxnModalVisible(true);
+  };
+
   const getXdrJson = () => {
-    const xdrType = "TransactionEnvelope";
+    const xdrType = XDR_TYPE_TRANSACTION_ENVELOPE;
 
     if (!(isXdrInit && blob)) {
       return null;
@@ -73,6 +98,8 @@ export default function SubmitTransaction() {
   };
 
   const xdrJson = getXdrJson();
+
+  const isSubmitDisabled = !network.rpcUrl || !blob || Boolean(xdrJson?.error);
 
   return (
     <Box gap="md">
@@ -99,17 +126,40 @@ export default function SubmitTransaction() {
             hasCopyButton
           />
 
-          <div className="SignTx__CTA">
-            <Button
-              disabled={!network.rpcUrl || !blob || Boolean(xdrJson?.error)}
-              isLoading={isSubmitRpcPending}
-              size="md"
-              variant={"secondary"}
-              onClick={onSubmitRpc}
-            >
-              Submit transaction
-            </Button>
-          </div>
+          <Box gap="lg" direction="row" align="center" justify="space-between">
+            <div>
+              <Button
+                disabled={isSubmitDisabled}
+                isLoading={isSubmitRpcPending}
+                size="md"
+                variant={"secondary"}
+                onClick={onSubmitRpc}
+              >
+                Submit transaction
+              </Button>
+            </div>
+
+            <Box gap="sm" direction="row" align="center" justify="end">
+              <Button
+                disabled={isSubmitDisabled || isSubmitRpcPending}
+                size="md"
+                variant={"tertiary"}
+                onClick={onSimulateTx}
+              >
+                Simulate transaction
+              </Button>
+
+              <Button
+                disabled={isSubmitDisabled || isSubmitRpcPending}
+                size="md"
+                variant={"tertiary"}
+                onClick={onSaveTx}
+                icon={<Icon.Save01 />}
+              >
+                Save transaction
+              </Button>
+            </Box>
+          </Box>
 
           <>
             {xdrJson?.jsonString ? (
@@ -158,6 +208,16 @@ export default function SubmitTransaction() {
         ) : null}
       </>
       <>{submitRpcError ? <RpcErrorResponse error={submitRpcError} /> : null}</>
+
+      <SaveTransactionModal
+        type="save"
+        page="submit"
+        isVisible={isSaveTxnModalVisible}
+        onClose={() => {
+          setIsSaveTxnModalVisible(false);
+        }}
+        xdr={blob}
+      />
     </Box>
   );
 }

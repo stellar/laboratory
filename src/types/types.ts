@@ -149,10 +149,14 @@ export type LedgerErrorResponse = {
 export type SavedTransaction = {
   timestamp: number;
   network: LocalStorageSavedNetwork;
-  params: TransactionBuildParams;
-  operations: TxnOperation[];
+  params?: TransactionBuildParams;
+  operations?: TxnOperation[];
+  xdr: string;
   name: string;
+  page: SavedTransactionPage;
 };
+
+export type SavedTransactionPage = "build" | "sign" | "simulate" | "submit";
 
 export type SubmitRpcResponse = {
   hash: string;

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { Button } from "@stellar/design-system";
 import { stringify } from "lossless-json";
 import { StrKey, TransactionBuilder } from "@stellar/stellar-sdk";
@@ -24,6 +25,7 @@ import {
   OPERATION_SET_FLAGS,
   OPERATION_TRUSTLINE_CLEAR_FLAGS,
   OPERATION_TRUSTLINE_SET_FLAGS,
+  XDR_TYPE_TRANSACTION_ENVELOPE,
 } from "@/constants/settings";
 
 import {
@@ -47,9 +49,19 @@ export const TransactionXdr = () => {
     operations: txnOperations,
     isValid,
   } = transaction.build;
-  const { updateSignActiveView, updateSignImportXdr } = transaction;
+  const { updateSignActiveView, updateSignImportXdr, updateBuildXdr } =
+    transaction;
 
   const isXdrInit = useIsXdrInit();
+
+  useEffect(() => {
+    // Reset transaction.xdr if the transaction is not valid
+    if (!(isValid.params && isValid.operations)) {
+      updateBuildXdr("");
+    }
+    // Not including updateBuildXdr
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isValid.params, isValid.operations]);
 
   if (!(isXdrInit && isValid.params && isValid.operations)) {
     return null;
@@ -477,11 +489,19 @@ export const TransactionXdr = () => {
       // TODO: Temp fix until Stellar XDR supports strings for big numbers
       // const jsonString = JSON.stringify(txnJson);
       const jsonString = stringify(txnJson);
+      const txnXdr = StellarXdr.encode(
+        XDR_TYPE_TRANSACTION_ENVELOPE,
+        jsonString || "",
+      );
+
+      updateBuildXdr(txnXdr);
 
       return {
-        xdr: StellarXdr.encode("TransactionEnvelope", jsonString || ""),
+        xdr: txnXdr,
       };
     } catch (e) {
+      updateBuildXdr("");
+
       return { error: `${e}` };
     }
   };

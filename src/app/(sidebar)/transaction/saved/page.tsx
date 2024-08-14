@@ -16,10 +16,10 @@ import { useStore } from "@/store/useStore";
 import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransactions";
 import { arrayItem } from "@/helpers/arrayItem";
 
-import { SavedTransaction } from "@/types/types";
+import { SavedTransaction, SavedTransactionPage } from "@/types/types";
 
 export default function SavedTransactions() {
-  const { network, transaction } = useStore();
+  const { network, transaction, xdr } = useStore();
   const router = useRouter();
 
   const [savedTxns, setSavedTxns] = useState<SavedTransaction[]>([]);
@@ -38,16 +38,71 @@ export default function SavedTransactions() {
     updateSavedTxns();
   }, [updateSavedTxns]);
 
-  const handleViewInBuilder = (timestamp: number) => {
-    const found = localStorageSavedTransactions
+  const findLocalStorageTx = (timestamp: number) => {
+    return localStorageSavedTransactions
       .get()
       .find((t) => t.timestamp === timestamp);
+  };
+
+  const handleViewInBuilder = (timestamp: number) => {
+    const found = findLocalStorageTx(timestamp);
 
     if (found) {
       router.push(Routes.BUILD_TRANSACTION);
       transaction.updateBuildActiveTab("params");
-      transaction.setBuildParams(found.params);
-      transaction.updateBuildOperations(found.operations);
+
+      if (found.params) {
+        transaction.setBuildParams(found.params);
+      }
+
+      if (found.operations) {
+        transaction.updateBuildOperations(found.operations);
+      }
+
+      if (found.xdr) {
+        transaction.updateBuildXdr(found.xdr);
+      }
+    }
+  };
+
+  const handleViewInSubmitter = (timestamp: number) => {
+    const found = findLocalStorageTx(timestamp);
+
+    if (found) {
+      router.push(Routes.SUBMIT_TRANSACTION);
+
+      if (found.xdr) {
+        xdr.updateXdrBlob(found.xdr);
+      }
+    }
+  };
+
+  const renderActionButton = (id: number, page: SavedTransactionPage) => {
+    switch (page) {
+      case "build":
+        return (
+          <Button
+            size="md"
+            variant="tertiary"
+            type="button"
+            onClick={() => handleViewInBuilder(id)}
+          >
+            View in builder
+          </Button>
+        );
+      case "submit":
+        return (
+          <Button
+            size="md"
+            variant="tertiary"
+            type="button"
+            onClick={() => handleViewInSubmitter(id)}
+          >
+            View in submitter
+          </Button>
+        );
+      default:
+        return null;
     }
   };
 
@@ -81,7 +136,7 @@ export default function SavedTransactions() {
         />
 
         <>
-          {txn.operations.length === 0
+          {!txn.operations || txn.operations.length === 0
             ? null
             : txn.operations.map((o, idx) => (
                 <Input
@@ -100,14 +155,7 @@ export default function SavedTransactions() {
 
         <Box gap="lg" direction="row" align="center" justify="space-between">
           <Box gap="sm" direction="row">
-            <Button
-              size="md"
-              variant="tertiary"
-              type="button"
-              onClick={() => handleViewInBuilder(txn.timestamp)}
-            >
-              View in builder
-            </Button>
+            {renderActionButton(txn.timestamp, txn.page)}
           </Box>
 
           <Box gap="sm" direction="row" align="center" justify="end">

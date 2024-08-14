@@ -8,6 +8,7 @@ import {
   xdr,
 } from "@stellar/stellar-sdk";
 
+import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
 import { sanitizeObject } from "@/helpers/sanitizeObject";
 import {
   AnyObject,
@@ -104,6 +105,7 @@ export interface Store {
       activeTab: string;
       params: TransactionBuildParams;
       operations: TxnOperation[];
+      xdr: string;
       isValid: {
         params: boolean;
         operations: boolean;
@@ -119,12 +121,14 @@ export interface Store {
     };
     simulate: {
       instructionLeeway?: string;
+      triggerOnLaunch?: boolean;
     };
     feeBump: FeeBumpParams;
     // [Transaction] Build Transaction actions
     updateBuildActiveTab: (tabId: string) => void;
     updateBuildParams: (params: TransactionBuildParamsObj) => void;
     updateBuildOperations: (operations: TxnOperation[]) => void;
+    updateBuildXdr: (xdr: string) => void;
     updateBuildSingleOperation: (
       index: number,
       operation: TxnOperation,
@@ -152,6 +156,7 @@ export interface Store {
     resetBaseFee: () => void;
     // [Transaction] Simulate Transaction actions
     updateSimulateInstructionLeeway: (instrLeeway?: string) => void;
+    updateSimulateTriggerOnLaunch: (trigger: boolean) => void;
   };
 
   // XDR
@@ -199,6 +204,7 @@ const initTransactionState = {
     activeTab: "params",
     params: initTransactionParamsState,
     operations: [],
+    xdr: "",
     isValid: {
       params: false,
       operations: false,
@@ -214,6 +220,7 @@ const initTransactionState = {
   },
   simulate: {
     instructionLeeway: undefined,
+    triggerOnLaunch: undefined,
   },
   feeBump: {
     source_account: "",
@@ -234,7 +241,7 @@ const initAccountState = {
 const initXdrState = {
   blob: "",
   jsonString: "",
-  type: "TransactionEnvelope",
+  type: XDR_TYPE_TRANSACTION_ENVELOPE,
 };
 
 // Store
@@ -365,6 +372,10 @@ export const createStore = (options: CreateStoreOptions) =>
             set((state) => {
               state.transaction.build.operations = operations;
             }),
+          updateBuildXdr: (xdr) =>
+            set((state) => {
+              state.transaction.build.xdr = xdr;
+            }),
           updateBuildSingleOperation: (index, operation) =>
             set((state) => {
               state.transaction.build.operations[index] = operation;
@@ -436,6 +447,10 @@ export const createStore = (options: CreateStoreOptions) =>
             set((state) => {
               state.transaction.simulate.instructionLeeway = instrLeeway;
             }),
+          updateSimulateTriggerOnLaunch: (trigger: boolean) =>
+            set((state) => {
+              state.transaction.simulate.triggerOnLaunch = trigger;
+            }),
           updateFeeBumpParams: (params: FeeBumpParamsObj) =>
             set((state) => {
               state.transaction.feeBump = {
@@ -487,7 +502,13 @@ export const createStore = (options: CreateStoreOptions) =>
               saved: true,
             },
             transaction: {
-              build: true,
+              build: {
+                activeTab: true,
+                params: true,
+                operations: true,
+                isValid: true,
+                xdr: false,
+              },
               sign: {
                 activeView: true,
                 importXdr: true,

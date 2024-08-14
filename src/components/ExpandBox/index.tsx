@@ -1,4 +1,5 @@
 import React, { useLayoutEffect, useState } from "react";
+import { delayedAction } from "@/helpers/delayedAction";
 import "./styles.scss";
 
 export const ExpandBox = ({
@@ -21,10 +22,12 @@ export const ExpandBox = ({
   // We need a bit of delay to enable overflow visible when the section is expanded
   useLayoutEffect(() => {
     if (isExpanded) {
-      const t = setTimeout(() => {
-        setIsOpen(true);
-        clearTimeout(t);
-      }, 200);
+      delayedAction({
+        action: () => {
+          setIsOpen(true);
+        },
+        delay: 200,
+      });
     } else {
       setIsOpen(false);
     }
