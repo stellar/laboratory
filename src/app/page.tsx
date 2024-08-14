@@ -12,6 +12,11 @@ import { Routes } from "@/constants/routes";
 import { openUrl } from "@/helpers/openUrl";
 
 export default function Introduction() {
+  console.log(
+    ">>> 2: process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY ",
+    process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY,
+  );
+
   const infoCards = [
     {
       id: "stellar-quest",

@@ -3,11 +3,11 @@ import { AnyObject } from "@/types/types";
 
 export const initTracking = () => {
   console.log(
-    ">>> process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY ",
+    ">>> 1: process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY ",
     process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY,
   );
   console.log(
-    ">>> process.env.NEXT_PUBLIC_COMMIT_HASH ",
+    ">>> 1: process.env.NEXT_PUBLIC_COMMIT_HASH ",
     process.env.NEXT_PUBLIC_COMMIT_HASH,
   );
 
