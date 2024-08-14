@@ -92,7 +92,7 @@ export default function ViewXdr() {
         <Box gap="lg">
           <XdrPicker
             id="view-xdr-blob"
-            label="Transaction XDR"
+            label="Base-64 encoded XDR"
             value={xdr.blob}
             hasCopyButton
             note={
