@@ -35,8 +35,8 @@ export const EndpointsLandingPage = () => {
           </Text>
 
           <Text size="sm" as="p">
-            The Stellar Laboratory is a set of tools that enables people to try
-            out and learn about the Stellar network. The Laboratory can{" "}
+            The Stellar Lab is a set of tools that enables people to try out and
+            learn about the Stellar network. The Lab can{" "}
             <NextLink href={Routes.BUILD_TRANSACTION} sds-variant="primary">
               build transactions
             </NextLink>
@@ -48,9 +48,9 @@ export const EndpointsLandingPage = () => {
             <NextLink href={Routes.SUBMIT_TRANSACTION} sds-variant="primary">
               submit them to the network
             </NextLink>
-            . In this section of the Laboratory, you can explore the various
-            endpoints from the RPC and Horizon, make requests to these
-            endpoints, and save them for future use.
+            . In this section of the Lab, you can explore the various endpoints
+            from the RPC and Horizon, make requests to these endpoints, and save
+            them for future use.
           </Text>
 
           <Text size="sm" as="p">
