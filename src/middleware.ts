@@ -12,7 +12,7 @@ export function middleware(request: NextRequest) {
         ? `'nonce-${nonce}'`
         : `'unsafe-inline'`
     };
-    img-src 'self' blob: data:;
+    img-src 'self' https://stellar.creit.tech/wallet-icons/ blob: data:;
     connect-src 'self' https://9sl3dhr1twv1.statuspage.io/api/v2/ *.stellar.org;
     font-src 'self' https://fonts.gstatic.com/;
     object-src 'none';

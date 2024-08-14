@@ -191,6 +191,39 @@ export type SubmitRpcError = {
   };
 };
 
+export type SubmitRpcResponse = {
+  hash: string;
+  result: SorobanRpc.Api.GetSuccessfulTransactionResponse;
+  operationCount: number;
+  fee: string;
+};
+
+export type SubmitRpcErrorStatus =
+  | "TIMEOUT"
+  | "FAILED"
+  | "DUPLICATE"
+  | "TRY_AGAIN_LATER"
+  | "ERROR";
+
+export type SubmitRpcError = {
+  status: SubmitRpcErrorStatus;
+  result: {
+    status: SubmitRpcErrorStatus;
+    latestLedger: number;
+    latestLedgerCloseTime: number;
+    hash?: string;
+    ledger?: number;
+    createdAt?: number;
+    applicationOrder?: number;
+    feeBump?: boolean;
+    envelopeXdr?: xdr.TransactionEnvelope;
+    resultXdr?: xdr.TransactionResult;
+    resultMetaXdr?: xdr.TransactionMeta;
+    errorResult?: xdr.TransactionResult;
+    diagnosticEvents?: xdr.DiagnosticEvent[];
+  };
+};
+
 // =============================================================================
 // Component
 // =============================================================================

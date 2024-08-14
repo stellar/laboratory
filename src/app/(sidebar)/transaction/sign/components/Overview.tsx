@@ -128,10 +128,6 @@ export const Overview = () => {
     }
   };
 
-  const addSignature = () => {
-    setSecretInputs([...secretInputs, ""]);
-  };
-
   const signTransaction = (
     txXdr: string,
     signers: string[],
@@ -321,16 +317,8 @@ export const Overview = () => {
                 validate={validate.getSecretKeyError}
                 placeholder="Secret key (starting with S) or hash preimage (in hex)"
                 autocomplete="off"
+                buttonLabel="Add signature"
               />
-            </div>
-            <div>
-              <Button
-                size="md"
-                variant="tertiary"
-                onClick={() => addSignature()}
-              >
-                Add signature
-              </Button>
             </div>
             <div className="Input__buttons full-width">
               <Box gap="sm" direction="row">
