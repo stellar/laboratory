@@ -7,8 +7,16 @@ export const initTracking = () => {
     process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY,
   );
   console.log(
+    ">>> 1: global.process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY ",
+    global.process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY,
+  );
+  console.log(
     ">>> 1: process.env.NEXT_PUBLIC_COMMIT_HASH ",
     process.env.NEXT_PUBLIC_COMMIT_HASH,
+  );
+  console.log(
+    ">>> 1: global.process.env.NEXT_PUBLIC_COMMIT_HASH ",
+    global.process.env.NEXT_PUBLIC_COMMIT_HASH,
   );
 
   if (!process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY) {
