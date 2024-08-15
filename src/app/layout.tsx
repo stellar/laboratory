@@ -11,10 +11,11 @@ import "@/styles/globals.scss";
 // Needed for CSP
 export const dynamic = "force-dynamic";
 
-// TODO: update metadata
 export const metadata: Metadata = {
-  title: "Laboratory - Stellar",
-  description: "",
+  title:
+    "Explore Stellar Lab: Tools, Learning, and Developer Resources for the Stellar Network",
+  description:
+    "Explore Stellar Lab: Build, sign, and submit transactions. Access tools, Stellar RPC, Horizon, and more. Enhance your skills with Stellar Quest.",
 };
 
 export default function RootLayout({
