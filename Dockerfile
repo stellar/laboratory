@@ -8,6 +8,8 @@ COPY . .
 # Passing env var to be used on client side
 ARG NEXT_PUBLIC_COMMIT_HASH
 
+ARG NEXT_PUBLIC_AMPLITUDE_API_KEY_TEST dockerfile123
+
 RUN yarn install
 RUN yarn build
 
