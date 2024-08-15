@@ -6,7 +6,23 @@ import { AnyObject } from "@/types/types";
 
 import "./styles.scss";
 
-export const PrettyJson = ({ json }: { json: AnyObject }) => {
+export type CustomKeyValueLinkMap = {
+  [key: string]: {
+    text?: string;
+    action: (value: string, key?: string) => void;
+    condition?: (val: string) => boolean;
+  };
+};
+
+type PrettyJsonProps = {
+  json: AnyObject;
+  customKeyValueLinkMap?: CustomKeyValueLinkMap;
+};
+
+export const PrettyJson = ({
+  json,
+  customKeyValueLinkMap,
+}: PrettyJsonProps) => {
   if (typeof json !== "object") {
     return null;
   }
@@ -44,6 +60,30 @@ export const PrettyJson = ({ json }: { json: AnyObject }) => {
   );
 
   const render = (item: any, parentKey?: string): React.ReactElement => {
+    const renderValue = (item: any, key: string) => {
+      const custom = customKeyValueLinkMap?.[key];
+
+      if (custom) {
+        if (custom.condition && !custom.condition(item)) {
+          return render(item, key);
+        }
+
+        return (
+          <SdsLink
+            href=""
+            onClick={(e) => {
+              e.preventDefault();
+              custom.action(item, key);
+            }}
+          >
+            {custom.text || item}
+          </SdsLink>
+        );
+      }
+
+      return render(item, key);
+    };
+
     switch (typeof item) {
       case "object":
         return (
@@ -166,7 +206,7 @@ export const PrettyJson = ({ json }: { json: AnyObject }) => {
                   <div className="PrettyJson__nested">
                     <Key>{key}</Key>
                   </div>
-                  {render(value, key)}
+                  {renderValue(value, key)}
                 </div>
               );
             })}
