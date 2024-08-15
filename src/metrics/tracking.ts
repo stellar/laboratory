@@ -11,6 +11,10 @@ export const initTracking = () => {
     process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY_TEST,
   );
   console.log(
+    ">>> process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY_TEST_ENV: ",
+    process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY_TEST_ENV,
+  );
+  console.log(
     ">>> process.env.NEXT_PUBLIC_COMMIT_HASH ",
     process.env.NEXT_PUBLIC_COMMIT_HASH,
   );
