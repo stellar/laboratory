@@ -889,7 +889,13 @@ export default function Endpoints() {
                 <div
                   className={`PageBody__content PageBody__scrollable ${endpointData.isError ? "PageBody__content--error" : ""}`}
                 >
-                  <EndpointsJsonResponse json={endpointData.json} />
+                  <EndpointsJsonResponse
+                    json={endpointData.json}
+                    onReset={() => {
+                      resetQuery();
+                      setFormError({});
+                    }}
+                  />
                 </div>
 
                 <div className="PageFooter">
