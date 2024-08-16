@@ -235,7 +235,7 @@ const signWithTrezor = async ({
 }> => {
   TrezorConnect.manifest({
     email: "accounts+trezor@stellar.org",
-    appUrl: "https://laboratory.stellar.org/",
+    appUrl: "https://lab.stellar.org/",
   });
 
   try {

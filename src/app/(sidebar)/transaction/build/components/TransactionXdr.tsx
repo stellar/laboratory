@@ -548,7 +548,7 @@ export const TransactionXdr = () => {
             <>
               In order for the transaction to make it into the ledger, a
               transaction must be successfully signed and submitted to the
-              network. The laboratory provides the{" "}
+              network. The Lab provides the{" "}
               <SdsLink href={Routes.SIGN_TRANSACTION}>
                 Transaction Signer
               </SdsLink>{" "}

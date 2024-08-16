@@ -277,7 +277,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
       data_value: {
         note: "If empty, will delete the data entry named in this operation.",
         // Use "note_add" to show another note below "note"
-        note_add: "Note: The laboratory only supports strings.",
+        note_add: "Note: The Lab only supports strings.",
       },
     },
   },

@@ -6,7 +6,7 @@ test.describe("Introduction Page", () => {
   });
 
   test("Loads", async ({ page }) => {
-    await expect(page.locator("h1")).toHaveText("Stellar Laboratory");
+    await expect(page.locator("h1")).toHaveText("Stellar Lab");
   });
 
   test("Renders info cards", async ({ page }) => {
