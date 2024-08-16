@@ -45,7 +45,6 @@ export const EndpointsJsonResponse = ({
       xdr.updateXdrType(xdrType);
 
       router.push(Routes.VIEW_XDR);
-      onReset();
     }
   };
 
