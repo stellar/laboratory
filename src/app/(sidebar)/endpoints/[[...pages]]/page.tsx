@@ -893,7 +893,6 @@ export default function Endpoints() {
                     json={endpointData.json}
                     onReset={() => {
                       resetQuery();
-                      setFormError({});
                     }}
                   />
                 </div>
