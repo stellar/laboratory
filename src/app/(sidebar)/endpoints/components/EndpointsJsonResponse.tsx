@@ -20,7 +20,6 @@ export const EndpointsJsonResponse = ({ json }: { json: AnyObject }) => {
       .replace(END_CHAR, "")
       .split(SPLIT_CHAR)
       .map((i) => {
-        // Trigger PR preview
         // Remove existing Endpoints or XDR params
         if (i.startsWith("endpoints$") || i.startsWith("xdr$")) {
           return "";
