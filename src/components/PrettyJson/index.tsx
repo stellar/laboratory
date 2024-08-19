@@ -9,7 +9,7 @@ import "./styles.scss";
 export type CustomKeyValueLinkMap = {
   [key: string]: {
     text?: string;
-    action: (value: string, key?: string) => void;
+    getHref: (value: string, key?: string) => string;
     condition?: (val: string) => boolean;
   };
 };
@@ -68,14 +68,10 @@ export const PrettyJson = ({
           return render(item, key);
         }
 
+        const href = custom.getHref(item, key);
+
         return (
-          <SdsLink
-            href=""
-            onClick={(e) => {
-              e.preventDefault();
-              custom.action(item, key);
-            }}
-          >
+          <SdsLink href={href || item} {...(href ? { target: "_blank" } : {})}>
             {custom.text || item}
           </SdsLink>
         );

@@ -1,21 +1,45 @@
-import { useRouter } from "next/navigation";
-import { CustomKeyValueLinkMap, PrettyJson } from "@/components/PrettyJson";
+import { stringify } from "zustand-querystring";
 
-import { useStore } from "@/store/useStore";
+import { CustomKeyValueLinkMap, PrettyJson } from "@/components/PrettyJson";
 import { Routes } from "@/constants/routes";
-import { delayedAction } from "@/helpers/delayedAction";
 import { sanitizeArray } from "@/helpers/sanitizeArray";
+import { isEmptyObject } from "@/helpers/isEmptyObject";
+
 import { AnyObject } from "@/types/types";
 
-export const EndpointsJsonResponse = ({
-  json,
-  onReset,
-}: {
-  json: AnyObject;
-  onReset: () => void;
-}) => {
-  const { xdr, endpoints } = useStore();
-  const router = useRouter();
+export const EndpointsJsonResponse = ({ json }: { json: AnyObject }) => {
+  const buildHref = (route: Routes | null, params: AnyObject = {}) => {
+    if (!route) {
+      return "";
+    }
+
+    const SPLIT_CHAR = ";&";
+    const END_CHAR = ";;";
+
+    const storeParams = window.location.search
+      .replace(END_CHAR, "")
+      .split(SPLIT_CHAR)
+      .map((i) => {
+        // Remove existing Endpoints or XDR params
+        if (i.startsWith("endpoints$") || i.startsWith("xdr$")) {
+          return "";
+        }
+
+        return i;
+      });
+
+    // Add XDR params
+    if (route.startsWith("/xdr")) {
+      storeParams.push(`xdr$${stringify(params)}`);
+    }
+
+    // Add Endpoints params
+    if (route.startsWith("/endpoints") && !isEmptyObject(params)) {
+      storeParams.push(`endpoints$params$${stringify(params)}`);
+    }
+
+    return `${route}${sanitizeArray(storeParams).join(SPLIT_CHAR)}${END_CHAR}`;
+  };
 
   const handleLinkXdr = (val: string, key?: string) => {
     let xdrType = "";
@@ -41,27 +65,18 @@ export const EndpointsJsonResponse = ({
     }
 
     if (xdrType) {
-      xdr.updateXdrBlob(val);
-      xdr.updateXdrType(xdrType);
-
-      router.push(Routes.VIEW_XDR);
+      return buildHref(Routes.VIEW_XDR, { blob: val, type: xdrType });
     }
+
+    return "";
   };
 
   const handleLinkAccount = (val: string) => {
     if (val.length !== 56) {
-      return;
+      return "";
     }
 
-    router.push(Routes.ENDPOINTS_ACCOUNTS_SINGLE);
-    onReset();
-
-    delayedAction({
-      action: () => {
-        endpoints.setParams({ account_id: val });
-      },
-      delay: 200,
-    });
+    return buildHref(Routes.ENDPOINTS_ACCOUNTS_SINGLE, { account_id: val });
   };
 
   const parseUrl = (val: string) => {
@@ -86,7 +101,7 @@ export const EndpointsJsonResponse = ({
     const { paths, searchParams } = parseUrl(val);
 
     if (!paths) {
-      return;
+      return "";
     }
 
     // Get the route
@@ -301,62 +316,52 @@ export const EndpointsJsonResponse = ({
       }
     }
 
-    if (route) {
-      router.push(route);
-      onReset();
-
-      delayedAction({
-        action: () => {
-          endpoints.setParams(params);
-        },
-        delay: 200,
-      });
-    }
+    return buildHref(route, params);
   };
 
   const customKeyValueLinkAction: CustomKeyValueLinkMap = {
     // Account
     id: {
-      action: handleLinkAccount,
+      getHref: handleLinkAccount,
       condition: (val: string) => val.length === 56,
     },
     public_key: {
-      action: handleLinkAccount,
+      getHref: handleLinkAccount,
     },
     account_id: {
-      action: handleLinkAccount,
+      getHref: handleLinkAccount,
     },
     funder: {
-      action: handleLinkAccount,
+      getHref: handleLinkAccount,
     },
     account: {
-      action: handleLinkAccount,
+      getHref: handleLinkAccount,
     },
     source_account: {
-      action: handleLinkAccount,
+      getHref: handleLinkAccount,
     },
     destination_account: {
-      action: handleLinkAccount,
+      getHref: handleLinkAccount,
     },
     // XDR
     envelope_xdr: {
-      action: handleLinkXdr,
+      getHref: handleLinkXdr,
     },
     result_xdr: {
-      action: handleLinkXdr,
+      getHref: handleLinkXdr,
     },
     result_meta_xdr: {
-      action: handleLinkXdr,
+      getHref: handleLinkXdr,
     },
     fee_meta_xdr: {
-      action: handleLinkXdr,
+      getHref: handleLinkXdr,
     },
     header_xdr: {
-      action: handleLinkXdr,
+      getHref: handleLinkXdr,
     },
     // Link
     href: {
-      action: handleLinkHref,
+      getHref: handleLinkHref,
       condition: (val: string) => {
         const { paths } = parseUrl(val);
 
