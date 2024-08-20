@@ -63,8 +63,6 @@ export default function Endpoints() {
   const page = isRpcEndpoint ? rpcPage : horizonPage;
   const pageData = isRpcEndpoint ? rpcPage?.form : horizonPage?.form;
 
-  console.log("[pageData]", pageData);
-
   const requiredFields = sanitizeArray(
     pageData?.requiredParams?.split(",") || [],
   );
@@ -177,7 +175,10 @@ export default function Endpoints() {
         return {
           ...defaultRpcRequestBody,
           params: {
-            keys: params.tx ?? "",
+            keys:
+              (params.ledgerKeyEntries &&
+                JSON.parse(params.ledgerKeyEntries)) ??
+              [],
           },
         };
       }
@@ -677,8 +678,6 @@ export default function Endpoints() {
       ...urlParams.split(","),
     ]);
 
-    console.log("[allFields]: ", allFields);
-
     if (!pageData || (allFields.length === 0 && !isRpcEndpoint)) {
       return null;
     }
@@ -703,9 +702,6 @@ export default function Endpoints() {
                   resetQuery();
                 }
 
-                console.log("[page] storeValue: ", storeValue);
-                console.log("[page] value: ", value);
-
                 // Mapping custom value to template params
                 const mappedParams = pageData?.custom?.paramMapping
                   ? Object.entries(pageData.custom.paramMapping).reduce(
@@ -721,8 +717,6 @@ export default function Endpoints() {
                       {} as AnyObject,
                     )
                   : {};
-
-                console.log("[page] mappedParams: ", mappedParams);
 
                 updateParams({
                   [f]: storeValue,
@@ -799,6 +793,18 @@ export default function Endpoints() {
                         isEmptyObject(sanitizeObject(filtersObject || {}))
                           ? undefined
                           : JSON.stringify(filtersObject),
+                      );
+                    },
+                  });
+                case "ledgerKeyEntries":
+                  return component.render({
+                    value: params[f],
+                    error: formError[f],
+                    isRequired,
+                    onChange: (ledgerKeyXdr: string[]) => {
+                      handleChange(
+                        ledgerKeyXdr,
+                        ledgerKeyXdr ? JSON.stringify(ledgerKeyXdr) : undefined,
                       );
                     },
                   });

@@ -278,3 +278,10 @@ export type LedgerKeyEntryTypeProps =
   | "hash"
   | "configSettingID"
   | "keyHash";
+
+export type LedgerKeyFieldsType = {
+  id: LedgerKeyType;
+  label: string;
+  templates: string;
+  addlFields?: AnyObject;
+};
