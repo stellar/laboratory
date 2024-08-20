@@ -14,6 +14,11 @@
   &__inline {
     display: flex;
     gap: pxToRem(4px);
+    position: relative;
+  }
+
+  &--click {
+    cursor: pointer;
   }
 
   &__value {
@@ -43,5 +48,30 @@
 
   .Link {
     font-family: var(--sds-ff-monospace);
+  }
+
+  &__expandIcon {
+    width: pxToRem(20px);
+    height: pxToRem(20px);
+    position: absolute;
+    top: 50%;
+    left: pxToRem(-20px);
+    transform: translate(0, -40%);
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    svg {
+      display: block;
+      width: pxToRem(16px);
+      height: pxToRem(16px);
+      stroke: var(--sds-clr-gray-10);
+    }
+  }
+
+  &__expandSize {
+    color: var(--sds-clr-gray-09);
+    font-size: pxToRem(12px);
+    margin-left: pxToRem(4px);
   }
 }
