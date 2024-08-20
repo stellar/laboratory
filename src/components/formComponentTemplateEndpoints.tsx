@@ -12,7 +12,7 @@ import { IncludeFailedPicker } from "@/components/FormElements/IncludeFailedPick
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { AssetMultiPicker } from "@/components/FormElements/AssetMultiPicker";
 import { FiltersPicker } from "@/components/FormElements/FiltersPicker";
-import { MultiLedgerTestPicker } from "@/components/FormElements/MultiLedgerTestPicker";
+import { MultiLedgerEntriesPicker } from "@/components/FormElements/XdrLedgerKeyPicker";
 
 import { parseJsonString } from "@/helpers/parseJsonString";
 import { validate } from "@/validate";
@@ -252,11 +252,11 @@ export const formComponentTemplateEndpoints = (
             label="Contract"
             placeholder="Ex: CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC"
             value={templ.value || ""}
-            error=""
+            error={templ.error}
             onChange={templ.onChange}
           />
         ),
-        validate: null,
+        validate: validate.getContractIdError,
       };
     case "counter_asset":
       return {
@@ -301,7 +301,7 @@ export const formComponentTemplateEndpoints = (
             id={id}
             label="Data Name"
             value={templ.value || ""}
-            error=""
+            error={templ.error}
             onChange={templ.onChange}
           />
         ),
@@ -393,6 +393,7 @@ export const formComponentTemplateEndpoints = (
           onChange: (val: any) => void;
         }) => (
           <Select
+            key={id}
             id={`${id}-type`}
             fieldSize="md"
             label="Durability"
@@ -455,7 +456,7 @@ export const formComponentTemplateEndpoints = (
             label="Key"
             placeholder="Ex: 67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9"
             value={JSON.stringify(templ.value) || ""}
-            error=""
+            error={templ.error}
             onChange={templ.onChange}
           />
         ),
@@ -699,8 +700,8 @@ export const formComponentTemplateEndpoints = (
         render: (templ: TemplateRenderAssetProps) => (
           <AssetPicker
             key={id}
-            assetInput={custom?.assetInput}
             id={id}
+            assetInput={custom?.assetInput}
             label="Source Asset"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={parseJsonString(templ.value)}
@@ -824,7 +825,7 @@ export const formComponentTemplateEndpoints = (
       return {
         render: (templ: TemplateRenderTxProps) => {
           return (
-            <MultiLedgerTestPicker
+            <MultiLedgerEntriesPicker
               key={id}
               id={id}
               value={parseJsonString(templ.value)}

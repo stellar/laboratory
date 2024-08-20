@@ -1,18 +1,37 @@
 import { ReactElement, useEffect, useState } from "react";
 
+import { Button, Icon } from "@stellar/design-system";
+
 import { Select } from "@stellar/design-system";
 
+import { arrayItem } from "@/helpers/arrayItem";
+import { isEmptyObject } from "@/helpers/isEmptyObject";
+import { sanitizeObject } from "@/helpers/sanitizeObject";
 import * as StellarXdr from "@/helpers/StellarXdr";
 
 import { Box } from "@/components/layout/Box";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { formComponentTemplateEndpoints } from "@/components/formComponentTemplateEndpoints";
+import { InputSideElement } from "@/components/InputSideElement";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
 import { validate } from "@/validate";
 
-import { AnyObject, LedgerKeyFieldsType, LedgerKeyType } from "@/types/types";
+import {
+  AnyObject,
+  AssetObjectValue,
+  LedgerKeyFieldsType,
+  LedgerKeyType,
+} from "@/types/types";
+
+type MultiPickerProps = {
+  id: string;
+  onChange: (val: string[]) => void;
+  value: string[];
+  buttonLabel?: string;
+  limit?: number;
+};
 
 type XdrLedgerKeyPicker = {
   id: string;
@@ -162,8 +181,6 @@ export const XdrLedgerKeyPicker = ({
 
   const xdrJsonDecoded = xdrDecodeJson();
 
-  console.log("xdrJsonDecoded?.jsonString: ", xdrJsonDecoded?.jsonString);
-
   useEffect(() => {
     if (xdrJsonDecoded?.jsonString) {
       setLedgerKeyJsonString(xdrJsonDecoded.jsonString);
@@ -179,16 +196,18 @@ export const XdrLedgerKeyPicker = ({
   }, [xdrJsonDecoded?.jsonString]);
 
   useEffect(() => {
-    if (xdrJsonDecoded?.error) {
-      console.log("xdrJsonDecoded?.error: ", xdrJsonDecoded?.error);
+    if (value && xdrJsonDecoded?.error) {
+      setLedgerKeyXdrError(xdrJsonDecoded?.error);
+    } else {
+      setLedgerKeyXdrError("");
     }
   }, [xdrJsonDecoded?.error]);
 
   useEffect(() => {
     if (ledgerKeyXdr) {
-      const error = validate.getXdrError(ledgerKeyXdr);
+      const error = validate.getXdrError(ledgerKeyXdr, "LedgerKey");
 
-      if (error) {
+      if (error?.result === "error") {
         setLedgerKeyXdrError(error.message);
       } else {
         setLedgerKeyXdrError("");
@@ -198,14 +217,10 @@ export const XdrLedgerKeyPicker = ({
     }
   }, [ledgerKeyXdr]);
 
-  const renderLedgerKeyTemplate = (): React.ReactElement[] | null => {
-    if (!selectedLedgerKey) {
-      return null;
-    }
-
-    if (!ledgerKeyJsonString) {
+  useEffect(() => {
+    if (!ledgerKeyJsonString && selectedLedgerKey) {
       const templatesArr = selectedLedgerKey.templates.split(",");
-      let formLedgerKeyJson = templatesArr.reduce((accr, item) => {
+      const formLedgerKeyJson = templatesArr.reduce((accr, item) => {
         accr[selectedLedgerKey.id] = {
           ...accr[selectedLedgerKey.id],
           [item]: "",
@@ -221,18 +236,19 @@ export const XdrLedgerKeyPicker = ({
       const formLedgerKeyJsonString = JSON.stringify(formLedgerKeyJson);
       setLedgerKeyJsonString(formLedgerKeyJsonString);
     }
+  }, [ledgerKeyJsonString, selectedLedgerKey]);
+
+  const renderLedgerKeyTemplate = () => {
+    if (!selectedLedgerKey || !ledgerKeyJsonString) {
+      return null;
+    }
 
     return selectedLedgerKey.templates.split(",").map((template) => {
-      if (!ledgerKeyJsonString) {
-        return null;
-      }
-
       const ledgerKeyJson = JSON.parse(ledgerKeyJsonString);
-
-      const component = formComponentTemplateEndpoints(template);
-
       const json = JSON.parse(ledgerKeyJsonString);
       const obj = json[selectedLedgerKey!.id];
+
+      const component = formComponentTemplateEndpoints(template);
 
       if (component) {
         const handleChange = (key: any, val: any) => {
@@ -250,12 +266,27 @@ export const XdrLedgerKeyPicker = ({
           setLedgerKeyJsonString(string);
 
           const jsonXdrEncoded = jsonEncodeXdr(string);
-          console.log("jsonXdrEncoded: ", jsonXdrEncoded);
 
           if (jsonXdrEncoded?.xdrString) {
             setLedgerKeyXdr(jsonXdrEncoded.xdrString);
           }
         };
+
+        if (template === "asset") {
+          return component.render({
+            value: ledgerKeyJson[selectedLedgerKey.id][template],
+            error: formError,
+            onChange: (assetObjVal: AssetObjectValue) => {
+              handleChange(
+                assetObjVal,
+                isEmptyObject(sanitizeObject(assetObjVal || {}))
+                  ? undefined
+                  : JSON.stringify(assetObjVal),
+              );
+            },
+            isRequired: true,
+          });
+        }
 
         return component.render({
           value: ledgerKeyJson[selectedLedgerKey.id][template],
@@ -269,8 +300,6 @@ export const XdrLedgerKeyPicker = ({
       return null;
     });
   };
-
-  const ledgerKeyTemplate = renderLedgerKeyTemplate();
 
   return (
     <Box gap="sm" key={id}>
@@ -309,7 +338,69 @@ export const XdrLedgerKeyPicker = ({
         ))}
       </Select>
 
-      {ledgerKeyTemplate && ledgerKeyTemplate}
+      {renderLedgerKeyTemplate()}
+    </Box>
+  );
+};
+
+export const MultiLedgerEntriesPicker = ({
+  id,
+  onChange,
+  value = [""],
+  buttonLabel = "Add another ledger key",
+  limit = 100,
+}: MultiPickerProps) => {
+  if (!value || !value.length) {
+    value = [];
+  }
+
+  return (
+    <Box gap="sm">
+      <>
+        {value.length
+          ? value.map((singleVal: string, index: number) => {
+              return (
+                <XdrLedgerKeyPicker
+                  id={`${id}-${index}`}
+                  onChange={(val) => {
+                    const updatedVal = arrayItem.update(value, index, val);
+                    return onChange([...updatedVal]);
+                  }}
+                  key={index}
+                  value={singleVal}
+                  rightElement={
+                    index !== 0 ? (
+                      <InputSideElement
+                        variant="button"
+                        onClick={() => {
+                          const val = arrayItem.delete(value, index);
+                          return onChange([...val]);
+                        }}
+                        placement="right"
+                        icon={<Icon.Trash01 />}
+                        addlClassName="MultiPicker__delete"
+                      />
+                    ) : null
+                  }
+                />
+              );
+            })
+          : null}
+      </>
+
+      <div>
+        <Button
+          disabled={value.length === limit}
+          size="md"
+          variant="tertiary"
+          onClick={(e) => {
+            e.preventDefault();
+            onChange([...value, ""]);
+          }}
+        >
+          {buttonLabel}
+        </Button>
+      </div>
     </Box>
   );
 };

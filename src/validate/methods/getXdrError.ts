@@ -1,6 +1,8 @@
 import { trim } from "@/helpers/trim";
 import { xdr as stellarXDR } from "@stellar/stellar-sdk";
 
+import { XdrType } from "@/types/types";
+
 const validateBase64 = (value: string) => {
   if (value.match(/^[-A-Za-z0-9+/=]*$/) === null) {
     return {
@@ -12,10 +14,13 @@ const validateBase64 = (value: string) => {
   return { result: "success", message: "Valid Base64" };
 };
 
-export const getXdrError = (value: string) => {
+export const getXdrError = (value: string, type?: XdrType) => {
   if (!value) {
     return undefined;
   }
+
+  const defaultType = "Transaction Envelope";
+  let selectedType = defaultType;
 
   const sanitizedXdr = trim(value);
   const base64Validation = validateBase64(sanitizedXdr);
@@ -25,7 +30,12 @@ export const getXdrError = (value: string) => {
   }
 
   try {
-    stellarXDR.TransactionEnvelope.fromXDR(sanitizedXdr, "base64");
+    if (type === "LedgerKey") {
+      selectedType = type;
+      stellarXDR.LedgerKey.fromXDR(sanitizedXdr, "base64");
+    } else {
+      stellarXDR.TransactionEnvelope.fromXDR(sanitizedXdr, "base64");
+    }
 
     // TODO: See, if we can make this response match all the other validations.
     // This is the only exception and might cause issues if we don't remember to
@@ -37,7 +47,7 @@ export const getXdrError = (value: string) => {
   } catch (e) {
     return {
       result: "error",
-      message: "Unable to parse input XDR into Transaction Envelope",
+      message: `Unable to parse input XDR into ${selectedType}`,
       originalError: e,
     };
   }
