@@ -1,8 +1,6 @@
 import { ReactElement, useEffect, useState } from "react";
 
-import { Button, Icon } from "@stellar/design-system";
-
-import { Select } from "@stellar/design-system";
+import { Button, Card, Icon, Select } from "@stellar/design-system";
 
 import { arrayItem } from "@/helpers/arrayItem";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
@@ -34,7 +32,6 @@ type MultiPickerProps = {
 };
 
 type XdrLedgerKeyPicker = {
-  id: string;
   value: string;
   onChange: (value: string) => void;
   rightElement: ReactElement | null;
@@ -107,11 +104,11 @@ const ledgerKeyFields: {
 ];
 
 export const XdrLedgerKeyPicker = ({
-  id,
   value,
   onChange,
+  rightElement,
 }: XdrLedgerKeyPicker) => {
-  const [selectedLedgerKey, selectLedgerKey] =
+  const [selectedLedgerKey, setSelectedLedgerKey] =
     useState<LedgerKeyFieldsType | null>(null);
 
   const [formError, setFormError] = useState<string>("");
@@ -190,7 +187,7 @@ export const XdrLedgerKeyPicker = ({
       const selectedKeyType = getKeyType(decodedKeyType);
 
       if (selectedKeyType) {
-        selectLedgerKey(selectedKeyType);
+        setSelectedLedgerKey(selectedKeyType);
       }
     }
   }, [xdrJsonDecoded?.jsonString]);
@@ -302,7 +299,7 @@ export const XdrLedgerKeyPicker = ({
   };
 
   return (
-    <Box gap="sm" key={id}>
+    <Box gap="sm">
       <XdrPicker
         id="ledger-key-xdr"
         label="Ledger Key XDR"
@@ -312,22 +309,16 @@ export const XdrLedgerKeyPicker = ({
           onChange(e.target.value);
         }}
       />
+
       <Select
-        id={`${id}-type`}
+        id="ledgerkey"
         fieldSize="md"
         label="Ledger Key"
         value={selectedLedgerKey?.id}
         onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
           const selectedVal = e.target.value;
-          const selectedLedgerKey = getKeyType(selectedVal);
-
           setLedgerKeyJsonString("");
-
-          if (selectedVal && selectedLedgerKey) {
-            selectLedgerKey(selectedLedgerKey);
-          } else {
-            selectLedgerKey(null);
-          }
+          setSelectedLedgerKey(selectedVal ? getKeyType(selectedVal)! : null);
         }}
       >
         <option value="">Select a key</option>
@@ -339,6 +330,7 @@ export const XdrLedgerKeyPicker = ({
         ))}
       </Select>
       <>{renderLedgerKeyTemplate()}</>
+      <>{rightElement}</>
     </Box>
   );
 };
@@ -355,13 +347,12 @@ export const MultiLedgerEntriesPicker = ({
   }
 
   return (
-    <Box gap="sm">
-      <>
+    <Box gap="md">
+      <Box gap="lg">
         {value.length
-          ? value.map((singleVal: string, index: number) => {
-              return (
+          ? value.map((singleVal: string, index: number) => (
+              <Card key={`${id}-${index}`}>
                 <XdrLedgerKeyPicker
-                  id={`${id}-${index}`}
                   onChange={(val) => {
                     const updatedVal = arrayItem.update(value, index, val);
                     return onChange([...updatedVal]);
@@ -373,6 +364,7 @@ export const MultiLedgerEntriesPicker = ({
                       <InputSideElement
                         variant="button"
                         onClick={() => {
+                          console.log("inputside element");
                           const val = arrayItem.delete(value, index);
                           return onChange([...val]);
                         }}
@@ -383,10 +375,10 @@ export const MultiLedgerEntriesPicker = ({
                     ) : null
                   }
                 />
-              );
-            })
+              </Card>
+            ))
           : null}
-      </>
+      </Box>
 
       <div>
         <Button
