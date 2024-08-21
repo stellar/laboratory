@@ -319,10 +319,11 @@ export const XdrLedgerKeyPicker = ({
         value={selectedLedgerKey?.id}
         onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
           const selectedVal = e.target.value;
+          const selectedLedgerKey = getKeyType(selectedVal);
+
           setLedgerKeyJsonString("");
 
-          if (selectedVal) {
-            const selectedLedgerKey = getKeyType(selectedVal);
+          if (selectedVal && selectedLedgerKey) {
             selectLedgerKey(selectedLedgerKey);
           } else {
             selectLedgerKey(null);
