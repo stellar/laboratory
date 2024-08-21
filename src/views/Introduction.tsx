@@ -15,7 +15,7 @@ export const Introduction = () => {
               </a>
               . It can also{" "}
               <a href="#explorer">
-                make requests to any of the Horizon endpoints
+                make requests to any of Horizon's endpoints
               </a>
               .
             </p>

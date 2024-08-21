@@ -30,16 +30,15 @@ export const EndpointExplorer = () => {
       <div className="so-chunk">
         <div className="pageIntro">
           <p>
-            This tool can be used to run queries against the{" "}
+            Learn about Horizon, the
             <a
               href="https://developers.stellar.org/api/horizon"
               rel="noreferrer"
               target="_blank"
             >
-              REST API endpoints
+              REST API
             </a>{" "}
-            on the Horizon server. Horizon is the client facing library for the
-            Stellar ecosystem.
+            for interacting with the Stellar network.
           </p>
         </div>
         <div className="EndpointExplorer">
