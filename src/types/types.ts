@@ -285,5 +285,5 @@ export type LedgerKeyFieldsType = {
   id: LedgerKeyType;
   label: string;
   templates: string;
-  addlFields?: AnyObject;
+  custom?: AnyObject;
 };

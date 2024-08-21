@@ -3,8 +3,8 @@ import { ReactElement, useEffect, useState } from "react";
 import { Button, Card, Icon, Select } from "@stellar/design-system";
 
 import { arrayItem } from "@/helpers/arrayItem";
-import { isEmptyObject } from "@/helpers/isEmptyObject";
-import { sanitizeObject } from "@/helpers/sanitizeObject";
+// import { isEmptyObject } from "@/helpers/isEmptyObject";
+// import { sanitizeObject } from "@/helpers/sanitizeObject";
 import * as StellarXdr from "@/helpers/StellarXdr";
 
 import { Box } from "@/components/layout/Box";
@@ -18,7 +18,7 @@ import { validate } from "@/validate";
 
 import {
   AnyObject,
-  AssetObjectValue,
+  // AssetObjectValue,
   LedgerKeyFieldsType,
   LedgerKeyType,
 } from "@/types/types";
@@ -42,7 +42,7 @@ const ledgerKeyFields: {
   id: LedgerKeyType;
   label: string;
   templates: string;
-  addlFields?: AnyObject;
+  custom?: AnyObject;
 }[] = [
   {
     id: "account",
@@ -53,7 +53,9 @@ const ledgerKeyFields: {
     id: "trustline",
     label: "Trustline",
     templates: "account_id,asset",
-    addlFields: {
+    custom: {
+      assetInput: "alphanumeric",
+      includeLiquidityPoolShares: true,
       asset: {
         type: "",
         code: "",
@@ -74,7 +76,7 @@ const ledgerKeyFields: {
   {
     id: "claimable_balance",
     label: "Claimable Balance",
-    templates: "claimable_balance_id",
+    templates: "balance_id",
   },
   {
     id: "liquidity_pool",
@@ -226,8 +228,8 @@ export const XdrLedgerKeyPicker = ({
         return accr;
       }, {} as AnyObject);
 
-      if (selectedLedgerKey.addlFields) {
-        formLedgerKeyJson[selectedLedgerKey.id] = selectedLedgerKey.addlFields;
+      if (selectedLedgerKey.custom) {
+        formLedgerKeyJson[selectedLedgerKey.id] = selectedLedgerKey.custom;
       }
 
       const formLedgerKeyJsonString = JSON.stringify(formLedgerKeyJson);
@@ -245,10 +247,13 @@ export const XdrLedgerKeyPicker = ({
       const json = JSON.parse(ledgerKeyJsonString);
       const obj = json[selectedLedgerKey!.id];
 
-      const component = formComponentTemplateEndpoints(template);
+      const component = formComponentTemplateEndpoints(
+        template,
+        selectedLedgerKey?.custom,
+      );
 
       if (component) {
-        const handleChange = (key: any, val: any) => {
+        const handleInputChange = (key: any, val: any) => {
           const error = component.validate?.(val);
 
           if (error) {
@@ -269,27 +274,28 @@ export const XdrLedgerKeyPicker = ({
           }
         };
 
-        if (template === "asset") {
-          return component.render({
-            value: ledgerKeyJson[selectedLedgerKey.id][template],
-            error: formError,
-            onChange: (assetObjVal: AssetObjectValue) => {
-              handleChange(
-                assetObjVal,
-                isEmptyObject(sanitizeObject(assetObjVal || {}))
-                  ? undefined
-                  : JSON.stringify(assetObjVal),
-              );
-            },
-            isRequired: true,
-          });
-        }
+        // if (template === "asset") {
+        //   return component.render({
+        //     value: JSON.stringify(obj),
+        //     error: formError,
+
+        // onChange: (assetObjVal: AssetObjectValue) => {
+        // handleAssetChange(
+        //   assetObjVal,
+        //   isEmptyObject(sanitizeObject(assetObjVal || {}))
+        //     ? undefined
+        //     : JSON.stringify(assetObjVal),
+        // );
+        // },
+        // isRequired: true,
+        // });
+        // }
 
         return component.render({
           value: ledgerKeyJson[selectedLedgerKey.id][template],
           error: formError,
           onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-            handleChange(template, e.target.value);
+            handleInputChange(template, e.target.value);
           },
           isRequired: true,
         });
@@ -364,7 +370,6 @@ export const MultiLedgerEntriesPicker = ({
                       <InputSideElement
                         variant="button"
                         onClick={() => {
-                          console.log("inputside element");
                           const val = arrayItem.delete(value, index);
                           return onChange([...val]);
                         }}
