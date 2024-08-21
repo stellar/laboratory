@@ -1,0 +1,114 @@
+@use "../../styles/utils.scss" as *;
+
+.RadioPicker {
+  --RadioPicker-width: 100%;
+  --RadioPicker-color-text: var(--sds-clr-gray-12);
+  --RadioPicker-color-background: var(--sds-clr-gray-01);
+  --RadioPicker-color-border: var(--sds-clr-gray-06);
+  --RadioPicker-box-shadow-size: 0;
+  --RadioPicker-box-shadow-color: var(--sds-clr-lilac-06);
+
+  display: flex;
+  flex-direction: column;
+  gap: pxToRem(8px);
+  width: var(--RadioPicker-width);
+
+  &__inset {
+    display: flex;
+    flex-direction: column;
+    gap: pxToRem(8px);
+  }
+
+  &__options {
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+  }
+
+  &__item {
+    flex: 1;
+
+    input[type="radio"] {
+      opacity: 0;
+      position: absolute;
+      z-index: -1;
+
+      &:checked + label {
+        --RadioPicker-color-text: var(--sds-clr-white);
+        --RadioPicker-color-background: var(--sds-clr-lilac-09);
+        --RadioPicker-color-border: var(--sds-clr-lilac-09);
+      }
+
+      &:focus + label {
+        --RadioPicker-box-shadow-size: #{pxToRem(2px)};
+        z-index: 1000;
+      }
+    }
+
+    label {
+      position: relative;
+      display: flex;
+      min-height: 100%;
+      align-items: center;
+      justify-content: center;
+      font-size: pxToRem(12px);
+      line-height: pxToRem(18px);
+      font-weight: var(--sds-fw-semi-bold);
+      color: var(--RadioPicker-color-text);
+      text-align: center;
+      padding: pxToRem(4px) pxToRem(16px);
+      width: 100%;
+      background-color: var(--RadioPicker-color-background);
+      border: 1px solid var(--RadioPicker-color-border);
+      cursor: pointer;
+      transition:
+        color var(--sds-anim-transition-default),
+        background-color var(--sds-anim-transition-default),
+        border-color var(--sds-anim-transition-default),
+        box-shadow var(--sds-anim-transition-default);
+      box-shadow: 0 0 0 var(--RadioPicker-box-shadow-size)
+        var(--RadioPicker-box-shadow-color);
+    }
+
+    &:not(:first-child) {
+      label {
+        border-left: none;
+      }
+    }
+
+    &:first-child {
+      label {
+        border-top-left-radius: pxToRem(4px);
+        border-bottom-left-radius: pxToRem(4px);
+      }
+    }
+
+    &:last-child {
+      label {
+        border-top-right-radius: pxToRem(4px);
+        border-bottom-right-radius: pxToRem(4px);
+      }
+    }
+
+    &[data-disabled="true"] {
+      pointer-events: none;
+      cursor: default;
+
+      input[type="radio"] {
+        & + label {
+          --RadioPicker-color-text: var(--sds-clr-gray-09);
+          --RadioPicker-color-background: var(--sds-clr-gray-03);
+          --RadioPicker-color-border: var(--sds-clr-gray-06);
+        }
+      }
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        --RadioPicker-color-text: var(--sds-clr-base-01);
+        --RadioPicker-color-background: var(--sds-clr-gray-04);
+        --RadioPicker-color-border: var(--sds-clr-gray-04);
+      }
+    }
+  }
+}

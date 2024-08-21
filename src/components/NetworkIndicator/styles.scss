@@ -1,0 +1,34 @@
+@use "../../styles/utils.scss" as *;
+
+.NetworkIndicator {
+  --NetworkSelector-dot-color: var(--sds-clr-gray-09);
+
+  display: flex;
+  align-items: center;
+  gap: pxToRem(4px);
+
+  font-size: pxToRem(14px);
+  line-height: pxToRem(20px);
+  font-weight: var(--sds-fw-medium);
+  color: var(--sds-clr-gray-12);
+
+  &__dot {
+    display: block;
+    width: pxToRem(6px);
+    height: pxToRem(6px);
+    border-radius: pxToRem(3px);
+    background-color: var(--NetworkSelector-dot-color);
+
+    &[data-network="futurenet"] {
+      --NetworkSelector-dot-color: var(--sds-clr-mint-09);
+    }
+
+    &[data-network="testnet"] {
+      --NetworkSelector-dot-color: var(--sds-clr-pink-09);
+    }
+
+    &[data-network="mainnet"] {
+      --NetworkSelector-dot-color: var(--sds-clr-lime-09);
+    }
+  }
+}

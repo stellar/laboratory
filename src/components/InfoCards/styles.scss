@@ -1,0 +1,20 @@
+@use "../../styles/utils.scss" as *;
+
+.InfoCards {
+  display: grid;
+  gap: pxToRem(12px);
+  grid-template-columns: 1fr 1fr;
+
+  .Card {
+    display: flex;
+    flex-direction: column;
+    gap: pxToRem(8px);
+    justify-content: space-between;
+    // needed height: auto; to fix sizing issue on safari
+    height: auto;
+
+    :nth-child(2) {
+      flex: 1;
+    }
+  }
+}

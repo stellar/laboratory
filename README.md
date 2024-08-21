@@ -1,19 +1,31 @@
-# laboratory
+# Lab
 
-The Stellar Laboratory is a suite of tools to help one learn about exploring the
+The Stellar Lab is a suite of tools to help one learn about exploring the
 Stellar network. See it in action:
-[https://laboratory.stellar.org/](https://laboratory.stellar.org/).
+[https://lab.stellar.org/](https://lab.stellar.org/).
+
+## Tech stack
+
+- [Next.js](https://nextjs.org/) framework (React)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Stellar Design System](https://design-system.stellar.org/) for UI
+- [Sass](https://sass-lang.com/) for CSS styling
+- [TanStack (React) Query](https://tanstack.com/query/latest) for API queries
+- [Zustand](https://docs.pmnd.rs/zustand/getting-started/introduction) for state
+  management
+- [Playwright](https://playwright.dev/) for e2e tests
+- [Yarn Classic (v1)](https://classic.yarnpkg.com/lang/en/docs/install/)
 
 ## Developing
 
 ```sh
-yarn start
+yarn dev
 ```
 
 Testing hardware wallets requires an HTTPS connection to enable U2F. The
 recommended way to do this is with [`ngrok`](https://ngrok.com/). Once
-downloaded and authenticated, start ngrok, and tell the laboratory to start with
-a public URL.
+downloaded and authenticated, start ngrok, and tell the Lab to start with a
+public URL.
 
 ```bash
 ./ngrok http 3000
@@ -28,26 +40,12 @@ yarn start --public randomsubdomain.ngrok.io
 yarn build
 ```
 
-To build a production docker image using a clean docker build environment:
-
-```sh
-make docker-build
-# or directly with docker
-docker build -t lab:localbuild .
-```
-
 To build and run production build locally:
 
 ```sh
-yarn production
-# or
-yarn prod:build
-yarn prod:serve
+yarn start
 ```
 
-Production uses Amplitude to emit metrics, so to fully emulate a production build, you'll need to set an `AMPLITUDE_API_KEY` variable in `/public/settings/env-config.js` file.
-
-## Internal documentation
-
-The [docs.md](./docs.md) file contains code documentation on the laboratory. The
-docs.md is only relevant for developing the laboratory.
+Production uses [Amplitude](https://amplitude.com/) to emit metrics, so to fully
+emulate a production build, you’ll need to set an
+`NEXT_PUBLIC_AMPLITUDE_API_KEY` variable in `.env.local` file.
