@@ -32,10 +32,11 @@ const primaryNavLinks: NavLink[] = [
     href: Routes.BUILD_TRANSACTION,
     label: "Transactions",
   },
-  {
-    href: Routes.SMART_CONTRACTS,
-    label: "Smart Contracts",
-  },
+  // TODO: hide until ready
+  // {
+  //   href: Routes.SMART_CONTRACTS,
+  //   label: "Smart Contracts",
+  // },
   {
     href: "https://developers.stellar.org/",
     label: "View Docs",

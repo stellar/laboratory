@@ -85,20 +85,21 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
         isStreaming: false,
       },
     },
-    {
-      route: Routes.ENDPOINTS_GET_LEDGER_ENTRIES,
-      label: "getLedgerEntries",
-      form: {
-        docsUrl:
-          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getLedgerEntries",
-        docsLabel: "getLedgerEntries",
-        endpointUrlTemplate: "{?tx}",
-        requestMethod: "POST",
-        requiredParams: "tx",
-        rpcMethod: "getLedgerEntries",
-        isStreaming: false,
-      },
-    },
+    // TODO: remove until ready
+    // {
+    //   route: Routes.ENDPOINTS_GET_LEDGER_ENTRIES,
+    //   label: "getLedgerEntries",
+    //   form: {
+    //     docsUrl:
+    //       "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getLedgerEntries",
+    //     docsLabel: "getLedgerEntries",
+    //     endpointUrlTemplate: "{?tx}",
+    //     requestMethod: "POST",
+    //     requiredParams: "tx",
+    //     rpcMethod: "getLedgerEntries",
+    //     isStreaming: false,
+    //   },
+    // },
     {
       route: Routes.ENDPOINTS_GET_NETWORK,
       label: "getNetwork",
