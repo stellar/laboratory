@@ -323,7 +323,7 @@ export const XdrLedgerKeyPicker = ({
 
           if (selectedVal) {
             const selectedLedgerKey = getKeyType(selectedVal);
-            selectLedgerKey(selectedLedgerKey!);
+            selectLedgerKey(selectedLedgerKey);
           } else {
             selectLedgerKey(null);
           }
@@ -337,8 +337,7 @@ export const XdrLedgerKeyPicker = ({
           </option>
         ))}
       </Select>
-
-      {renderLedgerKeyTemplate()}
+      <>{renderLedgerKeyTemplate()}</>
     </Box>
   );
 };
