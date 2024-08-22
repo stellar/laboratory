@@ -18,6 +18,7 @@ export type CustomKeyValueLinkMap = {
 type PrettyJsonProps = {
   json: AnyObject;
   customKeyValueLinkMap?: CustomKeyValueLinkMap;
+  isCollapsible?: boolean;
 };
 
 type Char = "{" | "}" | "[" | "]";
@@ -25,6 +26,7 @@ type Char = "{" | "}" | "[" | "]";
 export const PrettyJson = ({
   json,
   customKeyValueLinkMap,
+  isCollapsible = true,
 }: PrettyJsonProps) => {
   if (typeof json !== "object") {
     return null;
@@ -86,15 +88,21 @@ export const PrettyJson = ({
     return (
       <div key={key} className="PrettyJson__nested">
         <div
-          className="PrettyJson__inline PrettyJson--click"
-          onClick={() => setIsExpanded(!isExpanded)}
+          className={`PrettyJson__inline ${isCollapsible ? "PrettyJson--click" : ""}`}
+          {...(isCollapsible
+            ? {
+                onClick: () => setIsExpanded(!isExpanded),
+              }
+            : {})}
         >
-          <div className="PrettyJson__expandIcon">
-            {isExpanded ? <Icon.MinusSquare /> : <Icon.PlusSquare />}
-          </div>
+          {isCollapsible ? (
+            <div className="PrettyJson__expandIcon">
+              {isExpanded ? <Icon.MinusSquare /> : <Icon.PlusSquare />}
+            </div>
+          ) : null}
           {itemKey ? <Key>{itemKey}</Key> : null}
           <Bracket char={char} isCollapsed={!isExpanded} />
-          <ItemCount itemList={itemList} />
+          {isCollapsible ? <ItemCount itemList={itemList} /> : null}
         </div>
         {isExpanded ? (
           <div>
@@ -129,7 +137,11 @@ export const PrettyJson = ({
         const href = custom.getHref(item, key);
 
         return (
-          <SdsLink href={href || item} {...(href ? { target: "_blank" } : {})}>
+          <SdsLink
+            href={href || item}
+            {...(href ? { target: "_blank" } : {})}
+            isUnderline
+          >
             {custom.text || item}
           </SdsLink>
         );
@@ -258,7 +270,9 @@ export const PrettyJson = ({
             {isValidUrl(item) ? (
               <>
                 <Quotes />
-                <SdsLink href={item}>{item}</SdsLink>
+                <SdsLink href={item} isUnderline>
+                  {item}
+                </SdsLink>
                 <Quotes />
               </>
             ) : (
