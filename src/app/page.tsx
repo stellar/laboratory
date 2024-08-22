@@ -35,7 +35,7 @@ export default function Introduction() {
     {
       id: "soroban-rpc",
       title: "Soroban RPC",
-      description: "Learn about Soroban RPC, a RPC gateway to Stellar",
+      description: "Learn about Soroban RPC, a gateway to the Stellar network",
       buttonLabel: "Go to docs",
       buttonIcon: <Icon.LinkExternal01 />,
       buttonAction: () =>
