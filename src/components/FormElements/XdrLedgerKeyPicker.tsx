@@ -3,8 +3,8 @@ import { ReactElement, useEffect, useState } from "react";
 import { Button, Card, Icon, Select } from "@stellar/design-system";
 
 import { arrayItem } from "@/helpers/arrayItem";
-// import { isEmptyObject } from "@/helpers/isEmptyObject";
-// import { sanitizeObject } from "@/helpers/sanitizeObject";
+import { isEmptyObject } from "@/helpers/isEmptyObject";
+import { sanitizeObject } from "@/helpers/sanitizeObject";
 import * as StellarXdr from "@/helpers/StellarXdr";
 
 import { Box } from "@/components/layout/Box";
@@ -18,7 +18,7 @@ import { validate } from "@/validate";
 
 import {
   AnyObject,
-  // AssetObjectValue,
+  AssetObjectValue,
   LedgerKeyFieldsType,
   LedgerKeyType,
 } from "@/types/types";
@@ -56,11 +56,6 @@ const ledgerKeyFields: {
     custom: {
       assetInput: "alphanumeric",
       includeLiquidityPoolShares: true,
-      asset: {
-        type: "",
-        code: "",
-        issuer: "",
-      },
     },
   },
   {
@@ -113,12 +108,18 @@ export const XdrLedgerKeyPicker = ({
   const [selectedLedgerKey, setSelectedLedgerKey] =
     useState<LedgerKeyFieldsType | null>(null);
 
-  const [formError, setFormError] = useState<string>("");
+  const [formError, setFormError] = useState<AnyObject>({});
   const [ledgerKeyJsonString, setLedgerKeyJsonString] = useState<string>("");
   const [ledgerKeyXdr, setLedgerKeyXdr] = useState<string>("");
   const [ledgerKeyXdrError, setLedgerKeyXdrError] = useState<string>("");
 
   const isXdrInit = useIsXdrInit();
+
+  useEffect(() => {
+    if (isXdrInit) {
+      const jsonSchema = StellarXdr.schema("LedgerKey");
+    }
+  }, [isXdrInit]);
 
   const xdrDecodeJson = () => {
     if (!isXdrInit) {
@@ -158,7 +159,7 @@ export const XdrLedgerKeyPicker = ({
       const xdrString = StellarXdr.encode("LedgerKey", str);
 
       return {
-        xdrString: xdrString,
+        xdrString,
         error: "",
       };
     } catch (e) {
@@ -169,11 +170,16 @@ export const XdrLedgerKeyPicker = ({
     }
   };
 
-  useEffect(() => {
-    if (ledgerKeyXdr) {
-      onChange(ledgerKeyXdr);
-    }
-  }, [ledgerKeyXdr]);
+  // useEffect(() => {
+  //   if (ledgerKeyXdr) {
+  //     onChange(ledgerKeyXdr);
+  //   }
+  // }, [ledgerKeyXdr]);
+
+  const reset = () => {
+    setFormError({});
+    onChange("");
+  };
 
   const getKeyType = (val: string) =>
     ledgerKeyFields.find((field) => field.id === val);
@@ -228,10 +234,6 @@ export const XdrLedgerKeyPicker = ({
         return accr;
       }, {} as AnyObject);
 
-      if (selectedLedgerKey.custom) {
-        formLedgerKeyJson[selectedLedgerKey.id] = selectedLedgerKey.custom;
-      }
-
       const formLedgerKeyJsonString = JSON.stringify(formLedgerKeyJson);
       setLedgerKeyJsonString(formLedgerKeyJsonString);
     }
@@ -253,16 +255,16 @@ export const XdrLedgerKeyPicker = ({
       );
 
       if (component) {
-        const handleInputChange = (key: any, val: any) => {
+        const handleChange = (templateKey: any, val: any) => {
           const error = component.validate?.(val);
 
-          if (error) {
-            setFormError(error);
+          if (error && error.result !== "success") {
+            setFormError({ ...formError, [template]: error });
           } else {
-            setFormError("");
+            setFormError({ ...formError, [template]: "" });
           }
 
-          obj[key] = val;
+          obj[template] = val;
 
           const string = JSON.stringify(json);
           setLedgerKeyJsonString(string);
@@ -270,32 +272,32 @@ export const XdrLedgerKeyPicker = ({
           const jsonXdrEncoded = jsonEncodeXdr(string);
 
           if (jsonXdrEncoded?.xdrString) {
-            setLedgerKeyXdr(jsonXdrEncoded.xdrString);
+            // setLedgerKeyXdr(jsonXdrEncoded.xdrString);
+            onChange(jsonXdrEncoded.xdrString);
           }
         };
 
-        // if (template === "asset") {
-        //   return component.render({
-        //     value: JSON.stringify(obj),
-        //     error: formError,
-
-        // onChange: (assetObjVal: AssetObjectValue) => {
-        // handleAssetChange(
-        //   assetObjVal,
-        //   isEmptyObject(sanitizeObject(assetObjVal || {}))
-        //     ? undefined
-        //     : JSON.stringify(assetObjVal),
-        // );
-        // },
-        // isRequired: true,
-        // });
-        // }
+        if (template === "asset") {
+          return component.render({
+            value: ledgerKeyJson[selectedLedgerKey.id][template],
+            error: formError[template],
+            onChange: (assetObjVal: AssetObjectValue) => {
+              handleChange(
+                assetObjVal,
+                isEmptyObject(sanitizeObject(assetObjVal || {}))
+                  ? undefined
+                  : JSON.stringify(assetObjVal),
+              );
+            },
+            isRequired: true,
+          });
+        }
 
         return component.render({
           value: ledgerKeyJson[selectedLedgerKey.id][template],
-          error: formError,
+          error: formError[template],
           onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-            handleInputChange(template, e.target.value);
+            handleChange(template, e.target.value);
           },
           isRequired: true,
         });
@@ -322,6 +324,8 @@ export const XdrLedgerKeyPicker = ({
         label="Ledger Key"
         value={selectedLedgerKey?.id}
         onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+          reset();
+
           const selectedVal = e.target.value;
           setLedgerKeyJsonString("");
           setSelectedLedgerKey(selectedVal ? getKeyType(selectedVal)! : null);

@@ -104,6 +104,7 @@ export const formComponentTemplateEndpoints = (
             error={templ.error}
             includeNative={custom?.includeNative}
             onChange={templ.onChange}
+            includeLiquidityPoolShares={custom?.includeLiquidityPoolShares}
           />
         ),
         validate: validate.getAssetError,
@@ -780,6 +781,22 @@ export const formComponentTemplateEndpoints = (
             key={id}
             id={id}
             label="Transaction Hash"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            placeholder="Ex: 3389e9f0f1a65f19736cacf544c2e825313e8447f569233bb8db39aa607c8889"
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.getTransactionHashError,
+      };
+    case "hash":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <TextPicker
+            key={id}
+            id={id}
+            label="WASM Hash"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             placeholder="Ex: 3389e9f0f1a65f19736cacf544c2e825313e8447f569233bb8db39aa607c8889"
             value={templ.value || ""}

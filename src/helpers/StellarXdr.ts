@@ -1,4 +1,4 @@
-import wasm, { decode, encode } from "@stellar/stellar-xdr-json-web";
+import wasm, { decode, encode, schema } from "@stellar/stellar-xdr-json-web";
 
 // A wrapper for the Stellar XDR JSON
 declare global {
@@ -14,4 +14,4 @@ const init = async () => {
   }
 };
 
-export { init, decode, encode };
+export { init, decode, encode, schema };
