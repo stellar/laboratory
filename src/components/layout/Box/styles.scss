@@ -1,0 +1,34 @@
+.Box {
+  --Box-direction: column;
+  --Box-justify: left;
+  --Box-align: stretch;
+
+  display: flex;
+  flex-direction: var(--Box-direction);
+  justify-content: var(--Box-justify);
+  align-items: var(--Box-align);
+
+  &--xs {
+    gap: var(--sds-gap-xs);
+  }
+
+  &--sm {
+    gap: var(--sds-gap-sm);
+  }
+
+  &--md {
+    gap: var(--sds-gap-md);
+  }
+
+  &--lg {
+    gap: var(--sds-gap-lg);
+  }
+
+  &--xl {
+    gap: var(--sds-gap-xl);
+  }
+
+  &--xxl {
+    gap: var(--sds-gap-xxl);
+  }
+}

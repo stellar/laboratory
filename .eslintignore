@@ -1,6 +1,0 @@
-babel.config.js
-webpack.common.js
-webpack.dev.js
-webpack.prod.js
-.eslintrc.js
-prettier.config.js

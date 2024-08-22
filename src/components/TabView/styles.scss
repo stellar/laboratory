@@ -1,0 +1,20 @@
+@use "../../styles/utils.scss" as *;
+
+.TabView {
+  &__heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: pxToRem(24px);
+  }
+
+  &__content {
+    & > [data-is-active="false"] {
+      display: none;
+    }
+
+    & > [data-is-active="true"] {
+      display: block;
+    }
+  }
+}

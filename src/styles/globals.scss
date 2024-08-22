@@ -1,0 +1,627 @@
+@use "./utils.scss" as *;
+
+// Fonts for SDS
+@import url("https://fonts.googleapis.com/css2?family=Inter+Tight&family=Inter:wght@400;500;600&family=Roboto+Mono&display=swap");
+
+// TODO: move to SDS when ready
+:root {
+  --sds-gap-xs: #{pxToRem(4px)};
+  --sds-gap-sm: #{pxToRem(8px)};
+  --sds-gap-md: #{pxToRem(12px)};
+  --sds-gap-lg: #{pxToRem(16px)};
+  --sds-gap-xl: #{pxToRem(24px)};
+  --sds-gap-xxl: #{pxToRem(32px)};
+}
+
+// Layout
+#root {
+  min-width: auto !important;
+  min-height: auto !important;
+  display: block !important;
+}
+
+.LabLayout {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+  height: 100vh;
+  overflow: hidden;
+  min-width: 0;
+  min-height: 0;
+  color: var(--sds-clr-gray-11);
+  background-color: var(--sds-clr-gray-02);
+
+  // ===========================================================================
+  // Generic
+  // ===========================================================================
+
+  .Heading,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--sds-clr-gray-12);
+  }
+
+  .success-message {
+    color: var(--sds-clr-green-11) !important;
+  }
+
+  // SDS logos have hard coded fill colors, adjusting that here for GitHub icon
+  .Link--withLogo {
+    svg {
+      stroke: transparent;
+
+      g > path {
+        fill: currentColor;
+      }
+    }
+  }
+
+  // ===========================================================================
+  // Layout
+  // ===========================================================================
+
+  // Header
+  &__header {
+    display: grid;
+    background-color: var(--sds-clr-gray-01);
+    border-bottom: 1px solid var(--sds-clr-gray-06);
+
+    &__main {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: pxToRem(24px);
+      padding: pxToRem(8px) pxToRem(32px);
+    }
+
+    &__settings {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex: 1;
+      gap: pxToRem(12px);
+    }
+
+    &__nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: pxToRem(16px);
+
+      font-size: pxToRem(14px);
+      line-height: pxToRem(20px);
+      font-weight: var(--sds-fw-medium);
+      margin-bottom: -1px;
+
+      & > div {
+        display: flex;
+        gap: pxToRem(16px);
+        flex: 1;
+      }
+
+      &--secondary {
+        justify-content: flex-end;
+      }
+    }
+  }
+
+  // Sidebar layout
+  &__withSidebar {
+    display: grid;
+    grid-template-columns:
+      pxToRem(296px)
+      1fr;
+    overflow: hidden;
+  }
+
+  // Content
+  &__container {
+    padding: pxToRem(32px);
+    overflow-x: auto;
+  }
+
+  &__content {
+    width: clamp(pxToRem(672px), 100%, pxToRem(960px));
+    position: relative;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: pxToRem(12px);
+    min-height: 100%;
+  }
+
+  // Sideber
+  &__sidebar {
+    min-height: 0;
+    background-color: var(--sds-clr-gray-01);
+    border-right: 1px solid var(--sds-clr-gray-06);
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+
+    &--top {
+      overflow-x: auto;
+      padding: pxToRem(32px);
+      padding-bottom: pxToRem(16px);
+      display: flex;
+      flex-direction: column;
+      gap: pxToRem(12px);
+    }
+
+    &__section {
+      display: flex;
+      flex-direction: column;
+      gap: pxToRem(8px);
+
+      &--divider {
+        border-bottom: 1px solid var(--sds-clr-gray-06);
+        padding-bottom: pxToRem(16px);
+      }
+    }
+
+    &--bottom {
+      border-top: 1px solid var(--sds-clr-gray-06);
+      background-color: var(--sds-clr-gray-01);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      padding-top: pxToRem(16px);
+      padding-bottom: pxToRem(16px);
+      padding-left: pxToRem(32px);
+      padding-right: pxToRem(32px);
+
+      .SidebarLink {
+        justify-content: flex-start;
+      }
+    }
+
+    &__wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: pxToRem(8px);
+    }
+  }
+}
+
+.NavLink {
+  --Nav-navLink-color: var(--sds-clr-gray-11);
+
+  color: var(--Nav-navLink-color);
+  text-decoration: none;
+  padding: pxToRem(12px) 0;
+  transition:
+    color var(--sds-anim-transition-default),
+    border-color var(--sds-anim-transition-default);
+  white-space: nowrap;
+
+  display: flex;
+  align-items: center;
+  gap: pxToRem(4px);
+
+  @media (hover: hover) {
+    &:hover {
+      --Nav-navLink-color: var(--sds-clr-lilac-11);
+    }
+  }
+
+  &--active {
+    cursor: default;
+    --Nav-navLink-color: var(--sds-clr-lilac-11);
+    pointer-events: none;
+  }
+
+  &__icon {
+    display: flex;
+
+    // to fix Safari only styling bug
+    width: pxToRem(14px);
+    height: pxToRem(14px);
+  }
+}
+
+.SidebarLink {
+  --SidebarLink-color: var(--sds-clr-gray-11);
+  justify-content: space-between;
+
+  font-size: pxToRem(14px);
+  line-height: pxToRem(20px);
+  font-weight: var(--sds-fw-medium);
+  color: var(--SidebarLink-color);
+  transition:
+    color var(--sds-anim-transition-default),
+    font-weight var(--sds-anim-transition-default);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: pxToRem(4px);
+
+  svg {
+    display: block;
+    width: pxToRem(16px);
+    height: pxToRem(16px);
+    stroke: var(--SidebarLink-color);
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      --SidebarLink-color: var(--sds-clr-lilac-11);
+      font-weight: var(--sds-fw-semi-bold);
+    }
+  }
+
+  &[data-is-active="true"] {
+    --SidebarLink-color: var(--sds-clr-lilac-11);
+    cursor: default;
+    font-weight: var(--sds-fw-semi-bold);
+    pointer-events: none;
+    position: relative;
+  }
+
+  &__toggle {
+    --SidebarLink-rotate: 0;
+    cursor: pointer;
+
+    svg {
+      transition: transform var(--sds-anim-transition-default);
+      transform: rotate(var(--SidebarLink-rotate));
+    }
+
+    // Highlight if nested link is selected
+    &:has(
+        ~ .SidebarLink__nestedItemsWrapper
+          > .SidebarLink__nestedItems
+          > [data-is-active="true"]
+      ) {
+      --SidebarLink-color: var(--sds-clr-gray-12);
+      font-weight: var(--sds-fw-semi-bold);
+    }
+
+    // Rotate chevron when expanded
+    &:has(~ [data-is-expanded="true"]) {
+      --SidebarLink-rotate: 90deg;
+    }
+
+    &[data-is-expanded="true"] {
+      margin-bottom: pxToRem(12px);
+    }
+  }
+
+  &--nested,
+  &__nestedItems {
+    display: flex;
+    flex-direction: column;
+
+    .SidebarLink__nestedItemsWrapper {
+      margin-left: pxToRem(8px);
+    }
+  }
+
+  &--nested {
+    &:has(> [data-is-expanded="true"]) {
+      gap: pxToRem(12px);
+    }
+  }
+
+  &__nestedItems {
+    overflow: hidden;
+    gap: pxToRem(12px);
+  }
+
+  &__nestedItemsWrapper {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition:
+      grid-template-rows 100ms ease-out,
+      margin-top 100ms ease-out;
+    margin-left: pxToRem(16px);
+
+    &[data-is-expanded="true"] {
+      grid-template-rows: 1fr;
+      margin-top: pxToRem(0);
+    }
+  }
+}
+
+// =============================================================================
+// Pages
+// =============================================================================
+
+.PageHeader,
+.PageFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: pxToRem(16px);
+}
+
+.PageHeader {
+  .Link {
+    --Link-icon-size: pxToRem(14px);
+    font-size: pxToRem(14px);
+    font-weight: var(--sds-fw-semi-bold);
+
+    // to fix Safari only styling bug
+    .Link__icon {
+      width: pxToRem(14px);
+      height: pxToRem(14px);
+    }
+  }
+}
+
+.PageBody {
+  display: flex;
+  flex-direction: column;
+  gap: pxToRem(16px);
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: pxToRem(4px);
+
+    &__icon {
+      display: block;
+      width: pxToRem(14px);
+      height: pxToRem(14px);
+
+      svg {
+        display: block;
+        width: 100%;
+        height: 100%;
+        stroke: var(--sds-clr-red-09);
+      }
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: pxToRem(16px);
+    padding: pxToRem(16px);
+    background-color: var(--sds-clr-gray-03);
+    border-radius: pxToRem(8px);
+
+    &--error {
+      border: 1px solid var(--sds-clr-red-06);
+    }
+  }
+
+  &__scrollable {
+    max-width: 100%;
+    max-height: pxToRem(600px);
+    overflow: auto;
+  }
+}
+
+// Maintenance Banner
+.MaintenanceBanner {
+  .Banner__message {
+    max-width: 100%;
+  }
+
+  .Banner--primary .Banner__content a {
+    color: var(--sds-clr-lilac-11);
+    text-decoration: none;
+    transition: color var(--sds-anim-transition-default);
+
+    @media (hover: hover) {
+      &:hover {
+        color: var(--sds-clr-lilac-12);
+      }
+    }
+  }
+}
+
+// Introduction
+.CardText {
+  display: flex;
+  flex-direction: column;
+  gap: pxToRem(12px);
+
+  p {
+    margin-bottom: 0 !important;
+  }
+}
+
+.IntroFooter {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: pxToRem(12px);
+  font-size: pxToRem(14px);
+  line-height: pxToRem(20px);
+}
+
+// Endpoints
+.Endpoints {
+  &__urlBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: pxToRem(8px);
+
+    &__requestMethod {
+      color: var(--sds-clr-teal-11) !important;
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: pxToRem(12px);
+  }
+
+  .Input--disabled {
+    input:read-only {
+      cursor: default;
+    }
+  }
+
+  &__txTextarea {
+    .Textarea textarea {
+      word-break: break-all;
+    }
+  }
+}
+
+// Saved Transactions
+.SavedTransactions {
+  &__name {
+    &__postMethod {
+      color: var(--sds-clr-gold-11) !important;
+    }
+  }
+}
+
+// Operations
+.NumberFractionPicker__fraction__divider {
+  padding-top: pxToRem(22px);
+  color: var(--sds-clr-gray-09);
+}
+
+// Create claimable balance
+.PredicateTypeWrapper {
+  .PredicateWrapper {
+    &__split {
+      display: grid;
+      grid-template-columns: 49% 49%;
+      gap: 2%;
+      overflow: hidden;
+
+      .PredicateWrapper__split {
+        display: flex;
+        gap: 0.5rem;
+
+        & > :nth-child(2) {
+          border-top: 1px solid var(--sds-clr-gray-06);
+          padding-top: 0.5rem;
+        }
+      }
+    }
+  }
+}
+
+// Sign Transaction
+.SignTx {
+  display: flex;
+  flex-direction: column;
+  gap: pxToRem(24px);
+
+  &__xdr {
+    display: flex;
+    flex-direction: column;
+    gap: pxToRem(16px);
+
+    .Text {
+      display: flex;
+      align-items: center;
+      gap: pxToRem(4px);
+      color: var(--sds-clr-gray-12);
+    }
+  }
+
+  &__icon {
+    display: inline-block;
+    width: pxToRem(14px);
+    height: pxToRem(14px);
+
+    svg {
+      display: inline-block;
+      width: 100%;
+      height: 100%;
+      stroke: var(--sds-clr-gray-08);
+    }
+  }
+
+  &__FieldViewer,
+  &__Field {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: pxToRem(16px);
+
+    .half-width {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .full-width {
+      grid-column: 1 / 3;
+    }
+  }
+
+  &__FieldViewer {
+    .Textarea textarea,
+    .Input__container,
+    .Input__copyButton button,
+    input {
+      background: var(--sds-clr-gray-03);
+    }
+  }
+
+  &__Signs {
+    display: flex;
+    flex-direction: column;
+    gap: pxToRem(12px);
+  }
+
+  &__Buttons {
+    display: flex;
+    flex-direction: row;
+    grid-column: 1 / 3;
+    gap: pxToRem(12px);
+    justify-content: space-between;
+
+    div {
+      display: flex;
+      gap: pxToRem(8px);
+    }
+  }
+
+  .Input__container {
+    .Select__container {
+      border: 0;
+    }
+    input {
+      flex-shrink: 1;
+    }
+    .Input__side-element {
+      flex: 1 0;
+
+      &:has(.MultiPicker__delete) {
+        flex: 0;
+      }
+    }
+  }
+  .Input__buttons {
+    .Input__container {
+      padding-right: 0;
+    }
+    .hardware-button {
+      flex-grow: 1;
+      border-left: 1px solid var(--Input-color-border);
+    }
+    .hardware-sign-button {
+      .Button {
+        margin-top: pxToRem(25px);
+      }
+    }
+    .Button {
+      border: 0;
+    }
+  }
+}
+
+// to fix Safari only styling bug
+.Input,
+.RadioPicker,
+.Select,
+.Box {
+  .Label__infoButton {
+    width: pxToRem(16px);
+    height: pxToRem(16px);
+  }
+}

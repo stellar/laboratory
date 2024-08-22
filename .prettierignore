@@ -1,0 +1,5 @@
+.prettierignore
+public/
+.gitignore
+.husky/
+src/temp/stellar-xdr-web/

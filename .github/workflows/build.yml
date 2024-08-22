@@ -1,0 +1,19 @@
+name: Build the app and run Playwright Tests
+on: [push, pull_request]
+jobs:
+  build:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install dependencies
+        run: npm install -g yarn && yarn
+      - name: Install Playwright Browsers
+        run: yarn playwright install --with-deps
+      - name: Build app
+        run: yarn build
+      - name: Run Playwright tests
+        run: yarn test
