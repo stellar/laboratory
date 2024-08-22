@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { Icon } from "@stellar/design-system";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { isValidUrl } from "@/helpers/isValidUrl";
 import { SdsLink } from "@/components/SdsLink";
@@ -17,11 +18,15 @@ export type CustomKeyValueLinkMap = {
 type PrettyJsonProps = {
   json: AnyObject;
   customKeyValueLinkMap?: CustomKeyValueLinkMap;
+  isCollapsible?: boolean;
 };
+
+type Char = "{" | "}" | "[" | "]";
 
 export const PrettyJson = ({
   json,
   customKeyValueLinkMap,
+  isCollapsible = true,
 }: PrettyJsonProps) => {
   if (typeof json !== "object") {
     return null;
@@ -49,15 +54,76 @@ export const PrettyJson = ({
   const Bracket = ({
     char,
     children,
+    isCollapsed,
   }: {
-    char: "{" | "}" | "[" | "]";
+    char: Char;
     children?: React.ReactNode;
+    isCollapsed?: boolean;
   }) => (
     <span className="PrettyJson__bracket">
       {char}
       {children}
+      {isCollapsed ? `...${getClosingChar(char)}` : null}
     </span>
   );
+  const ItemCount = ({ itemList }: { itemList: any[] }) => (
+    <div className="PrettyJson__expandSize">{getItemSizeLabel(itemList)}</div>
+  );
+
+  const Collapsible = ({
+    key,
+    itemKey,
+    itemList,
+    char,
+    children,
+  }: {
+    key: string;
+    itemKey?: string;
+    itemList: any[];
+    char: Char;
+    children: React.ReactNode;
+  }) => {
+    const [isExpanded, setIsExpanded] = useState(true);
+
+    return (
+      <div key={key} className="PrettyJson__nested">
+        <div
+          className={`PrettyJson__inline ${isCollapsible ? "PrettyJson--click" : ""}`}
+          {...(isCollapsible
+            ? {
+                onClick: () => setIsExpanded(!isExpanded),
+              }
+            : {})}
+        >
+          {isCollapsible ? (
+            <div className="PrettyJson__expandIcon">
+              {isExpanded ? <Icon.MinusSquare /> : <Icon.PlusSquare />}
+            </div>
+          ) : null}
+          {itemKey ? <Key>{itemKey}</Key> : null}
+          <Bracket char={char} isCollapsed={!isExpanded} />
+          {isCollapsible ? <ItemCount itemList={itemList} /> : null}
+        </div>
+        {isExpanded ? (
+          <div>
+            {children}
+            <div>
+              <Bracket char={getClosingChar(char)} />
+              <Comma />
+            </div>
+          </div>
+        ) : null}
+      </div>
+    );
+  };
+
+  const getItemSizeLabel = (items: any[]) => {
+    const size = items.length;
+
+    return size === 1 ? `${size} item` : `${size} items`;
+  };
+
+  const getClosingChar = (char: Char) => (char === "[" ? "]" : "}");
 
   const render = (item: any, parentKey?: string): React.ReactElement => {
     const renderValue = (item: any, key: string) => {
@@ -71,7 +137,11 @@ export const PrettyJson = ({
         const href = custom.getHref(item, key);
 
         return (
-          <SdsLink href={href || item} {...(href ? { target: "_blank" } : {})}>
+          <SdsLink
+            href={href || item}
+            {...(href ? { target: "_blank" } : {})}
+            isUnderline
+          >
             {custom.text || item}
           </SdsLink>
         );
@@ -118,53 +188,42 @@ export const PrettyJson = ({
                   }
 
                   return (
-                    <div key={keyProp} className="PrettyJson__nested">
-                      <div className="PrettyJson__inline">
-                        <Key>{key}</Key>
-                        <Bracket char="[" />
-                      </div>
-                      <div>
-                        {value.map((v, index) => {
-                          if (typeof v === "object") {
-                            if (v === null) {
-                              return (
-                                <div
-                                  key={`${keyProp}-${index}`}
-                                  className="PrettyJson__nested"
-                                >
-                                  <Value>
-                                    null
-                                    <Comma />
-                                  </Value>
-                                </div>
-                              );
-                            }
-
+                    <Collapsible
+                      key={keyProp}
+                      itemKey={key}
+                      itemList={value}
+                      char="["
+                    >
+                      {value.map((v, index) => {
+                        if (typeof v === "object") {
+                          if (v === null) {
                             return (
                               <div
                                 key={`${keyProp}-${index}`}
                                 className="PrettyJson__nested"
                               >
-                                <div className="PrettyJson__inline">
-                                  <Bracket char="{" />
-                                </div>
-                                <div>{render(v)}</div>
-                                <div>
-                                  <Bracket char="}" />
+                                <Value>
+                                  null
                                   <Comma />
-                                </div>
+                                </Value>
                               </div>
                             );
                           }
 
-                          return render(v, key);
-                        })}
-                      </div>
-                      <div>
-                        <Bracket char="]" />
-                        <Comma />
-                      </div>
-                    </div>
+                          return (
+                            <Collapsible
+                              key={`${keyProp}-${index}`}
+                              itemList={Object.keys(v)}
+                              char="{"
+                            >
+                              {render(v)}
+                            </Collapsible>
+                          );
+                        }
+
+                        return render(v, key);
+                      })}
+                    </Collapsible>
                   );
                 }
 
@@ -183,17 +242,14 @@ export const PrettyJson = ({
                 }
 
                 return (
-                  <div key={keyProp} className="PrettyJson__nested">
-                    <div className="PrettyJson__inline">
-                      <Key>{key}</Key>
-                      <Bracket char="{" />
-                    </div>
-                    <div>{render(value, key)}</div>
-                    <div>
-                      <Bracket char="}" />
-                      <Comma />
-                    </div>
-                  </div>
+                  <Collapsible
+                    key={keyProp}
+                    itemKey={key}
+                    itemList={Object.keys(value)}
+                    char="{"
+                  >
+                    {render(value, key)}
+                  </Collapsible>
                 );
               }
 
@@ -214,7 +270,9 @@ export const PrettyJson = ({
             {isValidUrl(item) ? (
               <>
                 <Quotes />
-                <SdsLink href={item}>{item}</SdsLink>
+                <SdsLink href={item} isUnderline>
+                  {item}
+                </SdsLink>
                 <Quotes />
               </>
             ) : (
