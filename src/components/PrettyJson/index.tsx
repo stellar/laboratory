@@ -71,13 +71,11 @@ export const PrettyJson = ({
   );
 
   const Collapsible = ({
-    key,
     itemKey,
     itemList,
     char,
     children,
   }: {
-    key: string;
     itemKey?: string;
     itemList: any[];
     char: Char;
@@ -86,7 +84,7 @@ export const PrettyJson = ({
     const [isExpanded, setIsExpanded] = useState(true);
 
     return (
-      <div key={key} className="PrettyJson__nested">
+      <div className="PrettyJson__nested">
         <div
           className={`PrettyJson__inline ${isCollapsible ? "PrettyJson--click" : ""}`}
           {...(isCollapsible

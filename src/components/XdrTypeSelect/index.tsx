@@ -1,8 +1,14 @@
 import { useEffect, useState } from "react";
 import { Icon, Input } from "@stellar/design-system";
+
 import { ALL_XDR_TYPES } from "@/constants/xdr";
+import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
 import { delayedAction } from "@/helpers/delayedAction";
+import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { useStore } from "@/store/useStore";
+
+import * as StellarXdr from "@/helpers/StellarXdr";
+
 import "./styles.scss";
 
 export interface XdrTypeSelectProps {
@@ -15,6 +21,9 @@ export const XdrTypeSelect = ({ error }: XdrTypeSelectProps) => {
   const [searchValue, setSearchValue] = useState("");
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [displayOptions, setDisplayOptions] = useState<string[]>([]);
+  const [guessedTypes, setGuessedTypes] = useState<string[]>([]);
+
+  const isXdrInit = useIsXdrInit();
 
   useEffect(() => {
     if (searchValue) {
@@ -26,6 +35,26 @@ export const XdrTypeSelect = ({ error }: XdrTypeSelectProps) => {
       setDisplayOptions([]);
     }
   }, [searchValue]);
+
+  useEffect(() => {
+    if (isXdrInit && xdr.blob) {
+      try {
+        const guessed = StellarXdr.guess(xdr.blob);
+
+        console.log(">>> guessed: ", guessed);
+
+        setGuessedTypes(guessed.length > 0 ? guessed : []);
+        xdr.updateXdrType(guessed?.[0] || XDR_TYPE_TRANSACTION_ENVELOPE);
+      } catch (e) {
+        console.log(">>> error: ", e);
+        setGuessedTypes([]);
+      }
+    } else {
+      setGuessedTypes([]);
+    }
+    // Not adding xdr
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [xdr.blob, isXdrInit]);
 
   const OptionItem = ({
     option,
@@ -61,11 +90,29 @@ export const XdrTypeSelect = ({ error }: XdrTypeSelectProps) => {
     return null;
   };
 
+  const renderGuessedTypes = () => {
+    if (guessedTypes.length > 0) {
+      return (
+        <>
+          <OptionItem sectionTitle="Guessed" />
+
+          {guessedTypes.map((g) => (
+            <OptionItem key={`guessed-${g}`} option={g} />
+          ))}
+        </>
+      );
+    }
+
+    return null;
+  };
+
   const renderOptions = () => {
     // Default
     if (!searchValue) {
       return (
         <>
+          {renderGuessedTypes()}
+
           <OptionItem sectionTitle="Popular" />
 
           {["TransactionEnvelope", "TransactionResult", "TransactionMeta"].map(
@@ -123,6 +170,7 @@ export const XdrTypeSelect = ({ error }: XdrTypeSelectProps) => {
           }}
           leftElement={<Icon.SearchSm />}
           rightElement={<Icon.ChevronDown />}
+          autoComplete="off"
         />
 
         <div
