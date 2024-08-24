@@ -412,7 +412,6 @@ export const formComponentTemplateTxnOps = ({
             value={templ.value}
             error={templ.error}
             includeNative={false}
-            includeLiquidityPoolShares
             onChange={templ.onChange}
           />
         ),
