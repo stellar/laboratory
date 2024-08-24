@@ -461,7 +461,14 @@ export const formComponentTemplateEndpoints = (
             id={id}
             label="Key"
             placeholder="Ex: 67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9"
-            value={JSON.stringify(templ.value) || ""}
+            // @TODO we should have a different form its input
+            // each field is a TextPicker
+            // sanitizing value from backlashes and extra quotes
+            value={
+              JSON.stringify(templ.value)
+                .replace(/\\/g, "")
+                .replace(/^"+|"+$/g, "") || ""
+            }
             error={templ.error}
             onChange={templ.onChange}
           />
@@ -788,6 +795,22 @@ export const formComponentTemplateEndpoints = (
             label="Transaction Hash"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             placeholder="Ex: 3389e9f0f1a65f19736cacf544c2e825313e8447f569233bb8db39aa607c8889"
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.getTransactionHashError,
+      };
+    case "contract_code":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <TextPicker
+            key={id}
+            id={id}
+            label="WASM Hash"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            placeholder="Ex: f5c9668827b4783e1f87a7f6b7406f6c426b72e82f114654a724713e4e6c0de4"
             value={templ.value || ""}
             error={templ.error}
             onChange={templ.onChange}

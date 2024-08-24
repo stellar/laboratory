@@ -43,6 +43,7 @@ const ledgerKeyFields: {
   label: string;
   templates: string;
   custom?: AnyObject;
+  isDisabled?: boolean;
 }[] = [
   {
     id: "account",
@@ -86,12 +87,13 @@ const ledgerKeyFields: {
   {
     id: "contract_code",
     label: "Contract Code",
-    templates: "transaction",
+    templates: "hash",
   },
   {
     id: "config_setting",
     label: "Config Setting",
     templates: "config_setting_id",
+    isDisabled: true,
   },
   {
     id: "ttl",
@@ -388,7 +390,7 @@ export const XdrLedgerKeyPicker = ({
         <option value="">Select a key</option>
 
         {ledgerKeyFields.map((f) => (
-          <option key={f.id} value={f.id}>
+          <option key={f.id} value={f.id} disabled={f.isDisabled}>
             {f.label}
           </option>
         ))}
