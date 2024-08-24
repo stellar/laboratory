@@ -226,25 +226,25 @@ export const formComponentTemplateEndpoints = (
         ),
         validate: validate.getPublicKeyError,
       };
-    case "config_setting_id":
-      return {
-        render: (templ: {
-          value: string | undefined;
-          error: string | undefined;
-          onChange: (val: any) => void;
-        }) => (
-          <TextPicker
-            key={id}
-            id={id}
-            label="Config Setting ID"
-            placeholder="Ex: 3389e9f0f1a65f19736cacf544c2e825313e8447f569233bb8db39aa607c8889"
-            value={templ.value || ""}
-            error=""
-            onChange={templ.onChange}
-          />
-        ),
-        validate: null,
-      };
+    // case "config_setting_id":
+    //   return {
+    //     render: (templ: {
+    //       value: string | undefined;
+    //       error: string | undefined;
+    //       onChange: (val: any) => void;
+    //     }) => (
+    //       <TextPicker
+    //         key={id}
+    //         id={id}
+    //         label="Config Setting ID"
+    //         placeholder="Ex: 3389e9f0f1a65f19736cacf544c2e825313e8447f569233bb8db39aa607c8889"
+    //         value={templ.value || ""}
+    //         error=""
+    //         onChange={templ.onChange}
+    //       />
+    //     ),
+    //     validate: null,
+    //   };
     case "contract":
       return {
         render: (templ: {
@@ -461,9 +461,8 @@ export const formComponentTemplateEndpoints = (
             id={id}
             label="Key"
             placeholder="Ex: 67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9"
-            // @TODO we should have a different form its input
-            // each field is a TextPicker
-            // sanitizing value from backlashes and extra quotes
+            // @TODO we should display an input for each value
+            // hotfix: sanitizing value from backlashes and extra quotes
             value={
               JSON.stringify(templ.value)
                 .replace(/\\/g, "")

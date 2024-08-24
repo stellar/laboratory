@@ -13,7 +13,6 @@ import {
   AssetObjectValue,
   AssetPoolShareError,
   AssetPoolShareObjectValue,
-  // AssetPoolSingleShareError,
   AssetSinglePoolShareValue,
 } from "@/types/types";
 
@@ -38,6 +37,7 @@ type AssetPickerProps = {
   assetInput: "issued" | "alphanumeric";
   fitContent?: boolean;
   includeNative?: boolean;
+  includeLiquidityPoolShares?: boolean;
   includePoolShare?: boolean;
 };
 
@@ -52,6 +52,7 @@ export const AssetPicker = ({
   assetInput,
   fitContent,
   includeNative = true,
+  includeLiquidityPoolShares,
   includePoolShare,
 }: AssetPickerProps) => {
   let options: AssetObject[] = [];
@@ -108,6 +109,14 @@ export const AssetPicker = ({
       },
     ];
 
+    if (includeLiquidityPoolShares) {
+      options.push({
+        id: "liquidity_pool_shares",
+        label: "Liquidity pool shares",
+        value: initPoolSharesValue,
+      });
+    }
+
     if (includePoolShare) {
       options.push({
         id: "pool_share",
@@ -148,7 +157,6 @@ export const AssetPicker = ({
 
     if (value.type === "pool_share") {
       const poolShareValue = value as AssetSinglePoolShareValue;
-      // const poolShareError = error as AssetPoolSingleShareError;
 
       return (
         <TextPicker
@@ -157,7 +165,6 @@ export const AssetPicker = ({
           label="Liquidity Pool ID"
           placeholder="Ex: 67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9"
           value={poolShareValue.pool_share || ""}
-          // error={poolShareError.error || ""}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             onChange({ ...poolShareValue, pool_share: e.target.value });
           }}

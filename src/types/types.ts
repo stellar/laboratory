@@ -124,10 +124,6 @@ export type AssetPoolShareError = {
   asset_b?: AssetError;
 };
 
-// export type AssetPoolSingleShareError = {
-//   error: string;
-// };
-
 // =============================================================================
 // Endpoints
 // =============================================================================
