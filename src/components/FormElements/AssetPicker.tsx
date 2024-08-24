@@ -5,6 +5,7 @@ import { ExpandBox } from "@/components/ExpandBox";
 import { RadioPicker } from "@/components/RadioPicker";
 import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
 import { LiquidityPoolShares } from "@/components/FormElements/LiquidityPoolShares";
+import { TextPicker } from "@/components/FormElements/TextPicker";
 
 import {
   AssetError,
@@ -12,22 +13,32 @@ import {
   AssetObjectValue,
   AssetPoolShareError,
   AssetPoolShareObjectValue,
+  // AssetPoolSingleShareError,
+  AssetSinglePoolShareValue,
 } from "@/types/types";
 
 type AssetPickerProps = {
   id: string;
   label: string;
   labelSuffix?: string | React.ReactNode;
-  value: AssetObjectValue | AssetPoolShareObjectValue | undefined;
+  value:
+    | AssetObjectValue
+    | AssetPoolShareObjectValue
+    | AssetSinglePoolShareValue
+    | undefined;
   error: AssetError | AssetPoolShareError | undefined;
   note?: React.ReactNode;
   onChange: (
-    asset: AssetObjectValue | AssetPoolShareObjectValue | undefined,
+    asset:
+      | AssetObjectValue
+      | AssetPoolShareObjectValue
+      | AssetSinglePoolShareValue
+      | undefined,
   ) => void;
   assetInput: "issued" | "alphanumeric";
   fitContent?: boolean;
   includeNative?: boolean;
-  includeLiquidityPoolShares?: boolean;
+  includePoolShare?: boolean;
 };
 
 export const AssetPicker = ({
@@ -41,7 +52,7 @@ export const AssetPicker = ({
   assetInput,
   fitContent,
   includeNative = true,
-  includeLiquidityPoolShares,
+  includePoolShare,
 }: AssetPickerProps) => {
   let options: AssetObject[] = [];
 
@@ -55,6 +66,11 @@ export const AssetPicker = ({
     asset_a: { ...initAssetValue, type: undefined },
     asset_b: { ...initAssetValue, type: undefined },
     fee: "30",
+  };
+
+  const initSinglePoolShareValue: AssetSinglePoolShareValue = {
+    type: "pool_share",
+    pool_share: "",
   };
 
   if (includeNative) {
@@ -92,11 +108,11 @@ export const AssetPicker = ({
       },
     ];
 
-    if (includeLiquidityPoolShares) {
+    if (includePoolShare) {
       options.push({
-        id: "liquidity_pool_shares",
-        label: "Liquidity pool shares",
-        value: initPoolSharesValue,
+        id: "pool_share",
+        label: "Liquidity Pool Share",
+        value: initSinglePoolShareValue,
       });
     }
   } else {
@@ -125,6 +141,25 @@ export const AssetPicker = ({
           error={poolShareError}
           onChange={(poolShare: AssetPoolShareObjectValue | undefined) => {
             onChange(poolShare);
+          }}
+        />
+      );
+    }
+
+    if (value.type === "pool_share") {
+      const poolShareValue = value as AssetSinglePoolShareValue;
+      // const poolShareError = error as AssetPoolSingleShareError;
+
+      return (
+        <TextPicker
+          key={id}
+          id={id}
+          label="Liquidity Pool ID"
+          placeholder="Ex: 67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9"
+          value={poolShareValue.pool_share || ""}
+          // error={poolShareError.error || ""}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            onChange({ ...poolShareValue, pool_share: e.target.value });
           }}
         />
       );
@@ -184,6 +219,7 @@ export const AssetPicker = ({
               "credit_alphanum4",
               "credit_alphanum12",
               "liquidity_pool_shares",
+              "pool_share",
             ].includes(value.type),
         )}
         offsetTop="sm"

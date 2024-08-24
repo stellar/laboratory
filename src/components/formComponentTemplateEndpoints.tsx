@@ -20,6 +20,7 @@ import {
   AnyObject,
   AssetObjectValue,
   AssetPoolShareObjectValue,
+  AssetSinglePoolShareValue,
 } from "@/types/types";
 
 type TemplateRenderProps = {
@@ -33,7 +34,11 @@ type TemplateRenderAssetProps = {
   value: AssetObjectValue | undefined;
   error: { code: string | undefined; issuer: string | undefined } | undefined;
   onChange: (
-    asset: AssetObjectValue | AssetPoolShareObjectValue | undefined,
+    asset:
+      | AssetObjectValue
+      | AssetPoolShareObjectValue
+      | AssetSinglePoolShareValue
+      | undefined,
   ) => void;
   isRequired?: boolean;
 };
@@ -104,7 +109,7 @@ export const formComponentTemplateEndpoints = (
             error={templ.error}
             includeNative={custom?.includeNative}
             onChange={templ.onChange}
-            includeLiquidityPoolShares={custom?.includeLiquidityPoolShares}
+            includePoolShare={custom?.includePoolShare}
           />
         ),
         validate: validate.getAssetError,

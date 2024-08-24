@@ -55,7 +55,7 @@ const ledgerKeyFields: {
     templates: "account_id,asset",
     custom: {
       assetInput: "alphanumeric",
-      includeLiquidityPoolShares: true,
+      includePoolShare: true,
     },
   },
   {
@@ -163,12 +163,6 @@ export const XdrLedgerKeyPicker = ({
     }
   };
 
-  // useEffect(() => {
-  //   if (ledgerKeyXdr) {
-  //     onChange(ledgerKeyXdr);
-  //   }
-  // }, [ledgerKeyXdr]);
-
   const reset = () => {
     setFormError({});
     setLedgerKeyJsonString("");
@@ -177,46 +171,6 @@ export const XdrLedgerKeyPicker = ({
 
   const getKeyType = (val: string) =>
     ledgerKeyFields.find((field) => field.id === val);
-
-  // const xdrJsonDecoded = xdrDecodeJson();
-
-  // console.log("xdrJsonDecoded: ", xdrJsonDecoded);
-
-  // useEffect(() => {
-  //   if (xdrJsonDecoded?.jsonString) {
-  //     setLedgerKeyJsonString(xdrJsonDecoded.jsonString);
-
-  //     const xdrDecodedJSON = JSON.parse(xdrJsonDecoded.jsonString);
-  //     const decodedKeyType = Object.keys(xdrDecodedJSON)[0];
-  //     const selectedKeyType = getKeyType(decodedKeyType);
-
-  //     if (selectedKeyType) {
-  //       setSelectedLedgerKey(selectedKeyType);
-  //     }
-  //   }
-  // }, [xdrJsonDecoded?.jsonString]);
-
-  // useEffect(() => {
-  //   if (value && xdrJsonDecoded?.error) {
-  //     setLedgerKeyXdrError(xdrJsonDecoded?.error);
-  //   } else {
-  //     setLedgerKeyXdrError("");
-  //   }
-  // }, [xdrJsonDecoded?.error]);
-
-  // useEffect(() => {
-  //   if (ledgerKeyXdr) {
-  //     const error = validate.getXdrError(ledgerKeyXdr, "LedgerKey");
-
-  //     if (error?.result === "error") {
-  //       setLedgerKeyXdrError(error.message);
-  //     } else {
-  //       setLedgerKeyXdrError("");
-  //     }
-  //   } else {
-  //     setLedgerKeyXdrError("");
-  //   }
-  // }, [ledgerKeyXdr]);
 
   const validateLedgerKeyXdr = (xdrString: string) => {
     if (!xdrString) {
@@ -264,9 +218,13 @@ export const XdrLedgerKeyPicker = ({
             issuer: xdrDecodedJSON[key].asset[assetType].issuer,
             type: assetType,
           };
+        }
 
-          // if (xdrJsonDecoded.jsonString.includes("liquidity")) {
-          // }
+        if (xdrJsonDecoded.jsonString.includes("pool_share")) {
+          xdrDecodedJSON[key].asset = {
+            type: "pool_share",
+            pool_share: xdrDecodedJSON[key].asset.pool_share,
+          };
         }
 
         const xdrDecodedJsonToString = JSON.stringify(xdrDecodedJSON);
@@ -352,6 +310,14 @@ export const XdrLedgerKeyPicker = ({
                   asset_code: parsedObj.code,
                   issuer: parsedObj.issuer,
                 },
+              };
+            }
+
+            // use 67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9 as an example
+            if (parsedObj.type === "pool_share") {
+              newObj[selectedLedgerKey.id].asset = {
+                [parsedObj.type]: "pool_share",
+                pool_share: parsedObj.pool_share,
               };
             }
 

@@ -78,7 +78,8 @@ export type AssetType =
   | "issued"
   | "credit_alphanum4"
   | "credit_alphanum12"
-  | "liquidity_pool_shares";
+  | "liquidity_pool_shares"
+  | "pool_share";
 
 export type AssetString = {
   id: AssetType;
@@ -99,10 +100,18 @@ export type AssetPoolShareObjectValue = {
   fee: string;
 };
 
+export type AssetSinglePoolShareValue = {
+  type: "pool_share";
+  pool_share: string | undefined;
+};
+
 export type AssetObject = {
   id: AssetType;
   label: string;
-  value: AssetObjectValue | AssetPoolShareObjectValue;
+  value:
+    | AssetObjectValue
+    | AssetPoolShareObjectValue
+    | AssetSinglePoolShareValue;
 };
 
 export type AssetError = {
@@ -114,6 +123,10 @@ export type AssetPoolShareError = {
   asset_a?: AssetError;
   asset_b?: AssetError;
 };
+
+// export type AssetPoolSingleShareError = {
+//   error: string;
+// };
 
 // =============================================================================
 // Endpoints
