@@ -262,3 +262,39 @@ export type FiltersObject = {
   contract_ids: string[];
   topics: string[];
 };
+
+export type XdrType = "TransactionEnvelope" | "LedgerKey";
+
+export type LedgerKeyType =
+  | "account"
+  | "trustline"
+  | "offer"
+  | "data"
+  | "claimable_balance"
+  | "liquidity_pool"
+  | "contract_data"
+  | "contract_code"
+  | "config_setting"
+  | "ttl";
+
+export type LedgerKeyEntryTypeProps =
+  | "accountID"
+  | "asset"
+  | "sellerID"
+  | "offerID"
+  | "dataName"
+  | "balanceID"
+  | "liquidityPoolID"
+  | "contract"
+  | "key"
+  | "durability"
+  | "hash"
+  | "configSettingID"
+  | "keyHash";
+
+export type LedgerKeyFieldsType = {
+  id: LedgerKeyType;
+  label: string;
+  templates: string;
+  custom?: AnyObject;
+};

@@ -1,4 +1,5 @@
 import { JSX } from "react";
+import { Select, Textarea } from "@stellar/design-system";
 
 import { AssetPicker } from "@/components/FormElements/AssetPicker";
 import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
@@ -11,6 +12,7 @@ import { IncludeFailedPicker } from "@/components/FormElements/IncludeFailedPick
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { AssetMultiPicker } from "@/components/FormElements/AssetMultiPicker";
 import { FiltersPicker } from "@/components/FormElements/FiltersPicker";
+import { MultiLedgerEntriesPicker } from "@/components/FormElements/XdrLedgerKeyPicker";
 
 import { parseJsonString } from "@/helpers/parseJsonString";
 import { validate } from "@/validate";
@@ -102,6 +104,7 @@ export const formComponentTemplateEndpoints = (
             error={templ.error}
             includeNative={custom?.includeNative}
             onChange={templ.onChange}
+            includeLiquidityPoolShares={custom?.includeLiquidityPoolShares}
           />
         ),
         validate: validate.getAssetError,
@@ -187,6 +190,7 @@ export const formComponentTemplateEndpoints = (
         ),
         validate: validate.getAssetError,
       };
+    case "balance_id":
     case "claimable_balance_id":
       return {
         render: (templ: TemplateRenderProps) => (
@@ -217,6 +221,44 @@ export const formComponentTemplateEndpoints = (
         ),
         validate: validate.getPublicKeyError,
       };
+    case "config_setting_id":
+      return {
+        render: (templ: {
+          value: string | undefined;
+          error: string | undefined;
+          onChange: (val: any) => void;
+        }) => (
+          <TextPicker
+            key={id}
+            id={id}
+            label="Config Setting ID"
+            placeholder="Ex: 3389e9f0f1a65f19736cacf544c2e825313e8447f569233bb8db39aa607c8889"
+            value={templ.value || ""}
+            error=""
+            onChange={templ.onChange}
+          />
+        ),
+        validate: null,
+      };
+    case "contract":
+      return {
+        render: (templ: {
+          value: string | undefined;
+          error: string | undefined;
+          onChange: (val: any) => void;
+        }) => (
+          <TextPicker
+            key={id}
+            id={id}
+            label="Contract"
+            placeholder="Ex: CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC"
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.getContractIdError,
+      };
     case "counter_asset":
       return {
         render: (templ: TemplateRenderAssetProps) => (
@@ -241,6 +283,24 @@ export const formComponentTemplateEndpoints = (
             key={id}
             id={id}
             labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: null,
+      };
+    case "data_name":
+      return {
+        render: (templ: {
+          value: string | undefined;
+          error: string | undefined;
+          onChange: (val: any) => void;
+        }) => (
+          <TextPicker
+            key={id}
+            id={id}
+            label="Data Name"
             value={templ.value || ""}
             error={templ.error}
             onChange={templ.onChange}
@@ -326,6 +386,34 @@ export const formComponentTemplateEndpoints = (
         ),
         validate: validate.getAssetMultiError,
       };
+    case "durability":
+      return {
+        render: (templ: {
+          value: string | undefined;
+          error: string | undefined;
+          onChange: (val: any) => void;
+        }) => (
+          <Select
+            key={id}
+            id={`${id}-type`}
+            fieldSize="md"
+            label="Durability"
+            value={templ.value || ""}
+            onChange={templ.onChange}
+          >
+            <option value="">Select a durability</option>
+            {[
+              { id: "temporary", label: "Temporary" },
+              { id: "persistent", label: "Persistent" },
+            ].map((f) => (
+              <option key={f.id} value={f.id}>
+                {f.label}
+              </option>
+            ))}
+          </Select>
+        ),
+        validate: null,
+      };
     case "end_time":
       return {
         render: (templ: TemplateRenderProps) => (
@@ -349,6 +437,27 @@ export const formComponentTemplateEndpoints = (
             id={id}
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             selectedOption={templ.value}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: null,
+      };
+    // contract key
+    case "key":
+      return {
+        render: (templ: {
+          value: string | undefined;
+          error: string | undefined;
+          onChange: (val: any) => void;
+        }) => (
+          <Textarea
+            fieldSize="md"
+            key={id}
+            id={id}
+            label="Key"
+            placeholder="Ex: 67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9"
+            value={JSON.stringify(templ.value) || ""}
+            error={templ.error}
             onChange={templ.onChange}
           />
         ),
@@ -493,6 +602,7 @@ export const formComponentTemplateEndpoints = (
         validate: null,
       };
     case "seller":
+    case "seller_id":
       return {
         render: (templ: TemplateRenderProps) => (
           <PubKeyPicker
@@ -591,8 +701,8 @@ export const formComponentTemplateEndpoints = (
         render: (templ: TemplateRenderAssetProps) => (
           <AssetPicker
             key={id}
-            assetInput={custom?.assetInput}
             id={id}
+            assetInput={custom?.assetInput}
             label="Source Asset"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={parseJsonString(templ.value)}
@@ -680,6 +790,39 @@ export const formComponentTemplateEndpoints = (
         ),
         validate: validate.getTransactionHashError,
       };
+    case "hash":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <TextPicker
+            key={id}
+            id={id}
+            label="WASM Hash"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            placeholder="Ex: 3389e9f0f1a65f19736cacf544c2e825313e8447f569233bb8db39aa607c8889"
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.getTransactionHashError,
+      };
+    // Hash of the LedgerKey that is associated with this TTLEntry
+    case "key_hash":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <TextPicker
+            key={id}
+            id={id}
+            label="Key Hash"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            placeholder="Ex: 3389e9f0f1a65f19736cacf544c2e825313e8447f569233bb8db39aa607c8889"
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.getTransactionHashError,
+      };
     case "tx":
       return {
         render: (templ: TemplateRenderTxProps) => (
@@ -694,6 +837,20 @@ export const formComponentTemplateEndpoints = (
           />
         ),
         validate: validate.getXdrError,
+      };
+    case "ledgerKeyEntries":
+      return {
+        render: (templ: TemplateRenderTxProps) => {
+          return (
+            <MultiLedgerEntriesPicker
+              key={id}
+              id={id}
+              value={parseJsonString(templ.value)}
+              onChange={templ?.onChange}
+            />
+          );
+        },
+        validate: null,
       };
     case "filters":
       return {
