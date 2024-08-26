@@ -920,7 +920,7 @@ export default function Endpoints() {
         <SdsLink href="https://developers.stellar.org/network/horizon/resources">
           REST API endpoints
         </SdsLink>{" "}
-        on the Horizon server. Horizon is the client facing library for the
+        of Horizon servers. Horizon is one of the developer-facing services for the
         Stellar ecosystem.
       </Alert>
     </>

@@ -27,6 +27,7 @@
     font-weight: var(--sds-fw-medium);
     padding: pxToRem(16px);
     word-wrap: break-word;
+    overflow-y: auto;
 
     ul {
       font-size: inherit;
