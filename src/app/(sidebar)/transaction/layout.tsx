@@ -46,6 +46,10 @@ export default function TransactionTemplate({
               route: Routes.FEE_BUMP_TRANSACTION,
               label: "Fee Bump",
             },
+            {
+              route: Routes.CLI_SIGN_TRANSACTION,
+              label: "Sign Tx From CLI",
+            },
           ],
         },
       ]}
