@@ -41,12 +41,9 @@ export const XdrTypeSelect = ({ error }: XdrTypeSelectProps) => {
       try {
         const guessed = StellarXdr.guess(xdr.blob);
 
-        console.log(">>> guessed: ", guessed);
-
         setGuessedTypes(guessed.length > 0 ? guessed : []);
         xdr.updateXdrType(guessed?.[0] || XDR_TYPE_TRANSACTION_ENVELOPE);
       } catch (e) {
-        console.log(">>> error: ", e);
         setGuessedTypes([]);
       }
     } else {
@@ -94,7 +91,7 @@ export const XdrTypeSelect = ({ error }: XdrTypeSelectProps) => {
     if (guessedTypes.length > 0) {
       return (
         <>
-          <OptionItem sectionTitle="Guessed" />
+          <OptionItem sectionTitle="Best Guess" />
 
           {guessedTypes.map((g) => (
             <OptionItem key={`guessed-${g}`} option={g} />
