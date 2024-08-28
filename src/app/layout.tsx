@@ -1,12 +1,13 @@
-import React from "react";
 import type { Metadata } from "next";
+import React from "react";
 
 import { LayoutMain } from "@/components/layout/LayoutMain";
 import { QueryProvider } from "@/query/QueryProvider";
 import { StoreProvider } from "@/store/StoreProvider";
 
-import "@stellar/design-system/build/styles.min.css";
 import "@/styles/globals.scss";
+import "@stellar/design-system/build/styles.min.css";
+import { NetworkByPasswordProvider } from "@/components/NetworkByPasswordProvider";
 
 // Needed for CSP
 export const dynamic = "force-dynamic";
@@ -29,7 +30,9 @@ export default function RootLayout({
         <div id="root">
           <StoreProvider>
             <QueryProvider>
-              <LayoutMain>{children}</LayoutMain>
+              <NetworkByPasswordProvider>
+                <LayoutMain>{children}</LayoutMain>
+              </NetworkByPasswordProvider>
             </QueryProvider>
           </StoreProvider>
         </div>
