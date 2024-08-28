@@ -4,7 +4,7 @@ import { delay } from "@/helpers/delay";
 import { SubmitRpcError, SubmitRpcResponse } from "@/types/types";
 
 type SubmitRpcTxProps = {
-  rpcServer: SorobanRpc.Server;
+  rpcUrl: string;
   transactionXdr: string;
   networkPassphrase: string;
 };
@@ -16,7 +16,7 @@ export const useSubmitRpcTx = () => {
     SubmitRpcTxProps
   >({
     mutationFn: async ({
-      rpcServer,
+      rpcUrl,
       transactionXdr,
       networkPassphrase,
     }: SubmitRpcTxProps) => {
@@ -25,6 +25,7 @@ export const useSubmitRpcTx = () => {
           transactionXdr,
           networkPassphrase,
         );
+        const rpcServer = new SorobanRpc.Server(rpcUrl);
         const sentTx = await rpcServer.sendTransaction(transaction);
 
         if (sentTx.status !== "PENDING") {
