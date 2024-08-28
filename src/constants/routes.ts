@@ -71,7 +71,6 @@ export enum Routes {
   // Transactions
   BUILD_TRANSACTION = "/transaction/build",
   SIGN_TRANSACTION = "/transaction/sign",
-  CLI_SIGN_TRANSACTION = "/transaction/cli-sign",
   SIMULATE_TRANSACTION = "/transaction/simulate",
   SUBMIT_TRANSACTION = "/transaction/submit",
   FEE_BUMP_TRANSACTION = "/transaction/fee-bump",
