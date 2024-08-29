@@ -5,9 +5,9 @@ import { LayoutMain } from "@/components/layout/LayoutMain";
 import { QueryProvider } from "@/query/QueryProvider";
 import { StoreProvider } from "@/store/StoreProvider";
 
+import { NetworkByPasswordProvider } from "@/components/NetworkByPasswordProvider";
 import "@/styles/globals.scss";
 import "@stellar/design-system/build/styles.min.css";
-import { NetworkByPasswordProvider } from "@/components/NetworkByPasswordProvider";
 
 // Needed for CSP
 export const dynamic = "force-dynamic";
