@@ -1,4 +1,3 @@
-import { Button, Icon, Input, Notification } from "@stellar/design-system";
 import React, {
   useCallback,
   useEffect,
@@ -6,11 +5,12 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { Button, Icon, Input, Notification } from "@stellar/design-system";
 
 import { NetworkIndicator } from "@/components/NetworkIndicator";
-import { NetworkOptions } from "@/constants/settings";
-import { delayedAction } from "@/helpers/delayedAction";
 import { localStorageSavedNetwork } from "@/helpers/localStorageSavedNetwork";
+import { delayedAction } from "@/helpers/delayedAction";
+import { NetworkOptions } from "@/constants/settings";
 import { useStore } from "@/store/useStore";
 import { Network, NetworkType } from "@/types/types";
 
@@ -94,11 +94,9 @@ export const NetworkSelector = () => {
   const isMainnetNetwork = activeNetworkId === "mainnet";
 
   const setNetwork = useCallback(() => {
-    console.log("here in setNetwork. there is no network.id?", network?.id);
     if (!network?.id) {
       const defaultNetwork =
         localStorageSavedNetwork.get() || getNetworkById("testnet");
-      console.log("using the default: ", defaultNetwork);
 
       if (defaultNetwork) {
         selectNetwork(defaultNetwork);

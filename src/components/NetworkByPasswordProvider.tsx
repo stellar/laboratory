@@ -11,7 +11,8 @@ export const NetworkByPasswordProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const { updateIsDynamicNetworkSelect, transaction, selectNetwork } = useStore();
+  const { updateIsDynamicNetworkSelect, transaction, selectNetwork } =
+    useStore();
 
   const searchParams = useSearchParams();
 
@@ -20,16 +21,17 @@ export const NetworkByPasswordProvider = ({
   };
 
   useEffect(() => {
-    let networkPassphrase = searchParams.get("networkPassphrase");
+    const networkPassphrase = searchParams.get("networkPassphrase");
+    const xdr = searchParams.get("xdr");
+
     if (networkPassphrase) {
-      let network = getNetworkByPassphrase(networkPassphrase);
+      const network = getNetworkByPassphrase(networkPassphrase);
       if (network) {
         updateIsDynamicNetworkSelect(true);
         selectNetwork(network);
       }
     }
 
-    let xdr = searchParams.get("xdr");
     if (xdr) {
       transaction.updateSignActiveView("overview");
       transaction.updateSignImportXdr(xdr);
