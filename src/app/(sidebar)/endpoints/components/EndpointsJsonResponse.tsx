@@ -46,12 +46,15 @@ export const EndpointsJsonResponse = ({ json }: { json: AnyObject }) => {
 
     switch (key) {
       case "envelope_xdr":
+      case "envelopeXdr":
         xdrType = "TransactionEnvelope";
         break;
       case "result_xdr":
+      case "resultXdr":
         xdrType = "TransactionResult";
         break;
       case "result_meta_xdr":
+      case "resultMetaXdr":
         xdrType = "TransactionMeta";
         break;
       case "fee_meta_xdr":
@@ -347,10 +350,19 @@ export const EndpointsJsonResponse = ({ json }: { json: AnyObject }) => {
     envelope_xdr: {
       getHref: handleLinkXdr,
     },
+    envelopeXdr: {
+      getHref: handleLinkXdr,
+    },
     result_xdr: {
       getHref: handleLinkXdr,
     },
+    resultXdr: {
+      getHref: handleLinkXdr,
+    },
     result_meta_xdr: {
+      getHref: handleLinkXdr,
+    },
+    resultMetaXdr: {
       getHref: handleLinkXdr,
     },
     fee_meta_xdr: {
