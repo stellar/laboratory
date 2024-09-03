@@ -506,6 +506,110 @@
   }
 }
 
+// Submit Transaction
+.SubmitTx {
+  &__dropdownContainer {
+    position: relative;
+  }
+
+  // Floater
+  &__floater {
+    z-index: 2;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    left: auto !important;
+    bottom: auto;
+    display: none;
+    opacity: 0;
+    width: pxToRem(320px);
+    transform: none !important;
+
+    &[data-is-active="true"] {
+      display: block;
+    }
+
+    &[data-is-visible="true"] {
+      opacity: 1;
+    }
+
+    &__body {
+      padding: pxToRem(4px);
+      display: flex;
+      gap: pxToRem(4px);
+      flex-direction: column;
+    }
+
+    &__item {
+      padding: pxToRem(6px) pxToRem(8px);
+      border-radius: pxToRem(4px);
+      background-color: transparent;
+      transition: backround-color var(--sds-anim-transition-default);
+      cursor: pointer;
+
+      display: flex;
+      flex-direction: column;
+      gap: pxToRem(4px);
+      font-size: pxToRem(12px);
+      line-height: pxToRem(18px);
+      font-weight: var(--sds-fw-medium);
+      color: var(--sds-clr-gray-11);
+
+      &__title {
+        font-size: pxToRem(14px);
+        line-height: pxToRem(20px);
+        display: flex;
+        gap: pxToRem(4px);
+        align-items: center;
+        color: var(--sds-clr-gray-12);
+        position: relative;
+
+        svg {
+          stroke: var(--sds-clr-green-09);
+          width: pxToRem(12px);
+          height: pxToRem(12px);
+        }
+      }
+
+      &__warning {
+        color: var(--sds-clr-amber-11);
+      }
+
+      &[data-is-selected="true"] {
+        background-color: var(--sds-clr-gray-03);
+        cursor: default;
+
+        .SubmitTx__floater__item__title {
+          &::after {
+            display: block;
+            content: "Selected";
+            font-size: pxToRem(12px);
+            line-height: pxToRem(20px);
+            color: var(--sds-clr-gray-11);
+            position: absolute;
+            top: 0;
+            right: 0;
+          }
+        }
+      }
+
+      @media (hover: hover) {
+        &:hover {
+          background-color: var(--sds-clr-gray-03);
+        }
+      }
+
+      &[data-is-disabled="true"] {
+        cursor: default;
+        background-color: transparent !important;
+
+        .SubmitTx__floater__item__title {
+          color: var(--sds-clr-gray-11);
+        }
+      }
+    }
+  }
+}
+
 // Sign Transaction
 .SignTx {
   display: flex;
