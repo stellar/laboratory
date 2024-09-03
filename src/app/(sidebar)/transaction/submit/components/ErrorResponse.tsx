@@ -1,7 +1,6 @@
 import {
   AccountRequiresMemoError,
   BadResponseError,
-  NetworkError,
 } from "@stellar/stellar-sdk";
 
 import { Box } from "@/components/layout/Box";
@@ -9,22 +8,17 @@ import { TxResponse } from "@/components/TxResponse";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { PrettyJson } from "@/components/PrettyJson";
 
-import { SubmitRpcError, SubmitRpcErrorStatus } from "@/types/types";
+import {
+  SubmitHorizonError,
+  SubmitRpcError,
+  SubmitRpcErrorStatus,
+} from "@/types/types";
 
-interface ErrorProps {
-  error: NetworkError & {
-    response: {
-      data?: {
-        extras?: {
-          result_codes?: string;
-          result_xdr?: string;
-        };
-      };
-    };
-  };
-}
-
-export const ErrorResponse = ({ error }: ErrorProps) => {
+export const HorizonErrorResponse = ({
+  error,
+}: {
+  error: SubmitHorizonError;
+}) => {
   let message = "",
     extras = null;
   if (error instanceof AccountRequiresMemoError) {
