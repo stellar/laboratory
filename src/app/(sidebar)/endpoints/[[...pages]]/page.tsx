@@ -818,6 +818,32 @@ export default function Endpoints() {
     );
   };
 
+  const renderInfoMessage = () => {
+    if (isRpcEndpoint) {
+      return (
+        <>
+          This tool can be used to run queries against the{" "}
+          <SdsLink href="https://developers.stellar.org/docs/data/rpc">
+            REST API endpoints
+          </SdsLink>{" "}
+          of RPC servers. RPC is one of the developer-facing services for the
+          Stellar ecosystem.
+        </>
+      );
+    }
+
+    return (
+      <>
+        This tool can be used to run queries against the{" "}
+        <SdsLink href="https://developers.stellar.org/network/horizon/resources">
+          REST API endpoints
+        </SdsLink>{" "}
+        of Horizon servers. Horizon is one of the developer-facing services for
+        the Stellar ecosystem.
+      </>
+    );
+  };
+
   if (pathname === Routes.ENDPOINTS) {
     return <EndpointsLandingPage />;
   }
@@ -920,12 +946,7 @@ export default function Endpoints() {
       ) : null}
 
       <Alert variant="primary" placement="inline">
-        This tool can be used to run queries against the{" "}
-        <SdsLink href="https://developers.stellar.org/network/horizon/resources">
-          REST API endpoints
-        </SdsLink>{" "}
-        of Horizon servers. Horizon is one of the developer-facing services for
-        the Stellar ecosystem.
+        {renderInfoMessage()}
       </Alert>
     </>
   );
