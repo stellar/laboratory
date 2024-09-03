@@ -264,6 +264,10 @@ export default function Endpoints() {
   const responseEl = useRef<HTMLDivElement | null>(null);
 
   const isSubmitEnabled = () => {
+    if (isRpcEndpoint && !network.rpcUrl) {
+      return false;
+    }
+
     let isValidReqFields = true;
     let isValidReqAssetFields = true;
     let isValid = true;
