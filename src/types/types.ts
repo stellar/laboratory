@@ -1,5 +1,5 @@
 import React from "react";
-import { SorobanRpc, xdr } from "@stellar/stellar-sdk";
+import { NetworkError, SorobanRpc, xdr } from "@stellar/stellar-sdk";
 import { TransactionBuildParams } from "@/store/createStore";
 
 // =============================================================================
@@ -188,6 +188,17 @@ export type SubmitRpcError = {
     resultMetaXdr?: xdr.TransactionMeta;
     errorResult?: xdr.TransactionResult;
     diagnosticEvents?: xdr.DiagnosticEvent[];
+  };
+};
+
+export type SubmitHorizonError = NetworkError & {
+  response: {
+    data?: {
+      extras?: {
+        result_codes?: string;
+        result_xdr?: string;
+      };
+    };
   };
 };
 
