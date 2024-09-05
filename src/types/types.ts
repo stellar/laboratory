@@ -307,3 +307,19 @@ export type LedgerKeyFieldsType = {
   templates: string;
   custom?: AnyObject;
 };
+
+export type ConfigSettingIdType =
+  | "contract_max_size_bytes"
+  | "contract_compute_v0"
+  | "contract_ledger_cost_v0"
+  | "contract_historical_data_v0"
+  | "contract_events_v0"
+  | "contract_bandwidth_v0"
+  | "contract_cost_params_cpu_instructions"
+  | "contract_cost_params_memory_bytes"
+  | "contract_data_key_size_bytes"
+  | "contract_data_entry_size_bytes"
+  | "state_archival"
+  | "contract_execution_lanes"
+  | "bucketlist_size_window"
+  | "eviction_iterator";

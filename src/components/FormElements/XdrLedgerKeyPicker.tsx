@@ -19,6 +19,7 @@ import { validate } from "@/validate";
 import {
   AnyObject,
   AssetObjectValue,
+  ConfigSettingIdType,
   LedgerKeyFieldsType,
   LedgerKeyType,
 } from "@/types/types";
@@ -43,7 +44,6 @@ const ledgerKeyFields: {
   label: string;
   templates: string;
   custom?: AnyObject;
-  isDisabled?: boolean;
 }[] = [
   {
     id: "account",
@@ -93,7 +93,6 @@ const ledgerKeyFields: {
     id: "config_setting",
     label: "Config Setting",
     templates: "config_setting_id",
-    isDisabled: true,
   },
   {
     id: "ttl",
@@ -344,6 +343,17 @@ export const XdrLedgerKeyPicker = ({
                   ? undefined
                   : JSON.stringify(assetObjVal),
               );
+            },
+            isRequired: true,
+          });
+        }
+
+        if (template === "config_setting_id") {
+          return component.render({
+            value: ledgerKeyStringToJson[selectedLedgerKey.id][template],
+            error: formError[template],
+            onChange: (selectedConfigSetting: ConfigSettingIdType) => {
+              handleChange(selectedConfigSetting);
             },
             isRequired: true,
           });

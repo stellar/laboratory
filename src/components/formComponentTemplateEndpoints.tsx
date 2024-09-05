@@ -13,6 +13,7 @@ import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { AssetMultiPicker } from "@/components/FormElements/AssetMultiPicker";
 import { FiltersPicker } from "@/components/FormElements/FiltersPicker";
 import { MultiLedgerEntriesPicker } from "@/components/FormElements/XdrLedgerKeyPicker";
+import { ConfigSettingIdPicker } from "@/components/FormElements/ConfigSettingIdPicker";
 
 import { parseJsonString } from "@/helpers/parseJsonString";
 import { validate } from "@/validate";
@@ -226,25 +227,19 @@ export const formComponentTemplateEndpoints = (
         ),
         validate: validate.getPublicKeyError,
       };
-    // case "config_setting_id":
-    //   return {
-    //     render: (templ: {
-    //       value: string | undefined;
-    //       error: string | undefined;
-    //       onChange: (val: any) => void;
-    //     }) => (
-    //       <TextPicker
-    //         key={id}
-    //         id={id}
-    //         label="Config Setting ID"
-    //         placeholder="Ex: 3389e9f0f1a65f19736cacf544c2e825313e8447f569233bb8db39aa607c8889"
-    //         value={templ.value || ""}
-    //         error=""
-    //         onChange={templ.onChange}
-    //       />
-    //     ),
-    //     validate: null,
-    //   };
+    case "config_setting_id":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <ConfigSettingIdPicker
+            key={id}
+            id={id}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ?.onChange}
+          />
+        ),
+        validate: null,
+      };
     case "contract":
       return {
         render: (templ: {
