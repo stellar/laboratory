@@ -400,7 +400,7 @@ export const XdrLedgerKeyPicker = ({
         <option value="">Select a key</option>
 
         {ledgerKeyFields.map((f) => (
-          <option key={f.id} value={f.id} disabled={f.isDisabled}>
+          <option key={f.id} value={f.id}>
             {f.label}
           </option>
         ))}
