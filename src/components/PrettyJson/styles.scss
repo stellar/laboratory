@@ -7,8 +7,25 @@
   font-weight: var(--sds-fw-medium);
   letter-spacing: -0.5px;
 
+  &__loaderContainer {
+    display: flex;
+    justify-content: center;
+  }
+
   &__nested {
     padding-left: pxToRem(16px);
+
+    &:has(+ .PrettyJson--success) {
+      .PrettyJson__key {
+        color: var(--sds-clr-green-09);
+      }
+    }
+
+    &:has(+ .PrettyJson--error) {
+      .PrettyJson__key {
+        color: var(--sds-clr-red-09);
+      }
+    }
   }
 
   &__inline {
@@ -73,5 +90,17 @@
     color: var(--sds-clr-gray-09);
     font-size: pxToRem(12px);
     margin-left: pxToRem(4px);
+  }
+
+  &--success {
+    & > * {
+      color: var(--sds-clr-green-09);
+    }
+  }
+
+  &--error {
+    & > * {
+      color: var(--sds-clr-red-09);
+    }
   }
 }

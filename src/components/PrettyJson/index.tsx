@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { Icon } from "@stellar/design-system";
+import { Icon, Loader } from "@stellar/design-system";
+
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { isValidUrl } from "@/helpers/isValidUrl";
+
 import { SdsLink } from "@/components/SdsLink";
 import { AnyObject } from "@/types/types";
 
@@ -18,6 +20,12 @@ export type CustomKeyValueLinkMap = {
 type PrettyJsonProps = {
   json: AnyObject;
   customKeyValueLinkMap?: CustomKeyValueLinkMap;
+  customValueRenderer?: (
+    item: any,
+    key: string,
+    parentKey?: string,
+  ) => React.ReactNode | null;
+  isLoading?: boolean;
   isCollapsible?: boolean;
 };
 
@@ -26,46 +34,14 @@ type Char = "{" | "}" | "[" | "]";
 export const PrettyJson = ({
   json,
   customKeyValueLinkMap,
+  customValueRenderer,
+  isLoading,
   isCollapsible = true,
 }: PrettyJsonProps) => {
   if (typeof json !== "object") {
     return null;
   }
 
-  const Key = ({ children }: { children: string }) => (
-    <div className="PrettyJson__key">
-      {`"${children}"`}
-      <Colon />
-    </div>
-  );
-  const Value = ({ children }: { children: React.ReactNode }) => (
-    <div className="PrettyJson__value">{children}</div>
-  );
-  const ValueType = ({
-    children,
-    type,
-  }: {
-    children: React.ReactNode;
-    type: string;
-  }) => <span className={`PrettyJson__value--${type}`}>{children}</span>;
-  const Quotes = () => <span className="PrettyJson__quotes">{'"'}</span>;
-  const Colon = () => <span className="PrettyJson__colon">{":"}</span>;
-  const Comma = () => <span className="PrettyJson__comma">{","}</span>;
-  const Bracket = ({
-    char,
-    children,
-    isCollapsed,
-  }: {
-    char: Char;
-    children?: React.ReactNode;
-    isCollapsed?: boolean;
-  }) => (
-    <span className="PrettyJson__bracket">
-      {char}
-      {children}
-      {isCollapsed ? `...${getClosingChar(char)}` : null}
-    </span>
-  );
   const ItemCount = ({ itemList }: { itemList: any[] }) => (
     <div className="PrettyJson__expandSize">{getItemSizeLabel(itemList)}</div>
   );
@@ -121,10 +97,8 @@ export const PrettyJson = ({
     return size === 1 ? `${size} item` : `${size} items`;
   };
 
-  const getClosingChar = (char: Char) => (char === "[" ? "]" : "}");
-
   const render = (item: any, parentKey?: string): React.ReactElement => {
-    const renderValue = (item: any, key: string) => {
+    const renderValue = (item: any, key: string, parentKey?: string) => {
       const custom = customKeyValueLinkMap?.[key];
 
       if (custom) {
@@ -145,7 +119,11 @@ export const PrettyJson = ({
         );
       }
 
-      return render(item, key);
+      const customValue = customValueRenderer
+        ? customValueRenderer(item, key, parentKey)
+        : null;
+
+      return customValue ?? render(item, key);
     };
 
     switch (typeof item) {
@@ -214,7 +192,7 @@ export const PrettyJson = ({
                               itemList={Object.keys(v)}
                               char="{"
                             >
-                              {render(v)}
+                              {render(v, key)}
                             </Collapsible>
                           );
                         }
@@ -256,35 +234,14 @@ export const PrettyJson = ({
                   <div className="PrettyJson__nested">
                     <Key>{key}</Key>
                   </div>
-                  {renderValue(value, key)}
+                  {renderValue(value, key, parentKey)}
                 </div>
               );
             })}
           </React.Fragment>
         );
       case "string":
-        return (
-          <Value>
-            {isValidUrl(item) ? (
-              <>
-                <Quotes />
-                <SdsLink href={item} isUnderline>
-                  {item}
-                </SdsLink>
-                <Quotes />
-              </>
-            ) : (
-              <>
-                <Quotes />
-                <ValueType type={isNaN(Number(item)) ? "string" : "number"}>
-                  {item}
-                </ValueType>
-                <Quotes />
-              </>
-            )}
-            <Comma />
-          </Value>
-        );
+        return renderStringValue({ item });
       case "function":
         return (
           <Value>
@@ -302,6 +259,14 @@ export const PrettyJson = ({
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="PrettyJson__loaderContainer">
+        <Loader />
+      </div>
+    );
+  }
+
   return (
     <div className="PrettyJson">
       <Bracket char="{" />
@@ -310,3 +275,89 @@ export const PrettyJson = ({
     </div>
   );
 };
+
+// =============================================================================
+// Components
+// =============================================================================
+const Key = ({ children }: { children: string }) => (
+  <div className="PrettyJson__key">
+    {`"${children}"`}
+    <Colon />
+  </div>
+);
+
+const Value = ({
+  children,
+  addlClassName,
+}: {
+  children: React.ReactNode;
+  addlClassName?: string;
+}) => (
+  <div className={`PrettyJson__value ${addlClassName || ""}`}>{children}</div>
+);
+
+const ValueType = ({
+  children,
+  type,
+}: {
+  children: React.ReactNode;
+  type: string;
+}) => <span className={`PrettyJson__value--${type}`}>{children}</span>;
+
+const Quotes = () => <span className="PrettyJson__quotes">{'"'}</span>;
+
+const Colon = () => <span className="PrettyJson__colon">{":"}</span>;
+
+const Comma = () => <span className="PrettyJson__comma">{","}</span>;
+
+const Bracket = ({
+  char,
+  children,
+  isCollapsed,
+}: {
+  char: Char;
+  children?: React.ReactNode;
+  isCollapsed?: boolean;
+}) => (
+  <span className="PrettyJson__bracket">
+    {char}
+    {children}
+    {isCollapsed ? `...${getClosingChar(char)}` : null}
+  </span>
+);
+
+// =============================================================================
+// Helpers
+// =============================================================================
+const getClosingChar = (char: Char) => (char === "[" ? "]" : "}");
+
+const renderStringValue = ({
+  item,
+  addlClassName,
+}: {
+  item: string;
+  addlClassName?: string;
+}) => (
+  <Value addlClassName={addlClassName}>
+    {isValidUrl(item) ? (
+      <>
+        <Quotes />
+        <SdsLink href={item} isUnderline>
+          {item}
+        </SdsLink>
+        <Quotes />
+      </>
+    ) : (
+      <>
+        <Quotes />
+        <ValueType type={isNaN(Number(item)) ? "string" : "number"}>
+          {item}
+        </ValueType>
+        <Quotes />
+      </>
+    )}
+    <Comma />
+  </Value>
+);
+
+PrettyJson.renderStringValue = renderStringValue;

@@ -23,7 +23,7 @@ import { useSubmitRpcTx } from "@/query/useSubmitRpcTx";
 import { useSubmitHorizonTx } from "@/query/useSubmitHorizonTx";
 
 import { Box } from "@/components/layout/Box";
-import { PrettyJson } from "@/components/PrettyJson";
+import { PrettyJsonTransaction } from "@/components/PrettyJsonTransaction";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { TxResponse } from "@/components/TxResponse";
@@ -418,7 +418,10 @@ export default function SubmitTransaction() {
           <>
             {xdrJson?.jsonString ? (
               <div className="PageBody__content PageBody__scrollable">
-                <PrettyJson json={JSON.parse(xdrJson.jsonString)} />
+                <PrettyJsonTransaction
+                  json={JSON.parse(xdrJson.jsonString)}
+                  xdr={blob}
+                />
               </div>
             ) : null}
           </>
