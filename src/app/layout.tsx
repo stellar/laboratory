@@ -5,7 +5,6 @@ import { LayoutMain } from "@/components/layout/LayoutMain";
 import { QueryProvider } from "@/query/QueryProvider";
 import { StoreProvider } from "@/store/StoreProvider";
 
-import { NetworkByPasswordProvider } from "@/components/NetworkByPasswordProvider";
 import "@/styles/globals.scss";
 import "@stellar/design-system/build/styles.min.css";
 
@@ -30,9 +29,7 @@ export default function RootLayout({
         <div id="root">
           <StoreProvider>
             <QueryProvider>
-              <NetworkByPasswordProvider>
-                <LayoutMain>{children}</LayoutMain>
-              </NetworkByPasswordProvider>
+              <LayoutMain>{children}</LayoutMain>
             </QueryProvider>
           </StoreProvider>
         </div>
