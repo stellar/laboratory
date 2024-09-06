@@ -5,8 +5,8 @@ import { LayoutMain } from "@/components/layout/LayoutMain";
 import { QueryProvider } from "@/query/QueryProvider";
 import { StoreProvider } from "@/store/StoreProvider";
 
-import "@/styles/globals.scss";
 import "@stellar/design-system/build/styles.min.css";
+import "@/styles/globals.scss";
 
 // Needed for CSP
 export const dynamic = "force-dynamic";
