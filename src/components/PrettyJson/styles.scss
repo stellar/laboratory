@@ -17,13 +17,13 @@
 
     &:has(+ .PrettyJson--success) {
       .PrettyJson__key {
-        color: var(--sds-clr-green-09);
+        color: var(--sds-clr-green-11);
       }
     }
 
     &:has(+ .PrettyJson--error) {
       .PrettyJson__key {
-        color: var(--sds-clr-red-09);
+        color: var(--sds-clr-red-11);
       }
     }
   }
@@ -94,13 +94,13 @@
 
   &--success {
     & > * {
-      color: var(--sds-clr-green-09);
+      color: var(--sds-clr-green-11);
     }
   }
 
   &--error {
     & > * {
-      color: var(--sds-clr-red-09);
+      color: var(--sds-clr-red-11);
     }
   }
 }
