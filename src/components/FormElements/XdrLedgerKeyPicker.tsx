@@ -276,7 +276,7 @@ export const XdrLedgerKeyPicker = ({
       );
 
       if (component) {
-        const handleChange = (val: any) => {
+        const handleChange = (val: any, stringifiedVal: any) => {
           const error = component.validate?.(val);
 
           if (error && error.result !== "success") {
@@ -285,7 +285,7 @@ export const XdrLedgerKeyPicker = ({
             setFormError({ ...formError, [template]: "" });
           }
 
-          obj[template] = val;
+          obj[template] = stringifiedVal;
 
           // stringify the updated json with the input value
           const ledgerKeyJsonToString = JSON.stringify(ledgerKeyStringToJson);
@@ -339,6 +339,7 @@ export const XdrLedgerKeyPicker = ({
             error: formError[template],
             onChange: (assetObjVal: AssetObjectValue) => {
               handleChange(
+                assetObjVal,
                 isEmptyObject(sanitizeObject(assetObjVal || {}))
                   ? undefined
                   : JSON.stringify(assetObjVal),
@@ -353,7 +354,7 @@ export const XdrLedgerKeyPicker = ({
             value: ledgerKeyStringToJson[selectedLedgerKey.id][template],
             error: formError[template],
             onChange: (selectedConfigSetting: ConfigSettingIdType) => {
-              handleChange(selectedConfigSetting);
+              handleChange(selectedConfigSetting, selectedConfigSetting);
             },
             isRequired: true,
           });
@@ -363,7 +364,7 @@ export const XdrLedgerKeyPicker = ({
           value: ledgerKeyStringToJson[selectedLedgerKey.id][template],
           error: formError[template],
           onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-            handleChange(e.target.value);
+            handleChange(e.target.value, e.target.value);
           },
           isRequired: true,
         });
