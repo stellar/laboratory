@@ -38,7 +38,7 @@ type AssetPickerProps = {
   fitContent?: boolean;
   includeNative?: boolean;
   includeLiquidityPoolShares?: boolean;
-  includePoolShare?: boolean;
+  includeSingleLiquidityPoolShare?: boolean;
 };
 
 export const AssetPicker = ({
