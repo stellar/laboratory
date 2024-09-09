@@ -1,8 +1,14 @@
 import { useEffect } from "react";
+import { toSafeNumberOrThrow } from "lossless-json";
+
 import { PrettyJson } from "@/components/PrettyJson";
 import { signatureHint } from "@/helpers/signatureHint";
+import { xdrUtils } from "@/helpers/xdr/utils";
+import { formatAmount } from "@/helpers/formatAmount";
+
 import { useCheckTxSignatures } from "@/query/useCheckTxSignatures";
 import { useStore } from "@/store/useStore";
+
 import { AnyObject } from "@/types/types";
 
 type PrettyJsonTransactionProps = {
@@ -50,6 +56,38 @@ export const PrettyJsonTransaction = ({
       }
 
       return item;
+    }
+
+    // Amount
+    const amountKeys = [
+      "amount",
+      "buy_amount",
+      "starting_balance",
+      "send_max",
+      "send_amount",
+      "dest_min",
+      "dest_amount",
+      "limit",
+    ];
+
+    if (amountKeys.includes(key)) {
+      const parsedAmount = xdrUtils.fromAmount(item);
+      let formattedAmount = "";
+
+      try {
+        formattedAmount = formatAmount(toSafeNumberOrThrow(parsedAmount));
+      } catch (e) {
+        // Do nothing
+      }
+
+      if (formattedAmount) {
+        return PrettyJson.renderStringValue({
+          item: `${formattedAmount} (raw: ${item})`,
+          itemType: "number",
+        });
+      }
+
+      return PrettyJson.renderStringValue({ item });
     }
 
     return null;

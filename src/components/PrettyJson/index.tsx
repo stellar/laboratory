@@ -304,7 +304,8 @@ const ValueType = ({
   type: string;
 }) => <span className={`PrettyJson__value--${type}`}>{children}</span>;
 
-const Quotes = () => <span className="PrettyJson__quotes">{'"'}</span>;
+const Quotes = ({ isVisible = true }: { isVisible?: boolean }) =>
+  isVisible ? <span className="PrettyJson__quotes">{'"'}</span> : null;
 
 const Colon = () => <span className="PrettyJson__colon">{":"}</span>;
 
@@ -334,30 +335,38 @@ const getClosingChar = (char: Char) => (char === "[" ? "]" : "}");
 const renderStringValue = ({
   item,
   addlClassName,
+  itemType,
 }: {
   item: string;
   addlClassName?: string;
-}) => (
-  <Value addlClassName={addlClassName}>
-    {isValidUrl(item) ? (
-      <>
-        <Quotes />
-        <SdsLink href={item} isUnderline>
-          {item}
-        </SdsLink>
-        <Quotes />
-      </>
-    ) : (
-      <>
-        <Quotes />
-        <ValueType type={isNaN(Number(item)) ? "string" : "number"}>
-          {item}
-        </ValueType>
-        <Quotes />
-      </>
-    )}
-    <Comma />
-  </Value>
-);
+  itemType?: "number" | "string";
+}) => {
+  let type = isNaN(Number(item)) ? "string" : "number";
+
+  if (itemType) {
+    type = itemType;
+  }
+
+  return (
+    <Value addlClassName={addlClassName}>
+      {isValidUrl(item) ? (
+        <>
+          <Quotes />
+          <SdsLink href={item} isUnderline>
+            {item}
+          </SdsLink>
+          <Quotes />
+        </>
+      ) : (
+        <>
+          <Quotes isVisible={type === "string"} />
+          <ValueType type={type}>{item}</ValueType>
+          <Quotes isVisible={type === "string"} />
+        </>
+      )}
+      <Comma />
+    </Value>
+  );
+};
 
 PrettyJson.renderStringValue = renderStringValue;
