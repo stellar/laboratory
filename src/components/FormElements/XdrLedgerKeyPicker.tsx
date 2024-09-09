@@ -167,6 +167,7 @@ export const XdrLedgerKeyPicker = ({
   const reset = () => {
     setFormError({});
     setLedgerKeyJsonString("");
+    setLedgerKeyXdrError("")
     onChange("");
   };
 
