@@ -92,7 +92,7 @@ export const ConfigSettingIdPicker = ({
           }
         }}
       >
-        <option value="">Select config setting id</option>
+        <option value="">Select Config Setting ID</option>
 
         {configSettingType.map((f) => (
           <option key={f.id} value={f.id}>
