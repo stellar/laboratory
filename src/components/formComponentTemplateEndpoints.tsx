@@ -110,7 +110,9 @@ export const formComponentTemplateEndpoints = (
             error={templ.error}
             includeNative={custom?.includeNative}
             onChange={templ.onChange}
-            includePoolShare={custom?.includePoolShare}
+            includeSingleLiquidityPoolShare={
+              custom?.includeSingleLiquidityPoolShare
+            }
           />
         ),
         validate: validate.getAssetError,

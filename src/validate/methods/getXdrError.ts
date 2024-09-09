@@ -20,7 +20,7 @@ export const getXdrError = (value: string, type?: XdrType) => {
   }
 
   const defaultType = "Transaction Envelope";
-  let selectedType = defaultType;
+  const selectedType = type || defaultType;
 
   const sanitizedXdr = trim(value);
   const base64Validation = validateBase64(sanitizedXdr);
@@ -31,7 +31,6 @@ export const getXdrError = (value: string, type?: XdrType) => {
 
   try {
     if (type === "LedgerKey") {
-      selectedType = type;
       stellarXDR.LedgerKey.fromXDR(sanitizedXdr, "base64");
     } else {
       stellarXDR.TransactionEnvelope.fromXDR(sanitizedXdr, "base64");
@@ -42,7 +41,7 @@ export const getXdrError = (value: string, type?: XdrType) => {
     // handle it.
     return {
       result: "success",
-      message: "Valid Transaction Envelope XDR",
+      message: `Valid ${selectedType} XDR`,
     };
   } catch (e) {
     return {

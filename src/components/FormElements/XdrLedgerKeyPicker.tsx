@@ -56,7 +56,7 @@ const ledgerKeyFields: {
     templates: "account_id,asset",
     custom: {
       assetInput: "alphanumeric",
-      includePoolShare: true,
+      includeSingleLiquidityPoolShare: true,
     },
   },
   {
@@ -136,7 +136,7 @@ export const XdrLedgerKeyPicker = ({
   };
 
   const jsonEncodeXdr = (str: string) => {
-    if (!(isXdrInit && str && "LedgerKey")) {
+    if (!isXdrInit && !str) {
       return null;
     }
 
@@ -159,7 +159,7 @@ export const XdrLedgerKeyPicker = ({
     } catch (e) {
       return {
         xdrString: "",
-        error: `Unable to decode JSON as LedgerKey: ${e}`,
+        error: `Unable to encode JSON as LedgerKey: ${e}`,
       };
     }
   };
@@ -167,7 +167,7 @@ export const XdrLedgerKeyPicker = ({
   const reset = () => {
     setFormError({});
     setLedgerKeyJsonString("");
-    setLedgerKeyXdrError("")
+    setLedgerKeyXdrError("");
     onChange("");
   };
 

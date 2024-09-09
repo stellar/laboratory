@@ -53,7 +53,7 @@ export const AssetPicker = ({
   fitContent,
   includeNative = true,
   includeLiquidityPoolShares,
-  includePoolShare,
+  includeSingleLiquidityPoolShare,
 }: AssetPickerProps) => {
   let options: AssetObject[] = [];
 
@@ -117,7 +117,7 @@ export const AssetPicker = ({
       });
     }
 
-    if (includePoolShare) {
+    if (includeSingleLiquidityPoolShare) {
       options.push({
         id: "pool_share",
         label: "Liquidity Pool Share",
