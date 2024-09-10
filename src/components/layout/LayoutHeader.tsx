@@ -18,11 +18,12 @@ import { FloaterDropdown } from "@/components/FloaterDropdown";
 
 import { isExternalLink } from "@/helpers/isExternalLink";
 import { Routes } from "@/constants/routes";
-
-import { ACCOUNT_NAV_ITEMS } from "@/app/(sidebar)/account/layout";
-import { XDR_NAV_ITEMS } from "@/app/(sidebar)/xdr/layout";
-import { ENDPOINTS_NAV_ITEMS } from "@/app/(sidebar)/endpoints/layout";
-import { TRANSACTION_NAV_ITEMS } from "@/app/(sidebar)/transaction/layout";
+import {
+  ACCOUNT_NAV_ITEMS,
+  ENDPOINTS_NAV_ITEMS,
+  TRANSACTION_NAV_ITEMS,
+  XDR_NAV_ITEMS,
+} from "@/constants/navItems";
 
 const NAV = [
   {
