@@ -1,5 +1,6 @@
 import { ComponentProps } from "react";
 import Link from "next/link";
+import { isExternalLink } from "@/helpers/isExternalLink";
 
 type LinkProps = ComponentProps<typeof Link> & {
   "sds-variant"?: "primary" | "secondary" | "error" | "success" | "warning";
@@ -7,13 +8,10 @@ type LinkProps = ComponentProps<typeof Link> & {
 
 /** `NextLink` is extended `next/link`. */
 export const NextLink = (props: LinkProps) => {
-  const externalLinkProps = (href: string) => {
-    const isExternalLink = href?.startsWith("http") || href?.startsWith("//");
-
-    return isExternalLink
+  const externalLinkProps = (href: string) =>
+    isExternalLink(href)
       ? { rel: "noreferrer noopener", target: "_blank" }
       : {};
-  };
 
   return (
     <Link

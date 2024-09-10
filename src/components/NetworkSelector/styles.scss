@@ -66,6 +66,10 @@
     &[data-is-visible="true"] {
       opacity: 1;
     }
+
+    @media screen and (max-width: 1040px) {
+      right: pxToRem(-32px);
+    }
   }
 
   // Body

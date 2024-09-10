@@ -1,0 +1,19 @@
+@use "../../styles/utils.scss" as *;
+
+.FloaterDropdown {
+  &__content {
+    padding: pxToRem(4px);
+    min-width: pxToRem(100px);
+    display: flex;
+    flex-direction: column;
+    gap: pxToRem(4px);
+  }
+}
+
+.Floater__content {
+  &:has(.FloaterDropdown__content) {
+    left: auto !important;
+    right: 0 !important;
+    width: pxToRem(240px);
+  }
+}
