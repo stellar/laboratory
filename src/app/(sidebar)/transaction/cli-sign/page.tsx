@@ -1,11 +1,12 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Loader } from "@stellar/design-system";
+
 import { Routes } from "@/constants/routes";
 import { NetworkOptions } from "@/constants/settings";
 import { useStore } from "@/store/useStore";
-import { Loader } from "@stellar/design-system";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
 
 export default function CliSignTransaction() {
   const { network, updateIsDynamicNetworkSelect, transaction, selectNetwork } =
