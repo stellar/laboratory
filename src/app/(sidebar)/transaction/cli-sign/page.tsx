@@ -11,7 +11,6 @@ import { useStore } from "@/store/useStore";
 export default function CliSignTransaction() {
   const { network, updateIsDynamicNetworkSelect, transaction, selectNetwork } =
     useStore();
-  const { sign } = transaction;
   const searchParams = useSearchParams();
 
   const getNetworkByPassphrase = (passphrase: string) => {
@@ -37,7 +36,7 @@ export default function CliSignTransaction() {
     }
 
     router.push(Routes.SIGN_TRANSACTION);
-  }, [sign.importXdr, network, router, searchParams, updateIsDynamicNetworkSelect, selectNetwork, transaction]);
+  }, [transaction.sign.importXdr, network.id]);
 
   return <Loader />;
 }
