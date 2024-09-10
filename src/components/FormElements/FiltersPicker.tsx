@@ -1,5 +1,3 @@
-"use client";
-
 import { Select } from "@stellar/design-system";
 
 import { Box } from "@/components/layout/Box";
