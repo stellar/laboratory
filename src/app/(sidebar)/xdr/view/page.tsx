@@ -20,8 +20,8 @@ import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
 import { Box } from "@/components/layout/Box";
 import { SdsLink } from "@/components/SdsLink";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
-import { PrettyJson } from "@/components/PrettyJson";
 import { XdrTypeSelect } from "@/components/XdrTypeSelect";
+import { PrettyJsonTransaction } from "@/components/PrettyJsonTransaction";
 
 import { parseToLosslessJson } from "@/helpers/parseToLosslessJson";
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
@@ -148,8 +148,9 @@ export default function ViewXdr() {
             {xdrJsonDecoded?.jsonString ? (
               <Box gap="lg">
                 <div className="PageBody__content PageBody__scrollable">
-                  <PrettyJson
+                  <PrettyJsonTransaction
                     json={parseToLosslessJson(xdrJsonDecoded.jsonString)}
+                    xdr={xdr.blob}
                   />
                 </div>
 
