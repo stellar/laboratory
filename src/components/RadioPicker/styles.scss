@@ -23,10 +23,12 @@
     display: flex;
     align-items: stretch;
     justify-content: stretch;
+    flex-wrap: wrap;
   }
 
   &__item {
     flex: 1;
+    min-width: fit-content;
 
     input[type="radio"] {
       opacity: 0;

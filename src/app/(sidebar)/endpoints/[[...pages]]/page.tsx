@@ -19,6 +19,7 @@ import { SdsLink } from "@/components/SdsLink";
 import { formComponentTemplateEndpoints } from "@/components/formComponentTemplateEndpoints";
 import { PrettyJson } from "@/components/PrettyJson";
 import { InputSideElement } from "@/components/InputSideElement";
+import { Box } from "@/components/layout/Box";
 
 import { useStore } from "@/store/useStore";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
@@ -631,45 +632,53 @@ export default function Endpoints() {
               </InputSideElement>
             }
           />
-          <Button
-            size="md"
-            variant="secondary"
-            type="submit"
-            disabled={!isSubmitEnabled()}
-            isLoading={isLoading || isFetching}
-            data-testid="endpoints-submitBtn"
+          <Box
+            gap="sm"
+            align="center"
+            justify="space-between"
+            direction="row"
+            addlClassName="Endpoints__urlBar__buttons"
           >
-            Submit
-          </Button>
-          <CopyText textToCopy={requestUrl}>
+            <Button
+              size="md"
+              variant="secondary"
+              type="submit"
+              disabled={!isSubmitEnabled()}
+              isLoading={isLoading || isFetching}
+              data-testid="endpoints-submitBtn"
+            >
+              Submit
+            </Button>
+            <CopyText textToCopy={requestUrl}>
+              <Button
+                size="md"
+                variant="tertiary"
+                icon={<Icon.Copy01 />}
+                type="button"
+              ></Button>
+            </CopyText>
             <Button
               size="md"
               variant="tertiary"
-              icon={<Icon.Copy01 />}
+              icon={<Icon.Save01 />}
               type="button"
+              onClick={() => {
+                const currentSaved = localStorageSavedEndpointsHorizon.get();
+                localStorageSavedEndpointsHorizon.set(
+                  arrayItem.add(currentSaved, {
+                    url: requestUrl,
+                    method: pageData.requestMethod,
+                    timestamp: Date.now(),
+                    route: pathname,
+                    params,
+                    network: getSaveItemNetwork(network),
+                  }),
+                );
+              }}
+              showActionTooltip
+              actionTooltipText="Saved"
             ></Button>
-          </CopyText>
-          <Button
-            size="md"
-            variant="tertiary"
-            icon={<Icon.Save01 />}
-            type="button"
-            onClick={() => {
-              const currentSaved = localStorageSavedEndpointsHorizon.get();
-              localStorageSavedEndpointsHorizon.set(
-                arrayItem.add(currentSaved, {
-                  url: requestUrl,
-                  method: pageData.requestMethod,
-                  timestamp: Date.now(),
-                  route: pathname,
-                  params,
-                  network: getSaveItemNetwork(network),
-                }),
-              );
-            }}
-            showActionTooltip
-            actionTooltipText="Saved"
-          ></Button>
+          </Box>
         </div>
       </>
     );
@@ -895,7 +904,7 @@ export default function Endpoints() {
           icon={<Icon.LinkExternal01 />}
           data-testid="endpoints-docsLink"
         >
-          {`View ${pageData.docsLabel ? `${pageData.docsLabel} ` : ""}documentation`}
+          View docs
         </SdsLink>
       </div>
 

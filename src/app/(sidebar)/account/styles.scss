@@ -18,6 +18,15 @@
   &__CTA {
     display: flex;
     gap: pxToRem(18px) pxToRem(8px);
+    flex-wrap: wrap;
+
+    & > * {
+      min-width: fit-content;
+
+      @media screen and (max-width: 700px) {
+        flex: 1;
+      }
+    }
   }
 
   &__keypair {

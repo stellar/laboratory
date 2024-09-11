@@ -18,6 +18,15 @@
   min-width: auto !important;
   min-height: auto !important;
   display: block !important;
+
+  @media screen and (max-width: 1040px) {
+    position: relative;
+    z-index: 10;
+
+    .Card {
+      --Card-padding: #{pxToRem(16px)};
+    }
+  }
 }
 
 .LabLayout {
@@ -436,6 +445,8 @@
 }
 
 .PageHeader {
+  flex-wrap: wrap;
+
   .Link {
     --Link-icon-size: pxToRem(14px);
     font-size: pxToRem(14px);
@@ -541,9 +552,29 @@
     align-items: center;
     justify-content: space-between;
     gap: pxToRem(8px);
+    flex-wrap: wrap;
+
+    .Input {
+      width: auto;
+      flex: 1;
+    }
 
     &__requestMethod {
       color: var(--sds-clr-teal-11) !important;
+    }
+
+    @media screen and (max-width: 560px) {
+      &__buttons {
+        flex: 1;
+
+        .Button {
+          flex: 1;
+        }
+      }
+    }
+
+    &__footer {
+      flex-wrap: wrap;
     }
   }
 
@@ -576,9 +607,24 @@
 }
 
 // Operations
-.NumberFractionPicker__fraction__divider {
-  padding-top: pxToRem(22px);
-  color: var(--sds-clr-gray-09);
+.NumberFractionPicker {
+  &__fraction__divider {
+    padding-top: pxToRem(22px);
+    color: var(--sds-clr-gray-09);
+
+    @media screen and (max-width: 610px) {
+      display: none;
+    }
+  }
+
+  &__container {
+    flex-wrap: wrap;
+
+    .Input {
+      flex: 1;
+      width: auto;
+    }
+  }
 }
 
 // Create claimable balance
@@ -598,6 +644,27 @@
           border-top: 1px solid var(--sds-clr-gray-06);
           padding-top: 0.5rem;
         }
+      }
+    }
+  }
+}
+
+.Operation {
+  &__buttons {
+    flex-wrap: wrap;
+
+    & > * {
+      min-width: fit-content;
+    }
+
+    @media screen and (max-width: 440px) {
+      .Button--error,
+      .Button--secondary {
+        flex: 1;
+      }
+
+      .Box {
+        flex: 1;
       }
     }
   }
@@ -705,6 +772,29 @@
       }
     }
   }
+
+  &__buttons {
+    flex-wrap: wrap;
+
+    .Box {
+      flex: 1;
+      flex-wrap: wrap;
+
+      .Button--tertiary {
+        min-width: fit-content;
+      }
+    }
+
+    & > * {
+      min-width: fit-content;
+    }
+
+    @media screen and (max-width: 652px) {
+      .Button {
+        flex: 1;
+      }
+    }
+  }
 }
 
 // Sign Transaction
@@ -742,15 +832,18 @@
   &__FieldViewer,
   &__Field {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
     gap: pxToRem(16px);
 
-    .half-width {
-      grid-template-columns: 1fr 1fr;
-    }
+    @media screen and (min-width: 640px) {
+      grid-template-columns: repeat(2, 1fr);
 
-    .full-width {
-      grid-column: 1 / 3;
+      .half-width {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .full-width {
+        grid-column: 1 / 3;
+      }
     }
   }
 
@@ -791,6 +884,7 @@
     }
     .Input__side-element {
       flex: 1 0;
+      min-width: pxToRem(190px);
 
       &:has(.MultiPicker__delete) {
         flex: 0;

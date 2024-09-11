@@ -72,16 +72,26 @@ export const ValidationResponseCard = ({
                     direction="row"
                     align="center"
                     justify="space-between"
+                    addlClassName="ValidationResponseCard__footer"
                   >
                     <>
                       {footerLeftEl ? (
-                        <Box gap="sm" direction="row">
+                        <Box
+                          gap="sm"
+                          direction="row"
+                          addlClassName="ValidationResponseCard__footer--leftEl"
+                        >
                           <>{footerLeftEl}</>
                         </Box>
                       ) : null}
 
                       {footerRightEl ? (
-                        <Box gap="sm" direction="row" justify="right">
+                        <Box
+                          gap="sm"
+                          direction="row"
+                          justify="right"
+                          addlClassName="ValidationResponseCard__footer--rightEl"
+                        >
                           <>{footerRightEl}</>
                         </Box>
                       ) : null}
