@@ -223,6 +223,13 @@
     }
   }
 
+  &__loader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: pxToRem(32px);
+  }
+
   // Sideber
   &__sidebar {
     min-height: 0;

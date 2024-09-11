@@ -15,5 +15,9 @@ export const LayoutWithSidebar = ({ children }: { children: ReactNode }) => {
     return children;
   }
 
-  return <Loader />;
+  return (
+    <div className="LabLayout__loader">
+      <Loader size="1.5rem" />
+    </div>
+  );
 };
