@@ -904,7 +904,7 @@ export default function Endpoints() {
           icon={<Icon.LinkExternal01 />}
           data-testid="endpoints-docsLink"
         >
-          View docs
+          View Docs
         </SdsLink>
       </div>
 
