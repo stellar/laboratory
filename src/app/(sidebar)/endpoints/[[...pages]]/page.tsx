@@ -17,6 +17,7 @@ import { stringify } from "lossless-json";
 
 import { SdsLink } from "@/components/SdsLink";
 import { formComponentTemplateEndpoints } from "@/components/formComponentTemplateEndpoints";
+import { PrettyJson } from "@/components/PrettyJson";
 import { InputSideElement } from "@/components/InputSideElement";
 
 import { useStore } from "@/store/useStore";
@@ -45,7 +46,6 @@ import {
 
 import { EndpointsLandingPage } from "../components/EndpointsLandingPage";
 import { SavedEndpointsPage } from "../components/SavedEndpointsPage";
-import { EndpointsJsonResponse } from "../components/EndpointsJsonResponse";
 
 export default function Endpoints() {
   const pathname = usePathname();
@@ -149,7 +149,7 @@ export default function Endpoints() {
         const filteredTopics = filteredParams.topics
           ? filteredParams.topics
               .filter((topic: string) => topic.length)
-              .map((item: string) => JSON.parse(item))
+              .map((item: string) => (item ? JSON.parse(item) : []))
           : [];
 
         return {
@@ -175,7 +175,10 @@ export default function Endpoints() {
         return {
           ...defaultRpcRequestBody,
           params: {
-            keys: params.tx ?? "",
+            keys:
+              (params.ledgerKeyEntries &&
+                JSON.parse(params.ledgerKeyEntries)) ??
+              [],
           },
         };
       }
@@ -686,8 +689,6 @@ export default function Endpoints() {
     return (
       <div className="Endpoints__content">
         <div className="PageBody__content" data-testid="endpoints-pageContent">
-          {renderPostPayload()}
-
           {allFields.map((f) => {
             const component = formComponentTemplateEndpoints(
               f,
@@ -799,6 +800,18 @@ export default function Endpoints() {
                       );
                     },
                   });
+                case "ledgerKeyEntries":
+                  return component.render({
+                    value: params[f],
+                    error: formError[f],
+                    isRequired,
+                    onChange: (ledgerKeyXdr: string[]) => {
+                      handleChange(
+                        ledgerKeyXdr,
+                        ledgerKeyXdr ? JSON.stringify(ledgerKeyXdr) : undefined,
+                      );
+                    },
+                  });
                 default:
                   return component.render({
                     value: params[f],
@@ -813,6 +826,8 @@ export default function Endpoints() {
 
             return null;
           })}
+
+          {renderPostPayload()}
         </div>
       </div>
     );
@@ -919,7 +934,7 @@ export default function Endpoints() {
                 <div
                   className={`PageBody__content PageBody__scrollable ${endpointData.isError ? "PageBody__content--error" : ""}`}
                 >
-                  <EndpointsJsonResponse json={endpointData.json} />
+                  <PrettyJson json={endpointData.json} />
                 </div>
 
                 <div className="PageFooter">
