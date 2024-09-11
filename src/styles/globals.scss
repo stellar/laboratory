@@ -88,7 +88,7 @@
 
       .Select {
         --Select-color-border: transparent;
-        width: pxToRem(220px);
+        max-width: pxToRem(220px);
         margin-left: pxToRem(-8px);
 
         select {
@@ -531,6 +531,7 @@
   gap: pxToRem(12px);
   font-size: pxToRem(14px);
   line-height: pxToRem(20px);
+  flex-wrap: wrap;
 }
 
 // Endpoints

@@ -3,7 +3,7 @@
 .InfoCards {
   display: grid;
   gap: pxToRem(12px);
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
 
   .Card {
     display: flex;
