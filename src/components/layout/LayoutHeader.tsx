@@ -49,6 +49,60 @@ export const LayoutHeader = () => {
   const route = useRouter();
   const pathname = usePathname();
 
+  // Adjusting format to remove nested sub-sections (RPC Endpoints, for example)
+  // We cannot have nested optgroup in select
+  const formattedNav = NAV.map((mainNav) => {
+    type NavItem = {
+      route: Routes;
+      label: string;
+    };
+
+    const formatNavItems = (navItems: NavItem[]) =>
+      navItems.map((ni) => ({
+        label: ni.label,
+        value: ni.route,
+      }));
+
+    const hasSubSection = Boolean(
+      mainNav.subNav.find((sn: any) => sn.instruction),
+    );
+
+    if (hasSubSection) {
+      const rootItems = mainNav.subNav.filter((sn: any) => !sn.instruction);
+
+      const subSecs = mainNav.subNav
+        .filter((sn) => (sn as any).instruction)
+        .map((ss) => ({
+          groupTitle: (ss as any).instruction,
+          options: formatNavItems(ss.navItems),
+        }));
+
+      return [
+        {
+          groupTitle: mainNav.label,
+          options: rootItems
+            .map((ri) => formatNavItems(ri.navItems))
+            .reduce((r, c) => [...r, ...c], []),
+        },
+        ...subSecs,
+      ];
+    }
+
+    return [
+      {
+        groupTitle: mainNav.label,
+        options: mainNav.subNav
+          .map((sn) => formatNavItems(sn.navItems))
+          .reduce((r, c) => [...r, ...c], []),
+      },
+    ];
+  });
+
+  const flattenFormattedNav = formattedNav.reduce(
+    (res, cur) => [...res, ...cur],
+    [],
+  );
+
   const handleNavChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     route.push(event.target.value);
   };
@@ -57,32 +111,16 @@ export const LayoutHeader = () => {
     return (
       <>
         <option value={Routes.ROOT}>Introduction</option>
-        {NAV.map((mainNav) => {
-          return (
-            <optgroup key={mainNav.label} label={mainNav.label}>
-              <>
-                {mainNav.subNav.map((subItem) => {
-                  const subSection = (subItem as any)?.instruction;
 
-                  return (
-                    <>
-                      {subSection ? (
-                        <option key={subSection} disabled>
-                          {subSection}
-                        </option>
-                      ) : null}
-                      {subItem.navItems.map((item: any) => (
-                        <option key={item.route} value={item.route}>
-                          {item.label}
-                        </option>
-                      ))}
-                    </>
-                  );
-                })}
-              </>
-            </optgroup>
-          );
-        })}
+        {flattenFormattedNav.map((fn) => (
+          <optgroup key={fn.groupTitle} label={fn.groupTitle}>
+            {fn.options.map((op) => (
+              <option key={op.value} value={op.value}>
+                {op.label}
+              </option>
+            ))}
+          </optgroup>
+        ))}
       </>
     );
   };
