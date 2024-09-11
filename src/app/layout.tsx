@@ -1,5 +1,6 @@
 import React from "react";
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 
 import { LayoutMain } from "@/components/layout/LayoutMain";
 import { LayoutContextProvider } from "@/components/layout/LayoutContextProvider";
@@ -24,6 +25,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  headers();
+
   return (
     <html lang="en">
       <body>
