@@ -78,7 +78,8 @@ export type AssetType =
   | "issued"
   | "credit_alphanum4"
   | "credit_alphanum12"
-  | "liquidity_pool_shares";
+  | "liquidity_pool_shares"
+  | "pool_share";
 
 export type AssetString = {
   id: AssetType;
@@ -99,10 +100,18 @@ export type AssetPoolShareObjectValue = {
   fee: string;
 };
 
+export type AssetSinglePoolShareValue = {
+  type: "pool_share";
+  pool_share: string | undefined;
+};
+
 export type AssetObject = {
   id: AssetType;
   label: string;
-  value: AssetObjectValue | AssetPoolShareObjectValue;
+  value:
+    | AssetObjectValue
+    | AssetPoolShareObjectValue
+    | AssetSinglePoolShareValue;
 };
 
 export type AssetError = {
@@ -262,3 +271,55 @@ export type FiltersObject = {
   contract_ids: string[];
   topics: string[];
 };
+
+export type XdrType = "TransactionEnvelope" | "LedgerKey";
+
+export type LedgerKeyType =
+  | "account"
+  | "trustline"
+  | "offer"
+  | "data"
+  | "claimable_balance"
+  | "liquidity_pool"
+  | "contract_data"
+  | "contract_code"
+  | "config_setting"
+  | "ttl";
+
+export type LedgerKeyEntryTypeProps =
+  | "accountID"
+  | "asset"
+  | "sellerID"
+  | "offerID"
+  | "dataName"
+  | "balanceID"
+  | "liquidityPoolID"
+  | "contract"
+  | "key"
+  | "durability"
+  | "hash"
+  | "configSettingID"
+  | "keyHash";
+
+export type LedgerKeyFieldsType = {
+  id: LedgerKeyType;
+  label: string;
+  templates: string;
+  custom?: AnyObject;
+};
+
+export type ConfigSettingIdType =
+  | "contract_max_size_bytes"
+  | "contract_compute_v0"
+  | "contract_ledger_cost_v0"
+  | "contract_historical_data_v0"
+  | "contract_events_v0"
+  | "contract_bandwidth_v0"
+  | "contract_cost_params_cpu_instructions"
+  | "contract_cost_params_memory_bytes"
+  | "contract_data_key_size_bytes"
+  | "contract_data_entry_size_bytes"
+  | "state_archival"
+  | "contract_execution_lanes"
+  | "bucketlist_size_window"
+  | "eviction_iterator";

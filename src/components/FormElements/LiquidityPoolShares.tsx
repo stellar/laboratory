@@ -5,6 +5,7 @@ import {
   AssetObjectValue,
   AssetPoolShareError,
   AssetPoolShareObjectValue,
+  AssetSinglePoolShareValue,
 } from "@/types/types";
 
 type LiquidityPoolSharesProps = {
@@ -21,7 +22,11 @@ export const LiquidityPoolShares = ({
   onChange,
 }: LiquidityPoolSharesProps) => {
   const getAssetValue = (
-    val: AssetPoolShareObjectValue | AssetObjectValue | undefined,
+    val:
+      | AssetPoolShareObjectValue
+      | AssetObjectValue
+      | AssetSinglePoolShareValue
+      | undefined,
   ) => {
     let assetValue: AssetObjectValue = {
       type: undefined,

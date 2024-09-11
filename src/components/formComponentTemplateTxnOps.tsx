@@ -20,6 +20,7 @@ import {
   AnyObject,
   AssetObjectValue,
   AssetPoolShareObjectValue,
+  AssetSinglePoolShareValue,
   NumberFractionValue,
   OptionSigner,
   RevokeSponsorshipValue,
@@ -37,7 +38,11 @@ type TemplateRenderAssetProps = {
   value: AssetObjectValue | undefined;
   error: { code: string | undefined; issuer: string | undefined } | undefined;
   onChange: (
-    asset: AssetObjectValue | AssetPoolShareObjectValue | undefined,
+    asset:
+      | AssetObjectValue
+      | AssetPoolShareObjectValue
+      | AssetSinglePoolShareValue
+      | undefined,
   ) => void;
   isRequired?: boolean;
 };
