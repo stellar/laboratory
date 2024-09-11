@@ -27,6 +27,15 @@
       --Card-padding: #{pxToRem(16px)};
     }
   }
+
+  // TODO: fix in SDS
+  .Input {
+    &__container {
+      & > * {
+        min-width: 0;
+      }
+    }
+  }
 }
 
 .LabLayout {
@@ -557,6 +566,7 @@
     .Input {
       width: auto;
       flex: 1;
+      min-width: 0;
     }
 
     &__requestMethod {
@@ -564,6 +574,10 @@
     }
 
     @media screen and (max-width: 560px) {
+      .Input {
+        min-width: auto;
+      }
+
       &__buttons {
         flex: 1;
 
