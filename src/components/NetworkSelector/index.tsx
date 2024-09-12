@@ -18,6 +18,7 @@ import "./styles.scss";
 
 export const NetworkSelector = () => {
   const {
+    endpoints,
     network,
     isDynamicNetworkSelect,
     selectNetwork,
@@ -27,6 +28,8 @@ export const NetworkSelector = () => {
   const [activeNetworkId, setActiveNetworkId] = useState(network.id);
   const [isDropdownActive, setIsDropdownActive] = useState(false);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+
+  const { updateNetwork } = endpoints;
 
   const initialCustomState = {
     horizonUrl: network.id === "custom" ? network.horizonUrl : "",
@@ -194,6 +197,10 @@ export const NetworkSelector = () => {
       const latestData = getData();
 
       selectNetwork(latestData);
+
+      // also update the network setting for endpoints
+      updateNetwork(latestData);
+
       setCustomNetwork(
         networkData.id === "custom" ? customNetwork : initialCustomState,
       );
