@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { Icon, Input } from "@stellar/design-system";
+import { Badge, Icon, Input } from "@stellar/design-system";
 
 import { ALL_XDR_TYPES } from "@/constants/xdr";
-import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
 import { delayedAction } from "@/helpers/delayedAction";
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { useStore } from "@/store/useStore";
@@ -42,7 +41,6 @@ export const XdrTypeSelect = ({ error }: XdrTypeSelectProps) => {
         const guessed = StellarXdr.guess(xdr.blob);
 
         setGuessedTypes(guessed.length > 0 ? guessed : []);
-        xdr.updateXdrType(guessed?.[0] || XDR_TYPE_TRANSACTION_ENVELOPE);
       } catch (e) {
         setGuessedTypes([]);
       }
@@ -80,23 +78,12 @@ export const XdrTypeSelect = ({ error }: XdrTypeSelectProps) => {
           data-is-current={xdr.type === option}
         >
           {option}
+          {guessedTypes.includes(option) ? (
+            <Badge variant="secondary" size="sm">
+              Possible Type
+            </Badge>
+          ) : null}
         </div>
-      );
-    }
-
-    return null;
-  };
-
-  const renderGuessedTypes = () => {
-    if (guessedTypes.length > 0) {
-      return (
-        <>
-          <OptionItem sectionTitle="Best Guess" />
-
-          {guessedTypes.map((g) => (
-            <OptionItem key={`guessed-${g}`} option={g} />
-          ))}
-        </>
       );
     }
 
@@ -108,8 +95,6 @@ export const XdrTypeSelect = ({ error }: XdrTypeSelectProps) => {
     if (!searchValue) {
       return (
         <>
-          {renderGuessedTypes()}
-
           <OptionItem sectionTitle="Popular" />
 
           {["TransactionEnvelope", "TransactionResult", "TransactionMeta"].map(

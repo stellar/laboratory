@@ -30,7 +30,9 @@
   }
 
   &__item {
-    display: block;
+    display: flex;
+    gap: pxToRem(16px);
+    align-items: center;
     padding: pxToRem(4px) pxToRem(8px);
     border-radius: pxToRem(4px);
     background-color: var(--sds-clr-gray-01);
