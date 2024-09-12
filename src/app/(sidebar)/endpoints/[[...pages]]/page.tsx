@@ -9,6 +9,7 @@ import {
   CopyText,
   Icon,
   Input,
+  Notification,
   Text,
   Textarea,
 } from "@stellar/design-system";
@@ -541,7 +542,13 @@ export default function Endpoints() {
     return `${baseUrl}${searchParamString ? `?${searchParamString}` : ""}`;
     // Not including RegEx const
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [endpointNetwork.horizonUrl, params, urlParams, urlPath]);
+  }, [
+    endpointNetwork.horizonUrl,
+    endpointNetwork.rpcUrl,
+    params,
+    urlParams,
+    urlPath,
+  ]);
 
   useEffect(() => {
     setRequestUrl(buildUrl());
@@ -631,6 +638,7 @@ export default function Endpoints() {
               </InputSideElement>
             }
           />
+
           <Button
             size="md"
             variant="secondary"
@@ -902,6 +910,17 @@ export default function Endpoints() {
       <Card>
         <form className="PageBody" onSubmit={handleSubmit}>
           {renderEndpointUrl()}
+
+          {/* display a missing request url banner if requestUrl is empty */}
+          {!requestUrl ? (
+            <Notification
+              title={`Set a ${endpointNetwork.label} RPC URL in order to submit`}
+              icon={<Icon.AlertTriangle />}
+              variant="warning"
+              isFilled
+            />
+          ) : null}
+
           {renderFields()}
         </form>
       </Card>
