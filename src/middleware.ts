@@ -13,9 +13,10 @@ export function middleware(request: NextRequest) {
         : `'unsafe-inline'`
     };
     img-src 'self' https://stellar.creit.tech/wallet-icons/ blob: data:;
-    connect-src 'self' https://9sl3dhr1twv1.statuspage.io/api/v2/ https://stellar-mainnet.liquify.com/ https://stellar.liquify.com/ https://soroban-rpc.mainnet.stellar.gateway.fm/ https://soroban-rpc.testnet.stellar.gateway.fm/ *.stellar.org;
+    connect-src 'self' https:;
     font-src 'self' https://fonts.gstatic.com/;
     object-src 'none';
+    frame-src 'self' https://connect.trezor.io/;
     base-uri 'self';
     form-action 'self';
     frame-ancestors 'none';
