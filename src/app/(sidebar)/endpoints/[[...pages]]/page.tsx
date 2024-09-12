@@ -18,7 +18,6 @@ import { stringify } from "lossless-json";
 
 import { SdsLink } from "@/components/SdsLink";
 import { formComponentTemplateEndpoints } from "@/components/formComponentTemplateEndpoints";
-import { PrettyJson } from "@/components/PrettyJson";
 import { InputSideElement } from "@/components/InputSideElement";
 
 import { useStore } from "@/store/useStore";
@@ -47,6 +46,7 @@ import {
 
 import { EndpointsLandingPage } from "../components/EndpointsLandingPage";
 import { SavedEndpointsPage } from "../components/SavedEndpointsPage";
+import { EndpointsJsonResponse } from "../components/EndpointsJsonResponse";
 
 export default function Endpoints() {
   const pathname = usePathname();
@@ -953,7 +953,7 @@ export default function Endpoints() {
                 <div
                   className={`PageBody__content PageBody__scrollable ${endpointData.isError ? "PageBody__content--error" : ""}`}
                 >
-                  <PrettyJson json={endpointData.json} />
+                  <EndpointsJsonResponse json={endpointData.json} />
                 </div>
 
                 <div className="PageFooter">
