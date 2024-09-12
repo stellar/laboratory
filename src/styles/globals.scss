@@ -358,15 +358,6 @@
   flex-direction: column;
   gap: pxToRem(16px);
 
-  .Banner--warning {
-    padding: pxToRem(6px) pxToRem(10px);
-
-    .Banner__message {
-      max-width: 100%;
-      text-align: left;
-    }
-  }
-
   &__title {
     display: flex;
     align-items: center;

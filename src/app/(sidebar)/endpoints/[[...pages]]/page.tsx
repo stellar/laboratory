@@ -4,12 +4,12 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import {
   Alert,
-  Banner,
   Button,
   Card,
   CopyText,
   Icon,
   Input,
+  Notification,
   Text,
   Textarea,
 } from "@stellar/design-system";
@@ -913,9 +913,12 @@ export default function Endpoints() {
 
           {/* display a missing request url banner if requestUrl is empty */}
           {!requestUrl ? (
-            <Banner icon={<Icon.AlertTriangle />} variant="warning">
-              Set a {endpointNetwork.label} RPC URL in order to submit
-            </Banner>
+            <Notification
+              title={`Set a ${endpointNetwork.label} RPC URL in order to submit`}
+              icon={<Icon.AlertTriangle />}
+              variant="warning"
+              isFilled
+            />
           ) : null}
 
           {renderFields()}
