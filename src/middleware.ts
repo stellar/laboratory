@@ -16,6 +16,7 @@ export function middleware(request: NextRequest) {
     connect-src 'self' https:;
     font-src 'self' https://fonts.gstatic.com/;
     object-src 'none';
+    frame-src 'self' https://connect.trezor.io/;
     base-uri 'self';
     form-action 'self';
     frame-ancestors 'none';
