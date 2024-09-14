@@ -799,7 +799,6 @@ export default function Endpoints() {
                     error: formError[f],
                     isRequired,
                     onChange: (ledgerSeq: string | undefined) => {
-                      console.log("ledgerSeq: ", ledgerSeq);
                       handleChange(ledgerSeq, ledgerSeq);
                     },
                   });
