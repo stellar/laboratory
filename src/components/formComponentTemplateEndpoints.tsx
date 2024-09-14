@@ -5,6 +5,7 @@ import { AssetPicker } from "@/components/FormElements/AssetPicker";
 import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
 import { OrderPicker } from "@/components/FormElements/OrderPicker";
 import { CursorPicker } from "@/components/FormElements/CursorPicker";
+import { LedgerSeqPicker } from "@/components/FormElements/LedgerSeqPicker";
 import { LimitPicker } from "@/components/FormElements/LimitPicker";
 import { TextPicker } from "@/components/FormElements/TextPicker";
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
@@ -490,7 +491,7 @@ export const formComponentTemplateEndpoints = (
     case "startLedger":
       return {
         render: (templ: TemplateRenderProps) => (
-          <PositiveIntPicker
+          <LedgerSeqPicker
             key={id}
             id={id}
             label="Start Ledger Sequence"
