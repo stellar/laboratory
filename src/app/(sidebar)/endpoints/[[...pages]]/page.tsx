@@ -9,6 +9,7 @@ import {
   CopyText,
   Icon,
   Input,
+  Notification,
   Text,
   Textarea,
 } from "@stellar/design-system";
@@ -17,7 +18,6 @@ import { stringify } from "lossless-json";
 
 import { SdsLink } from "@/components/SdsLink";
 import { formComponentTemplateEndpoints } from "@/components/formComponentTemplateEndpoints";
-import { PrettyJson } from "@/components/PrettyJson";
 import { InputSideElement } from "@/components/InputSideElement";
 
 import { useStore } from "@/store/useStore";
@@ -46,6 +46,7 @@ import {
 
 import { EndpointsLandingPage } from "../components/EndpointsLandingPage";
 import { SavedEndpointsPage } from "../components/SavedEndpointsPage";
+import { EndpointsJsonResponse } from "../components/EndpointsJsonResponse";
 
 export default function Endpoints() {
   const pathname = usePathname();
@@ -541,7 +542,13 @@ export default function Endpoints() {
     return `${baseUrl}${searchParamString ? `?${searchParamString}` : ""}`;
     // Not including RegEx const
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [endpointNetwork.horizonUrl, params, urlParams, urlPath]);
+  }, [
+    endpointNetwork.horizonUrl,
+    endpointNetwork.rpcUrl,
+    params,
+    urlParams,
+    urlPath,
+  ]);
 
   useEffect(() => {
     setRequestUrl(buildUrl());
@@ -631,6 +638,7 @@ export default function Endpoints() {
               </InputSideElement>
             }
           />
+
           <Button
             size="md"
             variant="secondary"
@@ -902,6 +910,17 @@ export default function Endpoints() {
       <Card>
         <form className="PageBody" onSubmit={handleSubmit}>
           {renderEndpointUrl()}
+
+          {/* display a missing request url banner if requestUrl is empty */}
+          {!requestUrl ? (
+            <Notification
+              title={`Set a ${endpointNetwork.label} RPC URL in order to submit`}
+              icon={<Icon.AlertTriangle />}
+              variant="warning"
+              isFilled
+            />
+          ) : null}
+
           {renderFields()}
         </form>
       </Card>
@@ -934,7 +953,7 @@ export default function Endpoints() {
                 <div
                   className={`PageBody__content PageBody__scrollable ${endpointData.isError ? "PageBody__content--error" : ""}`}
                 >
-                  <PrettyJson json={endpointData.json} />
+                  <EndpointsJsonResponse json={endpointData.json} />
                 </div>
 
                 <div className="PageFooter">

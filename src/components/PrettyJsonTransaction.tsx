@@ -77,7 +77,8 @@ export const PrettyJsonTransaction = ({
       try {
         formattedAmount = formatAmount(toSafeNumberOrThrow(parsedAmount));
       } catch (e) {
-        // Do nothing
+        // It might fail for BigInt
+        formattedAmount = formatAmount(parsedAmount as any);
       }
 
       if (formattedAmount) {
