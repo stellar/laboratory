@@ -793,6 +793,15 @@ export default function Endpoints() {
                       handleChange(optionId, optionId);
                     },
                   });
+                case "startLedger":
+                  return component.render({
+                    value: params[f],
+                    error: formError[f],
+                    isRequired,
+                    onChange: (ledgerSeq: string | undefined) => {
+                      handleChange(ledgerSeq, ledgerSeq);
+                    },
+                  });
                 // Custom endpoint component
                 case "filters":
                   return component.render({
