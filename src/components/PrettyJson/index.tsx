@@ -341,7 +341,12 @@ const renderStringValue = ({
   addlClassName?: string;
   itemType?: "number" | "string";
 }) => {
-  let type = isNaN(Number(item)) ? "string" : "number";
+  let type = ["number", "bigint"].includes(typeof item) ? "number" : "string";
+  let value = item;
+
+  if (typeof item === "bigint") {
+    value = BigInt(item).toString();
+  }
 
   if (itemType) {
     type = itemType;
@@ -349,7 +354,7 @@ const renderStringValue = ({
 
   return (
     <Value addlClassName={addlClassName}>
-      {isValidUrl(item) ? (
+      {typeof item === "string" && isValidUrl(item) ? (
         <>
           <Quotes />
           <SdsLink href={item} isUnderline>
@@ -360,7 +365,7 @@ const renderStringValue = ({
       ) : (
         <>
           <Quotes isVisible={type === "string"} />
-          <ValueType type={type}>{item}</ValueType>
+          <ValueType type={type}>{value}</ValueType>
           <Quotes isVisible={type === "string"} />
         </>
       )}
