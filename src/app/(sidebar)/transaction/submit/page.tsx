@@ -19,6 +19,8 @@ import { openUrl } from "@/helpers/openUrl";
 import { Routes } from "@/constants/routes";
 import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
 
+import { getBlockExplorerLink } from "@/helpers/getBlockExplorerLink";
+
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
 import { useSubmitRpcTx } from "@/query/useSubmitRpcTx";
@@ -233,8 +235,11 @@ export default function SubmitTransaction() {
                   size="md"
                   variant="tertiary"
                   onClick={() => {
+                    const BLOCK_EXPLORER_LINK =
+                      getBlockExplorerLink("stellar.expert")[network.id];
+
                     openUrl(
-                      `https://stellar.expert/explorer/${network.id}/tx/${submitRpcResponse.hash}`,
+                      `${BLOCK_EXPLORER_LINK}/tx/${submitRpcResponse.hash}`,
                     );
                   }}
                 >
@@ -245,8 +250,11 @@ export default function SubmitTransaction() {
                   size="md"
                   variant="tertiary"
                   onClick={() => {
+                    const BLOCK_EXPLORER_LINK =
+                      getBlockExplorerLink("stellarchain.io")[network.id];
+
                     openUrl(
-                      `https://${network.id}.stellarchain.io/transactions/${submitRpcResponse.hash}`,
+                      `${BLOCK_EXPLORER_LINK}/transactions/${submitRpcResponse.hash}`,
                     );
                   }}
                 >
@@ -301,8 +309,11 @@ export default function SubmitTransaction() {
                   size="md"
                   variant="tertiary"
                   onClick={() => {
+                    const BLOCK_EXPLORER_LINK =
+                      getBlockExplorerLink("stellar.expert")[network.id];
+
                     openUrl(
-                      `https://stellar.expert/explorer/${network.id}/tx/${submitHorizonResponse.hash}`,
+                      `${BLOCK_EXPLORER_LINK}/tx/${submitHorizonResponse.hash}`,
                     );
                   }}
                 >
@@ -313,8 +324,11 @@ export default function SubmitTransaction() {
                   size="md"
                   variant="tertiary"
                   onClick={() => {
+                    const BLOCK_EXPLORER_LINK =
+                      getBlockExplorerLink("stellarchain.io")[network.id];
+
                     openUrl(
-                      `https://${network.id}.stellarchain.io/transactions/${submitHorizonResponse.hash}`,
+                      `${BLOCK_EXPLORER_LINK}/transactions/${submitHorizonResponse.hash}`,
                     );
                   }}
                 >
