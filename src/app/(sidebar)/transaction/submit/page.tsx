@@ -225,6 +225,7 @@ export default function SubmitTransaction() {
           variant="success"
           title="Transaction submitted!"
           subtitle={`Transaction succeeded with ${submitRpcResponse.operationCount} operation(s)`}
+          note={<></>}
           footerLeftEl={
             IS_BLOCK_EXPLORER_ENABLED ? (
               <>
@@ -292,6 +293,7 @@ export default function SubmitTransaction() {
           variant="success"
           title="Transaction submitted!"
           subtitle={`Transaction succeeded with ${submitHorizonResponse.operation_count} operation(s)`}
+          note={<></>}
           footerLeftEl={
             IS_BLOCK_EXPLORER_ENABLED ? (
               <>
