@@ -68,7 +68,7 @@ export const LedgerSeqPicker = ({
           disabled={!network.rpcUrl}
           isLoading={isFetching || isLoading}
         >
-          Fetch the latest ledger sequence
+          Fetch latest ledger sequence
         </InputSideElement>
       }
       {...props}

@@ -53,7 +53,13 @@ export const NumberFractionPicker = ({
 
       return (
         <Box gap="xs">
-          <Box gap="sm" direction="row" align="center" justify="space-between">
+          <Box
+            gap="sm"
+            direction="row"
+            align="center"
+            justify="space-between"
+            addlClassName="NumberFractionPicker__container"
+          >
             <TextPicker
               key={fracNumId}
               id={fracNumId}

@@ -18,6 +18,24 @@
   min-width: auto !important;
   min-height: auto !important;
   display: block !important;
+
+  @media screen and (max-width: 1040px) {
+    position: relative;
+    z-index: 10;
+
+    .Card {
+      --Card-padding: #{pxToRem(16px)};
+    }
+  }
+
+  // TODO: fix in SDS
+  .Input {
+    &__container {
+      & > * {
+        min-width: 0;
+      }
+    }
+  }
 }
 
 .LabLayout {
@@ -70,12 +88,93 @@
     background-color: var(--sds-clr-gray-01);
     border-bottom: 1px solid var(--sds-clr-gray-06);
 
+    @media screen and (max-width: 1040px) {
+      position: relative;
+      z-index: 10;
+    }
+
     &__main {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: pxToRem(24px);
       padding: pxToRem(8px) pxToRem(32px);
+
+      @media screen and (max-width: 1040px) {
+        padding: pxToRem(16px);
+      }
+
+      .Select {
+        --Select-color-border: transparent;
+        max-width: pxToRem(220px);
+        margin-left: pxToRem(-8px);
+
+        select {
+          font-weight: var(--sds-fw-semi-bold);
+        }
+
+        optgroup {
+          background-color: var(--Select-color-background-option);
+          font-weight: var(--sds-fw-semi-bold);
+          color: var(--sds-clr-gray-09);
+        }
+
+        option:disabled {
+          font-weight: var(--sds-fw-semi-bold);
+          color: var(--sds-clr-gray-09);
+        }
+
+        .Select__icon {
+          right: auto;
+          left: pxToRem(8px);
+        }
+
+        .Select__container {
+          padding-left: 20px;
+        }
+      }
+    }
+
+    &__dropdown {
+      &__item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: pxToRem(8px);
+        padding: pxToRem(6) pxToRem(8);
+
+        &__label {
+          color: var(--sds-clr-gray-12);
+        }
+
+        &__value {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+
+          svg {
+            stroke: var(--sds-clr-gray-09);
+            width: pxToRem(16px);
+            height: pxToRem(16px);
+          }
+        }
+
+        &--link {
+          --DropdownItem-backround-color-default: transparent;
+          --DropdownItem-backround-color-hover: var(--sds-clr-gray-03);
+
+          text-decoration: none;
+          cursor: pointer;
+          transition: background-color var(--sds-anim-transition-default);
+          background-color: var(--DropdownItem-backround-color-default);
+
+          @media (hover: hover) {
+            &:hover {
+              background-color: var(--DropdownItem-backround-color-hover);
+            }
+          }
+        }
+      }
     }
 
     &__settings {
@@ -122,6 +221,10 @@
   &__container {
     padding: pxToRem(32px);
     overflow-x: auto;
+
+    @media screen and (max-width: 1040px) {
+      padding: pxToRem(16px);
+    }
   }
 
   &__content {
@@ -132,6 +235,17 @@
     flex-direction: column;
     gap: pxToRem(12px);
     min-height: 100%;
+
+    @media screen and (max-width: 1040px) {
+      width: 100%;
+    }
+  }
+
+  &__loader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: pxToRem(32px);
   }
 
   // Sideber
@@ -340,6 +454,8 @@
 }
 
 .PageHeader {
+  flex-wrap: wrap;
+
   .Link {
     --Link-icon-size: pxToRem(14px);
     font-size: pxToRem(14px);
@@ -435,6 +551,7 @@
   gap: pxToRem(12px);
   font-size: pxToRem(14px);
   line-height: pxToRem(20px);
+  flex-wrap: wrap;
 }
 
 // Endpoints
@@ -444,9 +561,34 @@
     align-items: center;
     justify-content: space-between;
     gap: pxToRem(8px);
+    flex-wrap: wrap;
+
+    .Input {
+      width: auto;
+      flex: 1;
+      min-width: 0;
+    }
 
     &__requestMethod {
       color: var(--sds-clr-teal-11) !important;
+    }
+
+    @media screen and (max-width: 560px) {
+      .Input {
+        min-width: auto;
+      }
+
+      &__buttons {
+        flex: 1;
+
+        .Button {
+          flex: 1;
+        }
+      }
+    }
+
+    &__footer {
+      flex-wrap: wrap;
     }
   }
 
@@ -479,9 +621,24 @@
 }
 
 // Operations
-.NumberFractionPicker__fraction__divider {
-  padding-top: pxToRem(22px);
-  color: var(--sds-clr-gray-09);
+.NumberFractionPicker {
+  &__fraction__divider {
+    padding-top: pxToRem(22px);
+    color: var(--sds-clr-gray-09);
+
+    @media screen and (max-width: 610px) {
+      display: none;
+    }
+  }
+
+  &__container {
+    flex-wrap: wrap;
+
+    .Input {
+      flex: 1;
+      width: auto;
+    }
+  }
 }
 
 // Create claimable balance
@@ -501,6 +658,27 @@
           border-top: 1px solid var(--sds-clr-gray-06);
           padding-top: 0.5rem;
         }
+      }
+    }
+  }
+}
+
+.Operation {
+  &__buttons {
+    flex-wrap: wrap;
+
+    & > * {
+      min-width: fit-content;
+    }
+
+    @media screen and (max-width: 440px) {
+      .Button--error,
+      .Button--secondary {
+        flex: 1;
+      }
+
+      .Box {
+        flex: 1;
       }
     }
   }
@@ -608,6 +786,29 @@
       }
     }
   }
+
+  &__buttons {
+    flex-wrap: wrap;
+
+    .Box {
+      flex: 1;
+      flex-wrap: wrap;
+
+      .Button--tertiary {
+        min-width: fit-content;
+      }
+    }
+
+    & > * {
+      min-width: fit-content;
+    }
+
+    @media screen and (max-width: 652px) {
+      .Button {
+        flex: 1;
+      }
+    }
+  }
 }
 
 // Sign Transaction
@@ -645,15 +846,18 @@
   &__FieldViewer,
   &__Field {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
     gap: pxToRem(16px);
 
-    .half-width {
-      grid-template-columns: 1fr 1fr;
-    }
+    @media screen and (min-width: 640px) {
+      grid-template-columns: repeat(2, 1fr);
 
-    .full-width {
-      grid-column: 1 / 3;
+      .half-width {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .full-width {
+        grid-column: 1 / 3;
+      }
     }
   }
 
@@ -694,6 +898,7 @@
     }
     .Input__side-element {
       flex: 1 0;
+      min-width: pxToRem(190px);
 
       &:has(.MultiPicker__delete) {
         flex: 0;

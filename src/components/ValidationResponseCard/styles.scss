@@ -37,4 +37,19 @@
       padding-left: pxToRem(16px);
     }
   }
+
+  &__footer {
+    &--leftEl,
+    &--rightEl {
+      flex-wrap: wrap;
+
+      .Button {
+        min-width: fit-content;
+
+        @media screen and (max-width: 440px) {
+          flex: 1;
+        }
+      }
+    }
+  }
 }

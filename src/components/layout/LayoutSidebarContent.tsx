@@ -1,11 +1,12 @@
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useContext, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { Icon, Logo } from "@stellar/design-system";
+import { Icon, Loader, Logo } from "@stellar/design-system";
 import { Routes } from "@/constants/routes";
 import { NextLink } from "@/components/NextLink";
 import { GITHUB_URL } from "@/constants/settings";
+import { WindowContext } from "./LayoutContextProvider";
 
 export type SidebarLink = {
   route: Routes | string;
@@ -29,6 +30,7 @@ export const LayoutSidebarContent = ({
   sidebar: Sidebar | Sidebar[];
 }) => {
   const pathname = usePathname();
+  const { layoutMode } = useContext(WindowContext);
 
   const sidebarArray = Array.isArray(sidebar) ? sidebar : [sidebar];
   const bottomItems = sidebarArray?.reduce((res, cur) => {
@@ -39,47 +41,62 @@ export const LayoutSidebarContent = ({
     return res;
   }, [] as SidebarLink[]);
 
-  return (
-    <>
-      <div className="LabLayout__sidebar">
-        <div className="LabLayout__sidebar--top">
-          {sidebarArray.map((sidebar, index) => (
-            <div
-              className={`LabLayout__sidebar__section ${sidebar.hasBottomDivider ? "LabLayout__sidebar__section--divider" : ""}`}
-              key={`sidebar-${index}`}
-              data-testid="endpoints-sidebar-section"
-            >
-              {sidebar.instruction ? (
-                <NestedNav sidebar={sidebar} pathname={pathname} />
-              ) : (
-                sidebar.navItems.map((item) => (
-                  <Link key={item.route} item={item} pathname={pathname} />
-                ))
-              )}
-            </div>
-          ))}
-        </div>
-        <div className="LabLayout__sidebar--bottom">
-          <div className="LabLayout__sidebar__wrapper">
-            {bottomItems?.map((bi) => (
-              <Link key={bi.route} item={bi} pathname={pathname} />
+  if (layoutMode === "desktop") {
+    return (
+      <>
+        <div className="LabLayout__sidebar">
+          <div className="LabLayout__sidebar--top">
+            {sidebarArray.map((sidebar, index) => (
+              <div
+                className={`LabLayout__sidebar__section ${sidebar.hasBottomDivider ? "LabLayout__sidebar__section--divider" : ""}`}
+                key={`sidebar-${index}`}
+                data-testid="endpoints-sidebar-section"
+              >
+                {sidebar.instruction ? (
+                  <NestedNav sidebar={sidebar} pathname={pathname} />
+                ) : (
+                  sidebar.navItems.map((item) => (
+                    <Link key={item.route} item={item} pathname={pathname} />
+                  ))
+                )}
+              </div>
             ))}
           </div>
-          <div className="LabLayout__sidebar__wrapper">
-            <NextLink href={`${GITHUB_URL}/issues`} className="SidebarLink">
-              <Icon.MessageTextSquare02 /> Got product feedback?
-            </NextLink>
-            <NextLink href={GITHUB_URL} className="SidebarLink Link--withLogo">
-              <Logo.Github /> GitHub
-            </NextLink>
+          <div className="LabLayout__sidebar--bottom">
+            <div className="LabLayout__sidebar__wrapper">
+              {bottomItems?.map((bi) => (
+                <Link key={bi.route} item={bi} pathname={pathname} />
+              ))}
+            </div>
+            <div className="LabLayout__sidebar__wrapper">
+              <NextLink href={`${GITHUB_URL}/issues`} className="SidebarLink">
+                <Icon.MessageTextSquare02 /> Got product feedback?
+              </NextLink>
+              <NextLink
+                href={GITHUB_URL}
+                className="SidebarLink Link--withLogo"
+              >
+                <Logo.Github /> GitHub
+              </NextLink>
+            </div>
           </div>
         </div>
-      </div>
+        <div className="LabLayout__container">
+          <div className="LabLayout__content">{children}</div>
+        </div>
+      </>
+    );
+  }
+
+  if (layoutMode === "mobile") {
+    return (
       <div className="LabLayout__container">
         <div className="LabLayout__content">{children}</div>
       </div>
-    </>
-  );
+    );
+  }
+
+  return <Loader />;
 };
 
 const NestedNav = ({

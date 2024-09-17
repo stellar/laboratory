@@ -139,6 +139,7 @@ export const SavedEndpointsPage = () => {
                 direction="row"
                 align="center"
                 justify="space-between"
+                addlClassName="Endpoints__urlBar__footer"
               >
                 <Box gap="sm" direction="row">
                   <Button

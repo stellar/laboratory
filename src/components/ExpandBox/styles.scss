@@ -44,6 +44,7 @@
 
   &__inset {
     overflow: hidden;
+    min-width: 0;
   }
 
   // Allow tooltip, etc overflow

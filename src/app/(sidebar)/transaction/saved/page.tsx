@@ -153,7 +153,13 @@ export default function SavedTransactions() {
               ))}
         </>
 
-        <Box gap="lg" direction="row" align="center" justify="space-between">
+        <Box
+          gap="lg"
+          direction="row"
+          align="center"
+          justify="space-between"
+          addlClassName="Endpoints__urlBar__footer"
+        >
           <Box gap="sm" direction="row">
             {renderActionButton(txn.timestamp, txn.page)}
           </Box>

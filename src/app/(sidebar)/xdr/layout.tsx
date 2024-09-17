@@ -3,7 +3,7 @@
 import React from "react";
 
 import { LayoutSidebarContent } from "@/components/layout/LayoutSidebarContent";
-import { Routes } from "@/constants/routes";
+import { XDR_NAV_ITEMS } from "@/constants/navItems";
 
 export default function XdrTemplate({
   children,
@@ -11,20 +11,7 @@ export default function XdrTemplate({
   children: React.ReactNode;
 }) {
   return (
-    <LayoutSidebarContent
-      sidebar={{
-        navItems: [
-          {
-            route: Routes.VIEW_XDR,
-            label: "XDR to JSON",
-          },
-          {
-            route: Routes.TO_XDR,
-            label: "JSON to XDR",
-          },
-        ],
-      }}
-    >
+    <LayoutSidebarContent sidebar={XDR_NAV_ITEMS}>
       {children}
     </LayoutSidebarContent>
   );
