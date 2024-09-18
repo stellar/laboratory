@@ -30,7 +30,7 @@ export type EndpointsPagesProps = {
 };
 
 export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
-  instruction: "RPC Endpoints",
+  instruction: "RPC Methods",
   navItems: [
     {
       route: Routes.ENDPOINTS_GET_EVENTS,
