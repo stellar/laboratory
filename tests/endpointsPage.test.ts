@@ -1,17 +1,17 @@
 import { test, expect } from "@playwright/test";
 
-test.describe("Endpoints page", () => {
+test.describe("API Explorer page", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("http://localhost:3000/endpoints");
   });
 
   test("Loads", async ({ page }) => {
-    await expect(page.locator("h1")).toHaveText("Endpoints");
+    await expect(page.locator("h1")).toHaveText("API Explorer");
   });
 
   test("Renders info cards", async ({ page }) => {
     await expect(page.locator("h2")).toHaveText([
-      "Soroban RPC Endpoints",
+      "Soroban RPC Methods",
       "Horizon Endpoints",
     ]);
   });
@@ -22,7 +22,7 @@ test.describe("Endpoints page", () => {
 
       await expect(
         sidebar.getByTestId("endpoints-sidebar-subtitle").nth(0),
-      ).toContainText("RPC Endpoints");
+      ).toContainText("RPC Methods");
 
       await expect(
         sidebar.getByTestId("endpoints-sidebar-subtitle").nth(1),
