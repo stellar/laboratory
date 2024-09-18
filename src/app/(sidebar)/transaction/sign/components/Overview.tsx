@@ -317,7 +317,7 @@ export const Overview = () => {
                 validate={validate.getSecretKeyError}
                 placeholder="Secret key (starting with S) or hash preimage (in hex)"
                 autocomplete="off"
-                buttonLabel="Add signature"
+                buttonLabel="Add signer"
               />
             </div>
             <div className="Input__buttons full-width">
