@@ -3,6 +3,7 @@ import { Alert } from "@stellar/design-system";
 import { useStore } from "@/store/useStore";
 
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
+import { getBlockExplorerLink } from "@/helpers/getBlockExplorerLink";
 
 export const SuccessMsg = ({
   onClose,
@@ -16,17 +17,18 @@ export const SuccessMsg = ({
   const { network } = useStore();
   const IS_STELLAR_EXPERT_ENABLED =
     network.id === "testnet" || network.id === "mainnet";
+  const BLOCK_EXPLORER_LINK =
+    IS_STELLAR_EXPERT_ENABLED &&
+    getBlockExplorerLink("stellar.expert")[network.id];
 
   return isVisible ? (
     <Alert
       placement="inline"
       variant="success"
-      actionLabel={
-        IS_STELLAR_EXPERT_ENABLED ? "View on stellar.expert" : undefined
-      }
+      actionLabel={BLOCK_EXPLORER_LINK ? "View on stellar.expert" : undefined}
       actionLink={
-        IS_STELLAR_EXPERT_ENABLED
-          ? `https://stellar.expert/explorer/${network.id}/account/${publicKey}`
+        BLOCK_EXPLORER_LINK
+          ? `${BLOCK_EXPLORER_LINK}/account/${publicKey}`
           : undefined
       }
       onClose={onClose}

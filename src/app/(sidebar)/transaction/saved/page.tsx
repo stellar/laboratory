@@ -114,15 +114,6 @@ export default function SavedTransactions() {
           fieldSize="md"
           value={txn.name}
           readOnly
-          leftElement={
-            <InputSideElement
-              variant="text"
-              placement="left"
-              addlClassName="SavedTransactions__name__postMethod"
-            >
-              POST
-            </InputSideElement>
-          }
           rightElement={
             <InputSideElement
               variant="button"
@@ -229,11 +220,11 @@ export default function SavedTransactions() {
 
       <Alert
         variant="primary"
-        title="Looking for your saved endpoints?"
+        title="Looking for your saved requests?"
         placement="inline"
       >
         <NextLink href={`${Routes.ENDPOINTS_SAVED}`} sds-variant="primary">
-          See saved endpoints
+          See saved requests
         </NextLink>
       </Alert>
 
