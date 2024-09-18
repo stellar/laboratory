@@ -14,8 +14,12 @@ import { useStore } from "@/store/useStore";
 
 import * as StellarXdr from "@/helpers/StellarXdr";
 import { delayedAction } from "@/helpers/delayedAction";
+import { openUrl } from "@/helpers/openUrl";
+
 import { Routes } from "@/constants/routes";
 import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
+
+import { getBlockExplorerLink } from "@/helpers/getBlockExplorerLink";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
@@ -56,6 +60,9 @@ export default function SubmitTransaction() {
 
   const isXdrInit = useIsXdrInit();
   const router = useRouter();
+
+  const IS_BLOCK_EXPLORER_ENABLED =
+    network.id === "testnet" || network.id === "mainnet";
 
   const [isSaveTxnModalVisible, setIsSaveTxnModalVisible] = useState(false);
   const [isDropdownActive, setIsDropdownActive] = useState(false);
@@ -220,6 +227,42 @@ export default function SubmitTransaction() {
           variant="success"
           title="Transaction submitted!"
           subtitle={`Transaction succeeded with ${submitRpcResponse.operationCount} operation(s)`}
+          note={<></>}
+          footerLeftEl={
+            IS_BLOCK_EXPLORER_ENABLED ? (
+              <>
+                <Button
+                  size="md"
+                  variant="tertiary"
+                  onClick={() => {
+                    const BLOCK_EXPLORER_LINK =
+                      getBlockExplorerLink("stellar.expert")[network.id];
+
+                    openUrl(
+                      `${BLOCK_EXPLORER_LINK}/tx/${submitRpcResponse.hash}`,
+                    );
+                  }}
+                >
+                  View on stellar.expert
+                </Button>
+
+                <Button
+                  size="md"
+                  variant="tertiary"
+                  onClick={() => {
+                    const BLOCK_EXPLORER_LINK =
+                      getBlockExplorerLink("stellarchain.io")[network.id];
+
+                    openUrl(
+                      `${BLOCK_EXPLORER_LINK}/transactions/${submitRpcResponse.hash}`,
+                    );
+                  }}
+                >
+                  View on stellarchain.io
+                </Button>
+              </>
+            ) : null
+          }
           response={
             <Box gap="xs">
               <TxResponse label="Hash:" value={submitRpcResponse.hash} />
@@ -258,6 +301,42 @@ export default function SubmitTransaction() {
           variant="success"
           title="Transaction submitted!"
           subtitle={`Transaction succeeded with ${submitHorizonResponse.operation_count} operation(s)`}
+          note={<></>}
+          footerLeftEl={
+            IS_BLOCK_EXPLORER_ENABLED ? (
+              <>
+                <Button
+                  size="md"
+                  variant="tertiary"
+                  onClick={() => {
+                    const BLOCK_EXPLORER_LINK =
+                      getBlockExplorerLink("stellar.expert")[network.id];
+
+                    openUrl(
+                      `${BLOCK_EXPLORER_LINK}/tx/${submitHorizonResponse.hash}`,
+                    );
+                  }}
+                >
+                  View on stellar.expert
+                </Button>
+
+                <Button
+                  size="md"
+                  variant="tertiary"
+                  onClick={() => {
+                    const BLOCK_EXPLORER_LINK =
+                      getBlockExplorerLink("stellarchain.io")[network.id];
+
+                    openUrl(
+                      `${BLOCK_EXPLORER_LINK}/transactions/${submitHorizonResponse.hash}`,
+                    );
+                  }}
+                >
+                  View on stellarchain.io
+                </Button>
+              </>
+            ) : null
+          }
           response={
             <Box gap="xs">
               <TxResponse label="Hash:" value={submitHorizonResponse.hash} />
