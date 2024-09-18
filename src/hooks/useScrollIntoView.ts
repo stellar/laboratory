@@ -1,5 +1,5 @@
-import { delayedAction } from "@/helpers/delayedAction";
 import { useEffect } from "react";
+import { delayedAction } from "@/helpers/delayedAction";
 
 export const useScrollIntoView = (
   isEnabled: boolean,
