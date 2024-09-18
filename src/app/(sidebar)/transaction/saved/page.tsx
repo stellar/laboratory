@@ -114,15 +114,6 @@ export default function SavedTransactions() {
           fieldSize="md"
           value={txn.name}
           readOnly
-          leftElement={
-            <InputSideElement
-              variant="text"
-              placement="left"
-              addlClassName="SavedTransactions__name__postMethod"
-            >
-              POST
-            </InputSideElement>
-          }
           rightElement={
             <InputSideElement
               variant="button"
