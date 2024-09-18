@@ -403,7 +403,13 @@ export default function SubmitTransaction() {
             hasCopyButton
           />
 
-          <Box gap="lg" direction="row" align="center" justify="space-between">
+          <Box
+            gap="lg"
+            direction="row"
+            align="center"
+            justify="space-between"
+            addlClassName="SubmitTx__buttons"
+          >
             <Box gap="sm" direction="row" align="center" justify="left">
               <Button
                 disabled={isSubmitDisabled}

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 
 import { LayoutMain } from "@/components/layout/LayoutMain";
+import { LayoutContextProvider } from "@/components/layout/LayoutContextProvider";
 import { QueryProvider } from "@/query/QueryProvider";
 import { StoreProvider } from "@/store/StoreProvider";
 
@@ -32,7 +33,9 @@ export default function RootLayout({
         <div id="root">
           <StoreProvider>
             <QueryProvider>
-              <LayoutMain>{children}</LayoutMain>
+              <LayoutContextProvider>
+                <LayoutMain>{children}</LayoutMain>
+              </LayoutContextProvider>
             </QueryProvider>
           </StoreProvider>
         </div>

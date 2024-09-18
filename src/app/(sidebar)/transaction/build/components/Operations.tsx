@@ -1029,7 +1029,13 @@ export const Operations = () => {
           </>
 
           {/* Operations bottom buttons */}
-          <Box gap="lg" direction="row" align="center" justify="space-between">
+          <Box
+            gap="lg"
+            direction="row"
+            align="center"
+            justify="space-between"
+            addlClassName="Operation__buttons"
+          >
             <Box gap="sm" direction="row" align="center">
               <Button
                 size="md"

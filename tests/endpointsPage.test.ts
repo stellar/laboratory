@@ -95,7 +95,7 @@ test.describe("Endpoints page", () => {
 
       const docsLink = page.getByTestId("endpoints-docsLink");
 
-      await expect(docsLink).toContainText("View accounts documentation");
+      await expect(docsLink).toContainText("View Docs");
       await expect(docsLink).toHaveAttribute(
         "href",
         "https://developers.stellar.org/network/horizon/resources/list-all-accounts",
@@ -141,9 +141,7 @@ test.describe("Endpoints page", () => {
 
       const docsLink = page.getByTestId("endpoints-docsLink");
 
-      await expect(docsLink).toContainText(
-        "View effects for account documentation",
-      );
+      await expect(docsLink).toContainText("View Docs");
       await expect(docsLink).toHaveAttribute(
         "href",
         "https://developers.stellar.org/network/horizon/resources/get-effects-by-account-id",
