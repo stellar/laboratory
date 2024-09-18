@@ -739,7 +739,7 @@ export const Operations = () => {
           id={`${index}-operationType`}
           label="Operation type"
           value={operationType}
-          infoLink="https://developers.stellar.org/docs/start/list-of-operations/"
+          infoLink="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations"
           onChange={(e) => {
             updateBuildSingleOperation(index, {
               operation_type: e.target.value,

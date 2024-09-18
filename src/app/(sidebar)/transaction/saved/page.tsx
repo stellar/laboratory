@@ -220,11 +220,11 @@ export default function SavedTransactions() {
 
       <Alert
         variant="primary"
-        title="Looking for your saved endpoints?"
+        title="Looking for your saved requests?"
         placement="inline"
       >
         <NextLink href={`${Routes.ENDPOINTS_SAVED}`} sds-variant="primary">
-          See saved endpoints
+          See saved requests
         </NextLink>
       </Alert>
 

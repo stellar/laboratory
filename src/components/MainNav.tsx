@@ -25,12 +25,12 @@ const primaryNavLinks: NavLink[] = [
     label: "Account",
   },
   {
-    href: Routes.ENDPOINTS,
-    label: "Endpoints",
-  },
-  {
     href: Routes.BUILD_TRANSACTION,
     label: "Transactions",
+  },
+  {
+    href: Routes.ENDPOINTS,
+    label: "API Explorer",
   },
   // TODO: hide until ready
   // {

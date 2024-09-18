@@ -35,7 +35,7 @@ const NAV = [
     subNav: ACCOUNT_NAV_ITEMS,
   },
   {
-    label: "Endpoints",
+    label: "API Explorer",
     subNav: ENDPOINTS_NAV_ITEMS,
   },
   {
@@ -49,7 +49,7 @@ export const LayoutHeader = () => {
   const route = useRouter();
   const pathname = usePathname();
 
-  // Adjusting format to remove nested sub-sections (RPC Endpoints, for example)
+  // Adjusting format to remove nested sub-sections (RPC Methods, for example)
   // We cannot have nested optgroup in select
   const formattedNav = NAV.map((mainNav) => {
     type NavItem = {

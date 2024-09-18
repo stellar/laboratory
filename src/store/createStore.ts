@@ -188,7 +188,7 @@ const initEndpointState = {
 
 const initTransactionParamsState = {
   source_account: "",
-  fee: "",
+  fee: "100",
   seq_num: "",
   cond: {
     time: {

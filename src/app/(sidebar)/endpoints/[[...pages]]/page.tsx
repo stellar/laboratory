@@ -864,7 +864,7 @@ export default function Endpoints() {
         <>
           This tool can be used to run queries against the{" "}
           <SdsLink href="https://developers.stellar.org/docs/data/rpc">
-            REST API endpoints
+            REST API methods
           </SdsLink>{" "}
           of RPC servers. RPC is one of the developer-facing services for the
           Stellar ecosystem.
