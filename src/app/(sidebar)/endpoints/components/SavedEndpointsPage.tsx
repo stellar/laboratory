@@ -195,7 +195,7 @@ export const SavedEndpointsPage = () => {
   return (
     <Box gap="md">
       <TabView
-        heading={{ title: "Saved Endpoints" }}
+        heading={{ title: "Saved Requests" }}
         tab1={{
           id: "rpc",
           label: "RPC Methods",

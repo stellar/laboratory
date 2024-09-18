@@ -42,7 +42,7 @@ const ENDPOINTS_PAGES_SAVED: EndpointsPagesProps = {
   navItems: [
     {
       route: Routes.ENDPOINTS_SAVED,
-      label: "Saved Endpoints",
+      label: "Saved Requests",
       icon: <Icon.Save03 />,
     },
   ],
