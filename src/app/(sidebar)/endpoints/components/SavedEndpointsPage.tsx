@@ -198,7 +198,7 @@ export const SavedEndpointsPage = () => {
         heading={{ title: "Saved Endpoints" }}
         tab1={{
           id: "rpc",
-          label: "RPC Endpoints",
+          label: "RPC Methods",
           content: saved.activeTab === "rpc" ? <RpcEndpoints /> : null,
         }}
         tab2={{

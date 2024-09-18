@@ -33,7 +33,7 @@ const ENDPOINTS_PAGES_INTRO: EndpointsPagesProps = {
   navItems: [
     {
       route: Routes.ENDPOINTS,
-      label: "About Endpoints",
+      label: "About API Explorer",
     },
   ],
   hasBottomDivider: false,

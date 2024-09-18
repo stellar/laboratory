@@ -8,8 +8,8 @@ export const EndpointsLandingPage = () => {
   const infoCards = [
     {
       id: "soroban-rpc",
-      title: "Soroban RPC Endpoints",
-      description: "Learn about the RPC endpoints in our Developer Docs.",
+      title: "Soroban RPC Methods",
+      description: "Learn about the RPC methods in our Developer Docs.",
       buttonLabel: "See docs",
       buttonIcon: <Icon.LinkExternal01 />,
       buttonAction: () =>
@@ -31,7 +31,7 @@ export const EndpointsLandingPage = () => {
       <Card>
         <div className="CardText">
           <Text size="lg" as="h1" weight="medium">
-            Endpoints
+            API Explorer
           </Text>
 
           <Text size="sm" as="p">
