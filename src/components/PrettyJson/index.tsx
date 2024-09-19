@@ -13,7 +13,11 @@ export type CustomKeyValueLinkMap = {
   [key: string]: {
     text?: string;
     getHref: (value: string, key?: string) => string;
-    condition?: (val: string) => boolean;
+    condition?: (
+      val: string,
+      parentKey?: string,
+      isRpcResponse?: boolean,
+    ) => boolean;
   };
 };
 
@@ -41,6 +45,8 @@ export const PrettyJson = ({
   if (typeof json !== "object") {
     return null;
   }
+
+  const isRpcResponse = Object.keys(json)[0] === "jsonrpc";
 
   const ItemCount = ({ itemList }: { itemList: any[] }) => (
     <div className="PrettyJson__expandSize">{getItemSizeLabel(itemList)}</div>
@@ -102,7 +108,10 @@ export const PrettyJson = ({
       const custom = customKeyValueLinkMap?.[key];
 
       if (custom) {
-        if (custom.condition && !custom.condition(item)) {
+        if (
+          custom.condition &&
+          !custom.condition(item, parentKey, isRpcResponse)
+        ) {
           return render(item, key);
         }
 
