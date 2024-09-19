@@ -75,22 +75,19 @@ export const Overview = () => {
   });
 
   useEffect(() => {
-    if (!sign.importTx) {
-      if (sign.importXdr) {
-        // used to persist page data when accessed by query string
-        const transaction = TransactionBuilder.fromXDR(
-          sign.importXdr,
-          network.passphrase,
-        );
+    if (sign.importXdr) {
+      // used to persist page data when accessed by query string
+      const transaction = TransactionBuilder.fromXDR(
+        sign.importXdr,
+        network.passphrase,
+      );
 
-        updateSignImportTx(transaction);
-      } else {
-        updateSignActiveView("import");
-      }
+      updateSignImportTx(transaction);
+    } else {
+      updateSignActiveView("import");
     }
   }, [
     network.passphrase,
-    sign.importTx,
     sign.importXdr,
     updateSignActiveView,
     updateSignImportTx,
