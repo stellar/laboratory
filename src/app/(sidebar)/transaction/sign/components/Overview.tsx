@@ -419,7 +419,7 @@ export const Overview = () => {
           </div>
         </Card>
 
-        {sign.signedTx ? (
+        {sign.signedTx && signedTxSuccessMsg ? (
           <ValidationResponseCard
             variant="success"
             title="Transaction signed!"
