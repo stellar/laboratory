@@ -63,6 +63,12 @@ export const EndpointsJsonResponse = ({ json }: { json: AnyObject }) => {
       case "header_xdr":
         xdrType = "LedgerHeader";
         break;
+      case "key":
+        xdrType = "LedgerKey";
+        break;
+      case "xdr":
+        xdrType = "LedgerEntryData";
+        break;
       default:
       // Do nothing
     }
@@ -370,6 +376,26 @@ export const EndpointsJsonResponse = ({ json }: { json: AnyObject }) => {
     },
     header_xdr: {
       getHref: handleLinkXdr,
+    },
+    key: {
+      getHref: handleLinkXdr,
+      condition: (_: string, parentKey?: string, isRpcResponse?: boolean) => {
+        if (isRpcResponse && parentKey === "entries") {
+          return true;
+        }
+
+        return false;
+      },
+    },
+    xdr: {
+      getHref: handleLinkXdr,
+      condition: (_: string, parentKey?: string, isRpcResponse?: boolean) => {
+        if (isRpcResponse && parentKey === "entries") {
+          return true;
+        }
+
+        return false;
+      },
     },
     // Link
     href: {

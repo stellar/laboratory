@@ -91,6 +91,21 @@ export const PrettyJsonTransaction = ({
       return PrettyJson.renderStringValue({ item });
     }
 
+    // Manage data
+    if (parentKey === "manage_data") {
+      if (key === "data_name") {
+        return PrettyJson.renderStringValue({
+          item: `${item} (hex: ${Buffer.from(item).toString("base64")})`,
+        });
+      }
+
+      if (key === "data_value") {
+        return PrettyJson.renderStringValue({
+          item: `${Buffer.from(item, "hex").toString()} (hex: ${Buffer.from(item, "hex").toString("base64")})`,
+        });
+      }
+    }
+
     return null;
   };
 

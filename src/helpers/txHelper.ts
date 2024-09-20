@@ -7,7 +7,7 @@ import {
   xdr,
 } from "@stellar/stellar-sdk";
 import LedgerTransportWebUSB from "@ledgerhq/hw-transport-webusb";
-import LedgerStr from "@ledgerhq/hw-app-str";
+import Str from "@ledgerhq/hw-app-str";
 import TrezorConnect, { StellarSignedTx } from "@trezor/connect-web";
 import transformTransaction from "@trezor/connect-plugin-stellar";
 
@@ -71,16 +71,6 @@ const buildFeeBumpTx = ({
   }
   return result;
 };
-
-/* Sign Transaction related */
-interface LedgerApi {
-  getPublicKey(path: string): Promise<{ publicKey: string }>;
-  signHash(path: string, hash: Buffer): Promise<{ signature: Buffer }>;
-  signTransaction(
-    path: string,
-    transaction: Buffer,
-  ): Promise<{ signature: Buffer }>;
-}
 
 const signTx = ({
   txXdr,
@@ -179,11 +169,12 @@ const signWithLedger = async ({
     return error;
   };
 
-  const signTxWithLedger = async (ledgerApi: LedgerApi, isHash: boolean) => {
+  const signTxWithLedger = async (ledgerApi: Str, isHash: boolean) => {
     let ledgerSignature;
 
     try {
-      const { publicKey } = await ledgerApi.getPublicKey(bipPath);
+      const { rawPublicKey } = await ledgerApi.getPublicKey(bipPath);
+      const publicKey = StrKey.encodeEd25519PublicKey(rawPublicKey);
 
       if (isHash) {
         const { signature } = await ledgerApi.signHash(
@@ -215,7 +206,7 @@ const signWithLedger = async ({
 
   try {
     const transport = await LedgerTransportWebUSB.request();
-    const ledgerApi = new LedgerStr(transport);
+    const ledgerApi = new Str(transport);
     return await signTxWithLedger(ledgerApi, isHash);
   } catch (error) {
     const ledgerError = error as LedgerErrorResponse;
