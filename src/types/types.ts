@@ -150,6 +150,8 @@ export type TxnOperation = {
   source_account?: string;
 };
 
+export type OpBuildingError = { label?: string; errorList?: string[] };
+
 export type LedgerErrorResponse = {
   message: string;
   errorCode: number;

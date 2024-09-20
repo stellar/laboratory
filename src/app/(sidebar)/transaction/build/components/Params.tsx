@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Alert, Button, Card, Icon } from "@stellar/design-system";
+import { Button, Card, Icon } from "@stellar/design-system";
 import { MemoValue } from "@stellar/stellar-sdk";
 import { get, omit, set } from "lodash";
 
@@ -16,7 +16,6 @@ import {
   MemoPickerValue,
 } from "@/components/FormElements/MemoPicker";
 import { TimeBoundsPicker } from "@/components/FormElements/TimeBoundsPicker";
-import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 
 import { sanitizeObject } from "@/helpers/sanitizeObject";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
@@ -33,10 +32,10 @@ export const Params = () => {
   const { transaction, network } = useStore();
   const { params: txnParams } = transaction.build;
   const {
-    updateBuildActiveTab,
     updateBuildParams,
     updateBuildIsValid,
     resetBuildParams,
+    setBuildParamsError,
   } = transaction;
 
   const [paramsError, setParamsError] = useState<ParamsError>({});
@@ -109,6 +108,13 @@ export const Params = () => {
     sequenceNumberDataUpdatedAt,
     sequenceNumberErrorUpdatedAt,
   ]);
+
+  // Update params error when params change
+  useEffect(() => {
+    setBuildParamsError(getParamsError());
+    // Not including getParamsError()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [txnParams, setBuildParamsError]);
 
   const handleParamChange = <T,>(paramPath: string, value: T) => {
     updateBuildParams(set({}, `${paramPath}`, value));
@@ -248,8 +254,6 @@ export const Params = () => {
     return allErrorMessages;
   };
 
-  const formErrors = getParamsError();
-
   return (
     <Box gap="md">
       <Card>
@@ -361,17 +365,13 @@ export const Params = () => {
             infoLink="https://developers.stellar.org/docs/learn/glossary#time-bounds"
           />
 
-          <Box gap="md" direction="row" align="center" justify="space-between">
-            <Button
-              size="md"
-              variant="secondary"
-              onClick={() => {
-                updateBuildActiveTab("operations");
-              }}
-            >
-              Add Operations
-            </Button>
-
+          <Box
+            gap="md"
+            direction="row"
+            align="center"
+            justify="end"
+            addlClassName="Params__buttons"
+          >
             <Button
               size="md"
               variant="error"
@@ -386,29 +386,6 @@ export const Params = () => {
           </Box>
         </Box>
       </Card>
-
-      <Alert variant="primary" placement="inline">
-        The transaction builder lets you build a new Stellar transaction. This
-        transaction will start out with no signatures. To make it into the
-        ledger, this transaction will then need to be signed and submitted to
-        the network.
-      </Alert>
-
-      <>
-        {formErrors.length > 0 ? (
-          <ValidationResponseCard
-            variant="primary"
-            title="Transaction building errors:"
-            response={
-              <ul>
-                {formErrors.map((e, i) => (
-                  <li key={`e-${i}`}>{e}</li>
-                ))}
-              </ul>
-            }
-          />
-        ) : null}
-      </>
     </Box>
   );
 };
