@@ -663,6 +663,20 @@
   }
 }
 
+.Params {
+  &__buttons {
+    @media screen and (max-width: 418px) {
+      .Button--error {
+        flex: 1;
+      }
+
+      .Box {
+        flex: 1;
+      }
+    }
+  }
+}
+
 .Operation {
   &__buttons {
     flex-wrap: wrap;

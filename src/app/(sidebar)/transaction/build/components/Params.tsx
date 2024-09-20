@@ -365,7 +365,13 @@ export const Params = () => {
             infoLink="https://developers.stellar.org/docs/learn/glossary#time-bounds"
           />
 
-          <Box gap="md" direction="row" align="center" justify="end">
+          <Box
+            gap="md"
+            direction="row"
+            align="center"
+            justify="end"
+            addlClassName="Params__buttons"
+          >
             <Button
               size="md"
               variant="error"
