@@ -16,6 +16,7 @@ import {
   Network,
   MuxedAccount,
   TxnOperation,
+  OpBuildingError,
 } from "@/types/types";
 
 export type FeeBumpParams = {
@@ -102,9 +103,12 @@ export interface Store {
   // Transaction
   transaction: {
     build: {
-      activeTab: string;
       params: TransactionBuildParams;
       operations: TxnOperation[];
+      error: {
+        params: string[];
+        operations: OpBuildingError[];
+      };
       xdr: string;
       isValid: {
         params: boolean;
@@ -125,7 +129,6 @@ export interface Store {
     };
     feeBump: FeeBumpParams;
     // [Transaction] Build Transaction actions
-    updateBuildActiveTab: (tabId: string) => void;
     updateBuildParams: (params: TransactionBuildParamsObj) => void;
     updateBuildOperations: (operations: TxnOperation[]) => void;
     updateBuildXdr: (xdr: string) => void;
@@ -141,6 +144,8 @@ export interface Store {
       operations?: boolean;
     }) => void;
     setBuildParams: (params: TransactionBuildParamsObj) => void;
+    setBuildParamsError: (error: string[]) => void;
+    setBuildOperationsError: (error: OpBuildingError[]) => void;
     resetBuildParams: () => void;
     resetBuild: () => void;
     // [Transaction] Sign Transaction actions
@@ -201,9 +206,12 @@ const initTransactionParamsState = {
 
 const initTransactionState = {
   build: {
-    activeTab: "params",
     params: initTransactionParamsState,
     operations: [],
+    error: {
+      params: [],
+      operations: [],
+    },
     xdr: "",
     isValid: {
       params: false,
@@ -357,10 +365,6 @@ export const createStore = (options: CreateStoreOptions) =>
         // Transaction
         transaction: {
           ...initTransactionState,
-          updateBuildActiveTab: (tabId: string) =>
-            set((state) => {
-              state.transaction.build.activeTab = tabId;
-            }),
           updateBuildParams: (params: TransactionBuildParamsObj) =>
             set((state) => {
               state.transaction.build.params = {
@@ -401,6 +405,14 @@ export const createStore = (options: CreateStoreOptions) =>
                 ...initTransactionParamsState,
                 ...params,
               };
+            }),
+          setBuildParamsError: (error: string[]) =>
+            set((state) => {
+              state.transaction.build.error.params = error;
+            }),
+          setBuildOperationsError: (error: OpBuildingError[]) =>
+            set((state) => {
+              state.transaction.build.error.operations = error;
             }),
           resetBuildParams: () =>
             set((state) => {
@@ -503,9 +515,9 @@ export const createStore = (options: CreateStoreOptions) =>
             },
             transaction: {
               build: {
-                activeTab: true,
                 params: true,
                 operations: true,
+                error: false,
                 isValid: true,
                 xdr: false,
               },

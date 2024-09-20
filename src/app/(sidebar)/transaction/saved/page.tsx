@@ -49,7 +49,6 @@ export default function SavedTransactions() {
 
     if (found) {
       router.push(Routes.BUILD_TRANSACTION);
-      transaction.updateBuildActiveTab("params");
 
       if (found.params) {
         transaction.setBuildParams(found.params);

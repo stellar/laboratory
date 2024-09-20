@@ -13,7 +13,6 @@ import {
 import { formComponentTemplateTxnOps } from "@/components/formComponentTemplateTxnOps";
 import { Box } from "@/components/layout/Box";
 import { TabbedButtons } from "@/components/TabbedButtons";
-import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { SdsLink } from "@/components/SdsLink";
 import { SaveTransactionModal } from "@/components/SaveTransactionModal";
 
@@ -29,6 +28,7 @@ import {
   AssetObjectValue,
   AssetPoolShareObjectValue,
   NumberFractionValue,
+  OpBuildingError,
   OptionSigner,
   RevokeSponsorshipValue,
   TxnOperation,
@@ -41,6 +41,7 @@ export const Operations = () => {
     updateBuildOperations,
     updateBuildSingleOperation,
     updateBuildIsValid,
+    setBuildOperationsError,
   } = transaction;
 
   // Types
@@ -49,8 +50,6 @@ export const Operations = () => {
     error: { [key: string]: string };
     missingFields: string[];
   };
-
-  type OpBuildingError = { label?: string; errorList?: string[] };
 
   const [operationsError, setOperationsError] = useState<OperationError[]>([]);
   const [isSaveTxnModalVisible, setIsSaveTxnModalVisible] = useState(false);
@@ -194,6 +193,13 @@ export const Operations = () => {
     // Check this only when mounts, don't need to check any dependencies
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Update operations error when operations change
+  useEffect(() => {
+    setBuildOperationsError(getOperationsError());
+    // Not including getOperationsError()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [txnOperations, operationsError, setBuildOperationsError]);
 
   const missingSelectedAssetFields = (
     param: string,
@@ -623,8 +629,6 @@ export const Operations = () => {
 
     return allErrorMessages;
   };
-
-  const formErrors = getOperationsError();
 
   const renderSourceAccount = (opType: string, index: number) => {
     const sourceAccountComponent = formComponentTemplateTxnOps({
@@ -1076,33 +1080,6 @@ export const Operations = () => {
           </Box>
         </Box>
       </Card>
-
-      <>
-        {formErrors.length > 0 ? (
-          <ValidationResponseCard
-            variant="primary"
-            title="Transaction building errors:"
-            response={
-              <Box gap="sm">
-                <>
-                  {formErrors.map((e, i) => (
-                    <Box gap="sm" key={`e-${i}`}>
-                      <>
-                        {e.label ? <div>{e.label}</div> : null}
-                        <ul>
-                          {e.errorList?.map((ee, ei) => (
-                            <li key={`e-${i}-${ei}`}>{ee}</li>
-                          ))}
-                        </ul>
-                      </>
-                    </Box>
-                  ))}
-                </>
-              </Box>
-            }
-          />
-        ) : null}
-      </>
 
       <SaveTransactionModal
         type="save"
