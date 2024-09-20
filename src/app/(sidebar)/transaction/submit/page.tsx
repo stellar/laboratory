@@ -22,6 +22,7 @@ import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
 import { getBlockExplorerLink } from "@/helpers/getBlockExplorerLink";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
+import { useScrollIntoView } from "@/hooks/useScrollIntoView";
 
 import { useSubmitRpcTx } from "@/query/useSubmitRpcTx";
 import { useSubmitHorizonTx } from "@/query/useSubmitHorizonTx";
@@ -70,6 +71,8 @@ export default function SubmitTransaction() {
   const [submitMethod, setSubmitMethod] = useState("");
 
   const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const responseSuccessEl = useRef<HTMLDivElement | null>(null);
+  const responseErrorEl = useRef<HTMLDivElement | null>(null);
 
   const {
     data: submitRpcResponse,
@@ -92,6 +95,12 @@ export default function SubmitTransaction() {
   const isRpcAvailable = Boolean(network.rpcUrl);
   const isSubmitInProgress = isSubmitRpcPending || isSubmitHorizonPending;
 
+  const isSuccess = Boolean(
+    (isSubmitRpcSuccess && submitRpcResponse) ||
+      (isSubmitHorizonSuccess && submitHorizonResponse),
+  );
+  const isError = Boolean(submitRpcError || submitHorizonError);
+
   const handleClickOutside = useCallback((event: MouseEvent) => {
     if (dropdownRef?.current?.contains(event.target as Node)) {
       return;
@@ -107,6 +116,10 @@ export default function SubmitTransaction() {
     // Not including resetSubmitState
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRpcAvailable]);
+
+  // Scroll to response
+  useScrollIntoView(isSuccess, responseSuccessEl);
+  useScrollIntoView(isError, responseErrorEl);
 
   // Close dropdown when clicked outside
   useLayoutEffect(() => {
@@ -125,7 +138,6 @@ export default function SubmitTransaction() {
     if (submitRpcError || submitRpcResponse) {
       resetSubmitRpc();
     }
-
     if (submitHorizonError || submitHorizonResponse) {
       resetSubmitHorizon();
     }
@@ -223,146 +235,150 @@ export default function SubmitTransaction() {
   const renderSuccess = () => {
     if (isSubmitRpcSuccess && submitRpcResponse) {
       return (
-        <ValidationResponseCard
-          variant="success"
-          title="Transaction submitted!"
-          subtitle={`Transaction succeeded with ${submitRpcResponse.operationCount} operation(s)`}
-          note={<></>}
-          footerLeftEl={
-            IS_BLOCK_EXPLORER_ENABLED ? (
-              <>
-                <Button
-                  size="md"
-                  variant="tertiary"
-                  onClick={() => {
-                    const BLOCK_EXPLORER_LINK =
-                      getBlockExplorerLink("stellar.expert")[network.id];
+        <div ref={responseSuccessEl}>
+          <ValidationResponseCard
+            variant="success"
+            title="Transaction submitted!"
+            subtitle={`Transaction succeeded with ${submitRpcResponse.operationCount} operation(s)`}
+            note={<></>}
+            footerLeftEl={
+              IS_BLOCK_EXPLORER_ENABLED ? (
+                <>
+                  <Button
+                    size="md"
+                    variant="tertiary"
+                    onClick={() => {
+                      const BLOCK_EXPLORER_LINK =
+                        getBlockExplorerLink("stellar.expert")[network.id];
 
-                    openUrl(
-                      `${BLOCK_EXPLORER_LINK}/tx/${submitRpcResponse.hash}`,
-                    );
-                  }}
-                >
-                  View on stellar.expert
-                </Button>
+                      openUrl(
+                        `${BLOCK_EXPLORER_LINK}/tx/${submitRpcResponse.hash}`,
+                      );
+                    }}
+                  >
+                    View on stellar.expert
+                  </Button>
 
-                <Button
-                  size="md"
-                  variant="tertiary"
-                  onClick={() => {
-                    const BLOCK_EXPLORER_LINK =
-                      getBlockExplorerLink("stellarchain.io")[network.id];
+                  <Button
+                    size="md"
+                    variant="tertiary"
+                    onClick={() => {
+                      const BLOCK_EXPLORER_LINK =
+                        getBlockExplorerLink("stellarchain.io")[network.id];
 
-                    openUrl(
-                      `${BLOCK_EXPLORER_LINK}/transactions/${submitRpcResponse.hash}`,
-                    );
-                  }}
-                >
-                  View on stellarchain.io
-                </Button>
-              </>
-            ) : null
-          }
-          response={
-            <Box gap="xs">
-              <TxResponse label="Hash:" value={submitRpcResponse.hash} />
-              <TxResponse
-                label="Ledger number:"
-                value={submitRpcResponse.result.ledger}
-              />
-              <TxResponse
-                label="Envelope XDR:"
-                value={submitRpcResponse.result.envelopeXdr
-                  .toXDR("base64")
-                  .toString()}
-              />
-              <TxResponse
-                label="Result XDR:"
-                value={submitRpcResponse.result.resultXdr
-                  .toXDR("base64")
-                  .toString()}
-              />
-              <TxResponse
-                label="Result Meta XDR:"
-                value={submitRpcResponse.result.resultMetaXdr
-                  .toXDR("base64")
-                  .toString()}
-              />
-              <TxResponse label="Fee:" value={submitRpcResponse.fee} />
-            </Box>
-          }
-        />
+                      openUrl(
+                        `${BLOCK_EXPLORER_LINK}/transactions/${submitRpcResponse.hash}`,
+                      );
+                    }}
+                  >
+                    View on stellarchain.io
+                  </Button>
+                </>
+              ) : null
+            }
+            response={
+              <Box gap="xs">
+                <TxResponse label="Hash:" value={submitRpcResponse.hash} />
+                <TxResponse
+                  label="Ledger number:"
+                  value={submitRpcResponse.result.ledger}
+                />
+                <TxResponse
+                  label="Envelope XDR:"
+                  value={submitRpcResponse.result.envelopeXdr
+                    .toXDR("base64")
+                    .toString()}
+                />
+                <TxResponse
+                  label="Result XDR:"
+                  value={submitRpcResponse.result.resultXdr
+                    .toXDR("base64")
+                    .toString()}
+                />
+                <TxResponse
+                  label="Result Meta XDR:"
+                  value={submitRpcResponse.result.resultMetaXdr
+                    .toXDR("base64")
+                    .toString()}
+                />
+                <TxResponse label="Fee:" value={submitRpcResponse.fee} />
+              </Box>
+            }
+          />
+        </div>
       );
     }
 
     if (isSubmitHorizonSuccess && submitHorizonResponse) {
       return (
-        <ValidationResponseCard
-          variant="success"
-          title="Transaction submitted!"
-          subtitle={`Transaction succeeded with ${submitHorizonResponse.operation_count} operation(s)`}
-          note={<></>}
-          footerLeftEl={
-            IS_BLOCK_EXPLORER_ENABLED ? (
-              <>
-                <Button
-                  size="md"
-                  variant="tertiary"
-                  onClick={() => {
-                    const BLOCK_EXPLORER_LINK =
-                      getBlockExplorerLink("stellar.expert")[network.id];
+        <div ref={responseSuccessEl}>
+          <ValidationResponseCard
+            variant="success"
+            title="Transaction submitted!"
+            subtitle={`Transaction succeeded with ${submitHorizonResponse.operation_count} operation(s)`}
+            note={<></>}
+            footerLeftEl={
+              IS_BLOCK_EXPLORER_ENABLED ? (
+                <>
+                  <Button
+                    size="md"
+                    variant="tertiary"
+                    onClick={() => {
+                      const BLOCK_EXPLORER_LINK =
+                        getBlockExplorerLink("stellar.expert")[network.id];
 
-                    openUrl(
-                      `${BLOCK_EXPLORER_LINK}/tx/${submitHorizonResponse.hash}`,
-                    );
-                  }}
-                >
-                  View on stellar.expert
-                </Button>
+                      openUrl(
+                        `${BLOCK_EXPLORER_LINK}/tx/${submitHorizonResponse.hash}`,
+                      );
+                    }}
+                  >
+                    View on stellar.expert
+                  </Button>
 
-                <Button
-                  size="md"
-                  variant="tertiary"
-                  onClick={() => {
-                    const BLOCK_EXPLORER_LINK =
-                      getBlockExplorerLink("stellarchain.io")[network.id];
+                  <Button
+                    size="md"
+                    variant="tertiary"
+                    onClick={() => {
+                      const BLOCK_EXPLORER_LINK =
+                        getBlockExplorerLink("stellarchain.io")[network.id];
 
-                    openUrl(
-                      `${BLOCK_EXPLORER_LINK}/transactions/${submitHorizonResponse.hash}`,
-                    );
-                  }}
-                >
-                  View on stellarchain.io
-                </Button>
-              </>
-            ) : null
-          }
-          response={
-            <Box gap="xs">
-              <TxResponse label="Hash:" value={submitHorizonResponse.hash} />
-              <TxResponse
-                label="Ledger number:"
-                value={submitHorizonResponse.ledger}
-              />
-              <TxResponse
-                label="Envelope XDR:"
-                value={submitHorizonResponse.envelope_xdr}
-              />
-              <TxResponse
-                label="Result XDR:"
-                value={submitHorizonResponse.result_xdr}
-              />
-              <TxResponse
-                label="Result Meta XDR:"
-                value={submitHorizonResponse.result_meta_xdr}
-              />
-              <TxResponse
-                label="Fee charged:"
-                value={submitHorizonResponse.fee_charged}
-              />
-            </Box>
-          }
-        />
+                      openUrl(
+                        `${BLOCK_EXPLORER_LINK}/transactions/${submitHorizonResponse.hash}`,
+                      );
+                    }}
+                  >
+                    View on stellarchain.io
+                  </Button>
+                </>
+              ) : null
+            }
+            response={
+              <Box gap="xs">
+                <TxResponse label="Hash:" value={submitHorizonResponse.hash} />
+                <TxResponse
+                  label="Ledger number:"
+                  value={submitHorizonResponse.ledger}
+                />
+                <TxResponse
+                  label="Envelope XDR:"
+                  value={submitHorizonResponse.envelope_xdr}
+                />
+                <TxResponse
+                  label="Result XDR:"
+                  value={submitHorizonResponse.result_xdr}
+                />
+                <TxResponse
+                  label="Result Meta XDR:"
+                  value={submitHorizonResponse.result_meta_xdr}
+                />
+                <TxResponse
+                  label="Fee charged:"
+                  value={submitHorizonResponse.fee_charged}
+                />
+              </Box>
+            }
+          />
+        </div>
       );
     }
 
@@ -371,11 +387,19 @@ export default function SubmitTransaction() {
 
   const renderError = () => {
     if (submitRpcError) {
-      return <RpcErrorResponse error={submitRpcError} />;
+      return (
+        <div ref={responseErrorEl}>
+          <RpcErrorResponse error={submitRpcError} />
+        </div>
+      );
     }
 
     if (submitHorizonError) {
-      return <HorizonErrorResponse error={submitHorizonError} />;
+      return (
+        <div ref={responseErrorEl}>
+          <HorizonErrorResponse error={submitHorizonError} />
+        </div>
+      );
     }
 
     return null;

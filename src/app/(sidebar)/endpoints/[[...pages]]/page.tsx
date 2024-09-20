@@ -37,6 +37,7 @@ import {
   ENDPOINTS_PAGES_RPC,
 } from "@/constants/endpointsPages";
 import { useEndpoint } from "@/query/useEndpoint";
+import { useScrollIntoView } from "@/hooks/useScrollIntoView";
 import {
   AnyObject,
   AssetObject,
@@ -462,11 +463,7 @@ export default function Endpoints() {
   ]);
 
   // Scroll to response
-  useEffect(() => {
-    if (isSuccess || isError) {
-      responseEl?.current?.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [isSuccess, isError]);
+  useScrollIntoView(isSuccess || isError, responseEl);
 
   const createAssetString = (asset: AssetObjectValue) => {
     if (asset.type === "native") {

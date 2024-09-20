@@ -27,7 +27,7 @@ export const PrettyJsonTransaction = ({
     networkUrl: network.horizonUrl,
   });
 
-  const isTx = json?.tx || json?.tx_fee_bump;
+  const isTx = Boolean(json?.tx || json?.tx_fee_bump);
 
   useEffect(() => {
     // Check transaction signatures
