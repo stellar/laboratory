@@ -1,6 +1,5 @@
 "use client";
 
-import { createContext } from "react";
 import { Alert, Text } from "@stellar/design-system";
 
 import { useStore } from "@/store/useStore";
@@ -10,17 +9,6 @@ import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { Params } from "./components/Params";
 import { Operations } from "./components/Operations";
 import { TransactionXdr } from "./components/TransactionXdr";
-
-type BuildTransactionErrorContextProps = {
-  params: string[];
-  operations: string[];
-};
-
-export const BuildTransactionErrorContext =
-  createContext<BuildTransactionErrorContextProps>({
-    params: [],
-    operations: [],
-  });
 
 export default function BuildTransaction() {
   const { transaction } = useStore();
