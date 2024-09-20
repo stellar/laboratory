@@ -80,7 +80,7 @@ export const SignWithWallet = ({
   };
 
   return (
-    <Button size="md" variant="secondary" onClick={onSignWithWallet}>
+    <Button size="md" variant="tertiary" onClick={onSignWithWallet}>
       Sign with wallet
     </Button>
   );

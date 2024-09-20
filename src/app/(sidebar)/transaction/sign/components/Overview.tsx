@@ -148,6 +148,7 @@ export const Overview = () => {
 
   const signWithHardware = async () => {
     setHardwareSigSuccess(false);
+    setHardwareSigErrorMsg("");
     updateSignedTx("");
 
     setIsLoading(true);
