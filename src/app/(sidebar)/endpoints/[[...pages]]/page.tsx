@@ -11,7 +11,6 @@ import {
   Input,
   Notification,
   Text,
-  Textarea,
 } from "@stellar/design-system";
 import { useQueryClient } from "@tanstack/react-query";
 import { stringify } from "lossless-json";
@@ -20,6 +19,7 @@ import { SdsLink } from "@/components/SdsLink";
 import { formComponentTemplateEndpoints } from "@/components/formComponentTemplateEndpoints";
 import { InputSideElement } from "@/components/InputSideElement";
 import { Box } from "@/components/layout/Box";
+import { PrettyJsonTextarea } from "@/components/PrettyJsonTextarea";
 
 import { useStore } from "@/store/useStore";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
@@ -158,10 +158,10 @@ export default function Endpoints() {
         return {
           ...defaultRpcRequestBody,
           params: {
-            startLedger: Number(params.startLedger),
+            startLedger: Number(params.startLedger) || null,
             pagination: {
-              cursor: params.cursor,
-              limit: Number(params.limit) || undefined,
+              cursor: params.cursor || "",
+              limit: Number(params.limit) || "",
             },
             filters: [
               {
@@ -199,11 +199,11 @@ export default function Endpoints() {
         return {
           ...defaultRpcRequestBody,
           params: {
-            startLedger: Number(params.startLedger),
-            pagination: {
+            startLedger: Number(params.startLedger) || null,
+            pagination: sanitizeObject({
               cursor: params.cursor,
               limit: Number(params.limit) || undefined,
-            },
+            }),
           },
         };
       }
@@ -222,9 +222,9 @@ export default function Endpoints() {
           ...defaultRpcRequestBody,
           params: {
             transaction: params.tx ?? "",
-            resourceConfig: {
+            resourceConfig: sanitizeObject({
               instructionLeeway: Number(params.resourceConfig) || undefined,
-            },
+            }),
           },
         };
       }
@@ -572,7 +572,6 @@ export default function Endpoints() {
 
   const renderPostPayload = () => {
     let renderedProps = getPostPayload();
-    const defaultRowsLength = 5;
 
     if (pageData?.requestMethod === "POST") {
       if (pathname === Routes.ENDPOINTS_TRANSACTIONS_POST) {
@@ -585,25 +584,9 @@ export default function Endpoints() {
     }
 
     if (renderedProps) {
-      const requiredParams = renderedProps.params
-        ? Object.values(renderedProps.params).filter((val) => val !== undefined)
-        : undefined;
-
-      const rows = requiredParams
-        ? requiredParams.length + defaultRowsLength + 2
-        : defaultRowsLength;
-
       return (
         <div className="Endpoints__txTextarea">
-          <Textarea
-            id="tx"
-            fieldSize="md"
-            label="Payload"
-            value={renderedProps ? JSON.stringify(renderedProps, null, 2) : ""}
-            rows={rows}
-            disabled
-            spellCheck={false}
-          />
+          <PrettyJsonTextarea json={renderedProps} label="Payload" />
         </div>
       );
     }
