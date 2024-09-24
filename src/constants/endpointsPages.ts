@@ -950,6 +950,19 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
           },
         },
         {
+          route: Routes.ENDPOINTS_TRANSACTIONS_POST_ASYNC,
+          label: "Post Async Transaction",
+          form: {
+            docsUrl:
+              "https://developers.stellar.org/docs/data/horizon/api-reference/submit-async-transaction",
+            docsLabel: "post transaction",
+            requestMethod: "POST",
+            endpointUrlTemplate: "/transactions_async{?tx}",
+            requiredParams: "tx",
+            isStreaming: false,
+          },
+        },
+        {
           route: Routes.ENDPOINTS_TRANSACTIONS_ACCOUNT,
           label: "Transactions for Account",
           form: {

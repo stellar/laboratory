@@ -1,46 +1,11 @@
-import { stringify } from "zustand-querystring";
-
 import { CustomKeyValueLinkMap, PrettyJson } from "@/components/PrettyJson";
 import { Routes } from "@/constants/routes";
 import { sanitizeArray } from "@/helpers/sanitizeArray";
-import { isEmptyObject } from "@/helpers/isEmptyObject";
 
 import { AnyObject } from "@/types/types";
+import { buildEndpointHref } from "@/helpers/buildEndpointHref";
 
 export const EndpointsJsonResponse = ({ json }: { json: AnyObject }) => {
-  const buildHref = (route: Routes | null, params: AnyObject = {}) => {
-    if (!route) {
-      return "";
-    }
-
-    const SPLIT_CHAR = ";&";
-    const END_CHAR = ";;";
-
-    const storeParams = window.location.search
-      .replace(END_CHAR, "")
-      .split(SPLIT_CHAR)
-      .map((i) => {
-        // Remove existing Endpoints or XDR params
-        if (i.startsWith("endpoints$") || i.startsWith("xdr$")) {
-          return "";
-        }
-
-        return i;
-      });
-
-    // Add XDR params
-    if (route.startsWith("/xdr")) {
-      storeParams.push(`xdr$${stringify(params)}`);
-    }
-
-    // Add Endpoints params
-    if (route.startsWith("/endpoints") && !isEmptyObject(params)) {
-      storeParams.push(`endpoints$params$${stringify(params)}`);
-    }
-
-    return `${route}${sanitizeArray(storeParams).join(SPLIT_CHAR)}${END_CHAR}`;
-  };
-
   const handleLinkXdr = (val: string, key?: string) => {
     let xdrType = "";
 
@@ -51,6 +16,7 @@ export const EndpointsJsonResponse = ({ json }: { json: AnyObject }) => {
         break;
       case "result_xdr":
       case "resultXdr":
+      case "errorResultXdr":
         xdrType = "TransactionResult";
         break;
       case "result_meta_xdr":
@@ -74,7 +40,7 @@ export const EndpointsJsonResponse = ({ json }: { json: AnyObject }) => {
     }
 
     if (xdrType) {
-      return buildHref(Routes.VIEW_XDR, { blob: val, type: xdrType });
+      return buildEndpointHref(Routes.VIEW_XDR, { blob: val, type: xdrType });
     }
 
     return "";
@@ -85,7 +51,9 @@ export const EndpointsJsonResponse = ({ json }: { json: AnyObject }) => {
       return "";
     }
 
-    return buildHref(Routes.ENDPOINTS_ACCOUNTS_SINGLE, { account_id: val });
+    return buildEndpointHref(Routes.ENDPOINTS_ACCOUNTS_SINGLE, {
+      account_id: val,
+    });
   };
 
   const parseUrl = (val: string) => {
@@ -325,7 +293,7 @@ export const EndpointsJsonResponse = ({ json }: { json: AnyObject }) => {
       }
     }
 
-    return buildHref(route, params);
+    return buildEndpointHref(route, params);
   };
 
   const customKeyValueLinkAction: CustomKeyValueLinkMap = {
@@ -363,6 +331,9 @@ export const EndpointsJsonResponse = ({ json }: { json: AnyObject }) => {
       getHref: handleLinkXdr,
     },
     resultXdr: {
+      getHref: handleLinkXdr,
+    },
+    errorResultXdr: {
       getHref: handleLinkXdr,
     },
     result_meta_xdr: {

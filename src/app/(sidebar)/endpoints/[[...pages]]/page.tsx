@@ -9,6 +9,7 @@ import {
   CopyText,
   Icon,
   Input,
+  Link,
   Notification,
   Text,
   Textarea,
@@ -30,6 +31,7 @@ import { getSaveItemNetwork } from "@/helpers/getSaveItemNetwork";
 import { localStorageSavedEndpointsHorizon } from "@/helpers/localStorageSavedEndpointsHorizon";
 import { arrayItem } from "@/helpers/arrayItem";
 import { delayedAction } from "@/helpers/delayedAction";
+import { buildEndpointHref } from "@/helpers/buildEndpointHref";
 
 import { Routes } from "@/constants/routes";
 import {
@@ -131,6 +133,13 @@ export default function Endpoints() {
   const [urlPath, setUrlPath] = useState("");
   const [urlPathParams, setUrlPathparams] = useState("");
   const [urlParams, setUrlParams] = useState("");
+
+  const isTransactionPost = () => {
+    return [
+      Routes.ENDPOINTS_TRANSACTIONS_POST.toString(),
+      Routes.ENDPOINTS_TRANSACTIONS_POST_ASYNC.toString(),
+    ].includes(pathname);
+  };
 
   const getRpcPostPayloadProps = (endpoint: string) => {
     const defaultRpcRequestBody: AnyObject = {
@@ -239,7 +248,7 @@ export default function Endpoints() {
     let payload;
 
     if (pageData?.requestMethod === "POST") {
-      if (pathname === Routes.ENDPOINTS_TRANSACTIONS_POST) {
+      if (isTransactionPost()) {
         payload = { tx: params.tx ?? "" };
       }
 
@@ -386,7 +395,14 @@ export default function Endpoints() {
       }, {});
     };
 
-    setFormError(paramErrors());
+    const error: any = paramErrors();
+
+    // Handle XDR validation
+    if (error?.tx?.result === "success") {
+      delete error.tx;
+    }
+
+    setFormError(error);
 
     // We want to check this only when the page mounts for the first time
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -575,7 +591,7 @@ export default function Endpoints() {
     const defaultRowsLength = 5;
 
     if (pageData?.requestMethod === "POST") {
-      if (pathname === Routes.ENDPOINTS_TRANSACTIONS_POST) {
+      if (isTransactionPost()) {
         renderedProps = { tx: params.tx ?? "" };
       }
 
@@ -881,6 +897,24 @@ export default function Endpoints() {
     );
   };
 
+  const renderPostAsyncTxResponseMessage = () => {
+    if (pathname === Routes.ENDPOINTS_TRANSACTIONS_POST_ASYNC && endpointData) {
+      if (endpointData.json.tx_status === "PENDING" && endpointData.json.hash) {
+        const href = buildEndpointHref(Routes.ENDPOINTS_TRANSACTIONS_SINGLE, {
+          transaction: endpointData.json.hash,
+        });
+
+        return (
+          <div className="FieldNote FieldNote--note FieldNote--lg">
+            Check the async transaction’s status <Link href={href}>here</Link>
+          </div>
+        );
+      }
+    }
+
+    return null;
+  };
+
   if (pathname === Routes.ENDPOINTS) {
     return <EndpointsLandingPage />;
   }
@@ -971,8 +1005,10 @@ export default function Endpoints() {
                 </div>
 
                 <div className="PageFooter">
-                  <div>{/* TODO: add conditional StellarExpert link */}</div>
-                  <div>
+                  <div className="PageFooter__left">
+                    {renderPostAsyncTxResponseMessage()}
+                  </div>
+                  <div className="PageFooter__right">
                     <CopyText
                       textToCopy={stringify(endpointData.json, null, 2) || ""}
                     >
