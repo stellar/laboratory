@@ -31,8 +31,10 @@ const getWalletNetwork = (network: NetworkType) => {
 
 export const SignWithWallet = ({
   setSignError,
+  setSignSuccess,
 }: {
   setSignError: Dispatch<SetStateAction<string>>;
+  setSignSuccess: Dispatch<SetStateAction<string>>;
 }) => {
   const { network, transaction } = useStore();
   const { sign, updateSignedTx } = transaction;
@@ -46,33 +48,31 @@ export const SignWithWallet = ({
   const onSignWithWallet = async () => {
     // remove the previously signed tx from the display
     updateSignedTx("");
+    setSignError("");
+    setSignSuccess("");
 
     await kit.openModal({
       onWalletSelected: async (option: ISupportedWallet) => {
         try {
           kit.setWallet(option.id);
-          const publicKey = await kit.getPublicKey();
+          const { address } = await kit.getAddress();
           const networkType = getWalletNetwork(network.id);
 
-          const { result } = await kit.signTx({
-            xdr: sign.importXdr,
+          const { signedTxXdr } = await kit.signTransaction(sign.importXdr, {
             // You could send multiple public keys in case the wallet needs to handle multi signatures
-            publicKeys: [publicKey],
-            network: networkType,
+            address,
+            networkPassphrase: networkType,
           });
 
-          updateSignedTx(result);
+          updateSignedTx(signedTxXdr);
+          setSignSuccess("1 signature(s) added");
         } catch (error: any) {
           // the error for the following wallets:
           // xbull
           // albedo
           // freighter
-          if (
-            error?.message?.includes("denied") ||
-            error?.error?.code === -4 ||
-            error?.includes("User declined access")
-          ) {
-            setSignError(`User declined access to ${option.id}`);
+          if (error?.message) {
+            setSignError(error?.message);
           }
         }
       },

@@ -19,7 +19,7 @@
     "pre-push": "yarn lint:ts && yarn test"
   },
   "dependencies": {
-    "@creit.tech/stellar-wallets-kit": "^0.8.2",
+    "@creit.tech/stellar-wallets-kit": "^1.2.1",
     "@ledgerhq/hw-app-str": "^7.0.3",
     "@ledgerhq/hw-transport-webusb": "^6.29.3",
     "@stellar/design-system": "^2.0.0-beta.16",
