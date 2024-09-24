@@ -131,6 +131,9 @@ export const Overview = () => {
     networkPassphrase: string,
     hardWalletSigs: xdr.DecoratedSignature[],
   ) => {
+    setSignError("");
+    setSignedTxErrorMsg("");
+
     const { xdr, message } = txHelper.signTx({
       txXdr,
       signers,
@@ -401,7 +404,10 @@ export const Overview = () => {
                     Sign transaction
                   </Button>
 
-                  <SignWithWallet setSignError={setSignError} />
+                  <SignWithWallet
+                    setSignError={setSignError}
+                    setSignSuccess={setSignedTxSuccessMsg}
+                  />
                 </div>
               </div>
               <div>
