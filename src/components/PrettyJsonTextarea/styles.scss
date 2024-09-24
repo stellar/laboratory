@@ -1,0 +1,11 @@
+@use "../../styles/utils.scss" as *;
+
+.PrettyJsonTextarea {
+  &__json {
+    border: 1px solid var(--sds-input-color-border-disabled);
+    border-radius: pxToRem(6px);
+    max-height: pxToRem(220px);
+    overflow: auto;
+    padding: pxToRem(8px) pxToRem(12px);
+  }
+}
