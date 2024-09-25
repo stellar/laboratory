@@ -453,6 +453,14 @@
   gap: pxToRem(16px);
 }
 
+.PageFooter {
+  flex-wrap: wrap;
+
+  & > * {
+    white-space: nowrap;
+  }
+}
+
 .PageHeader {
   flex-wrap: wrap;
 

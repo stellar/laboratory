@@ -53,6 +53,7 @@ export enum Routes {
   ENDPOINTS_TRANSACTIONS = "/endpoints/transactions",
   ENDPOINTS_TRANSACTIONS_SINGLE = "/endpoints/transactions/single",
   ENDPOINTS_TRANSACTIONS_POST = "/endpoints/transactions/post",
+  ENDPOINTS_TRANSACTIONS_POST_ASYNC = "/endpoints/transactions/post-async",
   ENDPOINTS_TRANSACTIONS_ACCOUNT = "/endpoints/transactions/account",
   ENDPOINTS_TRANSACTIONS_LEDGER = "/endpoints/transactions/ledger",
   ENDPOINTS_TRANSACTIONS_LIQUIDITY_POOL = "/endpoints/transactions/liquidity-pool",
