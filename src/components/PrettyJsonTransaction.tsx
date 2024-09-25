@@ -109,10 +109,19 @@ export const PrettyJsonTransaction = ({
     return null;
   };
 
+  const customKeyRenderer = (item: any, key: string) => {
+    if (key === "signatures" && item?.length > 0) {
+      return <div className="PrettyJson__key__note">· Signatures Checked</div>;
+    }
+
+    return null;
+  };
+
   return (
     <PrettyJson
       json={json}
       customValueRenderer={customValueRenderer}
+      customKeyRenderer={customKeyRenderer}
       isLoading={isLoading || isFetching}
     />
   );

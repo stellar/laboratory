@@ -15,6 +15,16 @@
   &__nested {
     padding-left: pxToRem(16px);
 
+    // Show "Signatures Checked" message only if signatures are validated
+    &[data-is-custom-key] {
+      &:has(.PrettyJson--success),
+      &:has(.PrettyJson--error) {
+        .PrettyJson__key__note {
+          display: block;
+        }
+      }
+    }
+
     &:has(+ .PrettyJson--success) {
       .PrettyJson__key {
         color: var(--sds-clr-green-11);
@@ -61,6 +71,15 @@
   &__bracket,
   &__key {
     color: var(--sds-clr-gray-12);
+  }
+
+  &__key {
+    &__note {
+      display: none;
+      font-size: pxToRem(12px);
+      margin-left: pxToRem(4px);
+      color: var(--sds-clr-gray-09);
+    }
   }
 
   .Link {
