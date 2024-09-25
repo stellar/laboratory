@@ -55,13 +55,15 @@ export const LayoutHeader = () => {
     type NavItem = {
       route: Routes;
       label: string;
+      nestedItems?: { route: Routes; label: string }[];
     };
 
-    const formatNavItems = (navItems: NavItem[]) =>
-      navItems.map((ni) => ({
+    const formatNavItems = (navItems: NavItem[]) => {
+      return navItems.map((ni) => ({
         label: ni.label,
         value: ni.route,
       }));
+    };
 
     const hasSubSection = Boolean(
       mainNav.subNav.find((sn: any) => sn.instruction),
@@ -69,13 +71,38 @@ export const LayoutHeader = () => {
 
     if (hasSubSection) {
       const rootItems = mainNav.subNav.filter((sn: any) => !sn.instruction);
+      const subSecs = mainNav.subNav.filter((sn) => (sn as any).instruction);
 
-      const subSecs = mainNav.subNav
-        .filter((sn) => (sn as any).instruction)
-        .map((ss) => ({
-          groupTitle: (ss as any).instruction,
-          options: formatNavItems(ss.navItems),
-        }));
+      const subItems = subSecs.map((ss) => {
+        const items = ss.navItems as NavItem[];
+        const hasNestedItems = Boolean(items[0]?.nestedItems?.length);
+
+        if (hasNestedItems) {
+          const nestedFormatted = items.map((i) => {
+            const nestedItems = formatNavItems(i.nestedItems!);
+
+            return {
+              groupTitle: i.label,
+              options: nestedItems,
+            };
+          });
+
+          return [
+            {
+              groupTitle: (ss as any).instruction,
+              options: [],
+            },
+            ...nestedFormatted,
+          ];
+        }
+
+        return [
+          {
+            groupTitle: (ss as any).instruction,
+            options: formatNavItems(ss.navItems),
+          },
+        ];
+      });
 
       return [
         {
@@ -84,7 +111,7 @@ export const LayoutHeader = () => {
             .map((ri) => formatNavItems(ri.navItems))
             .reduce((r, c) => [...r, ...c], []),
         },
-        ...subSecs,
+        ...subItems.reduce((r, c) => [...r, ...c], []),
       ];
     }
 
