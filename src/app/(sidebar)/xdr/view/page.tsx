@@ -26,6 +26,7 @@ import { PrettyJsonTransaction } from "@/components/PrettyJsonTransaction";
 import { parseToLosslessJson } from "@/helpers/parseToLosslessJson";
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { useStore } from "@/store/useStore";
+import { delayedAction } from "@/helpers/delayedAction";
 
 export default function ViewXdr() {
   const { xdr, network } = useStore();
@@ -102,7 +103,13 @@ export default function ViewXdr() {
                 Input a base-64 encoded XDR blob,{" "}
                 <Link
                   onClick={() => {
-                    fetchLatestTxn();
+                    updateXdrBlob("");
+                    delayedAction({
+                      action: () => {
+                        fetchLatestTxn();
+                      },
+                      delay: 300,
+                    });
                   }}
                   isDisabled={isFetchingLatestTxn}
                   icon={isFetchingLatestTxn ? <Loader /> : null}
