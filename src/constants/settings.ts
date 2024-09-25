@@ -42,6 +42,8 @@ export const NetworkOptions: Network[] = [
   },
 ];
 
+export const OP_SET_TRUST_LINE_FLAGS = "set_trust_line_flags";
+
 export const OPERATION_SET_FLAGS = [
   {
     id: "set-auth-required",
