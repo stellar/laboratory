@@ -22,7 +22,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     description:
       "Creates and funds a new account with the specified starting balance.",
     docsUrl:
-      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#create-account",
+      "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#create-account",
     params: ["destination", "starting_balance"],
     requiredParams: ["destination", "starting_balance"],
   },
@@ -31,7 +31,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     description:
       "Sends an amount in a specific asset to a destination account.",
     docsUrl:
-      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#payment",
+      "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#payment",
     params: ["destination", "asset", "amount"],
     requiredParams: ["destination", "asset", "amount"],
   },
@@ -40,7 +40,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     description:
       "Sends an amount in a specific asset to a destination account through a path of offers. This allows the asset sent (e.g., 450 XLM) to be different from the asset received (e.g, 6 BTC). A Path Payment Strict Send allows a user to specify the amount of the asset to send. The amount received will vary based on offers in the order books.",
     docsUrl:
-      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#path-payment-strict-send",
+      "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#path-payment-strict-send",
     params: [
       "destination",
       "send_asset",
@@ -79,7 +79,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     description:
       "Sends an amount in a specific asset to a destination account through a path of offers. This allows the asset sent (e.g., 450 XLM) to be different from the asset received (e.g, 6 BTC). A Path Payment Strict Receive allows a user to specify the amount of the asset received. The amount sent varies based on offers in the order books.",
     docsUrl:
-      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#path-payment-strict-receive",
+      "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#path-payment-strict-receive",
     params: [
       "destination",
       "send_asset",
@@ -116,7 +116,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     label: "Manage Sell Offer",
     description: "Creates, updates, or deletes an offer.",
     docsUrl:
-      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#manage-sell-offer",
+      "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#manage-sell-offer",
     params: ["selling", "buying", "amount", "price", "offer_id"],
     requiredParams: ["selling", "buying", "amount", "price", "offer_id"],
     custom: {
@@ -136,7 +136,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     label: "Manage Buy Offer",
     description: "Creates, updates, or deletes an offer.",
     docsUrl:
-      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#manage-buy-offer",
+      "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#manage-buy-offer",
     params: ["selling", "buying", "buy_amount", "price", "offer_id"],
     requiredParams: ["selling", "buying", "buy_amount", "price", "offer_id"],
     custom: {
@@ -157,7 +157,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     description:
       "Creates an offer that does not take another offer of equal price when created.",
     docsUrl:
-      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#create-passive-sell-offer",
+      "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#create-passive-sell-offer",
     params: ["selling", "buying", "amount", "price"],
     requiredParams: ["selling", "buying", "amount", "price"],
     custom: {
@@ -174,7 +174,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     label: "Set Options",
     description: "Sets various configuration options for an account.",
     docsUrl:
-      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#set-options",
+      "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#set-options",
     params: [
       "inflation_dest",
       "set_flags",
@@ -238,7 +238,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     label: "Change Trust",
     description: "Creates, updates, or deletes a trustline.",
     docsUrl:
-      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#change-trust",
+      "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#change-trust",
     params: ["line", "limit"],
     requiredParams: ["line"],
     custom: {
@@ -253,7 +253,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     label: "Allow Trust",
     description: "Updates the authorized flag of an existing trustline.",
     docsUrl:
-      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#allow-trust",
+      "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#allow-trust",
     params: ["trustor", "assetCode", "authorize"],
     requiredParams: ["trustor", "assetCode", "authorize"],
   },
@@ -262,7 +262,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     description:
       "Transfers the native balance (the amount of XLM an account holds) to another account and removes the source account from the ledger.",
     docsUrl:
-      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#account-merge",
+      "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#account-merge",
     params: ["destination"],
     requiredParams: ["destination"],
   },
@@ -270,7 +270,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     label: "Manage Data",
     description: "Sets, modifies, or deletes a Data Entry (name/value pair).",
     docsUrl:
-      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#manage-data",
+      "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#manage-data",
     params: ["data_name", "data_value"],
     requiredParams: ["data_name"],
     custom: {
@@ -285,7 +285,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     label: "Bump Sequence",
     description: "Bumps sequence number.",
     docsUrl:
-      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#bump-sequence",
+      "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#bump-sequence",
     params: ["bump_to"],
     requiredParams: ["bump_to"],
   },
@@ -293,7 +293,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     label: "Create Claimable Balance",
     description: "Creates a new claimable balance.",
     docsUrl:
-      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#create-claimable-balance",
+      "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#create-claimable-balance",
     params: ["asset", "amount", "claimants"],
     requiredParams: ["asset", "amount", "claimants"],
   },
@@ -301,7 +301,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     label: "Claim Claimable Balance",
     description: "Claims a claimable balance.",
     docsUrl:
-      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#claim-claimable-balance",
+      "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#claim-claimable-balance",
     params: ["balance_id"],
     requiredParams: ["balance_id"],
   },
@@ -310,7 +310,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     description:
       "Initiate a sponsorship. There must be a corresponding End Sponsoring Future Reserves operation in the same transaction.",
     docsUrl:
-      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#begin-sponsoring-future-reserves",
+      "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#begin-sponsoring-future-reserves",
     params: ["sponsored_id"],
     requiredParams: ["sponsored_id"],
   },
@@ -318,7 +318,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     label: "End Sponsoring Future Reserves",
     description: "End a sponsorship.",
     docsUrl:
-      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#end-sponsoring-future-reserves",
+      "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#end-sponsoring-future-reserves",
     params: [],
     requiredParams: [],
   },
@@ -326,7 +326,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     label: "Clawback",
     description: "Creates a clawback operation.",
     docsUrl:
-      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#clawback",
+      "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#clawback",
     params: ["asset", "from", "amount"],
     requiredParams: ["asset", "from", "amount"],
     custom: {
@@ -339,7 +339,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     label: "Revoke Sponsorship",
     description: "Revoke sponsorship of a ledger entry.",
     docsUrl:
-      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#revoke-sponsorship",
+      "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#revoke-sponsorship",
     params: ["revokeSponsorship"],
     requiredParams: ["revokeSponsorship"],
   },
@@ -347,7 +347,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     label: "Clawback Claimable Balance",
     description: "Creates a clawback operation for a claimable balance.",
     docsUrl:
-      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#clawback-claimable-balance",
+      "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#clawback-claimable-balance",
     params: ["balance_id"],
     requiredParams: ["balance_id"],
   },
@@ -355,7 +355,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     label: "Set Trust Line Flags",
     description: "Creates a trustline flag configuring operation.",
     docsUrl:
-      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#set-trustline-flags",
+      "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#set-trustline-flags",
     params: ["asset", "trustor", "set_flags", "clear_flags"],
     requiredParams: ["asset", "trustor"],
     custom: {
@@ -374,7 +374,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     label: "Liquidity Pool Deposit",
     description: "Deposits assets into a liquidity pool.",
     docsUrl:
-      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#liquidity-pool-deposit",
+      "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#liquidity-pool-deposit",
     params: [
       "liquidity_pool_id",
       "max_amount_a",
@@ -410,7 +410,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     label: "Liquidity Pool Withdraw",
     description: "Withdraw assets from a liquidity pool.",
     docsUrl:
-      "https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#liquidity-pool-withdraw",
+      "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#liquidity-pool-withdraw",
     params: ["liquidity_pool_id", "amount", "min_amount_a", "min_amount_b"],
     requiredParams: [
       "liquidity_pool_id",

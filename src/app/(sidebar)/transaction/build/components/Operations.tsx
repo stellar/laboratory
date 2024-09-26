@@ -20,6 +20,7 @@ import { arrayItem } from "@/helpers/arrayItem";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { sanitizeObject } from "@/helpers/sanitizeObject";
 
+import { OP_SET_TRUST_LINE_FLAGS } from "@/constants/settings";
 import { TRANSACTION_OPERATIONS } from "@/constants/transactionOperations";
 import { useStore } from "@/store/useStore";
 import {
@@ -49,6 +50,7 @@ export const Operations = () => {
     operationType: string;
     error: { [key: string]: string };
     missingFields: string[];
+    customMessage: string[];
   };
 
   const [operationsError, setOperationsError] = useState<OperationError[]>([]);
@@ -63,7 +65,10 @@ export const Operations = () => {
     operationType: "",
     error: {},
     missingFields: [],
+    customMessage: [],
   };
+
+  const SET_TRUSTLINE_FLAGS_CUSTOM_MESSAGE = "At least one flag is required";
 
   const updateOptionParamAndError = ({
     type,
@@ -184,6 +189,13 @@ export const Operations = () => {
             }),
           };
         }
+
+        // Missing optional selection
+        opErrors = operationCustomMessage({
+          opType: op.operation_type,
+          opIndex: idx,
+          opError: opErrors,
+        });
 
         errors.push(opErrors);
       });
@@ -380,6 +392,34 @@ export const Operations = () => {
     return false;
   };
 
+  const operationCustomMessage = ({
+    opType,
+    opIndex,
+    opError,
+  }: {
+    opType: string;
+    opIndex: number;
+    opError: OperationError;
+  }) => {
+    if (opType === OP_SET_TRUST_LINE_FLAGS) {
+      const setTrustLineFlagsOp = txnOperations[opIndex];
+
+      if (
+        !(
+          setTrustLineFlagsOp?.params.set_flags ||
+          setTrustLineFlagsOp?.params.clear_flags
+        )
+      ) {
+        return {
+          ...opError,
+          customMessage: [SET_TRUSTLINE_FLAGS_CUSTOM_MESSAGE],
+        };
+      }
+    }
+
+    return opError;
+  };
+
   const loopPredicate = (
     predicate: AnyObject = {},
     missingArray: boolean[],
@@ -521,6 +561,7 @@ export const Operations = () => {
       operationType: opType,
       error: opParamErrorFields,
       missingFields: opParamMissingFields,
+      customMessage: opError.customMessage,
     };
   };
 
@@ -594,10 +635,16 @@ export const Operations = () => {
     operationsError.forEach((op, idx) => {
       const hasErrors = !isEmptyObject(op.error);
       const hasMissingFields = op.missingFields.length > 0;
+      const hasCustomMessage = op.customMessage.length > 0;
 
       const opErrors: OpBuildingError = {};
 
-      if (!op.operationType || hasErrors || hasMissingFields) {
+      if (
+        !op.operationType ||
+        hasErrors ||
+        hasMissingFields ||
+        hasCustomMessage
+      ) {
         const opLabel = TRANSACTION_OPERATIONS[op.operationType]?.label;
         opErrors.label = `Operation #${idx}${opLabel ? `: ${opLabel}` : ""}`;
         opErrors.errorList = [];
@@ -608,6 +655,12 @@ export const Operations = () => {
 
         if (hasMissingFields) {
           opErrors.errorList.push("Fill out all required fields");
+        }
+
+        if (hasCustomMessage) {
+          op.customMessage.forEach((cm) => {
+            opErrors.errorList?.push(cm);
+          });
         }
 
         if (hasErrors) {
@@ -763,6 +816,12 @@ export const Operations = () => {
                 ],
                 operationType: e.target.value,
               };
+
+              initParamError = operationCustomMessage({
+                opType: e.target.value,
+                opIndex: index,
+                opError: initParamError,
+              });
             }
 
             setOperationsError([
@@ -989,9 +1048,40 @@ export const Operations = () => {
                                 handleOperationParamChange({
                                   opIndex: idx,
                                   opParam: input,
-                                  opValue: value,
+                                  opValue: value.length > 0 ? value : undefined,
                                   opType: op.operation_type,
                                 });
+
+                                if (
+                                  op.operation_type === OP_SET_TRUST_LINE_FLAGS
+                                ) {
+                                  const txOp = txnOperations[idx];
+
+                                  // If checking a flag, remove the message (the
+                                  // other flag doesn't matter).
+                                  // If unchecking a flag, check if the other
+                                  // flag is checked.
+                                  const showCustomMessage =
+                                    value.length > 0
+                                      ? false
+                                      : input === "clear_flags"
+                                        ? !txOp.params.set_flags
+                                        : !txOp.params.clear_flags;
+
+                                  const opError = {
+                                    ...operationsError[idx],
+                                    customMessage: showCustomMessage
+                                      ? [SET_TRUSTLINE_FLAGS_CUSTOM_MESSAGE]
+                                      : [],
+                                  };
+                                  const updated = arrayItem.update(
+                                    operationsError,
+                                    idx,
+                                    opError,
+                                  );
+
+                                  setOperationsError(updated);
+                                }
                               },
                             });
                           case "signer":

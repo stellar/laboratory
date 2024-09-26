@@ -21,6 +21,7 @@ import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { useStore } from "@/store/useStore";
 import { Routes } from "@/constants/routes";
 import {
+  OP_SET_TRUST_LINE_FLAGS,
   OPERATION_CLEAR_FLAGS,
   OPERATION_SET_FLAGS,
   OPERATION_TRUSTLINE_CLEAR_FLAGS,
@@ -241,7 +242,7 @@ export const TransactionXdr = () => {
       ) => {
         const total = optionsFlagDetails(operations, val).total;
 
-        if (op === "set_trust_line_flags") {
+        if (op === OP_SET_TRUST_LINE_FLAGS) {
           return BigInt(total);
         }
 
@@ -338,7 +339,7 @@ export const TransactionXdr = () => {
           case "clear_flags":
             return flagTotal(
               val,
-              op === "set_trust_line_flags"
+              op === OP_SET_TRUST_LINE_FLAGS
                 ? OPERATION_TRUSTLINE_CLEAR_FLAGS
                 : OPERATION_CLEAR_FLAGS,
               op,
@@ -346,7 +347,7 @@ export const TransactionXdr = () => {
           case "set_flags":
             return flagTotal(
               val,
-              op === "set_trust_line_flags"
+              op === OP_SET_TRUST_LINE_FLAGS
                 ? OPERATION_TRUSTLINE_SET_FLAGS
                 : OPERATION_SET_FLAGS,
               op,
@@ -416,6 +417,20 @@ export const TransactionXdr = () => {
                 },
               };
             }),
+          };
+        }
+
+        if (opType === OP_SET_TRUST_LINE_FLAGS) {
+          const formatted = Object.entries(params).reduce((res, [key, val]) => {
+            res[key] = getXdrVal(key, val, opType);
+
+            return res;
+          }, {} as AnyObject);
+
+          return {
+            set_flags: BigInt(0),
+            clear_flags: BigInt(0),
+            ...formatted,
           };
         }
 
