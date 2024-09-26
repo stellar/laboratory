@@ -599,7 +599,7 @@ export const Operations = () => {
 
       if (!op.operationType || hasErrors || hasMissingFields) {
         const opLabel = TRANSACTION_OPERATIONS[op.operationType]?.label;
-        opErrors.label = `Operation #${idx + 1}${opLabel ? `: ${opLabel}` : ""}`;
+        opErrors.label = `Operation #${idx}${opLabel ? `: ${opLabel}` : ""}`;
         opErrors.errorList = [];
 
         if (!op.operationType) {
@@ -845,7 +845,7 @@ export const Operations = () => {
                   <Badge
                     size="md"
                     variant="secondary"
-                  >{`Operation ${idx + 1}`}</Badge>
+                  >{`Operation ${idx}`}</Badge>
 
                   <OperationTabbedButtons
                     index={idx}
