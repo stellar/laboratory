@@ -29,6 +29,7 @@ type PrettyJsonProps = {
     key: string,
     parentKey?: string,
   ) => React.ReactNode | null;
+  customKeyRenderer?: (item: any, key: string) => React.ReactNode | null;
   isLoading?: boolean;
   isCollapsible?: boolean;
 };
@@ -39,6 +40,7 @@ export const PrettyJson = ({
   json,
   customKeyValueLinkMap,
   customValueRenderer,
+  customKeyRenderer,
   isLoading,
   isCollapsible = true,
 }: PrettyJsonProps) => {
@@ -64,9 +66,16 @@ export const PrettyJson = ({
     children: React.ReactNode;
   }) => {
     const [isExpanded, setIsExpanded] = useState(true);
+    const customRender =
+      itemKey && customKeyRenderer
+        ? customKeyRenderer(children, itemKey)
+        : null;
 
     return (
-      <div className="PrettyJson__nested">
+      <div
+        className="PrettyJson__nested"
+        {...(customRender ? { "data-is-custom-key": "" } : {})}
+      >
         <div
           className={`PrettyJson__inline ${isCollapsible ? "PrettyJson--click" : ""}`}
           {...(isCollapsible
@@ -83,6 +92,7 @@ export const PrettyJson = ({
           {itemKey ? <Key>{itemKey}</Key> : null}
           <Bracket char={char} isCollapsed={!isExpanded} />
           {isCollapsible ? <ItemCount itemList={itemList} /> : null}
+          {customRender}
         </div>
         {isExpanded ? (
           <div>

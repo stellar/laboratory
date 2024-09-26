@@ -11,9 +11,10 @@ import {
   Icon,
   CopyText,
 } from "@stellar/design-system";
+import { useQueryClient } from "@tanstack/react-query";
+import { stringify } from "lossless-json";
 
 import { useLatestTxn } from "@/query/useLatestTxn";
-import { stringify } from "lossless-json";
 import * as StellarXdr from "@/helpers/StellarXdr";
 import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
 
@@ -26,6 +27,7 @@ import { PrettyJsonTransaction } from "@/components/PrettyJsonTransaction";
 import { parseToLosslessJson } from "@/helpers/parseToLosslessJson";
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { useStore } from "@/store/useStore";
+import { delayedAction } from "@/helpers/delayedAction";
 
 export default function ViewXdr() {
   const { xdr, network } = useStore();
@@ -41,6 +43,8 @@ export default function ViewXdr() {
     isLoading: isLatestTxnLoading,
     refetch: fetchLatestTxn,
   } = useLatestTxn(network.horizonUrl);
+
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (isLatestTxnSuccess && latestTxn) {
@@ -102,7 +106,21 @@ export default function ViewXdr() {
                 Input a base-64 encoded XDR blob,{" "}
                 <Link
                   onClick={() => {
-                    fetchLatestTxn();
+                    if (latestTxn) {
+                      // Reset query to clear old data
+                      queryClient.resetQueries({
+                        queryKey: ["xdr", "latestTxn"],
+                        exact: true,
+                      });
+                      updateXdrBlob("");
+                    }
+
+                    delayedAction({
+                      action: () => {
+                        fetchLatestTxn();
+                      },
+                      delay: 500,
+                    });
                   }}
                   isDisabled={isFetchingLatestTxn}
                   icon={isFetchingLatestTxn ? <Loader /> : null}
