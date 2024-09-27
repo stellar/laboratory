@@ -1,9 +1,5 @@
-import { ReactNode, useEffect, useRef } from "react";
-import { usePathname } from "next/navigation";
-import { Icon } from "@stellar/design-system";
-
-import { Routes } from "@/constants/routes";
-import { NextLink } from "@/components/NextLink";
+import { useContext, useEffect, useRef, useState } from "react";
+import { useStore } from "@/store/useStore";
 
 import {
   StellarWalletsKit,
@@ -11,63 +7,62 @@ import {
   allowAllModules,
   ISupportedWallet,
   FREIGHTER_ID,
+  XBULL_ID,
 } from "@creit.tech/stellar-wallets-kit";
 
-type NavLink = {
-  href: Routes | string;
-  label: string;
-  icon?: ReactNode;
-};
+import { WalletKitContext } from "@/components/WalletKitContextProvider";
+import { getWalletKitNetwork } from "@/helpers/getWalletKitNetwork";
 
 export const ConnectWallet = () => {
-  const responseSuccessEl = useRef<HTMLElement | null>(null);
+  const { network, setWalletKit, setWalletKitAddress } = useStore();
+  const networkType = getWalletKitNetwork(network.id);
 
-  const kit: StellarWalletsKit = new StellarWalletsKit({
-    network: WalletNetwork.TESTNET,
-    selectedWalletId: "",
-    modules: allowAllModules(),
-  });
+  const walletKitInstance = useContext(WalletKitContext);
 
-  kit;
+  console.log("walletKitInstance: ", walletKitInstance.walletKit);
 
-  const pathname = usePathname();
+  const responseSuccessEl = useRef<HTMLDivElement | null>(null);
+  const [isStellarWalletInit, setIsStellarWalletInit] =
+    useState<boolean>(false);
 
-  const isActiveRoute = (link: string) => {
-    if (link.startsWith("http")) {
-      return false;
-    }
+  // const kit: StellarWalletsKit = new StellarWalletsKit({
+  //   network: networkType,
+  //   selectedWalletId: XBULL_ID,
+  //   modules: allowAllModules(),
+  // });
 
-    return pathname.split("/")[1] === link.split("/")[1];
+  // console.log("kit: ", kit);
+  // console.log("kit: ", kit.getAddress());
+  // useEffect(() => {
+  //   setWalletKit(kit);
+  // }, []);
+
+  const createWalletKitButton = async () => {
+    await walletKitInstance.walletKit?.createButton({
+      container: responseSuccessEl.current!,
+      onConnect: ({ address }) => {
+        setWalletKitAddress(address);
+        console.log("onConnect");
+      },
+      onDisconnect: () => {
+        setWalletKit(null);
+        setWalletKitAddress(undefined);
+        console.log("onDisconnect");
+        // Do something when the user "disconnects" the wallet, like clearing all site data and reload
+      },
+    });
   };
 
-  const NavItem = ({ link }: { link: NavLink }) => (
-    <NextLink
-      href={link.href}
-      className={`NavLink ${isActiveRoute(link.href) ? "NavLink--active" : ""}`}
-    >
-      {link.label}
+  useEffect(() => {
+    const initButton = async () => {
+      await createWalletKitButton();
+    };
 
-      {link.icon ? <span className="NavLink__icon">{link.icon}</span> : null}
-    </NextLink>
-  );
+    if (!isStellarWalletInit && walletKitInstance.walletKit) {
+      setIsStellarWalletInit(true);
+      initButton();
+    }
+  }, [isStellarWalletInit, walletKitInstance.walletKit]);
 
-  const walletKitButton = await kit.createButton({
-    container: responseSuccessEl.current,
-    onConnect: ({ address }) => {
-      // Do something when the user "connects" the wallet, like fetching the account data
-    },
-    onDisconnect: () => {
-      // Do something when the user "disconnects" the wallet, like clearing all site data and reload
-    },
-  });
-
-  return (
-    <div className="ConnectWallet" ref={responseSuccessEl}>
-      <div className="ConnectWallet--primary">
-        {primaryNavLinks.map((l) => (
-          <NavItem key={l.href} link={l} />
-        ))}
-      </div>
-    </div>
-  );
+  return <div className="ConnectWallet" ref={responseSuccessEl}></div>;
 };

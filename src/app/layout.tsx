@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 
 import { LayoutMain } from "@/components/layout/LayoutMain";
 import { LayoutContextProvider } from "@/components/layout/LayoutContextProvider";
+import { WalletKitContextProvider } from "@/components/WalletKitContextProvider";
 import { QueryProvider } from "@/query/QueryProvider";
 import { StoreProvider } from "@/store/StoreProvider";
 
@@ -34,7 +35,9 @@ export default function RootLayout({
           <StoreProvider>
             <QueryProvider>
               <LayoutContextProvider>
-                <LayoutMain>{children}</LayoutMain>
+                <WalletKitContextProvider>
+                  <LayoutMain>{children}</LayoutMain>
+                </WalletKitContextProvider>
               </LayoutContextProvider>
             </QueryProvider>
           </StoreProvider>

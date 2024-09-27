@@ -7,6 +7,7 @@ import {
   Transaction,
   xdr,
 } from "@stellar/stellar-sdk";
+import { StellarWalletsKit } from "@creit.tech/stellar-wallets-kit";
 
 import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
 import { sanitizeObject } from "@/helpers/sanitizeObject";
@@ -18,6 +19,7 @@ import {
   TxnOperation,
   OpBuildingError,
 } from "@/types/types";
+import { UnaryExpression } from "typescript";
 
 export type FeeBumpParams = {
   source_account: string;
@@ -66,6 +68,10 @@ export interface Store {
   //     in other places because it will stay for the session (not saved in URL)
   updateIsDynamicNetworkSelect: (isDynamic: boolean) => void;
   resetStoredData: () => void;
+  walletKit: StellarWalletsKit | null;
+  walletKitAddress: string | undefined;
+  setWalletKit: (walletKit: StellarWalletsKit | null) => void;
+  setWalletKitAddress: (address: string | undefined) => void;
 
   // Account
   account: {
@@ -269,6 +275,16 @@ export const createStore = (options: CreateStoreOptions) =>
         updateIsDynamicNetworkSelect: (isDynamic: boolean) =>
           set((state) => {
             state.isDynamicNetworkSelect = isDynamic;
+          }),
+        walletKit: null,
+        walletKitAddress: undefined,
+        setWalletKit: (walletKit: StellarWalletsKit | null) =>
+          set((state) => {
+            state.walletKit = walletKit;
+          }),
+        setWalletKitAddress: (address: string | undefined) =>
+          set((state) => {
+            state.walletKitAddress = address;
           }),
         resetStoredData: () =>
           set((state) => {
