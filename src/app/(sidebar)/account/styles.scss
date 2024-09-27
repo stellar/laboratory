@@ -48,39 +48,4 @@
     border-radius: pxToRem(8px);
     padding: pxToRem(16px);
   }
-
-  // TODO: temp fix until SDS is fixed (tooltip overlap)
-  // Adjusting form element z-index to fix "Copied" tooltip overlap
-  .Input {
-    // Keypair Generator response
-    &:has(#generate-keypair-publickey) {
-      z-index: 2;
-    }
-
-    &:has(#generate-keypair-secretkey) {
-      z-index: 1;
-    }
-
-    // Create Multiplexed Account main form
-    &:has(#muxed-public-key) {
-      z-index: 2;
-    }
-
-    &:has(#muxed-account-id) {
-      z-index: 1;
-    }
-
-    // Create Multiplexed Account results
-    &:has(#muxed-public-key-result) {
-      z-index: 3;
-    }
-
-    &:has(#muxed-account-id-result) {
-      z-index: 2;
-    }
-
-    &:has(#muxed-account-address-result) {
-      z-index: 1;
-    }
-  }
 }
