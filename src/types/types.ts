@@ -134,6 +134,7 @@ export type SavedEndpointHorizon = {
   route: string;
   params: AnyObject;
   network: LocalStorageSavedNetwork;
+  shareableUrl: string | undefined;
 };
 
 // =============================================================================
