@@ -260,7 +260,7 @@ export const PrettyJson = ({
           </React.Fragment>
         );
       case "string":
-        return renderStringValue({ item });
+        return renderStringValue({ item, parentKey, customValueRenderer });
       case "function":
         return (
           <Value>
@@ -355,11 +355,31 @@ const renderStringValue = ({
   item,
   addlClassName,
   itemType,
+  parentKey,
+  customValueRenderer,
 }: {
   item: string;
   addlClassName?: string;
   itemType?: "number" | "string";
+  parentKey?: string;
+  customValueRenderer?: (
+    item: any,
+    key: string,
+    parentKey?: string,
+  ) => React.ReactNode | null;
 }) => {
+  const customValue =
+    customValueRenderer && customValueRenderer(item, "", parentKey);
+
+  if (customValue) {
+    return (
+      <Value addlClassName={addlClassName}>
+        <>{customValue}</>
+        <Comma />
+      </Value>
+    );
+  }
+
   let type = ["number", "bigint"].includes(typeof item) ? "number" : "string";
   let value = item;
 

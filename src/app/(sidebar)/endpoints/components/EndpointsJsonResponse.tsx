@@ -4,6 +4,7 @@ import { sanitizeArray } from "@/helpers/sanitizeArray";
 
 import { AnyObject } from "@/types/types";
 import { buildEndpointHref } from "@/helpers/buildEndpointHref";
+import { SdsLink } from "@/components/SdsLink";
 
 export const EndpointsJsonResponse = ({ json }: { json: AnyObject }) => {
   const handleLinkXdr = (val: string, key?: string) => {
@@ -34,6 +35,9 @@ export const EndpointsJsonResponse = ({ json }: { json: AnyObject }) => {
         break;
       case "xdr":
         xdrType = "LedgerEntryData";
+        break;
+      case "diagnosticEventsXdr":
+        xdrType = "DiagnosticEvent";
         break;
       default:
       // Do nothing
@@ -396,7 +400,27 @@ export const EndpointsJsonResponse = ({ json }: { json: AnyObject }) => {
     },
   };
 
+  const customValueLinkAction = (item: any, _: string, parentKey?: string) => {
+    if (parentKey === "diagnosticEventsXdr" && item) {
+      const href = handleLinkXdr(item, parentKey);
+
+      if (href) {
+        return (
+          <SdsLink href={href} target="_blank" isUnderline>
+            {item}
+          </SdsLink>
+        );
+      }
+    }
+
+    return null;
+  };
+
   return (
-    <PrettyJson json={json} customKeyValueLinkMap={customKeyValueLinkAction} />
+    <PrettyJson
+      json={json}
+      customKeyValueLinkMap={customKeyValueLinkAction}
+      customValueRenderer={customValueLinkAction}
+    />
   );
 };
