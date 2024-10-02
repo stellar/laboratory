@@ -4,7 +4,6 @@ import {
   Alert,
   Button,
   Card,
-  CopyText,
   Icon,
   Input,
   Modal,
@@ -14,6 +13,7 @@ import { TabView } from "@/components/TabView";
 import { Box } from "@/components/layout/Box";
 import { InputSideElement } from "@/components/InputSideElement";
 import { NextLink } from "@/components/NextLink";
+import { ShareApiExplorerUrlButton } from "@/components/ShareApiExplorerUrlButton";
 
 import { NetworkOptions } from "@/constants/settings";
 import { Routes } from "@/constants/routes";
@@ -151,14 +151,13 @@ export const SavedEndpointsPage = () => {
                     View
                   </Button>
 
-                  <CopyText textToCopy={e.url}>
-                    <Button
-                      size="md"
-                      variant="tertiary"
-                      icon={<Icon.Copy01 />}
-                      type="button"
-                    ></Button>
-                  </CopyText>
+                  <>
+                    {e.shareableUrl ? (
+                      <ShareApiExplorerUrlButton
+                        shareableUrl={e.shareableUrl}
+                      />
+                    ) : null}
+                  </>
                 </Box>
 
                 <Box gap="sm" direction="row" align="center" justify="end">
