@@ -1,18 +1,14 @@
 "use client";
 
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useContext } from "react";
 import { Button } from "@stellar/design-system";
-import {
-  StellarWalletsKit,
-  WalletNetwork,
-  allowAllModules,
-  ISupportedWallet,
-  FREIGHTER_ID,
-} from "@creit.tech/stellar-wallets-kit";
+import { ISupportedWallet } from "@creit.tech/stellar-wallets-kit";
 
 import { getWalletKitNetwork } from "@/helpers/getWalletKitNetwork";
 
 import { useStore } from "@/store/useStore";
+
+import { WalletKitContext } from "@/components/WalletKitContextProvider";
 
 export const SignWithWallet = ({
   setSignError,
@@ -21,67 +17,63 @@ export const SignWithWallet = ({
   setSignError: Dispatch<SetStateAction<string>>;
   setSignSuccess: Dispatch<SetStateAction<string>>;
 }) => {
-  const { network, transaction, walletKit, walletKitAddress } = useStore();
+  const { account, network, transaction } = useStore();
   const { sign, updateSignedTx } = transaction;
+  const { walletKitPubKey, updateWalletKitPubKey } = account;
+  const networkPassphrase = getWalletKitNetwork(network.id);
 
-  console.log("walletKit: ", walletKit);
+  const walletKitInstance = useContext(WalletKitContext);
 
   const onSignWithWallet = async () => {
-    const networkPassphrase = getWalletKitNetwork(network.id);
-
     // remove the previously signed tx from the display
     updateSignedTx("");
     setSignError("");
     setSignSuccess("");
 
-    if (walletKit && walletKitAddress) {
+    if (walletKitPubKey) {
       try {
-        const { signedTxXdr } = await walletKit.signTransaction(
-          sign.importXdr,
-          {
-            address: walletKitAddress,
+        const { signedTxXdr } =
+          await walletKitInstance.walletKit!.signTransaction(sign.importXdr, {
+            address: walletKitPubKey,
             networkPassphrase,
-          },
-        );
-
+          });
         updateSignedTx(signedTxXdr);
         setSignSuccess("1 signature(s) added");
       } catch (error: any) {
-        // the error for the following wallets:
-        // xbull
-        // albedo
-        // freighter
         if (error?.message) {
           setSignError(error?.message);
         }
       }
     } else {
-      // if there is no connected wallet kit in store
-      // create one just for signing
-      const kit: StellarWalletsKit = new StellarWalletsKit({
-        network: networkPassphrase,
-        selectedWalletId: FREIGHTER_ID,
-        modules: allowAllModules(),
-      });
-
-      await kit.openModal({
+      // if a user didn't log in via stellar wallet kit in the main nav
+      // open a wallet kid modal to sign in
+      await walletKitInstance.walletKit!.openModal({
         onWalletSelected: async (option: ISupportedWallet) => {
           try {
-            kit.setWallet(option.id);
-            const { address } = await kit.getAddress();
-            const { signedTxXdr } = await kit.signTransaction(sign.importXdr, {
-              // You could send multiple public keys in case the wallet needs to handle multi signatures
-              address,
-              networkPassphrase,
-            });
+            walletKitInstance.walletKit?.setWallet(option.id);
+            const addressResult =
+              await walletKitInstance.walletKit?.getAddress();
 
-            updateSignedTx(signedTxXdr);
-            setSignSuccess("1 signature(s) added");
+            if (addressResult?.address) {
+              updateWalletKitPubKey(addressResult.address);
+
+              const result = await walletKitInstance.walletKit?.signTransaction(
+                sign.importXdr,
+                {
+                  // You could send multiple public keys in case the wallet needs to handle multi signatures
+                  address: addressResult.address,
+                  networkPassphrase,
+                },
+              );
+
+              if (result?.signedTxXdr) {
+                updateSignedTx(result.signedTxXdr);
+                setSignSuccess("1 signature(s) added");
+              } else {
+                throw { message: "couldn't sign with wallet. try again later" };
+              }
+            }
           } catch (error: any) {
-            // the error for the following wallets:
-            // xbull
-            // albedo
-            // freighter
             if (error?.message) {
               setSignError(error?.message);
             }
@@ -91,9 +83,9 @@ export const SignWithWallet = ({
     }
   };
 
-  return (
+  return walletKitInstance.walletKit ? (
     <Button size="md" variant="tertiary" onClick={onSignWithWallet}>
       Sign with wallet
     </Button>
-  );
+  ) : null;
 };

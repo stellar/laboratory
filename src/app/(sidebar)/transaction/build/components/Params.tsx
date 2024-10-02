@@ -29,7 +29,9 @@ import { EmptyObj, KeysOfUnion } from "@/types/types";
 export const Params = () => {
   const requiredParams = ["source_account", "seq_num", "fee"] as const;
 
-  const { transaction, walletKitAddress, network } = useStore();
+  const { account, transaction, network } = useStore();
+
+  const { walletKitPubKey } = account;
   const { params: txnParams } = transaction.build;
   const {
     updateBuildParams,
@@ -270,17 +272,20 @@ export const Params = () => {
               handleParamsError(id, validateParam(id, e.target.value));
             }}
             rightElement={
-              walletKitAddress ? (
+              walletKitPubKey ? (
                 <InputSideElement
                   variant="button"
-                  onClick={() => {
+                  onClick={async () => {
                     const id = "source_account";
-                    handleParamChange(id, walletKitAddress);
-                    handleParamsError(id, validateParam(id, walletKitAddress));
+
+                    if (walletKitPubKey) {
+                      handleParamChange(id, walletKitPubKey);
+                      handleParamsError(id, validateParam(id, walletKitPubKey));
+                    }
                   }}
                   placement="right"
                 >
-                  Get Connected Wallet Address
+                  Get connected wallet address
                 </InputSideElement>
               ) : null
             }

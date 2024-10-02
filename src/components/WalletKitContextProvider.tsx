@@ -1,15 +1,11 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { throttle } from "lodash";
+import { createContext, useMemo } from "react";
 import { useStore } from "@/store/useStore";
 
 import {
   StellarWalletsKit,
-  WalletNetwork,
   allowAllModules,
-  ISupportedWallet,
-  FREIGHTER_ID,
   XBULL_ID,
 } from "@creit.tech/stellar-wallets-kit";
 
@@ -38,7 +34,7 @@ export const WalletKitContextProvider = ({
         selectedWalletId: XBULL_ID,
         modules: allowAllModules(),
       }),
-    [],
+    [networkType],
   );
 
   return (
