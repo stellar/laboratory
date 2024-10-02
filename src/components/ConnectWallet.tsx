@@ -8,7 +8,7 @@ export const ConnectWallet = () => {
   const { updateWalletKitPubKey } = account;
 
   // using Ref because it needs to be called only once
-  // on dev, strict mode is calling it twice
+  // on dev, strict mode forces it to call it twice which prompts an error modal
   const isStellarWalletInit = useRef(false);
   const responseSuccessEl = useRef<HTMLDivElement | null>(null);
   const walletKitInstance = useContext(WalletKitContext);

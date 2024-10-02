@@ -275,7 +275,7 @@ export const Params = () => {
               walletKitPubKey ? (
                 <InputSideElement
                   variant="button"
-                  onClick={async () => {
+                  onClick={() => {
                     const id = "source_account";
 
                     if (walletKitPubKey) {
