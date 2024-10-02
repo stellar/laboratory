@@ -798,9 +798,13 @@ export const Operations = () => {
           value={operationType}
           infoLink="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations"
           onChange={(e) => {
+            const defaultParams =
+              TRANSACTION_OPERATIONS[e.target.value]?.defaultParams || {};
+            const defaultParamKeys = Object.keys(defaultParams);
+
             updateBuildSingleOperation(index, {
               operation_type: e.target.value,
-              params: [],
+              params: defaultParams,
               source_account: "",
             });
 
@@ -808,12 +812,20 @@ export const Operations = () => {
 
             // Get operation required fields if there is operation type
             if (e.target.value) {
+              const missingFields = [
+                ...(TRANSACTION_OPERATIONS[e.target.value]?.requiredParams ||
+                  []),
+              ].reduce((missingRes: string[], reqItem) => {
+                if (!defaultParamKeys.includes(reqItem)) {
+                  return [...missingRes, reqItem];
+                }
+
+                return missingRes;
+              }, []);
+
               initParamError = {
                 ...initParamError,
-                missingFields: [
-                  ...(TRANSACTION_OPERATIONS[e.target.value]?.requiredParams ||
-                    []),
-                ],
+                missingFields,
                 operationType: e.target.value,
               };
 
