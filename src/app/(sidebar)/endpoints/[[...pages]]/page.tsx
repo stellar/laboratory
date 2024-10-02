@@ -21,6 +21,7 @@ import { formComponentTemplateEndpoints } from "@/components/formComponentTempla
 import { InputSideElement } from "@/components/InputSideElement";
 import { Box } from "@/components/layout/Box";
 import { PrettyJsonTextarea } from "@/components/PrettyJsonTextarea";
+import { ShareApiExplorerUrlButton } from "@/components/ShareApiExplorerUrlButton";
 
 import { useStore } from "@/store/useStore";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
@@ -32,6 +33,7 @@ import { localStorageSavedEndpointsHorizon } from "@/helpers/localStorageSavedEn
 import { arrayItem } from "@/helpers/arrayItem";
 import { delayedAction } from "@/helpers/delayedAction";
 import { buildEndpointHref } from "@/helpers/buildEndpointHref";
+import { apiExplorerShareableUrl } from "@/helpers/apiExplorerShareableUrl";
 
 import { Routes } from "@/constants/routes";
 import {
@@ -652,14 +654,11 @@ export default function Endpoints() {
             >
               Submit
             </Button>
-            <CopyText textToCopy={requestUrl}>
-              <Button
-                size="md"
-                variant="tertiary"
-                icon={<Icon.Copy01 />}
-                type="button"
-              ></Button>
-            </CopyText>
+
+            <ShareApiExplorerUrlButton
+              shareableUrl={apiExplorerShareableUrl()}
+            />
+
             <Button
               size="md"
               variant="tertiary"
@@ -675,6 +674,7 @@ export default function Endpoints() {
                     route: pathname,
                     params,
                     network: getSaveItemNetwork(network),
+                    shareableUrl: apiExplorerShareableUrl(),
                   }),
                 );
               }}

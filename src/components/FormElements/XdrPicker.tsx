@@ -43,8 +43,6 @@ export const XdrPicker = ({
     disabled={disabled}
     {...props}
   >
-    {/* TODO: Remove this temp fix once SDS is fixed (it expects children
-    instead of value for the copy button) */}
-    {value}
+    {props.children}
   </Textarea>
 );
