@@ -46,6 +46,7 @@ export const Params = () => {
   type ParamsField = KeysOfUnion<typeof txnParams>;
 
   type ParamsError = {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     [K in keyof TransactionBuildParams]?: any;
   };
 
