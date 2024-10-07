@@ -9,7 +9,6 @@ export const ConnectWallet = () => {
 
   // using Ref because it needs to be called only once
   // on dev, strict mode forces it to call it twice which prompts an error modal
-  const isStellarWalletInit = useRef(false);
   const responseSuccessEl = useRef<HTMLDivElement | null>(null);
   const walletKitInstance = useContext(WalletKitContext);
 
@@ -31,11 +30,13 @@ export const ConnectWallet = () => {
       await createWalletKitButton();
     };
 
-    if (!isStellarWalletInit.current) {
-      isStellarWalletInit.current = true;
+    if (!walletKitInstance.walletKit?.isButtonCreated()) {
       initButton();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    return () => {
+      walletKitInstance.walletKit?.removeButton({ skipDisconnect: true });
+    };
   }, []);
 
   return <div className="ConnectWallet" ref={responseSuccessEl}></div>;

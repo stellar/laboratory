@@ -4,6 +4,7 @@ import React, { Dispatch, SetStateAction, useContext } from "react";
 import { Button } from "@stellar/design-system";
 import { ISupportedWallet } from "@creit.tech/stellar-wallets-kit";
 
+import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import { getWalletKitNetwork } from "@/helpers/getWalletKitNetwork";
 
 import { useStore } from "@/store/useStore";
@@ -83,9 +84,9 @@ export const SignWithWallet = ({
     }
   };
 
-  return walletKitInstance.walletKit ? (
+  return walletKitPubKey ? (
     <Button size="md" variant="tertiary" onClick={onSignWithWallet}>
-      Sign with wallet
+      {shortenStellarAddress(walletKitPubKey)}
     </Button>
   ) : null;
 };

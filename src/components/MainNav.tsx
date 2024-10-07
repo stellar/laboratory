@@ -5,8 +5,6 @@ import { Icon } from "@stellar/design-system";
 import { Routes } from "@/constants/routes";
 import { NextLink } from "@/components/NextLink";
 
-import { ConnectWallet } from "@/components/ConnectWallet";
-
 type NavLink = {
   href: Routes | string;
   label: string;
@@ -75,7 +73,6 @@ export const MainNav = () => {
           <NavItem key={l.href} link={l} />
         ))}
       </div>
-      <ConnectWallet />
     </nav>
   );
 };

@@ -95,6 +95,10 @@
         padding: pxToRem(16px);
       }
 
+      @media screen and (max-width: 560px) {
+        gap: pxToRem(8px);
+      }
+
       .Select {
         --Select-color-border: transparent;
         max-width: pxToRem(220px);

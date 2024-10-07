@@ -15,6 +15,7 @@ import { NetworkSelector } from "@/components/NetworkSelector";
 import { Hydration } from "@/components/Hydration";
 import { Box } from "@/components/layout/Box";
 import { FloaterDropdown } from "@/components/FloaterDropdown";
+import { ConnectWallet } from "@/components/ConnectWallet";
 
 import { isExternalLink } from "@/helpers/isExternalLink";
 import { Routes } from "@/constants/routes";
@@ -163,6 +164,7 @@ export const LayoutHeader = () => {
           />
 
           <MainNav />
+          <ConnectWallet />
 
           <div className="LabLayout__header__settings">
             <Hydration>
@@ -187,6 +189,8 @@ export const LayoutHeader = () => {
           >
             {renderNav()}
           </Select>
+
+          <ConnectWallet />
 
           <Box gap="md" direction="row" align="center">
             <NetworkSelector />
