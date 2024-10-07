@@ -41,7 +41,7 @@
     "react-dom": "^18.3.1",
     "tslib": "^2.7.0",
     "zustand": "^4.5.5",
-    "zustand-querystring": "^0.0.19"
+    "zustand-querystring": "^0.1.0"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^14.2.14",

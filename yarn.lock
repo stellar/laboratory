@@ -6180,10 +6180,10 @@ yocto-queue@^0.1.0:
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
 
-zustand-querystring@^0.0.19:
-  version "0.0.19"
-  resolved "https://registry.yarnpkg.com/zustand-querystring/-/zustand-querystring-0.0.19.tgz#18ac1c9258a21c6345aa09dbf8738133471c2ebd"
-  integrity sha512-+lLMisaJOgEiEochoCYKKwodR4Gd6RdIcJu4j2uuM5HE/8YzXVwKEAWc/XnU46ixXT8dj33wpedm0+iWqgjOSQ==
+zustand-querystring@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/zustand-querystring/-/zustand-querystring-0.1.0.tgz#415b26a7e9abf95159a8d67a4950412b6b12ef33"
+  integrity sha512-TNREzWiRMZRSFiDTNxcwyerHWQIMGgSF/Opl65PbJoewdBuWIhyKzGkYEJl0nATogie9VQb1VNTnqwi8hkTLhA==
   dependencies:
     lodash-es "^4.17.21"
 
