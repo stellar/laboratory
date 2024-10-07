@@ -40,6 +40,7 @@ export default function FeeBumpTransaction() {
   type ParamsField = KeysOfUnion<typeof feeBump>;
 
   type ParamsError = {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     [K in keyof FeeBumpParams]?: any;
   };
 
