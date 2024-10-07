@@ -17,6 +17,7 @@ import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransa
 import { arrayItem } from "@/helpers/arrayItem";
 
 import { SavedTransaction, SavedTransactionPage } from "@/types/types";
+import { ShareUrlButton } from "@/components/ShareUrlButton";
 
 export default function SavedTransactions() {
   const { network, transaction, xdr } = useStore();
@@ -151,7 +152,12 @@ export default function SavedTransactions() {
           addlClassName="Endpoints__urlBar__footer"
         >
           <Box gap="sm" direction="row">
-            {renderActionButton(txn.timestamp, txn.page)}
+            <>
+              {renderActionButton(txn.timestamp, txn.page)}
+              {txn.shareableUrl ? (
+                <ShareUrlButton shareableUrl={txn.shareableUrl} />
+              ) : null}
+            </>
           </Box>
 
           <Box gap="sm" direction="row" align="center" justify="end">

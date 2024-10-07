@@ -166,6 +166,7 @@ export type SavedTransaction = {
   xdr: string;
   name: string;
   page: SavedTransactionPage;
+  shareableUrl: string | undefined;
 };
 
 export type SavedTransactionPage = "build" | "sign" | "simulate" | "submit";

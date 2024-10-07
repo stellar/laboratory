@@ -3,6 +3,7 @@ import { Button, Input, Modal } from "@stellar/design-system";
 import { arrayItem } from "@/helpers/arrayItem";
 import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransactions";
 import { getSaveItemNetwork } from "@/helpers/getSaveItemNetwork";
+import { shareableUrl } from "@/helpers/shareableUrl";
 import { useStore } from "@/store/useStore";
 import { SavedTransactionPage } from "@/types/types";
 
@@ -129,6 +130,7 @@ export const SaveTransactionModal = ({
                   name: savedTxnName,
                   page,
                   xdr,
+                  shareableUrl: shareableUrl("transactions"),
                   ...(page === "build"
                     ? {
                         params: transaction.build.params,
