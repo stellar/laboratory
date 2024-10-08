@@ -69,7 +69,7 @@ export const SignWithWallet = ({
 
               if (result?.signedTxXdr) {
                 updateSignedTx(result.signedTxXdr);
-                setSignSuccess("1 signature(s) added");
+                setSignSuccess("1 signature added");
               } else {
                 throw { message: "couldn't sign with wallet. try again later" };
               }
