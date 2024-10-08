@@ -1,10 +1,6 @@
 import { Button, CopyText, Icon } from "@stellar/design-system";
 
-export const ShareApiExplorerUrlButton = ({
-  shareableUrl,
-}: {
-  shareableUrl: string;
-}) => {
+export const ShareUrlButton = ({ shareableUrl }: { shareableUrl: string }) => {
   return (
     <CopyText
       textToCopy={shareableUrl}
