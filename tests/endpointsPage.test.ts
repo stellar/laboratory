@@ -11,7 +11,7 @@ test.describe("API Explorer page", () => {
 
   test("Renders info cards", async ({ page }) => {
     await expect(page.locator("h2")).toHaveText([
-      "Soroban RPC Methods",
+      "Stellar RPC Methods",
       "Horizon Endpoints",
     ]);
   });
