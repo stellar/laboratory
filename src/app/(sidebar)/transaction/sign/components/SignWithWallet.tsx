@@ -47,7 +47,7 @@ export const SignWithWallet = ({
       }
     } else {
       // if a user didn't log in via stellar wallet kit in the main nav
-      // open a wallet kid modal to sign in
+      // open a wallet kit modal to sign in
       await walletKitInstance.walletKit!.openModal({
         onWalletSelected: async (option: ISupportedWallet) => {
           try {
