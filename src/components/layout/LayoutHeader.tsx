@@ -209,12 +209,11 @@ export const LayoutHeader = () => {
               offset={14}
             >
               <>
-                {/* @TOOD enable it once mobile bug is fixed
-                 <div className="LabLayout__header__dropdown__item">
+                <div className="LabLayout__header__dropdown__item">
                   <div className="LabLayout__header__dropdown__item__label">
                     <ConnectWallet />
                   </div>
-                </div> */}
+                </div>
 
                 <DropdownItem label="Theme">
                   <Hydration>
