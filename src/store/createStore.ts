@@ -17,6 +17,7 @@ import {
   MuxedAccount,
   TxnOperation,
   OpBuildingError,
+  ThemeColorType,
 } from "@/types/types";
 
 export type FeeBumpParams = {
@@ -57,6 +58,8 @@ export type SignTxActiveView = "import" | "overview";
 export interface Store {
   // Shared
   network: Network | EmptyObj;
+  // Theme Color
+  theme: ThemeColorType | undefined;
   // isDynamicNetworkSelect flag to indicate network update outside of the dropdown
   isDynamicNetworkSelect: boolean;
   selectNetwork: (network: Network) => void;
@@ -65,6 +68,7 @@ export interface Store {
   //   set to false when changing network from the dropdown, no need to clear it
   //     in other places because it will stay for the session (not saved in URL)
   updateIsDynamicNetworkSelect: (isDynamic: boolean) => void;
+  setTheme: (theme: ThemeColorType) => void;
   resetStoredData: () => void;
 
   // Account
@@ -263,6 +267,7 @@ export const createStore = (options: CreateStoreOptions) =>
       immer((set) => ({
         // Shared
         network: {},
+        theme: undefined,
         isDynamicNetworkSelect: false,
         selectNetwork: (network: Network) =>
           set((state) => {
@@ -271,6 +276,10 @@ export const createStore = (options: CreateStoreOptions) =>
         updateIsDynamicNetworkSelect: (isDynamic: boolean) =>
           set((state) => {
             state.isDynamicNetworkSelect = isDynamic;
+          }),
+        setTheme: (theme: ThemeColorType) =>
+          set((state) => {
+            state.theme = theme;
           }),
         resetStoredData: () =>
           set((state) => {

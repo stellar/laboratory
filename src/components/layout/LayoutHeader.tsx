@@ -8,6 +8,7 @@ import {
   Select,
   ThemeSwitch,
 } from "@stellar/design-system";
+import { useStore } from "@/store/useStore";
 
 import { MainNav } from "@/components/MainNav";
 import { WindowContext } from "@/components/layout/LayoutContextProvider";
@@ -19,6 +20,7 @@ import { ConnectWallet } from "@/components/ConnectWallet";
 
 import { isExternalLink } from "@/helpers/isExternalLink";
 import { Routes } from "@/constants/routes";
+import { LOCAL_STORAGE_SAVED_THEME } from "@/constants/settings";
 import {
   ACCOUNT_NAV_ITEMS,
   ENDPOINTS_NAV_ITEMS,
@@ -47,6 +49,7 @@ const NAV = [
 
 export const LayoutHeader = () => {
   const { layoutMode } = useContext(WindowContext);
+  const { setTheme } = useStore();
   const route = useRouter();
   const pathname = usePathname();
 
@@ -168,7 +171,15 @@ export const LayoutHeader = () => {
 
           <div className="LabLayout__header__settings">
             <Hydration>
-              <ThemeSwitch storageKeyId="stellarTheme:Laboratory" />
+              <ThemeSwitch
+                storageKeyId={LOCAL_STORAGE_SAVED_THEME}
+                onActionEnd={(isDarkMode) => {
+                  const theme = isDarkMode
+                    ? "sds-theme-dark"
+                    : "sds-theme-light";
+                  setTheme(theme);
+                }}
+              />
             </Hydration>
             <NetworkSelector />
           </div>
@@ -190,8 +201,6 @@ export const LayoutHeader = () => {
             {renderNav()}
           </Select>
 
-          <ConnectWallet />
-
           <Box gap="md" direction="row" align="center">
             <NetworkSelector />
 
@@ -200,9 +209,24 @@ export const LayoutHeader = () => {
               offset={14}
             >
               <>
+                {/* @TOOD enable it once mobile bug is fixed
+                 <div className="LabLayout__header__dropdown__item">
+                  <div className="LabLayout__header__dropdown__item__label">
+                    <ConnectWallet />
+                  </div>
+                </div> */}
+
                 <DropdownItem label="Theme">
                   <Hydration>
-                    <ThemeSwitch storageKeyId="stellarTheme:Laboratory" />
+                    <ThemeSwitch
+                      storageKeyId={LOCAL_STORAGE_SAVED_THEME}
+                      onActionEnd={(isDarkMode) => {
+                        const theme = isDarkMode
+                          ? "sds-theme-dark"
+                          : "sds-theme-light";
+                        setTheme(theme);
+                      }}
+                    />
                   </Hydration>
                 </DropdownItem>
 

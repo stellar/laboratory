@@ -86,7 +86,7 @@ export const SignWithWallet = ({
 
   return walletKitPubKey ? (
     <Button size="md" variant="tertiary" onClick={onSignWithWallet}>
-      {shortenStellarAddress(walletKitPubKey)}
+      Sign with {shortenStellarAddress(walletKitPubKey)}
     </Button>
   ) : null;
 };
