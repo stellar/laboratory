@@ -169,7 +169,7 @@ export default function Endpoints() {
         return {
           ...defaultRpcRequestBody,
           params: {
-            xdrFormat: "json",
+            xdrFormat: params.xdrFormat || "base64",
             startLedger: Number(params.startLedger) || null,
             pagination: {
               cursor: params.cursor || "",
@@ -194,7 +194,7 @@ export default function Endpoints() {
               (params.ledgerKeyEntries &&
                 JSON.parse(params.ledgerKeyEntries)) ??
               [],
-            xdrFormat: "json",
+            xdrFormat: params.xdrFormat || "base64",
           },
         };
       }
@@ -204,7 +204,7 @@ export default function Endpoints() {
           ...defaultRpcRequestBody,
           params: {
             hash: params.transaction ?? "",
-            xdrFormat: "json",
+            xdrFormat: params.xdrFormat || "base64",
           },
         };
       }
@@ -218,7 +218,7 @@ export default function Endpoints() {
               cursor: params.cursor,
               limit: Number(params.limit) || undefined,
             }),
-            xdrFormat: "json",
+            xdrFormat: params.xdrFormat || "base64",
           },
         };
       }
@@ -228,7 +228,7 @@ export default function Endpoints() {
           ...defaultRpcRequestBody,
           params: {
             transaction: params.tx ?? "",
-            xdrFormat: "json",
+            xdrFormat: params.xdrFormat || "base64",
           },
         };
       }
@@ -241,7 +241,7 @@ export default function Endpoints() {
             resourceConfig: sanitizeObject({
               instructionLeeway: Number(params.resourceConfig) || undefined,
             }),
-            xdrFormat: "json",
+            xdrFormat: params.xdrFormat || "base64",
           },
         };
       }
