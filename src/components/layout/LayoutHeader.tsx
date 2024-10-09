@@ -156,6 +156,11 @@ export const LayoutHeader = () => {
     );
   };
 
+  const renderTheme = (isDarkMode: boolean) => {
+    const theme = isDarkMode ? "sds-theme-dark" : "sds-theme-light";
+    setTheme(theme);
+  };
+
   if (layoutMode === "desktop") {
     return (
       <div className="LabLayout__header">
@@ -173,12 +178,7 @@ export const LayoutHeader = () => {
             <Hydration>
               <ThemeSwitch
                 storageKeyId={LOCAL_STORAGE_SAVED_THEME}
-                onActionEnd={(isDarkMode) => {
-                  const theme = isDarkMode
-                    ? "sds-theme-dark"
-                    : "sds-theme-light";
-                  setTheme(theme);
-                }}
+                onActionEnd={renderTheme}
               />
             </Hydration>
             <NetworkSelector />
@@ -219,12 +219,7 @@ export const LayoutHeader = () => {
                   <Hydration>
                     <ThemeSwitch
                       storageKeyId={LOCAL_STORAGE_SAVED_THEME}
-                      onActionEnd={(isDarkMode) => {
-                        const theme = isDarkMode
-                          ? "sds-theme-dark"
-                          : "sds-theme-light";
-                        setTheme(theme);
-                      }}
+                      onActionEnd={renderTheme}
                     />
                   </Hydration>
                 </DropdownItem>
