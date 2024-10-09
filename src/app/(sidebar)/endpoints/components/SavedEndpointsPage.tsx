@@ -13,7 +13,7 @@ import { TabView } from "@/components/TabView";
 import { Box } from "@/components/layout/Box";
 import { InputSideElement } from "@/components/InputSideElement";
 import { NextLink } from "@/components/NextLink";
-import { ShareApiExplorerUrlButton } from "@/components/ShareApiExplorerUrlButton";
+import { ShareUrlButton } from "@/components/ShareUrlButton";
 
 import { NetworkOptions } from "@/constants/settings";
 import { Routes } from "@/constants/routes";
@@ -153,9 +153,7 @@ export const SavedEndpointsPage = () => {
 
                   <>
                     {e.shareableUrl ? (
-                      <ShareApiExplorerUrlButton
-                        shareableUrl={e.shareableUrl}
-                      />
+                      <ShareUrlButton shareableUrl={e.shareableUrl} />
                     ) : null}
                   </>
                 </Box>

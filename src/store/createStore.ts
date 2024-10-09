@@ -42,6 +42,7 @@ export type TransactionBuildParams = {
   memo:
     | string
     | {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         [T in Exclude<MemoType, "none">]?: string;
       }
     | EmptyObj;

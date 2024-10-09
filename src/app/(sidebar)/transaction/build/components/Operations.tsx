@@ -15,10 +15,12 @@ import { Box } from "@/components/layout/Box";
 import { TabbedButtons } from "@/components/TabbedButtons";
 import { SdsLink } from "@/components/SdsLink";
 import { SaveTransactionModal } from "@/components/SaveTransactionModal";
+import { ShareUrlButton } from "@/components/ShareUrlButton";
 
 import { arrayItem } from "@/helpers/arrayItem";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { sanitizeObject } from "@/helpers/sanitizeObject";
+import { shareableUrl } from "@/helpers/shareableUrl";
 
 import { OP_SET_TRUST_LINE_FLAGS } from "@/constants/settings";
 import { TRANSACTION_OPERATIONS } from "@/constants/transactionOperations";
@@ -1167,6 +1169,8 @@ export const Operations = () => {
                 title="Save transaction"
                 disabled={!txnXdr}
               ></Button>
+
+              <ShareUrlButton shareableUrl={shareableUrl("transactions")} />
             </Box>
 
             <Button
