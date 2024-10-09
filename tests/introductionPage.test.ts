@@ -10,7 +10,7 @@ test.describe("Introduction Page", () => {
   });
 
   test("Renders info cards", async ({ page }) => {
-    await expect(page.locator("h2")).toHaveText([
+    await expect(page.getByTestId("info-cards").locator("h2")).toHaveText([
       "Stellar Quest",
       "Developer Tools",
       "Soroban RPC",

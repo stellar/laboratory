@@ -7,6 +7,7 @@ import { TransactionBuildParams } from "@/store/createStore";
 // =============================================================================
 export type AnyObject = { [key: string]: any };
 export type EmptyObj = Record<PropertyKey, never>;
+export type ThemeColorType = "sds-theme-dark" | "sds-theme-light";
 
 // =============================================================================
 // Helpers
@@ -134,6 +135,7 @@ export type SavedEndpointHorizon = {
   route: string;
   params: AnyObject;
   network: LocalStorageSavedNetwork;
+  shareableUrl: string | undefined;
 };
 
 // =============================================================================
@@ -165,6 +167,7 @@ export type SavedTransaction = {
   xdr: string;
   name: string;
   page: SavedTransactionPage;
+  shareableUrl: string | undefined;
 };
 
 export type SavedTransactionPage = "build" | "sign" | "simulate" | "submit";

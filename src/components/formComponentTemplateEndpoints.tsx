@@ -906,6 +906,31 @@ export const formComponentTemplateEndpoints = (
         ),
         validate: validate.getPositiveIntError,
       };
+    case "xdrFormat":
+      return {
+        render: (templ: {
+          value: string | undefined;
+          error: string | undefined;
+          onChange: (val: any) => void;
+        }) => (
+          <Select
+            key={id}
+            id={id}
+            fieldSize="md"
+            label="XDR Format"
+            value={templ.value || ""}
+            onChange={templ.onChange}
+          >
+            <option id="base64" value="base64">
+              base64
+            </option>
+            <option id="json" value="json">
+              json
+            </option>
+          </Select>
+        ),
+        validate: null,
+      };
     default:
       return null;
   }

@@ -15,10 +15,12 @@ import { Box } from "@/components/layout/Box";
 import { TabbedButtons } from "@/components/TabbedButtons";
 import { SdsLink } from "@/components/SdsLink";
 import { SaveTransactionModal } from "@/components/SaveTransactionModal";
+import { ShareUrlButton } from "@/components/ShareUrlButton";
 
 import { arrayItem } from "@/helpers/arrayItem";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { sanitizeObject } from "@/helpers/sanitizeObject";
+import { shareableUrl } from "@/helpers/shareableUrl";
 
 import { OP_SET_TRUST_LINE_FLAGS } from "@/constants/settings";
 import { TRANSACTION_OPERATIONS } from "@/constants/transactionOperations";
@@ -798,9 +800,13 @@ export const Operations = () => {
           value={operationType}
           infoLink="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations"
           onChange={(e) => {
+            const defaultParams =
+              TRANSACTION_OPERATIONS[e.target.value]?.defaultParams || {};
+            const defaultParamKeys = Object.keys(defaultParams);
+
             updateBuildSingleOperation(index, {
               operation_type: e.target.value,
-              params: [],
+              params: defaultParams,
               source_account: "",
             });
 
@@ -808,12 +814,20 @@ export const Operations = () => {
 
             // Get operation required fields if there is operation type
             if (e.target.value) {
+              const missingFields = [
+                ...(TRANSACTION_OPERATIONS[e.target.value]?.requiredParams ||
+                  []),
+              ].reduce((missingRes: string[], reqItem) => {
+                if (!defaultParamKeys.includes(reqItem)) {
+                  return [...missingRes, reqItem];
+                }
+
+                return missingRes;
+              }, []);
+
               initParamError = {
                 ...initParamError,
-                missingFields: [
-                  ...(TRANSACTION_OPERATIONS[e.target.value]?.requiredParams ||
-                    []),
-                ],
+                missingFields,
                 operationType: e.target.value,
               };
 
@@ -1155,6 +1169,8 @@ export const Operations = () => {
                 title="Save transaction"
                 disabled={!txnXdr}
               ></Button>
+
+              <ShareUrlButton shareableUrl={shareableUrl("transactions")} />
             </Box>
 
             <Button

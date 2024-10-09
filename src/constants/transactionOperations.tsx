@@ -13,6 +13,9 @@ type TransactionOperation = {
   docsUrl: string;
   params: string[];
   requiredParams: string[];
+  defaultParams?: {
+    [key: string]: string;
+  };
   custom?: AnyObject;
 };
 
@@ -119,6 +122,9 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
       "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#manage-sell-offer",
     params: ["selling", "buying", "amount", "price", "offer_id"],
     requiredParams: ["selling", "buying", "amount", "price", "offer_id"],
+    defaultParams: {
+      offer_id: "0",
+    },
     custom: {
       amount: {
         label: "Amount you are selling",
@@ -139,6 +145,9 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
       "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#manage-buy-offer",
     params: ["selling", "buying", "buy_amount", "price", "offer_id"],
     requiredParams: ["selling", "buying", "buy_amount", "price", "offer_id"],
+    defaultParams: {
+      offer_id: "0",
+    },
     custom: {
       buy_amount: {
         label: "Amount you are buying",

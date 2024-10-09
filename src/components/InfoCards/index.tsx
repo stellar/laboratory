@@ -4,7 +4,7 @@ import "./styles.scss";
 
 export const InfoCards = ({ infoCards }: { infoCards: InfoCard[] }) => {
   return (
-    <div className="InfoCards">
+    <div className="InfoCards" data-testid="info-cards">
       {infoCards.map((c) => (
         <Card key={c.id}>
           <Text size="md" as="h2" weight="medium">

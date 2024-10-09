@@ -27,15 +27,6 @@
       --Card-padding: #{pxToRem(16px)};
     }
   }
-
-  // TODO: fix in SDS
-  .Input {
-    &__container {
-      & > * {
-        min-width: 0;
-      }
-    }
-  }
 }
 
 .LabLayout {
