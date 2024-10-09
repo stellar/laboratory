@@ -5,7 +5,6 @@ import {
   MemoType,
   FeeBumpTransaction,
   Transaction,
-  xdr,
 } from "@stellar/stellar-sdk";
 
 import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
@@ -121,7 +120,6 @@ export interface Store {
       importXdr: string;
       signedTx: string;
       bipPath: string;
-      hardWalletSigs: xdr.DecoratedSignature[] | [];
     };
     simulate: {
       instructionLeeway?: string;
@@ -154,9 +152,7 @@ export interface Store {
     updateSignImportXdr: (xdr: string) => void;
     updateSignedTx: (tx: string) => void;
     updateBipPath: (bipPath: string) => void;
-    updateHardWalletSigs: (signer: xdr.DecoratedSignature[]) => void;
     resetSign: () => void;
-    resetSignHardWalletSigs: () => void;
     updateFeeBumpParams: (params: FeeBumpParamsObj) => void;
     resetBaseFee: () => void;
     // [Transaction] Simulate Transaction actions
@@ -224,7 +220,6 @@ const initTransactionState = {
     importXdr: "",
     signedTx: "",
     bipPath: "44'/148'/0'",
-    hardWalletSigs: [],
   },
   simulate: {
     instructionLeeway: undefined,
@@ -442,18 +437,9 @@ export const createStore = (options: CreateStoreOptions) =>
             set((state) => {
               state.transaction.sign.bipPath = bipPath;
             }),
-          updateHardWalletSigs: (signer: xdr.DecoratedSignature[]) =>
-            set((state) => {
-              state.transaction.sign.hardWalletSigs = signer;
-            }),
           resetSign: () =>
             set((state) => {
               state.transaction.sign = initTransactionState.sign;
-            }),
-          resetSignHardWalletSigs: () =>
-            set((state) => {
-              state.transaction.sign.hardWalletSigs =
-                initTransactionState.sign.hardWalletSigs;
             }),
           updateSimulateInstructionLeeway: (instrLeeway?: string) =>
             set((state) => {
