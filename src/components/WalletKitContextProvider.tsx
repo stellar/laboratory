@@ -77,18 +77,20 @@ export const WalletKitContextProvider = ({
       network: networkType,
       selectedWalletId: XBULL_ID,
       modules: allowAllModules(),
-      buttonTheme: isDarkTheme
-        ? {
-            ...commonDarkTheme,
-            buttonPadding: "0.5rem 1.25rem",
-            buttonBorderRadius: "0.5rem",
-          }
-        : {
-            ...commonLightTheme,
-            buttonPadding: "0.5rem 1.25rem",
-            buttonBorderRadius: "0.5rem",
-          },
-      modalTheme: isDarkTheme ? modalDarkTheme : modalLightTheme,
+      ...(theme && {
+        buttonTheme: isDarkTheme
+          ? {
+              ...commonDarkTheme,
+              buttonPadding: "0.5rem 1.25rem",
+              buttonBorderRadius: "0.5rem",
+            }
+          : {
+              ...commonLightTheme,
+              buttonPadding: "0.5rem 1.25rem",
+              buttonBorderRadius: "0.5rem",
+            },
+        modalTheme: isDarkTheme ? modalDarkTheme : modalLightTheme,
+      }),
     });
   }, [networkType, theme]);
 
