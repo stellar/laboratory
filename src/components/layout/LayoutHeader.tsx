@@ -172,7 +172,6 @@ export const LayoutHeader = () => {
           />
 
           <MainNav />
-          <ConnectWallet />
 
           <div className="LabLayout__header__settings">
             <Hydration>
@@ -182,6 +181,7 @@ export const LayoutHeader = () => {
               />
             </Hydration>
             <NetworkSelector />
+            <ConnectWallet />
           </div>
         </header>
       </div>
