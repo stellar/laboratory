@@ -921,7 +921,7 @@ export const formComponentTemplateEndpoints = (
             value={templ.value || ""}
             onChange={templ.onChange}
           >
-            <option id="base64" value="base64" selected>
+            <option id="base64" value="base64">
               base64
             </option>
             <option id="json" value="json">
