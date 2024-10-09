@@ -29,7 +29,9 @@ import { EmptyObj, KeysOfUnion } from "@/types/types";
 export const Params = () => {
   const requiredParams = ["source_account", "seq_num", "fee"] as const;
 
-  const { transaction, network } = useStore();
+  const { account, transaction, network } = useStore();
+
+  const { walletKitPubKey } = account;
   const { params: txnParams } = transaction.build;
   const {
     updateBuildParams,
@@ -269,6 +271,24 @@ export const Params = () => {
               handleParamChange(id, e.target.value);
               handleParamsError(id, validateParam(id, e.target.value));
             }}
+            rightElement={
+              walletKitPubKey ? (
+                <InputSideElement
+                  variant="button"
+                  onClick={() => {
+                    const id = "source_account";
+
+                    if (walletKitPubKey) {
+                      handleParamChange(id, walletKitPubKey);
+                      handleParamsError(id, validateParam(id, walletKitPubKey));
+                    }
+                  }}
+                  placement="right"
+                >
+                  Get connected wallet address
+                </InputSideElement>
+              ) : null
+            }
             note={
               <>
                 If you don’t have an account yet, you can create and fund a test
