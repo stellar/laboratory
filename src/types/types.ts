@@ -147,7 +147,7 @@ export type SavedRpcMethod = {
   params: AnyObject;
   network: LocalStorageSavedNetwork;
   shareableUrl: string | undefined;
-  payload: string;
+  payload: AnyObject;
 };
 
 // =============================================================================

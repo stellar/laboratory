@@ -15,6 +15,7 @@ import { Box } from "@/components/layout/Box";
 import { InputSideElement } from "@/components/InputSideElement";
 import { NextLink } from "@/components/NextLink";
 import { ShareUrlButton } from "@/components/ShareUrlButton";
+import { PrettyJsonTextarea } from "@/components/PrettyJsonTextarea";
 
 import { NetworkOptions } from "@/constants/settings";
 import { Routes } from "@/constants/routes";
@@ -40,6 +41,9 @@ export const SavedEndpointsPage = () => {
     SavedEndpointHorizon[]
   >([]);
   const [savedRpcMethods, setSavedRpcMethods] = useState<SavedRpcMethod[]>([]);
+  const [expandedPayloadIndex, setExpandedPayloadIndex] = useState<{
+    [key: number]: boolean;
+  }>({});
   const [isNetworkChangeModalVisible, setIsNetworkChangeModalVisible] =
     useState(false);
   const [currentEndpointIndex, setCurrentEndpointIndex] = useState<
@@ -50,6 +54,18 @@ export const SavedEndpointsPage = () => {
     setSavedEndpointsHorizon(localStorageSavedEndpointsHorizon.get());
     setSavedRpcMethods(localStorageSavedRpcMethods.get());
   }, []);
+
+  useEffect(() => {
+    const mappedRpcIndex = savedRpcMethods.reduce(
+      (acc, _, index) => {
+        acc[index] = false;
+        return acc;
+      },
+      {} as { [key: number]: boolean },
+    );
+
+    setExpandedPayloadIndex(mappedRpcIndex);
+  }, [savedRpcMethods]);
 
   const getNetworkConfig = (
     network: LocalStorageSavedNetwork,
@@ -198,8 +214,6 @@ export const SavedEndpointsPage = () => {
       return <Card>There are no saved RPC Methods</Card>;
     }
 
-    console.log("savedRpcMethods: ", savedRpcMethods);
-
     return (
       <Card>
         <Box gap="md">
@@ -214,7 +228,6 @@ export const SavedEndpointsPage = () => {
                   {e.rpcMethod}
                 </Badge>
               </Box>
-
               <div className="Endpoints__urlBar">
                 <Input
                   id={`endpoint-url-${e.timestamp}`}
@@ -232,7 +245,6 @@ export const SavedEndpointsPage = () => {
                   }
                 />
               </div>
-
               <Box
                 gap="lg"
                 direction="row"
@@ -255,8 +267,26 @@ export const SavedEndpointsPage = () => {
                       size="md"
                       variant="tertiary"
                       type="button"
-                      icon={<Icon.ChevronRight />}
-                      onClick={() => handleViewHorizonEndpoint(e, idx)}
+                      icon={
+                        expandedPayloadIndex[idx] ? (
+                          <Icon.ChevronDown />
+                        ) : (
+                          <Icon.ChevronRight />
+                        )
+                      }
+                      onClick={() => {
+                        const obj: { [key: number]: boolean } = {};
+
+                        if (expandedPayloadIndex[idx]) {
+                          obj[idx] = false;
+                        } else {
+                          obj[idx] = true;
+                        }
+                        setExpandedPayloadIndex({
+                          ...expandedPayloadIndex,
+                          ...obj,
+                        });
+                      }}
                     >
                       View payload
                     </Button>
@@ -292,6 +322,13 @@ export const SavedEndpointsPage = () => {
                   ></Button>
                 </Box>
               </Box>
+              {expandedPayloadIndex[idx] ? (
+                <div className="Endpoints__txTextarea">
+                  <PrettyJsonTextarea json={e.payload} label="Payload" />
+                </div>
+              ) : (
+                <></>
+              )}
             </Box>
           ))}
         </Box>
