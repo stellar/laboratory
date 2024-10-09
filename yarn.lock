@@ -1135,7 +1135,7 @@
   optionalDependencies:
     sodium-native "^4.1.1"
 
-"@stellar/stellar-sdk@13.0.0-beta.1":
+"@stellar/stellar-sdk@^13.0.0-beta.1":
   version "13.0.0-beta.1"
   resolved "https://registry.yarnpkg.com/@stellar/stellar-sdk/-/stellar-sdk-13.0.0-beta.1.tgz#9a995575b806bea3a383b2d9fe4b1fde065caeb4"
   integrity sha512-yJN2HzibhZFJsdLRU83bkUwb9dq1sZRRiQptTJyunVv0hQsF+tTldrP3hHst3LROv/2GWTn20tmAqnp0hkzOhg==
