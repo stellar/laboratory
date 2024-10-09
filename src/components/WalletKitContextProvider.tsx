@@ -31,64 +31,35 @@ export const WalletKitContextProvider = ({
   useEffect(() => {
     const savedTheme = localStorageSavedTheme.get();
 
-    if (savedTheme) {
-      setTheme(savedTheme);
-    }
+    setTheme(savedTheme);
   }, []);
 
   const walletKitInstance = useMemo(() => {
     const isDarkTheme = theme === "sds-theme-dark";
 
-    const commonDarkTheme = {
-      bgColor: "#161616",
-      textColor: "#fcfcfc",
-      solidTextColor: "#fcfcfc",
-      dividerColor: "#fcfcfc",
-    };
-
-    const commonLightTheme = {
-      bgColor: "#fcfcfc",
-      textColor: "#161616",
-      solidTextColor: "#161616",
-      dividerColor: "#161616",
-    };
-
-    const modalDarkTheme = {
-      ...commonDarkTheme,
-      dividerColor: "#161616",
-      headerButtonColor: "#161616",
-      helpBgColor: "#161616",
-      notAvailableTextColor: "#fcfcfc",
-      notAvailableBgColor: "#161616",
-      notAvailableBorderColor: "#fcfcfc",
-    };
-
-    const modalLightTheme = {
-      ...commonLightTheme,
-      dividerColor: "#fcfcfc",
-      headerButtonColor: "#fcfcfc",
-      helpBgColor: "#fcfcfc",
-      notAvailableTextColor: "#161616",
-      notAvailableBgColor: "#fcfcfc",
-      notAvailableBorderColor: "#161616",
-    };
-
     return new StellarWalletsKit({
       network: networkType,
       selectedWalletId: XBULL_ID,
       modules: allowAllModules(),
-      buttonTheme: isDarkTheme
-        ? {
-            ...commonDarkTheme,
-            buttonPadding: "0.5rem 1.25rem",
-            buttonBorderRadius: "0.5rem",
-          }
-        : {
-            ...commonLightTheme,
-            buttonPadding: "0.5rem 1.25rem",
-            buttonBorderRadius: "0.5rem",
-          },
-      modalTheme: isDarkTheme ? modalDarkTheme : modalLightTheme,
+      buttonTheme: {
+        bgColor: isDarkTheme ? "#161616" : "#fcfcfc",
+        textColor: isDarkTheme ? "#fcfcfc" : "#161616",
+        solidTextColor: isDarkTheme ? "#fcfcfc" : "#161616",
+        dividerColor: isDarkTheme ? "#fcfcfc" : "#161616",
+        buttonPadding: "0.5rem 1.25rem",
+        buttonBorderRadius: "0.5rem",
+      },
+      modalTheme: {
+        bgColor: isDarkTheme ? "#161616" : "#fcfcfc",
+        textColor: isDarkTheme ? "#fcfcfc" : "#161616",
+        solidTextColor: isDarkTheme ? "#fcfcfc" : "#161616",
+        dividerColor: isDarkTheme ? "#161616" : "#fcfcfc",
+        headerButtonColor: isDarkTheme ? "#161616" : "#fcfcfc",
+        helpBgColor: isDarkTheme ? "#161616" : "#fcfcfc",
+        notAvailableTextColor: isDarkTheme ? "#fcfcfc" : "#161616",
+        notAvailableBgColor: isDarkTheme ? "#161616" : "#fcfcfc",
+        notAvailableBorderColor: isDarkTheme ? "#fcfcfc" : "#161616",
+      },
     });
   }, [networkType, theme]);
 
