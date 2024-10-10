@@ -126,7 +126,7 @@ export type AssetPoolShareError = {
 };
 
 // =============================================================================
-// Endpoints
+// Saved Horizon Endpoints & RPC Method
 // =============================================================================
 export type SavedEndpointHorizon = {
   url: string;
@@ -136,6 +136,18 @@ export type SavedEndpointHorizon = {
   params: AnyObject;
   network: LocalStorageSavedNetwork;
   shareableUrl: string | undefined;
+};
+
+export type SavedRpcMethod = {
+  url: string;
+  method: string;
+  rpcMethod: string;
+  timestamp: number;
+  route: string;
+  params: AnyObject;
+  network: LocalStorageSavedNetwork;
+  shareableUrl: string | undefined;
+  payload: AnyObject;
 };
 
 // =============================================================================

@@ -456,8 +456,8 @@ export const formComponentTemplateTxnOps = ({
             <>
               {custom?.showWarning ? (
                 <div className="FieldNote FieldNote--error FieldNote--md">
-                  This can result in a permanently locked account. Are you sure
-                  you know what you’re doing?
+                  This can result in a permanently locked account. Please make
+                  sure you understand multisignature accounts before proceeding.
                 </div>
               ) : null}
             </>
