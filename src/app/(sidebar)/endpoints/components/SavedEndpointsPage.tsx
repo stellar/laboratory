@@ -252,7 +252,7 @@ export const SavedEndpointsPage = () => {
                 justify="space-between"
                 addlClassName="Endpoints__urlBar__footer"
               >
-                <Box gap="sm" direction="row">
+                <Box gap="sm" direction="row" wrap="wrap">
                   <Button
                     size="md"
                     variant="tertiary"
