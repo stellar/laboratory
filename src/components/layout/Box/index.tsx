@@ -9,6 +9,7 @@ export const Box = ({
   direction = "column",
   justify = "baseline",
   align = "stretch",
+  wrap,
   ...props
 }: (
   | { gap: "xs" | "sm" | "md" | "lg" | "xl" | "xxl"; customValue?: undefined }
@@ -26,11 +27,13 @@ export const Box = ({
     | "right"
     | "baseline";
   align?: "center" | "end" | "start" | "baseline" | "stretch";
+  wrap?: "nowrap" | "wrap";
 }) => {
   const customStyle = {
     "--Box-direction": direction,
     "--Box-justify": justify,
     "--Box-align": align,
+    ...(wrap ? { flexWrap: wrap } : {}),
   } as React.CSSProperties;
 
   return (
