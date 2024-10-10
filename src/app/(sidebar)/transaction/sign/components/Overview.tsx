@@ -26,6 +26,8 @@ import { useStore } from "@/store/useStore";
 
 import { txHelper } from "@/helpers/txHelper";
 import { delayedAction } from "@/helpers/delayedAction";
+import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
+import { useSignWithExtensionWallet } from "@/hooks/useSignWithExtensionWallet";
 
 import { validate } from "@/validate";
 
@@ -37,8 +39,6 @@ import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { ViewInXdrButton } from "@/components/ViewInXdrButton";
 
-import { SignWithWallet } from "./SignWithWallet";
-
 const MIN_LENGTH_FOR_FULL_WIDTH_FIELD = 30;
 
 type TxSignatureType =
@@ -48,7 +48,7 @@ type TxSignatureType =
   | "signature";
 
 export const Overview = () => {
-  const { network, transaction, xdr } = useStore();
+  const { network, transaction, xdr, account } = useStore();
   const {
     sign,
     updateSignActiveView,
@@ -81,16 +81,12 @@ export const Overview = () => {
   const [bipPathErrorMsg, setBipPathErrorMsg] = useState("");
 
   // Extension wallet
-  const [extensionSignature] = useState<xdr.DecoratedSignature[]>([]);
-  const [extensionSuccessMsg] = useState("");
-  const [extensionErrorMsg] = useState("");
+  const [extensionSignature, setExtensionSignature] = useState<
+    xdr.DecoratedSignature[]
+  >([]);
 
-  const [isExtensionLoading] = useState(false);
-
-  // Sign tx with wallet extension
-  const [signWithExtensionError, setSignWithExtensionError] =
-    useState<string>("");
-  const [, setSignWithExtensionSuccess] = useState<string>("");
+  const [isExtensionLoading, setIsExtensionLoading] = useState(false);
+  const [isExtensionClear, setIsExtensionClear] = useState(false);
 
   const HAS_SECRET_KEYS = secretKeyInputs.some((input) => input !== "");
   const HAS_INVALID_SECRET_KEYS = secretKeyInputs.some((input) => {
@@ -98,6 +94,16 @@ export const Overview = () => {
       return validate.getSecretKeyError(input);
     }
     return false;
+  });
+
+  const {
+    signedTxXdr: exSignedTxXdr,
+    successMsg: exSuccessMsg,
+    errorMsg: exErrorMsg,
+  } = useSignWithExtensionWallet({
+    isEnabled: isExtensionLoading,
+    isClear: isExtensionClear,
+    txXdr: sign.importXdr,
   });
 
   useEffect(() => {
@@ -118,6 +124,15 @@ export const Overview = () => {
     updateSignActiveView,
     updateSignImportTx,
   ]);
+
+  useEffect(() => {
+    if (exSuccessMsg || exErrorMsg) {
+      handleSign({ sigType: "extensionWallet", isClear: false });
+      setIsExtensionLoading(false);
+    }
+    // Not including handleSign
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [exErrorMsg, exSuccessMsg]);
 
   const onViewSubmitTxn = () => {
     if (sign.signedTx) {
@@ -146,7 +161,13 @@ export const Overview = () => {
     }
   };
 
-  const handleSign = async (sigType: TxSignatureType, isClear?: boolean) => {
+  const handleSign = async ({
+    sigType,
+    isClear,
+  }: {
+    sigType: TxSignatureType;
+    isClear?: boolean;
+  }) => {
     // Initial state
     let secretKeySigs: xdr.DecoratedSignature[] = [];
     let hardwareSigs: xdr.DecoratedSignature[] = [];
@@ -171,10 +192,22 @@ export const Overview = () => {
         errorMsg = hwErrorMsg;
         break;
       case "extensionWallet":
-        extensionSigs = extensionSignature;
+        if (!isClear && exSignedTxXdr) {
+          extensionSigs =
+            txHelper.extractLastSignature({
+              txXdr: exSignedTxXdr,
+              networkPassphrase: network.passphrase,
+            }) || [];
+          errorMsg = exErrorMsg;
+
+          setExtensionSignature(extensionSigs);
+        } else {
+          setExtensionSignature([]);
+        }
+
         break;
       case "signature":
-        // TODO: handle in next PR
+        // TODO: handle in another PR
         break;
       default:
       // Do nothing
@@ -195,27 +228,17 @@ export const Overview = () => {
       hardwareSigs = hardwareSignature;
     }
 
-    if (sigType !== "extensionWallet" && extensionSuccessMsg) {
+    if (sigType !== "extensionWallet" && exSuccessMsg) {
       extensionSigs = extensionSignature;
     }
 
     const tx = TransactionBuilder.fromXDR(sign.importXdr, network.passphrase);
     const allSigs = [...secretKeySigs, ...hardwareSigs, ...extensionSigs];
 
-    console.log(">>> secretKeySigs: ", secretKeySigs);
-    console.log(">>> hardwareSigs: ", hardwareSigs);
-    console.log(">>> extensionSigs: ", extensionSigs);
-
-    console.log(">>> allSigs: ", allSigs);
-
     if (allSigs.length > 0) {
       tx.signatures.push(...allSigs);
 
       const signedTx = tx.toEnvelope().toXDR("base64");
-
-      console.log(">>> signedTx: ", signedTx);
-      console.log(">>> tx.signatures: ", tx.signatures);
-
       updateSignedTx(signedTx);
     } else {
       updateSignedTx("");
@@ -311,25 +334,6 @@ export const Overview = () => {
     return { signature, errorMsg };
   };
 
-  // const signExtensionWallet = (isClear?: boolean) => {
-  //   setIsExtensionLoading(true);
-
-  //   let signature: xdr.DecoratedSignature[] = [];
-  //   let successMsg = "";
-  //   let errorMsg = "";
-
-  //   if (!isClear) {
-  //     // TODO:
-  //   }
-
-  //   setIsExtensionLoading(false);
-  //   setExtensionSignature(signature);
-  //   setExtensionSuccessMsg(successMsg);
-  //   setExtensionErrorMsg(errorMsg);
-
-  //   return { signature, errorMsg };
-  // }
-
   const REQUIRED_FIELDS = [
     {
       label: "Signing for",
@@ -420,6 +424,34 @@ export const Overview = () => {
     );
   };
 
+  const getAllSigsMessage = () => {
+    const allMsgs = [];
+    const secretKeySigCount = secretKeySignature.length;
+    const hardwareSigCount = hardwareSignature.length;
+    const extensionSigCount = extensionSignature.length;
+
+    const getMsg = (count: number, label: string) =>
+      `${count} ${label} signature${count > 1 ? "s" : ""}`;
+
+    if (secretKeySigCount > 0) {
+      allMsgs.push(getMsg(secretKeySigCount, "secret key"));
+    }
+
+    if (hardwareSigCount > 0) {
+      allMsgs.push(getMsg(hardwareSigCount, "hardware wallet"));
+    }
+
+    if (extensionSigCount > 0) {
+      allMsgs.push(getMsg(extensionSigCount, "extension wallet"));
+    }
+
+    if (allMsgs.length > 0) {
+      return `${allMsgs.join(", ")} added`;
+    }
+
+    return "";
+  };
+
   return (
     <>
       <Box gap="md">
@@ -499,7 +531,7 @@ export const Overview = () => {
                 value={secretKeyInputs}
                 onChange={(val) => {
                   if (secretKeySuccessMsg || secretKeyErrorMsg) {
-                    handleSign("secretKey", true);
+                    handleSign({ sigType: "secretKey", isClear: true });
                   }
 
                   setSecretKeyInputs(val);
@@ -512,10 +544,10 @@ export const Overview = () => {
               />
               <SignTxButton
                 onSign={() => {
-                  handleSign("secretKey", false);
+                  handleSign({ sigType: "secretKey", isClear: false });
                 }}
                 onClear={() => {
-                  handleSign("secretKey", true);
+                  handleSign({ sigType: "secretKey", isClear: true });
                 }}
                 isDisabled={!HAS_SECRET_KEYS || HAS_INVALID_SECRET_KEYS}
                 successMsg={secretKeySuccessMsg}
@@ -553,7 +585,10 @@ export const Overview = () => {
                             event: React.ChangeEvent<HTMLSelectElement>,
                           ) => {
                             if (hardwareSuccessMsg || hardwareErrorMsg) {
-                              handleSign("hardwareWallet", true);
+                              handleSign({
+                                sigType: "hardwareWallet",
+                                isClear: true,
+                              });
                             }
 
                             setSelectedHardware(event.target.value);
@@ -572,10 +607,16 @@ export const Overview = () => {
 
               <SignTxButton
                 onSign={() => {
-                  handleSign("hardwareWallet", false);
+                  handleSign({
+                    sigType: "hardwareWallet",
+                    isClear: false,
+                  });
                 }}
                 onClear={() => {
-                  handleSign("hardwareWallet", true);
+                  handleSign({
+                    sigType: "hardwareWallet",
+                    isClear: true,
+                  });
                 }}
                 isLoading={isHardwareLoading}
                 isDisabled={!selectedHardware || !sign.bipPath}
@@ -590,48 +631,28 @@ export const Overview = () => {
               </Label>
 
               <SignTxButton
+                label={`Sign with ${account.walletKitPubKey ? shortenStellarAddress(account.walletKitPubKey) : "wallet"}`}
                 onSign={() => {
-                  handleSign("extensionWallet", false);
+                  setIsExtensionClear(false);
+                  setIsExtensionLoading(true);
                 }}
                 onClear={() => {
-                  handleSign("extensionWallet", true);
+                  setIsExtensionClear(true);
+                  handleSign({ sigType: "extensionWallet", isClear: true });
                 }}
                 isLoading={isExtensionLoading}
-                successMsg={extensionSuccessMsg}
-                errorMsg={extensionErrorMsg}
+                successMsg={exSuccessMsg}
+                errorMsg={exErrorMsg}
               />
-              <div className="SignTx__Buttons">
-                <div>
-                  {/* TODO: update this to get the last signature after tx signed with wallet */}
-                  <SignWithWallet
-                    setSignError={setSignWithExtensionError}
-                    setSignSuccess={setSignWithExtensionSuccess}
-                  />
-                </div>
-              </div>
-              <div>
-                {signWithExtensionError ? (
-                  <Text
-                    as="div"
-                    size="xs"
-                    weight="regular"
-                    addlClassName="FieldNote--error"
-                  >
-                    {signWithExtensionError}
-                  </Text>
-                ) : null}
-              </div>
             </Box>
           </Box>
         </Card>
 
-        {sign.signedTx &&
-        !(secretKeyErrorMsg || hardwareErrorMsg || extensionErrorMsg) ? (
+        {sign.signedTx ? (
           <ValidationResponseCard
             variant="success"
             title="Transaction signed!"
-            // TODO: handle total signatures message
-            subtitle={""}
+            subtitle={getAllSigsMessage()}
             response={
               <Box gap="xs">
                 <div>
@@ -664,16 +685,6 @@ export const Overview = () => {
                   Wrap with Fee Bump
                 </Button>
               </div>
-            }
-          />
-        ) : null}
-
-        {secretKeyErrorMsg || hardwareErrorMsg || extensionErrorMsg ? (
-          <ValidationResponseCard
-            variant="error"
-            title="Transaction Sign Error:"
-            response={
-              secretKeyErrorMsg || hardwareErrorMsg || extensionErrorMsg
             }
           />
         ) : null}

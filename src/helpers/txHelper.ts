@@ -122,76 +122,6 @@ const secretKeySignature = ({
   };
 };
 
-const signTx = ({
-  txXdr,
-  networkPassphrase,
-  signers,
-  hardWalletSigs,
-}: {
-  txXdr: string;
-  networkPassphrase: string;
-  signers: string[];
-  hardWalletSigs: xdr.DecoratedSignature[];
-}) => {
-  const validSecretKeys = [];
-  const validPreimages = [];
-
-  if (signers?.length) {
-    for (let i = 0; i < signers.length; i++) {
-      const signer = signers[i];
-
-      if (signer !== null && signer !== undefined && signer !== "") {
-        const error = validate.getSecretKeyError(signer);
-
-        if (error) {
-          return {
-            xdr: undefined,
-            signerMessage: error,
-          };
-        }
-
-        if (!error) {
-          if (signer.charAt(0) === "S") {
-            // Secret keys
-            validSecretKeys.push(signer);
-          } else {
-            // Hash preimage
-            validPreimages.push(signer);
-          }
-        }
-      }
-    }
-  }
-
-  const newTx = TransactionBuilder.fromXDR(txXdr, networkPassphrase);
-  let addedSignerSigs = 0;
-
-  validSecretKeys.forEach((signer) => {
-    addedSignerSigs++;
-    newTx.sign(Keypair.fromSecret(signer));
-  });
-  validPreimages.forEach((signer) => {
-    addedSignerSigs++;
-    newTx.signHashX(Buffer.from(signer, "hex"));
-  });
-
-  if (hardWalletSigs) {
-    hardWalletSigs.forEach((signer) => {
-      newTx.signatures.push(signer);
-    });
-  }
-
-  // TODO: handle case where there are no signatures (when clearing sigs)
-
-  return {
-    xdr: newTx.toEnvelope().toXDR("base64"),
-    signerMessage: `Successfully added ${addedSignerSigs} signature${addedSignerSigs == 1 ? "" : "s"}`,
-    hardwareMessage: hardWalletSigs
-      ? "Successfully added a hardware wallet signature"
-      : undefined,
-  };
-};
-
 const signWithLedger = async ({
   bipPath,
   transaction,
@@ -339,7 +269,6 @@ const extractLastSignature = ({
 
 export const txHelper = {
   buildFeeBumpTx,
-  signTx,
   signWithLedger,
   signWithTrezor,
   extractLastSignature,
