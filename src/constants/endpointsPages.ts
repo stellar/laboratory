@@ -39,7 +39,7 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
         docsUrl:
           "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getEvents",
         docsLabel: "getEvents",
-        endpointUrlTemplate: "{?startLedger,cursor,limit,filters}",
+        endpointUrlTemplate: "{?startLedger,cursor,limit,filters,xdrFormat}",
         requestMethod: "POST",
         requiredParams: "startLedger,filters",
         rpcMethod: "getEvents",
@@ -92,7 +92,7 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
         docsUrl:
           "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getLedgerEntries",
         docsLabel: "getLedgerEntries",
-        endpointUrlTemplate: "{?ledgerKeyEntries}",
+        endpointUrlTemplate: "{?ledgerKeyEntries,xdrFormat}",
         requestMethod: "POST",
         requiredParams: "ledgerKeyEntries",
         rpcMethod: "getLedgerEntries",
@@ -119,7 +119,7 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
         docsUrl:
           "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getTransaction",
         docsLabel: "getTransaction",
-        endpointUrlTemplate: "{?transaction}",
+        endpointUrlTemplate: "{?transaction,xdrFormat}",
         requestMethod: "POST",
         requiredParams: "transaction",
         rpcMethod: "getTransaction",
@@ -133,7 +133,7 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
         docsUrl:
           "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getTransactions",
         docsLabel: "getTransactions",
-        endpointUrlTemplate: "{?startLedger,cursor,limit}",
+        endpointUrlTemplate: "{?startLedger,cursor,limit,xdrFormat}",
         requestMethod: "POST",
         requiredParams: "startLedger",
         rpcMethod: "getTransactions",
@@ -160,7 +160,7 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
         docsUrl:
           "https://developers.stellar.org/docs/data/rpc/api-reference/methods/sendTransaction",
         docsLabel: "sendTransaction",
-        endpointUrlTemplate: "{?tx}",
+        endpointUrlTemplate: "{?tx,xdrFormat}",
         requestMethod: "POST",
         requiredParams: "tx",
         rpcMethod: "sendTransaction",
@@ -174,7 +174,7 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
         docsUrl:
           "https://developers.stellar.org/docs/data/rpc/api-reference/methods/simulateTransaction",
         docsLabel: "simulateTransaction",
-        endpointUrlTemplate: "{?tx,resourceConfig}",
+        endpointUrlTemplate: "{?tx,resourceConfig,xdrFormat}",
         requestMethod: "POST",
         requiredParams: "tx",
         rpcMethod: "simulateTransaction",
