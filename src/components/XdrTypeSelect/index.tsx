@@ -106,9 +106,7 @@ export const XdrTypeSelect = ({ error }: XdrTypeSelectProps) => {
             <>
               <OptionItem sectionTitle="Possible Types" />
               {guessedTypes.map((o) => (
-                <>
-                  <OptionItem key={`guessed-${o}`} option={o} />
-                </>
+                <OptionItem key={`guessed-${o}`} option={o} />
               ))}
             </>
           ) : null}
