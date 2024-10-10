@@ -30,6 +30,7 @@ import { sanitizeObject } from "@/helpers/sanitizeObject";
 import { parseJsonString } from "@/helpers/parseJsonString";
 import { getSaveItemNetwork } from "@/helpers/getSaveItemNetwork";
 import { localStorageSavedEndpointsHorizon } from "@/helpers/localStorageSavedEndpointsHorizon";
+import { localStorageSavedRpcMethods } from "@/helpers/localStorageSavedRpcMethods";
 import { arrayItem } from "@/helpers/arrayItem";
 import { delayedAction } from "@/helpers/delayedAction";
 import { buildEndpointHref } from "@/helpers/buildEndpointHref";
@@ -669,18 +670,35 @@ export default function Endpoints() {
               icon={<Icon.Save01 />}
               type="button"
               onClick={() => {
-                const currentSaved = localStorageSavedEndpointsHorizon.get();
-                localStorageSavedEndpointsHorizon.set(
-                  arrayItem.add(currentSaved, {
-                    url: requestUrl,
-                    method: pageData.requestMethod,
-                    timestamp: Date.now(),
-                    route: pathname,
-                    params,
-                    network: getSaveItemNetwork(network),
-                    shareableUrl: shareableUrl("requests"),
-                  }),
-                );
+                if (isRpcEndpoint) {
+                  const currentSaved = localStorageSavedRpcMethods.get();
+                  localStorageSavedRpcMethods.set(
+                    arrayItem.add(currentSaved, {
+                      url: requestUrl,
+                      method: pageData.requestMethod,
+                      rpcMethod: pageData.rpcMethod,
+                      timestamp: Date.now(),
+                      route: pathname,
+                      params,
+                      network: getSaveItemNetwork(network),
+                      shareableUrl: shareableUrl("requests"),
+                      payload: getPostPayload(),
+                    }),
+                  );
+                } else {
+                  const currentSaved = localStorageSavedEndpointsHorizon.get();
+                  localStorageSavedEndpointsHorizon.set(
+                    arrayItem.add(currentSaved, {
+                      url: requestUrl,
+                      method: pageData.requestMethod,
+                      timestamp: Date.now(),
+                      route: pathname,
+                      params,
+                      network: getSaveItemNetwork(network),
+                      shareableUrl: shareableUrl("requests"),
+                    }),
+                  );
+                }
               }}
               showActionTooltip
               actionTooltipText="Saved"

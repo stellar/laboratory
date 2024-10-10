@@ -58,7 +58,7 @@ export interface Store {
   // Shared
   network: Network | EmptyObj;
   // Theme Color
-  theme: ThemeColorType | undefined;
+  theme: ThemeColorType | null;
   // isDynamicNetworkSelect flag to indicate network update outside of the dropdown
   isDynamicNetworkSelect: boolean;
   selectNetwork: (network: Network) => void;
@@ -262,7 +262,7 @@ export const createStore = (options: CreateStoreOptions) =>
       immer((set) => ({
         // Shared
         network: {},
-        theme: undefined,
+        theme: null,
         isDynamicNetworkSelect: false,
         selectNetwork: (network: Network) =>
           set((state) => {
