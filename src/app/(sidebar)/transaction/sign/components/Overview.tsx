@@ -172,24 +172,13 @@ export const Overview = () => {
     let secretKeySigs: xdr.DecoratedSignature[] = [];
     let hardwareSigs: xdr.DecoratedSignature[] = [];
     let extensionSigs: xdr.DecoratedSignature[] = [];
-    let errorMsg = "";
 
     switch (sigType) {
       case "secretKey":
-        // eslint-disable-next-line no-case-declarations
-        const { signature: skSignature, errorMsg: skErrorMsg } =
-          signSecretKey(isClear);
-
-        secretKeySigs = skSignature;
-        errorMsg = skErrorMsg;
+        secretKeySigs = signSecretKey(isClear).signature;
         break;
       case "hardwareWallet":
-        // eslint-disable-next-line no-case-declarations
-        const { signature: hwSignature, errorMsg: hwErrorMsg } =
-          await signHardwareWallet(isClear);
-
-        hardwareSigs = hwSignature;
-        errorMsg = hwErrorMsg;
+        hardwareSigs = (await signHardwareWallet(isClear)).signature;
         break;
       case "extensionWallet":
         if (!isClear && exSignedTxXdr) {
@@ -198,7 +187,6 @@ export const Overview = () => {
               txXdr: exSignedTxXdr,
               networkPassphrase: network.passphrase,
             }) || [];
-          errorMsg = exErrorMsg;
 
           setExtensionSignature(extensionSigs);
         } else {
@@ -211,12 +199,6 @@ export const Overview = () => {
         break;
       default:
       // Do nothing
-    }
-
-    // If any signType has error, clear signed transaction and return
-    if (errorMsg) {
-      updateSignedTx("");
-      return;
     }
 
     // Previously added signatures from other types
