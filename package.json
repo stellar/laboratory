@@ -22,6 +22,7 @@
     "@creit.tech/stellar-wallets-kit": "^1.2.2",
     "@ledgerhq/hw-app-str": "^7.0.4",
     "@ledgerhq/hw-transport-webusb": "^6.29.4",
+    "@sentry/nextjs": "^8",
     "@stellar/design-system": "^2.0.0-beta.17",
     "@stellar/stellar-sdk": "^13.0.0-beta.1",
     "@stellar/stellar-xdr-json-web": "^0.0.2",

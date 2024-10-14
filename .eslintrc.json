@@ -9,6 +9,7 @@
   "rules": {
     // @TODO: ideally, these should be removed
     "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-var-requires": "warn",
     "import/named": "off"
   },
   "ignorePatterns": ["./src/temp/stellar-xdr-web/*"]
