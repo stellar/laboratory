@@ -73,6 +73,7 @@ export const ValidationResponseCard = ({
                     align="center"
                     justify="space-between"
                     addlClassName="ValidationResponseCard__footer"
+                    wrap="wrap"
                   >
                     <>
                       {footerLeftEl ? (
@@ -80,6 +81,7 @@ export const ValidationResponseCard = ({
                           gap="sm"
                           direction="row"
                           addlClassName="ValidationResponseCard__footer--leftEl"
+                          wrap="wrap"
                         >
                           <>{footerLeftEl}</>
                         </Box>
@@ -91,6 +93,7 @@ export const ValidationResponseCard = ({
                           direction="row"
                           justify="right"
                           addlClassName="ValidationResponseCard__footer--rightEl"
+                          wrap="wrap"
                         >
                           <>{footerRightEl}</>
                         </Box>
