@@ -814,7 +814,7 @@ export const Overview = () => {
 
                     <TextPicker
                       id={`${idx}-tx-sig-b64sig`}
-                      placeholder="B64 encoded signature"
+                      placeholder="Hex encoded 64-byte ed25519 signature"
                       value={sigInputs[idx]?.signature}
                       error={sigInputsError[idx]?.signature}
                       onChange={(e) =>
