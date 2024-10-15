@@ -27,6 +27,7 @@ import { useStore } from "@/store/useStore";
 import { txHelper } from "@/helpers/txHelper";
 import { delayedAction } from "@/helpers/delayedAction";
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
+import { arrayItem } from "@/helpers/arrayItem";
 import { useSignWithExtensionWallet } from "@/hooks/useSignWithExtensionWallet";
 
 import { validate } from "@/validate";
@@ -38,6 +39,7 @@ import { WithInfoText } from "@/components/WithInfoText";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { ViewInXdrButton } from "@/components/ViewInXdrButton";
+import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
 
 const MIN_LENGTH_FOR_FULL_WIDTH_FIELD = 30;
 
@@ -60,6 +62,8 @@ export const Overview = () => {
   } = transaction;
 
   const router = useRouter();
+
+  const [signError, setSignError] = useState("");
 
   // Secret key
   const [secretKeyInputs, setSecretKeyInputs] = useState<string[]>([""]);
@@ -87,6 +91,25 @@ export const Overview = () => {
 
   const [isExtensionLoading, setIsExtensionLoading] = useState(false);
   const [isExtensionClear, setIsExtensionClear] = useState(false);
+
+  type SigObj = {
+    publicKey: string;
+    signature: string;
+  };
+
+  const sigObj: SigObj = {
+    publicKey: "",
+    signature: "",
+  };
+
+  // Signature
+  const [sigInputs, setSigInputs] = useState<SigObj[]>([sigObj]);
+  const [sigInputsError, setSigInputsError] = useState<SigObj[]>([sigObj]);
+  const [sigSignature, setSigSignature] = useState<xdr.DecoratedSignature[]>(
+    [],
+  );
+  const [sigSuccessMsg, setSigSuccessMsg] = useState("");
+  const [sigErrorMsg, setSigErrorMsg] = useState("");
 
   const HAS_SECRET_KEYS = secretKeyInputs.some((input) => input !== "");
   const HAS_INVALID_SECRET_KEYS = secretKeyInputs.some((input) => {
@@ -168,62 +191,108 @@ export const Overview = () => {
     sigType: TxSignatureType;
     isClear?: boolean;
   }) => {
+    setSignError("");
+
     // Initial state
     let secretKeySigs: xdr.DecoratedSignature[] = [];
     let hardwareSigs: xdr.DecoratedSignature[] = [];
     let extensionSigs: xdr.DecoratedSignature[] = [];
+    let signatureSigs: xdr.DecoratedSignature[] = [];
 
-    switch (sigType) {
-      case "secretKey":
-        secretKeySigs = signSecretKey(isClear).signature;
-        break;
-      case "hardwareWallet":
-        hardwareSigs = (await signHardwareWallet(isClear)).signature;
-        break;
-      case "extensionWallet":
-        if (!isClear && exSignedTxXdr) {
-          extensionSigs =
-            txHelper.extractLastSignature({
-              txXdr: exSignedTxXdr,
-              networkPassphrase: network.passphrase,
-            }) || [];
+    try {
+      switch (sigType) {
+        case "secretKey":
+          secretKeySigs = signSecretKey(isClear).signature;
+          break;
+        case "hardwareWallet":
+          hardwareSigs = (await signHardwareWallet(isClear)).signature;
+          break;
+        case "extensionWallet":
+          if (!isClear && exSignedTxXdr) {
+            extensionSigs =
+              txHelper.extractLastSignature({
+                txXdr: exSignedTxXdr,
+                networkPassphrase: network.passphrase,
+              }) || [];
 
-          setExtensionSignature(extensionSigs);
-        } else {
-          setExtensionSignature([]);
-        }
+            setExtensionSignature(extensionSigs);
+          } else {
+            setExtensionSignature([]);
+          }
 
-        break;
-      case "signature":
-        // TODO: handle in another PR
-        break;
-      default:
-      // Do nothing
+          break;
+        case "signature":
+          signatureSigs = signSignature(isClear).signature;
+          break;
+        default:
+        // Do nothing
+      }
+
+      // Previously added signatures from other types
+      if (sigType !== "secretKey" && secretKeySuccessMsg) {
+        secretKeySigs = secretKeySignature;
+      }
+
+      if (sigType !== "hardwareWallet" && hardwareSuccessMsg) {
+        hardwareSigs = hardwareSignature;
+      }
+
+      if (sigType !== "extensionWallet" && exSuccessMsg) {
+        extensionSigs = extensionSignature;
+      }
+
+      if (sigType !== "signature" && sigSuccessMsg) {
+        signatureSigs = sigSignature;
+      }
+
+      const tx = TransactionBuilder.fromXDR(sign.importXdr, network.passphrase);
+      const allSigs = [
+        ...secretKeySigs,
+        ...hardwareSigs,
+        ...extensionSigs,
+        ...signatureSigs,
+      ];
+
+      if (allSigs.length > 0) {
+        tx.signatures.push(...allSigs);
+
+        const signedTx = tx.toEnvelope().toXDR("base64");
+        updateSignedTx(signedTx);
+      } else {
+        updateSignedTx("");
+      }
+    } catch (e: any) {
+      setSignError(e.toString());
     }
+  };
 
-    // Previously added signatures from other types
-    if (sigType !== "secretKey" && secretKeySuccessMsg) {
-      secretKeySigs = secretKeySignature;
-    }
+  const handleSignatureOnChange = (
+    value: string,
+    key: "publicKey" | "signature",
+    index: number,
+  ) => {
+    const validationError =
+      key === "publicKey" ? validate.getPublicKeyError(value) : "";
 
-    if (sigType !== "hardwareWallet" && hardwareSuccessMsg) {
-      hardwareSigs = hardwareSignature;
-    }
+    const inputVal = arrayItem.update(sigInputs, index, {
+      ...sigInputs[index],
+      [key]: value,
+    });
 
-    if (sigType !== "extensionWallet" && exSuccessMsg) {
-      extensionSigs = extensionSignature;
-    }
+    const inputError = arrayItem.update(sigInputsError, index, {
+      ...sigInputsError[index],
+      publicKey: validationError,
+    });
 
-    const tx = TransactionBuilder.fromXDR(sign.importXdr, network.passphrase);
-    const allSigs = [...secretKeySigs, ...hardwareSigs, ...extensionSigs];
+    updateSignatureInputsAndError(inputVal, inputError);
+  };
 
-    if (allSigs.length > 0) {
-      tx.signatures.push(...allSigs);
+  const updateSignatureInputsAndError = (inputs: SigObj[], error: SigObj[]) => {
+    setSigInputs(inputs);
+    setSigInputsError(error);
 
-      const signedTx = tx.toEnvelope().toXDR("base64");
-      updateSignedTx(signedTx);
-    } else {
-      updateSignedTx("");
+    if (sigSuccessMsg || sigErrorMsg) {
+      handleSign({ sigType: "signature", isClear: true });
     }
   };
 
@@ -312,6 +381,26 @@ export const Overview = () => {
     setHardwareSignature(signature);
     setHardwareSuccessMsg(successMsg);
     setHardwareErrorMsg(errorMsg);
+
+    return { signature, errorMsg };
+  };
+
+  const signSignature = (isClear?: boolean) => {
+    let signature: xdr.DecoratedSignature[] = [];
+    let successMsg = "";
+    let errorMsg = "";
+
+    if (!isClear) {
+      const txSig = txHelper.decoratedSigFromBase64Sig(sigInputs);
+
+      signature = txSig.signature;
+      successMsg = txSig.successMsg || "";
+      errorMsg = txSig.errorMsg || "";
+    }
+
+    setSigSignature(signature);
+    setSigSuccessMsg(successMsg);
+    setSigErrorMsg(errorMsg);
 
     return { signature, errorMsg };
   };
@@ -406,11 +495,79 @@ export const Overview = () => {
     );
   };
 
+  const AddSignatureButton = () => {
+    const signatureText = sigInputs.length === 1 ? "signature" : "signatures";
+
+    const hasEmptyFields =
+      sigInputs.reduce((res, cur) => {
+        if (!(cur.publicKey && cur.signature)) {
+          return [...res, true];
+        }
+
+        return res;
+      }, [] as boolean[]).length > 0;
+
+    const hasErrors =
+      sigInputsError.reduce((res, cur) => {
+        if (cur.publicKey || cur.signature) {
+          return [...res, true];
+        }
+
+        return res;
+      }, [] as boolean[]).length > 0;
+
+    return (
+      <Box gap="md" direction="row" align="center" wrap="wrap">
+        {sigSuccessMsg ? (
+          <Button
+            size="md"
+            variant="tertiary"
+            onClick={() => handleSign({ sigType: "signature", isClear: true })}
+          >
+            {`Clear ${signatureText}`}
+          </Button>
+        ) : (
+          <Button
+            disabled={hasEmptyFields || hasErrors}
+            size="md"
+            variant="tertiary"
+            onClick={() => handleSign({ sigType: "signature", isClear: false })}
+          >
+            {`Add ${signatureText} to transaction`}
+          </Button>
+        )}
+
+        <Button
+          size="md"
+          variant="tertiary"
+          onClick={() => {
+            const newInputs = arrayItem.add(sigInputs, sigObj);
+            const newErrors = arrayItem.add(sigInputsError, sigObj);
+
+            updateSignatureInputsAndError(newInputs, newErrors);
+          }}
+        >
+          Add additional signature
+        </Button>
+
+        <>
+          {sigSuccessMsg || sigErrorMsg ? (
+            <MessageField
+              message={sigSuccessMsg || sigErrorMsg}
+              isError={Boolean(sigErrorMsg)}
+            />
+          ) : null}
+        </>
+      </Box>
+    );
+  };
+
   const getAllSigsMessage = () => {
     const allMsgs = [];
     const secretKeySigCount = secretKeySignature.length;
     const hardwareSigCount = hardwareSignature.length;
     const extensionSigCount = extensionSignature.length;
+    const sigSignatureCount = sigSignature.length;
 
     const getMsg = (count: number, label: string) =>
       `${count} ${label} signature${count > 1 ? "s" : ""}`;
@@ -425,6 +582,10 @@ export const Overview = () => {
 
     if (extensionSigCount > 0) {
       allMsgs.push(getMsg(extensionSigCount, "extension wallet"));
+    }
+
+    if (sigSignatureCount > 0) {
+      allMsgs.push(getMsg(sigSignatureCount, ""));
     }
 
     if (allMsgs.length > 0) {
@@ -627,6 +788,82 @@ export const Overview = () => {
                 errorMsg={exErrorMsg}
               />
             </Box>
+
+            <Box gap="md" addlClassName="PageBody__content">
+              <Label size="md" htmlFor="">
+                Add a signature
+              </Label>
+
+              <>
+                {sigInputs.map((_, idx) => (
+                  <Box gap="xs" key={`${idx}-tx-sig`}>
+                    <PubKeyPicker
+                      id={`${idx}-tx-sig-pubkey`}
+                      placeholder="Public key"
+                      label=""
+                      value={sigInputs[idx]?.publicKey}
+                      error={sigInputsError[idx]?.publicKey}
+                      onChange={(e) =>
+                        handleSignatureOnChange(
+                          e.target.value,
+                          "publicKey",
+                          idx,
+                        )
+                      }
+                    />
+
+                    <TextPicker
+                      id={`${idx}-tx-sig-b64sig`}
+                      placeholder="B64 encoded signature"
+                      value={sigInputs[idx]?.signature}
+                      error={sigInputsError[idx]?.signature}
+                      onChange={(e) =>
+                        handleSignatureOnChange(
+                          e.target.value,
+                          "signature",
+                          idx,
+                        )
+                      }
+                      autocomplete="off"
+                    />
+
+                    <>
+                      {idx !== 0 ? (
+                        <Box gap="md" direction="row" justify="end">
+                          <Button
+                            size="md"
+                            variant="error"
+                            onClick={() => {
+                              const newInputs = arrayItem.delete(
+                                sigInputs,
+                                idx,
+                              );
+                              const newErrors = arrayItem.delete(
+                                sigInputsError,
+                                idx,
+                              );
+
+                              updateSignatureInputsAndError(
+                                newInputs,
+                                newErrors,
+                              );
+                            }}
+                          >
+                            Remove
+                          </Button>
+                        </Box>
+                      ) : null}
+                    </>
+                  </Box>
+                ))}
+                <div className="FieldNote FieldNote--note FieldNote--md">
+                  Use this section to add signature(s) to the transaction
+                  envelope
+                </div>
+              </>
+
+              <AddSignatureButton />
+            </Box>
           </Box>
         </Card>
 
@@ -668,6 +905,14 @@ export const Overview = () => {
                 </Button>
               </div>
             }
+          />
+        ) : null}
+
+        {signError ? (
+          <ValidationResponseCard
+            variant="error"
+            title="Transaction Sign Error:"
+            response={signError}
           />
         ) : null}
       </div>

@@ -267,10 +267,41 @@ const extractLastSignature = ({
   return lastSig.length === 1 ? lastSig : undefined;
 };
 
+const decoratedSigFromBase64Sig = (
+  base64Sigs: { signature: string; publicKey: string }[],
+) => {
+  try {
+    const decoratedSig = base64Sigs.reduce((decorated, item) => {
+      const sig = Buffer.from(item.signature, "hex");
+      const keypair = Keypair.fromPublicKey(item.publicKey);
+
+      const hint = keypair.signatureHint();
+      const decoratedSig = new xdr.DecoratedSignature({ hint, signature: sig });
+
+      return [...decorated, decoratedSig];
+    }, [] as xdr.DecoratedSignature[]);
+
+    if (decoratedSig.length === 0) {
+      throw "No valid signatures were added";
+    }
+
+    return {
+      signature: decoratedSig,
+      successMsg: `Successfully added ${decoratedSig.length} signature${decoratedSig.length == 1 ? "" : "s"}`,
+    };
+  } catch (e: any) {
+    return {
+      signature: [],
+      errorMsg: e.toString(),
+    };
+  }
+};
+
 export const txHelper = {
   buildFeeBumpTx,
   signWithLedger,
   signWithTrezor,
   extractLastSignature,
   secretKeySignature,
+  decoratedSigFromBase64Sig,
 };
