@@ -903,6 +903,7 @@
     grid-column: 1 / 3;
     gap: pxToRem(12px);
     justify-content: space-between;
+    flex-wrap: wrap;
 
     div {
       display: flex;
