@@ -391,7 +391,7 @@ export const Overview = () => {
     let errorMsg = "";
 
     if (!isClear) {
-      const txSig = txHelper.decoratedSigFromBase64Sig(sigInputs);
+      const txSig = txHelper.decoratedSigFromHexSig(sigInputs);
 
       signature = txSig.signature;
       successMsg = txSig.successMsg || "";

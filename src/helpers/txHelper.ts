@@ -267,11 +267,11 @@ const extractLastSignature = ({
   return lastSig.length === 1 ? lastSig : undefined;
 };
 
-const decoratedSigFromBase64Sig = (
-  base64Sigs: { signature: string; publicKey: string }[],
+const decoratedSigFromHexSig = (
+  hexSigs: { signature: string; publicKey: string }[],
 ) => {
   try {
-    const decoratedSig = base64Sigs.reduce((decorated, item) => {
+    const decoratedSig = hexSigs.reduce((decorated, item) => {
       const sig = Buffer.from(item.signature, "hex");
       const keypair = Keypair.fromPublicKey(item.publicKey);
 
@@ -303,5 +303,5 @@ export const txHelper = {
   signWithTrezor,
   extractLastSignature,
   secretKeySignature,
-  decoratedSigFromBase64Sig,
+  decoratedSigFromHexSig,
 };
