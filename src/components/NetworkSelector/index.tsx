@@ -8,11 +8,15 @@ import React, {
 import { Button, Icon, Input, Notification } from "@stellar/design-system";
 
 import { NetworkIndicator } from "@/components/NetworkIndicator";
-import { localStorageSavedNetwork } from "@/helpers/localStorageSavedNetwork";
-import { delayedAction } from "@/helpers/delayedAction";
 import { NetworkOptions } from "@/constants/settings";
 import { useStore } from "@/store/useStore";
-import { Network, NetworkType } from "@/types/types";
+
+import { localStorageSavedNetwork } from "@/helpers/localStorageSavedNetwork";
+import { delayedAction } from "@/helpers/delayedAction";
+import { isEmptyObject } from "@/helpers/isEmptyObject";
+import { sanitizeObject } from "@/helpers/sanitizeObject";
+
+import { AnyObject, EmptyObj, Network, NetworkType } from "@/types/types";
 
 import "./styles.scss";
 
@@ -25,46 +29,28 @@ export const NetworkSelector = () => {
     updateIsDynamicNetworkSelect,
   } = useStore();
 
-  const [activeNetworkId, setActiveNetworkId] = useState(network.id);
+  const { updateNetwork } = endpoints;
+
+  const [activeNetwork, setActiveNetwork] = useState<Network | EmptyObj>(
+    network,
+  );
+  const [validationError, setValidationError] = useState<AnyObject>({});
+
   const [isDropdownActive, setIsDropdownActive] = useState(false);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
-  const { updateNetwork } = endpoints;
-
-  const initialCustomState = {
-    horizonUrl: network.id === "custom" ? network.horizonUrl : "",
-    rpcUrl: network.id === "custom" ? network.rpcUrl : "",
-    passphrase: network.id === "custom" ? network.passphrase : "",
-  };
-
-  const [customNetwork, setCustomNetwork] = useState(initialCustomState);
-  const [mainnetRpc, setMainnetRpc] = useState("");
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
-  const isSameNetwork = () => {
-    if (activeNetworkId === "custom") {
-      return (
-        network.horizonUrl &&
-        network.rpcUrl &&
-        network.passphrase &&
-        customNetwork.horizonUrl === network.horizonUrl &&
-        customNetwork.rpcUrl === network.rpcUrl &&
-        customNetwork.passphrase === network.passphrase
-      );
-    }
-
-    if (activeNetworkId === "mainnet") {
-      return (
-        network.horizonUrl &&
-        network.rpcUrl &&
-        network.passphrase &&
-        mainnetRpc === network.rpcUrl
-      );
-    }
-
-    return activeNetworkId === network.id;
-  };
+  const isSameNetwork =
+    activeNetwork.id === network.id &&
+    activeNetwork.horizonUrl === network.horizonUrl &&
+    activeNetwork.horizonHeaderName === network.horizonHeaderName &&
+    activeNetwork.horizonHeaderValue === network.horizonHeaderValue &&
+    activeNetwork.rpcUrl === network.rpcUrl &&
+    activeNetwork.rpcHeaderName === network.rpcHeaderName &&
+    activeNetwork.rpcHeaderValue === network.rpcHeaderValue &&
+    activeNetwork.passphrase === network.passphrase;
 
   const isNetworkUrlInvalid = (url: string) => {
     if (!url) {
@@ -79,47 +65,52 @@ export const NetworkSelector = () => {
     }
   };
 
-  const isSubmitDisabled =
-    isSameNetwork() ||
-    // custom network
-    (activeNetworkId === "custom" &&
-      !(customNetwork.horizonUrl && customNetwork.passphrase)) ||
-    Boolean(
-      customNetwork.horizonUrl && isNetworkUrlInvalid(customNetwork.horizonUrl),
-    ) ||
-    // mainnet ;
-    Boolean(
-      activeNetworkId === "mainnet" &&
-        Boolean(mainnetRpc && isNetworkUrlInvalid(mainnetRpc)),
-    );
-
-  const isCustomNetwork = activeNetworkId === "custom";
-  const isMainnetNetwork = activeNetworkId === "mainnet";
-
-  const setNetwork = useCallback(() => {
-    if (!network?.id) {
-      const defaultNetwork =
-        localStorageSavedNetwork.get() || getNetworkById("testnet");
-
-      if (defaultNetwork) {
-        selectNetwork(defaultNetwork);
-        setActiveNetworkId(defaultNetwork.id);
-      }
+  const isSubmitDisabled = () => {
+    if (isSameNetwork) {
+      return true;
     }
 
-    if (network.id === "mainnet") {
-      setMainnetRpc(network?.rpcUrl || "");
-    }
-  }, [network.id, network?.rpcUrl, selectNetwork]);
+    return !(activeNetwork.horizonUrl && activeNetwork.passphrase);
+  };
 
   // Set default network on launch
   useEffect(() => {
-    setNetwork();
-  }, [setNetwork]);
+    let defaultNetwork: Network | undefined;
+
+    if (network.id) {
+      const savedNetwork = localStorageSavedNetwork.get();
+
+      defaultNetwork = { ...(network as Network) };
+
+      // Get API keys from local storage if it's the same network
+      if (
+        savedNetwork &&
+        savedNetwork.id === network.id &&
+        savedNetwork.passphrase === network.passphrase &&
+        savedNetwork.horizonUrl === network.horizonUrl &&
+        savedNetwork.rpcUrl === network.rpcUrl
+      ) {
+        defaultNetwork = {
+          ...defaultNetwork,
+          horizonHeaderName: savedNetwork.horizonHeaderName || "",
+          rpcHeaderName: savedNetwork.rpcHeaderName || "",
+        };
+      }
+    } else {
+      defaultNetwork =
+        localStorageSavedNetwork.get() || getNetworkById("testnet");
+    }
+
+    if (defaultNetwork) {
+      setActiveNetwork(defaultNetwork);
+    }
+    // Not including network to avoid unnecessary re-renders
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (isDynamicNetworkSelect) {
-      setActiveNetworkId(network.id);
+      setActiveNetwork(network);
       localStorageSavedNetwork.set(network as Network);
     }
     // Not including network
@@ -150,14 +141,9 @@ export const NetworkSelector = () => {
       }
 
       toggleDropdown(false);
-      setActiveNetworkId(network.id);
-      setCustomNetwork({
-        horizonUrl: network.horizonUrl ?? "",
-        rpcUrl: network.rpcUrl ?? "",
-        passphrase: network.passphrase ?? "",
-      });
+      setActiveNetwork(network);
     },
-    [network.id, network.horizonUrl, network.rpcUrl, network.passphrase],
+    [network],
   );
 
   // Close dropdown when clicked outside
@@ -181,38 +167,48 @@ export const NetworkSelector = () => {
   ) => {
     event.preventDefault();
 
-    const networkData = getNetworkById(activeNetworkId);
+    const network = isEmptyObject(activeNetwork)
+      ? null
+      : (activeNetwork as Network);
 
-    if (networkData) {
-      const getData = () => {
-        if (isCustomNetwork) {
-          return { ...networkData, ...customNetwork };
-        }
-        if (isMainnetNetwork) {
-          return { ...networkData, rpcUrl: mainnetRpc };
-        }
-        return networkData;
+    if (network) {
+      // Update store (header values won't persist)
+      selectNetwork(network);
+      // Also update the network setting for endpoints
+      updateNetwork(network);
+      // Update local state
+      setActiveNetwork(network);
+
+      // Don't save header values in local storage
+      const savedNetwork: Network = {
+        ...network,
+        horizonHeaderValue: "",
+        rpcHeaderValue: "",
       };
+      // Update local storage
+      localStorageSavedNetwork.set(sanitizeObject(savedNetwork));
 
-      const latestData = getData();
-
-      selectNetwork(latestData);
-
-      // also update the network setting for endpoints
-      updateNetwork(latestData);
-
-      setCustomNetwork(
-        networkData.id === "custom" ? customNetwork : initialCustomState,
-      );
-      localStorageSavedNetwork.set(latestData);
+      // Close dropdown
       toggleDropdown(false);
       updateIsDynamicNetworkSelect(false);
     }
   };
 
-  const handleSelectActive = (networkId: NetworkType) => {
-    setActiveNetworkId(networkId);
-    setCustomNetwork(initialCustomState);
+  const handleInputChange = (param: string, value: string | undefined) => {
+    const _network = { ...activeNetwork } as Network;
+
+    setActiveNetwork({ ..._network, [param]: value });
+
+    if (["rpcUrl", "horizonUrl"].includes(param)) {
+      validateInputUrl(param, value);
+    }
+  };
+
+  const validateInputUrl = (param: string, value: string | undefined) => {
+    setValidationError({
+      ...validationError,
+      [param]: value ? isNetworkUrlInvalid(value) : false,
+    });
   };
 
   const getNetworkById = (networkId: NetworkType) => {
@@ -220,11 +216,11 @@ export const NetworkSelector = () => {
   };
 
   const getButtonLabel = () => {
-    if (activeNetworkId === "custom") {
+    if (activeNetwork.id === "custom") {
       return "Switch to Custom Network";
     }
 
-    return `Switch to ${getNetworkById(activeNetworkId)?.label}`;
+    return `Switch to ${getNetworkById(activeNetwork.id)?.label}`;
   };
 
   const toggleDropdown = (show: boolean) => {
@@ -248,23 +244,6 @@ export const NetworkSelector = () => {
       });
     }
   };
-
-  const getRpcValue = () => {
-    if (isCustomNetwork) {
-      return customNetwork.rpcUrl;
-    }
-    if (isMainnetNetwork) {
-      return mainnetRpc;
-    }
-    return getNetworkById(activeNetworkId)?.rpcUrl;
-  };
-
-  const horizonValue = isCustomNetwork
-    ? customNetwork.horizonUrl
-    : getNetworkById(activeNetworkId)?.horizonUrl;
-  const passphraseValue = isCustomNetwork
-    ? customNetwork.passphrase
-    : getNetworkById(activeNetworkId)?.passphrase;
 
   return (
     <div className="NetworkSelector">
@@ -292,14 +271,14 @@ export const NetworkSelector = () => {
               <div
                 key={op.id}
                 className="NetworkSelector__body__link"
-                data-is-active={op.id === activeNetworkId}
+                data-is-active={op.id === activeNetwork.id}
                 role="button"
-                onClick={() => handleSelectActive(op.id)}
+                onClick={() => setActiveNetwork(op)}
                 tabIndex={0}
                 data-testid="networkSelector-option"
               >
                 <NetworkIndicator networkId={op.id} networkLabel={op.label} />
-                {op.id === activeNetworkId ? (
+                {op.id === activeNetwork.id ? (
                   <div className="NetworkSelector__body__link__note">
                     Selected
                   </div>
@@ -309,7 +288,7 @@ export const NetworkSelector = () => {
           </div>
 
           <div className="NetworkSelector__body__inputs">
-            {activeNetworkId === "futurenet" ? (
+            {activeNetwork.id === "futurenet" ? (
               <Notification
                 variant="warning"
                 title="Warning"
@@ -321,76 +300,88 @@ export const NetworkSelector = () => {
             ) : null}
 
             <form onSubmit={handleSelectNetwork}>
-              <Input
+              {/* RPC */}
+              <NetworkInput
                 id="rpc-url"
-                fieldSize="sm"
                 label="RPC URL"
-                value={getRpcValue()}
-                title={getRpcValue()}
-                disabled={!isCustomNetwork && !isMainnetNetwork}
+                placeholder="RPC URL"
+                value={activeNetwork.rpcUrl || ""}
                 onChange={(e) => {
-                  if (isCustomNetwork) {
-                    setCustomNetwork({
-                      ...customNetwork,
-                      rpcUrl: e.target.value,
-                    });
-                  }
-                  if (isMainnetNetwork) {
-                    setMainnetRpc(e.target.value);
-                  }
+                  handleInputChange("rpcUrl", e.target.value);
                 }}
-                error={
-                  isMainnetNetwork
-                    ? isNetworkUrlInvalid(mainnetRpc)
-                    : isNetworkUrlInvalid(customNetwork.rpcUrl)
-                }
-                tabIndex={0}
-                copyButton={{
-                  position: "right",
-                }}
+                error={validationError?.rpcUrl}
               />
-              <Input
+              <NetworkInput
+                id="rpc-header-name"
+                placeholder="RPC Header Name (optional)"
+                value={activeNetwork.rpcHeaderName || ""}
+                onChange={(e) => {
+                  handleInputChange("rpcHeaderName", e.target.value);
+                }}
+                error={validationError?.rpcHeaderName}
+              />
+              <NetworkInput
+                id="rpc-header-value"
+                placeholder="RPC Header Value (optional)"
+                value={activeNetwork.rpcHeaderValue || ""}
+                onChange={(e) => {
+                  handleInputChange("rpcHeaderValue", e.target.value);
+                }}
+                error={validationError?.rpcHeaderValue}
+                disableAutocomplete={true}
+              />
+
+              {/* Horizon */}
+              <NetworkInput
                 id="network-url"
-                fieldSize="sm"
                 label="Horizon URL"
-                value={horizonValue}
-                title={horizonValue}
-                disabled={!isCustomNetwork}
-                onChange={(e) =>
-                  setCustomNetwork({
-                    ...customNetwork,
-                    horizonUrl: e.target.value,
-                  })
-                }
-                error={isNetworkUrlInvalid(customNetwork.horizonUrl)}
-                tabIndex={0}
-                copyButton={{
-                  position: "right",
+                placeholder="Horizon URL"
+                value={activeNetwork.horizonUrl || ""}
+                onChange={(e) => {
+                  handleInputChange("horizonUrl", e.target.value);
                 }}
+                error={validationError?.horizonUrl}
               />
-              <Input
+              <NetworkInput
+                id="network-header-name"
+                placeholder="Horizon Header Name (optional)"
+                value={activeNetwork.horizonHeaderName || ""}
+                onChange={(e) => {
+                  handleInputChange("horizonHeaderName", e.target.value);
+                }}
+                error={validationError?.horizonHeaderName}
+              />
+              <NetworkInput
+                id="network-header-value"
+                placeholder="Horizon Header Value (optional)"
+                value={activeNetwork.horizonHeaderValue || ""}
+                onChange={(e) => {
+                  handleInputChange("horizonHeaderValue", e.target.value);
+                }}
+                error={validationError?.horizonHeaderValue}
+                disableAutocomplete={true}
+              />
+
+              {/* Passphrase */}
+              <NetworkInput
                 id="network-passphrase"
-                fieldSize="sm"
                 label="Network Passphrase"
-                value={passphraseValue}
-                title={passphraseValue}
-                disabled={!isCustomNetwork}
-                onChange={(e) =>
-                  setCustomNetwork({
-                    ...customNetwork,
-                    passphrase: e.target.value,
-                  })
-                }
-                tabIndex={0}
-                copyButton={{
-                  position: "right",
+                placeholder="Network Passphrase"
+                value={activeNetwork.passphrase || ""}
+                onChange={(e) => {
+                  handleInputChange("passphrase", e.target.value);
                 }}
+                error={validationError?.passphrase}
+                disabled={["testnet", "mainnet", "futurenet"].includes(
+                  activeNetwork.id,
+                )}
               />
+
               <Button
                 size="sm"
                 variant="secondary"
                 type="submit"
-                disabled={isSubmitDisabled}
+                disabled={isSubmitDisabled()}
                 tabIndex={0}
                 data-testid="networkSelector-submit-button"
               >
@@ -401,5 +392,46 @@ export const NetworkSelector = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+type NetworkInputProps = {
+  id: string;
+  label?: string;
+  placeholder?: string;
+  value: string | undefined;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  error?: React.ReactNode;
+  disabled?: boolean;
+  disableAutocomplete?: boolean;
+};
+
+const NetworkInput = ({
+  id,
+  label,
+  placeholder,
+  value,
+  onChange,
+  error,
+  disabled,
+  disableAutocomplete,
+}: NetworkInputProps) => {
+  return (
+    <Input
+      id={id}
+      fieldSize="sm"
+      label={label}
+      placeholder={placeholder}
+      value={value}
+      title={value}
+      disabled={disabled}
+      onChange={onChange}
+      error={error}
+      tabIndex={0}
+      copyButton={{
+        position: "right",
+      }}
+      {...(disableAutocomplete ? { autoComplete: "off" } : {})}
+    />
   );
 };
