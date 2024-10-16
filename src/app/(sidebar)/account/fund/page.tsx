@@ -6,6 +6,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import { useFriendBot } from "@/query/useFriendBot";
 import { useStore } from "@/store/useStore";
+import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 
 import { validate } from "@/validate";
 
@@ -38,6 +39,7 @@ export default function FundAccount() {
     network,
     publicKey: generatedPublicKey,
     key: { type: "fund" },
+    headers: getNetworkHeaders(network, "horizon"),
   });
 
   const queryClient = useQueryClient();
@@ -61,7 +63,9 @@ export default function FundAccount() {
       networkRef.current = network;
       resetStates();
     }
-  }, [networkRef.current.id, network.id]);
+    // Not including network
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [networkRef.current.id, network.id, resetStates]);
 
   useEffect(() => {
     if (isError || isSuccess) {

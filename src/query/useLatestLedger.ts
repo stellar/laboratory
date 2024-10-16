@@ -1,12 +1,19 @@
+import { NetworkHeaders } from "@/types/types";
 import { SorobanRpc } from "@stellar/stellar-sdk";
 
 import { useQuery } from "@tanstack/react-query";
 
-export const useLatestLedger = ({ rpcUrl }: { rpcUrl: string }) => {
+export const useLatestLedger = ({
+  rpcUrl,
+  headers,
+}: {
+  rpcUrl: string;
+  headers: NetworkHeaders;
+}) => {
   const query = useQuery({
     queryKey: ["useLatestLedger"],
     queryFn: async () => {
-      const rpcServer = new SorobanRpc.Server(rpcUrl);
+      const rpcServer = new SorobanRpc.Server(rpcUrl, { headers });
 
       try {
         const latestLedger = await rpcServer.getLatestLedger();

@@ -25,6 +25,7 @@ import { useStore } from "@/store/useStore";
 import { useAccountSequenceNumber } from "@/query/useAccountSequenceNumber";
 import { validate } from "@/validate";
 import { EmptyObj, KeysOfUnion } from "@/types/types";
+import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 
 export const Params = () => {
   const requiredParams = ["source_account", "seq_num", "fee"] as const;
@@ -63,6 +64,7 @@ export const Params = () => {
   } = useAccountSequenceNumber({
     publicKey: txnParams.source_account,
     horizonUrl: network.horizonUrl,
+    headers: getNetworkHeaders(network, "horizon"),
   });
 
   // Preserve values and validate inputs when components mounts

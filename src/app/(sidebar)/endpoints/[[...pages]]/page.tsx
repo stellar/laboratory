@@ -35,6 +35,7 @@ import { arrayItem } from "@/helpers/arrayItem";
 import { delayedAction } from "@/helpers/delayedAction";
 import { buildEndpointHref } from "@/helpers/buildEndpointHref";
 import { shareableUrl } from "@/helpers/shareableUrl";
+import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 
 import { Routes } from "@/constants/routes";
 import {
@@ -278,12 +279,11 @@ export default function Endpoints() {
     refetch,
     isSuccess,
     isError,
-  } = useEndpoint(
+  } = useEndpoint({
     requestUrl,
-    // There is only one endpoint request for POST, using params directly for
-    // simplicity.
-    pageData?.requestMethod === "POST" ? getPostPayload() : undefined,
-  );
+    postData: pageData?.requestMethod === "POST" ? getPostPayload() : undefined,
+    headers: getNetworkHeaders(network, isRpcEndpoint ? "rpc" : "horizon"),
+  });
 
   const responseEl = useRef<HTMLDivElement | null>(null);
 
