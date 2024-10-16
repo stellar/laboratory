@@ -5,6 +5,7 @@ import { PrettyJson } from "@/components/PrettyJson";
 import { signatureHint } from "@/helpers/signatureHint";
 import { xdrUtils } from "@/helpers/xdr/utils";
 import { formatAmount } from "@/helpers/formatAmount";
+import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 
 import { useCheckTxSignatures } from "@/query/useCheckTxSignatures";
 import { useStore } from "@/store/useStore";
@@ -25,6 +26,7 @@ export const PrettyJsonTransaction = ({
     xdr,
     networkPassphrase: network.passphrase,
     networkUrl: network.horizonUrl,
+    headers: getNetworkHeaders(network, "horizon"),
   });
 
   const isTx = Boolean(json?.tx || json?.tx_fee_bump);

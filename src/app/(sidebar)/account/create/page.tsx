@@ -9,6 +9,7 @@ import { useFriendBot } from "@/query/useFriendBot";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { useIsTestingNetwork } from "@/hooks/useIsTestingNetwork";
+import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 
 import { GenerateKeypair } from "@/components/GenerateKeypair";
 import { ExpandBox } from "@/components/ExpandBox";
@@ -49,6 +50,7 @@ export default function CreateAccount() {
       network,
       publicKey: account.publicKey!,
       key: { type: "create" },
+      headers: getNetworkHeaders(network, "horizon"),
     });
 
   useEffect(() => {
@@ -62,7 +64,9 @@ export default function CreateAccount() {
       networkRef.current = network;
       resetStates();
     }
-  }, [networkRef.current.id, network.id]);
+    // Not including network
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [networkRef.current.id, network.id, resetStates]);
 
   const generateKeypair = () => {
     resetStates();

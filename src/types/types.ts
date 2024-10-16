@@ -32,6 +32,8 @@ export type Network = {
   passphrase: string;
 };
 
+export type NetworkHeaders = Record<string, string>;
+
 export type StatusPageComponent = {
   [key: string]: any;
   id: string;

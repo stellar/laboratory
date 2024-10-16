@@ -103,6 +103,11 @@ export const NetworkSelector = () => {
 
     if (defaultNetwork) {
       setActiveNetwork(defaultNetwork);
+
+      if (!network.id) {
+        selectNetwork(defaultNetwork);
+        updateNetwork(defaultNetwork);
+      }
     }
     // Not including network to avoid unnecessary re-renders
     // eslint-disable-next-line react-hooks/exhaustive-deps

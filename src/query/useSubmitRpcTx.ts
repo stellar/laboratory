@@ -1,12 +1,18 @@
 import { useMutation } from "@tanstack/react-query";
 import { SorobanRpc, TransactionBuilder } from "@stellar/stellar-sdk";
 import { delay } from "@/helpers/delay";
-import { SubmitRpcError, SubmitRpcResponse } from "@/types/types";
+import { isEmptyObject } from "@/helpers/isEmptyObject";
+import {
+  NetworkHeaders,
+  SubmitRpcError,
+  SubmitRpcResponse,
+} from "@/types/types";
 
 type SubmitRpcTxProps = {
   rpcUrl: string;
   transactionXdr: string;
   networkPassphrase: string;
+  headers: NetworkHeaders;
 };
 
 export const useSubmitRpcTx = () => {
@@ -19,13 +25,16 @@ export const useSubmitRpcTx = () => {
       rpcUrl,
       transactionXdr,
       networkPassphrase,
+      headers,
     }: SubmitRpcTxProps) => {
       try {
         const transaction = TransactionBuilder.fromXDR(
           transactionXdr,
           networkPassphrase,
         );
-        const rpcServer = new SorobanRpc.Server(rpcUrl);
+        const rpcServer = new SorobanRpc.Server(rpcUrl, {
+          headers: isEmptyObject(headers) ? undefined : { ...headers },
+        });
         const sentTx = await rpcServer.sendTransaction(transaction);
 
         if (sentTx.status !== "PENDING") {
