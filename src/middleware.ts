@@ -14,7 +14,7 @@ export function middleware(request: NextRequest) {
         : `'unsafe-inline'`
     };
     img-src 'self' https://stellar.creit.tech/wallet-icons/ blob: data:;
-    connect-src 'self' localhost:* https:;
+    connect-src 'self' http://localhost:* https:;
     font-src 'self' https://fonts.gstatic.com/;
     object-src 'none';
     frame-src 'self' https://connect.trezor.io/;
