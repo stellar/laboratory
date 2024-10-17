@@ -26,9 +26,12 @@ export const useSubmitHorizonTx = () => {
         transactionXdr,
         networkPassphrase,
       );
+
       const horizonServer = new Horizon.Server(horizonUrl, {
         headers: isEmptyObject(headers) ? undefined : { ...headers },
+        allowHttp: new URL(horizonUrl).hostname === "localhost",
       });
+
       return (await horizonServer.submitTransaction(
         transaction,
       )) as Horizon.HorizonApi.TransactionResponse;
