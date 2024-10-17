@@ -8,6 +8,7 @@ import { TransactionBuildParams } from "@/store/createStore";
 export type AnyObject = { [key: string]: any };
 export type EmptyObj = Record<PropertyKey, never>;
 export type ThemeColorType = "sds-theme-dark" | "sds-theme-light";
+export type LabSettings = Record<string, string>;
 
 // =============================================================================
 // Helpers
