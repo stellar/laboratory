@@ -1,7 +1,12 @@
+import { useContext } from "react";
+
 import { Box } from "@/components/layout/Box";
 import { SdsLink } from "@/components/SdsLink";
 import { InputSideElement } from "@/components/InputSideElement";
-import { PositiveIntPicker } from "./PositiveIntPicker";
+import { WindowContext } from "@/components/layout/LayoutContextProvider";
+import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
+
+import { formatEpochToDate } from "@/helpers/formatEpochToDate";
 
 type TimeBoundValue = {
   min_time: string;
@@ -27,6 +32,15 @@ export const TimeBoundsPicker = ({
   infoLink,
   infoText,
 }: TimeBoundsPickerProps) => {
+  const { layoutMode } = useContext(WindowContext);
+
+  const isDesktop = layoutMode === "desktop";
+
+  const minTime = value?.min_time?.toString() || "";
+  const maxTime = value?.max_time?.toString() || "";
+  const minDate = minTime ? formatEpochToDate(Number(minTime)) : null;
+  const maxDate = maxTime ? formatEpochToDate(Number(maxTime)) : null;
+
   return (
     <Box gap="sm">
       <Box gap="xs">
@@ -35,7 +49,7 @@ export const TimeBoundsPicker = ({
           label="Time Bounds"
           labelSuffix={labelSuffix}
           placeholder="Lower time bound unix timestamp. Ex: 1479151713"
-          value={value?.min_time?.toString() || ""}
+          value={minTime}
           error={error?.min_time ? `Lower time bound: ${error.min_time}` : ""}
           onChange={(e) => {
             onChange({
@@ -45,12 +59,14 @@ export const TimeBoundsPicker = ({
           }}
           infoLink={infoLink}
           infoText={infoText}
+          rightElement={isDesktop ? minDate : null}
+          note={!isDesktop ? minDate : null}
         />
         <PositiveIntPicker
           id={`${id}-max-time`}
           label=""
           placeholder="Upper time bound unix timestamp. Ex: 1479151713"
-          value={value?.max_time?.toString() || ""}
+          value={maxTime}
           error={error?.max_time ? `Upper time bound: ${error.max_time}` : ""}
           onChange={(e) => {
             onChange({
@@ -59,22 +75,28 @@ export const TimeBoundsPicker = ({
             });
           }}
           rightElement={
-            <InputSideElement
-              variant="button"
-              placement="right"
-              onClick={() => {
-                onChange({
-                  ...value,
-                  max_time: (
-                    Math.ceil(new Date().getTime() / 1000) +
-                    5 * 60
-                  ).toString(),
-                });
-              }}
-            >
-              Set to 5 min from now
-            </InputSideElement>
+            <>
+              {isDesktop && maxDate ? (
+                <span className="TimeBoundsDate">{maxDate}</span>
+              ) : null}
+              <InputSideElement
+                variant="button"
+                placement="right"
+                onClick={() => {
+                  onChange({
+                    ...value,
+                    max_time: (
+                      Math.ceil(new Date().getTime() / 1000) +
+                      5 * 60
+                    ).toString(),
+                  });
+                }}
+              >
+                Set to 5 min from now
+              </InputSideElement>
+            </>
           }
+          note={!isDesktop ? maxDate : null}
         />
       </Box>
       <Box gap="xs" addlClassName="FieldNote FieldNote--note FieldNote--md">
