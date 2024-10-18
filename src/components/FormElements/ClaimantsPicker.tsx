@@ -414,7 +414,7 @@ const PredicateTimeValue = ({
         <>
           <TextPicker
             id={`${index}-${parentPath}-time-value-abs`}
-            placeholder="Ex: 1603303504267"
+            placeholder="Ex: 1603303504"
             value={nodeValue}
             label="Time Value"
             onChange={handleUpdate}
@@ -429,7 +429,7 @@ const PredicateTimeValue = ({
         <>
           <PositiveIntPicker
             id={`${index}-${parentPath}-time-value-rel`}
-            placeholder="Ex: 1603303504267"
+            placeholder="Ex: 1603303504"
             value={nodeValue}
             label="Time Value"
             error={error?.[path]}
