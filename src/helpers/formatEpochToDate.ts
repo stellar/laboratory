@@ -9,7 +9,8 @@ export const formatEpochToDate = (epoch: number) => {
     minute: "numeric",
     second: "numeric",
     hourCycle: "h24",
-    timeZoneName: "longOffset",
+    timeZone: "utc",
+    timeZoneName: "short",
   });
 
   return dateTimeFormatter.format(date);
