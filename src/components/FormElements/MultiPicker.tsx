@@ -21,6 +21,8 @@ type MultiPickerProps = {
   autocomplete?: React.HTMLInputAutoCompleteAttribute;
   buttonLabel?: string;
   limit?: number;
+  useAutoAdd?: boolean;
+  note?: React.ReactNode;
 };
 
 export const MultiPicker = ({
@@ -34,6 +36,8 @@ export const MultiPicker = ({
   autocomplete,
   buttonLabel = "Add additional",
   limit,
+  useAutoAdd,
+  note,
 }: MultiPickerProps) => {
   if (!value || !value.length) {
     value = [];
@@ -54,7 +58,12 @@ export const MultiPicker = ({
                   id={`${id}-${index}`}
                   onChange={(e) => {
                     const val = arrayItem.update(value, index, e.target.value);
-                    return onChange([...val]);
+                    const isLastItem = index === value.length - 1;
+
+                    // If enabled, automatically add another signer if is last item
+                    return onChange(
+                      useAutoAdd && isLastItem ? [...val, ""] : [...val],
+                    );
                   }}
                   key={index}
                   value={singleVal}
@@ -79,20 +88,27 @@ export const MultiPicker = ({
               );
             })
           : null}
+        {note ? (
+          <div className="FieldNote FieldNote--note FieldNote--md">{note}</div>
+        ) : null}
       </>
-      <div>
-        <Button
-          disabled={value.length === limit}
-          size="md"
-          variant="tertiary"
-          onClick={(e) => {
-            e.preventDefault();
-            onChange([...value, ""]);
-          }}
-        >
-          {buttonLabel}
-        </Button>
-      </div>
+      <>
+        {!useAutoAdd ? (
+          <div>
+            <Button
+              disabled={value.length === limit}
+              size="md"
+              variant="tertiary"
+              onClick={(e) => {
+                e.preventDefault();
+                onChange([...value, ""]);
+              }}
+            >
+              {buttonLabel}
+            </Button>
+          </div>
+        ) : null}
+      </>
     </Box>
   );
 };

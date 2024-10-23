@@ -72,67 +72,53 @@ const buildFeeBumpTx = ({
   return result;
 };
 
-const signTx = ({
+const secretKeySignature = ({
   txXdr,
-  signers,
   networkPassphrase,
-  hardWalletSigs,
+  signers,
 }: {
   txXdr: string;
-  signers: string[];
   networkPassphrase: string;
-  hardWalletSigs: xdr.DecoratedSignature[] | [];
-}) => {
-  const validSecretKeys = [];
-  const validPreimages = [];
+  signers: string[];
+}): {
+  signature: xdr.DecoratedSignature[];
+  successMsg?: string;
+  errorMsg?: string;
+} => {
+  const tx = TransactionBuilder.fromXDR(txXdr, networkPassphrase);
+  const signature: xdr.DecoratedSignature[] = [];
 
+  // Validate secret keys
   for (let i = 0; i < signers.length; i++) {
     const signer = signers[i];
 
-    if (signer !== null && signer !== undefined && signer !== "") {
+    if (signer) {
       const error = validate.getSecretKeyError(signer);
 
       if (error) {
         return {
-          xdr: undefined,
-          message: error,
+          signature: [],
+          errorMsg: error,
         };
       }
 
-      if (!error) {
-        if (signer.charAt(0) === "S") {
-          // Secret keys
-          validSecretKeys.push(signer);
-        } else {
-          // Hash preimage
-          validPreimages.push(signer);
-        }
-      }
+      const keypair = Keypair.fromSecret(signer);
+      const decor = keypair.signDecorated(tx.hash());
+
+      signature.push(decor);
     }
   }
 
-  const newTx = TransactionBuilder.fromXDR(txXdr, networkPassphrase);
-  const existingSigs = newTx.signatures.length;
-  let addedSigs = 0;
-
-  validSecretKeys.forEach((signer) => {
-    addedSigs++;
-    newTx.sign(Keypair.fromSecret(signer));
-  });
-  validPreimages.forEach((signer) => {
-    addedSigs++;
-    newTx.signHashX(Buffer.from(signer, "hex"));
-  });
-  hardWalletSigs.forEach((signer) => {
-    addedSigs++;
-    newTx.signatures.push(signer);
-  });
+  if (signature.length === 0) {
+    return {
+      signature: [],
+      errorMsg: "No valid signatures were added",
+    };
+  }
 
   return {
-    xdr: newTx.toEnvelope().toXDR("base64"),
-    message: `${addedSigs} signature(s) added; ${
-      existingSigs + addedSigs
-    } signature(s) total`,
+    signature,
+    successMsg: `Successfully added ${signature.length} signature${signature.length == 1 ? "" : "s"}`,
   };
 };
 
@@ -268,9 +254,23 @@ const getTrezorDecoratedSignature = (
   return [decorated];
 };
 
+const extractLastSignature = ({
+  txXdr,
+  networkPassphrase,
+}: {
+  txXdr: string;
+  networkPassphrase: string;
+}) => {
+  const tx = TransactionBuilder.fromXDR(txXdr, networkPassphrase);
+  const lastSig = tx.signatures.slice(-1);
+
+  return lastSig.length === 1 ? lastSig : undefined;
+};
+
 export const txHelper = {
   buildFeeBumpTx,
-  signTx,
   signWithLedger,
   signWithTrezor,
+  extractLastSignature,
+  secretKeySignature,
 };
