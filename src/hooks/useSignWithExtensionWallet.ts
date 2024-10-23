@@ -97,6 +97,9 @@ export const useSignWithExtensionWallet = ({
             }
           }
         },
+        onClosed: () => {
+          setErrorMsg("The user closed the modal.");
+        },
       });
     }
   }, [
