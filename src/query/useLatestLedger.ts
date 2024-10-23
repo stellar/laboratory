@@ -13,7 +13,10 @@ export const useLatestLedger = ({
   const query = useQuery({
     queryKey: ["useLatestLedger"],
     queryFn: async () => {
-      const rpcServer = new SorobanRpc.Server(rpcUrl, { headers });
+      const rpcServer = new SorobanRpc.Server(rpcUrl, {
+        headers,
+        allowHttp: new URL(rpcUrl).hostname === "localhost",
+      });
 
       try {
         const latestLedger = await rpcServer.getLatestLedger();
