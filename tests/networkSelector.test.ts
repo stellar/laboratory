@@ -44,7 +44,7 @@ test.describe("Network selector", () => {
       .getByTestId("networkSelector-dropdown")
       .locator("#rpc-url");
     await expect(rpcField).toHaveValue("https://soroban-testnet.stellar.org");
-    await expect(rpcField).toBeDisabled();
+    await expect(rpcField).toBeEnabled();
 
     // Horizon URL
     const horizonUrlField = page
@@ -53,7 +53,7 @@ test.describe("Network selector", () => {
     await expect(horizonUrlField).toHaveValue(
       "https://horizon-testnet.stellar.org",
     );
-    await expect(horizonUrlField).toBeDisabled();
+    await expect(horizonUrlField).toBeEnabled();
 
     // Network Passphrase
     const networkPassphraseField = page
@@ -88,7 +88,7 @@ test.describe("Network selector", () => {
       .getByTestId("networkSelector-dropdown")
       .locator("#rpc-url");
     await expect(rpcField).toHaveValue("https://rpc-futurenet.stellar.org");
-    await expect(rpcField).toBeDisabled();
+    await expect(rpcField).toBeEnabled();
 
     // Horizon URL
     const horizonUrlField = page
@@ -97,7 +97,7 @@ test.describe("Network selector", () => {
     await expect(horizonUrlField).toHaveValue(
       "https://horizon-futurenet.stellar.org",
     );
-    await expect(horizonUrlField).toBeDisabled();
+    await expect(horizonUrlField).toBeEnabled();
 
     // Network Passphrase
     const networkPassphraseField = page

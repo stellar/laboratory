@@ -1,14 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchTxSignatures } from "@/helpers/fetchTxSignatures";
+import { NetworkHeaders } from "@/types/types";
 
 export const useCheckTxSignatures = ({
   xdr,
   networkPassphrase,
   networkUrl,
+  headers,
 }: {
   xdr: string;
   networkPassphrase: string;
   networkUrl: string;
+  headers: NetworkHeaders;
 }) => {
   const query = useQuery({
     queryKey: ["tx", "signatures"],
@@ -18,6 +21,7 @@ export const useCheckTxSignatures = ({
           txXdr: xdr,
           networkPassphrase,
           networkUrl,
+          headers,
         });
       } catch (e) {
         throw new Error(

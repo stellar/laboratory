@@ -6,6 +6,7 @@ import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 import { useLatestLedger } from "@/query/useLatestLedger";
 
 import { useStore } from "@/store/useStore";
+import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 
 interface LedgerSeqPickerProps {
   id: string;
@@ -37,6 +38,7 @@ export const LedgerSeqPicker = ({
     isLoading,
   } = useLatestLedger({
     rpcUrl: network.rpcUrl,
+    headers: getNetworkHeaders(network, "rpc"),
   });
 
   useEffect(() => {

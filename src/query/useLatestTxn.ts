@@ -1,12 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
+import { NetworkHeaders } from "@/types/types";
 
-export const useLatestTxn = (horizonUrl: string) => {
+export const useLatestTxn = (horizonUrl: string, headers: NetworkHeaders) => {
   const query = useQuery({
     queryKey: ["xdr", "latestTxn"],
     queryFn: async () => {
       try {
         const request = await fetch(
           `${horizonUrl}/transactions?limit=1&order=desc`,
+          { headers },
         );
         const requestResponse = await request.json();
 
