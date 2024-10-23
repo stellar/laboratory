@@ -3,5 +3,11 @@
 .TxResponse {
   &__value {
     margin-left: var(--sds-gap-sm);
+
+    .Link {
+      --Link-color-default: var(--sds-clr-gray-12);
+      word-break: break-all;
+      font-weight: var(--sds-fw-regular);
+    }
   }
 }

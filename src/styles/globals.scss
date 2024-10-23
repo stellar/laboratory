@@ -640,6 +640,10 @@
   }
 }
 
+.TimeBoundsDate {
+  padding-right: pxToRem(10px);
+}
+
 // Create claimable balance
 .PredicateTypeWrapper {
   .PredicateWrapper {
@@ -883,6 +887,14 @@
     }
   }
 
+  &__note {
+    font-weight: var(--sds-fw-medium) !important;
+  }
+
+  &__hardwareDropdown {
+    min-width: pxToRem(190px);
+  }
+
   &__Signs {
     display: flex;
     flex-direction: column;
@@ -908,14 +920,6 @@
     }
     input {
       flex-shrink: 1;
-    }
-    .Input__side-element {
-      flex: 1 0;
-      min-width: pxToRem(190px);
-
-      &:has(.MultiPicker__delete) {
-        flex: 0;
-      }
     }
   }
   .Input__buttons {
