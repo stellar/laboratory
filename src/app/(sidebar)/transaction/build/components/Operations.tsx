@@ -1170,7 +1170,9 @@ export const Operations = () => {
                 disabled={!txnXdr}
               ></Button>
 
-              <ShareUrlButton shareableUrl={shareableUrl("transactions")} />
+              <ShareUrlButton
+                shareableUrl={shareableUrl("transactions-build")}
+              />
             </Box>
 
             <Button
