@@ -15,11 +15,11 @@ import { useStore } from "@/store/useStore";
 import * as StellarXdr from "@/helpers/StellarXdr";
 import { delayedAction } from "@/helpers/delayedAction";
 import { openUrl } from "@/helpers/openUrl";
+import { getBlockExplorerLink } from "@/helpers/getBlockExplorerLink";
+import { localStorageSubmitMethod } from "@/helpers/localStorageSubmitMethod";
 
 import { Routes } from "@/constants/routes";
 import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
-
-import { getBlockExplorerLink } from "@/helpers/getBlockExplorerLink";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { useScrollIntoView } from "@/hooks/useScrollIntoView";
@@ -54,6 +54,8 @@ const SUBMIT_OPTIONS = [
       "Submit the transaction via the Horizon API. Does not support Soroban transactions that need simulating.",
   },
 ];
+
+const SETTING_KEY = "submitMethod";
 
 export default function SubmitTransaction() {
   const { network, xdr, transaction } = useStore();
@@ -111,7 +113,14 @@ export default function SubmitTransaction() {
 
   // Set default submit method
   useEffect(() => {
-    setSubmitMethod(isRpcAvailable ? "rpc" : "horizon");
+    const localStorageMethod = localStorageSubmitMethod.get(SETTING_KEY);
+
+    if (localStorageMethod) {
+      setSubmitMethod(localStorageMethod);
+    } else {
+      setSubmitMethod(isRpcAvailable ? "rpc" : "horizon");
+    }
+
     resetSubmitState();
     // Not including resetSubmitState
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -481,6 +490,11 @@ export default function SubmitTransaction() {
                           setSubmitMethod(s.id);
                           toggleDropdown(false);
                           resetSubmitState();
+
+                          localStorageSubmitMethod.set({
+                            key: SETTING_KEY,
+                            value: s.id,
+                          });
                         }}
                       >
                         <div className="SubmitTx__floater__item__title">
