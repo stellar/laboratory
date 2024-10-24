@@ -1,7 +1,7 @@
-import { stringify } from "zustand-querystring";
+import { stringify, parse } from "zustand-querystring";
 import { Routes } from "@/constants/routes";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
-import { sanitizeArray } from "@/helpers/sanitizeArray";
+import { Store } from "@/store/createStore";
 import { AnyObject } from "@/types/types";
 
 export const buildEndpointHref = (
@@ -12,30 +12,30 @@ export const buildEndpointHref = (
     return "";
   }
 
-  const SPLIT_CHAR = ";&";
-  const END_CHAR = ";;";
+  const trimmedSearch = window.location.search.substring(3);
+  const parsedParams = parse(trimmedSearch) as Store;
 
-  const storeParams = window.location.search
-    .replace(END_CHAR, "")
-    .split(SPLIT_CHAR)
-    .map((i) => {
-      // Remove existing Endpoints or XDR params
-      if (i.startsWith("endpoints$") || i.startsWith("xdr$")) {
-        return "";
-      }
+  const buildParams = Object.entries(parsedParams).reduce((res, cur) => {
+    const [key, value] = cur;
 
-      return i;
-    });
+    // Only need to keep network params
+    if (key === "network") {
+      return { ...res, [key]: value };
+    }
 
-  // Add XDR params
-  if (route.startsWith("/xdr")) {
-    storeParams.push(`xdr$${stringify(params)}`);
-  }
+    return res;
+  }, {} as AnyObject);
 
-  // Add Endpoints params
+  // Endpoints params
   if (route.startsWith("/endpoints") && !isEmptyObject(params)) {
-    storeParams.push(`endpoints$params$${stringify(params)}`);
+    // Endpoints params need a "params" key
+    buildParams["endpoints"] = { params };
   }
 
-  return `${route}${sanitizeArray(storeParams).join(SPLIT_CHAR)}${END_CHAR}`;
+  // XDR params
+  if (route.startsWith("/xdr")) {
+    buildParams["xdr"] = params;
+  }
+
+  return `${route}?$=${stringify(buildParams)};;`;
 };
