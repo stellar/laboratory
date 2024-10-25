@@ -9,7 +9,7 @@ TAG ?= stellar/laboratory:$(LABEL)
 BUILD_DATE := $(shell date -u +%FT%TZ)
 
 docker-build:
-	$(SUDO) docker build --pull --label org.opencontainers.image.created="$(BUILD_DATE)" -t $(TAG) --build-arg=NEXT_PUBLIC_COMMIT_HASH="$(shell git rev-parse --short HEAD)" .
+	$(SUDO) docker build --pull --label org.opencontainers.image.created="$(BUILD_DATE)" -t $(TAG) --build-arg=NEXT_PUBLIC_COMMIT_HASH="$(shell git rev-parse --short HEAD)" --build-arg=NEXT_PUBLIC_AMPLITUDE_API_KEY_3="$(NEXT_PUBLIC_AMPLITUDE_API_KEY)" .
 
 docker-push:
 	$(SUDO) docker push $(TAG)

@@ -8,9 +8,18 @@ import { LayoutHeader } from "@/components/layout/LayoutHeader";
 
 export const LayoutMain = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
-    Object.entries(process.env).forEach((env) => {
-      console.log(">>> env: ", env);
-    });
+    console.log(
+      ">>> process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY_1: ",
+      process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY_1,
+    );
+    console.log(
+      ">>> process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY_2: ",
+      process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY_2,
+    );
+    console.log(
+      ">>> process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY_3: ",
+      process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY_3,
+    );
   }, []);
 
   return (

@@ -6,6 +6,10 @@ WORKDIR /app
 COPY . .
 # Passing env var to be used on client side
 ARG NEXT_PUBLIC_COMMIT_HASH
+# Setting env var
+ENV NEXT_PUBLIC_AMPLITUDE_API_KEY_1 $NEXT_PUBLIC_AMPLITUDE_API_KEY
+# Hard coding value here works on the client
+ENV NEXT_PUBLIC_AMPLITUDE_API_KEY_2 123
 
 RUN yarn install
 RUN yarn build
