@@ -17,8 +17,8 @@ export const LayoutMain = ({ children }: { children: ReactNode }) => {
       process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY_2,
     );
     console.log(
-      ">>> process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY_3: ",
-      process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY_3,
+      ">>> process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY: ",
+      process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY,
     );
   }, []);
 
