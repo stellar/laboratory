@@ -24,6 +24,7 @@ type MultiPickerProps = {
   limit?: number;
   useAutoAdd?: boolean;
   note?: React.ReactNode;
+  isPassword?: boolean;
 };
 
 export const MultiPicker = ({
@@ -39,6 +40,7 @@ export const MultiPicker = ({
   limit,
   useAutoAdd,
   note,
+  isPassword,
 }: MultiPickerProps) => {
   if (!value || !value.length) {
     value = [];
@@ -85,6 +87,7 @@ export const MultiPicker = ({
                       />
                     ) : null
                   }
+                  isPassword={isPassword}
                 />
               );
             })

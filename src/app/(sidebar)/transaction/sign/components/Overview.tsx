@@ -678,6 +678,7 @@ export const Overview = () => {
                 autocomplete="off"
                 useAutoAdd
                 note="Paste a secret key to add an additional signer"
+                isPassword
               />
               <SignTxButton
                 onSign={() => {
