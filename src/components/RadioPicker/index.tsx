@@ -1,5 +1,5 @@
 import React from "react";
-import { Label } from "@stellar/design-system";
+import { LabelHeading } from "@/components/LabelHeading";
 import "./styles.scss";
 
 interface RadioPickerProps<TOptionValue = string> {
@@ -38,15 +38,14 @@ export const RadioPicker = <TOptionValue,>({
   return (
     <div className="RadioPicker" style={customStyle}>
       {label ? (
-        <Label
+        <LabelHeading
           size="md"
-          htmlFor=""
           labelSuffix={labelSuffix}
           infoLink={infoLink}
           infoText={infoText}
         >
           {label}
-        </Label>
+        </LabelHeading>
       ) : null}
       <div className="RadioPicker__options">
         {options.map((o) => {

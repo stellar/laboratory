@@ -62,6 +62,8 @@ export default function CreateAccount() {
       networkRef.current = network;
       resetStates();
     }
+    // Not including network and resetStates()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [networkRef.current.id, network.id]);
 
   const generateKeypair = () => {
