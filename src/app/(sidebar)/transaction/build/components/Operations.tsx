@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, Fragment, useEffect, useState } from "react";
 import {
   Badge,
   Button,
@@ -8,6 +8,7 @@ import {
   Icon,
   Select,
   Notification,
+  Input,
 } from "@stellar/design-system";
 
 import { formComponentTemplateTxnOps } from "@/components/formComponentTemplateTxnOps";
@@ -21,6 +22,7 @@ import { arrayItem } from "@/helpers/arrayItem";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { sanitizeObject } from "@/helpers/sanitizeObject";
 import { shareableUrl } from "@/helpers/shareableUrl";
+import { getClaimableBalanceIdFromXdr } from "@/helpers/getClaimableBalanceIdFromXdr";
 
 import { OP_SET_TRUST_LINE_FLAGS } from "@/constants/settings";
 import { TRANSACTION_OPERATIONS } from "@/constants/transactionOperations";
@@ -38,7 +40,7 @@ import {
 } from "@/types/types";
 
 export const Operations = () => {
-  const { transaction } = useStore();
+  const { transaction, network } = useStore();
   const { operations: txnOperations, xdr: txnXdr } = transaction.build;
   const {
     updateBuildOperations,
@@ -900,6 +902,31 @@ export const Operations = () => {
     );
   };
 
+  const renderClaimableBalanceId = (opIndex: number) => {
+    const balanceId = getClaimableBalanceIdFromXdr({
+      xdr: txnXdr,
+      networkPassphrase: network.passphrase,
+      opIndex,
+    });
+
+    if (!balanceId) {
+      return null;
+    }
+
+    return (
+      <Input
+        id={`${opIndex}-create_claimable_balance`}
+        label="Claimable Balance ID"
+        labelSuffix="generated"
+        fieldSize="md"
+        value={balanceId}
+        disabled
+        copyButton={{ position: "right" }}
+        infoLink="https://developers.stellar.org/docs/learn/glossary#claimablebalanceid"
+      />
+    );
+  };
+
   return (
     <Box gap="md">
       <Card>
@@ -986,19 +1013,25 @@ export const Operations = () => {
                               },
                             });
                           case "claimants":
-                            return component.render({
-                              ...baseProps,
-                              onChange: (
-                                claimants: AnyObject[] | undefined,
-                              ) => {
-                                handleOperationParamChange({
-                                  opIndex: idx,
-                                  opParam: input,
-                                  opValue: claimants,
-                                  opType: op.operation_type,
-                                });
-                              },
-                            });
+                            return (
+                              <Fragment key={`op-${idx}-claimants-wrapper`}>
+                                {component.render({
+                                  ...baseProps,
+                                  onChange: (
+                                    claimants: AnyObject[] | undefined,
+                                  ) => {
+                                    handleOperationParamChange({
+                                      opIndex: idx,
+                                      opParam: input,
+                                      opValue: claimants,
+                                      opType: op.operation_type,
+                                    });
+                                  },
+                                })}
+
+                                {renderClaimableBalanceId(idx)}
+                              </Fragment>
+                            );
                           case "line":
                             return component.render({
                               ...baseProps,
