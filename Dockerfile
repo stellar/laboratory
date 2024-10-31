@@ -4,6 +4,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 ENV PORT 80
 WORKDIR /app
 COPY . .
+ARG NEXT_PUBLIC_AMPLITUDE_API_KEY
 # Passing env var to be used on client side
 ARG NEXT_PUBLIC_COMMIT_HASH
 # Setting env var
