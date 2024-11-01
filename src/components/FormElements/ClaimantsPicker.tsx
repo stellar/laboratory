@@ -1,4 +1,4 @@
-import { Badge, Button, Icon, Label } from "@stellar/design-system";
+import { Badge, Button, Icon } from "@stellar/design-system";
 import { flatten, isEmpty, set } from "lodash";
 
 import { RadioPicker } from "@/components/RadioPicker";
@@ -7,6 +7,7 @@ import { Box } from "@/components/layout/Box";
 import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
 import { TextPicker } from "@/components/FormElements/TextPicker";
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
+import { LabelHeading } from "@/components/LabelHeading";
 
 import { arrayItem } from "@/helpers/arrayItem";
 import { AnyObject } from "@/types/types";
@@ -28,9 +29,7 @@ export const ClaimantsPicker = ({
 
   return (
     <Box gap="md">
-      <Label size="md" htmlFor="">
-        Claimants
-      </Label>
+      <LabelHeading size="md">Claimants</LabelHeading>
 
       <>
         {hasClaimants ? (
@@ -256,9 +255,9 @@ const Predicate = ({
 
   return (
     <Box gap="sm" addlClassName="PredicateWrapper">
-      <Label size="md" htmlFor="">
+      <LabelHeading size="md">
         {`${getParentLabel(parentPath)}${label}`}
-      </Label>
+      </LabelHeading>
 
       <RadioPicker
         id={`${parentId}-${index}-${parentPath}-predicate`}

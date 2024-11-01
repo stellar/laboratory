@@ -1,6 +1,6 @@
-import { Label } from "@stellar/design-system";
 import { PrettyJson } from "@/components/PrettyJson";
 import { Box } from "@/components/layout/Box";
+import { LabelHeading } from "@/components/LabelHeading";
 import { AnyObject } from "@/types/types";
 import "./styles.scss";
 
@@ -13,9 +13,7 @@ export const PrettyJsonTextarea = ({
 }) => {
   return (
     <Box gap="sm" addlClassName="PrettyJsonTextarea">
-      <Label htmlFor="" size="md">
-        {label}
-      </Label>
+      <LabelHeading size="md">{label}</LabelHeading>
       <div className="PrettyJsonTextarea__json">
         <PrettyJson json={json} isCollapsible={false} />
       </div>

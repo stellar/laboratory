@@ -35,6 +35,7 @@ import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { TxResponse } from "@/components/TxResponse";
 import { SaveTransactionModal } from "@/components/SaveTransactionModal";
 import { SdsLink } from "@/components/SdsLink";
+import { TransactionHashReadOnlyField } from "@/components/TransactionHashReadOnlyField";
 
 import {
   HorizonErrorResponse,
@@ -480,6 +481,11 @@ export default function SubmitTransaction() {
             }}
             note="Enter a base-64 encoded XDR blob to decode."
             hasCopyButton
+          />
+
+          <TransactionHashReadOnlyField
+            xdr={xdr.blob}
+            networkPassphrase={network.passphrase}
           />
 
           <Box

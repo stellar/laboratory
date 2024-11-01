@@ -196,7 +196,7 @@ export const LayoutHeader = () => {
             id="mobile-nav"
             fieldSize="md"
             onChange={handleNavChange}
-            value={pathname}
+            value={pathname || undefined}
           >
             {renderNav()}
           </Select>

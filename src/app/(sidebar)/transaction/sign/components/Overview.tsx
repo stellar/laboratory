@@ -1,14 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  Card,
-  Icon,
-  Text,
-  Button,
-  Select,
-  Label,
-} from "@stellar/design-system";
+import { Card, Icon, Text, Button, Select } from "@stellar/design-system";
 import {
   FeeBumpTransaction,
   Transaction,
@@ -40,6 +33,7 @@ import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { ViewInXdrButton } from "@/components/ViewInXdrButton";
 import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
+import { LabelHeading } from "@/components/LabelHeading";
 
 const MIN_LENGTH_FOR_FULL_WIDTH_FIELD = 30;
 
@@ -684,6 +678,7 @@ export const Overview = () => {
                 autocomplete="off"
                 useAutoAdd
                 note="Paste a secret key to add an additional signer"
+                isPassword
               />
               <SignTxButton
                 onSign={() => {
@@ -769,9 +764,7 @@ export const Overview = () => {
             </Box>
 
             <Box gap="md" addlClassName="PageBody__content">
-              <Label size="md" htmlFor="">
-                Sign with wallet extension
-              </Label>
+              <LabelHeading size="md">Sign with wallet extension</LabelHeading>
 
               <SignTxButton
                 label={`Sign with ${account.walletKitPubKey ? shortenStellarAddress(account.walletKitPubKey) : "wallet"}`}
@@ -790,9 +783,7 @@ export const Overview = () => {
             </Box>
 
             <Box gap="md" addlClassName="PageBody__content">
-              <Label size="md" htmlFor="">
-                Add a signature
-              </Label>
+              <LabelHeading size="md">Add a signature</LabelHeading>
 
               <>
                 {sigInputs.map((_, idx) => (
