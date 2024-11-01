@@ -52,7 +52,7 @@ export const MainNav = () => {
       return false;
     }
 
-    return pathname.split("/")[1] === link.split("/")[1];
+    return pathname?.split("/")[1] === link.split("/")[1];
   };
 
   const NavItem = ({ link }: { link: NavLink }) => (

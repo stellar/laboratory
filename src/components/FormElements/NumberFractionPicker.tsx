@@ -1,8 +1,8 @@
-import { Label } from "@stellar/design-system";
 import { Box } from "@/components/layout/Box";
 import { RadioPicker } from "@/components/RadioPicker";
 import { ExpandBox } from "@/components/ExpandBox";
 import { TextPicker } from "@/components/FormElements/TextPicker";
+import { LabelHeading } from "@/components/LabelHeading";
 
 import { FractionValue, NumberFractionValue } from "@/types/types";
 
@@ -105,9 +105,9 @@ export const NumberFractionPicker = ({
 
   return (
     <Box gap="sm">
-      <Label size="md" labelSuffix={labelSuffix} htmlFor="">
+      <LabelHeading size="md" labelSuffix={labelSuffix}>
         {label}
-      </Label>
+      </LabelHeading>
       <RadioPicker
         id={id}
         selectedOption={value?.type}

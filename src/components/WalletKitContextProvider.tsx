@@ -36,6 +36,8 @@ export const WalletKitContextProvider = ({
     if (savedTheme) {
       setTheme(savedTheme);
     }
+    // Run only when component mounts
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const walletKitInstance = useMemo(() => {

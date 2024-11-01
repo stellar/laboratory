@@ -57,11 +57,11 @@ import { EndpointsJsonResponse } from "../components/EndpointsJsonResponse";
 
 export default function Endpoints() {
   const pathname = usePathname();
-  const isRpcEndpoint = pathname.includes(Routes.ENDPOINTS_RPC);
-  const currentPage = pathname.split(Routes.ENDPOINTS)?.[1];
+  const isRpcEndpoint = pathname?.includes(Routes.ENDPOINTS_RPC);
+  const currentPage = pathname?.split(Routes.ENDPOINTS)?.[1];
 
   const horizonPage = ENDPOINTS_PAGES_HORIZON.navItems
-    .find((page) => pathname.includes(page.route))
+    .find((page) => pathname?.includes(page.route))
     ?.nestedItems?.find((i) => i.route === pathname);
 
   const rpcPage = ENDPOINTS_PAGES_RPC.navItems.find(
@@ -141,7 +141,7 @@ export default function Endpoints() {
     return [
       Routes.ENDPOINTS_TRANSACTIONS_POST.toString(),
       Routes.ENDPOINTS_TRANSACTIONS_POST_ASYNC.toString(),
-    ].includes(pathname);
+    ].includes(pathname || "");
   };
 
   const getRpcPostPayloadProps = (endpoint: string) => {
@@ -261,7 +261,7 @@ export default function Endpoints() {
         payload = { tx: params.tx ?? "" };
       }
 
-      if (isRpcEndpoint) {
+      if (isRpcEndpoint && pathname) {
         payload = getRpcPostPayloadProps(pathname);
       }
     }
@@ -603,7 +603,7 @@ export default function Endpoints() {
         renderedProps = { tx: params.tx ?? "" };
       }
 
-      if (isRpcEndpoint) {
+      if (isRpcEndpoint && pathname) {
         renderedProps = getRpcPostPayloadProps(pathname);
       }
     }
