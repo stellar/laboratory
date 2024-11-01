@@ -10,12 +10,13 @@ import {
   Button,
   Icon,
   CopyText,
+  Input,
 } from "@stellar/design-system";
+import { TransactionBuilder } from "@stellar/stellar-sdk";
 import { useQueryClient } from "@tanstack/react-query";
 import { stringify } from "lossless-json";
 
 import { useLatestTxn } from "@/query/useLatestTxn";
-import * as StellarXdr from "@/helpers/StellarXdr";
 import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
 
 import { Box } from "@/components/layout/Box";
@@ -25,10 +26,12 @@ import { XdrTypeSelect } from "@/components/XdrTypeSelect";
 import { PrettyJsonTransaction } from "@/components/PrettyJsonTransaction";
 import { TransactionHashReadOnlyField } from "@/components/TransactionHashReadOnlyField";
 
+import * as StellarXdr from "@/helpers/StellarXdr";
 import { parseToLosslessJson } from "@/helpers/parseToLosslessJson";
+import { delayedAction } from "@/helpers/delayedAction";
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { useStore } from "@/store/useStore";
-import { delayedAction } from "@/helpers/delayedAction";
+import { LabelHeading } from "@/components/LabelHeading";
 
 export default function ViewXdr() {
   const { xdr, network } = useStore();
@@ -77,6 +80,9 @@ export default function ViewXdr() {
   };
 
   const xdrJsonDecoded = xdrDecodeJson();
+  const txn = xdrJsonDecoded?.jsonString
+    ? TransactionBuilder.fromXDR(xdr.blob, network.passphrase)
+    : null;
 
   const prettifyJsonString = (jsonString: string): string => {
     try {
@@ -85,6 +91,60 @@ export default function ViewXdr() {
     } catch (e) {
       return jsonString;
     }
+  };
+
+  const renderClaimableBalanceIds = () => {
+    if (!txn) {
+      return null;
+    }
+
+    const createClaimableBalanceIds = txn.operations.reduce(
+      (res, curOp, curIdx) => {
+        if (curOp.type === "createClaimableBalance") {
+          return [
+            ...res,
+            { opIdx: curIdx, cbId: (txn as any).getClaimableBalanceId(curIdx) },
+          ];
+        }
+
+        return res;
+      },
+      [] as { opIdx: number; cbId: string }[],
+    );
+
+    if (createClaimableBalanceIds.length > 0) {
+      const labelText =
+        createClaimableBalanceIds.length === 1
+          ? "a Create Claimable Balance operation"
+          : "Create Claimable Balance operations";
+
+      const idText = createClaimableBalanceIds.length === 1 ? "ID" : "IDs";
+
+      return (
+        <Box gap="sm">
+          <LabelHeading size="md">{`This transaction contains ${labelText} with the following ${idText}`}</LabelHeading>
+          <>
+            {createClaimableBalanceIds.map((op) => {
+              const id = `view-xdr-ccb-op-${op.cbId}`;
+
+              return (
+                <Input
+                  key={id}
+                  id={id}
+                  fieldSize="md"
+                  value={op.cbId}
+                  disabled
+                  copyButton={{ position: "right" }}
+                  leftElement={`Operation ${op.opIdx}`}
+                />
+              );
+            })}
+          </>
+        </Box>
+      );
+    }
+
+    return null;
   };
 
   return (
@@ -171,6 +231,8 @@ export default function ViewXdr() {
           <>
             {xdrJsonDecoded?.jsonString ? (
               <Box gap="lg">
+                <>{renderClaimableBalanceIds()}</>
+
                 <div className="PageBody__content PageBody__scrollable">
                   <PrettyJsonTransaction
                     json={parseToLosslessJson(xdrJsonDecoded.jsonString)}
