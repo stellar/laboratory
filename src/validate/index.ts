@@ -11,6 +11,7 @@ import { getContractIdError } from "./methods/getContractIdError";
 import { getDataNameError } from "./methods/getDataNameError";
 import { getDataValueError } from "./methods/getDataValueError";
 import { getEventsFiltersError } from "./methods/getEventsFiltersError";
+import { getHomeDomainError } from "./methods/getHomeDomainError";
 import { getMemoError } from "./methods/getMemoError";
 import { getNumberFractionError } from "./methods/getNumberFractionError";
 import { getOptionsSignerError } from "./methods/getOptionsSignerError";
@@ -37,6 +38,7 @@ export const validate = {
   getDataNameError,
   getDataValueError,
   getEventsFiltersError,
+  getHomeDomainError,
   getMemoError,
   getNumberFractionError,
   getOptionsSignerError,

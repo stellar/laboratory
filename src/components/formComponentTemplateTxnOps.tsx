@@ -355,7 +355,7 @@ export const formComponentTemplateTxnOps = ({
             infoLink="https://developers.stellar.org/docs/glossary#home-domain"
           />
         ),
-        validate: null,
+        validate: validate.getHomeDomainError,
       };
     case "inflation_dest":
       return {
