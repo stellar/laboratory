@@ -1,12 +1,13 @@
 import React from "react";
 
-import { Button, Icon, Label } from "@stellar/design-system";
+import { Button, Icon } from "@stellar/design-system";
 
 import { arrayItem } from "@/helpers/arrayItem";
 
 import { TextPicker } from "@/components/FormElements/TextPicker";
 import { Box } from "@/components/layout/Box";
 import { InputSideElement } from "@/components/InputSideElement";
+import { LabelHeading } from "@/components/LabelHeading";
 
 type Values = string[];
 
@@ -23,6 +24,7 @@ type MultiPickerProps = {
   limit?: number;
   useAutoAdd?: boolean;
   note?: React.ReactNode;
+  isPassword?: boolean;
 };
 
 export const MultiPicker = ({
@@ -38,6 +40,7 @@ export const MultiPicker = ({
   limit,
   useAutoAdd,
   note,
+  isPassword,
 }: MultiPickerProps) => {
   if (!value || !value.length) {
     value = [];
@@ -45,9 +48,9 @@ export const MultiPicker = ({
 
   return (
     <Box gap="sm">
-      <Label htmlFor="" size="md" labelSuffix={labelSuffix}>
+      <LabelHeading size="md" labelSuffix={labelSuffix}>
         {label}
-      </Label>
+      </LabelHeading>
       <>
         {value.length
           ? value.map((singleVal: string, index: number) => {
@@ -84,6 +87,7 @@ export const MultiPicker = ({
                       />
                     ) : null
                   }
+                  isPassword={isPassword}
                 />
               );
             })

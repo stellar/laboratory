@@ -19,8 +19,8 @@ export default function CliSignTransaction() {
   const router = useRouter();
 
   useEffect(() => {
-    const networkPassphrase = searchParams.get("networkPassphrase");
-    const xdr = searchParams.get("xdr");
+    const networkPassphrase = searchParams?.get("networkPassphrase");
+    const xdr = searchParams?.get("xdr");
 
     if (networkPassphrase) {
       const network = getNetworkByPassphrase(networkPassphrase);
@@ -36,6 +36,8 @@ export default function CliSignTransaction() {
     }
 
     router.push(Routes.SIGN_TRANSACTION);
+    // Not including other deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transaction.sign.importXdr, network.id]);
 
   return <Loader />;

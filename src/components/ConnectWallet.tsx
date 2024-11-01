@@ -37,6 +37,8 @@ export const ConnectWallet = () => {
     return () => {
       walletKitInstance.walletKit?.removeButton({ skipDisconnect: true });
     };
+    // Run only when component mounts
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <div className="ConnectWallet" ref={responseSuccessEl}></div>;

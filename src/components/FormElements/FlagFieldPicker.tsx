@@ -1,6 +1,6 @@
-import { Label } from "@stellar/design-system";
 import { arrayItem } from "@/helpers/arrayItem";
 import { optionsFlagDetails } from "@/helpers/optionsFlagDetails";
+import { LabelHeading } from "@/components/LabelHeading";
 import { OptionFlag } from "@/types/types";
 
 interface FlagFieldProps {
@@ -35,15 +35,14 @@ export const FlagFieldPicker = ({
   return (
     <div className="RadioPicker">
       {label ? (
-        <Label
+        <LabelHeading
           size="md"
-          htmlFor=""
           labelSuffix={labelSuffix}
           infoLink={infoLink}
           infoText={infoText}
         >
           {label}
-        </Label>
+        </LabelHeading>
       ) : null}
       <div className="RadioPicker__options">
         {options.map((o) => {
