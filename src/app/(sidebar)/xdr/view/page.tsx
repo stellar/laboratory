@@ -54,6 +54,23 @@ export default function ViewXdr() {
     }
   }, [isLatestTxnSuccess, latestTxn, updateXdrBlob, updateXdrType]);
 
+  useEffect(() => {
+    if (isXdrInit && xdr.blob) {
+      try {
+        const guessed = StellarXdr.guess(xdr.blob);
+
+        // enable xdr type selector to use the guessed type as default
+        if (guessed.includes("TransactionEnvelope")) {
+          xdr.updateXdrType("TransactionEnvelope");
+        } else {
+          xdr.updateXdrType(guessed[0]);
+        }
+      } catch (e) {
+        // do nothing
+      }
+    }
+  }, [xdr.blob, isXdrInit]);
+
   const isFetchingLatestTxn = isLatestTxnFetching || isLatestTxnLoading;
 
   const xdrDecodeJson = () => {
@@ -137,10 +154,14 @@ export default function ViewXdr() {
             disabled={isFetchingLatestTxn}
           />
 
-          <TransactionHashReadOnlyField
-            xdr={xdr.blob}
-            networkPassphrase={network.passphrase}
-          />
+          {xdr.type?.includes("Transaction") ? (
+            <TransactionHashReadOnlyField
+              xdr={xdr.blob}
+              networkPassphrase={network.passphrase}
+            />
+          ) : (
+            <></>
+          )}
 
           <XdrTypeSelect error={xdrJsonDecoded?.error} />
 
