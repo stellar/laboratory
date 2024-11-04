@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Card, Icon, Text, Button, Select } from "@stellar/design-system";
 import {
   FeeBumpTransaction,
@@ -21,6 +21,7 @@ import { txHelper } from "@/helpers/txHelper";
 import { delayedAction } from "@/helpers/delayedAction";
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import { arrayItem } from "@/helpers/arrayItem";
+import { scrollElIntoView } from "@/helpers/scrollElIntoView";
 import { useSignWithExtensionWallet } from "@/hooks/useSignWithExtensionWallet";
 
 import { validate } from "@/validate";
@@ -56,6 +57,7 @@ export const Overview = () => {
   } = transaction;
 
   const router = useRouter();
+  const successResponseEl = useRef<HTMLDivElement | null>(null);
 
   const [signError, setSignError] = useState("");
 
@@ -252,6 +254,8 @@ export const Overview = () => {
 
         const signedTx = tx.toEnvelope().toXDR("base64");
         updateSignedTx(signedTx);
+
+        scrollElIntoView(successResponseEl);
       } else {
         updateSignedTx("");
       }
@@ -857,44 +861,46 @@ export const Overview = () => {
         </Card>
 
         {sign.signedTx ? (
-          <ValidationResponseCard
-            variant="success"
-            title="Transaction signed!"
-            subtitle={getAllSigsMessage()}
-            response={
-              <Box gap="xs">
-                <div>
-                  <div>{sign.signedTx}</div>
-                </div>
-              </Box>
-            }
-            note={
-              <>
-                Now that this transaction is signed, you can submit it to the
-                network. Horizon provides an endpoint called Post Transaction
-                that will relay your transaction to the network and inform you
-                of the result.
-              </>
-            }
-            footerLeftEl={
-              <Button size="md" variant="secondary" onClick={onViewSubmitTxn}>
-                Submit in Transaction Submitter
-              </Button>
-            }
-            footerRightEl={
-              <div className="SignTx__Buttons">
-                <ViewInXdrButton xdrBlob={sign.signedTx} />
-
-                <Button
-                  size="md"
-                  variant="tertiary"
-                  onClick={onWrapWithFeeBump}
-                >
-                  Wrap with Fee Bump
+          <div ref={successResponseEl}>
+            <ValidationResponseCard
+              variant="success"
+              title="Transaction signed!"
+              subtitle={getAllSigsMessage()}
+              response={
+                <Box gap="xs">
+                  <div>
+                    <div>{sign.signedTx}</div>
+                  </div>
+                </Box>
+              }
+              note={
+                <>
+                  Now that this transaction is signed, you can submit it to the
+                  network. Horizon provides an endpoint called Post Transaction
+                  that will relay your transaction to the network and inform you
+                  of the result.
+                </>
+              }
+              footerLeftEl={
+                <Button size="md" variant="secondary" onClick={onViewSubmitTxn}>
+                  Submit in Transaction Submitter
                 </Button>
-              </div>
-            }
-          />
+              }
+              footerRightEl={
+                <div className="SignTx__Buttons">
+                  <ViewInXdrButton xdrBlob={sign.signedTx} />
+
+                  <Button
+                    size="md"
+                    variant="tertiary"
+                    onClick={onWrapWithFeeBump}
+                  >
+                    Wrap with Fee Bump
+                  </Button>
+                </div>
+              }
+            />
+          </div>
         ) : null}
 
         {signError ? (

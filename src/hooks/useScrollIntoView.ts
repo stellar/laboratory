@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { delayedAction } from "@/helpers/delayedAction";
+import { scrollElIntoView } from "@/helpers/scrollElIntoView";
 
 export const useScrollIntoView = (
   isEnabled: boolean,
@@ -7,12 +7,7 @@ export const useScrollIntoView = (
 ) => {
   useEffect(() => {
     if (isEnabled) {
-      delayedAction({
-        action: () => {
-          scrollEl?.current?.scrollIntoView({ behavior: "smooth" });
-        },
-        delay: 300,
-      });
+      scrollElIntoView(scrollEl);
     }
   }, [isEnabled, scrollEl]);
 };
