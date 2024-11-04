@@ -316,7 +316,8 @@ export const NetworkSelector = () => {
                 }}
                 error={validationError?.rpcUrl}
               />
-              <NetworkInput
+              {/* TODO: put these back once Stellar JS SDK is ready */}
+              {/* <NetworkInput
                 id="rpc-header-name"
                 placeholder="RPC Header Name (optional)"
                 value={activeNetwork.rpcHeaderName || ""}
@@ -334,7 +335,7 @@ export const NetworkSelector = () => {
                 }}
                 error={validationError?.rpcHeaderValue}
                 disableAutocomplete={true}
-              />
+              /> */}
 
               {/* Horizon */}
               <NetworkInput
@@ -347,7 +348,8 @@ export const NetworkSelector = () => {
                 }}
                 error={validationError?.horizonUrl}
               />
-              <NetworkInput
+              {/* TODO: put these back once Stellar JS SDK is ready */}
+              {/* <NetworkInput
                 id="network-header-name"
                 placeholder="Horizon Header Name (optional)"
                 value={activeNetwork.horizonHeaderName || ""}
@@ -365,7 +367,7 @@ export const NetworkSelector = () => {
                 }}
                 error={validationError?.horizonHeaderValue}
                 disableAutocomplete={true}
-              />
+              /> */}
 
               {/* Passphrase */}
               <NetworkInput
