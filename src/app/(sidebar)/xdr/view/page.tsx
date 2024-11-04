@@ -54,23 +54,6 @@ export default function ViewXdr() {
     }
   }, [isLatestTxnSuccess, latestTxn, updateXdrBlob, updateXdrType]);
 
-  useEffect(() => {
-    if (isXdrInit && xdr.blob) {
-      try {
-        const guessed = StellarXdr.guess(xdr.blob);
-
-        // enable xdr type selector to use the guessed type as default
-        if (guessed.includes("TransactionEnvelope")) {
-          xdr.updateXdrType("TransactionEnvelope");
-        } else {
-          xdr.updateXdrType(guessed[0]);
-        }
-      } catch (e) {
-        // do nothing
-      }
-    }
-  }, [xdr.blob, isXdrInit]);
-
   const isFetchingLatestTxn = isLatestTxnFetching || isLatestTxnLoading;
 
   const xdrDecodeJson = () => {
@@ -88,7 +71,7 @@ export default function ViewXdr() {
     } catch (e) {
       return {
         jsonString: "",
-        error: `Unable to decode input as ${xdr.type}: ${e}`,
+        error: `Unable to decode input as ${xdr.type}: ${e}. Select another XDR type.`,
       };
     }
   };

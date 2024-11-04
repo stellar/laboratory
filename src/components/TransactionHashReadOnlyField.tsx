@@ -12,6 +12,12 @@ export const TransactionHashReadOnlyField = ({
     return null;
   }
 
+  const hashValue = transactionHashFromXdr(xdr, networkPassphrase);
+
+  if (!hashValue) {
+    return null;
+  }
+
   return (
     <Input
       id="tx-hash"
