@@ -1,9 +1,10 @@
-import { Label, Select } from "@stellar/design-system";
+import { Select } from "@stellar/design-system";
 import { Box } from "@/components/layout/Box";
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
 import { TextPicker } from "@/components/FormElements/TextPicker";
 import { OptionSigner } from "@/types/types";
+import { LabelHeading } from "../LabelHeading";
 
 type SignerPickerProps = {
   id: string;
@@ -71,15 +72,14 @@ export const SignerPicker = ({
     <Box gap="sm">
       <>
         {label ? (
-          <Label
+          <LabelHeading
             size="md"
-            htmlFor=""
             labelSuffix={labelSuffix}
             infoLink={infoLink}
             infoText={infoText}
           >
             {label}
-          </Label>
+          </LabelHeading>
         ) : null}
 
         <Select
