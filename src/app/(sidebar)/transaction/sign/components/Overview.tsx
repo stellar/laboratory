@@ -680,8 +680,6 @@ export const Overview = () => {
                 validate={validate.getSecretKeyError}
                 placeholder="Secret key (starting with S) or hash preimage (in hex)"
                 autocomplete="off"
-                useAutoAdd
-                note="Paste a secret key to add an additional signer"
                 isPassword
               />
               <SignTxButton

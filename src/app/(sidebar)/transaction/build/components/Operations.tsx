@@ -1147,7 +1147,7 @@ export const Operations = () => {
             <Box gap="sm" direction="row" align="center">
               <Button
                 size="md"
-                variant="secondary"
+                variant="tertiary"
                 icon={<Icon.PlusCircle />}
                 onClick={() => {
                   updateOptionParamAndError({
