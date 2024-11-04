@@ -23,7 +23,7 @@ export const TransactionHashReadOnlyField = ({
       id="tx-hash"
       fieldSize="md"
       label="Transaction hash"
-      value={transactionHashFromXdr(xdr, networkPassphrase)}
+      value={hashValue}
       copyButton={{ position: "right" }}
       disabled
     />
