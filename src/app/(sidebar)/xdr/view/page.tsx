@@ -137,14 +137,10 @@ export default function ViewXdr() {
             disabled={isFetchingLatestTxn}
           />
 
-          {xdr.type?.includes("Transaction") ? (
-            <TransactionHashReadOnlyField
-              xdr={xdr.blob}
-              networkPassphrase={network.passphrase}
-            />
-          ) : (
-            <></>
-          )}
+          <TransactionHashReadOnlyField
+            xdr={xdr.blob}
+            networkPassphrase={network.passphrase}
+          />
 
           <XdrTypeSelect error={xdrJsonDecoded?.error} />
 
