@@ -18,26 +18,30 @@ export const useAccountSequenceNumber = ({
         sourceAccount = muxedAccount.baseAccount().accountId();
       }
 
-      const response = await fetch(`${horizonUrl}/accounts/${sourceAccount}`);
-      const responseJson = await response.json();
+      try {
+        const response = await fetch(`${horizonUrl}/accounts/${sourceAccount}`);
+        const responseJson = await response.json();
 
-      if (responseJson?.status === 0) {
-        throw `Unable to reach server at ${horizonUrl}.`;
-      }
-
-      if (responseJson?.status?.toString()?.startsWith("4")) {
-        if (responseJson?.title === "Resource Missing") {
-          throw "Account not found. Make sure the correct network is selected and the account is funded/created.";
+        if (responseJson?.status === 0) {
+          throw `Unable to reach server at ${horizonUrl}.`;
         }
 
-        throw (
-          responseJson?.extras?.reason ||
-          responseJson?.detail ||
-          "Something went wrong when fetching the transaction sequence number. Please try again."
-        );
-      }
+        if (responseJson?.status?.toString()?.startsWith("4")) {
+          if (responseJson?.title === "Resource Missing") {
+            throw "Account not found. Make sure the correct network is selected and the account is funded/created.";
+          }
 
-      return (BigInt(responseJson.sequence) + BigInt(1)).toString();
+          throw (
+            responseJson?.extras?.reason ||
+            responseJson?.detail ||
+            "Something went wrong when fetching the transaction sequence number. Please try again."
+          );
+        }
+
+        return (BigInt(responseJson.sequence) + BigInt(1)).toString();
+      } catch (e: any) {
+        throw `${e}. Check network configuration.`;
+      }
     },
     enabled: false,
   });
