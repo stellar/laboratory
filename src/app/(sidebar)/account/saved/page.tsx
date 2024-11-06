@@ -6,6 +6,7 @@ import { Alert, Text, Card, Input, Icon, Button } from "@stellar/design-system";
 import { Box } from "@/components/layout/Box";
 import { InputSideElement } from "@/components/InputSideElement";
 import { SaveKeypairModal } from "@/components/SaveKeypairModal";
+import { SavedItemTimestampAndDelete } from "@/components/SavedItemTimestampAndDelete";
 
 import { useStore } from "@/store/useStore";
 import { localStorageSavedKeypairs } from "@/helpers/localStorageSavedKeypairs";
@@ -13,6 +14,7 @@ import { NetworkOptions } from "@/constants/settings";
 import { useIsTestingNetwork } from "@/hooks/useIsTestingNetwork";
 
 import { NetworkType, SavedKeypair } from "@/types/types";
+import { arrayItem } from "@/helpers/arrayItem";
 
 export default function SavedKeypairs() {
   const { network, selectNetwork, updateIsDynamicNetworkSelect } = useStore();
@@ -37,7 +39,7 @@ export default function SavedKeypairs() {
 
   const SavedKeypair = ({ keypair }: { keypair: SavedKeypair }) => {
     return (
-      <Box gap="sm">
+      <Box gap="sm" addlClassName="PageBody__content">
         <Input
           id={`saved-kp-${keypair.timestamp}-name`}
           fieldSize="md"
@@ -74,6 +76,34 @@ export default function SavedKeypairs() {
           copyButton={{ position: "right" }}
           isPassword
         />
+
+        <Box
+          gap="lg"
+          direction="row"
+          align="center"
+          justify="end"
+          addlClassName="Endpoints__urlBar__footer"
+        >
+          <SavedItemTimestampAndDelete
+            timestamp={keypair.timestamp}
+            onDelete={() => {
+              const savedKeypairs = localStorageSavedKeypairs.get();
+              const indexToUpdate = savedKeypairs.findIndex(
+                (kp) => kp.timestamp === keypair.timestamp,
+              );
+
+              if (indexToUpdate >= 0) {
+                const updatedList = arrayItem.delete(
+                  savedKeypairs,
+                  indexToUpdate,
+                );
+
+                localStorageSavedKeypairs.set(updatedList);
+                updateSavedKeypairs();
+              }
+            }}
+          />
+        </Box>
       </Box>
     );
   };
