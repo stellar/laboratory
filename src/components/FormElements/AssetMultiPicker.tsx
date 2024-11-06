@@ -1,12 +1,13 @@
 import React from "react";
-import { Button, Input, Label } from "@stellar/design-system";
+import { Button, Input } from "@stellar/design-system";
 
 import { ExpandBox } from "@/components/ExpandBox";
 import { RadioPicker } from "@/components/RadioPicker";
 import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
+import { Box } from "@/components/layout/Box";
+import { LabelHeading } from "@/components/LabelHeading";
 
 import { AssetObject, AssetObjectValue } from "@/types/types";
-import { Box } from "../layout/Box";
 
 type AssetMultiPickerProps = {
   id: string;
@@ -95,9 +96,9 @@ export const AssetMultiPicker = ({
   return (
     <Box gap="sm">
       <>
-        <Label htmlFor="" size="md" labelSuffix={labelSuffix}>
+        <LabelHeading size="md" labelSuffix={labelSuffix}>
           {label}
-        </Label>
+        </LabelHeading>
         {values.length ? (
           <Box gap="sm">
             <>

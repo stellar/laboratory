@@ -4,7 +4,7 @@ export function middleware(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
 
   // script-src 'unsafe-eval' is needed for XDR JSON WebAssembly scripts
-  // connect-src localhost:* to allow local network
+  // connect-src http://localhost:* to allow local network
   const cspHeader = `
     default-src 'self';
     script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: 'unsafe-inline' 'unsafe-eval';

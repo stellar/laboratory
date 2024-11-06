@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { SorobanRpc, TransactionBuilder } from "@stellar/stellar-sdk";
+import { rpc as StellarRpc, TransactionBuilder } from "@stellar/stellar-sdk";
 import { delay } from "@/helpers/delay";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import {
@@ -32,7 +32,7 @@ export const useSubmitRpcTx = () => {
           transactionXdr,
           networkPassphrase,
         );
-        const rpcServer = new SorobanRpc.Server(rpcUrl, {
+        const rpcServer = new StellarRpc.Server(rpcUrl, {
           headers: isEmptyObject(headers) ? undefined : { ...headers },
           allowHttp: new URL(rpcUrl).hostname === "localhost",
         });

@@ -23,6 +23,7 @@ import { SdsLink } from "@/components/SdsLink";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { XdrTypeSelect } from "@/components/XdrTypeSelect";
 import { PrettyJsonTransaction } from "@/components/PrettyJsonTransaction";
+import { TransactionHashReadOnlyField } from "@/components/TransactionHashReadOnlyField";
 
 import { parseToLosslessJson } from "@/helpers/parseToLosslessJson";
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
@@ -71,7 +72,7 @@ export default function ViewXdr() {
     } catch (e) {
       return {
         jsonString: "",
-        error: `Unable to decode input as ${xdr.type}: ${e}`,
+        error: `Unable to decode input as ${xdr.type}: ${e}. Select another XDR type.`,
       };
     }
   };
@@ -135,6 +136,11 @@ export default function ViewXdr() {
             }}
             error={latestTxnError?.toString()}
             disabled={isFetchingLatestTxn}
+          />
+
+          <TransactionHashReadOnlyField
+            xdr={xdr.blob}
+            networkPassphrase={network.passphrase}
           />
 
           <XdrTypeSelect error={xdrJsonDecoded?.error} />

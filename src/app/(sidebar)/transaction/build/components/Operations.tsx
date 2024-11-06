@@ -1147,7 +1147,7 @@ export const Operations = () => {
             <Box gap="sm" direction="row" align="center">
               <Button
                 size="md"
-                variant="secondary"
+                variant="tertiary"
                 icon={<Icon.PlusCircle />}
                 onClick={() => {
                   updateOptionParamAndError({
@@ -1170,7 +1170,9 @@ export const Operations = () => {
                 disabled={!txnXdr}
               ></Button>
 
-              <ShareUrlButton shareableUrl={shareableUrl("transactions")} />
+              <ShareUrlButton
+                shareableUrl={shareableUrl("transactions-build")}
+              />
             </Box>
 
             <Button

@@ -45,8 +45,12 @@
 
       .Button {
         min-width: fit-content;
+      }
 
-        @media screen and (max-width: 440px) {
+      @media screen and (max-width: 440px) {
+        width: 100%;
+
+        .Button {
           flex: 1;
         }
       }

@@ -1,12 +1,13 @@
 import React from "react";
 
-import { Button, Icon, Label } from "@stellar/design-system";
+import { Button, Icon } from "@stellar/design-system";
 
 import { arrayItem } from "@/helpers/arrayItem";
 
 import { TextPicker } from "@/components/FormElements/TextPicker";
 import { Box } from "@/components/layout/Box";
 import { InputSideElement } from "@/components/InputSideElement";
+import { LabelHeading } from "@/components/LabelHeading";
 
 type Values = string[];
 
@@ -21,6 +22,9 @@ type MultiPickerProps = {
   autocomplete?: React.HTMLInputAutoCompleteAttribute;
   buttonLabel?: string;
   limit?: number;
+  useAutoAdd?: boolean;
+  note?: React.ReactNode;
+  isPassword?: boolean;
 };
 
 export const MultiPicker = ({
@@ -34,6 +38,9 @@ export const MultiPicker = ({
   autocomplete,
   buttonLabel = "Add additional",
   limit,
+  useAutoAdd,
+  note,
+  isPassword,
 }: MultiPickerProps) => {
   if (!value || !value.length) {
     value = [];
@@ -41,9 +48,9 @@ export const MultiPicker = ({
 
   return (
     <Box gap="sm">
-      <Label htmlFor="" size="md" labelSuffix={labelSuffix}>
+      <LabelHeading size="md" labelSuffix={labelSuffix}>
         {label}
-      </Label>
+      </LabelHeading>
       <>
         {value.length
           ? value.map((singleVal: string, index: number) => {
@@ -54,7 +61,12 @@ export const MultiPicker = ({
                   id={`${id}-${index}`}
                   onChange={(e) => {
                     const val = arrayItem.update(value, index, e.target.value);
-                    return onChange([...val]);
+                    const isLastItem = index === value.length - 1;
+
+                    // If enabled, automatically add another signer if is last item
+                    return onChange(
+                      useAutoAdd && isLastItem ? [...val, ""] : [...val],
+                    );
                   }}
                   key={index}
                   value={singleVal}
@@ -75,24 +87,32 @@ export const MultiPicker = ({
                       />
                     ) : null
                   }
+                  isPassword={isPassword}
                 />
               );
             })
           : null}
+        {note ? (
+          <div className="FieldNote FieldNote--note FieldNote--md">{note}</div>
+        ) : null}
       </>
-      <div>
-        <Button
-          disabled={value.length === limit}
-          size="md"
-          variant="tertiary"
-          onClick={(e) => {
-            e.preventDefault();
-            onChange([...value, ""]);
-          }}
-        >
-          {buttonLabel}
-        </Button>
-      </div>
+      <>
+        {!useAutoAdd ? (
+          <div>
+            <Button
+              disabled={value.length === limit}
+              size="md"
+              variant="tertiary"
+              onClick={(e) => {
+                e.preventDefault();
+                onChange([...value, ""]);
+              }}
+            >
+              {buttonLabel}
+            </Button>
+          </div>
+        ) : null}
+      </>
     </Box>
   );
 };

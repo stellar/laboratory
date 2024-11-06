@@ -1,5 +1,5 @@
 import React from "react";
-import { NetworkError, SorobanRpc, xdr } from "@stellar/stellar-sdk";
+import { NetworkError, rpc as StellarRpc, xdr } from "@stellar/stellar-sdk";
 import { TransactionBuildParams } from "@/store/createStore";
 
 // =============================================================================
@@ -8,6 +8,7 @@ import { TransactionBuildParams } from "@/store/createStore";
 export type AnyObject = { [key: string]: any };
 export type EmptyObj = Record<PropertyKey, never>;
 export type ThemeColorType = "sds-theme-dark" | "sds-theme-light";
+export type LabSettings = Record<string, string>;
 
 // =============================================================================
 // Helpers
@@ -192,7 +193,7 @@ export type SavedTransactionPage = "build" | "sign" | "simulate" | "submit";
 
 export type SubmitRpcResponse = {
   hash: string;
-  result: SorobanRpc.Api.GetSuccessfulTransactionResponse;
+  result: StellarRpc.Api.GetSuccessfulTransactionResponse;
   operationCount: number;
   fee: string;
 };

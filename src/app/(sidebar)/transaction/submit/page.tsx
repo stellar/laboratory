@@ -17,6 +17,8 @@ import { delayedAction } from "@/helpers/delayedAction";
 import { openUrl } from "@/helpers/openUrl";
 import { getBlockExplorerLink } from "@/helpers/getBlockExplorerLink";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
+import { localStorageSubmitMethod } from "@/helpers/localStorageSubmitMethod";
+import { buildEndpointHref } from "@/helpers/buildEndpointHref";
 
 import { Routes } from "@/constants/routes";
 import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
@@ -33,6 +35,8 @@ import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { TxResponse } from "@/components/TxResponse";
 import { SaveTransactionModal } from "@/components/SaveTransactionModal";
+import { SdsLink } from "@/components/SdsLink";
+import { TransactionHashReadOnlyField } from "@/components/TransactionHashReadOnlyField";
 
 import {
   HorizonErrorResponse,
@@ -54,6 +58,8 @@ const SUBMIT_OPTIONS = [
       "Submit the transaction via the Horizon API. Does not support Soroban transactions that need simulating.",
   },
 ];
+
+const SETTING_KEY = "submitMethod";
 
 export default function SubmitTransaction() {
   const { network, xdr, transaction } = useStore();
@@ -113,7 +119,14 @@ export default function SubmitTransaction() {
 
   // Set default submit method
   useEffect(() => {
-    setSubmitMethod(isRpcAvailable ? "rpc" : "horizon");
+    const localStorageMethod = localStorageSubmitMethod.get(SETTING_KEY);
+
+    if (localStorageMethod) {
+      setSubmitMethod(localStorageMethod);
+    } else {
+      setSubmitMethod(isRpcAvailable ? "rpc" : "horizon");
+    }
+
     resetSubmitState();
     // Not including resetSubmitState
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -243,6 +256,20 @@ export default function SubmitTransaction() {
 
   const isSubmitDisabled = !submitMethod || !blob || Boolean(xdrJson?.error);
 
+  const XdrLink = ({ xdr, type }: { xdr: string; type: string }) => (
+    <SdsLink
+      href={buildEndpointHref(Routes.VIEW_XDR, {
+        blob: xdr,
+        type: type,
+      })}
+      target="_blank"
+      isUnderline
+      variant="secondary"
+    >
+      {xdr}
+    </SdsLink>
+  );
+
   const renderSuccess = () => {
     if (isSubmitRpcSuccess && submitRpcResponse) {
       return (
@@ -296,21 +323,36 @@ export default function SubmitTransaction() {
                 />
                 <TxResponse
                   label="Envelope XDR:"
-                  value={submitRpcResponse.result.envelopeXdr
-                    .toXDR("base64")
-                    .toString()}
+                  item={
+                    <XdrLink
+                      xdr={submitRpcResponse.result.envelopeXdr
+                        .toXDR("base64")
+                        .toString()}
+                      type="TransactionEnvelope"
+                    />
+                  }
                 />
                 <TxResponse
                   label="Result XDR:"
-                  value={submitRpcResponse.result.resultXdr
-                    .toXDR("base64")
-                    .toString()}
+                  item={
+                    <XdrLink
+                      xdr={submitRpcResponse.result.resultXdr
+                        .toXDR("base64")
+                        .toString()}
+                      type="TransactionResult"
+                    />
+                  }
                 />
                 <TxResponse
                   label="Result Meta XDR:"
-                  value={submitRpcResponse.result.resultMetaXdr
-                    .toXDR("base64")
-                    .toString()}
+                  item={
+                    <XdrLink
+                      xdr={submitRpcResponse.result.resultMetaXdr
+                        .toXDR("base64")
+                        .toString()}
+                      type="TransactionMeta"
+                    />
+                  }
                 />
                 <TxResponse label="Fee:" value={submitRpcResponse.fee} />
               </Box>
@@ -372,15 +414,30 @@ export default function SubmitTransaction() {
                 />
                 <TxResponse
                   label="Envelope XDR:"
-                  value={submitHorizonResponse.envelope_xdr}
+                  item={
+                    <XdrLink
+                      xdr={submitHorizonResponse.envelope_xdr}
+                      type="TransactionEnvelope"
+                    />
+                  }
                 />
                 <TxResponse
                   label="Result XDR:"
-                  value={submitHorizonResponse.result_xdr}
+                  item={
+                    <XdrLink
+                      xdr={submitHorizonResponse.result_xdr}
+                      type="TransactionResult"
+                    />
+                  }
                 />
                 <TxResponse
                   label="Result Meta XDR:"
-                  value={submitHorizonResponse.result_meta_xdr}
+                  item={
+                    <XdrLink
+                      xdr={submitHorizonResponse.result_meta_xdr}
+                      type="TransactionMeta"
+                    />
+                  }
                 />
                 <TxResponse
                   label="Fee charged:"
@@ -438,6 +495,11 @@ export default function SubmitTransaction() {
             hasCopyButton
           />
 
+          <TransactionHashReadOnlyField
+            xdr={xdr.blob}
+            networkPassphrase={network.passphrase}
+          />
+
           <Box
             gap="lg"
             direction="row"
@@ -492,6 +554,11 @@ export default function SubmitTransaction() {
                           setSubmitMethod(s.id);
                           toggleDropdown(false);
                           resetSubmitState();
+
+                          localStorageSubmitMethod.set({
+                            key: SETTING_KEY,
+                            value: s.id,
+                          });
                         }}
                       >
                         <div className="SubmitTx__floater__item__title">
@@ -537,12 +604,22 @@ export default function SubmitTransaction() {
 
           <>
             {xdrJson?.jsonString ? (
-              <div className="PageBody__content PageBody__scrollable">
-                <PrettyJsonTransaction
-                  json={JSON.parse(xdrJson.jsonString)}
-                  xdr={blob}
-                />
-              </div>
+              <Box gap="sm">
+                <Text
+                  size="sm"
+                  as="h2"
+                  weight="semi-bold"
+                  addlClassName="PageBody__title"
+                >
+                  TransactionEnvelope
+                </Text>
+                <div className="PageBody__content PageBody__scrollable">
+                  <PrettyJsonTransaction
+                    json={JSON.parse(xdrJson.jsonString)}
+                    xdr={blob}
+                  />
+                </div>
+              </Box>
             ) : null}
           </>
         </Box>

@@ -29,7 +29,7 @@ export const LayoutSidebarContent = ({
   children: ReactNode;
   sidebar: Sidebar | Sidebar[];
 }) => {
-  const pathname = usePathname();
+  const pathname = usePathname() || "";
   const { layoutMode } = useContext(WindowContext);
 
   const sidebarArray = Array.isArray(sidebar) ? sidebar : [sidebar];

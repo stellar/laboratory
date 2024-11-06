@@ -130,7 +130,11 @@ export const SaveTransactionModal = ({
                   name: savedTxnName,
                   page,
                   xdr,
-                  shareableUrl: shareableUrl("transactions"),
+                  shareableUrl: shareableUrl(
+                    page === "build"
+                      ? "transactions-build"
+                      : "transactions-save",
+                  ),
                   ...(page === "build"
                     ? {
                         params: transaction.build.params,
