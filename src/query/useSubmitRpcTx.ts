@@ -34,6 +34,7 @@ export const useSubmitRpcTx = () => {
         );
         const rpcServer = new StellarRpc.Server(rpcUrl, {
           headers: isEmptyObject(headers) ? undefined : { ...headers },
+          allowHttp: new URL(rpcUrl).hostname === "localhost",
         });
         const sentTx = await rpcServer.sendTransaction(transaction);
 
