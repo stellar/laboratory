@@ -202,6 +202,20 @@ export default function SavedKeypairs() {
           </Text>
         </div>
 
+        <>
+          {IS_TESTING_NETWORK ? (
+            <Alert variant="warning" placement="inline">
+              Saved keypairs are stored in the browser’s localstorage
+              unencrypted and with no protection. Anyone using this browser will
+              be able to access the keys and the keys could be easily lost. Do
+              not save keys that are intended to hold or control value on
+              mainnet. Do not reuse keypairs from futurenet or testnet on
+              mainnet for security. For keys that will hold value, please
+              consider using a Stellar wallet.
+            </Alert>
+          ) : null}
+        </>
+
         <Card>{renderContent()}</Card>
       </Box>
 
