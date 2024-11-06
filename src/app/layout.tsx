@@ -15,8 +15,7 @@ import "@/styles/globals.scss";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title:
-    "Explore Stellar Lab: Tools, Learning, and Developer Resources for the Stellar Network",
+  title: "Stellar Lab",
   description:
     "Explore Stellar Lab: Build, sign, and submit transactions. Access tools, Stellar RPC, Horizon, and more. Enhance your skills with Stellar Quest.",
 };

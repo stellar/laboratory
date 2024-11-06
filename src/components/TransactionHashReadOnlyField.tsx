@@ -12,12 +12,18 @@ export const TransactionHashReadOnlyField = ({
     return null;
   }
 
+  const hashValue = transactionHashFromXdr(xdr, networkPassphrase);
+
+  if (!hashValue) {
+    return null;
+  }
+
   return (
     <Input
       id="tx-hash"
       fieldSize="md"
       label="Transaction hash"
-      value={transactionHashFromXdr(xdr, networkPassphrase)}
+      value={hashValue}
       copyButton={{ position: "right" }}
       disabled
     />
