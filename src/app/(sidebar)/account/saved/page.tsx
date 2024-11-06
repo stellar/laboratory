@@ -60,7 +60,7 @@ export default function SavedKeypairs() {
           id={`saved-kp-${keypair.timestamp}-pk`}
           fieldSize="md"
           value={keypair.publicKey}
-          disabled
+          readOnly
           leftElement="Public"
           copyButton={{ position: "right" }}
         />
@@ -69,9 +69,10 @@ export default function SavedKeypairs() {
           id={`saved-kp-${keypair.timestamp}-sk`}
           fieldSize="md"
           value={keypair.secretKey}
-          disabled
+          readOnly
           leftElement="Secret"
           copyButton={{ position: "right" }}
+          isPassword
         />
       </Box>
     );
