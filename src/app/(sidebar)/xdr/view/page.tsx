@@ -29,6 +29,7 @@ import { parseToLosslessJson } from "@/helpers/parseToLosslessJson";
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { useStore } from "@/store/useStore";
 import { delayedAction } from "@/helpers/delayedAction";
+import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 
 export default function ViewXdr() {
   const { xdr, network } = useStore();
@@ -43,7 +44,7 @@ export default function ViewXdr() {
     isFetching: isLatestTxnFetching,
     isLoading: isLatestTxnLoading,
     refetch: fetchLatestTxn,
-  } = useLatestTxn(network.horizonUrl);
+  } = useLatestTxn(network.horizonUrl, getNetworkHeaders(network, "horizon"));
 
   const queryClient = useQueryClient();
 

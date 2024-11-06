@@ -10,6 +10,7 @@ import { PrettyJson } from "@/components/PrettyJson";
 import { useStore } from "@/store/useStore";
 import { useSimulateTx } from "@/query/useSimulateTx";
 import { delayedAction } from "@/helpers/delayedAction";
+import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { validate } from "@/validate";
 
 export default function SimulateTransaction() {
@@ -75,6 +76,7 @@ export default function SimulateTransaction() {
         rpcUrl: network.rpcUrl,
         transactionXdr: xdr.blob,
         instructionLeeway: simulate.instructionLeeway,
+        headers: getNetworkHeaders(network, "rpc"),
       });
 
       if (simulate.triggerOnLaunch) {
