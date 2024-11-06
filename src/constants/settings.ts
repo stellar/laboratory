@@ -9,6 +9,7 @@ export const LOCAL_STORAGE_SAVED_RPC_METHODS =
   "stellar_lab_saved_rpc_endpoints";
 export const LOCAL_STORAGE_SAVED_TRANSACTIONS =
   "stellar_lab_saved_transactions";
+export const LOCAL_STORAGE_SAVED_KEYPAIRS = "stellar_lab_saved_keypairs";
 export const LOCAL_STORAGE_SAVED_THEME = "stellarTheme:Laboratory";
 
 export const XDR_TYPE_TRANSACTION_ENVELOPE = "TransactionEnvelope";
