@@ -10,6 +10,16 @@ export const ACCOUNT_NAV_ITEMS = [
   {
     navItems: [
       {
+        route: Routes.SAVED_KEYPAIRS,
+        label: "Saved Keypairs",
+        icon: <Icon.Save03 />,
+      },
+    ],
+    hasBottomDivider: true,
+  },
+  {
+    navItems: [
+      {
         route: Routes.ACCOUNT_CREATE,
         label: "Create Account Keypair",
       },
