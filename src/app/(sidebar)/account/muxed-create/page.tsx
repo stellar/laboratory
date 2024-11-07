@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Alert, Button, Card, Input, Text } from "@stellar/design-system";
+import { Alert, Button, Card, Input, Link, Text } from "@stellar/design-system";
 
 import { useStore } from "@/store/useStore";
 
@@ -9,6 +9,7 @@ import { ExpandBox } from "@/components/ExpandBox";
 import { MuxedAccountResult } from "@/components/MuxedAccountResult";
 import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
 import { SdsLink } from "@/components/SdsLink";
+import { WithInfoText } from "@/components/WithInfoText";
 
 import { muxedAccount } from "@/helpers/muxedAccount";
 
@@ -68,9 +69,11 @@ export default function CreateMuxedAccount() {
       <Card>
         <div className="Account__card">
           <div className="CardText">
-            <Text size="lg" as="h1" weight="medium">
-              Create Multiplexed Account
-            </Text>
+            <WithInfoText href="https://developers.stellar.org/docs/learn/encyclopedia/transactions-specialized/pooled-accounts-muxed-accounts-memos">
+              <Text size="lg" as="h1" weight="medium">
+                Create Multiplexed Account
+              </Text>
+            </WithInfoText>
 
             <Text size="sm" as="p">
               A muxed (or multiplexed) account (defined in{" "}
@@ -165,6 +168,11 @@ export default function CreateMuxedAccount() {
         title="Muxed accounts are uncommon"
       >
         Don’t use in a production environment unless you know what you’re doing.
+        Read more about Muxed accounts{" "}
+        <Link href="https://developers.stellar.org/docs/learn/encyclopedia/transactions-specialized/pooled-accounts-muxed-accounts-memos#muxed-accounts">
+          here
+        </Link>
+        .
       </Alert>
 
       {Boolean(sdkError) && (
