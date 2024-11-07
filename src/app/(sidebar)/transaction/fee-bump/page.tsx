@@ -12,6 +12,7 @@ import { validate } from "@/validate";
 
 import { sanitizeObject } from "@/helpers/sanitizeObject";
 import { txHelper, FeeBumpedTxResponse } from "@/helpers/txHelper";
+import { removeLeadingZeroes } from "@/helpers/removeLeadingZeroes";
 
 import { Box } from "@/components/layout/Box";
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
@@ -202,7 +203,7 @@ export default function FeeBumpTransaction() {
           <PositiveIntPicker
             id="fee"
             label="Base Fee"
-            value={fee}
+            value={removeLeadingZeroes(fee)}
             error={paramsError.fee}
             onChange={(e) => {
               const id = "fee";

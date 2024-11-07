@@ -15,6 +15,8 @@ import { NumberFractionPicker } from "@/components/FormElements/NumberFractionPi
 import { RevokeSponsorshipPicker } from "@/components/FormElements/RevokeSponsorshipPicker";
 import { ClaimantsPicker } from "@/components/FormElements/ClaimantsPicker";
 
+import { removeLeadingZeroes } from "@/helpers/removeLeadingZeroes";
+
 import { validate } from "@/validate";
 import {
   AnyObject,
@@ -124,7 +126,7 @@ export const formComponentTemplateTxnOps = ({
             id={id}
             label={custom?.label || "Amount"}
             labelSuffix={!templ.isRequired ? "optional" : undefined}
-            value={templ.value || ""}
+            value={templ.value ? removeLeadingZeroes(templ.value) : ""}
             error={templ.error}
             onChange={templ.onChange}
             note={custom?.note}
@@ -641,7 +643,7 @@ export const formComponentTemplateTxnOps = ({
             id={id}
             label="Starting Balance"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
-            value={templ.value || ""}
+            value={templ.value ? removeLeadingZeroes(templ.value) : ""}
             error={templ.error}
             onChange={templ.onChange}
           />
