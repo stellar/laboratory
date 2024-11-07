@@ -169,7 +169,10 @@ export default function CreateMuxedAccount() {
       >
         Don’t use in a production environment unless you know what you’re doing.
         Read more about Muxed accounts{" "}
-        <Link href="https://developers.stellar.org/">here</Link>.
+        <Link href="https://developers.stellar.org/docs/learn/encyclopedia/transactions-specialized/pooled-accounts-muxed-accounts-memos#muxed-accounts">
+          here
+        </Link>
+        .
       </Alert>
 
       {Boolean(sdkError) && (
