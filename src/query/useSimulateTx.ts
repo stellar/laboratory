@@ -1,10 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
-import { AnyObject } from "@/types/types";
+import { AnyObject, NetworkHeaders } from "@/types/types";
 
 type SimulateTxProps = {
   rpcUrl: string;
   transactionXdr: string;
   instructionLeeway?: string;
+  headers: NetworkHeaders;
 };
 
 export const useSimulateTx = () => {
@@ -13,11 +14,13 @@ export const useSimulateTx = () => {
       rpcUrl,
       transactionXdr,
       instructionLeeway,
+      headers,
     }: SimulateTxProps) => {
       const res = await fetch(rpcUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          ...headers,
         },
         body: JSON.stringify({
           jsonrpc: "2.0",
@@ -47,12 +50,14 @@ export const useSimulateTx = () => {
       rpcUrl,
       transactionXdr,
       instructionLeeway,
+      headers,
     }: SimulateTxProps) => {
       try {
         await mutation.mutateAsync({
           rpcUrl,
           transactionXdr,
           instructionLeeway,
+          headers,
         });
       } catch (e) {
         // do nothing

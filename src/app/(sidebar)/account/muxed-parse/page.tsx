@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Alert, Card, Text, Button } from "@stellar/design-system";
+import { Alert, Card, Link, Text, Button } from "@stellar/design-system";
 
 import { useStore } from "@/store/useStore";
 
 import { ExpandBox } from "@/components/ExpandBox";
 import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
 import { MuxedAccountResult } from "@/components/MuxedAccountResult";
+import { WithInfoText } from "@/components/WithInfoText";
 
 import { muxedAccount } from "@/helpers/muxedAccount";
 
@@ -59,9 +60,11 @@ export default function ParseMuxedAccount() {
       <Card>
         <div className="Account__card">
           <div className="CardText">
-            <Text size="lg" as="h1" weight="medium">
-              Get Muxed Account from M address
-            </Text>
+            <WithInfoText href="https://developers.stellar.org/docs/learn/encyclopedia/transactions-specialized/pooled-accounts-muxed-accounts-memos">
+              <Text size="lg" as="h1" weight="medium">
+                Get Muxed Account from M address
+              </Text>
+            </WithInfoText>
           </div>
 
           <PubKeyPicker
@@ -126,6 +129,11 @@ export default function ParseMuxedAccount() {
         title="Muxed accounts are uncommon"
       >
         Don’t use in a production environment unless you know what you’re doing.
+        Read more about Muxed accounts{" "}
+        <Link href="https://developers.stellar.org/docs/learn/encyclopedia/transactions-specialized/pooled-accounts-muxed-accounts-memos#muxed-accounts">
+          here
+        </Link>
+        .
       </Alert>
 
       {Boolean(sdkError) && (

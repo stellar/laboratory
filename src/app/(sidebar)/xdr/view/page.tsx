@@ -25,13 +25,14 @@ import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { XdrTypeSelect } from "@/components/XdrTypeSelect";
 import { PrettyJsonTransaction } from "@/components/PrettyJsonTransaction";
 import { TransactionHashReadOnlyField } from "@/components/TransactionHashReadOnlyField";
+import { LabelHeading } from "@/components/LabelHeading";
 
 import * as StellarXdr from "@/helpers/StellarXdr";
 import { parseToLosslessJson } from "@/helpers/parseToLosslessJson";
 import { delayedAction } from "@/helpers/delayedAction";
+import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { useStore } from "@/store/useStore";
-import { LabelHeading } from "@/components/LabelHeading";
 
 export default function ViewXdr() {
   const { xdr, network } = useStore();
@@ -46,7 +47,7 @@ export default function ViewXdr() {
     isFetching: isLatestTxnFetching,
     isLoading: isLatestTxnLoading,
     refetch: fetchLatestTxn,
-  } = useLatestTxn(network.horizonUrl);
+  } = useLatestTxn(network.horizonUrl, getNetworkHeaders(network, "horizon"));
 
   const queryClient = useQueryClient();
 
@@ -74,7 +75,7 @@ export default function ViewXdr() {
     } catch (e) {
       return {
         jsonString: "",
-        error: `Unable to decode input as ${xdr.type}: ${e}`,
+        error: `Unable to decode input as ${xdr.type}: ${e}. Select another XDR type.`,
       };
     }
   };

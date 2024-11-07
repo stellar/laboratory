@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Card, Text, Button } from "@stellar/design-system";
+import { Card, Text, Button, Icon } from "@stellar/design-system";
 import { Keypair } from "@stellar/stellar-sdk";
 
 import { useStore } from "@/store/useStore";
@@ -9,11 +9,14 @@ import { useFriendBot } from "@/query/useFriendBot";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { useIsTestingNetwork } from "@/hooks/useIsTestingNetwork";
+import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 
 import { GenerateKeypair } from "@/components/GenerateKeypair";
 import { ExpandBox } from "@/components/ExpandBox";
 import { SuccessMsg } from "@/components/FriendBot/SuccessMsg";
 import { ErrorMsg } from "@/components/FriendBot/ErrorMsg";
+import { Box } from "@/components/layout/Box";
+import { SaveKeypairModal } from "@/components/SaveKeypairModal";
 
 import "../styles.scss";
 
@@ -23,6 +26,7 @@ export default function CreateAccount() {
 
   const [secretKey, setSecretKey] = useState("");
   const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [isSaveModalVisible, setIsSaveModalVisible] = useState(false);
 
   const queryClient = useQueryClient();
   const IS_TESTING_NETWORK = useIsTestingNetwork();
@@ -49,6 +53,7 @@ export default function CreateAccount() {
       network,
       publicKey: account.publicKey!,
       key: { type: "create" },
+      headers: getNetworkHeaders(network, "horizon"),
     });
 
   useEffect(() => {
@@ -95,32 +100,64 @@ export default function CreateAccount() {
               account signer, and/or as a stellar-core node key.
             </Text>
           </div>
-          <div className="Account__CTA" data-testid="createAccount-buttons">
-            <Button
-              disabled={isLoading || isFetching}
-              size="md"
-              variant="secondary"
-              onClick={generateKeypair}
+          <Box
+            gap="sm"
+            direction="row"
+            justify="space-between"
+            wrap="wrap"
+            data-testid="createAccount-buttons"
+            addlClassName="Account__create__buttons"
+          >
+            <Box
+              gap="sm"
+              direction="row"
+              wrap="wrap"
+              addlClassName="Account__create__buttons__group"
             >
-              Generate keypair
-            </Button>
-
-            {IS_TESTING_NETWORK || IS_CUSTOM_NETWORK_WITH_HORIZON ? (
               <Button
+                disabled={isLoading || isFetching}
                 size="md"
-                disabled={!account.publicKey || isLoading}
-                variant="tertiary"
-                isLoading={isLoading || isFetching}
-                onClick={() => {
-                  resetQuery();
-                  refetch();
-                }}
-                data-testid="fundAccount-button"
+                variant="secondary"
+                onClick={generateKeypair}
               >
-                Fund account with Friendbot
+                Generate keypair
               </Button>
-            ) : null}
-          </div>
+
+              <>
+                {IS_TESTING_NETWORK ? (
+                  <Button
+                    disabled={!account.publicKey || isLoading || isFetching}
+                    size="md"
+                    variant="tertiary"
+                    icon={<Icon.Save01 />}
+                    onClick={() => {
+                      setIsSaveModalVisible(true);
+                    }}
+                  >
+                    Save Keypair
+                  </Button>
+                ) : null}
+              </>
+            </Box>
+
+            <>
+              {IS_TESTING_NETWORK || IS_CUSTOM_NETWORK_WITH_HORIZON ? (
+                <Button
+                  size="md"
+                  disabled={!account.publicKey || isLoading}
+                  variant="tertiary"
+                  isLoading={isLoading || isFetching}
+                  onClick={() => {
+                    resetQuery();
+                    refetch();
+                  }}
+                  data-testid="fundAccount-button"
+                >
+                  Fund account with Friendbot
+                </Button>
+              ) : null}
+            </>
+          </Box>
 
           {Boolean(account.publicKey) && (
             <ExpandBox isExpanded={Boolean(account.publicKey)} offsetTop="xl">
@@ -149,6 +186,16 @@ export default function CreateAccount() {
         onClose={() => {
           setShowAlert(false);
         }}
+      />
+
+      <SaveKeypairModal
+        type="save"
+        isVisible={isSaveModalVisible}
+        onClose={() => {
+          setIsSaveModalVisible(false);
+        }}
+        publicKey={account.publicKey!}
+        secretKey={secretKey}
       />
     </div>
   );

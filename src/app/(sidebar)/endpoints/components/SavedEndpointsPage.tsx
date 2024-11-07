@@ -16,6 +16,7 @@ import { InputSideElement } from "@/components/InputSideElement";
 import { NextLink } from "@/components/NextLink";
 import { ShareUrlButton } from "@/components/ShareUrlButton";
 import { PrettyJsonTextarea } from "@/components/PrettyJsonTextarea";
+import { SavedItemTimestampAndDelete } from "@/components/SavedItemTimestampAndDelete";
 
 import { NetworkOptions } from "@/constants/settings";
 import { Routes } from "@/constants/routes";
@@ -300,17 +301,9 @@ export const SavedEndpointsPage = () => {
                 </Box>
 
                 <Box gap="sm" direction="row" align="center" justify="end">
-                  <Text
-                    as="div"
-                    size="xs"
-                  >{`Last saved ${formatTimestamp(e.timestamp)}`}</Text>
-
-                  <Button
-                    size="md"
-                    variant="error"
-                    icon={<Icon.Trash01 />}
-                    type="button"
-                    onClick={() => {
+                  <SavedItemTimestampAndDelete
+                    timestamp={e.timestamp}
+                    onDelete={() => {
                       const updatedList = arrayItem.delete(
                         savedRpcMethods,
                         idx,
@@ -319,7 +312,7 @@ export const SavedEndpointsPage = () => {
                       localStorageSavedRpcMethods.set(updatedList);
                       setSavedRpcMethods(updatedList);
                     }}
-                  ></Button>
+                  />
                 </Box>
               </Box>
               {expandedPayloadIndex[idx] ? (

@@ -17,6 +17,8 @@ import { MultiLedgerEntriesPicker } from "@/components/FormElements/XdrLedgerKey
 import { ConfigSettingIdPicker } from "@/components/FormElements/ConfigSettingIdPicker";
 
 import { parseJsonString } from "@/helpers/parseJsonString";
+import { removeLeadingZeroes } from "@/helpers/removeLeadingZeroes";
+
 import { validate } from "@/validate";
 import {
   AnyObject,
@@ -349,7 +351,7 @@ export const formComponentTemplateEndpoints = (
             id={id}
             label="Destination Amount"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
-            value={templ.value || ""}
+            value={templ.value ? removeLeadingZeroes(templ.value) : ""}
             error={templ.error}
             onChange={templ.onChange}
           />
@@ -698,7 +700,7 @@ export const formComponentTemplateEndpoints = (
             id={id}
             label="Source Amount"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
-            value={templ.value || ""}
+            value={templ.value ? removeLeadingZeroes(templ.value) : ""}
             error={templ.error}
             onChange={templ.onChange}
           />
@@ -761,7 +763,7 @@ export const formComponentTemplateEndpoints = (
             id={id}
             label="Starting Balance"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
-            value={templ.value || ""}
+            value={templ.value ? removeLeadingZeroes(templ.value) : ""}
             error={templ.error}
             onChange={templ.onChange}
           />

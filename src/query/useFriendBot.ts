@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { EmptyObj, Network } from "@/types/types";
+import { EmptyObj, Network, NetworkHeaders } from "@/types/types";
 
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 
@@ -7,10 +7,12 @@ export const useFriendBot = ({
   network,
   publicKey,
   key,
+  headers,
 }: {
   network: Network | EmptyObj;
   publicKey: string;
   key: { type: string };
+  headers: NetworkHeaders;
 }) => {
   const knownFriendbotURL =
     network.id === "futurenet"
@@ -29,7 +31,7 @@ export const useFriendBot = ({
           network.id === "custom"
             ? `${network.horizonUrl}/friendbot`
             : `${knownFriendbotURL}/`;
-        const response = await fetch(`${url}?addr=${publicKey}`);
+        const response = await fetch(`${url}?addr=${publicKey}`, { headers });
 
         if (!response.ok) {
           const errorBody = await response.json();

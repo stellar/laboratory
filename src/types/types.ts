@@ -1,5 +1,5 @@
 import React from "react";
-import { NetworkError, SorobanRpc, xdr } from "@stellar/stellar-sdk";
+import { NetworkError, rpc as StellarRpc, xdr } from "@stellar/stellar-sdk";
 import { TransactionBuildParams } from "@/store/createStore";
 
 // =============================================================================
@@ -25,9 +25,15 @@ export type Network = {
   id: NetworkType;
   label: string;
   horizonUrl: string;
+  horizonHeaderName?: string;
+  horizonHeaderValue?: string;
   rpcUrl: string;
+  rpcHeaderName?: string;
+  rpcHeaderValue?: string;
   passphrase: string;
 };
+
+export type NetworkHeaders = Record<string, string>;
 
 export type StatusPageComponent = {
   [key: string]: any;
@@ -70,6 +76,14 @@ export type MuxedAccount = {
 
 export type MuxedAccountFieldType = MuxedAccount & {
   error: string;
+};
+
+export type SavedKeypair = {
+  timestamp: number;
+  network: LocalStorageSavedNetwork;
+  name: string;
+  publicKey: string;
+  secretKey: string;
 };
 
 // =============================================================================
@@ -187,7 +201,7 @@ export type SavedTransactionPage = "build" | "sign" | "simulate" | "submit";
 
 export type SubmitRpcResponse = {
   hash: string;
-  result: SorobanRpc.Api.GetSuccessfulTransactionResponse;
+  result: StellarRpc.Api.GetSuccessfulTransactionResponse;
   operationCount: number;
   fee: string;
 };

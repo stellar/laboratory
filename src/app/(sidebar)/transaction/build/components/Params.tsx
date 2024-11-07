@@ -19,12 +19,14 @@ import { TimeBoundsPicker } from "@/components/FormElements/TimeBoundsPicker";
 
 import { sanitizeObject } from "@/helpers/sanitizeObject";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
+import { removeLeadingZeroes } from "@/helpers/removeLeadingZeroes";
 
 import { TransactionBuildParams } from "@/store/createStore";
 import { useStore } from "@/store/useStore";
 import { useAccountSequenceNumber } from "@/query/useAccountSequenceNumber";
 import { validate } from "@/validate";
 import { EmptyObj, KeysOfUnion } from "@/types/types";
+import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 
 export const Params = () => {
   const requiredParams = ["source_account", "seq_num", "fee"] as const;
@@ -63,6 +65,7 @@ export const Params = () => {
   } = useAccountSequenceNumber({
     publicKey: txnParams.source_account,
     horizonUrl: network.horizonUrl,
+    headers: getNetworkHeaders(network, "horizon"),
   });
 
   // Preserve values and validate inputs when components mounts
@@ -333,7 +336,7 @@ export const Params = () => {
           <PositiveIntPicker
             id="fee"
             label="Base Fee"
-            value={txnParams.fee}
+            value={removeLeadingZeroes(txnParams.fee)}
             error={paramsError.fee}
             onChange={(e) => {
               const id = "fee";

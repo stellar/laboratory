@@ -1,11 +1,13 @@
 import { useMutation } from "@tanstack/react-query";
 import { Horizon, TransactionBuilder } from "@stellar/stellar-sdk";
-import { SubmitHorizonError } from "@/types/types";
+import { isEmptyObject } from "@/helpers/isEmptyObject";
+import { NetworkHeaders, SubmitHorizonError } from "@/types/types";
 
 type SubmitHorizonTxProps = {
   horizonUrl: string;
   transactionXdr: string;
   networkPassphrase: string;
+  headers: NetworkHeaders;
 };
 
 export const useSubmitHorizonTx = () => {
@@ -18,12 +20,16 @@ export const useSubmitHorizonTx = () => {
       horizonUrl,
       transactionXdr,
       networkPassphrase,
+      headers,
     }: SubmitHorizonTxProps) => {
       const transaction = TransactionBuilder.fromXDR(
         transactionXdr,
         networkPassphrase,
       );
-      const horizonServer = new Horizon.Server(horizonUrl);
+      const horizonServer = new Horizon.Server(horizonUrl, {
+        headers: isEmptyObject(headers) ? undefined : { ...headers },
+        allowHttp: new URL(horizonUrl).hostname === "localhost",
+      });
       return (await horizonServer.submitTransaction(
         transaction,
       )) as Horizon.HorizonApi.TransactionResponse;
