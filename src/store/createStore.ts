@@ -508,7 +508,17 @@ export const createStore = (options: CreateStoreOptions) =>
         // Select what to save in query string
         select() {
           return {
-            network: true,
+            network: {
+              id: true,
+              label: true,
+              horizonUrl: true,
+              horizonHeaderName: true,
+              horizonHeaderValue: false,
+              rpcUrl: true,
+              rpcHeaderName: true,
+              rpcHeaderValue: false,
+              passphrase: true,
+            },
             account: false,
             endpoints: {
               params: true,

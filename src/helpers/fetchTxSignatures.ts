@@ -1,3 +1,4 @@
+import { NetworkHeaders } from "@/types/types";
 import {
   FeeBumpTransaction,
   hash,
@@ -10,10 +11,12 @@ export const fetchTxSignatures = async ({
   txXdr,
   networkUrl,
   networkPassphrase,
+  headers,
 }: {
   txXdr: string;
   networkUrl: string;
   networkPassphrase: string;
+  headers: NetworkHeaders;
 }) => {
   try {
     let tx = TransactionBuilder.fromXDR(txXdr, networkPassphrase);
@@ -71,7 +74,9 @@ export const fetchTxSignatures = async ({
       const srcAccount = accounts[i];
 
       try {
-        const res = await fetch(`${networkUrl}/accounts/${srcAccount}`);
+        const res = await fetch(`${networkUrl}/accounts/${srcAccount}`, {
+          headers,
+        });
         const resJson = await res.json();
 
         if (sourceAccounts[srcAccount] && resJson?.signers) {

@@ -16,6 +16,7 @@ import * as StellarXdr from "@/helpers/StellarXdr";
 import { delayedAction } from "@/helpers/delayedAction";
 import { openUrl } from "@/helpers/openUrl";
 import { getBlockExplorerLink } from "@/helpers/getBlockExplorerLink";
+import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { localStorageSubmitMethod } from "@/helpers/localStorageSubmitMethod";
 import { buildEndpointHref } from "@/helpers/buildEndpointHref";
 
@@ -73,7 +74,9 @@ export default function SubmitTransaction() {
   const [isSaveTxnModalVisible, setIsSaveTxnModalVisible] = useState(false);
   const [isDropdownActive, setIsDropdownActive] = useState(false);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
-  const [submitMethod, setSubmitMethod] = useState("");
+  const [submitMethod, setSubmitMethod] = useState<"horizon" | "rpc" | string>(
+    "",
+  );
 
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const responseSuccessEl = useRef<HTMLDivElement | null>(null);
@@ -178,21 +181,30 @@ export default function SubmitTransaction() {
   };
 
   const handleSubmit = () => {
-    if (submitMethod === "rpc") {
-      submitRpc({
-        rpcUrl: network.rpcUrl,
-        transactionXdr: blob,
-        networkPassphrase: network.passphrase,
-      });
-    } else if (submitMethod === "horizon") {
-      submitHorizon({
-        horizonUrl: network.horizonUrl,
-        transactionXdr: blob,
-        networkPassphrase: network.passphrase,
-      });
-    } else {
-      // Do nothing
-    }
+    resetSubmitState();
+
+    delayedAction({
+      action: () => {
+        if (submitMethod === "rpc") {
+          submitRpc({
+            rpcUrl: network.rpcUrl,
+            transactionXdr: blob,
+            networkPassphrase: network.passphrase,
+            headers: getNetworkHeaders(network, submitMethod),
+          });
+        } else if (submitMethod === "horizon") {
+          submitHorizon({
+            horizonUrl: network.horizonUrl,
+            transactionXdr: blob,
+            networkPassphrase: network.passphrase,
+            headers: getNetworkHeaders(network, submitMethod),
+          });
+        } else {
+          // Do nothing
+        }
+      },
+      delay: 300,
+    });
   };
 
   const onSimulateTx = () => {
