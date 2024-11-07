@@ -610,9 +610,27 @@ export default function Endpoints() {
 
     if (renderedProps) {
       return (
-        <div className="Endpoints__txTextarea">
-          <PrettyJsonTextarea json={renderedProps} label="Payload" />
-        </div>
+        <>
+          <div className="Endpoints__txTextarea">
+            <PrettyJsonTextarea json={renderedProps} label="Payload" />
+          </div>
+          <Box gap="md" direction="row" justify="end">
+            <CopyText textToCopy={stringify(renderedProps, null, 2) || ""}>
+              <Button
+                size="md"
+                variant="tertiary"
+                icon={<Icon.Copy01 />}
+                iconPosition="left"
+                // needed this to prevent the form from submitting
+                onClick={(e) => {
+                  e.preventDefault();
+                }}
+              >
+                Copy JSON
+              </Button>
+            </CopyText>
+          </Box>
+        </>
       );
     }
     return null;
