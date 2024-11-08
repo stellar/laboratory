@@ -5,6 +5,7 @@ import {
   Badge,
   Button,
   Card,
+  CopyText,
   Icon,
   Input,
   Modal,
@@ -24,6 +25,7 @@ import { localStorageSavedEndpointsHorizon } from "@/helpers/localStorageSavedEn
 import { localStorageSavedRpcMethods } from "@/helpers/localStorageSavedRpcMethods";
 import { arrayItem } from "@/helpers/arrayItem";
 import { formatTimestamp } from "@/helpers/formatTimestamp";
+import { stringify } from "lossless-json";
 import { useStore } from "@/store/useStore";
 import {
   Network,
@@ -316,9 +318,23 @@ export const SavedEndpointsPage = () => {
                 </Box>
               </Box>
               {expandedPayloadIndex[idx] ? (
-                <div className="Endpoints__txTextarea">
-                  <PrettyJsonTextarea json={e.payload} label="Payload" />
-                </div>
+                <>
+                  <div className="Endpoints__txTextarea">
+                    <PrettyJsonTextarea json={e.payload} label="Payload" />
+                  </div>
+                  <Box gap="md" direction="row" justify="end">
+                    <CopyText textToCopy={stringify(e.payload, null, 2) || ""}>
+                      <Button
+                        size="md"
+                        variant="tertiary"
+                        icon={<Icon.Copy01 />}
+                        iconPosition="left"
+                      >
+                        Copy JSON
+                      </Button>
+                    </CopyText>
+                  </Box>
+                </>
               ) : (
                 <></>
               )}
