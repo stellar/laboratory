@@ -9,7 +9,6 @@ import {
   Loader,
   Button,
   Icon,
-  CopyText,
 } from "@stellar/design-system";
 import { useQueryClient } from "@tanstack/react-query";
 import { stringify } from "lossless-json";
@@ -24,6 +23,7 @@ import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { XdrTypeSelect } from "@/components/XdrTypeSelect";
 import { PrettyJsonTransaction } from "@/components/PrettyJsonTransaction";
 import { TransactionHashReadOnlyField } from "@/components/TransactionHashReadOnlyField";
+import { CopyJsonPayloadButton } from "@/components/CopyJsonPayloadButton";
 
 import { parseToLosslessJson } from "@/helpers/parseToLosslessJson";
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
@@ -180,18 +180,9 @@ export default function ViewXdr() {
                 </div>
 
                 <Box gap="md" direction="row" justify="end">
-                  <CopyText
-                    textToCopy={prettifyJsonString(xdrJsonDecoded.jsonString)}
-                  >
-                    <Button
-                      size="md"
-                      variant="tertiary"
-                      icon={<Icon.Copy01 />}
-                      iconPosition="left"
-                    >
-                      Copy JSON
-                    </Button>
-                  </CopyText>
+                  <CopyJsonPayloadButton
+                    jsonString={prettifyJsonString(xdrJsonDecoded.jsonString)}
+                  />
                 </Box>
               </Box>
             ) : null}

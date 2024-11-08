@@ -5,7 +5,6 @@ export const CopyJsonPayloadButton = ({
 }: {
   jsonString: string;
 }) => {
-  console.log("jsonString: ", jsonString);
   return (
     <CopyText textToCopy={jsonString}>
       <Button
