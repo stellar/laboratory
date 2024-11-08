@@ -18,12 +18,12 @@ import { ShareUrlButton } from "@/components/ShareUrlButton";
 import { PrettyJsonTextarea } from "@/components/PrettyJsonTextarea";
 import { SavedItemTimestampAndDelete } from "@/components/SavedItemTimestampAndDelete";
 
-import { NetworkOptions } from "@/constants/settings";
 import { Routes } from "@/constants/routes";
 import { localStorageSavedEndpointsHorizon } from "@/helpers/localStorageSavedEndpointsHorizon";
 import { localStorageSavedRpcMethods } from "@/helpers/localStorageSavedRpcMethods";
 import { arrayItem } from "@/helpers/arrayItem";
 import { formatTimestamp } from "@/helpers/formatTimestamp";
+import { getNetworkById } from "@/helpers/getNetworkById";
 import { useStore } from "@/store/useStore";
 import {
   Network,
@@ -71,7 +71,7 @@ export const SavedEndpointsPage = () => {
   const getNetworkConfig = (
     network: LocalStorageSavedNetwork,
   ): Network | undefined => {
-    const defaults = NetworkOptions.find((n) => n.id === network.id);
+    const defaults = getNetworkById(network.id);
 
     switch (network.id) {
       case "testnet":

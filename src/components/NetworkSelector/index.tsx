@@ -15,8 +15,9 @@ import { localStorageSavedNetwork } from "@/helpers/localStorageSavedNetwork";
 import { delayedAction } from "@/helpers/delayedAction";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { sanitizeObject } from "@/helpers/sanitizeObject";
+import { getNetworkById } from "@/helpers/getNetworkById";
 
-import { AnyObject, EmptyObj, Network, NetworkType } from "@/types/types";
+import { AnyObject, EmptyObj, Network } from "@/types/types";
 
 import "./styles.scss";
 
@@ -214,10 +215,6 @@ export const NetworkSelector = () => {
       ...validationError,
       [param]: value ? isNetworkUrlInvalid(value) : false,
     });
-  };
-
-  const getNetworkById = (networkId: NetworkType) => {
-    return NetworkOptions.find((op) => op.id === networkId);
   };
 
   const getButtonLabel = () => {
