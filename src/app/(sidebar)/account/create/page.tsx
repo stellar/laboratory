@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Card, Text, Button, Icon } from "@stellar/design-system";
 import { Keypair } from "@stellar/stellar-sdk";
 
@@ -9,6 +9,7 @@ import { useFriendBot } from "@/query/useFriendBot";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { useIsTestingNetwork } from "@/hooks/useIsTestingNetwork";
+import { useNetworkChanged } from "@/hooks/useNetworkChanged";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 
 import { GenerateKeypair } from "@/components/GenerateKeypair";
@@ -32,8 +33,6 @@ export default function CreateAccount() {
   const IS_TESTING_NETWORK = useIsTestingNetwork();
   const IS_CUSTOM_NETWORK_WITH_HORIZON =
     network.id === "custom" && network.horizonUrl;
-
-  const networkRef = useRef(network);
 
   const resetQuery = useCallback(
     () =>
@@ -62,14 +61,7 @@ export default function CreateAccount() {
     }
   }, [isError, isSuccess]);
 
-  useEffect(() => {
-    if (networkRef.current.id !== network.id) {
-      networkRef.current = network;
-      resetStates();
-    }
-    // Not including network and resetStates()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [networkRef.current.id, network.id]);
+  useNetworkChanged(resetStates);
 
   const generateKeypair = () => {
     resetStates();
