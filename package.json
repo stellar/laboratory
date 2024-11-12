@@ -4,7 +4,7 @@
   "author": "Stellar Development Foundation <stellar@stellar.org>",
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.0.0"
   },
   "scripts": {
     "dev": "export NEXT_PUBLIC_COMMIT_HASH=$(git rev-parse --short HEAD) && next dev",
