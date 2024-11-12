@@ -6,7 +6,6 @@ import {
   Alert,
   Button,
   Card,
-  CopyText,
   Icon,
   Input,
   Link,
@@ -22,6 +21,7 @@ import { InputSideElement } from "@/components/InputSideElement";
 import { Box } from "@/components/layout/Box";
 import { PrettyJsonTextarea } from "@/components/PrettyJsonTextarea";
 import { ShareUrlButton } from "@/components/ShareUrlButton";
+import { CopyJsonPayloadButton } from "@/components/CopyJsonPayloadButton";
 
 import { useStore } from "@/store/useStore";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
@@ -615,20 +615,9 @@ export default function Endpoints() {
             <PrettyJsonTextarea json={renderedProps} label="Payload" />
           </div>
           <Box gap="md" direction="row" justify="end">
-            <CopyText textToCopy={stringify(renderedProps, null, 2) || ""}>
-              <Button
-                size="md"
-                variant="tertiary"
-                icon={<Icon.Copy01 />}
-                iconPosition="left"
-                // needed this to prevent the form from submitting
-                onClick={(e) => {
-                  e.preventDefault();
-                }}
-              >
-                Copy JSON
-              </Button>
-            </CopyText>
+            <CopyJsonPayloadButton
+              jsonString={stringify(renderedProps, null, 2) || ""}
+            />
           </Box>
         </>
       );
@@ -1032,18 +1021,9 @@ export default function Endpoints() {
                     {renderPostAsyncTxResponseMessage()}
                   </div>
                   <div className="PageFooter__right">
-                    <CopyText
-                      textToCopy={stringify(endpointData.json, null, 2) || ""}
-                    >
-                      <Button
-                        size="md"
-                        variant="tertiary"
-                        icon={<Icon.Copy01 />}
-                        iconPosition="left"
-                      >
-                        Copy JSON
-                      </Button>
-                    </CopyText>
+                    <CopyJsonPayloadButton
+                      jsonString={stringify(endpointData.json, null, 2) || ""}
+                    />
                   </div>
                 </div>
               </div>
