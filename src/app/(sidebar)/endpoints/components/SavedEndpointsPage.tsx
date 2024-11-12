@@ -5,11 +5,14 @@ import {
   Badge,
   Button,
   Card,
+  CopyText,
   Icon,
   Input,
   Modal,
   Text,
 } from "@stellar/design-system";
+import { stringify } from "lossless-json";
+
 import { TabView } from "@/components/TabView";
 import { Box } from "@/components/layout/Box";
 import { InputSideElement } from "@/components/InputSideElement";
@@ -316,9 +319,23 @@ export const SavedEndpointsPage = () => {
                 </Box>
               </Box>
               {expandedPayloadIndex[idx] ? (
-                <div className="Endpoints__txTextarea">
-                  <PrettyJsonTextarea json={e.payload} label="Payload" />
-                </div>
+                <>
+                  <div className="Endpoints__txTextarea">
+                    <PrettyJsonTextarea json={e.payload} label="Payload" />
+                  </div>
+                  <Box gap="md" direction="row" justify="end">
+                    <CopyText textToCopy={stringify(e.payload, null, 2) || ""}>
+                      <Button
+                        size="md"
+                        variant="tertiary"
+                        icon={<Icon.Copy01 />}
+                        iconPosition="left"
+                      >
+                        Copy JSON
+                      </Button>
+                    </CopyText>
+                  </Box>
+                </>
               ) : (
                 <></>
               )}
