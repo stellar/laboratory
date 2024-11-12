@@ -262,10 +262,10 @@
     "@babel/helper-validator-identifier" "^7.24.7"
     to-fast-properties "^2.0.0"
 
-"@creit.tech/stellar-wallets-kit@^1.2.3":
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/@creit.tech/stellar-wallets-kit/-/stellar-wallets-kit-1.2.3.tgz#4a7cb03786fdf8c4ac3da8f872e951d3e9a2c349"
-  integrity sha512-AM1fL/cQkI0i+lefJlViOPR4uxZrPDImbF+eCYST7FEIWYZrPsd/Mtne5qGVJDC6Umzdg9HqJt7CSFZTUJ2b3A==
+"@creit.tech/stellar-wallets-kit@^1.2.5":
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/@creit.tech/stellar-wallets-kit/-/stellar-wallets-kit-1.2.5.tgz#852cdb9a1c248a5e9d9e899ff7fa59d99db69848"
+  integrity sha512-PcNK//8LzMLwZgpJwrnVAKR6PRN9Idt37VgG5SzkQEyLze5G1v+T+sUAc4OBQ0jkpFqHLarpgeMjfeB21T5ZGA==
   dependencies:
     "@albedo-link/intent" "0.12.0"
     "@creit.tech/xbull-wallet-connect" "0.3.0"
@@ -277,6 +277,7 @@
     "@stellar/freighter-api" "3.0.0"
     "@walletconnect/modal" "2.6.2"
     "@walletconnect/sign-client" "2.11.2"
+    buffer "6.0.3"
     events "3.3.0"
     lit "3.2.0"
     rxjs "7.8.1"

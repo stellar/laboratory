@@ -5,10 +5,8 @@ import { useStore } from "@/store/useStore";
 
 import {
   StellarWalletsKit,
-  FreighterModule,
-  xBullModule,
-  AlbedoModule,
   XBULL_ID,
+  allowAllModules,
 } from "@creit.tech/stellar-wallets-kit";
 
 import { getWalletKitNetwork } from "@/helpers/getWalletKitNetwork";
@@ -80,7 +78,7 @@ export const WalletKitContextProvider = ({
     return new StellarWalletsKit({
       network: networkType,
       selectedWalletId: XBULL_ID,
-      modules: [new xBullModule(), new FreighterModule(), new AlbedoModule()],
+      modules: allowAllModules(),
       ...(theme && {
         buttonTheme: isDarkTheme
           ? {
