@@ -40,6 +40,26 @@
     }
   }
 
+  &__create__buttons {
+    .Button {
+      min-width: fit-content;
+    }
+
+    @media screen and (max-width: 420px) {
+      & > * {
+        width: 100%;
+      }
+
+      &__group {
+        flex: 1;
+
+        .Button {
+          flex: 1;
+        }
+      }
+    }
+  }
+
   &__result {
     display: flex;
     flex-direction: column;

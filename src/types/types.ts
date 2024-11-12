@@ -78,6 +78,14 @@ export type MuxedAccountFieldType = MuxedAccount & {
   error: string;
 };
 
+export type SavedKeypair = {
+  timestamp: number;
+  network: LocalStorageSavedNetwork;
+  name: string;
+  publicKey: string;
+  secretKey: string;
+};
+
 // =============================================================================
 // Asset
 // =============================================================================

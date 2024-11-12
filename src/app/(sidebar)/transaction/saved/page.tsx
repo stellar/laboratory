@@ -9,15 +9,15 @@ import { Box } from "@/components/layout/Box";
 import { Routes } from "@/constants/routes";
 import { InputSideElement } from "@/components/InputSideElement";
 import { SaveTransactionModal } from "@/components/SaveTransactionModal";
+import { ShareUrlButton } from "@/components/ShareUrlButton";
+import { SavedItemTimestampAndDelete } from "@/components/SavedItemTimestampAndDelete";
 
 import { TRANSACTION_OPERATIONS } from "@/constants/transactionOperations";
-import { formatTimestamp } from "@/helpers/formatTimestamp";
 import { useStore } from "@/store/useStore";
 import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransactions";
 import { arrayItem } from "@/helpers/arrayItem";
 
 import { SavedTransaction, SavedTransactionPage } from "@/types/types";
-import { ShareUrlButton } from "@/components/ShareUrlButton";
 
 export default function SavedTransactions() {
   const { network, transaction, xdr } = useStore();
@@ -161,17 +161,9 @@ export default function SavedTransactions() {
           </Box>
 
           <Box gap="sm" direction="row" align="center" justify="end">
-            <Text
-              as="div"
-              size="xs"
-            >{`Last saved ${formatTimestamp(txn.timestamp)}`}</Text>
-
-            <Button
-              size="md"
-              variant="error"
-              icon={<Icon.Trash01 />}
-              type="button"
-              onClick={() => {
+            <SavedItemTimestampAndDelete
+              timestamp={txn.timestamp}
+              onDelete={() => {
                 const allTxns = localStorageSavedTransactions.get();
                 const indexToUpdate = allTxns.findIndex(
                   (t) => t.timestamp === txn.timestamp,
@@ -184,7 +176,7 @@ export default function SavedTransactions() {
                   updateSavedTxns();
                 }
               }}
-            ></Button>
+            />
           </Box>
         </Box>
       </Box>

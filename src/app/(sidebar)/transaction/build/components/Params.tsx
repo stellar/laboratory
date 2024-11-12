@@ -19,6 +19,7 @@ import { TimeBoundsPicker } from "@/components/FormElements/TimeBoundsPicker";
 
 import { sanitizeObject } from "@/helpers/sanitizeObject";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
+import { removeLeadingZeroes } from "@/helpers/removeLeadingZeroes";
 
 import { TransactionBuildParams } from "@/store/createStore";
 import { useStore } from "@/store/useStore";
@@ -335,7 +336,7 @@ export const Params = () => {
           <PositiveIntPicker
             id="fee"
             label="Base Fee"
-            value={txnParams.fee}
+            value={removeLeadingZeroes(txnParams.fee)}
             error={paramsError.fee}
             onChange={(e) => {
               const id = "fee";
