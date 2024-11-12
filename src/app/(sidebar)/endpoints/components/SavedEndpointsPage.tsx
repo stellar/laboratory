@@ -5,7 +5,6 @@ import {
   Badge,
   Button,
   Card,
-  CopyText,
   Icon,
   Input,
   Modal,
@@ -20,6 +19,7 @@ import { NextLink } from "@/components/NextLink";
 import { ShareUrlButton } from "@/components/ShareUrlButton";
 import { PrettyJsonTextarea } from "@/components/PrettyJsonTextarea";
 import { SavedItemTimestampAndDelete } from "@/components/SavedItemTimestampAndDelete";
+import { CopyJsonPayloadButton } from "@/components/CopyJsonPayloadButton";
 
 import { Routes } from "@/constants/routes";
 import { localStorageSavedEndpointsHorizon } from "@/helpers/localStorageSavedEndpointsHorizon";
@@ -324,16 +324,9 @@ export const SavedEndpointsPage = () => {
                     <PrettyJsonTextarea json={e.payload} label="Payload" />
                   </div>
                   <Box gap="md" direction="row" justify="end">
-                    <CopyText textToCopy={stringify(e.payload, null, 2) || ""}>
-                      <Button
-                        size="md"
-                        variant="tertiary"
-                        icon={<Icon.Copy01 />}
-                        iconPosition="left"
-                      >
-                        Copy JSON
-                      </Button>
-                    </CopyText>
+                    <CopyJsonPayloadButton
+                      jsonString={stringify(e.payload, null, 2) || ""}
+                    />
                   </Box>
                 </>
               ) : (
