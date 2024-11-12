@@ -4,7 +4,7 @@
   "author": "Stellar Development Foundation <stellar@stellar.org>",
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.0.0"
   },
   "scripts": {
     "dev": "export NEXT_PUBLIC_COMMIT_HASH=$(git rev-parse --short HEAD) && next dev",
@@ -19,7 +19,7 @@
     "pre-push": "yarn lint:ts && yarn test"
   },
   "dependencies": {
-    "@creit.tech/stellar-wallets-kit": "^1.2.3",
+    "@creit.tech/stellar-wallets-kit": "^1.2.5",
     "@ledgerhq/hw-app-str": "^7.0.4",
     "@ledgerhq/hw-transport-webusb": "^6.29.4",
     "@stellar/design-system": "^2.0.0-beta.17",

@@ -9,7 +9,6 @@ import {
   Loader,
   Button,
   Icon,
-  CopyText,
   Input,
 } from "@stellar/design-system";
 import { TransactionBuilder } from "@stellar/stellar-sdk";
@@ -26,6 +25,7 @@ import { XdrTypeSelect } from "@/components/XdrTypeSelect";
 import { PrettyJsonTransaction } from "@/components/PrettyJsonTransaction";
 import { TransactionHashReadOnlyField } from "@/components/TransactionHashReadOnlyField";
 import { LabelHeading } from "@/components/LabelHeading";
+import { CopyJsonPayloadButton } from "@/components/CopyJsonPayloadButton";
 
 import * as StellarXdr from "@/helpers/StellarXdr";
 import { parseToLosslessJson } from "@/helpers/parseToLosslessJson";
@@ -242,18 +242,9 @@ export default function ViewXdr() {
                 </div>
 
                 <Box gap="md" direction="row" justify="end">
-                  <CopyText
-                    textToCopy={prettifyJsonString(xdrJsonDecoded.jsonString)}
-                  >
-                    <Button
-                      size="md"
-                      variant="tertiary"
-                      icon={<Icon.Copy01 />}
-                      iconPosition="left"
-                    >
-                      Copy JSON
-                    </Button>
-                  </CopyText>
+                  <CopyJsonPayloadButton
+                    jsonString={prettifyJsonString(xdrJsonDecoded.jsonString)}
+                  />
                 </Box>
               </Box>
             ) : null}

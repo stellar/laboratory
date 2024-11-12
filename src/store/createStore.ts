@@ -57,6 +57,7 @@ export type SignTxActiveView = "import" | "overview";
 export interface Store {
   // Shared
   network: Network | EmptyObj;
+  previousNetwork: Network | EmptyObj;
   // Theme Color
   theme: ThemeColorType | null;
   // isDynamicNetworkSelect flag to indicate network update outside of the dropdown
@@ -262,10 +263,12 @@ export const createStore = (options: CreateStoreOptions) =>
       immer((set) => ({
         // Shared
         network: {},
+        previousNetwork: {},
         theme: null,
         isDynamicNetworkSelect: false,
         selectNetwork: (network: Network) =>
           set((state) => {
+            state.previousNetwork = state.network;
             state.network = network;
           }),
         updateIsDynamicNetworkSelect: (isDynamic: boolean) =>
