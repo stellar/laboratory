@@ -1,4 +1,4 @@
-import wasm, { decode, encode, guess } from "@stellar/stellar-xdr-json-web";
+import init, { decode, encode, guess } from "@stellar/stellar-xdr-json";
 
 // A wrapper for the Stellar XDR JSON
 declare global {
@@ -7,11 +7,11 @@ declare global {
   }
 }
 
-const init = async () => {
+const initialize = async () => {
   if (!window.__STELLAR_XDR_INIT__) {
-    await wasm();
+    await init();
     window.__STELLAR_XDR_INIT__ = true;
   }
 };
 
-export { init, decode, encode, guess };
+export { initialize, decode, encode, guess };
