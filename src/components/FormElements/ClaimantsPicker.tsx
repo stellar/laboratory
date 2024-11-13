@@ -162,6 +162,7 @@ const ClaimantPredicatePicker = ({
         {isEmpty(predicateValue) ? (
           <Predicate
             index={index}
+            parentId={id}
             key={`${id}-${index}`}
             parentPath=""
             onUpdate={(val: AnyObject | undefined) => {
@@ -171,6 +172,7 @@ const ClaimantPredicatePicker = ({
           />
         ) : (
           renderComponent({
+            parentId: id,
             index,
             nodes: transformPredicateDataForRender(predicateValue),
             onUpdate: handleUpdate,
@@ -183,11 +185,13 @@ const ClaimantPredicatePicker = ({
 };
 
 const renderComponent = ({
+  parentId,
   index,
   nodes,
   onUpdate,
   error,
 }: {
+  parentId: string;
   index: number;
   nodes: AnyObject[];
   onUpdate: (val: AnyObject | undefined) => void;
@@ -203,6 +207,7 @@ const renderComponent = ({
 
     return (
       <Component
+        parentId={parentId}
         key={`${index}${parentPath}`}
         index={index}
         parentPath={parentPath}
@@ -217,6 +222,7 @@ const renderComponent = ({
 
 const Predicate = ({
   index,
+  parentId,
   parentPath,
   type,
   nodeValue,
@@ -224,6 +230,7 @@ const Predicate = ({
   error,
 }: {
   index: number;
+  parentId: string;
   parentPath: string;
   type?: string;
   nodeValue?: AnyObject[] | undefined;
@@ -253,7 +260,7 @@ const Predicate = ({
       </LabelHeading>
 
       <RadioPicker
-        id={`${index}-${parentPath}-predicate`}
+        id={`${parentId}-${index}-${parentPath}-predicate`}
         selectedOption={type}
         onChange={(val) => {
           onUpdate({
@@ -273,7 +280,13 @@ const Predicate = ({
 
       <>
         {isConditional &&
-          renderComponent({ nodes: nodeValue || [], onUpdate, error, index })}
+          renderComponent({
+            nodes: nodeValue || [],
+            onUpdate,
+            error,
+            index,
+            parentId,
+          })}
       </>
     </Box>
   );
@@ -281,6 +294,7 @@ const Predicate = ({
 
 const PredicateType = ({
   index,
+  parentId,
   parentPath,
   type,
   nodeValue,
@@ -288,6 +302,7 @@ const PredicateType = ({
   error,
 }: {
   index: number;
+  parentId: string;
   parentPath: string;
   type: string;
   nodeValue: AnyObject[];
@@ -299,7 +314,7 @@ const PredicateType = ({
   return (
     <Box gap="sm" addlClassName="PredicateTypeWrapper">
       <RadioPicker
-        id={`${index}-${parentPath}-predicate-type`}
+        id={`${parentId}-${index}-${parentPath}-predicate-type`}
         selectedOption={type}
         label="Predicate Type"
         onChange={(val) => {
@@ -332,7 +347,15 @@ const PredicateType = ({
               ["and", "or"].includes(type) ? "PredicateWrapper__split" : ""
             }
           >
-            <>{renderComponent({ nodes: nodeValue, onUpdate, error, index })}</>
+            <>
+              {renderComponent({
+                nodes: nodeValue,
+                onUpdate,
+                error,
+                index,
+                parentId,
+              })}
+            </>
           </Box>
         )}
       </>
@@ -342,6 +365,7 @@ const PredicateType = ({
 
 const PredicateTimeType = ({
   index,
+  parentId,
   parentPath,
   type,
   nodeValue,
@@ -349,6 +373,7 @@ const PredicateTimeType = ({
   error,
 }: {
   index: number;
+  parentId: string;
   parentPath: string;
   type: string;
   nodeValue: AnyObject[];
@@ -358,7 +383,7 @@ const PredicateTimeType = ({
   return (
     <>
       <RadioPicker
-        id={`${index}-${parentPath}-time-type`}
+        id={`${parentId}-${index}-${parentPath}-time-type`}
         selectedOption={type}
         label="Time Type"
         onChange={(val) => {
@@ -376,19 +401,21 @@ const PredicateTimeType = ({
 
       {nodeValue &&
         nodeValue.length > 0 &&
-        renderComponent({ nodes: nodeValue, onUpdate, error, index })}
+        renderComponent({ nodes: nodeValue, onUpdate, error, index, parentId })}
     </>
   );
 };
 
 const PredicateTimeValue = ({
   index,
+  parentId,
   parentPath,
   nodeValue,
   onUpdate,
   error,
 }: {
   index: number;
+  parentId: string;
   parentPath: string;
   nodeValue: string;
   onUpdate: (val: {
@@ -412,7 +439,7 @@ const PredicateTimeValue = ({
       {inputType === "absolute" && (
         <>
           <TextPicker
-            id={`${index}-${parentPath}-time-value-abs`}
+            id={`${parentId}-${index}-${parentPath}-time-value-abs`}
             placeholder="Ex: 1603303504"
             value={nodeValue}
             label="Time Value"
