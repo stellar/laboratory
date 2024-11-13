@@ -1122,10 +1122,10 @@
   resolved "https://registry.yarnpkg.com/@stellar/js-xdr/-/js-xdr-3.1.2.tgz#db7611135cf21e989602fd72f513c3bed621bc74"
   integrity sha512-VVolPL5goVEIsvuGqDc5uiKxV03lzfWdvYg1KikvwheDmTBO68CKDji3bAZ/kppZrx5iTA8z3Ld5yuytcvhvOQ==
 
-"@stellar/stellar-base@13.0.0-beta.1":
-  version "13.0.0-beta.1"
-  resolved "https://registry.yarnpkg.com/@stellar/stellar-base/-/stellar-base-13.0.0-beta.1.tgz#e703865c835106bd04b8a9f1e106ed65f6e249f4"
-  integrity sha512-S5c2FyKwUOc28/3sDoOfPIcdzcbUyfiYRmcUlscZrEX/VVzV12216XRkdWy2MYa8KQNK60MpR7wrGp2MamvVGg==
+"@stellar/stellar-base@^13.0.0":
+  version "13.0.0"
+  resolved "https://registry.yarnpkg.com/@stellar/stellar-base/-/stellar-base-13.0.0.tgz#cbe5877600ec1aff9822ab671230a60fd026ad8d"
+  integrity sha512-zS/F1P2MfvgoIlUxOM3PMAEm76qoP5N7HYiww6y6EMP+j3brVFTnTIlJuYdnRdVaPXC/Z4BpojG3bVyhs32Tiw==
   dependencies:
     "@stellar/js-xdr" "^3.1.2"
     base32.js "^0.1.0"
@@ -1134,14 +1134,14 @@
     sha.js "^2.3.6"
     tweetnacl "^1.0.3"
   optionalDependencies:
-    sodium-native "^4.1.1"
+    sodium-native "^4.3.0"
 
-"@stellar/stellar-sdk@^13.0.0-beta.1":
-  version "13.0.0-beta.1"
-  resolved "https://registry.yarnpkg.com/@stellar/stellar-sdk/-/stellar-sdk-13.0.0-beta.1.tgz#9a995575b806bea3a383b2d9fe4b1fde065caeb4"
-  integrity sha512-yJN2HzibhZFJsdLRU83bkUwb9dq1sZRRiQptTJyunVv0hQsF+tTldrP3hHst3LROv/2GWTn20tmAqnp0hkzOhg==
+"@stellar/stellar-sdk@^13.0.0-rc.1":
+  version "13.0.0-rc.1"
+  resolved "https://registry.yarnpkg.com/@stellar/stellar-sdk/-/stellar-sdk-13.0.0-rc.1.tgz#1caa1a63c63b91c83a8e52b6f3eb30363888d5af"
+  integrity sha512-a173pQPCuS8/xVET/euwp8UWEFsE68KGF21Xcq46TluDGIq0fKVmJ6mw1LAS2uEOE757rrY24KNGAux4FXR64g==
   dependencies:
-    "@stellar/stellar-base" "13.0.0-beta.1"
+    "@stellar/stellar-base" "^13.0.0"
     axios "^1.7.7"
     bignumber.js "^9.1.2"
     eventsource "^2.0.2"
@@ -1150,10 +1150,10 @@
     toml "^3.0.0"
     urijs "^1.19.1"
 
-"@stellar/stellar-xdr-json-web@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@stellar/stellar-xdr-json-web/-/stellar-xdr-json-web-0.0.2.tgz#e4a954efb3c67ff875cf92e503b7c80efba5eea6"
-  integrity sha512-hBZgdTHG9FZhonYZApHapdi8gUhyD7fybgxqhz9tu2UY4iy7AMZgVwlX8Qmpoo8Xr9ap3PxAUZtlwfLg6oUT2w==
+"@stellar/stellar-xdr-json@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@stellar/stellar-xdr-json/-/stellar-xdr-json-0.0.4.tgz#8bf240fb7144cca55992b82207e5ccab08f9802e"
+  integrity sha512-QtgNlyd5V0ygxxHNn07HvrObfYcXtgBKHmFyAH0CwzTBYPyb1oDkff8DV0Zil2GRfroCTSXntXROq2Nzlz0/VA==
 
 "@stellar/tsconfig@^1.0.2":
   version "1.0.2"
@@ -5421,10 +5421,10 @@ socks@^2.6.1:
     ip-address "^9.0.5"
     smart-buffer "^4.2.0"
 
-sodium-native@^4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/sodium-native/-/sodium-native-4.1.1.tgz#109bc924dd55c13db87c6dd30da047487595723c"
-  integrity sha512-LXkAfRd4FHtkQS4X6g+nRcVaN7mWVNepV06phIsC6+IZFvGh1voW5TNQiQp2twVaMf05gZqQjuS+uWLM6gHhNQ==
+sodium-native@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/sodium-native/-/sodium-native-4.3.0.tgz#cc76b70824b0e131cbdc5f56d5369eaa89e1ad72"
+  integrity sha512-OcMgoS0NJx+4yVUlhvL9uZsVZfmyHZ2RpSXkiIoOHMglqvJDeGwn1rUigPrvcNTq3m9hPXtt6syxQbF3vvwmRQ==
   dependencies:
     node-gyp-build "^4.8.0"
 

@@ -7,7 +7,7 @@ export const useIsXdrInit = () => {
   useEffect(() => {
     // Stellar XDR init
     const init = async () => {
-      await StellarXdr.init();
+      await StellarXdr.initialize();
       setIsReady(true);
     };
 
