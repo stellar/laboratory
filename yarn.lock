@@ -1150,10 +1150,10 @@
     toml "^3.0.0"
     urijs "^1.19.1"
 
-"@stellar/stellar-xdr-json@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@stellar/stellar-xdr-json/-/stellar-xdr-json-0.0.4.tgz#8bf240fb7144cca55992b82207e5ccab08f9802e"
-  integrity sha512-QtgNlyd5V0ygxxHNn07HvrObfYcXtgBKHmFyAH0CwzTBYPyb1oDkff8DV0Zil2GRfroCTSXntXROq2Nzlz0/VA==
+"@stellar/stellar-xdr-json@^22.0.0-rc.1":
+  version "22.0.0-rc.1"
+  resolved "https://registry.yarnpkg.com/@stellar/stellar-xdr-json/-/stellar-xdr-json-22.0.0-rc.1.tgz#5690afb7776accdb51f82a6358ff80950a6137c1"
+  integrity sha512-BEVt2F2hmEuBctueFhFTyTh1GPxOZe4wtqhPhiSgc0y5iJb7+iy+ZMABBSQ6+xOx4edbiqR9O8wGHWosAuq4Ew==
 
 "@stellar/tsconfig@^1.0.2":
   version "1.0.2"
