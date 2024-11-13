@@ -81,9 +81,18 @@ export default function ViewXdr() {
   };
 
   const xdrJsonDecoded = xdrDecodeJson();
-  const txn = xdrJsonDecoded?.jsonString
-    ? TransactionBuilder.fromXDR(xdr.blob, network.passphrase)
-    : null;
+
+  const txnFromXdr = () => {
+    try {
+      return xdrJsonDecoded?.jsonString
+        ? TransactionBuilder.fromXDR(xdr.blob, network.passphrase)
+        : null;
+    } catch (e) {
+      return null;
+    }
+  };
+
+  const txn = txnFromXdr();
 
   const prettifyJsonString = (jsonString: string): string => {
     try {
