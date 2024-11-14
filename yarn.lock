@@ -1122,10 +1122,10 @@
   resolved "https://registry.yarnpkg.com/@stellar/js-xdr/-/js-xdr-3.1.2.tgz#db7611135cf21e989602fd72f513c3bed621bc74"
   integrity sha512-VVolPL5goVEIsvuGqDc5uiKxV03lzfWdvYg1KikvwheDmTBO68CKDji3bAZ/kppZrx5iTA8z3Ld5yuytcvhvOQ==
 
-"@stellar/stellar-base@^13.0.0":
-  version "13.0.0"
-  resolved "https://registry.yarnpkg.com/@stellar/stellar-base/-/stellar-base-13.0.0.tgz#cbe5877600ec1aff9822ab671230a60fd026ad8d"
-  integrity sha512-zS/F1P2MfvgoIlUxOM3PMAEm76qoP5N7HYiww6y6EMP+j3brVFTnTIlJuYdnRdVaPXC/Z4BpojG3bVyhs32Tiw==
+"@stellar/stellar-base@^13.0.1":
+  version "13.0.1"
+  resolved "https://registry.yarnpkg.com/@stellar/stellar-base/-/stellar-base-13.0.1.tgz#0897f77349ded61e838c0d55519f36f720efe3c9"
+  integrity sha512-Xbd12mc9Oj/130Tv0URmm3wXG77XMshZtZ2yNCjqX5ZbMD5IYpbBs3DVCteLU/4SLj/Fnmhh1dzhrQXnk4r+pQ==
   dependencies:
     "@stellar/js-xdr" "^3.1.2"
     base32.js "^0.1.0"
@@ -1136,12 +1136,12 @@
   optionalDependencies:
     sodium-native "^4.3.0"
 
-"@stellar/stellar-sdk@^13.0.0-rc.2":
-  version "13.0.0-rc.2"
-  resolved "https://registry.yarnpkg.com/@stellar/stellar-sdk/-/stellar-sdk-13.0.0-rc.2.tgz#283e8e6ba0aba0e324a69ed5ae2336d0c0ef4582"
-  integrity sha512-6EqMKAOumI64aAFjTFdbtjf7J3edZ4Usu+kWfRrUXpq4zzuMMiWU8Otiuavd3T3a+09nP4kNnoUTv9LDnyzr9Q==
+"@stellar/stellar-sdk@^13.0.0":
+  version "13.0.0"
+  resolved "https://registry.yarnpkg.com/@stellar/stellar-sdk/-/stellar-sdk-13.0.0.tgz#293f0bf6964b384e489b0ad75174d39cd22a3a69"
+  integrity sha512-+wvmKi+XWwu27nLYTM17EgBdpbKohEkOfCIK4XKfsI4WpMXAqvnqSm98i9h5dAblNB+w8BJqzGs1JY0PtTGm4A==
   dependencies:
-    "@stellar/stellar-base" "^13.0.0"
+    "@stellar/stellar-base" "^13.0.1"
     axios "^1.7.7"
     bignumber.js "^9.1.2"
     eventsource "^2.0.2"
