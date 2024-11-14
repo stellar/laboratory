@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-test.describe("View XDR Page", () => {
+test.describe("View XDR to JSON Page", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("http://localhost:3000/xdr/view");
   });
