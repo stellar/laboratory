@@ -133,7 +133,7 @@ export const XdrTypeSelect = ({ error }: XdrTypeSelectProps) => {
 
   return (
     <>
-      <div className="XdrTypeSelect">
+      <div className="XdrTypeSelect" data-testid="xdr-type-select-container">
         <Input
           id="xdr-type-select"
           fieldSize="md"
@@ -166,6 +166,7 @@ export const XdrTypeSelect = ({ error }: XdrTypeSelectProps) => {
         <div
           className="XdrTypeSelect__options"
           data-is-visible={isOptionsVisible}
+          data-testid="xdr-type-select-options"
         >
           {renderOptions()}
         </div>

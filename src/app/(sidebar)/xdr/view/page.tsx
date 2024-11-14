@@ -81,9 +81,18 @@ export default function ViewXdr() {
   };
 
   const xdrJsonDecoded = xdrDecodeJson();
-  const txn = xdrJsonDecoded?.jsonString
-    ? TransactionBuilder.fromXDR(xdr.blob, network.passphrase)
-    : null;
+
+  const txnFromXdr = () => {
+    try {
+      return xdrJsonDecoded?.jsonString
+        ? TransactionBuilder.fromXDR(xdr.blob, network.passphrase)
+        : null;
+    } catch (e) {
+      return null;
+    }
+  };
+
+  const txn = txnFromXdr();
 
   const prettifyJsonString = (jsonString: string): string => {
     try {
@@ -122,7 +131,7 @@ export default function ViewXdr() {
       const idText = createClaimableBalanceIds.length === 1 ? "ID" : "IDs";
 
       return (
-        <Box gap="sm">
+        <Box gap="sm" data-testid="view-xdr-claimable-balance-container">
           <LabelHeading size="md">{`This transaction contains ${labelText} with the following ${idText}`}</LabelHeading>
           <>
             {createClaimableBalanceIds.map((op) => {
@@ -234,7 +243,10 @@ export default function ViewXdr() {
               <Box gap="lg">
                 <>{renderClaimableBalanceIds()}</>
 
-                <div className="PageBody__content PageBody__scrollable">
+                <div
+                  className="PageBody__content PageBody__scrollable"
+                  data-testid="view-xdr-render-json"
+                >
                   <PrettyJsonTransaction
                     json={parseToLosslessJson(xdrJsonDecoded.jsonString)}
                     xdr={xdr.blob}
