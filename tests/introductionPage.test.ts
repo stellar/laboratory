@@ -13,7 +13,7 @@ test.describe("Introduction Page", () => {
     await expect(page.getByTestId("info-cards").locator("h2")).toHaveText([
       "Stellar Quest",
       "Developer Tools",
-      "Soroban RPC",
+      "Stellar RPC",
       "Horizon",
     ]);
   });
