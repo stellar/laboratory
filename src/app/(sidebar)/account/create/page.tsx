@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Card, Text, Button, Icon } from "@stellar/design-system";
+import { Text, Button, Icon } from "@stellar/design-system";
 import { Keypair } from "@stellar/stellar-sdk";
 
 import { useStore } from "@/store/useStore";
@@ -20,6 +20,7 @@ import { Box } from "@/components/layout/Box";
 import { SaveKeypairModal } from "@/components/SaveKeypairModal";
 
 import "../styles.scss";
+import { PageCard } from "@/components/layout/PageCard";
 
 export default function CreateAccount() {
   const { account, network } = useStore();
@@ -79,19 +80,14 @@ export default function CreateAccount() {
 
   return (
     <div className="Account">
-      <Card>
+      <PageCard heading="Keypair Generator">
         <div className="Account__card">
-          <div className="CardText">
-            <Text size="lg" as="h1" weight="medium">
-              Keypair Generator
-            </Text>
+          <Text size="sm" as="div">
+            These keypairs can be used on the Stellar network where one is
+            required. For example, it can be used as an account master key,
+            account signer, and/or as a stellar-core node key.
+          </Text>
 
-            <Text size="sm" as="p">
-              These keypairs can be used on the Stellar network where one is
-              required. For example, it can be used as an account master key,
-              account signer, and/or as a stellar-core node key.
-            </Text>
-          </div>
           <Box
             gap="sm"
             direction="row"
@@ -162,7 +158,7 @@ export default function CreateAccount() {
             </ExpandBox>
           )}
         </div>
-      </Card>
+      </PageCard>
 
       <SuccessMsg
         publicKey={account.publicKey!}

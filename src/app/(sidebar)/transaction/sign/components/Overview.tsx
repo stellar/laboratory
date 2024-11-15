@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Card, Icon, Text, Button, Select } from "@stellar/design-system";
+import { Icon, Button, Select } from "@stellar/design-system";
 import {
   FeeBumpTransaction,
   Transaction,
@@ -29,12 +29,12 @@ import { validate } from "@/validate";
 import { Box } from "@/components/layout/Box";
 import { MultiPicker } from "@/components/FormElements/MultiPicker";
 import { TextPicker } from "@/components/FormElements/TextPicker";
-import { WithInfoText } from "@/components/WithInfoText";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { ViewInXdrButton } from "@/components/ViewInXdrButton";
 import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
 import { LabelHeading } from "@/components/LabelHeading";
+import { PageCard } from "@/components/layout/PageCard";
 
 const MIN_LENGTH_FOR_FULL_WIDTH_FIELD = 30;
 
@@ -595,12 +595,9 @@ export const Overview = () => {
 
   return (
     <>
-      <Box gap="md">
-        <div className="PageHeader">
-          <Text size="md" as="h1" weight="medium">
-            Transaction Overview
-          </Text>
-
+      <PageCard
+        heading="Transaction Overview"
+        rightElement={
           <Button
             size="md"
             variant="error"
@@ -612,58 +609,52 @@ export const Overview = () => {
           >
             Clear and import new
           </Button>
+        }
+      >
+        <div className="SignTx__FieldViewer">
+          {mergedFields?.map((field) => {
+            const className =
+              field.value &&
+              field.value.toString().length >= MIN_LENGTH_FOR_FULL_WIDTH_FIELD
+                ? "full-width"
+                : "half-width";
+
+            if (field.label.includes("XDR")) {
+              return (
+                <div className={className} key={field.label}>
+                  <XdrPicker
+                    readOnly
+                    id={field.label}
+                    label={field.label}
+                    value={field.value ? field.value.toString() : ""}
+                  />
+                </div>
+              );
+            } else {
+              return (
+                <div className={className} key={field.label}>
+                  <TextPicker
+                    readOnly
+                    id={field.label}
+                    label={field.label}
+                    value={field.value ? field.value.toString() : ""}
+                    copyButton={{
+                      position: "right",
+                    }}
+                  />
+                </div>
+              );
+            }
+          })}
         </div>
-
-        <Card>
-          <div className="SignTx__FieldViewer">
-            {mergedFields?.map((field) => {
-              const className =
-                field.value &&
-                field.value.toString().length >= MIN_LENGTH_FOR_FULL_WIDTH_FIELD
-                  ? "full-width"
-                  : "half-width";
-
-              if (field.label.includes("XDR")) {
-                return (
-                  <div className={className} key={field.label}>
-                    <XdrPicker
-                      readOnly
-                      id={field.label}
-                      label={field.label}
-                      value={field.value ? field.value.toString() : ""}
-                    />
-                  </div>
-                );
-              } else {
-                return (
-                  <div className={className} key={field.label}>
-                    <TextPicker
-                      readOnly
-                      id={field.label}
-                      label={field.label}
-                      value={field.value ? field.value.toString() : ""}
-                      copyButton={{
-                        position: "right",
-                      }}
-                    />
-                  </div>
-                );
-              }
-            })}
-          </div>
-        </Card>
-      </Box>
+      </PageCard>
 
       <div className="SignTx__Signs">
-        <div className="PageHeader">
-          <WithInfoText href="https://developers.stellar.org/docs/learn/encyclopedia/signatures-multisig">
-            <Text size="md" as="h1" weight="medium">
-              Signatures
-            </Text>
-          </WithInfoText>
-        </div>
-
-        <Card>
+        <PageCard
+          heading="Signatures"
+          headingInfoLink="https://developers.stellar.org/docs/learn/encyclopedia/signatures-multisig"
+          headingAs="h2"
+        >
           <Box gap="lg">
             <Box gap="md" addlClassName="PageBody__content">
               <MultiPicker
@@ -858,7 +849,7 @@ export const Overview = () => {
               <AddSignatureButton />
             </Box>
           </Box>
-        </Card>
+        </PageCard>
 
         {sign.signedTx ? (
           <div ref={successResponseEl}>

@@ -4,7 +4,6 @@ import { useCallback, useEffect, useState } from "react";
 import {
   Alert,
   Text,
-  Card,
   Input,
   Icon,
   Button,
@@ -28,6 +27,7 @@ import { useFriendBot } from "@/query/useFriendBot";
 import { useAccountInfo } from "@/query/useAccountInfo";
 
 import { NetworkType, SavedKeypair } from "@/types/types";
+import { PageCard } from "@/components/layout/PageCard";
 
 export default function SavedKeypairs() {
   const { network, selectNetwork, updateIsDynamicNetworkSelect } = useStore();
@@ -157,13 +157,7 @@ export default function SavedKeypairs() {
 
   return (
     <Box gap="md">
-      <Box gap="md">
-        <div className="PageHeader">
-          <Text size="md" as="h1" weight="medium">
-            Saved Keypairs
-          </Text>
-        </div>
-
+      <PageCard heading="Saved Keypairs">
         <>
           {IS_TESTING_NETWORK ? (
             <Alert variant="warning" placement="inline">
@@ -178,8 +172,8 @@ export default function SavedKeypairs() {
           ) : null}
         </>
 
-        <Card>{renderContent()}</Card>
-      </Box>
+        {renderContent()}
+      </PageCard>
 
       <>{renderOtherNetworkMessage()}</>
 

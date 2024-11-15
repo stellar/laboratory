@@ -1,6 +1,6 @@
 "use client";
 
-import { Alert, Text } from "@stellar/design-system";
+import { Alert } from "@stellar/design-system";
 
 import { useStore } from "@/store/useStore";
 import { Box } from "@/components/layout/Box";
@@ -65,12 +65,6 @@ export default function BuildTransaction() {
 
   return (
     <Box gap="md">
-      <div className="PageHeader">
-        <Text size="md" as="h1" weight="medium">
-          Build Transaction
-        </Text>
-      </div>
-
       <Params />
       <Operations />
 

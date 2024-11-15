@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Alert, Card, Link, Text, Button } from "@stellar/design-system";
+import { Alert, Link, Button } from "@stellar/design-system";
 
 import { useStore } from "@/store/useStore";
 
 import { ExpandBox } from "@/components/ExpandBox";
 import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
 import { MuxedAccountResult } from "@/components/MuxedAccountResult";
-import { WithInfoText } from "@/components/WithInfoText";
+import { PageCard } from "@/components/layout/PageCard";
 
 import { muxedAccount } from "@/helpers/muxedAccount";
 
@@ -57,16 +57,11 @@ export default function ParseMuxedAccount() {
 
   return (
     <div className="Account">
-      <Card>
+      <PageCard
+        heading="Get Muxed Account from M address"
+        headingInfoLink="https://developers.stellar.org/docs/learn/encyclopedia/transactions-specialized/pooled-accounts-muxed-accounts-memos"
+      >
         <div className="Account__card">
-          <div className="CardText">
-            <WithInfoText href="https://developers.stellar.org/docs/learn/encyclopedia/transactions-specialized/pooled-accounts-muxed-accounts-memos">
-              <Text size="lg" as="h1" weight="medium">
-                Get Muxed Account from M address
-              </Text>
-            </WithInfoText>
-          </div>
-
           <PubKeyPicker
             id="muxed-account-address"
             label="Muxed Account M Address"
@@ -121,7 +116,7 @@ export default function ParseMuxedAccount() {
             />
           </ExpandBox>
         </div>
-      </Card>
+      </PageCard>
 
       <Alert
         placement="inline"

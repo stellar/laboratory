@@ -1,7 +1,8 @@
-import { Icon, Card, Text, Link } from "@stellar/design-system";
+import { Icon, Text, Link } from "@stellar/design-system";
 import { NextLink } from "@/components/NextLink";
-import { Routes } from "@/constants/routes";
 import { InfoCards } from "@/components/InfoCards";
+import { PageCard } from "@/components/layout/PageCard";
+import { Routes } from "@/constants/routes";
 import { openUrl } from "@/helpers/openUrl";
 
 export const EndpointsLandingPage = () => {
@@ -28,40 +29,34 @@ export const EndpointsLandingPage = () => {
 
   return (
     <>
-      <Card>
-        <div className="CardText">
-          <Text size="lg" as="h1" weight="medium">
-            API Explorer
-          </Text>
+      <PageCard heading="API Explorer">
+        <Text size="sm" as="p">
+          The Stellar Lab is a set of tools that enables people to try out and
+          learn about the Stellar network. The Lab can{" "}
+          <NextLink href={Routes.BUILD_TRANSACTION} sds-variant="primary">
+            build transactions
+          </NextLink>
+          ,{" "}
+          <NextLink href={Routes.SIGN_TRANSACTION} sds-variant="primary">
+            sign them
+          </NextLink>
+          , and{" "}
+          <NextLink href={Routes.SUBMIT_TRANSACTION} sds-variant="primary">
+            submit them to the network
+          </NextLink>
+          . In this section of the Lab, you can explore the various endpoints
+          from the RPC and Horizon, make requests to these endpoints, and save
+          them for future use.
+        </Text>
 
-          <Text size="sm" as="p">
-            The Stellar Lab is a set of tools that enables people to try out and
-            learn about the Stellar network. The Lab can{" "}
-            <NextLink href={Routes.BUILD_TRANSACTION} sds-variant="primary">
-              build transactions
-            </NextLink>
-            ,{" "}
-            <NextLink href={Routes.SIGN_TRANSACTION} sds-variant="primary">
-              sign them
-            </NextLink>
-            , and{" "}
-            <NextLink href={Routes.SUBMIT_TRANSACTION} sds-variant="primary">
-              submit them to the network
-            </NextLink>
-            . In this section of the Lab, you can explore the various endpoints
-            from the RPC and Horizon, make requests to these endpoints, and save
-            them for future use.
-          </Text>
-
-          <Text size="sm" as="p">
-            For Stellar docs, take a look at the{" "}
-            <Link href="https://developers.stellar.org/">
-              Stellar developers site
-            </Link>
-            .
-          </Text>
-        </div>
-      </Card>
+        <Text size="sm" as="p">
+          For Stellar docs, take a look at the{" "}
+          <Link href="https://developers.stellar.org/">
+            Stellar developers site
+          </Link>
+          .
+        </Text>
+      </PageCard>
       <InfoCards infoCards={infoCards} />
     </>
   );

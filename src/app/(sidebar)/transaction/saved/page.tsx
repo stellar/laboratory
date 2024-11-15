@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Alert, Text, Card, Input, Icon, Button } from "@stellar/design-system";
+import { Alert, Input, Icon, Button } from "@stellar/design-system";
 import { useRouter } from "next/navigation";
 
 import { NextLink } from "@/components/NextLink";
@@ -11,6 +11,7 @@ import { InputSideElement } from "@/components/InputSideElement";
 import { SaveTransactionModal } from "@/components/SaveTransactionModal";
 import { ShareUrlButton } from "@/components/ShareUrlButton";
 import { SavedItemTimestampAndDelete } from "@/components/SavedItemTimestampAndDelete";
+import { PageCard } from "@/components/layout/PageCard";
 
 import { TRANSACTION_OPERATIONS } from "@/constants/transactionOperations";
 import { useStore } from "@/store/useStore";
@@ -185,25 +186,17 @@ export default function SavedTransactions() {
 
   return (
     <Box gap="md">
-      <Box gap="md">
-        <div className="PageHeader">
-          <Text size="md" as="h1" weight="medium">
-            Saved Transactions
-          </Text>
-        </div>
-
-        <Card>
-          <Box gap="md">
-            <>
-              {savedTxns.length === 0
-                ? `There are no saved transactions on ${network.label} network.`
-                : savedTxns.map((t) => (
-                    <SavedTxn key={`txn-${t.timestamp}`} txn={t} />
-                  ))}
-            </>
-          </Box>
-        </Card>
-      </Box>
+      <PageCard heading="Saved Transactions">
+        <Box gap="md">
+          <>
+            {savedTxns.length === 0
+              ? `There are no saved transactions on ${network.label} network.`
+              : savedTxns.map((t) => (
+                  <SavedTxn key={`txn-${t.timestamp}`} txn={t} />
+                ))}
+          </>
+        </Box>
+      </PageCard>
 
       <Alert
         variant="primary"

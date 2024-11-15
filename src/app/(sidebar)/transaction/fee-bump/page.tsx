@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, Card, Icon, Text } from "@stellar/design-system";
+import { Button, Icon } from "@stellar/design-system";
 import { get, omit, set } from "lodash";
 import { useRouter } from "next/navigation";
 
@@ -22,6 +22,7 @@ import { TxResponse } from "@/components/TxResponse";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { ViewInXdrButton } from "@/components/ViewInXdrButton";
+import { PageCard } from "@/components/layout/PageCard";
 
 import { Routes } from "@/constants/routes";
 import { KeysOfUnion } from "@/types/types";
@@ -163,25 +164,23 @@ export default function FeeBumpTransaction() {
 
   return (
     <Box gap="md">
-      <div className="PageHeader">
-        <Text size="md" as="h1" weight="medium">
-          Fee Bump
-        </Text>
-
-        <Button
-          size="md"
-          variant="error"
-          icon={<Icon.RefreshCw01 />}
-          iconPosition="right"
-          onClick={() => {
-            resetResult();
-            resetBaseFee();
-          }}
-        >
-          Clear and import new
-        </Button>
-      </div>
-      <Card>
+      <PageCard
+        heading="Fee Bump"
+        rightElement={
+          <Button
+            size="md"
+            variant="error"
+            icon={<Icon.RefreshCw01 />}
+            iconPosition="right"
+            onClick={() => {
+              resetResult();
+              resetBaseFee();
+            }}
+          >
+            Clear and import new
+          </Button>
+        }
+      >
         <Box gap="lg">
           <PubKeyPicker
             id="source_account"
@@ -245,7 +244,7 @@ export default function FeeBumpTransaction() {
             hasCopyButton
           />
         </Box>
-      </Card>
+      </PageCard>
       <>
         {feeBumpedTx.xdr ? (
           <ValidationResponseCard
