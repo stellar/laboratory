@@ -34,13 +34,13 @@ export default function Introduction() {
       buttonAction: () => openUrl("https://developers.stellar.org/docs/tools"),
     },
     {
-      id: "soroban-rpc",
-      title: "Soroban RPC",
-      description: "Learn about Soroban RPC, a gateway to the Stellar network",
+      id: "stellar-rpc",
+      title: "Stellar RPC",
+      description: "Learn about Stellar RPC, a gateway to the Stellar network",
       buttonLabel: "Go to docs",
       buttonIcon: <Icon.LinkExternal01 />,
       buttonAction: () =>
-        openUrl("https://developers.stellar.org/network/soroban-rpc"),
+        openUrl("https://developers.stellar.org/docs/data/rpc"),
     },
     {
       id: "horizon",

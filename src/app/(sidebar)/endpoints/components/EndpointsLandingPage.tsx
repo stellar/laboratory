@@ -8,13 +8,15 @@ import { openUrl } from "@/helpers/openUrl";
 export const EndpointsLandingPage = () => {
   const infoCards = [
     {
-      id: "soroban-rpc",
-      title: "Soroban RPC Methods",
+      id: "stellar-rpc",
+      title: "Stellar RPC Methods",
       description: "Learn about the RPC methods in our Developer Docs.",
       buttonLabel: "See docs",
       buttonIcon: <Icon.LinkExternal01 />,
       buttonAction: () =>
-        openUrl("https://developers.stellar.org/network/soroban-rpc/methods"),
+        openUrl(
+          "https://developers.stellar.org/docs/data/rpc/api-reference/methods",
+        ),
     },
     {
       id: "horizon",
