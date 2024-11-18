@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, Card, Icon } from "@stellar/design-system";
+import { Button, Icon } from "@stellar/design-system";
 import { MemoValue } from "@stellar/stellar-sdk";
 import { get, omit, set } from "lodash";
 
@@ -16,6 +16,7 @@ import {
   MemoPickerValue,
 } from "@/components/FormElements/MemoPicker";
 import { TimeBoundsPicker } from "@/components/FormElements/TimeBoundsPicker";
+import { PageCard } from "@/components/layout/PageCard";
 
 import { sanitizeObject } from "@/helpers/sanitizeObject";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
@@ -261,155 +262,151 @@ export const Params = () => {
   };
 
   return (
-    <Box gap="md">
-      <Card>
-        <Box gap="lg">
-          <PubKeyPicker
-            id="source_account"
-            label="Source Account"
-            value={txnParams.source_account}
-            error={paramsError.source_account}
-            onChange={(e) => {
-              const id = "source_account";
-              handleParamChange(id, e.target.value);
-              handleParamsError(id, validateParam(id, e.target.value));
-            }}
-            rightElement={
-              walletKitPubKey ? (
-                <InputSideElement
-                  variant="button"
-                  onClick={() => {
-                    const id = "source_account";
-
-                    if (walletKitPubKey) {
-                      handleParamChange(id, walletKitPubKey);
-                      handleParamsError(id, validateParam(id, walletKitPubKey));
-                    }
-                  }}
-                  placement="right"
-                >
-                  Get connected wallet address
-                </InputSideElement>
-              ) : null
-            }
-            note={
-              <>
-                If you don’t have an account yet, you can create and fund a test
-                net account with the{" "}
-                <SdsLink href={Routes.ACCOUNT_CREATE}>account creator</SdsLink>.
-              </>
-            }
-            infoLink="https://developers.stellar.org/docs/learn/glossary#source-account"
-          />
-
-          <PositiveIntPicker
-            id="seq_num"
-            label="Transaction Sequence Number"
-            placeholder="Ex: 559234806710273"
-            value={txnParams.seq_num}
-            error={paramsError.seq_num}
-            onChange={(e) => {
-              const id = "seq_num";
-              handleParamChange(id, e.target.value);
-              handleParamsError(id, validateParam(id, e.target.value));
-            }}
-            note="The transaction sequence number is usually one higher than current account sequence number."
-            rightElement={
+    <PageCard heading="Build Transaction">
+      <Box gap="lg">
+        <PubKeyPicker
+          id="source_account"
+          label="Source Account"
+          value={txnParams.source_account}
+          error={paramsError.source_account}
+          onChange={(e) => {
+            const id = "source_account";
+            handleParamChange(id, e.target.value);
+            handleParamsError(id, validateParam(id, e.target.value));
+          }}
+          rightElement={
+            walletKitPubKey ? (
               <InputSideElement
                 variant="button"
                 onClick={() => {
-                  handleParamChange("seq_num", "");
-                  fetchSequenceNumber();
+                  const id = "source_account";
+
+                  if (walletKitPubKey) {
+                    handleParamChange(id, walletKitPubKey);
+                    handleParamsError(id, validateParam(id, walletKitPubKey));
+                  }
                 }}
                 placement="right"
-                disabled={
-                  !txnParams.source_account || paramsError.source_account
-                }
-                isLoading={isFetchingSequenceNumber || isLoadingSequenceNumber}
               >
-                Fetch next sequence
+                Get connected wallet address
               </InputSideElement>
-            }
-            infoLink="https://developers.stellar.org/docs/glossary#sequence-number"
-          />
+            ) : null
+          }
+          note={
+            <>
+              If you don’t have an account yet, you can create and fund a test
+              net account with the{" "}
+              <SdsLink href={Routes.ACCOUNT_CREATE}>account creator</SdsLink>.
+            </>
+          }
+          infoLink="https://developers.stellar.org/docs/learn/glossary#source-account"
+        />
 
-          <PositiveIntPicker
-            id="fee"
-            label="Base Fee"
-            value={removeLeadingZeroes(txnParams.fee)}
-            error={paramsError.fee}
-            onChange={(e) => {
-              const id = "fee";
-              handleParamChange(id, e.target.value);
-              handleParamsError(id, validateParam(id, e.target.value));
-            }}
-            note={
-              <>
-                The base inclusion fee is currently set to 100 stroops (0.00001
-                lumens). For more real time inclusion fee, please see{" "}
-                <SdsLink href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getFeeStats">
-                  getFeeStats
-                </SdsLink>{" "}
-                from the RPC. To learn more about fees, please see{" "}
-                <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/fees-resource-limits-metering">
-                  Fees & Metering
-                </SdsLink>
-                .
-              </>
-            }
-            infoLink="https://developers.stellar.org/docs/learn/glossary#base-fee"
-          />
-
-          <MemoPicker
-            id="memo"
-            value={getMemoPickerValue()}
-            labelSuffix="optional"
-            error={paramsError.memo}
-            onChange={(_, memo) => {
-              const id = "memo";
-              handleParamChange(id, getMemoValue(memo));
-              handleParamsError(id, validateParam(id, memo));
-            }}
-            infoLink="https://developers.stellar.org/docs/encyclopedia/memos"
-          />
-
-          <TimeBoundsPicker
-            id="time"
-            value={{
-              min_time: txnParams.cond?.time?.min_time,
-              max_time: txnParams.cond?.time?.max_time,
-            }}
-            labelSuffix="optional"
-            error={paramsError.cond?.time}
-            onChange={(timeBounds) => {
-              const id = "cond.time";
-              handleParamChange(id, timeBounds);
-              handleParamsError(id, validateParam("cond", timeBounds));
-            }}
-            infoLink="https://developers.stellar.org/docs/learn/glossary#time-bounds"
-          />
-
-          <Box
-            gap="md"
-            direction="row"
-            align="center"
-            justify="end"
-            addlClassName="Params__buttons"
-          >
-            <Button
-              size="md"
-              variant="error"
+        <PositiveIntPicker
+          id="seq_num"
+          label="Transaction Sequence Number"
+          placeholder="Ex: 559234806710273"
+          value={txnParams.seq_num}
+          error={paramsError.seq_num}
+          onChange={(e) => {
+            const id = "seq_num";
+            handleParamChange(id, e.target.value);
+            handleParamsError(id, validateParam(id, e.target.value));
+          }}
+          note="The transaction sequence number is usually one higher than current account sequence number."
+          rightElement={
+            <InputSideElement
+              variant="button"
               onClick={() => {
-                resetBuildParams();
-                setParamsError({});
+                handleParamChange("seq_num", "");
+                fetchSequenceNumber();
               }}
-              icon={<Icon.RefreshCw01 />}
+              placement="right"
+              disabled={!txnParams.source_account || paramsError.source_account}
+              isLoading={isFetchingSequenceNumber || isLoadingSequenceNumber}
             >
-              Clear Params
-            </Button>
-          </Box>
+              Fetch next sequence
+            </InputSideElement>
+          }
+          infoLink="https://developers.stellar.org/docs/glossary#sequence-number"
+        />
+
+        <PositiveIntPicker
+          id="fee"
+          label="Base Fee"
+          value={removeLeadingZeroes(txnParams.fee)}
+          error={paramsError.fee}
+          onChange={(e) => {
+            const id = "fee";
+            handleParamChange(id, e.target.value);
+            handleParamsError(id, validateParam(id, e.target.value));
+          }}
+          note={
+            <>
+              The base inclusion fee is currently set to 100 stroops (0.00001
+              lumens). For more real time inclusion fee, please see{" "}
+              <SdsLink href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getFeeStats">
+                getFeeStats
+              </SdsLink>{" "}
+              from the RPC. To learn more about fees, please see{" "}
+              <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/fees-resource-limits-metering">
+                Fees & Metering
+              </SdsLink>
+              .
+            </>
+          }
+          infoLink="https://developers.stellar.org/docs/learn/glossary#base-fee"
+        />
+
+        <MemoPicker
+          id="memo"
+          value={getMemoPickerValue()}
+          labelSuffix="optional"
+          error={paramsError.memo}
+          onChange={(_, memo) => {
+            const id = "memo";
+            handleParamChange(id, getMemoValue(memo));
+            handleParamsError(id, validateParam(id, memo));
+          }}
+          infoLink="https://developers.stellar.org/docs/encyclopedia/memos"
+        />
+
+        <TimeBoundsPicker
+          id="time"
+          value={{
+            min_time: txnParams.cond?.time?.min_time,
+            max_time: txnParams.cond?.time?.max_time,
+          }}
+          labelSuffix="optional"
+          error={paramsError.cond?.time}
+          onChange={(timeBounds) => {
+            const id = "cond.time";
+            handleParamChange(id, timeBounds);
+            handleParamsError(id, validateParam("cond", timeBounds));
+          }}
+          infoLink="https://developers.stellar.org/docs/learn/glossary#time-bounds"
+        />
+
+        <Box
+          gap="md"
+          direction="row"
+          align="center"
+          justify="end"
+          addlClassName="Params__buttons"
+        >
+          <Button
+            size="md"
+            variant="error"
+            onClick={() => {
+              resetBuildParams();
+              setParamsError({});
+            }}
+            icon={<Icon.RefreshCw01 />}
+          >
+            Clear Params
+          </Button>
         </Box>
-      </Card>
-    </Box>
+      </Box>
+    </PageCard>
   );
 };

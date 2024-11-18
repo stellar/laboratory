@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, Text, Card, Input, Alert } from "@stellar/design-system";
+import { Button, Input, Alert } from "@stellar/design-system";
 
 import { Box } from "@/components/layout/Box";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { PrettyJson } from "@/components/PrettyJson";
+import { PageCard } from "@/components/layout/PageCard";
 
 import { useStore } from "@/store/useStore";
 import { useSimulateTx } from "@/query/useSimulateTx";
@@ -92,75 +93,65 @@ export default function SimulateTransaction() {
   };
 
   return (
-    <Box gap="md">
-      <div className="PageHeader">
-        <Text size="md" as="h1" weight="medium">
-          Simulate Transaction
-        </Text>
-      </div>
+    <PageCard heading="Simulate Transaction">
+      {!network.rpcUrl ? (
+        <Alert variant="warning" placement="inline" title="Attention">
+          RPC URL is required to simulate a transaction. You can add it in the
+          network settings in the upper right corner.
+        </Alert>
+      ) : null}
 
-      <>
-        {!network.rpcUrl ? (
-          <Alert variant="warning" placement="inline" title="Attention">
-            RPC URL is required to simulate a transaction. You can add it in the
-            network settings in the upper right corner.
-          </Alert>
-        ) : null}
-      </>
+      <Box gap="lg">
+        <XdrPicker
+          id="simulate-tx-xdr"
+          label="Input a base-64 encoded TransactionEnvelope"
+          value={xdr.blob}
+          error={xdrError}
+          onChange={(e) => {
+            xdr.updateXdrBlob(e.target.value);
+            resetResponse();
+          }}
+          note="Enter a base-64 encoded XDR blob to decode."
+          hasCopyButton
+        />
 
-      <Card>
-        <Box gap="lg">
-          <XdrPicker
-            id="simulate-tx-xdr"
-            label="Input a base-64 encoded TransactionEnvelope"
-            value={xdr.blob}
-            error={xdrError}
-            onChange={(e) => {
-              xdr.updateXdrBlob(e.target.value);
-              resetResponse();
-            }}
-            note="Enter a base-64 encoded XDR blob to decode."
-            hasCopyButton
-          />
+        <Input
+          id="simulate-tx-instr-leeway"
+          fieldSize="md"
+          label="Instruction Leeway"
+          labelSuffix="optional"
+          value={simulate.instructionLeeway}
+          onChange={(e) => {
+            updateSimulateInstructionLeeway(e.target.value || undefined);
+            resetResponse();
+          }}
+          error={instrLeewayError}
+        />
 
-          <Input
-            id="simulate-tx-instr-leeway"
-            fieldSize="md"
-            label="Instruction Leeway"
-            labelSuffix="optional"
-            value={simulate.instructionLeeway}
-            onChange={(e) => {
-              updateSimulateInstructionLeeway(e.target.value || undefined);
-              resetResponse();
-            }}
-            error={instrLeewayError}
-          />
+        <div className="SignTx__CTA">
+          <Button
+            disabled={Boolean(
+              !network.rpcUrl || !xdr.blob || xdrError || instrLeewayError,
+            )}
+            isLoading={isSimulateTxPending}
+            size="md"
+            variant={"secondary"}
+            onClick={onSimulate}
+          >
+            Simulate transaction
+          </Button>
+        </div>
 
-          <div className="SignTx__CTA">
-            <Button
-              disabled={Boolean(
-                !network.rpcUrl || !xdr.blob || xdrError || instrLeewayError,
-              )}
-              isLoading={isSimulateTxPending}
-              size="md"
-              variant={"secondary"}
-              onClick={onSimulate}
+        <>
+          {simulateTxData ? (
+            <div
+              className={`PageBody__content PageBody__scrollable ${simulateTxData?.result?.error ? "PageBody__content--error" : ""}`}
             >
-              Simulate transaction
-            </Button>
-          </div>
-
-          <>
-            {simulateTxData ? (
-              <div
-                className={`PageBody__content PageBody__scrollable ${simulateTxData?.result?.error ? "PageBody__content--error" : ""}`}
-              >
-                <PrettyJson json={simulateTxData} />
-              </div>
-            ) : null}
-          </>
-        </Box>
-      </Card>
-    </Box>
+              <PrettyJson json={simulateTxData} />
+            </div>
+          ) : null}
+        </>
+      </Box>
+    </PageCard>
   );
 }

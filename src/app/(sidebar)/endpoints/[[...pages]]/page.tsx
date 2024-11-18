@@ -22,6 +22,7 @@ import { Box } from "@/components/layout/Box";
 import { PrettyJsonTextarea } from "@/components/PrettyJsonTextarea";
 import { ShareUrlButton } from "@/components/ShareUrlButton";
 import { CopyJsonPayloadButton } from "@/components/CopyJsonPayloadButton";
+import { PageCard } from "@/components/layout/PageCard";
 
 import { useStore } from "@/store/useStore";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
@@ -951,23 +952,18 @@ export default function Endpoints() {
 
   return (
     <>
-      <div className="PageHeader">
-        {page ? (
-          <Text size="md" as="h1" weight="medium">
-            {page.label}
-          </Text>
-        ) : null}
-
-        <SdsLink
-          href={pageData.docsUrl}
-          icon={<Icon.LinkExternal01 />}
-          data-testid="endpoints-docsLink"
-        >
-          View Docs
-        </SdsLink>
-      </div>
-
-      <Card>
+      <PageCard
+        heading={page?.label}
+        rightElement={
+          <SdsLink
+            href={pageData.docsUrl}
+            icon={<Icon.LinkExternal01 />}
+            data-testid="endpoints-docsLink"
+          >
+            View Docs
+          </SdsLink>
+        }
+      >
         <form className="PageBody" onSubmit={handleSubmit}>
           {renderEndpointUrl()}
 
@@ -983,7 +979,7 @@ export default function Endpoints() {
 
           {renderFields()}
         </form>
-      </Card>
+      </PageCard>
 
       {endpointData || endpointError ? (
         <div ref={responseEl}>

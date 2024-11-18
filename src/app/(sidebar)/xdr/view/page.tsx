@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import {
   Text,
-  Card,
   Alert,
   Link,
   Loader,
@@ -26,6 +25,7 @@ import { PrettyJsonTransaction } from "@/components/PrettyJsonTransaction";
 import { TransactionHashReadOnlyField } from "@/components/TransactionHashReadOnlyField";
 import { LabelHeading } from "@/components/LabelHeading";
 import { CopyJsonPayloadButton } from "@/components/CopyJsonPayloadButton";
+import { PageCard } from "@/components/layout/PageCard";
 
 import * as StellarXdr from "@/helpers/StellarXdr";
 import { parseToLosslessJson } from "@/helpers/parseToLosslessJson";
@@ -159,13 +159,7 @@ export default function ViewXdr() {
 
   return (
     <Box gap="md">
-      <div className="PageHeader">
-        <Text size="md" as="h1" weight="medium">
-          View XDR
-        </Text>
-      </div>
-
-      <Card>
+      <PageCard heading="View XDR">
         <Box gap="lg">
           <XdrPicker
             id="view-xdr-blob"
@@ -262,7 +256,7 @@ export default function ViewXdr() {
             ) : null}
           </>
         </Box>
-      </Card>
+      </PageCard>
 
       <Alert variant="primary" placement="inline">
         You can use use this tool to decode XDR into JSON.{" "}

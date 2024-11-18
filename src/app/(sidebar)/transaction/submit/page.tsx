@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { Button, Card, Icon, Text } from "@stellar/design-system";
+import { Button, Icon, Text } from "@stellar/design-system";
 import { useRouter } from "next/navigation";
 
 import { useStore } from "@/store/useStore";
@@ -37,6 +37,7 @@ import { TxResponse } from "@/components/TxResponse";
 import { SaveTransactionModal } from "@/components/SaveTransactionModal";
 import { SdsLink } from "@/components/SdsLink";
 import { TransactionHashReadOnlyField } from "@/components/TransactionHashReadOnlyField";
+import { PageCard } from "@/components/layout/PageCard";
 
 import {
   HorizonErrorResponse,
@@ -475,12 +476,7 @@ export default function SubmitTransaction() {
 
   return (
     <Box gap="md">
-      <div className="PageHeader">
-        <Text size="md" as="h1" weight="medium">
-          Submit Transaction
-        </Text>
-      </div>
-      <Card>
+      <PageCard heading="Submit Transaction">
         <Box gap="lg">
           <XdrPicker
             id="submit-tx-xdr"
@@ -623,7 +619,7 @@ export default function SubmitTransaction() {
             ) : null}
           </>
         </Box>
-      </Card>
+      </PageCard>
 
       <>{renderSuccess()}</>
       <>{renderError()}</>

@@ -1,9 +1,9 @@
 import React from "react";
-import { Text } from "@stellar/design-system";
 
 import { WithInfoText } from "@/components/WithInfoText";
 import { Tabs } from "@/components/Tabs";
 import { Box } from "@/components/layout/Box";
+import { PageHeader } from "@/components/layout/PageHeader";
 
 import "./styles.scss";
 
@@ -89,11 +89,7 @@ const TabViewHeading = ({
   infoText,
   href,
 }: TabViewHeadingProps) => {
-  const renderTitle = () => (
-    <Text size="md" as="h1" weight="medium">
-      {title}
-    </Text>
-  );
+  const renderTitle = () => <PageHeader heading={title} />;
 
   if (href || infoText) {
     if (href) {

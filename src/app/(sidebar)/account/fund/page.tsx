@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Card, Input, Text, Button } from "@stellar/design-system";
+import { Input, Text, Button } from "@stellar/design-system";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { useFriendBot } from "@/query/useFriendBot";
@@ -12,6 +12,7 @@ import { validate } from "@/validate";
 
 import { SuccessMsg } from "@/components/FriendBot/SuccessMsg";
 import { ErrorMsg } from "@/components/FriendBot/ErrorMsg";
+import { PageCard } from "@/components/layout/PageCard";
 
 import { SwitchNetwork } from "./components/SwitchNetwork";
 
@@ -78,18 +79,12 @@ export default function FundAccount() {
   }
   return (
     <div className="Account">
-      <Card>
+      <PageCard heading={`Friendbot: fund a ${network.id} network account`}>
         <div className="Account__card">
-          <div className="CardText">
-            <Text size="lg" as="h1" weight="medium">
-              Friendbot: fund a {network.id} network account
-            </Text>
-
-            <Text size="sm" as="p">
-              The friendbot is a horizon API endpoint that will fund an account
-              with 10,000 lumens on the {network.id} network.
-            </Text>
-          </div>
+          <Text size="sm" as="div">
+            The friendbot is a horizon API endpoint that will fund an account
+            with 10,000 lumens on the {network.id} network.
+          </Text>
 
           <Input
             id="fund-public-key-input"
@@ -133,7 +128,7 @@ export default function FundAccount() {
             </Button>
           </div>
         </div>
-      </Card>
+      </PageCard>
 
       <SuccessMsg
         isVisible={Boolean(showAlert && isFetchedAfterMount && isSuccess)}

@@ -1,12 +1,13 @@
 "use client";
 
-import { Card, Link, Text, Icon, Logo } from "@stellar/design-system";
+import { Link, Text, Icon, Logo } from "@stellar/design-system";
 
 import { NextLink } from "@/components/NextLink";
 import { LayoutContentContainer } from "@/components/layout/LayoutContentContainer";
 import { InfoCards } from "@/components/InfoCards";
 import { SdsLink } from "@/components/SdsLink";
 import { Box } from "@/components/layout/Box";
+import { PageCard } from "@/components/layout/PageCard";
 
 import { Routes } from "@/constants/routes";
 import { GITHUB_URL } from "@/constants/settings";
@@ -55,39 +56,33 @@ export default function Introduction() {
 
   return (
     <LayoutContentContainer>
-      <Card>
-        <div className="CardText">
-          <Text size="lg" as="h1" weight="medium">
-            Stellar Lab
-          </Text>
+      <PageCard heading="Stellar Lab">
+        <Text size="sm" as="p">
+          The Stellar Lab is a set of tools that enables people to try out and
+          learn about the Stellar network. The Lab can{" "}
+          <NextLink href={Routes.BUILD_TRANSACTION} sds-variant="primary">
+            build transactions
+          </NextLink>
+          ,{" "}
+          <NextLink href={Routes.SIGN_TRANSACTION} sds-variant="primary">
+            sign them
+          </NextLink>
+          , and{" "}
+          <NextLink href={Routes.SUBMIT_TRANSACTION} sds-variant="primary">
+            submit them to the network
+          </NextLink>
+          . It can also make requests to RPC and Horizon endpoints. You can save
+          your transactions and runbooks for future use.
+        </Text>
 
-          <Text size="sm" as="p">
-            The Stellar Lab is a set of tools that enables people to try out and
-            learn about the Stellar network. The Lab can{" "}
-            <NextLink href={Routes.BUILD_TRANSACTION} sds-variant="primary">
-              build transactions
-            </NextLink>
-            ,{" "}
-            <NextLink href={Routes.SIGN_TRANSACTION} sds-variant="primary">
-              sign them
-            </NextLink>
-            , and{" "}
-            <NextLink href={Routes.SUBMIT_TRANSACTION} sds-variant="primary">
-              submit them to the network
-            </NextLink>
-            . It can also make requests to RPC and Horizon endpoints. You can
-            save your transactions and runbooks for future use.
-          </Text>
-
-          <Text size="sm" as="p">
-            For Stellar docs, take a look at the{" "}
-            <Link href="https://developers.stellar.org/">
-              Stellar developers site
-            </Link>
-            .
-          </Text>
-        </div>
-      </Card>
+        <Text size="sm" as="p">
+          For Stellar docs, take a look at the{" "}
+          <Link href="https://developers.stellar.org/">
+            Stellar developers site
+          </Link>
+          .
+        </Text>
+      </PageCard>
 
       <InfoCards infoCards={infoCards} />
 

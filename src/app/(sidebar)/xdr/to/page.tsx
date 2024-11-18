@@ -1,19 +1,13 @@
 "use client";
 
-import {
-  Text,
-  Card,
-  Alert,
-  Button,
-  Icon,
-  Textarea,
-} from "@stellar/design-system";
+import { Text, Alert, Button, Icon, Textarea } from "@stellar/design-system";
 import * as StellarXdr from "@/helpers/StellarXdr";
 
 import { Box } from "@/components/layout/Box";
 import { SdsLink } from "@/components/SdsLink";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { XdrTypeSelect } from "@/components/XdrTypeSelect";
+import { PageCard } from "@/components/layout/PageCard";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { useStore } from "@/store/useStore";
@@ -57,13 +51,7 @@ export default function ToXdr() {
 
   return (
     <Box gap="md">
-      <div className="PageHeader">
-        <Text size="md" as="h1" weight="medium">
-          To XDR
-        </Text>
-      </div>
-
-      <Card>
+      <PageCard heading="To XDR">
         <Box gap="lg">
           <Textarea
             id="to-xdr-json"
@@ -118,7 +106,7 @@ export default function ToXdr() {
             ) : null}
           </>
         </Box>
-      </Card>
+      </PageCard>
 
       <Alert variant="primary" placement="inline">
         You can use use this tool to encode JSON into XDR.{" "}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Alert, Button, Card, Input, Link, Text } from "@stellar/design-system";
+import { Alert, Button, Input, Link, Text } from "@stellar/design-system";
 
 import { useStore } from "@/store/useStore";
 
@@ -9,7 +9,7 @@ import { ExpandBox } from "@/components/ExpandBox";
 import { MuxedAccountResult } from "@/components/MuxedAccountResult";
 import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
 import { SdsLink } from "@/components/SdsLink";
-import { WithInfoText } from "@/components/WithInfoText";
+import { PageCard } from "@/components/layout/PageCard";
 
 import { muxedAccount } from "@/helpers/muxedAccount";
 
@@ -66,28 +66,23 @@ export default function CreateMuxedAccount() {
 
   return (
     <div className="Account">
-      <Card>
+      <PageCard
+        heading="Create Multiplexed Account"
+        headingInfoLink="https://developers.stellar.org/docs/learn/encyclopedia/transactions-specialized/pooled-accounts-muxed-accounts-memos"
+      >
         <div className="Account__card">
-          <div className="CardText">
-            <WithInfoText href="https://developers.stellar.org/docs/learn/encyclopedia/transactions-specialized/pooled-accounts-muxed-accounts-memos">
-              <Text size="lg" as="h1" weight="medium">
-                Create Multiplexed Account
-              </Text>
-            </WithInfoText>
-
-            <Text size="sm" as="p">
-              A muxed (or multiplexed) account (defined in{" "}
-              <SdsLink href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0027.md">
-                CAP-27
-              </SdsLink>{" "}
-              and briefly{" "}
-              <SdsLink href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0023.md">
-                SEP-23
-              </SdsLink>
-              ) is one that resolves a single Stellar G...account to many
-              different underlying IDs.
-            </Text>
-          </div>
+          <Text size="sm" as="div">
+            A muxed (or multiplexed) account (defined in{" "}
+            <SdsLink href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0027.md">
+              CAP-27
+            </SdsLink>{" "}
+            and briefly{" "}
+            <SdsLink href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0023.md">
+              SEP-23
+            </SdsLink>
+            ) is one that resolves a single Stellar G...account to many
+            different underlying IDs.
+          </Text>
 
           <PubKeyPicker
             id="muxed-public-key"
@@ -160,7 +155,7 @@ export default function CreateMuxedAccount() {
             />
           </ExpandBox>
         </div>
-      </Card>
+      </PageCard>
 
       <Alert
         placement="inline"

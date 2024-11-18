@@ -4,7 +4,6 @@ import {
   Alert,
   Badge,
   Button,
-  Card,
   Icon,
   Input,
   Modal,
@@ -20,6 +19,7 @@ import { ShareUrlButton } from "@/components/ShareUrlButton";
 import { PrettyJsonTextarea } from "@/components/PrettyJsonTextarea";
 import { SavedItemTimestampAndDelete } from "@/components/SavedItemTimestampAndDelete";
 import { CopyJsonPayloadButton } from "@/components/CopyJsonPayloadButton";
+import { PageCard } from "@/components/layout/PageCard";
 
 import { Routes } from "@/constants/routes";
 import { localStorageSavedEndpointsHorizon } from "@/helpers/localStorageSavedEndpointsHorizon";
@@ -129,51 +129,167 @@ export const SavedEndpointsPage = () => {
 
   const HorizonEndpoints = () => {
     if (savedEndpointsHorizon.length === 0) {
-      return <Card>There are no saved Horizon Endpoints</Card>;
+      return "There are no saved Horizon Endpoints";
     }
 
     return (
-      <Card>
-        <Box gap="md">
-          {savedEndpointsHorizon.map((e, idx) => (
-            <Box
-              gap="sm"
-              key={`horizon-${e.timestamp}`}
-              addlClassName="PageBody__content"
-            >
-              <div className="Endpoints__urlBar">
-                <Input
-                  id={`endpoint-url-${e.timestamp}`}
-                  fieldSize="md"
-                  value={e.url}
-                  readOnly
-                  leftElement={
-                    <InputSideElement
-                      variant="text"
-                      placement="left"
-                      addlClassName="Endpoints__urlBar__requestMethod"
-                    >
-                      {e.method}
-                    </InputSideElement>
-                  }
-                />
-              </div>
+      <Box gap="md">
+        {savedEndpointsHorizon.map((e, idx) => (
+          <Box
+            gap="sm"
+            key={`horizon-${e.timestamp}`}
+            addlClassName="PageBody__content"
+          >
+            <div className="Endpoints__urlBar">
+              <Input
+                id={`endpoint-url-${e.timestamp}`}
+                fieldSize="md"
+                value={e.url}
+                readOnly
+                leftElement={
+                  <InputSideElement
+                    variant="text"
+                    placement="left"
+                    addlClassName="Endpoints__urlBar__requestMethod"
+                  >
+                    {e.method}
+                  </InputSideElement>
+                }
+              />
+            </div>
 
-              <Box
-                gap="lg"
-                direction="row"
-                align="center"
-                justify="space-between"
-                addlClassName="Endpoints__urlBar__footer"
-              >
-                <Box gap="sm" direction="row">
+            <Box
+              gap="lg"
+              direction="row"
+              align="center"
+              justify="space-between"
+              addlClassName="Endpoints__urlBar__footer"
+            >
+              <Box gap="sm" direction="row">
+                <Button
+                  size="md"
+                  variant="tertiary"
+                  type="button"
+                  onClick={() => handleViewHorizonEndpoint(e, idx)}
+                >
+                  View
+                </Button>
+
+                <>
+                  {e.shareableUrl ? (
+                    <ShareUrlButton shareableUrl={e.shareableUrl} />
+                  ) : null}
+                </>
+              </Box>
+
+              <Box gap="sm" direction="row" align="center" justify="end">
+                <Text
+                  as="div"
+                  size="xs"
+                >{`Last saved ${formatTimestamp(e.timestamp)}`}</Text>
+
+                <Button
+                  size="md"
+                  variant="error"
+                  icon={<Icon.Trash01 />}
+                  type="button"
+                  onClick={() => {
+                    const updatedList = arrayItem.delete(
+                      savedEndpointsHorizon,
+                      idx,
+                    );
+
+                    localStorageSavedEndpointsHorizon.set(updatedList);
+                    setSavedEndpointsHorizon(updatedList);
+                  }}
+                ></Button>
+              </Box>
+            </Box>
+          </Box>
+        ))}
+      </Box>
+    );
+  };
+
+  const RpcEndpoints = () => {
+    if (savedRpcMethods.length === 0) {
+      return "There are no saved RPC Methods";
+    }
+
+    return (
+      <Box gap="md">
+        {savedRpcMethods.map((e, idx) => (
+          <Box
+            gap="sm"
+            key={`horizon-${e.timestamp}`}
+            addlClassName="PageBody__content"
+          >
+            <Box gap="sm" direction="row">
+              <Badge size="md" variant="secondary">
+                {e.rpcMethod}
+              </Badge>
+            </Box>
+            <div className="Endpoints__urlBar">
+              <Input
+                id={`endpoint-url-${e.timestamp}`}
+                fieldSize="md"
+                value={e.url}
+                readOnly
+                leftElement={
+                  <InputSideElement
+                    variant="text"
+                    placement="left"
+                    addlClassName="Endpoints__urlBar__requestMethod"
+                  >
+                    {e.method}
+                  </InputSideElement>
+                }
+              />
+            </div>
+            <Box
+              gap="lg"
+              direction="row"
+              align="center"
+              justify="space-between"
+              addlClassName="Endpoints__urlBar__footer"
+            >
+              <Box gap="sm" direction="row" wrap="wrap">
+                <Button
+                  size="md"
+                  variant="tertiary"
+                  type="button"
+                  onClick={() => handleViewHorizonEndpoint(e, idx)}
+                >
+                  View in API Explorer
+                </Button>
+
+                <>
                   <Button
                     size="md"
                     variant="tertiary"
                     type="button"
-                    onClick={() => handleViewHorizonEndpoint(e, idx)}
+                    icon={
+                      expandedPayloadIndex[idx] ? (
+                        <Icon.ChevronDown />
+                      ) : (
+                        <Icon.ChevronRight />
+                      )
+                    }
+                    onClick={() => {
+                      const obj: { [key: number]: boolean } = {};
+
+                      if (expandedPayloadIndex[idx]) {
+                        obj[idx] = false;
+                      } else {
+                        obj[idx] = true;
+                      }
+                      setExpandedPayloadIndex({
+                        ...expandedPayloadIndex,
+                        ...obj,
+                      });
+                    }}
                   >
-                    View
+                    View payload
                   </Button>
 
                   <>
@@ -181,183 +297,63 @@ export const SavedEndpointsPage = () => {
                       <ShareUrlButton shareableUrl={e.shareableUrl} />
                     ) : null}
                   </>
-                </Box>
+                </>
+              </Box>
 
-                <Box gap="sm" direction="row" align="center" justify="end">
-                  <Text
-                    as="div"
-                    size="xs"
-                  >{`Last saved ${formatTimestamp(e.timestamp)}`}</Text>
+              <Box gap="sm" direction="row" align="center" justify="end">
+                <SavedItemTimestampAndDelete
+                  timestamp={e.timestamp}
+                  onDelete={() => {
+                    const updatedList = arrayItem.delete(savedRpcMethods, idx);
 
-                  <Button
-                    size="md"
-                    variant="error"
-                    icon={<Icon.Trash01 />}
-                    type="button"
-                    onClick={() => {
-                      const updatedList = arrayItem.delete(
-                        savedEndpointsHorizon,
-                        idx,
-                      );
-
-                      localStorageSavedEndpointsHorizon.set(updatedList);
-                      setSavedEndpointsHorizon(updatedList);
-                    }}
-                  ></Button>
-                </Box>
+                    localStorageSavedRpcMethods.set(updatedList);
+                    setSavedRpcMethods(updatedList);
+                  }}
+                />
               </Box>
             </Box>
-          ))}
-        </Box>
-      </Card>
-    );
-  };
-
-  const RpcEndpoints = () => {
-    if (savedRpcMethods.length === 0) {
-      return <Card>There are no saved RPC Methods</Card>;
-    }
-
-    return (
-      <Card>
-        <Box gap="md">
-          {savedRpcMethods.map((e, idx) => (
-            <Box
-              gap="sm"
-              key={`horizon-${e.timestamp}`}
-              addlClassName="PageBody__content"
-            >
-              <Box gap="sm" direction="row">
-                <Badge size="md" variant="secondary">
-                  {e.rpcMethod}
-                </Badge>
-              </Box>
-              <div className="Endpoints__urlBar">
-                <Input
-                  id={`endpoint-url-${e.timestamp}`}
-                  fieldSize="md"
-                  value={e.url}
-                  readOnly
-                  leftElement={
-                    <InputSideElement
-                      variant="text"
-                      placement="left"
-                      addlClassName="Endpoints__urlBar__requestMethod"
-                    >
-                      {e.method}
-                    </InputSideElement>
-                  }
-                />
-              </div>
-              <Box
-                gap="lg"
-                direction="row"
-                align="center"
-                justify="space-between"
-                addlClassName="Endpoints__urlBar__footer"
-              >
-                <Box gap="sm" direction="row" wrap="wrap">
-                  <Button
-                    size="md"
-                    variant="tertiary"
-                    type="button"
-                    onClick={() => handleViewHorizonEndpoint(e, idx)}
-                  >
-                    View in API Explorer
-                  </Button>
-
-                  <>
-                    <Button
-                      size="md"
-                      variant="tertiary"
-                      type="button"
-                      icon={
-                        expandedPayloadIndex[idx] ? (
-                          <Icon.ChevronDown />
-                        ) : (
-                          <Icon.ChevronRight />
-                        )
-                      }
-                      onClick={() => {
-                        const obj: { [key: number]: boolean } = {};
-
-                        if (expandedPayloadIndex[idx]) {
-                          obj[idx] = false;
-                        } else {
-                          obj[idx] = true;
-                        }
-                        setExpandedPayloadIndex({
-                          ...expandedPayloadIndex,
-                          ...obj,
-                        });
-                      }}
-                    >
-                      View payload
-                    </Button>
-
-                    <>
-                      {e.shareableUrl ? (
-                        <ShareUrlButton shareableUrl={e.shareableUrl} />
-                      ) : null}
-                    </>
-                  </>
-                </Box>
-
-                <Box gap="sm" direction="row" align="center" justify="end">
-                  <SavedItemTimestampAndDelete
-                    timestamp={e.timestamp}
-                    onDelete={() => {
-                      const updatedList = arrayItem.delete(
-                        savedRpcMethods,
-                        idx,
-                      );
-
-                      localStorageSavedRpcMethods.set(updatedList);
-                      setSavedRpcMethods(updatedList);
-                    }}
+            {expandedPayloadIndex[idx] ? (
+              <>
+                <div className="Endpoints__txTextarea">
+                  <PrettyJsonTextarea json={e.payload} label="Payload" />
+                </div>
+                <Box gap="md" direction="row" justify="end">
+                  <CopyJsonPayloadButton
+                    jsonString={stringify(e.payload, null, 2) || ""}
                   />
                 </Box>
-              </Box>
-              {expandedPayloadIndex[idx] ? (
-                <>
-                  <div className="Endpoints__txTextarea">
-                    <PrettyJsonTextarea json={e.payload} label="Payload" />
-                  </div>
-                  <Box gap="md" direction="row" justify="end">
-                    <CopyJsonPayloadButton
-                      jsonString={stringify(e.payload, null, 2) || ""}
-                    />
-                  </Box>
-                </>
-              ) : (
-                <></>
-              )}
-            </Box>
-          ))}
-        </Box>
-      </Card>
+              </>
+            ) : (
+              <></>
+            )}
+          </Box>
+        ))}
+      </Box>
     );
   };
 
   return (
     <Box gap="md">
-      <TabView
-        heading={{ title: "Saved Requests" }}
-        tab1={{
-          id: "rpc",
-          label: "RPC Methods",
-          content: saved.activeTab === "rpc" ? <RpcEndpoints /> : null,
-        }}
-        tab2={{
-          id: "horizon",
-          label: "Horizon Endpoints",
-          content: saved.activeTab === "horizon" ? <HorizonEndpoints /> : null,
-        }}
-        activeTabId={saved.activeTab}
-        onTabChange={(id) => {
-          updateSavedActiveTab(id);
-        }}
-      />
+      <PageCard>
+        <TabView
+          heading={{ title: "Saved Requests" }}
+          tab1={{
+            id: "rpc",
+            label: "RPC Methods",
+            content: saved.activeTab === "rpc" ? <RpcEndpoints /> : null,
+          }}
+          tab2={{
+            id: "horizon",
+            label: "Horizon Endpoints",
+            content:
+              saved.activeTab === "horizon" ? <HorizonEndpoints /> : null,
+          }}
+          activeTabId={saved.activeTab}
+          onTabChange={(id) => {
+            updateSavedActiveTab(id);
+          }}
+        />
+      </PageCard>
 
       <Alert
         variant="primary"

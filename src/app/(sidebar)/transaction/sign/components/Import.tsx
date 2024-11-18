@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Alert, Card, Text, Button } from "@stellar/design-system";
+import { Alert, Text, Button } from "@stellar/design-system";
 import { TransactionBuilder } from "@stellar/stellar-sdk";
 
 import { useStore } from "@/store/useStore";
@@ -10,6 +10,7 @@ import { validate } from "@/validate";
 
 import { Box } from "@/components/layout/Box";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
+import { PageCard } from "@/components/layout/PageCard";
 
 export const Import = () => {
   const { network, transaction } = useStore();
@@ -58,12 +59,7 @@ export const Import = () => {
 
   return (
     <Box gap="md">
-      <div className="PageHeader">
-        <Text size="md" as="h1" weight="medium">
-          Sign Transaction
-        </Text>
-      </div>
-      <Card>
+      <PageCard heading="Sign Transaction">
         <div className="SignTx__xdr">
           <XdrPicker
             id="sign-tx-xdr"
@@ -85,7 +81,7 @@ export const Import = () => {
             </Button>
           </div>
         </div>
-      </Card>
+      </PageCard>
 
       <Alert
         placement="inline"
