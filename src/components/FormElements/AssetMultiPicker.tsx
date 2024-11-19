@@ -106,6 +106,7 @@ export const AssetMultiPicker = ({
                 <div className="RadioPicker__inset" key={`${id}-${index}`}>
                   <RadioPicker
                     id={`${id}-${index}`}
+                    data-testid={`asset-multipicker-${index}`}
                     selectedOption={value.type}
                     label={`#${index + 1}`}
                     onChange={(optionId) => {
