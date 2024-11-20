@@ -39,7 +39,7 @@ export const ClaimantsPicker = ({
                 const clId = `${id}-claimant-${idx}`;
 
                 return (
-                  <Box gap="sm" key={clId}>
+                  <Box gap="sm" key={clId} data-testid="claimants-picker">
                     <Box
                       gap="lg"
                       direction="row"
@@ -261,6 +261,7 @@ const Predicate = ({
 
       <RadioPicker
         id={`${parentId}-${index}-${parentPath}-predicate`}
+        data-testid="predicate-picker"
         selectedOption={type}
         onChange={(val) => {
           onUpdate({
@@ -315,6 +316,7 @@ const PredicateType = ({
     <Box gap="sm" addlClassName="PredicateTypeWrapper">
       <RadioPicker
         id={`${parentId}-${index}-${parentPath}-predicate-type`}
+        data-testid="predicate-type-picker"
         selectedOption={type}
         label="Predicate Type"
         onChange={(val) => {
@@ -384,6 +386,7 @@ const PredicateTimeType = ({
     <>
       <RadioPicker
         id={`${parentId}-${index}-${parentPath}-time-type`}
+        data-testid="predicate-time-picker"
         selectedOption={type}
         label="Time Type"
         onChange={(val) => {

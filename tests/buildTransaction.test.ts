@@ -813,6 +813,234 @@ test.describe("Build Transaction Page", () => {
         ).toBeVisible();
       });
     });
+
+    // Account Merge
+    test.describe("Account Merge", () => {
+      test("Happy path", async ({ page }) => {
+        const { operation_0 } = await selectOperationType({
+          page,
+          opType: "account_merge",
+        });
+
+        await operation_0.getByLabel("Destination").fill(ACCOUNT_ONE);
+
+        await testOpSuccessHashAndXdr({
+          page,
+          hash: "ba4cde50dbd3c47e08df575e63189432490125cc3e4b1582594552cfc23044ea",
+          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgAAAGQAD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAACAAAAAC23ZgEEvb0ushQAKe4Pv/scVG2zGiwNgw5EL5Yd+lQJgAAAAAAAAAA",
+        });
+      });
+    });
+
+    // Manage Data
+    test.describe("Manage Data", () => {
+      test("Happy path", async ({ page }) => {
+        const { operation_0 } = await selectOperationType({
+          page,
+          opType: "manage_data",
+        });
+
+        await operation_0.getByLabel("Entry name").fill("Test Name");
+        await operation_0.getByLabel("Entry value").fill("Test Value");
+
+        await testOpSuccessHashAndXdr({
+          page,
+          hash: "59606ea77f40ee57da6ec0077eb6c796e07fd7d2c6ed5144bfd733fdf4b10691",
+          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgAAAGQAD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAACgAAAAlUZXN0IE5hbWUAAAAAAAABAAAAClRlc3QgVmFsdWUAAAAAAAAAAAAA",
+        });
+      });
+    });
+
+    // Bump Sequence
+    test.describe("Bump Sequence", () => {
+      test("Happy path", async ({ page }) => {
+        const { operation_0 } = await selectOperationType({
+          page,
+          opType: "bump_sequence",
+        });
+
+        await operation_0
+          .getByLabel("Bump To")
+          .fill((Number(SEQUENCE_NUMBER) + 1).toString());
+
+        await testOpSuccessHashAndXdr({
+          page,
+          hash: "65c428afe32631ed2539637ca10e3bebdbb297ac8a890dca1db918dcef580ce3",
+          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgAAAGQAD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAACwAP3lAAAAACAAAAAAAAAAA=",
+        });
+      });
+
+      test("Validation", async ({ page }) => {
+        await selectOperationType({
+          page,
+          opType: "bump_sequence",
+        });
+
+        await testInputError({
+          page,
+          label: "Bump To",
+          value: "aaa",
+          errorMessage: "Expected a whole number.",
+        });
+      });
+    });
+
+    // Create Claimable Balance
+    test.describe("Create Claimable Balance", () => {
+      test("Happy path", async ({ page }) => {
+        const { operation_0 } = await selectOperationType({
+          page,
+          opType: "create_claimable_balance",
+        });
+
+        await selectRadioPicker({
+          page,
+          testId: "asset-picker",
+          selectOption: "Native",
+        });
+
+        await operation_0.getByLabel("Amount", { exact: true }).fill("1");
+        await operation_0.getByText("Add a claimant").click();
+
+        const claimantEl = operation_0.getByTestId("claimants-picker");
+
+        await expect(claimantEl.getByText("Claimant 1")).toBeVisible();
+
+        await claimantEl
+          .getByLabel("Destination", { exact: true })
+          .fill(ACCOUNT_ONE);
+
+        await claimantEl
+          .getByTestId("predicate-picker")
+          .getByText("Conditional", { exact: true })
+          .click();
+
+        await claimantEl
+          .getByTestId("predicate-type-picker")
+          .getByText("AND", { exact: true })
+          .click();
+
+        await claimantEl
+          .getByTestId("predicate-picker")
+          .nth(1)
+          .getByText("Conditional", { exact: true })
+          .click();
+
+        await claimantEl
+          .getByTestId("predicate-type-picker")
+          .nth(1)
+          .getByText("Time", { exact: true })
+          .click();
+
+        await claimantEl
+          .getByTestId("predicate-time-picker")
+          .getByText("Relative", { exact: true })
+          .click();
+
+        await claimantEl.getByLabel("Time Value").fill("1729270000");
+
+        await claimantEl
+          .getByTestId("predicate-picker")
+          .nth(2)
+          .getByText("Unconditional", { exact: true })
+          .click();
+
+        await expect(page.getByLabel("Claimable Balance ID")).toHaveValue(
+          "00000000379df3d9e7f90a0de80d452e00ec02168f08479450ba8370aaf13c765ee988bd",
+        );
+
+        await testOpSuccessHashAndXdr({
+          page,
+          hash: "fc83c0c77ea2c152ee0814fcaadbdba0ea57275c34a17488c233c0fc04639e0e",
+          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgAAAGQAD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAADgAAAAAAAAAAAJiWgAAAAAEAAAAAAAAAALbdmAQS9vS6yFAAp7g+/+xxUbbMaLA2DDkQvlh36VAmAAAAAQAAAAIAAAAFAAAAAGcSkPAAAAAAAAAAAAAAAAA=",
+        });
+      });
+    });
+
+    // Claim Claimable Balance
+    test.describe("Claim Claimable Balance", () => {
+      test("Happy path", async ({ page }) => {
+        const { operation_0 } = await selectOperationType({
+          page,
+          opType: "claim_claimable_balance",
+        });
+
+        await operation_0
+          .getByLabel("Claimable Balance ID")
+          .fill(
+            "00000000379df3d9e7f90a0de80d452e00ec02168f08479450ba8370aaf13c765ee988bd",
+          );
+
+        await testOpSuccessHashAndXdr({
+          page,
+          hash: "d6a82a52a53ee9c61cfbc906ccf55d81782dc3900d0ebde2f6fbe7de5fab45be",
+          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgAAAGQAD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAADwAAAAA3nfPZ5/kKDegNRS4A7AIWjwhHlFC6g3Cq8Tx2XumIvQAAAAAAAAAA",
+        });
+      });
+
+      test("Validation", async ({ page }) => {
+        await selectOperationType({
+          page,
+          opType: "claim_claimable_balance",
+        });
+
+        await testInputError({
+          page,
+          label: "Claimable Balance ID",
+          value: "aaa",
+          errorMessage: "Claimable Balance ID is invalid.",
+        });
+      });
+    });
+
+    // Begin and End Sponsoring Future Reserves
+    test.describe("Begin and End Sponsoring Future Reserves", () => {
+      test("Happy path", async ({ page }) => {
+        const { operation_0 } = await selectOperationType({
+          page,
+          opType: "begin_sponsoring_future_reserves",
+        });
+
+        await operation_0.getByLabel("Sponsored ID").fill(ACCOUNT_ONE);
+
+        await page.getByText("Add Operation").click();
+
+        const operation_1 = page.getByTestId("build-transaction-operation-1");
+        await operation_1
+          .getByLabel("Operation type")
+          .selectOption({ value: "end_sponsoring_future_reserves" });
+
+        await testOpSuccessHashAndXdr({
+          page,
+          hash: "175658bca4faee673efb5c9548c775fc0156ecb3b14e0c28a805463585ff8af9",
+          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgAAAMgAD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAEAAAAAC23ZgEEvb0ushQAKe4Pv/scVG2zGiwNgw5EL5Yd+lQJgAAAAAAAAARAAAAAAAAAAA=",
+        });
+      });
+    });
+
+    // Revoke Sponsorship
+    test.describe("Revoke Sponsorship", () => {
+      test("Happy path", async ({ page }) => {
+        const { operation_0 } = await selectOperationType({
+          page,
+          opType: "revoke_sponsorship",
+        });
+
+        await operation_0
+          .getByLabel("Revoke Sponsorship Type")
+          .selectOption({ value: "account" });
+
+        await operation_0
+          .getByLabel("Account", { exact: true })
+          .fill(ACCOUNT_ONE);
+
+        await testOpSuccessHashAndXdr({
+          page,
+          hash: "ae866b5937d65908fb3a8a07cb6b82f03c3dc4df9a91553783aebfaff1d4187e",
+          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgAAAGQAD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAEgAAAAAAAAAAAAAAALbdmAQS9vS6yFAAp7g+/+xxUbbMaLA2DDkQvlh36VAmAAAAAAAAAAA=",
+        });
+      });
+    });
   });
 });
 
