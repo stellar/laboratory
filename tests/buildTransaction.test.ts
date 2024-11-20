@@ -439,6 +439,380 @@ test.describe("Build Transaction Page", () => {
         });
       });
     });
+
+    // Manage Sell Offer
+    test.describe("Manage Sell Offer", () => {
+      test("Happy path", async ({ page }) => {
+        const { operation_0 } = await selectOperationType({
+          page,
+          opType: "manage_sell_offer",
+        });
+
+        await selectRadioPicker({
+          page,
+          testId: "asset-picker",
+          selectOption: "Native",
+          nthIndex: 0,
+        });
+
+        await selectRadioPicker({
+          page,
+          testId: "asset-picker",
+          selectOption: "Alphanumeric 4",
+          nthIndex: 1,
+        });
+
+        await operation_0.getByLabel("Asset Code").nth(1).fill(ASSET_CODE);
+        await operation_0
+          .getByLabel("Issuer Account ID")
+          .nth(1)
+          .fill(ASSET_ISSUER);
+
+        await operation_0.getByLabel("Amount you are selling").fill("1");
+        await operation_0
+          .getByLabel("Price of 1 unit of selling in terms of buying")
+          .fill("2");
+
+        await expect(operation_0.getByLabel("Offer ID")).toHaveValue("0");
+
+        await testOpSuccessHashAndXdr({
+          page,
+          hash: "aeb031d72eee5fd7dc2d53a8a70ce69fcddc07d37cc9a0fd7fb4523883fb4e91",
+          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgAAAGQAD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAwAAAAAAAAABVVNEQwAAAABCPn0F8uyvv+wZKyFaPxvpau242OcCVKvjQT4CB95WsgAAAAAAmJaAAAAAAgAAAAEAAAAAAAAAAAAAAAAAAAAA",
+        });
+      });
+
+      test("Validation", async ({ page }) => {
+        await selectOperationType({
+          page,
+          opType: "manage_sell_offer",
+        });
+
+        await testInputError({
+          page,
+          label: "Amount you are selling",
+          value: "aaa",
+          errorMessage:
+            "Amount can only contain numbers and a period for the decimal point.",
+        });
+
+        await testInputError({
+          page,
+          label: "Price of 1 unit of selling in terms of buying",
+          value: "aaa",
+          errorMessage:
+            "Expected a positive number with a period for the decimal point.",
+        });
+
+        await testInputError({
+          page,
+          label: "Offer ID",
+          value: "aaa",
+          errorMessage: "Expected a whole number.",
+        });
+      });
+    });
+
+    // Manage Buy Offer
+    test.describe("Manage Buy Offer", () => {
+      test("Happy path", async ({ page }) => {
+        const { operation_0 } = await selectOperationType({
+          page,
+          opType: "manage_buy_offer",
+        });
+
+        await selectRadioPicker({
+          page,
+          testId: "asset-picker",
+          selectOption: "Native",
+          nthIndex: 0,
+        });
+
+        await selectRadioPicker({
+          page,
+          testId: "asset-picker",
+          selectOption: "Alphanumeric 4",
+          nthIndex: 1,
+        });
+
+        await operation_0.getByLabel("Asset Code").nth(1).fill(ASSET_CODE);
+        await operation_0
+          .getByLabel("Issuer Account ID")
+          .nth(1)
+          .fill(ASSET_ISSUER);
+
+        await operation_0.getByLabel("Amount you are buying").fill("1");
+        await operation_0
+          .getByLabel("Price of 1 unit of buying in terms of selling")
+          .fill("2");
+
+        await expect(operation_0.getByLabel("Offer ID")).toHaveValue("0");
+
+        await testOpSuccessHashAndXdr({
+          page,
+          hash: "01d3a1f320ede12976260e4d30d15c4530b21241e91b6cbbe03c405b8f6d9de2",
+          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgAAAGQAD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAADAAAAAAAAAABVVNEQwAAAABCPn0F8uyvv+wZKyFaPxvpau242OcCVKvjQT4CB95WsgAAAAAAmJaAAAAAAgAAAAEAAAAAAAAAAAAAAAAAAAAA",
+        });
+      });
+    });
+
+    // Create Passive Sell Offer
+    test.describe("Create Passive Sell Offer", () => {
+      test("Happy path", async ({ page }) => {
+        const { operation_0 } = await selectOperationType({
+          page,
+          opType: "create_passive_sell_offer",
+        });
+
+        await selectRadioPicker({
+          page,
+          testId: "asset-picker",
+          selectOption: "Native",
+          nthIndex: 0,
+        });
+
+        await selectRadioPicker({
+          page,
+          testId: "asset-picker",
+          selectOption: "Alphanumeric 4",
+          nthIndex: 1,
+        });
+
+        await operation_0.getByLabel("Asset Code").nth(1).fill(ASSET_CODE);
+        await operation_0
+          .getByLabel("Issuer Account ID")
+          .nth(1)
+          .fill(ASSET_ISSUER);
+
+        await operation_0.getByLabel("Amount you are selling").fill("1");
+        await operation_0
+          .getByLabel("Price of 1 unit of selling in terms of buying")
+          .fill("2");
+
+        await testOpSuccessHashAndXdr({
+          page,
+          hash: "66e63ecf7ebc9c67b78e201fd604f8775b9dc7a47a1d89e836505a75557e4e1c",
+          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgAAAGQAD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAABAAAAAAAAAABVVNEQwAAAABCPn0F8uyvv+wZKyFaPxvpau242OcCVKvjQT4CB95WsgAAAAAAmJaAAAAAAgAAAAEAAAAAAAAAAA==",
+        });
+      });
+    });
+
+    // Set Options
+    test.describe("Set Options", () => {
+      test("Happy path", async ({ page }) => {
+        const { operation_0 } = await selectOperationType({
+          page,
+          opType: "set_options",
+        });
+
+        // Set flags
+        const setFlagsPicker = page.getByTestId("flag-field-picker").nth(0);
+        const setFlagsOptions = setFlagsPicker.locator(".RadioPicker__item");
+
+        await setFlagsOptions
+          .filter({ hasText: "Authorization required" })
+          .click();
+        await setFlagsOptions
+          .filter({ hasText: "Authorization revocable" })
+          .click();
+        await setFlagsOptions
+          .filter({ hasText: "Authorization immutable" })
+          .click();
+        await setFlagsOptions
+          .filter({ hasText: "Authorization clawback enabled" })
+          .click();
+
+        await expect(
+          setFlagsPicker.getByText(
+            "Authorization required (1) + Authorization revocable (2) + Authorization immutable (4) + Authorization clawback enabled (8) = 15",
+          ),
+        ).toBeVisible();
+
+        // Clear flags
+        const clearFlagsPicker = page.getByTestId("flag-field-picker").nth(1);
+        const clearFlagsOptions =
+          clearFlagsPicker.locator(".RadioPicker__item");
+
+        await clearFlagsOptions
+          .filter({ hasText: "Authorization required" })
+          .click();
+        await clearFlagsOptions
+          .filter({ hasText: "Authorization revocable" })
+          .click();
+        await clearFlagsOptions
+          .filter({ hasText: "Authorization clawback enabled" })
+          .click();
+
+        await expect(
+          clearFlagsPicker.getByText(
+            "Authorization required (1) + Authorization revocable (2) + Authorization clawback enabled (8) = 11",
+          ),
+        ).toBeVisible();
+
+        await operation_0.getByLabel("Master Weight").fill("1");
+        await operation_0.getByLabel("Low Threshold").fill("2");
+        await operation_0.getByLabel("Medium Threshold").fill("3");
+        await operation_0.getByLabel("High Threshold").fill("4");
+
+        await operation_0
+          .locator(`[id="0-set_options-signer"]`)
+          .selectOption({ value: "ed25519PublicKey" });
+
+        await operation_0.getByLabel("Key", { exact: true }).fill(ACCOUNT_ONE);
+        await operation_0.getByLabel("Weight", { exact: true }).fill("5");
+
+        await operation_0.getByLabel("Home Domain").fill("test.org");
+
+        await testOpSuccessHashAndXdr({
+          page,
+          hash: "073fb00287ddc690ebe11682305fd5e81f9db9062be577df02692143c02f367f",
+          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgAAAGQAD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAABQAAAAAAAAABAAAACwAAAAEAAAAPAAAAAQAAAAEAAAABAAAAAgAAAAEAAAADAAAAAQAAAAQAAAABAAAACHRlc3Qub3JnAAAAAQAAAAC23ZgEEvb0ushQAKe4Pv/scVG2zGiwNgw5EL5Yd+lQJgAAAAUAAAAAAAAAAA==",
+        });
+      });
+
+      test("Validation", async ({ page }) => {
+        const { operation_0 } = await selectOperationType({
+          page,
+          opType: "set_options",
+        });
+
+        await testInputError({
+          page,
+          label: "Master Weight",
+          value: "aaa",
+          errorMessage: "Expected a whole number.",
+          nthErrorIndex: 0,
+        });
+
+        await testInputError({
+          page,
+          label: "Low Threshold",
+          value: "aaa",
+          errorMessage: "Expected a whole number.",
+          nthErrorIndex: 1,
+        });
+
+        await testInputError({
+          page,
+          label: "Medium Threshold",
+          value: "aaa",
+          errorMessage: "Expected a whole number.",
+          nthErrorIndex: 2,
+        });
+
+        await testInputError({
+          page,
+          label: "High Threshold",
+          value: "aaa",
+          errorMessage: "Expected a whole number.",
+          nthErrorIndex: 3,
+        });
+
+        await operation_0
+          .locator(`[id="0-set_options-signer"]`)
+          .selectOption({ value: "ed25519PublicKey" });
+
+        await testInputError({
+          page,
+          label: "Key",
+          exact: true,
+          value: "aaa",
+          errorMessage: "Public key is invalid.",
+        });
+
+        await testInputError({
+          page,
+          label: "Weight",
+          exact: true,
+          value: "aaa",
+          errorMessage: "Expected a whole number.",
+          nthErrorIndex: 4,
+        });
+
+        await testInputError({
+          page,
+          label: "Home Domain",
+          value: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          errorMessage: "Max length of home domain is 32 characters (got 40).",
+        });
+      });
+    });
+
+    // Change Trust
+    test.describe("Change Trust", () => {
+      test("Happy path", async ({ page }) => {
+        const { operation_0 } = await selectOperationType({
+          page,
+          opType: "change_trust",
+        });
+
+        await selectRadioPicker({
+          page,
+          testId: "asset-picker",
+          selectOption: "Liquidity pool shares",
+          nthIndex: 0,
+        });
+
+        await selectRadioPicker({
+          page,
+          testId: "asset-picker",
+          selectOption: "Native",
+          nthIndex: 1,
+        });
+
+        await selectRadioPicker({
+          page,
+          testId: "asset-picker",
+          selectOption: "Alphanumeric 4",
+          nthIndex: 2,
+        });
+
+        await operation_0.getByLabel("Asset Code").nth(1).fill(ASSET_CODE);
+        await operation_0
+          .getByLabel("Issuer Account ID")
+          .nth(1)
+          .fill(ASSET_ISSUER);
+
+        await expect(operation_0.getByLabel("Fee")).toHaveValue("30");
+
+        await testOpSuccessHashAndXdr({
+          page,
+          hash: "12e8de530a1f9c6a88c64496760813c6958ce9829bb97cbd18058223a53e4d58",
+          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgAAAGQAD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAABgAAAAMAAAAAAAAAAAAAAAFVU0RDAAAAAEI+fQXy7K+/7BkrIVo/G+lq7bjY5wJUq+NBPgIH3layAAAAHn//////////AAAAAAAAAAA=",
+        });
+      });
+
+      test("Validation", async ({ page }) => {
+        await selectOperationType({
+          page,
+          opType: "change_trust",
+        });
+
+        await testInputError({
+          page,
+          label: "Trust Limit",
+          value: "aaa",
+          errorMessage:
+            "Expected a positive number with a period for the decimal point.",
+        });
+      });
+    });
+
+    // Allow Trust
+    test.describe("Allow Trust", () => {
+      test("Happy path", async ({ page }) => {
+        const { operation_0 } = await selectOperationType({
+          page,
+          opType: "allow_trust",
+        });
+
+        await expect(
+          operation_0.getByText(
+            "This operation is deprecated as of Protocol 17. Prefer SetTrustLineFlags instead.",
+          ),
+        ).toBeVisible();
+      });
+    });
   });
 });
 

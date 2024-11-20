@@ -33,7 +33,7 @@ export const FlagFieldPicker = ({
   const details = optionsFlagDetails(options, selectedOptions);
 
   return (
-    <div className="RadioPicker">
+    <div className="RadioPicker" data-testid="flag-field-picker">
       {label ? (
         <LabelHeading
           size="md"
