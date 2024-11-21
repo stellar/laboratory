@@ -28,6 +28,36 @@ test.describe("Build Transaction Page", () => {
     ).toHaveText(["Select operation type"]);
   });
 
+  test("Save transaction modal works", async ({ page }) => {
+    await page.getByLabel("Source Account").fill(SOURCE_ACCOUNT);
+    await page.getByLabel("Transaction Sequence Number").fill(SEQUENCE_NUMBER);
+
+    const saveTxButton = page.getByTitle("Save transaction");
+
+    await expect(saveTxButton).toBeDisabled();
+
+    const { operation_0 } = await selectOperationType({
+      page,
+      opType: "create_account",
+    });
+
+    await operation_0.getByLabel("Destination").fill(ACCOUNT_ONE);
+    await operation_0.getByLabel("Starting Balance").fill("1");
+
+    await expect(saveTxButton).toBeEnabled();
+    await saveTxButton.click();
+
+    const modal = page.locator(".Modal");
+
+    await expect(modal).toBeVisible();
+    await expect(page.locator(".ModalHeading")).toHaveText("Save Transaction");
+
+    await modal.getByLabel("Name", { exact: true }).fill("Transaction 1");
+    await modal.getByText("Save", { exact: true }).click();
+
+    await expect(modal).toBeHidden();
+  });
+
   test.describe("Params", () => {
     test("Happy path", async ({ page }) => {
       const { paramsErrors } = getOperationsErrorsAndSuccessElements(page);
@@ -1038,6 +1068,233 @@ test.describe("Build Transaction Page", () => {
           page,
           hash: "ae866b5937d65908fb3a8a07cb6b82f03c3dc4df9a91553783aebfaff1d4187e",
           xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgAAAGQAD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAEgAAAAAAAAAAAAAAALbdmAQS9vS6yFAAp7g+/+xxUbbMaLA2DDkQvlh36VAmAAAAAAAAAAA=",
+        });
+      });
+    });
+
+    // Clawback
+    test.describe("Clawback", () => {
+      test("Happy path", async ({ page }) => {
+        const { operation_0 } = await selectOperationType({
+          page,
+          opType: "clawback",
+        });
+
+        await selectRadioPicker({
+          page,
+          testId: "asset-picker",
+          selectOption: "Alphanumeric 4",
+        });
+
+        await operation_0.getByLabel("Asset Code").fill(ASSET_CODE);
+        await operation_0.getByLabel("Issuer Account ID").fill(ASSET_ISSUER);
+        await operation_0.getByLabel("From", { exact: true }).fill(ACCOUNT_ONE);
+        await operation_0.getByLabel("Amount", { exact: true }).fill("1");
+
+        await testOpSuccessHashAndXdr({
+          page,
+          hash: "0fd135ae4d3dd28d338ac78e5f6f76ea99cebebf56f22dd9370b1d7273b42825",
+          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgAAAGQAD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAEwAAAAFVU0RDAAAAAEI+fQXy7K+/7BkrIVo/G+lq7bjY5wJUq+NBPgIH3layAAAAALbdmAQS9vS6yFAAp7g+/+xxUbbMaLA2DDkQvlh36VAmAAAAAACYloAAAAAAAAAAAA==",
+        });
+      });
+    });
+
+    // Clawback Claimable Balance
+    test.describe("Clawback Claimable Balance", () => {
+      test("Happy path", async ({ page }) => {
+        const { operation_0 } = await selectOperationType({
+          page,
+          opType: "clawback_claimable_balance",
+        });
+
+        await operation_0
+          .getByLabel("Claimable Balance ID")
+          .fill(
+            "00000000379df3d9e7f90a0de80d452e00ec02168f08479450ba8370aaf13c765ee988bd",
+          );
+
+        await testOpSuccessHashAndXdr({
+          page,
+          hash: "257a9b3731e2933f9ff20f42a1db0778c379a7b41e0bab382b908ba19e780b97",
+          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgAAAGQAD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAFAAAAAA3nfPZ5/kKDegNRS4A7AIWjwhHlFC6g3Cq8Tx2XumIvQAAAAAAAAAA",
+        });
+      });
+    });
+
+    // Set Trust Line Flags
+    test.describe("Set Trust Line Flags", () => {
+      test("Happy path", async ({ page }) => {
+        const { operation_0 } = await selectOperationType({
+          page,
+          opType: "set_trust_line_flags",
+        });
+
+        await selectRadioPicker({
+          page,
+          testId: "asset-picker",
+          selectOption: "Alphanumeric 4",
+        });
+
+        await operation_0.getByLabel("Asset Code").fill(ASSET_CODE);
+        await operation_0.getByLabel("Issuer Account ID").fill(ASSET_ISSUER);
+        await operation_0.getByLabel("Trustor").fill(ACCOUNT_ONE);
+
+        // Set flags
+        const setFlagsPicker = page.getByTestId("flag-field-picker").nth(0);
+
+        await setFlagsPicker.getByText("Authorized", { exact: true }).click();
+        await setFlagsPicker
+          .getByText("Authorized to maintain liabilites", { exact: true })
+          .click();
+
+        await expect(
+          setFlagsPicker.getByText(
+            "Authorized (1) + Authorized to maintain liabilites (2) = 3",
+          ),
+        ).toBeVisible();
+
+        // Clear flags
+        const clearFlagsPicker = page.getByTestId("flag-field-picker").nth(1);
+
+        await clearFlagsPicker.getByText("Authorized", { exact: true }).click();
+        await clearFlagsPicker
+          .getByText("Authorized to maintain liabilites", { exact: true })
+          .click();
+        await clearFlagsPicker
+          .getByText("Clawback enabled", { exact: true })
+          .click();
+
+        await expect(
+          clearFlagsPicker.getByText(
+            "Authorized (1) + Authorized to maintain liabilites (2) + Clawback enabled (4) = 7",
+          ),
+        ).toBeVisible();
+
+        await testOpSuccessHashAndXdr({
+          page,
+          hash: "c5af39517a4f66420594e2938cd38cd813b5f31939258cf005899ed423bc25a7",
+          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgAAAGQAD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAFQAAAAC23ZgEEvb0ushQAKe4Pv/scVG2zGiwNgw5EL5Yd+lQJgAAAAFVU0RDAAAAAEI+fQXy7K+/7BkrIVo/G+lq7bjY5wJUq+NBPgIH3layAAAABwAAAAMAAAAAAAAAAA==",
+        });
+      });
+    });
+
+    // Liquidity Pool Deposit
+    test.describe("Liquidity Pool Deposit", () => {
+      test("Happy path", async ({ page }) => {
+        const { operation_0 } = await selectOperationType({
+          page,
+          opType: "liquidity_pool_deposit",
+        });
+
+        await operation_0
+          .getByLabel("Liquidity Pool ID")
+          .fill(
+            "67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9",
+          );
+        await operation_0.getByLabel("Max Amount A").fill("1");
+        await operation_0.getByLabel("Max Amount B").fill("2");
+
+        const minPricePicker = page
+          .getByTestId("number-fraction-picker")
+          .nth(0);
+
+        await minPricePicker.getByText("Number", { exact: true }).click();
+        await minPricePicker
+          .locator(`[id="0-liquidity_pool_deposit-min_price-number"]`)
+          .fill("3");
+
+        const maxPricePicker = page
+          .getByTestId("number-fraction-picker")
+          .nth(1);
+
+        await maxPricePicker.getByText("Fraction", { exact: true }).click();
+        await maxPricePicker.getByLabel("Numerator").fill("4");
+        await maxPricePicker.getByLabel("Denominator").fill("5");
+
+        await testOpSuccessHashAndXdr({
+          page,
+          hash: "3a3272395648f4936e88406651ad33df330c749f9afc90364326d8542e4cae41",
+          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgAAAGQAD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAFmcmDEwYB7Ji/4UbCj/hQRlJNrsCFbL3dEfx3xGZjqu5AAAAAACYloAAAAAAATEtAAAAAAMAAAABAAAABAAAAAUAAAAAAAAAAA==",
+        });
+      });
+
+      test("Validation", async ({ page }) => {
+        const { operation_0 } = await selectOperationType({
+          page,
+          opType: "liquidity_pool_deposit",
+        });
+
+        await testInputError({
+          page,
+          label: "Max Amount A",
+          value: "aaa",
+          errorMessage:
+            "Amount can only contain numbers and a period for the decimal point.",
+          nthErrorIndex: 0,
+        });
+
+        await testInputError({
+          page,
+          label: "Max Amount B",
+          value: "aaa",
+          errorMessage:
+            "Amount can only contain numbers and a period for the decimal point.",
+          nthErrorIndex: 1,
+        });
+
+        const minPricePicker = page
+          .getByTestId("number-fraction-picker")
+          .nth(0);
+
+        await minPricePicker.getByText("Number", { exact: true }).click();
+        await minPricePicker
+          .locator(`[id="0-liquidity_pool_deposit-min_price-number"]`)
+          .fill("aaa");
+        await expect(
+          operation_0
+            .getByText(
+              "Amount can only contain numbers and a period for the decimal point.",
+            )
+            .nth(2),
+        ).toBeVisible();
+
+        const maxPricePicker = page
+          .getByTestId("number-fraction-picker")
+          .nth(1);
+
+        await maxPricePicker.getByText("Fraction", { exact: true }).click();
+        await maxPricePicker.getByLabel("Numerator").fill("aaa");
+        await maxPricePicker.getByLabel("Denominator").fill("aaa");
+
+        await expect(
+          operation_0.getByText(
+            "Numerator: Expected a whole number. Denominator: Expected a whole number.",
+          ),
+        ).toBeVisible();
+      });
+    });
+
+    // Liquidity Pool Withdraw
+    test.describe("Liquidity Pool Withdraw", () => {
+      test("Happy path", async ({ page }) => {
+        const { operation_0 } = await selectOperationType({
+          page,
+          opType: "liquidity_pool_withdraw",
+        });
+
+        await operation_0
+          .getByLabel("Liquidity Pool ID")
+          .fill(
+            "67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9",
+          );
+        await operation_0.getByLabel("Amount", { exact: true }).fill("1");
+        await operation_0.getByLabel("Min Amount A").fill("2");
+        await operation_0.getByLabel("Min Amount B").fill("3");
+
+        await testOpSuccessHashAndXdr({
+          page,
+          hash: "d5d0af78096983daa56b980cfd588176593449a5ed34be29932c604c46b33a99",
+          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgAAAGQAD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAF2cmDEwYB7Ji/4UbCj/hQRlJNrsCFbL3dEfx3xGZjqu5AAAAAACYloAAAAAAATEtAAAAAAABycOAAAAAAAAAAAA=",
         });
       });
     });
