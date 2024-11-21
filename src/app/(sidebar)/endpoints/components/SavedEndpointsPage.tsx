@@ -55,9 +55,16 @@ export const SavedEndpointsPage = () => {
   >();
 
   useEffect(() => {
-    setSavedEndpointsHorizon(localStorageSavedEndpointsHorizon.get());
-    setSavedRpcMethods(localStorageSavedRpcMethods.get());
-  }, []);
+    const horizonItems = localStorageSavedEndpointsHorizon
+      .get()
+      .filter((h) => h.network.id === network.id);
+    const rpcItems = localStorageSavedRpcMethods
+      .get()
+      .filter((r) => r.network.id === network.id);
+
+    setSavedEndpointsHorizon(horizonItems);
+    setSavedRpcMethods(rpcItems);
+  }, [network.id]);
 
   useEffect(() => {
     const mappedRpcIndex = savedRpcMethods.reduce(
