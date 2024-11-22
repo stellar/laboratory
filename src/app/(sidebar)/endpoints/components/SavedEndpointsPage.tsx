@@ -1,5 +1,5 @@
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Alert,
   Badge,
@@ -20,6 +20,7 @@ import { PrettyJsonTextarea } from "@/components/PrettyJsonTextarea";
 import { SavedItemTimestampAndDelete } from "@/components/SavedItemTimestampAndDelete";
 import { CopyJsonPayloadButton } from "@/components/CopyJsonPayloadButton";
 import { PageCard } from "@/components/layout/PageCard";
+import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 
 import { Routes } from "@/constants/routes";
 import { localStorageSavedEndpointsHorizon } from "@/helpers/localStorageSavedEndpointsHorizon";
@@ -54,17 +55,33 @@ export const SavedEndpointsPage = () => {
     number | undefined
   >();
 
-  useEffect(() => {
+  const [currentRequestTimestamp, setCurrentRequestTimestamp] = useState<
+    number | undefined
+  >();
+
+  const isRpcTab = saved.activeTab === "rpc";
+
+  const updateSavedHorizonEndpoints = useCallback(() => {
     const horizonItems = localStorageSavedEndpointsHorizon
       .get()
       .filter((h) => h.network.id === network.id);
+    setSavedEndpointsHorizon(horizonItems);
+  }, [network.id]);
+
+  const updateSavedRpcRequests = useCallback(() => {
     const rpcItems = localStorageSavedRpcMethods
       .get()
       .filter((r) => r.network.id === network.id);
-
-    setSavedEndpointsHorizon(horizonItems);
     setSavedRpcMethods(rpcItems);
   }, [network.id]);
+
+  useEffect(() => {
+    updateSavedHorizonEndpoints();
+  }, [updateSavedHorizonEndpoints]);
+
+  useEffect(() => {
+    updateSavedRpcRequests();
+  }, [updateSavedRpcRequests]);
 
   useEffect(() => {
     const mappedRpcIndex = savedRpcMethods.reduce(
@@ -147,6 +164,24 @@ export const SavedEndpointsPage = () => {
             key={`horizon-${e.timestamp}`}
             addlClassName="PageBody__content"
           >
+            <Input
+              id={`saved-horizon-${e.timestamp}`}
+              fieldSize="md"
+              value={e.name}
+              readOnly
+              placeholder="Click Edit to add Horizon Endpoint name"
+              rightElement={
+                <InputSideElement
+                  variant="button"
+                  placement="right"
+                  onClick={() => {
+                    setCurrentRequestTimestamp(e.timestamp);
+                  }}
+                  icon={<Icon.Edit05 />}
+                />
+              }
+            />
+
             <div className="Endpoints__urlBar">
               <Input
                 id={`endpoint-url-${e.timestamp}`}
@@ -236,6 +271,25 @@ export const SavedEndpointsPage = () => {
                 {e.rpcMethod}
               </Badge>
             </Box>
+
+            <Input
+              id={`saved-rpc-${e.timestamp}`}
+              fieldSize="md"
+              value={e.name}
+              readOnly
+              placeholder="Click Edit to add RPC Request name"
+              rightElement={
+                <InputSideElement
+                  variant="button"
+                  placement="right"
+                  onClick={() => {
+                    setCurrentRequestTimestamp(e.timestamp);
+                  }}
+                  icon={<Icon.Edit05 />}
+                />
+              }
+            />
+
             <div className="Endpoints__urlBar">
               <Input
                 id={`endpoint-url-${e.timestamp}`}
@@ -347,13 +401,12 @@ export const SavedEndpointsPage = () => {
           tab1={{
             id: "rpc",
             label: "RPC Methods",
-            content: saved.activeTab === "rpc" ? <RpcEndpoints /> : null,
+            content: isRpcTab ? <RpcEndpoints /> : null,
           }}
           tab2={{
             id: "horizon",
             label: "Horizon Endpoints",
-            content:
-              saved.activeTab === "horizon" ? <HorizonEndpoints /> : null,
+            content: !isRpcTab ? <HorizonEndpoints /> : null,
           }}
           activeTabId={saved.activeTab}
           onTabChange={(id) => {
@@ -411,6 +464,38 @@ export const SavedEndpointsPage = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      <SaveToLocalStorageModal
+        type="editName"
+        itemTitle={isRpcTab ? "RPC Method" : "Horizon Endpoint"}
+        itemTimestamp={currentRequestTimestamp}
+        allSavedItems={
+          isRpcTab
+            ? localStorageSavedRpcMethods.get()
+            : localStorageSavedEndpointsHorizon.get()
+        }
+        isVisible={currentRequestTimestamp !== undefined}
+        onClose={(isUpdate?: boolean) => {
+          setCurrentRequestTimestamp(undefined);
+
+          if (isUpdate) {
+            if (isRpcTab) {
+              updateSavedRpcRequests();
+            } else {
+              updateSavedHorizonEndpoints();
+            }
+          }
+        }}
+        onUpdate={(updatedItems) => {
+          if (isRpcTab) {
+            localStorageSavedRpcMethods.set(updatedItems as SavedRpcMethod[]);
+          } else {
+            localStorageSavedEndpointsHorizon.set(
+              updatedItems as SavedEndpointHorizon[],
+            );
+          }
+        }}
+      />
     </Box>
   );
 };

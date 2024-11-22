@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, Input, Modal } from "@stellar/design-system";
 import { arrayItem } from "@/helpers/arrayItem";
-// import { localStorageSavedKeypairs } from "@/helpers/localStorageSavedKeypairs";
 import { getSaveItemNetwork } from "@/helpers/getSaveItemNetwork";
 import { useStore } from "@/store/useStore";
 import { AnyObject, LocalStorageSavedItem } from "@/types/types";
@@ -82,14 +81,6 @@ export const SaveToLocalStorageModal = <
             variant="primary"
             onClick={() => {
               if (currentItemIndex >= 0) {
-                // localStorageSavedKeypairs.set(
-                //   arrayItem.update(allSavedItems, currentItemIndex, {
-                //     ...currentItem,
-                //     timestamp: Date.now(),
-                //     name: savedItemName,
-                //   }),
-                // );
-
                 onUpdate(
                   arrayItem.update(allSavedItems, currentItemIndex, {
                     ...currentItem,
@@ -133,23 +124,12 @@ export const SaveToLocalStorageModal = <
             size="md"
             variant="primary"
             onClick={() => {
-              // const allCurrentKeypairs = localStorageSavedKeypairs.get();
-
-              // localStorageSavedKeypairs.set(
-              //   arrayItem.add(allCurrentKeypairs, {
-              //     timestamp: Date.now(),
-              //     network: getSaveItemNetwork(network),
-              //     name: savedItemName,
-              //     publicKey,
-              //     secretKey,
-              //   }),
-              // );
               onUpdate(
                 arrayItem.add(allSavedItems, {
                   timestamp: Date.now(),
                   network: getSaveItemNetwork(network),
                   name: savedItemName,
-                  ...itemProps,
+                  ...(itemProps || {}),
                 }),
               );
 
