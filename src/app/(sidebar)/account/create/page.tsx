@@ -11,16 +11,17 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useIsTestingNetwork } from "@/hooks/useIsTestingNetwork";
 import { useNetworkChanged } from "@/hooks/useNetworkChanged";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
+import { localStorageSavedKeypairs } from "@/helpers/localStorageSavedKeypairs";
 
 import { GenerateKeypair } from "@/components/GenerateKeypair";
 import { ExpandBox } from "@/components/ExpandBox";
 import { SuccessMsg } from "@/components/FriendBot/SuccessMsg";
 import { ErrorMsg } from "@/components/FriendBot/ErrorMsg";
 import { Box } from "@/components/layout/Box";
-import { SaveKeypairModal } from "@/components/SaveKeypairModal";
+import { PageCard } from "@/components/layout/PageCard";
+import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 
 import "../styles.scss";
-import { PageCard } from "@/components/layout/PageCard";
 
 export default function CreateAccount() {
   const { account, network } = useStore();
@@ -176,14 +177,21 @@ export default function CreateAccount() {
         }}
       />
 
-      <SaveKeypairModal
+      <SaveToLocalStorageModal
         type="save"
+        itemTitle="Keypair"
+        itemProps={{
+          publicKey: account.publicKey,
+          secretKey: secretKey,
+        }}
+        allSavedItems={localStorageSavedKeypairs.get()}
         isVisible={isSaveModalVisible}
         onClose={() => {
           setIsSaveModalVisible(false);
         }}
-        publicKey={account.publicKey!}
-        secretKey={secretKey}
+        onUpdate={(updatedItems) => {
+          localStorageSavedKeypairs.set(updatedItems);
+        }}
       />
     </div>
   );

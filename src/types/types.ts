@@ -57,14 +57,6 @@ export type StatusPageScheduled = {
   incident_updates: StatusPageIncident[];
 };
 
-export type LocalStorageSavedNetwork = {
-  id: NetworkType;
-  label: string;
-  horizonUrl?: string;
-  rpcUrl?: string;
-  passphrase?: string;
-};
-
 // =============================================================================
 // Account
 // =============================================================================
@@ -76,14 +68,6 @@ export type MuxedAccount = {
 
 export type MuxedAccountFieldType = MuxedAccount & {
   error: string;
-};
-
-export type SavedKeypair = {
-  timestamp: number;
-  network: LocalStorageSavedNetwork;
-  name: string;
-  publicKey: string;
-  secretKey: string;
 };
 
 // =============================================================================
@@ -141,31 +125,6 @@ export type AssetPoolShareError = {
 };
 
 // =============================================================================
-// Saved Horizon Endpoints & RPC Method
-// =============================================================================
-export type SavedEndpointHorizon = {
-  url: string;
-  method: string;
-  timestamp: number;
-  route: string;
-  params: AnyObject;
-  network: LocalStorageSavedNetwork;
-  shareableUrl: string | undefined;
-};
-
-export type SavedRpcMethod = {
-  url: string;
-  method: string;
-  rpcMethod: string;
-  timestamp: number;
-  route: string;
-  params: AnyObject;
-  network: LocalStorageSavedNetwork;
-  shareableUrl: string | undefined;
-  payload: AnyObject;
-};
-
-// =============================================================================
 // Transaction
 // =============================================================================
 export type TimeBoundsValue = {
@@ -185,19 +144,6 @@ export type LedgerErrorResponse = {
   message: string;
   errorCode: number;
 };
-
-export type SavedTransaction = {
-  timestamp: number;
-  network: LocalStorageSavedNetwork;
-  params?: TransactionBuildParams;
-  operations?: TxnOperation[];
-  xdr: string;
-  name: string;
-  page: SavedTransactionPage;
-  shareableUrl: string | undefined;
-};
-
-export type SavedTransactionPage = "build" | "sign" | "simulate" | "submit";
 
 export type SubmitRpcResponse = {
   hash: string;
@@ -355,3 +301,53 @@ export type ConfigSettingIdType =
   | "contract_execution_lanes"
   | "bucketlist_size_window"
   | "eviction_iterator";
+
+// =============================================================================
+// Local storage items
+// =============================================================================
+export type LocalStorageSavedNetwork = {
+  id: NetworkType;
+  label: string;
+  horizonUrl?: string;
+  rpcUrl?: string;
+  passphrase?: string;
+};
+
+export interface LocalStorageSavedItem {
+  timestamp: number;
+  network: LocalStorageSavedNetwork;
+  name: string;
+}
+
+export interface SavedKeypair extends LocalStorageSavedItem {
+  publicKey: string;
+  secretKey: string;
+}
+
+export interface SavedTransaction extends LocalStorageSavedItem {
+  params?: TransactionBuildParams;
+  operations?: TxnOperation[];
+  xdr: string;
+  page: SavedTransactionPage;
+  shareableUrl: string | undefined;
+}
+
+export type SavedTransactionPage = "build" | "sign" | "simulate" | "submit";
+
+export interface SavedEndpointHorizon extends LocalStorageSavedItem {
+  url: string;
+  method: string;
+  route: string;
+  params: AnyObject;
+  shareableUrl: string | undefined;
+}
+
+export interface SavedRpcMethod extends LocalStorageSavedItem {
+  url: string;
+  method: string;
+  rpcMethod: string;
+  route: string;
+  params: AnyObject;
+  shareableUrl: string | undefined;
+  payload: AnyObject;
+}

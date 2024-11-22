@@ -19,6 +19,8 @@ import { getBlockExplorerLink } from "@/helpers/getBlockExplorerLink";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { localStorageSubmitMethod } from "@/helpers/localStorageSubmitMethod";
 import { buildEndpointHref } from "@/helpers/buildEndpointHref";
+import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransactions";
+import { shareableUrl } from "@/helpers/shareableUrl";
 
 import { Routes } from "@/constants/routes";
 import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
@@ -34,10 +36,10 @@ import { PrettyJsonTransaction } from "@/components/PrettyJsonTransaction";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { TxResponse } from "@/components/TxResponse";
-import { SaveTransactionModal } from "@/components/SaveTransactionModal";
 import { SdsLink } from "@/components/SdsLink";
 import { TransactionHashReadOnlyField } from "@/components/TransactionHashReadOnlyField";
 import { PageCard } from "@/components/layout/PageCard";
+import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 
 import {
   HorizonErrorResponse,
@@ -624,14 +626,22 @@ export default function SubmitTransaction() {
       <>{renderSuccess()}</>
       <>{renderError()}</>
 
-      <SaveTransactionModal
+      <SaveToLocalStorageModal
         type="save"
-        page="submit"
+        itemTitle="Transaction"
+        itemProps={{
+          xdr: blob,
+          page: "submit",
+          shareableUrl: shareableUrl("transactions-save"),
+        }}
+        allSavedItems={localStorageSavedTransactions.get()}
         isVisible={isSaveTxnModalVisible}
         onClose={() => {
           setIsSaveTxnModalVisible(false);
         }}
-        xdr={blob}
+        onUpdate={(updatedItems) => {
+          localStorageSavedTransactions.set(updatedItems);
+        }}
       />
     </Box>
   );

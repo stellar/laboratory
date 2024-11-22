@@ -13,8 +13,9 @@ import {
 
 import { Box } from "@/components/layout/Box";
 import { InputSideElement } from "@/components/InputSideElement";
-import { SaveKeypairModal } from "@/components/SaveKeypairModal";
 import { SavedItemTimestampAndDelete } from "@/components/SavedItemTimestampAndDelete";
+import { PageCard } from "@/components/layout/PageCard";
+import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 
 import { localStorageSavedKeypairs } from "@/helpers/localStorageSavedKeypairs";
 import { arrayItem } from "@/helpers/arrayItem";
@@ -27,7 +28,6 @@ import { useFriendBot } from "@/query/useFriendBot";
 import { useAccountInfo } from "@/query/useAccountInfo";
 
 import { NetworkType, SavedKeypair } from "@/types/types";
-import { PageCard } from "@/components/layout/PageCard";
 
 export default function SavedKeypairs() {
   const { network, selectNetwork, updateIsDynamicNetworkSelect } = useStore();
@@ -177,8 +177,11 @@ export default function SavedKeypairs() {
 
       <>{renderOtherNetworkMessage()}</>
 
-      <SaveKeypairModal
+      <SaveToLocalStorageModal
         type="editName"
+        itemTitle="Keypair"
+        itemTimestamp={currentKeypairTimestamp}
+        allSavedItems={localStorageSavedKeypairs.get()}
         isVisible={currentKeypairTimestamp !== undefined}
         onClose={(isUpdate?: boolean) => {
           setCurrentKeypairTimestamp(undefined);
@@ -187,7 +190,9 @@ export default function SavedKeypairs() {
             updateSavedKeypairs();
           }
         }}
-        keypairTimestamp={currentKeypairTimestamp}
+        onUpdate={(updatedItems) => {
+          localStorageSavedKeypairs.set(updatedItems);
+        }}
       />
     </Box>
   );
