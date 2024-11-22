@@ -793,7 +793,11 @@ export const Overview = () => {
               />
             </Box>
 
-            <Box gap="md" addlClassName="PageBody__content">
+            <Box
+              gap="md"
+              addlClassName="PageBody__content"
+              data-testid="sign-tx-signature"
+            >
               <LabelHeading size="md">Add a signature</LabelHeading>
 
               <>
@@ -870,7 +874,7 @@ export const Overview = () => {
         </PageCard>
 
         {sign.signedTx ? (
-          <div ref={successResponseEl}>
+          <div ref={successResponseEl} data-testid="sign-tx-validation-card">
             <ValidationResponseCard
               variant="success"
               title="Transaction signed!"
@@ -878,7 +882,9 @@ export const Overview = () => {
               response={
                 <Box gap="xs">
                   <div>
-                    <div>{sign.signedTx}</div>
+                    <div data-testid="validation-card-response">
+                      {sign.signedTx}
+                    </div>
                   </div>
                 </Box>
               }

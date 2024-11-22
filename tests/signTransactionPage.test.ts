@@ -18,6 +18,9 @@ test.describe("Sign Transaction Page", () => {
     const secretKeysView = page.getByTestId("sign-tx-secretkeys");
     const hardwareView = page.getByTestId("sign-tx-hardware");
     const walletExtView = page.getByTestId("sign-tx-wallet-ext");
+    const sigExtView = page.getByTestId("sign-tx-signature");
+    const validationView = page.getByTestId("sign-tx-validation-card");
+    const signedXdr = page.getByTestId("validation-card-response");
 
     // Import Screen
     const importBtn = page.getByText("Import transaction");
@@ -79,14 +82,6 @@ test.describe("Sign Transaction Page", () => {
     );
     const addAddlSecretBtn = multiPickerContainer.getByText("Add additional");
     const secretKeysSignBtn = secretKeysView.getByText("Sign transaction");
-
-    await expect(multiPickerInput).toHaveCount(1);
-    await addAddlSecretBtn.click();
-    await expect(multiPickerInput).toHaveCount(2);
-
-    // Type in a string in an invalid secret key format
-    await multiPickerInput.nth(0).fill("lkjlsdkjflksdjf");
-
     const invalidSecretKeyErrorMsg = page.getByText(
       "Invalid secret key. Please check your secret key and try again.",
     );
@@ -94,6 +89,12 @@ test.describe("Sign Transaction Page", () => {
       "Successfully added 1 signature",
     );
 
+    await expect(multiPickerInput).toHaveCount(1);
+    await addAddlSecretBtn.click();
+    await expect(multiPickerInput).toHaveCount(2);
+
+    // Type in a string in an invalid secret key format
+    await multiPickerInput.nth(0).fill("lkjlsdkjflksdjf");
     await expect(invalidSecretKeyErrorMsg).toBeVisible();
 
     // Type in a string in an valid secret key format
@@ -106,6 +107,12 @@ test.describe("Sign Transaction Page", () => {
     await secretKeysSignBtn.click();
 
     await expect(successSecretKeyMsg).toBeVisible();
+
+    const firstSignedResponse = await signedXdr.getByText(
+      "AAAAAgAAAADJrq4b4AopDZibkeBWpDxuWKUcY4FUUNQdIEF3Nm9dkQAAAGQAAAIiAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAQAAAACXlGN76T6NQcaUJxbEkH3mi1HHWsHnLqMDdlLl9NlJgQAAAAAAAAAABfXhAAAAAAAAAAABjc9OtQAAAEBrpI8Q90yqEqjcLSubVj5nqtyt53bpVzi8Bzikps4xuom0xHQgrM6MsQS503ortwLcYOw0gyLPyst7J88ZDoQJ",
+    );
+
+    await expect(firstSignedResponse).toBeVisible();
 
     /*** Signatures: Hardware Wallet ***/
     const bipPathInput = await hardwareView.getByPlaceholder(
@@ -126,18 +133,23 @@ test.describe("Sign Transaction Page", () => {
       "Trezor",
     ]);
 
+    const hardwareSignBtn = hardwareView.getByText("Sign transaction");
+
+    await hardwareSignBtn.isDisabled();
+
     await hardwareSelect.selectOption("Trezor");
 
     await expect(hardwareSelect).toHaveValue("trezor");
 
-    const hardwareSignBtn = hardwareView.getByText("Sign transaction");
+    await hardwareSignBtn.isEnabled();
 
-    // Start waiting for popup before clicking. Note no await.
-    const pagePromise = page.context().waitForEvent("page");
-    await hardwareSignBtn.click();
-    await pagePromise;
+    await hardwareSelect.selectOption("Ledger");
 
-    // @TODO mock the hardware API
+    await expect(hardwareSelect).toHaveValue("ledger");
+
+    await hardwareSelect.selectOption("Hash with Ledger");
+
+    await expect(hardwareSelect).toHaveValue("ledger_hash");
 
     /*** Signatures: Wallet Extension ***/
     const walletExtSignBtn = walletExtView.getByRole("button", {
@@ -145,7 +157,67 @@ test.describe("Sign Transaction Page", () => {
     });
     await walletExtSignBtn.click();
 
+    await expect(
+      page.getByRole("heading", { name: "Connect a Wallet" }),
+    ).toBeVisible();
+
+    // Wallet Extension to display 6 wallets
+    await expect(page.getByRole("listitem")).toHaveCount(6);
+
+    // Exit out of the wallet extension modal
+    await page.click("body", { position: { x: 10, y: 10 } });
+
     /*** Signatures: Add a signature ***/
+    const addSigBtn = sigExtView.getByText("Add signature to transaction");
+    await addSigBtn.isDisabled();
+
+    const pubKeyInput = sigExtView.getByPlaceholder("Public key");
+    const sigInput = sigExtView.getByPlaceholder(
+      "Hex encoded 64-byte ed25519 signature",
+    );
+    const pubKeyErrorMsg = sigExtView.getByText("Public key is invalid.");
+    const addSigErrorMsg = sigExtView.getByText(
+      "Error: invalid encoded string",
+    );
+    const addSigSuccessMsg = sigExtView.getByText(
+      "Successfully added 1 signature",
+    );
+
+    await expect(pubKeyInput).toBeVisible();
+    await expect(sigInput).toBeVisible();
+
+    pubKeyInput.fill("sdfsdf");
+
+    await expect(pubKeyErrorMsg).toBeVisible();
+
+    sigInput.fill(
+      "ef6db30947dafea9f87f821751812dc15180f084c70dfab6e359bc92fa892f10aa0eb403c37ccc77c67cb0fabc77eba6e151485a72c5e549c58a2f57f0c26101",
+    );
+
+    await addSigBtn.isEnabled();
+    await addSigBtn.click();
+
+    await expect(addSigErrorMsg).toBeVisible();
+
+    pubKeyInput.fill(
+      "GDBE5AQAPXR6DYK7WPTWY25KM4TN552VZ3543DZUGUND7KI2TB2SIAJX",
+    );
+
+    await expect(addSigErrorMsg).toBeHidden();
+
+    await addSigBtn.click();
+
+    await expect(addSigSuccessMsg).toBeVisible();
+
+    await expect(signedXdr).toContainText(
+      "AAAAAgAAAADJrq4b4AopDZibkeBWpDxuWKUcY4FUUNQdIEF3Nm9dkQAAAGQAAAIiAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAQAAAACXlGN76T6NQcaUJxbEkH3mi1HHWsHnLqMDdlLl9NlJgQAAAAAAAAAABfXhAAAAAAAAAAACjc9OtQAAAEBrpI8Q90yqEqjcLSubVj5nqtyt53bpVzi8Bzikps4xuom0xHQgrM6MsQS503ortwLcYOw0gyLPyst7J88ZDoQJGph1JAAAAEDvbbMJR9r+qfh/ghdRgS3BUYDwhMcN+rbjWbyS+okvEKoOtAPDfMx3xnyw+rx366bhUUhacsXlScWKL1fwwmEB",
+    );
+
+    const submitBtn = validationView.getByText(
+      "Submit in Transaction Submitter",
+    );
+    await expect(submitBtn).toBeEnabled();
+    await submitBtn.click();
   });
 
   test("Use an ScVal Type XDR that is not Transaction Envelope XDR", async ({
@@ -163,6 +235,64 @@ test.describe("Sign Transaction Page", () => {
     await xdrInput.fill(MOCK_SC_VAL_XDR);
 
     await expect(decodeErrorMsg).toBeVisible();
+  });
+
+  test("Use an XDR that includes 3 operations", async ({ page }) => {
+    // sections
+    const overview = page.getByTestId("sign-tx-overview");
+    const signaturesView = page.getByTestId("sign-tx-sigs");
+
+    // Import Screen
+    const importBtn = page.getByText("Import transaction");
+    const validMsg = page.getByText("Valid Transaction Envelope XDR");
+
+    const xdrInput = page.getByLabel(
+      "Import a transaction envelope in XDR format",
+    );
+    await xdrInput.fill(MOCK_TX_XDR_3_OPERATIONS);
+
+    await expect(validMsg).toBeVisible();
+
+    await importBtn.click();
+
+    // Overview and Signatures Screen
+    await expect(overview).toBeVisible();
+    await expect(signaturesView).toBeVisible();
+
+    /*** TX Overview Details ***/
+    // Network passphrase
+    const overviewSigning = page.getByLabel("Signing for");
+    await expect(overviewSigning).toHaveValue(
+      "Test SDF Network ; September 2015",
+    );
+
+    // TX XDR
+    const overviewTxXDR = page.getByLabel("Transaction Envelope XDR");
+    await expect(overviewTxXDR).toHaveValue(MOCK_TX_XDR_3_OPERATIONS);
+
+    // TX HASH
+    const overviewTxHash = page.getByLabel("Transaction Hash");
+    await expect(overviewTxHash).toHaveValue(
+      "892110aecc9f30662d5ececcf2a1f2fdd03fc42f3b3ca55c475a05d421838e60",
+    );
+
+    // Source Account
+    const overviewSource = page.getByLabel("Source account");
+    await expect(overviewSource).toHaveValue(
+      "GBTQEP2NS6WSRRXYXZ4JJLLLO4OWH5LWHZFEGL5PMOQQDELD4MY5YUWJ",
+    );
+
+    // Sequence number
+    const overviewSeq = page.getByLabel("Sequence number");
+    await expect(overviewSeq).toHaveValue("4552819952582657");
+
+    // Transaction Fee (stroops)
+    const overviewTxFee = page.getByLabel("Transaction Fee (stroops)");
+    await expect(overviewTxFee).toHaveValue("300");
+
+    // Number of operations
+    const overviewOpsNum = page.getByLabel("Number of operations");
+    await expect(overviewOpsNum).toHaveValue("3");
   });
 
   test("Invalid XDR", async ({ page }) => {
@@ -190,3 +320,6 @@ const MOCK_SC_VAL_XDR =
 
 const MOCK_TX_XDR =
   "AAAAAgAAAADJrq4b4AopDZibkeBWpDxuWKUcY4FUUNQdIEF3Nm9dkQAAAGQAAAIiAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAQAAAACXlGN76T6NQcaUJxbEkH3mi1HHWsHnLqMDdlLl9NlJgQAAAAAAAAAABfXhAAAAAAAAAAAA";
+
+const MOCK_TX_XDR_3_OPERATIONS =
+  "AAAAAgAAAABnAj9Nl60oxvi+eJSta3cdY/V2PkpDL69joQGRY+Mx3AAAASwAECzEAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAAAAAAAAAEAAAAABHLXc6lPRFz7BJua75KzEQi1Iw3Hj6bUXLrNdMRPZmYwAAAAAAAAAAAAAAAEctdzqU9EXPsEm5rvkrMRCLUjDcePptRcus10xE9mZjAAAAAAExLQAAAAAAAAAAEQAAAAAAAAAA";
