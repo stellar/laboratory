@@ -200,6 +200,7 @@ export const AssetPicker = ({
     <div className="RadioPicker__inset">
       <RadioPicker
         id={id}
+        data-testid="asset-picker"
         selectedOption={value.type}
         label={label}
         labelSuffix={labelSuffix}

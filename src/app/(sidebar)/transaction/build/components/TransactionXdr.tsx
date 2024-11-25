@@ -544,7 +544,7 @@ export const TransactionXdr = () => {
           variant="success"
           title="Success! Transaction Envelope XDR:"
           response={
-            <Box gap="xs">
+            <Box gap="xs" data-testid="build-transaction-envelope-xdr">
               <div>
                 <div>Network Passphrase:</div>
                 <div>{network.passphrase}</div>

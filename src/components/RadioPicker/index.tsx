@@ -30,13 +30,14 @@ export const RadioPicker = <TOptionValue,>({
   infoLink,
   infoText,
   disabledOptions,
+  ...props
 }: RadioPickerProps<TOptionValue>) => {
   const customStyle = {
     ...(fitContent ? { "--RadioPicker-width": "fit-content" } : {}),
   } as React.CSSProperties;
 
   return (
-    <div className="RadioPicker" style={customStyle}>
+    <div className="RadioPicker" style={customStyle} {...props}>
       {label ? (
         <LabelHeading
           size="md"

@@ -53,6 +53,13 @@
       .ExpandBox__inset {
         overflow: visible;
       }
+
+      // Don't affect nested closed ExpandBox
+      [data-is-expanded="false"] {
+        .ExpandBox__inset {
+          overflow: hidden;
+        }
+      }
     }
   }
 }

@@ -56,6 +56,7 @@ export const MemoPicker = ({
     <div className="RadioPicker__inset">
       <RadioPicker
         id={id}
+        data-testid="memo-picker"
         selectedOption={value?.type}
         label="Memo"
         labelSuffix={labelSuffix}
