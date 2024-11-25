@@ -515,7 +515,13 @@ export const Overview = () => {
       }, [] as boolean[]).length > 0;
 
     return (
-      <Box gap="md" direction="row" align="center" wrap="wrap">
+      <Box
+        gap="md"
+        direction="row"
+        align="center"
+        wrap="wrap"
+        data-testid="sign-tx-overview"
+      >
         {sigSuccessMsg ? (
           <Button
             size="md"
@@ -649,14 +655,18 @@ export const Overview = () => {
         </div>
       </PageCard>
 
-      <div className="SignTx__Signs">
+      <div className="SignTx__Signs" data-testid="sign-tx-sigs">
         <PageCard
           heading="Signatures"
           headingInfoLink="https://developers.stellar.org/docs/learn/encyclopedia/signatures-multisig"
           headingAs="h2"
         >
           <Box gap="lg">
-            <Box gap="md" addlClassName="PageBody__content">
+            <Box
+              gap="md"
+              addlClassName="PageBody__content"
+              data-testid="sign-tx-secretkeys"
+            >
               <MultiPicker
                 id="signer"
                 label="Sign with secret key"
@@ -686,7 +696,11 @@ export const Overview = () => {
               />
             </Box>
 
-            <Box gap="md" addlClassName="PageBody__content">
+            <Box
+              gap="md"
+              addlClassName="PageBody__content"
+              data-testid="sign-tx-hardware"
+            >
               <Box gap="sm" direction="row">
                 <TextPicker
                   id="bip-path"
@@ -756,7 +770,11 @@ export const Overview = () => {
               />
             </Box>
 
-            <Box gap="md" addlClassName="PageBody__content">
+            <Box
+              gap="md"
+              addlClassName="PageBody__content"
+              data-testid="sign-tx-wallet-ext"
+            >
               <LabelHeading size="md">Sign with wallet extension</LabelHeading>
 
               <SignTxButton
@@ -775,7 +793,11 @@ export const Overview = () => {
               />
             </Box>
 
-            <Box gap="md" addlClassName="PageBody__content">
+            <Box
+              gap="md"
+              addlClassName="PageBody__content"
+              data-testid="sign-tx-signature"
+            >
               <LabelHeading size="md">Add a signature</LabelHeading>
 
               <>
@@ -852,7 +874,7 @@ export const Overview = () => {
         </PageCard>
 
         {sign.signedTx ? (
-          <div ref={successResponseEl}>
+          <div ref={successResponseEl} data-testid="sign-tx-validation-card">
             <ValidationResponseCard
               variant="success"
               title="Transaction signed!"
@@ -860,7 +882,9 @@ export const Overview = () => {
               response={
                 <Box gap="xs">
                   <div>
-                    <div>{sign.signedTx}</div>
+                    <div data-testid="validation-card-response">
+                      {sign.signedTx}
+                    </div>
                   </div>
                 </Box>
               }

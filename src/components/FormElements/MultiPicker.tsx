@@ -47,7 +47,7 @@ export const MultiPicker = ({
   }
 
   return (
-    <Box gap="sm">
+    <Box gap="sm" data-testid={`multipicker-${id}`}>
       <LabelHeading size="md" labelSuffix={labelSuffix}>
         {label}
       </LabelHeading>
