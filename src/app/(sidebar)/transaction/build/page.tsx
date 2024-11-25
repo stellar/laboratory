@@ -28,7 +28,7 @@ export default function BuildTransaction() {
                   <Box gap="sm">
                     <>
                       <div>Params</div>
-                      <ul>
+                      <ul data-testid="build-transaction-params-errors">
                         {paramsError.map((e, i) => (
                           <li key={`e-${i}`}>{e}</li>
                         ))}
@@ -38,7 +38,10 @@ export default function BuildTransaction() {
                 ) : null}
 
                 {operationsError.length > 0 ? (
-                  <Box gap="sm">
+                  <Box
+                    gap="sm"
+                    data-testid="build-transaction-operations-errors"
+                  >
                     {operationsError.map((e, i) => (
                       <Box gap="sm" key={`e-${i}`}>
                         <>
