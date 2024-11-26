@@ -8,10 +8,10 @@ import { NextLink } from "@/components/NextLink";
 import { Box } from "@/components/layout/Box";
 import { Routes } from "@/constants/routes";
 import { InputSideElement } from "@/components/InputSideElement";
-import { SaveTransactionModal } from "@/components/SaveTransactionModal";
 import { ShareUrlButton } from "@/components/ShareUrlButton";
 import { SavedItemTimestampAndDelete } from "@/components/SavedItemTimestampAndDelete";
 import { PageCard } from "@/components/layout/PageCard";
+import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 
 import { TRANSACTION_OPERATIONS } from "@/constants/transactionOperations";
 import { useStore } from "@/store/useStore";
@@ -218,8 +218,11 @@ export default function SavedTransactions() {
         </NextLink>
       </Alert>
 
-      <SaveTransactionModal
+      <SaveToLocalStorageModal
         type="editName"
+        itemTitle="Transaction"
+        itemTimestamp={currentTxnTimestamp}
+        allSavedItems={localStorageSavedTransactions.get()}
         isVisible={currentTxnTimestamp !== undefined}
         onClose={(isUpdate?: boolean) => {
           setCurrentTxnTimestamp(undefined);
@@ -228,7 +231,9 @@ export default function SavedTransactions() {
             updateSavedTxns();
           }
         }}
-        txnTimestamp={currentTxnTimestamp}
+        onUpdate={(updatedItems) => {
+          localStorageSavedTransactions.set(updatedItems);
+        }}
       />
     </Box>
   );

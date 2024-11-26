@@ -1,71 +1,74 @@
 import { useEffect, useState } from "react";
 import { Button, Input, Modal } from "@stellar/design-system";
 import { arrayItem } from "@/helpers/arrayItem";
-import { localStorageSavedKeypairs } from "@/helpers/localStorageSavedKeypairs";
 import { getSaveItemNetwork } from "@/helpers/getSaveItemNetwork";
 import { useStore } from "@/store/useStore";
+import { AnyObject, LocalStorageSavedItem } from "@/types/types";
 
-type SaveKeypairModalProps = (
+type SaveToLocalStorageModalProps<T, K> = (
   | {
       type: "save";
-      keypairTimestamp?: undefined;
-      publicKey: string;
-      secretKey: string;
+      itemTimestamp?: undefined;
+      itemProps: K;
     }
   | {
       type: "editName";
-      keypairTimestamp: number | undefined;
-      publicKey?: undefined;
-      secretKey?: undefined;
+      itemTimestamp: number | undefined;
+      itemProps?: undefined;
     }
 ) & {
   isVisible: boolean;
+  allSavedItems: T[];
+  itemTitle: string;
   onClose: (isUpdate?: boolean) => void;
+  onUpdate: (updatedItemsList: T[]) => void;
 };
 
-export const SaveKeypairModal = ({
+export const SaveToLocalStorageModal = <
+  T extends LocalStorageSavedItem,
+  K extends AnyObject,
+>({
   type,
-  publicKey,
-  secretKey,
+  itemProps,
+  itemTimestamp,
+  allSavedItems,
+  itemTitle,
   isVisible,
-  keypairTimestamp,
   onClose,
-}: SaveKeypairModalProps) => {
+  onUpdate,
+}: SaveToLocalStorageModalProps<T, K>) => {
   const { network } = useStore();
-  const [savedKeypairName, setSavedKeypairName] = useState("");
+  const [savedItemName, setSavedItemName] = useState("");
 
-  const allKeypairs = localStorageSavedKeypairs.get();
-  const currentKeypair = allKeypairs.find(
-    (kp) => kp.timestamp === keypairTimestamp,
+  const currentItem = allSavedItems.find((s) => s.timestamp === itemTimestamp);
+  const currentItemIndex = allSavedItems.findIndex(
+    (s) => s.timestamp === itemTimestamp,
   );
-  const currentKeypairIndex = allKeypairs.findIndex(
-    (kp) => kp.timestamp === keypairTimestamp,
-  );
-  const currentKeypairName = currentKeypair?.name || "";
+  const currentItemName = currentItem?.name || "";
 
   useEffect(() => {
     if (isVisible && type === "editName") {
-      setSavedKeypairName(currentKeypairName);
+      setSavedItemName(currentItemName);
     }
-  }, [isVisible, type, currentKeypairName]);
+  }, [isVisible, type, currentItemName]);
 
   const handleClose = (isUpdate?: boolean) => {
-    setSavedKeypairName("");
+    setSavedItemName("");
     onClose(isUpdate);
   };
 
-  if (type === "editName" && keypairTimestamp !== undefined) {
+  if (type === "editName" && itemTimestamp !== undefined) {
     return (
       <Modal visible={isVisible} onClose={handleClose}>
-        <Modal.Heading>Edit Saved Keypair</Modal.Heading>
+        <Modal.Heading>{`Edit Saved ${itemTitle}`}</Modal.Heading>
         <div>
           <Input
-            id="saved-kp-name"
+            id="saved-ls-name"
             fieldSize="md"
             label="Name"
-            value={savedKeypairName}
+            value={savedItemName}
             onChange={(e) => {
-              setSavedKeypairName(e.target.value);
+              setSavedItemName(e.target.value);
             }}
           />
         </div>
@@ -77,21 +80,19 @@ export const SaveKeypairModal = ({
             size="md"
             variant="primary"
             onClick={() => {
-              if (currentKeypairIndex >= 0) {
-                localStorageSavedKeypairs.set(
-                  arrayItem.update(allKeypairs, currentKeypairIndex, {
-                    ...currentKeypair,
+              if (currentItemIndex >= 0) {
+                onUpdate(
+                  arrayItem.update(allSavedItems, currentItemIndex, {
+                    ...currentItem,
                     timestamp: Date.now(),
-                    name: savedKeypairName,
+                    name: savedItemName,
                   }),
                 );
 
                 handleClose(true);
               }
             }}
-            disabled={
-              !savedKeypairName || savedKeypairName === currentKeypairName
-            }
+            disabled={!savedItemName || savedItemName === currentItemName}
           >
             Save
           </Button>
@@ -103,15 +104,15 @@ export const SaveKeypairModal = ({
   if (type === "save") {
     return (
       <Modal visible={isVisible} onClose={handleClose}>
-        <Modal.Heading>Save Keypair</Modal.Heading>
+        <Modal.Heading>{`Save ${itemTitle}`}</Modal.Heading>
         <div>
           <Input
-            id="saved-kp-name"
+            id="saved-ls-name"
             fieldSize="md"
             label="Name"
-            value={savedKeypairName}
+            value={savedItemName}
             onChange={(e) => {
-              setSavedKeypairName(e.target.value);
+              setSavedItemName(e.target.value);
             }}
           />
         </div>
@@ -123,21 +124,18 @@ export const SaveKeypairModal = ({
             size="md"
             variant="primary"
             onClick={() => {
-              const allCurrentKeypairs = localStorageSavedKeypairs.get();
-
-              localStorageSavedKeypairs.set(
-                arrayItem.add(allCurrentKeypairs, {
+              onUpdate(
+                arrayItem.add(allSavedItems, {
                   timestamp: Date.now(),
                   network: getSaveItemNetwork(network),
-                  name: savedKeypairName,
-                  publicKey,
-                  secretKey,
+                  name: savedItemName,
+                  ...(itemProps || {}),
                 }),
               );
 
               handleClose();
             }}
-            disabled={!savedKeypairName}
+            disabled={!savedItemName}
           >
             Save
           </Button>

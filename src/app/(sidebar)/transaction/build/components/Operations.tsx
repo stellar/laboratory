@@ -15,14 +15,15 @@ import { formComponentTemplateTxnOps } from "@/components/formComponentTemplateT
 import { Box } from "@/components/layout/Box";
 import { TabbedButtons } from "@/components/TabbedButtons";
 import { SdsLink } from "@/components/SdsLink";
-import { SaveTransactionModal } from "@/components/SaveTransactionModal";
 import { ShareUrlButton } from "@/components/ShareUrlButton";
+import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 
 import { arrayItem } from "@/helpers/arrayItem";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { sanitizeObject } from "@/helpers/sanitizeObject";
 import { shareableUrl } from "@/helpers/shareableUrl";
 import { getClaimableBalanceIdFromXdr } from "@/helpers/getClaimableBalanceIdFromXdr";
+import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransactions";
 
 import { OP_SET_TRUST_LINE_FLAGS } from "@/constants/settings";
 import { TRANSACTION_OPERATIONS } from "@/constants/transactionOperations";
@@ -1227,14 +1228,24 @@ export const Operations = () => {
         </Box>
       </Card>
 
-      <SaveTransactionModal
+      <SaveToLocalStorageModal
         type="save"
-        page="build"
+        itemTitle="Transaction"
+        itemProps={{
+          xdr: txnXdr,
+          page: "build",
+          shareableUrl: shareableUrl("transactions-build"),
+          params: transaction.build.params,
+          operations: transaction.build.operations,
+        }}
+        allSavedItems={localStorageSavedTransactions.get()}
         isVisible={isSaveTxnModalVisible}
         onClose={() => {
           setIsSaveTxnModalVisible(false);
         }}
-        xdr={txnXdr}
+        onUpdate={(updatedItems) => {
+          localStorageSavedTransactions.set(updatedItems);
+        }}
       />
     </Box>
   );

@@ -23,16 +23,15 @@ import { PrettyJsonTextarea } from "@/components/PrettyJsonTextarea";
 import { ShareUrlButton } from "@/components/ShareUrlButton";
 import { CopyJsonPayloadButton } from "@/components/CopyJsonPayloadButton";
 import { PageCard } from "@/components/layout/PageCard";
+import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 
 import { useStore } from "@/store/useStore";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { sanitizeArray } from "@/helpers/sanitizeArray";
 import { sanitizeObject } from "@/helpers/sanitizeObject";
 import { parseJsonString } from "@/helpers/parseJsonString";
-import { getSaveItemNetwork } from "@/helpers/getSaveItemNetwork";
 import { localStorageSavedEndpointsHorizon } from "@/helpers/localStorageSavedEndpointsHorizon";
 import { localStorageSavedRpcMethods } from "@/helpers/localStorageSavedRpcMethods";
-import { arrayItem } from "@/helpers/arrayItem";
 import { delayedAction } from "@/helpers/delayedAction";
 import { buildEndpointHref } from "@/helpers/buildEndpointHref";
 import { shareableUrl } from "@/helpers/shareableUrl";
@@ -51,6 +50,8 @@ import {
   AssetObjectValue,
   Network,
   FiltersObject,
+  SavedRpcMethod,
+  SavedEndpointHorizon,
 } from "@/types/types";
 
 import { EndpointsLandingPage } from "../components/EndpointsLandingPage";
@@ -138,6 +139,7 @@ export default function Endpoints() {
   const [urlPath, setUrlPath] = useState("");
   const [urlPathParams, setUrlPathparams] = useState("");
   const [urlParams, setUrlParams] = useState("");
+  const [isSaveModalVisible, setIsSaveModalVisible] = useState(false);
 
   const isTransactionPost = () => {
     return [
@@ -678,35 +680,7 @@ export default function Endpoints() {
               icon={<Icon.Save01 />}
               type="button"
               onClick={() => {
-                if (isRpcEndpoint) {
-                  const currentSaved = localStorageSavedRpcMethods.get();
-                  localStorageSavedRpcMethods.set(
-                    arrayItem.add(currentSaved, {
-                      url: requestUrl,
-                      method: pageData.requestMethod,
-                      rpcMethod: pageData.rpcMethod,
-                      timestamp: Date.now(),
-                      route: pathname,
-                      params,
-                      network: getSaveItemNetwork(network),
-                      shareableUrl: shareableUrl("requests"),
-                      payload: getPostPayload(),
-                    }),
-                  );
-                } else {
-                  const currentSaved = localStorageSavedEndpointsHorizon.get();
-                  localStorageSavedEndpointsHorizon.set(
-                    arrayItem.add(currentSaved, {
-                      url: requestUrl,
-                      method: pageData.requestMethod,
-                      timestamp: Date.now(),
-                      route: pathname,
-                      params,
-                      network: getSaveItemNetwork(network),
-                      shareableUrl: shareableUrl("requests"),
-                    }),
-                  );
-                }
+                setIsSaveModalVisible(true);
               }}
               showActionTooltip
               actionTooltipText="Saved"
@@ -1031,6 +1005,39 @@ export default function Endpoints() {
       <Alert variant="primary" placement="inline">
         {renderInfoMessage()}
       </Alert>
+
+      <SaveToLocalStorageModal
+        type="save"
+        itemTitle={isRpcEndpoint ? "RPC Method" : "Horizon Endpoint"}
+        itemProps={{
+          url: requestUrl,
+          method: pageData.requestMethod,
+          route: pathname,
+          params,
+          shareableUrl: shareableUrl("requests"),
+          ...(isRpcEndpoint
+            ? { payload: getPostPayload(), rpcMethod: pageData.rpcMethod }
+            : {}),
+        }}
+        allSavedItems={
+          isRpcEndpoint
+            ? localStorageSavedRpcMethods.get()
+            : localStorageSavedEndpointsHorizon.get()
+        }
+        isVisible={isSaveModalVisible}
+        onClose={() => {
+          setIsSaveModalVisible(false);
+        }}
+        onUpdate={(updatedItems) => {
+          if (isRpcEndpoint) {
+            localStorageSavedRpcMethods.set(updatedItems as SavedRpcMethod[]);
+          } else {
+            localStorageSavedEndpointsHorizon.set(
+              updatedItems as SavedEndpointHorizon[],
+            );
+          }
+        }}
+      />
     </>
   );
 }
