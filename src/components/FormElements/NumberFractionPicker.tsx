@@ -104,7 +104,7 @@ export const NumberFractionPicker = ({
   };
 
   return (
-    <Box gap="sm">
+    <Box gap="sm" data-testid="number-fraction-picker">
       <LabelHeading size="md" labelSuffix={labelSuffix}>
         {label}
       </LabelHeading>

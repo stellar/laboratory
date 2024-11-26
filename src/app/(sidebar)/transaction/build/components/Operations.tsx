@@ -935,7 +935,12 @@ export const Operations = () => {
           {/* Operations */}
           <>
             {txnOperations.map((op, idx) => (
-              <Box key={`op-${idx}`} gap="lg" addlClassName="PageBody__content">
+              <Box
+                key={`op-${idx}`}
+                gap="lg"
+                addlClassName="PageBody__content"
+                data-testid={`build-transaction-operation-${idx}`}
+              >
                 {/* Operation label and action buttons */}
                 <Box
                   gap="lg"
