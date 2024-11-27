@@ -1,4 +1,9 @@
-import init, { decode, encode, guess } from "@stellar/stellar-xdr-json";
+import init, {
+  decode,
+  decode_stream,
+  encode,
+  guess,
+} from "@stellar/stellar-xdr-json";
 
 // A wrapper for the Stellar XDR JSON
 declare global {
@@ -14,4 +19,4 @@ const initialize = async () => {
   }
 };
 
-export { initialize, decode, encode, guess };
+export { initialize, decode, decode_stream, encode, guess };
