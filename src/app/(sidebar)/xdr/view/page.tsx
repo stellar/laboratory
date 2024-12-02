@@ -33,6 +33,7 @@ import { delayedAction } from "@/helpers/delayedAction";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { useStore } from "@/store/useStore";
+import { AnyObject } from "@/types/types";
 
 export default function ViewXdr() {
   const { xdr, network } = useStore();
@@ -178,6 +179,42 @@ export default function ViewXdr() {
     return null;
   };
 
+  const renderJsonContent = ({
+    jsonArray,
+    xdr,
+  }: {
+    jsonArray: AnyObject[];
+    xdr: string;
+  }) => {
+    if (jsonArray.length > 1) {
+      return (
+        <div className="PrettyJson PrettyJson__array">
+          <div className="PrettyJson__inline">
+            <span className="PrettyJson__bracket">[</span>
+            <span className="PrettyJson__expandSize">{`${jsonArray.length} items`}</span>
+          </div>
+          {jsonArray.map((j, index) => (
+            <>
+              <PrettyJsonTransaction
+                // Using index here because we can't get something unique from the JSON
+                key={`pretty-json-${index}`}
+                json={j}
+                xdr={xdr}
+              />
+            </>
+          ))}
+          <span className="PrettyJson__bracket">]</span>
+        </div>
+      );
+    }
+
+    if (jsonArray.length === 1) {
+      return <PrettyJsonTransaction json={jsonArray[0]} xdr={xdr} />;
+    }
+
+    return null;
+  };
+
   return (
     <Box gap="md">
       <PageCard heading="View XDR">
@@ -262,14 +299,10 @@ export default function ViewXdr() {
                   className="PageBody__content PageBody__scrollable"
                   data-testid="view-xdr-render-json"
                 >
-                  {xdrJsonDecoded?.jsonArray?.map((j, index) => (
-                    <PrettyJsonTransaction
-                      // Using index here because we can't get something unique from the JSON
-                      key={`pretty-json-${index}`}
-                      json={j}
-                      xdr={xdr.blob}
-                    />
-                  ))}
+                  {renderJsonContent({
+                    jsonArray: xdrJsonDecoded.jsonArray,
+                    xdr: xdr.blob,
+                  })}
                 </div>
 
                 <Box gap="md" direction="row" justify="end">
