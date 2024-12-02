@@ -118,14 +118,15 @@ test.describe("Saved Keypairs Page", () => {
       );
 
       // Wait for the Friendbot response
-      const responsePromise = pageContext.waitForResponse(
+      const friendbotResponse = pageContext.waitForResponse(
         (response) =>
-          response.url().includes("?addr=") && response.status() === 200,
+          response.url().includes(`?addr=${SAVED_ACCOUNT_2}`) &&
+          response.status() === 200,
       );
 
       await fundButton.click();
 
-      await responsePromise;
+      await friendbotResponse;
 
       // Mock Account 2 response
       await pageContext.route(
@@ -138,6 +139,14 @@ test.describe("Saved Keypairs Page", () => {
           });
         },
       );
+
+      const accountResponse = pageContext.waitForResponse(
+        (response) =>
+          response.url().includes(`accounts/${SAVED_ACCOUNT_2}`) &&
+          response.status() === 200,
+      );
+
+      await accountResponse;
 
       await expect(fundButton).toBeHidden();
       await expect(
