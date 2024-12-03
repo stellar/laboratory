@@ -153,7 +153,7 @@ export const SavedEndpointsPage = () => {
 
   const HorizonEndpoints = () => {
     if (savedEndpointsHorizon.length === 0) {
-      return "There are no saved Horizon Endpoints";
+      return `There are no saved Horizon Endpoints on ${network.label} network`;
     }
 
     return (
@@ -163,9 +163,11 @@ export const SavedEndpointsPage = () => {
             gap="sm"
             key={`horizon-${e.timestamp}`}
             addlClassName="PageBody__content"
+            data-testid="saved-requests-horizon-item"
           >
             <Input
               id={`saved-horizon-${e.timestamp}`}
+              data-testid="saved-horizon-name"
               fieldSize="md"
               value={e.name}
               readOnly
@@ -178,6 +180,7 @@ export const SavedEndpointsPage = () => {
                     setCurrentRequestTimestamp(e.timestamp);
                   }}
                   icon={<Icon.Edit05 />}
+                  data-testid="saved-horizon-edit"
                 />
               }
             />
@@ -185,6 +188,7 @@ export const SavedEndpointsPage = () => {
             <div className="Endpoints__urlBar">
               <Input
                 id={`endpoint-url-${e.timestamp}`}
+                data-testid="saved-horizon-url"
                 fieldSize="md"
                 value={e.url}
                 readOnly
@@ -255,7 +259,7 @@ export const SavedEndpointsPage = () => {
 
   const RpcEndpoints = () => {
     if (savedRpcMethods.length === 0) {
-      return "There are no saved RPC Methods";
+      return `There are no saved RPC Methods ${network.label} network`;
     }
 
     return (
@@ -263,8 +267,9 @@ export const SavedEndpointsPage = () => {
         {savedRpcMethods.map((e, idx) => (
           <Box
             gap="sm"
-            key={`horizon-${e.timestamp}`}
+            key={`rpc-${e.timestamp}`}
             addlClassName="PageBody__content"
+            data-testid="saved-requests-rpc-item"
           >
             <Box gap="sm" direction="row">
               <Badge size="md" variant="secondary">
@@ -274,6 +279,7 @@ export const SavedEndpointsPage = () => {
 
             <Input
               id={`saved-rpc-${e.timestamp}`}
+              data-testid="saved-rpc-name"
               fieldSize="md"
               value={e.name}
               readOnly
@@ -286,6 +292,7 @@ export const SavedEndpointsPage = () => {
                     setCurrentRequestTimestamp(e.timestamp);
                   }}
                   icon={<Icon.Edit05 />}
+                  data-testid="saved-rpc-edit"
                 />
               }
             />
@@ -293,6 +300,7 @@ export const SavedEndpointsPage = () => {
             <div className="Endpoints__urlBar">
               <Input
                 id={`endpoint-url-${e.timestamp}`}
+                data-testid="saved-rpc-url"
                 fieldSize="md"
                 value={e.url}
                 readOnly
@@ -375,7 +383,10 @@ export const SavedEndpointsPage = () => {
             </Box>
             {expandedPayloadIndex[idx] ? (
               <>
-                <div className="Endpoints__txTextarea">
+                <div
+                  className="Endpoints__txTextarea"
+                  data-testid="saved-rpc-payload"
+                >
                   <PrettyJsonTextarea json={e.payload} label="Payload" />
                 </div>
                 <Box gap="md" direction="row" justify="end">
@@ -394,7 +405,7 @@ export const SavedEndpointsPage = () => {
   };
 
   return (
-    <Box gap="md">
+    <Box gap="md" data-testid="saved-requests-container">
       <PageCard>
         <TabView
           heading={{ title: "Saved Requests" }}
