@@ -102,6 +102,7 @@
 
         select {
           font-weight: var(--sds-fw-semi-bold);
+          padding-left: pxToRem(18px);
         }
 
         optgroup {
@@ -118,6 +119,16 @@
         .Select__icon {
           right: auto;
           left: pxToRem(8px);
+          top: pxToRem(4px);
+          width: pxToRem(24px);
+          height: pxToRem(24px);
+          border: 1px solid var(--sds-clr-gray-06);
+          border-radius: pxToRem(24px);
+
+          svg {
+            width: pxToRem(16px);
+            height: pxToRem(16px);
+          }
         }
 
         .Select__container {
