@@ -176,7 +176,7 @@ test.describe("Saved Requests Page", () => {
 
       await horizonItem.getByText("View", { exact: true }).click();
 
-      // Loads All Transactions endpoint page with saved data
+      // Loads All Transactions endpoint page with saved params
       await expect(pageContext.locator("h1")).toHaveText("All Transactions");
 
       await expect(pageContext.getByTestId("endpoints-url")).toHaveValue(
@@ -193,7 +193,7 @@ test.describe("Saved Requests Page", () => {
 
       await rpcItem.getByText("View in API Explorer", { exact: true }).click();
 
-      // Loads getTransactions RPC request page with saved data
+      // Loads getTransactions RPC request page with saved params
       await expect(pageContext.locator("h1")).toHaveText("getTransactions");
 
       await expect(pageContext.getByTestId("endpoints-url")).toHaveValue(
