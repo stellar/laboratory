@@ -298,9 +298,14 @@ const SavedKeypairItem = ({
   };
 
   return (
-    <Box gap="sm" addlClassName="PageBody__content">
+    <Box
+      gap="sm"
+      addlClassName="PageBody__content"
+      data-testid="saved-keypair-item"
+    >
       <Input
         id={`saved-kp-${keypair.timestamp}-name`}
+        data-testid="saved-keypair-name"
         fieldSize="md"
         value={keypair.name}
         readOnly
@@ -319,6 +324,7 @@ const SavedKeypairItem = ({
 
       <Input
         id={`saved-kp-${keypair.timestamp}-pk`}
+        data-testid="saved-keypair-pk"
         fieldSize="md"
         value={keypair.publicKey}
         readOnly
@@ -328,6 +334,7 @@ const SavedKeypairItem = ({
 
       <Input
         id={`saved-kp-${keypair.timestamp}-sk`}
+        data-testid="saved-keypair-sk"
         fieldSize="md"
         value={keypair.secretKey}
         readOnly
