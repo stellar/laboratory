@@ -57,6 +57,17 @@ test.describe("Saved Keypairs Page", () => {
           });
         },
       );
+
+      // Account 2 Friendbot response
+      await pageContext.route(
+        `https://friendbot.stellar.org/?addr=${SAVED_ACCOUNT_2}`,
+        async (route) => {
+          await route.fulfill({
+            status: 200,
+            contentType: "application/hal+json; charset=utf-8",
+          });
+        },
+      );
     });
 
     test("Loads", async () => {
@@ -106,16 +117,6 @@ test.describe("Saved Keypairs Page", () => {
 
       await expect(fundButton).toBeVisible();
 
-      const friendbotUrl = `https://friendbot.stellar.org/?addr=${SAVED_ACCOUNT_2}`;
-
-      // Mock fund account
-      await pageContext.route(friendbotUrl, async (route) => {
-        await route.fulfill({
-          status: 200,
-          contentType: "application/hal+json; charset=utf-8",
-        });
-      });
-
       // Wait for the Friendbot response
       const friendbotResponse = pageContext.waitForResponse(
         (response) =>
@@ -125,7 +126,6 @@ test.describe("Saved Keypairs Page", () => {
 
       await fundButton.click();
       await friendbotResponse;
-      await pageContext.unroute(friendbotUrl);
 
       // Mock Account 2 response
       await pageContext.route(
