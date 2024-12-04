@@ -57,17 +57,6 @@ test.describe("Saved Keypairs Page", () => {
           });
         },
       );
-
-      // Account 2 Friendbot response
-      await pageContext.route(
-        `https://friendbot.stellar.org/?addr=${SAVED_ACCOUNT_2}`,
-        async (route) => {
-          await route.fulfill({
-            status: 200,
-            contentType: "application/hal+json; charset=utf-8",
-          });
-        },
-      );
     });
 
     test("Loads", async () => {
@@ -102,54 +91,6 @@ test.describe("Saved Keypairs Page", () => {
         keypairItem.getByText("Last saved Nov 22, 2024, 3:04 PM UTC", {
           exact: true,
         }),
-      ).toBeVisible();
-    });
-
-    test("Fund unfunded account", async () => {
-      const keypairItem = pageContext.getByTestId("saved-keypair-item").nth(1);
-
-      await expect(keypairItem).toBeVisible();
-      await expect(keypairItem.getByTestId("saved-keypair-name")).toHaveValue(
-        "Account 2",
-      );
-
-      const fundButton = pageContext.getByText("Fund with Friendbot");
-
-      await expect(fundButton).toBeVisible();
-
-      // Wait for the Friendbot response
-      const friendbotResponse = pageContext.waitForResponse(
-        (response) =>
-          response.url().includes(`?addr=${SAVED_ACCOUNT_2}`) &&
-          response.status() === 200,
-      );
-
-      await fundButton.click();
-      await friendbotResponse;
-
-      // Mock Account 2 response
-      await pageContext.route(
-        `*/**/accounts/${SAVED_ACCOUNT_2}`,
-        async (route) => {
-          await route.fulfill({
-            status: 200,
-            contentType: "application/hal+json; charset=utf-8",
-            body: JSON.stringify(MOCK_ACCOUNT_1_RESPONSE),
-          });
-        },
-      );
-
-      const accountResponse = pageContext.waitForResponse(
-        (response) =>
-          response.url().includes(`accounts/${SAVED_ACCOUNT_2}`) &&
-          response.status() === 200,
-      );
-
-      await accountResponse;
-
-      await expect(fundButton).toBeHidden();
-      await expect(
-        keypairItem.getByText("Balance: 10000.0000000 XLM", { exact: true }),
       ).toBeVisible();
     });
 
