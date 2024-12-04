@@ -290,7 +290,7 @@ export const PrettyJson = ({
     <div className="PrettyJson">
       <Bracket char="{" />
       {render(json)}
-      <Bracket char="}" />
+      <Bracket char="}" isEnd />
     </div>
   );
 };
@@ -334,12 +334,16 @@ const Bracket = ({
   char,
   children,
   isCollapsed,
+  isEnd,
 }: {
   char: Char;
   children?: React.ReactNode;
   isCollapsed?: boolean;
+  isEnd?: boolean;
 }) => (
-  <span className="PrettyJson__bracket">
+  <span
+    className={`PrettyJson__bracket${isEnd ? " PrettyJson__bracket--end" : ""}`}
+  >
     {char}
     {children}
     {isCollapsed ? `...${getClosingChar(char)}` : null}

@@ -44,6 +44,18 @@
     position: relative;
   }
 
+  &__array {
+    & > .PrettyJson {
+      padding-left: pxToRem(16px);
+
+      & > .PrettyJson__bracket--end {
+        &::after {
+          content: ",";
+        }
+      }
+    }
+  }
+
   &--click {
     cursor: pointer;
   }
