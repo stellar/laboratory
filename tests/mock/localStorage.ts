@@ -108,6 +108,56 @@ const SAVED_RPC_ENDPOINTS = [
   },
 ];
 
+const SAVED_TRANSACTIONS = [
+  {
+    timestamp: 1733259519949,
+    network: { id: "testnet", label: "Testnet" },
+    name: "Submit Create Account Tx",
+    xdr: "AAAAAgAAAAA55ZjOXdOOulfzeLPXjLDLdplq/5HGjapWAXjGSkdAkwAAAGQADQioAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAD4XTdOZpDOMR4vk9NUjYLbGosEJ65W78xLqdY6paYxJwAAAAJUC+QAAAAAAAAAAAFKR0CTAAAAQOvPXZdv0dUdcNAY26wVnVAUjyGRd8yrxDeUO2qaP9XF9Ws2qaCnAnfdoCzp6hk5CHwA/EiA+aJGwnMMxUjoxQw=",
+    page: "submit",
+    shareableUrl:
+      "https://lab.stellar.org/transaction/submit?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;&xdr$blob=AAAAAgAAAAA55ZjOXdOOulfzeLPXjLDLdplq//5HGjapWAXjGSkdAkwAAAGQADQioAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAD4XTdOZpDOMR4vk9NUjYLbGosEJ65W78xLqdY6paYxJwAAAAJUC+QAAAAAAAAAAAFKR0CTAAAAQOvPXZdv0dUdcNAY26wVnVAUjyGRd8yrxDeUO2qaP9XF9Ws2qaCnAnfdoCzp6hk5CHwA//EiA+aJGwnMMxUjoxQw=;;",
+  },
+  {
+    timestamp: 1733259577781,
+    network: { id: "testnet", label: "Testnet" },
+    name: "Create Account + Payment Tx",
+    xdr: "AAAAAgAAAAA55ZjOXdOOulfzeLPXjLDLdplq/5HGjapWAXjGSkdAkwAAAMgADQioAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAD4XTdOZpDOMR4vk9NUjYLbGosEJ65W78xLqdY6paYxJwAAAAJUC+QAAAAAAAAAAAEAAAAA+F03TmaQzjEeL5PTVI2C2xqLBCeuVu/MS6nWOqWmMScAAAAAAAAAADuaygAAAAAAAAAAAA==",
+    page: "build",
+    shareableUrl:
+      "https://lab.stellar.org/transaction/build?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;&transaction$build$params$source_account=GA46LGGOLXJY5OSX6N4LHV4MWDFXNGLK76I4NDNKKYAXRRSKI5AJGMXG&seq_num=3668692344766465;&operations@$operation_type=create_account&params$destination=GD4F2N2OM2IM4MI6F6J5GVENQLNRVCYEE6XFN36MJOU5MOVFUYYSPBYG&starting_balance=1000;&source_account=;&$operation_type=payment&params$destination=GD4F2N2OM2IM4MI6F6J5GVENQLNRVCYEE6XFN36MJOU5MOVFUYYSPBYG&asset$code=&issuer=&type=native;&amount=100;&source_account=;;&isValid$params:true&operations:true;;&sign$activeView=overview&importXdr=AAAAAgAAAAA55ZjOXdOOulfzeLPXjLDLdplq//5HGjapWAXjGSkdAkwAAAGQADQioAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAD4XTdOZpDOMR4vk9NUjYLbGosEJ65W78xLqdY6paYxJwAAAAJUC+QAAAAAAAAAAAA=;;",
+    params: {
+      source_account:
+        "GA46LGGOLXJY5OSX6N4LHV4MWDFXNGLK76I4NDNKKYAXRRSKI5AJGMXG",
+      fee: "100",
+      seq_num: "3668692344766465",
+      cond: { time: { min_time: "", max_time: "" } },
+      memo: {},
+    },
+    operations: [
+      {
+        operation_type: "create_account",
+        params: {
+          destination:
+            "GD4F2N2OM2IM4MI6F6J5GVENQLNRVCYEE6XFN36MJOU5MOVFUYYSPBYG",
+          starting_balance: "1000",
+        },
+        source_account: "",
+      },
+      {
+        operation_type: "payment",
+        params: {
+          destination:
+            "GD4F2N2OM2IM4MI6F6J5GVENQLNRVCYEE6XFN36MJOU5MOVFUYYSPBYG",
+          asset: { code: "", issuer: "", type: "native" },
+          amount: "100",
+        },
+        source_account: "",
+      },
+    ],
+  },
+];
+
 export const MOCK_LOCAL_STORAGE = {
   cookies: [],
   origins: [
@@ -125,6 +175,10 @@ export const MOCK_LOCAL_STORAGE = {
         {
           name: "stellar_lab_saved_rpc_endpoints",
           value: JSON.stringify(SAVED_RPC_ENDPOINTS),
+        },
+        {
+          name: "stellar_lab_saved_transactions",
+          value: JSON.stringify(SAVED_TRANSACTIONS),
         },
       ],
     },
