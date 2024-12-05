@@ -678,8 +678,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
             requestMethod: "GET",
             endpointUrlTemplate:
               "/paths/strict-receive{?,destination_asset_type,destination_asset_issuer,destination_asset_code,destination_amount,destination_account,source_account,source_assets}",
-            requiredParams:
-              "source_account,destination_asset,destination_amount",
+            requiredParams: "destination_asset,destination_amount",
             isStreaming: true,
             custom: {
               renderComponents: ["destination_asset"],
