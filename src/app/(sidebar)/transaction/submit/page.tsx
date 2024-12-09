@@ -319,12 +319,18 @@ export default function SubmitTransaction() {
             }
             response={
               <Box gap="xs">
-                <TxResponse label="Hash:" value={submitRpcResponse.hash} />
                 <TxResponse
+                  data-testid="submit-tx-rpc-success-hash"
+                  label="Hash:"
+                  value={submitRpcResponse.hash}
+                />
+                <TxResponse
+                  data-testid="submit-tx-rpc-success-ledger"
                   label="Ledger number:"
                   value={submitRpcResponse.result.ledger}
                 />
                 <TxResponse
+                  data-testid="submit-tx-rpc-success-envelope-xdr"
                   label="Envelope XDR:"
                   item={
                     <XdrLink
@@ -336,6 +342,7 @@ export default function SubmitTransaction() {
                   }
                 />
                 <TxResponse
+                  data-testid="submit-tx-rpc-success-result-xdr"
                   label="Result XDR:"
                   item={
                     <XdrLink
@@ -347,6 +354,7 @@ export default function SubmitTransaction() {
                   }
                 />
                 <TxResponse
+                  data-testid="submit-tx-rpc-success-result-meta-xdr"
                   label="Result Meta XDR:"
                   item={
                     <XdrLink
@@ -410,12 +418,18 @@ export default function SubmitTransaction() {
             }
             response={
               <Box gap="xs">
-                <TxResponse label="Hash:" value={submitHorizonResponse.hash} />
                 <TxResponse
+                  data-testid="submit-tx-success-hash"
+                  label="Hash:"
+                  value={submitHorizonResponse.hash}
+                />
+                <TxResponse
+                  data-testid="submit-tx-success-ledger"
                   label="Ledger number:"
                   value={submitHorizonResponse.ledger}
                 />
                 <TxResponse
+                  data-testid="submit-tx-success-envelope-xdr"
                   label="Envelope XDR:"
                   item={
                     <XdrLink
@@ -425,6 +439,7 @@ export default function SubmitTransaction() {
                   }
                 />
                 <TxResponse
+                  data-testid="submit-tx-success-result-xdr"
                   label="Result XDR:"
                   item={
                     <XdrLink
@@ -443,6 +458,7 @@ export default function SubmitTransaction() {
                   }
                 />
                 <TxResponse
+                  data-testid="submit-tx-success-fee"
                   label="Fee charged:"
                   value={submitHorizonResponse.fee_charged}
                 />
@@ -477,7 +493,7 @@ export default function SubmitTransaction() {
   };
 
   return (
-    <Box gap="md">
+    <Box gap="md" data-testid="submit-tx-xdr">
       <PageCard heading="Submit Transaction">
         <Box gap="lg">
           <XdrPicker
@@ -537,7 +553,10 @@ export default function SubmitTransaction() {
                   ref={dropdownRef}
                   tabIndex={0}
                 >
-                  <div className="SubmitTx__floater__body">
+                  <div
+                    className="SubmitTx__floater__body"
+                    data-testid="submit-tx-methods-dropdown"
+                  >
                     {SUBMIT_OPTIONS.map((s) => (
                       <div
                         key={`submit-method-${s.id}`}
@@ -602,14 +621,14 @@ export default function SubmitTransaction() {
 
           <>
             {xdrJson?.jsonString ? (
-              <Box gap="sm">
+              <Box gap="sm" data-testid="submit-tx-envelope-json">
                 <Text
                   size="sm"
                   as="h2"
                   weight="semi-bold"
                   addlClassName="PageBody__title"
                 >
-                  TransactionEnvelope
+                  Transaction Envelope
                 </Text>
                 <div className="PageBody__content PageBody__scrollable">
                   <PrettyJsonTransaction

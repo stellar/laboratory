@@ -24,7 +24,7 @@ export const HorizonErrorResponse = ({
   if (error instanceof AccountRequiresMemoError) {
     message = "This destination requires a memo.";
     extras = (
-      <Box gap="xs">
+      <Box gap="xs" data-testid="submit-tx-horizon-error-memo">
         <TxResponse label="Destination account:" value={error.accountId} />
         <TxResponse label="Operation index:" value={error.operationIndex} />
       </Box>
@@ -37,7 +37,7 @@ export const HorizonErrorResponse = ({
     const { result_codes, result_xdr } = error.response.data.extras;
     message = error.message;
     extras = (
-      <Box gap="xs">
+      <Box gap="xs" data-testid="submit-tx-horizon-error-extras">
         <TxResponse
           label="extras.result_codes:"
           value={JSON.stringify(result_codes)}
@@ -52,7 +52,7 @@ export const HorizonErrorResponse = ({
         ? "Received a bad response when submitting."
         : "An unknown error occurred.";
     extras = (
-      <Box gap="xs">
+      <Box gap="xs" data-testid="submit-tx-horizon-error">
         <TxResponse
           label="original error:"
           value={JSON.stringify(error, null, 2)}
@@ -97,7 +97,7 @@ export const RpcErrorResponse = ({ error }: { error: SubmitRpcError }) => {
           </Box>
         ) : null}
         {errorResult ? (
-          <Box gap="xs">
+          <Box gap="xs" data-testid="submit-tx-rpc-error">
             <TxResponse
               label="Error result:"
               item={<PrettyJson json={errorResult} />}
