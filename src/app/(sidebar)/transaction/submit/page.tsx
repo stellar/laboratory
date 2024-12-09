@@ -319,12 +319,18 @@ export default function SubmitTransaction() {
             }
             response={
               <Box gap="xs">
-                <TxResponse label="Hash:" value={submitRpcResponse.hash} />
                 <TxResponse
+                  data-testid="submit-tx-rpc-success-hash"
+                  label="Hash:"
+                  value={submitRpcResponse.hash}
+                />
+                <TxResponse
+                  data-testid="submit-tx-rpc-success-ledger"
                   label="Ledger number:"
                   value={submitRpcResponse.result.ledger}
                 />
                 <TxResponse
+                  data-testid="submit-tx-rpc-success-envelope-xdr"
                   label="Envelope XDR:"
                   item={
                     <XdrLink
@@ -336,6 +342,7 @@ export default function SubmitTransaction() {
                   }
                 />
                 <TxResponse
+                  data-testid="submit-tx-rpc-success-result-xdr"
                   label="Result XDR:"
                   item={
                     <XdrLink
@@ -347,6 +354,7 @@ export default function SubmitTransaction() {
                   }
                 />
                 <TxResponse
+                  data-testid="submit-tx-rpc-success-result-meta-xdr"
                   label="Result Meta XDR:"
                   item={
                     <XdrLink
@@ -410,12 +418,18 @@ export default function SubmitTransaction() {
             }
             response={
               <Box gap="xs">
-                <TxResponse label="Hash:" value={submitHorizonResponse.hash} />
                 <TxResponse
+                  data-testid="submit-tx-success-hash"
+                  label="Hash:"
+                  value={submitHorizonResponse.hash}
+                />
+                <TxResponse
+                  data-testid="submit-tx-success-ledger"
                   label="Ledger number:"
                   value={submitHorizonResponse.ledger}
                 />
                 <TxResponse
+                  data-testid="submit-tx-success-envelope-xdr"
                   label="Envelope XDR:"
                   item={
                     <XdrLink
@@ -425,6 +439,7 @@ export default function SubmitTransaction() {
                   }
                 />
                 <TxResponse
+                  data-testid="submit-tx-success-result-xdr"
                   label="Result XDR:"
                   item={
                     <XdrLink
@@ -443,6 +458,7 @@ export default function SubmitTransaction() {
                   }
                 />
                 <TxResponse
+                  data-testid="submit-tx-success-fee"
                   label="Fee charged:"
                   value={submitHorizonResponse.fee_charged}
                 />
