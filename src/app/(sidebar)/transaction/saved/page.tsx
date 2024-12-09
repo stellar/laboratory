@@ -109,9 +109,14 @@ export default function SavedTransactions() {
 
   const SavedTxn = ({ txn }: { txn: SavedTransaction }) => {
     return (
-      <Box gap="sm" addlClassName="PageBody__content">
+      <Box
+        gap="sm"
+        addlClassName="PageBody__content"
+        data-testid="saved-transactions-item"
+      >
         <Input
           id={`saved-txn-${txn.timestamp}`}
+          data-testid="saved-transactions-name"
           fieldSize="md"
           value={txn.name}
           readOnly
@@ -123,6 +128,7 @@ export default function SavedTransactions() {
                 setCurrentTxnTimestamp(txn.timestamp);
               }}
               icon={<Icon.Edit05 />}
+              data-testid="saved-transactions-edit"
             />
           }
         />
@@ -134,6 +140,7 @@ export default function SavedTransactions() {
                 <Input
                   key={`saved-txn-${txn.timestamp}-op-${idx}`}
                   id={`saved-txn-${txn.timestamp}-op-${idx}`}
+                  data-testid="saved-transactions-op"
                   fieldSize="md"
                   value={
                     TRANSACTION_OPERATIONS[o.operation_type]?.label ||
@@ -185,7 +192,7 @@ export default function SavedTransactions() {
   };
 
   return (
-    <Box gap="md">
+    <Box gap="md" data-testid="saved-transactions-container">
       <PageCard heading="Saved Transactions">
         <Box gap="md">
           <>
