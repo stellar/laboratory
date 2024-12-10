@@ -11,7 +11,7 @@ test.describe("Simulate Transaction Page", () => {
 
   test.describe("Instruction Leeway Input", () => {
     test("error when inputting a non whole number", async ({ page }) => {
-      const instructionLeewayOn = page.getByTestId("simulate-tx-instr-leeway");
+      const instructionLeewayOn = page.getByLabel("Instruction Leeway");
       await instructionLeewayOn.fill("aaa");
       await expect(page.getByText("Expected a whole number.")).toBeVisible();
     });
@@ -19,6 +19,8 @@ test.describe("Simulate Transaction Page", () => {
     test("previous response should be removed when inputting a non whole number", async ({
       page,
     }) => {
+      const instructionLeewayOn = page.getByLabel("Instruction Leeway");
+
       // Getting a success response
       const xdrInput = page.getByLabel(
         "Input a base-64 encoded TransactionEnvelope",
@@ -60,7 +62,6 @@ test.describe("Simulate Transaction Page", () => {
       await expect(txResponseCard).toBeVisible();
 
       // Typing in the wrong instruction leeway should remove the previous response
-      const instructionLeewayOn = page.getByTestId("simulate-tx-instr-leeway");
       await instructionLeewayOn.fill("aaa");
       await expect(page.getByText("Expected a whole number.")).toBeVisible();
 
@@ -79,7 +80,7 @@ test.describe("Simulate Transaction Page", () => {
 
       await expect(simulateTxBtn).toBeDisabled();
 
-      const instructionLeewayOn = page.getByTestId("simulate-tx-instr-leeway");
+      const instructionLeewayOn = page.getByLabel("Instruction Leeway");
       await instructionLeewayOn.fill("23423423");
 
       // inputting the leeway alone isn't enough to enable the simulate tx button
@@ -233,9 +234,9 @@ test.describe("Simulate Transaction Page", () => {
   });
 });
 
-// // =============================================================================
-// // Mock data
-// // =============================================================================
+// =============================================================================
+// Mock data
+// =============================================================================
 const MOCK_SC_VAL_XDR =
   "AAAAEQAAAAEAAAAGAAAADwAAAAZhbW91bnQAAAAAAAoAAAAAAAAAAAAACRhOcqAAAAAADwAAAAxib290c3RyYXBwZXIAAAASAAAAARssFqxD/prgmYc9vGkaqslWrGlPINzMYTLc4yqRfO3AAAAADwAAAAxjbG9zZV9sZWRnZXIAAAADAz6ilAAAAA8AAAAIcGFpcl9taW4AAAAKAAAAAAAAAAAAAAARdlkuAAAAAA8AAAAEcG9vbAAAABIAAAABX/a7xfliM8nFgGel6pbCM6fT/kqrHAITNtWZQXgDlIIAAAAPAAAAC3Rva2VuX2luZGV4AAAAAAMAAAAA";
 

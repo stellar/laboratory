@@ -116,7 +116,6 @@ export default function SimulateTransaction() {
         />
 
         <Input
-          data-testid="simulate-tx-instr-leeway"
           id="simulate-tx-instr-leeway"
           fieldSize="md"
           label="Instruction Leeway"
