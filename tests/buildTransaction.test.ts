@@ -70,7 +70,6 @@ test.describe("Build Transaction Page", () => {
 
       // Sequence number
       await expect(fetchNextSeqButton).toBeEnabled();
-      await fetchNextSeqButton.click();
 
       // Base fee
       await expect(page.getByLabel("Base fee")).toHaveValue("100");
@@ -83,6 +82,8 @@ test.describe("Build Transaction Page", () => {
           body: JSON.stringify(MOCK_SOURCE_ACCOUNT_RESPONSE),
         });
       });
+
+      await fetchNextSeqButton.click();
 
       await expect(page.getByLabel("Transaction Sequence Number")).toHaveValue(
         SEQUENCE_NUMBER,
