@@ -116,6 +116,7 @@ export default function SimulateTransaction() {
         />
 
         <Input
+          data-testid="simulate-tx-instr-leeway"
           id="simulate-tx-instr-leeway"
           fieldSize="md"
           label="Instruction Leeway"
@@ -145,6 +146,7 @@ export default function SimulateTransaction() {
         <>
           {simulateTxData ? (
             <div
+              data-testid="simulate-tx-response"
               className={`PageBody__content PageBody__scrollable ${simulateTxData?.result?.error ? "PageBody__content--error" : ""}`}
             >
               <PrettyJson json={simulateTxData} />
