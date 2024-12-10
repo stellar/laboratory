@@ -251,7 +251,7 @@ export default function FeeBumpTransaction() {
             variant="success"
             title="Success! Transaction Envelope XDR:"
             response={
-              <Box gap="xs">
+              <Box gap="xs" data-testid="fee-bump-success">
                 <TxResponse
                   label="Network Passphrase:"
                   value={network.passphrase}
