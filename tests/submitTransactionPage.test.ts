@@ -10,7 +10,6 @@ test.describe("Submit Transaction Page", () => {
   });
 
   test("Save Transaction Flow", async ({ page }) => {
-    await expect(page.locator("h1")).toHaveText("Submit Transaction");
     const xdrInput = page.getByLabel(
       "Input a base-64 encoded TransactionEnvelope",
     );
@@ -43,7 +42,6 @@ test.describe("Submit Transaction Page", () => {
   });
 
   test("Simulate Transaction Flow", async ({ page }) => {
-    await expect(page.locator("h1")).toHaveText("Submit Transaction");
     const xdrInput = page.getByLabel(
       "Input a base-64 encoded TransactionEnvelope",
     );
@@ -61,9 +59,7 @@ test.describe("Submit Transaction Page", () => {
 
     await simulateTxBtn.click();
 
-    await page.goto(
-      "http://localhost:3000/transaction/simulate?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;&transaction$build$operations@$operation_type=&params@;;;;&simulate$triggerOnLaunch:false;;&xdr$blob=AAAAAgAAAABua+HUFN6zjqIQaw+w+xQgEmGB7deJ7fGT6bez//oKDzwAAAGQAAY//PAAAABwAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAQAAAAAkykrlZ6vjTMpbViATGt20liShZWOSoGzFDkcPC9C5KgAAAAAAAAAAAvrwgAAAAAAAAAAB//oKDzwAAAEDSDO1Dz8nPdSj4LJxs8vKVCTgYczDVk3+bwjDcxN7KMtrTlPllYsXSdfVCWDa02IhlZi9WuycvGjoouDu0YxYP;;",
-    );
+    await page.waitForURL(/\/transaction\/simulate\?/);
 
     await expect(page.locator("h1")).toHaveText("Simulate Transaction");
 
@@ -81,13 +77,10 @@ test.describe("Submit Transaction Page", () => {
         "Input a base-64 encoded TransactionEnvelope",
       );
       await xdrInput.fill("ssdfsdf");
+
       await expect(invalidXdrMsg).toBeVisible();
 
-      // Submit, Simulate, and Save TX buttons to be disabled
-      for (const btn of await page
-        .getByRole("button", { name: /transaction/i })
-        .all())
-        await btn.isDisabled();
+      await testButtonState({ page, isDisabledExpected: true });
     });
 
     test("display an error with a valid XDR that is not TX Envelope", async ({
@@ -103,10 +96,7 @@ test.describe("Submit Transaction Page", () => {
       await expect(invalidXdrMsg).toBeVisible();
 
       // Submit, Simulate, and Save TX buttons to be disabled
-      for (const btn of await page
-        .getByRole("button", { name: /transaction/i })
-        .all())
-        await btn.isDisabled();
+      await testButtonState({ page, isDisabledExpected: true });
     });
   });
 
@@ -117,13 +107,13 @@ test.describe("Submit Transaction Page", () => {
       );
       const validationCard = page.locator(".ValidationResponseCard");
 
+      // Submit, Simulate, and Save TX buttons to be disabled by default
+      await testButtonState({ page, isDisabledExpected: true });
+
       await xdrInput.fill(MOCK_VALID_FAILED_TX_XDR.XDR);
 
-      // Submit, Simulate, and Save TX buttons to be disabled
-      for (const btn of await page
-        .getByRole("button", { name: /transaction/i })
-        .all())
-        await btn.isEnabled();
+      // Submit, Simulate, and Save TX buttons to be enabled
+      await testButtonState({ page });
 
       expect(page.getByLabel("Transaction hash")).toBeVisible;
 
@@ -197,13 +187,13 @@ test.describe("Submit Transaction Page", () => {
       const validationCard = page.locator(".ValidationResponseCard");
       const errorValidationCard = page.getByTestId("submit-tx-rpc-error");
 
+      // Submit, Simulate, and Save TX buttons to be disabled by default
+      await testButtonState({ page, isDisabledExpected: true });
+
       await xdrInput.fill(MOCK_VALID_FAILED_TX_XDR.XDR);
 
-      // Submit, Simulate, and Save TX buttons to be disabled
-      for (const btn of await page
-        .getByRole("button", { name: /transaction/i })
-        .all())
-        await btn.isEnabled();
+      // Submit, Simulate, and Save TX buttons to be enabled
+      await testButtonState({ page });
 
       expect(page.getByLabel("Transaction hash")).toBeVisible;
 
@@ -237,7 +227,7 @@ test.describe("Submit Transaction Page", () => {
       });
 
       // Mock the rpc submission api call
-      await page.route("**", async (route) => {
+      await page.route("https://soroban-testnet.stellar.org", async (route) => {
         await route.fulfill({
           status: 400,
           contentType: "application/json",
@@ -276,15 +266,12 @@ test.describe("Submit Transaction Page", () => {
         name: "Submit transaction",
       });
 
-      expect(submitTxBtn).toBeDisabled();
-
+      // Submit, Simulate, and Save TX buttons to be disabled by default
+      await testButtonState({ page, isDisabledExpected: true });
       await xdrInput.fill(MOCK_VALID_SUCCESS_TX_XDR.XDR);
 
-      // Submit, Simulate, and Save TX buttons to be disabled
-      for (const btn of await page
-        .getByRole("button", { name: /transaction/i })
-        .all())
-        await btn.isEnabled();
+      // Submit, Simulate, and Save TX buttons to be enabled
+      await testButtonState({ page });
 
       expect(page.getByLabel("Transaction hash")).toBeVisible;
 
@@ -361,14 +348,13 @@ test.describe("Submit Transaction Page", () => {
       });
       const validationCard = page.locator(".ValidationResponseCard");
 
-      expect(submitTxBtn).toBeDisabled();
+      // Submit, Simulate, and Save TX buttons to be disabled by default
+      await testButtonState({ page, isDisabledExpected: true });
+
       await xdrInput.fill(MOCK_VALID_SUCCESS_TX_XDR_RPC.XDR);
 
-      // Submit, Simulate, and Save TX buttons to be disabled
-      for (const btn of await page
-        .getByRole("button", { name: /transaction/i })
-        .all())
-        await btn.isEnabled();
+      // Submit, Simulate, and Save TX buttons to be enabled
+      await testButtonState({ page });
 
       expect(page.getByLabel("Transaction hash")).toBeVisible;
 
@@ -446,6 +432,33 @@ const testSuccessHashAndJson = async ({
   await expect(
     txJsonFlow.getByText("Transaction Envelope").locator("+ div"),
   ).toHaveText(json);
+};
+
+const testButtonState = async ({
+  page,
+  isDisabledExpected,
+}: {
+  page: Page;
+  isDisabledExpected?: boolean;
+}) => {
+  const submitTxBtn = page.getByRole("button", {
+    name: "Submit transaction",
+  });
+
+  const simulateTxBtn = page.getByRole("button", {
+    name: "Simulate transaction",
+  });
+
+  const saveTxBtn = page.getByRole("button", {
+    name: "Save transaction",
+  });
+
+  for (const btn of [submitTxBtn, simulateTxBtn, saveTxBtn])
+    if (isDisabledExpected) {
+      await expect(btn).toBeDisabled();
+    } else {
+      await expect(btn).toBeEnabled();
+    }
 };
 
 const testBlockExplorerLink = async ({

@@ -1,8 +1,12 @@
 # Lab
 
 The Stellar Lab is a suite of tools to help one learn about exploring the
-Stellar network. See it in action:
-[https://lab.stellar.org/](https://lab.stellar.org/).
+Stellar network.
+
+The `main` branch is deployed to
+[https://lab.stellar.org/](https://lab.stellar.org/). On the landing page at the
+bottom right, you can reference a commit hash of the web app version you're
+viewing.
 
 ## Tech stack
 
