@@ -184,7 +184,7 @@ test.describe("API Explorer page", () => {
   });
 
   test("getLedgerEntries", async ({ page }) => {
-    page.goto("http://localhost:3000/endpoints/rpc/get-ledger-entries");
+    await page.goto("http://localhost:3000/endpoints/rpc/get-ledger-entries");
 
     // XDR
     const ledgerKeyXdrInput = page.getByLabel("Ledger Key XDR");
