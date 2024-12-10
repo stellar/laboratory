@@ -3,7 +3,7 @@
 The Stellar Lab is a suite of tools to help one learn about exploring the
 Stellar network.
 
-The `master` branch is deployed to
+The `main` branch is deployed to
 [https://lab.stellar.org/](https://lab.stellar.org/). On the landing page at the
 bottom right, you can reference a commit hash of the web app version you're
 viewing.
