@@ -202,11 +202,6 @@ test.describe("API Explorer page", () => {
       exact: true,
     });
 
-    await expect(ledgerKeySelect).toBeDisabled();
-    await expect(accountIdInput).toBeDisabled();
-    await expect(assetCodeInput).toBeDisabled();
-    await expect(assetIssuerInput).toBeDisabled();
-
     await expect(ledgerKeySelect).toHaveValue("trustline");
     await expect(accountIdInput).toHaveValue(
       "GAMQTINWD3YPP3GLTQZ4M6FKCCSRGROQLIIRVECIFC6VEGL5F64CND22",
@@ -215,6 +210,11 @@ test.describe("API Explorer page", () => {
     await expect(assetIssuerInput).toHaveValue(
       "GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5",
     );
+
+    await expect(ledgerKeySelect).toBeDisabled();
+    await expect(accountIdInput).toBeDisabled();
+    await expect(assetCodeInput).toBeDisabled();
+    await expect(assetIssuerInput).toBeDisabled();
 
     const assetPicker = page.getByTestId("asset-picker");
     // All asset options are disabled
