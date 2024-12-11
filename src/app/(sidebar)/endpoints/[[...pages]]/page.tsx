@@ -24,6 +24,7 @@ import { ShareUrlButton } from "@/components/ShareUrlButton";
 import { CopyJsonPayloadButton } from "@/components/CopyJsonPayloadButton";
 import { PageCard } from "@/components/layout/PageCard";
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
+import { JsonCodeWrapToggle } from "@/components/JsonCodeWrapToggle";
 
 import { useStore } from "@/store/useStore";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
@@ -44,6 +45,7 @@ import {
 } from "@/constants/endpointsPages";
 import { useEndpoint } from "@/query/useEndpoint";
 import { useScrollIntoView } from "@/hooks/useScrollIntoView";
+import { useCodeWrappedSetting } from "@/hooks/useCodeWrappedSetting";
 import {
   AnyObject,
   AssetObject,
@@ -140,6 +142,8 @@ export default function Endpoints() {
   const [urlPathParams, setUrlPathparams] = useState("");
   const [urlParams, setUrlParams] = useState("");
   const [isSaveModalVisible, setIsSaveModalVisible] = useState(false);
+
+  const [isCodeWrapped, setIsCodeWrapped] = useCodeWrappedSetting();
 
   const isTransactionPost = () => {
     return [
@@ -615,9 +619,20 @@ export default function Endpoints() {
       return (
         <>
           <div className="Endpoints__txTextarea">
-            <PrettyJsonTextarea json={renderedProps} label="Payload" />
+            <PrettyJsonTextarea
+              json={renderedProps}
+              label="Payload"
+              isCodeWrapped={isCodeWrapped}
+            />
           </div>
-          <Box gap="md" direction="row" justify="end">
+          <Box gap="md" direction="row" justify="space-between" align="center">
+            <JsonCodeWrapToggle
+              isChecked={isCodeWrapped}
+              onChange={(isChecked) => {
+                setIsCodeWrapped(isChecked);
+              }}
+            />
+
             <CopyJsonPayloadButton
               jsonString={stringify(renderedProps, null, 2) || ""}
             />
@@ -983,12 +998,20 @@ export default function Endpoints() {
                 <div
                   className={`PageBody__content PageBody__scrollable ${endpointData.isError ? "PageBody__content--error" : ""}`}
                 >
-                  <EndpointsJsonResponse json={endpointData.json} />
+                  <EndpointsJsonResponse
+                    json={endpointData.json}
+                    isCodeWrapped={isCodeWrapped}
+                  />
                 </div>
 
                 <div className="PageFooter">
                   <div className="PageFooter__left">
-                    {renderPostAsyncTxResponseMessage()}
+                    <JsonCodeWrapToggle
+                      isChecked={isCodeWrapped}
+                      onChange={(isChecked) => {
+                        setIsCodeWrapped(isChecked);
+                      }}
+                    />
                   </div>
                   <div className="PageFooter__right">
                     <CopyJsonPayloadButton
@@ -996,6 +1019,7 @@ export default function Endpoints() {
                     />
                   </div>
                 </div>
+                {renderPostAsyncTxResponseMessage()}
               </div>
             </Card>
           ) : null}

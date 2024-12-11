@@ -14,6 +14,10 @@ export const LOCAL_STORAGE_SAVED_THEME = "stellarTheme:Laboratory";
 
 export const XDR_TYPE_TRANSACTION_ENVELOPE = "TransactionEnvelope";
 
+// Local storage settings
+export const SETTINGS_CODE_WRAP = "jsonCodeWrap";
+export const SETTINGS_SUBMIT_METHOD = "submitMethod";
+
 export const NetworkOptions: Network[] = [
   {
     id: "futurenet",
