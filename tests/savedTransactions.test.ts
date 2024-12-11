@@ -1,4 +1,4 @@
-import { test, expect, Page } from "@playwright/test";
+import { test, expect, Page, BrowserContext } from "@playwright/test";
 import { MOCK_LOCAL_STORAGE } from "./mock/localStorage";
 
 test.describe("Saved Transactions Page", () => {
@@ -23,14 +23,19 @@ test.describe("Saved Transactions Page", () => {
   test.describe("Saved transactions", () => {
     // Setting page context to share among all the tests in this section to keep
     // local storage data
+    let browserContext: BrowserContext;
     let pageContext: Page;
 
     test.beforeAll(async ({ browser }) => {
-      const browserContext = await browser.newContext({
+      browserContext = await browser.newContext({
         storageState: MOCK_LOCAL_STORAGE,
       });
       pageContext = await browserContext.newPage();
       await pageContext.goto("http://localhost:3000/transaction/saved");
+    });
+
+    test.afterAll(() => {
+      browserContext.close();
     });
 
     test("Loads", async () => {

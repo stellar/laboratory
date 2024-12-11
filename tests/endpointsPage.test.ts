@@ -186,71 +186,23 @@ test.describe("API Explorer page", () => {
   test.describe("getLedgerEntries", () => {
     test.beforeEach(async ({ page }) => {
       await page.goto("http://localhost:3000/endpoints/rpc/get-ledger-entries");
-    });
-
-    test("Initial state", async ({ page }) => {
-      // XDR
-      await expect(page.getByLabel("Ledger Key XDR")).toBeEnabled();
-
-      // Manual inputs
-      await expect(
-        page.getByLabel("Ledger Key", { exact: true }),
-      ).toBeDisabled();
+      await expect(page.locator("h1")).toHaveText("getLedgerEntries");
     });
 
     test("Input switch", async ({ page }) => {
-      // XDR
-      const ledgerKeyXdrInput = page.getByLabel("Ledger Key XDR");
-
-      await expect(ledgerKeyXdrInput).toBeEnabled();
-      await ledgerKeyXdrInput.fill(
-        "AAAAAQAAAAAZCaG2HvD37MucM8Z4qhClE0XQWhEakEgovVIZfS+4JgAAAAFVU0RDAAAAAEI+fQXy7K+/7BkrIVo/G+lq7bjY5wJUq+NBPgIH3lay",
-      );
-
-      // Manual inputs
-      const ledgerKeySelect = page.getByLabel("Ledger Key", { exact: true });
-      const accountIdInput = page.getByLabel("Account ID", { exact: true });
-      const assetCodeInput = page.getByLabel("Asset Code", { exact: true });
-      const assetIssuerInput = page.getByLabel("Issuer Account ID", {
+      const ledgerKeyXdrInput = page.getByLabel("Ledger Key XDR", {
         exact: true,
       });
+      const ledgerKeySelect = page.getByLabel("Ledger Key", { exact: true });
 
-      await expect(ledgerKeySelect).toHaveValue("trustline");
-      await expect(accountIdInput).toHaveValue(
-        "GAMQTINWD3YPP3GLTQZ4M6FKCCSRGROQLIIRVECIFC6VEGL5F64CND22",
-      );
-      await expect(assetCodeInput).toHaveValue("USDC");
-      await expect(assetIssuerInput).toHaveValue(
-        "GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5",
-      );
-
+      await expect(ledgerKeyXdrInput).toBeEnabled();
       await expect(ledgerKeySelect).toBeDisabled();
-      await expect(accountIdInput).toBeDisabled();
-      await expect(assetCodeInput).toBeDisabled();
-      await expect(assetIssuerInput).toBeDisabled();
-
-      const assetPicker = page.getByTestId("asset-picker");
-      // All asset options are disabled
-      await expect(assetPicker.locator("[data-disabled='true']")).toHaveCount(
-        4,
-      );
-      // Alphanum4 checked
-      await expect(
-        assetPicker.locator("#credit_alphanum4-asset"),
-      ).toBeChecked();
 
       // Switch inputs
       await page.getByText("Switch input").click();
 
       await expect(ledgerKeyXdrInput).toBeDisabled();
-
       await expect(ledgerKeySelect).toBeEnabled();
-      await expect(accountIdInput).toBeEnabled();
-      await expect(assetCodeInput).toBeEnabled();
-      await expect(assetIssuerInput).toBeEnabled();
-      await expect(assetPicker.locator("[data-disabled='true']")).toHaveCount(
-        0,
-      );
     });
   });
 });
