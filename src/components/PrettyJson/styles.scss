@@ -61,8 +61,6 @@
   }
 
   &__value {
-    white-space: nowrap;
-
     &--string {
       color: var(--sds-clr-navy-11);
     }
@@ -86,6 +84,8 @@
   }
 
   &__key {
+    white-space: nowrap;
+
     &__note {
       display: none;
       font-size: pxToRem(12px);
@@ -132,6 +132,24 @@
   &--error {
     & > * {
       color: var(--sds-clr-red-11);
+    }
+  }
+
+  // Code wrapping
+  &[data-code-wrapped="true"] {
+    .PrettyJson__inline {
+      & > * {
+        word-break: break-all;
+      }
+    }
+
+    .PrettyJson__value {
+      white-space: nowrap;
+
+      &--string {
+        word-break: break-all;
+        white-space: normal;
+      }
     }
   }
 }
