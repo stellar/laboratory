@@ -1,4 +1,4 @@
-import { test, expect, Page, BrowserContext } from "@playwright/test";
+import { test, expect, Page } from "@playwright/test";
 import {
   MOCK_LOCAL_STORAGE,
   SAVED_ACCOUNT_1,
@@ -24,11 +24,10 @@ test.describe("Saved Keypairs Page", () => {
   test.describe("Saved accounts", () => {
     // Setting page context to share among all the tests in this section to keep
     // local storage data
-    let browserContext: BrowserContext;
     let pageContext: Page;
 
     test.beforeAll(async ({ browser }) => {
-      browserContext = await browser.newContext({
+      const browserContext = await browser.newContext({
         storageState: MOCK_LOCAL_STORAGE,
       });
       pageContext = await browserContext.newPage();
@@ -58,10 +57,6 @@ test.describe("Saved Keypairs Page", () => {
           });
         },
       );
-    });
-
-    test.afterAll(() => {
-      browserContext.close();
     });
 
     test("Loads", async () => {
