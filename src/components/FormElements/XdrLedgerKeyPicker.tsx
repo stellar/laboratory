@@ -109,6 +109,7 @@ export const XdrLedgerKeyPicker = ({
   const [selectedLedgerKey, setSelectedLedgerKey] =
     useState<LedgerKeyFieldsType | null>(null);
 
+  const [isXdrInputActive, setIsXdrInputActive] = useState(true);
   const [formError, setFormError] = useState<AnyObject>({});
   const [ledgerKeyXdrJsonString, setLedgerKeyJsonString] = useState<string>("");
   const [ledgerKeyXdrError, setLedgerKeyXdrError] = useState<string>("");
@@ -347,6 +348,7 @@ export const XdrLedgerKeyPicker = ({
               );
             },
             isRequired: true,
+            disabled: isXdrInputActive,
           });
         }
 
@@ -358,6 +360,7 @@ export const XdrLedgerKeyPicker = ({
               handleChange(selectedConfigSetting, selectedConfigSetting);
             },
             isRequired: true,
+            disabled: isXdrInputActive,
           });
         }
 
@@ -368,6 +371,7 @@ export const XdrLedgerKeyPicker = ({
             handleChange(e.target.value, e.target.value);
           },
           isRequired: true,
+          disabled: isXdrInputActive,
         });
       }
       return null;
@@ -375,7 +379,7 @@ export const XdrLedgerKeyPicker = ({
   };
 
   return (
-    <Box gap="sm">
+    <Box gap="lg" addlClassName="XdrLedgerKeyPicker">
       <XdrPicker
         id="ledger-key-xdr"
         label="Ledger Key XDR"
@@ -385,30 +389,46 @@ export const XdrLedgerKeyPicker = ({
           onChange(e.target.value);
           validateLedgerKeyXdr(e.target.value);
         }}
+        disabled={!isXdrInputActive}
       />
 
-      <Select
-        id="ledgerkey"
-        fieldSize="md"
-        label="Ledger Key"
-        value={selectedLedgerKey?.id}
-        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-          reset();
-
-          const selectedVal = e.target.value;
-          setSelectedLedgerKey(selectedVal ? getKeyType(selectedVal)! : null);
+      <Button
+        size="md"
+        variant="tertiary"
+        icon={<Icon.SwitchVertical01 />}
+        type="button"
+        onClick={() => {
+          setIsXdrInputActive(!isXdrInputActive);
         }}
       >
-        <option value="">Select a key</option>
+        Switch input
+      </Button>
 
-        {ledgerKeyFields.map((f) => (
-          <option key={f.id} value={f.id}>
-            {f.label}
-          </option>
-        ))}
-      </Select>
-      <>{renderLedgerKeyTemplate()}</>
-      <>{rightElement}</>
+      <Box gap="sm">
+        <Select
+          id="ledgerkey"
+          fieldSize="md"
+          label="Ledger Key"
+          value={selectedLedgerKey?.id}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+            reset();
+
+            const selectedVal = e.target.value;
+            setSelectedLedgerKey(selectedVal ? getKeyType(selectedVal)! : null);
+          }}
+          disabled={isXdrInputActive}
+        >
+          <option value="">Select a key</option>
+
+          {ledgerKeyFields.map((f) => (
+            <option key={f.id} value={f.id}>
+              {f.label}
+            </option>
+          ))}
+        </Select>
+        <>{renderLedgerKeyTemplate()}</>
+        <>{rightElement}</>
+      </Box>
     </Box>
   );
 };

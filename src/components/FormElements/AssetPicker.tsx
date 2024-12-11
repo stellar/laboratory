@@ -39,6 +39,7 @@ type AssetPickerProps = {
   includeNative?: boolean;
   includeLiquidityPoolShares?: boolean;
   includeSingleLiquidityPoolShare?: boolean;
+  disabled?: boolean;
 };
 
 export const AssetPicker = ({
@@ -54,6 +55,7 @@ export const AssetPicker = ({
   includeNative = true,
   includeLiquidityPoolShares,
   includeSingleLiquidityPoolShare,
+  disabled,
 }: AssetPickerProps) => {
   let options: AssetObject[] = [];
 
@@ -168,6 +170,7 @@ export const AssetPicker = ({
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             onChange({ ...poolShareValue, pool_share: e.target.value });
           }}
+          disabled={disabled}
         />
       );
     }
@@ -192,6 +195,7 @@ export const AssetPicker = ({
           },
           error: assetError?.issuer || "",
         }}
+        disabled={disabled}
       />
     );
   };
@@ -217,6 +221,18 @@ export const AssetPicker = ({
         }}
         options={options}
         fitContent={fitContent}
+        disabledOptions={
+          disabled
+            ? [
+                "native",
+                "credit_alphanum4",
+                "credit_alphanum12",
+                "pool_share",
+                "liquidity_pool_shares",
+                "issued",
+              ]
+            : []
+        }
       />
 
       <ExpandBox
@@ -254,9 +270,15 @@ type AssetPickerFieldsProps = {
     error: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   };
+  disabled?: boolean;
 };
 
-const AssetPickerFields = ({ id, code, issuer }: AssetPickerFieldsProps) => (
+const AssetPickerFields = ({
+  id,
+  code,
+  issuer,
+  disabled,
+}: AssetPickerFieldsProps) => (
   <div className="RadioPicker__inset">
     <Input
       id={`${id}-code`}
@@ -265,6 +287,7 @@ const AssetPickerFields = ({ id, code, issuer }: AssetPickerFieldsProps) => (
       value={code.value}
       onChange={code.onChange}
       error={code.error}
+      disabled={disabled}
     />
     <PubKeyPicker
       id={`${id}-issuer`}
@@ -273,6 +296,7 @@ const AssetPickerFields = ({ id, code, issuer }: AssetPickerFieldsProps) => (
       value={issuer.value}
       onChange={issuer.onChange}
       error={issuer.error}
+      disabled={disabled}
     />
   </div>
 );

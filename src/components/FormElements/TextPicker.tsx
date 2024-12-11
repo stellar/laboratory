@@ -10,6 +10,7 @@ interface TextPickerProps extends Omit<InputProps, "fieldSize"> {
   placeholder?: string;
   error?: string | undefined;
   readOnly?: boolean;
+  disabled?: boolean;
   autocomplete?: React.HTMLInputAutoCompleteAttribute;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -23,6 +24,7 @@ export const TextPicker = ({
   error,
   onChange,
   readOnly,
+  disabled,
   autocomplete,
   ...props
 }: TextPickerProps) => (
@@ -35,6 +37,7 @@ export const TextPicker = ({
     error={error}
     onChange={onChange}
     readOnly={readOnly}
+    disabled={disabled}
     autoComplete={autocomplete}
     {...props}
   />

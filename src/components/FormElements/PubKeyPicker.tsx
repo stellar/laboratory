@@ -8,6 +8,7 @@ interface PubKeyPickerProps extends Omit<InputProps, "fieldSize"> {
   labelSuffix?: string | React.ReactNode;
   placeholder?: string;
   readOnly?: boolean;
+  disabled?: boolean;
   value: string;
   error: string | undefined;
   onChange?: (e: React.ChangeEvent<any>) => void;
@@ -22,6 +23,7 @@ export const PubKeyPicker = ({
   value,
   error,
   readOnly,
+  disabled,
   onChange,
   ...props
 }: PubKeyPickerProps) => (
@@ -34,6 +36,7 @@ export const PubKeyPicker = ({
     value={value}
     error={error}
     readOnly={readOnly}
+    disabled={disabled}
     onChange={onChange}
     {...props}
   />

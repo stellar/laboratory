@@ -13,6 +13,7 @@ type LiquidityPoolSharesProps = {
   value: AssetPoolShareObjectValue;
   error: AssetPoolShareError | undefined;
   onChange: (val: AssetPoolShareObjectValue | undefined) => void;
+  disabled?: boolean;
 };
 
 export const LiquidityPoolShares = ({
@@ -20,6 +21,7 @@ export const LiquidityPoolShares = ({
   value,
   error,
   onChange,
+  disabled,
 }: LiquidityPoolSharesProps) => {
   const getAssetValue = (
     val:
@@ -52,6 +54,7 @@ export const LiquidityPoolShares = ({
         onChange={(val) => {
           onChange({ ...value, asset_a: getAssetValue(val) });
         }}
+        disabled={disabled}
       />
 
       <AssetPicker
@@ -63,6 +66,7 @@ export const LiquidityPoolShares = ({
         onChange={(val) => {
           onChange({ ...value, asset_b: getAssetValue(val) });
         }}
+        disabled={disabled}
       />
 
       <PositiveIntPicker
@@ -76,6 +80,7 @@ export const LiquidityPoolShares = ({
           // Do nothing
         }}
         readOnly
+        disabled={disabled}
       />
     </Box>
   );
