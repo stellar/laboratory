@@ -1,5 +1,10 @@
 import React from "react";
-import { NetworkError, rpc as StellarRpc, xdr } from "@stellar/stellar-sdk";
+import {
+  NetworkError,
+  rpc as StellarRpc,
+  Transaction,
+  xdr,
+} from "@stellar/stellar-sdk";
 import { TransactionBuildParams } from "@/store/createStore";
 
 // =============================================================================
@@ -224,6 +229,10 @@ export type NumberFractionValue = {
 export type FractionValue = {
   n: string | undefined;
   d: string | undefined;
+};
+
+export type RestoreFootprintValue = {
+  tx: Transaction;
 };
 
 export type RevokeSponsorshipValue = {
