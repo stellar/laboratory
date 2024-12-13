@@ -886,6 +886,7 @@ export const Operations = () => {
           <option value="end_sponsoring_future_reserves">
             End Sponsoring Future Reserves
           </option>
+          <option value="restore_footprint">Restore Footprint</option>
           <option value="revoke_sponsorship">Revoke Sponsorship</option>
           <option value="clawback">Clawback</option>
           <option value="clawback_claimable_balance">
@@ -1187,6 +1188,7 @@ export const Operations = () => {
               <Button
                 size="md"
                 variant="tertiary"
+                disabled={true}
                 icon={<Icon.PlusCircle />}
                 onClick={() => {
                   updateOptionParamAndError({
