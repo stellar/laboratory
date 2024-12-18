@@ -165,7 +165,11 @@ export const ContractInfo = ({
 
   return (
     <Card>
-      <Box gap="xs" addlClassName="ContractInfo">
+      <Box
+        gap="xs"
+        addlClassName="ContractInfo"
+        data-testid="contract-info-container"
+      >
         <>{INFO_FIELDS.map((f) => renderInfoField(f))}</>
       </Box>
     </Card>
