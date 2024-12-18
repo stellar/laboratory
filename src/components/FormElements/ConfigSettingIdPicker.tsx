@@ -9,12 +9,14 @@ type ConfigSettingIdPickerProps = {
   value: string | undefined;
   onChange: (value: ConfigSettingIdType | undefined) => void;
   error: string | undefined;
+  disabled?: boolean;
 };
 
 export const ConfigSettingIdPicker = ({
   id,
   value,
   onChange,
+  disabled,
 }: ConfigSettingIdPickerProps) => {
   const configSettingType: { id: ConfigSettingIdType; label: string }[] = [
     {
@@ -91,6 +93,7 @@ export const ConfigSettingIdPicker = ({
             onChange(undefined);
           }
         }}
+        disabled={disabled}
       >
         <option value="">Select Config Setting ID</option>
 

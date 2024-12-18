@@ -2,7 +2,7 @@ import { LOCAL_STORAGE_SETTINGS } from "@/constants/settings";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { LabSettings } from "@/types/types";
 
-export const localStorageSubmitMethod = {
+export const localStorageSettings = {
   get: (key: string) => {
     const labSettings = getSettings();
     return labSettings[key];

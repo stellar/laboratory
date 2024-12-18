@@ -26,13 +26,17 @@ import { TransactionHashReadOnlyField } from "@/components/TransactionHashReadOn
 import { LabelHeading } from "@/components/LabelHeading";
 import { CopyJsonPayloadButton } from "@/components/CopyJsonPayloadButton";
 import { PageCard } from "@/components/layout/PageCard";
+import { JsonCodeWrapToggle } from "@/components/JsonCodeWrapToggle";
 
 import * as StellarXdr from "@/helpers/StellarXdr";
 import { parseToLosslessJson } from "@/helpers/parseToLosslessJson";
 import { delayedAction } from "@/helpers/delayedAction";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
+
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
+import { useCodeWrappedSetting } from "@/hooks/useCodeWrappedSetting";
 import { useStore } from "@/store/useStore";
+
 import { AnyObject } from "@/types/types";
 
 export default function ViewXdr() {
@@ -40,6 +44,7 @@ export default function ViewXdr() {
   const { updateXdrBlob, updateXdrType, resetXdr } = xdr;
 
   const isXdrInit = useIsXdrInit();
+  const [isCodeWrapped, setIsCodeWrapped] = useCodeWrappedSetting();
 
   const {
     data: latestTxn,
@@ -200,6 +205,7 @@ export default function ViewXdr() {
                 key={`pretty-json-${index}`}
                 json={j}
                 xdr={xdr}
+                isCodeWrapped={isCodeWrapped}
               />
             </>
           ))}
@@ -209,7 +215,13 @@ export default function ViewXdr() {
     }
 
     if (jsonArray.length === 1) {
-      return <PrettyJsonTransaction json={jsonArray[0]} xdr={xdr} />;
+      return (
+        <PrettyJsonTransaction
+          json={jsonArray[0]}
+          xdr={xdr}
+          isCodeWrapped={isCodeWrapped}
+        />
+      );
     }
 
     return null;
@@ -305,7 +317,19 @@ export default function ViewXdr() {
                   })}
                 </div>
 
-                <Box gap="md" direction="row" justify="end">
+                <Box
+                  gap="md"
+                  direction="row"
+                  justify="space-between"
+                  align="center"
+                >
+                  <JsonCodeWrapToggle
+                    isChecked={isCodeWrapped}
+                    onChange={(isChecked) => {
+                      setIsCodeWrapped(isChecked);
+                    }}
+                  />
+
                   <CopyJsonPayloadButton
                     jsonString={prettifyJsonString(xdrJsonDecoded.jsonString)}
                   />
