@@ -14,7 +14,7 @@ type Tab = {
 };
 
 type TabViewProps = {
-  heading: TabViewHeadingProps;
+  heading?: TabViewHeadingProps;
   tab1: Tab;
   tab2: Tab;
   tab3?: Tab;
@@ -42,9 +42,9 @@ export const TabView = ({
   }));
 
   return (
-    <Box gap="md" addlClassName="TabView">
+    <Box gap="lg" addlClassName="TabView">
       <div className="TabView__heading">
-        <TabViewHeading {...heading} />
+        {heading ? <TabViewHeading {...heading} /> : null}
 
         <div className="TabView__tabContainer">
           <Tabs
@@ -55,15 +55,13 @@ export const TabView = ({
         </div>
       </div>
 
-      <Box gap="md">
-        <div className="TabView__content">
-          {tabContent.map((tc) => (
-            <div key={tc.id} data-is-active={activeTabId === tc.id}>
-              {tc.content}
-            </div>
-          ))}
-        </div>
-      </Box>
+      <div className="TabView__content">
+        {tabContent.map((tc) => (
+          <div key={tc.id} data-is-active={activeTabId === tc.id}>
+            {tc.content}
+          </div>
+        ))}
+      </div>
     </Box>
   );
 };

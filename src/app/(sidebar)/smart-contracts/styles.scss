@@ -1,0 +1,18 @@
+@use "../../../styles/utils.scss" as *;
+
+.ContractExplorer {
+  &__form {
+    .Button {
+      width: fit-content;
+    }
+  }
+}
+
+.InfoFieldItem {
+  font-size: pxToRem(12px);
+  line-height: pxToRem(18px);
+
+  &__label {
+    width: pxToRem(128px);
+  }
+}

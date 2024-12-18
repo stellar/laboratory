@@ -35,6 +35,7 @@ import { ViewInXdrButton } from "@/components/ViewInXdrButton";
 import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
 import { LabelHeading } from "@/components/LabelHeading";
 import { PageCard } from "@/components/layout/PageCard";
+import { MessageField } from "@/components/MessageField";
 
 const MIN_LENGTH_FOR_FULL_WIDTH_FIELD = 30;
 
@@ -425,26 +426,6 @@ export const Overview = () => {
   } else if (sign.importTx) {
     mergedFields = [...REQUIRED_FIELDS, ...TX_FIELDS(sign.importTx)];
   }
-
-  const MessageField = ({
-    message,
-    isError,
-  }: {
-    message: string;
-    isError?: boolean;
-  }) => {
-    return (
-      <Box
-        gap="xs"
-        addlClassName={`SignTx__note FieldNote FieldNote--${isError ? "error" : "success"}`}
-        direction="row"
-        align="center"
-      >
-        <span>{message}</span>
-        {isError ? <Icon.XCircle /> : <Icon.CheckCircle />}
-      </Box>
-    );
-  };
 
   const SignTxButton = ({
     label = "Sign transaction",

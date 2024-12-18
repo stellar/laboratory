@@ -32,11 +32,10 @@ const primaryNavLinks: NavLink[] = [
     href: Routes.ENDPOINTS,
     label: "API Explorer",
   },
-  // TODO: hide until ready
-  // {
-  //   href: Routes.SMART_CONTRACTS,
-  //   label: "Smart Contracts",
-  // },
+  {
+    href: Routes.SMART_CONTRACTS_CONTRACT_EXPLORER,
+    label: "Smart Contracts",
+  },
   {
     href: "https://developers.stellar.org/",
     label: "View Docs",
