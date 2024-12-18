@@ -1,24 +1,11 @@
 "use client";
 
-import { Card, Text, Button } from "@stellar/design-system";
-
-import { NetworkOptions } from "@/constants/settings";
-import { useStore } from "@/store/useStore";
-
-import { NetworkType } from "@/types/types";
+import { Card, Text } from "@stellar/design-system";
+import { SwitchNetworkButtons } from "@/components/SwitchNetworkButtons";
 
 import "../../styles.scss";
 
 export const SwitchNetwork = () => {
-  const { selectNetwork, updateIsDynamicNetworkSelect } = useStore();
-  const onSwitchNetwork = (network: NetworkType) => {
-    const selectedNetwork = NetworkOptions.find((n) => n.id === network);
-    if (selectedNetwork) {
-      updateIsDynamicNetworkSelect(true);
-      selectNetwork(selectedNetwork);
-    }
-  };
-
   return (
     <Card>
       <div className="Account__card">
@@ -33,26 +20,12 @@ export const SwitchNetwork = () => {
             fund an account with 10,000 lumens on the futurenet network.
           </Text>
         </div>
-        <div className="Account__CTA" data-testid="fundAccount-buttons">
-          <Button
-            size="md"
-            variant="tertiary"
-            onClick={() => {
-              onSwitchNetwork("futurenet");
-            }}
-          >
-            Switch to Futurenet
-          </Button>
 
-          <Button
-            size="md"
-            variant="tertiary"
-            onClick={() => {
-              onSwitchNetwork("testnet");
-            }}
-          >
-            Switch to Testnet
-          </Button>
+        <div className="Account__CTA" data-testid="fundAccount-buttons">
+          <SwitchNetworkButtons
+            includedNetworks={["futurenet", "testnet"]}
+            buttonSize="md"
+          />
         </div>
       </div>
     </Card>

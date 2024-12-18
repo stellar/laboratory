@@ -83,4 +83,5 @@ export enum Routes {
   TO_XDR = "/xdr/to",
   // Smart Contracts
   SMART_CONTRACTS = "/smart-contracts",
+  SMART_CONTRACTS_CONTRACT_EXPLORER = "/smart-contracts/contract-explorer",
 }

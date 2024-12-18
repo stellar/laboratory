@@ -117,3 +117,15 @@ export const XDR_NAV_ITEMS = [
     ],
   },
 ];
+
+export const SMART_CONTRACTS_NAV_ITEMS = [
+  {
+    instruction: "Smart Contract Tools",
+    navItems: [
+      {
+        route: Routes.SMART_CONTRACTS_CONTRACT_EXPLORER,
+        label: "Contract Explorer",
+      },
+    ],
+  },
+];

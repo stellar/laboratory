@@ -35,25 +35,29 @@ test.describe("Fee Bump Page", () => {
 
       await page.getByLabel("Base Fee").fill(BASE_FEE);
 
+      await expect(successCard).toBeVisible();
       await expect(
         successCard.getByText("Network Passphrase:").locator("+ div"),
       ).toHaveText("Test SDF Network ; September 2015");
       await expect(successCard.getByText("XDR:").locator("+ div")).toHaveText(
         MOCK_XDR,
       );
-    });
 
-    test("Clear", async ({ page }) => {
-      await page.getByLabel("Base Fee").fill(BASE_FEE);
-      await expect(successCard).toBeVisible();
-
+      // Clear
       await page.getByText("Clear and import new").click();
       await expect(successCard).toBeHidden();
     });
 
     test("Sign in Transaction Signer", async ({ page }) => {
       await page.getByLabel("Base Fee").fill(BASE_FEE);
-      await page.getByText("Sign in Transaction Signer").click();
+
+      const signButton = page.getByRole("button", {
+        name: "Sign in Transaction Signer",
+        exact: true,
+      });
+
+      await expect(signButton).toBeVisible();
+      await signButton.click();
 
       await expect(page.locator("h1")).toHaveText("Transaction Overview");
       await expect(page.getByLabel("Transaction Envelope XDR")).toHaveText(
@@ -63,7 +67,14 @@ test.describe("Fee Bump Page", () => {
 
     test("View in XDR viewer", async ({ page }) => {
       await page.getByLabel("Base Fee").fill(BASE_FEE);
-      await page.getByText("View in XDR Viewer").click();
+
+      const viewButton = page.getByRole("button", {
+        name: "View in XDR viewer",
+        exact: true,
+      });
+
+      await expect(viewButton).toBeVisible();
+      await viewButton.click();
 
       await expect(page.locator("h1")).toHaveText("View XDR");
       await expect(page.getByLabel("Base-64 encoded XDR")).toHaveText(MOCK_XDR);

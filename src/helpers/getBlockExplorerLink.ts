@@ -1,15 +1,9 @@
+import { STELLAR_EXPERT } from "@/constants/settings";
+
 export type BlockExplorer = "stellar.expert" | "stellarchain.io";
 
 export const getBlockExplorerLink = (explorer: BlockExplorer) => {
   switch (explorer) {
-    case "stellar.expert": {
-      return {
-        mainnet: "https://stellar.expert/explorer/public",
-        testnet: "https://stellar.expert/explorer/testnet",
-        futurenet: "",
-        custom: "",
-      };
-    }
     case "stellarchain.io":
       return {
         mainnet: "https://stellarchain.io",
@@ -18,10 +12,11 @@ export const getBlockExplorerLink = (explorer: BlockExplorer) => {
         custom: "",
       };
     // defaults to stellar.expert
+    case "stellar.expert":
     default:
       return {
-        mainnet: "https://stellar.expert/explorer/public",
-        testnet: "https://stellar.expert/explorer/testnet",
+        mainnet: `${STELLAR_EXPERT}/public`,
+        testnet: `${STELLAR_EXPERT}/testnet`,
         futurenet: "",
         custom: "",
       };
