@@ -32,6 +32,7 @@ type PrettyJsonProps = {
   customKeyRenderer?: (item: any, key: string) => React.ReactNode | null;
   isLoading?: boolean;
   isCollapsible?: boolean;
+  isCodeWrapped?: boolean;
 };
 
 type Char = "{" | "}" | "[" | "]";
@@ -43,6 +44,7 @@ export const PrettyJson = ({
   customKeyRenderer,
   isLoading,
   isCollapsible = true,
+  isCodeWrapped,
 }: PrettyJsonProps) => {
   if (typeof json !== "object") {
     return null;
@@ -287,7 +289,7 @@ export const PrettyJson = ({
   }
 
   return (
-    <div className="PrettyJson">
+    <div className="PrettyJson" data-code-wrapped={Boolean(isCodeWrapped)}>
       <Bracket char="{" />
       {render(json)}
       <Bracket char="}" isEnd />

@@ -1,12 +1,18 @@
-import { CustomKeyValueLinkMap, PrettyJson } from "@/components/PrettyJson";
 import { Routes } from "@/constants/routes";
+import { CustomKeyValueLinkMap, PrettyJson } from "@/components/PrettyJson";
+import { SdsLink } from "@/components/SdsLink";
 import { sanitizeArray } from "@/helpers/sanitizeArray";
+import { buildEndpointHref } from "@/helpers/buildEndpointHref";
 
 import { AnyObject } from "@/types/types";
-import { buildEndpointHref } from "@/helpers/buildEndpointHref";
-import { SdsLink } from "@/components/SdsLink";
 
-export const EndpointsJsonResponse = ({ json }: { json: AnyObject }) => {
+export const EndpointsJsonResponse = ({
+  json,
+  isCodeWrapped,
+}: {
+  json: AnyObject;
+  isCodeWrapped?: boolean;
+}) => {
   const handleLinkXdr = (val: string, key?: string) => {
     let xdrType = "";
 
@@ -421,6 +427,7 @@ export const EndpointsJsonResponse = ({ json }: { json: AnyObject }) => {
       json={json}
       customKeyValueLinkMap={customKeyValueLinkAction}
       customValueRenderer={customValueLinkAction}
+      isCodeWrapped={isCodeWrapped}
     />
   );
 };

@@ -17,16 +17,20 @@ import { delayedAction } from "@/helpers/delayedAction";
 import { openUrl } from "@/helpers/openUrl";
 import { getBlockExplorerLink } from "@/helpers/getBlockExplorerLink";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
-import { localStorageSubmitMethod } from "@/helpers/localStorageSubmitMethod";
+import { localStorageSettings } from "@/helpers/localStorageSettings";
 import { buildEndpointHref } from "@/helpers/buildEndpointHref";
 import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransactions";
 import { shareableUrl } from "@/helpers/shareableUrl";
 
 import { Routes } from "@/constants/routes";
-import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
+import {
+  SETTINGS_SUBMIT_METHOD,
+  XDR_TYPE_TRANSACTION_ENVELOPE,
+} from "@/constants/settings";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { useScrollIntoView } from "@/hooks/useScrollIntoView";
+import { useCodeWrappedSetting } from "@/hooks/useCodeWrappedSetting";
 
 import { useSubmitRpcTx } from "@/query/useSubmitRpcTx";
 import { useSubmitHorizonTx } from "@/query/useSubmitHorizonTx";
@@ -40,6 +44,7 @@ import { SdsLink } from "@/components/SdsLink";
 import { TransactionHashReadOnlyField } from "@/components/TransactionHashReadOnlyField";
 import { PageCard } from "@/components/layout/PageCard";
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
+import { JsonCodeWrapToggle } from "@/components/JsonCodeWrapToggle";
 
 import {
   HorizonErrorResponse,
@@ -62,8 +67,6 @@ const SUBMIT_OPTIONS = [
   },
 ];
 
-const SETTING_KEY = "submitMethod";
-
 export default function SubmitTransaction() {
   const { network, xdr, transaction } = useStore();
   const { blob, updateXdrBlob } = xdr;
@@ -80,6 +83,8 @@ export default function SubmitTransaction() {
   const [submitMethod, setSubmitMethod] = useState<"horizon" | "rpc" | string>(
     "",
   );
+
+  const [isCodeWrapped, setIsCodeWrapped] = useCodeWrappedSetting();
 
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const responseSuccessEl = useRef<HTMLDivElement | null>(null);
@@ -122,7 +127,7 @@ export default function SubmitTransaction() {
 
   // Set default submit method
   useEffect(() => {
-    const localStorageMethod = localStorageSubmitMethod.get(SETTING_KEY);
+    const localStorageMethod = localStorageSettings.get(SETTINGS_SUBMIT_METHOD);
 
     if (localStorageMethod) {
       setSubmitMethod(localStorageMethod);
@@ -572,8 +577,8 @@ export default function SubmitTransaction() {
                           toggleDropdown(false);
                           resetSubmitState();
 
-                          localStorageSubmitMethod.set({
-                            key: SETTING_KEY,
+                          localStorageSettings.set({
+                            key: SETTINGS_SUBMIT_METHOD,
                             value: s.id,
                           });
                         }}
@@ -634,8 +639,17 @@ export default function SubmitTransaction() {
                   <PrettyJsonTransaction
                     json={JSON.parse(xdrJson.jsonString)}
                     xdr={blob}
+                    isCodeWrapped={isCodeWrapped}
                   />
                 </div>
+                <Box gap="md" direction="row" align="center">
+                  <JsonCodeWrapToggle
+                    isChecked={isCodeWrapped}
+                    onChange={(isChecked) => {
+                      setIsCodeWrapped(isChecked);
+                    }}
+                  />
+                </Box>
               </Box>
             ) : null}
           </>

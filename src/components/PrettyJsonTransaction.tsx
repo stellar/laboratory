@@ -15,11 +15,13 @@ import { AnyObject } from "@/types/types";
 type PrettyJsonTransactionProps = {
   xdr: string;
   json: AnyObject;
+  isCodeWrapped?: boolean;
 };
 
 export const PrettyJsonTransaction = ({
   xdr,
   json,
+  isCodeWrapped,
 }: PrettyJsonTransactionProps) => {
   const { network } = useStore();
   const { data, isFetching, isLoading, refetch } = useCheckTxSignatures({
@@ -125,6 +127,7 @@ export const PrettyJsonTransaction = ({
       customValueRenderer={customValueRenderer}
       customKeyRenderer={customKeyRenderer}
       isLoading={isLoading || isFetching}
+      isCodeWrapped={isCodeWrapped}
     />
   );
 };

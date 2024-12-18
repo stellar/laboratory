@@ -21,6 +21,7 @@ import { SavedItemTimestampAndDelete } from "@/components/SavedItemTimestampAndD
 import { CopyJsonPayloadButton } from "@/components/CopyJsonPayloadButton";
 import { PageCard } from "@/components/layout/PageCard";
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
+import { JsonCodeWrapToggle } from "@/components/JsonCodeWrapToggle";
 
 import { Routes } from "@/constants/routes";
 import { localStorageSavedEndpointsHorizon } from "@/helpers/localStorageSavedEndpointsHorizon";
@@ -28,6 +29,7 @@ import { localStorageSavedRpcMethods } from "@/helpers/localStorageSavedRpcMetho
 import { arrayItem } from "@/helpers/arrayItem";
 import { formatTimestamp } from "@/helpers/formatTimestamp";
 import { getNetworkById } from "@/helpers/getNetworkById";
+import { useCodeWrappedSetting } from "@/hooks/useCodeWrappedSetting";
 import { useStore } from "@/store/useStore";
 import {
   Network,
@@ -58,6 +60,8 @@ export const SavedEndpointsPage = () => {
   const [currentRequestTimestamp, setCurrentRequestTimestamp] = useState<
     number | undefined
   >();
+
+  const [isCodeWrapped, setIsCodeWrapped] = useCodeWrappedSetting();
 
   const isRpcTab = saved.activeTab === "rpc";
 
@@ -387,9 +391,25 @@ export const SavedEndpointsPage = () => {
                   className="Endpoints__txTextarea"
                   data-testid="saved-rpc-payload"
                 >
-                  <PrettyJsonTextarea json={e.payload} label="Payload" />
+                  <PrettyJsonTextarea
+                    json={e.payload}
+                    label="Payload"
+                    isCodeWrapped={isCodeWrapped}
+                  />
                 </div>
-                <Box gap="md" direction="row" justify="end">
+                <Box
+                  gap="md"
+                  direction="row"
+                  justify="space-between"
+                  align="center"
+                >
+                  <JsonCodeWrapToggle
+                    isChecked={isCodeWrapped}
+                    onChange={(isChecked) => {
+                      setIsCodeWrapped(isChecked);
+                    }}
+                  />
+
                   <CopyJsonPayloadButton
                     jsonString={stringify(e.payload, null, 2) || ""}
                   />
