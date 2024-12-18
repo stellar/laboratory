@@ -24,7 +24,13 @@ export const useSEContractInfo = ({
           `${STELLAR_EXPERT_API}/${network}/contract/${contractId}`,
         );
 
-        return await response.json();
+        const responseJson = await response.json();
+
+        if (responseJson.error) {
+          throw responseJson.error;
+        }
+
+        return responseJson;
       } catch (e: any) {
         throw `Something went wrong. ${e}`;
       }
