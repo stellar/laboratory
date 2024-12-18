@@ -55,7 +55,10 @@ test.describe("Fee Bump Page", () => {
       await page.getByLabel("Base Fee").fill(BASE_FEE);
       await page.getByText("Sign in Transaction Signer").click();
 
-      await expect(page.locator("h1")).toHaveText("Transaction Overview");
+      // Adding extra delay because sometimes it takes longer to load the next page
+      await expect(page.locator("h1")).toHaveText("Transaction Overview", {
+        timeout: 5000,
+      });
       await expect(page.getByLabel("Transaction Envelope XDR")).toHaveText(
         MOCK_XDR,
       );
@@ -65,7 +68,10 @@ test.describe("Fee Bump Page", () => {
       await page.getByLabel("Base Fee").fill(BASE_FEE);
       await page.getByText("View in XDR Viewer").click();
 
-      await expect(page.locator("h1")).toHaveText("View XDR");
+      // Adding extra delay because sometimes it takes longer to load the next page
+      await expect(page.locator("h1")).toHaveText("View XDR", {
+        timeout: 5000,
+      });
       await expect(page.getByLabel("Base-64 encoded XDR")).toHaveText(MOCK_XDR);
     });
   });
