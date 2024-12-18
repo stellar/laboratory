@@ -54,7 +54,7 @@ export const ContractInfo = ({
   }) => {
     return (
       <Box
-        gap="lg"
+        gap="xs"
         direction="row"
         align="center"
         addlClassName="InfoFieldItem"
@@ -165,7 +165,7 @@ export const ContractInfo = ({
 
   return (
     <Card>
-      <Box gap="xs">
+      <Box gap="xs" addlClassName="ContractInfo">
         <>{INFO_FIELDS.map((f) => renderInfoField(f))}</>
       </Box>
     </Card>

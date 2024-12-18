@@ -16,9 +16,6 @@ import { SwitchNetworkButtons } from "@/components/SwitchNetworkButtons";
 
 import { ContractInfo } from "./components/ContractInfo";
 
-// TODO: mobile UI
-// TODO: update nav break points
-// TODO: tests
 export default function ContractExplorer() {
   const { network, smartContracts } = useStore();
   const [contractActiveTab, setContractActiveTab] = useState("contract-info");

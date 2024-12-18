@@ -7,10 +7,12 @@ type LayoutMode = "desktop" | "mobile";
 
 type WindowContextProps = {
   layoutMode?: LayoutMode;
+  windowWidth?: number;
 };
 
 export const WindowContext = createContext<WindowContextProps>({
   layoutMode: undefined,
+  windowWidth: undefined,
 });
 
 export const LayoutContextProvider = ({
@@ -21,16 +23,22 @@ export const LayoutContextProvider = ({
   const MAX_WIDTH = 1040;
 
   const [layoutMode, setLayoutMode] = useState<LayoutMode>();
+  const [windowWidth, setWindowWidth] = useState<number>();
 
   const getLayoutMode = (windowWidth: number) => {
     return windowWidth < MAX_WIDTH ? "mobile" : "desktop";
   };
 
   useEffect(() => {
-    setLayoutMode(getLayoutMode(document.documentElement.clientWidth));
+    const setState = () => {
+      setLayoutMode(getLayoutMode(document.documentElement.clientWidth));
+      setWindowWidth(document.documentElement.clientWidth);
+    };
+
+    setState();
 
     const handleResize = throttle(() => {
-      setLayoutMode(getLayoutMode(document.documentElement.clientWidth));
+      setState();
     }, 500);
 
     window.addEventListener("resize", handleResize);
@@ -41,7 +49,7 @@ export const LayoutContextProvider = ({
   }, []);
 
   return (
-    <WindowContext.Provider value={{ layoutMode }}>
+    <WindowContext.Provider value={{ layoutMode, windowWidth }}>
       {children}
     </WindowContext.Provider>
   );

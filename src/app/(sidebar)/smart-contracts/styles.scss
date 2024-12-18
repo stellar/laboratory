@@ -8,11 +8,32 @@
   }
 }
 
+.ContractInfo {
+  @media screen and (max-width: 500px) {
+    &.Box--xs {
+      gap: pxToRem(12px);
+    }
+  }
+}
+
 .InfoFieldItem {
   font-size: pxToRem(12px);
   line-height: pxToRem(18px);
 
   &__label {
+    flex-shrink: 0;
     width: pxToRem(128px);
+  }
+
+  &__value {
+    word-break: break-all;
+  }
+
+  @media screen and (max-width: 500px) {
+    flex-wrap: wrap;
+
+    &__label {
+      width: 100%;
+    }
   }
 }

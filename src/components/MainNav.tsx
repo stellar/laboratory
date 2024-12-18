@@ -43,7 +43,7 @@ const primaryNavLinks: NavLink[] = [
   },
 ];
 
-export const MainNav = () => {
+export const MainNav = ({ excludeDocs }: { excludeDocs?: boolean }) => {
   const pathname = usePathname();
 
   const isActiveRoute = (link: string) => {
@@ -65,10 +65,14 @@ export const MainNav = () => {
     </NextLink>
   );
 
+  const links = excludeDocs
+    ? primaryNavLinks.filter((l) => l.label !== "View Docs")
+    : primaryNavLinks;
+
   return (
     <nav className="LabLayout__header__nav">
       <div className="LabLayout__header__nav--primary">
-        {primaryNavLinks.map((l) => (
+        {links.map((l) => (
           <NavItem key={l.href} link={l} />
         ))}
       </div>
