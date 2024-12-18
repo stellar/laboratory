@@ -59,7 +59,9 @@ export default function ContractExplorer() {
   const isCurrentNetworkSupported = ["mainnet", "testnet"].includes(network.id);
 
   const renderContractInfoContent = () => {
-    return <ContractInfo infoData={contractInfoData} networkId={network.id} />;
+    return contractInfoData ? (
+      <ContractInfo infoData={contractInfoData} networkId={network.id} />
+    ) : null;
   };
 
   const renderContractInvokeContent = () => {

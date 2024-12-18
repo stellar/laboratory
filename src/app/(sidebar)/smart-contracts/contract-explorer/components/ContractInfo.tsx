@@ -4,13 +4,13 @@ import { SdsLink } from "@/components/SdsLink";
 import { formatEpochToDate } from "@/helpers/formatEpochToDate";
 import { formatNumber } from "@/helpers/formatNumber";
 import { stellarExpertAccountLink } from "@/helpers/stellarExpertAccountLink";
-import { NetworkType } from "@/types/types";
+import { ContractInfoApiResponse, NetworkType } from "@/types/types";
 
 export const ContractInfo = ({
   infoData,
   networkId,
 }: {
-  infoData: any;
+  infoData: ContractInfoApiResponse;
   networkId: NetworkType;
 }) => {
   type ContractExplorerInfoField = {
@@ -85,7 +85,7 @@ export const ContractInfo = ({
             key={field.id}
             label={field.label}
             value={
-              infoData.validation.repository ? (
+              infoData.validation?.repository ? (
                 <SdsLink
                   href={infoData.validation.repository}
                   addlClassName="Link--external"
