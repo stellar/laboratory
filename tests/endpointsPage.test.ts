@@ -182,4 +182,27 @@ test.describe("API Explorer page", () => {
       await expect(page.getByTestId("endpoints-submitBtn")).toBeDisabled();
     });
   });
+
+  test.describe("getLedgerEntries", () => {
+    test.beforeEach(async ({ page }) => {
+      await page.goto("http://localhost:3000/endpoints/rpc/get-ledger-entries");
+      await expect(page.locator("h1")).toHaveText("getLedgerEntries");
+    });
+
+    test("Input switch", async ({ page }) => {
+      const ledgerKeyXdrInput = page.getByLabel("Ledger Key XDR", {
+        exact: true,
+      });
+      const ledgerKeySelect = page.getByLabel("Ledger Key", { exact: true });
+
+      await expect(ledgerKeyXdrInput).toBeEnabled();
+      await expect(ledgerKeySelect).toBeDisabled();
+
+      // Switch inputs
+      await page.getByText("Switch input").click();
+
+      await expect(ledgerKeyXdrInput).toBeDisabled();
+      await expect(ledgerKeySelect).toBeEnabled();
+    });
+  });
 });

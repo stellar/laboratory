@@ -621,6 +621,17 @@
   }
 }
 
+.XdrLedgerKeyPicker {
+  .Button {
+    width: fit-content;
+  }
+
+  // Make checked item darker
+  .RadioPicker__item[data-disabled="true"] input[type="radio"]:checked + label {
+    --RadioPicker-color-background: var(--sds-clr-gray-06);
+  }
+}
+
 // Saved Transactions
 .SavedTransactions {
   &__name {

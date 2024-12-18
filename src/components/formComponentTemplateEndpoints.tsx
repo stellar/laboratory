@@ -32,6 +32,7 @@ type TemplateRenderProps = {
   error: string | undefined;
   onChange: (val: any) => void;
   isRequired?: boolean;
+  disabled?: boolean;
 };
 
 type TemplateRenderAssetProps = {
@@ -45,6 +46,7 @@ type TemplateRenderAssetProps = {
       | undefined,
   ) => void;
   isRequired?: boolean;
+  disabled?: boolean;
 };
 
 type TemplateRenderAssetMultiProps = {
@@ -96,6 +98,7 @@ export const formComponentTemplateEndpoints = (
             value={templ.value || ""}
             error={templ.error}
             onChange={templ.onChange}
+            disabled={templ.disabled}
           />
         ),
         validate: validate.getPublicKeyError,
@@ -116,6 +119,7 @@ export const formComponentTemplateEndpoints = (
             includeSingleLiquidityPoolShare={
               custom?.includeSingleLiquidityPoolShare
             }
+            disabled={templ.disabled}
           />
         ),
         validate: validate.getAssetError,
@@ -131,6 +135,7 @@ export const formComponentTemplateEndpoints = (
             value={templ.value || ""}
             error={templ.error}
             onChange={templ.onChange}
+            disabled={templ.disabled}
           />
         ),
         validate: validate.getAssetCodeError,
@@ -146,6 +151,7 @@ export const formComponentTemplateEndpoints = (
             value={templ.value || ""}
             error={templ.error}
             onChange={templ.onChange}
+            disabled={templ.disabled}
           />
         ),
         validate: validate.getPublicKeyError,
@@ -213,6 +219,7 @@ export const formComponentTemplateEndpoints = (
             value={templ.value || ""}
             error={templ.error}
             onChange={templ.onChange}
+            disabled={templ.disabled}
           />
         ),
         validate: null,
@@ -241,6 +248,7 @@ export const formComponentTemplateEndpoints = (
             value={templ.value || ""}
             error={templ.error}
             onChange={templ?.onChange}
+            disabled={templ.disabled}
           />
         ),
         validate: null,
@@ -251,6 +259,7 @@ export const formComponentTemplateEndpoints = (
           value: string | undefined;
           error: string | undefined;
           onChange: (val: any) => void;
+          disabled?: boolean;
         }) => (
           <TextPicker
             key={id}
@@ -260,6 +269,7 @@ export const formComponentTemplateEndpoints = (
             value={templ.value || ""}
             error={templ.error}
             onChange={templ.onChange}
+            disabled={templ.disabled}
           />
         ),
         validate: validate.getContractIdError,
@@ -301,6 +311,7 @@ export const formComponentTemplateEndpoints = (
           value: string | undefined;
           error: string | undefined;
           onChange: (val: any) => void;
+          disabled?: boolean;
         }) => (
           <TextPicker
             key={id}
@@ -309,6 +320,7 @@ export const formComponentTemplateEndpoints = (
             value={templ.value || ""}
             error={templ.error}
             onChange={templ.onChange}
+            disabled={templ.disabled}
           />
         ),
         validate: null,
@@ -397,6 +409,7 @@ export const formComponentTemplateEndpoints = (
           value: string | undefined;
           error: string | undefined;
           onChange: (val: any) => void;
+          disabled?: boolean;
         }) => (
           <Select
             key={id}
@@ -405,6 +418,7 @@ export const formComponentTemplateEndpoints = (
             label="Durability"
             value={templ.value || ""}
             onChange={templ.onChange}
+            disabled={templ.disabled}
           >
             <option value="">Select a durability</option>
             {[
@@ -454,6 +468,7 @@ export const formComponentTemplateEndpoints = (
           value: string | undefined;
           error: string | undefined;
           onChange: (val: any) => void;
+          disabled?: boolean;
         }) => (
           <Textarea
             fieldSize="md"
@@ -470,6 +485,7 @@ export const formComponentTemplateEndpoints = (
             }
             error={templ.error}
             onChange={templ.onChange}
+            disabled={templ.disabled}
           />
         ),
         validate: null,
@@ -532,6 +548,7 @@ export const formComponentTemplateEndpoints = (
             value={templ.value || ""}
             error={templ.error}
             onChange={templ.onChange}
+            disabled={templ.disabled}
           />
         ),
         validate: null,
@@ -547,6 +564,7 @@ export const formComponentTemplateEndpoints = (
             value={templ.value || ""}
             error={templ.error}
             onChange={templ.onChange}
+            disabled={templ.disabled}
           />
         ),
         validate: null,
@@ -624,6 +642,7 @@ export const formComponentTemplateEndpoints = (
             value={templ.value || ""}
             error={templ.error}
             onChange={templ.onChange}
+            disabled={templ.disabled}
           />
         ),
         validate: validate.getPublicKeyError,
@@ -829,6 +848,7 @@ export const formComponentTemplateEndpoints = (
             value={templ.value || ""}
             error={templ.error}
             onChange={templ.onChange}
+            disabled={templ.disabled}
           />
         ),
         validate: validate.getTransactionHashError,
@@ -846,6 +866,7 @@ export const formComponentTemplateEndpoints = (
             value={templ.value || ""}
             error={templ.error}
             onChange={templ.onChange}
+            disabled={templ.disabled}
           />
         ),
         validate: validate.getTransactionHashError,
