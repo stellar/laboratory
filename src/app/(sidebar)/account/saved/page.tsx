@@ -16,6 +16,7 @@ import { InputSideElement } from "@/components/InputSideElement";
 import { SavedItemTimestampAndDelete } from "@/components/SavedItemTimestampAndDelete";
 import { PageCard } from "@/components/layout/PageCard";
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
+import { SwitchNetworkButtons } from "@/components/SwitchNetworkButtons";
 
 import { localStorageSavedKeypairs } from "@/helpers/localStorageSavedKeypairs";
 import { arrayItem } from "@/helpers/arrayItem";
@@ -131,25 +132,10 @@ export default function SavedKeypairs() {
         </Text>
 
         <Box gap="sm" direction="row" wrap="wrap">
-          <Button
-            variant="tertiary"
-            size="sm"
-            onClick={() => {
-              getAndSetNetwork("futurenet");
-            }}
-          >
-            Switch to Futurenet
-          </Button>
-
-          <Button
-            variant="tertiary"
-            size="sm"
-            onClick={() => {
-              getAndSetNetwork("testnet");
-            }}
-          >
-            Switch to Testnet
-          </Button>
+          <SwitchNetworkButtons
+            includedNetworks={["futurenet", "testnet"]}
+            buttonSize="md"
+          />
         </Box>
       </Box>
     );

@@ -48,7 +48,7 @@ const NAV = [
 ];
 
 export const LayoutHeader = () => {
-  const { layoutMode } = useContext(WindowContext);
+  const { windowWidth } = useContext(WindowContext);
   const { setTheme } = useStore();
   const route = useRouter();
   const pathname = usePathname();
@@ -143,10 +143,10 @@ export const LayoutHeader = () => {
       <>
         <option value={Routes.ROOT}>Introduction</option>
 
-        {flattenFormattedNav.map((fn) => (
-          <optgroup key={fn.groupTitle} label={fn.groupTitle}>
+        {flattenFormattedNav.map((fn, groupIdx) => (
+          <optgroup key={`${fn.groupTitle}-${groupIdx}`} label={fn.groupTitle}>
             {fn.options.map((op) => (
-              <option key={op.value} value={op.value}>
+              <option key={`${fn.groupTitle}-${op.value}`} value={op.value}>
                 {op.label}
               </option>
             ))}
@@ -161,34 +161,53 @@ export const LayoutHeader = () => {
     setTheme(theme);
   };
 
-  if (layoutMode === "desktop") {
+  const renderSettingsDropdown = () => {
     return (
-      <div className="LabLayout__header">
-        <header className="LabLayout__header__main">
-          <ProjectLogo
-            title="Lab"
-            link="/"
-            customAnchor={<Link href="/" prefetch={true} />}
-          />
+      <FloaterDropdown
+        triggerEl={<IconButton icon={<Icon.Menu01 />} altText="Menu" />}
+        offset={14}
+      >
+        <>
+          <div className="LabLayout__header__dropdown__item">
+            <div className="LabLayout__header__dropdown__item__label">
+              <ConnectWallet />
+            </div>
+          </div>
 
-          <MainNav />
-
-          <div className="LabLayout__header__settings">
+          <DropdownItem label="Theme">
             <Hydration>
               <ThemeSwitch
                 storageKeyId={LOCAL_STORAGE_SAVED_THEME}
                 onActionEnd={renderTheme}
               />
             </Hydration>
-            <NetworkSelector />
-            <ConnectWallet />
-          </div>
-        </header>
-      </div>
+          </DropdownItem>
+
+          <DropdownItem
+            label="View documentation"
+            href="https://developers.stellar.org/"
+          />
+
+          <DropdownItem
+            label="Got product feedback?"
+            href="https://github.com/stellar/laboratory/issues"
+          />
+
+          <DropdownItem
+            label="GitHub"
+            href="https://github.com/stellar/laboratory"
+          />
+        </>
+      </FloaterDropdown>
     );
+  };
+
+  if (!windowWidth) {
+    return null;
   }
 
-  if (layoutMode === "mobile") {
+  // Mobile
+  if (windowWidth < 940) {
     return (
       <div className="LabLayout__header">
         <header className="LabLayout__header__main">
@@ -203,50 +222,62 @@ export const LayoutHeader = () => {
 
           <Box gap="md" direction="row" align="center">
             <NetworkSelector />
-
-            <FloaterDropdown
-              triggerEl={<IconButton icon={<Icon.Menu01 />} altText="Menu" />}
-              offset={14}
-            >
-              <>
-                <div className="LabLayout__header__dropdown__item">
-                  <div className="LabLayout__header__dropdown__item__label">
-                    <ConnectWallet />
-                  </div>
-                </div>
-
-                <DropdownItem label="Theme">
-                  <Hydration>
-                    <ThemeSwitch
-                      storageKeyId={LOCAL_STORAGE_SAVED_THEME}
-                      onActionEnd={renderTheme}
-                    />
-                  </Hydration>
-                </DropdownItem>
-
-                <DropdownItem
-                  label="View documentation"
-                  href="https://developers.stellar.org/"
-                />
-
-                <DropdownItem
-                  label="Got product feedback?"
-                  href="https://github.com/stellar/laboratory/issues"
-                />
-
-                <DropdownItem
-                  label="GitHub"
-                  href="https://github.com/stellar/laboratory"
-                />
-              </>
-            </FloaterDropdown>
+            {renderSettingsDropdown()}
           </Box>
         </header>
       </div>
     );
   }
 
-  return null;
+  // Show hamburger menu
+  if (windowWidth < 1230) {
+    return (
+      <div className="LabLayout__header">
+        <header className="LabLayout__header__main">
+          <ProjectLogo
+            title="Lab"
+            link="/"
+            customAnchor={<Link href="/" prefetch={true} />}
+          />
+
+          <MainNav excludeDocs={true} />
+
+          <div className="LabLayout__header__settings">
+            <Box gap="md" direction="row" align="center">
+              <NetworkSelector />
+              {renderSettingsDropdown()}
+            </Box>
+          </div>
+        </header>
+      </div>
+    );
+  }
+
+  // Desktop
+  return (
+    <div className="LabLayout__header">
+      <header className="LabLayout__header__main">
+        <ProjectLogo
+          title="Lab"
+          link="/"
+          customAnchor={<Link href="/" prefetch={true} />}
+        />
+
+        <MainNav />
+
+        <div className="LabLayout__header__settings">
+          <Hydration>
+            <ThemeSwitch
+              storageKeyId={LOCAL_STORAGE_SAVED_THEME}
+              onActionEnd={renderTheme}
+            />
+          </Hydration>
+          <NetworkSelector />
+          <ConnectWallet />
+        </div>
+      </header>
+    </div>
+  );
 };
 
 const DropdownItem = ({

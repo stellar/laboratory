@@ -178,6 +178,15 @@ export interface Store {
     resetXdr: () => void;
     resetJsonString: () => void;
   };
+
+  // Smart Contracts
+  smartContracts: {
+    explorer: {
+      contractId: string;
+    };
+    updateExplorerContractId: (contractId: string) => void;
+    resetExplorerContractId: () => void;
+  };
 }
 
 interface CreateStoreOptions {
@@ -253,6 +262,12 @@ const initXdrState = {
   blob: "",
   jsonString: "",
   type: XDR_TYPE_TRANSACTION_ENVELOPE,
+};
+
+const initSmartContractsState = {
+  explorer: {
+    contractId: "",
+  },
 };
 
 // Store
@@ -480,6 +495,7 @@ export const createStore = (options: CreateStoreOptions) =>
               state.transaction.feeBump = initTransactionState.feeBump;
             }),
         },
+        // XDR
         xdr: {
           ...initXdrState,
           updateXdrBlob: (blob: string) =>
@@ -503,6 +519,18 @@ export const createStore = (options: CreateStoreOptions) =>
             set((state) => {
               state.xdr.jsonString = initXdrState.jsonString;
               state.xdr.type = initXdrState.type;
+            }),
+        },
+        // Smart Contracts
+        smartContracts: {
+          ...initSmartContractsState,
+          updateExplorerContractId: (contractId) =>
+            set((state) => {
+              state.smartContracts.explorer.contractId = contractId;
+            }),
+          resetExplorerContractId: () =>
+            set((state) => {
+              state.smartContracts.explorer.contractId = "";
             }),
         },
       })),
@@ -548,6 +576,11 @@ export const createStore = (options: CreateStoreOptions) =>
               blob: true,
               jsonString: true,
               type: true,
+            },
+            smartContracts: {
+              explorer: {
+                contractId: true,
+              },
             },
           };
         },

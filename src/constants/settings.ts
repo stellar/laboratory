@@ -124,3 +124,5 @@ export const OPERATION_TRUSTLINE_CLEAR_FLAGS = [
 ];
 
 export const GITHUB_URL = "https://github.com/stellar/laboratory";
+export const STELLAR_EXPERT = "https://stellar.expert/explorer";
+export const STELLAR_EXPERT_API = "https://api.stellar.expert/explorer";

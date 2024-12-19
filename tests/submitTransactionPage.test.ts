@@ -1,3 +1,4 @@
+import { STELLAR_EXPERT } from "@/constants/settings";
 import { test, expect, Page } from "@playwright/test";
 
 test.describe("Submit Transaction Page", () => {
@@ -493,7 +494,7 @@ const testBlockExplorerLink = async ({
 
   // Assert the StellarExpert URL
   expect(newTabUrl).toBe(
-    `https://stellar.expert/explorer/${network?.toLowerCase()}/tx/${hash}`,
+    `${STELLAR_EXPERT}/${network?.toLowerCase()}/tx/${hash}`,
   );
 
   const [stellarChainPage] = await Promise.all([

@@ -69,6 +69,18 @@
     }
   }
 
+  .Link--external {
+    gap: pxToRem(4px);
+    align-items: center;
+
+    svg {
+      // GitHub icon
+      g[clip-path="url(#github_svg__a)"] path {
+        fill: currentColor !important;
+      }
+    }
+  }
+
   // ===========================================================================
   // Layout
   // ===========================================================================
