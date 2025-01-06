@@ -81,6 +81,61 @@
     }
   }
 
+  .LabTable {
+    --LabTable-grid-template-columns: 1fr;
+
+    &__container {
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    &__scroll {
+      overflow-x: auto;
+    }
+
+    &__table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-weight: var(--sds-fw-medium);
+      color: var(--sds-clr-gray-11);
+
+      tr[data-style="row"] {
+        display: grid;
+        grid-template-columns: var(--LabTable-grid-template-columns);
+      }
+
+      td,
+      th {
+        padding: pxToRem(8px) pxToRem(12px);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      th {
+        font-size: pxToRem(12px);
+        line-height: pxToRem(18px);
+        min-width: 100px;
+      }
+
+      td {
+        font-size: pxToRem(14px);
+        line-height: pxToRem(20px);
+
+        &[data-style="bold"] {
+          color: var(--sds-clr-gray-12);
+        }
+      }
+
+      tr:not(:last-child),
+      thead tr {
+        border-bottom: 1px solid var(--sds-clr-gray-06);
+      }
+    }
+  }
+
   // ===========================================================================
   // Layout
   // ===========================================================================
