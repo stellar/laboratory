@@ -135,7 +135,11 @@ export const VersionHistory = ({
       <Card noPadding={true}>
         <div className="LabTable__container">
           <div className="LabTable__scroll">
-            <table className="LabTable__table" style={customStyle}>
+            <table
+              className="LabTable__table"
+              style={customStyle}
+              data-testid="version-history-table"
+            >
               <thead>
                 <tr data-style="row" role="row">
                   {tableHeaders.map((th) => (
