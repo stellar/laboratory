@@ -60,6 +60,7 @@ export const Operations = () => {
 
   const [operationsError, setOperationsError] = useState<OperationError[]>([]);
   const [isSaveTxnModalVisible, setIsSaveTxnModalVisible] = useState(false);
+  const [isSorobanOperation, setIsSorobanOperation] = useState(false);
 
   const INITIAL_OPERATION: TxnOperation = {
     operation_type: "",
@@ -217,6 +218,14 @@ export const Operations = () => {
     // Not including getOperationsError()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [txnOperations, operationsError, setBuildOperationsError]);
+
+  useEffect(() => {
+    const isSorobanOp = txnOperations.some((op) =>
+      op.operation_type.includes("restore_footprint"),
+    );
+
+    setIsSorobanOperation(isSorobanOp);
+  }, [txnOperations]);
 
   const missingSelectedAssetFields = (
     param: string,
@@ -784,6 +793,13 @@ export const Operations = () => {
     return null;
   };
 
+  const renderSorobanNote = () => (
+    <Notification variant="warning" title="Only One Operation Allowed">
+      Note that Soroban transactions can only contain one operation per
+      transaction.
+    </Notification>
+  );
+
   const OperationTypeSelector = ({
     index,
     operationType,
@@ -886,7 +902,7 @@ export const Operations = () => {
           <option value="end_sponsoring_future_reserves">
             End Sponsoring Future Reserves
           </option>
-          <option value="restore_footprint">Restore Footprint</option>
+          <option value="restore_footprint">Restore Footprint (Soroban)</option>
           <option value="revoke_sponsorship">Revoke Sponsorship</option>
           <option value="clawback">Clawback</option>
           <option value="clawback_claimable_balance">
@@ -1176,6 +1192,10 @@ export const Operations = () => {
             ))}
           </>
 
+          <Box gap="sm" direction="row" align="center">
+            {isSorobanOperation ? renderSorobanNote() : null}
+          </Box>
+
           {/* Operations bottom buttons */}
           <Box
             gap="lg"
@@ -1188,13 +1208,16 @@ export const Operations = () => {
               <Button
                 size="md"
                 variant="tertiary"
-                disabled={true}
+                disabled={isSorobanOperation}
                 icon={<Icon.PlusCircle />}
                 onClick={() => {
+                  // classic operation
                   updateOptionParamAndError({
                     type: "add",
                     item: INITIAL_OPERATION,
                   });
+
+                  // todo: soroban operation
                 }}
               >
                 Add Operation

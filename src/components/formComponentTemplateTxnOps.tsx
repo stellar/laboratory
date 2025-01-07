@@ -271,6 +271,25 @@ export const formComponentTemplateTxnOps = ({
         ),
         validate: null,
       };
+    case "contract":
+      return {
+        render: (templ: {
+          value: string | undefined;
+          error: string | undefined;
+          onChange: (val: any) => void;
+        }) => (
+          <TextPicker
+            key={id}
+            id={id}
+            label="Contract ID"
+            placeholder="Ex: CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC"
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        validate: validate.getContractIdError,
+      };
     case "data_name":
       return {
         render: (templ: TemplateRenderProps) => (
@@ -373,6 +392,23 @@ export const formComponentTemplateTxnOps = ({
             infoLink="https://developers.stellar.org/docs/learn/encyclopedia/inflation"
           />
         ),
+        validate: validate.getPublicKeyError,
+      };
+    case "key_xdr":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <TextPicker
+            key={id}
+            id={id}
+            label="(Storage) Key in ScVal XDR Type"
+            placeholder="Ex: AAAAEAAAAAEAAAACAAAADwAAAAdDb3VudGVyAAAAABIAAAAAAAAAAHkOSeQVxNP4zqcstl6AA+PwtKrnRwrp7+LGt4xqEnTC"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
+        // validate: validate.getXdrError,
         validate: validate.getPublicKeyError,
       };
     case "limit":

@@ -264,7 +264,7 @@ export const formComponentTemplateEndpoints = (
           <TextPicker
             key={id}
             id={id}
-            label="Contract"
+            label="Contract ID"
             placeholder="Ex: CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC"
             value={templ.value || ""}
             error={templ.error}
@@ -461,33 +461,33 @@ export const formComponentTemplateEndpoints = (
         ),
         validate: null,
       };
-    // contract key
-    case "key":
+    // contract data key
+    case "storageKey":
       return {
         render: (templ: {
           value: string | undefined;
           error: string | undefined;
           onChange: (val: any) => void;
-          disabled?: boolean;
-        }) => (
-          <Textarea
-            fieldSize="md"
-            key={id}
-            id={id}
-            label="Key"
-            placeholder="Ex: 67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9"
-            // @TODO we should display an input for each value
-            // hotfix: sanitizing value from backlashes and extra quotes
-            value={
-              JSON.stringify(templ.value)
-                .replace(/\\/g, "")
-                .replace(/^"+|"+$/g, "") || ""
-            }
-            error={templ.error}
-            onChange={templ.onChange}
-            disabled={templ.disabled}
-          />
-        ),
+        }) => {
+          return (
+            <Textarea
+              fieldSize="md"
+              key={id}
+              id={id}
+              label="Key (Storage Key)"
+              placeholder='ex: {"string":"Counter"}'
+              // @TODO we should display an input for each value
+              // hotfix: sanitizing value from backlashes and extra quotes
+              value={
+                JSON.stringify(templ.value)
+                  .replace(/\\/g, "")
+                  .replace(/^"+|"+$/g, "") || ""
+              }
+              error={templ.error}
+              onChange={templ.onChange}
+            />
+          );
+        },
         validate: null,
       };
     case "ledger":

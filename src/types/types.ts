@@ -259,7 +259,7 @@ export type FiltersObject = {
   topics: string[];
 };
 
-export type XdrType = "TransactionEnvelope" | "LedgerKey";
+export type XdrType = "TransactionEnvelope" | "LedgerKey" | "ScVal";
 
 export type LedgerKeyType =
   | "account"

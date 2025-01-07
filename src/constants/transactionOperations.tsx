@@ -338,10 +338,17 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
       "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#clawback",
     params: ["asset", "from", "amount"],
     requiredParams: ["asset", "from", "amount"],
+  },
+  restore_footprint: {
+    label: "Restore Footprint",
+    description:
+      "Make archived Soroban smart contract entries accessible again by restoring them.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#restore-footprint",
+    params: ["contract", "key_xdr"],
+    requiredParams: ["contract", "key_xdr"],
     custom: {
-      asset: {
-        includeNative: false,
-      },
+      isSorobanTx: true,
     },
   },
   revoke_sponsorship: {
