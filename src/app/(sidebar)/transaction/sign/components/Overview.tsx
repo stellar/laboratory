@@ -338,7 +338,13 @@ export const Overview = () => {
           );
 
           signature = ledgerSig ?? [];
+
           errorMsg = error || "";
+
+          if (errorMsg.includes("0x6511")) {
+            errorMsg =
+              "Please select Stellar app on the Ledger device and try again";
+          }
         }
 
         if (selectedHardware === "ledger_hash") {
