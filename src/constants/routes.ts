@@ -64,6 +64,7 @@ export enum Routes {
   ENDPOINTS_GET_HEALTH = "/endpoints/rpc/get-health",
   ENDPOINTS_GET_LATEST_LEDGER = "/endpoints/rpc/get-latest-ledger",
   ENDPOINTS_GET_LEDGER_ENTRIES = "/endpoints/rpc/get-ledger-entries",
+  ENDPOINTS_GET_LEDGERS = "/endpoints/rpc/get-ledgers",
   ENDPOINTS_GET_NETWORK = "/endpoints/rpc/get-network",
   ENDPOINTS_GET_TRANSACTION = "/endpoints/rpc/get-transaction",
   ENDPOINTS_GET_TRANSACTIONS = "/endpoints/rpc/get-transactions",

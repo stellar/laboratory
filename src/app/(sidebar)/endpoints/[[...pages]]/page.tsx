@@ -208,6 +208,20 @@ export default function Endpoints() {
         };
       }
 
+      case Routes.ENDPOINTS_GET_LEDGERS: {
+        return {
+          ...defaultRpcRequestBody,
+          params: {
+            startLedger: Number(params.startLedger) || null,
+            pagination: sanitizeObject({
+              cursor: params.cursor,
+              limit: Number(params.limit) || undefined,
+            }),
+            xdrFormat: params.xdrFormat || "base64",
+          },
+        };
+      }
+
       case Routes.ENDPOINTS_GET_TRANSACTION: {
         return {
           ...defaultRpcRequestBody,
@@ -362,6 +376,15 @@ export default function Endpoints() {
         });
       }
     });
+
+    // RPC Cursor field can be used instead of the required Start Ledger Sequence
+    if (
+      isRpcEndpoint &&
+      requiredFields.includes("startLedger") &&
+      !params.startLedger
+    ) {
+      isValidReqFields = Boolean(params.cursor);
+    }
 
     return (
       isValidReqAssetFields && isValidReqFields && isValid && isAssetMultiValid
