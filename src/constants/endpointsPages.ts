@@ -100,6 +100,20 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
       },
     },
     {
+      route: Routes.ENDPOINTS_GET_LEDGERS,
+      label: "getLedgers",
+      form: {
+        docsUrl:
+          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getLedgers",
+        docsLabel: "getLedgers",
+        endpointUrlTemplate: "{?startLedger,cursor,limit,xdrFormat}",
+        requestMethod: "POST",
+        requiredParams: "startLedger",
+        rpcMethod: "getLedgers",
+        isStreaming: false,
+      },
+    },
+    {
       route: Routes.ENDPOINTS_GET_NETWORK,
       label: "getNetwork",
       form: {
