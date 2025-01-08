@@ -65,7 +65,13 @@ export default function ContractExplorer() {
   };
 
   const renderContractInvokeContent = () => {
-    return <Card>Coming soon</Card>;
+    return (
+      <Card>
+        <Text as="div" size="sm">
+          Coming soon
+        </Text>
+      </Card>
+    );
   };
 
   const renderButtons = () => {

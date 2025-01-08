@@ -383,3 +383,10 @@ export type ContractInfoApiResponse = {
     function: string;
   }[];
 };
+
+export type ContractVersionHistoryResponseItem = {
+  operation: string;
+  paging_token: string;
+  ts: number;
+  wasm: string;
+};

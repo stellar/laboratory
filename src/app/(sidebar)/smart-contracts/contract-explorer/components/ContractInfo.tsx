@@ -1,10 +1,16 @@
-import { Avatar, Card, Icon, Logo } from "@stellar/design-system";
+import { useState } from "react";
+import { Avatar, Badge, Card, Icon, Logo, Text } from "@stellar/design-system";
+
 import { Box } from "@/components/layout/Box";
 import { SdsLink } from "@/components/SdsLink";
+import { TabView } from "@/components/TabView";
 import { formatEpochToDate } from "@/helpers/formatEpochToDate";
 import { formatNumber } from "@/helpers/formatNumber";
 import { stellarExpertAccountLink } from "@/helpers/stellarExpertAccountLink";
+
 import { ContractInfoApiResponse, NetworkType } from "@/types/types";
+
+import { VersionHistory } from "./VersionHistory";
 
 export const ContractInfo = ({
   infoData,
@@ -13,6 +19,8 @@ export const ContractInfo = ({
   infoData: ContractInfoApiResponse;
   networkId: NetworkType;
 }) => {
+  const [activeTab, setActiveTab] = useState("contract-version-history");
+
   type ContractExplorerInfoField = {
     id: string;
     label: string;
@@ -85,9 +93,9 @@ export const ContractInfo = ({
             key={field.id}
             label={field.label}
             value={
-              infoData.validation?.repository ? (
+              infoData.validation?.repository && infoData.validation?.commit ? (
                 <SdsLink
-                  href={infoData.validation.repository}
+                  href={`${infoData.validation.repository}/tree/${infoData.validation.commit}`}
                   addlClassName="Link--external"
                 >
                   <Logo.Github />
@@ -163,15 +171,80 @@ export const ContractInfo = ({
     }
   };
 
+  const ComingSoonText = () => (
+    <Text as="div" size="sm">
+      Coming soon
+    </Text>
+  );
+
   return (
-    <Card>
-      <Box
-        gap="xs"
-        addlClassName="ContractInfo"
-        data-testid="contract-info-container"
-      >
-        <>{INFO_FIELDS.map((f) => renderInfoField(f))}</>
-      </Box>
-    </Card>
+    <Box gap="lg">
+      <Card>
+        <Box
+          gap="xs"
+          addlClassName="ContractInfo"
+          data-testid="contract-info-container"
+        >
+          <>{INFO_FIELDS.map((f) => renderInfoField(f))}</>
+        </Box>
+      </Card>
+
+      <Card>
+        <Box gap="lg" data-testid="contract-info-contract-container">
+          <Box gap="sm" direction="row" align="center">
+            <Text as="h2" size="md" weight="semi-bold">
+              Contract
+            </Text>
+
+            {infoData.validation?.status === "verified" ? (
+              <Badge variant="success" icon={<Icon.CheckCircle />}>
+                Verified
+              </Badge>
+            ) : (
+              <Badge variant="error" icon={<Icon.XCircle />}>
+                Unverified
+              </Badge>
+            )}
+          </Box>
+
+          <TabView
+            tab1={{
+              id: "contract-bindings",
+              label: "Bindings",
+              content: <ComingSoonText />,
+            }}
+            tab2={{
+              id: "contract-contract-info",
+              label: "Contract Info",
+              content: <ComingSoonText />,
+            }}
+            tab3={{
+              id: "contract-source-code",
+              label: "Source Code",
+              content: <ComingSoonText />,
+            }}
+            tab4={{
+              id: "contract-contract-storage",
+              label: "Contract Storage",
+              content: <ComingSoonText />,
+            }}
+            tab5={{
+              id: "contract-version-history",
+              label: "Version History",
+              content: (
+                <VersionHistory
+                  contractId={infoData.contract}
+                  networkId={networkId}
+                />
+              ),
+            }}
+            activeTabId={activeTab}
+            onTabChange={(tabId) => {
+              setActiveTab(tabId);
+            }}
+          />
+        </Box>
+      </Card>
+    </Box>
   );
 };

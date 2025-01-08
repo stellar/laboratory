@@ -7,11 +7,13 @@
   display: flex;
   align-items: center;
   gap: pxToRem(8px);
+  flex-wrap: wrap;
 
   .Tab {
     font-size: pxToRem(14px);
     line-height: pxToRem(20px);
     font-weight: var(--sds-fw-medium);
+    white-space: nowrap;
     color: var(--Tabs-default-text);
     background-color: var(--Tabs-default-background);
     border-radius: pxToRem(6px);
