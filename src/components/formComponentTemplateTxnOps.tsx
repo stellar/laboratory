@@ -1,4 +1,5 @@
 import { JSX } from "react";
+import { Select } from "@stellar/design-system";
 
 import { Box } from "@/components/layout/Box";
 import { SdsLink } from "@/components/SdsLink";
@@ -346,6 +347,51 @@ export const formComponentTemplateTxnOps = ({
         ),
         validate: validate.getPublicKeyError,
       };
+    case "durability":
+      return {
+        render: (templ: {
+          value: string | undefined;
+          error: string | undefined;
+          onChange: (val: any) => void;
+        }) => (
+          <Select
+            key={id}
+            id={`${id}-type`}
+            fieldSize="md"
+            label="Durability"
+            value={templ.value || ""}
+            onChange={templ.onChange}
+            note="Only persistent and instance entries can be restored."
+          >
+            {/* @todo also add a temporary but disabled 
+            https://github.com/stellar/js-stellar-base/blob/master/src/generated/curr_generated.js#L1887-L1891 */}
+            <option value="">Select a durability</option>
+            {[{ id: "persistent", label: "Persistent" }].map((f) => (
+              <option key={f.id} value={f.id}>
+                {f.label}
+              </option>
+            ))}
+          </Select>
+        ),
+        validate: null,
+      };
+    case "extend_ttl_to": {
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <PositiveIntPicker
+            key={id}
+            id={id}
+            label={custom?.label || "Extend To"}
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+            note={custom?.note}
+          />
+        ),
+        validate: validate.getPositiveIntError,
+      };
+    }
     case "from":
       return {
         render: (templ: TemplateRenderProps) => (
@@ -400,16 +446,17 @@ export const formComponentTemplateTxnOps = ({
           <TextPicker
             key={id}
             id={id}
-            label="(Storage) Key in ScVal XDR Type"
+            label="Key ScVal in XDR"
             placeholder="Ex: AAAAEAAAAAEAAAACAAAADwAAAAdDb3VudGVyAAAAABIAAAAAAAAAAHkOSeQVxNP4zqcstl6AA+PwtKrnRwrp7+LGt4xqEnTC"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={templ.value || ""}
             error={templ.error}
             onChange={templ.onChange}
+            // @TODO add a link of doc that describes how to convert ScVal to XDR
+            // infoLink=""
           />
         ),
-        // validate: validate.getXdrError,
-        validate: validate.getPublicKeyError,
+        validate: null,
       };
     case "limit":
       return {

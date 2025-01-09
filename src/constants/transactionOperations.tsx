@@ -339,16 +339,45 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     params: ["asset", "from", "amount"],
     requiredParams: ["asset", "from", "amount"],
   },
+  extend_footprint_ttl: {
+    label: "Extend Footprint TTL",
+    description:
+      "Extend the time to live (TTL) of entries for Soroban smart contracts. This operation extends the TTL of the entries specified in the readOnly footprint of the transaction so that they will live at least until the extendTo ledger sequence number is reached.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#extend-footprint-ttl",
+    params: [
+      "contract",
+      "key_xdr",
+      "extend_ttl_to",
+      "durability",
+      "resource_fee",
+    ],
+    requiredParams: [
+      "contract",
+      "key_xdr",
+      "extend_ttl_to",
+      "durability",
+      "resource_fee",
+    ],
+    defaultParams: {
+      durability: "persistent",
+    },
+    custom: {
+      extend_ttl_to: {
+        note: "The ledger sequence number the entries will live until.",
+      },
+    },
+  },
   restore_footprint: {
     label: "Restore Footprint",
     description:
       "Make archived Soroban smart contract entries accessible again by restoring them.",
     docsUrl:
       "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#restore-footprint",
-    params: ["contract", "key_xdr"],
-    requiredParams: ["contract", "key_xdr"],
-    custom: {
-      isSorobanTx: true,
+    params: ["contract", "key_xdr", "durability", "resource_fee"],
+    requiredParams: ["contract", "key_xdr", "durability", "resource_fee"],
+    defaultParams: {
+      durability: "persistent",
     },
   },
   revoke_sponsorship: {

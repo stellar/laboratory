@@ -462,7 +462,7 @@ export const formComponentTemplateEndpoints = (
         validate: null,
       };
     // contract data key
-    case "storageKey":
+    case "entryKey":
       return {
         render: (templ: {
           value: string | undefined;
@@ -474,8 +474,8 @@ export const formComponentTemplateEndpoints = (
               fieldSize="md"
               key={id}
               id={id}
-              label="Key (Storage Key)"
-              placeholder='ex: {"string":"Counter"}'
+              label="Entry Key"
+              placeholder='ex: {"symbol":"Counter"}'
               // @TODO we should display an input for each value
               // hotfix: sanitizing value from backlashes and extra quotes
               value={

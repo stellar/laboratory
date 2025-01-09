@@ -82,7 +82,7 @@ const ledgerKeyFields: {
   {
     id: "contract_data",
     label: "Contract Data",
-    templates: "contract,storageKey,durability",
+    templates: "contract,entryKey,durability",
   },
   {
     id: "contract_code",
