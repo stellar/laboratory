@@ -5,7 +5,7 @@ import { ContractVersionHistoryResponseItem, NetworkType } from "@/types/types";
 /**
  * StellarExpert API to get smart contract’s version history
  */
-export const useSEContracVersionHistory = ({
+export const useSEContractVersionHistory = ({
   networkId,
   contractId,
 }: {
@@ -13,7 +13,7 @@ export const useSEContracVersionHistory = ({
   contractId: string;
 }) => {
   const query = useQuery<ContractVersionHistoryResponseItem[]>({
-    queryKey: ["useSEContracVersionHistory", networkId, contractId],
+    queryKey: ["useSEContractVersionHistory", networkId, contractId],
     queryFn: async () => {
       // Not supported networks
       if (["futurenet", "custom"].includes(networkId)) {
