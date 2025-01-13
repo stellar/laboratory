@@ -96,4 +96,15 @@
       }
     }
   }
+
+  &__pagination {
+    background-color: var(--sds-clr-gray-01);
+    border-radius: pxToRem(4px);
+    border: 1px solid var(--sds-clr-gray-06);
+    padding: pxToRem(3px) pxToRem(8px);
+    font-size: pxToRem(12px);
+    line-height: pxToRem(18px);
+    font-weight: var(--sds-fw-semi-bold);
+    color: var(--sds-clr-gray-12);
+  }
 }

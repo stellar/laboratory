@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Card, Icon } from "@stellar/design-system";
+import { useEffect, useState } from "react";
+import { Button, Card, Icon } from "@stellar/design-system";
 import { Box } from "@/components/layout/Box";
 import { DataTableCell, DataTableHeader, SortDirection } from "@/types/types";
 
@@ -18,8 +18,20 @@ export const DataTable = <T,>({
   tableData: T[];
   formatDataRow: (item: T) => DataTableCell[];
 }) => {
+  const PAGE_SIZE = 10;
+  const tableDataSize = tableData.length;
+
+  // Sort by
   const [sortById, setSortById] = useState("");
   const [sortByDir, setSortByDir] = useState<SortDirection>("default");
+
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPageCount, setTotalPageCount] = useState(1);
+
+  useEffect(() => {
+    setTotalPageCount(Math.ceil(tableDataSize / PAGE_SIZE));
+  }, [tableDataSize]);
 
   const getSortByProps = (th: DataTableHeader) => {
     if (th.isSortable) {
@@ -52,11 +64,13 @@ export const DataTable = <T,>({
 
     setSortById(headerId);
     setSortByDir(sortDir);
+    setCurrentPage(1);
   };
 
   const tableRowsData = (): DataTableCell[][] => {
     let sortedData = [...tableData];
 
+    // Sort
     if (sortById) {
       if (["asc", "desc"].includes(sortByDir)) {
         // Asc
@@ -74,12 +88,26 @@ export const DataTable = <T,>({
     return sortedData.map(formatDataRow);
   };
 
+  const paginateData = (data: DataTableCell[][]): DataTableCell[][] => {
+    if (!data || data.length === 0) {
+      return [];
+    }
+
+    const startIndex = Math.max(currentPage - 1, 0) * PAGE_SIZE;
+    const endIndex = startIndex + PAGE_SIZE;
+
+    return data.slice(startIndex, endIndex);
+  };
+
   const customStyle = {
     "--DataTable-grid-template-columns": cssGridTemplateColumns,
   } as React.CSSProperties;
 
+  const displayData = paginateData(tableRowsData());
+
   return (
     <Box gap="md">
+      {/* Table */}
       <Card noPadding={true}>
         <div className="DataTable__container">
           <div className="DataTable__scroll">
@@ -104,7 +132,7 @@ export const DataTable = <T,>({
                 </tr>
               </thead>
               <tbody>
-                {tableRowsData().map((row, rowIdx) => {
+                {displayData.map((row, rowIdx) => {
                   const rowKey = `${tableId}-row-${rowIdx}`;
 
                   return (
@@ -131,6 +159,55 @@ export const DataTable = <T,>({
           </div>
         </div>
       </Card>
+
+      <Box gap="lg" direction="row" align="center" justify="end">
+        {/* Pagination */}
+        <Box gap="xs" direction="row" align="center">
+          <Button
+            variant="tertiary"
+            size="sm"
+            onClick={() => {
+              setCurrentPage(1);
+            }}
+            disabled={currentPage === 1}
+          >
+            First
+          </Button>
+
+          <Button
+            variant="tertiary"
+            size="sm"
+            icon={<Icon.ArrowLeft />}
+            onClick={() => {
+              setCurrentPage(currentPage - 1);
+            }}
+            disabled={currentPage === 1}
+          ></Button>
+
+          <div className="DataTable__pagination">{`Page ${currentPage} of ${totalPageCount}`}</div>
+
+          <Button
+            variant="tertiary"
+            size="sm"
+            icon={<Icon.ArrowRight />}
+            onClick={() => {
+              setCurrentPage(currentPage + 1);
+            }}
+            disabled={currentPage === totalPageCount}
+          ></Button>
+
+          <Button
+            variant="tertiary"
+            size="sm"
+            onClick={() => {
+              setCurrentPage(totalPageCount);
+            }}
+            disabled={currentPage === totalPageCount}
+          >
+            Last
+          </Button>
+        </Box>
+      </Box>
     </Box>
   );
 };

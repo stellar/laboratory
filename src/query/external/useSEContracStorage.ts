@@ -6,10 +6,12 @@ import { ContractStorageResponseItem, NetworkType } from "@/types/types";
  * StellarExpert API to get smart contract’s storage data
  */
 export const useSEContractStorage = ({
+  isActive,
   networkId,
   contractId,
   totalEntriesCount,
 }: {
+  isActive: boolean;
   networkId: NetworkType;
   contractId: string;
   totalEntriesCount: number | undefined;
@@ -71,7 +73,9 @@ export const useSEContractStorage = ({
         throw `Something went wrong. ${e}`;
       }
     },
-    enabled: Boolean(networkId && contractId),
+    enabled: Boolean(isActive && networkId && contractId),
+    // Keep data for 30 seconds
+    staleTime: 1000 * 30,
   });
 
   return query;

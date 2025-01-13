@@ -14,10 +14,12 @@ import { capitalizeString } from "@/helpers/capitalizeString";
 import { ContractStorageResponseItem, NetworkType } from "@/types/types";
 
 export const ContractStorage = ({
+  isActive,
   contractId,
   networkId,
   totalEntriesCount,
 }: {
+  isActive: boolean;
   contractId: string;
   networkId: NetworkType;
   totalEntriesCount: number | undefined;
@@ -28,6 +30,7 @@ export const ContractStorage = ({
     isLoading: isStorageLoading,
     isFetching: isStorageFetching,
   } = useSEContractStorage({
+    isActive,
     networkId,
     contractId,
     totalEntriesCount,

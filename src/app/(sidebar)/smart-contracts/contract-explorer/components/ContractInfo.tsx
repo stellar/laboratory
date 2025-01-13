@@ -28,7 +28,16 @@ export const ContractInfo = ({
   infoData: ContractInfoApiResponse;
   networkId: NetworkType;
 }) => {
-  const [activeTab, setActiveTab] = useState("contract-version-history");
+  type ContractTabId =
+    | "contract-bindings"
+    | "contract-contract-info"
+    | "contract-source-code"
+    | "contract-contract-storage"
+    | "contract-version-history";
+
+  const [activeTab, setActiveTab] = useState<ContractTabId>(
+    "contract-version-history",
+  );
 
   type ContractExplorerInfoField = {
     id: string;
@@ -242,6 +251,7 @@ export const ContractInfo = ({
               label: "Contract Storage",
               content: (
                 <ContractStorage
+                  isActive={activeTab === "contract-contract-storage"}
                   contractId={infoData.contract}
                   networkId={networkId}
                   totalEntriesCount={infoData.storage_entries}
@@ -253,6 +263,7 @@ export const ContractInfo = ({
               label: "Version History",
               content: (
                 <VersionHistory
+                  isActive={activeTab === "contract-version-history"}
                   contractId={infoData.contract}
                   networkId={networkId}
                 />
@@ -260,7 +271,7 @@ export const ContractInfo = ({
             }}
             activeTabId={activeTab}
             onTabChange={(tabId) => {
-              setActiveTab(tabId);
+              setActiveTab(tabId as ContractTabId);
             }}
           />
         </Box>

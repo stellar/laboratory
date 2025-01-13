@@ -10,9 +10,11 @@ import { formatEpochToDate } from "@/helpers/formatEpochToDate";
 import { ContractVersionHistoryResponseItem, NetworkType } from "@/types/types";
 
 export const VersionHistory = ({
+  isActive,
   contractId,
   networkId,
 }: {
+  isActive: boolean;
   contractId: string;
   networkId: NetworkType;
 }) => {
@@ -22,6 +24,7 @@ export const VersionHistory = ({
     isLoading: isVersionHistoryLoading,
     isFetching: isVersionHistoryFetching,
   } = useSEContractVersionHistory({
+    isActive,
     networkId,
     contractId,
   });
