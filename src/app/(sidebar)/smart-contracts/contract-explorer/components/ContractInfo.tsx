@@ -28,7 +28,7 @@ export const ContractInfo = ({
   infoData: ContractInfoApiResponse;
   networkId: NetworkType;
 }) => {
-  const [activeTab, setActiveTab] = useState("contract-contract-storage");
+  const [activeTab, setActiveTab] = useState("contract-version-history");
 
   type ContractExplorerInfoField = {
     id: string;
