@@ -15,7 +15,6 @@ import {
   Network,
   MuxedAccount,
   TxnOperation,
-  TxnSorobanOperation,
   OpBuildingError,
   ThemeColorType,
 } from "@/types/types";
@@ -124,7 +123,7 @@ export interface Store {
       };
       // soroban
       soroban: {
-        operation: TxnSorobanOperation;
+        operation: TxnOperation;
         xdr: string;
       };
     };
@@ -160,7 +159,7 @@ export interface Store {
     setBuildOperationsError: (error: OpBuildingError[]) => void;
     resetBuildParams: () => void;
     // [Transaction] Build Soroban Transaction actions
-    updateSorobanBuildOperation: (operation: TxnSorobanOperation) => void;
+    updateSorobanBuildOperation: (operation: TxnOperation) => void;
     updateSorobanBuildXdr: (xdr: string) => void;
     // [Transaction] Both Classic & Soroban Transaction actions
     resetBuild: () => void;
