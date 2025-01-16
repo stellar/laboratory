@@ -160,7 +160,7 @@ export interface Store {
     setBuildOperationsError: (error: OpBuildingError[]) => void;
     resetBuildParams: () => void;
     // [Transaction] Build Soroban Transaction actions
-    updateSorobanBuildOperation: (operation: TxnOperation) => void;
+    updateSorobanBuildOperation: (operation: TxnSorobanOperation) => void;
     updateSorobanBuildXdr: (xdr: string) => void;
     // [Transaction] Both Classic & Soroban Transaction actions
     resetBuild: () => void;
@@ -241,21 +241,12 @@ const initTransactionState = {
       operations: false,
     },
     soroban: {
-      params: initTransactionParamsState,
       operation: {
         operation_type: "",
         params: {},
         source_account: "",
       },
-      error: {
-        params: [],
-        operations: [],
-      },
       xdr: "",
-      isValid: {
-        params: false,
-        operations: false,
-      },
     },
   },
   sign: {
@@ -564,7 +555,7 @@ export const createStore = (options: CreateStoreOptions) =>
         // Smart Contracts
         smartContracts: {
           ...initSmartContractsState,
-          updateExplorerContractId: (contractId) =>
+          updateExplorerContractId: (contractId: string) =>
             set((state) => {
               state.smartContracts.explorer.contractId = contractId;
             }),
