@@ -1,15 +1,16 @@
 import { Loader, Text } from "@stellar/design-system";
-import { scValToNative, xdr } from "@stellar/stellar-sdk";
-import { stringify } from "lossless-json";
 
 import { ErrorText } from "@/components/ErrorText";
 import { Box } from "@/components/layout/Box";
 import { DataTable } from "@/components/DataTable";
+import { ScValPrettyJson } from "@/components/ScValPrettyJson";
 
 import { useSEContractStorage } from "@/query/external/useSEContracStorage";
 import { formatEpochToDate } from "@/helpers/formatEpochToDate";
 import { formatNumber } from "@/helpers/formatNumber";
 import { capitalizeString } from "@/helpers/capitalizeString";
+
+import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
 import { ContractStorageResponseItem, NetworkType } from "@/types/types";
 
@@ -24,6 +25,8 @@ export const ContractStorage = ({
   networkId: NetworkType;
   totalEntriesCount: number | undefined;
 }) => {
+  const isXdrInit = useIsXdrInit();
+
   const {
     data: storageData,
     error: storageError,
@@ -35,6 +38,7 @@ export const ContractStorage = ({
     contractId,
     totalEntriesCount,
   });
+
   // Loading, error, and no data states
   if (isStorageLoading || isStorageFetching) {
     return (
@@ -51,32 +55,14 @@ export const ContractStorage = ({
   if (!storageData || storageData.length === 0) {
     return (
       <Text as="div" size="sm">
-        No version history
+        No contract storage
       </Text>
     );
   }
 
-  const formatScv = (xdrString: string) => {
-    // TODO: handle formatting
-    try {
-      const scv = xdr.ScVal.fromXDR(xdrString, "base64");
-
-      // TODO: handle instance
-      const res = scValToNative(scv);
-
-      if (typeof res === "object") {
-        return stringify(res);
-      }
-
-      return res;
-    } catch (e: any) {
-      return xdrString;
-    }
-  };
-
   return (
     <DataTable
-      tableId="contract-version-history"
+      tableId="contract-storage"
       tableData={storageData}
       tableHeaders={[
         { id: "key", value: "Key", isSortable: false },
@@ -86,8 +72,20 @@ export const ContractStorage = ({
         { id: "updated", value: "Updated", isSortable: true },
       ]}
       formatDataRow={(vh: ContractStorageResponseItem) => [
-        { value: <div>{formatScv(vh.key)}</div> },
-        { value: <div>{formatScv(vh.value)}</div> },
+        {
+          value: (
+            <div className="CodeBox">
+              <ScValPrettyJson xdrString={vh.key} isReady={isXdrInit} />
+            </div>
+          ),
+        },
+        {
+          value: (
+            <div className="CodeBox">
+              <ScValPrettyJson xdrString={vh.value} isReady={isXdrInit} />
+            </div>
+          ),
+        },
         { value: capitalizeString(vh.durability) },
         { value: formatNumber(vh.ttl) },
         { value: formatEpochToDate(vh.updated, "short") || "-" },

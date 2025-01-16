@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { STELLAR_EXPERT_API } from "@/constants/settings";
+import { getStellarExpertNetwork } from "@/helpers/getStellarExpertNetwork";
 import { ContractStorageResponseItem, NetworkType } from "@/types/types";
 
 /**
@@ -24,12 +25,11 @@ export const useSEContractStorage = ({
         return null;
       }
 
-      // Not supported networks
-      if (["futurenet", "custom"].includes(networkId)) {
+      const network = getStellarExpertNetwork(networkId);
+
+      if (!network) {
         return null;
       }
-
-      const network = networkId === "mainnet" ? "public" : "testnet";
 
       let allRecords: ContractStorageResponseItem[] = [];
 
@@ -44,7 +44,7 @@ export const useSEContractStorage = ({
         }
 
         const response = await fetch(
-          `${STELLAR_EXPERT_API}/${network}/contract-data/${contractId}?${searchParams.toString()}}`,
+          `${STELLAR_EXPERT_API}/${network}/contract-data/${contractId}?${searchParams.toString()}`,
         );
 
         const responseJson = await response.json();
@@ -60,13 +60,10 @@ export const useSEContractStorage = ({
       };
 
       try {
-        // TODO: put this back once cursor works
-        // while (allRecords.length < totalEntriesCount) {
-        //   const lastRecord = allRecords.slice(-1)[0];
-        //   await fetchData(lastRecord?.paging_token);
-        // }
-
-        await fetchData();
+        while (allRecords.length < totalEntriesCount) {
+          const lastRecord = allRecords.slice(-1)[0];
+          await fetchData(lastRecord?.paging_token);
+        }
 
         return allRecords;
       } catch (e: any) {

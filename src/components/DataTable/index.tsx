@@ -18,7 +18,7 @@ export const DataTable = <T,>({
   tableData: T[];
   formatDataRow: (item: T) => DataTableCell[];
 }) => {
-  const PAGE_SIZE = 10;
+  const PAGE_SIZE = 20;
   const tableDataSize = tableData.length;
 
   // Sort by
@@ -161,6 +161,8 @@ export const DataTable = <T,>({
       </Card>
 
       <Box gap="lg" direction="row" align="center" justify="end">
+        {/* TODO: add color legend */}
+
         {/* Pagination */}
         <Box gap="xs" direction="row" align="center">
           <Button

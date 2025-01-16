@@ -81,6 +81,15 @@
     }
   }
 
+  .CodeBox {
+    background-color: var(--sds-clr-gray-02);
+    padding: pxToRem(8px);
+    border-radius: pxToRem(8px);
+    white-space: normal;
+    word-break: break-word;
+    height: 100%;
+  }
+
   // ===========================================================================
   // Layout
   // ===========================================================================
