@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Address,
-  NetworkError,
-  rpc as StellarRpc,
-  xdr,
-} from "@stellar/stellar-sdk";
+import { NetworkError, rpc as StellarRpc, xdr } from "@stellar/stellar-sdk";
 import { TransactionBuildParams } from "@/store/createStore";
 
 // =============================================================================
@@ -231,13 +226,6 @@ export type FractionValue = {
   d: string | undefined;
 };
 
-// https://github.com/stellar/js-stellar-base/blob/master/src/generated/curr_generated.js#L1887-L1891
-export type LedgerKeyContractDataType = {
-  contract: xdr.ScAddress;
-  key: xdr.ScVal;
-  durability: xdr.ContractDataDurability;
-};
-
 export type RevokeSponsorshipValue = {
   type: SponsorshipType | string;
   data: AnyObject;
@@ -251,6 +239,9 @@ export type SponsorshipType =
   | "claimable_balance"
   | "signer";
 
+// =============================================================================
+// Soroban Operations
+// =============================================================================
 export type SorobanOpType = "restore_footprint" | "extend_footprint_ttl";
 
 // =============================================================================

@@ -72,7 +72,7 @@ export const TransactionXdr = () => {
     try {
       // TODO: remove this formatter once Stellar XDR supports strings for numbers.
       // Format values to meet XDR requirements
-      console.log("txnParams: ", txnParams);
+
       const prepTxnParams = Object.entries(txnParams).reduce((res, param) => {
         const key = param[0] as KeysOfUnion<typeof txnParams>;
         // Casting to any type for simplicity
@@ -491,9 +491,6 @@ export const TransactionXdr = () => {
         body: renderTxnBody(op),
       }));
 
-      console.log("prepTxnParams: ", prepTxnParams);
-      console.log("prepTxnOps: ", prepTxnOps);
-
       const txnJson = {
         tx: {
           tx: {
@@ -526,8 +523,6 @@ export const TransactionXdr = () => {
   };
 
   const txnXdr = txnJsonToXdr();
-
-  console.log("txnXdr :", txnXdr);
 
   if (txnXdr.error) {
     return (

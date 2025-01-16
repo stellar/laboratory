@@ -462,32 +462,30 @@ export const formComponentTemplateEndpoints = (
         validate: null,
       };
     // contract data key
-    case "entryKey":
+    case "key":
       return {
         render: (templ: {
           value: string | undefined;
           error: string | undefined;
           onChange: (val: any) => void;
-        }) => {
-          return (
-            <Textarea
-              fieldSize="md"
-              key={id}
-              id={id}
-              label="Entry Key"
-              placeholder='ex: {"symbol":"Counter"}'
-              // @TODO we should display an input for each value
-              // hotfix: sanitizing value from backlashes and extra quotes
-              value={
-                JSON.stringify(templ.value)
-                  .replace(/\\/g, "")
-                  .replace(/^"+|"+$/g, "") || ""
-              }
-              error={templ.error}
-              onChange={templ.onChange}
-            />
-          );
-        },
+        }) => (
+          <Textarea
+            fieldSize="md"
+            key={id}
+            id={id}
+            label="Key"
+            placeholder="Ex: 67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9"
+            // @TODO we should display an input for each value
+            // hotfix: sanitizing value from backlashes and extra quotes
+            value={
+              JSON.stringify(templ.value)
+                .replace(/\\/g, "")
+                .replace(/^"+|"+$/g, "") || ""
+            }
+            error={templ.error}
+            onChange={templ.onChange}
+          />
+        ),
         validate: null,
       };
     case "ledger":

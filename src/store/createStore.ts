@@ -15,6 +15,7 @@ import {
   Network,
   MuxedAccount,
   TxnOperation,
+  TxnSorobanOperation,
   OpBuildingError,
   ThemeColorType,
 } from "@/types/types";
@@ -109,6 +110,7 @@ export interface Store {
   // Transaction
   transaction: {
     build: {
+      // @TODO wrap it within classic object
       params: TransactionBuildParams;
       operations: TxnOperation[];
       error: {
@@ -119,6 +121,11 @@ export interface Store {
       isValid: {
         params: boolean;
         operations: boolean;
+      };
+      // soroban
+      soroban: {
+        operation: TxnSorobanOperation;
+        xdr: string;
       };
     };
     sign: {
@@ -133,7 +140,7 @@ export interface Store {
       triggerOnLaunch?: boolean;
     };
     feeBump: FeeBumpParams;
-    // [Transaction] Build Transaction actions
+    // [Transaction] Build Classic Transaction actions
     updateBuildParams: (params: TransactionBuildParamsObj) => void;
     updateBuildOperations: (operations: TxnOperation[]) => void;
     updateBuildXdr: (xdr: string) => void;
@@ -152,6 +159,10 @@ export interface Store {
     setBuildParamsError: (error: string[]) => void;
     setBuildOperationsError: (error: OpBuildingError[]) => void;
     resetBuildParams: () => void;
+    // [Transaction] Build Soroban Transaction actions
+    updateSorobanBuildOperation: (operation: TxnOperation) => void;
+    updateSorobanBuildXdr: (xdr: string) => void;
+    // [Transaction] Both Classic & Soroban Transaction actions
     resetBuild: () => void;
     // [Transaction] Sign Transaction actions
     updateSignActiveView: (viewId: SignTxActiveView) => void;
@@ -228,6 +239,23 @@ const initTransactionState = {
     isValid: {
       params: false,
       operations: false,
+    },
+    soroban: {
+      params: initTransactionParamsState,
+      operation: {
+        operation_type: "",
+        params: {},
+        source_account: "",
+      },
+      error: {
+        params: [],
+        operations: [],
+      },
+      xdr: "",
+      isValid: {
+        params: false,
+        operations: false,
+      },
     },
   },
   sign: {
@@ -394,6 +422,7 @@ export const createStore = (options: CreateStoreOptions) =>
         // Transaction
         transaction: {
           ...initTransactionState,
+          // Classic Build
           updateBuildParams: (params: TransactionBuildParamsObj) =>
             set((state) => {
               state.transaction.build.params = {
@@ -447,10 +476,21 @@ export const createStore = (options: CreateStoreOptions) =>
             set((state) => {
               state.transaction.build.params = initTransactionParamsState;
             }),
+          // Soroban Build
+          updateSorobanBuildOperation: (operation: TxnOperation) =>
+            set((state) => {
+              state.transaction.build.soroban.operation = operation;
+            }),
+          updateSorobanBuildXdr: (xdr: string) =>
+            set((state) => {
+              state.transaction.build.soroban.xdr = xdr;
+            }),
+          // Classic & Soroban
           resetBuild: () =>
             set((state) => {
               state.transaction.build = initTransactionState.build;
             }),
+          // Sign
           updateSignActiveView: (viewId: SignTxActiveView) =>
             set((state) => {
               state.transaction.sign.activeView = viewId;
@@ -563,6 +603,10 @@ export const createStore = (options: CreateStoreOptions) =>
                 error: false,
                 isValid: true,
                 xdr: false,
+                soroban: {
+                  operation: true,
+                  xdr: false,
+                },
               },
               sign: {
                 activeView: true,

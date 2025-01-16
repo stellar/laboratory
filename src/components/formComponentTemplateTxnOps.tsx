@@ -366,7 +366,10 @@ export const formComponentTemplateTxnOps = ({
             {/* @todo also add a temporary but disabled 
             https://github.com/stellar/js-stellar-base/blob/master/src/generated/curr_generated.js#L1887-L1891 */}
             <option value="">Select a durability</option>
-            {[{ id: "persistent", label: "Persistent" }].map((f) => (
+            {[
+              { id: "persistent", label: "Persistent" },
+              { id: "temporary", label: "Temporary" },
+            ].map((f) => (
               <option key={f.id} value={f.id}>
                 {f.label}
               </option>
@@ -457,6 +460,31 @@ export const formComponentTemplateTxnOps = ({
           />
         ),
         validate: null,
+      };
+    case "resource_fee":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <PositiveIntPicker
+            id={id}
+            label="Resource Fee (in stroops)"
+            value={removeLeadingZeroes(templ.value || "")}
+            error={templ.error}
+            onChange={templ.onChange}
+            note={
+              <>
+                The best way to find the required resource fee for any smart
+                contract transaction is to use the{" "}
+                <SdsLink href="https://developers.stellar.org/docs/learn/encyclopedia/contract-development/contract-interactions/transaction-simulation">
+                  simulateTransaction endpoint
+                </SdsLink>{" "}
+                from the RPC, which enables you to send a preflight transaction
+                that will return the necessary resource values and resource fee.
+              </>
+            }
+            infoLink="https://developers.stellar.org/docs/learn/fundamentals/fees-resource-limits-metering#resource-fee"
+          />
+        ),
+        validate: validate.getPositiveNumberError,
       };
     case "limit":
       return {
