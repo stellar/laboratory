@@ -138,6 +138,12 @@ export type TxnOperation = {
   source_account?: string;
 };
 
+export type TxnSorobanOperation = {
+  operation_type: SorobanOpType;
+  params: AnyObject;
+  source_account?: string;
+};
+
 export type OpBuildingError = { label?: string; errorList?: string[] };
 
 export type LedgerErrorResponse = {
