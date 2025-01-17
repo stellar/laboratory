@@ -37,3 +37,45 @@
     }
   }
 }
+
+.DataTypeLegend {
+  --DataTypeLegend-color: var(--sds-clr-gray-11);
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: pxToRem(6px);
+
+  &::before {
+    content: "";
+    display: block;
+    width: pxToRem(8px);
+    height: pxToRem(8px);
+    border-radius: pxToRem(4px);
+    background-color: var(--DataTypeLegend-color);
+  }
+
+  &::after {
+    content: attr(data-type);
+    font-size: pxToRem(12px);
+    line-height: pxToRem(18px);
+    font-weight: var(--sds-fw-semi-bold);
+    color: var(--sds-clr-gray-11);
+  }
+
+  &[data-type="sym"] {
+    --DataTypeLegend-color: var(--sds-clr-navy-11);
+  }
+
+  &[data-type="i128"] {
+    --DataTypeLegend-color: var(--sds-clr-lime-11);
+  }
+
+  &[data-type="u32"] {
+    --DataTypeLegend-color: var(--sds-clr-teal-11);
+  }
+
+  &[data-type="bool"] {
+    --DataTypeLegend-color: var(--sds-clr-pink-11);
+  }
+}

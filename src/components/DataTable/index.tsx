@@ -11,12 +11,14 @@ export const DataTable = <T,>({
   tableHeaders,
   tableData,
   formatDataRow,
+  customFooterEl,
 }: {
   tableId: string;
   cssGridTemplateColumns: string;
   tableHeaders: DataTableHeader[];
   tableData: T[];
   formatDataRow: (item: T) => DataTableCell[];
+  customFooterEl?: React.ReactNode;
 }) => {
   const PAGE_SIZE = 20;
   const tableDataSize = tableData.length;
@@ -160,8 +162,8 @@ export const DataTable = <T,>({
         </div>
       </Card>
 
-      <Box gap="lg" direction="row" align="center" justify="end">
-        {/* TODO: add color legend */}
+      <Box gap="lg" direction="row" align="center" justify="space-between">
+        <div>{customFooterEl || null}</div>
 
         {/* Pagination */}
         <Box gap="xs" direction="row" align="center">
