@@ -375,7 +375,7 @@ export const formComponentTemplateTxnOps = ({
             value={templ.value || ""}
             onChange={templ.onChange}
             disabled={templ.isDisabled}
-            note="Only persistent and instance entries can be restored."
+            note={custom?.note}
           >
             {/* @todo also add a temporary but disabled 
             https://github.com/stellar/js-stellar-base/blob/master/src/generated/curr_generated.js#L1887-L1891 */}

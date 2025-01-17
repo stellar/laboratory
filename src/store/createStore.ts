@@ -161,6 +161,7 @@ export interface Store {
     // [Transaction] Build Soroban Transaction actions
     updateSorobanBuildOperation: (operation: TxnOperation) => void;
     updateSorobanBuildXdr: (xdr: string) => void;
+    resetSorobanBuildOperation: () => void;
     // [Transaction] Both Classic & Soroban Transaction actions
     resetBuild: () => void;
     // [Transaction] Sign Transaction actions
@@ -226,6 +227,15 @@ const initTransactionParamsState = {
   memo: {},
 };
 
+const initSorobanState = {
+  operation: {
+    operation_type: "",
+    params: {},
+    source_account: "",
+  },
+  xdr: "",
+};
+
 const initTransactionState = {
   build: {
     params: initTransactionParamsState,
@@ -239,14 +249,7 @@ const initTransactionState = {
       params: false,
       operations: false,
     },
-    soroban: {
-      operation: {
-        operation_type: "",
-        params: {},
-        source_account: "",
-      },
-      xdr: "",
-    },
+    soroban: initSorobanState,
   },
   sign: {
     activeView: "import" as SignTxActiveView,
@@ -474,6 +477,10 @@ export const createStore = (options: CreateStoreOptions) =>
           updateSorobanBuildXdr: (xdr: string) =>
             set((state) => {
               state.transaction.build.soroban.xdr = xdr;
+            }),
+          resetSorobanBuildOperation: () =>
+            set((state) => {
+              state.transaction.build.soroban = initSorobanState;
             }),
           // Classic & Soroban
           resetBuild: () =>

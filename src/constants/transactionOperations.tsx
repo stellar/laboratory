@@ -366,6 +366,9 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
       extend_ttl_to: {
         note: "The ledger sequence number the entries will live until.",
       },
+      durability: {
+        note: "TTL for the temporary data can be extended; however, it is unsafe to rely on the extensions to preserve data since there is always a risk of losing temporary data",
+      },
     },
   },
   restore_footprint: {
@@ -378,6 +381,14 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     requiredParams: ["contract", "key_xdr", "durability", "resource_fee"],
     defaultParams: {
       durability: "persistent",
+    },
+    custom: {
+      durability: {
+        note: "Only persistent and instance entries can be restored.",
+      },
+      extend_ttl_to: {
+        note: "The ledger sequence number the entries will live until.",
+      },
     },
   },
   revoke_sponsorship: {

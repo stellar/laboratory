@@ -66,6 +66,7 @@ export default function SavedTransactions() {
         if (isSorobanTx) {
           transaction.updateSorobanBuildOperation(found.operations[0]);
         } else {
+          transaction.resetSorobanBuildOperation();
           transaction.updateBuildOperations(found.operations);
         }
       }
