@@ -78,7 +78,7 @@ test.describe("Fee Bump Page", () => {
       await expect(viewButton).toBeVisible();
       await viewButton.click();
 
-      await page.waitForURL("**/xdr");
+      await page.waitForURL("**/xdr/view");
 
       await expect(page.locator("h1")).toHaveText("View XDR");
       await expect(page.getByLabel("Base-64 encoded XDR")).toHaveText(MOCK_XDR);
