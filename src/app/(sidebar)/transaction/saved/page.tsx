@@ -107,89 +107,87 @@ export default function SavedTransactions() {
     }
   };
 
-  const SavedTxn = ({ txn }: { txn: SavedTransaction }) => {
-    return (
-      <Box
-        gap="sm"
-        addlClassName="PageBody__content"
-        data-testid="saved-transactions-item"
-      >
-        <Input
-          id={`saved-txn-${txn.timestamp}`}
-          data-testid="saved-transactions-name"
-          fieldSize="md"
-          value={txn.name}
-          readOnly
-          rightElement={
-            <InputSideElement
-              variant="button"
-              placement="right"
-              onClick={() => {
-                setCurrentTxnTimestamp(txn.timestamp);
-              }}
-              icon={<Icon.Edit05 />}
-              data-testid="saved-transactions-edit"
-            />
-          }
-        />
+  const SavedTxn = ({ txn }: { txn: SavedTransaction }) => (
+    <Box
+      gap="sm"
+      addlClassName="PageBody__content"
+      data-testid="saved-transactions-item"
+    >
+      <Input
+        id={`saved-txn-${txn.timestamp}`}
+        data-testid="saved-transactions-name"
+        fieldSize="md"
+        value={txn.name}
+        readOnly
+        rightElement={
+          <InputSideElement
+            variant="button"
+            placement="right"
+            onClick={() => {
+              setCurrentTxnTimestamp(txn.timestamp);
+            }}
+            icon={<Icon.Edit05 />}
+            data-testid="saved-transactions-edit"
+          />
+        }
+      />
 
-        <>
-          {!txn.operations || txn.operations.length === 0
-            ? null
-            : txn.operations.map((o, idx) => (
-                <Input
-                  key={`saved-txn-${txn.timestamp}-op-${idx}`}
-                  id={`saved-txn-${txn.timestamp}-op-${idx}`}
-                  data-testid="saved-transactions-op"
-                  fieldSize="md"
-                  value={
-                    TRANSACTION_OPERATIONS[o.operation_type]?.label ||
-                    "Operation type not selected"
-                  }
-                  readOnly
-                  leftElement={idx + 1}
-                />
-              ))}
-        </>
-
-        <Box
-          gap="lg"
-          direction="row"
-          align="center"
-          justify="space-between"
-          addlClassName="Endpoints__urlBar__footer"
-        >
-          <Box gap="sm" direction="row">
-            <>
-              {renderActionButton(txn.timestamp, txn.page)}
-              {txn.shareableUrl ? (
-                <ShareUrlButton shareableUrl={txn.shareableUrl} />
-              ) : null}
-            </>
-          </Box>
-
-          <Box gap="sm" direction="row" align="center" justify="end">
-            <SavedItemTimestampAndDelete
-              timestamp={txn.timestamp}
-              onDelete={() => {
-                const allTxns = localStorageSavedTransactions.get();
-                const indexToUpdate = allTxns.findIndex(
-                  (t) => t.timestamp === txn.timestamp,
-                );
-
-                if (indexToUpdate >= 0) {
-                  const updatedList = arrayItem.delete(allTxns, indexToUpdate);
-
-                  localStorageSavedTransactions.set(updatedList);
-                  updateSavedTxns();
+      <>
+        {!txn.operations || txn.operations.length === 0
+          ? null
+          : txn.operations.map((o, idx) => (
+              <Input
+                key={`saved-txn-${txn.timestamp}-op-${idx}`}
+                id={`saved-txn-${txn.timestamp}-op-${idx}`}
+                data-testid="saved-transactions-op"
+                fieldSize="md"
+                value={
+                  TRANSACTION_OPERATIONS[o.operation_type]?.label ||
+                  "Operation type not selected"
                 }
-              }}
-            />
-          </Box>
+                readOnly
+                leftElement={idx + 1}
+              />
+            ))}
+      </>
+
+      <Box
+        gap="lg"
+        direction="row"
+        align="center"
+        justify="space-between"
+        addlClassName="Endpoints__urlBar__footer"
+      >
+        <Box gap="sm" direction="row">
+          <>
+            {renderActionButton(txn.timestamp, txn.page)}
+            {txn.shareableUrl ? (
+              <ShareUrlButton shareableUrl={txn.shareableUrl} />
+            ) : null}
+          </>
+        </Box>
+
+        <Box gap="sm" direction="row" align="center" justify="end">
+          <SavedItemTimestampAndDelete
+            timestamp={txn.timestamp}
+            onDelete={() => {
+              const allTxns = localStorageSavedTransactions.get();
+              const indexToUpdate = allTxns.findIndex(
+                (t) => t.timestamp === txn.timestamp,
+              );
+
+              if (indexToUpdate >= 0) {
+                const updatedList = arrayItem.delete(allTxns, indexToUpdate);
+
+                localStorageSavedTransactions.set(updatedList);
+                updateSavedTxns();
+              }
+            }}
+          />
         </Box>
       </Box>
-    );
-  };
+    </Box>
+  );
 
   return (
     <Box gap="md" data-testid="saved-transactions-container">

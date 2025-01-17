@@ -10,6 +10,7 @@ import {
 } from "@stellar/stellar-sdk";
 
 import { TransactionBuildParams } from "@/store/createStore";
+import { SorobanOpType } from "@/types/types";
 
 export const transactionHashFromXdr = (
   xdr: string,
@@ -66,20 +67,50 @@ export const getContractDataXDR = ({
   );
 };
 
-export const buildSorobanData = ({
+export const getSorobanDataResult = ({
+  contractDataXDR,
+  operationType,
+  fee,
+}: {
+  contractDataXDR: xdr.LedgerKey;
+  operationType: SorobanOpType;
+  fee: string;
+}) => {
+  switch (operationType) {
+    case "extend_footprint_ttl":
+      return buildSorobanData({
+        readOnlyXdrLedgerKey: [contractDataXDR],
+        resourceFee: fee,
+      });
+    // case "restore_footprint":
+    // return buildSorobanData({
+    //   readWriteXdrLedgerKey: [contractDataXDR],
+    //   resourceFee: operation.params.resource_fee,
+    // });
+    default:
+      return undefined;
+  }
+};
+
+const buildSorobanData = ({
   readOnlyXdrLedgerKey = [],
-  readWrieXdrLedgerKey = [],
+  readWriteXdrLedgerKey = [],
   resourceFee,
   //   instructionsm
   //   ReadableByteStreamController,
 }: {
   readOnlyXdrLedgerKey?: xdr.LedgerKey[];
-  readWrieXdrLedgerKey?: xdr.LedgerKey[];
+  readWriteXdrLedgerKey?: xdr.LedgerKey[];
   resourceFee: string;
 }) => {
+  // one of the two must be provided
+  if (!readOnlyXdrLedgerKey && !readWriteXdrLedgerKey) {
+    return;
+  }
+
   return new SorobanDataBuilder()
     .setReadOnly(readOnlyXdrLedgerKey)
-    .setReadWrite(readWrieXdrLedgerKey)
+    .setReadWrite(readWriteXdrLedgerKey)
     .setResourceFee(resourceFee)
     .build();
 };

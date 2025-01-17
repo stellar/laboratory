@@ -1098,6 +1098,20 @@ export const Operations = () => {
                   operationType={sorobanOperation.operation_type}
                 />
 
+                <>
+                  {!network.rpcUrl ? (
+                    <Box gap="sm" direction="row" align="center">
+                      <Notification
+                        variant="error"
+                        title="Network Configuration Required"
+                      >
+                        An RPC URL must be configured in the network settings to
+                        proceed with a Soroban operation.
+                      </Notification>
+                    </Box>
+                  ) : null}
+                </>
+
                 {/* Operation params */}
                 <>
                   {TRANSACTION_OPERATIONS[
@@ -1121,6 +1135,7 @@ export const Operations = () => {
                         TRANSACTION_OPERATIONS[
                           sorobanOperation.operation_type
                         ].requiredParams.includes(input),
+                      isDisabled: Boolean(!network.rpcUrl),
                     };
 
                     if (component) {
@@ -1217,11 +1232,11 @@ export const Operations = () => {
           type="save"
           itemTitle="Transaction"
           itemProps={{
-            xdr: txnXdr,
+            xdr: sorobanTxnXdr,
             page: "build",
             shareableUrl: shareableUrl("transactions-build"),
             params: transaction.build.params,
-            operations: transaction.build.operations,
+            operations: [transaction.build.soroban.operation],
           }}
           allSavedItems={localStorageSavedTransactions.get()}
           isVisible={isSaveTxnModalVisible}

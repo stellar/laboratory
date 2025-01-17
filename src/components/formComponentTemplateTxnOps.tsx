@@ -15,6 +15,7 @@ import { AuthorizePicker } from "@/components/FormElements/AuthorizePicker";
 import { NumberFractionPicker } from "@/components/FormElements/NumberFractionPicker";
 import { RevokeSponsorshipPicker } from "@/components/FormElements/RevokeSponsorshipPicker";
 import { ClaimantsPicker } from "@/components/FormElements/ClaimantsPicker";
+import { ResourceFeePicker } from "@/components/FormElements/ResourceFeePicker";
 
 import { removeLeadingZeroes } from "@/helpers/removeLeadingZeroes";
 
@@ -35,6 +36,15 @@ type TemplateRenderProps = {
   error: string | undefined;
   onChange: (val: any) => void;
   isRequired?: boolean;
+};
+
+// Types
+type SorobanTemplateRenderProps = {
+  value: string | undefined;
+  error: string | undefined;
+  onChange: (val: any) => void;
+  isRequired?: boolean;
+  isDisabled?: boolean;
 };
 
 type TemplateRenderAssetProps = {
@@ -278,6 +288,7 @@ export const formComponentTemplateTxnOps = ({
           value: string | undefined;
           error: string | undefined;
           onChange: (val: any) => void;
+          isDisabled?: boolean;
         }) => (
           <TextPicker
             key={id}
@@ -287,6 +298,7 @@ export const formComponentTemplateTxnOps = ({
             value={templ.value || ""}
             error={templ.error}
             onChange={templ.onChange}
+            disabled={templ.isDisabled}
           />
         ),
         validate: validate.getContractIdError,
@@ -352,6 +364,7 @@ export const formComponentTemplateTxnOps = ({
         render: (templ: {
           value: string | undefined;
           error: string | undefined;
+          isDisabled?: boolean;
           onChange: (val: any) => void;
         }) => (
           <Select
@@ -361,6 +374,7 @@ export const formComponentTemplateTxnOps = ({
             label="Durability"
             value={templ.value || ""}
             onChange={templ.onChange}
+            disabled={templ.isDisabled}
             note="Only persistent and instance entries can be restored."
           >
             {/* @todo also add a temporary but disabled 
@@ -380,7 +394,7 @@ export const formComponentTemplateTxnOps = ({
       };
     case "extend_ttl_to": {
       return {
-        render: (templ: TemplateRenderProps) => (
+        render: (templ: SorobanTemplateRenderProps) => (
           <PositiveIntPicker
             key={id}
             id={id}
@@ -389,6 +403,7 @@ export const formComponentTemplateTxnOps = ({
             value={templ.value || ""}
             error={templ.error}
             onChange={templ.onChange}
+            disabled={templ.isDisabled}
             note={custom?.note}
           />
         ),
@@ -445,7 +460,7 @@ export const formComponentTemplateTxnOps = ({
       };
     case "key_xdr":
       return {
-        render: (templ: TemplateRenderProps) => (
+        render: (templ: SorobanTemplateRenderProps) => (
           <TextPicker
             key={id}
             id={id}
@@ -455,6 +470,7 @@ export const formComponentTemplateTxnOps = ({
             value={templ.value || ""}
             error={templ.error}
             onChange={templ.onChange}
+            disabled={templ.isDisabled}
             // @TODO add a link of doc that describes how to convert ScVal to XDR
             // infoLink=""
           />
@@ -463,13 +479,14 @@ export const formComponentTemplateTxnOps = ({
       };
     case "resource_fee":
       return {
-        render: (templ: TemplateRenderProps) => (
-          <PositiveIntPicker
+        render: (templ: SorobanTemplateRenderProps) => (
+          <ResourceFeePicker
             id={id}
             label="Resource Fee (in stroops)"
             value={removeLeadingZeroes(templ.value || "")}
             error={templ.error}
             onChange={templ.onChange}
+            disabled={templ.isDisabled}
             note={
               <>
                 The best way to find the required resource fee for any smart

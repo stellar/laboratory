@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@stellar/design-system";
 
 import {
-  buildSorobanData,
+  getSorobanDataResult,
   buildSorobanTx,
   getContractDataXDR,
 } from "@/helpers/sorobanUtils";
@@ -17,23 +17,22 @@ import { SdsLink } from "@/components/SdsLink";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { Box } from "@/components/layout/Box";
 import { ViewInXdrButton } from "@/components/ViewInXdrButton";
+import { SorobanOpType } from "@/types/types";
 
 export const SorobanTransactionXdr = () => {
   const { network, transaction } = useStore();
-  const { updateSignActiveView, updateSignImportXdr } = transaction;
+  const { updateSignActiveView, updateSignImportXdr, updateSorobanBuildXdr } =
+    transaction;
   const { soroban, isValid, params: txnParams } = transaction.build;
   const { operation } = soroban;
   const router = useRouter();
 
-  const sorobanTxData = () => {
+  const sorobanTxData = (): { xdr: string; error?: string } => {
     try {
       if (!isValid.operations || !isValid.params) {
-        return "";
+        updateSorobanBuildXdr("");
+        return { xdr: "" };
       }
-
-      let sorobanData;
-
-      const operationtype = operation.operation_type;
 
       const contractDataXDR = getContractDataXDR({
         contractAddress: operation.params.contract,
@@ -41,13 +40,11 @@ export const SorobanTransactionXdr = () => {
         durability: operation.params.durability,
       });
 
-      switch (operationtype) {
-        case "extend_footprint_ttl":
-          sorobanData = buildSorobanData({
-            readOnlyXdrLedgerKey: [contractDataXDR],
-            resourceFee: operation.params.resource_fee,
-          });
-      }
+      const sorobanData = getSorobanDataResult({
+        contractDataXDR,
+        operationType: operation.operation_type as SorobanOpType,
+        fee: operation.params.resource_fee,
+      });
 
       if (sorobanData) {
         const builtXdr = buildSorobanTx({
@@ -56,21 +53,26 @@ export const SorobanTransactionXdr = () => {
           sorobanParams: operation.params,
           networkPassphrase: network.passphrase,
         });
-        return builtXdr.toXDR();
+
+        const builtXdrString = builtXdr.toXDR();
+
+        updateSorobanBuildXdr(builtXdrString);
+        return { xdr: builtXdrString };
       }
-      return "";
+      updateSorobanBuildXdr("");
+      return { xdr: "" };
     } catch (e) {
-      console.log("error: ", e);
-      return "";
+      updateSorobanBuildXdr("");
+      return { xdr: "", error: `${e}` };
     }
   };
 
   const sorobanData = sorobanTxData();
 
-  if (sorobanData) {
+  if (sorobanData?.xdr) {
     try {
       const txnHash = TransactionBuilder.fromXDR(
-        sorobanData,
+        sorobanData.xdr,
         network.passphrase,
       )
         .hash()
@@ -92,7 +94,7 @@ export const SorobanTransactionXdr = () => {
               </div>
               <div>
                 <div>XDR:</div>
-                <div>{sorobanData}</div>
+                <div>{sorobanData.xdr}</div>
               </div>
             </Box>
           }
@@ -117,7 +119,7 @@ export const SorobanTransactionXdr = () => {
                 size="md"
                 variant="secondary"
                 onClick={() => {
-                  updateSignImportXdr(sorobanData);
+                  updateSignImportXdr(sorobanData.xdr);
                   updateSignActiveView("overview");
 
                   router.push(Routes.SIGN_TRANSACTION);
@@ -126,7 +128,7 @@ export const SorobanTransactionXdr = () => {
                 Sign in Transaction Signer
               </Button>
 
-              <ViewInXdrButton xdrBlob={sorobanData} />
+              <ViewInXdrButton xdrBlob={sorobanData.xdr} />
             </>
           }
         />
@@ -140,6 +142,16 @@ export const SorobanTransactionXdr = () => {
         />
       );
     }
+  }
+
+  if (sorobanData?.error) {
+    return (
+      <ValidationResponseCard
+        variant="error"
+        title="Transaction Error:"
+        response={sorobanData.error}
+      />
+    );
   }
 
   return null;
