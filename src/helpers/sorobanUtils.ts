@@ -12,20 +12,12 @@ import {
 import { TransactionBuildParams } from "@/store/createStore";
 import { SorobanOpType } from "@/types/types";
 
-export const transactionHashFromXdr = (
-  xdr: string,
-  networkPassphrase: string,
-) => {
-  try {
-    // Code to read XDR data
-    return TransactionBuilder?.fromXDR(xdr, networkPassphrase)
-      .hash()
-      .toString("hex");
-  } catch (e) {
-    // @TODO Do nothing for now
-    // add amplitude error tracking
-    return;
-  }
+export const isSorobanOperationType = (operationType: string) => {
+  return [
+    "extend_footprint_ttl",
+    "restore_footprint",
+    "invoke_host_function",
+  ].includes(operationType);
 };
 
 // https://developers.stellar.org/docs/learn/glossary#ledgerkey
@@ -92,29 +84,6 @@ export const getSorobanDataResult = ({
   }
 };
 
-const buildSorobanData = ({
-  readOnlyXdrLedgerKey = [],
-  readWriteXdrLedgerKey = [],
-  resourceFee,
-  //   instructionsm
-  //   ReadableByteStreamController,
-}: {
-  readOnlyXdrLedgerKey?: xdr.LedgerKey[];
-  readWriteXdrLedgerKey?: xdr.LedgerKey[];
-  resourceFee: string;
-}) => {
-  // one of the two must be provided
-  if (!readOnlyXdrLedgerKey && !readWriteXdrLedgerKey) {
-    return;
-  }
-
-  return new SorobanDataBuilder()
-    .setReadOnly(readOnlyXdrLedgerKey)
-    .setReadWrite(readWriteXdrLedgerKey)
-    .setResourceFee(resourceFee)
-    .build();
-};
-
 export const buildSorobanTx = ({
   sorobanData,
   params,
@@ -177,5 +146,28 @@ export const buildSorobanTx = ({
         extendTo: Number(sorobanParams.extend_ttl_to),
       }),
     )
+    .build();
+};
+
+const buildSorobanData = ({
+  readOnlyXdrLedgerKey = [],
+  readWriteXdrLedgerKey = [],
+  resourceFee,
+  //   instructionsm
+  //   ReadableByteStreamController,
+}: {
+  readOnlyXdrLedgerKey?: xdr.LedgerKey[];
+  readWriteXdrLedgerKey?: xdr.LedgerKey[];
+  resourceFee: string;
+}) => {
+  // one of the two must be provided
+  if (!readOnlyXdrLedgerKey && !readWriteXdrLedgerKey) {
+    return;
+  }
+
+  return new SorobanDataBuilder()
+    .setReadOnly(readOnlyXdrLedgerKey)
+    .setReadWrite(readWriteXdrLedgerKey)
+    .setResourceFee(resourceFee)
     .build();
 };

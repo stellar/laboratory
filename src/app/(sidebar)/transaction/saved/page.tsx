@@ -17,6 +17,7 @@ import { TRANSACTION_OPERATIONS } from "@/constants/transactionOperations";
 import { useStore } from "@/store/useStore";
 import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransactions";
 import { arrayItem } from "@/helpers/arrayItem";
+import { isSorobanOperationType } from "@/helpers/sorobanUtils";
 
 import { SavedTransaction, SavedTransactionPage } from "@/types/types";
 
@@ -50,6 +51,8 @@ export default function SavedTransactions() {
     const found = findLocalStorageTx(timestamp);
 
     if (found) {
+      let isSorobanTx = false;
+
       router.push(Routes.BUILD_TRANSACTION);
 
       if (found.params) {
@@ -57,11 +60,22 @@ export default function SavedTransactions() {
       }
 
       if (found.operations) {
-        transaction.updateBuildOperations(found.operations);
+        isSorobanTx = isSorobanOperationType(
+          found?.operations?.[0]?.operation_type,
+        );
+        if (isSorobanTx) {
+          transaction.updateSorobanBuildOperation(found.operations[0]);
+        } else {
+          transaction.updateBuildOperations(found.operations);
+        }
       }
 
       if (found.xdr) {
-        transaction.updateBuildXdr(found.xdr);
+        if (isSorobanTx) {
+          transaction.updateSorobanBuildXdr(found.xdr);
+        } else {
+          transaction.updateBuildXdr(found.xdr);
+        }
       }
     }
   };

@@ -24,6 +24,7 @@ import { sanitizeObject } from "@/helpers/sanitizeObject";
 import { shareableUrl } from "@/helpers/shareableUrl";
 import { getClaimableBalanceIdFromXdr } from "@/helpers/getClaimableBalanceIdFromXdr";
 import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransactions";
+import { isSorobanOperationType } from "@/helpers/sorobanUtils";
 
 import { OP_SET_TRUST_LINE_FLAGS } from "@/constants/settings";
 import { TRANSACTION_OPERATIONS } from "@/constants/transactionOperations";
@@ -924,13 +925,6 @@ export const Operations = () => {
               TRANSACTION_OPERATIONS[e.target.value]?.defaultParams || {};
             const defaultParamKeys = Object.keys(defaultParams);
 
-            const isSorobanOperationType = (operationType: string) => {
-              return [
-                "extend_footprint_ttl",
-                "restore_footprint",
-                "invoke_host_function",
-              ].includes(operationType);
-            };
             if (isSorobanOperationType(e.target.value)) {
               updateSorobanBuildOperation({
                 operation_type: e.target.value,
