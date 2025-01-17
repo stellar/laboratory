@@ -73,6 +73,7 @@ test.describe("Saved Transactions Page", () => {
 
       // View in submitter
       await submitItem.getByText("View in submitter").click();
+      await pageContext.waitForURL("**/transaction/submit");
 
       await expect(pageContext.locator("h1")).toHaveText("Submit Transaction");
       await expect(
@@ -106,6 +107,7 @@ test.describe("Saved Transactions Page", () => {
       // View in builder
       await buildItem.getByText("View in builder", { exact: true }).click();
 
+      await pageContext.waitForURL("**/transaction/build");
       await expect(pageContext.locator("h1")).toHaveText("Build Transaction");
 
       // Params
