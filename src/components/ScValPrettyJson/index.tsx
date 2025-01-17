@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import { XdrLargeInt } from "@stellar/stellar-sdk";
 import { parse, stringify } from "lossless-json";
+import { v4 as uuidv4 } from "uuid";
 
 import { SdsLink } from "@/components/SdsLink";
 import { STELLAR_EXPERT } from "@/constants/settings";
@@ -13,8 +14,6 @@ import { getStellarExpertNetwork } from "@/helpers/getStellarExpertNetwork";
 import { AnyObject } from "@/types/types";
 
 import "./styles.scss";
-
-// TODO: unique React key
 
 /* Create contract storage JSON-like structure */
 export const ScValPrettyJson = ({
@@ -108,14 +107,16 @@ export const ScValPrettyJson = ({
         );
       }
 
-      const renderedItems = item.map((arrayItem: any, arrayIndex: number) =>
-        render({
-          item: arrayItem,
-          parentKey,
-          isKey,
-          renderKey: `${renderKey || "init"}-${parentKey}-${arrayIndex}`,
-        }),
-      );
+      const renderedItems = item.map((arrayItem: any, arrayIndex: number) => (
+        <Fragment key={`${renderKey}-${arrayIndex}`}>
+          {render({
+            item: arrayItem,
+            parentKey,
+            isKey,
+            renderKey: `${renderKey || ""}${parentKey || ""}-${arrayIndex}`,
+          })}
+        </Fragment>
+      ));
 
       if (isKey) {
         return renderedItems;
@@ -173,7 +174,8 @@ export const ScValPrettyJson = ({
               item: eVal,
               parentKey: eKey,
               isKey,
-              renderKey: `${renderKey}-${parentKey}-${eKey}`,
+              // Using UUID to make sure key will be unique
+              renderKey: `${renderKey || parentKey || ""}${eKey}-${uuidv4()}`,
             });
           case "bool":
             return (
@@ -256,8 +258,9 @@ export const ScValPrettyJson = ({
         <Fragment key={renderKey}>
           <Bracket char="{" />
           <div className="ScValPrettyJson__container">
-            {entries.map((e) => {
+            {entries.map((e, eIdx) => {
               const [eKey, eVal] = e;
+              const renKey = `${renderKey}-${parentKey}-${eKey}-${eIdx}`;
 
               switch (eKey) {
                 // Don't render these keys
@@ -265,21 +268,25 @@ export const ScValPrettyJson = ({
                 case "vec":
                 case "wasm":
                 case "symbol":
-                  return render({
-                    item: eVal,
-                    parentKey: eKey,
-                    isKey,
-                    renderKey: `${renderKey}-${parentKey}-${eKey}`,
-                  });
+                  return (
+                    <Fragment key={renKey}>
+                      {render({
+                        item: eVal,
+                        parentKey: eKey,
+                        isKey,
+                        renderKey: renKey,
+                      })}
+                    </Fragment>
+                  );
                 default:
                   return (
-                    <div className="ScValPrettyJson__row">
+                    <div className="ScValPrettyJson__row" key={renKey}>
                       <div className="ScValPrettyJson__key">{eKey}</div>
                       {render({
                         item: eVal,
                         parentKey: eKey,
                         isKey,
-                        renderKey: `${renderKey}-${parentKey}-${eKey}`,
+                        renderKey: renKey,
                       })}
                     </div>
                   );
