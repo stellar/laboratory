@@ -1393,6 +1393,47 @@ test.describe("Build Transaction Page", () => {
           errorMessage: "Expected a whole number.",
         });
       });
+
+      test("Check rendering betweem classic and soroban", async ({ page }) => {
+        // Select Soroban Operation
+        const { operation_0 } = await selectOperationType({
+          page,
+          opType: "extend_footprint_ttl",
+        });
+        // we are going from classic operation to soroban operation
+        // so the classic operation should not be visible
+        await expect(operation_0).not.toBeVisible();
+
+        const soroban_operation = page.getByTestId(
+          "build-soroban-transaction-operation",
+        );
+
+        // Verify warning message about one operation limit
+        await expect(
+          page.getByText(
+            "Note that Soroban transactions can only contain one operation per transaction.",
+          ),
+        ).toBeVisible();
+
+        // Soroban Operation only allows one operation
+        // Add Operation button should not be visible
+        await expect(page.getByText("Add Operation")).not.toBeVisible();
+
+        // Select Classic Operation
+        await soroban_operation.getByLabel("Operation type").selectOption({
+          value: "payment",
+        });
+
+        const classicOperation = page.getByTestId(
+          "build-transaction-operation-0",
+        );
+
+        await expect(classicOperation).toBeVisible();
+
+        // Soroban Operation only allows one operation
+        // Add Operation button should not be visible
+        await expect(page.getByText("Add Operation")).toBeVisible();
+      });
     });
   });
 });

@@ -153,7 +153,7 @@ export const Operations = () => {
   // Preserve values and validate inputs when components mounts
   useEffect(() => {
     // If no operations to preserve, add inital operation and error template
-    if (txnOperations.length === 0) {
+    if (txnOperations.length === 0 && !soroban.operation.operation_type) {
       updateOptionParamAndError({ type: "add", item: INITIAL_OPERATION });
     } else {
       // Validate all params in all operations
@@ -799,6 +799,10 @@ export const Operations = () => {
   };
 
   const renderSourceAccount = (opType: string, index: number) => {
+    const currentOperation = isSorobanOperationType(opType)
+      ? sorobanOperation
+      : txnOperations[index];
+
     const sourceAccountComponent = formComponentTemplateTxnOps({
       param: "source_account",
       opType,
@@ -807,7 +811,7 @@ export const Operations = () => {
 
     return opType && sourceAccountComponent
       ? sourceAccountComponent.render({
-          value: txnOperations[index].source_account,
+          value: currentOperation.source_account,
           error: operationsError[index]?.error?.["source_account"],
           isRequired: false,
           onChange: (e: ChangeEvent<HTMLInputElement>) => {
