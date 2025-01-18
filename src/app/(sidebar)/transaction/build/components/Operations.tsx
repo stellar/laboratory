@@ -1073,7 +1073,7 @@ export const Operations = () => {
                 key={`op`}
                 gap="lg"
                 addlClassName="PageBody__content"
-                data-testid={`build-soroban-transaction-operation`}
+                data-testid="build-soroban-transaction-operation"
               >
                 {/* Operation label and action buttons */}
                 <Box
@@ -1213,6 +1213,7 @@ export const Operations = () => {
                 variant="error"
                 icon={<Icon.RefreshCw01 />}
                 onClick={() => {
+                  updateOptionParamAndError({ type: "reset" });
                   updateSorobanBuildOperation(INITIAL_OPERATION);
                 }}
               >

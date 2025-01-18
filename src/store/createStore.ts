@@ -110,21 +110,22 @@ export interface Store {
   transaction: {
     build: {
       // @TODO wrap it within classic object
-      params: TransactionBuildParams;
       operations: TxnOperation[];
-      error: {
-        params: string[];
-        operations: OpBuildingError[];
-      };
       xdr: string;
-      isValid: {
-        params: boolean;
-        operations: boolean;
-      };
       // soroban
       soroban: {
         operation: TxnOperation;
         xdr: string;
+      };
+      // used for both classic and soroban
+      params: TransactionBuildParams;
+      error: {
+        params: string[];
+        operations: OpBuildingError[];
+      };
+      isValid: {
+        params: boolean;
+        operations: boolean;
       };
     };
     sign: {
@@ -230,7 +231,7 @@ const initTransactionParamsState = {
 const initSorobanState = {
   operation: {
     operation_type: "",
-    params: {},
+    params: [],
     source_account: "",
   },
   xdr: "",

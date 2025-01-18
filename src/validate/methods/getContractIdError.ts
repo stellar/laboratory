@@ -9,7 +9,7 @@ export const getContractIdError = (value: string) => {
   } else if (value.length > CONTRACT_MAX_LENGTH) {
     return `The string length is too large.`;
   } else if (value.length < CONTRACT_MIN_LENGTH) {
-    return `The string length should be at least ${CONTRACT_MAX_LENGTH} characters long.`;
+    return `The string length should be at least ${CONTRACT_MIN_LENGTH} characters long.`;
   }
 
   return false;

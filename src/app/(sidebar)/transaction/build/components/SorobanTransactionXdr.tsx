@@ -83,7 +83,7 @@ export const SorobanTransactionXdr = () => {
           variant="success"
           title="Success! Transaction Envelope XDR:"
           response={
-            <Box gap="xs" data-testid="build-transaction-envelope-xdr">
+            <Box gap="xs" data-testid="build-soroban-transaction-envelope-xdr">
               <div>
                 <div>Network Passphrase:</div>
                 <div>{network.passphrase}</div>

@@ -1299,6 +1299,101 @@ test.describe("Build Transaction Page", () => {
         });
       });
     });
+
+    // Soroban Extend Footprint TTL
+    test.describe("Soroban Extend Footprint TTL", () => {
+      test("Happy path", async ({ page }) => {
+        const { operation_0 } = await selectOperationType({
+          page,
+          opType: "extend_footprint_ttl",
+        });
+        // we are going from classic operation to soroban operation
+        // so the classic operation should not be visible
+        await expect(operation_0).not.toBeVisible();
+
+        const soroban_operation = page.getByTestId(
+          "build-soroban-transaction-operation",
+        );
+
+        // Verify warning message about one operation limit
+        await expect(
+          page.getByText(
+            "Note that Soroban transactions can only contain one operation per transaction.",
+          ),
+        ).toBeVisible();
+
+        // Soroban Operation only allows one operation
+        // Add Operation button should not be visible
+        await expect(page.getByText("Add Operation")).not.toBeVisible();
+
+        // Fill in required fields
+        await soroban_operation
+          .getByLabel("Contract ID")
+          .fill("CAQP53Z2GMZ6WVOKJWXMCVDLZYJ7GYVMWPAMWACPLEZRF2UEZW3B636S");
+        await soroban_operation
+          .getByLabel("Key ScVal in XDR")
+          .fill(
+            "AAAAEAAAAAEAAAACAAAADwAAAAdDb3VudGVyAAAAABIAAAAAAAAAAH5MvQcuICNqcxGfJ6rKFvwi77h3WDZ2XVzA+LVRkCKD",
+          );
+        await soroban_operation.getByLabel("Extend To").fill("30000");
+        await soroban_operation
+          .getByLabel("Resource Fee (in stroops)")
+          .fill("20000");
+
+        await soroban_operation
+          .getByLabel("Durability")
+          .selectOption({ value: "persistent" });
+
+        await testOpSuccessHashAndXdr({
+          isSorobanOp: true,
+          page,
+          hash: "f81b348c83b9e59781117a65b01e2332ef5a00523ec7daead11b91bcf56a0755",
+          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgAAToQAD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAGQAAAAAAAHUwAAAAAQAAAAAAAAABAAAABgAAAAEg/u86MzPrVcpNrsFUa84T82Kss8DLAE9ZMxLqhM22HwAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAAB+TL0HLiAjanMRnyeqyhb8Iu+4d1g2dl1cwPi1UZAigwAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAATiAAAAAA",
+        });
+      });
+
+      test("Validation", async ({ page }) => {
+        const { operation_0 } = await selectOperationType({
+          page,
+          opType: "extend_footprint_ttl",
+        });
+
+        await expect(operation_0).not.toBeVisible();
+
+        await testInputError({
+          page,
+          isSorobanOp: true,
+          label: "Contract ID",
+          value: "aaa",
+          errorMessage: "The string must start with 'C'.",
+        });
+
+        await testInputError({
+          page,
+          isSorobanOp: true,
+          label: "Contract ID",
+          value: "CAQP53Z2GMZ6WVOKJWXMCVDL",
+          errorMessage:
+            "The string length should be at least 32 characters long.",
+        });
+
+        await testInputError({
+          page,
+          isSorobanOp: true,
+          label: "Extend To",
+          value: "aaa",
+          errorMessage: "Expected a whole number.",
+        });
+
+        await testInputError({
+          page,
+          isSorobanOp: true,
+          label: "Resource Fee (in stroops)",
+          value: "aaa",
+          errorMessage: "Expected a whole number.",
+        });
+      });
+    });
   });
 });
 
@@ -1353,12 +1448,22 @@ const testOpSuccessHashAndXdr = async ({
   page,
   hash,
   xdr,
+  isSorobanOp = false,
 }: {
   page: Page;
   hash: string;
   xdr: string;
+  isSorobanOp?: boolean;
 }) => {
-  const txnSuccess = page.getByTestId("build-transaction-envelope-xdr");
+  let txnSuccess;
+
+  if (isSorobanOp) {
+    txnSuccess = page.getByTestId("build-soroban-transaction-envelope-xdr");
+  } else {
+    txnSuccess = page.getByTestId("build-transaction-envelope-xdr");
+  }
+
+  await expect(txnSuccess).toBeVisible();
 
   await expect(txnSuccess.getByText("Hash").locator("+ div")).toHaveText(hash);
   await expect(txnSuccess.getByText("XDR").locator("+ div")).toHaveText(xdr);
@@ -1372,6 +1477,7 @@ const testInputError = async ({
   nthErrorIndex = 0,
   nthLabelIndex = 0,
   exact = false,
+  isSorobanOp = false,
 }: {
   page: Page;
   label: string;
@@ -1380,12 +1486,19 @@ const testInputError = async ({
   nthErrorIndex?: number;
   nthLabelIndex?: number;
   exact?: boolean;
+  isSorobanOp?: boolean;
 }) => {
-  const operation_0 = page.getByTestId("build-transaction-operation-0");
+  let operation;
 
-  await operation_0.getByLabel(label, { exact }).nth(nthLabelIndex).fill(value);
+  if (isSorobanOp) {
+    operation = page.getByTestId("build-soroban-transaction-operation");
+  } else {
+    operation = page.getByTestId("build-transaction-operation-0");
+  }
+
+  await operation.getByLabel(label, { exact }).nth(nthLabelIndex).fill(value);
   await expect(
-    operation_0.getByText(errorMessage).nth(nthErrorIndex),
+    operation.getByText(errorMessage).nth(nthErrorIndex),
   ).toBeVisible();
 };
 
