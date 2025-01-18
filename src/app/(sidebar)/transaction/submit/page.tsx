@@ -67,6 +67,47 @@ const SUBMIT_OPTIONS = [
   },
 ];
 
+// Define operation types for better type safety
+interface DecodedOperationBody {
+  extend_footprint_ttl?: { ext: string };
+  restore_footprint?: { ext: string };
+  invoke_host_function?: { ext: string };
+}
+
+interface DecodedOperation {
+  body: DecodedOperationBody;
+}
+
+// Move function outside component to prevent recreation
+const isSorobanXdr = (jsonString: string): boolean => {
+  try {
+    const parsedXdr = JSON.parse(jsonString);
+    const operations = parsedXdr?.tx?.tx?.operations;
+
+    if (!Array.isArray(operations)) {
+      return false;
+    }
+
+    return operations.some((op: DecodedOperation) => {
+      const body = op?.body;
+      if (!body) {
+        return false;
+      }
+
+      const sorobanOps = [
+        body.extend_footprint_ttl,
+        body.restore_footprint,
+        body.invoke_host_function,
+      ];
+
+      return sorobanOps.some((op) => op?.ext === "v0");
+    });
+  } catch (e) {
+    console.debug("Error parsing XDR:", e);
+    return false;
+  }
+};
+
 export default function SubmitTransaction() {
   const { network, xdr, transaction } = useStore();
   const { blob, updateXdrBlob } = xdr;
@@ -80,6 +121,7 @@ export default function SubmitTransaction() {
   const [isSaveTxnModalVisible, setIsSaveTxnModalVisible] = useState(false);
   const [isDropdownActive, setIsDropdownActive] = useState(false);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const [isSorobanTx, setIsSorobanTx] = useState(false);
   const [submitMethod, setSubmitMethod] = useState<"horizon" | "rpc" | string>(
     "",
   );
@@ -129,7 +171,9 @@ export default function SubmitTransaction() {
   useEffect(() => {
     const localStorageMethod = localStorageSettings.get(SETTINGS_SUBMIT_METHOD);
 
-    if (localStorageMethod) {
+    if (isSorobanTx && isRpcAvailable) {
+      setSubmitMethod("rpc");
+    } else if (localStorageMethod) {
       setSubmitMethod(localStorageMethod);
     } else {
       setSubmitMethod(isRpcAvailable ? "rpc" : "horizon");
@@ -138,7 +182,7 @@ export default function SubmitTransaction() {
     resetSubmitState();
     // Not including resetSubmitState
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isRpcAvailable]);
+  }, [isRpcAvailable, isSorobanTx]);
 
   // Scroll to response
   useScrollIntoView(isSuccess, responseSuccessEl);
@@ -496,6 +540,13 @@ export default function SubmitTransaction() {
 
     return null;
   };
+
+  useEffect(() => {
+    if (xdrJson?.jsonString) {
+      const hasSorobanOp = isSorobanXdr(xdrJson.jsonString);
+      setIsSorobanTx(hasSorobanOp);
+    }
+  }, [xdrJson?.jsonString]);
 
   return (
     <Box gap="md" data-testid="submit-tx-xdr">
