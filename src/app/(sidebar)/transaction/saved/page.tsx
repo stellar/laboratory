@@ -13,7 +13,10 @@ import { SavedItemTimestampAndDelete } from "@/components/SavedItemTimestampAndD
 import { PageCard } from "@/components/layout/PageCard";
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 
-import { TRANSACTION_OPERATIONS } from "@/constants/transactionOperations";
+import {
+  TRANSACTION_OPERATIONS,
+  INITIAL_OPERATION,
+} from "@/constants/transactionOperations";
 import { useStore } from "@/store/useStore";
 import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransactions";
 import { arrayItem } from "@/helpers/arrayItem";
@@ -55,6 +58,12 @@ export default function SavedTransactions() {
 
       router.push(Routes.BUILD_TRANSACTION);
 
+      // reset both the classic and soroban related states
+      transaction.updateBuildOperations([INITIAL_OPERATION]);
+      transaction.updateBuildXdr("");
+      transaction.updateSorobanBuildOperation(INITIAL_OPERATION);
+      transaction.updateSorobanBuildXdr("");
+
       if (found.params) {
         transaction.setBuildParams(found.params);
       }
@@ -64,9 +73,10 @@ export default function SavedTransactions() {
           found?.operations?.[0]?.operation_type,
         );
         if (isSorobanTx) {
+          // update the soroban operation
           transaction.updateSorobanBuildOperation(found.operations[0]);
         } else {
-          transaction.resetSorobanBuildOperation();
+          // reset the soroban operations
           transaction.updateBuildOperations(found.operations);
         }
       }

@@ -45,13 +45,10 @@ const MAX_INT64 = "9223372036854775807";
 export const TransactionXdr = () => {
   const { transaction, network } = useStore();
   const router = useRouter();
-  const {
-    params: txnParams,
-    operations: txnOperations,
-    isValid,
-  } = transaction.build;
+  const { classic, params: txnParams, isValid } = transaction.build;
   const { updateSignActiveView, updateSignImportXdr, updateBuildXdr } =
     transaction;
+  const { operations: txnOperations } = classic;
 
   const isXdrInit = useIsXdrInit();
 

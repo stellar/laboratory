@@ -27,7 +27,10 @@ import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransa
 import { isSorobanOperationType } from "@/helpers/sorobanUtils";
 
 import { OP_SET_TRUST_LINE_FLAGS } from "@/constants/settings";
-import { TRANSACTION_OPERATIONS } from "@/constants/transactionOperations";
+import {
+  TRANSACTION_OPERATIONS,
+  INITIAL_OPERATION,
+} from "@/constants/transactionOperations";
 import { useStore } from "@/store/useStore";
 import {
   AnyObject,
@@ -38,12 +41,11 @@ import {
   OpBuildingError,
   OptionSigner,
   RevokeSponsorshipValue,
-  TxnOperation,
 } from "@/types/types";
 
 export const Operations = () => {
   const { transaction, network } = useStore();
-  const { operations: txnOperations, xdr: txnXdr, soroban } = transaction.build;
+  const { classic, soroban } = transaction.build;
   const {
     // Classic
     updateBuildOperations,
@@ -55,11 +57,10 @@ export const Operations = () => {
     setBuildOperationsError,
   } = transaction;
 
-  const {
-    // Soroban
-    operation: sorobanOperation,
-    xdr: sorobanTxnXdr,
-  } = soroban;
+  // Classic Operations
+  const { operations: txnOperations, xdr: txnXdr } = classic;
+  // Soroban Operation
+  const { operation: sorobanOperation, xdr: sorobanTxnXdr } = soroban;
 
   // Types
   type OperationError = {
@@ -71,11 +72,6 @@ export const Operations = () => {
 
   const [operationsError, setOperationsError] = useState<OperationError[]>([]);
   const [isSaveTxnModalVisible, setIsSaveTxnModalVisible] = useState(false);
-
-  const INITIAL_OPERATION: TxnOperation = {
-    operation_type: "",
-    params: [],
-  };
 
   const EMPTY_OPERATION_ERROR: OperationError = {
     operationType: "",
@@ -1576,7 +1572,7 @@ export const Operations = () => {
           page: "build",
           shareableUrl: shareableUrl("transactions-build"),
           params: transaction.build.params,
-          operations: transaction.build.operations,
+          operations: transaction.build.classic.operations,
         }}
         allSavedItems={localStorageSavedTransactions.get()}
         isVisible={isSaveTxnModalVisible}
