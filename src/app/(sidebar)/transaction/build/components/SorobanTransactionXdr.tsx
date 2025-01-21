@@ -50,7 +50,7 @@ export const SorobanTransactionXdr = () => {
         const builtXdr = buildSorobanTx({
           sorobanData,
           params: txnParams,
-          sorobanParams: operation.params,
+          sorobanOp: operation,
           networkPassphrase: network.passphrase,
         });
 

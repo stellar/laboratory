@@ -159,7 +159,11 @@ export const Operations = () => {
       // Validate all params in all operations
       const errors: OperationError[] = [];
 
-      // Check for Soroban operation errors
+      /*
+      / Soroban Operations
+      */
+
+      // Soroban: Check operation errors
       if (soroban.operation.operation_type) {
         const sorobanOpRequiredFields = [
           ...(TRANSACTION_OPERATIONS[soroban.operation.operation_type]
@@ -182,7 +186,7 @@ export const Operations = () => {
           operationType: soroban.operation.operation_type,
         };
 
-        // Validate params
+        // Soroban: Validate params
         Object.entries(soroban.operation.params).forEach(([key, value]) => {
           sorobanOpErrors = {
             ...sorobanOpErrors,
@@ -720,14 +724,24 @@ export const Operations = () => {
     opIndex: number,
     opValue: any,
     opType: string,
+    isSoroban: boolean = false,
   ) => {
-    const op = txnOperations[opIndex];
+    if (isSoroban) {
+      // Handle Soroban operation
+      updateSorobanBuildOperation({
+        ...sorobanOperation,
+        source_account: opValue,
+      });
+    } else {
+      // Handle classic operation
+      const op = txnOperations[opIndex];
+      updateBuildSingleOperation(opIndex, {
+        ...op,
+        source_account: opValue,
+      });
+    }
 
-    updateBuildSingleOperation(opIndex, {
-      ...op,
-      source_account: opValue,
-    });
-
+    // Validation logic is the same for both
     const validatedSourceAccount = validateOperationParam({
       opIndex,
       opParam: "source_account",
@@ -815,7 +829,12 @@ export const Operations = () => {
           error: operationsError[index]?.error?.["source_account"],
           isRequired: false,
           onChange: (e: ChangeEvent<HTMLInputElement>) => {
-            handleOperationSourceAccountChange(index, e.target.value, opType);
+            handleOperationSourceAccountChange(
+              index,
+              e.target.value,
+              opType,
+              isSorobanOperationType(opType),
+            );
           },
         })
       : null;
@@ -1063,10 +1082,8 @@ export const Operations = () => {
     );
   };
 
+  // only one operation is allowed in Soroban
   if (soroban.operation.operation_type) {
-    // only one operation is allowed in Soroban
-    const SOROBAN_INDEX = 0;
-
     return (
       <Box gap="md">
         <Card>
@@ -1092,7 +1109,7 @@ export const Operations = () => {
                 </Box>
 
                 <OperationTypeSelector
-                  index={SOROBAN_INDEX} // there is only one operation allowed in soroban
+                  index={0} // there is only one operation allowed in soroban
                   operationType={sorobanOperation.operation_type}
                 />
 
@@ -1126,7 +1143,7 @@ export const Operations = () => {
 
                     // Soroban base props
                     const sorobanBaseProps = {
-                      key: `${SOROBAN_INDEX}-${input}`,
+                      key: input,
                       value: sorobanOperation.params[input],
                       error: operationsError[0]?.error?.[input],
                       isRequired:
@@ -1172,7 +1189,7 @@ export const Operations = () => {
                   })}
                 </>
 
-                {/* Optional source account for all operations */}
+                {/* Optional source account for Soroban operations */}
                 <>{renderSourceAccount(sorobanOperation.operation_type, 0)}</>
               </Box>
             </>

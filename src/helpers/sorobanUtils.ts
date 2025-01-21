@@ -10,7 +10,7 @@ import {
 } from "@stellar/stellar-sdk";
 
 import { TransactionBuildParams } from "@/store/createStore";
-import { SorobanOpType } from "@/types/types";
+import { SorobanOpType, TxnOperation } from "@/types/types";
 
 export const isSorobanOperationType = (operationType: string) => {
   return [
@@ -87,12 +87,12 @@ export const getSorobanDataResult = ({
 export const buildSorobanTx = ({
   sorobanData,
   params,
-  sorobanParams,
+  sorobanOp,
   networkPassphrase,
 }: {
   sorobanData: xdr.SorobanTransactionData;
   params: TransactionBuildParams;
-  sorobanParams: any;
+  sorobanOp: TxnOperation;
   networkPassphrase: string;
 }) => {
   // decrement seq number by 1 because TransactionBuilder.build()
@@ -101,7 +101,7 @@ export const buildSorobanTx = ({
   const account = new Account(params.source_account, txSeq);
 
   // https://developers.stellar.org/docs/learn/fundamentals/fees-resource-limits-metering
-  const totalTxFee = BigInt(params.fee) + BigInt(sorobanParams.resource_fee);
+  const totalTxFee = BigInt(params.fee) + BigInt(sorobanOp.params.resource_fee);
 
   const getMemoValue = (memoType: string, memoValue: string) => {
     switch (memoType) {
@@ -143,7 +143,8 @@ export const buildSorobanTx = ({
     .setSorobanData(sorobanData)
     .addOperation(
       Operation.extendFootprintTtl({
-        extendTo: Number(sorobanParams.extend_ttl_to),
+        extendTo: Number(sorobanOp.params.extend_ttl_to),
+        source: sorobanOp.source_account,
       }),
     )
     .build();
