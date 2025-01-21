@@ -229,6 +229,12 @@ const initTransactionParamsState = {
   memo: {},
 };
 
+const initTransactionOperationState = {
+  operation_type: "",
+  params: {},
+  source_account: "",
+};
+
 const initTransactionState = {
   build: {
     classic: {
@@ -236,7 +242,7 @@ const initTransactionState = {
       xdr: "",
     },
     soroban: {
-      operation: {},
+      operation: initTransactionOperationState,
       xdr: "",
     },
     params: initTransactionParamsState,
