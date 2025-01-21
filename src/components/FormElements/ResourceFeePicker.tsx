@@ -102,9 +102,12 @@ export const ResourceFeePicker = ({
         builtXdr = buildSorobanTx({
           sorobanData,
           params: txnParams,
-          sorobanParams: {
-            ...operation.params,
-            resource_fee: BOGUS_RESOURCE_FEE,
+          sorobanOp: {
+            ...operation,
+            params: {
+              ...operation.params,
+              resource_fee: BOGUS_RESOURCE_FEE,
+            },
           },
           networkPassphrase: network.passphrase,
         }).toXDR();
