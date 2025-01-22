@@ -595,9 +595,6 @@ export const createStore = (options: CreateStoreOptions) =>
             },
             transaction: {
               build: {
-                error: false,
-                isValid: true,
-                xdr: false,
                 classic: {
                   operations: true,
                   xdr: false,
@@ -606,6 +603,9 @@ export const createStore = (options: CreateStoreOptions) =>
                   operation: true,
                   xdr: false,
                 },
+                params: true,
+                error: false,
+                isValid: true,
               },
               sign: {
                 activeView: true,
