@@ -17,11 +17,13 @@ import "./styles.scss";
 
 /* Create contract storage JSON-like structure */
 export const ScValPrettyJson = ({
-  xdrString,
   isReady,
+  xdrString,
+  json,
 }: {
-  xdrString: string;
   isReady: boolean;
+  xdrString?: string;
+  json?: AnyObject | null;
 }) => {
   const { network } = useStore();
 
@@ -31,7 +33,9 @@ export const ScValPrettyJson = ({
 
   const parseJson = () => {
     try {
-      return parse(StellarXdr.decode("ScVal", xdrString)) as AnyObject;
+      return xdrString
+        ? (parse(StellarXdr.decode("ScVal", xdrString)) as AnyObject)
+        : null;
     } catch (e: any) {
       return null;
     }
@@ -329,7 +333,11 @@ export const ScValPrettyJson = ({
   };
 
   // Entry point
-  return <div className="ScValPrettyJson">{render({ item: parseJson() })}</div>;
+  return (
+    <div className="ScValPrettyJson">
+      {render({ item: typeof json !== "undefined" ? json : parseJson() })}
+    </div>
+  );
 };
 
 // =============================================================================

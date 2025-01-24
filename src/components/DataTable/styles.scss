@@ -7,6 +7,13 @@
     width: 100%;
     position: relative;
     overflow: hidden;
+
+    & > .Loader {
+      position: absolute;
+      top: 5rem;
+      left: 50%;
+      transform: translateX(-50%);
+    }
   }
 
   &__scroll {
@@ -19,6 +26,7 @@
     text-align: left;
     font-weight: var(--sds-fw-medium);
     color: var(--sds-clr-gray-11);
+    transition: opacity var(--sds-anim-transition-default);
 
     tr[data-style="row"] {
       display: grid;
@@ -70,6 +78,10 @@
     tr:not(:last-child),
     thead tr {
       border-bottom: 1px solid var(--sds-clr-gray-06);
+    }
+
+    &[data-disabled="true"] {
+      opacity: 0.5;
     }
   }
 

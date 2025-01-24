@@ -403,6 +403,11 @@ export type ContractStorageResponseItem = {
   expired?: boolean;
 };
 
+export type ContractStorageProcessedItem<T> = T & {
+  keyJson?: AnyObject;
+  valueJson?: AnyObject;
+};
+
 // =============================================================================
 // Data table
 // =============================================================================

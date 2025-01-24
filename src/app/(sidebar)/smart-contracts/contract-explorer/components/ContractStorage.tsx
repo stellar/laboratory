@@ -12,7 +12,11 @@ import { capitalizeString } from "@/helpers/capitalizeString";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
-import { ContractStorageResponseItem, NetworkType } from "@/types/types";
+import {
+  ContractStorageProcessedItem,
+  ContractStorageResponseItem,
+  NetworkType,
+} from "@/types/types";
 
 export const ContractStorage = ({
   isActive,
@@ -71,18 +75,28 @@ export const ContractStorage = ({
         { id: "ttl", value: "TTL", isSortable: true },
         { id: "updated", value: "Updated", isSortable: true },
       ]}
-      formatDataRow={(vh: ContractStorageResponseItem) => [
+      formatDataRow={(
+        vh: ContractStorageProcessedItem<ContractStorageResponseItem>,
+      ) => [
         {
           value: (
             <div className="CodeBox">
-              <ScValPrettyJson xdrString={vh.key} isReady={isXdrInit} />
+              <ScValPrettyJson
+                xdrString={vh.key}
+                json={vh.keyJson}
+                isReady={isXdrInit}
+              />
             </div>
           ),
         },
         {
           value: (
             <div className="CodeBox">
-              <ScValPrettyJson xdrString={vh.value} isReady={isXdrInit} />
+              <ScValPrettyJson
+                xdrString={vh.value}
+                json={vh.valueJson}
+                isReady={isXdrInit}
+              />
             </div>
           ),
         },

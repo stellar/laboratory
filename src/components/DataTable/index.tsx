@@ -1,11 +1,18 @@
 import { useEffect, useState } from "react";
-import { Button, Card, Icon } from "@stellar/design-system";
+import { Button, Card, Icon, Loader } from "@stellar/design-system";
 import { Box } from "@/components/layout/Box";
-import { DataTableCell, DataTableHeader, SortDirection } from "@/types/types";
+import { processContractStorageData } from "@/helpers/processContractStorageData";
+import {
+  AnyObject,
+  ContractStorageProcessedItem,
+  DataTableCell,
+  DataTableHeader,
+  SortDirection,
+} from "@/types/types";
 
 import "./styles.scss";
 
-export const DataTable = <T,>({
+export const DataTable = <T extends AnyObject>({
   tableId,
   cssGridTemplateColumns,
   tableHeaders,
@@ -23,6 +30,12 @@ export const DataTable = <T,>({
   const PAGE_SIZE = 20;
   const tableDataSize = tableData.length;
 
+  // Data
+  const [processedData, setProcessedData] = useState<
+    ContractStorageProcessedItem<T>[]
+  >([]);
+  const [isUpdating, setIsUpdating] = useState(false);
+
   // Sort by
   const [sortById, setSortById] = useState("");
   const [sortByDir, setSortByDir] = useState<SortDirection>("default");
@@ -32,8 +45,23 @@ export const DataTable = <T,>({
   const [totalPageCount, setTotalPageCount] = useState(1);
 
   useEffect(() => {
+    const data = processContractStorageData({
+      data: tableData,
+      sortById,
+      sortByDir,
+    });
+
+    setProcessedData(data);
+  }, [tableData, sortByDir, sortById]);
+
+  useEffect(() => {
     setTotalPageCount(Math.ceil(tableDataSize / PAGE_SIZE));
   }, [tableDataSize]);
+
+  // Hide loader when processed data is done
+  useEffect(() => {
+    setIsUpdating(false);
+  }, [processedData]);
 
   const getSortByProps = (th: DataTableHeader) => {
     if (th.isSortable) {
@@ -67,27 +95,7 @@ export const DataTable = <T,>({
     setSortById(headerId);
     setSortByDir(sortDir);
     setCurrentPage(1);
-  };
-
-  const tableRowsData = (): DataTableCell[][] => {
-    let sortedData = [...tableData];
-
-    // Sort
-    if (sortById) {
-      if (["asc", "desc"].includes(sortByDir)) {
-        // Asc
-        sortedData = sortedData.sort((a: any, b: any) =>
-          a[sortById] > b[sortById] ? 1 : -1,
-        );
-
-        // Desc
-        if (sortByDir === "desc") {
-          sortedData = sortedData.reverse();
-        }
-      }
-    }
-
-    return sortedData.map(formatDataRow);
+    setIsUpdating(true);
   };
 
   const paginateData = (data: DataTableCell[][]): DataTableCell[][] => {
@@ -105,18 +113,20 @@ export const DataTable = <T,>({
     "--DataTable-grid-template-columns": cssGridTemplateColumns,
   } as React.CSSProperties;
 
-  const displayData = paginateData(tableRowsData());
+  const displayData = paginateData(processedData.map(formatDataRow));
 
   return (
     <Box gap="md">
       {/* Table */}
       <Card noPadding={true}>
         <div className="DataTable__container">
+          {isUpdating ? <Loader /> : null}
           <div className="DataTable__scroll">
             <table
               className="DataTable__table"
               style={customStyle}
               data-testid={`${tableId}-table`}
+              data-disabled={isUpdating}
             >
               <thead>
                 <tr data-style="row" role="row">
