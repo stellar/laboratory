@@ -5,15 +5,17 @@ import { ContractVersionHistoryResponseItem, NetworkType } from "@/types/types";
 /**
  * StellarExpert API to get smart contract’s version history
  */
-export const useSEContracVersionHistory = ({
+export const useSEContractVersionHistory = ({
+  isActive,
   networkId,
   contractId,
 }: {
+  isActive: boolean;
   networkId: NetworkType;
   contractId: string;
 }) => {
   const query = useQuery<ContractVersionHistoryResponseItem[]>({
-    queryKey: ["useSEContracVersionHistory", networkId, contractId],
+    queryKey: ["useSEContractVersionHistory", networkId, contractId],
     queryFn: async () => {
       // Not supported networks
       if (["futurenet", "custom"].includes(networkId)) {
@@ -38,7 +40,9 @@ export const useSEContracVersionHistory = ({
         throw `Something went wrong. ${e}`;
       }
     },
-    enabled: Boolean(networkId && contractId),
+    enabled: Boolean(isActive && networkId && contractId),
+    // Keep data for 30 seconds
+    staleTime: 1000 * 30,
   });
 
   return query;

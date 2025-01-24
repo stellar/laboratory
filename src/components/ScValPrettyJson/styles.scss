@@ -1,0 +1,141 @@
+@use "../../styles/utils.scss" as *;
+
+.ScValPrettyJson {
+  --ScValPrettyJson-punctuation-color: var(--sds-clr-gray-12);
+
+  font-family: var(--sds-ff-monospace);
+  font-size: pxToRem(14px);
+  line-height: pxToRem(20px);
+  font-weight: var(--sds-fw-medium);
+  letter-spacing: -0.5px;
+  color: var(--sds-clr-gray-12);
+
+  &__container {
+    padding-left: pxToRem(16px);
+
+    & > .ScValPrettyJson__value {
+      &:not(:last-child) {
+        &::after {
+          content: ",";
+          color: var(--ScValPrettyJson-punctuation-color);
+        }
+
+        // Quotes + comma
+        &[data-type="symbol"] {
+          &::after {
+            content: '",';
+            color: var(--ScValPrettyJson-punctuation-color);
+          }
+        }
+      }
+    }
+  }
+
+  &__row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    .ScValPrettyJson__value {
+      padding-left: pxToRem(4px);
+    }
+
+    &:not(:last-child) {
+      .ScValPrettyJson__value {
+        &::after {
+          content: ",";
+          color: var(--ScValPrettyJson-punctuation-color);
+        }
+
+        // Quotes + comma
+        &[data-type="string"] {
+          &::after {
+            content: '",';
+          }
+        }
+      }
+
+      .ScValPrettyJson__container {
+        // Add comma after nested closing bracket
+        & ~ .ScValPrettyJson__bracket {
+          &::after {
+            content: ",";
+          }
+        }
+      }
+    }
+
+    // Nested object and array
+    .ScValPrettyJson__container {
+      & ~ .ScValPrettyJson__bracket {
+        // Force closing bracket to new line
+        width: 100%;
+      }
+    }
+  }
+
+  &__key {
+    &::after {
+      content: ":";
+      padding-right: pxToRem(4px);
+    }
+
+    // Quotes + colon
+    &[data-type="symbol"],
+    &[data-type="string"] {
+      &::after {
+        content: '":' !important;
+      }
+    }
+  }
+
+  &__key,
+  &__value {
+    // Symbol
+    &[data-type="symbol"],
+    &[data-type="string"] {
+      color: var(--sds-clr-navy-11);
+
+      &::before,
+      &::after {
+        content: '"';
+        color: var(--ScValPrettyJson-punctuation-color);
+      }
+    }
+
+    // String
+    &[data-type="string"] {
+      color: var(--sds-clr-gray-12);
+    }
+
+    // Number
+    &[data-type="i8"],
+    &[data-type="u8"],
+    &[data-type="i16"],
+    &[data-type="u16"],
+    &[data-type="i32"],
+    &[data-type="u32"],
+    &[data-type="i64"],
+    &[data-type="u64"] {
+      color: var(--sds-clr-teal-11);
+    }
+
+    // Big int
+    &[data-type="i128"],
+    &[data-type="u128"],
+    &[data-type="i256"],
+    &[data-type="u256"] {
+      color: var(--sds-clr-lime-11);
+    }
+
+    // Bool
+    &[data-type="bool"] {
+      color: var(--sds-clr-pink-11);
+    }
+
+    // Address
+    &[data-type="address"] {
+      color: var(--sds-clr-gray-12);
+    }
+  }
+}

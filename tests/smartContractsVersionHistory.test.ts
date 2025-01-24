@@ -46,7 +46,7 @@ test.describe("Smart Contracts: Version History", () => {
   });
 
   test("Table data", async ({ page }) => {
-    const table = page.getByTestId("version-history-table");
+    const table = page.getByTestId("contract-version-history-table");
     const colWasm = table.locator("th").nth(0);
     const colUpdated = table.locator("th").nth(1);
 

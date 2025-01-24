@@ -390,3 +390,31 @@ export type ContractVersionHistoryResponseItem = {
   ts: number;
   wasm: string;
 };
+
+export type ContractStorageDurability = "instance" | "persistent" | "temporary";
+
+export type ContractStorageResponseItem = {
+  durability: ContractStorageDurability;
+  key: string;
+  paging_token: string;
+  ttl: number;
+  updated: number;
+  value: any;
+  expired?: boolean;
+};
+
+// =============================================================================
+// Data table
+// =============================================================================
+export type SortDirection = "default" | "asc" | "desc";
+
+export type DataTableHeader = {
+  id: string;
+  value: string;
+  isSortable?: boolean;
+};
+
+export type DataTableCell = {
+  value: React.ReactNode;
+  isBold?: boolean;
+};

@@ -1,5 +1,13 @@
 import { useState } from "react";
-import { Avatar, Badge, Card, Icon, Logo, Text } from "@stellar/design-system";
+import {
+  Avatar,
+  Badge,
+  Card,
+  Icon,
+  Link,
+  Logo,
+  Text,
+} from "@stellar/design-system";
 
 import { Box } from "@/components/layout/Box";
 import { SdsLink } from "@/components/SdsLink";
@@ -10,6 +18,7 @@ import { stellarExpertAccountLink } from "@/helpers/stellarExpertAccountLink";
 
 import { ContractInfoApiResponse, NetworkType } from "@/types/types";
 
+import { ContractStorage } from "./ContractStorage";
 import { VersionHistory } from "./VersionHistory";
 
 export const ContractInfo = ({
@@ -19,7 +28,16 @@ export const ContractInfo = ({
   infoData: ContractInfoApiResponse;
   networkId: NetworkType;
 }) => {
-  const [activeTab, setActiveTab] = useState("contract-version-history");
+  type ContractTabId =
+    | "contract-bindings"
+    | "contract-contract-info"
+    | "contract-source-code"
+    | "contract-contract-storage"
+    | "contract-version-history";
+
+  const [activeTab, setActiveTab] = useState<ContractTabId>(
+    "contract-version-history",
+  );
 
   type ContractExplorerInfoField = {
     id: string;
@@ -158,11 +176,16 @@ export const ContractInfo = ({
           <InfoFieldItem
             key={field.id}
             label={field.label}
-            // TODO: link to Contract Storage tab when ready
             value={
-              infoData.storage_entries
-                ? formatEntriesText(infoData.storage_entries)
-                : null
+              infoData.storage_entries ? (
+                <Link
+                  onClick={() => {
+                    setActiveTab("contract-contract-storage");
+                  }}
+                >
+                  {formatEntriesText(infoData.storage_entries)}
+                </Link>
+              ) : null
             }
           />
         );
@@ -226,13 +249,21 @@ export const ContractInfo = ({
             tab4={{
               id: "contract-contract-storage",
               label: "Contract Storage",
-              content: <ComingSoonText />,
+              content: (
+                <ContractStorage
+                  isActive={activeTab === "contract-contract-storage"}
+                  contractId={infoData.contract}
+                  networkId={networkId}
+                  totalEntriesCount={infoData.storage_entries}
+                />
+              ),
             }}
             tab5={{
               id: "contract-version-history",
               label: "Version History",
               content: (
                 <VersionHistory
+                  isActive={activeTab === "contract-version-history"}
                   contractId={infoData.contract}
                   networkId={networkId}
                 />
@@ -240,7 +271,7 @@ export const ContractInfo = ({
             }}
             activeTabId={activeTab}
             onTabChange={(tabId) => {
-              setActiveTab(tabId);
+              setActiveTab(tabId as ContractTabId);
             }}
           />
         </Box>
