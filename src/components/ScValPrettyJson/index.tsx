@@ -335,7 +335,7 @@ export const ScValPrettyJson = ({
   // Entry point
   return (
     <div className="ScValPrettyJson">
-      {render({ item: typeof json !== "undefined" ? json : parseJson() })}
+      {render({ item: json ? json : parseJson() })}
     </div>
   );
 };
