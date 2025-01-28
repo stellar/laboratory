@@ -5,7 +5,7 @@ import {
   OPERATION_TRUSTLINE_CLEAR_FLAGS,
   OPERATION_TRUSTLINE_SET_FLAGS,
 } from "@/constants/settings";
-import { AnyObject } from "@/types/types";
+import { AnyObject, TxnOperation } from "@/types/types";
 
 type TransactionOperation = {
   label: string;
@@ -17,6 +17,11 @@ type TransactionOperation = {
     [key: string]: string;
   };
   custom?: AnyObject;
+};
+
+export const INITIAL_OPERATION: TxnOperation = {
+  operation_type: "",
+  params: [],
 };
 
 export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
