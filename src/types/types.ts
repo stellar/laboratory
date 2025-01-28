@@ -404,8 +404,8 @@ export type ContractStorageResponseItem = {
 };
 
 export type ContractStorageProcessedItem<T> = T & {
-  keyJson?: AnyObject;
-  valueJson?: AnyObject;
+  keyJson?: AnyObject | null;
+  valueJson?: AnyObject | null;
 };
 
 // =============================================================================
@@ -417,6 +417,7 @@ export type DataTableHeader = {
   id: string;
   value: string;
   isSortable?: boolean;
+  filter?: string[];
 };
 
 export type DataTableCell = {

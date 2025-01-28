@@ -9,6 +9,7 @@ import { useSEContractStorage } from "@/query/external/useSEContracStorage";
 import { formatEpochToDate } from "@/helpers/formatEpochToDate";
 import { formatNumber } from "@/helpers/formatNumber";
 import { capitalizeString } from "@/helpers/capitalizeString";
+import { decodeScVal } from "@/helpers/decodeScVal";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
@@ -64,13 +65,74 @@ export const ContractStorage = ({
     );
   }
 
+  const parsedKeyValueData = () => {
+    return storageData.map((i) => ({
+      ...i,
+      keyJson: i.key ? decodeScVal(i.key) : undefined,
+      valueJson: i.value ? decodeScVal(i.value) : undefined,
+    }));
+  };
+
+  const parsedData = parsedKeyValueData();
+
+  const getKeyValueFilters = () => {
+    return parsedData.reduce(
+      (
+        res: {
+          key: string[];
+          value: string[];
+        },
+        cur,
+      ) => {
+        // Key
+        if (cur.keyJson && Array.isArray(cur.keyJson)) {
+          const keyFilter = cur.keyJson[0];
+
+          if (!res.key.includes(keyFilter)) {
+            res.key = [...res.key, keyFilter];
+          }
+        }
+
+        // Value
+        if (cur.valueJson && typeof cur.valueJson === "object") {
+          // Excluding keys that start with _ because on the UI structure is
+          // different. For example, for Instance type.
+          const valueFilters = Object.keys(cur.valueJson).filter(
+            (f) => !f.startsWith("_"),
+          );
+
+          valueFilters.forEach((v) => {
+            if (!res.value.includes(v)) {
+              res.value = [...res.value, v];
+            }
+          });
+        }
+
+        return res;
+      },
+      { key: [], value: [] },
+    );
+  };
+
+  const keyValueFilters = getKeyValueFilters();
+
   return (
     <DataTable
       tableId="contract-storage"
-      tableData={storageData}
+      tableData={parsedData}
       tableHeaders={[
-        { id: "key", value: "Key", isSortable: false },
-        { id: "value", value: "Value", isSortable: false },
+        {
+          id: "key",
+          value: "Key",
+          isSortable: false,
+          filter: keyValueFilters.key,
+        },
+        {
+          id: "value",
+          value: "Value",
+          isSortable: false,
+          filter: keyValueFilters.value,
+        },
         { id: "durability", value: "Durability", isSortable: true },
         { id: "ttl", value: "TTL", isSortable: true },
         { id: "updated", value: "Updated", isSortable: true },
@@ -81,22 +143,14 @@ export const ContractStorage = ({
         {
           value: (
             <div className="CodeBox">
-              <ScValPrettyJson
-                xdrString={vh.key}
-                json={vh.keyJson}
-                isReady={isXdrInit}
-              />
+              <ScValPrettyJson xdrString={vh.key} isReady={isXdrInit} />
             </div>
           ),
         },
         {
           value: (
             <div className="CodeBox">
-              <ScValPrettyJson
-                xdrString={vh.value}
-                json={vh.valueJson}
-                isReady={isXdrInit}
-              />
+              <ScValPrettyJson xdrString={vh.value} isReady={isXdrInit} />
             </div>
           ),
         },

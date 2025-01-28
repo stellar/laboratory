@@ -1,5 +1,3 @@
-import { parse } from "lossless-json";
-import * as StellarXdr from "@/helpers/StellarXdr";
 import {
   AnyObject,
   ContractStorageProcessedItem,
@@ -10,19 +8,14 @@ export const processContractStorageData = <T extends AnyObject>({
   data,
   sortById,
   sortByDir,
+  filters,
 }: {
   data: T[];
   sortById: string | undefined;
   sortByDir: SortDirection;
+  filters: { [key: string]: string[] };
 }): ContractStorageProcessedItem<T>[] => {
   let sortedData = [...data];
-
-  // Decode key and value
-  sortedData = sortedData.map((i) => ({
-    ...i,
-    keyJson: i.key ? decodeScVal(i.key) : undefined,
-    valueJson: i.value ? decodeScVal(i.value) : undefined,
-  }));
 
   // Sort
   if (sortById) {
@@ -39,17 +32,36 @@ export const processContractStorageData = <T extends AnyObject>({
     }
   }
 
-  // TODO: Filter
+  // Filter
+  const keyFilters = filters.key;
+  const valueFilters = filters.value;
+
+  if (keyFilters.length > 0 || valueFilters.length > 0) {
+    sortedData = sortedData.filter((s) => {
+      let hasKeyFilter = false;
+      let hasValueFilter = false;
+
+      // Key
+      if (s.keyJson && Array.isArray(s.keyJson)) {
+        const sFilter = s.keyJson[0];
+
+        hasKeyFilter = keyFilters.includes(sFilter);
+      }
+
+      // Value
+      if (s.valueJson && typeof s.valueJson === "object") {
+        const vFilters = Object.keys(s.valueJson);
+
+        valueFilters.forEach((v) => {
+          if (vFilters.includes(v)) {
+            hasValueFilter = true;
+          }
+        });
+      }
+
+      return hasKeyFilter || hasValueFilter;
+    });
+  }
 
   return sortedData as ContractStorageProcessedItem<T>[];
-};
-
-const decodeScVal = (xdrString: string) => {
-  try {
-    return xdrString
-      ? (parse(StellarXdr.decode("ScVal", xdrString)) as AnyObject)
-      : null;
-  } catch (e) {
-    return null;
-  }
 };
