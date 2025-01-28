@@ -1394,7 +1394,7 @@ test.describe("Build Transaction Page", () => {
         });
       });
 
-      test("Check rendering betweem classic and soroban", async ({ page }) => {
+      test("Check rendering between classic and soroban", async ({ page }) => {
         // Select Soroban Operation
         const { operation_0 } = await selectOperationType({
           page,

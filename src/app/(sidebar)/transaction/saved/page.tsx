@@ -22,7 +22,16 @@ import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransa
 import { arrayItem } from "@/helpers/arrayItem";
 import { isSorobanOperationType } from "@/helpers/sorobanUtils";
 
-import { SavedTransaction, SavedTransactionPage } from "@/types/types";
+import {
+  SavedTransaction,
+  SavedTransactionPage,
+  TxnOperation,
+} from "@/types/types";
+
+const INITIAL_OPERATION: TxnOperation = {
+  operation_type: "",
+  params: [],
+};
 
 export default function SavedTransactions() {
   const { network, transaction, xdr } = useStore();
@@ -73,10 +82,12 @@ export default function SavedTransactions() {
           found?.operations?.[0]?.operation_type,
         );
         if (isSorobanTx) {
-          // update the soroban operation
+          // reset the classic operation
+          transaction.updateBuildOperations([INITIAL_OPERATION]);
           transaction.updateSorobanBuildOperation(found.operations[0]);
         } else {
-          // reset the soroban operations
+          // reset the soroban operation
+          transaction.updateSorobanBuildOperation(INITIAL_OPERATION);
           transaction.updateBuildOperations(found.operations);
         }
       }

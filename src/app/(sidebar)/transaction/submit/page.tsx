@@ -70,7 +70,6 @@ const SUBMIT_OPTIONS = [
 // Define operation types for better type safety
 interface DecodedOperationBody {
   extend_footprint_ttl?: { ext: string };
-  restore_footprint?: { ext: string };
   invoke_host_function?: { ext: string };
 }
 

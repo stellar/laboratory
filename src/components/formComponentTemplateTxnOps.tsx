@@ -15,7 +15,7 @@ import { AuthorizePicker } from "@/components/FormElements/AuthorizePicker";
 import { NumberFractionPicker } from "@/components/FormElements/NumberFractionPicker";
 import { RevokeSponsorshipPicker } from "@/components/FormElements/RevokeSponsorshipPicker";
 import { ClaimantsPicker } from "@/components/FormElements/ClaimantsPicker";
-import { ResourceFeePicker } from "@/components/FormElements/ResourceFeePicker";
+import { ResourceFeePickerWithQuery } from "@/components/FormElements/ResourceFeePickerWithQuery";
 
 import { removeLeadingZeroes } from "@/helpers/removeLeadingZeroes";
 
@@ -480,7 +480,7 @@ export const formComponentTemplateTxnOps = ({
     case "resource_fee":
       return {
         render: (templ: SorobanTemplateRenderProps) => (
-          <ResourceFeePicker
+          <ResourceFeePickerWithQuery
             id={id}
             label="Resource Fee (in stroops)"
             value={removeLeadingZeroes(templ.value || "")}

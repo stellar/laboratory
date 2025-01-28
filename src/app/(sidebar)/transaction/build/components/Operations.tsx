@@ -82,6 +82,11 @@ export const Operations = () => {
 
   const SET_TRUSTLINE_FLAGS_CUSTOM_MESSAGE = "At least one flag is required";
 
+  const resetSorobanOperation = () => {
+    updateSorobanBuildOperation(INITIAL_OPERATION);
+    setOperationsError([EMPTY_OPERATION_ERROR]);
+  };
+
   const updateOptionParamAndError = ({
     type,
     index,
@@ -156,8 +161,8 @@ export const Operations = () => {
       const errors: OperationError[] = [];
 
       /*
-      / Soroban Operations
-      */
+       * Soroban Operations
+       */
 
       // Soroban: Check operation errors
       if (soroban.operation.operation_type) {
@@ -187,6 +192,7 @@ export const Operations = () => {
           sorobanOpErrors = {
             ...sorobanOpErrors,
             ...validateOperationParam({
+              // setting index to 0 because only one operation is allowed with Soroban
               opIndex: 0,
               opParam: key,
               opValue: value,
@@ -201,6 +207,7 @@ export const Operations = () => {
           sorobanOpErrors = {
             ...sorobanOpErrors,
             ...validateOperationParam({
+              // setting index to 0 because only one operation is allowed with Soroban
               opIndex: 0,
               opParam: "source_account",
               opValue: soroban.operation.source_account,
@@ -213,6 +220,7 @@ export const Operations = () => {
         // Check for custom messages
         sorobanOpErrors = operationCustomMessage({
           opType: soroban.operation.operation_type,
+          // setting index to 0 because only one operation is allowed with Soroban
           opIndex: 0,
           opError: sorobanOpErrors,
         });
@@ -670,7 +678,8 @@ export const Operations = () => {
 
     // Validate the parameter
     const validatedOpParam = validateOperationParam({
-      opIndex: 0, // Soroban only has one operation
+      // setting index to 0 because only one operation is allowed with Soroban
+      opIndex: 0,
       opParam,
       opValue,
       opType,
@@ -913,14 +922,6 @@ export const Operations = () => {
     return null;
   };
 
-  const resetSorobanOperation = () => {
-    updateSorobanBuildOperation({
-      operation_type: "",
-      params: {},
-      source_account: "",
-    });
-  };
-
   const OperationTypeSelector = ({
     index,
     operationType,
@@ -945,18 +946,21 @@ export const Operations = () => {
             const defaultParamKeys = Object.keys(defaultParams);
 
             if (isSorobanOperationType(e.target.value)) {
+              // reset the classic operation
+              updateOptionParamAndError({ type: "reset" });
               updateSorobanBuildOperation({
                 operation_type: e.target.value,
                 params: defaultParams,
                 source_account: "",
               });
             } else {
+              // if it's classic, reset the soroban operation
+              resetSorobanOperation();
               updateBuildSingleOperation(index, {
                 operation_type: e.target.value,
                 params: defaultParams,
                 source_account: "",
               });
-              resetSorobanOperation();
             }
 
             let initParamError: OperationError = EMPTY_OPERATION_ERROR;
@@ -1035,7 +1039,6 @@ export const Operations = () => {
           <option value="end_sponsoring_future_reserves">
             End Sponsoring Future Reserves
           </option>
-          <option value="restore_footprint">Restore Footprint (Soroban)</option>
           <option value="revoke_sponsorship">Revoke Sponsorship</option>
           <option value="clawback">Clawback</option>
           <option value="clawback_claimable_balance">
@@ -1078,117 +1081,115 @@ export const Operations = () => {
     );
   };
 
-  // only one operation is allowed in Soroban
+  // Rendering Soroban related operation
+  // Unlike classic transactions, Soroban tx can only have one operation
+  // So we don't .map over operations here
   if (soroban.operation.operation_type) {
     return (
       <Box gap="md">
         <Card>
           <Box gap="lg">
-            {/* Soroban Operation */}
-            <>
+            <Box
+              key={`op`}
+              gap="lg"
+              addlClassName="PageBody__content"
+              data-testid="build-soroban-transaction-operation"
+            >
+              {/* Operation label and action buttons */}
               <Box
-                key={`op`}
                 gap="lg"
-                addlClassName="PageBody__content"
-                data-testid="build-soroban-transaction-operation"
+                direction="row"
+                align="center"
+                justify="space-between"
               >
-                {/* Operation label and action buttons */}
-                <Box
-                  gap="lg"
-                  direction="row"
-                  align="center"
-                  justify="space-between"
-                >
-                  <Badge size="md" variant="secondary">
-                    Operation
-                  </Badge>
-                </Box>
-
-                <OperationTypeSelector
-                  index={0} // there is only one operation allowed in soroban
-                  operationType={sorobanOperation.operation_type}
-                />
-
-                <>
-                  {!network.rpcUrl ? (
-                    <Box gap="sm" direction="row" align="center">
-                      <Notification
-                        variant="error"
-                        title="Network Configuration Required"
-                      >
-                        An RPC URL must be configured in the network settings to
-                        proceed with a Soroban operation.
-                      </Notification>
-                    </Box>
-                  ) : null}
-                </>
-
-                {/* Operation params */}
-                <>
-                  {TRANSACTION_OPERATIONS[
-                    sorobanOperation.operation_type
-                  ]?.params.map((input, paramIndex) => {
-                    const component = formComponentTemplateTxnOps({
-                      param: input,
-                      opType: sorobanOperation.operation_type,
-                      index: paramIndex, // @check
-                      custom:
-                        TRANSACTION_OPERATIONS[sorobanOperation.operation_type]
-                          .custom?.[input],
-                    });
-
-                    // Soroban base props
-                    const sorobanBaseProps = {
-                      key: input,
-                      value: sorobanOperation.params[input],
-                      error: operationsError[0]?.error?.[input],
-                      isRequired:
-                        TRANSACTION_OPERATIONS[
-                          sorobanOperation.operation_type
-                        ].requiredParams.includes(input),
-                      isDisabled: Boolean(!network.rpcUrl),
-                    };
-
-                    if (component) {
-                      switch (input) {
-                        case "contract":
-                        case "key_xdr":
-                        case "extend_ttl_to":
-                        case "resource_fee":
-                        case "durability":
-                          // @TODO add an optional source account
-                          return component.render({
-                            ...sorobanBaseProps,
-                            onChange: (e: ChangeEvent<HTMLInputElement>) => {
-                              handleSorobanOperationParamChange({
-                                opParam: input,
-                                opValue: e.target.value,
-                                opType: sorobanOperation.operation_type,
-                              });
-                            },
-                          });
-                        default:
-                          return component.render({
-                            ...sorobanBaseProps,
-                            onChange: (e: ChangeEvent<HTMLInputElement>) => {
-                              handleSorobanOperationParamChange({
-                                opParam: input,
-                                opValue: e.target.value,
-                                opType: sorobanOperation.operation_type,
-                              });
-                            },
-                          });
-                      }
-                    }
-
-                    return null;
-                  })}
-                </>
-
-                {/* Optional source account for Soroban operations */}
-                <>{renderSourceAccount(sorobanOperation.operation_type, 0)}</>
+                <Badge size="md" variant="secondary">
+                  Operation
+                </Badge>
               </Box>
-            </>
+
+              <OperationTypeSelector
+                index={0} // there is only one operation allowed in soroban
+                operationType={sorobanOperation.operation_type}
+              />
+
+              <>
+                {!network.rpcUrl ? (
+                  <Box gap="sm" direction="row" align="center">
+                    <Notification
+                      variant="error"
+                      title="Network Configuration Required"
+                    >
+                      An RPC URL must be configured in the network settings to
+                      proceed with a Soroban operation.
+                    </Notification>
+                  </Box>
+                ) : null}
+              </>
+
+              {/* Operation params */}
+              <>
+                {TRANSACTION_OPERATIONS[
+                  sorobanOperation.operation_type
+                ]?.params.map((input) => {
+                  const component = formComponentTemplateTxnOps({
+                    param: input,
+                    opType: sorobanOperation.operation_type,
+                    index: 0, // no index for soroban operations
+                    custom:
+                      TRANSACTION_OPERATIONS[sorobanOperation.operation_type]
+                        .custom?.[input],
+                  });
+
+                  // Soroban base props
+                  const sorobanBaseProps = {
+                    key: input,
+                    value: sorobanOperation.params[input],
+                    error: operationsError[0]?.error?.[input],
+                    isRequired:
+                      TRANSACTION_OPERATIONS[
+                        sorobanOperation.operation_type
+                      ].requiredParams.includes(input),
+                    isDisabled: Boolean(!network.rpcUrl),
+                  };
+
+                  if (component) {
+                    switch (input) {
+                      case "contract":
+                      case "key_xdr":
+                      case "extend_ttl_to":
+                      case "resource_fee":
+                      case "durability":
+                        return component.render({
+                          ...sorobanBaseProps,
+                          onChange: (e: ChangeEvent<HTMLInputElement>) => {
+                            handleSorobanOperationParamChange({
+                              opParam: input,
+                              opValue: e.target.value,
+                              opType: sorobanOperation.operation_type,
+                            });
+                          },
+                        });
+                      default:
+                        return component.render({
+                          ...sorobanBaseProps,
+                          onChange: (e: ChangeEvent<HTMLInputElement>) => {
+                            handleSorobanOperationParamChange({
+                              opParam: input,
+                              opValue: e.target.value,
+                              opType: sorobanOperation.operation_type,
+                            });
+                          },
+                        });
+                    }
+                  }
+
+                  return null;
+                })}
+              </>
+
+              {/* Optional source account for Soroban operations */}
+              <>{renderSourceAccount(sorobanOperation.operation_type, 0)}</>
+            </Box>
 
             <Box gap="sm" direction="row" align="center">
               <Notification
@@ -1209,6 +1210,18 @@ export const Operations = () => {
               addlClassName="Operation__buttons"
             >
               <Box gap="sm" direction="row" align="center">
+                <Button
+                  size="md"
+                  variant="tertiary"
+                  disabled={true}
+                  icon={<Icon.PlusCircle />}
+                  onClick={() => {
+                    /* noop*/
+                  }}
+                >
+                  Add Operation
+                </Button>
+
                 <Button
                   size="md"
                   variant="tertiary"

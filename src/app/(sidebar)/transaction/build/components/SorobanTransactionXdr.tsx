@@ -1,23 +1,25 @@
 "use client";
 
+import { useEffect } from "react";
 import { useStore } from "@/store/useStore";
 import { TransactionBuilder } from "@stellar/stellar-sdk";
 import { useRouter } from "next/navigation";
 import { Button } from "@stellar/design-system";
 
 import {
-  getSorobanDataResult,
+  getSorobanTxData,
   buildSorobanTx,
   getContractDataXDR,
 } from "@/helpers/sorobanUtils";
 
 import { Routes } from "@/constants/routes";
 
+import { SorobanOpType } from "@/types/types";
+
 import { SdsLink } from "@/components/SdsLink";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { Box } from "@/components/layout/Box";
 import { ViewInXdrButton } from "@/components/ViewInXdrButton";
-import { SorobanOpType } from "@/types/types";
 
 export const SorobanTransactionXdr = () => {
   const { network, transaction } = useStore();
@@ -27,20 +29,24 @@ export const SorobanTransactionXdr = () => {
   const { operation } = soroban;
   const router = useRouter();
 
-  const sorobanTxData = (): { xdr: string; error?: string } => {
-    try {
-      if (!isValid.operations || !isValid.params) {
-        updateSorobanBuildXdr("");
-        return { xdr: "" };
-      }
+  useEffect(() => {
+    // Reset transaction.xdr if the transaction is not valid
+    if (!(isValid.params && isValid.operations)) {
+      updateSorobanBuildXdr("");
+    }
+    // Not including updateBuildXdr
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isValid.params, isValid.operations]);
 
+  const getSorobanTxDataResult = (): { xdr: string; error?: string } => {
+    try {
       const contractDataXDR = getContractDataXDR({
         contractAddress: operation.params.contract,
         dataKey: operation.params.key_xdr,
         durability: operation.params.durability,
       });
 
-      const sorobanData = getSorobanDataResult({
+      const sorobanData = getSorobanTxData({
         contractDataXDR,
         operationType: operation.operation_type as SorobanOpType,
         fee: operation.params.resource_fee,
@@ -56,18 +62,22 @@ export const SorobanTransactionXdr = () => {
 
         const builtXdrString = builtXdr.toXDR();
 
-        updateSorobanBuildXdr(builtXdrString);
         return { xdr: builtXdrString };
+      } else {
+        throw new Error("Failed to build Soroban transaction data");
       }
-      updateSorobanBuildXdr("");
-      return { xdr: "" };
     } catch (e) {
-      updateSorobanBuildXdr("");
       return { xdr: "", error: `${e}` };
     }
   };
 
-  const sorobanData = sorobanTxData();
+  const sorobanData = getSorobanTxDataResult();
+
+  useEffect(() => {
+    if (sorobanData.xdr) {
+      updateSorobanBuildXdr(sorobanData.xdr);
+    }
+  }, [sorobanData.xdr, updateSorobanBuildXdr]);
 
   if (sorobanData?.xdr) {
     try {
@@ -142,16 +152,6 @@ export const SorobanTransactionXdr = () => {
         />
       );
     }
-  }
-
-  if (sorobanData?.error) {
-    return (
-      <ValidationResponseCard
-        variant="error"
-        title="Transaction Error:"
-        response={sorobanData.error}
-      />
-    );
   }
 
   return null;

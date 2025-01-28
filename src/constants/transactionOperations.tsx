@@ -376,26 +376,6 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
       },
     },
   },
-  restore_footprint: {
-    label: "Restore Footprint",
-    description:
-      "Make archived Soroban smart contract entries accessible again by restoring them.",
-    docsUrl:
-      "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#restore-footprint",
-    params: ["contract", "key_xdr", "durability", "resource_fee"],
-    requiredParams: ["contract", "key_xdr", "durability", "resource_fee"],
-    defaultParams: {
-      durability: "persistent",
-    },
-    custom: {
-      durability: {
-        note: "Only persistent and instance entries can be restored.",
-      },
-      extend_ttl_to: {
-        note: "The ledger sequence number the entries will live until.",
-      },
-    },
-  },
   revoke_sponsorship: {
     label: "Revoke Sponsorship",
     description: "Revoke sponsorship of a ledger entry.",

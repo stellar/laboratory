@@ -10,13 +10,13 @@ import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import {
   buildSorobanTx,
   getContractDataXDR,
-  getSorobanDataResult,
+  getSorobanTxData,
 } from "@/helpers/sorobanUtils";
 
 import { InputSideElement } from "@/components/InputSideElement";
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 
-interface ResourceFeePickerProps {
+interface ResourceFeePickerWithQueryProps {
   id: string;
   labelSuffix?: string | React.ReactNode;
   label: string;
@@ -29,9 +29,10 @@ interface ResourceFeePickerProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-// only for Soroban Operation
-// includes a simulate transaction to fetch the minimum resource fee
-export const ResourceFeePicker = ({
+// Used only for a Soroban operation
+// Includes a simulate transaction function to fetch
+// the minimum resource fee
+export const ResourceFeePickerWithQuery = ({
   id,
   labelSuffix,
   label,
@@ -43,7 +44,7 @@ export const ResourceFeePicker = ({
   infoLink,
   disabled,
   ...props
-}: ResourceFeePickerProps) => {
+}: ResourceFeePickerWithQueryProps) => {
   const { network, transaction } = useStore();
   const { params: txnParams, soroban, isValid } = transaction.build;
   const { operation } = soroban;
@@ -91,7 +92,7 @@ export const ResourceFeePicker = ({
       });
 
       if (contractDataXDR) {
-        sorobanData = getSorobanDataResult({
+        sorobanData = getSorobanTxData({
           contractDataXDR,
           operationType: operation.operation_type as SorobanOpType,
           fee: BOGUS_RESOURCE_FEE, // simulate purpose only
@@ -148,7 +149,8 @@ export const ResourceFeePicker = ({
             });
           }}
           placement="right"
-          disabled={!network.rpcUrl}
+          // if we can't build a txn to simulate, we can't fetch the min resource fee
+          disabled={!buildTxToSimulate()}
           isLoading={isSimulateTxPending}
         >
           Fetch minimum resource fee from RPC
