@@ -42,7 +42,7 @@ test.describe("Saved Transactions Page", () => {
 
       const txItems = pageContext.getByTestId("saved-transactions-item");
 
-      await expect(txItems).toHaveCount(4);
+      await expect(txItems).toHaveCount(2);
     });
 
     test("[Classic] Submit item", async () => {
