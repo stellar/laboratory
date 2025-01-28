@@ -93,11 +93,7 @@ const isSorobanXdr = (jsonString: string): boolean => {
         return false;
       }
 
-      const sorobanOps = [
-        body.extend_footprint_ttl,
-        body.restore_footprint,
-        body.invoke_host_function,
-      ];
+      const sorobanOps = [body.extend_footprint_ttl, body.invoke_host_function];
 
       return sorobanOps.some((op) => op?.ext === "v0");
     });

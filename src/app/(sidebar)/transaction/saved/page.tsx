@@ -22,16 +22,7 @@ import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransa
 import { arrayItem } from "@/helpers/arrayItem";
 import { isSorobanOperationType } from "@/helpers/sorobanUtils";
 
-import {
-  SavedTransaction,
-  SavedTransactionPage,
-  TxnOperation,
-} from "@/types/types";
-
-const INITIAL_OPERATION: TxnOperation = {
-  operation_type: "",
-  params: [],
-};
+import { SavedTransaction, SavedTransactionPage } from "@/types/types";
 
 export default function SavedTransactions() {
   const { network, transaction, xdr } = useStore();
