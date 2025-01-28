@@ -36,9 +36,9 @@ test.describe("URL Params", () => {
   });
 
   test.describe("Transactions", () => {
-    test("Build Transaction", async ({ page }) => {
+    test("[Classic] Build Transaction", async ({ page }) => {
       await page.goto(
-        "http://localhost:3000/transaction/build?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;&transaction$build$params$source_account=GA46LGGOLXJY5OSX6N4LHV4MWDFXNGLK76I4NDNKKYAXRRSKI5AJGMXG&fee=2000&seq_num=3668692344766465&cond$time$max_time=1733409768;;&memo$text=123;;&operations@$operation_type=create_account&params$destination=GC5TQ7TXKHGE5JQMZPYV5KBSQ67X6PYQVU5QN7JRGWCHRA227UFPZ6LD&starting_balance=3000;&source_account=;&$operation_type=payment&params$destination=GAJAIHPKNTJ362TAUWTU2S56B7PULRTMY456LUELK53USX43537IFMS3&asset$code=USDC&issuer=GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5&type=credit_alphanum4;&amount=4000;&source_account=GA46LGGOLXJY5OSX6N4LHV4MWDFXNGLK76I4NDNKKYAXRRSKI5AJGMXG;;&isValid$params:true&operations:true;;",
+        "http://localhost:3000/transaction/build?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;&transaction$build$classic$operations@$operation_type=create_account&params$destination=GC5TQ7TXKHGE5JQMZPYV5KBSQ67X6PYQVU5QN7JRGWCHRA227UFPZ6LD&starting_balance=3000;&source_account=;&$operation_type=payment&params$destination=GAJAIHPKNTJ362TAUWTU2S56B7PULRTMY456LUELK53USX43537IFMS3&asset$code=USDC&issuer=GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5&type=credit_alphanum4;&amount=4000;&source_account=GA46LGGOLXJY5OSX6N4LHV4MWDFXNGLK76I4NDNKKYAXRRSKI5AJGMXG;;;&params$source_account=GA46LGGOLXJY5OSX6N4LHV4MWDFXNGLK76I4NDNKKYAXRRSKI5AJGMXG&fee=2000&seq_num=3668692344766465&cond$time$max_time=1733409768;;&memo$text=123;;&isValid$params:true&operations:true;;",
       );
 
       await expect(page.locator("h1")).toHaveText("Build Transaction");
@@ -111,7 +111,7 @@ test.describe("URL Params", () => {
       );
     });
 
-    test("Sign Transaction", async ({ page }) => {
+    test("[Classic] Sign Transaction", async ({ page }) => {
       await page.goto(
         "http://localhost:3000/transaction/sign?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;&transaction$sign$activeView=overview&importXdr=AAAAAgAAAAA55ZjOXdOOulfzeLPXjLDLdplq//5HGjapWAXjGSkdAkwAAD6AADQioAAAAAQAAAAEAAAAAAAAAAAAAAABnUbvoAAAAAQAAAAMxMjMAAAAAAgAAAAAAAAAAAAAAALs4fndRzE6mDMvxXqgyh79//PxCtOwb9MTWEeINa//Qr8AAAABvwjrAAAAAABAAAAADnlmM5d0466V//N4s9eMsMt2mWr//kcaNqlYBeMZKR0CTAAAAAQAAAAASBB3qbNO//amClp01Lvg//fRcZsxzvl0ItXd0lfm+7+ggAAAAFVU0RDAAAAAEI+fQXy7K+//7BkrIVo//G+lq7bjY5wJUq+NBPgIH3layAAAACVAvkAAAAAAAAAAAAA==;;",
       );
@@ -143,7 +143,7 @@ test.describe("URL Params", () => {
       );
     });
 
-    test("Submit Transaction", async ({ page }) => {
+    test("[Classic] Submit Transaction", async ({ page }) => {
       await page.goto(
         "http://localhost:3000/transaction/submit?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;&xdr$blob=AAAAAgAAAAA55ZjOXdOOulfzeLPXjLDLdplq//5HGjapWAXjGSkdAkwAAD6AADQioAAAAAQAAAAEAAAAAAAAAAAAAAABnUbvoAAAAAQAAAAMxMjMAAAAAAgAAAAAAAAAAAAAAALs4fndRzE6mDMvxXqgyh79//PxCtOwb9MTWEeINa//Qr8AAAABvwjrAAAAAABAAAAADnlmM5d0466V//N4s9eMsMt2mWr//kcaNqlYBeMZKR0CTAAAAAQAAAAASBB3qbNO//amClp01Lvg//fRcZsxzvl0ItXd0lfm+7+ggAAAAFVU0RDAAAAAEI+fQXy7K+//7BkrIVo//G+lq7bjY5wJUq+NBPgIH3layAAAACVAvkAAAAAAAAAAAAA==;;",
       );
