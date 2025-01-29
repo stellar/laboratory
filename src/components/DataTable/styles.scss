@@ -159,6 +159,7 @@
       flex-direction: row;
       align-items: center;
       justify-content: space-between;
+      gap: pxToRem(8px);
       padding: pxToRem(6px) pxToRem(8px);
       background-color: transparent;
       transition: background-color var(--sds-anim-transition-default);
@@ -167,12 +168,17 @@
 
       .Label__wrapper {
         width: 100%;
+        overflow: hidden;
       }
 
       .Label {
         color: var(--sds-clr-gray-12);
         width: 100%;
         cursor: pointer;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
       }
 
       @media (hover: hover) {

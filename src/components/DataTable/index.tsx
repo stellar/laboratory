@@ -198,7 +198,7 @@ export const DataTable = <T extends AnyObject>({
 
                 return (
                   <div key={id} className="DataTable__filterDropdown__filter">
-                    <Label size="lg" htmlFor={id}>
+                    <Label size="lg" htmlFor={id} title={f}>
                       {f}
                     </Label>
                     <Checkbox
@@ -237,7 +237,9 @@ export const DataTable = <T extends AnyObject>({
                 onClick={() => {
                   setSelectedFilters({ ...selectedFilters, [headerId]: [] });
                   setAppliedFilters({ ...appliedFilters, [headerId]: [] });
+
                   setVisibleFilters(undefined);
+                  setCurrentPage(1);
                 }}
                 disabled={appliedFilters[headerId].length === 0}
               >
@@ -249,7 +251,9 @@ export const DataTable = <T extends AnyObject>({
                 variant="secondary"
                 onClick={() => {
                   setAppliedFilters(selectedFilters);
+
                   setVisibleFilters(undefined);
+                  setCurrentPage(1);
                 }}
                 disabled={isFilterApplyDisabled(headerId)}
               >
@@ -287,6 +291,8 @@ export const DataTable = <T extends AnyObject>({
                   // Update both selected and applied filters
                   setSelectedFilters(updatedFilters);
                   setAppliedFilters(updatedFilters);
+
+                  setCurrentPage(1);
                 }}
               >
                 <Icon.XClose />
