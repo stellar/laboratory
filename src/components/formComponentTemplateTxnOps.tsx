@@ -1,4 +1,5 @@
 import { JSX } from "react";
+import { Select } from "@stellar/design-system";
 
 import { Box } from "@/components/layout/Box";
 import { SdsLink } from "@/components/SdsLink";
@@ -14,6 +15,7 @@ import { AuthorizePicker } from "@/components/FormElements/AuthorizePicker";
 import { NumberFractionPicker } from "@/components/FormElements/NumberFractionPicker";
 import { RevokeSponsorshipPicker } from "@/components/FormElements/RevokeSponsorshipPicker";
 import { ClaimantsPicker } from "@/components/FormElements/ClaimantsPicker";
+import { ResourceFeePickerWithQuery } from "@/components/FormElements/ResourceFeePickerWithQuery";
 
 import { removeLeadingZeroes } from "@/helpers/removeLeadingZeroes";
 
@@ -34,6 +36,15 @@ type TemplateRenderProps = {
   error: string | undefined;
   onChange: (val: any) => void;
   isRequired?: boolean;
+};
+
+// Types
+type SorobanTemplateRenderProps = {
+  value: string | undefined;
+  error: string | undefined;
+  onChange: (val: any) => void;
+  isRequired?: boolean;
+  isDisabled?: boolean;
 };
 
 type TemplateRenderAssetProps = {
@@ -271,6 +282,27 @@ export const formComponentTemplateTxnOps = ({
         ),
         validate: null,
       };
+    case "contract":
+      return {
+        render: (templ: {
+          value: string | undefined;
+          error: string | undefined;
+          onChange: (val: any) => void;
+          isDisabled?: boolean;
+        }) => (
+          <TextPicker
+            key={id}
+            id={id}
+            label="Contract ID"
+            placeholder="Ex: CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC"
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+            disabled={templ.isDisabled}
+          />
+        ),
+        validate: validate.getContractIdError,
+      };
     case "data_name":
       return {
         render: (templ: TemplateRenderProps) => (
@@ -327,6 +359,56 @@ export const formComponentTemplateTxnOps = ({
         ),
         validate: validate.getPublicKeyError,
       };
+    case "durability":
+      return {
+        render: (templ: {
+          value: string | undefined;
+          error: string | undefined;
+          isDisabled?: boolean;
+          onChange: (val: any) => void;
+        }) => (
+          <Select
+            key={id}
+            id={`${id}-type`}
+            fieldSize="md"
+            label="Durability"
+            value={templ.value || ""}
+            onChange={templ.onChange}
+            disabled={templ.isDisabled}
+            note={custom?.note}
+          >
+            {/* https://github.com/stellar/js-stellar-base/blob/master/src/generated/curr_generated.js#L1887-L1891 */}
+            <option value="">Select a durability</option>
+            {[
+              { id: "persistent", label: "Persistent", disabled: false },
+              { id: "temporary", label: "Temporary", disabled: true },
+            ].map((f) => (
+              <option key={f.id} value={f.id} disabled={f.disabled}>
+                {f.label}
+              </option>
+            ))}
+          </Select>
+        ),
+        validate: null,
+      };
+    case "extend_ttl_to": {
+      return {
+        render: (templ: SorobanTemplateRenderProps) => (
+          <PositiveIntPicker
+            key={id}
+            id={id}
+            label={custom?.label || "Extend To"}
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+            disabled={templ.isDisabled}
+            note={custom?.note}
+          />
+        ),
+        validate: validate.getPositiveIntError,
+      };
+    }
     case "from":
       return {
         render: (templ: TemplateRenderProps) => (
@@ -374,6 +456,51 @@ export const formComponentTemplateTxnOps = ({
           />
         ),
         validate: validate.getPublicKeyError,
+      };
+    case "key_xdr":
+      return {
+        render: (templ: SorobanTemplateRenderProps) => (
+          <TextPicker
+            key={id}
+            id={id}
+            label="Key ScVal in XDR"
+            placeholder="Ex: AAAAEAAAAAEAAAACAAAADwAAAAdDb3VudGVyAAAAABIAAAAAAAAAAHkOSeQVxNP4zqcstl6AA+PwtKrnRwrp7+LGt4xqEnTC"
+            labelSuffix={!templ.isRequired ? "optional" : undefined}
+            value={templ.value || ""}
+            error={templ.error}
+            onChange={templ.onChange}
+            disabled={templ.isDisabled}
+            // @TODO add a link of doc that describes how to convert ScVal to XDR
+            // infoLink=""
+          />
+        ),
+        validate: null,
+      };
+    case "resource_fee":
+      return {
+        render: (templ: SorobanTemplateRenderProps) => (
+          <ResourceFeePickerWithQuery
+            id={id}
+            label="Resource Fee (in stroops)"
+            value={removeLeadingZeroes(templ.value || "")}
+            error={templ.error}
+            onChange={templ.onChange}
+            disabled={templ.isDisabled}
+            note={
+              <>
+                The best way to find the required resource fee for any smart
+                contract transaction is to use the{" "}
+                <SdsLink href="https://developers.stellar.org/docs/learn/encyclopedia/contract-development/contract-interactions/transaction-simulation">
+                  simulateTransaction endpoint
+                </SdsLink>{" "}
+                from the RPC, which enables you to send a preflight transaction
+                that will return the necessary resource values and resource fee.
+              </>
+            }
+            infoLink="https://developers.stellar.org/docs/learn/fundamentals/fees-resource-limits-metering#resource-fee"
+          />
+        ),
+        validate: validate.getPositiveNumberError,
       };
     case "limit":
       return {
