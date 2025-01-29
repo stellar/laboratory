@@ -1,4 +1,5 @@
 import { ReactElement, useEffect, useState } from "react";
+import { parse, stringify } from "lossless-json";
 
 import { Button, Card, Icon, Select } from "@stellar/design-system";
 
@@ -116,21 +117,20 @@ export const XdrLedgerKeyPicker = ({
 
   const isXdrInit = useIsXdrInit();
 
-  const xdrDecodeJson = (xdr: string) => {
+  const xdrDecodeLedgerKeyJson = (xdr: string) => {
     if (!isXdrInit) {
       return null;
     }
 
     try {
-      const xdrJson = StellarXdr.decode("LedgerKey", xdr);
+      const xdrJson = parse(StellarXdr.decode("LedgerKey", xdr));
 
       return {
-        jsonString: xdrJson,
+        xdrJson,
         error: "",
       };
     } catch (e) {
       return {
-        jsonString: "",
         error: `Unable to decode input as LedgerKey: ${e}`,
       };
     }
@@ -142,7 +142,8 @@ export const XdrLedgerKeyPicker = ({
     }
 
     try {
-      JSON.parse(str);
+      // check to see if it's a valid JSON
+      parse(str);
     } catch (e) {
       return {
         xdrString: "",
@@ -172,72 +173,103 @@ export const XdrLedgerKeyPicker = ({
     onChange("");
   };
 
-  const getKeyType = (val: string) =>
+  const getLedgerKeyFields = (val: string) =>
     ledgerKeyFields.find((field) => field.id === val);
 
+  // validate the xdr string on input change
   const validateLedgerKeyXdr = (xdrString: string) => {
+    // if the xdr string is empty (by deleting the input or other)
+    // reset the form
     if (!xdrString) {
-      setLedgerKeyXdrError("");
+      reset();
       return;
     }
+
     // check error
     const error = validate.getXdrError(xdrString, "LedgerKey");
-    const xdrJsonDecoded = xdrDecodeJson(xdrString);
+    const xdrJsonDecoded = xdrDecodeLedgerKeyJson(xdrString);
 
+    // check if the xdr string is valid
     if (error?.result === "error") {
       setLedgerKeyXdrError(error.message);
       return;
     }
 
+    // check if there was an error during the xdr string decoding
     if (xdrJsonDecoded?.error) {
       setLedgerKeyXdrError(xdrJsonDecoded?.error);
       return;
     }
 
-    // success case:
-    // xdr decoded successfully to JSON
-    if (xdrJsonDecoded?.jsonString) {
+    // success case: xdr decoded successfully to JSON
+    if (xdrJsonDecoded?.xdrJson) {
+      let xdrJsonToString;
+
+      // reset the existing error
       setLedgerKeyXdrError("");
 
-      const xdrDecodedJSON = JSON.parse(xdrJsonDecoded.jsonString);
-      const key = Object.keys(xdrDecodedJSON)[0];
-      const selectedKeyType = getKeyType(key);
+      const xdrDecodedJSON = xdrJsonDecoded.xdrJson as Record<
+        LedgerKeyType,
+        any
+      >;
 
-      // Transform LedgerKey Trustline's 'asset' object to match what <AssetPicker/> accepts
-      if (key === "trustline") {
-        if (xdrDecodedJSON[key].asset === "native") {
-          xdrDecodedJSON[key].asset = {
+      // returns the following ledger key type:
+      //// account
+      //// trustline
+      //// offer
+      //// data
+      //// claimable_balance
+      //// liquidity_pool
+      //// contract_data
+      //// contract_code
+      //// config_setting
+      //// ttl
+      const ledgerKey = Object.keys(xdrDecodedJSON)[0] as LedgerKeyType;
+      const selectedLedgerKeyField = getLedgerKeyFields(ledgerKey);
+
+      if (ledgerKey === "trustline") {
+        // handle native asset
+        if (xdrDecodedJSON[ledgerKey].asset === "native") {
+          // transform LedgerKey Trustline's 'asset' object to
+          // match what <AssetPicker/> accepts
+          xdrDecodedJSON[ledgerKey].asset = {
             code: "",
             issuer: "",
-            type: xdrDecodedJSON[key].asset,
+            type: xdrDecodedJSON[ledgerKey].asset,
           };
         }
+        // handle credit alphanum asset (credit_alphanum4 or credit_alphanum12)
+        const assetType = Object.keys(xdrDecodedJSON[ledgerKey].asset)[0];
 
-        if (xdrJsonDecoded.jsonString.includes("credit_alphanum")) {
-          const assetType = Object.keys(xdrDecodedJSON[key].asset)[0];
-
-          xdrDecodedJSON[key].asset = {
-            code: xdrDecodedJSON[key].asset[assetType].asset_code,
-            issuer: xdrDecodedJSON[key].asset[assetType].issuer,
+        if (
+          assetType === "credit_alphanum4" ||
+          assetType === "credit_alphanum12"
+        ) {
+          xdrDecodedJSON[ledgerKey].asset = {
+            code: xdrDecodedJSON[ledgerKey].asset[assetType].asset_code,
+            issuer: xdrDecodedJSON[ledgerKey].asset[assetType].issuer,
             type: assetType,
           };
         }
 
-        if (xdrJsonDecoded.jsonString.includes("pool_share")) {
-          xdrDecodedJSON[key].asset = {
+        if (assetType === "pool_share") {
+          xdrDecodedJSON[ledgerKey].asset = {
             type: "pool_share",
-            pool_share: xdrDecodedJSON[key].asset.pool_share,
+            pool_share: xdrDecodedJSON[ledgerKey].asset.pool_share,
           };
         }
 
-        const xdrDecodedJsonToString = JSON.stringify(xdrDecodedJSON);
-        setLedgerKeyJsonString(xdrDecodedJsonToString);
+        // convert the xdr decoded JSON to a string
+        xdrJsonToString = stringify(xdrDecodedJSON) || "";
       } else {
-        setLedgerKeyJsonString(xdrJsonDecoded.jsonString);
+        // @TODO: handle other ledger key types (or I don't know what this is for)
+        xdrJsonToString = stringify(xdrJsonDecoded.xdrJson) || "";
       }
 
-      if (selectedKeyType) {
-        setSelectedLedgerKey(selectedKeyType);
+      setLedgerKeyJsonString(xdrJsonToString);
+
+      if (selectedLedgerKeyField) {
+        setSelectedLedgerKey(selectedLedgerKeyField);
       }
       return;
     }
@@ -245,6 +277,8 @@ export const XdrLedgerKeyPicker = ({
 
   useEffect(() => {
     // this creates a form based on the ledger key that got selected from the dropdown
+    // this is used to create the form for the ledger key template
+    // ledgerKeyFields
     if (!ledgerKeyXdrJsonString && selectedLedgerKey) {
       const templatesArr = selectedLedgerKey.templates.split(",");
       const formLedgerKeyJson = templatesArr.reduce((accr, item) => {
@@ -257,17 +291,19 @@ export const XdrLedgerKeyPicker = ({
       }, {} as AnyObject);
 
       const formLedgerKeyJsonString = JSON.stringify(formLedgerKeyJson);
+
       setLedgerKeyJsonString(formLedgerKeyJsonString);
     }
   }, [ledgerKeyXdrJsonString, selectedLedgerKey]);
 
   const renderLedgerKeyTemplate = () => {
+    // if there is no selected ledger key or the xdr string is empty, return null
     if (!selectedLedgerKey || !ledgerKeyXdrJsonString) {
       return null;
     }
 
     return selectedLedgerKey.templates.split(",").map((template) => {
-      const ledgerKeyStringToJson = JSON.parse(ledgerKeyXdrJsonString);
+      const ledgerKeyStringToJson = parse(ledgerKeyXdrJsonString) as AnyObject;
       const obj = ledgerKeyStringToJson[selectedLedgerKey!.id];
 
       let jsonXdrEncoded;
@@ -278,7 +314,9 @@ export const XdrLedgerKeyPicker = ({
       );
 
       if (component) {
-        const handleChange = (val: any, stringifiedVal: any) => {
+        // handle the change of the input value of the forms created from the
+        // Ledger Key dropdown (not the Ledger Key XDR input)
+        const handleChange = (val: any) => {
           const error = component.validate?.(val);
 
           if (error && error.result !== "success") {
@@ -287,11 +325,15 @@ export const XdrLedgerKeyPicker = ({
             setFormError({ ...formError, [template]: "" });
           }
 
-          obj[template] = stringifiedVal;
+          obj[template] = val;
 
-          // stringify the updated json with the input value
-          const ledgerKeyJsonToString = JSON.stringify(ledgerKeyStringToJson);
-          setLedgerKeyJsonString(ledgerKeyJsonToString);
+          // For Contract Data Ledger Key
+          // we need to parse the key value because it's a nested JSON string
+          if (template === "key") {
+            ledgerKeyStringToJson[selectedLedgerKey.id].key = parse(
+              obj[template],
+            );
+          }
 
           // update each template's field with an input value
           if (template === "asset") {
@@ -324,10 +366,21 @@ export const XdrLedgerKeyPicker = ({
               };
             }
 
-            const newObjToString = JSON.stringify(newObj);
+            const newObjToString = stringify(newObj) || "";
             jsonXdrEncoded = jsonEncodeXdr(newObjToString);
-          } else {
-            jsonXdrEncoded = jsonEncodeXdr(ledgerKeyJsonToString);
+          }
+
+          // stringify the updated json with the input value
+          const ledgerKeyJsonToString = stringify(ledgerKeyStringToJson);
+
+          setLedgerKeyJsonString(ledgerKeyJsonToString || "");
+
+          // for every template that is not an asset, encode the json string
+          jsonXdrEncoded = jsonEncodeXdr(ledgerKeyJsonToString || "");
+
+          if (jsonXdrEncoded?.error) {
+            setLedgerKeyXdrError(jsonXdrEncoded.error);
+            return;
           }
 
           if (jsonXdrEncoded?.xdrString) {
@@ -335,43 +388,40 @@ export const XdrLedgerKeyPicker = ({
           }
         };
 
+        const baseProps = {
+          value: ledgerKeyStringToJson[selectedLedgerKey.id][template] || "",
+          error: formError[template],
+          isRequired: true,
+          disabled: isXdrInputActive,
+        };
+
         if (template === "asset") {
           return component.render({
-            value: ledgerKeyStringToJson[selectedLedgerKey.id][template],
-            error: formError[template],
+            ...baseProps,
             onChange: (assetObjVal: AssetObjectValue) => {
               handleChange(
-                assetObjVal,
                 isEmptyObject(sanitizeObject(assetObjVal || {}))
                   ? undefined
                   : JSON.stringify(assetObjVal),
               );
             },
-            isRequired: true,
-            disabled: isXdrInputActive,
           });
         }
 
         if (template === "config_setting_id") {
           return component.render({
-            value: ledgerKeyStringToJson[selectedLedgerKey.id][template],
-            error: formError[template],
+            ...baseProps,
             onChange: (selectedConfigSetting: ConfigSettingIdType) => {
-              handleChange(selectedConfigSetting, selectedConfigSetting);
+              handleChange(selectedConfigSetting);
             },
-            isRequired: true,
-            disabled: isXdrInputActive,
           });
         }
 
         return component.render({
-          value: ledgerKeyStringToJson[selectedLedgerKey.id][template],
-          error: formError[template],
+          ...baseProps,
           onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-            handleChange(e.target.value, e.target.value);
+            handleChange(e.target.value);
           },
-          isRequired: true,
-          disabled: isXdrInputActive,
         });
       }
       return null;
@@ -414,7 +464,9 @@ export const XdrLedgerKeyPicker = ({
             reset();
 
             const selectedVal = e.target.value;
-            setSelectedLedgerKey(selectedVal ? getKeyType(selectedVal)! : null);
+            setSelectedLedgerKey(
+              selectedVal ? getLedgerKeyFields(selectedVal)! : null,
+            );
           }}
           disabled={isXdrInputActive}
         >
