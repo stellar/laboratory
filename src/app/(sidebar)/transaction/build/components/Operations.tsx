@@ -161,7 +161,7 @@ export const Operations = () => {
       // Default to classic operations empty state
       updateOptionParamAndError({ type: "add", item: INITIAL_OPERATION });
     } else {
-      // Validate all params in all operations
+      // If there are operations on mount, validate all params in all operations
       const errors: OperationError[] = [];
 
       // Soroban operation params validation
@@ -297,7 +297,12 @@ export const Operations = () => {
     setBuildOperationsError(getOperationsError());
     // Not including getOperationsError()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [txnOperations, operationsError, setBuildOperationsError]);
+  }, [
+    txnOperations,
+    sorobanOperation.operation_type,
+    operationsError,
+    setBuildOperationsError,
+  ]);
 
   const missingSelectedAssetFields = (
     param: string,
@@ -712,6 +717,7 @@ export const Operations = () => {
       opValue,
       opType,
     });
+
     const updatedOpParamError = arrayItem.update(
       operationsError,
       opIndex,
@@ -938,38 +944,41 @@ export const Operations = () => {
                 params: defaultParams,
                 source_account: "",
               });
+            }
 
-              // @TODO the following is where renderError keeps both soroban and classic errors
-              console.log("operationsError", operationsError);
+            let initParamError: OperationError = EMPTY_OPERATION_ERROR;
 
-              let initParamError: OperationError = EMPTY_OPERATION_ERROR;
+            // Get operation required fields if there is operation type
+            if (e.target.value) {
+              const missingFields = [
+                ...(TRANSACTION_OPERATIONS[e.target.value]?.requiredParams ||
+                  []),
+              ].reduce((missingRes: string[], reqItem) => {
+                if (!defaultParamKeys.includes(reqItem)) {
+                  return [...missingRes, reqItem];
+                }
 
-              // Get operation required fields if there is operation type
-              if (e.target.value) {
-                const missingFields = [
-                  ...(TRANSACTION_OPERATIONS[e.target.value]?.requiredParams ||
-                    []),
-                ].reduce((missingRes: string[], reqItem) => {
-                  if (!defaultParamKeys.includes(reqItem)) {
-                    return [...missingRes, reqItem];
-                  }
+                return missingRes;
+              }, []);
 
-                  return missingRes;
-                }, []);
+              initParamError = {
+                ...initParamError,
+                missingFields,
+                operationType: e.target.value,
+              };
 
-                initParamError = {
-                  ...initParamError,
-                  missingFields,
-                  operationType: e.target.value,
-                };
+              initParamError = operationCustomMessage({
+                opType: e.target.value,
+                opIndex: index,
+                opError: initParamError,
+              });
+            }
 
-                initParamError = operationCustomMessage({
-                  opType: e.target.value,
-                  opIndex: index,
-                  opError: initParamError,
-                });
-              }
-
+            if (isSorobanOperationType(e.target.value)) {
+              // for soroban, on operation dropdown change, we don't need to update the existing array
+              // since there is only one operation
+              setOperationsError([initParamError]);
+            } else {
               setOperationsError([
                 ...arrayItem.update(operationsError, index, initParamError),
               ]);
