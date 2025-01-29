@@ -25,7 +25,7 @@ test.describe("Saved Transactions Page", () => {
     // local storage data
     let pageContext: Page;
 
-    test.beforeAll(async ({ browser }) => {
+    test.beforeEach(async ({ browser }) => {
       const browserContext = await browser.newContext({
         storageState: MOCK_LOCAL_STORAGE,
       });
@@ -45,7 +45,7 @@ test.describe("Saved Transactions Page", () => {
       await expect(txItems).toHaveCount(2);
     });
 
-    test("Submit item", async () => {
+    test("[Classic] Submit item", async () => {
       const submitItem = pageContext
         .getByTestId("saved-transactions-item")
         .nth(0);
@@ -73,6 +73,7 @@ test.describe("Saved Transactions Page", () => {
 
       // View in submitter
       await submitItem.getByText("View in submitter").click();
+      await pageContext.waitForURL("**/transaction/submit");
 
       await expect(pageContext.locator("h1")).toHaveText("Submit Transaction");
       await expect(

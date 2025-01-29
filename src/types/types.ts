@@ -240,6 +240,11 @@ export type SponsorshipType =
   | "signer";
 
 // =============================================================================
+// Soroban Operations
+// =============================================================================
+export type SorobanOpType = "extend_footprint_ttl";
+
+// =============================================================================
 // RPC
 // =============================================================================
 export type FiltersType = "system" | "contract" | "diagnostic";
@@ -250,7 +255,7 @@ export type FiltersObject = {
   topics: string[];
 };
 
-export type XdrType = "TransactionEnvelope" | "LedgerKey";
+export type XdrType = "TransactionEnvelope" | "LedgerKey" | "ScVal";
 
 export type LedgerKeyType =
   | "account"

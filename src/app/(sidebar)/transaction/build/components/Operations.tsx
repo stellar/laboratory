@@ -26,7 +26,10 @@ import { getClaimableBalanceIdFromXdr } from "@/helpers/getClaimableBalanceIdFro
 import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransactions";
 
 import { OP_SET_TRUST_LINE_FLAGS } from "@/constants/settings";
-import { TRANSACTION_OPERATIONS } from "@/constants/transactionOperations";
+import {
+  INITIAL_OPERATION,
+  TRANSACTION_OPERATIONS,
+} from "@/constants/transactionOperations";
 import { useStore } from "@/store/useStore";
 import {
   AnyObject,
@@ -37,15 +40,18 @@ import {
   OpBuildingError,
   OptionSigner,
   RevokeSponsorshipValue,
-  TxnOperation,
 } from "@/types/types";
 
 export const Operations = () => {
   const { transaction, network } = useStore();
-  const { operations: txnOperations, xdr: txnXdr } = transaction.build;
+  const { classic } = transaction.build;
+  const { operations: txnOperations, xdr: txnXdr } = classic;
+
   const {
+    // Classic
     updateBuildOperations,
     updateBuildSingleOperation,
+    // Either Classic or (@todo) Soroban
     updateBuildIsValid,
     setBuildOperationsError,
   } = transaction;
@@ -60,11 +66,6 @@ export const Operations = () => {
 
   const [operationsError, setOperationsError] = useState<OperationError[]>([]);
   const [isSaveTxnModalVisible, setIsSaveTxnModalVisible] = useState(false);
-
-  const INITIAL_OPERATION: TxnOperation = {
-    operation_type: "",
-    params: [],
-  };
 
   const EMPTY_OPERATION_ERROR: OperationError = {
     operationType: "",
@@ -856,6 +857,9 @@ export const Operations = () => {
         >
           <option value="">Select operation type</option>
           <option value="create_account">Create Account</option>
+          <option disabled={true} value="extend_footprint_ttl">
+            Extend Footprint TTL (Soroban)
+          </option>
           <option value="payment">Payment</option>
           <option value="path_payment_strict_send">
             Path Payment Strict Send
@@ -1236,7 +1240,7 @@ export const Operations = () => {
           page: "build",
           shareableUrl: shareableUrl("transactions-build"),
           params: transaction.build.params,
-          operations: transaction.build.operations,
+          operations: transaction.build.classic.operations,
         }}
         allSavedItems={localStorageSavedTransactions.get()}
         isVisible={isSaveTxnModalVisible}
