@@ -1014,7 +1014,7 @@ export const Operations = () => {
         >
           <option value="">Select operation type</option>
           <option value="create_account">Create Account</option>
-          <option value="extend_footprint_ttl">
+          <option value="extend_footprint_ttl" disabled>
             Extend Footprint TTL (Soroban)
           </option>
           <option value="payment">Payment</option>
