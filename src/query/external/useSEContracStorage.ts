@@ -65,7 +65,6 @@ export const useSEContractStorage = ({
           await fetchData(lastRecord?.paging_token);
         }
 
-        // TODO: check max entries for smooth UX
         return allRecords;
       } catch (e: any) {
         throw `Something went wrong. ${e}`;

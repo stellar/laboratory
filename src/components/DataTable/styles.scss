@@ -140,14 +140,56 @@
     top: 85%;
     left: pxToRem(4px);
 
-    // TODO: style
     &__container {
+      display: flex;
+      flex-direction: column;
+      gap: pxToRem(4px);
     }
 
     &__title {
+      font-size: pxToRem(14px);
+      line-height: pxToRem(20px);
+      font-weight: var(--sds-fw-medium);
+      color: var(--sds-clr-gray-11);
+      padding: pxToRem(6px) pxToRem(8px);
     }
 
     &__filter {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      padding: pxToRem(6px) pxToRem(8px);
+      background-color: transparent;
+      transition: background-color var(--sds-anim-transition-default);
+      border-radius: pxToRem(4px);
+      cursor: pointer;
+
+      .Label__wrapper {
+        width: 100%;
+      }
+
+      .Label {
+        color: var(--sds-clr-gray-12);
+        width: 100%;
+        cursor: pointer;
+      }
+
+      @media (hover: hover) {
+        &:hover {
+          background-color: var(--sds-clr-gray-04);
+        }
+      }
+
+      &:has(input[type="checkbox"]:checked) {
+        background-color: var(--sds-clr-gray-04);
+      }
+    }
+
+    &__buttons {
+      .Button {
+        flex: 1;
+      }
     }
   }
 

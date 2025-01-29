@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import {
   Button,
   Card,
@@ -126,8 +126,18 @@ export const DataTable = <T extends AnyObject>({
     setIsUpdating(true);
   };
 
+  const closeFilterDropdown = () => {
+    setVisibleFilters(undefined);
+    // Clear selections that weren't applied
+    setSelectedFilters({ ...appliedFilters });
+  };
+
   const toggleFilterDropdown = (headerId: FilterCols) => {
-    setVisibleFilters(visibleFilters === headerId ? undefined : headerId);
+    if (visibleFilters === headerId) {
+      closeFilterDropdown();
+    } else {
+      setVisibleFilters(headerId);
+    }
   };
 
   const paginateData = (data: DataTableCell[][]): DataTableCell[][] => {
@@ -176,21 +186,19 @@ export const DataTable = <T extends AnyObject>({
         <Dropdown
           addlClassName="DataTable__filterDropdown"
           isDropdownVisible={visibleFilters === headerId}
-          onClose={() => {
-            setVisibleFilters(undefined);
-          }}
+          onClose={closeFilterDropdown}
           triggerDataAttribute="filter"
         >
           <div className="DataTable__filterDropdown__container">
             <div className="DataTable__filterDropdown__title">Filter by</div>
-            <div>
-              {filters.map((f) => {
-                const id = `filter-${headerId}-${f}`;
+            <>
+              {filters.map((f, idx) => {
+                const id = `filter-${headerId}-${f}-${idx}`;
                 let currentFilters = selectedFilters[headerId] || [];
 
                 return (
                   <div key={id} className="DataTable__filterDropdown__filter">
-                    <Label size="sm" htmlFor={id}>
+                    <Label size="lg" htmlFor={id}>
                       {f}
                     </Label>
                     <Checkbox
@@ -215,19 +223,14 @@ export const DataTable = <T extends AnyObject>({
                   </div>
                 );
               })}
-            </div>
-            <div>
-              <Button
-                size="sm"
-                variant="secondary"
-                onClick={() => {
-                  setAppliedFilters(selectedFilters);
-                  setVisibleFilters(undefined);
-                }}
-                disabled={isFilterApplyDisabled(headerId)}
-              >
-                Apply
-              </Button>
+            </>
+            <Box
+              gap="sm"
+              direction="row"
+              align="center"
+              justify="space-between"
+              addlClassName="DataTable__filterDropdown__buttons"
+            >
               <Button
                 size="sm"
                 variant="error"
@@ -240,7 +243,19 @@ export const DataTable = <T extends AnyObject>({
               >
                 Clear filter
               </Button>
-            </div>
+
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={() => {
+                  setAppliedFilters(selectedFilters);
+                  setVisibleFilters(undefined);
+                }}
+                disabled={isFilterApplyDisabled(headerId)}
+              >
+                Apply
+              </Button>
+            </Box>
           </div>
         </Dropdown>
       );
@@ -250,14 +265,14 @@ export const DataTable = <T extends AnyObject>({
   };
 
   const renderFilterBadges = () => {
-    return Object.entries(appliedFilters).map((af) => {
+    return Object.entries(appliedFilters).map((af, afIdx) => {
       const [id, filters] = af;
 
       return (
-        <>
-          {filters.map((f) => (
+        <Fragment key={`badge-${id}-${afIdx}`}>
+          {filters.map((f, fIdx) => (
             <div
-              key={`badge-${id}-${f}`}
+              key={`badge-${id}-${afIdx}-${f}-${fIdx}`}
               className="DataTable__badge Badge Badge--secondary Badge--sm"
             >
               {f}
@@ -278,7 +293,7 @@ export const DataTable = <T extends AnyObject>({
               </div>
             </div>
           ))}
-        </>
+        </Fragment>
       );
     });
   };
@@ -311,8 +326,8 @@ export const DataTable = <T extends AnyObject>({
             >
               <thead>
                 <tr data-style="row" role="row">
-                  {tableHeaders.map((th) => (
-                    <th key={`col-${th.id}`} role="cell">
+                  {tableHeaders.map((th, idx) => (
+                    <th key={`col-${idx}-${th.id}`} role="cell">
                       <div {...getCustomProps(th)}>
                         {th.value}
 
