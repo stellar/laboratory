@@ -731,14 +731,24 @@ export const Operations = () => {
     opIndex: number,
     opValue: any,
     opType: string,
+    isSoroban: boolean = false,
   ) => {
-    const op = txnOperations[opIndex];
+    if (isSoroban) {
+      // Handle Soroban operation
+      updateSorobanBuildOperation({
+        ...sorobanOperation,
+        source_account: opValue,
+      });
+    } else {
+      // Handle classic operation
+      const op = txnOperations[opIndex];
+      updateBuildSingleOperation(opIndex, {
+        ...op,
+        source_account: opValue,
+      });
+    }
 
-    updateBuildSingleOperation(opIndex, {
-      ...op,
-      source_account: opValue,
-    });
-
+    // Validation logic is the same for both
     const validatedSourceAccount = validateOperationParam({
       opIndex,
       opParam: "source_account",
@@ -810,6 +820,10 @@ export const Operations = () => {
   };
 
   const renderSourceAccount = (opType: string, index: number) => {
+    const currentOperation = isSorobanOperationType(opType)
+      ? sorobanOperation
+      : txnOperations[index];
+
     const sourceAccountComponent = formComponentTemplateTxnOps({
       param: "source_account",
       opType,
@@ -818,11 +832,16 @@ export const Operations = () => {
 
     return opType && sourceAccountComponent
       ? sourceAccountComponent.render({
-          value: txnOperations[index].source_account,
+          value: currentOperation.source_account,
           error: operationsError[index]?.error?.["source_account"],
           isRequired: false,
           onChange: (e: ChangeEvent<HTMLInputElement>) => {
-            handleOperationSourceAccountChange(index, e.target.value, opType);
+            handleOperationSourceAccountChange(
+              index,
+              e.target.value,
+              opType,
+              isSorobanOperationType(opType),
+            );
           },
         })
       : null;
