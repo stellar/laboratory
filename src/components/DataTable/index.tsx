@@ -346,7 +346,7 @@ export const DataTable = <T extends AnyObject>({
                         ) : null}
 
                         {/* Filter icon */}
-                        {th.filter ? (
+                        {th.filter?.length ? (
                           <span className="DataTable__filter">
                             <Icon.FilterFunnel01 />
                           </span>
