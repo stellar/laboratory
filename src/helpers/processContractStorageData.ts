@@ -19,16 +19,18 @@ export const processContractStorageData = <T extends AnyObject>({
 
   // Sort
   if (sortById) {
-    if (["asc", "desc"].includes(sortByDir)) {
-      // Asc
+    // Asc
+    if (sortByDir === "asc") {
       sortedData = sortedData.sort((a: any, b: any) =>
         a[sortById] > b[sortById] ? 1 : -1,
       );
+    }
 
-      // Desc
-      if (sortByDir === "desc") {
-        sortedData = sortedData.reverse();
-      }
+    // Desc
+    if (sortByDir === "desc") {
+      sortedData = sortedData.sort((a: any, b: any) =>
+        a[sortById] > b[sortById] ? -1 : 1,
+      );
     }
   }
 
