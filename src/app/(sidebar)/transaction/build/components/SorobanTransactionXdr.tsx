@@ -72,12 +72,13 @@ export const SorobanTransactionXdr = () => {
   };
 
   const sorobanData = getSorobanTxDataResult();
+  const sorobanDataXdr = sorobanData?.xdr || "";
 
   useEffect(() => {
-    if (sorobanData.xdr) {
-      updateSorobanBuildXdr(sorobanData.xdr);
+    if (sorobanDataXdr) {
+      updateSorobanBuildXdr(sorobanDataXdr);
     }
-  }, [sorobanData.xdr, updateSorobanBuildXdr]);
+  }, [sorobanDataXdr, updateSorobanBuildXdr]);
 
   if (!(isValid.params && isValid.operations)) {
     return null;
