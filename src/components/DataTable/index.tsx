@@ -10,7 +10,13 @@ import {
 
 import { Box } from "@/components/layout/Box";
 import { Dropdown } from "@/components/Dropdown";
+
 import { processContractStorageData } from "@/helpers/processContractStorageData";
+import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
+import { isEmptyObject } from "@/helpers/isEmptyObject";
+
+import { getPublicKeyError } from "@/validate/methods/getPublicKeyError";
+import { getContractIdError } from "@/validate/methods/getContractIdError";
 
 import {
   AnyObject,
@@ -191,7 +197,7 @@ export const DataTable = <T extends AnyObject>({
         >
           <div className="DataTable__filterDropdown__container">
             <div className="DataTable__filterDropdown__title">Filter by</div>
-            <>
+            <div className="DataTable__filterDropdown__filterContainer">
               {filters.map((f, idx) => {
                 const id = `filter-${headerId}-${f}-${idx}`;
                 let currentFilters = selectedFilters[headerId] || [];
@@ -223,7 +229,7 @@ export const DataTable = <T extends AnyObject>({
                   </div>
                 );
               })}
-            </>
+            </div>
             <Box
               gap="sm"
               direction="row"
@@ -268,6 +274,18 @@ export const DataTable = <T extends AnyObject>({
     return null;
   };
 
+  const renderFilterBadgeLabel = (label: string) => {
+    const isValidPubKey = !getPublicKeyError(label);
+    const isValidContractId = !getContractIdError(label);
+
+    // Stellar public key or contract ID
+    if (isValidPubKey || isValidContractId) {
+      return shortenStellarAddress(label);
+    }
+
+    return label;
+  };
+
   const renderFilterBadges = () => {
     return Object.entries(appliedFilters).map((af, afIdx) => {
       const [id, filters] = af;
@@ -279,7 +297,7 @@ export const DataTable = <T extends AnyObject>({
               key={`badge-${id}-${afIdx}-${f}-${fIdx}`}
               className="DataTable__badge Badge Badge--secondary Badge--sm"
             >
-              {f}
+              {renderFilterBadgeLabel(f)}
 
               <div
                 role="button"
@@ -304,6 +322,23 @@ export const DataTable = <T extends AnyObject>({
     });
   };
 
+  const renderFilteredResultCount = () => {
+    // No filters applied
+    if (isEmptyObject(appliedFilters)) {
+      return null;
+    }
+
+    const resultCount = processedData.length;
+
+    if (resultCount === 0) {
+      return null;
+    }
+
+    return (
+      <div className="DataTable__filteredResultCount">{`${resultCount} filtered ${resultCount === 1 ? "results" : "results"}`}</div>
+    );
+  };
+
   const customStyle = {
     "--DataTable-grid-template-columns": cssGridTemplateColumns,
   } as React.CSSProperties;
@@ -313,7 +348,7 @@ export const DataTable = <T extends AnyObject>({
   return (
     <Box gap="md">
       <Box gap="sm" direction="row" align="center" justify="space-between">
-        <Box gap="sm" direction="row" align="center">
+        <Box gap="sm" direction="row" align="center" wrap="wrap">
           {/* Applied filter badges */}
           {renderFilterBadges()}
         </Box>
@@ -387,54 +422,66 @@ export const DataTable = <T extends AnyObject>({
         </div>
       </Card>
 
-      <Box gap="lg" direction="row" align="center" justify="space-between">
+      <Box
+        gap="lg"
+        direction="row"
+        align="center"
+        justify="space-between"
+        wrap="wrap"
+      >
         <div>{customFooterEl || null}</div>
 
         {/* Pagination */}
-        <Box gap="xs" direction="row" align="center">
-          <Button
-            variant="tertiary"
-            size="sm"
-            onClick={() => {
-              setCurrentPage(1);
-            }}
-            disabled={currentPage === 1}
-          >
-            First
-          </Button>
+        <Box gap="md" direction="row" align="center" wrap="wrap">
+          <Box gap="xs" direction="row" align="center">
+            <>{renderFilteredResultCount()}</>
+          </Box>
 
-          <Button
-            variant="tertiary"
-            size="sm"
-            icon={<Icon.ArrowLeft />}
-            onClick={() => {
-              setCurrentPage(currentPage - 1);
-            }}
-            disabled={currentPage === 1}
-          ></Button>
+          <Box gap="xs" direction="row" align="center">
+            <Button
+              variant="tertiary"
+              size="sm"
+              onClick={() => {
+                setCurrentPage(1);
+              }}
+              disabled={currentPage === 1}
+            >
+              First
+            </Button>
 
-          <div className="DataTable__pagination">{`Page ${currentPage} of ${totalPageCount}`}</div>
+            <Button
+              variant="tertiary"
+              size="sm"
+              icon={<Icon.ArrowLeft />}
+              onClick={() => {
+                setCurrentPage(currentPage - 1);
+              }}
+              disabled={currentPage === 1}
+            ></Button>
 
-          <Button
-            variant="tertiary"
-            size="sm"
-            icon={<Icon.ArrowRight />}
-            onClick={() => {
-              setCurrentPage(currentPage + 1);
-            }}
-            disabled={currentPage === totalPageCount}
-          ></Button>
+            <div className="DataTable__pagination">{`Page ${currentPage} of ${totalPageCount}`}</div>
 
-          <Button
-            variant="tertiary"
-            size="sm"
-            onClick={() => {
-              setCurrentPage(totalPageCount);
-            }}
-            disabled={currentPage === totalPageCount}
-          >
-            Last
-          </Button>
+            <Button
+              variant="tertiary"
+              size="sm"
+              icon={<Icon.ArrowRight />}
+              onClick={() => {
+                setCurrentPage(currentPage + 1);
+              }}
+              disabled={currentPage === totalPageCount}
+            ></Button>
+
+            <Button
+              variant="tertiary"
+              size="sm"
+              onClick={() => {
+                setCurrentPage(totalPageCount);
+              }}
+              disabled={currentPage === totalPageCount}
+            >
+              Last
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Box>

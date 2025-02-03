@@ -18,6 +18,11 @@
 
   &__scroll {
     overflow-x: auto;
+
+    // Set min-height to make sure filter dropdown will fit
+    &:has(.DataTable__filter) {
+      min-height: pxToRem(400px);
+    }
   }
 
   &__table {
@@ -132,6 +137,14 @@
     line-height: pxToRem(18px);
     font-weight: var(--sds-fw-semi-bold);
     color: var(--sds-clr-gray-12);
+    flex-shrink: 0;
+  }
+
+  &__filteredResultCount {
+    font-size: pxToRem(12px);
+    line-height: pxToRem(18px);
+    font-weight: var(--sds-fw-semi-bold);
+    color: var(--sds-clr-gray-09);
   }
 
   &__filterDropdown {
@@ -152,6 +165,11 @@
       font-weight: var(--sds-fw-medium);
       color: var(--sds-clr-gray-11);
       padding: pxToRem(6px) pxToRem(8px);
+    }
+
+    &__filterContainer {
+      max-height: pxToRem(250px);
+      overflow-x: auto;
     }
 
     &__filter {
