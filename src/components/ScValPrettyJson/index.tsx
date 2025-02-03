@@ -10,6 +10,7 @@ import { useStore } from "@/store/useStore";
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import * as StellarXdr from "@/helpers/StellarXdr";
 import { getStellarExpertNetwork } from "@/helpers/getStellarExpertNetwork";
+import { getContractIdError } from "@/validate/methods/getContractIdError";
 
 import { AnyObject } from "@/types/types";
 
@@ -63,12 +64,13 @@ export const ScValPrettyJson = ({
 
   const renderAddress = (value: string) => {
     const seNetwork = getStellarExpertNetwork(network.id);
+    const isContract = !getContractIdError(value);
 
     if (seNetwork) {
       return (
         <div className="ScValPrettyJson__value" data-type="address">
           <SdsLink
-            href={`${STELLAR_EXPERT}/${seNetwork}/account/${value}`}
+            href={`${STELLAR_EXPERT}/${seNetwork}/${isContract ? "contract" : "account"}/${value}`}
             variant="secondary"
             isUnderline
             title={value}
