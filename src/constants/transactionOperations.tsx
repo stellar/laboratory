@@ -5,7 +5,7 @@ import {
   OPERATION_TRUSTLINE_CLEAR_FLAGS,
   OPERATION_TRUSTLINE_SET_FLAGS,
 } from "@/constants/settings";
-import { AnyObject, TxnOperation } from "@/types/types";
+import { AnyObject, OperationError, TxnOperation } from "@/types/types";
 
 type TransactionOperation = {
   label: string;
@@ -23,6 +23,16 @@ export const INITIAL_OPERATION: TxnOperation = {
   operation_type: "",
   params: [],
 };
+
+export const EMPTY_OPERATION_ERROR: OperationError = {
+  operationType: "",
+  error: {},
+  missingFields: [],
+  customMessage: [],
+};
+
+export const SET_TRUSTLINE_FLAGS_CUSTOM_MESSAGE =
+  "At least one flag is required";
 
 export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
   create_account: {

@@ -8,7 +8,7 @@ import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 
 import { Params } from "./components/Params";
 import { Operations } from "./components/Operations";
-import { TransactionXdr } from "./components/TransactionXdr";
+import { ClassicTransactionXdr } from "./components/ClassicTransactionXdr";
 import { SorobanTransactionXdr } from "./components/SorobanTransactionXdr";
 
 export default function BuildTransaction() {
@@ -87,7 +87,7 @@ export default function BuildTransaction() {
 
       <>{renderError()}</>
 
-      {IS_SOROBAN_TX ? <SorobanTransactionXdr /> : <TransactionXdr />}
+      {IS_SOROBAN_TX ? <SorobanTransactionXdr /> : <ClassicTransactionXdr />}
     </Box>
   );
 }

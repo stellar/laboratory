@@ -42,7 +42,7 @@ import {
 
 const MAX_INT64 = "9223372036854775807";
 
-export const TransactionXdr = () => {
+export const ClassicTransactionXdr = () => {
   const { transaction, network } = useStore();
   const router = useRouter();
   const { classic, params: txnParams, isValid } = transaction.build;

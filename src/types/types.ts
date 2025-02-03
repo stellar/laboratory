@@ -138,6 +138,13 @@ export type TxnOperation = {
   source_account?: string;
 };
 
+export type OperationError = {
+  operationType: string;
+  error: { [key: string]: string };
+  missingFields: string[];
+  customMessage: string[];
+};
+
 export type OpBuildingError = { label?: string; errorList?: string[] };
 
 export type LedgerErrorResponse = {
