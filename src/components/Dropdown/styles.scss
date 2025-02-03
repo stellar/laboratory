@@ -1,0 +1,20 @@
+@use "../../styles/utils.scss" as *;
+
+.Dropdown {
+  z-index: 2;
+  transform: none;
+  display: none;
+  opacity: 0;
+
+  &[data-is-active="true"] {
+    display: block;
+  }
+
+  &[data-is-visible="true"] {
+    opacity: 1;
+  }
+
+  &__body {
+    padding: pxToRem(4px);
+  }
+}

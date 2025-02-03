@@ -10,6 +10,7 @@ import { useStore } from "@/store/useStore";
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import * as StellarXdr from "@/helpers/StellarXdr";
 import { getStellarExpertNetwork } from "@/helpers/getStellarExpertNetwork";
+import { getContractIdError } from "@/validate/methods/getContractIdError";
 
 import { AnyObject } from "@/types/types";
 
@@ -17,11 +18,13 @@ import "./styles.scss";
 
 /* Create contract storage JSON-like structure */
 export const ScValPrettyJson = ({
-  xdrString,
   isReady,
+  xdrString,
+  json,
 }: {
-  xdrString: string;
   isReady: boolean;
+  xdrString?: string;
+  json?: AnyObject | null;
 }) => {
   const { network } = useStore();
 
@@ -31,7 +34,9 @@ export const ScValPrettyJson = ({
 
   const parseJson = () => {
     try {
-      return parse(StellarXdr.decode("ScVal", xdrString)) as AnyObject;
+      return xdrString
+        ? (parse(StellarXdr.decode("ScVal", xdrString)) as AnyObject)
+        : null;
     } catch (e: any) {
       return null;
     }
@@ -59,12 +64,13 @@ export const ScValPrettyJson = ({
 
   const renderAddress = (value: string) => {
     const seNetwork = getStellarExpertNetwork(network.id);
+    const isContract = !getContractIdError(value);
 
     if (seNetwork) {
       return (
         <div className="ScValPrettyJson__value" data-type="address">
           <SdsLink
-            href={`${STELLAR_EXPERT}/${seNetwork}/account/${value}`}
+            href={`${STELLAR_EXPERT}/${seNetwork}/${isContract ? "contract" : "account"}/${value}`}
             variant="secondary"
             isUnderline
             title={value}
@@ -329,7 +335,11 @@ export const ScValPrettyJson = ({
   };
 
   // Entry point
-  return <div className="ScValPrettyJson">{render({ item: parseJson() })}</div>;
+  return (
+    <div className="ScValPrettyJson">
+      {render({ item: json ? json : parseJson() })}
+    </div>
+  );
 };
 
 // =============================================================================

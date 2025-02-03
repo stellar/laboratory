@@ -415,6 +415,11 @@ export type ContractStorageResponseItem = {
   expired?: boolean;
 };
 
+export type ContractStorageProcessedItem<T> = T & {
+  keyJson?: AnyObject | null;
+  valueJson?: AnyObject | null;
+};
+
 // =============================================================================
 // Data table
 // =============================================================================
@@ -424,6 +429,7 @@ export type DataTableHeader = {
   id: string;
   value: string;
   isSortable?: boolean;
+  filter?: string[];
 };
 
 export type DataTableCell = {
