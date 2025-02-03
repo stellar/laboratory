@@ -134,7 +134,9 @@ export const ResourceFeePickerWithQuery = ({
       }
       return builtXdr;
     } catch (e) {
-      setErrorMessage(`${e}`);
+      setErrorMessage(
+        `Something went wrong when calculating a resource fee: ${e}`,
+      );
       return;
     }
   };
