@@ -416,24 +416,25 @@ test.describe("Submit Transaction Page", () => {
       // Omitting the API end result because the test gives inconsistenet results
     });
   });
-});
 
-test.describe("Update default submit method to RPC when it is a Soroban XDR", () => {
-  test("Submit Soroban", async ({ page }) => {
-    const xdrInput = page.getByLabel(
-      "Input a base-64 encoded TransactionEnvelope",
-    );
-    const submitMethodsBtn = page
-      .locator(".SubmitTx__buttons")
-      .getByRole("button", { name: /via/i });
+  test.describe("Update default submit method to RPC when it is a Soroban XDR", () => {
+    test("Submit Soroban", async ({ page }) => {
+      const xdrInput = page.getByLabel(
+        "Input a base-64 encoded TransactionEnvelope",
+      );
 
-    await expect(submitMethodsBtn).toBeVisible();
+      // Input the Soroban XDR
+      await xdrInput.fill(MOCK_VALID_SOROBAN_TX_XDR.XDR);
 
-    // Input the Soroban XDR
-    await xdrInput.fill(MOCK_VALID_SOROBAN_TX_XDR.XDR);
+      const submitMethodsBtn = page
+        .locator(".SubmitTx__buttons")
+        .getByRole("button", { name: /via/i });
 
-    // Check if the submit method button shows RPC as default
-    await expect(submitMethodsBtn).toHaveText("via RPC");
+      await expect(submitMethodsBtn).toBeVisible();
+
+      // Check if the submit method button shows RPC as default
+      await expect(submitMethodsBtn).toHaveText("via RPC");
+    });
   });
 });
 

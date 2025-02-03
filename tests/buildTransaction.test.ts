@@ -1365,7 +1365,8 @@ test.describe("Build Transaction Page", () => {
           isSorobanOp: true,
           label: "Contract ID",
           value: "aaa",
-          errorMessage: "The string must start with 'C'.",
+          errorMessage:
+            "Invalid contract ID. Please enter a valid contract ID.",
         });
 
         await testInputError({
@@ -1374,7 +1375,7 @@ test.describe("Build Transaction Page", () => {
           label: "Contract ID",
           value: "CAQP53Z2GMZ6WVOKJWXMCVDL",
           errorMessage:
-            "The string length should be at least 52 characters long.",
+            "Invalid contract ID. Please enter a valid contract ID.",
         });
 
         await testInputError({
