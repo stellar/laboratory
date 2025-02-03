@@ -1,81 +1,58 @@
 "use client";
 
-import { ChangeEvent, Fragment, useEffect, useState } from "react";
-import {
-  Badge,
-  Button,
-  Card,
-  Icon,
-  Select,
-  Notification,
-  Input,
-} from "@stellar/design-system";
+import { ChangeEvent, useEffect, useState } from "react";
+import { Select, Notification } from "@stellar/design-system";
 
 import { formComponentTemplateTxnOps } from "@/components/formComponentTemplateTxnOps";
-import { Box } from "@/components/layout/Box";
-import { TabbedButtons } from "@/components/TabbedButtons";
 import { SdsLink } from "@/components/SdsLink";
-import { ShareUrlButton } from "@/components/ShareUrlButton";
-import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
+import { SorobanOperation } from "./SorobanOperation";
+import { ClassicOperation } from "./ClassicOperation";
 
 import { arrayItem } from "@/helpers/arrayItem";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
-import { sanitizeObject } from "@/helpers/sanitizeObject";
-import { shareableUrl } from "@/helpers/shareableUrl";
-import { getClaimableBalanceIdFromXdr } from "@/helpers/getClaimableBalanceIdFromXdr";
-import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransactions";
+import { isSorobanOperationType } from "@/helpers/sorobanUtils";
 
 import { OP_SET_TRUST_LINE_FLAGS } from "@/constants/settings";
 import {
+  EMPTY_OPERATION_ERROR,
   INITIAL_OPERATION,
   TRANSACTION_OPERATIONS,
+  SET_TRUSTLINE_FLAGS_CUSTOM_MESSAGE,
 } from "@/constants/transactionOperations";
 import { useStore } from "@/store/useStore";
 import {
   AnyObject,
-  AssetObject,
   AssetObjectValue,
-  AssetPoolShareObjectValue,
   NumberFractionValue,
   OpBuildingError,
+  OperationError,
   OptionSigner,
   RevokeSponsorshipValue,
 } from "@/types/types";
 
 export const Operations = () => {
-  const { transaction, network } = useStore();
-  const { classic } = transaction.build;
-  const { operations: txnOperations, xdr: txnXdr } = classic;
+  const { transaction } = useStore();
+  const { classic, soroban } = transaction.build;
+
+  // Classic Operations
+  const { operations: txnOperations } = classic;
+  // Soroban Operation
+  const { operation: sorobanOperation } = soroban;
 
   const {
     // Classic
     updateBuildOperations,
     updateBuildSingleOperation,
+    // Soroban
+    updateSorobanBuildOperation,
     // Either Classic or (@todo) Soroban
     updateBuildIsValid,
     setBuildOperationsError,
   } = transaction;
 
-  // Types
-  type OperationError = {
-    operationType: string;
-    error: { [key: string]: string };
-    missingFields: string[];
-    customMessage: string[];
-  };
-
   const [operationsError, setOperationsError] = useState<OperationError[]>([]);
-  const [isSaveTxnModalVisible, setIsSaveTxnModalVisible] = useState(false);
 
-  const EMPTY_OPERATION_ERROR: OperationError = {
-    operationType: "",
-    error: {},
-    missingFields: [],
-    customMessage: [],
-  };
-
-  const SET_TRUSTLINE_FLAGS_CUSTOM_MESSAGE = "At least one flag is required";
-
+  // For Classic Operations
   const updateOptionParamAndError = ({
     type,
     index,
@@ -140,71 +117,143 @@ export const Operations = () => {
     }
   };
 
+  // For Soroban Operation
+  const resetSorobanOperation = () => {
+    updateSorobanBuildOperation(INITIAL_OPERATION);
+    setOperationsError([EMPTY_OPERATION_ERROR]);
+  };
+
   // Preserve values and validate inputs when components mounts
   useEffect(() => {
     // If no operations to preserve, add inital operation and error template
-    if (txnOperations.length === 0) {
+    if (txnOperations.length === 0 && !soroban.operation.operation_type) {
+      // Default to classic operations empty state
       updateOptionParamAndError({ type: "add", item: INITIAL_OPERATION });
     } else {
-      // Validate all params in all operations
+      // If there are operations on mount, validate all params in all operations
       const errors: OperationError[] = [];
 
-      txnOperations.forEach((op, idx) => {
-        const opRequiredFields = [
-          ...(TRANSACTION_OPERATIONS[op.operation_type]?.requiredParams || []),
+      // Soroban operation params validation
+      if (soroban.operation.operation_type) {
+        const sorobanOpRequiredFields = [
+          ...(TRANSACTION_OPERATIONS[soroban.operation.operation_type]
+            ?.requiredParams || []),
         ];
 
-        const missingFields = opRequiredFields.reduce((res, cur) => {
-          if (!op.params[cur]) {
-            return [...res, cur];
-          }
+        const sorobanMissingFields = sorobanOpRequiredFields.reduce(
+          (res, cur) => {
+            if (!soroban.operation.params[cur]) {
+              return [...res, cur];
+            }
+            return res;
+          },
+          [] as string[],
+        );
 
-          return res;
-        }, [] as string[]);
-
-        let opErrors: OperationError = {
+        // Soroban Operation Error related
+        let sorobanOpErrors: OperationError = {
           ...EMPTY_OPERATION_ERROR,
-          missingFields,
-          operationType: op.operation_type,
+          missingFields: sorobanMissingFields,
+          operationType: soroban.operation.operation_type,
         };
 
-        // Params
-        Object.entries(op.params).forEach(([key, value]) => {
-          opErrors = {
-            ...opErrors,
+        // Soroban: Validate params
+        Object.entries(soroban.operation.params).forEach(([key, value]) => {
+          sorobanOpErrors = {
+            ...sorobanOpErrors,
             ...validateOperationParam({
-              opIndex: idx,
+              // setting index to 0 because only one operation is allowed with Soroban
+              opIndex: 0,
               opParam: key,
               opValue: value,
-              opParamError: opErrors,
-              opType: op.operation_type,
+              opParamError: sorobanOpErrors,
+              opType: soroban.operation.operation_type,
             }),
           };
         });
 
-        // Source account
-        if (op.source_account) {
-          opErrors = {
-            ...opErrors,
+        // Validate source account if present
+        if (soroban.operation.source_account) {
+          sorobanOpErrors = {
+            ...sorobanOpErrors,
             ...validateOperationParam({
-              opIndex: idx,
+              opIndex: 0, // setting index to 0 because only one operation is allowed with Soroban
               opParam: "source_account",
-              opValue: op.source_account,
-              opParamError: opErrors,
-              opType: op.operation_type,
+              opValue: soroban.operation.source_account,
+              opParamError: sorobanOpErrors,
+              opType: soroban.operation.operation_type,
             }),
           };
         }
 
-        // Missing optional selection
-        opErrors = operationCustomMessage({
-          opType: op.operation_type,
-          opIndex: idx,
-          opError: opErrors,
+        // Check for custom messages
+        sorobanOpErrors = operationCustomMessage({
+          opType: soroban.operation.operation_type,
+          opIndex: 0, // setting index to 0 because only one operation is allowed with Soroban
+          opError: sorobanOpErrors,
         });
 
-        errors.push(opErrors);
-      });
+        errors.push(sorobanOpErrors);
+      } else {
+        // Classic operation params validation
+        txnOperations.forEach((op, idx) => {
+          const opRequiredFields = [
+            ...(TRANSACTION_OPERATIONS[op.operation_type]?.requiredParams ||
+              []),
+          ];
+
+          const missingFields = opRequiredFields.reduce((res, cur) => {
+            if (!op.params[cur]) {
+              return [...res, cur];
+            }
+
+            return res;
+          }, [] as string[]);
+
+          let opErrors: OperationError = {
+            ...EMPTY_OPERATION_ERROR,
+            missingFields,
+            operationType: op.operation_type,
+          };
+
+          // Params
+          Object.entries(op.params).forEach(([key, value]) => {
+            opErrors = {
+              ...opErrors,
+              ...validateOperationParam({
+                opIndex: idx,
+                opParam: key,
+                opValue: value,
+                opParamError: opErrors,
+                opType: op.operation_type,
+              }),
+            };
+          });
+
+          // Source account
+          if (op.source_account) {
+            opErrors = {
+              ...opErrors,
+              ...validateOperationParam({
+                opIndex: idx,
+                opParam: "source_account",
+                opValue: op.source_account,
+                opParamError: opErrors,
+                opType: op.operation_type,
+              }),
+            };
+          }
+
+          // Missing optional selection
+          opErrors = operationCustomMessage({
+            opType: op.operation_type,
+            opIndex: idx,
+            opError: opErrors,
+          });
+
+          errors.push(opErrors);
+        });
+      }
 
       setOperationsError([...errors]);
     }
@@ -217,7 +266,12 @@ export const Operations = () => {
     setBuildOperationsError(getOperationsError());
     // Not including getOperationsError()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [txnOperations, operationsError, setBuildOperationsError]);
+  }, [
+    txnOperations,
+    sorobanOperation.operation_type,
+    operationsError,
+    setBuildOperationsError,
+  ]);
 
   const missingSelectedAssetFields = (
     param: string,
@@ -571,54 +625,28 @@ export const Operations = () => {
     };
   };
 
-  const handleOperationParamChange = ({
-    opIndex,
-    opParam,
-    opValue,
-    opType,
-  }: {
-    opIndex: number;
-    opParam: string;
-    opValue: any;
-    opType: string;
-  }) => {
-    const op = txnOperations[opIndex];
-
-    updateBuildSingleOperation(opIndex, {
-      ...op,
-      params: sanitizeObject({
-        ...op?.params,
-        [opParam]: opValue,
-      }),
-    });
-
-    const validatedOpParam = validateOperationParam({
-      opIndex,
-      opParam,
-      opValue,
-      opType,
-    });
-    const updatedOpParamError = arrayItem.update(
-      operationsError,
-      opIndex,
-      validatedOpParam,
-    );
-
-    setOperationsError([...updatedOpParamError]);
-  };
-
   const handleOperationSourceAccountChange = (
     opIndex: number,
     opValue: any,
     opType: string,
+    isSoroban: boolean = false,
   ) => {
-    const op = txnOperations[opIndex];
+    if (isSoroban) {
+      // Handle Soroban operation
+      updateSorobanBuildOperation({
+        ...sorobanOperation,
+        source_account: opValue,
+      });
+    } else {
+      // Handle classic operation
+      const op = txnOperations[opIndex];
+      updateBuildSingleOperation(opIndex, {
+        ...op,
+        source_account: opValue,
+      });
+    }
 
-    updateBuildSingleOperation(opIndex, {
-      ...op,
-      source_account: opValue,
-    });
-
+    // Validation logic is the same for both
     const validatedSourceAccount = validateOperationParam({
       opIndex,
       opParam: "source_account",
@@ -690,6 +718,10 @@ export const Operations = () => {
   };
 
   const renderSourceAccount = (opType: string, index: number) => {
+    const currentOperation = isSorobanOperationType(opType)
+      ? sorobanOperation
+      : txnOperations[index];
+
     const sourceAccountComponent = formComponentTemplateTxnOps({
       param: "source_account",
       opType,
@@ -698,78 +730,19 @@ export const Operations = () => {
 
     return opType && sourceAccountComponent
       ? sourceAccountComponent.render({
-          value: txnOperations[index].source_account,
+          value: currentOperation.source_account,
           error: operationsError[index]?.error?.["source_account"],
           isRequired: false,
           onChange: (e: ChangeEvent<HTMLInputElement>) => {
-            handleOperationSourceAccountChange(index, e.target.value, opType);
+            handleOperationSourceAccountChange(
+              index,
+              e.target.value,
+              opType,
+              isSorobanOperationType(opType),
+            );
           },
         })
       : null;
-  };
-
-  const OperationTabbedButtons = ({
-    index,
-    isUpDisabled,
-    isDownDisabled,
-    isDeleteDisabled,
-  }: {
-    index: number;
-    isUpDisabled: boolean;
-    isDownDisabled: boolean;
-    isDeleteDisabled: boolean;
-  }) => {
-    return (
-      <TabbedButtons
-        size="md"
-        buttons={[
-          {
-            id: "moveUp",
-            hoverTitle: "Move up",
-            icon: <Icon.ArrowUp />,
-            onClick: () =>
-              updateOptionParamAndError({
-                type: "move-before",
-                index,
-              }),
-            isDisabled: isUpDisabled,
-          },
-          {
-            id: "moveDown",
-            hoverTitle: "Move down",
-            icon: <Icon.ArrowDown />,
-            onClick: () =>
-              updateOptionParamAndError({
-                type: "move-after",
-                index,
-              }),
-            isDisabled: isDownDisabled,
-          },
-          {
-            id: "duplicate",
-            hoverTitle: "Duplicate",
-            icon: <Icon.Copy07 />,
-            onClick: () =>
-              updateOptionParamAndError({
-                type: "duplicate",
-                index,
-              }),
-          },
-          {
-            id: "delete",
-            hoverTitle: "Delete",
-            icon: <Icon.Trash01 />,
-            isError: true,
-            isDisabled: isDeleteDisabled,
-            onClick: () =>
-              updateOptionParamAndError({
-                type: "delete",
-                index,
-              }),
-          },
-        ]}
-      />
-    );
   };
 
   const renderCustom = (operationType: string) => {
@@ -808,11 +781,23 @@ export const Operations = () => {
               TRANSACTION_OPERATIONS[e.target.value]?.defaultParams || {};
             const defaultParamKeys = Object.keys(defaultParams);
 
-            updateBuildSingleOperation(index, {
-              operation_type: e.target.value,
-              params: defaultParams,
-              source_account: "",
-            });
+            if (isSorobanOperationType(e.target.value)) {
+              // if it's soroban, reset the classic operation
+              updateOptionParamAndError({ type: "reset" });
+              updateSorobanBuildOperation({
+                operation_type: e.target.value,
+                params: defaultParams,
+                source_account: "",
+              });
+            } else {
+              // if it's classic, reset the soroban operation
+              resetSorobanOperation();
+              updateBuildSingleOperation(index, {
+                operation_type: e.target.value,
+                params: defaultParams,
+                source_account: "",
+              });
+            }
 
             let initParamError: OperationError = EMPTY_OPERATION_ERROR;
 
@@ -842,9 +827,15 @@ export const Operations = () => {
               });
             }
 
-            setOperationsError([
-              ...arrayItem.update(operationsError, index, initParamError),
-            ]);
+            if (isSorobanOperationType(e.target.value)) {
+              // for soroban, on operation dropdown change, we don't need to update the existing array
+              // since there is only one operation
+              setOperationsError([initParamError]);
+            } else {
+              setOperationsError([
+                ...arrayItem.update(operationsError, index, initParamError),
+              ]);
+            }
           }}
           note={
             opInfo ? (
@@ -857,7 +848,7 @@ export const Operations = () => {
         >
           <option value="">Select operation type</option>
           <option value="create_account">Create Account</option>
-          <option disabled={true} value="extend_footprint_ttl">
+          <option value="extend_footprint_ttl">
             Extend Footprint TTL (Soroban)
           </option>
           <option value="payment">Payment</option>
@@ -907,350 +898,33 @@ export const Operations = () => {
     );
   };
 
-  const renderClaimableBalanceId = (opIndex: number) => {
-    const balanceId = getClaimableBalanceIdFromXdr({
-      xdr: txnXdr,
-      networkPassphrase: network.passphrase,
-      opIndex,
-    });
-
-    if (!balanceId) {
-      return null;
-    }
-
+  /* Soroban Operations */
+  // Unlike classic transactions, Soroban tx can only have one operation
+  if (soroban.operation.operation_type) {
     return (
-      <Input
-        id={`${opIndex}-create_claimable_balance`}
-        label="Claimable Balance ID"
-        labelSuffix="generated"
-        fieldSize="md"
-        value={balanceId}
-        disabled
-        copyButton={{ position: "right" }}
-        infoLink="https://developers.stellar.org/docs/learn/glossary#claimablebalanceid"
+      <SorobanOperation
+        operationTypeSelector={
+          <OperationTypeSelector
+            index={0}
+            operationType={soroban.operation.operation_type}
+          />
+        }
+        operationsError={operationsError}
+        setOperationsError={setOperationsError}
+        validateOperationParam={validateOperationParam}
+        renderSourceAccount={renderSourceAccount}
       />
     );
-  };
+  }
 
   return (
-    <Box gap="md">
-      <Card>
-        <Box gap="lg">
-          {/* Operations */}
-          <>
-            {txnOperations.map((op, idx) => (
-              <Box
-                key={`op-${idx}`}
-                gap="lg"
-                addlClassName="PageBody__content"
-                data-testid={`build-transaction-operation-${idx}`}
-              >
-                {/* Operation label and action buttons */}
-                <Box
-                  gap="lg"
-                  direction="row"
-                  align="center"
-                  justify="space-between"
-                >
-                  <Badge
-                    size="md"
-                    variant="secondary"
-                  >{`Operation ${idx}`}</Badge>
-
-                  <OperationTabbedButtons
-                    index={idx}
-                    isUpDisabled={idx === 0}
-                    isDownDisabled={idx === txnOperations.length - 1}
-                    isDeleteDisabled={txnOperations.length === 1}
-                  />
-                </Box>
-
-                <OperationTypeSelector
-                  index={idx}
-                  operationType={op.operation_type}
-                />
-
-                {/* Operation params */}
-                <>
-                  {TRANSACTION_OPERATIONS[op.operation_type]?.params.map(
-                    (input) => {
-                      const component = formComponentTemplateTxnOps({
-                        param: input,
-                        opType: op.operation_type,
-                        index: idx,
-                        custom:
-                          TRANSACTION_OPERATIONS[op.operation_type].custom?.[
-                            input
-                          ],
-                      });
-                      const baseProps = {
-                        value: txnOperations[idx]?.params[input],
-                        error: operationsError[idx]?.error?.[input],
-                        isRequired:
-                          TRANSACTION_OPERATIONS[
-                            op.operation_type
-                          ].requiredParams.includes(input),
-                      };
-
-                      if (component) {
-                        switch (input) {
-                          case "asset":
-                          case "buying":
-                          case "selling":
-                          case "send_asset":
-                          case "dest_asset":
-                            return component.render({
-                              ...baseProps,
-                              onChange: (assetValue: AssetObjectValue) => {
-                                handleOperationParamChange({
-                                  opIndex: idx,
-                                  opParam: input,
-                                  opValue: assetValue,
-                                  opType: op.operation_type,
-                                });
-                              },
-                            });
-                          case "authorize":
-                            return component.render({
-                              ...baseProps,
-                              onChange: (selected: string | undefined) => {
-                                handleOperationParamChange({
-                                  opIndex: idx,
-                                  opParam: input,
-                                  opValue: selected,
-                                  opType: op.operation_type,
-                                });
-                              },
-                            });
-                          case "claimants":
-                            return (
-                              <Fragment key={`op-${idx}-claimants-wrapper`}>
-                                {component.render({
-                                  ...baseProps,
-                                  onChange: (
-                                    claimants: AnyObject[] | undefined,
-                                  ) => {
-                                    handleOperationParamChange({
-                                      opIndex: idx,
-                                      opParam: input,
-                                      opValue: claimants,
-                                      opType: op.operation_type,
-                                    });
-                                  },
-                                })}
-
-                                {renderClaimableBalanceId(idx)}
-                              </Fragment>
-                            );
-                          case "line":
-                            return component.render({
-                              ...baseProps,
-                              onChange: (
-                                assetValue:
-                                  | AssetObjectValue
-                                  | AssetPoolShareObjectValue,
-                              ) => {
-                                handleOperationParamChange({
-                                  opIndex: idx,
-                                  opParam: input,
-                                  opValue: assetValue,
-                                  opType: op.operation_type,
-                                });
-                              },
-                            });
-                          case "min_price":
-                          case "max_price":
-                            return component.render({
-                              ...baseProps,
-                              onChange: (value: NumberFractionValue) => {
-                                handleOperationParamChange({
-                                  opIndex: idx,
-                                  opParam: input,
-                                  opValue: value,
-                                  opType: op.operation_type,
-                                });
-                              },
-                            });
-                          case "path":
-                            return component.render({
-                              ...baseProps,
-                              onChange: (path: AssetObject[]) => {
-                                handleOperationParamChange({
-                                  opIndex: idx,
-                                  opParam: input,
-                                  opValue: path,
-                                  opType: op.operation_type,
-                                });
-                              },
-                            });
-                          case "revokeSponsorship":
-                            return component.render({
-                              ...baseProps,
-                              onChange: (
-                                value: RevokeSponsorshipValue | undefined,
-                              ) => {
-                                handleOperationParamChange({
-                                  opIndex: idx,
-                                  opParam: input,
-                                  opValue: value,
-                                  opType: op.operation_type,
-                                });
-                              },
-                            });
-                          case "clear_flags":
-                          case "set_flags":
-                            return component.render({
-                              ...baseProps,
-                              onChange: (value: string[]) => {
-                                handleOperationParamChange({
-                                  opIndex: idx,
-                                  opParam: input,
-                                  opValue: value.length > 0 ? value : undefined,
-                                  opType: op.operation_type,
-                                });
-
-                                if (
-                                  op.operation_type === OP_SET_TRUST_LINE_FLAGS
-                                ) {
-                                  const txOp = txnOperations[idx];
-
-                                  // If checking a flag, remove the message (the
-                                  // other flag doesn't matter).
-                                  // If unchecking a flag, check if the other
-                                  // flag is checked.
-                                  const showCustomMessage =
-                                    value.length > 0
-                                      ? false
-                                      : input === "clear_flags"
-                                        ? !txOp.params.set_flags
-                                        : !txOp.params.clear_flags;
-
-                                  const opError = {
-                                    ...operationsError[idx],
-                                    customMessage: showCustomMessage
-                                      ? [SET_TRUSTLINE_FLAGS_CUSTOM_MESSAGE]
-                                      : [],
-                                  };
-                                  const updated = arrayItem.update(
-                                    operationsError,
-                                    idx,
-                                    opError,
-                                  );
-
-                                  setOperationsError(updated);
-                                }
-                              },
-                            });
-                          case "signer":
-                            return component.render({
-                              ...baseProps,
-                              onChange: (value: OptionSigner | undefined) => {
-                                handleOperationParamChange({
-                                  opIndex: idx,
-                                  opParam: input,
-                                  opValue: value,
-                                  opType: op.operation_type,
-                                });
-                              },
-                            });
-                          default:
-                            return component.render({
-                              ...baseProps,
-                              onChange: (e: ChangeEvent<HTMLInputElement>) => {
-                                handleOperationParamChange({
-                                  opIndex: idx,
-                                  opParam: input,
-                                  opValue: e.target.value,
-                                  opType: op.operation_type,
-                                });
-                              },
-                            });
-                        }
-                      }
-
-                      return null;
-                    },
-                  )}
-                </>
-
-                {/* Optional source account for all operations */}
-                <>{renderSourceAccount(op.operation_type, idx)}</>
-              </Box>
-            ))}
-          </>
-
-          {/* Operations bottom buttons */}
-          <Box
-            gap="lg"
-            direction="row"
-            align="center"
-            justify="space-between"
-            addlClassName="Operation__buttons"
-          >
-            <Box gap="sm" direction="row" align="center">
-              <Button
-                size="md"
-                variant="tertiary"
-                icon={<Icon.PlusCircle />}
-                onClick={() => {
-                  updateOptionParamAndError({
-                    type: "add",
-                    item: INITIAL_OPERATION,
-                  });
-                }}
-              >
-                Add Operation
-              </Button>
-
-              <Button
-                size="md"
-                variant="tertiary"
-                icon={<Icon.Save01 />}
-                onClick={() => {
-                  setIsSaveTxnModalVisible(true);
-                }}
-                title="Save transaction"
-                disabled={!txnXdr}
-              ></Button>
-
-              <ShareUrlButton
-                shareableUrl={shareableUrl("transactions-build")}
-              />
-            </Box>
-
-            <Button
-              size="md"
-              variant="error"
-              icon={<Icon.RefreshCw01 />}
-              onClick={() => {
-                updateOptionParamAndError({ type: "reset" });
-              }}
-            >
-              Clear Operations
-            </Button>
-          </Box>
-        </Box>
-      </Card>
-
-      <SaveToLocalStorageModal
-        type="save"
-        itemTitle="Transaction"
-        itemProps={{
-          xdr: txnXdr,
-          page: "build",
-          shareableUrl: shareableUrl("transactions-build"),
-          params: transaction.build.params,
-          operations: transaction.build.classic.operations,
-        }}
-        allSavedItems={localStorageSavedTransactions.get()}
-        isVisible={isSaveTxnModalVisible}
-        onClose={() => {
-          setIsSaveTxnModalVisible(false);
-        }}
-        onUpdate={(updatedItems) => {
-          localStorageSavedTransactions.set(updatedItems);
-        }}
-      />
-    </Box>
+    <ClassicOperation
+      operationTypeSelector={OperationTypeSelector}
+      operationsError={operationsError}
+      setOperationsError={setOperationsError}
+      updateOptionParamAndError={updateOptionParamAndError}
+      validateOperationParam={validateOperationParam}
+      renderSourceAccount={renderSourceAccount}
+    />
   );
 };

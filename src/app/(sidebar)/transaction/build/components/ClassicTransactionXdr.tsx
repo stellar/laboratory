@@ -1,17 +1,13 @@
 "use client";
 
 import { useEffect } from "react";
-import { Button } from "@stellar/design-system";
 import { stringify } from "lossless-json";
 import { StrKey, TransactionBuilder } from "@stellar/stellar-sdk";
 import { set } from "lodash";
 import * as StellarXdr from "@/helpers/StellarXdr";
 import { useRouter } from "next/navigation";
 
-import { SdsLink } from "@/components/SdsLink";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
-import { Box } from "@/components/layout/Box";
-import { ViewInXdrButton } from "@/components/ViewInXdrButton";
 
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { xdrUtils } from "@/helpers/xdr/utils";
@@ -39,10 +35,11 @@ import {
   OptionSigner,
   TxnOperation,
 } from "@/types/types";
+import { TransactionXdrDisplay } from "./TransactionXdrDisplay";
 
 const MAX_INT64 = "9223372036854775807";
 
-export const TransactionXdr = () => {
+export const ClassicTransactionXdr = () => {
   const { transaction, network } = useStore();
   const router = useRouter();
   const { classic, params: txnParams, isValid } = transaction.build;
@@ -537,58 +534,16 @@ export const TransactionXdr = () => {
         .toString("hex");
 
       return (
-        <ValidationResponseCard
-          variant="success"
-          title="Success! Transaction Envelope XDR:"
-          response={
-            <Box gap="xs" data-testid="build-transaction-envelope-xdr">
-              <div>
-                <div>Network Passphrase:</div>
-                <div>{network.passphrase}</div>
-              </div>
-              <div>
-                <div>Hash:</div>
-                <div>{txnHash}</div>
-              </div>
-              <div>
-                <div>XDR:</div>
-                <div>{txnXdr.xdr}</div>
-              </div>
-            </Box>
-          }
-          note={
-            <>
-              In order for the transaction to make it into the ledger, a
-              transaction must be successfully signed and submitted to the
-              network. The Lab provides the{" "}
-              <SdsLink href={Routes.SIGN_TRANSACTION}>
-                Transaction Signer
-              </SdsLink>{" "}
-              for signing a transaction, and the{" "}
-              <SdsLink href={Routes.SUBMIT_TRANSACTION}>
-                Post Transaction endpoint
-              </SdsLink>{" "}
-              for submitting one to the network.
-            </>
-          }
-          footerLeftEl={
-            <>
-              <Button
-                size="md"
-                variant="secondary"
-                onClick={() => {
-                  updateSignImportXdr(txnXdr.xdr);
-                  updateSignActiveView("overview");
-
-                  router.push(Routes.SIGN_TRANSACTION);
-                }}
-              >
-                Sign in Transaction Signer
-              </Button>
-
-              <ViewInXdrButton xdrBlob={txnXdr.xdr} />
-            </>
-          }
+        <TransactionXdrDisplay
+          xdr={txnXdr.xdr}
+          networkPassphrase={network.passphrase}
+          txnHash={txnHash}
+          dataTestId="build-transaction-envelope-xdr"
+          onSignClick={() => {
+            updateSignImportXdr(txnXdr.xdr);
+            updateSignActiveView("overview");
+            router.push(Routes.SIGN_TRANSACTION);
+          }}
         />
       );
     } catch (e: any) {
