@@ -312,6 +312,7 @@ export const NetworkSelector = () => {
                   handleInputChange("rpcUrl", e.target.value);
                 }}
                 error={validationError?.rpcUrl}
+                infoLink="https://developers.stellar.org/docs/data/rpc/rpc-providers"
               />
               {/* TODO: put these back once Stellar JS SDK is ready */}
               {/* <NetworkInput
@@ -344,6 +345,7 @@ export const NetworkSelector = () => {
                   handleInputChange("horizonUrl", e.target.value);
                 }}
                 error={validationError?.horizonUrl}
+                infoLink="https://developers.stellar.org/docs/data/horizon/horizon-providers"
               />
               {/* TODO: put these back once Stellar JS SDK is ready */}
               {/* <NetworkInput
@@ -408,6 +410,7 @@ type NetworkInputProps = {
   error?: React.ReactNode;
   disabled?: boolean;
   disableAutocomplete?: boolean;
+  infoLink?: string;
 };
 
 const NetworkInput = ({
@@ -419,6 +422,7 @@ const NetworkInput = ({
   error,
   disabled,
   disableAutocomplete,
+  infoLink,
 }: NetworkInputProps) => {
   return (
     <Input
@@ -435,6 +439,7 @@ const NetworkInput = ({
       copyButton={{
         position: "right",
       }}
+      infoLink={infoLink}
       {...(disableAutocomplete ? { autoComplete: "off" } : {})}
     />
   );
