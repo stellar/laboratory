@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { useStore } from "@/store/useStore";
 import { TransactionBuilder } from "@stellar/stellar-sdk";
 import { useRouter } from "next/navigation";
-import { Button } from "@stellar/design-system";
 
 import {
   getSorobanTxData,
@@ -16,10 +15,8 @@ import { Routes } from "@/constants/routes";
 
 import { SorobanOpType } from "@/types/types";
 
-import { SdsLink } from "@/components/SdsLink";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
-import { Box } from "@/components/layout/Box";
-import { ViewInXdrButton } from "@/components/ViewInXdrButton";
+import { TransactionXdrDisplay } from "./TransactionXdrDisplay";
 
 export const SorobanTransactionXdr = () => {
   const { network, transaction } = useStore();
@@ -94,58 +91,16 @@ export const SorobanTransactionXdr = () => {
         .toString("hex");
 
       return (
-        <ValidationResponseCard
-          variant="success"
-          title="Success! Soroban Transaction Envelope XDR:"
-          response={
-            <Box gap="xs" data-testid="build-soroban-transaction-envelope-xdr">
-              <div>
-                <div>Network Passphrase:</div>
-                <div>{network.passphrase}</div>
-              </div>
-              <div>
-                <div>Hash:</div>
-                <div>{txnHash}</div>
-              </div>
-              <div>
-                <div>XDR:</div>
-                <div>{sorobanData.xdr}</div>
-              </div>
-            </Box>
-          }
-          note={
-            <>
-              In order for the transaction to make it into the ledger, a
-              transaction must be successfully signed and submitted to the
-              network. The Lab provides the{" "}
-              <SdsLink href={Routes.SIGN_TRANSACTION}>
-                Transaction Signer
-              </SdsLink>{" "}
-              for signing a transaction, and the{" "}
-              <SdsLink href={Routes.SUBMIT_TRANSACTION}>
-                Post Transaction endpoint
-              </SdsLink>{" "}
-              for submitting one to the network.
-            </>
-          }
-          footerLeftEl={
-            <>
-              <Button
-                size="md"
-                variant="secondary"
-                onClick={() => {
-                  updateSignImportXdr(sorobanData.xdr);
-                  updateSignActiveView("overview");
-
-                  router.push(Routes.SIGN_TRANSACTION);
-                }}
-              >
-                Sign in Transaction Signer
-              </Button>
-
-              <ViewInXdrButton xdrBlob={sorobanData.xdr} />
-            </>
-          }
+        <TransactionXdrDisplay
+          xdr={sorobanData.xdr}
+          networkPassphrase={network.passphrase}
+          txnHash={txnHash}
+          dataTestId="build-soroban-transaction-envelope-xdr"
+          onSignClick={() => {
+            updateSignImportXdr(sorobanData.xdr);
+            updateSignActiveView("overview");
+            router.push(Routes.SIGN_TRANSACTION);
+          }}
         />
       );
     } catch (e: any) {
