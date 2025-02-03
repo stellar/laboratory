@@ -418,6 +418,25 @@ test.describe("Submit Transaction Page", () => {
   });
 });
 
+test.describe("Update default submit method to RPC when it is a Soroban XDR", () => {
+  test("Submit Soroban", async ({ page }) => {
+    const xdrInput = page.getByLabel(
+      "Input a base-64 encoded TransactionEnvelope",
+    );
+    const submitMethodsBtn = page
+      .locator(".SubmitTx__buttons")
+      .getByRole("button", { name: /via/i });
+
+    await expect(submitMethodsBtn).toBeVisible();
+
+    // Input the Soroban XDR
+    await xdrInput.fill(MOCK_VALID_SOROBAN_TX_XDR.XDR);
+
+    // Check if the submit method button shows RPC as default
+    await expect(submitMethodsBtn).toHaveText("via RPC");
+  });
+});
+
 const testSuccessHashAndJson = async ({
   page,
   hash,
@@ -536,6 +555,12 @@ const MOCK_VALID_SUCCESS_TX_XDR_RPC = {
   XDR: "AAAAAgAAAABua+HUFN6zjqIQaw+w+xQgEmGB7deJ7fGT6bez/oKDzwAAAGQAAY/PAAAACQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAQAAAAAkykrlZ6vjTMpbViATGt20liShZWOSoGzFDkcPC9C5KgAAAAAAAAAAAvrwgAAAAAAAAAAB/oKDzwAAAEDo5iGuMU5bhYmLZsfb13hnwPvXnO9VwMQvuoHKcPiIB3u5aa/1zfgm/hzFYY+g66LbgkXoOKcCCvVj708iwTgJ",
   JSON: `{"tx":{2 items"tx":{7 items"source_account":"GBXGXYOUCTPLHDVCCBVQ7MH3CQQBEYMB5XLYT3PRSPU3PM76QKB47XJQ","fee":100,"seq_num":439594197712905,"cond":{1 item"time":{2 items"min_time":0,"max_time":0,},},"memo":"none","operations":[1 item{2 items"source_account":null,"body":{1 item"payment":{3 items"destination":"GASMUSXFM6V6GTGKLNLCAEY23W2JMJFBMVRZFIDMYUHEODYL2C4SVKUP","asset":"native","amount":5.0 (raw: 50000000),},},},],"ext":"v0",},"signatures":[1 item· Signatures Checked{2 items"hint":"G----------------------------------------------6QKB4----","signature":"e8e621ae314e5b85898b66c7dbd77867c0fbd79cef55c0c42fba81ca70f888077bb969aff5cdf826fe1cc5618fa0eba2db8245e838a7020af563ef4f22c13809",},],},}`,
   hash: "00cb774dce521a93438236d49f8154ede32729a595c797d51c1a72c364056fd0",
+};
+
+const MOCK_VALID_SOROBAN_TX_XDR = {
+  XDR: "AAAAAgAAAAB+TL0HLiAjanMRnyeqyhb8Iu+4d1g2dl1cwPi1UZAigwAAtwUABiLjAAAAGQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAGQAAAAAAAHUwAAAAAQAAAAAAAAABAAAABgAAAAEg/u86MzPrVcpNrsFUa84T82Kss8DLAE9ZMxLqhM22HwAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAAB+TL0HLiAjanMRnyeqyhb8Iu+4d1g2dl1cwPi1UZAigwAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAtqEAAAABUZAigwAAAEADYbntiznotYPblvJQ35DiGEpMTQU9jCYANxV18VVGV6zDFSjB+qK++dF656Pr4oMTpyBVvE15YSo6ITxR5DoE",
+  JSON: `{"tx":{"tx":{"source_account":"GB7EZPIHFYQCG2TTCGPSPKWKC36CF35YO5MDM5S5LTAPRNKRSARIHWGG","fee":46853,"seq_num":1727208213184537,"cond":{"time":{"min_time":0,"max_time":0}},"memo":"none","operations":[{"source_account":null,"body":{"extend_footprint_ttl":{"ext":"v0","extend_to":30000}}}],"ext":{"v1":{"ext":"v0","resources":{"footprint":{"read_only":[{"contract_data":{"contract":"CAQP53Z2GMZ6WVOKJWXMCVDLZYJ7GYVMWPAMWACPLEZRF2UEZW3B636S","key":{"vec":[{"symbol":"Counter"},{"address":"GB7EZPIHFYQCG2TTCGPSPKWKC36CF35YO5MDM5S5LTAPRNKRSARIHWGG"}]},"durability":"persistent"}}],"read_write":[]},"instructions":0,"read_bytes":0,"write_bytes":0},"resource_fee":46753}}},"signatures":[{"hint":"51902283","signature":"0361b9ed8b39e8b583db96f250df90e2184a4c4d053d8c2600371575f1554657acc31528c1faa2bef9d17ae7a3ebe28313a72055bc4d79612a3a213c51e43a04"}]}}`,
+  hash: "0571508f487a343006d231d11f201a855f67973e0e019da6164b32b992dab46f",
 };
 
 const MOCK_VALID_TX_SUCCESS_HORIZON_RESPONSE = {

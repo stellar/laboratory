@@ -156,6 +156,46 @@ const SAVED_TRANSACTIONS = [
       },
     ],
   },
+  // Soroban Transaction
+  {
+    timestamp: 1737143650128,
+    network: { id: "testnet", label: "Testnet" },
+    name: "Extend to TTL",
+    xdr: "AAAAAgAAAAB+TL0HLiAjanMRnyeqyhb8Iu+4d1g2dl1cwPi1UZAigwAAtwUABiLjAAAAGQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAGQAAAAAAAHUwAAAAAQAAAAAAAAABAAAABgAAAAEg/u86MzPrVcpNrsFUa84T82Kss8DLAE9ZMxLqhM22HwAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAAB+TL0HLiAjanMRnyeqyhb8Iu+4d1g2dl1cwPi1UZAigwAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAtqEAAAAA",
+    page: "build",
+    shareableUrl:
+      "http://localhost:3000/transaction/build?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;&transaction$build$params$source_account=GB7EZPIHFYQCG2TTCGPSPKWKC36CF35YO5MDM5S5LTAPRNKRSARIHWGG&seq_num=1727208213184537;&operations@$operation_type=payment&params$destination=GAQ6LVQXNRX26CBIKCYGGGD6B4SNQACTJ46QMHS4Q5S52UHZW76XJJPJ&asset$code=&issuer=&type=native;&amount=5;&source_account=;;&isValid$params:true&operations:true;&soroban$operation$operation_type=extend_footprint_ttl&params$durability=persistent&contract=CAQP53Z2GMZ6WVOKJWXMCVDLZYJ7GYVMWPAMWACPLEZRF2UEZW3B636S&key_xdr=AAAAEAAAAAEAAAACAAAADwAAAAdDb3VudGVyAAAAABIAAAAAAAAAAH5MvQcuICNqcxGfJ6rKFvwi77h3WDZ2XVzA+LVRkCKD&extend_ttl_to=30000&resource_fee=46753;;",
+    params: {
+      source_account:
+        "GB7EZPIHFYQCG2TTCGPSPKWKC36CF35YO5MDM5S5LTAPRNKRSARIHWGG",
+      fee: "100",
+      seq_num: "1727208213184537",
+      cond: { time: { min_time: "", max_time: "" } },
+      memo: {},
+    },
+    operations: [
+      {
+        operation_type: "extend_footprint_ttl",
+        params: {
+          durability: "persistent",
+          contract: "CAQP53Z2GMZ6WVOKJWXMCVDLZYJ7GYVMWPAMWACPLEZRF2UEZW3B636S",
+          key_xdr:
+            "AAAAEAAAAAEAAAACAAAADwAAAAdDb3VudGVyAAAAABIAAAAAAAAAAH5MvQcuICNqcxGfJ6rKFvwi77h3WDZ2XVzA+LVRkCKD",
+          extend_ttl_to: "30000",
+          resource_fee: "46753",
+        },
+        source_account: "",
+      },
+    ],
+  },
+  {
+    timestamp: 1737148428325,
+    network: { id: "testnet", label: "Testnet" },
+    name: "Extend TTL",
+    xdr: "AAAAAgAAAAB+TL0HLiAjanMRnyeqyhb8Iu+4d1g2dl1cwPi1UZAigwAAtwUABiLjAAAAGQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAGQAAAAAAAHUwAAAAAQAAAAAAAAABAAAABgAAAAEg/u86MzPrVcpNrsFUa84T82Kss8DLAE9ZMxLqhM22HwAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAAB+TL0HLiAjanMRnyeqyhb8Iu+4d1g2dl1cwPi1UZAigwAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAtqEAAAABUZAigwAAAEADYbntiznotYPblvJQ35DiGEpMTQU9jCYANxV18VVGV6zDFSjB+qK++dF656Pr4oMTpyBVvE15YSo6ITxR5DoE",
+    page: "submit",
+    shareableUrl: "http://localhost:3000/transaction/submit?$=;;",
+  },
 ];
 
 export const MOCK_LOCAL_STORAGE = {
