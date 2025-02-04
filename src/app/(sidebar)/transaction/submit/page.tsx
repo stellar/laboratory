@@ -67,6 +67,30 @@ const SUBMIT_OPTIONS = [
   },
 ];
 
+// traverse the xdr to json string and check if
+// it contains a soroban operation
+const isSorobanXdr = (xdrJsonString: string) => {
+  if (!xdrJsonString) {
+    return false;
+  }
+
+  try {
+    const parsedJson = JSON.parse(xdrJsonString);
+    const operations = parsedJson?.tx?.tx?.operations || [];
+
+    return operations.some((op: any) => {
+      const body = op?.body || {};
+      return (
+        "extend_footprint_ttl" in body ||
+        "restore_footprint" in body ||
+        "invoke_host_function" in body
+      );
+    });
+  } catch (e) {
+    return false;
+  }
+};
+
 export default function SubmitTransaction() {
   const { network, xdr, transaction } = useStore();
   const { blob, updateXdrBlob } = xdr;
@@ -117,6 +141,31 @@ export default function SubmitTransaction() {
   );
   const isError = Boolean(submitRpcError || submitHorizonError);
 
+  const getXdrJson = () => {
+    const xdrType = XDR_TYPE_TRANSACTION_ENVELOPE;
+
+    if (!(isXdrInit && blob)) {
+      return null;
+    }
+
+    try {
+      const xdrJson = StellarXdr.decode(xdrType, blob);
+
+      return {
+        jsonString: xdrJson,
+        error: "",
+      };
+    } catch (e) {
+      return {
+        jsonString: "",
+        error: `Unable to decode input as ${xdrType}`,
+      };
+    }
+  };
+
+  const xdrJson = getXdrJson();
+  const isSoroban = isSorobanXdr(xdrJson?.jsonString || "");
+
   const handleClickOutside = useCallback((event: MouseEvent) => {
     if (dropdownRef?.current?.contains(event.target as Node)) {
       return;
@@ -132,13 +181,13 @@ export default function SubmitTransaction() {
     if (localStorageMethod) {
       setSubmitMethod(localStorageMethod);
     } else {
-      setSubmitMethod(isRpcAvailable ? "rpc" : "horizon");
+      setSubmitMethod(isSoroban && isRpcAvailable ? "rpc" : "horizon");
     }
 
     resetSubmitState();
     // Not including resetSubmitState
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isRpcAvailable]);
+  }, [isRpcAvailable, isSoroban]);
 
   // Scroll to response
   useScrollIntoView(isSuccess, responseSuccessEl);
@@ -231,36 +280,12 @@ export default function SubmitTransaction() {
     setIsSaveTxnModalVisible(true);
   };
 
-  const getXdrJson = () => {
-    const xdrType = XDR_TYPE_TRANSACTION_ENVELOPE;
-
-    if (!(isXdrInit && blob)) {
-      return null;
-    }
-
-    try {
-      const xdrJson = StellarXdr.decode(xdrType, blob);
-
-      return {
-        jsonString: xdrJson,
-        error: "",
-      };
-    } catch (e) {
-      return {
-        jsonString: "",
-        error: `Unable to decode input as ${xdrType}`,
-      };
-    }
-  };
-
   const getButtonLabel = () => {
     return (
       SUBMIT_OPTIONS.find((s) => s.id === submitMethod)?.title ||
       "Select submit method"
     );
   };
-
-  const xdrJson = getXdrJson();
 
   const isSubmitDisabled = !submitMethod || !blob || Boolean(xdrJson?.error);
 
