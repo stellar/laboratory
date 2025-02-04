@@ -109,6 +109,64 @@ test.describe("Smart Contracts: Contract Storage", () => {
       "ledger_key_contract_instance",
     );
   });
+
+  test("Filters", async ({ page }) => {
+    const keyFilterCol = page.locator("[data-filter]").nth(0);
+    const keyFiltersDropdown = page.getByTestId("data-table-filters-key");
+    const filterBadges = page.getByTestId("data-table-filter-badge");
+
+    const table = page.getByTestId("contract-storage-table");
+    const firstRow = table.locator("tr").nth(1);
+    const resultsText = page.getByTestId("data-table-filter-results-text");
+
+    // Initial state
+    await expect(keyFiltersDropdown).toBeHidden();
+    await keyFilterCol.click();
+    await expect(keyFiltersDropdown).toBeVisible();
+    await expect(firstRow.locator("td").nth(0)).toContainText(
+      "[BalanceGA2Q…D5Y4]",
+    );
+    await expect(resultsText).toBeHidden();
+
+    // Filter buttons
+    const keyFilterClearBtn = keyFiltersDropdown.getByRole("button", {
+      name: "Clear filter",
+      exact: true,
+    });
+    const keyFilterApplyBtn = keyFiltersDropdown.getByRole("button", {
+      name: "Apply",
+      exact: true,
+    });
+
+    await expect(keyFilterClearBtn).toBeDisabled();
+    await expect(keyFilterApplyBtn).toBeDisabled();
+
+    // Select filter and apply
+    await keyFiltersDropdown.getByText("Contracts", { exact: true }).click();
+    await expect(keyFilterApplyBtn).toBeEnabled();
+    await keyFilterApplyBtn.click();
+    await expect(keyFiltersDropdown).toBeHidden();
+
+    // Badge
+    await expect(filterBadges.nth(0)).toHaveText("Contracts");
+
+    // Table data
+    await expect(firstRow.locator("td").nth(0)).toContainText(
+      "[ContractsCDJ6…632B]",
+    );
+    await expect(resultsText).toHaveText("1 filtered result");
+
+    // Clear filters
+    await keyFilterCol.click();
+    await expect(keyFilterClearBtn).toBeEnabled();
+    await keyFilterClearBtn.click();
+    await expect(resultsText).toBeHidden();
+    await expect(filterBadges.nth(0)).toBeHidden();
+  });
+
+  test("Export CSV button", async ({ page }) => {
+    await expect(page.getByText("Export to CSV")).toBeVisible();
+  });
 });
 
 // =============================================================================

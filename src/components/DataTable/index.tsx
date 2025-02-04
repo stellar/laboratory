@@ -13,7 +13,7 @@ import { Dropdown } from "@/components/Dropdown";
 
 import { processContractStorageData } from "@/helpers/processContractStorageData";
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
-import { isEmptyObject } from "@/helpers/isEmptyObject";
+import { exportJsonToCsvFile } from "@/helpers/exportJsonToCsvFile";
 
 import { getPublicKeyError } from "@/validate/methods/getPublicKeyError";
 import { getContractIdError } from "@/validate/methods/getContractIdError";
@@ -35,6 +35,7 @@ export const DataTable = <T extends AnyObject>({
   tableData,
   formatDataRow,
   customFooterEl,
+  csvFileName,
 }: {
   tableId: string;
   cssGridTemplateColumns: string;
@@ -42,6 +43,7 @@ export const DataTable = <T extends AnyObject>({
   tableData: T[];
   formatDataRow: (item: T) => DataTableCell[];
   customFooterEl?: React.ReactNode;
+  csvFileName?: string;
 }) => {
   const PAGE_SIZE = 20;
 
@@ -183,6 +185,24 @@ export const DataTable = <T extends AnyObject>({
     );
   };
 
+  const handleExportToCsv = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) => {
+    event.preventDefault();
+
+    if (csvFileName) {
+      const sanitizedData = processedData.map((item) => {
+        // Removing decoded key and value attributes
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { keyJson, valueJson, ...rest } = item;
+
+        return rest;
+      });
+
+      exportJsonToCsvFile(sanitizedData, `${csvFileName}-${Date.now()}`);
+    }
+  };
+
   const renderFilterDropdown = (
     headerId: string,
     filters: string[] | undefined,
@@ -194,6 +214,7 @@ export const DataTable = <T extends AnyObject>({
           isDropdownVisible={visibleFilters === headerId}
           onClose={closeFilterDropdown}
           triggerDataAttribute="filter"
+          testId={`data-table-filters-${headerId}`}
         >
           <div className="DataTable__filterDropdown__container">
             <div className="DataTable__filterDropdown__title">Filter by</div>
@@ -296,6 +317,7 @@ export const DataTable = <T extends AnyObject>({
             <div
               key={`badge-${id}-${afIdx}-${f}-${fIdx}`}
               className="DataTable__badge Badge Badge--secondary Badge--sm"
+              data-testid="data-table-filter-badge"
             >
               {renderFilterBadgeLabel(f)}
 
@@ -324,7 +346,7 @@ export const DataTable = <T extends AnyObject>({
 
   const renderFilteredResultCount = () => {
     // No filters applied
-    if (isEmptyObject(appliedFilters)) {
+    if (appliedFilters.key.length === 0 && appliedFilters.value.length === 0) {
       return null;
     }
 
@@ -335,7 +357,10 @@ export const DataTable = <T extends AnyObject>({
     }
 
     return (
-      <div className="DataTable__filteredResultCount">{`${resultCount} filtered ${resultCount === 1 ? "results" : "results"}`}</div>
+      <div
+        className="DataTable__filteredResultCount"
+        data-testid="data-table-filter-results-text"
+      >{`${resultCount} filtered ${resultCount === 1 ? "result" : "results"}`}</div>
     );
   };
 
@@ -347,11 +372,25 @@ export const DataTable = <T extends AnyObject>({
 
   return (
     <Box gap="md">
-      <Box gap="sm" direction="row" align="center" justify="space-between">
+      <Box gap="sm" direction="row" align="end" justify="space-between">
         <Box gap="sm" direction="row" align="center" wrap="wrap">
           {/* Applied filter badges */}
           {renderFilterBadges()}
         </Box>
+
+        <div className="DataTable__exportCsv">
+          {csvFileName ? (
+            <Button
+              variant="tertiary"
+              size="sm"
+              icon={<Icon.AlignBottom01 />}
+              iconPosition="left"
+              onClick={handleExportToCsv}
+            >
+              Export to CSV
+            </Button>
+          ) : null}
+        </div>
       </Box>
 
       {/* Table */}
