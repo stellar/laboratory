@@ -37,13 +37,13 @@ test.describe("Smart Contracts: Contract Info", () => {
     // Input validation
     await contractIdInput.fill("aaa");
     await expect(
-      page.getByText("The string must start with 'C'."),
+      page.getByText("Invalid contract ID. Please enter a valid contract ID."),
     ).toBeVisible();
 
     // Valid input
     await contractIdInput.fill(MOCK_CONTRACT_ID);
     await expect(
-      page.getByText("The string must start with 'C'."),
+      page.getByText("Invalid contract ID. Please enter a valid contract ID."),
     ).toBeHidden();
 
     // Fetch info

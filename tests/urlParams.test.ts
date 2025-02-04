@@ -160,6 +160,67 @@ test.describe("URL Params", () => {
       );
     });
 
+    test("[Soroban] Build Transaction", async ({ page }) => {
+      await page.goto(
+        "http://localhost:3000/transaction/build?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;&transaction$build$classic$operations@$operation_type=payment&params$destination=GA46LGGOLXJY5OSX6N4LHV4MWDFXNGLK76I4NDNKKYAXRRSKI5AJGMXG&asset$code=&issuer=&type=native;&amount=5;&source_account=;;;&soroban$operation$operation_type=extend_footprint_ttl&params$durability=persistent&contract=CAQP53Z2GMZ6WVOKJWXMCVDLZYJ7GYVMWPAMWACPLEZRF2UEZW3B636S&key_xdr=AAAAEAAAAAEAAAACAAAADwAAAAdDb3VudGVyAAAAABIAAAAAAAAAAH5MvQcuICNqcxGfJ6rKFvwi77h3WDZ2XVzA+LVRkCKD&extend_ttl_to=20000&resource_fee=46753;;;&params$source_account=GB7EZPIHFYQCG2TTCGPSPKWKC36CF35YO5MDM5S5LTAPRNKRSARIHWGG&seq_num=1727208213184538&cond$time$min_time=1733409768;;&memo$text=100;;&isValid$params:true&operations:true;;",
+      );
+
+      await expect(page.locator("h1")).toHaveText("Build Transaction");
+
+      // Params
+      await expect(
+        page.getByLabel("Source Account", { exact: true }),
+      ).toHaveValue("GB7EZPIHFYQCG2TTCGPSPKWKC36CF35YO5MDM5S5LTAPRNKRSARIHWGG");
+      await expect(page.getByLabel("Transaction Sequence Number")).toHaveValue(
+        "1727208213184538",
+      );
+      await expect(page.getByLabel("Base Fee")).toHaveValue("100");
+
+      await expect(page.locator("#text-memo")).toBeChecked();
+      await expect(page.locator("#memo_value")).toHaveValue("100");
+
+      await expect(
+        page.getByPlaceholder(
+          "Lower time bound unix timestamp. Ex: 1479151713",
+        ),
+      ).toHaveValue("1733409768");
+      await expect(
+        page.getByPlaceholder(
+          "Upper time bound unix timestamp. Ex: 1479151713",
+        ),
+      ).toHaveValue("");
+
+      // Only One Operation Allowed in Soroban
+      const sorobanOp = page.getByTestId("build-soroban-transaction-operation");
+
+      await expect(sorobanOp.getByLabel("Operation Type")).toHaveValue(
+        "extend_footprint_ttl",
+      );
+      await expect(sorobanOp.getByLabel("Contract ID")).toHaveValue(
+        "CAQP53Z2GMZ6WVOKJWXMCVDLZYJ7GYVMWPAMWACPLEZRF2UEZW3B636S",
+      );
+      await expect(sorobanOp.getByLabel("Extend To")).toHaveValue("20000");
+      await expect(sorobanOp.getByLabel("Durability")).toHaveValue(
+        "persistent",
+      );
+      await expect(sorobanOp.getByLabel("Resource Fee")).toHaveValue("46753");
+
+      // Validation
+      const txnSuccess = page.getByTestId(
+        "build-soroban-transaction-envelope-xdr",
+      );
+
+      await expect(
+        txnSuccess.getByText("Network Passphrase").locator("+ div"),
+      ).toHaveText("Test SDF Network ; September 2015");
+      await expect(txnSuccess.getByText("Hash").locator("+ div")).toHaveText(
+        "d8c7f3dee39f14373e2f1a1131bcc91a49694b6af6b6d81b7703784b3a51bc94",
+      );
+      await expect(txnSuccess.getByText("XDR").locator("+ div")).toHaveText(
+        "AAAAAgAAAAB+TL0HLiAjanMRnyeqyhb8Iu+4d1g2dl1cwPi1UZAigwAAtwUABiLjAAAAGgAAAAEAAAAAZ1G76AAAAAAAAAAAAAAAAQAAAAMxMDAAAAAAAQAAAAAAAAAZAAAAAAAATiAAAAABAAAAAAAAAAEAAAAGAAAAASD+7zozM+tVyk2uwVRrzhPzYqyzwMsAT1kzEuqEzbYfAAAAEAAAAAEAAAACAAAADwAAAAdDb3VudGVyAAAAABIAAAAAAAAAAH5MvQcuICNqcxGfJ6rKFvwi77h3WDZ2XVzA+LVRkCKDAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAC2oQAAAAA=",
+      );
+    });
+
     test("Fee Bump", async ({ page }) => {
       await page.goto(
         "http://localhost:3000/transaction/fee-bump?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;&transaction$feeBump$source_account=GA46LGGOLXJY5OSX6N4LHV4MWDFXNGLK76I4NDNKKYAXRRSKI5AJGMXG&fee=2000&xdr=AAAAAgAAAAA55ZjOXdOOulfzeLPXjLDLdplq//5HGjapWAXjGSkdAkwAAD6AADQioAAAAAQAAAAEAAAAAAAAAAAAAAABnUbvoAAAAAQAAAAMxMjMAAAAAAgAAAAAAAAAAAAAAALs4fndRzE6mDMvxXqgyh79//PxCtOwb9MTWEeINa//Qr8AAAABvwjrAAAAAABAAAAADnlmM5d0466V//N4s9eMsMt2mWr//kcaNqlYBeMZKR0CTAAAAAQAAAAASBB3qbNO//amClp01Lvg//fRcZsxzvl0ItXd0lfm+7+ggAAAAFVU0RDAAAAAEI+fQXy7K+//7BkrIVo//G+lq7bjY5wJUq+NBPgIH3layAAAACVAvkAAAAAAAAAAAAA==;;",
