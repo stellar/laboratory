@@ -170,6 +170,7 @@ export const ContractStorage = ({
           ))}
         </Box>
       }
+      csvFileName={contractId}
     />
   );
 };
