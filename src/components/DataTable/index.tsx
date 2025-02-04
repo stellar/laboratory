@@ -13,7 +13,6 @@ import { Dropdown } from "@/components/Dropdown";
 
 import { processContractStorageData } from "@/helpers/processContractStorageData";
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
-import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { exportJsonToCsvFile } from "@/helpers/exportJsonToCsvFile";
 
 import { getPublicKeyError } from "@/validate/methods/getPublicKeyError";
@@ -215,6 +214,7 @@ export const DataTable = <T extends AnyObject>({
           isDropdownVisible={visibleFilters === headerId}
           onClose={closeFilterDropdown}
           triggerDataAttribute="filter"
+          testId={`data-table-filters-${headerId}`}
         >
           <div className="DataTable__filterDropdown__container">
             <div className="DataTable__filterDropdown__title">Filter by</div>
@@ -317,6 +317,7 @@ export const DataTable = <T extends AnyObject>({
             <div
               key={`badge-${id}-${afIdx}-${f}-${fIdx}`}
               className="DataTable__badge Badge Badge--secondary Badge--sm"
+              data-testid="data-table-filter-badge"
             >
               {renderFilterBadgeLabel(f)}
 
@@ -345,7 +346,7 @@ export const DataTable = <T extends AnyObject>({
 
   const renderFilteredResultCount = () => {
     // No filters applied
-    if (isEmptyObject(appliedFilters)) {
+    if (appliedFilters.key.length === 0 && appliedFilters.value.length === 0) {
       return null;
     }
 
@@ -356,7 +357,10 @@ export const DataTable = <T extends AnyObject>({
     }
 
     return (
-      <div className="DataTable__filteredResultCount">{`${resultCount} filtered ${resultCount === 1 ? "results" : "results"}`}</div>
+      <div
+        className="DataTable__filteredResultCount"
+        data-testid="data-table-filter-results-text"
+      >{`${resultCount} filtered ${resultCount === 1 ? "result" : "results"}`}</div>
     );
   };
 
