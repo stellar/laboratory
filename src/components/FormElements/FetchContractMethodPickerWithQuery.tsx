@@ -23,6 +23,13 @@ interface FetchContractMethodPickerWithQueryProps {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
+/**
+ * FetchContractMethodPickerWithQuery
+ *
+ * This component is used to fetch the contract methods for a given contract id.
+ * It is used in the SorobanOperation component.
+ *
+ */
 export const FetchContractMethodPickerWithQuery = ({
   id,
   value,
@@ -34,7 +41,6 @@ export const FetchContractMethodPickerWithQuery = ({
   const { network } = useStore();
 
   const [contractIdError, setContractIdError] = useState<string>("");
-
   const [contractMethods, setContractMethods] = useState<string[]>([]);
   const [fetchError, setFetchError] = useState<string>("");
 
