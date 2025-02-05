@@ -67,6 +67,8 @@ export const FetchContractMethodPickerWithQuery = ({
   };
 
   const handleFetchContractMethods = async () => {
+    setFetchError("");
+
     const contractMethods: ContractFunctionMethods =
       await fetchContractFunctionMethods({
         contractId: value,

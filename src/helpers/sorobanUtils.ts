@@ -184,10 +184,10 @@ export const fetchContractFunctionMethods = async ({
       methods: methods.map((method) => method.name().toString()),
       error: "",
     };
-  } catch (e) {
+  } catch (e: any) {
     return {
       methods: [],
-      error: `error while fetching contract information: ${e}`,
+      error: `error while fetching contract information: ${e?.message ? e?.message : e}`,
     };
   }
 };
