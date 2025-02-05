@@ -160,6 +160,7 @@ export const SorobanOperation = ({
                     case "extend_ttl_to":
                     case "resource_fee":
                     case "durability":
+                    case "invoke_contract":
                       return component.render({
                         ...sorobanBaseProps,
                         onChange: (e: ChangeEvent<HTMLInputElement>) => {

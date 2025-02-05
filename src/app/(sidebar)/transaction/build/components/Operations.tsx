@@ -862,6 +862,9 @@ export const Operations = () => {
           <option value="restore_footprint">
             Restore Footprint (Smart Contract)
           </option>
+          <option value="invoke_contract_function">
+            Invoke Contract Function (Smart Contract)
+          </option>
           <option value="create_account">Create Account</option>
           <option value="payment">Payment</option>
           <option value="path_payment_strict_send">
