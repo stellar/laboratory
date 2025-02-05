@@ -1,4 +1,5 @@
 import {
+  contract,
   Address,
   Contract,
   Operation,
@@ -12,9 +13,16 @@ import {
 import { TransactionBuildParams } from "@/store/createStore";
 import { SorobanOpType, TxnOperation } from "@/types/types";
 
+export type ContractFunctionMethods = {
+  methods: string[];
+  error: string;
+};
+
 export const isSorobanOperationType = (operationType: string) => {
-  // @TODO: add restore_footprint and invoke_host_function
-  return ["extend_footprint_ttl"].includes(operationType);
+  // @TODO: add restore_footprint
+  return ["extend_footprint_ttl", "invoke_contract_function"].includes(
+    operationType,
+  );
 };
 
 // https://developers.stellar.org/docs/learn/glossary#ledgerkey
@@ -149,6 +157,39 @@ export const buildSorobanTx = ({
     .setSorobanData(sorobanData)
     .addOperation(getSorobanOp(sorobanOp.operation_type))
     .build();
+};
+
+export const fetchContractFunctionMethods = async ({
+  contractId,
+  networkPassphrase,
+  rpcUrl,
+}: {
+  contractId: string;
+  networkPassphrase: string;
+  rpcUrl: string;
+}): Promise<ContractFunctionMethods> => {
+  try {
+    const client = await contract.Client.from({
+      contractId,
+      networkPassphrase,
+      rpcUrl,
+    });
+
+    // on how to get the function methods from the contract
+    // https://github.com/stellar/js-stellar-sdk/blob/master/test/unit/spec/contract_spec.ts
+    const spec = client.spec;
+    const methods = spec.funcs();
+
+    return {
+      methods: methods.map((method) => method.name().toString()),
+      error: "",
+    };
+  } catch (e) {
+    return {
+      methods: [],
+      error: `error while fetching contract information: ${e}`,
+    };
+  }
 };
 
 // Preparing Soroban Transaction Data

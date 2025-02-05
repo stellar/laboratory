@@ -851,6 +851,9 @@ export const Operations = () => {
           <option value="extend_footprint_ttl">
             Extend Footprint TTL (Soroban)
           </option>
+          <option value="invoke_contract_function">
+            Invoke Contract Function (Soroban)
+          </option>
           <option value="payment">Payment</option>
           <option value="path_payment_strict_send">
             Path Payment Strict Send
