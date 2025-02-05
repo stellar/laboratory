@@ -83,7 +83,7 @@ const isSorobanXdr = (xdrJsonString: string) => {
       return (
         "extend_footprint_ttl" in body ||
         "restore_footprint" in body ||
-        "invoke_host_function" in body
+        "invoke_contract_function" in body
       );
     });
   } catch (e) {

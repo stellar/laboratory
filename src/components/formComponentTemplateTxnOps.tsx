@@ -16,6 +16,7 @@ import { NumberFractionPicker } from "@/components/FormElements/NumberFractionPi
 import { RevokeSponsorshipPicker } from "@/components/FormElements/RevokeSponsorshipPicker";
 import { ClaimantsPicker } from "@/components/FormElements/ClaimantsPicker";
 import { ResourceFeePickerWithQuery } from "@/components/FormElements/ResourceFeePickerWithQuery";
+import { FetchContractMethodPickerWithQuery } from "@/components/FormElements/FetchContractMethodPickerWithQuery";
 
 import { removeLeadingZeroes } from "@/helpers/removeLeadingZeroes";
 
@@ -476,6 +477,7 @@ export const formComponentTemplateTxnOps = ({
         ),
         validate: null,
       };
+    // Soroban Only
     case "resource_fee":
       return {
         render: (templ: SorobanTemplateRenderProps) => (
@@ -501,6 +503,23 @@ export const formComponentTemplateTxnOps = ({
           />
         ),
         validate: validate.getPositiveNumberError,
+      };
+    // Soroban Only
+    case "invoke_contract":
+      return {
+        render: (templ: SorobanTemplateRenderProps) => {
+          return (
+            <FetchContractMethodPickerWithQuery
+              id={id}
+              label="Invoke Contract"
+              value={templ.value || ""}
+              error={templ.error}
+              onChange={templ.onChange}
+              disabled={templ.isDisabled}
+            />
+          );
+        },
+        validate: null,
       };
     case "limit":
       return {
