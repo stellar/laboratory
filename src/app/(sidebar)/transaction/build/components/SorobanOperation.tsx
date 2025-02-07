@@ -159,27 +159,35 @@ export const SorobanOperation = ({
                     case "resource_fee":
                     case "durability":
                     case "invoke_contract":
-                      return component.render({
-                        ...sorobanBaseProps,
-                        onChange: (e: ChangeEvent<HTMLInputElement>) => {
-                          handleSorobanOperationParamChange({
-                            opParam: input,
-                            opValue: e.target.value,
-                            opType: sorobanOperation.operation_type,
-                          });
-                        },
-                      });
+                      return (
+                        <div key={`soroban-param-${input}`}>
+                          {component.render({
+                            ...sorobanBaseProps,
+                            onChange: (e: ChangeEvent<HTMLInputElement>) => {
+                              handleSorobanOperationParamChange({
+                                opParam: input,
+                                opValue: e.target.value,
+                                opType: sorobanOperation.operation_type,
+                              });
+                            },
+                          })}
+                        </div>
+                      );
                     default:
-                      return component.render({
-                        ...sorobanBaseProps,
-                        onChange: (e: ChangeEvent<HTMLInputElement>) => {
-                          handleSorobanOperationParamChange({
-                            opParam: input,
-                            opValue: e.target.value,
-                            opType: sorobanOperation.operation_type,
-                          });
-                        },
-                      });
+                      return (
+                        <div key={`soroban-param-${input}`}>
+                          {component.render({
+                            ...sorobanBaseProps,
+                            onChange: (e: ChangeEvent<HTMLInputElement>) => {
+                              handleSorobanOperationParamChange({
+                                opParam: input,
+                                opValue: e.target.value,
+                                opType: sorobanOperation.operation_type,
+                              });
+                            },
+                          })}
+                        </div>
+                      );
                   }
                 }
 

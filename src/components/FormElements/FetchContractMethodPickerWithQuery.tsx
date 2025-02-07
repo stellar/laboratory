@@ -13,6 +13,7 @@ import {
 
 import { useStore } from "@/store/useStore";
 import { validate } from "@/validate";
+import { AnyObject } from "@/types/types";
 
 interface FetchContractMethodPickerWithQueryProps {
   id: string;
@@ -42,8 +43,10 @@ export const FetchContractMethodPickerWithQuery = ({
 
   const [contractIdError, setContractIdError] = useState<string>("");
   const [contractMethods, setContractMethods] = useState<string[]>([]);
+  const [contractMethodsSpec, setContractMethodsSpec] = useState<AnyObject>({});
   const [fetchError, setFetchError] = useState<string>("");
 
+  console.log("contractMethodsSpec: ", contractMethodsSpec);
   const onContractIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // reset the error and methods
     setFetchError("");
@@ -78,6 +81,10 @@ export const FetchContractMethodPickerWithQuery = ({
 
     if (contractMethods.methods) {
       setContractMethods(contractMethods.methods);
+    }
+
+    if (contractMethods.spec) {
+      setContractMethodsSpec(contractMethods.spec);
     }
 
     if (contractMethods.error) {
@@ -115,6 +122,7 @@ export const FetchContractMethodPickerWithQuery = ({
       <>
         {contractMethods.length ? (
           <ContractMethodSelectPicker
+            spec={contractMethodsSpec}
             methods={contractMethods}
             id={`${id}-method`}
           />

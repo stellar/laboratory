@@ -11,11 +11,12 @@ import {
 } from "@stellar/stellar-sdk";
 
 import { TransactionBuildParams } from "@/store/createStore";
-import { SorobanOpType, TxnOperation } from "@/types/types";
+import { AnyObject, SorobanOpType, TxnOperation } from "@/types/types";
 
 export type ContractFunctionMethods = {
   methods: string[];
   error: string;
+  spec: xdr.ScSpecEntry[];
 };
 
 export const isSorobanOperationType = (operationType: string) => {
@@ -177,16 +178,20 @@ export const fetchContractFunctionMethods = async ({
 
     // on how to get the function methods from the contract
     // https://github.com/stellar/js-stellar-sdk/blob/master/test/unit/spec/contract_spec.ts
-    const spec = client.spec;
+    const spec = client.spec; // returns xdr.ScSpecEntry[]
     const methods = spec.funcs();
+
+    console.log("spec: ", spec);
 
     return {
       methods: methods.map((method) => method.name().toString()),
+      spec,
       error: "",
     };
   } catch (e: any) {
     return {
       methods: [],
+      spec: {},
       error: `error while fetching contract information: ${e?.message ? e?.message : e}`,
     };
   }
