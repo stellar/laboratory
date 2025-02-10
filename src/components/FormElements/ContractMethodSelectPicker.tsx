@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { Select } from "@stellar/design-system";
-
 import { contract, xdr } from "@stellar/stellar-sdk";
 
-import { retrieveSchema } from "@rjsf/utils";
-
 import { Box } from "@/components/layout/Box";
-import { JsonSchemaForm } from "@/components/FormElements/JsonSchemaForm";
+import { JsonSchemaForm } from "@/components/JsonSchemaForm";
 
 import { AnyObject } from "@/types/types";
 import { RJSFSchema } from "@rjsf/utils";
+
+// testing
+import Form from "@rjsf/core";
+import validator from "@rjsf/validator-ajv8";
 
 const getResultType = (selectedValue: string, spec: AnyObject) => {
   // returns xdr.ScSpecEntry
@@ -37,7 +38,6 @@ export const ContractMethodSelectPicker = ({
 }) => {
   const [selectedValue, setSelectedValue] = useState<string>("");
   const [funcSpec, setFuncSpec] = useState<RJSFSchema | undefined>(undefined);
-  const [formData, setFormData] = useState<any>({});
 
   const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedValue(e.target.value);
@@ -49,9 +49,9 @@ export const ContractMethodSelectPicker = ({
     const selectedFuncSchema = spec.jsonSchema(e.target.value);
     const normalSchema = spec.jsonSchema();
 
+    console.log("getResultType type: ", type);
     console.log("jsonSchema func: ", selectedFuncSchema);
     console.log("just a normal spec: ", normalSchema);
-    console.log("getResultType: ", type);
 
     setFuncSpec(selectedFuncSchema);
 
@@ -78,7 +78,10 @@ export const ContractMethodSelectPicker = ({
       {/* // @TODO // Render func args */}
       <>
         {funcSpec ? (
-          <JsonSchemaForm schema={funcSpec} name={selectedValue} />
+          <>
+            <JsonSchemaForm schema={funcSpec} name={selectedValue} />
+            <Form schema={funcSpec} validator={validator} />;
+          </>
         ) : null}
       </>
     </Box>

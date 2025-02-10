@@ -11,7 +11,7 @@ import {
 } from "@stellar/stellar-sdk";
 
 import { TransactionBuildParams } from "@/store/createStore";
-import { AnyObject, SorobanOpType, TxnOperation } from "@/types/types";
+import { SorobanOpType, TxnOperation } from "@/types/types";
 
 export type ContractFunctionMethods = {
   methods: string[];
