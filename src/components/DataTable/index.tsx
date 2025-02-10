@@ -370,6 +370,41 @@ export const DataTable = <T extends AnyObject>({
 
   const displayData = paginateData(processedData.map(formatDataRow));
 
+  const renderTableBody = () => {
+    if (!displayData.length) {
+      const hasFilters =
+        appliedFilters.key.length > 0 || appliedFilters.value.length > 0;
+      const emptyMessage = hasFilters
+        ? "There are no items matching selected filters"
+        : "There are no contract storage items";
+
+      return (
+        <tr data-style="emptyMessage">
+          <td colSpan={tableHeaders.length}>{emptyMessage}</td>
+        </tr>
+      );
+    }
+
+    return displayData.map((row, rowIdx) => {
+      const rowKey = `${tableId}-row-${rowIdx}`;
+
+      return (
+        <tr data-style="row" role="row" key={rowKey}>
+          {row.map((cell, cellIdx) => (
+            <td
+              key={`${rowKey}-cell-${cellIdx}`}
+              title={typeof cell.value === "string" ? cell.value : undefined}
+              role="cell"
+              {...(cell.isBold ? { "data-style": "bold" } : {})}
+            >
+              {cell.value}
+            </td>
+          ))}
+        </tr>
+      );
+    });
+  };
+
   return (
     <Box gap="md">
       <Box gap="sm" direction="row" align="end" justify="space-between">
@@ -432,30 +467,7 @@ export const DataTable = <T extends AnyObject>({
                   ))}
                 </tr>
               </thead>
-              <tbody>
-                {displayData.map((row, rowIdx) => {
-                  const rowKey = `${tableId}-row-${rowIdx}`;
-
-                  return (
-                    <tr data-style="row" role="row" key={rowKey}>
-                      {row.map((cell, cellIdx) => (
-                        <td
-                          key={`${rowKey}-cell-${cellIdx}`}
-                          title={
-                            typeof cell.value === "string"
-                              ? cell.value
-                              : undefined
-                          }
-                          role="cell"
-                          {...(cell.isBold ? { "data-style": "bold" } : {})}
-                        >
-                          {cell.value}
-                        </td>
-                      ))}
-                    </tr>
-                  );
-                })}
-              </tbody>
+              <tbody>{renderTableBody()}</tbody>
             </table>
           </div>
         </div>
