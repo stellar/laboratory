@@ -24,6 +24,7 @@ import { LOCAL_STORAGE_SAVED_THEME } from "@/constants/settings";
 import {
   ACCOUNT_NAV_ITEMS,
   ENDPOINTS_NAV_ITEMS,
+  SMART_CONTRACTS_NAV_ITEMS,
   TRANSACTION_NAV_ITEMS,
   XDR_NAV_ITEMS,
 } from "@/constants/navItems";
@@ -38,12 +39,16 @@ const NAV = [
     subNav: ACCOUNT_NAV_ITEMS,
   },
   {
+    label: "Transactions",
+    subNav: TRANSACTION_NAV_ITEMS,
+  },
+  {
     label: "API Explorer",
     subNav: ENDPOINTS_NAV_ITEMS,
   },
   {
-    label: "Transactions",
-    subNav: TRANSACTION_NAV_ITEMS,
+    label: "Smart Contracts",
+    subNav: SMART_CONTRACTS_NAV_ITEMS,
   },
 ];
 
