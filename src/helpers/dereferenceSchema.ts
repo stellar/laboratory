@@ -60,6 +60,40 @@ export const getDereferenceSchema = (
     if (value.$ref) {
       const refPath = value.$ref.replace("#/definitions/", "");
 
+      // refPath type is like `#/$defs/U32`
+      // there are cases when array type is passed
+      //       {
+      //     "type": "array",
+      //     "items": [
+      //         {
+      //             "$ref": "#/definitions/Address"
+      //         },
+      //         {
+      //             "$ref": "#/definitions/Address"
+      //         },
+      //         {
+      //             "$ref": "#/definitions/Address"
+      //         },
+      //         {
+      //             "$ref": "#/definitions/Address"
+      //         },
+      //         {
+      //             "type": "array",
+      //             "items": {
+      //                 "$ref": "#/definitions/Address"
+      //             }
+      //         }
+      //     ],
+      //     "minItems": 5,
+      //     "maxItems": 5
+      // }
+      // or
+      //   {
+      //     "type": "array",
+      //     "items": {
+      //         "$ref": "#/definitions/Address"
+      //     }
+      // }
       properties[key] = resolveRef(refPath);
       properties[key].specType = refPath;
     } else {

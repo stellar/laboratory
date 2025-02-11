@@ -46,7 +46,6 @@ export const FetchContractMethodPickerWithQuery = ({
   const [contractMethodsSpec, setContractMethodsSpec] = useState<AnyObject>({});
   const [fetchError, setFetchError] = useState<string>("");
 
-  console.log("contractMethodsSpec: ", contractMethodsSpec);
   const onContractIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // reset the error and methods
     setFetchError("");
