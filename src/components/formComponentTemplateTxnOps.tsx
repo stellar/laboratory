@@ -48,6 +48,14 @@ type SorobanTemplateRenderProps = {
   isDisabled?: boolean;
 };
 
+type SorobanInvokeTemplateRenderProps = {
+  value: string;
+  error: string | undefined;
+  onChange: (val: string) => void;
+  isRequired?: boolean;
+  isDisabled?: boolean;
+};
+
 type TemplateRenderAssetProps = {
   value: AssetObjectValue | undefined;
   error: { code: string | undefined; issuer: string | undefined } | undefined;
@@ -504,15 +512,16 @@ export const formComponentTemplateTxnOps = ({
         ),
         validate: validate.getPositiveNumberError,
       };
-    // Soroban Only
+
+    // Soroban Custom Soroban Operation
     case "invoke_contract":
       return {
-        render: (templ: SorobanTemplateRenderProps) => {
+        render: (templ: SorobanInvokeTemplateRenderProps) => {
           return (
             <FetchContractMethodPickerWithQuery
               id={id}
-              label="Invoke Contract"
-              value={templ.value || ""}
+              label="Contract ID"
+              value={templ.value}
               error={templ.error}
               onChange={templ.onChange}
               disabled={templ.isDisabled}
