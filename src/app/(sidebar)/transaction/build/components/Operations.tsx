@@ -797,7 +797,6 @@ export const Operations = () => {
             } else {
               // if it's classic, reset the soroban operation
               resetSorobanOperation();
-              updateOptionParamAndError({ type: "reset" });
               updateBuildSingleOperation(index, {
                 operation_type: newOpType,
                 params: defaultParams,
