@@ -78,8 +78,7 @@ export const SorobanOperation = ({
 
     // Validate the parameter
     const validatedOpParam = validateOperationParam({
-      // setting index to 0 because only one operation is allowed with Soroban
-      opIndex: 0,
+      opIndex: 0, // setting index to 0 because only one operation is allowed with Soroban
       opParam,
       opValue,
       opType,
@@ -160,28 +159,50 @@ export const SorobanOperation = ({
                     case "extend_ttl_to":
                     case "resource_fee":
                     case "durability":
+                      return (
+                        <div key={`soroban-param-${input}`}>
+                          {component.render({
+                            ...sorobanBaseProps,
+                            onChange: (e: ChangeEvent<HTMLInputElement>) => {
+                              handleSorobanOperationParamChange({
+                                opParam: input,
+                                opValue: e.target.value,
+                                opType: sorobanOperation.operation_type,
+                              });
+                            },
+                          })}
+                        </div>
+                      );
                     case "invoke_contract":
-                      return component.render({
-                        ...sorobanBaseProps,
-                        onChange: (e: ChangeEvent<HTMLInputElement>) => {
-                          handleSorobanOperationParamChange({
-                            opParam: input,
-                            opValue: e.target.value,
-                            opType: sorobanOperation.operation_type,
-                          });
-                        },
-                      });
+                      return (
+                        <div key={`soroban-param-${input}`}>
+                          {component.render({
+                            ...sorobanBaseProps,
+                            onChange: (value: string) => {
+                              handleSorobanOperationParamChange({
+                                opParam: input,
+                                opValue: value,
+                                opType: sorobanOperation.operation_type,
+                              });
+                            },
+                          })}
+                        </div>
+                      );
                     default:
-                      return component.render({
-                        ...sorobanBaseProps,
-                        onChange: (e: ChangeEvent<HTMLInputElement>) => {
-                          handleSorobanOperationParamChange({
-                            opParam: input,
-                            opValue: e.target.value,
-                            opType: sorobanOperation.operation_type,
-                          });
-                        },
-                      });
+                      return (
+                        <div key={`soroban-param-${input}`}>
+                          {component.render({
+                            ...sorobanBaseProps,
+                            onChange: (e: ChangeEvent<HTMLInputElement>) => {
+                              handleSorobanOperationParamChange({
+                                opParam: input,
+                                opValue: e.target.value,
+                                opType: sorobanOperation.operation_type,
+                              });
+                            },
+                          })}
+                        </div>
+                      );
                   }
                 }
 
