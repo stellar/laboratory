@@ -13,13 +13,12 @@ type PrimitiveType =
   | "I256";
 
 type XdrSpecialType = "Address" | "ScString" | "ScSymbol" | "DataUrl";
-
-type XdrPrimitiveType = PrimitiveType | XdrSpecialType;
+type CustomXdrSpecType = PrimitiveType | XdrSpecialType;
 
 export type DereferencedSchema = {
   properties: Record<
     string,
-    JSONSchema7Definition & { specType?: XdrPrimitiveType }
+    JSONSchema7Definition & { specType?: CustomXdrSpecType }
   >;
   required: string[];
   additionalProperties: boolean;
@@ -53,7 +52,7 @@ export const getDereferenceSchema = (
   // Process properties and resolve all $refs
   const properties: Record<
     string,
-    JSONSchema7Definition & { specType?: XdrPrimitiveType }
+    JSONSchema7Definition & { specType?: CustomXdrSpecType }
   > = {};
 
   Object.entries(argsProperties).forEach(([key, value]: [string, any]) => {

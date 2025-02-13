@@ -65,7 +65,6 @@ export const SorobanOperation = ({
   }) => {
     const updatedOperation = {
       ...sorobanOperation,
-      operation_type: opType,
       params: {
         ...sorobanOperation?.params,
         [opParam]: opValue,
@@ -76,8 +75,7 @@ export const SorobanOperation = ({
 
     // Validate the parameter
     const validatedOpParam = validateOperationParam({
-      // setting index to 0 because only one operation is allowed with Soroban
-      opIndex: 0,
+      opIndex: 0, // setting index to 0 because only one operation is allowed with Soroban
       opParam,
       opValue,
       opType,
@@ -158,7 +156,6 @@ export const SorobanOperation = ({
                     case "extend_ttl_to":
                     case "resource_fee":
                     case "durability":
-                    case "invoke_contract":
                       return (
                         <div key={`soroban-param-${input}`}>
                           {component.render({
@@ -167,6 +164,21 @@ export const SorobanOperation = ({
                               handleSorobanOperationParamChange({
                                 opParam: input,
                                 opValue: e.target.value,
+                                opType: sorobanOperation.operation_type,
+                              });
+                            },
+                          })}
+                        </div>
+                      );
+                    case "invoke_contract":
+                      return (
+                        <div key={`soroban-param-${input}`}>
+                          {component.render({
+                            ...sorobanBaseProps,
+                            onChange: (value: string) => {
+                              handleSorobanOperationParamChange({
+                                opParam: input,
+                                opValue: value,
                                 opType: sorobanOperation.operation_type,
                               });
                             },

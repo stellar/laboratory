@@ -7,8 +7,6 @@ import {
   DereferencedSchema,
 } from "@/helpers/dereferenceSchema";
 
-import { AnyObject } from "@/types/types";
-
 import { Box } from "@/components/layout/Box";
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 import { LabelHeading } from "@/components/LabelHeading";
@@ -16,19 +14,9 @@ import { LabelHeading } from "@/components/LabelHeading";
 export const JsonSchemaForm = ({
   schema,
   name,
-  onChange,
-  // @todo for now
-  schemaValue,
 }: {
   schema: JSONSchema7;
   name: string;
-  onChange: (
-    argObj: AnyObject,
-    key: string,
-    val: string,
-    index?: number,
-  ) => void;
-  schemaValue: AnyObject;
 }) => {
   const [dereferencedSchema, setDereferencedSchema] =
     useState<DereferencedSchema>({
@@ -37,20 +25,24 @@ export const JsonSchemaForm = ({
       additionalProperties: false,
     });
 
-  console.log("schemaValue :", schemaValue);
+  const [schemaValues, setSchemaValues] = useState<Record<string, string>>({});
 
   useEffect(() => {
     const dereferencedSchema = getDereferenceSchema(schema, name);
     setDereferencedSchema(dereferencedSchema);
   }, [schema, name]);
 
+  const handleChange = (key: string, value: string) => {
+    setSchemaValues({ ...schemaValues, [key]: value });
+  };
+
   // key: argument label
-  // value: argument value that includes
-  // type: argument type
-  // description: argument description
-  // sometimes format
-  // pattern
-  // min-length; max-length
+  // prop: argument object
+  //   // value: argument value that includes the key
+  //   // type: argument type
+  //   // description: argument description
+  //   // pattern
+  //   // min-length; max-length
   const renderComponent = (key: string, prop: any, index?: number) => {
     const getSpecType = (prop: any) => {
       if (prop.specType) {
@@ -71,12 +63,13 @@ export const JsonSchemaForm = ({
           return (
             <Input
               id={key}
+              key={label}
               fieldSize="md"
               label={label}
-              value={schemaValue[label] || ""}
+              value={schemaValues[label] || ""}
               error={""}
               onChange={(e) => {
-                onChange(schemaValue, label, e.target.value);
+                handleChange(label, e.target.value);
               }}
               infoText={prop.description || ""}
               leftElement={<Icon.User03 />}
@@ -88,12 +81,13 @@ export const JsonSchemaForm = ({
           return (
             <Input
               id={key}
+              key={label}
               fieldSize="md"
               label={label}
-              value={schemaValue[label] || ""}
+              value={schemaValues[label] || ""}
               error={""}
               onChange={(e) => {
-                onChange(schemaValue, label, e.target.value);
+                handleChange(label, e.target.value);
               }}
             />
           );
@@ -104,11 +98,12 @@ export const JsonSchemaForm = ({
           return (
             <PositiveIntPicker
               id={key}
+              key={label}
               label={label}
-              value={schemaValue[label] || ""}
+              value={schemaValues[label] || ""}
               error={""}
               onChange={(e) => {
-                onChange(schemaValue, label, e.target.value);
+                handleChange(label, e.target.value);
               }}
             />
           );
@@ -129,7 +124,7 @@ export const JsonSchemaForm = ({
           }
           // render a button to add an item to the array
           return (
-            <Box gap="sm">
+            <Box gap="sm" key={label}>
               <LabelHeading size="md">{label}</LabelHeading>
               <div>
                 <Button
@@ -158,7 +153,7 @@ export const JsonSchemaForm = ({
       <>
         {renderTitle(name, argLabels, fields)}
 
-        <Box gap="md">
+        <Box gap="md" key={name}>
           {fields.map(([key, prop]) => (
             <>{renderComponent(key, prop)}</>
           ))}

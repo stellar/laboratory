@@ -16,7 +16,7 @@ import { SorobanOpType, TxnOperation } from "@/types/types";
 export type ContractFunctionMethods = {
   methods: string[];
   error: string;
-  spec: xdr.ScSpecEntry[];
+  spec: contract.Spec;
 };
 
 export const isSorobanOperationType = (operationType: string) => {
@@ -176,12 +176,8 @@ export const fetchContractFunctionMethods = async ({
       rpcUrl,
     });
 
-    // on how to get the function methods from the contract
-    // https://github.com/stellar/js-stellar-sdk/blob/master/test/unit/spec/contract_spec.ts
-    const spec = client.spec; // returns xdr.ScSpecEntry[]
+    const spec = client.spec;
     const methods = spec.funcs();
-
-    console.log("spec: ", spec);
 
     return {
       methods: methods.map((method) => method.name().toString()),
@@ -191,7 +187,7 @@ export const fetchContractFunctionMethods = async ({
   } catch (e: any) {
     return {
       methods: [],
-      spec: {},
+      spec: {} as contract.Spec,
       error: `error while fetching contract information: ${e?.message ? e?.message : e}`,
     };
   }

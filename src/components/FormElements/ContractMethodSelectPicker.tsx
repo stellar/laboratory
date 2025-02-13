@@ -5,20 +5,13 @@ import type { JSONSchema7 } from "json-schema";
 
 import { Box } from "@/components/layout/Box";
 import { JsonSchemaForm } from "@/components/JsonSchemaForm";
+import { ExpandBox } from "@/components/ExpandBox";
 
 // @todo for testing
 // comment it out before committing
 // remove it before merging into main
 import Form from "@rjsf/core";
 import validator from "@rjsf/validator-ajv8";
-
-import { AnyObject } from "@/types/types";
-
-// @todo for now
-import { useStore } from "@/store/useStore";
-import { INITIAL_OPERATION } from "@/constants/transactionOperations";
-import { invert } from "lodash";
-
 export const ContractMethodSelectPicker = ({
   methods,
   spec,
@@ -28,98 +21,42 @@ export const ContractMethodSelectPicker = ({
   spec: contract.Spec;
   id: string;
 }) => {
-  const { transaction } = useStore();
-  const { updateSorobanBuildOperation } = transaction;
-  const { soroban } = transaction.build;
-  const { operation: sorobanOperation } = soroban;
-
   const [selectedValue, setSelectedValue] = useState<string>("");
   const [funcSpec, setFuncSpec] = useState<JSONSchema7 | undefined>(undefined);
 
-  // console.log("[ContractMethodSelectPicker] funcSpec: ", funcSpec);
-
-  // sorobanOperation
-  // params:
-  // {
-  //   invoke_contract: contract_address,
-  //   function_name: function_name,
-  //   args: args
-  // }
-
-  const selectOnChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    updateSorobanBuildOperation(INITIAL_OPERATION);
+  const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    console.log("[onChange] e.target.value: ", e.target.value);
 
     setSelectedValue(e.target.value);
 
-    // https://stellar.github.io/js-stellar-sdk/module-contract.Spec.html#jsonSchema
-    // The schema provided will be a reference to the function schema
-    const selectedFuncSchema = spec.jsonSchema(e.target.value);
-
-    setFuncSpec(selectedFuncSchema);
-
-    console.log("sorobanOperation:", sorobanOperation);
-
-    updateSorobanBuildOperation({
-      ...sorobanOperation,
-      params: {
-        ...sorobanOperation.params,
-        contract_method: {
-          name: e.target.value,
-          args: {},
-        },
-      },
-    });
-  };
-
-  const handleArgChange = (argObj: AnyObject, label: string, val: string) => {
-    const { params } = sorobanOperation;
-
-    console.log("[handleArgChange] sorobanOperation: ", sorobanOperation);
-    console.log("[handleArgChange] argObj: ", argObj);
-    console.log(
-      "[handleArgChange] params.contract_method: ",
-      params.contract_method,
-    );
-
-    updateSorobanBuildOperation({
-      ...sorobanOperation,
-      params: {
-        ...params,
-        contract_method: {
-          ...params.contract_method,
-          args: {
-            ...(params.contract_method.args || {}),
-            [label]: val,
-          },
-        },
-      },
-    });
+    if (e.target.value) {
+      const selectedFuncSchema = spec.jsonSchema(e.target.value);
+      setFuncSpec(selectedFuncSchema);
+    } else {
+      setFuncSpec(undefined);
+    }
   };
 
   return (
     <Box gap="md">
       <Select
         fieldSize="md"
-        label="Select a function method"
+        label="Select a method"
         id={id}
         value={selectedValue}
-        onChange={selectOnChange}
+        onChange={onChange}
       >
+        <option value="">Select a method</option>
         {methods.map((method) => (
           <option key={method} value={method}>
             {method}
           </option>
         ))}
       </Select>
-      <>
-        {funcSpec ? (
+      <ExpandBox isExpanded={Boolean(selectedValue)} offsetTop="sm">
+        {selectedValue && funcSpec ? (
           <>
-            <JsonSchemaForm
-              schema={funcSpec}
-              name={selectedValue}
-              onChange={handleArgChange}
-              schemaValue={sorobanOperation.params.contract_method.args}
-            />
+            <JsonSchemaForm schema={funcSpec} name={selectedValue} />
             {/* 
             // @todo for testing
             // comment it out before committing
@@ -128,7 +65,7 @@ export const ContractMethodSelectPicker = ({
             <Form schema={funcSpec} validator={validator} />
           </>
         ) : null}
-      </>
+      </ExpandBox>
     </Box>
   );
 };
