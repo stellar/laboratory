@@ -191,7 +191,7 @@ const renderTitle = (
   labels: string[],
   fields: [string, any][],
 ) => {
-  if (labels) {
+  if (labels.length) {
     const mappedLabels = labels.map((label) => {
       const field = fields.find(([key]) => key === label);
 
