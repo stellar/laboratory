@@ -387,14 +387,12 @@
   @media (hover: hover) {
     &:hover {
       --SidebarLink-color: var(--sds-clr-lilac-11);
-      font-weight: var(--sds-fw-semi-bold);
     }
   }
 
   &[data-is-active="true"] {
     --SidebarLink-color: var(--sds-clr-lilac-11);
     cursor: default;
-    font-weight: var(--sds-fw-semi-bold);
     pointer-events: none;
     position: relative;
   }
@@ -415,7 +413,6 @@
           > [data-is-active="true"]
       ) {
       --SidebarLink-color: var(--sds-clr-gray-12);
-      font-weight: var(--sds-fw-semi-bold);
     }
 
     // Rotate chevron when expanded
