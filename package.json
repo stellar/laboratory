@@ -19,7 +19,6 @@
     "pre-push": "yarn lint:ts && yarn test"
   },
   "dependencies": {
-    "@apidevtools/json-schema-ref-parser": "^11.9.0",
     "@creit.tech/stellar-wallets-kit": "^1.2.5",
     "@ledgerhq/hw-app-str": "^7.0.4",
     "@ledgerhq/hw-transport-webusb": "^6.29.4",
