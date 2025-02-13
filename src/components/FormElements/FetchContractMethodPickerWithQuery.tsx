@@ -13,6 +13,7 @@ import {
 
 import { useStore } from "@/store/useStore";
 import { validate } from "@/validate";
+import { Spec } from "@stellar/stellar-sdk/contract";
 
 interface FetchContractMethodPickerWithQueryProps {
   id: string;
@@ -20,7 +21,7 @@ interface FetchContractMethodPickerWithQueryProps {
   error?: string | undefined;
   label?: string;
   disabled?: boolean;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (val: string) => void;
 }
 
 /**
@@ -39,35 +40,40 @@ export const FetchContractMethodPickerWithQuery = ({
   onChange,
 }: FetchContractMethodPickerWithQueryProps) => {
   const { network } = useStore();
-
   const [contractIdError, setContractIdError] = useState<string>("");
   const [contractMethods, setContractMethods] = useState<string[]>([]);
+  const [contractMethodsSpec, setContractMethodsSpec] = useState<Spec>(
+    {} as Spec,
+  );
   const [fetchError, setFetchError] = useState<string>("");
 
-  const onContractIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleContractIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // reset the error and methods
     setFetchError("");
     setContractMethods([]);
-
-    // call the onChange callback
-    onChange?.(e);
 
     // validate the contract id
     if (e.target.value) {
       const validatedContractIdError = validate.getContractIdError(
         e.target.value,
       );
-
       if (validatedContractIdError) {
         setContractIdError(validatedContractIdError);
       } else {
         setContractIdError("");
       }
     }
+
+    onChange(e.target.value || "");
   };
 
   const handleFetchContractMethods = async () => {
     setFetchError("");
+
+    if (!value) {
+      setFetchError("Contract ID is required");
+      return;
+    }
 
     const contractMethods: ContractFunctionMethods =
       await fetchContractFunctionMethods({
@@ -78,6 +84,10 @@ export const FetchContractMethodPickerWithQuery = ({
 
     if (contractMethods.methods) {
       setContractMethods(contractMethods.methods);
+    }
+
+    if (contractMethods.spec) {
+      setContractMethodsSpec(contractMethods.spec);
     }
 
     if (contractMethods.error) {
@@ -94,7 +104,7 @@ export const FetchContractMethodPickerWithQuery = ({
         placeholder="Ex: CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC"
         value={value || ""}
         error={error || contractIdError}
-        onChange={onContractIdChange}
+        onChange={handleContractIdChange}
         disabled={disabled}
       />
 
@@ -113,8 +123,9 @@ export const FetchContractMethodPickerWithQuery = ({
       </Box>
 
       <>
-        {contractMethods.length ? (
+        {contractMethods.length && value ? (
           <ContractMethodSelectPicker
+            spec={contractMethodsSpec}
             methods={contractMethods}
             id={`${id}-method`}
           />

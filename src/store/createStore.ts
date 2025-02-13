@@ -474,7 +474,7 @@ export const createStore = (options: CreateStoreOptions) =>
               state.transaction.build.params = initTransactionParamsState;
             }),
           // Soroban Build
-          updateSorobanBuildOperation: (operation: TxnOperation) =>
+          updateSorobanBuildOperation: (operation) =>
             set((state) => {
               state.transaction.build.soroban.operation = operation;
             }),
