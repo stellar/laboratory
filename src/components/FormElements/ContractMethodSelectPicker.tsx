@@ -25,8 +25,6 @@ export const ContractMethodSelectPicker = ({
   const [funcSpec, setFuncSpec] = useState<JSONSchema7 | undefined>(undefined);
 
   const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log("[onChange] e.target.value: ", e.target.value);
-
     setSelectedValue(e.target.value);
 
     if (e.target.value) {

@@ -65,6 +65,7 @@ export const SorobanOperation = ({
   }) => {
     const updatedOperation = {
       ...sorobanOperation,
+      operation_type: opType,
       params: {
         ...sorobanOperation?.params,
         [opParam]: opValue,
