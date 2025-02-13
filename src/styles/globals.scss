@@ -395,6 +395,7 @@
     cursor: default;
     pointer-events: none;
     position: relative;
+    font-weight: var(--sds-fw-semi-bold);
   }
 
   &__toggle {
