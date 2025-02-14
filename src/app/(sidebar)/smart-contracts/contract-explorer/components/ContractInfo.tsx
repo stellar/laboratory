@@ -16,21 +16,22 @@ import { formatEpochToDate } from "@/helpers/formatEpochToDate";
 import { formatNumber } from "@/helpers/formatNumber";
 import { stellarExpertAccountLink } from "@/helpers/stellarExpertAccountLink";
 
-import { ContractInfoApiResponse, NetworkType } from "@/types/types";
+import { ContractInfoApiResponse, EmptyObj, Network } from "@/types/types";
 
+import { ContractSpec } from "./ContractSpec";
 import { ContractStorage } from "./ContractStorage";
 import { VersionHistory } from "./VersionHistory";
 
 export const ContractInfo = ({
   infoData,
-  networkId,
+  network,
 }: {
   infoData: ContractInfoApiResponse;
-  networkId: NetworkType;
+  network: Network | EmptyObj;
 }) => {
   type ContractTabId =
     | "contract-bindings"
-    | "contract-contract-info"
+    | "contract-contract-spec"
     | "contract-source-code"
     | "contract-contract-storage"
     | "contract-version-history";
@@ -161,7 +162,7 @@ export const ContractInfo = ({
             value={
               infoData.creator ? (
                 <SdsLink
-                  href={stellarExpertAccountLink(infoData.creator, networkId)}
+                  href={stellarExpertAccountLink(infoData.creator, network.id)}
                 >
                   <Avatar publicAddress={infoData.creator} size="sm" />
                   {infoData.creator}
@@ -237,9 +238,17 @@ export const ContractInfo = ({
               content: <ComingSoonText />,
             }}
             tab2={{
-              id: "contract-contract-info",
-              label: "Contract Info",
-              content: <ComingSoonText />,
+              id: "contract-contract-spec",
+              label: "Contract Spec",
+              content: (
+                <ContractSpec
+                  wasmHash={infoData.wasm || ""}
+                  contractId={infoData.account || ""}
+                  networkPassphrase={network.passphrase}
+                  rpcUrl={network.rpcUrl}
+                  isActive={activeTab === "contract-contract-spec"}
+                />
+              ),
             }}
             tab3={{
               id: "contract-source-code",
@@ -253,7 +262,7 @@ export const ContractInfo = ({
                 <ContractStorage
                   isActive={activeTab === "contract-contract-storage"}
                   contractId={infoData.contract}
-                  networkId={networkId}
+                  networkId={network.id}
                   totalEntriesCount={infoData.storage_entries}
                 />
               ),
@@ -265,7 +274,7 @@ export const ContractInfo = ({
                 <VersionHistory
                   isActive={activeTab === "contract-version-history"}
                   contractId={infoData.contract}
-                  networkId={networkId}
+                  networkId={network.id}
                 />
               ),
             }}
