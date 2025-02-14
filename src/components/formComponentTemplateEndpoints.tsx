@@ -474,14 +474,25 @@ export const formComponentTemplateEndpoints = (
             fieldSize="md"
             key={id}
             id={id}
-            label="Key"
-            placeholder="Ex: 67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9"
-            // @TODO we should display an input for each value
-            // hotfix: sanitizing value from backlashes and extra quotes
+            label="Key (ScVal)"
+            rows={10}
+            placeholder={`{
+      "vec": [
+        {
+          "symbol": "Balance"
+        },
+        {
+          "address": "CDGAH7TU7UH3BXGYXRIXLJX63LYRIF6APZPIG64ZAW3NNDCPJ7AAWVTZ"
+        }
+      ]
+    }
+  }
+}`}
+            // Convert object to string if needed
             value={
-              JSON.stringify(templ.value)
-                .replace(/\\/g, "")
-                .replace(/^"+|"+$/g, "") || ""
+              typeof templ.value === "object"
+                ? JSON.stringify(templ.value, null, 2)
+                : templ.value || ""
             }
             error={templ.error}
             onChange={templ.onChange}
