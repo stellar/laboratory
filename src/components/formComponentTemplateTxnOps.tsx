@@ -29,7 +29,9 @@ import {
   NumberFractionValue,
   OptionSigner,
   RevokeSponsorshipValue,
+  SorobanInvokeValue,
 } from "@/types/types";
+import { parseJsonString } from "@/helpers/parseJsonString";
 
 // Types
 type TemplateRenderProps = {
@@ -37,23 +39,6 @@ type TemplateRenderProps = {
   error: string | undefined;
   onChange: (val: any) => void;
   isRequired?: boolean;
-};
-
-// Types
-type SorobanTemplateRenderProps = {
-  value: string | undefined;
-  error: string | undefined;
-  onChange: (val: any) => void;
-  isRequired?: boolean;
-  isDisabled?: boolean;
-};
-
-type SorobanInvokeTemplateRenderProps = {
-  value: string;
-  error: string | undefined;
-  onChange: (val: string) => void;
-  isRequired?: boolean;
-  isDisabled?: boolean;
 };
 
 type TemplateRenderAssetProps = {
@@ -108,6 +93,22 @@ type TemplateRenderClaimantsProps = {
   error: (AnyObject | undefined)[] | undefined;
   onChange: (val: AnyObject[] | undefined) => void;
   isRequired?: boolean;
+};
+
+type TemplateRenderSorobanProps = {
+  value: string | undefined;
+  error: string | undefined;
+  onChange: (val: any) => void;
+  isRequired?: boolean;
+  isDisabled?: boolean;
+};
+
+type TemplateRenderSorobanInvokeProps = {
+  value: SorobanInvokeValue | undefined;
+  error: string | undefined;
+  onChange: (val: SorobanInvokeValue | undefined) => void;
+  isRequired?: boolean;
+  isDisabled?: boolean;
 };
 
 type FormComponentTemplateTxnOpsProps = {
@@ -402,7 +403,7 @@ export const formComponentTemplateTxnOps = ({
       };
     case "extend_ttl_to": {
       return {
-        render: (templ: SorobanTemplateRenderProps) => (
+        render: (templ: TemplateRenderSorobanProps) => (
           <PositiveIntPicker
             key={id}
             id={id}
@@ -468,7 +469,7 @@ export const formComponentTemplateTxnOps = ({
       };
     case "key_xdr":
       return {
-        render: (templ: SorobanTemplateRenderProps) => (
+        render: (templ: TemplateRenderSorobanProps) => (
           <TextPicker
             key={id}
             id={id}
@@ -488,7 +489,7 @@ export const formComponentTemplateTxnOps = ({
     // Soroban Only
     case "resource_fee":
       return {
-        render: (templ: SorobanTemplateRenderProps) => (
+        render: (templ: TemplateRenderSorobanProps) => (
           <ResourceFeePickerWithQuery
             id={id}
             label="Resource Fee (in stroops)"
@@ -513,15 +514,17 @@ export const formComponentTemplateTxnOps = ({
         validate: validate.getPositiveNumberError,
       };
 
-    // Soroban Custom Soroban Operation
+    // Custom Soroban Operation
     case "invoke_contract":
       return {
-        render: (templ: SorobanInvokeTemplateRenderProps) => {
+        render: (templ: TemplateRenderSorobanInvokeProps) => {
           return (
             <FetchContractMethodPickerWithQuery
               id={id}
               label="Contract ID"
-              value={templ.value}
+              // parse the JSON string that we converted for zustand querystring to
+              // back to an object to properly display the value
+              value={parseJsonString(templ.value)}
               error={templ.error}
               onChange={templ.onChange}
               disabled={templ.isDisabled}

@@ -22,7 +22,8 @@ import {
   INITIAL_OPERATION,
   TRANSACTION_OPERATIONS,
 } from "@/constants/transactionOperations";
-import { OperationError } from "@/types/types";
+import { OperationError, SorobanInvokeValue } from "@/types/types";
+import { sanitizeObject } from "@/helpers/sanitizeObject";
 
 export const SorobanOperation = ({
   operationTypeSelector,
@@ -66,10 +67,10 @@ export const SorobanOperation = ({
     const updatedOperation = {
       ...sorobanOperation,
       operation_type: opType,
-      params: {
+      params: sanitizeObject({
         ...sorobanOperation?.params,
         [opParam]: opValue,
-      },
+      }),
     };
 
     updateSorobanBuildOperation(updatedOperation);
@@ -176,10 +177,16 @@ export const SorobanOperation = ({
                         <div key={`soroban-param-${input}`}>
                           {component.render({
                             ...sorobanBaseProps,
-                            onChange: (value: string) => {
+                            onChange: (value: SorobanInvokeValue) => {
                               handleSorobanOperationParamChange({
                                 opParam: input,
-                                opValue: value,
+                                // invoke_contract has a nested object within params
+                                // { contract_id: "", data: {} }
+                                // we need to stringify the nested object
+                                // for zustand querystring to properly save the value in the url
+                                opValue: value
+                                  ? JSON.stringify(value)
+                                  : undefined,
                                 opType: sorobanOperation.operation_type,
                               });
                             },

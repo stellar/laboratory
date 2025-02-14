@@ -14,22 +14,20 @@ import {
 import { useStore } from "@/store/useStore";
 import { validate } from "@/validate";
 import { Spec } from "@stellar/stellar-sdk/contract";
+import { SorobanInvokeValue } from "@/types/types";
 
 interface FetchContractMethodPickerWithQueryProps {
   id: string;
-  value: string;
+  value: SorobanInvokeValue | undefined;
   error?: string | undefined;
   label?: string;
   disabled?: boolean;
-  onChange: (val: string) => void;
+  onChange: (val: SorobanInvokeValue | undefined) => void;
 }
 
 /**
- * FetchContractMethodPickerWithQuery
- *
  * This component is used to fetch the contract methods for a given contract id.
  * It is used in the SorobanOperation component.
- *
  */
 export const FetchContractMethodPickerWithQuery = ({
   id,
@@ -64,7 +62,12 @@ export const FetchContractMethodPickerWithQuery = ({
       }
     }
 
-    onChange(e.target.value || "");
+    const newValue: SorobanInvokeValue = {
+      contract_id: e.target.value || "",
+      data: value?.data || {},
+    };
+
+    onChange(newValue);
   };
 
   const handleFetchContractMethods = async () => {
@@ -77,7 +80,7 @@ export const FetchContractMethodPickerWithQuery = ({
 
     const contractMethods: ContractFunctionMethods =
       await fetchContractFunctionMethods({
-        contractId: value,
+        contractId: value.contract_id,
         networkPassphrase: network.passphrase,
         rpcUrl: network.rpcUrl,
       });
@@ -102,7 +105,7 @@ export const FetchContractMethodPickerWithQuery = ({
         id={id}
         label={label}
         placeholder="Ex: CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC"
-        value={value || ""}
+        value={value?.contract_id || ""}
         error={error || contractIdError}
         onChange={handleContractIdChange}
         disabled={disabled}
@@ -125,6 +128,8 @@ export const FetchContractMethodPickerWithQuery = ({
       <>
         {contractMethods.length && value ? (
           <ContractMethodSelectPicker
+            value={value}
+            onChange={onChange}
             spec={contractMethodsSpec}
             methods={contractMethods}
             id={`${id}-method`}

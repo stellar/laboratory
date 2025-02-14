@@ -10,13 +10,18 @@ import {
 import { Box } from "@/components/layout/Box";
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 import { LabelHeading } from "@/components/LabelHeading";
+import { SorobanInvokeValue } from "@/types/types";
 
 export const JsonSchemaForm = ({
   schema,
   name,
+  value,
+  onChange,
 }: {
   schema: JSONSchema7;
   name: string;
+  value: SorobanInvokeValue;
+  onChange: (value: SorobanInvokeValue) => void;
 }) => {
   const [dereferencedSchema, setDereferencedSchema] =
     useState<DereferencedSchema>({
@@ -25,15 +30,19 @@ export const JsonSchemaForm = ({
       additionalProperties: false,
     });
 
-  const [schemaValues, setSchemaValues] = useState<Record<string, string>>({});
-
   useEffect(() => {
     const dereferencedSchema = getDereferenceSchema(schema, name);
     setDereferencedSchema(dereferencedSchema);
   }, [schema, name]);
 
-  const handleChange = (key: string, value: string) => {
-    setSchemaValues({ ...schemaValues, [key]: value });
+  const handleChange = (key: string, newVal: string) => {
+    onChange({
+      ...value,
+      data: {
+        ...value.data,
+        [key]: newVal,
+      },
+    });
   };
 
   // key: argument label
@@ -66,7 +75,7 @@ export const JsonSchemaForm = ({
               key={label}
               fieldSize="md"
               label={label}
-              value={schemaValues[label] || ""}
+              value={value.data[label] || ""}
               error={""}
               onChange={(e) => {
                 handleChange(label, e.target.value);
@@ -84,7 +93,7 @@ export const JsonSchemaForm = ({
               key={label}
               fieldSize="md"
               label={label}
-              value={schemaValues[label] || ""}
+              value={value.data[label] || ""}
               error={""}
               onChange={(e) => {
                 handleChange(label, e.target.value);
@@ -100,7 +109,7 @@ export const JsonSchemaForm = ({
               id={key}
               key={label}
               label={label}
-              value={schemaValues[label] || ""}
+              value={value.data[label] || ""}
               error={""}
               onChange={(e) => {
                 handleChange(label, e.target.value);

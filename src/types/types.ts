@@ -251,6 +251,11 @@ export type SponsorshipType =
 // =============================================================================
 export type SorobanOpType = "extend_footprint_ttl" | "invoke_contract_function";
 
+export type SorobanInvokeValue = {
+  contract_id: string;
+  data: AnyObject;
+};
+
 // =============================================================================
 // RPC
 // =============================================================================
