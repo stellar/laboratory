@@ -75,6 +75,9 @@ export const DataTable = <T extends AnyObject>({
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPageCount, setTotalPageCount] = useState(1);
 
+  const hasAppliedFilters =
+    appliedFilters.key.length > 0 || appliedFilters.value.length > 0;
+
   useEffect(() => {
     const data = processContractStorageData({
       data: tableData,
@@ -370,27 +373,91 @@ export const DataTable = <T extends AnyObject>({
 
   const displayData = paginateData(processedData.map(formatDataRow));
 
+  const renderTableBody = () => {
+    if (!displayData.length) {
+      const emptyMessage = hasAppliedFilters
+        ? "There are no items matching selected filters"
+        : "There are no contract storage items";
+
+      return (
+        <tr data-style="emptyMessage">
+          <td colSpan={tableHeaders.length}>{emptyMessage}</td>
+        </tr>
+      );
+    }
+
+    return displayData.map((row, rowIdx) => {
+      const rowKey = `${tableId}-row-${rowIdx}`;
+
+      return (
+        <tr data-style="row" role="row" key={rowKey}>
+          {row.map((cell, cellIdx) => (
+            <td
+              key={`${rowKey}-cell-${cellIdx}`}
+              title={typeof cell.value === "string" ? cell.value : undefined}
+              role="cell"
+              {...(cell.isBold ? { "data-style": "bold" } : {})}
+            >
+              {cell.value}
+            </td>
+          ))}
+        </tr>
+      );
+    });
+  };
+
   return (
     <Box gap="md">
-      <Box gap="sm" direction="row" align="end" justify="space-between">
+      <Box
+        gap="sm"
+        direction="row"
+        align="end"
+        justify="space-between"
+        wrap="wrap"
+      >
         <Box gap="sm" direction="row" align="center" wrap="wrap">
           {/* Applied filter badges */}
           {renderFilterBadges()}
         </Box>
 
-        <div className="DataTable__exportCsv">
-          {csvFileName ? (
-            <Button
-              variant="tertiary"
-              size="sm"
-              icon={<Icon.AlignBottom01 />}
-              iconPosition="left"
-              onClick={handleExportToCsv}
-            >
-              Export to CSV
-            </Button>
-          ) : null}
-        </div>
+        <Box
+          gap="sm"
+          direction="row"
+          wrap="wrap"
+          addlClassName="DataTable__actionButtons"
+        >
+          <>
+            {hasAppliedFilters ? (
+              <Button
+                variant="error"
+                size="sm"
+                onClick={() => {
+                  setSelectedFilters(INIT_FILTERS);
+                  setAppliedFilters(INIT_FILTERS);
+
+                  setVisibleFilters(undefined);
+                  setCurrentPage(1);
+                }}
+              >
+                Clear filters
+              </Button>
+            ) : null}
+          </>
+
+          <>
+            {csvFileName ? (
+              <Button
+                variant="tertiary"
+                size="sm"
+                icon={<Icon.AlignBottom01 />}
+                iconPosition="left"
+                onClick={handleExportToCsv}
+              >
+                Export to CSV
+              </Button>
+            ) : null}
+          </>
+        </Box>
       </Box>
 
       {/* Table */}
@@ -432,30 +499,7 @@ export const DataTable = <T extends AnyObject>({
                   ))}
                 </tr>
               </thead>
-              <tbody>
-                {displayData.map((row, rowIdx) => {
-                  const rowKey = `${tableId}-row-${rowIdx}`;
-
-                  return (
-                    <tr data-style="row" role="row" key={rowKey}>
-                      {row.map((cell, cellIdx) => (
-                        <td
-                          key={`${rowKey}-cell-${cellIdx}`}
-                          title={
-                            typeof cell.value === "string"
-                              ? cell.value
-                              : undefined
-                          }
-                          role="cell"
-                          {...(cell.isBold ? { "data-style": "bold" } : {})}
-                        >
-                          {cell.value}
-                        </td>
-                      ))}
-                    </tr>
-                  );
-                })}
-              </tbody>
+              <tbody>{renderTableBody()}</tbody>
             </table>
           </div>
         </div>

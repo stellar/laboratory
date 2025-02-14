@@ -38,6 +38,17 @@
       grid-template-columns: var(--DataTable-grid-template-columns);
     }
 
+    tr[data-style="emptyMessage"] {
+      height: pxToRem(320px);
+      text-align: center;
+
+      td {
+        padding: 1rem;
+        white-space: normal;
+        font-weight: var(--sds-fw-regular);
+      }
+    }
+
     td,
     th {
       padding: pxToRem(8px) pxToRem(6px);
@@ -241,7 +252,7 @@
     }
   }
 
-  &__exportCsv {
+  &__actionButtons {
     flex-shrink: 0;
   }
 }
