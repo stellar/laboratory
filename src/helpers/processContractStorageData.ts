@@ -17,7 +17,9 @@ export const processContractStorageData = <T extends AnyObject>({
 }): ContractStorageProcessedItem<T>[] => {
   let sortedData = [...data];
 
+  // ===========================================================================
   // Sort
+  // ===========================================================================
   if (sortById) {
     // Asc
     if (sortByDir === "asc") {
@@ -34,36 +36,45 @@ export const processContractStorageData = <T extends AnyObject>({
     }
   }
 
+  // ===========================================================================
   // Filter
+  // ===========================================================================
   const keyFilters = filters.key;
   const valueFilters = filters.value;
 
-  if (keyFilters.length > 0 || valueFilters.length > 0) {
+  // Filter by key first
+  if (keyFilters.length > 0) {
     sortedData = sortedData.filter((s) => {
-      let hasKeyFilter = false;
-      let hasValueFilter = false;
-
-      // Key
       if (s.keyJson && Array.isArray(s.keyJson)) {
+        // Key value should have only one key
         const sFilter = s.keyJson[0];
 
-        hasKeyFilter = keyFilters.includes(sFilter);
+        // Has to match all selected key filters
+        // Exits early if something doesn't match
+        return keyFilters.every((v) => v === sFilter);
+      } else {
+        return false;
       }
-
-      // Value
-      if (s.valueJson && typeof s.valueJson === "object") {
-        const vFilters = Object.keys(s.valueJson);
-
-        valueFilters.forEach((v) => {
-          if (vFilters.includes(v)) {
-            hasValueFilter = true;
-          }
-        });
-      }
-
-      return hasKeyFilter || hasValueFilter;
     });
   }
 
+  // Then filter by value
+  if (valueFilters.length > 0) {
+    sortedData = sortedData.filter((s) => {
+      if (s.valueJson && typeof s.valueJson === "object") {
+        const vFilters = Object.keys(s.valueJson);
+
+        // Has to match all selected value filters
+        // Exits early if something doesn't match
+        return valueFilters.every((v) => vFilters.includes(v));
+      } else {
+        return false;
+      }
+    });
+  }
+
+  // ===========================================================================
+  // Result
+  // ===========================================================================
   return sortedData as ContractStorageProcessedItem<T>[];
 };
