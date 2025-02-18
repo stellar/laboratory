@@ -1,35 +1,30 @@
 import React, { useState } from "react";
 import { Button } from "@stellar/design-system";
+import { Spec } from "@stellar/stellar-sdk/contract";
+
+import { SorobanInvokeValue } from "@/types/types";
 
 import { Box } from "@/components/layout/Box";
 import { ContractMethodSelectPicker } from "@/components/FormElements/ContractMethodSelectPicker";
 import { TextPicker } from "@/components/FormElements/TextPicker";
 import { MessageField } from "@/components/MessageField";
 
-import {
-  fetchContractFunctionMethods,
-  ContractFunctionMethods,
-} from "@/helpers/sorobanUtils";
-
 import { useStore } from "@/store/useStore";
 import { validate } from "@/validate";
-import { Spec } from "@stellar/stellar-sdk/contract";
+import { useContractClientFromRpc } from "@/query/useContractClientFromRpc";
 
 interface FetchContractMethodPickerWithQueryProps {
   id: string;
-  value: string;
+  value: SorobanInvokeValue | undefined;
   error?: string | undefined;
   label?: string;
   disabled?: boolean;
-  onChange: (val: string) => void;
+  onChange: (val: SorobanInvokeValue | undefined) => void;
 }
 
 /**
- * FetchContractMethodPickerWithQuery
- *
  * This component is used to fetch the contract methods for a given contract id.
  * It is used in the SorobanOperation component.
- *
  */
 export const FetchContractMethodPickerWithQuery = ({
   id,
@@ -46,6 +41,17 @@ export const FetchContractMethodPickerWithQuery = ({
     {} as Spec,
   );
   const [fetchError, setFetchError] = useState<string>("");
+
+  const {
+    data: contractClient,
+    isError,
+    isSuccess,
+    error: contractClientError,
+  } = useContractClientFromRpc({
+    contractId: value?.contract_id || "",
+    networkPassphrase: network.passphrase,
+    rpcUrl: network.rpcUrl,
+  });
 
   const handleContractIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // reset the error and methods
@@ -64,7 +70,12 @@ export const FetchContractMethodPickerWithQuery = ({
       }
     }
 
-    onChange(e.target.value || "");
+    const newValue: SorobanInvokeValue = {
+      contract_id: e.target.value || "",
+      data: value?.data || {},
+    };
+
+    onChange(newValue);
   };
 
   const handleFetchContractMethods = async () => {
@@ -75,23 +86,24 @@ export const FetchContractMethodPickerWithQuery = ({
       return;
     }
 
-    const contractMethods: ContractFunctionMethods =
-      await fetchContractFunctionMethods({
-        contractId: value,
-        networkPassphrase: network.passphrase,
-        rpcUrl: network.rpcUrl,
-      });
+    if (isSuccess) {
+      const contractSpec = contractClient?.spec;
+      const contractMethods = contractSpec?.funcs();
 
-    if (contractMethods.methods) {
-      setContractMethods(contractMethods.methods);
+      if (contractMethods) {
+        const methodNames = contractMethods.map((method) =>
+          method.name().toString(),
+        );
+        setContractMethods(methodNames);
+      }
+
+      if (contractSpec) {
+        setContractMethodsSpec(contractSpec);
+      }
     }
 
-    if (contractMethods.spec) {
-      setContractMethodsSpec(contractMethods.spec);
-    }
-
-    if (contractMethods.error) {
-      setFetchError(contractMethods.error);
+    if (isError) {
+      setFetchError(contractClientError.message);
     }
   };
 
@@ -102,7 +114,7 @@ export const FetchContractMethodPickerWithQuery = ({
         id={id}
         label={label}
         placeholder="Ex: CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC"
-        value={value || ""}
+        value={value?.contract_id || ""}
         error={error || contractIdError}
         onChange={handleContractIdChange}
         disabled={disabled}
@@ -125,6 +137,8 @@ export const FetchContractMethodPickerWithQuery = ({
       <>
         {contractMethods.length && value ? (
           <ContractMethodSelectPicker
+            value={value}
+            onChange={onChange}
             spec={contractMethodsSpec}
             methods={contractMethods}
             id={`${id}-method`}

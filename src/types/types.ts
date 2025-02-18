@@ -254,6 +254,11 @@ export type SorobanOpType =
   | "restore_footprint"
   | "invoke_contract_function";
 
+export type SorobanInvokeValue = {
+  contract_id: string;
+  data: AnyObject;
+};
+
 // =============================================================================
 // RPC
 // =============================================================================
