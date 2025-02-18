@@ -1,5 +1,4 @@
 import {
-  contract,
   Address,
   Contract,
   Operation,
@@ -12,12 +11,6 @@ import {
 
 import { TransactionBuildParams } from "@/store/createStore";
 import { SorobanOpType, TxnOperation } from "@/types/types";
-
-export type ContractFunctionMethods = {
-  methods: string[];
-  error: string;
-  spec: contract.Spec;
-};
 
 export const isSorobanOperationType = (operationType: string) => {
   // @TODO: add restore_footprint
@@ -158,39 +151,6 @@ export const buildSorobanTx = ({
     .setSorobanData(sorobanData)
     .addOperation(getSorobanOp(sorobanOp.operation_type))
     .build();
-};
-
-export const fetchContractFunctionMethods = async ({
-  contractId,
-  networkPassphrase,
-  rpcUrl,
-}: {
-  contractId: string;
-  networkPassphrase: string;
-  rpcUrl: string;
-}): Promise<ContractFunctionMethods> => {
-  try {
-    const client = await contract.Client.from({
-      contractId,
-      networkPassphrase,
-      rpcUrl,
-    });
-
-    const spec = client.spec;
-    const methods = spec.funcs();
-
-    return {
-      methods: methods.map((method) => method.name().toString()),
-      spec,
-      error: "",
-    };
-  } catch (e: any) {
-    return {
-      methods: [],
-      spec: {} as contract.Spec,
-      error: `error while fetching contract information: ${e?.message ? e?.message : e}`,
-    };
-  }
 };
 
 // Preparing Soroban Transaction Data

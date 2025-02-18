@@ -1,20 +1,17 @@
 import React, { useState } from "react";
 import { Button } from "@stellar/design-system";
+import { Spec } from "@stellar/stellar-sdk/contract";
+
+import { SorobanInvokeValue } from "@/types/types";
 
 import { Box } from "@/components/layout/Box";
 import { ContractMethodSelectPicker } from "@/components/FormElements/ContractMethodSelectPicker";
 import { TextPicker } from "@/components/FormElements/TextPicker";
 import { MessageField } from "@/components/MessageField";
 
-import {
-  fetchContractFunctionMethods,
-  ContractFunctionMethods,
-} from "@/helpers/sorobanUtils";
-
 import { useStore } from "@/store/useStore";
 import { validate } from "@/validate";
-import { Spec } from "@stellar/stellar-sdk/contract";
-import { SorobanInvokeValue } from "@/types/types";
+import { useContractClientFromRpc } from "@/query/useContractClientFromRpc";
 
 interface FetchContractMethodPickerWithQueryProps {
   id: string;
@@ -44,6 +41,17 @@ export const FetchContractMethodPickerWithQuery = ({
     {} as Spec,
   );
   const [fetchError, setFetchError] = useState<string>("");
+
+  const {
+    data: contractClient,
+    isError,
+    isSuccess,
+    error: contractClientError,
+  } = useContractClientFromRpc({
+    contractId: value?.contract_id || "",
+    networkPassphrase: network.passphrase,
+    rpcUrl: network.rpcUrl,
+  });
 
   const handleContractIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // reset the error and methods
@@ -78,23 +86,24 @@ export const FetchContractMethodPickerWithQuery = ({
       return;
     }
 
-    const contractMethods: ContractFunctionMethods =
-      await fetchContractFunctionMethods({
-        contractId: value.contract_id,
-        networkPassphrase: network.passphrase,
-        rpcUrl: network.rpcUrl,
-      });
+    if (isSuccess) {
+      const contractSpec = contractClient?.spec;
+      const contractMethods = contractSpec?.funcs();
 
-    if (contractMethods.methods) {
-      setContractMethods(contractMethods.methods);
+      if (contractMethods) {
+        const methodNames = contractMethods.map((method) =>
+          method.name().toString(),
+        );
+        setContractMethods(methodNames);
+      }
+
+      if (contractSpec) {
+        setContractMethodsSpec(contractSpec);
+      }
     }
 
-    if (contractMethods.spec) {
-      setContractMethodsSpec(contractMethods.spec);
-    }
-
-    if (contractMethods.error) {
-      setFetchError(contractMethods.error);
+    if (isError) {
+      setFetchError(contractClientError.message);
     }
   };
 
