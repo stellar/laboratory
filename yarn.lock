@@ -267,19 +267,24 @@
     "@babel/helper-validator-identifier" "^7.24.7"
     to-fast-properties "^2.0.0"
 
-"@creit.tech/stellar-wallets-kit@^1.2.5":
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/@creit.tech/stellar-wallets-kit/-/stellar-wallets-kit-1.2.5.tgz#852cdb9a1c248a5e9d9e899ff7fa59d99db69848"
-  integrity sha512-PcNK//8LzMLwZgpJwrnVAKR6PRN9Idt37VgG5SzkQEyLze5G1v+T+sUAc4OBQ0jkpFqHLarpgeMjfeB21T5ZGA==
+"@creit.tech/stellar-wallets-kit@^1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@creit.tech/stellar-wallets-kit/-/stellar-wallets-kit-1.5.0.tgz#546ccdfc0da7c869fbc34c930dba074279e64090"
+  integrity sha512-H01QToFltbfhaelLYn/HQNHyeLOfYfi+u/Nc5Ak7rLtcSkBHEsRjq4lwo/lla1tbIUohndS4REq0Mncin69bUw==
   dependencies:
     "@albedo-link/intent" "0.12.0"
     "@creit.tech/xbull-wallet-connect" "0.3.0"
+    "@ledgerhq/hw-app-str" "7.0.4"
+    "@ledgerhq/hw-transport" "6.31.4"
+    "@ledgerhq/hw-transport-webusb" "6.29.4"
     "@lobstrco/signer-extension-api" "1.0.0-beta.0"
     "@ngneat/elf" "2.5.1"
     "@ngneat/elf-devtools" "1.3.0"
     "@ngneat/elf-entities" "5.0.2"
     "@ngneat/elf-persist-state" "1.2.1"
-    "@stellar/freighter-api" "3.0.0"
+    "@stellar/freighter-api" "4.0.0"
+    "@trezor/connect-plugin-stellar" "9.0.6"
+    "@trezor/connect-web" "9.4.7"
     "@walletconnect/modal" "2.6.2"
     "@walletconnect/sign-client" "2.11.2"
     buffer "6.0.3"
@@ -832,7 +837,7 @@
   resolved "https://registry.yarnpkg.com/@ledgerhq/errors/-/errors-6.19.1.tgz#d9ac45ad4ff839e468b8f63766e665537aaede58"
   integrity sha512-75yK7Nnit/Gp7gdrJAz0ipp31CCgncRp+evWt6QawQEtQKYEDfGo10QywgrrBBixeRxwnMy1DP6g2oCWRf1bjw==
 
-"@ledgerhq/hw-app-str@^7.0.4":
+"@ledgerhq/hw-app-str@7.0.4", "@ledgerhq/hw-app-str@^7.0.4":
   version "7.0.4"
   resolved "https://registry.yarnpkg.com/@ledgerhq/hw-app-str/-/hw-app-str-7.0.4.tgz#b3d4f5fb9a6000fa2d590118f123f08d202bac6b"
   integrity sha512-ArKnGCZaGnUPqoKaR9OE+ZGcGARKJLHthl/aybQWOIo952+cQpgcn0mg5yK1Amd9EiKfArCTlLJ3wAafO5d/lw==
@@ -841,7 +846,7 @@
     "@ledgerhq/hw-transport" "^6.31.4"
     bip32-path "^0.4.2"
 
-"@ledgerhq/hw-transport-webusb@^6.29.4":
+"@ledgerhq/hw-transport-webusb@6.29.4", "@ledgerhq/hw-transport-webusb@^6.29.4":
   version "6.29.4"
   resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport-webusb/-/hw-transport-webusb-6.29.4.tgz#5926421b8db4b474c7aba4851f21ddd4ad4bcc70"
   integrity sha512-HoGF1LlBT9HEGBQy2XeCHrFdv/FEOZU0+J+yfKcgAQIAiASr2MLvdzwoJbUS8h6Gn+vc+/BjzBSO3JNn7Loqbg==
@@ -851,7 +856,7 @@
     "@ledgerhq/hw-transport" "^6.31.4"
     "@ledgerhq/logs" "^6.12.0"
 
-"@ledgerhq/hw-transport@^6.31.4":
+"@ledgerhq/hw-transport@6.31.4", "@ledgerhq/hw-transport@^6.31.4":
   version "6.31.4"
   resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport/-/hw-transport-6.31.4.tgz#9b23a6de4a4caaa5c24b149c2dea8adde46f0eb1"
   integrity sha512-6c1ir/cXWJm5dCWdq55NPgCJ3UuKuuxRvf//Xs36Bq9BwkV2YaRQhZITAkads83l07NAdR16hkTWqqpwFMaI6A==
@@ -1862,10 +1867,13 @@
     react-copy-to-clipboard "^5.1.0"
     tslib "^2.7.0"
 
-"@stellar/freighter-api@3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@stellar/freighter-api/-/freighter-api-3.0.0.tgz#305854910e46c199728e34e6fe19ce2e253a86b9"
-  integrity sha512-AI1AeHnCPLMcM8d6182FScOJjCFd1tLZcNuu5M10NmtuLfNzavw+f991dWBoz6h41mOKjauIaojR+7VfU2nULg==
+"@stellar/freighter-api@4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@stellar/freighter-api/-/freighter-api-4.0.0.tgz#0557774c5bf4fa7c93396444e03827c58358d252"
+  integrity sha512-LYuVAUuvmZhzissBoAQPu2InD+R7WW1NUAJZ3iD0mPa/e5pMEhQSQUQoBWLcSpSrsQduRSDqEn5Egu8caUjLgQ==
+  dependencies:
+    buffer "^6.0.3"
+    semver "^7.6.3"
 
 "@stellar/js-xdr@^3.1.2":
   version "3.1.2"
@@ -2017,7 +2025,15 @@
     "@trezor/env-utils" "1.3.0"
     "@trezor/utils" "9.3.0"
 
-"@trezor/connect-plugin-stellar@^9.0.6":
+"@trezor/connect-common@0.2.7":
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/@trezor/connect-common/-/connect-common-0.2.7.tgz#78b2de0bf4a44649d64b4d81c88ea1f3588d9cf8"
+  integrity sha512-m9gYDY0Elitofs4k3E4uAmzgi2DtJHneb47jQVbjBZSLpzROiV7fz49aDxBnz/oPCJnIVF9Gu2OUQEh2GDeZcA==
+  dependencies:
+    "@trezor/env-utils" "1.2.1"
+    "@trezor/utils" "9.2.6"
+
+"@trezor/connect-plugin-stellar@9.0.6", "@trezor/connect-plugin-stellar@^9.0.6":
   version "9.0.6"
   resolved "https://registry.yarnpkg.com/@trezor/connect-plugin-stellar/-/connect-plugin-stellar-9.0.6.tgz#170dd27ddeb7c7912c3004dcfed4f8b4fd86ac99"
   integrity sha512-LieD7xqckUXaPIA3a5XHyAAWE4gMRru6ot+kp1J93MfLn7wnjzJ5FrH2/TXFMxXJh/o1VCX/CzT4KQmgFSQ4Lw==
@@ -2087,6 +2103,14 @@
     "@trezor/schema-utils" "1.3.0"
     protobufjs "7.4.0"
 
+"@trezor/protobuf@1.2.6":
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/@trezor/protobuf/-/protobuf-1.2.6.tgz#549dbce7f48f6423ad54b72fea3762522e61ab3c"
+  integrity sha512-QN/1T0/NgZk3r5FVGtMVL41Q3UaUdjFsE4LSxWvzreLp9T5jsHp5bL0wT6TCkocNqmKK3ijH2Ro/Dh8VOSZDbQ==
+  dependencies:
+    "@trezor/schema-utils" "1.2.3"
+    protobufjs "7.4.0"
+
 "@trezor/protocol@1.2.2":
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/@trezor/protocol/-/protocol-1.2.2.tgz#922319cb59da33f605257a59f630345b4866dcd3"
@@ -2112,6 +2136,11 @@
     long "^4.0.0"
     protobufjs "7.4.0"
     usb "^2.14.0"
+
+"@trezor/type-utils@1.1.4":
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/@trezor/type-utils/-/type-utils-1.1.4.tgz#ba47e737c2b20e2172b75fc3cf26e42fe28f7042"
+  integrity sha512-pzrIdskmTZRocHellMZxCDPQ3IpmTr749qn1xdIN29pIKuI4ms0OfNUPk/rfR4Iug0kEiWt+n+Hw7+lIBzc2LA==
 
 "@trezor/type-utils@1.1.4":
   version "1.1.4"
@@ -6211,6 +6240,11 @@ semver@^7.3.5, semver@^7.6.0:
   version "7.6.2"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.6.2.tgz#1e3b34759f896e8f14d6134732ce798aeb0c6e13"
   integrity sha512-FNAIBWCx9qcRhoHcgcJ0gvU7SN1lYU2ZXuSfl04bSC5OpvDHFyJCjdNHomPXxjQlCBU67YW64PzY7/VIEH7F2w==
+
+semver@^7.6.3:
+  version "7.7.1"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-7.7.1.tgz#abd5098d82b18c6c81f6074ff2647fd3e7220c9f"
+  integrity sha512-hlq8tAfn0m/61p4BVRcPzIGr6LKiMwo4VM6dGi6pt4qcRkmNzTcWq6eCEjEh+qXjkMDvPlOFFSGwQjoEa6gyMA==
 
 set-blocking@^2.0.0:
   version "2.0.0"
