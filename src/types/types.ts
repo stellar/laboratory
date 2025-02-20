@@ -249,7 +249,7 @@ export type SponsorshipType =
 // =============================================================================
 // Soroban Operations
 // =============================================================================
-export type SorobanOpType = "extend_footprint_ttl";
+export type SorobanOpType = "extend_footprint_ttl" | "restore_footprint";
 
 // =============================================================================
 // RPC

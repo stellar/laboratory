@@ -13,8 +13,8 @@ import { TransactionBuildParams } from "@/store/createStore";
 import { SorobanOpType, TxnOperation } from "@/types/types";
 
 export const isSorobanOperationType = (operationType: string) => {
-  // @TODO: add restore_footprint and invoke_host_function
-  return ["extend_footprint_ttl"].includes(operationType);
+  // @TODO: add invoke_host_function
+  return ["extend_footprint_ttl", "restore_footprint"].includes(operationType);
 };
 
 // https://developers.stellar.org/docs/learn/glossary#ledgerkey
@@ -70,6 +70,11 @@ export const getSorobanTxData = ({
     case "extend_footprint_ttl":
       return buildSorobanData({
         readOnlyXdrLedgerKey: [contractDataXDR],
+        resourceFee: fee,
+      });
+    case "restore_footprint":
+      return buildSorobanData({
+        readWriteXdrLedgerKey: [contractDataXDR],
         resourceFee: fee,
       });
     default:
@@ -128,7 +133,8 @@ export const buildSorobanTx = ({
           extendTo: Number(sorobanOp.params.extend_ttl_to),
           source: sorobanOp.source_account,
         });
-      // case "restore_footprint":
+      case "restore_footprint":
+        return Operation.restoreFootprint({});
       default:
         throw new Error(`Unsupported Soroban operation type: ${operationType}`);
     }

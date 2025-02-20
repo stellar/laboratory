@@ -847,10 +847,11 @@ export const Operations = () => {
           }
         >
           <option value="">Select operation type</option>
-          <option value="create_account">Create Account</option>
           <option value="extend_footprint_ttl">
             Extend Footprint TTL (Soroban)
           </option>
+          <option value="restore_footprint">Restore Footprint (Soroban)</option>
+          <option value="create_account">Create Account</option>
           <option value="payment">Payment</option>
           <option value="path_payment_strict_send">
             Path Payment Strict Send
