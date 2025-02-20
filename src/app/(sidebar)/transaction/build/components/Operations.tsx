@@ -52,8 +52,6 @@ export const Operations = () => {
 
   const [operationsError, setOperationsError] = useState<OperationError[]>([]);
 
-  console.log("[Operations] sorobanOperation: ", sorobanOperation);
-
   // For Classic Operations
   const updateOptionParamAndError = ({
     type,
