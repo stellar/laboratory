@@ -8,14 +8,14 @@ export function middleware(request: NextRequest) {
   const cspHeader = `
     default-src 'self';
     script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: 'unsafe-inline' 'unsafe-eval';
-    style-src 'self' https://fonts.googleapis.com ${
+    style-src 'self' https://fonts.googleapis.com https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs/editor/editor.main.css ${
       process.env.NODE_ENV === "production"
         ? `'nonce-${nonce}'`
         : `'unsafe-inline'`
     };
     img-src 'self' https://stellar.creit.tech/wallet-icons/ blob: data:;
     connect-src 'self' http://localhost:* https:;
-    font-src 'self' https://fonts.gstatic.com/;
+    font-src 'self' https://fonts.gstatic.com/ https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs/base/browser/ui/codicons/codicon/codicon.ttf;
     object-src 'none';
     frame-src 'self' https://connect.trezor.io/;
     base-uri 'self';

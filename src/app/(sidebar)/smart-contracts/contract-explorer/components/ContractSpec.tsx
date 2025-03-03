@@ -1,7 +1,7 @@
 import { Alert, Text } from "@stellar/design-system";
-import AceEditor from "react-ace";
 
 import { useWasmFromRpc } from "@/query/useWasmFromRpc";
+import { CodeEditor } from "@/components/CodeEditor";
 import * as StellarXdr from "@/helpers/StellarXdr";
 import { prettifyJsonString } from "@/helpers/prettifyJsonString";
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
@@ -75,21 +75,7 @@ export const ContractSpec = ({
     return "";
   };
 
-  // TODO: replace Ace Editor with Monaco Editor
   return (
-    <>
-      <AceEditor
-        mode="json"
-        value={formatSpec()}
-        // theme="github"
-        // onChange={onChange}
-        name="contract-spec-editor"
-        // editorProps={{ $blockScrolling: true }}
-        readOnly={true}
-        width="100%"
-        height="500px"
-        showPrintMargin={false}
-      />
-    </>
+    <CodeEditor title="Contract Spec" value={formatSpec()} language="json" />
   );
 };
