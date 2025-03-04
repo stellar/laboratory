@@ -16,7 +16,8 @@ export const CodeEditor = ({ title, value, language }: CodeEditorProps) => {
   const [isReady, setIsReady] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const headerHeight = headerEl?.current?.clientHeight || 0;
+  // Default header height is 43px
+  const headerHeight = headerEl?.current?.clientHeight || 43;
 
   useEffect(() => {
     if (typeof window !== "undefined" && monaco) {

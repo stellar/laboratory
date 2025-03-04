@@ -1,7 +1,10 @@
-import { Alert, Text } from "@stellar/design-system";
+import { Alert, Text, Loader } from "@stellar/design-system";
+
+import { CodeEditor } from "@/components/CodeEditor";
+import { Box } from "@/components/layout/Box";
+import { ErrorText } from "@/components/ErrorText";
 
 import { useWasmFromRpc } from "@/query/useWasmFromRpc";
-import { CodeEditor } from "@/components/CodeEditor";
 import * as StellarXdr from "@/helpers/StellarXdr";
 import { prettifyJsonString } from "@/helpers/prettifyJsonString";
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
@@ -21,12 +24,11 @@ export const ContractSpec = ({
 }) => {
   const isXdrInit = useIsXdrInit();
 
-  // TODO: manage loading and error state
   const {
     data: wasmData,
-    // error: wasmError,
-    // isLoading: isWasmLoading,
-    // isFetching: isWasmFetching,
+    error: wasmError,
+    isLoading: isWasmLoading,
+    isFetching: isWasmFetching,
   } = useWasmFromRpc({
     wasmHash,
     contractId,
@@ -50,6 +52,18 @@ export const ContractSpec = ({
         network settings in the upper right corner.
       </Alert>
     );
+  }
+
+  if (isWasmLoading || isWasmFetching) {
+    return (
+      <Box gap="sm" direction="row" justify="center">
+        <Loader />
+      </Box>
+    );
+  }
+
+  if (wasmError) {
+    return <ErrorText errorMessage={wasmError.toString()} size="sm" />;
   }
 
   const formatSpec = () => {
