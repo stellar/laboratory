@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Button, CopyText, Icon } from "@stellar/design-system";
 import MonacoEditor, { useMonaco } from "@monaco-editor/react";
-
 import { useStore } from "@/store/useStore";
 import { Box } from "@/components/layout/Box";
 
