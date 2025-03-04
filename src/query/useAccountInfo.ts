@@ -11,7 +11,7 @@ export const useAccountInfo = ({
   headers: NetworkHeaders;
 }) => {
   const query = useQuery({
-    queryKey: ["useAccountInfo", publicKey],
+    queryKey: ["accountInfo", publicKey],
     queryFn: async () => {
       try {
         const response = await fetch(`${horizonUrl}/accounts/${publicKey}`, {
