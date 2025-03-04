@@ -1,0 +1,56 @@
+@use "../../styles/utils.scss" as *;
+
+.CodeEditor {
+  border: 1px solid var(--sds-clr-gray-06);
+  border-radius: pxToRem(8px);
+  overflow: hidden;
+  height: pxToRem(400px);
+  position: relative;
+
+  &--expanded {
+    position: fixed;
+    top: 8px;
+    left: 8px;
+    width: calc(100vw - 16px);
+    height: calc(100vh - 16px);
+    z-index: var(--sds-z-index-modal);
+
+    &::after {
+      content: "";
+      display: block;
+      z-index: -1;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      // Need consistent dark color for the overlay
+      background-color: #000;
+      opacity: 0.6;
+    }
+  }
+
+  &__header {
+    background-color: var(--sds-clr-gray-03);
+    border-bottom: 1px solid var(--sds-clr-gray-06);
+    padding: pxToRem(8px) pxToRem(16px);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: pxToRem(8px);
+    flex-wrap: wrap;
+
+    &__title {
+      font-size: pxToRem(14px);
+      line-height: pxToRem(20px);
+      font-weight: var(--sds-fw-semi-bold);
+      color: var(--sds-clr-gray-12);
+      white-space: nowrap;
+    }
+  }
+
+  &__content {
+    width: 100%;
+  }
+}

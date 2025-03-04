@@ -12,7 +12,6 @@ import {
 } from "@stellar/design-system";
 import { TransactionBuilder } from "@stellar/stellar-sdk";
 import { useQueryClient } from "@tanstack/react-query";
-import { stringify } from "lossless-json";
 
 import { useLatestTxn } from "@/query/useLatestTxn";
 import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
@@ -32,6 +31,7 @@ import * as StellarXdr from "@/helpers/StellarXdr";
 import { parseToLosslessJson } from "@/helpers/parseToLosslessJson";
 import { delayedAction } from "@/helpers/delayedAction";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
+import { prettifyJsonString } from "@/helpers/prettifyJsonString";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { useCodeWrappedSetting } from "@/hooks/useCodeWrappedSetting";
@@ -120,15 +120,6 @@ export default function ViewXdr() {
   };
 
   const txn = txnFromXdr();
-
-  const prettifyJsonString = (jsonString: string): string => {
-    try {
-      const parsedJson = parseToLosslessJson(jsonString);
-      return stringify(parsedJson, null, 2) || "";
-    } catch (e) {
-      return jsonString;
-    }
-  };
 
   const renderClaimableBalanceIds = () => {
     if (!txn) {
