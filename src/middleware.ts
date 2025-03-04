@@ -8,7 +8,7 @@ export function middleware(request: NextRequest) {
   const cspHeader = `
     default-src 'self';
     script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: 'unsafe-inline' 'unsafe-eval';
-    style-src 'self' https://fonts.googleapis.com https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs/editor/editor.main.css ${
+    style-src 'self' https://fonts.googleapis.com https: ${
       process.env.NODE_ENV === "production"
         ? `'nonce-${nonce}'`
         : `'unsafe-inline'`

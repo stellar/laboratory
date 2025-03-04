@@ -128,8 +128,13 @@ export default function ContractExplorer() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            fetchContractInfo();
-            smartContracts.updateExplorerContractId(contractIdInput);
+
+            try {
+              fetchContractInfo();
+              smartContracts.updateExplorerContractId(contractIdInput);
+            } catch (e) {
+              // Do nothing
+            }
           }}
           className="ContractExplorer__form"
         >
