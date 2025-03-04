@@ -394,6 +394,23 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     params: ["revokeSponsorship"],
     requiredParams: ["revokeSponsorship"],
   },
+  restore_footprint: {
+    label: "Restore Footprint",
+    description:
+      "Builds an operation to restore the archived ledger entries specified by the ledger keys.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#restore-footprint",
+    params: ["contract", "key_xdr", "durability", "resource_fee"],
+    requiredParams: ["contract", "key_xdr", "durability", "resource_fee"],
+    defaultParams: {
+      durability: "persistent",
+    },
+    custom: {
+      durability: {
+        note: "TTL for the temporary data can be extended; however, it is unsafe to rely on the extensions to preserve data since there is always a risk of losing temporary data",
+      },
+    },
+  },
   clawback_claimable_balance: {
     label: "Clawback Claimable Balance",
     description: "Creates a clawback operation for a claimable balance.",
