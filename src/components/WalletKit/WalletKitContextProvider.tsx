@@ -8,6 +8,7 @@ import {
   XBULL_ID,
   allowAllModules,
 } from "@creit.tech/stellar-wallets-kit";
+import { LedgerModule } from "@creit.tech/stellar-wallets-kit/modules/ledger.module";
 
 import { getWalletKitNetwork } from "@/helpers/getWalletKitNetwork";
 import { localStorageSavedTheme } from "@/helpers/localStorageSavedTheme";
@@ -78,7 +79,7 @@ export const WalletKitContextProvider = ({
     return new StellarWalletsKit({
       network: networkType,
       selectedWalletId: XBULL_ID,
-      modules: allowAllModules(),
+      modules: [...allowAllModules(), new LedgerModule()],
       ...(theme && {
         buttonTheme: isDarkTheme
           ? {
