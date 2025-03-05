@@ -12,7 +12,7 @@ export const useAccountSequenceNumber = ({
   headers: NetworkHeaders;
 }) => {
   const query = useQuery({
-    queryKey: ["useAccountSequenceNumber", { publicKey }],
+    queryKey: ["accountSequenceNumber", { publicKey }],
     queryFn: async () => {
       let sourceAccount = publicKey;
 
