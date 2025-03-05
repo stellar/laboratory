@@ -34,8 +34,20 @@ export const useSignWithExtensionWallet = ({
     setErrorMsg("");
   };
 
-  const getErrorMsg = (error: any) =>
-    error?.message || error || "Something went wrong, please try again";
+  const getErrorMsg = (error: any) => {
+    const errorMessage =
+      error?.message || error || "Something went wrong, please try again";
+    const busyMessage = "is busy";
+
+    // Wallets Kit's Ledger returns a busy message as an error when the device is busy
+    // ex: TransportError: Ledger Device is busy (lock signHash)
+    // We don't want to show this error to the user
+    if (errorMessage.includes(busyMessage)) {
+      return "";
+    }
+
+    return errorMessage;
+  };
 
   const signTx = useCallback(async () => {
     if (isInProgress || !walletKitInstance?.walletKit) {
@@ -53,9 +65,12 @@ export const useSignWithExtensionWallet = ({
             networkPassphrase,
           },
         );
+        clearTimeout(timeoutId);
+
         setSignedTxXdr(result.signedTxXdr);
         setSuccessMsg(SUCCESS_MSG);
       } catch (error: any) {
+        clearTimeout(timeoutId);
         if (error?.message) {
           setErrorMsg(getErrorMsg(error));
         }
@@ -83,6 +98,7 @@ export const useSignWithExtensionWallet = ({
               );
 
               if (result?.signedTxXdr) {
+                clearTimeout(timeoutId);
                 setSignedTxXdr(result.signedTxXdr);
                 setSuccessMsg(SUCCESS_MSG);
               } else {
@@ -92,12 +108,14 @@ export const useSignWithExtensionWallet = ({
               }
             }
           } catch (error: any) {
+            clearTimeout(timeoutId);
             if (error?.message) {
               setErrorMsg(getErrorMsg(error));
             }
           }
         },
         onClosed: () => {
+          clearTimeout(timeoutId);
           setErrorMsg("The user closed the modal.");
         },
       });
