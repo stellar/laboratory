@@ -5,7 +5,7 @@ import {
   OPERATION_TRUSTLINE_CLEAR_FLAGS,
   OPERATION_TRUSTLINE_SET_FLAGS,
 } from "@/constants/settings";
-import { AnyObject } from "@/types/types";
+import { AnyObject, OperationError, TxnOperation } from "@/types/types";
 
 type TransactionOperation = {
   label: string;
@@ -18,6 +18,21 @@ type TransactionOperation = {
   };
   custom?: AnyObject;
 };
+
+export const INITIAL_OPERATION: TxnOperation = {
+  operation_type: "",
+  params: [],
+};
+
+export const EMPTY_OPERATION_ERROR: OperationError = {
+  operationType: "",
+  error: {},
+  missingFields: [],
+  customMessage: [],
+};
+
+export const SET_TRUSTLINE_FLAGS_CUSTOM_MESSAGE =
+  "At least one flag is required";
 
 export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
   create_account: {
@@ -338,9 +353,36 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
       "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#clawback",
     params: ["asset", "from", "amount"],
     requiredParams: ["asset", "from", "amount"],
+  },
+  extend_footprint_ttl: {
+    label: "Extend Footprint TTL",
+    description:
+      "Extend the time to live (TTL) of entries for Soroban smart contracts. This operation extends the TTL of the entries specified in the readOnly footprint of the transaction so that they will live at least until the extendTo ledger sequence number is reached.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#extend-footprint-ttl",
+    params: [
+      "contract",
+      "key_xdr",
+      "extend_ttl_to",
+      "durability",
+      "resource_fee",
+    ],
+    requiredParams: [
+      "contract",
+      "key_xdr",
+      "extend_ttl_to",
+      "durability",
+      "resource_fee",
+    ],
+    defaultParams: {
+      durability: "persistent",
+    },
     custom: {
-      asset: {
-        includeNative: false,
+      extend_ttl_to: {
+        note: "The ledger sequence number the entries will live until.",
+      },
+      durability: {
+        note: "TTL for the temporary data can be extended; however, it is unsafe to rely on the extensions to preserve data since there is always a risk of losing temporary data",
       },
     },
   },
@@ -351,6 +393,23 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
       "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#revoke-sponsorship",
     params: ["revokeSponsorship"],
     requiredParams: ["revokeSponsorship"],
+  },
+  restore_footprint: {
+    label: "Restore Footprint",
+    description:
+      "Builds an operation to restore the archived ledger entries specified by the ledger keys.",
+    docsUrl:
+      "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#restore-footprint",
+    params: ["contract", "key_xdr", "durability", "resource_fee"],
+    requiredParams: ["contract", "key_xdr", "durability", "resource_fee"],
+    defaultParams: {
+      durability: "persistent",
+    },
+    custom: {
+      durability: {
+        note: "TTL for the temporary data can be extended; however, it is unsafe to rely on the extensions to preserve data since there is always a risk of losing temporary data",
+      },
+    },
   },
   clawback_claimable_balance: {
     label: "Clawback Claimable Balance",

@@ -11,7 +11,7 @@ export const useLatestLedger = ({
   headers: NetworkHeaders;
 }) => {
   const query = useQuery({
-    queryKey: ["useLatestLedger"],
+    queryKey: ["latestLedger"],
     queryFn: async () => {
       const rpcServer = new StellarRpc.Server(rpcUrl, {
         headers,

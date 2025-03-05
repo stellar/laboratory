@@ -138,6 +138,13 @@ export type TxnOperation = {
   source_account?: string;
 };
 
+export type OperationError = {
+  operationType: string;
+  error: { [key: string]: string };
+  missingFields: string[];
+  customMessage: string[];
+};
+
 export type OpBuildingError = { label?: string; errorList?: string[] };
 
 export type LedgerErrorResponse = {
@@ -240,6 +247,11 @@ export type SponsorshipType =
   | "signer";
 
 // =============================================================================
+// Soroban Operations
+// =============================================================================
+export type SorobanOpType = "extend_footprint_ttl" | "restore_footprint";
+
+// =============================================================================
 // RPC
 // =============================================================================
 export type FiltersType = "system" | "contract" | "diagnostic";
@@ -250,7 +262,7 @@ export type FiltersObject = {
   topics: string[];
 };
 
-export type XdrType = "TransactionEnvelope" | "LedgerKey";
+export type XdrType = "TransactionEnvelope" | "LedgerKey" | "ScVal";
 
 export type LedgerKeyType =
   | "account"
@@ -403,6 +415,11 @@ export type ContractStorageResponseItem = {
   expired?: boolean;
 };
 
+export type ContractStorageProcessedItem<T> = T & {
+  keyJson?: AnyObject | null;
+  valueJson?: AnyObject | null;
+};
+
 // =============================================================================
 // Data table
 // =============================================================================
@@ -412,6 +429,7 @@ export type DataTableHeader = {
   id: string;
   value: string;
   isSortable?: boolean;
+  filter?: string[];
 };
 
 export type DataTableCell = {

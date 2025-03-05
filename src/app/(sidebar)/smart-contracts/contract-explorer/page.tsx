@@ -146,7 +146,9 @@ export default function ContractExplorer() {
                 resetFetchContractInfo();
                 setContractIdInput(e.target.value);
 
-                const error = validate.getContractIdError(e.target.value);
+                const error =
+                  e.target.value && validate.getContractIdError(e.target.value);
+
                 setContractIdInputError(error || "");
               }}
               note={

@@ -8,12 +8,19 @@ import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 
 import { Params } from "./components/Params";
 import { Operations } from "./components/Operations";
-import { TransactionXdr } from "./components/TransactionXdr";
+import { ClassicTransactionXdr } from "./components/ClassicTransactionXdr";
+import { SorobanTransactionXdr } from "./components/SorobanTransactionXdr";
 
 export default function BuildTransaction() {
   const { transaction } = useStore();
+
+  // For Classic
   const { params: paramsError, operations: operationsError } =
     transaction.build.error;
+
+  // For Soroban
+  const { soroban } = transaction.build;
+  const IS_SOROBAN_TX = Boolean(soroban.operation.operation_type);
 
   const renderError = () => {
     if (paramsError.length > 0 || operationsError.length > 0) {
@@ -80,7 +87,7 @@ export default function BuildTransaction() {
 
       <>{renderError()}</>
 
-      <TransactionXdr />
+      {IS_SOROBAN_TX ? <SorobanTransactionXdr /> : <ClassicTransactionXdr />}
     </Box>
   );
 }

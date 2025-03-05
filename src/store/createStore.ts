@@ -109,13 +109,22 @@ export interface Store {
   // Transaction
   transaction: {
     build: {
+      // classic
+      classic: {
+        operations: TxnOperation[];
+        xdr: string;
+      };
+      // soroban
+      soroban: {
+        operation: TxnOperation;
+        xdr: string;
+      };
+      // used for both classic and soroban
       params: TransactionBuildParams;
-      operations: TxnOperation[];
       error: {
         params: string[];
         operations: OpBuildingError[];
       };
-      xdr: string;
       isValid: {
         params: boolean;
         operations: boolean;
@@ -133,7 +142,7 @@ export interface Store {
       triggerOnLaunch?: boolean;
     };
     feeBump: FeeBumpParams;
-    // [Transaction] Build Transaction actions
+    // [Transaction] Build Classic Transaction actions
     updateBuildParams: (params: TransactionBuildParamsObj) => void;
     updateBuildOperations: (operations: TxnOperation[]) => void;
     updateBuildXdr: (xdr: string) => void;
@@ -152,6 +161,10 @@ export interface Store {
     setBuildParamsError: (error: string[]) => void;
     setBuildOperationsError: (error: OpBuildingError[]) => void;
     resetBuildParams: () => void;
+    // [Transaction] Build Soroban Transaction actions
+    updateSorobanBuildOperation: (operation: TxnOperation) => void;
+    updateSorobanBuildXdr: (xdr: string) => void;
+    // [Transaction] Both Classic & Soroban Transaction actions
     resetBuild: () => void;
     // [Transaction] Sign Transaction actions
     updateSignActiveView: (viewId: SignTxActiveView) => void;
@@ -216,15 +229,27 @@ const initTransactionParamsState = {
   memo: {},
 };
 
+const initTransactionOperationState = {
+  operation_type: "",
+  params: {},
+  source_account: "",
+};
+
 const initTransactionState = {
   build: {
+    classic: {
+      operations: [],
+      xdr: "",
+    },
+    soroban: {
+      operation: initTransactionOperationState,
+      xdr: "",
+    },
     params: initTransactionParamsState,
-    operations: [],
     error: {
       params: [],
       operations: [],
     },
-    xdr: "",
     isValid: {
       params: false,
       operations: false,
@@ -394,6 +419,7 @@ export const createStore = (options: CreateStoreOptions) =>
         // Transaction
         transaction: {
           ...initTransactionState,
+          // Classic Build
           updateBuildParams: (params: TransactionBuildParamsObj) =>
             set((state) => {
               state.transaction.build.params = {
@@ -403,15 +429,15 @@ export const createStore = (options: CreateStoreOptions) =>
             }),
           updateBuildOperations: (operations) =>
             set((state) => {
-              state.transaction.build.operations = operations;
+              state.transaction.build.classic.operations = operations;
             }),
           updateBuildXdr: (xdr) =>
             set((state) => {
-              state.transaction.build.xdr = xdr;
+              state.transaction.build.classic.xdr = xdr;
             }),
           updateBuildSingleOperation: (index, operation) =>
             set((state) => {
-              state.transaction.build.operations[index] = operation;
+              state.transaction.build.classic.operations[index] = operation;
             }),
           updateBuildIsValid: ({
             params,
@@ -447,10 +473,21 @@ export const createStore = (options: CreateStoreOptions) =>
             set((state) => {
               state.transaction.build.params = initTransactionParamsState;
             }),
+          // Soroban Build
+          updateSorobanBuildOperation: (operation: TxnOperation) =>
+            set((state) => {
+              state.transaction.build.soroban.operation = operation;
+            }),
+          updateSorobanBuildXdr: (xdr: string) =>
+            set((state) => {
+              state.transaction.build.soroban.xdr = xdr;
+            }),
+          // Classic & Soroban
           resetBuild: () =>
             set((state) => {
               state.transaction.build = initTransactionState.build;
             }),
+          // Sign
           updateSignActiveView: (viewId: SignTxActiveView) =>
             set((state) => {
               state.transaction.sign.activeView = viewId;
@@ -558,11 +595,17 @@ export const createStore = (options: CreateStoreOptions) =>
             },
             transaction: {
               build: {
+                classic: {
+                  operations: true,
+                  xdr: false,
+                },
+                soroban: {
+                  operation: true,
+                  xdr: false,
+                },
                 params: true,
-                operations: true,
                 error: false,
                 isValid: true,
-                xdr: false,
               },
               sign: {
                 activeView: true,
