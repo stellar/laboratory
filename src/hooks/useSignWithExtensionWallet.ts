@@ -65,12 +65,10 @@ export const useSignWithExtensionWallet = ({
             networkPassphrase,
           },
         );
-        clearTimeout(timeoutId);
 
         setSignedTxXdr(result.signedTxXdr);
         setSuccessMsg(SUCCESS_MSG);
       } catch (error: any) {
-        clearTimeout(timeoutId);
         if (error?.message) {
           setErrorMsg(getErrorMsg(error));
         }
@@ -98,7 +96,6 @@ export const useSignWithExtensionWallet = ({
               );
 
               if (result?.signedTxXdr) {
-                clearTimeout(timeoutId);
                 setSignedTxXdr(result.signedTxXdr);
                 setSuccessMsg(SUCCESS_MSG);
               } else {
@@ -108,14 +105,12 @@ export const useSignWithExtensionWallet = ({
               }
             }
           } catch (error: any) {
-            clearTimeout(timeoutId);
             if (error?.message) {
               setErrorMsg(getErrorMsg(error));
             }
           }
         },
         onClosed: () => {
-          clearTimeout(timeoutId);
           setErrorMsg("The user closed the modal.");
         },
       });
