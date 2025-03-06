@@ -108,14 +108,14 @@ test.describe("Sign Transaction Page", () => {
 
     await expect(successSecretKeyMsg).toBeVisible();
 
-    const firstSignedResponse = await signedXdr.getByText(
+    const firstSignedResponse = signedXdr.getByText(
       "AAAAAgAAAADJrq4b4AopDZibkeBWpDxuWKUcY4FUUNQdIEF3Nm9dkQAAAGQAAAIiAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAQAAAACXlGN76T6NQcaUJxbEkH3mi1HHWsHnLqMDdlLl9NlJgQAAAAAAAAAABfXhAAAAAAAAAAABjc9OtQAAAEBrpI8Q90yqEqjcLSubVj5nqtyt53bpVzi8Bzikps4xuom0xHQgrM6MsQS503ortwLcYOw0gyLPyst7J88ZDoQJ",
     );
 
     await expect(firstSignedResponse).toBeVisible();
 
     /*** Signatures: Hardware Wallet ***/
-    const bipPathInput = await hardwareView.getByPlaceholder(
+    const bipPathInput = hardwareView.getByPlaceholder(
       "BIP path in format: 44'/148'/0'",
     );
 
@@ -162,7 +162,7 @@ test.describe("Sign Transaction Page", () => {
     ).toBeVisible();
 
     // Wallet Extension to display 6 wallets
-    await expect(page.getByRole("listitem")).toHaveCount(6);
+    await expect(page.getByRole("listitem")).toHaveCount(7);
 
     // Exit out of the wallet extension modal
     await page.click("body", { position: { x: 10, y: 10 } });

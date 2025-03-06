@@ -4,10 +4,16 @@ import { createContext, useEffect, useMemo } from "react";
 import { useStore } from "@/store/useStore";
 
 import {
+  AlbedoModule,
+  FreighterModule,
+  HanaModule,
+  LobstrModule,
+  RabetModule,
   StellarWalletsKit,
   XBULL_ID,
-  allowAllModules,
+  xBullModule,
 } from "@creit.tech/stellar-wallets-kit";
+import { LedgerModule } from "@creit.tech/stellar-wallets-kit/modules/ledger.module";
 
 import { getWalletKitNetwork } from "@/helpers/getWalletKitNetwork";
 import { localStorageSavedTheme } from "@/helpers/localStorageSavedTheme";
@@ -78,7 +84,15 @@ export const WalletKitContextProvider = ({
     return new StellarWalletsKit({
       network: networkType,
       selectedWalletId: XBULL_ID,
-      modules: allowAllModules(),
+      modules: [
+        new AlbedoModule(),
+        new xBullModule(),
+        new FreighterModule(),
+        new LobstrModule(),
+        new RabetModule(),
+        new HanaModule(),
+        new LedgerModule(),
+      ],
       ...(theme && {
         buttonTheme: isDarkTheme
           ? {
