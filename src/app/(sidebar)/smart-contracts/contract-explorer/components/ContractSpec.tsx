@@ -1,28 +1,38 @@
-import { Alert, Text, Loader } from "@stellar/design-system";
+import { useCallback, useEffect } from "react";
+import { Alert, Text, Loader, Button, Icon } from "@stellar/design-system";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { CodeEditor } from "@/components/CodeEditor";
 import { Box } from "@/components/layout/Box";
 import { ErrorText } from "@/components/ErrorText";
 
 import { useWasmFromRpc } from "@/query/useWasmFromRpc";
+import { useSEContractWasmBinary } from "@/query/external/useSEContractWasmBinary";
+import { useIsXdrInit } from "@/hooks/useIsXdrInit";
+
 import * as StellarXdr from "@/helpers/StellarXdr";
 import { prettifyJsonString } from "@/helpers/prettifyJsonString";
-import { useIsXdrInit } from "@/hooks/useIsXdrInit";
+import { delayedAction } from "@/helpers/delayedAction";
+
+import { NetworkType } from "@/types/types";
 
 export const ContractSpec = ({
   contractId,
+  networkId,
   networkPassphrase,
   rpcUrl,
   wasmHash,
   isActive,
 }: {
   contractId: string;
+  networkId: NetworkType;
   networkPassphrase: string;
   rpcUrl: string;
   wasmHash: string;
   isActive: boolean;
 }) => {
   const isXdrInit = useIsXdrInit();
+  const queryClient = useQueryClient();
 
   const {
     data: wasmData,
@@ -36,6 +46,47 @@ export const ContractSpec = ({
     rpcUrl,
     isActive: Boolean(isActive && rpcUrl && wasmHash),
   });
+
+  const {
+    data: wasmBinary,
+    error: wasmBinaryError,
+    isLoading: isWasmBinaryLoading,
+    isFetching: isWasmBinaryFetching,
+    refetch: fetchWasmBinary,
+  } = useSEContractWasmBinary({ wasmHash, networkId });
+
+  const resetWasmBlob = useCallback(() => {
+    queryClient.resetQueries({
+      queryKey: ["useSEContractWasmBinary", networkId, wasmHash],
+    });
+  }, [networkId, queryClient, wasmHash]);
+
+  useEffect(() => {
+    if (wasmBinary) {
+      // Create blob
+      const blob = new Blob([wasmBinary], {
+        type: "application/octet-stream",
+      });
+
+      // Create a link element and trigger a download
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.setAttribute("download", `${wasmHash}.wasm`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  }, [wasmBinary, wasmHash]);
+
+  useEffect(() => {
+    if (wasmBinaryError) {
+      // Automatically clear error message after 5 sec
+      delayedAction({
+        action: resetWasmBlob,
+        delay: 5000,
+      });
+    }
+  }, [resetWasmBlob, wasmBinaryError]);
 
   if (!wasmHash) {
     return (
@@ -90,6 +141,38 @@ export const ContractSpec = ({
   };
 
   return (
-    <CodeEditor title="Contract Spec" value={formatSpec()} language="json" />
+    <Box gap="lg">
+      <CodeEditor title="Contract Spec" value={formatSpec()} language="json" />
+
+      <Box gap="xs" direction="column" align="end">
+        <Button
+          variant="tertiary"
+          size="sm"
+          icon={<Icon.Download01 />}
+          iconPosition="left"
+          onClick={(e) => {
+            e.preventDefault();
+
+            if (wasmBinaryError) {
+              resetWasmBlob();
+            }
+
+            delayedAction({
+              action: fetchWasmBinary,
+              delay: wasmBinaryError ? 500 : 0,
+            });
+          }}
+          isLoading={isWasmBinaryLoading || isWasmBinaryFetching}
+        >
+          Download WASM
+        </Button>
+
+        <>
+          {wasmBinaryError ? (
+            <ErrorText errorMessage={wasmBinaryError.toString()} size="sm" />
+          ) : null}
+        </>
+      </Box>
+    </Box>
   );
 };
