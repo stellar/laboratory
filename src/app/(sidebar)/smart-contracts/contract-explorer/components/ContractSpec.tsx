@@ -114,7 +114,26 @@ export const ContractSpec = ({
   }
 
   if (wasmError) {
-    return <ErrorText errorMessage={wasmError.toString()} size="sm" />;
+    const errorString = wasmError.toString();
+    let networkMessage = null;
+
+    if (errorString.toLowerCase().includes("network error")) {
+      networkMessage = (
+        <Alert variant="warning" placement="inline" title="Attention">
+          There may be an issue with the RPC server. You can change it in the
+          network settings in the upper right corner.
+        </Alert>
+      );
+    }
+
+    return (
+      <Box gap="lg">
+        <>
+          <ErrorText errorMessage={errorString} size="sm" />
+          {networkMessage}
+        </>
+      </Box>
+    );
   }
 
   const formatSpec = () => {
