@@ -18,7 +18,8 @@ import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 
 const isAllParamsExceptResourceFeeValid = (params: Record<string, any>) => {
   // Create a copy of params without resource_fee
-  const { ...requiredParams } = params;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { resource_fee, ...requiredParams } = params;
 
   // Check if all remaining fields have truthy values
   return Object.values(requiredParams).every((value) => Boolean(value));
@@ -65,6 +66,11 @@ export const ResourceFeePickerWithQuery = ({
   const [errorMessage, setErrorMessage] = useState<string | undefined>(
     undefined,
   );
+
+  useEffect(() => {
+    // Reset error message when operation params change
+    setErrorMessage(undefined);
+  }, [soroban.operation]);
 
   // operation.params.resource_fee is required for submitting; however,
   // we don't check for it here in case user doesn't have one and we still want to simulate

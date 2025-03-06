@@ -1391,7 +1391,8 @@ test.describe("Build Transaction Page", () => {
           isSorobanOp: true,
           label: "Resource Fee (in stroops)",
           value: "aaa",
-          errorMessage: "Expected a whole number.",
+          errorMessage:
+            "Expected a positive number with a period for the decimal point.",
         });
       });
 
@@ -1400,6 +1401,132 @@ test.describe("Build Transaction Page", () => {
         const { operation_0 } = await selectOperationType({
           page,
           opType: "extend_footprint_ttl",
+        });
+        // we are going from classic operation to soroban operation
+        // so the classic operation should not be visible
+        await expect(operation_0).not.toBeVisible();
+
+        const soroban_operation = page.getByTestId(
+          "build-soroban-transaction-operation",
+        );
+
+        // Verify warning message about one operation limit
+        await expect(
+          page.getByText(
+            "Note that Soroban transactions can only contain one operation per transaction.",
+          ),
+        ).toBeVisible();
+
+        // Soroban Operation only allows one operation
+        // Add Operation button should be disabled
+        await expect(page.getByText("Add Operation")).toBeDisabled();
+
+        // Select Classic Operation
+        await soroban_operation.getByLabel("Operation type").selectOption({
+          value: "payment",
+        });
+
+        const classicOperation = page.getByTestId(
+          "build-transaction-operation-0",
+        );
+
+        await expect(classicOperation).toBeVisible();
+
+        await expect(page.getByText("Add Operation")).toBeVisible();
+      });
+    });
+
+    // Soroban Restore Footprint
+    test.describe("Soroban Restore Footprint", () => {
+      test("Happy path", async ({ page }) => {
+        const { operation_0 } = await selectOperationType({
+          page,
+          opType: "restore_footprint",
+        });
+        // we are going from classic operation to soroban operation
+        // so the classic operation should not be visible
+        await expect(operation_0).not.toBeVisible();
+
+        const soroban_operation = page.getByTestId(
+          "build-soroban-transaction-operation",
+        );
+
+        // Verify warning message about one operation limit
+        await expect(
+          page.getByText(
+            "Note that Soroban transactions can only contain one operation per transaction.",
+          ),
+        ).toBeVisible();
+
+        // Soroban Operation only allows one operation
+        // Add Operation button should be disabled
+        await expect(page.getByText("Add Operation")).toBeDisabled();
+
+        // Fill in required fields
+        await soroban_operation
+          .getByLabel("Contract ID")
+          .fill("CAQP53Z2GMZ6WVOKJWXMCVDLZYJ7GYVMWPAMWACPLEZRF2UEZW3B636S");
+        await soroban_operation
+          .getByLabel("Key ScVal in XDR")
+          .fill(
+            "AAAAEAAAAAEAAAACAAAADwAAAAdDb3VudGVyAAAAABIAAAAAAAAAAH5MvQcuICNqcxGfJ6rKFvwi77h3WDZ2XVzA+LVRkCKD",
+          );
+        await soroban_operation
+          .getByLabel("Durability")
+          .selectOption({ value: "persistent" });
+        await soroban_operation
+          .getByLabel("Resource Fee (in stroops)")
+          .fill("46684");
+
+        await testOpSuccessHashAndXdr({
+          isSorobanOp: true,
+          page,
+          hash: "232c61d2e07fae61a09ffe12102f13c79c86dadbf0c49f8237fcbe0a2231921c",
+          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgAAtsAAD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAGgAAAAAAAAABAAAAAAAAAAAAAAABAAAABgAAAAEg/u86MzPrVcpNrsFUa84T82Kss8DLAE9ZMxLqhM22HwAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAAB+TL0HLiAjanMRnyeqyhb8Iu+4d1g2dl1cwPi1UZAigwAAAAEAAAAAAAAAAAAAAAAAAAAAAAC2XAAAAAA=",
+        });
+      });
+
+      test("Validation", async ({ page }) => {
+        const { operation_0 } = await selectOperationType({
+          page,
+          opType: "restore_footprint",
+        });
+
+        await expect(operation_0).not.toBeVisible();
+
+        await testInputError({
+          page,
+          isSorobanOp: true,
+          label: "Contract ID",
+          value: "aaa",
+          errorMessage:
+            "Invalid contract ID. Please enter a valid contract ID.",
+        });
+
+        await testInputError({
+          page,
+          isSorobanOp: true,
+          label: "Contract ID",
+          value: "CAQP53Z2GMZ6WVOKJWXMCVDL",
+          errorMessage:
+            "Invalid contract ID. Please enter a valid contract ID.",
+        });
+
+        await testInputError({
+          page,
+          isSorobanOp: true,
+          label: "Resource Fee (in stroops)",
+          value: "aaa",
+          errorMessage:
+            "Expected a positive number with a period for the decimal point.",
+        });
+      });
+
+      test("Check rendering between classic and soroban", async ({ page }) => {
+        // Select Soroban Operation
+        const { operation_0 } = await selectOperationType({
+          page,
+          opType: "restore_footprint",
         });
         // we are going from classic operation to soroban operation
         // so the classic operation should not be visible
