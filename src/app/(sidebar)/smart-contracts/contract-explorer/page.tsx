@@ -60,7 +60,7 @@ export default function ContractExplorer() {
 
   const renderContractInfoContent = () => {
     return contractInfoData ? (
-      <ContractInfo infoData={contractInfoData} networkId={network.id} />
+      <ContractInfo infoData={contractInfoData} network={network} />
     ) : null;
   };
 
