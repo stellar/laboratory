@@ -13,6 +13,7 @@ import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import * as StellarXdr from "@/helpers/StellarXdr";
 import { prettifyJsonString } from "@/helpers/prettifyJsonString";
 import { delayedAction } from "@/helpers/delayedAction";
+import { downloadFile } from "@/helpers/downloadFile";
 
 import { NetworkType } from "@/types/types";
 
@@ -63,18 +64,12 @@ export const ContractSpec = ({
 
   useEffect(() => {
     if (wasmBinary) {
-      // Create blob
-      const blob = new Blob([wasmBinary], {
-        type: "application/octet-stream",
+      downloadFile({
+        value: wasmBinary,
+        fileType: "application/octet-stream",
+        fileName: wasmHash,
+        fileExtension: "wasm",
       });
-
-      // Create a link element and trigger a download
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.setAttribute("download", `${wasmHash}.wasm`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
     }
   }, [wasmBinary, wasmHash]);
 
@@ -161,7 +156,12 @@ export const ContractSpec = ({
 
   return (
     <Box gap="lg">
-      <CodeEditor title="Contract Spec" value={formatSpec()} language="json" />
+      <CodeEditor
+        title="Contract Spec"
+        value={formatSpec()}
+        language="json"
+        fileName={`${wasmHash}-contract-spec`}
+      />
 
       <Box gap="xs" direction="column" align="end">
         <Button
