@@ -40,7 +40,7 @@ export const FetchContractMethodPickerWithQuery = ({
   const [contractMethodsSpec, setContractMethodsSpec] = useState<Spec>(
     {} as Spec,
   );
-  const [fetchError, setFetchError] = useState<string>("");
+  const [fetchError, setFetchError] = useState<string | null>(null);
 
   const {
     data: contractClient,
