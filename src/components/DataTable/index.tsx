@@ -449,7 +449,7 @@ export const DataTable = <T extends AnyObject>({
               <Button
                 variant="tertiary"
                 size="sm"
-                icon={<Icon.AlignBottom01 />}
+                icon={<Icon.Download01 />}
                 iconPosition="left"
                 onClick={handleExportToCsv}
               >

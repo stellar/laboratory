@@ -244,6 +244,7 @@ export const ContractInfo = ({
                 <ContractSpec
                   wasmHash={infoData.wasm || ""}
                   contractId={infoData.account || ""}
+                  networkId={network.id}
                   networkPassphrase={network.passphrase}
                   rpcUrl={network.rpcUrl}
                   isActive={activeTab === "contract-contract-spec"}

@@ -1,14 +1,26 @@
 import { useEffect, useRef, useState } from "react";
 import { Button, CopyText, Icon } from "@stellar/design-system";
 import MonacoEditor, { useMonaco } from "@monaco-editor/react";
+
 import { useStore } from "@/store/useStore";
 import { Box } from "@/components/layout/Box";
+import { downloadFile } from "@/helpers/downloadFile";
 
 import "./styles.scss";
 
-type CodeEditorProps = { title: string; value: string; language: "json" };
+type CodeEditorProps = {
+  title: string;
+  value: string;
+  language: "json";
+  fileName?: string;
+};
 
-export const CodeEditor = ({ title, value, language }: CodeEditorProps) => {
+export const CodeEditor = ({
+  title,
+  value,
+  language,
+  fileName,
+}: CodeEditorProps) => {
   const { theme } = useStore();
   const monaco = useMonaco();
   const headerEl = useRef<HTMLDivElement | null>(null);
@@ -37,6 +49,27 @@ export const CodeEditor = ({ title, value, language }: CodeEditorProps) => {
 
         {/* Actions */}
         <Box gap="xs" direction="row" align="center" justify="end">
+          <>
+            {fileName ? (
+              <Button
+                variant="tertiary"
+                size="sm"
+                icon={<Icon.Download01 />}
+                title="Download"
+                onClick={(e) => {
+                  e.preventDefault();
+
+                  downloadFile({
+                    value,
+                    fileType: "application/json",
+                    fileName,
+                    fileExtension: language,
+                  });
+                }}
+              ></Button>
+            ) : null}
+          </>
+
           <CopyText textToCopy={value}>
             <Button
               variant="tertiary"
