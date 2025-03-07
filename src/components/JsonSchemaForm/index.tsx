@@ -300,8 +300,7 @@ export const JsonSchemaForm = ({
       // prop.type
       case "array":
         // if the array has items, render the items
-        if (Array.isArray(prop.items)) {
-          // @todo add minLength and maxLength
+        if (Array.isArray(prop.items) && prop.items.length > 0) {
           return prop.items.map((item: any, index: number) =>
             renderComponent(key, item, index),
           );
