@@ -6,11 +6,13 @@ import {
   getDereferenceSchema,
   DereferencedSchema,
 } from "@/helpers/dereferenceSchema";
+import { removeLeadingZeroes } from "@/helpers/removeLeadingZeroes";
 
 import { Box } from "@/components/layout/Box";
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 import { LabelHeading } from "@/components/LabelHeading";
-import { SorobanInvokeValue } from "@/types/types";
+import { AnyObject, SorobanInvokeValue } from "@/types/types";
+import { validate } from "@/validate";
 
 export const JsonSchemaForm = ({
   schema,
@@ -45,6 +47,8 @@ export const JsonSchemaForm = ({
     });
   };
 
+  const [formError, setFormError] = useState<AnyObject>({});
+
   // key: argument label
   // prop: argument object
   //   // value: argument value that includes the key
@@ -66,91 +70,260 @@ export const JsonSchemaForm = ({
     const specType = getSpecType(prop);
     const label = index !== undefined ? `${key}-${index + 1}` : key;
 
-    if (getSpecType(prop)) {
-      switch (specType) {
-        case "Address":
-          return (
-            <Input
-              id={key}
-              key={label}
-              fieldSize="md"
-              label={label}
-              value={value.data[label] || ""}
-              error={""}
-              onChange={(e) => {
-                handleChange(label, e.target.value);
-              }}
-              infoText={prop.description || ""}
-              leftElement={<Icon.User03 />}
-            />
-          );
-        case "ScString":
-        case "ScSymbol":
-        case "DataUrl":
-          return (
-            <Input
-              id={key}
-              key={label}
-              fieldSize="md"
-              label={label}
-              value={value.data[label] || ""}
-              error={""}
-              onChange={(e) => {
-                handleChange(label, e.target.value);
-              }}
-            />
-          );
-        case "U32":
-        case "U64":
-        case "U128":
-        case "U256":
-          return (
-            <PositiveIntPicker
-              id={key}
-              key={label}
-              label={label}
-              value={value.data[label] || ""}
-              error={""}
-              onChange={(e) => {
-                handleChange(label, e.target.value);
-              }}
-            />
-          );
+    switch (specType) {
+      case "Address":
+        return (
+          <Input
+            id={key}
+            key={label}
+            fieldSize="md"
+            label={label}
+            value={value.data[label] || ""}
+            error={formError[label] || ""}
+            onChange={(e) => {
+              handleChange(label, e.target.value);
 
-        case "I32":
-        case "I64":
-        case "I128":
-        case "I256":
-          return null;
-        // prop.type
-        case "array":
-          // if the array has items, render the items
-          if (Array.isArray(prop.items)) {
-            // @todo add minLength and maxLength
-            return prop.items.map((item: any, index: number) =>
-              renderComponent(key, item, index),
-            );
-          }
-          // render a button to add an item to the array
-          return (
-            <Box gap="sm" key={label}>
-              <LabelHeading size="md">{label}</LabelHeading>
-              <div>
-                <Button
-                  variant="secondary"
-                  size="md"
-                  onClick={() => {}}
-                  type="button"
-                >
-                  Add {label}
-                </Button>
-              </div>
-            </Box>
-          );
+              // validate the value
+              const error = validate.getPublicKeyError(e.target.value);
+              setFormError({
+                ...formError,
+                [label]: error,
+              });
+            }}
+            infoText={prop.description || ""}
+            leftElement={<Icon.User03 />}
+            note={<>{prop.description}</>}
+          />
+        );
+      case "ScString":
+      case "ScSymbol":
+        return (
+          <Input
+            id={key}
+            key={label}
+            fieldSize="md"
+            label={label}
+            value={value.data[label] || ""}
+            error={""}
+            onChange={(e) => {
+              handleChange(label, e.target.value);
+            }}
+            note={<>{prop.description}</>}
+          />
+        );
+      case "DataUrl":
+        return (
+          <Input
+            id={key}
+            key={label}
+            fieldSize="md"
+            label={label}
+            value={value.data[label] || ""}
+            error={formError[label] || ""}
+            onChange={(e) => {
+              handleChange(label, e.target.value);
 
-        default:
-          return null;
-      }
+              // validate the value
+              const error = validate.getDataUrlError(e.target.value);
+              setFormError({
+                ...formError,
+                [label]: error,
+              });
+            }}
+          />
+        );
+      case "U32":
+        return (
+          <PositiveIntPicker
+            id={key}
+            key={label}
+            label={label}
+            value={removeLeadingZeroes(value.data[label] || "")}
+            error={formError[label] || ""}
+            onChange={(e) => {
+              handleChange(label, e.target.value);
+
+              // validate the value
+              const error = validate.getU32Error(e.target.value);
+              setFormError({
+                ...formError,
+                [label]: error,
+              });
+            }}
+          />
+        );
+      case "U64":
+        return (
+          <PositiveIntPicker
+            id={key}
+            key={label}
+            label={label}
+            value={removeLeadingZeroes(value.data[label] || "")}
+            error={formError[label] || ""}
+            onChange={(e) => {
+              handleChange(label, e.target.value);
+
+              // validate the value
+              const error = validate.getU64Error(e.target.value);
+              setFormError({
+                ...formError,
+                [label]: error,
+              });
+            }}
+          />
+        );
+      case "U128":
+        return (
+          <PositiveIntPicker
+            id={key}
+            key={label}
+            label={label}
+            value={removeLeadingZeroes(value.data[label] || "")}
+            error={formError[label] || ""}
+            onChange={(e) => {
+              handleChange(label, e.target.value);
+
+              // validate the value
+              const error = validate.getU128Error(e.target.value);
+              setFormError({
+                ...formError,
+                [label]: error,
+              });
+            }}
+          />
+        );
+      case "U256":
+        return (
+          <PositiveIntPicker
+            id={key}
+            key={label}
+            label={label}
+            value={value.data[label] || ""}
+            error={formError[label] || ""}
+            onChange={(e) => {
+              handleChange(label, e.target.value);
+
+              // validate the value
+              const error = validate.getU256Error(e.target.value);
+              setFormError({
+                ...formError,
+                [label]: error,
+              });
+            }}
+          />
+        );
+
+      case "I32":
+        return (
+          <Input
+            id={key}
+            key={label}
+            fieldSize="md"
+            label={label}
+            value={value.data[label] || ""}
+            error={formError[label] || ""}
+            onChange={(e) => {
+              handleChange(label, e.target.value);
+
+              // validate the value
+              const error = validate.getI32Error(e.target.value);
+              setFormError({
+                ...formError,
+                [label]: error,
+              });
+            }}
+          />
+        );
+      case "I64":
+        return (
+          <Input
+            id={key}
+            key={label}
+            fieldSize="md"
+            label={label}
+            value={value.data[label] || ""}
+            error={formError[label] || ""}
+            onChange={(e) => {
+              handleChange(label, e.target.value);
+
+              // validate the value
+              const error = validate.getI64Error(e.target.value);
+              setFormError({
+                ...formError,
+                [label]: error,
+              });
+            }}
+          />
+        );
+      case "I128":
+        return (
+          <Input
+            id={key}
+            key={label}
+            fieldSize="md"
+            label={label}
+            value={value.data[label] || ""}
+            error={formError[label] || ""}
+            onChange={(e) => {
+              handleChange(label, e.target.value);
+
+              // validate the value
+              const error = validate.getI128Error(e.target.value);
+              setFormError({
+                ...formError,
+                [label]: error,
+              });
+            }}
+          />
+        );
+      case "I256":
+        return (
+          <Input
+            id={key}
+            key={label}
+            fieldSize="md"
+            label={label}
+            value={value.data[label] || ""}
+            error={formError[label] || ""}
+            onChange={(e) => {
+              handleChange(label, e.target.value);
+
+              // validate the value
+              const error = validate.getI256Error(e.target.value);
+              setFormError({
+                ...formError,
+                [label]: error,
+              });
+            }}
+          />
+        );
+      // prop.type
+      case "array":
+        // if the array has items, render the items
+        if (Array.isArray(prop.items) && prop.items.length > 0) {
+          return prop.items.map((item: any, index: number) =>
+            renderComponent(key, item, index),
+          );
+        }
+        // render a button to add an item to the array
+        return (
+          <Box gap="sm" key={label}>
+            <LabelHeading size="md">{label}</LabelHeading>
+            <div>
+              <Button
+                variant="secondary"
+                size="md"
+                onClick={() => {}}
+                type="button"
+              >
+                Add {label}
+              </Button>
+            </div>
+          </Box>
+        );
+
+      default:
+        return null;
     }
   };
 

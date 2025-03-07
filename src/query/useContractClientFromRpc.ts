@@ -22,7 +22,9 @@ export const useContractClientFromRpc = ({
 
         return client;
       } catch (e: any) {
-        throw `error while fetching contract information: ${e?.message ? e?.message : e}`;
+        throw new Error(
+          `error while fetching contract information: ${e?.message || e}`,
+        );
       }
     },
     enabled: !!contractId && !!networkPassphrase && !!rpcUrl,
