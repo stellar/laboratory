@@ -1,6 +1,5 @@
 // Primitive Definition I32 comes from
 // https://github.com/stellar/js-stellar-sdk/blob/master/src/contract/spec.ts#L105-L109
-
 export const getI32Error = (value: string) => {
   try {
     const num = BigInt(value);
