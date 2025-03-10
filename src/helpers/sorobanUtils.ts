@@ -131,6 +131,14 @@ export const buildSorobanTx = ({
           source: sorobanOp.source_account,
         });
       // case "restore_footprint":
+      case "invoke_contract_function":
+        return Operation.invokeContractFunction({
+          contract: sorobanOp.params.contract_address,
+          function: sorobanOp.params.function_name,
+          args: sorobanOp.params.function_args,
+          auth: [],
+          source: sorobanOp.source_account,
+        });
       default:
         throw new Error(`Unsupported Soroban operation type: ${operationType}`);
     }

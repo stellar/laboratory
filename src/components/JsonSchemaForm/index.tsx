@@ -38,6 +38,17 @@ export const JsonSchemaForm = ({
   }, [schema, name]);
 
   const handleChange = (key: string, newVal: string) => {
+    // @TODO
+    // onChange({
+    //   ...value,
+    //   data: {
+    //     ...value.data,
+    //     [key]: {
+    //       value: newVal,
+    //       type: dereferencedSchema.properties[key],
+    //     },
+    //   },
+    // });
     onChange({
       ...value,
       data: {
@@ -141,7 +152,7 @@ export const JsonSchemaForm = ({
             value={removeLeadingZeroes(value.data[label] || "")}
             error={formError[label] || ""}
             onChange={(e) => {
-              handleChange(label, e.target.value);
+              handleChange(label, removeLeadingZeroes(e.target.value));
 
               // validate the value
               const error = validate.getU32Error(e.target.value);
@@ -161,7 +172,7 @@ export const JsonSchemaForm = ({
             value={removeLeadingZeroes(value.data[label] || "")}
             error={formError[label] || ""}
             onChange={(e) => {
-              handleChange(label, e.target.value);
+              handleChange(label, removeLeadingZeroes(e.target.value));
 
               // validate the value
               const error = validate.getU64Error(e.target.value);
@@ -181,7 +192,7 @@ export const JsonSchemaForm = ({
             value={removeLeadingZeroes(value.data[label] || "")}
             error={formError[label] || ""}
             onChange={(e) => {
-              handleChange(label, e.target.value);
+              handleChange(label, removeLeadingZeroes(e.target.value));
 
               // validate the value
               const error = validate.getU128Error(e.target.value);
