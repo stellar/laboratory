@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { STELLAR_EXPERT_API } from "@/constants/settings";
+import { getStellarExpertNetwork } from "@/helpers/getStellarExpertNetwork";
 import { ContractInfoApiResponse, NetworkType } from "@/types/types";
 
 /**
@@ -15,12 +16,11 @@ export const useSEContractInfo = ({
   const query = useQuery<ContractInfoApiResponse>({
     queryKey: ["useSEContractInfo", networkId, contractId],
     queryFn: async () => {
-      // Not supported networks
-      if (["futurenet", "custom"].includes(networkId)) {
+      const network = getStellarExpertNetwork(networkId);
+
+      if (!network) {
         return null;
       }
-
-      const network = networkId === "mainnet" ? "public" : "testnet";
 
       try {
         const response = await fetch(
