@@ -159,6 +159,11 @@ export default function Endpoints() {
       method: pageData?.rpcMethod,
     };
 
+    const pagination =
+      params.cursor || params.limit
+        ? sanitizeObject({ cursor: params.cursor, limit: Number(params.limit) })
+        : undefined;
+
     switch (endpoint) {
       case Routes.ENDPOINTS_GET_EVENTS: {
         const filteredParams = params.filters ? JSON.parse(params.filters) : {};
@@ -167,12 +172,23 @@ export default function Endpoints() {
         const filteredContractIds = filteredParams.contract_ids
           ? filteredParams.contract_ids.filter((topic: string) => topic.length)
           : [];
-        // [filter] do not display the empty string unless its field is filled
-        // [map] Parse the JSON string to JSON
+
         const filteredTopics = filteredParams.topics
           ? filteredParams.topics
               .filter((topic: string) => topic.length)
-              .map((item: string) => (item ? JSON.parse(item) : []))
+              .map((item: string) => {
+                if (!item) return [];
+
+                try {
+                  // Parse the JSON string into an actual array
+                  const parsed = JSON.parse(item);
+
+                  return parsed;
+                } catch (e) {
+                  // If parsing fails, wrap it in an array
+                  return [item];
+                }
+              })
           : [];
 
         return {
@@ -180,10 +196,7 @@ export default function Endpoints() {
           params: {
             xdrFormat: params.xdrFormat || "base64",
             startLedger: Number(params.startLedger) || null,
-            pagination: {
-              cursor: params.cursor || "",
-              limit: Number(params.limit) || "",
-            },
+            ...(pagination && { pagination }),
             filters: [
               {
                 type: filteredParams.type ?? "",
@@ -213,10 +226,7 @@ export default function Endpoints() {
           ...defaultRpcRequestBody,
           params: {
             startLedger: Number(params.startLedger) || null,
-            pagination: sanitizeObject({
-              cursor: params.cursor,
-              limit: Number(params.limit) || undefined,
-            }),
+            ...(pagination && { pagination }),
             xdrFormat: params.xdrFormat || "base64",
           },
         };
@@ -237,10 +247,7 @@ export default function Endpoints() {
           ...defaultRpcRequestBody,
           params: {
             startLedger: Number(params.startLedger) || null,
-            pagination: sanitizeObject({
-              cursor: params.cursor,
-              limit: Number(params.limit) || undefined,
-            }),
+            ...(pagination && { pagination }),
             xdrFormat: params.xdrFormat || "base64",
           },
         };

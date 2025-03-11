@@ -207,6 +207,21 @@ export const PrettyJson = ({
                             );
                           }
 
+                          // for array[array] type
+                          // ex. getEvents' filters' topics
+                          if (Array.isArray(v)) {
+                            return (
+                              <Collapsible
+                                key={`${keyProp}-${index}`}
+                                itemList={Object.keys(v)}
+                                char="["
+                              >
+                                {v.map((v2) => {
+                                  return render(v2);
+                                })}
+                              </Collapsible>
+                            );
+                          }
                           return (
                             <Collapsible
                               key={`${keyProp}-${index}`}
