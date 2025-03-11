@@ -31,10 +31,15 @@ export const FiltersPicker = ({ id, value, onChange }: FiltersPickerProps) => {
     },
   ];
 
-  const onUpdate = (val: any, prop: string) => {
+  const onUpdate = (val: any, type: "contract_ids" | "topics") => {
     onChange({
       ...value,
-      [prop]: [...val],
+      [type]:
+        type === "topics"
+          ? val.map((item: string) =>
+              typeof item === "string" ? item.replace(/'/g, '"') : item,
+            )
+          : val,
     });
   };
 

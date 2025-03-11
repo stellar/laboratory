@@ -167,12 +167,23 @@ export default function Endpoints() {
         const filteredContractIds = filteredParams.contract_ids
           ? filteredParams.contract_ids.filter((topic: string) => topic.length)
           : [];
-        // [filter] do not display the empty string unless its field is filled
-        // [map] Parse the JSON string to JSON
+
         const filteredTopics = filteredParams.topics
           ? filteredParams.topics
               .filter((topic: string) => topic.length)
-              .map((item: string) => (item ? JSON.parse(item) : []))
+              .map((item: string) => {
+                if (!item) return [];
+
+                try {
+                  // Parse the JSON string into an actual array
+                  const parsed = JSON.parse(item);
+
+                  return parsed;
+                } catch (e) {
+                  // If parsing fails, wrap it in an array
+                  return [item];
+                }
+              })
           : [];
 
         return {
