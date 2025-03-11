@@ -369,9 +369,7 @@
   line-height: pxToRem(20px);
   font-weight: var(--sds-fw-medium);
   color: var(--SidebarLink-color);
-  transition:
-    color var(--sds-anim-transition-default),
-    font-weight var(--sds-anim-transition-default);
+  transition: color var(--sds-anim-transition-default);
   text-decoration: none;
   display: flex;
   align-items: center;
