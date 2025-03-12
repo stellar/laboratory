@@ -20,6 +20,7 @@ import { validate } from "@/validate";
 import {
   AnyObject,
   AssetObjectValue,
+  AssetSinglePoolShareValue,
   ConfigSettingIdType,
   LedgerKeyFieldsType,
   LedgerKeyType,
@@ -109,7 +110,6 @@ export const XdrLedgerKeyPicker = ({
 }: XdrLedgerKeyPicker) => {
   const [selectedLedgerKey, setSelectedLedgerKey] =
     useState<LedgerKeyFieldsType | null>(null);
-
   const [isXdrInputActive, setIsXdrInputActive] = useState(true);
   const [formError, setFormError] = useState<AnyObject>({});
   const [ledgerKeyXdrToJsonString, setLedgerKeyJsonString] =
@@ -124,28 +124,22 @@ export const XdrLedgerKeyPicker = ({
     }
 
     try {
-      const xdrToJsonString = StellarXdr.decode("LedgerKey", xdr);
       const xdrToJson = parse(StellarXdr.decode("LedgerKey", xdr));
 
       return {
         xdrToJson,
-        xdrToJsonString,
         error: "",
       };
     } catch (e) {
       return {
         xdrToJson: {},
-        xdrToJsonString: "",
         error: `Unable to decode input as LedgerKey: ${e}`,
       };
     }
   };
 
   const encodeJsonToXdr = (xdrToJson: AnyObject) => {
-    console.log("[encodeJsonToXdr] xdrToJson", xdrToJson);
     const jsonToString = stringify(xdrToJson) || "";
-
-    console.log("[encodeJsonToXdr] parse(jsonToString);", parse(jsonToString));
 
     if (!isXdrInit && !xdrToJson) {
       return null;
@@ -223,17 +217,6 @@ export const XdrLedgerKeyPicker = ({
         any
       >;
 
-      // returns the following LedgerKey type:
-      //// account
-      //// trustline
-      //// offer
-      //// data
-      //// claimable_balance
-      //// liquidity_pool
-      //// contract_data
-      //// contract_code
-      //// config_setting
-      //// ttl
       const ledgerKey = Object.keys(xdrDecodedJSON)[0] as LedgerKeyType;
       const selectedLedgerKeyFields = getLedgerKeyFields(ledgerKey);
 
@@ -317,28 +300,10 @@ export const XdrLedgerKeyPicker = ({
     }
 
     return selectedLedgerKey.fields.split(",").map((field) => {
-      // {
-      //   "trustline": {
-      //     "account_id": "GDE25LQ34AFCSDMYTOI6AVVEHRXFRJI4MOAVIUGUDUQEC5ZWN5OZDLAZ",
-      //     "asset": "{\"code\":\"\",\"issuer\":\"\",\"type\":\"native\"}"
-      //   }
-      // }
       const ledgerKeyXdrToJson = parse(ledgerKeyXdrToJsonString) as AnyObject;
-
-      // will output
-      // {
-      //   "account_id": "GDE25LQ34AFCSDMYTOI6AVVEHRXFRJI4MOAVIUGUDUQEC5ZWN5OZDLAZ",
-      //   "asset": "{\"code\":\"\",\"issuer\":\"\",\"type\":\"native\"}"
-      // }
 
       // output that fits into the fields
       const formInputs = ledgerKeyXdrToJson[selectedLedgerKey.id];
-
-      let xdrJson: AnyObject = {
-        [selectedLedgerKey.id]: {
-          ...formInputs, // Start with existing form inputs
-        },
-      };
 
       const component = formComponentTemplateEndpoints(
         field,
@@ -354,28 +319,17 @@ export const XdrLedgerKeyPicker = ({
 
           if (error && error.result !== "success") {
             setFormError({ ...formError, [field]: error });
-          } else {
-            setFormError({ ...formError, [field]: "" });
           }
 
           formInputs[field] = val;
 
-          console.log(
-            "[renderLedgerKeyTemplate] formInputs[field]",
-            formInputs[field],
-          );
-          console.log(
-            "[renderLedgerKeyTemplate] ledgerKeyXdrToJson",
-            ledgerKeyXdrToJson,
-          );
+          let xdrJson: AnyObject = {
+            [selectedLedgerKey.id]: {
+              ...parseFormJsonValues(formInputs), // Start with existing form inputs
+            },
+          };
 
           if (field === "key") {
-            console.log("[renderLedgerKeyTemplate] field === key");
-            console.log(
-              "[renderLedgerKeyTemplate] parse(formInputs[field]): ",
-              parse(formInputs[field]),
-            );
-
             xdrJson = {
               [selectedLedgerKey.id]: {
                 ...formInputs,
@@ -386,22 +340,12 @@ export const XdrLedgerKeyPicker = ({
           }
 
           if (field === "asset") {
-            const parsedAssetValue = parse(formInputs[field]);
-
-            if (isAssetObjectValue(parsedAssetValue)) {
-              xdrJson = {
-                [selectedLedgerKey.id]: {
-                  ...formInputs,
-                  asset: formatAssetValue(parsedAssetValue),
-                },
-              };
-            } else {
-              // Handle the case where parsedAssetValue is not of the expected type
-              console.error(
-                "Parsed asset value is not valid:",
-                parsedAssetValue,
-              );
-            }
+            xdrJson = {
+              [selectedLedgerKey.id]: {
+                ...formInputs,
+                ...convertAssetField(formInputs, field),
+              },
+            };
           }
 
           if (field === "offer_id") {
@@ -415,17 +359,6 @@ export const XdrLedgerKeyPicker = ({
 
           // stringify the updated json with the input value
           const ledgerKeyJsonToString = stringify(ledgerKeyXdrToJson) || "";
-          const parsedLedgerKeyJsonToString = parse(ledgerKeyJsonToString);
-
-          console.log(
-            "[renderLedgerKeyTemplate] ledgerKeyJsonToString",
-            ledgerKeyJsonToString,
-          );
-          console.log("[renderLedgerKeyTemplate] xdrJson", xdrJson);
-          console.log(
-            "[renderLedgerKeyTemplate] parsedLedgerKeyJsonToString",
-            parsedLedgerKeyJsonToString,
-          );
 
           setLedgerKeyJsonString(ledgerKeyJsonToString || "");
 
@@ -598,4 +531,54 @@ export const MultiLedgerEntriesPicker = ({
       </div>
     </Box>
   );
+};
+
+const parseFormJsonValues = (inputs: any) => {
+  return Object.entries(inputs).reduce((acc, [key, value]) => {
+    if (key === "asset") {
+      // For asset fields, use convertAssetField to properly format the asset
+      return { ...acc, ...convertAssetField(inputs, key) };
+    }
+
+    // If value is a stringified object/array, try to parse it
+    if (typeof value === "string") {
+      try {
+        const parsed = parse(value);
+        // Only use parsed value if it's actually an object/array
+        if (typeof parsed === "object" && parsed !== null) {
+          return { ...acc, [key]: parsed };
+        }
+      } catch (e) {
+        // If parsing fails, use original value
+      }
+    }
+    return { ...acc, [key]: value };
+  }, {});
+};
+
+const convertAssetField = (formInputs: any, field: string) => {
+  // Handle empty asset case
+  if (!formInputs[field]) {
+    return {
+      asset: {},
+    };
+  }
+
+  try {
+    const parsedAssetValue = parse(formInputs[field]) as
+      | AssetObjectValue
+      | AssetSinglePoolShareValue;
+    const formattedAsset = formatAssetValue(parsedAssetValue);
+
+    return {
+      asset: formattedAsset,
+    };
+  } catch (e) {
+    // Handle parsing errors gracefully
+    console.error("Error parsing asset value:", e);
+
+    return {
+      asset: {},
+    };
+  }
 };
