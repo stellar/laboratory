@@ -112,7 +112,7 @@ export const XdrLedgerKeyPicker = ({
     useState<LedgerKeyFieldsType | null>(null);
   const [isXdrInputActive, setIsXdrInputActive] = useState(true);
   const [formError, setFormError] = useState<AnyObject>({});
-  const [ledgerKeyXdrToJsonString, setLedgerKeyJsonString] =
+  const [ledgerKeyXdrToJsonString, setLedgerKeyXdrToJsonString] =
     useState<string>("");
   const [ledgerKeyXdrError, setLedgerKeyXdrError] = useState<string>("");
 
@@ -172,7 +172,7 @@ export const XdrLedgerKeyPicker = ({
 
   const reset = () => {
     setFormError({});
-    setLedgerKeyJsonString("");
+    setLedgerKeyXdrToJsonString("");
     setLedgerKeyXdrError("");
     onChange("");
   };
@@ -259,7 +259,7 @@ export const XdrLedgerKeyPicker = ({
         xdrJsonToString = stringify(decodedXdrJson.xdrToJson) || "";
       }
 
-      setLedgerKeyJsonString(xdrJsonToString);
+      setLedgerKeyXdrToJsonString(xdrJsonToString);
 
       if (selectedLedgerKeyFields) {
         setSelectedLedgerKey(selectedLedgerKeyFields);
@@ -288,7 +288,7 @@ export const XdrLedgerKeyPicker = ({
       const ledgerKeyFieldInputsToString = stringify(ledgerKeyFieldInputs);
 
       if (ledgerKeyFieldInputsToString) {
-        setLedgerKeyJsonString(ledgerKeyFieldInputsToString);
+        setLedgerKeyXdrToJsonString(ledgerKeyFieldInputsToString);
       }
     }
   }, [ledgerKeyXdrToJsonString, selectedLedgerKey]);
@@ -299,12 +299,12 @@ export const XdrLedgerKeyPicker = ({
       return null;
     }
 
+    const ledgerKeyXdrToJson = parse(ledgerKeyXdrToJsonString) as AnyObject;
+
+    // output that fits into the fields
+    const formInputs = ledgerKeyXdrToJson[selectedLedgerKey.id];
+
     return selectedLedgerKey.fields.split(",").map((field) => {
-      const ledgerKeyXdrToJson = parse(ledgerKeyXdrToJsonString) as AnyObject;
-
-      // output that fits into the fields
-      const formInputs = ledgerKeyXdrToJson[selectedLedgerKey.id];
-
       const component = formComponentTemplateEndpoints(
         field,
         selectedLedgerKey?.custom,
@@ -331,13 +331,17 @@ export const XdrLedgerKeyPicker = ({
           };
 
           if (field === "key") {
-            xdrJson = {
-              [selectedLedgerKey.id]: {
-                ...formInputs,
-                // Parse the nested JSON string key value
-                key: parse(formInputs[field]),
-              },
-            };
+            try {
+              xdrJson = {
+                [selectedLedgerKey.id]: {
+                  ...formInputs,
+                  // Parse the nested JSON string key value
+                  key: parse(formInputs[field]),
+                },
+              };
+            } catch (e) {
+              // noop
+            }
           }
 
           if (field === "asset") {
@@ -361,7 +365,7 @@ export const XdrLedgerKeyPicker = ({
           // stringify the updated json with the input value
           const ledgerKeyJsonToString = stringify(ledgerKeyXdrToJson) || "";
 
-          setLedgerKeyJsonString(ledgerKeyJsonToString || "");
+          setLedgerKeyXdrToJsonString(ledgerKeyJsonToString || "");
 
           // for every template that is not an asset, encode the json string
           const jsonToXdr = encodeJsonToXdr(xdrJson || "");
