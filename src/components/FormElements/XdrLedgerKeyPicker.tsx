@@ -325,6 +325,7 @@ export const XdrLedgerKeyPicker = ({
 
           let xdrJson: AnyObject = {
             [selectedLedgerKey.id]: {
+              // parseFormJsonValues is needed to convert either the asset or key field to the correct format
               ...parseFormJsonValues(formInputs), // Start with existing form inputs
             },
           };
