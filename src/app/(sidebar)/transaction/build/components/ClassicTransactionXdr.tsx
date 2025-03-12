@@ -12,6 +12,7 @@ import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { xdrUtils } from "@/helpers/xdr/utils";
 import { optionsFlagDetails } from "@/helpers/optionsFlagDetails";
+import { formatAssetValue } from "@/helpers/formatAssetValue";
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
 import { useStore } from "@/store/useStore";
@@ -28,7 +29,6 @@ import {
 import {
   AnyObject,
   AssetObjectValue,
-  AssetPoolShareObjectValue,
   KeysOfUnion,
   NumberFractionValue,
   OptionFlag,
@@ -113,42 +113,6 @@ export const ClassicTransactionXdr = () => {
 
         return { ...res, [key]: val };
       }, {});
-
-      const formatAssetValue = (
-        asset: AssetObjectValue | AssetPoolShareObjectValue,
-      ): any => {
-        let formattedAsset;
-
-        if (asset.type === "native") {
-          formattedAsset = "native";
-        } else if (
-          asset.type &&
-          ["credit_alphanum4", "credit_alphanum12"].includes(asset.type)
-        ) {
-          const assetValue = asset as AssetObjectValue;
-
-          formattedAsset = {
-            [asset.type]: {
-              asset_code: assetValue.code,
-              issuer: assetValue.issuer,
-            },
-          };
-        } else if (asset.type === "liquidity_pool_shares") {
-          const assetPoolShareValue = asset as AssetPoolShareObjectValue;
-
-          formattedAsset = {
-            pool_share: {
-              liquidity_pool_constant_product: {
-                asset_a: formatAssetValue(assetPoolShareValue.asset_a),
-                asset_b: formatAssetValue(assetPoolShareValue.asset_b),
-                fee: 30,
-              },
-            },
-          };
-        }
-
-        return formattedAsset;
-      };
 
       const formatAssetMultiValue = (assets: AssetObjectValue[]) => {
         return assets.reduce((res, cur) => {

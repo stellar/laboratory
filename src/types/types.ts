@@ -294,7 +294,7 @@ export type LedgerKeyEntryTypeProps =
 export type LedgerKeyFieldsType = {
   id: LedgerKeyType;
   label: string;
-  templates: string;
+  fields: string;
   custom?: AnyObject;
 };
 
