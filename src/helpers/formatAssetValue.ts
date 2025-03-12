@@ -10,8 +10,6 @@ export const formatAssetValue = (
     | AssetPoolShareObjectValue
     | AssetSinglePoolShareValue,
 ): any => {
-  console.log("[formatAssetValue] asset:", asset);
-  console.log("[formatAssetValue] typeof asset:", typeof asset);
   let formattedAsset;
 
   if (asset.type === "native") {

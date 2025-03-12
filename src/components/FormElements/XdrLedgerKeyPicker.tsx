@@ -165,7 +165,7 @@ export const XdrLedgerKeyPicker = ({
     } catch (e) {
       return {
         xdr: "",
-        error: `[MEOW] Unable to encode JSON as LedgerKey: ${e}`,
+        error: `Unable to encode JSON as LedgerKey: ${e}`,
       };
     }
   };
