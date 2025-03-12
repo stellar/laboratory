@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "@stellar/design-system";
-import { Spec } from "@stellar/stellar-sdk/contract";
+import { contract } from "@stellar/stellar-sdk";
 
 import { SorobanInvokeValue } from "@/types/types";
 
@@ -37,8 +37,8 @@ export const FetchContractMethodPickerWithQuery = ({
   const { network } = useStore();
   const [contractIdError, setContractIdError] = useState<string>("");
   const [contractMethods, setContractMethods] = useState<string[]>([]);
-  const [contractMethodsSpec, setContractMethodsSpec] = useState<Spec>(
-    {} as Spec,
+  const [contractMethodsSpec, setContractMethodsSpec] = useState<contract.Spec>(
+    {} as contract.Spec,
   );
   const [fetchError, setFetchError] = useState<string | null>(null);
 

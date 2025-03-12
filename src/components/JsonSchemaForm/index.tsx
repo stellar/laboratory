@@ -32,6 +32,8 @@ export const JsonSchemaForm = ({
       additionalProperties: false,
     });
 
+  console.log("dereferencedSchema: ", dereferencedSchema);
+
   useEffect(() => {
     const dereferencedSchema = getDereferenceSchema(schema, name);
     setDereferencedSchema(dereferencedSchema);
@@ -107,6 +109,20 @@ export const JsonSchemaForm = ({
           />
         );
       case "ScString":
+        return (
+          <Input
+            id={key}
+            key={label}
+            fieldSize="md"
+            label={label}
+            value={value.data[label] || ""}
+            error={""}
+            onChange={(e) => {
+              handleChange(label, e.target.value);
+            }}
+            note={<>{prop.description}</>}
+          />
+        );
       case "ScSymbol":
         return (
           <Input
@@ -118,6 +134,8 @@ export const JsonSchemaForm = ({
             error={""}
             onChange={(e) => {
               handleChange(label, e.target.value);
+
+              // @TODO add an error handling
             }}
             note={<>{prop.description}</>}
           />

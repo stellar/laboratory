@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { Select } from "@stellar/design-system";
 import { contract } from "@stellar/stellar-sdk";
+
 import type { JSONSchema7 } from "json-schema";
+
+import { parseContractSpec } from "@/helpers/parseContractSpec";
 
 import { Box } from "@/components/layout/Box";
 import { JsonSchemaForm } from "@/components/JsonSchemaForm";
@@ -37,13 +40,19 @@ export const ContractMethodSelectPicker = ({
   onChange: (val: SorobanInvokeValue) => void;
 }) => {
   const [selectedValue, setSelectedValue] = useState<string>("");
-  const [funcSpec, setFuncSpec] = useState<JSONSchema7 | undefined>(undefined);
+  const [specSchema, setSpecSchema] = useState<JSONSchema7 | undefined>(
+    undefined,
+  );
+
+  console.log("parseContractSpec(spec): ", parseContractSpec(spec));
+  console.log("specSchema: ", specSchema);
+  console.log("spec.funcs(): ", spec.funcs());
 
   const onSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (e.target.value) {
       const selectedFuncSchema = spec.jsonSchema(e.target.value);
       setSelectedValue(e.target.value);
-      setFuncSpec(selectedFuncSchema);
+      setSpecSchema(selectedFuncSchema);
 
       onChange({
         ...value,
@@ -53,7 +62,7 @@ export const ContractMethodSelectPicker = ({
         },
       });
     } else {
-      setFuncSpec(undefined);
+      setSpecSchema(undefined);
     }
   };
 
@@ -66,6 +75,8 @@ export const ContractMethodSelectPicker = ({
         value={selectedValue}
         onChange={(e) => {
           onSelectChange(e);
+
+          // test();
         }}
       >
         <option value="">Select a method</option>
@@ -77,10 +88,10 @@ export const ContractMethodSelectPicker = ({
         ))}
       </Select>
       <ExpandBox isExpanded={Boolean(selectedValue)} offsetTop="sm">
-        {selectedValue && funcSpec ? (
+        {selectedValue && specSchema ? (
           <>
             <JsonSchemaForm
-              schema={funcSpec}
+              schema={specSchema}
               name={selectedValue}
               value={value}
               onChange={onChange}
@@ -90,7 +101,7 @@ export const ContractMethodSelectPicker = ({
             // comment it out before committing
             // remove it before merging into main
             */}
-            <Form schema={funcSpec} validator={validator} />
+            <Form schema={specSchema} validator={validator} />
           </>
         ) : null}
       </ExpandBox>
