@@ -62,6 +62,8 @@ export const ResourceFeePickerWithQuery = ({
     isPending: isSimulateTxPending,
   } = useSimulateTx();
 
+  console.log("operation: ", operation);
+
   const [errorMessage, setErrorMessage] = useState<string | undefined>(
     undefined,
   );

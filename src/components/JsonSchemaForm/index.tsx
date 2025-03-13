@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import type { JSONSchema7 } from "json-schema";
+import { Contract, contract } from "@stellar/stellar-sdk";
 import { Button, Card, Icon, Input, Text } from "@stellar/design-system";
 
 import {
-  getDereferenceSchema,
+  dereferenceSchema,
   DereferencedSchema,
 } from "@/helpers/dereferenceSchema";
 import { removeLeadingZeroes } from "@/helpers/removeLeadingZeroes";
@@ -19,32 +20,35 @@ export const JsonSchemaForm = ({
   name,
   value,
   onChange,
+  spec,
 }: {
   schema: JSONSchema7;
   name: string;
   value: SorobanInvokeValue;
   onChange: (value: SorobanInvokeValue) => void;
+  spec: contract.Spec;
 }) => {
   const [dereferencedSchema, setDereferencedSchema] =
     useState<DereferencedSchema>({
+      name: "",
+      description: "",
       properties: {},
       required: [],
       additionalProperties: false,
     });
 
-  console.log("dereferencedSchema: ", dereferencedSchema);
-
   useEffect(() => {
-    const dereferencedSchema = getDereferenceSchema(schema, name);
-    setDereferencedSchema(dereferencedSchema);
+    setDereferencedSchema(dereferenceSchema(schema, name));
   }, [schema, name]);
 
-  const handleChange = (key: string, newVal: string) => {
+  console.log("value: ", value);
+
+  const handleChange = (key: string, newVal: any) => {
     // @TODO
     // onChange({
     //   ...value,
     //   data: {
-    //     ...value.data,
+    //     ...value.args,
     //     [key]: {
     //       value: newVal,
     //       type: dereferencedSchema.properties[key],
@@ -53,8 +57,8 @@ export const JsonSchemaForm = ({
     // });
     onChange({
       ...value,
-      data: {
-        ...value.data,
+      args: {
+        ...value.args,
         [key]: newVal,
       },
     });
@@ -80,6 +84,7 @@ export const JsonSchemaForm = ({
       return prop.type;
     };
 
+    const requiredFields = dereferencedSchema.required;
     const specType = getSpecType(prop);
     const label = index !== undefined ? `${key}-${index + 1}` : key;
 
@@ -91,8 +96,9 @@ export const JsonSchemaForm = ({
             key={label}
             fieldSize="md"
             label={label}
-            value={value.data[label] || ""}
+            value={value.args[label] || ""}
             error={formError[label] || ""}
+            required={requiredFields.includes(key)}
             onChange={(e) => {
               handleChange(label, e.target.value);
 
@@ -115,8 +121,9 @@ export const JsonSchemaForm = ({
             key={label}
             fieldSize="md"
             label={label}
-            value={value.data[label] || ""}
+            value={value.args[label] || ""}
             error={""}
+            required={requiredFields.includes(key)}
             onChange={(e) => {
               handleChange(label, e.target.value);
             }}
@@ -130,8 +137,9 @@ export const JsonSchemaForm = ({
             key={label}
             fieldSize="md"
             label={label}
-            value={value.data[label] || ""}
+            value={value.args[label] || ""}
             error={""}
+            required={requiredFields.includes(key)}
             onChange={(e) => {
               handleChange(label, e.target.value);
 
@@ -147,8 +155,9 @@ export const JsonSchemaForm = ({
             key={label}
             fieldSize="md"
             label={label}
-            value={value.data[label] || ""}
+            value={value.args[label] || ""}
             error={formError[label] || ""}
+            required={requiredFields.includes(key)}
             onChange={(e) => {
               handleChange(label, e.target.value);
 
@@ -167,10 +176,12 @@ export const JsonSchemaForm = ({
             id={key}
             key={label}
             label={label}
-            value={removeLeadingZeroes(value.data[label] || "")}
+            value={value.args[label] || ""}
             error={formError[label] || ""}
             onChange={(e) => {
-              handleChange(label, removeLeadingZeroes(e.target.value));
+              const sanitizedValue = removeLeadingZeroes(e.target.value);
+              const numVal = Number(sanitizedValue);
+              handleChange(label, numVal);
 
               // validate the value
               const error = validate.getU32Error(e.target.value);
@@ -187,7 +198,7 @@ export const JsonSchemaForm = ({
             id={key}
             key={label}
             label={label}
-            value={removeLeadingZeroes(value.data[label] || "")}
+            value={removeLeadingZeroes(value.args[label] || "")}
             error={formError[label] || ""}
             onChange={(e) => {
               handleChange(label, removeLeadingZeroes(e.target.value));
@@ -207,7 +218,7 @@ export const JsonSchemaForm = ({
             id={key}
             key={label}
             label={label}
-            value={removeLeadingZeroes(value.data[label] || "")}
+            value={removeLeadingZeroes(value.args[label] || "")}
             error={formError[label] || ""}
             onChange={(e) => {
               handleChange(label, removeLeadingZeroes(e.target.value));
@@ -227,7 +238,7 @@ export const JsonSchemaForm = ({
             id={key}
             key={label}
             label={label}
-            value={value.data[label] || ""}
+            value={value.args[label] || ""}
             error={formError[label] || ""}
             onChange={(e) => {
               handleChange(label, e.target.value);
@@ -249,8 +260,9 @@ export const JsonSchemaForm = ({
             key={label}
             fieldSize="md"
             label={label}
-            value={value.data[label] || ""}
+            value={value.args[label] || ""}
             error={formError[label] || ""}
+            required={requiredFields.includes(key)}
             onChange={(e) => {
               handleChange(label, e.target.value);
 
@@ -270,8 +282,9 @@ export const JsonSchemaForm = ({
             key={label}
             fieldSize="md"
             label={label}
-            value={value.data[label] || ""}
+            value={value.args[label] || ""}
             error={formError[label] || ""}
+            required={requiredFields.includes(key)}
             onChange={(e) => {
               handleChange(label, e.target.value);
 
@@ -291,8 +304,9 @@ export const JsonSchemaForm = ({
             key={label}
             fieldSize="md"
             label={label}
-            value={value.data[label] || ""}
+            value={value.args[label] || ""}
             error={formError[label] || ""}
+            required={requiredFields.includes(key)}
             onChange={(e) => {
               handleChange(label, e.target.value);
 
@@ -312,8 +326,9 @@ export const JsonSchemaForm = ({
             key={label}
             fieldSize="md"
             label={label}
-            value={value.data[label] || ""}
+            value={value.args[label] || ""}
             error={formError[label] || ""}
+            required={requiredFields.includes(key)}
             onChange={(e) => {
               handleChange(label, e.target.value);
 
@@ -359,17 +374,41 @@ export const JsonSchemaForm = ({
   const render = (item: any): React.ReactElement => {
     const argLabels = item.properties ? Object.keys(item.properties) : [];
     const fields = item.properties ? Object.entries(item.properties) : [];
+    const { name, description } = dereferencedSchema;
 
     return (
-      <>
-        {renderTitle(name, argLabels, fields)}
+      <Box gap="md">
+        {renderTitle(name, description, argLabels, fields)}
 
         <Box gap="md" key={name}>
           {fields.map(([key, prop]) => (
             <>{renderComponent(key, prop)}</>
           ))}
         </Box>
-      </>
+
+        <Button
+          variant="secondary"
+          size="md"
+          onClick={() => {
+            const scVals = spec.funcArgsToScVals(
+              value.function_name,
+              value.args,
+            );
+
+            const call = new Contract(value.contract_id).call(
+              value.function_name,
+              ...scVals,
+            );
+
+            console.log("call: ", call);
+            console.log("call: ", call.toXDR("base64"));
+            // console.log("scVals: ", scVals);
+          }}
+          type="button"
+        >
+          meow
+        </Button>
+      </Box>
     );
   };
 
@@ -399,44 +438,46 @@ const getTupleLabel = (items: any[]): string => {
 
 const renderTitle = (
   name: string,
+  description: string,
   labels: string[],
   fields: [string, any][],
 ) => {
-  if (labels.length) {
-    const mappedLabels = labels.map((label) => {
-      const field = fields.find(([key]) => key === label);
+  // if (labels.length) {
+  const mappedLabels = labels.map((label) => {
+    const field = fields.find(([key]) => key === label);
 
-      if (field) {
-        if (field?.[1]?.specType) {
-          return `${label}: ${field?.[1]?.specType}`;
-        }
-        // for an array type that doesn't have a specType
-        if (field?.[1]?.type === "array") {
-          if (field?.[1]?.items?.$ref) {
-            // ex: will output 'Address[]' for `"#/definitions/Address"`
-            const refPath = field?.[1]?.items?.$ref.replace(
-              "#/definitions/",
-              "",
-            );
-            return `${label}: ${refPath}[]`;
-          }
-          if (Array.isArray(field?.[1]?.items)) {
-            // Handle tuple case
-            const tupleLabel = getTupleLabel(field[1].items);
-            return `${label}: ${tupleLabel}`;
-          }
-          return `${label}: array`;
-        }
+    if (field) {
+      if (field?.[1]?.specType) {
+        return `${label}: ${field?.[1]?.specType}`;
       }
-      return label;
-    });
+      // for an array type that doesn't have a specType
+      if (field?.[1]?.type === "array") {
+        if (field?.[1]?.items?.$ref) {
+          // ex: will output 'Address[]' for `"#/definitions/Address"`
+          const refPath = field?.[1]?.items?.$ref.replace("#/definitions/", "");
+          return `${label}: ${refPath}[]`;
+        }
+        if (Array.isArray(field?.[1]?.items)) {
+          // Handle tuple case
+          const tupleLabel = getTupleLabel(field[1].items);
+          return `${label}: ${tupleLabel}`;
+        }
+        return `${label}: array`;
+      }
+    }
+    return label;
+  });
 
-    return (
-      <Text size="lg" as="p">
-        {name}({mappedLabels.join(", ")})
+  return (
+    <>
+      <Text size="lg" as="h2">
+        {name} ({mappedLabels.join(", ")})
       </Text>
-    );
-  }
-
-  return null;
+      {description ? (
+        <Text size="sm" as="h3">
+          {description}
+        </Text>
+      ) : null}
+    </>
+  );
 };

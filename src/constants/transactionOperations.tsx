@@ -392,8 +392,8 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
       "Invoke a function of the deployed contract using 'HOST_FUNCTION_TYPE_INVOKE_CONTRACT' from Invoke Host Function.",
     docsUrl:
       "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#invoke-host-function",
-    params: ["invoke_contract"],
-    requiredParams: ["invoke_contract"],
+    params: ["invoke_contract", "resource_fee"],
+    requiredParams: ["invoke_contract", "resource_fee"],
   },
   revoke_sponsorship: {
     label: "Revoke Sponsorship",

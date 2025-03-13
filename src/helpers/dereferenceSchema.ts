@@ -16,6 +16,8 @@ type XdrSpecialType = "Address" | "ScString" | "ScSymbol" | "DataUrl";
 type CustomXdrSpecType = PrimitiveType | XdrSpecialType;
 
 export type DereferencedSchema = {
+  name: string;
+  description: string;
   properties: Record<
     string,
     JSONSchema7Definition & { specType?: CustomXdrSpecType }
@@ -29,7 +31,7 @@ export type DereferencedSchema = {
  * @param methodName - the method name
  * @returns the dereferenced schema
  */
-export const getDereferenceSchema = (
+export const dereferenceSchema = (
   fullSchema: any,
   methodName: string,
 ): DereferencedSchema => {
@@ -101,6 +103,8 @@ export const getDereferenceSchema = (
   });
 
   return {
+    name: methodName,
+    description: methodSchema.description,
     properties,
     required: requiredFields,
     additionalProperties: false,

@@ -18,14 +18,6 @@ import { SorobanInvokeValue } from "@/types/types";
 import Form from "@rjsf/core";
 import validator from "@rjsf/validator-ajv8";
 
-const cleanupData = (data: any) => {
-  if (!data) return {};
-  // Only keep function_method if it exists, reset all other fields
-  return {
-    function_method: data.function_method || "",
-  };
-};
-
 export const ContractMethodSelectPicker = ({
   value,
   methods,
@@ -44,9 +36,9 @@ export const ContractMethodSelectPicker = ({
     undefined,
   );
 
-  console.log("parseContractSpec(spec): ", parseContractSpec(spec));
-  console.log("specSchema: ", specSchema);
-  console.log("spec.funcs(): ", spec.funcs());
+  // console.log("parseContractSpec(spec): ", parseContractSpec(spec));
+  // console.log("specSchema: ", specSchema);
+  // console.log("spec.funcs(): ", spec.funcs());
 
   const onSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (e.target.value) {
@@ -56,9 +48,9 @@ export const ContractMethodSelectPicker = ({
 
       onChange({
         ...value,
-        data: {
-          ...cleanupData(value.data),
-          function_method: e.target.value,
+        function_name: e.target.value,
+        args: {
+          ...value.args,
         },
       });
     } else {
@@ -75,8 +67,6 @@ export const ContractMethodSelectPicker = ({
         value={selectedValue}
         onChange={(e) => {
           onSelectChange(e);
-
-          // test();
         }}
       >
         <option value="">Select a method</option>
@@ -95,6 +85,7 @@ export const ContractMethodSelectPicker = ({
               name={selectedValue}
               value={value}
               onChange={onChange}
+              spec={spec}
             />
             {/* 
             // @todo for testing

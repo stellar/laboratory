@@ -124,6 +124,8 @@ export const buildSorobanTx = ({
   };
 
   const getSorobanOp = (operationType: string) => {
+    console.log("sorobanOp: ", sorobanOp);
+
     switch (operationType) {
       case "extend_footprint_ttl":
         return Operation.extendFootprintTtl({
@@ -136,7 +138,7 @@ export const buildSorobanTx = ({
           contract: sorobanOp.params.contract_address,
           function: sorobanOp.params.function_name,
           args: sorobanOp.params.function_args,
-          auth: [],
+          auth: sorobanOp.params.auth,
           source: sorobanOp.source_account,
         });
       default:

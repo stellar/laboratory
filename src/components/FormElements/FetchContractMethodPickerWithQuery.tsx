@@ -37,9 +37,6 @@ export const FetchContractMethodPickerWithQuery = ({
   const { network } = useStore();
   const [contractIdError, setContractIdError] = useState<string>("");
   const [contractMethods, setContractMethods] = useState<string[]>([]);
-  const [contractMethodsSpec, setContractMethodsSpec] = useState<contract.Spec>(
-    {} as contract.Spec,
-  );
   const [fetchError, setFetchError] = useState<string | null>(null);
 
   const {
@@ -72,7 +69,8 @@ export const FetchContractMethodPickerWithQuery = ({
 
     const newValue: SorobanInvokeValue = {
       contract_id: e.target.value || "",
-      data: value?.data || {},
+      function_name: value?.function_name || "",
+      args: value?.args || {},
     };
 
     onChange(newValue);
@@ -87,18 +85,13 @@ export const FetchContractMethodPickerWithQuery = ({
     }
 
     if (isSuccess) {
-      const contractSpec = contractClient?.spec;
-      const contractMethods = contractSpec?.funcs();
+      const contractMethods = contractClient?.spec?.funcs();
 
       if (contractMethods) {
         const methodNames = contractMethods.map((method) =>
           method.name().toString(),
         );
         setContractMethods(methodNames);
-      }
-
-      if (contractSpec) {
-        setContractMethodsSpec(contractSpec);
       }
     }
 
@@ -135,11 +128,11 @@ export const FetchContractMethodPickerWithQuery = ({
       </Box>
 
       <>
-        {contractMethods.length && value ? (
+        {contractMethods.length && contractClient?.spec && value ? (
           <ContractMethodSelectPicker
             value={value}
             onChange={onChange}
-            spec={contractMethodsSpec}
+            spec={contractClient.spec}
             methods={contractMethods}
             id={`${id}-method`}
           />
