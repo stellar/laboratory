@@ -345,7 +345,7 @@ export const Params = () => {
             <>
               The base inclusion fee is currently set to 100 stroops (0.00001
               lumens). For more real time inclusion fee, please see{" "}
-              <SdsLink href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getFeeStats">
+              <SdsLink href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getFeeStats">
                 getFeeStats
               </SdsLink>{" "}
               from the RPC. To learn more about fees, please see{" "}

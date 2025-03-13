@@ -37,7 +37,7 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
       label: "getEvents",
       form: {
         docsUrl:
-          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getEvents",
+          "https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getEvents",
         docsLabel: "getEvents",
         endpointUrlTemplate: "{?startLedger,cursor,limit,filters,xdrFormat}",
         requestMethod: "POST",
@@ -51,7 +51,7 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
       label: "getFeeStats",
       form: {
         docsUrl:
-          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getFeeStats",
+          "https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getFeeStats",
         docsLabel: "getFeeStats",
         requestMethod: "POST",
         requiredParams: "",
@@ -64,7 +64,7 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
       label: "getHealth",
       form: {
         docsUrl:
-          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getHealth",
+          "https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getHealth",
         docsLabel: "getHealth",
         requestMethod: "POST",
         requiredParams: "",
@@ -77,7 +77,7 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
       label: "getLatestLedger",
       form: {
         docsUrl:
-          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getLatestLedger",
+          "https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getLatestLedger",
         docsLabel: "getLatestLedger",
         requestMethod: "POST",
         requiredParams: "",
@@ -90,7 +90,7 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
       label: "getLedgerEntries",
       form: {
         docsUrl:
-          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getLedgerEntries",
+          "https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getLedgerEntries",
         docsLabel: "getLedgerEntries",
         endpointUrlTemplate: "{?ledgerKeyEntries,xdrFormat}",
         requestMethod: "POST",
@@ -104,7 +104,7 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
       label: "getLedgers",
       form: {
         docsUrl:
-          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getLedgers",
+          "https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getLedgers",
         docsLabel: "getLedgers",
         endpointUrlTemplate: "{?startLedger,cursor,limit,xdrFormat}",
         requestMethod: "POST",
@@ -118,7 +118,7 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
       label: "getNetwork",
       form: {
         docsUrl:
-          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getNetwork",
+          "https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getNetwork",
         docsLabel: "getNetwork",
         requestMethod: "POST",
         requiredParams: "",
@@ -131,7 +131,7 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
       label: "getTransaction",
       form: {
         docsUrl:
-          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getTransaction",
+          "https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getTransaction",
         docsLabel: "getTransaction",
         endpointUrlTemplate: "{?transaction,xdrFormat}",
         requestMethod: "POST",
@@ -145,7 +145,7 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
       label: "getTransactions",
       form: {
         docsUrl:
-          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getTransactions",
+          "https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getTransactions",
         docsLabel: "getTransactions",
         endpointUrlTemplate: "{?startLedger,cursor,limit,xdrFormat}",
         requestMethod: "POST",
@@ -159,7 +159,7 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
       label: "getVersionInfo",
       form: {
         docsUrl:
-          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/getVersionInfo",
+          "https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getVersionInfo",
         docsLabel: "getVersionInfo",
         requestMethod: "POST",
         requiredParams: "",
@@ -172,7 +172,7 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
       label: "sendTransaction",
       form: {
         docsUrl:
-          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/sendTransaction",
+          "https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/sendTransaction",
         docsLabel: "sendTransaction",
         endpointUrlTemplate: "{?tx,xdrFormat}",
         requestMethod: "POST",
@@ -186,7 +186,7 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
       label: "simulateTransaction",
       form: {
         docsUrl:
-          "https://developers.stellar.org/docs/data/rpc/api-reference/methods/simulateTransaction",
+          "https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/simulateTransaction",
         docsLabel: "simulateTransaction",
         endpointUrlTemplate: "{?tx,resourceConfig,xdrFormat}",
         requestMethod: "POST",

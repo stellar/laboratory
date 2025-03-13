@@ -312,7 +312,7 @@ export const NetworkSelector = () => {
                   handleInputChange("rpcUrl", e.target.value);
                 }}
                 error={validationError?.rpcUrl}
-                infoLink="https://developers.stellar.org/docs/data/rpc/rpc-providers"
+                infoLink="https://developers.stellar.org/docs/data/apis/api-providers"
               />
               {/* TODO: put these back once Stellar JS SDK is ready */}
               {/* <NetworkInput
@@ -345,7 +345,7 @@ export const NetworkSelector = () => {
                   handleInputChange("horizonUrl", e.target.value);
                 }}
                 error={validationError?.horizonUrl}
-                infoLink="https://developers.stellar.org/docs/data/horizon/horizon-providers"
+                infoLink="https://developers.stellar.org/docs/data/apis/api-providers"
               />
               {/* TODO: put these back once Stellar JS SDK is ready */}
               {/* <NetworkInput

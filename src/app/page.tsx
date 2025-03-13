@@ -13,6 +13,7 @@ import { Routes } from "@/constants/routes";
 import { GITHUB_URL } from "@/constants/settings";
 import { openUrl } from "@/helpers/openUrl";
 
+// Landing page
 export default function Introduction() {
   const infoCards = [
     {
