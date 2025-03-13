@@ -15,7 +15,7 @@ export const Box = ({
   | { gap: "xs" | "sm" | "md" | "lg" | "xl" | "xxl"; customValue?: undefined }
   | { gap: "custom"; customValue: string }
 ) & {
-  children: React.ReactElement | React.ReactElement[] | null;
+  children: React.ReactElement | React.ReactElement[] | React.ReactNode;
   addlClassName?: string;
   direction?: "column" | "row" | "column-reverse" | "row-reverse";
   justify?:

@@ -47,10 +47,20 @@
       font-weight: var(--sds-fw-semi-bold);
       color: var(--sds-clr-gray-12);
       white-space: nowrap;
+
+      .WithInfoText__button svg {
+        stroke: var(--sds-clr-gray-09);
+      }
     }
   }
 
   &__content {
     width: 100%;
+  }
+
+  &__actions {
+    & > .Select {
+      width: pxToRem(120px);
+    }
   }
 }
