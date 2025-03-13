@@ -15,7 +15,7 @@ export const EndpointsLandingPage = () => {
       buttonIcon: <Icon.LinkExternal01 />,
       buttonAction: () =>
         openUrl(
-          "https://developers.stellar.org/docs/data/rpc/api-reference/methods",
+          "https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods",
         ),
     },
     {
