@@ -1,4 +1,5 @@
 import { ChangeEvent, useState } from "react";
+import { parse } from "lossless-json";
 
 import {
   Badge,
@@ -59,10 +60,12 @@ export const SorobanOperation = ({
     opParam,
     opValue,
     opType,
+    opParamCustomError,
   }: {
     opParam: string;
     opValue: any;
     opType: string;
+    opParamCustomError?: any;
   }) => {
     const updatedOperation = {
       ...sorobanOperation,
@@ -72,6 +75,11 @@ export const SorobanOperation = ({
         [opParam]: opValue,
       }),
     };
+
+    if (opType === "invoke_contract_function") {
+      // const parsedParams = parse(updatedOperation.params.invoke_contract);
+      // console.log("parsedParams: ", parsedParams);
+    }
 
     updateSorobanBuildOperation(updatedOperation);
 
@@ -178,6 +186,10 @@ export const SorobanOperation = ({
                           {component.render({
                             ...sorobanBaseProps,
                             onChange: (value: SorobanInvokeValue) => {
+                              console.log(
+                                "[opType] value.opParamCustomError: ",
+                                value.opParamCustomError,
+                              );
                               handleSorobanOperationParamChange({
                                 opParam: input,
                                 // invoke_contract has a nested object within params
@@ -188,6 +200,8 @@ export const SorobanOperation = ({
                                   ? JSON.stringify(value)
                                   : undefined,
                                 opType: sorobanOperation.operation_type,
+                                // errors from dynamic form params generated from contract schema
+                                opParamCustomError: value.opParamCustomError,
                               });
                             },
                           })}

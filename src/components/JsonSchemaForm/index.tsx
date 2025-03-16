@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import type { JSONSchema7 } from "json-schema";
 import { Contract, contract } from "@stellar/stellar-sdk";
 import { Button, Card, Icon, Input, Text } from "@stellar/design-system";
-
+import BigNumber from "bignumber.js";
 import {
   dereferenceSchema,
   DereferencedSchema,
@@ -16,32 +16,30 @@ import { AnyObject, SorobanInvokeValue } from "@/types/types";
 import { validate } from "@/validate";
 
 export const JsonSchemaForm = ({
-  schema,
   name,
   value,
   onChange,
   spec,
 }: {
-  schema: JSONSchema7;
   name: string;
   value: SorobanInvokeValue;
   onChange: (value: SorobanInvokeValue) => void;
   spec: contract.Spec;
 }) => {
-  const [dereferencedSchema, setDereferencedSchema] =
-    useState<DereferencedSchema>({
-      name: "",
-      description: "",
-      properties: {},
-      required: [],
-      additionalProperties: false,
-    });
+  const selectedFuncSchema: JSONSchema7 | undefined = spec.jsonSchema(name);
+
+  if (!selectedFuncSchema) {
+    return null;
+  }
+
+  const dereferencedSchema = dereferenceSchema(selectedFuncSchema, name);
+  const requiredFields = dereferencedSchema.required;
+  const [formError, setFormError] = useState<AnyObject>({});
+  const missingFields = requiredFields.filter((field) => !value.args[field]);
 
   useEffect(() => {
-    setDereferencedSchema(dereferenceSchema(schema, name));
-  }, [schema, name]);
-
-  console.log("value: ", value);
+    // const missingFields = requiredFields.filter((field) => !value.args[field]);
+  }, [value.args]);
 
   const handleChange = (key: string, newVal: any) => {
     // @TODO
@@ -55,16 +53,21 @@ export const JsonSchemaForm = ({
     //     },
     //   },
     // });
+
     onChange({
       ...value,
       args: {
         ...value.args,
         [key]: newVal,
       },
+      opParamCustomError: {
+        ...value.opParamCustomError,
+        error: {
+          ...formError,
+        },
+      },
     });
   };
-
-  const [formError, setFormError] = useState<AnyObject>({});
 
   // key: argument label
   // prop: argument object
@@ -84,7 +87,6 @@ export const JsonSchemaForm = ({
       return prop.type;
     };
 
-    const requiredFields = dereferencedSchema.required;
     const specType = getSpecType(prop);
     const label = index !== undefined ? `${key}-${index + 1}` : key;
 
@@ -162,7 +164,7 @@ export const JsonSchemaForm = ({
               handleChange(label, e.target.value);
 
               // validate the value
-              const error = validate.getDataUrlError(e.target.value);
+              const error = Boolean(validate.getDataUrlError(e.target.value));
               setFormError({
                 ...formError,
                 [label]: error,
@@ -179,9 +181,11 @@ export const JsonSchemaForm = ({
             value={value.args[label] || ""}
             error={formError[label] || ""}
             onChange={(e) => {
-              const sanitizedValue = removeLeadingZeroes(e.target.value);
-              const numVal = Number(sanitizedValue);
-              handleChange(label, numVal);
+              const bn = new BigNumber(e.target.value);
+              console.log("bn: ", bn);
+              // const sanitizedValue = removeLeadingZeroes(e.target.value);
+              // const numVal = Number(sanitizedValue);
+              handleChange(label, bn.toNumber());
 
               // validate the value
               const error = validate.getU32Error(e.target.value);
@@ -386,28 +390,37 @@ export const JsonSchemaForm = ({
           ))}
         </Box>
 
-        <Button
-          variant="secondary"
-          size="md"
-          onClick={() => {
-            const scVals = spec.funcArgsToScVals(
-              value.function_name,
-              value.args,
-            );
+        <Box gap="md" direction="row" wrap="wrap">
+          <Button
+            variant="secondary"
+            disabled={
+              missingFields.length > 0 ||
+              Object.values(formError).filter(Boolean).length > 0
+            }
+            size="md"
+            onClick={() => {
+              console.log("value.args: ", value.args);
+              const scVals = spec.funcArgsToScVals(
+                value.function_name,
+                value.args,
+              );
 
-            const call = new Contract(value.contract_id).call(
-              value.function_name,
-              ...scVals,
-            );
+              // returns an InvokeHostFunctionOp operation to call the
+              // contract with the given method and parameters
+              const call = new Contract(value.contract_id).call(
+                value.function_name,
+                ...scVals,
+              );
 
-            console.log("call: ", call);
-            console.log("call: ", call.toXDR("base64"));
-            // console.log("scVals: ", scVals);
-          }}
-          type="button"
-        >
-          meow
-        </Button>
+              console.log("call.toXDR(): ", call.toXDR());
+
+              const xdrOperaion = call.toXDR("base64");
+            }}
+            type="button"
+          >
+            Call Contract
+          </Button>
+        </Box>
       </Box>
     );
   };
