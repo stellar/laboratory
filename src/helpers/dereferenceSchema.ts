@@ -15,7 +15,7 @@ type PrimitiveType =
 type XdrSpecialType = "Address" | "ScString" | "ScSymbol" | "DataUrl";
 type CustomXdrSpecType = PrimitiveType | XdrSpecialType;
 
-export type DereferencedSchema = {
+export type DereferencedSchemaType = {
   name: string;
   description: string;
   properties: Record<
@@ -34,7 +34,7 @@ export type DereferencedSchema = {
 export const dereferenceSchema = (
   fullSchema: any,
   methodName: string,
-): DereferencedSchema => {
+): DereferencedSchemaType => {
   // Get the method schema
   const methodSchema = fullSchema.definitions[methodName];
   if (!methodSchema) {

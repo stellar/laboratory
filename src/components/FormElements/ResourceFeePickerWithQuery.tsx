@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-
 import { useSimulateTx } from "@/query/useSimulateTx";
 
 import { useStore } from "@/store/useStore";
@@ -9,6 +8,7 @@ import { SorobanOpType } from "@/types/types";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import {
   buildSorobanTx,
+  buildSorobanData,
   getContractDataXDR,
   getSorobanTxData,
 } from "@/helpers/sorobanUtils";
@@ -16,8 +16,10 @@ import {
 import { InputSideElement } from "@/components/InputSideElement";
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 
+// We add a bogus fee to simualte to fetch the min resource fee from the RPC
+const BOGUS_RESOURCE_FEE = "100";
+
 const isAllParamsExceptResourceFeeValid = (params: Record<string, any>) => {
-  // Create a copy of params without resource_fee
   const { ...requiredParams } = params;
 
   // Check if all remaining fields have truthy values
@@ -62,8 +64,6 @@ export const ResourceFeePickerWithQuery = ({
     isPending: isSimulateTxPending,
   } = useSimulateTx();
 
-  console.log("operation: ", operation);
-
   const [errorMessage, setErrorMessage] = useState<string | undefined>(
     undefined,
   );
@@ -90,12 +90,29 @@ export const ResourceFeePickerWithQuery = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [simulateTxData?.result?.minResourceFee]);
 
-  // Create a sample transaction to simulate to get the min resource fee
+  const passTxToSimulate = () => {
+    const sorobanData = buildSorobanData({
+      resourceFee: BOGUS_RESOURCE_FEE, // simulate purpose only
+    });
+
+    const builtXdr = buildSorobanTx({
+      sorobanData,
+      params: txnParams,
+      sorobanOp: {
+        ...operation,
+        params: {
+          ...operation.params,
+          resource_fee: BOGUS_RESOURCE_FEE,
+        },
+      },
+      networkPassphrase: network.passphrase,
+    }).toXDR();
+
+    return builtXdr;
+  };
+
   const buildTxToSimulate = () => {
     try {
-      // We add a bogus fee to simualte to fetch the min resource fee from the RPC
-      const BOGUS_RESOURCE_FEE = "100";
-
       let builtXdr, contractDataXDR;
 
       try {
@@ -163,8 +180,12 @@ export const ResourceFeePickerWithQuery = ({
         <InputSideElement
           variant="button"
           onClick={async () => {
-            const sampleTxnXdr = buildTxToSimulate();
-
+            let sampleTxnXdr;
+            if (operation.operation_type === "invoke_contract_function") {
+              sampleTxnXdr = passTxToSimulate();
+            } else {
+              sampleTxnXdr = buildTxToSimulate();
+            }
             if (!sampleTxnXdr) {
               return;
             }

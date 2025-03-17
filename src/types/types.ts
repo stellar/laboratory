@@ -255,7 +255,7 @@ export type SorobanInvokeValue = {
   contract_id: string;
   function_name: string;
   args: AnyObject;
-  opParamCustomError?: AnyObject;
+  scValsXdr?: string[];
 };
 
 // =============================================================================

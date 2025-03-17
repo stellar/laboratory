@@ -9,6 +9,8 @@ import {
   SorobanDataBuilder,
 } from "@stellar/stellar-sdk";
 
+import { parseJsonString } from "@/helpers/parseJsonString";
+
 import { TransactionBuildParams } from "@/store/createStore";
 import { SorobanOpType, TxnOperation } from "@/types/types";
 
@@ -124,8 +126,6 @@ export const buildSorobanTx = ({
   };
 
   const getSorobanOp = (operationType: string) => {
-    console.log("sorobanOp: ", sorobanOp);
-
     switch (operationType) {
       case "extend_footprint_ttl":
         return Operation.extendFootprintTtl({
@@ -134,10 +134,17 @@ export const buildSorobanTx = ({
         });
       // case "restore_footprint":
       case "invoke_contract_function":
+        const invokeContractParams = parseJsonString(
+          sorobanOp.params.invoke_contract,
+        );
+        const scVals = invokeContractParams.scValsXdr.map((val: string) =>
+          xdr.ScVal.fromXDR(val, "base64"),
+        );
+
         return Operation.invokeContractFunction({
-          contract: sorobanOp.params.contract_address,
-          function: sorobanOp.params.function_name,
-          args: sorobanOp.params.function_args,
+          contract: invokeContractParams.contract_id,
+          function: invokeContractParams.function_name,
+          args: scVals,
           auth: sorobanOp.params.auth,
           source: sorobanOp.source_account,
         });
@@ -164,7 +171,7 @@ export const buildSorobanTx = ({
 };
 
 // Preparing Soroban Transaction Data
-const buildSorobanData = ({
+export const buildSorobanData = ({
   readOnlyXdrLedgerKey = [],
   readWriteXdrLedgerKey = [],
   resourceFee,
@@ -175,11 +182,6 @@ const buildSorobanData = ({
   readWriteXdrLedgerKey?: xdr.LedgerKey[];
   resourceFee: string;
 }) => {
-  // one of the two must be provided
-  if (!(readOnlyXdrLedgerKey && readWriteXdrLedgerKey)) {
-    return;
-  }
-
   // https://stellar.github.io/js-stellar-sdk/SorobanDataBuilder.html
   // SorobanDataBuilder is a builder for xdr.SorobanTransactionData structures
   // that will be used in tx builder

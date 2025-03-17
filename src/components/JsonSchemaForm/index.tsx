@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import type { JSONSchema7 } from "json-schema";
-import { Contract, contract } from "@stellar/stellar-sdk";
+import { Contract, contract, nativeToScVal, xdr } from "@stellar/stellar-sdk";
 import { Button, Card, Icon, Input, Text } from "@stellar/design-system";
-import BigNumber from "bignumber.js";
+
+import { isSpecTypeNumber } from "@/helpers/isSpecTypeNumber";
+import { readObj } from "@/helpers/readObj";
 import {
   dereferenceSchema,
-  DereferencedSchema,
+  DereferencedSchemaType,
 } from "@/helpers/dereferenceSchema";
 import { removeLeadingZeroes } from "@/helpers/removeLeadingZeroes";
 
@@ -14,6 +16,8 @@ import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 import { LabelHeading } from "@/components/LabelHeading";
 import { AnyObject, SorobanInvokeValue } from "@/types/types";
 import { validate } from "@/validate";
+import { useStore } from "@/store/useStore";
+import { getScValsFromSpec } from "@/helpers/getScValsFromSpec";
 
 export const JsonSchemaForm = ({
   name,
@@ -26,45 +30,37 @@ export const JsonSchemaForm = ({
   onChange: (value: SorobanInvokeValue) => void;
   spec: contract.Spec;
 }) => {
+  const { transaction } = useStore();
+  const { updateSorobanBuildXdr } = transaction;
+
   const selectedFuncSchema: JSONSchema7 | undefined = spec.jsonSchema(name);
 
   if (!selectedFuncSchema) {
     return null;
   }
 
-  const dereferencedSchema = dereferenceSchema(selectedFuncSchema, name);
+  const dereferencedSchema: DereferencedSchemaType = dereferenceSchema(
+    selectedFuncSchema,
+    name,
+  );
   const requiredFields = dereferencedSchema.required;
-  const [formError, setFormError] = useState<AnyObject>({});
   const missingFields = requiredFields.filter((field) => !value.args[field]);
+
+  const [formError, setFormError] = useState<AnyObject>({});
 
   useEffect(() => {
     // const missingFields = requiredFields.filter((field) => !value.args[field]);
   }, [value.args]);
 
   const handleChange = (key: string, newVal: any) => {
-    // @TODO
-    // onChange({
-    //   ...value,
-    //   data: {
-    //     ...value.args,
-    //     [key]: {
-    //       value: newVal,
-    //       type: dereferencedSchema.properties[key],
-    //     },
-    //   },
-    // });
+    console.log("[handleChange] typeof newVal: ", typeof newVal);
+    console.log("[handleChange] newVal: ", newVal);
 
     onChange({
       ...value,
       args: {
         ...value.args,
         [key]: newVal,
-      },
-      opParamCustomError: {
-        ...value.opParamCustomError,
-        error: {
-          ...formError,
-        },
       },
     });
   };
@@ -181,13 +177,9 @@ export const JsonSchemaForm = ({
             value={value.args[label] || ""}
             error={formError[label] || ""}
             onChange={(e) => {
-              const bn = new BigNumber(e.target.value);
-              console.log("bn: ", bn);
-              // const sanitizedValue = removeLeadingZeroes(e.target.value);
-              // const numVal = Number(sanitizedValue);
-              handleChange(label, bn.toNumber());
-
               // validate the value
+              handleChange(label, e.target.value);
+
               const error = validate.getU32Error(e.target.value);
               setFormError({
                 ...formError,
@@ -399,22 +391,21 @@ export const JsonSchemaForm = ({
             }
             size="md"
             onClick={() => {
-              console.log("value.args: ", value.args);
-              const scVals = spec.funcArgsToScVals(
+              const scVals = getScValsFromSpec(
                 value.function_name,
-                value.args,
+                spec,
+                value,
               );
 
-              // returns an InvokeHostFunctionOp operation to call the
-              // contract with the given method and parameters
-              const call = new Contract(value.contract_id).call(
-                value.function_name,
-                ...scVals,
-              );
+              const scValsToXdr = scVals.map((val) => val.toXDR("base64"));
 
-              console.log("call.toXDR(): ", call.toXDR());
+              onChange({
+                ...value,
+                scValsXdr: scValsToXdr,
+              });
 
-              const xdrOperaion = call.toXDR("base64");
+              console.log("scValsToXdr: ", scValsToXdr);
+              console.log("scVals: ", scVals);
             }}
             type="button"
           >
