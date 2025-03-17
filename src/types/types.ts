@@ -420,6 +420,17 @@ export type ContractStorageProcessedItem<T> = T & {
   valueJson?: AnyObject | null;
 };
 
+export type ContractListRecord = {
+  account: string;
+  contract: string;
+  created: number;
+  creator: string;
+  paging_token: string;
+  payments: number;
+  trades: number;
+  wasm: string;
+};
+
 // =============================================================================
 // Data table
 // =============================================================================

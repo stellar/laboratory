@@ -978,6 +978,19 @@
   }
 }
 
+// Smart Contract List
+.ContractLink {
+  &--withIcon {
+    gap: pxToRem(4px) !important;
+
+    svg {
+      stroke: var(--sds-clr-gray-09);
+      width: pxToRem(12px);
+      height: pxToRem(12px);
+    }
+  }
+}
+
 // to fix Safari only styling bug
 .Input,
 .RadioPicker,

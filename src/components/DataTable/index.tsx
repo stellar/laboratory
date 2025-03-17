@@ -28,6 +28,27 @@ import {
 
 import "./styles.scss";
 
+type DataTableProps<T> = {
+  tableId: string;
+  cssGridTemplateColumns: string;
+  tableHeaders: DataTableHeader[];
+  tableData: T[];
+  formatDataRow: (item: T) => DataTableCell[];
+  customFooterEl?: React.ReactNode;
+  csvFileName?: string;
+  hideFirstLastPageNav?: boolean;
+  hidePageCount?: boolean;
+  pageNavConfig?: Record<
+    "prev" | "next",
+    {
+      onClick: () => void;
+      disabled?: boolean;
+    }
+  >;
+  isExternalUpdating?: boolean;
+  externalSort?: (sortDirection: SortDirection) => void;
+};
+
 export const DataTable = <T extends AnyObject>({
   tableId,
   cssGridTemplateColumns,
@@ -36,15 +57,12 @@ export const DataTable = <T extends AnyObject>({
   formatDataRow,
   customFooterEl,
   csvFileName,
-}: {
-  tableId: string;
-  cssGridTemplateColumns: string;
-  tableHeaders: DataTableHeader[];
-  tableData: T[];
-  formatDataRow: (item: T) => DataTableCell[];
-  customFooterEl?: React.ReactNode;
-  csvFileName?: string;
-}) => {
+  hideFirstLastPageNav = false,
+  hidePageCount = false,
+  pageNavConfig,
+  isExternalUpdating = false,
+  externalSort,
+}: DataTableProps<T>) => {
   const PAGE_SIZE = 20;
 
   // Data
@@ -54,6 +72,7 @@ export const DataTable = <T extends AnyObject>({
   const [isUpdating, setIsUpdating] = useState(false);
 
   // Sort by
+  const hasExternalSort = Boolean(externalSort);
   const [sortById, setSortById] = useState("");
   const [sortByDir, setSortByDir] = useState<SortDirection>("default");
 
@@ -81,13 +100,13 @@ export const DataTable = <T extends AnyObject>({
   useEffect(() => {
     const data = processContractStorageData({
       data: tableData,
-      sortById,
-      sortByDir,
+      sortById: hasExternalSort ? undefined : sortById,
+      sortByDir: hasExternalSort ? "default" : sortByDir,
       filters: appliedFilters,
     });
 
     setProcessedData(data);
-  }, [tableData, sortByDir, sortById, appliedFilters]);
+  }, [hasExternalSort, tableData, sortByDir, sortById, appliedFilters]);
 
   // Hide loader when processed data is done
   useEffect(() => {
@@ -134,7 +153,12 @@ export const DataTable = <T extends AnyObject>({
     setSortById(headerId);
     setSortByDir(sortDir);
     setCurrentPage(1);
-    setIsUpdating(true);
+
+    if (externalSort) {
+      externalSort(sortDir);
+    } else {
+      setIsUpdating(true);
+    }
   };
 
   const closeFilterDropdown = () => {
@@ -463,13 +487,13 @@ export const DataTable = <T extends AnyObject>({
       {/* Table */}
       <Card noPadding={true}>
         <div className="DataTable__container">
-          {isUpdating ? <Loader /> : null}
+          {isUpdating || isExternalUpdating ? <Loader /> : null}
           <div className="DataTable__scroll">
             <table
               className="DataTable__table"
               style={customStyle}
               data-testid={`${tableId}-table`}
-              data-disabled={isUpdating}
+              data-disabled={isUpdating || isExternalUpdating}
             >
               <thead>
                 <tr data-style="row" role="row">
@@ -521,49 +545,82 @@ export const DataTable = <T extends AnyObject>({
           </Box>
 
           <Box gap="xs" direction="row" align="center">
-            <Button
-              variant="tertiary"
-              size="sm"
-              onClick={() => {
-                setCurrentPage(1);
-              }}
-              disabled={currentPage === 1}
-            >
-              First
-            </Button>
+            {/* First page */}
+            {hideFirstLastPageNav ? (
+              <></>
+            ) : (
+              <Button
+                variant="tertiary"
+                size="sm"
+                onClick={() => {
+                  setCurrentPage(1);
+                }}
+                disabled={currentPage === 1}
+              >
+                First
+              </Button>
+            )}
 
+            {/* Previous page */}
             <Button
               variant="tertiary"
               size="sm"
               icon={<Icon.ArrowLeft />}
               onClick={() => {
-                setCurrentPage(currentPage - 1);
+                if (pageNavConfig?.prev.onClick) {
+                  pageNavConfig.prev.onClick();
+                } else {
+                  setCurrentPage(currentPage - 1);
+                }
               }}
-              disabled={currentPage === 1}
+              disabled={
+                pageNavConfig?.prev.disabled !== undefined
+                  ? pageNavConfig.prev.disabled
+                  : currentPage === 1
+              }
             ></Button>
 
-            <div className="DataTable__pagination">{`Page ${currentPage} of ${totalPageCount}`}</div>
+            {/* Page count */}
+            {hidePageCount ? (
+              <></>
+            ) : (
+              <div className="DataTable__pagination">{`Page ${currentPage} of ${totalPageCount}`}</div>
+            )}
 
+            {/* Next page */}
             <Button
               variant="tertiary"
               size="sm"
               icon={<Icon.ArrowRight />}
               onClick={() => {
-                setCurrentPage(currentPage + 1);
+                if (pageNavConfig?.next.onClick) {
+                  pageNavConfig.next.onClick();
+                } else {
+                  setCurrentPage(currentPage + 1);
+                }
               }}
-              disabled={currentPage === totalPageCount}
+              disabled={
+                pageNavConfig?.next.disabled !== undefined
+                  ? pageNavConfig.next.disabled
+                  : currentPage === totalPageCount
+              }
             ></Button>
 
-            <Button
-              variant="tertiary"
-              size="sm"
-              onClick={() => {
-                setCurrentPage(totalPageCount);
-              }}
-              disabled={currentPage === totalPageCount}
-            >
-              Last
-            </Button>
+            {/* Last page */}
+            {hideFirstLastPageNav ? (
+              <></>
+            ) : (
+              <Button
+                variant="tertiary"
+                size="sm"
+                onClick={() => {
+                  setCurrentPage(totalPageCount);
+                }}
+                disabled={currentPage === totalPageCount}
+              >
+                Last
+              </Button>
+            )}
           </Box>
         </Box>
       </Box>

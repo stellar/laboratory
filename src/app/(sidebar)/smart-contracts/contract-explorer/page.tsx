@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, Card, Icon, Input, Link, Text } from "@stellar/design-system";
+import { Button, Card, Icon, Input, Text } from "@stellar/design-system";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { useStore } from "@/store/useStore";
@@ -13,6 +13,7 @@ import { PageCard } from "@/components/layout/PageCard";
 import { MessageField } from "@/components/MessageField";
 import { TabView } from "@/components/TabView";
 import { SwitchNetworkButtons } from "@/components/SwitchNetworkButtons";
+import { PoweredByStellarExpert } from "@/components/PoweredByStellarExpert";
 
 import { ContractInfo } from "./components/ContractInfo";
 
@@ -192,10 +193,7 @@ export default function ContractExplorer() {
               }}
             />
 
-            <Text as="div" size="xs">
-              Powered by{" "}
-              <Link href="https://stellar.expert">Stellar.Expert</Link>
-            </Text>
+            <PoweredByStellarExpert />
           </>
         ) : null}
       </>

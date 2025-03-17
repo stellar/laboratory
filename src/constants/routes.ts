@@ -85,4 +85,5 @@ export enum Routes {
   // Smart Contracts
   SMART_CONTRACTS = "/smart-contracts",
   SMART_CONTRACTS_CONTRACT_EXPLORER = "/smart-contracts/contract-explorer",
+  SMART_CONTRACTS_CONTRACT_LIST = "/smart-contracts/contract-list",
 }
