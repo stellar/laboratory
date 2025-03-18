@@ -1,23 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import type { JSONSchema7 } from "json-schema";
-import { Contract, contract, nativeToScVal, xdr } from "@stellar/stellar-sdk";
+import { contract } from "@stellar/stellar-sdk";
 import { Button, Card, Icon, Input, Text } from "@stellar/design-system";
 
-import { isSpecTypeNumber } from "@/helpers/isSpecTypeNumber";
-import { readObj } from "@/helpers/readObj";
+import { TransactionBuildParams } from "@/store/createStore";
+import { useStore } from "@/store/useStore";
+import { AnyObject, SorobanInvokeValue, TxnOperation } from "@/types/types";
+import { validate } from "@/validate";
+
 import {
   dereferenceSchema,
   DereferencedSchemaType,
 } from "@/helpers/dereferenceSchema";
 import { removeLeadingZeroes } from "@/helpers/removeLeadingZeroes";
+import { getScValsFromSpec } from "@/helpers/getScValsFromSpec";
+import { buildSorobanTx } from "@/helpers/sorobanUtils";
+import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
+
+import { usePrepareRpcTx } from "@/query/usePrepareRpcTx";
 
 import { Box } from "@/components/layout/Box";
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 import { LabelHeading } from "@/components/LabelHeading";
-import { AnyObject, SorobanInvokeValue } from "@/types/types";
-import { validate } from "@/validate";
-import { useStore } from "@/store/useStore";
-import { getScValsFromSpec } from "@/helpers/getScValsFromSpec";
 
 export const JsonSchemaForm = ({
   name,
@@ -30,8 +34,16 @@ export const JsonSchemaForm = ({
   onChange: (value: SorobanInvokeValue) => void;
   spec: contract.Spec;
 }) => {
-  const { transaction } = useStore();
+  const { network, transaction } = useStore();
   const { updateSorobanBuildXdr } = transaction;
+  const { params: txnParams, soroban } = transaction.build;
+  const { operation } = soroban;
+  const {
+    mutate: prepareTx,
+    isPending: isPrepareTxPending,
+    status: prepareTxStatus,
+    data: prepareTxData,
+  } = usePrepareRpcTx();
 
   const selectedFuncSchema: JSONSchema7 | undefined = spec.jsonSchema(name);
 
@@ -48,14 +60,7 @@ export const JsonSchemaForm = ({
 
   const [formError, setFormError] = useState<AnyObject>({});
 
-  useEffect(() => {
-    // const missingFields = requiredFields.filter((field) => !value.args[field]);
-  }, [value.args]);
-
   const handleChange = (key: string, newVal: any) => {
-    console.log("[handleChange] typeof newVal: ", typeof newVal);
-    console.log("[handleChange] newVal: ", newVal);
-
     onChange({
       ...value,
       args: {
@@ -389,27 +394,38 @@ export const JsonSchemaForm = ({
               missingFields.length > 0 ||
               Object.values(formError).filter(Boolean).length > 0
             }
+            isLoading={isPrepareTxPending}
             size="md"
             onClick={() => {
-              const scVals = getScValsFromSpec(
-                value.function_name,
-                spec,
+              const sampleTxnXdr = getTxnToSimulate(
                 value,
+                spec,
+                txnParams,
+                operation,
+                network.passphrase,
               );
 
-              const scValsToXdr = scVals.map((val) => val.toXDR("base64"));
-
-              onChange({
-                ...value,
-                scValsXdr: scValsToXdr,
+              prepareTx({
+                rpcUrl: network.rpcUrl,
+                transactionXdr: sampleTxnXdr,
+                networkPassphrase: network.passphrase,
+                headers: getNetworkHeaders(network, "rpc"),
               });
 
-              console.log("scValsToXdr: ", scValsToXdr);
-              console.log("scVals: ", scVals);
+              console.log(
+                "[JsonSchemaForm] prepareTxStatus: ",
+                prepareTxStatus,
+              );
+              console.log("[JsonSchemaForm] prepareTxData: ", prepareTxData);
+              if (prepareTxStatus === "success") {
+                updateSorobanBuildXdr(prepareTxData?.envelopeXdr);
+              } else {
+                updateSorobanBuildXdr("");
+              }
             }}
             type="button"
           >
-            Call Contract
+            Prepare Transaction
           </Button>
         </Box>
       </Box>
@@ -484,4 +500,31 @@ const renderTitle = (
       ) : null}
     </>
   );
+};
+
+const getTxnToSimulate = (
+  value: SorobanInvokeValue,
+  spec: contract.Spec,
+  txnParams: TransactionBuildParams,
+  operation: TxnOperation,
+  networkPassphrase: string,
+) => {
+  const scVals = getScValsFromSpec(value.function_name, spec, value);
+
+  const builtXdr = buildSorobanTx({
+    params: txnParams,
+    sorobanOp: {
+      ...operation,
+      params: {
+        ...operation.params,
+        contract_id: value.contract_id,
+        function_name: value.function_name,
+        args: scVals,
+        resource_fee: "200", // bogus resource fee for simulation purpose
+      },
+    },
+    networkPassphrase,
+  }).toXDR();
+
+  return builtXdr;
 };

@@ -9,8 +9,6 @@ import {
   SorobanDataBuilder,
 } from "@stellar/stellar-sdk";
 
-import { parseJsonString } from "@/helpers/parseJsonString";
-
 import { TransactionBuildParams } from "@/store/createStore";
 import { SorobanOpType, TxnOperation } from "@/types/types";
 
@@ -24,6 +22,8 @@ export const isSorobanOperationType = (operationType: string) => {
 // https://developers.stellar.org/docs/learn/glossary#ledgerkey
 // https://developers.stellar.org/docs/build/guides/archival/restore-data-js
 // Setup contract data xdr that will be used to build Soroban Transaction Data
+// Used for Soroban Operation "restore_footprint" and "extend_footprint_ttl"
+// "invoke_contract_function" uses the returned soroban transaction data from simulateTransaction
 export const getContractDataXDR = ({
   contractAddress,
   dataKey,
@@ -87,7 +87,7 @@ export const buildSorobanTx = ({
   sorobanOp,
   networkPassphrase,
 }: {
-  sorobanData: xdr.SorobanTransactionData;
+  sorobanData?: xdr.SorobanTransactionData | string;
   params: TransactionBuildParams;
   sorobanOp: TxnOperation;
   networkPassphrase: string;
@@ -134,17 +134,10 @@ export const buildSorobanTx = ({
         });
       // case "restore_footprint":
       case "invoke_contract_function":
-        const invokeContractParams = parseJsonString(
-          sorobanOp.params.invoke_contract,
-        );
-        const scVals = invokeContractParams.scValsXdr.map((val: string) =>
-          xdr.ScVal.fromXDR(val, "base64"),
-        );
-
         return Operation.invokeContractFunction({
-          contract: invokeContractParams.contract_id,
-          function: invokeContractParams.function_name,
-          args: scVals,
+          contract: sorobanOp.params.contract_id,
+          function: sorobanOp.params.function_name,
+          args: sorobanOp.params.args,
           auth: sorobanOp.params.auth,
           source: sorobanOp.source_account,
         });
@@ -165,13 +158,13 @@ export const buildSorobanTx = ({
 
   return transaction
     .setNetworkPassphrase(networkPassphrase)
-    .setSorobanData(sorobanData)
+    .setSorobanData(sorobanData || "")
     .addOperation(getSorobanOp(sorobanOp.operation_type))
     .build();
 };
 
 // Preparing Soroban Transaction Data
-export const buildSorobanData = ({
+const buildSorobanData = ({
   readOnlyXdrLedgerKey = [],
   readWriteXdrLedgerKey = [],
   resourceFee,

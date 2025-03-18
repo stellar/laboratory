@@ -2,8 +2,6 @@ import { useState } from "react";
 import { Select } from "@stellar/design-system";
 import { contract } from "@stellar/stellar-sdk";
 
-import { parseContractSpec } from "@/helpers/parseContractSpec";
-
 import { Box } from "@/components/layout/Box";
 import { JsonSchemaForm } from "@/components/JsonSchemaForm";
 import { ExpandBox } from "@/components/ExpandBox";
@@ -31,15 +29,9 @@ export const ContractMethodSelectPicker = ({
 }) => {
   const [selectedValue, setSelectedValue] = useState<string>("");
 
-  // console.log("parseContractSpec(spec): ", parseContractSpec(spec));
-  // console.log("specSchema: ", specSchema);
-  // console.log("spec.funcs(): ", spec.funcs());
-
   const onSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (e.target.value) {
-      // const selectedFuncSchema = spec.jsonSchema(e.target.value);
       setSelectedValue(e.target.value);
-      // setSpecSchema(selectedFuncSchema);
 
       onChange({
         ...value,

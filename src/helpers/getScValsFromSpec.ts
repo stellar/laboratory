@@ -7,7 +7,7 @@ import { SorobanInvokeValue } from "@/types/types";
 
 // Used in the JsonSchemaForm component:
 // To convert the string value to ScVal
-// based on the function name and spec
+// based on its function name and spec
 export const getScValsFromSpec = (
   function_name: string,
   spec: contract.Spec,
@@ -15,7 +15,7 @@ export const getScValsFromSpec = (
 ) => {
   let fn = spec.getFunc(function_name);
 
-  return fn.inputs().map((input) => {
+  return fn.inputs().map((input: xdr.ScSpecFunctionInputV0) => {
     if (isSpecTypeNumber(input.type().switch())) {
       const rawValue = readObj(value.args, input);
 
@@ -31,14 +31,14 @@ export const getScValsFromSpec = (
 
       const parsedValue = BigInt(rawValue);
 
-      return nativeToScVal(parsedValue);
+      return nativeToScVal(parsedValue, { type: input.type() });
     }
 
     // the below is how funcArgsToScVals is implemented
     // we need to customize a bit since the saved number value is a string
     // https://stellar.github.io/js-soroban-client/ContractSpec.html#funcArgsToScVals
-    console.log("value.args: ", value.args);
-    console.log("readObj(value.args, input)", readObj(value.args, input));
-    return nativeToScVal(readObj(value.args, input));
+    return nativeToScVal(readObj(value.args, input), {
+      type: "address",
+    });
   });
 };

@@ -8,7 +8,6 @@ import { SorobanOpType } from "@/types/types";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import {
   buildSorobanTx,
-  buildSorobanData,
   getContractDataXDR,
   getSorobanTxData,
 } from "@/helpers/sorobanUtils";
@@ -20,7 +19,9 @@ import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 const BOGUS_RESOURCE_FEE = "100";
 
 const isAllParamsExceptResourceFeeValid = (params: Record<string, any>) => {
-  const { ...requiredParams } = params;
+  // Create a copy of params without resource_fee
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { resource_fee, ...requiredParams } = params;
 
   // Check if all remaining fields have truthy values
   return Object.values(requiredParams).every((value) => Boolean(value));
@@ -68,6 +69,11 @@ export const ResourceFeePickerWithQuery = ({
     undefined,
   );
 
+  useEffect(() => {
+    // Reset error message when operation params change
+    setErrorMessage(undefined);
+  }, [soroban.operation]);
+
   // operation.params.resource_fee is required for submitting; however,
   // we don't check for it here in case user doesn't have one and we still want to simulate
   // @TODO should update this from isValid.operations point of view
@@ -90,27 +96,7 @@ export const ResourceFeePickerWithQuery = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [simulateTxData?.result?.minResourceFee]);
 
-  const passTxToSimulate = () => {
-    const sorobanData = buildSorobanData({
-      resourceFee: BOGUS_RESOURCE_FEE, // simulate purpose only
-    });
-
-    const builtXdr = buildSorobanTx({
-      sorobanData,
-      params: txnParams,
-      sorobanOp: {
-        ...operation,
-        params: {
-          ...operation.params,
-          resource_fee: BOGUS_RESOURCE_FEE,
-        },
-      },
-      networkPassphrase: network.passphrase,
-    }).toXDR();
-
-    return builtXdr;
-  };
-
+  // Create a sample transaction to simulate to get the min resource fee
   const buildTxToSimulate = () => {
     try {
       let builtXdr, contractDataXDR;
@@ -180,12 +166,8 @@ export const ResourceFeePickerWithQuery = ({
         <InputSideElement
           variant="button"
           onClick={async () => {
-            let sampleTxnXdr;
-            if (operation.operation_type === "invoke_contract_function") {
-              sampleTxnXdr = passTxToSimulate();
-            } else {
-              sampleTxnXdr = buildTxToSimulate();
-            }
+            const sampleTxnXdr = buildTxToSimulate();
+
             if (!sampleTxnXdr) {
               return;
             }
