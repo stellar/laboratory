@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Button } from "@stellar/design-system";
-import { contract } from "@stellar/stellar-sdk";
 
 import { SorobanInvokeValue } from "@/types/types";
 
