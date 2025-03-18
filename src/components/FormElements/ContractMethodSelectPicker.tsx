@@ -63,13 +63,14 @@ export const ContractMethodSelectPicker = ({
         ))}
       </Select>
       <ExpandBox isExpanded={Boolean(selectedValue)} offsetTop="sm">
-        {selectedValue ? (
+        {selectedValue && spec.jsonSchema(selectedValue) ? (
           <>
             <JsonSchemaForm
               name={selectedValue}
               value={value}
               onChange={onChange}
               spec={spec}
+              funcSchema={spec.jsonSchema(selectedValue)}
             />
             {/* 
             // @todo for testing

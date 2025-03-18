@@ -152,6 +152,14 @@ export type LedgerErrorResponse = {
   errorCode: number;
 };
 
+export type PrepareRpcResponse = {
+  transactionXdr: string;
+};
+
+export type PrepareRpcErrorResponse = {
+  error: StellarRpc.Api.SimulateTransactionErrorResponse;
+};
+
 export type SubmitRpcResponse = {
   hash: string;
   result: StellarRpc.Api.GetSuccessfulTransactionResponse;

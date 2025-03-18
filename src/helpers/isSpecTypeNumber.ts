@@ -1,8 +1,6 @@
 import { xdr } from "@stellar/stellar-sdk";
 
 export const isSpecTypeNumber = (specType: xdr.ScSpecType): boolean => {
-  console.log("specType.name(): ", specType.name);
-  console.log("specType.value: ", specType.value);
   switch (specType.name) {
     case xdr.ScSpecType.scSpecTypeU32().name:
     case xdr.ScSpecType.scSpecTypeI32().name:

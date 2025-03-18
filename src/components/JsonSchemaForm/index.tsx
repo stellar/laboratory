@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import type { JSONSchema7 } from "json-schema";
+import React, { useEffect, useState } from "react";
 import { contract } from "@stellar/stellar-sdk";
 import { Button, Card, Icon, Input, Text } from "@stellar/design-system";
+
+import type { JSONSchema7 } from "json-schema";
 
 import { TransactionBuildParams } from "@/store/createStore";
 import { useStore } from "@/store/useStore";
@@ -14,10 +15,10 @@ import {
 } from "@/helpers/dereferenceSchema";
 import { removeLeadingZeroes } from "@/helpers/removeLeadingZeroes";
 import { getScValsFromSpec } from "@/helpers/getScValsFromSpec";
-import { buildSorobanTx } from "@/helpers/sorobanUtils";
+import { buildTxWithSorobanData } from "@/helpers/sorobanUtils";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 
-import { usePrepareRpcTx } from "@/query/usePrepareRpcTx";
+import { useRpcPrepareTx } from "@/query/useRpcPrepareTx";
 
 import { Box } from "@/components/layout/Box";
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
@@ -28,11 +29,13 @@ export const JsonSchemaForm = ({
   value,
   onChange,
   spec,
+  funcSchema,
 }: {
   name: string;
   value: SorobanInvokeValue;
   onChange: (value: SorobanInvokeValue) => void;
   spec: contract.Spec;
+  funcSchema: JSONSchema7;
 }) => {
   const { network, transaction } = useStore();
   const { updateSorobanBuildXdr } = transaction;
@@ -41,18 +44,12 @@ export const JsonSchemaForm = ({
   const {
     mutate: prepareTx,
     isPending: isPrepareTxPending,
-    status: prepareTxStatus,
     data: prepareTxData,
-  } = usePrepareRpcTx();
-
-  const selectedFuncSchema: JSONSchema7 | undefined = spec.jsonSchema(name);
-
-  if (!selectedFuncSchema) {
-    return null;
-  }
+    reset: resetPrepareTx,
+  } = useRpcPrepareTx();
 
   const dereferencedSchema: DereferencedSchemaType = dereferenceSchema(
-    selectedFuncSchema,
+    funcSchema,
     name,
   );
   const requiredFields = dereferencedSchema.required;
@@ -60,7 +57,20 @@ export const JsonSchemaForm = ({
 
   const [formError, setFormError] = useState<AnyObject>({});
 
+  useEffect(() => {
+    if (prepareTxData) {
+      updateSorobanBuildXdr(prepareTxData.transactionXdr);
+    } else {
+      updateSorobanBuildXdr("");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [prepareTxData]);
+
   const handleChange = (key: string, newVal: any) => {
+    if (soroban.xdr) {
+      updateSorobanBuildXdr("");
+    }
+
     onChange({
       ...value,
       args: {
@@ -372,6 +382,25 @@ export const JsonSchemaForm = ({
     }
   };
 
+  const handlePrepareTx = () => {
+    resetPrepareTx();
+
+    const sampleTxnXdr = getTxnToSimulate(
+      value,
+      spec,
+      txnParams,
+      operation,
+      network.passphrase,
+    );
+
+    prepareTx({
+      rpcUrl: network.rpcUrl,
+      transactionXdr: sampleTxnXdr,
+      networkPassphrase: network.passphrase,
+      headers: getNetworkHeaders(network, "rpc"),
+    });
+  };
+
   const render = (item: any): React.ReactElement => {
     const argLabels = item.properties ? Object.keys(item.properties) : [];
     const fields = item.properties ? Object.entries(item.properties) : [];
@@ -396,33 +425,7 @@ export const JsonSchemaForm = ({
             }
             isLoading={isPrepareTxPending}
             size="md"
-            onClick={() => {
-              const sampleTxnXdr = getTxnToSimulate(
-                value,
-                spec,
-                txnParams,
-                operation,
-                network.passphrase,
-              );
-
-              prepareTx({
-                rpcUrl: network.rpcUrl,
-                transactionXdr: sampleTxnXdr,
-                networkPassphrase: network.passphrase,
-                headers: getNetworkHeaders(network, "rpc"),
-              });
-
-              console.log(
-                "[JsonSchemaForm] prepareTxStatus: ",
-                prepareTxStatus,
-              );
-              console.log("[JsonSchemaForm] prepareTxData: ", prepareTxData);
-              if (prepareTxStatus === "success") {
-                updateSorobanBuildXdr(prepareTxData?.envelopeXdr);
-              } else {
-                updateSorobanBuildXdr("");
-              }
-            }}
+            onClick={handlePrepareTx}
             type="button"
           >
             Prepare Transaction
@@ -511,7 +514,7 @@ const getTxnToSimulate = (
 ) => {
   const scVals = getScValsFromSpec(value.function_name, spec, value);
 
-  const builtXdr = buildSorobanTx({
+  const builtXdr = buildTxWithSorobanData({
     params: txnParams,
     sorobanOp: {
       ...operation,

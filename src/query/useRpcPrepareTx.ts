@@ -2,7 +2,11 @@ import { useMutation } from "@tanstack/react-query";
 import { rpc as StellarRpc, TransactionBuilder } from "@stellar/stellar-sdk";
 
 import { isEmptyObject } from "@/helpers/isEmptyObject";
-import { NetworkHeaders } from "@/types/types";
+import {
+  NetworkHeaders,
+  PrepareRpcErrorResponse,
+  PrepareRpcResponse,
+} from "@/types/types";
 
 type PrepareRpcTxProps = {
   rpcUrl: string;
@@ -11,10 +15,12 @@ type PrepareRpcTxProps = {
   headers: NetworkHeaders;
 };
 
-export const usePrepareRpcTx = () => {
+// RPC's prepareTransaction method handles both
+// simulating and assembling transactions
+export const useRpcPrepareTx = () => {
   const mutation = useMutation<
-    { envelopeXdr: string },
-    { result: { errorResult: string } },
+    PrepareRpcResponse,
+    PrepareRpcErrorResponse,
     PrepareRpcTxProps
   >({
     mutationFn: async ({
@@ -35,7 +41,7 @@ export const usePrepareRpcTx = () => {
         const preparedTx = await rpcServer.prepareTransaction(transaction);
 
         return {
-          envelopeXdr: preparedTx.toXDR(),
+          transactionXdr: preparedTx.toXDR(),
         };
       } catch (e) {
         throw {
