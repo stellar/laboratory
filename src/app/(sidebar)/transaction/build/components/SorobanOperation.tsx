@@ -1,5 +1,4 @@
 import { ChangeEvent, useState } from "react";
-import { parse } from "lossless-json";
 
 import {
   Badge,
