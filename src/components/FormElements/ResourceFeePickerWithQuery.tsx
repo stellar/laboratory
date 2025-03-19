@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useSimulateTx } from "@/query/useSimulateTx";
+import { BASE_FEE } from "@stellar/stellar-sdk";
 
 import { useStore } from "@/store/useStore";
 import { SorobanOpType } from "@/types/types";
@@ -14,9 +15,6 @@ import {
 
 import { InputSideElement } from "@/components/InputSideElement";
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
-
-// We add a bogus fee to simualte to fetch the min resource fee from the RPC
-const BOGUS_RESOURCE_FEE = "100";
 
 const isAllParamsExceptResourceFeeValid = (params: Record<string, any>) => {
   // Create a copy of params without resource_fee
@@ -112,7 +110,7 @@ export const ResourceFeePickerWithQuery = ({
       const sorobanData = getSorobanTxData({
         contractDataXDR,
         operationType: operation.operation_type as SorobanOpType,
-        fee: BOGUS_RESOURCE_FEE, // simulate purpose only
+        fee: BASE_FEE, // simulate purpose only
       });
 
       if (!sorobanData) {
@@ -126,7 +124,7 @@ export const ResourceFeePickerWithQuery = ({
           ...operation,
           params: {
             ...operation.params,
-            resource_fee: BOGUS_RESOURCE_FEE,
+            resource_fee: BASE_FEE,
           },
         },
         networkPassphrase: network.passphrase,

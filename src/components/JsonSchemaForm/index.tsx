@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { contract } from "@stellar/stellar-sdk";
+import { BASE_FEE, contract } from "@stellar/stellar-sdk";
 import { Button, Card, Icon, Input, Text } from "@stellar/design-system";
 
 import type { JSONSchema7 } from "json-schema";
@@ -540,7 +540,7 @@ const getTxnToSimulate = (
           contract_id: value.contract_id,
           function_name: value.function_name,
           args: scVals,
-          resource_fee: "200", // bogus resource fee for simulation purpose
+          resource_fee: BASE_FEE, // bogus resource fee for simulation purpose
         },
       },
       networkPassphrase,
