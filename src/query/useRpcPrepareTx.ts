@@ -34,7 +34,6 @@ export const useRpcPrepareTx = () => {
           transactionXdr,
           networkPassphrase,
         );
-        console.log("transaction :", transaction);
         const rpcServer = new StellarRpc.Server(rpcUrl, {
           headers: isEmptyObject(headers) ? undefined : { ...headers },
           allowHttp: new URL(rpcUrl).hostname === "localhost",
