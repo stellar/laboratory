@@ -31,10 +31,7 @@ export const useSEContractsList = ({
       const params = new URLSearchParams();
 
       params.append("limit", "20");
-
-      if (order) {
-        params.append("order", order);
-      }
+      params.append("order", order || "desc");
 
       if (cursor) {
         params.append("cursor", cursor);
