@@ -45,11 +45,12 @@ import { TransactionHashReadOnlyField } from "@/components/TransactionHashReadOn
 import { PageCard } from "@/components/layout/PageCard";
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 import { JsonCodeWrapToggle } from "@/components/JsonCodeWrapToggle";
-
 import {
   HorizonErrorResponse,
   RpcErrorResponse,
 } from "./components/ErrorResponse";
+
+import { parseJsonString } from "@/helpers/parseJsonString";
 
 const SUBMIT_OPTIONS = [
   {
@@ -75,7 +76,7 @@ const isSorobanXdr = (xdrJsonString: string) => {
   }
 
   try {
-    const parsedJson = JSON.parse(xdrJsonString);
+    const parsedJson = parseJsonString(xdrJsonString);
     const operations = parsedJson?.tx?.tx?.operations || [];
 
     return operations.some((op: any) => {
@@ -83,7 +84,7 @@ const isSorobanXdr = (xdrJsonString: string) => {
       return (
         "extend_footprint_ttl" in body ||
         "restore_footprint" in body ||
-        "invoke_contract_function" in body
+        "invoke_host_function" in body
       );
     });
   } catch (e) {
@@ -662,7 +663,7 @@ export default function SubmitTransaction() {
                 </Text>
                 <div className="PageBody__content PageBody__scrollable">
                   <PrettyJsonTransaction
-                    json={JSON.parse(xdrJson.jsonString)}
+                    json={parseJsonString(xdrJson.jsonString)}
                     xdr={blob}
                     isCodeWrapped={isCodeWrapped}
                   />

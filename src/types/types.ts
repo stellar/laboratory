@@ -152,6 +152,14 @@ export type LedgerErrorResponse = {
   errorCode: number;
 };
 
+export type PrepareRpcResponse = {
+  transactionXdr: string;
+};
+
+export type PrepareRpcErrorResponse = {
+  result: StellarRpc.Api.SimulateTransactionErrorResponse;
+};
+
 export type SubmitRpcResponse = {
   hash: string;
   result: StellarRpc.Api.GetSuccessfulTransactionResponse;
@@ -253,7 +261,9 @@ export type SorobanOpType = "extend_footprint_ttl" | "invoke_contract_function";
 
 export type SorobanInvokeValue = {
   contract_id: string;
-  data: AnyObject;
+  function_name: string;
+  args: AnyObject;
+  scValsXdr?: string[];
 };
 
 // =============================================================================
