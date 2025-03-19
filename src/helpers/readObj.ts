@@ -2,8 +2,8 @@ import { AnyObject } from "@/types/types";
 import { xdr } from "@stellar/stellar-sdk";
 
 export const readObj = (args: AnyObject, input: xdr.ScSpecFunctionInputV0) => {
-  let inputName = input.name().toString();
-  let entry = Object.entries(args).find(([name, _]) => name === inputName);
+  const inputName = input.name().toString();
+  const entry = Object.entries(args).find(([name]) => name === inputName);
   if (!entry) {
     throw new Error(`Missing field ${inputName}`);
   }
