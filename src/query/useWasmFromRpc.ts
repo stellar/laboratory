@@ -30,7 +30,7 @@ export const useWasmFromRpc = ({
 
         return wasm;
       } catch (e: any) {
-        throw `Something went wrong downloading the wasm binary. ${e}`;
+        throw `Something went wrong downloading the wasm binary. ${e.message || e}`;
       }
     },
     enabled: isActive,

@@ -1,25 +1,36 @@
 import { useEffect, useRef, useState } from "react";
-import { Button, CopyText, Icon } from "@stellar/design-system";
+import { Button, CopyText, Icon, Select } from "@stellar/design-system";
 import MonacoEditor, { useMonaco } from "@monaco-editor/react";
 
 import { useStore } from "@/store/useStore";
 import { Box } from "@/components/layout/Box";
+import { WithInfoText } from "@/components/WithInfoText";
 import { downloadFile } from "@/helpers/downloadFile";
 
 import "./styles.scss";
 
+export type SupportedLanguage = "json" | "xdr";
+
 type CodeEditorProps = {
   title: string;
   value: string;
-  language: "json";
+  selectedLanguage: SupportedLanguage;
   fileName?: string;
+  languages?: SupportedLanguage[];
+  infoText?: React.ReactNode;
+  infoLink?: string;
+  onLanguageChange?: (newLanguage: SupportedLanguage) => void;
 };
 
 export const CodeEditor = ({
   title,
   value,
-  language,
+  selectedLanguage,
   fileName,
+  languages,
+  infoText,
+  infoLink,
+  onLanguageChange,
 }: CodeEditorProps) => {
   const { theme } = useStore();
   const monaco = useMonaco();
@@ -41,34 +52,77 @@ export const CodeEditor = ({
     return null;
   }
 
+  const getFileExtension = () => {
+    switch (selectedLanguage) {
+      case "xdr":
+        return "txt";
+      case "json":
+      default:
+        return selectedLanguage;
+    }
+  };
+
+  const renderTitle = () => {
+    if (infoText) {
+      return <WithInfoText infoText={infoText}>{title}</WithInfoText>;
+    }
+
+    if (infoLink) {
+      return <WithInfoText href={infoLink}>{title}</WithInfoText>;
+    }
+
+    return title;
+  };
+
   return (
     <div className={`CodeEditor ${isExpanded ? "CodeEditor--expanded" : ""}`}>
       <div className="CodeEditor__header" ref={headerEl}>
         {/* Title */}
-        <div className="CodeEditor__header__title">{title}</div>
+        <div className="CodeEditor__header__title">{renderTitle()}</div>
 
         {/* Actions */}
-        <Box gap="xs" direction="row" align="center" justify="end">
-          <>
-            {fileName ? (
-              <Button
-                variant="tertiary"
-                size="sm"
-                icon={<Icon.Download01 />}
-                title="Download"
-                onClick={(e) => {
-                  e.preventDefault();
+        <Box
+          gap="xs"
+          direction="row"
+          align="center"
+          justify="end"
+          addlClassName="CodeEditor__actions"
+        >
+          {languages && onLanguageChange ? (
+            <Select
+              id="code-editor-languages"
+              fieldSize="sm"
+              onChange={(e) =>
+                onLanguageChange(e.target.value as SupportedLanguage)
+              }
+              value={selectedLanguage}
+            >
+              {languages.map((l) => (
+                <option value={l} key={`ce-lang-${l}`}>
+                  {l.toUpperCase()}
+                </option>
+              ))}
+            </Select>
+          ) : null}
 
-                  downloadFile({
-                    value,
-                    fileType: "application/json",
-                    fileName,
-                    fileExtension: language,
-                  });
-                }}
-              ></Button>
-            ) : null}
-          </>
+          {fileName ? (
+            <Button
+              variant="tertiary"
+              size="sm"
+              icon={<Icon.Download01 />}
+              title="Download"
+              onClick={(e) => {
+                e.preventDefault();
+
+                downloadFile({
+                  value,
+                  fileType: "application/json",
+                  fileName,
+                  fileExtension: getFileExtension(),
+                });
+              }}
+            ></Button>
+          ) : null}
 
           <CopyText textToCopy={value}>
             <Button
@@ -104,13 +158,14 @@ export const CodeEditor = ({
         <MonacoEditor
           defaultLanguage="javascript"
           defaultValue=""
-          language={language}
+          language={selectedLanguage}
           value={value}
           options={{
             minimap: { enabled: false },
             readOnly: true,
             scrollBeyondLastLine: false,
             padding: { top: 8, bottom: 8 },
+            wordWrap: "on",
           }}
           theme={theme === "sds-theme-light" ? "light" : "vs-dark"}
         />

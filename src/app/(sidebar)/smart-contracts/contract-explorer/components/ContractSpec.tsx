@@ -1,8 +1,8 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Alert, Text, Loader, Button, Icon } from "@stellar/design-system";
 import { useQueryClient } from "@tanstack/react-query";
 
-import { CodeEditor } from "@/components/CodeEditor";
+import { CodeEditor, SupportedLanguage } from "@/components/CodeEditor";
 import { Box } from "@/components/layout/Box";
 import { ErrorText } from "@/components/ErrorText";
 
@@ -34,6 +34,9 @@ export const ContractSpec = ({
 }) => {
   const isXdrInit = useIsXdrInit();
   const queryClient = useQueryClient();
+
+  const [selectedFormat, setSelectedFormat] =
+    useState<SupportedLanguage>("json");
 
   const {
     data: wasmData,
@@ -132,23 +135,33 @@ export const ContractSpec = ({
   }
 
   const formatSpec = () => {
-    const entries = wasmData?.spec?.entries;
+    const entries = wasmData?.spec?.entries || [];
 
-    try {
-      if (isXdrInit && entries?.length) {
-        const decodedEntries = entries.map((e) => {
-          const jsonString = StellarXdr.decode(
-            "ScSpecEntry",
-            e.toXDR("base64"),
-          );
+    // JSON
+    if (selectedFormat === "json") {
+      try {
+        if (isXdrInit) {
+          const decodedEntries = entries.map((e) => {
+            const jsonString = StellarXdr.decode(
+              "ScSpecEntry",
+              e.toXDR("base64"),
+            );
 
-          return prettifyJsonString(jsonString);
-        });
+            return prettifyJsonString(jsonString);
+          });
 
-        return decodedEntries.join(",\n\n");
+          return decodedEntries.join(",\n\n");
+        }
+      } catch (e) {
+        // do nothing
       }
-    } catch (e) {
-      // do nothing
+      // XDR
+    } else if (selectedFormat === "xdr") {
+      const xdrEntries = entries?.map((e) => {
+        return e.toXDR("base64");
+      });
+
+      return xdrEntries?.join("\n\n");
     }
 
     return "";
@@ -159,8 +172,13 @@ export const ContractSpec = ({
       <CodeEditor
         title="Contract Spec"
         value={formatSpec()}
-        language="json"
+        selectedLanguage={selectedFormat}
         fileName={`${wasmHash}-contract-spec`}
+        languages={["json", "xdr"]}
+        onLanguageChange={(newLanguage) => {
+          setSelectedFormat(newLanguage);
+        }}
+        infoLink="https://developers.stellar.org/docs/build/guides/dapps/working-with-contract-specs#what-are-contract-specs"
       />
 
       <Box gap="xs" direction="column" align="end">
