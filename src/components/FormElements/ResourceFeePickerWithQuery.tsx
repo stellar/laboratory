@@ -1,14 +1,14 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-
 import { useSimulateTx } from "@/query/useSimulateTx";
+import { BASE_FEE } from "@stellar/stellar-sdk";
 
 import { useStore } from "@/store/useStore";
 import { SorobanOpType } from "@/types/types";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import {
-  buildSorobanTx,
+  buildTxWithSorobanData,
   getContractDataXDR,
   getSorobanTxData,
 } from "@/helpers/sorobanUtils";
@@ -97,20 +97,11 @@ export const ResourceFeePickerWithQuery = ({
   // Create a sample transaction to simulate to get the min resource fee
   const buildTxToSimulate = () => {
     try {
-      // We add a bogus fee to simualte to fetch the min resource fee from the RPC
-      const BOGUS_RESOURCE_FEE = "100";
-
-      let builtXdr, contractDataXDR;
-
-      try {
-        contractDataXDR = getContractDataXDR({
-          contractAddress: operation.params.contract,
-          dataKey: operation.params.key_xdr,
-          durability: operation.params.durability,
-        });
-      } catch (e) {
-        throw new Error(`Failed to generate contract data XDR: ${e}`);
-      }
+      const contractDataXDR = getContractDataXDR({
+        contractAddress: operation.params.contract,
+        dataKey: operation.params.key_xdr,
+        durability: operation.params.durability,
+      });
 
       if (!contractDataXDR) {
         throw new Error("Failed to fetch contract data XDR");
@@ -119,25 +110,26 @@ export const ResourceFeePickerWithQuery = ({
       const sorobanData = getSorobanTxData({
         contractDataXDR,
         operationType: operation.operation_type as SorobanOpType,
-        fee: BOGUS_RESOURCE_FEE, // simulate purpose only
+        fee: BASE_FEE, // simulate purpose only
       });
 
-      if (sorobanData) {
-        builtXdr = buildSorobanTx({
-          sorobanData,
-          params: txnParams,
-          sorobanOp: {
-            ...operation,
-            params: {
-              ...operation.params,
-              resource_fee: BOGUS_RESOURCE_FEE,
-            },
-          },
-          networkPassphrase: network.passphrase,
-        }).toXDR();
-      } else {
+      if (!sorobanData) {
         throw new Error("Failed to build Soroban transaction data");
       }
+
+      const builtXdr = buildTxWithSorobanData({
+        sorobanData,
+        params: txnParams,
+        sorobanOp: {
+          ...operation,
+          params: {
+            ...operation.params,
+            resource_fee: BASE_FEE,
+          },
+        },
+        networkPassphrase: network.passphrase,
+      }).toXDR();
+
       return builtXdr;
     } catch (e) {
       setErrorMessage(

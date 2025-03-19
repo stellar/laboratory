@@ -1,53 +1,88 @@
 import React, { useEffect, useState } from "react";
-import type { JSONSchema7 } from "json-schema";
+import { BASE_FEE, contract } from "@stellar/stellar-sdk";
 import { Button, Card, Icon, Input, Text } from "@stellar/design-system";
 
+import type { JSONSchema7 } from "json-schema";
+
+import { TransactionBuildParams } from "@/store/createStore";
+import { useStore } from "@/store/useStore";
+import { AnyObject, SorobanInvokeValue, TxnOperation } from "@/types/types";
+import { validate } from "@/validate";
+
 import {
-  getDereferenceSchema,
-  DereferencedSchema,
+  dereferenceSchema,
+  DereferencedSchemaType,
 } from "@/helpers/dereferenceSchema";
 import { removeLeadingZeroes } from "@/helpers/removeLeadingZeroes";
+import { getScValsFromSpec } from "@/helpers/getScValsFromSpec";
+import { buildTxWithSorobanData } from "@/helpers/sorobanUtils";
+import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
+
+import { useRpcPrepareTx } from "@/query/useRpcPrepareTx";
 
 import { Box } from "@/components/layout/Box";
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 import { LabelHeading } from "@/components/LabelHeading";
-import { AnyObject, SorobanInvokeValue } from "@/types/types";
-import { validate } from "@/validate";
+import { ErrorText } from "../ErrorText";
 
 export const JsonSchemaForm = ({
-  schema,
   name,
   value,
   onChange,
+  spec,
+  funcSchema,
 }: {
-  schema: JSONSchema7;
   name: string;
   value: SorobanInvokeValue;
   onChange: (value: SorobanInvokeValue) => void;
+  spec: contract.Spec;
+  funcSchema: JSONSchema7;
 }) => {
-  const [dereferencedSchema, setDereferencedSchema] =
-    useState<DereferencedSchema>({
-      properties: {},
-      required: [],
-      additionalProperties: false,
-    });
+  const { network, transaction } = useStore();
+  const { updateSorobanBuildXdr } = transaction;
+  const { params: txnParams, soroban } = transaction.build;
+  const { operation } = soroban;
+  const {
+    mutate: prepareTx,
+    isPending: isPrepareTxPending,
+    isError: isPrepareTxError,
+    error: prepareTxError,
+    data: prepareTxData,
+    reset: resetPrepareTx,
+  } = useRpcPrepareTx();
+
+  const dereferencedSchema: DereferencedSchemaType = dereferenceSchema(
+    funcSchema,
+    name,
+  );
+  const requiredFields = dereferencedSchema.required;
+  const missingFields =
+    requiredFields && requiredFields.filter((field) => !value.args[field]);
+
+  const [formError, setFormError] = useState<AnyObject>({});
 
   useEffect(() => {
-    const dereferencedSchema = getDereferenceSchema(schema, name);
-    setDereferencedSchema(dereferencedSchema);
-  }, [schema, name]);
+    if (prepareTxData) {
+      updateSorobanBuildXdr(prepareTxData.transactionXdr);
+    } else {
+      updateSorobanBuildXdr("");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [prepareTxData]);
 
-  const handleChange = (key: string, newVal: string) => {
+  const handleChange = (key: string, newVal: any) => {
+    if (soroban.xdr) {
+      updateSorobanBuildXdr("");
+    }
+
     onChange({
       ...value,
-      data: {
-        ...value.data,
+      args: {
+        ...value.args,
         [key]: newVal,
       },
     });
   };
-
-  const [formError, setFormError] = useState<AnyObject>({});
 
   // key: argument label
   // prop: argument object
@@ -78,8 +113,9 @@ export const JsonSchemaForm = ({
             key={label}
             fieldSize="md"
             label={label}
-            value={value.data[label] || ""}
+            value={value.args[label] || ""}
             error={formError[label] || ""}
+            required={requiredFields.includes(key)}
             onChange={(e) => {
               handleChange(label, e.target.value);
 
@@ -96,6 +132,21 @@ export const JsonSchemaForm = ({
           />
         );
       case "ScString":
+        return (
+          <Input
+            id={key}
+            key={label}
+            fieldSize="md"
+            label={label}
+            value={value.args[label] || ""}
+            error={""}
+            required={requiredFields.includes(key)}
+            onChange={(e) => {
+              handleChange(label, e.target.value);
+            }}
+            note={<>{prop.description}</>}
+          />
+        );
       case "ScSymbol":
         return (
           <Input
@@ -103,10 +154,13 @@ export const JsonSchemaForm = ({
             key={label}
             fieldSize="md"
             label={label}
-            value={value.data[label] || ""}
+            value={value.args[label] || ""}
             error={""}
+            required={requiredFields.includes(key)}
             onChange={(e) => {
               handleChange(label, e.target.value);
+
+              // @TODO add an error handling
             }}
             note={<>{prop.description}</>}
           />
@@ -118,13 +172,14 @@ export const JsonSchemaForm = ({
             key={label}
             fieldSize="md"
             label={label}
-            value={value.data[label] || ""}
+            value={value.args[label] || ""}
             error={formError[label] || ""}
+            required={requiredFields.includes(key)}
             onChange={(e) => {
               handleChange(label, e.target.value);
 
               // validate the value
-              const error = validate.getDataUrlError(e.target.value);
+              const error = Boolean(validate.getDataUrlError(e.target.value));
               setFormError({
                 ...formError,
                 [label]: error,
@@ -138,12 +193,12 @@ export const JsonSchemaForm = ({
             id={key}
             key={label}
             label={label}
-            value={removeLeadingZeroes(value.data[label] || "")}
+            value={value.args[label] || ""}
             error={formError[label] || ""}
             onChange={(e) => {
+              // validate the value
               handleChange(label, e.target.value);
 
-              // validate the value
               const error = validate.getU32Error(e.target.value);
               setFormError({
                 ...formError,
@@ -158,10 +213,10 @@ export const JsonSchemaForm = ({
             id={key}
             key={label}
             label={label}
-            value={removeLeadingZeroes(value.data[label] || "")}
+            value={removeLeadingZeroes(value.args[label] || "")}
             error={formError[label] || ""}
             onChange={(e) => {
-              handleChange(label, e.target.value);
+              handleChange(label, removeLeadingZeroes(e.target.value));
 
               // validate the value
               const error = validate.getU64Error(e.target.value);
@@ -178,10 +233,10 @@ export const JsonSchemaForm = ({
             id={key}
             key={label}
             label={label}
-            value={removeLeadingZeroes(value.data[label] || "")}
+            value={removeLeadingZeroes(value.args[label] || "")}
             error={formError[label] || ""}
             onChange={(e) => {
-              handleChange(label, e.target.value);
+              handleChange(label, removeLeadingZeroes(e.target.value));
 
               // validate the value
               const error = validate.getU128Error(e.target.value);
@@ -198,7 +253,7 @@ export const JsonSchemaForm = ({
             id={key}
             key={label}
             label={label}
-            value={value.data[label] || ""}
+            value={value.args[label] || ""}
             error={formError[label] || ""}
             onChange={(e) => {
               handleChange(label, e.target.value);
@@ -220,8 +275,9 @@ export const JsonSchemaForm = ({
             key={label}
             fieldSize="md"
             label={label}
-            value={value.data[label] || ""}
+            value={value.args[label] || ""}
             error={formError[label] || ""}
+            required={requiredFields.includes(key)}
             onChange={(e) => {
               handleChange(label, e.target.value);
 
@@ -241,8 +297,9 @@ export const JsonSchemaForm = ({
             key={label}
             fieldSize="md"
             label={label}
-            value={value.data[label] || ""}
+            value={value.args[label] || ""}
             error={formError[label] || ""}
+            required={requiredFields.includes(key)}
             onChange={(e) => {
               handleChange(label, e.target.value);
 
@@ -262,8 +319,9 @@ export const JsonSchemaForm = ({
             key={label}
             fieldSize="md"
             label={label}
-            value={value.data[label] || ""}
+            value={value.args[label] || ""}
             error={formError[label] || ""}
+            required={requiredFields.includes(key)}
             onChange={(e) => {
               handleChange(label, e.target.value);
 
@@ -283,8 +341,9 @@ export const JsonSchemaForm = ({
             key={label}
             fieldSize="md"
             label={label}
-            value={value.data[label] || ""}
+            value={value.args[label] || ""}
             error={formError[label] || ""}
+            required={requiredFields.includes(key)}
             onChange={(e) => {
               handleChange(label, e.target.value);
 
@@ -305,6 +364,7 @@ export const JsonSchemaForm = ({
             renderComponent(key, item, index),
           );
         }
+
         // render a button to add an item to the array
         return (
           <Box gap="sm" key={label}>
@@ -321,26 +381,74 @@ export const JsonSchemaForm = ({
             </div>
           </Box>
         );
-
       default:
         return null;
+    }
+  };
+
+  const handlePrepareTx = () => {
+    resetPrepareTx();
+
+    const sampleTxnXdr = getTxnToSimulate(
+      value,
+      spec,
+      txnParams,
+      operation,
+      network.passphrase,
+    );
+
+    if (sampleTxnXdr) {
+      prepareTx({
+        rpcUrl: network.rpcUrl,
+        transactionXdr: sampleTxnXdr,
+        networkPassphrase: network.passphrase,
+        headers: getNetworkHeaders(network, "rpc"),
+      });
+    } else {
+      // @TODO write an error
     }
   };
 
   const render = (item: any): React.ReactElement => {
     const argLabels = item.properties ? Object.keys(item.properties) : [];
     const fields = item.properties ? Object.entries(item.properties) : [];
+    const { name, description } = dereferencedSchema;
 
     return (
-      <>
-        {renderTitle(name, argLabels, fields)}
+      <Box gap="md">
+        {renderTitle(name, description, argLabels, fields)}
 
         <Box gap="md" key={name}>
           {fields.map(([key, prop]) => (
             <>{renderComponent(key, prop)}</>
           ))}
         </Box>
-      </>
+
+        <Box gap="md" direction="row" wrap="wrap">
+          <Button
+            variant="secondary"
+            disabled={
+              (missingFields && missingFields.length > 0) ||
+              Object.values(formError).filter(Boolean).length > 0
+            }
+            isLoading={isPrepareTxPending}
+            size="md"
+            onClick={handlePrepareTx}
+            type="button"
+          >
+            Prepare Transaction
+          </Button>
+        </Box>
+
+        {isPrepareTxError && prepareTxError?.result.toString() ? (
+          <ErrorText
+            errorMessage={prepareTxError?.result.toString()}
+            size="sm"
+          />
+        ) : (
+          <></>
+        )}
+      </Box>
     );
   };
 
@@ -370,44 +478,78 @@ const getTupleLabel = (items: any[]): string => {
 
 const renderTitle = (
   name: string,
+  description: string,
   labels: string[],
   fields: [string, any][],
 ) => {
-  if (labels.length) {
-    const mappedLabels = labels.map((label) => {
-      const field = fields.find(([key]) => key === label);
+  const mappedLabels = labels.map((label) => {
+    const field = fields.find(([key]) => key === label);
 
-      if (field) {
-        if (field?.[1]?.specType) {
-          return `${label}: ${field?.[1]?.specType}`;
-        }
-        // for an array type that doesn't have a specType
-        if (field?.[1]?.type === "array") {
-          if (field?.[1]?.items?.$ref) {
-            // ex: will output 'Address[]' for `"#/definitions/Address"`
-            const refPath = field?.[1]?.items?.$ref.replace(
-              "#/definitions/",
-              "",
-            );
-            return `${label}: ${refPath}[]`;
-          }
-          if (Array.isArray(field?.[1]?.items)) {
-            // Handle tuple case
-            const tupleLabel = getTupleLabel(field[1].items);
-            return `${label}: ${tupleLabel}`;
-          }
-          return `${label}: array`;
-        }
+    if (field) {
+      if (field?.[1]?.specType) {
+        return `${label}: ${field?.[1]?.specType}`;
       }
-      return label;
+      // for an array type that doesn't have a specType
+      if (field?.[1]?.type === "array") {
+        if (field?.[1]?.items?.$ref) {
+          // ex: will output 'Address[]' for `"#/definitions/Address"`
+          const refPath = field?.[1]?.items?.$ref.replace("#/definitions/", "");
+          return `${label}: ${refPath}[]`;
+        }
+        if (Array.isArray(field?.[1]?.items)) {
+          // Handle tuple case
+          const tupleLabel = getTupleLabel(field[1].items);
+          return `${label}: ${tupleLabel}`;
+        }
+        return `${label}: array`;
+      }
+    }
+    return label;
+  });
+
+  return (
+    <>
+      <Text size="lg" as="h2">
+        {name} ({mappedLabels.join(", ")})
+      </Text>
+      {description ? (
+        <Text size="sm" as="h3">
+          {description}
+        </Text>
+      ) : null}
+    </>
+  );
+};
+
+const getTxnToSimulate = (
+  value: SorobanInvokeValue,
+  spec: contract.Spec,
+  txnParams: TransactionBuildParams,
+  operation: TxnOperation,
+  networkPassphrase: string,
+) => {
+  const scVals = getScValsFromSpec(value.function_name, spec, value);
+
+  try {
+    const builtXdr = buildTxWithSorobanData({
+      params: txnParams,
+      sorobanOp: {
+        ...operation,
+        params: {
+          ...operation.params,
+          contract_id: value.contract_id,
+          function_name: value.function_name,
+          args: scVals,
+          resource_fee: BASE_FEE, // bogus resource fee for simulation purpose
+        },
+      },
+      networkPassphrase,
     });
 
-    return (
-      <Text size="lg" as="p">
-        {name}({mappedLabels.join(", ")})
-      </Text>
-    );
+    return builtXdr.toXDR();
+  } catch (e) {
+    console.log("e :", e);
   }
 
-  return null;
+  return undefined;
 };
