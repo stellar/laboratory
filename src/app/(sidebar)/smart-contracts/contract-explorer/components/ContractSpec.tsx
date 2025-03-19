@@ -35,7 +35,7 @@ export const ContractSpec = ({
   const isXdrInit = useIsXdrInit();
   const queryClient = useQueryClient();
 
-  const [selectedLanguage, setSelectedLanguage] =
+  const [selectedFormat, setSelectedFormat] =
     useState<SupportedLanguage>("json");
 
   const {
@@ -138,7 +138,7 @@ export const ContractSpec = ({
     const entries = wasmData?.spec?.entries || [];
 
     // JSON
-    if (selectedLanguage === "json") {
+    if (selectedFormat === "json") {
       try {
         if (isXdrInit) {
           const decodedEntries = entries.map((e) => {
@@ -156,7 +156,7 @@ export const ContractSpec = ({
         // do nothing
       }
       // XDR
-    } else if (selectedLanguage === "xdr") {
+    } else if (selectedFormat === "xdr") {
       const xdrEntries = entries?.map((e) => {
         return e.toXDR("base64");
       });
@@ -172,11 +172,11 @@ export const ContractSpec = ({
       <CodeEditor
         title="Contract Spec"
         value={formatSpec()}
-        selectedLanguage={selectedLanguage}
+        selectedLanguage={selectedFormat}
         fileName={`${wasmHash}-contract-spec`}
         languages={["json", "xdr"]}
         onLanguageChange={(newLanguage) => {
-          setSelectedLanguage(newLanguage);
+          setSelectedFormat(newLanguage);
         }}
         infoLink="https://developers.stellar.org/docs/build/guides/dapps/working-with-contract-specs#what-are-contract-specs"
       />
