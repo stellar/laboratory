@@ -46,9 +46,7 @@ export const useRpcPrepareTx = () => {
         };
       } catch (e) {
         throw {
-          result: {
-            errorResult: e,
-          },
+          result: e,
         };
       }
     },

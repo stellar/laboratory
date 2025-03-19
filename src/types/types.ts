@@ -157,7 +157,7 @@ export type PrepareRpcResponse = {
 };
 
 export type PrepareRpcErrorResponse = {
-  error: StellarRpc.Api.SimulateTransactionErrorResponse;
+  result: StellarRpc.Api.SimulateTransactionErrorResponse;
 };
 
 export type SubmitRpcResponse = {

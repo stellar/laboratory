@@ -46,7 +46,7 @@ export const JsonSchemaForm = ({
     mutate: prepareTx,
     isPending: isPrepareTxPending,
     isError: isPrepareTxError,
-    error: isPrepareTxError,
+    error: prepareTxError,
     data: prepareTxData,
     reset: resetPrepareTx,
   } = useRpcPrepareTx();
@@ -364,6 +364,7 @@ export const JsonSchemaForm = ({
             renderComponent(key, item, index),
           );
         }
+
         // render a button to add an item to the array
         return (
           <Box gap="sm" key={label}>
@@ -380,7 +381,6 @@ export const JsonSchemaForm = ({
             </div>
           </Box>
         );
-
       default:
         return null;
     }
@@ -407,8 +407,6 @@ export const JsonSchemaForm = ({
     } else {
       // @TODO write an error
     }
-
-    console.log("isPrepareTxError :", isPrepareTxError);
   };
 
   const render = (item: any): React.ReactElement => {
@@ -442,12 +440,14 @@ export const JsonSchemaForm = ({
           </Button>
         </Box>
 
-        {isPrepareTxError ? (
+        {isPrepareTxError && prepareTxError?.result.toString() ? (
           <ErrorText
-            errorMessage={prepareTxError.result.errorResult}
+            errorMessage={prepareTxError?.result.toString()}
             size="sm"
           />
-        ) : null}
+        ) : (
+          <></>
+        )}
       </Box>
     );
   };
@@ -529,9 +529,7 @@ const getTxnToSimulate = (
   operation: TxnOperation,
   networkPassphrase: string,
 ) => {
-  console.log("value :", value);
   const scVals = getScValsFromSpec(value.function_name, spec, value);
-  console.log("scVals :", scVals);
 
   try {
     const builtXdr = buildTxWithSorobanData({

@@ -13,13 +13,11 @@ export const getScValsFromSpec = (
   spec: contract.Spec,
   value: SorobanInvokeValue,
 ) => {
-  let fn = spec.getFunc(function_name);
+  const fn = spec.getFunc(function_name);
 
   return fn.inputs().map((input: xdr.ScSpecFunctionInputV0) => {
     const rawInputValue = readObj(value.args, input);
     const { name: inputFieldType } = input.type().switch();
-
-    console.log("inputFieldType :", inputFieldType);
 
     if (isSpecTypeNumber(input.type().switch())) {
       const parsedIntValue = new ScInt(rawInputValue);
@@ -58,9 +56,6 @@ export const getScValsFromSpec = (
       });
     }
 
-    console.log("value.args :", value.args);
-    console.log("input.type().switch() :", input.type().switch());
-    console.log("[rawInputValue] rawInputValue :", rawInputValue);
     // the below is how funcArgsToScVals is implemented
     // we need to customize a bit since the saved number value is a string
     // https://stellar.github.io/js-soroban-client/ContractSpec.html#funcArgsToScVals
