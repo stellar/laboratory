@@ -23,6 +23,7 @@ import { useRpcPrepareTx } from "@/query/useRpcPrepareTx";
 import { Box } from "@/components/layout/Box";
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 import { LabelHeading } from "@/components/LabelHeading";
+import { ErrorText } from "../ErrorText";
 
 export const JsonSchemaForm = ({
   name,
@@ -44,6 +45,8 @@ export const JsonSchemaForm = ({
   const {
     mutate: prepareTx,
     isPending: isPrepareTxPending,
+    isError: isPrepareTxError,
+    error: isPrepareTxError,
     data: prepareTxData,
     reset: resetPrepareTx,
   } = useRpcPrepareTx();
@@ -53,7 +56,8 @@ export const JsonSchemaForm = ({
     name,
   );
   const requiredFields = dereferencedSchema.required;
-  const missingFields = requiredFields.filter((field) => !value.args[field]);
+  const missingFields =
+    requiredFields && requiredFields.filter((field) => !value.args[field]);
 
   const [formError, setFormError] = useState<AnyObject>({});
 
@@ -393,12 +397,18 @@ export const JsonSchemaForm = ({
       network.passphrase,
     );
 
-    prepareTx({
-      rpcUrl: network.rpcUrl,
-      transactionXdr: sampleTxnXdr,
-      networkPassphrase: network.passphrase,
-      headers: getNetworkHeaders(network, "rpc"),
-    });
+    if (sampleTxnXdr) {
+      prepareTx({
+        rpcUrl: network.rpcUrl,
+        transactionXdr: sampleTxnXdr,
+        networkPassphrase: network.passphrase,
+        headers: getNetworkHeaders(network, "rpc"),
+      });
+    } else {
+      // @TODO write an error
+    }
+
+    console.log("isPrepareTxError :", isPrepareTxError);
   };
 
   const render = (item: any): React.ReactElement => {
@@ -420,7 +430,7 @@ export const JsonSchemaForm = ({
           <Button
             variant="secondary"
             disabled={
-              missingFields.length > 0 ||
+              (missingFields && missingFields.length > 0) ||
               Object.values(formError).filter(Boolean).length > 0
             }
             isLoading={isPrepareTxPending}
@@ -431,6 +441,13 @@ export const JsonSchemaForm = ({
             Prepare Transaction
           </Button>
         </Box>
+
+        {isPrepareTxError ? (
+          <ErrorText
+            errorMessage={prepareTxError.result.errorResult}
+            size="sm"
+          />
+        ) : null}
       </Box>
     );
   };
@@ -512,22 +529,30 @@ const getTxnToSimulate = (
   operation: TxnOperation,
   networkPassphrase: string,
 ) => {
+  console.log("value :", value);
   const scVals = getScValsFromSpec(value.function_name, spec, value);
+  console.log("scVals :", scVals);
 
-  const builtXdr = buildTxWithSorobanData({
-    params: txnParams,
-    sorobanOp: {
-      ...operation,
-      params: {
-        ...operation.params,
-        contract_id: value.contract_id,
-        function_name: value.function_name,
-        args: scVals,
-        resource_fee: "200", // bogus resource fee for simulation purpose
+  try {
+    const builtXdr = buildTxWithSorobanData({
+      params: txnParams,
+      sorobanOp: {
+        ...operation,
+        params: {
+          ...operation.params,
+          contract_id: value.contract_id,
+          function_name: value.function_name,
+          args: scVals,
+          resource_fee: "200", // bogus resource fee for simulation purpose
+        },
       },
-    },
-    networkPassphrase,
-  }).toXDR();
+      networkPassphrase,
+    });
 
-  return builtXdr;
+    return builtXdr.toXDR();
+  } catch (e) {
+    console.log("e :", e);
+  }
+
+  return undefined;
 };
