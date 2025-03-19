@@ -126,6 +126,10 @@ export const SMART_CONTRACTS_NAV_ITEMS = [
         route: Routes.SMART_CONTRACTS_CONTRACT_EXPLORER,
         label: "Contract Explorer",
       },
+      {
+        route: Routes.SMART_CONTRACTS_CONTRACT_LIST,
+        label: "Smart Contract List",
+      },
     ],
   },
 ];
