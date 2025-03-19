@@ -47,6 +47,9 @@ export const dereferenceSchema = (
   const requiredFields = methodSchema.properties.args.required;
 
   // Helper function to resolve $ref
+  // @TODO recursively replace $ref with the actual definition
+  // Good example contract: CDVQVKOY2YSXS2IC7KN6MNASSHPAO7UN2UR2ON4OI2SKMFJNVAMDX6DP
+  // "submit" function
   function resolveRef(refPath: string): JSONSchema7Definition {
     return fullSchema.definitions[refPath];
   }
