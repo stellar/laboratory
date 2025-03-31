@@ -11,6 +11,7 @@ import { PageCard } from "@/components/layout/PageCard";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { useStore } from "@/store/useStore";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 export default function ToXdr() {
   const { xdr } = useStore();
@@ -35,11 +36,19 @@ export default function ToXdr() {
     try {
       const xdrString = StellarXdr.encode(xdr.type, xdr.jsonString);
 
+      trackEvent(TrackingEvent.XDR_FROM_JSON_SUCCESS, {
+        xdrType: xdr.type,
+      });
+
       return {
         xdrString: xdrString,
         error: "",
       };
     } catch (e) {
+      trackEvent(TrackingEvent.XDR_FROM_JSON_ERROR, {
+        xdrType: xdr.type,
+      });
+
       return {
         xdrString: "",
         error: `Unable to decode JSON as ${xdr.type}: ${e}`,
@@ -87,6 +96,7 @@ export default function ToXdr() {
               icon={<Icon.RefreshCw01 />}
               onClick={() => {
                 resetJsonString();
+                trackEvent(TrackingEvent.XDR_FROM_JSON_CLEAR);
               }}
               disabled={!xdr.jsonString}
             >

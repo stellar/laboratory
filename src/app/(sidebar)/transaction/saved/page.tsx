@@ -23,6 +23,7 @@ import {
   INITIAL_OPERATION,
 } from "@/constants/transactionOperations";
 import { SavedTransaction, SavedTransactionPage } from "@/types/types";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 export default function SavedTransactions() {
   const { network, transaction, xdr } = useStore();
@@ -62,6 +63,8 @@ export default function SavedTransactions() {
       transaction.updateSorobanBuildOperation(INITIAL_OPERATION);
       transaction.updateSorobanBuildXdr("");
 
+      trackEvent(TrackingEvent.TRANSACTION_SAVED_VIEW_BUILDER);
+
       router.push(Routes.BUILD_TRANSACTION);
 
       if (found.params) {
@@ -98,6 +101,8 @@ export default function SavedTransactions() {
     const found = findLocalStorageTx(timestamp);
 
     if (found) {
+      trackEvent(TrackingEvent.TRANSACTION_SAVED_VIEW_SUBMITTER);
+
       router.push(Routes.SUBMIT_TRANSACTION);
 
       if (found.xdr) {
@@ -209,6 +214,8 @@ export default function SavedTransactions() {
 
                 localStorageSavedTransactions.set(updatedList);
                 updateSavedTxns();
+
+                trackEvent(TrackingEvent.TRANSACTION_SAVED_DELETE);
               }
             }}
           />
@@ -266,6 +273,8 @@ export default function SavedTransactions() {
         }}
         onUpdate={(updatedItems) => {
           localStorageSavedTransactions.set(updatedItems);
+
+          trackEvent(TrackingEvent.TRANSACTION_SAVED_EDIT_SAVE);
         }}
       />
     </Box>

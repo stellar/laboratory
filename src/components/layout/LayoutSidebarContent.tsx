@@ -7,6 +7,7 @@ import { Routes } from "@/constants/routes";
 import { NextLink } from "@/components/NextLink";
 import { GITHUB_URL } from "@/constants/settings";
 import { WindowContext } from "./LayoutContextProvider";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 export type SidebarLink = {
   route: Routes | string;
@@ -194,6 +195,11 @@ const Link = ({ item, pathname }: { item: SidebarLink; pathname: string }) => {
                   className="SidebarLink"
                   data-is-active={pathname === nested.route}
                   data-testid="endpoints-sidebar-link"
+                  onClick={() => {
+                    trackEvent(TrackingEvent.SUBNAV_CLICKED, {
+                      route: nested.route,
+                    });
+                  }}
                 >
                   {nested.label}
                 </NextLink>
@@ -210,6 +216,11 @@ const Link = ({ item, pathname }: { item: SidebarLink; pathname: string }) => {
       href={item.route}
       className="SidebarLink"
       data-is-active={pathname === item.route}
+      onClick={() => {
+        trackEvent(TrackingEvent.SUBNAV_CLICKED, {
+          route: item.route,
+        });
+      }}
     >
       {item.label} {item.icon ?? null}
     </NextLink>

@@ -26,6 +26,7 @@ import { PageCard } from "@/components/layout/PageCard";
 
 import { Routes } from "@/constants/routes";
 import { KeysOfUnion } from "@/types/types";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 export default function FeeBumpTransaction() {
   const router = useRouter();
@@ -175,6 +176,7 @@ export default function FeeBumpTransaction() {
             onClick={() => {
               resetResult();
               resetBaseFee();
+              trackEvent(TrackingEvent.TRANSACTION_FEE_BUMP_CLEAR);
             }}
           >
             Clear and import new
@@ -269,13 +271,22 @@ export default function FeeBumpTransaction() {
                     updateSignImportXdr(feeBumpedTx.xdr);
                     updateSignActiveView("overview");
 
+                    trackEvent(
+                      TrackingEvent.TRANSACTION_FEE_BUMP_SIGN_IN_TX_SIGNER,
+                    );
+
                     router.push(Routes.SIGN_TRANSACTION);
                   }}
                 >
                   Sign in Transaction Signer
                 </Button>
 
-                <ViewInXdrButton xdrBlob={feeBumpedTx.xdr} />
+                <ViewInXdrButton
+                  xdrBlob={feeBumpedTx.xdr}
+                  callback={() => {
+                    trackEvent(TrackingEvent.TRANSACTION_FEE_BUMP_VIEW_XDR);
+                  }}
+                />
               </>
             }
           />

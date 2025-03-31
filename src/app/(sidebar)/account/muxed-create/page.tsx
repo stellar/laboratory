@@ -13,6 +13,7 @@ import { PageCard } from "@/components/layout/PageCard";
 
 import { muxedAccount } from "@/helpers/muxedAccount";
 
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 import { validate } from "@/validate";
 
 import "../styles.scss";
@@ -53,6 +54,8 @@ export default function CreateMuxedAccount() {
         id: muxedId,
         baseAddress,
       });
+
+      trackEvent(TrackingEvent.ACCOUNT_MUXED_CREATE);
 
       setSdkError("");
       return;

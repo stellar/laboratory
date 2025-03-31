@@ -12,10 +12,11 @@ import {
 } from "@/helpers/sorobanUtils";
 
 import { Routes } from "@/constants/routes";
+import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 import { SorobanOpType } from "@/types/types";
 
-import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { TransactionXdrDisplay } from "./TransactionXdrDisplay";
 
 export const SorobanTransactionXdr = () => {
@@ -99,7 +100,17 @@ export const SorobanTransactionXdr = () => {
           onSignClick={() => {
             updateSignImportXdr(sorobanData.xdr);
             updateSignActiveView("overview");
+
+            trackEvent(TrackingEvent.TRANSACTION_BUILD_SIGN_IN_TX_SIGNER, {
+              txType: "smart contract",
+            });
+
             router.push(Routes.SIGN_TRANSACTION);
+          }}
+          onViewXdrClick={() => {
+            trackEvent(TrackingEvent.TRANSACTION_BUILD_VIEW_IN_XDR, {
+              txType: "smart contract",
+            });
           }}
         />
       );

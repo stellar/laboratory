@@ -26,6 +26,7 @@ import {
   XDR_TYPE_TRANSACTION_ENVELOPE,
 } from "@/constants/settings";
 
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 import {
   AnyObject,
   AssetObjectValue,
@@ -35,6 +36,7 @@ import {
   OptionSigner,
   TxnOperation,
 } from "@/types/types";
+
 import { TransactionXdrDisplay } from "./TransactionXdrDisplay";
 
 const MAX_INT64 = "9223372036854775807";
@@ -506,7 +508,17 @@ export const ClassicTransactionXdr = () => {
           onSignClick={() => {
             updateSignImportXdr(txnXdr.xdr);
             updateSignActiveView("overview");
+
+            trackEvent(TrackingEvent.TRANSACTION_BUILD_SIGN_IN_TX_SIGNER, {
+              txType: "classic",
+            });
+
             router.push(Routes.SIGN_TRANSACTION);
+          }}
+          onViewXdrClick={() => {
+            trackEvent(TrackingEvent.TRANSACTION_BUILD_VIEW_IN_XDR, {
+              txType: "classic",
+            });
           }}
         />
       );
