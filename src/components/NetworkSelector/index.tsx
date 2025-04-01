@@ -17,7 +17,7 @@ import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { sanitizeObject } from "@/helpers/sanitizeObject";
 import { getNetworkById } from "@/helpers/getNetworkById";
 
-import { AnyObject, EmptyObj, Network } from "@/types/types";
+import { AnyObject, EmptyObj, Network, NetworkType } from "@/types/types";
 
 import "./styles.scss";
 
@@ -99,7 +99,10 @@ export const NetworkSelector = () => {
       }
     } else {
       defaultNetwork =
-        localStorageSavedNetwork.get() || getNetworkById("testnet");
+        localStorageSavedNetwork.get() ||
+        getNetworkById(
+          (process.env.NEXT_PUBLIC_DEFAULT_NETWORK ?? "testnet") as NetworkType,
+        );
     }
 
     if (defaultNetwork) {
