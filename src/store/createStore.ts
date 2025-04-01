@@ -206,9 +206,25 @@ interface CreateStoreOptions {
   url?: string;
 }
 
+// The default custom network will be used when creating a new store for the
+// lab that runs on quickstart. This can be enabled by passing
+// `NEXT_PUBLIC_DEFAULT_NETWORK=custom` as an env var.
+const defaultCustomNetwork = {
+  id: "custom",
+  label: "Custom",
+  horizonUrl: "http://localhost:8000",
+  rpcUrl: "http://localhost:8000/rpc",
+  passphrase: "Standalone Network ; February 2017",
+};
+
+const initNetwork =
+  process.env.NEXT_PUBLIC_DEFAULT_NETWORK === "custom"
+    ? defaultCustomNetwork
+    : {};
+
 // Initial states
 const initEndpointState = {
-  network: {},
+  network: initNetwork,
   currentEndpoint: undefined,
   params: {},
   saved: {
@@ -302,7 +318,7 @@ export const createStore = (options: CreateStoreOptions) =>
     querystring(
       immer((set) => ({
         // Shared
-        network: {},
+        network: initNetwork,
         previousNetwork: {},
         theme: null,
         isDynamicNetworkSelect: false,
