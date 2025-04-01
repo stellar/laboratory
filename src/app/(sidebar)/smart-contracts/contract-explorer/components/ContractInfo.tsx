@@ -17,6 +17,7 @@ import { formatEpochToDate } from "@/helpers/formatEpochToDate";
 import { formatNumber } from "@/helpers/formatNumber";
 import { stellarExpertAccountLink } from "@/helpers/stellarExpertAccountLink";
 
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 import { ContractInfoApiResponse, EmptyObj, Network } from "@/types/types";
 
 import { ContractSpec } from "./ContractSpec";
@@ -358,6 +359,10 @@ export const ContractInfo = ({
             activeTabId={activeTab}
             onTabChange={(tabId) => {
               setActiveTab(tabId as ContractTabId);
+
+              trackEvent(TrackingEvent.SMART_CONTRACTS_EXPLORER_TAB, {
+                tab: tabId,
+              });
             }}
           />
         </Box>

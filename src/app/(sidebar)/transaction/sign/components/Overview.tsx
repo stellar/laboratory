@@ -25,6 +25,7 @@ import { scrollElIntoView } from "@/helpers/scrollElIntoView";
 import { useSignWithExtensionWallet } from "@/hooks/useSignWithExtensionWallet";
 
 import { validate } from "@/validate";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { Box } from "@/components/layout/Box";
 import { MultiPicker } from "@/components/FormElements/MultiPicker";
@@ -161,6 +162,7 @@ export const Overview = () => {
 
       delayedAction({
         action: () => {
+          trackEvent(TrackingEvent.TRANSACTION_SIGN_SUBMIT_IN_TX_SUBMITTER);
           router.push(Routes.SUBMIT_TRANSACTION);
         },
         delay: 200,
@@ -174,6 +176,7 @@ export const Overview = () => {
 
       delayedAction({
         action: () => {
+          trackEvent(TrackingEvent.TRANSACTION_SIGN_FEE_BUMP);
           router.push(Routes.FEE_BUMP_TRANSACTION);
         },
         delay: 200,
@@ -316,6 +319,14 @@ export const Overview = () => {
     setSecretKeySuccessMsg(successMsg);
     setSecretKeyErrorMsg(errorMsg);
 
+    if (successMsg) {
+      trackEvent(TrackingEvent.TRANSACTION_SIGN_SECRET_KEY_SUCCESS);
+    }
+
+    if (errorMsg) {
+      trackEvent(TrackingEvent.TRANSACTION_SIGN_SECRET_KEY_ERROR);
+    }
+
     return { signature, errorMsg };
   };
 
@@ -387,6 +398,18 @@ export const Overview = () => {
     setHardwareSuccessMsg(successMsg);
     setHardwareErrorMsg(errorMsg);
 
+    if (successMsg) {
+      trackEvent(TrackingEvent.TRANSACTION_SIGN_HARDWARE_SUCCESS, {
+        selectedHardware,
+      });
+    }
+
+    if (errorMsg) {
+      trackEvent(TrackingEvent.TRANSACTION_SIGN_HARDWARE_ERROR, {
+        selectedHardware,
+      });
+    }
+
     return { signature, errorMsg };
   };
 
@@ -406,6 +429,18 @@ export const Overview = () => {
     setSigSignature(signature);
     setSigSuccessMsg(successMsg);
     setSigErrorMsg(errorMsg);
+
+    if (successMsg) {
+      trackEvent(TrackingEvent.TRANSACTION_SIGN_SIGNATURE_SUCCESS, {
+        selectedHardware,
+      });
+    }
+
+    if (errorMsg) {
+      trackEvent(TrackingEvent.TRANSACTION_SIGN_SIGNATURE_ERROR, {
+        selectedHardware,
+      });
+    }
 
     return { signature, errorMsg };
   };
@@ -598,6 +633,7 @@ export const Overview = () => {
             iconPosition="right"
             onClick={() => {
               resetSign();
+              trackEvent(TrackingEvent.TRANSACTION_SIGN_CLEAR);
             }}
           >
             Clear and import new
@@ -769,6 +805,8 @@ export const Overview = () => {
                 onSign={() => {
                   setIsExtensionClear(false);
                   setIsExtensionLoading(true);
+
+                  trackEvent(TrackingEvent.TRANSACTION_SIGN_WALLET);
                 }}
                 onClear={() => {
                   setIsExtensionClear(true);
@@ -890,7 +928,12 @@ export const Overview = () => {
               }
               footerRightEl={
                 <div className="SignTx__Buttons">
-                  <ViewInXdrButton xdrBlob={sign.signedTx} />
+                  <ViewInXdrButton
+                    xdrBlob={sign.signedTx}
+                    callback={() => {
+                      trackEvent(TrackingEvent.TRANSACTION_SIGN_VIEW_IN_XDR);
+                    }}
+                  />
 
                   <Button
                     size="md"

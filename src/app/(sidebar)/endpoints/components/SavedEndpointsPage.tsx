@@ -31,6 +31,8 @@ import { formatTimestamp } from "@/helpers/formatTimestamp";
 import { getNetworkById } from "@/helpers/getNetworkById";
 import { useCodeWrappedSetting } from "@/hooks/useCodeWrappedSetting";
 import { useStore } from "@/store/useStore";
+
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 import {
   Network,
   SavedEndpointHorizon,
@@ -126,7 +128,7 @@ export const SavedEndpointsPage = () => {
     }
   };
 
-  const handleViewHorizonEndpoint = (
+  const handleViewEndpoint = (
     endpoint: SavedEndpointHorizon,
     index: number,
   ) => {
@@ -135,10 +137,10 @@ export const SavedEndpointsPage = () => {
       return setIsNetworkChangeModalVisible(true);
     }
 
-    handleHorizonEndpointAction(endpoint);
+    handleEndpointAction(endpoint);
   };
 
-  const handleHorizonEndpointAction = (
+  const handleEndpointAction = (
     endpoint: SavedEndpointHorizon,
     isNetworkChange?: boolean,
   ) => {
@@ -150,6 +152,11 @@ export const SavedEndpointsPage = () => {
         selectNetwork(newNetwork);
       }
     }
+
+    trackEvent(TrackingEvent.ENDPOINTS_SAVED_VIEW, {
+      tab: saved.activeTab,
+      route: endpoint.route,
+    });
 
     setParams(endpoint.params);
     router.push(endpoint.route);
@@ -220,7 +227,7 @@ export const SavedEndpointsPage = () => {
                   size="md"
                   variant="tertiary"
                   type="button"
-                  onClick={() => handleViewHorizonEndpoint(e, idx)}
+                  onClick={() => handleViewEndpoint(e, idx)}
                 >
                   View
                 </Button>
@@ -251,6 +258,10 @@ export const SavedEndpointsPage = () => {
 
                     localStorageSavedEndpointsHorizon.set(updatedList);
                     setSavedEndpointsHorizon(updatedList);
+
+                    trackEvent(TrackingEvent.ENDPOINTS_SAVED_DELETE, {
+                      tab: saved.activeTab,
+                    });
                   }}
                 ></Button>
               </Box>
@@ -331,7 +342,7 @@ export const SavedEndpointsPage = () => {
                   size="md"
                   variant="tertiary"
                   type="button"
-                  onClick={() => handleViewHorizonEndpoint(e, idx)}
+                  onClick={() => handleViewEndpoint(e, idx)}
                 >
                   View in API Explorer
                 </Button>
@@ -442,6 +453,10 @@ export const SavedEndpointsPage = () => {
           activeTabId={saved.activeTab}
           onTabChange={(id) => {
             updateSavedActiveTab(id);
+
+            trackEvent(TrackingEvent.ENDPOINTS_SAVED_TAB, {
+              tab: saved.activeTab,
+            });
           }}
         />
       </PageCard>
@@ -487,7 +502,7 @@ export const SavedEndpointsPage = () => {
                 savedEndpointsHorizon[currentEndpointIndex];
 
               if (endpoint) {
-                handleHorizonEndpointAction(endpoint, true);
+                handleEndpointAction(endpoint, true);
               }
             }}
           >
@@ -525,6 +540,10 @@ export const SavedEndpointsPage = () => {
               updatedItems as SavedEndpointHorizon[],
             );
           }
+
+          trackEvent(TrackingEvent.ENDPOINTS_SAVED_EDIT, {
+            tab: saved.activeTab,
+          });
         }}
       />
     </Box>

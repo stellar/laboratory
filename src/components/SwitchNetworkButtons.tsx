@@ -1,8 +1,9 @@
 import { Button } from "@stellar/design-system";
 import { getNetworkById } from "@/helpers/getNetworkById";
-import { useStore } from "@/store/useStore";
-import { NetworkType } from "@/types/types";
 import { capitalizeString } from "@/helpers/capitalizeString";
+import { useStore } from "@/store/useStore";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
+import { NetworkType } from "@/types/types";
 
 export const SwitchNetworkButtons = ({
   includedNetworks,
@@ -31,6 +32,9 @@ export const SwitchNetworkButtons = ({
           size={buttonSize}
           onClick={() => {
             getAndSetNetwork(n);
+            trackEvent(TrackingEvent.NETWORK_SWITCH, {
+              to: n,
+            });
           }}
         >
           {`Switch to ${capitalizeString(n)}`}

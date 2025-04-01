@@ -46,6 +46,8 @@ import {
 import { useEndpoint } from "@/query/useEndpoint";
 import { useScrollIntoView } from "@/hooks/useScrollIntoView";
 import { useCodeWrappedSetting } from "@/hooks/useCodeWrappedSetting";
+
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 import {
   AnyObject,
   AssetObject,
@@ -627,6 +629,11 @@ export default function Endpoints() {
     delayedAction({
       action: () => {
         refetch();
+
+        trackEvent(TrackingEvent.ENDPOINTS_SUBMIT, {
+          endpoint: isRpcEndpoint ? "rpc" : "horizon",
+          route: page?.route,
+        });
       },
       delay,
     });
@@ -1090,6 +1097,11 @@ export default function Endpoints() {
               updatedItems as SavedEndpointHorizon[],
             );
           }
+
+          trackEvent(TrackingEvent.ENDPOINTS_SAVE, {
+            endpoint: isRpcEndpoint ? "rpc" : "horizon",
+            route: page?.route,
+          });
         }}
       />
     </>
