@@ -25,9 +25,12 @@ import { removeLeadingZeroes } from "@/helpers/removeLeadingZeroes";
 import { TransactionBuildParams } from "@/store/createStore";
 import { useStore } from "@/store/useStore";
 import { useAccountSequenceNumber } from "@/query/useAccountSequenceNumber";
+
 import { validate } from "@/validate";
-import { EmptyObj, KeysOfUnion } from "@/types/types";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
+
+import { EmptyObj, KeysOfUnion } from "@/types/types";
 
 export const Params = () => {
   const requiredParams = ["source_account", "seq_num", "fee"] as const;
@@ -400,6 +403,7 @@ export const Params = () => {
             onClick={() => {
               resetBuildParams();
               setParamsError({});
+              trackEvent(TrackingEvent.TRANSACTION_BUILD_CLEAR_PARAMS);
             }}
             icon={<Icon.RefreshCw01 />}
           >

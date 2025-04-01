@@ -12,6 +12,7 @@ interface TransactionXdrDisplayProps {
   txnHash: string;
   dataTestId: string;
   onSignClick: () => void;
+  onViewXdrClick: () => void;
 }
 
 export const TransactionXdrDisplay = ({
@@ -20,6 +21,7 @@ export const TransactionXdrDisplay = ({
   txnHash,
   dataTestId,
   onSignClick,
+  onViewXdrClick,
 }: TransactionXdrDisplayProps) => (
   <ValidationResponseCard
     variant="success"
@@ -59,7 +61,7 @@ export const TransactionXdrDisplay = ({
           Sign in Transaction Signer
         </Button>
 
-        <ViewInXdrButton xdrBlob={xdr} />
+        <ViewInXdrButton xdrBlob={xdr} callback={onViewXdrClick} />
       </>
     }
   />

@@ -19,6 +19,7 @@
     "pre-push": "yarn lint:ts && yarn test"
   },
   "dependencies": {
+    "@amplitude/analytics-browser": "^2.12.2",
     "@creit.tech/stellar-wallets-kit": "^1.2.5",
     "@ledgerhq/hw-app-str": "^7.0.4",
     "@ledgerhq/hw-transport-webusb": "^6.29.4",

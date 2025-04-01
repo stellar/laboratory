@@ -21,6 +21,8 @@ import { Box } from "@/components/layout/Box";
 import { PageCard } from "@/components/layout/PageCard";
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
+
 import "../styles.scss";
 
 export default function CreateAccount() {
@@ -77,6 +79,8 @@ export default function CreateAccount() {
     }
 
     setSecretKey(keypair.secret());
+
+    trackEvent(TrackingEvent.ACCOUNT_CREATE_GENERATE_KEYPAIR);
   };
 
   return (
@@ -139,6 +143,7 @@ export default function CreateAccount() {
                   onClick={() => {
                     resetQuery();
                     refetch();
+                    trackEvent(TrackingEvent.ACCOUNT_CREATE_FUND_ACCOUNT);
                   }}
                   data-testid="fundAccount-button"
                 >
@@ -191,6 +196,7 @@ export default function CreateAccount() {
         }}
         onUpdate={(updatedItems) => {
           localStorageSavedKeypairs.set(updatedItems);
+          trackEvent(TrackingEvent.ACCOUNT_CREATE_SAVE);
         }}
       />
     </div>

@@ -13,6 +13,7 @@ import { useSimulateTx } from "@/query/useSimulateTx";
 import { delayedAction } from "@/helpers/delayedAction";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { validate } from "@/validate";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 export default function SimulateTransaction() {
   const { xdr, transaction, network } = useStore();
@@ -83,6 +84,8 @@ export default function SimulateTransaction() {
       if (simulate.triggerOnLaunch) {
         transaction.updateSimulateTriggerOnLaunch(false);
       }
+
+      trackEvent(TrackingEvent.TRANSACTION_SIMULATE);
     }
   };
 

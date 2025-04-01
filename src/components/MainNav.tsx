@@ -4,6 +4,7 @@ import { Icon } from "@stellar/design-system";
 
 import { Routes } from "@/constants/routes";
 import { NextLink } from "@/components/NextLink";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 type NavLink = {
   href: Routes | string;
@@ -57,6 +58,9 @@ export const MainNav = ({ excludeDocs }: { excludeDocs?: boolean }) => {
   const NavItem = ({ link }: { link: NavLink }) => (
     <NextLink
       href={link.href}
+      onClick={() => {
+        trackEvent(TrackingEvent.MAIN_NAV_CLICKED, { page: link.label });
+      }}
       className={`NavLink ${isActiveRoute(link.href) ? "NavLink--active" : ""}`}
     >
       {link.label}
