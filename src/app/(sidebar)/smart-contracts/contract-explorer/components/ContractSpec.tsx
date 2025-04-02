@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Alert, Text, Loader, Button, Icon } from "@stellar/design-system";
+import { Button, Icon } from "@stellar/design-system";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { CodeEditor, SupportedLanguage } from "@/components/CodeEditor";
@@ -14,6 +14,7 @@ import * as StellarXdr from "@/helpers/StellarXdr";
 import { prettifyJsonString } from "@/helpers/prettifyJsonString";
 import { delayedAction } from "@/helpers/delayedAction";
 import { downloadFile } from "@/helpers/downloadFile";
+import { renderWasmStatus } from "@/helpers/renderWasmStatus";
 
 import { NetworkType } from "@/types/types";
 
@@ -86,52 +87,15 @@ export const ContractSpec = ({
     }
   }, [resetWasmBlob, wasmBinaryError]);
 
-  if (!wasmHash) {
-    return (
-      <Text as="div" size="sm">
-        There is no wasm for this contract
-      </Text>
-    );
-  }
+  const wasmStatus = renderWasmStatus({
+    wasmHash,
+    rpcUrl,
+    isLoading: isWasmFetching || isWasmLoading,
+    error: wasmError,
+  });
 
-  if (!rpcUrl) {
-    return (
-      <Alert variant="warning" placement="inline" title="Attention">
-        RPC URL is required to get the Contract Spec. You can add it in the
-        network settings in the upper right corner.
-      </Alert>
-    );
-  }
-
-  if (isWasmLoading || isWasmFetching) {
-    return (
-      <Box gap="sm" direction="row" justify="center">
-        <Loader />
-      </Box>
-    );
-  }
-
-  if (wasmError) {
-    const errorString = wasmError.toString();
-    let networkMessage = null;
-
-    if (errorString.toLowerCase().includes("network error")) {
-      networkMessage = (
-        <Alert variant="warning" placement="inline" title="Attention">
-          There may be an issue with the RPC server. You can change it in the
-          network settings in the upper right corner.
-        </Alert>
-      );
-    }
-
-    return (
-      <Box gap="lg">
-        <>
-          <ErrorText errorMessage={errorString} size="sm" />
-          {networkMessage}
-        </>
-      </Box>
-    );
+  if (wasmStatus) {
+    return wasmStatus;
   }
 
   const formatSpec = () => {
