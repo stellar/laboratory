@@ -15,6 +15,8 @@ import { TabView } from "@/components/TabView";
 import { SwitchNetworkButtons } from "@/components/SwitchNetworkButtons";
 import { PoweredByStellarExpert } from "@/components/PoweredByStellarExpert";
 
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
+
 import { ContractInfo } from "./components/ContractInfo";
 
 export default function ContractExplorer() {
@@ -102,6 +104,10 @@ export default function ContractExplorer() {
                 onClick={() => {
                   resetFetchContractInfo();
                   setContractIdInput("");
+
+                  trackEvent(
+                    TrackingEvent.SMART_CONTRACTS_EXPLORER_CLEAR_CONTRACT,
+                  );
                 }}
                 disabled={isContractInfoLoading || isContractInfoFetching}
               >
@@ -131,6 +137,8 @@ export default function ContractExplorer() {
             e.preventDefault();
             fetchContractInfo();
             smartContracts.updateExplorerContractId(contractIdInput);
+
+            trackEvent(TrackingEvent.SMART_CONTRACTS_EXPLORER_LOAD_CONTRACT);
           }}
           className="ContractExplorer__form"
         >

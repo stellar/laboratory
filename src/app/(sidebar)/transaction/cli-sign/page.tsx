@@ -7,6 +7,7 @@ import { Loader } from "@stellar/design-system";
 import { Routes } from "@/constants/routes";
 import { NetworkOptions } from "@/constants/settings";
 import { useStore } from "@/store/useStore";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 export default function CliSignTransaction() {
   const { network, updateIsDynamicNetworkSelect, transaction, selectNetwork } =
@@ -34,6 +35,8 @@ export default function CliSignTransaction() {
       transaction.updateSignActiveView("overview");
       transaction.updateSignImportXdr(xdr);
     }
+
+    trackEvent(TrackingEvent.TRANSACTION_CLI_SIGN);
 
     router.push(Routes.SIGN_TRANSACTION);
     // Not including other deps

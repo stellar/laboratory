@@ -13,6 +13,7 @@ import { PageCard } from "@/components/layout/PageCard";
 import { muxedAccount } from "@/helpers/muxedAccount";
 
 import { validate } from "@/validate";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import "../styles.scss";
 
@@ -44,6 +45,8 @@ export default function ParseMuxedAccount() {
         muxedAddress,
       });
       account.updateParsedMuxedAccountInput(muxedAddress);
+
+      trackEvent(TrackingEvent.ACCOUNT_MUXED_PARSE);
 
       setSdkError("");
       return;

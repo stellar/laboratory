@@ -50,6 +50,7 @@ import {
   HorizonErrorResponse,
   RpcErrorResponse,
 } from "./components/ErrorResponse";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 const SUBMIT_OPTIONS = [
   {
@@ -120,6 +121,7 @@ export default function SubmitTransaction() {
     error: submitRpcError,
     isPending: isSubmitRpcPending,
     isSuccess: isSubmitRpcSuccess,
+    isError: isSubmitRpcError,
     reset: resetSubmitRpc,
   } = useSubmitRpcTx();
 
@@ -129,6 +131,7 @@ export default function SubmitTransaction() {
     error: submitHorizonError,
     isPending: isSubmitHorizonPending,
     isSuccess: isSubmitHorizonSuccess,
+    isError: isSubmitHorizonError,
     reset: resetSubmitHorizon,
   } = useSubmitHorizonTx();
 
@@ -206,6 +209,28 @@ export default function SubmitTransaction() {
     };
   }, [isDropdownVisible, handleClickOutside]);
 
+  useEffect(() => {
+    if (isSubmitRpcSuccess) {
+      trackEvent(TrackingEvent.TRANSACTION_SUBMIT_SUCCESS, { method: "rpc" });
+    }
+
+    if (isSubmitRpcError) {
+      trackEvent(TrackingEvent.TRANSACTION_SUBMIT_ERROR, { method: "rpc" });
+    }
+  }, [isSubmitRpcError, isSubmitRpcSuccess]);
+
+  useEffect(() => {
+    if (isSubmitHorizonSuccess) {
+      trackEvent(TrackingEvent.TRANSACTION_SUBMIT_SUCCESS, {
+        method: "horizon",
+      });
+    }
+
+    if (isSubmitHorizonError) {
+      trackEvent(TrackingEvent.TRANSACTION_SUBMIT_ERROR, { method: "horizon" });
+    }
+  }, [isSubmitHorizonError, isSubmitHorizonSuccess]);
+
   const resetSubmitState = () => {
     if (submitRpcError || submitRpcResponse) {
       resetSubmitRpc();
@@ -270,6 +295,7 @@ export default function SubmitTransaction() {
     // Adding delay to make sure the store will update
     delayedAction({
       action: () => {
+        trackEvent(TrackingEvent.TRANSACTION_SUBMIT_SIMULATE);
         router.push(Routes.SIMULATE_TRANSACTION);
       },
       delay: 200,
@@ -699,6 +725,7 @@ export default function SubmitTransaction() {
         }}
         onUpdate={(updatedItems) => {
           localStorageSavedTransactions.set(updatedItems);
+          trackEvent(TrackingEvent.TRANSACTION_SUBMIT_SAVE);
         }}
       />
     </Box>

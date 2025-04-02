@@ -14,6 +14,31 @@
       gap: pxToRem(12px);
     }
   }
+
+  &__badgeButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+
+    .Badge--success,
+    .Badge--error {
+      transition: background-color var(--sds-anim-transition-default);
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        .Badge--success {
+          --Badge-color-background: var(--sds-clr-green-04);
+        }
+
+        .Badge--error {
+          --Badge-color-background: var(--sds-clr-red-04);
+        }
+      }
+    }
+  }
 }
 
 .InfoFieldItem {

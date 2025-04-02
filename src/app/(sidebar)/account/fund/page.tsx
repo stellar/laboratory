@@ -14,6 +14,8 @@ import { SuccessMsg } from "@/components/FriendBot/SuccessMsg";
 import { ErrorMsg } from "@/components/FriendBot/ErrorMsg";
 import { PageCard } from "@/components/layout/PageCard";
 
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
+
 import { SwitchNetwork } from "./components/SwitchNetwork";
 
 import "../styles.scss";
@@ -77,6 +79,7 @@ export default function FundAccount() {
   if (network.id === "mainnet") {
     return <SwitchNetwork />;
   }
+
   return (
     <div className="Account">
       <PageCard heading={`Friendbot: fund a ${network.id} network account`}>
@@ -109,6 +112,7 @@ export default function FundAccount() {
               onClick={() => {
                 if (!inlineErrorMessage) {
                   refetch();
+                  trackEvent(TrackingEvent.ACCOUNT_FUND_FUND_ACCOUNT);
                 }
               }}
             >
@@ -122,6 +126,7 @@ export default function FundAccount() {
               onClick={() => {
                 setInlineErrorMessage("");
                 setGeneratedPublicKey(account.publicKey!);
+                trackEvent(TrackingEvent.ACCOUNT_FUND_FILL);
               }}
             >
               Fill in with generated key

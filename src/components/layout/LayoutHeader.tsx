@@ -28,6 +28,7 @@ import {
   TRANSACTION_NAV_ITEMS,
   XDR_NAV_ITEMS,
 } from "@/constants/navItems";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 const NAV = [
   {
@@ -141,6 +142,7 @@ export const LayoutHeader = () => {
 
   const handleNavChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     route.push(event.target.value);
+    trackEvent(TrackingEvent.MOBILE_NAV_CLICKED, { page: event.target.value });
   };
 
   const renderNav = () => {
@@ -164,6 +166,8 @@ export const LayoutHeader = () => {
   const renderTheme = (isDarkMode: boolean) => {
     const theme = isDarkMode ? "sds-theme-dark" : "sds-theme-light";
     setTheme(theme);
+
+    trackEvent(TrackingEvent.THEME_SET, { theme });
   };
 
   const renderSettingsDropdown = () => {

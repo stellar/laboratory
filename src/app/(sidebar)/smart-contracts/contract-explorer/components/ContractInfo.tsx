@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import {
   Avatar,
   Badge,
@@ -7,6 +7,7 @@ import {
   Link,
   Logo,
   Text,
+  Tooltip,
 } from "@stellar/design-system";
 
 import { Box } from "@/components/layout/Box";
@@ -16,6 +17,7 @@ import { formatEpochToDate } from "@/helpers/formatEpochToDate";
 import { formatNumber } from "@/helpers/formatNumber";
 import { stellarExpertAccountLink } from "@/helpers/stellarExpertAccountLink";
 
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 import { ContractInfoApiResponse, EmptyObj, Network } from "@/types/types";
 
 import { ContractSpec } from "./ContractSpec";
@@ -41,6 +43,30 @@ export const ContractInfo = ({
   const [activeTab, setActiveTab] = useState<ContractTabId>(
     "contract-version-history",
   );
+  const [isBadgeTooltipVisible, setIsBadgeTooltipVisible] = useState(false);
+
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+
+  const handleClickOutside = useCallback((event: MouseEvent) => {
+    if (buttonRef?.current?.contains(event.target as Node)) {
+      return;
+    }
+
+    setIsBadgeTooltipVisible(false);
+  }, []);
+
+  // Close tooltip when clicked outside
+  useLayoutEffect(() => {
+    if (isBadgeTooltipVisible) {
+      document.addEventListener("pointerup", handleClickOutside);
+    } else {
+      document.removeEventListener("pointerup", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("pointerup", handleClickOutside);
+    };
+  }, [handleClickOutside, isBadgeTooltipVisible]);
 
   type ContractExplorerInfoField = {
     id: string;
@@ -203,6 +229,65 @@ export const ContractInfo = ({
     </Text>
   );
 
+  const renderBuildVerifiedBadge = (
+    type: "verified" | "unverified" | undefined,
+  ) => {
+    const item = {
+      verified: {
+        badge: (
+          <Badge variant="success" icon={<Icon.CheckCircle />}>
+            Build Verified
+          </Badge>
+        ),
+        message: (
+          <>
+            <code>Build Verified</code> means that a GitHub Action run has
+            attested to have built the WASM, but does not verify the source
+            code.
+          </>
+        ),
+      },
+      unverified: {
+        badge: (
+          <Badge variant="error" icon={<Icon.XCircle />}>
+            Build Unverified
+          </Badge>
+        ),
+        message: (
+          <>
+            This contract has no build verification configured. Please see{" "}
+            <Link href="https://stellar.expert/explorer/public/contract/validation">
+              verification setup instructions
+            </Link>{" "}
+            for more info.
+          </>
+        ),
+      },
+    };
+
+    const badge = type ? item[type] : item.unverified;
+
+    return (
+      <Tooltip
+        triggerEl={
+          <button
+            ref={buttonRef}
+            className="ContractInfo__badgeButton"
+            onClick={() => {
+              setIsBadgeTooltipVisible(!isBadgeTooltipVisible);
+            }}
+            type="button"
+          >
+            {badge.badge}
+          </button>
+        }
+        isVisible={isBadgeTooltipVisible}
+      >
+        {badge.message}
+      </Tooltip>
+    );
+  };
+
   return (
     <Box gap="lg">
       <Card>
@@ -222,15 +307,7 @@ export const ContractInfo = ({
               Contract
             </Text>
 
-            {infoData.validation?.status === "verified" ? (
-              <Badge variant="success" icon={<Icon.CheckCircle />}>
-                Verified
-              </Badge>
-            ) : (
-              <Badge variant="error" icon={<Icon.XCircle />}>
-                Unverified
-              </Badge>
-            )}
+            {renderBuildVerifiedBadge(infoData.validation?.status)}
           </Box>
 
           <TabView
@@ -300,6 +377,10 @@ export const ContractInfo = ({
             activeTabId={activeTab}
             onTabChange={(tabId) => {
               setActiveTab(tabId as ContractTabId);
+
+              trackEvent(TrackingEvent.SMART_CONTRACTS_EXPLORER_TAB, {
+                tab: tabId,
+              });
             }}
           />
         </Box>

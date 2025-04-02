@@ -22,6 +22,7 @@ import {
   TRANSACTION_OPERATIONS,
 } from "@/constants/transactionOperations";
 
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 import {
   AnyObject,
   AssetObject,
@@ -131,33 +132,54 @@ export const ClassicOperation = ({
             id: "moveUp",
             hoverTitle: "Move up",
             icon: <Icon.ArrowUp />,
-            onClick: () =>
+            onClick: () => {
               updateOptionParamAndError({
                 type: "move-before",
                 index,
-              }),
+              });
+
+              trackEvent(TrackingEvent.TRANSACTION_BUILD_OPERATIONS_ACTION_UP, {
+                txType: "classic",
+              });
+            },
             isDisabled: isUpDisabled,
           },
           {
             id: "moveDown",
             hoverTitle: "Move down",
             icon: <Icon.ArrowDown />,
-            onClick: () =>
+            onClick: () => {
               updateOptionParamAndError({
                 type: "move-after",
                 index,
-              }),
+              });
+
+              trackEvent(
+                TrackingEvent.TRANSACTION_BUILD_OPERATIONS_ACTION_DOWN,
+                {
+                  txType: "classic",
+                },
+              );
+            },
             isDisabled: isDownDisabled,
           },
           {
             id: "duplicate",
             hoverTitle: "Duplicate",
             icon: <Icon.Copy07 />,
-            onClick: () =>
+            onClick: () => {
               updateOptionParamAndError({
                 type: "duplicate",
                 index,
-              }),
+              });
+
+              trackEvent(
+                TrackingEvent.TRANSACTION_BUILD_OPERATIONS_ACTION_DUPLICATE,
+                {
+                  txType: "classic",
+                },
+              );
+            },
           },
           {
             id: "delete",
@@ -165,11 +187,19 @@ export const ClassicOperation = ({
             icon: <Icon.Trash01 />,
             isError: true,
             isDisabled: isDeleteDisabled,
-            onClick: () =>
+            onClick: () => {
               updateOptionParamAndError({
                 type: "delete",
                 index,
-              }),
+              });
+
+              trackEvent(
+                TrackingEvent.TRANSACTION_BUILD_OPERATIONS_ACTION_DELETE,
+                {
+                  txType: "classic",
+                },
+              );
+            },
           },
         ]}
       />
@@ -466,6 +496,10 @@ export const ClassicOperation = ({
                     type: "add",
                     item: INITIAL_OPERATION,
                   });
+
+                  trackEvent(TrackingEvent.TRANSACTION_BUILD_ADD_OPERATION, {
+                    txType: "classic",
+                  });
                 }}
               >
                 Add Operation
@@ -493,6 +527,9 @@ export const ClassicOperation = ({
               icon={<Icon.RefreshCw01 />}
               onClick={() => {
                 updateOptionParamAndError({ type: "reset" });
+                trackEvent(TrackingEvent.TRANSACTION_BUILD_OPERATIONS_CLEAR, {
+                  txType: "classic",
+                });
               }}
             >
               Clear Operations
@@ -518,6 +555,10 @@ export const ClassicOperation = ({
         }}
         onUpdate={(updatedItems) => {
           localStorageSavedTransactions.set(updatedItems);
+
+          trackEvent(TrackingEvent.TRANSACTION_BUILD_SAVE, {
+            txType: "classic",
+          });
         }}
       />
     </Box>

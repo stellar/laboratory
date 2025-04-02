@@ -20,6 +20,8 @@ import {
   SET_TRUSTLINE_FLAGS_CUSTOM_MESSAGE,
 } from "@/constants/transactionOperations";
 import { useStore } from "@/store/useStore";
+
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 import {
   AnyObject,
   AssetObjectValue,
@@ -781,7 +783,9 @@ export const Operations = () => {
               TRANSACTION_OPERATIONS[e.target.value]?.defaultParams || {};
             const defaultParamKeys = Object.keys(defaultParams);
 
-            if (isSorobanOperationType(e.target.value)) {
+            const isSorobanOpType = isSorobanOperationType(e.target.value);
+
+            if (isSorobanOpType) {
               // if it's soroban, reset the classic operation
               updateOptionParamAndError({ type: "reset" });
               updateSorobanBuildOperation({
@@ -827,7 +831,7 @@ export const Operations = () => {
               });
             }
 
-            if (isSorobanOperationType(e.target.value)) {
+            if (isSorobanOpType) {
               // for soroban, on operation dropdown change, we don't need to update the existing array
               // since there is only one operation
               setOperationsError([initParamError]);
@@ -836,6 +840,11 @@ export const Operations = () => {
                 ...arrayItem.update(operationsError, index, initParamError),
               ]);
             }
+
+            trackEvent(TrackingEvent.TRANSACTION_BUILD_OPERATIONS_OP_TYPE, {
+              txType: isSorobanOpType ? "smart contract" : "classic",
+              operationType: e.target.value,
+            });
           }}
           note={
             opInfo ? (

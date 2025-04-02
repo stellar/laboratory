@@ -22,6 +22,8 @@ import {
   INITIAL_OPERATION,
   TRANSACTION_OPERATIONS,
 } from "@/constants/transactionOperations";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
+
 import { OperationError } from "@/types/types";
 
 export const SorobanOperation = ({
@@ -241,6 +243,9 @@ export const SorobanOperation = ({
               icon={<Icon.RefreshCw01 />}
               onClick={() => {
                 resetSorobanOperation();
+                trackEvent(TrackingEvent.TRANSACTION_BUILD_ADD_OPERATION, {
+                  txType: "smart contract",
+                });
               }}
             >
               Clear Operation
@@ -266,6 +271,10 @@ export const SorobanOperation = ({
         }}
         onUpdate={(updatedItems) => {
           localStorageSavedTransactions.set(updatedItems);
+
+          trackEvent(TrackingEvent.TRANSACTION_BUILD_SAVE, {
+            txType: "smart contract",
+          });
         }}
       />
     </Box>
