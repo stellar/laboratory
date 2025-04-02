@@ -24,8 +24,8 @@ export const renderWasmStatus = ({
   if (!rpcUrl) {
     return (
       <Alert variant="warning" placement="inline" title="Attention">
-        RPC URL is required to get the Contract Spec. You can add it in the
-        network settings in the upper right corner.
+        RPC URL is required to view this section. You can add it in the network
+        settings in the upper right corner.
       </Alert>
     );
   }
