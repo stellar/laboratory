@@ -21,6 +21,7 @@ import { ContractInfoApiResponse, EmptyObj, Network } from "@/types/types";
 import { ContractSpec } from "./ContractSpec";
 import { ContractStorage } from "./ContractStorage";
 import { VersionHistory } from "./VersionHistory";
+import { BuildInfo } from "./BuildInfo";
 
 export const ContractInfo = ({
   infoData,
@@ -34,7 +35,8 @@ export const ContractInfo = ({
     | "contract-contract-spec"
     | "contract-source-code"
     | "contract-contract-storage"
-    | "contract-version-history";
+    | "contract-version-history"
+    | "contract-build-info";
 
   const [activeTab, setActiveTab] = useState<ContractTabId>(
     "contract-version-history",
@@ -276,6 +278,22 @@ export const ContractInfo = ({
                   isActive={activeTab === "contract-version-history"}
                   contractId={infoData.contract}
                   networkId={network.id}
+                />
+              ),
+            }}
+            tab6={{
+              id: "contract-build-info",
+              label: "Build Info",
+              content: (
+                <BuildInfo
+                  wasmHash={infoData.wasm || ""}
+                  sourceCodeLink={
+                    infoData.validation
+                      ? `${infoData.validation.repository}/tree/${infoData.validation.commit}`
+                      : ""
+                  }
+                  rpcUrl={network.rpcUrl}
+                  isActive={activeTab === "contract-build-info"}
                 />
               ),
             }}
