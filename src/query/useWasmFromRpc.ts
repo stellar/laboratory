@@ -1,6 +1,9 @@
 import { contract } from "@stellar/stellar-sdk";
 import { useQuery } from "@tanstack/react-query";
 
+/**
+ * Fetch Wasm from RPC (returns parsed Wasm to get entries, etc).
+ */
 export const useWasmFromRpc = ({
   wasmHash,
   contractId,
