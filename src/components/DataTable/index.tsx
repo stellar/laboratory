@@ -7,6 +7,7 @@ import {
   Label,
   Loader,
 } from "@stellar/design-system";
+import { stringify } from "lossless-json";
 
 import { Box } from "@/components/layout/Box";
 import { Dropdown } from "@/components/Dropdown";
@@ -14,6 +15,9 @@ import { Dropdown } from "@/components/Dropdown";
 import { processContractStorageData } from "@/helpers/processContractStorageData";
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import { exportJsonToCsvFile } from "@/helpers/exportJsonToCsvFile";
+import { capitalizeString } from "@/helpers/capitalizeString";
+import { formatNumber } from "@/helpers/formatNumber";
+import { formatEpochToDate } from "@/helpers/formatEpochToDate";
 
 import { getPublicKeyError } from "@/validate/methods/getPublicKeyError";
 import { getContractIdError } from "@/validate/methods/getContractIdError";
@@ -214,19 +218,38 @@ export const DataTable = <T extends AnyObject>({
 
   const handleExportToCsv = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    format: "xdr" | "json",
   ) => {
     event.preventDefault();
 
     if (csvFileName) {
-      const sanitizedData = processedData.map((item) => {
-        // Removing decoded key and value attributes
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { keyJson, valueJson, ...rest } = item;
+      let fileData;
 
-        return rest;
-      });
+      if (format === "xdr") {
+        fileData = processedData.map((item) => {
+          // Removing decoded key and value attributes
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { keyJson, valueJson, ...rest } = item;
 
-      exportJsonToCsvFile(sanitizedData, `${csvFileName}-${Date.now()}`);
+          return rest;
+        });
+      }
+
+      if (format === "json") {
+        fileData = processedData.map((p) => ({
+          key: stringify(p.keyJson),
+          value: stringify(p.valueJson),
+          durability: capitalizeString(p.durability),
+          ttl: formatNumber(p.ttl),
+          updated: formatEpochToDate(p.updated, "short") || "-",
+        }));
+      }
+
+      if (!fileData) {
+        return;
+      }
+
+      exportJsonToCsvFile(fileData, `${csvFileName}-${Date.now()}`);
     }
   };
 
@@ -470,15 +493,27 @@ export const DataTable = <T extends AnyObject>({
 
           <>
             {csvFileName ? (
-              <Button
-                variant="tertiary"
-                size="sm"
-                icon={<Icon.Download01 />}
-                iconPosition="left"
-                onClick={handleExportToCsv}
-              >
-                Export to CSV
-              </Button>
+              <>
+                <Button
+                  variant="tertiary"
+                  size="sm"
+                  icon={<Icon.Download01 />}
+                  iconPosition="left"
+                  onClick={(e) => handleExportToCsv(e, "xdr")}
+                >
+                  Export in XDR
+                </Button>
+
+                <Button
+                  variant="tertiary"
+                  size="sm"
+                  icon={<Icon.Download01 />}
+                  iconPosition="left"
+                  onClick={(e) => handleExportToCsv(e, "json")}
+                >
+                  Export in JSON
+                </Button>
+              </>
             ) : null}
           </>
         </Box>
