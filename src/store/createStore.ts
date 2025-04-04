@@ -17,6 +17,7 @@ import {
   TxnOperation,
   OpBuildingError,
   ThemeColorType,
+  SorobanInvokeValue,
 } from "@/types/types";
 
 export type FeeBumpParams = {
@@ -163,6 +164,10 @@ export interface Store {
     resetBuildParams: () => void;
     // [Transaction] Build Soroban Transaction actions
     updateSorobanBuildOperation: (operation: TxnOperation) => void;
+    updateSorobanBuildOperationInvokeValue: (
+      path: (string | number)[],
+      value: any,
+    ) => void;
     updateSorobanBuildXdr: (xdr: string) => void;
     // [Transaction] Both Classic & Soroban Transaction actions
     resetBuild: () => void;
@@ -476,7 +481,58 @@ export const createStore = (options: CreateStoreOptions) =>
           // Soroban Build
           updateSorobanBuildOperation: (operation) =>
             set((state) => {
+              console.log(
+                "state.transaction.build.soroban.operation:",
+                JSON.parse(
+                  JSON.stringify(state.transaction.build.soroban.operation),
+                ),
+              );
               state.transaction.build.soroban.operation = operation;
+            }),
+          // used for Invoke Contract Function
+          updateSorobanBuildOperationInvokeValue: (
+            path: (string | number)[],
+            value: any,
+          ) =>
+            set((state) => {
+              // type TxnOperation = {
+              //   operation_type: string;
+              //   params: AnyObject;
+              //   source_account?: string;
+              // };
+              let paramNode =
+                state.transaction.build.soroban.operation.params
+                  .invoke_contract;
+
+              if (paramNode) {
+                paramNode = JSON.parse(paramNode);
+              } else {
+                paramNode = { args: {} };
+              }
+
+              let node = paramNode.args;
+
+              for (let i = 0; i < path.length - 1; i++) {
+                const key = path[i];
+                console.log("[createStore] path[i]: ", path[i]);
+                console.log("[createStore] path: ", path);
+
+                if (node[key] === undefined) {
+                  // node[key] = typeof path[i + 1] === "number" ? [] : {};
+                  node[key] = [];
+                }
+
+                console.log("[createStore] node: ", node);
+                console.log("[createStore] node[key]: ", node[key]);
+                node = node[key];
+              }
+
+              // Set the final value
+              node[path[path.length - 1]] = value;
+
+              // 💡 Re-serialize the updated paramNode back into the state
+              state.transaction.build.soroban.operation.params.invoke_contract =
+                JSON.stringify(paramNode);
             }),
           updateSorobanBuildXdr: (xdr: string) =>
             set((state) => {

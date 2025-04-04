@@ -1,30 +1,7 @@
-import type { JSONSchema7Definition } from "json-schema";
+// https://jsonforms.io/api/core/interfaces/jsonschema7.html
+import type { JSONSchema7 } from "json-schema";
+import type { DereferencedSchemaType } from "@/constants/jsonSchema";
 
-// PRIMITIVE DEFINITIONS
-// https://github.com/stellar/js-stellar-sdk/blob/38115a16ed3fbc5d868ae8b1ab3042cf8a0c3399/src/contract/spec.ts#L99
-type PrimitiveType =
-  | "U32"
-  | "I32"
-  | "U64"
-  | "I64"
-  | "U128"
-  | "I128"
-  | "U256"
-  | "I256";
-
-type XdrSpecialType = "Address" | "ScString" | "ScSymbol" | "DataUrl";
-type CustomXdrSpecType = PrimitiveType | XdrSpecialType;
-
-export type DereferencedSchemaType = {
-  name: string;
-  description: string;
-  properties: Record<
-    string,
-    JSONSchema7Definition & { specType?: CustomXdrSpecType }
-  >;
-  required: string[];
-  additionalProperties: boolean;
-};
 /**
  * dereferences the schema for the given method name
  * @param fullSchema - the full schema
@@ -32,84 +9,94 @@ export type DereferencedSchemaType = {
  * @returns the dereferenced schema
  */
 export const dereferenceSchema = (
-  fullSchema: any,
+  fullSchema: JSONSchema7,
   methodName: string,
 ): DereferencedSchemaType => {
+  if (!fullSchema || !fullSchema.definitions) {
+    throw new Error("Full schema is required");
+  }
   // Get the method schema
   const methodSchema = fullSchema.definitions[methodName];
-  if (!methodSchema) {
+
+  if (!methodSchema || typeof methodSchema === "boolean") {
     throw new Error(`Method ${methodName} not found in schema`);
   }
+  const methodSchemaObj = methodSchema as JSONSchema7;
 
   // Get the args properties and required fields implemented under `argsAndRequired`
   // https://github.com/stellar/js-stellar-sdk/blob/38115a16ed3fbc5d868ae8b1ab3042cf8a0c3399/src/contract/spec.ts
-  const argsProperties = methodSchema.properties.args.properties;
-  const requiredFields = methodSchema.properties.args.required;
+  const argsProperties = methodSchemaObj.properties?.args as JSONSchema7;
+  const requiredFields = argsProperties?.required ?? [];
 
-  // Helper function to resolve $ref
-  // @TODO recursively replace $ref with the actual definition
   // Good example contract: CDVQVKOY2YSXS2IC7KN6MNASSHPAO7UN2UR2ON4OI2SKMFJNVAMDX6DP
-  // "submit" function
-  function resolveRef(refPath: string): JSONSchema7Definition {
-    return fullSchema.definitions[refPath];
-  }
+  // "submit", "queue_set_reserve" function
+  const resolveRef = (val: any, fullSchema: JSONSchema7) => {
+    // primitive: { '$ref': '#/definitions/Address' }
+    // array: { type: 'array', items: { '$ref': '#/definitions/Request' } }
 
-  // Process properties and resolve all $refs
-  const properties: Record<
-    string,
-    JSONSchema7Definition & { specType?: CustomXdrSpecType }
-  > = {};
+    const ref = val.$ref;
 
-  Object.entries(argsProperties).forEach(([key, value]: [string, any]) => {
-    if (value.$ref) {
-      const refPath = value.$ref.replace("#/definitions/", "");
+    if (ref) {
+      // would output something like
+      // "Address"  if it's a primitive
+      const refPath = ref.replace("#/definitions/", "");
 
-      // refPath type is like `#/$defs/U32`
-      // there are cases when array type is passed
-      //       {
-      //     "type": "array",
-      //     "items": [
-      //         {
-      //             "$ref": "#/definitions/Address"
-      //         },
-      //         {
-      //             "$ref": "#/definitions/Address"
-      //         },
-      //         {
-      //             "$ref": "#/definitions/Address"
-      //         },
-      //         {
-      //             "$ref": "#/definitions/Address"
-      //         },
-      //         {
-      //             "type": "array",
-      //             "items": {
-      //                 "$ref": "#/definitions/Address"
-      //             }
-      //         }
-      //     ],
-      //     "minItems": 5,
-      //     "maxItems": 5
-      // }
-      // or
-      //   {
-      //     "type": "array",
-      //     "items": {
-      //         "$ref": "#/definitions/Address"
-      //     }
-      // }
-      properties[key] = resolveRef(refPath);
-      properties[key].specType = refPath;
-    } else {
-      properties[key] = value;
+      const refPathDef = fullSchema?.definitions?.[refPath] as JSONSchema7;
+
+      // if the refPathDef has properties aka is an array
+      // we need to recursively dereference the properties
+      if (refPathDef?.properties) {
+        return {
+          properties: dereferenceSchemaProps(
+            fullSchema?.definitions?.[refPath],
+          ),
+          type: refPathDef?.type,
+          description: refPathDef?.description,
+          required: refPathDef?.required,
+          additionalProperties: refPathDef?.additionalProperties ?? false,
+        };
+      }
+
+      // return fullSchema?.definitions?.[refPath];
+      return {
+        type: refPath,
+        description: refPathDef?.description ?? false,
+      };
     }
-  });
+
+    return val;
+  };
+
+  const dereferenceSchemaProps = (funcArgs: any) => {
+    let resolvedProps: Record<string, any> = {};
+
+    if (funcArgs.properties) {
+      Object.entries(funcArgs.properties).forEach(([key, value]) => {
+        // `value` can be either JSONSchema7Definition or false
+        // parse the value if it's an object
+        if (typeof value === "object" && value !== null) {
+          if ("$ref" in value) {
+            resolvedProps[key] = resolveRef(value, fullSchema);
+          }
+          if ("items" in value) {
+            resolvedProps[key] = {
+              ...resolveRef(value.items, fullSchema),
+              type: "array",
+            };
+          }
+        }
+      });
+    }
+
+    return resolvedProps;
+  };
 
   return {
     name: methodName,
-    description: methodSchema.description,
-    properties,
+    description: methodSchemaObj.description ?? "",
+    properties: dereferenceSchemaProps(argsProperties),
     required: requiredFields,
-    additionalProperties: false,
+    additionalProperties: methodSchemaObj.additionalProperties ?? false,
+    type: "object",
   };
 };
