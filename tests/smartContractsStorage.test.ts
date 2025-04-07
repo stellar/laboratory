@@ -164,8 +164,9 @@ test.describe("Smart Contracts: Contract Storage", () => {
     await expect(filterBadges.nth(0)).toBeHidden();
   });
 
-  test("Export CSV button", async ({ page }) => {
-    await expect(page.getByText("Export to CSV")).toBeVisible();
+  test("Export CSV buttons", async ({ page }) => {
+    await expect(page.getByText("Export in XDR")).toBeVisible();
+    await expect(page.getByText("Export in JSON")).toBeVisible();
   });
 });
 
