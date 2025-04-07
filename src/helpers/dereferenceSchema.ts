@@ -68,7 +68,7 @@ export const dereferenceSchema = (
   };
 
   const dereferenceSchemaProps = (funcArgs: any) => {
-    let resolvedProps: Record<string, any> = {};
+    const resolvedProps: Record<string, any> = {};
 
     if (funcArgs.properties) {
       Object.entries(funcArgs.properties).forEach(([key, value]) => {

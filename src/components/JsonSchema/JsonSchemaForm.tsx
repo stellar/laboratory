@@ -108,15 +108,17 @@ export const JsonSchemaFormRenderer = ({
 
     // Validate the value
     const error = validateFn?.(e.target.value, requiredFields?.includes(label));
+    const currentPath = path.length > 0 ? path.join(".") : name;
+
     if (error) {
       setFormError({
         ...formError,
-        [path.join(".")]: error,
+        [currentPath]: error,
       });
     } else {
       setFormError({
         ...formError,
-        [path.join(".")]: "",
+        [currentPath]: "",
       });
     }
   };
@@ -174,7 +176,7 @@ export const JsonSchemaFormRenderer = ({
 
     return (
       <Box gap="md" key={index}>
-        <LabelHeading size="lg" infoText={schema.description}>
+        <LabelHeading size="md" infoText={schema.description}>
           {name}
         </LabelHeading>
 
@@ -183,54 +185,56 @@ export const JsonSchemaFormRenderer = ({
             storedItems.map((args: any, index: number) => (
               <Box gap="md" key={index}>
                 <Card>
-                  <LabelHeading size="lg">
-                    {name}-{index + 1}
-                  </LabelHeading>
+                  <Box gap="md" key={index}>
+                    <LabelHeading size="lg">
+                      {name}-{index + 1}
+                    </LabelHeading>
 
-                  <Box gap="md">
-                    <>
-                      {Object.keys(args).map((arg) => {
-                        const nested = [];
-                        nested.push(name);
-                        nested.push(index);
-                        nested.push(arg);
+                    <Box gap="md">
+                      <>
+                        {Object.keys(args).map((arg) => {
+                          const nested = [];
+                          nested.push(name);
+                          nested.push(index);
+                          nested.push(arg);
 
-                        return (
-                          <JsonSchemaFormRenderer
-                            name={name}
-                            index={index}
-                            key={nested.join(".")}
-                            schema={schema.properties?.[arg] as JSONSchema7}
-                            path={[...path, nested.join(".")]}
-                            formData={args}
-                            onChange={onChange}
-                            requiredFields={schema.required}
-                          />
-                        );
-                      })}
-                    </>
-
-                    <Box gap="sm" direction="row" align="center">
-                      <Button
-                        size="md"
-                        variant="tertiary"
-                        icon={<Icon.Trash01 />}
-                        type="button"
-                        onClick={() => {
-                          const updatedList = arrayItem.delete(
-                            getNestedValue(parsedSorobanOperation.args, name),
-                            index,
+                          return (
+                            <JsonSchemaFormRenderer
+                              name={name}
+                              index={index}
+                              key={nested.join(".")}
+                              schema={schema.properties?.[arg] as JSONSchema7}
+                              path={[...path, nested.join(".")]}
+                              formData={args}
+                              onChange={onChange}
+                              requiredFields={schema.required}
+                            />
                           );
+                        })}
+                      </>
 
-                          onChange({
-                            ...invokeContractBaseProps,
-                            args: {
-                              ...parsedSorobanOperation.args,
-                              [name]: updatedList,
-                            },
-                          });
-                        }}
-                      ></Button>
+                      <Box gap="sm" direction="row" align="center">
+                        <Button
+                          size="md"
+                          variant="tertiary"
+                          icon={<Icon.Trash01 />}
+                          type="button"
+                          onClick={() => {
+                            const updatedList = arrayItem.delete(
+                              getNestedValue(parsedSorobanOperation.args, name),
+                              index,
+                            );
+
+                            onChange({
+                              ...invokeContractBaseProps,
+                              args: {
+                                ...parsedSorobanOperation.args,
+                                [name]: updatedList,
+                              },
+                            });
+                          }}
+                        ></Button>
+                      </Box>
                     </Box>
                   </Box>
                 </Card>
@@ -261,7 +265,7 @@ export const JsonSchemaFormRenderer = ({
           fieldSize="md"
           label={labelWithSchemaType}
           value={getNestedValue(parsedSorobanOperation.args, path.join("."))}
-          error={formError[path.join(".")] || ""}
+          error={path.length > 0 ? formError[path.join(".")] : formError[name]}
           onChange={(e) => {
             handleChange(e, validate.getPublicKeyError);
           }}
@@ -277,7 +281,7 @@ export const JsonSchemaFormRenderer = ({
           key={path.join(".")}
           label={labelWithSchemaType}
           value={getNestedValue(parsedSorobanOperation.args, path.join("."))}
-          error={formError[path.join(".")] || ""}
+          error={path.length > 0 ? formError[path.join(".")] : formError[name]}
           onChange={(e) => {
             handleChange(e, validate.getU32Error);
           }}
@@ -290,7 +294,7 @@ export const JsonSchemaFormRenderer = ({
           key={path.join(".")}
           label={labelWithSchemaType}
           value={getNestedValue(parsedSorobanOperation.args, path.join("."))}
-          error={formError[path.join(".")] || ""}
+          error={path.length > 0 ? formError[path.join(".")] : formError[name]}
           onChange={(e) => {
             handleChange(e, validate.getU64Error);
           }}
@@ -303,7 +307,7 @@ export const JsonSchemaFormRenderer = ({
           key={path.join(".")}
           label={labelWithSchemaType}
           value={getNestedValue(parsedSorobanOperation.args, path.join("."))}
-          error={formError[path.join(".")] || ""}
+          error={path.length > 0 ? formError[path.join(".")] : formError[name]}
           onChange={(e) => {
             handleChange(e, validate.getU128Error);
           }}
@@ -316,7 +320,7 @@ export const JsonSchemaFormRenderer = ({
           key={path.join(".")}
           label={labelWithSchemaType}
           value={getNestedValue(parsedSorobanOperation.args, path.join("."))}
-          error={formError[path.join(".")] || ""}
+          error={path.length > 0 ? formError[path.join(".")] : formError[name]}
           onChange={(e) => {
             handleChange(e, validate.getU256Error);
           }}
@@ -330,7 +334,7 @@ export const JsonSchemaFormRenderer = ({
           fieldSize="md"
           label={labelWithSchemaType}
           value={getNestedValue(parsedSorobanOperation.args, path.join("."))}
-          error={formError[path.join(".")] || ""}
+          error={path.length > 0 ? formError[path.join(".")] : formError[name]}
           onChange={(e) => {
             handleChange(e, validate.getI32Error);
           }}
@@ -344,7 +348,7 @@ export const JsonSchemaFormRenderer = ({
           fieldSize="md"
           label={labelWithSchemaType}
           value={getNestedValue(parsedSorobanOperation.args, path.join("."))}
-          error={formError[path.join(".")] || ""}
+          error={path.length > 0 ? formError[path.join(".")] : formError[name]}
           onChange={(e) => {
             handleChange(e, validate.getI64Error);
           }}
@@ -358,7 +362,7 @@ export const JsonSchemaFormRenderer = ({
           fieldSize="md"
           label={labelWithSchemaType}
           value={getNestedValue(parsedSorobanOperation.args, path.join("."))}
-          error={formError[path.join(".")] || ""}
+          error={path.length > 0 ? formError[path.join(".")] : formError[name]}
           onChange={(e) => {
             handleChange(e, validate.getI128Error);
           }}
@@ -372,7 +376,7 @@ export const JsonSchemaFormRenderer = ({
           fieldSize="md"
           label={labelWithSchemaType}
           value={getNestedValue(parsedSorobanOperation.args, path.join("."))}
-          error={formError[path.join(".")] || ""}
+          error={path.length > 0 ? formError[path.join(".")] : formError[name]}
           onChange={(e) => {
             handleChange(e, validate.getI256Error);
           }}
@@ -403,7 +407,7 @@ export const JsonSchemaFormRenderer = ({
           fieldSize="md"
           label={label}
           value={getNestedValue(parsedSorobanOperation.args, path.join("."))}
-          error={formError[path.join(".")] || ""}
+          error={path.length > 0 ? formError[path.join(".")] : formError[name]}
           onChange={(e) => {
             handleChange(e, validate.getDataUrlError);
           }}
@@ -429,6 +433,7 @@ export const JsonSchemaForm = ({
 }) => {
   const { network, transaction } = useStore();
   const { updateSorobanBuildXdr } = transaction;
+  const { isValid } = transaction.build;
   const { params: txnParams, soroban } = transaction.build;
   const { operation } = soroban;
   const {
@@ -444,10 +449,6 @@ export const JsonSchemaForm = ({
     funcSchema,
     name,
   );
-
-  const requiredFields = dereferencedSchema.required;
-  const missingFields =
-    requiredFields && requiredFields.filter((field) => !value.args[field]);
 
   useEffect(() => {
     if (prepareTxData) {
@@ -477,7 +478,7 @@ export const JsonSchemaForm = ({
         headers: getNetworkHeaders(network, "rpc"),
       });
     } else {
-      // @TODO write an error
+      return undefined;
     }
   };
 
@@ -500,7 +501,7 @@ export const JsonSchemaForm = ({
         <Box gap="md" direction="row" wrap="wrap">
           <Button
             variant="secondary"
-            disabled={missingFields && missingFields.length > 0}
+            disabled={!(isValid.params && isValid.operations)}
             isLoading={isPrepareTxPending}
             size="md"
             onClick={handlePrepareTx}
@@ -549,9 +550,8 @@ const getTxnToSimulate = (
   operation: TxnOperation,
   networkPassphrase: string,
 ) => {
-  const scVals = getScValsFromSpec(value.function_name, spec, value);
-
   try {
+    const scVals = getScValsFromSpec(value.function_name, spec, value);
     const builtXdr = buildTxWithSorobanData({
       params: txnParams,
       sorobanOp: {
@@ -568,11 +568,10 @@ const getTxnToSimulate = (
     });
 
     return builtXdr.toXDR();
-  } catch (e) {
-    console.log("e", e);
+  } catch (e: any) {
+    console.error("e", e);
+    return undefined;
   }
-
-  return undefined;
 };
 
 const getDefType = (prop: any) => {
@@ -614,7 +613,7 @@ function setNestedValueWithArr(
   function helper(current: any, idx: number): any {
     const key = keys[idx];
 
-    // If it's the last key, just set the value
+    // If it's the last key, set the value
     if (idx === keys.length - 1) {
       if (Array.isArray(current)) {
         const newArr = [...current];
