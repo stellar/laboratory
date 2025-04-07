@@ -364,11 +364,6 @@ export const ContractInfo = ({
               content: (
                 <BuildInfo
                   wasmHash={infoData.wasm || ""}
-                  sourceCodeLink={
-                    infoData.validation
-                      ? `${infoData.validation.repository}/tree/${infoData.validation.commit}`
-                      : ""
-                  }
                   rpcUrl={network.rpcUrl}
                   isActive={activeTab === "contract-build-info"}
                 />

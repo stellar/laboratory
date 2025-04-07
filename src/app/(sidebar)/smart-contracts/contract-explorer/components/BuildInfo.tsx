@@ -7,12 +7,10 @@ import { useStore } from "@/store/useStore";
 
 export const BuildInfo = ({
   wasmHash,
-  sourceCodeLink,
   rpcUrl,
   isActive,
 }: {
   wasmHash: string;
-  sourceCodeLink: string;
   rpcUrl: string;
   isActive: boolean;
 }) => {
@@ -25,7 +23,6 @@ export const BuildInfo = ({
     isFetching: isWasmFetching,
   } = useWasmGitHubAttestation({
     wasmHash,
-    sourceCodeLink,
     rpcUrl,
     isActive: Boolean(isActive && rpcUrl && wasmHash),
     headers: getNetworkHeaders(network, "rpc"),

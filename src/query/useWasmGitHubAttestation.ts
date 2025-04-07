@@ -5,13 +5,11 @@ import { AnyObject, NetworkHeaders } from "@/types/types";
 
 export const useWasmGitHubAttestation = ({
   wasmHash,
-  sourceCodeLink,
   rpcUrl,
   isActive,
   headers = {},
 }: {
   wasmHash: string;
-  sourceCodeLink: string;
   rpcUrl: string;
   isActive: boolean;
   headers?: NetworkHeaders;
@@ -51,14 +49,21 @@ export const useWasmGitHubAttestation = ({
           return null;
         }
 
-        // Validate workflow file
-        const workflowPath = attPayload?.predicate?.runDetails?.builder?.id
-          .split(sourceRepo)?.[1]
-          .split("@")?.[0];
+        // Validate workflow path
+        const workflowPath =
+          attPayload?.predicate?.buildDefinition?.externalParameters?.workflow
+            ?.path;
+        const workflowRef =
+          attPayload?.predicate?.buildDefinition?.externalParameters?.workflow
+            ?.ref;
+        const workflowRepository =
+          attPayload?.predicate?.buildDefinition?.externalParameters?.workflow
+            ?.repository;
 
-        const fetchWorkflow = await fetch(`${sourceCodeLink}${workflowPath}`);
-
-        if (fetchWorkflow.status !== 200) {
+        if (
+          attPayload?.predicate?.runDetails?.builder?.id !==
+          `${workflowRepository}/${workflowPath}@${workflowRef}`
+        ) {
           return null;
         }
 
