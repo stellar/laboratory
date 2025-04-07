@@ -5,9 +5,10 @@ import { useQueryClient } from "@tanstack/react-query";
 import { CodeEditor, SupportedLanguage } from "@/components/CodeEditor";
 import { Box } from "@/components/layout/Box";
 import { ErrorText } from "@/components/ErrorText";
+import { WithInfoText } from "@/components/WithInfoText";
 
 import { useWasmFromRpc } from "@/query/useWasmFromRpc";
-import { useSEContractWasmBinary } from "@/query/external/useSEContractWasmBinary";
+import { useWasmBinaryFromRpc } from "@/query/useWasmBinaryFromRpc";
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
 import * as StellarXdr from "@/helpers/StellarXdr";
@@ -57,7 +58,10 @@ export const ContractSpec = ({
     isLoading: isWasmBinaryLoading,
     isFetching: isWasmBinaryFetching,
     refetch: fetchWasmBinary,
-  } = useSEContractWasmBinary({ wasmHash, networkId });
+  } = useWasmBinaryFromRpc({
+    wasmHash,
+    rpcUrl,
+  });
 
   const resetWasmBlob = useCallback(() => {
     queryClient.resetQueries({
@@ -182,27 +186,29 @@ export const ContractSpec = ({
       />
 
       <Box gap="xs" direction="column" align="end">
-        <Button
-          variant="tertiary"
-          size="sm"
-          icon={<Icon.Download01 />}
-          iconPosition="left"
-          onClick={(e) => {
-            e.preventDefault();
+        <WithInfoText href="https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/contracts#wasm">
+          <Button
+            variant="tertiary"
+            size="sm"
+            icon={<Icon.Download01 />}
+            iconPosition="left"
+            onClick={(e) => {
+              e.preventDefault();
 
-            if (wasmBinaryError) {
-              resetWasmBlob();
-            }
+              if (wasmBinaryError) {
+                resetWasmBlob();
+              }
 
-            delayedAction({
-              action: fetchWasmBinary,
-              delay: wasmBinaryError ? 500 : 0,
-            });
-          }}
-          isLoading={isWasmBinaryLoading || isWasmBinaryFetching}
-        >
-          Download WASM
-        </Button>
+              delayedAction({
+                action: fetchWasmBinary,
+                delay: wasmBinaryError ? 500 : 0,
+              });
+            }}
+            isLoading={isWasmBinaryLoading || isWasmBinaryFetching}
+          >
+            Download WASM
+          </Button>
+        </WithInfoText>
 
         <>
           {wasmBinaryError ? (
