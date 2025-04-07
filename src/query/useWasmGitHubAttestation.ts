@@ -49,24 +49,6 @@ export const useWasmGitHubAttestation = ({
           return null;
         }
 
-        // Validate workflow path
-        const workflowPath =
-          attPayload?.predicate?.buildDefinition?.externalParameters?.workflow
-            ?.path;
-        const workflowRef =
-          attPayload?.predicate?.buildDefinition?.externalParameters?.workflow
-            ?.ref;
-        const workflowRepository =
-          attPayload?.predicate?.buildDefinition?.externalParameters?.workflow
-            ?.repository;
-
-        if (
-          attPayload?.predicate?.runDetails?.builder?.id !==
-          `${workflowRepository}/${workflowPath}@${workflowRef}`
-        ) {
-          return null;
-        }
-
         // Validate source repo
         if (
           !(
