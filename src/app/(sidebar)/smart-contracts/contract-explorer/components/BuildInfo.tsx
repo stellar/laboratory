@@ -75,6 +75,16 @@ export const BuildInfo = ({
         <div className="BuildInfo__data__title">Build</div>
 
         <div className="BuildInfo__data__item">
+          <div>Attestation</div>
+          <div>
+            {renderLink(
+              wasmData.build.attestationUrl,
+              wasmData.build.attestation,
+            )}
+          </div>
+        </div>
+
+        <div className="BuildInfo__data__item">
           <div>Commit</div>
           <div>
             {renderLink(wasmData.build.commitUrl, wasmData.build.commit)}

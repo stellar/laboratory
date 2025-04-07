@@ -32,9 +32,12 @@ export const useWasmGitHubAttestation = ({
         const wasm = await rpcServer.getContractWasmByHash(wasmHash, "hex");
         const sourceRepo = await extractSourceRepo(wasm);
 
-        const att = await fetch(
-          `https://api.github.com/repos/${sourceRepo}/attestations/sha256:${wasmHash}`,
-        );
+        if (!sourceRepo) {
+          return null;
+        }
+
+        const attestationUrl = `https://api.github.com/repos/${sourceRepo}/attestations/sha256:${wasmHash}`;
+        const att = await fetch(attestationUrl);
 
         if (att.status !== 200) {
           return null;
@@ -85,6 +88,8 @@ export const useWasmGitHubAttestation = ({
 
         return {
           build: {
+            attestation: `api.github.com/repos/${sourceRepo}/…`,
+            attestationUrl,
             commit: gitCommit || "",
             commitUrl,
             summary: invocationId ? invocationId.split(sourceRepo)[1] : "",
