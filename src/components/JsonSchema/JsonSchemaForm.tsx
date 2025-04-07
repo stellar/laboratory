@@ -3,6 +3,7 @@ import { BASE_FEE, contract } from "@stellar/stellar-sdk";
 import { Button, Card, Icon, Input, Text } from "@stellar/design-system";
 
 import type { JSONSchema7, JSONSchema7Definition } from "json-schema";
+import { parse, stringify } from "lossless-json";
 
 import { TransactionBuildParams } from "@/store/createStore";
 import { useStore } from "@/store/useStore";
@@ -30,20 +31,34 @@ export const JsonSchemaFormRenderer = ({
   schema,
   path = [],
   formData,
+  onChange,
+  index,
   // index,
 }: {
   name: string;
   schema: JSONSchema7;
   path?: (string | number)[];
   formData: AnyObject;
-  // index?: number;
+  onChange: (value: SorobanInvokeValue) => void;
+  index?: number;
 }) => {
   const { transaction } = useStore();
-  const { updateSorobanBuildOperationInvokeValue } = transaction;
+  const { build } = transaction;
+
+  const { operation: sorobanOperation } = build.soroban;
+
+  const parsedSorobanOperation = parse(
+    sorobanOperation.params.invoke_contract,
+  ) as AnyObject;
+
+  const invokeContractBaseProps = {
+    contract_id: parsedSorobanOperation.contract_id,
+    function_name: parsedSorobanOperation.function_name,
+  };
 
   const schemaType = getDefType(schema);
 
-  if (schema.type === "object") {
+  if (schemaType === "object") {
     return (
       <Box gap="md">
         {Object.entries(schema.properties || {}).map(
@@ -53,7 +68,8 @@ export const JsonSchemaFormRenderer = ({
                 name={key}
                 key={index}
                 schema={subSchema as JSONSchema7}
-                path={[...path, key]}
+                onChange={onChange}
+                // path={[...path, key]}
                 formData={formData}
               />
             );
@@ -63,37 +79,89 @@ export const JsonSchemaFormRenderer = ({
     );
   }
 
-  if (schema.type === "array") {
-    const items = formData;
-    console.log("schema: ", schema);
-    console.log("items: ", items);
+  if (schemaType === "array") {
+    console.log('schemaType === "array"');
+    console.log("parsedSorobanOperation: ", parsedSorobanOperation);
+    console.log("path: ", path);
+    const storedItems = parsedSorobanOperation.args?.[name] || [];
 
-    const defaultEmptyObject = Object.keys(schema.properties || {}).reduce(
-      (acc: Record<string, string>, key) => {
-        acc[key] = "";
+    const addDefaultSchemaTemplate = () => {
+      console.log("storedItems: ", storedItems);
 
-        return acc;
-      },
-      {},
-    );
+      // template created based on the schema.properties
+      const defaultTemplate = Object.keys(schema.properties || {}).reduce(
+        (acc: Record<string, string | any[]>, key) => {
+          if (schema?.properties?.[key]?.type === "array") {
+            acc[key] = [];
+          } else {
+            acc[key] = "";
+          }
+
+          return acc;
+        },
+        {},
+      );
+
+      const args = parsedSorobanOperation.args?.[name] || [];
+      args.push(defaultTemplate);
+
+      onChange({
+        ...invokeContractBaseProps,
+        args: {
+          ...parsedSorobanOperation.args,
+          [name]: args,
+        },
+      });
+    };
 
     return (
-      <Box gap="md">
+      <Box gap="md" key={index}>
         <Card>
           <Box gap="md">
             <LabelHeading size="lg" infoText={schema.description}>
               {name}
             </LabelHeading>
-            {items.length > 0 &&
-              items.map((item: any, index: number) => (
-                <JsonSchemaFormRenderer
-                  name={name}
-                  key={index}
-                  schema={schema.items as JSONSchema7}
-                  path={[...path, index]}
-                  formData={item}
-                />
-              ))}
+            {storedItems.length > 0 &&
+              storedItems.map((args: any, index: number) => {
+                // item:
+                // {
+                //     "address": "",
+                //     "amount": "",
+                //     "request_type": ""
+                // }
+                console.log("args: ", args);
+
+                return (
+                  <Box gap="md" key={index}>
+                    <Card>
+                      <LabelHeading size="lg" infoText={schema.description}>
+                        {name}-{index}
+                      </LabelHeading>
+
+                      <Box gap="md">
+                        {Object.keys(args).map((arg) => {
+                          const nested = [];
+                          nested.push(name);
+                          nested.push(index);
+                          nested.push(arg);
+
+                          return (
+                            <JsonSchemaFormRenderer
+                              name={name}
+                              index={index}
+                              key={nested.join(".")}
+                              schema={schema.properties?.[arg] as JSONSchema7}
+                              path={[...path, nested.join(".")]}
+                              formData={args}
+                              onChange={onChange}
+                            />
+                          );
+                        })}
+                      </Box>
+                    </Card>
+                  </Box>
+                );
+              })}
           </Box>
         </Card>
 
@@ -101,18 +169,7 @@ export const JsonSchemaFormRenderer = ({
           <Button
             variant="secondary"
             size="md"
-            onClick={() => {
-              console.log("[JsonSchemaFormRenderer] items: ", items);
-              console.log(
-                "[JsonSchemaFormRenderer] [...path, items.length]: ",
-                [...path, items.length],
-              );
-
-              updateSorobanBuildOperationInvokeValue(
-                [...path, items.length],
-                {},
-              );
-            }}
+            onClick={addDefaultSchemaTemplate}
             type="button"
           >
             Add {name}
@@ -130,280 +187,194 @@ export const JsonSchemaFormRenderer = ({
           // key={path.join(".")}
           fieldSize="md"
           label={`${name} (${schemaType})`}
-          value={formData?.[path[path.length - 1]] || ""}
+          value={formData?.[name] || ""}
           // error={formError[path.join(".")] || ""}
           // required={requiredFields.includes(path.join("."))}
           onChange={(e) => {
-            updateSorobanBuildOperationInvokeValue(path, e.target.value);
-
-            // validate the value
-            // const error = validate.getPublicKeyError(e.target.value);
-            // setFormError({
-            //   ...formError,
-            //   [label]: error,
+            // updatedFormData[name] = e.target.value;
+            // reset the args
+            // onChange({
+            //   ...invokeContractBaseProps,
+            //   args: {},
             // });
+
+            console.log("[function] path:  ", path);
+
+            if (path.length > 0) {
+              const result = setNestedValueWithArr(
+                parsedSorobanOperation.args,
+                path.join("."),
+                e.target.value,
+              );
+
+              console.log("result: ", result);
+
+              // onChange({
+              //   ...invokeContractBaseProps,
+              //   args: [...result],
+              // });
+            }
+
+            //   console.log("result: ", result);
+            // } else {
+            //   onChange({
+            //     ...invokeContractBaseProps,
+            //     args: {
+            //       ...parsedSorobanOperation.args,
+            //       [name]: e.target.value,
+            //     },
+            //   });
+            // }
           }}
           infoText={schema.description || ""}
           leftElement={<Icon.User03 />}
           note={<>{schema.description}</>}
         />
       );
+    case "U32":
+      return (
+        <PositiveIntPicker
+          id={path.join(".")}
+          key={path.join(".")}
+          label={`${name} (${schemaType})`}
+          value={parsedSorobanOperation.args?.[name] || ""}
+          // error={formError[label] || ""}
+          onChange={(e) => {
+            // validate the value
+          }}
+        />
+      );
+    case "U64":
+      return (
+        <PositiveIntPicker
+          id={path.join(".")}
+          key={path.join(".")}
+          label={`${name} (${schemaType})`}
+          value={removeLeadingZeroes(parsedSorobanOperation.args?.[name] || "")}
+          // error={formError[label] || ""}
+          onChange={(e) => {}}
+        />
+      );
+    // case "U128":
+    //   return (
+    //     <PositiveIntPicker
+    //       id={key}
+    //       key={label}
+    //       label={`${label} (${defType})`}
+    //       value={removeLeadingZeroes(value.args[label] || "")}
+    //       error={formError[label] || ""}
+    //       onChange={(e) => {
+    //         handleChange(label, removeLeadingZeroes(e.target.value));
+
+    //         // validate the value
+    //         const error = validate.getU128Error(e.target.value);
+    //         setFormError({
+    //           ...formError,
+    //           [label]: error,
+    //         });
+    //       }}
+    //     />
+    //   );
+    // case "U256":
+    //   return (
+    //     <PositiveIntPicker
+    //       id={key}
+    //       key={label}
+    //       label={`${label} (${defType})`}
+    //       value={value.args[label] || ""}
+    //       error={formError[label] || ""}
+    //       onChange={(e) => {
+    //         handleChange(label, e.target.value);
+
+    //         // validate the value
+    //         const error = validate.getU256Error(e.target.value);
+    //         setFormError({
+    //           ...formError,
+    //           [label]: error,
+    //         });
+    //       }}
+    //     />
+    //   );
+    case "I32":
+      return (
+        <Input
+          id={key}
+          key={label}
+          fieldSize="md"
+          label={`${label} (${defType})`}
+          value={value.args[label] || ""}
+          error={formError[label] || ""}
+          required={requiredFields.includes(key)}
+          onChange={(e) => {
+            handleChange(label, e.target.value);
+
+            // validate the value
+            const error = validate.getI32Error(e.target.value);
+            setFormError({
+              ...formError,
+              [label]: error,
+            });
+          }}
+        />
+      );
+    // case "I64":
+    //   return (
+    //     <Input
+    //       id={key}
+    //       key={label}
+    //       fieldSize="md"
+    //       label={`${label} (${defType})`}
+    //       value={value.args[label] || ""}
+    //       error={formError[label] || ""}
+    //       required={requiredFields.includes(key)}
+    //       onChange={(e) => {
+    //         handleChange(label, e.target.value);
+
+    //         // validate the value
+    //         const error = validate.getI64Error(e.target.value);
+    //         setFormError({
+    //           ...formError,
+    //           [label]: error,
+    //         });
+    //       }}
+    //     />
+    //   );
+    case "I128":
+      return (
+        <Input
+          id={path.join(".")}
+          key={path.join(".")}
+          fieldSize="md"
+          label={`${name} (${schemaType})`}
+          value={parsedSorobanOperation.args?.[name] || ""}
+          // error={formError[label] || ""}
+          // required={requiredFields.includes(key)}
+          onChange={(e) => {}}
+        />
+      );
+    // case "I256":
+    //   return (
+    //     <Input
+    //       id={key}
+    //       key={label}
+    //       fieldSize="md"
+    //       label={`${label} (${defType})`}
+    //       value={value.args[label] || ""}
+    //       error={formError[label] || ""}
+    //       required={requiredFields.includes(key)}
+    //       onChange={(e) => {
+    //         handleChange(label, e.target.value);
+
+    //         // validate the value
+    //         const error = validate.getI256Error(e.target.value);
+    //         setFormError({
+    //           ...formError,
+    //           [label]: error,
+    //         });
+    //       }}
+    //     />
+    //   );
   }
-  //   case "ScString":
-  //     return (
-  //       <Input
-  //         id={key}
-  //         key={label}
-  //         fieldSize="md"
-  //         label={`${label} (${defType})`}
-  //         value={value.args[label] || ""}
-  //         error={""}
-  //         required={requiredFields.includes(key)}
-  //         onChange={(e) => {
-  //           handleChange(label, e.target.value);
-  //         }}
-  //         note={<>{prop.description}</>}
-  //       />
-  //     );
-  //   case "ScSymbol":
-  //     return (
-  //       <Input
-  //         id={key}
-  //         key={label}
-  //         fieldSize="md"
-  //         label={`${label} (${defType})`}
-  //         value={value.args[label] || ""}
-  //         error={""}
-  //         required={requiredFields.includes(key)}
-  //         onChange={(e) => {
-  //           handleChange(label, e.target.value);
-
-  //           // @TODO add an error handling
-  //         }}
-  //         note={<>{prop.description}</>}
-  //       />
-  //     );
-  //   case "DataUrl":
-  //     return (
-  //       <Input
-  //         id={key}
-  //         key={label}
-  //         fieldSize="md"
-  //         label={`${label} (${defType})`}
-  //         value={value.args[label] || ""}
-  //         error={formError[label] || ""}
-  //         required={requiredFields.includes(key)}
-  //         onChange={(e) => {
-  //           handleChange(label, e.target.value);
-
-  //           // validate the value
-  //           const error = Boolean(validate.getDataUrlError(e.target.value));
-  //           setFormError({
-  //             ...formError,
-  //             [label]: error,
-  //           });
-  //         }}
-  //       />
-  //     );
-  //   case "U32":
-  //     return (
-  //       <PositiveIntPicker
-  //         id={key}
-  //         key={label}
-  //         label={`${label} (${defType})`}
-  //         value={value.args[label] || ""}
-  //         error={formError[label] || ""}
-  //         onChange={(e) => {
-  //           // validate the value
-  //           handleChange(label, e.target.value);
-
-  //           const error = validate.getU32Error(e.target.value);
-  //           setFormError({
-  //             ...formError,
-  //             [label]: error,
-  //           });
-  //         }}
-  //       />
-  //     );
-  //   case "U64":
-  //     return (
-  //       <PositiveIntPicker
-  //         id={key}
-  //         key={label}
-  //         label={`${label} (${defType})`}
-  //         value={removeLeadingZeroes(value.args[label] || "")}
-  //         error={formError[label] || ""}
-  //         onChange={(e) => {
-  //           handleChange(label, removeLeadingZeroes(e.target.value));
-
-  //           // validate the value
-  //           const error = validate.getU64Error(e.target.value);
-  //           setFormError({
-  //             ...formError,
-  //             [label]: error,
-  //           });
-  //         }}
-  //       />
-  //     );
-  //   case "U128":
-  //     return (
-  //       <PositiveIntPicker
-  //         id={key}
-  //         key={label}
-  //         label={`${label} (${defType})`}
-  //         value={removeLeadingZeroes(value.args[label] || "")}
-  //         error={formError[label] || ""}
-  //         onChange={(e) => {
-  //           handleChange(label, removeLeadingZeroes(e.target.value));
-
-  //           // validate the value
-  //           const error = validate.getU128Error(e.target.value);
-  //           setFormError({
-  //             ...formError,
-  //             [label]: error,
-  //           });
-  //         }}
-  //       />
-  //     );
-  //   case "U256":
-  //     return (
-  //       <PositiveIntPicker
-  //         id={key}
-  //         key={label}
-  //         label={`${label} (${defType})`}
-  //         value={value.args[label] || ""}
-  //         error={formError[label] || ""}
-  //         onChange={(e) => {
-  //           handleChange(label, e.target.value);
-
-  //           // validate the value
-  //           const error = validate.getU256Error(e.target.value);
-  //           setFormError({
-  //             ...formError,
-  //             [label]: error,
-  //           });
-  //         }}
-  //       />
-  //     );
-
-  //   case "I32":
-  //     return (
-  //       <Input
-  //         id={key}
-  //         key={label}
-  //         fieldSize="md"
-  //         label={`${label} (${defType})`}
-  //         value={value.args[label] || ""}
-  //         error={formError[label] || ""}
-  //         required={requiredFields.includes(key)}
-  //         onChange={(e) => {
-  //           handleChange(label, e.target.value);
-
-  //           // validate the value
-  //           const error = validate.getI32Error(e.target.value);
-  //           setFormError({
-  //             ...formError,
-  //             [label]: error,
-  //           });
-  //         }}
-  //       />
-  //     );
-  //   case "I64":
-  //     return (
-  //       <Input
-  //         id={key}
-  //         key={label}
-  //         fieldSize="md"
-  //         label={`${label} (${defType})`}
-  //         value={value.args[label] || ""}
-  //         error={formError[label] || ""}
-  //         required={requiredFields.includes(key)}
-  //         onChange={(e) => {
-  //           handleChange(label, e.target.value);
-
-  //           // validate the value
-  //           const error = validate.getI64Error(e.target.value);
-  //           setFormError({
-  //             ...formError,
-  //             [label]: error,
-  //           });
-  //         }}
-  //       />
-  //     );
-  //   case "I128":
-  //     return (
-  //       <Input
-  //         id={key}
-  //         key={label}
-  //         fieldSize="md"
-  //         label={`${label} (${defType})`}
-  //         value={value.args[label] || ""}
-  //         error={formError[label] || ""}
-  //         required={requiredFields.includes(key)}
-  //         onChange={(e) => {
-  //           handleChange(label, e.target.value);
-
-  //           // validate the value
-  //           const error = validate.getI128Error(e.target.value);
-  //           setFormError({
-  //             ...formError,
-  //             [label]: error,
-  //           });
-  //         }}
-  //       />
-  //     );
-  //   case "I256":
-  //     return (
-  //       <Input
-  //         id={key}
-  //         key={label}
-  //         fieldSize="md"
-  //         label={`${label} (${defType})`}
-  //         value={value.args[label] || ""}
-  //         error={formError[label] || ""}
-  //         required={requiredFields.includes(key)}
-  //         onChange={(e) => {
-  //           handleChange(label, e.target.value);
-
-  //           // validate the value
-  //           const error = validate.getI256Error(e.target.value);
-  //           setFormError({
-  //             ...formError,
-  //             [label]: error,
-  //           });
-  //         }}
-  //       />
-  //     );
-  //   // prop.type
-  //   case "array":
-  //     console.log("meow");
-  //     return (
-  //       <Box gap="md" key={label}>
-  //         <Card>
-  //           <Box gap="md">
-  //             <LabelHeading size="lg" infoText={prop.description}>
-  //               {label}
-  //             </LabelHeading>
-
-  //             <>
-  //               {prop.description ? (
-  //                 <Text size="sm" as="h3">
-  //                   {prop.description}
-  //                 </Text>
-  //               ) : null}
-  //             </>
-
-  //             <ArrayTypePicker
-  //               valueKey={key}
-  //               prop={prop}
-  //               value={value}
-  //               onChange={handleChange}
-  //               renderComponent={renderComponent}
-  //             />
-  //           </Box>
-  //         </Card>
-  //       </Box>
-  //     );
 };
 
 export const JsonSchemaForm = ({
@@ -415,15 +386,6 @@ export const JsonSchemaForm = ({
 }: {
   name: string;
   value: SorobanInvokeValue;
-  // handleSorobanOperationParamChange
-  // const updatedOperation = {
-  //   ...sorobanOperation,
-  //   operation_type: opType,
-  //   params: sanitizeObject({
-  //     ...sorobanOperation?.params,
-  //     [opParam]: opValue,
-  //   }),
-  // };
   onChange: (value: SorobanInvokeValue) => void;
   spec: contract.Spec;
   funcSchema: JSONSchema7;
@@ -440,8 +402,6 @@ export const JsonSchemaForm = ({
     data: prepareTxData,
     reset: resetPrepareTx,
   } = useRpcPrepareTx();
-
-  // console.log("funcSchema:", funcSchema);
 
   const dereferencedSchema: DereferencedSchemaType = dereferenceSchema(
     funcSchema,
@@ -464,338 +424,6 @@ export const JsonSchemaForm = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prepareTxData]);
-
-  const handleChange = (key: string, newVal: any) => {
-    if (soroban.xdr) {
-      updateSorobanBuildXdr("");
-    }
-
-    // reset
-    // onChange({ ...value, args: {} });
-
-    // only updates the opValue from value prop
-    // for flat structure
-
-    onChange({
-      ...value,
-      args: {
-        ...value.args,
-        [key]: newVal,
-      },
-    });
-  };
-
-  // key: argument label
-  // prop: argument object
-  //   // value: argument value that includes the key
-  //   // type: argument type
-  //   // description: argument description
-  //   // pattern
-  //   // min-length; max-length
-  const renderComponent = (
-    key: string,
-    prop: any,
-    handleChange: (key: string, newVal: any) => void,
-    index?: number,
-  ) => {
-    const getDefType = (prop: any) => {
-      if (prop.$ref) {
-        return prop.$ref.replace("#/definitions/", "");
-      }
-      return prop.type;
-    };
-
-    const defType = getDefType(prop);
-
-    // useful for array type component
-    // it will output address, address-1, address-2
-    const label = index !== undefined ? `${key}-${index}` : key;
-
-    switch (defType) {
-      case "Address":
-        return (
-          <Input
-            id={key}
-            key={label}
-            fieldSize="md"
-            label={`${label} (${defType})`}
-            value={value.args[label] || ""}
-            error={formError[label] || ""}
-            required={requiredFields.includes(key)}
-            onChange={(e) => {
-              handleChange(label, e.target.value);
-
-              // validate the value
-              const error = validate.getPublicKeyError(e.target.value);
-              setFormError({
-                ...formError,
-                [label]: error,
-              });
-            }}
-            infoText={prop.description || ""}
-            leftElement={<Icon.User03 />}
-            note={<>{prop.description}</>}
-          />
-        );
-      case "ScString":
-        return (
-          <Input
-            id={key}
-            key={label}
-            fieldSize="md"
-            label={`${label} (${defType})`}
-            value={value.args[label] || ""}
-            error={""}
-            required={requiredFields.includes(key)}
-            onChange={(e) => {
-              handleChange(label, e.target.value);
-            }}
-            note={<>{prop.description}</>}
-          />
-        );
-      case "ScSymbol":
-        return (
-          <Input
-            id={key}
-            key={label}
-            fieldSize="md"
-            label={`${label} (${defType})`}
-            value={value.args[label] || ""}
-            error={""}
-            required={requiredFields.includes(key)}
-            onChange={(e) => {
-              handleChange(label, e.target.value);
-
-              // @TODO add an error handling
-            }}
-            note={<>{prop.description}</>}
-          />
-        );
-      case "DataUrl":
-        return (
-          <Input
-            id={key}
-            key={label}
-            fieldSize="md"
-            label={`${label} (${defType})`}
-            value={value.args[label] || ""}
-            error={formError[label] || ""}
-            required={requiredFields.includes(key)}
-            onChange={(e) => {
-              handleChange(label, e.target.value);
-
-              // validate the value
-              const error = Boolean(validate.getDataUrlError(e.target.value));
-              setFormError({
-                ...formError,
-                [label]: error,
-              });
-            }}
-          />
-        );
-      case "U32":
-        return (
-          <PositiveIntPicker
-            id={key}
-            key={label}
-            label={`${label} (${defType})`}
-            value={value.args[label] || ""}
-            error={formError[label] || ""}
-            onChange={(e) => {
-              // validate the value
-              handleChange(label, e.target.value);
-
-              const error = validate.getU32Error(e.target.value);
-              setFormError({
-                ...formError,
-                [label]: error,
-              });
-            }}
-          />
-        );
-      case "U64":
-        return (
-          <PositiveIntPicker
-            id={key}
-            key={label}
-            label={`${label} (${defType})`}
-            value={removeLeadingZeroes(value.args[label] || "")}
-            error={formError[label] || ""}
-            onChange={(e) => {
-              handleChange(label, removeLeadingZeroes(e.target.value));
-
-              // validate the value
-              const error = validate.getU64Error(e.target.value);
-              setFormError({
-                ...formError,
-                [label]: error,
-              });
-            }}
-          />
-        );
-      case "U128":
-        return (
-          <PositiveIntPicker
-            id={key}
-            key={label}
-            label={`${label} (${defType})`}
-            value={removeLeadingZeroes(value.args[label] || "")}
-            error={formError[label] || ""}
-            onChange={(e) => {
-              handleChange(label, removeLeadingZeroes(e.target.value));
-
-              // validate the value
-              const error = validate.getU128Error(e.target.value);
-              setFormError({
-                ...formError,
-                [label]: error,
-              });
-            }}
-          />
-        );
-      case "U256":
-        return (
-          <PositiveIntPicker
-            id={key}
-            key={label}
-            label={`${label} (${defType})`}
-            value={value.args[label] || ""}
-            error={formError[label] || ""}
-            onChange={(e) => {
-              handleChange(label, e.target.value);
-
-              // validate the value
-              const error = validate.getU256Error(e.target.value);
-              setFormError({
-                ...formError,
-                [label]: error,
-              });
-            }}
-          />
-        );
-
-      case "I32":
-        return (
-          <Input
-            id={key}
-            key={label}
-            fieldSize="md"
-            label={`${label} (${defType})`}
-            value={value.args[label] || ""}
-            error={formError[label] || ""}
-            required={requiredFields.includes(key)}
-            onChange={(e) => {
-              handleChange(label, e.target.value);
-
-              // validate the value
-              const error = validate.getI32Error(e.target.value);
-              setFormError({
-                ...formError,
-                [label]: error,
-              });
-            }}
-          />
-        );
-      case "I64":
-        return (
-          <Input
-            id={key}
-            key={label}
-            fieldSize="md"
-            label={`${label} (${defType})`}
-            value={value.args[label] || ""}
-            error={formError[label] || ""}
-            required={requiredFields.includes(key)}
-            onChange={(e) => {
-              handleChange(label, e.target.value);
-
-              // validate the value
-              const error = validate.getI64Error(e.target.value);
-              setFormError({
-                ...formError,
-                [label]: error,
-              });
-            }}
-          />
-        );
-      case "I128":
-        return (
-          <Input
-            id={key}
-            key={label}
-            fieldSize="md"
-            label={`${label} (${defType})`}
-            value={value.args[label] || ""}
-            error={formError[label] || ""}
-            required={requiredFields.includes(key)}
-            onChange={(e) => {
-              handleChange(label, e.target.value);
-
-              // validate the value
-              const error = validate.getI128Error(e.target.value);
-              setFormError({
-                ...formError,
-                [label]: error,
-              });
-            }}
-          />
-        );
-      case "I256":
-        return (
-          <Input
-            id={key}
-            key={label}
-            fieldSize="md"
-            label={`${label} (${defType})`}
-            value={value.args[label] || ""}
-            error={formError[label] || ""}
-            required={requiredFields.includes(key)}
-            onChange={(e) => {
-              handleChange(label, e.target.value);
-
-              // validate the value
-              const error = validate.getI256Error(e.target.value);
-              setFormError({
-                ...formError,
-                [label]: error,
-              });
-            }}
-          />
-        );
-      // prop.type
-      case "array":
-        return (
-          <Box gap="md" key={label}>
-            <Card>
-              <Box gap="md">
-                <LabelHeading size="lg" infoText={prop.description}>
-                  {label}
-                </LabelHeading>
-
-                <>
-                  {prop.description ? (
-                    <Text size="sm" as="h3">
-                      {prop.description}
-                    </Text>
-                  ) : null}
-                </>
-
-                {/* <ArrayTypePicker
-                  valueKey={key}
-                  prop={prop}
-                  value={value}
-                  onChange={handleChange}
-                  renderComponent={renderComponent}
-                /> */}
-              </Box>
-            </Card>
-          </Box>
-        );
-
-      default:
-        return <React.Fragment />;
-    }
-  };
 
   const handlePrepareTx = () => {
     resetPrepareTx();
@@ -824,8 +452,6 @@ export const JsonSchemaForm = ({
     const fields = schema.properties ? Object.entries(schema.properties) : [];
     const { name, description } = schema;
 
-    console.log("[JsonSchemaForm] schema.properties: ", schema.properties);
-
     return (
       <Box gap="md">
         {renderTitle(name, description)}
@@ -835,22 +461,8 @@ export const JsonSchemaForm = ({
             name={name}
             schema={dereferencedSchema as JSONSchema7}
             formData={value.args}
+            onChange={onChange}
           />
-          {/* {Object.entries(schema.properties).map(([key, subSchema], index) => {
-            return (
-              <JsonSchemaFormRenderer
-                name={key}
-                key={index}
-                schema={subSchema as JSONSchema7}
-                // path={[...path, key]}
-                formData={value.args}
-              />
-            );
-          })} */}
-
-          {/* {fields.map(([key, prop]) => {
-            return <>{renderComponent(key, prop, handleChange)}</>;
-          })} */}
         </Box>
 
         <Box gap="md" direction="row" wrap="wrap">
@@ -935,8 +547,101 @@ const getTxnToSimulate = (
 };
 
 const getDefType = (prop: any) => {
+  if (!prop) return undefined;
+
   if (prop.$ref) {
     return prop.$ref.replace("#/definitions/", "");
   }
   return prop.type;
 };
+
+const isSchemaObject = (schema: any): schema is JSONSchema7 => {
+  return schema && typeof schema === "object" && !Array.isArray(schema);
+};
+
+const getSchemaProperty = (
+  schema: any,
+  key: string,
+): JSONSchema7 | undefined => {
+  if (!isSchemaObject(schema) || !schema.properties) return undefined;
+  const prop = schema.properties[key];
+  return isSchemaObject(prop) ? prop : undefined;
+};
+
+function parsePath(path: string) {
+  return path
+    .replace(/\[(\d+)\]/g, ".$1")
+    .split(".")
+    .map((key) => (/^\d+$/.test(key) ? Number(key) : key));
+}
+
+function setNestedValueWithArr(obj: AnyObject, path: string, val: any) {
+  const keys = parsePath(path);
+
+  console.log("[setNestedValueWithArr] obj: ", obj);
+  console.log("[setNestedValueWithArr] keys: ", keys);
+
+  function helper(current: AnyObject, idx: number): AnyObject {
+    const key = keys[idx];
+
+    console.log("[helper] beginning - current: ", current);
+    console.log("[helper] beginning - key: ", key);
+
+    // once the index reaches the last
+    if (idx === keys.length - 1) {
+      // if it is an array
+      if (typeof key === "number" && Array.isArray(current)) {
+        console.log("[helper] final - current[key]: ", current[key]);
+
+        return { ...current, [key]: [...current[key], val] };
+      } else {
+        // update its value
+        console.log("[helper] final - val: ", val);
+        console.log("[helper] final - current: ", current);
+        return { ...current, [key]: val };
+      }
+    }
+
+    const nextKey = keys[idx + 1];
+    // console.log("[helper] nextKey === 'number': ", nextKey);
+
+    // let next;
+
+    // // is an array
+    if (typeof nextKey === "number") {
+      console.log("[next one is array] current[key]: ", current[key]);
+      console.log(
+        "[next one is array] current[key][nextKey]: ",
+        current[key][nextKey],
+      );
+
+      return {
+        ...current,
+        [key]: helper(current[key], idx + 1),
+      };
+
+      //   console.log("[helper] checking next - current[key]: ", current[key]);
+      //   console.log(
+      //     "[helper] checking next - current[key][nextKey]: ",
+      //     current[key][nextKey],
+      //   );
+    }
+
+    //   next = [...current[key]];
+    // } else {
+    //   next = current?.[nextKey] ?? {};
+    // }
+
+    // console.log("[end] current: ", current);
+    const next = current[key] ?? [];
+    console.log("[end] current: ", current);
+    console.log("[end] next: ", next);
+    console.log("[end] key: ", key);
+    return {
+      ...current,
+      [key]: helper(next, idx + 1),
+    };
+  }
+  // starts from the index 0
+  return helper(obj, 0);
+}
