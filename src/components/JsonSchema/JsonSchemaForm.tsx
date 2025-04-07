@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { BASE_FEE, contract } from "@stellar/stellar-sdk";
 import { Button, Card, Icon, Input, Text } from "@stellar/design-system";
 
-import type { JSONSchema7, JSONSchema7Definition } from "json-schema";
-import { parse, stringify } from "lossless-json";
+import type { JSONSchema7 } from "json-schema";
+import { parse } from "lossless-json";
 
 import { TransactionBuildParams } from "@/store/createStore";
 import { useStore } from "@/store/useStore";
@@ -11,7 +11,6 @@ import { AnyObject, SorobanInvokeValue, TxnOperation } from "@/types/types";
 import { validate } from "@/validate";
 
 import { dereferenceSchema } from "@/helpers/dereferenceSchema";
-import { removeLeadingZeroes } from "@/helpers/removeLeadingZeroes";
 import { getScValsFromSpec } from "@/helpers/getScValsFromSpec";
 import { buildTxWithSorobanData } from "@/helpers/sorobanUtils";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
@@ -24,7 +23,7 @@ import { Box } from "@/components/layout/Box";
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 import { LabelHeading } from "@/components/LabelHeading";
 import { ErrorText } from "@/components/ErrorText";
-import { ArrayTypePicker } from "@/components/JsonSchema/ArrayTypePicker";
+import { arrayItem } from "@/helpers/arrayItem";
 
 export const JsonSchemaFormRenderer = ({
   name,
@@ -33,7 +32,7 @@ export const JsonSchemaFormRenderer = ({
   formData,
   onChange,
   index,
-  // index,
+  requiredFields,
 }: {
   name: string;
   schema: JSONSchema7;
@@ -41,12 +40,15 @@ export const JsonSchemaFormRenderer = ({
   formData: AnyObject;
   onChange: (value: SorobanInvokeValue) => void;
   index?: number;
+  requiredFields?: string[];
 }) => {
   const { transaction } = useStore();
   const { build } = transaction;
-
   const { operation: sorobanOperation } = build.soroban;
 
+  const [formError, setFormError] = useState<AnyObject>({});
+
+  // parse stringified soroban operation
   const parsedSorobanOperation = parse(
     sorobanOperation.params.invoke_contract,
   ) as AnyObject;
@@ -57,6 +59,67 @@ export const JsonSchemaFormRenderer = ({
   };
 
   const schemaType = getDefType(schema);
+  const label = path.length > 0 ? getNestedValueLabel(path.join(".")) : name;
+  const labelWithSchemaType = `${label} (${schemaType})`;
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    validateFn?: (value: string, required?: boolean) => string | false,
+  ) => {
+    /**
+     * Example of how setNestedValueWithArr works:
+     *
+     * For a path like 'requests.1.request_type':
+     *
+     * obj = {
+     *   requests: [
+     *     { address: "", amount: "", request_type: "" },
+     *     { address: "", amount: "", request_type: "" }
+     *   ]
+     * }
+     *
+     * path = "requests.1.request_type"
+     * val = e.target.value
+     *
+     * This will update the value of requests[1].request_type
+     */
+    if (path.length > 0) {
+      const result = setNestedValueWithArr(
+        parsedSorobanOperation.args,
+        path.join("."),
+        e.target.value,
+      );
+      onChange({
+        ...invokeContractBaseProps,
+        args: {
+          ...result,
+        },
+      });
+    } else {
+      // if path is not set, then set the value of the field directly
+      onChange({
+        ...invokeContractBaseProps,
+        args: {
+          ...parsedSorobanOperation.args,
+          [name]: e.target.value,
+        },
+      });
+    }
+
+    // Validate the value
+    const error = validateFn?.(e.target.value, requiredFields?.includes(label));
+    if (error) {
+      setFormError({
+        ...formError,
+        [path.join(".")]: error,
+      });
+    } else {
+      setFormError({
+        ...formError,
+        [path.join(".")]: "",
+      });
+    }
+  };
 
   if (schemaType === "object") {
     return (
@@ -69,8 +132,8 @@ export const JsonSchemaFormRenderer = ({
                 key={index}
                 schema={subSchema as JSONSchema7}
                 onChange={onChange}
-                // path={[...path, key]}
                 formData={formData}
+                requiredFields={schema.required}
               />
             );
           },
@@ -80,18 +143,13 @@ export const JsonSchemaFormRenderer = ({
   }
 
   if (schemaType === "array") {
-    console.log('schemaType === "array"');
-    console.log("parsedSorobanOperation: ", parsedSorobanOperation);
-    console.log("path: ", path);
     const storedItems = parsedSorobanOperation.args?.[name] || [];
 
     const addDefaultSchemaTemplate = () => {
-      console.log("storedItems: ", storedItems);
-
       // template created based on the schema.properties
       const defaultTemplate = Object.keys(schema.properties || {}).reduce(
         (acc: Record<string, string | any[]>, key) => {
-          if (schema?.properties?.[key]?.type === "array") {
+          if (getSchemaProperty(schema, key)?.type === "array") {
             acc[key] = [];
           } else {
             acc[key] = "";
@@ -116,56 +174,71 @@ export const JsonSchemaFormRenderer = ({
 
     return (
       <Box gap="md" key={index}>
-        <Card>
-          <Box gap="md">
-            <LabelHeading size="lg" infoText={schema.description}>
-              {name}
-            </LabelHeading>
-            {storedItems.length > 0 &&
-              storedItems.map((args: any, index: number) => {
-                // item:
-                // {
-                //     "address": "",
-                //     "amount": "",
-                //     "request_type": ""
-                // }
-                console.log("args: ", args);
+        <LabelHeading size="lg" infoText={schema.description}>
+          {name}
+        </LabelHeading>
 
-                return (
-                  <Box gap="md" key={index}>
-                    <Card>
-                      <LabelHeading size="lg" infoText={schema.description}>
-                        {name}-{index}
-                      </LabelHeading>
+        <Box gap="md">
+          {storedItems.length > 0 &&
+            storedItems.map((args: any, index: number) => (
+              <Box gap="md" key={index}>
+                <Card>
+                  <LabelHeading size="lg">
+                    {name}-{index + 1}
+                  </LabelHeading>
 
-                      <Box gap="md">
-                        {Object.keys(args).map((arg) => {
-                          const nested = [];
-                          nested.push(name);
-                          nested.push(index);
-                          nested.push(arg);
+                  <Box gap="md">
+                    <>
+                      {Object.keys(args).map((arg) => {
+                        const nested = [];
+                        nested.push(name);
+                        nested.push(index);
+                        nested.push(arg);
 
-                          return (
-                            <JsonSchemaFormRenderer
-                              name={name}
-                              index={index}
-                              key={nested.join(".")}
-                              schema={schema.properties?.[arg] as JSONSchema7}
-                              path={[...path, nested.join(".")]}
-                              formData={args}
-                              onChange={onChange}
-                            />
+                        return (
+                          <JsonSchemaFormRenderer
+                            name={name}
+                            index={index}
+                            key={nested.join(".")}
+                            schema={schema.properties?.[arg] as JSONSchema7}
+                            path={[...path, nested.join(".")]}
+                            formData={args}
+                            onChange={onChange}
+                            requiredFields={schema.required}
+                          />
+                        );
+                      })}
+                    </>
+
+                    <Box gap="sm" direction="row" align="center">
+                      <Button
+                        size="md"
+                        variant="tertiary"
+                        icon={<Icon.Trash01 />}
+                        type="button"
+                        onClick={() => {
+                          const updatedList = arrayItem.delete(
+                            getNestedValue(parsedSorobanOperation.args, name),
+                            index,
                           );
-                        })}
-                      </Box>
-                    </Card>
-                  </Box>
-                );
-              })}
-          </Box>
-        </Card>
 
-        <Card>
+                          onChange({
+                            ...invokeContractBaseProps,
+                            args: {
+                              ...parsedSorobanOperation.args,
+                              [name]: updatedList,
+                            },
+                          });
+                        }}
+                      ></Button>
+                    </Box>
+                  </Box>
+                </Card>
+              </Box>
+            ))}
+        </Box>
+
+        <Box gap="md" direction="row" align="center">
           <Button
             variant="secondary"
             size="md"
@@ -174,7 +247,7 @@ export const JsonSchemaFormRenderer = ({
           >
             Add {name}
           </Button>
-        </Card>
+        </Box>
       </Box>
     );
   }
@@ -184,47 +257,13 @@ export const JsonSchemaFormRenderer = ({
       return (
         <Input
           id={path.join(".")}
-          // key={path.join(".")}
+          key={path.join(".")}
           fieldSize="md"
-          label={`${name} (${schemaType})`}
-          value={formData?.[name] || ""}
-          // error={formError[path.join(".")] || ""}
-          // required={requiredFields.includes(path.join("."))}
+          label={labelWithSchemaType}
+          value={getNestedValue(parsedSorobanOperation.args, path.join("."))}
+          error={formError[path.join(".")] || ""}
           onChange={(e) => {
-            // updatedFormData[name] = e.target.value;
-            // reset the args
-            // onChange({
-            //   ...invokeContractBaseProps,
-            //   args: {},
-            // });
-
-            console.log("[function] path:  ", path);
-
-            if (path.length > 0) {
-              const result = setNestedValueWithArr(
-                parsedSorobanOperation.args,
-                path.join("."),
-                e.target.value,
-              );
-
-              console.log("result: ", result);
-
-              // onChange({
-              //   ...invokeContractBaseProps,
-              //   args: [...result],
-              // });
-            }
-
-            //   console.log("result: ", result);
-            // } else {
-            //   onChange({
-            //     ...invokeContractBaseProps,
-            //     args: {
-            //       ...parsedSorobanOperation.args,
-            //       [name]: e.target.value,
-            //     },
-            //   });
-            // }
+            handleChange(e, validate.getPublicKeyError);
           }}
           infoText={schema.description || ""}
           leftElement={<Icon.User03 />}
@@ -236,11 +275,11 @@ export const JsonSchemaFormRenderer = ({
         <PositiveIntPicker
           id={path.join(".")}
           key={path.join(".")}
-          label={`${name} (${schemaType})`}
-          value={parsedSorobanOperation.args?.[name] || ""}
-          // error={formError[label] || ""}
+          label={labelWithSchemaType}
+          value={getNestedValue(parsedSorobanOperation.args, path.join("."))}
+          error={formError[path.join(".")] || ""}
           onChange={(e) => {
-            // validate the value
+            handleChange(e, validate.getU32Error);
           }}
         />
       );
@@ -249,131 +288,129 @@ export const JsonSchemaFormRenderer = ({
         <PositiveIntPicker
           id={path.join(".")}
           key={path.join(".")}
-          label={`${name} (${schemaType})`}
-          value={removeLeadingZeroes(parsedSorobanOperation.args?.[name] || "")}
-          // error={formError[label] || ""}
-          onChange={(e) => {}}
-        />
-      );
-    // case "U128":
-    //   return (
-    //     <PositiveIntPicker
-    //       id={key}
-    //       key={label}
-    //       label={`${label} (${defType})`}
-    //       value={removeLeadingZeroes(value.args[label] || "")}
-    //       error={formError[label] || ""}
-    //       onChange={(e) => {
-    //         handleChange(label, removeLeadingZeroes(e.target.value));
-
-    //         // validate the value
-    //         const error = validate.getU128Error(e.target.value);
-    //         setFormError({
-    //           ...formError,
-    //           [label]: error,
-    //         });
-    //       }}
-    //     />
-    //   );
-    // case "U256":
-    //   return (
-    //     <PositiveIntPicker
-    //       id={key}
-    //       key={label}
-    //       label={`${label} (${defType})`}
-    //       value={value.args[label] || ""}
-    //       error={formError[label] || ""}
-    //       onChange={(e) => {
-    //         handleChange(label, e.target.value);
-
-    //         // validate the value
-    //         const error = validate.getU256Error(e.target.value);
-    //         setFormError({
-    //           ...formError,
-    //           [label]: error,
-    //         });
-    //       }}
-    //     />
-    //   );
-    case "I32":
-      return (
-        <Input
-          id={key}
-          key={label}
-          fieldSize="md"
-          label={`${label} (${defType})`}
-          value={value.args[label] || ""}
-          error={formError[label] || ""}
-          required={requiredFields.includes(key)}
+          label={labelWithSchemaType}
+          value={getNestedValue(parsedSorobanOperation.args, path.join("."))}
+          error={formError[path.join(".")] || ""}
           onChange={(e) => {
-            handleChange(label, e.target.value);
-
-            // validate the value
-            const error = validate.getI32Error(e.target.value);
-            setFormError({
-              ...formError,
-              [label]: error,
-            });
+            handleChange(e, validate.getU64Error);
           }}
         />
       );
-    // case "I64":
-    //   return (
-    //     <Input
-    //       id={key}
-    //       key={label}
-    //       fieldSize="md"
-    //       label={`${label} (${defType})`}
-    //       value={value.args[label] || ""}
-    //       error={formError[label] || ""}
-    //       required={requiredFields.includes(key)}
-    //       onChange={(e) => {
-    //         handleChange(label, e.target.value);
-
-    //         // validate the value
-    //         const error = validate.getI64Error(e.target.value);
-    //         setFormError({
-    //           ...formError,
-    //           [label]: error,
-    //         });
-    //       }}
-    //     />
-    //   );
+    case "U128":
+      return (
+        <PositiveIntPicker
+          id={path.join(".")}
+          key={path.join(".")}
+          label={labelWithSchemaType}
+          value={getNestedValue(parsedSorobanOperation.args, path.join("."))}
+          error={formError[path.join(".")] || ""}
+          onChange={(e) => {
+            handleChange(e, validate.getU128Error);
+          }}
+        />
+      );
+    case "U256":
+      return (
+        <PositiveIntPicker
+          id={path.join(".")}
+          key={path.join(".")}
+          label={labelWithSchemaType}
+          value={getNestedValue(parsedSorobanOperation.args, path.join("."))}
+          error={formError[path.join(".")] || ""}
+          onChange={(e) => {
+            handleChange(e, validate.getU256Error);
+          }}
+        />
+      );
+    case "I32":
+      return (
+        <Input
+          id={path.join(".")}
+          key={path.join(".")}
+          fieldSize="md"
+          label={labelWithSchemaType}
+          value={getNestedValue(parsedSorobanOperation.args, path.join("."))}
+          error={formError[path.join(".")] || ""}
+          onChange={(e) => {
+            handleChange(e, validate.getI32Error);
+          }}
+        />
+      );
+    case "I64":
+      return (
+        <Input
+          id={path.join(".")}
+          key={path.join(".")}
+          fieldSize="md"
+          label={labelWithSchemaType}
+          value={getNestedValue(parsedSorobanOperation.args, path.join("."))}
+          error={formError[path.join(".")] || ""}
+          onChange={(e) => {
+            handleChange(e, validate.getI64Error);
+          }}
+        />
+      );
     case "I128":
       return (
         <Input
           id={path.join(".")}
           key={path.join(".")}
           fieldSize="md"
-          label={`${name} (${schemaType})`}
-          value={parsedSorobanOperation.args?.[name] || ""}
-          // error={formError[label] || ""}
-          // required={requiredFields.includes(key)}
-          onChange={(e) => {}}
+          label={labelWithSchemaType}
+          value={getNestedValue(parsedSorobanOperation.args, path.join("."))}
+          error={formError[path.join(".")] || ""}
+          onChange={(e) => {
+            handleChange(e, validate.getI128Error);
+          }}
         />
       );
-    // case "I256":
-    //   return (
-    //     <Input
-    //       id={key}
-    //       key={label}
-    //       fieldSize="md"
-    //       label={`${label} (${defType})`}
-    //       value={value.args[label] || ""}
-    //       error={formError[label] || ""}
-    //       required={requiredFields.includes(key)}
-    //       onChange={(e) => {
-    //         handleChange(label, e.target.value);
-
-    //         // validate the value
-    //         const error = validate.getI256Error(e.target.value);
-    //         setFormError({
-    //           ...formError,
-    //           [label]: error,
-    //         });
-    //       }}
-    //     />
-    //   );
+    case "I256":
+      return (
+        <Input
+          id={path.join(".")}
+          key={path.join(".")}
+          fieldSize="md"
+          label={labelWithSchemaType}
+          value={getNestedValue(parsedSorobanOperation.args, path.join("."))}
+          error={formError[path.join(".")] || ""}
+          onChange={(e) => {
+            handleChange(e, validate.getI256Error);
+          }}
+        />
+      );
+    case "ScString":
+    case "ScSymbol":
+      return (
+        <Input
+          id={path.join(".")}
+          key={path.join(".")}
+          fieldSize="md"
+          label={label}
+          value={getNestedValue(parsedSorobanOperation.args, path.join("."))}
+          error={""}
+          onChange={(e) => {
+            // @TODO validate the value via length
+            handleChange(e);
+          }}
+          note={<>{schema.description}</>}
+        />
+      );
+    case "DataUrl":
+      return (
+        <Input
+          id={path.join(".")}
+          key={path.join(".")}
+          fieldSize="md"
+          label={label}
+          value={getNestedValue(parsedSorobanOperation.args, path.join("."))}
+          error={formError[path.join(".")] || ""}
+          onChange={(e) => {
+            handleChange(e, validate.getDataUrlError);
+          }}
+        />
+      );
+    default:
+      return null;
   }
 };
 
@@ -412,11 +449,7 @@ export const JsonSchemaForm = ({
   const missingFields =
     requiredFields && requiredFields.filter((field) => !value.args[field]);
 
-  const [formError, setFormError] = useState<AnyObject>({});
-
   useEffect(() => {
-    // onChange({ ...value, args: {} });
-
     if (prepareTxData) {
       updateSorobanBuildXdr(prepareTxData.transactionXdr);
     } else {
@@ -449,7 +482,6 @@ export const JsonSchemaForm = ({
   };
 
   const render = (schema: DereferencedSchemaType): React.ReactElement => {
-    const fields = schema.properties ? Object.entries(schema.properties) : [];
     const { name, description } = schema;
 
     return (
@@ -468,10 +500,7 @@ export const JsonSchemaForm = ({
         <Box gap="md" direction="row" wrap="wrap">
           <Button
             variant="secondary"
-            disabled={
-              (missingFields && missingFields.length > 0) ||
-              Object.values(formError).filter(Boolean).length > 0
-            }
+            disabled={missingFields && missingFields.length > 0}
             isLoading={isPrepareTxPending}
             size="md"
             onClick={handlePrepareTx}
@@ -540,7 +569,7 @@ const getTxnToSimulate = (
 
     return builtXdr.toXDR();
   } catch (e) {
-    console.log("[JsonSchema] e :", e);
+    console.log("e", e);
   }
 
   return undefined;
@@ -568,80 +597,70 @@ const getSchemaProperty = (
   return isSchemaObject(prop) ? prop : undefined;
 };
 
-function parsePath(path: string) {
-  return path
-    .replace(/\[(\d+)\]/g, ".$1")
-    .split(".")
-    .map((key) => (/^\d+$/.test(key) ? Number(key) : key));
+function parsePath(path: string): (string | number)[] {
+  return path.split(".").map((key) => {
+    const parsed = Number(key);
+    return isNaN(parsed) ? key : parsed;
+  });
 }
 
-function setNestedValueWithArr(obj: AnyObject, path: string, val: any) {
+function setNestedValueWithArr(
+  obj: AnyObject,
+  path: string,
+  val: any,
+): AnyObject {
   const keys = parsePath(path);
 
-  console.log("[setNestedValueWithArr] obj: ", obj);
-  console.log("[setNestedValueWithArr] keys: ", keys);
-
-  function helper(current: AnyObject, idx: number): AnyObject {
+  function helper(current: any, idx: number): any {
     const key = keys[idx];
 
-    console.log("[helper] beginning - current: ", current);
-    console.log("[helper] beginning - key: ", key);
-
-    // once the index reaches the last
+    // If it's the last key, just set the value
     if (idx === keys.length - 1) {
-      // if it is an array
-      if (typeof key === "number" && Array.isArray(current)) {
-        console.log("[helper] final - current[key]: ", current[key]);
-
-        return { ...current, [key]: [...current[key], val] };
-      } else {
-        // update its value
-        console.log("[helper] final - val: ", val);
-        console.log("[helper] final - current: ", current);
-        return { ...current, [key]: val };
+      if (Array.isArray(current)) {
+        const newArr = [...current];
+        newArr[key as number] = val;
+        return newArr;
       }
+      return { ...current, [key]: val };
     }
 
     const nextKey = keys[idx + 1];
-    // console.log("[helper] nextKey === 'number': ", nextKey);
 
-    // let next;
-
-    // // is an array
-    if (typeof nextKey === "number") {
-      console.log("[next one is array] current[key]: ", current[key]);
-      console.log(
-        "[next one is array] current[key][nextKey]: ",
-        current[key][nextKey],
+    // If current is an array
+    if (Array.isArray(current)) {
+      const index = key as number;
+      const nextVal = helper(
+        current[index] ?? (typeof nextKey === "number" ? [] : {}),
+        idx + 1,
       );
-
-      return {
-        ...current,
-        [key]: helper(current[key], idx + 1),
-      };
-
-      //   console.log("[helper] checking next - current[key]: ", current[key]);
-      //   console.log(
-      //     "[helper] checking next - current[key][nextKey]: ",
-      //     current[key][nextKey],
-      //   );
+      const newArr = [...current];
+      newArr[index] = nextVal;
+      return newArr;
     }
 
-    //   next = [...current[key]];
-    // } else {
-    //   next = current?.[nextKey] ?? {};
-    // }
-
-    // console.log("[end] current: ", current);
-    const next = current[key] ?? [];
-    console.log("[end] current: ", current);
-    console.log("[end] next: ", next);
-    console.log("[end] key: ", key);
+    // Otherwise, treat as object
     return {
       ...current,
-      [key]: helper(next, idx + 1),
+      [key]: helper(
+        current?.[key] ?? (typeof nextKey === "number" ? [] : {}),
+        idx + 1,
+      ),
     };
   }
-  // starts from the index 0
+
   return helper(obj, 0);
 }
+
+const getNestedValue = (obj: AnyObject, path: string): any => {
+  const keys = parsePath(path);
+
+  return keys.reduce((acc, key) => {
+    if (acc === undefined || acc === null) return undefined;
+    return acc[key];
+  }, obj);
+};
+
+const getNestedValueLabel = (path: string): string => {
+  const keys = parsePath(path);
+  return keys[keys.length - 1].toString();
+};

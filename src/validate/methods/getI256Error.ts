@@ -1,6 +1,13 @@
 // Primitive Definition I256 comes from
 // https://github.com/stellar/js-stellar-sdk/blob/master/src/contract/spec.ts#L140-L145
-export const getI256Error = (value: string) => {
+export const getI256Error = (value: string, isRequired?: boolean) => {
+  if (!value) {
+    if (isRequired) {
+      return "This field is required.";
+    } else {
+      return false;
+    }
+  }
   // Check pattern for I256
   const i256Pattern = /^(-?[1-9][0-9]*|0)$/;
   if (!i256Pattern.test(value)) {

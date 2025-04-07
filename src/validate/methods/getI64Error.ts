@@ -1,6 +1,13 @@
 // Primitive Definition I64 comes from
 // https://github.com/stellar/js-stellar-sdk/blob/master/src/contract/spec.ts#L116C2-L121C5
-export const getI64Error = (value: string) => {
+export const getI64Error = (value: string, isRequired?: boolean) => {
+  if (!value) {
+    if (isRequired) {
+      return "This field is required.";
+    } else {
+      return false;
+    }
+  }
   // Check pattern for I64
   const i64Pattern = /^(-?[1-9][0-9]*|0)$/;
   if (!i64Pattern.test(value)) {

@@ -4,7 +4,15 @@ import { validate } from "@/validate";
 // https://github.com/stellar/js-stellar-sdk/blob/master/src/contract/spec.ts#L100-L104
 const MAX_U32 = BigInt("4294967295");
 
-export const getU32Error = (value: string) => {
+export const getU32Error = (value: string, isRequired?: boolean) => {
+  if (!value) {
+    if (isRequired) {
+      return "This field is required.";
+    } else {
+      return false;
+    }
+  }
+
   const error = validate.getPositiveIntError(value);
 
   if (error) {

@@ -2,7 +2,15 @@ import { validate } from "@/validate";
 
 // Primitive Definition U256 comes from
 // https://github.com/stellar/js-stellar-sdk/blob/master/src/contract/spec.ts#L134-L139
-export const getU256Error = (value: string) => {
+export const getU256Error = (value: string, isRequired?: boolean) => {
+  if (!value) {
+    if (isRequired) {
+      return "This field is required.";
+    } else {
+      return false;
+    }
+  }
+
   const error = validate.getPositiveIntError(value);
 
   if (error) {

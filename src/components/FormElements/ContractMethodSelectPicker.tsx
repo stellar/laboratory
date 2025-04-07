@@ -41,8 +41,6 @@ export const ContractMethodSelectPicker = ({
     }
   };
 
-  console.log("[ContractMethodSelectPicker] value: ", value);
-
   return (
     <Box gap="md">
       <Select
