@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { BASE_FEE, contract } from "@stellar/stellar-sdk";
 import { Button, Card, Icon, Input, Text } from "@stellar/design-system";
-
 import type { JSONSchema7 } from "json-schema";
 import { parse } from "lossless-json";
 
 import { TransactionBuildParams } from "@/store/createStore";
 import { useStore } from "@/store/useStore";
-import { AnyObject, SorobanInvokeValue, TxnOperation } from "@/types/types";
 import { validate } from "@/validate";
+
+import { DereferencedSchemaType } from "@/constants/jsonSchema";
 
 import { dereferenceSchema } from "@/helpers/dereferenceSchema";
 import { getScValsFromSpec } from "@/helpers/getScValsFromSpec";
 import { buildTxWithSorobanData } from "@/helpers/sorobanUtils";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
-
-import { DereferencedSchemaType } from "@/constants/jsonSchema";
+import { arrayItem } from "@/helpers/arrayItem";
 
 import { useRpcPrepareTx } from "@/query/useRpcPrepareTx";
 
@@ -23,7 +22,8 @@ import { Box } from "@/components/layout/Box";
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 import { LabelHeading } from "@/components/LabelHeading";
 import { ErrorText } from "@/components/ErrorText";
-import { arrayItem } from "@/helpers/arrayItem";
+
+import { AnyObject, SorobanInvokeValue, TxnOperation } from "@/types/types";
 
 export const JsonSchemaFormRenderer = ({
   name,
