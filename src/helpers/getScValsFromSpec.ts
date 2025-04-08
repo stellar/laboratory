@@ -56,6 +56,36 @@ export const getScValsFromSpec = (
       });
     }
 
+    if (inputFieldType === xdr.ScSpecType.scSpecTypeSymbol().name) {
+      return nativeToScVal(rawInputValue, {
+        type: "symbol",
+      });
+    }
+
+    if (inputFieldType === xdr.ScSpecType.scSpecTypeString().name) {
+      return nativeToScVal(rawInputValue, {
+        type: "string",
+      });
+    }
+
+    if (inputFieldType === xdr.ScSpecType.scSpecTypeBool().name) {
+      return nativeToScVal(rawInputValue, {
+        type: "bool",
+      });
+    }
+
+    if (inputFieldType === xdr.ScSpecType.scSpecTypeBytes().name) {
+      return nativeToScVal(rawInputValue, {
+        type: "bytes",
+      });
+    }
+
+    if (inputFieldType === xdr.ScSpecType.scSpecTypeVec().name) {
+      return nativeToScVal(rawInputValue, {
+        type: "vec",
+      });
+    }
+
     // the below is how funcArgsToScVals is implemented
     // we need to customize a bit since the saved number value is a string
     // https://stellar.github.io/js-soroban-client/ContractSpec.html#funcArgsToScVals

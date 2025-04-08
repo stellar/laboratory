@@ -1,6 +1,14 @@
 // Primitive Definition I32 comes from
 // https://github.com/stellar/js-stellar-sdk/blob/master/src/contract/spec.ts#L105-L109
-export const getI32Error = (value: string) => {
+export const getI32Error = (value: string, isRequired?: boolean) => {
+  if (!value) {
+    if (isRequired) {
+      return "This field is required.";
+    } else {
+      return false;
+    }
+  }
+
   try {
     const num = BigInt(value);
     const MIN_I32 = BigInt("-2147483648");
