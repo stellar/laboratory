@@ -6,7 +6,9 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import { useStore } from "@/store/useStore";
 import { useSEContractInfo } from "@/query/external/useSEContractInfo";
+import { useWasmGitHubAttestation } from "@/query/useWasmGitHubAttestation";
 import { validate } from "@/validate";
+import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 
 import { Box } from "@/components/layout/Box";
 import { PageCard } from "@/components/layout/PageCard";
@@ -36,7 +38,27 @@ export default function ContractExplorer() {
     contractId: contractIdInput,
   });
 
+  const rpcUrl = network.rpcUrl;
+  const wasmHash = contractInfoData?.wasm || "";
+
+  const {
+    data: wasmData,
+    error: wasmError,
+    isLoading: isWasmLoading,
+    isFetching: isWasmFetching,
+  } = useWasmGitHubAttestation({
+    wasmHash,
+    rpcUrl,
+    isActive: Boolean(rpcUrl && wasmHash),
+    headers: getNetworkHeaders(network, "rpc"),
+  });
+
   const queryClient = useQueryClient();
+  const isLoading =
+    isContractInfoLoading ||
+    isContractInfoFetching ||
+    isWasmLoading ||
+    isWasmFetching;
 
   useEffect(() => {
     if (smartContracts.explorer.contractId) {
@@ -63,7 +85,12 @@ export default function ContractExplorer() {
 
   const renderContractInfoContent = () => {
     return contractInfoData ? (
-      <ContractInfo infoData={contractInfoData} network={network} />
+      <ContractInfo
+        infoData={contractInfoData}
+        wasmData={wasmData}
+        network={network}
+        isLoading={isLoading}
+      />
     ) : null;
   };
 
@@ -90,7 +117,7 @@ export default function ContractExplorer() {
               !contractIdInput ||
               Boolean(contractIdInputError)
             }
-            isLoading={isContractInfoLoading || isContractInfoFetching}
+            isLoading={isLoading}
           >
             Load contract
           </Button>
@@ -109,7 +136,7 @@ export default function ContractExplorer() {
                     TrackingEvent.SMART_CONTRACTS_EXPLORER_CLEAR_CONTRACT,
                   );
                 }}
-                disabled={isContractInfoLoading || isContractInfoFetching}
+                disabled={isLoading}
               >
                 Clear
               </Button>
@@ -175,6 +202,10 @@ export default function ContractExplorer() {
                   message={contractInfoError.toString()}
                   isError={true}
                 />
+              ) : null}
+
+              {wasmError ? (
+                <MessageField message={wasmError.toString()} isError={true} />
               ) : null}
             </>
           </Box>

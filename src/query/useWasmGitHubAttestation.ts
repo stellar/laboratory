@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { rpc as StellarRpc } from "@stellar/stellar-sdk";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
-import { AnyObject, NetworkHeaders } from "@/types/types";
+import { AnyObject, NetworkHeaders, WasmData } from "@/types/types";
 
 export const useWasmGitHubAttestation = ({
   wasmHash,
@@ -14,7 +14,7 @@ export const useWasmGitHubAttestation = ({
   isActive: boolean;
   headers?: NetworkHeaders;
 }) => {
-  const query = useQuery({
+  const query = useQuery<WasmData | null | undefined>({
     queryKey: ["useWasmGitHubAttestation", wasmHash, rpcUrl],
     queryFn: async () => {
       if (!wasmHash || !rpcUrl) {

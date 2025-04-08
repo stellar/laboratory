@@ -5,6 +5,7 @@ import {
   Card,
   Icon,
   Link,
+  Loader,
   Logo,
   Text,
   Tooltip,
@@ -18,7 +19,12 @@ import { formatNumber } from "@/helpers/formatNumber";
 import { stellarExpertAccountLink } from "@/helpers/stellarExpertAccountLink";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
-import { ContractInfoApiResponse, EmptyObj, Network } from "@/types/types";
+import {
+  ContractInfoApiResponse,
+  EmptyObj,
+  Network,
+  WasmData,
+} from "@/types/types";
 
 import { ContractSpec } from "./ContractSpec";
 import { ContractStorage } from "./ContractStorage";
@@ -27,10 +33,14 @@ import { BuildInfo } from "./BuildInfo";
 
 export const ContractInfo = ({
   infoData,
+  wasmData,
   network,
+  isLoading,
 }: {
   infoData: ContractInfoApiResponse;
+  wasmData: WasmData | null | undefined;
   network: Network | EmptyObj;
+  isLoading: boolean;
 }) => {
   type ContractTabId =
     | "contract-bindings"
@@ -229,9 +239,7 @@ export const ContractInfo = ({
     </Text>
   );
 
-  const renderBuildVerifiedBadge = (
-    type: "verified" | "unverified" | undefined,
-  ) => {
+  const renderBuildVerifiedBadge = (hasWasmData: boolean) => {
     const item = {
       verified: {
         badge: (
@@ -265,7 +273,7 @@ export const ContractInfo = ({
       },
     };
 
-    const badge = type ? item[type] : item.unverified;
+    const badge = hasWasmData ? item.verified : item.unverified;
 
     return (
       <Tooltip
@@ -288,6 +296,14 @@ export const ContractInfo = ({
     );
   };
 
+  if (isLoading) {
+    return (
+      <Box gap="sm" direction="row" justify="center">
+        <Loader />
+      </Box>
+    );
+  }
+
   return (
     <Box gap="lg">
       <Card>
@@ -307,7 +323,7 @@ export const ContractInfo = ({
               Contract
             </Text>
 
-            {renderBuildVerifiedBadge(infoData.validation?.status)}
+            {renderBuildVerifiedBadge(Boolean(wasmData))}
           </Box>
 
           <TabView
@@ -363,8 +379,7 @@ export const ContractInfo = ({
               label: "Build Info",
               content: (
                 <BuildInfo
-                  wasmHash={infoData.wasm || ""}
-                  rpcUrl={network.rpcUrl}
+                  wasmData={wasmData}
                   isActive={activeTab === "contract-build-info"}
                 />
               ),

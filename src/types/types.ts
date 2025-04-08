@@ -431,6 +431,19 @@ export type ContractListRecord = {
   wasm: string;
 };
 
+export type WasmData = {
+  build: {
+    attestation: string;
+    attestationUrl: string;
+    commit: any;
+    commitUrl: string;
+    summary: any;
+    summaryUrl: any;
+    workflowFile: any;
+    workflowFileUrl: string;
+  };
+};
+
 // =============================================================================
 // Data table
 // =============================================================================

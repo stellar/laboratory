@@ -1,42 +1,16 @@
 import { Alert, Link, Text } from "@stellar/design-system";
 import { Box } from "@/components/layout/Box";
-import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
-import { renderWasmStatus } from "@/helpers/renderWasmStatus";
-import { useWasmGitHubAttestation } from "@/query/useWasmGitHubAttestation";
-import { useStore } from "@/store/useStore";
+import { WasmData } from "@/types/types";
 
 export const BuildInfo = ({
-  wasmHash,
-  rpcUrl,
+  wasmData,
   isActive,
 }: {
-  wasmHash: string;
-  rpcUrl: string;
+  wasmData: WasmData | null | undefined;
   isActive: boolean;
 }) => {
-  const { network } = useStore();
-
-  const {
-    data: wasmData,
-    error: wasmError,
-    isLoading: isWasmLoading,
-    isFetching: isWasmFetching,
-  } = useWasmGitHubAttestation({
-    wasmHash,
-    rpcUrl,
-    isActive: Boolean(isActive && rpcUrl && wasmHash),
-    headers: getNetworkHeaders(network, "rpc"),
-  });
-
-  const wasmStatus = renderWasmStatus({
-    wasmHash,
-    rpcUrl,
-    isLoading: isWasmFetching || isWasmLoading,
-    error: wasmError,
-  });
-
-  if (wasmStatus) {
-    return wasmStatus;
+  if (!isActive) {
+    return null;
   }
 
   if (!wasmData) {
