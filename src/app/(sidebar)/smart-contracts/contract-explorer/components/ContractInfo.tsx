@@ -30,6 +30,7 @@ import { ContractSpec } from "./ContractSpec";
 import { ContractStorage } from "./ContractStorage";
 import { VersionHistory } from "./VersionHistory";
 import { BuildInfo } from "./BuildInfo";
+import { SourceCode } from "./SourceCode";
 
 export const ContractInfo = ({
   infoData,
@@ -349,7 +350,18 @@ export const ContractInfo = ({
             tab3={{
               id: "contract-source-code",
               label: "Source Code",
-              content: <ComingSoonText />,
+              content: (
+                <SourceCode
+                  isActive={activeTab === "contract-source-code"}
+                  repo={
+                    infoData.validation?.repository?.replace(
+                      "https://github.com/",
+                      "",
+                    ) || ""
+                  }
+                  commit={infoData.validation?.commit || ""}
+                />
+              ),
             }}
             tab4={{
               id: "contract-contract-storage",
