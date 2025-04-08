@@ -75,7 +75,7 @@ export const FetchContractMethodPickerWithQuery = ({
     onChange(newValue);
   };
 
-  const handleFetchContractMethods = async () => {
+  const handleFetchContractMethods = () => {
     setFetchError("");
 
     if (!value) {

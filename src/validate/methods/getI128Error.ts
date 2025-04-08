@@ -1,6 +1,13 @@
 // Primitive Definition I128 comes from
 // https://github.com/stellar/js-stellar-sdk/blob/master/src/contract/spec.ts#L128-L133
-export const getI128Error = (value: string) => {
+export const getI128Error = (value: string, isRequired?: boolean) => {
+  if (!value) {
+    if (isRequired) {
+      return "This field is required.";
+    } else {
+      return false;
+    }
+  }
   // Check pattern for I128
   const i128Pattern = /^(-?[1-9][0-9]*|0)$/;
   if (!i128Pattern.test(value)) {

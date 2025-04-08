@@ -1,6 +1,13 @@
 // Primitive Definition DataUrl comes from
 // https://github.com/stellar/js-stellar-sdk/blob/master/src/contract/spec.ts#L159-L164
-export const getDataUrlError = (value: string) => {
+export const getDataUrlError = (value: string, isRequired?: boolean) => {
+  if (!value) {
+    if (isRequired) {
+      return "This field is required.";
+    } else {
+      return false;
+    }
+  }
   // Check if value is a string
   if (typeof value !== "string") {
     return "Value must be a string";
