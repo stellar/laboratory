@@ -110,35 +110,26 @@ export const JsonSchemaFormRenderer = ({
     const error = validateFn?.(e.target.value, requiredFields?.includes(label));
     const currentPath = path.length > 0 ? path.join(".") : name;
 
-    if (error) {
-      setFormError({
-        ...formError,
-        [currentPath]: error,
-      });
-    } else {
-      setFormError({
-        ...formError,
-        [currentPath]: "",
-      });
-    }
+    setFormError({
+      ...formError,
+      [currentPath]: error ? error : "",
+    });
   };
 
   if (schemaType === "object") {
     return (
       <Box gap="md">
         {Object.entries(schema.properties || {}).map(
-          ([key, subSchema], index) => {
-            return (
-              <JsonSchemaFormRenderer
-                name={key}
-                key={index}
-                schema={subSchema as JSONSchema7}
-                onChange={onChange}
-                formData={formData}
-                requiredFields={schema.required}
-              />
-            );
-          },
+          ([key, subSchema], index) => (
+            <JsonSchemaFormRenderer
+              name={key}
+              key={`${key}-${index}`}
+              schema={subSchema as JSONSchema7}
+              onChange={onChange}
+              formData={formData}
+              requiredFields={schema.required}
+            />
+          ),
         )}
       </Box>
     );
@@ -175,7 +166,7 @@ export const JsonSchemaFormRenderer = ({
     };
 
     return (
-      <Box gap="md" key={index}>
+      <Box gap="md" key={`${name}-${index}`}>
         <LabelHeading size="md" infoText={schema.description}>
           {name}
         </LabelHeading>
@@ -183,9 +174,9 @@ export const JsonSchemaFormRenderer = ({
         <Box gap="md">
           {storedItems.length > 0 &&
             storedItems.map((args: any, index: number) => (
-              <Box gap="md" key={index}>
+              <Box gap="md" key={`${name}-${index}`}>
                 <Card>
-                  <Box gap="md" key={index}>
+                  <Box gap="md" key={`${name}-${index}`}>
                     <LabelHeading size="lg">
                       {name}-{index + 1}
                     </LabelHeading>
@@ -193,18 +184,15 @@ export const JsonSchemaFormRenderer = ({
                     <Box gap="md">
                       <>
                         {Object.keys(args).map((arg) => {
-                          const nested = [];
-                          nested.push(name);
-                          nested.push(index);
-                          nested.push(arg);
+                          const nestedPath = [name, index, arg].join(".");
 
                           return (
                             <JsonSchemaFormRenderer
                               name={name}
                               index={index}
-                              key={nested.join(".")}
+                              key={nestedPath}
                               schema={schema.properties?.[arg] as JSONSchema7}
-                              path={[...path, nested.join(".")]}
+                              path={[...path, nestedPath]}
                               formData={args}
                               onChange={onChange}
                               requiredFields={schema.required}
@@ -535,11 +523,7 @@ const renderTitle = (name: string, description: string) => (
     <Text size="lg" as="h2">
       {name}
     </Text>
-    {description ? (
-      <Text size="sm" as="h3">
-        {description}
-      </Text>
-    ) : null}
+    {description ? <div>{description}</div> : null}
   </>
 );
 
