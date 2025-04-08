@@ -9,7 +9,7 @@ import { downloadFile } from "@/helpers/downloadFile";
 
 import "./styles.scss";
 
-export type SupportedLanguage = "json" | "xdr";
+export type SupportedLanguage = "json" | "xdr" | "text";
 
 type CodeEditorProps = {
   title: string;
