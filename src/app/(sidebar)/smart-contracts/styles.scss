@@ -104,3 +104,28 @@
     --DataTypeLegend-color: var(--sds-clr-pink-11);
   }
 }
+
+.BuildInfo {
+  &__data {
+    font-size: pxToRem(14px);
+    line-height: pxToRem(20px);
+
+    &__title {
+      color: var(--sds-clr-gray-12);
+      font-weight: var(--sds-fw-semi-bold);
+      margin-bottom: pxToRem(10px);
+    }
+
+    &__item {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: pxToRem(16px);
+      border-top: 1px solid var(--sds-clr-gray-04);
+      padding: pxToRem(10px) 0;
+      word-break: break-all;
+    }
+  }
+}

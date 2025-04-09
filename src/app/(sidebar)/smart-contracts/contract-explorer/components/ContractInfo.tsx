@@ -5,6 +5,7 @@ import {
   Card,
   Icon,
   Link,
+  Loader,
   Logo,
   Text,
   Tooltip,
@@ -18,26 +19,37 @@ import { formatNumber } from "@/helpers/formatNumber";
 import { stellarExpertAccountLink } from "@/helpers/stellarExpertAccountLink";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
-import { ContractInfoApiResponse, EmptyObj, Network } from "@/types/types";
+import {
+  ContractInfoApiResponse,
+  EmptyObj,
+  Network,
+  WasmData,
+} from "@/types/types";
 
 import { ContractSpec } from "./ContractSpec";
 import { ContractStorage } from "./ContractStorage";
 import { VersionHistory } from "./VersionHistory";
+import { BuildInfo } from "./BuildInfo";
 import { SourceCode } from "./SourceCode";
 
 export const ContractInfo = ({
   infoData,
+  wasmData,
   network,
+  isLoading,
 }: {
   infoData: ContractInfoApiResponse;
+  wasmData: WasmData | null | undefined;
   network: Network | EmptyObj;
+  isLoading: boolean;
 }) => {
   type ContractTabId =
     | "contract-bindings"
     | "contract-contract-spec"
     | "contract-source-code"
     | "contract-contract-storage"
-    | "contract-version-history";
+    | "contract-version-history"
+    | "contract-build-info";
 
   const [activeTab, setActiveTab] = useState<ContractTabId>(
     "contract-version-history",
@@ -228,9 +240,7 @@ export const ContractInfo = ({
     </Text>
   );
 
-  const renderBuildVerifiedBadge = (
-    type: "verified" | "unverified" | undefined,
-  ) => {
+  const renderBuildVerifiedBadge = (hasWasmData: boolean) => {
     const item = {
       verified: {
         badge: (
@@ -264,7 +274,7 @@ export const ContractInfo = ({
       },
     };
 
-    const badge = type ? item[type] : item.unverified;
+    const badge = hasWasmData ? item.verified : item.unverified;
 
     return (
       <Tooltip
@@ -287,6 +297,14 @@ export const ContractInfo = ({
     );
   };
 
+  if (isLoading) {
+    return (
+      <Box gap="sm" direction="row" justify="center">
+        <Loader />
+      </Box>
+    );
+  }
+
   return (
     <Box gap="lg">
       <Card>
@@ -306,7 +324,7 @@ export const ContractInfo = ({
               Contract
             </Text>
 
-            {renderBuildVerifiedBadge(infoData.validation?.status)}
+            {renderBuildVerifiedBadge(Boolean(wasmData))}
           </Box>
 
           <TabView
@@ -365,6 +383,16 @@ export const ContractInfo = ({
                   isActive={activeTab === "contract-version-history"}
                   contractId={infoData.contract}
                   networkId={network.id}
+                />
+              ),
+            }}
+            tab6={{
+              id: "contract-build-info",
+              label: "Build Info",
+              content: (
+                <BuildInfo
+                  wasmData={wasmData}
+                  isActive={activeTab === "contract-build-info"}
                 />
               ),
             }}
