@@ -8,9 +8,11 @@ import { NetworkType } from "@/types/types";
 export const SwitchNetworkButtons = ({
   includedNetworks,
   buttonSize,
+  page,
 }: {
   includedNetworks: NetworkType[];
   buttonSize: "sm" | "md" | "lg";
+  page: string;
 }) => {
   const { selectNetwork, updateIsDynamicNetworkSelect } = useStore();
 
@@ -34,6 +36,7 @@ export const SwitchNetworkButtons = ({
             getAndSetNetwork(n);
             trackEvent(TrackingEvent.NETWORK_SWITCH, {
               to: n,
+              location: `${page} button`,
             });
           }}
         >

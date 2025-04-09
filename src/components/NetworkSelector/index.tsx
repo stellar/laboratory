@@ -10,12 +10,14 @@ import { Button, Icon, Input, Notification } from "@stellar/design-system";
 import { NetworkIndicator } from "@/components/NetworkIndicator";
 import { NetworkOptions } from "@/constants/settings";
 import { useStore } from "@/store/useStore";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { localStorageSavedNetwork } from "@/helpers/localStorageSavedNetwork";
 import { delayedAction } from "@/helpers/delayedAction";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { sanitizeObject } from "@/helpers/sanitizeObject";
 import { getNetworkById } from "@/helpers/getNetworkById";
+import { localStorageSavedNetworksPrevious } from "@/helpers/localStorageSavedNetworksPrevious";
 
 import { AnyObject, EmptyObj, Network, NetworkType } from "@/types/types";
 
@@ -74,6 +76,28 @@ export const NetworkSelector = () => {
     return !(activeNetwork.horizonUrl && activeNetwork.passphrase);
   };
 
+  const handleNetworkSaveLocalStorage = (network: Network) => {
+    localStorageSavedNetwork.set(sanitizeObject(network));
+    localStorageSavedNetworksPrevious.set({
+      networkId: network.id,
+      rpcUrl: network.rpcUrl,
+      horizonUrl: network.horizonUrl,
+      passphrase: network.id === "custom" ? network.passphrase : undefined,
+    });
+  };
+
+  const handleSetActiveNetwork = (network: Network) => {
+    const savedPreviousNetwork =
+      localStorageSavedNetworksPrevious.get()?.[network.id];
+
+    setActiveNetwork({
+      ...network,
+      rpcUrl: savedPreviousNetwork?.rpcUrl || network.rpcUrl,
+      horizonUrl: savedPreviousNetwork?.horizonUrl || network.horizonUrl,
+      passphrase: savedPreviousNetwork?.passphrase || network.passphrase,
+    });
+  };
+
   // Set default network on launch
   useEffect(() => {
     let defaultNetwork: Network | undefined;
@@ -119,8 +143,8 @@ export const NetworkSelector = () => {
 
   useEffect(() => {
     if (isDynamicNetworkSelect) {
-      setActiveNetwork(network);
-      localStorageSavedNetwork.set(network as Network);
+      handleSetActiveNetwork(network as Network);
+      handleNetworkSaveLocalStorage(network as Network);
     }
     // Not including network
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -194,12 +218,19 @@ export const NetworkSelector = () => {
         horizonHeaderValue: "",
         rpcHeaderValue: "",
       };
+
       // Update local storage
-      localStorageSavedNetwork.set(sanitizeObject(savedNetwork));
+      handleNetworkSaveLocalStorage(savedNetwork);
 
       // Close dropdown
       toggleDropdown(false);
       updateIsDynamicNetworkSelect(false);
+
+      // Tracking
+      trackEvent(TrackingEvent.NETWORK_SWITCH, {
+        to: network.id,
+        location: "network selector",
+      });
     }
   };
 
@@ -278,7 +309,7 @@ export const NetworkSelector = () => {
                 className="NetworkSelector__body__link"
                 data-is-active={op.id === activeNetwork.id}
                 role="button"
-                onClick={() => setActiveNetwork(op)}
+                onClick={() => handleSetActiveNetwork(op)}
                 tabIndex={0}
                 data-testid="networkSelector-option"
               >
