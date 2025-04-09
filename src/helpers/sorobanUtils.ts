@@ -13,14 +13,12 @@ import {
 import { TransactionBuildParams } from "@/store/createStore";
 import { SorobanOpType, TxnOperation } from "@/types/types";
 
-export const isSorobanOperationType = (operationType: string) => {
-  // @TODO: add invoke_host_function
-  return [
+export const isSorobanOperationType = (operationType: string) =>
+  [
     "extend_footprint_ttl",
     "restore_footprint",
     "invoke_contract_function",
   ].includes(operationType);
-};
 
 // https://developers.stellar.org/docs/learn/glossary#ledgerkey
 // https://developers.stellar.org/docs/build/guides/archival/restore-data-js
