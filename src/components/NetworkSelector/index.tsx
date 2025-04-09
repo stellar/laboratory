@@ -160,6 +160,7 @@ export const NetworkSelector = () => {
         handleSelectNetwork(event);
       }
     },
+    // Not including handleSelectNetwork
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [isSubmitDisabled],
   );
