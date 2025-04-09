@@ -57,7 +57,6 @@ export const dereferenceSchema = (
         };
       }
 
-      // return fullSchema?.definitions?.[refPath];
       return {
         type: refPath,
         description: refPathDef?.description ?? false,

@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BASE_FEE, contract } from "@stellar/stellar-sdk";
 import { Button, Card, Text } from "@stellar/design-system";
 import type { JSONSchema7 } from "json-schema";
-
+import { stringify } from "lossless-json";
+import { usePrevious } from "@/hooks/usePrevious";
 import { TransactionBuildParams } from "@/store/createStore";
 import { useStore } from "@/store/useStore";
 
@@ -18,7 +19,7 @@ import { useRpcPrepareTx } from "@/query/useRpcPrepareTx";
 import { Box } from "@/components/layout/Box";
 import { ErrorText } from "@/components/ErrorText";
 
-import { SorobanInvokeValue, TxnOperation } from "@/types/types";
+import { AnyObject, SorobanInvokeValue, TxnOperation } from "@/types/types";
 
 import { JsonSchemaFormRenderer } from "./JsonSchemaFormRenderer";
 
@@ -39,7 +40,7 @@ export const JsonSchemaForm = ({
   const { updateSorobanBuildXdr } = transaction;
   const { isValid } = transaction.build;
   const { params: txnParams, soroban } = transaction.build;
-  const { operation } = soroban;
+  const { operation: sorobanOperation } = soroban;
   const {
     mutate: prepareTx,
     isPending: isPrepareTxPending,
@@ -54,6 +55,29 @@ export const JsonSchemaForm = ({
     name,
   );
 
+  const requiredFields = dereferencedSchema.required;
+  const [formError, setFormError] = useState<AnyObject>({});
+  const [submitTxError, setSubmitTxError] = useState<string>("");
+
+  const hasFormError = Object.values(formError).some((error) => error !== "");
+  const prevName = usePrevious(name);
+  const prevValue = usePrevious(stringify(value.args));
+
+  // reset form error and submit tx error when the dropdown changes
+  useEffect(() => {
+    if (prevName !== name) {
+      setFormError({});
+      setSubmitTxError("");
+    }
+  }, [prevName, name]);
+
+  // reset submit tx error when the form's argument data changes
+  useEffect(() => {
+    if (prevValue !== stringify(value.args)) {
+      setSubmitTxError("");
+    }
+  }, [value.args]);
+
   useEffect(() => {
     if (prepareTxData) {
       updateSorobanBuildXdr(prepareTxData.transactionXdr);
@@ -63,26 +87,43 @@ export const JsonSchemaForm = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prepareTxData]);
 
+  useEffect(() => {
+    if (isPrepareTxError) {
+      setSubmitTxError(prepareTxError?.result.toString() || "");
+    } else {
+      setSubmitTxError("");
+    }
+  }, [isPrepareTxError]);
+
   const handlePrepareTx = () => {
+    setSubmitTxError("");
     resetPrepareTx();
 
-    const sampleTxnXdr = getTxnToSimulate(
+    const { xdr, error } = getTxnToSimulate(
       value,
       spec,
       txnParams,
-      operation,
+      sorobanOperation,
       network.passphrase,
     );
 
-    if (sampleTxnXdr) {
+    if (xdr) {
       prepareTx({
         rpcUrl: network.rpcUrl,
-        transactionXdr: sampleTxnXdr,
+        transactionXdr: xdr,
         networkPassphrase: network.passphrase,
         headers: getNetworkHeaders(network, "rpc"),
       });
-    } else {
-      return undefined;
+    }
+
+    if (error) {
+      if (error.includes("Missing field")) {
+        setSubmitTxError(
+          `Missing required field(s): ${requiredFields.join(", ")}`,
+        );
+      } else {
+        setSubmitTxError(error);
+      }
     }
   };
 
@@ -99,30 +140,25 @@ export const JsonSchemaForm = ({
             schema={dereferencedSchema as JSONSchema7}
             formData={value.args}
             onChange={onChange}
+            formError={formError}
+            setFormError={setFormError}
           />
         </Box>
 
         <Box gap="md" direction="row" wrap="wrap">
           <Button
             variant="secondary"
-            disabled={!(isValid.params && isValid.operations)}
+            disabled={!isValid.params || hasFormError}
             isLoading={isPrepareTxPending}
             size="md"
             onClick={handlePrepareTx}
-            type="button"
+            type="submit"
           >
             Prepare Transaction
           </Button>
         </Box>
 
-        {isPrepareTxError && prepareTxError?.result.toString() ? (
-          <ErrorText
-            errorMessage={prepareTxError?.result.toString()}
-            size="sm"
-          />
-        ) : (
-          <></>
-        )}
+        {submitTxError && <ErrorText errorMessage={submitTxError} size="sm" />}
       </Box>
     );
   };
@@ -139,7 +175,11 @@ const renderTitle = (name: string, description: string) => (
     <Text size="lg" as="h2">
       {name}
     </Text>
-    {description ? <div>{description}</div> : null}
+    {description ? (
+      <Text size="sm" as="div">
+        {description}
+      </Text>
+    ) : null}
   </>
 );
 
@@ -149,9 +189,10 @@ const getTxnToSimulate = (
   txnParams: TransactionBuildParams,
   operation: TxnOperation,
   networkPassphrase: string,
-) => {
+): { xdr: string; error: string } => {
   try {
     const scVals = getScValsFromSpec(value.function_name, spec, value);
+
     const builtXdr = buildTxWithSorobanData({
       params: txnParams,
       sorobanOp: {
@@ -167,9 +208,8 @@ const getTxnToSimulate = (
       networkPassphrase,
     });
 
-    return builtXdr.toXDR();
+    return { xdr: builtXdr.toXDR(), error: "" };
   } catch (e: any) {
-    console.error("e", e);
-    return undefined;
+    return { xdr: "", error: e.message };
   }
 };
