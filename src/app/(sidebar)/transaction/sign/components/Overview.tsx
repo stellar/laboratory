@@ -170,6 +170,24 @@ export const Overview = () => {
     }
   };
 
+  const onSimulateTxn = () => {
+    if (sign.signedTx) {
+      xdr.updateXdrBlob(sign.signedTx);
+      xdr.updateXdrType(XDR_TYPE_TRANSACTION_ENVELOPE);
+
+      transaction.updateSimulateTriggerOnLaunch(true);
+
+      // Adding delay to make sure the store will update
+      delayedAction({
+        action: () => {
+          trackEvent(TrackingEvent.TRANSACTION_SIGN_SIMULATE);
+          router.push(Routes.SIMULATE_TRANSACTION);
+        },
+        delay: 200,
+      });
+    }
+  };
+
   const onWrapWithFeeBump = () => {
     if (sign.signedTx) {
       updateFeeBumpParams(set({}, "xdr", sign.signedTx));
@@ -922,9 +940,19 @@ export const Overview = () => {
                 </>
               }
               footerLeftEl={
-                <Button size="md" variant="secondary" onClick={onViewSubmitTxn}>
-                  Submit in Transaction Submitter
-                </Button>
+                <Box gap="sm" direction="row" align="center" wrap="wrap">
+                  <Button
+                    size="md"
+                    variant="secondary"
+                    onClick={onViewSubmitTxn}
+                  >
+                    Submit transaction
+                  </Button>
+
+                  <Button size="md" variant="tertiary" onClick={onSimulateTxn}>
+                    Simulate transaction
+                  </Button>
+                </Box>
               }
               footerRightEl={
                 <div className="SignTx__Buttons">

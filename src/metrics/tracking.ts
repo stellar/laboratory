@@ -135,6 +135,7 @@ export enum TrackingEvent {
   TRANSACTION_SIGN_SIGNATURE_ERROR = "transaction: sign: signature: error",
   TRANSACTION_SIGN_WALLET = "transaction: sign: wallet",
   TRANSACTION_SIGN_SUBMIT_IN_TX_SUBMITTER = "transaction: sign: submit in transaction submitter",
+  TRANSACTION_SIGN_SIMULATE = "transaction: sign: simulate",
   TRANSACTION_SIGN_VIEW_IN_XDR = "transaction: sign: view in xdr",
   TRANSACTION_SIGN_FEE_BUMP = "transaction: sign: fee bump",
   // Transactions - simulate
