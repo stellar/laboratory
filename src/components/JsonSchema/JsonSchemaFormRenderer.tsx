@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button, Card, Icon, Input, Text } from "@stellar/design-system";
 import type { JSONSchema7 } from "json-schema";
 import { parse } from "lossless-json";
