@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Button, Card, Icon, Input } from "@stellar/design-system";
+import React from "react";
+import { Button, Card, Icon, Input, Text } from "@stellar/design-system";
 import type { JSONSchema7 } from "json-schema";
 import { parse } from "lossless-json";
 
@@ -22,6 +22,8 @@ export const JsonSchemaFormRenderer = ({
   onChange,
   index,
   requiredFields,
+  formError,
+  setFormError,
 }: {
   name: string;
   schema: JSONSchema7;
@@ -30,12 +32,12 @@ export const JsonSchemaFormRenderer = ({
   onChange: (value: SorobanInvokeValue) => void;
   index?: number;
   requiredFields?: string[];
+  formError: AnyObject;
+  setFormError: (formError: AnyObject) => void;
 }) => {
   const { transaction } = useStore();
   const { build } = transaction;
   const { operation: sorobanOperation } = build.soroban;
-
-  const [formError, setFormError] = useState<AnyObject>({});
 
   // parse stringified soroban operation
   const parsedSorobanOperation = parse(
@@ -52,7 +54,6 @@ export const JsonSchemaFormRenderer = ({
   };
   const sharedProps = {
     id: path.join("."),
-    key: path.join("."),
     label: labelWithSchemaType,
     value: getNestedValue(parsedSorobanOperation.args, path.join(".")),
     error: path.length > 0 ? formError[path.join(".")] : formError[name],
@@ -60,7 +61,9 @@ export const JsonSchemaFormRenderer = ({
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    validateFn?: (value: string, required?: boolean) => string | false,
+    validateFn?:
+      | ((value: string, required?: boolean) => string | false)
+      | ((value: string, required?: boolean) => string | false)[],
   ) => {
     /**
      * Example of how setNestedValueWithArr works:
@@ -103,7 +106,13 @@ export const JsonSchemaFormRenderer = ({
     }
 
     // Validate the value
-    const error = validateFn?.(e.target.value, requiredFields?.includes(label));
+    // Address type validates both public key and contract address
+    const error = Array.isArray(validateFn)
+      ? validateFn.every((fn) =>
+          fn(e.target.value, requiredFields?.includes(label)),
+        )
+      : validateFn?.(e.target.value, requiredFields?.includes(label));
+
     const currentPath = path.length > 0 ? path.join(".") : name;
 
     setFormError({
@@ -126,16 +135,52 @@ export const JsonSchemaFormRenderer = ({
     return (
       <Box gap="md">
         {Object.entries(schema.properties || {}).map(
-          ([key, subSchema], index) => (
-            <JsonSchemaFormRenderer
-              name={key}
-              key={`${key}-${index}`}
-              schema={subSchema as JSONSchema7}
-              onChange={onChange}
-              formData={formData}
-              requiredFields={schema.required}
-            />
-          ),
+          ([key, subSchema], index) => {
+            const subSchemaObj = getSchemaProperty(schema, key);
+
+            if (subSchemaObj?.type === "object") {
+              return (
+                <>
+                  <LabelHeading size="md" infoText={schema.description}>
+                    {key}
+                  </LabelHeading>
+                  {subSchemaObj?.description ? (
+                    <Text as="div" size="xs">
+                      {subSchemaObj.description}
+                    </Text>
+                  ) : null}
+
+                  <Box gap="md">
+                    <Card>
+                      <JsonSchemaFormRenderer
+                        name={key}
+                        key={`${key}-${index}`}
+                        schema={subSchema as JSONSchema7}
+                        onChange={onChange}
+                        formData={formData}
+                        requiredFields={schema.required}
+                        setFormError={setFormError}
+                        formError={formError}
+                      />
+                    </Card>
+                  </Box>
+                </>
+              );
+            }
+
+            return (
+              <JsonSchemaFormRenderer
+                name={key}
+                key={`${key}-${index}`}
+                schema={subSchema as JSONSchema7}
+                onChange={onChange}
+                formData={formData}
+                requiredFields={schema.required}
+                setFormError={setFormError}
+                formError={formError}
+              />
+            );
+          },
         )}
       </Box>
     );
@@ -202,6 +247,8 @@ export const JsonSchemaFormRenderer = ({
                               formData={args}
                               onChange={onChange}
                               requiredFields={schema.required}
+                              setFormError={setFormError}
+                              formError={formError}
                             />
                           );
                         })}
@@ -255,8 +302,12 @@ export const JsonSchemaFormRenderer = ({
       return (
         <Input
           {...sharedProps}
+          key={path.join(".")}
           onChange={(e) => {
-            handleChange(e, validate.getPublicKeyError);
+            handleChange(e, [
+              validate.getPublicKeyError,
+              validate.getContractIdError,
+            ]);
           }}
           infoText={schema.description || ""}
           leftElement={<Icon.User03 />}
@@ -268,6 +319,7 @@ export const JsonSchemaFormRenderer = ({
       return (
         <PositiveIntPicker
           {...sharedProps}
+          key={path.join(".")}
           onChange={(e) => {
             handleChange(e, validate.getU32Error);
           }}
@@ -277,6 +329,7 @@ export const JsonSchemaFormRenderer = ({
       return (
         <PositiveIntPicker
           {...sharedProps}
+          key={path.join(".")}
           onChange={(e) => {
             handleChange(e, validate.getU64Error);
           }}
@@ -286,6 +339,7 @@ export const JsonSchemaFormRenderer = ({
       return (
         <PositiveIntPicker
           {...sharedProps}
+          key={path.join(".")}
           onChange={(e) => {
             handleChange(e, validate.getU128Error);
           }}
@@ -295,6 +349,7 @@ export const JsonSchemaFormRenderer = ({
       return (
         <PositiveIntPicker
           {...sharedProps}
+          key={path.join(".")}
           onChange={(e) => {
             handleChange(e, validate.getU256Error);
           }}
@@ -304,6 +359,7 @@ export const JsonSchemaFormRenderer = ({
       return (
         <Input
           {...sharedProps}
+          key={path.join(".")}
           onChange={(e) => {
             handleChange(e, validate.getI32Error);
           }}
@@ -314,6 +370,7 @@ export const JsonSchemaFormRenderer = ({
       return (
         <Input
           {...sharedProps}
+          key={path.join(".")}
           onChange={(e) => {
             handleChange(e, validate.getI64Error);
           }}
@@ -324,6 +381,7 @@ export const JsonSchemaFormRenderer = ({
       return (
         <Input
           {...sharedProps}
+          key={path.join(".")}
           onChange={(e) => {
             handleChange(e, validate.getI128Error);
           }}
@@ -334,6 +392,7 @@ export const JsonSchemaFormRenderer = ({
       return (
         <Input
           {...sharedProps}
+          key={path.join(".")}
           onChange={(e) => {
             handleChange(e, validate.getI256Error);
           }}
@@ -345,6 +404,7 @@ export const JsonSchemaFormRenderer = ({
       return (
         <Input
           {...sharedProps}
+          key={path.join(".")}
           error="" // @TODO
           onChange={(e) => {
             // @TODO validate the value via length
@@ -358,6 +418,7 @@ export const JsonSchemaFormRenderer = ({
       return (
         <Input
           {...sharedProps}
+          key={path.join(".")}
           onChange={(e) => {
             handleChange(e, validate.getDataUrlError);
           }}
