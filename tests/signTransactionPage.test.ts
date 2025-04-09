@@ -213,10 +213,12 @@ test.describe("Sign Transaction Page", () => {
       "AAAAAgAAAADJrq4b4AopDZibkeBWpDxuWKUcY4FUUNQdIEF3Nm9dkQAAAGQAAAIiAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAQAAAACXlGN76T6NQcaUJxbEkH3mi1HHWsHnLqMDdlLl9NlJgQAAAAAAAAAABfXhAAAAAAAAAAACjc9OtQAAAEBrpI8Q90yqEqjcLSubVj5nqtyt53bpVzi8Bzikps4xuom0xHQgrM6MsQS503ortwLcYOw0gyLPyst7J88ZDoQJGph1JAAAAEDvbbMJR9r+qfh/ghdRgS3BUYDwhMcN+rbjWbyS+okvEKoOtAPDfMx3xnyw+rx366bhUUhacsXlScWKL1fwwmEB",
     );
 
-    const submitBtn = validationView.getByText(
-      "Submit in Transaction Submitter",
-    );
+    const submitBtn = validationView.getByText("Submit transaction");
+    const simulateBtn = validationView.getByText("Simulate transaction");
+
     await expect(submitBtn).toBeEnabled();
+    await expect(simulateBtn).toBeEnabled();
+
     await submitBtn.click();
   });
 
