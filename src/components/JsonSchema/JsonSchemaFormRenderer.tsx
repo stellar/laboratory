@@ -55,12 +55,13 @@ export const JsonSchemaFormRenderer = ({
   const sharedProps = {
     id: path.join("."),
     label: labelWithSchemaType,
-    value: getNestedValue(parsedSorobanOperation.args, path.join(".")),
+    value: getNestedValue(parsedSorobanOperation.args, path.join("."))?.value,
     error: path.length > 0 ? formError[path.join(".")] : formError[name],
   };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
+    schemaType: string,
     validateFn?:
       | ((value: string, required?: boolean) => string | false)
       | ((value: string, required?: boolean) => string | false)[],
@@ -86,7 +87,7 @@ export const JsonSchemaFormRenderer = ({
       const result = setNestedValueWithArr(
         parsedSorobanOperation.args,
         path.join("."),
-        e.target.value,
+        { value: e.target.value, type: schemaType },
       );
       onChange({
         ...invokeContractBaseProps,
@@ -100,7 +101,7 @@ export const JsonSchemaFormRenderer = ({
         ...invokeContractBaseProps,
         args: {
           ...parsedSorobanOperation.args,
-          [name]: e.target.value,
+          [name]: { value: e.target.value, type: schemaType },
         },
       });
     }
@@ -304,7 +305,7 @@ export const JsonSchemaFormRenderer = ({
           {...sharedProps}
           key={path.join(".")}
           onChange={(e) => {
-            handleChange(e, [
+            handleChange(e, schemaType, [
               validate.getPublicKeyError,
               validate.getContractIdError,
             ]);
@@ -321,7 +322,7 @@ export const JsonSchemaFormRenderer = ({
           {...sharedProps}
           key={path.join(".")}
           onChange={(e) => {
-            handleChange(e, validate.getU32Error);
+            handleChange(e, schemaType, validate.getU32Error);
           }}
         />
       );
@@ -331,7 +332,7 @@ export const JsonSchemaFormRenderer = ({
           {...sharedProps}
           key={path.join(".")}
           onChange={(e) => {
-            handleChange(e, validate.getU64Error);
+            handleChange(e, schemaType, validate.getU64Error);
           }}
         />
       );
@@ -341,7 +342,7 @@ export const JsonSchemaFormRenderer = ({
           {...sharedProps}
           key={path.join(".")}
           onChange={(e) => {
-            handleChange(e, validate.getU128Error);
+            handleChange(e, schemaType, validate.getU128Error);
           }}
         />
       );
@@ -351,7 +352,7 @@ export const JsonSchemaFormRenderer = ({
           {...sharedProps}
           key={path.join(".")}
           onChange={(e) => {
-            handleChange(e, validate.getU256Error);
+            handleChange(e, schemaType, validate.getU256Error);
           }}
         />
       );
@@ -361,7 +362,7 @@ export const JsonSchemaFormRenderer = ({
           {...sharedProps}
           key={path.join(".")}
           onChange={(e) => {
-            handleChange(e, validate.getI32Error);
+            handleChange(e, schemaType, validate.getI32Error);
           }}
           fieldSize="md"
         />
@@ -372,7 +373,7 @@ export const JsonSchemaFormRenderer = ({
           {...sharedProps}
           key={path.join(".")}
           onChange={(e) => {
-            handleChange(e, validate.getI64Error);
+            handleChange(e, schemaType, validate.getI64Error);
           }}
           fieldSize="md"
         />
@@ -383,7 +384,7 @@ export const JsonSchemaFormRenderer = ({
           {...sharedProps}
           key={path.join(".")}
           onChange={(e) => {
-            handleChange(e, validate.getI128Error);
+            handleChange(e, schemaType, validate.getI128Error);
           }}
           fieldSize="md"
         />
@@ -394,7 +395,7 @@ export const JsonSchemaFormRenderer = ({
           {...sharedProps}
           key={path.join(".")}
           onChange={(e) => {
-            handleChange(e, validate.getI256Error);
+            handleChange(e, schemaType, validate.getI256Error);
           }}
           fieldSize="md"
         />
@@ -408,7 +409,7 @@ export const JsonSchemaFormRenderer = ({
           error="" // @TODO
           onChange={(e) => {
             // @TODO validate the value via length
-            handleChange(e);
+            handleChange(e, schemaType);
           }}
           note={<>{schema.description}</>}
           fieldSize="md"
@@ -420,7 +421,7 @@ export const JsonSchemaFormRenderer = ({
           {...sharedProps}
           key={path.join(".")}
           onChange={(e) => {
-            handleChange(e, validate.getDataUrlError);
+            handleChange(e, schemaType, validate.getDataUrlError);
           }}
           fieldSize="md"
         />
