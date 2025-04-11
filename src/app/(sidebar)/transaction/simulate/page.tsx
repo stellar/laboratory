@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, Input, Alert } from "@stellar/design-system";
+import { Button, Input, Alert, Select } from "@stellar/design-system";
 
 import { Box } from "@/components/layout/Box";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
@@ -79,6 +79,7 @@ export default function SimulateTransaction() {
         transactionXdr: xdr.blob,
         instructionLeeway: simulate.instructionLeeway,
         headers: getNetworkHeaders(network, "rpc"),
+        xdrFormat: xdr.format,
       });
 
       if (simulate.triggerOnLaunch) {
@@ -117,6 +118,23 @@ export default function SimulateTransaction() {
           note="Enter a base-64 encoded XDR blob to decode."
           hasCopyButton
         />
+
+        <Select
+          id="simulate-tx-xdr-format"
+          fieldSize="md"
+          label="XDR Format"
+          value={xdr.format}
+          onChange={(e) => {
+            xdr.updateXdrFormat(e.target.value);
+          }}
+        >
+          <option id="base64" value="base64">
+            base64
+          </option>
+          <option id="json" value="json">
+            json
+          </option>
+        </Select>
 
         <Input
           id="simulate-tx-instr-leeway"

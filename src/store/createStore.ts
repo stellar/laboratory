@@ -185,9 +185,11 @@ export interface Store {
     blob: string;
     jsonString: string;
     type: string;
+    format: string;
     updateXdrBlob: (blob: string) => void;
     updateJsonString: (jsonString: string) => void;
     updateXdrType: (type: string) => void;
+    updateXdrFormat: (format: string) => void;
     resetXdr: () => void;
     resetJsonString: () => void;
   };
@@ -303,6 +305,7 @@ const initXdrState = {
   blob: "",
   jsonString: "",
   type: XDR_TYPE_TRANSACTION_ENVELOPE,
+  format: "base64",
 };
 
 const initSmartContractsState = {
@@ -563,15 +566,21 @@ export const createStore = (options: CreateStoreOptions) =>
             set((state) => {
               state.xdr.type = type;
             }),
+          updateXdrFormat: (format: string) =>
+            set((state) => {
+              state.xdr.format = format;
+            }),
           resetXdr: () =>
             set((state) => {
               state.xdr.blob = initXdrState.blob;
               state.xdr.type = initXdrState.type;
+              state.xdr.format = initXdrState.format;
             }),
           resetJsonString: () =>
             set((state) => {
               state.xdr.jsonString = initXdrState.jsonString;
               state.xdr.type = initXdrState.type;
+              state.xdr.format = initXdrState.format;
             }),
         },
         // Smart Contracts

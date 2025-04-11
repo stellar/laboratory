@@ -6,6 +6,7 @@ type SimulateTxProps = {
   transactionXdr: string;
   instructionLeeway?: string;
   headers: NetworkHeaders;
+  xdrFormat?: string;
 };
 
 export const useSimulateTx = () => {
@@ -15,6 +16,7 @@ export const useSimulateTx = () => {
       transactionXdr,
       instructionLeeway,
       headers,
+      xdrFormat,
     }: SimulateTxProps) => {
       const res = await fetch(rpcUrl, {
         method: "POST",
@@ -27,6 +29,7 @@ export const useSimulateTx = () => {
           id: 1,
           method: "simulateTransaction",
           params: {
+            xdrFormat: xdrFormat || "base64",
             transaction: transactionXdr,
             ...(instructionLeeway
               ? {
@@ -51,6 +54,7 @@ export const useSimulateTx = () => {
       transactionXdr,
       instructionLeeway,
       headers,
+      xdrFormat,
     }: SimulateTxProps) => {
       try {
         await mutation.mutateAsync({
@@ -58,6 +62,7 @@ export const useSimulateTx = () => {
           transactionXdr,
           instructionLeeway,
           headers,
+          xdrFormat,
         });
       } catch (e) {
         // do nothing
