@@ -140,6 +140,7 @@ export interface Store {
     simulate: {
       instructionLeeway?: string;
       triggerOnLaunch?: boolean;
+      assembledTx?: string;
     };
     feeBump: FeeBumpParams;
     // [Transaction] Build Classic Transaction actions
@@ -178,6 +179,7 @@ export interface Store {
     // [Transaction] Simulate Transaction actions
     updateSimulateInstructionLeeway: (instrLeeway?: string) => void;
     updateSimulateTriggerOnLaunch: (trigger: boolean) => void;
+    updateSimulateAssembledTx: (assembledTx: string) => void;
   };
 
   // XDR
@@ -538,6 +540,10 @@ export const createStore = (options: CreateStoreOptions) =>
           updateSimulateTriggerOnLaunch: (trigger: boolean) =>
             set((state) => {
               state.transaction.simulate.triggerOnLaunch = trigger;
+            }),
+          updateSimulateAssembledTx: (assembledTx: string) =>
+            set((state) => {
+              state.transaction.simulate.assembledTx = assembledTx;
             }),
           updateFeeBumpParams: (params: FeeBumpParamsObj) =>
             set((state) => {

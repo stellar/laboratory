@@ -8,18 +8,27 @@ import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { PrettyJson } from "@/components/PrettyJson";
 import { PageCard } from "@/components/layout/PageCard";
 
+import { rpc as StellarRpc, TransactionBuilder } from "@stellar/stellar-sdk";
+
+import { useRouter } from "next/navigation";
+
 import { useStore } from "@/store/useStore";
 import { useSimulateTx } from "@/query/useSimulateTx";
 import { delayedAction } from "@/helpers/delayedAction";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { validate } from "@/validate";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
+import { Routes } from "@/constants/routes";
 
 export default function SimulateTransaction() {
   const { xdr, transaction, network } = useStore();
   const [xdrError, setXdrError] = useState("");
   const [instrLeewayError, setInstrLeewayError] = useState("");
   const { simulate, updateSimulateInstructionLeeway } = transaction;
+
+  const rpcServer = new StellarRpc.Server(network.rpcUrl);
+
+  const router = useRouter();
 
   const {
     mutateAsync: simulateTx,
@@ -90,11 +99,35 @@ export default function SimulateTransaction() {
     }
   };
 
+  const assembleTransaction = async () => {
+    try {
+      const txn = TransactionBuilder.fromXDR(xdr.blob, network.passphrase);
+      const preparedTx = await rpcServer.prepareTransaction(txn);
+
+      transaction.updateSimulateAssembledTx(preparedTx.toXDR());
+
+      delayedAction({
+        action: () => {
+          trackEvent(TrackingEvent.TRANSACTION_SIGN_SIMULATE);
+          router.push(Routes.BUILD_TRANSACTION);
+        },
+        delay: 200,
+      });
+
+      return;
+    } catch (e) {
+      console.error("Error assembling transaction:", e);
+      return null;
+    }
+  };
+
   const resetResponse = () => {
     if (simulateTxData) {
       resetSimulateTx();
     }
   };
+
+  console.log("simulateTxData: ", simulateTxData);
 
   return (
     <PageCard heading="Simulate Transaction">
@@ -149,25 +182,49 @@ export default function SimulateTransaction() {
           error={instrLeewayError}
         />
 
-        <div className="SignTx__CTA">
-          <Button
-            disabled={Boolean(
-              !network.rpcUrl || !xdr.blob || xdrError || instrLeewayError,
-            )}
-            isLoading={isSimulateTxPending}
-            size="md"
-            variant={"secondary"}
-            onClick={onSimulate}
-          >
-            Simulate transaction
-          </Button>
-        </div>
+        <Box gap="sm" direction="row" align="center">
+          <div className="SignTx__CTA">
+            <Button
+              disabled={Boolean(
+                !network.rpcUrl || !xdr.blob || xdrError || instrLeewayError,
+              )}
+              isLoading={isSimulateTxPending}
+              size="md"
+              variant={"secondary"}
+              onClick={onSimulate}
+            >
+              Simulate transaction
+            </Button>
+          </div>
 
+          {transaction.build.soroban.operation.operation_type ===
+            "invoke_contract_function" &&
+          transaction.build.soroban.operation.params.invoke_contract ? (
+            <div className="SignTx__CTA">
+              <Button
+                disabled={Boolean(
+                  !network.rpcUrl ||
+                    !xdr.blob ||
+                    xdrError ||
+                    instrLeewayError ||
+                    !simulateTxData ||
+                    simulateTxData?.result.error,
+                )}
+                isLoading={isSimulateTxPending}
+                size="md"
+                variant={"secondary"}
+                onClick={assembleTransaction}
+              >
+                Use Simulated Output
+              </Button>
+            </div>
+          ) : null}
+        </Box>
         <>
           {simulateTxData ? (
             <div
               data-testid="simulate-tx-response"
-              className={`PageBody__content PageBody__scrollable ${simulateTxData?.result?.error ? "PageBody__content--error" : ""}`}
+              className={`PageBody__content PageBody__scrollable ${simulateTxData?.result.error ? "PageBody__content--error" : ""}`}
             >
               <PrettyJson json={simulateTxData} />
             </div>

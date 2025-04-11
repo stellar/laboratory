@@ -6,6 +6,7 @@ import { stringify } from "lossless-json";
 import { usePrevious } from "@/hooks/usePrevious";
 import { TransactionBuildParams } from "@/store/createStore";
 import { useStore } from "@/store/useStore";
+import { useRouter } from "next/navigation";
 
 import { DereferencedSchemaType } from "@/constants/jsonSchema";
 
@@ -21,6 +22,12 @@ import { ErrorText } from "@/components/ErrorText";
 import { AnyObject, SorobanInvokeValue, TxnOperation } from "@/types/types";
 
 import { JsonSchemaFormRenderer } from "./JsonSchemaFormRenderer";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
+
+import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
+
+import { Routes } from "@/constants/routes";
+import { delayedAction } from "@/helpers/delayedAction";
 
 export const JsonSchemaForm = ({
   name,
@@ -33,7 +40,8 @@ export const JsonSchemaForm = ({
   onChange: (value: SorobanInvokeValue) => void;
   funcSchema: JSONSchema7;
 }) => {
-  const { network, transaction } = useStore();
+  const { network, transaction, xdr } = useStore();
+  const { updateXdrBlob, updateXdrType } = xdr;
   const { updateSorobanBuildXdr } = transaction;
   const { isValid } = transaction.build;
   const { params: txnParams, soroban } = transaction.build;
@@ -51,6 +59,8 @@ export const JsonSchemaForm = ({
     funcSchema,
     name,
   );
+
+  const router = useRouter();
 
   const requiredFields = dereferencedSchema.required;
   const [formError, setFormError] = useState<AnyObject>({});
@@ -92,7 +102,40 @@ export const JsonSchemaForm = ({
     }
   }, [isPrepareTxError]);
 
-  const handlePrepareTx = () => {
+  // const onViewSubmitTxn = () => {
+  //   if (sign.signedTx) {
+  //     xdr.updateXdrBlob(sign.signedTx);
+  //     xdr.updateXdrType(XDR_TYPE_TRANSACTION_ENVELOPE);
+
+  //     delayedAction({
+  //       action: () => {
+  //         trackEvent(TrackingEvent.TRANSACTION_SIGN_SUBMIT_IN_TX_SUBMITTER);
+  //         router.push(Routes.SUBMIT_TRANSACTION);
+  //       },
+  //       delay: 200,
+  //     });
+  //   }
+  // };
+
+  // const onSimulateTxn = () => {
+  //   if (sign.signedTx) {
+  //     xdr.updateXdrBlob(sign.signedTx);
+  //     xdr.updateXdrType(XDR_TYPE_TRANSACTION_ENVELOPE);
+
+  //   transaction.updateSimulateTriggerOnLaunch(true);
+
+  //   // Adding delay to make sure the store will update
+  //   delayedAction({
+  //     action: () => {
+  //       trackEvent(TrackingEvent.TRANSACTION_SIGN_SIMULATE);
+  //       router.push(Routes.SIMULATE_TRANSACTION);
+  //     },
+  //     delay: 200,
+  //   });
+  // }
+  // };
+
+  const handleSimulateTx = () => {
     setSubmitTxError("");
     resetPrepareTx();
 
@@ -103,24 +146,33 @@ export const JsonSchemaForm = ({
       network.passphrase,
     );
 
+    console.log("xdr", xdr);
+
+    // updateXdrBlob(sign.signedTx);
+    // updateXdrType(XDR_TYPE_TRANSACTION_ENVELOPE);
+
     if (xdr) {
-      prepareTx({
-        rpcUrl: network.rpcUrl,
-        transactionXdr: xdr,
-        networkPassphrase: network.passphrase,
-        headers: getNetworkHeaders(network, "rpc"),
+      updateXdrBlob(xdr);
+      updateXdrType(XDR_TYPE_TRANSACTION_ENVELOPE);
+
+      transaction.updateSimulateTriggerOnLaunch(true);
+
+      // Adding delay to make sure the store will update
+      delayedAction({
+        action: () => {
+          trackEvent(TrackingEvent.TRANSACTION_SIGN_SIMULATE);
+          router.push(Routes.SIMULATE_TRANSACTION);
+        },
+        delay: 200,
       });
     }
 
-    if (error) {
-      if (error.includes("Missing field")) {
-        setSubmitTxError(
-          `Missing required field(s): ${requiredFields.join(", ")}`,
-        );
-      } else {
-        setSubmitTxError(error);
-      }
-    }
+    // prepareTx({
+    //   rpcUrl: network.rpcUrl,
+    //   transactionXdr: xdr,
+    //   networkPassphrase: network.passphrase,
+    //   headers: getNetworkHeaders(network, "rpc"),
+    // });
   };
 
   const render = (schema: DereferencedSchemaType): React.ReactElement => {
@@ -147,10 +199,10 @@ export const JsonSchemaForm = ({
             disabled={!isValid.params || hasFormError}
             isLoading={isPrepareTxPending}
             size="md"
-            onClick={handlePrepareTx}
+            onClick={handleSimulateTx}
             type="submit"
           >
-            Prepare Transaction
+            Simulate Transaction
           </Button>
         </Box>
 
