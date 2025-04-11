@@ -187,7 +187,6 @@ const getTxnToSimulate = (
 ): { xdr: string; error: string } => {
   try {
     const argsToScVals = getScValsFromArgs(value.args);
-
     const builtXdr = buildTxWithSorobanData({
       params: txnParams,
       sorobanOp: {
@@ -227,6 +226,27 @@ const getScValsFromArgs = (args: SorobanInvokeValue["args"]): xdr.ScVal[] => {
           typeHints[key] = ["symbol", v[key].type.toLowerCase()];
         }
 
+        // for an array of objects, `nativeToScVal` expects the following type for val:
+        //   {
+        //     "address": "CDVQVKOY2YSXS2IC7KN6MNASSHPAO7UN2UR2ON4OI2SKMFJNVAMDX6DP",
+        //     "amount": "2",
+        //     "request_type": "2"
+        // }
+        // for `type`, it expects the following type:
+        //   {
+        //     "address": [
+        //         "symbol", // matching the key type
+        //         "address" // matching the value type
+        //     ],
+        //     "amount": [
+        //         "symbol", // matching the key type
+        //         "i128" // matching the value type
+        //     ],
+        //     "request_type": [
+        //         "symbol", // matching the key type
+        //         "u32" // matching the value type
+        //     ]
+        // }
         return nativeToScVal(convertedValue, { type: typeHints });
       });
 
