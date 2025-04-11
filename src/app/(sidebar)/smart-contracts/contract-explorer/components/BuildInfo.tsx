@@ -16,12 +16,24 @@ export const BuildInfo = ({
   if (!wasmData) {
     return (
       <Alert variant="warning" placement="inline">
-        We couldn’t get the validation info for this smart contract. You can
-        learn more about the Contract Source Validation SEP{" "}
-        <Link href="https://github.com/stellar/stellar-protocol/discussions/1573">
-          here
-        </Link>
-        .
+        <div>
+          This contract has no contract build verification configured, therefore
+          its Build Info is not available.
+        </div>
+
+        <div>
+          Verifying your contract’s build helps others understand and trust what
+          it does, and improves transparency across the Stellar ecosystem. To
+          verify, follow the{" "}
+          <Link href="https://stellar.expert/explorer/public/contract/validation">
+            setup instructions on Stellar Expert
+          </Link>
+          . You can also learn more about{" "}
+          <Link href="https://github.com/stellar/stellar-protocol/discussions/1573">
+            Contract Source Validation SEP
+          </Link>
+          .
+        </div>
       </Alert>
     );
   }
