@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BASE_FEE, contract } from "@stellar/stellar-sdk";
+import { BASE_FEE, nativeToScVal, xdr } from "@stellar/stellar-sdk";
 import { Button, Card, Text } from "@stellar/design-system";
 import type { JSONSchema7 } from "json-schema";
 import { stringify } from "lossless-json";
@@ -10,7 +10,6 @@ import { useStore } from "@/store/useStore";
 import { DereferencedSchemaType } from "@/constants/jsonSchema";
 
 import { dereferenceSchema } from "@/helpers/dereferenceSchema";
-import { getScValsFromSpec } from "@/helpers/getScValsFromSpec";
 import { buildTxWithSorobanData } from "@/helpers/sorobanUtils";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 
@@ -27,13 +26,11 @@ export const JsonSchemaForm = ({
   name,
   value,
   onChange,
-  spec,
   funcSchema,
 }: {
   name: string;
   value: SorobanInvokeValue;
   onChange: (value: SorobanInvokeValue) => void;
-  spec: contract.Spec;
   funcSchema: JSONSchema7;
 }) => {
   const { network, transaction } = useStore();
@@ -101,7 +98,6 @@ export const JsonSchemaForm = ({
 
     const { xdr, error } = getTxnToSimulate(
       value,
-      spec,
       txnParams,
       sorobanOperation,
       network.passphrase,
@@ -185,13 +181,12 @@ const renderTitle = (name: string, description: string) => (
 
 const getTxnToSimulate = (
   value: SorobanInvokeValue,
-  spec: contract.Spec,
   txnParams: TransactionBuildParams,
   operation: TxnOperation,
   networkPassphrase: string,
 ): { xdr: string; error: string } => {
   try {
-    const scVals = getScValsFromSpec(value.function_name, spec, value);
+    const argsToScVals = getScValsFromArgs(value.args);
 
     const builtXdr = buildTxWithSorobanData({
       params: txnParams,
@@ -201,7 +196,7 @@ const getTxnToSimulate = (
           ...operation.params,
           contract_id: value.contract_id,
           function_name: value.function_name,
-          args: scVals,
+          args: argsToScVals,
           resource_fee: BASE_FEE, // bogus resource fee for simulation purpose
         },
       },
@@ -212,4 +207,36 @@ const getTxnToSimulate = (
   } catch (e: any) {
     return { xdr: "", error: e.message };
   }
+};
+
+const getScValsFromArgs = (args: SorobanInvokeValue["args"]): xdr.ScVal[] => {
+  const scVals: xdr.ScVal[] = [];
+
+  for (const argKey in args) {
+    const argValue = args[argKey];
+    // Note: argValue is either an object or array of objects
+    if (Array.isArray(argValue)) {
+      const arrayScVals = argValue.map((v) => {
+        const convertedValue: Record<string, any> = {};
+        const typeHints: Record<string, [string, string]> = {};
+
+        for (const key in v) {
+          convertedValue[key] = v[key].value;
+          // toLowerCase() is needed because the type we save from the label is in uppercase
+          // but nativeToScval expects the type to be in lowercase
+          typeHints[key] = ["symbol", v[key].type.toLowerCase()];
+        }
+
+        return nativeToScVal(convertedValue, { type: typeHints });
+      });
+
+      scVals.push(...arrayScVals);
+    } else {
+      scVals.push(
+        nativeToScVal(argValue.value, { type: argValue.type.toLowerCase() }),
+      );
+    }
+  }
+
+  return scVals;
 };
