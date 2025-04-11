@@ -151,6 +151,7 @@ export default function ContractExplorer() {
         <SwitchNetworkButtons
           includedNetworks={["testnet", "mainnet"]}
           buttonSize="md"
+          page="contract explorer"
         />
       </Box>
     );

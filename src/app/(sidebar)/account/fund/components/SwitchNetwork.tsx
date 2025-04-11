@@ -25,6 +25,7 @@ export const SwitchNetwork = () => {
           <SwitchNetworkButtons
             includedNetworks={["futurenet", "testnet"]}
             buttonSize="md"
+            page="fund account"
           />
         </div>
       </div>

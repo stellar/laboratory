@@ -3,6 +3,8 @@ import { Network } from "@/types/types";
 
 export const LOCAL_STORAGE_SETTINGS = "stellar_lab_settings";
 export const LOCAL_STORAGE_SAVED_NETWORK = "stellar_lab_network";
+export const LOCAL_STORAGE_SAVED_NETWORKS_PREVIOUS =
+  "stellar_lab_networks_previous";
 export const LOCAL_STORAGE_SAVED_ENDPOINTS_HORIZON =
   "stellar_lab_saved_horizon_endpoints";
 export const LOCAL_STORAGE_SAVED_RPC_METHODS =

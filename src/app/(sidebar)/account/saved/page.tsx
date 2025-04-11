@@ -135,6 +135,7 @@ export default function SavedKeypairs() {
           <SwitchNetworkButtons
             includedNetworks={["futurenet", "testnet"]}
             buttonSize="md"
+            page="saved accounts"
           />
         </Box>
       </Box>
