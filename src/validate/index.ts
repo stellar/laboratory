@@ -23,6 +23,15 @@ import { getSecretKeyError } from "./methods/getSecretKeyError";
 import { getTimeBoundsError } from "./methods/getTimeBoundsError";
 import { getTransactionHashError } from "./methods/getTransactionHashError";
 import { getXdrError } from "./methods/getXdrError";
+import { getU32Error } from "./methods/getU32Error";
+import { getU64Error } from "./methods/getU64Error";
+import { getU128Error } from "./methods/getU128Error";
+import { getU256Error } from "./methods/getU256Error";
+import { getI32Error } from "./methods/getI32Error";
+import { getI64Error } from "./methods/getI64Error";
+import { getI128Error } from "./methods/getI128Error";
+import { getI256Error } from "./methods/getI256Error";
+import { getDataUrlError } from "./methods/getDataUrlError";
 
 export const validate = {
   getAccountThresholdError,
@@ -50,4 +59,13 @@ export const validate = {
   getTimeBoundsError,
   getTransactionHashError,
   getXdrError,
+  getU32Error,
+  getI32Error,
+  getU64Error,
+  getI64Error,
+  getU128Error,
+  getI128Error,
+  getU256Error,
+  getI256Error,
+  getDataUrlError,
 };

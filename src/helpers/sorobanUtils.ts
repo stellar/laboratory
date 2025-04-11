@@ -7,19 +7,24 @@ import {
   Account,
   Memo,
   SorobanDataBuilder,
+  Transaction,
 } from "@stellar/stellar-sdk";
 
 import { TransactionBuildParams } from "@/store/createStore";
 import { SorobanOpType, TxnOperation } from "@/types/types";
 
-export const isSorobanOperationType = (operationType: string) => {
-  // @TODO: add invoke_host_function
-  return ["extend_footprint_ttl", "restore_footprint"].includes(operationType);
-};
+export const isSorobanOperationType = (operationType: string) =>
+  [
+    "extend_footprint_ttl",
+    "restore_footprint",
+    "invoke_contract_function",
+  ].includes(operationType);
 
 // https://developers.stellar.org/docs/learn/glossary#ledgerkey
 // https://developers.stellar.org/docs/build/guides/archival/restore-data-js
 // Setup contract data xdr that will be used to build Soroban Transaction Data
+// Used for Soroban Operation "restore_footprint" and "extend_footprint_ttl"
+// "invoke_contract_function" uses the returned soroban transaction data from simulateTransaction
 export const getContractDataXDR = ({
   contractAddress,
   dataKey,
@@ -82,17 +87,17 @@ export const getSorobanTxData = ({
   }
 };
 
-export const buildSorobanTx = ({
+export const buildTxWithSorobanData = ({
   sorobanData,
   params,
   sorobanOp,
   networkPassphrase,
 }: {
-  sorobanData: xdr.SorobanTransactionData;
+  sorobanData?: xdr.SorobanTransactionData | string;
   params: TransactionBuildParams;
   sorobanOp: TxnOperation;
   networkPassphrase: string;
-}) => {
+}): Transaction => {
   // decrement seq number by 1 because TransactionBuilder.build()
   // will increment the seq number by 1 automatically
   const txSeq = (BigInt(params.seq_num) - BigInt(1)).toString();
@@ -135,6 +140,14 @@ export const buildSorobanTx = ({
         });
       case "restore_footprint":
         return Operation.restoreFootprint({});
+      case "invoke_contract_function":
+        return Operation.invokeContractFunction({
+          contract: sorobanOp.params.contract_id,
+          function: sorobanOp.params.function_name,
+          args: sorobanOp.params.args,
+          auth: sorobanOp.params.auth,
+          source: sorobanOp.source_account,
+        });
       default:
         throw new Error(`Unsupported Soroban operation type: ${operationType}`);
     }
@@ -152,12 +165,15 @@ export const buildSorobanTx = ({
 
   return transaction
     .setNetworkPassphrase(networkPassphrase)
-    .setSorobanData(sorobanData)
+    .setSorobanData(sorobanData || "")
     .addOperation(getSorobanOp(sorobanOp.operation_type))
     .build();
 };
 
-// Preparing Soroban Transaction Data
+// supports building xdr.SorobanTransactionData that
+// will be included in TransactionBuilder.setSorobanData()
+// used in "extend_footprint_ttl" and "restore_footprint" operation
+// https://stellar.github.io/js-stellar-sdk/SorobanDataBuilder.html
 const buildSorobanData = ({
   readOnlyXdrLedgerKey = [],
   readWriteXdrLedgerKey = [],
@@ -169,14 +185,6 @@ const buildSorobanData = ({
   readWriteXdrLedgerKey?: xdr.LedgerKey[];
   resourceFee: string;
 }) => {
-  // one of the two must be provided
-  if (!(readOnlyXdrLedgerKey && readWriteXdrLedgerKey)) {
-    return;
-  }
-
-  // https://stellar.github.io/js-stellar-sdk/SorobanDataBuilder.html
-  // SorobanDataBuilder is a builder for xdr.SorobanTransactionData structures
-  // that will be used in tx builder
   return new SorobanDataBuilder()
     .setReadOnly(readOnlyXdrLedgerKey)
     .setReadWrite(readWriteXdrLedgerKey)
