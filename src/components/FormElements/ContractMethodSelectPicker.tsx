@@ -11,8 +11,8 @@ import { SorobanInvokeValue } from "@/types/types";
 // @todo for testing
 // comment it out before committing
 // remove it before merging into main
-import Form from "@rjsf/core";
-import validator from "@rjsf/validator-ajv8";
+// import Form from "@rjsf/core";
+// import validator from "@rjsf/validator-ajv8";
 
 export const ContractMethodSelectPicker = ({
   value,
@@ -67,7 +67,6 @@ export const ContractMethodSelectPicker = ({
               name={selectedMethod}
               value={value}
               onChange={onChange}
-              spec={spec}
               funcSchema={spec.jsonSchema(selectedMethod)}
             />
             {/* 
@@ -75,10 +74,10 @@ export const ContractMethodSelectPicker = ({
             // comment it out before committing
             // remove it before merging into main
             */}
-            <Form
+            {/* <Form
               schema={spec.jsonSchema(selectedMethod)}
               validator={validator}
-            />
+            /> */}
           </>
         ) : null}
       </ExpandBox>
