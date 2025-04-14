@@ -47,7 +47,7 @@ export const Operations = () => {
     updateBuildSingleOperation,
     // Soroban
     updateSorobanBuildOperation,
-    // Either Classic or (@todo) Soroban
+    // Either Classic or Soroban
     updateBuildIsValid,
     setBuildOperationsError,
   } = transaction;
@@ -782,14 +782,17 @@ export const Operations = () => {
             const defaultParams =
               TRANSACTION_OPERATIONS[e.target.value]?.defaultParams || {};
             const defaultParamKeys = Object.keys(defaultParams);
+            const newOpType = e.target.value;
 
-            const isSorobanOpType = isSorobanOperationType(e.target.value);
-
-            if (isSorobanOpType) {
-              // if it's soroban, reset the classic operation
+            if (isSorobanOperationType(newOpType)) {
+              // reset both the soroban and classic operation
+              // we reset soroban operatiion because its invoke host function
+              // will have a nested operation
+              resetSorobanOperation();
               updateOptionParamAndError({ type: "reset" });
+
               updateSorobanBuildOperation({
-                operation_type: e.target.value,
+                operation_type: newOpType,
                 params: defaultParams,
                 source_account: "",
               });
@@ -797,7 +800,7 @@ export const Operations = () => {
               // if it's classic, reset the soroban operation
               resetSorobanOperation();
               updateBuildSingleOperation(index, {
-                operation_type: e.target.value,
+                operation_type: newOpType,
                 params: defaultParams,
                 source_account: "",
               });
@@ -806,10 +809,9 @@ export const Operations = () => {
             let initParamError: OperationError = EMPTY_OPERATION_ERROR;
 
             // Get operation required fields if there is operation type
-            if (e.target.value) {
+            if (newOpType) {
               const missingFields = [
-                ...(TRANSACTION_OPERATIONS[e.target.value]?.requiredParams ||
-                  []),
+                ...(TRANSACTION_OPERATIONS[newOpType]?.requiredParams || []),
               ].reduce((missingRes: string[], reqItem) => {
                 if (!defaultParamKeys.includes(reqItem)) {
                   return [...missingRes, reqItem];
@@ -821,17 +823,17 @@ export const Operations = () => {
               initParamError = {
                 ...initParamError,
                 missingFields,
-                operationType: e.target.value,
+                operationType: newOpType,
               };
 
               initParamError = operationCustomMessage({
-                opType: e.target.value,
+                opType: newOpType,
                 opIndex: index,
                 opError: initParamError,
               });
             }
 
-            if (isSorobanOpType) {
+            if (isSorobanOperationType(newOpType)) {
               // for soroban, on operation dropdown change, we don't need to update the existing array
               // since there is only one operation
               setOperationsError([initParamError]);
@@ -842,8 +844,10 @@ export const Operations = () => {
             }
 
             trackEvent(TrackingEvent.TRANSACTION_BUILD_OPERATIONS_OP_TYPE, {
-              txType: isSorobanOpType ? "smart contract" : "classic",
-              operationType: e.target.value,
+              txType: isSorobanOperationType(newOpType)
+                ? "smart contract"
+                : "classic",
+              operationType: newOpType,
             });
           }}
           note={
@@ -857,10 +861,13 @@ export const Operations = () => {
         >
           <option value="">Select operation type</option>
           <option value="extend_footprint_ttl">
-            Extend Footprint TTL (Smart Contract)
+            [Smart Contract] Extend Footprint TTL
           </option>
           <option value="restore_footprint">
-            Restore Footprint (Smart Contract)
+            [Smart Contract] Restore Footprint
+          </option>
+          <option value="invoke_contract_function">
+            [Smart Contract] Invoke Contract Function **Experimental**
           </option>
           <option value="create_account">Create Account</option>
           <option value="payment">Payment</option>

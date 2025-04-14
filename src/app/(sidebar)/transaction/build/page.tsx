@@ -87,7 +87,20 @@ export default function BuildTransaction() {
 
       <>{renderError()}</>
 
-      {IS_SOROBAN_TX ? <SorobanTransactionXdr /> : <ClassicTransactionXdr />}
+      {IS_SOROBAN_TX ? (
+        renderSorobanTransactionXdr(soroban.operation.operation_type)
+      ) : (
+        <ClassicTransactionXdr />
+      )}
     </Box>
   );
 }
+
+const renderSorobanTransactionXdr = (sorobanOperation: string) => {
+  // "invoke_contract_function" operation builds its tx from the component level
+  if (sorobanOperation === "invoke_contract_function") {
+    return <SorobanTransactionXdr hasPreBuiltXdr={true} />;
+  }
+
+  return <SorobanTransactionXdr />;
+};
