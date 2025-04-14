@@ -1,5 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { STELLAR_EXPERT_API } from "@/constants/settings";
+import {
+  CONTRACT_STORAGE_MAX_ENTRIES,
+  STELLAR_EXPERT_API,
+} from "@/constants/settings";
 import { getStellarExpertNetwork } from "@/helpers/getStellarExpertNetwork";
 import { ContractStorageResponseItem, NetworkType } from "@/types/types";
 
@@ -36,7 +39,7 @@ export const useSEContractStorage = ({
       const fetchData = async (cursor?: string) => {
         const searchParams = new URLSearchParams();
 
-        searchParams.append("order", "asc");
+        searchParams.append("order", "desc");
         searchParams.append("limit", "200");
 
         if (cursor) {
@@ -60,7 +63,11 @@ export const useSEContractStorage = ({
       };
 
       try {
-        while (allRecords.length < totalEntriesCount) {
+        // Fetch the last entries limited by CONTRACT_STORAGE_MAX_ENTRIES
+        while (
+          allRecords.length <
+          Math.min(totalEntriesCount, CONTRACT_STORAGE_MAX_ENTRIES)
+        ) {
           const lastRecord = allRecords.slice(-1)[0];
           await fetchData(lastRecord?.paging_token);
         }

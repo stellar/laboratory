@@ -12,6 +12,7 @@ import { capitalizeString } from "@/helpers/capitalizeString";
 import { decodeScVal } from "@/helpers/decodeScVal";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
+import { CONTRACT_STORAGE_MAX_ENTRIES } from "@/constants/settings";
 
 import {
   ContractStorageProcessedItem,
@@ -117,60 +118,74 @@ export const ContractStorage = ({
   const keyValueFilters = getKeyValueFilters();
 
   return (
-    <DataTable
-      tableId="contract-storage"
-      tableData={parsedData}
-      tableHeaders={[
-        {
-          id: "key",
-          value: "Key",
-          isSortable: false,
-          filter: keyValueFilters.key,
-        },
-        {
-          id: "value",
-          value: "Value",
-          isSortable: false,
-          filter: keyValueFilters.value,
-        },
-        { id: "durability", value: "Durability", isSortable: true },
-        { id: "ttl", value: "TTL", isSortable: true },
-        { id: "updated", value: "Updated", isSortable: true },
-      ]}
-      formatDataRow={(
-        vh: ContractStorageProcessedItem<ContractStorageResponseItem>,
-      ) => [
-        {
-          value: (
-            <div className="CodeBox">
-              <ScValPrettyJson xdrString={vh.key} isReady={isXdrInit} />
-            </div>
-          ),
-        },
-        {
-          value: (
-            <div className="CodeBox">
-              <ScValPrettyJson xdrString={vh.value} isReady={isXdrInit} />
-            </div>
-          ),
-        },
-        { value: capitalizeString(vh.durability) },
-        { value: formatNumber(vh.ttl) },
-        { value: formatEpochToDate(vh.updated, "short") || "-" },
-      ]}
-      cssGridTemplateColumns="minmax(210px, 2fr) minmax(210px, 2fr) minmax(130px, 1fr) minmax(130px, 1fr) minmax(210px, 1fr)"
-      customFooterEl={
-        <Box gap="sm" direction="row" align="center">
-          {["sym", "i128", "u32", "bool"].map((t) => (
-            <div
-              className="DataTypeLegend"
-              data-type={t}
-              key={`legend-type-${t}`}
-            ></div>
-          ))}
+    <Box gap="sm">
+      <DataTable
+        tableId="contract-storage"
+        tableData={parsedData}
+        tableHeaders={[
+          {
+            id: "key",
+            value: "Key",
+            isSortable: false,
+            filter: keyValueFilters.key,
+          },
+          {
+            id: "value",
+            value: "Value",
+            isSortable: false,
+            filter: keyValueFilters.value,
+          },
+          { id: "durability", value: "Durability", isSortable: true },
+          { id: "ttl", value: "TTL", isSortable: true },
+          { id: "updated", value: "Updated", isSortable: true },
+        ]}
+        formatDataRow={(
+          vh: ContractStorageProcessedItem<ContractStorageResponseItem>,
+        ) => [
+          {
+            value: (
+              <div className="CodeBox">
+                <ScValPrettyJson xdrString={vh.key} isReady={isXdrInit} />
+              </div>
+            ),
+          },
+          {
+            value: (
+              <div className="CodeBox">
+                <ScValPrettyJson xdrString={vh.value} isReady={isXdrInit} />
+              </div>
+            ),
+          },
+          { value: capitalizeString(vh.durability) },
+          { value: formatNumber(vh.ttl) },
+          { value: formatEpochToDate(vh.updated, "short") || "-" },
+        ]}
+        cssGridTemplateColumns="minmax(210px, 2fr) minmax(210px, 2fr) minmax(130px, 1fr) minmax(130px, 1fr) minmax(210px, 1fr)"
+        customFooterEl={
+          <Box gap="sm" direction="row" align="center">
+            {["sym", "i128", "u32", "bool"].map((t) => (
+              <div
+                className="DataTypeLegend"
+                data-type={t}
+                key={`legend-type-${t}`}
+              ></div>
+            ))}
+          </Box>
+        }
+        csvFileName={contractId}
+      />
+
+      {/* Max entries message */}
+      {totalEntriesCount && totalEntriesCount > parsedData.length ? (
+        <Box
+          gap="md"
+          addlClassName="FieldNote FieldNote--note FieldNote--md"
+          direction="row"
+          justify="end"
+        >
+          {`Showing the last ${CONTRACT_STORAGE_MAX_ENTRIES} entries`}
         </Box>
-      }
-      csvFileName={contractId}
-    />
+      ) : null}
+    </Box>
   );
 };
