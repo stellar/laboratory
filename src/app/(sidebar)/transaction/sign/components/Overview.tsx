@@ -57,6 +57,7 @@ export const Overview = () => {
     resetSign,
     updateFeeBumpParams,
   } = transaction;
+  const { soroban } = transaction.build;
 
   const router = useRouter();
   const successResponseEl = useRef<HTMLDivElement | null>(null);
@@ -145,6 +146,13 @@ export const Overview = () => {
     updateSignActiveView,
     updateSignImportTx,
   ]);
+
+  useEffect(() => {
+    // Always reset the signed tx since user's signature(s) always get reset as well
+    updateSignedTx("");
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (exSuccessMsg || exErrorMsg) {
@@ -948,10 +956,15 @@ export const Overview = () => {
                   >
                     Submit transaction
                   </Button>
-
-                  <Button size="md" variant="tertiary" onClick={onSimulateTxn}>
-                    Simulate transaction
-                  </Button>
+                  {soroban.xdr ? (
+                    <Button
+                      size="md"
+                      variant="tertiary"
+                      onClick={onSimulateTxn}
+                    >
+                      Simulate transaction
+                    </Button>
+                  ) : null}
                 </Box>
               }
               footerRightEl={

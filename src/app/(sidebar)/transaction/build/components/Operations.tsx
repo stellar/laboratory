@@ -47,6 +47,7 @@ export const Operations = () => {
     updateBuildSingleOperation,
     // Soroban
     updateSorobanBuildOperation,
+    updateSorobanBuildXdr,
     // Either Classic or Soroban
     updateBuildIsValid,
     setBuildOperationsError,
@@ -123,6 +124,7 @@ export const Operations = () => {
   const resetSorobanOperation = () => {
     updateSorobanBuildOperation(INITIAL_OPERATION);
     setOperationsError([EMPTY_OPERATION_ERROR]);
+    updateSorobanBuildXdr("");
   };
 
   // Preserve values and validate inputs when components mounts
@@ -786,11 +788,12 @@ export const Operations = () => {
 
             if (isSorobanOperationType(newOpType)) {
               // reset both the soroban and classic operation
-              // we reset soroban operatiion because its invoke host function
+              // we reset soroban operation because its invoke host function
               // will have a nested operation
+              updateBuildOperations([INITIAL_OPERATION]);
+
               resetSorobanOperation();
               updateOptionParamAndError({ type: "reset" });
-
               updateSorobanBuildOperation({
                 operation_type: newOpType,
                 params: defaultParams,
