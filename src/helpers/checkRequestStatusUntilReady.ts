@@ -13,8 +13,11 @@ export const checkRequestStatusUntilReady = async ({
   const interval = 1000 * 10;
   // Try for max 10 minutes
   const MAX_ATTEMPTS = 6 * 10;
+  // Max retries on error
+  const MAX_ERROR_ATTEMPTS = 3;
 
   let attempts = 0;
+  let errorAttempts = 0;
 
   return new Promise((resolve, reject) => {
     const checkStatus = async () => {
@@ -32,8 +35,13 @@ export const checkRequestStatusUntilReady = async ({
           reject(false);
         }
       } catch (e) {
-        clearInterval(intervalId);
-        reject(e);
+        // Retry on error
+        if (errorAttempts < MAX_ERROR_ATTEMPTS) {
+          errorAttempts++;
+        } else {
+          clearInterval(intervalId);
+          reject(e);
+        }
       }
     };
 

@@ -18,7 +18,7 @@ export const useHorizonHealthCheckUntilReady = (
 
       try {
         return await checkRequestStatusUntilReady({
-          url: `${horizonUrl}/health`,
+          url: buildHorizonHealthUrl(horizonUrl),
           options: {
             headers,
           },
@@ -34,4 +34,12 @@ export const useHorizonHealthCheckUntilReady = (
   });
 
   return query;
+};
+
+const buildHorizonHealthUrl = (horizonUrl: string) => {
+  const url = new URL(horizonUrl);
+  const pathnamePieces = url.pathname.split("/").filter((i) => i);
+  const pathname = [...pathnamePieces, "health"].join("/");
+
+  return `${url.origin}/${pathname}`;
 };
