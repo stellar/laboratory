@@ -9,7 +9,107 @@ test.describe("Sign Transaction Page", () => {
     await expect(page.locator("h1")).toHaveText("Sign Transaction");
   });
 
-  test("Overview with a VALID transaction with ONE operation envelope XDR", async ({
+  test("Overview with a VALID Soroban Transaction", async ({ page }) => {
+    // sections
+    const overview = page.getByTestId("sign-tx-overview");
+    const signaturesView = page.getByTestId("sign-tx-sigs");
+    const secretKeysView = page.getByTestId("sign-tx-secretkeys");
+    const validationView = page.getByTestId("sign-tx-validation-card");
+    const signedXdr = page.getByTestId("validation-card-response");
+
+    // Import Screen
+    const importBtn = page.getByText("Import transaction");
+    const validMsg = page.getByText("Valid Transaction Envelope XDR");
+
+    const xdrInput = page.getByLabel(
+      "Import a transaction envelope in XDR format",
+    );
+    await xdrInput.fill(MOCK_SOROBAN_XDR);
+
+    await expect(validMsg).toBeVisible();
+
+    await importBtn.click();
+
+    // Overview and Signatures Screen
+    await expect(overview).toBeVisible();
+    await expect(signaturesView).toBeVisible();
+
+    /*** TX Overview Details ***/
+    // Network passphrase
+    const overviewSigning = page.getByLabel("Signing for");
+    await expect(overviewSigning).toHaveValue(
+      "Test SDF Network ; September 2015",
+    );
+
+    // TX XDR
+    const overviewTxXDR = page.getByLabel("Transaction Envelope XDR");
+    await expect(overviewTxXDR).toHaveValue(MOCK_SOROBAN_XDR);
+
+    // TX HASH
+    const overviewTxHash = page.getByLabel("Transaction Hash");
+    await expect(overviewTxHash).toHaveValue(
+      "ab12155abb53a5f8177e47683a870976621fcac62cc3441d997cc0aafaac99ad",
+    );
+
+    // Source Account
+    const overviewSource = page.getByLabel("Source account");
+    await expect(overviewSource).toHaveValue(
+      "GBOTV3EYB4BO26MK3PFXNDWKI54XGXMLMK52F7TYLNOOQLL2GCJGBUQQ",
+    );
+
+    // Sequence number
+    const overviewSeq = page.getByLabel("Sequence number");
+    await expect(overviewSeq).toHaveValue("1112100176920589");
+
+    // Transaction Fee (stroops)
+    const overviewTxFee = page.getByLabel("Transaction Fee (stroops)");
+    await expect(overviewTxFee).toHaveValue("1920974");
+
+    // Number of operations
+    const overviewOpsNum = page.getByLabel("Number of operations");
+    await expect(overviewOpsNum).toHaveValue("1");
+
+    /*** Signatures: Secret Keys ***/
+    // Click 'Add additional' button to get an additional secret input field
+    const multiPickerContainer = page.getByTestId("multipicker-signer");
+    const multiPickerInput = multiPickerContainer.getByPlaceholder(
+      "Secret key (starting with S) or hash preimage (in hex)",
+    );
+    const secretKeysSignBtn = secretKeysView.getByText("Sign transaction");
+    const invalidSecretKeyErrorMsg = page.getByText(
+      "Invalid secret key. Please check your secret key and try again.",
+    );
+    const successSecretKeyMsg = secretKeysView.getByText(
+      "Successfully added 1 signature",
+    );
+
+    await expect(multiPickerInput).toHaveCount(1);
+
+    // Type in a string in an valid secret key format
+    await multiPickerInput
+      .nth(0)
+      .fill("SCX5AFVSAW7NUDWMYIO6E5BVLNHHU4YELSP2YI66YAQKPQXT2UXJWLJ6");
+    await expect(invalidSecretKeyErrorMsg).toBeHidden();
+    await expect(secretKeysSignBtn).toBeEnabled();
+
+    await secretKeysSignBtn.click();
+
+    await expect(successSecretKeyMsg).toBeVisible();
+
+    await expect(signedXdr).toContainText(
+      "AAAAAgAAAABdOuyYDwLteYrby3aOykd5c12LYrui/nhbXOgtejCSYAAdT84AA/NzAAAADQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAGAAAAAAAAAABlL5dkzzoyLMbmYEsrdy39HekdojWLuKyg7lC02jClEoAAAAEbWludAAAAAIAAAASAAAAAAAAAADRh2IaEYIegGIrvdxKRF5FM9AGClfaqPnxY7SmWduVggAAAAoAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAZS+XZM86MizG5mBLK3ct/R3pHaI1i7isoO5QtNowpRKAAAABG1pbnQAAAACAAAAEgAAAAAAAAAA0YdiGhGCHoBiK73cSkReRTPQBgpX2qj58WO0plnblYIAAAAKAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAABAAAAAAAAAAEAAAAHJ9d4ncm4GZ+WLWTVqsnHAEkBZcuJ/PoXwvzFTQBx5ygAAAACAAAABgAAAAGUvl2TPOjIsxuZgSyt3Lf0d6R2iNYu4rKDuULTaMKUSgAAABAAAAABAAAAAgAAAA8AAAAHQmFsYW5jZQAAAAASAAAAAAAAAADRh2IaEYIegGIrvdxKRF5FM9AGClfaqPnxY7SmWduVggAAAAEAAAAGAAAAAZS+XZM86MizG5mBLK3ct/R3pHaI1i7isoO5QtNowpRKAAAAFAAAAAEAL4fdAABS/AAAAfwAAAAAAB1PBgAAAAF6MJJgAAAAQA+i1MPVxoGS9hO+roDg4od2KV1TmaaeuTwswZ5FLW/24F+oRFFwUetyxQ8SKfY0SPSyCvJdVo1bbv/65NugBwI=",
+    );
+
+    const submitBtn = validationView.getByText("Submit transaction");
+    const simulateBtn = validationView.getByText("Simulate transaction");
+
+    await expect(submitBtn).toBeEnabled();
+    await expect(simulateBtn).toBeEnabled();
+
+    await submitBtn.click();
+  });
+
+  test("Overview with a VALID Classic Transaction with ONE operation envelope XDR", async ({
     page,
   }) => {
     // sections
@@ -108,14 +208,14 @@ test.describe("Sign Transaction Page", () => {
 
     await expect(successSecretKeyMsg).toBeVisible();
 
-    const firstSignedResponse = await signedXdr.getByText(
+    const firstSignedResponse = signedXdr.getByText(
       "AAAAAgAAAADJrq4b4AopDZibkeBWpDxuWKUcY4FUUNQdIEF3Nm9dkQAAAGQAAAIiAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAQAAAACXlGN76T6NQcaUJxbEkH3mi1HHWsHnLqMDdlLl9NlJgQAAAAAAAAAABfXhAAAAAAAAAAABjc9OtQAAAEBrpI8Q90yqEqjcLSubVj5nqtyt53bpVzi8Bzikps4xuom0xHQgrM6MsQS503ortwLcYOw0gyLPyst7J88ZDoQJ",
     );
 
     await expect(firstSignedResponse).toBeVisible();
 
     /*** Signatures: Hardware Wallet ***/
-    const bipPathInput = await hardwareView.getByPlaceholder(
+    const bipPathInput = hardwareView.getByPlaceholder(
       "BIP path in format: 44'/148'/0'",
     );
 
@@ -217,7 +317,7 @@ test.describe("Sign Transaction Page", () => {
     const simulateBtn = validationView.getByText("Simulate transaction");
 
     await expect(submitBtn).toBeEnabled();
-    await expect(simulateBtn).toBeEnabled();
+    await expect(simulateBtn).toBeDisabled();
 
     await submitBtn.click();
   });
@@ -325,3 +425,6 @@ const MOCK_TX_XDR =
 
 const MOCK_TX_XDR_3_OPERATIONS =
   "AAAAAgAAAABnAj9Nl60oxvi+eJSta3cdY/V2PkpDL69joQGRY+Mx3AAAASwAECzEAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAAAAAAAAAEAAAAABHLXc6lPRFz7BJua75KzEQi1Iw3Hj6bUXLrNdMRPZmYwAAAAAAAAAAAAAAAEctdzqU9EXPsEm5rvkrMRCLUjDcePptRcus10xE9mZjAAAAAAExLQAAAAAAAAAAEQAAAAAAAAAA";
+
+const MOCK_SOROBAN_XDR =
+  "AAAAAgAAAABdOuyYDwLteYrby3aOykd5c12LYrui/nhbXOgtejCSYAAdT84AA/NzAAAADQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAGAAAAAAAAAABlL5dkzzoyLMbmYEsrdy39HekdojWLuKyg7lC02jClEoAAAAEbWludAAAAAIAAAASAAAAAAAAAADRh2IaEYIegGIrvdxKRF5FM9AGClfaqPnxY7SmWduVggAAAAoAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAZS+XZM86MizG5mBLK3ct/R3pHaI1i7isoO5QtNowpRKAAAABG1pbnQAAAACAAAAEgAAAAAAAAAA0YdiGhGCHoBiK73cSkReRTPQBgpX2qj58WO0plnblYIAAAAKAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAABAAAAAAAAAAEAAAAHJ9d4ncm4GZ+WLWTVqsnHAEkBZcuJ/PoXwvzFTQBx5ygAAAACAAAABgAAAAGUvl2TPOjIsxuZgSyt3Lf0d6R2iNYu4rKDuULTaMKUSgAAABAAAAABAAAAAgAAAA8AAAAHQmFsYW5jZQAAAAASAAAAAAAAAADRh2IaEYIegGIrvdxKRF5FM9AGClfaqPnxY7SmWduVggAAAAEAAAAGAAAAAZS+XZM86MizG5mBLK3ct/R3pHaI1i7isoO5QtNowpRKAAAAFAAAAAEAL4fdAABS/AAAAfwAAAAAAB1PBgAAAAA=";

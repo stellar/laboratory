@@ -37,6 +37,7 @@ import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
 import { LabelHeading } from "@/components/LabelHeading";
 import { PageCard } from "@/components/layout/PageCard";
 import { MessageField } from "@/components/MessageField";
+import { isSorobanOperationType } from "@/helpers/sorobanUtils";
 
 const MIN_LENGTH_FOR_FULL_WIDTH_FIELD = 30;
 
@@ -57,7 +58,6 @@ export const Overview = () => {
     resetSign,
     updateFeeBumpParams,
   } = transaction;
-  const { soroban } = transaction.build;
 
   const router = useRouter();
   const successResponseEl = useRef<HTMLDivElement | null>(null);
@@ -110,6 +110,8 @@ export const Overview = () => {
   const [sigSuccessMsg, setSigSuccessMsg] = useState("");
   const [sigErrorMsg, setSigErrorMsg] = useState("");
 
+  const [isSorobanXdr, setIsSorobanXdr] = useState(false);
+
   const HAS_SECRET_KEYS = secretKeyInputs.some((input) => input !== "");
   const HAS_INVALID_SECRET_KEYS = secretKeyInputs.some((input) => {
     if (input.length) {
@@ -136,6 +138,11 @@ export const Overview = () => {
         network.passphrase,
       );
 
+      const isSorobanTx = isSorobanOperationType(
+        transaction?.operations?.[0]?.type,
+      );
+
+      setIsSorobanXdr(isSorobanTx);
       updateSignImportTx(transaction);
     } else {
       updateSignActiveView("import");
@@ -956,15 +963,15 @@ export const Overview = () => {
                   >
                     Submit transaction
                   </Button>
-                  {soroban.xdr ? (
-                    <Button
-                      size="md"
-                      variant="tertiary"
-                      onClick={onSimulateTxn}
-                    >
-                      Simulate transaction
-                    </Button>
-                  ) : null}
+
+                  <Button
+                    size="md"
+                    variant="tertiary"
+                    onClick={onSimulateTxn}
+                    disabled={!isSorobanXdr}
+                  >
+                    Simulate transaction
+                  </Button>
                 </Box>
               }
               footerRightEl={
