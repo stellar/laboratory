@@ -12,6 +12,7 @@ import { capitalizeString } from "@/helpers/capitalizeString";
 import { decodeScVal } from "@/helpers/decodeScVal";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
+import { CONTRACT_STORAGE_MAX_ENTRIES } from "@/constants/settings";
 
 import {
   ContractStorageProcessedItem,
@@ -182,7 +183,7 @@ export const ContractStorage = ({
           direction="row"
           justify="end"
         >
-          Showing the last 4000 entries
+          {`Showing the last ${CONTRACT_STORAGE_MAX_ENTRIES} entries`}
         </Box>
       ) : null}
     </Box>
