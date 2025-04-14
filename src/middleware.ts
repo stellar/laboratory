@@ -3,6 +3,10 @@ import { NextRequest, NextResponse } from "next/server";
 export function middleware(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
 
+  const isLocalhost = Boolean(
+    request.headers.get("host")?.match(/^localhost(:\d+)?$/),
+  );
+
   // script-src 'unsafe-eval' is needed for XDR JSON WebAssembly scripts
   // connect-src http://localhost:* to allow local network
   const cspHeader = `
@@ -18,11 +22,11 @@ export function middleware(request: NextRequest) {
     form-action 'self';
     frame-ancestors 'none';
     block-all-mixed-content;
-    upgrade-insecure-requests;
+    ${isLocalhost ? "" : "upgrade-insecure-requests;"}
 `;
   // Replace newline characters and spaces
   const contentSecurityPolicyHeaderValue = cspHeader
-    .replace(/\s{2,}/g, " ")
+    .replace(/\s+/g, " ")
     .trim();
 
   const requestHeaders = new Headers(request.headers);
