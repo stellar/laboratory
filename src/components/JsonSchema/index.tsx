@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BASE_FEE, nativeToScVal, xdr } from "@stellar/stellar-sdk";
 import { Button, Card, Text } from "@stellar/design-system";
 import type { JSONSchema7 } from "json-schema";
-import { stringify } from "lossless-json";
+import { parse, stringify } from "lossless-json";
 import { usePrevious } from "@/hooks/usePrevious";
 import { TransactionBuildParams } from "@/store/createStore";
 import { useStore } from "@/store/useStore";
@@ -156,6 +156,11 @@ export const JsonSchemaForm = ({
             onChange={onChange}
             formError={formError}
             setFormError={setFormError}
+            parsedSorobanOperation={
+              parse(
+                sorobanOperation.params.invoke_contract,
+              ) as SorobanInvokeValue
+            }
           />
         </Box>
 
