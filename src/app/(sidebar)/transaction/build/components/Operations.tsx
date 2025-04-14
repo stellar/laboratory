@@ -47,7 +47,7 @@ export const Operations = () => {
     updateBuildSingleOperation,
     // Soroban
     updateSorobanBuildOperation,
-    // Either Classic or (@todo) Soroban
+    // Either Classic or Soroban
     updateBuildIsValid,
     setBuildOperationsError,
   } = transaction;
@@ -861,13 +861,13 @@ export const Operations = () => {
         >
           <option value="">Select operation type</option>
           <option value="extend_footprint_ttl">
-            Extend Footprint TTL (Smart Contract)
+            [Smart Contract] Extend Footprint TTL
           </option>
           <option value="restore_footprint">
-            Restore Footprint (Smart Contract)
+            [Smart Contract] Restore Footprint
           </option>
           <option value="invoke_contract_function">
-            Invoke Contract Function (Smart Contract)
+            [Smart Contract] Invoke Contract Function **Experimental**
           </option>
           <option value="create_account">Create Account</option>
           <option value="payment">Payment</option>

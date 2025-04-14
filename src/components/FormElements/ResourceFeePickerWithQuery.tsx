@@ -5,7 +5,6 @@ import { useSimulateTx } from "@/query/useSimulateTx";
 import { BASE_FEE } from "@stellar/stellar-sdk";
 
 import { useStore } from "@/store/useStore";
-import { SorobanOpType } from "@/types/types";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import {
   buildTxWithSorobanData,
@@ -15,6 +14,8 @@ import {
 
 import { InputSideElement } from "@/components/InputSideElement";
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
+
+import { SorobanOpType } from "@/types/types";
 
 const isAllParamsExceptResourceFeeValid = (params: Record<string, any>) => {
   // Create a copy of params without resource_fee

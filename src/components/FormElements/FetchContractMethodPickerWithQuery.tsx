@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "@stellar/design-system";
 
-import { SorobanInvokeValue } from "@/types/types";
-
 import { Box } from "@/components/layout/Box";
 import { ContractMethodSelectPicker } from "@/components/FormElements/ContractMethodSelectPicker";
 import { TextPicker } from "@/components/FormElements/TextPicker";
@@ -11,6 +9,8 @@ import { MessageField } from "@/components/MessageField";
 import { useStore } from "@/store/useStore";
 import { validate } from "@/validate";
 import { useContractClientFromRpc } from "@/query/useContractClientFromRpc";
+
+import { SorobanInvokeValue } from "@/types/types";
 
 interface FetchContractMethodPickerWithQueryProps {
   id: string;
