@@ -21,7 +21,7 @@ test.describe("Smart Contracts: Contract Storage", () => {
 
     // Mock the Contract Storage API call
     await page.route(
-      `${STELLAR_EXPERT_API}/testnet/contract-data/${MOCK_CONTRACT_ID}?order=asc&limit=200`,
+      `${STELLAR_EXPERT_API}/testnet/contract-data/${MOCK_CONTRACT_ID}?order=desc&limit=200`,
       async (route) => {
         await route.fulfill({
           status: 200,
