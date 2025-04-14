@@ -26,6 +26,7 @@ export const useSEContractStorage = ({
       }
 
       const network = getStellarExpertNetwork(networkId);
+      const MAX_ENTRIES = 4000;
 
       if (!network) {
         return null;
@@ -36,7 +37,7 @@ export const useSEContractStorage = ({
       const fetchData = async (cursor?: string) => {
         const searchParams = new URLSearchParams();
 
-        searchParams.append("order", "asc");
+        searchParams.append("order", "desc");
         searchParams.append("limit", "200");
 
         if (cursor) {
@@ -60,7 +61,8 @@ export const useSEContractStorage = ({
       };
 
       try {
-        while (allRecords.length < totalEntriesCount) {
+        // Fetch max the last 4000 entries
+        while (allRecords.length < Math.min(totalEntriesCount, MAX_ENTRIES)) {
           const lastRecord = allRecords.slice(-1)[0];
           await fetchData(lastRecord?.paging_token);
         }
