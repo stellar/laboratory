@@ -68,10 +68,7 @@ export default function Explorer() {
       <PageCard heading="Blockchain Explorer">
         {errorElement}
 
-        <TransactionsTable
-          isLoading={txsQuery.isLoading}
-          transactions={Array.from(transactions.values())}
-        />
+        <TransactionsTable transactions={Array.from(transactions.values())} />
       </PageCard>
     </Box>
   );
