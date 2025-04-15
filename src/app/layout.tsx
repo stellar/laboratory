@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 
 import { LayoutMain } from "@/components/layout/LayoutMain";
 import { LayoutContextProvider } from "@/components/layout/LayoutContextProvider";
-import { WalletKitContextProvider } from "@/components/WalletKitContextProvider";
+import { WalletKitContextProvider } from "@/components/WalletKit/WalletKitContextProvider";
 import { QueryProvider } from "@/query/QueryProvider";
 import { StoreProvider } from "@/store/StoreProvider";
 

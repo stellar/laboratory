@@ -94,6 +94,7 @@ export enum TrackingEvent {
   SUBNAV_CLICKED = "subnav clicked",
   NETWORK_SWITCH = "network: switch",
   THEME_SET = "theme set",
+  WALLET_KIT_SELECTED = "wallet kit selected",
   // XDR
   XDR_TO_JSON_SUCCESS = "xdr: to json: success",
   XDR_TO_JSON_STREAM_SUCCESS = "xdr: to json stream: success",

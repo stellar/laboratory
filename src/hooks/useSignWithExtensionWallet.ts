@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import { ISupportedWallet } from "@creit.tech/stellar-wallets-kit";
 
-import { WalletKitContext } from "@/components/WalletKitContextProvider";
+import { WalletKitContext } from "@/components/WalletKit/WalletKitContextProvider";
 import { getWalletKitNetwork } from "@/helpers/getWalletKitNetwork";
 import { useStore } from "@/store/useStore";
 
@@ -15,7 +15,7 @@ export const useSignWithExtensionWallet = ({
   txXdr: string;
 }) => {
   const { account, network } = useStore();
-  const { walletKitPubKey, updateWalletKitPubKey } = account;
+  const { walletKit, updateWalletKit } = account;
   const networkPassphrase = getWalletKitNetwork(network.id);
 
   const walletKitInstance = useContext(WalletKitContext);
@@ -44,12 +44,12 @@ export const useSignWithExtensionWallet = ({
 
     setIsInProgress(true);
 
-    if (walletKitPubKey) {
+    if (walletKit?.publicKey) {
       try {
         const result = await walletKitInstance.walletKit.signTransaction(
           txXdr,
           {
-            address: walletKitPubKey,
+            address: walletKit.publicKey,
             networkPassphrase,
           },
         );
@@ -71,7 +71,7 @@ export const useSignWithExtensionWallet = ({
               await walletKitInstance.walletKit?.getAddress();
 
             if (addressResult?.address) {
-              updateWalletKitPubKey(addressResult.address);
+              updateWalletKit({ publicKey: addressResult.address });
 
               const result = await walletKitInstance.walletKit?.signTransaction(
                 txXdr,
@@ -106,9 +106,9 @@ export const useSignWithExtensionWallet = ({
     isInProgress,
     networkPassphrase,
     txXdr,
-    updateWalletKitPubKey,
+    updateWalletKit,
     walletKitInstance.walletKit,
-    walletKitPubKey,
+    walletKit,
   ]);
 
   useEffect(() => {

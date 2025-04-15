@@ -16,7 +16,7 @@ import { NetworkSelector } from "@/components/NetworkSelector";
 import { Hydration } from "@/components/Hydration";
 import { Box } from "@/components/layout/Box";
 import { FloaterDropdown } from "@/components/FloaterDropdown";
-import { ConnectWallet } from "@/components/ConnectWallet";
+import { ConnectWallet } from "@/components/WalletKit/ConnectWallet";
 
 import { isExternalLink } from "@/helpers/isExternalLink";
 import { Routes } from "@/constants/routes";
