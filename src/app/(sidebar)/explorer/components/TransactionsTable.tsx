@@ -31,6 +31,10 @@ function getOperationType(tx: StellarRpc.Api.TransactionInfo): string {
   // @ts-expect-error Fee bump operation is covered first by the `tx.feeBump`
   const operations = tx.feeBump ? [] : value.tx().operations();
 
+  if (operations.length > 1) {
+    return `${operations.length} OPERATIONS`;
+  }
+
   return underscore(operations[0].body().switch().name);
 }
 
