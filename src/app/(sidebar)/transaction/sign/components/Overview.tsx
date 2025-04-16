@@ -404,19 +404,20 @@ export const Overview = () => {
           errorMsg = error || "";
         }
 
-        if (selectedHardware === "trezor") {
-          const path = `m/${sign.bipPath}`;
+        // TODO: Trezor
+        // if (selectedHardware === "trezor") {
+        //   const path = `m/${sign.bipPath}`;
 
-          const { signature: trezorSig, error } = await txHelper.signWithTrezor(
-            {
-              bipPath: path,
-              transaction: sign.importTx as Transaction,
-            },
-          );
+        //   const { signature: trezorSig, error } = await txHelper.signWithTrezor(
+        //     {
+        //       bipPath: path,
+        //       transaction: sign.importTx as Transaction,
+        //     },
+        //   );
 
-          signature = trezorSig ?? [];
-          errorMsg = error || "";
-        }
+        //   signature = trezorSig ?? [];
+        //   errorMsg = error || "";
+        // }
 
         successMsg = errorMsg
           ? ""
@@ -795,10 +796,11 @@ export const Overview = () => {
                             setSelectedHardware(event.target.value);
                           }}
                         >
-                          <option value="">Select operation type</option>
+                          <option value="">Select a wallet</option>
                           <option value="ledger">Ledger</option>
                           <option value="ledger_hash">Hash with Ledger</option>
-                          <option value="trezor">Trezor</option>
+                          {/* TODO: Trezor */}
+                          {/* <option value="trezor">Trezor</option> */}
                         </Select>
                       </div>
                     </>

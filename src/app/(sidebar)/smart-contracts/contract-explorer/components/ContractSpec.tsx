@@ -1,154 +1,145 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Icon } from "@stellar/design-system";
-import { useQueryClient } from "@tanstack/react-query";
 
 import { CodeEditor, SupportedLanguage } from "@/components/CodeEditor";
 import { Box } from "@/components/layout/Box";
-import { ErrorText } from "@/components/ErrorText";
 import { WithInfoText } from "@/components/WithInfoText";
 
-import { useWasmFromRpc } from "@/query/useWasmFromRpc";
 import { useWasmBinaryFromRpc } from "@/query/useWasmBinaryFromRpc";
-import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
-import * as StellarXdr from "@/helpers/StellarXdr";
-import { prettifyJsonString } from "@/helpers/prettifyJsonString";
-import { delayedAction } from "@/helpers/delayedAction";
 import { downloadFile } from "@/helpers/downloadFile";
 import { renderWasmStatus } from "@/helpers/renderWasmStatus";
+import { getWasmContractData } from "@/helpers/getWasmContractData";
 
-import { NetworkType } from "@/types/types";
+import { ContractSections, ContractSectionName } from "@/types/types";
 
 export const ContractSpec = ({
-  contractId,
-  networkId,
-  networkPassphrase,
   rpcUrl,
   wasmHash,
   isActive,
 }: {
-  contractId: string;
-  networkId: NetworkType;
-  networkPassphrase: string;
   rpcUrl: string;
   wasmHash: string;
   isActive: boolean;
 }) => {
-  const isXdrInit = useIsXdrInit();
-  const queryClient = useQueryClient();
-
-  const [selectedFormat, setSelectedFormat] =
-    useState<SupportedLanguage>("json");
-
-  const {
-    data: wasmData,
-    error: wasmError,
-    isLoading: isWasmLoading,
-    isFetching: isWasmFetching,
-  } = useWasmFromRpc({
-    wasmHash,
-    contractId,
-    networkPassphrase,
-    rpcUrl,
-    isActive: Boolean(isActive && rpcUrl && wasmHash),
+  const [selectedFormat, setSelectedFormat] = useState<
+    Record<ContractSectionName, SupportedLanguage>
+  >({
+    contractenvmetav0: "json",
+    contractmetav0: "json",
+    contractspecv0: "json",
   });
+  const [contractSections, setContractSections] =
+    useState<ContractSections | null>();
 
   const {
     data: wasmBinary,
     error: wasmBinaryError,
     isLoading: isWasmBinaryLoading,
     isFetching: isWasmBinaryFetching,
-    refetch: fetchWasmBinary,
   } = useWasmBinaryFromRpc({
     wasmHash,
     rpcUrl,
+    isActive,
   });
 
-  const resetWasmBlob = useCallback(() => {
-    queryClient.resetQueries({
-      queryKey: ["useSEContractWasmBinary", networkId, wasmHash],
-    });
-  }, [networkId, queryClient, wasmHash]);
-
   useEffect(() => {
-    if (wasmBinary) {
-      downloadFile({
-        value: wasmBinary,
-        fileType: "application/octet-stream",
-        fileName: wasmHash,
-        fileExtension: "wasm",
-      });
-    }
-  }, [wasmBinary, wasmHash]);
+    const getContractData = async () => {
+      if (wasmBinary) {
+        const data = await getWasmContractData(wasmBinary);
+        setContractSections(data);
+      }
+    };
 
-  useEffect(() => {
-    if (wasmBinaryError) {
-      // Automatically clear error message after 5 sec
-      delayedAction({
-        action: resetWasmBlob,
-        delay: 5000,
-      });
-    }
-  }, [resetWasmBlob, wasmBinaryError]);
+    getContractData();
+  }, [wasmBinary]);
 
   const wasmStatus = renderWasmStatus({
     wasmHash,
     rpcUrl,
-    isLoading: isWasmFetching || isWasmLoading,
-    error: wasmError,
+    isLoading: isWasmBinaryLoading || isWasmBinaryFetching || !contractSections,
+    error: wasmBinaryError,
   });
 
   if (wasmStatus) {
     return wasmStatus;
   }
 
-  const formatSpec = () => {
-    const entries = wasmData?.spec?.entries || [];
-
-    // JSON
-    if (selectedFormat === "json") {
-      try {
-        if (isXdrInit) {
-          const decodedEntries = entries.map((e) => {
-            const jsonString = StellarXdr.decode(
-              "ScSpecEntry",
-              e.toXDR("base64"),
-            );
-
-            return prettifyJsonString(jsonString);
-          });
-
-          return decodedEntries.join(",\n\n");
-        }
-      } catch (e) {
-        // do nothing
-      }
-      // XDR
-    } else if (selectedFormat === "xdr") {
-      const xdrEntries = entries?.map((e) => {
-        return e.toXDR("base64");
-      });
-
-      return xdrEntries?.join("\n\n");
+  const formatValue = (sectionName: ContractSectionName) => {
+    // Adding the first line as a comment with a section name. For example:
+    // // contractspecv0
+    switch (selectedFormat[sectionName]) {
+      case "json":
+        return `// ${sectionName} \n\n${contractSections?.[sectionName].json?.join(",\n\n")}`;
+      case "xdr":
+        return `// ${sectionName} \n\n${contractSections?.[sectionName].xdr?.join("\n\n")}`;
+      case "text":
+      default:
+        return "";
     }
-
-    return "";
   };
+
+  const renderSectionCodeEditor = ({
+    sectionName,
+    title,
+    infoLink,
+    height,
+  }: {
+    sectionName: ContractSectionName;
+    title: string;
+    infoLink: string;
+    height?: string;
+  }) => (
+    <CodeEditor
+      title={title}
+      value={formatValue(sectionName) || ""}
+      selectedLanguage={selectedFormat[sectionName]}
+      fileName={`${wasmHash}-${sectionName}`}
+      languages={["json", "xdr"]}
+      onLanguageChange={(newLanguage) => {
+        setSelectedFormat({
+          ...selectedFormat,
+          [sectionName]: newLanguage,
+        });
+      }}
+      infoLink={infoLink}
+      heightInRem={height}
+    />
+  );
 
   return (
     <Box gap="lg">
-      <CodeEditor
-        title="Contract Spec"
-        value={formatSpec()}
-        selectedLanguage={selectedFormat}
-        fileName={`${wasmHash}-contract-spec`}
-        languages={["json", "xdr"]}
-        onLanguageChange={(newLanguage) => {
-          setSelectedFormat(newLanguage);
-        }}
-        infoLink="https://developers.stellar.org/docs/build/guides/dapps/working-with-contract-specs#what-are-contract-specs"
-      />
+      {/* Sections */}
+      {contractSections?.contractmetav0
+        ? renderSectionCodeEditor({
+            sectionName: "contractmetav0",
+            title: "Contract Meta",
+            infoLink:
+              "https://developers.stellar.org/docs/tools/sdks/build-your-own#contract-meta-generation",
+            height: "22",
+          })
+        : null}
 
+      {contractSections?.contractenvmetav0
+        ? renderSectionCodeEditor({
+            sectionName: "contractenvmetav0",
+            title: "Contract Env Meta",
+            infoLink:
+              "https://developers.stellar.org/docs/tools/sdks/build-your-own#environment-meta-generation",
+            height: "15",
+          })
+        : null}
+
+      {contractSections?.contractspecv0
+        ? renderSectionCodeEditor({
+            sectionName: "contractspecv0",
+            title: "Contract Spec",
+            infoLink:
+              "https://developers.stellar.org/docs/build/guides/dapps/working-with-contract-specs#what-are-contract-specs",
+          })
+        : null}
+
+      {/* Download Wasm button */}
       <Box gap="xs" direction="column" align="end">
         <WithInfoText href="https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/contracts#wasm">
           <Button
@@ -156,29 +147,24 @@ export const ContractSpec = ({
             size="sm"
             icon={<Icon.Download01 />}
             iconPosition="left"
+            disabled={!wasmBinary}
             onClick={(e) => {
               e.preventDefault();
 
-              if (wasmBinaryError) {
-                resetWasmBlob();
+              if (wasmBinary) {
+                downloadFile({
+                  value: wasmBinary,
+                  fileType: "application/octet-stream",
+                  fileName: wasmHash,
+                  fileExtension: "wasm",
+                });
               }
-
-              delayedAction({
-                action: fetchWasmBinary,
-                delay: wasmBinaryError ? 500 : 0,
-              });
             }}
             isLoading={isWasmBinaryLoading || isWasmBinaryFetching}
           >
             Download WASM
           </Button>
         </WithInfoText>
-
-        <>
-          {wasmBinaryError ? (
-            <ErrorText errorMessage={wasmBinaryError.toString()} size="sm" />
-          ) : null}
-        </>
       </Box>
     </Box>
   );
