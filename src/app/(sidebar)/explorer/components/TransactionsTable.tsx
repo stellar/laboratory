@@ -8,9 +8,9 @@ import {
 } from "@stellar/design-system";
 import { rpc as StellarRpc } from "@stellar/stellar-sdk";
 import { DataTable } from "@/components/DataTable";
+import { Box } from "@/components/layout/Box";
 import { formatEpochToDate } from "@/helpers/formatEpochToDate";
 import { DataTableHeader } from "@/types/types";
-import { Box } from "@/components/layout/Box";
 
 function shortenHash(hash: string): string {
   const segmentSize = 6;
