@@ -3,14 +3,15 @@ import { Button } from "@stellar/design-system";
 import { ISupportedWallet } from "@creit.tech/stellar-wallets-kit";
 import { useStore } from "@/store/useStore";
 
+import { useAccountInfo } from "@/query/useAccountInfo";
+
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
+import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 
 import { ConnectedModal } from "@/components/WalletKit/ConnectedModal";
 import { WalletKitContext } from "@/components/WalletKit/WalletKitContextProvider";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
-import { useAccountInfo } from "@/query/useAccountInfo";
-import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 
 export const ConnectWallet = () => {
   const { account, network } = useStore();
