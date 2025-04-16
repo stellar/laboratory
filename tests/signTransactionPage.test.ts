@@ -130,16 +130,18 @@ test.describe("Sign Transaction Page", () => {
       "Select operation type",
       "Ledger",
       "Hash with Ledger",
-      "Trezor",
+      // TODO: Trezor
+      // "Trezor",
     ]);
 
     const hardwareSignBtn = hardwareView.getByText("Sign transaction");
 
     await hardwareSignBtn.isDisabled();
 
-    await hardwareSelect.selectOption("Trezor");
+    // TODO: Trezor
+    // await hardwareSelect.selectOption("Trezor");
 
-    await expect(hardwareSelect).toHaveValue("trezor");
+    // await expect(hardwareSelect).toHaveValue("trezor");
 
     await hardwareSignBtn.isEnabled();
 

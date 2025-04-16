@@ -8,8 +8,9 @@ import {
 } from "@stellar/stellar-sdk";
 import LedgerTransportWebUSB from "@ledgerhq/hw-transport-webusb";
 import Str from "@ledgerhq/hw-app-str";
-import TrezorConnect, { StellarSignedTx } from "@trezor/connect-web";
-import transformTransaction from "@trezor/connect-plugin-stellar";
+// TODO: Trezor
+// import TrezorConnect, { StellarSignedTx } from "@trezor/connect-web";
+// import transformTransaction from "@trezor/connect-plugin-stellar";
 
 import { LedgerErrorResponse } from "@/types/types";
 
@@ -200,59 +201,60 @@ const signWithLedger = async ({
   }
 };
 
-const signWithTrezor = async ({
-  bipPath,
-  transaction,
-}: {
-  bipPath: string;
-  transaction: Transaction;
-}): Promise<{
-  signature: xdr.DecoratedSignature[] | undefined;
-  error: string | undefined;
-}> => {
-  TrezorConnect.manifest({
-    email: "accounts+trezor@stellar.org",
-    appUrl: "https://lab.stellar.org/",
-  });
+// TODO: Trezor
+// const signWithTrezor = async ({
+//   bipPath,
+//   transaction,
+// }: {
+//   bipPath: string;
+//   transaction: Transaction;
+// }): Promise<{
+//   signature: xdr.DecoratedSignature[] | undefined;
+//   error: string | undefined;
+// }> => {
+//   TrezorConnect.manifest({
+//     email: "accounts+trezor@stellar.org",
+//     appUrl: "https://lab.stellar.org/",
+//   });
 
-  try {
-    const trezorParams = transformTransaction(bipPath, transaction);
-    const response = await TrezorConnect.stellarSignTransaction(trezorParams);
+//   try {
+//     const trezorParams = transformTransaction(bipPath, transaction);
+//     const response = await TrezorConnect.stellarSignTransaction(trezorParams);
 
-    if (response.success) {
-      return {
-        signature: getTrezorDecoratedSignature(response.payload),
-        error: undefined,
-      };
-    } else {
-      const errorPayload = response.payload as { error: string };
-      return {
-        signature: undefined,
-        error:
-          errorPayload.error || "Couldn't sign transaction with Trezor device.",
-      };
-    }
-  } catch (error) {
-    return {
-      signature: undefined,
-      error: `Couldn't sign transaction with Trezor device. Details: ${error}`,
-    };
-  }
-};
+//     if (response.success) {
+//       return {
+//         signature: getTrezorDecoratedSignature(response.payload),
+//         error: undefined,
+//       };
+//     } else {
+//       const errorPayload = response.payload as { error: string };
+//       return {
+//         signature: undefined,
+//         error:
+//           errorPayload.error || "Couldn't sign transaction with Trezor device.",
+//       };
+//     }
+//   } catch (error) {
+//     return {
+//       signature: undefined,
+//       error: `Couldn't sign transaction with Trezor device. Details: ${error}`,
+//     };
+//   }
+// };
 
-const getTrezorDecoratedSignature = (
-  payload: StellarSignedTx,
-): xdr.DecoratedSignature[] => {
-  const signature = Buffer.from(payload.signature, "hex");
-  const publicKeyBytes = Buffer.from(payload.publicKey, "hex");
-  const encodedPublicKey = StrKey.encodeEd25519PublicKey(publicKeyBytes);
+// const getTrezorDecoratedSignature = (
+//   payload: StellarSignedTx,
+// ): xdr.DecoratedSignature[] => {
+//   const signature = Buffer.from(payload.signature, "hex");
+//   const publicKeyBytes = Buffer.from(payload.publicKey, "hex");
+//   const encodedPublicKey = StrKey.encodeEd25519PublicKey(publicKeyBytes);
 
-  const keyPair = Keypair.fromPublicKey(encodedPublicKey);
-  const hint = keyPair.signatureHint();
-  const decorated = new xdr.DecoratedSignature({ hint, signature });
+//   const keyPair = Keypair.fromPublicKey(encodedPublicKey);
+//   const hint = keyPair.signatureHint();
+//   const decorated = new xdr.DecoratedSignature({ hint, signature });
 
-  return [decorated];
-};
+//   return [decorated];
+// };
 
 const extractLastSignature = ({
   txXdr,
@@ -300,7 +302,8 @@ const decoratedSigFromHexSig = (
 export const txHelper = {
   buildFeeBumpTx,
   signWithLedger,
-  signWithTrezor,
+  // TODO: Trezor
+  // signWithTrezor,
   extractLastSignature,
   secretKeySignature,
   decoratedSigFromHexSig,
