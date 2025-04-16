@@ -13,7 +13,7 @@ export const useGetRpcTxs = ({
   startLedger: number;
 }) => {
   const query = useQuery({
-    queryKey: ["getTransactions"],
+    queryKey: ["useGetRpcTxs", rpcUrl, startLedger],
     queryFn: async () => {
       const rpcServer = new StellarRpc.Server(rpcUrl, {
         headers,
@@ -39,7 +39,6 @@ export const useGetRpcTxs = ({
 
         return response;
       } catch (error) {
-        console.error(error);
         throw `there was an error with fetching responses. e: ${error}`;
       }
     },
