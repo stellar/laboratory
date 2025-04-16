@@ -37,11 +37,13 @@ type DataTableProps<T> = {
   cssGridTemplateColumns: string;
   tableHeaders: DataTableHeader[];
   tableData: T[];
+  emptyMessage?: string;
   formatDataRow: (item: T) => DataTableCell[];
   customFooterEl?: React.ReactNode;
   csvFileName?: string;
   hideFirstLastPageNav?: boolean;
   hidePageCount?: boolean;
+  pageSize?: number;
   pageNavConfig?: Record<
     "prev" | "next",
     {
@@ -66,9 +68,9 @@ export const DataTable = <T extends AnyObject>({
   pageNavConfig,
   isExternalUpdating = false,
   externalSort,
+  pageSize = 20,
+  emptyMessage,
 }: DataTableProps<T>) => {
-  const PAGE_SIZE = 20;
-
   // Data
   const [processedData, setProcessedData] = useState<
     ContractStorageProcessedItem<T>[]
@@ -115,7 +117,7 @@ export const DataTable = <T extends AnyObject>({
   // Hide loader when processed data is done
   useEffect(() => {
     setIsUpdating(false);
-    setTotalPageCount(Math.ceil(processedData.length / PAGE_SIZE));
+    setTotalPageCount(Math.ceil(processedData.length / pageSize));
   }, [processedData]);
 
   const getCustomProps = (th: DataTableHeader) => {
@@ -184,8 +186,8 @@ export const DataTable = <T extends AnyObject>({
       return [];
     }
 
-    const startIndex = Math.max(currentPage - 1, 0) * PAGE_SIZE;
-    const endIndex = startIndex + PAGE_SIZE;
+    const startIndex = Math.max(currentPage - 1, 0) * pageSize;
+    const endIndex = startIndex + pageSize;
 
     return data.slice(startIndex, endIndex);
   };
@@ -422,13 +424,13 @@ export const DataTable = <T extends AnyObject>({
 
   const renderTableBody = () => {
     if (!displayData.length) {
-      const emptyMessage = hasAppliedFilters
+      const message = hasAppliedFilters
         ? "There are no items matching selected filters"
-        : "There are no contract storage items";
+        : emptyMessage || "There are no contract storage items";
 
       return (
         <tr data-style="emptyMessage">
-          <td colSpan={tableHeaders.length}>{emptyMessage}</td>
+          <td colSpan={tableHeaders.length}>{message}</td>
         </tr>
       );
     }

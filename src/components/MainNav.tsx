@@ -37,12 +37,16 @@ const primaryNavLinks: NavLink[] = [
     href: Routes.SMART_CONTRACTS_CONTRACT_EXPLORER,
     label: "Smart Contracts",
   },
+  process.env.NEXT_PUBLIC_ENABLE_EXPLORER === "true" && {
+    href: Routes.BLOCKCHAIN_EXPLORER,
+    label: "Blockchain Explorer",
+  },
   {
     href: "https://developers.stellar.org/",
     label: "View Docs",
     icon: <Icon.LinkExternal01 />,
   },
-];
+].filter(Boolean) as NavLink[];
 
 export const MainNav = ({ excludeDocs }: { excludeDocs?: boolean }) => {
   const pathname = usePathname();
