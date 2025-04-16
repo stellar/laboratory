@@ -69,7 +69,7 @@ export const DataTable = <T extends AnyObject>({
   isExternalUpdating = false,
   externalSort,
   pageSize = 20,
-  emptyMessage: defaultEmptyMessage,
+  emptyMessage,
 }: DataTableProps<T>) => {
   // Data
   const [processedData, setProcessedData] = useState<
@@ -424,13 +424,13 @@ export const DataTable = <T extends AnyObject>({
 
   const renderTableBody = () => {
     if (!displayData.length) {
-      const emptyMessage = hasAppliedFilters
+      const message = hasAppliedFilters
         ? "There are no items matching selected filters"
-        : defaultEmptyMessage || "There are no contract storage items";
+        : emptyMessage || "There are no contract storage items";
 
       return (
         <tr data-style="emptyMessage">
-          <td colSpan={tableHeaders.length}>{emptyMessage}</td>
+          <td colSpan={tableHeaders.length}>{message}</td>
         </tr>
       );
     }
