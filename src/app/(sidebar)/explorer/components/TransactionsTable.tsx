@@ -9,8 +9,8 @@ import {
 import { rpc as StellarRpc } from "@stellar/stellar-sdk";
 import { DataTable } from "@/components/DataTable";
 import { formatEpochToDate } from "@/helpers/formatEpochToDate";
-import { Fragment } from "react";
 import { DataTableHeader } from "@/types/types";
+import { Box } from "@/components/layout/Box";
 
 function shortenHash(hash: string): string {
   const segmentSize = 6;
@@ -22,14 +22,13 @@ function shortenHash(hash: string): string {
 }
 
 function getOperationType(tx: StellarRpc.Api.TransactionInfo): string {
-  if (tx.feeBump) {
-    return "FEE_BUMP";
-  }
-
   const value = tx.envelopeXdr.value();
 
-  // @ts-expect-error Fee bump operation is covered first by the `tx.feeBump`
-  const operations = tx.feeBump ? [] : value.tx().operations();
+  const operations = tx.feeBump
+    ? // @ts-expect-error Fee bump operation is covered first by the `tx.feeBump`
+      value.tx().innerTx().value().tx().operations()
+    : // @ts-expect-error Fee bump operation is covered first by the `tx.feeBump`
+      value.tx().operations();
 
   if (operations.length > 1) {
     return `${operations.length} OPERATIONS`;
@@ -78,9 +77,9 @@ export function TransactionsTable({
         },
         {
           value: (
-            <Fragment>
+            <Box gap="sm" direction="row" align="center">
               <Link href="#">{shortenHash(tx.txHash)}</Link>
-              &nbsp; &nbsp;
+
               <CopyText textToCopy={tx.txHash}>
                 <Button
                   size="sm"
@@ -90,7 +89,7 @@ export function TransactionsTable({
                   onClick={(e) => e.preventDefault()}
                 />
               </CopyText>
-            </Fragment>
+            </Box>
           ),
         },
         { value: formatEpochToDate(tx.createdAt, "short") },
