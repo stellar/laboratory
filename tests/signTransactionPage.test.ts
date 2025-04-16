@@ -127,7 +127,7 @@ test.describe("Sign Transaction Page", () => {
 
     const options = await hardwareSelect.locator("option").allTextContents();
     expect(options).toEqual([
-      "Select operation type",
+      "Select a wallet",
       "Ledger",
       "Hash with Ledger",
       // TODO: Trezor
