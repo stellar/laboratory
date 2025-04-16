@@ -48,7 +48,7 @@ export const ConnectedModal = ({
           <CopyText textToCopy={publicKey}>Copy address</CopyText>
           <IconButton
             altText="Default"
-            customColor="#8F8F8F"
+            customColor="var(--sds-clr-gray-09)"
             customSize="14px"
             icon={<Icon.Copy01 />}
           />
@@ -57,7 +57,7 @@ export const ConnectedModal = ({
           Disconnect
           <IconButton
             altText="Default"
-            customColor="#8F8F8F"
+            customColor="var(--sds-clr-gray-09)"
             customSize="14px"
             icon={<Icon.LogOut01 />}
           />
