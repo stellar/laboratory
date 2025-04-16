@@ -14,7 +14,7 @@ export const checkRequestStatusUntilReady = async ({
   // Try for max 10 minutes
   const MAX_ATTEMPTS = 6 * 10;
   // Max retries on error
-  const MAX_ERROR_ATTEMPTS = 3;
+  const MAX_ERROR_ATTEMPTS = 100;
 
   let attempts = 0;
   let errorAttempts = 0;
