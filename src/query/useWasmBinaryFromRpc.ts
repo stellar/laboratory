@@ -9,10 +9,12 @@ import { NetworkHeaders } from "@/types/types";
 export const useWasmBinaryFromRpc = ({
   wasmHash,
   rpcUrl,
+  isActive,
   headers = {},
 }: {
   wasmHash: string;
   rpcUrl: string;
+  isActive: boolean;
   headers?: NetworkHeaders;
 }) => {
   const query = useQuery<Buffer | null>({
@@ -33,7 +35,7 @@ export const useWasmBinaryFromRpc = ({
         throw `Something went wrong downloading the wasm binary. ${e.message || e}`;
       }
     },
-    enabled: false,
+    enabled: Boolean(wasmHash && rpcUrl && isActive),
   });
 
   return query;
