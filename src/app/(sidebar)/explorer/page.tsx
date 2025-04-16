@@ -1,14 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Alert } from "@stellar/design-system";
+import { rpc as StellarRpc } from "@stellar/stellar-sdk";
+
 import { PageCard } from "@/components/layout/PageCard";
 import { Box } from "@/components/layout/Box";
+
 import { useStore } from "@/store/useStore";
 import { useGetRpcTxs } from "@/query/useGetRpcTxs";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
-import { Alert } from "@stellar/design-system";
+
 import { TransactionsTable } from "./components/TransactionsTable";
-import { rpc as StellarRpc } from "@stellar/stellar-sdk";
 
 export default function Explorer() {
   const { network } = useStore();
