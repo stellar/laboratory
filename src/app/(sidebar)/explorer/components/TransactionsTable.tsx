@@ -9,8 +9,8 @@ import {
 import { rpc as StellarRpc } from "@stellar/stellar-sdk";
 import { DataTable } from "@/components/DataTable";
 import { Box } from "@/components/layout/Box";
-import { formatEpochToDate } from "@/helpers/formatEpochToDate";
 import { DataTableHeader } from "@/types/types";
+import { Time } from "./Time";
 
 function shortenHash(hash: string): string {
   const segmentSize = 6;
@@ -92,7 +92,7 @@ export function TransactionsTable({
             </Box>
           ),
         },
-        { value: formatEpochToDate(tx.createdAt, "short") },
+        { value: <Time timestamp={tx.createdAt} /> },
         {
           value: (
             <Badge variant={tx.status === "SUCCESS" ? "success" : "error"}>
