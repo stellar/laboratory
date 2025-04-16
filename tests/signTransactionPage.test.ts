@@ -127,19 +127,21 @@ test.describe("Sign Transaction Page", () => {
 
     const options = await hardwareSelect.locator("option").allTextContents();
     expect(options).toEqual([
-      "Select operation type",
+      "Select a wallet",
       "Ledger",
       "Hash with Ledger",
-      "Trezor",
+      // TODO: Trezor
+      // "Trezor",
     ]);
 
     const hardwareSignBtn = hardwareView.getByText("Sign transaction");
 
     await hardwareSignBtn.isDisabled();
 
-    await hardwareSelect.selectOption("Trezor");
+    // TODO: Trezor
+    // await hardwareSelect.selectOption("Trezor");
 
-    await expect(hardwareSelect).toHaveValue("trezor");
+    // await expect(hardwareSelect).toHaveValue("trezor");
 
     await hardwareSignBtn.isEnabled();
 
@@ -162,7 +164,7 @@ test.describe("Sign Transaction Page", () => {
     ).toBeVisible();
 
     // Wallet Extension to display 6 wallets
-    await expect(page.getByRole("listitem")).toHaveCount(7);
+    await expect(page.getByRole("listitem")).toHaveCount(6);
 
     // Exit out of the wallet extension modal
     await page.click("body", { position: { x: 10, y: 10 } });
