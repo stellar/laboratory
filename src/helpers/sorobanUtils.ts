@@ -18,6 +18,7 @@ export const isSorobanOperationType = (operationType: string) =>
     "extend_footprint_ttl",
     "restore_footprint",
     "invoke_contract_function",
+    "invokeHostFunction",
   ].includes(operationType);
 
 // https://developers.stellar.org/docs/learn/glossary#ledgerkey
