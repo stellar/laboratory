@@ -477,3 +477,21 @@ export type DataTableCell = {
   value: React.ReactNode;
   isBold?: boolean;
 };
+
+// =============================================================================
+// Smart contract Wasm binary
+// =============================================================================
+export const CONTRACT_SECTIONS = [
+  "contractmetav0",
+  "contractenvmetav0",
+  "contractspecv0",
+] as const;
+
+export type ContractSectionName = (typeof CONTRACT_SECTIONS)[number];
+
+export type ContractData = {
+  xdr?: string[];
+  json?: string[];
+  text?: string[];
+};
+export type ContractSections = Record<ContractSectionName, ContractData>;

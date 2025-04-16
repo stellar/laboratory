@@ -20,6 +20,7 @@ type CodeEditorProps = {
   infoText?: React.ReactNode;
   infoLink?: string;
   onLanguageChange?: (newLanguage: SupportedLanguage) => void;
+  heightInRem?: string;
 };
 
 export const CodeEditor = ({
@@ -30,6 +31,7 @@ export const CodeEditor = ({
   languages,
   infoText,
   infoLink,
+  heightInRem,
   onLanguageChange,
 }: CodeEditorProps) => {
   const { theme } = useStore();
@@ -74,8 +76,15 @@ export const CodeEditor = ({
     return title;
   };
 
+  const customStyle = {
+    ...(heightInRem ? { "--CodeEditor-height": `${heightInRem}rem` } : {}),
+  } as React.CSSProperties;
+
   return (
-    <div className={`CodeEditor ${isExpanded ? "CodeEditor--expanded" : ""}`}>
+    <div
+      className={`CodeEditor ${isExpanded ? "CodeEditor--expanded" : ""}`}
+      style={customStyle}
+    >
       <div className="CodeEditor__header" ref={headerEl}>
         {/* Title */}
         <div className="CodeEditor__header__title">{renderTitle()}</div>

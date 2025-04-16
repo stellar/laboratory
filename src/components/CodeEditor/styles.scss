@@ -1,10 +1,12 @@
 @use "../../styles/utils.scss" as *;
 
 .CodeEditor {
+  --CodeEditor-height: #{pxToRem(400px)};
+
   border: 1px solid var(--sds-clr-gray-06);
   border-radius: pxToRem(8px);
   overflow: hidden;
-  height: pxToRem(400px);
+  height: var(--CodeEditor-height);
   position: relative;
 
   &--expanded {
