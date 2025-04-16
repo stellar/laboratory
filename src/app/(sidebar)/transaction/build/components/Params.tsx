@@ -37,7 +37,8 @@ export const Params = () => {
 
   const { account, transaction, network } = useStore();
 
-  const { walletKitPubKey } = account;
+  const { walletKit } = account;
+  const { publicKey: walletKitPubKey } = walletKit || {};
   const { params: txnParams } = transaction.build;
   const {
     updateBuildParams,
