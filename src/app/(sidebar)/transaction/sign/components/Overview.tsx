@@ -840,7 +840,7 @@ export const Overview = () => {
               <LabelHeading size="md">Sign with wallet extension</LabelHeading>
 
               <SignTxButton
-                label={`Sign with ${account.walletKitPubKey ? shortenStellarAddress(account.walletKitPubKey) : "wallet"}`}
+                label={`Sign with ${account.walletKit?.publicKey ? shortenStellarAddress(account.walletKit?.publicKey) : "wallet"}`}
                 onSign={() => {
                   setIsExtensionClear(false);
                   setIsExtensionLoading(true);

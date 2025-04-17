@@ -29,6 +29,11 @@ type FeeBumpParamsObj = {
   [K in keyof FeeBumpParams]?: FeeBumpParams[K];
 };
 
+export type WalletKit = {
+  publicKey?: string;
+  walletType?: string;
+};
+
 export type TransactionBuildParams = {
   source_account: string;
   fee: string;
@@ -75,7 +80,7 @@ export interface Store {
   account: {
     publicKey: string | undefined;
     secretKey: string | undefined;
-    walletKitPubKey: string | undefined;
+    walletKit: WalletKit | undefined;
     generatedMuxedAccountInput: Partial<MuxedAccount> | EmptyObj;
     parsedMuxedAccountInput: string | undefined;
     generatedMuxedAccount: MuxedAccount | EmptyObj;
@@ -85,7 +90,7 @@ export interface Store {
     updateParsedMuxedAccountInput: (value: string) => void;
     updateGeneratedMuxedAccount: (value: MuxedAccount) => void;
     updateParsedMuxedAccount: (value: MuxedAccount) => void;
-    updateWalletKitPubKey: (value?: string) => void;
+    updateWalletKit: (value?: WalletKit) => void;
     reset: () => void;
   };
 
@@ -294,7 +299,10 @@ const initTransactionState = {
 const initAccountState = {
   publicKey: undefined,
   secretKey: undefined,
-  walletKitPubKey: undefined,
+  walletKit: {
+    publicKey: undefined,
+    walletType: undefined,
+  },
   generatedMuxedAccountInput: {},
   parsedMuxedAccountInput: undefined,
   generatedMuxedAccount: {},
@@ -388,9 +396,12 @@ export const createStore = (options: CreateStoreOptions) =>
               state.account.publicKey = publicKey;
               state.account.secretKey = secretKey || "";
             }),
-          updateWalletKitPubKey: (value?: string) =>
+          updateWalletKit: (value?: WalletKit) =>
             set((state) => {
-              state.account.walletKitPubKey = value;
+              state.account.walletKit = {
+                ...state.account.walletKit,
+                ...value,
+              };
             }),
           reset: () =>
             set((state) => {
