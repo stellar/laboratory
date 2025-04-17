@@ -1,9 +1,13 @@
 import { useState } from "react";
 import { Button, Card, Text } from "@stellar/design-system";
-
 import { JSONSchema7 } from "json-schema";
-import { dereferenceSchema } from "@/helpers/dereferenceSchema";
+
 import { DereferencedSchemaType } from "@/constants/jsonSchema";
+import { dereferenceSchema } from "@/helpers/dereferenceSchema";
+import { renderWasmStatus } from "@/helpers/renderWasmStatus";
+import { getTxnToSimulate } from "@/helpers/sorobanUtils";
+
+import { useWasmFromRpc } from "@/query/useWasmFromRpc";
 
 import { Box } from "@/components/layout/Box";
 import { JsonSchemaFormRenderer } from "@/components/JsonSchema/JsonSchemaFormRenderer";
@@ -15,8 +19,6 @@ import {
   SorobanInvokeValue,
   EmptyObj,
 } from "@/types/types";
-import { useWasmFromRpc } from "@/query/useWasmFromRpc";
-import { renderWasmStatus } from "@/helpers/renderWasmStatus";
 
 export const InvokeContractForm = ({
   infoData,
@@ -83,6 +85,8 @@ export const InvokeContractForm = ({
     </>
   );
 
+  console.log("formValue: ", formValue);
+
   return (
     <Card>
       <Box gap="md">
@@ -113,6 +117,13 @@ export const InvokeContractForm = ({
             variant="tertiary"
             disabled={!Object.keys(formValue.args).length}
             onClick={() => {
+              // @TODO could also may be use TX BINDING
+              // const { xdr, error } = getTxnToSimulate(
+                // formValue,
+                // txnParams,
+                // sorobanOperation,
+                // network.passphrase,
+              );
               // noop
             }}
           >
