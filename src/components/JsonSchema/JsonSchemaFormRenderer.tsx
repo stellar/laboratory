@@ -107,9 +107,6 @@ export const JsonSchemaFormRenderer = ({
     }
 
     // Validate the value
-    // Address type validates both public key and contract address
-    // Validate the value
-    // Address type validates both public key and contract address
     let error;
 
     if (Array.isArray(validateFn)) {
