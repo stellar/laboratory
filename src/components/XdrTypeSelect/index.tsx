@@ -41,6 +41,7 @@ export const XdrTypeSelect = ({ error }: XdrTypeSelectProps) => {
         const guessed = StellarXdr.guess(xdr.blob);
 
         setGuessedTypes(guessed.length > 0 ? guessed : []);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {
         setGuessedTypes([]);
       }

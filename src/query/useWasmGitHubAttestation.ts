@@ -134,7 +134,8 @@ const extractSourceRepo = async (wasmBytes: Buffer): Promise<string | null> => {
     }
 
     return null;
-  } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (e) {
     return null;
   }
 };

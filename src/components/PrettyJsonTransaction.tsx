@@ -80,6 +80,7 @@ export const PrettyJsonTransaction = ({
 
       try {
         formattedAmount = formatAmount(toSafeNumberOrThrow(parsedAmount));
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {
         // It might fail for BigInt
         formattedAmount = formatAmount(parsedAmount as any);

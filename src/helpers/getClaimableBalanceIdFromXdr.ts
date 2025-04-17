@@ -18,6 +18,7 @@ export const getClaimableBalanceIdFromXdr = ({
 
   try {
     balanceId = (txn as any).getClaimableBalanceId(opIndex);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     // Do nothing
   }

@@ -88,6 +88,7 @@ const isSorobanXdr = (xdrJsonString: string) => {
         "invoke_host_function" in body
       );
     });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     return false;
   }
@@ -159,6 +160,7 @@ export default function SubmitTransaction() {
         jsonString: xdrJson,
         error: "",
       };
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       return {
         jsonString: "",

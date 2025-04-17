@@ -37,7 +37,8 @@ export const ScValPrettyJson = ({
       return xdrString
         ? (parse(StellarXdr.decode("ScVal", xdrString)) as AnyObject)
         : null;
-    } catch (e: any) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {
       return null;
     }
   };
@@ -229,6 +230,7 @@ export const ScValPrettyJson = ({
                   renderKey: `${renderKey}-${parentKey}-${eKey}`,
                 });
               }
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
             } catch (e) {
               // do nothing
             }

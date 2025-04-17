@@ -33,6 +33,7 @@ export const getWasmContractData = async (wasmBytes: Buffer) => {
     }
 
     return result;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     return null;
   }
@@ -72,6 +73,7 @@ const getJsonAndXdr = (sectionName: ContractSectionName, xdr: string) => {
         StellarXdr.encode(TYPE_VARIANT[sectionName], s),
       ),
     };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     return { json: [], xdr: [] };
   }
