@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { Button } from "@stellar/design-system";
+import { Button, Modal, Text } from "@stellar/design-system";
 import { ISupportedWallet } from "@creit.tech/stellar-wallets-kit";
 import { useStore } from "@/store/useStore";
 
@@ -18,6 +18,7 @@ export const ConnectWallet = () => {
   const { updateWalletKit, walletKit } = account;
 
   const [isModalVisible, setShowModal] = useState(false);
+  const [errorMessageOnConnect, setErrorMessageOnConnect] = useState("");
   const walletKitInstance = useContext(WalletKitContext);
 
   const { data: accountInfo, refetch: fetchAccountInfo } = useAccountInfo({
@@ -39,18 +40,27 @@ export const ConnectWallet = () => {
     try {
       await walletKitInstance.walletKit?.openModal({
         onWalletSelected: async (option: ISupportedWallet) => {
-          walletKitInstance.walletKit?.setWallet(option.id);
-          const addressResult = await walletKitInstance.walletKit?.getAddress();
+          try {
+            walletKitInstance.walletKit?.setWallet(option.id);
+            const addressResult =
+              await walletKitInstance.walletKit?.getAddress();
 
-          if (addressResult?.address) {
-            updateWalletKit({
-              publicKey: addressResult.address,
-              walletType: option.id,
-            });
+            if (addressResult?.address) {
+              updateWalletKit({
+                publicKey: addressResult.address,
+                walletType: option.id,
+              });
 
-            trackEvent(TrackingEvent.WALLET_KIT_SELECTED, {
-              walletType: option.id,
-            });
+              trackEvent(TrackingEvent.WALLET_KIT_SELECTED, {
+                walletType: option.id,
+              });
+            }
+          } catch (e: unknown) {
+            // Ledger sends a message with the error code, so we need to check for that
+            const errorMessage =
+              (e as { message?: string })?.message || "Unknown error occurred";
+            setErrorMessageOnConnect(errorMessage);
+            resetWalletKit();
           }
         },
       });
@@ -79,6 +89,21 @@ export const ConnectWallet = () => {
     );
   };
 
+  const renderErrorModal = () => {
+    return (
+      <Modal
+        visible={Boolean(errorMessageOnConnect)}
+        onClose={() => setErrorMessageOnConnect("")}
+      >
+        <Modal.Body>
+          <Text size="md" as="div" weight="bold">
+            {errorMessageOnConnect}
+          </Text>
+        </Modal.Body>
+      </Modal>
+    );
+  };
+
   return walletKit?.publicKey ? (
     <>
       <Button
@@ -97,6 +122,7 @@ export const ConnectWallet = () => {
   ) : (
     <Button size="md" variant="secondary" onClick={connectWallet}>
       Connect Wallet
+      {renderErrorModal()}
     </Button>
   );
 };

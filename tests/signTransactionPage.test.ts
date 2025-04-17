@@ -164,7 +164,7 @@ test.describe("Sign Transaction Page", () => {
     ).toBeVisible();
 
     // Wallet Extension to display 6 wallets
-    await expect(page.getByRole("listitem")).toHaveCount(6);
+    await expect(page.getByRole("listitem")).toHaveCount(7);
 
     // Exit out of the wallet extension modal
     await page.click("body", { position: { x: 10, y: 10 } });
