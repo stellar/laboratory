@@ -108,11 +108,26 @@ export const JsonSchemaFormRenderer = ({
 
     // Validate the value
     // Address type validates both public key and contract address
-    const error = Array.isArray(validateFn)
-      ? validateFn.every((fn) =>
-          fn(e.target.value, requiredFields?.includes(label)),
-        )
-      : validateFn?.(e.target.value, requiredFields?.includes(label));
+    // Validate the value
+    // Address type validates both public key and contract address
+    let error;
+
+    if (Array.isArray(validateFn)) {
+      const errors = validateFn.map((fn) =>
+        fn(e.target.value, requiredFields?.includes(label)),
+      );
+
+      // Address type validates both public key and contract address
+      if (schemaType === "Address") {
+        error = "Invalid Public key or contract ID";
+        // unlikely there'll be an array of validation other than Address type
+        // but just in case
+      } else {
+        error = errors.join(" ");
+      }
+    } else {
+      error = validateFn?.(e.target.value, requiredFields?.includes(label));
+    }
 
     const currentPath = path.length > 0 ? path.join(".") : name;
 
