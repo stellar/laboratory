@@ -776,7 +776,11 @@ export const Overview = () => {
                   }}
                   error={bipPathErrorMsg}
                   value={sign.bipPath}
-                  note="Note: Trezor devices require upper time bounds to be set (non-zero), otherwise the signature will not be verified"
+                  note={
+                    selectedHardware === "trezor"
+                      ? "Note: Trezor devices require upper time bounds to be set (non-zero), otherwise the signature will not be verified"
+                      : undefined
+                  }
                   rightElement={
                     <>
                       <div className="InputSideElement InputSideElement--right SignTx__hardwareDropdown">
