@@ -118,7 +118,7 @@ export const DataTable = <T extends AnyObject>({
   useEffect(() => {
     setIsUpdating(false);
     setTotalPageCount(Math.ceil(processedData.length / pageSize));
-  }, [processedData]);
+  }, [processedData, pageSize]);
 
   const getCustomProps = (th: DataTableHeader) => {
     if (th.isSortable) {
