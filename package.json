@@ -47,12 +47,12 @@
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^15.3.1",
-    "@playwright/test": "^1.47.2",
+    "@playwright/test": "^1.52.0",
     "@stellar/tsconfig": "^1.0.2",
-    "@types/dompurify": "^3.0.5",
+    "@types/dompurify": "^3.2.0",
     "@types/json-schema": "^7.0.15",
     "@types/lodash": "^4.17.16",
-    "@types/node": "^22.7.4",
+    "@types/node": "^22.14.1",
     "@types/papaparse": "^5.3.15",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
@@ -61,9 +61,9 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "husky": "^9.1.7",
-    "lint-staged": "^15.2.10",
-    "prettier": "^3.3.3",
-    "sass": "^1.79.4",
-    "typescript": "^5.6.2"
+    "lint-staged": "^15.5.1",
+    "prettier": "^3.5.3",
+    "sass": "^1.86.3",
+    "typescript": "^5.8.3"
   }
 }
