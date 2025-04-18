@@ -73,7 +73,7 @@ export const JsonSchemaForm = ({
     if (prevValue !== stringify(value.args)) {
       setSubmitTxError("");
     }
-  }, [value.args]);
+  }, [prevValue, value.args]);
 
   useEffect(() => {
     if (prepareTxData) {
@@ -90,7 +90,7 @@ export const JsonSchemaForm = ({
     } else {
       setSubmitTxError("");
     }
-  }, [isPrepareTxError]);
+  }, [isPrepareTxError, prepareTxError?.result]);
 
   const handlePrepareTx = () => {
     setSubmitTxError("");

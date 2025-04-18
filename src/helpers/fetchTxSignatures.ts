@@ -82,6 +82,7 @@ export const fetchTxSignatures = async ({
         if (sourceAccounts[srcAccount] && resJson?.signers) {
           sourceAccounts[srcAccount] = resJson.signers;
         }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {
         // Do nothing
       }
@@ -136,6 +137,7 @@ export const fetchTxSignatures = async ({
 
       return result;
     }, []);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     return [];
   }

@@ -84,6 +84,7 @@ export default function ViewXdr() {
         jsonArray: streamXdrJson.map((s) => parseToLosslessJson(s)),
         error: "",
       };
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       trackEvent(TrackingEvent.XDR_FROM_JSON_ERROR, { xdrType: xdr.type });
 
@@ -123,6 +124,7 @@ export default function ViewXdr() {
       return xdrJsonDecoded?.jsonString
         ? TransactionBuilder.fromXDR(xdr.blob, network.passphrase)
         : null;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       return null;
     }

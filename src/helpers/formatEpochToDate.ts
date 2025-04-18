@@ -25,6 +25,7 @@ export const formatEpochToDate = (
     });
 
     return dateTimeFormatter.format(date);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     return null;
   }

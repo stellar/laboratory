@@ -64,6 +64,7 @@ export const ConnectWallet = () => {
           }
         },
       });
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       resetWalletKit();
     }
@@ -84,7 +85,11 @@ export const ConnectWallet = () => {
         showModal={setShowModal}
         publicKey={walletKit?.publicKey || ""}
         onDisconnect={resetWalletKit}
-        balance={`${xlmBalance?.balance} XLM` || "can't load the balance"}
+        balance={
+          xlmBalance?.balance
+            ? `${xlmBalance.balance} XLM`
+            : "can't load the balance"
+        }
       />
     );
   };

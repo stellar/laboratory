@@ -15,6 +15,7 @@ export const getArrayOfStringsError = (value: string) => {
         }
       }
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     return "Expected an array.";
   }

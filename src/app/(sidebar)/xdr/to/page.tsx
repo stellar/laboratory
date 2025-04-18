@@ -26,6 +26,7 @@ export default function ToXdr() {
 
     try {
       JSON.parse(xdr.jsonString);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       return {
         xdrString: "",
