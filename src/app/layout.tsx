@@ -1,12 +1,13 @@
 import React from "react";
 import type { Metadata } from "next";
-import { headers } from "next/headers";
 
 import { LayoutMain } from "@/components/layout/LayoutMain";
 import { LayoutContextProvider } from "@/components/layout/LayoutContextProvider";
 import { WalletKitContextProvider } from "@/components/WalletKit/WalletKitContextProvider";
+
 import { QueryProvider } from "@/query/QueryProvider";
 import { StoreProvider } from "@/store/StoreProvider";
+import { GoogleAnalytics } from "@/metrics/GoogleAnalytics";
 
 import "@stellar/design-system/build/styles.min.css";
 import "@/styles/globals.scss";
@@ -22,8 +23,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  headers();
-
   return (
     <html lang="en">
       <body>
@@ -38,6 +37,7 @@ export default function RootLayout({
             </QueryProvider>
           </StoreProvider>
         </div>
+        <GoogleAnalytics />
       </body>
     </html>
   );
