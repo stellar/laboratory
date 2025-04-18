@@ -64,6 +64,7 @@ export const useSimulateTx = () => {
           headers,
           xdrFormat,
         });
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {
         // do nothing
       }

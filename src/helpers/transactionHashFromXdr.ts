@@ -9,6 +9,7 @@ export const transactionHashFromXdr = (
     return TransactionBuilder?.fromXDR(xdr, networkPassphrase)
       .hash()
       .toString("hex");
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     // @TODO Do nothing for now
     // add amplitude error tracking

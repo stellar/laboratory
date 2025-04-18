@@ -63,6 +63,7 @@ export const NetworkSelector = () => {
     try {
       new URL(url);
       return "";
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       return "Value is not a valid URL";
     }

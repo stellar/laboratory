@@ -186,6 +186,7 @@ export default function Endpoints() {
                   const parsed = JSON.parse(item);
 
                   return parsed;
+                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 } catch (e) {
                   // If parsing fails, wrap it in an array
                   return [item];

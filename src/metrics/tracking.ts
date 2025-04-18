@@ -56,6 +56,7 @@ export const initTracking = () => {
   try {
     amplitude.init(apiKey, options);
     window.__STELLAR_TRACKING_ENABLED__ = true;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     // Do nothing
   }
@@ -82,6 +83,7 @@ export const trackEvent = (type: TrackingEvent, properties?: AnyObject) => {
     if (process.env.NODE_ENV === "development") {
       console.log("Amplitude tracking: ", type, props);
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     // Do nothing
   }

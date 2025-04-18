@@ -45,6 +45,7 @@ const buildFeeBumpTx = ({
       innerTxXdr,
       networkPassphrase,
     ) as Transaction;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     result.errors.push("Invalid inner transaction XDR.");
     return result;

@@ -53,6 +53,7 @@ export const Import = () => {
       updateSignActiveView("overview");
 
       trackEvent(TrackingEvent.TRANSACTION_SIGN_IMPORT_SUCCESS);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       setTxErrMsg("Unable to import a transaction envelope");
       updateSignImportXdr("");

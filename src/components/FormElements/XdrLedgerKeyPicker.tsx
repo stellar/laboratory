@@ -148,6 +148,7 @@ export const XdrLedgerKeyPicker = ({
     try {
       // check to see if it's a valid JSON
       parse(jsonToString);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       return {
         xdr: "",
@@ -339,6 +340,7 @@ export const XdrLedgerKeyPicker = ({
                   key: parse(formInputs[field]),
                 },
               };
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
             } catch (e) {
               // noop
             }
@@ -553,6 +555,7 @@ const parseFormJsonValues = (inputs: any) => {
         if (typeof parsed === "object" && parsed !== null) {
           return { ...acc, [key]: parsed };
         }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {
         // If parsing fails, use original value
       }

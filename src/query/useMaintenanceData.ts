@@ -12,6 +12,7 @@ export const useMaintenanceData = () => {
         const scheduleResponseJson = await scheduleResponse.json();
 
         return scheduleResponseJson.scheduled_maintenances;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {
         throw Error("Failed to fetch testnet reset date.");
       }
