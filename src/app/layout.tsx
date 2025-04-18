@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import type { Metadata } from "next";
 
 import { LayoutMain } from "@/components/layout/LayoutMain";
@@ -26,18 +26,20 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <div id="root">
-          <StoreProvider>
-            <QueryProvider>
-              <LayoutContextProvider>
-                <WalletKitContextProvider>
-                  <LayoutMain>{children}</LayoutMain>
-                </WalletKitContextProvider>
-              </LayoutContextProvider>
-            </QueryProvider>
-          </StoreProvider>
-        </div>
-        <GoogleAnalytics />
+        <Suspense>
+          <div id="root">
+            <StoreProvider>
+              <QueryProvider>
+                <LayoutContextProvider>
+                  <WalletKitContextProvider>
+                    <LayoutMain>{children}</LayoutMain>
+                  </WalletKitContextProvider>
+                </LayoutContextProvider>
+              </QueryProvider>
+            </StoreProvider>
+          </div>
+          <GoogleAnalytics />
+        </Suspense>
       </body>
     </html>
   );
