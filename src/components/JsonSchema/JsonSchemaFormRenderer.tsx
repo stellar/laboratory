@@ -1,9 +1,7 @@
 import React from "react";
 import { Button, Card, Icon, Input, Text } from "@stellar/design-system";
 import type { JSONSchema7 } from "json-schema";
-import { parse } from "lossless-json";
 
-import { useStore } from "@/store/useStore";
 import { validate } from "@/validate";
 
 import { arrayItem } from "@/helpers/arrayItem";
@@ -24,6 +22,7 @@ export const JsonSchemaFormRenderer = ({
   requiredFields,
   formError,
   setFormError,
+  parsedSorobanOperation,
 }: {
   name: string;
   schema: JSONSchema7;
@@ -34,16 +33,8 @@ export const JsonSchemaFormRenderer = ({
   requiredFields?: string[];
   formError: AnyObject;
   setFormError: (formError: AnyObject) => void;
+  parsedSorobanOperation: SorobanInvokeValue;
 }) => {
-  const { transaction } = useStore();
-  const { build } = transaction;
-  const { operation: sorobanOperation } = build.soroban;
-
-  // parse stringified soroban operation
-  const parsedSorobanOperation = parse(
-    sorobanOperation.params.invoke_contract,
-  ) as AnyObject;
-
   const schemaType = getDefType(schema);
   const label = path.length > 0 ? getNestedValueLabel(path.join(".")) : name;
   const labelWithSchemaType = `${label} (${schemaType})`;
@@ -174,6 +165,7 @@ export const JsonSchemaFormRenderer = ({
                         requiredFields={schema.required}
                         setFormError={setFormError}
                         formError={formError}
+                        parsedSorobanOperation={parsedSorobanOperation}
                       />
                     </Card>
                   </Box>
@@ -191,6 +183,7 @@ export const JsonSchemaFormRenderer = ({
                 requiredFields={schema.required}
                 setFormError={setFormError}
                 formError={formError}
+                parsedSorobanOperation={parsedSorobanOperation}
               />
             );
           },
@@ -262,6 +255,7 @@ export const JsonSchemaFormRenderer = ({
                               requiredFields={schema.required}
                               setFormError={setFormError}
                               formError={formError}
+                              parsedSorobanOperation={parsedSorobanOperation}
                             />
                           );
                         })}
