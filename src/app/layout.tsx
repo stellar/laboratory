@@ -18,6 +18,9 @@ export const metadata: Metadata = {
     "Explore Stellar Lab: Build, sign, and submit transactions. Access tools, Stellar RPC, Horizon, and more. Enhance your skills with Stellar Quest.",
 };
 
+// Automatically generates nonce for script and style tags
+export const dynamic = "force-dynamic";
+
 export default function RootLayout({
   children,
 }: {
