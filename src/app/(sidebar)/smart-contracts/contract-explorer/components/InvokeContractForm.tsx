@@ -1,13 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Card, Text } from "@stellar/design-system";
+import { contract } from "@stellar/stellar-sdk";
 import { JSONSchema7 } from "json-schema";
 
 import { DereferencedSchemaType } from "@/constants/jsonSchema";
 import { dereferenceSchema } from "@/helpers/dereferenceSchema";
 import { renderWasmStatus } from "@/helpers/renderWasmStatus";
-import { getTxnToSimulate } from "@/helpers/sorobanUtils";
-
-import { useWasmFromRpc } from "@/query/useWasmFromRpc";
+// import { getTxnToSimulate } from "@/helpers/sorobanUtils";
 
 import { Box } from "@/components/layout/Box";
 import { JsonSchemaFormRenderer } from "@/components/JsonSchema/JsonSchemaFormRenderer";
@@ -19,6 +18,8 @@ import {
   SorobanInvokeValue,
   EmptyObj,
 } from "@/types/types";
+import { useWasmBinaryFromRpc } from "@/query/useWasmBinaryFromRpc";
+import { getWasmContractData } from "@/helpers/getWasmContractData";
 
 export const InvokeContractForm = ({
   infoData,
@@ -29,20 +30,35 @@ export const InvokeContractForm = ({
   network: Network | EmptyObj;
   funcName: string;
 }) => {
-  const { wasm: wasmHash, contract: contractId } = infoData;
+  const [contractSpec, setContractSpec] = useState<contract.Spec | null>();
+  const { wasm: wasmHash } = infoData;
 
   const {
-    data: wasmData,
-    error: wasmError,
-    isLoading: isWasmLoading,
-    isFetching: isWasmFetching,
-  } = useWasmFromRpc({
+    data: wasmBinary,
+    error: wasmBinaryError,
+    isLoading: isWasmBinaryLoading,
+    isFetching: isWasmBinaryFetching,
+    // refetch: fetchWasmBinary,
+  } = useWasmBinaryFromRpc({
     wasmHash: wasmHash || "",
-    contractId: contractId || "",
-    networkPassphrase: network.passphrase || "",
     rpcUrl: network.rpcUrl || "",
     isActive: Boolean(network.passphrase && wasmHash),
   });
+
+  useEffect(() => {
+    const getContractData = async () => {
+      if (wasmBinary) {
+        const data = await getWasmContractData(wasmBinary);
+
+        if (data?.contractspecv0.xdr) {
+          const contractSpec = new contract.Spec(data.contractspecv0.xdr);
+          setContractSpec(contractSpec);
+        }
+      }
+    };
+
+    getContractData();
+  }, [wasmBinary]);
 
   const [formValue, setFormValue] = useState<SorobanInvokeValue>({
     contract_id: infoData.contract,
@@ -58,17 +74,16 @@ export const InvokeContractForm = ({
   const wasmStatus = renderWasmStatus({
     wasmHash: wasmHash || "",
     rpcUrl: network.rpcUrl || "",
-    isLoading: isWasmFetching || isWasmLoading,
-    error: wasmError,
+    isLoading: isWasmBinaryFetching || isWasmBinaryLoading,
+    error: wasmBinaryError,
   });
 
   if (wasmStatus) {
     return wasmStatus;
   }
 
-  const schema = wasmData?.spec.jsonSchema(funcName) as JSONSchema7;
   const dereferencedSchema: DereferencedSchemaType = dereferenceSchema(
-    schema,
+    contractSpec?.jsonSchema(funcName) as JSONSchema7,
     funcName,
   );
 
@@ -85,24 +100,24 @@ export const InvokeContractForm = ({
     </>
   );
 
-  console.log("formValue: ", formValue);
-
   return (
     <Card>
       <Box gap="md">
-        {renderTitle(funcName, schema.description)}
+        {renderTitle(funcName, dereferencedSchema?.description)}
 
-        {formValue.contract_id && formValue.function_name && (
-          <JsonSchemaFormRenderer
-            name={funcName}
-            schema={dereferencedSchema as JSONSchema7}
-            formData={formValue}
-            onChange={handleChange}
-            formError={formError}
-            setFormError={setFormError}
-            parsedSorobanOperation={formValue}
-          />
-        )}
+        {formValue.contract_id &&
+          formValue.function_name &&
+          dereferencedSchema && (
+            <JsonSchemaFormRenderer
+              name={funcName}
+              schema={dereferencedSchema as JSONSchema7}
+              formData={formValue}
+              onChange={handleChange}
+              formError={formError}
+              setFormError={setFormError}
+              parsedSorobanOperation={formValue}
+            />
+          )}
 
         <Box
           gap="sm"
@@ -119,11 +134,11 @@ export const InvokeContractForm = ({
             onClick={() => {
               // @TODO could also may be use TX BINDING
               // const { xdr, error } = getTxnToSimulate(
-                // formValue,
-                // txnParams,
-                // sorobanOperation,
-                // network.passphrase,
-              );
+              // formValue,
+              // txnParams,
+              // sorobanOperation,
+              // network.passphrase,
+              // );
               // noop
             }}
           >
