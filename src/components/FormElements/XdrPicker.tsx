@@ -35,17 +35,10 @@ export const XdrPicker = ({
       // Clean the value by removing all whitespace (including newlines)
       const cleanedValue = e.target.value.replace(/\s+/g, '');
       
-      // Create a new event with the cleaned value
-      const newEvent = {
+      onChange({
         ...e,
-        target: {
-          ...e.target,
-          value: cleanedValue
-        }
-      } as React.ChangeEvent<HTMLTextAreaElement>;
-      
-      // Pass the cleaned event to the parent component
-      onChange(newEvent);
+        target: { ...e.target, value: cleanedValue },
+      });
     }
   };
 
