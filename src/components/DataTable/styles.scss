@@ -255,4 +255,10 @@
   &__actionButtons {
     flex-shrink: 0;
   }
+
+  &__filters {
+    .Button {
+      min-width: fit-content;
+    }
+  }
 }
