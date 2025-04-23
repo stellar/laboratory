@@ -27,22 +27,38 @@ export const XdrPicker = ({
   readOnly,
   disabled,
   ...props
-}: XdrPickerProps) => (
-  <Textarea
-    id={id}
-    fieldSize={fieldSize}
-    label={label}
-    value={value}
-    labelSuffix={labelSuffix}
-    placeholder="Ex: AAAAABbxCy3mLg3hiTqX4VUEEp60pFOrJNxYM1JtxXTwXhY2AAAAZAAAAAMAAAAGAAAAAAAAAAEAAAAAAAAAAQAAAAAAAAAJAAAAAAAAAAHwXhY2AAAAQCPAo8QwsZe9FA0sz/deMdhlu6/zrk7SgkBG22ApvtpETBhnGkX4trSFDz8sVlKqvweqGUVgvjUyM0AcHxyXZQw="
-    error={error}
-    success={success}
-    rows={5}
-    onChange={onChange}
-    readOnly={readOnly}
-    disabled={disabled}
-    {...props}
-  >
-    {props.children}
-  </Textarea>
-);
+}: XdrPickerProps) => {
+
+  //Internal function that cleans up the input by removing newlines and extra spaces
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    if (onChange) {
+      // Clean the value by removing all whitespace (including newlines)
+      const cleanedValue = e.target.value.replace(/\s+/g, '');
+      
+      onChange({
+        ...e,
+        target: { ...e.target, value: cleanedValue },
+      });
+    }
+  };
+
+  return (
+    <Textarea
+      id={id}
+      fieldSize={fieldSize}
+      label={label}
+      value={value}
+      labelSuffix={labelSuffix}
+      placeholder="Ex: AAAAABbxCy3mLg3hiTqX4VUEEp60pFOrJNxYM1JtxXTwXhY2AAAAZAAAAAMAAAAGAAAAAAAAAAEAAAAAAAAAAQAAAAAAAAAJAAAAAAAAAAHwXhY2AAAAQCPAo8QwsZe9FA0sz/deMdhlu6/zrk7SgkBG22ApvtpETBhnGkX4trSFDz8sVlKqvweqGUVgvjUyM0AcHxyXZQw="
+      error={error}
+      success={success}
+      rows={5}
+      onChange={handleChange}
+      readOnly={readOnly}
+      disabled={disabled}
+      {...props}
+    >
+      {props.children}
+    </Textarea>
+  );
+};
