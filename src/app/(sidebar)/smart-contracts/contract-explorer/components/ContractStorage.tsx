@@ -161,9 +161,9 @@ export const ContractStorage = ({
           { value: formatEpochToDate(vh.updated, "short") || "-" },
         ]}
         cssGridTemplateColumns="minmax(210px, 2fr) minmax(210px, 2fr) minmax(130px, 1fr) minmax(130px, 1fr) minmax(210px, 1fr)"
-        customFooterEl={
-          <Box gap="sm" direction="row" align="center">
-            {["sym", "i128", "u32", "bool"].map((t) => (
+        customHeaderEl={
+          <Box gap="sm" direction="row" align="center" wrap="wrap">
+            {["sym", "string", "address", "u8-u64", "i8-i64", "i128-i256", "u128-u256", "bool"].map((t) => (
               <div
                 className="DataTypeLegend"
                 data-type={t}

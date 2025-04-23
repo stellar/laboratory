@@ -39,6 +39,7 @@ type DataTableProps<T> = {
   tableData: T[];
   emptyMessage?: string;
   formatDataRow: (item: T) => DataTableCell[];
+  customHeaderEl?: React.ReactNode;
   customFooterEl?: React.ReactNode;
   csvFileName?: string;
   hideFirstLastPageNav?: boolean;
@@ -61,6 +62,7 @@ export const DataTable = <T extends AnyObject>({
   tableHeaders,
   tableData,
   formatDataRow,
+  customHeaderEl,
   customFooterEl,
   csvFileName,
   hideFirstLastPageNav = false,
@@ -457,6 +459,7 @@ export const DataTable = <T extends AnyObject>({
 
   return (
     <Box gap="md">
+      {/* Header */}
       <Box
         gap="sm"
         direction="row"
@@ -464,10 +467,7 @@ export const DataTable = <T extends AnyObject>({
         justify="space-between"
         wrap="wrap"
       >
-        <Box gap="sm" direction="row" align="center" wrap="wrap">
-          {/* Applied filter badges */}
-          {renderFilterBadges()}
-        </Box>
+        {customHeaderEl}
 
         <Box
           gap="sm"
@@ -475,24 +475,6 @@ export const DataTable = <T extends AnyObject>({
           wrap="wrap"
           addlClassName="DataTable__actionButtons"
         >
-          <>
-            {hasAppliedFilters ? (
-              <Button
-                variant="error"
-                size="sm"
-                onClick={() => {
-                  setSelectedFilters(INIT_FILTERS);
-                  setAppliedFilters(INIT_FILTERS);
-
-                  setVisibleFilters(undefined);
-                  setCurrentPage(1);
-                }}
-              >
-                Clear filters
-              </Button>
-            ) : null}
-          </>
-
           <>
             {csvFileName ? (
               <>
@@ -520,6 +502,28 @@ export const DataTable = <T extends AnyObject>({
           </>
         </Box>
       </Box>
+
+      {/* Filters */}
+      {hasAppliedFilters ? <Box gap="md" direction="row" align="start" justify="space-between" addlClassName="DataTable__filters">
+        <Box gap="sm" direction="row" align="center" wrap="wrap">
+          {/* Applied filter badges */}
+          {renderFilterBadges()}
+        </Box>
+
+        <Button
+          variant="error"
+          size="sm"
+          onClick={() => {
+            setSelectedFilters(INIT_FILTERS);
+            setAppliedFilters(INIT_FILTERS);
+
+            setVisibleFilters(undefined);
+            setCurrentPage(1);
+          }}
+        >
+          Clear filters
+        </Button>
+      </Box> : null}
 
       {/* Table */}
       <Card noPadding={true}>
