@@ -113,14 +113,15 @@ export const JsonSchemaFormRenderer = ({
       const errors = validateFn.map((fn) =>
         fn(e.target.value, requiredFields?.includes(label)),
       );
+      const hasNoError = hasAnyValidationPassed(errors);
 
       // Address type validates both public key and contract address
       if (schemaType === "Address") {
-        error = "Invalid Public key or contract ID";
+        error = hasNoError ? "" : "Invalid Public key or contract ID";
         // unlikely there'll be an array of validation other than Address type
         // but just in case
       } else {
-        error = errors.join(" ");
+        error = hasNoError ? "" : errors.join(" ");
       }
     } else {
       error = validateFn?.(e.target.value, requiredFields?.includes(label));
@@ -532,3 +533,6 @@ const getNestedValueLabel = (path: string): string => {
   const keys = parsePath(path);
   return keys[keys.length - 1].toString();
 };
+
+const hasAnyValidationPassed = (errors: (string | false)[]): boolean =>
+  errors.some((error) => error === false);
