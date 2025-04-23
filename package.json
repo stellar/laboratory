@@ -24,6 +24,7 @@
     "@ledgerhq/hw-app-str": "^7.2.0",
     "@ledgerhq/hw-transport-webusb": "^6.29.4",
     "@monaco-editor/react": "^4.7.0",
+    "@next/third-parties": "^15.3.1",
     "@stellar/design-system": "^2.0.0-beta.17",
     "@stellar/stellar-sdk": "^13.0.0",
     "@stellar/stellar-xdr-json": "^22.0.0-rc.1.1",
