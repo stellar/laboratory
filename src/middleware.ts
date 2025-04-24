@@ -12,7 +12,7 @@ export function middleware(request: NextRequest) {
   const cspHeader = `
     default-src 'self';
     script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: 'unsafe-inline' 'unsafe-eval';
-    script-src-elem 'self' https://www.googletagmanager.com https: 'unsafe-inline';
+    script-src-elem 'self' 'nonce-${nonce}' 'strict-dynamic' https://www.googletagmanager.com https: 'unsafe-inline';
     style-src 'self' https: 'unsafe-inline';
     img-src 'self' https://stellar.creit.tech/wallet-icons/ blob: data:;
     connect-src 'self' http://localhost:* https:;
