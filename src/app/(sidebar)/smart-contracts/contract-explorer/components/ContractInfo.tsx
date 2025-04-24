@@ -52,7 +52,7 @@ export const ContractInfo = ({
     | "contract-build-info";
 
   const [activeTab, setActiveTab] = useState<ContractTabId>(
-    "contract-version-history",
+    "contract-contract-spec",
   );
   const [isBadgeTooltipVisible, setIsBadgeTooltipVisible] = useState(false);
 
