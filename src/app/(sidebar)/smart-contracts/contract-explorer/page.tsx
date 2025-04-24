@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, Card, Icon, Input, Text } from "@stellar/design-system";
+import { Alert, Button, Card, Icon, Input, Text } from "@stellar/design-system";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { useStore } from "@/store/useStore";
@@ -82,6 +82,11 @@ export default function ContractExplorer() {
   };
 
   const isCurrentNetworkSupported = ["mainnet", "testnet"].includes(network.id);
+  const isLoadContractDisabled =
+    !isCurrentNetworkSupported ||
+    !network.rpcUrl ||
+    !contractIdInput ||
+    Boolean(contractIdInputError);
 
   const renderContractInfoContent = () => {
     return contractInfoData ? (
@@ -112,11 +117,7 @@ export default function ContractExplorer() {
             size="md"
             variant="secondary"
             type="submit"
-            disabled={
-              !isCurrentNetworkSupported ||
-              !contractIdInput ||
-              Boolean(contractIdInputError)
-            }
+            disabled={isLoadContractDisabled}
             isLoading={isLoading}
           >
             Load contract
@@ -160,6 +161,13 @@ export default function ContractExplorer() {
   return (
     <Box gap="lg">
       <PageCard heading="Contract Explorer">
+        {!network.rpcUrl ? (
+          <Alert variant="warning" placement="inline" title="Attention">
+            RPC URL is required to view contract information. You can add it in
+            the network settings in the upper right corner.
+          </Alert>
+        ) : null}
+
         <form
           onSubmit={(e) => {
             e.preventDefault();
