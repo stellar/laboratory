@@ -37,6 +37,13 @@ test.describe("Smart Contracts: Version History", () => {
     // Load Contract Info
     await page.getByLabel("Contract ID").fill(MOCK_CONTRACT_ID);
     await page.getByRole("button", { name: "Load contract" }).click();
+
+    // Go to Version History tab
+    await page
+      .getByText("Version History", {
+        exact: true,
+      })
+      .click();
   });
 
   test("Loads", async ({ page }) => {
