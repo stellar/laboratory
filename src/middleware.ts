@@ -11,7 +11,8 @@ export function middleware(request: NextRequest) {
   // connect-src http://localhost:* to allow local network
   const cspHeader = `
     default-src 'self';
-    script-src 'self' https://www.googletagmanager.com 'nonce-${nonce}' 'strict-dynamic' https: 'unsafe-inline' 'unsafe-eval';
+    script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: 'unsafe-inline' 'unsafe-eval';
+    script-src-elem 'self' https://www.googletagmanager.com https: 'unsafe-inline';
     style-src 'self' https: 'unsafe-inline';
     img-src 'self' https://stellar.creit.tech/wallet-icons/ blob: data:;
     connect-src 'self' http://localhost:* https:;
