@@ -155,7 +155,7 @@ export const JsonSchemaFormRenderer = ({
 
             if (schemaProperty?.type === "object") {
               return (
-                <>
+                <React.Fragment key={index}>
                   <LabelHeading size="md" infoText={schema.description}>
                     {key}
                   </LabelHeading>
@@ -180,7 +180,7 @@ export const JsonSchemaFormRenderer = ({
                       />
                     </Card>
                   </Box>
-                </>
+                </React.Fragment>
               );
             }
 

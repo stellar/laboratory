@@ -1,10 +1,11 @@
-import { Card, Loader, Text } from "@stellar/design-system";
+import { Alert, Card, Loader, Text } from "@stellar/design-system";
 
 import { Box } from "@/components/layout/Box";
 
 import { ContractInfoApiResponse, EmptyObj, Network } from "@/types/types";
 
 import { InvokeContractForm } from "./InvokeContractForm";
+import { useStore } from "@/store/useStore";
 
 export const InvokeContract = ({
   infoData,
@@ -15,6 +16,9 @@ export const InvokeContract = ({
   network: Network | EmptyObj;
   isLoading: boolean;
 }) => {
+  const { account } = useStore();
+  const { walletKit } = account;
+
   // omit __constructor__ and __init__ functions
   const filteredSpecFunctions = infoData.functions?.filter(
     (f) => !f.function.includes("__"),
@@ -38,16 +42,24 @@ export const InvokeContract = ({
   }
 
   return (
-    <Card>
-      <Box gap="lg" data-testid="contract-info-contract-container">
-        <Text as="h2" size="md" weight="semi-bold">
-          Invoke Contract
-        </Text>
+    <Box gap="md">
+      {!walletKit?.publicKey ? (
+        <Alert variant="warning" placement="inline" title="Connect wallet">
+          A connected wallet is required to invoke this contract. Please connect
+          your wallet to proceed.
+        </Alert>
+      ) : null}
+      <Card>
+        <Box gap="lg" data-testid="contract-info-contract-container">
+          <Text as="h2" size="md" weight="semi-bold">
+            Invoke Contract
+          </Text>
 
-        {filteredSpecFunctions?.map((func, index) =>
-          renderFunctionCard(func.function, index),
-        )}
-      </Box>
-    </Card>
+          {filteredSpecFunctions?.map((func, index) =>
+            renderFunctionCard(func.function, index),
+          )}
+        </Box>
+      </Card>
+    </Box>
   );
 };

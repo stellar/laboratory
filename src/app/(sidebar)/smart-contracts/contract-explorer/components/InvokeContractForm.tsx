@@ -82,11 +82,6 @@ export const InvokeContractForm = ({
     return wasmStatus;
   }
 
-  const dereferencedSchema: DereferencedSchemaType = dereferenceSchema(
-    contractSpec?.jsonSchema(funcName) as JSONSchema7,
-    funcName,
-  );
-
   const renderTitle = (name: string, description?: string) => (
     <>
       <Text size="sm" as="div" weight="bold">
@@ -100,11 +95,23 @@ export const InvokeContractForm = ({
     </>
   );
 
-  return (
-    <Card>
-      <Box gap="md">
-        {renderTitle(funcName, dereferencedSchema?.description)}
+  const renderSchema = () => {
+    if (!contractSpec) {
+      return null;
+    }
 
+    const dereferencedSchema: DereferencedSchemaType = dereferenceSchema(
+      contractSpec?.jsonSchema(funcName) as JSONSchema7,
+      funcName,
+    );
+
+    if (!dereferencedSchema) {
+      return null;
+    }
+
+    return (
+      <div>
+        {renderTitle(funcName, dereferencedSchema?.description)}
         {formValue.contract_id &&
           formValue.function_name &&
           dereferencedSchema && (
@@ -118,6 +125,14 @@ export const InvokeContractForm = ({
               parsedSorobanOperation={formValue}
             />
           )}
+      </div>
+    );
+  };
+
+  return (
+    <Card>
+      <Box gap="md">
+        {renderSchema()}
 
         <Box
           gap="sm"
