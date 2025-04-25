@@ -190,6 +190,17 @@ test.describe("View XDR to JSON Page", () => {
 
     await expect(decodeErrorMsg).toBeVisible();
   });
+
+  test("Remove non-XDR characters", async ({ page }) => {
+    const xdrInput = page.getByLabel("Base-64 encoded XDR");
+    const jsonView = page.getByTestId("view-xdr-render-json");
+
+    // Fill XDR input with non-XDR characters
+    await xdrInput.fill(`"${MOCK_TX_TRANSACTION_ENVELOPE}",`);
+
+    await expect(jsonView).toBeVisible();
+    await expect(xdrInput).toHaveValue(MOCK_TX_TRANSACTION_ENVELOPE);
+  });
 });
 
 // =============================================================================
