@@ -132,6 +132,16 @@ export default function ViewXdr() {
 
   const txn = txnFromXdr();
 
+  const sanitizeXdr = (xdrString: string) => {
+    if (!xdrString) {
+      return "";
+    }
+
+    // Remove non-XDR characters from the beginning and end of the string.
+    const regex = /^[^A-Za-z0-9+/]*(.*?)[^A-Za-z0-9+/=]*$/;
+    return xdrString.replace(regex, "$1");
+  };
+
   const renderClaimableBalanceIds = () => {
     if (!txn) {
       return null;
@@ -268,7 +278,7 @@ export default function ViewXdr() {
               </>
             }
             onChange={(e) => {
-              updateXdrBlob(e.target.value);
+              updateXdrBlob(sanitizeXdr(e.target.value));
             }}
             error={latestTxnError?.toString()}
             disabled={isFetchingLatestTxn}
