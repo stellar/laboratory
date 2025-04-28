@@ -16,8 +16,7 @@ export const InvokeContract = ({
   network: Network | EmptyObj;
   isLoading: boolean;
 }) => {
-  const { account } = useStore();
-  const { walletKit } = account;
+  const { walletKit } = useStore();
 
   // omit __constructor__ and __init__ functions
   const filteredSpecFunctions = infoData.functions?.filter(
