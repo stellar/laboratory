@@ -56,9 +56,14 @@ export const ConnectedModal = ({
           </Button>
         </CopyText>
 
-        <Button size="md" variant="tertiary" onClick={onDisconnect}>
+        <Button
+          size="md"
+          variant="tertiary"
+          onClick={onDisconnect}
+          icon={<Icon.LogOut01 />}
+          iconPosition="right"
+        >
           Disconnect
-          <Icon.LogOut01 />
         </Button>
       </Modal.Footer>
     </Modal>
