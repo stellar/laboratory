@@ -162,7 +162,7 @@ export const ContractSpec = ({
             }}
             isLoading={isWasmBinaryLoading || isWasmBinaryFetching}
           >
-            Download WASM
+            Download Wasm
           </Button>
         </WithInfoText>
       </Box>
