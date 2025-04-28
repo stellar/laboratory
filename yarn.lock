@@ -282,18 +282,23 @@
   dependencies:
     "@floating-ui/utils" "^0.2.8"
 
-"@floating-ui/dom@^1.6.11":
-  version "1.6.11"
-  resolved "https://registry.yarnpkg.com/@floating-ui/dom/-/dom-1.6.11.tgz#8631857838d34ee5712339eb7cbdfb8ad34da723"
-  integrity sha512-qkMCxSR24v2vGkhYDo/UzxfJN3D4syqSjyuTFz6C7XcpU1pASPRieNI0Kj5VP3/503mOfYiGY891ugBX1GlABQ==
+"@floating-ui/dom@^1.6.13":
+  version "1.6.13"
+  resolved "https://registry.yarnpkg.com/@floating-ui/dom/-/dom-1.6.13.tgz#a8a938532aea27a95121ec16e667a7cbe8c59e34"
+  integrity sha512-umqzocjDgNRGTuO7Q8CU32dkHkECqI8ZdMZ5Swb6QAM0t5rnlrN3lGo1hdpscRd3WS8T6DKYK4ephgIH9iRh3w==
   dependencies:
     "@floating-ui/core" "^1.6.0"
-    "@floating-ui/utils" "^0.2.8"
+    "@floating-ui/utils" "^0.2.9"
 
 "@floating-ui/utils@^0.2.8":
   version "0.2.8"
   resolved "https://registry.yarnpkg.com/@floating-ui/utils/-/utils-0.2.8.tgz#21a907684723bbbaa5f0974cf7730bd797eb8e62"
   integrity sha512-kym7SodPp8/wloecOpcmSnWJsK7M0E5Wg8UcFA+uO4B9s5d0ywXOEro/8HM9x0rW+TljRzul/14UYz3TleT3ig==
+
+"@floating-ui/utils@^0.2.9":
+  version "0.2.9"
+  resolved "https://registry.yarnpkg.com/@floating-ui/utils/-/utils-0.2.9.tgz#50dea3616bc8191fb8e112283b49eaff03e78429"
+  integrity sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==
 
 "@hot-wallet/sdk@1.0.11":
   version "1.0.11"
@@ -1568,16 +1573,16 @@
     "@stablelib/random" "^1.0.2"
     "@stablelib/wipe" "^1.0.1"
 
-"@stellar/design-system@^2.0.0-beta.17":
-  version "2.0.0-beta.17"
-  resolved "https://registry.yarnpkg.com/@stellar/design-system/-/design-system-2.0.0-beta.17.tgz#67c0fdd9bc62d3b69277b6bd8c6e96952dc0613c"
-  integrity sha512-OI550YuErfOebfGfkMvDYF0KizzzouI9+npsBvAs1eL1+ILNTbeZusX+dYoVvmHJMkzpnF9gXTAcUJnfUIfWSg==
+"@stellar/design-system@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@stellar/design-system/-/design-system-3.1.0.tgz#298ca94a09033310461a854de1075a11df262e0f"
+  integrity sha512-QyQSg1HO6rKMIpiWH+4oOASNhxiNkYsXh/O1173IfO/7uPp614RlM4rXe0tfXYbfOHi9gkcdV++YNpQUz8BVgA==
   dependencies:
-    "@floating-ui/dom" "^1.6.11"
+    "@floating-ui/dom" "^1.6.13"
     bignumber.js "^9.1.2"
     lodash "^4.17.21"
     react-copy-to-clipboard "^5.1.0"
-    tslib "^2.7.0"
+    tslib "^2.8.1"
 
 "@stellar/freighter-api@4.0.0":
   version "4.0.0"
@@ -6771,11 +6776,6 @@ tslib@^2.4.1, tslib@^2.8.0, tslib@^2.8.1:
   version "2.8.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.8.1.tgz#612efe4ed235d567e8aba5f2a5fab70280ade83f"
   integrity sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==
-
-tslib@^2.7.0:
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.7.0.tgz#d9b40c5c40ab59e8738f297df3087bf1a2690c01"
-  integrity sha512-gLXCKdN1/j47AiHiOkJN69hJmcbGTHI0ImLmbYLHykhgeN0jVGola9yVjFgzCUklsZQMW55o+dW7IXv3RCXDzA==
 
 tweetnacl-util@^0.15.1:
   version "0.15.1"

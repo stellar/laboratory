@@ -12,8 +12,11 @@
 
 .Floater__content {
   &:has(.FloaterDropdown__content) {
+    --Floater-background-color: var(--sds-clr-gray-01);
+
     left: auto !important;
     right: 0 !important;
     width: pxToRem(240px);
+    border: 1px solid var(--sds-clr-gray-06);
   }
 }
