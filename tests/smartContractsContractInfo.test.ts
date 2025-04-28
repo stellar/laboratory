@@ -67,7 +67,7 @@ test.describe("Smart Contracts: Contract Info", () => {
     await expect(getInfoItem("Created")).toHaveText(
       "Tue, Nov 12, 2024, 09:12:56 UTC",
     );
-    await expect(getInfoItem("WASM Hash")).toHaveText(
+    await expect(getInfoItem("Wasm Hash")).toHaveText(
       "df88820e231ad8f3027871e5dd3cf45491d7b7735e785731466bfc2946008608",
     );
     await expect(getInfoItem("Versions")).toHaveText("-");
