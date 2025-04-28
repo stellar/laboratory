@@ -43,10 +43,19 @@ export const ConnectedModal = ({
         </Box>
       </Modal.Body>
       <Modal.Footer itemAlignment="stack">
-        <Button size="md" variant="tertiary">
-          <CopyText textToCopy={publicKey}>Copy address</CopyText>
-          <Icon.Copy01 />
-        </Button>
+        <CopyText textToCopy={publicKey} variant="headless">
+          <Button
+            isFullWidth
+            size="md"
+            variant="tertiary"
+            icon={<Icon.Copy01 />}
+            iconPosition="right"
+            onClick={(e) => e.preventDefault()}
+          >
+            Copy address
+          </Button>
+        </CopyText>
+
         <Button size="md" variant="tertiary" onClick={onDisconnect}>
           Disconnect
           <Icon.LogOut01 />

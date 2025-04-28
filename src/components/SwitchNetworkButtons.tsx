@@ -14,8 +14,7 @@ export const SwitchNetworkButtons = ({
   buttonSize: "sm" | "md" | "lg";
   page: string;
 }) => {
-  const { selectNetwork, updateIsDynamicNetworkSelect, account } = useStore();
-  const { updateWalletKit, walletKit } = account;
+  const { selectNetwork, updateIsDynamicNetworkSelect } = useStore();
 
   const getAndSetNetwork = (networkId: NetworkType) => {
     const newNetwork = getNetworkById(networkId);
@@ -23,14 +22,6 @@ export const SwitchNetworkButtons = ({
     if (newNetwork) {
       updateIsDynamicNetworkSelect(true);
       selectNetwork(newNetwork);
-
-      // reset walletKit when switching networks
-      if (walletKit?.publicKey) {
-        updateWalletKit({
-          publicKey: undefined,
-          walletType: undefined,
-        });
-      }
     }
   };
 

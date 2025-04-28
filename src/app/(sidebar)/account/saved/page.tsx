@@ -31,9 +31,13 @@ import { useAccountInfo } from "@/query/useAccountInfo";
 import { NetworkType, SavedKeypair } from "@/types/types";
 
 export default function SavedKeypairs() {
-  const { account, network, selectNetwork, updateIsDynamicNetworkSelect } =
-    useStore();
-  const { updateWalletKit, walletKit } = account;
+  const {
+    network,
+    updateWalletKit,
+    walletKit,
+    selectNetwork,
+    updateIsDynamicNetworkSelect,
+  } = useStore();
 
   const [savedKeypairs, setSavedKeypairs] = useState<SavedKeypair[]>([]);
   const [currentKeypairTimestamp, setCurrentKeypairTimestamp] = useState<

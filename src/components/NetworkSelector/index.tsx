@@ -30,11 +30,11 @@ export const NetworkSelector = () => {
     isDynamicNetworkSelect,
     selectNetwork,
     updateIsDynamicNetworkSelect,
-    account,
+    updateWalletKit,
   } = useStore();
 
   const { updateNetwork } = endpoints;
-  const { updateWalletKit, walletKit } = account;
+
   const [activeNetwork, setActiveNetwork] = useState<Network | EmptyObj>(
     network,
   );
@@ -148,6 +148,11 @@ export const NetworkSelector = () => {
       handleSetActiveNetwork(network as Network);
       handleNetworkSaveLocalStorage(network as Network);
     }
+
+    updateWalletKit({
+      publicKey: undefined,
+      walletType: undefined,
+    });
     // Not including network
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDynamicNetworkSelect, network.id]);
@@ -214,14 +219,6 @@ export const NetworkSelector = () => {
       updateNetwork(network);
       // Update local state
       setActiveNetwork(network);
-
-      // reset walletKit when switching networks
-      if (walletKit?.publicKey) {
-        updateWalletKit({
-          publicKey: undefined,
-          walletType: undefined,
-        });
-      }
 
       // Don't save header values in local storage
       const savedNetwork: Network = {
