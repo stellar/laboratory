@@ -31,13 +31,7 @@ import { useAccountInfo } from "@/query/useAccountInfo";
 import { NetworkType, SavedKeypair } from "@/types/types";
 
 export default function SavedKeypairs() {
-  const {
-    network,
-    updateWalletKit,
-    walletKit,
-    selectNetwork,
-    updateIsDynamicNetworkSelect,
-  } = useStore();
+  const { network, selectNetwork, updateIsDynamicNetworkSelect } = useStore();
 
   const [savedKeypairs, setSavedKeypairs] = useState<SavedKeypair[]>([]);
   const [currentKeypairTimestamp, setCurrentKeypairTimestamp] = useState<
@@ -63,14 +57,6 @@ export default function SavedKeypairs() {
     if (newNetwork) {
       updateIsDynamicNetworkSelect(true);
       selectNetwork(newNetwork);
-
-      // reset walletKit when switching networks
-      if (walletKit?.publicKey) {
-        updateWalletKit({
-          publicKey: undefined,
-          walletType: undefined,
-        });
-      }
     }
   };
 
