@@ -1,12 +1,22 @@
 import { useEffect, useState } from "react";
 import { Button, Card, Text } from "@stellar/design-system";
-import { contract } from "@stellar/stellar-sdk";
+import { BASE_FEE, contract } from "@stellar/stellar-sdk";
 import { JSONSchema7 } from "json-schema";
 
+import { useStore } from "@/store/useStore";
+import { useWasmBinaryFromRpc } from "@/query/useWasmBinaryFromRpc";
+import { useAccountSequenceNumber } from "@/query/useAccountSequenceNumber";
+import { useSimulateTx } from "@/query/useSimulateTx";
+
 import { DereferencedSchemaType } from "@/constants/jsonSchema";
+
+import { useCodeWrappedSetting } from "@/hooks/useCodeWrappedSetting";
+
+import * as StellarXdr from "@/helpers/StellarXdr";
 import { dereferenceSchema } from "@/helpers/dereferenceSchema";
 import { renderWasmStatus } from "@/helpers/renderWasmStatus";
-// import { getTxnToSimulate } from "@/helpers/sorobanUtils";
+import { getWasmContractData } from "@/helpers/getWasmContractData";
+import { getTxnToSimulate } from "@/helpers/sorobanUtils";
 
 import { Box } from "@/components/layout/Box";
 import { JsonSchemaFormRenderer } from "@/components/JsonSchema/JsonSchemaFormRenderer";
@@ -18,8 +28,16 @@ import {
   SorobanInvokeValue,
   EmptyObj,
 } from "@/types/types";
-import { useWasmBinaryFromRpc } from "@/query/useWasmBinaryFromRpc";
-import { getWasmContractData } from "@/helpers/getWasmContractData";
+
+import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
+import { TransactionBuildParams } from "@/store/createStore";
+
+import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
+import { useIsXdrInit } from "@/hooks/useIsXdrInit";
+import { PrettyJsonTransaction } from "@/components/PrettyJsonTransaction";
+import { parseJsonString } from "@/helpers/parseJsonString";
+import { JsonCodeWrapToggle } from "@/components/JsonCodeWrapToggle";
+import { PrettyJson } from "@/components/PrettyJson";
 
 export const InvokeContractForm = ({
   infoData,
@@ -30,8 +48,31 @@ export const InvokeContractForm = ({
   network: Network | EmptyObj;
   funcName: string;
 }) => {
+  const { walletKit } = useStore();
   const [contractSpec, setContractSpec] = useState<contract.Spec | null>();
   const { wasm: wasmHash } = infoData;
+  const [xdr, setXdr] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [isCodeWrapped, setIsCodeWrapped] = useCodeWrappedSetting();
+
+  const {
+    data: sequenceNumberData,
+    error: sequenceNumberError,
+    refetch: fetchSequenceNumber,
+    isFetching: isFetchingSequenceNumber,
+    isLoading: isLoadingSequenceNumber,
+  } = useAccountSequenceNumber({
+    publicKey: walletKit?.publicKey || "",
+    horizonUrl: network.horizonUrl,
+    headers: getNetworkHeaders(network, "horizon"),
+  });
+
+  const {
+    mutateAsync: simulateTx,
+    data: simulateTxData,
+    isPending: isSimulateTxPending,
+    reset: resetSimulateTx,
+  } = useSimulateTx();
 
   const {
     data: wasmBinary,
@@ -44,6 +85,31 @@ export const InvokeContractForm = ({
     rpcUrl: network.rpcUrl || "",
     isActive: Boolean(network.passphrase && wasmHash),
   });
+
+  const isXdrInit = useIsXdrInit();
+
+  const getXdrJson = (xdr: string) => {
+    const xdrType = XDR_TYPE_TRANSACTION_ENVELOPE;
+
+    if (!(isXdrInit && xdr)) {
+      return null;
+    }
+
+    try {
+      const xdrJson = StellarXdr.decode(xdrType, xdr);
+
+      return {
+        jsonString: xdrJson,
+        error: "",
+      };
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {
+      return {
+        jsonString: "",
+        error: `Unable to decode input as ${xdrType}`,
+      };
+    }
+  };
 
   useEffect(() => {
     const getContractData = async () => {
@@ -71,16 +137,72 @@ export const InvokeContractForm = ({
     setFormValue(value);
   };
 
-  const wasmStatus = renderWasmStatus({
-    wasmHash: wasmHash || "",
-    rpcUrl: network.rpcUrl || "",
-    isLoading: isWasmBinaryFetching || isWasmBinaryLoading,
-    error: wasmBinaryError,
-  });
+  // const wasmStatus = renderWasmStatus({
+  //   wasmHash: wasmHash || "",
+  //   rpcUrl: network.rpcUrl || "",
+  //   isLoading: isWasmBinaryFetching || isWasmBinaryLoading,
+  //   error: wasmBinaryError,
+  // });
 
-  if (wasmStatus) {
-    return wasmStatus;
-  }
+  // if (wasmStatus) {
+  //   return wasmStatus;
+  // }
+
+  const isSimulating = isFetchingSequenceNumber || isLoadingSequenceNumber;
+
+  const handleSubmit = () => {
+    console.log(formValue);
+  };
+
+  const handleSimulate = () => {
+    fetchSequenceNumber();
+
+    const txnParams: TransactionBuildParams = {
+      source_account: walletKit?.publicKey || "",
+      fee: BASE_FEE,
+      seq_num: sequenceNumberData || "",
+      cond: {
+        time: {
+          min_time: "0",
+          max_time: "0",
+        },
+      },
+      memo: {},
+    };
+
+    const sorobanOperation = {
+      operation_type: "invoke_contract_function",
+      params: {
+        contract_id: formValue.contract_id,
+        function_name: formValue.function_name,
+        args: formValue.args,
+      },
+    };
+
+    const { xdr, error } = getTxnToSimulate(
+      formValue,
+      txnParams,
+      sorobanOperation,
+      network.passphrase,
+    );
+
+    if (network.rpcUrl && xdr) {
+      simulateTx({
+        rpcUrl: network.rpcUrl,
+        transactionXdr: xdr,
+        headers: getNetworkHeaders(network, "rpc"),
+      });
+    }
+
+    if (error) {
+      setError(error);
+    }
+
+    setXdr(xdr);
+
+    console.log("xdr: ", xdr);
+    console.log("simulateTxData: ", simulateTxData);
+  };
 
   const renderTitle = (name: string, description?: string) => (
     <>
@@ -145,17 +267,11 @@ export const InvokeContractForm = ({
           <Button
             size="md"
             variant="tertiary"
-            disabled={!Object.keys(formValue.args).length}
-            onClick={() => {
-              // @TODO could also may be use TX BINDING
-              // const { xdr, error } = getTxnToSimulate(
-              // formValue,
-              // txnParams,
-              // sorobanOperation,
-              // network.passphrase,
-              // );
-              // noop
-            }}
+            disabled={
+              !Object.keys(formValue.args).length && !walletKit?.publicKey
+            }
+            isLoading={isSimulating}
+            onClick={handleSimulate}
           >
             Simulate
           </Button>
@@ -163,7 +279,9 @@ export const InvokeContractForm = ({
           <Button
             size="md"
             variant="secondary"
-            disabled={!Object.keys(formValue.args).length}
+            disabled={
+              !Object.keys(formValue.args).length && !walletKit?.publicKey
+            }
             onClick={() => {
               // noop
             }}
@@ -171,6 +289,28 @@ export const InvokeContractForm = ({
             Submit
           </Button>
         </Box>
+        {xdr ? (
+          <Box gap="md">
+            <div
+              data-testid="simulate-tx-response"
+              className={`PageBody__content PageBody__scrollable ${simulateTxData?.result?.error ? "PageBody__content--error" : ""}`}
+            >
+              <PrettyJsonTransaction
+                json={simulateTxData}
+                xdr={xdr}
+                isCodeWrapped={isCodeWrapped}
+              />
+            </div>
+            <Box gap="md" direction="row" align="center">
+              <JsonCodeWrapToggle
+                isChecked={isCodeWrapped}
+                onChange={(isChecked) => {
+                  setIsCodeWrapped(isChecked);
+                }}
+              />
+            </Box>
+          </Box>
+        ) : null}
       </Box>
     </Card>
   );
