@@ -30,6 +30,7 @@ export const NetworkSelector = () => {
     isDynamicNetworkSelect,
     selectNetwork,
     updateIsDynamicNetworkSelect,
+    updateWalletKit,
   } = useStore();
 
   const { updateNetwork } = endpoints;
@@ -147,6 +148,11 @@ export const NetworkSelector = () => {
       handleSetActiveNetwork(network as Network);
       handleNetworkSaveLocalStorage(network as Network);
     }
+
+    updateWalletKit({
+      publicKey: undefined,
+      walletType: undefined,
+    });
     // Not including network
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDynamicNetworkSelect, network.id]);

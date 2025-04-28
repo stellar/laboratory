@@ -48,7 +48,7 @@ type TxSignatureType =
   | "signature";
 
 export const Overview = () => {
-  const { network, transaction, xdr, account } = useStore();
+  const { network, transaction, xdr, walletKit } = useStore();
   const {
     sign,
     updateSignActiveView,
@@ -840,7 +840,7 @@ export const Overview = () => {
               <LabelHeading size="md">Sign with wallet extension</LabelHeading>
 
               <SignTxButton
-                label={`Sign with ${account.walletKit?.publicKey ? shortenStellarAddress(account.walletKit?.publicKey) : "wallet"}`}
+                label={`Sign with ${walletKit?.publicKey ? shortenStellarAddress(walletKit?.publicKey) : "wallet"}`}
                 onSign={() => {
                   setIsExtensionClear(false);
                   setIsExtensionLoading(true);
