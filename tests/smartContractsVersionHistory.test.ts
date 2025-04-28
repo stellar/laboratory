@@ -58,7 +58,7 @@ test.describe("Smart Contracts: Version History", () => {
     const colUpdated = table.locator("th").nth(1);
 
     // Table headers
-    await expect(colWasm).toContainText("Contract WASM Hash");
+    await expect(colWasm).toContainText("Contract Wasm Hash");
     await expect(colUpdated).toContainText("Updated");
 
     // Table data
