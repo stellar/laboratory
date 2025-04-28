@@ -36,6 +36,9 @@ export const EndpointsJsonResponse = ({
       case "header_xdr":
         xdrType = "LedgerHeader";
         break;
+      case "headerXdr":
+        xdrType = "LedgerHeaderHistoryEntry";
+        break;
       case "key":
         xdrType = "LedgerKey";
         break;
@@ -44,6 +47,9 @@ export const EndpointsJsonResponse = ({
         break;
       case "diagnosticEventsXdr":
         xdrType = "DiagnosticEvent";
+        break;
+      case "metadataXdr":
+        xdrType = "LedgerCloseMeta";
         break;
       default:
       // Do nothing
@@ -356,6 +362,12 @@ export const EndpointsJsonResponse = ({
       getHref: handleLinkXdr,
     },
     header_xdr: {
+      getHref: handleLinkXdr,
+    },
+    headerXdr: {
+      getHref: handleLinkXdr,
+    },
+    metadataXdr: {
       getHref: handleLinkXdr,
     },
     key: {
