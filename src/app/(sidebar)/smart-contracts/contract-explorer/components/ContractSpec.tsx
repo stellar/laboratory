@@ -115,7 +115,7 @@ export const ContractSpec = ({
             sectionName: "contractmetav0",
             title: "Contract Meta",
             infoLink:
-              "https://developers.stellar.org/docs/tools/sdks/build-your-own#contract-meta-generation",
+              "https://developers.stellar.org/docs/learn/encyclopedia/contract-development/stellar-contract#contract-meta",
             height: "22",
           })
         : null}
@@ -125,7 +125,7 @@ export const ContractSpec = ({
             sectionName: "contractenvmetav0",
             title: "Contract Env Meta",
             infoLink:
-              "https://developers.stellar.org/docs/tools/sdks/build-your-own#environment-meta-generation",
+              "https://developers.stellar.org/docs/learn/encyclopedia/contract-development/stellar-contract#environment-meta",
             height: "15",
           })
         : null}
@@ -135,7 +135,7 @@ export const ContractSpec = ({
             sectionName: "contractspecv0",
             title: "Contract Spec",
             infoLink:
-              "https://developers.stellar.org/docs/build/guides/dapps/working-with-contract-specs#what-are-contract-specs",
+              "https://developers.stellar.org/docs/learn/encyclopedia/contract-development/stellar-contract#contract-spec",
           })
         : null}
 
@@ -162,7 +162,7 @@ export const ContractSpec = ({
             }}
             isLoading={isWasmBinaryLoading || isWasmBinaryFetching}
           >
-            Download WASM
+            Download Wasm
           </Button>
         </WithInfoText>
       </Box>
