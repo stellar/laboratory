@@ -32,7 +32,7 @@ export const useWasmBinaryFromRpc = ({
 
         return await rpcServer.getContractWasmByHash(wasmHash, "hex");
       } catch (e: any) {
-        throw `Something went wrong downloading the wasm binary. ${e.message || e}`;
+        throw `Something went wrong downloading the Wasm binary. ${e.message || e}`;
       }
     },
     enabled: Boolean(wasmHash && rpcUrl && isActive),

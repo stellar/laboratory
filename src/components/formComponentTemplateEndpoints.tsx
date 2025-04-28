@@ -837,7 +837,7 @@ export const formComponentTemplateEndpoints = (
           <TextPicker
             key={id}
             id={id}
-            label="WASM Hash"
+            label="Wasm Hash"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             placeholder="Ex: f5c9668827b4783e1f87a7f6b7406f6c426b72e82f114654a724713e4e6c0de4"
             value={templ.value || ""}
@@ -853,7 +853,7 @@ export const formComponentTemplateEndpoints = (
           <TextPicker
             key={id}
             id={id}
-            label="WASM Hash"
+            label="Wasm Hash"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             placeholder="Ex: 3389e9f0f1a65f19736cacf544c2e825313e8447f569233bb8db39aa607c8889"
             value={templ.value || ""}

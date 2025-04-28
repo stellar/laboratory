@@ -4,7 +4,7 @@ import { getStellarExpertNetwork } from "@/helpers/getStellarExpertNetwork";
 import { NetworkType } from "@/types/types";
 
 /**
- * StellarExpert API to get smart contract wasm binary
+ * StellarExpert API to get smart contract Wasm binary
  */
 export const useSEContractWasmBinary = ({
   networkId,
@@ -34,10 +34,10 @@ export const useSEContractWasmBinary = ({
         } else {
           const responseJson = await response.json();
 
-          throw responseJson.error || "WASM binary error";
+          throw responseJson.error || "Wasm binary error";
         }
       } catch (e: any) {
-        throw `Error downloading WASM. ${e}`;
+        throw `Error downloading Wasm. ${e}`;
       }
     },
     enabled: false,
