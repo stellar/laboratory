@@ -44,7 +44,7 @@ export const useWasmGitHubAttestation = ({
         const attResponse = await att.json();
         const attPayload = parseAttestationPayload(attResponse);
 
-        // Validate wasm hash
+        // Validate Wasm hash
         if (attPayload?.subject?.[0]?.digest?.sha256 !== wasmHash) {
           return null;
         }

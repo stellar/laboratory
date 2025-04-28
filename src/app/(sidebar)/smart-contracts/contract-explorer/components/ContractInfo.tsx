@@ -95,7 +95,7 @@ export const ContractInfo = ({
     },
     {
       id: "wasm",
-      label: "WASM Hash",
+      label: "Wasm Hash",
     },
     {
       id: "versions",
@@ -251,7 +251,7 @@ export const ContractInfo = ({
         message: (
           <>
             <code>Build Verified</code> means that a GitHub Action run has
-            attested to have built the WASM, but does not verify the source
+            attested to have built the Wasm, but does not verify the source
             code.
           </>
         ),
