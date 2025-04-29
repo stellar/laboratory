@@ -482,6 +482,7 @@ const NetworkInput = ({
         position: "right",
       }}
       infoLink={infoLink}
+      infoLinkIcon={<Icon.InfoCircle />}
       {...(disableAutocomplete ? { autoComplete: "off" } : {})}
     />
   );

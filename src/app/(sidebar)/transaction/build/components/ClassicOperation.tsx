@@ -1,4 +1,4 @@
-import { ChangeEvent, Fragment, useState } from "react";
+import React, { ChangeEvent, Fragment, useState } from "react";
 import { Card, Badge, Button, Icon, Input } from "@stellar/design-system";
 
 import { TabbedButtons } from "@/components/TabbedButtons";
@@ -227,6 +227,7 @@ export const ClassicOperation = ({
         disabled
         copyButton={{ position: "right" }}
         infoLink="https://developers.stellar.org/docs/learn/glossary#claimablebalanceid"
+        infoLinkIcon={<Icon.InfoCircle />}
       />
     );
   };

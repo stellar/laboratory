@@ -1,5 +1,5 @@
 import React from "react";
-import { Input, InputProps } from "@stellar/design-system";
+import { Icon, Input, InputProps } from "@stellar/design-system";
 
 interface TextPickerProps extends Omit<InputProps, "fieldSize"> {
   id: string;
@@ -39,6 +39,7 @@ export const TextPicker = ({
     readOnly={readOnly}
     disabled={disabled}
     autoComplete={autocomplete}
+    infoLinkIcon={<Icon.InfoCircle />}
     {...props}
   />
 );

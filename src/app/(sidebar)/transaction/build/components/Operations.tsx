@@ -1,7 +1,7 @@
 "use client";
 
-import { ChangeEvent, useEffect, useState } from "react";
-import { Select, Notification } from "@stellar/design-system";
+import React, { ChangeEvent, useEffect, useState } from "react";
+import { Select, Notification, Icon } from "@stellar/design-system";
 
 import { formComponentTemplateTxnOps } from "@/components/formComponentTemplateTxnOps";
 import { SdsLink } from "@/components/SdsLink";
@@ -780,6 +780,7 @@ export const Operations = () => {
           label="Operation type"
           value={operationType}
           infoLink="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations"
+          infoLinkIcon={<Icon.InfoCircle />}
           onChange={(e) => {
             const defaultParams =
               TRANSACTION_OPERATIONS[e.target.value]?.defaultParams || {};
