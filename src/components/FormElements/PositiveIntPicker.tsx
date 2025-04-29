@@ -1,5 +1,5 @@
 import React from "react";
-import { Input, InputProps } from "@stellar/design-system";
+import { Icon, Input, InputProps } from "@stellar/design-system";
 
 interface PositiveIntPickerProps extends Omit<InputProps, "fieldSize"> {
   id: string;
@@ -37,6 +37,7 @@ export const PositiveIntPicker = ({
       onChange={onChange}
       readOnly={readOnly}
       disabled={disabled}
+      infoLinkIcon={<Icon.InfoCircle />}
       {...props}
     />
   );

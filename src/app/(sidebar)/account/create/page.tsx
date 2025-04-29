@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Text, Button, Icon } from "@stellar/design-system";
+import { Text, Button, Icon, Alert } from "@stellar/design-system";
 import { Keypair } from "@stellar/stellar-sdk";
 
 import { useStore } from "@/store/useStore";
@@ -181,6 +181,21 @@ export default function CreateAccount() {
           setShowAlert(false);
         }}
       />
+
+      {!IS_TESTING_NETWORK ? (
+        <Alert
+          placement="inline"
+          variant="warning"
+          title="Please Avoid Using Private Keys Directly on Mainnet"
+        >
+          For your security, do not use your private key for accounts holding
+          significant funds when interacting with the Stellar’s mainnet.
+          Handling private keys manually increases the risk of loss, theft, or
+          accidental misuse. Instead, connect your wallet and sign transactions
+          securely. Wallets are designed to manage keys safely and protect your
+          assets.
+        </Alert>
+      ) : null}
 
       <SaveToLocalStorageModal
         type="save"
