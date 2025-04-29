@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Select, Notification, Icon } from "@stellar/design-system";
 
 import { formComponentTemplateTxnOps } from "@/components/formComponentTemplateTxnOps";

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Fragment, useState } from "react";
+import { ChangeEvent, Fragment, useState } from "react";
 import { Card, Badge, Button, Icon, Input } from "@stellar/design-system";
 
 import { TabbedButtons } from "@/components/TabbedButtons";
