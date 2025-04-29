@@ -122,6 +122,17 @@ export const NetworkSelector = () => {
           horizonHeaderName: savedNetwork.horizonHeaderName || "",
           rpcHeaderName: savedNetwork.rpcHeaderName || "",
         };
+      } else {
+        // Network values that don’t match saved network values
+        const newNetwork = {
+          ...network,
+          label: getNetworkById(network.id)?.label,
+        } as Network;
+
+        setActiveNetwork(newNetwork);
+        selectNetwork(newNetwork);
+        updateNetwork(newNetwork);
+        return;
       }
     } else {
       defaultNetwork =
