@@ -13,6 +13,8 @@
   --NetworkSelector-padding-horizontal: #{pxToRem(10px)};
   --NetworkSelector-box-shadow-size: 0;
 
+  --Floater-background-color: var(--sds-clr-gray-01);
+
   position: relative;
 
   // Button
@@ -58,6 +60,7 @@
     display: none;
     opacity: 0;
     min-width: pxToRem(360px);
+    border: 1px solid var(--sds-clr-gray-06);
 
     &[data-is-active="true"] {
       display: block;

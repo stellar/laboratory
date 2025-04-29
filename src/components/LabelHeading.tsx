@@ -28,7 +28,7 @@ export const LabelHeading = ({
         rel="noreferrer noopener"
         target="_blank"
       >
-        <Icon.BookOpen01 />
+        <Icon.InfoCircle />
       </a>
     ) : null}
 
