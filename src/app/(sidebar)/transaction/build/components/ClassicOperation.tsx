@@ -227,6 +227,7 @@ export const ClassicOperation = ({
         disabled
         copyButton={{ position: "right" }}
         infoLink="https://developers.stellar.org/docs/learn/glossary#claimablebalanceid"
+        infoLinkIcon={<Icon.InfoCircle />}
       />
     );
   };
