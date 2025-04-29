@@ -14,9 +14,7 @@ import { WalletKitContext } from "@/components/WalletKit/WalletKitContextProvide
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 export const ConnectWallet = () => {
-  const { account, network } = useStore();
-  const { updateWalletKit, walletKit } = account;
-
+  const { network, walletKit, updateWalletKit } = useStore();
   const [isModalVisible, setShowModal] = useState(false);
   const [errorMessageOnConnect, setErrorMessageOnConnect] = useState("");
   const walletKitInstance = useContext(WalletKitContext);

@@ -14,8 +14,7 @@ export const useSignWithExtensionWallet = ({
   isClear: boolean;
   txXdr: string;
 }) => {
-  const { account, network } = useStore();
-  const { walletKit, updateWalletKit } = account;
+  const { network, walletKit, updateWalletKit } = useStore();
   const networkPassphrase = getWalletKitNetwork(network.id);
 
   const walletKitInstance = useContext(WalletKitContext);

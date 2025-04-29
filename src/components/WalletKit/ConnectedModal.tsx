@@ -6,7 +6,6 @@ import {
   Modal,
   Icon,
   Text,
-  IconButton,
 } from "@stellar/design-system";
 
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
@@ -44,23 +43,27 @@ export const ConnectedModal = ({
         </Box>
       </Modal.Body>
       <Modal.Footer itemAlignment="stack">
-        <Button size="md" variant="tertiary">
-          <CopyText textToCopy={publicKey}>Copy address</CopyText>
-          <IconButton
-            altText="Default"
-            customColor="var(--sds-clr-gray-09)"
-            customSize="14px"
+        <CopyText textToCopy={publicKey} variant="headless">
+          <Button
+            isFullWidth
+            size="md"
+            variant="tertiary"
             icon={<Icon.Copy01 />}
-          />
-        </Button>
-        <Button size="md" variant="tertiary" onClick={onDisconnect}>
+            iconPosition="right"
+            onClick={(e) => e.preventDefault()}
+          >
+            Copy address
+          </Button>
+        </CopyText>
+
+        <Button
+          size="md"
+          variant="tertiary"
+          onClick={onDisconnect}
+          icon={<Icon.LogOut01 />}
+          iconPosition="right"
+        >
           Disconnect
-          <IconButton
-            altText="Default"
-            customColor="var(--sds-clr-gray-09)"
-            customSize="14px"
-            icon={<Icon.LogOut01 />}
-          />
         </Button>
       </Modal.Footer>
     </Modal>
