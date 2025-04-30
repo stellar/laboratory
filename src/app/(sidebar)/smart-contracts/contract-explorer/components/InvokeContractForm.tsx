@@ -50,25 +50,21 @@ export const InvokeContractForm = ({
   const [signedTxXdr, setSignedTxXdr] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isExtensionLoading, setIsExtensionLoading] = useState(false);
-  // const [isExtensionClear, setIsExtensionClear] = useState(false);
+  const [isFetchingSequenceNumber, setIsFetchingSequenceNumber] =
+    useState(false);
 
   const { wasm: wasmHash } = infoData;
 
-  const {
-    data: sequenceNumberData,
-    refetch: fetchSequenceNumber,
-    isFetching: isFetchingSequenceNumber,
-    isLoading: isLoadingSequenceNumber,
-  } = useAccountSequenceNumber({
-    publicKey: walletKit?.publicKey || "",
-    horizonUrl: network.horizonUrl,
-    headers: getNetworkHeaders(network, "horizon"),
-  });
+  const { data: sequenceNumberData, refetch: fetchSequenceNumber } =
+    useAccountSequenceNumber({
+      publicKey: walletKit?.publicKey || "",
+      horizonUrl: network.horizonUrl,
+      headers: getNetworkHeaders(network, "horizon"),
+    });
 
   const {
     mutateAsync: simulateTx,
     data: simulateTxData,
-    isSuccess: isSimulateTxSuccess,
     isError: isSimulateTxError,
     isPending: isSimulateTxPending,
     reset: resetSimulateTx,
@@ -81,12 +77,6 @@ export const InvokeContractForm = ({
     reset: resetPrepareTx,
   } = useRpcPrepareTx();
 
-  const { data: wasmBinary } = useWasmBinaryFromRpc({
-    wasmHash: wasmHash || "",
-    rpcUrl: network.rpcUrl || "",
-    isActive: Boolean(network.passphrase && wasmHash),
-  });
-
   const {
     data: submitRpcResponse,
     mutate: submitRpc,
@@ -96,6 +86,12 @@ export const InvokeContractForm = ({
     isError: isSubmitRpcError,
     reset: resetSubmitRpc,
   } = useSubmitRpcTx();
+
+  const { data: wasmBinary } = useWasmBinaryFromRpc({
+    wasmHash: wasmHash || "",
+    rpcUrl: network.rpcUrl || "",
+    isActive: Boolean(network.passphrase && wasmHash),
+  });
 
   const walletKitInstance = useContext(WalletKitContext);
 
@@ -108,7 +104,7 @@ export const InvokeContractForm = ({
   const responseErrorEl = useRef<HTMLDivElement | null>(null);
 
   const signTx = async (xdr: string) => {
-    if (!walletKitInstance?.walletKit) {
+    if (!walletKitInstance?.walletKit || !walletKit?.publicKey) {
       return;
     }
 
@@ -127,7 +123,6 @@ export const InvokeContractForm = ({
         if (result.signedTxXdr && result.signedTxXdr !== "") {
           setSignedTxXdr(result.signedTxXdr);
         }
-
         setIsExtensionLoading(false);
       } catch (error: any) {
         if (error?.message) {
@@ -166,10 +161,7 @@ export const InvokeContractForm = ({
   };
 
   const isSimulating =
-    isFetchingSequenceNumber ||
-    isLoadingSequenceNumber ||
-    isSimulateTxPending ||
-    isPrepareTxPending;
+    isFetchingSequenceNumber || isSimulateTxPending || isPrepareTxPending;
 
   const resetSubmitState = () => {
     if (submitRpcError || submitRpcResponse) {
@@ -210,7 +202,9 @@ export const InvokeContractForm = ({
     resetSubmitState();
     resetPrepareTx();
 
+    setIsFetchingSequenceNumber(true);
     fetchSequenceNumber();
+    setIsFetchingSequenceNumber(false);
 
     const txnParams: TransactionBuildParams = {
       source_account: walletKit?.publicKey || "",
@@ -418,7 +412,10 @@ export const InvokeContractForm = ({
             variant="secondary"
             isLoading={isExtensionLoading || isSubmitRpcPending}
             disabled={
-              isSimulateTxError || isSubmitRpcError || !isSimulateTxSuccess
+              isSimulateTxError ||
+              isSubmitRpcError ||
+              simulateTxData?.result?.error ||
+              isSimulating
             }
             onClick={handleSubmit}
           >
