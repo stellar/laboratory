@@ -58,6 +58,13 @@ export const ContractInfo = ({
 
   const buttonRef = useRef<HTMLButtonElement | null>(null);
 
+  const sourceRepo =
+    infoData.validation?.repository?.replace("https://github.com/", "") ||
+    wasmData?.sourceRepo ||
+    "";
+  const sourceCommit =
+    infoData?.validation?.commit || wasmData?.build.commit || "";
+
   const handleClickOutside = useCallback((event: MouseEvent) => {
     if (buttonRef?.current?.contains(event.target as Node)) {
       return;
@@ -151,16 +158,13 @@ export const ContractInfo = ({
             key={field.id}
             label={field.label}
             value={
-              infoData.validation?.repository && infoData.validation?.commit ? (
+              sourceRepo && sourceCommit ? (
                 <SdsLink
-                  href={`${infoData.validation.repository}/tree/${infoData.validation.commit}`}
+                  href={`https://github.com/${sourceRepo}/tree/${sourceCommit}`}
                   addlClassName="Link--external"
                 >
                   <Logo.Github />
-                  {infoData.validation.repository.replace(
-                    "https://github.com/",
-                    "",
-                  )}
+                  {sourceRepo}
                   <Icon.LinkExternal01 />
                 </SdsLink>
               ) : null
@@ -350,13 +354,8 @@ export const ContractInfo = ({
               content: (
                 <SourceCode
                   isActive={activeTab === "contract-source-code"}
-                  repo={
-                    infoData.validation?.repository?.replace(
-                      "https://github.com/",
-                      "",
-                    ) || ""
-                  }
-                  commit={infoData.validation?.commit || ""}
+                  repo={sourceRepo}
+                  commit={sourceCommit}
                 />
               ),
             }}
