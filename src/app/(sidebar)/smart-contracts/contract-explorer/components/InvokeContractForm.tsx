@@ -415,7 +415,8 @@ export const InvokeContractForm = ({
               isSimulateTxError ||
               isSubmitRpcError ||
               simulateTxData?.result?.error ||
-              isSimulating
+              isSimulating ||
+              !walletKit?.publicKey
             }
             onClick={handleSubmit}
           >
