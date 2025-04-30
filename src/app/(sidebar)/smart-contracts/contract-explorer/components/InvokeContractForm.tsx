@@ -1,26 +1,26 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Button, Card, Text } from "@stellar/design-system";
 import { BASE_FEE, contract } from "@stellar/stellar-sdk";
 import { JSONSchema7 } from "json-schema";
 
-import { useStore } from "@/store/useStore";
-import { useWasmBinaryFromRpc } from "@/query/useWasmBinaryFromRpc";
-import { useAccountSequenceNumber } from "@/query/useAccountSequenceNumber";
-import { useSimulateTx } from "@/query/useSimulateTx";
-
-import { DereferencedSchemaType } from "@/constants/jsonSchema";
+import { Box } from "@/components/layout/Box";
+import { ErrorText } from "@/components/ErrorText";
+import { JsonCodeWrapToggle } from "@/components/JsonCodeWrapToggle";
+import { JsonSchemaFormRenderer } from "@/components/JsonSchema/JsonSchemaFormRenderer";
+import { PrettyJsonTransaction } from "@/components/PrettyJsonTransaction";
+import { RpcErrorResponse } from "@/app/(sidebar)/transaction/submit/components/ErrorResponse";
+import { TransactionSuccessCard } from "@/components/TransactionSuccessCard";
+import { WalletKitContext } from "@/components/WalletKit/WalletKitContextProvider";
 
 import { useCodeWrappedSetting } from "@/hooks/useCodeWrappedSetting";
 
-import * as StellarXdr from "@/helpers/StellarXdr";
 import { dereferenceSchema } from "@/helpers/dereferenceSchema";
-import { renderWasmStatus } from "@/helpers/renderWasmStatus";
+import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { getWasmContractData } from "@/helpers/getWasmContractData";
 import { getTxnToSimulate } from "@/helpers/sorobanUtils";
 
-import { Box } from "@/components/layout/Box";
-import { JsonSchemaFormRenderer } from "@/components/JsonSchema/JsonSchemaFormRenderer";
-
+import { DereferencedSchemaType } from "@/constants/jsonSchema";
+import { TransactionBuildParams } from "@/store/createStore";
 import {
   AnyObject,
   ContractInfoApiResponse,
@@ -29,15 +29,12 @@ import {
   EmptyObj,
 } from "@/types/types";
 
-import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
-import { TransactionBuildParams } from "@/store/createStore";
-
-import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
-import { useIsXdrInit } from "@/hooks/useIsXdrInit";
-import { PrettyJsonTransaction } from "@/components/PrettyJsonTransaction";
-import { parseJsonString } from "@/helpers/parseJsonString";
-import { JsonCodeWrapToggle } from "@/components/JsonCodeWrapToggle";
-import { PrettyJson } from "@/components/PrettyJson";
+import { useAccountSequenceNumber } from "@/query/useAccountSequenceNumber";
+import { useRpcPrepareTx } from "@/query/useRpcPrepareTx";
+import { useSimulateTx } from "@/query/useSimulateTx";
+import { useSubmitRpcTx } from "@/query/useSubmitRpcTx";
+import { useStore } from "@/store/useStore";
+import { useWasmBinaryFromRpc } from "@/query/useWasmBinaryFromRpc";
 
 export const InvokeContractForm = ({
   infoData,
@@ -50,14 +47,15 @@ export const InvokeContractForm = ({
 }) => {
   const { walletKit } = useStore();
   const [contractSpec, setContractSpec] = useState<contract.Spec | null>();
-  const { wasm: wasmHash } = infoData;
-  const [xdr, setXdr] = useState<string | null>(null);
+  const [signedTxXdr, setSignedTxXdr] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [isCodeWrapped, setIsCodeWrapped] = useCodeWrappedSetting();
+  const [isExtensionLoading, setIsExtensionLoading] = useState(false);
+  // const [isExtensionClear, setIsExtensionClear] = useState(false);
+
+  const { wasm: wasmHash } = infoData;
 
   const {
     data: sequenceNumberData,
-    error: sequenceNumberError,
     refetch: fetchSequenceNumber,
     isFetching: isFetchingSequenceNumber,
     isLoading: isLoadingSequenceNumber,
@@ -70,44 +68,74 @@ export const InvokeContractForm = ({
   const {
     mutateAsync: simulateTx,
     data: simulateTxData,
+    isSuccess: isSimulateTxSuccess,
+    isError: isSimulateTxError,
     isPending: isSimulateTxPending,
     reset: resetSimulateTx,
   } = useSimulateTx();
 
   const {
-    data: wasmBinary,
-    error: wasmBinaryError,
-    isLoading: isWasmBinaryLoading,
-    isFetching: isWasmBinaryFetching,
-    // refetch: fetchWasmBinary,
-  } = useWasmBinaryFromRpc({
+    mutateAsync: prepareTx,
+    isPending: isPrepareTxPending,
+    data: prepareTxData,
+    reset: resetPrepareTx,
+  } = useRpcPrepareTx();
+
+  const { data: wasmBinary } = useWasmBinaryFromRpc({
     wasmHash: wasmHash || "",
     rpcUrl: network.rpcUrl || "",
     isActive: Boolean(network.passphrase && wasmHash),
   });
 
-  const isXdrInit = useIsXdrInit();
+  const {
+    data: submitRpcResponse,
+    mutate: submitRpc,
+    error: submitRpcError,
+    isPending: isSubmitRpcPending,
+    isSuccess: isSubmitRpcSuccess,
+    isError: isSubmitRpcError,
+    reset: resetSubmitRpc,
+  } = useSubmitRpcTx();
 
-  const getXdrJson = (xdr: string) => {
-    const xdrType = XDR_TYPE_TRANSACTION_ENVELOPE;
+  const walletKitInstance = useContext(WalletKitContext);
 
-    if (!(isXdrInit && xdr)) {
-      return null;
+  const IS_BLOCK_EXPLORER_ENABLED =
+    network.id === "testnet" || network.id === "mainnet";
+
+  const [isCodeWrapped, setIsCodeWrapped] = useCodeWrappedSetting();
+
+  const responseSuccessEl = useRef<HTMLDivElement | null>(null);
+  const responseErrorEl = useRef<HTMLDivElement | null>(null);
+
+  const signTx = async (xdr: string) => {
+    if (!walletKitInstance?.walletKit) {
+      return;
     }
 
-    try {
-      const xdrJson = StellarXdr.decode(xdrType, xdr);
+    setIsExtensionLoading(true);
 
-      return {
-        jsonString: xdrJson,
-        error: "",
-      };
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (e) {
-      return {
-        jsonString: "",
-        error: `Unable to decode input as ${xdrType}`,
-      };
+    if (walletKit?.publicKey) {
+      try {
+        const result = await walletKitInstance.walletKit.signTransaction(
+          xdr || "",
+          {
+            address: walletKit.publicKey,
+            networkPassphrase: network.passphrase,
+          },
+        );
+
+        if (result.signedTxXdr && result.signedTxXdr !== "") {
+          setSignedTxXdr(result.signedTxXdr);
+        }
+
+        setIsExtensionLoading(false);
+      } catch (error: any) {
+        if (error?.message) {
+          setError(error?.message);
+        }
+        setIsExtensionLoading(false);
+        return;
+      }
     }
   };
 
@@ -137,24 +165,51 @@ export const InvokeContractForm = ({
     setFormValue(value);
   };
 
-  // const wasmStatus = renderWasmStatus({
-  //   wasmHash: wasmHash || "",
-  //   rpcUrl: network.rpcUrl || "",
-  //   isLoading: isWasmBinaryFetching || isWasmBinaryLoading,
-  //   error: wasmBinaryError,
-  // });
+  const isSimulating =
+    isFetchingSequenceNumber ||
+    isLoadingSequenceNumber ||
+    isSimulateTxPending ||
+    isPrepareTxPending;
 
-  // if (wasmStatus) {
-  //   return wasmStatus;
-  // }
+  const resetSubmitState = () => {
+    if (submitRpcError || submitRpcResponse) {
+      resetSubmitRpc();
+    }
+  };
 
-  const isSimulating = isFetchingSequenceNumber || isLoadingSequenceNumber;
+  const resetSimulateState = () => {
+    if (isSimulateTxError || simulateTxData?.result) {
+      resetSimulateTx();
+    }
+  };
 
-  const handleSubmit = () => {
-    console.log(formValue);
+  const handleSubmit = async () => {
+    if (!prepareTxData?.transactionXdr) {
+      return;
+    }
+
+    resetSimulateState();
+    resetSubmitState();
+
+    if (prepareTxData?.transactionXdr) {
+      await signTx(prepareTxData.transactionXdr);
+    }
+
+    if (signedTxXdr) {
+      submitRpc({
+        rpcUrl: network.rpcUrl,
+        transactionXdr: signedTxXdr,
+        networkPassphrase: network.passphrase,
+        headers: getNetworkHeaders(network, "rpc"),
+      });
+    }
   };
 
   const handleSimulate = () => {
+    resetSimulateState();
+    resetSubmitState();
+    resetPrepareTx();
+
     fetchSequenceNumber();
 
     const txnParams: TransactionBuildParams = {
@@ -186,10 +241,19 @@ export const InvokeContractForm = ({
       network.passphrase,
     );
 
-    if (network.rpcUrl && xdr) {
+    if (xdr) {
       simulateTx({
         rpcUrl: network.rpcUrl,
+        transactionXdr: xdr || "",
+        headers: getNetworkHeaders(network, "rpc"),
+      });
+
+      // using prepareTransaction instead of assembleTransaction because
+      // assembleTransaction requires an auth, but signing for simulation is rare
+      prepareTx({
+        rpcUrl: network.rpcUrl,
         transactionXdr: xdr,
+        networkPassphrase: network.passphrase,
         headers: getNetworkHeaders(network, "rpc"),
       });
     }
@@ -197,11 +261,6 @@ export const InvokeContractForm = ({
     if (error) {
       setError(error);
     }
-
-    setXdr(xdr);
-
-    console.log("xdr: ", xdr);
-    console.log("simulateTxData: ", simulateTxData);
   };
 
   const renderTitle = (name: string, description?: string) => (
@@ -251,6 +310,84 @@ export const InvokeContractForm = ({
     );
   };
 
+  const renderResponse = () => {
+    const { result: simulateResult } = simulateTxData || {};
+    const { result: submitResult } = submitRpcResponse || {};
+
+    let result;
+
+    if (simulateResult) {
+      result = simulateResult;
+    }
+
+    if (submitResult) {
+      result = submitResult;
+    }
+
+    if (result) {
+      return (
+        <Box gap="md">
+          <div
+            data-testid="simulate-tx-response"
+            className={`PageBody__content PageBody__scrollable ${result?.error ? "PageBody__content--error" : ""}`}
+          >
+            <PrettyJsonTransaction
+              json={result}
+              xdr={result?.xdr}
+              isCodeWrapped={isCodeWrapped}
+            />
+          </div>
+          <Box gap="md" direction="row" align="center">
+            <JsonCodeWrapToggle
+              isChecked={isCodeWrapped}
+              onChange={(isChecked) => {
+                setIsCodeWrapped(isChecked);
+              }}
+            />
+          </Box>
+        </Box>
+      );
+    }
+
+    return null;
+  };
+
+  const renderSuccess = () => {
+    if (isSubmitRpcSuccess && submitRpcResponse && network.id) {
+      return (
+        <div ref={responseSuccessEl}>
+          <TransactionSuccessCard
+            response={submitRpcResponse}
+            network={network.id}
+            isBlockExplorerEnabled={IS_BLOCK_EXPLORER_ENABLED}
+          />
+        </div>
+      );
+    }
+
+    return null;
+  };
+
+  const renderError = () => {
+    if (submitRpcError) {
+      return (
+        <div ref={responseErrorEl}>
+          <RpcErrorResponse error={submitRpcError} />
+        </div>
+      );
+    }
+
+    if (error) {
+      return (
+        <div ref={responseErrorEl}>
+          <ErrorText errorMessage={error} size="sm" />
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <Card>
       <Box gap="md">
@@ -268,7 +405,7 @@ export const InvokeContractForm = ({
             size="md"
             variant="tertiary"
             disabled={
-              !Object.keys(formValue.args).length && !walletKit?.publicKey
+              !Object.keys(formValue.args).length || !walletKit?.publicKey
             }
             isLoading={isSimulating}
             onClick={handleSimulate}
@@ -279,38 +416,19 @@ export const InvokeContractForm = ({
           <Button
             size="md"
             variant="secondary"
+            isLoading={isExtensionLoading || isSubmitRpcPending}
             disabled={
-              !Object.keys(formValue.args).length && !walletKit?.publicKey
+              isSimulateTxError || isSubmitRpcError || !isSimulateTxSuccess
             }
-            onClick={() => {
-              // noop
-            }}
+            onClick={handleSubmit}
           >
             Submit
           </Button>
         </Box>
-        {xdr ? (
-          <Box gap="md">
-            <div
-              data-testid="simulate-tx-response"
-              className={`PageBody__content PageBody__scrollable ${simulateTxData?.result?.error ? "PageBody__content--error" : ""}`}
-            >
-              <PrettyJsonTransaction
-                json={simulateTxData}
-                xdr={xdr}
-                isCodeWrapped={isCodeWrapped}
-              />
-            </div>
-            <Box gap="md" direction="row" align="center">
-              <JsonCodeWrapToggle
-                isChecked={isCodeWrapped}
-                onChange={(isChecked) => {
-                  setIsCodeWrapped(isChecked);
-                }}
-              />
-            </Box>
-          </Box>
-        ) : null}
+
+        <>{renderResponse()}</>
+        <>{renderSuccess()}</>
+        <>{renderError()}</>
       </Box>
     </Card>
   );
