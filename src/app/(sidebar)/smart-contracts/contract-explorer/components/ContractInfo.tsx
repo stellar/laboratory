@@ -31,6 +31,7 @@ import { ContractStorage } from "./ContractStorage";
 import { VersionHistory } from "./VersionHistory";
 import { BuildInfo } from "./BuildInfo";
 import { SourceCode } from "./SourceCode";
+import { Bindings } from "./Bindings";
 
 export const ContractInfo = ({
   infoData,
@@ -238,12 +239,6 @@ export const ContractInfo = ({
     }
   };
 
-  const ComingSoonText = () => (
-    <Text as="div" size="sm">
-      Coming soon
-    </Text>
-  );
-
   const renderBuildVerifiedBadge = (hasWasmData: boolean) => {
     const item = {
       verified: {
@@ -333,11 +328,6 @@ export const ContractInfo = ({
 
           <TabView
             tab1={{
-              id: "contract-bindings",
-              label: "Bindings",
-              content: <ComingSoonText />,
-            }}
-            tab2={{
               id: "contract-contract-spec",
               label: "Contract Spec",
               content: (
@@ -348,7 +338,7 @@ export const ContractInfo = ({
                 />
               ),
             }}
-            tab3={{
+            tab2={{
               id: "contract-source-code",
               label: "Source Code",
               content: (
@@ -359,7 +349,7 @@ export const ContractInfo = ({
                 />
               ),
             }}
-            tab4={{
+            tab3={{
               id: "contract-contract-storage",
               label: "Contract Storage",
               content: (
@@ -368,6 +358,16 @@ export const ContractInfo = ({
                   contractId={infoData.contract}
                   networkId={network.id}
                   totalEntriesCount={infoData.storage_entries}
+                />
+              ),
+            }}
+            tab4={{
+              id: "contract-build-info",
+              label: "Build Info",
+              content: (
+                <BuildInfo
+                  wasmData={wasmData}
+                  isActive={activeTab === "contract-build-info"}
                 />
               ),
             }}
@@ -383,14 +383,9 @@ export const ContractInfo = ({
               ),
             }}
             tab6={{
-              id: "contract-build-info",
-              label: "Build Info",
-              content: (
-                <BuildInfo
-                  wasmData={wasmData}
-                  isActive={activeTab === "contract-build-info"}
-                />
-              ),
+              id: "contract-bindings",
+              label: "Bindings",
+              content: <Bindings />,
             }}
             activeTabId={activeTab}
             onTabChange={(tabId) => {
