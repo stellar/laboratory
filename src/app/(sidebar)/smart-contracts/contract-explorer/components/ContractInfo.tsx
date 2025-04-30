@@ -59,11 +59,11 @@ export const ContractInfo = ({
   const buttonRef = useRef<HTMLButtonElement | null>(null);
 
   const sourceRepo =
-    infoData.validation?.repository?.replace("https://github.com/", "") ||
     wasmData?.sourceRepo ||
+    infoData.validation?.repository?.replace("https://github.com/", "") ||
     "";
   const sourceCommit =
-    infoData?.validation?.commit || wasmData?.build.commit || "";
+    wasmData?.build.commit || infoData?.validation?.commit || "";
 
   const handleClickOutside = useCallback((event: MouseEvent) => {
     if (buttonRef?.current?.contains(event.target as Node)) {
