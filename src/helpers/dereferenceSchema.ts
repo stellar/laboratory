@@ -37,11 +37,60 @@ export const dereferenceSchema = (
     const ref = val.$ref;
 
     if (ref) {
+      // console.log("ref", ref);
       // would output something like
       // "Address"  if it's a primitive
       const refPath = ref.replace("#/definitions/", "");
 
+      // console.log("refPath", refPath);
+
       const refPathDef = fullSchema?.definitions?.[refPath] as JSONSchema7;
+
+      // console.log("refPathDef", refPathDef);
+
+      //   {
+      //     "type": "array",
+      //     "items": {
+      //         "$ref": "#/definitions/Request"
+      //     }
+      // }
+      // ref: #/definitions/Request
+      // refPath: Request
+      // refPathDef: {
+      //     "description": "A request a user makes against the pool",
+      //     "properties": {
+      //         "address": {
+      //             "$ref": "#/definitions/Address"
+      //         },
+      //         "amount": {
+      //             "$ref": "#/definitions/I128"
+      //         },
+      //         "request_type": {
+      //             "$ref": "#/definitions/U32"
+      //         },
+      //         "additionalProperties": false
+      //     },
+      //     "required": [
+      //         "address",
+      //         "amount",
+      //         "request_type"
+      //     ],
+      //     "type": "object"
+      // }
+
+      // value: {
+      //     "type": "array",
+      //     "items": {
+      //         "$ref": "#/definitions/Address"
+      //     }
+      // }
+      // ref: #/definitions/Address
+      // refPath: Address
+      // refPathDef: {
+      //     "type": "string",
+      //     "format": "address",
+      //     "description": "Address can be a public key or contract id"
+      // }
 
       // if the refPathDef has properties aka is an array
       // we need to recursively dereference the properties
@@ -69,19 +118,28 @@ export const dereferenceSchema = (
   const dereferenceSchemaProps = (funcArgs: any) => {
     const resolvedProps: Record<string, any> = {};
 
+    // console.log("funcArgs", funcArgs);
     if (funcArgs.properties) {
       Object.entries(funcArgs.properties).forEach(([key, value]) => {
         // `value` can be either JSONSchema7Definition or false
         // parse the value if it's an object
+
         if (typeof value === "object" && value !== null) {
           if ("$ref" in value) {
             resolvedProps[key] = resolveRef(value, fullSchema);
           }
           if ("items" in value) {
+            // console.log(
+            //   "resolveRef(value.items, fullSchema)",
+            //   resolveRef(value.items, fullSchema),
+            // );
+
             resolvedProps[key] = {
-              ...resolveRef(value.items, fullSchema),
+              items: resolveRef(value.items, fullSchema),
               type: "array",
             };
+
+            // console.log("resolvedProps", resolvedProps);
           }
         }
       });
