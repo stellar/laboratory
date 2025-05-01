@@ -238,7 +238,7 @@ export const InvokeContractForm = ({
     if (xdr) {
       simulateTx({
         rpcUrl: network.rpcUrl,
-        transactionXdr: xdr || "",
+        transactionXdr: xdr,
         headers: getNetworkHeaders(network, "rpc"),
       });
 
