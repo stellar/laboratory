@@ -315,15 +315,7 @@ export const InvokeContractForm = ({
     const { result: simulateResult } = simulateTxData || {};
     const { result: submitResult } = submitRpcResponse || {};
 
-    let result;
-
-    if (simulateResult) {
-      result = simulateResult;
-    }
-
-    if (submitResult) {
-      result = submitResult;
-    }
+    const result = simulateResult || submitResult;
 
     if (result) {
       return (
