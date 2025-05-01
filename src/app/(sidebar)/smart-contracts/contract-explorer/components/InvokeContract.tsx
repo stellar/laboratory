@@ -49,7 +49,7 @@ export const InvokeContract = ({
         </Alert>
       ) : null}
       <Card>
-        <Box gap="lg" data-testid="contract-info-contract-container">
+        <Box gap="lg" data-testid="invoke-contract-container">
           <Text as="h2" size="md" weight="semi-bold">
             Invoke Contract
           </Text>

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { Button, Card, Text } from "@stellar/design-system";
+import { Button, Card, Text, Textarea } from "@stellar/design-system";
 import { BASE_FEE, contract } from "@stellar/stellar-sdk";
 import { JSONSchema7 } from "json-schema";
 
@@ -263,9 +263,16 @@ export const InvokeContractForm = ({
         {name}
       </Text>
       {description ? (
-        <Text size="sm" as="div">
+        <Textarea
+          id={`invoke-contract-description-${name}`}
+          fieldSize="md"
+          disabled
+          rows={description.length > 100 ? 7 : 1}
+          value={description}
+          spellCheck="false"
+        >
           {description}
-        </Text>
+        </Textarea>
       ) : null}
     </>
   );
@@ -285,7 +292,7 @@ export const InvokeContractForm = ({
     }
 
     return (
-      <div>
+      <Box gap="md">
         {renderTitle(funcName, dereferencedSchema?.description)}
         {formValue.contract_id &&
           formValue.function_name &&
@@ -300,7 +307,7 @@ export const InvokeContractForm = ({
               parsedSorobanOperation={formValue}
             />
           )}
-      </div>
+      </Box>
     );
   };
 
@@ -322,7 +329,7 @@ export const InvokeContractForm = ({
       return (
         <Box gap="md">
           <div
-            data-testid="simulate-tx-response"
+            data-testid="invoke-contract-simulate-tx-response"
             className={`PageBody__content PageBody__scrollable ${result?.error ? "PageBody__content--error" : ""}`}
           >
             <PrettyJsonTransaction

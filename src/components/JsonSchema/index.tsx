@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, Text } from "@stellar/design-system";
+import { Button, Card, Text, Textarea } from "@stellar/design-system";
 import type { JSONSchema7 } from "json-schema";
 import { parse, stringify } from "lossless-json";
 import { usePrevious } from "@/hooks/usePrevious";
@@ -189,15 +189,24 @@ export const JsonSchemaForm = ({
   );
 };
 
-const renderTitle = (name: string, description: string) => (
-  <>
-    <Text size="lg" as="h2">
-      {name}
-    </Text>
-    {description ? (
-      <Text size="sm" as="div">
-        {description}
+const renderTitle = (name: string, description: string) => {
+  return (
+    <>
+      <Text size="lg" as="h2">
+        {name}
       </Text>
-    ) : null}
-  </>
-);
+      {description ? (
+        <Textarea
+          id={`json-schema-description-${name}`}
+          fieldSize="md"
+          disabled
+          rows={description.length > 100 ? 7 : 1}
+          value={description}
+          spellCheck="false"
+        >
+          {description}
+        </Textarea>
+      ) : null}
+    </>
+  );
+};
