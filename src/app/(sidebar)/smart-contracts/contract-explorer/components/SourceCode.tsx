@@ -1,8 +1,15 @@
-import { Alert, Code, Link, Loader, Text } from "@stellar/design-system";
+import {
+  Alert,
+  Code,
+  Link,
+  Loader,
+  Select,
+  Text,
+} from "@stellar/design-system";
 import { CodeEditor } from "@/components/CodeEditor";
 import { Box } from "@/components/layout/Box";
-import { useGitHubReadmeText } from "@/query/useGitHubReadmeText";
 import { ErrorText } from "@/components/ErrorText";
+import { useGitHubReadmeText } from "@/query/useGitHubReadmeText";
 
 export const SourceCode = ({
   isActive,
@@ -65,7 +72,58 @@ export const SourceCode = ({
     );
   }
 
+  type ContainerResource = "devcontainer" | "codeanywhere" | "github";
+
+  const handleOpenInContainer = (resource: ContainerResource) => {
+    if (!resource) {
+      return;
+    }
+
+    let url = "";
+
+    switch (resource) {
+      case "devcontainer":
+        url = `https://github.com/codespaces/new/${repo}/tree/${commit}`;
+        break;
+      case "codeanywhere":
+        url = `https://app.codeanywhere.com/#https://github.com/${repo}/commit/${commit}`;
+        break;
+      case "github":
+        url = `https://github.com/${repo}/tree/${commit}`;
+        break;
+      default:
+      // Do nothing
+    }
+
+    if (!url) {
+      return;
+    }
+
+    window.open(url, "_blank");
+  };
+
   return (
-    <CodeEditor title="README.md" value={readmeText} selectedLanguage="text" />
+    <CodeEditor
+      title="README.md"
+      value={readmeText}
+      selectedLanguage="text"
+      customEl={
+        <Select
+          id="source-code-viewer"
+          fieldSize="sm"
+          onChange={(e) => {
+            handleOpenInContainer(e.target.value as ContainerResource);
+          }}
+          value=""
+        >
+          <option value="" disabled={true}>
+            Open in
+          </option>
+          <option value="devcontainer">Dev Container</option>
+          <option value="codeanywhere">Codeanywhere</option>
+          <option value="github">GitHub</option>
+        </Select>
+      }
+    />
   );
 };

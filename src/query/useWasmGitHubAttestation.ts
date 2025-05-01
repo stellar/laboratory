@@ -74,6 +74,7 @@ export const useWasmGitHubAttestation = ({
           repository && gitCommit ? `${repository}/tree/${gitCommit}` : "";
 
         return {
+          sourceRepo,
           build: {
             attestation: `api.github.com/repos/${sourceRepo}/…`,
             attestationUrl,
