@@ -47,7 +47,6 @@ export const JsonSchemaFormRenderer = ({
   console.log("schema: ", schema);
   const schemaType = getDefType(schema);
 
-  console.log("schemaType: ", schemaType);
   const label = path.length > 0 ? getNestedValueLabel(path.join(".")) : name;
   const labelWithSchemaType = `${label} (${schemaType})`;
 
@@ -138,8 +137,6 @@ export const JsonSchemaFormRenderer = ({
     });
   };
 
-  console.log("schemaType", schemaType);
-
   if (schemaType === null || schemaType === undefined) {
     return (
       <Box gap="md">
@@ -208,7 +205,6 @@ export const JsonSchemaFormRenderer = ({
   if (schemaType === "array") {
     const storedItems = parsedSorobanOperation.args?.[name] || [];
 
-    console.log("schema", schema);
     const addDefaultSchemaTemplate = () => {
       // template created based on the schema.properties
       const defaultTemplate = Object.keys(schema.properties || {}).reduce(
@@ -257,20 +253,12 @@ export const JsonSchemaFormRenderer = ({
                         {Object.keys(args).map((arg) => {
                           const nestedPath = [name, index, arg].join(".");
 
-                          console.log("args", args);
-                          console.log("schema", schema);
-                          console.log(
-                            "schema?.items?.properties?.[arg]",
-                            schema?.items?.properties?.[arg],
-                          );
                           return (
                             <JsonSchemaFormRenderer
                               name={name}
                               index={index}
                               key={nestedPath}
-                              schema={
-                                schema?.items?.properties?.[arg] as JSONSchema7
-                              }
+                              schema={schema.properties?.[arg] as JSONSchema7}
                               path={[...path, nestedPath]}
                               formData={args}
                               onChange={onChange}
