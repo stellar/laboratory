@@ -449,6 +449,7 @@ export type ContractListRecord = {
 };
 
 export type WasmData = {
+  sourceRepo: string;
   build: {
     attestation: string;
     attestationUrl: string;

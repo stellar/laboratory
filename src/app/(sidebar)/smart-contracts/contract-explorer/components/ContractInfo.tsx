@@ -31,6 +31,7 @@ import { ContractStorage } from "./ContractStorage";
 import { VersionHistory } from "./VersionHistory";
 import { BuildInfo } from "./BuildInfo";
 import { SourceCode } from "./SourceCode";
+import { Bindings } from "./Bindings";
 
 export const ContractInfo = ({
   infoData,
@@ -57,6 +58,13 @@ export const ContractInfo = ({
   const [isBadgeTooltipVisible, setIsBadgeTooltipVisible] = useState(false);
 
   const buttonRef = useRef<HTMLButtonElement | null>(null);
+
+  const sourceRepo =
+    wasmData?.sourceRepo ||
+    infoData.validation?.repository?.replace("https://github.com/", "") ||
+    "";
+  const sourceCommit =
+    wasmData?.build.commit || infoData?.validation?.commit || "";
 
   const handleClickOutside = useCallback((event: MouseEvent) => {
     if (buttonRef?.current?.contains(event.target as Node)) {
@@ -151,16 +159,13 @@ export const ContractInfo = ({
             key={field.id}
             label={field.label}
             value={
-              infoData.validation?.repository && infoData.validation?.commit ? (
+              sourceRepo && sourceCommit ? (
                 <SdsLink
-                  href={`${infoData.validation.repository}/tree/${infoData.validation.commit}`}
+                  href={`https://github.com/${sourceRepo}/tree/${sourceCommit}`}
                   addlClassName="Link--external"
                 >
                   <Logo.Github />
-                  {infoData.validation.repository.replace(
-                    "https://github.com/",
-                    "",
-                  )}
+                  {sourceRepo}
                   <Icon.LinkExternal01 />
                 </SdsLink>
               ) : null
@@ -233,12 +238,6 @@ export const ContractInfo = ({
         return null;
     }
   };
-
-  const ComingSoonText = () => (
-    <Text as="div" size="sm">
-      Coming soon
-    </Text>
-  );
 
   const renderBuildVerifiedBadge = (hasWasmData: boolean) => {
     const item = {
@@ -329,11 +328,6 @@ export const ContractInfo = ({
 
           <TabView
             tab1={{
-              id: "contract-bindings",
-              label: "Bindings",
-              content: <ComingSoonText />,
-            }}
-            tab2={{
               id: "contract-contract-spec",
               label: "Contract Spec",
               content: (
@@ -344,23 +338,18 @@ export const ContractInfo = ({
                 />
               ),
             }}
-            tab3={{
+            tab2={{
               id: "contract-source-code",
               label: "Source Code",
               content: (
                 <SourceCode
                   isActive={activeTab === "contract-source-code"}
-                  repo={
-                    infoData.validation?.repository?.replace(
-                      "https://github.com/",
-                      "",
-                    ) || ""
-                  }
-                  commit={infoData.validation?.commit || ""}
+                  repo={sourceRepo}
+                  commit={sourceCommit}
                 />
               ),
             }}
-            tab4={{
+            tab3={{
               id: "contract-contract-storage",
               label: "Contract Storage",
               content: (
@@ -369,6 +358,16 @@ export const ContractInfo = ({
                   contractId={infoData.contract}
                   networkId={network.id}
                   totalEntriesCount={infoData.storage_entries}
+                />
+              ),
+            }}
+            tab4={{
+              id: "contract-build-info",
+              label: "Build Info",
+              content: (
+                <BuildInfo
+                  wasmData={wasmData}
+                  isActive={activeTab === "contract-build-info"}
                 />
               ),
             }}
@@ -384,14 +383,9 @@ export const ContractInfo = ({
               ),
             }}
             tab6={{
-              id: "contract-build-info",
-              label: "Build Info",
-              content: (
-                <BuildInfo
-                  wasmData={wasmData}
-                  isActive={activeTab === "contract-build-info"}
-                />
-              ),
+              id: "contract-bindings",
+              label: "Bindings",
+              content: <Bindings />,
             }}
             activeTabId={activeTab}
             onTabChange={(tabId) => {
