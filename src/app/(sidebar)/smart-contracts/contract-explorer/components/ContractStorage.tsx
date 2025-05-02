@@ -158,12 +158,24 @@ export const ContractStorage = ({
           },
           { value: capitalizeString(vh.durability) },
           { value: formatNumber(vh.ttl) },
-          { value: formatEpochToDate(vh.updated, "short") || "-" },
+          {
+            value: formatEpochToDate(vh.updated, "short") || "-",
+            isWrap: true,
+          },
         ]}
-        cssGridTemplateColumns="minmax(210px, 2fr) minmax(210px, 2fr) minmax(130px, 1fr) minmax(130px, 1fr) minmax(210px, 1fr)"
+        cssGridTemplateColumns="minmax(210px, 2fr) minmax(210px, 2fr) minmax(100px, 0.8fr) minmax(110px, 0.8fr) minmax(114px, 0.7fr)"
         customHeaderEl={
           <Box gap="sm" direction="row" align="center" wrap="wrap">
-            {["sym", "string", "address", "u8-u64", "i8-i64", "i128-i256", "u128-u256", "bool"].map((t) => (
+            {[
+              "sym",
+              "string",
+              "address",
+              "u8-u64",
+              "i8-i64",
+              "i128-i256",
+              "u128-u256",
+              "bool",
+            ].map((t) => (
               <div
                 className="DataTypeLegend"
                 data-type={t}
