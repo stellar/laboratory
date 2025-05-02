@@ -163,7 +163,7 @@ export const ContractStorage = ({
             isWrap: true,
           },
         ]}
-        cssGridTemplateColumns="minmax(210px, 2fr) minmax(210px, 2fr) minmax(100px, 0.8fr) minmax(110px, 0.8fr) minmax(100px, 0.7fr)"
+        cssGridTemplateColumns="minmax(210px, 2fr) minmax(210px, 2fr) minmax(100px, 0.8fr) minmax(110px, 0.8fr) minmax(114px, 0.7fr)"
         customHeaderEl={
           <Box gap="sm" direction="row" align="center" wrap="wrap">
             {[
