@@ -257,7 +257,7 @@
   }
 
   &__content {
-    width: clamp(pxToRem(672px), 100%, pxToRem(960px));
+    width: clamp(pxToRem(672px), 100%, pxToRem(1280px));
     position: relative;
     margin: 0 auto;
     display: flex;
