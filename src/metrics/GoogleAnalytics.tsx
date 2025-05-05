@@ -1,5 +1,8 @@
 "use client";
-import { GoogleAnalytics as NextGoogleAnalytics } from "@next/third-parties/google";
+import {
+  GoogleAnalytics as NextGoogleAnalytics,
+  GoogleTagManager,
+} from "@next/third-parties/google";
 
 const GA_MEASUREMENT_ID = "GTM-KCNDDL3";
 
@@ -10,5 +13,10 @@ export const GoogleAnalytics = () => {
     return null;
   }
 
-  return <NextGoogleAnalytics gaId={GA_MEASUREMENT_ID} />;
+  return (
+    <>
+      <GoogleTagManager gtmId={GA_MEASUREMENT_ID} />
+      <NextGoogleAnalytics gaId={GA_MEASUREMENT_ID} />
+    </>
+  );
 };
