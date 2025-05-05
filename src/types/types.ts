@@ -477,6 +477,7 @@ export type DataTableHeader = {
 export type DataTableCell = {
   value: React.ReactNode;
   isBold?: boolean;
+  isWrap?: boolean;
 };
 
 // =============================================================================
