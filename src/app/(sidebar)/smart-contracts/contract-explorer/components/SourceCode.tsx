@@ -10,6 +10,7 @@ import { CodeEditor } from "@/components/CodeEditor";
 import { Box } from "@/components/layout/Box";
 import { ErrorText } from "@/components/ErrorText";
 import { useGitHubReadmeText } from "@/query/useGitHubReadmeText";
+import { openUrl } from "@/helpers/openUrl";
 
 export const SourceCode = ({
   isActive,
@@ -99,7 +100,7 @@ export const SourceCode = ({
       return;
     }
 
-    window.open(url, "_blank");
+    openUrl(url);
   };
 
   return (
