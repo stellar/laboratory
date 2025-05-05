@@ -16,7 +16,7 @@ export const renderWasmStatus = ({
   if (!wasmHash) {
     return (
       <Text as="div" size="sm">
-        There is no wasm for this contract
+        There is no Wasm for this contract
       </Text>
     );
   }

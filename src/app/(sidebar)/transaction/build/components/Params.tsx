@@ -35,9 +35,7 @@ import { EmptyObj, KeysOfUnion } from "@/types/types";
 export const Params = () => {
   const requiredParams = ["source_account", "seq_num", "fee"] as const;
 
-  const { account, transaction, network } = useStore();
-
-  const { walletKit } = account;
+  const { transaction, network, walletKit } = useStore();
   const { publicKey: walletKitPubKey } = walletKit || {};
   const { params: txnParams } = transaction.build;
   const {

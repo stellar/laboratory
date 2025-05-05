@@ -28,13 +28,11 @@ export const XdrPicker = ({
   disabled,
   ...props
 }: XdrPickerProps) => {
-
   //Internal function that cleans up the input by removing newlines and extra spaces
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     if (onChange) {
-      // Clean the value by removing all whitespace (including newlines)
-      const cleanedValue = e.target.value.replace(/\s+/g, '');
-      
+      const cleanedValue = sanitizeXdr(e.target.value);
+
       onChange({
         ...e,
         target: { ...e.target, value: cleanedValue },
@@ -61,4 +59,14 @@ export const XdrPicker = ({
       {props.children}
     </Textarea>
   );
+};
+
+const sanitizeXdr = (xdrString: string) => {
+  if (!xdrString) {
+    return "";
+  }
+
+  // Remove non-XDR characters from the beginning and end of the string.
+  const regex = /^[^A-Za-z0-9+/]*(.*?)[^A-Za-z0-9+/=]*$/;
+  return xdrString.replace(regex, "$1");
 };

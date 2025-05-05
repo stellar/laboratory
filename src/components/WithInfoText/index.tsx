@@ -34,7 +34,7 @@ export const WithInfoText = ({
         {children}
 
         <NextLink {...buttonBaseProps} href={href}>
-          <Icon.BookOpen01 />
+          <Icon.InfoCircle />
         </NextLink>
       </div>
     );

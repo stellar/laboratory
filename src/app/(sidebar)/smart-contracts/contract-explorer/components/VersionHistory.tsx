@@ -57,7 +57,7 @@ export const VersionHistory = ({
       tableId="contract-version-history"
       tableData={versionHistoryData}
       tableHeaders={[
-        { id: "wasm", value: "Contract WASM Hash", isSortable: true },
+        { id: "wasm", value: "Contract Wasm Hash", isSortable: true },
         { id: "ts", value: "Updated", isSortable: true },
       ]}
       formatDataRow={(vh: ContractVersionHistoryResponseItem) => [

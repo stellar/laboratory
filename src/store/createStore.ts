@@ -68,11 +68,13 @@ export interface Store {
   // isDynamicNetworkSelect flag to indicate network update outside of the dropdown
   isDynamicNetworkSelect: boolean;
   selectNetwork: (network: Network) => void;
+  walletKit: WalletKit | undefined;
   // updateIsDynamicNetworkSelect:
   //   set to true when updating outside of the network dropdown;
   //   set to false when changing network from the dropdown, no need to clear it
   //     in other places because it will stay for the session (not saved in URL)
   updateIsDynamicNetworkSelect: (isDynamic: boolean) => void;
+  updateWalletKit: (value?: WalletKit) => void;
   setTheme: (theme: ThemeColorType) => void;
   resetStoredData: () => void;
 
@@ -80,7 +82,6 @@ export interface Store {
   account: {
     publicKey: string | undefined;
     secretKey: string | undefined;
-    walletKit: WalletKit | undefined;
     generatedMuxedAccountInput: Partial<MuxedAccount> | EmptyObj;
     parsedMuxedAccountInput: string | undefined;
     generatedMuxedAccount: MuxedAccount | EmptyObj;
@@ -90,7 +91,6 @@ export interface Store {
     updateParsedMuxedAccountInput: (value: string) => void;
     updateGeneratedMuxedAccount: (value: MuxedAccount) => void;
     updateParsedMuxedAccount: (value: MuxedAccount) => void;
-    updateWalletKit: (value?: WalletKit) => void;
     reset: () => void;
   };
 
@@ -299,10 +299,6 @@ const initTransactionState = {
 const initAccountState = {
   publicKey: undefined,
   secretKey: undefined,
-  walletKit: {
-    publicKey: undefined,
-    walletType: undefined,
-  },
   generatedMuxedAccountInput: {},
   parsedMuxedAccountInput: undefined,
   generatedMuxedAccount: {},
@@ -333,6 +329,10 @@ export const createStore = (options: CreateStoreOptions) =>
         previousNetwork: {},
         theme: null,
         isDynamicNetworkSelect: false,
+        walletKit: {
+          publicKey: undefined,
+          walletType: undefined,
+        },
         selectNetwork: (network: Network) =>
           set((state) => {
             state.previousNetwork = state.network;
@@ -361,6 +361,13 @@ export const createStore = (options: CreateStoreOptions) =>
             state.xdr = {
               ...state.xdr,
               ...initXdrState,
+            };
+          }),
+        updateWalletKit: (value?: WalletKit) =>
+          set((state) => {
+            state.walletKit = {
+              ...state.walletKit,
+              ...value,
             };
           }),
         // Account
@@ -395,13 +402,6 @@ export const createStore = (options: CreateStoreOptions) =>
             set((state) => {
               state.account.publicKey = publicKey;
               state.account.secretKey = secretKey || "";
-            }),
-          updateWalletKit: (value?: WalletKit) =>
-            set((state) => {
-              state.account.walletKit = {
-                ...state.account.walletKit,
-                ...value,
-              };
             }),
           reset: () =>
             set((state) => {

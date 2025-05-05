@@ -345,13 +345,24 @@ export default function ViewXdr() {
       </PageCard>
 
       <Alert variant="primary" placement="inline">
-        You can use use this tool to decode XDR into JSON.{" "}
-        <SdsLink href="https://developers.stellar.org/docs/encyclopedia/xdr">
-          External Data Representation
-        </SdsLink>{" "}
-        (XDR) is a standardized protocol that the Stellar network uses to encode
-        data. The XDR Viewer is a tool that displays contents of a Stellar XDR
-        blob in a human-readable format.
+        <div>
+          You can use use this tool to decode XDR into JSON.{" "}
+          <SdsLink href="https://developers.stellar.org/docs/encyclopedia/xdr">
+            XDR (External Data Representation)
+          </SdsLink>{" "}
+          is a standardized data format that the Stellar network uses to encode
+          data. The XDR ⇄ JSON tool helps you convert Stellar XDR blobs into a
+          human-readable JSON format, and vice versa.
+        </div>
+
+        <div>
+          To learn more about converting between XDR and JSON, including
+          libraries for JavaScript (npm), Go, and Rust, check out the{" "}
+          <SdsLink href="https://developers.stellar.org/docs/learn/encyclopedia/data-format/xdr-json">
+            XDR ⇄ JSON guide
+          </SdsLink>{" "}
+          on the Stellar Developer Docs.
+        </div>
       </Alert>
     </Box>
   );

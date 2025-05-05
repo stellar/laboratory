@@ -99,6 +99,10 @@
       &[data-style="bold"] {
         color: var(--sds-clr-gray-12);
       }
+
+      &[data-wrap="true"] {
+        white-space: normal;
+      }
     }
 
     tr:not(:last-child),

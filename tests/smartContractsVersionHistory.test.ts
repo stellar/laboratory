@@ -37,6 +37,13 @@ test.describe("Smart Contracts: Version History", () => {
     // Load Contract Info
     await page.getByLabel("Contract ID").fill(MOCK_CONTRACT_ID);
     await page.getByRole("button", { name: "Load contract" }).click();
+
+    // Go to Version History tab
+    await page
+      .getByText("Version History", {
+        exact: true,
+      })
+      .click();
   });
 
   test("Loads", async ({ page }) => {
@@ -51,7 +58,7 @@ test.describe("Smart Contracts: Version History", () => {
     const colUpdated = table.locator("th").nth(1);
 
     // Table headers
-    await expect(colWasm).toContainText("Contract WASM Hash");
+    await expect(colWasm).toContainText("Contract Wasm Hash");
     await expect(colUpdated).toContainText("Updated");
 
     // Table data

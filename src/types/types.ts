@@ -449,6 +449,7 @@ export type ContractListRecord = {
 };
 
 export type WasmData = {
+  sourceRepo: string;
   build: {
     attestation: string;
     attestationUrl: string;
@@ -476,6 +477,7 @@ export type DataTableHeader = {
 export type DataTableCell = {
   value: React.ReactNode;
   isBold?: boolean;
+  isWrap?: boolean;
 };
 
 // =============================================================================

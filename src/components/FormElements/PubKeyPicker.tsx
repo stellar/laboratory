@@ -1,5 +1,5 @@
 import React from "react";
-import { Input, InputProps } from "@stellar/design-system";
+import { Icon, Input, InputProps } from "@stellar/design-system";
 
 interface PubKeyPickerProps extends Omit<InputProps, "fieldSize"> {
   id: string;
@@ -38,6 +38,7 @@ export const PubKeyPicker = ({
     readOnly={readOnly}
     disabled={disabled}
     onChange={onChange}
+    infoLinkIcon={<Icon.InfoCircle />}
     {...props}
   />
 );

@@ -448,6 +448,7 @@ export const DataTable = <T extends AnyObject>({
               title={typeof cell.value === "string" ? cell.value : undefined}
               role="cell"
               {...(cell.isBold ? { "data-style": "bold" } : {})}
+              {...(cell.isWrap ? { "data-wrap": "true" } : {})}
             >
               {cell.value}
             </td>
@@ -504,26 +505,34 @@ export const DataTable = <T extends AnyObject>({
       </Box>
 
       {/* Filters */}
-      {hasAppliedFilters ? <Box gap="md" direction="row" align="start" justify="space-between" addlClassName="DataTable__filters">
-        <Box gap="sm" direction="row" align="center" wrap="wrap">
-          {/* Applied filter badges */}
-          {renderFilterBadges()}
-        </Box>
-
-        <Button
-          variant="error"
-          size="sm"
-          onClick={() => {
-            setSelectedFilters(INIT_FILTERS);
-            setAppliedFilters(INIT_FILTERS);
-
-            setVisibleFilters(undefined);
-            setCurrentPage(1);
-          }}
+      {hasAppliedFilters ? (
+        <Box
+          gap="md"
+          direction="row"
+          align="start"
+          justify="space-between"
+          addlClassName="DataTable__filters"
         >
-          Clear filters
-        </Button>
-      </Box> : null}
+          <Box gap="sm" direction="row" align="center" wrap="wrap">
+            {/* Applied filter badges */}
+            {renderFilterBadges()}
+          </Box>
+
+          <Button
+            variant="error"
+            size="sm"
+            onClick={() => {
+              setSelectedFilters(INIT_FILTERS);
+              setAppliedFilters(INIT_FILTERS);
+
+              setVisibleFilters(undefined);
+              setCurrentPage(1);
+            }}
+          >
+            Clear filters
+          </Button>
+        </Box>
+      ) : null}
 
       {/* Table */}
       <Card noPadding={true}>

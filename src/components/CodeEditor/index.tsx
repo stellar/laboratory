@@ -21,6 +21,7 @@ type CodeEditorProps = {
   infoLink?: string;
   onLanguageChange?: (newLanguage: SupportedLanguage) => void;
   heightInRem?: string;
+  customEl?: React.ReactNode;
 };
 
 export const CodeEditor = ({
@@ -31,8 +32,9 @@ export const CodeEditor = ({
   languages,
   infoText,
   infoLink,
-  heightInRem,
   onLanguageChange,
+  heightInRem,
+  customEl,
 }: CodeEditorProps) => {
   const { theme } = useStore();
   const monaco = useMonaco();
@@ -97,6 +99,7 @@ export const CodeEditor = ({
           justify="end"
           addlClassName="CodeEditor__actions"
         >
+          {customEl ?? null}
           {languages && onLanguageChange ? (
             <Select
               id="code-editor-languages"
