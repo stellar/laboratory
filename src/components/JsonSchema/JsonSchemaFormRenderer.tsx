@@ -2,6 +2,7 @@ import React from "react";
 import { Button, Card, Icon, Input, Text } from "@stellar/design-system";
 import type { JSONSchema7 } from "json-schema";
 import { parse } from "lossless-json";
+import { get, set } from "lodash";
 
 import { useStore } from "@/store/useStore";
 import { validate } from "@/validate";
@@ -44,11 +45,13 @@ export const JsonSchemaFormRenderer = ({
     sorobanOperation.params.invoke_contract,
   ) as AnyObject;
 
-  console.log("schema: ", schema);
   const schemaType = getDefType(schema);
 
-  const label = path.length > 0 ? getNestedValueLabel(path.join(".")) : name;
-  const labelWithSchemaType = `${label} (${schemaType})`;
+  const nestedItemLabel =
+    path.length > 0 ? getNestedItemLabel(path.join(".")) : name;
+  const label = Number(getNestedItemLabel(path.join(".")))
+    ? schemaType
+    : `${nestedItemLabel} (${schemaType})`;
 
   const invokeContractBaseProps = {
     contract_id: parsedSorobanOperation.contract_id,
@@ -56,8 +59,8 @@ export const JsonSchemaFormRenderer = ({
   };
   const sharedProps = {
     id: path.join("."),
-    label: labelWithSchemaType,
-    value: getNestedValue(parsedSorobanOperation.args, path.join("."))?.value,
+    label,
+    value: get(parsedSorobanOperation.args, path.join("."))?.value,
     error: path.length > 0 ? formError[path.join(".")] : formError[name],
   };
 
@@ -69,8 +72,6 @@ export const JsonSchemaFormRenderer = ({
       | ((value: string, required?: boolean) => string | false)[],
   ) => {
     /**
-     * Example of how setNestedValueWithArr works:
-     *
      * For a path like 'requests.1.request_type':
      *
      * obj = {
@@ -85,16 +86,16 @@ export const JsonSchemaFormRenderer = ({
      *
      * This will update the value of requests[1].request_type
      */
+
     if (path.length > 0) {
-      const result = setNestedValueWithArr(
-        parsedSorobanOperation.args,
-        path.join("."),
-        { value: e.target.value, type: schemaType },
-      );
+      const updatedList = set(parsedSorobanOperation.args, path.join("."), {
+        value: e.target.value,
+        type: schemaType,
+      });
       onChange({
         ...invokeContractBaseProps,
         args: {
-          ...result,
+          ...updatedList,
         },
       });
     } else {
@@ -113,7 +114,7 @@ export const JsonSchemaFormRenderer = ({
 
     if (Array.isArray(validateFn)) {
       const errors = validateFn.map((fn) =>
-        fn(e.target.value, requiredFields?.includes(label)),
+        fn(e.target.value, requiredFields?.includes(nestedItemLabel)),
       );
       const hasNoError = hasAnyValidationPassed(errors);
 
@@ -126,15 +127,24 @@ export const JsonSchemaFormRenderer = ({
         error = hasNoError ? "" : errors.join(" ");
       }
     } else {
-      error = validateFn?.(e.target.value, requiredFields?.includes(label));
+      error = validateFn?.(
+        e.target.value,
+        requiredFields?.includes(nestedItemLabel),
+      );
     }
 
     const currentPath = path.length > 0 ? path.join(".") : name;
 
-    setFormError({
-      ...formError,
-      [currentPath]: error ? error : "",
-    });
+    if (error) {
+      setFormError({
+        ...formError,
+        [currentPath]: error ? error : "",
+      });
+    } else {
+      const newFormError = { ...formError };
+      delete newFormError[currentPath];
+      setFormError(newFormError);
+    }
   };
 
   if (schemaType === null || schemaType === undefined) {
@@ -152,17 +162,18 @@ export const JsonSchemaFormRenderer = ({
       <Box gap="md">
         {Object.entries(schema.properties || {}).map(
           ([key, subSchema], index) => {
-            const subSchemaObj = getSchemaProperty(schema, key);
+            const schemaProperty = getSchemaProperty(schema, key);
 
-            if (subSchemaObj?.type === "object") {
+            if (schemaProperty?.type === "object") {
               return (
                 <>
                   <LabelHeading size="md" infoText={schema.description}>
                     {key}
                   </LabelHeading>
-                  {subSchemaObj?.description ? (
+
+                  {schemaProperty?.description ? (
                     <Text as="div" size="xs">
-                      {subSchemaObj.description}
+                      {schemaProperty.description}
                     </Text>
                   ) : null}
 
@@ -203,22 +214,43 @@ export const JsonSchemaFormRenderer = ({
   }
 
   if (schemaType === "array") {
-    const storedItems = parsedSorobanOperation.args?.[name] || [];
+    const storedNestedItems = parsedSorobanOperation.args?.[name] || [];
+    const schemaItems = getSchemaItems(schema);
 
     const addDefaultSchemaTemplate = () => {
       // template created based on the schema.properties
-      const defaultTemplate = Object.keys(schema.properties || {}).reduce(
-        (acc: Record<string, string | any[]>, key) => {
-          if (getSchemaProperty(schema, key)?.type === "array") {
-            acc[key] = [];
-          } else {
-            acc[key] = "";
-          }
+      let defaultTemplate;
 
-          return acc;
-        },
-        {},
-      );
+      if (isSchemaObject(schema.items) && schema.items.type === "object") {
+        defaultTemplate = Object.keys(schemaItems || {}).reduce(
+          (acc: Record<string, string | any[]>, key) => {
+            // For example, if the schema.items has an array of object type like following:
+            // {
+            //   "items": {
+            //     "type": "object",
+            //     "properties": {
+            //       "address": { "type": "string" },
+            //       "amount": { "type": "string" },
+            //       "request_type": { "type": "string" }
+            //     }
+            //   }
+            // }
+            // then the defaultTemplate will be:
+            // {
+            //   "address": [],
+            //   "amount": [],
+            //   "request_type": []
+            // }
+            acc[key] = [];
+            return acc;
+          },
+          {},
+        );
+      } else {
+        // if the schema.items is not an object,
+        // we don't need to add any default template with a key
+        defaultTemplate = {};
+      }
 
       const args = parsedSorobanOperation.args?.[name] || [];
       args.push(defaultTemplate);
@@ -238,9 +270,15 @@ export const JsonSchemaFormRenderer = ({
           {name}
         </LabelHeading>
 
+        {schema.description ? (
+          <Text as="div" size="xs">
+            {schema.description}
+          </Text>
+        ) : null}
+
         <Box gap="md">
-          {storedItems.length > 0 &&
-            storedItems.map((args: any, index: number) => (
+          {storedNestedItems.length > 0 &&
+            storedNestedItems.map((args: any, index: number) => (
               <Box gap="md" key={`${name}-${index}`}>
                 <Card>
                   <Box gap="md" key={`${name}-${index}`}>
@@ -250,24 +288,41 @@ export const JsonSchemaFormRenderer = ({
 
                     <Box gap="md">
                       <>
-                        {Object.keys(args).map((arg) => {
-                          const nestedPath = [name, index, arg].join(".");
-
-                          return (
-                            <JsonSchemaFormRenderer
-                              name={name}
-                              index={index}
-                              key={nestedPath}
-                              schema={schema.properties?.[arg] as JSONSchema7}
-                              path={[...path, nestedPath]}
-                              formData={args}
-                              onChange={onChange}
-                              requiredFields={schema.required}
-                              setFormError={setFormError}
-                              formError={formError}
-                            />
-                          );
-                        })}
+                        {/* Check if we're dealing with an array of objects */}
+                        {isSchemaObject(schema.items) &&
+                        schema.items.type === "object" ? (
+                          Object.keys(args).map((arg) => {
+                            const nestedPath = [name, index, arg].join(".");
+                            return (
+                              <JsonSchemaFormRenderer
+                                name={name}
+                                index={index}
+                                key={nestedPath}
+                                schema={schemaItems?.[arg] as JSONSchema7}
+                                path={[...path, nestedPath]}
+                                formData={args}
+                                onChange={onChange}
+                                requiredFields={schema.required}
+                                setFormError={setFormError}
+                                formError={formError}
+                              />
+                            );
+                          })
+                        ) : (
+                          // for an argument array that carries non-object type
+                          <JsonSchemaFormRenderer
+                            name={name}
+                            index={index}
+                            key={[name, index].join(".")}
+                            schema={schemaItems}
+                            path={[[name, index].join(".")]}
+                            formData={args}
+                            onChange={onChange}
+                            requiredFields={schema.required}
+                            setFormError={setFormError}
+                            formError={formError}
+                          />
+                        )}
                       </>
 
                       <Box gap="sm" direction="row" align="center">
@@ -278,9 +333,27 @@ export const JsonSchemaFormRenderer = ({
                           type="button"
                           onClick={() => {
                             const updatedList = arrayItem.delete(
-                              getNestedValue(parsedSorobanOperation.args, name),
+                              get(parsedSorobanOperation.args, name),
                               index,
                             );
+
+                            const nestedErrorKeys = Object.keys(
+                              get(
+                                parsedSorobanOperation.args,
+                                `${name}[${index}]`,
+                              ),
+                            );
+
+                            if (nestedErrorKeys.length > 0) {
+                              const nestedKeyPath = `${name}.${index}`;
+                              const newFormError = deleteNestedItemError(
+                                nestedErrorKeys,
+                                formError,
+                                nestedKeyPath,
+                              );
+
+                              setFormError(newFormError);
+                            }
 
                             onChange({
                               ...invokeContractBaseProps,
@@ -459,6 +532,20 @@ const isSchemaObject = (schema: any): schema is JSONSchema7 => {
   return schema && typeof schema === "object" && !Array.isArray(schema);
 };
 
+const getSchemaItems = (schema: any) => {
+  // First, check if schema.items exists and is not a boolean
+  if (schema.items && typeof schema.items !== "boolean") {
+    // Now check if it has properties (object schema)
+    if (schema.items.properties) {
+      return schema.items.properties;
+    }
+    // If no properties, return the items schema itself
+    return schema.items;
+  }
+  // Handle the case where items is false or doesn't exist
+  return {};
+};
+
 const getSchemaProperty = (
   schema: any,
   key: string,
@@ -471,70 +558,30 @@ const getSchemaProperty = (
 function parsePath(path: string): (string | number)[] {
   return path.split(".").map((key) => {
     const parsed = Number(key);
+
     return isNaN(parsed) ? key : parsed;
   });
 }
 
-function setNestedValueWithArr(
-  obj: AnyObject,
-  path: string,
-  val: any,
-): AnyObject {
+const getNestedItemLabel = (path: string): string => {
   const keys = parsePath(path);
-
-  function helper(current: any, idx: number): any {
-    const key = keys[idx];
-
-    // If it's the last key, set the value
-    if (idx === keys.length - 1) {
-      if (Array.isArray(current)) {
-        const newArr = [...current];
-        newArr[key as number] = val;
-        return newArr;
-      }
-      return { ...current, [key]: val };
-    }
-
-    const nextKey = keys[idx + 1];
-
-    // If current is an array
-    if (Array.isArray(current)) {
-      const index = key as number;
-      const nextVal = helper(
-        current[index] ?? (typeof nextKey === "number" ? [] : {}),
-        idx + 1,
-      );
-      const newArr = [...current];
-      newArr[index] = nextVal;
-      return newArr;
-    }
-
-    // Otherwise, treat as object
-    return {
-      ...current,
-      [key]: helper(
-        current?.[key] ?? (typeof nextKey === "number" ? [] : {}),
-        idx + 1,
-      ),
-    };
-  }
-
-  return helper(obj, 0);
-}
-
-const getNestedValue = (obj: AnyObject, path: string): any => {
-  const keys = parsePath(path);
-
-  return keys.reduce((acc, key) => {
-    if (acc === undefined || acc === null) return undefined;
-    return acc[key];
-  }, obj);
-};
-
-const getNestedValueLabel = (path: string): string => {
-  const keys = parsePath(path);
-  return keys[keys.length - 1].toString();
+  return keys[keys.length - 1] ? keys[keys.length - 1].toString() : "";
 };
 
 const hasAnyValidationPassed = (errors: (string | false)[]): boolean =>
   errors.some((error) => error === false);
+
+const deleteNestedItemError = (
+  nestedKey: string[],
+  formError: AnyObject,
+  nameIndex: string,
+) => {
+  const newFormError = { ...formError };
+
+  for (const item of nestedKey) {
+    const deletedPath = [nameIndex, item].join(".");
+    delete newFormError[deletedPath];
+  }
+
+  return newFormError;
+};
