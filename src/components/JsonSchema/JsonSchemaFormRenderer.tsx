@@ -19,7 +19,6 @@ export const JsonSchemaFormRenderer = ({
   name,
   schema,
   path = [],
-  formData,
   onChange,
   index,
   requiredFields,
@@ -29,7 +28,6 @@ export const JsonSchemaFormRenderer = ({
   name: string;
   schema: JSONSchema7;
   path?: (string | number)[];
-  formData: AnyObject;
   onChange: (value: SorobanInvokeValue) => void;
   index?: number;
   requiredFields?: string[];
@@ -184,7 +182,6 @@ export const JsonSchemaFormRenderer = ({
                         key={`${key}-${index}`}
                         schema={subSchema as JSONSchema7}
                         onChange={onChange}
-                        formData={formData}
                         requiredFields={schema.required}
                         setFormError={setFormError}
                         formError={formError}
@@ -201,7 +198,6 @@ export const JsonSchemaFormRenderer = ({
                 key={`${key}-${index}`}
                 schema={subSchema as JSONSchema7}
                 onChange={onChange}
-                formData={formData}
                 requiredFields={schema.required}
                 setFormError={setFormError}
                 formError={formError}
@@ -223,7 +219,7 @@ export const JsonSchemaFormRenderer = ({
 
       if (isSchemaObject(schema.items) && schema.items.type === "object") {
         defaultTemplate = Object.keys(schemaItems || {}).reduce(
-          (acc: Record<string, string | any[]>, key) => {
+          (acc: Record<string, string | AnyObject>, key) => {
             // For example, if the schema.items has an array of object type like following:
             // {
             //   "items": {
@@ -237,11 +233,11 @@ export const JsonSchemaFormRenderer = ({
             // }
             // then the defaultTemplate will be:
             // {
-            //   "address": [],
-            //   "amount": [],
-            //   "request_type": []
+            //   "address": {},
+            //   "amount": {},
+            //   "request_type": {}
             // }
-            acc[key] = [];
+            acc[key] = {};
             return acc;
           },
           {},
@@ -300,7 +296,6 @@ export const JsonSchemaFormRenderer = ({
                                 key={nestedPath}
                                 schema={schemaItems?.[arg] as JSONSchema7}
                                 path={[...path, nestedPath]}
-                                formData={args}
                                 onChange={onChange}
                                 requiredFields={schema.required}
                                 setFormError={setFormError}
@@ -316,7 +311,6 @@ export const JsonSchemaFormRenderer = ({
                             key={[name, index].join(".")}
                             schema={schemaItems}
                             path={[[name, index].join(".")]}
-                            formData={args}
                             onChange={onChange}
                             requiredFields={schema.required}
                             setFormError={setFormError}

@@ -12,6 +12,7 @@ import { DereferencedSchemaType } from "@/constants/jsonSchema";
 import { dereferenceSchema } from "@/helpers/dereferenceSchema";
 import { buildTxWithSorobanData } from "@/helpers/sorobanUtils";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
+import { isEmptyObject } from "@/helpers/isEmptyObject";
 
 import { useRpcPrepareTx } from "@/query/useRpcPrepareTx";
 
@@ -59,6 +60,24 @@ export const JsonSchemaForm = ({
   const hasFormError = Object.values(formError).some((error) => error !== "");
   const prevName = usePrevious(name);
   const prevValue = usePrevious(stringify(value.args));
+
+  const missingReqFields = requiredFields.reduce((res, cur) => {
+    if (value.args[cur].length === 0) {
+      return [...res, cur];
+    }
+
+    if (!value.args[cur]) {
+      return [...res, cur];
+    }
+
+    if (value.args[cur] && Array.isArray(value.args[cur])) {
+      if (value.args[cur].some((v: any) => isEmptyObject(v))) {
+        return [...res, cur];
+      }
+    }
+
+    return res;
+  }, [] as string[]);
 
   // reset form error and submit tx error when the dropdown changes
   useEffect(() => {
@@ -134,7 +153,6 @@ export const JsonSchemaForm = ({
           <JsonSchemaFormRenderer
             name={name}
             schema={dereferencedSchema as JSONSchema7}
-            formData={value.args}
             onChange={onChange}
             formError={formError}
             setFormError={setFormError}
@@ -144,7 +162,9 @@ export const JsonSchemaForm = ({
         <Box gap="md" direction="row" wrap="wrap">
           <Button
             variant="secondary"
-            disabled={!isValid.params || hasFormError}
+            disabled={
+              !isValid.params || hasFormError || missingReqFields.length > 0
+            }
             isLoading={isPrepareTxPending}
             size="md"
             onClick={handlePrepareTx}
@@ -266,9 +286,9 @@ const getScValsFromArgs = (args: SorobanInvokeValue["args"]): xdr.ScVal[] => {
   for (const argKey in args) {
     const argValue = args[argKey];
     // Note: argValue is either an object or array of objects
-    if (Array.isArray(argValue)) {
+    if (Array.isArray(argValue) && Object.values(argValue).length > 0) {
+      // array of objects
       if (argValue.some((v) => typeof Object.values(v)[0] === "object")) {
-        // array of objects
         const arrayScVals = argValue.map((v) => convertObjectToScVal(v));
         scVals.push(...arrayScVals);
       } else {
