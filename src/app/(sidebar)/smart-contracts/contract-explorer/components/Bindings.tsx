@@ -12,7 +12,7 @@ export const Bindings = () => {
       corresponding to your contract’s methods. To learn more about generating
       bindings, please see the{" "}
       <SdsLink href="https://developers.stellar.org/docs/tools/cli/stellar-cli#stellar-contract-bindings">
-        Stellar CLI’s binding command
+        Stellar CLI’s bindings command
       </SdsLink>
       .
     </Alert>
