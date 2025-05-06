@@ -533,16 +533,12 @@ const isSchemaObject = (schema: any): schema is JSONSchema7 => {
 };
 
 const getSchemaItems = (schema: any) => {
-  // First, check if schema.items exists and is not a boolean
   if (schema.items && typeof schema.items !== "boolean") {
-    // Now check if it has properties (object schema)
     if (schema.items.properties) {
       return schema.items.properties;
     }
-    // If no properties, return the items schema itself
     return schema.items;
   }
-  // Handle the case where items is false or doesn't exist
   return {};
 };
 
