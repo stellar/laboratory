@@ -62,7 +62,7 @@ export const JsonSchemaForm = ({
   const prevValue = usePrevious(stringify(value.args));
 
   const missingReqFields = requiredFields.reduce((res, cur) => {
-    if (value.args[cur].length === 0) {
+    if (value.args[cur]?.length === 0) {
       return [...res, cur];
     }
 
