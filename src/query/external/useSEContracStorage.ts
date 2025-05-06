@@ -35,6 +35,7 @@ export const useSEContractStorage = ({
       }
 
       let allRecords: ContractStorageResponseItem[] = [];
+      let hasMoreRecords = true;
 
       const fetchData = async (cursor?: string) => {
         const searchParams = new URLSearchParams();
@@ -56,17 +57,21 @@ export const useSEContractStorage = ({
           throw responseJson.error;
         }
 
-        allRecords = [
-          ...allRecords,
-          ...(responseJson?._embedded?.records || []),
-        ];
+        const newRecords = responseJson?._embedded?.records || [];
+
+        allRecords = [...allRecords, ...newRecords];
+
+        if (newRecords.length === 0) {
+          hasMoreRecords = false;
+        }
       };
 
       try {
         // Fetch the last entries limited by CONTRACT_STORAGE_MAX_ENTRIES
         while (
           allRecords.length <
-          Math.min(totalEntriesCount, CONTRACT_STORAGE_MAX_ENTRIES)
+            Math.min(totalEntriesCount, CONTRACT_STORAGE_MAX_ENTRIES) &&
+          hasMoreRecords
         ) {
           const lastRecord = allRecords.slice(-1)[0];
           await fetchData(lastRecord?.paging_token);

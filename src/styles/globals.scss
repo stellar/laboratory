@@ -27,6 +27,16 @@
       --Card-padding: #{pxToRem(16px)};
     }
   }
+
+  .Modal {
+    &__content {
+      grid-template-rows: minmax(0,max-content) fit-content(24rem) minmax(0,max-content);
+    }
+
+    .Card {
+      height: fit-content;
+    }
+  }
 }
 
 .LabLayout {
@@ -257,7 +267,7 @@
   }
 
   &__content {
-    width: clamp(pxToRem(672px), 100%, pxToRem(960px));
+    width: clamp(pxToRem(672px), 100%, pxToRem(1280px));
     position: relative;
     margin: 0 auto;
     display: flex;
@@ -337,8 +347,7 @@
   color: var(--Nav-navLink-color);
   text-decoration: none;
   padding: pxToRem(12px) 0;
-  transition:
-    color var(--sds-anim-transition-default),
+  transition: color var(--sds-anim-transition-default),
     border-color var(--sds-anim-transition-default);
   white-space: nowrap;
 
@@ -454,9 +463,8 @@
   &__nestedItemsWrapper {
     display: grid;
     grid-template-rows: 0fr;
-    transition:
-      grid-template-rows 100ms ease-out,
-      margin-top 100ms ease-out;
+    transition: grid-template-rows 100ms ease-out,
+    margin-top 100ms ease-out;
     margin-left: pxToRem(16px);
 
     &[data-is-expanded="true"] {
@@ -964,18 +972,22 @@
     .Select__container {
       border: 0;
     }
+
     input {
       flex-shrink: 1;
     }
   }
+
   .Input__buttons {
     .Input__container {
       padding-right: 0;
     }
+
     .hardware-button {
       flex-grow: 1;
       border-left: 1px solid var(--Input-color-border);
     }
+
     .hardware-sign-button {
       .Button {
         margin-top: pxToRem(25px);

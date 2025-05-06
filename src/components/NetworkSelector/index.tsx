@@ -8,6 +8,7 @@ import React, {
 import { Button, Icon, Input, Notification } from "@stellar/design-system";
 
 import { NetworkIndicator } from "@/components/NetworkIndicator";
+import { LoadNetworkModal } from "@/components/NetworkSelector/LoadNetworkModal";
 import { NetworkOptions } from "@/constants/settings";
 import { useStore } from "@/store/useStore";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
@@ -38,6 +39,7 @@ export const NetworkSelector = () => {
   const [activeNetwork, setActiveNetwork] = useState<Network | EmptyObj>(
     network,
   );
+  const [loadedNetwork, setLoadedNetwork] = useState<Network | null>(null);
   const [validationError, setValidationError] = useState<AnyObject>({});
 
   const [isDropdownActive, setIsDropdownActive] = useState(false);
@@ -46,15 +48,21 @@ export const NetworkSelector = () => {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
-  const isSameNetwork =
-    activeNetwork.id === network.id &&
-    activeNetwork.horizonUrl === network.horizonUrl &&
-    activeNetwork.horizonHeaderName === network.horizonHeaderName &&
-    activeNetwork.horizonHeaderValue === network.horizonHeaderValue &&
-    activeNetwork.rpcUrl === network.rpcUrl &&
-    activeNetwork.rpcHeaderName === network.rpcHeaderName &&
-    activeNetwork.rpcHeaderValue === network.rpcHeaderValue &&
-    activeNetwork.passphrase === network.passphrase;
+  const isSameNetwork = (
+    networkOne: Network | EmptyObj,
+    networkTwo: Network | EmptyObj,
+  ) => {
+    return (
+      networkOne.id === networkTwo.id &&
+      networkOne.horizonUrl === networkTwo.horizonUrl &&
+      networkOne.horizonHeaderName === networkTwo.horizonHeaderName &&
+      networkOne.horizonHeaderValue === networkTwo.horizonHeaderValue &&
+      networkOne.rpcUrl === networkTwo.rpcUrl &&
+      networkOne.rpcHeaderName === networkTwo.rpcHeaderName &&
+      networkOne.rpcHeaderValue === networkTwo.rpcHeaderValue &&
+      networkOne.passphrase === networkTwo.passphrase
+    );
+  };
 
   const isNetworkUrlInvalid = (url: string) => {
     if (!url) {
@@ -71,7 +79,7 @@ export const NetworkSelector = () => {
   };
 
   const isSubmitDisabled = () => {
-    if (isSameNetwork) {
+    if (isSameNetwork(activeNetwork, network)) {
       return true;
     }
 
@@ -122,6 +130,49 @@ export const NetworkSelector = () => {
           horizonHeaderName: savedNetwork.horizonHeaderName || "",
           rpcHeaderName: savedNetwork.rpcHeaderName || "",
         };
+      } else {
+        // Network settings in the URL don’t match saved network settings
+        // Get the network from our preset list
+        const networkPreset = getNetworkById(network.id);
+        // Check if there is previously saved network for this network ID
+        const savedPreviousNetwork =
+          localStorageSavedNetworksPrevious.get()?.[network.id];
+
+        const currentNetwork = {
+          ...networkPreset,
+          rpcUrl: savedPreviousNetwork?.rpcUrl || networkPreset?.rpcUrl || "",
+          horizonUrl:
+            savedPreviousNetwork?.horizonUrl || networkPreset?.horizonUrl || "",
+          passphrase:
+            savedPreviousNetwork?.passphrase || networkPreset?.passphrase || "",
+        } as Network;
+
+        // Loaded network settings
+        const newNetwork = {
+          ...network,
+          label: networkPreset?.label,
+        } as Network;
+
+        // Only on Mainnet with a new network, temporarily set network settings
+        // (user will approve new settings in the modal)
+        if (
+          network.id === "mainnet" &&
+          !isSameNetwork(currentNetwork, newNetwork)
+        ) {
+          setActiveNetwork(currentNetwork);
+          selectNetwork(currentNetwork);
+          updateNetwork(currentNetwork);
+
+          // This will trigger the modal to open
+          setLoadedNetwork(newNetwork);
+        } else {
+          // If it’s not Mainnet, use loaded network settings
+          setActiveNetwork(newNetwork);
+          selectNetwork(newNetwork);
+          updateNetwork(newNetwork);
+        }
+
+        return;
       }
     } else {
       defaultNetwork =
@@ -439,6 +490,22 @@ export const NetworkSelector = () => {
           </div>
         </div>
       </div>
+
+      <LoadNetworkModal
+        onClose={() => {
+          setLoadedNetwork(null);
+        }}
+        onAccept={() => {
+          if (loadedNetwork) {
+            setActiveNetwork(loadedNetwork);
+            selectNetwork(loadedNetwork);
+            updateNetwork(loadedNetwork);
+
+            handleNetworkSaveLocalStorage(loadedNetwork);
+          }
+        }}
+        loadedNetwork={loadedNetwork}
+      />
     </div>
   );
 };
