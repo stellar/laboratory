@@ -75,7 +75,7 @@ export default function Introduction() {
           <NextLink href={Routes.SUBMIT_TRANSACTION} sds-variant="primary">
             submitting transactions
           </NextLink>
-          , as well as making requests to both RPC and Horizon APIs. With build-in tools for saving and sharing transactions, converting between XDR and JSON, and exploring smart contracts on Stellar, the Stellar Lab is ideal for testing, learning, and exploring on Stellar.
+          , as well as making requests to both RPC and Horizon APIs. With built-in tools for saving and sharing transactions, converting between XDR and JSON, and exploring smart contracts on Stellar, the Stellar Lab is ideal for testing, learning, and exploring on Stellar.
         </Text>
 
         <Text size="sm" as="p">
