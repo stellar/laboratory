@@ -7,7 +7,9 @@ import {
 const GA_MEASUREMENT_ID = "GTM-KCNDDL3";
 
 export const GoogleAnalytics = () => {
-  const isGoogleTrackingEnabled = process.env.NODE_ENV === "production";
+  const isGoogleTrackingEnabled =
+    process.env.NEXT_PUBLIC_DISABLE_GOOGLE_ANALYTICS !== "true" &&
+    process.env.NODE_ENV === "production";
 
   if (!isGoogleTrackingEnabled) {
     return null;
