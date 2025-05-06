@@ -43,6 +43,7 @@ export const FetchContractMethodPickerWithQuery = ({
     isError,
     isSuccess,
     error: contractClientError,
+    refetch,
   } = useContractClientFromRpc({
     contractId: value?.contract_id || "",
     networkPassphrase: network.passphrase,
@@ -75,7 +76,8 @@ export const FetchContractMethodPickerWithQuery = ({
     onChange(newValue);
   };
 
-  const handleFetchContractMethods = () => {
+  const handleFetch = () => {
+    refetch();
     setFetchError("");
 
     if (!value) {
@@ -117,7 +119,7 @@ export const FetchContractMethodPickerWithQuery = ({
           disabled={!value || Boolean(contractIdError)}
           variant="secondary"
           size="md"
-          onClick={handleFetchContractMethods}
+          onClick={handleFetch}
           type="button"
         >
           Fetch contract methods
