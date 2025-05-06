@@ -208,6 +208,58 @@ const getTxnToSimulate = (
   }
 };
 
+const convertObjectToScVal = (obj: Record<string, any>): xdr.ScVal => {
+  const convertedValue: Record<string, any> = {};
+  const typeHints: Record<string, [string, string]> = {};
+  // obj input example:
+  //  {
+  //    "address": {
+  //      "value": "CDVQVKOY2YSXS2IC7KN6MNASSHPAO7UN2UR2ON4OI2SKMFJNVAMDX6DP",
+  //      "type": "Address"
+  //    },
+  //    "amount": {
+  //      "value": "2",
+  //      "type": "I128"
+  //    },
+  //    "request_type": {
+  //      "value": "4",
+  //      "type": "U32"
+  //    }
+  //  }
+
+  //  for an array of objects, `nativeToScVal` expects the following type for `val`:
+  //  https://stellar.github.io/js-stellar-sdk/global.html#nativeToScVal
+  //  {
+  //     "address": "CDVQVKOY2YSXS2IC7KN6MNASSHPAO7UN2UR2ON4OI2SKMFJNVAMDX6DP",
+  //     "amount": "2",
+  //     "request_type": "2"
+  //  }
+  //  for `type`, it expects the following type:
+  //   {
+  //     "address": [
+  //       "symbol", // matching the key type
+  //       "address" // matching the value type
+  //     ],
+  //     "amount": [
+  //       "symbol", // matching the key type
+  //       "i128" // matching the value type
+  //     ],
+  //     "request_type": [
+  //       "symbol", // matching the key type
+  //       "u32" // matching the value type
+  //     ]
+  //  }
+
+  for (const key in obj) {
+    convertedValue[key] = obj[key].value;
+    // toLowerCase() is needed because the type we save from the label is in uppercase
+    // but nativeToScval expects the type to be in lowercase
+    typeHints[key] = ["symbol", obj[key].type.toLowerCase()];
+  }
+
+  return nativeToScVal(convertedValue, { type: typeHints });
+};
+
 const getScValsFromArgs = (args: SorobanInvokeValue["args"]): xdr.ScVal[] => {
   const scVals: xdr.ScVal[] = [];
 
@@ -215,42 +267,27 @@ const getScValsFromArgs = (args: SorobanInvokeValue["args"]): xdr.ScVal[] => {
     const argValue = args[argKey];
     // Note: argValue is either an object or array of objects
     if (Array.isArray(argValue)) {
-      const arrayScVals = argValue.map((v) => {
-        const convertedValue: Record<string, any> = {};
-        const typeHints: Record<string, [string, string]> = {};
-
-        for (const key in v) {
-          convertedValue[key] = v[key].value;
-          // toLowerCase() is needed because the type we save from the label is in uppercase
-          // but nativeToScval expects the type to be in lowercase
-          typeHints[key] = ["symbol", v[key].type.toLowerCase()];
-        }
-
-        // for an array of objects, `nativeToScVal` expects the following type for val:
+      if (argValue.some((v) => typeof Object.values(v)[0] === "object")) {
+        // array of objects
+        const arrayScVals = argValue.map((v) => convertObjectToScVal(v));
+        scVals.push(...arrayScVals);
+      } else {
+        // array of primitives example:
         //   {
-        //     "address": "CDVQVKOY2YSXS2IC7KN6MNASSHPAO7UN2UR2ON4OI2SKMFJNVAMDX6DP",
-        //     "amount": "2",
-        //     "request_type": "2"
+        //     "value": "GBPIMUEJFYS7RT23QO2ACH2JMKGXLXZI4E5ACBSQMF32RKZ5H3SVNL5F",
+        //     "type": "Address"
         // }
-        // for `type`, it expects the following type:
-        //   {
-        //     "address": [
-        //         "symbol", // matching the key type
-        //         "address" // matching the value type
-        //     ],
-        //     "amount": [
-        //         "symbol", // matching the key type
-        //         "i128" // matching the value type
-        //     ],
-        //     "request_type": [
-        //         "symbol", // matching the key type
-        //         "u32" // matching the value type
-        //     ]
-        // }
-        return nativeToScVal(convertedValue, { type: typeHints });
-      });
+        const arrayScVals = argValue.reduce((acc, v) => {
+          acc.push(v.value);
+          return acc;
+        }, []);
 
-      scVals.push(...arrayScVals);
+        const scVal = nativeToScVal(arrayScVals, {
+          type: argValue[0].type.toLowerCase(),
+        });
+
+        scVals.push(scVal);
+      }
     } else {
       scVals.push(
         nativeToScVal(argValue.value, { type: argValue.type.toLowerCase() }),
