@@ -47,19 +47,19 @@ export const NetworkNotAvailableBanner = () => {
     let msg = "";
 
     if (isHorizonInProgress && isRpcInProgress) {
-      msg = "Horizon and RPC networks are";
+      msg = "Horizon and RPC networks";
     }
 
     if (isHorizonInProgress) {
-      msg = "Horizon network is";
+      msg = "Horizon network";
     }
 
     if (isRpcInProgress) {
-      msg = "RPC network is";
+      msg = "RPC network";
     }
 
     if (msg) {
-      return `${msg} still ingesting data, which can take several minutes. Until this process completes, network requests will fail.`;
+      return `${msg} couldn’t be reached. If you are still ingesting data, this process can take several minutes. Until then, network requests will fail.`;
     }
 
     return null;
