@@ -59,21 +59,23 @@ export default function Introduction() {
     <LayoutContentContainer>
       <PageCard heading="Stellar Lab">
         <Text size="sm" as="p">
-          The Stellar Lab is a set of tools that enables people to try out and
-          learn about the Stellar network. The Lab can{" "}
+          The Stellar Lab is an interactive toolkit for exploring the Stellar network. It helps developers and builders experiment with{" "}
           <NextLink href={Routes.BUILD_TRANSACTION} sds-variant="primary">
-            build transactions
+            building
           </NextLink>
           ,{" "}
           <NextLink href={Routes.SIGN_TRANSACTION} sds-variant="primary">
-            sign them
+            signing
+          </NextLink>
+          ,{" "}
+          <NextLink href={Routes.SIMULATE_TRANSACTION} sds-variant="primary">
+            simulating
           </NextLink>
           , and{" "}
           <NextLink href={Routes.SUBMIT_TRANSACTION} sds-variant="primary">
-            submit them to the network
+            submitting transactions
           </NextLink>
-          . It can also make requests to RPC and Horizon endpoints. You can save
-          your transactions and runbooks for future use.
+          , as well as making requests to both RPC and Horizon APIs. With build-in tools for saving and sharing transactions, converting between XDR and JSON, and exploring smart contracts on Stellar, the Stellar Lab is ideal for testing, learning, and exploring on Stellar.
         </Text>
 
         <Text size="sm" as="p">
