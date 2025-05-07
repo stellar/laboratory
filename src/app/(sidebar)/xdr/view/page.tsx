@@ -361,7 +361,12 @@ export default function ViewXdr() {
           <SdsLink href="https://developers.stellar.org/docs/learn/encyclopedia/data-format/xdr-json">
             XDR ⇄ JSON guide
           </SdsLink>{" "}
-          on the Stellar Developer Docs.
+          on the Stellar Developer Docs. To see the XDR ⇄ JSON conversion
+          specification, please see{" "}
+          <SdsLink href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0051.md">
+            SEP-51 XDR-JSON
+          </SdsLink>
+          .
         </div>
       </Alert>
     </Box>
