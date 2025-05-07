@@ -449,6 +449,7 @@ export const DataTable = <T extends AnyObject>({
               role="cell"
               {...(cell.isBold ? { "data-style": "bold" } : {})}
               {...(cell.isWrap ? { "data-wrap": "true" } : {})}
+              {...(cell.isExpired ? { "data-style": "expired" } : {})}
             >
               {cell.value}
             </td>

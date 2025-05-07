@@ -157,7 +157,7 @@ export const ContractStorage = ({
             ),
           },
           { value: capitalizeString(vh.durability) },
-          { value: formatNumber(vh.ttl) },
+          { value: formatNumber(vh.ttl), isExpired: vh.expired },
           {
             value: formatEpochToDate(vh.updated, "short") || "-",
             isWrap: true,

@@ -100,6 +100,10 @@
         color: var(--sds-clr-gray-12);
       }
 
+      &[data-style="expired"] {
+        text-decoration: line-through;
+      }
+
       &[data-wrap="true"] {
         white-space: normal;
       }
