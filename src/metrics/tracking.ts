@@ -172,4 +172,6 @@ export enum TrackingEvent {
   SMART_CONTRACTS_EXPLORER_LOAD_CONTRACT = "smart contracts: explorer: load contract",
   SMART_CONTRACTS_EXPLORER_CLEAR_CONTRACT = "smart contracts: explorer: clear contract",
   SMART_CONTRACTS_EXPLORER_TAB = "smart contracts: explorer: tab",
+  SMART_CONTRACTS_EXPLORER_SAVE = "smart contracts: explorer: save contract id",
+  SMART_CONTRACTS_SAVED_VIEW_IN_EXPLORER = "smart contracts: saved: view in contract explorer",
 }

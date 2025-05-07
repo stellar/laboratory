@@ -8,7 +8,11 @@ import { useStore } from "@/store/useStore";
 import { useSEContractInfo } from "@/query/external/useSEContractInfo";
 import { useWasmGitHubAttestation } from "@/query/useWasmGitHubAttestation";
 import { validate } from "@/validate";
+
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
+import { localStorageSavedContracts } from "@/helpers/localStorageSavedContracts";
+import { buildContractExplorerHref } from "@/helpers/buildContractExplorerHref";
+import { delayedAction } from "@/helpers/delayedAction";
 
 import { Box } from "@/components/layout/Box";
 import { PageCard } from "@/components/layout/PageCard";
@@ -16,16 +20,20 @@ import { MessageField } from "@/components/MessageField";
 import { TabView } from "@/components/TabView";
 import { SwitchNetworkButtons } from "@/components/SwitchNetworkButtons";
 import { PoweredByStellarExpert } from "@/components/PoweredByStellarExpert";
+import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { ContractInfo } from "./components/ContractInfo";
 
 export default function ContractExplorer() {
-  const { network, smartContracts } = useStore();
+  const { network, smartContracts, savedContractId, clearSavedContractId } =
+    useStore();
+
   const [contractActiveTab, setContractActiveTab] = useState("contract-info");
   const [contractIdInput, setContractIdInput] = useState("");
   const [contractIdInputError, setContractIdInputError] = useState("");
+  const [isSaveModalVisible, setIsSaveModalVisible] = useState(false);
 
   const {
     data: contractInfoData,
@@ -61,8 +69,23 @@ export default function ContractExplorer() {
     isWasmFetching;
 
   useEffect(() => {
+    // Pre-fill on page refresh and initial load
     if (smartContracts.explorer.contractId) {
       setContractIdInput(smartContracts.explorer.contractId);
+    }
+
+    // Pre-fill only on initial load when navigating from the Saved Smart
+    // Contract IDs view.
+    if (savedContractId) {
+      setContractIdInput(savedContractId);
+
+      // Remove temporary savedContractId from URL
+      delayedAction({
+        action: () => {
+          clearSavedContractId();
+        },
+        delay: 200,
+      });
     }
     // On page load only
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -125,22 +148,37 @@ export default function ContractExplorer() {
 
           <>
             {contractIdInput ? (
-              <Button
-                size="md"
-                variant="error"
-                icon={<Icon.RefreshCw01 />}
-                onClick={() => {
-                  resetFetchContractInfo();
-                  setContractIdInput("");
+              <>
+                <Button
+                  disabled={isLoadContractDisabled || isLoading}
+                  size="md"
+                  variant="tertiary"
+                  icon={<Icon.Save01 />}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsSaveModalVisible(true);
+                  }}
+                >
+                  Save Contract ID
+                </Button>
 
-                  trackEvent(
-                    TrackingEvent.SMART_CONTRACTS_EXPLORER_CLEAR_CONTRACT,
-                  );
-                }}
-                disabled={isLoading}
-              >
-                Clear
-              </Button>
+                <Button
+                  size="md"
+                  variant="error"
+                  icon={<Icon.RefreshCw01 />}
+                  onClick={() => {
+                    resetFetchContractInfo();
+                    setContractIdInput("");
+
+                    trackEvent(
+                      TrackingEvent.SMART_CONTRACTS_EXPLORER_CLEAR_CONTRACT,
+                    );
+                  }}
+                  disabled={isLoading}
+                >
+                  Clear
+                </Button>
+              </>
             ) : null}
           </>
         </Box>
@@ -245,6 +283,24 @@ export default function ContractExplorer() {
           </>
         ) : null}
       </>
+
+      <SaveToLocalStorageModal
+        type="save"
+        itemTitle="Smart Contract ID"
+        itemProps={{
+          contractId: contractIdInput,
+          shareableUrl: `${window.location.origin}${buildContractExplorerHref(contractIdInput)}`,
+        }}
+        allSavedItems={localStorageSavedContracts.get()}
+        isVisible={isSaveModalVisible}
+        onClose={() => {
+          setIsSaveModalVisible(false);
+        }}
+        onUpdate={(updatedItems) => {
+          localStorageSavedContracts.set(updatedItems);
+          trackEvent(TrackingEvent.SMART_CONTRACTS_EXPLORER_SAVE);
+        }}
+      />
     </Box>
   );
 }

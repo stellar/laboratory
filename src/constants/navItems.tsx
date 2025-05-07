@@ -120,6 +120,16 @@ export const XDR_NAV_ITEMS = [
 
 export const SMART_CONTRACTS_NAV_ITEMS = [
   {
+    navItems: [
+      {
+        route: Routes.SMART_CONTRACTS_SAVED,
+        label: "Saved Smart Contract IDs",
+        icon: <Icon.Save03 />,
+      },
+    ],
+    hasBottomDivider: true,
+  },
+  {
     instruction: "Smart Contract Tools",
     navItems: [
       {
