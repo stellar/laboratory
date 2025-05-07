@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Button } from "@stellar/design-system";
 
 import { Box } from "@/components/layout/Box";
@@ -42,6 +42,7 @@ export const FetchContractMethodPickerWithQuery = ({
     data: contractClient,
     isError,
     isSuccess,
+    isFetching,
     error: contractClientError,
     refetch,
   } = useContractClientFromRpc({
@@ -49,6 +50,23 @@ export const FetchContractMethodPickerWithQuery = ({
     networkPassphrase: network.passphrase,
     rpcUrl: network.rpcUrl,
   });
+
+  const memoizedMethods = useMemo(() => {
+    return contractClient?.spec?.funcs();
+  }, [contractClient?.spec]);
+
+  useEffect(() => {
+    if (isSuccess && memoizedMethods) {
+      const methodNames = memoizedMethods.map((method) =>
+        method.name().toString(),
+      );
+      setContractMethods(methodNames);
+    }
+
+    if (isError && contractClientError?.message) {
+      setFetchError(contractClientError.message);
+    }
+  }, [isSuccess, isError, contractClientError?.message, memoizedMethods]);
 
   const handleContractIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // reset the error and methods
@@ -76,29 +94,9 @@ export const FetchContractMethodPickerWithQuery = ({
     onChange(newValue);
   };
 
-  const handleFetch = () => {
-    refetch();
+  const handleFetch = async () => {
+    await refetch();
     setFetchError("");
-
-    if (!value) {
-      setFetchError("Contract ID is required");
-      return;
-    }
-
-    if (isSuccess) {
-      const contractMethods = contractClient?.spec?.funcs();
-
-      if (contractMethods) {
-        const methodNames = contractMethods.map((method) =>
-          method.name().toString(),
-        );
-        setContractMethods(methodNames);
-      }
-    }
-
-    if (isError) {
-      setFetchError(contractClientError.message);
-    }
   };
 
   return (
@@ -116,7 +114,8 @@ export const FetchContractMethodPickerWithQuery = ({
 
       <Box gap="md" direction="row" wrap="wrap">
         <Button
-          disabled={!value || Boolean(contractIdError)}
+          disabled={!value?.contract_id || Boolean(contractIdError)}
+          isLoading={isFetching}
           variant="secondary"
           size="md"
           onClick={handleFetch}
