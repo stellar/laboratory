@@ -33,6 +33,14 @@
     color: var(--sds-clr-gray-11);
     transition: opacity var(--sds-anim-transition-default);
 
+    .TtlBox {
+      &__value {
+        &[data-style="expired"] {
+          text-decoration: line-through;
+        }
+      }
+    }
+
     tr[data-style="row"] {
       display: grid;
       grid-template-columns: var(--DataTable-grid-template-columns);
@@ -98,10 +106,6 @@
 
       &[data-style="bold"] {
         color: var(--sds-clr-gray-12);
-      }
-
-      &[data-style="expired"] {
-        text-decoration: line-through;
       }
 
       &[data-wrap="true"] {
