@@ -1,10 +1,8 @@
 import React from "react";
 import { Button, Card, Icon, Input, Text } from "@stellar/design-system";
 import type { JSONSchema7 } from "json-schema";
-import { parse } from "lossless-json";
 import { get, set } from "lodash";
 
-import { useStore } from "@/store/useStore";
 import { validate } from "@/validate";
 
 import { arrayItem } from "@/helpers/arrayItem";
@@ -24,6 +22,7 @@ export const JsonSchemaFormRenderer = ({
   requiredFields,
   formError,
   setFormError,
+  parsedSorobanOperation,
 }: {
   name: string;
   schema: JSONSchema7;
@@ -33,16 +32,8 @@ export const JsonSchemaFormRenderer = ({
   requiredFields?: string[];
   formError: AnyObject;
   setFormError: (formError: AnyObject) => void;
+  parsedSorobanOperation: SorobanInvokeValue;
 }) => {
-  const { transaction } = useStore();
-  const { build } = transaction;
-  const { operation: sorobanOperation } = build.soroban;
-
-  // parse stringified soroban operation
-  const parsedSorobanOperation = parse(
-    sorobanOperation.params.invoke_contract,
-  ) as AnyObject;
-
   const schemaType = getDefType(schema);
 
   const nestedItemLabel =
@@ -164,7 +155,7 @@ export const JsonSchemaFormRenderer = ({
 
             if (schemaProperty?.type === "object") {
               return (
-                <>
+                <React.Fragment key={index}>
                   <LabelHeading size="md" infoText={schema.description}>
                     {key}
                   </LabelHeading>
@@ -185,10 +176,11 @@ export const JsonSchemaFormRenderer = ({
                         requiredFields={schema.required}
                         setFormError={setFormError}
                         formError={formError}
+                        parsedSorobanOperation={parsedSorobanOperation}
                       />
                     </Card>
                   </Box>
-                </>
+                </React.Fragment>
               );
             }
 
@@ -201,6 +193,7 @@ export const JsonSchemaFormRenderer = ({
                 requiredFields={schema.required}
                 setFormError={setFormError}
                 formError={formError}
+                parsedSorobanOperation={parsedSorobanOperation}
               />
             );
           },
@@ -272,99 +265,99 @@ export const JsonSchemaFormRenderer = ({
           </Text>
         ) : null}
 
-        <Box gap="md">
-          {storedNestedItems.length > 0 &&
-            storedNestedItems.map((args: any, index: number) => (
-              <Box gap="md" key={`${name}-${index}`}>
-                <Card>
-                  <Box gap="md" key={`${name}-${index}`}>
-                    <LabelHeading size="lg">
-                      {name}-{index + 1}
-                    </LabelHeading>
+        {storedNestedItems.length > 0 &&
+          storedNestedItems.map((args: any, index: number) => (
+            <Box gap="md" key={`${name}-${index}`}>
+              <Card>
+                <Box gap="md" key={`${name}-${index}`}>
+                  <LabelHeading size="lg">
+                    {name}-{index + 1}
+                  </LabelHeading>
 
-                    <Box gap="md">
-                      <>
-                        {/* Check if we're dealing with an array of objects */}
-                        {isSchemaObject(schema.items) &&
-                        schema.items.type === "object" ? (
-                          Object.keys(args).map((arg) => {
-                            const nestedPath = [name, index, arg].join(".");
-                            return (
-                              <JsonSchemaFormRenderer
-                                name={name}
-                                index={index}
-                                key={nestedPath}
-                                schema={schemaItems?.[arg] as JSONSchema7}
-                                path={[...path, nestedPath]}
-                                onChange={onChange}
-                                requiredFields={schema.required}
-                                setFormError={setFormError}
-                                formError={formError}
-                              />
+                  <Box gap="md">
+                    <>
+                      {/* Check if we're dealing with an array of objects */}
+                      {isSchemaObject(schema.items) &&
+                      schema.items.type === "object" ? (
+                        Object.keys(args).map((arg) => {
+                          const nestedPath = [name, index, arg].join(".");
+                          return (
+                            <JsonSchemaFormRenderer
+                              name={name}
+                              index={index}
+                              key={nestedPath}
+                              schema={schemaItems?.[arg] as JSONSchema7}
+                              path={[...path, nestedPath]}
+                              onChange={onChange}
+                              requiredFields={schema.required}
+                              setFormError={setFormError}
+                              formError={formError}
+                              parsedSorobanOperation={parsedSorobanOperation}
+                            />
+                          );
+                        })
+                      ) : (
+                        // for an argument array that carries non-object type
+                        <JsonSchemaFormRenderer
+                          name={name}
+                          index={index}
+                          key={[name, index].join(".")}
+                          schema={schemaItems}
+                          path={[[name, index].join(".")]}
+                          onChange={onChange}
+                          requiredFields={schema.required}
+                          setFormError={setFormError}
+                          formError={formError}
+                          parsedSorobanOperation={parsedSorobanOperation}
+                        />
+                      )}
+                    </>
+
+                    <Box gap="sm" direction="row" align="center">
+                      <Button
+                        size="md"
+                        variant="tertiary"
+                        icon={<Icon.Trash01 />}
+                        type="button"
+                        onClick={() => {
+                          const updatedList = arrayItem.delete(
+                            get(parsedSorobanOperation.args, name),
+                            index,
+                          );
+
+                          const nestedErrorKeys = Object.keys(
+                            get(
+                              parsedSorobanOperation.args,
+                              `${name}[${index}]`,
+                            ),
+                          );
+
+                          if (nestedErrorKeys.length > 0) {
+                            const nestedKeyPath = `${name}.${index}`;
+                            const newFormError = deleteNestedItemError(
+                              nestedErrorKeys,
+                              formError,
+                              nestedKeyPath,
                             );
-                          })
-                        ) : (
-                          // for an argument array that carries non-object type
-                          <JsonSchemaFormRenderer
-                            name={name}
-                            index={index}
-                            key={[name, index].join(".")}
-                            schema={schemaItems}
-                            path={[[name, index].join(".")]}
-                            onChange={onChange}
-                            requiredFields={schema.required}
-                            setFormError={setFormError}
-                            formError={formError}
-                          />
-                        )}
-                      </>
 
-                      <Box gap="sm" direction="row" align="center">
-                        <Button
-                          size="md"
-                          variant="tertiary"
-                          icon={<Icon.Trash01 />}
-                          type="button"
-                          onClick={() => {
-                            const updatedList = arrayItem.delete(
-                              get(parsedSorobanOperation.args, name),
-                              index,
-                            );
+                            setFormError(newFormError);
+                          }
 
-                            const nestedErrorKeys = Object.keys(
-                              get(
-                                parsedSorobanOperation.args,
-                                `${name}[${index}]`,
-                              ),
-                            );
-
-                            if (nestedErrorKeys.length > 0) {
-                              const nestedKeyPath = `${name}.${index}`;
-                              const newFormError = deleteNestedItemError(
-                                nestedErrorKeys,
-                                formError,
-                                nestedKeyPath,
-                              );
-
-                              setFormError(newFormError);
-                            }
-
-                            onChange({
-                              ...invokeContractBaseProps,
-                              args: {
-                                ...parsedSorobanOperation.args,
-                                [name]: updatedList,
-                              },
-                            });
-                          }}
-                        ></Button>
-                      </Box>
+                          onChange({
+                            ...invokeContractBaseProps,
+                            args: {
+                              ...parsedSorobanOperation.args,
+                              [name]: updatedList,
+                            },
+                          });
+                        }}
+                      ></Button>
                     </Box>
                   </Box>
-                </Card>
-              </Box>
-            ))}
-        </Box>
+                </Box>
+              </Card>
+            </Box>
+          ))}
 
         <Box gap="md" direction="row" align="center">
           <Button
