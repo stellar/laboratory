@@ -12,15 +12,23 @@ import { RpcErrorResponse } from "@/app/(sidebar)/transaction/submit/components/
 import { TransactionSuccessCard } from "@/components/TransactionSuccessCard";
 import { WalletKitContext } from "@/components/WalletKit/WalletKitContextProvider";
 
+import { TransactionBuildParams } from "@/store/createStore";
+import { useStore } from "@/store/useStore";
+import { DereferencedSchemaType } from "@/constants/jsonSchema";
+
+import { useAccountSequenceNumber } from "@/query/useAccountSequenceNumber";
+import { useRpcPrepareTx } from "@/query/useRpcPrepareTx";
+import { useSimulateTx } from "@/query/useSimulateTx";
+import { useSubmitRpcTx } from "@/query/useSubmitRpcTx";
+import { useWasmBinaryFromRpc } from "@/query/useWasmBinaryFromRpc";
 import { useCodeWrappedSetting } from "@/hooks/useCodeWrappedSetting";
 
+import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { dereferenceSchema } from "@/helpers/dereferenceSchema";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { getWasmContractData } from "@/helpers/getWasmContractData";
 import { getTxnToSimulate } from "@/helpers/sorobanUtils";
 
-import { DereferencedSchemaType } from "@/constants/jsonSchema";
-import { TransactionBuildParams } from "@/store/createStore";
 import {
   AnyObject,
   ContractInfoApiResponse,
@@ -28,13 +36,6 @@ import {
   SorobanInvokeValue,
   EmptyObj,
 } from "@/types/types";
-
-import { useAccountSequenceNumber } from "@/query/useAccountSequenceNumber";
-import { useRpcPrepareTx } from "@/query/useRpcPrepareTx";
-import { useSimulateTx } from "@/query/useSimulateTx";
-import { useSubmitRpcTx } from "@/query/useSubmitRpcTx";
-import { useStore } from "@/store/useStore";
-import { useWasmBinaryFromRpc } from "@/query/useWasmBinaryFromRpc";
 
 export const InvokeContractForm = ({
   infoData,
@@ -50,17 +51,28 @@ export const InvokeContractForm = ({
   const [signedTxXdr, setSignedTxXdr] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isExtensionLoading, setIsExtensionLoading] = useState(false);
-  const [isFetchingSequenceNumber, setIsFetchingSequenceNumber] =
-    useState(false);
+  const [formValue, setFormValue] = useState<SorobanInvokeValue>({
+    contract_id: infoData.contract,
+    function_name: funcName,
+    args: {},
+  });
+  const [formError, setFormError] = useState<AnyObject>({});
+
+  const hasNoErrors = isEmptyObject(formError);
 
   const { wasm: wasmHash } = infoData;
 
-  const { data: sequenceNumberData, refetch: fetchSequenceNumber } =
-    useAccountSequenceNumber({
-      publicKey: walletKit?.publicKey || "",
-      horizonUrl: network.horizonUrl,
-      headers: getNetworkHeaders(network, "horizon"),
-    });
+  const {
+    data: sequenceNumberData,
+    isFetching: isFetchingSequenceNumber,
+    isLoading: isLoadingSequenceNumber,
+    refetch: fetchSequenceNumber,
+  } = useAccountSequenceNumber({
+    publicKey: walletKit?.publicKey || "",
+    horizonUrl: network.horizonUrl,
+    headers: getNetworkHeaders(network, "horizon"),
+    uniqueId: funcName,
+  });
 
   const {
     mutateAsync: simulateTx,
@@ -149,19 +161,15 @@ export const InvokeContractForm = ({
     getContractData();
   }, [wasmBinary]);
 
-  const [formValue, setFormValue] = useState<SorobanInvokeValue>({
-    contract_id: infoData.contract,
-    function_name: funcName,
-    args: {},
-  });
-  const [formError, setFormError] = useState<AnyObject>({});
-
   const handleChange = (value: SorobanInvokeValue) => {
     setFormValue(value);
   };
 
   const isSimulating =
-    isFetchingSequenceNumber || isSimulateTxPending || isPrepareTxPending;
+    isLoadingSequenceNumber ||
+    isFetchingSequenceNumber ||
+    isSimulateTxPending ||
+    isPrepareTxPending;
 
   const resetSubmitState = () => {
     if (submitRpcError || submitRpcResponse) {
@@ -198,14 +206,14 @@ export const InvokeContractForm = ({
   };
 
   const handleSimulate = () => {
+    // reset
     setError(null);
     resetSimulateState();
     resetSubmitState();
     resetPrepareTx();
 
-    setIsFetchingSequenceNumber(true);
+    // fetch sequence number
     fetchSequenceNumber();
-    setIsFetchingSequenceNumber(false);
 
     const txnParams: TransactionBuildParams = {
       source_account: walletKit?.publicKey || "",
@@ -398,7 +406,9 @@ export const InvokeContractForm = ({
             size="md"
             variant="tertiary"
             disabled={
-              !Object.keys(formValue.args).length || !walletKit?.publicKey
+              !Object.keys(formValue.args).length ||
+              !walletKit?.publicKey ||
+              !hasNoErrors
             }
             isLoading={isSimulating}
             onClick={handleSimulate}
@@ -415,7 +425,8 @@ export const InvokeContractForm = ({
               isSubmitRpcError ||
               simulateTxData?.result?.error ||
               isSimulating ||
-              !walletKit?.publicKey
+              !walletKit?.publicKey ||
+              !hasNoErrors
             }
             onClick={handleSubmit}
           >
