@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Alert, Button, Card, Icon, Input, Text } from "@stellar/design-system";
+import { Alert, Button, Icon, Input } from "@stellar/design-system";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { useStore } from "@/store/useStore";
@@ -16,10 +16,10 @@ import { MessageField } from "@/components/MessageField";
 import { TabView } from "@/components/TabView";
 import { SwitchNetworkButtons } from "@/components/SwitchNetworkButtons";
 import { PoweredByStellarExpert } from "@/components/PoweredByStellarExpert";
+import { ContractInfo } from "./components/ContractInfo";
+import { InvokeContract } from "./components/InvokeContract";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
-
-import { ContractInfo } from "./components/ContractInfo";
 
 export default function ContractExplorer() {
   const { network, smartContracts } = useStore();
@@ -100,13 +100,13 @@ export default function ContractExplorer() {
   };
 
   const renderContractInvokeContent = () => {
-    return (
-      <Card>
-        <Text as="div" size="sm">
-          Coming soon
-        </Text>
-      </Card>
-    );
+    return contractInfoData ? (
+      <InvokeContract
+        infoData={contractInfoData}
+        network={network}
+        isLoading={isLoading}
+      />
+    ) : null;
   };
 
   const renderButtons = () => {

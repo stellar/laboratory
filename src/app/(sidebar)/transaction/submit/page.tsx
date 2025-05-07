@@ -18,7 +18,6 @@ import { openUrl } from "@/helpers/openUrl";
 import { getBlockExplorerLink } from "@/helpers/getBlockExplorerLink";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { localStorageSettings } from "@/helpers/localStorageSettings";
-import { buildEndpointHref } from "@/helpers/buildEndpointHref";
 import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransactions";
 import { shareableUrl } from "@/helpers/shareableUrl";
 
@@ -40,7 +39,7 @@ import { PrettyJsonTransaction } from "@/components/PrettyJsonTransaction";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { TxResponse } from "@/components/TxResponse";
-import { SdsLink } from "@/components/SdsLink";
+import { XdrLink } from "@/components/XdrLink";
 import { TransactionHashReadOnlyField } from "@/components/TransactionHashReadOnlyField";
 import { PageCard } from "@/components/layout/PageCard";
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
@@ -52,6 +51,7 @@ import {
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { parseJsonString } from "@/helpers/parseJsonString";
+import { TransactionSuccessCard } from "@/components/TransactionSuccessCard";
 
 const SUBMIT_OPTIONS = [
   {
@@ -318,115 +318,14 @@ export default function SubmitTransaction() {
 
   const isSubmitDisabled = !submitMethod || !blob || Boolean(xdrJson?.error);
 
-  const XdrLink = ({ xdr, type }: { xdr: string; type: string }) => (
-    <SdsLink
-      href={buildEndpointHref(Routes.VIEW_XDR, {
-        blob: xdr,
-        type: type,
-      })}
-      target="_blank"
-      isUnderline
-      variant="secondary"
-    >
-      {xdr}
-    </SdsLink>
-  );
-
   const renderSuccess = () => {
-    if (isSubmitRpcSuccess && submitRpcResponse) {
+    if (isSubmitRpcSuccess && submitRpcResponse && network.id) {
       return (
         <div ref={responseSuccessEl}>
-          <ValidationResponseCard
-            variant="success"
-            title="Transaction submitted!"
-            subtitle={`Transaction succeeded with ${submitRpcResponse.operationCount} operation(s)`}
-            note={<></>}
-            footerLeftEl={
-              IS_BLOCK_EXPLORER_ENABLED ? (
-                <>
-                  <Button
-                    size="md"
-                    variant="tertiary"
-                    onClick={() => {
-                      const BLOCK_EXPLORER_LINK =
-                        getBlockExplorerLink("stellar.expert")[network.id];
-
-                      openUrl(
-                        `${BLOCK_EXPLORER_LINK}/tx/${submitRpcResponse.hash}`,
-                      );
-                    }}
-                  >
-                    View on stellar.expert
-                  </Button>
-
-                  <Button
-                    size="md"
-                    variant="tertiary"
-                    onClick={() => {
-                      const BLOCK_EXPLORER_LINK =
-                        getBlockExplorerLink("stellarchain.io")[network.id];
-
-                      openUrl(
-                        `${BLOCK_EXPLORER_LINK}/transactions/${submitRpcResponse.hash}`,
-                      );
-                    }}
-                  >
-                    View on stellarchain.io
-                  </Button>
-                </>
-              ) : null
-            }
-            response={
-              <Box gap="xs">
-                <TxResponse
-                  data-testid="submit-tx-rpc-success-hash"
-                  label="Hash:"
-                  value={submitRpcResponse.hash}
-                />
-                <TxResponse
-                  data-testid="submit-tx-rpc-success-ledger"
-                  label="Ledger number:"
-                  value={submitRpcResponse.result.ledger}
-                />
-                <TxResponse
-                  data-testid="submit-tx-rpc-success-envelope-xdr"
-                  label="Envelope XDR:"
-                  item={
-                    <XdrLink
-                      xdr={submitRpcResponse.result.envelopeXdr
-                        .toXDR("base64")
-                        .toString()}
-                      type="TransactionEnvelope"
-                    />
-                  }
-                />
-                <TxResponse
-                  data-testid="submit-tx-rpc-success-result-xdr"
-                  label="Result XDR:"
-                  item={
-                    <XdrLink
-                      xdr={submitRpcResponse.result.resultXdr
-                        .toXDR("base64")
-                        .toString()}
-                      type="TransactionResult"
-                    />
-                  }
-                />
-                <TxResponse
-                  data-testid="submit-tx-rpc-success-result-meta-xdr"
-                  label="Result Meta XDR:"
-                  item={
-                    <XdrLink
-                      xdr={submitRpcResponse.result.resultMetaXdr
-                        .toXDR("base64")
-                        .toString()}
-                      type="TransactionMeta"
-                    />
-                  }
-                />
-                <TxResponse label="Fee:" value={submitRpcResponse.fee} />
-              </Box>
-            }
+          <TransactionSuccessCard
+            response={submitRpcResponse}
+            network={network.id}
+            isBlockExplorerEnabled={IS_BLOCK_EXPLORER_ENABLED}
           />
         </div>
       );
