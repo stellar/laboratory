@@ -112,18 +112,19 @@ export const FetchContractMethodPickerWithQuery = ({
         disabled={disabled}
       />
 
-      <Box gap="md" direction="row" wrap="wrap">
-        <Button
-          disabled={!value?.contract_id || Boolean(contractIdError)}
-          isLoading={isFetching}
-          variant="secondary"
-          size="md"
-          onClick={handleFetch}
-          type="button"
-        >
-          Fetch contract methods
-        </Button>
-
+      <Box gap="sm">
+        <Box gap="md" direction="row" wrap="wrap">
+          <Button
+            disabled={!value?.contract_id || Boolean(contractIdError)}
+            isLoading={isFetching}
+            variant="secondary"
+            size="md"
+            onClick={handleFetch}
+            type="button"
+          >
+            Fetch contract methods
+          </Button>
+        </Box>
         <>{fetchError ? <MessageField message={fetchError} isError /> : null}</>
       </Box>
 
