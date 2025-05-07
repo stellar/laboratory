@@ -198,6 +198,7 @@ export const InvokeContractForm = ({
   };
 
   const handleSimulate = () => {
+    setError(null);
     resetSimulateState();
     resetSubmitState();
     resetPrepareTx();

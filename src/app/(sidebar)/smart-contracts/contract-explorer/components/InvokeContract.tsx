@@ -1,11 +1,14 @@
 import { Alert, Card, Loader, Text } from "@stellar/design-system";
 
+import { useStore } from "@/store/useStore";
+
+import { useContractClientFromRpc } from "@/query/useContractClientFromRpc";
+
 import { Box } from "@/components/layout/Box";
 
 import { ContractInfoApiResponse, EmptyObj, Network } from "@/types/types";
 
 import { InvokeContractForm } from "./InvokeContractForm";
-import { useStore } from "@/store/useStore";
 
 export const InvokeContract = ({
   infoData,
@@ -17,22 +20,38 @@ export const InvokeContract = ({
   isLoading: boolean;
 }) => {
   const { walletKit } = useStore();
+  const {
+    data: contractClient,
+    isFetching: isFetchingContractClient,
+    isError,
+    isSuccess,
+    error: contractClientError,
+  } = useContractClientFromRpc({
+    contractId: infoData.contract,
+    networkPassphrase: network.passphrase,
+    rpcUrl: network.rpcUrl,
+  });
 
-  // omit __constructor__ and __init__ functions
-  const filteredSpecFunctions = infoData.functions?.filter(
-    (f) => !f.function.includes("__"),
+  const renderFunctionCard = () =>
+    contractClient?.spec
+      ?.funcs()
+      ?.filter((func) => !func.name().toString().includes("__"))
+      ?.map((func) => (
+        <InvokeContractForm
+          key={`${func.name()}`}
+          infoData={infoData}
+          network={network}
+          funcName={func.name().toString()}
+        />
+      ));
+
+  const renderError = () => (
+    <Alert variant="error" placement="inline" title="Error">
+      {contractClientError?.message}
+    </Alert>
   );
 
-  const renderFunctionCard = (funcName: string, index: number) => (
-    <InvokeContractForm
-      key={funcName + index}
-      infoData={infoData}
-      network={network}
-      funcName={funcName}
-    />
-  );
-
-  if (isLoading) {
+  if (isLoading || isFetchingContractClient) {
     return (
       <Box gap="sm" direction="row" justify="center">
         <Loader />
@@ -54,9 +73,8 @@ export const InvokeContract = ({
             Invoke Contract
           </Text>
 
-          {filteredSpecFunctions?.map((func, index) =>
-            renderFunctionCard(func.function, index),
-          )}
+          {isSuccess ? renderFunctionCard() : null}
+          {isError ? renderError() : null}
         </Box>
       </Card>
     </Box>
