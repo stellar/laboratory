@@ -110,7 +110,7 @@ const SavedContractItem = ({
   return (
     <Box
       gap="sm"
-      addlClassName="PageBody__content"
+      addlClassName="PageBody__content SavedContractItem"
       data-testid="saved-contract-item"
     >
       <Input
