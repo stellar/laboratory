@@ -198,15 +198,11 @@ export const ContractStorage = ({
                   {formatNumber(vh.ttl)}
                 </span>
                 {vh.expired && vh.durability !== "temporary" ? (
-                  <div className="TtlBox__expired">
-                    <Text size="sm" as="p">
-                      <Link
-                        onClick={() => handleRestore(vh.key, vh.durability)}
-                      >
-                        Restore
-                      </Link>
-                    </Text>
-                  </div>
+                  <Text size="sm" as="p">
+                    <Link onClick={() => handleRestore(vh.key, vh.durability)}>
+                      Restore
+                    </Link>
+                  </Text>
                 ) : null}
               </div>
             ),
