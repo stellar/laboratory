@@ -16,8 +16,8 @@ export const SwitchNetwork = () => {
 
           <Text size="sm" as="p">
             You must switch your network to Futurenet or Testnet in order to
-            fund keypairs. The friendbot is a horizon API endpoint that will
-            fund an account with 10,000 lumens on the futurenet network.
+            fund keypairs. The friendbot is an API endpoint that will
+            fund an account with 10,000 lumens on Futurenet or Testnet.
           </Text>
         </div>
 
