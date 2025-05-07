@@ -363,7 +363,7 @@ export default function ViewXdr() {
           </SdsLink>{" "}
           on the Stellar Developer Docs. To see the XDR ⇄ JSON conversion
           specification, please see{" "}
-          <SdsLink href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0051.md">
+          <SdsLink href="https://stellar.org/protocol/sep-51">
             SEP-51 XDR-JSON
           </SdsLink>
           .
