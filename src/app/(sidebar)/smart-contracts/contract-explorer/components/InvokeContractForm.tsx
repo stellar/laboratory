@@ -301,7 +301,6 @@ export const InvokeContractForm = ({
             <JsonSchemaFormRenderer
               name={funcName}
               schema={dereferencedSchema as JSONSchema7}
-              formData={formValue}
               onChange={handleChange}
               formError={formError}
               setFormError={setFormError}
