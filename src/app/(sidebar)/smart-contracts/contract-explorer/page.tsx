@@ -126,7 +126,7 @@ export default function ContractExplorer() {
   const renderButtons = () => {
     if (isCurrentNetworkSupported) {
       return (
-        <Box gap="sm" direction="row">
+        <Box gap="sm" direction="row" wrap="wrap">
           <Button
             size="md"
             variant="secondary"
