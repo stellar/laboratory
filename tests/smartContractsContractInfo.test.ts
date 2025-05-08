@@ -78,7 +78,7 @@ test.describe("Smart Contracts: Contract Info", () => {
     await page.getByRole("button", { name: "Clear", exact: true }).click();
     await expect(contractIdInput).toHaveValue("");
     await expect(loadButton).toBeDisabled();
-    await expect(contractInfoContainer).toBeHidden();
+    await expect(contractInfoContainer).toBeVisible();
   });
 
   test("Response error", async ({ page }) => {
