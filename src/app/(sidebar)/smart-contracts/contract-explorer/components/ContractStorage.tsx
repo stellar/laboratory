@@ -217,13 +217,17 @@ export const ContractStorage = ({
           <Box gap="sm" direction="row" align="center" wrap="wrap">
             {[
               "sym",
-              "string",
-              "address",
               "u8-u64",
               "i8-i64",
               "i128-i256",
               "u128-u256",
               "bool",
+              "map",
+              "vec",
+              "string",
+              "address",
+              "bytes",
+              "bytesN",
             ].map((t) => (
               <div
                 className="DataTypeLegend"
