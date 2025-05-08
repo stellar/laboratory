@@ -11,6 +11,7 @@ type Tab = {
   id: string;
   label: string;
   content: React.ReactNode;
+  isDisabled?: boolean;
 };
 
 type TabViewProps = {
@@ -34,6 +35,7 @@ export const TabView = ({
   const tabItems = Object.values(tabs).map((t) => ({
     id: t.id,
     label: t.label,
+    isDisabled: t.isDisabled,
   }));
 
   const tabContent = Object.values(tabs).map((t) => ({
