@@ -40,6 +40,7 @@ export default function ContractExplorer() {
 
   const rpcUrl = network.rpcUrl;
   const wasmHash = contractInfoData?.wasm || "";
+  const isDataLoaded = Boolean(contractInfoData);
 
   const {
     data: wasmData,
@@ -87,17 +88,6 @@ export default function ContractExplorer() {
     !network.rpcUrl ||
     !contractIdInput ||
     Boolean(contractIdInputError);
-
-  const renderContractInfoContent = () => {
-    return contractInfoData ? (
-      <ContractInfo
-        infoData={contractInfoData}
-        wasmData={wasmData}
-        network={network}
-        isLoading={isLoading}
-      />
-    ) : null;
-  };
 
   const renderContractInvokeContent = () => {
     return contractInfoData ? (
@@ -222,28 +212,35 @@ export default function ContractExplorer() {
       </PageCard>
 
       <>
-        {contractInfoData ? (
-          <>
-            <TabView
-              tab1={{
-                id: "contract-info",
-                label: "Contract Info",
-                content: renderContractInfoContent(),
-              }}
-              tab2={{
-                id: "contract-invoke",
-                label: "Invoke Contract",
-                content: renderContractInvokeContent(),
-              }}
-              activeTabId={contractActiveTab}
-              onTabChange={(tabId) => {
-                setContractActiveTab(tabId);
-              }}
-            />
+        <>
+          <TabView
+            tab1={{
+              id: "contract-info",
+              label: "Contract Info",
+              content: (
+                <ContractInfo
+                  infoData={contractInfoData}
+                  wasmData={wasmData}
+                  network={network}
+                  isLoading={isLoading}
+                />
+              ),
+              isDisabled: !isDataLoaded,
+            }}
+            tab2={{
+              id: "contract-invoke",
+              label: "Invoke Contract",
+              content: renderContractInvokeContent(),
+              isDisabled: !isDataLoaded,
+            }}
+            activeTabId={contractActiveTab}
+            onTabChange={(tabId) => {
+              setContractActiveTab(tabId);
+            }}
+          />
 
-            <PoweredByStellarExpert />
-          </>
-        ) : null}
+          <PoweredByStellarExpert />
+        </>
       </>
     </Box>
   );
