@@ -7,6 +7,8 @@ import { JsonSchemaForm } from "@/components/JsonSchema";
 import { ExpandBox } from "@/components/ExpandBox";
 
 import { SorobanInvokeValue } from "@/types/types";
+import { TrackingEvent } from "@/metrics/tracking";
+import { trackEvent } from "@/metrics/tracking";
 
 export const ContractMethodSelectPicker = ({
   value,
@@ -26,6 +28,10 @@ export const ContractMethodSelectPicker = ({
   const onSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (e.target.value) {
       setSelectedMethod(e.target.value);
+
+      trackEvent(TrackingEvent.TRANSACTION_BUILD_INVOKE_CONTRACT, {
+        funcName: e.target.value,
+      });
 
       onChange({
         ...value,
