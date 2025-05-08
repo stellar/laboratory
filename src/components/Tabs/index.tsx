@@ -3,6 +3,7 @@ import "./styles.scss";
 type Tab = {
   id: string;
   label: string;
+  isDisabled?: boolean;
 };
 
 export const Tabs = ({
@@ -21,7 +22,10 @@ export const Tabs = ({
           key={t.id}
           className="Tab"
           data-is-active={t.id === activeTabId}
-          onClick={() => onChange(t.id)}
+          {...{
+            "data-is-disabled": t.isDisabled ?? undefined,
+            onClick: !t.isDisabled ? () => onChange(t.id) : undefined,
+          }}
         >
           {t.label}
         </div>
