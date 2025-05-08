@@ -19,9 +19,8 @@
     border-radius: pxToRem(6px);
     padding: pxToRem(6px) pxToRem(10px);
     cursor: pointer;
-    transition:
-      color var(--sds-anim-transition-default),
-      background-color var(--sds-anim-transition-default);
+    transition: color var(--sds-anim-transition-default),
+    background-color var(--sds-anim-transition-default);
 
     @media (hover: hover) {
       &:hover {
@@ -34,6 +33,17 @@
       --Tabs-default-text: var(--sds-clr-lilac-11);
       --Tabs-default-background: var(--sds-clr-lilac-04);
       cursor: default;
+    }
+
+    &[data-is-disabled="true"] {
+      cursor: default;
+      pointer-events: none;
+      --Tabs-default-text: var(--sds-clr-gray-09);
+
+      &[data-is-active="true"] {
+        --Tabs-default-text: var(--sds-clr-gray-10);
+        --Tabs-default-background: var(--sds-clr-gray-04);
+      }
     }
   }
 }

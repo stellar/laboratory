@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
-import { AnyObject, NetworkHeaders } from "@/types/types";
+
+import { NetworkHeaders } from "@/types/types";
 
 type SimulateTxProps = {
   rpcUrl: string;
@@ -18,56 +19,39 @@ export const useSimulateTx = () => {
       headers,
       xdrFormat,
     }: SimulateTxProps) => {
-      const res = await fetch(rpcUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...headers,
-        },
-        body: JSON.stringify({
-          jsonrpc: "2.0",
-          id: 1,
-          method: "simulateTransaction",
-          params: {
-            xdrFormat: xdrFormat || "base64",
-            transaction: transactionXdr,
-            ...(instructionLeeway
-              ? {
-                  resourceConfig: {
-                    instructionLeeway: Number(instructionLeeway),
-                  },
-                }
-              : {}),
+      try {
+        const res = await fetch(rpcUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...headers,
           },
-        }),
-      });
+          body: JSON.stringify({
+            jsonrpc: "2.0",
+            id: 1,
+            method: "simulateTransaction",
+            params: {
+              xdrFormat: xdrFormat || "base64",
+              transaction: transactionXdr,
+              ...(instructionLeeway
+                ? {
+                    resourceConfig: {
+                      instructionLeeway: Number(instructionLeeway),
+                    },
+                  }
+                : {}),
+            },
+          }),
+        });
 
-      return await res.json();
+        return await res.json();
+      } catch (e) {
+        throw {
+          result: e,
+        };
+      }
     },
   });
 
-  return {
-    ...mutation,
-    data: mutation.data as AnyObject,
-    mutateAsync: async ({
-      rpcUrl,
-      transactionXdr,
-      instructionLeeway,
-      headers,
-      xdrFormat,
-    }: SimulateTxProps) => {
-      try {
-        await mutation.mutateAsync({
-          rpcUrl,
-          transactionXdr,
-          instructionLeeway,
-          headers,
-          xdrFormat,
-        });
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (e) {
-        // do nothing
-      }
-    },
-  };
+  return mutation;
 };

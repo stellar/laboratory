@@ -6,13 +6,15 @@ export const useAccountSequenceNumber = ({
   publicKey,
   horizonUrl,
   headers,
+  uniqueId,
 }: {
   publicKey: string;
   horizonUrl: string;
   headers: NetworkHeaders;
+  uniqueId?: string;
 }) => {
   const query = useQuery({
-    queryKey: ["accountSequenceNumber", { publicKey }],
+    queryKey: ["accountSequenceNumber", { publicKey, uniqueId }],
     queryFn: async () => {
       let sourceAccount = publicKey;
 

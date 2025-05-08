@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Alert, Button, Card, Icon, Input, Text } from "@stellar/design-system";
+import { Alert, Button, Icon, Input } from "@stellar/design-system";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { useStore } from "@/store/useStore";
@@ -16,10 +16,10 @@ import { MessageField } from "@/components/MessageField";
 import { TabView } from "@/components/TabView";
 import { SwitchNetworkButtons } from "@/components/SwitchNetworkButtons";
 import { PoweredByStellarExpert } from "@/components/PoweredByStellarExpert";
+import { ContractInfo } from "./components/ContractInfo";
+import { InvokeContract } from "./components/InvokeContract";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
-
-import { ContractInfo } from "./components/ContractInfo";
 
 export default function ContractExplorer() {
   const { network, smartContracts } = useStore();
@@ -40,6 +40,7 @@ export default function ContractExplorer() {
 
   const rpcUrl = network.rpcUrl;
   const wasmHash = contractInfoData?.wasm || "";
+  const isDataLoaded = Boolean(contractInfoData);
 
   const {
     data: wasmData,
@@ -88,25 +89,14 @@ export default function ContractExplorer() {
     !contractIdInput ||
     Boolean(contractIdInputError);
 
-  const renderContractInfoContent = () => {
+  const renderContractInvokeContent = () => {
     return contractInfoData ? (
-      <ContractInfo
+      <InvokeContract
         infoData={contractInfoData}
-        wasmData={wasmData}
         network={network}
         isLoading={isLoading}
       />
     ) : null;
-  };
-
-  const renderContractInvokeContent = () => {
-    return (
-      <Card>
-        <Text as="div" size="sm">
-          Coming soon
-        </Text>
-      </Card>
-    );
   };
 
   const renderButtons = () => {
@@ -222,28 +212,35 @@ export default function ContractExplorer() {
       </PageCard>
 
       <>
-        {contractInfoData ? (
-          <>
-            <TabView
-              tab1={{
-                id: "contract-info",
-                label: "Contract Info",
-                content: renderContractInfoContent(),
-              }}
-              tab2={{
-                id: "contract-invoke",
-                label: "Invoke Contract",
-                content: renderContractInvokeContent(),
-              }}
-              activeTabId={contractActiveTab}
-              onTabChange={(tabId) => {
-                setContractActiveTab(tabId);
-              }}
-            />
+        <>
+          <TabView
+            tab1={{
+              id: "contract-info",
+              label: "Contract Info",
+              content: (
+                <ContractInfo
+                  infoData={contractInfoData}
+                  wasmData={wasmData}
+                  network={network}
+                  isLoading={isLoading}
+                />
+              ),
+              isDisabled: !isDataLoaded,
+            }}
+            tab2={{
+              id: "contract-invoke",
+              label: "Invoke Contract",
+              content: renderContractInvokeContent(),
+              isDisabled: !isDataLoaded,
+            }}
+            activeTabId={contractActiveTab}
+            onTabChange={(tabId) => {
+              setContractActiveTab(tabId);
+            }}
+          />
 
-            <PoweredByStellarExpert />
-          </>
-        ) : null}
+          <PoweredByStellarExpert />
+        </>
       </>
     </Box>
   );

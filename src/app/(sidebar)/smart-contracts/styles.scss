@@ -8,9 +8,22 @@
   }
 }
 
+.ContractInfoWrapper {
+  &[data-no-data="true"] {
+    display: grid;
+    grid-template-columns: fit-content(pxToRem(130px)) 1fr;
+
+    @media screen and (max-width: 500px) {
+      display: flex;
+      flex-direction: column-reverse;
+      gap: pxToRem(12px);
+    }
+  }
+}
+
 .ContractInfo {
   @media screen and (max-width: 500px) {
-    &.Box--xs {
+    &.Box--xs:not([data-no-data="true"]) {
       gap: pxToRem(12px);
     }
   }
@@ -37,6 +50,12 @@
           --Badge-color-background: var(--sds-clr-red-04);
         }
       }
+    }
+  }
+
+  &__tabs {
+    .NoContractLoaded {
+      min-height: pxToRem(320px);
     }
   }
 }
@@ -101,12 +120,12 @@
   }
 
   &[data-type="i128-i256"],
-  &[data-type="u128-u256"]{
+  &[data-type="u128-u256"] {
     --DataTypeLegend-color: var(--sds-clr-lime-11);
   }
 
   &[data-type="i8-i64"],
-  &[data-type="u8-u64"]{
+  &[data-type="u8-u64"] {
     --DataTypeLegend-color: var(--sds-clr-teal-11);
   }
 
@@ -137,5 +156,24 @@
       padding: pxToRem(10px) 0;
       word-break: break-all;
     }
+  }
+}
+
+.NoContractLoaded {
+  background-color: var(--sds-clr-gray-03);
+  border-radius: pxToRem(8px);
+  padding: pxToRem(24px);
+  width: 100%;
+  height: 100%;
+
+  font-size: pxToRem(14px);
+  line-height: pxToRem(20px);
+  color: var(--sds-clr-gray-11);
+
+  svg {
+    display: block;
+    stroke: var(--sds-clr-gray-11);
+    width: pxToRem(14px);
+    height: pxToRem(14px);
   }
 }

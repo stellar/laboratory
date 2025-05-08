@@ -30,21 +30,20 @@ export const dereferenceSchema = (
 
   // Good example contract: CDVQVKOY2YSXS2IC7KN6MNASSHPAO7UN2UR2ON4OI2SKMFJNVAMDX6DP
   // "submit", "queue_set_reserve" function
-  const resolveRef = (val: any, fullSchema: JSONSchema7) => {
+  const resolveSchemaRef = (schema: any, fullSchema: JSONSchema7) => {
     // primitive: { '$ref': '#/definitions/Address' }
     // array: { type: 'array', items: { '$ref': '#/definitions/Request' } }
 
-    const ref = val.$ref;
+    if (!schema.$ref) {
+      return schema;
+    }
 
-    if (ref) {
-      // would output something like
-      // "Address"  if it's a primitive
-      const refPath = ref.replace("#/definitions/", "");
-
+    if (schema.$ref) {
+      const refPath = schema.$ref.replace("#/definitions/", "");
       const refPathDef = fullSchema?.definitions?.[refPath] as JSONSchema7;
 
-      // if the refPathDef has properties aka is an array
-      // we need to recursively dereference the properties
+      // properties indicates that there is an array of objects
+      // we need to recursively dereference properties
       if (refPathDef?.properties) {
         return {
           properties: dereferenceSchemaProps(
@@ -62,26 +61,36 @@ export const dereferenceSchema = (
         description: refPathDef?.description ?? false,
       };
     }
-
-    return val;
   };
 
   const dereferenceSchemaProps = (funcArgs: any) => {
     const resolvedProps: Record<string, any> = {};
 
     if (funcArgs.properties) {
-      Object.entries(funcArgs.properties).forEach(([key, value]) => {
-        // `value` can be either JSONSchema7Definition or false
-        // parse the value if it's an object
-        if (typeof value === "object" && value !== null) {
-          if ("$ref" in value) {
-            resolvedProps[key] = resolveRef(value, fullSchema);
+      Object.entries(funcArgs.properties).forEach(([key, schema]) => {
+        // `schema` can be either JSONSchema7Definition or false
+        // parse the schema if it's an object
+
+        if (typeof schema === "object" && schema !== null) {
+          if ("$ref" in schema) {
+            resolvedProps[key] = resolveSchemaRef(schema, fullSchema);
           }
-          if ("items" in value) {
-            resolvedProps[key] = {
-              ...resolveRef(value.items, fullSchema),
-              type: "array",
-            };
+
+          if ("items" in schema) {
+            if (Array.isArray(schema.items)) {
+              const items = schema.items.map((item) =>
+                resolveSchemaRef(item, fullSchema),
+              );
+              resolvedProps[key] = {
+                items: items,
+                type: "array",
+              };
+            } else {
+              resolvedProps[key] = {
+                items: resolveSchemaRef(schema.items, fullSchema),
+                type: "array",
+              };
+            }
           }
         }
       });

@@ -18,6 +18,7 @@ import { formatEpochToDate } from "@/helpers/formatEpochToDate";
 import { formatNumber } from "@/helpers/formatNumber";
 import { stellarExpertAccountLink } from "@/helpers/stellarExpertAccountLink";
 
+import { Routes } from "@/constants/routes";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 import {
   ContractInfoApiResponse,
@@ -39,7 +40,7 @@ export const ContractInfo = ({
   network,
   isLoading,
 }: {
-  infoData: ContractInfoApiResponse;
+  infoData: ContractInfoApiResponse | undefined;
   wasmData: WasmData | null | undefined;
   network: Network | EmptyObj;
   isLoading: boolean;
@@ -59,9 +60,10 @@ export const ContractInfo = ({
 
   const buttonRef = useRef<HTMLButtonElement | null>(null);
 
+  const isDataLoaded = Boolean(infoData);
   const sourceRepo =
     wasmData?.sourceRepo ||
-    infoData.validation?.repository?.replace("https://github.com/", "") ||
+    infoData?.validation?.repository?.replace("https://github.com/", "") ||
     "";
   const sourceCommit =
     wasmData?.build.commit || infoData?.validation?.commit || "";
@@ -134,7 +136,9 @@ export const ContractInfo = ({
         addlClassName="InfoFieldItem"
       >
         <div className="InfoFieldItem__label">{label}</div>
-        <div className="InfoFieldItem__value">{value ?? "-"}</div>
+        {isDataLoaded ? (
+          <div className="InfoFieldItem__value">{value ?? "-"}</div>
+        ) : null}
       </Box>
     );
   };
@@ -178,7 +182,7 @@ export const ContractInfo = ({
             key={field.id}
             label={field.label}
             value={
-              infoData.created ? formatEpochToDate(infoData.created) : null
+              infoData?.created ? formatEpochToDate(infoData.created) : null
             }
           />
         );
@@ -187,7 +191,7 @@ export const ContractInfo = ({
           <InfoFieldItem
             key={field.id}
             label={field.label}
-            value={infoData.wasm}
+            value={infoData?.wasm}
           />
         );
       case "versions":
@@ -195,7 +199,7 @@ export const ContractInfo = ({
           <InfoFieldItem
             key={field.id}
             label={field.label}
-            value={infoData.versions}
+            value={infoData?.versions}
           />
         );
       case "creator":
@@ -204,7 +208,7 @@ export const ContractInfo = ({
             key={field.id}
             label={field.label}
             value={
-              infoData.creator ? (
+              infoData?.creator ? (
                 <SdsLink
                   href={stellarExpertAccountLink(infoData.creator, network.id)}
                 >
@@ -222,7 +226,7 @@ export const ContractInfo = ({
             key={field.id}
             label={field.label}
             value={
-              infoData.storage_entries ? (
+              infoData?.storage_entries ? (
                 <Link
                   onClick={() => {
                     setActiveTab("contract-contract-storage");
@@ -307,36 +311,47 @@ export const ContractInfo = ({
   return (
     <Box gap="lg">
       <Card>
-        <Box
-          gap="xs"
-          addlClassName="ContractInfo"
-          data-testid="contract-info-container"
-        >
-          <>{INFO_FIELDS.map((f) => renderInfoField(f))}</>
-        </Box>
+        <div className="ContractInfoWrapper" data-no-data={!isDataLoaded}>
+          <Box
+            gap="xs"
+            addlClassName="ContractInfo"
+            data-testid="contract-info-container"
+            data-no-data={!isDataLoaded}
+          >
+            <>{INFO_FIELDS.map((f) => renderInfoField(f))}</>
+          </Box>
+          {!isDataLoaded ? <NoContractLoadedView /> : null}
+        </div>
       </Card>
 
       <Card>
-        <Box gap="lg" data-testid="contract-info-contract-container">
+        <Box
+          gap="lg"
+          data-testid="contract-info-contract-container"
+          addlClassName="ContractInfo__tabs"
+        >
           <Box gap="sm" direction="row" align="center">
             <Text as="h2" size="md" weight="semi-bold">
               Contract
             </Text>
 
-            {renderBuildVerifiedBadge(Boolean(wasmData))}
+            {infoData ? renderBuildVerifiedBadge(Boolean(wasmData)) : null}
           </Box>
 
           <TabView
             tab1={{
               id: "contract-contract-spec",
               label: "Contract Spec",
-              content: (
+              content: isDataLoaded ? (
                 <ContractSpec
-                  wasmHash={infoData.wasm || ""}
+                  wasmHash={infoData?.wasm || ""}
                   rpcUrl={network.rpcUrl}
                   isActive={activeTab === "contract-contract-spec"}
                 />
+              ) : (
+                <NoContractLoadedView />
               ),
+              isDisabled: !isDataLoaded,
             }}
             tab2={{
               id: "contract-source-code",
@@ -348,18 +363,20 @@ export const ContractInfo = ({
                   commit={sourceCommit}
                 />
               ),
+              isDisabled: !isDataLoaded,
             }}
             tab3={{
               id: "contract-contract-storage",
               label: "Contract Storage",
-              content: (
+              content: infoData ? (
                 <ContractStorage
                   isActive={activeTab === "contract-contract-storage"}
                   contractId={infoData.contract}
                   networkId={network.id}
                   totalEntriesCount={infoData.storage_entries}
                 />
-              ),
+              ) : null,
+              isDisabled: !isDataLoaded,
             }}
             tab4={{
               id: "contract-build-info",
@@ -370,22 +387,25 @@ export const ContractInfo = ({
                   isActive={activeTab === "contract-build-info"}
                 />
               ),
+              isDisabled: !isDataLoaded,
             }}
             tab5={{
               id: "contract-version-history",
               label: "Version History",
-              content: (
+              content: infoData ? (
                 <VersionHistory
                   isActive={activeTab === "contract-version-history"}
                   contractId={infoData.contract}
                   networkId={network.id}
                 />
-              ),
+              ) : null,
+              isDisabled: !isDataLoaded,
             }}
             tab6={{
               id: "contract-bindings",
               label: "Bindings",
               content: <Bindings />,
+              isDisabled: !isDataLoaded,
             }}
             activeTabId={activeTab}
             onTabChange={(tabId) => {
@@ -398,6 +418,25 @@ export const ContractInfo = ({
           />
         </Box>
       </Card>
+    </Box>
+  );
+};
+
+const NoContractLoadedView = () => {
+  return (
+    <Box
+      gap="sm"
+      align="center"
+      justify="center"
+      addlClassName="NoContractLoaded"
+    >
+      <Box gap="xs" direction="row" align="center" justify="center" wrap="wrap">
+        <Icon.FileCode02 />
+        Load a contract or{" "}
+        <SdsLink href={Routes.SMART_CONTRACTS_CONTRACT_LIST}>
+          explore contracts
+        </SdsLink>
+      </Box>
     </Box>
   );
 };
