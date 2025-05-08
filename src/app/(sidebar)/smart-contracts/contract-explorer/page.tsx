@@ -256,7 +256,9 @@ export default function ContractExplorer() {
             }}
           />
 
-          <PoweredByStellarExpert />
+          {contractActiveTab === "contract-info" ? (
+            <PoweredByStellarExpert />
+          ) : null}
         </>
       </>
     </Box>
