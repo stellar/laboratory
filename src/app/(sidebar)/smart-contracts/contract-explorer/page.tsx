@@ -7,6 +7,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useStore } from "@/store/useStore";
 import { useSEContractInfo } from "@/query/external/useSEContractInfo";
 import { useWasmGitHubAttestation } from "@/query/useWasmGitHubAttestation";
+import { useContractClientFromRpc } from "@/query/useContractClientFromRpc";
 import { validate } from "@/validate";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 
@@ -36,6 +37,17 @@ export default function ContractExplorer() {
   } = useSEContractInfo({
     networkId: network.id,
     contractId: contractIdInput,
+  });
+
+  const {
+    data: contractClient,
+    isFetching: isFetchingContractClient,
+    error: contractClientError,
+    refetch: fetchWasmContractClient,
+  } = useContractClientFromRpc({
+    contractId: contractIdInput,
+    networkPassphrase: network.passphrase,
+    rpcUrl: network.rpcUrl,
   });
 
   const rpcUrl = network.rpcUrl;
@@ -72,7 +84,7 @@ export default function ContractExplorer() {
   const resetFetchContractInfo = () => {
     if (contractInfoData) {
       queryClient.resetQueries({
-        queryKey: ["useSEContractInfo"],
+        queryKey: ["useSEContractInfo", "useClientFromRpc"],
       });
       smartContracts.resetExplorerContractId();
     }
@@ -90,11 +102,15 @@ export default function ContractExplorer() {
     Boolean(contractIdInputError);
 
   const renderContractInvokeContent = () => {
-    return contractInfoData ? (
+    const wasmSpec = contractClient?.spec;
+
+    return contractInfoData && wasmSpec ? (
       <InvokeContract
+        contractSpec={wasmSpec}
         infoData={contractInfoData}
         network={network}
-        isLoading={isLoading}
+        isLoading={isFetchingContractClient}
+        contractClientError={contractClientError}
       />
     ) : null;
   };
@@ -162,6 +178,7 @@ export default function ContractExplorer() {
           onSubmit={(e) => {
             e.preventDefault();
             fetchContractInfo();
+            fetchWasmContractClient();
             smartContracts.updateExplorerContractId(contractIdInput);
 
             trackEvent(TrackingEvent.SMART_CONTRACTS_EXPLORER_LOAD_CONTRACT);

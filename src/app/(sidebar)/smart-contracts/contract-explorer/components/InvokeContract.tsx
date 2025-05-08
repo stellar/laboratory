@@ -1,8 +1,6 @@
 import { Alert, Card, Loader, Text } from "@stellar/design-system";
-
+import { contract } from "@stellar/stellar-sdk";
 import { useStore } from "@/store/useStore";
-
-import { useContractClientFromRpc } from "@/query/useContractClientFromRpc";
 
 import { Box } from "@/components/layout/Box";
 
@@ -11,30 +9,23 @@ import { ContractInfoApiResponse, EmptyObj, Network } from "@/types/types";
 import { InvokeContractForm } from "./InvokeContractForm";
 
 export const InvokeContract = ({
-  infoData,
   network,
   isLoading,
+  infoData,
+  contractSpec,
+  contractClientError,
 }: {
-  infoData: ContractInfoApiResponse;
   network: Network | EmptyObj;
   isLoading: boolean;
+  infoData: ContractInfoApiResponse;
+  contractSpec: contract.Spec;
+  contractClientError: Error | null;
 }) => {
   const { walletKit } = useStore();
-  const {
-    data: contractClient,
-    isFetching: isFetchingContractClient,
-    isError,
-    isSuccess,
-    error: contractClientError,
-  } = useContractClientFromRpc({
-    contractId: infoData.contract,
-    networkPassphrase: network.passphrase,
-    rpcUrl: network.rpcUrl,
-  });
+  const contractSpecFuncs = contractSpec?.funcs();
 
   const renderFunctionCard = () =>
-    contractClient?.spec
-      ?.funcs()
+    contractSpecFuncs
       ?.filter((func) => !func.name().toString().includes("__"))
       ?.map((func) => (
         <InvokeContractForm
@@ -51,7 +42,7 @@ export const InvokeContract = ({
     </Alert>
   );
 
-  if (isLoading || isFetchingContractClient) {
+  if (isLoading) {
     return (
       <Box gap="sm" direction="row" justify="center">
         <Loader />
@@ -73,8 +64,8 @@ export const InvokeContract = ({
             Invoke Contract
           </Text>
 
-          {isSuccess ? renderFunctionCard() : null}
-          {isError ? renderError() : null}
+          {contractSpecFuncs ? renderFunctionCard() : null}
+          {contractClientError ? renderError() : null}
         </Box>
       </Card>
     </Box>
