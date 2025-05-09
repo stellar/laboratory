@@ -24,6 +24,8 @@ import {
   ContractStorageResponseItem,
   NetworkType,
 } from "@/types/types";
+import { trackEvent } from "@/metrics/tracking";
+import { TrackingEvent } from "@/metrics/tracking";
 
 export const ContractStorage = ({
   isActive,
@@ -135,6 +137,10 @@ export const ContractStorage = ({
   const handleRestore = (key: string, durability: string) => {
     // reset transaction related stores
     handleResetTransactions();
+
+    trackEvent(TrackingEvent.SMART_CONTRACTS_EXPLORER_STORAGE_RESTORE, {
+      contractId,
+    });
 
     router.push(Routes.BUILD_TRANSACTION);
 
