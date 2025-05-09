@@ -361,6 +361,11 @@ export interface SavedTransaction extends LocalStorageSavedItem {
   shareableUrl: string | undefined;
 }
 
+export interface SavedContract extends LocalStorageSavedItem {
+  contractId: string;
+  shareableUrl: string;
+}
+
 export type SavedTransactionPage = "build" | "sign" | "simulate" | "submit";
 
 export interface SavedEndpointHorizon extends LocalStorageSavedItem {

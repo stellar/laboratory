@@ -78,6 +78,11 @@ export interface Store {
   setTheme: (theme: ThemeColorType) => void;
   resetStoredData: () => void;
 
+  // Saved Smart Contract IDs view
+  savedContractId: string;
+  setSavedContractId: (contractId: string) => void;
+  clearSavedContractId: () => void;
+
   // Account
   account: {
     publicKey: string | undefined;
@@ -370,6 +375,16 @@ export const createStore = (options: CreateStoreOptions) =>
               ...value,
             };
           }),
+        // Saved Smart Contract IDs view
+        savedContractId: "",
+        setSavedContractId: (contractId: string) =>
+          set((state) => {
+            state.savedContractId = contractId;
+          }),
+        clearSavedContractId: () =>
+          set((state) => {
+            state.savedContractId = "";
+          }),
         // Account
         account: {
           ...initAccountState,
@@ -661,6 +676,7 @@ export const createStore = (options: CreateStoreOptions) =>
                 contractId: true,
               },
             },
+            savedContractId: true,
           };
         },
       },
