@@ -6,6 +6,10 @@ export const SAVED_ACCOUNT_2 =
   "GC5TQ7TXKHGE5JQMZPYV5KBSQ67X6PYQVU5QN7JRGWCHRA227UFPZ6LD";
 export const SAVED_ACCOUNT_2_SECRET =
   "SCPPMMBZBQGTGQKIPGFJDOHOPGK7SXZJGMYF76PFHF2PBLY2RWGZNSVV";
+export const SAVED_CONTRACT_1 =
+  "CA7EJMAZFK3JKYRSSPK5FNEMJ3A77NQT6AA4ZGLA7J25CFR7A26ADQQB";
+export const SAVED_CONTRACT_2 =
+  "CBASD23H3XLX3OVJPKN7Z5UIQLKJFA45HD5UOJTFUHL43NKBHJY3JMUQ";
 
 const SAVED_ACCOUNTS = [
   {
@@ -198,6 +202,23 @@ const SAVED_TRANSACTIONS = [
   },
 ];
 
+const SAVED_CONTRACT_IDS = [
+  {
+    timestamp: 1746637724982,
+    network: { id: "testnet", label: "Testnet" },
+    name: "Contract 1",
+    contractId: SAVED_CONTRACT_1,
+    shareableUrl: `http://localhost:3000/smart-contracts/contract-explorer?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;&smartContracts$explorer$contractId=${SAVED_CONTRACT_1};;`,
+  },
+  {
+    timestamp: 1746637746246,
+    network: { id: "testnet", label: "Testnet" },
+    name: "Contract 2",
+    contractId: SAVED_CONTRACT_2,
+    shareableUrl: `http://localhost:3000/smart-contracts/contract-explorer?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;&smartContracts$explorer$contractId=${SAVED_CONTRACT_2};;`,
+  },
+];
+
 export const MOCK_LOCAL_STORAGE = {
   cookies: [],
   origins: [
@@ -219,6 +240,10 @@ export const MOCK_LOCAL_STORAGE = {
         {
           name: "stellar_lab_saved_transactions",
           value: JSON.stringify(SAVED_TRANSACTIONS),
+        },
+        {
+          name: "stellar_lab_saved_contract_ids",
+          value: JSON.stringify(SAVED_CONTRACT_IDS),
         },
       ],
     },
