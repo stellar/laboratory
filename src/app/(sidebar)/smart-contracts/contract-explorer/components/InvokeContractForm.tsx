@@ -37,8 +37,10 @@ import {
   EmptyObj,
   XdrFormatType,
 } from "@/types/types";
-import { trackEvent } from "@/metrics/tracking";
-import { TrackingEvent } from "@/metrics/tracking";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
+
+import Form from "@rjsf/core";
+import validator from "@rjsf/validator-ajv8";
 
 export const InvokeContractForm = ({
   infoData,
@@ -394,6 +396,8 @@ export const InvokeContractForm = ({
       return null;
     }
 
+    // console.log("dereferencedSchema", dereferencedSchema);
+
     return (
       <Box gap="md">
         {renderTitle(funcName, dereferencedSchema?.description)}
@@ -409,6 +413,13 @@ export const InvokeContractForm = ({
               parsedSorobanOperation={formValue}
             />
           )}
+        <Form
+          schema={contractSpec?.jsonSchema(funcName)}
+          validator={validator}
+          // onChange={log("changed")}
+          // onSubmit={log("submitted")}
+          // onError={log("errors")}
+        />
       </Box>
     );
   };

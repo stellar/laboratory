@@ -1,5 +1,12 @@
 import React from "react";
-import { Button, Card, Icon, Input, Text } from "@stellar/design-system";
+import {
+  Button,
+  Card,
+  Icon,
+  Input,
+  Select,
+  Text,
+} from "@stellar/design-system";
 import type { JSONSchema7 } from "json-schema";
 import { get, set } from "lodash";
 
@@ -35,7 +42,7 @@ export const JsonSchemaFormRenderer = ({
   setFormError: (formError: AnyObject) => void;
   parsedSorobanOperation: SorobanInvokeValue;
 }) => {
-  const schemaType = getDefType(schema);
+  const schemaType = getSchemaType(schema);
 
   const nestedItemLabel =
     path.length > 0 ? getNestedItemLabel(path.join(".")) : name;
@@ -84,6 +91,7 @@ export const JsonSchemaFormRenderer = ({
         value: e.target.value,
         type: scValType,
       });
+
       onChange({
         ...invokeContractBaseProps,
         args: {
@@ -144,6 +152,72 @@ export const JsonSchemaFormRenderer = ({
       <Box gap="md">
         <Box gap="md">
           <div>No schema found</div>
+        </Box>
+      </Box>
+    );
+  }
+
+  // @TODO
+  if (
+    schemaType === "oneOf" &&
+    schema.oneOf &&
+    Object.values(schema.oneOf).length > 0
+  ) {
+    const selectedOneOf = schema.oneOf.find(
+      (oneOf) => oneOf?.title === parsedSorobanOperation.args[name]?.tag,
+    );
+
+    return (
+      <Box gap="md">
+        <Select
+          id="simulate-tx-xdr-format"
+          fieldSize="md"
+          label={name}
+          value={
+            Object.keys(parsedSorobanOperation.args)[0]
+              ? Object.keys(parsedSorobanOperation.args)[0]
+              : ""
+          }
+          onChange={(e) => {
+            onChange({
+              ...invokeContractBaseProps,
+              args: {
+                ...parsedSorobanOperation.args,
+                [name]: {
+                  tag: e.target.value,
+                  values: [],
+                },
+              },
+            });
+          }}
+        >
+          {/* title is the tag */}
+          <option value="">Select</option>
+
+          {schema.oneOf.map((oneOf) => {
+            if (typeof oneOf === "boolean") return null;
+
+            return (
+              <option id={oneOf?.title} value={oneOf?.title}>
+                {oneOf?.title}
+              </option>
+            );
+          })}
+        </Select>
+
+        <Box gap="md">
+          <Card>
+            <JsonSchemaFormRenderer
+              name={name}
+              key={`${name}-${index}`}
+              schema={selectedOneOf as JSONSchema7}
+              onChange={onChange}
+              requiredFields={schema.required}
+              setFormError={setFormError}
+              formError={formError}
+              parsedSorobanOperation={parsedSorobanOperation}
+            />
+          </Card>
         </Box>
       </Box>
     );
@@ -213,7 +287,7 @@ export const JsonSchemaFormRenderer = ({
       // template created based on the schema.properties
       let defaultTemplate;
 
-      if (isSchemaObject(schema.items) && schema.items.type === "object") {
+      if (schemaItems && schemaItems.type === "object") {
         defaultTemplate = Object.keys(schemaItems || {}).reduce(
           (acc: Record<string, string | AnyObject>, key) => {
             // For example, if the schema.items has an array of object type like following:
@@ -509,12 +583,17 @@ export const JsonSchemaFormRenderer = ({
   }
 };
 
-const getDefType = (prop: any) => {
+const getSchemaType = (prop: any) => {
   if (!prop) return undefined;
 
   if (prop.$ref) {
     return prop.$ref.replace("#/definitions/", "");
   }
+
+  if (prop.oneOf) {
+    return "oneOf";
+  }
+
   return prop.type;
 };
 
