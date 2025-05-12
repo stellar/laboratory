@@ -1,5 +1,5 @@
 // https://jsonforms.io/api/core/interfaces/jsonschema7.html
-import type { JSONSchema7 } from "json-schema";
+import type { JSONSchema7, JSONSchema7Definition } from "json-schema";
 import type { DereferencedSchemaType } from "@/constants/jsonSchema";
 
 /**
@@ -53,6 +53,34 @@ export const dereferenceSchema = (
           description: refPathDef?.description,
           required: refPathDef?.required,
           additionalProperties: refPathDef?.additionalProperties ?? false,
+        };
+      }
+
+      // @TODO
+      if (refPathDef?.oneOf) {
+        return {
+          oneOf: refPathDef?.oneOf.map((oneOf: JSONSchema7Definition) => {
+            if (typeof oneOf === "boolean") return oneOf;
+
+            return {
+              ...oneOf,
+              properties: dereferenceSchemaProps(oneOf),
+            };
+          }),
+          // type: refPathDef?.type,
+          // description: refPathDef?.description,
+          // required: refPathDef?.required,
+          // additionalProperties: refPathDef?.additionalProperties ?? false,
+        };
+      }
+
+      // @TODO
+      if (refPathDef?.items) {
+        return {
+          // type: refPathDef?.type,
+          // description: refPathDef?.description ?? false,
+          type: "array",
+          items: refPathDef?.items,
         };
       }
 
