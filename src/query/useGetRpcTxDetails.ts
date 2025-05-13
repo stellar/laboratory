@@ -21,9 +21,7 @@ export const useGetRpcTxDetails = ({
       });
 
       try {
-        const response = await rpcServer._getTransaction(tx);
-
-        console.log(JSON.stringify(response));
+        const response = await rpcServer.getTransaction(tx);
 
         return response;
       } catch (error) {

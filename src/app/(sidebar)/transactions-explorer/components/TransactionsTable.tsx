@@ -36,19 +36,6 @@ function getOperationType(tx: NormalizedTransaction): string {
   } else {
     return `${prefix}${types.length} OPERATIONS`;
   }
-  // const value = tx.envelopeXdr.value();
-
-  // const operations = tx.feeBump
-  //   ? // @ts-expect-error Fee bump operation is covered first by the `tx.feeBump`
-  //     value.tx().innerTx().value().tx().operations()
-  //   : // @ts-expect-error Fee bump operation is covered first by the `tx.feeBump`
-  //     value.tx().operations();
-
-  // if (operations.length > 1) {
-  //   return `${operations.length} OPERATIONS`;
-  // }
-
-  // return underscore(operations[0].body().switch().name);
 }
 
 function underscore(input: string) {
@@ -93,7 +80,7 @@ export function TransactionsTable({
         {
           value: (
             <Box gap="sm" direction="row" align="center">
-              <NextLink href={`/explorer/tx/${tx.txHash}`}>
+              <NextLink href={`/transactions-explorer/tx/${tx.txHash}`}>
                 {shortenStellarAddress(tx.txHash)}
               </NextLink>
 
@@ -123,7 +110,7 @@ export function TransactionsTable({
               size="sm"
               variant="tertiary"
               onClick={() => {
-                router.push(`/explorer/tx/${tx.txHash}`);
+                router.push(`/transactions-explorer/tx/${tx.txHash}`);
               }}
             >
               View details

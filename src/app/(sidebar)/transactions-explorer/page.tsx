@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Alert } from "@stellar/design-system";
+import { Alert, Loader } from "@stellar/design-system";
 
 import { PageCard } from "@/components/layout/PageCard";
 import { Box } from "@/components/layout/Box";
@@ -92,7 +92,10 @@ export default function Explorer() {
 
   return (
     <Box gap="md" data-testid="explorer">
-      <PageCard heading="Transaction Explorer">
+      <PageCard
+        heading="Transaction Explorer"
+        rightElement={<Loader size="sm" />}
+      >
         {errorElement}
 
         <TransactionsTable transactions={Array.from(transactions.values())} />
