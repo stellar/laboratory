@@ -199,11 +199,6 @@ export const InvokeContractForm = ({
       );
 
       setDereferencedSchema(schema);
-
-      if (schema) {
-        const isSchemaPropertiesEmpty = isEmptyObject(schema?.properties);
-        setIsGetFunction(isSchemaPropertiesEmpty);
-      }
     }
   }, [contractSpec, funcName]);
 
