@@ -61,7 +61,7 @@ export const InvokeContractForm = ({
     args: {},
   });
   const [formError, setFormError] = useState<AnyObject>({});
-  // const [isGetFunction, checkGetFunction] = useState(false);
+  const [isGetFunction, setIsGetFunction] = useState(false);
   const [dereferencedSchema, setDereferencedSchema] =
     useState<DereferencedSchemaType | null>(null);
 
@@ -94,7 +94,6 @@ export const InvokeContractForm = ({
     mutate: prepareTx,
     isPending: isPrepareTxPending,
     data: prepareTxData,
-    // error: prepareTxError,
     reset: resetPrepareTx,
   } = useRpcPrepareTx();
 
@@ -124,7 +123,7 @@ export const InvokeContractForm = ({
   const responseSuccessEl = useRef<HTMLDivElement | null>(null);
   const responseErrorEl = useRef<HTMLDivElement | null>(null);
 
-  const signTx = async (xdr: string) => {
+  const signTx = async (xdr: string): Promise<string | null> => {
     if (!walletKitInstance?.walletKit || !walletKit?.publicKey) {
       return null;
     }
@@ -201,10 +200,10 @@ export const InvokeContractForm = ({
 
       setDereferencedSchema(schema);
 
-      // if (schema) {
-      //   const isEmptyProperties = isEmptyObject(schema?.properties);
-      //   // checkGetFunction(isEmptyProperties);
-      // }
+      if (schema) {
+        const isSchemaPropertiesEmpty = isEmptyObject(schema?.properties);
+        setIsGetFunction(isSchemaPropertiesEmpty);
+      }
     }
   }, [contractSpec, funcName]);
 
@@ -235,7 +234,7 @@ export const InvokeContractForm = ({
     if (!prepareTxData?.transactionXdr) {
       setInvokeError({
         message: "No transaction data available to sign",
-        methodType: "sign",
+        methodType: "submit",
       });
       return;
     }
@@ -265,7 +264,7 @@ export const InvokeContractForm = ({
     } catch (error: any) {
       setInvokeError({
         message: error?.message || "Failed to sign transaction",
-        methodType: "sign",
+        methodType: "submit",
       });
     }
   };
@@ -384,6 +383,14 @@ export const InvokeContractForm = ({
     </>
   );
 
+  useEffect(() => {
+    if (dereferencedSchema && !dereferencedSchema?.required.length) {
+      setIsGetFunction(true);
+    } else {
+      setIsGetFunction(false);
+    }
+  }, [dereferencedSchema]);
+
   const renderSchema = () => {
     if (!contractSpec || !dereferencedSchema) {
       return null;
@@ -470,7 +477,10 @@ export const InvokeContractForm = ({
     if (invokeError?.message) {
       return (
         <div ref={responseErrorEl}>
-          <ErrorText errorMessage={invokeError.message} size="sm" />
+          <ErrorText
+            errorMessage={`${invokeError.methodType}: ${invokeError.message}`}
+            size="sm"
+          />
         </div>
       );
     }
@@ -496,10 +506,8 @@ export const InvokeContractForm = ({
     !simulateTxData?.result?.transactionData;
 
   const isSimulationDisabled = () => {
-    // const validForms = !isGetFunction && Object.keys(formValue.args).length;
-
-    // check whether inputs are filled
-    return !walletKit?.publicKey || !hasNoFormErrors;
+    const disabled = !isGetFunction && !Object.keys(formValue.args).length;
+    return !walletKit?.publicKey || !hasNoFormErrors || disabled;
   };
 
   return (
