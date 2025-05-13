@@ -14,6 +14,7 @@ import { buildEndpointHref } from "@/helpers/buildEndpointHref";
 import { Routes } from "@/constants/routes";
 import { useStore } from "@/store/useStore";
 import { useRouter } from "next/navigation";
+import { delayedAction } from "@/helpers/delayedAction";
 
 const InfoField = ({ label, value }: { label: string; value: ReactNode }) => (
   <Box gap="xs" direction="row" align="center" addlClassName="InfoFieldItem">
@@ -46,16 +47,26 @@ export function TransactionDetails({
     event.preventDefault();
     event.stopPropagation();
 
-    endpoints.updateParams({ account_id: sourceAccount });
-    router.push(Routes.ENDPOINTS_ACCOUNTS_SINGLE);
+    delayedAction({
+      action: () => {
+        endpoints.updateParams({ account_id: sourceAccount });
+        router.push(Routes.ENDPOINTS_ACCOUNTS_SINGLE);
+      },
+      delay: 100,
+    });
   };
 
   const goToTransaction: MouseEventHandler = (event) => {
     event.preventDefault();
     event.stopPropagation();
 
-    endpoints.updateParams({ transaction: tx.txHash });
-    router.push(Routes.ENDPOINTS_TRANSACTIONS_SINGLE);
+    delayedAction({
+      action: () => {
+        endpoints.updateParams({ transaction: tx.txHash });
+        router.push(Routes.ENDPOINTS_TRANSACTIONS_SINGLE);
+      },
+      delay: 100,
+    });
   };
 
   useEffect(() => {
@@ -77,7 +88,7 @@ export function TransactionDetails({
 
   return (
     <Box gap="md" data-testid="explorer">
-      <PageCard heading={`Transaction Envelope`}>
+      <PageCard heading="Transaction Envelope">
         <Box gap="xs" align="start">
           <InfoField
             label="Status"

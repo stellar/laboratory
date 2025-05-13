@@ -1,7 +1,7 @@
 "use client";
 
 import { use } from "react";
-import { Alert } from "@stellar/design-system";
+import { Alert, Loader } from "@stellar/design-system";
 import { rpc as StellarRpc } from "@stellar/stellar-sdk";
 
 import { PageCard } from "@/components/layout/PageCard";
@@ -25,7 +25,7 @@ export default function Tx({ params }: { params: Promise<{ tx: string }> }) {
 
   const errorElement = tx.error && (
     <Alert variant="error" placement="inline">
-      {tx.error.message}
+      {String(tx.error)}
     </Alert>
   );
 
@@ -43,8 +43,14 @@ export default function Tx({ params }: { params: Promise<{ tx: string }> }) {
 
   return (
     <Box gap="md" data-testid="explorer">
-      <PageCard heading={`Transaction Explorer - ${resolvedParams.tx}`}>
+      <PageCard heading="Transaction Envelope">
         {errorElement}
+
+        {tx.isLoading && (
+          <Box gap="lg" direction="row" justify="center">
+            <Loader />
+          </Box>
+        )}
       </PageCard>
     </Box>
   );

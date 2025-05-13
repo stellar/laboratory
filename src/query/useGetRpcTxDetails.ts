@@ -25,7 +25,7 @@ export const useGetRpcTxDetails = ({
 
         return response;
       } catch (error) {
-        throw `there was an error while fetching the transaction ${tx}. e: ${error}`;
+        throw "There was an error while fetching the transaction";
       }
     },
   });
