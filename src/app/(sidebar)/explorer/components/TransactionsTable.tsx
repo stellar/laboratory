@@ -1,40 +1,54 @@
-import {
-  Badge,
-  Button,
-  CopyText,
-  Icon,
-  Link,
-  Text,
-} from "@stellar/design-system";
-import { rpc as StellarRpc } from "@stellar/stellar-sdk";
+"use client";
+
+import { useRouter } from "next/navigation";
+import { Badge, Button, CopyText, Icon, Text } from "@stellar/design-system";
 import { DataTable } from "@/components/DataTable";
 import { Box } from "@/components/layout/Box";
+import { NextLink } from "@/components/NextLink";
 import { DataTableHeader } from "@/types/types";
 import { Time } from "./Time";
+import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
+import { NormalizedTransaction } from "@/helpers/explorer/normalizeTransaction";
 
-function shortenHash(hash: string): string {
-  const segmentSize = 6;
-  return (
-    hash.substring(0, segmentSize) +
-    "…" +
-    hash.substring(hash.length - segmentSize)
-  );
-}
+function getOperationType(tx: NormalizedTransaction): string {
+  const payload = tx.payload;
 
-function getOperationType(tx: StellarRpc.Api.TransactionInfo): string {
-  const value = tx.envelopeXdr.value();
+  const getOpTypeList = (ops: unknown) =>
+    // @ts-expect-error
+    ops.map((op) => underscore(Object.keys(op.body)[0]));
 
-  const operations = tx.feeBump
-    ? // @ts-expect-error Fee bump operation is covered first by the `tx.feeBump`
-      value.tx().innerTx().value().tx().operations()
-    : // @ts-expect-error Fee bump operation is covered first by the `tx.feeBump`
-      value.tx().operations();
+  let prefix = "";
+  let ops: unknown[] = [];
 
-  if (operations.length > 1) {
-    return `${operations.length} OPERATIONS`;
+  if ("txFeeBump" in payload) {
+    prefix = "FEE_BUMP + ";
+    // @ts-expect-error
+    ops = payload.txFeeBump.tx.innerTx.tx.tx.operations;
+  } else {
+    // @ts-expect-error
+    ops = payload.tx.tx.operations;
   }
 
-  return underscore(operations[0].body().switch().name);
+  const types = getOpTypeList(ops);
+
+  if (types.length === 1) {
+    return types[0];
+  } else {
+    return `${prefix}${types.length} OPERATIONS`;
+  }
+  // const value = tx.envelopeXdr.value();
+
+  // const operations = tx.feeBump
+  //   ? // @ts-expect-error Fee bump operation is covered first by the `tx.feeBump`
+  //     value.tx().innerTx().value().tx().operations()
+  //   : // @ts-expect-error Fee bump operation is covered first by the `tx.feeBump`
+  //     value.tx().operations();
+
+  // if (operations.length > 1) {
+  //   return `${operations.length} OPERATIONS`;
+  // }
+
+  // return underscore(operations[0].body().switch().name);
 }
 
 function underscore(input: string) {
@@ -47,8 +61,9 @@ function underscore(input: string) {
 export function TransactionsTable({
   transactions,
 }: {
-  transactions: StellarRpc.Api.TransactionInfo[];
+  transactions: NormalizedTransaction[];
 }) {
+  const router = useRouter();
   const headers: DataTableHeader[] = [
     { id: "type", value: "Type" },
     { id: "txhash", value: "Transaction hash" },
@@ -67,10 +82,10 @@ export function TransactionsTable({
       tableHeaders={headers}
       tableData={transactions}
       cssGridTemplateColumns="minmax(300px, 2fr) minmax(130px, 2fr) minmax(200px, 1fr) minmax(50px, 100px) minmax(100px, 1fr)"
-      formatDataRow={(tx: StellarRpc.Api.TransactionInfo) => [
+      formatDataRow={(tx: NormalizedTransaction) => [
         {
           value: (
-            <Text size="xs" as="span">
+            <Text size="xs" as="span" title="">
               {getOperationType(tx)}
             </Text>
           ),
@@ -78,7 +93,9 @@ export function TransactionsTable({
         {
           value: (
             <Box gap="sm" direction="row" align="center">
-              <Link href="#">{shortenHash(tx.txHash)}</Link>
+              <NextLink href={`/explorer/tx/${tx.txHash}`}>
+                {shortenStellarAddress(tx.txHash)}
+              </NextLink>
 
               <CopyText textToCopy={tx.txHash}>
                 <Button
@@ -102,7 +119,13 @@ export function TransactionsTable({
         },
         {
           value: (
-            <Button size="sm" variant="tertiary">
+            <Button
+              size="sm"
+              variant="tertiary"
+              onClick={() => {
+                router.push(`/explorer/tx/${tx.txHash}`);
+              }}
+            >
               View details
             </Button>
           ),
