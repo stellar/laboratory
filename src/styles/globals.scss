@@ -30,7 +30,10 @@
 
   .Modal {
     &__content {
-      grid-template-rows: minmax(0,max-content) fit-content(24rem) minmax(0,max-content);
+      grid-template-rows: minmax(0, max-content) fit-content(24rem) minmax(
+          0,
+          max-content
+        );
     }
 
     .Card {
@@ -347,7 +350,8 @@
   color: var(--Nav-navLink-color);
   text-decoration: none;
   padding: pxToRem(12px) 0;
-  transition: color var(--sds-anim-transition-default),
+  transition:
+    color var(--sds-anim-transition-default),
     border-color var(--sds-anim-transition-default);
   white-space: nowrap;
 
@@ -378,7 +382,6 @@
 
 .SidebarLink {
   --SidebarLink-color: var(--sds-clr-gray-11);
-  justify-content: space-between;
 
   font-size: pxToRem(14px);
   line-height: pxToRem(20px);
@@ -420,12 +423,8 @@
       transform: rotate(var(--SidebarLink-rotate));
     }
 
-    // Highlight if nested link is selected
-    &:has(
-        ~ .SidebarLink__nestedItemsWrapper
-          > .SidebarLink__nestedItems
-          > [data-is-active="true"]
-      ) {
+    // Highlight nested link’s parent(s)
+    &[data-is-active-parent="true"] {
       --SidebarLink-color: var(--sds-clr-gray-12);
     }
 
@@ -463,8 +462,9 @@
   &__nestedItemsWrapper {
     display: grid;
     grid-template-rows: 0fr;
-    transition: grid-template-rows 100ms ease-out,
-    margin-top 100ms ease-out;
+    transition:
+      grid-template-rows 100ms ease-out,
+      margin-top 100ms ease-out;
     margin-left: pxToRem(16px);
 
     &[data-is-expanded="true"] {

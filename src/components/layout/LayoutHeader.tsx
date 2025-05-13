@@ -10,7 +10,6 @@ import {
 } from "@stellar/design-system";
 import { useStore } from "@/store/useStore";
 
-import { MainNav } from "@/components/MainNav";
 import { WindowContext } from "@/components/layout/LayoutContextProvider";
 import { NetworkSelector } from "@/components/NetworkSelector";
 import { Hydration } from "@/components/Hydration";
@@ -21,37 +20,9 @@ import { ConnectWallet } from "@/components/WalletKit/ConnectWallet";
 import { isExternalLink } from "@/helpers/isExternalLink";
 import { Routes } from "@/constants/routes";
 import { LOCAL_STORAGE_SAVED_THEME } from "@/constants/settings";
-import {
-  ACCOUNT_NAV_ITEMS,
-  ENDPOINTS_NAV_ITEMS,
-  SMART_CONTRACTS_NAV_ITEMS,
-  TRANSACTION_NAV_ITEMS,
-  XDR_NAV_ITEMS,
-} from "@/constants/navItems";
-import { trackEvent, TrackingEvent } from "@/metrics/tracking";
+import { MOBILE_NAV } from "@/constants/navItems";
 
-const NAV = [
-  {
-    label: "View XDR",
-    subNav: XDR_NAV_ITEMS,
-  },
-  {
-    label: "Account",
-    subNav: ACCOUNT_NAV_ITEMS,
-  },
-  {
-    label: "Transactions",
-    subNav: TRANSACTION_NAV_ITEMS,
-  },
-  {
-    label: "API Explorer",
-    subNav: ENDPOINTS_NAV_ITEMS,
-  },
-  {
-    label: "Smart Contracts",
-    subNav: SMART_CONTRACTS_NAV_ITEMS,
-  },
-];
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 export const LayoutHeader = () => {
   const { windowWidth } = useContext(WindowContext);
@@ -61,7 +32,7 @@ export const LayoutHeader = () => {
 
   // Adjusting format to remove nested sub-sections (RPC Methods, for example)
   // We cannot have nested optgroup in select
-  const formattedNav = NAV.map((mainNav) => {
+  const formattedNav = MOBILE_NAV.map((mainNav) => {
     type NavItem = {
       route: Routes;
       label: string;
@@ -249,8 +220,6 @@ export const LayoutHeader = () => {
             customAnchor={<Link href="/" prefetch={true} />}
           />
 
-          <MainNav excludeDocs={true} />
-
           <div className="LabLayout__header__settings">
             <Box gap="md" direction="row" align="center">
               <NetworkSelector />
@@ -271,8 +240,6 @@ export const LayoutHeader = () => {
           link="/"
           customAnchor={<Link href="/" prefetch={true} />}
         />
-
-        <MainNav />
 
         <div className="LabLayout__header__settings">
           <Hydration>
