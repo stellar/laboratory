@@ -1,20 +1,23 @@
 import { StrKey } from "@stellar/stellar-sdk";
+import { Asset, Icon, Text } from "@stellar/design-system";
+import { rpc as StellarRpc } from "@stellar/stellar-sdk";
+import { useEffect, useState, ReactNode, MouseEventHandler } from "react";
+import { useRouter } from "next/navigation";
+
 import { JsonCodeWrapToggle } from "@/components/JsonCodeWrapToggle";
 import { Box } from "@/components/layout/Box";
 import { PageCard } from "@/components/layout/PageCard";
 import { PrettyJsonTransaction } from "@/components/PrettyJsonTransaction";
+import { SdsLink } from "@/components/SdsLink";
+
 import { formatTimestamp } from "@/helpers/formatTimestamp";
 import { parseJsonString } from "@/helpers/parseJsonString";
-import { Asset, Icon, Text } from "@stellar/design-system";
 import * as StellarXdr from "@/helpers/StellarXdr";
-import { rpc as StellarRpc } from "@stellar/stellar-sdk";
-import { useEffect, useState, ReactNode, MouseEventHandler } from "react";
-import { SdsLink } from "@/components/SdsLink";
+import { delayedAction } from "@/helpers/delayedAction";
 import { buildEndpointHref } from "@/helpers/buildEndpointHref";
+
 import { Routes } from "@/constants/routes";
 import { useStore } from "@/store/useStore";
-import { useRouter } from "next/navigation";
-import { delayedAction } from "@/helpers/delayedAction";
 
 const InfoField = ({ label, value }: { label: string; value: ReactNode }) => (
   <Box gap="xs" direction="row" align="center" addlClassName="InfoFieldItem">
@@ -36,7 +39,7 @@ export function TransactionDetails({
   const [xdrJson, setXdrJson] = useState("");
   const [xdr, setXdr] = useState("");
   const innerTx = tx.feeBump
-    ? // @ts-expect-error
+    ? // @ts-expect-error fee bump tx has innerTx.
       tx.envelopeXdr.value().tx().innerTx().value().tx()
     : tx.envelopeXdr.value().tx();
   const sourceAccount = StrKey.encodeEd25519PublicKey(
@@ -78,6 +81,8 @@ export function TransactionDetails({
         const guesses = StellarXdr.guess(envelopeXdr);
         setXdrJson(StellarXdr.decode(guesses[0], envelopeXdr));
         setXdr(envelopeXdr);
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {
         // do nothing
       }

@@ -24,6 +24,8 @@ export const useGetRpcTxDetails = ({
         const response = await rpcServer.getTransaction(tx);
 
         return response;
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         throw "There was an error while fetching the transaction";
       }

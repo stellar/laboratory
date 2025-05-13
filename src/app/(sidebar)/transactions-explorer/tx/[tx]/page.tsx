@@ -6,11 +6,11 @@ import { rpc as StellarRpc } from "@stellar/stellar-sdk";
 
 import { PageCard } from "@/components/layout/PageCard";
 import { Box } from "@/components/layout/Box";
+import { TransactionDetails } from "./components/TransactionDetails";
 
 import { useStore } from "@/store/useStore";
 import { useGetRpcTxDetails } from "@/query/useGetRpcTxDetails";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
-import { TransactionDetails } from "./components/TransactionDetails";
 
 import "./layout.css";
 

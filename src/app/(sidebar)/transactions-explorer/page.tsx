@@ -59,7 +59,7 @@ export default function Explorer() {
         await txsQuery.refetch();
 
         if (txsQuery.data?.transactions && !txsQuery.error) {
-          for (let txinfo of txsQuery.data.transactions) {
+          for (const txinfo of txsQuery.data.transactions) {
             const normalizedTx = await normalizeTransaction(txinfo);
 
             if (normalizedTx) {
@@ -82,7 +82,14 @@ export default function Explorer() {
     if (network.rpcUrl) {
       fetchTxs();
     }
-  }, [network?.rpcUrl, txsQuery, iter, nextFetchAt, transactions]);
+  }, [
+    network?.rpcUrl,
+    txsQuery,
+    iter,
+    nextFetchAt,
+    transactions,
+    localStorageKey,
+  ]);
 
   const errorElement = txsQuery.error && (
     <Alert variant="error" placement="inline">

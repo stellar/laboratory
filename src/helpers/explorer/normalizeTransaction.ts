@@ -14,12 +14,12 @@ function camelize(input: unknown): unknown {
     return input;
   }
 
-  // @ts-expect-error
+  // @ts-expect-error assume it's an object, we don't care about type
   const output = Object.keys(input).reduce((buffer, key) => {
     const newKey = key.replace(/_([a-z])/g, (_, letter) =>
       letter.toUpperCase(),
     );
-    // @ts-expect-error
+    // @ts-expect-error assume it's an object, we don't care about type
     return Object.assign(buffer, { [newKey]: camelize(input[key]) });
   }, {});
 
@@ -49,6 +49,7 @@ export async function normalizeTransaction(
       status: txinfo.status,
       createdAt: txinfo.createdAt,
     };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     return null;
   }

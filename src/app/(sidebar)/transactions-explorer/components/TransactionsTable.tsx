@@ -14,7 +14,7 @@ function getOperationType(tx: NormalizedTransaction): string {
   const payload = tx.payload;
 
   const getOpTypeList = (ops: unknown) =>
-    // @ts-expect-error
+    // @ts-expect-error we don't care about op type here
     ops.map((op) => underscore(Object.keys(op.body)[0]));
 
   let prefix = "";
@@ -22,10 +22,10 @@ function getOperationType(tx: NormalizedTransaction): string {
 
   if ("txFeeBump" in payload) {
     prefix = "FEE_BUMP + ";
-    // @ts-expect-error
+    // @ts-expect-error this was deserialized from json xdr, so no types
     ops = payload.txFeeBump.tx.innerTx.tx.tx.operations;
   } else {
-    // @ts-expect-error
+    // @ts-expect-error this was deserialized from json xdr, so no types
     ops = payload.tx.tx.operations;
   }
 
