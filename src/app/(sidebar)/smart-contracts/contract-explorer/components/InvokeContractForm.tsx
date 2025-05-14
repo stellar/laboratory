@@ -36,6 +36,8 @@ import {
   SorobanInvokeValue,
   EmptyObj,
 } from "@/types/types";
+import { trackEvent } from "@/metrics/tracking";
+import { TrackingEvent } from "@/metrics/tracking";
 
 export const InvokeContractForm = ({
   infoData,
@@ -147,6 +149,28 @@ export const InvokeContractForm = ({
   };
 
   useEffect(() => {
+    if (isSubmitRpcSuccess) {
+      trackEvent(
+        TrackingEvent.SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SUBMIT_SUCCESS,
+        {
+          funcName: formValue.function_name,
+        },
+      );
+    }
+  }, [isSubmitRpcSuccess]);
+
+  useEffect(() => {
+    if (isSubmitRpcError) {
+      trackEvent(
+        TrackingEvent.SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SUBMIT_ERROR,
+        {
+          funcName: formValue.function_name,
+        },
+      );
+    }
+  }, [isSubmitRpcError]);
+
+  useEffect(() => {
     const getContractData = async () => {
       if (wasmBinary) {
         const data = await getWasmContractData(wasmBinary);
@@ -191,6 +215,10 @@ export const InvokeContractForm = ({
     resetSimulateState();
     resetSubmitState();
 
+    trackEvent(TrackingEvent.SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SUBMIT, {
+      funcName: formValue.function_name,
+    });
+
     if (prepareTxData?.transactionXdr) {
       await signTx(prepareTxData.transactionXdr);
     }
@@ -214,6 +242,13 @@ export const InvokeContractForm = ({
 
     // fetch sequence number
     fetchSequenceNumber();
+
+    trackEvent(
+      TrackingEvent.SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SIMULATE,
+      {
+        funcName: formValue.function_name,
+      },
+    );
 
     const txnParams: TransactionBuildParams = {
       source_account: walletKit?.publicKey || "",
@@ -259,10 +294,24 @@ export const InvokeContractForm = ({
         networkPassphrase: network.passphrase,
         headers: getNetworkHeaders(network, "rpc"),
       });
+
+      trackEvent(
+        TrackingEvent.SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SIMULATE_SUCCESS,
+        {
+          funcName: formValue.function_name,
+        },
+      );
     }
 
     if (error) {
       setError(error);
+
+      trackEvent(
+        TrackingEvent.SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SIMULATE_ERROR,
+        {
+          funcName: formValue.function_name,
+        },
+      );
     }
   };
 

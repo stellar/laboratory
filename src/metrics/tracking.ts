@@ -126,6 +126,7 @@ export enum TrackingEvent {
   TRANSACTION_BUILD_OPERATIONS_ACTION_DELETE = "transaction: build: operations: action: delete",
   TRANSACTION_BUILD_SIGN_IN_TX_SIGNER = "transaction: build: sign in transaction signer",
   TRANSACTION_BUILD_VIEW_IN_XDR = "transaction: build: view in xdr",
+  TRANSACTION_BUILD_INVOKE_CONTRACT = "transaction: build: invoke contract",
   // Transactions - sign
   TRANSACTION_SIGN_IMPORT_SUCCESS = "transaction: sign: import: success",
   TRANSACTION_SIGN_IMPORT_ERROR = "transaction: sign: import: error",
@@ -174,4 +175,11 @@ export enum TrackingEvent {
   SMART_CONTRACTS_EXPLORER_TAB = "smart contracts: explorer: tab",
   SMART_CONTRACTS_EXPLORER_SAVE = "smart contracts: explorer: save contract id",
   SMART_CONTRACTS_SAVED_VIEW_IN_EXPLORER = "smart contracts: saved: view in contract explorer",
+  SMART_CONTRACTS_EXPLORER_STORAGE_RESTORE = "smart contracts: explorer: storage: restore",
+  SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SIMULATE = "smart contracts: explorer: invoke contract: simulate",
+  SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SIMULATE_SUCCESS = "smart contracts: explorer: invoke contract: simulate: success",
+  SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SIMULATE_ERROR = "smart contracts: explorer: invoke contract: simulate: error",
+  SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SUBMIT = "smart contracts: explorer: invoke contract: submit",
+  SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SUBMIT_SUCCESS = "smart contracts: explorer: invoke contract: submit: success",
+  SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SUBMIT_ERROR = "smart contracts: explorer: invoke contract: submit: error",
 }
