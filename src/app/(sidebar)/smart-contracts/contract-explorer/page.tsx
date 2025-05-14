@@ -7,8 +7,13 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useStore } from "@/store/useStore";
 import { useSEContractInfo } from "@/query/external/useSEContractInfo";
 import { useWasmGitHubAttestation } from "@/query/useWasmGitHubAttestation";
+import { useContractClientFromRpc } from "@/query/useContractClientFromRpc";
 import { validate } from "@/validate";
+
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
+import { localStorageSavedContracts } from "@/helpers/localStorageSavedContracts";
+import { buildContractExplorerHref } from "@/helpers/buildContractExplorerHref";
+import { delayedAction } from "@/helpers/delayedAction";
 
 import { Box } from "@/components/layout/Box";
 import { PageCard } from "@/components/layout/PageCard";
@@ -16,16 +21,21 @@ import { MessageField } from "@/components/MessageField";
 import { TabView } from "@/components/TabView";
 import { SwitchNetworkButtons } from "@/components/SwitchNetworkButtons";
 import { PoweredByStellarExpert } from "@/components/PoweredByStellarExpert";
-import { ContractInfo } from "./components/ContractInfo";
-import { InvokeContract } from "./components/InvokeContract";
+import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
+import { ContractInfo } from "./components/ContractInfo";
+import { InvokeContract } from "./components/InvokeContract";
+
 export default function ContractExplorer() {
-  const { network, smartContracts } = useStore();
+  const { network, smartContracts, savedContractId, clearSavedContractId } =
+    useStore();
+
   const [contractActiveTab, setContractActiveTab] = useState("contract-info");
   const [contractIdInput, setContractIdInput] = useState("");
   const [contractIdInputError, setContractIdInputError] = useState("");
+  const [isSaveModalVisible, setIsSaveModalVisible] = useState(false);
 
   const {
     data: contractInfoData,
@@ -36,6 +46,17 @@ export default function ContractExplorer() {
   } = useSEContractInfo({
     networkId: network.id,
     contractId: contractIdInput,
+  });
+
+  const {
+    data: contractClient,
+    isFetching: isFetchingContractClient,
+    error: contractClientError,
+    refetch: fetchWasmContractClient,
+  } = useContractClientFromRpc({
+    contractId: contractIdInput,
+    networkPassphrase: network.passphrase,
+    rpcUrl: network.rpcUrl,
   });
 
   const rpcUrl = network.rpcUrl;
@@ -62,8 +83,23 @@ export default function ContractExplorer() {
     isWasmFetching;
 
   useEffect(() => {
+    // Pre-fill on page refresh and initial load
     if (smartContracts.explorer.contractId) {
       setContractIdInput(smartContracts.explorer.contractId);
+    }
+
+    // Pre-fill only on initial load when navigating from the Saved Smart
+    // Contract IDs view.
+    if (savedContractId) {
+      setContractIdInput(savedContractId);
+
+      // Remove temporary savedContractId from URL
+      delayedAction({
+        action: () => {
+          clearSavedContractId();
+        },
+        delay: 200,
+      });
     }
     // On page load only
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -72,7 +108,7 @@ export default function ContractExplorer() {
   const resetFetchContractInfo = () => {
     if (contractInfoData) {
       queryClient.resetQueries({
-        queryKey: ["useSEContractInfo"],
+        queryKey: ["useSEContractInfo", "useClientFromRpc"],
       });
       smartContracts.resetExplorerContractId();
     }
@@ -90,11 +126,15 @@ export default function ContractExplorer() {
     Boolean(contractIdInputError);
 
   const renderContractInvokeContent = () => {
-    return contractInfoData ? (
+    const wasmSpec = contractClient?.spec;
+
+    return contractInfoData && wasmSpec ? (
       <InvokeContract
+        contractSpec={wasmSpec}
         infoData={contractInfoData}
         network={network}
-        isLoading={isLoading}
+        isLoading={isFetchingContractClient}
+        contractClientError={contractClientError}
       />
     ) : null;
   };
@@ -102,7 +142,7 @@ export default function ContractExplorer() {
   const renderButtons = () => {
     if (isCurrentNetworkSupported) {
       return (
-        <Box gap="sm" direction="row">
+        <Box gap="sm" direction="row" wrap="wrap">
           <Button
             size="md"
             variant="secondary"
@@ -115,22 +155,37 @@ export default function ContractExplorer() {
 
           <>
             {contractIdInput ? (
-              <Button
-                size="md"
-                variant="error"
-                icon={<Icon.RefreshCw01 />}
-                onClick={() => {
-                  resetFetchContractInfo();
-                  setContractIdInput("");
+              <>
+                <Button
+                  disabled={isLoadContractDisabled || isLoading}
+                  size="md"
+                  variant="tertiary"
+                  icon={<Icon.Save01 />}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsSaveModalVisible(true);
+                  }}
+                >
+                  Save Contract ID
+                </Button>
 
-                  trackEvent(
-                    TrackingEvent.SMART_CONTRACTS_EXPLORER_CLEAR_CONTRACT,
-                  );
-                }}
-                disabled={isLoading}
-              >
-                Clear
-              </Button>
+                <Button
+                  size="md"
+                  variant="error"
+                  icon={<Icon.RefreshCw01 />}
+                  onClick={() => {
+                    resetFetchContractInfo();
+                    setContractIdInput("");
+
+                    trackEvent(
+                      TrackingEvent.SMART_CONTRACTS_EXPLORER_CLEAR_CONTRACT,
+                    );
+                  }}
+                  disabled={isLoading}
+                >
+                  Clear
+                </Button>
+              </>
             ) : null}
           </>
         </Box>
@@ -162,6 +217,7 @@ export default function ContractExplorer() {
           onSubmit={(e) => {
             e.preventDefault();
             fetchContractInfo();
+            fetchWasmContractClient();
             smartContracts.updateExplorerContractId(contractIdInput);
 
             trackEvent(TrackingEvent.SMART_CONTRACTS_EXPLORER_LOAD_CONTRACT);
@@ -239,9 +295,29 @@ export default function ContractExplorer() {
             }}
           />
 
-          <PoweredByStellarExpert />
+          {contractActiveTab === "contract-info" ? (
+            <PoweredByStellarExpert />
+          ) : null}
         </>
       </>
+
+      <SaveToLocalStorageModal
+        type="save"
+        itemTitle="Smart Contract ID"
+        itemProps={{
+          contractId: contractIdInput,
+          shareableUrl: `${window.location.origin}${buildContractExplorerHref(contractIdInput)}`,
+        }}
+        allSavedItems={localStorageSavedContracts.get()}
+        isVisible={isSaveModalVisible}
+        onClose={() => {
+          setIsSaveModalVisible(false);
+        }}
+        onUpdate={(updatedItems) => {
+          localStorageSavedContracts.set(updatedItems);
+          trackEvent(TrackingEvent.SMART_CONTRACTS_EXPLORER_SAVE);
+        }}
+      />
     </Box>
   );
 }

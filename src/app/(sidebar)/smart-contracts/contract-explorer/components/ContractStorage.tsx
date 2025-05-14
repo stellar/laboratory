@@ -1,4 +1,7 @@
-import { Loader, Text } from "@stellar/design-system";
+import { Link, Loader, Text } from "@stellar/design-system";
+import { useRouter } from "next/navigation";
+
+import { useStore } from "@/store/useStore";
 
 import { ErrorText } from "@/components/ErrorText";
 import { Box } from "@/components/layout/Box";
@@ -13,12 +16,16 @@ import { decodeScVal } from "@/helpers/decodeScVal";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { CONTRACT_STORAGE_MAX_ENTRIES } from "@/constants/settings";
+import { INITIAL_OPERATION } from "@/constants/transactionOperations";
+import { Routes } from "@/constants/routes";
 
 import {
   ContractStorageProcessedItem,
   ContractStorageResponseItem,
   NetworkType,
 } from "@/types/types";
+import { trackEvent } from "@/metrics/tracking";
+import { TrackingEvent } from "@/metrics/tracking";
 
 export const ContractStorage = ({
   isActive,
@@ -32,6 +39,8 @@ export const ContractStorage = ({
   totalEntriesCount: number | undefined;
 }) => {
   const isXdrInit = useIsXdrInit();
+  const { transaction } = useStore();
+  const router = useRouter();
 
   const {
     data: storageData,
@@ -117,6 +126,34 @@ export const ContractStorage = ({
 
   const keyValueFilters = getKeyValueFilters();
 
+  const handleResetTransactions = () => {
+    // reset transaction related stores
+    transaction.updateBuildOperations([INITIAL_OPERATION]);
+    transaction.updateBuildXdr("");
+    transaction.updateSorobanBuildOperation(INITIAL_OPERATION);
+    transaction.updateSorobanBuildXdr("");
+  };
+
+  const handleRestore = (key: string, durability: string) => {
+    // reset transaction related stores
+    handleResetTransactions();
+
+    trackEvent(TrackingEvent.SMART_CONTRACTS_EXPLORER_STORAGE_RESTORE, {
+      contractId,
+    });
+
+    router.push(Routes.BUILD_TRANSACTION);
+
+    transaction.updateSorobanBuildOperation({
+      operation_type: "restore_footprint",
+      params: {
+        contract: contractId,
+        key_xdr: key,
+        durability: durability,
+      },
+    });
+  };
+
   return (
     <Box gap="sm">
       <DataTable
@@ -157,7 +194,25 @@ export const ContractStorage = ({
             ),
           },
           { value: capitalizeString(vh.durability) },
-          { value: formatNumber(vh.ttl) },
+          {
+            value: (
+              <div className="TtlBox">
+                <span
+                  className="TtlBox__value"
+                  {...(vh.expired ? { "data-style": "expired" } : {})}
+                >
+                  {formatNumber(vh.ttl)}
+                </span>
+                {vh.expired && vh.durability !== "temporary" ? (
+                  <span>
+                    <Link onClick={() => handleRestore(vh.key, vh.durability)}>
+                      Restore
+                    </Link>
+                  </span>
+                ) : null}
+              </div>
+            ),
+          },
           {
             value: formatEpochToDate(vh.updated, "short") || "-",
             isWrap: true,
@@ -168,13 +223,17 @@ export const ContractStorage = ({
           <Box gap="sm" direction="row" align="center" wrap="wrap">
             {[
               "sym",
-              "string",
-              "address",
               "u8-u64",
               "i8-i64",
               "i128-i256",
               "u128-u256",
               "bool",
+              "map",
+              "vec",
+              "string",
+              "address",
+              "bytes",
+              "bytesN",
             ].map((t) => (
               <div
                 className="DataTypeLegend"
