@@ -246,9 +246,7 @@ const convertObjectToScVal = (obj: Record<string, any>): xdr.ScVal => {
 
   for (const key in obj) {
     convertedValue[key] = obj[key].value;
-    // toLowerCase() is needed because the type we save from the label is in uppercase
-    // but nativeToScval expects the type to be in lowercase
-    typeHints[key] = ["symbol", obj[key].type.toLowerCase()];
+    typeHints[key] = ["symbol", obj[key].type];
   }
 
   return nativeToScVal(convertedValue, { type: typeHints });
@@ -277,15 +275,13 @@ const getScValsFromArgs = (args: SorobanInvokeValue["args"]): xdr.ScVal[] => {
         }, []);
 
         const scVal = nativeToScVal(arrayScVals, {
-          type: argValue[0].type.toLowerCase(),
+          type: argValue[0].type,
         });
 
         scVals.push(scVal);
       }
     } else {
-      scVals.push(
-        nativeToScVal(argValue.value, { type: argValue.type.toLowerCase() }),
-      );
+      scVals.push(nativeToScVal(argValue.value, { type: argValue.type }));
     }
   }
 
@@ -312,4 +308,35 @@ const buildSorobanData = ({
     .setReadWrite(readWriteXdrLedgerKey)
     .setResourceFee(resourceFee)
     .build();
+};
+
+export const convertSpecTypeToScValType = (type: string) => {
+  switch (type) {
+    case "Address":
+      return "address";
+    case "U32":
+      return "u32";
+    case "U64":
+      return "u64";
+    case "U128":
+      return "u128";
+    case "U256":
+      return "u256";
+    case "I32":
+      return "i32";
+    case "I64":
+      return "i64";
+    case "I128":
+      return "i128";
+    case "I256":
+      return "i256";
+    case "ScString":
+      return "string";
+    case "ScSymbol":
+      return "symbol";
+    case "DataUrl":
+      return "bytes";
+    default:
+      return type;
+  }
 };
