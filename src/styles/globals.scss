@@ -417,6 +417,7 @@
   &__toggle {
     --SidebarLink-rotate: 0;
     cursor: pointer;
+    justify-content: space-between;
 
     svg {
       transition: transform var(--sds-anim-transition-default);
