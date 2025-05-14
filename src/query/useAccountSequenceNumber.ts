@@ -7,11 +7,13 @@ export const useAccountSequenceNumber = ({
   horizonUrl,
   headers,
   uniqueId,
+  enabled = false,
 }: {
   publicKey: string;
   horizonUrl: string;
   headers: NetworkHeaders;
   uniqueId?: string;
+  enabled?: boolean;
 }) => {
   const query = useQuery({
     queryKey: ["accountSequenceNumber", { publicKey, uniqueId }],
@@ -51,7 +53,7 @@ export const useAccountSequenceNumber = ({
         throw `${e}. Check network configuration.`;
       }
     },
-    enabled: false,
+    enabled,
   });
 
   return query;
