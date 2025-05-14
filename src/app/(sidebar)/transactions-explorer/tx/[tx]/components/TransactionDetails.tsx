@@ -79,7 +79,13 @@ export function TransactionDetails({
       try {
         const envelopeXdr = tx.envelopeXdr.toXDR().toString("base64");
         const guesses = StellarXdr.guess(envelopeXdr);
-        setXdrJson(StellarXdr.decode(guesses[0], envelopeXdr));
+        // TODO: remove this when xdr-json v2 lands with protocol 23
+        const re = /(".*?":\s*)(\d{16,})/gm;
+        const json = StellarXdr.decode(guesses[0], envelopeXdr).replace(
+          re,
+          '$1"$2"',
+        );
+        setXdrJson(json);
         setXdr(envelopeXdr);
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
