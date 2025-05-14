@@ -50,8 +50,10 @@ export const InvokeContractForm = ({
 }) => {
   const { walletKit } = useStore();
   const [contractSpec, setContractSpec] = useState<contract.Spec | null>();
-  const [signedTxXdr, setSignedTxXdr] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [invokeError, setInvokeError] = useState<{
+    message: string;
+    methodType: string;
+  } | null>(null);
   const [isExtensionLoading, setIsExtensionLoading] = useState(false);
   const [formValue, setFormValue] = useState<SorobanInvokeValue>({
     contract_id: infoData.contract,
@@ -59,8 +61,11 @@ export const InvokeContractForm = ({
     args: {},
   });
   const [formError, setFormError] = useState<AnyObject>({});
+  const [isGetFunction, setIsGetFunction] = useState(false);
+  const [dereferencedSchema, setDereferencedSchema] =
+    useState<DereferencedSchemaType | null>(null);
 
-  const hasNoErrors = isEmptyObject(formError);
+  const hasNoFormErrors = isEmptyObject(formError);
 
   const { wasm: wasmHash } = infoData;
 
@@ -74,10 +79,11 @@ export const InvokeContractForm = ({
     horizonUrl: network.horizonUrl,
     headers: getNetworkHeaders(network, "horizon"),
     uniqueId: funcName,
+    enabled: !!walletKit?.publicKey,
   });
 
   const {
-    mutateAsync: simulateTx,
+    mutate: simulateTx,
     data: simulateTxData,
     isError: isSimulateTxError,
     isPending: isSimulateTxPending,
@@ -85,7 +91,7 @@ export const InvokeContractForm = ({
   } = useSimulateTx();
 
   const {
-    mutateAsync: prepareTx,
+    mutate: prepareTx,
     isPending: isPrepareTxPending,
     data: prepareTxData,
     reset: resetPrepareTx,
@@ -117,9 +123,9 @@ export const InvokeContractForm = ({
   const responseSuccessEl = useRef<HTMLDivElement | null>(null);
   const responseErrorEl = useRef<HTMLDivElement | null>(null);
 
-  const signTx = async (xdr: string) => {
+  const signTx = async (xdr: string): Promise<string | null> => {
     if (!walletKitInstance?.walletKit || !walletKit?.publicKey) {
-      return;
+      return null;
     }
 
     setIsExtensionLoading(true);
@@ -135,17 +141,17 @@ export const InvokeContractForm = ({
         );
 
         if (result.signedTxXdr && result.signedTxXdr !== "") {
-          setSignedTxXdr(result.signedTxXdr);
+          return result.signedTxXdr;
         }
-        setIsExtensionLoading(false);
       } catch (error: any) {
         if (error?.message) {
-          setError(error?.message);
+          setInvokeError({ message: error?.message, methodType: "sign" });
         }
+      } finally {
         setIsExtensionLoading(false);
-        return;
       }
     }
+    return null;
   };
 
   useEffect(() => {
@@ -185,7 +191,19 @@ export const InvokeContractForm = ({
     getContractData();
   }, [wasmBinary]);
 
+  useEffect(() => {
+    if (contractSpec) {
+      const schema = dereferenceSchema(
+        contractSpec?.jsonSchema(funcName) as JSONSchema7,
+        funcName,
+      );
+
+      setDereferencedSchema(schema);
+    }
+  }, [contractSpec, funcName]);
+
   const handleChange = (value: SorobanInvokeValue) => {
+    setInvokeError(null);
     setFormValue(value);
   };
 
@@ -209,6 +227,10 @@ export const InvokeContractForm = ({
 
   const handleSubmit = async () => {
     if (!prepareTxData?.transactionXdr) {
+      setInvokeError({
+        message: "No transaction data available to sign",
+        methodType: "submit",
+      });
       return;
     }
 
@@ -219,99 +241,120 @@ export const InvokeContractForm = ({
       funcName: formValue.function_name,
     });
 
-    if (prepareTxData?.transactionXdr) {
-      await signTx(prepareTxData.transactionXdr);
-    }
+    try {
+      const signedTxXdr = await signTx(prepareTxData.transactionXdr);
 
-    if (signedTxXdr) {
+      if (!signedTxXdr) {
+        throw new Error(
+          "Transaction signing failed - no signed transaction received",
+        );
+      }
+
       submitRpc({
         rpcUrl: network.rpcUrl,
         transactionXdr: signedTxXdr,
         networkPassphrase: network.passphrase,
         headers: getNetworkHeaders(network, "rpc"),
       });
+    } catch (error: any) {
+      setInvokeError({
+        message: error?.message || "Failed to sign transaction",
+        methodType: "submit",
+      });
     }
   };
 
-  const handleSimulate = () => {
+  const handleSimulate = async () => {
     // reset
-    setError(null);
+    setInvokeError(null);
     resetSimulateState();
     resetSubmitState();
     resetPrepareTx();
 
-    // fetch sequence number
-    fetchSequenceNumber();
+    try {
+      // fetch sequence number first
+      await fetchSequenceNumber();
 
-    trackEvent(
-      TrackingEvent.SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SIMULATE,
-      {
-        funcName: formValue.function_name,
-      },
-    );
-
-    const txnParams: TransactionBuildParams = {
-      source_account: walletKit?.publicKey || "",
-      fee: BASE_FEE,
-      seq_num: sequenceNumberData || "",
-      cond: {
-        time: {
-          min_time: "0",
-          max_time: "0",
-        },
-      },
-      memo: {},
-    };
-
-    const sorobanOperation = {
-      operation_type: "invoke_contract_function",
-      params: {
-        contract_id: formValue.contract_id,
-        function_name: formValue.function_name,
-        args: formValue.args,
-      },
-    };
-
-    const { xdr, error } = getTxnToSimulate(
-      formValue,
-      txnParams,
-      sorobanOperation,
-      network.passphrase,
-    );
-
-    if (xdr) {
-      simulateTx({
-        rpcUrl: network.rpcUrl,
-        transactionXdr: xdr,
-        headers: getNetworkHeaders(network, "rpc"),
-      });
-
-      // using prepareTransaction instead of assembleTransaction because
-      // assembleTransaction requires an auth, but signing for simulation is rare
-      prepareTx({
-        rpcUrl: network.rpcUrl,
-        transactionXdr: xdr,
-        networkPassphrase: network.passphrase,
-        headers: getNetworkHeaders(network, "rpc"),
-      });
+      if (!sequenceNumberData) {
+        throw new Error("Failed to fetch sequence number. Please try again.");
+      }
 
       trackEvent(
-        TrackingEvent.SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SIMULATE_SUCCESS,
+        TrackingEvent.SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SIMULATE,
         {
           funcName: formValue.function_name,
         },
       );
-    }
 
-    if (error) {
-      setError(error);
-
-      trackEvent(
-        TrackingEvent.SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SIMULATE_ERROR,
-        {
-          funcName: formValue.function_name,
+      const txnParams: TransactionBuildParams = {
+        source_account: walletKit?.publicKey || "",
+        fee: BASE_FEE,
+        seq_num: sequenceNumberData,
+        cond: {
+          time: {
+            min_time: "0",
+            max_time: "0",
+          },
         },
+        memo: {},
+      };
+
+      const sorobanOperation = {
+        operation_type: "invoke_contract_function",
+        params: {
+          contract_id: formValue.contract_id,
+          function_name: formValue.function_name,
+          args: formValue.args,
+        },
+      };
+
+      const { xdr, error: simulateError } = getTxnToSimulate(
+        formValue,
+        txnParams,
+        sorobanOperation,
+        network.passphrase,
       );
+
+      if (xdr) {
+        simulateTx({
+          rpcUrl: network.rpcUrl,
+          transactionXdr: xdr,
+          headers: getNetworkHeaders(network, "rpc"),
+        });
+
+        // using prepareTransaction instead of assembleTransaction because
+        // assembleTransaction requires an auth, but signing for simulation is rare
+        prepareTx({
+          rpcUrl: network.rpcUrl,
+          transactionXdr: xdr,
+          networkPassphrase: network.passphrase,
+          headers: getNetworkHeaders(network, "rpc"),
+        });
+
+        trackEvent(
+          TrackingEvent.SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SIMULATE_SUCCESS,
+          {
+            funcName: formValue.function_name,
+          },
+        );
+      }
+
+      if (simulateError) {
+        setInvokeError({ message: simulateError, methodType: "simulate" });
+
+        trackEvent(
+          TrackingEvent.SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SIMULATE_ERROR,
+          {
+            funcName: formValue.function_name,
+          },
+        );
+      }
+    } catch (error: any) {
+      setInvokeError({
+        message:
+          error?.message || "Failed to simulate transaction. Please try again.",
+        methodType: "simulate",
+      });
     }
   };
 
@@ -335,17 +378,16 @@ export const InvokeContractForm = ({
     </>
   );
 
-  const renderSchema = () => {
-    if (!contractSpec) {
-      return null;
+  useEffect(() => {
+    if (dereferencedSchema && !dereferencedSchema?.required.length) {
+      setIsGetFunction(true);
+    } else {
+      setIsGetFunction(false);
     }
+  }, [dereferencedSchema]);
 
-    const dereferencedSchema: DereferencedSchemaType = dereferenceSchema(
-      contractSpec?.jsonSchema(funcName) as JSONSchema7,
-      funcName,
-    );
-
-    if (!dereferencedSchema) {
+  const renderSchema = () => {
+    if (!contractSpec || !dereferencedSchema) {
       return null;
     }
 
@@ -427,15 +469,40 @@ export const InvokeContractForm = ({
       );
     }
 
-    if (error) {
+    if (invokeError?.message) {
       return (
         <div ref={responseErrorEl}>
-          <ErrorText errorMessage={error} size="sm" />
+          <ErrorText
+            errorMessage={`${invokeError.methodType}: ${invokeError.message}`}
+            size="sm"
+          />
         </div>
       );
     }
 
     return null;
+  };
+
+  /*
+    isSubmitDisabled is true if:
+    - there is an invoke error from simulation or signing
+    - there is a submit rpc error
+    - the transaction is simulating
+    - the wallet is not connected
+    - there are form validation errors
+    - the transaction data from simulation is not available (needed to submit)
+  */
+  const isSubmitDisabled =
+    !!invokeError?.message ||
+    isSubmitRpcError ||
+    isSimulating ||
+    !walletKit?.publicKey ||
+    !hasNoFormErrors ||
+    !simulateTxData?.result?.transactionData;
+
+  const isSimulationDisabled = () => {
+    const disabled = !isGetFunction && !Object.keys(formValue.args).length;
+    return !walletKit?.publicKey || !hasNoFormErrors || disabled;
   };
 
   return (
@@ -454,11 +521,7 @@ export const InvokeContractForm = ({
           <Button
             size="md"
             variant="tertiary"
-            disabled={
-              !Object.keys(formValue.args).length ||
-              !walletKit?.publicKey ||
-              !hasNoErrors
-            }
+            disabled={isSimulationDisabled()}
             isLoading={isSimulating}
             onClick={handleSimulate}
           >
@@ -469,14 +532,7 @@ export const InvokeContractForm = ({
             size="md"
             variant="secondary"
             isLoading={isExtensionLoading || isSubmitRpcPending}
-            disabled={
-              isSimulateTxError ||
-              isSubmitRpcError ||
-              simulateTxData?.result?.error ||
-              isSimulating ||
-              !walletKit?.publicKey ||
-              !hasNoErrors
-            }
+            disabled={isSubmitDisabled}
             onClick={handleSubmit}
           >
             Submit
