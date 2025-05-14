@@ -18,21 +18,26 @@ test.describe("API Explorer page", () => {
 
   test.describe("Sidebar", () => {
     test("Renders Horizon endpoints", async ({ page }) => {
-      const sidebar = page.getByTestId("endpoints-sidebar-section");
+      const sidebar = page.getByTestId("sidebar-links");
 
       await expect(
-        sidebar.getByTestId("endpoints-sidebar-subtitle").nth(0),
+        sidebar.getByTestId("endpoints-sidebar-linkToggle").nth(4),
       ).toContainText("RPC Methods");
 
-      await expect(
-        sidebar.getByTestId("endpoints-sidebar-subtitle").nth(1),
-      ).toContainText("Horizon Endpoints");
+      const horizonToggle = sidebar
+        .getByTestId("endpoints-sidebar-linkToggle")
+        .nth(5);
 
-      const linkToggles = sidebar.getByTestId("endpoints-sidebar-linkToggle");
+      await expect(horizonToggle).toContainText("Horizon Endpoints");
+      await horizonToggle.click();
 
-      await expect(linkToggles).toHaveCount(17);
+      const horizonLinks = sidebar.getByTestId(
+        /^endpoints-sidebar\/endpoints\/horizon\/.*$/,
+      );
 
-      await expect(linkToggles).toContainText([
+      await expect(horizonLinks).toHaveCount(15);
+
+      await expect(horizonLinks).toContainText([
         "Accounts",
         "Assets",
         "Claimable Balances",
@@ -52,34 +57,35 @@ test.describe("API Explorer page", () => {
     });
 
     test("Dropdown shows correct links on page load", async ({ page }) => {
-      const sidebar = page.getByTestId("endpoints-sidebar-section");
+      await page.goto(
+        "http://localhost:3000/endpoints/horizon/accounts/single",
+      );
+      const sidebar = page.getByTestId("sidebar-links");
+
+      const horizonToggle = sidebar
+        .getByTestId("endpoints-sidebar-linkToggle")
+        .nth(5);
+
+      await expect(horizonToggle).toHaveAttribute(
+        "data-is-active-parent",
+        "true",
+      );
 
       const accountsLink = sidebar
-        .getByTestId("endpoints-sidebar-linkToggle")
-        .filter({ hasText: "Accounts" });
+        .getByTestId("endpoints-sidebar/endpoints/horizon/accounts")
+        .getByTestId("endpoints-sidebar-linkToggle");
 
-      const parent = sidebar.getByTestId(
-        "endpoints-sidebar/endpoints/accounts",
-      );
-      await expect(parent).toBeVisible();
-
-      const linksContainer = parent.getByTestId(
-        "endpoints-sidebar-linksContainer",
+      await expect(accountsLink).toHaveAttribute(
+        "data-is-active-parent",
+        "true",
       );
 
-      await expect(linksContainer).toBeHidden();
-      await accountsLink.click();
-      await expect(linksContainer).toBeVisible();
+      const singleAccountLink = sidebar
+        .getByTestId("endpoints-sidebar-link")
+        .filter({ hasText: "Single Account" });
 
-      await expect(
-        linksContainer.getByTestId("endpoints-sidebar-link"),
-      ).toContainText(["All Accounts", "Single Account"]);
-
-      await expect(
-        linksContainer
-          .getByTestId("endpoints-sidebar-link")
-          .filter({ hasText: "All Accounts" }),
-      ).toHaveAttribute("href", "/endpoints/accounts");
+      await expect(singleAccountLink).toHaveAttribute("data-is-active", "true");
+      await expect(singleAccountLink).toBeInViewport();
     });
   });
 
@@ -131,7 +137,9 @@ test.describe("API Explorer page", () => {
 
   test.describe("Effects for Account", () => {
     test.beforeEach(async ({ page }) => {
-      await page.goto("http://localhost:3000/endpoints/effects/account");
+      await page.goto(
+        "http://localhost:3000/endpoints/horizon/effects/account",
+      );
     });
 
     test("Page loads with correct title and view docs link", async ({

@@ -258,7 +258,7 @@ test.describe("URL Params", () => {
 
     test("Horizon Endpoints: Payments for Account", async ({ page }) => {
       await page.goto(
-        "http://localhost:3000/endpoints/payments/account?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;&endpoints$params$account_id=GA46LGGOLXJY5OSX6N4LHV4MWDFXNGLK76I4NDNKKYAXRRSKI5AJGMXG&cursor=123123&limit=5&order=desc&include_failed=true;;",
+        "http://localhost:3000/endpoints/horizon/payments/account?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;&endpoints$params$account_id=GA46LGGOLXJY5OSX6N4LHV4MWDFXNGLK76I4NDNKKYAXRRSKI5AJGMXG&cursor=123123&limit=5&order=desc&include_failed=true;;",
       );
 
       await expect(page.locator("h1")).toHaveText("Payments for Account");
