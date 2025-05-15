@@ -1,5 +1,5 @@
 import { StrKey } from "@stellar/stellar-sdk";
-import { Asset, Icon, Text } from "@stellar/design-system";
+import { Asset, Icon, Loader, Text } from "@stellar/design-system";
 import { rpc as StellarRpc } from "@stellar/stellar-sdk";
 import { useEffect, useState, ReactNode, MouseEventHandler } from "react";
 import { useRouter } from "next/navigation";
@@ -12,7 +12,6 @@ import { PrettyJsonTransaction } from "@/components/PrettyJsonTransaction";
 import { SdsLink } from "@/components/SdsLink";
 
 import { formatTimestamp } from "@/helpers/formatTimestamp";
-import { parseJsonString } from "@/helpers/parseJsonString";
 import * as StellarXdr from "@/helpers/StellarXdr";
 import { delayedAction } from "@/helpers/delayedAction";
 import { buildEndpointHref } from "@/helpers/buildEndpointHref";
@@ -37,7 +36,7 @@ export function TransactionDetails({
   const { endpoints } = useStore();
   const router = useRouter();
   const [isCodeWrapped, setIsCodeWrapped] = useState(false);
-  const [xdrJson, setXdrJson] = useState("");
+  const [xdrJson, setXdrJson] = useState<Record<string, unknown> | null>(null);
   const [xdr, setXdr] = useState("");
   const innerTx = tx.feeBump
     ? // @ts-expect-error fee bump tx has innerTx.
@@ -85,7 +84,7 @@ export function TransactionDetails({
           null,
           parseNumberAndBigInt,
         );
-        setXdrJson(json);
+        setXdrJson(json as Record<string, unknown>);
         setXdr(envelopeXdr);
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -176,14 +175,14 @@ export function TransactionDetails({
         <div className="PageBody__content PageBody__scrollable">
           {xdrJson ? (
             <PrettyJsonTransaction
-              json={parseJsonString(xdrJson)}
+              json={xdrJson}
               xdr={xdr}
               isCodeWrapped={isCodeWrapped}
             />
           ) : (
-            <Text size="sm" as="p">
-              Parsing…
-            </Text>
+            <Box gap="xs" align="center">
+              <Loader />
+            </Box>
           )}
         </div>
         <Box gap="md" direction="row" align="center">
