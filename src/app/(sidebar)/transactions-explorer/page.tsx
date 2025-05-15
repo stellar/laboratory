@@ -100,7 +100,7 @@ export default function Explorer() {
   return (
     <Box gap="md" data-testid="explorer">
       <PageCard
-        heading="Transaction Explorer"
+        heading="Transactions Explorer"
         rightElement={<Loader size="sm" />}
       >
         {errorElement}
