@@ -3,6 +3,7 @@ import { Asset, Icon, Text } from "@stellar/design-system";
 import { rpc as StellarRpc } from "@stellar/stellar-sdk";
 import { useEffect, useState, ReactNode, MouseEventHandler } from "react";
 import { useRouter } from "next/navigation";
+import { parseNumberAndBigInt, parse as JsonParse } from "lossless-json";
 
 import { JsonCodeWrapToggle } from "@/components/JsonCodeWrapToggle";
 import { Box } from "@/components/layout/Box";
@@ -79,11 +80,10 @@ export function TransactionDetails({
       try {
         const envelopeXdr = tx.envelopeXdr.toXDR().toString("base64");
         const guesses = StellarXdr.guess(envelopeXdr);
-        // TODO: remove this when xdr-json v2 lands with protocol 23
-        const re = /(".*?":\s*)(\d{16,})/gm;
-        const json = StellarXdr.decode(guesses[0], envelopeXdr).replace(
-          re,
-          '$1"$2"',
+        const json = JsonParse(
+          StellarXdr.decode(guesses[0], envelopeXdr),
+          null,
+          parseNumberAndBigInt,
         );
         setXdrJson(json);
         setXdr(envelopeXdr);
