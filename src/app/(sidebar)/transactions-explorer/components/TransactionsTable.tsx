@@ -75,7 +75,7 @@ export function TransactionsTable({
       formatDataRow={(tx: NormalizedTransaction) => [
         {
           value: (
-            <Text size="xs" as="span" title="">
+            <Text size="xs" as="span">
               {getOperationType(tx)}
             </Text>
           ),
