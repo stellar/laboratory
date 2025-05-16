@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Alert, Loader } from "@stellar/design-system";
+import { Alert } from "@stellar/design-system";
 import {
   parse as jsonParse,
   stringify as jsonStringify,
@@ -110,10 +110,7 @@ export default function Explorer() {
 
   return (
     <Box gap="md" data-testid="explorer">
-      <PageCard
-        heading="Transactions Explorer"
-        rightElement={<Loader size="sm" />}
-      >
+      <PageCard heading="Transactions Explorer">
         {errorElement}
 
         <TransactionsTable transactions={Array.from(transactions.values())} />
