@@ -77,7 +77,7 @@ export function TransactionsTable({
       tableId="transactions"
       tableHeaders={headers}
       tableData={sortedTransactions}
-      cssGridTemplateColumns="minmax(300px, 2fr) minmax(130px, 2fr) minmax(200px, 1fr) minmax(50px, 100px) minmax(100px, 1fr)"
+      cssGridTemplateColumns="minmax(300px, 2fr) minmax(130px, 2fr) minmax(300px, 1fr) minmax(50px, 100px) minmax(100px, 1fr)"
       formatDataRow={(tx: NormalizedTransaction) => [
         {
           value: (
