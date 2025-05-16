@@ -5,7 +5,7 @@ import { Badge, Button, CopyText, Icon, Text } from "@stellar/design-system";
 
 import { DataTable } from "@/components/DataTable";
 import { Box } from "@/components/layout/Box";
-import { NextLink } from "@/components/NextLink";
+import { SdsLink } from "@/components/SdsLink";
 
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import { NormalizedTransaction } from "@/helpers/explorer/normalizeTransaction";
@@ -89,9 +89,9 @@ export function TransactionsTable({
         {
           value: (
             <Box gap="sm" direction="row" align="center">
-              <NextLink href={`/transactions-explorer/tx/${tx.txHash}`}>
+              <SdsLink href={`/transactions-explorer/tx/${tx.txHash}`}>
                 {shortenStellarAddress(tx.txHash)}
-              </NextLink>
+              </SdsLink>
 
               <CopyText textToCopy={tx.txHash}>
                 <Button
