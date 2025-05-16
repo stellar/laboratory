@@ -45,6 +45,7 @@ export function TransactionDetails({
   const sourceAccount = StrKey.encodeEd25519PublicKey(
     innerTx.sourceAccount().value(),
   );
+  const success = tx.status === StellarRpc.Api.GetTransactionStatus.SUCCESS;
 
   const goToAccount: MouseEventHandler = (event) => {
     event.preventDefault();
@@ -112,11 +113,13 @@ export function TransactionDetails({
                 addlClassName={tx.status.toLowerCase()}
               >
                 <Text size="xs" as="span">
-                  {tx.status === StellarRpc.Api.GetTransactionStatus.SUCCESS
-                    ? "Successful"
-                    : "Failed"}
+                  {success ? "Successful" : "Failed"}
                 </Text>
-                <Icon.CheckCircle size="xs" color="currentColor" />
+                {success ? (
+                  <Icon.CheckCircle size="xs" color="currentColor" />
+                ) : (
+                  <Icon.XCircle size="xs" color="currentColor" />
+                )}
               </Box>
             }
           />
