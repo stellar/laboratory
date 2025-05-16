@@ -4,6 +4,7 @@ import {
   Badge,
   Card,
   Icon,
+  IconButton,
   Link,
   Loader,
   Logo,
@@ -57,6 +58,7 @@ export const ContractInfo = ({
     "contract-contract-spec",
   );
   const [isBadgeTooltipVisible, setIsBadgeTooltipVisible] = useState(false);
+  const [isSourceTooltipVisible, setIsSourceTooltipVisible] = useState(false);
 
   const buttonRef = useRef<HTMLButtonElement | null>(null);
 
@@ -74,6 +76,7 @@ export const ContractInfo = ({
     }
 
     setIsBadgeTooltipVisible(false);
+    setIsSourceTooltipVisible(false);
   }, []);
 
   // Close tooltip when clicked outside
@@ -96,28 +99,24 @@ export const ContractInfo = ({
 
   const INFO_FIELDS: ContractExplorerInfoField[] = [
     {
-      id: "repository",
-      label: "Source Code",
-    },
-    {
       id: "created",
       label: "Created",
-    },
-    {
-      id: "wasm",
-      label: "Wasm Hash",
-    },
-    {
-      id: "versions",
-      label: "Versions",
     },
     {
       id: "creator",
       label: "Creator",
     },
     {
+      id: "wasm",
+      label: "Wasm Hash",
+    },
+    {
+      id: "repository",
+      label: "Source Code",
+    },
+    {
       id: "storage_entries",
-      label: "Data Storage",
+      label: "Contract Storage",
     },
   ];
 
@@ -172,7 +171,27 @@ export const ContractInfo = ({
                   {sourceRepo}
                   <Icon.LinkExternal01 />
                 </SdsLink>
-              ) : null
+              ) : (
+                <Tooltip
+                  triggerEl={
+                    <IconButton
+                      altText="Unavailable"
+                      label="Unavailable"
+                      icon={<Icon.InfoCircle />}
+                      onClick={() => {
+                        setIsSourceTooltipVisible(!isSourceTooltipVisible);
+                      }}
+                    />
+                  }
+                  isVisible={isSourceTooltipVisible}
+                >
+                  This contract has no build verification configured. Please see{" "}
+                  <Link href="https://stellar.expert/explorer/public/contract/validation">
+                    verification setup instructions
+                  </Link>{" "}
+                  for more info.
+                </Tooltip>
+              )
             }
           />
         );
