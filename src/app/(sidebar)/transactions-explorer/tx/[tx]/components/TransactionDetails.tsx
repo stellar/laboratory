@@ -18,6 +18,7 @@ import { buildEndpointHref } from "@/helpers/buildEndpointHref";
 
 import { Routes } from "@/constants/routes";
 import { useStore } from "@/store/useStore";
+import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
 const InfoField = ({ label, value }: { label: string; value: ReactNode }) => (
   <Box gap="xs" direction="row" align="center" addlClassName="InfoFieldItem">
@@ -75,10 +76,10 @@ export function TransactionDetails({
     });
   };
 
+  useIsXdrInit();
+
   useEffect(() => {
     const parse = async () => {
-      await StellarXdr.initialize();
-
       try {
         const envelopeXdr = tx.envelopeXdr.toXDR().toString("base64");
         const guesses = StellarXdr.guess(envelopeXdr);
