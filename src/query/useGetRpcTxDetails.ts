@@ -1,7 +1,7 @@
-import { NetworkHeaders } from "@/types/types";
 import { rpc as StellarRpc } from "@stellar/stellar-sdk";
-
 import { useQuery } from "@tanstack/react-query";
+
+import { NetworkHeaders } from "@/types/types";
 
 export const useGetRpcTxDetails = ({
   rpcUrl,

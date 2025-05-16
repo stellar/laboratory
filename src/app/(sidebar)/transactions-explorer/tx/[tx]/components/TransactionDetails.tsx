@@ -55,7 +55,7 @@ export function TransactionDetails({
         endpoints.updateParams({ account_id: sourceAccount });
         router.push(Routes.ENDPOINTS_ACCOUNTS_SINGLE);
       },
-      delay: 100,
+      delay: 200,
     });
   };
 
@@ -68,7 +68,7 @@ export function TransactionDetails({
         endpoints.updateParams({ transaction: tx.txHash });
         router.push(Routes.ENDPOINTS_TRANSACTIONS_SINGLE);
       },
-      delay: 100,
+      delay: 200,
     });
   };
 

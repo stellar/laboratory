@@ -8,13 +8,14 @@ import { Box } from "@/components/layout/Box";
 
 import { useStore } from "@/store/useStore";
 import { useGetRpcTxs } from "@/query/useGetRpcTxs";
-import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 
-import { TransactionsTable } from "./components/TransactionsTable";
+import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import {
   type NormalizedTransaction,
   normalizeTransaction,
 } from "@/helpers/explorer/normalizeTransaction";
+
+import { TransactionsTable } from "./components/TransactionsTable";
 
 export default function Explorer() {
   const { network } = useStore();

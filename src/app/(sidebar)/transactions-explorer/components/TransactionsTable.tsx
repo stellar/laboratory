@@ -2,13 +2,16 @@
 
 import { useRouter } from "next/navigation";
 import { Badge, Button, CopyText, Icon, Text } from "@stellar/design-system";
+
 import { DataTable } from "@/components/DataTable";
 import { Box } from "@/components/layout/Box";
 import { NextLink } from "@/components/NextLink";
-import { DataTableHeader } from "@/types/types";
-import { Time } from "./Time";
+
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import { NormalizedTransaction } from "@/helpers/explorer/normalizeTransaction";
+
+import { DataTableHeader } from "@/types/types";
+import { Time } from "./Time";
 
 function getOperationType(tx: NormalizedTransaction): string {
   const payload = tx.payload;
