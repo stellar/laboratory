@@ -1,0 +1,30 @@
+.InfoFieldItem {
+  font-size: 0.75rem;
+  line-height: 1.125rem;
+}
+
+.InfoFieldItem__label {
+  flex-shrink: 0;
+  width: 8rem;
+}
+
+.InfoFieldItem__value {
+  word-break: break-all;
+}
+
+.InfoFieldItem__value .failed {
+  color: var(--sds-clr-red-11) !important;
+}
+
+.InfoFieldItem__value .success {
+  color: var(--sds-clr-green-11) !important;
+}
+
+@media screen and (max-width: 500px) {
+  .InfoFieldItem {
+    flex-wrap: wrap;
+  }
+  .InfoFieldItem__label {
+    width: 100%;
+  }
+}

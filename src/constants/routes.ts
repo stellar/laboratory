@@ -87,6 +87,6 @@ export enum Routes {
   SMART_CONTRACTS_CONTRACT_EXPLORER = "/smart-contracts/contract-explorer",
   SMART_CONTRACTS_CONTRACT_LIST = "/smart-contracts/contract-list",
   SMART_CONTRACTS_SAVED = "/smart-contracts/saved",
-  // Blockchain Explorer
-  BLOCKCHAIN_EXPLORER = "/explorer",
+  // Transactions Explorer
+  TRANSACTIONS_EXPLORER = "/transactions-explorer",
 }
