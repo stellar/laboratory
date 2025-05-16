@@ -102,7 +102,7 @@ export default function Explorer() {
     localStorageKey,
   ]);
 
-  const errorElement = txsQuery.error && (
+  const errorElement = txsQuery.isError && (
     <Alert variant="error" placement="inline">
       {txsQuery.error.message}
     </Alert>
