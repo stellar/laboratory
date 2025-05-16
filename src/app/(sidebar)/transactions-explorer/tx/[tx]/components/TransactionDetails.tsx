@@ -3,7 +3,7 @@ import { Icon, Loader, Profile, Text } from "@stellar/design-system";
 import { rpc as StellarRpc } from "@stellar/stellar-sdk";
 import { useEffect, useState, ReactNode, MouseEventHandler } from "react";
 import { useRouter } from "next/navigation";
-import { parseNumberAndBigInt, parse as JsonParse } from "lossless-json";
+import { parseNumberAndBigInt, parse as jsonParse } from "lossless-json";
 
 import { JsonCodeWrapToggle } from "@/components/JsonCodeWrapToggle";
 import { Box } from "@/components/layout/Box";
@@ -83,7 +83,7 @@ export function TransactionDetails({
       try {
         const envelopeXdr = tx.envelopeXdr.toXDR().toString("base64");
         const guesses = StellarXdr.guess(envelopeXdr);
-        const json = JsonParse(
+        const json = jsonParse(
           StellarXdr.decode(guesses[0], envelopeXdr),
           null,
           parseNumberAndBigInt,
