@@ -1,5 +1,5 @@
 import { StrKey } from "@stellar/stellar-sdk";
-import { Asset, Icon, Loader, Text } from "@stellar/design-system";
+import { Icon, Loader, Profile, Text } from "@stellar/design-system";
 import { rpc as StellarRpc } from "@stellar/stellar-sdk";
 import { useEffect, useState, ReactNode, MouseEventHandler } from "react";
 import { useRouter } from "next/navigation";
@@ -148,15 +148,7 @@ export function TransactionDetails({
                     account_id: sourceAccount,
                   })}
                 >
-                  <Asset
-                    size="sm"
-                    sourceOne={{
-                      altText: "",
-                      image: `https://id.lobstr.co/${sourceAccount}.png`,
-                    }}
-                    variant="single"
-                  />
-                  {sourceAccount}
+                  <Profile publicAddress={sourceAccount} size="sm" />
                 </SdsLink>
               </Box>
             }
