@@ -62,7 +62,13 @@ export function TransactionsTable({
     { id: "actions", value: "", isSortable: false },
   ];
 
-  transactions.sort((a, b) => b.createdAt - a.createdAt);
+  const sortedTransactions = transactions
+    .map<[number, NormalizedTransaction]>((tx) => [
+      parseInt(tx.createdAt.toString(), 10),
+      tx,
+    ])
+    .toSorted(([a], [b]) => b - a)
+    .map<NormalizedTransaction>(([, tx]) => tx);
 
   return (
     <DataTable
@@ -70,7 +76,7 @@ export function TransactionsTable({
       pageSize={100}
       tableId="transactions"
       tableHeaders={headers}
-      tableData={transactions}
+      tableData={sortedTransactions}
       cssGridTemplateColumns="minmax(300px, 2fr) minmax(130px, 2fr) minmax(200px, 1fr) minmax(50px, 100px) minmax(100px, 1fr)"
       formatDataRow={(tx: NormalizedTransaction) => [
         {
@@ -93,13 +99,14 @@ export function TransactionsTable({
                   variant="tertiary"
                   icon={<Icon.Copy01 />}
                   iconPosition="left"
+                  showActionTooltip={false}
                   onClick={(e) => e.preventDefault()}
                 />
               </CopyText>
             </Box>
           ),
         },
-        { value: <Time timestamp={tx.createdAt} /> },
+        { value: <Time timestamp={parseInt(tx.createdAt.toString(), 10)} /> },
         {
           value: (
             <Badge variant={tx.status === "SUCCESS" ? "success" : "error"}>
