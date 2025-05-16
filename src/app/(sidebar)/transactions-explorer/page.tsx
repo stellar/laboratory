@@ -2,6 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { Alert, Loader } from "@stellar/design-system";
+import {
+  parse as jsonParse,
+  stringify as jsonStringify,
+  parseNumberAndBigInt,
+} from "lossless-json";
 
 import { PageCard } from "@/components/layout/PageCard";
 import { Box } from "@/components/layout/Box";
@@ -29,7 +34,11 @@ export default function Explorer() {
     const txs = localStorage.getItem(localStorageKey);
 
     if (txs) {
-      const parsedTxs = JSON.parse(txs) as NormalizedTransaction[];
+      const parsedTxs = jsonParse(
+        txs,
+        null,
+        parseNumberAndBigInt,
+      ) as NormalizedTransaction[];
       for (const tx of parsedTxs) {
         map.set(tx.txHash, tx);
       }
@@ -72,7 +81,7 @@ export default function Explorer() {
           const txs = Array.from(transactions.values())
             .toSorted((tx) => tx.createdAt)
             .splice(-500);
-          localStorage.setItem(localStorageKey, JSON.stringify(txs));
+          localStorage.setItem(localStorageKey, jsonStringify(txs)!);
           setStartLedger(txsQuery.data.latestLedger);
         }
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
