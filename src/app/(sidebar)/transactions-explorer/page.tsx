@@ -8,6 +8,7 @@ import { Box } from "@/components/layout/Box";
 
 import { useStore } from "@/store/useStore";
 import { useGetRpcTxs } from "@/query/useGetRpcTxs";
+import { LOCAL_STORAGE_SAVED_EXPLORER_TRANSACTIONS } from "@/constants/settings";
 
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import {
@@ -19,7 +20,7 @@ import { TransactionsTable } from "./components/TransactionsTable";
 
 export default function Explorer() {
   const { network } = useStore();
-  const localStorageKey = `${network.id}.explorer.transactions`;
+  const localStorageKey = `${network.id}.${LOCAL_STORAGE_SAVED_EXPLORER_TRANSACTIONS}`;
   const [iter, setIter] = useState(0);
   const [nextFetchAt, setNextFetchAt] = useState<number>(0);
   const [startLedger, setStartLedger] = useState<number>(0);
