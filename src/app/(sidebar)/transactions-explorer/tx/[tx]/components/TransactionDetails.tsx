@@ -50,12 +50,13 @@ export function TransactionDetails({
     event.preventDefault();
     event.stopPropagation();
 
+    endpoints.updateParams({ account_id: sourceAccount });
+
     delayedAction({
       action: () => {
-        endpoints.updateParams({ account_id: sourceAccount });
         router.push(Routes.ENDPOINTS_ACCOUNTS_SINGLE);
       },
-      delay: 200,
+      delay: 100,
     });
   };
 
@@ -63,12 +64,13 @@ export function TransactionDetails({
     event.preventDefault();
     event.stopPropagation();
 
+    endpoints.updateParams({ transaction: tx.txHash });
+
     delayedAction({
       action: () => {
-        endpoints.updateParams({ transaction: tx.txHash });
         router.push(Routes.ENDPOINTS_TRANSACTIONS_SINGLE);
       },
-      delay: 200,
+      delay: 100,
     });
   };
 
