@@ -1,5 +1,12 @@
 import React from "react";
-import { Button, Card, Icon, Input, Text } from "@stellar/design-system";
+import {
+  Button,
+  Card,
+  Icon,
+  Input,
+  Select,
+  Text,
+} from "@stellar/design-system";
 import type { JSONSchema7 } from "json-schema";
 import { get, set } from "lodash";
 
@@ -35,13 +42,12 @@ export const JsonSchemaFormRenderer = ({
   setFormError: (formError: AnyObject) => void;
   parsedSorobanOperation: SorobanInvokeValue;
 }) => {
-  const schemaType = getDefType(schema);
-
+  const schemaType = getSchemaType(schema);
   const nestedItemLabel =
     path.length > 0 ? getNestedItemLabel(path.join(".")) : name;
   const label = Number(getNestedItemLabel(path.join(".")))
     ? schemaType
-    : `${nestedItemLabel} (${schemaType})`;
+    : `${nestedItemLabel || name} (${schemaType})`;
 
   const invokeContractBaseProps = {
     contract_id: parsedSorobanOperation.contract_id,
@@ -84,6 +90,7 @@ export const JsonSchemaFormRenderer = ({
         value: e.target.value,
         type: scValType,
       });
+
       onChange({
         ...invokeContractBaseProps,
         args: {
@@ -140,16 +147,93 @@ export const JsonSchemaFormRenderer = ({
   };
 
   if (schemaType === null || schemaType === undefined) {
+    return null;
+  }
+
+  // @TODO
+  if (
+    schemaType === "oneOf" &&
+    schema.oneOf &&
+    Object.values(schema.oneOf).length > 0
+  ) {
+    const selectedSchema = schema.oneOf.find(
+      (oneOf) =>
+        isSchemaObject(oneOf) &&
+        oneOf?.title === parsedSorobanOperation.args[name]?.tag,
+    );
+
     return (
       <Box gap="md">
-        <Box gap="md">
-          <div>No schema found</div>
-        </Box>
+        <Select
+          id="simulate-tx-xdr-format"
+          fieldSize="md"
+          label={name}
+          value={
+            parsedSorobanOperation.args[name]?.tag
+              ? parsedSorobanOperation.args[name]?.tag
+              : ""
+          }
+          onChange={(e) => {
+            onChange({
+              ...invokeContractBaseProps,
+              args: {
+                ...parsedSorobanOperation.args,
+                [name]: {
+                  tag: e.target.value,
+                  values: [],
+                },
+              },
+            });
+          }}
+        >
+          {/* title is the tag */}
+          <option value="">Select</option>
+
+          {schema.oneOf.map((oneOf) => {
+            if (typeof oneOf === "boolean") return null;
+
+            return (
+              <option id={oneOf?.title} value={oneOf?.title} key={oneOf?.title}>
+                {oneOf?.title}
+              </option>
+            );
+          })}
+        </Select>
+
+        {selectedSchema &&
+          isSchemaObject(selectedSchema) &&
+          selectedSchema.properties?.values && (
+            <Box gap="md">
+              <Card>
+                <JsonSchemaFormRenderer
+                  name={name}
+                  key={`${name}-${index}`}
+                  schema={selectedSchema as JSONSchema7}
+                  onChange={onChange}
+                  requiredFields={schema.required}
+                  setFormError={setFormError}
+                  formError={formError}
+                  parsedSorobanOperation={parsedSorobanOperation}
+                />
+              </Card>
+            </Box>
+          )}
       </Box>
     );
   }
 
   if (schemaType === "object") {
+    if (isTaggedUnion(schema)) {
+      return renderTaggedUnion(
+        name,
+        schema,
+        onChange,
+        parsedSorobanOperation,
+        formError,
+        setFormError,
+      );
+    }
+
     return (
       <Box gap="md">
         {Object.entries(schema.properties || {}).map(
@@ -206,8 +290,32 @@ export const JsonSchemaFormRenderer = ({
   }
 
   if (schemaType === "array") {
+    const IS_TUPLE = Array.isArray(schema.items);
     const storedNestedItems = parsedSorobanOperation.args?.[name] || [];
     const schemaItems = getSchemaItems(schema);
+
+    // check if it is a tuple type to disable adding new items
+    if (IS_TUPLE && schemaItems.length > 0) {
+      return schemaItems.map((item: JSONSchema7, index: number) => {
+        const nestedPath = [name, index].join(".");
+        const nestedName = [name, index + 1].join("-") || name;
+
+        return (
+          <JsonSchemaFormRenderer
+            name={nestedName}
+            index={index}
+            key={nestedPath}
+            schema={item}
+            path={[...path, nestedPath]}
+            onChange={onChange}
+            requiredFields={schema.required}
+            setFormError={setFormError}
+            formError={formError}
+            parsedSorobanOperation={parsedSorobanOperation}
+          />
+        );
+      });
+    }
 
     const addDefaultSchemaTemplate = () => {
       // template created based on the schema.properties
@@ -362,16 +470,18 @@ export const JsonSchemaFormRenderer = ({
             </Box>
           ))}
 
-        <Box gap="md" direction="row" align="center">
-          <Button
-            variant="secondary"
-            size="md"
-            onClick={addDefaultSchemaTemplate}
-            type="button"
-          >
-            Add {name}
-          </Button>
-        </Box>
+        {!IS_TUPLE && (
+          <Box gap="md" direction="row" align="center">
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={addDefaultSchemaTemplate}
+              type="button"
+            >
+              Add {name}
+            </Button>
+          </Box>
+        )}
       </Box>
     );
   }
@@ -509,12 +619,17 @@ export const JsonSchemaFormRenderer = ({
   }
 };
 
-const getDefType = (prop: any) => {
+const getSchemaType = (prop: any) => {
   if (!prop) return undefined;
 
   if (prop.$ref) {
     return prop.$ref.replace("#/definitions/", "");
   }
+
+  if (prop.oneOf) {
+    return "oneOf";
+  }
+
   return prop.type;
 };
 
@@ -570,4 +685,56 @@ const deleteNestedItemError = (
   }
 
   return newFormError;
+};
+
+const isTaggedUnion = (schema: JSONSchema7): boolean => {
+  return Boolean(
+    schema.properties?.tag &&
+      schema.properties?.values &&
+      schema.required?.includes("tag") &&
+      schema.required?.includes("values"),
+  );
+};
+
+const renderTaggedUnion = (
+  name: string,
+  schema: JSONSchema7,
+  onChange: (value: SorobanInvokeValue) => void,
+  parsedSorobanOperation: SorobanInvokeValue,
+  formError: AnyObject,
+  setFormError: (formError: AnyObject) => void,
+) => {
+  if (!parsedSorobanOperation.args[name]?.tag || !schema.properties?.values) {
+    return null;
+  }
+
+  // union keys includes
+  // tag for both void and tuple
+  // values for only tuple case
+  const unionKeys = Object.keys(schema.properties);
+  const isUnionCase = unionKeys.includes("values");
+
+  const label = isUnionCase ? unionKeys[unionKeys.length - 1] : unionKeys[0];
+
+  return (
+    <Box gap="md">
+      <LabelHeading size="md" infoText={schema.description}>
+        {label}
+      </LabelHeading>
+
+      <Card>
+        <Box gap="md">
+          <JsonSchemaFormRenderer
+            name={label}
+            schema={schema.properties.values as JSONSchema7}
+            onChange={onChange}
+            requiredFields={schema.required}
+            setFormError={setFormError}
+            formError={formError}
+            parsedSorobanOperation={parsedSorobanOperation}
+          />
+        </Box>
+      </Card>
+    </Box>
+  );
 };
