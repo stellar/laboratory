@@ -54,6 +54,13 @@ export default function Explorer() {
   });
 
   useEffect(() => {
+    localStorage.removeItem(localStorageKey);
+    setStartLedger(0);
+    setNextFetchAt(Date.now());
+    transactions.clear();
+  }, [network.rpcUrl]);
+
+  useEffect(() => {
     const tid = setInterval(() => setIter((prev) => prev + 1), 1000);
     return () => clearInterval(tid);
   }, []);

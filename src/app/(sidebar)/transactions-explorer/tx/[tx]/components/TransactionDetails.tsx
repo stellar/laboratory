@@ -1,5 +1,5 @@
-import { StrKey } from "@stellar/stellar-sdk";
-import { Icon, Loader, Profile, Text } from "@stellar/design-system";
+import { StrKey, xdr as XDR } from "@stellar/stellar-sdk";
+import { Icon, Loader, Profile, Text, Tooltip } from "@stellar/design-system";
 import { rpc as StellarRpc } from "@stellar/stellar-sdk";
 import { useEffect, useState, ReactNode, MouseEventHandler } from "react";
 import { useRouter } from "next/navigation";
@@ -20,7 +20,15 @@ import { Routes } from "@/constants/routes";
 import { useStore } from "@/store/useStore";
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
-const InfoField = ({ label, value }: { label: string; value: ReactNode }) => (
+import { Stroop } from "./Stroop";
+
+const InfoField = ({
+  label,
+  value,
+}: {
+  label: ReactNode;
+  value: ReactNode;
+}) => (
   <Box gap="xs" direction="row" align="center" addlClassName="InfoFieldItem">
     <div className="InfoFieldItem__label">{label}</div>
     <div className="InfoFieldItem__value">{value ?? "-"}</div>
@@ -47,6 +55,46 @@ export function TransactionDetails({
     innerTx.sourceAccount().value(),
   );
   const success = tx.status === StellarRpc.Api.GetTransactionStatus.SUCCESS;
+  const feeCharged = tx.resultXdr.feeCharged().toBigInt();
+  const rawMaxFee = tx.envelopeXdr.value().tx().fee();
+  const maxFee =
+    rawMaxFee instanceof XDR.Int64 ? rawMaxFee.toBigInt() : rawMaxFee;
+
+  const maxFeeElement = (
+    <Box align="center" direction="row" gap="xs">
+      Max fee
+      <Tooltip
+        triggerEl={
+          <div className="Label__infoButton" role="button">
+            <Icon.InfoCircle />
+          </div>
+        }
+      >
+        Maximum fee specified in the transaction itself – the maximum XLM amount
+        the source account willing to pay. Each transaction sets a fee that is
+        paid by the source account. The more operations in the transaction, the
+        greater the required fee.
+      </Tooltip>
+    </Box>
+  );
+
+  const feeChargedElement = (
+    <Box align="center" direction="row" gap="xs">
+      Fee charged
+      <Tooltip
+        triggerEl={
+          <div className="Label__infoButton" role="button">
+            <Icon.InfoCircle />
+          </div>
+        }
+      >
+        Actually charged fee which can be lower than the fee specified in the
+        transaction. Each transaction sets a fee that is paid by the source
+        account. The more operations in the transaction, the greater the
+        required fee.
+      </Tooltip>
+    </Box>
+  );
 
   const goToAccount: MouseEventHandler = (event) => {
     event.preventDefault();
@@ -167,6 +215,13 @@ export function TransactionDetails({
           <InfoField
             label="Processed"
             value={formatTimestamp(tx.createdAt * 1000)}
+          />
+
+          <InfoField label={maxFeeElement} value={<Stroop amount={maxFee} />} />
+
+          <InfoField
+            label={feeChargedElement}
+            value={<Stroop amount={feeCharged} />}
           />
         </Box>
 
