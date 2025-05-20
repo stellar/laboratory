@@ -94,7 +94,9 @@ export const ScValPrettyJson = ({
   }) => {
     switch (type) {
       case "address":
-        return (
+        return isValueOnly ? (
+          renderAddress(value)
+        ) : (
           <Value key={`${type}-${uuidv4()}`} type={type} hasComma={hasComma}>
             {renderAddress(value)}
           </Value>
@@ -228,9 +230,8 @@ export const ScValPrettyJson = ({
             }),
           )}
         </Block>
-        <Bracket char={isMap ? "}" : "]"} />
         {/* Comma for nested items */}
-        {hasComma ? <Comma /> : null}
+        <Bracket char={isMap ? "}" : "]"} hasComma={hasComma} />
       </Fragment>
     );
   };
@@ -270,7 +271,14 @@ export const ScValPrettyJson = ({
     hasComma?: boolean;
   }) => {
     const [keyType, keyValue] = Object.entries(mapItem.key)[0];
-    const [valType, valValue] = Object.entries(mapItem.val)[0];
+
+    // Not always value will be an object
+    let valType = "";
+    let valValue = mapItem.val;
+
+    if (typeof mapItem.val === "object") {
+      [valType, valValue] = Object.entries(mapItem.val)[0];
+    }
 
     return (
       <Row key={`${valType}-${valType}-${uuidv4()}`}>
@@ -301,7 +309,7 @@ export const ScValPrettyJson = ({
         return isMap ? <EmptyObject /> : <EmptyArray />;
       }
 
-      return renderArray(item, "");
+      return renderArray(item, "", hasComma);
     }
 
     // Object
@@ -312,6 +320,15 @@ export const ScValPrettyJson = ({
       switch (scType) {
         case "contract_instance":
           return renderObject(scValue);
+        case "ledger_key_nonce": {
+          const [keyType, keyValue] = Object.entries(scValue)[0];
+
+          return renderPrimitive({
+            value: stringify(keyValue),
+            type: keyType,
+            hasComma,
+          });
+        }
         case "map":
           return (
             <Fragment key={`${scType}-${uuidv4()}`}>
@@ -328,13 +345,9 @@ export const ScValPrettyJson = ({
             </Fragment>
           );
         case "vec":
-          return renderArray(scValue, scType);
+          return renderArray(scValue, scType, hasComma);
         default:
-          return renderPrimitive({
-            value: scValue,
-            type: scType,
-            hasComma,
-          });
+          return renderPrimitive({ value: scValue, type: scType, hasComma });
       }
     }
 
@@ -378,7 +391,7 @@ export const ScValPrettyJson = ({
     }
 
     // If not a "primitive" value, we need to render as an object
-    const objectTypes = ["contract_instance", "map", "vec"];
+    const objectTypes = ["contract_instance", "ledger_key_nonce", "map", "vec"];
 
     if (type && objectTypes.includes(type)) {
       return render({ item: value, parentType: type, hasComma });
@@ -455,8 +468,17 @@ const Value = ({
   );
 };
 
-const Bracket = ({ char }: { char: "{" | "}" | "[" | "]" }) => (
-  <div className="ScValPrettyJson__bracket">{char}</div>
+const Bracket = ({
+  char,
+  hasComma,
+}: {
+  char: "{" | "}" | "[" | "]";
+  hasComma?: boolean;
+}) => (
+  <div className="ScValPrettyJson__bracket">
+    {char}
+    {hasComma ? <Comma /> : null}
+  </div>
 );
 
 const Colon = () => <div className="ScValPrettyJson__colon">:</div>;
