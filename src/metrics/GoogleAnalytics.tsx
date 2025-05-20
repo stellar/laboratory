@@ -1,10 +1,10 @@
 "use client";
 import {
-  GoogleAnalytics as NextGoogleAnalytics,
+  // GoogleAnalytics as NextGoogleAnalytics,
   GoogleTagManager,
 } from "@next/third-parties/google";
 
-const GA_MEASUREMENT_ID = "GTM-KCNDDL3";
+const GA_MEASUREMENT_ID = "GTM-K692P79H";
 
 export const GoogleAnalytics = () => {
   const isGoogleTrackingEnabled =
@@ -18,7 +18,7 @@ export const GoogleAnalytics = () => {
   return (
     <>
       <GoogleTagManager gtmId={GA_MEASUREMENT_ID} />
-      <NextGoogleAnalytics gaId={GA_MEASUREMENT_ID} />
+      {/*<NextGoogleAnalytics gaId={GA_MEASUREMENT_ID} />*/}
     </>
   );
 };
