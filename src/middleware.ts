@@ -13,7 +13,7 @@ export function middleware(request: NextRequest) {
     default-src 'self';
     script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: 'unsafe-inline' 'unsafe-eval';
     style-src 'self' https: 'unsafe-inline';
-    img-src 'self' https://id.lobstr.co/ https://stellar.creit.tech/wallet-icons/ blob: data:;
+    img-src 'self' https://stellar.creit.tech/wallet-icons/ blob: data:;
     connect-src 'self' http://localhost:* https:;
     font-src 'self' https://fonts.gstatic.com/ https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs/base/browser/ui/codicons/codicon/codicon.ttf;
     object-src 'none';
