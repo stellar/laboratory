@@ -39,7 +39,7 @@ export const useGetRpcTxs = ({
 
         return response;
       } catch (error) {
-        throw `there was an error with fetching responses. e: ${error}`;
+        throw `there was an error with fetching transactions. e: ${error}`;
       }
     },
     enabled: false,
