@@ -33,7 +33,7 @@ const primaryNavLinks: NavLink[] = [
     href: Routes.ENDPOINTS,
     label: "API Explorer",
   },
-  {
+  process.env.NEXT_PUBLIC_ENABLE_EXPLORER !== "true" && {
     href: Routes.SMART_CONTRACTS_CONTRACT_EXPLORER,
     label: "Smart Contracts",
   },
