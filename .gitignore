@@ -47,3 +47,6 @@ next-env.d.ts
 
 # versions
 mise.toml
+
+# Sentry config file
+.env.sentry-build-plugin

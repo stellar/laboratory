@@ -59,7 +59,8 @@ export default function Introduction() {
     <LayoutContentContainer>
       <PageCard heading="Stellar Lab">
         <Text size="sm" as="p">
-          The Stellar Lab is an interactive toolkit for exploring the Stellar network. It helps developers and builders experiment with{" "}
+          The Stellar Lab is an interactive toolkit for exploring the Stellar
+          network. It helps developers and builders experiment with{" "}
           <NextLink href={Routes.BUILD_TRANSACTION} sds-variant="primary">
             building
           </NextLink>
@@ -75,7 +76,10 @@ export default function Introduction() {
           <NextLink href={Routes.SUBMIT_TRANSACTION} sds-variant="primary">
             submitting transactions
           </NextLink>
-          , as well as making requests to both RPC and Horizon APIs. With built-in tools for saving and sharing transactions, converting between XDR and JSON, and exploring smart contracts on Stellar, the Stellar Lab is ideal for testing, learning, and exploring on Stellar.
+          , as well as making requests to both RPC and Horizon APIs. With
+          built-in tools for saving and sharing transactions, converting between
+          XDR and JSON, and exploring smart contracts on Stellar, the Stellar
+          Lab is ideal for testing, learning, and exploring on Stellar.
         </Text>
 
         <Text size="sm" as="p">
@@ -86,6 +90,16 @@ export default function Introduction() {
           .
         </Text>
       </PageCard>
+
+      {/*TODO: for testing; remove before merging */}
+      <button
+        type="button"
+        onClick={() => {
+          throw new Error("Test Sentry error");
+        }}
+      >
+        Trigger test error
+      </button>
 
       <InfoCards infoCards={infoCards} />
 
