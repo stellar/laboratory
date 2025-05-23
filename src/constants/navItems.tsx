@@ -172,16 +172,20 @@ export const NAV: NavItem[] = [
     label: "API Explorer",
     subNav: ENDPOINTS_NAV,
   },
-  {
-    route: Routes.SMART_CONTRACTS,
-    label: "Smart Contracts",
-    subNav: SMART_CONTRACTS_NAV,
-  },
+  ...(process.env.NEXT_PUBLIC_ENABLE_EXPLORER !== "true"
+    ? [
+        {
+          route: Routes.SMART_CONTRACTS,
+          label: "Smart Contracts",
+          subNav: SMART_CONTRACTS_NAV,
+        },
+      ]
+    : []),
   ...(process.env.NEXT_PUBLIC_ENABLE_EXPLORER === "true"
     ? [
         {
-          route: Routes.BLOCKCHAIN_EXPLORER,
-          label: "Blockchain Explorer",
+          route: Routes.TRANSACTIONS_EXPLORER,
+          label: "Transactions Explorer",
         },
       ]
     : []),
