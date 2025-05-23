@@ -21,12 +21,12 @@ test.describe("API Explorer page", () => {
       const sidebar = page.getByTestId("sidebar-links");
 
       await expect(
-        sidebar.getByTestId("endpoints-sidebar-linkToggle").nth(4),
+        sidebar.getByTestId("endpoints-sidebar-linkToggle").nth(5),
       ).toContainText("RPC Methods");
 
       const horizonToggle = sidebar
         .getByTestId("endpoints-sidebar-linkToggle")
-        .nth(5);
+        .nth(6);
 
       await expect(horizonToggle).toContainText("Horizon Endpoints");
       await horizonToggle.click();
@@ -64,7 +64,7 @@ test.describe("API Explorer page", () => {
 
       const horizonToggle = sidebar
         .getByTestId("endpoints-sidebar-linkToggle")
-        .nth(5);
+        .nth(6);
 
       await expect(horizonToggle).toHaveAttribute(
         "data-is-active-parent",
