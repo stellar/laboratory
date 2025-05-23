@@ -33,13 +33,13 @@ const primaryNavLinks: NavLink[] = [
     href: Routes.ENDPOINTS,
     label: "API Explorer",
   },
-  {
+  process.env.NEXT_PUBLIC_ENABLE_EXPLORER !== "true" && {
     href: Routes.SMART_CONTRACTS_CONTRACT_EXPLORER,
     label: "Smart Contracts",
   },
   process.env.NEXT_PUBLIC_ENABLE_EXPLORER === "true" && {
-    href: Routes.BLOCKCHAIN_EXPLORER,
-    label: "Blockchain Explorer",
+    href: Routes.TRANSACTIONS_EXPLORER,
+    label: "Transactions Explorer",
   },
   {
     href: "https://developers.stellar.org/",

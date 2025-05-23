@@ -44,3 +44,6 @@ next-env.d.ts
 
 # ide settings
 /.idea/
+
+# versions
+mise.toml
