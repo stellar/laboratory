@@ -8,10 +8,14 @@ export enum Routes {
   ACCOUNT_FUND = "/account/fund",
   ACCOUNT_CREATE_MUXED = "/account/muxed-create",
   ACCOUNT_PARSE_MUXED = "/account/muxed-parse",
+  // Saved
+  SAVED = "/saved",
   SAVED_KEYPAIRS = "/account/saved",
+  ENDPOINTS_SAVED = "/endpoints/saved",
+  SAVED_TRANSACTIONS = "/transaction/saved",
+  SMART_CONTRACTS_SAVED = "/smart-contracts/saved",
   // Endpoints
   ENDPOINTS = "/endpoints",
-  ENDPOINTS_SAVED = "/endpoints/saved",
   // Endpoints Horizon
   ENDPOINTS_HORIZON = "/endpoints/horizon",
   ENDPOINTS_ACCOUNTS = "/endpoints/horizon/accounts",
@@ -81,7 +85,6 @@ export enum Routes {
   SIMULATE_TRANSACTION = "/transaction/simulate",
   SUBMIT_TRANSACTION = "/transaction/submit",
   FEE_BUMP_TRANSACTION = "/transaction/fee-bump",
-  SAVED_TRANSACTIONS = "/transaction/saved",
   // View XDR
   XDR = "/xdr",
   VIEW_XDR = "/xdr/view",
@@ -90,7 +93,6 @@ export enum Routes {
   SMART_CONTRACTS = "/smart-contracts",
   SMART_CONTRACTS_CONTRACT_EXPLORER = "/smart-contracts/contract-explorer",
   SMART_CONTRACTS_CONTRACT_LIST = "/smart-contracts/contract-list",
-  SMART_CONTRACTS_SAVED = "/smart-contracts/saved",
   // Transactions Explorer
   TRANSACTIONS_EXPLORER = "/transactions-explorer",
 }

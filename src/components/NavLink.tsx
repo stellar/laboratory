@@ -28,7 +28,7 @@ export const NavLink = ({ item, level }: { item: NavItem; level: number }) => {
   if (item.subNav?.length) {
     return (
       <div
-        className="SidebarLink--nested"
+        className={`SidebarLink--nested ${item.route === Routes.SAVED ? "SidebarLink--saved" : ""}`}
         data-testid={`endpoints-sidebar${item.route}`}
       >
         <div
@@ -39,7 +39,11 @@ export const NavLink = ({ item, level }: { item: NavItem; level: number }) => {
           data-testid="endpoints-sidebar-linkToggle"
           data-is-active-parent={isActive}
         >
-          {item.label} <Icon.ChevronRight />
+          <span className="SidebarLink__label">
+            {item.icon ?? null}
+            {item.label}
+          </span>
+          <Icon.ChevronRight />
         </div>
 
         {item.subNav?.length ? (
@@ -77,7 +81,7 @@ export const NavLink = ({ item, level }: { item: NavItem; level: number }) => {
         });
       }}
     >
-      {item.icon ?? null} {item.label}
+      {item.label}
     </NextLink>
   );
 };
@@ -87,6 +91,11 @@ const isActivePath = (
   route: Routes | undefined,
   level: number,
 ) => {
+  // Handle saved paths
+  if (pathname.includes(Routes.SAVED)) {
+    return route === Routes.SAVED || pathname === route;
+  }
+
   if (pathname === route) {
     return true;
   }

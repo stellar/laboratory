@@ -2,6 +2,7 @@ import { useContext } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
+  Button,
   Icon,
   IconButton,
   ProjectLogo,
@@ -25,7 +26,7 @@ import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 export const LayoutHeader = () => {
   const { windowWidth } = useContext(WindowContext);
-  const { setTheme } = useStore();
+  const { setTheme, isMainNavHidden, toggleIsMainNavHidden } = useStore();
   const route = useRouter();
   const pathname = usePathname();
 
@@ -143,7 +144,7 @@ export const LayoutHeader = () => {
   const renderSettingsDropdown = () => {
     return (
       <FloaterDropdown
-        triggerEl={<IconButton icon={<Icon.Menu01 />} altText="Menu" />}
+        triggerEl={<IconButton icon={<Icon.Settings01 />} altText="Menu" />}
         offset={14}
       >
         <>
@@ -190,6 +191,7 @@ export const LayoutHeader = () => {
     return (
       <div className="LabLayout__header">
         <header className="LabLayout__header__main">
+          {/* TODO: replace arrow with menu icon */}
           <Select
             id="mobile-nav"
             fieldSize="md"
@@ -198,7 +200,6 @@ export const LayoutHeader = () => {
           >
             {renderNav()}
           </Select>
-
           <Box gap="md" direction="row" align="center">
             <NetworkSelector />
             {renderSettingsDropdown()}
@@ -208,37 +209,29 @@ export const LayoutHeader = () => {
     );
   }
 
-  // Show hamburger menu
-  if (windowWidth < 1230) {
-    return (
-      <div className="LabLayout__header">
-        <header className="LabLayout__header__main">
+  // Desktop
+  return (
+    <div className="LabLayout__header">
+      <header className="LabLayout__header__main">
+        <Box
+          gap="md"
+          direction="row"
+          align="center"
+          addlClassName="LabLayout__header__left"
+        >
+          <Button
+            size="md"
+            variant="tertiary"
+            // TODO: better switch between icons
+            icon={isMainNavHidden ? <Icon.Menu01 /> : <Icon.AlignLeft01 />}
+            onClick={() => toggleIsMainNavHidden(!isMainNavHidden)}
+          ></Button>
           <ProjectLogo
             title="Lab"
             link="/"
             customAnchor={<Link href="/" prefetch={true} />}
           />
-
-          <div className="LabLayout__header__settings">
-            <Box gap="md" direction="row" align="center">
-              <NetworkSelector />
-              {renderSettingsDropdown()}
-            </Box>
-          </div>
-        </header>
-      </div>
-    );
-  }
-
-  // Desktop
-  return (
-    <div className="LabLayout__header">
-      <header className="LabLayout__header__main">
-        <ProjectLogo
-          title="Lab"
-          link="/"
-          customAnchor={<Link href="/" prefetch={true} />}
-        />
+        </Box>
 
         <div className="LabLayout__header__settings">
           <Hydration>

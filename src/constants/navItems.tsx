@@ -48,11 +48,6 @@ export type NavItem = {
 
 const ACCOUNT_NAV = [
   {
-    route: Routes.SAVED_KEYPAIRS,
-    label: "Saved Keypairs",
-    icon: <Icon.Save03 />,
-  },
-  {
     route: Routes.ACCOUNT_CREATE,
     label: "Create Account Keypair",
   },
@@ -72,11 +67,6 @@ const ACCOUNT_NAV = [
 
 const ENDPOINTS_NAV = [
   {
-    route: Routes.ENDPOINTS_SAVED,
-    label: "Saved Requests",
-    icon: <Icon.Save03 />,
-  },
-  {
     route: Routes.ENDPOINTS,
     label: "About API Explorer",
   },
@@ -94,11 +84,6 @@ const ENDPOINTS_NAV = [
 
 const SMART_CONTRACTS_NAV = [
   {
-    route: Routes.SMART_CONTRACTS_SAVED,
-    label: "Saved Smart Contract IDs",
-    icon: <Icon.Save03 />,
-  },
-  {
     route: Routes.SMART_CONTRACTS_CONTRACT_EXPLORER,
     label: "Contract Explorer",
   },
@@ -109,11 +94,6 @@ const SMART_CONTRACTS_NAV = [
 ];
 
 const TRANSACTION_NAV = [
-  {
-    route: Routes.SAVED_TRANSACTIONS,
-    label: "Saved Transactions",
-    icon: <Icon.Save03 />,
-  },
   {
     route: Routes.BUILD_TRANSACTION,
     label: "Build Transaction",
@@ -148,6 +128,29 @@ const XDR_NAV = [
 ];
 
 export const NAV: NavItem[] = [
+  {
+    route: Routes.SAVED,
+    label: "Saved",
+    icon: <Icon.Save03 />,
+    subNav: [
+      {
+        route: Routes.SAVED_KEYPAIRS,
+        label: "Keypairs",
+      },
+      {
+        route: Routes.ENDPOINTS_SAVED,
+        label: "Requests",
+      },
+      {
+        route: Routes.SAVED_TRANSACTIONS,
+        label: "Transactions",
+      },
+      {
+        route: Routes.SMART_CONTRACTS_SAVED,
+        label: "Smart Contracts",
+      },
+    ],
+  },
   {
     route: Routes.ROOT,
     label: "Introduction",

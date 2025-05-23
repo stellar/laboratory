@@ -129,7 +129,7 @@
       align-items: center;
       justify-content: space-between;
       gap: pxToRem(24px);
-      padding: pxToRem(8px) pxToRem(32px);
+      padding: pxToRem(8px) pxToRem(24px);
 
       @media screen and (max-width: 1040px) {
         padding: pxToRem(16px);
@@ -174,6 +174,13 @@
         .Select__container {
           padding-left: 20px;
         }
+      }
+    }
+
+    &__left {
+      .Button {
+        width: pxToRem(34px);
+        height: pxToRem(34px);
       }
     }
 
@@ -257,6 +264,18 @@
       pxToRem(296px)
       1fr;
     overflow: hidden;
+    transition: grid-template-columns cubic-bezier(0.65, 0.05, 0.36, 1) 500ms;
+
+    &[data-is-hidden="true"] {
+      grid-template-columns:
+        0
+        1fr;
+
+      .LabLayout__sidebar {
+        transform: translateX(pxToRem(-296px));
+        opacity: 0;
+      }
+    }
   }
 
   // Content
@@ -298,14 +317,25 @@
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 1fr;
+    min-width: pxToRem(296px);
+    overflow-y: hidden;
+    transform: translateX(0);
+    transition:
+      transform cubic-bezier(0.65, 0.05, 0.36, 1) 400ms,
+      opacity cubic-bezier(0.65, 0.05, 0.36, 1) 400ms;
+    opacity: 1;
 
     &--top {
       overflow-x: auto;
-      padding: pxToRem(32px);
+      padding: pxToRem(24px);
       padding-bottom: pxToRem(16px);
       display: flex;
       flex-direction: column;
-      gap: pxToRem(12px);
+      gap: pxToRem(4px);
+
+      & > .SidebarLink {
+        margin-left: pxToRem(8px);
+      }
     }
 
     &__section {
@@ -328,8 +358,8 @@
 
       padding-top: pxToRem(16px);
       padding-bottom: pxToRem(16px);
-      padding-left: pxToRem(32px);
-      padding-right: pxToRem(32px);
+      padding-left: pxToRem(24px);
+      padding-right: pxToRem(24px);
 
       .SidebarLink {
         justify-content: flex-start;
@@ -382,16 +412,22 @@
 
 .SidebarLink {
   --SidebarLink-color: var(--sds-clr-gray-11);
+  --Nav-navLink-background: transparent;
 
   font-size: pxToRem(14px);
   line-height: pxToRem(20px);
   font-weight: var(--sds-fw-medium);
   color: var(--SidebarLink-color);
-  transition: color var(--sds-anim-transition-default);
+  background-color: var(--Nav-navLink-background);
+  transition:
+    color var(--sds-anim-transition-default),
+    background-color var(--sds-anim-transition-default);
   text-decoration: none;
   display: flex;
   align-items: center;
   gap: pxToRem(4px);
+  padding: pxToRem(4px) 0;
+  border-radius: pxToRem(4px);
 
   svg {
     display: block;
@@ -400,14 +436,33 @@
     stroke: var(--SidebarLink-color);
   }
 
+  &__label {
+    display: flex;
+    align-items: center;
+    gap: pxToRem(4px);
+  }
+
   @media (hover: hover) {
     &:hover {
-      --SidebarLink-color: var(--sds-clr-lilac-11);
+      --SidebarLink-color: var(--sds-clr-gray-12);
+    }
+  }
+
+  &[data-is-active] {
+    padding-left: pxToRem(12px);
+    padding-right: pxToRem(12px);
+
+    @media (hover: hover) {
+      &:hover {
+        --SidebarLink-color: var(--sds-clr-lilac-11);
+        --Nav-navLink-background: var(--sds-clr-lilac-04);
+      }
     }
   }
 
   &[data-is-active="true"] {
     --SidebarLink-color: var(--sds-clr-lilac-11);
+    --Nav-navLink-background: var(--sds-clr-lilac-04);
     cursor: default;
     pointer-events: none;
     position: relative;
@@ -419,7 +474,7 @@
     cursor: pointer;
     justify-content: space-between;
 
-    svg {
+    & > svg {
       transition: transform var(--sds-anim-transition-default);
       transform: rotate(var(--SidebarLink-rotate));
     }
@@ -451,13 +506,23 @@
 
   &--nested {
     &:has(> [data-is-expanded="true"]) {
-      gap: pxToRem(12px);
+      gap: pxToRem(4px);
     }
+  }
+
+  &--saved {
+    border-bottom: 1px solid var(--sds-clr-gray-06);
+    padding-bottom: pxToRem(8px);
+    margin-bottom: pxToRem(4px);
   }
 
   &__nestedItems {
     overflow: hidden;
-    gap: pxToRem(12px);
+    gap: pxToRem(4px);
+
+    & > .SidebarLink--nested {
+      margin-left: pxToRem(12px);
+    }
   }
 
   &__nestedItemsWrapper {
