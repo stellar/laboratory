@@ -3,12 +3,18 @@
 import { ReactNode, useContext } from "react";
 import { Loader } from "@stellar/design-system";
 import { WindowContext } from "@/components/layout/LayoutContextProvider";
+import { useStore } from "@/store/useStore";
 
 export const LayoutWithSidebar = ({ children }: { children: ReactNode }) => {
   const { layoutMode } = useContext(WindowContext);
+  const { isMainNavHidden } = useStore();
 
   if (layoutMode === "desktop") {
-    return <div className="LabLayout__withSidebar">{children}</div>;
+    return (
+      <div className="LabLayout__withSidebar" data-is-hidden={isMainNavHidden}>
+        {children}
+      </div>
+    );
   }
 
   if (layoutMode === "mobile") {

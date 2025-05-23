@@ -6,6 +6,8 @@ import { MaintenanceBanner } from "@/components/MaintenanceBanner";
 import { NetworkNotAvailableBanner } from "@/components/NetworkNotAvailableBanner";
 import { Hydration } from "@/components/Hydration";
 import { LayoutHeader } from "@/components/layout/LayoutHeader";
+import { LayoutWithSidebar } from "@/components/layout/LayoutWithSidebar";
+import { LayoutSidebarContent } from "@/components/layout/LayoutSidebarContent";
 import { initTracking } from "@/metrics/tracking";
 
 export const LayoutMain = ({ children }: { children: ReactNode }) => {
@@ -22,7 +24,11 @@ export const LayoutMain = ({ children }: { children: ReactNode }) => {
         <LayoutHeader />
       </div>
 
-      <Hydration>{children}</Hydration>
+      <Hydration>
+        <LayoutWithSidebar>
+          <LayoutSidebarContent>{children}</LayoutSidebarContent>
+        </LayoutWithSidebar>
+      </Hydration>
     </div>
   );
 };

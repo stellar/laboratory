@@ -7,7 +7,8 @@
     "node": ">=22.0.0"
   },
   "scripts": {
-    "dev": "NEXT_PUBLIC_COMMIT_HASH=$(git rev-parse --short HEAD) NEXT_PUBLIC_ENABLE_EXPLORER=true next dev",
+    "dev": "NEXT_PUBLIC_COMMIT_HASH=$(git rev-parse --short HEAD) next dev",
+    "dev-qs": "NEXT_PUBLIC_COMMIT_HASH=$(git rev-parse --short HEAD) NEXT_PUBLIC_ENABLE_EXPLORER=true next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
