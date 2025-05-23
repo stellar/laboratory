@@ -80,7 +80,7 @@ export interface Store {
   isMainNavHidden: boolean;
   toggleIsMainNavHidden: (isHidden: boolean) => void;
 
-  // Saved Smart Contract IDs view
+  // Saved Smart Contracts view
   savedContractId: string;
   setSavedContractId: (contractId: string) => void;
   clearSavedContractId: () => void;
@@ -382,7 +382,7 @@ export const createStore = (options: CreateStoreOptions) =>
           set((state) => {
             state.isMainNavHidden = isHidden;
           }),
-        // Saved Smart Contract IDs view
+        // Saved Smart Contracts view
         savedContractId: "",
         setSavedContractId: (contractId: string) =>
           set((state) => {
