@@ -175,15 +175,16 @@ export const NAV: NavItem[] = [
     label: "API Explorer",
     subNav: ENDPOINTS_NAV,
   },
-  ...(process.env.NEXT_PUBLIC_ENABLE_EXPLORER !== "true"
-    ? [
+  ...(process.env.NEXT_PUBLIC_ENABLE_EXPLORER === "true" &&
+  process.env.NODE_ENV === "production"
+    ? []
+    : [
         {
           route: Routes.SMART_CONTRACTS,
           label: "Smart Contracts",
           subNav: SMART_CONTRACTS_NAV,
         },
-      ]
-    : []),
+      ]),
   ...(process.env.NEXT_PUBLIC_ENABLE_EXPLORER === "true"
     ? [
         {
