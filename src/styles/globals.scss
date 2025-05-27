@@ -157,23 +157,69 @@
         }
 
         .Select__icon {
-          right: auto;
-          left: pxToRem(8px);
-          top: pxToRem(4px);
-          width: pxToRem(24px);
-          height: pxToRem(24px);
-          border: 1px solid var(--sds-clr-gray-06);
-          border-radius: pxToRem(24px);
-
-          svg {
-            width: pxToRem(16px);
-            height: pxToRem(16px);
-          }
+          display: none;
         }
 
         .Select__container {
           padding-left: 20px;
         }
+      }
+    }
+
+    &__navIcon {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+
+      svg {
+        display: block;
+        width: pxToRem(14px);
+        height: pxToRem(14px);
+        stroke: var(--sds-clr-gray-09);
+        position: absolute;
+        top: pxToRem(3px);
+        left: pxToRem(0);
+        transform: translateX(0);
+        transition: transform cubic-bezier(0.65, 0.05, 0.36, 1) 500ms;
+      }
+
+      &[data-is-hidden="false"] {
+        svg {
+          &:nth-child(1) {
+            transform: translateX(pxToRem(22px));
+          }
+
+          &:nth-child(2) {
+            transform: translateX(0);
+          }
+        }
+      }
+
+      &[data-is-hidden="true"] {
+        svg {
+          &:nth-child(1) {
+            transform: translateX(pxToRem(-1px));
+          }
+
+          &:nth-child(2) {
+            transform: translateX(pxToRem(-22px));
+          }
+        }
+      }
+    }
+
+    &__mobileNav {
+      position: relative;
+
+      svg {
+        width: pxToRem(18px);
+        height: pxToRem(18px);
+        position: absolute;
+        top: pxToRem(8px);
+        left: pxToRem(4px);
+        stroke: var(--sds-clr-gray-09);
+        pointer-events: none;
       }
     }
 
@@ -280,7 +326,7 @@
 
   // Content
   &__container {
-    padding: pxToRem(32px);
+    padding: pxToRem(24px);
     overflow-x: auto;
 
     @media screen and (max-width: 1040px) {
@@ -357,7 +403,7 @@
       justify-content: space-between;
 
       padding-top: pxToRem(16px);
-      padding-bottom: pxToRem(16px);
+      padding-bottom: pxToRem(20px);
       padding-left: pxToRem(24px);
       padding-right: pxToRem(24px);
 

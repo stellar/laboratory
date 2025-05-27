@@ -191,15 +191,17 @@ export const LayoutHeader = () => {
     return (
       <div className="LabLayout__header">
         <header className="LabLayout__header__main">
-          {/* TODO: replace arrow with menu icon */}
-          <Select
-            id="mobile-nav"
-            fieldSize="md"
-            onChange={handleNavChange}
-            value={pathname || undefined}
-          >
-            {renderNav()}
-          </Select>
+          <div className="LabLayout__header__mobileNav">
+            <Select
+              id="mobile-nav"
+              fieldSize="md"
+              onChange={handleNavChange}
+              value={pathname || undefined}
+            >
+              {renderNav()}
+            </Select>
+            <Icon.Menu01 aria-hidden="true" />
+          </div>
           <Box gap="md" direction="row" align="center">
             <NetworkSelector />
             {renderSettingsDropdown()}
@@ -222,10 +224,16 @@ export const LayoutHeader = () => {
           <Button
             size="md"
             variant="tertiary"
-            // TODO: better switch between icons
-            icon={isMainNavHidden ? <Icon.Menu01 /> : <Icon.AlignLeft01 />}
             onClick={() => toggleIsMainNavHidden(!isMainNavHidden)}
-          ></Button>
+          >
+            <div
+              className="LabLayout__header__navIcon"
+              data-is-hidden={isMainNavHidden}
+            >
+              <Icon.Menu01 aria-hidden={!isMainNavHidden} />
+              <Icon.AlignLeft01 aria-hidden={isMainNavHidden} />
+            </div>
+          </Button>
           <ProjectLogo
             title="Lab"
             link="/"
