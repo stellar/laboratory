@@ -229,8 +229,6 @@ export const ContractStorage = ({
               "i128-i256",
               "u128-u256",
               "bool",
-              "map",
-              "vec",
               "string",
               "address",
               "bytes",
