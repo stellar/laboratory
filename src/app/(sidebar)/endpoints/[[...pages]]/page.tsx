@@ -959,7 +959,7 @@ export default function Endpoints() {
     return <EndpointsLandingPage />;
   }
 
-  if (pathname === Routes.ENDPOINTS_SAVED) {
+  if (pathname === Routes.SAVED_ENDPOINTS) {
     return <SavedEndpointsPage />;
   }
 
