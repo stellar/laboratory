@@ -75,7 +75,7 @@ test.describe("Smart Contracts: Contract Storage", () => {
     // Table data
     const firstRow = table.locator("tr").nth(1);
     await expect(firstRow.locator("td").nth(0)).toContainText(
-      "[BalanceGA2Q…D5Y4]",
+      '["Balance",GA2Q…D5Y4]',
     );
     await expect(firstRow.locator("td").nth(1)).toContainText("25648162");
     await expect(firstRow.locator("td").nth(2)).toContainText("Persistent");
@@ -89,7 +89,7 @@ test.describe("Smart Contracts: Contract Storage", () => {
       "ledger_key_contract_instance",
     );
     await expect(secondRow.locator("td").nth(1)).toContainText(
-      "{executable8abc28913035c07411ed5d134e6bfeab4723d97ddd4d1a22a0605d35c94d1a36storage[METADATA{decimal7nameComet Pool TokensymbolCPAL}ControllerGABQ…Q246SwapFee30000]}",
+      '{executable:8abc28913035c07411ed5d134e6bfeab4723d97ddd4d1a22a0605d35c94d1a36,storage:["METADATA":{"decimal":7,"name":"Comet Pool Token","symbol":"CPAL"},"Controller":GABQ…Q246,"SwapFee":30000]}',
     );
     await expect(secondRow.locator("td").nth(2)).toContainText("Instance");
     await expect(secondRow.locator("td").nth(3)).toContainText("55,739,737");
@@ -100,7 +100,7 @@ test.describe("Smart Contracts: Contract Storage", () => {
     // Sort by TTL
     await colTTL.click();
     await expect(firstRow.locator("td").nth(0)).toContainText(
-      "[BalanceCB3H…HGUC]",
+      '["Balance",CB3H…HGUC]',
     );
 
     // Sort by Updated
@@ -124,7 +124,7 @@ test.describe("Smart Contracts: Contract Storage", () => {
     await keyFilterCol.click();
     await expect(keyFiltersDropdown).toBeVisible();
     await expect(firstRow.locator("td").nth(0)).toContainText(
-      "[BalanceGA2Q…D5Y4]",
+      '["Balance",GA2Q…D5Y4]',
     );
     await expect(resultsText).toBeHidden();
 
@@ -152,7 +152,7 @@ test.describe("Smart Contracts: Contract Storage", () => {
 
     // Table data
     await expect(firstRow.locator("td").nth(0)).toContainText(
-      "[ContractsCDJ6…632B]",
+      '["Contracts",CDJ6…632B]',
     );
     await expect(resultsText).toHaveText("1 filtered result");
 

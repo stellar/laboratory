@@ -19,13 +19,14 @@ import { CONTRACT_STORAGE_MAX_ENTRIES } from "@/constants/settings";
 import { INITIAL_OPERATION } from "@/constants/transactionOperations";
 import { Routes } from "@/constants/routes";
 
+import { trackEvent } from "@/metrics/tracking";
+import { TrackingEvent } from "@/metrics/tracking";
+
 import {
   ContractStorageProcessedItem,
   ContractStorageResponseItem,
   NetworkType,
 } from "@/types/types";
-import { trackEvent } from "@/metrics/tracking";
-import { TrackingEvent } from "@/metrics/tracking";
 
 export const ContractStorage = ({
   isActive,
@@ -228,8 +229,6 @@ export const ContractStorage = ({
               "i128-i256",
               "u128-u256",
               "bool",
-              "map",
-              "vec",
               "string",
               "address",
               "bytes",
