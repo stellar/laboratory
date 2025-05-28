@@ -89,6 +89,7 @@ export enum Routes {
   XDR = "/xdr",
   VIEW_XDR = "/xdr/view",
   TO_XDR = "/xdr/to",
+  DIFF_XDR = "/xdr/diff",
   // Smart Contracts
   SMART_CONTRACTS = "/smart-contracts",
   SMART_CONTRACTS_CONTRACT_EXPLORER = "/smart-contracts/contract-explorer",

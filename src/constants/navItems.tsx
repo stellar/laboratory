@@ -125,6 +125,10 @@ const XDR_NAV = [
     route: Routes.TO_XDR,
     label: "JSON to XDR",
   },
+  {
+    route: Routes.DIFF_XDR,
+    label: "Diff XDRs",
+  },
 ];
 
 export const NAV: NavItem[] = [
