@@ -8,18 +8,19 @@ import {
   Text,
 } from "@stellar/design-system";
 import type { JSONSchema7 } from "json-schema";
-import { get, set } from "lodash";
+import { get } from "lodash";
 
 import { validate } from "@/validate";
 
 import { arrayItem } from "@/helpers/arrayItem";
+import { convertSpecTypeToScValType } from "@/helpers/sorobanUtils";
+import { setDeepValue, getNestedItemLabel } from "@/helpers/jsonSchema";
 
 import { Box } from "@/components/layout/Box";
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 import { LabelHeading } from "@/components/LabelHeading";
 
 import { AnyObject, SorobanInvokeValue } from "@/types/types";
-import { convertSpecTypeToScValType } from "@/helpers/sorobanUtils";
 
 export const JsonSchemaFormRenderer = ({
   name,
@@ -44,8 +45,8 @@ export const JsonSchemaFormRenderer = ({
 }) => {
   const schemaType = getSchemaType(schema);
   const nestedItemLabel =
-    path.length > 0 ? getNestedItemLabel(path.join(".")) : name;
-  const label = Number(getNestedItemLabel(path.join(".")))
+    path.length > 0 ? getNestedItemLabel(path.join("-")) : name;
+  const label = Number(getNestedItemLabel(path.join("-")))
     ? schemaType
     : `${nestedItemLabel || name} (${schemaType})`;
 
@@ -60,12 +61,11 @@ export const JsonSchemaFormRenderer = ({
     error: path.length > 0 ? formError[path.join(".")] : formError[name],
   };
 
-  const handleChange = (
+  console.log("[select] name: ", name);
+
+  const handleStoreChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     schemaType: string,
-    validateFn?:
-      | ((value: string, required?: boolean) => string | false)
-      | ((value: string, required?: boolean) => string | false)[],
   ) => {
     /**
      * For a path like 'requests.1.request_type':
@@ -85,19 +85,55 @@ export const JsonSchemaFormRenderer = ({
 
     const scValType = convertSpecTypeToScValType(schemaType);
 
-    if (path.length > 0) {
-      const updatedList = set(parsedSorobanOperation.args, path.join("."), {
-        value: e.target.value,
-        type: scValType,
-      });
+    const isUnionTuple =
+      Object.values(parsedSorobanOperation.args)[0] &&
+      "tag" in Object.values(parsedSorobanOperation.args)[0] &&
+      "values" in Object.values(parsedSorobanOperation.args)[0];
 
-      onChange({
-        ...invokeContractBaseProps,
-        args: {
-          ...updatedList,
-        },
-      });
+    if (path.length > 0) {
+      if (isUnionTuple) {
+        // @TODO
+
+        const keyName = Object.keys(parsedSorobanOperation.args)[0];
+
+        // signer
+        const updatedTupleList = setDeepValue(
+          parsedSorobanOperation.args[keyName],
+          path.join("."),
+          {
+            value: e.target.value,
+            type: scValType,
+          },
+        );
+
+        console.log("[handleStoreChange] updatedTupleList: ", updatedTupleList);
+
+        onChange({
+          ...invokeContractBaseProps,
+          args: {
+            ...parsedSorobanOperation.args,
+            [keyName]: updatedTupleList,
+          },
+        });
+      } else {
+        const updatedList = setDeepValue(
+          parsedSorobanOperation.args,
+          path.join("."),
+          {
+            value: e.target.value,
+            type: scValType,
+          },
+        );
+
+        onChange({
+          ...invokeContractBaseProps,
+          args: {
+            ...updatedList,
+          },
+        });
+      }
     } else {
+      console.log("flat value storage");
       // if path is not set, then set the value of the field directly
       onChange({
         ...invokeContractBaseProps,
@@ -107,7 +143,15 @@ export const JsonSchemaFormRenderer = ({
         },
       });
     }
+  };
 
+  const handleValidate = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    schemaType: string,
+    validateFn?:
+      | ((value: string, required?: boolean) => string | false)
+      | ((value: string, required?: boolean) => string | false)[],
+  ) => {
     // Validate the value
     let error;
 
@@ -150,7 +194,6 @@ export const JsonSchemaFormRenderer = ({
     return null;
   }
 
-  // @TODO
   if (
     schemaType === "oneOf" &&
     schema.oneOf &&
@@ -165,15 +208,13 @@ export const JsonSchemaFormRenderer = ({
     return (
       <Box gap="md">
         <Select
-          id="simulate-tx-xdr-format"
+          id="json-schema-form-renderer-one-of"
           fieldSize="md"
           label={name}
-          value={
-            parsedSorobanOperation.args[name]?.tag
-              ? parsedSorobanOperation.args[name]?.tag
-              : ""
-          }
+          value={get(parsedSorobanOperation.args, path.join("."))?.tag}
           onChange={(e) => {
+            // handleStoreChange(e, schemaType);
+
             onChange({
               ...invokeContractBaseProps,
               args: {
@@ -223,7 +264,7 @@ export const JsonSchemaFormRenderer = ({
   }
 
   if (schemaType === "object") {
-    if (isTaggedUnion(schema)) {
+    if (isTaggedTuple(schema)) {
       return renderTaggedUnion(
         name,
         schema,
@@ -242,7 +283,7 @@ export const JsonSchemaFormRenderer = ({
 
             if (schemaProperty?.type === "object") {
               return (
-                <React.Fragment key={index}>
+                <React.Fragment key={`${key}-${index}`}>
                   <LabelHeading size="md" infoText={schema.description}>
                     {key}
                   </LabelHeading>
@@ -291,22 +332,43 @@ export const JsonSchemaFormRenderer = ({
 
   if (schemaType === "array") {
     const IS_TUPLE = Array.isArray(schema.items);
-    const storedNestedItems = parsedSorobanOperation.args?.[name] || [];
     const schemaItems = getSchemaItems(schema);
 
     // check if it is a tuple type to disable adding new items
     if (IS_TUPLE && schemaItems.length > 0) {
       return schemaItems.map((item: JSONSchema7, index: number) => {
+        // item
+        // type Address or
+        // type array
         const nestedPath = [name, index].join(".");
-        const nestedName = [name, index + 1].join("-") || name;
+        // const nestedName = [name, index].join("-") || name;
 
+        if (item.type === "array") {
+          return (
+            <Box gap="md">
+              <LabelHeading size="md">{nestedPath}</LabelHeading>
+              <Card>
+                <Box gap="md">
+                  <JsonSchemaFormRenderer
+                    name={nestedPath}
+                    path={[nestedPath]}
+                    schema={item}
+                    onChange={onChange}
+                    requiredFields={schema.required}
+                    setFormError={setFormError}
+                    formError={formError}
+                    parsedSorobanOperation={parsedSorobanOperation}
+                  />
+                </Box>
+              </Card>
+            </Box>
+          );
+        }
         return (
           <JsonSchemaFormRenderer
-            name={nestedName}
-            index={index}
-            key={nestedPath}
+            name={nestedPath}
+            path={[nestedPath]}
             schema={item}
-            path={[...path, nestedPath]}
             onChange={onChange}
             requiredFields={schema.required}
             setFormError={setFormError}
@@ -346,6 +408,17 @@ export const JsonSchemaFormRenderer = ({
           },
           {},
         );
+      } else if (
+        isSchemaObject(schema.items) &&
+        schema.items.type === "array"
+      ) {
+        // defaultTemplate = Object.keys(schemaItems || {}).reduce(
+        //   (acc: Record<string, string | AnyObject>, key) => {
+        //     // For example, if the schema.items has an array of object type like following:
+        //     // acc[key] = acc[key].;
+        //     // return acc;
+        //   },
+        //   {},
       } else {
         // if the schema.items is not an object,
         // we don't need to add any default template with a key
@@ -364,10 +437,12 @@ export const JsonSchemaFormRenderer = ({
       });
     };
 
+    const storedNestedItems = parsedSorobanOperation.args?.[name] || [];
+
     return (
       <Box gap="md" key={`${name}-${index}`}>
         <LabelHeading size="md" infoText={schema.description}>
-          {name}
+          {name.split(".").join("-")}
         </LabelHeading>
 
         {schema.description ? (
@@ -382,7 +457,7 @@ export const JsonSchemaFormRenderer = ({
               <Card>
                 <Box gap="md" key={`${name}-${index}`}>
                   <LabelHeading size="lg">
-                    {name}-{index + 1}
+                    {name.split(".").join("-")}-{index}
                   </LabelHeading>
 
                   <Box gap="md">
@@ -392,6 +467,7 @@ export const JsonSchemaFormRenderer = ({
                       schema.items.type === "object" ? (
                         Object.keys(args).map((arg) => {
                           const nestedPath = [name, index, arg].join(".");
+
                           return (
                             <JsonSchemaFormRenderer
                               name={name}
@@ -493,7 +569,8 @@ export const JsonSchemaFormRenderer = ({
           {...sharedProps}
           key={path.join(".")}
           onChange={(e) => {
-            handleChange(e, schemaType, [
+            handleStoreChange(e, schemaType);
+            handleValidate(e, schemaType, [
               validate.getPublicKeyError,
               validate.getContractIdError,
             ]);
@@ -510,7 +587,8 @@ export const JsonSchemaFormRenderer = ({
           {...sharedProps}
           key={path.join(".")}
           onChange={(e) => {
-            handleChange(e, schemaType, validate.getU32Error);
+            handleStoreChange(e, schemaType);
+            handleValidate(e, schemaType, validate.getU32Error);
           }}
         />
       );
@@ -520,7 +598,8 @@ export const JsonSchemaFormRenderer = ({
           {...sharedProps}
           key={path.join(".")}
           onChange={(e) => {
-            handleChange(e, schemaType, validate.getU64Error);
+            handleStoreChange(e, schemaType);
+            handleValidate(e, schemaType, validate.getU64Error);
           }}
         />
       );
@@ -530,7 +609,8 @@ export const JsonSchemaFormRenderer = ({
           {...sharedProps}
           key={path.join(".")}
           onChange={(e) => {
-            handleChange(e, schemaType, validate.getU128Error);
+            handleStoreChange(e, schemaType);
+            handleValidate(e, schemaType, validate.getU128Error);
           }}
         />
       );
@@ -540,7 +620,8 @@ export const JsonSchemaFormRenderer = ({
           {...sharedProps}
           key={path.join(".")}
           onChange={(e) => {
-            handleChange(e, schemaType, validate.getU256Error);
+            handleStoreChange(e, schemaType);
+            handleValidate(e, schemaType, validate.getU256Error);
           }}
         />
       );
@@ -550,7 +631,8 @@ export const JsonSchemaFormRenderer = ({
           {...sharedProps}
           key={path.join(".")}
           onChange={(e) => {
-            handleChange(e, schemaType, validate.getI32Error);
+            handleStoreChange(e, schemaType);
+            handleValidate(e, schemaType, validate.getI32Error);
           }}
           fieldSize="md"
         />
@@ -561,7 +643,8 @@ export const JsonSchemaFormRenderer = ({
           {...sharedProps}
           key={path.join(".")}
           onChange={(e) => {
-            handleChange(e, schemaType, validate.getI64Error);
+            handleStoreChange(e, schemaType);
+            handleValidate(e, schemaType, validate.getI64Error);
           }}
           fieldSize="md"
         />
@@ -572,7 +655,8 @@ export const JsonSchemaFormRenderer = ({
           {...sharedProps}
           key={path.join(".")}
           onChange={(e) => {
-            handleChange(e, schemaType, validate.getI128Error);
+            handleStoreChange(e, schemaType);
+            handleValidate(e, schemaType, validate.getI128Error);
           }}
           fieldSize="md"
         />
@@ -583,7 +667,8 @@ export const JsonSchemaFormRenderer = ({
           {...sharedProps}
           key={path.join(".")}
           onChange={(e) => {
-            handleChange(e, schemaType, validate.getI256Error);
+            handleStoreChange(e, schemaType);
+            handleValidate(e, schemaType, validate.getI256Error);
           }}
           fieldSize="md"
         />
@@ -596,8 +681,9 @@ export const JsonSchemaFormRenderer = ({
           key={path.join(".")}
           error="" // @TODO
           onChange={(e) => {
+            handleStoreChange(e, schemaType);
             // @TODO validate the value via length
-            handleChange(e, schemaType);
+            handleValidate(e, schemaType);
           }}
           note={<>{schema.description}</>}
           fieldSize="md"
@@ -609,7 +695,8 @@ export const JsonSchemaFormRenderer = ({
           {...sharedProps}
           key={path.join(".")}
           onChange={(e) => {
-            handleChange(e, schemaType, validate.getDataUrlError);
+            handleStoreChange(e, schemaType);
+            handleValidate(e, schemaType, validate.getDataUrlError);
           }}
           fieldSize="md"
         />
@@ -656,19 +743,6 @@ const getSchemaProperty = (
   return isSchemaObject(prop) ? prop : undefined;
 };
 
-function parsePath(path: string): (string | number)[] {
-  return path.split(".").map((key) => {
-    const parsed = Number(key);
-
-    return isNaN(parsed) ? key : parsed;
-  });
-}
-
-const getNestedItemLabel = (path: string): string => {
-  const keys = parsePath(path);
-  return keys[keys.length - 1] ? keys[keys.length - 1].toString() : "";
-};
-
 const hasAnyValidationPassed = (errors: (string | false)[]): boolean =>
   errors.some((error) => error === false);
 
@@ -687,7 +761,7 @@ const deleteNestedItemError = (
   return newFormError;
 };
 
-const isTaggedUnion = (schema: JSONSchema7): boolean => {
+const isTaggedTuple = (schema: JSONSchema7): boolean => {
   return Boolean(
     schema.properties?.tag &&
       schema.properties?.values &&
@@ -708,13 +782,8 @@ const renderTaggedUnion = (
     return null;
   }
 
-  // union keys includes
-  // tag for both void and tuple
-  // values for only tuple case
-  const unionKeys = Object.keys(schema.properties);
-  const isUnionCase = unionKeys.includes("values");
-
-  const label = isUnionCase ? unionKeys[unionKeys.length - 1] : unionKeys[0];
+  // from the schema, the tag is "values"
+  const label = "values";
 
   return (
     <Box gap="md">
