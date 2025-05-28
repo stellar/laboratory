@@ -42,11 +42,11 @@ export default function SavedSmartContracts() {
 
   return (
     <Box gap="md">
-      <PageCard heading="Saved Smart Contract IDs">
+      <PageCard heading="Saved Smart Contracts">
         <Box gap="md">
           <>
             {savedContracts.length === 0
-              ? `There are no saved smart contract IDs on ${network.label} network.`
+              ? `There are no saved smart contracts on ${network.label} network.`
               : savedContracts.map((c) => (
                   <SavedContractItem
                     key={`saved-contract-${c.timestamp}`}
@@ -76,7 +76,7 @@ export default function SavedSmartContracts() {
 
       <SaveToLocalStorageModal
         type="editName"
-        itemTitle="Smart Contract ID"
+        itemTitle="Smart Contract"
         itemTimestamp={currentContractTimestamp}
         allSavedItems={localStorageSavedContracts.get()}
         isVisible={currentContractTimestamp !== undefined}

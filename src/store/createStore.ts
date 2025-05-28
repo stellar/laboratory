@@ -77,8 +77,10 @@ export interface Store {
   updateWalletKit: (value?: WalletKit) => void;
   setTheme: (theme: ThemeColorType) => void;
   resetStoredData: () => void;
+  isMainNavHidden: boolean;
+  toggleIsMainNavHidden: (isHidden: boolean) => void;
 
-  // Saved Smart Contract IDs view
+  // Saved Smart Contracts view
   savedContractId: string;
   setSavedContractId: (contractId: string) => void;
   clearSavedContractId: () => void;
@@ -375,7 +377,12 @@ export const createStore = (options: CreateStoreOptions) =>
               ...value,
             };
           }),
-        // Saved Smart Contract IDs view
+        isMainNavHidden: false,
+        toggleIsMainNavHidden: (isHidden) =>
+          set((state) => {
+            state.isMainNavHidden = isHidden;
+          }),
+        // Saved Smart Contracts view
         savedContractId: "",
         setSavedContractId: (contractId: string) =>
           set((state) => {

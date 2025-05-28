@@ -303,7 +303,7 @@ export default function ContractExplorer() {
 
       <SaveToLocalStorageModal
         type="save"
-        itemTitle="Smart Contract ID"
+        itemTitle="Smart Contract"
         itemProps={{
           contractId: contractIdInput,
           shareableUrl: `${window.location.origin}${buildContractExplorerHref(contractIdInput)}`,
