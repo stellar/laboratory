@@ -138,7 +138,7 @@ export const NAV: NavItem[] = [
         label: "Keypairs",
       },
       {
-        route: Routes.ENDPOINTS_SAVED,
+        route: Routes.SAVED_ENDPOINTS,
         label: "Requests",
       },
       {
@@ -146,7 +146,7 @@ export const NAV: NavItem[] = [
         label: "Transactions",
       },
       {
-        route: Routes.SMART_CONTRACTS_SAVED,
+        route: Routes.SAVED_SMART_CONTRACTS,
         label: "Smart Contracts",
       },
     ],

@@ -11,9 +11,9 @@ export enum Routes {
   // Saved
   SAVED = "/saved",
   SAVED_KEYPAIRS = "/account/saved",
-  ENDPOINTS_SAVED = "/endpoints/saved",
+  SAVED_ENDPOINTS = "/endpoints/saved",
   SAVED_TRANSACTIONS = "/transaction/saved",
-  SMART_CONTRACTS_SAVED = "/smart-contracts/saved",
+  SAVED_SMART_CONTRACTS = "/smart-contracts/saved",
   // Endpoints
   ENDPOINTS = "/endpoints",
   // Endpoints Horizon
