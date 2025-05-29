@@ -347,6 +347,7 @@ export const ContractInfo = ({
                   wasmHash={infoData?.wasm || ""}
                   rpcUrl={network.rpcUrl}
                   isActive={activeTab === "contract-contract-spec"}
+                  isSourceStellarExpert={false}
                 />
               ) : (
                 <NoContractLoadedView />
@@ -361,6 +362,7 @@ export const ContractInfo = ({
                   isActive={activeTab === "contract-source-code"}
                   repo={sourceRepo}
                   commit={sourceCommit}
+                  isSourceStellarExpert={!wasmData?.sourceRepo}
                 />
               ),
               isDisabled: !isDataLoaded,
@@ -374,6 +376,7 @@ export const ContractInfo = ({
                   contractId={infoData.contract}
                   networkId={network.id}
                   totalEntriesCount={infoData.storage_entries}
+                  isSourceStellarExpert={true}
                 />
               ) : null,
               isDisabled: !isDataLoaded,
@@ -397,6 +400,7 @@ export const ContractInfo = ({
                   isActive={activeTab === "contract-version-history"}
                   contractId={infoData.contract}
                   networkId={network.id}
+                  isSourceStellarExpert={true}
                 />
               ) : null,
               isDisabled: !isDataLoaded,
