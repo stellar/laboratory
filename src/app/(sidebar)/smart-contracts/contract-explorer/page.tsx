@@ -20,7 +20,6 @@ import { PageCard } from "@/components/layout/PageCard";
 import { MessageField } from "@/components/MessageField";
 import { TabView } from "@/components/TabView";
 import { SwitchNetworkButtons } from "@/components/SwitchNetworkButtons";
-import { PoweredByStellarExpert } from "@/components/PoweredByStellarExpert";
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
@@ -294,10 +293,6 @@ export default function ContractExplorer() {
               setContractActiveTab(tabId);
             }}
           />
-
-          {contractActiveTab === "contract-info" ? (
-            <PoweredByStellarExpert />
-          ) : null}
         </>
       </>
 
