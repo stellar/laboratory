@@ -7,6 +7,7 @@ import { ErrorText } from "@/components/ErrorText";
 import { Box } from "@/components/layout/Box";
 import { DataTable } from "@/components/DataTable";
 import { ScValPrettyJson } from "@/components/ScValPrettyJson";
+import { PoweredByStellarExpert } from "@/components/PoweredByStellarExpert";
 
 import { useSEContractStorage } from "@/query/external/useSEContracStorage";
 import { formatEpochToDate } from "@/helpers/formatEpochToDate";
@@ -32,11 +33,13 @@ export const ContractStorage = ({
   contractId,
   networkId,
   totalEntriesCount,
+  isSourceStellarExpert,
 }: {
   isActive: boolean;
   contractId: string;
   networkId: NetworkType;
   totalEntriesCount: number | undefined;
+  isSourceStellarExpert: boolean;
 }) => {
   const isXdrInit = useIsXdrInit();
   const { transaction } = useStore();
@@ -155,108 +158,114 @@ export const ContractStorage = ({
   };
 
   return (
-    <Box gap="sm">
-      <DataTable
-        tableId="contract-storage"
-        tableData={parsedData}
-        tableHeaders={[
-          {
-            id: "key",
-            value: "Key",
-            isSortable: false,
-            filter: keyValueFilters.key,
-          },
-          {
-            id: "value",
-            value: "Value",
-            isSortable: false,
-            filter: keyValueFilters.value,
-          },
-          { id: "durability", value: "Durability", isSortable: true },
-          { id: "ttl", value: "TTL", isSortable: true },
-          { id: "updated", value: "Updated", isSortable: true },
-        ]}
-        formatDataRow={(
-          vh: ContractStorageProcessedItem<ContractStorageResponseItem>,
-        ) => [
-          {
-            value: (
-              <div className="CodeBox">
-                <ScValPrettyJson xdrString={vh.key} isReady={isXdrInit} />
-              </div>
-            ),
-          },
-          {
-            value: (
-              <div className="CodeBox">
-                <ScValPrettyJson xdrString={vh.value} isReady={isXdrInit} />
-              </div>
-            ),
-          },
-          { value: capitalizeString(vh.durability) },
-          {
-            value: (
-              <div className="TtlBox">
-                <span
-                  className="TtlBox__value"
-                  {...(vh.expired ? { "data-style": "expired" } : {})}
-                >
-                  {formatNumber(vh.ttl)}
-                </span>
-                {vh.expired && vh.durability !== "temporary" ? (
-                  <span>
-                    <Link onClick={() => handleRestore(vh.key, vh.durability)}>
-                      Restore
-                    </Link>
+    <Box gap="lg">
+      <Box gap="sm">
+        <DataTable
+          tableId="contract-storage"
+          tableData={parsedData}
+          tableHeaders={[
+            {
+              id: "key",
+              value: "Key",
+              isSortable: false,
+              filter: keyValueFilters.key,
+            },
+            {
+              id: "value",
+              value: "Value",
+              isSortable: false,
+              filter: keyValueFilters.value,
+            },
+            { id: "durability", value: "Durability", isSortable: true },
+            { id: "ttl", value: "TTL", isSortable: true },
+            { id: "updated", value: "Updated", isSortable: true },
+          ]}
+          formatDataRow={(
+            vh: ContractStorageProcessedItem<ContractStorageResponseItem>,
+          ) => [
+            {
+              value: (
+                <div className="CodeBox">
+                  <ScValPrettyJson xdrString={vh.key} isReady={isXdrInit} />
+                </div>
+              ),
+            },
+            {
+              value: (
+                <div className="CodeBox">
+                  <ScValPrettyJson xdrString={vh.value} isReady={isXdrInit} />
+                </div>
+              ),
+            },
+            { value: capitalizeString(vh.durability) },
+            {
+              value: (
+                <div className="TtlBox">
+                  <span
+                    className="TtlBox__value"
+                    {...(vh.expired ? { "data-style": "expired" } : {})}
+                  >
+                    {formatNumber(vh.ttl)}
                   </span>
-                ) : null}
-              </div>
-            ),
-          },
-          {
-            value: formatEpochToDate(vh.updated, "short") || "-",
-            isWrap: true,
-          },
-        ]}
-        cssGridTemplateColumns="minmax(210px, 2fr) minmax(210px, 2fr) minmax(100px, 0.8fr) minmax(110px, 0.8fr) minmax(114px, 0.7fr)"
-        customHeaderEl={
-          <Box gap="sm" direction="row" align="center" wrap="wrap">
-            {[
-              "sym",
-              "u8-u64",
-              "i8-i64",
-              "i128-i256",
-              "u128-u256",
-              "bool",
-              "map",
-              "vec",
-              "string",
-              "address",
-              "bytes",
-              "bytesN",
-            ].map((t) => (
-              <div
-                className="DataTypeLegend"
-                data-type={t}
-                key={`legend-type-${t}`}
-              ></div>
-            ))}
-          </Box>
-        }
-        csvFileName={contractId}
-      />
+                  {vh.expired && vh.durability !== "temporary" ? (
+                    <span>
+                      <Link
+                        onClick={() => handleRestore(vh.key, vh.durability)}
+                      >
+                        Restore
+                      </Link>
+                    </span>
+                  ) : null}
+                </div>
+              ),
+            },
+            {
+              value: formatEpochToDate(vh.updated, "short") || "-",
+              isWrap: true,
+            },
+          ]}
+          cssGridTemplateColumns="minmax(210px, 2fr) minmax(210px, 2fr) minmax(100px, 0.8fr) minmax(110px, 0.8fr) minmax(114px, 0.7fr)"
+          customHeaderEl={
+            <Box gap="sm" direction="row" align="center" wrap="wrap">
+              {[
+                "sym",
+                "u8-u64",
+                "i8-i64",
+                "i128-i256",
+                "u128-u256",
+                "bool",
+                "map",
+                "vec",
+                "string",
+                "address",
+                "bytes",
+                "bytesN",
+              ].map((t) => (
+                <div
+                  className="DataTypeLegend"
+                  data-type={t}
+                  key={`legend-type-${t}`}
+                ></div>
+              ))}
+            </Box>
+          }
+          csvFileName={contractId}
+        />
 
-      {/* Max entries message */}
-      {totalEntriesCount && totalEntriesCount > parsedData.length ? (
-        <Box
-          gap="md"
-          addlClassName="FieldNote FieldNote--note FieldNote--md"
-          direction="row"
-          justify="end"
-        >
-          {`Showing the last ${CONTRACT_STORAGE_MAX_ENTRIES} entries`}
-        </Box>
-      ) : null}
+        {/* Max entries message */}
+        {totalEntriesCount && totalEntriesCount > parsedData.length ? (
+          <Box
+            gap="md"
+            addlClassName="FieldNote FieldNote--note FieldNote--md"
+            direction="row"
+            justify="end"
+          >
+            {`Showing the last ${CONTRACT_STORAGE_MAX_ENTRIES} entries`}
+          </Box>
+        ) : null}
+      </Box>
+
+      {isSourceStellarExpert ? <PoweredByStellarExpert /> : null}
     </Box>
   );
 };

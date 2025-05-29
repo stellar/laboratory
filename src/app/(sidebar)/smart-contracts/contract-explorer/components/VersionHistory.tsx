@@ -3,6 +3,7 @@ import { Loader, Text } from "@stellar/design-system";
 import { Box } from "@/components/layout/Box";
 import { ErrorText } from "@/components/ErrorText";
 import { DataTable } from "@/components/DataTable";
+import { PoweredByStellarExpert } from "@/components/PoweredByStellarExpert";
 
 import { useSEContractVersionHistory } from "@/query/external/useSEContractVersionHistory";
 import { formatEpochToDate } from "@/helpers/formatEpochToDate";
@@ -13,10 +14,12 @@ export const VersionHistory = ({
   isActive,
   contractId,
   networkId,
+  isSourceStellarExpert,
 }: {
   isActive: boolean;
   contractId: string;
   networkId: NetworkType;
+  isSourceStellarExpert: boolean;
 }) => {
   const {
     data: versionHistoryData,
@@ -53,18 +56,22 @@ export const VersionHistory = ({
   }
 
   return (
-    <DataTable
-      tableId="contract-version-history"
-      tableData={versionHistoryData}
-      tableHeaders={[
-        { id: "wasm", value: "Contract Wasm Hash", isSortable: true },
-        { id: "ts", value: "Updated", isSortable: true },
-      ]}
-      formatDataRow={(vh: ContractVersionHistoryResponseItem) => [
-        { value: vh.wasm, isBold: true },
-        { value: formatEpochToDate(vh.ts, "short") || "-" },
-      ]}
-      cssGridTemplateColumns="minmax(210px, 2fr) minmax(210px, 1fr)"
-    />
+    <Box gap="lg">
+      <DataTable
+        tableId="contract-version-history"
+        tableData={versionHistoryData}
+        tableHeaders={[
+          { id: "wasm", value: "Contract Wasm Hash", isSortable: true },
+          { id: "ts", value: "Updated", isSortable: true },
+        ]}
+        formatDataRow={(vh: ContractVersionHistoryResponseItem) => [
+          { value: vh.wasm, isBold: true },
+          { value: formatEpochToDate(vh.ts, "short") || "-" },
+        ]}
+        cssGridTemplateColumns="minmax(210px, 2fr) minmax(210px, 1fr)"
+      />
+
+      {isSourceStellarExpert ? <PoweredByStellarExpert /> : null}
+    </Box>
   );
 };
