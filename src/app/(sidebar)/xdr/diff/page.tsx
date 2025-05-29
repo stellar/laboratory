@@ -9,6 +9,7 @@ import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { XdrTypeSelect } from "@/components/XdrTypeSelect";
 import { PageCard } from "@/components/layout/PageCard";
 import { ErrorText } from "@/components/ErrorText";
+import { CopyJsonPayloadButton } from "@/components/CopyJsonPayloadButton";
 
 import { prettifyJsonString } from "@/helpers/prettifyJsonString";
 import { decodeXdr } from "@/helpers/decodeXdr";
@@ -37,6 +38,16 @@ export default function DiffXdr() {
   const [xdrType, setXdrType] = useState(XDR_TYPE_TRANSACTION_ENVELOPE);
 
   const ERROR_MESSAGE_NOTE = "Make sure the XDR value and type are valid.";
+  const DEFAULT_JSON_ONE = JSON.stringify(
+    { value: "Original XDR JSON" },
+    null,
+    2,
+  );
+  const DEFAULT_JSON_TWO = JSON.stringify(
+    { value: "Changed XDR JSON" },
+    null,
+    2,
+  );
 
   useEffect(() => {
     if (isXdrInit && xdrOne && xdrType) {
@@ -116,7 +127,7 @@ export default function DiffXdr() {
         <Box gap="lg" direction="row">
           <XdrPicker
             id="diff-xdr-one"
-            label="XDR One"
+            label="Original XDR"
             value={xdrOne}
             hasCopyButton
             onChange={(e) => {
@@ -126,7 +137,7 @@ export default function DiffXdr() {
 
           <XdrPicker
             id="diff-xdr-two"
-            label="XDR Two"
+            label="Changed XDR"
             value={xdrTwo}
             hasCopyButton
             onChange={(e) => {
@@ -165,72 +176,83 @@ export default function DiffXdr() {
           <Box gap="xs">
             {jsonOneError ? (
               <ErrorText
-                errorMessage={`XDR One error: ${jsonOneError}`}
+                errorMessage={`Original XDR error: ${jsonOneError}`}
                 size="sm"
               />
             ) : null}
 
             {jsonTwoError ? (
               <ErrorText
-                errorMessage={`XDR Two error: ${jsonTwoError}`}
+                errorMessage={`Changed XDR error: ${jsonTwoError}`}
                 size="sm"
               />
             ) : null}
           </Box>
         ) : null}
 
-        {jsonOne && jsonTwo ? (
-          <div
-            className={`CodeEditor ${isExpanded ? "CodeEditor--expanded" : ""}`}
-            data-testid="diff-xdr-editor"
-          >
-            <div className="CodeEditor__header">
-              {/* Title */}
-              <div className="CodeEditor__header__title">Diff</div>
+        <div
+          className={`CodeEditor ${isExpanded ? "CodeEditor--expanded" : ""}`}
+          data-testid="diff-xdr-editor"
+        >
+          <div className="CodeEditor__header">
+            {/* Title */}
+            <div className="CodeEditor__header__title">Diff in JSON</div>
 
-              {/* Actions */}
-              <Box
-                gap="xs"
-                direction="row"
-                align="center"
-                justify="end"
-                addlClassName="CodeEditor__actions"
-              >
-                <Button
-                  variant="tertiary"
-                  size="sm"
-                  icon={isExpanded ? <Icon.X /> : <Icon.Expand06 />}
-                  title={isExpanded ? "Close" : "Expand"}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setIsExpanded(!isExpanded);
-                  }}
-                ></Button>
-              </Box>
-            </div>
-
-            {/* Content / editor */}
-            <div
-              className="CodeEditor__content"
-              // Container must have set height (43 px header height)
-              style={{ height: `calc(100% - 43px)` }}
+            {/* Actions */}
+            <Box
+              gap="xs"
+              direction="row"
+              align="center"
+              justify="end"
+              addlClassName="CodeEditor__actions"
             >
-              <DiffEditor
-                language="xdr"
-                original={prettifyJsonString(jsonOne)}
-                modified={prettifyJsonString(jsonTwo)}
-                options={{
-                  minimap: { enabled: false },
-                  readOnly: true,
-                  scrollBeyondLastLine: false,
-                  padding: { top: 8, bottom: 8 },
-                  wordWrap: "off",
+              <Button
+                variant="tertiary"
+                size="sm"
+                icon={isExpanded ? <Icon.X /> : <Icon.Expand06 />}
+                title={isExpanded ? "Close" : "Expand"}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsExpanded(!isExpanded);
                 }}
-                theme={theme === "sds-theme-light" ? "light" : "vs-dark"}
-              />
-            </div>
+              ></Button>
+            </Box>
           </div>
-        ) : null}
+
+          {/* Content / editor */}
+          <div
+            className="CodeEditor__content"
+            // Container must have a set height (43 px header height)
+            style={{ height: `calc(100% - 43px)` }}
+          >
+            <DiffEditor
+              language="json"
+              original={prettifyJsonString(jsonOne || DEFAULT_JSON_ONE)}
+              modified={prettifyJsonString(jsonTwo || DEFAULT_JSON_TWO)}
+              options={{
+                minimap: { enabled: false },
+                readOnly: true,
+                scrollBeyondLastLine: false,
+                padding: { top: 8, bottom: 8 },
+                wordWrap: "off",
+              }}
+              theme={theme === "sds-theme-light" ? "light" : "vs-dark"}
+            />
+          </div>
+        </div>
+
+        <Box gap="md" direction="row" align="center" justify="space-between">
+          <CopyJsonPayloadButton
+            label="Copy Original JSON"
+            jsonString={prettifyJsonString(jsonOne)}
+            isDisabled={!jsonOne}
+          />
+          <CopyJsonPayloadButton
+            label="Copy Changed JSON"
+            jsonString={prettifyJsonString(jsonTwo)}
+            isDisabled={!jsonTwo}
+          />
+        </Box>
       </PageCard>
     </Box>
   );

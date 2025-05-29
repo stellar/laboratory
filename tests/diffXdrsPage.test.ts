@@ -10,31 +10,30 @@ test.describe("Diff XDRs Page", () => {
   });
 
   test("Default TransactionEnvelope type works", async ({ page }) => {
-    const xdrInputOne = page.getByLabel("XDR One", { exact: true });
-    const xdrInputTwo = page.getByLabel("XDR Two", { exact: true });
+    const xdrInputOne = page.getByLabel("Original XDR", { exact: true });
+    const xdrInputTwo = page.getByLabel("Changed XDR", { exact: true });
     const diffEditor = page.getByTestId("diff-xdr-editor");
 
     // Default input state
     await expect(xdrInputOne).toBeEnabled();
     await expect(xdrInputTwo).toBeDisabled();
-    await expect(diffEditor).toBeHidden();
+    await expect(diffEditor).toBeVisible();
 
     // Fill inputs
     await xdrInputOne.fill(XDR_TX_1);
     await expect(xdrInputTwo).toBeEnabled();
     await xdrInputTwo.fill(XDR_TX_2);
-    await expect(diffEditor).toBeVisible();
   });
 
   test("Non-default type works", async ({ page }) => {
-    const xdrInputOne = page.getByLabel("XDR One", { exact: true });
-    const xdrInputTwo = page.getByLabel("XDR Two", { exact: true });
+    const xdrInputOne = page.getByLabel("Original XDR", { exact: true });
+    const xdrInputTwo = page.getByLabel("Changed XDR", { exact: true });
     const diffEditor = page.getByTestId("diff-xdr-editor");
     const errorMessageOne = page.getByText(
-      "XDR One error: Unable to decode input as TransactionEnvelope: xdr value invalid. Make sure the XDR value and type are valid.",
+      "Original XDR error: Unable to decode input as TransactionEnvelope: xdr value invalid. Make sure the XDR value and type are valid.",
     );
     const errorMessageTwo = page.getByText(
-      "XDR Two error: Unable to decode input as ScVal: length limit exceeded. Make sure the XDR value and type are valid.",
+      "Changed XDR error: Unable to decode input as ScVal: length limit exceeded. Make sure the XDR value and type are valid.",
     );
 
     const xdrTypeInput = page.getByLabel("XDR type", { exact: true });
@@ -43,8 +42,8 @@ test.describe("Diff XDRs Page", () => {
     // Default input state
     await expect(xdrInputOne).toBeEnabled();
     await expect(xdrInputTwo).toBeDisabled();
-    await expect(diffEditor).toBeHidden();
     await expect(xdrTypeInput).toHaveValue("TransactionEnvelope");
+    await expect(diffEditor).toBeVisible();
 
     // Fill the first XDR input
     await xdrInputOne.fill(XDR_SCVAL_1);
@@ -67,7 +66,6 @@ test.describe("Diff XDRs Page", () => {
     // Valid second XDR input
     await xdrInputTwo.fill(XDR_SCVAL_2);
     await expect(errorMessageTwo).toBeHidden();
-    await expect(diffEditor).toBeVisible();
   });
 });
 
