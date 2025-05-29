@@ -6,11 +6,13 @@ export const decodeXdr = ({
   xdrType,
   xdrBlob,
   isReady,
+  customErrorMessage = "Select another XDR type.",
   trackingEvents,
 }: {
   xdrType: string;
   xdrBlob: string;
   isReady: boolean;
+  customErrorMessage?: string;
   trackingEvents?: {
     success: TrackingEvent;
     successStream: TrackingEvent;
@@ -45,7 +47,7 @@ export const decodeXdr = ({
       // If the stream fails, assume that the XDR is invalid and return the original error.
       return {
         jsonString: "",
-        error: `Unable to decode input as ${xdrType}: ${originalError}. Select another XDR type.`,
+        error: `Unable to decode input as ${xdrType}: ${originalError}. ${customErrorMessage}`,
       };
     }
   };

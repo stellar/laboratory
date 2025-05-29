@@ -17,7 +17,6 @@ import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { useStore } from "@/store/useStore";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
-import { validate } from "@/validate";
 
 import "@/components/CodeEditor/styles.scss";
 
@@ -28,23 +27,24 @@ export default function DiffXdr() {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const [xdrOne, setXdrOne] = useState("");
-  const [xdrOneError, setXdrOneError] = useState("");
   const [jsonOne, setJsonOne] = useState("");
   const [jsonOneError, setJsonOneError] = useState("");
 
   const [xdrTwo, setXdrTwo] = useState("");
-  const [xdrTwoError, setXdrTwoError] = useState("");
   const [jsonTwo, setJsonTwo] = useState("");
   const [jsonTwoError, setJsonTwoError] = useState("");
 
   const [xdrType, setXdrType] = useState(XDR_TYPE_TRANSACTION_ENVELOPE);
 
+  const ERROR_MESSAGE_NOTE = "Make sure the XDR value and type are valid.";
+
   useEffect(() => {
-    if (isXdrInit && xdrOne && xdrType && !xdrOneError) {
+    if (isXdrInit && xdrOne && xdrType) {
       const xdrJsonDecodedOne = decodeXdr({
         xdrType,
         xdrBlob: xdrOne,
         isReady: isXdrInit,
+        customErrorMessage: ERROR_MESSAGE_NOTE,
       });
 
       if (xdrJsonDecodedOne?.jsonString) {
@@ -66,14 +66,15 @@ export default function DiffXdr() {
       setJsonOneError("");
       setJsonOne("");
     }
-  }, [xdrOne, xdrType, isXdrInit, xdrOneError]);
+  }, [xdrOne, xdrType, isXdrInit]);
 
   useEffect(() => {
-    if (jsonOne && xdrTwo && !xdrTwoError) {
+    if (jsonOne && xdrTwo) {
       const xdrJsonDecodedTwo = decodeXdr({
         xdrType,
         xdrBlob: xdrTwo,
         isReady: isXdrInit,
+        customErrorMessage: ERROR_MESSAGE_NOTE,
       });
 
       if (xdrJsonDecodedTwo?.jsonString) {
@@ -95,7 +96,7 @@ export default function DiffXdr() {
       setJsonTwoError("");
       setJsonTwo("");
     }
-  }, [isXdrInit, jsonOne, xdrTwo, xdrTwoError, xdrType]);
+  }, [isXdrInit, jsonOne, xdrTwo, xdrType]);
 
   useEffect(() => {
     if (jsonOne && jsonTwo) {
@@ -120,22 +121,7 @@ export default function DiffXdr() {
             hasCopyButton
             onChange={(e) => {
               setXdrOne(e.target.value);
-
-              const validation = validate.getXdrError(e.target.value);
-
-              if (validation?.result === "error") {
-                setXdrOneError(validation.message);
-
-                trackEvent(TrackingEvent.XDR_DIFF_ERROR, {
-                  xdrType,
-                  errorType: "xdr",
-                  xdr: "one",
-                });
-              } else {
-                setXdrOneError("");
-              }
             }}
-            error={xdrOneError}
           />
 
           <XdrPicker
@@ -145,22 +131,7 @@ export default function DiffXdr() {
             hasCopyButton
             onChange={(e) => {
               setXdrTwo(e.target.value);
-
-              const validation = validate.getXdrError(e.target.value);
-
-              if (validation?.result === "error") {
-                setXdrTwoError(validation.message);
-
-                trackEvent(TrackingEvent.XDR_DIFF_ERROR, {
-                  xdrType,
-                  errorType: "xdr",
-                  xdr: "two",
-                });
-              } else {
-                setXdrTwoError("");
-              }
             }}
-            error={xdrTwoError}
             disabled={!jsonOne}
           />
         </Box>
