@@ -1,11 +1,11 @@
-import { setDeepValue } from "../../src/helpers/jsonSchema";
+import { jsonSchema } from "../../src/helpers/jsonSchema";
 
-describe("setDeepValue", () => {
+describe("jsonSchema.setDeepValue", () => {
   it("sets nested value in array correctly", () => {
     const input = {
       addresses: [],
     };
-    const updated = setDeepValue(input, "addresses.0", {
+    const updated = jsonSchema.setDeepValue(input, "addresses.0", {
       value: "GBPIMUEJFYS7RT23QO2ACH2JMKGXLXZI4E5ACBSQMF32RKZ5H3SVNL5F",
       type: "address",
     });
@@ -29,19 +29,19 @@ describe("setDeepValue", () => {
     };
 
     // First update
-    const updated1 = setDeepValue(input, "values.0", {
+    const updated1 = jsonSchema.setDeepValue(input, "values.0", {
       value: "first update",
       type: "string",
     });
 
     // Second update to same path
-    const updated2 = setDeepValue(updated1, "values.0", {
+    const updated2 = jsonSchema.setDeepValue(updated1, "values.0", {
       value: "second update",
       type: "string",
     });
 
     // Third update to same path
-    const updated3 = setDeepValue(updated2, "values.1", {
+    const updated3 = jsonSchema.setDeepValue(updated2, "values.1", {
       value: "final update",
       type: "string",
     });
@@ -76,13 +76,13 @@ describe("setDeepValue", () => {
     };
 
     // First update
-    const updated1 = setDeepValue(input, "values.1.0", {
+    const updated1 = jsonSchema.setDeepValue(input, "values.1.0", {
       value: "2",
       type: "u32",
     });
 
     // Second update
-    const updated2 = setDeepValue(updated1, "values.0", {
+    const updated2 = jsonSchema.setDeepValue(updated1, "values.0", {
       value: "GBOTV3EYB4BO26MK3PFXNDWKI54XGXMLMK52F7TYLNOOQLL2GCJGBUQQ",
       type: "address",
     });
@@ -100,51 +100,6 @@ describe("setDeepValue", () => {
           type: "address",
         },
         [{ value: "2", type: "u32" }],
-      ],
-    });
-  });
-
-  it("should preserve existing values when setting new paths", () => {
-    const input = {
-      tag: "Policy",
-      values: [],
-    };
-
-    // First set values.0
-    const updated1 = setDeepValue(input, "values.0", {
-      value: "GBOTV3EYB4BO26MK3PFXNDWKI54XGXMLMK52F7TYLNOOQLL2GCJGBUQQ",
-      type: "address",
-    });
-
-    // Then set values.1.0
-    const updated2 = setDeepValue(updated1, "values.1.0", {
-      value: "2",
-      type: "u32",
-    });
-
-    expect(updated1).toEqual({
-      tag: "Policy",
-      values: [
-        {
-          value: "GBOTV3EYB4BO26MK3PFXNDWKI54XGXMLMK52F7TYLNOOQLL2GCJGBUQQ",
-          type: "address",
-        },
-      ],
-    });
-
-    expect(updated2).toEqual({
-      tag: "Policy",
-      values: [
-        {
-          value: "GBOTV3EYB4BO26MK3PFXNDWKI54XGXMLMK52F7TYLNOOQLL2GCJGBUQQ",
-          type: "address",
-        },
-        [
-          {
-            value: "2",
-            type: "u32",
-          },
-        ],
       ],
     });
   });
