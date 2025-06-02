@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { Button, Card, Text, Textarea } from "@stellar/design-system";
+import { Button, Card, Select, Text, Textarea } from "@stellar/design-system";
 import { BASE_FEE, contract } from "@stellar/stellar-sdk";
 import { JSONSchema7 } from "json-schema";
 
@@ -35,6 +35,7 @@ import {
   Network,
   SorobanInvokeValue,
   EmptyObj,
+  XdrFormatType,
 } from "@/types/types";
 import { trackEvent } from "@/metrics/tracking";
 import { TrackingEvent } from "@/metrics/tracking";
@@ -55,6 +56,7 @@ export const InvokeContractForm = ({
     methodType: string;
   } | null>(null);
   const [isExtensionLoading, setIsExtensionLoading] = useState(false);
+  const [xdrFormat, setXdrFormat] = useState<XdrFormatType>("json");
   const [formValue, setFormValue] = useState<SorobanInvokeValue>({
     contract_id: infoData.contract,
     function_name: funcName,
@@ -320,6 +322,7 @@ export const InvokeContractForm = ({
           rpcUrl: network.rpcUrl,
           transactionXdr: xdr,
           headers: getNetworkHeaders(network, "rpc"),
+          xdrFormat,
         });
 
         // using prepareTransaction instead of assembleTransaction because
@@ -492,14 +495,18 @@ export const InvokeContractForm = ({
     - there are form validation errors
     - the transaction data from simulation is not available (needed to submit)
   */
+
+  const simulatedResultResponse =
+    simulateTxData?.result?.transactionData ||
+    simulateTxData?.result?.transactionDataJson;
+
   const isSubmitDisabled =
     !!invokeError?.message ||
     isSubmitRpcError ||
     isSimulating ||
     !walletKit?.publicKey ||
     !hasNoFormErrors ||
-    !simulateTxData?.result?.transactionData;
-
+    !simulatedResultResponse;
   const isSimulationDisabled = () => {
     const disabled = !isGetFunction && !Object.keys(formValue.args).length;
     return !walletKit?.publicKey || !hasNoFormErrors || disabled;
@@ -537,6 +544,32 @@ export const InvokeContractForm = ({
           >
             Submit
           </Button>
+
+          <Box
+            gap="sm"
+            direction="row"
+            align="end"
+            justify="end"
+            addlClassName="ValidationResponseCard__footer"
+            wrap="wrap"
+          >
+            <Select
+              id="simulate-tx-xdr-format"
+              fieldSize="md"
+              // label="XDR Format"
+              value={xdrFormat}
+              onChange={(e) => {
+                setXdrFormat(e.target.value as XdrFormatType);
+              }}
+            >
+              <option id="base64" value="base64">
+                XDR Format: base64
+              </option>
+              <option id="json" value="json">
+                XDR Format: json
+              </option>
+            </Select>
+          </Box>
         </Box>
 
         <>{renderResponse()}</>
