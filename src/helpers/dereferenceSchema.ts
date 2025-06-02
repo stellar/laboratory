@@ -1,6 +1,7 @@
 // https://jsonforms.io/api/core/interfaces/jsonschema7.html
 import type { JSONSchema7 } from "json-schema";
 import type { DereferencedSchemaType } from "@/constants/jsonSchema";
+import type { ScValPrimitiveType } from "@/types/types";
 
 const resolveNestedSchema = (schema: any, fullSchema: JSONSchema7): any => {
   if (!schema) return schema;
@@ -31,7 +32,7 @@ const resolveNestedSchema = (schema: any, fullSchema: JSONSchema7): any => {
       "ScString",
       "ScSymbol",
       "DataUrl",
-    ];
+    ] as ScValPrimitiveType[];
 
     const finalSchema = isScPrimitive.includes(refPath)
       ? {
