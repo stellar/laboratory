@@ -517,14 +517,7 @@ export const InvokeContractForm = ({
       <Box gap="md">
         {renderSchema()}
 
-        <Box
-          gap="sm"
-          direction="row"
-          align="end"
-          justify="end"
-          addlClassName="ValidationResponseCard__footer"
-          wrap="wrap"
-        >
+        <Box gap="sm" direction="row" align="end" justify="end" wrap="wrap">
           <Button
             size="md"
             variant="tertiary"
@@ -545,14 +538,7 @@ export const InvokeContractForm = ({
             Submit
           </Button>
 
-          <Box
-            gap="sm"
-            direction="row"
-            align="end"
-            justify="end"
-            addlClassName="ValidationResponseCard__footer"
-            wrap="wrap"
-          >
+          <Box gap="sm" direction="row" align="end" justify="end" wrap="wrap">
             <Select
               id="simulate-tx-xdr-format"
               fieldSize="md"
