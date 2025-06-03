@@ -2,13 +2,11 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { Button, Card, Text, Textarea } from "@stellar/design-system";
 import { BASE_FEE, contract } from "@stellar/stellar-sdk";
 import { JSONSchema7 } from "json-schema";
-import { get } from "lodash";
 
 import { Box } from "@/components/layout/Box";
 import { ErrorText } from "@/components/ErrorText";
 import { JsonCodeWrapToggle } from "@/components/JsonCodeWrapToggle";
-import { JsonSchemaFormRenderer } from "@/components/JsonSchema/JsonSchemaFormRenderer";
-import { JsonSchemaFormRendererTwo } from "@/components/JsonSchema/JsonSchemaFormRendererTwo";
+import { JsonSchemaRenderer } from "@/components/SmartContractJsonSchema/JsonSchemaRenderer";
 import { PrettyJsonTransaction } from "@/components/PrettyJsonTransaction";
 import { RpcErrorResponse } from "@/app/(sidebar)/transaction/submit/components/ErrorResponse";
 import { TransactionSuccessCard } from "@/components/TransactionSuccessCard";
@@ -39,9 +37,6 @@ import {
   EmptyObj,
 } from "@/types/types";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
-
-import Form from "@rjsf/core";
-import validator from "@rjsf/validator-ajv8";
 
 export const InvokeContractForm = ({
   infoData,
@@ -275,8 +270,6 @@ export const InvokeContractForm = ({
     resetSubmitState();
     resetPrepareTx();
 
-    console.log("[InvokeContractForm] parsedSorobanOperation: ", formValue);
-
     try {
       // fetch sequence number first
       await fetchSequenceNumber();
@@ -403,28 +396,13 @@ export const InvokeContractForm = ({
         {formValue.contract_id &&
           formValue.function_name &&
           dereferencedSchema && (
-            // <JsonSchemaFormRenderer
-            //   name={funcName}
-            //   schema={dereferencedSchema as JSONSchema7}
-            //   onChange={handleChange}
-            //   formError={formError}
-            //   setFormError={setFormError}
-            //   parsedSorobanOperation={formValue}
-            // />
-            <JsonSchemaFormRendererTwo
+            <JsonSchemaRenderer
               name={funcName}
               schema={dereferencedSchema as JSONSchema7}
               onChange={handleChange}
               parsedSorobanOperation={formValue}
             />
           )}
-        <Form
-          schema={contractSpec?.jsonSchema(funcName)}
-          validator={validator}
-          // onChange={log("changed")}
-          // onSubmit={log("submitted")}
-          // onError={log("errors")}
-        />
       </Box>
     );
   };
