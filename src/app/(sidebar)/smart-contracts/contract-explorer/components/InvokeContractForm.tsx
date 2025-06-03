@@ -6,7 +6,7 @@ import { JSONSchema7 } from "json-schema";
 import { Box } from "@/components/layout/Box";
 import { ErrorText } from "@/components/ErrorText";
 import { JsonCodeWrapToggle } from "@/components/JsonCodeWrapToggle";
-import { JsonSchemaFormRendererTwo } from "@/components/JsonSchema/JsonSchemaFormRendererTwo";
+import { JsonSchemaRenderer } from "@/components/SmartContractJsonSchema/JsonSchemaRenderer";
 import { PrettyJsonTransaction } from "@/components/PrettyJsonTransaction";
 import { RpcErrorResponse } from "@/app/(sidebar)/transaction/submit/components/ErrorResponse";
 import { TransactionSuccessCard } from "@/components/TransactionSuccessCard";
@@ -272,8 +272,6 @@ export const InvokeContractForm = ({
     resetSubmitState();
     resetPrepareTx();
 
-    console.log("[InvokeContractForm] parsedSorobanOperation: ", formValue);
-
     try {
       // fetch sequence number first
       await fetchSequenceNumber();
@@ -401,28 +399,13 @@ export const InvokeContractForm = ({
         {formValue.contract_id &&
           formValue.function_name &&
           dereferencedSchema && (
-            // <JsonSchemaFormRenderer
-            //   name={funcName}
-            //   schema={dereferencedSchema as JSONSchema7}
-            //   onChange={handleChange}
-            //   formError={formError}
-            //   setFormError={setFormError}
-            //   parsedSorobanOperation={formValue}
-            // />
-            <JsonSchemaFormRendererTwo
+            <JsonSchemaRenderer
               name={funcName}
               schema={dereferencedSchema as JSONSchema7}
               onChange={handleChange}
               parsedSorobanOperation={formValue}
             />
           )}
-        <Form
-          schema={contractSpec?.jsonSchema(funcName)}
-          validator={validator}
-          // onChange={log("changed")}
-          // onSubmit={log("submitted")}
-          // onError={log("errors")}
-        />
       </Box>
     );
   };

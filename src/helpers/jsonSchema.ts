@@ -1,6 +1,7 @@
 import type { JSONSchema7 } from "json-schema";
 
 import type { AnyObject, ScValPrimitiveType } from "@/types/types";
+import { set } from "lodash";
 
 /**
  * For a path like 'requests.1.request_type':
@@ -17,10 +18,10 @@ import type { AnyObject, ScValPrimitiveType } from "@/types/types";
  *
  * This will update the value of requests[1].request_type
  */
-// const setDeepValue = (obj: AnyObject, path: string, val: any): AnyObject => {
-//     const newObj = JSON.parse(JSON.stringify(obj));
-//     return set(newObj, path, val);
-// }
+const setDeepValue = (obj: AnyObject, path: string, val: any): AnyObject => {
+  const newObj = JSON.parse(JSON.stringify(obj));
+  return set(newObj, path, val);
+};
 
 const isTaggedUnion = (schema: JSONSchema7): boolean => {
   return Boolean(
@@ -29,50 +30,6 @@ const isTaggedUnion = (schema: JSONSchema7): boolean => {
       schema.required?.includes("tag") &&
       schema.required?.includes("values"),
   );
-};
-
-const setDeepValue = (obj: AnyObject, path: string, val: any): AnyObject => {
-  const keys = parsePath(path);
-  console.log("setDeepValue - input:", { obj, path, val, keys });
-
-  function helper(current: any, idx: number): any {
-    const key = keys[idx];
-
-    // If it's the last key, set the value
-    if (idx === keys.length - 1) {
-      if (Array.isArray(current)) {
-        const newArr = [...current];
-        newArr[key as number] = val;
-        return newArr;
-      }
-      return { ...current, [key]: val };
-    }
-
-    const nextKey = keys[idx + 1];
-
-    if (Array.isArray(current)) {
-      const index = key as number;
-      // Create a new array with the same length as current, preserving existing values
-      const newArr = [...current];
-      // Only create new structure if the index doesn't exist or is undefined
-      if (!newArr[index]) {
-        newArr[index] = typeof nextKey === "number" ? [] : {};
-      }
-      const nextVal = helper(newArr[index], idx + 1);
-      newArr[index] = nextVal;
-      return newArr;
-    }
-
-    return {
-      ...current,
-      [key]: helper(
-        current?.[key] ?? (typeof nextKey === "number" ? [] : {}),
-        idx + 1,
-      ),
-    };
-  }
-
-  return helper(obj, 0);
 };
 
 const getNestedItemLabel = (path: string): string => {
@@ -154,7 +111,6 @@ const deleteNestedItemError = (
 export const jsonSchema = {
   setDeepValue,
   isSchemaObject,
-  //   getStoredNestedItems,
   getNestedItemLabel,
   getSchemaType,
   getSchemaItems,

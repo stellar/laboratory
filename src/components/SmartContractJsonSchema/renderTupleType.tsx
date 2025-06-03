@@ -1,14 +1,12 @@
-import {
-  AnyObject,
-  JsonSchemaFormProps,
-  SorobanInvokeValue,
-} from "@/types/types";
-import { JSONSchema7 } from "json-schema";
-import { Box } from "../layout/Box";
-import { LabelHeading } from "../LabelHeading";
 import { Card } from "@stellar/design-system";
+import { JSONSchema7 } from "json-schema";
 
-export const renderUnionType = ({
+import { Box } from "@/components/layout/Box";
+import { LabelHeading } from "@/components/LabelHeading";
+
+import { JsonSchemaFormProps, SorobanInvokeValue } from "@/types/types";
+
+export const renderTupleType = ({
   name,
   path,
   schema,
@@ -26,10 +24,6 @@ export const renderUnionType = ({
   if (!parsedSorobanOperation.args[name]?.tag || !schema.properties?.values) {
     return null;
   }
-
-  //   console.log("[renderUnionType] schema: ", schema);
-  //   console.log("[renderUnionType] path: ", path);
-  //   console.log("[renderUnionType] name: ", name);
 
   // from the schema, the tag is "values"
   const label = "values";
@@ -50,21 +44,11 @@ export const renderUnionType = ({
               {renderer({
                 name: label,
                 schema: schema?.properties?.values as JSONSchema7,
-                path: [path.join(".")],
+                // path: [...path, parsedSorobanOperation.args[name]?.tag, label],
+                path: [...path, label],
                 parsedSorobanOperation,
                 onChange,
               })}
-
-              {/* <JsonSchemaFormRenderer
-                name={label}
-                path={path}
-                schema={schema.properties.values as JSONSchema7}
-                onChange={onChange}
-                requiredFields={schema.required}
-                setFormError={setFormError}
-                formError={formError}
-                parsedSorobanOperation={parsedSorobanOperation}
-              /> */}
             </Box>
           </Card>
         </Box>
