@@ -1,6 +1,6 @@
 import type { JSONSchema7, JSONSchema7Definition } from "json-schema";
 
-import { dereferenceSchema } from "../../src/helpers/dereferenceSchema";
+import { dereferenceSchema } from "../dereferenceSchema";
 
 describe("dereferenceSchema", () => {
   // basic primitive schema

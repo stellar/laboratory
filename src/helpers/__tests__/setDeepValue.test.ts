@@ -1,4 +1,4 @@
-import { jsonSchema } from "../../src/helpers/jsonSchema";
+import { jsonSchema } from "../jsonSchema";
 
 describe("jsonSchema.setDeepValue", () => {
   it("sets nested value in array correctly", () => {
