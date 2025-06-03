@@ -13,9 +13,10 @@ test.describe("Create Account Page", () => {
     page,
   }) => {
     const buttonContainer = page.getByTestId("createAccount-buttons");
-    expect(buttonContainer.getByText("Generate keypair")).toBeVisible;
-    expect(buttonContainer.getByText("Fund account with Friendbot"))
-      .toBeVisible;
+    await expect(buttonContainer.getByText("Generate keypair")).toBeVisible();
+    await expect(
+      buttonContainer.getByText("Fund account with Friendbot"),
+    ).toBeVisible();
   });
 
   test("Test 'Generate keypair' button", async ({ page }) => {

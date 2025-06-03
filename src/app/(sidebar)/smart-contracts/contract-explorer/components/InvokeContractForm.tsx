@@ -6,7 +6,7 @@ import { JSONSchema7 } from "json-schema";
 import { Box } from "@/components/layout/Box";
 import { ErrorText } from "@/components/ErrorText";
 import { JsonCodeWrapToggle } from "@/components/JsonCodeWrapToggle";
-import { JsonSchemaFormRenderer } from "@/components/JsonSchema/JsonSchemaFormRenderer";
+import { JsonSchemaRenderer } from "@/components/SmartContractJsonSchema/JsonSchemaRenderer";
 import { PrettyJsonTransaction } from "@/components/PrettyJsonTransaction";
 import { RpcErrorResponse } from "@/app/(sidebar)/transaction/submit/components/ErrorResponse";
 import { TransactionSuccessCard } from "@/components/TransactionSuccessCard";
@@ -36,8 +36,7 @@ import {
   SorobanInvokeValue,
   EmptyObj,
 } from "@/types/types";
-import { trackEvent } from "@/metrics/tracking";
-import { TrackingEvent } from "@/metrics/tracking";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 export const InvokeContractForm = ({
   infoData,
@@ -397,12 +396,10 @@ export const InvokeContractForm = ({
         {formValue.contract_id &&
           formValue.function_name &&
           dereferencedSchema && (
-            <JsonSchemaFormRenderer
+            <JsonSchemaRenderer
               name={funcName}
               schema={dereferencedSchema as JSONSchema7}
               onChange={handleChange}
-              formError={formError}
-              setFormError={setFormError}
               parsedSorobanOperation={formValue}
             />
           )}
@@ -536,6 +533,22 @@ export const InvokeContractForm = ({
             onClick={handleSubmit}
           >
             Submit
+          </Button>
+
+          <Button
+            size="md"
+            variant="secondary"
+            isLoading={isExtensionLoading || isSubmitRpcPending}
+            // disabled={isSubmitDisabled}
+            onClick={() => {
+              setFormValue({
+                contract_id: formValue.contract_id,
+                function_name: formValue.function_name,
+                args: {},
+              });
+            }}
+          >
+            Reset
           </Button>
         </Box>
 

@@ -1,5 +1,6 @@
 import React from "react";
 import { NetworkError, rpc as StellarRpc, xdr } from "@stellar/stellar-sdk";
+import type { JSONSchema7 } from "json-schema";
 import { TransactionBuildParams } from "@/store/createStore";
 
 // =============================================================================
@@ -268,6 +269,29 @@ export type SorobanInvokeValue = {
   args: AnyObject;
 };
 
+export type ScValPrimitiveType =
+  | "U32"
+  | "U64"
+  | "U128"
+  | "U256"
+  | "I32"
+  | "I64"
+  | "I128"
+  | "I256"
+  | "Address"
+  | "ScString"
+  | "ScSymbol"
+  | "DataUrl";
+
+export type JsonSchemaFormProps = {
+  name: string;
+  schema: JSONSchema7;
+  path?: string[];
+  onChange: (value: SorobanInvokeValue) => void;
+  index?: number;
+  requiredFields?: string[];
+  parsedSorobanOperation: SorobanInvokeValue;
+};
 // =============================================================================
 // RPC
 // =============================================================================
