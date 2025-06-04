@@ -514,54 +514,51 @@ export const InvokeContractForm = ({
 
   return (
     <Card>
-      <Box gap="md">
-        {renderSchema()}
-
-        <Box gap="sm" direction="row" align="end" justify="end" wrap="wrap">
-          <Button
-            size="md"
-            variant="tertiary"
-            disabled={isSimulationDisabled()}
-            isLoading={isSimulating}
-            onClick={handleSimulate}
-          >
-            Simulate
-          </Button>
-
-          <Button
-            size="md"
-            variant="secondary"
-            isLoading={isExtensionLoading || isSubmitRpcPending}
-            disabled={isSubmitDisabled}
-            onClick={handleSubmit}
-          >
-            Submit
-          </Button>
+      <div className="ContractInvoke">
+        <Box gap="md">
+          {renderSchema()}
 
           <Box gap="sm" direction="row" align="end" justify="end" wrap="wrap">
-            <Select
-              id="simulate-tx-xdr-format"
-              fieldSize="md"
-              // label="XDR Format"
-              value={xdrFormat}
-              onChange={(e) => {
-                setXdrFormat(e.target.value as XdrFormatType);
-              }}
-            >
-              <option id="base64" value="base64">
-                XDR Format: base64
-              </option>
-              <option id="json" value="json">
-                XDR Format: json
-              </option>
-            </Select>
-          </Box>
-        </Box>
+            <Box gap="sm" direction="row" align="end" justify="end" wrap="wrap">
+              <Select
+                id="simulate-tx-xdr-format"
+                fieldSize="md"
+                value={xdrFormat}
+                onChange={(e) => {
+                  setXdrFormat(e.target.value as XdrFormatType);
+                }}
+              >
+                <option value="base64">XDR Format: Base64</option>
+                <option value="json">XDR Format: JSON</option>
+              </Select>
+            </Box>
 
-        <>{renderResponse()}</>
-        <>{renderSuccess()}</>
-        <>{renderError()}</>
-      </Box>
+            <Button
+              size="md"
+              variant="tertiary"
+              disabled={isSimulationDisabled()}
+              isLoading={isSimulating}
+              onClick={handleSimulate}
+            >
+              Simulate
+            </Button>
+
+            <Button
+              size="md"
+              variant="secondary"
+              isLoading={isExtensionLoading || isSubmitRpcPending}
+              disabled={isSubmitDisabled}
+              onClick={handleSubmit}
+            >
+              Submit
+            </Button>
+          </Box>
+
+          <>{renderResponse()}</>
+          <>{renderSuccess()}</>
+          <>{renderError()}</>
+        </Box>
+      </div>
     </Card>
   );
 };
