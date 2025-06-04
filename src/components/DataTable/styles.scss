@@ -23,6 +23,10 @@
     &:has(.DataTable__filter) {
       min-height: pxToRem(400px);
     }
+
+    &:has([data-overflow="true"]) {
+      overflow-x: visible;
+    }
   }
 
   &__table {
@@ -66,6 +70,12 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+
+      &[data-overflow="true"] {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: initial;
+      }
     }
 
     th {
