@@ -50,6 +50,14 @@ To build and run production build locally:
 yarn start
 ```
 
-Production uses [Amplitude](https://amplitude.com/) to emit metrics, so to fully
-emulate a production build, you’ll need to set an
-`NEXT_PUBLIC_AMPLITUDE_API_KEY` variable in `.env.local` file.
+## Tracking
+
+To improve Lab, we use [Amplitude](https://amplitude.com/) and [Google Analytics](https://developers.google.com/analytics) tracking in production.
+
+If you are running your version of Lab (for Quickstart, for example), you can disable the Google Analytics by setting this `env` variable:
+
+```
+NEXT_PUBLIC_DISABLE_GOOGLE_ANALYTICS=true
+```
+
+No need to disable Amplitude as it runs only on `lab.stellar.org`.
