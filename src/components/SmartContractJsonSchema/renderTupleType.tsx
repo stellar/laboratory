@@ -5,23 +5,26 @@ import { Box } from "@/components/layout/Box";
 import { LabelHeading } from "@/components/LabelHeading";
 
 import { JsonSchemaFormProps, SorobanInvokeValue } from "@/types/types";
+import { get } from "lodash";
 
 export const renderTupleType = ({
-  name,
+  // name,
   path,
   schema,
   onChange,
   parsedSorobanOperation,
   renderer,
 }: {
-  name: string;
+  // name: string;
   path: string[];
   schema: JSONSchema7;
   onChange: (value: SorobanInvokeValue) => void;
   parsedSorobanOperation: SorobanInvokeValue;
   renderer: (props: JsonSchemaFormProps) => React.ReactNode;
 }) => {
-  if (!parsedSorobanOperation.args[name]?.tag || !schema.properties?.values) {
+  const getKeyName = get(parsedSorobanOperation.args, path.join("."));
+
+  if (!getKeyName?.tag || !schema.properties?.values) {
     return null;
   }
 
@@ -31,7 +34,7 @@ export const renderTupleType = ({
   return (
     <Box gap="md">
       <LabelHeading size="md" infoText={schema.description}>
-        {parsedSorobanOperation.args[name]?.tag}
+        {getKeyName?.tag}
       </LabelHeading>
 
       <Card>
@@ -44,7 +47,6 @@ export const renderTupleType = ({
               {renderer({
                 name: label,
                 schema: schema?.properties?.values as JSONSchema7,
-                // path: [...path, parsedSorobanOperation.args[name]?.tag, label],
                 path: [...path, label],
                 parsedSorobanOperation,
                 onChange,

@@ -1,5 +1,5 @@
 import type { JSONSchema7 } from "json-schema";
-import { Button, Card, Text } from "@stellar/design-system";
+import { Button, Card, Icon, Text } from "@stellar/design-system";
 import { get } from "lodash";
 
 import { jsonSchema } from "@/helpers/jsonSchema";
@@ -12,6 +12,7 @@ import type {
   JsonSchemaFormProps,
   SorobanInvokeValue,
 } from "@/types/types";
+import { arrayItem } from "@/helpers/arrayItem";
 
 export const renderArrayType = ({
   schema,
@@ -49,6 +50,7 @@ export const renderArrayType = ({
         name: nestedPath,
         schema: item,
         path: [nestedPath],
+        // path: [...path, nestedPath],
         parsedSorobanOperation,
         onChange,
       });
@@ -70,6 +72,7 @@ export const renderArrayType = ({
       {nestedArgsItems.length > 0 &&
         nestedArgsItems.map((args: any, index: number) => {
           const nestedPathTitle = [name, index].join(".");
+          const argHeader = [name, index].join("[").concat("]");
 
           return (
             <Box gap="md" key={`${name}-${index}`}>
@@ -78,19 +81,24 @@ export const renderArrayType = ({
                   {/* Map Type (scSpecTypeMap) */}
                   {jsonSchema.isSchemaObject(schema.items) &&
                   schema.items.type === "object" ? (
-                    // <LabelHeading size="lg">{nestedPathTitle}sss</LabelHeading>
+                    <>
+                      <LabelHeading size="lg">{argHeader}</LabelHeading>
 
-                    Object.keys(args).map((arg) => {
-                      const nestedPath = [index, arg].join(".");
+                      {Object.keys(args).map((arg) => {
+                        // will return the nested path for the item
+                        // ex. requests.0.address
+                        const nestedPath = [nestedPathTitle, arg].join(".");
 
-                      return renderer({
-                        name: nestedPathTitle,
-                        schema: schemaItems?.[arg] as JSONSchema7,
-                        path: [...path, nestedPath],
-                        parsedSorobanOperation,
-                        onChange,
-                      });
-                    })
+                        return renderer({
+                          name: nestedPath,
+                          schema: schemaItems?.[arg] as JSONSchema7,
+                          // path: [...path, nestedPath],
+                          path: [nestedPath],
+                          parsedSorobanOperation,
+                          onChange,
+                        });
+                      })}
+                    </>
                   ) : (
                     <Box gap="md">
                       {/* Vec Type (scSpecTypeVec) */}
@@ -104,6 +112,47 @@ export const renderArrayType = ({
                       })}
                     </Box>
                   )}
+
+                  {/* delete button */}
+                  <Box gap="sm" direction="row" align="center">
+                    <Button
+                      size="md"
+                      variant="tertiary"
+                      icon={<Icon.Trash01 />}
+                      type="button"
+                      onClick={() => {
+                        // @TODO
+                        // CBBBUV6XRCPRL4C4K7DQJSU2UL37B3XJYORXDCXLOKMZUQFH4COCNANI
+                        // Tuple isn't removing the selected item
+                        const updatedList = arrayItem.delete(
+                          get(parsedSorobanOperation.args, path),
+                          index,
+                        );
+
+                        // const nestedErrorKeys = Object.keys(
+                        //   get(parsedSorobanOperation.args, `${name}[${index}]`),
+                        // );
+
+                        // if (nestedErrorKeys.length > 0) {
+                        //   const nestedKeyPath = `${name}.${index}`;
+                        //   const newFormError = jsonSchema.deleteNestedItemError(
+                        //     nestedErrorKeys,
+                        //     formError,
+                        //     nestedKeyPath,
+                        //   );
+                        //   setFormError(newFormError);
+                        // }
+
+                        onChange({
+                          ...invokeContractBaseProps,
+                          args: {
+                            ...parsedSorobanOperation.args,
+                            [name]: updatedList,
+                          },
+                        });
+                      }}
+                    ></Button>
+                  </Box>
                 </Box>
               </Card>
             </Box>
@@ -118,14 +167,20 @@ export const renderArrayType = ({
             onClick={() => {
               const template = getTemplate({ schema });
 
-              const args = parsedSorobanOperation.args?.[name] || [];
+              const args =
+                get(parsedSorobanOperation.args, path.join(".")) || [];
               args.push(template);
+
+              const updatedList = jsonSchema.setDeepValue(
+                parsedSorobanOperation.args,
+                path.join("."),
+                args,
+              );
 
               onChange({
                 ...invokeContractBaseProps,
                 args: {
-                  ...parsedSorobanOperation.args,
-                  [name]: args,
+                  ...updatedList,
                 },
               });
             }}

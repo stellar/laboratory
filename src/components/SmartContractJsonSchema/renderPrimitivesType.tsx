@@ -5,7 +5,7 @@ import { get } from "lodash";
 
 import { jsonSchema } from "@/helpers/jsonSchema";
 
-import { validate } from "@/validate";
+// import { validate } from "@/validate";
 
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 
@@ -30,7 +30,7 @@ export const renderPrimitivesType = ({
 
   const sharedProps = {
     id: path.join("."),
-    label: name,
+    label: `${name} (${schemaType})`,
     value: get(parsedSorobanOperation.args, path.join("."))?.value || "",
   };
 

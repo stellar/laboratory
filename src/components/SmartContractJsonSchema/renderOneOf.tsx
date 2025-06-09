@@ -48,14 +48,22 @@ export const renderOneOf = ({
   );
 
   const onSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    if (path.length > 1) {
+    const pathSegments = path[0].split(".");
+
+    if (pathSegments.length > 1) {
       const keyName = Object.keys(parsedSorobanOperation.args)[0];
+
+      const updatedPath =
+        keyName === pathSegments[0]
+          ? pathSegments.slice(1).join(".")
+          : pathSegments.join(".");
+
       const updatedTupleList = jsonSchema.setDeepValue(
         parsedSorobanOperation.args[keyName],
-        path.join("."),
+        updatedPath,
         {
           tag: e.target.value,
-          values: [],
+          // values: [],
         },
       );
 
@@ -107,7 +115,7 @@ export const renderOneOf = ({
       jsonSchema.isSchemaObject(selectedSchema) &&
       jsonSchema.isTaggedUnion(selectedSchema as JSONSchema7)
         ? renderTupleType({
-            name,
+            // name,
             path,
             schema: selectedSchema as JSONSchema7,
             onChange,

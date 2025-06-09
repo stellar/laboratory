@@ -19,7 +19,6 @@ export const JsonSchemaRenderer = ({
   schema,
   path = [],
   onChange,
-  requiredFields,
   parsedSorobanOperation,
 }: JsonSchemaFormProps) => {
   const schemaType = jsonSchema.getSchemaType(schema);
@@ -61,7 +60,6 @@ export const JsonSchemaRenderer = ({
                         path={[...path, key]}
                         schema={propertySchema as JSONSchema7}
                         onChange={onChange}
-                        requiredFields={schema.required}
                         parsedSorobanOperation={parsedSorobanOperation}
                       />
                     </Card>
@@ -69,16 +67,15 @@ export const JsonSchemaRenderer = ({
                 </React.Fragment>
               );
             }
-            // console.log("[OUTSIDE] path", path);
-            // console.log("[OUTSIDE] key", key);
+
             return (
               <JsonSchemaRenderer
+                key={`${key}-${index}`}
                 name={key}
                 schema={propertySchema as JSONSchema7}
                 path={[...path, key]}
                 onChange={onChange}
                 parsedSorobanOperation={parsedSorobanOperation}
-                // requiredFields={[...(requiredFields || []), key]}
               />
             );
           },
