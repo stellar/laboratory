@@ -3,14 +3,16 @@ import { Button, Card, Select, Text, Textarea } from "@stellar/design-system";
 import { BASE_FEE, contract } from "@stellar/stellar-sdk";
 import { JSONSchema7 } from "json-schema";
 
+import { RpcErrorResponse } from "@/app/(sidebar)/transaction/submit/components/ErrorResponse";
+
 import { Box } from "@/components/layout/Box";
 import { ErrorText } from "@/components/ErrorText";
 import { JsonCodeWrapToggle } from "@/components/JsonCodeWrapToggle";
 import { JsonSchemaRenderer } from "@/components/SmartContractJsonSchema/JsonSchemaRenderer";
 import { PrettyJsonTransaction } from "@/components/PrettyJsonTransaction";
-import { RpcErrorResponse } from "@/app/(sidebar)/transaction/submit/components/ErrorResponse";
 import { TransactionSuccessCard } from "@/components/TransactionSuccessCard";
 import { WalletKitContext } from "@/components/WalletKit/WalletKitContextProvider";
+import { useFormError } from "@/components/SmartContractJsonSchema/FormErrorContext";
 
 import { TransactionBuildParams } from "@/store/createStore";
 import { useStore } from "@/store/useStore";
@@ -30,13 +32,13 @@ import { getWasmContractData } from "@/helpers/getWasmContractData";
 import { getTxnToSimulate } from "@/helpers/sorobanUtils";
 
 import {
-  AnyObject,
   ContractInfoApiResponse,
   Network,
   SorobanInvokeValue,
   EmptyObj,
   XdrFormatType,
 } from "@/types/types";
+
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 export const InvokeContractForm = ({
@@ -61,7 +63,7 @@ export const InvokeContractForm = ({
     function_name: funcName,
     args: {},
   });
-  const [formError, setFormError] = useState<AnyObject>({});
+  const { formError } = useFormError();
   const [isGetFunction, setIsGetFunction] = useState(false);
   const [dereferencedSchema, setDereferencedSchema] =
     useState<DereferencedSchemaType | null>(null);
@@ -164,7 +166,7 @@ export const InvokeContractForm = ({
         },
       );
     }
-  }, [isSubmitRpcSuccess]);
+  }, [isSubmitRpcSuccess, formValue.function_name]);
 
   useEffect(() => {
     if (isSubmitRpcError) {
@@ -175,7 +177,7 @@ export const InvokeContractForm = ({
         },
       );
     }
-  }, [isSubmitRpcError]);
+  }, [isSubmitRpcError, formValue.function_name]);
 
   useEffect(() => {
     const getContractData = async () => {

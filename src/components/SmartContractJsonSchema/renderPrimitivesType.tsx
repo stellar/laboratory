@@ -5,7 +5,7 @@ import { get } from "lodash";
 
 import { jsonSchema } from "@/helpers/jsonSchema";
 
-// import { validate } from "@/validate";
+import { validate } from "@/validate";
 
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 
@@ -18,20 +18,35 @@ export const renderPrimitivesType = ({
   path,
   parsedSorobanOperation,
   onChange,
+  formError,
+  setFormError,
+  clearFormError,
 }: {
   name: string;
   schema: Partial<JSONSchema7>;
   path: string[];
   parsedSorobanOperation: SorobanInvokeValue;
   onChange: (value: SorobanInvokeValue) => void;
+  formError: Record<string, string>;
+  setFormError: (error: Record<string, string>) => void;
+  clearFormError: (key: string) => void;
 }) => {
   const { description } = schema;
   const schemaType = jsonSchema.getSchemaType(schema);
 
+  const nestedItemLabel =
+    path.length > 0 ? jsonSchema.getNestedItemLabel(path.join(".")) : path;
+
+  const formErrorKey = [
+    parsedSorobanOperation.function_name,
+    path.join("."),
+  ].join(".");
+
   const sharedProps = {
     id: path.join("."),
-    label: `${name} (${schemaType})`,
+    label: `${nestedItemLabel} (${schemaType})`,
     value: get(parsedSorobanOperation.args, path.join("."))?.value || "",
+    error: formError[formErrorKey],
   };
 
   const invokeContractBaseProps = {
@@ -46,27 +61,6 @@ export const renderPrimitivesType = ({
     const scValType = convertSpecTypeToScValType(schemaType);
 
     if (path.length > 0) {
-      // if (jsonSchema.isTuple(schema)) {
-      //   const keyName = Object.keys(parsedSorobanOperation.args)[0];
-
-      //   const updatedTupleList = jsonSchema.setDeepValue(
-      //     parsedSorobanOperation.args[keyName],
-      //     path.join("."),
-      //     {
-      //       value: e.target.value,
-      //       type: scValType,
-      //     },
-      //   );
-
-      //   onChange({
-      //     ...invokeContractBaseProps,
-      //     args: {
-      //       ...parsedSorobanOperation.args,
-      //       [keyName]: updatedTupleList,
-      //     },
-      //   });
-      // } else
-
       const updatedList = jsonSchema.setDeepValue(
         parsedSorobanOperation.args,
         path.join("."),
@@ -83,7 +77,6 @@ export const renderPrimitivesType = ({
         },
       });
     } else {
-      // if path is not set, then set the value of the field directly
       onChange({
         ...invokeContractBaseProps,
         args: {
@@ -94,6 +87,38 @@ export const renderPrimitivesType = ({
     }
   };
 
+  const handleValidate = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    schemaType: string,
+    validateFn?:
+      | ((value: string, required?: boolean) => string | false)
+      | ((value: string, required?: boolean) => string | false)[],
+  ) => {
+    let error;
+
+    if (Array.isArray(validateFn)) {
+      const errors = validateFn.map((fn) => fn(e.target.value));
+      const hasNoError = jsonSchema.hasAnyValidationPassed(errors);
+
+      if (schemaType === "Address") {
+        error = hasNoError ? "" : "Invalid Public key or contract ID";
+      } else {
+        error = hasNoError ? "" : errors.join(" ");
+      }
+    } else {
+      error = validateFn?.(e.target.value);
+    }
+
+    if (error) {
+      setFormError({
+        ...formError,
+        [formErrorKey]: error ? error : "",
+      });
+    } else {
+      clearFormError(formErrorKey);
+    }
+  };
+
   switch (schemaType) {
     case "Address":
       return (
@@ -101,6 +126,10 @@ export const renderPrimitivesType = ({
           {...sharedProps}
           onChange={(e) => {
             handleChange(e, schemaType);
+            handleValidate(e, schemaType, [
+              validate.getPublicKeyError,
+              validate.getContractIdError,
+            ]);
           }}
           key={path.join(".")}
           infoText={description || ""}
@@ -113,10 +142,10 @@ export const renderPrimitivesType = ({
       return (
         <PositiveIntPicker
           {...sharedProps}
-          error="" // @TODO
           key={path.join(".")}
           onChange={(e) => {
             handleChange(e, schemaType);
+            handleValidate(e, schemaType, validate.getU32Error);
           }}
         />
       );
@@ -124,10 +153,10 @@ export const renderPrimitivesType = ({
       return (
         <PositiveIntPicker
           {...sharedProps}
-          error="" // @TODO
           key={path.join(".")}
           onChange={(e) => {
             handleChange(e, schemaType);
+            handleValidate(e, schemaType, validate.getU64Error);
           }}
         />
       );
@@ -135,10 +164,10 @@ export const renderPrimitivesType = ({
       return (
         <PositiveIntPicker
           {...sharedProps}
-          error="" // @TODO
           key={path.join(".")}
           onChange={(e) => {
             handleChange(e, schemaType);
+            handleValidate(e, schemaType, validate.getU128Error);
           }}
         />
       );
@@ -146,10 +175,10 @@ export const renderPrimitivesType = ({
       return (
         <PositiveIntPicker
           {...sharedProps}
-          error="" // @TODO
           key={path.join(".")}
           onChange={(e) => {
             handleChange(e, schemaType);
+            handleValidate(e, schemaType, validate.getU256Error);
           }}
         />
       );
@@ -160,6 +189,7 @@ export const renderPrimitivesType = ({
           key={path.join(".")}
           onChange={(e) => {
             handleChange(e, schemaType);
+            handleValidate(e, schemaType, validate.getI32Error);
           }}
           fieldSize="md"
         />
@@ -168,10 +198,10 @@ export const renderPrimitivesType = ({
       return (
         <Input
           {...sharedProps}
-          error="" // @TODO
           key={path.join(".")}
           onChange={(e) => {
             handleChange(e, schemaType);
+            handleValidate(e, schemaType, validate.getI64Error);
           }}
           fieldSize="md"
         />
@@ -180,10 +210,10 @@ export const renderPrimitivesType = ({
       return (
         <Input
           {...sharedProps}
-          error="" // @TODO
           key={path.join(".")}
           onChange={(e) => {
             handleChange(e, schemaType);
+            handleValidate(e, schemaType, validate.getI128Error);
           }}
           fieldSize="md"
         />
@@ -192,10 +222,10 @@ export const renderPrimitivesType = ({
       return (
         <Input
           {...sharedProps}
-          error="" // @TODO
           key={path.join(".")}
           onChange={(e) => {
             handleChange(e, schemaType);
+            handleValidate(e, schemaType, validate.getI256Error);
           }}
           fieldSize="md"
         />
@@ -205,10 +235,10 @@ export const renderPrimitivesType = ({
       return (
         <Input
           {...sharedProps}
-          error="" // @TODO
           key={path.join(".")}
           onChange={(e) => {
             handleChange(e, schemaType);
+            handleValidate(e, schemaType);
           }}
           note={<>{description}</>}
           fieldSize="md"
@@ -218,10 +248,10 @@ export const renderPrimitivesType = ({
       return (
         <Input
           {...sharedProps}
-          error="" // @TODO
           key={path.join(".")}
           onChange={(e) => {
             handleChange(e, schemaType);
+            handleValidate(e, schemaType, validate.getDataUrlError);
           }}
           fieldSize="md"
         />

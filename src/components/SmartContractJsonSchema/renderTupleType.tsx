@@ -8,14 +8,12 @@ import { JsonSchemaFormProps, SorobanInvokeValue } from "@/types/types";
 import { get } from "lodash";
 
 export const renderTupleType = ({
-  // name,
   path,
   schema,
   onChange,
   parsedSorobanOperation,
   renderer,
 }: {
-  // name: string;
   path: string[];
   schema: JSONSchema7;
   onChange: (value: SorobanInvokeValue) => void;

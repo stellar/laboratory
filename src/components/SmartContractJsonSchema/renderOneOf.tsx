@@ -115,14 +115,11 @@ export const renderOneOf = ({
       jsonSchema.isSchemaObject(selectedSchema) &&
       jsonSchema.isTaggedUnion(selectedSchema as JSONSchema7)
         ? renderTupleType({
-            // name,
             path,
             schema: selectedSchema as JSONSchema7,
             onChange,
             parsedSorobanOperation,
             renderer,
-            //   formError,
-            //   setFormError,
           })
         : null}
     </Box>

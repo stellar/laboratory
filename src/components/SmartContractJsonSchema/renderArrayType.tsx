@@ -102,7 +102,6 @@ export const renderArrayType = ({
                   ) : (
                     <Box gap="md">
                       {/* Vec Type (scSpecTypeVec) */}
-                      {/* REMOVED: <LabelHeading size="lg">{nestedPathTitle}</LabelHeading> */}
                       {renderer({
                         name: nestedPathTitle,
                         schema: schemaItems,
@@ -121,27 +120,13 @@ export const renderArrayType = ({
                       icon={<Icon.Trash01 />}
                       type="button"
                       onClick={() => {
-                        // @TODO
                         // CBBBUV6XRCPRL4C4K7DQJSU2UL37B3XJYORXDCXLOKMZUQFH4COCNANI
                         // Tuple isn't removing the selected item
+
                         const updatedList = arrayItem.delete(
-                          get(parsedSorobanOperation.args, path),
+                          get(parsedSorobanOperation.args, path.join(".")),
                           index,
                         );
-
-                        // const nestedErrorKeys = Object.keys(
-                        //   get(parsedSorobanOperation.args, `${name}[${index}]`),
-                        // );
-
-                        // if (nestedErrorKeys.length > 0) {
-                        //   const nestedKeyPath = `${name}.${index}`;
-                        //   const newFormError = jsonSchema.deleteNestedItemError(
-                        //     nestedErrorKeys,
-                        //     formError,
-                        //     nestedKeyPath,
-                        //   );
-                        //   setFormError(newFormError);
-                        // }
 
                         onChange({
                           ...invokeContractBaseProps,

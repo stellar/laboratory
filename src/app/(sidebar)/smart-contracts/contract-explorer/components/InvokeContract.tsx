@@ -3,6 +3,7 @@ import { contract } from "@stellar/stellar-sdk";
 import { useStore } from "@/store/useStore";
 
 import { Box } from "@/components/layout/Box";
+import { FormErrorProvider } from "@/components/SmartContractJsonSchema/FormErrorContext";
 
 import { ContractInfoApiResponse, EmptyObj, Network } from "@/types/types";
 
@@ -64,7 +65,9 @@ export const InvokeContract = ({
             Invoke Contract
           </Text>
 
-          {contractSpecFuncs ? renderFunctionCard() : null}
+          <FormErrorProvider>
+            {contractSpecFuncs ? renderFunctionCard() : null}
+          </FormErrorProvider>
           {contractClientError ? renderError() : null}
         </Box>
       </Card>

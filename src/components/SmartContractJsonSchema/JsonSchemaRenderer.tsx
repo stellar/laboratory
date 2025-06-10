@@ -12,8 +12,8 @@ import { JsonSchemaFormProps } from "@/types/types";
 import { renderPrimitivesType } from "./renderPrimitivesType";
 import { renderArrayType } from "./renderArrayType";
 import { renderOneOf } from "./renderOneOf";
+import { useFormError } from "./FormErrorContext";
 
-// react context gets the latest
 export const JsonSchemaRenderer = ({
   name,
   schema,
@@ -21,6 +21,7 @@ export const JsonSchemaRenderer = ({
   onChange,
   parsedSorobanOperation,
 }: JsonSchemaFormProps) => {
+  const { formError, setFormError, clearFormError } = useFormError();
   const schemaType = jsonSchema.getSchemaType(schema);
 
   // function schema always starts with an object type
@@ -112,5 +113,8 @@ export const JsonSchemaRenderer = ({
     schema,
     parsedSorobanOperation,
     onChange,
+    formError,
+    setFormError,
+    clearFormError,
   });
 };
