@@ -17,6 +17,7 @@ import {
   TxnOperation,
   OpBuildingError,
   ThemeColorType,
+  XdrFormatType,
 } from "@/types/types";
 
 export type FeeBumpParams = {
@@ -77,8 +78,10 @@ export interface Store {
   updateWalletKit: (value?: WalletKit) => void;
   setTheme: (theme: ThemeColorType) => void;
   resetStoredData: () => void;
+  isMainNavHidden: boolean;
+  toggleIsMainNavHidden: (isHidden: boolean) => void;
 
-  // Saved Smart Contract IDs view
+  // Saved Smart Contracts view
   savedContractId: string;
   setSavedContractId: (contractId: string) => void;
   clearSavedContractId: () => void;
@@ -199,7 +202,7 @@ export interface Store {
     updateXdrBlob: (blob: string) => void;
     updateJsonString: (jsonString: string) => void;
     updateXdrType: (type: string) => void;
-    updateXdrFormat: (format: string) => void;
+    updateXdrFormat: (format: XdrFormatType) => void;
     resetXdr: () => void;
     resetJsonString: () => void;
   };
@@ -375,7 +378,12 @@ export const createStore = (options: CreateStoreOptions) =>
               ...value,
             };
           }),
-        // Saved Smart Contract IDs view
+        isMainNavHidden: false,
+        toggleIsMainNavHidden: (isHidden) =>
+          set((state) => {
+            state.isMainNavHidden = isHidden;
+          }),
+        // Saved Smart Contracts view
         savedContractId: "",
         setSavedContractId: (contractId: string) =>
           set((state) => {

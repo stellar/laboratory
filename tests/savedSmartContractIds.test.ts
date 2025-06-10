@@ -1,20 +1,18 @@
 import { expect, Page, test } from "@playwright/test";
 import { MOCK_LOCAL_STORAGE, SAVED_CONTRACT_1 } from "./mock/localStorage";
 
-test.describe("Saved Smart Contract IDs Page", () => {
+test.describe("Saved Smart Contracts Page", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("http://localhost:3000/smart-contracts/saved");
   });
 
   test("Loads", async ({ page }) => {
-    await expect(page.locator("h1")).toHaveText("Saved Smart Contract IDs");
+    await expect(page.locator("h1")).toHaveText("Saved Smart Contracts");
   });
 
-  test("Show no saved smart contract IDs message", async ({ page }) => {
+  test("Show no saved smart contracts message", async ({ page }) => {
     await expect(
-      page.getByText(
-        "There are no saved smart contract IDs on Testnet network.",
-      ),
+      page.getByText("There are no saved smart contracts on Testnet network."),
     ).toBeVisible();
   });
 });
@@ -36,7 +34,7 @@ test.describe("Saved contract IDs", () => {
   test("Loads", async () => {
     await expect(
       pageContext.getByText(
-        "There are no saved smart contract IDs on Testnet network.",
+        "There are no saved smart contracts on Testnet network.",
       ),
     ).toBeHidden();
 

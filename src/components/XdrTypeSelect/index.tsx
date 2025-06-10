@@ -11,11 +11,23 @@ import * as StellarXdr from "@/helpers/StellarXdr";
 import "./styles.scss";
 
 export interface XdrTypeSelectProps {
+  xdrType?: string;
+  xdrBlob?: string;
+  onUpdateXdrType?: (type: string) => void;
   error?: string | React.ReactNode;
 }
 
-export const XdrTypeSelect = ({ error }: XdrTypeSelectProps) => {
+export const XdrTypeSelect = ({
+  xdrType,
+  xdrBlob,
+  onUpdateXdrType,
+  error,
+}: XdrTypeSelectProps) => {
   const { xdr } = useStore();
+
+  // Allow passing type and value separately
+  const _xdrType = xdrType || xdr.type;
+  const _xdrBlob = xdrBlob || xdr.blob;
 
   const [searchValue, setSearchValue] = useState("");
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
@@ -36,9 +48,9 @@ export const XdrTypeSelect = ({ error }: XdrTypeSelectProps) => {
   }, [searchValue]);
 
   useEffect(() => {
-    if (isXdrInit && xdr.blob) {
+    if (isXdrInit && _xdrBlob) {
       try {
-        const guessed = StellarXdr.guess(xdr.blob);
+        const guessed = StellarXdr.guess(_xdrBlob);
 
         setGuessedTypes(guessed.length > 0 ? guessed : []);
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -50,7 +62,7 @@ export const XdrTypeSelect = ({ error }: XdrTypeSelectProps) => {
     }
     // Not adding xdr
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [xdr.blob, isXdrInit]);
+  }, [_xdrBlob, isXdrInit]);
 
   const OptionItem = ({
     option,
@@ -73,10 +85,14 @@ export const XdrTypeSelect = ({ error }: XdrTypeSelectProps) => {
           className="XdrTypeSelect__item"
           key={option}
           onClick={() => {
-            xdr.updateXdrType(option);
+            if (onUpdateXdrType) {
+              onUpdateXdrType(option);
+            } else {
+              xdr.updateXdrType(option);
+            }
             setIsOptionsVisible(false);
           }}
-          data-is-current={xdr.type === option}
+          data-is-current={_xdrType === option}
         >
           {option}
           {guessedTypes.includes(option) ? (
@@ -141,7 +157,7 @@ export const XdrTypeSelect = ({ error }: XdrTypeSelectProps) => {
           label="XDR type"
           error={error}
           spellCheck="false"
-          value={isOptionsVisible ? searchValue : xdr.type}
+          value={isOptionsVisible ? searchValue : _xdrType}
           onChange={(e) => {
             setSearchValue(e.target.value);
           }}

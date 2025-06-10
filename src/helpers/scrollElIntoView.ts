@@ -1,7 +1,7 @@
 import { delayedAction } from "@/helpers/delayedAction";
 
 export const scrollElIntoView = (
-  scrollEl: React.MutableRefObject<HTMLDivElement | null>,
+  scrollEl: React.MutableRefObject<HTMLDivElement | HTMLAnchorElement | null>,
 ) => {
   delayedAction({
     action: () => {

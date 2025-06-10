@@ -2,6 +2,7 @@ import { useContext } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
+  Button,
   Icon,
   IconButton,
   ProjectLogo,
@@ -10,7 +11,6 @@ import {
 } from "@stellar/design-system";
 import { useStore } from "@/store/useStore";
 
-import { MainNav } from "@/components/MainNav";
 import { WindowContext } from "@/components/layout/LayoutContextProvider";
 import { NetworkSelector } from "@/components/NetworkSelector";
 import { Hydration } from "@/components/Hydration";
@@ -19,146 +19,117 @@ import { FloaterDropdown } from "@/components/FloaterDropdown";
 import { ConnectWallet } from "@/components/WalletKit/ConnectWallet";
 
 import { isExternalLink } from "@/helpers/isExternalLink";
-import { Routes } from "@/constants/routes";
 import { LOCAL_STORAGE_SAVED_THEME } from "@/constants/settings";
-import {
-  ACCOUNT_NAV_ITEMS,
-  ENDPOINTS_NAV_ITEMS,
-  SMART_CONTRACTS_NAV_ITEMS,
-  TRANSACTION_NAV_ITEMS,
-  XDR_NAV_ITEMS,
-} from "@/constants/navItems";
+import { NAV, NavItem } from "@/constants/navItems";
+
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
-const NAV = [
-  {
-    label: "View XDR",
-    subNav: XDR_NAV_ITEMS,
-  },
-  {
-    label: "Account",
-    subNav: ACCOUNT_NAV_ITEMS,
-  },
-  {
-    label: "Transactions",
-    subNav: TRANSACTION_NAV_ITEMS,
-  },
-  {
-    label: "API Explorer",
-    subNav: ENDPOINTS_NAV_ITEMS,
-  },
-  {
-    label: "Smart Contracts",
-    subNav: SMART_CONTRACTS_NAV_ITEMS,
-  },
-];
-
 export const LayoutHeader = () => {
-  const { windowWidth } = useContext(WindowContext);
-  const { setTheme } = useStore();
+  const { layoutMode } = useContext(WindowContext);
+  const { setTheme, isMainNavHidden, toggleIsMainNavHidden } = useStore();
   const route = useRouter();
   const pathname = usePathname();
-
-  // Adjusting format to remove nested sub-sections (RPC Methods, for example)
-  // We cannot have nested optgroup in select
-  const formattedNav = NAV.map((mainNav) => {
-    type NavItem = {
-      route: Routes;
-      label: string;
-      nestedItems?: { route: Routes; label: string }[];
-    };
-
-    const formatNavItems = (navItems: NavItem[]) => {
-      return navItems.map((ni) => ({
-        label: ni.label,
-        value: ni.route,
-      }));
-    };
-
-    const hasSubSection = Boolean(
-      mainNav.subNav.find((sn: any) => sn.instruction),
-    );
-
-    if (hasSubSection) {
-      const rootItems = mainNav.subNav.filter((sn: any) => !sn.instruction);
-      const subSecs = mainNav.subNav.filter((sn) => (sn as any).instruction);
-
-      const subItems = subSecs.map((ss) => {
-        const items = ss.navItems as NavItem[];
-        const hasNestedItems = Boolean(items[0]?.nestedItems?.length);
-
-        if (hasNestedItems) {
-          const nestedFormatted = items.map((i) => {
-            const nestedItems = formatNavItems(i.nestedItems!);
-
-            return {
-              groupTitle: i.label,
-              options: nestedItems,
-            };
-          });
-
-          return [
-            {
-              groupTitle: (ss as any).instruction,
-              options: [],
-            },
-            ...nestedFormatted,
-          ];
-        }
-
-        return [
-          {
-            groupTitle: (ss as any).instruction,
-            options: formatNavItems(ss.navItems),
-          },
-        ];
-      });
-
-      return [
-        {
-          groupTitle: mainNav.label,
-          options: rootItems
-            .map((ri) => formatNavItems(ri.navItems))
-            .reduce((r, c) => [...r, ...c], []),
-        },
-        ...subItems.reduce((r, c) => [...r, ...c], []),
-      ];
-    }
-
-    return [
-      {
-        groupTitle: mainNav.label,
-        options: mainNav.subNav
-          .map((sn) => formatNavItems(sn.navItems))
-          .reduce((r, c) => [...r, ...c], []),
-      },
-    ];
-  });
-
-  const flattenFormattedNav = formattedNav.reduce(
-    (res, cur) => [...res, ...cur],
-    [],
-  );
 
   const handleNavChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     route.push(event.target.value);
     trackEvent(TrackingEvent.MOBILE_NAV_CLICKED, { page: event.target.value });
   };
 
+  type MobileNavItem = {
+    label: string;
+    value: string;
+  };
+
+  type MobileNavGroup = {
+    groupTitle: string;
+    options: MobileNavItem[];
+  };
+
+  // Flatten the nav structure for mobile nav dropdown. Nested sub-navs are their own group (Horizon Endpoints methods,
+  // for example)
+  const formatNavToMobileNav = () => {
+    const processNavItem = (item: NavItem): MobileNavItem => ({
+      label: item.label,
+      value: item.route.toString(),
+    });
+
+    const processSubNav = (navItem: NavItem) => {
+      const result = navItem.subNav?.reduce(
+        (
+          acc: {
+            options: MobileNavItem[];
+            nestedOptions: (MobileNavItem | MobileNavGroup)[];
+          },
+          sn,
+        ) => {
+          if (!sn.subNav) {
+            acc.options.push(processNavItem(sn));
+            return acc;
+          }
+
+          const subGroup = {
+            groupTitle: sn.label,
+            options: sn.subNav.filter((i) => !i.subNav).map(processNavItem),
+          };
+
+          const nestedGroups = sn.subNav
+            .filter((i) => i.subNav)
+            .map((i) => ({
+              groupTitle: i.label,
+              options: i?.subNav?.map(processNavItem) || [],
+            }));
+
+          acc.nestedOptions.push(subGroup, ...nestedGroups);
+          return acc;
+        },
+        { options: [], nestedOptions: [] },
+      );
+
+      return [
+        { groupTitle: navItem.label, options: result?.options || [] },
+        ...(result?.nestedOptions || []),
+      ];
+    };
+
+    return NAV.reduce(
+      (res: (MobileNavItem | MobileNavGroup)[], cur: NavItem) =>
+        cur.subNav
+          ? [...res, ...processSubNav(cur)]
+          : [...res, processNavItem(cur)],
+      [],
+    );
+  };
+
   const renderNav = () => {
     return (
       <>
-        <option value={Routes.ROOT}>Introduction</option>
+        {formatNavToMobileNav().map(
+          (fn: MobileNavItem | MobileNavGroup, groupIdx) => {
+            if ("groupTitle" in fn) {
+              return (
+                <optgroup
+                  key={`${fn.groupTitle}-${groupIdx}`}
+                  label={fn.groupTitle}
+                >
+                  {fn.options.map((op) => (
+                    <option
+                      key={`${fn.groupTitle}-${op.value}`}
+                      value={op.value}
+                    >
+                      {op.label}
+                    </option>
+                  ))}
+                </optgroup>
+              );
+            }
 
-        {flattenFormattedNav.map((fn, groupIdx) => (
-          <optgroup key={`${fn.groupTitle}-${groupIdx}`} label={fn.groupTitle}>
-            {fn.options.map((op) => (
-              <option key={`${fn.groupTitle}-${op.value}`} value={op.value}>
-                {op.label}
+            return (
+              <option key={`${fn.value}-${groupIdx}`} value={fn.value}>
+                {fn.label}
               </option>
-            ))}
-          </optgroup>
-        ))}
+            );
+          },
+        )}
       </>
     );
   };
@@ -173,7 +144,7 @@ export const LayoutHeader = () => {
   const renderSettingsDropdown = () => {
     return (
       <FloaterDropdown
-        triggerEl={<IconButton icon={<Icon.Menu01 />} altText="Menu" />}
+        triggerEl={<IconButton icon={<Icon.Settings01 />} altText="Menu" />}
         offset={14}
       >
         <>
@@ -211,24 +182,26 @@ export const LayoutHeader = () => {
     );
   };
 
-  if (!windowWidth) {
+  if (!layoutMode) {
     return null;
   }
 
   // Mobile
-  if (windowWidth < 940) {
+  if (layoutMode === "mobile") {
     return (
       <div className="LabLayout__header">
         <header className="LabLayout__header__main">
-          <Select
-            id="mobile-nav"
-            fieldSize="md"
-            onChange={handleNavChange}
-            value={pathname || undefined}
-          >
-            {renderNav()}
-          </Select>
-
+          <div className="LabLayout__header__mobileNav">
+            <Select
+              id="mobile-nav"
+              fieldSize="md"
+              onChange={handleNavChange}
+              value={pathname || undefined}
+            >
+              {renderNav()}
+            </Select>
+            <Icon.Menu01 aria-hidden="true" />
+          </div>
           <Box gap="md" direction="row" align="center">
             <NetworkSelector />
             {renderSettingsDropdown()}
@@ -238,41 +211,35 @@ export const LayoutHeader = () => {
     );
   }
 
-  // Show hamburger menu
-  if (windowWidth < 1230) {
-    return (
-      <div className="LabLayout__header">
-        <header className="LabLayout__header__main">
+  // Desktop
+  return (
+    <div className="LabLayout__header">
+      <header className="LabLayout__header__main">
+        <Box
+          gap="md"
+          direction="row"
+          align="center"
+          addlClassName="LabLayout__header__left"
+        >
+          <Button
+            size="md"
+            variant="tertiary"
+            onClick={() => toggleIsMainNavHidden(!isMainNavHidden)}
+          >
+            <div
+              className="LabLayout__header__navIcon"
+              data-is-hidden={isMainNavHidden}
+            >
+              <Icon.Menu01 aria-hidden={!isMainNavHidden} />
+              <Icon.AlignLeft01 aria-hidden={isMainNavHidden} />
+            </div>
+          </Button>
           <ProjectLogo
             title="Lab"
             link="/"
             customAnchor={<Link href="/" prefetch={true} />}
           />
-
-          <MainNav excludeDocs={true} />
-
-          <div className="LabLayout__header__settings">
-            <Box gap="md" direction="row" align="center">
-              <NetworkSelector />
-              {renderSettingsDropdown()}
-            </Box>
-          </div>
-        </header>
-      </div>
-    );
-  }
-
-  // Desktop
-  return (
-    <div className="LabLayout__header">
-      <header className="LabLayout__header__main">
-        <ProjectLogo
-          title="Lab"
-          link="/"
-          customAnchor={<Link href="/" prefetch={true} />}
-        />
-
-        <MainNav />
+        </Box>
 
         <div className="LabLayout__header__settings">
           <Hydration>

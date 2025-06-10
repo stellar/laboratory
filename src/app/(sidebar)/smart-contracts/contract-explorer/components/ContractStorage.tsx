@@ -7,6 +7,7 @@ import { ErrorText } from "@/components/ErrorText";
 import { Box } from "@/components/layout/Box";
 import { DataTable } from "@/components/DataTable";
 import { ScValPrettyJson } from "@/components/ScValPrettyJson";
+import { PoweredByStellarExpert } from "@/components/PoweredByStellarExpert";
 
 import { useSEContractStorage } from "@/query/external/useSEContracStorage";
 import { formatEpochToDate } from "@/helpers/formatEpochToDate";
@@ -33,11 +34,13 @@ export const ContractStorage = ({
   contractId,
   networkId,
   totalEntriesCount,
+  isSourceStellarExpert,
 }: {
   isActive: boolean;
   contractId: string;
   networkId: NetworkType;
   totalEntriesCount: number | undefined;
+  isSourceStellarExpert: boolean;
 }) => {
   const isXdrInit = useIsXdrInit();
   const { transaction } = useStore();
@@ -156,7 +159,8 @@ export const ContractStorage = ({
   };
 
   return (
-    <Box gap="sm">
+    <Box gap="lg">
+      <Box gap="sm">
       <DataTable
         tableId="contract-storage"
         tableData={parsedData}
@@ -245,17 +249,20 @@ export const ContractStorage = ({
         csvFileName={contractId}
       />
 
-      {/* Max entries message */}
-      {totalEntriesCount && totalEntriesCount > parsedData.length ? (
-        <Box
-          gap="md"
-          addlClassName="FieldNote FieldNote--note FieldNote--md"
-          direction="row"
-          justify="end"
-        >
-          {`Showing the last ${CONTRACT_STORAGE_MAX_ENTRIES} entries`}
-        </Box>
-      ) : null}
+        {/* Max entries message */}
+        {totalEntriesCount && totalEntriesCount > parsedData.length ? (
+          <Box
+            gap="md"
+            addlClassName="FieldNote FieldNote--note FieldNote--md"
+            direction="row"
+            justify="end"
+          >
+            {`Showing the last ${CONTRACT_STORAGE_MAX_ENTRIES} entries`}
+          </Box>
+        ) : null}
+      </Box>
+
+      {isSourceStellarExpert ? <PoweredByStellarExpert /> : null}
     </Box>
   );
 };

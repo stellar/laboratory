@@ -4,6 +4,7 @@ import { Button, Icon } from "@stellar/design-system";
 import { CodeEditor, SupportedLanguage } from "@/components/CodeEditor";
 import { Box } from "@/components/layout/Box";
 import { WithInfoText } from "@/components/WithInfoText";
+import { PoweredByStellarExpert } from "@/components/PoweredByStellarExpert";
 
 import { useWasmBinaryFromRpc } from "@/query/useWasmBinaryFromRpc";
 
@@ -17,10 +18,12 @@ export const ContractSpec = ({
   rpcUrl,
   wasmHash,
   isActive,
+  isSourceStellarExpert,
 }: {
   rpcUrl: string;
   wasmHash: string;
   isActive: boolean;
+  isSourceStellarExpert: boolean;
 }) => {
   const [selectedFormat, setSelectedFormat] = useState<
     Record<ContractSectionName, SupportedLanguage>
@@ -166,6 +169,8 @@ export const ContractSpec = ({
           </Button>
         </WithInfoText>
       </Box>
+
+      {isSourceStellarExpert ? <PoweredByStellarExpert /> : null}
     </Box>
   );
 };
