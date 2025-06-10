@@ -25,7 +25,7 @@ import { NAV, NavItem } from "@/constants/navItems";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 export const LayoutHeader = () => {
-  const { windowWidth } = useContext(WindowContext);
+  const { layoutMode } = useContext(WindowContext);
   const { setTheme, isMainNavHidden, toggleIsMainNavHidden } = useStore();
   const route = useRouter();
   const pathname = usePathname();
@@ -182,12 +182,12 @@ export const LayoutHeader = () => {
     );
   };
 
-  if (!windowWidth) {
+  if (!layoutMode) {
     return null;
   }
 
   // Mobile
-  if (windowWidth < 940) {
+  if (layoutMode === "mobile") {
     return (
       <div className="LabLayout__header">
         <header className="LabLayout__header__main">

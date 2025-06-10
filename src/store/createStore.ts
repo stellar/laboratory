@@ -17,6 +17,7 @@ import {
   TxnOperation,
   OpBuildingError,
   ThemeColorType,
+  XdrFormatType,
 } from "@/types/types";
 
 export type FeeBumpParams = {
@@ -201,7 +202,7 @@ export interface Store {
     updateXdrBlob: (blob: string) => void;
     updateJsonString: (jsonString: string) => void;
     updateXdrType: (type: string) => void;
-    updateXdrFormat: (format: string) => void;
+    updateXdrFormat: (format: XdrFormatType) => void;
     resetXdr: () => void;
     resetJsonString: () => void;
   };

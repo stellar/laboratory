@@ -14,6 +14,7 @@ import { delayedAction } from "@/helpers/delayedAction";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { validate } from "@/validate";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
+import { XdrFormatType } from "@/types/types";
 
 export default function SimulateTransaction() {
   const { xdr, transaction, network } = useStore();
@@ -125,7 +126,7 @@ export default function SimulateTransaction() {
           label="XDR Format"
           value={xdr.format}
           onChange={(e) => {
-            xdr.updateXdrFormat(e.target.value);
+            xdr.updateXdrFormat(e.target.value as XdrFormatType);
           }}
         >
           <option id="base64" value="base64">

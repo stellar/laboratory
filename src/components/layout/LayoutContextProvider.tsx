@@ -20,7 +20,7 @@ export const LayoutContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const MAX_WIDTH = 1040;
+  const MAX_WIDTH = 940;
 
   const [layoutMode, setLayoutMode] = useState<LayoutMode>();
   const [windowWidth, setWindowWidth] = useState<number>();

@@ -105,6 +105,7 @@ export function TransactionsTable({
               </CopyText>
             </Box>
           ),
+          isOverflow: true,
         },
         { value: <Time timestamp={parseInt(tx.createdAt.toString(), 10)} /> },
         {
