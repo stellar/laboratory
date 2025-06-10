@@ -100,11 +100,15 @@ export const renderOneOf = ({
         {/* title is the tag */}
         <option value="">Select</option>
 
-        {schema.oneOf.map((oneOf) => {
+        {schema.oneOf.map((oneOf, index) => {
           if (typeof oneOf === "boolean") return null;
 
           return (
-            <option id={oneOf?.title} value={oneOf?.title} key={oneOf?.title}>
+            <option
+              id={oneOf?.title}
+              value={oneOf?.title}
+              key={`${oneOf?.title}-${index}`}
+            >
               {oneOf?.title}
             </option>
           );

@@ -281,7 +281,8 @@ export type ScValPrimitiveType =
   | "Address"
   | "ScString"
   | "ScSymbol"
-  | "DataUrl";
+  | "DataUrl"
+  | "Bool";
 
 export type JsonSchemaFormProps = {
   name: string;

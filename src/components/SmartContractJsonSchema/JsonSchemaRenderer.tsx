@@ -31,7 +31,7 @@ export const JsonSchemaRenderer = ({
 
   if (schemaType === "object") {
     return (
-      <Box gap="md">
+      <Box gap="md" key={`${name}-${path.join(".")}`}>
         {Object.entries(schema.properties || {}).map(
           ([key, propertySchema], index) => {
             const propertySchemaType = jsonSchema.getSchemaType(propertySchema);

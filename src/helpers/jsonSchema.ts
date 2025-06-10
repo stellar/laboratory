@@ -19,6 +19,7 @@ import { set } from "lodash";
  * This will update the value of requests[1].request_type
  */
 const setDeepValue = (obj: AnyObject, path: string, val: any): AnyObject => {
+  if (!obj) return {};
   const newObj = JSON.parse(JSON.stringify(obj));
   return set(newObj, path, val);
 };

@@ -32,6 +32,7 @@ const resolveNestedSchema = (schema: any, fullSchema: JSONSchema7): any => {
       "ScString",
       "ScSymbol",
       "DataUrl",
+      "Bool",
     ] as ScValPrimitiveType[];
 
     const finalSchema = isScPrimitive.includes(refPath)
@@ -57,6 +58,13 @@ const resolveNestedSchema = (schema: any, fullSchema: JSONSchema7): any => {
     return {
       ...schema,
       items: resolveNestedSchema(schema.items, fullSchema),
+    };
+  }
+
+  if (schema.type === "boolean") {
+    return {
+      ...schema,
+      type: "Bool",
     };
   }
 

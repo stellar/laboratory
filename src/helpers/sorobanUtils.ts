@@ -180,6 +180,7 @@ export const getTxnToSimulate = (
   networkPassphrase: string,
 ): { xdr: string; error: string } => {
   try {
+    console.log("value: ", value);
     const argsToScVals = getScValsFromArgs(value.args);
     const builtXdr = buildTxWithSorobanData({
       params: txnParams,
@@ -203,8 +204,9 @@ export const getTxnToSimulate = (
 };
 
 const convertObjectToScVal = (obj: Record<string, any>): xdr.ScVal => {
+  console.log("convertObjectToScVal");
   const convertedValue: Record<string, any> = {};
-  const typeHints: Record<string, [string, string]> = {};
+  const typeHints: Record<string, any> = {};
   // obj input example:
   //  {
   //    "address": {
@@ -245,9 +247,17 @@ const convertObjectToScVal = (obj: Record<string, any>): xdr.ScVal => {
   //  }
 
   for (const key in obj) {
-    convertedValue[key] = obj[key].value;
-    typeHints[key] = ["symbol", obj[key].type];
+    if (obj[key].type === "bool") {
+      convertedValue[key] = obj[key].value === "true" ? true : false;
+      typeHints[key] = ["symbol"];
+    } else {
+      convertedValue[key] = obj[key].value;
+      typeHints[key] = ["symbol", obj[key].type];
+    }
   }
+
+  console.log("convertedValue: ", convertedValue);
+  console.log("typeHints: ", typeHints);
 
   return nativeToScVal(convertedValue, { type: typeHints });
 };
@@ -257,20 +267,26 @@ const getScValsFromArgs = (args: SorobanInvokeValue["args"]): xdr.ScVal[] => {
 
   for (const argKey in args) {
     const argValue = args[argKey];
+    console.log("argValue: ", argValue);
     // Note: argValue is either an object or array of objects
     if (Array.isArray(argValue) && Object.values(argValue).length > 0) {
-      // array of objects
+      // MAP type: array of objects
       if (argValue.some((v) => typeof Object.values(v)[0] === "object")) {
         const arrayScVals = argValue.map((v) => convertObjectToScVal(v));
         scVals.push(...arrayScVals);
       } else {
+        // VEC type
         // array of primitives example:
         //   {
         //     "value": "GBPIMUEJFYS7RT23QO2ACH2JMKGXLXZI4E5ACBSQMF32RKZ5H3SVNL5F",
         //     "type": "Address"
         // }
         const arrayScVals = argValue.reduce((acc, v) => {
-          acc.push(v.value);
+          if (v.type === "bool") {
+            acc.push(Boolean(v.value));
+          } else {
+            acc.push(v.value);
+          }
           return acc;
         }, []);
 
@@ -281,10 +297,20 @@ const getScValsFromArgs = (args: SorobanInvokeValue["args"]): xdr.ScVal[] => {
         scVals.push(scVal);
       }
     } else {
-      scVals.push(nativeToScVal(argValue.value, { type: argValue.type }));
+      console.log("[ELSE] argValue: ", argValue);
+      // @TODO MAP
+
+      // PRIMITIVE
+      if (argValue.type === "bool") {
+        const boolValue = argValue.value === "true" ? true : false;
+        scVals.push(nativeToScVal(boolValue));
+      } else {
+        scVals.push(nativeToScVal(argValue.value, { type: argValue.type }));
+      }
     }
   }
 
+  console.log("scVals: ", scVals);
   return scVals;
 };
 
@@ -336,6 +362,8 @@ export const convertSpecTypeToScValType = (type: string) => {
       return "symbol";
     case "DataUrl":
       return "bytes";
+    case "Bool":
+      return "bool";
     default:
       return type;
   }

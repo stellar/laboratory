@@ -1,5 +1,5 @@
 import React from "react";
-import { Icon, Input } from "@stellar/design-system";
+import { Icon, Input, Select } from "@stellar/design-system";
 import type { JSONSchema7 } from "json-schema";
 import { get } from "lodash";
 
@@ -32,6 +32,7 @@ export const renderPrimitivesType = ({
   clearFormError: (key: string) => void;
 }) => {
   const { description } = schema;
+
   const schemaType = jsonSchema.getSchemaType(schema);
 
   const nestedItemLabel =
@@ -55,7 +56,7 @@ export const renderPrimitivesType = ({
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
     schemaType: string,
   ) => {
     const scValType = convertSpecTypeToScValType(schemaType);
@@ -229,6 +230,22 @@ export const renderPrimitivesType = ({
           }}
           fieldSize="md"
         />
+      );
+    case "Bool":
+      return (
+        <Select
+          {...sharedProps}
+          fieldSize="md"
+          onChange={(e) => {
+            handleChange(e, schemaType);
+          }}
+        >
+          <option value="" disabled={true}>
+            Select
+          </option>
+          <option value="true">true</option>
+          <option value="false">false</option>
+        </Select>
       );
     case "ScString":
     case "ScSymbol":
