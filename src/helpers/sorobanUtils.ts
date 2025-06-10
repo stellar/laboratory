@@ -180,7 +180,6 @@ export const getTxnToSimulate = (
   networkPassphrase: string,
 ): { xdr: string; error: string } => {
   try {
-    console.log("value: ", value);
     const argsToScVals = getScValsFromArgs(value.args);
     const builtXdr = buildTxWithSorobanData({
       params: txnParams,
@@ -204,7 +203,6 @@ export const getTxnToSimulate = (
 };
 
 const convertObjectToScVal = (obj: Record<string, any>): xdr.ScVal => {
-  console.log("convertObjectToScVal");
   const convertedValue: Record<string, any> = {};
   const typeHints: Record<string, any> = {};
   // obj input example:
@@ -256,9 +254,6 @@ const convertObjectToScVal = (obj: Record<string, any>): xdr.ScVal => {
     }
   }
 
-  console.log("convertedValue: ", convertedValue);
-  console.log("typeHints: ", typeHints);
-
   return nativeToScVal(convertedValue, { type: typeHints });
 };
 
@@ -267,7 +262,6 @@ const getScValsFromArgs = (args: SorobanInvokeValue["args"]): xdr.ScVal[] => {
 
   for (const argKey in args) {
     const argValue = args[argKey];
-    console.log("argValue: ", argValue);
     // Note: argValue is either an object or array of objects
     if (Array.isArray(argValue) && Object.values(argValue).length > 0) {
       // MAP type: array of objects
@@ -297,20 +291,38 @@ const getScValsFromArgs = (args: SorobanInvokeValue["args"]): xdr.ScVal[] => {
         scVals.push(scVal);
       }
     } else {
-      console.log("[ELSE] argValue: ", argValue);
-      // @TODO MAP
-
-      // PRIMITIVE
-      if (argValue.type === "bool") {
-        const boolValue = argValue.value === "true" ? true : false;
-        scVals.push(nativeToScVal(boolValue));
+      if (["value", "type"].every((key) => Object.hasOwn(argValue, key))) {
+        // Handle Primitive type
+        if (argValue.type === "bool") {
+          const boolValue = argValue.value === "true" ? true : false;
+          scVals.push(nativeToScVal(boolValue));
+        } else {
+          scVals.push(nativeToScVal(argValue.value, { type: argValue.type }));
+        }
       } else {
-        scVals.push(nativeToScVal(argValue.value, { type: argValue.type }));
+        // Handle MAP type
+        // args: {
+        //     "strukt": {
+        //         "a": {
+        //             "value": "21",
+        //             "type": "u32"
+        //         },
+        //         "b": {
+        //             "value": "true",
+        //             "type": "bool"
+        //         },
+        //         "c": {
+        //             "value": "he",
+        //             "type": "symbol"
+        //         }
+        //     }
+        // }
+        const convertedObj = convertObjectToScVal(argValue);
+        scVals.push(nativeToScVal(convertedObj));
       }
     }
   }
 
-  console.log("scVals: ", scVals);
   return scVals;
 };
 
