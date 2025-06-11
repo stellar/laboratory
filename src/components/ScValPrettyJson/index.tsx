@@ -1,17 +1,17 @@
 import { Fragment } from "react";
+import { XdrLargeInt } from "@stellar/stellar-sdk";
 import { parse, stringify } from "lossless-json";
 import { v4 as uuidv4 } from "uuid";
-import { XdrLargeInt } from "@stellar/stellar-sdk";
+
+import { SdsLink } from "@/components/SdsLink";
+import { STELLAR_EXPERT } from "@/constants/settings";
 
 import { useStore } from "@/store/useStore";
-import { getContractIdError } from "@/validate/methods/getContractIdError";
-import { STELLAR_EXPERT } from "@/constants/settings";
-import { SdsLink } from "@/components/SdsLink";
-
+import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import * as StellarXdr from "@/helpers/StellarXdr";
 import { getStellarExpertNetwork } from "@/helpers/getStellarExpertNetwork";
 import { buildContractExplorerHref } from "@/helpers/buildContractExplorerHref";
-import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
+import { getContractIdError } from "@/validate/methods/getContractIdError";
 
 import { AnyObject } from "@/types/types";
 

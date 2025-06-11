@@ -20,8 +20,7 @@ import { CONTRACT_STORAGE_MAX_ENTRIES } from "@/constants/settings";
 import { INITIAL_OPERATION } from "@/constants/transactionOperations";
 import { Routes } from "@/constants/routes";
 
-import { trackEvent } from "@/metrics/tracking";
-import { TrackingEvent } from "@/metrics/tracking";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import {
   ContractStorageProcessedItem,
