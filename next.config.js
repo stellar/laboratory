@@ -3,6 +3,11 @@ const nextConfig = {
   output: "standalone",
   distDir: "build",
   basePath: process.env.NEXT_BASE_PATH || undefined,
+  webpack: (config) => {
+    // Needed for stellar-hd-wallet
+    config.externals.push("sodium-native");
+    return config;
+  },
   // Adding client side redirects to support old URLs in case they were saved or
   // bookmarked.
   async redirects() {
@@ -69,12 +74,12 @@ const nextConfig = {
       },
       {
         source: "/endpoints/ledgers",
-        destination: "/endpoints/horizon/ledgers", 
+        destination: "/endpoints/horizon/ledgers",
         permanent: true,
       },
       {
         source: "/endpoints/ledgers/single",
-        destination: "/endpoints/horizon/ledgers/single", 
+        destination: "/endpoints/horizon/ledgers/single",
         permanent: true,
       },
       {

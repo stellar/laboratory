@@ -353,6 +353,7 @@ export interface LocalStorageSavedItem {
 export interface SavedKeypair extends LocalStorageSavedItem {
   publicKey: string;
   secretKey: string;
+  recoveryPhrase?: string;
 }
 
 export interface SavedTransaction extends LocalStorageSavedItem {

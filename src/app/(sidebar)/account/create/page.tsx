@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Text, Button, Icon, Alert } from "@stellar/design-system";
-import { Keypair } from "@stellar/stellar-sdk";
+import StellarHDWallet from "stellar-hd-wallet";
 
 import { useStore } from "@/store/useStore";
 import { useFriendBot } from "@/query/useFriendBot";
@@ -30,6 +30,7 @@ export default function CreateAccount() {
   const { reset } = account;
 
   const [secretKey, setSecretKey] = useState("");
+  const [recoveryPhrase, setRecoveryPhrase] = useState("");
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [isSaveModalVisible, setIsSaveModalVisible] = useState(false);
 
@@ -70,15 +71,23 @@ export default function CreateAccount() {
   const generateKeypair = () => {
     resetStates();
 
-    const keypair = Keypair.random();
+    // Generate 24-word mnemonic
+    const mnemonic = StellarHDWallet.generateMnemonic({
+      entropyBits: 256,
+      language: "english",
+    });
+    const wallet = StellarHDWallet.fromMnemonic(mnemonic);
+    const publicKey = wallet.getPublicKey(0);
+    const secret = wallet.getSecret(0);
 
     if (IS_TESTING_NETWORK) {
-      account.updateKeypair(keypair.publicKey(), keypair.secret());
+      account.updateKeypair(publicKey, secret, mnemonic);
     } else {
-      account.updateKeypair(keypair.publicKey());
+      account.updateKeypair(publicKey);
     }
 
-    setSecretKey(keypair.secret());
+    setSecretKey(secret);
+    setRecoveryPhrase(mnemonic);
 
     trackEvent(TrackingEvent.ACCOUNT_CREATE_GENERATE_KEYPAIR);
   };
@@ -159,6 +168,9 @@ export default function CreateAccount() {
                 <GenerateKeypair
                   publicKey={account.publicKey}
                   secretKey={IS_TESTING_NETWORK ? account.secretKey : secretKey}
+                  recoveryPhrase={
+                    IS_TESTING_NETWORK ? account.recoveryPhrase : recoveryPhrase
+                  }
                 />
               </div>
             </ExpandBox>
@@ -202,7 +214,10 @@ export default function CreateAccount() {
         itemTitle="Keypair"
         itemProps={{
           publicKey: account.publicKey,
-          secretKey: secretKey,
+          secretKey: IS_TESTING_NETWORK ? account.secretKey : secretKey,
+          recoveryPhrase: IS_TESTING_NETWORK
+            ? account.recoveryPhrase
+            : recoveryPhrase,
         }}
         allSavedItems={localStorageSavedKeypairs.get()}
         isVisible={isSaveModalVisible}
