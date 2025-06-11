@@ -9,6 +9,8 @@ import { jsonSchema } from "@/helpers/jsonSchema";
 import { JsonSchemaFormProps, SorobanInvokeValue } from "@/types/types";
 import { renderTupleType } from "./renderTupleType";
 
+// oneOf is used for union and enum types
+// https://github.com/stellar/js-stellar-sdk/blob/master/src/contract/spec.ts
 export const renderOneOf = ({
   name,
   schema,
@@ -81,7 +83,7 @@ export const renderOneOf = ({
           ...parsedSorobanOperation.args,
           [name]: {
             tag: e.target.value,
-            values: [],
+            // values: [],
           },
         },
       });

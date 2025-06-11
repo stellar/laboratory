@@ -202,6 +202,20 @@ export const getTxnToSimulate = (
   }
 };
 
+const convertEnumToScVal = (obj: Record<string, any>) => {
+  if (obj.tag && obj.values) {
+    const tagVal = nativeToScVal(obj.tag, { type: "symbol" });
+    const valuesVal = obj.values.map((v: any) => {
+      return nativeToScVal(getScValsFromArgs([v])[0]);
+    });
+
+    return nativeToScVal([tagVal, ...valuesVal]);
+  }
+
+  const tagVec = [obj.tag];
+  return nativeToScVal(tagVec, { type: "symbol" });
+};
+
 const convertObjectToScVal = (obj: Record<string, any>): xdr.ScVal => {
   const convertedValue: Record<string, any> = {};
   const typeHints: Record<string, any> = {};
@@ -258,17 +272,29 @@ const convertObjectToScVal = (obj: Record<string, any>): xdr.ScVal => {
 };
 
 const getScValsFromArgs = (args: SorobanInvokeValue["args"]): xdr.ScVal[] => {
+  console.log("[getScValsFromArgs] args: ", args);
+
   const scVals: xdr.ScVal[] = [];
 
   for (const argKey in args) {
     const argValue = args[argKey];
+
     // Note: argValue is either an object or array of objects
     if (Array.isArray(argValue) && Object.values(argValue).length > 0) {
       // MAP type: array of objects
       if (argValue.some((v) => typeof Object.values(v)[0] === "object")) {
-        const arrayScVals = argValue.map((v) => convertObjectToScVal(v));
+        console.log("MEOW");
+        const arrayScVals = argValue.map((v) => {
+          if (v.tag) {
+            const test = convertEnumToScVal(v);
+            return test;
+          }
+          return convertObjectToScVal(v);
+        });
+        console.log("arrayScVals: ", arrayScVals);
         scVals.push(...arrayScVals);
       } else {
+        console.log("ELSE within argvalue");
         // VEC type
         // array of primitives example:
         //   {
@@ -276,8 +302,9 @@ const getScValsFromArgs = (args: SorobanInvokeValue["args"]): xdr.ScVal[] => {
         //     "type": "Address"
         // }
         const arrayScVals = argValue.reduce((acc, v) => {
+          console.log("arrayScVals v: ", v);
           if (v.type === "bool") {
-            acc.push(Boolean(v.value));
+            acc.push(v.value === "true" ? true : false);
           } else {
             acc.push(v.value);
           }
@@ -291,7 +318,9 @@ const getScValsFromArgs = (args: SorobanInvokeValue["args"]): xdr.ScVal[] => {
         scVals.push(scVal);
       }
     } else {
+      console.log("NOT ARRAY ELSE WORLD:");
       if (["value", "type"].every((key) => Object.hasOwn(argValue, key))) {
+        console.log("NOT ARRAY ELSE WORLD: primitive");
         // Handle Primitive type
         if (argValue.type === "bool") {
           const boolValue = argValue.value === "true" ? true : false;
@@ -299,7 +328,18 @@ const getScValsFromArgs = (args: SorobanInvokeValue["args"]): xdr.ScVal[] => {
         } else {
           scVals.push(nativeToScVal(argValue.value, { type: argValue.type }));
         }
+      } else if (argValue.tag) {
+        console.log("NOT ARRAY ELSE WORLD: else if");
+
+        const convertedObj = convertEnumToScVal(argValue);
+        console.log("NOT ARRAY ELSE WORLD: else if scVals: ", scVals);
+        console.log(
+          "NOT ARRAY ELSE WORLD: else if convertedObj: ",
+          convertedObj,
+        );
+        scVals.push(convertedObj);
       } else {
+        console.log("NOT ARRAY ELSE WORLD: else else");
         // Handle MAP type
         // args: {
         //     "strukt": {
@@ -317,12 +357,14 @@ const getScValsFromArgs = (args: SorobanInvokeValue["args"]): xdr.ScVal[] => {
         //         }
         //     }
         // }
+
         const convertedObj = convertObjectToScVal(argValue);
         scVals.push(nativeToScVal(convertedObj));
       }
     }
   }
 
+  console.log("[FINAL]scVals: ", scVals);
   return scVals;
 };
 
