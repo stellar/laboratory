@@ -180,7 +180,7 @@ export const getTxnToSimulate = (
   networkPassphrase: string,
 ): { xdr: string; error: string } => {
   try {
-    const argsToScVals = getScValsFromArgs(value.args);
+    const argsToScVals = getScValsFromArgs(value.args, []);
     const builtXdr = buildTxWithSorobanData({
       params: txnParams,
       sorobanOp: {
@@ -202,16 +202,18 @@ export const getTxnToSimulate = (
   }
 };
 
-const convertEnumToScVal = (obj: Record<string, any>) => {
+const convertEnumToScVal = (obj: Record<string, any>, scVals?: xdr.ScVal[]) => {
+  // TUPLE CASE
   if (obj.tag && obj.values) {
     const tagVal = nativeToScVal(obj.tag, { type: "symbol" });
     const valuesVal = obj.values.map((v: any) => {
-      return nativeToScVal(getScValsFromArgs([v])[0]);
+      return nativeToScVal(getScValsFromArgs([v], scVals || [])[0]);
     });
 
     return nativeToScVal([tagVal, ...valuesVal]);
   }
 
+  // ENUM CASE
   const tagVec = [obj.tag];
   return nativeToScVal(tagVec, { type: "symbol" });
 };
@@ -271,19 +273,39 @@ const convertObjectToScVal = (obj: Record<string, any>): xdr.ScVal => {
   return nativeToScVal(convertedValue, { type: typeHints });
 };
 
-const getScValsFromArgs = (args: SorobanInvokeValue["args"]): xdr.ScVal[] => {
-  console.log("[getScValsFromArgs] args: ", args);
+const getScValsFromArgs = (
+  args: SorobanInvokeValue["args"],
+  scVals: xdr.ScVal[] = [],
+): xdr.ScVal[] => {
+  // ENUM or TUPLE CASE
+  if (Object.values(args).some((v) => v.tag)) {
+    const enumScVals = Object.values(args).map((v) => {
+      return convertEnumToScVal(v, scVals);
+    });
 
-  const scVals: xdr.ScVal[] = [];
+    return enumScVals;
+  }
+
+  if (Object.values(args).every((v: any) => v.type && v.value)) {
+    const primitiveScVals = Object.values(args).map((v) => {
+      if (v.type === "bool") {
+        const boolValue = v.value === "true" ? true : false;
+        return nativeToScVal(boolValue);
+      } else {
+        return nativeToScVal(v.value, { type: v.type });
+      }
+    });
+
+    return primitiveScVals;
+  }
 
   for (const argKey in args) {
     const argValue = args[argKey];
 
-    // Note: argValue is either an object or array of objects
-    if (Array.isArray(argValue) && Object.values(argValue).length > 0) {
-      // MAP type: array of objects
+    // VEC CASE
+    if (Array.isArray(argValue)) {
+      // VEC CASE #1: array of objects
       if (argValue.some((v) => typeof Object.values(v)[0] === "object")) {
-        console.log("MEOW");
         const arrayScVals = argValue.map((v) => {
           if (v.tag) {
             const test = convertEnumToScVal(v);
@@ -291,80 +313,54 @@ const getScValsFromArgs = (args: SorobanInvokeValue["args"]): xdr.ScVal[] => {
           }
           return convertObjectToScVal(v);
         });
-        console.log("arrayScVals: ", arrayScVals);
+
         scVals.push(...arrayScVals);
-      } else {
-        console.log("ELSE within argvalue");
-        // VEC type
-        // array of primitives example:
-        //   {
-        //     "value": "GBPIMUEJFYS7RT23QO2ACH2JMKGXLXZI4E5ACBSQMF32RKZ5H3SVNL5F",
-        //     "type": "Address"
-        // }
-        const arrayScVals = argValue.reduce((acc, v) => {
-          console.log("arrayScVals v: ", v);
-          if (v.type === "bool") {
-            acc.push(v.value === "true" ? true : false);
-          } else {
-            acc.push(v.value);
-          }
-          return acc;
-        }, []);
-
-        const scVal = nativeToScVal(arrayScVals, {
-          type: argValue[0].type,
-        });
-
-        scVals.push(scVal);
+        return scVals;
       }
-    } else {
-      console.log("NOT ARRAY ELSE WORLD:");
-      if (["value", "type"].every((key) => Object.hasOwn(argValue, key))) {
-        console.log("NOT ARRAY ELSE WORLD: primitive");
-        // Handle Primitive type
-        if (argValue.type === "bool") {
-          const boolValue = argValue.value === "true" ? true : false;
-          scVals.push(nativeToScVal(boolValue));
+
+      // VEC CASE #2: array of primitives
+      const arrayScVals = argValue.reduce((acc, v) => {
+        if (v.type === "bool") {
+          acc.push(v.value === "true" ? true : false);
         } else {
-          scVals.push(nativeToScVal(argValue.value, { type: argValue.type }));
+          acc.push(v.value);
         }
-      } else if (argValue.tag) {
-        console.log("NOT ARRAY ELSE WORLD: else if");
+        return acc;
+      }, []);
 
-        const convertedObj = convertEnumToScVal(argValue);
-        console.log("NOT ARRAY ELSE WORLD: else if scVals: ", scVals);
-        console.log(
-          "NOT ARRAY ELSE WORLD: else if convertedObj: ",
-          convertedObj,
-        );
-        scVals.push(convertedObj);
-      } else {
-        console.log("NOT ARRAY ELSE WORLD: else else");
-        // Handle MAP type
-        // args: {
-        //     "strukt": {
-        //         "a": {
-        //             "value": "21",
-        //             "type": "u32"
-        //         },
-        //         "b": {
-        //             "value": "true",
-        //             "type": "bool"
-        //         },
-        //         "c": {
-        //             "value": "he",
-        //             "type": "symbol"
-        //         }
-        //     }
-        // }
+      // all values in VEC must b e the same type
+      const scVal = nativeToScVal(arrayScVals, {
+        type: argValue[0].type,
+      });
 
-        const convertedObj = convertObjectToScVal(argValue);
-        scVals.push(nativeToScVal(convertedObj));
-      }
+      scVals.push(scVal);
+      return scVals;
+    }
+
+    // handles Object of objects (strukt_hel example)
+    // {
+    //     "strukt": {
+    //       "a": {
+    //           "value": "4",
+    //           "type": "u32"
+    //       },
+    //       "b": {
+    //           "value": "true",
+    //           "type": "bool"
+    //       },
+    //       "c": {
+    //           "value": "ew",
+    //           "type": "symbol"
+    //       }
+    //   }
+    // }
+    if (Object.values(argValue).every((v: any) => v.type && v.value)) {
+      const convertedObj = convertObjectToScVal(argValue);
+      scVals.push(nativeToScVal(convertedObj));
+      return scVals;
     }
   }
 
-  console.log("[FINAL]scVals: ", scVals);
   return scVals;
 };
 
