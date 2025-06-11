@@ -2,6 +2,7 @@ import { test, expect, Page } from "@playwright/test";
 import {
   MOCK_LOCAL_STORAGE,
   SAVED_ACCOUNT_1,
+  SAVED_ACCOUNT_1_RECOVERY_PHRASE,
   SAVED_ACCOUNT_1_SECRET,
   SAVED_ACCOUNT_2,
 } from "./mock/localStorage";
@@ -83,6 +84,9 @@ test.describe("Saved Keypairs Page", () => {
       );
       await expect(keypairItem.getByTestId("saved-keypair-sk")).toHaveValue(
         SAVED_ACCOUNT_1_SECRET,
+      );
+      await expect(keypairItem.getByTestId("saved-keypair-rp")).toHaveValue(
+        SAVED_ACCOUNT_1_RECOVERY_PHRASE,
       );
       await expect(
         keypairItem.getByText("Balance: 10000.0000000 XLM", { exact: true }),
