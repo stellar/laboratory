@@ -299,9 +299,11 @@ const getScValsFromArgs = (
       if (v.type === "bool") {
         const boolValue = v.value === "true" ? true : false;
         return nativeToScVal(boolValue);
-      } else {
-        return nativeToScVal(v.value, { type: v.type });
       }
+      if (v.type === "bytes") {
+        return nativeToScVal(new Uint8Array(Buffer.from(v.value, "base64")));
+      }
+      return nativeToScVal(v.value, { type: v.type });
     });
 
     return primitiveScVals;
