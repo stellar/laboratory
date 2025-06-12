@@ -309,7 +309,7 @@ const getScValsFromArgs = (
     return primitiveScVals;
   }
 
-  // ENUM or TUPLE CASE
+  // ENUM (VOID AND COMPLEX ONE LIKE TUPLE) CASE
   if (Object.values(args).some((v) => v.tag)) {
     const enumScVals = Object.values(args).map((v) => {
       return convertEnumToScVal(v, scVals);
@@ -351,22 +351,54 @@ const getScValsFromArgs = (
         return scVals;
       }
 
-      // VEC CASE #2: array of primitives
-      const arrayScVals = argValue.reduce((acc, v) => {
-        if (v.type === "bool") {
-          acc.push(v.value === "true" ? true : false);
-        } else {
-          acc.push(v.value);
-        }
-        return acc;
-      }, []);
-
-      const scVal = nativeToScVal(arrayScVals, {
-        type: argValue[0].type,
+      const isVecArray = argValue.every((v) => {
+        return v.type === argValue[0].type;
       });
 
-      scVals.push(scVal);
-      return scVals;
+      // VEC CASE #2: array of primitives
+      if (isVecArray) {
+        const arrayScVals = argValue.reduce((acc, v) => {
+          if (v.type === "bool") {
+            acc.push(v.value === "true" ? true : false);
+          } else if (v.type === "bytes") {
+            acc.push(new Uint8Array(Buffer.from(v.value, "base64")));
+          } else {
+            acc.push(v.value);
+          }
+          return acc;
+        }, []);
+
+        const scVal = nativeToScVal(arrayScVals, {
+          type: argValue[0].type,
+        });
+
+        scVals.push(scVal);
+        return scVals;
+      }
+
+      // TUPLE CASE
+      const isTupleArray = argValue.every((v: any) => v.type && v.value);
+      if (isTupleArray) {
+        const tupleScVals = argValue.map((v) => {
+          if (v.type === "bool") {
+            const boolValue = v.value === "true" ? true : false;
+            return nativeToScVal(boolValue);
+          }
+          if (v.type === "bytes") {
+            return nativeToScVal(
+              new Uint8Array(Buffer.from(v.value, "base64")),
+            );
+          }
+          return nativeToScVal(v.value, { type: v.type });
+        });
+
+        // JS SDK's nativeToScval doesn't support an array of different types
+        // so we need to use xdr.ScVal.scvVec
+        const tupleVec = xdr.ScVal.scvVec(tupleScVals);
+
+        scVals.push(tupleVec);
+        return scVals;
+      }
     }
 
     // OBJECT CASE
