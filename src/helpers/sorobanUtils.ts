@@ -273,19 +273,27 @@ const convertObjectToScVal = (obj: Record<string, any>): xdr.ScVal => {
   return nativeToScVal(convertedValue, { type: typeHints });
 };
 
+const convertObjectToMap = (
+  mapArray: any,
+): { mapVal: Record<string, any>; mapType: Record<string, any> } => {
+  const mapVal = mapArray.reduce((acc: any, pair: any) => {
+    acc[pair["0"].value] = pair["1"].value === "true" ? true : false;
+    return acc;
+  }, {});
+
+  const mapType = mapArray.reduce((acc: any, pair: any) => {
+    acc[pair["0"].value] = [pair["0"].type, pair["1"].type];
+    return acc;
+  }, {});
+
+  return { mapVal, mapType };
+};
+
 const getScValsFromArgs = (
   args: SorobanInvokeValue["args"],
   scVals: xdr.ScVal[] = [],
 ): xdr.ScVal[] => {
-  // ENUM or TUPLE CASE
-  if (Object.values(args).some((v) => v.tag)) {
-    const enumScVals = Object.values(args).map((v) => {
-      return convertEnumToScVal(v, scVals);
-    });
-
-    return enumScVals;
-  }
-
+  // PRIMITIVE CASE
   if (Object.values(args).every((v: any) => v.type && v.value)) {
     const primitiveScVals = Object.values(args).map((v) => {
       if (v.type === "bool") {
@@ -299,17 +307,40 @@ const getScValsFromArgs = (
     return primitiveScVals;
   }
 
+  // ENUM or TUPLE CASE
+  if (Object.values(args).some((v) => v.tag)) {
+    const enumScVals = Object.values(args).map((v) => {
+      return convertEnumToScVal(v, scVals);
+    });
+
+    return enumScVals;
+  }
+
   for (const argKey in args) {
     const argValue = args[argKey];
 
-    // VEC CASE
+    // Check if it's an array of map objects
     if (Array.isArray(argValue)) {
+      // Check if each object in the array has the map structure (key-value pairs with type)
+      const isMapArray = argValue.every((obj) =>
+        Object.values(obj).every(
+          (v) => v && typeof v === "object" && "value" in v && "type" in v,
+        ),
+      );
+
+      // MAP CASE
+      if (isMapArray) {
+        const { mapVal, mapType } = convertObjectToMap(argValue);
+        const mapScVal = nativeToScVal(mapVal, { type: mapType });
+        scVals.push(mapScVal);
+        return scVals;
+      }
+
       // VEC CASE #1: array of objects
       if (argValue.some((v) => typeof Object.values(v)[0] === "object")) {
         const arrayScVals = argValue.map((v) => {
           if (v.tag) {
-            const test = convertEnumToScVal(v);
-            return test;
+            return convertEnumToScVal(v);
           }
           return convertObjectToScVal(v);
         });
@@ -328,7 +359,6 @@ const getScValsFromArgs = (
         return acc;
       }, []);
 
-      // all values in VEC must b e the same type
       const scVal = nativeToScVal(arrayScVals, {
         type: argValue[0].type,
       });
@@ -337,23 +367,7 @@ const getScValsFromArgs = (
       return scVals;
     }
 
-    // handles Object of objects (strukt_hel example)
-    // {
-    //     "strukt": {
-    //       "a": {
-    //           "value": "4",
-    //           "type": "u32"
-    //       },
-    //       "b": {
-    //           "value": "true",
-    //           "type": "bool"
-    //       },
-    //       "c": {
-    //           "value": "ew",
-    //           "type": "symbol"
-    //       }
-    //   }
-    // }
+    // OBJECT CASE
     if (Object.values(argValue).every((v: any) => v.type && v.value)) {
       const convertedObj = convertObjectToScVal(argValue);
       scVals.push(nativeToScVal(convertedObj));
