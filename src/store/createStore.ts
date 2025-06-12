@@ -90,11 +90,16 @@ export interface Store {
   account: {
     publicKey: string | undefined;
     secretKey: string | undefined;
+    recoveryPhrase: string | undefined;
     generatedMuxedAccountInput: Partial<MuxedAccount> | EmptyObj;
     parsedMuxedAccountInput: string | undefined;
     generatedMuxedAccount: MuxedAccount | EmptyObj;
     parsedMuxedAccount: MuxedAccount | EmptyObj;
-    updateKeypair: (publicKey: string, secretKey?: string) => void;
+    updateKeypair: (
+      publicKey: string,
+      secretKey?: string,
+      recoveryPhrase?: string,
+    ) => void;
     updateGeneratedMuxedAccountInput: (value: Partial<MuxedAccount>) => void;
     updateParsedMuxedAccountInput: (value: string) => void;
     updateGeneratedMuxedAccount: (value: MuxedAccount) => void;
@@ -307,6 +312,7 @@ const initTransactionState = {
 const initAccountState = {
   publicKey: undefined,
   secretKey: undefined,
+  recoveryPhrase: undefined,
   generatedMuxedAccountInput: {},
   parsedMuxedAccountInput: undefined,
   generatedMuxedAccount: {},
@@ -421,10 +427,15 @@ export const createStore = (options: CreateStoreOptions) =>
                 ...value,
               };
             }),
-          updateKeypair: (publicKey: string, secretKey?: string) =>
+          updateKeypair: (
+            publicKey: string,
+            secretKey?: string,
+            recoveryPhrase?: string,
+          ) =>
             set((state) => {
               state.account.publicKey = publicKey;
               state.account.secretKey = secretKey || "";
+              state.account.recoveryPhrase = recoveryPhrase || "";
             }),
           reset: () =>
             set((state) => {

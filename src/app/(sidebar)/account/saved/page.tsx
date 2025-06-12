@@ -330,6 +330,19 @@ const SavedKeypairItem = ({
         isPassword
       />
 
+      {keypair.recoveryPhrase ? (
+        <Input
+          id={`saved-kp-${keypair.timestamp}-rp`}
+          data-testid="saved-keypair-rp"
+          fieldSize="md"
+          value={keypair.recoveryPhrase}
+          readOnly
+          leftElement="Recovery Phrase"
+          copyButton={{ position: "right" }}
+          isPassword
+        />
+      ) : null}
+
       <Box
         gap="lg"
         direction="row"

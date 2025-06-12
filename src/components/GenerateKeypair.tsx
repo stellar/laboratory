@@ -3,9 +3,11 @@ import { Input } from "@stellar/design-system";
 export const GenerateKeypair = ({
   publicKey,
   secretKey,
+  recoveryPhrase,
 }: {
   publicKey: string | undefined;
   secretKey: string | undefined;
+  recoveryPhrase: string | undefined;
 }) => {
   return (
     <div className="Account__keypair">
@@ -29,6 +31,20 @@ export const GenerateKeypair = ({
           fieldSize="md"
           label="Secret Key"
           value={secretKey}
+          isPassword
+          copyButton={{
+            position: "right",
+          }}
+        />
+      )}
+
+      {recoveryPhrase && (
+        <Input
+          readOnly
+          id="generate-keypair-recovery-phrase"
+          fieldSize="md"
+          label="Recovery Phrase"
+          value={recoveryPhrase}
           isPassword
           copyButton={{
             position: "right",

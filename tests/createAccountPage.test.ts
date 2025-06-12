@@ -13,9 +13,10 @@ test.describe("Create Account Page", () => {
     page,
   }) => {
     const buttonContainer = page.getByTestId("createAccount-buttons");
-    expect(buttonContainer.getByText("Generate keypair")).toBeVisible;
-    expect(buttonContainer.getByText("Fund account with Friendbot"))
-      .toBeVisible;
+    await expect(buttonContainer.getByText("Generate keypair")).toBeVisible();
+    await expect(
+      buttonContainer.getByText("Fund account with Friendbot"),
+    ).toBeVisible();
   });
 
   test("Test 'Generate keypair' button", async ({ page }) => {
@@ -27,6 +28,10 @@ test.describe("Create Account Page", () => {
     await expect(
       page.locator("input[id='generate-keypair-secretkey']"),
     ).toHaveValue(/^S/);
+    // Match any 24 words separated by space
+    await expect(
+      page.locator("input[id='generate-keypair-recovery-phrase']"),
+    ).toHaveValue(/^([a-zA-Z]+\s){23}[a-zA-Z]+$/);
   });
 
   test("Successfully funds an account when clicking 'Fund account' with a valid public key", async ({
