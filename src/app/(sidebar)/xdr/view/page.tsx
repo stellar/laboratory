@@ -27,11 +27,10 @@ import { CopyJsonPayloadButton } from "@/components/CopyJsonPayloadButton";
 import { PageCard } from "@/components/layout/PageCard";
 import { JsonCodeWrapToggle } from "@/components/JsonCodeWrapToggle";
 
-import * as StellarXdr from "@/helpers/StellarXdr";
-import { parseToLosslessJson } from "@/helpers/parseToLosslessJson";
 import { delayedAction } from "@/helpers/delayedAction";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { prettifyJsonString } from "@/helpers/prettifyJsonString";
+import { decodeXdr } from "@/helpers/decodeXdr";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { useCodeWrappedSetting } from "@/hooks/useCodeWrappedSetting";
@@ -67,57 +66,16 @@ export default function ViewXdr() {
 
   const isFetchingLatestTxn = isLatestTxnFetching || isLatestTxnLoading;
 
-  const maybeStreamXdr = (
-    xdrType: string,
-    xdrString: string,
-    originalError: any,
-  ) => {
-    try {
-      const streamXdrJson = StellarXdr.decode_stream(xdrType, xdrString);
-
-      trackEvent(TrackingEvent.XDR_TO_JSON_STREAM_SUCCESS, {
-        xdrType: xdr.type,
-      });
-
-      return {
-        jsonString: JSON.stringify(streamXdrJson),
-        jsonArray: streamXdrJson.map((s) => parseToLosslessJson(s)),
-        error: "",
-      };
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (e) {
-      trackEvent(TrackingEvent.XDR_FROM_JSON_ERROR, { xdrType: xdr.type });
-
-      // If the stream fails, assume that the XDR is invalid and return the original error.
-      return {
-        jsonString: "",
-        error: `Unable to decode input as ${xdrType}: ${originalError}. Select another XDR type.`,
-      };
-    }
-  };
-
-  const xdrDecodeJson = () => {
-    if (!(isXdrInit && xdr.blob && xdr.type)) {
-      return null;
-    }
-
-    try {
-      const xdrJson = StellarXdr.decode(xdr.type, xdr.blob);
-
-      trackEvent(TrackingEvent.XDR_TO_JSON_SUCCESS, { xdrType: xdr.type });
-
-      return {
-        jsonString: xdrJson,
-        jsonArray: [parseToLosslessJson(xdrJson)],
-        error: "",
-      };
-    } catch (e) {
-      // It's possible that the XDR is a stream
-      return maybeStreamXdr(xdr.type, xdr.blob, e);
-    }
-  };
-
-  const xdrJsonDecoded = xdrDecodeJson();
+  const xdrJsonDecoded = decodeXdr({
+    xdrType: xdr.type,
+    xdrBlob: xdr.blob,
+    isReady: isXdrInit,
+    trackingEvents: {
+      success: TrackingEvent.XDR_TO_JSON_SUCCESS,
+      successStream: TrackingEvent.XDR_TO_JSON_STREAM_SUCCESS,
+      error: TrackingEvent.XDR_FROM_JSON_ERROR,
+    },
+  });
 
   const txnFromXdr = () => {
     try {

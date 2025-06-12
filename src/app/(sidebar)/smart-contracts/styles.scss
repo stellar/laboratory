@@ -181,13 +181,12 @@
   }
 }
 
-// Saved Smart Contract IDs
+// Saved Smart Contracts
 .SavedContractItem {
   .Input__side-element--left {
     width: pxToRem(76px);
   }
 }
-
 
 .NoContractLoaded {
   background-color: var(--sds-clr-gray-03);
@@ -205,5 +204,14 @@
     stroke: var(--sds-clr-gray-11);
     width: pxToRem(14px);
     height: pxToRem(14px);
+  }
+}
+
+.ContractInvoke {
+  .Select {
+    select {
+      font-weight: var(--sds-fw-semi-bold);
+      padding-right: pxToRem(32px);
+    }
   }
 }

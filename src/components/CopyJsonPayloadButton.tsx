@@ -2,8 +2,12 @@ import { Button, Icon, CopyText } from "@stellar/design-system";
 
 export const CopyJsonPayloadButton = ({
   jsonString,
+  label = "Copy JSON",
+  isDisabled,
 }: {
   jsonString: string;
+  label?: string;
+  isDisabled?: boolean;
 }) => {
   return (
     <CopyText textToCopy={jsonString}>
@@ -15,8 +19,9 @@ export const CopyJsonPayloadButton = ({
         onClick={(e) => {
           e.preventDefault();
         }}
+        disabled={isDisabled}
       >
-        Copy JSON
+        {label}
       </Button>
     </CopyText>
   );

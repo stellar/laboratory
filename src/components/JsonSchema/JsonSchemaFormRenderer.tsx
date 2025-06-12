@@ -12,6 +12,7 @@ import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 import { LabelHeading } from "@/components/LabelHeading";
 
 import { AnyObject, SorobanInvokeValue } from "@/types/types";
+import { convertSpecTypeToScValType } from "@/helpers/sorobanUtils";
 
 export const JsonSchemaFormRenderer = ({
   name,
@@ -76,10 +77,12 @@ export const JsonSchemaFormRenderer = ({
      * This will update the value of requests[1].request_type
      */
 
+    const scValType = convertSpecTypeToScValType(schemaType);
+
     if (path.length > 0) {
       const updatedList = set(parsedSorobanOperation.args, path.join("."), {
         value: e.target.value,
-        type: schemaType,
+        type: scValType,
       });
       onChange({
         ...invokeContractBaseProps,
@@ -93,7 +96,7 @@ export const JsonSchemaFormRenderer = ({
         ...invokeContractBaseProps,
         args: {
           ...parsedSorobanOperation.args,
-          [name]: { value: e.target.value, type: schemaType },
+          [name]: { value: e.target.value, type: scValType },
         },
       });
     }

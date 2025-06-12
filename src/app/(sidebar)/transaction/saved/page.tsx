@@ -253,7 +253,7 @@ export default function SavedTransactions() {
         title="Looking for your saved requests?"
         placement="inline"
       >
-        <NextLink href={`${Routes.ENDPOINTS_SAVED}`} sds-variant="primary">
+        <NextLink href={`${Routes.SAVED_ENDPOINTS}`} sds-variant="primary">
           See saved requests
         </NextLink>
       </Alert>

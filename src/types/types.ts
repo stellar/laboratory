@@ -331,6 +331,8 @@ export type ConfigSettingIdType =
   | "bucketlist_size_window"
   | "eviction_iterator";
 
+export type XdrFormatType = "json" | "base64";
+
 // =============================================================================
 // Local storage items
 // =============================================================================
@@ -483,6 +485,7 @@ export type DataTableCell = {
   value: React.ReactNode;
   isBold?: boolean;
   isWrap?: boolean;
+  isOverflow?: boolean;
 };
 
 // =============================================================================
