@@ -225,21 +225,6 @@ export const ContractStorage = ({
             },
           ]}
           cssGridTemplateColumns="minmax(210px, 2fr) minmax(210px, 2fr) minmax(100px, 0.8fr) minmax(110px, 0.8fr) minmax(114px, 0.7fr)"
-          customHeaderEl={
-            <Box gap="sm" direction="row" align="center" wrap="wrap">
-              {["string", "address", "sym", "bool", "8-64", "128-256"].map(
-                (t) => (
-                  <div
-                    className="DataTypeLegend"
-                    data-type={t}
-                    key={`legend-type-${t}`}
-                  >
-                    {t}
-                  </div>
-                ),
-              )}
-            </Box>
-          }
           csvFileName={contractId}
         />
 

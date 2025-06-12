@@ -82,58 +82,6 @@
   }
 }
 
-.DataTypeLegend {
-  --DataTypeLegend-text-color: var(--sds-clr-gray-12);
-  --DataTypeLegend-background-color: var(--sds-clr-gray-01);
-  --DataTypeLegend-border-color: var(--sds-clr-gray-06);
-
-  font-size: pxToRem(12px);
-  line-height: pxToRem(18px);
-  font-weight: var(--sds-fw-semi-bold);
-  color: var(--DataTypeLegend-text-color);
-
-  background-color: var(--DataTypeLegend-background-color);
-  border: 1px solid var(--DataTypeLegend-border-color);
-  padding: pxToRem(2px) pxToRem(6px);
-  border-radius: pxToRem(6px);
-
-  &[data-type="string"] {
-    --DataTypeLegend-text-color: var(--sds-clr-gray-12);
-    --DataTypeLegend-background-color: var(--sds-clr-gray-01);
-    --DataTypeLegend-border-color: var(--sds-clr-gray-06);
-  }
-
-  &[data-type="address"] {
-    --DataTypeLegend-text-color: var(--sds-clr-gray-11);
-    --DataTypeLegend-background-color: var(--sds-clr-gray-03);
-    --DataTypeLegend-border-color: var(--sds-clr-gray-06);
-  }
-
-  &[data-type="sym"] {
-    --DataTypeLegend-text-color: var(--sds-clr-navy-11);
-    --DataTypeLegend-background-color: var(--sds-clr-navy-02);
-    --DataTypeLegend-border-color: var(--sds-clr-navy-06);
-  }
-
-  &[data-type="bool"] {
-    --DataTypeLegend-text-color: var(--sds-clr-pink-11);
-    --DataTypeLegend-background-color: var(--sds-clr-pink-02);
-    --DataTypeLegend-border-color: var(--sds-clr-pink-06);
-  }
-
-  &[data-type="8-64"] {
-    --DataTypeLegend-text-color: var(--sds-clr-teal-11);
-    --DataTypeLegend-background-color: var(--sds-clr-teal-02);
-    --DataTypeLegend-border-color: var(--sds-clr-teal-06);
-  }
-
-  &[data-type="128-256"] {
-    --DataTypeLegend-text-color: var(--sds-clr-mint-11);
-    --DataTypeLegend-background-color: var(--sds-clr-mint-02);
-    --DataTypeLegend-border-color: var(--sds-clr-mint-06);
-  }
-}
-
 .BuildInfo {
   &__data {
     font-size: pxToRem(14px);
