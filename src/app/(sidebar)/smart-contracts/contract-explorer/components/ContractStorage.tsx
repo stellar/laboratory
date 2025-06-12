@@ -20,13 +20,13 @@ import { CONTRACT_STORAGE_MAX_ENTRIES } from "@/constants/settings";
 import { INITIAL_OPERATION } from "@/constants/transactionOperations";
 import { Routes } from "@/constants/routes";
 
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
+
 import {
   ContractStorageProcessedItem,
   ContractStorageResponseItem,
   NetworkType,
 } from "@/types/types";
-import { trackEvent } from "@/metrics/tracking";
-import { TrackingEvent } from "@/metrics/tracking";
 
 export const ContractStorage = ({
   isActive,
@@ -225,30 +225,6 @@ export const ContractStorage = ({
             },
           ]}
           cssGridTemplateColumns="minmax(210px, 2fr) minmax(210px, 2fr) minmax(100px, 0.8fr) minmax(110px, 0.8fr) minmax(114px, 0.7fr)"
-          customHeaderEl={
-            <Box gap="sm" direction="row" align="center" wrap="wrap">
-              {[
-                "sym",
-                "u8-u64",
-                "i8-i64",
-                "i128-i256",
-                "u128-u256",
-                "bool",
-                "map",
-                "vec",
-                "string",
-                "address",
-                "bytes",
-                "bytesN",
-              ].map((t) => (
-                <div
-                  className="DataTypeLegend"
-                  data-type={t}
-                  key={`legend-type-${t}`}
-                ></div>
-              ))}
-            </Box>
-          }
           csvFileName={contractId}
         />
 

@@ -469,7 +469,7 @@ export const DataTable = <T extends AnyObject>({
         justify="space-between"
         wrap="wrap"
       >
-        {customHeaderEl}
+        {customHeaderEl ?? <div></div>}
 
         <Box
           gap="sm"
