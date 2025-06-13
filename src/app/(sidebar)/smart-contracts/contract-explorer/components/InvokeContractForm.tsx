@@ -3,14 +3,16 @@ import { Button, Card, Select, Text, Textarea } from "@stellar/design-system";
 import { BASE_FEE, contract } from "@stellar/stellar-sdk";
 import { JSONSchema7 } from "json-schema";
 
+import { RpcErrorResponse } from "@/app/(sidebar)/transaction/submit/components/ErrorResponse";
+
 import { Box } from "@/components/layout/Box";
 import { ErrorText } from "@/components/ErrorText";
 import { JsonCodeWrapToggle } from "@/components/JsonCodeWrapToggle";
-import { JsonSchemaFormRenderer } from "@/components/JsonSchema/JsonSchemaFormRenderer";
+import { JsonSchemaRenderer } from "@/components/SmartContractJsonSchema/JsonSchemaRenderer";
 import { PrettyJsonTransaction } from "@/components/PrettyJsonTransaction";
-import { RpcErrorResponse } from "@/app/(sidebar)/transaction/submit/components/ErrorResponse";
 import { TransactionSuccessCard } from "@/components/TransactionSuccessCard";
 import { WalletKitContext } from "@/components/WalletKit/WalletKitContextProvider";
+import { useFormError } from "@/components/SmartContractJsonSchema/FormErrorContext";
 
 import { TransactionBuildParams } from "@/store/createStore";
 import { useStore } from "@/store/useStore";
@@ -30,15 +32,14 @@ import { getWasmContractData } from "@/helpers/getWasmContractData";
 import { getTxnToSimulate } from "@/helpers/sorobanUtils";
 
 import {
-  AnyObject,
   ContractInfoApiResponse,
   Network,
   SorobanInvokeValue,
   EmptyObj,
   XdrFormatType,
 } from "@/types/types";
-import { trackEvent } from "@/metrics/tracking";
-import { TrackingEvent } from "@/metrics/tracking";
+
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 export const InvokeContractForm = ({
   infoData,
@@ -62,7 +63,7 @@ export const InvokeContractForm = ({
     function_name: funcName,
     args: {},
   });
-  const [formError, setFormError] = useState<AnyObject>({});
+  const { formError } = useFormError();
   const [isGetFunction, setIsGetFunction] = useState(false);
   const [dereferencedSchema, setDereferencedSchema] =
     useState<DereferencedSchemaType | null>(null);
@@ -165,7 +166,7 @@ export const InvokeContractForm = ({
         },
       );
     }
-  }, [isSubmitRpcSuccess]);
+  }, [isSubmitRpcSuccess, formValue.function_name]);
 
   useEffect(() => {
     if (isSubmitRpcError) {
@@ -176,7 +177,7 @@ export const InvokeContractForm = ({
         },
       );
     }
-  }, [isSubmitRpcError]);
+  }, [isSubmitRpcError, formValue.function_name]);
 
   useEffect(() => {
     const getContractData = async () => {
@@ -400,12 +401,10 @@ export const InvokeContractForm = ({
         {formValue.contract_id &&
           formValue.function_name &&
           dereferencedSchema && (
-            <JsonSchemaFormRenderer
+            <JsonSchemaRenderer
               name={funcName}
               schema={dereferencedSchema as JSONSchema7}
               onChange={handleChange}
-              formError={formError}
-              setFormError={setFormError}
               parsedSorobanOperation={formValue}
             />
           )}
@@ -551,6 +550,22 @@ export const InvokeContractForm = ({
               onClick={handleSubmit}
             >
               Submit
+            </Button>
+
+            <Button
+              size="md"
+              variant="secondary"
+              isLoading={isExtensionLoading || isSubmitRpcPending}
+              // disabled={isSubmitDisabled}
+              onClick={() => {
+                setFormValue({
+                  contract_id: formValue.contract_id,
+                  function_name: formValue.function_name,
+                  args: {},
+                });
+              }}
+            >
+              Reset
             </Button>
           </Box>
 

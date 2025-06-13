@@ -3,6 +3,7 @@ import { contract } from "@stellar/stellar-sdk";
 import { useStore } from "@/store/useStore";
 
 import { Box } from "@/components/layout/Box";
+import { FormErrorProvider } from "@/components/SmartContractJsonSchema/FormErrorContext";
 
 import { ContractInfoApiResponse, EmptyObj, Network } from "@/types/types";
 
@@ -27,14 +28,18 @@ export const InvokeContract = ({
   const renderFunctionCard = () =>
     contractSpecFuncs
       ?.filter((func) => !func.name().toString().includes("__"))
-      ?.map((func) => (
-        <InvokeContractForm
-          key={`${func.name()}`}
-          infoData={infoData}
-          network={network}
-          funcName={func.name().toString()}
-        />
-      ));
+      ?.map((func) => {
+        const funcName = func.name().toString();
+
+        return (
+          <InvokeContractForm
+            key={funcName}
+            infoData={infoData}
+            network={network}
+            funcName={funcName}
+          />
+        );
+      });
 
   const renderError = () => (
     <Alert variant="error" placement="inline" title="Error">
@@ -64,7 +69,9 @@ export const InvokeContract = ({
             Invoke Contract
           </Text>
 
-          {contractSpecFuncs ? renderFunctionCard() : null}
+          <FormErrorProvider>
+            {contractSpecFuncs ? renderFunctionCard() : null}
+          </FormErrorProvider>
           {contractClientError ? renderError() : null}
         </Box>
       </Card>
