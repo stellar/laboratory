@@ -91,7 +91,7 @@ export const renderOneOf = ({
   };
 
   return (
-    <Box gap="md">
+    <Box gap="md" key={`${path.join(".")}`}>
       <Select
         id="json-schema-form-renderer-one-of"
         fieldSize="md"

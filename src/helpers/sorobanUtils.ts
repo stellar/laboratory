@@ -289,6 +289,23 @@ const convertObjectToMap = (
   return { mapVal, mapType };
 };
 
+const convertTupleToScVal = (tupleArray: any) => {
+  const tupleScVals = tupleArray.map((v: { value: any; type: any }) => {
+    if (v.type === "bool") {
+      const boolValue = v.value === "true" ? true : false;
+      return nativeToScVal(boolValue);
+    }
+    if (v.type === "bytes") {
+      return nativeToScVal(new Uint8Array(Buffer.from(v.value, "base64")));
+    }
+    return nativeToScVal(v.value, { type: v.type });
+  });
+
+  // JS SDK's nativeToScval doesn't support an array of different types
+  // so we need to use xdr.ScVal.scvVec
+  return xdr.ScVal.scvVec(tupleScVals);
+};
+
 const getScValsFromArgs = (
   args: SorobanInvokeValue["args"],
   scVals: xdr.ScVal[] = [],
@@ -338,24 +355,39 @@ const getScValsFromArgs = (
         return scVals;
       }
 
-      // VEC CASE #1: array of objects
+      // VEC CASE #1: array of objects or complicated tuple case
       if (argValue.some((v) => typeof Object.values(v)[0] === "object")) {
         const arrayScVals = argValue.map((v) => {
           if (v.tag) {
-            return convertEnumToScVal(v);
+            return convertEnumToScVal(v, scVals);
           }
           return convertObjectToScVal(v);
         });
 
-        scVals.push(...arrayScVals);
+        const tupleScValsVec = xdr.ScVal.scvVec(arrayScVals);
+
+        scVals.push(tupleScValsVec);
         return scVals;
       }
 
+      // if (argValue.some((v) => typeof Object.values(v)[0] === "object")) {
+
+      //   const arrayScVals = argValue.map((v) => {
+      //     if (v.tag) {
+      //       return convertEnumToScVal(v, scVals);
+      //     }
+      //     return convertObjectToScVal(v);
+      //   });
+
+      //   scVals.push(...arrayScVals);
+      //   return scVals;
+      // }
+
+      // VEC CASE #2: array of primitives
       const isVecArray = argValue.every((v) => {
         return v.type === argValue[0].type;
       });
 
-      // VEC CASE #2: array of primitives
       if (isVecArray) {
         const arrayScVals = argValue.reduce((acc, v) => {
           if (v.type === "bool") {
@@ -379,24 +411,9 @@ const getScValsFromArgs = (
       // TUPLE CASE
       const isTupleArray = argValue.every((v: any) => v.type && v.value);
       if (isTupleArray) {
-        const tupleScVals = argValue.map((v) => {
-          if (v.type === "bool") {
-            const boolValue = v.value === "true" ? true : false;
-            return nativeToScVal(boolValue);
-          }
-          if (v.type === "bytes") {
-            return nativeToScVal(
-              new Uint8Array(Buffer.from(v.value, "base64")),
-            );
-          }
-          return nativeToScVal(v.value, { type: v.type });
-        });
+        const tupleScValsVec = convertTupleToScVal(argValue);
 
-        // JS SDK's nativeToScval doesn't support an array of different types
-        // so we need to use xdr.ScVal.scvVec
-        const tupleVec = xdr.ScVal.scvVec(tupleScVals);
-
-        scVals.push(tupleVec);
+        scVals.push(tupleScValsVec);
         return scVals;
       }
     }

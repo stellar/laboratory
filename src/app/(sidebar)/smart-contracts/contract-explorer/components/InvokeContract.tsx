@@ -28,14 +28,18 @@ export const InvokeContract = ({
   const renderFunctionCard = () =>
     contractSpecFuncs
       ?.filter((func) => !func.name().toString().includes("__"))
-      ?.map((func) => (
-        <InvokeContractForm
-          key={`${func.name()}`}
-          infoData={infoData}
-          network={network}
-          funcName={func.name().toString()}
-        />
-      ));
+      ?.map((func) => {
+        const funcName = func.name().toString();
+
+        return (
+          <InvokeContractForm
+            key={funcName}
+            infoData={infoData}
+            network={network}
+            funcName={funcName}
+          />
+        );
+      });
 
   const renderError = () => (
     <Alert variant="error" placement="inline" title="Error">
