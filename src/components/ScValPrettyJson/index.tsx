@@ -164,7 +164,7 @@ export const ScValPrettyJson = ({
           value
         ) : (
           <Value key={`${type}-${uuidv4()}`} type={type} hasComma={hasComma}>
-            {value}
+            {`${value}`}
           </Value>
         );
     }
@@ -182,7 +182,7 @@ export const ScValPrettyJson = ({
             let valType = "";
             let valValue = objItm[1];
 
-            if (!Array.isArray(valValue)) {
+            if (valValue && !Array.isArray(valValue)) {
               [valType, valValue] = Object.entries(objItm[1])[0];
             }
 
@@ -276,7 +276,7 @@ export const ScValPrettyJson = ({
     let valType = "";
     let valValue = mapItem.val;
 
-    if (typeof mapItem.val === "object") {
+    if (mapItem.val && typeof mapItem.val === "object") {
       [valType, valValue] = Object.entries(mapItem.val)[0];
     }
 
@@ -375,7 +375,7 @@ export const ScValPrettyJson = ({
     let isKeyValue = false;
 
     // Checking if an object is a key-value object
-    if (typeof value === "object") {
+    if (value && typeof value === "object") {
       const keys = Object.keys(value);
 
       if (keys.length === 2 && keys[0] === "key" && keys[1] === "val") {
@@ -394,7 +394,11 @@ export const ScValPrettyJson = ({
     const objectTypes = ["contract_instance", "ledger_key_nonce", "map", "vec"];
 
     if (type && objectTypes.includes(type)) {
-      return render({ item: value, parentType: type, hasComma });
+      return render({
+        item: value,
+        parentType: type,
+        hasComma,
+      });
     }
 
     return renderPrimitive({ value, type, hasComma });
