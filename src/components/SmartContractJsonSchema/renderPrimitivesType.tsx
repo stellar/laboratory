@@ -45,7 +45,7 @@ export const renderPrimitivesType = ({
     id: path.join("."),
     label: `${nestedItemLabel} (${schemaType})`,
     value: get(parsedSorobanOperation.args, path.join("."))?.value || "",
-    error: formError[formErrorKey],
+    error: formError?.[formErrorKey] || undefined,
   };
 
   const invokeContractBaseProps = {
