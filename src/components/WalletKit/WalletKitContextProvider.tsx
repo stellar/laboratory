@@ -117,7 +117,7 @@ export const WalletKitContextProvider = ({
     <WalletKitContext.Provider
       value={{
         walletKit: walletKitInstance,
-        walletId: savedWallet,
+        walletId: savedWallet?.id,
       }}
     >
       {children}
