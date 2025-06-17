@@ -4,7 +4,6 @@ import {
   Badge,
   Card,
   Icon,
-  IconButton,
   Link,
   Loader,
   Logo,
@@ -58,7 +57,6 @@ export const ContractInfo = ({
     "contract-contract-spec",
   );
   const [isBadgeTooltipVisible, setIsBadgeTooltipVisible] = useState(false);
-  const [isSourceTooltipVisible, setIsSourceTooltipVisible] = useState(false);
 
   const buttonRef = useRef<HTMLButtonElement | null>(null);
 
@@ -76,7 +74,6 @@ export const ContractInfo = ({
     }
 
     setIsBadgeTooltipVisible(false);
-    setIsSourceTooltipVisible(false);
   }, []);
 
   // Close tooltip when clicked outside
@@ -172,25 +169,23 @@ export const ContractInfo = ({
                   <Icon.LinkExternal01 />
                 </SdsLink>
               ) : (
-                <Tooltip
-                  triggerEl={
-                    <IconButton
-                      altText="Unavailable"
-                      label="Unavailable"
-                      icon={<Icon.InfoCircle />}
-                      onClick={() => {
-                        setIsSourceTooltipVisible(!isSourceTooltipVisible);
-                      }}
-                    />
-                  }
-                  isVisible={isSourceTooltipVisible}
-                >
-                  This contract has no build verification configured. Please see{" "}
-                  <Link href="https://stellar.expert/explorer/public/contract/validation">
-                    verification setup instructions
-                  </Link>{" "}
-                  for more info.
-                </Tooltip>
+                <Box align="center" direction="row" gap="xs">
+                  Unavailable
+                  <Tooltip
+                    triggerEl={
+                      <div className="Label__infoButton" role="button">
+                        <Icon.InfoCircle />
+                      </div>
+                    }
+                  >
+                    This contract has no build verification configured. Please
+                    see{" "}
+                    <Link href="https://github.com/stellar/stellar-protocol/blob/fcac47a6a51a96b7ef9f1d0594d8779c65926155/ecosystem/sep-contract-build-info.md">
+                      verification setup instructions
+                    </Link>{" "}
+                    for more info.
+                  </Tooltip>
+                </Box>
               )
             }
           />
