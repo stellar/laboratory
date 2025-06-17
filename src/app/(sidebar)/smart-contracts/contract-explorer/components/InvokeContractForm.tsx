@@ -553,22 +553,6 @@ export const InvokeContractForm = ({
             >
               Submit
             </Button>
-
-            <Button
-              size="md"
-              variant="secondary"
-              isLoading={isExtensionLoading || isSubmitRpcPending}
-              // disabled={isSubmitDisabled}
-              onClick={() => {
-                setFormValue({
-                  contract_id: formValue.contract_id,
-                  function_name: formValue.function_name,
-                  args: {},
-                });
-              }}
-            >
-              Reset
-            </Button>
           </Box>
 
           <>{renderResponse()}</>
