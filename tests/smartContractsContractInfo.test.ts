@@ -70,9 +70,9 @@ test.describe("Smart Contracts: Contract Info", () => {
     await expect(getInfoItem("Wasm Hash")).toHaveText(
       "df88820e231ad8f3027871e5dd3cf45491d7b7735e785731466bfc2946008608",
     );
-    await expect(getInfoItem("Versions")).toHaveText("-");
+    await expect(getInfoItem("Versions")).toHaveText("Unavailable");
     await expect(getInfoItem("Creator")).toHaveText(SAVED_ACCOUNT_1);
-    await expect(getInfoItem("Data Storage")).toHaveText("10 entries");
+    await expect(getInfoItem("Contract Storage")).toHaveText("10 entries");
 
     // Clear
     await page.getByRole("button", { name: "Clear", exact: true }).click();
