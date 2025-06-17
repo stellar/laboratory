@@ -54,7 +54,6 @@ export const renderArrayType = ({
         name: nestedPath,
         schema: item,
         path: [nestedPath],
-        // path: [...path, nestedPath],
         parsedSorobanOperation,
         onChange,
         formError,
@@ -98,7 +97,6 @@ export const renderArrayType = ({
                         return renderer({
                           name: nestedPath,
                           schema: schemaItems?.[arg] as JSONSchema7,
-                          // path: [...path, nestedPath],
                           path: [nestedPath],
                           parsedSorobanOperation,
                           onChange,
