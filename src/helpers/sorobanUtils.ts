@@ -384,6 +384,17 @@ const convertTupleToScVal = (tupleArray: any) => {
   return xdr.ScVal.scvVec(tupleScVals);
 };
 
+const getScValFromPrimitive = (v: any) => {
+  if (v.type === "bool") {
+    const boolValue = v.value === "true" ? true : false;
+    return nativeToScVal(boolValue);
+  }
+  if (v.type === "bytes") {
+    return nativeToScVal(new Uint8Array(Buffer.from(v.value, "base64")));
+  }
+  return nativeToScVal(v.value, { type: v.type });
+};
+
 const getScValsFromArgs = (
   args: SorobanInvokeValue["args"],
   scVals: xdr.ScVal[] = [],
@@ -391,14 +402,7 @@ const getScValsFromArgs = (
   // PRIMITIVE CASE
   if (Object.values(args).every((v: any) => v.type && v.value)) {
     const primitiveScVals = Object.values(args).map((v) => {
-      if (v.type === "bool") {
-        const boolValue = v.value === "true" ? true : false;
-        return nativeToScVal(boolValue);
-      }
-      if (v.type === "bytes") {
-        return nativeToScVal(new Uint8Array(Buffer.from(v.value, "base64")));
-      }
-      return nativeToScVal(v.value, { type: v.type });
+      return getScValFromPrimitive(v);
     });
 
     return primitiveScVals;
@@ -418,15 +422,8 @@ const getScValsFromArgs = (
 
     // Check if it's an array of map objects
     if (Array.isArray(argValue)) {
-      // Check if each object in the array has the map structure (key-value pairs with type)
-      const isMapArray = argValue.every((obj) =>
-        Object.values(obj).every(
-          (v) => v && typeof v === "object" && "value" in v && "type" in v,
-        ),
-      );
-
       // MAP CASE
-      if (isMapArray) {
+      if (isMap(argValue)) {
         const { mapVal, mapType } = convertObjectToMap(argValue);
         const mapScVal = nativeToScVal(mapVal, { type: mapType });
         scVals.push(mapScVal);
@@ -488,6 +485,10 @@ const getScValsFromArgs = (
       const convertedObj = convertObjectToScVal(argValue);
       scVals.push(nativeToScVal(convertedObj));
       return scVals;
+    }
+
+    if (argValue.type && argValue.value) {
+      scVals.push(getScValFromPrimitive(argValue));
     }
   }
 
