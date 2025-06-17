@@ -292,6 +292,8 @@ export type JsonSchemaFormProps = {
   index?: number;
   requiredFields?: string[];
   parsedSorobanOperation: SorobanInvokeValue;
+  formError: AnyObject;
+  setFormError: (error: AnyObject) => void;
 };
 // =============================================================================
 // RPC

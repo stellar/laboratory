@@ -20,12 +20,16 @@ export const renderArrayType = ({
   parsedSorobanOperation,
   renderer,
   onChange,
+  formError,
+  setFormError,
 }: {
   schema: JSONSchema7;
   path: string[];
   parsedSorobanOperation: SorobanInvokeValue;
   renderer: (props: JsonSchemaFormProps) => React.ReactNode;
   onChange: (value: SorobanInvokeValue) => void;
+  formError: AnyObject;
+  setFormError: (error: AnyObject) => void;
 }) => {
   const name = path.join(".");
   const invokeContractBaseProps = {
@@ -53,6 +57,8 @@ export const renderArrayType = ({
         // path: [...path, nestedPath],
         parsedSorobanOperation,
         onChange,
+        formError,
+        setFormError,
       });
     });
   }
@@ -96,6 +102,8 @@ export const renderArrayType = ({
                           path: [nestedPath],
                           parsedSorobanOperation,
                           onChange,
+                          formError,
+                          setFormError,
                         });
                       })}
                     </>
@@ -108,6 +116,8 @@ export const renderArrayType = ({
                         path: [nestedPathTitle],
                         parsedSorobanOperation,
                         onChange,
+                        formError,
+                        setFormError,
                       })}
                     </Box>
                   )}

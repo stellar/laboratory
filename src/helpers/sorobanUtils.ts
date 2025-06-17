@@ -346,16 +346,6 @@ const convertObjectToScVal = (obj: Record<string, any>): xdr.ScVal => {
   return nativeToScVal(convertedValue, { type: typeHints });
 };
 
-// if (Array.isArray(pair["1"])) {
-//   // Check if it's an array of enums
-//   if (pair["1"].length > 0 && pair["1"][0].tag) {
-//     const enumScVals = pair["1"].map((item) => convertEnumToScVal(item));
-//     acc[pair["0"].value] = xdr.ScVal.scvVec(enumScVals);
-//   } else {
-//     const valueScVal = getScValFromArg(pair["1"]);
-//     acc[pair["0"].value] = valueScVal;
-//   }
-
 const convertObjectToMap = (
   mapArray: any,
 ): { mapVal: Record<string, any>; mapType: Record<string, any> } => {

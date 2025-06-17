@@ -82,11 +82,6 @@ const getSchemaProperty = (
   return isSchemaObject(prop) ? prop : undefined;
 };
 
-// const getStoredNestedItems = (parsedSorobanOperation: any, path: string) => {
-//   const rootKeyName = Object.keys(parsedSorobanOperation.args)[0];
-//   return get(parsedSorobanOperation.args[rootKeyName], path.join(".")) || [];
-// };
-
 const isTuple = (schema: any) => {
   return schema.type === "array" && Array.isArray(schema.items);
 };

@@ -12,7 +12,6 @@ import { JsonSchemaRenderer } from "@/components/SmartContractJsonSchema/JsonSch
 import { PrettyJsonTransaction } from "@/components/PrettyJsonTransaction";
 import { TransactionSuccessCard } from "@/components/TransactionSuccessCard";
 import { WalletKitContext } from "@/components/WalletKit/WalletKitContextProvider";
-import { useFormError } from "@/components/SmartContractJsonSchema/FormErrorContext";
 
 import { TransactionBuildParams } from "@/store/createStore";
 import { useStore } from "@/store/useStore";
@@ -37,6 +36,7 @@ import {
   SorobanInvokeValue,
   EmptyObj,
   XdrFormatType,
+  AnyObject,
 } from "@/types/types";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
@@ -63,7 +63,7 @@ export const InvokeContractForm = ({
     function_name: funcName,
     args: {},
   });
-  const { formError } = useFormError();
+  const [formError, setFormError] = useState<AnyObject>({});
   const [isGetFunction, setIsGetFunction] = useState(false);
   const [dereferencedSchema, setDereferencedSchema] =
     useState<DereferencedSchemaType | null>(null);
@@ -402,6 +402,8 @@ export const InvokeContractForm = ({
           formValue.function_name &&
           dereferencedSchema && (
             <JsonSchemaRenderer
+              formError={formError}
+              setFormError={setFormError}
               name={funcName}
               schema={dereferencedSchema as JSONSchema7}
               onChange={handleChange}

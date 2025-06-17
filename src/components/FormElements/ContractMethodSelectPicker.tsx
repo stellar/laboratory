@@ -9,7 +9,6 @@ import { ExpandBox } from "@/components/ExpandBox";
 import { SorobanInvokeValue } from "@/types/types";
 import { TrackingEvent } from "@/metrics/tracking";
 import { trackEvent } from "@/metrics/tracking";
-import { FormErrorProvider } from "../SmartContractJsonSchema/FormErrorContext";
 
 export const ContractMethodSelectPicker = ({
   value,
@@ -63,14 +62,12 @@ export const ContractMethodSelectPicker = ({
       </Select>
       <ExpandBox isExpanded={Boolean(selectedMethod)} offsetTop="sm">
         {selectedMethod && spec.jsonSchema(selectedMethod) ? (
-          <FormErrorProvider>
-            <JsonSchemaForm
-              name={selectedMethod}
-              value={value}
-              onChange={onChange}
-              funcSchema={spec.jsonSchema(selectedMethod)}
-            />
-          </FormErrorProvider>
+          <JsonSchemaForm
+            name={selectedMethod}
+            value={value}
+            onChange={onChange}
+            funcSchema={spec.jsonSchema(selectedMethod)}
+          />
         ) : null}
       </ExpandBox>
     </Box>

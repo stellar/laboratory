@@ -12,7 +12,6 @@ import { JsonSchemaFormProps } from "@/types/types";
 import { renderPrimitivesType } from "./renderPrimitivesType";
 import { renderArrayType } from "./renderArrayType";
 import { renderOneOf } from "./renderOneOf";
-import { useFormError } from "./FormErrorContext";
 
 export const JsonSchemaRenderer = ({
   name,
@@ -20,8 +19,9 @@ export const JsonSchemaRenderer = ({
   path = [],
   onChange,
   parsedSorobanOperation,
+  formError,
+  setFormError,
 }: JsonSchemaFormProps) => {
-  const { formError, setFormError, clearFormError } = useFormError();
   const schemaType = jsonSchema.getSchemaType(schema);
 
   // function schema always starts with an object type
@@ -62,6 +62,8 @@ export const JsonSchemaRenderer = ({
                         schema={propertySchema as JSONSchema7}
                         onChange={onChange}
                         parsedSorobanOperation={parsedSorobanOperation}
+                        formError={formError}
+                        setFormError={setFormError}
                       />
                     </Card>
                   </Box>
@@ -77,6 +79,8 @@ export const JsonSchemaRenderer = ({
                 path={[...path, key]}
                 onChange={onChange}
                 parsedSorobanOperation={parsedSorobanOperation}
+                formError={formError}
+                setFormError={setFormError}
               />
             );
           },
@@ -92,6 +96,8 @@ export const JsonSchemaRenderer = ({
       parsedSorobanOperation,
       onChange,
       renderer: JsonSchemaRenderer,
+      formError,
+      setFormError,
     });
   }
 
@@ -115,6 +121,5 @@ export const JsonSchemaRenderer = ({
     onChange,
     formError,
     setFormError,
-    clearFormError,
   });
 };

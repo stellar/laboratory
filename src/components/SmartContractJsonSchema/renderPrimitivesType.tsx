@@ -9,7 +9,7 @@ import { validate } from "@/validate";
 
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 
-import type { SorobanInvokeValue } from "@/types/types";
+import type { AnyObject, SorobanInvokeValue } from "@/types/types";
 import { convertSpecTypeToScValType } from "@/helpers/sorobanUtils";
 
 export const renderPrimitivesType = ({
@@ -20,16 +20,14 @@ export const renderPrimitivesType = ({
   onChange,
   formError,
   setFormError,
-  clearFormError,
 }: {
   name: string;
   schema: Partial<JSONSchema7>;
   path: string[];
   parsedSorobanOperation: SorobanInvokeValue;
   onChange: (value: SorobanInvokeValue) => void;
-  formError: Record<string, string>;
-  setFormError: (error: Record<string, string>) => void;
-  clearFormError: (key: string) => void;
+  formError: AnyObject;
+  setFormError: (error: AnyObject) => void;
 }) => {
   const { description } = schema;
 
@@ -116,7 +114,11 @@ export const renderPrimitivesType = ({
         [formErrorKey]: error ? error : "",
       });
     } else {
-      clearFormError(formErrorKey);
+      setFormError((prev: AnyObject) => {
+        const newFormError = { ...prev };
+        delete newFormError[formErrorKey];
+        return newFormError;
+      });
     }
   };
 
