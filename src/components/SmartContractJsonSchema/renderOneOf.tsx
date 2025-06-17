@@ -6,7 +6,11 @@ import { Box } from "@/components/layout/Box";
 
 import { jsonSchema } from "@/helpers/jsonSchema";
 
-import { JsonSchemaFormProps, SorobanInvokeValue } from "@/types/types";
+import {
+  AnyObject,
+  JsonSchemaFormProps,
+  SorobanInvokeValue,
+} from "@/types/types";
 import { renderTupleType } from "./renderTupleType";
 
 // oneOf is used for union and enum types
@@ -18,6 +22,8 @@ export const renderOneOf = ({
   parsedSorobanOperation,
   renderer,
   onChange,
+  formError,
+  setFormError,
 }: {
   name: string;
   schema: JSONSchema7;
@@ -25,6 +31,8 @@ export const renderOneOf = ({
   parsedSorobanOperation: SorobanInvokeValue;
   renderer: (props: JsonSchemaFormProps) => React.ReactNode;
   onChange: (value: SorobanInvokeValue) => void;
+  formError: AnyObject;
+  setFormError: (error: AnyObject) => void;
 }) => {
   if (!schema?.oneOf) {
     return null;
@@ -126,6 +134,8 @@ export const renderOneOf = ({
             onChange,
             parsedSorobanOperation,
             renderer,
+            formError,
+            setFormError,
           })
         : null}
     </Box>

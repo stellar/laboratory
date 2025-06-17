@@ -109,6 +109,8 @@ export const JsonSchemaRenderer = ({
       parsedSorobanOperation,
       onChange,
       renderer: JsonSchemaRenderer,
+      formError,
+      setFormError,
     });
   }
 

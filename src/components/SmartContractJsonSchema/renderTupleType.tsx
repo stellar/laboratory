@@ -4,7 +4,11 @@ import { JSONSchema7 } from "json-schema";
 import { Box } from "@/components/layout/Box";
 import { LabelHeading } from "@/components/LabelHeading";
 
-import { JsonSchemaFormProps, SorobanInvokeValue } from "@/types/types";
+import {
+  AnyObject,
+  JsonSchemaFormProps,
+  SorobanInvokeValue,
+} from "@/types/types";
 import { get } from "lodash";
 
 export const renderTupleType = ({
@@ -13,12 +17,16 @@ export const renderTupleType = ({
   onChange,
   parsedSorobanOperation,
   renderer,
+  formError,
+  setFormError,
 }: {
   path: string[];
   schema: JSONSchema7;
   onChange: (value: SorobanInvokeValue) => void;
   parsedSorobanOperation: SorobanInvokeValue;
   renderer: (props: JsonSchemaFormProps) => React.ReactNode;
+  formError: AnyObject;
+  setFormError: (error: AnyObject) => void;
 }) => {
   const getKeyName = get(parsedSorobanOperation.args, path.join("."));
 
@@ -48,6 +56,8 @@ export const renderTupleType = ({
                 path: [...path, label],
                 parsedSorobanOperation,
                 onChange,
+                formError,
+                setFormError,
               })}
             </Box>
           </Card>

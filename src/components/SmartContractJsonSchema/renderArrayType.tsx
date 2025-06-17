@@ -130,20 +130,20 @@ export const renderArrayType = ({
                       icon={<Icon.Trash01 />}
                       type="button"
                       onClick={() => {
-                        // CBBBUV6XRCPRL4C4K7DQJSU2UL37B3XJYORXDCXLOKMZUQFH4COCNANI
-                        // Tuple isn't removing the selected item
-
                         const updatedList = arrayItem.delete(
                           get(parsedSorobanOperation.args, path.join(".")),
                           index,
                         );
 
+                        const updatedArgs = jsonSchema.setDeepValue(
+                          parsedSorobanOperation.args,
+                          path.join("."),
+                          updatedList,
+                        );
+
                         onChange({
                           ...invokeContractBaseProps,
-                          args: {
-                            ...parsedSorobanOperation.args,
-                            [name]: updatedList,
-                          },
+                          args: updatedArgs,
                         });
                       }}
                     ></Button>
