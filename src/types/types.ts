@@ -369,6 +369,11 @@ export interface SavedContract extends LocalStorageSavedItem {
   shareableUrl: string;
 }
 
+export interface SavedWallet {
+  id: string;
+  network: LocalStorageSavedNetwork;
+}
+
 export type SavedTransactionPage = "build" | "sign" | "simulate" | "submit";
 
 export interface SavedEndpointHorizon extends LocalStorageSavedItem {

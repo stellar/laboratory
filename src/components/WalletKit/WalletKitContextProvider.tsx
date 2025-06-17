@@ -17,9 +17,11 @@ import { LedgerModule } from "@creit.tech/stellar-wallets-kit/modules/ledger.mod
 
 import { getWalletKitNetwork } from "@/helpers/getWalletKitNetwork";
 import { localStorageSavedTheme } from "@/helpers/localStorageSavedTheme";
+import { localStorageSavedWallet } from "@/helpers/localStorageSavedWallet";
 
 type WalletKitProps = {
   walletKit?: StellarWalletsKit;
+  walletId?: string;
 };
 
 export const WalletKitContext = createContext<WalletKitProps>({
@@ -33,6 +35,7 @@ export const WalletKitContextProvider = ({
 }) => {
   const { network, theme, setTheme } = useStore();
   const networkType = getWalletKitNetwork(network.id);
+  const savedWallet = localStorageSavedWallet.get();
 
   useEffect(() => {
     const savedTheme = localStorageSavedTheme.get();
@@ -111,7 +114,12 @@ export const WalletKitContextProvider = ({
   }, [networkType, theme]);
 
   return (
-    <WalletKitContext.Provider value={{ walletKit: walletKitInstance }}>
+    <WalletKitContext.Provider
+      value={{
+        walletKit: walletKitInstance,
+        walletId: savedWallet,
+      }}
+    >
       {children}
     </WalletKitContext.Provider>
   );
