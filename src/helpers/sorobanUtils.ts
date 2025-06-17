@@ -202,15 +202,88 @@ export const getTxnToSimulate = (
   }
 };
 
+const isMap = (arg: any) => {
+  try {
+    return (
+      Array.isArray(arg) &&
+      arg.every((obj: any) => {
+        // Check if object has exactly two keys: "0" and "1"
+        const keys = Object.keys(obj);
+        if (keys.length !== 2 || !keys.includes("0") || !keys.includes("1")) {
+          return false;
+        }
+
+        // Check if "0" key has value and type
+        if (
+          !obj["0"] ||
+          typeof obj["0"] !== "object" ||
+          !("value" in obj["0"]) ||
+          !("type" in obj["0"])
+        ) {
+          return false;
+        }
+
+        // "1" can be either a simple value with type, or a complex value (array, enum, etc)
+        return true;
+      })
+    );
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (e: any) {
+    return false;
+  }
+};
+
+const getScValFromArg = (arg: any, scVals: xdr.ScVal[]): xdr.ScVal => {
+  // Handle array of arrays with numeric objects
+  if (Array.isArray(arg) && arg.length > 0) {
+    const arrayScVals = arg.map((subArray) => {
+      if (Array.isArray(subArray) && isMap(subArray)) {
+        const { mapVal, mapType } = convertObjectToMap(subArray);
+
+        if (Object.keys(mapVal).length > 1) {
+          const items = Object.keys(mapVal);
+
+          const mapScValOne = nativeToScVal(mapVal[items[0]], {
+            type: mapType[items[0]],
+          });
+
+          scVals.push(mapScValOne);
+
+          const mapScValTwo = nativeToScVal(mapVal[items[1]], {
+            type: mapType[items[1]],
+          });
+
+          scVals.push(mapScValTwo);
+        }
+
+        return nativeToScVal(mapVal, { type: mapType });
+      }
+      return getScValFromArg(subArray, scVals);
+    });
+
+    return xdr.ScVal.scvVec(arrayScVals);
+  }
+
+  return getScValsFromArgs([arg], scVals || [])[0];
+};
+
+const convertValuesToScVals = (
+  values: any[],
+  scVals: xdr.ScVal[],
+): xdr.ScVal[] => {
+  return values.map((v) => {
+    return getScValFromArg(v, scVals);
+  });
+};
+
 const convertEnumToScVal = (obj: Record<string, any>, scVals?: xdr.ScVal[]) => {
   // TUPLE CASE
   if (obj.tag && obj.values) {
     const tagVal = nativeToScVal(obj.tag, { type: "symbol" });
-    const valuesVal = obj.values.map((v: any) => {
-      return nativeToScVal(getScValsFromArgs([v], scVals || [])[0]);
-    });
+    const valuesVal = convertValuesToScVals(obj.values, scVals || []);
+    const tupleScValsVec = xdr.ScVal.scvVec([tagVal, ...valuesVal]);
 
-    return nativeToScVal([tagVal, ...valuesVal]);
+    return tupleScValsVec;
   }
 
   // ENUM CASE
@@ -273,11 +346,26 @@ const convertObjectToScVal = (obj: Record<string, any>): xdr.ScVal => {
   return nativeToScVal(convertedValue, { type: typeHints });
 };
 
+// if (Array.isArray(pair["1"])) {
+//   // Check if it's an array of enums
+//   if (pair["1"].length > 0 && pair["1"][0].tag) {
+//     const enumScVals = pair["1"].map((item) => convertEnumToScVal(item));
+//     acc[pair["0"].value] = xdr.ScVal.scvVec(enumScVals);
+//   } else {
+//     const valueScVal = getScValFromArg(pair["1"]);
+//     acc[pair["0"].value] = valueScVal;
+//   }
+
 const convertObjectToMap = (
   mapArray: any,
 ): { mapVal: Record<string, any>; mapType: Record<string, any> } => {
   const mapVal = mapArray.reduce((acc: any, pair: any) => {
-    acc[pair["0"].value] = pair["1"].value === "true" ? true : false;
+    if (Array.isArray(pair["1"])) {
+      const valueScVal = getScValFromArg(pair["1"], []);
+      acc[pair["0"].value] = valueScVal;
+    } else {
+      acc[pair["0"].value] = pair["1"].value === "true" ? true : false;
+    }
     return acc;
   }, {});
 
@@ -369,19 +457,6 @@ const getScValsFromArgs = (
         scVals.push(tupleScValsVec);
         return scVals;
       }
-
-      // if (argValue.some((v) => typeof Object.values(v)[0] === "object")) {
-
-      //   const arrayScVals = argValue.map((v) => {
-      //     if (v.tag) {
-      //       return convertEnumToScVal(v, scVals);
-      //     }
-      //     return convertObjectToScVal(v);
-      //   });
-
-      //   scVals.push(...arrayScVals);
-      //   return scVals;
-      // }
 
       // VEC CASE #2: array of primitives
       const isVecArray = argValue.every((v) => {
