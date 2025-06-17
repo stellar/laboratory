@@ -157,6 +157,8 @@ export const JsonSchemaForm = ({
                 sorobanOperation.params.invoke_contract,
               ) as SorobanInvokeValue
             }
+            formError={formError}
+            setFormError={setFormError}
           />
         </Box>
 
