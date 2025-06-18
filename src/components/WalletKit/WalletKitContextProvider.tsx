@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useEffect, useMemo } from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
 import { useStore } from "@/store/useStore";
 
 import {
@@ -18,6 +18,7 @@ import { LedgerModule } from "@creit.tech/stellar-wallets-kit/modules/ledger.mod
 import { getWalletKitNetwork } from "@/helpers/getWalletKitNetwork";
 import { localStorageSavedTheme } from "@/helpers/localStorageSavedTheme";
 import { localStorageSavedWallet } from "@/helpers/localStorageSavedWallet";
+import { SavedWallet } from "@/types/types";
 
 type WalletKitProps = {
   walletKit?: StellarWalletsKit;
@@ -34,8 +35,8 @@ export const WalletKitContextProvider = ({
   children: React.ReactNode;
 }) => {
   const { network, theme, setTheme } = useStore();
+  const [savedWallet, setSavedWallet] = useState<SavedWallet | null>(null);
   const networkType = getWalletKitNetwork(network.id);
-  const savedWallet = localStorageSavedWallet.get();
 
   useEffect(() => {
     const savedTheme = localStorageSavedTheme.get();
@@ -44,6 +45,14 @@ export const WalletKitContextProvider = ({
       setTheme(savedTheme);
     }
     // Run only when component mounts
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const savedWallet = localStorageSavedWallet.get();
+    if (savedWallet) {
+      setSavedWallet(savedWallet);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
