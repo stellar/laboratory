@@ -96,28 +96,24 @@ export const ContractInfo = ({
 
   const INFO_FIELDS: ContractExplorerInfoField[] = [
     {
-      id: "repository",
-      label: "Source Code",
-    },
-    {
       id: "created",
       label: "Created",
-    },
-    {
-      id: "wasm",
-      label: "Wasm Hash",
-    },
-    {
-      id: "versions",
-      label: "Versions",
     },
     {
       id: "creator",
       label: "Creator",
     },
     {
+      id: "wasm",
+      label: "Wasm Hash",
+    },
+    {
+      id: "repository",
+      label: "Source Code",
+    },
+    {
       id: "storage_entries",
-      label: "Data Storage",
+      label: "Contract Storage",
     },
   ];
 
@@ -172,7 +168,25 @@ export const ContractInfo = ({
                   {sourceRepo}
                   <Icon.LinkExternal01 />
                 </SdsLink>
-              ) : null
+              ) : (
+                <Box align="center" direction="row" gap="xs">
+                  Unavailable
+                  <Tooltip
+                    triggerEl={
+                      <div className="Label__infoButton" role="button">
+                        <Icon.InfoCircle />
+                      </div>
+                    }
+                  >
+                    This contract has no build verification configured. Please
+                    see{" "}
+                    <Link href="https://stellar.expert/explorer/public/contract/validation">
+                      verification setup instructions
+                    </Link>{" "}
+                    for more info.
+                  </Tooltip>
+                </Box>
+              )
             }
           />
         );
