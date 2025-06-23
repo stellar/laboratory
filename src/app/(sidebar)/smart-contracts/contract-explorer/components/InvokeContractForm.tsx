@@ -3,7 +3,7 @@ import { Button, Card, Select, Text, Textarea } from "@stellar/design-system";
 import { BASE_FEE, contract } from "@stellar/stellar-sdk";
 import { JSONSchema7 } from "json-schema";
 
-import { RpcErrorResponse } from "@/app/(sidebar)/transaction/submit/components/ErrorResponse";
+import { RpcErrorResponse } from "@/components/TxErrorResponse";
 
 import { Box } from "@/components/layout/Box";
 import { ErrorText } from "@/components/ErrorText";
