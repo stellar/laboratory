@@ -184,10 +184,13 @@
   }
 
   &__filterDropdown {
+    --Floater-background-color: var(--sds-clr-gray-01);
+
     position: absolute;
     width: calc(100% - 0.6rem);
     top: 85%;
     left: pxToRem(4px);
+    border: 1px solid var(--sds-clr-gray-06);
 
     &__container {
       display: flex;
