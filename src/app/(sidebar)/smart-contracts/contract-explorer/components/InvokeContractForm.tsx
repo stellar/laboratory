@@ -1,5 +1,12 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { Button, Card, Select, Text, Textarea } from "@stellar/design-system";
+import {
+  Button,
+  Card,
+  Loader,
+  Select,
+  Text,
+  Textarea,
+} from "@stellar/design-system";
 import { BASE_FEE, contract } from "@stellar/stellar-sdk";
 import { JSONSchema7 } from "json-schema";
 
@@ -111,11 +118,12 @@ export const InvokeContractForm = ({
     reset: resetSubmitRpc,
   } = useSubmitRpcTx();
 
-  const { data: wasmBinary } = useWasmBinaryFromRpc({
-    wasmHash: wasmHash || "",
-    rpcUrl: network.rpcUrl || "",
-    isActive: Boolean(network.passphrase && wasmHash),
-  });
+  const { data: wasmBinary, isFetching: isWasmBinaryFetching } =
+    useWasmBinaryFromRpc({
+      wasmHash: wasmHash || "",
+      rpcUrl: network.rpcUrl || "",
+      isActive: Boolean(network.passphrase && wasmHash),
+    });
 
   const walletKitInstance = useContext(WalletKitContext);
 
@@ -395,6 +403,10 @@ export const InvokeContractForm = ({
   }, [dereferencedSchema]);
 
   const renderSchema = () => {
+    if (isWasmBinaryFetching) {
+      return <Loader />;
+    }
+
     if (!contractSpec || !dereferencedSchema) {
       return null;
     }
