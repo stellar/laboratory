@@ -3,7 +3,7 @@ import { Select } from "@stellar/design-system";
 import { contract } from "@stellar/stellar-sdk";
 
 import { Box } from "@/components/layout/Box";
-import { JsonSchemaForm } from "@/components/JsonSchema";
+import { JsonSchemaForm } from "@/components/SmartContractJsonSchema";
 import { ExpandBox } from "@/components/ExpandBox";
 
 import { SorobanInvokeValue } from "@/types/types";
@@ -62,14 +62,12 @@ export const ContractMethodSelectPicker = ({
       </Select>
       <ExpandBox isExpanded={Boolean(selectedMethod)} offsetTop="sm">
         {selectedMethod && spec.jsonSchema(selectedMethod) ? (
-          <>
-            <JsonSchemaForm
-              name={selectedMethod}
-              value={value}
-              onChange={onChange}
-              funcSchema={spec.jsonSchema(selectedMethod)}
-            />
-          </>
+          <JsonSchemaForm
+            name={selectedMethod}
+            value={value}
+            onChange={onChange}
+            funcSchema={spec.jsonSchema(selectedMethod)}
+          />
         ) : null}
       </ExpandBox>
     </Box>
