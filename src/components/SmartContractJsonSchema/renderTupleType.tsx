@@ -1,5 +1,6 @@
 import { Card } from "@stellar/design-system";
 import { JSONSchema7 } from "json-schema";
+import { get } from "lodash";
 
 import { Box } from "@/components/layout/Box";
 import { LabelHeading } from "@/components/LabelHeading";
@@ -9,7 +10,6 @@ import {
   JsonSchemaFormProps,
   SorobanInvokeValue,
 } from "@/types/types";
-import { get } from "lodash";
 
 export const renderTupleType = ({
   path,
@@ -40,7 +40,7 @@ export const renderTupleType = ({
   return (
     <Box gap="md">
       <LabelHeading size="md" infoText={schema.description}>
-        {getKeyName?.tag}
+        {getKeyName.tag}
       </LabelHeading>
 
       <Card>

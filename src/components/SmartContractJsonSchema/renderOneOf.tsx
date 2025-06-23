@@ -73,7 +73,6 @@ export const renderOneOf = ({
         updatedPath,
         {
           tag: e.target.value,
-          // values: [],
         },
       );
 
@@ -91,7 +90,6 @@ export const renderOneOf = ({
           ...parsedSorobanOperation.args,
           [name]: {
             tag: e.target.value,
-            // values: [],
           },
         },
       });

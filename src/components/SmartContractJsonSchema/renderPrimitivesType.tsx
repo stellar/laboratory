@@ -4,13 +4,13 @@ import type { JSONSchema7 } from "json-schema";
 import { get } from "lodash";
 
 import { jsonSchema } from "@/helpers/jsonSchema";
+import { convertSpecTypeToScValType } from "@/helpers/sorobanUtils";
 
 import { validate } from "@/validate";
 
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 
 import type { AnyObject, SorobanInvokeValue } from "@/types/types";
-import { convertSpecTypeToScValType } from "@/helpers/sorobanUtils";
 
 export const renderPrimitivesType = ({
   name,

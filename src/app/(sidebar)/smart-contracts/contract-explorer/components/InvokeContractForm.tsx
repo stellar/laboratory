@@ -77,6 +77,7 @@ export const InvokeContractForm = ({
     isFetching: isFetchingSequenceNumber,
     isLoading: isLoadingSequenceNumber,
     refetch: fetchSequenceNumber,
+    error: sequenceNumberError,
   } = useAccountSequenceNumber({
     publicKey: walletKit?.publicKey || "",
     horizonUrl: network.horizonUrl,
@@ -148,7 +149,7 @@ export const InvokeContractForm = ({
         }
       } catch (error: any) {
         if (error?.message) {
-          setInvokeError({ message: error?.message, methodType: "sign" });
+          setInvokeError({ message: error?.message, methodType: "Sign" });
         }
       } finally {
         setIsExtensionLoading(false);
@@ -232,7 +233,7 @@ export const InvokeContractForm = ({
     if (!prepareTxData?.transactionXdr) {
       setInvokeError({
         message: "No transaction data available to sign",
-        methodType: "submit",
+        methodType: "Submit",
       });
       return;
     }
@@ -262,7 +263,7 @@ export const InvokeContractForm = ({
     } catch (error: any) {
       setInvokeError({
         message: error?.message || "Failed to sign transaction",
-        methodType: "submit",
+        methodType: "Submit",
       });
     }
   };
@@ -278,8 +279,12 @@ export const InvokeContractForm = ({
       // fetch sequence number first
       await fetchSequenceNumber();
 
-      if (!sequenceNumberData) {
-        throw new Error("Failed to fetch sequence number. Please try again.");
+      if (!sequenceNumberData || sequenceNumberError) {
+        const errorMessage =
+          sequenceNumberError ||
+          "Failed to fetch sequence number. Please try again.";
+
+        throw errorMessage;
       }
 
       trackEvent(
@@ -344,7 +349,7 @@ export const InvokeContractForm = ({
       }
 
       if (simulateError) {
-        setInvokeError({ message: simulateError, methodType: "simulate" });
+        setInvokeError({ message: simulateError, methodType: "Simulate" });
 
         trackEvent(
           TrackingEvent.SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SIMULATE_ERROR,
@@ -355,9 +360,8 @@ export const InvokeContractForm = ({
       }
     } catch (error: any) {
       setInvokeError({
-        message:
-          error?.message || "Failed to simulate transaction. Please try again.",
-        methodType: "simulate",
+        message: error,
+        methodType: "Simulate",
       });
     }
   };

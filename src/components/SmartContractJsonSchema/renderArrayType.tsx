@@ -3,6 +3,7 @@ import { Button, Card, Icon, Text } from "@stellar/design-system";
 import { get } from "lodash";
 
 import { jsonSchema } from "@/helpers/jsonSchema";
+import { arrayItem } from "@/helpers/arrayItem";
 
 import { Box } from "@/components/layout/Box";
 import { LabelHeading } from "@/components/LabelHeading";
@@ -12,7 +13,6 @@ import type {
   JsonSchemaFormProps,
   SorobanInvokeValue,
 } from "@/types/types";
-import { arrayItem } from "@/helpers/arrayItem";
 
 export const renderArrayType = ({
   schema,

@@ -1,7 +1,12 @@
 import type { JSONSchema7 } from "json-schema";
+import { set } from "lodash";
+import {
+  parse as jsonParse,
+  stringify as jsonStringify,
+  parseNumberAndBigInt,
+} from "lossless-json";
 
 import type { AnyObject } from "@/types/types";
-import { set } from "lodash";
 
 /**
  * For a path like 'requests.1.request_type':
@@ -20,7 +25,14 @@ import { set } from "lodash";
  */
 const setDeepValue = (obj: AnyObject, path: string, val: any): AnyObject => {
   if (!obj) return {};
-  const newObj = JSON.parse(JSON.stringify(obj));
+
+  const stringifiedObj = jsonStringify(obj) as string;
+  const newObj = jsonParse(
+    stringifiedObj,
+    null,
+    parseNumberAndBigInt,
+  ) as AnyObject;
+
   return set(newObj, path, val);
 };
 
