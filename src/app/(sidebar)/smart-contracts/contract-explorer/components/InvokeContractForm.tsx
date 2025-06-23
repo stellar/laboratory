@@ -512,8 +512,14 @@ export const InvokeContractForm = ({
     !walletKit?.publicKey ||
     !hasNoFormErrors ||
     !simulatedResultResponse;
+
   const isSimulationDisabled = () => {
-    const disabled = !isGetFunction && !Object.keys(formValue.args).length;
+    const currentKey = Object.keys(formValue.args)[0];
+    const isEmptyArgs =
+      isEmptyObject(formValue.args) || formValue.args[currentKey]?.value === "";
+
+    const disabled = !isGetFunction && isEmptyArgs;
+
     return !walletKit?.publicKey || !hasNoFormErrors || disabled;
   };
 
