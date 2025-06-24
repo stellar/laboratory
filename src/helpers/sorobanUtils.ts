@@ -181,7 +181,7 @@ export const getTxnToSimulate = (
   networkPassphrase: string,
 ): { xdr: string; error: string } => {
   try {
-    const argsToScVals = getScValsFromArgs(value.args);
+    const argsToScVals = getScValsFromArgs(value.args, []);
     const builtXdr = buildTxWithSorobanData({
       params: txnParams,
       sorobanOp: {
@@ -203,9 +203,98 @@ export const getTxnToSimulate = (
   }
 };
 
+const isMap = (arg: any) => {
+  try {
+    return (
+      Array.isArray(arg) &&
+      arg.every((obj: any) => {
+        // Check if object has exactly two keys: "0" and "1"
+        const keys = Object.keys(obj);
+        if (keys.length !== 2 || !keys.includes("0") || !keys.includes("1")) {
+          return false;
+        }
+
+        // Check if "0" key has value and type
+        if (
+          !obj["0"] ||
+          typeof obj["0"] !== "object" ||
+          !("value" in obj["0"]) ||
+          !("type" in obj["0"])
+        ) {
+          return false;
+        }
+
+        // "1" can be either a simple value with type, or a complex value (array, enum, etc)
+        return true;
+      })
+    );
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (e: any) {
+    return false;
+  }
+};
+
+const getScValFromArg = (arg: any, scVals: xdr.ScVal[]): xdr.ScVal => {
+  // Handle array of arrays with numeric objects
+  if (Array.isArray(arg) && arg.length > 0) {
+    const arrayScVals = arg.map((subArray) => {
+      if (Array.isArray(subArray) && isMap(subArray)) {
+        const { mapVal, mapType } = convertObjectToMap(subArray);
+
+        if (Object.keys(mapVal).length > 1) {
+          const items = Object.keys(mapVal);
+
+          const mapScValOne = nativeToScVal(mapVal[items[0]], {
+            type: mapType[items[0]],
+          });
+
+          scVals.push(mapScValOne);
+
+          const mapScValTwo = nativeToScVal(mapVal[items[1]], {
+            type: mapType[items[1]],
+          });
+
+          scVals.push(mapScValTwo);
+        }
+
+        return nativeToScVal(mapVal, { type: mapType });
+      }
+      return getScValFromArg(subArray, scVals);
+    });
+
+    return xdr.ScVal.scvVec(arrayScVals);
+  }
+
+  return getScValsFromArgs([arg], scVals || [])[0];
+};
+
+const convertValuesToScVals = (
+  values: any[],
+  scVals: xdr.ScVal[],
+): xdr.ScVal[] => {
+  return values.map((v) => {
+    return getScValFromArg(v, scVals);
+  });
+};
+
+const convertEnumToScVal = (obj: Record<string, any>, scVals?: xdr.ScVal[]) => {
+  // TUPLE CASE
+  if (obj.tag && obj.values) {
+    const tagVal = nativeToScVal(obj.tag, { type: "symbol" });
+    const valuesVal = convertValuesToScVals(obj.values, scVals || []);
+    const tupleScValsVec = xdr.ScVal.scvVec([tagVal, ...valuesVal]);
+
+    return tupleScValsVec;
+  }
+
+  // ENUM CASE
+  const tagVec = [obj.tag];
+  return nativeToScVal(tagVec, { type: "symbol" });
+};
+
 const convertObjectToScVal = (obj: Record<string, any>): xdr.ScVal => {
   const convertedValue: Record<string, any> = {};
-  const typeHints: Record<string, [string, string]> = {};
+  const typeHints: Record<string, any> = {};
   // obj input example:
   //  {
   //    "address": {
@@ -246,32 +335,131 @@ const convertObjectToScVal = (obj: Record<string, any>): xdr.ScVal => {
   //  }
 
   for (const key in obj) {
-    convertedValue[key] = obj[key].value;
-    typeHints[key] = ["symbol", obj[key].type];
+    if (obj[key].type === "bool") {
+      convertedValue[key] = obj[key].value === "true" ? true : false;
+      typeHints[key] = ["symbol"];
+    } else {
+      convertedValue[key] = obj[key].value;
+      typeHints[key] = ["symbol", obj[key].type];
+    }
   }
 
   return nativeToScVal(convertedValue, { type: typeHints });
 };
 
-const getScValsFromArgs = (args: SorobanInvokeValue["args"]): xdr.ScVal[] => {
-  const scVals: xdr.ScVal[] = [];
+const convertObjectToMap = (
+  mapArray: any,
+): { mapVal: Record<string, any>; mapType: Record<string, any> } => {
+  const mapVal = mapArray.reduce((acc: any, pair: any) => {
+    if (Array.isArray(pair["1"])) {
+      const valueScVal = getScValFromArg(pair["1"], []);
+      acc[pair["0"].value] = valueScVal;
+    } else {
+      acc[pair["0"].value] = pair["1"].value === "true" ? true : false;
+    }
+    return acc;
+  }, {});
+
+  const mapType = mapArray.reduce((acc: any, pair: any) => {
+    acc[pair["0"].value] = [pair["0"].type, pair["1"].type];
+    return acc;
+  }, {});
+
+  return { mapVal, mapType };
+};
+
+const convertTupleToScVal = (tupleArray: any) => {
+  const tupleScVals = tupleArray.map((v: { value: any; type: any }) => {
+    if (v.type === "bool") {
+      const boolValue = v.value === "true" ? true : false;
+      return nativeToScVal(boolValue);
+    }
+    if (v.type === "bytes") {
+      return nativeToScVal(new Uint8Array(Buffer.from(v.value, "base64")));
+    }
+    return nativeToScVal(v.value, { type: v.type });
+  });
+
+  // JS SDK's nativeToScval doesn't support an array of different types
+  // so we need to use xdr.ScVal.scvVec
+  return xdr.ScVal.scvVec(tupleScVals);
+};
+
+const getScValFromPrimitive = (v: any) => {
+  if (v.type === "bool") {
+    const boolValue = v.value === "true" ? true : false;
+    return nativeToScVal(boolValue);
+  }
+  if (v.type === "bytes") {
+    return nativeToScVal(new Uint8Array(Buffer.from(v.value, "base64")));
+  }
+  return nativeToScVal(v.value, { type: v.type });
+};
+
+const getScValsFromArgs = (
+  args: SorobanInvokeValue["args"],
+  scVals: xdr.ScVal[] = [],
+): xdr.ScVal[] => {
+  // PRIMITIVE CASE
+  if (Object.values(args).every((v: any) => v.type && v.value)) {
+    const primitiveScVals = Object.values(args).map((v) => {
+      return getScValFromPrimitive(v);
+    });
+
+    return primitiveScVals;
+  }
+
+  // ENUM (VOID AND COMPLEX ONE LIKE TUPLE) CASE
+  if (Object.values(args).some((v) => v.tag)) {
+    const enumScVals = Object.values(args).map((v) => {
+      return convertEnumToScVal(v, scVals);
+    });
+
+    return enumScVals;
+  }
 
   for (const argKey in args) {
     const argValue = args[argKey];
-    // Note: argValue is either an object or array of objects
-    if (Array.isArray(argValue) && Object.values(argValue).length > 0) {
-      // array of objects
+
+    // Check if it's an array of map objects
+    if (Array.isArray(argValue)) {
+      // MAP CASE
+      if (isMap(argValue)) {
+        const { mapVal, mapType } = convertObjectToMap(argValue);
+        const mapScVal = nativeToScVal(mapVal, { type: mapType });
+        scVals.push(mapScVal);
+        return scVals;
+      }
+
+      // VEC CASE #1: array of objects or complicated tuple case
       if (argValue.some((v) => typeof Object.values(v)[0] === "object")) {
-        const arrayScVals = argValue.map((v) => convertObjectToScVal(v));
-        scVals.push(...arrayScVals);
-      } else {
-        // array of primitives example:
-        //   {
-        //     "value": "GBPIMUEJFYS7RT23QO2ACH2JMKGXLXZI4E5ACBSQMF32RKZ5H3SVNL5F",
-        //     "type": "Address"
-        // }
+        const arrayScVals = argValue.map((v) => {
+          if (v.tag) {
+            return convertEnumToScVal(v, scVals);
+          }
+          return convertObjectToScVal(v);
+        });
+
+        const tupleScValsVec = xdr.ScVal.scvVec(arrayScVals);
+
+        scVals.push(tupleScValsVec);
+        return scVals;
+      }
+
+      // VEC CASE #2: array of primitives
+      const isVecArray = argValue.every((v) => {
+        return v.type === argValue[0].type;
+      });
+
+      if (isVecArray) {
         const arrayScVals = argValue.reduce((acc, v) => {
-          acc.push(v.value);
+          if (v.type === "bool") {
+            acc.push(v.value === "true" ? true : false);
+          } else if (v.type === "bytes") {
+            acc.push(new Uint8Array(Buffer.from(v.value, "base64")));
+          } else {
+            acc.push(v.value);
+          }
           return acc;
         }, []);
 
@@ -280,9 +468,28 @@ const getScValsFromArgs = (args: SorobanInvokeValue["args"]): xdr.ScVal[] => {
         });
 
         scVals.push(scVal);
+        return scVals;
       }
-    } else {
-      scVals.push(nativeToScVal(argValue.value, { type: argValue.type }));
+
+      // TUPLE CASE
+      const isTupleArray = argValue.every((v: any) => v.type && v.value);
+      if (isTupleArray) {
+        const tupleScValsVec = convertTupleToScVal(argValue);
+
+        scVals.push(tupleScValsVec);
+        return scVals;
+      }
+    }
+
+    // OBJECT CASE
+    if (Object.values(argValue).every((v: any) => v.type && v.value)) {
+      const convertedObj = convertObjectToScVal(argValue);
+      scVals.push(nativeToScVal(convertedObj));
+      return scVals;
+    }
+
+    if (argValue.type && argValue.value) {
+      scVals.push(getScValFromPrimitive(argValue));
     }
   }
 
@@ -337,6 +544,8 @@ export const convertSpecTypeToScValType = (type: string) => {
       return "symbol";
     case "DataUrl":
       return "bytes";
+    case "Bool":
+      return "bool";
     default:
       return type;
   }
