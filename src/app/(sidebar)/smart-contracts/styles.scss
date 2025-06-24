@@ -54,7 +54,7 @@
   }
 
   &__tabs {
-    .NoContractLoaded {
+    .NoInfoLoadedView {
       min-height: pxToRem(320px);
     }
   }
@@ -111,25 +111,6 @@
 .SavedContractItem {
   .Input__side-element--left {
     width: pxToRem(76px);
-  }
-}
-
-.NoContractLoaded {
-  background-color: var(--sds-clr-gray-03);
-  border-radius: pxToRem(8px);
-  padding: pxToRem(24px);
-  width: 100%;
-  height: 100%;
-
-  font-size: pxToRem(14px);
-  line-height: pxToRem(20px);
-  color: var(--sds-clr-gray-11);
-
-  svg {
-    display: block;
-    stroke: var(--sds-clr-gray-11);
-    width: pxToRem(14px);
-    height: pxToRem(14px);
   }
 }
 

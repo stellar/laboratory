@@ -216,9 +216,12 @@ export interface Store {
   smartContracts: {
     explorer: {
       contractId: string;
+      transactionHash: string;
     };
     updateExplorerContractId: (contractId: string) => void;
+    updateExplorerTransactionHash: (txHash: string) => void;
     resetExplorerContractId: () => void;
+    resetExplorerTransactionHash: () => void;
   };
 }
 
@@ -329,6 +332,7 @@ const initXdrState = {
 const initSmartContractsState = {
   explorer: {
     contractId: "",
+    transactionHash: "",
   },
 };
 
@@ -635,9 +639,17 @@ export const createStore = (options: CreateStoreOptions) =>
             set((state) => {
               state.smartContracts.explorer.contractId = contractId;
             }),
+          updateExplorerTransactionHash: (txHash) =>
+            set((state) => {
+              state.smartContracts.explorer.transactionHash = txHash;
+            }),
           resetExplorerContractId: () =>
             set((state) => {
               state.smartContracts.explorer.contractId = "";
+            }),
+          resetExplorerTransactionHash: () =>
+            set((state) => {
+              state.smartContracts.explorer.transactionHash = "";
             }),
         },
       })),

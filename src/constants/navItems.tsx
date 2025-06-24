@@ -88,6 +88,10 @@ const SMART_CONTRACTS_NAV = [
     label: "Contract Explorer",
   },
   {
+    route: Routes.SMART_CONTRACTS_TRANSACTION_DASHBOARD,
+    label: "Transaction Dashboard",
+  },
+  {
     route: Routes.SMART_CONTRACTS_CONTRACT_LIST,
     label: "Smart Contract List",
   },

@@ -172,17 +172,21 @@ export enum TrackingEvent {
   ENDPOINTS_SAVED_VIEW = "endpoints: saved: view",
   ENDPOINTS_SAVED_EDIT = "endpoints: saved: edit",
   ENDPOINTS_SAVED_DELETE = "endpoints: saved: delete",
-  // Smart Contracts
+  // Smart Contracts - Contract Explorer
   SMART_CONTRACTS_EXPLORER_LOAD_CONTRACT = "smart contracts: explorer: load contract",
   SMART_CONTRACTS_EXPLORER_CLEAR_CONTRACT = "smart contracts: explorer: clear contract",
   SMART_CONTRACTS_EXPLORER_TAB = "smart contracts: explorer: tab",
   SMART_CONTRACTS_EXPLORER_SAVE = "smart contracts: explorer: save contract id",
   SMART_CONTRACTS_SAVED_VIEW_IN_EXPLORER = "smart contracts: saved: view in contract explorer",
   SMART_CONTRACTS_EXPLORER_STORAGE_RESTORE = "smart contracts: explorer: storage: restore",
+  // Smart Contracts - Invoke Contract
   SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SIMULATE = "smart contracts: explorer: invoke contract: simulate",
   SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SIMULATE_SUCCESS = "smart contracts: explorer: invoke contract: simulate: success",
   SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SIMULATE_ERROR = "smart contracts: explorer: invoke contract: simulate: error",
   SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SUBMIT = "smart contracts: explorer: invoke contract: submit",
   SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SUBMIT_SUCCESS = "smart contracts: explorer: invoke contract: submit: success",
   SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SUBMIT_ERROR = "smart contracts: explorer: invoke contract: submit: error",
+  // Smart Contracts - Transaction Dashboard
+  SMART_CONTRACTS_TX_DASHBOARD_LOAD_TX = "smart contracts: tx dashboard: load tx",
+  SMART_CONTRACTS_TX_DASHBOARD_CLEAR_TX = "smart contracts: tx dashboard: clear tx",
 }
