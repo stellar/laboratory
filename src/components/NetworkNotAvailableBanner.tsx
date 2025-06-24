@@ -29,6 +29,8 @@ export const NetworkNotAvailableBanner = () => {
   );
 
   useLayoutEffect(() => {
+    setIsDelay(true);
+
     // Adding slight delay to avoid banner flicker when the status check is fast
     const t = setTimeout(() => {
       setIsDelay(false);
@@ -38,7 +40,7 @@ export const NetworkNotAvailableBanner = () => {
     return () => {
       clearTimeout(t);
     };
-  }, []);
+  }, [network.id]);
 
   const isHorizonInProgress = isHorizonFetching || isHorizonLoading;
   const isRpcInProgress = isRpcFetching || isRpcLoading;

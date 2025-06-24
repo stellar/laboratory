@@ -21,6 +21,7 @@ export const Tabs = ({
         <div
           key={t.id}
           className="Tab"
+          data-testid={`${t.id}`}
           data-is-active={t.id === activeTabId}
           {...{
             "data-is-disabled": t.isDisabled ?? undefined,

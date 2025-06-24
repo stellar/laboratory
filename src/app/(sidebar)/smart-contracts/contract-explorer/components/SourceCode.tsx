@@ -6,9 +6,12 @@ import {
   Select,
   Text,
 } from "@stellar/design-system";
+
 import { CodeEditor } from "@/components/CodeEditor";
 import { Box } from "@/components/layout/Box";
 import { ErrorText } from "@/components/ErrorText";
+import { PoweredByStellarExpert } from "@/components/PoweredByStellarExpert";
+
 import { useGitHubReadmeText } from "@/query/useGitHubReadmeText";
 import { openUrl } from "@/helpers/openUrl";
 
@@ -16,10 +19,12 @@ export const SourceCode = ({
   isActive,
   repo,
   commit,
+  isSourceStellarExpert,
 }: {
   isActive: boolean;
   repo: string;
   commit: string;
+  isSourceStellarExpert: boolean;
 }) => {
   const {
     data: readmeText,
@@ -104,27 +109,43 @@ export const SourceCode = ({
   };
 
   return (
-    <CodeEditor
-      title="README.md"
-      value={readmeText}
-      selectedLanguage="text"
-      customEl={
-        <Select
-          id="source-code-viewer"
-          fieldSize="sm"
-          onChange={(e) => {
-            handleOpenInContainer(e.target.value as ContainerResource);
-          }}
-          value=""
-        >
-          <option value="" disabled={true}>
-            Open in
-          </option>
-          <option value="devcontainer">Dev Container</option>
-          <option value="codeanywhere">Codeanywhere</option>
-          <option value="github">GitHub</option>
-        </Select>
-      }
-    />
+    <Box gap="lg">
+      <CodeEditor
+        title="README.md"
+        value={readmeText}
+        selectedLanguage="text"
+        customEl={
+          <Select
+            id="source-code-viewer"
+            fieldSize="sm"
+            onChange={(e) => {
+              handleOpenInContainer(e.target.value as ContainerResource);
+            }}
+            value=""
+          >
+            <option value="" disabled={true}>
+              Open in
+            </option>
+            <option value="devcontainer">Dev Container</option>
+            <option value="codeanywhere">Codeanywhere</option>
+            <option value="github">GitHub</option>
+          </Select>
+        }
+      />
+
+      {isSourceStellarExpert ? (
+        <>
+          <Alert variant="primary" placement="inline">
+            Please note that the source code provided is from the{" "}
+            <Link href="https://stellar.expert">Stellar.Expert</Link> API and
+            not from contract build verification. This contract has no build
+            verification configured. As such, it may not reflect the contract
+            deployed on-chain.
+          </Alert>
+
+          <PoweredByStellarExpert />
+        </>
+      ) : null}
+    </Box>
   );
 };

@@ -82,80 +82,6 @@
   }
 }
 
-.DataTypeLegend {
-  --DataTypeLegend-color: var(--sds-clr-gray-11);
-
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: pxToRem(6px);
-
-  &::before {
-    content: "";
-    display: block;
-    width: pxToRem(8px);
-    height: pxToRem(8px);
-    border-radius: pxToRem(4px);
-    background-color: var(--DataTypeLegend-color);
-  }
-
-  &::after {
-    content: attr(data-type);
-    font-size: pxToRem(12px);
-    line-height: pxToRem(18px);
-    font-weight: var(--sds-fw-semi-bold);
-    color: var(--sds-clr-gray-11);
-  }
-
-  &[data-type="sym"] {
-    --DataTypeLegend-color: var(--sds-clr-navy-10);
-  }
-
-  &[data-type="u8-u64"] {
-    --DataTypeLegend-color: var(--sds-clr-teal-10);
-  }
-
-  &[data-type="i8-i64"] {
-    --DataTypeLegend-color: var(--sds-clr-teal-08);
-  }
-
-  &[data-type="i128-i256"] {
-    --DataTypeLegend-color: var(--sds-clr-teal-07);
-  }
-
-  &[data-type="u128-u256"] {
-    --DataTypeLegend-color: var(--sds-clr-teal-05);
-  }
-
-  &[data-type="bool"] {
-    --DataTypeLegend-color: var(--sds-clr-pink-10);
-  }
-
-  &[data-type="map"] {
-    --DataTypeLegend-color: var(--sds-clr-gold-08);
-  }
-
-  &[data-type="vec"] {
-    --DataTypeLegend-color: var(--sds-clr-mint-07);
-  }
-
-  &[data-type="string"] {
-    --DataTypeLegend-color: var(--sds-clr-gray-11);
-  }
-
-  &[data-type="address"] {
-    --DataTypeLegend-color: var(--sds-clr-gray-10);
-  }
-
-  &[data-type="bytes"] {
-    --DataTypeLegend-color: var(--sds-clr-gray-09);
-  }
-
-  &[data-type="bytesN"] {
-    --DataTypeLegend-color: var(--sds-clr-gray-08);
-  }
-}
-
 .BuildInfo {
   &__data {
     font-size: pxToRem(14px);
@@ -181,13 +107,12 @@
   }
 }
 
-// Saved Smart Contract IDs
+// Saved Smart Contracts
 .SavedContractItem {
   .Input__side-element--left {
     width: pxToRem(76px);
   }
 }
-
 
 .NoContractLoaded {
   background-color: var(--sds-clr-gray-03);
@@ -205,5 +130,14 @@
     stroke: var(--sds-clr-gray-11);
     width: pxToRem(14px);
     height: pxToRem(14px);
+  }
+}
+
+.ContractInvoke {
+  .Select {
+    select {
+      font-weight: var(--sds-fw-semi-bold);
+      padding-right: pxToRem(32px);
+    }
   }
 }

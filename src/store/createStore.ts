@@ -17,6 +17,7 @@ import {
   TxnOperation,
   OpBuildingError,
   ThemeColorType,
+  XdrFormatType,
 } from "@/types/types";
 
 export type FeeBumpParams = {
@@ -77,8 +78,10 @@ export interface Store {
   updateWalletKit: (value?: WalletKit) => void;
   setTheme: (theme: ThemeColorType) => void;
   resetStoredData: () => void;
+  isMainNavHidden: boolean;
+  toggleIsMainNavHidden: (isHidden: boolean) => void;
 
-  // Saved Smart Contract IDs view
+  // Saved Smart Contracts view
   savedContractId: string;
   setSavedContractId: (contractId: string) => void;
   clearSavedContractId: () => void;
@@ -87,11 +90,16 @@ export interface Store {
   account: {
     publicKey: string | undefined;
     secretKey: string | undefined;
+    recoveryPhrase: string | undefined;
     generatedMuxedAccountInput: Partial<MuxedAccount> | EmptyObj;
     parsedMuxedAccountInput: string | undefined;
     generatedMuxedAccount: MuxedAccount | EmptyObj;
     parsedMuxedAccount: MuxedAccount | EmptyObj;
-    updateKeypair: (publicKey: string, secretKey?: string) => void;
+    updateKeypair: (
+      publicKey: string,
+      secretKey?: string,
+      recoveryPhrase?: string,
+    ) => void;
     updateGeneratedMuxedAccountInput: (value: Partial<MuxedAccount>) => void;
     updateParsedMuxedAccountInput: (value: string) => void;
     updateGeneratedMuxedAccount: (value: MuxedAccount) => void;
@@ -199,7 +207,7 @@ export interface Store {
     updateXdrBlob: (blob: string) => void;
     updateJsonString: (jsonString: string) => void;
     updateXdrType: (type: string) => void;
-    updateXdrFormat: (format: string) => void;
+    updateXdrFormat: (format: XdrFormatType) => void;
     resetXdr: () => void;
     resetJsonString: () => void;
   };
@@ -304,6 +312,7 @@ const initTransactionState = {
 const initAccountState = {
   publicKey: undefined,
   secretKey: undefined,
+  recoveryPhrase: undefined,
   generatedMuxedAccountInput: {},
   parsedMuxedAccountInput: undefined,
   generatedMuxedAccount: {},
@@ -375,7 +384,12 @@ export const createStore = (options: CreateStoreOptions) =>
               ...value,
             };
           }),
-        // Saved Smart Contract IDs view
+        isMainNavHidden: false,
+        toggleIsMainNavHidden: (isHidden) =>
+          set((state) => {
+            state.isMainNavHidden = isHidden;
+          }),
+        // Saved Smart Contracts view
         savedContractId: "",
         setSavedContractId: (contractId: string) =>
           set((state) => {
@@ -413,10 +427,15 @@ export const createStore = (options: CreateStoreOptions) =>
                 ...value,
               };
             }),
-          updateKeypair: (publicKey: string, secretKey?: string) =>
+          updateKeypair: (
+            publicKey: string,
+            secretKey?: string,
+            recoveryPhrase?: string,
+          ) =>
             set((state) => {
               state.account.publicKey = publicKey;
               state.account.secretKey = secretKey || "";
+              state.account.recoveryPhrase = recoveryPhrase || "";
             }),
           reset: () =>
             set((state) => {

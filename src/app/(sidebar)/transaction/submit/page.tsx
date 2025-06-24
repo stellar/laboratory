@@ -47,7 +47,7 @@ import { JsonCodeWrapToggle } from "@/components/JsonCodeWrapToggle";
 import {
   HorizonErrorResponse,
   RpcErrorResponse,
-} from "./components/ErrorResponse";
+} from "@/components/TxErrorResponse";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { parseJsonString } from "@/helpers/parseJsonString";

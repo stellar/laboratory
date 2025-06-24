@@ -1,5 +1,6 @@
 import React from "react";
 import { NetworkError, rpc as StellarRpc, xdr } from "@stellar/stellar-sdk";
+import type { JSONSchema7 } from "json-schema";
 import { TransactionBuildParams } from "@/store/createStore";
 
 // =============================================================================
@@ -268,6 +269,32 @@ export type SorobanInvokeValue = {
   args: AnyObject;
 };
 
+export type ScValPrimitiveType =
+  | "U32"
+  | "U64"
+  | "U128"
+  | "U256"
+  | "I32"
+  | "I64"
+  | "I128"
+  | "I256"
+  | "Address"
+  | "ScString"
+  | "ScSymbol"
+  | "DataUrl"
+  | "Bool";
+
+export type JsonSchemaFormProps = {
+  name: string;
+  schema: JSONSchema7;
+  path?: string[];
+  onChange: (value: SorobanInvokeValue) => void;
+  index?: number;
+  requiredFields?: string[];
+  parsedSorobanOperation: SorobanInvokeValue;
+  formError: AnyObject;
+  setFormError: (error: AnyObject) => void;
+};
 // =============================================================================
 // RPC
 // =============================================================================
@@ -331,6 +358,8 @@ export type ConfigSettingIdType =
   | "bucketlist_size_window"
   | "eviction_iterator";
 
+export type XdrFormatType = "json" | "base64";
+
 // =============================================================================
 // Local storage items
 // =============================================================================
@@ -351,6 +380,7 @@ export interface LocalStorageSavedItem {
 export interface SavedKeypair extends LocalStorageSavedItem {
   publicKey: string;
   secretKey: string;
+  recoveryPhrase?: string;
 }
 
 export interface SavedTransaction extends LocalStorageSavedItem {
@@ -483,6 +513,7 @@ export type DataTableCell = {
   value: React.ReactNode;
   isBold?: boolean;
   isWrap?: boolean;
+  isOverflow?: boolean;
 };
 
 // =============================================================================

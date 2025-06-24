@@ -2,6 +2,8 @@ export const SAVED_ACCOUNT_1 =
   "GA46LGGOLXJY5OSX6N4LHV4MWDFXNGLK76I4NDNKKYAXRRSKI5AJGMXG";
 export const SAVED_ACCOUNT_1_SECRET =
   "SADVGAH3VA3NGZ5VLX2ZICV7JQAINB2ZJZYOPMBXUNI3YRLGWLOA2OFY";
+export const SAVED_ACCOUNT_1_RECOVERY_PHRASE =
+  "test rare garbage cruise castle brand call topic bind bar test1 borrow garden jar melt island museum number test2 night final sleep avoid recycle";
 export const SAVED_ACCOUNT_2 =
   "GC5TQ7TXKHGE5JQMZPYV5KBSQ67X6PYQVU5QN7JRGWCHRA227UFPZ6LD";
 export const SAVED_ACCOUNT_2_SECRET =
@@ -21,6 +23,7 @@ const SAVED_ACCOUNTS = [
     name: "Account 1",
     publicKey: SAVED_ACCOUNT_1,
     secretKey: SAVED_ACCOUNT_1_SECRET,
+    recoveryPhrase: SAVED_ACCOUNT_1_RECOVERY_PHRASE,
   },
   {
     timestamp: 1731083842367,

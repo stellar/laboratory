@@ -1,12 +1,13 @@
-import React from "react";
+import React, { Suspense } from "react";
 import type { Metadata } from "next";
-import { headers } from "next/headers";
 
 import { LayoutMain } from "@/components/layout/LayoutMain";
 import { LayoutContextProvider } from "@/components/layout/LayoutContextProvider";
 import { WalletKitContextProvider } from "@/components/WalletKit/WalletKitContextProvider";
+
 import { QueryProvider } from "@/query/QueryProvider";
 import { StoreProvider } from "@/store/StoreProvider";
+import { GoogleAnalytics } from "@/metrics/GoogleAnalytics";
 
 import "@stellar/design-system/build/styles.min.css";
 import "@/styles/globals.scss";
@@ -17,27 +18,31 @@ export const metadata: Metadata = {
     "Explore Stellar Lab: Build, sign, and submit transactions. Access tools, Stellar RPC, Horizon, and more. Enhance your skills with Stellar Quest.",
 };
 
+// Automatically generates nonce for script and style tags
+export const dynamic = "force-dynamic";
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  headers();
-
   return (
     <html lang="en">
       <body>
-        <div id="root">
-          <StoreProvider>
-            <QueryProvider>
-              <LayoutContextProvider>
-                <WalletKitContextProvider>
-                  <LayoutMain>{children}</LayoutMain>
-                </WalletKitContextProvider>
-              </LayoutContextProvider>
-            </QueryProvider>
-          </StoreProvider>
-        </div>
+        <Suspense>
+          <div id="root">
+            <StoreProvider>
+              <QueryProvider>
+                <LayoutContextProvider>
+                  <WalletKitContextProvider>
+                    <LayoutMain>{children}</LayoutMain>
+                  </WalletKitContextProvider>
+                </LayoutContextProvider>
+              </QueryProvider>
+            </StoreProvider>
+          </div>
+          <GoogleAnalytics />
+        </Suspense>
       </body>
     </html>
   );

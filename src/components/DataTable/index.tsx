@@ -449,6 +449,7 @@ export const DataTable = <T extends AnyObject>({
               role="cell"
               {...(cell.isBold ? { "data-style": "bold" } : {})}
               {...(cell.isWrap ? { "data-wrap": "true" } : {})}
+              {...(cell.isOverflow ? { "data-overflow": "true" } : {})}
             >
               {cell.value}
             </td>
@@ -468,7 +469,7 @@ export const DataTable = <T extends AnyObject>({
         justify="space-between"
         wrap="wrap"
       >
-        {customHeaderEl}
+        {customHeaderEl ?? <div></div>}
 
         <Box
           gap="sm"

@@ -1,14 +1,22 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { Button, Card, Text, Textarea } from "@stellar/design-system";
+import {
+  Button,
+  Card,
+  Loader,
+  Select,
+  Text,
+  Textarea,
+} from "@stellar/design-system";
 import { BASE_FEE, contract } from "@stellar/stellar-sdk";
 import { JSONSchema7 } from "json-schema";
+
+import { RpcErrorResponse } from "@/components/TxErrorResponse";
 
 import { Box } from "@/components/layout/Box";
 import { ErrorText } from "@/components/ErrorText";
 import { JsonCodeWrapToggle } from "@/components/JsonCodeWrapToggle";
-import { JsonSchemaFormRenderer } from "@/components/JsonSchema/JsonSchemaFormRenderer";
+import { JsonSchemaRenderer } from "@/components/SmartContractJsonSchema/JsonSchemaRenderer";
 import { PrettyJsonTransaction } from "@/components/PrettyJsonTransaction";
-import { RpcErrorResponse } from "@/app/(sidebar)/transaction/submit/components/ErrorResponse";
 import { TransactionSuccessCard } from "@/components/TransactionSuccessCard";
 import { WalletKitContext } from "@/components/WalletKit/WalletKitContextProvider";
 
@@ -30,14 +38,15 @@ import { getWasmContractData } from "@/helpers/getWasmContractData";
 import { getTxnToSimulate } from "@/helpers/sorobanUtils";
 
 import {
-  AnyObject,
   ContractInfoApiResponse,
   Network,
   SorobanInvokeValue,
   EmptyObj,
+  XdrFormatType,
+  AnyObject,
 } from "@/types/types";
-import { trackEvent } from "@/metrics/tracking";
-import { TrackingEvent } from "@/metrics/tracking";
+
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 export const InvokeContractForm = ({
   infoData,
@@ -55,6 +64,7 @@ export const InvokeContractForm = ({
     methodType: string;
   } | null>(null);
   const [isExtensionLoading, setIsExtensionLoading] = useState(false);
+  const [xdrFormat, setXdrFormat] = useState<XdrFormatType>("json");
   const [formValue, setFormValue] = useState<SorobanInvokeValue>({
     contract_id: infoData.contract,
     function_name: funcName,
@@ -74,6 +84,7 @@ export const InvokeContractForm = ({
     isFetching: isFetchingSequenceNumber,
     isLoading: isLoadingSequenceNumber,
     refetch: fetchSequenceNumber,
+    error: sequenceNumberError,
   } = useAccountSequenceNumber({
     publicKey: walletKit?.publicKey || "",
     horizonUrl: network.horizonUrl,
@@ -107,11 +118,12 @@ export const InvokeContractForm = ({
     reset: resetSubmitRpc,
   } = useSubmitRpcTx();
 
-  const { data: wasmBinary } = useWasmBinaryFromRpc({
-    wasmHash: wasmHash || "",
-    rpcUrl: network.rpcUrl || "",
-    isActive: Boolean(network.passphrase && wasmHash),
-  });
+  const { data: wasmBinary, isFetching: isWasmBinaryFetching } =
+    useWasmBinaryFromRpc({
+      wasmHash: wasmHash || "",
+      rpcUrl: network.rpcUrl || "",
+      isActive: Boolean(network.passphrase && wasmHash),
+    });
 
   const walletKitInstance = useContext(WalletKitContext);
 
@@ -145,7 +157,7 @@ export const InvokeContractForm = ({
         }
       } catch (error: any) {
         if (error?.message) {
-          setInvokeError({ message: error?.message, methodType: "sign" });
+          setInvokeError({ message: error?.message, methodType: "Sign" });
         }
       } finally {
         setIsExtensionLoading(false);
@@ -163,7 +175,7 @@ export const InvokeContractForm = ({
         },
       );
     }
-  }, [isSubmitRpcSuccess]);
+  }, [isSubmitRpcSuccess, formValue.function_name]);
 
   useEffect(() => {
     if (isSubmitRpcError) {
@@ -174,7 +186,7 @@ export const InvokeContractForm = ({
         },
       );
     }
-  }, [isSubmitRpcError]);
+  }, [isSubmitRpcError, formValue.function_name]);
 
   useEffect(() => {
     const getContractData = async () => {
@@ -229,7 +241,7 @@ export const InvokeContractForm = ({
     if (!prepareTxData?.transactionXdr) {
       setInvokeError({
         message: "No transaction data available to sign",
-        methodType: "submit",
+        methodType: "Submit",
       });
       return;
     }
@@ -259,7 +271,7 @@ export const InvokeContractForm = ({
     } catch (error: any) {
       setInvokeError({
         message: error?.message || "Failed to sign transaction",
-        methodType: "submit",
+        methodType: "Submit",
       });
     }
   };
@@ -275,8 +287,12 @@ export const InvokeContractForm = ({
       // fetch sequence number first
       await fetchSequenceNumber();
 
-      if (!sequenceNumberData) {
-        throw new Error("Failed to fetch sequence number. Please try again.");
+      if (!sequenceNumberData || sequenceNumberError) {
+        const errorMessage =
+          sequenceNumberError ||
+          "Failed to fetch sequence number. Please try again.";
+
+        throw errorMessage;
       }
 
       trackEvent(
@@ -320,6 +336,7 @@ export const InvokeContractForm = ({
           rpcUrl: network.rpcUrl,
           transactionXdr: xdr,
           headers: getNetworkHeaders(network, "rpc"),
+          xdrFormat,
         });
 
         // using prepareTransaction instead of assembleTransaction because
@@ -340,7 +357,7 @@ export const InvokeContractForm = ({
       }
 
       if (simulateError) {
-        setInvokeError({ message: simulateError, methodType: "simulate" });
+        setInvokeError({ message: simulateError, methodType: "Simulate" });
 
         trackEvent(
           TrackingEvent.SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SIMULATE_ERROR,
@@ -351,9 +368,8 @@ export const InvokeContractForm = ({
       }
     } catch (error: any) {
       setInvokeError({
-        message:
-          error?.message || "Failed to simulate transaction. Please try again.",
-        methodType: "simulate",
+        message: error,
+        methodType: "Simulate",
       });
     }
   };
@@ -387,6 +403,10 @@ export const InvokeContractForm = ({
   }, [dereferencedSchema]);
 
   const renderSchema = () => {
+    if (isWasmBinaryFetching) {
+      return <Loader />;
+    }
+
     if (!contractSpec || !dereferencedSchema) {
       return null;
     }
@@ -397,12 +417,12 @@ export const InvokeContractForm = ({
         {formValue.contract_id &&
           formValue.function_name &&
           dereferencedSchema && (
-            <JsonSchemaFormRenderer
+            <JsonSchemaRenderer
+              formError={formError}
+              setFormError={setFormError}
               name={funcName}
               schema={dereferencedSchema as JSONSchema7}
               onChange={handleChange}
-              formError={formError}
-              setFormError={setFormError}
               parsedSorobanOperation={formValue}
             />
           )}
@@ -492,57 +512,76 @@ export const InvokeContractForm = ({
     - there are form validation errors
     - the transaction data from simulation is not available (needed to submit)
   */
+
+  const simulatedResultResponse =
+    simulateTxData?.result?.transactionData ||
+    simulateTxData?.result?.transactionDataJson;
+
   const isSubmitDisabled =
     !!invokeError?.message ||
     isSubmitRpcError ||
     isSimulating ||
     !walletKit?.publicKey ||
     !hasNoFormErrors ||
-    !simulateTxData?.result?.transactionData;
+    !simulatedResultResponse;
 
   const isSimulationDisabled = () => {
-    const disabled = !isGetFunction && !Object.keys(formValue.args).length;
+    const currentKey = Object.keys(formValue.args)[0];
+    const isEmptyArgs =
+      isEmptyObject(formValue.args) || formValue.args[currentKey]?.value === "";
+
+    const disabled = !isGetFunction && isEmptyArgs;
+
     return !walletKit?.publicKey || !hasNoFormErrors || disabled;
   };
 
   return (
     <Card>
-      <Box gap="md">
-        {renderSchema()}
+      <div className="ContractInvoke">
+        <Box gap="md">
+          {renderSchema()}
 
-        <Box
-          gap="sm"
-          direction="row"
-          align="end"
-          justify="end"
-          addlClassName="ValidationResponseCard__footer"
-          wrap="wrap"
-        >
-          <Button
-            size="md"
-            variant="tertiary"
-            disabled={isSimulationDisabled()}
-            isLoading={isSimulating}
-            onClick={handleSimulate}
-          >
-            Simulate
-          </Button>
+          <Box gap="sm" direction="row" align="end" justify="end" wrap="wrap">
+            <Box gap="sm" direction="row" align="end" justify="end" wrap="wrap">
+              <Select
+                id="simulate-tx-xdr-format"
+                fieldSize="md"
+                value={xdrFormat}
+                onChange={(e) => {
+                  setXdrFormat(e.target.value as XdrFormatType);
+                }}
+              >
+                <option value="base64">XDR Format: Base64</option>
+                <option value="json">XDR Format: JSON</option>
+              </Select>
+            </Box>
 
-          <Button
-            size="md"
-            variant="secondary"
-            isLoading={isExtensionLoading || isSubmitRpcPending}
-            disabled={isSubmitDisabled}
-            onClick={handleSubmit}
-          >
-            Submit
-          </Button>
+            <Button
+              size="md"
+              variant="tertiary"
+              disabled={isSimulationDisabled()}
+              isLoading={isSimulating}
+              onClick={handleSimulate}
+            >
+              Simulate
+            </Button>
+
+            <Button
+              size="md"
+              variant="secondary"
+              isLoading={isExtensionLoading || isSubmitRpcPending}
+              disabled={isSubmitDisabled}
+              onClick={handleSubmit}
+            >
+              Submit
+            </Button>
+          </Box>
+
+          <>{renderResponse()}</>
+          <>{renderSuccess()}</>
+          <>{renderError()}</>
         </Box>
-
-        <>{renderResponse()}</>
-        <>{renderSuccess()}</>
-        <>{renderError()}</>
-      </Box>
+      </div>
     </Card>
   );
 };

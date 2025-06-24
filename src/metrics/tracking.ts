@@ -106,6 +106,9 @@ export enum TrackingEvent {
   XDR_FROM_JSON_SUCCESS = "xdr: from json: success",
   XDR_FROM_JSON_ERROR = "xdr: from json: error",
   XDR_FROM_JSON_CLEAR = "xdr: from json: clear",
+  XDR_DIFF_SUCCESS = "xdr: diff: success",
+  XDR_DIFF_ERROR = "xdr: diff: error",
+  XDR_DIFF_CLEAR = "xdr: diff: clear",
   // Account
   ACCOUNT_CREATE_GENERATE_KEYPAIR = "account: create: generate keypair",
   ACCOUNT_CREATE_FUND_ACCOUNT = "account: create: fund account",
