@@ -88,9 +88,7 @@ export default function TransactionDashboard() {
                   await resetFetchTxDetails();
                   setTransactionHashInput("");
 
-                  trackEvent(
-                    TrackingEvent.SMART_CONTRACTS_TX_DASHBOARD_CLEAR_TX,
-                  );
+                  trackEvent(TrackingEvent.TRANSACTION_DASHBOARD_CLEAR_TX);
                 }}
                 disabled={isLoading}
               >
@@ -128,7 +126,7 @@ export default function TransactionDashboard() {
             e.preventDefault();
             await fetchTxDetails();
 
-            trackEvent(TrackingEvent.SMART_CONTRACTS_TX_DASHBOARD_LOAD_TX, {});
+            trackEvent(TrackingEvent.TRANSACTION_DASHBOARD_LOAD_TX, {});
           }}
           className="ContractExplorer__form"
         >
