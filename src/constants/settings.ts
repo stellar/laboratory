@@ -27,13 +27,6 @@ export const CONTRACT_STORAGE_MAX_ENTRIES = 4000;
 
 export const NetworkOptions: Network[] = [
   {
-    id: "futurenet",
-    label: "Futurenet",
-    horizonUrl: "https://horizon-futurenet.stellar.org",
-    rpcUrl: "https://rpc-futurenet.stellar.org",
-    passphrase: Networks.FUTURENET,
-  },
-  {
     id: "testnet",
     label: "Testnet",
     horizonUrl: "https://horizon-testnet.stellar.org",
@@ -46,6 +39,13 @@ export const NetworkOptions: Network[] = [
     horizonUrl: "https://horizon.stellar.org",
     rpcUrl: "",
     passphrase: Networks.PUBLIC,
+  },
+  {
+    id: "futurenet",
+    label: "Futurenet",
+    horizonUrl: "https://horizon-futurenet.stellar.org",
+    rpcUrl: "https://rpc-futurenet.stellar.org",
+    passphrase: Networks.FUTURENET,
   },
   {
     id: "custom",

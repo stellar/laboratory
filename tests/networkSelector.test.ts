@@ -22,7 +22,7 @@ test.describe("Network selector", () => {
       page
         .getByTestId("networkSelector-dropdown")
         .getByTestId("networkSelector-option"),
-    ).toContainText(["Futurenet", "Testnet", "Mainnet", "Custom"]);
+    ).toContainText(["Testnet", "Mainnet", "Futurenet", "Custom"]);
   });
 
   test("Shows correct network data for the selected network", async ({
@@ -55,7 +55,7 @@ test.describe("Network selector", () => {
     );
     await expect(horizonUrlField).toBeEnabled();
 
-    // Network Passphrase
+    // Network passphrase
     const networkPassphraseField = page
       .getByTestId("networkSelector-dropdown")
       .locator("#network-passphrase");
