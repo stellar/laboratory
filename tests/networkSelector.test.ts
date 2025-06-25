@@ -55,7 +55,7 @@ test.describe("Network selector", () => {
     );
     await expect(horizonUrlField).toBeEnabled();
 
-    // Network Passphrase
+    // Network passphrase
     const networkPassphraseField = page
       .getByTestId("networkSelector-dropdown")
       .locator("#network-passphrase");
