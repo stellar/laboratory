@@ -1131,3 +1131,86 @@
     height: pxToRem(16px);
   }
 }
+
+// Contract Explorer and Transaction Dashboard
+.ContractExplorer {
+  &__form {
+    .Button {
+      width: fit-content;
+    }
+  }
+}
+
+.ContractInfoWrapper {
+  &[data-no-data="true"] {
+    display: grid;
+    grid-template-columns: fit-content(pxToRem(130px)) 1fr;
+
+    @media screen and (max-width: 500px) {
+      display: flex;
+      flex-direction: column-reverse;
+      gap: pxToRem(12px);
+    }
+  }
+}
+
+.ContractInfo {
+  @media screen and (max-width: 500px) {
+    &.Box--xs:not([data-no-data="true"]) {
+      gap: pxToRem(12px);
+    }
+  }
+
+  &__badgeButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+
+    .Badge--success,
+    .Badge--error {
+      transition: background-color var(--sds-anim-transition-default);
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        .Badge--success {
+          --Badge-color-background: var(--sds-clr-green-04);
+        }
+
+        .Badge--error {
+          --Badge-color-background: var(--sds-clr-red-04);
+        }
+      }
+    }
+  }
+
+  &__tabs {
+    .NoInfoLoadedView {
+      min-height: pxToRem(320px);
+    }
+  }
+}
+
+.InfoFieldItem {
+  font-size: pxToRem(12px);
+  line-height: pxToRem(18px);
+
+  &__label {
+    flex-shrink: 0;
+    width: pxToRem(128px);
+  }
+
+  &__value {
+    word-break: break-all;
+  }
+
+  @media screen and (max-width: 500px) {
+    flex-wrap: wrap;
+
+    &__label {
+      width: 100%;
+    }
+  }
+}
