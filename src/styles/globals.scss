@@ -1142,6 +1142,8 @@
 }
 
 .ContractInfoWrapper {
+  width: 100%;
+
   &[data-no-data="true"] {
     display: grid;
     grid-template-columns: fit-content(pxToRem(130px)) 1fr;
@@ -1211,6 +1213,78 @@
 
     &__label {
       width: 100%;
+    }
+  }
+}
+
+// Fee breakdown
+.TransactionInfo {
+  &__txFeeWrapper {
+    &[data-open="true"] {
+      .TransactionInfo__feeBreakdownLink {
+        .Link__icon {
+          transform: rotate(90deg);
+        }
+      }
+    }
+  }
+
+  &__feeBreakdownLink {
+    .Link__icon {
+      transition: transform var(--sds-anim-transition-default);
+    }
+  }
+
+  &__feeBreakdown {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sds-gap-md);
+
+    &__row {
+      display: grid;
+      gap: var(--sds-gap-sm);
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+
+      @media screen and (min-width: 670px) {
+        &[data-row="2"] {
+          grid-template-columns: 2fr 1fr;
+        }
+
+        &[data-row="3"] {
+          grid-template-columns: 1fr 1fr 1fr;
+        }
+      }
+    }
+
+    &__item {
+      font-size: pxToRem(12px);
+      line-height: pxToRem(18px);
+      font-weight: var(--sds-fw-medium);
+      color: var(--sds-clr-gray-12);
+      border-radius: pxToRem(6px);
+      padding: pxToRem(8px);
+
+      &[data-type="solid"] {
+        justify-content: center;
+        border: 1px solid var(--sds-clr-lilac-03);
+        background-color: var(--sds-clr-lilac-03);
+      }
+
+      &[data-type="dotted"] {
+        border: 1px dashed var(--sds-clr-lilac-08);
+      }
+
+      &[data-center-aligned="true"] {
+        justify-content: center;
+        align-items: center;
+      }
+
+      &__label {
+        color: var(--sds-clr-lilac-11);
+      }
+
+      &__value {
+      }
     }
   }
 }
