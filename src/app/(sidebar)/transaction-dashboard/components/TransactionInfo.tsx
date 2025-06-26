@@ -91,7 +91,7 @@ export const TransactionInfo = ({
   ];
 
   const formatData = () => {
-    if (!txDetails || !transaction) {
+    if (!txDetails) {
       return null;
     }
 
@@ -99,19 +99,19 @@ export const TransactionInfo = ({
       isSorobanTx: IS_SOROBAN_TX,
       status: txDetails.status,
       transactionInfo: txDetails.txHash,
-      sourceAccount: transaction.source_account,
-      sequenceNumber: transaction.seq_num,
-      processed: txDetails.createdAt,
+      sourceAccount: transaction?.source_account,
+      sequenceNumber: transaction?.seq_num,
+      processed: txDetails?.createdAt,
     };
 
     const feeProps = {
-      maxFee: transaction.fee,
-      transactionFee: txDetails.resultJson.fee_charged,
+      maxFee: transaction?.fee,
+      transactionFee: txDetails?.resultJson?.fee_charged,
     };
 
     const classicTxProps = {
-      operations: operations.length,
-      memo: transaction.memo,
+      operations: operations?.length,
+      memo: transaction?.memo,
     };
 
     return {
@@ -152,7 +152,7 @@ export const TransactionInfo = ({
   };
 
   const renderTxBadge = () => {
-    if (!isDataLoaded) {
+    if (!isDataLoaded || txDetails?.status === "NOT_FOUND") {
       return null;
     }
 
