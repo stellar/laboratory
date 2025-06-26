@@ -16,7 +16,7 @@ import { stroopsToLumens } from "@/helpers/stroopsToLumens";
 import { STELLAR_LOGO_DATA_URI } from "@/constants/assets";
 import { useStore } from "@/store/useStore";
 
-import { RpcTxJsonResponse } from "@/types/types";
+import { AnyObject, RpcTxJsonResponse } from "@/types/types";
 
 export const TransactionInfo = ({
   txDetails,
@@ -52,10 +52,6 @@ export const TransactionInfo = ({
       id: "operations",
       label: "Operations",
     },
-    {
-      id: "memo",
-      label: "Memo",
-    },
   ];
 
   const INFO_FIELDS: InfoFieldItem[] = [
@@ -79,6 +75,10 @@ export const TransactionInfo = ({
       id: "processed",
       label: "Processed",
     },
+    {
+      id: "memo",
+      label: "Memo",
+    },
     ...(isDataLoaded && !IS_SOROBAN_TX ? classicTxFields : []),
     {
       id: "max-fee",
@@ -89,6 +89,20 @@ export const TransactionInfo = ({
       label: "Transaction Fee",
     },
   ];
+
+  const parseMemo = (memo?: string | AnyObject) => {
+    if (!memo) {
+      return null;
+    }
+
+    if (typeof memo === "string") {
+      return memo;
+    }
+
+    const [type, value] = Object.entries(memo)[0];
+
+    return `${value} (${type})`;
+  };
 
   const formatData = () => {
     if (!txDetails) {
@@ -102,6 +116,7 @@ export const TransactionInfo = ({
       sourceAccount: transaction?.source_account,
       sequenceNumber: transaction?.seq_num,
       processed: txDetails?.createdAt,
+      memo: parseMemo(transaction?.memo),
     };
 
     const feeProps = {
@@ -111,7 +126,6 @@ export const TransactionInfo = ({
 
     const classicTxProps = {
       operations: operations?.length,
-      memo: transaction?.memo,
     };
 
     return {
