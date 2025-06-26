@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Alert, Button, Icon, Input } from "@stellar/design-system";
 
@@ -19,7 +19,7 @@ import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 import { TransactionInfo } from "./components/TransactionInfo";
 
 export default function TransactionDashboard() {
-  const { network, smartContracts } = useStore();
+  const { network, txDashboard } = useStore();
 
   const [transactionHashInput, setTransactionHashInput] = useState("");
   const [transactionHashInputError, setTransactionHashInputError] =
@@ -47,7 +47,19 @@ export default function TransactionDashboard() {
 
   const queryClient = useQueryClient();
 
+  useEffect(() => {
+    if (txDashboard.transactionHash) {
+      setTransactionHashInput(txDashboard.transactionHash);
+    }
+    // Run this only when page loads
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const resetFetchTxDetails = async () => {
+    if (transactionHashInputError) {
+      setTransactionHashInputError("");
+    }
+
     if (txDetails) {
       await queryClient.resetQueries({
         queryKey: [
@@ -56,11 +68,6 @@ export default function TransactionDashboard() {
           transactionHashInput,
         ],
       });
-      smartContracts.resetExplorerTransactionHash();
-    }
-
-    if (transactionHashInputError) {
-      setTransactionHashInputError("");
     }
   };
 
@@ -85,8 +92,9 @@ export default function TransactionDashboard() {
                 variant="error"
                 icon={<Icon.RefreshCw01 />}
                 onClick={async () => {
-                  await resetFetchTxDetails();
                   setTransactionHashInput("");
+                  txDashboard.resetTransactionHash();
+                  await resetFetchTxDetails();
 
                   trackEvent(TrackingEvent.TRANSACTION_DASHBOARD_CLEAR_TX);
                 }}
@@ -140,10 +148,12 @@ export default function TransactionDashboard() {
               error={transactionHashInputError}
               value={transactionHashInput}
               onChange={async (e) => {
+                setTransactionHashInput(e.target.value);
+                txDashboard.updateTransactionHash(e.target.value);
+
                 if (txDetails) {
                   await resetFetchTxDetails();
                 }
-                setTransactionHashInput(e.target.value);
 
                 const error =
                   e.target.value &&

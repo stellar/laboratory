@@ -216,12 +216,16 @@ export interface Store {
   smartContracts: {
     explorer: {
       contractId: string;
-      transactionHash: string;
     };
     updateExplorerContractId: (contractId: string) => void;
-    updateExplorerTransactionHash: (txHash: string) => void;
     resetExplorerContractId: () => void;
-    resetExplorerTransactionHash: () => void;
+  };
+
+  // Transaction Dashboard
+  txDashboard: {
+    transactionHash: string;
+    updateTransactionHash: (txHash: string) => void;
+    resetTransactionHash: () => void;
   };
 }
 
@@ -332,8 +336,11 @@ const initXdrState = {
 const initSmartContractsState = {
   explorer: {
     contractId: "",
-    transactionHash: "",
   },
+};
+
+const initTxDashboardState = {
+  transactionHash: "",
 };
 
 // Store
@@ -639,17 +646,21 @@ export const createStore = (options: CreateStoreOptions) =>
             set((state) => {
               state.smartContracts.explorer.contractId = contractId;
             }),
-          updateExplorerTransactionHash: (txHash) =>
-            set((state) => {
-              state.smartContracts.explorer.transactionHash = txHash;
-            }),
           resetExplorerContractId: () =>
             set((state) => {
               state.smartContracts.explorer.contractId = "";
             }),
-          resetExplorerTransactionHash: () =>
+        },
+        // Transaction Dashboard
+        txDashboard: {
+          ...initTxDashboardState,
+          updateTransactionHash: (txHash) =>
             set((state) => {
-              state.smartContracts.explorer.transactionHash = "";
+              state.txDashboard.transactionHash = txHash;
+            }),
+          resetTransactionHash: () =>
+            set((state) => {
+              state.txDashboard.transactionHash = "";
             }),
         },
       })),
@@ -708,6 +719,9 @@ export const createStore = (options: CreateStoreOptions) =>
               },
             },
             savedContractId: true,
+            txDashboard: {
+              transactionHash: true,
+            },
           };
         },
       },
