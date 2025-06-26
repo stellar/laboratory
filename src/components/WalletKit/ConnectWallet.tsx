@@ -42,9 +42,7 @@ export const ConnectWallet = () => {
   useEffect(() => {
     if (
       !connected &&
-      savedWallet?.id !== undefined &&
-      savedWallet?.id !== "false" &&
-      savedWallet?.id !== "wallet_connect"
+      ![undefined, "false", "wallet_connect"].includes(savedWallet?.id)
     ) {
       // timeout ensures chrome has the ability to load extensions
       setTimeout(() => {
