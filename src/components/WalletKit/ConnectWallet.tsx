@@ -62,7 +62,7 @@ export const ConnectWallet = () => {
       }
       const publicKey = addressResult.address;
 
-      if (publicKey === "" || publicKey == undefined) {
+      if (!publicKey) {
         return false;
       }
 
