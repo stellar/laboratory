@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { Button, Modal, Text } from "@stellar/design-system";
 import { ISupportedWallet } from "@creit.tech/stellar-wallets-kit";
 import { useStore } from "@/store/useStore";
@@ -7,6 +7,7 @@ import { useAccountInfo } from "@/query/useAccountInfo";
 
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
+import { useDelayedAction } from "@/hooks/useDelayedAction";
 
 import { ConnectedModal } from "@/components/WalletKit/ConnectedModal";
 import { WalletKitContext } from "@/components/WalletKit/WalletKitContextProvider";
@@ -39,19 +40,22 @@ export const ConnectWallet = () => {
     localStorageSavedWallet.remove();
   };
 
-  useEffect(() => {
-    if (
-      !connected &&
-      ![undefined, "false", "wallet_connect"].includes(savedWallet?.id)
-    ) {
-      // timeout ensures chrome has the ability to load extensions
-      setTimeout(() => {
-        walletKitInstance.walletKit?.setWallet(savedWallet?.id);
+  useDelayedAction(
+    () => {
+      if (savedWallet?.id) {
+        walletKitInstance.walletKit?.setWallet(savedWallet.id);
         handleSetWalletAddress();
-      }, 750);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [savedWallet?.id, connected]);
+      }
+    },
+    {
+      delay: 750,
+      enabled:
+        !connected &&
+        ![undefined, "false", "wallet_connect"].includes(savedWallet?.id) &&
+        !!savedWallet?.id,
+    },
+    [savedWallet?.id, connected],
+  );
 
   async function handleSetWalletAddress(): Promise<boolean> {
     try {
@@ -73,8 +77,8 @@ export const ConnectWallet = () => {
       setConnected(true);
 
       return true;
-    } catch (e: any) {
-      console.error("Unable to load wallet information: ", e);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {
       return false;
     }
   }
