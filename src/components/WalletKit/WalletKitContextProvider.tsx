@@ -50,7 +50,8 @@ export const WalletKitContextProvider = ({
 
   useEffect(() => {
     const savedWallet = localStorageSavedWallet.get();
-    if (savedWallet) {
+
+    if (savedWallet && savedWallet.network.id === network.id) {
       setSavedWallet(savedWallet);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

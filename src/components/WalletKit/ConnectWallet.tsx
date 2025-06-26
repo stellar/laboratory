@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button, Modal, Text } from "@stellar/design-system";
 import { ISupportedWallet } from "@creit.tech/stellar-wallets-kit";
 import { useStore } from "@/store/useStore";
@@ -7,7 +7,7 @@ import { useAccountInfo } from "@/query/useAccountInfo";
 
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
-import { useDelayedAction } from "@/hooks/useDelayedAction";
+// import { useDelayedAction } from "@/hooks/useDelayedAction";
 
 import { ConnectedModal } from "@/components/WalletKit/ConnectedModal";
 import { WalletKitContext } from "@/components/WalletKit/WalletKitContextProvider";
@@ -40,22 +40,26 @@ export const ConnectWallet = () => {
     localStorageSavedWallet.remove();
   };
 
-  useDelayedAction(
-    () => {
-      if (savedWallet?.id) {
+  useEffect(() => {
+    let t: NodeJS.Timeout;
+
+    if (
+      !connected &&
+      !!savedWallet?.id &&
+      ![undefined, "false", "wallet_connect"].includes(savedWallet?.id) &&
+      savedWallet.network.id === network.id
+    ) {
+      t = setTimeout(() => {
         walletKitInstance.walletKit?.setWallet(savedWallet.id);
         handleSetWalletAddress();
-      }
-    },
-    {
-      delay: 750,
-      enabled:
-        !connected &&
-        ![undefined, "false", "wallet_connect"].includes(savedWallet?.id) &&
-        !!savedWallet?.id,
-    },
-    [savedWallet?.id, connected],
-  );
+        clearTimeout(t);
+      }, 750);
+    }
+
+    return () => {
+      clearTimeout(t);
+    };
+  }, [savedWallet?.id, connected, walletKitInstance]);
 
   async function handleSetWalletAddress(): Promise<boolean> {
     try {
