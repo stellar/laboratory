@@ -12,11 +12,12 @@
     "start": "next start",
     "lint": "next lint",
     "lint:ts": "tsc --noEmit",
-    "test": "playwright test",
+    "test:unit": "jest",
+    "test:e2e": "playwright test",
     "install-if-package-changed": "git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD | grep --quiet yarn.lock && yarn install || exit 0",
     "prepare": "husky",
     "pre-commit": "yarn lint-staged",
-    "pre-push": "yarn lint:ts && yarn test"
+    "pre-push": "yarn lint:ts && yarn test:e2e && yarn test:unit"
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^2.15.0",
@@ -53,6 +54,7 @@
     "@next/eslint-plugin-next": "^15.3.1",
     "@playwright/test": "^1.52.0",
     "@stellar/tsconfig": "^1.0.2",
+    "@types/jest": "^30.0.0",
     "@types/json-schema": "^7.0.15",
     "@types/lodash": "^4.17.16",
     "@types/node": "^22.14.1",
@@ -64,9 +66,11 @@
     "eslint-config-prettier": "^10.1.2",
     "eslint-plugin-react-hooks": "^5.2.0",
     "husky": "^9.1.7",
+    "jest": "^30.0.3",
     "lint-staged": "^15.5.1",
     "prettier": "^3.5.3",
     "sass": "^1.86.3",
+    "ts-jest": "^29.4.0",
     "typescript": "^5.8.3"
   }
 }
