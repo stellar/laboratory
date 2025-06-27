@@ -189,6 +189,10 @@ export const NAV: NavItem[] = [
           subNav: SMART_CONTRACTS_NAV,
         },
       ]),
+  {
+    route: Routes.TRANSACTION_DASHBOARD,
+    label: "Transaction Dashboard",
+  },
   ...(process.env.NEXT_PUBLIC_ENABLE_EXPLORER === "true"
     ? [
         {

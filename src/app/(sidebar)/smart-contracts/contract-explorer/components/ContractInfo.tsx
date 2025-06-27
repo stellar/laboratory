@@ -14,6 +14,9 @@ import {
 import { Box } from "@/components/layout/Box";
 import { SdsLink } from "@/components/SdsLink";
 import { TabView } from "@/components/TabView";
+import { InfoFieldItem } from "@/components/InfoFieldItem";
+import { NoInfoLoadedView } from "@/components/NoInfoLoadedView";
+
 import { formatEpochToDate } from "@/helpers/formatEpochToDate";
 import { formatNumber } from "@/helpers/formatNumber";
 import { stellarExpertAccountLink } from "@/helpers/stellarExpertAccountLink";
@@ -117,28 +120,6 @@ export const ContractInfo = ({
     },
   ];
 
-  const InfoFieldItem = ({
-    label,
-    value,
-  }: {
-    label: string;
-    value: React.ReactNode;
-  }) => {
-    return (
-      <Box
-        gap="xs"
-        direction="row"
-        align="center"
-        addlClassName="InfoFieldItem"
-      >
-        <div className="InfoFieldItem__label">{label}</div>
-        {isDataLoaded ? (
-          <div className="InfoFieldItem__value">{value ?? "-"}</div>
-        ) : null}
-      </Box>
-    );
-  };
-
   const formatEntriesText = (entriesCount: number) => {
     if (!entriesCount) {
       return "";
@@ -157,6 +138,7 @@ export const ContractInfo = ({
         return (
           <InfoFieldItem
             key={field.id}
+            isValueLoaded={isDataLoaded}
             label={field.label}
             value={
               sourceRepo && sourceCommit ? (
@@ -194,6 +176,7 @@ export const ContractInfo = ({
         return (
           <InfoFieldItem
             key={field.id}
+            isValueLoaded={isDataLoaded}
             label={field.label}
             value={
               infoData?.created ? formatEpochToDate(infoData.created) : null
@@ -204,6 +187,7 @@ export const ContractInfo = ({
         return (
           <InfoFieldItem
             key={field.id}
+            isValueLoaded={isDataLoaded}
             label={field.label}
             value={infoData?.wasm}
           />
@@ -212,6 +196,7 @@ export const ContractInfo = ({
         return (
           <InfoFieldItem
             key={field.id}
+            isValueLoaded={isDataLoaded}
             label={field.label}
             value={infoData?.versions}
           />
@@ -220,6 +205,7 @@ export const ContractInfo = ({
         return (
           <InfoFieldItem
             key={field.id}
+            isValueLoaded={isDataLoaded}
             label={field.label}
             value={
               infoData?.creator ? (
@@ -238,6 +224,7 @@ export const ContractInfo = ({
         return (
           <InfoFieldItem
             key={field.id}
+            isValueLoaded={isDataLoaded}
             label={field.label}
             value={
               infoData?.storage_entries ? (
@@ -327,7 +314,7 @@ export const ContractInfo = ({
       <Card>
         <div className="ContractInfoWrapper" data-no-data={!isDataLoaded}>
           <Box
-            gap="xs"
+            gap="sm"
             addlClassName="ContractInfo"
             data-testid="contract-info-container"
             data-no-data={!isDataLoaded}
@@ -442,19 +429,15 @@ export const ContractInfo = ({
 
 const NoContractLoadedView = () => {
   return (
-    <Box
-      gap="sm"
-      align="center"
-      justify="center"
-      addlClassName="NoContractLoaded"
-    >
-      <Box gap="xs" direction="row" align="center" justify="center" wrap="wrap">
-        <Icon.FileCode02 />
-        Load a contract or{" "}
-        <SdsLink href={Routes.SMART_CONTRACTS_CONTRACT_LIST}>
-          explore contracts
-        </SdsLink>
-      </Box>
-    </Box>
+    <NoInfoLoadedView
+      message={
+        <>
+          Load a contract or{" "}
+          <SdsLink href={Routes.SMART_CONTRACTS_CONTRACT_LIST}>
+            explore contracts
+          </SdsLink>
+        </>
+      }
+    />
   );
 };

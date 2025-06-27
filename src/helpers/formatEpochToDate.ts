@@ -1,9 +1,9 @@
 export const formatEpochToDate = (
-  epoch: number,
+  epoch: number | string,
   format: "short" | "long" = "long",
 ) => {
   try {
-    const date = new Date(epoch * 1000);
+    const date = new Date(Number(epoch) * 1000);
 
     const dateOptions: Intl.DateTimeFormatOptions =
       format === "short"

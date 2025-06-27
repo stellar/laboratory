@@ -6,10 +6,12 @@
 .InfoFieldItem__label {
   flex-shrink: 0;
   width: 8rem;
+  color: var(--sds-clr-gray-11);
 }
 
 .InfoFieldItem__value {
   word-break: break-all;
+  color: var(--sds-clr-gray-12);
 }
 
 .InfoFieldItem__value .failed {
