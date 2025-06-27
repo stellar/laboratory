@@ -40,17 +40,16 @@ test.describe("Smart Contracts: Contract Storage", () => {
 
     // Go to Contract Storage tab
     await page
-      .getByText("Contract Storage", {
-        exact: true,
-      })
+      .getByTestId("contract-contract-storage")
+      .getByText("Contract Storage")
       .click();
   });
 
   test("Loads", async ({ page }) => {
     await expect(
-      page.getByText("Contract Storage", {
-        exact: true,
-      }),
+      page
+        .getByTestId("contract-contract-storage")
+        .getByText("Contract Storage"),
     ).toHaveAttribute("data-is-active", "true");
   });
 

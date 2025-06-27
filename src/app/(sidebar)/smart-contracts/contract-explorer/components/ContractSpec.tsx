@@ -118,7 +118,7 @@ export const ContractSpec = ({
             sectionName: "contractmetav0",
             title: "Contract Meta",
             infoLink:
-              "https://developers.stellar.org/docs/learn/encyclopedia/contract-development/stellar-contract#contract-meta",
+              "https://developers.stellar.org/docs/learn/fundamentals/contract-development/overview#contract-meta",
             height: "22",
           })
         : null}
@@ -128,7 +128,7 @@ export const ContractSpec = ({
             sectionName: "contractenvmetav0",
             title: "Contract Env Meta",
             infoLink:
-              "https://developers.stellar.org/docs/learn/encyclopedia/contract-development/stellar-contract#environment-meta",
+              "https://developers.stellar.org/docs/learn/fundamentals/contract-development/overview#environment-meta",
             height: "15",
           })
         : null}
@@ -138,7 +138,7 @@ export const ContractSpec = ({
             sectionName: "contractspecv0",
             title: "Contract Spec",
             infoLink:
-              "https://developers.stellar.org/docs/learn/encyclopedia/contract-development/stellar-contract#contract-spec",
+              "https://developers.stellar.org/docs/learn/fundamentals/contract-development/overview#contract-spec",
           })
         : null}
 
