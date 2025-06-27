@@ -7,13 +7,12 @@ import { useAccountInfo } from "@/query/useAccountInfo";
 
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
-// import { useDelayedAction } from "@/hooks/useDelayedAction";
+import { localStorageSavedWallet } from "@/helpers/localStorageSavedWallet";
 
 import { ConnectedModal } from "@/components/WalletKit/ConnectedModal";
 import { WalletKitContext } from "@/components/WalletKit/WalletKitContextProvider";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
-import { localStorageSavedWallet } from "@/helpers/localStorageSavedWallet";
 
 export const ConnectWallet = () => {
   const { network, walletKit, updateWalletKit } = useStore();
