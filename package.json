@@ -46,7 +46,7 @@
     "stellar-hd-wallet": "^1.0.2",
     "tslib": "^2.8.1",
     "uuid": "^11.1.0",
-    "zustand": "^4.5.5",
+    "zustand": "^5.0.6",
     "zustand-querystring": "^0.0.19"
   },
   "devDependencies": {
@@ -55,7 +55,7 @@
     "@stellar/tsconfig": "^1.0.2",
     "@types/json-schema": "^7.0.15",
     "@types/lodash": "^4.17.16",
-    "@types/node": "^22.14.1",
+    "@types/node": "^24.0.7",
     "@types/papaparse": "^5.3.15",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
@@ -64,7 +64,7 @@
     "eslint-config-prettier": "^10.1.2",
     "eslint-plugin-react-hooks": "^5.2.0",
     "husky": "^9.1.7",
-    "lint-staged": "^15.5.1",
+    "lint-staged": "^16.1.2",
     "prettier": "^3.5.3",
     "sass": "^1.86.3",
     "typescript": "^5.8.3"
