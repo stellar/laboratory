@@ -1214,3 +1214,15 @@
     }
   }
 }
+
+.TransactionInfo {
+  &__badges {
+    .Badge--primary {
+      --Badge-color-text: var(--sds-clr-teal-11);
+      --Badge-color-icon: var(--sds-clr-teal-09);
+      --Badge-color-background: var(--sds-clr-teal-02);
+      --Badge-color-border: var(--sds-clr-teal-06);
+      --Badge-color-dot: var(--sds-clr-teal-09);
+    }
+  }
+}

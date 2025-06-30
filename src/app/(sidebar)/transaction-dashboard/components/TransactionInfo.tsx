@@ -365,7 +365,19 @@ export const TransactionInfo = ({
         align={isNoDataScreen ? "stretch" : "start"}
         addlClassName="TransactionInfo"
       >
-        {renderTxBadge()}
+        <Box
+          gap="sm"
+          direction="row"
+          align="center"
+          addlClassName="TransactionInfo__badges"
+        >
+          {renderTxBadge()}
+          {feeBumpTx ? (
+            <Badge variant="primary" size="sm">
+              Fee Bump Transaction
+            </Badge>
+          ) : null}
+        </Box>
 
         <div className="ContractInfoWrapper" data-no-data={isNoDataScreen}>
           <Box
