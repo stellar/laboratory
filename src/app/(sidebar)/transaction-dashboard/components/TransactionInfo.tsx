@@ -26,7 +26,11 @@ export const TransactionInfo = ({
   const { network } = useStore();
 
   const isDataLoaded = Boolean(txDetails);
-  const transaction = txDetails?.envelopeJson?.tx?.tx;
+  const feeBumpTx = txDetails?.envelopeJson?.tx_fee_bump;
+
+  const transaction = feeBumpTx
+    ? feeBumpTx.tx?.inner_tx?.tx?.tx
+    : txDetails?.envelopeJson?.tx?.tx;
   const operations = transaction?.operations;
 
   const isSorobanTx = () => {
@@ -41,6 +45,9 @@ export const TransactionInfo = ({
   };
 
   const IS_SOROBAN_TX = isSorobanTx();
+
+  const isTxNotFound = txDetails?.status === "NOT_FOUND";
+  const isNoDataScreen = !isDataLoaded || isTxNotFound;
 
   type InfoFieldItem = {
     id: string;
@@ -79,7 +86,7 @@ export const TransactionInfo = ({
       id: "memo",
       label: "Memo",
     },
-    ...(isDataLoaded && !IS_SOROBAN_TX ? classicTxFields : []),
+    ...(!isNoDataScreen && !IS_SOROBAN_TX ? classicTxFields : []),
     {
       id: "max-fee",
       label: "Max Fee",
@@ -88,6 +95,14 @@ export const TransactionInfo = ({
       id: "transaction-fee",
       label: "Transaction Fee",
     },
+    ...(feeBumpTx
+      ? [
+          {
+            id: "fee-source-account",
+            label: "Fee Source Account",
+          },
+        ]
+      : []),
   ];
 
   const parseMemo = (memo?: string | AnyObject) => {
@@ -123,7 +138,7 @@ export const TransactionInfo = ({
     };
 
     const feeProps = {
-      maxFee: transaction?.fee,
+      maxFee: feeBumpTx ? feeBumpTx.tx?.fee : transaction?.fee,
       transactionFee: txDetails?.resultJson?.fee_charged,
     };
 
@@ -135,6 +150,11 @@ export const TransactionInfo = ({
       ...baseProps,
       ...(IS_SOROBAN_TX ? {} : classicTxProps),
       ...feeProps,
+      ...(feeBumpTx
+        ? {
+            feeSourceAccount: feeBumpTx.tx?.fee_source,
+          }
+        : {}),
     };
   };
 
@@ -169,7 +189,7 @@ export const TransactionInfo = ({
   };
 
   const renderTxBadge = () => {
-    if (!isDataLoaded || txDetails?.status === "NOT_FOUND") {
+    if (isNoDataScreen) {
       return null;
     }
 
@@ -182,6 +202,16 @@ export const TransactionInfo = ({
         Classic Transaction
       </Badge>
     );
+  };
+
+  const renderAccount = (account: string) => {
+    return account ? (
+      <SdsLink href={stellarExpertAccountLink(account, network.id)}>
+        <Avatar publicAddress={account} size="sm" />
+        {account}
+        <Icon.LinkExternal01 />
+      </SdsLink>
+    ) : null;
   };
 
   const renderFee = (fee: any) => {
@@ -218,7 +248,7 @@ export const TransactionInfo = ({
         return (
           <InfoFieldItem
             key={`tx-info-${field.id}`}
-            isValueLoaded={isDataLoaded}
+            isValueLoaded={!isNoDataScreen}
             label={field.label}
             value={
               formattedData?.status ? renderStatus(formattedData.status) : null
@@ -229,7 +259,7 @@ export const TransactionInfo = ({
         return (
           <InfoFieldItem
             key={`tx-info-${field.id}`}
-            isValueLoaded={isDataLoaded}
+            isValueLoaded={!isNoDataScreen}
             label={field.label}
             value={
               formattedData?.transactionInfo ? (
@@ -250,32 +280,16 @@ export const TransactionInfo = ({
         return (
           <InfoFieldItem
             key={`tx-info-${field.id}`}
-            isValueLoaded={isDataLoaded}
+            isValueLoaded={!isNoDataScreen}
             label={field.label}
-            value={
-              formattedData?.sourceAccount ? (
-                <SdsLink
-                  href={stellarExpertAccountLink(
-                    formattedData.sourceAccount,
-                    network.id,
-                  )}
-                >
-                  <Avatar
-                    publicAddress={formattedData.sourceAccount}
-                    size="sm"
-                  />
-                  {formattedData.sourceAccount}
-                  <Icon.LinkExternal01 />
-                </SdsLink>
-              ) : null
-            }
+            value={renderAccount(formattedData?.sourceAccount)}
           />
         );
       case "sequence-number":
         return (
           <InfoFieldItem
             key={`tx-info-${field.id}`}
-            isValueLoaded={isDataLoaded}
+            isValueLoaded={!isNoDataScreen}
             label={field.label}
             value={stringify(formattedData?.sequenceNumber)}
           />
@@ -284,7 +298,7 @@ export const TransactionInfo = ({
         return (
           <InfoFieldItem
             key={`tx-info-${field.id}`}
-            isValueLoaded={isDataLoaded}
+            isValueLoaded={!isNoDataScreen}
             label={field.label}
             value={
               formattedData?.processed
@@ -297,7 +311,7 @@ export const TransactionInfo = ({
         return (
           <InfoFieldItem
             key={`tx-info-${field.id}`}
-            isValueLoaded={isDataLoaded}
+            isValueLoaded={!isNoDataScreen}
             label={field.label}
             value={formattedData?.operations}
           />
@@ -306,7 +320,7 @@ export const TransactionInfo = ({
         return (
           <InfoFieldItem
             key={`tx-info-${field.id}`}
-            isValueLoaded={isDataLoaded}
+            isValueLoaded={!isNoDataScreen}
             label={field.label}
             value={formattedData?.memo}
           />
@@ -315,7 +329,7 @@ export const TransactionInfo = ({
         return (
           <InfoFieldItem
             key={`tx-info-${field.id}`}
-            isValueLoaded={isDataLoaded}
+            isValueLoaded={!isNoDataScreen}
             label={field.label}
             value={renderFee(formattedData?.maxFee)}
           />
@@ -324,11 +338,20 @@ export const TransactionInfo = ({
         return (
           <InfoFieldItem
             key={`tx-info-${field.id}`}
-            isValueLoaded={isDataLoaded}
+            isValueLoaded={!isNoDataScreen}
             label={field.label}
             value={renderFee(formattedData?.transactionFee)}
           />
           // TODO: Add fee breakdown
+        );
+      case "fee-source-account":
+        return (
+          <InfoFieldItem
+            key={`tx-info-${field.id}`}
+            isValueLoaded={!isNoDataScreen}
+            label={field.label}
+            value={renderAccount(formattedData?.feeSourceAccount)}
+          />
         );
       default:
         return null;
@@ -339,22 +362,33 @@ export const TransactionInfo = ({
     <Card>
       <Box
         gap="lg"
-        align={isDataLoaded ? "start" : "stretch"}
+        align={isNoDataScreen ? "stretch" : "start"}
         addlClassName="TransactionInfo"
       >
         {renderTxBadge()}
 
-        <div className="ContractInfoWrapper" data-no-data={!isDataLoaded}>
+        <div className="ContractInfoWrapper" data-no-data={isNoDataScreen}>
           <Box
             gap="sm"
             addlClassName="ContractInfo"
             data-testid="transaction-info-container"
-            data-no-data={!isDataLoaded}
           >
             <>{INFO_FIELDS.map((f) => renderInfoField(f))}</>
           </Box>
-          {!isDataLoaded ? (
-            <NoInfoLoadedView message={<>Load a transaction</>} />
+          {isNoDataScreen ? (
+            <NoInfoLoadedView
+              message={
+                isTxNotFound ? (
+                  <>
+                    Couldn’t find that transaction. Please make sure you’re
+                    using the correct network.
+                  </>
+                ) : (
+                  <>Load a transaction</>
+                )
+              }
+              type={isTxNotFound ? "error" : "info"}
+            />
           ) : null}
         </div>
       </Box>

@@ -1,6 +1,9 @@
 @use "../../styles/utils.scss" as *;
 
 .NoInfoLoadedView {
+  --NoInfoLoadedView-color-text: var(--sds-clr-gray-11);
+  --NoInfoLoadedView-color-icon: var(--sds-clr-gray-11);
+
   background-color: var(--sds-clr-gray-03);
   border-radius: pxToRem(8px);
   padding: pxToRem(24px);
@@ -9,12 +12,17 @@
 
   font-size: pxToRem(14px);
   line-height: pxToRem(20px);
-  color: var(--sds-clr-gray-11);
+  color: var(--NoInfoLoadedView-color-text);
 
   svg {
     display: block;
-    stroke: var(--sds-clr-gray-11);
+    stroke: var(--NoInfoLoadedView-color-icon);
     width: pxToRem(14px);
     height: pxToRem(14px);
+  }
+
+  &[data-type="error"] {
+    --NoInfoLoadedView-color-text: var(--sds-clr-gray-12);
+    --NoInfoLoadedView-color-icon: var(--sds-clr-red-11);
   }
 }
