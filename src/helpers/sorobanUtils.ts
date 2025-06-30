@@ -369,6 +369,30 @@ const convertObjectToMap = (
   return { mapVal, mapType };
 };
 
+// Helper function to detect if string is base64 or hex
+const detectBytesEncoding = (value: string): "base64" | "hex" => {
+  const hexRegex = /^[0-9a-fA-F]+$/;
+  const base64Regex = /^[A-Za-z0-9+/]*={0,2}$/;
+
+  if (hexRegex.test(value) && value.length % 2 === 0) {
+    return "hex";
+  }
+
+  if (base64Regex.test(value) && value.length % 4 === 0) {
+    try {
+      const decoded = Buffer.from(value, "base64");
+      return decoded.toString("base64").replace(/=+$/, "") ===
+        value.replace(/=+$/, "")
+        ? "base64"
+        : "hex";
+    } catch {
+      return "hex";
+    }
+  }
+
+  return "base64";
+};
+
 const convertTupleToScVal = (tupleArray: any) => {
   const tupleScVals = tupleArray.map((v: { value: any; type: any }) => {
     if (v.type === "bool") {
@@ -376,7 +400,8 @@ const convertTupleToScVal = (tupleArray: any) => {
       return nativeToScVal(boolValue);
     }
     if (v.type === "bytes") {
-      return nativeToScVal(new Uint8Array(Buffer.from(v.value, "base64")));
+      const encoding = detectBytesEncoding(v.value);
+      return nativeToScVal(new Uint8Array(Buffer.from(v.value, encoding)));
     }
     return nativeToScVal(v.value, { type: v.type });
   });
@@ -394,7 +419,9 @@ const getScValFromPrimitive = (v: any) => {
     return nativeToScVal(boolValue);
   }
   if (v.type === "bytes") {
-    return nativeToScVal(new Uint8Array(Buffer.from(v.value, "base64")));
+    const encoding = detectBytesEncoding(v.value);
+    console.log("encoding", encoding);
+    return nativeToScVal(new Uint8Array(Buffer.from(v.value, encoding)));
   }
   return nativeToScVal(v.value, { type: v.type });
 };
@@ -459,7 +486,8 @@ export const getScValsFromArgs = (
           if (v.type === "bool") {
             acc.push(v.value === "true" ? true : false);
           } else if (v.type === "bytes") {
-            acc.push(new Uint8Array(Buffer.from(v.value, "base64")));
+            const encoding = detectBytesEncoding(v.value);
+            acc.push(new Uint8Array(Buffer.from(v.value, encoding)));
           } else {
             acc.push(v.value);
           }
