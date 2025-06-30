@@ -1,5 +1,5 @@
 import { describe, expect, it } from "@jest/globals";
-import { xdr, ScInt } from "@stellar/stellar-sdk";
+import { xdr, ScInt, Address } from "@stellar/stellar-sdk";
 
 import { getScValsFromArgs } from "../../src/helpers/sorobanUtils";
 
@@ -221,8 +221,7 @@ describe("convert js arguments to smart contract values using getScValsFromArgs"
   });
 
   // Symbols
-
-  it("resolves primitive value: symbol", () => {
+  it("resolves symbol", () => {
     const args = {
       hello: {
         value: "hello",
@@ -237,6 +236,7 @@ describe("convert js arguments to smart contract values using getScValsFromArgs"
     expect(expectedResult).toEqual(scValsResult);
   });
 
+  // Bytes
   it("resolves bytes (hex)", () => {
     const args = {
       bytes: {
@@ -271,4 +271,135 @@ describe("convert js arguments to smart contract values using getScValsFromArgs"
 
     expect(expectedResult).toEqual(scValsResult);
   });
+
+  // Strings
+  it("resolves string", () => {
+    const args = {
+      bytes: {
+        value: "hello there!",
+        type: "string",
+      },
+    };
+
+    const scVals: xdr.ScVal[] = [];
+    const scValsResult = getScValsFromArgs(args, scVals);
+    const expectedResult: xdr.ScVal[] = [xdr.ScVal.scvString("hello there!")];
+
+    expect(expectedResult).toEqual(scValsResult);
+  });
+
+  // Vec - a group of values of the same type
+  it("resolves vec", () => {
+    const args = {
+      vec: [
+        {
+          value: "Hello",
+          type: "string",
+        },
+        {
+          value: "Hola",
+          type: "string",
+        },
+        {
+          value: "Bonjour",
+          type: "string",
+        },
+      ],
+    };
+
+    const scVals: xdr.ScVal[] = [];
+    const scValsResult = getScValsFromArgs(args, scVals);
+    const expectedResult: xdr.ScVal[] = [
+      xdr.ScVal.scvVec(args.vec.map((v) => xdr.ScVal.scvString(v.value))),
+    ];
+
+    expect(expectedResult).toEqual(scValsResult);
+  });
+
+  // Vec - multiple arguments
+  // @TODO ask George about this
+  // https://stellar.expert/explorer/testnet/contract/CBHQGTSBJWA54K67RSG3JPXSZY5IXIZ4FSLJM4PQ33FA3FYCU5YZV7MZ?filter=interface
+  // it("resolves a vec with multiple arguments", () => {});
+
+  // Map
+  it("resolves a map", () => {
+    const args = {
+      map: [
+        {
+          0: {
+            value: "2",
+            type: "u32",
+          },
+          1: {
+            value: "false",
+            type: "bool",
+          },
+        },
+        {
+          0: {
+            value: "3",
+            type: "u32",
+          },
+          1: {
+            value: "true",
+            type: "bool",
+          },
+        },
+      ],
+    };
+
+    const scVals: xdr.ScVal[] = [];
+    const scValsResult = getScValsFromArgs(args, scVals);
+    const expectedResult: xdr.ScVal[] = [
+      xdr.ScVal.scvMap(
+        args.map.map((v) => {
+          return new xdr.ScMapEntry({
+            key: xdr.ScVal.scvU32(parseInt(v[0].value)),
+            val: xdr.ScVal.scvBool(v[1].value === "true" ? true : false),
+          });
+        }),
+      ),
+    ];
+
+    expect(expectedResult).toEqual(scValsResult);
+  });
+
+  // Public Key Address
+  it("resolves a public key address", () => {
+    const args = {
+      address: {
+        value: "GBPIMUEJFYS7RT23QO2ACH2JMKGXLXZI4E5ACBSQMF32RKZ5H3SVNL5F",
+        type: "address",
+      },
+    };
+
+    const scVals: xdr.ScVal[] = [];
+    const scValsResult = getScValsFromArgs(args, scVals);
+    const expectedResult: xdr.ScVal[] = [
+      new Address(args.address.value).toScVal(),
+    ];
+
+    expect(expectedResult).toEqual(scValsResult);
+  });
+
+  // Contract Address
+  it("resolves a contract address", () => {
+    const args = {
+      address: {
+        value: "CBHQGTSBJWA54K67RSG3JPXSZY5IXIZ4FSLJM4PQ33FA3FYCU5YZV7MZ",
+        type: "address",
+      },
+    };
+
+    const scVals: xdr.ScVal[] = [];
+    const scValsResult = getScValsFromArgs(args, scVals);
+    const expectedResult: xdr.ScVal[] = [
+      new Address(args.address.value).toScVal(),
+    ];
+
+    expect(expectedResult).toEqual(scValsResult);
+  });
+
+  // Not supported:
+  // BytesN
 });
