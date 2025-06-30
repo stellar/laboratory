@@ -115,7 +115,10 @@ export const TransactionInfo = ({
       transactionInfo: txDetails.txHash,
       sourceAccount: transaction?.source_account,
       sequenceNumber: transaction?.seq_num,
-      processed: txDetails?.createdAt,
+      processed:
+        txDetails?.createdAt && txDetails.createdAt.toString() !== "0"
+          ? txDetails.createdAt
+          : null,
       memo: parseMemo(transaction?.memo),
     };
 
