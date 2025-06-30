@@ -316,11 +316,6 @@ describe("convert js arguments to smart contract values using getScValsFromArgs"
     expect(expectedResult).toEqual(scValsResult);
   });
 
-  // Vec - multiple arguments
-  // @TODO ask George about this
-  // https://stellar.expert/explorer/testnet/contract/CBHQGTSBJWA54K67RSG3JPXSZY5IXIZ4FSLJM4PQ33FA3FYCU5YZV7MZ?filter=interface
-  // it("resolves a vec with multiple arguments", () => {});
-
   // Map
   it("resolves a map", () => {
     const args = {
@@ -399,6 +394,146 @@ describe("convert js arguments to smart contract values using getScValsFromArgs"
 
     expect(expectedResult).toEqual(scValsResult);
   });
+
+  // Enum Details: https://developers.stellar.org/docs/learn/fundamentals/contract-development/types/custom-types#enum-unit-and-tuple-variants
+  // Enum - Simple
+  it("resolves a Unit Enum", () => {
+    const args = {
+      enum: {
+        tag: "First",
+      },
+    };
+
+    const scVals: xdr.ScVal[] = [];
+    const scValsResult = getScValsFromArgs(args, scVals);
+    const expectedResult: xdr.ScVal[] = [
+      xdr.ScVal.scvVec([xdr.ScVal.scvSymbol("First")]),
+    ];
+
+    expect(expectedResult).toEqual(scValsResult);
+  });
+
+  // Enum - Tuple
+  it("resolves a Tuple Enum", () => {
+    const args = {
+      enum: [
+        {
+          value: "meow",
+          type: "symbol",
+        },
+        {
+          value: "12",
+          type: "u32",
+        },
+      ],
+    };
+
+    const scVals: xdr.ScVal[] = [];
+    const scValsResult = getScValsFromArgs(args, scVals);
+    const expectedResult: xdr.ScVal[] = [
+      xdr.ScVal.scvVec([xdr.ScVal.scvSymbol("meow"), xdr.ScVal.scvU32(12)]),
+    ];
+
+    expect(expectedResult).toEqual(scValsResult);
+  });
+
+  // Struct Details: https://developers.stellar.org/docs/learn/fundamentals/contract-development/types/custom-types#structs-with-named-fields
+  // Struct - Simple
+  it("resolves a struct", () => {
+    const args = {
+      struct: {
+        a: {
+          value: "10",
+          type: "u32",
+        },
+        b: {
+          value: "false",
+          type: "bool",
+        },
+        c: {
+          value: "Soroban",
+          type: "symbol",
+        },
+      },
+    };
+
+    const scVals: xdr.ScVal[] = [];
+    const scValsResult = getScValsFromArgs(args, scVals);
+    const expectedResult: xdr.ScVal[] = [
+      xdr.ScVal.scvMap([
+        new xdr.ScMapEntry({
+          key: xdr.ScVal.scvSymbol("a"),
+          val: xdr.ScVal.scvU32(10),
+        }),
+        new xdr.ScMapEntry({
+          key: xdr.ScVal.scvSymbol("b"),
+          val: xdr.ScVal.scvBool(false),
+        }),
+        new xdr.ScMapEntry({
+          key: xdr.ScVal.scvSymbol("c"),
+          val: xdr.ScVal.scvSymbol("Soroban"),
+        }),
+      ]),
+    ];
+
+    expect(expectedResult).toEqual(scValsResult);
+  });
+
+  // Struct - Complex
+  // @TODO START HERE
+  it("resolves a struct with an enum tuple variant", () => {
+    const args = {
+      complex: {
+        tag: "Struct",
+        values: [
+          {
+            a: {
+              value: "10",
+              type: "u32",
+            },
+            b: {
+              value: "true",
+              type: "bool",
+            },
+            c: {
+              value: "meow",
+              type: "symbol",
+            },
+          },
+        ],
+      },
+    };
+
+    const scVals: xdr.ScVal[] = [];
+    const scValsResult = getScValsFromArgs(args, scVals);
+    const expectedResult: xdr.ScVal[] = [
+      xdr.ScVal.scvMap([
+        new xdr.ScMapEntry({
+          key: xdr.ScVal.scvSymbol("a"),
+          val: xdr.ScVal.scvU32(10),
+        }),
+        new xdr.ScMapEntry({
+          key: xdr.ScVal.scvSymbol("b"),
+          val: xdr.ScVal.scvBool(false),
+        }),
+        new xdr.ScMapEntry({
+          key: xdr.ScVal.scvSymbol("c"),
+          val: xdr.ScVal.scvSymbol("Soroban"),
+        }),
+      ]),
+    ];
+
+    expect(expectedResult).toEqual(scValsResult);
+  });
+
+  // @TODO
+  // Enum - Integer
+  // it("resolves a Integer Enum", () => {});
+
+  // Vec - multiple arguments
+  // @TODO ask George about this
+  // https://stellar.expert/explorer/testnet/contract/CBHQGTSBJWA54K67RSG3JPXSZY5IXIZ4FSLJM4PQ33FA3FYCU5YZV7MZ?filter=interface
+  // it("resolves a vec with multiple arguments", () => {});
 
   // Not supported:
   // BytesN
