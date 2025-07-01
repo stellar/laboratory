@@ -111,6 +111,14 @@ export const renderOneOf = ({
         {schema.oneOf.map((oneOf, index) => {
           if (typeof oneOf === "boolean") return null;
 
+          if (oneOf.enum && oneOf.enum.length > 0) {
+            return (
+              <option value={oneOf.enum[0]?.toString()} key={`${oneOf.title}`}>
+                {oneOf.title} = {oneOf.enum[0]?.toString()}
+              </option>
+            );
+          }
+
           return (
             <option
               id={oneOf?.title}
