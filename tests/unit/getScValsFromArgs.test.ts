@@ -272,6 +272,28 @@ describe("convert js arguments to smart contract values using getScValsFromArgs"
     expect(expectedResult).toEqual(scValsResult);
   });
 
+  it("resolves a vec with multiple arguments", () => {
+    const args = {
+      a: {
+        value: "10",
+        type: "u32",
+      },
+      b: {
+        value: "false",
+        type: "bool",
+      },
+    };
+
+    const scVals: xdr.ScVal[] = [];
+    const scValsResult = getScValsFromArgs(args, scVals);
+    const expectedResult: xdr.ScVal[] = [
+      xdr.ScVal.scvU32(10),
+      xdr.ScVal.scvBool(false),
+    ];
+
+    expect(expectedResult).toEqual(scValsResult);
+  });
+
   // Strings
   it("resolves string", () => {
     const args = {
@@ -430,9 +452,13 @@ describe("convert js arguments to smart contract values using getScValsFromArgs"
 
     const scVals: xdr.ScVal[] = [];
     const scValsResult = getScValsFromArgs(args, scVals);
+
     const expectedResult: xdr.ScVal[] = [
       xdr.ScVal.scvVec([xdr.ScVal.scvSymbol("meow"), xdr.ScVal.scvU32(12)]),
     ];
+
+    console.log("scValsResult[2]: ", scValsResult);
+    console.log("expectedResult[2]: ", expectedResult);
 
     expect(expectedResult).toEqual(scValsResult);
   });
@@ -652,14 +678,56 @@ describe("convert js arguments to smart contract values using getScValsFromArgs"
     const expectedResult: xdr.ScVal[] = [xdr.ScVal.scvVec(vec)];
     expect(expectedResult).toEqual(scValsResult);
   });
+
+  // @TODO Union Case with Tuple
+  // CBBBUV6XRCPRL4C4K7DQJSU2UL37B3XJYORXDCXLOKMZUQFH4COCNANI (Signer Example)
+  // it("resolves a union case with a tuple", () => {
+  //   const args = {
+  //     tag: "Policy",
+  //     values: [
+  //       {
+  //         value: "GBPIMUEJFYS7RT23QO2ACH2JMKGXLXZI4E5ACBSQMF32RKZ5H3SVNL5F",
+  //         type: "address",
+  //       },
+  //       [
+  //         {
+  //           value: "10",
+  //           type: "u32",
+  //         },
+  //       ],
+  //       [
+  //         [
+  //           {
+  //             "0": {
+  //               value:
+  //                 "GB6SJHJIB4NJJOMLAX4OMNR24LXDBOF4SU57UDVAEFJVZGAPXRSXVTVI",
+  //               type: "address",
+  //             },
+  //             "1": [
+  //               {
+  //                 tag: "Policy",
+  //                 values: [
+  //                   {
+  //                     value:
+  //                       "GB6SJHJIB4NJJOMLAX4OMNR24LXDBOF4SU57UDVAEFJVZGAPXRSXVTVI",
+  //                     type: "address",
+  //                   },
+  //                 ],
+  //               },
+  //             ],
+  //           },
+  //         ],
+  //       ],
+  //       {
+  //         tag: "Persistent",
+  //       },
+  //     ],
+  //   };
+  // });
+
   // @TODO
   // Enum - Integer
   // it("resolves a Integer Enum", () => {});
-
-  // Vec - multiple arguments
-  // @TODO ask George about this
-  // https://stellar.expert/explorer/testnet/contract/CBHQGTSBJWA54K67RSG3JPXSZY5IXIZ4FSLJM4PQ33FA3FYCU5YZV7MZ?filter=interface
-  // it("resolves a vec with multiple arguments", () => {});
 
   // Not supported:
   // BytesN

@@ -180,9 +180,7 @@ export const getTxnToSimulate = (
   networkPassphrase: string,
 ): { xdr: string; error: string } => {
   try {
-    console.log("value.args", value.args);
     const argsToScVals = getScValsFromArgs(value.args, []);
-    console.log("argsToScVals", argsToScVals);
     const builtXdr = buildTxWithSorobanData({
       params: txnParams,
       sorobanOp: {
@@ -412,15 +410,12 @@ const convertTupleToScVal = (tupleArray: any) => {
 };
 
 const getScValFromPrimitive = (v: any) => {
-  console.log("primitive");
-
   if (v.type === "bool") {
     const boolValue = v.value === "true" ? true : false;
     return nativeToScVal(boolValue);
   }
   if (v.type === "bytes") {
     const encoding = detectBytesEncoding(v.value);
-    console.log("encoding", encoding);
     return nativeToScVal(new Uint8Array(Buffer.from(v.value, encoding)));
   }
   return nativeToScVal(v.value, { type: v.type });
