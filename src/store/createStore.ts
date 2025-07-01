@@ -220,6 +220,13 @@ export interface Store {
     updateExplorerContractId: (contractId: string) => void;
     resetExplorerContractId: () => void;
   };
+
+  // Transaction Dashboard
+  txDashboard: {
+    transactionHash: string;
+    updateTransactionHash: (txHash: string) => void;
+    resetTransactionHash: () => void;
+  };
 }
 
 interface CreateStoreOptions {
@@ -330,6 +337,10 @@ const initSmartContractsState = {
   explorer: {
     contractId: "",
   },
+};
+
+const initTxDashboardState = {
+  transactionHash: "",
 };
 
 // Store
@@ -640,6 +651,18 @@ export const createStore = (options: CreateStoreOptions) =>
               state.smartContracts.explorer.contractId = "";
             }),
         },
+        // Transaction Dashboard
+        txDashboard: {
+          ...initTxDashboardState,
+          updateTransactionHash: (txHash) =>
+            set((state) => {
+              state.txDashboard.transactionHash = txHash;
+            }),
+          resetTransactionHash: () =>
+            set((state) => {
+              state.txDashboard.transactionHash = "";
+            }),
+        },
       })),
       {
         url: options.url,
@@ -696,6 +719,9 @@ export const createStore = (options: CreateStoreOptions) =>
               },
             },
             savedContractId: true,
+            txDashboard: {
+              transactionHash: true,
+            },
           };
         },
       },

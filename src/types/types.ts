@@ -538,3 +538,22 @@ export type ContractData = {
   text?: string[];
 };
 export type ContractSections = Record<ContractSectionName, ContractData>;
+
+// =============================================================================
+// Smart contract transaction dashboard
+// =============================================================================
+export type RpcTxJsonResponse = {
+  applicationOrder: number;
+  createdAt: string;
+  feeBump: boolean;
+  ledger: number;
+  latestLedger: number;
+  latestLedgerCloseTime: string;
+  oldestLedger: number;
+  oldestLedgerCloseTime: string;
+  status: string;
+  txHash: string;
+  envelopeJson: AnyObject;
+  resultJson: AnyObject;
+  resultMetaJson: AnyObject;
+};

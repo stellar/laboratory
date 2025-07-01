@@ -96,4 +96,6 @@ export enum Routes {
   SMART_CONTRACTS_CONTRACT_LIST = "/smart-contracts/contract-list",
   // Transactions Explorer
   TRANSACTIONS_EXPLORER = "/transactions-explorer",
+  // Transaction Dashboard
+  TRANSACTION_DASHBOARD = "/transaction-dashboard",
 }
