@@ -391,10 +391,14 @@ export const TransactionInfo = ({
             <NoInfoLoadedView
               message={
                 isTxNotFound ? (
-                  <>
+                  <span>
                     Couldn’t find that transaction. Please make sure you’re
-                    using the correct network.
-                  </>
+                    using the correct network, or the transaction is within the{" "}
+                    <SdsLink href="https://developers.stellar.org/docs/data/apis/rpc#why-run-rpc">
+                      retention window
+                    </SdsLink>{" "}
+                    of the RPC.
+                  </span>
                 ) : (
                   <>Load a transaction</>
                 )
