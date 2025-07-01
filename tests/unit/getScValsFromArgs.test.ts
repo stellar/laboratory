@@ -479,9 +479,8 @@ describe("convert js arguments to smart contract values using getScValsFromArgs"
     expect(expectedResult).toEqual(scValsResult);
   });
 
-  // Struct - Complex
-  // @TODO START HERE
-  it("resolves a struct with an enum tuple variant", () => {
+  // Complex Enum with Struct
+  it("resolves a complex enum with a struct", () => {
     const args = {
       complex: {
         tag: "Struct",
@@ -506,7 +505,8 @@ describe("convert js arguments to smart contract values using getScValsFromArgs"
 
     const scVals: xdr.ScVal[] = [];
     const scValsResult = getScValsFromArgs(args, scVals);
-    const expectedResult: xdr.ScVal[] = [
+    const vec = [
+      xdr.ScVal.scvSymbol(args.complex.tag),
       xdr.ScVal.scvMap([
         new xdr.ScMapEntry({
           key: xdr.ScVal.scvSymbol("a"),
@@ -514,18 +514,144 @@ describe("convert js arguments to smart contract values using getScValsFromArgs"
         }),
         new xdr.ScMapEntry({
           key: xdr.ScVal.scvSymbol("b"),
-          val: xdr.ScVal.scvBool(false),
+          val: xdr.ScVal.scvBool(true),
         }),
         new xdr.ScMapEntry({
           key: xdr.ScVal.scvSymbol("c"),
-          val: xdr.ScVal.scvSymbol("Soroban"),
+          val: xdr.ScVal.scvSymbol("meow"),
         }),
       ]),
     ];
 
+    const expectedResult: xdr.ScVal[] = [xdr.ScVal.scvVec(vec)];
     expect(expectedResult).toEqual(scValsResult);
   });
 
+  // Complex Enum with Tuple
+  it("resolves a complex enum with a tuple struct", () => {
+    const args = {
+      complex: {
+        tag: "Tuple",
+        values: [
+          [
+            {
+              a: {
+                value: "10",
+                type: "u32",
+              },
+              b: {
+                value: "false",
+                type: "bool",
+              },
+              c: {
+                value: "Tuple",
+                type: "symbol",
+              },
+            },
+            {
+              tag: "First",
+            },
+          ],
+        ],
+      },
+    };
+
+    const scVals: xdr.ScVal[] = [];
+    const scValsResult = getScValsFromArgs(args, scVals);
+    const vec = [
+      xdr.ScVal.scvSymbol("Tuple"),
+      xdr.ScVal.scvVec([
+        xdr.ScVal.scvMap([
+          new xdr.ScMapEntry({
+            key: xdr.ScVal.scvSymbol("a"),
+            val: xdr.ScVal.scvU32(10),
+          }),
+          new xdr.ScMapEntry({
+            key: xdr.ScVal.scvSymbol("b"),
+            val: xdr.ScVal.scvBool(false),
+          }),
+          new xdr.ScMapEntry({
+            key: xdr.ScVal.scvSymbol("c"),
+            val: xdr.ScVal.scvSymbol("Tuple"),
+          }),
+        ]),
+        xdr.ScVal.scvVec([xdr.ScVal.scvSymbol("First")]),
+      ]),
+    ];
+
+    const expectedResult: xdr.ScVal[] = [xdr.ScVal.scvVec(vec)];
+    expect(expectedResult).toEqual(scValsResult);
+  });
+
+  // Complex Enum with Enum
+  it("resolves a complex enum with an enum", () => {
+    const args = {
+      complex: {
+        tag: "Enum",
+        values: [
+          {
+            tag: "First",
+          },
+        ],
+      },
+    };
+
+    const scVals: xdr.ScVal[] = [];
+    const scValsResult = getScValsFromArgs(args, scVals);
+    const vec = [
+      xdr.ScVal.scvSymbol(args.complex.tag),
+      xdr.ScVal.scvVec([xdr.ScVal.scvSymbol(args.complex.values[0].tag)]),
+    ];
+
+    const expectedResult: xdr.ScVal[] = [xdr.ScVal.scvVec(vec)];
+    expect(expectedResult).toEqual(scValsResult);
+  });
+
+  // Complex Enum with Address
+  it("resolves a complex enum with Address", () => {
+    const args = {
+      complex: {
+        tag: "Asset",
+        values: [
+          {
+            value: "GBPIMUEJFYS7RT23QO2ACH2JMKGXLXZI4E5ACBSQMF32RKZ5H3SVNL5F",
+            type: "address",
+          },
+          {
+            value: "10",
+            type: "i128",
+          },
+        ],
+      },
+    };
+
+    const scVals: xdr.ScVal[] = [];
+    const scValsResult = getScValsFromArgs(args, scVals);
+    const vec = [
+      xdr.ScVal.scvSymbol(args.complex.tag),
+      new Address(args.complex.values[0].value).toScVal(),
+      new ScInt(args.complex.values[1].value, { type: "i128" }).toScVal(),
+    ];
+
+    const expectedResult: xdr.ScVal[] = [xdr.ScVal.scvVec(vec)];
+    expect(expectedResult).toEqual(scValsResult);
+  });
+
+  // Complex Enum with Void
+  it("resolves a complex enum with Void", () => {
+    const args = {
+      complex: {
+        tag: "Void",
+      },
+    };
+
+    const scVals: xdr.ScVal[] = [];
+    const scValsResult = getScValsFromArgs(args, scVals);
+    const vec = [xdr.ScVal.scvSymbol(args.complex.tag)];
+
+    const expectedResult: xdr.ScVal[] = [xdr.ScVal.scvVec(vec)];
+    expect(expectedResult).toEqual(scValsResult);
+  });
   // @TODO
   // Enum - Integer
   // it("resolves a Integer Enum", () => {});
