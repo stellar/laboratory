@@ -178,7 +178,9 @@ test.describe("Submit Transaction Page", () => {
       const txResponseError = validationCard.getByTestId(
         "submit-tx-horizon-error-extras",
       );
-      expect(txResponseError.locator(".TxResponse__value")).toBeVisible();
+      await expect(
+        txResponseError.locator(".TxResponse__value").first(),
+      ).toBeVisible();
     });
 
     test("Submit via RPC", async ({ page }) => {
