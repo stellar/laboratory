@@ -418,7 +418,7 @@ describe("convert js arguments to smart contract values using getScValsFromArgs"
   });
 
   // Enum Details: https://developers.stellar.org/docs/learn/fundamentals/contract-development/types/custom-types#enum-unit-and-tuple-variants
-  // Enum - Simple
+  // Enum with Unit Variant
   it("resolves a Unit Enum", () => {
     const args = {
       enum: {
@@ -435,7 +435,7 @@ describe("convert js arguments to smart contract values using getScValsFromArgs"
     expect(expectedResult).toEqual(scValsResult);
   });
 
-  // Enum - Tuple
+  // Enum with Tuple Variant
   it("resolves a Tuple Enum", () => {
     const args = {
       enum: [
@@ -457,9 +457,21 @@ describe("convert js arguments to smart contract values using getScValsFromArgs"
       xdr.ScVal.scvVec([xdr.ScVal.scvSymbol("meow"), xdr.ScVal.scvU32(12)]),
     ];
 
-    console.log("scValsResult[2]: ", scValsResult);
-    console.log("expectedResult[2]: ", expectedResult);
+    expect(expectedResult).toEqual(scValsResult);
+  });
 
+  // Enum with Integer Variant
+  it("resolves a Integer Enum", () => {
+    const args = {
+      card: {
+        enum: "13",
+      },
+    };
+
+    const scVals: xdr.ScVal[] = [];
+    const scValsResult = getScValsFromArgs(args, scVals);
+
+    const expectedResult: xdr.ScVal[] = [xdr.ScVal.scvU32(13)];
     expect(expectedResult).toEqual(scValsResult);
   });
 

@@ -57,7 +57,10 @@ export const renderOneOf = ({
     (oneOf) => jsonSchema.isSchemaObject(oneOf) && oneOf?.title === tagName,
   );
 
-  const onSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const onSelectChange = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    isEnumType: boolean,
+  ) => {
     const pathSegments = path[0].split(".");
 
     if (pathSegments.length > 1) {
@@ -89,7 +92,7 @@ export const renderOneOf = ({
         args: {
           ...parsedSorobanOperation.args,
           [name]: {
-            tag: e.target.value,
+            [isEnumType ? "enum" : "tag"]: e.target.value,
           },
         },
       });
@@ -103,9 +106,15 @@ export const renderOneOf = ({
         fieldSize="md"
         label={name}
         value={get(parsedSorobanOperation.args, path.join("."))?.tag}
-        onChange={onSelectChange}
+        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+          const isEnumType = schema?.oneOf?.find(
+            (oneOf) =>
+              jsonSchema.isSchemaObject(oneOf) && oneOf?.enum !== undefined,
+          );
+
+          onSelectChange(e, !!isEnumType);
+        }}
       >
-        {/* title is the tag */}
         <option value="">Select</option>
 
         {schema.oneOf.map((oneOf, index) => {

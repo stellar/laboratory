@@ -286,7 +286,12 @@ const convertEnumToScVal = (obj: Record<string, any>, scVals?: xdr.ScVal[]) => {
     return tupleScValsVec;
   }
 
-  // ENUM CASE
+  // ENUM INTEGER VARIANT CASE
+  if (obj.enum) {
+    return nativeToScVal(obj.enum, { type: "u32" });
+  }
+
+  // ENUM CASE UNIT CASE
   const tagVec = [obj.tag];
   return nativeToScVal(tagVec, { type: "symbol" });
 };
@@ -435,7 +440,7 @@ export const getScValsFromArgs = (
   }
 
   // ENUM (VOID AND COMPLEX ONE LIKE TUPLE) CASE
-  if (Object.values(args).some((v) => v.tag)) {
+  if (Object.values(args).some((v) => v.tag || v.enum)) {
     const enumScVals = Object.values(args).map((v) => {
       return convertEnumToScVal(v, scVals);
     });
