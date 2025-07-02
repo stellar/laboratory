@@ -1,12 +1,9 @@
 module.exports = {
   preset: "ts-jest",
-  roots: ["."],
+  roots: ["./src"],
   collectCoverageFrom: ["src/**/*.ts"],
   testEnvironment: "node",
   transform: { "\\.[jt]sx?$": ["ts-jest", { useESM: true }] },
-  // moduleNameMapper: {
-  //   "^(\\.\\.?\\/.+)\\.ts$": "$1",
-  // },
   extensionsToTreatAsEsm: [".ts"],
   modulePathIgnorePatterns: ["tests/e2e"],
   moduleDirectories: ["node_modules", "<rootDir>"],
