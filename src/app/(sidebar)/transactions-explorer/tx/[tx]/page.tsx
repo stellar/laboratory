@@ -12,7 +12,6 @@ import { useGetRpcTxDetails } from "@/query/useGetRpcTxDetails";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 
 import { TransactionDetails } from "./components/TransactionDetails";
-import "./layout.css";
 
 export default function Tx({ params }: { params: Promise<{ tx: string }> }) {
   const { network } = useStore();
