@@ -13,7 +13,10 @@ import { Box } from "@/components/layout/Box";
 
 import { useStore } from "@/store/useStore";
 import { useGetRpcTxs } from "@/query/useGetRpcTxs";
-import { LOCAL_STORAGE_SAVED_EXPLORER_TRANSACTIONS } from "@/constants/settings";
+import {
+  LOCAL_STORAGE_SAVED_EXPLORER_TRANSACTIONS,
+  LOCALSTORAGE_EXPLORER_TRANSACTIONS_RPC_REF,
+} from "@/constants/settings";
 
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import {
@@ -25,7 +28,7 @@ import { TransactionsTable } from "./components/TransactionsTable";
 
 export default function Explorer() {
   const { network } = useStore();
-  const localStorageKey = `${network.id}.${LOCAL_STORAGE_SAVED_EXPLORER_TRANSACTIONS}`;
+  const localStorageKey = LOCAL_STORAGE_SAVED_EXPLORER_TRANSACTIONS;
   const [iter, setIter] = useState(0);
   const [nextFetchAt, setNextFetchAt] = useState<number>(0);
   const [startLedger, setStartLedger] = useState<number>(0);
@@ -54,7 +57,19 @@ export default function Explorer() {
   });
 
   useEffect(() => {
+    // If rpc url is the same, we don't need to reset state.
+    if (
+      localStorage.getItem(LOCALSTORAGE_EXPLORER_TRANSACTIONS_RPC_REF) ===
+      network.rpcUrl
+    ) {
+      return;
+    }
+
     localStorage.removeItem(localStorageKey);
+    localStorage.setItem(
+      LOCALSTORAGE_EXPLORER_TRANSACTIONS_RPC_REF,
+      network.rpcUrl,
+    );
     setStartLedger(0);
     setNextFetchAt(Date.now());
     transactions.clear();

@@ -16,6 +16,8 @@ export const LOCAL_STORAGE_SAVED_CONTRACTS = "stellar_lab_saved_contract_ids";
 export const LOCAL_STORAGE_SAVED_THEME = "stellarTheme:Laboratory";
 export const LOCAL_STORAGE_SAVED_EXPLORER_TRANSACTIONS =
   "stellar_lab_saved_explorer_transactions";
+export const LOCALSTORAGE_EXPLORER_TRANSACTIONS_RPC_REF =
+  "stellar_lab_saved_explorer_transactions_rpc_ref";
 export const LOCAL_STORAGE_SAVED_WALLET = "stellar_lab_wallet";
 
 export const XDR_TYPE_TRANSACTION_ENVELOPE = "TransactionEnvelope";
