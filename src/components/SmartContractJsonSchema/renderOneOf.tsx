@@ -121,9 +121,11 @@ export const renderOneOf = ({
           if (typeof oneOf === "boolean") return null;
 
           if (oneOf.enum && oneOf.enum.length > 0) {
+            const val = oneOf.enum[0]?.toString();
+          
             return (
-              <option value={oneOf.enum[0]?.toString()} key={`${oneOf.title}`}>
-                {oneOf.title} = {oneOf.enum[0]?.toString()}
+              <option value={val} key={`${oneOf.title}`}>
+                {oneOf.title} = {val}
               </option>
             );
           }
