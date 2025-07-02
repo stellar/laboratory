@@ -1,6 +1,6 @@
 module.exports = {
   preset: "ts-jest",
-  roots: ["./src"],
+  roots: ["."],
   collectCoverageFrom: ["src/**/*.ts"],
   testEnvironment: "node",
   transform: { "\\.[jt]sx?$": ["ts-jest", { useESM: true }] },
