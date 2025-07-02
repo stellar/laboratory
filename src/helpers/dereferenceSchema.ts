@@ -45,12 +45,21 @@ const resolveNestedSchema = (schema: any, fullSchema: JSONSchema7): any => {
     return finalSchema;
   }
 
+  if (schema.enum) {
+    return {
+      ...schema,
+      enum: schema.enum.map((item: any) =>
+        resolveNestedSchema(item, fullSchema),
+      ),
+    };
+  }
+
   if (schema.oneOf) {
     return {
       ...schema,
-      oneOf: schema.oneOf.map((item: any) =>
-        resolveNestedSchema(item, fullSchema),
-      ),
+      oneOf: schema.oneOf.map((item: any) => {
+        return resolveNestedSchema(item, fullSchema);
+      }),
     };
   }
 

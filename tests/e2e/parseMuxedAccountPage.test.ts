@@ -12,7 +12,9 @@ test.describe("Parse Muxed Account Page", () => {
   });
 
   test("Renders 'Muxed Account M Address' input field", async ({ page }) => {
-    expect(page.locator("input[id='muxed-account-address']")).toBeVisible;
+    await expect(
+      page.locator("input[id='muxed-account-address']"),
+    ).toBeVisible();
   });
 
   test("Gets an error with an invalid muxed account key in 'Muxed Account M Address' field", async ({

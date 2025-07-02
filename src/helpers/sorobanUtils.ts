@@ -278,7 +278,7 @@ const convertValuesToScVals = (
 };
 
 const convertEnumToScVal = (obj: Record<string, any>, scVals?: xdr.ScVal[]) => {
-  // TUPLE CASE
+  // Tuple Case
   if (obj.tag && obj.values) {
     const tagVal = nativeToScVal(obj.tag, { type: "symbol" });
     const valuesVal = convertValuesToScVals(obj.values, scVals || []);
@@ -287,7 +287,12 @@ const convertEnumToScVal = (obj: Record<string, any>, scVals?: xdr.ScVal[]) => {
     return tupleScValsVec;
   }
 
-  // ENUM CASE
+  // Enum Integer Variant Case
+  if (obj.enum) {
+    return nativeToScVal(obj.enum, { type: "u32" });
+  }
+
+  // Enum Case Unit Case
   const tagVec = [obj.tag];
   return nativeToScVal(tagVec, { type: "symbol" });
 };
@@ -368,6 +373,30 @@ const convertObjectToMap = (
   return { mapVal, mapType };
 };
 
+// Helper function to detect if string is base64 or hex
+const detectBytesEncoding = (value: string): "base64" | "hex" => {
+  const hexRegex = /^[0-9a-fA-F]+$/;
+  const base64Regex = /^[A-Za-z0-9+/]*={0,2}$/;
+
+  if (hexRegex.test(value) && value.length % 2 === 0) {
+    return "hex";
+  }
+
+  if (base64Regex.test(value) && value.length % 4 === 0) {
+    try {
+      const decoded = Buffer.from(value, "base64");
+      return decoded.toString("base64").replace(/=+$/, "") ===
+        value.replace(/=+$/, "")
+        ? "base64"
+        : "hex";
+    } catch {
+      return "hex";
+    }
+  }
+
+  return "base64";
+};
+
 const convertTupleToScVal = (tupleArray: any) => {
   const tupleScVals = tupleArray.map((v: { value: any; type: any }) => {
     if (v.type === "bool") {
@@ -375,7 +404,8 @@ const convertTupleToScVal = (tupleArray: any) => {
       return nativeToScVal(boolValue);
     }
     if (v.type === "bytes") {
-      return nativeToScVal(new Uint8Array(Buffer.from(v.value, "base64")));
+      const encoding = detectBytesEncoding(v.value);
+      return nativeToScVal(new Uint8Array(Buffer.from(v.value, encoding)));
     }
     return nativeToScVal(v.value, { type: v.type });
   });
@@ -391,16 +421,17 @@ const getScValFromPrimitive = (v: any) => {
     return nativeToScVal(boolValue);
   }
   if (v.type === "bytes") {
-    return nativeToScVal(new Uint8Array(Buffer.from(v.value, "base64")));
+    const encoding = detectBytesEncoding(v.value);
+    return nativeToScVal(new Uint8Array(Buffer.from(v.value, encoding)));
   }
   return nativeToScVal(v.value, { type: v.type });
 };
 
-const getScValsFromArgs = (
+export const getScValsFromArgs = (
   args: SorobanInvokeValue["args"],
   scVals: xdr.ScVal[] = [],
 ): xdr.ScVal[] => {
-  // PRIMITIVE CASE
+  // Primitive Case
   if (Object.values(args).every((v: any) => v.type && v.value)) {
     const primitiveScVals = Object.values(args).map((v) => {
       return getScValFromPrimitive(v);
@@ -409,8 +440,8 @@ const getScValsFromArgs = (
     return primitiveScVals;
   }
 
-  // ENUM (VOID AND COMPLEX ONE LIKE TUPLE) CASE
-  if (Object.values(args).some((v) => v.tag)) {
+  // Enum (Void and Complex One Like Tuple) Case
+  if (Object.values(args).some((v) => v.tag || v.enum)) {
     const enumScVals = Object.values(args).map((v) => {
       return convertEnumToScVal(v, scVals);
     });
@@ -423,7 +454,7 @@ const getScValsFromArgs = (
 
     // Check if it's an array of map objects
     if (Array.isArray(argValue)) {
-      // MAP CASE
+      // Map Case
       if (isMap(argValue)) {
         const { mapVal, mapType } = convertObjectToMap(argValue);
         const mapScVal = nativeToScVal(mapVal, { type: mapType });
@@ -431,7 +462,7 @@ const getScValsFromArgs = (
         return scVals;
       }
 
-      // VEC CASE #1: array of objects or complicated tuple case
+      // Vec Case #1: array of objects or complicated tuple case
       if (argValue.some((v) => typeof Object.values(v)[0] === "object")) {
         const arrayScVals = argValue.map((v) => {
           if (v.tag) {
@@ -446,7 +477,7 @@ const getScValsFromArgs = (
         return scVals;
       }
 
-      // VEC CASE #2: array of primitives
+      // Vec Case #2: array of primitives
       const isVecArray = argValue.every((v) => {
         return v.type === argValue[0].type;
       });
@@ -456,7 +487,8 @@ const getScValsFromArgs = (
           if (v.type === "bool") {
             acc.push(v.value === "true" ? true : false);
           } else if (v.type === "bytes") {
-            acc.push(new Uint8Array(Buffer.from(v.value, "base64")));
+            const encoding = detectBytesEncoding(v.value);
+            acc.push(new Uint8Array(Buffer.from(v.value, encoding)));
           } else {
             acc.push(v.value);
           }
@@ -471,7 +503,7 @@ const getScValsFromArgs = (
         return scVals;
       }
 
-      // TUPLE CASE
+      // Tuple Case
       const isTupleArray = argValue.every((v: any) => v.type && v.value);
       if (isTupleArray) {
         const tupleScValsVec = convertTupleToScVal(argValue);
@@ -481,7 +513,7 @@ const getScValsFromArgs = (
       }
     }
 
-    // OBJECT CASE
+    // Object Case
     if (Object.values(argValue).every((v: any) => v.type && v.value)) {
       const convertedObj = convertObjectToScVal(argValue);
       scVals.push(nativeToScVal(convertedObj));
