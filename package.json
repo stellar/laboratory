@@ -14,6 +14,7 @@
     "lint:ts": "tsc --noEmit",
     "test:unit": "jest",
     "test:e2e": "playwright test",
+    "test": "yarn test:unit && yarn test:e2e",
     "install-if-package-changed": "git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD | grep --quiet yarn.lock && yarn install || exit 0",
     "prepare": "husky",
     "pre-commit": "yarn lint-staged",
