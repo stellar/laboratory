@@ -15,7 +15,7 @@ import { useStore } from "@/store/useStore";
 import { useGetRpcTxs } from "@/query/useGetRpcTxs";
 import {
   LOCAL_STORAGE_SAVED_EXPLORER_TRANSACTIONS,
-  LOCALSTORAGE_EXPLORER_TRANSACTIONS_RPC_REF,
+  LOCAL_STORAGE_EXPLORER_TRANSACTIONS_RPC_REF,
 } from "@/constants/settings";
 
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
@@ -59,7 +59,7 @@ export default function Explorer() {
   useEffect(() => {
     // If rpc url is the same, we don't need to reset state.
     if (
-      localStorage.getItem(LOCALSTORAGE_EXPLORER_TRANSACTIONS_RPC_REF) ===
+      localStorage.getItem(LOCAL_STORAGE_EXPLORER_TRANSACTIONS_RPC_REF) ===
       network.rpcUrl
     ) {
       return;
@@ -67,7 +67,7 @@ export default function Explorer() {
 
     localStorage.removeItem(localStorageKey);
     localStorage.setItem(
-      LOCALSTORAGE_EXPLORER_TRANSACTIONS_RPC_REF,
+      LOCAL_STORAGE_EXPLORER_TRANSACTIONS_RPC_REF,
       network.rpcUrl,
     );
     setStartLedger(0);
