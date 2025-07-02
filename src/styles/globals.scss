@@ -874,6 +874,8 @@
 
   // Floater
   &__floater {
+    --Floater-background-color: var(--sds-clr-gray-01);
+
     z-index: 2;
     top: calc(100% + 0.5rem);
     right: 0;
@@ -883,6 +885,7 @@
     opacity: 0;
     width: pxToRem(320px);
     transform: none !important;
+    border: 1px solid var(--sds-clr-gray-06) !important;
 
     &[data-is-active="true"] {
       display: block;
