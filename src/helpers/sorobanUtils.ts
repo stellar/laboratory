@@ -277,7 +277,7 @@ const convertValuesToScVals = (
 };
 
 const convertEnumToScVal = (obj: Record<string, any>, scVals?: xdr.ScVal[]) => {
-  // TUPLE CASE
+  // Tuple Case
   if (obj.tag && obj.values) {
     const tagVal = nativeToScVal(obj.tag, { type: "symbol" });
     const valuesVal = convertValuesToScVals(obj.values, scVals || []);
@@ -286,12 +286,12 @@ const convertEnumToScVal = (obj: Record<string, any>, scVals?: xdr.ScVal[]) => {
     return tupleScValsVec;
   }
 
-  // ENUM INTEGER VARIANT CASE
+  // Enum Integer Variant Case
   if (obj.enum) {
     return nativeToScVal(obj.enum, { type: "u32" });
   }
 
-  // ENUM CASE UNIT CASE
+  // Enum Case Unit Case
   const tagVec = [obj.tag];
   return nativeToScVal(tagVec, { type: "symbol" });
 };
@@ -430,7 +430,7 @@ export const getScValsFromArgs = (
   args: SorobanInvokeValue["args"],
   scVals: xdr.ScVal[] = [],
 ): xdr.ScVal[] => {
-  // PRIMITIVE CASE
+  // Primitive Case
   if (Object.values(args).every((v: any) => v.type && v.value)) {
     const primitiveScVals = Object.values(args).map((v) => {
       return getScValFromPrimitive(v);
@@ -439,7 +439,7 @@ export const getScValsFromArgs = (
     return primitiveScVals;
   }
 
-  // ENUM (VOID AND COMPLEX ONE LIKE TUPLE) CASE
+  // Enum (Void and Complex One Like Tuple) Case
   if (Object.values(args).some((v) => v.tag || v.enum)) {
     const enumScVals = Object.values(args).map((v) => {
       return convertEnumToScVal(v, scVals);
@@ -453,7 +453,7 @@ export const getScValsFromArgs = (
 
     // Check if it's an array of map objects
     if (Array.isArray(argValue)) {
-      // MAP CASE
+      // Map Case
       if (isMap(argValue)) {
         const { mapVal, mapType } = convertObjectToMap(argValue);
         const mapScVal = nativeToScVal(mapVal, { type: mapType });
@@ -461,7 +461,7 @@ export const getScValsFromArgs = (
         return scVals;
       }
 
-      // VEC CASE #1: array of objects or complicated tuple case
+      // Vec Case #1: array of objects or complicated tuple case
       if (argValue.some((v) => typeof Object.values(v)[0] === "object")) {
         const arrayScVals = argValue.map((v) => {
           if (v.tag) {
@@ -476,7 +476,7 @@ export const getScValsFromArgs = (
         return scVals;
       }
 
-      // VEC CASE #2: array of primitives
+      // Vec Case #2: array of primitives
       const isVecArray = argValue.every((v) => {
         return v.type === argValue[0].type;
       });
@@ -502,7 +502,7 @@ export const getScValsFromArgs = (
         return scVals;
       }
 
-      // TUPLE CASE
+      // Tuple Case
       const isTupleArray = argValue.every((v: any) => v.type && v.value);
       if (isTupleArray) {
         const tupleScValsVec = convertTupleToScVal(argValue);
@@ -512,7 +512,7 @@ export const getScValsFromArgs = (
       }
     }
 
-    // OBJECT CASE
+    // Object Case
     if (Object.values(argValue).every((v: any) => v.type && v.value)) {
       const convertedObj = convertObjectToScVal(argValue);
       scVals.push(nativeToScVal(convertedObj));

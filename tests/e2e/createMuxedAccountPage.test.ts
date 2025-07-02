@@ -14,8 +14,8 @@ test.describe("Create Muxed Account Page", () => {
   test("Renders 'Base Account G Address' and 'Muxed Account ID' input field", async ({
     page,
   }) => {
-    await expect(page.getByTestId("muxed-public-key")).toBeVisible();
-    await expect(page.getByTestId("muxed-account-id")).toBeVisible();
+    await expect(page.locator("input[id='muxed-public-key']")).toBeVisible();
+    await expect(page.locator("input[id='muxed-account-id']")).toBeVisible();
   });
 
   test("Gets an error with an invalid public key in 'Base Account G Address' field", async ({

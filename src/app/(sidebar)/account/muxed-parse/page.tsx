@@ -67,7 +67,6 @@ export default function ParseMuxedAccount() {
         <div className="Account__card">
           <PubKeyPicker
             id="muxed-account-address"
-            data-testid="muxed-account-address"
             label="Muxed Account M Address"
             placeholder="Ex: MBRWSVNURRYVIYSWLRFQ5AAAUWPKOZZNZVVVIXHFGUSGIRVKLVIDYAAAAAAAAAAD5GJ4U"
             value={muxedAddress}

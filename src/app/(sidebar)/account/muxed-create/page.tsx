@@ -89,7 +89,6 @@ export default function CreateMuxedAccount() {
 
           <PubKeyPicker
             id="muxed-public-key"
-            data-testid="muxed-public-key"
             label="Base Account G Address"
             value={baseAddress}
             onChange={(e) => {
@@ -113,7 +112,6 @@ export default function CreateMuxedAccount() {
           />
 
           <Input
-            data-testid="muxed-account-id"
             id="muxed-account-id"
             fieldSize="md"
             placeholder="Ex: 1"
