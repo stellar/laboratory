@@ -5,7 +5,7 @@ interface PositiveIntPickerProps extends Omit<InputProps, "fieldSize"> {
   id: string;
   fieldSize?: "sm" | "md" | "lg";
   labelSuffix?: string | React.ReactNode;
-  label: string;
+  label: string | React.ReactNode;
   value: string;
   placeholder?: string;
   error: string | undefined;

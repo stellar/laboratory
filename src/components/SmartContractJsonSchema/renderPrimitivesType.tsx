@@ -9,6 +9,7 @@ import { convertSpecTypeToScValType } from "@/helpers/sorobanUtils";
 import { validate } from "@/validate";
 
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
+import { ColorPillType } from "@/components/ColorPillType";
 
 import type { AnyObject, SorobanInvokeValue } from "@/types/types";
 
@@ -36,6 +37,19 @@ export const renderPrimitivesType = ({
   const nestedItemLabel =
     path.length > 0 ? jsonSchema.getNestedItemLabel(path.join(".")) : path;
 
+  const renameType = (type: string) => {
+    switch (type) {
+      case "ScSymbol":
+        return "symbol";
+      case "ScString":
+        return "string";
+      case "DataUrl":
+        return "dataUrl";
+      default:
+        return type;
+    }
+  };
+
   const formErrorKey = [
     parsedSorobanOperation.function_name,
     path.join("."),
@@ -43,7 +57,6 @@ export const renderPrimitivesType = ({
 
   const sharedProps = {
     id: path.join("."),
-    label: `${nestedItemLabel} (${schemaType})`,
     value: get(parsedSorobanOperation.args, path.join("."))?.value || "",
     error: formError?.[formErrorKey] || undefined,
   };
@@ -122,11 +135,19 @@ export const renderPrimitivesType = ({
     }
   };
 
+  const InputLabel = (
+    <div className="InvokeContractForm__label">
+      {renameType(nestedItemLabel as string)}
+      <ColorPillType type={renameType(schemaType)} />
+    </div>
+  );
+
   switch (schemaType) {
     case "Address":
       return (
         <Input
           {...sharedProps}
+          label={InputLabel}
           onChange={(e) => {
             handleChange(e, schemaType);
             handleValidate(e, schemaType, [
@@ -145,6 +166,7 @@ export const renderPrimitivesType = ({
       return (
         <PositiveIntPicker
           {...sharedProps}
+          label={InputLabel}
           key={path.join(".")}
           onChange={(e) => {
             handleChange(e, schemaType);
@@ -156,6 +178,12 @@ export const renderPrimitivesType = ({
       return (
         <PositiveIntPicker
           {...sharedProps}
+          label={
+            <div className="InvokeContractForm__label">
+              {nestedItemLabel}
+              <ColorPillType type={schemaType} />
+            </div>
+          }
           key={path.join(".")}
           onChange={(e) => {
             handleChange(e, schemaType);
@@ -167,6 +195,7 @@ export const renderPrimitivesType = ({
       return (
         <PositiveIntPicker
           {...sharedProps}
+          label={InputLabel}
           key={path.join(".")}
           onChange={(e) => {
             handleChange(e, schemaType);
@@ -179,6 +208,7 @@ export const renderPrimitivesType = ({
         <PositiveIntPicker
           {...sharedProps}
           key={path.join(".")}
+          label={InputLabel}
           onChange={(e) => {
             handleChange(e, schemaType);
             handleValidate(e, schemaType, validate.getU256Error);
@@ -190,6 +220,7 @@ export const renderPrimitivesType = ({
         <Input
           {...sharedProps}
           key={path.join(".")}
+          label={InputLabel}
           onChange={(e) => {
             handleChange(e, schemaType);
             handleValidate(e, schemaType, validate.getI32Error);
@@ -202,6 +233,7 @@ export const renderPrimitivesType = ({
         <Input
           {...sharedProps}
           key={path.join(".")}
+          label={InputLabel}
           onChange={(e) => {
             handleChange(e, schemaType);
             handleValidate(e, schemaType, validate.getI64Error);
@@ -214,6 +246,7 @@ export const renderPrimitivesType = ({
         <Input
           {...sharedProps}
           key={path.join(".")}
+          label={InputLabel}
           onChange={(e) => {
             handleChange(e, schemaType);
             handleValidate(e, schemaType, validate.getI128Error);
@@ -226,6 +259,7 @@ export const renderPrimitivesType = ({
         <Input
           {...sharedProps}
           key={path.join(".")}
+          label={InputLabel}
           onChange={(e) => {
             handleChange(e, schemaType);
             handleValidate(e, schemaType, validate.getI256Error);
@@ -238,6 +272,7 @@ export const renderPrimitivesType = ({
         <Select
           {...sharedProps}
           key={path.join(".")}
+          label={InputLabel}
           fieldSize="md"
           onChange={(e) => {
             handleChange(e, schemaType);
@@ -256,6 +291,7 @@ export const renderPrimitivesType = ({
         <Input
           {...sharedProps}
           key={path.join(".")}
+          label={InputLabel}
           onChange={(e) => {
             handleChange(e, schemaType);
             handleValidate(e, schemaType);
@@ -269,6 +305,7 @@ export const renderPrimitivesType = ({
         <Input
           {...sharedProps}
           key={path.join(".")}
+          label={InputLabel}
           onChange={(e) => {
             handleChange(e, schemaType);
             handleValidate(e, schemaType, validate.getDataUrlError);
