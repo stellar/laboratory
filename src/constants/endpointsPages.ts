@@ -41,7 +41,7 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
         docsLabel: "getEvents",
         endpointUrlTemplate: "{?startLedger,cursor,limit,filters,xdrFormat}",
         requestMethod: "POST",
-        requiredParams: "startLedger,filters",
+        requiredParams: "startLedger",
         rpcMethod: "getEvents",
         isStreaming: false,
       },

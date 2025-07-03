@@ -55,7 +55,7 @@ export const InvokeContract = ({
   }
 
   return (
-    <Box gap="md">
+    <Box gap="md" addlClassName="InvokeContractForm">
       {!walletKit?.publicKey ? (
         <Alert variant="warning" placement="inline" title="Connect wallet">
           A connected wallet is required to invoke this contract. Please connect
