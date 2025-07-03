@@ -1,12 +1,12 @@
 import "./styles.scss";
 
-export const ColorPillType = ({ type }: { type: string }) => {
+export const ColorTypePill = ({ type }: { type: string }) => {
   const lowercaseType = type?.toLowerCase();
 
   return (
-    <div className="ColorPillType">
+    <div className="ColorTypePill">
       <div
-        className="ColorPillType__value"
+        className="ColorTypePill__value"
         {...(lowercaseType ? { "data-type": lowercaseType } : {})}
       >
         {lowercaseType}

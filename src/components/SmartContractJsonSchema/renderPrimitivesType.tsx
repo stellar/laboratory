@@ -9,7 +9,7 @@ import { convertSpecTypeToScValType } from "@/helpers/sorobanUtils";
 import { validate } from "@/validate";
 
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
-import { ColorPillType } from "@/components/ColorPillType";
+import { ColorTypePill } from "@/components/ColorTypePill";
 
 import type { AnyObject, SorobanInvokeValue } from "@/types/types";
 
@@ -138,7 +138,7 @@ export const renderPrimitivesType = ({
   const InputLabel = (
     <div className="InvokeContractForm__label">
       {renameType(nestedItemLabel as string)}
-      <ColorPillType type={renameType(schemaType)} />
+      <ColorTypePill type={renameType(schemaType)} />
     </div>
   );
 
@@ -181,7 +181,7 @@ export const renderPrimitivesType = ({
           label={
             <div className="InvokeContractForm__label">
               {nestedItemLabel}
-              <ColorPillType type={schemaType} />
+              <ColorTypePill type={schemaType} />
             </div>
           }
           key={path.join(".")}

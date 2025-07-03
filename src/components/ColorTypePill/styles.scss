@@ -1,6 +1,6 @@
 @use "../../styles/utils.scss" as *;
 
-.ColorPillType {
+.ColorTypePill {
   --ColorPill-font-size: #{pxToRem(12px)};
   --ColorPill-line-height: #{pxToRem(16px)};
   --ColorPill-padding-vertical: #{pxToRem(2px)};
