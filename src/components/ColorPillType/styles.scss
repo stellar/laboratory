@@ -31,8 +31,8 @@
   // Colors
   // Symbol
   [data-type="symbol"] {
-    color: var(--sds-clr-navy-10);
-    border-color: var(--sds-clr-navy-10);
+    --ColorPill-color-text: var(--sds-clr-navy-10);
+    --ColorPill-color-border: var(--sds-clr-navy-10);
   }
 
   // String
