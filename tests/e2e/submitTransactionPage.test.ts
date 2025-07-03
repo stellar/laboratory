@@ -116,7 +116,7 @@ test.describe("Submit Transaction Page", () => {
       // Submit, Simulate, and Save TX buttons to be enabled
       await testButtonState({ page });
 
-      expect(page.getByLabel("Transaction hash")).toBeVisible;
+      expect(page.getByLabel("Transaction hash")).toBeVisible();
 
       await testSuccessHashAndJson({
         page,
@@ -178,7 +178,9 @@ test.describe("Submit Transaction Page", () => {
       const txResponseError = validationCard.getByTestId(
         "submit-tx-horizon-error-extras",
       );
-      expect(txResponseError.locator(".TxResponse__value")).toBeVisible;
+      await expect(
+        txResponseError.locator(".TxResponse__value").first(),
+      ).toBeVisible();
     });
 
     test("Submit via RPC", async ({ page }) => {
@@ -196,7 +198,7 @@ test.describe("Submit Transaction Page", () => {
       // Submit, Simulate, and Save TX buttons to be enabled
       await testButtonState({ page });
 
-      expect(page.getByLabel("Transaction hash")).toBeVisible;
+      expect(page.getByLabel("Transaction hash")).toBeVisible();
 
       await testSuccessHashAndJson({
         page,
@@ -274,7 +276,7 @@ test.describe("Submit Transaction Page", () => {
       // Submit, Simulate, and Save TX buttons to be enabled
       await testButtonState({ page });
 
-      expect(page.getByLabel("Transaction hash")).toBeVisible;
+      expect(page.getByLabel("Transaction hash")).toBeVisible();
 
       await testSuccessHashAndJson({
         page,
@@ -357,7 +359,7 @@ test.describe("Submit Transaction Page", () => {
       // Submit, Simulate, and Save TX buttons to be enabled
       await testButtonState({ page });
 
-      expect(page.getByLabel("Transaction hash")).toBeVisible;
+      expect(page.getByLabel("Transaction hash")).toBeVisible();
 
       await testSuccessHashAndJson({
         page,

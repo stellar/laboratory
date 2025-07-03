@@ -16,4 +16,6 @@ jobs:
       - name: Build app
         run: yarn build
       - name: Run Playwright tests
-        run: yarn test
+        run: yarn test:e2e
+      - name: Run Unit tests
+        run: yarn test:unit

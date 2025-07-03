@@ -237,6 +237,7 @@ export const renderPrimitivesType = ({
       return (
         <Select
           {...sharedProps}
+          key={path.join(".")}
           fieldSize="md"
           onChange={(e) => {
             handleChange(e, schemaType);
