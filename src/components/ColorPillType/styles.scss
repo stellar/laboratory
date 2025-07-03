@@ -1,34 +1,32 @@
 @use "../../styles/utils.scss" as *;
 
 .ColorPillType {
-  --Badge-font-size: #{pxToRem(12px)};
-  --Badge-line-height: #{pxToRem(16px)};
-  --Badge-padding-vertical: #{pxToRem(2px)};
-  --Badge-padding-horizontal: #{pxToRem(6px)};
-  --Badge-gap: #{pxToRem(2px)};
-  --Badge-border-radius: #{pxToRem(6px)};
+  --ColorPill-font-size: #{pxToRem(12px)};
+  --ColorPill-line-height: #{pxToRem(16px)};
+  --ColorPill-padding-vertical: #{pxToRem(2px)};
+  --ColorPill-padding-horizontal: #{pxToRem(6px)};
+  --ColorPill-gap: #{pxToRem(2px)};
+  --ColorPill-border-radius: #{pxToRem(6px)};
 
-  --Badge-color-text: var(--sds-clr-gray-12);
-  --Badge-color-icon: var(--sds-clr-gray-09);
-  --Badge-color-background: var(--sds-clr-gray-01);
-  --Badge-color-border: var(--sds-clr-gray-06);
-  --Badge-color-dot: var(--sds-clr-green-09);
+  --ColorPill-color-text: var(--sds-clr-gray-12);
+  --ColorPill-color-background: var(--sds-clr-gray-01);
+  --ColorPill-color-border: var(--sds-clr-gray-06);
 
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--Badge-gap);
+  gap: var(--ColorPill-gap);
 
-  font-size: var(--Badge-font-size);
-  line-height: var(--Badge-line-height);
+  font-size: var(--ColorPill-font-size);
+  line-height: var(--ColorPill-line-height);
   font-family: var(--sds-ff-base);
   font-weight: var(--sds-fw-medium);
-  padding: var(--Badge-padding-vertical) var(--Badge-padding-horizontal);
-  border-radius: var(--Badge-border-radius);
-  border: 1px solid var(--Badge-color-border);
+  padding: var(--ColorPill-padding-vertical) var(--ColorPill-padding-horizontal);
+  border-radius: var(--ColorPill-border-radius);
+  border: 1px solid var(--ColorPill-color-border);
 
-  background-color: var(--Badge-color-background);
-  color: var(--Badge-color-text);
+  background-color: var(--ColorPill-color-background);
+  color: var(--ColorPill-color-text);
 
   // Colors
   // Symbol
