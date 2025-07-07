@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Button, Input, Alert, Select } from "@stellar/design-system";
+import { useRouter } from "next/navigation";
 
 import { Box } from "@/components/layout/Box";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
@@ -15,12 +16,18 @@ import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { validate } from "@/validate";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 import { XdrFormatType } from "@/types/types";
+import { Routes } from "@/constants/routes";
 
 export default function SimulateTransaction() {
   const { xdr, transaction, network } = useStore();
   const [xdrError, setXdrError] = useState("");
   const [instrLeewayError, setInstrLeewayError] = useState("");
   const { simulate, updateSimulateInstructionLeeway } = transaction;
+
+  const isActionDisabled =
+    !network.rpcUrl || !xdr.blob || xdrError || instrLeewayError;
+
+  const router = useRouter();
 
   const {
     mutateAsync: simulateTx,
@@ -91,6 +98,10 @@ export default function SimulateTransaction() {
     }
   };
 
+  const onSubmit = () => {
+    router.push(Routes.SUBMIT_TRANSACTION);
+  };
+
   const resetResponse = () => {
     if (simulateTxData) {
       resetSimulateTx();
@@ -150,19 +161,34 @@ export default function SimulateTransaction() {
           error={instrLeewayError}
         />
 
-        <div className="SignTx__CTA">
+        <Box
+          gap="md"
+          direction="row"
+          align="center"
+          justify="space-between"
+          wrap="wrap"
+          addlClassName="SignTx__CTA"
+        >
           <Button
-            disabled={Boolean(
-              !network.rpcUrl || !xdr.blob || xdrError || instrLeewayError,
-            )}
+            disabled={Boolean(isActionDisabled)}
             isLoading={isSimulateTxPending}
             size="md"
-            variant={"secondary"}
+            variant="secondary"
             onClick={onSimulate}
           >
             Simulate transaction
           </Button>
-        </div>
+
+          <Button
+            disabled={Boolean(isActionDisabled)}
+            isLoading={isSimulateTxPending}
+            size="md"
+            variant="tertiary"
+            onClick={onSubmit}
+          >
+            Submit transaction
+          </Button>
+        </Box>
 
         <>
           {simulateTxData ? (
