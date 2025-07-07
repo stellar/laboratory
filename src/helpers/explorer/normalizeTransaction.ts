@@ -2,7 +2,7 @@ import * as StellarXdr from "@/helpers/StellarXdr";
 import { rpc as StellarRpc } from "@stellar/stellar-sdk";
 
 function isPrimitive(obj: unknown): boolean {
-  return ["number", "string", "null", "boolean"].includes(typeof obj);
+  return ["number", "string", "boolean"].includes(typeof obj) || obj === null;
 }
 
 function camelize(input: unknown): unknown {
@@ -38,19 +38,28 @@ export async function normalizeTransaction(
 ): Promise<NormalizedTransaction | null> {
   await StellarXdr.initialize();
 
-  try {
-    const xdr = txinfo.envelopeXdr.toXDR().toString("base64");
-    const guesses = StellarXdr.guess(xdr);
-    return {
-      payload: camelize(
-        JSON.parse(StellarXdr.decode(guesses[0], xdr)),
-      ) as Record<string, unknown>,
-      txHash: txinfo.txHash,
-      status: txinfo.status,
-      createdAt: txinfo.createdAt,
-    };
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  } catch (e) {
+  const xdr = txinfo.envelopeXdr.toXDR().toString("base64");
+  const guesses = StellarXdr.guess(xdr);
+
+  const decodedTx = guesses
+    .map((guess) => {
+      try {
+        return StellarXdr.decode(guess, xdr);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (e) {
+        return null;
+      }
+    })
+    .find(Boolean);
+
+  if (!decodedTx) {
     return null;
   }
+
+  return {
+    payload: camelize(JSON.parse(decodedTx)) as Record<string, unknown>,
+    txHash: txinfo.txHash,
+    status: txinfo.status,
+    createdAt: txinfo.createdAt,
+  };
 }

@@ -1,0 +1,83 @@
+@use "../../styles/utils.scss" as *;
+
+.ColorTypePill {
+  --ColorPill-font-size: #{pxToRem(12px)};
+  --ColorPill-line-height: #{pxToRem(16px)};
+  --ColorPill-padding-vertical: #{pxToRem(2px)};
+  --ColorPill-padding-horizontal: #{pxToRem(6px)};
+  --ColorPill-gap: #{pxToRem(2px)};
+  --ColorPill-border-radius: #{pxToRem(6px)};
+
+  --ColorPill-color-text: var(--sds-clr-gray-12);
+  --ColorPill-color-background: var(--sds-clr-gray-01);
+  --ColorPill-color-border: var(--sds-clr-gray-06);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ColorPill-gap);
+
+  font-size: var(--ColorPill-font-size);
+  line-height: var(--ColorPill-line-height);
+  font-family: var(--sds-ff-base);
+  font-weight: var(--sds-fw-medium);
+  padding: var(--ColorPill-padding-vertical) var(--ColorPill-padding-horizontal);
+  border-radius: var(--ColorPill-border-radius);
+  border: 1px solid var(--ColorPill-color-border);
+
+  background-color: var(--ColorPill-color-background);
+  color: var(--ColorPill-color-text);
+
+  // Colors
+  // Symbol
+  [data-type="symbol"] {
+    --ColorPill-color-text: var(--sds-clr-navy-10);
+    --ColorPill-color-border: var(--sds-clr-navy-10);
+  }
+
+  // String
+  [data-type="string"] {
+    color: var(--sds-clr-gray-12);
+    border-color: var(--sds-clr-gray-12);
+  }
+
+  // Bytes
+  [data-type="dataUrl"] {
+    color: var(--sds-clr-gray-10);
+    border-color: var(--sds-clr-gray-10);
+  }
+
+  // Number
+  [data-type="u8"],
+  [data-type="u16"],
+  [data-type="u32"],
+  [data-type="u64"],
+  [data-type="i8"],
+  [data-type="i16"],
+  [data-type="i32"],
+  [data-type="i64"] {
+    color: var(--sds-clr-mint-08);
+    border-color: var(--sds-clr-mint-08);
+  }
+
+  // Big int
+  [data-type="i128"],
+  [data-type="i256"],
+  [data-type="u128"],
+  [data-type="u256"] {
+    color: var(--sds-clr-teal-08);
+    border-color: var(--sds-clr-teal-08);
+  }
+
+  // Bool
+  [data-type="bool"] {
+    color: var(--sds-clr-pink-10);
+    border-color: var(--sds-clr-pink-10);
+  }
+
+  // Address
+  [data-type="address"] {
+    color: var(--sds-clr-gray-10);
+    border-color: var(--sds-clr-gray-10);
+  }
+}

@@ -1229,3 +1229,11 @@
     }
   }
 }
+
+.InvokeContractForm {
+  &__label {
+    display: flex;
+    align-items: center;
+    gap: pxToRem(4px);
+  }
+}
