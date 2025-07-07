@@ -240,10 +240,7 @@ export default function TransactionDashboard() {
                 id: "tx-state-change",
                 label: "State Change",
                 content: isDataLoaded ? (
-                  <StateChange
-                    txDetails={txDetails || null}
-                    isActive={activeTab === "tx-state-change"}
-                  />
+                  <StateChange />
                 ) : (
                   <NoInfoLoadedView message="Load a transaction" />
                 ),
