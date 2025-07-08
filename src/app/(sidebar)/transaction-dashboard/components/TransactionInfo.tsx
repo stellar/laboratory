@@ -108,7 +108,7 @@ export const TransactionInfo = ({
     }
 
     const baseProps = {
-      isSorobanTx: isSorobanTx,
+      isSorobanTx,
       status: txDetails.status,
       transactionInfo: txDetails.txHash,
       sourceAccount: transaction?.source_account,
