@@ -6,12 +6,12 @@ import { InfoFieldItem } from "@/components/InfoFieldItem";
 import { SdsLink } from "@/components/SdsLink";
 import { NoInfoLoadedView } from "@/components/NoInfoLoadedView";
 
-import { isSorobanOperationType } from "@/helpers/sorobanUtils";
 import { formatEpochToDate } from "@/helpers/formatEpochToDate";
 import { stellarExpertAccountLink } from "@/helpers/stellarExpertAccountLink";
 import { stellarExpertTransactionLink } from "@/helpers/stellarExpertTransactionLink";
 import { formatNumber } from "@/helpers/formatNumber";
 import { stroopsToLumens } from "@/helpers/stroopsToLumens";
+import { getTxData } from "@/helpers/getTxData";
 
 import { STELLAR_LOGO_DATA_URI } from "@/constants/assets";
 import { useStore } from "@/store/useStore";
@@ -26,25 +26,8 @@ export const TransactionInfo = ({
   const { network } = useStore();
 
   const isDataLoaded = Boolean(txDetails);
-  const feeBumpTx = txDetails?.envelopeJson?.tx_fee_bump;
-
-  const transaction = feeBumpTx
-    ? feeBumpTx.tx?.inner_tx?.tx?.tx
-    : txDetails?.envelopeJson?.tx?.tx;
-  const operations = transaction?.operations;
-
-  const isSorobanTx = () => {
-    if (operations?.length > 1) {
-      return false;
-    }
-
-    const firstTxOp = operations?.[0]?.body;
-    const firstTxOpType = firstTxOp ? Object.keys(firstTxOp)[0] : null;
-
-    return firstTxOpType ? isSorobanOperationType(firstTxOpType) : false;
-  };
-
-  const IS_SOROBAN_TX = isSorobanTx();
+  const { feeBumpTx, transaction, operations, isSorobanTx } =
+    getTxData(txDetails);
 
   const isTxNotFound = txDetails?.status === "NOT_FOUND";
   const isNoDataScreen = !isDataLoaded || isTxNotFound;
@@ -86,7 +69,7 @@ export const TransactionInfo = ({
       id: "memo",
       label: "Memo",
     },
-    ...(!isNoDataScreen && !IS_SOROBAN_TX ? classicTxFields : []),
+    ...(!isNoDataScreen && !isSorobanTx ? classicTxFields : []),
     {
       id: "max-fee",
       label: "Max Fee",
@@ -125,7 +108,7 @@ export const TransactionInfo = ({
     }
 
     const baseProps = {
-      isSorobanTx: IS_SOROBAN_TX,
+      isSorobanTx,
       status: txDetails.status,
       transactionInfo: txDetails.txHash,
       sourceAccount: transaction?.source_account,
@@ -148,7 +131,7 @@ export const TransactionInfo = ({
 
     return {
       ...baseProps,
-      ...(IS_SOROBAN_TX ? {} : classicTxProps),
+      ...(isSorobanTx ? {} : classicTxProps),
       ...feeProps,
       ...(feeBumpTx
         ? {
@@ -193,7 +176,7 @@ export const TransactionInfo = ({
       return null;
     }
 
-    return IS_SOROBAN_TX ? (
+    return isSorobanTx ? (
       <Badge variant="secondary" size="sm">
         Soroban Transaction
       </Badge>
