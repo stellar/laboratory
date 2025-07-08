@@ -2,28 +2,41 @@
 
 import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Alert, Button, Icon, Input } from "@stellar/design-system";
+import { Alert, Button, Card, Icon, Input, Text } from "@stellar/design-system";
 
 import { PageCard } from "@/components/layout/PageCard";
 import { Box } from "@/components/layout/Box";
 import { MessageField } from "@/components/MessageField";
 import { SwitchNetworkButtons } from "@/components/SwitchNetworkButtons";
+import { TabView } from "@/components/TabView";
+import { NoInfoLoadedView } from "@/components/NoInfoLoadedView";
 
 import { validate } from "@/validate";
 import { useStore } from "@/store/useStore";
 import { useFetchRpcTxDetails } from "@/query/useFetchRpcTxDetails";
 
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
+import { getTxData } from "@/helpers/getTxData";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { TransactionInfo } from "./components/TransactionInfo";
+import { StateChange } from "./components/StateChange";
 
 export default function TransactionDashboard() {
+  type TxTabId =
+    | "tx-token-summary"
+    | "tx-contracts"
+    | "tx-events"
+    | "tx-state-change"
+    | "tx-resource-profiler"
+    | "tx-signatures";
+
   const { network, txDashboard } = useStore();
 
   const [transactionHashInput, setTransactionHashInput] = useState("");
   const [transactionHashInputError, setTransactionHashInputError] =
     useState("");
+  const [activeTab, setActiveTab] = useState<TxTabId>("tx-state-change");
 
   const {
     data: txDetails,
@@ -44,6 +57,9 @@ export default function TransactionDashboard() {
     !transactionHashInput ||
     Boolean(transactionHashInputError);
   const isLoading = isTxDetailsLoading || isTxDetailsFetching;
+  const isDataLoaded = Boolean(txDetails);
+
+  const { isSorobanTx } = getTxData(txDetails || null);
 
   const queryClient = useQueryClient();
 
@@ -119,6 +135,12 @@ export default function TransactionDashboard() {
     );
   };
 
+  const ComingSoonText = () => (
+    <Text as="div" size="sm" weight="regular">
+      Coming soon
+    </Text>
+  );
+
   return (
     <Box gap="lg">
       <PageCard heading="Transaction Dashboard">
@@ -181,6 +203,73 @@ export default function TransactionDashboard() {
       </PageCard>
 
       <TransactionInfo txDetails={txDetails || null} />
+
+      {isSorobanTx ? (
+        <Card>
+          <Box
+            gap="lg"
+            data-testid="contract-info-contract-container"
+            addlClassName="ContractInfo__tabs"
+          >
+            <Box gap="sm" direction="row" align="center">
+              <Text as="h2" size="md" weight="semi-bold">
+                Transaction
+              </Text>
+            </Box>
+
+            <TabView
+              tab1={{
+                id: "tx-token-summary",
+                label: "Token Summary",
+                content: <ComingSoonText />,
+                isDisabled: true,
+              }}
+              tab2={{
+                id: "tx-contracts",
+                label: "Contracts",
+                content: <ComingSoonText />,
+                isDisabled: true,
+              }}
+              tab3={{
+                id: "tx-events",
+                label: "Events",
+                content: <ComingSoonText />,
+                isDisabled: true,
+              }}
+              tab4={{
+                id: "tx-state-change",
+                label: "State Change",
+                content: isDataLoaded ? (
+                  <StateChange />
+                ) : (
+                  <NoInfoLoadedView message="Load a transaction" />
+                ),
+                isDisabled: !isDataLoaded,
+              }}
+              tab5={{
+                id: "tx-resource-profiler",
+                label: "Resources Profiler",
+                content: <ComingSoonText />,
+                isDisabled: true,
+              }}
+              tab6={{
+                id: "tx-signatures",
+                label: "Signatures",
+                content: <ComingSoonText />,
+                isDisabled: !isDataLoaded,
+              }}
+              activeTabId={activeTab}
+              onTabChange={(tabId) => {
+                setActiveTab(tabId as TxTabId);
+
+                trackEvent(TrackingEvent.TRANSACTION_DASHBOARD_TAB, {
+                  tab: tabId,
+                });
+              }}
+            />
+          </Box>
+        </Card>
+      ) : null}
     </Box>
   );
 }

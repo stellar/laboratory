@@ -19,8 +19,9 @@
     border-radius: pxToRem(6px);
     padding: pxToRem(6px) pxToRem(10px);
     cursor: pointer;
-    transition: color var(--sds-anim-transition-default),
-    background-color var(--sds-anim-transition-default);
+    transition:
+      color var(--sds-anim-transition-default),
+      background-color var(--sds-anim-transition-default);
 
     @media (hover: hover) {
       &:hover {
@@ -36,9 +37,8 @@
     }
 
     &[data-is-disabled="true"] {
-      cursor: default;
+      --Tabs-default-text: var(--sds-clr-gray-08);
       pointer-events: none;
-      --Tabs-default-text: var(--sds-clr-gray-09);
 
       &[data-is-active="true"] {
         --Tabs-default-text: var(--sds-clr-gray-10);
