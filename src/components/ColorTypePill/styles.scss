@@ -7,8 +7,8 @@
   --ColorPill-padding-horizontal: #{pxToRem(6px)};
   --ColorPill-gap: #{pxToRem(2px)};
   --ColorPill-border-radius: #{pxToRem(6px)};
-
   --ColorPill-color-text: var(--sds-clr-gray-12);
+
   --ColorPill-color-background: var(--sds-clr-gray-01);
   --ColorPill-color-border: var(--sds-clr-gray-06);
 
@@ -28,49 +28,52 @@
   background-color: var(--ColorPill-color-background);
   color: var(--ColorPill-color-text);
 
-  // Colors
-  // Symbol
-  [data-type="symbol"] {
-    color: var(--sds-clr-navy-10);
-  }
+  &__value {
+    color: var(--ColorPill-color-text);
 
-  // String
-  [data-type="string"] {
-    color: var(--sds-clr-gray-12);
-  }
+    // Symbol
+    &[data-type="symbol"] {
+      --ColorPill-color-text: var(--sds-clr-navy-10);
+    }
 
-  // Bytes
-  [data-type="dataUrl"] {
-    color: var(--sds-clr-gray-10);
-  }
+    // String
+    &[data-type="string"] {
+      --ColorPill-color-text: var(--sds-clr-gray-12);
+    }
 
-  // Number
-  [data-type="u8"],
-  [data-type="u16"],
-  [data-type="u32"],
-  [data-type="u64"],
-  [data-type="i8"],
-  [data-type="i16"],
-  [data-type="i32"],
-  [data-type="i64"] {
-    color: var(--sds-clr-mint-08);
-  }
+    // Bytes
+    &[data-type="dataUrl"] {
+      --ColorPill-color-text: var(--sds-clr-gray-10);
+    }
 
-  // Big int
-  [data-type="i128"],
-  [data-type="i256"],
-  [data-type="u128"],
-  [data-type="u256"] {
-    color: var(--sds-clr-teal-08);
-  }
+    // Number
+    &[data-type="u8"],
+    &[data-type="u16"],
+    &[data-type="u32"],
+    &[data-type="u64"],
+    &[data-type="i8"],
+    &[data-type="i16"],
+    &[data-type="i32"],
+    &[data-type="i64"] {
+      --ColorPill-color-text: var(--sds-clr-mint-08);
+    }
 
-  // Bool
-  [data-type="bool"] {
-    color: var(--sds-clr-pink-10);
-  }
+    // Big int
+    &[data-type="i128"],
+    &[data-type="i256"],
+    &[data-type="u128"],
+    &[data-type="u256"] {
+      --ColorPill-color-text: var(--sds-clr-teal-08);
+    }
 
-  // Address
-  [data-type="address"] {
-    color: var(--sds-clr-gray-10);
+    // Bool
+    &[data-type="bool"] {
+      --ColorPill-color-text: var(--sds-clr-pink-10);
+    }
+
+    // Address
+    &[data-type="address"] {
+      --ColorPill-color-text: var(--sds-clr-gray-10);
+    }
   }
 }

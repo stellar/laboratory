@@ -140,6 +140,8 @@ export const InvokeContractForm = ({
       return null;
     }
 
+    let timeout: NodeJS.Timeout | null = null;
+
     setIsExtensionLoading(true);
 
     if (walletKit?.publicKey) {
@@ -147,7 +149,7 @@ export const InvokeContractForm = ({
         // Add timeout to prevent endless loading
         // when user exits out of the extension
         const timeoutPromise = new Promise<never>((_, reject) => {
-          setTimeout(() => {
+          timeout = setTimeout(() => {
             reject(
               new Error("Transaction signing timed out. Please try again."),
             );
@@ -173,6 +175,10 @@ export const InvokeContractForm = ({
         }
       } finally {
         setIsExtensionLoading(false);
+
+        if (timeout) {
+          clearTimeout(timeout);
+        }
       }
     }
     return null;
