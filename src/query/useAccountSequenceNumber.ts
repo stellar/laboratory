@@ -54,6 +54,7 @@ export const useAccountSequenceNumber = ({
       }
     },
     enabled,
+    staleTime: 0,
   });
 
   return query;

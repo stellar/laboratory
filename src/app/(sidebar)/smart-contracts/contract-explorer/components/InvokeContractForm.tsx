@@ -144,13 +144,25 @@ export const InvokeContractForm = ({
 
     if (walletKit?.publicKey) {
       try {
-        const result = await walletKitInstance.walletKit.signTransaction(
+        // Add timeout to prevent endless loading
+        // when user exits out of the extension
+        const timeoutPromise = new Promise<never>((_, reject) => {
+          setTimeout(() => {
+            reject(
+              new Error("Transaction signing timed out. Please try again."),
+            );
+          }, 20000);
+        });
+
+        const signPromise = walletKitInstance.walletKit.signTransaction(
           xdr || "",
           {
             address: walletKit.publicKey,
             networkPassphrase: network.passphrase,
           },
         );
+
+        const result = await Promise.race([signPromise, timeoutPromise]);
 
         if (result.signedTxXdr && result.signedTxXdr !== "") {
           return result.signedTxXdr;
@@ -285,9 +297,9 @@ export const InvokeContractForm = ({
 
     try {
       // fetch sequence number first
-      await fetchSequenceNumber();
+      const sequenceResult = await fetchSequenceNumber();
 
-      if (!sequenceNumberData || sequenceNumberError) {
+      if (!sequenceResult?.data || sequenceNumberError) {
         const errorMessage =
           sequenceNumberError ||
           "Failed to fetch sequence number. Please try again.";
@@ -305,7 +317,7 @@ export const InvokeContractForm = ({
       const txnParams: TransactionBuildParams = {
         source_account: walletKit?.publicKey || "",
         fee: BASE_FEE,
-        seq_num: sequenceNumberData,
+        seq_num: sequenceResult?.data || sequenceNumberData || "",
         cond: {
           time: {
             min_time: "0",
