@@ -1,7 +1,11 @@
-# Lab
+# Stellar Lab (Lab)
 
-The Stellar Lab is a suite of tools to help one learn about exploring the
-Stellar network.
+[![Apache 2.0 licensed](https://img.shields.io/badge/license-apache%202.0-blue.svg)](LICENSE)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/stellar/laboratory)
+
+The Stellar Lab is an interactive toolkit for exploring the Stellar network. It helps developers and builders experiment with building, signing, simulating, and submitting transactions, as well as making requests to both RPC and Horizon APIs. With built-in tools for saving and sharing transactions, converting between XDR and JSON, and exploring smart contracts on Stellar, the Stellar Lab is ideal for testing, learning, and exploring on Stellar.
+
+## Overview
 
 The `main` branch is deployed to
 [https://lab.stellar.org/](https://lab.stellar.org/). On the landing page at the
