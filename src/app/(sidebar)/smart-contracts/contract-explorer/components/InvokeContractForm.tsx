@@ -103,7 +103,6 @@ export const InvokeContractForm = ({
 
   const {
     mutateAsync: prepareTx,
-    data: prepareTxData,
     isPending: isPrepareTxPending,
     reset: resetPrepareTx,
   } = useRpcPrepareTx();
@@ -134,8 +133,6 @@ export const InvokeContractForm = ({
 
   const responseSuccessEl = useRef<HTMLDivElement | null>(null);
   const responseErrorEl = useRef<HTMLDivElement | null>(null);
-
-  const IS_MAINNET = network.id === "mainnet";
 
   const signTx = async (xdr: string): Promise<string | null> => {
     if (!walletKitInstance?.walletKit || !walletKit?.publicKey) {
@@ -257,7 +254,6 @@ export const InvokeContractForm = ({
     }
   };
 
-  // We allow simulate and submit in one step on TESTNET
   const handleSimulateAndSubmit = async () => {
     const xdr = await getXdrToSimulate();
 
@@ -385,10 +381,8 @@ export const InvokeContractForm = ({
     }
   };
 
-  const handleSubmit = async (xdr?: string) => {
-    const xdrToUse = xdr || prepareTxData?.transactionXdr;
-
-    if (!xdrToUse) {
+  const handleSubmit = async (xdr: string) => {
+    if (!xdr) {
       setInvokeError({
         message: "No transaction data available to sign",
         methodType: "Submit",
@@ -404,7 +398,7 @@ export const InvokeContractForm = ({
     });
 
     try {
-      const signedTxXdr = await signTx(xdrToUse);
+      const signedTxXdr = await signTx(xdr);
 
       if (!signedTxXdr) {
         throw new Error(
@@ -637,15 +631,9 @@ export const InvokeContractForm = ({
               variant="secondary"
               isLoading={isExtensionLoading || isSubmitRpcPending}
               disabled={isSubmitDisabled}
-              onClick={() => {
-                if (IS_MAINNET) {
-                  handleSubmit();
-                } else {
-                  handleSimulateAndSubmit();
-                }
-              }}
+              onClick={handleSimulateAndSubmit}
             >
-              Submit
+              Simulate & Submit
             </Button>
           </Box>
 
