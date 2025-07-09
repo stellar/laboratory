@@ -94,7 +94,7 @@ export const InvokeContractForm = ({
   });
 
   const {
-    mutate: simulateTx,
+    mutateAsync: simulateTx,
     data: simulateTxData,
     isError: isSimulateTxError,
     isPending: isSimulateTxPending,
@@ -102,9 +102,8 @@ export const InvokeContractForm = ({
   } = useSimulateTx();
 
   const {
-    mutate: prepareTx,
+    mutateAsync: prepareTx,
     isPending: isPrepareTxPending,
-    data: prepareTxData,
     reset: resetPrepareTx,
   } = useRpcPrepareTx();
 
@@ -255,54 +254,23 @@ export const InvokeContractForm = ({
     }
   };
 
-  const handleSubmit = async () => {
-    if (!prepareTxData?.transactionXdr) {
-      setInvokeError({
-        message: "No transaction data available to sign",
-        methodType: "Submit",
-      });
-      return;
-    }
+  const handleSimulateAndSubmit = async () => {
+    const xdr = await getXdrToSimulate();
 
-    resetSimulateState();
-    resetSubmitState();
+    if (xdr) {
+      await handleSimulate(xdr);
+      const prepareResult = await handlePrepareTx(xdr);
 
-    trackEvent(TrackingEvent.SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SUBMIT, {
-      funcName: formValue.function_name,
-    });
-
-    try {
-      const signedTxXdr = await signTx(prepareTxData.transactionXdr);
-
-      if (!signedTxXdr) {
-        throw new Error(
-          "Transaction signing failed - no signed transaction received",
-        );
+      if (prepareResult?.transactionXdr) {
+        await handleSubmit(prepareResult.transactionXdr);
       }
-
-      submitRpc({
-        rpcUrl: network.rpcUrl,
-        transactionXdr: signedTxXdr,
-        networkPassphrase: network.passphrase,
-        headers: getNetworkHeaders(network, "rpc"),
-      });
-    } catch (error: any) {
-      setInvokeError({
-        message: error?.message || "Failed to sign transaction",
-        methodType: "Submit",
-      });
     }
   };
 
-  const handleSimulate = async () => {
-    // reset
-    setInvokeError(null);
-    resetSimulateState();
-    resetSubmitState();
-    resetPrepareTx();
+  const getXdrToSimulate = async () => {
+    reset();
 
     try {
-      // fetch sequence number first
       const sequenceResult = await fetchSequenceNumber();
 
       if (!sequenceResult?.data || sequenceNumberError) {
@@ -342,7 +310,7 @@ export const InvokeContractForm = ({
         },
       };
 
-      const { xdr, error: simulateError } = getTxnToSimulate(
+      const { xdr, error } = getTxnToSimulate(
         formValue,
         txnParams,
         sorobanOperation,
@@ -350,46 +318,113 @@ export const InvokeContractForm = ({
       );
 
       if (xdr) {
-        simulateTx({
-          rpcUrl: network.rpcUrl,
-          transactionXdr: xdr,
-          headers: getNetworkHeaders(network, "rpc"),
-          xdrFormat,
-        });
-
-        // using prepareTransaction instead of assembleTransaction because
-        // assembleTransaction requires an auth, but signing for simulation is rare
-        prepareTx({
-          rpcUrl: network.rpcUrl,
-          transactionXdr: xdr,
-          networkPassphrase: network.passphrase,
-          headers: getNetworkHeaders(network, "rpc"),
-        });
-
-        trackEvent(
-          TrackingEvent.SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SIMULATE_SUCCESS,
-          {
-            funcName: formValue.function_name,
-          },
-        );
+        return xdr;
       }
 
-      if (simulateError) {
-        setInvokeError({ message: simulateError, methodType: "Simulate" });
-
-        trackEvent(
-          TrackingEvent.SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SIMULATE_ERROR,
-          {
-            funcName: formValue.function_name,
-          },
-        );
+      if (error) {
+        setInvokeError({ message: error, methodType: "Get TX to Simulate" });
       }
+
+      return null;
     } catch (error: any) {
       setInvokeError({
         message: error,
+        methodType: "Get TX to Simulate",
+      });
+      return null;
+    }
+  };
+
+  const handleSimulate = async (xdr: string) => {
+    try {
+      await simulateTx({
+        rpcUrl: network.rpcUrl,
+        transactionXdr: xdr,
+        headers: getNetworkHeaders(network, "rpc"),
+        xdrFormat,
+      });
+
+      trackEvent(
+        TrackingEvent.SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SIMULATE_SUCCESS,
+        {
+          funcName: formValue.function_name,
+        },
+      );
+    } catch (error: any) {
+      setInvokeError({
+        message: error?.message || "Failed to simulate transaction",
         methodType: "Simulate",
       });
     }
+  };
+
+  const handlePrepareTx = async (xdr: string) => {
+    if (!xdr) {
+      return null;
+    }
+
+    try {
+      const prepareResult = await prepareTx({
+        rpcUrl: network.rpcUrl,
+        transactionXdr: xdr,
+        networkPassphrase: network.passphrase,
+        headers: getNetworkHeaders(network, "rpc"),
+      });
+
+      return prepareResult;
+    } catch (error: any) {
+      setInvokeError({
+        message: error?.message || "Failed to prepare transaction",
+        methodType: "Prepare",
+      });
+      return null;
+    }
+  };
+
+  const handleSubmit = async (xdr: string) => {
+    if (!xdr) {
+      setInvokeError({
+        message: "No transaction data available to sign",
+        methodType: "Submit",
+      });
+      return;
+    }
+
+    resetSimulateState();
+    resetSubmitState();
+
+    trackEvent(TrackingEvent.SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SUBMIT, {
+      funcName: formValue.function_name,
+    });
+
+    try {
+      const signedTxXdr = await signTx(xdr);
+
+      if (!signedTxXdr) {
+        throw new Error(
+          "Transaction signing failed - no signed transaction received",
+        );
+      }
+
+      submitRpc({
+        rpcUrl: network.rpcUrl,
+        transactionXdr: signedTxXdr,
+        networkPassphrase: network.passphrase,
+        headers: getNetworkHeaders(network, "rpc"),
+      });
+    } catch (error: any) {
+      setInvokeError({
+        message: error?.message || "Failed to sign transaction",
+        methodType: "Submit",
+      });
+    }
+  };
+
+  const reset = () => {
+    setInvokeError(null);
+    resetSimulateState();
+    resetSubmitState();
+    resetPrepareTx();
   };
 
   const renderTitle = (name: string, description?: string) => (
@@ -579,7 +614,14 @@ export const InvokeContractForm = ({
               variant="tertiary"
               disabled={isSimulationDisabled()}
               isLoading={isSimulating}
-              onClick={handleSimulate}
+              onClick={async () => {
+                const xdr = await getXdrToSimulate();
+
+                if (xdr) {
+                  await handleSimulate(xdr);
+                  await handlePrepareTx(xdr);
+                }
+              }}
             >
               Simulate
             </Button>
@@ -589,9 +631,9 @@ export const InvokeContractForm = ({
               variant="secondary"
               isLoading={isExtensionLoading || isSubmitRpcPending}
               disabled={isSubmitDisabled}
-              onClick={handleSubmit}
+              onClick={handleSimulateAndSubmit}
             >
-              Submit
+              Simulate & Submit
             </Button>
           </Box>
 
