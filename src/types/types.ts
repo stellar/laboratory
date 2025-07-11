@@ -557,3 +557,39 @@ export type RpcTxJsonResponse = {
   resultJson: AnyObject;
   resultMetaJson: AnyObject;
 };
+
+// =============================================================================
+// Transaction: State Change
+// =============================================================================
+export type ChangeStateItemOpType =
+  | "state"
+  | "updated"
+  | "removed"
+  | "created"
+  | "restored";
+
+export type ChangeStateEntityType =
+  | "account"
+  | "trustline"
+  | "offer"
+  | "data"
+  | "claimable_balance"
+  | "liquidity_pool"
+  | "contract_data"
+  | "contract_code"
+  | "config_setting"
+  | "ttl";
+
+export type ChangeStateItem = {
+  title: string;
+  before: {
+    itemType: ChangeStateItemOpType;
+    entityType: ChangeStateEntityType;
+    data: AnyObject;
+  };
+  after?: {
+    itemType: ChangeStateItemOpType;
+    entityType: ChangeStateEntityType;
+    data: AnyObject;
+  };
+};
