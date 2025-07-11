@@ -48,10 +48,25 @@ yarn start --public randomsubdomain.ngrok.io
 yarn build
 ```
 
-To build and run production build locally:
+The app will be built into the `build` directory in Next.js' standalone output
+format.
+
+To run production build locally this command can be used conveniently:
 
 ```sh
 yarn start
+```
+
+To distribute and deploy the production build you need to copy the
+`build/static` directory to the `build/standalone/public/_next/static`
+location, and then the files and directories inside the `build/standalone`
+directory are the only files needed for production and can be distributed to
+the deployment location.
+
+In the deployment location the following command will run the app:
+
+```sh
+node server.js
 ```
 
 ## Tracking
