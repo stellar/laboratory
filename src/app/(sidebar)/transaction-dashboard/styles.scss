@@ -15,7 +15,8 @@
 
     &__content {
       max-height: pxToRem(296px);
-      overflow: auto;
+      overflow-x: clip;
+      overflow-y: auto;
     }
 
     table[class*="-diff-container"] {

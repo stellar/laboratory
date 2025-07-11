@@ -112,7 +112,10 @@ export const formatTxChangeStateItems = (
 
   return changes.reduce((res: ChangeStateItem[], cur: AnyObject) => {
     const itemType = Object.keys(cur)?.[0] as ChangeStateItemOpType;
-    const opData = cur[itemType]?.data;
+
+    // `removed` doesn’t have nested `data` level
+    const opData = itemType === "removed" ? cur[itemType] : cur[itemType]?.data;
+
     const entityType = Object.keys(opData)?.[0] as ChangeStateEntityType;
 
     // `created` and `restored` is like adding a new state from nothing.
