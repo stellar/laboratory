@@ -275,6 +275,7 @@ export default function Endpoints() {
               instructionLeeway: Number(params.resourceConfig) || undefined,
             }),
             xdrFormat: params.xdrFormat || "base64",
+            authMode: params.authMode || "",
           },
         };
       }

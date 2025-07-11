@@ -88,7 +88,7 @@ test.describe("Smart Contracts: Contract Storage", () => {
       "ledger_key_contract_instance",
     );
     await expect(secondRow.locator("td").nth(1)).toContainText(
-      '{executable:8abc28913035c07411ed5d134e6bfeab4723d97ddd4d1a22a0605d35c94d1a36,storage:["METADATA":{"decimal":7,"name":"Comet Pool Token","symbol":"CPAL"},"Controller":GABQ…Q246,"SwapFee":30000]}',
+      '{executable:8abc28913035c07411ed5d134e6bfeab4723d97ddd4d1a22a0605d35c94d1a36,storage:["METADATA":{"decimal":7,"name":"Comet Pool Token","symbol":"CPAL"},"Controller":GABQ…Q246,"SwapFee":"30000"]}',
     );
     await expect(secondRow.locator("td").nth(2)).toContainText("Instance");
     await expect(secondRow.locator("td").nth(3)).toContainText("55,739,737");

@@ -1400,7 +1400,7 @@
   dependencies:
     "@noble/hashes" "1.8.0"
 
-"@noble/curves@^1.0.0", "@noble/curves@^1.4.2", "@noble/curves@~1.9.0":
+"@noble/curves@^1.0.0", "@noble/curves@^1.4.2", "@noble/curves@^1.9.2", "@noble/curves@~1.9.0":
   version "1.9.2"
   resolved "https://registry.yarnpkg.com/@noble/curves/-/curves-1.9.2.tgz#73388356ce733922396214a933ff7c95afcef911"
   integrity sha512-HxngEd2XUcg9xi20JkwlLCtYwfoFw4JGkuZpT+WlsPD4gB/cxkvTD8fSsoAnphGZhFdZYKeQIPCuFlWPm1uE0g==
@@ -2681,7 +2681,19 @@
   optionalDependencies:
     sodium-native "^4.3.3"
 
-"@stellar/stellar-sdk@^13.0.0", "@stellar/stellar-sdk@^13.3.0":
+"@stellar/stellar-base@^14.0.0-rc.1":
+  version "14.0.0-rc.2"
+  resolved "https://registry.yarnpkg.com/@stellar/stellar-base/-/stellar-base-14.0.0-rc.2.tgz#51251177f5a3b2023b99f0977aae17e2ecea1263"
+  integrity sha512-jzDJANrh8hcW3yWikS0At6MWOmf2dCD2cwWS1o0nZLRDj3tFMCrIcOGmw9uB7Widomdu4DzKHetpgn+XB1prpg==
+  dependencies:
+    "@noble/curves" "^1.9.2"
+    "@stellar/js-xdr" "^3.1.2"
+    base32.js "^0.1.0"
+    bignumber.js "^9.3.0"
+    buffer "^6.0.3"
+    sha.js "^2.3.6"
+
+"@stellar/stellar-sdk@^13.3.0":
   version "13.3.0"
   resolved "https://registry.yarnpkg.com/@stellar/stellar-sdk/-/stellar-sdk-13.3.0.tgz#72bf3eea4797de053aaebb889bf4de342d0b6b54"
   integrity sha512-8+GHcZLp+mdin8gSjcgfb/Lb6sSMYRX6Nf/0LcSJxvjLQR0XHpjGzOiRbYb2jSXo51EnA6kAV5j+4Pzh5OUKUg==
@@ -2695,10 +2707,24 @@
     toml "^3.0.0"
     urijs "^1.19.1"
 
-"@stellar/stellar-xdr-json@^22.0.0-rc.1.1":
-  version "22.0.0-rc.1.1"
-  resolved "https://registry.yarnpkg.com/@stellar/stellar-xdr-json/-/stellar-xdr-json-22.0.0-rc.1.1.tgz#e3e236aba492171114d3facf901cb0a848068f2d"
-  integrity sha512-2fXydL1i7OiegEjDHj2QFLKjypJVXd2BaaPp+QRgZTMD/FYrfJdTaubhDwEdBNk6TQ3ICl8YpESLmb7ca8r6QA==
+"@stellar/stellar-sdk@v14.0.0-rc.1":
+  version "14.0.0-rc.1"
+  resolved "https://registry.yarnpkg.com/@stellar/stellar-sdk/-/stellar-sdk-14.0.0-rc.1.tgz#0591f27b9147d724c0871015c6b94c217658da35"
+  integrity sha512-kLGi1s4G8kkapRjmwC3JFN7LKkibuIutSBOoI6ZF/cY5Z318RHY750lcaZGWK2zbz6XaakbZBQ/JtqOM+a9ScA==
+  dependencies:
+    "@stellar/stellar-base" "^14.0.0-rc.1"
+    axios "^1.8.4"
+    bignumber.js "^9.1.2"
+    eventsource "^2.0.2"
+    feaxios "^0.0.23"
+    randombytes "^2.1.0"
+    toml "^3.0.0"
+    urijs "^1.19.1"
+
+"@stellar/stellar-xdr-json@^23.0.0-rc.1":
+  version "23.0.0-rc.1"
+  resolved "https://registry.yarnpkg.com/@stellar/stellar-xdr-json/-/stellar-xdr-json-23.0.0-rc.1.tgz#4a0642a8ea5a91f74d2cf1df257cdd90a022a4d5"
+  integrity sha512-8Xr+iwQxpc1yGJ0wJGHSFzJCqdHbdYuBhTD4Ob/3T0H4rVP+j0i5CXZrKo3kAf51rXOGWfuYxAGRBzid3aZtAA==
 
 "@stellar/tsconfig@^1.0.2":
   version "1.0.2"

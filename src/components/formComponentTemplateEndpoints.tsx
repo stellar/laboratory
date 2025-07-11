@@ -965,6 +965,38 @@ export const formComponentTemplateEndpoints = (
         ),
         validate: null,
       };
+    case "authMode":
+      return {
+        render: (templ: {
+          value: string | undefined;
+          error: string | undefined;
+          onChange: (val: any) => void;
+        }) => (
+          <Select
+            key={id}
+            id={id}
+            fieldSize="md"
+            label="Auth Mode"
+            labelSuffix="optional"
+            value={templ.value || ""}
+            onChange={templ.onChange}
+          >
+            <option id="none" value="">
+              none
+            </option>
+            <option id="enforce" value="enforce">
+              enforce
+            </option>
+            <option id="record" value="record">
+              record
+            </option>
+            <option id="record_allow_nonroot" value="record_allow_nonroot">
+              record_allow_nonroot
+            </option>
+          </Select>
+        ),
+        validate: null,
+      };
     default:
       return null;
   }
