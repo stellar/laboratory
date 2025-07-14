@@ -10,8 +10,9 @@ import {
   LobstrModule,
   RabetModule,
   StellarWalletsKit,
-  XBULL_ID,
+  HotWalletModule,
   xBullModule,
+  XBULL_ID,
 } from "@creit.tech/stellar-wallets-kit";
 import { LedgerModule } from "@creit.tech/stellar-wallets-kit/modules/ledger.module";
 
@@ -94,18 +95,22 @@ export const WalletKitContextProvider = ({
       notAvailableBorderColor: "#161616",
     };
 
+    const TEST_MODULES = [
+      new AlbedoModule(),
+      new xBullModule(),
+      new FreighterModule(),
+      new LobstrModule(),
+      new RabetModule(),
+      new HanaModule(),
+      new LedgerModule(),
+    ];
+
+    const PROD_MODULES = [...TEST_MODULES, new HotWalletModule()];
+
     return new StellarWalletsKit({
       network: networkType,
       selectedWalletId: XBULL_ID,
-      modules: [
-        new AlbedoModule(),
-        new xBullModule(),
-        new FreighterModule(),
-        new LobstrModule(),
-        new RabetModule(),
-        new HanaModule(),
-        new LedgerModule(),
-      ],
+      modules: network.id === "mainnet" ? PROD_MODULES : TEST_MODULES,
       ...(theme && {
         buttonTheme: isDarkTheme
           ? {
