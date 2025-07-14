@@ -119,7 +119,7 @@ export const formatTxChangeStateItems = (
     const entityType = Object.keys(opData)?.[0] as ChangeStateEntityType;
 
     // `created` and `restored` is like adding a new state from nothing.
-    // `state` is followed by either `updated` or `deleted`, and shows the state
+    // `state` is followed by either `updated` or `removed`, and shows the state
     // change.
 
     switch (itemType) {
