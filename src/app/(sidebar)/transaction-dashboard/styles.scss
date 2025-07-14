@@ -40,6 +40,7 @@
       pre {
         font-family: var(--sds-ff-monospace);
         line-height: pxToRem(18px);
+        word-break: break-all;
       }
     }
   }
