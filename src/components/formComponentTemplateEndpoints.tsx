@@ -477,17 +477,15 @@ export const formComponentTemplateEndpoints = (
             label="Key (ScVal)"
             rows={10}
             placeholder={`{
-      "vec": [
-        {
-          "symbol": "Balance"
-        },
-        {
-          "address": "CDGAH7TU7UH3BXGYXRIXLJX63LYRIF6APZPIG64ZAW3NNDCPJ7AAWVTZ"
-        }
-      ]
-    }
-  }
-}`}
+              "vec": [
+                {
+                  "symbol": "Balance"
+                },
+                {
+                  "address": "CDGAH7TU7UH3BXGYXRIXLJX63LYRIF6APZPIG64ZAW3NNDCPJ7AAWVTZ"
+                }
+              ]
+            }`}
             // Convert object to string if needed
             value={
               typeof templ.value === "object"
