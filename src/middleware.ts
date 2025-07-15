@@ -14,11 +14,11 @@ export function middleware(request: NextRequest) {
     script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: 'unsafe-inline' 'unsafe-eval';
     script-src-elem 'self' 'nonce-${nonce}' 'strict-dynamic' https://www.googletagmanager.com/ https: 'unsafe-inline';
     style-src 'self' https: 'unsafe-inline';
-    img-src 'self' https://stellar.creit.tech/wallet-icons/ https://www.googletagmanager.com/ blob: data:;
+    img-src 'self' https://stellar.creit.tech/wallet-icons/ https://www.googletagmanager.com/ https://storage.herewallet.app/ blob: data:;
     connect-src 'self' http://localhost:* https:;
     font-src 'self' https://fonts.gstatic.com/ https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs/base/browser/ui/codicons/codicon/codicon.ttf;
     object-src 'none';
-    frame-src 'self' https://connect.trezor.io/;
+    frame-src 'self' https://connect.trezor.io/ https://hot-labs.org/;
     base-uri 'self';
     form-action 'self';
     frame-ancestors 'none';

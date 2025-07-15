@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^2.15.0",
-    "@creit.tech/stellar-wallets-kit": "^1.7.3",
+    "@creit.tech/stellar-wallets-kit": "^1.7.6",
     "@ledgerhq/hw-app-str": "^7.2.0",
     "@ledgerhq/hw-transport-webusb": "^6.29.4",
     "@monaco-editor/react": "^4.7.0",
