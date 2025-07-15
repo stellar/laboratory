@@ -323,6 +323,15 @@ export const ClassicTransactionXdr = () => {
           case "min_price":
           case "max_price":
             return formatNumberFraction(val);
+          // Hash to StrKeys
+          case "balance_id":
+            // Removing the first six `0` characters
+            return StrKey.encodeClaimableBalance(
+              Buffer.from(val.substring(6), "hex"),
+            );
+          case "liquidity_pool_id":
+            // Removing the first six `0` characters
+            return StrKey.encodeLiquidityPool(Buffer.from(val, "hex"));
           default:
             return val;
         }
