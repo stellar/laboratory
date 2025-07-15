@@ -2693,20 +2693,6 @@
     buffer "^6.0.3"
     sha.js "^2.3.6"
 
-"@stellar/stellar-sdk@14.0.0-rc.2":
-  version "14.0.0-rc.2"
-  resolved "https://registry.yarnpkg.com/@stellar/stellar-sdk/-/stellar-sdk-14.0.0-rc.2.tgz#c0556a46e6eab1d6a72889cea194cddcd2ffb324"
-  integrity sha512-ihIDccpKxCa8vKSTdHy2WxeR5rMGzLIXQxtSkRmH3lASmcuPGYkFXTSPphltSSKcduA+1FOvAcli/tzwUfP0rA==
-  dependencies:
-    "@stellar/stellar-base" "^14.0.0-rc.2"
-    axios "^1.8.4"
-    bignumber.js "^9.3.1"
-    eventsource "^2.0.2"
-    feaxios "^0.0.23"
-    randombytes "^2.1.0"
-    toml "^3.0.0"
-    urijs "^1.19.1"
-
 "@stellar/stellar-sdk@^13.3.0":
   version "13.3.0"
   resolved "https://registry.yarnpkg.com/@stellar/stellar-sdk/-/stellar-sdk-13.3.0.tgz#72bf3eea4797de053aaebb889bf4de342d0b6b54"
@@ -2715,6 +2701,20 @@
     "@stellar/stellar-base" "^13.1.0"
     axios "^1.8.4"
     bignumber.js "^9.3.0"
+    eventsource "^2.0.2"
+    feaxios "^0.0.23"
+    randombytes "^2.1.0"
+    toml "^3.0.0"
+    urijs "^1.19.1"
+
+"@stellar/stellar-sdk@^14.0.0-rc.2":
+  version "14.0.0-rc.2"
+  resolved "https://registry.yarnpkg.com/@stellar/stellar-sdk/-/stellar-sdk-14.0.0-rc.2.tgz#c0556a46e6eab1d6a72889cea194cddcd2ffb324"
+  integrity sha512-ihIDccpKxCa8vKSTdHy2WxeR5rMGzLIXQxtSkRmH3lASmcuPGYkFXTSPphltSSKcduA+1FOvAcli/tzwUfP0rA==
+  dependencies:
+    "@stellar/stellar-base" "^14.0.0-rc.2"
+    axios "^1.8.4"
+    bignumber.js "^9.3.1"
     eventsource "^2.0.2"
     feaxios "^0.0.23"
     randombytes "^2.1.0"
