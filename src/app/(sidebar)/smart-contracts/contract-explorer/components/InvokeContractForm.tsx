@@ -1,4 +1,11 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   Button,
   Card,
@@ -81,8 +88,31 @@ export const InvokeContractForm = ({
   const [isWriteFn, setIsWriteFn] = useState<boolean | undefined>(undefined);
   const [dereferencedSchema, setDereferencedSchema] =
     useState<DereferencedSchemaType | null>(null);
-  const [isReadTooltipVisible, setIsReadTooltipVisible] = useState(false);
+  const [isBadgeTooltipVisible, setIsBadgeTooltipVisible] = useState(false);
   const hasNoFormErrors = isEmptyObject(formError);
+
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+
+  const handleClickOutside = useCallback((event: MouseEvent) => {
+    if (buttonRef?.current?.contains(event.target as Node)) {
+      return;
+    }
+
+    setIsBadgeTooltipVisible(false);
+  }, []);
+
+  // Close tooltip when clicked outside
+  useLayoutEffect(() => {
+    if (isBadgeTooltipVisible) {
+      document.addEventListener("pointerup", handleClickOutside);
+    } else {
+      document.removeEventListener("pointerup", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("pointerup", handleClickOutside);
+    };
+  }, [handleClickOutside, isBadgeTooltipVisible]);
 
   const { wasm: wasmHash } = infoData;
 
@@ -238,22 +268,20 @@ export const InvokeContractForm = ({
     }
   }, [contractSpec, funcName]);
 
-  const isSuccessfulSimulation = Boolean(!simulateTxData?.result?.error);
-  const isFailedSimulation = Boolean(simulateTxData?.result?.error);
-
   useEffect(() => {
+    const isSuccessfulSimulation =
+      simulateTxData && Boolean(!simulateTxData?.result?.error);
+
+    const isFailedSimulation =
+      simulateTxData && Boolean(simulateTxData?.result.error);
+
     if (isSuccessfulSimulation) {
       const result =
         simulateTxData.result as Api.RawSimulateTransactionResponse;
       const simulationChangesState =
         result.stateChanges && result.stateChanges.length > 0;
 
-      if (simulationChangesState) {
-        setIsWriteFn(true);
-        return;
-      }
-
-      setIsWriteFn(false);
+      setIsWriteFn(Boolean(simulationChangesState));
       return;
     }
 
@@ -493,23 +521,28 @@ export const InvokeContractForm = ({
     if (isWriteFn === undefined) return null;
 
     const badge = (
-      <Badge
-        icon={isWriteFn ? <Icon.Pencil01 /> : <Icon.Eye />}
-        variant={isWriteFn ? "secondary" : "success"}
-        iconPosition="left"
+      <button
+        ref={buttonRef}
+        className="ContractInfo__badgeButton"
+        onClick={() => {
+          setIsBadgeTooltipVisible(!isBadgeTooltipVisible);
+        }}
+        type="button"
       >
-        {isWriteFn ? "Write" : "Read"}
-      </Badge>
+        <Badge
+          icon={isWriteFn ? <Icon.Pencil01 /> : <Icon.Eye />}
+          variant={isWriteFn ? "secondary" : "success"}
+          iconPosition="left"
+        >
+          {isWriteFn ? "Write" : "Read"}
+        </Badge>
+      </button>
     );
 
     return !isWriteFn ? (
-      <div
-        onMouseEnter={() => setIsReadTooltipVisible(true)}
-        onMouseLeave={() => setIsReadTooltipVisible(false)}
-        style={{ cursor: "pointer" }}
-      >
+      <div style={{ cursor: "pointer" }}>
         <Tooltip
-          isVisible={isReadTooltipVisible}
+          isVisible={isBadgeTooltipVisible}
           isContrast
           title="Read Only"
           placement="right-end"
