@@ -238,13 +238,8 @@ export const InvokeContractForm = ({
     }
   }, [contractSpec, funcName]);
 
-  const isSuccessfulSimulation =
-    simulateTxData &&
-    "result" in simulateTxData &&
-    !simulateTxData.result.error;
-
-  const isFailedSimulation =
-    simulateTxData && "result" in simulateTxData && simulateTxData.result.error;
+  const isSuccessfulSimulation = Boolean(!simulateTxData?.result?.error);
+  const isFailedSimulation = Boolean(simulateTxData?.result?.error);
 
   useEffect(() => {
     if (isSuccessfulSimulation) {
