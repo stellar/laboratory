@@ -979,18 +979,13 @@ export const formComponentTemplateEndpoints = (
             value={templ.value || ""}
             onChange={templ.onChange}
           >
-            <option id="none" value="">
-              none
-            </option>
-            <option id="enforce" value="enforce">
-              enforce
-            </option>
-            <option id="record" value="record">
-              record
-            </option>
-            <option id="record_allow_nonroot" value="record_allow_nonroot">
-              record_allow_nonroot
-            </option>
+            {
+              ["none", "enforce", "record", "record_allow_nonroot"].map((i) => (
+                <option key={i} id={i} value={i === "none" ? "" : i}>
+                  {i}
+                </option>
+              ));
+            }
           </Select>
         ),
         validate: null,
