@@ -202,7 +202,7 @@ export const TransactionInfo = ({
       return null;
     }
 
-    const stroops = stringify(fee);
+    const stroops = typeof fee === "string" ? fee : stringify(fee);
 
     if (!stroops) {
       return null;
@@ -274,7 +274,7 @@ export const TransactionInfo = ({
             key={`tx-info-${field.id}`}
             isValueLoaded={!isNoDataScreen}
             label={field.label}
-            value={stringify(formattedData?.sequenceNumber)}
+            value={typeof formattedData?.sequenceNumber === "string" ? formattedData.sequenceNumber : stringify(formattedData?.sequenceNumber)}
           />
         );
       case "processed":
