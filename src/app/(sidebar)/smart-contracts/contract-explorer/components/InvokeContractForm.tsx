@@ -1,4 +1,11 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   Button,
   Card,
@@ -6,8 +13,12 @@ import {
   Select,
   Text,
   Textarea,
+  Badge,
+  Icon,
+  Tooltip,
 } from "@stellar/design-system";
 import { BASE_FEE, contract } from "@stellar/stellar-sdk";
+import { Api } from "@stellar/stellar-sdk/rpc";
 import { JSONSchema7 } from "json-schema";
 
 import { RpcErrorResponse } from "@/components/TxErrorResponse";
@@ -72,10 +83,36 @@ export const InvokeContractForm = ({
   });
   const [formError, setFormError] = useState<AnyObject>({});
   const [isGetFunction, setIsGetFunction] = useState(false);
+  // Based on reads and writes to the contract
+  // Can only be determined based on the simulation result
+  const [isWriteFn, setIsWriteFn] = useState<boolean | undefined>(undefined);
   const [dereferencedSchema, setDereferencedSchema] =
     useState<DereferencedSchemaType | null>(null);
-
+  const [isBadgeTooltipVisible, setIsBadgeTooltipVisible] = useState(false);
   const hasNoFormErrors = isEmptyObject(formError);
+
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+
+  const handleClickOutside = useCallback((event: MouseEvent) => {
+    if (buttonRef?.current?.contains(event.target as Node)) {
+      return;
+    }
+
+    setIsBadgeTooltipVisible(false);
+  }, []);
+
+  // Close tooltip when clicked outside
+  useLayoutEffect(() => {
+    if (isBadgeTooltipVisible) {
+      document.addEventListener("pointerup", handleClickOutside);
+    } else {
+      document.removeEventListener("pointerup", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("pointerup", handleClickOutside);
+    };
+  }, [handleClickOutside, isBadgeTooltipVisible]);
 
   const { wasm: wasmHash } = infoData;
 
@@ -230,6 +267,28 @@ export const InvokeContractForm = ({
       setDereferencedSchema(schema);
     }
   }, [contractSpec, funcName]);
+
+  useEffect(() => {
+    const isSuccessfulSimulation =
+      simulateTxData && Boolean(!simulateTxData?.result?.error);
+
+    const isFailedSimulation =
+      simulateTxData && Boolean(simulateTxData?.result.error);
+
+    if (isSuccessfulSimulation) {
+      const result =
+        simulateTxData.result as Api.RawSimulateTransactionResponse;
+      const simulationChangesState =
+        result.stateChanges && result.stateChanges.length > 0;
+
+      setIsWriteFn(Boolean(simulationChangesState));
+      return;
+    }
+
+    if (isFailedSimulation) {
+      setIsWriteFn(undefined);
+    }
+  }, [simulateTxData]);
 
   const handleChange = (value: SorobanInvokeValue) => {
     setInvokeError(null);
@@ -429,9 +488,12 @@ export const InvokeContractForm = ({
 
   const renderTitle = (name: string, description?: string) => (
     <>
-      <Text size="sm" as="div" weight="bold">
-        {name}
-      </Text>
+      <Box gap="sm" direction="row">
+        <Text size="sm" as="div" weight="bold">
+          {name}
+        </Text>
+        {renderReadWriteBadge(isWriteFn)}
+      </Box>
       {description ? (
         <Textarea
           id={`invoke-contract-description-${name}`}
@@ -454,6 +516,49 @@ export const InvokeContractForm = ({
       setIsGetFunction(false);
     }
   }, [dereferencedSchema]);
+
+  const renderReadWriteBadge = (isWriteFn: boolean | undefined) => {
+    if (isWriteFn === undefined) return null;
+
+    const badge = (
+      <button
+        ref={buttonRef}
+        className="ContractInfo__badgeButton"
+        onClick={() => {
+          setIsBadgeTooltipVisible(!isBadgeTooltipVisible);
+        }}
+        type="button"
+      >
+        <Badge
+          icon={isWriteFn ? <Icon.Pencil01 /> : <Icon.Eye />}
+          variant={isWriteFn ? "secondary" : "success"}
+          iconPosition="left"
+        >
+          {isWriteFn ? "Write" : "Read"}
+        </Badge>
+      </button>
+    );
+
+    return !isWriteFn ? (
+      <div style={{ cursor: "pointer" }}>
+        <Tooltip
+          isVisible={isBadgeTooltipVisible}
+          isContrast
+          title="Read Only"
+          placement="right-end"
+          triggerEl={badge}
+        >
+          {`When a transaction doesn't change the state of the contract, it is
+               considered a read operation. \nIn this scenario, it is not
+               necessary to submit the transaction to the network, as it does not
+               modify any data. \nYou can simply simulate the transaction to see
+               the results without incurring any costs.`}
+        </Tooltip>
+      </div>
+    ) : (
+      badge
+    );
+  };
 
   const renderSchema = () => {
     if (isWasmBinaryFetching) {
