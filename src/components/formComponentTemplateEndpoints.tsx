@@ -477,17 +477,15 @@ export const formComponentTemplateEndpoints = (
             label="Key (ScVal)"
             rows={10}
             placeholder={`{
-      "vec": [
-        {
-          "symbol": "Balance"
-        },
-        {
-          "address": "CDGAH7TU7UH3BXGYXRIXLJX63LYRIF6APZPIG64ZAW3NNDCPJ7AAWVTZ"
-        }
-      ]
-    }
-  }
-}`}
+              "vec": [
+                {
+                  "symbol": "Balance"
+                },
+                {
+                  "address": "CDGAH7TU7UH3BXGYXRIXLJX63LYRIF6APZPIG64ZAW3NNDCPJ7AAWVTZ"
+                }
+              ]
+            }`}
             // Convert object to string if needed
             value={
               typeof templ.value === "object"
@@ -961,6 +959,31 @@ export const formComponentTemplateEndpoints = (
             <option id="json" value="json">
               json
             </option>
+          </Select>
+        ),
+        validate: null,
+      };
+    case "authMode":
+      return {
+        render: (templ: {
+          value: string | undefined;
+          error: string | undefined;
+          onChange: (val: any) => void;
+        }) => (
+          <Select
+            key={id}
+            id={id}
+            fieldSize="md"
+            label="Auth Mode"
+            labelSuffix="optional"
+            value={templ.value || ""}
+            onChange={templ.onChange}
+          >
+            {["none", "enforce", "record", "record_allow_nonroot"].map((i) => (
+              <option key={i} id={i} value={i === "none" ? "" : i}>
+                {i}
+              </option>
+            ))}
           </Select>
         ),
         validate: null,
