@@ -1,5 +1,9 @@
-name: Build the app and run Playwright Tests
-on: [push, pull_request]
+name: Build the app and run unit and e2e tests
+on:
+  # Trigger push only on the main branch to avoid duplicate runs on PRs
+  push:
+    branches: [main]
+  pull_request:
 jobs:
   build:
     timeout-minutes: 60
