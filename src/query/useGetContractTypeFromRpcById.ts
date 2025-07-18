@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Contract, rpc as StellarRpc } from "@stellar/stellar-sdk";
+import { Contract, rpc as StellarRpc, xdr } from "@stellar/stellar-sdk";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { NetworkHeaders } from "@/types/types";
 
@@ -12,9 +12,16 @@ export const useGetContractTypeFromRpcById = ({
   rpcUrl: string;
   headers?: NetworkHeaders;
 }) => {
-  const query = useQuery<
-    "contractExecutableWasm" | "contractExecutableStellarAsset" | null
-  >({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const execWasm = xdr.ContractExecutableType.contractExecutableWasm();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const execStellarAsset =
+    xdr.ContractExecutableType.contractExecutableStellarAsset();
+
+  type ExecWasmType = typeof execWasm.name;
+  type ExecStellarAssetType = typeof execStellarAsset.name;
+
+  const query = useQuery<ExecWasmType | ExecStellarAssetType | null>({
     queryKey: ["useGetContractTypeFromRpcById", contractId, rpcUrl],
     queryFn: async () => {
       if (!contractId || !rpcUrl) {
