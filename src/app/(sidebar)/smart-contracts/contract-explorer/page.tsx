@@ -314,7 +314,8 @@ export default function ContractExplorer() {
               id: "contract-invoke",
               label: "Invoke Contract",
               content: renderContractInvokeContent(),
-              isDisabled: !isDataLoaded,
+              isDisabled:
+                !isDataLoaded || !(contractInfoData && contractClient?.spec),
             }}
             activeTabId={contractActiveTab}
             onTabChange={(tabId) => {
