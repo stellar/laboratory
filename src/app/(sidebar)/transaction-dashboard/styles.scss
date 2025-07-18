@@ -1,0 +1,82 @@
+@use "../../../styles/utils.scss" as *;
+
+.StateChange {
+  &__item {
+    .Badge {
+      width: fit-content;
+    }
+  }
+
+  &__diff {
+    background-color: var(--sds-clr-gray-01);
+    border-radius: pxToRem(8px);
+    border: 1px solid var(--sds-clr-gray-06);
+    overflow: hidden;
+
+    &__content {
+      max-height: pxToRem(296px);
+      overflow-x: clip;
+      overflow-y: auto;
+    }
+
+    table[class*="-diff-container"] {
+      font-size: pxToRem(14px);
+      line-height: pxToRem(18px);
+      background-color: var(--sds-clr-gray-02);
+
+      tr {
+        // Hide expand lines row
+        &[class*="-code-fold"] {
+          display: none;
+        }
+
+        td {
+          &[class*="-content"]:not(:last-child) {
+            border-right: 1px solid var(--sds-clr-gray-06);
+          }
+        }
+      }
+
+      pre {
+        font-family: var(--sds-ff-monospace);
+        line-height: pxToRem(18px);
+        word-break: break-all;
+      }
+    }
+  }
+
+  &__noDiff {
+    background-color: var(--sds-clr-gray-02);
+    font-family: var(--sds-ff-monospace);
+    font-size: pxToRem(14px);
+    color: var(--sds-clr-gray-12);
+    padding: pxToRem(10px);
+  }
+
+  &__diffTitle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    position: sticky;
+    top: 0;
+
+    background-color: var(--sds-clr-gray-01);
+    border-bottom: 1px solid var(--sds-clr-gray-06);
+
+    font-family: var(--sds-ff-base);
+    font-size: pxToRem(12px);
+    line-height: pxToRem(18px);
+    color: var(--sds-clr-gray-11);
+    font-weight: var(--sds-fw-medium);
+
+    & > div {
+      width: 50%;
+      padding: pxToRem(10px);
+
+      &:first-child:not(:last-child) {
+        border-right: 1px solid var(--sds-clr-gray-06);
+      }
+    }
+  }
+}

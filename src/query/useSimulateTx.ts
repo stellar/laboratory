@@ -8,6 +8,7 @@ type SimulateTxProps = {
   instructionLeeway?: string;
   headers: NetworkHeaders;
   xdrFormat?: string;
+  authMode?: string;
 };
 
 export const useSimulateTx = () => {
@@ -18,6 +19,7 @@ export const useSimulateTx = () => {
       instructionLeeway,
       headers,
       xdrFormat,
+      authMode,
     }: SimulateTxProps) => {
       try {
         const res = await fetch(rpcUrl, {
@@ -33,6 +35,7 @@ export const useSimulateTx = () => {
             params: {
               xdrFormat: xdrFormat || "base64",
               transaction: transactionXdr,
+              authMode: authMode || "",
               ...(instructionLeeway
                 ? {
                     resourceConfig: {
