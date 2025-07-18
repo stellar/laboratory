@@ -528,6 +528,7 @@ export const CONTRACT_SECTIONS = [
   "contractmetav0",
   "contractenvmetav0",
   "contractspecv0",
+  "sac",
 ] as const;
 
 export type ContractSectionName = (typeof CONTRACT_SECTIONS)[number];

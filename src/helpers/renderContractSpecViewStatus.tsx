@@ -2,18 +2,20 @@ import { Alert, Text, Loader } from "@stellar/design-system";
 import { ErrorText } from "@/components/ErrorText";
 import { Box } from "@/components/layout/Box";
 
-export const renderWasmStatus = ({
+export const renderContractSpecViewStatus = ({
   wasmHash,
   rpcUrl,
   isLoading,
   error,
+  isSacType,
 }: {
   wasmHash: string;
   rpcUrl: string;
   isLoading: boolean;
   error: Error | null;
+  isSacType: boolean;
 }) => {
-  if (!wasmHash) {
+  if (isSacType === false && !wasmHash) {
     return (
       <Text as="div" size="sm">
         There is no Wasm for this contract

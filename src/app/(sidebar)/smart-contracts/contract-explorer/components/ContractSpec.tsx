@@ -7,10 +7,12 @@ import { WithInfoText } from "@/components/WithInfoText";
 import { PoweredByStellarExpert } from "@/components/PoweredByStellarExpert";
 
 import { useWasmBinaryFromRpc } from "@/query/useWasmBinaryFromRpc";
+import { useGitHubFile } from "@/query/useGitHubFile";
 
 import { downloadFile } from "@/helpers/downloadFile";
-import { renderWasmStatus } from "@/helpers/renderWasmStatus";
+import { renderContractSpecViewStatus } from "@/helpers/renderContractSpecViewStatus";
 import { getWasmContractData } from "@/helpers/getWasmContractData";
+import { STELLAR_ASSET_CONTRACT } from "@/constants/stellarAssetContractData";
 
 import { ContractSections, ContractSectionName } from "@/types/types";
 
@@ -19,11 +21,13 @@ export const ContractSpec = ({
   wasmHash,
   isActive,
   isSourceStellarExpert,
+  isSacType,
 }: {
   rpcUrl: string;
   wasmHash: string;
   isActive: boolean;
   isSourceStellarExpert: boolean;
+  isSacType?: boolean;
 }) => {
   const [selectedFormat, setSelectedFormat] = useState<
     Record<ContractSectionName, SupportedLanguage>
@@ -31,6 +35,7 @@ export const ContractSpec = ({
     contractenvmetav0: "json",
     contractmetav0: "json",
     contractspecv0: "json",
+    sac: "json",
   });
   const [contractSections, setContractSections] =
     useState<ContractSections | null>();
@@ -46,6 +51,21 @@ export const ContractSpec = ({
     isActive,
   });
 
+  const {
+    data: sacData,
+    error: sacDataError,
+    isFetching: isSacDataFetching,
+    isLoading: isSacDataLoading,
+  } = useGitHubFile({
+    repo: STELLAR_ASSET_CONTRACT.contractSpecRepo,
+    path: STELLAR_ASSET_CONTRACT.contractSpecPath,
+    file:
+      selectedFormat.sac === "xdr"
+        ? `${STELLAR_ASSET_CONTRACT.contractSpecFileName}.xdr`
+        : `${STELLAR_ASSET_CONTRACT.contractSpecFileName}.json`,
+    isActive: Boolean(isActive && isSacType),
+  });
+
   useEffect(() => {
     const getContractData = async () => {
       if (wasmBinary) {
@@ -57,15 +77,21 @@ export const ContractSpec = ({
     getContractData();
   }, [wasmBinary]);
 
-  const wasmStatus = renderWasmStatus({
+  const viewStatus = renderContractSpecViewStatus({
     wasmHash,
     rpcUrl,
-    isLoading: isWasmBinaryLoading || isWasmBinaryFetching || !contractSections,
-    error: wasmBinaryError,
+    isLoading:
+      isWasmBinaryLoading ||
+      isWasmBinaryFetching ||
+      isSacDataLoading ||
+      isSacDataFetching ||
+      (isSacType === false && !contractSections),
+    error: wasmBinaryError || sacDataError,
+    isSacType: Boolean(isSacType),
   });
 
-  if (wasmStatus) {
-    return wasmStatus;
+  if (viewStatus) {
+    return viewStatus;
   }
 
   const formatValue = (sectionName: ContractSectionName) => {
@@ -73,9 +99,13 @@ export const ContractSpec = ({
     // // contractspecv0
     switch (selectedFormat[sectionName]) {
       case "json":
-        return `// ${sectionName} \n\n${contractSections?.[sectionName].json?.join(",\n\n")}`;
+        return isSacType
+          ? `${sacData}`
+          : `// ${sectionName} \n\n${contractSections?.[sectionName].json?.join(",\n\n")}`;
       case "xdr":
-        return `// ${sectionName} \n\n${contractSections?.[sectionName].xdr?.join("\n\n")}`;
+        return isSacType
+          ? `${sacData}`
+          : `// ${sectionName} \n\n${contractSections?.[sectionName].xdr?.join("\n\n")}`;
       case "text":
       default:
         return "";
@@ -142,33 +172,45 @@ export const ContractSpec = ({
           })
         : null}
 
-      {/* Download Wasm button */}
-      <Box gap="xs" direction="column" align="end">
-        <WithInfoText href="https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/contracts#wasm">
-          <Button
-            variant="tertiary"
-            size="sm"
-            icon={<Icon.Download01 />}
-            iconPosition="left"
-            disabled={!wasmBinary}
-            onClick={(e) => {
-              e.preventDefault();
+      {/* Stellar Asset Contract section */}
+      {isSacType
+        ? renderSectionCodeEditor({
+            sectionName: "sac",
+            title: "Contract Spec",
+            infoLink:
+              "https://developers.stellar.org/docs/tokens/stellar-asset-contract",
+          })
+        : null}
 
-              if (wasmBinary) {
-                downloadFile({
-                  value: wasmBinary,
-                  fileType: "application/octet-stream",
-                  fileName: wasmHash,
-                  fileExtension: "wasm",
-                });
-              }
-            }}
-            isLoading={isWasmBinaryLoading || isWasmBinaryFetching}
-          >
-            Download Wasm
-          </Button>
-        </WithInfoText>
-      </Box>
+      {/* Download Wasm button */}
+      {!isSacType ? (
+        <Box gap="xs" direction="column" align="end">
+          <WithInfoText href="https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/contracts#wasm">
+            <Button
+              variant="tertiary"
+              size="sm"
+              icon={<Icon.Download01 />}
+              iconPosition="left"
+              disabled={!wasmBinary}
+              onClick={(e) => {
+                e.preventDefault();
+
+                if (wasmBinary) {
+                  downloadFile({
+                    value: wasmBinary,
+                    fileType: "application/octet-stream",
+                    fileName: wasmHash,
+                    fileExtension: "wasm",
+                  });
+                }
+              }}
+              isLoading={isWasmBinaryLoading || isWasmBinaryFetching}
+            >
+              Download Wasm
+            </Button>
+          </WithInfoText>
+        </Box>
+      ) : null}
 
       {isSourceStellarExpert ? <PoweredByStellarExpert /> : null}
     </Box>
