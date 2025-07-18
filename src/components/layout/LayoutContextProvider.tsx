@@ -1,7 +1,7 @@
 "use client";
 
-import { createContext, useEffect, useState } from "react";
-import { throttle } from "lodash";
+import { createContext } from "react";
+import { useWindowSize } from "@/hooks/useWindowSize";
 
 type LayoutMode = "desktop" | "mobile";
 
@@ -20,33 +20,7 @@ export const LayoutContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const MAX_WIDTH = 940;
-
-  const [layoutMode, setLayoutMode] = useState<LayoutMode>();
-  const [windowWidth, setWindowWidth] = useState<number>();
-
-  const getLayoutMode = (windowWidth: number) => {
-    return windowWidth < MAX_WIDTH ? "mobile" : "desktop";
-  };
-
-  useEffect(() => {
-    const setState = () => {
-      setLayoutMode(getLayoutMode(document.documentElement.clientWidth));
-      setWindowWidth(document.documentElement.clientWidth);
-    };
-
-    setState();
-
-    const handleResize = throttle(() => {
-      setState();
-    }, 500);
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+  const { windowWidth, layoutMode } = useWindowSize();
 
   return (
     <WindowContext.Provider value={{ layoutMode, windowWidth }}>

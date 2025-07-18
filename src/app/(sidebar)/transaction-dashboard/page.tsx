@@ -22,6 +22,8 @@ import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 import { TransactionInfo } from "./components/TransactionInfo";
 import { StateChange } from "./components/StateChange";
 
+import "./styles.scss";
+
 export default function TransactionDashboard() {
   type TxTabId =
     | "tx-token-summary"
@@ -240,7 +242,7 @@ export default function TransactionDashboard() {
                 id: "tx-state-change",
                 label: "State Change",
                 content: isDataLoaded ? (
-                  <StateChange />
+                  <StateChange txDetails={txDetails} />
                 ) : (
                   <NoInfoLoadedView message="Load a transaction" />
                 ),
