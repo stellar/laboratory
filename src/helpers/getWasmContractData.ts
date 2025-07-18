@@ -13,6 +13,7 @@ export const getWasmContractData = async (wasmBytes: Buffer) => {
       contractmetav0: {},
       contractenvmetav0: {},
       contractspecv0: {},
+      sac: {},
     };
 
     // Make sure the StellarXdr is available
@@ -58,6 +59,7 @@ const TYPE_VARIANT: Record<ContractSectionName, string> = {
   contractenvmetav0: "ScEnvMetaEntry",
   contractmetav0: "ScMetaEntry",
   contractspecv0: "ScSpecEntry",
+  sac: "SAC",
 };
 
 const getJsonAndXdr = (sectionName: ContractSectionName, xdr: string) => {
