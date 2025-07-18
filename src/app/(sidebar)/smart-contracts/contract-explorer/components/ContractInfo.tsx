@@ -305,7 +305,21 @@ export const ContractInfo = ({
             Built-in Contract
           </Badge>
         ),
-        message: <>TODO: needs description</>,
+        message: (
+          <>
+            The Stellar Asset Contract (SAC) is a built-in smart contract that
+            provides a standardized, programmatic interface to Stellar assets on
+            the network. It implements the{" "}
+            <Link href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0041.md">
+              SEP‑41 Token Interface
+            </Link>{" "}
+            via{" "}
+            <Link href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0046-06.md">
+              CAP-46-06
+            </Link>
+            .
+          </>
+        ),
       },
     };
 
@@ -431,7 +445,7 @@ export const ContractInfo = ({
                   isActive={activeTab === "contract-build-info"}
                 />
               ),
-              isDisabled: !isDataLoaded,
+              isDisabled: !isDataLoaded || isSacType,
             }}
             tab5={{
               id: "contract-version-history",
@@ -444,7 +458,7 @@ export const ContractInfo = ({
                   isSourceStellarExpert={true}
                 />
               ) : null,
-              isDisabled: !isDataLoaded,
+              isDisabled: !isDataLoaded || isSacType,
             }}
             tab6={{
               id: "contract-bindings",
