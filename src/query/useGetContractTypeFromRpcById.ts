@@ -12,16 +12,13 @@ export const useGetContractTypeFromRpcById = ({
   rpcUrl: string;
   headers?: NetworkHeaders;
 }) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const execWasm = xdr.ContractExecutableType.contractExecutableWasm();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const execStellarAsset =
-    xdr.ContractExecutableType.contractExecutableStellarAsset();
+  const execWasmType = xdr.ContractExecutableType.contractExecutableWasm().name;
+  const execStellarAssetType =
+    xdr.ContractExecutableType.contractExecutableStellarAsset().name;
 
-  type ExecWasmType = typeof execWasm.name;
-  type ExecStellarAssetType = typeof execStellarAsset.name;
-
-  const query = useQuery<ExecWasmType | ExecStellarAssetType | null>({
+  const query = useQuery<
+    typeof execWasmType | typeof execStellarAssetType | null
+  >({
     queryKey: ["useGetContractTypeFromRpcById", contractId, rpcUrl],
     queryFn: async () => {
       if (!contractId || !rpcUrl) {
@@ -54,11 +51,7 @@ export const useGetContractTypeFromRpcById = ({
 
         const contractType = executable?.switch()?.name;
 
-        if (
-          ["contractExecutableWasm", "contractExecutableStellarAsset"].includes(
-            contractType,
-          )
-        ) {
+        if ([execWasmType, execStellarAssetType].includes(contractType)) {
           return contractType;
         }
 

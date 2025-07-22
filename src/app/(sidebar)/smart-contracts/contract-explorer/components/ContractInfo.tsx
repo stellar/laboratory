@@ -75,7 +75,7 @@ export const ContractInfo = ({
         infoData?.validation?.repository?.replace("https://github.com/", "") ||
         "",
     sourceCommit: isSacType
-      ? STELLAR_ASSET_CONTRACT.sourceCommit
+      ? STELLAR_ASSET_CONTRACT.sourceTag
       : wasmData?.build.commit || infoData?.validation?.commit || "",
   });
 
