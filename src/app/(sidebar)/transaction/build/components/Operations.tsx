@@ -871,7 +871,7 @@ export const Operations = () => {
             [Smart Contract] Restore Footprint
           </option>
           <option value="invoke_contract_function">
-            [Smart Contract] Invoke Contract Function **Experimental**
+            [Smart Contract] Invoke Contract Function
           </option>
           <option value="create_account">Create Account</option>
           <option value="payment">Payment</option>
