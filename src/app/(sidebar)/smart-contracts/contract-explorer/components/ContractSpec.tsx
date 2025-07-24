@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, Icon } from "@stellar/design-system";
+import { parse, stringify } from "lossless-json";
 
 import { CodeEditor, SupportedLanguage } from "@/components/CodeEditor";
 import { Box } from "@/components/layout/Box";
@@ -9,12 +10,18 @@ import { PoweredByStellarExpert } from "@/components/PoweredByStellarExpert";
 import { useWasmBinaryFromRpc } from "@/query/useWasmBinaryFromRpc";
 import { useGitHubFile } from "@/query/useGitHubFile";
 
+import * as StellarXdr from "@/helpers/StellarXdr";
 import { downloadFile } from "@/helpers/downloadFile";
 import { renderContractSpecViewStatus } from "@/helpers/renderContractSpecViewStatus";
 import { getWasmContractData } from "@/helpers/getWasmContractData";
 import { STELLAR_ASSET_CONTRACT } from "@/constants/stellarAssetContractData";
+import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
-import { ContractSections, ContractSectionName } from "@/types/types";
+import {
+  ContractSections,
+  ContractSectionName,
+  AnyObject,
+} from "@/types/types";
 
 export const ContractSpec = ({
   rpcUrl,
@@ -40,6 +47,8 @@ export const ContractSpec = ({
   const [contractSections, setContractSections] =
     useState<ContractSections | null>();
 
+  const isXdrInit = useIsXdrInit();
+
   const {
     data: wasmBinary,
     error: wasmBinaryError,
@@ -59,10 +68,7 @@ export const ContractSpec = ({
   } = useGitHubFile({
     repo: STELLAR_ASSET_CONTRACT.contractSpecRepo,
     path: STELLAR_ASSET_CONTRACT.contractSpecPath,
-    file:
-      selectedFormat.sac === "xdr"
-        ? `${STELLAR_ASSET_CONTRACT.contractSpecFileName}.xdr`
-        : `${STELLAR_ASSET_CONTRACT.contractSpecFileName}.json`,
+    file: `${STELLAR_ASSET_CONTRACT.contractSpecFileName}.json`,
     isActive: Boolean(isActive && isSacType),
   });
 
@@ -94,17 +100,36 @@ export const ContractSpec = ({
     return viewStatus;
   }
 
+  const formatSacData = (
+    dataString: string | null | undefined,
+    type: "json" | "xdr",
+  ) => {
+    if (!dataString) {
+      return "";
+    }
+
+    const jsonData = parse(dataString) as AnyObject[];
+
+    if (type === "json") {
+      return `${jsonData.map((d) => stringify(d, null, 2)).join(",\n\n")}`;
+    }
+
+    return isXdrInit
+      ? `${jsonData.map((d) => StellarXdr.encode("ScSpecEntry", stringify(d) || "")).join("\n\n")}`
+      : "";
+  };
+
   const formatValue = (sectionName: ContractSectionName) => {
-    // Adding the first line as a comment with a section name. For example:
-    // // contractspecv0
     switch (selectedFormat[sectionName]) {
       case "json":
         return isSacType
-          ? `${sacData}`
-          : `// ${sectionName} \n\n${contractSections?.[sectionName].json?.join(",\n\n")}`;
+          ? formatSacData(sacData, "json")
+          : // Adding the first line as a comment with a section name. For example:
+            // // contractspecv0
+            `// ${sectionName} \n\n${contractSections?.[sectionName].json?.join(",\n\n")}`;
       case "xdr":
         return isSacType
-          ? `${sacData}`
+          ? formatSacData(sacData, "xdr")
           : `// ${sectionName} \n\n${contractSections?.[sectionName].xdr?.join("\n\n")}`;
       case "text":
       default:
