@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Alert, Card, Loader, Text } from "@stellar/design-system";
 import { contract } from "@stellar/stellar-sdk";
 import { useStore } from "@/store/useStore";
@@ -22,16 +23,31 @@ export const InvokeContract = ({
   isSacType: boolean;
 }) => {
   const { walletKit, network } = useStore();
+  const [invokeContractSpec, setInvokeContractSpec] = useState(contractSpec);
+  const [sacError, setSacError] = useState<string | null>(null);
   const { sacXdrData } = useSacXdrData({
     isActive: Boolean(network.rpcUrl && isSacType),
   });
-  const isError = Boolean(
-    (!sacXdrData && contractClientError) || !(sacXdrData || contractSpec),
-  );
 
-  const invokeContractSpec = sacXdrData
-    ? new contract.Spec(sacXdrData)
-    : contractSpec;
+  useEffect(() => {
+    if (sacXdrData) {
+      try {
+        setInvokeContractSpec(new contract.Spec(sacXdrData));
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (error) {
+        setSacError("Invalid SAC XDR data");
+      }
+    } else {
+      setInvokeContractSpec(contractSpec);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSacType]);
+
+  const isError = Boolean(
+    (!sacXdrData && contractClientError) ||
+      (isSacType && sacError) ||
+      !(sacXdrData || contractSpec),
+  );
 
   const renderFunctionCard = (invokeContractSpec: contract.Spec) => {
     const invokeContractSpecFuncs = invokeContractSpec?.funcs();
