@@ -26,7 +26,7 @@ export const InvokeContract = ({
     isActive: Boolean(network.rpcUrl && isSacType),
   });
   const isError = Boolean(
-    (contractSpec && contractClientError) || !(sacXdrData || contractSpec),
+    (!sacXdrData && contractClientError) || !(sacXdrData || contractSpec),
   );
 
   const invokeContractSpec = sacXdrData
