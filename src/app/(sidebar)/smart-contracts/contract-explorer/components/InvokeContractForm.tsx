@@ -9,7 +9,6 @@ import {
 import {
   Button,
   Card,
-  Loader,
   Select,
   Text,
   Textarea,
@@ -39,37 +38,28 @@ import { useAccountSequenceNumber } from "@/query/useAccountSequenceNumber";
 import { useRpcPrepareTx } from "@/query/useRpcPrepareTx";
 import { useSimulateTx } from "@/query/useSimulateTx";
 import { useSubmitRpcTx } from "@/query/useSubmitRpcTx";
-import { useWasmBinaryFromRpc } from "@/query/useWasmBinaryFromRpc";
+
 import { useCodeWrappedSetting } from "@/hooks/useCodeWrappedSetting";
 
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { dereferenceSchema } from "@/helpers/dereferenceSchema";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
-import { getWasmContractData } from "@/helpers/getWasmContractData";
 import { getTxnToSimulate } from "@/helpers/sorobanUtils";
 
-import {
-  ContractInfoApiResponse,
-  Network,
-  SorobanInvokeValue,
-  EmptyObj,
-  XdrFormatType,
-  AnyObject,
-} from "@/types/types";
+import { SorobanInvokeValue, XdrFormatType, AnyObject } from "@/types/types";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 export const InvokeContractForm = ({
-  infoData,
-  network,
+  contractId,
   funcName,
+  contractSpec,
 }: {
-  infoData: ContractInfoApiResponse;
-  network: Network | EmptyObj;
+  contractId: string;
   funcName: string;
+  contractSpec: contract.Spec;
 }) => {
-  const { walletKit } = useStore();
-  const [contractSpec, setContractSpec] = useState<contract.Spec | null>();
+  const { network, walletKit } = useStore();
   const [invokeError, setInvokeError] = useState<{
     message: string;
     methodType: string;
@@ -77,7 +67,7 @@ export const InvokeContractForm = ({
   const [isExtensionLoading, setIsExtensionLoading] = useState(false);
   const [xdrFormat, setXdrFormat] = useState<XdrFormatType>("json");
   const [formValue, setFormValue] = useState<SorobanInvokeValue>({
-    contract_id: infoData.contract,
+    contract_id: contractId,
     function_name: funcName,
     args: {},
   });
@@ -113,8 +103,6 @@ export const InvokeContractForm = ({
       document.removeEventListener("pointerup", handleClickOutside);
     };
   }, [handleClickOutside, isBadgeTooltipVisible]);
-
-  const { wasm: wasmHash } = infoData;
 
   const {
     data: sequenceNumberData,
@@ -153,13 +141,6 @@ export const InvokeContractForm = ({
     isError: isSubmitRpcError,
     reset: resetSubmitRpc,
   } = useSubmitRpcTx();
-
-  const { data: wasmBinary, isFetching: isWasmBinaryFetching } =
-    useWasmBinaryFromRpc({
-      wasmHash: wasmHash || "",
-      rpcUrl: network.rpcUrl || "",
-      isActive: Boolean(network.passphrase && wasmHash),
-    });
 
   const walletKitInstance = useContext(WalletKitContext);
 
@@ -241,21 +222,6 @@ export const InvokeContractForm = ({
       );
     }
   }, [isSubmitRpcError, formValue.function_name]);
-
-  useEffect(() => {
-    const getContractData = async () => {
-      if (wasmBinary) {
-        const data = await getWasmContractData(wasmBinary);
-
-        if (data?.contractspecv0.xdr) {
-          const contractSpec = new contract.Spec(data.contractspecv0.xdr);
-          setContractSpec(contractSpec);
-        }
-      }
-    };
-
-    getContractData();
-  }, [wasmBinary]);
 
   useEffect(() => {
     if (contractSpec) {
@@ -561,10 +527,6 @@ export const InvokeContractForm = ({
   };
 
   const renderSchema = () => {
-    if (isWasmBinaryFetching) {
-      return <Loader />;
-    }
-
     if (!contractSpec || !dereferencedSchema) {
       return null;
     }
