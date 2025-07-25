@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Alert, Button, Icon, Input } from "@stellar/design-system";
 import { useQueryClient } from "@tanstack/react-query";
+import { contract } from "@stellar/stellar-sdk";
 
 import { useStore } from "@/store/useStore";
 import { useSEContractInfo } from "@/query/external/useSEContractInfo";
@@ -27,6 +28,7 @@ import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { ContractInfo } from "./components/ContractInfo";
 import { InvokeContract } from "./components/InvokeContract";
+import { useSacXdrData } from "@/hooks/useSacXdrData";
 
 export default function ContractExplorer() {
   const { network, smartContracts, savedContractId, clearSavedContractId } =
@@ -143,16 +145,25 @@ export default function ContractExplorer() {
     ? contractType === "contractExecutableStellarAsset"
     : false;
 
-  const renderContractInvokeContent = () => {
-    const wasmSpec = contractClient?.spec;
+  const { sacXdrData } = useSacXdrData({
+    isActive: Boolean(network.rpcUrl && isSacType),
+  });
 
-    return contractInfoData && (wasmSpec || isSacType) ? (
+  const renderContractInvokeContent = () => {
+    let invokeContractSpec;
+
+    if (sacXdrData && isSacType) {
+      invokeContractSpec = new contract.Spec(sacXdrData);
+    } else {
+      invokeContractSpec = contractClient?.spec;
+    }
+
+    return contractInfoData && invokeContractSpec ? (
       <InvokeContract
-        contractSpec={wasmSpec}
+        contractSpec={invokeContractSpec}
         contractId={contractInfoData.contract}
         isLoading={isFetchingContractClient}
-        contractClientError={contractClientError}
-        isSacType={isSacType}
+        contractClientError={contractClient?.spec && contractClientError}
       />
     ) : null;
   };

@@ -1,11 +1,8 @@
-import { useEffect, useState } from "react";
 import { Alert, Card, Loader, Text } from "@stellar/design-system";
 import { contract } from "@stellar/stellar-sdk";
 import { useStore } from "@/store/useStore";
 
 import { Box } from "@/components/layout/Box";
-
-import { useSacXdrData } from "@/hooks/useSacXdrData";
 
 import { InvokeContractForm } from "./InvokeContractForm";
 
@@ -14,43 +11,16 @@ export const InvokeContract = ({
   contractId,
   contractSpec,
   contractClientError,
-  isSacType,
 }: {
   isLoading: boolean;
   contractId: string;
-  contractSpec?: contract.Spec;
-  contractClientError: Error | null;
-  isSacType: boolean;
+  contractSpec: contract.Spec;
+  contractClientError: Error | null | undefined;
 }) => {
-  const { walletKit, network } = useStore();
-  const [invokeContractSpec, setInvokeContractSpec] = useState(contractSpec);
-  const [sacError, setSacError] = useState<string | null>(null);
-  const { sacXdrData } = useSacXdrData({
-    isActive: Boolean(network.rpcUrl && isSacType),
-  });
+  const { walletKit } = useStore();
 
-  useEffect(() => {
-    if (sacXdrData) {
-      try {
-        setInvokeContractSpec(new contract.Spec(sacXdrData));
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (error) {
-        setSacError("Invalid SAC XDR data");
-      }
-    } else {
-      setInvokeContractSpec(contractSpec);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSacType]);
-
-  const isError = Boolean(
-    (!sacXdrData && contractClientError) ||
-      (isSacType && sacError) ||
-      !(sacXdrData || contractSpec),
-  );
-
-  const renderFunctionCard = (invokeContractSpec: contract.Spec) => {
-    const invokeContractSpecFuncs = invokeContractSpec?.funcs();
+  const renderFunctionCard = () => {
+    const invokeContractSpecFuncs = contractSpec?.funcs();
 
     return invokeContractSpecFuncs
       ?.filter((func) => !func.name().toString().includes("__"))
@@ -59,7 +29,7 @@ export const InvokeContract = ({
 
         return (
           <InvokeContractForm
-            contractSpec={invokeContractSpec}
+            contractSpec={contractSpec}
             key={funcName}
             contractId={contractId}
             funcName={funcName}
@@ -105,8 +75,8 @@ export const InvokeContract = ({
             Invoke Contract
           </Text>
 
-          {invokeContractSpec ? renderFunctionCard(invokeContractSpec) : null}
-          {isError ? renderError() : null}
+          {contractSpec ? renderFunctionCard() : null}
+          {contractClientError ? renderError() : null}
         </Box>
       </Card>
     </Box>
