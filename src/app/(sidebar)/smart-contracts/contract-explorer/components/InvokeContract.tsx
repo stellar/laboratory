@@ -4,47 +4,68 @@ import { useStore } from "@/store/useStore";
 
 import { Box } from "@/components/layout/Box";
 
-import { ContractInfoApiResponse, EmptyObj, Network } from "@/types/types";
+import { useSacXdrData } from "@/hooks/useSacXdrData";
 
 import { InvokeContractForm } from "./InvokeContractForm";
 
 export const InvokeContract = ({
-  network,
   isLoading,
-  infoData,
+  contractId,
   contractSpec,
   contractClientError,
+  isSacType,
 }: {
-  network: Network | EmptyObj;
   isLoading: boolean;
-  infoData: ContractInfoApiResponse;
-  contractSpec: contract.Spec;
+  contractId: string;
+  contractSpec?: contract.Spec;
   contractClientError: Error | null;
+  isSacType: boolean;
 }) => {
-  const { walletKit } = useStore();
-  const contractSpecFuncs = contractSpec?.funcs();
+  const { walletKit, network } = useStore();
+  const { sacXdrData } = useSacXdrData({
+    isActive: Boolean(network.rpcUrl && isSacType),
+  });
+  const isError = Boolean(
+    (contractSpec && contractClientError) || !(sacXdrData || contractSpec),
+  );
 
-  const renderFunctionCard = () =>
-    contractSpecFuncs
+  const invokeContractSpec = sacXdrData
+    ? new contract.Spec(sacXdrData)
+    : contractSpec;
+
+  const renderFunctionCard = (invokeContractSpec: contract.Spec) => {
+    const invokeContractSpecFuncs = invokeContractSpec?.funcs();
+
+    return invokeContractSpecFuncs
       ?.filter((func) => !func.name().toString().includes("__"))
       ?.map((func) => {
         const funcName = func.name().toString();
 
         return (
           <InvokeContractForm
+            contractSpec={invokeContractSpec}
             key={funcName}
-            infoData={infoData}
-            network={network}
+            contractId={contractId}
             funcName={funcName}
           />
         );
       });
+  };
 
-  const renderError = () => (
-    <Alert variant="error" placement="inline" title="Error">
-      {contractClientError?.message}
-    </Alert>
-  );
+  const renderError = () => {
+    if (contractClientError?.message) {
+      return (
+        <Alert variant="error" placement="inline" title="Error">
+          {contractClientError?.message}
+        </Alert>
+      );
+    }
+    return (
+      <Alert variant="error" placement="inline" title="Error">
+        An unexpected error occurred while fetching the contract specification.
+      </Alert>
+    );
+  };
 
   if (isLoading) {
     return (
@@ -68,8 +89,8 @@ export const InvokeContract = ({
             Invoke Contract
           </Text>
 
-          {contractSpecFuncs ? renderFunctionCard() : null}
-          {contractClientError ? renderError() : null}
+          {invokeContractSpec ? renderFunctionCard(invokeContractSpec) : null}
+          {isError ? renderError() : null}
         </Box>
       </Card>
     </Box>

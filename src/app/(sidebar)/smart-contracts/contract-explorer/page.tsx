@@ -141,18 +141,18 @@ export default function ContractExplorer() {
 
   const isSacType = contractType
     ? contractType === "contractExecutableStellarAsset"
-    : undefined;
+    : false;
 
   const renderContractInvokeContent = () => {
     const wasmSpec = contractClient?.spec;
 
-    return contractInfoData && wasmSpec ? (
+    return contractInfoData && (wasmSpec || isSacType) ? (
       <InvokeContract
         contractSpec={wasmSpec}
-        infoData={contractInfoData}
-        network={network}
+        contractId={contractInfoData.contract}
         isLoading={isFetchingContractClient}
         contractClientError={contractClientError}
+        isSacType={isSacType}
       />
     ) : null;
   };
@@ -315,7 +315,8 @@ export default function ContractExplorer() {
               label: "Invoke Contract",
               content: renderContractInvokeContent(),
               isDisabled:
-                !isDataLoaded || !(contractInfoData && contractClient?.spec),
+                !isDataLoaded ||
+                (!contractInfoData && !(contractClient?.spec || isSacType)),
             }}
             activeTabId={contractActiveTab}
             onTabChange={(tabId) => {
