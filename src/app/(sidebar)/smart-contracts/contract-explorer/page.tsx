@@ -8,6 +8,7 @@ import { useStore } from "@/store/useStore";
 import { useSEContractInfo } from "@/query/external/useSEContractInfo";
 import { useWasmGitHubAttestation } from "@/query/useWasmGitHubAttestation";
 import { useContractClientFromRpc } from "@/query/useContractClientFromRpc";
+import { useGetContractTypeFromRpcById } from "@/query/useGetContractTypeFromRpcById";
 import { validate } from "@/validate";
 
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
@@ -35,6 +36,18 @@ export default function ContractExplorer() {
   const [contractIdInput, setContractIdInput] = useState("");
   const [contractIdInputError, setContractIdInputError] = useState("");
   const [isSaveModalVisible, setIsSaveModalVisible] = useState(false);
+
+  const {
+    data: contractType,
+    isLoading: isContractTypeLoading,
+    isFetching: isContractTypeFetching,
+    error: contractTypeError,
+    refetch: fetchContractType,
+  } = useGetContractTypeFromRpcById({
+    contractId: contractIdInput,
+    rpcUrl: network.rpcUrl,
+    headers: getNetworkHeaders(network, "rpc"),
+  });
 
   const {
     data: contractInfoData,
@@ -76,6 +89,8 @@ export default function ContractExplorer() {
 
   const queryClient = useQueryClient();
   const isLoading =
+    isContractTypeLoading ||
+    isContractTypeFetching ||
     isContractInfoLoading ||
     isContractInfoFetching ||
     isWasmLoading ||
@@ -123,6 +138,10 @@ export default function ContractExplorer() {
     !network.rpcUrl ||
     !contractIdInput ||
     Boolean(contractIdInputError);
+
+  const isSacType = contractType
+    ? contractType === "contractExecutableStellarAsset"
+    : undefined;
 
   const renderContractInvokeContent = () => {
     const wasmSpec = contractClient?.spec;
@@ -213,10 +232,11 @@ export default function ContractExplorer() {
         ) : null}
 
         <form
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
-            fetchContractInfo();
-            fetchWasmContractClient();
+            await fetchContractType();
+            await fetchContractInfo();
+            await fetchWasmContractClient();
             smartContracts.updateExplorerContractId(contractIdInput);
 
             trackEvent(TrackingEvent.SMART_CONTRACTS_EXPLORER_LOAD_CONTRACT);
@@ -258,6 +278,13 @@ export default function ContractExplorer() {
                 />
               ) : null}
 
+              {contractTypeError ? (
+                <MessageField
+                  message={contractTypeError.toString()}
+                  isError={true}
+                />
+              ) : null}
+
               {wasmError ? (
                 <MessageField message={wasmError.toString()} isError={true} />
               ) : null}
@@ -278,6 +305,7 @@ export default function ContractExplorer() {
                   wasmData={wasmData}
                   network={network}
                   isLoading={isLoading}
+                  isSacType={isSacType}
                 />
               ),
               isDisabled: !isDataLoaded,
@@ -286,7 +314,8 @@ export default function ContractExplorer() {
               id: "contract-invoke",
               label: "Invoke Contract",
               content: renderContractInvokeContent(),
-              isDisabled: !isDataLoaded,
+              isDisabled:
+                !isDataLoaded || !(contractInfoData && contractClient?.spec),
             }}
             activeTabId={contractActiveTab}
             onTabChange={(tabId) => {

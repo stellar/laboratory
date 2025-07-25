@@ -21,6 +21,7 @@ import { formatEpochToDate } from "@/helpers/formatEpochToDate";
 import { formatNumber } from "@/helpers/formatNumber";
 import { stellarExpertAccountLink } from "@/helpers/stellarExpertAccountLink";
 
+import { STELLAR_ASSET_CONTRACT } from "@/constants/stellarAssetContractData";
 import { Routes } from "@/constants/routes";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 import {
@@ -42,11 +43,13 @@ export const ContractInfo = ({
   wasmData,
   network,
   isLoading,
+  isSacType,
 }: {
   infoData: ContractInfoApiResponse | undefined;
   wasmData: WasmData | null | undefined;
   network: Network | EmptyObj;
   isLoading: boolean;
+  isSacType?: boolean;
 }) => {
   type ContractTabId =
     | "contract-bindings"
@@ -64,12 +67,19 @@ export const ContractInfo = ({
   const buttonRef = useRef<HTMLButtonElement | null>(null);
 
   const isDataLoaded = Boolean(infoData);
-  const sourceRepo =
-    wasmData?.sourceRepo ||
-    infoData?.validation?.repository?.replace("https://github.com/", "") ||
-    "";
-  const sourceCommit =
-    wasmData?.build.commit || infoData?.validation?.commit || "";
+
+  const getRepoData = () => ({
+    sourceRepo: isSacType
+      ? STELLAR_ASSET_CONTRACT.sourceRepo
+      : wasmData?.sourceRepo ||
+        infoData?.validation?.repository?.replace("https://github.com/", "") ||
+        "",
+    sourceCommit: isSacType
+      ? STELLAR_ASSET_CONTRACT.sourceTag
+      : wasmData?.build.commit || infoData?.validation?.commit || "",
+  });
+
+  const { sourceRepo, sourceCommit } = getRepoData();
 
   const handleClickOutside = useCallback((event: MouseEvent) => {
     if (buttonRef?.current?.contains(event.target as Node)) {
@@ -106,10 +116,14 @@ export const ContractInfo = ({
       id: "creator",
       label: "Creator",
     },
-    {
-      id: "wasm",
-      label: "Wasm Hash",
-    },
+    ...(isSacType
+      ? [{ id: "asset", label: "Asset" }]
+      : [
+          {
+            id: "wasm",
+            label: "Wasm Hash",
+          },
+        ]),
     {
       id: "repository",
       label: "Source Code",
@@ -190,6 +204,15 @@ export const ContractInfo = ({
             isValueLoaded={isDataLoaded}
             label={field.label}
             value={infoData?.wasm}
+          />
+        );
+      case "asset":
+        return (
+          <InfoFieldItem
+            key={field.id}
+            isValueLoaded={isDataLoaded}
+            label={field.label}
+            value={infoData?.asset}
           />
         );
       case "versions":
@@ -276,9 +299,35 @@ export const ContractInfo = ({
           </>
         ),
       },
+      builtIn: {
+        badge: (
+          <Badge variant="success" icon={<Icon.CheckCircle />}>
+            Built-in Contract
+          </Badge>
+        ),
+        message: (
+          <>
+            The Stellar Asset Contract (SAC) is a built-in smart contract that
+            provides a standardized, programmatic interface to Stellar assets on
+            the network. It implements the{" "}
+            <Link href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0041.md">
+              SEP‑41 Token Interface
+            </Link>{" "}
+            via{" "}
+            <Link href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0046-06.md">
+              CAP-46-06
+            </Link>
+            .
+          </>
+        ),
+      },
     };
 
-    const badge = hasWasmData ? item.verified : item.unverified;
+    const badge = isSacType
+      ? item.builtIn
+      : hasWasmData
+        ? item.verified
+        : item.unverified;
 
     return (
       <Tooltip
@@ -349,6 +398,7 @@ export const ContractInfo = ({
                   rpcUrl={network.rpcUrl}
                   isActive={activeTab === "contract-contract-spec"}
                   isSourceStellarExpert={false}
+                  isSacType={isSacType}
                 />
               ) : (
                 <NoContractLoadedView />
@@ -363,7 +413,11 @@ export const ContractInfo = ({
                   isActive={activeTab === "contract-source-code"}
                   repo={sourceRepo}
                   commit={sourceCommit}
-                  isSourceStellarExpert={!wasmData?.sourceRepo}
+                  isSourceStellarExpert={
+                    // isSacType can also be undefined, so we need to make sure
+                    // the value was set here
+                    isSacType === false && !wasmData?.sourceRepo
+                  }
                 />
               ),
               isDisabled: !isDataLoaded,
@@ -391,7 +445,7 @@ export const ContractInfo = ({
                   isActive={activeTab === "contract-build-info"}
                 />
               ),
-              isDisabled: !isDataLoaded,
+              isDisabled: !isDataLoaded || isSacType,
             }}
             tab5={{
               id: "contract-version-history",
@@ -404,7 +458,7 @@ export const ContractInfo = ({
                   isSourceStellarExpert={true}
                 />
               ) : null,
-              isDisabled: !isDataLoaded,
+              isDisabled: !isDataLoaded || isSacType,
             }}
             tab6={{
               id: "contract-bindings",
