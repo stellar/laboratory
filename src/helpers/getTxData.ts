@@ -26,7 +26,10 @@ export const getTxData = (txDetails: RpcTxJsonResponse | null) => {
     transaction,
     operations,
     isSorobanTx: isSorobanTx(),
-    feeBreakdown: txDetails ? feeBreakdown(txDetails) : null,
+    feeBreakdown:
+      txDetails && txDetails.status !== "NOT_FOUND"
+        ? feeBreakdown(txDetails)
+        : null,
   };
 };
 

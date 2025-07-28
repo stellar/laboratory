@@ -274,7 +274,7 @@ export const TransactionInfo = ({
           {`${formatNumber(BigInt(fee))} stroops`}
         </Badge>
 
-        {isTransactionFee ? (
+        {isTransactionFee && feeBreakdown ? (
           <Link
             variant="primary"
             href="#"
@@ -531,9 +531,11 @@ export const TransactionInfo = ({
               label={field.label}
               value={renderFee(formattedData?.transactionFee, "tertiary", true)}
             />
-            <ExpandBox offsetTop="sm" isExpanded={isFeeBreakdownExpanded}>
-              {renderFeeBreakdown()}
-            </ExpandBox>
+            {feeBreakdown ? (
+              <ExpandBox offsetTop="sm" isExpanded={isFeeBreakdownExpanded}>
+                {renderFeeBreakdown()}
+              </ExpandBox>
+            ) : null}
           </Box>
         );
       case "fee-source-account":
