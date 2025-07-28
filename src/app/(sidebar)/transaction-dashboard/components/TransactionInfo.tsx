@@ -1,10 +1,12 @@
-import { Asset, Avatar, Badge, Card, Icon } from "@stellar/design-system";
+import { useState } from "react";
+import { Asset, Avatar, Badge, Card, Icon, Link } from "@stellar/design-system";
 import { stringify } from "lossless-json";
 
 import { Box } from "@/components/layout/Box";
 import { InfoFieldItem } from "@/components/InfoFieldItem";
 import { SdsLink } from "@/components/SdsLink";
 import { NoInfoLoadedView } from "@/components/NoInfoLoadedView";
+import { ExpandBox } from "@/components/ExpandBox";
 
 import { formatEpochToDate } from "@/helpers/formatEpochToDate";
 import { stellarExpertAccountLink } from "@/helpers/stellarExpertAccountLink";
@@ -25,8 +27,10 @@ export const TransactionInfo = ({
 }) => {
   const { network } = useStore();
 
+  const [isFeeBreakdownExpanded, setIsFeeBreakdownExpanded] = useState(false);
+
   const isDataLoaded = Boolean(txDetails);
-  const { feeBumpTx, transaction, operations, isSorobanTx } =
+  const { feeBumpTx, transaction, operations, isSorobanTx, feeBreakdown } =
     getTxData(txDetails);
 
   const isTxNotFound = txDetails?.status === "NOT_FOUND";
@@ -70,14 +74,6 @@ export const TransactionInfo = ({
       label: "Memo",
     },
     ...(!isNoDataScreen && !isSorobanTx ? classicTxFields : []),
-    {
-      id: "max-fee",
-      label: "Max Fee",
-    },
-    {
-      id: "transaction-fee",
-      label: "Transaction Fee",
-    },
     ...(feeBumpTx
       ? [
           {
@@ -86,6 +82,14 @@ export const TransactionInfo = ({
           },
         ]
       : []),
+    {
+      id: "max-fee",
+      label: "Max Fee",
+    },
+    {
+      id: "transaction-fee",
+      label: "Transaction Fee",
+    },
   ];
 
   const parseMemo = (memo?: string | AnyObject) => {
@@ -143,6 +147,50 @@ export const TransactionInfo = ({
 
   const formattedData = formatData();
 
+  const FeeBreakdownItem = ({
+    label,
+    fee,
+    type,
+    details,
+    isCenterAligned = false,
+  }: {
+    label: string;
+    fee: string;
+    type: "solid" | "dotted";
+    details?: string[];
+    isCenterAligned?: boolean;
+  }) => {
+    return (
+      <Box
+        gap="xs"
+        addlClassName="FeeBreakdown__item"
+        data-type={type}
+        data-center-aligned={isCenterAligned}
+      >
+        <Box
+          gap="xs"
+          direction="row"
+          align="center"
+          justify={type === "solid" ? "center" : "left"}
+          wrap="wrap"
+        >
+          <div className="FeeBreakdown__item__label">{label}:</div>
+          <div className="FeeBreakdown__item__value">
+            {renderFee(fee, type === "solid" ? "secondary" : "tertiary")}
+          </div>
+        </Box>
+
+        {details ? (
+          <div>
+            {details.map((d, index) => (
+              <div key={`${d.toLowerCase()}-${index}`}>{d}</div>
+            ))}
+          </div>
+        ) : null}
+      </Box>
+    );
+  };
+
   const renderStatus = (status: string) => {
     switch (status) {
       case "SUCCESS":
@@ -197,30 +245,184 @@ export const TransactionInfo = ({
     ) : null;
   };
 
-  const renderFee = (fee: any) => {
+  const renderFee = (
+    fee: string | number,
+    badgeVariant: "tertiary" | "secondary" = "tertiary",
+    isTransactionFee?: boolean,
+  ) => {
     if (!fee) {
       return null;
     }
 
-    const stroops = typeof fee === "string" ? fee : stringify(fee);
+    const stroops = fee;
 
     if (!stroops) {
       return null;
     }
 
     return (
-      <Box gap="sm" direction="row" align="center">
+      <Box gap="sm" direction="row" align="center" wrap="wrap">
         <Box gap="xs" direction="row" align="center">
-          {stroopsToLumens(stroops)} XLM{" "}
+          {stroopsToLumens(stroops.toString())} XLM{" "}
           <Asset
             variant="single"
             size="sm"
             sourceOne={{ image: STELLAR_LOGO_DATA_URI, altText: "XLM logo" }}
           />
         </Box>
-        <Badge variant="tertiary" size="sm">
-          {`${formatNumber(fee)} stroops`}
+        <Badge variant={badgeVariant} size="sm">
+          {`${formatNumber(BigInt(fee))} stroops`}
         </Badge>
+
+        {isTransactionFee ? (
+          <Link
+            variant="primary"
+            href="#"
+            iconPosition="right"
+            icon={<Icon.ChevronRight />}
+            onClick={(e) => {
+              e.preventDefault();
+              setIsFeeBreakdownExpanded(!isFeeBreakdownExpanded);
+            }}
+            data-is-expanded={isFeeBreakdownExpanded}
+          >
+            See fee breakdown
+          </Link>
+        ) : null}
+      </Box>
+    );
+  };
+
+  const renderFeeBreakdown = () => {
+    if (!feeBreakdown) {
+      return null;
+    }
+
+    return (
+      <Box gap="md" addlClassName="FeeBreakdown">
+        {/* Row 1 */}
+        <div className="FeeBreakdown__row" data-row="1">
+          <FeeBreakdownItem
+            label="Fee Proposed"
+            fee={feeBreakdown.maxFee}
+            type="solid"
+          />
+        </div>
+
+        {/* Row 2 */}
+        {feeBreakdown.maxResourceFee ? (
+          <div className="FeeBreakdown__row" data-row="2">
+            <FeeBreakdownItem
+              label="Inclusion Fee"
+              fee={feeBreakdown.inclusionFee}
+              type="dotted"
+              isCenterAligned={true}
+            />
+            <FeeBreakdownItem
+              label="Resource Fee"
+              fee={feeBreakdown.maxResourceFee}
+              type="solid"
+            />
+          </div>
+        ) : null}
+
+        {/* Row 3 */}
+        {feeBreakdown.refundable ? (
+          <div className="FeeBreakdown__row" data-row="3">
+            <FeeBreakdownItem
+              label="Inclusion Fee"
+              fee={feeBreakdown.inclusionFee}
+              type="dotted"
+              isCenterAligned={true}
+            />
+            <FeeBreakdownItem
+              label="Refundable"
+              fee={feeBreakdown.refundable}
+              type="dotted"
+              details={["cpu instructions", "storage read/write", "tx size"]}
+            />
+            <FeeBreakdownItem
+              label="Non-Refundable"
+              fee={feeBreakdown.nonRefundable}
+              type="dotted"
+              details={["return value", "storage rent", "events"]}
+            />
+          </div>
+        ) : null}
+
+        {/* Row 4 */}
+        <div className="FeeBreakdown__title">
+          <span>
+            <Icon.ChevronUp /> Fee Proposed
+          </span>
+          <span>
+            <Icon.ChevronDown /> Final Fee
+          </span>
+        </div>
+
+        {/* Row 5 */}
+        {feeBreakdown.finalInclusionFee ? (
+          <div className="FeeBreakdown__row" data-row="5">
+            <FeeBreakdownItem
+              label="Inclusion Fee"
+              fee={feeBreakdown.finalInclusionFee}
+              type="dotted"
+              isCenterAligned={true}
+            />
+            <FeeBreakdownItem
+              label="Non-Refundable"
+              fee={feeBreakdown.finalNonRefundable}
+              type="dotted"
+            />
+            <FeeBreakdownItem
+              label="Refundable"
+              fee={feeBreakdown.finalRefundable}
+              type="dotted"
+            />
+            <FeeBreakdownItem
+              label="Refunded"
+              fee={feeBreakdown.finalRefunded}
+              type="dotted"
+            />
+          </div>
+        ) : null}
+
+        {/* Row 6 */}
+        {feeBreakdown.finalInclusionFee &&
+        feeBreakdown.finalResourceFeeCharged ? (
+          <div className="FeeBreakdown__row" data-row="6">
+            <FeeBreakdownItem
+              label="Inclusion Fee"
+              fee={feeBreakdown.finalInclusionFee}
+              type="dotted"
+              isCenterAligned={true}
+            />
+            <FeeBreakdownItem
+              label="Resource Fee"
+              fee={feeBreakdown.finalResourceFeeCharged}
+              type="solid"
+            />
+            <FeeBreakdownItem
+              label="Refunded"
+              fee={feeBreakdown.finalRefunded}
+              type="dotted"
+            />
+          </div>
+        ) : null}
+
+        {/* Row 7 */}
+        <div className="FeeBreakdown__row" data-row="7">
+          <FeeBreakdownItem
+            label="Fee Charged"
+            fee={feeBreakdown.finalFeeCharged}
+            type="solid"
+          />
+          <FeeBreakdownItem
+            label="Refunded"
+            fee={feeBreakdown.finalRefunded}
+            type="dotted"
+          />
+        </div>
       </Box>
     );
   };
@@ -274,7 +476,11 @@ export const TransactionInfo = ({
             key={`tx-info-${field.id}`}
             isValueLoaded={!isNoDataScreen}
             label={field.label}
-            value={typeof formattedData?.sequenceNumber === "string" ? formattedData.sequenceNumber : stringify(formattedData?.sequenceNumber)}
+            value={
+              typeof formattedData?.sequenceNumber === "string"
+                ? formattedData.sequenceNumber
+                : stringify(formattedData?.sequenceNumber)
+            }
           />
         );
       case "processed":
@@ -319,13 +525,16 @@ export const TransactionInfo = ({
         );
       case "transaction-fee":
         return (
-          <InfoFieldItem
-            key={`tx-info-${field.id}`}
-            isValueLoaded={!isNoDataScreen}
-            label={field.label}
-            value={renderFee(formattedData?.transactionFee)}
-          />
-          // TODO: Add fee breakdown
+          <Box gap="sm" key={`tx-info-${field.id}`}>
+            <InfoFieldItem
+              isValueLoaded={!isNoDataScreen}
+              label={field.label}
+              value={renderFee(formattedData?.transactionFee, "tertiary", true)}
+            />
+            <ExpandBox offsetTop="sm" isExpanded={isFeeBreakdownExpanded}>
+              {renderFeeBreakdown()}
+            </ExpandBox>
+          </Box>
         );
       case "fee-source-account":
         return (

@@ -12,6 +12,19 @@
 .InfoFieldItem__value {
   word-break: break-all;
   color: var(--sds-clr-gray-12);
+
+  .Link {
+    .Link__icon {
+      transition: transform var(--sds-anim-transition-default);
+      transform: rotate(0deg);
+    }
+
+    &[data-is-expanded="true"] {
+      .Link__icon {
+        transform: rotate(90deg);
+      }
+    }
+  }
 }
 
 .InfoFieldItem__value .failed {
