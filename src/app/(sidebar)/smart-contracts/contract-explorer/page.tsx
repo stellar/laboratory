@@ -26,9 +26,10 @@ import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
+import { useSacXdrData } from "@/hooks/useSacXdrData";
+
 import { ContractInfo } from "./components/ContractInfo";
 import { InvokeContract } from "./components/InvokeContract";
-import { useSacXdrData } from "@/hooks/useSacXdrData";
 
 export default function ContractExplorer() {
   const { network, smartContracts, savedContractId, clearSavedContractId } =

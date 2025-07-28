@@ -27,14 +27,14 @@ export const useSacXdrData = ({ isActive }: { isActive: boolean }) => {
 
   if (!sacData) {
     return {
-      SacXdrData: "",
+      SacXdrData: [""],
       sacDataError: null,
       isSacDataFetching: false,
       isSacDataLoading: false,
     };
   }
 
-  const SacXdrData = (dataString: string | null | undefined): string[] => {
+  const sacXdrData = (dataString: string | null | undefined): string[] => {
     if (!dataString) {
       return [""];
     }
@@ -48,7 +48,7 @@ export const useSacXdrData = ({ isActive }: { isActive: boolean }) => {
       : [""];
   };
 
-  const sacXdrDataFormatted = SacXdrData(sacData);
+  const sacXdrDataFormatted = sacXdrData(sacData);
 
   return {
     sacXdrData: sacXdrDataFormatted,
