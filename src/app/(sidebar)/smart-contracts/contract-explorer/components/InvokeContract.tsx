@@ -4,47 +4,54 @@ import { useStore } from "@/store/useStore";
 
 import { Box } from "@/components/layout/Box";
 
-import { ContractInfoApiResponse, EmptyObj, Network } from "@/types/types";
-
 import { InvokeContractForm } from "./InvokeContractForm";
 
 export const InvokeContract = ({
-  network,
   isLoading,
-  infoData,
+  contractId,
   contractSpec,
   contractClientError,
 }: {
-  network: Network | EmptyObj;
   isLoading: boolean;
-  infoData: ContractInfoApiResponse;
+  contractId: string;
   contractSpec: contract.Spec;
-  contractClientError: Error | null;
+  contractClientError: Error | null | undefined;
 }) => {
   const { walletKit } = useStore();
-  const contractSpecFuncs = contractSpec?.funcs();
 
-  const renderFunctionCard = () =>
-    contractSpecFuncs
+  const renderFunctionCard = () => {
+    const invokeContractSpecFuncs = contractSpec?.funcs();
+
+    return invokeContractSpecFuncs
       ?.filter((func) => !func.name().toString().includes("__"))
       ?.map((func) => {
         const funcName = func.name().toString();
 
         return (
           <InvokeContractForm
+            contractSpec={contractSpec}
             key={funcName}
-            infoData={infoData}
-            network={network}
+            contractId={contractId}
             funcName={funcName}
           />
         );
       });
+  };
 
-  const renderError = () => (
-    <Alert variant="error" placement="inline" title="Error">
-      {contractClientError?.message}
-    </Alert>
-  );
+  const renderError = () => {
+    if (contractClientError?.message) {
+      return (
+        <Alert variant="error" placement="inline" title="Error">
+          {contractClientError?.message}
+        </Alert>
+      );
+    }
+    return (
+      <Alert variant="error" placement="inline" title="Error">
+        An unexpected error occurred while fetching the contract specification.
+      </Alert>
+    );
+  };
 
   if (isLoading) {
     return (
@@ -68,7 +75,7 @@ export const InvokeContract = ({
             Invoke Contract
           </Text>
 
-          {contractSpecFuncs ? renderFunctionCard() : null}
+          {contractSpec ? renderFunctionCard() : null}
           {contractClientError ? renderError() : null}
         </Box>
       </Card>

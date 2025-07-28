@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Alert, Button, Icon, Input } from "@stellar/design-system";
 import { useQueryClient } from "@tanstack/react-query";
+import { contract } from "@stellar/stellar-sdk";
 
 import { useStore } from "@/store/useStore";
 import { useSEContractInfo } from "@/query/external/useSEContractInfo";
@@ -24,6 +25,8 @@ import { SwitchNetworkButtons } from "@/components/SwitchNetworkButtons";
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
+
+import { useSacXdrData } from "@/hooks/useSacXdrData";
 
 import { ContractInfo } from "./components/ContractInfo";
 import { InvokeContract } from "./components/InvokeContract";
@@ -141,18 +144,27 @@ export default function ContractExplorer() {
 
   const isSacType = contractType
     ? contractType === "contractExecutableStellarAsset"
-    : undefined;
+    : false;
+
+  const { sacXdrData } = useSacXdrData({
+    isActive: Boolean(network.rpcUrl && isSacType),
+  });
 
   const renderContractInvokeContent = () => {
-    const wasmSpec = contractClient?.spec;
+    let invokeContractSpec;
 
-    return contractInfoData && wasmSpec ? (
+    if (sacXdrData && isSacType) {
+      invokeContractSpec = new contract.Spec(sacXdrData);
+    } else {
+      invokeContractSpec = contractClient?.spec;
+    }
+
+    return contractInfoData && invokeContractSpec ? (
       <InvokeContract
-        contractSpec={wasmSpec}
-        infoData={contractInfoData}
-        network={network}
+        contractSpec={invokeContractSpec}
+        contractId={contractInfoData.contract}
         isLoading={isFetchingContractClient}
-        contractClientError={contractClientError}
+        contractClientError={contractClient?.spec && contractClientError}
       />
     ) : null;
   };
@@ -315,7 +327,8 @@ export default function ContractExplorer() {
               label: "Invoke Contract",
               content: renderContractInvokeContent(),
               isDisabled:
-                !isDataLoaded || !(contractInfoData && contractClient?.spec),
+                !isDataLoaded ||
+                (!contractInfoData && !(contractClient?.spec || isSacType)),
             }}
             activeTabId={contractActiveTab}
             onTabChange={(tabId) => {
