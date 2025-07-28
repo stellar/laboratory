@@ -254,7 +254,7 @@ export const TransactionInfo = ({
       return null;
     }
 
-    const stroops = fee;
+    const stroops = typeof fee === "string" ? fee : stringify(fee);
 
     if (!stroops) {
       return null;
