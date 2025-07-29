@@ -114,7 +114,6 @@ export const SaveToLocalStorageModal = <
       handleSave,
       isEditSaveDisabled,
       isSaveDisabled,
-      savedItemName,
       type,
     ],
   );
