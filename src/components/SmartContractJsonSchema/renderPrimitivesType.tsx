@@ -278,11 +278,15 @@ export const renderPrimitivesType = ({
             handleChange(e, schemaType);
           }}
         >
-          <option value="" disabled={true}>
+          <option key="bool-empty" value="" disabled={true}>
             Select
           </option>
-          <option value="true">true</option>
-          <option value="false">false</option>
+          <option key="bool-true" value="true">
+            true
+          </option>
+          <option key="bool-false" value="false">
+            false
+          </option>
         </Select>
       );
     case "ScString":
