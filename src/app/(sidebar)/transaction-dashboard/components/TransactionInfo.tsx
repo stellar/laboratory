@@ -42,6 +42,10 @@ export const TransactionInfo = ({
       id: "operations",
       label: "Operations",
     },
+    {
+      id: "memo",
+      label: "Memo",
+    },
   ];
 
   const INFO_FIELDS: InfoFieldItem[] = [
@@ -64,10 +68,6 @@ export const TransactionInfo = ({
     {
       id: "processed",
       label: "Processed",
-    },
-    {
-      id: "memo",
-      label: "Memo",
     },
     ...(!isNoDataScreen && !isSorobanTx ? classicTxFields : []),
     {
@@ -274,7 +274,11 @@ export const TransactionInfo = ({
             key={`tx-info-${field.id}`}
             isValueLoaded={!isNoDataScreen}
             label={field.label}
-            value={typeof formattedData?.sequenceNumber === "string" ? formattedData.sequenceNumber : stringify(formattedData?.sequenceNumber)}
+            value={
+              typeof formattedData?.sequenceNumber === "string"
+                ? formattedData.sequenceNumber
+                : stringify(formattedData?.sequenceNumber)
+            }
           />
         );
       case "processed":
