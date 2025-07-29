@@ -7,6 +7,7 @@ import { InfoFieldItem } from "@/components/InfoFieldItem";
 import { SdsLink } from "@/components/SdsLink";
 import { NoInfoLoadedView } from "@/components/NoInfoLoadedView";
 import { ExpandBox } from "@/components/ExpandBox";
+import { WithInfoText } from "@/components/WithInfoText";
 
 import { formatEpochToDate } from "@/helpers/formatEpochToDate";
 import { stellarExpertAccountLink } from "@/helpers/stellarExpertAccountLink";
@@ -275,19 +276,21 @@ export const TransactionInfo = ({
         </Badge>
 
         {isTransactionFee && feeBreakdown ? (
-          <Link
-            variant="primary"
-            href="#"
-            iconPosition="right"
-            icon={<Icon.ChevronRight />}
-            onClick={(e) => {
-              e.preventDefault();
-              setIsFeeBreakdownExpanded(!isFeeBreakdownExpanded);
-            }}
-            data-is-expanded={isFeeBreakdownExpanded}
-          >
-            See fee breakdown
-          </Link>
+          <WithInfoText href="https://developers.stellar.org/docs/learn/fundamentals/fees-resource-limits-metering">
+            <Link
+              variant="primary"
+              href="#"
+              iconPosition="right"
+              icon={<Icon.ChevronRight />}
+              onClick={(e) => {
+                e.preventDefault();
+                setIsFeeBreakdownExpanded(!isFeeBreakdownExpanded);
+              }}
+              data-is-expanded={isFeeBreakdownExpanded}
+            >
+              See fee breakdown
+            </Link>
+          </WithInfoText>
         ) : null}
       </Box>
     );
