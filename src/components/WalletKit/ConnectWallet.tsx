@@ -58,6 +58,8 @@ export const ConnectWallet = () => {
     return () => {
       clearTimeout(t);
     };
+    // Not including savedWallet.network.id
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [savedWallet?.id, connected, walletKitInstance]);
 
   async function handleSetWalletAddress(): Promise<boolean> {
