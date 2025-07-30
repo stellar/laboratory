@@ -73,7 +73,9 @@ export default function Explorer() {
     setStartLedger(0);
     setNextFetchAt(Date.now());
     transactions.clear();
-  }, [network.rpcUrl]);
+    // Not including transactions
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [network.rpcUrl, localStorageKey]);
 
   useEffect(() => {
     const tid = setInterval(() => setIter((prev) => prev + 1), 1000);
@@ -115,6 +117,7 @@ export default function Explorer() {
     if (network.rpcUrl) {
       fetchTxs();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     network?.rpcUrl,
     txsQuery,
