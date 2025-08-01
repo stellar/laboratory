@@ -2,8 +2,11 @@ import React from "react";
 import { MemoType, MemoValue } from "@stellar/stellar-sdk";
 import { Input } from "@stellar/design-system";
 
+import { Box } from "@/components/layout/Box";
+import { SdsLink } from "@/components/SdsLink";
 import { RadioPicker } from "@/components/RadioPicker";
 import { ExpandBox } from "@/components/ExpandBox";
+
 import { EmptyObj } from "@/types/types";
 
 export type MemoPickerValue = {
@@ -93,6 +96,16 @@ export const MemoPicker = ({
           error={error}
         />
       </ExpandBox>
+      <Box gap="xs" addlClassName="FieldNote FieldNote--note FieldNote--md">
+        <div>
+          Note: Starting with Protocol 23,{" "}
+          <SdsLink href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0067.md#prohibit-the-transaction-memo-and-muxed-source-accounts-from-being-set-on-soroban-transactions">
+            (CAP 0067)
+          </SdsLink>{" "}
+          Soroban transactions no longer support memos. If you include a memo,
+          it will be ignored. Be sure to update your transactions accordingly.
+        </div>
+      </Box>
     </div>
   );
 };
