@@ -113,9 +113,13 @@ export const JsonSchemaForm = ({
     setSubmitTxError("");
     resetPrepareTx();
 
+    const updatedTxnParams = {
+      ...txnParams,
+      memo: {}, // starting with p23, soroban tx no longer support memos
+    };
     const { xdr, error } = getTxnToSimulate(
       value,
-      txnParams,
+      updatedTxnParams,
       sorobanOperation,
       network.passphrase,
     );
