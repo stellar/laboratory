@@ -42,6 +42,7 @@ export const JsonSchemaForm = ({
     isPending: isPrepareTxPending,
     isError: isPrepareTxError,
     error: prepareTxError,
+    isSuccess: isPrepareTxSuccess,
     data: prepareTxData,
     reset: resetPrepareTx,
   } = useRpcPrepareTx();
@@ -180,6 +181,16 @@ export const JsonSchemaForm = ({
             Prepare Transaction
           </Button>
         </Box>
+
+        {isPrepareTxSuccess && txnParams.memo && (
+          <Box
+            gap="md"
+            addlClassName="FieldNote FieldNote--note FieldNote--md"
+            direction="row"
+          >
+            {`Note: Your memo was removed because Soroban transactions no longer support memos as of Protocol 23.`}
+          </Box>
+        )}
 
         {submitTxError && <ErrorText errorMessage={submitTxError} size="sm" />}
       </Box>

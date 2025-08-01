@@ -2,11 +2,12 @@ import React from "react";
 import { MemoType, MemoValue } from "@stellar/stellar-sdk";
 import { Input } from "@stellar/design-system";
 
+import { Box } from "@/components/layout/Box";
 import { SdsLink } from "@/components/SdsLink";
 import { RadioPicker } from "@/components/RadioPicker";
 import { ExpandBox } from "@/components/ExpandBox";
+
 import { EmptyObj } from "@/types/types";
-import { Box } from "@/components/layout/Box";
 
 export type MemoPickerValue = {
   type: MemoType | string | undefined;
