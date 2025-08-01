@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, Text, Textarea } from "@stellar/design-system";
+import {
+  Button,
+  Card,
+  Notification,
+  Text,
+  Textarea,
+} from "@stellar/design-system";
 import type { JSONSchema7 } from "json-schema";
 import { parse, stringify } from "lossless-json";
 import { usePrevious } from "@/hooks/usePrevious";
@@ -188,7 +194,10 @@ export const JsonSchemaForm = ({
             addlClassName="FieldNote FieldNote--note FieldNote--md"
             direction="row"
           >
-            {`Note: Your memo was removed because Soroban transactions no longer support memos as of Protocol 23.`}
+            <Notification
+              variant="warning"
+              title="Note: Your memo was removed because Soroban transactions no longer support memos as of Protocol 23."
+            ></Notification>
           </Box>
         )}
 
