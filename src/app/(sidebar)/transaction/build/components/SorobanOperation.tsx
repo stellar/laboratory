@@ -262,7 +262,7 @@ export const SorobanOperation = ({
           </Box>
 
           {sorobanOperation.operation_type !== "invoke_contract" && (
-            <Box gap="sm" direction="row" align="center">
+            <Box gap="sm" align="start">
               <Button
                 disabled={Boolean(!network.rpcUrl)}
                 isLoading={isPrepareTxPending}

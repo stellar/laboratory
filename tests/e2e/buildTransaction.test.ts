@@ -1344,11 +1344,17 @@ test.describe("Build Transaction Page", () => {
           .getByLabel("Durability")
           .selectOption({ value: "persistent" });
 
+        const prepareTxButton = page.getByText(
+          "Prepare Soroban Transaction to Sign",
+        );
+        await expect(prepareTxButton).toBeEnabled();
+        await prepareTxButton.click();
+
         await testOpSuccessHashAndXdr({
           isSorobanOp: true,
           page,
-          hash: "f81b348c83b9e59781117a65b01e2332ef5a00523ec7daead11b91bcf56a0755",
-          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgAAToQAD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAGQAAAAAAAHUwAAAAAQAAAAAAAAABAAAABgAAAAEg/u86MzPrVcpNrsFUa84T82Kss8DLAE9ZMxLqhM22HwAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAAB+TL0HLiAjanMRnyeqyhb8Iu+4d1g2dl1cwPi1UZAigwAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAATiAAAAAA",
+          hash: "697f7755242fca0a02dad6c154b0285942da75dc0dc8bc89d13edd4f1a66131c",
+          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgABBWwAD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAGQAAAAAAAHUwAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALboAAAAAA==",
         });
       });
 
@@ -1465,12 +1471,8 @@ test.describe("Build Transaction Page", () => {
         // Fill in required fields
         await soroban_operation
           .getByLabel("Contract ID")
-          .fill("CAQP53Z2GMZ6WVOKJWXMCVDLZYJ7GYVMWPAMWACPLEZRF2UEZW3B636S");
-        await soroban_operation
-          .getByLabel("Key ScVal in XDR")
-          .fill(
-            "AAAAEAAAAAEAAAACAAAADwAAAAdDb3VudGVyAAAAABIAAAAAAAAAAH5MvQcuICNqcxGfJ6rKFvwi77h3WDZ2XVzA+LVRkCKD",
-          );
+          .fill("CA2WMM5VMUEAZLXBIOHAJTQKXT7AM3D6IKDQVOLGNAWZO5JCJXVIUCJG");
+        await soroban_operation.getByLabel("Key ScVal in XDR").fill("AAAAFA==");
         await soroban_operation
           .getByLabel("Durability")
           .selectOption({ value: "persistent" });
@@ -1478,11 +1480,17 @@ test.describe("Build Transaction Page", () => {
           .getByLabel("Resource Fee (in stroops)")
           .fill("46684");
 
+        const prepareTxButton = page.getByText(
+          "Prepare Soroban Transaction to Sign",
+        );
+        await expect(prepareTxButton).toBeEnabled();
+        await prepareTxButton.click();
+
         await testOpSuccessHashAndXdr({
           isSorobanOp: true,
           page,
-          hash: "232c61d2e07fae61a09ffe12102f13c79c86dadbf0c49f8237fcbe0a2231921c",
-          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgAAtsAAD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAGgAAAAAAAAABAAAAAAAAAAAAAAABAAAABgAAAAEg/u86MzPrVcpNrsFUa84T82Kss8DLAE9ZMxLqhM22HwAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAAB+TL0HLiAjanMRnyeqyhb8Iu+4d1g2dl1cwPi1UZAigwAAAAEAAAAAAAAAAAAAAAAAAAAAAAC2XAAAAAA=",
+          hash: "111892cc24b7183aba3bbab8bca4103653d982c8ef67e7808e80354928ced640",
+          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgABbWEAD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAGgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAtqEAAAAA",
         });
       });
 
