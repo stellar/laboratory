@@ -332,6 +332,11 @@
     @media screen and (max-width: 1040px) {
       padding: pxToRem(16px);
     }
+
+    // Remove padding for full content width background
+    &:has([data-no-padding="true"]) {
+      padding: 0;
+    }
   }
 
   &__content {
@@ -345,6 +350,11 @@
 
     @media screen and (max-width: 1040px) {
       width: 100%;
+    }
+
+    &:has([data-no-padding="true"]) {
+      width: 100%;
+      display: block;
     }
   }
 
@@ -694,17 +704,6 @@
   p {
     margin-bottom: 0 !important;
   }
-}
-
-.IntroFooter {
-  flex: 1;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: pxToRem(12px);
-  font-size: pxToRem(14px);
-  line-height: pxToRem(20px);
-  flex-wrap: wrap;
 }
 
 // Endpoints

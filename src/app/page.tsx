@@ -1,98 +1,88 @@
 "use client";
 
-import { Link, Text, Icon, Logo } from "@stellar/design-system";
+import { Logo } from "@stellar/design-system";
 
 import { NextLink } from "@/components/NextLink";
-import { InfoCards } from "@/components/InfoCards";
 import { SdsLink } from "@/components/SdsLink";
 import { Box } from "@/components/layout/Box";
-import { PageCard } from "@/components/layout/PageCard";
+import {
+  HomeSection,
+  HomeResources,
+  HomeNetworks,
+  HomeTutorials,
+} from "@/components/HomeComponents";
 
 import { Routes } from "@/constants/routes";
 import { GITHUB_URL } from "@/constants/settings";
-import { openUrl } from "@/helpers/openUrl";
+import { useStore } from "@/store/useStore";
+
+import "@/styles/home.scss";
 
 // Landing page
 export default function Introduction() {
-  const infoCards = [
-    {
-      id: "stellar-quest",
-      title: "Stellar Quest",
-      description:
-        "Learn to build world-class applications on the Stellar network in a gamified experience",
-      buttonLabel: "Go to site",
-      buttonIcon: <Icon.LinkExternal01 />,
-      buttonAction: () => openUrl("https://quest.stellar.org/"),
-    },
-    {
-      id: "tools",
-      title: "Developer Tools",
-      description:
-        "Tools, like the Stellar CLI, for reading and interacting with smart contracts on the Stellar Network",
-      buttonLabel: "See tools",
-      buttonIcon: undefined,
-      buttonAction: () => openUrl("https://developers.stellar.org/docs/tools"),
-    },
-    {
-      id: "stellar-rpc",
-      title: "Stellar RPC",
-      description: "Learn about Stellar RPC, a gateway to the Stellar network",
-      buttonLabel: "Go to docs",
-      buttonIcon: <Icon.LinkExternal01 />,
-      buttonAction: () =>
-        openUrl("https://developers.stellar.org/docs/data/rpc"),
-    },
-    {
-      id: "horizon",
-      title: "Horizon",
-      description:
-        "Learn about Horizon, the REST API for interacting with the Stellar network",
-      buttonLabel: "Go to docs",
-      buttonIcon: <Icon.LinkExternal01 />,
-      buttonAction: () =>
-        openUrl("https://developers.stellar.org/network/horizon"),
-    },
-  ];
-
+  const { theme } = useStore();
   return (
     <>
-      <PageCard heading="Stellar Lab">
-        <Text size="sm" as="p">
-          The Stellar Lab is an interactive toolkit for exploring the Stellar
-          network. It helps developers and builders experiment with{" "}
-          <NextLink href={Routes.BUILD_TRANSACTION} sds-variant="primary">
-            building
-          </NextLink>
-          ,{" "}
-          <NextLink href={Routes.SIGN_TRANSACTION} sds-variant="primary">
-            signing
-          </NextLink>
-          ,{" "}
-          <NextLink href={Routes.SIMULATE_TRANSACTION} sds-variant="primary">
-            simulating
-          </NextLink>
-          , and{" "}
-          <NextLink href={Routes.SUBMIT_TRANSACTION} sds-variant="primary">
-            submitting transactions
-          </NextLink>
-          , as well as making requests to both RPC and Horizon APIs. With
-          built-in tools for saving and sharing transactions, converting between
-          XDR and JSON, and exploring smart contracts on Stellar, the Stellar
-          Lab is ideal for testing, learning, and exploring on Stellar.
-        </Text>
+      <HomeSection
+        title="Build and Test Stellar Transactions With No Code"
+        description={
+          <>
+            Stellar Lab is a web-based toolkit for exploring the Stellar
+            blockchain, allowing you to{" "}
+            <NextLink href={Routes.BUILD_TRANSACTION} sds-variant="primary">
+              build
+            </NextLink>
+            ,{" "}
+            <NextLink href={Routes.SIGN_TRANSACTION} sds-variant="primary">
+              sign
+            </NextLink>
+            ,{" "}
+            <NextLink href={Routes.SIMULATE_TRANSACTION} sds-variant="primary">
+              simulate
+            </NextLink>
+            , and{" "}
+            <NextLink href={Routes.SUBMIT_TRANSACTION} sds-variant="primary">
+              submit transactions
+            </NextLink>
+            , interact with RPC and Horizon APIs, convert between XDR and JSON,
+            and explore smart contracts.
+          </>
+        }
+        isTopSection={true}
+      >
+        <></>
+      </HomeSection>
 
-        <Text size="sm" as="p">
-          For Stellar docs, take a look at the{" "}
-          <Link href="https://developers.stellar.org/">
-            Stellar developers site
-          </Link>
-          .
-        </Text>
-      </PageCard>
+      <HomeSection
+        title="Follow our step-by-step tutorials to start building"
+        eyebrow="Learn from tutorials"
+      >
+        <HomeTutorials />
+      </HomeSection>
 
-      <InfoCards infoCards={infoCards} />
+      <HomeSection
+        title="Choose your network to get started"
+        eyebrow="Use on multiple networks"
+        description="Test safely in testnet and localnet, or connect to the mainnet — Stellar Lab gives you full control."
+      >
+        <HomeNetworks theme={theme} />
+      </HomeSection>
 
-      <div className="IntroFooter">
+      <HomeSection
+        title="Everything you need to build and connect"
+        eyebrow="Resources"
+      >
+        <HomeResources />
+      </HomeSection>
+
+      <Box
+        gap="md"
+        wrap="wrap"
+        direction="row"
+        align="center"
+        justify="space-between"
+        addlClassName="Lab__home__footer"
+      >
         <Box gap="sm" direction="row">
           <SdsLink
             href="https://www.stellar.org/privacy-policy"
@@ -122,7 +112,7 @@ export default function Introduction() {
             />
           </>
         </Box>
-      </div>
+      </Box>
     </>
   );
 }
