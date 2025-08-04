@@ -69,6 +69,12 @@ export const ResourceFeePickerWithQuery = ({
   );
 
   useEffect(() => {
+    if (simulateTxData && (simulateTxData as any)?.result?.error) {
+      setErrorMessage((simulateTxData as any).result.error);
+    }
+  }, [simulateTxData]);
+
+  useEffect(() => {
     // Reset error message when operation params change
     setErrorMessage(undefined);
   }, [soroban.operation]);
