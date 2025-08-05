@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, Text, Textarea } from "@stellar/design-system";
+import {
+  Button,
+  Card,
+  Notification,
+  Text,
+  Textarea,
+} from "@stellar/design-system";
 import type { JSONSchema7 } from "json-schema";
 import { parse, stringify } from "lossless-json";
 import { usePrevious } from "@/hooks/usePrevious";
@@ -42,6 +48,7 @@ export const JsonSchemaForm = ({
     isPending: isPrepareTxPending,
     isError: isPrepareTxError,
     error: prepareTxError,
+    isSuccess: isPrepareTxSuccess,
     data: prepareTxData,
     reset: resetPrepareTx,
   } = useRpcPrepareTx();
@@ -113,9 +120,13 @@ export const JsonSchemaForm = ({
     setSubmitTxError("");
     resetPrepareTx();
 
+    const updatedTxnParams = {
+      ...txnParams,
+      memo: {}, // starting with p23, soroban tx no longer support memos
+    };
     const { xdr, error } = getTxnToSimulate(
       value,
-      txnParams,
+      updatedTxnParams,
       sorobanOperation,
       network.passphrase,
     );
@@ -176,6 +187,19 @@ export const JsonSchemaForm = ({
             Prepare Transaction
           </Button>
         </Box>
+
+        {isPrepareTxSuccess && txnParams.memo && (
+          <Box
+            gap="md"
+            addlClassName="FieldNote FieldNote--note FieldNote--md"
+            direction="row"
+          >
+            <Notification
+              variant="warning"
+              title="Note: Your memo was removed because Soroban transactions no longer support memos as of Protocol 23."
+            ></Notification>
+          </Box>
+        )}
 
         {submitTxError && <ErrorText errorMessage={submitTxError} size="sm" />}
       </Box>
