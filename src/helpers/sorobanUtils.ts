@@ -18,10 +18,13 @@ import { SorobanInvokeValue, SorobanOpType, TxnOperation } from "@/types/types";
 export const isSorobanOperationType = (operationType: string) =>
   [
     "extend_footprint_ttl",
+    "extendFootprintTtl",
     "restore_footprint",
+    "restoreFootprint",
     "invoke_contract_function",
-    "invokeHostFunction",
+    "invokeContractFunction",
     "invoke_host_function",
+    "invokeHostFunction",
   ].includes(operationType);
 
 // https://developers.stellar.org/docs/learn/glossary#ledgerkey
@@ -172,6 +175,50 @@ export const buildTxWithSorobanData = ({
     .setSorobanData(sorobanData || "")
     .addOperation(getSorobanOp(sorobanOp.operation_type))
     .build();
+};
+
+/* 
+  get a transaction xdr with Soroban data to simulate with
+*/
+export const getTxWithSorobanData = ({
+  operation,
+  txnParams,
+  networkPassphrase,
+}: {
+  operation: TxnOperation;
+  txnParams: TransactionBuildParams;
+  networkPassphrase: string;
+}): { xdr: string; error?: string } => {
+  try {
+    const contractDataXDR = getContractDataXDR({
+      contractAddress: operation.params.contract,
+      dataKey: operation.params.key_xdr,
+      durability: operation.params.durability,
+    });
+
+    const sorobanData = getSorobanTxData({
+      contractDataXDR,
+      operationType: operation.operation_type as SorobanOpType,
+      fee: operation.params.resource_fee,
+    });
+
+    if (sorobanData) {
+      const sorobanTx = buildTxWithSorobanData({
+        sorobanData,
+        params: txnParams,
+        sorobanOp: operation,
+        networkPassphrase: networkPassphrase,
+      });
+
+      const sorobanTxXdrString = sorobanTx.toXDR();
+
+      return { xdr: sorobanTxXdrString, error: undefined };
+    } else {
+      throw new Error("Failed to build Soroban transaction data");
+    }
+  } catch (e) {
+    return { xdr: "", error: `${e}` };
+  }
 };
 
 export const getTxnToSimulate = (
