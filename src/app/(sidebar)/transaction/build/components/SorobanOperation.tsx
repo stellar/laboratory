@@ -8,15 +8,22 @@ import {
   Notification,
 } from "@stellar/design-system";
 
+import { useStore } from "@/store/useStore";
+
 import { Box } from "@/components/layout/Box";
 import { formComponentTemplateTxnOps } from "@/components/formComponentTemplateTxnOps";
 import { ShareUrlButton } from "@/components/ShareUrlButton";
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
+import { ErrorText } from "@/components/ErrorText";
 
 import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransactions";
 import { shareableUrl } from "@/helpers/shareableUrl";
+import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
+import { getTxWithSorobanData } from "@/helpers/sorobanUtils";
+import { sanitizeObject } from "@/helpers/sanitizeObject";
 
-import { useStore } from "@/store/useStore";
+import { useRpcPrepareTx } from "@/query/useRpcPrepareTx";
+
 import {
   EMPTY_OPERATION_ERROR,
   INITIAL_OPERATION,
@@ -25,7 +32,6 @@ import {
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { OperationError, SorobanInvokeValue } from "@/types/types";
-import { sanitizeObject } from "@/helpers/sanitizeObject";
 
 export const SorobanOperation = ({
   operationTypeSelector,
@@ -46,11 +52,45 @@ export const SorobanOperation = ({
   renderSourceAccount: (opType: string, index: number) => React.ReactNode;
 }) => {
   const { transaction, network } = useStore();
-  const { soroban } = transaction.build;
+  const { soroban, params: txnParams } = transaction.build;
   const { operation: sorobanOperation, xdr: sorobanTxnXdr } = soroban;
-  const { updateSorobanBuildOperation } = transaction;
+  const { updateSorobanBuildOperation, updateSorobanBuildXdr } = transaction;
 
   const [isSaveTxnModalVisible, setIsSaveTxnModalVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const {
+    mutateAsync: prepareTx,
+    isPending: isPrepareTxPending,
+    reset: resetPrepareTx,
+  } = useRpcPrepareTx();
+
+  const prepareSorobanTx = async () => {
+    resetPrepareTx();
+    setErrorMessage("");
+
+    try {
+      const sorobanTx = getTxWithSorobanData({
+        operation: sorobanOperation,
+        txnParams,
+        networkPassphrase: network.passphrase,
+      });
+
+      const preparedTx = await prepareTx({
+        rpcUrl: network.rpcUrl,
+        transactionXdr: sorobanTx.xdr,
+        headers: getNetworkHeaders(network, "rpc"),
+        networkPassphrase: network.passphrase,
+      });
+
+      if (preparedTx.transactionXdr) {
+        updateSorobanBuildXdr(preparedTx.transactionXdr);
+      }
+    } catch (e: any) {
+      setErrorMessage(e?.result?.message || "Failed to prepare transaction");
+      updateSorobanBuildXdr("");
+    }
+  };
 
   const resetSorobanOperation = () => {
     updateSorobanBuildOperation(INITIAL_OPERATION);
@@ -220,6 +260,24 @@ export const SorobanOperation = ({
             {/* Optional source account for Soroban operations */}
             <>{renderSourceAccount(sorobanOperation.operation_type, 0)}</>
           </Box>
+
+          {sorobanOperation.operation_type !== "invoke_contract" && (
+            <Box gap="sm" align="start">
+              <Button
+                disabled={Boolean(!network.rpcUrl)}
+                isLoading={isPrepareTxPending}
+                size="md"
+                variant="secondary"
+                onClick={prepareSorobanTx}
+              >
+                Prepare Soroban Transaction to Sign
+              </Button>
+
+              {errorMessage && (
+                <ErrorText errorMessage={errorMessage} size="sm" />
+              )}
+            </Box>
+          )}
 
           <Box gap="sm" direction="row" align="center">
             <Notification variant="warning" title="Only One Operation Allowed">

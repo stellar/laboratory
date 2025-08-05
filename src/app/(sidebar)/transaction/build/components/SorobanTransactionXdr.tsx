@@ -5,46 +5,21 @@ import { useStore } from "@/store/useStore";
 import { TransactionBuilder } from "@stellar/stellar-sdk";
 import { useRouter } from "next/navigation";
 
-import {
-  getSorobanTxData,
-  buildTxWithSorobanData,
-  getContractDataXDR,
-} from "@/helpers/sorobanUtils";
-import { TransactionBuildParams } from "@/store/createStore";
-
 import { Routes } from "@/constants/routes";
+
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
-import { SorobanOpType, TxnOperation } from "@/types/types";
 
 import { TransactionXdrDisplay } from "./TransactionXdrDisplay";
 
-export const SorobanTransactionXdr = ({
-  hasPreBuiltXdr,
-}: {
-  hasPreBuiltXdr?: boolean;
-}) => {
+export const SorobanTransactionXdr = () => {
   const { network, transaction } = useStore();
   const { updateSignActiveView, updateSignImportXdr, updateSorobanBuildXdr } =
     transaction;
-  const { soroban, isValid, params: txnParams } = transaction.build;
-  const { operation } = soroban;
+  const { soroban, isValid } = transaction.build;
+  const { xdr: sorobanXdr } = soroban;
   const router = useRouter();
-
-  const sorobanData = hasPreBuiltXdr
-    ? { xdr: soroban.xdr }
-    : getTxWithSorobanData({
-        operation,
-        txnParams,
-        networkPassphrase: network.passphrase,
-      });
-
-  useEffect(() => {
-    if (sorobanData.xdr && !hasPreBuiltXdr) {
-      updateSorobanBuildXdr(sorobanData.xdr);
-    }
-  }, [sorobanData.xdr, updateSorobanBuildXdr, hasPreBuiltXdr]);
 
   useEffect(() => {
     // Reset transaction.xdr if the transaction is not valid
@@ -59,12 +34,12 @@ export const SorobanTransactionXdr = ({
     return null;
   }
 
-  if (sorobanData?.xdr) {
+  if (sorobanXdr) {
     return renderSorobanTxResultDisplay({
-      sorobanData: { xdr: sorobanData.xdr },
+      sorobanXdr: sorobanXdr,
       networkPassphrase: network.passphrase,
       onSignClick: () => {
-        updateSignImportXdr(sorobanData.xdr);
+        updateSignImportXdr(sorobanXdr);
         updateSignActiveView("overview");
 
         trackEvent(TrackingEvent.TRANSACTION_BUILD_SIGN_IN_TX_SIGNER, {
@@ -83,73 +58,29 @@ export const SorobanTransactionXdr = ({
   return null;
 };
 
-const getTxWithSorobanData = ({
-  operation,
-  txnParams,
-  networkPassphrase,
-}: {
-  operation: TxnOperation;
-  txnParams: TransactionBuildParams;
-  networkPassphrase: string;
-}): { xdr: string; error?: string } => {
-  try {
-    const contractDataXDR = getContractDataXDR({
-      contractAddress: operation.params.contract,
-      dataKey: operation.params.key_xdr,
-      durability: operation.params.durability,
-    });
-
-    const sorobanData = getSorobanTxData({
-      contractDataXDR,
-      operationType: operation.operation_type as SorobanOpType,
-      fee: operation.params.resource_fee,
-    });
-
-    if (sorobanData) {
-      const sorobanTx = buildTxWithSorobanData({
-        sorobanData,
-        params: txnParams,
-        sorobanOp: operation,
-        networkPassphrase: networkPassphrase,
-      });
-
-      const sorobanTxXdrString = sorobanTx.toXDR();
-
-      return { xdr: sorobanTxXdrString, error: undefined };
-    } else {
-      throw new Error("Failed to build Soroban transaction data");
-    }
-  } catch (e) {
-    return { xdr: "", error: `${e}` };
-  }
-};
-
 export const renderSorobanTxResultDisplay = ({
-  sorobanData,
+  sorobanXdr,
   networkPassphrase,
   onSignClick,
   onViewXdrClick,
 }: {
-  sorobanData: { xdr: string };
+  sorobanXdr: string;
   networkPassphrase: string;
   onSignClick: () => void;
   onViewXdrClick: () => void;
 }) => {
   try {
-    if (!sorobanData.xdr) {
+    if (!sorobanXdr) {
       return null;
     }
 
-    const txnHash = TransactionBuilder.fromXDR(
-      sorobanData.xdr,
-      networkPassphrase,
-    )
+    const txnHash = TransactionBuilder.fromXDR(sorobanXdr, networkPassphrase)
       .hash()
       .toString("hex");
 
     return (
       <TransactionXdrDisplay
-        xdr={sorobanData.xdr}
+        xdr={sorobanXdr}
         networkPassphrase={networkPassphrase}
         txnHash={txnHash}
         dataTestId="build-soroban-transaction-envelope-xdr"

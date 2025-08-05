@@ -234,17 +234,6 @@ test.describe("Saved Transactions Page", () => {
       await expect(
         pageContext.getByLabel("Resource Fee (in stroops)"),
       ).toHaveValue("46753");
-
-      const xdrElement = pageContext.getByTestId(
-        "build-soroban-transaction-envelope-xdr",
-      );
-
-      await xdrElement.isVisible();
-
-      // XDR
-      await expect(xdrElement.getByText("XDR").locator("+ div")).toHaveText(
-        "AAAAAgAAAAB+TL0HLiAjanMRnyeqyhb8Iu+4d1g2dl1cwPi1UZAigwAAtwUABiLjAAAAGQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAGQAAAAAAAHUwAAAAAQAAAAAAAAABAAAABgAAAAEg/u86MzPrVcpNrsFUa84T82Kss8DLAE9ZMxLqhM22HwAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAAB+TL0HLiAjanMRnyeqyhb8Iu+4d1g2dl1cwPi1UZAigwAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAtqEAAAAA",
-      );
     });
 
     test("Delete transaction", async () => {
