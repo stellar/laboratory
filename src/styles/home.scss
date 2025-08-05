@@ -11,7 +11,7 @@
     background-color: var(--sds-clr-gray-02);
 
     &:nth-child(even) {
-      background-color: var(--sds-clr-gray-01);
+      background-color: var(--sds-clr-base-00);
     }
 
     &:nth-child(3) {
@@ -54,19 +54,94 @@
 
   // Tutorials
   &__tutorials {
-    display: grid;
-    grid-template-columns: minmax(pxToRem(320px), 2fr) minmax(
-        pxToRem(320px),
-        1fr
-      );
+    display: flex;
+    flex-direction: row;
     gap: pxToRem(12px);
+    flex-wrap: wrap;
 
     &__video {
-      background-color: #f0f;
+      position: relative;
+      flex: 2;
+      min-width: pxToRem(320px);
+      // Keep video ratio
+      aspect-ratio: 560/315;
+      border-radius: pxToRem(8px);
+      overflow: hidden;
     }
 
     &__list {
-      background-color: #ff0;
+      position: relative;
+      flex: 1;
+      min-width: pxToRem(260px);
+      min-height: pxToRem(200px);
+      overflow: hidden;
+
+      &__container {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        overflow: hidden;
+      }
+
+      &__scroll {
+        overflow-y: auto;
+        height: 100%;
+        overflow-scrolling: touch;
+        position: relative;
+      }
+    }
+
+    &__item {
+      display: flex;
+      flex-direction: column;
+      gap: pxToRem(8px);
+      padding: pxToRem(12px);
+      border-radius: pxToRem(12px);
+      background-color: var(--sds-clr-gray-01);
+      transition: background-color var(--sds-anim-transition-default);
+      cursor: pointer;
+
+      @media (hover: hover) {
+        &:hover {
+          background-color: var(--sds-clr-gray-03);
+        }
+      }
+
+      &[data-selected="true"] {
+        background-color: var(--sds-clr-gray-03);
+        cursor: default;
+      }
+
+      &__title {
+        color: var(--sds-clr-gray-12);
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: pxToRem(8px);
+
+        &::before {
+          content: attr(data-number);
+          display: flex;
+          width: pxToRem(24px);
+          height: pxToRem(24px);
+          border-radius: 50%;
+          border: 1px solid var(--sds-clr-gray-06);
+          flex-shrink: 0;
+          justify-content: center;
+          align-items: center;
+
+          font-size: pxToRem(14px);
+          line-height: pxToRem(20px);
+          font-weight: var(--sds-fw-bold);
+          color: var(--sds-clr-gray-12);
+        }
+      }
+
+      &__description {
+        height: pxToRem(44px);
+      }
     }
   }
 
@@ -149,9 +224,10 @@
   // Footer
   &__footer {
     padding: pxToRem(24px) pxToRem(32px);
-    background-color: var(--sds-clr-gray-01);
+    background-color: var(--sds-clr-base-00);
     font-size: pxToRem(14px);
     line-height: pxToRem(20px);
     color: var(--sds-clr-gray-11);
+    flex: 1;
   }
 }

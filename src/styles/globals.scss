@@ -354,7 +354,7 @@
 
     &:has([data-no-padding="true"]) {
       width: 100%;
-      display: block;
+      gap: 0;
     }
   }
 

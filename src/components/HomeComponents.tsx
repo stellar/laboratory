@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Image from "next/image";
 import { Heading, Icon, Text, Button } from "@stellar/design-system";
 
@@ -43,36 +44,114 @@ export const HomeSection = ({
 );
 
 export const HomeTutorials = () => {
-  // TODO: get tutorials data
-  // const tutorials = [
-  //   {
-  //     title: "Create Account",
-  //     description: "Creates and funds a new Stellar account.",
-  //     youTubeLink: "https://youtu.be/BSbkptStkKY?si=M86yiTMToVvivCDG",
-  //   },
-  //   {
-  //     title: "Payment",
-  //     description:
-  //       "Send an amount in a specific asset to a destination account.",
-  //     youTubeLink: "https://youtu.be/B18a9AGrsA4?si=ezfrR3Lec8NoyHdy",
-  //   },
-  //   {
-  //     title: "Change Trust",
-  //     description:
-  //       "Create, update, or delete trustlines for the assets on the network.",
-  //     youTubeLink: "https://youtu.be/0HKCpCKQLJo?si=PtlxiR3vdKxmzL_N",
-  //   },
-  //   {
-  //     title: "Manage Offers",
-  //     description: "TODO: add description",
-  //     youTubeLink: "https://youtu.be/bAbcYh03x10?si=KxxDxv4dZTd45m3d",
-  //   },
-  // ];
+  // TODO: replace placeholder data
+  const tutorials = [
+    {
+      title: "Create Account",
+      description: "Creates and funds a new Stellar account.",
+      youTubeLink:
+        "https://www.youtube.com/embed/BSbkptStkKY?si=E1WMYdnM5hsfePyr",
+    },
+    {
+      title: "Payment",
+      description:
+        "Send an amount in a specific asset to a destination account.",
+      youTubeLink:
+        "https://www.youtube.com/embed/B18a9AGrsA4?si=ezfrR3Lec8NoyHdy",
+    },
+    {
+      title: "Change Trust",
+      description:
+        "Create, update, or delete trustlines for the assets on the network.",
+      youTubeLink:
+        "https://www.youtube.com/embed/0HKCpCKQLJo?si=PtlxiR3vdKxmzL_N",
+    },
+    {
+      title: "Manage Offers",
+      description: "TODO: add description",
+      youTubeLink:
+        "https://www.youtube.com/embed/bAbcYh03x10?si=KxxDxv4dZTd45m3d",
+    },
+    {
+      title: "Create Account",
+      description: "Creates and funds a new Stellar account.",
+      youTubeLink:
+        "https://www.youtube.com/embed/BSbkptStkKY?si=E1WMYdnM5hsfePyr",
+    },
+    {
+      title: "Payment",
+      description:
+        "Send an amount in a specific asset to a destination account.",
+      youTubeLink:
+        "https://www.youtube.com/embed/B18a9AGrsA4?si=ezfrR3Lec8NoyHdy",
+    },
+    {
+      title: "Change Trust",
+      description:
+        "Create, update, or delete trustlines for the assets on the network.",
+      youTubeLink:
+        "https://www.youtube.com/embed/0HKCpCKQLJo?si=PtlxiR3vdKxmzL_N",
+    },
+    {
+      title: "Manage Offers",
+      description: "TODO: add description",
+      youTubeLink:
+        "https://www.youtube.com/embed/bAbcYh03x10?si=KxxDxv4dZTd45m3d",
+    },
+  ];
+
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   return (
     <div className="Lab__home__tutorials">
-      <div className="Lab__home__tutorials__video"></div>
-      <div className="Lab__home__tutorials__list"></div>
+      {/* Video */}
+      <div className="Lab__home__tutorials__video">
+        <iframe
+          width="100%"
+          height="100%"
+          src={tutorials[selectedIndex].youTubeLink}
+          title={`${tutorials[selectedIndex].title} video`}
+          frameBorder="0"
+          allow="accelerometer; clipboard-write; encrypted-media; gyroscope;"
+          referrerPolicy="strict-origin-when-cross-origin"
+          allowFullScreen
+        ></iframe>
+      </div>
+
+      {/* List */}
+      <div className="Lab__home__tutorials__list">
+        <div className="Lab__home__tutorials__list__container">
+          <Box gap="xs" addlClassName="Lab__home__tutorials__list__scroll">
+            {tutorials.map((t, idx) => (
+              <div
+                key={`tutorialItem-${idx}`}
+                className="Lab__home__tutorials__item"
+                onClick={() => {
+                  setSelectedIndex(idx);
+                }}
+                data-selected={selectedIndex === idx}
+              >
+                <Text
+                  as="div"
+                  size="sm"
+                  weight="semi-bold"
+                  addlClassName="Lab__home__tutorials__item__title"
+                  data-number={idx + 1}
+                >
+                  {t.title}
+                </Text>
+                <Text
+                  as="div"
+                  size="sm"
+                  addlClassName="Lab__home__tutorials__item__description"
+                >
+                  {t.description}
+                </Text>
+              </div>
+            ))}
+          </Box>
+        </div>
+      </div>
     </div>
   );
 };
@@ -157,11 +236,11 @@ export const HomeNetworks = ({ theme }: { theme: ThemeColorType | null }) => {
               </Text>
             </Box>
             <Box gap="sm">
-              {i.links.map((l, lIdx) => (
+              {i.links.map((l, idx) => (
                 <Button
                   variant="tertiary"
                   size="lg"
-                  key={`networkItem-${i.id}-btn-${lIdx}`}
+                  key={`networkItem-${i.id}-btn-${idx}`}
                   icon={<Icon.ArrowRight />}
                 >
                   {l.label}

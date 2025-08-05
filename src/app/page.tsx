@@ -79,7 +79,7 @@ export default function Introduction() {
         gap="md"
         wrap="wrap"
         direction="row"
-        align="center"
+        align="end"
         justify="space-between"
         addlClassName="Lab__home__footer"
       >
