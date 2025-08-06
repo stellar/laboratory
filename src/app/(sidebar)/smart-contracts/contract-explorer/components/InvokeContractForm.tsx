@@ -490,6 +490,14 @@ export const InvokeContractForm = ({
     resetPrepareTx();
   };
 
+  useEffect(() => {
+    if (dereferencedSchema && !dereferencedSchema?.required.length) {
+      setIsGetFunction(true);
+    } else {
+      setIsGetFunction(false);
+    }
+  }, [dereferencedSchema]);
+
   const renderTitle = (name: string, description?: string) => (
     <>
       <Box gap="sm" direction="row">
@@ -512,14 +520,6 @@ export const InvokeContractForm = ({
       ) : null}
     </>
   );
-
-  useEffect(() => {
-    if (dereferencedSchema && !dereferencedSchema?.required.length) {
-      setIsGetFunction(true);
-    } else {
-      setIsGetFunction(false);
-    }
-  }, [dereferencedSchema]);
 
   const renderReadWriteBadge = (isWriteFn: boolean | undefined) => {
     if (isWriteFn === undefined) return null;
@@ -586,6 +586,40 @@ export const InvokeContractForm = ({
           )}
       </Box>
     );
+  };
+
+  const renderResponse = () => {
+    if (jsonResult || base64Result) {
+      return (
+        <TabView
+          tab1={{
+            id: "json",
+            label: "JSON",
+            content: jsonResult && <SimulatedResponse result={jsonResult} />,
+            isDisabled: !jsonResult,
+          }}
+          tab2={{
+            id: "base64",
+            label: "Base64",
+            content: base64Result && (
+              <SimulatedResponse result={base64Result} />
+            ),
+            isDisabled: !base64Result,
+          }}
+          activeTabId={xdrFormat}
+          onTabChange={(id) => {
+            setXdrFormat(id);
+            trackEvent(
+              TrackingEvent.SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SELECTED_XDR_FORMAT,
+              {
+                xdrFormat: id,
+              },
+            );
+          }}
+        />
+      );
+    }
+    return null;
   };
 
   const renderSuccess = () => {
@@ -661,86 +695,42 @@ export const InvokeContractForm = ({
 
   return (
     <Card>
-      <div className="ContractInvoke">
-        <Box gap="md">
-          {renderSchema()}
+      <Box gap="md">
+        {renderSchema()}
 
-          <Box
-            gap="sm"
-            direction="row"
-            align="stretch"
-            justify="space-between"
-            wrap="wrap"
+        <Box gap="sm" direction="row" align="end" justify="end" wrap="wrap">
+          <Button
+            size="md"
+            variant="tertiary"
+            disabled={isSimulationDisabled()}
+            isLoading={isSimulating}
+            onClick={async () => {
+              const xdr = await getXdrToSimulate();
+
+              if (xdr) {
+                await handleSimulate(xdr);
+                await handlePrepareTx(xdr);
+              }
+            }}
           >
-            <TabView
-              tab1={{
-                id: "json",
-                label: "JSON",
-                content: jsonResult && (
-                  <SimulatedResponse result={jsonResult} />
-                ),
-                isDisabled: !jsonResult,
-              }}
-              tab2={{
-                id: "base64",
-                label: "Base64",
-                content: base64Result && (
-                  <SimulatedResponse result={base64Result} />
-                ),
-                isDisabled: !base64Result,
-              }}
-              activeTabId={xdrFormat}
-              onTabChange={(id) => {
-                setXdrFormat(id);
-                trackEvent(
-                  TrackingEvent.SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SELECTED_XDR_FORMAT,
-                  {
-                    xdrFormat: id,
-                  },
-                );
-              }}
-            />
-            <Box
-              addlClassName="AbsoluteButtons"
-              gap="sm"
-              direction="row"
-              align="stretch"
-              justify="space-between"
-              wrap="wrap"
-            >
-              <Button
-                size="md"
-                variant="tertiary"
-                disabled={isSimulationDisabled()}
-                isLoading={isSimulating}
-                onClick={async () => {
-                  const xdr = await getXdrToSimulate();
+            Simulate
+          </Button>
 
-                  if (xdr) {
-                    await handleSimulate(xdr);
-                    await handlePrepareTx(xdr);
-                  }
-                }}
-              >
-                Simulate
-              </Button>
-
-              <Button
-                size="md"
-                variant="secondary"
-                isLoading={isExtensionLoading || isSubmitRpcPending}
-                disabled={isSubmitDisabled}
-                onClick={handleSimulateAndSubmit}
-              >
-                Simulate & Submit
-              </Button>
-            </Box>
-          </Box>
-
-          <>{renderSuccess()}</>
-          <>{renderError()}</>
+          <Button
+            size="md"
+            variant="secondary"
+            isLoading={isExtensionLoading || isSubmitRpcPending}
+            disabled={isSubmitDisabled}
+            onClick={handleSimulateAndSubmit}
+          >
+            Simulate & Submit
+          </Button>
         </Box>
-      </div>
+
+        <>{renderResponse()}</>
+        <>{renderSuccess()}</>
+        <>{renderError()}</>
+      </Box>
     </Card>
   );
 };
