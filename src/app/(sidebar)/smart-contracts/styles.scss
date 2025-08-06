@@ -33,10 +33,14 @@
 }
 
 .ContractInvoke {
-  .Select {
-    select {
-      font-weight: var(--sds-fw-semi-bold);
-      padding-right: pxToRem(32px);
-    }
+  position: relative;
+
+  .TabView {
+    width: 100%;
+  }
+
+  .AbsoluteButtons {
+    position: absolute;
+    right: 0;
   }
 }
