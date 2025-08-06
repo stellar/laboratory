@@ -44,59 +44,126 @@ export const HomeSection = ({
 );
 
 export const HomeTutorials = () => {
-  // TODO: replace placeholder data
   const tutorials = [
     {
       title: "Create Account",
-      description: "Creates and funds a new Stellar account.",
+      description: "Stellar Quest Level 1 (Lumen Loop)",
       youTubeLink:
-        "https://www.youtube.com/embed/BSbkptStkKY?si=E1WMYdnM5hsfePyr",
+        "https://www.youtube.com/embed/Sou5wUsfsZw?si=dtQFORe7YBkmApHe",
     },
     {
       title: "Payment",
-      description:
-        "Send an amount in a specific asset to a destination account.",
+      description: "Stellar Quest Level 1 (Lumen Loop)",
       youTubeLink:
-        "https://www.youtube.com/embed/B18a9AGrsA4?si=ezfrR3Lec8NoyHdy",
+        "https://www.youtube.com/embed/Isn5CkEWFs8?si=Fj5UkHk8XzVWzyA_",
     },
     {
       title: "Change Trust",
-      description:
-        "Create, update, or delete trustlines for the assets on the network.",
+      description: "Stellar Quest Level 1 (Lumen Loop)",
       youTubeLink:
-        "https://www.youtube.com/embed/0HKCpCKQLJo?si=PtlxiR3vdKxmzL_N",
+        "https://www.youtube.com/embed/Ln-_2pkkj3k?si=B9XmD2BEkc6cyDpu",
     },
     {
       title: "Manage Offers",
-      description: "TODO: add description",
+      description: "Stellar Quest Level 1 (Lumen Loop)",
       youTubeLink:
-        "https://www.youtube.com/embed/bAbcYh03x10?si=KxxDxv4dZTd45m3d",
+        "https://www.youtube.com/embed/4d558Q0MDso?si=IIslGXLT1clwXIOR",
     },
     {
-      title: "Create Account",
-      description: "Creates and funds a new Stellar account.",
+      title: "Path Payments",
+      description: "Stellar Quest Level 1 (Lumen Loop)",
       youTubeLink:
-        "https://www.youtube.com/embed/BSbkptStkKY?si=E1WMYdnM5hsfePyr",
+        "https://www.youtube.com/embed/ZNuNrYjpx9s?si=ZAK5L_ZCg9Jb1B0y",
     },
     {
-      title: "Payment",
-      description:
-        "Send an amount in a specific asset to a destination account.",
+      title: "Account Merge",
+      description: "Stellar Quest Level 2 (Lumen Loop)",
       youTubeLink:
-        "https://www.youtube.com/embed/B18a9AGrsA4?si=ezfrR3Lec8NoyHdy",
+        "https://www.youtube.com/embed/XkzYMQUtyeo?si=VcOGkVJErgdiHip3",
     },
     {
-      title: "Change Trust",
-      description:
-        "Create, update, or delete trustlines for the assets on the network.",
+      title: "Manage Data",
+      description: "Stellar Quest Level 2 (Lumen Loop)",
       youTubeLink:
-        "https://www.youtube.com/embed/0HKCpCKQLJo?si=PtlxiR3vdKxmzL_N",
+        "https://www.youtube.com/embed/vRq8_cSFdlQ?si=AtsZ-W7uzuZi3Fz4",
     },
     {
-      title: "Manage Offers",
-      description: "TODO: add description",
+      title: "Set Options Home Domain",
+      description: "Stellar Quest Level 2 (Lumen Loop)",
       youTubeLink:
-        "https://www.youtube.com/embed/bAbcYh03x10?si=KxxDxv4dZTd45m3d",
+        "https://www.youtube.com/embed/2bEe8DzKUUw?si=kjYopS1IOfUSgiOV",
+    },
+    {
+      title: "Set Options Weights, Thresholds, and Signers",
+      description: "Stellar Quest Level 2 (Lumen Loop)",
+      youTubeLink:
+        "https://www.youtube.com/embed/RmvIdxkm_JE?si=SkVtyqcJ4leeBFU3",
+    },
+    {
+      title: "Set Flags",
+      description: "Stellar Quest Level 2 (Lumen Loop)",
+      youTubeLink:
+        "https://www.youtube.com/embed/ovJK8I4qoC0?si=XkXvXZSQEUhlV5Zu",
+    },
+    {
+      title: "Bump Sequence",
+      description: "Stellar Quest Level 3 (Lumen Loop)",
+      youTubeLink:
+        "https://www.youtube.com/embed/9sCTcK2sYaU?si=E1FoQeiudnWlne7N",
+    },
+    {
+      title: "Sponsorships",
+      description: "Stellar Quest Level 3 (Lumen Loop)",
+      youTubeLink:
+        "https://www.youtube.com/embed/-MTUtsp_Ovc?si=60EEBVFoYzxszfrc",
+    },
+    {
+      title: "Claimable Balances",
+      description: "Stellar Quest Level 3 (Lumen Loop)",
+      youTubeLink:
+        "https://www.youtube.com/embed/cC669NmLyew?si=XAVMNapfqeOVoAeV",
+    },
+    {
+      title: "Clawbacks",
+      description: "Stellar Quest Level 3 (Lumen Loop)",
+      youTubeLink:
+        "https://www.youtube.com/embed/DWJ-wOydPJQ?si=vW-PF5ffoEoX1H9-",
+    },
+    {
+      title: "Liquidity Pools",
+      description: "Stellar Quest Level 3 (Lumen Loop)",
+      youTubeLink:
+        "https://www.youtube.com/embed/kd5sa5df3oU?si=wK2bkN1_SAUrnfw8",
+    },
+    {
+      title: "Hello World (Build, Deploy, Invoke)",
+      description: "Stellar Soroban Quest Live 1 (Lumen Loop)",
+      youTubeLink:
+        "https://www.youtube.com/embed/XcFgR_OHKl8?si=-5wdlfi5xqhQyoRX",
+    },
+    {
+      title: "Auth Store (Store and Retrieve)",
+      description: "Stellar Soroban Quest Live 2 (Lumen Loop)",
+      youTubeLink:
+        "https://www.youtube.com/embed/kpyIotaiFfw?si=p9QSbs3hNYguHawP",
+    },
+    {
+      title: "Reverse Engineer (Decode XDR)",
+      description: "Stellar Soroban Quest Live 3 (Lumen Loop)",
+      youTubeLink:
+        "https://www.youtube.com/embed/ZrmDQKU2dqY?si=iMELpqmM_mn8rbkL",
+    },
+    {
+      title: "Cross Contract",
+      description: "Stellar Soroban Quest Live 4 (Lumen Loop)",
+      youTubeLink:
+        "https://www.youtube.com/embed/nyGFAA8hcDE?si=1mOFIgEYboi2VgSC",
+    },
+    {
+      title: "Custom Types (Structs and Enums)",
+      description: "Stellar Soroban Quest Live 5 (Lumen Loop)",
+      youTubeLink:
+        "https://www.youtube.com/embed/Dypune9qagg?si=_geNAtdF07s4hQfN",
     },
   ];
 
@@ -279,8 +346,8 @@ export const HomeResources = () => {
     },
     {
       title: "Discord",
-      // TODO: description cut off
-      description: "Chat with us and the rest of the dev community on our...",
+      description:
+        "Join the conversation and build with us in the dev community.",
       link: "https://discord.gg/stellardev",
     },
   ];
