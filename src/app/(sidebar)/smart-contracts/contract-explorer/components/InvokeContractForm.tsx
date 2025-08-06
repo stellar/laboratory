@@ -370,7 +370,7 @@ export const InvokeContractForm = ({
 
   const handleSimulate = async (xdr: string) => {
     try {
-      const [jsonResponse, base64Result] = await Promise.all([
+      const [simJsonResponse, simBase64Response] = await Promise.all([
         simulateTx({
           rpcUrl: network.rpcUrl,
           transactionXdr: xdr,
@@ -385,17 +385,17 @@ export const InvokeContractForm = ({
         }),
       ]);
 
-      if (jsonResponse?.result) {
+      if (simJsonResponse?.result) {
         setJsonResponse({
-          fullResponse: jsonResponse?.result,
-          resultOnly: jsonResponse?.result?.results,
+          fullResponse: simJsonResponse?.result,
+          resultOnly: simJsonResponse?.result?.results,
         });
       }
 
-      if (base64Result?.result) {
+      if (simBase64Response?.result) {
         setBase64Response({
-          fullResponse: base64Result?.result,
-          resultOnly: base64Result?.result?.results,
+          fullResponse: simBase64Response?.result,
+          resultOnly: simBase64Response?.result?.results,
         });
       }
 
