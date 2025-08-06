@@ -180,6 +180,7 @@ export enum TrackingEvent {
   SMART_CONTRACTS_SAVED_VIEW_IN_EXPLORER = "smart contracts: saved: view in contract explorer",
   SMART_CONTRACTS_EXPLORER_STORAGE_RESTORE = "smart contracts: explorer: storage: restore",
   // Smart Contracts - Invoke Contract
+  SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SELECTED_XDR_FORMAT = "smart contracts: explorer: invoke contract: simulate: xdr format selected",
   SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SIMULATE = "smart contracts: explorer: invoke contract: simulate",
   SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SIMULATE_SUCCESS = "smart contracts: explorer: invoke contract: simulate: success",
   SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SIMULATE_ERROR = "smart contracts: explorer: invoke contract: simulate: error",

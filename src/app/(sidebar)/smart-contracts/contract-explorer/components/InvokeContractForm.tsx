@@ -7,13 +7,12 @@ import {
   useState,
 } from "react";
 import {
+  Badge,
   Button,
   Card,
-  Select,
+  Icon,
   Text,
   Textarea,
-  Badge,
-  Icon,
   Tooltip,
 } from "@stellar/design-system";
 import { BASE_FEE, contract } from "@stellar/stellar-sdk";
@@ -24,11 +23,11 @@ import { RpcErrorResponse } from "@/components/TxErrorResponse";
 
 import { Box } from "@/components/layout/Box";
 import { ErrorText } from "@/components/ErrorText";
-import { JsonCodeWrapToggle } from "@/components/JsonCodeWrapToggle";
 import { JsonSchemaRenderer } from "@/components/SmartContractJsonSchema/JsonSchemaRenderer";
-import { PrettyJsonTransaction } from "@/components/PrettyJsonTransaction";
 import { TransactionSuccessCard } from "@/components/TransactionSuccessCard";
 import { WalletKitContext } from "@/components/WalletKit/WalletKitContextProvider";
+import { TabView } from "@/components/TabView";
+import { PrettyJson } from "@/components/PrettyJson";
 
 import { TransactionBuildParams } from "@/store/createStore";
 import { useStore } from "@/store/useStore";
@@ -39,8 +38,6 @@ import { useRpcPrepareTx } from "@/query/useRpcPrepareTx";
 import { useSimulateTx } from "@/query/useSimulateTx";
 import { useSubmitRpcTx } from "@/query/useSubmitRpcTx";
 
-import { useCodeWrappedSetting } from "@/hooks/useCodeWrappedSetting";
-
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { dereferenceSchema } from "@/helpers/dereferenceSchema";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
@@ -49,6 +46,27 @@ import { getTxnToSimulate } from "@/helpers/sorobanUtils";
 import { SorobanInvokeValue, XdrFormatType, AnyObject } from "@/types/types";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
+
+export const SimulatedResponse = ({
+  result,
+}: {
+  result: Api.SimulateTransactionResponse;
+}) => {
+  const errorClass = Api.isSimulationError(result)
+    ? "PageBody__content--error"
+    : "";
+
+  return (
+    <Box gap="md">
+      <div
+        data-testid="invoke-contract-simulate-tx-response"
+        className={`PageBody__content PageBody__scrollable ${errorClass}`}
+      >
+        <PrettyJson json={result} isCodeWrapped={true} />
+      </div>
+    </Box>
+  );
+};
 
 export const InvokeContractForm = ({
   contractId,
@@ -65,7 +83,7 @@ export const InvokeContractForm = ({
     methodType: string;
   } | null>(null);
   const [isExtensionLoading, setIsExtensionLoading] = useState(false);
-  const [xdrFormat, setXdrFormat] = useState<XdrFormatType>("json");
+  const [xdrFormat, setXdrFormat] = useState<XdrFormatType | string>("json");
   const [formValue, setFormValue] = useState<SorobanInvokeValue>({
     contract_id: contractId,
     function_name: funcName,
@@ -73,6 +91,12 @@ export const InvokeContractForm = ({
   });
   const [formError, setFormError] = useState<AnyObject>({});
   const [isGetFunction, setIsGetFunction] = useState(false);
+
+  const [jsonResult, setJsonResult] =
+    useState<Api.SimulateTransactionResponse>();
+  const [base64Result, setBase64Result] =
+    useState<Api.SimulateTransactionResponse>();
+
   // Based on reads and writes to the contract
   // Can only be determined based on the simulation result
   const [isWriteFn, setIsWriteFn] = useState<boolean | undefined>(undefined);
@@ -146,8 +170,6 @@ export const InvokeContractForm = ({
 
   const IS_BLOCK_EXPLORER_ENABLED =
     network.id === "testnet" || network.id === "mainnet";
-
-  const [isCodeWrapped, setIsCodeWrapped] = useCodeWrappedSetting();
 
   const responseSuccessEl = useRef<HTMLDivElement | null>(null);
   const responseErrorEl = useRef<HTMLDivElement | null>(null);
@@ -362,12 +384,28 @@ export const InvokeContractForm = ({
 
   const handleSimulate = async (xdr: string) => {
     try {
-      await simulateTx({
-        rpcUrl: network.rpcUrl,
-        transactionXdr: xdr,
-        headers: getNetworkHeaders(network, "rpc"),
-        xdrFormat,
-      });
+      const [jsonResult, base64Result] = await Promise.all([
+        simulateTx({
+          rpcUrl: network.rpcUrl,
+          transactionXdr: xdr,
+          headers: getNetworkHeaders(network, "rpc"),
+          xdrFormat: "json",
+        }),
+        simulateTx({
+          rpcUrl: network.rpcUrl,
+          transactionXdr: xdr,
+          headers: getNetworkHeaders(network, "rpc"),
+          xdrFormat: "base64",
+        }),
+      ]);
+
+      if (jsonResult?.result) {
+        setJsonResult(jsonResult?.result);
+      }
+
+      if (base64Result?.result) {
+        setBase64Result(base64Result?.result);
+      }
 
       trackEvent(
         TrackingEvent.SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SIMULATE_SUCCESS,
@@ -452,6 +490,14 @@ export const InvokeContractForm = ({
     resetPrepareTx();
   };
 
+  useEffect(() => {
+    if (dereferencedSchema && !dereferencedSchema?.required.length) {
+      setIsGetFunction(true);
+    } else {
+      setIsGetFunction(false);
+    }
+  }, [dereferencedSchema]);
+
   const renderTitle = (name: string, description?: string) => (
     <>
       <Box gap="sm" direction="row">
@@ -474,14 +520,6 @@ export const InvokeContractForm = ({
       ) : null}
     </>
   );
-
-  useEffect(() => {
-    if (dereferencedSchema && !dereferencedSchema?.required.length) {
-      setIsGetFunction(true);
-    } else {
-      setIsGetFunction(false);
-    }
-  }, [dereferencedSchema]);
 
   const renderReadWriteBadge = (isWriteFn: boolean | undefined) => {
     if (isWriteFn === undefined) return null;
@@ -551,36 +589,36 @@ export const InvokeContractForm = ({
   };
 
   const renderResponse = () => {
-    const { result: simulateResult } = simulateTxData || {};
-    const { result: submitResult } = submitRpcResponse || {};
-
-    const result = simulateResult || submitResult;
-
-    if (result) {
+    if (jsonResult || base64Result) {
       return (
-        <Box gap="md">
-          <div
-            data-testid="invoke-contract-simulate-tx-response"
-            className={`PageBody__content PageBody__scrollable ${result?.error ? "PageBody__content--error" : ""}`}
-          >
-            <PrettyJsonTransaction
-              json={result}
-              xdr={result?.xdr}
-              isCodeWrapped={isCodeWrapped}
-            />
-          </div>
-          <Box gap="md" direction="row" align="center">
-            <JsonCodeWrapToggle
-              isChecked={isCodeWrapped}
-              onChange={(isChecked) => {
-                setIsCodeWrapped(isChecked);
-              }}
-            />
-          </Box>
-        </Box>
+        <TabView
+          tab1={{
+            id: "json",
+            label: "JSON",
+            content: jsonResult && <SimulatedResponse result={jsonResult} />,
+            isDisabled: !jsonResult,
+          }}
+          tab2={{
+            id: "base64",
+            label: "Base64",
+            content: base64Result && (
+              <SimulatedResponse result={base64Result} />
+            ),
+            isDisabled: !base64Result,
+          }}
+          activeTabId={xdrFormat}
+          onTabChange={(id) => {
+            setXdrFormat(id);
+            trackEvent(
+              TrackingEvent.SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SELECTED_XDR_FORMAT,
+              {
+                xdrFormat: id,
+              },
+            );
+          }}
+        />
       );
     }
-
     return null;
   };
 
@@ -657,58 +695,42 @@ export const InvokeContractForm = ({
 
   return (
     <Card>
-      <div className="ContractInvoke">
-        <Box gap="md">
-          {renderSchema()}
+      <Box gap="md">
+        {renderSchema()}
 
-          <Box gap="sm" direction="row" align="end" justify="end" wrap="wrap">
-            <Box gap="sm" direction="row" align="end" justify="end" wrap="wrap">
-              <Select
-                id="simulate-tx-xdr-format"
-                fieldSize="md"
-                value={xdrFormat}
-                onChange={(e) => {
-                  setXdrFormat(e.target.value as XdrFormatType);
-                }}
-              >
-                <option value="base64">XDR Format: Base64</option>
-                <option value="json">XDR Format: JSON</option>
-              </Select>
-            </Box>
+        <Box gap="sm" direction="row" align="end" justify="end" wrap="wrap">
+          <Button
+            size="md"
+            variant="tertiary"
+            disabled={isSimulationDisabled()}
+            isLoading={isSimulating}
+            onClick={async () => {
+              const xdr = await getXdrToSimulate();
 
-            <Button
-              size="md"
-              variant="tertiary"
-              disabled={isSimulationDisabled()}
-              isLoading={isSimulating}
-              onClick={async () => {
-                const xdr = await getXdrToSimulate();
+              if (xdr) {
+                await handleSimulate(xdr);
+                await handlePrepareTx(xdr);
+              }
+            }}
+          >
+            Simulate
+          </Button>
 
-                if (xdr) {
-                  await handleSimulate(xdr);
-                  await handlePrepareTx(xdr);
-                }
-              }}
-            >
-              Simulate
-            </Button>
-
-            <Button
-              size="md"
-              variant="secondary"
-              isLoading={isExtensionLoading || isSubmitRpcPending}
-              disabled={isSubmitDisabled}
-              onClick={handleSimulateAndSubmit}
-            >
-              Simulate & Submit
-            </Button>
-          </Box>
-
-          <>{renderResponse()}</>
-          <>{renderSuccess()}</>
-          <>{renderError()}</>
+          <Button
+            size="md"
+            variant="secondary"
+            isLoading={isExtensionLoading || isSubmitRpcPending}
+            disabled={isSubmitDisabled}
+            onClick={handleSimulateAndSubmit}
+          >
+            Simulate & Submit
+          </Button>
         </Box>
-      </div>
+
+        <>{renderResponse()}</>
+        <>{renderSuccess()}</>
+        <>{renderError()}</>
+      </Box>
     </Card>
   );
 };
