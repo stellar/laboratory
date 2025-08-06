@@ -4,10 +4,6 @@
   &__section {
     padding: pxToRem(32px) pxToRem(24px);
 
-    @media screen and (max-width: 1040px) {
-      padding: pxToRem(24px) pxToRem(16px);
-    }
-
     background-color: var(--sds-clr-gray-02);
 
     &:nth-child(even) {
@@ -32,6 +28,10 @@
       p.Text {
         max-width: 65ch;
       }
+    }
+
+    @media screen and (max-width: 1040px) {
+      padding: pxToRem(24px) pxToRem(16px);
     }
   }
 
@@ -186,7 +186,8 @@
       padding: pxToRem(24px);
     }
 
-    &__title {
+    &__title,
+    &__modalText {
       color: var(--sds-clr-gray-12);
     }
 

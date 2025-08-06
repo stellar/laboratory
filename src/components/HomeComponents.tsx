@@ -1,11 +1,15 @@
 import { useState } from "react";
 import Image from "next/image";
-import { Heading, Icon, Text, Button } from "@stellar/design-system";
+import { Heading, Icon, Text, Button, Modal } from "@stellar/design-system";
 
 import { Box } from "@/components/layout/Box";
 import { SdsLink } from "@/components/SdsLink";
 
-import { ThemeColorType } from "@/types/types";
+import { useSwitchNetwork } from "@/hooks/useSwitchNetwork";
+import { openUrl } from "@/helpers/openUrl";
+import { capitalizeString } from "@/helpers/capitalizeString";
+
+import { EmptyObj, Network, NetworkType, ThemeColorType } from "@/types/types";
 
 export const HomeSection = ({
   title,
@@ -223,11 +227,33 @@ export const HomeTutorials = () => {
   );
 };
 
-export const HomeNetworks = ({ theme }: { theme: ThemeColorType | null }) => {
-  const imgTheme = theme === "sds-theme-dark" ? "dark" : "light";
+export const HomeNetworks = ({
+  theme,
+  network,
+}: {
+  theme: ThemeColorType | null;
+  network: Network | EmptyObj;
+}) => {
+  type BtnNetwork = string | null;
 
-  // TODO: add button actions
-  const networkItems = [
+  type NetworkItem = {
+    id: string;
+    title: string;
+    description: string;
+    imagePath: string;
+    links: { label: string; url?: string }[];
+  };
+
+  const { getAndSetNetwork } = useSwitchNetwork();
+  const [btnNetwork, setBtnNetwork] = useState<BtnNetwork>(null);
+
+  const getNetworkLabel = (network: BtnNetwork) =>
+    network ? capitalizeString(network) : "";
+
+  const imgTheme = theme === "sds-theme-dark" ? "dark" : "light";
+  const networkLabel = btnNetwork ? getNetworkLabel(btnNetwork) : "";
+
+  const networkItems: NetworkItem[] = [
     {
       id: "testnet",
       title: "Testnet",
@@ -260,64 +286,127 @@ export const HomeNetworks = ({ theme }: { theme: ThemeColorType | null }) => {
       links: [
         {
           label: "Use Quickstart",
+          url: "https://github.com/stellar/quickstart",
         },
         {
           label: "Use Stellar CLI",
+          url: "https://github.com/stellar/stellar-cli",
         },
       ],
     },
   ];
 
-  return (
-    <div className="Lab__home__networks">
-      {networkItems.map((i) => (
-        <div
-          key={`networkItem-${i.id}`}
-          className="Lab__home__networks__item"
-          data-id={i.id}
+  const handleModalClose = () => {
+    setBtnNetwork(null);
+  };
+
+  const renderButtons = (item: NetworkItem) => {
+    if (item.id === "local" && item.links.length > 1) {
+      return item.links.map((l, idx) => (
+        <Button
+          variant="tertiary"
+          size="lg"
+          key={`networkItem-${item.id}-btn-${idx}`}
+          icon={<Icon.ArrowRight />}
+          // Not having URL here is unlikely
+          onClick={() => (l.url ? openUrl(l.url) : false)}
         >
-          <div className="Lab__home__networks__image">
-            <Image
-              src={i.imagePath}
-              alt={`${i.title} image`}
-              width={304}
-              height={200}
-            />
-          </div>
-          <Box gap="md" addlClassName="Lab__home__networks__content">
-            <Box gap="xs">
-              <Text
-                size="xl"
-                as="div"
-                weight="semi-bold"
-                addlClassName="Lab__home__networks__title"
-              >
-                {i.title}
-              </Text>
-              <Text
-                size="md"
-                as="div"
-                addlClassName="Lab__home__networks__description"
-              >
-                {i.description}
-              </Text>
-            </Box>
-            <Box gap="sm">
-              {i.links.map((l, idx) => (
-                <Button
-                  variant="tertiary"
-                  size="lg"
-                  key={`networkItem-${i.id}-btn-${idx}`}
-                  icon={<Icon.ArrowRight />}
+          {l.label}
+        </Button>
+      ));
+    }
+
+    if (["testnet", "mainnet"].includes(item.id) && item.links.length === 1) {
+      return (
+        <Button
+          variant="tertiary"
+          size="lg"
+          key={`networkItem-${item.id}-btn`}
+          icon={<Icon.ArrowRight />}
+          onClick={() => {
+            setBtnNetwork(item.id);
+          }}
+          disabled={item.id === network.id}
+        >
+          {item.id === network.id
+            ? `You’re on ${network.label}`
+            : item.links[0].label}
+        </Button>
+      );
+    }
+
+    return null;
+  };
+
+  return (
+    <>
+      <div className="Lab__home__networks">
+        {networkItems.map((i) => (
+          <div
+            key={`networkItem-${i.id}`}
+            className="Lab__home__networks__item"
+            data-id={i.id}
+          >
+            <div className="Lab__home__networks__image">
+              <Image
+                src={i.imagePath}
+                alt={`${i.title} image`}
+                width={304}
+                height={200}
+              />
+            </div>
+            <Box gap="md" addlClassName="Lab__home__networks__content">
+              <Box gap="xs">
+                <Text
+                  size="xl"
+                  as="div"
+                  weight="semi-bold"
+                  addlClassName="Lab__home__networks__title"
                 >
-                  {l.label}
-                </Button>
-              ))}
+                  {i.title}
+                </Text>
+                <Text
+                  size="md"
+                  as="div"
+                  addlClassName="Lab__home__networks__description"
+                >
+                  {i.description}
+                </Text>
+              </Box>
+              <Box gap="sm">{renderButtons(i)}</Box>
             </Box>
-          </Box>
-        </div>
-      ))}
-    </div>
+          </div>
+        ))}
+      </div>
+
+      <Modal visible={Boolean(btnNetwork)} onClose={handleModalClose}>
+        <Modal.Heading>{`Switch to ${networkLabel}`}</Modal.Heading>
+        <Text
+          as="div"
+          size="sm"
+          addlClassName="Lab__home__networks__modalText"
+        >{`You’re currently on ${network.label}. Switch networks to try ${networkLabel}.`}</Text>
+        <Modal.Footer>
+          <Button
+            size="md"
+            variant="tertiary"
+            onClick={() => handleModalClose()}
+          >
+            Cancel
+          </Button>
+          <Button
+            size="md"
+            variant="primary"
+            onClick={() => {
+              getAndSetNetwork(btnNetwork as NetworkType);
+              handleModalClose();
+            }}
+          >
+            {`Switch to ${networkLabel}`}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
   );
 };
 

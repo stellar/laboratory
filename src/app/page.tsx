@@ -20,7 +20,8 @@ import "@/styles/home.scss";
 
 // Landing page
 export default function Introduction() {
-  const { theme } = useStore();
+  const { theme, network } = useStore();
+
   return (
     <>
       <HomeSection
@@ -65,7 +66,7 @@ export default function Introduction() {
         eyebrow="Use on multiple networks"
         description="Test safely in testnet and localnet, or connect to the mainnet — Stellar Lab gives you full control."
       >
-        <HomeNetworks theme={theme} />
+        <HomeNetworks theme={theme} network={network} />
       </HomeSection>
 
       <HomeSection
