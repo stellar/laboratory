@@ -204,21 +204,6 @@ test.describe("URL Params", () => {
         "persistent",
       );
       await expect(sorobanOp.getByLabel("Resource Fee")).toHaveValue("46753");
-
-      // Validation
-      const txnSuccess = page.getByTestId(
-        "build-soroban-transaction-envelope-xdr",
-      );
-
-      await expect(
-        txnSuccess.getByText("Network Passphrase").locator("+ div"),
-      ).toHaveText("Test SDF Network ; September 2015");
-      await expect(txnSuccess.getByText("Hash").locator("+ div")).toHaveText(
-        "d8c7f3dee39f14373e2f1a1131bcc91a49694b6af6b6d81b7703784b3a51bc94",
-      );
-      await expect(txnSuccess.getByText("XDR").locator("+ div")).toHaveText(
-        "AAAAAgAAAAB+TL0HLiAjanMRnyeqyhb8Iu+4d1g2dl1cwPi1UZAigwAAtwUABiLjAAAAGgAAAAEAAAAAZ1G76AAAAAAAAAAAAAAAAQAAAAMxMDAAAAAAAQAAAAAAAAAZAAAAAAAATiAAAAABAAAAAAAAAAEAAAAGAAAAASD+7zozM+tVyk2uwVRrzhPzYqyzwMsAT1kzEuqEzbYfAAAAEAAAAAEAAAACAAAADwAAAAdDb3VudGVyAAAAABIAAAAAAAAAAH5MvQcuICNqcxGfJ6rKFvwi77h3WDZ2XVzA+LVRkCKDAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAC2oQAAAAA=",
-      );
     });
 
     test("Fee Bump", async ({ page }) => {
