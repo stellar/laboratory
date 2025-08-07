@@ -1,9 +1,8 @@
 import { Button } from "@stellar/design-system";
-import { getNetworkById } from "@/helpers/getNetworkById";
 import { capitalizeString } from "@/helpers/capitalizeString";
-import { useStore } from "@/store/useStore";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 import { NetworkType } from "@/types/types";
+import { useSwitchNetwork } from "@/hooks/useSwitchNetwork";
 
 export const SwitchNetworkButtons = ({
   includedNetworks,
@@ -14,16 +13,7 @@ export const SwitchNetworkButtons = ({
   buttonSize: "sm" | "md" | "lg";
   page: string;
 }) => {
-  const { selectNetwork, updateIsDynamicNetworkSelect } = useStore();
-
-  const getAndSetNetwork = (networkId: NetworkType) => {
-    const newNetwork = getNetworkById(networkId);
-
-    if (newNetwork) {
-      updateIsDynamicNetworkSelect(true);
-      selectNetwork(newNetwork);
-    }
-  };
+  const { getAndSetNetwork } = useSwitchNetwork();
 
   return (
     <>
