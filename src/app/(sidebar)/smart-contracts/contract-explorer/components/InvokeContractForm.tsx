@@ -11,9 +11,11 @@ import {
   Button,
   Card,
   Icon,
+  Label,
   Text,
   Textarea,
   Tooltip,
+  Toggle,
 } from "@stellar/design-system";
 import { BASE_FEE, contract } from "@stellar/stellar-sdk";
 import { Api } from "@stellar/stellar-sdk/rpc";
@@ -47,25 +49,9 @@ import { SorobanInvokeValue, XdrFormatType, AnyObject } from "@/types/types";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
-export const SimulatedResponse = ({
-  result,
-}: {
-  result: Api.SimulateTransactionResponse;
-}) => {
-  const errorClass = Api.isSimulationError(result)
-    ? "PageBody__content--error"
-    : "";
-
-  return (
-    <Box gap="md">
-      <div
-        data-testid="invoke-contract-simulate-tx-response"
-        className={`PageBody__content PageBody__scrollable ${errorClass}`}
-      >
-        <PrettyJson json={result} isCodeWrapped={true} />
-      </div>
-    </Box>
-  );
+type SimulatedResponseType = {
+  fullResponse: Api.SimulateTransactionResponse;
+  resultOnly: AnyObject;
 };
 
 export const InvokeContractForm = ({
@@ -92,10 +78,10 @@ export const InvokeContractForm = ({
   const [formError, setFormError] = useState<AnyObject>({});
   const [isGetFunction, setIsGetFunction] = useState(false);
 
-  const [jsonResult, setJsonResult] =
-    useState<Api.SimulateTransactionResponse>();
-  const [base64Result, setBase64Result] =
-    useState<Api.SimulateTransactionResponse>();
+  const [jsonResponse, setJsonResponse] = useState<SimulatedResponseType>();
+  const [base64Response, setBase64Response] = useState<SimulatedResponseType>();
+  const [isFullResponseEnabled, setIsFullResponseEnabled] =
+    useState<boolean>(false);
 
   // Based on reads and writes to the contract
   // Can only be determined based on the simulation result
@@ -384,7 +370,7 @@ export const InvokeContractForm = ({
 
   const handleSimulate = async (xdr: string) => {
     try {
-      const [jsonResult, base64Result] = await Promise.all([
+      const [simJsonResponse, simBase64Response] = await Promise.all([
         simulateTx({
           rpcUrl: network.rpcUrl,
           transactionXdr: xdr,
@@ -399,12 +385,18 @@ export const InvokeContractForm = ({
         }),
       ]);
 
-      if (jsonResult?.result) {
-        setJsonResult(jsonResult?.result);
+      if (simJsonResponse?.result) {
+        setJsonResponse({
+          fullResponse: simJsonResponse?.result,
+          resultOnly: simJsonResponse?.result?.results,
+        });
       }
 
-      if (base64Result?.result) {
-        setBase64Result(base64Result?.result);
+      if (simBase64Response?.result) {
+        setBase64Response({
+          fullResponse: simBase64Response?.result,
+          resultOnly: simBase64Response?.result?.results,
+        });
       }
 
       trackEvent(
@@ -589,22 +581,30 @@ export const InvokeContractForm = ({
   };
 
   const renderResponse = () => {
-    if (jsonResult || base64Result) {
+    if (jsonResponse?.fullResponse || base64Response?.fullResponse) {
       return (
         <TabView
           tab1={{
             id: "json",
             label: "JSON",
-            content: jsonResult && <SimulatedResponse result={jsonResult} />,
-            isDisabled: !jsonResult,
+            content: jsonResponse?.fullResponse && (
+              <SimulatedResponse
+                result={jsonResponse}
+                isFullResponseEnabled={isFullResponseEnabled}
+              />
+            ),
+            isDisabled: !jsonResponse?.fullResponse,
           }}
           tab2={{
             id: "base64",
             label: "Base64",
-            content: base64Result && (
-              <SimulatedResponse result={base64Result} />
+            content: base64Response?.fullResponse && (
+              <SimulatedResponse
+                result={base64Response}
+                isFullResponseEnabled={isFullResponseEnabled}
+              />
             ),
-            isDisabled: !base64Result,
+            isDisabled: !base64Response?.fullResponse,
           }}
           activeTabId={xdrFormat}
           onTabChange={(id) => {
@@ -616,6 +616,13 @@ export const InvokeContractForm = ({
               },
             );
           }}
+          rightElement={
+            <FullResponseToggle
+              isChecked={isFullResponseEnabled}
+              onChange={setIsFullResponseEnabled}
+              id={funcName}
+            />
+          }
         />
       );
     }
@@ -732,5 +739,61 @@ export const InvokeContractForm = ({
         <>{renderError()}</>
       </Box>
     </Card>
+  );
+};
+
+export const FullResponseToggle = ({
+  isChecked,
+  onChange,
+  id,
+}: {
+  isChecked: boolean;
+  onChange: (isChecked: boolean) => void;
+  id: string;
+}) => {
+  return (
+    <Box gap="sm" direction="row" align="center">
+      <Label htmlFor="full-response-toggle" size="sm">
+        Show full response
+      </Label>
+      <Toggle
+        id={`full-response-toggle-${id}`}
+        fieldSize="sm"
+        title="Show full response"
+        onChange={() => {
+          const newValue = !isChecked;
+
+          onChange(newValue);
+        }}
+        checked={isChecked}
+      />
+    </Box>
+  );
+};
+
+export const SimulatedResponse = ({
+  result,
+  isFullResponseEnabled = false,
+}: {
+  result: SimulatedResponseType;
+  isFullResponseEnabled: boolean;
+}) => {
+  const errorClass = Api.isSimulationError(result.fullResponse)
+    ? "PageBody__content--error"
+    : "";
+
+  const json = isFullResponseEnabled
+    ? result.fullResponse
+    : (result?.resultOnly && { results: result?.resultOnly }) || {};
+
+  return (
+    <Box gap="md">
+      <div
+        data-testid="invoke-contract-simulate-tx-response"
+        className={`PageBody__content PageBody__scrollable ${errorClass}`}
+      >
+        <PrettyJson json={json} isCodeWrapped={true} />
+      </div>
+    </Box>
   );
 };

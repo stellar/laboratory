@@ -24,12 +24,14 @@ type TabViewProps = {
   tab6?: Tab;
   onTabChange: (id: string) => void;
   activeTabId: string;
+  rightElement?: React.ReactNode;
 };
 
 export const TabView = ({
   heading,
   onTabChange,
   activeTabId,
+  rightElement,
   ...tabs
 }: TabViewProps) => {
   const tabItems = Object.values(tabs).map((t) => ({
@@ -55,6 +57,10 @@ export const TabView = ({
             onChange={onTabChange}
           />
         </div>
+
+        {rightElement ? (
+          <div className="TabView__rightElement">{rightElement}</div>
+        ) : null}
       </div>
 
       <div className="TabView__content">
