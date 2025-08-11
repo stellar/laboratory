@@ -1,6 +1,13 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { Heading, Icon, Text, Button, Modal } from "@stellar/design-system";
+import {
+  Heading,
+  Icon,
+  Text,
+  Button,
+  Modal,
+  Display,
+} from "@stellar/design-system";
 
 import { Box } from "@/components/layout/Box";
 import { SdsLink } from "@/components/SdsLink";
@@ -46,6 +53,390 @@ export const HomeSection = ({
     </Box>
   </div>
 );
+
+export const HomeIntro = () => {
+  const introItems = [
+    {
+      id: "home-tx",
+      title: "Sign, Simulate & Build Transactions",
+      description: "Build Stellar transaction through a web interface",
+      imagePath: "/images/lab-home-intro-tx.png",
+      imageSize: 180,
+    },
+    {
+      id: "home-contract",
+      title: "Contract Explorer",
+      description: "Comprehensive smart contract inspection",
+      imagePath: "/images/lab-home-intro-contract.png",
+      imageSize: 180,
+    },
+    {
+      id: "home-xdr",
+      title: "Decode and Inspect",
+      description: "Convert XDR data into human-readable JSON",
+      imagePath: "/images/lab-home-intro-xdr.png",
+      imageSize: 180,
+    },
+    {
+      id: "home-api",
+      title: "Explore Endpoints",
+      description: "Test and explore Stellar Horizon and RPC API",
+      imagePath: "/images/lab-home-intro-api.png",
+      imageSize: 210,
+    },
+  ];
+
+  const sliderItems = [
+    {
+      id: "slider-tx",
+      title: "Sign, Simulate & Build Transaction",
+      description:
+        "Construct Stellar transactions through a web interface. It supports building both classic Stellar operations(like payments, account creation) and Soroban smart contract transactions.",
+      tutorialLink: "",
+      imagePath: "/images/lab-home-intro-tx.png",
+      imageSize: 311,
+      buttons: [
+        {
+          label: "Create Account",
+          link: "",
+        },
+        {
+          label: "Payment",
+          link: "",
+        },
+        {
+          label: "Change Trust",
+          link: "",
+        },
+        {
+          label: "Account Merge",
+          link: "",
+        },
+      ],
+    },
+    {
+      id: "slider-contract",
+      title: "Real-time feedback",
+      description:
+        "Immediate validation and error display system that provides instant feedback as users build transactions. The system validates user input continuously and shows error without requiring from submission.",
+      tutorialLink: "",
+      imagePath: "/images/lab-home-intro-contract.png",
+      imageSize: 311,
+      buttons: [
+        {
+          label: "Resource Fee Validation",
+          link: "",
+        },
+        {
+          label: "Multisignature Account Validation",
+          link: "",
+        },
+        {
+          label: "API Documentation",
+          link: "",
+        },
+      ],
+    },
+    {
+      id: "slider-xdr",
+      title: "Decode and Inspect",
+      description:
+        "The process of converting XDR(External Data Representation) data into human-readable JSON format for inspection and analysis.",
+      tutorialLink: "",
+      imagePath: "/images/lab-home-intro-xdr.png",
+      imageSize: 311,
+      buttons: [
+        {
+          label: "XDR Overview",
+          link: "",
+        },
+        {
+          label: "XDR ⇄ JSON Conversion",
+          link: "",
+        },
+      ],
+    },
+    {
+      id: "slider-api",
+      title: "Explore Endpoints ",
+      description:
+        "Interactively test and explore Stellar’s REST API endpoints and RPC methods, with a comprehensive interface for building requests, submitting them to networks, and viewing formatted responses. ",
+      tutorialLink: "",
+      imagePath: "/images/lab-home-intro-api.png",
+      imageSize: 343,
+      buttons: [
+        {
+          label: "RPC Methods Documentation",
+          link: "",
+        },
+        {
+          label: "Horizon Endpoints Documentation",
+          link: "",
+        },
+      ],
+    },
+  ];
+
+  const containerEl = useRef<HTMLDivElement>(null);
+  const sliderEl = useRef<HTMLDivElement>(null);
+
+  const [isDesktopMode, setIsDesktopMode] = useState(true);
+  const [isSliderVisible, setIsSliderVisible] = useState(false);
+  const [currentSliderIndex, setCurrentSliderIndex] = useState<number>(0);
+
+  useEffect(() => {
+    const el = containerEl?.current;
+
+    if (!el) {
+      return;
+    }
+
+    const elResizeObserver = new ResizeObserver((entries) => {
+      // Get the first entry
+      if (entries[0]) {
+        const isDesktop = Math.round(entries[0].contentRect.width) > 840;
+        setIsDesktopMode(isDesktop);
+        setIsSliderVisible(!isDesktop);
+      }
+    });
+
+    // Start the observer
+    elResizeObserver.observe(el);
+
+    // Cleanup on unmount
+    return () => {
+      elResizeObserver.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    const slider = sliderEl?.current;
+
+    if (!slider || !isSliderVisible) {
+      return;
+    }
+
+    const scrollendHandler = () => {
+      const width = slider.clientWidth;
+      const activeIndex = Math.round(slider.scrollLeft / width);
+
+      if (currentSliderIndex !== activeIndex) {
+        setCurrentSliderIndex(activeIndex);
+      }
+    };
+
+    slider.addEventListener("scrollend", scrollendHandler);
+
+    return () => {
+      slider.removeEventListener("scrollend", scrollendHandler);
+    };
+  }, [currentSliderIndex, isSliderVisible]);
+
+  const handleSlideScroll = (index: number, hasScrollAnimation = true) => {
+    const slider = sliderEl?.current;
+
+    if (slider) {
+      const containerWidth = slider.clientWidth;
+
+      slider.scroll({
+        left: index * containerWidth,
+        behavior: hasScrollAnimation ? "smooth" : "auto",
+      });
+    }
+  };
+
+  const updateSliderIndex = (newIndex: number) => {
+    setCurrentSliderIndex(newIndex);
+    handleSlideScroll(newIndex);
+  };
+
+  return (
+    <div
+      className="Lab__home__intro"
+      ref={containerEl}
+      data-is-desktop-mode={isDesktopMode}
+      data-is-slider-visible={isSliderVisible}
+    >
+      <div className="Lab__home__introSlider">
+        <div className="Lab__home__introSlider__container" ref={sliderEl}>
+          {sliderItems.map((s) => {
+            const sliderImageSize = isDesktopMode ? s.imageSize : 160;
+
+            return (
+              <div className="Lab__home__introSlider__cardItem" key={s.id}>
+                <div className="Lab__home__introSlider__cardItem__image">
+                  <Image
+                    src={s.imagePath}
+                    alt={`${s.title} image`}
+                    width={sliderImageSize}
+                    height={sliderImageSize}
+                  />
+                </div>
+
+                <div className="Lab__home__introSlider__cardItem__content">
+                  <div className="Lab__home__introSlider__cardItem__card">
+                    <Box
+                      gap="md"
+                      direction="row"
+                      align="center"
+                      justify="space-between"
+                    >
+                      <Display
+                        size="xs"
+                        weight="semi-bold"
+                        addlClassName="Lab__home__introSlider__cardItem__title"
+                      >
+                        {s.title}
+                      </Display>
+
+                      {isDesktopMode ? (
+                        <div
+                          className="Lab__home__introSlider__button"
+                          role="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setCurrentSliderIndex(0);
+                            setIsSliderVisible(false);
+                          }}
+                        >
+                          <Icon.X />
+                        </div>
+                      ) : null}
+                    </Box>
+                    <Text
+                      as="div"
+                      size="md"
+                      addlClassName="Lab__home__introSlider__cardItem__description"
+                    >
+                      {s.description}
+                    </Text>
+
+                    {s.tutorialLink ? (
+                      <SdsLink
+                        href={s.tutorialLink}
+                        icon={<Icon.LinkExternal01 />}
+                      >
+                        Watch Video Tutorial
+                      </SdsLink>
+                    ) : null}
+
+                    <Box gap="sm" wrap="wrap">
+                      <Text
+                        as="div"
+                        size="md"
+                        addlClassName="Lab__home__introSlider__cardItem__note"
+                        weight="medium"
+                      >
+                        Most useful documents for developer engagement:
+                      </Text>
+
+                      <Box gap="sm" wrap="wrap" direction="row">
+                        {s.buttons.map((b, idx) => (
+                          <Button
+                            size="lg"
+                            variant="tertiary"
+                            icon={<Icon.LinkExternal01 />}
+                            key={`${s.id}-${idx}`}
+                            // TODO: handle link
+                          >
+                            {b.label}
+                          </Button>
+                        ))}
+                      </Box>
+                    </Box>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="Lab__home__introSlider__nav">
+          <Box
+            gap="md"
+            direction="row"
+            align="center"
+            justify="center"
+            addlClassName="Lab__home__introSlider__nav__container"
+          >
+            {/* Left button */}
+            <button
+              className="Lab__home__introSlider__button"
+              disabled={currentSliderIndex === 0}
+              data-is-active={currentSliderIndex !== 0}
+              onClick={() => {
+                updateSliderIndex(currentSliderIndex - 1);
+              }}
+            >
+              <Icon.ChevronLeft />
+            </button>
+            {/* Dots */}
+            {sliderItems.map((_, idx) => (
+              <div
+                key={`nav-dot-${idx}`}
+                className="Lab__home__introSlider__nav__dot"
+                data-is-current={currentSliderIndex === idx}
+                onClick={() => {
+                  updateSliderIndex(idx);
+                }}
+              ></div>
+            ))}
+            {/* Right button */}
+            <button
+              className="Lab__home__introSlider__button"
+              disabled={currentSliderIndex === sliderItems.length - 1}
+              data-is-active={currentSliderIndex !== sliderItems.length - 1}
+              onClick={() => {
+                updateSliderIndex(currentSliderIndex + 1);
+              }}
+            >
+              <Icon.ChevronRight />
+            </button>
+          </Box>
+        </div>
+      </div>
+
+      <div className="Lab__home__introCards">
+        {introItems.map((i, cardIndex) => (
+          <div
+            className="Lab__home__intro__card"
+            key={`home-sm-${i.id}`}
+            onClick={() => {
+              setCurrentSliderIndex(cardIndex);
+              setIsSliderVisible(true);
+              handleSlideScroll(cardIndex, false);
+            }}
+          >
+            <Box gap="xl" align="center">
+              <div className="Lab__home__introCards__image">
+                <Image
+                  src={i.imagePath}
+                  alt={`${i.title} image`}
+                  width={i.imageSize}
+                  height={i.imageSize}
+                />
+              </div>
+
+              <Box gap="xs" align="center">
+                <Text
+                  as="div"
+                  size="md"
+                  weight="medium"
+                  addlClassName="Lab__home__introCards__title"
+                >
+                  {i.title}
+                </Text>
+                <Text as="div" size="sm">
+                  {i.description}
+                </Text>
+              </Box>
+            </Box>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 export const HomeTutorials = () => {
   const tutorials = [

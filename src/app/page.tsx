@@ -10,6 +10,7 @@ import {
   HomeResources,
   HomeNetworks,
   HomeTutorials,
+  HomeIntro,
 } from "@/components/HomeComponents";
 
 import { Routes } from "@/constants/routes";
@@ -51,7 +52,7 @@ export default function Introduction() {
         }
         isTopSection={true}
       >
-        <></>
+        <HomeIntro />
       </HomeSection>
 
       <HomeSection
