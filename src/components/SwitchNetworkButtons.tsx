@@ -1,8 +1,8 @@
 import { Button } from "@stellar/design-system";
 import { capitalizeString } from "@/helpers/capitalizeString";
+import { useSwitchNetwork } from "@/hooks/useSwitchNetwork";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 import { NetworkType } from "@/types/types";
-import { useSwitchNetwork } from "@/hooks/useSwitchNetwork";
 
 export const SwitchNetworkButtons = ({
   includedNetworks,
