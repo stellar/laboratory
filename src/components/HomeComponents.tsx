@@ -98,19 +98,19 @@ export const HomeIntro = () => {
       buttons: [
         {
           label: "Create Account",
-          link: "",
+          link: "https://developers.stellar.org/docs/build/guides/transactions/create-account",
         },
         {
           label: "Payment",
-          link: "",
+          link: "https://developers.stellar.org/docs/build/apps/example-application-tutorial/payment",
         },
         {
           label: "Change Trust",
-          link: "",
+          link: "https://developers.stellar.org/docs/data/apis/horizon/api-reference/errors/result-codes/operation-specific/account-merge",
         },
         {
           label: "Account Merge",
-          link: "",
+          link: "https://developers.stellar.org/docs/data/apis/horizon/api-reference/errors/result-codes/operation-specific/account-merge",
         },
       ],
     },
@@ -125,15 +125,15 @@ export const HomeIntro = () => {
       buttons: [
         {
           label: "Resource Fee Validation",
-          link: "",
+          link: "https://developers.stellar.org/docs/learn/fundamentals/fees-resource-limits-metering#resource-fee",
         },
         {
           label: "Multisignature Account Validation",
-          link: "",
+          link: "https://developers.stellar.org/docs/learn/fundamentals/transactions/signatures-multisig#alternate-signature-types",
         },
         {
           label: "API Documentation",
-          link: "",
+          link: "https://developers.stellar.org/docs/data/apis/rpc/api-reference",
         },
       ],
     },
@@ -148,11 +148,11 @@ export const HomeIntro = () => {
       buttons: [
         {
           label: "XDR Overview",
-          link: "",
+          link: "https://developers.stellar.org/docs/learn/fundamentals/data-format/xdr",
         },
         {
           label: "XDR ⇄ JSON Conversion",
-          link: "",
+          link: "https://developers.stellar.org/docs/learn/fundamentals/data-format/xdr-json",
         },
       ],
     },
@@ -167,11 +167,11 @@ export const HomeIntro = () => {
       buttons: [
         {
           label: "RPC Methods Documentation",
-          link: "",
+          link: "https://developers.stellar.org/docs/tools/lab/api-explorer/rpc-methods",
         },
         {
           label: "Horizon Endpoints Documentation",
-          link: "",
+          link: "https://developers.stellar.org/docs/data/apis/horizon",
         },
       ],
     },
@@ -337,7 +337,9 @@ export const HomeIntro = () => {
                             variant="tertiary"
                             icon={<Icon.LinkExternal01 />}
                             key={`${s.id}-${idx}`}
-                            // TODO: handle link
+                            onClick={() => {
+                              openUrl(b.link);
+                            }}
                           >
                             {b.label}
                           </Button>
