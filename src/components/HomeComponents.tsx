@@ -568,7 +568,7 @@ export const HomeTutorials = () => {
 
   return (
     <div className="Lab__home__tutorials">
-      {/* Video */}
+      {/* Tutorial video */}
       <div className="Lab__home__tutorials__video">
         <iframe
           width="100%"
@@ -582,7 +582,7 @@ export const HomeTutorials = () => {
         ></iframe>
       </div>
 
-      {/* List */}
+      {/* Tutorial List */}
       <div className="Lab__home__tutorials__list">
         <div className="Lab__home__tutorials__list__container">
           <Box gap="xs" addlClassName="Lab__home__tutorials__list__scroll">
