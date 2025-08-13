@@ -4,13 +4,13 @@ import { stringify } from "lossless-json";
 
 import { Box } from "@/components/layout/Box";
 import { SdsLink } from "@/components/SdsLink";
+import { ExpandBox } from "@/components/ExpandBox";
 
 import { formatNumber } from "@/helpers/formatNumber";
 import { stroopsToLumens } from "@/helpers/stroopsToLumens";
 import { getTxData } from "@/helpers/getTxData";
 
 import { RpcTxJsonResponse } from "@/types/types";
-import { ExpandBox } from "@/components/ExpandBox";
 
 export const FeeBreakdown = ({
   txDetails,
@@ -167,7 +167,7 @@ export const FeeBreakdown = ({
 
           {/* Nested */}
           <ExpandBox offsetTop="custom" customValue="0" isExpanded={isExpanded}>
-            {/* Nested Refundable Fee */}
+            {/* Refundable Fee */}
             <GridTableRow>
               <GridTableCell isNested={true}>
                 <FeeType
