@@ -21,6 +21,7 @@ import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { TransactionInfo } from "./components/TransactionInfo";
 import { StateChange } from "./components/StateChange";
+import { FeeBreakdown } from "./components/FeeBreakdown";
 
 import "./styles.scss";
 
@@ -31,7 +32,8 @@ export default function TransactionDashboard() {
     | "tx-events"
     | "tx-state-change"
     | "tx-resource-profiler"
-    | "tx-signatures";
+    | "tx-signatures"
+    | "tx-fee-breakdown";
 
   const { network, txDashboard } = useStore();
 
@@ -258,6 +260,12 @@ export default function TransactionDashboard() {
                 id: "tx-signatures",
                 label: "Signatures",
                 content: <ComingSoonText />,
+                isDisabled: !isDataLoaded,
+              }}
+              tab7={{
+                id: "tx-fee-breakdown",
+                label: "Fee Breakdown",
+                content: <FeeBreakdown txDetails={txDetails} />,
                 isDisabled: !isDataLoaded,
               }}
               activeTabId={activeTab}

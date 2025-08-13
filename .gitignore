@@ -44,6 +44,7 @@ next-env.d.ts
 
 # ide settings
 /.idea/
+/.vscode/
 
 # versions
 mise.toml
