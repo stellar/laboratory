@@ -18,4 +18,11 @@
   time {
     color: var(--sds-clr-gray-12);
   }
+
+  &__ellipsis {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }

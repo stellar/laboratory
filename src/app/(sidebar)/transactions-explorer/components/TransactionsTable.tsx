@@ -119,7 +119,9 @@ export function TransactionsTable({
               as="div"
               addlClassName="TransactionsExplorer__table__cell"
             >
-              {getOperationType(tx)}
+              <div className="TransactionsExplorer__ellipsis">
+                {getOperationType(tx)}
+              </div>
             </Text>
           ),
         },
