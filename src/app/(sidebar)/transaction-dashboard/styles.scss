@@ -153,8 +153,8 @@
         minmax(pxToRem(160px), 1fr)
         minmax(pxToRem(160px), 1fr);
 
-      &:not(:last-child) {
-        border-bottom: 1px solid var(--sds-clr-gray-06);
+      &:not(:first-child) {
+        border-top: 1px solid var(--sds-clr-gray-06);
       }
 
       &[data-is-header="true"] {
