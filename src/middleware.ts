@@ -18,7 +18,7 @@ export function middleware(request: NextRequest) {
     connect-src 'self' http://localhost:* https:;
     font-src 'self' https://fonts.gstatic.com/ https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs/base/browser/ui/codicons/codicon/codicon.ttf;
     object-src 'none';
-    frame-src 'self' https://connect.trezor.io/ https://hot-labs.org/;
+    frame-src 'self' https://connect.trezor.io/ https://hot-labs.org/ https://www.youtube.com/;
     base-uri 'self';
     form-action 'self';
     frame-ancestors 'none';
