@@ -22,6 +22,7 @@ type TabViewProps = {
   tab4?: Tab;
   tab5?: Tab;
   tab6?: Tab;
+  tab7?: Tab;
   onTabChange: (id: string) => void;
   activeTabId: string;
   rightElement?: React.ReactNode;

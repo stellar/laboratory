@@ -1,5 +1,9 @@
 import { BigNumber } from "bignumber.js";
 
 export const stroopsToLumens = (stroops: string) => {
-  return new BigNumber(Number(stroops) / 1e7).toString();
+  if (!stroops) {
+    return "";
+  }
+
+  return new BigNumber(stroops).dividedBy(1e7).toFixed();
 };
