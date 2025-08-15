@@ -1,0 +1,28 @@
+.TransactionsExplorer {
+  &__table {
+    &__cell {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      color: var(--sds-clr-gray-11);
+    }
+
+    &__lastCell {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+  }
+
+  time {
+    color: var(--sds-clr-gray-12);
+  }
+
+  &__ellipsis {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

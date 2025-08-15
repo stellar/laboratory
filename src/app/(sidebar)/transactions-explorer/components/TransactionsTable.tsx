@@ -1,7 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Badge, Button, CopyText, Icon, Text } from "@stellar/design-system";
+import {
+  Badge,
+  Button,
+  CopyText,
+  Icon,
+  IconButton,
+  Text,
+} from "@stellar/design-system";
 
 import { DataTable } from "@/components/DataTable";
 import { Box } from "@/components/layout/Box";
@@ -9,8 +16,10 @@ import { SdsLink } from "@/components/SdsLink";
 
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import { NormalizedTransaction } from "@/helpers/explorer/normalizeTransaction";
+import { capitalizeString } from "@/helpers/capitalizeString";
 
 import { DataTableHeader } from "@/types/types";
+
 import { Time } from "./Time";
 
 function getOperationType(tx: NormalizedTransaction): string {
@@ -55,8 +64,8 @@ export function TransactionsTable({
 }) {
   const router = useRouter();
   const headers: DataTableHeader[] = [
+    { id: "txhash", value: "Transaction Hash" },
     { id: "type", value: "Type" },
-    { id: "txhash", value: "Transaction hash" },
     { id: "created", value: "Created at" },
     { id: "status", value: "Status" },
     { id: "actions", value: "", isSortable: false },
@@ -77,29 +86,25 @@ export function TransactionsTable({
       tableId="transactions"
       tableHeaders={headers}
       tableData={sortedTransactions}
-      cssGridTemplateColumns="minmax(300px, 2fr) minmax(130px, 2fr) minmax(300px, 1fr) minmax(50px, 100px) minmax(100px, 1fr)"
+      cssGridTemplateColumns="minmax(160px, 1fr) minmax(180px, 1.5fr) minmax(260px, 1fr) minmax(80px, 100px) minmax(100px, 1fr)"
       formatDataRow={(tx: NormalizedTransaction) => [
         {
           value: (
-            <Text size="xs" as="span">
-              {getOperationType(tx)}
-            </Text>
-          ),
-        },
-        {
-          value: (
-            <Box gap="sm" direction="row" align="center">
+            <Box
+              gap="sm"
+              direction="row"
+              align="center"
+              addlClassName="TransactionsExplorer__table__cell"
+            >
               <SdsLink href={`/transactions-explorer/tx/${tx.txHash}`}>
                 {shortenStellarAddress(tx.txHash)}
               </SdsLink>
 
               <CopyText textToCopy={tx.txHash}>
-                <Button
-                  size="sm"
-                  variant="tertiary"
+                <IconButton
+                  customSize="12px"
                   icon={<Icon.Copy01 />}
-                  iconPosition="left"
-                  showActionTooltip={false}
+                  altText="Copy Transaction Hash"
                   onClick={(e) => e.preventDefault()}
                 />
               </CopyText>
@@ -107,25 +112,40 @@ export function TransactionsTable({
           ),
           isOverflow: true,
         },
+        {
+          value: (
+            <Text
+              size="sm"
+              as="div"
+              addlClassName="TransactionsExplorer__table__cell"
+            >
+              <div className="TransactionsExplorer__ellipsis">
+                {getOperationType(tx)}
+              </div>
+            </Text>
+          ),
+        },
         { value: <Time timestamp={parseInt(tx.createdAt.toString(), 10)} /> },
         {
           value: (
             <Badge variant={tx.status === "SUCCESS" ? "success" : "error"}>
-              {tx.status}
+              {capitalizeString(tx.status.toLowerCase())}
             </Badge>
           ),
         },
         {
           value: (
-            <Button
-              size="sm"
-              variant="tertiary"
-              onClick={() => {
-                router.push(`/transactions-explorer/tx/${tx.txHash}`);
-              }}
-            >
-              View details
-            </Button>
+            <div className="TransactionsExplorer__table__lastCell">
+              <Button
+                size="sm"
+                variant="tertiary"
+                onClick={() => {
+                  router.push(`/transactions-explorer/tx/${tx.txHash}`);
+                }}
+              >
+                View details
+              </Button>
+            </div>
           ),
         },
       ]}
