@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "standalone",
+  output: process.env.NEXT_PUBLIC_ENABLE_STANDALONE_OUTPUT
+    ? "standalone"
+    : undefined,
   distDir: "build",
   basePath: process.env.NEXT_BASE_PATH || undefined,
   webpack: (config) => {
