@@ -90,6 +90,16 @@ export default function Introduction() {
         </Text>
       </PageCard>
 
+      {/*TODO: for testing; remove before merging */}
+      <button
+        type="button"
+        onClick={() => {
+          throw new Error("Test Sentry error");
+        }}
+      >
+        Trigger test error
+      </button>
+
       <InfoCards infoCards={infoCards} />
 
       <div className="IntroFooter">
