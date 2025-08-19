@@ -1471,8 +1471,10 @@ test.describe("Build Transaction Page", () => {
         // Fill in required fields
         await soroban_operation
           .getByLabel("Contract ID")
-          .fill("CA2WMM5VMUEAZLXBIOHAJTQKXT7AM3D6IKDQVOLGNAWZO5JCJXVIUCJG");
-        await soroban_operation.getByLabel("Key ScVal in XDR").fill("AAAAFA==");
+          .fill("CBAQUCFEHS5LTXZXLJN37A5Z3AWVJLZKLR5CDEIMISQX4CX7WBSM7VDJ");
+        await soroban_operation
+          .getByLabel("Key ScVal in XDR")
+          .fill("AAAAEAAAAAEAAAACAAAADwAAAAlBZG1pbnNWZWMAAAAAAAAFAAAAAAAAAAE=");
         await soroban_operation
           .getByLabel("Durability")
           .selectOption({ value: "persistent" });
