@@ -18,6 +18,8 @@ import {
   LOCAL_STORAGE_EXPLORER_TRANSACTIONS_RPC_REF,
 } from "@/constants/settings";
 
+import "./styles.scss";
+
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import {
   type NormalizedTransaction,
@@ -127,14 +129,14 @@ export default function Explorer() {
     localStorageKey,
   ]);
 
-  const errorElement = txsQuery.isError && (
+  const errorElement = txsQuery.isError ? (
     <Alert variant="error" placement="inline">
       {txsQuery.error.message}
     </Alert>
-  );
+  ) : null;
 
   return (
-    <Box gap="md" data-testid="explorer">
+    <Box gap="md" data-testid="explorer" addlClassName="TransactionsExplorer">
       <PageCard heading="Transactions Explorer">
         {errorElement}
 

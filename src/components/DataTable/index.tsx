@@ -462,48 +462,50 @@ export const DataTable = <T extends AnyObject>({
   return (
     <Box gap="md">
       {/* Header */}
-      <Box
-        gap="sm"
-        direction="row"
-        align="end"
-        justify="space-between"
-        wrap="wrap"
-      >
-        {customHeaderEl ?? <div></div>}
-
+      {csvFileName || customHeaderEl ? (
         <Box
           gap="sm"
           direction="row"
+          align="end"
+          justify="space-between"
           wrap="wrap"
-          addlClassName="DataTable__actionButtons"
         >
-          <>
-            {csvFileName ? (
-              <>
-                <Button
-                  variant="tertiary"
-                  size="sm"
-                  icon={<Icon.Download01 />}
-                  iconPosition="left"
-                  onClick={(e) => handleExportToCsv(e, "xdr")}
-                >
-                  Export in XDR
-                </Button>
+          {customHeaderEl ?? <div></div>}
 
-                <Button
-                  variant="tertiary"
-                  size="sm"
-                  icon={<Icon.Download01 />}
-                  iconPosition="left"
-                  onClick={(e) => handleExportToCsv(e, "json")}
-                >
-                  Export in JSON
-                </Button>
-              </>
-            ) : null}
-          </>
+          <Box
+            gap="sm"
+            direction="row"
+            wrap="wrap"
+            addlClassName="DataTable__actionButtons"
+          >
+            <>
+              {csvFileName ? (
+                <>
+                  <Button
+                    variant="tertiary"
+                    size="sm"
+                    icon={<Icon.Download01 />}
+                    iconPosition="left"
+                    onClick={(e) => handleExportToCsv(e, "xdr")}
+                  >
+                    Export in XDR
+                  </Button>
+
+                  <Button
+                    variant="tertiary"
+                    size="sm"
+                    icon={<Icon.Download01 />}
+                    iconPosition="left"
+                    onClick={(e) => handleExportToCsv(e, "json")}
+                  >
+                    Export in JSON
+                  </Button>
+                </>
+              ) : null}
+            </>
+          </Box>
         </Box>
-      </Box>
+      ) : null}
 
       {/* Filters */}
       {hasAppliedFilters ? (
