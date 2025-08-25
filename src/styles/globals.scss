@@ -336,6 +336,7 @@
     // Remove padding for full content width background
     &:has([data-no-padding="true"]) {
       padding: 0;
+      background-color: var(--sds-clr-gray-01);
     }
   }
 

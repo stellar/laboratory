@@ -24,38 +24,36 @@ export const HomeSection = ({
   eyebrow,
   description,
   children,
-  isTopSection = false,
 }: {
-  title: string;
+  title?: string;
   eyebrow?: string;
   description?: React.ReactNode;
   children: React.ReactElement | React.ReactElement[];
-  isTopSection?: boolean;
 }) => (
   <div className="Lab__home__section" data-no-padding="true">
     <Box gap="xl" addlClassName="Lab__home__content">
-      <Box gap="xs">
-        {eyebrow ? <div className="Lab__home__eyebrow">{eyebrow}</div> : null}
-        <Heading
-          as={isTopSection ? "h1" : "h2"}
-          size={isTopSection ? "md" : "xs"}
-          weight="semi-bold"
-        >
-          {title}
-        </Heading>
-        {description ? (
-          <Text size="md" as="p">
-            {description}
-          </Text>
-        ) : null}
-      </Box>
+      {eyebrow || title || description ? (
+        <Box gap="xs">
+          {eyebrow ? <div className="Lab__home__eyebrow">{eyebrow}</div> : null}
+          {title ? (
+            <Heading as="h2" size="xs" weight="semi-bold">
+              {title}
+            </Heading>
+          ) : null}
+          {description ? (
+            <Text size="md" as="p">
+              {description}
+            </Text>
+          ) : null}
+        </Box>
+      ) : null}
 
       {children}
     </Box>
   </div>
 );
 
-export const HomeIntro = () => {
+export const HomeSlider = () => {
   const introItems = [
     {
       id: "home-tx",

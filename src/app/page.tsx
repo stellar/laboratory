@@ -1,6 +1,13 @@
 "use client";
 
-import { Logo } from "@stellar/design-system";
+import {
+  Badge,
+  Button,
+  Heading,
+  Icon,
+  Logo,
+  Text,
+} from "@stellar/design-system";
 
 import { NextLink } from "@/components/NextLink";
 import { SdsLink } from "@/components/SdsLink";
@@ -10,7 +17,7 @@ import {
   HomeResources,
   HomeNetworks,
   HomeTutorials,
-  HomeIntro,
+  HomeSlider,
 } from "@/components/HomeComponents";
 
 import { Routes } from "@/constants/routes";
@@ -23,59 +30,98 @@ import "@/styles/home.scss";
 export default function Introduction() {
   const { theme, network } = useStore();
 
+  const topImgSuffix = theme === "sds-theme-light" ? "light" : "dark";
+
   return (
-    <>
-      <HomeSection
-        title="Build and Test Stellar Transactions With No Code"
-        description={
-          <>
-            Stellar Lab is a web-based toolkit for exploring the Stellar
-            blockchain, allowing you to{" "}
-            <NextLink href={Routes.BUILD_TRANSACTION} sds-variant="primary">
-              build
-            </NextLink>
-            ,{" "}
-            <NextLink href={Routes.SIGN_TRANSACTION} sds-variant="primary">
-              sign
-            </NextLink>
-            ,{" "}
-            <NextLink href={Routes.SIMULATE_TRANSACTION} sds-variant="primary">
-              simulate
-            </NextLink>
-            , and{" "}
-            <NextLink href={Routes.SUBMIT_TRANSACTION} sds-variant="primary">
-              submit transactions
-            </NextLink>
-            , interact with RPC and Horizon APIs, convert between XDR and JSON,
-            and explore smart contracts.
-          </>
-        }
-        isTopSection={true}
-      >
-        <HomeIntro />
-      </HomeSection>
+    <Box gap="xl">
+      <Box gap="custom" customValue="92px">
+        <HomeSection>
+          <div className="Lab__home__top">
+            <div className="Lab__home__top__graphic">
+              <Badge size="md" variant="secondary">
+                Stellar Lab
+              </Badge>
 
-      <HomeSection
-        title="Follow our step-by-step tutorials to start building"
-        eyebrow="Learn from tutorials"
-      >
-        <HomeTutorials />
-      </HomeSection>
+              <img
+                src={`/images/lab-home-main-${topImgSuffix}.png`}
+                alt="Home graphic image"
+              />
+            </div>
+            <Heading as="h1" size="md" weight="semi-bold">
+              Simulate, Analyze, and Explore — All in One place
+            </Heading>
+            <Text as="div" size="md">
+              The all-in-one web tool to{" "}
+              <NextLink href={Routes.BUILD_TRANSACTION} sds-variant="primary">
+                build
+              </NextLink>
+              ,{" "}
+              <NextLink href={Routes.SIGN_TRANSACTION} sds-variant="primary">
+                sign
+              </NextLink>
+              ,{" "}
+              <NextLink
+                href={Routes.SIMULATE_TRANSACTION}
+                sds-variant="primary"
+              >
+                simulate
+              </NextLink>
+              , and{" "}
+              <NextLink href={Routes.SUBMIT_TRANSACTION} sds-variant="primary">
+                submit transactions
+              </NextLink>{" "}
+              and interact with contracts on the Stellar network.
+            </Text>
 
-      <HomeSection
-        title="Choose your network to get started"
-        eyebrow="Use on multiple networks"
-        description="Test safely in testnet and localnet, or connect to the mainnet — Stellar Lab gives you full control."
-      >
-        <HomeNetworks theme={theme} network={network} />
-      </HomeSection>
+            <Box
+              gap="md"
+              direction="row"
+              align="center"
+              justify="center"
+              wrap="wrap"
+            >
+              {/* TODO: add links */}
+              <Button size="lg" variant="secondary" icon={<Icon.ArrowRight />}>
+                Get started
+              </Button>
 
-      <HomeSection
-        title="Everything you need to build and connect"
-        eyebrow="Resources"
-      >
-        <HomeResources />
-      </HomeSection>
+              <Button
+                size="lg"
+                variant="tertiary"
+                icon={<Icon.LinkExternal01 />}
+              >
+                Read docs
+              </Button>
+            </Box>
+          </div>
+        </HomeSection>
+
+        <HomeSection>
+          <HomeSlider />
+        </HomeSection>
+
+        <HomeSection
+          title="Follow our step-by-step tutorials to start building"
+          eyebrow="Learn from tutorials"
+        >
+          <HomeTutorials />
+        </HomeSection>
+
+        <HomeSection
+          title="Choose your network to get started"
+          eyebrow="Use on multiple networks"
+          description="Test safely in testnet and localnet, or connect to the mainnet — Stellar Lab gives you full control."
+        >
+          <HomeNetworks theme={theme} network={network} />
+        </HomeSection>
+
+        <HomeSection
+          title="Everything you need to build and connect"
+          eyebrow="Resources"
+        >
+          <HomeResources />
+        </HomeSection>
+      </Box>
 
       <Box
         gap="md"
@@ -115,6 +161,6 @@ export default function Introduction() {
           </>
         </Box>
       </Box>
-    </>
+    </Box>
   );
 }
