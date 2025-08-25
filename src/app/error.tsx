@@ -1,18 +1,15 @@
 "use client";
+import * as Sentry from "@sentry/nextjs";
+import type { NextPage } from "next";
+import type { ErrorProps } from "next/error";
+import NextError from "next/error";
 
 import { Button, Card, Heading, Icon, Text } from "@stellar/design-system";
 import { Box } from "@/components/layout/Box";
 import { openUrl } from "@/helpers/openUrl";
 
-export default function Error({
-  error,
-}: {
-  error: Error & { digest?: string };
-}) {
-  // TODO: track this in Sentry once set up
-  console.log("Unhandled error: ", error);
-
-  return (
+const Error: NextPage<ErrorProps> = () => (
+  <>
     <Card>
       <Box gap="xl" align="start">
         <Box gap="md">
@@ -53,5 +50,15 @@ export default function Error({
         </Box>
       </Box>
     </Card>
-  );
-}
+  </>
+);
+
+Error.getInitialProps = async (contextData) => {
+  // In case this is running in a serverless function, await this in order to give Sentry
+  // time to send the error before the lambda exits
+  await Sentry.captureUnderscoreErrorException(contextData);
+  // This will contain the status code of the response
+  return NextError.getInitialProps(contextData);
+};
+
+export default Error;
