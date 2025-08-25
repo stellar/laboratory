@@ -357,10 +357,10 @@
 
     &__video {
       position: relative;
-      flex: 2;
+      flex: 2.3;
       min-width: pxToRem(320px);
       // Keep video ratio
-      aspect-ratio: 560/315;
+      aspect-ratio: 654/364;
       border-radius: pxToRem(8px);
       overflow: hidden;
     }
