@@ -52,7 +52,9 @@ export default function TransactionDashboard() {
     rpcUrl: network.rpcUrl,
   });
 
-  const isCurrentNetworkSupported = ["mainnet", "testnet"].includes(network.id);
+  const isCurrentNetworkSupported = ["mainnet", "testnet", "custom"].includes(
+    network.id,
+  );
   const isLoadContractDisabled =
     !isCurrentNetworkSupported ||
     !network.rpcUrl ||
@@ -129,7 +131,7 @@ export default function TransactionDashboard() {
     return (
       <Box gap="sm" direction="row">
         <SwitchNetworkButtons
-          includedNetworks={["testnet", "mainnet"]}
+          includedNetworks={["testnet", "mainnet", "custom"]}
           buttonSize="md"
           page="transaction dashboard"
         />
@@ -188,7 +190,7 @@ export default function TransactionDashboard() {
               note={
                 isCurrentNetworkSupported
                   ? ""
-                  : "You must switch your network to Mainnet or Testnet in order to see transaction info."
+                  : "You must switch your network to Mainnet, Testnet, or Custom in order to see transaction info."
               }
             />
 
