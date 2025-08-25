@@ -4,21 +4,7 @@
   &__section {
     padding: pxToRem(32px) pxToRem(24px);
 
-    background-color: var(--sds-clr-gray-02);
-
-    &:nth-child(even) {
-      background-color: var(--sds-clr-base-00);
-    }
-
-    &:nth-child(3) {
-      background:
-        linear-gradient(
-          0deg,
-          var(--sds-clr-gray-02) 0%,
-          var(--sds-clr-gray-02) 100%
-        ),
-        var(--sds-clr-base-00);
-    }
+    background-color: var(--sds-clr-gray-01);
 
     &:first-child {
       h1.Heading {
@@ -36,7 +22,7 @@
   }
 
   &__content {
-    width: clamp(pxToRem(672px), 100%, pxToRem(1280px));
+    width: clamp(pxToRem(672px), 100%, pxToRem(960px));
     margin: 0 auto;
 
     @media screen and (max-width: 1040px) {
@@ -508,19 +494,49 @@
 
   // Resources
   &__resources {
+    --sds-logo-fill: var(--sds-clr-base-01);
+    --lab-home-resources-logo-size: #{pxToRem(16px)};
+
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(pxToRem(320px), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(pxToRem(304px), 1fr));
     gap: pxToRem(24px);
 
     &__item {
-      background-color: var(--sds-clr-base-00);
+      background-color: var(--sds-clr-gray-01);
       border: 1px solid var(--sds-clr-gray-06);
       border-radius: pxToRem(8px);
       padding: pxToRem(24px);
+
+      // Using custom colors for YouTube and Discord
+      &[data-item="youtube"] {
+        --sds-logo-fill: #ff0100;
+      }
+
+      &[data-item="discord"] {
+        --sds-logo-fill: #5865f2;
+      }
+
+      &[data-item="x"] {
+        --lab-home-resources-logo-size: #{pxToRem(12px)};
+      }
+
+      &[data-item="dev-docs"] {
+        .Lab__home__resources__title {
+          svg {
+            stroke: var(--sds-logo-fill);
+          }
+        }
+      }
     }
 
     &__title {
       color: var(--sds-clr-gray-11);
+
+      svg {
+        width: var(--lab-home-resources-logo-size);
+        height: var(--lab-home-resources-logo-size);
+        display: block;
+      }
     }
 
     &__description {
@@ -529,6 +545,10 @@
       .Link {
         margin-bottom: pxToRem(4px);
       }
+    }
+
+    .Button {
+      width: fit-content;
     }
   }
 
