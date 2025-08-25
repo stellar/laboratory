@@ -16,6 +16,7 @@ export const useSacXdrData = ({ isActive }: { isActive: boolean }) => {
     error: sacDataError,
     isFetching: isSacDataFetching,
     isLoading: isSacDataLoading,
+    isSuccess: isSacDataSuccess,
   } = useGitHubFile({
     repo: STELLAR_ASSET_CONTRACT.contractSpecRepo,
     path: STELLAR_ASSET_CONTRACT.contractSpecPath,
@@ -55,5 +56,6 @@ export const useSacXdrData = ({ isActive }: { isActive: boolean }) => {
     sacDataError: sacDataError,
     isSacDataFetching: isSacDataFetching,
     isSacDataLoading: isSacDataLoading,
+    isSacDataSuccess: isSacDataSuccess,
   };
 };
