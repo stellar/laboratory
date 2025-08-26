@@ -96,8 +96,7 @@ export const HomeSlider = ({ imgTheme }: { imgTheme: "light" | "dark" }) => {
       buttons: [
         {
           label: "Watch Video Tutorial",
-          // TODO: tutorial link
-          link: "",
+          link: "https://youtu.be/ZrmDQKU2dqY?si=QXFFSQ4FAHgrx-8c",
         },
         {
           label: "XDR Overview",
@@ -122,8 +121,7 @@ export const HomeSlider = ({ imgTheme }: { imgTheme: "light" | "dark" }) => {
       buttons: [
         {
           label: "Watch Video Tutorial",
-          // TODO: tutorial link
-          link: "",
+          link: "https://youtu.be/Isn5CkEWFs8?si=BUdXoSVYYFZPwKG8",
         },
         {
           label: "Create Account",
@@ -155,11 +153,6 @@ export const HomeSlider = ({ imgTheme }: { imgTheme: "light" | "dark" }) => {
       },
       buttons: [
         {
-          label: "Watch Video Tutorial",
-          // TODO: tutorial link
-          link: "",
-        },
-        {
           label: "RPC Methods Documentation",
           link: "https://developers.stellar.org/docs/tools/lab/api-explorer/rpc-methods",
         },
@@ -182,8 +175,7 @@ export const HomeSlider = ({ imgTheme }: { imgTheme: "light" | "dark" }) => {
       buttons: [
         {
           label: "Watch Video Tutorial",
-          // TODO: tutorial link
-          link: "",
+          link: "https://youtu.be/XcFgR_OHKl8?si=kJ5nEejo_t5ySpIU",
         },
         {
           label: "Contract Overview",
@@ -743,7 +735,6 @@ export const HomeNetworks = ({
           variant="tertiary"
           size="lg"
           key={`networkItem-${item.id}-btn-${idx}`}
-          icon={<Icon.ArrowRight />}
           // Not having URL here is unlikely
           onClick={() => (l.url ? openUrl(l.url) : false)}
         >
@@ -760,7 +751,6 @@ export const HomeNetworks = ({
             variant="tertiary"
             size="lg"
             key={`networkItem-${item.id}-btn`}
-            icon={<Icon.ArrowRight />}
             onClick={() => {
               router.push(Routes.BUILD_TRANSACTION);
             }}
@@ -822,7 +812,7 @@ export const HomeNetworks = ({
                   {i.description}
                 </Text>
               </Box>
-              <Box gap="sm" direction="row" justify="space-between" wrap="wrap">
+              <Box gap="sm" direction="row" wrap="wrap">
                 {renderButtons(i)}
               </Box>
             </Box>
