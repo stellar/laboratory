@@ -1,5 +1,8 @@
 @use "../../../styles/utils.scss" as *;
 
+// =============================================================================
+// State Change
+// =============================================================================
 .StateChange {
   &__item {
     .Badge {
@@ -77,6 +80,143 @@
       &:first-child:not(:last-child) {
         border-right: 1px solid var(--sds-clr-gray-06);
       }
+    }
+  }
+}
+
+// =============================================================================
+// Fee Breakdown
+// =============================================================================
+.FeeBreakdown {
+  color: var(--sds-clr-gray-11);
+
+  &__text {
+    font-size: pxToRem(14px);
+    line-height: pxToRem(20px);
+    font-weight: var(--sds-fw-medium);
+    white-space: nowrap;
+
+    &[data-is-bold="true"] {
+      color: var(--sds-clr-gray-12);
+    }
+  }
+
+  &__resourceFeeToggle {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: pxToRem(4px);
+    cursor: pointer;
+
+    svg {
+      display: block;
+      width: pxToRem(12px);
+      height: pxToRem(12px);
+      stroke: var(--sds-clr-gray-09);
+      transform: rotate(0deg);
+      transition: transform ease-in-out 0.2s;
+    }
+
+    &[data-is-expanded="true"] {
+      svg {
+        transform: rotate(90deg);
+      }
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        svg {
+          transform: rotate(90deg);
+        }
+      }
+    }
+  }
+
+  // Table
+  &__gridTableContainer {
+    width: 100%;
+    overflow-y: auto;
+
+    border: 1px solid var(--sds-clr-gray-06);
+    border-radius: pxToRem(8px);
+    background-color: var(--sds-clr-base-00);
+  }
+
+  &__gridTable {
+    min-width: fit-content;
+
+    &__row {
+      display: grid;
+      grid-template-columns:
+        minmax(pxToRem(200px), 1.4fr)
+        minmax(pxToRem(160px), 1fr)
+        minmax(pxToRem(160px), 1fr)
+        minmax(pxToRem(160px), 1fr);
+
+      &:not(:first-child) {
+        border-top: 1px solid var(--sds-clr-gray-06);
+      }
+
+      &[data-is-header="true"] {
+        font-size: pxToRem(12px);
+        line-height: pxToRem(18px);
+        font-weight: var(--sds-fw-medium);
+        color: var(--sds-clr-gray-11);
+      }
+
+      &[data-is-highlighted="true"] {
+        background-color: var(--sds-clr-gray-03);
+      }
+    }
+
+    &__cell {
+      display: flex;
+      flex-direction: column;
+      padding: pxToRem(8px) pxToRem(12px);
+      justify-content: center;
+
+      &:not(:last-child) {
+        border-right: 1px solid var(--sds-clr-gray-06);
+      }
+
+      &[data-is-nested="true"] {
+        padding: pxToRem(12px) pxToRem(16px);
+      }
+
+      & > .Box {
+        flex: 1;
+      }
+
+      .Badge {
+        --Badge-padding-vertical: 0;
+        --Badge-padding-horizontal: #{pxToRem(6px)};
+
+        font-family: var(--sds-ff-monospace);
+        letter-spacing: pxToRem(-0.24px);
+      }
+    }
+  }
+
+  // Footprint
+  ul.FeeBreakdown__footprint {
+    display: flex;
+    flex-direction: column;
+    gap: pxToRem(4px);
+    padding: pxToRem(12px);
+    margin: 0;
+    background-color: var(--sds-clr-gray-02);
+    border-radius: pxToRem(8px);
+
+    list-style-type: disc;
+    list-style-position: inside;
+
+    font-size: pxToRem(12px);
+    line-height: pxToRem(18px);
+    font-weight: var(--sds-fw-medium);
+    color: var(--sds-clr-gray-11);
+
+    li::before {
+      display: none;
     }
   }
 }
