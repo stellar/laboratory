@@ -13,13 +13,12 @@ import { useRouter } from "next/navigation";
 import { NextLink } from "@/components/NextLink";
 import { SdsLink } from "@/components/SdsLink";
 import { Box } from "@/components/layout/Box";
-import {
-  HomeSection,
-  HomeResources,
-  HomeNetworks,
-  HomeTutorials,
-  HomeSlider,
-} from "@/components/HomeComponents";
+
+import { HomeSection } from "@/components/Home/Section";
+import { Slider } from "@/components/Home/Slider";
+import { Tutorials } from "@/components/Home/Tutorials";
+import { Networks } from "@/components/Home/Networks";
+import { Resources } from "@/components/Home/Resources";
 
 import { Routes } from "@/constants/routes";
 import { GITHUB_URL } from "@/constants/settings";
@@ -109,14 +108,14 @@ export default function Introduction() {
         </HomeSection>
 
         <HomeSection>
-          <HomeSlider imgTheme={imgTheme} />
+          <Slider imgTheme={imgTheme} />
         </HomeSection>
 
         <HomeSection
           title="Follow our step-by-step tutorials to start building"
           eyebrow="Learn from tutorials"
         >
-          <HomeTutorials />
+          <Tutorials />
         </HomeSection>
 
         <HomeSection
@@ -124,14 +123,14 @@ export default function Introduction() {
           eyebrow="Use on multiple networks"
           description="Test safely in testnet and localnet, or connect to the mainnet — Stellar Lab gives you full control."
         >
-          <HomeNetworks imgTheme={imgTheme} network={network} />
+          <Networks imgTheme={imgTheme} network={network} />
         </HomeSection>
 
         <HomeSection
           title="Everything you need to build and connect"
           eyebrow="Resources"
         >
-          <HomeResources />
+          <Resources />
         </HomeSection>
       </Box>
 
