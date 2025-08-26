@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import {
   Heading,
   Icon,
@@ -13,6 +14,7 @@ import {
 import { Box } from "@/components/layout/Box";
 import { SdsLink } from "@/components/SdsLink";
 
+import { Routes } from "@/constants/routes";
 import { useSwitchNetwork } from "@/hooks/useSwitchNetwork";
 import { openUrl } from "@/helpers/openUrl";
 import { capitalizeString } from "@/helpers/capitalizeString";
@@ -638,6 +640,7 @@ export const HomeNetworks = ({
     links: { label: string; url?: string }[];
   };
 
+  const router = useRouter();
   const { getAndSetNetwork } = useSwitchNetwork();
   const [btnNetwork, setBtnNetwork] = useState<BtnNetwork>(null);
 
@@ -651,39 +654,37 @@ export const HomeNetworks = ({
     {
       id: "testnet",
       title: "Testnet",
-      description:
-        "Works like a staging environment. Test and develop without using real XLM.",
+      description: "Safely test transactions without real funds.",
       imagePath: `/images/lab-home-net-test-${imgTheme}.png`,
       links: [
         {
-          label: "Try Testnet",
+          label: "Switch to Testnet",
         },
       ],
     },
     {
       id: "mainnet",
       title: "Mainnet",
-      description:
-        "This is the production environment. Connect to the Stellar public network.",
+      description: "Build, test, and run real transactions on Stellar.",
       imagePath: `/images/lab-home-net-main-${imgTheme}.png`,
       links: [
         {
-          label: "Try Mainnet",
+          label: "Switch to Mainnet",
         },
       ],
     },
     {
       id: "local",
       title: "Local Network",
-      description: "Use the Stellar CLI to create a local network.",
+      description: "Run a local Stellar network for development.",
       imagePath: `/images/lab-home-net-local-${imgTheme}.png`,
       links: [
         {
-          label: "Use Quickstart",
+          label: "Quickstart",
           url: "https://github.com/stellar/quickstart",
         },
         {
-          label: "Use Stellar CLI",
+          label: "Stellar CLI",
           url: "https://github.com/stellar/stellar-cli",
         },
       ],
@@ -698,7 +699,7 @@ export const HomeNetworks = ({
     if (item.id === "local" && item.links.length > 1) {
       return item.links.map((l, idx) => (
         <Button
-          variant="tertiary"
+          variant="secondary"
           size="lg"
           key={`networkItem-${item.id}-btn-${idx}`}
           icon={<Icon.ArrowRight />}
@@ -711,20 +712,33 @@ export const HomeNetworks = ({
     }
 
     if (["testnet", "mainnet"].includes(item.id) && item.links.length === 1) {
+      // Show Build Transaction button if is current network
+      if (item.id === network.id) {
+        return (
+          <Button
+            variant="secondary"
+            size="lg"
+            key={`networkItem-${item.id}-btn`}
+            icon={<Icon.ArrowRight />}
+            onClick={() => {
+              router.push(Routes.BUILD_TRANSACTION);
+            }}
+          >
+            Build Transaction
+          </Button>
+        );
+      }
+
       return (
         <Button
           variant="tertiary"
           size="lg"
           key={`networkItem-${item.id}-btn`}
-          icon={<Icon.ArrowRight />}
           onClick={() => {
             setBtnNetwork(item.id);
           }}
-          disabled={item.id === network.id}
         >
-          {item.id === network.id
-            ? `You’re on ${network.label}`
-            : item.links[0].label}
+          {item.links[0].label}
         </Button>
       );
     }
@@ -767,7 +781,9 @@ export const HomeNetworks = ({
                   {i.description}
                 </Text>
               </Box>
-              <Box gap="sm">{renderButtons(i)}</Box>
+              <Box gap="sm" direction="row" justify="space-between" wrap="wrap">
+                {renderButtons(i)}
+              </Box>
             </Box>
           </div>
         ))}

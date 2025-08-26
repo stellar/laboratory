@@ -8,6 +8,7 @@ import {
   Logo,
   Text,
 } from "@stellar/design-system";
+import { useRouter } from "next/navigation";
 
 import { NextLink } from "@/components/NextLink";
 import { SdsLink } from "@/components/SdsLink";
@@ -25,10 +26,12 @@ import { GITHUB_URL } from "@/constants/settings";
 import { useStore } from "@/store/useStore";
 
 import "@/styles/home.scss";
+import { openUrl } from "@/helpers/openUrl";
 
 // Landing page
 export default function Introduction() {
   const { theme, network } = useStore();
+  const router = useRouter();
 
   const topImgSuffix = theme === "sds-theme-light" ? "light" : "dark";
 
@@ -80,8 +83,14 @@ export default function Introduction() {
               justify="center"
               wrap="wrap"
             >
-              {/* TODO: add links */}
-              <Button size="lg" variant="secondary" icon={<Icon.ArrowRight />}>
+              <Button
+                size="lg"
+                variant="secondary"
+                icon={<Icon.ArrowRight />}
+                onClick={() => {
+                  router.push(Routes.ACCOUNT_CREATE);
+                }}
+              >
                 Get started
               </Button>
 
@@ -89,6 +98,9 @@ export default function Introduction() {
                 size="lg"
                 variant="tertiary"
                 icon={<Icon.LinkExternal01 />}
+                onClick={() => {
+                  openUrl("https://developers.stellar.org/");
+                }}
               >
                 Read docs
               </Button>
