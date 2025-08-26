@@ -7,7 +7,7 @@ test.describe("Introduction Page", () => {
 
   test("Loads", async ({ page }) => {
     await expect(page.locator("h1")).toHaveText(
-      "Build and Test Stellar Transactions With No Code",
+      "Simulate, Analyze, and Explore — All in One place",
     );
   });
 });
