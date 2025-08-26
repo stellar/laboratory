@@ -1,6 +1,9 @@
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { AnyObject } from "@/types/types";
 
+/**
+ * Sanitize an object by removing falsy values (including 0).
+ */
 export const sanitizeObject = <T extends AnyObject>(
   obj: T,
   noEmptyObj = false,
