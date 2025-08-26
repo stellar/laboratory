@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
@@ -12,14 +12,13 @@ import {
 } from "@stellar/design-system";
 
 import { Box } from "@/components/layout/Box";
-import { SdsLink } from "@/components/SdsLink";
 
 import { Routes } from "@/constants/routes";
 import { useSwitchNetwork } from "@/hooks/useSwitchNetwork";
 import { openUrl } from "@/helpers/openUrl";
 import { capitalizeString } from "@/helpers/capitalizeString";
 
-import { EmptyObj, Network, NetworkType, ThemeColorType } from "@/types/types";
+import { EmptyObj, Network, NetworkType } from "@/types/types";
 
 export const HomeSection = ({
   title,
@@ -55,48 +54,77 @@ export const HomeSection = ({
   </div>
 );
 
-export const HomeSlider = () => {
+export const HomeSlider = ({ imgTheme }: { imgTheme: "light" | "dark" }) => {
   const introItems = [
-    {
-      id: "home-tx",
-      title: "Sign, Simulate & Build Transactions",
-      description: "Build Stellar transaction through a web interface",
-      imagePath: "/images/lab-home-intro-tx.png",
-      imageSize: 180,
-    },
-    {
-      id: "home-contract",
-      title: "Contract Explorer",
-      description: "Comprehensive smart contract inspection",
-      imagePath: "/images/lab-home-intro-contract.png",
-      imageSize: 180,
-    },
     {
       id: "home-xdr",
       title: "Decode and Inspect",
       description: "Convert XDR data into human-readable JSON",
-      imagePath: "/images/lab-home-intro-xdr.png",
-      imageSize: 180,
+      imagePath: `/images/lab-home-intro-xdr-${imgTheme}.png`,
+    },
+    {
+      id: "home-tx",
+      title: "Build, Sign, Simulate & Submit Transactions",
+      description: "Build Stellar transaction with a web interface",
+      imagePath: `/images/lab-home-intro-tx-${imgTheme}.png`,
     },
     {
       id: "home-api",
-      title: "Explore Endpoints",
-      description: "Test and explore Stellar Horizon and RPC API",
-      imagePath: "/images/lab-home-intro-api.png",
-      imageSize: 210,
+      title: "Interact with API Endpoints",
+      description: "Explore and test Stellar RPC and Horizon APIs",
+      imagePath: `/images/lab-home-intro-api-${imgTheme}.png`,
+    },
+    {
+      id: "home-contract",
+      title: "Contract Explorer",
+      description: "Explore smart contracts on the networks with ease",
+      imagePath: `/images/lab-home-intro-contract-${imgTheme}.png`,
     },
   ];
 
   const sliderItems = [
     {
-      id: "slider-tx",
-      title: "Sign, Simulate & Build Transaction",
+      id: "slider-xdr",
+      title: "Decode and Inspect",
       description:
-        "Construct Stellar transactions through a web interface. It supports building both classic Stellar operations(like payments, account creation) and Soroban smart contract transactions.",
-      tutorialLink: "",
-      imagePath: "/images/lab-home-intro-tx.png",
-      imageSize: 311,
+        "Decode XDR to human-readable JSON for inspection, or back from JSON to XDR for execution. Easily diff XDR to spot changes.",
+      imagePath: `/images/lab-home-intro-xdr-${imgTheme}.png`,
+      actionButton: {
+        label: "XDR to JSON",
+        route: Routes.XDR,
+      },
       buttons: [
+        {
+          label: "Watch Video Tutorial",
+          // TODO: tutorial link
+          link: "",
+        },
+        {
+          label: "XDR Overview",
+          link: "https://developers.stellar.org/docs/learn/fundamentals/data-format/xdr",
+        },
+        {
+          label: "XDR ⇄ JSON Conversion",
+          link: "https://developers.stellar.org/docs/learn/fundamentals/data-format/xdr-json",
+        },
+      ],
+    },
+    {
+      id: "slider-tx",
+      title: "Build, Sign, Simulate & Submit Transactions",
+      description:
+        "Construct Stellar transactions with ease through a web interface. Lab supports building both classic operations (like payments, account creation) and smart contract transactions.",
+      imagePath: `/images/lab-home-intro-tx-${imgTheme}.png`,
+      actionButton: {
+        label: "Build Transaction",
+        route: Routes.BUILD_TRANSACTION,
+      },
+      buttons: [
+        {
+          label: "Watch Video Tutorial",
+          // TODO: tutorial link
+          link: "",
+        },
         {
           label: "Create Account",
           link: "https://developers.stellar.org/docs/build/guides/transactions/create-account",
@@ -116,56 +144,21 @@ export const HomeSlider = () => {
       ],
     },
     {
-      id: "slider-contract",
-      title: "Real-time feedback",
-      description:
-        "Immediate validation and error display system that provides instant feedback as users build transactions. The system validates user input continuously and shows error without requiring from submission.",
-      tutorialLink: "",
-      imagePath: "/images/lab-home-intro-contract.png",
-      imageSize: 311,
-      buttons: [
-        {
-          label: "Resource Fee Validation",
-          link: "https://developers.stellar.org/docs/learn/fundamentals/fees-resource-limits-metering#resource-fee",
-        },
-        {
-          label: "Multisignature Account Validation",
-          link: "https://developers.stellar.org/docs/learn/fundamentals/transactions/signatures-multisig#alternate-signature-types",
-        },
-        {
-          label: "API Documentation",
-          link: "https://developers.stellar.org/docs/data/apis/rpc/api-reference",
-        },
-      ],
-    },
-    {
-      id: "slider-xdr",
-      title: "Decode and Inspect",
-      description:
-        "The process of converting XDR(External Data Representation) data into human-readable JSON format for inspection and analysis.",
-      tutorialLink: "",
-      imagePath: "/images/lab-home-intro-xdr.png",
-      imageSize: 311,
-      buttons: [
-        {
-          label: "XDR Overview",
-          link: "https://developers.stellar.org/docs/learn/fundamentals/data-format/xdr",
-        },
-        {
-          label: "XDR ⇄ JSON Conversion",
-          link: "https://developers.stellar.org/docs/learn/fundamentals/data-format/xdr-json",
-        },
-      ],
-    },
-    {
       id: "slider-api",
-      title: "Explore Endpoints ",
+      title: "Explore RPC and Horizon Endpoints",
       description:
-        "Interactively test and explore Stellar’s REST API endpoints and RPC methods, with a comprehensive interface for building requests, submitting them to networks, and viewing formatted responses. ",
-      tutorialLink: "",
-      imagePath: "/images/lab-home-intro-api.png",
-      imageSize: 343,
+        "Interactively test and explore RPC methods and Horizon endpoints with a comprehensive interface for building requests, submitting them to networks, and viewing formatted responses.",
+      imagePath: `/images/lab-home-intro-api-${imgTheme}.png`,
+      actionButton: {
+        label: "Use API Explorer",
+        route: Routes.ENDPOINTS_RPC,
+      },
       buttons: [
+        {
+          label: "Watch Video Tutorial",
+          // TODO: tutorial link
+          link: "",
+        },
         {
           label: "RPC Methods Documentation",
           link: "https://developers.stellar.org/docs/tools/lab/api-explorer/rpc-methods",
@@ -176,10 +169,41 @@ export const HomeSlider = () => {
         },
       ],
     },
+    {
+      id: "slider-contract",
+      title: "Smart Contract Explorer",
+      description:
+        "Inspect and interact with smart contracts deployed on the networks. Understand their interface, see their codebase, and invoke them in Lab.",
+      imagePath: `/images/lab-home-intro-contract-${imgTheme}.png`,
+      actionButton: {
+        label: "Invoke Smart Contract",
+        route: Routes.SMART_CONTRACTS_CONTRACT_EXPLORER,
+      },
+      buttons: [
+        {
+          label: "Watch Video Tutorial",
+          // TODO: tutorial link
+          link: "",
+        },
+        {
+          label: "Contract Overview",
+          link: "https://developers.stellar.org/docs/learn/fundamentals/contract-development/overview",
+        },
+        {
+          label: "Contract Spec",
+          link: "https://developers.stellar.org/docs/learn/fundamentals/contract-development/overview#contract-spec",
+        },
+        {
+          label: "Contract Source Validation",
+          link: "https://developers.stellar.org/docs/tools/lab/smart-contracts/contract-explorer#build-info",
+        },
+      ],
+    },
   ];
 
   const containerEl = useRef<HTMLDivElement>(null);
   const sliderEl = useRef<HTMLDivElement>(null);
+  const sliderScrollEl = useRef<HTMLDivElement>(null);
 
   const [isDesktopMode, setIsDesktopMode] = useState(true);
   const [isSliderVisible, setIsSliderVisible] = useState(false);
@@ -210,8 +234,29 @@ export const HomeSlider = () => {
     };
   }, []);
 
+  const handleClickOutside = (event: MouseEvent) => {
+    if (sliderEl?.current?.contains(event.target as Node)) {
+      return;
+    }
+
+    setIsSliderVisible(false);
+  };
+
+  // Close slider when clicked outside
+  useLayoutEffect(() => {
+    if (isDesktopMode && isSliderVisible) {
+      document.addEventListener("pointerup", handleClickOutside);
+    } else {
+      document.removeEventListener("pointerup", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("pointerup", handleClickOutside);
+    };
+  }, [isSliderVisible, isDesktopMode, handleClickOutside]);
+
   useEffect(() => {
-    const slider = sliderEl?.current;
+    const slider = sliderScrollEl?.current;
 
     if (!slider || !isSliderVisible) {
       return;
@@ -234,7 +279,7 @@ export const HomeSlider = () => {
   }, [currentSliderIndex, isSliderVisible]);
 
   const handleSlideScroll = (index: number, hasScrollAnimation = true) => {
-    const slider = sliderEl?.current;
+    const slider = sliderScrollEl?.current;
 
     if (slider) {
       const containerWidth = slider.clientWidth;
@@ -258,13 +303,15 @@ export const HomeSlider = () => {
       data-is-desktop-mode={isDesktopMode}
       data-is-slider-visible={isSliderVisible}
     >
-      <div className="Lab__home__introSlider">
-        <div className="Lab__home__introSlider__container" ref={sliderEl}>
+      {/* Slider */}
+      <div className="Lab__home__introSlider" ref={sliderEl}>
+        <div className="Lab__home__introSlider__container" ref={sliderScrollEl}>
           {sliderItems.map((s) => {
-            const sliderImageSize = isDesktopMode ? s.imageSize : 160;
+            const sliderImageSize = isDesktopMode ? 300 : 160;
 
             return (
               <div className="Lab__home__introSlider__cardItem" key={s.id}>
+                {/* Image */}
                 <div className="Lab__home__introSlider__cardItem__image">
                   <Image
                     src={s.imagePath}
@@ -274,6 +321,7 @@ export const HomeSlider = () => {
                   />
                 </div>
 
+                {/* Cards */}
                 <div className="Lab__home__introSlider__cardItem__content">
                   <div className="Lab__home__introSlider__cardItem__card">
                     <Box
@@ -312,15 +360,6 @@ export const HomeSlider = () => {
                       {s.description}
                     </Text>
 
-                    {s.tutorialLink ? (
-                      <SdsLink
-                        href={s.tutorialLink}
-                        icon={<Icon.LinkExternal01 />}
-                      >
-                        Watch Video Tutorial
-                      </SdsLink>
-                    ) : null}
-
                     <Box gap="sm" wrap="wrap">
                       <Text
                         as="div"
@@ -354,51 +393,54 @@ export const HomeSlider = () => {
           })}
         </div>
 
-        <div className="Lab__home__introSlider__nav">
-          <Box
-            gap="md"
-            direction="row"
-            align="center"
-            justify="center"
-            addlClassName="Lab__home__introSlider__nav__container"
-          >
-            {/* Left button */}
-            <button
-              className="Lab__home__introSlider__button"
-              disabled={currentSliderIndex === 0}
-              data-is-active={currentSliderIndex !== 0}
+        {/* Left button */}
+        <button
+          className="Lab__home__introSlider__button"
+          disabled={currentSliderIndex === 0}
+          data-btn="left"
+          data-is-active={currentSliderIndex !== 0}
+          onClick={() => {
+            updateSliderIndex(currentSliderIndex - 1);
+          }}
+        >
+          <Icon.ChevronLeft />
+        </button>
+
+        {/* Right button */}
+        <button
+          className="Lab__home__introSlider__button"
+          disabled={currentSliderIndex === sliderItems.length - 1}
+          data-btn="right"
+          data-is-active={currentSliderIndex !== sliderItems.length - 1}
+          onClick={() => {
+            updateSliderIndex(currentSliderIndex + 1);
+          }}
+        >
+          <Icon.ChevronRight />
+        </button>
+
+        {/* Dots nav */}
+        <Box
+          gap="md"
+          direction="row"
+          align="center"
+          justify="center"
+          addlClassName="Lab__home__introSlider__nav"
+        >
+          {sliderItems.map((_, idx) => (
+            <div
+              key={`nav-dot-${idx}`}
+              className="Lab__home__introSlider__nav__dot"
+              data-is-current={currentSliderIndex === idx}
               onClick={() => {
-                updateSliderIndex(currentSliderIndex - 1);
+                updateSliderIndex(idx);
               }}
-            >
-              <Icon.ChevronLeft />
-            </button>
-            {/* Dots */}
-            {sliderItems.map((_, idx) => (
-              <div
-                key={`nav-dot-${idx}`}
-                className="Lab__home__introSlider__nav__dot"
-                data-is-current={currentSliderIndex === idx}
-                onClick={() => {
-                  updateSliderIndex(idx);
-                }}
-              ></div>
-            ))}
-            {/* Right button */}
-            <button
-              className="Lab__home__introSlider__button"
-              disabled={currentSliderIndex === sliderItems.length - 1}
-              data-is-active={currentSliderIndex !== sliderItems.length - 1}
-              onClick={() => {
-                updateSliderIndex(currentSliderIndex + 1);
-              }}
-            >
-              <Icon.ChevronRight />
-            </button>
-          </Box>
-        </div>
+            ></div>
+          ))}
+        </Box>
       </div>
 
+      {/* Cards */}
       <div className="Lab__home__introCards">
         {introItems.map((i, cardIndex) => (
           <div
@@ -415,8 +457,8 @@ export const HomeSlider = () => {
                 <Image
                   src={i.imagePath}
                   alt={`${i.title} image`}
-                  width={i.imageSize}
-                  height={i.imageSize}
+                  width="183"
+                  height="168"
                 />
               </div>
 
@@ -624,10 +666,10 @@ export const HomeTutorials = () => {
 };
 
 export const HomeNetworks = ({
-  theme,
+  imgTheme,
   network,
 }: {
-  theme: ThemeColorType | null;
+  imgTheme: "light" | "dark";
   network: Network | EmptyObj;
 }) => {
   type BtnNetwork = string | null;
@@ -647,7 +689,6 @@ export const HomeNetworks = ({
   const getNetworkLabel = (network: BtnNetwork) =>
     network ? capitalizeString(network) : "";
 
-  const imgTheme = theme === "sds-theme-dark" ? "dark" : "light";
   const networkLabel = btnNetwork ? getNetworkLabel(btnNetwork) : "";
 
   const networkItems: NetworkItem[] = [
@@ -699,7 +740,7 @@ export const HomeNetworks = ({
     if (item.id === "local" && item.links.length > 1) {
       return item.links.map((l, idx) => (
         <Button
-          variant="secondary"
+          variant="tertiary"
           size="lg"
           key={`networkItem-${item.id}-btn-${idx}`}
           icon={<Icon.ArrowRight />}
@@ -716,7 +757,7 @@ export const HomeNetworks = ({
       if (item.id === network.id) {
         return (
           <Button
-            variant="secondary"
+            variant="tertiary"
             size="lg"
             key={`networkItem-${item.id}-btn`}
             icon={<Icon.ArrowRight />}

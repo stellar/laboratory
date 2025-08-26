@@ -1,6 +1,7 @@
 @use "./utils.scss" as *;
 
 .Lab__home {
+  // Top section
   &__top {
     padding-top: pxToRem(60px);
     display: flex;
@@ -57,6 +58,7 @@
     }
   }
 
+  // Home sections
   &__section {
     padding: 0 pxToRem(24px);
     background-color: var(--sds-clr-gray-01);
@@ -75,7 +77,6 @@
     }
   }
 
-  // Top section
   &__eyebrow {
     font-size: pxToRem(16px);
     line-height: pxToRem(24px);
@@ -85,11 +86,11 @@
 
   &__intro {
     position: relative;
+    min-height: pxToRem(338px);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: pxToRem(484px);
 
     // Info cards
     &__card {
@@ -140,30 +141,50 @@
         justify-content: center;
         align-items: center;
       }
+
+      .Lab__home__introSlider__button {
+        &[data-btn] {
+          top: pxToRem(80px);
+        }
+
+        &[data-btn="left"] {
+          left: 0;
+        }
+
+        &[data-btn="right"] {
+          right: 0;
+        }
+      }
     }
 
     // Desktop mode
     &[data-is-desktop-mode="true"] {
       // Slider
       .Lab__home__introSlider__cardItem {
-        padding-top: pxToRem(44px);
+        // Don't crop drop shadow
+        padding-bottom: pxToRem(36px);
+        margin-bottom: pxToRem(-36px);
       }
 
       .Lab__home__introSlider__cardItem__card {
-        height: pxToRem(348px);
-        box-shadow: 0 pxToRem(20px) pxToRem(20px) 0 rgba(0, 0, 0, 0.1);
+        height: pxToRem(344px);
+        box-shadow: 0 pxToRem(20px) pxToRem(20px) 0 rgba(0, 0, 0, 0.05);
       }
 
       .Lab__home__introSlider__cardItem__image {
-        margin-right: pxToRem(-30px);
-        width: pxToRem(311px);
+        margin-left: pxToRem(24px);
+        width: pxToRem(300px);
         height: 100%;
+      }
+
+      .Lab__home__introSlider__cardItem__content {
+        margin-right: pxToRem(24px);
       }
 
       // Slider visibility
       &[data-is-slider-visible="true"] {
         .Lab__home__introCards {
-          opacity: 0.3;
+          opacity: 0;
         }
 
         .Lab__home__introSlider {
@@ -176,12 +197,6 @@
           opacity: 0;
           pointer-events: none;
         }
-      }
-
-      .Lab__home__introSlider__nav__container {
-        // Offset left to center the slider navigation under the card
-        // 311px - 30px (image width - offset margin right)
-        margin-left: pxToRem(311px - 30px);
       }
     }
   }
@@ -199,11 +214,10 @@
       width: pxToRem(168px);
       height: pxToRem(168px);
       overflow: visible;
-      display: flex;
-      justify-content: center;
-      align-items: center;
 
       img {
+        max-width: 100%;
+        max-height: 100%;
         transition: transform ease-in-out 0.2s;
       }
     }
@@ -225,7 +239,7 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    gap: pxToRem(24px);
+    gap: pxToRem(12px);
     transition: opacity ease-in-out 0.2s;
 
     &__container {
@@ -250,7 +264,6 @@
     &__cardItem {
       width: 100%;
       height: 100%;
-      flex: 1 0;
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
@@ -281,7 +294,6 @@
         display: flex;
         flex: 1;
         width: 100%;
-        max-width: pxToRem(636px);
         height: 100%;
         flex-direction: column;
         justify-content: space-between;
@@ -343,6 +355,22 @@
         cursor: default;
       }
 
+      &[data-btn] {
+        position: absolute;
+        // Offset card bottom padding to show drop shadow
+        top: calc(50% - 18px);
+        transform: translateY(-50%);
+        z-index: 10;
+      }
+
+      &[data-btn="left"] {
+        left: pxToRem(8px);
+      }
+
+      &[data-btn="right"] {
+        right: pxToRem(8px);
+      }
+
       &[data-is-active="true"] {
         background-color: var(--sds-clr-gray-12);
 
@@ -363,13 +391,9 @@
     }
 
     &__nav {
+      display: none;
       width: 100%;
-
-      &__container {
-        // Match the card width
-        width: 100%;
-        max-width: pxToRem(636px);
-      }
+      padding: pxToRem(6px);
 
       &__dot {
         width: pxToRem(8px);

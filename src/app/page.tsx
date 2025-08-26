@@ -24,16 +24,16 @@ import {
 import { Routes } from "@/constants/routes";
 import { GITHUB_URL } from "@/constants/settings";
 import { useStore } from "@/store/useStore";
+import { openUrl } from "@/helpers/openUrl";
 
 import "@/styles/home.scss";
-import { openUrl } from "@/helpers/openUrl";
 
 // Landing page
 export default function Introduction() {
   const { theme, network } = useStore();
   const router = useRouter();
 
-  const topImgSuffix = theme === "sds-theme-light" ? "light" : "dark";
+  const imgTheme = theme === "sds-theme-light" ? "light" : "dark";
 
   return (
     <Box gap="xl">
@@ -46,7 +46,7 @@ export default function Introduction() {
               </Badge>
 
               <img
-                src={`/images/lab-home-main-${topImgSuffix}.png`}
+                src={`/images/lab-home-main-${imgTheme}.png`}
                 alt="Home graphic image"
               />
             </div>
@@ -109,7 +109,7 @@ export default function Introduction() {
         </HomeSection>
 
         <HomeSection>
-          <HomeSlider />
+          <HomeSlider imgTheme={imgTheme} />
         </HomeSection>
 
         <HomeSection
@@ -124,7 +124,7 @@ export default function Introduction() {
           eyebrow="Use on multiple networks"
           description="Test safely in testnet and localnet, or connect to the mainnet — Stellar Lab gives you full control."
         >
-          <HomeNetworks theme={theme} network={network} />
+          <HomeNetworks imgTheme={imgTheme} network={network} />
         </HomeSection>
 
         <HomeSection
