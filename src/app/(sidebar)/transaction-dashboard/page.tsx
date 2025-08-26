@@ -21,6 +21,7 @@ import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { TransactionInfo } from "./components/TransactionInfo";
 import { StateChange } from "./components/StateChange";
+import { FeeBreakdown } from "./components/FeeBreakdown";
 
 import "./styles.scss";
 
@@ -31,7 +32,8 @@ export default function TransactionDashboard() {
     | "tx-events"
     | "tx-state-change"
     | "tx-resource-profiler"
-    | "tx-signatures";
+    | "tx-signatures"
+    | "tx-fee-breakdown";
 
   const { network, txDashboard } = useStore();
 
@@ -52,7 +54,9 @@ export default function TransactionDashboard() {
     rpcUrl: network.rpcUrl,
   });
 
-  const isCurrentNetworkSupported = ["mainnet", "testnet"].includes(network.id);
+  const isCurrentNetworkSupported = ["mainnet", "testnet", "custom"].includes(
+    network.id,
+  );
   const isLoadContractDisabled =
     !isCurrentNetworkSupported ||
     !network.rpcUrl ||
@@ -129,7 +133,7 @@ export default function TransactionDashboard() {
     return (
       <Box gap="sm" direction="row">
         <SwitchNetworkButtons
-          includedNetworks={["testnet", "mainnet"]}
+          includedNetworks={["testnet", "mainnet", "custom"]}
           buttonSize="md"
           page="transaction dashboard"
         />
@@ -188,7 +192,7 @@ export default function TransactionDashboard() {
               note={
                 isCurrentNetworkSupported
                   ? ""
-                  : "You must switch your network to Mainnet or Testnet in order to see transaction info."
+                  : "You must switch your network to Mainnet, Testnet, or Custom in order to see transaction info."
               }
             />
 
@@ -258,6 +262,12 @@ export default function TransactionDashboard() {
                 id: "tx-signatures",
                 label: "Signatures",
                 content: <ComingSoonText />,
+                isDisabled: !isDataLoaded,
+              }}
+              tab7={{
+                id: "tx-fee-breakdown",
+                label: "Fee Breakdown",
+                content: <FeeBreakdown txDetails={txDetails} />,
                 isDisabled: !isDataLoaded,
               }}
               activeTabId={activeTab}
