@@ -1,6 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import {
   Heading,
   Icon,
@@ -674,7 +673,6 @@ export const HomeNetworks = ({
     links: { label: string; url?: string }[];
   };
 
-  const router = useRouter();
   const { getAndSetNetwork } = useSwitchNetwork();
   const [btnNetwork, setBtnNetwork] = useState<BtnNetwork>(null);
 
@@ -744,22 +742,6 @@ export const HomeNetworks = ({
     }
 
     if (["testnet", "mainnet"].includes(item.id) && item.links.length === 1) {
-      // Show Build Transaction button if is current network
-      if (item.id === network.id) {
-        return (
-          <Button
-            variant="tertiary"
-            size="lg"
-            key={`networkItem-${item.id}-btn`}
-            onClick={() => {
-              router.push(Routes.BUILD_TRANSACTION);
-            }}
-          >
-            Build Transaction
-          </Button>
-        );
-      }
-
       return (
         <Button
           variant="tertiary"
@@ -768,6 +750,7 @@ export const HomeNetworks = ({
           onClick={() => {
             setBtnNetwork(item.id);
           }}
+          disabled={network.id === item.id}
         >
           {item.links[0].label}
         </Button>
