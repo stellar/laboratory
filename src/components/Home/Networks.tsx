@@ -187,7 +187,7 @@ export const Networks = ({
           </Button>
           <Button
             size="md"
-            variant="primary"
+            variant="secondary"
             onClick={() => {
               getAndSetNetwork(btnNetwork as NetworkType);
               handleModalClose();

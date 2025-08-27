@@ -60,7 +60,7 @@ export const Resources = () => {
             addlClassName="Lab__home__resources__title"
           >
             {i.icon}
-            <Text size="sm" as="div">
+            <Text size="sm" as="div" weight="semi-bold">
               {i.title}
             </Text>
           </Box>
