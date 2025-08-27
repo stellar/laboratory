@@ -32,7 +32,7 @@ export const Resources = () => {
       title: "X (Twitter)",
       description:
         "Follow along with us @StellarOrg for updates on our platforms.",
-      link: "https://twitter.com/StellarOrg",
+      link: "https://twitter.com/@StellarOrg",
       icon: <Logo.XTwitter />,
     },
     {

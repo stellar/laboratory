@@ -86,7 +86,7 @@ export const Slider = ({ imgTheme }: { imgTheme: "light" | "dark" }) => {
         },
         {
           label: "Change Trust",
-          link: "https://developers.stellar.org/docs/data/apis/horizon/api-reference/errors/result-codes/operation-specific/account-merge",
+          link: "https://developers.stellar.org/docs/data/apis/horizon/api-reference/errors/result-codes/operation-specific/change-trust",
         },
         {
           label: "Account Merge",
