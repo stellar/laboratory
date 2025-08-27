@@ -7,6 +7,7 @@ import { Box } from "@/components/layout/Box";
 
 import { capitalizeString } from "@/helpers/capitalizeString";
 import { openUrl } from "@/helpers/openUrl";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { EmptyObj, Network, NetworkType } from "@/types/types";
 
@@ -88,7 +89,16 @@ export const Networks = ({
           size="lg"
           key={`networkItem-${item.id}-btn-${idx}`}
           // Not having URL here is unlikely
-          onClick={() => (l.url ? openUrl(l.url) : false)}
+          onClick={() => {
+            if (l.url) {
+              trackEvent(TrackingEvent.HOME_NETWORKS_BTN, {
+                button: `local: ${l.label.toLowerCase()}`,
+              });
+              openUrl(l.url);
+            }
+
+            return false;
+          }}
         >
           {l.label}
         </Button>
@@ -103,6 +113,9 @@ export const Networks = ({
           key={`networkItem-${item.id}-btn`}
           onClick={() => {
             setBtnNetwork(item.id);
+            trackEvent(TrackingEvent.HOME_NETWORKS_BTN, {
+              button: `switch to network: ${item.id}`,
+            });
           }}
           disabled={network.id === item.id}
         >

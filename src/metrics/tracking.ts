@@ -97,6 +97,13 @@ export enum TrackingEvent {
   NETWORK_SWITCH = "network: switch",
   THEME_SET = "theme set",
   WALLET_KIT_SELECTED = "wallet kit selected",
+  // Home
+  HOME_TOP_BTN = "home: top btn",
+  HOME_SLIDER_CARD = "home: slider card",
+  HOME_SLIDER_DETAILS_BTN = "home: slider details btn",
+  HOME_TUTORIAL = "home: tutorial",
+  HOME_NETWORKS_BTN = "home: networks btn",
+  HOME_RESOURCES_BTN = "home: resources btn",
   // XDR
   XDR_TO_JSON_SUCCESS = "xdr: to json: success",
   XDR_TO_JSON_STREAM_SUCCESS = "xdr: to json stream: success",

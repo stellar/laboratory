@@ -24,6 +24,7 @@ import { Routes } from "@/constants/routes";
 import { GITHUB_URL } from "@/constants/settings";
 import { useStore } from "@/store/useStore";
 import { openUrl } from "@/helpers/openUrl";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import "@/styles/home.scss";
 
@@ -87,6 +88,10 @@ export default function Introduction() {
                 variant="secondary"
                 icon={<Icon.ArrowRight />}
                 onClick={() => {
+                  trackEvent(TrackingEvent.HOME_TOP_BTN, {
+                    type: "get started",
+                  });
+
                   router.push(Routes.ACCOUNT_CREATE);
                 }}
               >
@@ -98,6 +103,10 @@ export default function Introduction() {
                 variant="tertiary"
                 icon={<Icon.LinkExternal01 />}
                 onClick={() => {
+                  trackEvent(TrackingEvent.HOME_TOP_BTN, {
+                    type: "read docs",
+                  });
+
                   openUrl("https://developers.stellar.org/");
                 }}
               >

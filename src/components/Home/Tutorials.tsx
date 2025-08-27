@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Text } from "@stellar/design-system";
 import { Box } from "@/components/layout/Box";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 export const Tutorials = () => {
   const tutorials = [
@@ -156,6 +157,9 @@ export const Tutorials = () => {
                 className="Lab__home__tutorials__item"
                 onClick={() => {
                   setSelectedIndex(idx);
+                  trackEvent(TrackingEvent.HOME_TUTORIAL, {
+                    tutorial: t.title.toLowerCase(),
+                  });
                 }}
                 data-selected={selectedIndex === idx}
               >

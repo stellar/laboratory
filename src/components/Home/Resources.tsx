@@ -1,6 +1,7 @@
 import { Button, Icon, Logo, Text } from "@stellar/design-system";
 import { Box } from "@/components/layout/Box";
 import { openUrl } from "@/helpers/openUrl";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 export const Resources = () => {
   const resourceItems = [
@@ -76,7 +77,12 @@ export const Resources = () => {
             size="md"
             variant="tertiary"
             icon={<Icon.LinkExternal01 />}
-            onClick={() => openUrl(i.link)}
+            onClick={() => {
+              trackEvent(TrackingEvent.HOME_RESOURCES_BTN, {
+                resource: i.id,
+              });
+              openUrl(i.link);
+            }}
           >
             Check it out
           </Button>

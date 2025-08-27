@@ -5,6 +5,7 @@ import { Button, Display, Icon, Text } from "@stellar/design-system";
 import { Routes } from "@/constants/routes";
 import { Box } from "@/components/layout/Box";
 import { openUrl } from "@/helpers/openUrl";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 export const Slider = ({ imgTheme }: { imgTheme: "light" | "dark" }) => {
   const introItems = [
@@ -322,6 +323,12 @@ export const Slider = ({ imgTheme }: { imgTheme: "light" | "dark" }) => {
                             icon={<Icon.LinkExternal01 />}
                             key={`${s.id}-${idx}`}
                             onClick={() => {
+                              trackEvent(
+                                TrackingEvent.HOME_SLIDER_DETAILS_BTN,
+                                {
+                                  button: `${s.id}: ${b.label.toLowerCase()}`,
+                                },
+                              );
                               openUrl(b.link);
                             }}
                           >
@@ -394,6 +401,10 @@ export const Slider = ({ imgTheme }: { imgTheme: "light" | "dark" }) => {
               setCurrentSliderIndex(cardIndex);
               setIsSliderVisible(true);
               handleSlideScroll(cardIndex, false);
+
+              trackEvent(TrackingEvent.HOME_SLIDER_CARD, {
+                card: i.id,
+              });
             }}
           >
             <Box gap="xl" align="center">
