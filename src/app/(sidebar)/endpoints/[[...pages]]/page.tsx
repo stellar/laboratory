@@ -61,6 +61,7 @@ import {
 import { EndpointsLandingPage } from "../components/EndpointsLandingPage";
 import { SavedEndpointsPage } from "../components/SavedEndpointsPage";
 import { EndpointsJsonResponse } from "../components/EndpointsJsonResponse";
+import { sanitizeUrl } from "@/helpers/sanitizeUrl";
 
 export default function Endpoints() {
   const pathname = usePathname();
@@ -603,7 +604,9 @@ export default function Endpoints() {
 
     const searchParamString = searchParams.toString();
 
-    return `${baseUrl}${searchParamString ? `?${searchParamString}` : ""}`;
+    return sanitizeUrl(
+      `${baseUrl}${searchParamString ? `?${searchParamString}` : ""}`,
+    );
     // Not including RegEx const
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
