@@ -334,14 +334,14 @@ const convertEnumToScVal = (obj: Record<string, any>, scVals?: xdr.ScVal[]) => {
     return tupleScValsVec;
   }
 
-  if (!obj.tag) {
-    // If no tag is present, we assume it's a primitive value
-    return getScValFromArg(obj, scVals || []);
-  }
-
   // Enum Integer Variant Case
   if (obj.enum) {
     return nativeToScVal(obj.enum, { type: "u32" });
+  }
+
+  if (!obj.tag) {
+    // If no tag is present, we assume it's a primitive value
+    return getScValFromArg(obj, scVals || []);
   }
 
   // Enum Case Unit Case
@@ -494,6 +494,25 @@ export const getScValsFromArgs = (
 
   // Enum (Void and Complex One Like Tuple) Case
   if (Object.values(args).some((v) => v.tag || v.enum)) {
+    // Check if we have mixed primitive and enum arguments
+    const hasEnums = Object.values(args).some((v) => v.tag || v.enum);
+    const hasPrimitives = Object.values(args).some((v) => v.type && v.value);
+
+    if (hasEnums && hasPrimitives) {
+      // Handle mixed case - return separate arguments
+      const mixedScVals = Object.values(args).map((v) => {
+        if (v.tag || v.enum) {
+          return convertEnumToScVal(v, scVals);
+        } else if (v.type && v.value) {
+          return getScValFromPrimitive(v);
+        }
+        return v;
+      });
+
+      return mixedScVals;
+    }
+
+    // Handle pure enum case
     const enumScVals = Object.values(args).map((v) => {
       return convertEnumToScVal(v, scVals);
     });
