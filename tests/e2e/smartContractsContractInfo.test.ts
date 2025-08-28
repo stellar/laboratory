@@ -3,7 +3,9 @@ import { STELLAR_EXPERT_API } from "@/constants/settings";
 import { SAVED_ACCOUNT_1 } from "./mock/localStorage";
 import {
   MOCK_CONTRACT_ID,
+  MOCK_CONTRACT_INFO_CONTRACT_TYPE_FAILURE,
   MOCK_CONTRACT_INFO_RESPONSE_SUCCESS,
+  mockContractTypeFn,
 } from "./mock/smartContracts";
 
 test.describe("Smart Contracts: Contract Info", () => {
@@ -20,7 +22,10 @@ test.describe("Smart Contracts: Contract Info", () => {
   });
 
   test("Response success", async ({ page }) => {
-    // Mock the API call
+    // Mock the RPC call for getting the contract type
+    await mockContractTypeFn(page);
+
+    // Mock the Stellar Expert API call
     await page.route(
       `${STELLAR_EXPERT_API}/testnet/contract/${MOCK_CONTRACT_ID}`,
       async (route) => {
@@ -81,6 +86,22 @@ test.describe("Smart Contracts: Contract Info", () => {
   });
 
   test("Response error", async ({ page }) => {
+    // Mock the RPC call for getting the contract type
+    await page.route("https://soroban-testnet.stellar.org", async (route) => {
+      const request = route.request();
+      const postData = request.postDataJSON();
+
+      if (postData?.method === "getLedgerEntries") {
+        await route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify(MOCK_CONTRACT_INFO_CONTRACT_TYPE_FAILURE),
+        });
+      } else {
+        await route.continue();
+      }
+    });
+
     // Mock the API call
     await page.route(
       `${STELLAR_EXPERT_API}/testnet/contract/${MOCK_CONTRACT_ID}`,
@@ -102,7 +123,7 @@ test.describe("Smart Contracts: Contract Info", () => {
 
     await expect(
       page.getByText(
-        "Something went wrong. Not found. Contract was not found on the ledger. Check if you specified contract address correctly.",
+        "Something went wrong getting contract type by contract ID. Could not obtain contract data from server.",
       ),
     ).toBeVisible();
   });
