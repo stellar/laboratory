@@ -37,6 +37,7 @@ import { delayedAction } from "@/helpers/delayedAction";
 import { buildEndpointHref } from "@/helpers/buildEndpointHref";
 import { shareableUrl } from "@/helpers/shareableUrl";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
+import { sanitizeUrl } from "@/helpers/sanitizeUrl";
 
 import { Routes } from "@/constants/routes";
 import {
@@ -61,7 +62,6 @@ import {
 import { EndpointsLandingPage } from "../components/EndpointsLandingPage";
 import { SavedEndpointsPage } from "../components/SavedEndpointsPage";
 import { EndpointsJsonResponse } from "../components/EndpointsJsonResponse";
-import { sanitizeUrl } from "@/helpers/sanitizeUrl";
 
 export default function Endpoints() {
   const pathname = usePathname();
