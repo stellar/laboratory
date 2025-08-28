@@ -30,7 +30,7 @@
     "@next/third-parties": "^15.4.4",
     "@sentry/nextjs": "^10",
     "@stellar/design-system": "^3.1.5",
-    "@stellar/stellar-sdk": "^14.1.0",
+    "@stellar/stellar-sdk": "^14.1.1",
     "@stellar/stellar-xdr-json": "^23.0.0-rc.1",
     "@tanstack/react-query": "^5.83.0",
     "@tanstack/react-query-devtools": "^5.83.0",
