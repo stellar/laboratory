@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button, Display, Icon, Text } from "@stellar/design-system";
 
@@ -44,7 +45,7 @@ export const Slider = ({ imgTheme }: { imgTheme: "light" | "dark" }) => {
       imagePath: `/images/lab-home-intro-xdr-${imgTheme}.png`,
       actionButton: {
         label: "XDR to JSON",
-        route: Routes.XDR,
+        route: Routes.VIEW_XDR,
       },
       buttons: [
         {
@@ -102,7 +103,7 @@ export const Slider = ({ imgTheme }: { imgTheme: "light" | "dark" }) => {
       imagePath: `/images/lab-home-intro-api-${imgTheme}.png`,
       actionButton: {
         label: "Use API Explorer",
-        route: Routes.ENDPOINTS_RPC,
+        route: Routes.ENDPOINTS,
       },
       buttons: [
         {
@@ -153,6 +154,8 @@ export const Slider = ({ imgTheme }: { imgTheme: "light" | "dark" }) => {
   const [isDesktopMode, setIsDesktopMode] = useState(true);
   const [isSliderVisible, setIsSliderVisible] = useState(false);
   const [currentSliderIndex, setCurrentSliderIndex] = useState<number>(0);
+
+  const router = useRouter();
 
   useEffect(() => {
     const el = containerEl?.current;
@@ -304,6 +307,17 @@ export const Slider = ({ imgTheme }: { imgTheme: "light" | "dark" }) => {
                     >
                       {s.description}
                     </Text>
+
+                    <Button
+                      variant="secondary"
+                      size="lg"
+                      icon={<Icon.ArrowRight />}
+                      onClick={() => {
+                        router.push(s.actionButton.route);
+                      }}
+                    >
+                      {s.actionButton.label}
+                    </Button>
 
                     <Box gap="sm" wrap="wrap">
                       <Text

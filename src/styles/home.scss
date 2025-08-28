@@ -314,6 +314,10 @@
         height: 100%;
         min-width: pxToRem(320px);
         padding: pxToRem(24px);
+
+        .Button {
+          width: fit-content;
+        }
       }
 
       &__title {
