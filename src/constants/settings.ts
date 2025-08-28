@@ -26,9 +26,6 @@ export const XDR_TYPE_TRANSACTION_ENVELOPE = "TransactionEnvelope";
 export const SETTINGS_CODE_WRAP = "jsonCodeWrap";
 export const SETTINGS_SUBMIT_METHOD = "submitMethod";
 
-// Sentry
-export const isSentryEnabled = window.location.hostname === "lab.stellar.org";
-
 export const CONTRACT_STORAGE_MAX_ENTRIES = 4000;
 
 export const NetworkOptions: Network[] = [
