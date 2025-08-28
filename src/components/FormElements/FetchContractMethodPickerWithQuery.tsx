@@ -107,7 +107,6 @@ export const FetchContractMethodPickerWithQuery = ({
     }
 
     if (contractTypeError) {
-      setFetchError(null);
       setFetchError(contractTypeError?.message);
     }
   }, [contractType, contractTypeError, isSacType]);
