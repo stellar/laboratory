@@ -334,6 +334,11 @@ const convertEnumToScVal = (obj: Record<string, any>, scVals?: xdr.ScVal[]) => {
     return tupleScValsVec;
   }
 
+  if (!obj.tag) {
+    // If no tag is present, we assume it's a primitive value
+    return getScValFromArg(obj, scVals || []);
+  }
+
   // Enum Integer Variant Case
   if (obj.enum) {
     return nativeToScVal(obj.enum, { type: "u32" });
