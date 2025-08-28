@@ -3507,10 +3507,10 @@
     "@stablelib/random" "^1.0.2"
     "@stablelib/wipe" "^1.0.1"
 
-"@stellar/design-system@^3.1.2":
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/@stellar/design-system/-/design-system-3.1.2.tgz#a63245b2dfc9ed13adf637440d163ff4ac8fbea9"
-  integrity sha512-//WjhYWYvDQ4O/T+n9D/lZwL+08M4xt4H6JTlY8fb8b98pl9Wd7gJWaKNp4CiL8iNMQn+sb4vFyAiIbkl3s8QA==
+"@stellar/design-system@^3.1.5":
+  version "3.1.5"
+  resolved "https://registry.yarnpkg.com/@stellar/design-system/-/design-system-3.1.5.tgz#b1b6957b1d1ce384ce3307c0d10ae772ce3c629d"
+  integrity sha512-ZUeV8F0Eep9SXrgMLEXzopzwmdjvgblMLlgmySnakAEykAyL7SRw4H/rMoXoacVsczWGj1ue3dMRj30wMJPy6A==
   dependencies:
     "@floating-ui/dom" "^1.6.13"
     bignumber.js "^9.1.2"

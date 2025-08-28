@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -23,12 +23,44 @@ import { LOCAL_STORAGE_SAVED_THEME } from "@/constants/settings";
 import { NAV, NavItem } from "@/constants/navItems";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
+import { ThemeColorType } from "@/types/types";
 
 export const LayoutHeader = () => {
   const { layoutMode } = useContext(WindowContext);
   const { setTheme, isMainNavHidden, toggleIsMainNavHidden } = useStore();
   const route = useRouter();
   const pathname = usePathname();
+
+  // Make sure we always have the theme set in the store
+  useEffect(() => {
+    const attr = "data-sds-theme";
+    const getVal = () => document.body.getAttribute(attr);
+
+    const currentTheme = getVal();
+
+    if (currentTheme) {
+      setTheme(currentTheme as ThemeColorType);
+      return;
+    }
+
+    const observer = new MutationObserver(() => {
+      const theme = getVal();
+
+      if (theme) {
+        observer.disconnect();
+        setTheme(theme as ThemeColorType);
+      }
+    });
+
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: [attr],
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   const handleNavChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     route.push(event.target.value);
