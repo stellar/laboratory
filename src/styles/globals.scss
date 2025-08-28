@@ -332,6 +332,12 @@
     @media screen and (max-width: 1040px) {
       padding: pxToRem(16px);
     }
+
+    // Remove padding for full content width background
+    &:has([data-no-padding="true"]) {
+      padding: 0;
+      background-color: var(--sds-clr-gray-01);
+    }
   }
 
   &__content {
@@ -345,6 +351,11 @@
 
     @media screen and (max-width: 1040px) {
       width: 100%;
+    }
+
+    &:has([data-no-padding="true"]) {
+      width: 100%;
+      gap: 0;
     }
   }
 
@@ -694,17 +705,6 @@
   p {
     margin-bottom: 0 !important;
   }
-}
-
-.IntroFooter {
-  flex: 1;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: pxToRem(12px);
-  font-size: pxToRem(14px);
-  line-height: pxToRem(20px);
-  flex-wrap: wrap;
 }
 
 // Endpoints

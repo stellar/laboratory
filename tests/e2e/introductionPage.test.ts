@@ -6,15 +6,8 @@ test.describe("Introduction Page", () => {
   });
 
   test("Loads", async ({ page }) => {
-    await expect(page.locator("h1")).toHaveText("Stellar Lab");
-  });
-
-  test("Renders info cards", async ({ page }) => {
-    await expect(page.getByTestId("info-cards").locator("h2")).toHaveText([
-      "Stellar Quest",
-      "Developer Tools",
-      "Stellar RPC",
-      "Horizon",
-    ]);
+    await expect(page.locator("h1")).toHaveText(
+      "Simulate, Analyze, and Explore — All in One place",
+    );
   });
 });

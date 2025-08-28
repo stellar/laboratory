@@ -44,6 +44,10 @@ next-env.d.ts
 
 # ide settings
 /.idea/
+/.vscode/
 
 # versions
 mise.toml
+
+# Sentry Config File
+.env.sentry-build-plugin
