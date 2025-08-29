@@ -298,7 +298,7 @@ export type JsonSchemaFormProps = {
 // =============================================================================
 // RPC
 // =============================================================================
-export type FiltersType = "system" | "contract" | "diagnostic";
+export type FiltersType = "system" | "contract";
 
 export type FiltersObject = {
   type: FiltersType;
