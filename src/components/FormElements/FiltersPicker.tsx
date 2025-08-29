@@ -25,10 +25,6 @@ export const FiltersPicker = ({ id, value, onChange }: FiltersPickerProps) => {
       id: "contract",
       label: "Contract",
     },
-    {
-      id: "diagnostic",
-      label: "Diagnostic",
-    },
   ];
 
   const onUpdate = (val: any, type: "contract_ids" | "topics") => {
