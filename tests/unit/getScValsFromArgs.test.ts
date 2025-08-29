@@ -475,6 +475,30 @@ describe("convert js arguments to smart contract values using getScValsFromArgs"
     expect(expectedResult).toEqual(scValsResult);
   });
 
+  // Mixed primitive and enum arguments: address: address, status: CustomStatus
+  it("resolves mixed primitive and enum arguments", () => {
+    const args = {
+      address: {
+        value: "GBPIMUEJFYS7RT23QO2ACH2JMKGXLXZI4E5ACBSQMF32RKZ5H3SVNL5F",
+        type: "address",
+      },
+      status: {
+        tag: "Active",
+      },
+    };
+
+    const scVals: xdr.ScVal[] = [];
+    const scValsResult = getScValsFromArgs(args, scVals);
+
+    const expectedResult: xdr.ScVal[] = [
+      // First argument: address
+      new Address(args.address.value).toScVal(),
+      // Second argument: CustomStatus enum (unit variant)
+      xdr.ScVal.scvVec([xdr.ScVal.scvSymbol("Active")]),
+    ];
+    expect(expectedResult).toEqual(scValsResult);
+  });
+
   // Struct Details: https://developers.stellar.org/docs/learn/fundamentals/contract-development/types/custom-types#structs-with-named-fields
   // Struct - Simple
   it("resolves a struct", () => {

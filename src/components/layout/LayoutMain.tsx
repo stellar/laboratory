@@ -18,7 +18,7 @@ export const LayoutMain = ({ children }: { children: ReactNode }) => {
 
   return (
     <div className="LabLayout">
-      <div>
+      <div className="LabLayout__header">
         <NetworkNotAvailableBanner />
         <MaintenanceBanner />
         <LayoutHeader />
