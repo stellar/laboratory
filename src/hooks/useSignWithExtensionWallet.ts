@@ -49,7 +49,12 @@ export const useSignWithExtensionWallet = ({
   };
 
   const signTx = useCallback(async () => {
-    if (isInProgress || !walletKitInstance?.walletKit) {
+    if (
+      isInProgress ||
+      !walletKitInstance?.walletKit ||
+      !walletKitInstance?.walletKit?.signTransaction ||
+      typeof walletKitInstance.walletKit.signTransaction !== "function"
+    ) {
       return;
     }
 

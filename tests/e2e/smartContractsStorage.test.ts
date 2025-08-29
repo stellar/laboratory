@@ -3,10 +3,14 @@ import { STELLAR_EXPERT_API } from "@/constants/settings";
 import {
   MOCK_CONTRACT_ID,
   MOCK_CONTRACT_INFO_RESPONSE_SUCCESS,
+  mockContractTypeFn,
 } from "./mock/smartContracts";
 
 test.describe("Smart Contracts: Contract Storage", () => {
   test.beforeEach(async ({ page }) => {
+    // Mock the RPC call for getting the contract type
+    await mockContractTypeFn(page);
+
     // Mock the Contract Info API call
     await page.route(
       `${STELLAR_EXPERT_API}/testnet/contract/${MOCK_CONTRACT_ID}`,

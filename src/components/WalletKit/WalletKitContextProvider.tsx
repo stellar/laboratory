@@ -59,6 +59,11 @@ export const WalletKitContextProvider = ({
   }, []);
 
   const walletKitInstance = useMemo(() => {
+    // Only initialize on client side to avoid "window is not defined" errors in terminal
+    if (typeof window === "undefined") {
+      return undefined;
+    }
+
     const isDarkTheme = theme === "sds-theme-dark";
 
     const commonDarkTheme = {
@@ -114,15 +119,15 @@ export const WalletKitContextProvider = ({
       ...(theme && {
         buttonTheme: isDarkTheme
           ? {
-              ...commonDarkTheme,
-              buttonPadding: "0.5rem 1.25rem",
-              buttonBorderRadius: "0.5rem",
-            }
+            ...commonDarkTheme,
+            buttonPadding: "0.5rem 1.25rem",
+            buttonBorderRadius: "0.5rem",
+          }
           : {
-              ...commonLightTheme,
-              buttonPadding: "0.5rem 1.25rem",
-              buttonBorderRadius: "0.5rem",
-            },
+            ...commonLightTheme,
+            buttonPadding: "0.5rem 1.25rem",
+            buttonBorderRadius: "0.5rem",
+          },
         modalTheme: isDarkTheme ? modalDarkTheme : modalLightTheme,
       }),
     });

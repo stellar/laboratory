@@ -426,7 +426,7 @@ export const Slider = ({ imgTheme }: { imgTheme: "light" | "dark" }) => {
                 <Image
                   src={i.imagePath}
                   alt={`${i.title} image`}
-                  width="183"
+                  width="168"
                   height="168"
                 />
               </div>

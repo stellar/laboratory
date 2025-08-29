@@ -229,6 +229,8 @@ export default function DiffXdr() {
               language="json"
               original={prettifyJsonString(jsonOne || DEFAULT_JSON_ONE)}
               modified={prettifyJsonString(jsonTwo || DEFAULT_JSON_TWO)}
+              keepCurrentModifiedModel={true}
+              keepCurrentOriginalModel={true}
               options={{
                 minimap: { enabled: false },
                 readOnly: true,
