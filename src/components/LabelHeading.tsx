@@ -1,4 +1,5 @@
 import { Icon, Tooltip } from "@stellar/design-system";
+import { sanitizeUrl } from "@/helpers/sanitizeUrl";
 
 export const LabelHeading = ({
   children,
@@ -23,7 +24,7 @@ export const LabelHeading = ({
 
     {infoLink ? (
       <a
-        href={infoLink}
+        href={sanitizeUrl(infoLink)}
         className="Label__infoButton"
         rel="noreferrer noopener"
         target="_blank"

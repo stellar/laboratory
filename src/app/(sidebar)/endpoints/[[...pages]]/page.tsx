@@ -37,6 +37,7 @@ import { delayedAction } from "@/helpers/delayedAction";
 import { buildEndpointHref } from "@/helpers/buildEndpointHref";
 import { shareableUrl } from "@/helpers/shareableUrl";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
+import { sanitizeUrl } from "@/helpers/sanitizeUrl";
 
 import { Routes } from "@/constants/routes";
 import {
@@ -603,7 +604,9 @@ export default function Endpoints() {
 
     const searchParamString = searchParams.toString();
 
-    return `${baseUrl}${searchParamString ? `?${searchParamString}` : ""}`;
+    return sanitizeUrl(
+      `${baseUrl}${searchParamString ? `?${searchParamString}` : ""}`,
+    );
     // Not including RegEx const
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [

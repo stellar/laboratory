@@ -1,6 +1,14 @@
 import { Keypair } from "@stellar/stellar-sdk";
 
 export const signatureHint = (value: string) => {
+  // Validate the input
+  if (!value) {
+    throw new Error("Signature hint must be a non-empty string");
+  }
+  if (!/^[0-9a-fA-F]{8}$/.test(value)) {
+    throw new Error("Signature hint must be exactly 8 hexadecimal characters");
+  }
+
   // strkey encoding is using base32 encoding. Encoded public key consists of:
   //
   //  * 1 byte version byte (0x30 encoded as `G`)
