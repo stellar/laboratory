@@ -18,17 +18,26 @@ import { muxedAccount } from "@/helpers/muxedAccount";
 
 // Utility to handle muxed address processing for SAC transfers
 const processMuxedAddress = (address: string) => {
+  if (!address || typeof address !== "string") {
+    return { baseAddress: address, memoId: null };
+  }
+  
   // Check if the address starts with 'M' (muxed address)
   if (address.startsWith("M")) {
-    const result = muxedAccount.parse({ muxedAddress: address });
-    if (result.error) {
-      // If parsing fails, return the original address (validation will catch it later)
+    try {
+      const result = muxedAccount.parse({ muxedAddress: address });
+      if (result.error) {
+        // If parsing fails, return the original address (validation will catch it later)
+        return { baseAddress: address, memoId: null };
+      }
+      return { 
+        baseAddress: result.baseAddress || address, 
+        memoId: result.id || null 
+      };
+    } catch (error) {
+      // If parsing throws an error, return the original address
       return { baseAddress: address, memoId: null };
     }
-    return { 
-      baseAddress: result.baseAddress || address, 
-      memoId: result.id || null 
-    };
   }
   
   // Check for G...:ID format muxed address
@@ -44,6 +53,7 @@ const processMuxedAddress = (address: string) => {
 };
 
 // Extract memo IDs from muxed addresses in contract arguments
+// Returns the first memo ID found, or null if no muxed addresses with memo IDs are present
 const extractMemoFromArgs = (args: SorobanInvokeValue["args"]): string | null => {
   const extractFromValue = (value: any): string | null => {
     if (!value) return null;
@@ -54,11 +64,11 @@ const extractMemoFromArgs = (args: SorobanInvokeValue["args"]): string | null =>
       return memoId;
     }
     
-    // Handle nested objects and arrays
+    // Handle nested objects and arrays recursively
     if (typeof value === "object" && value !== null) {
       for (const key in value) {
         const result = extractFromValue(value[key]);
-        if (result) return result;
+        if (result) return result; // Return the first memo ID found
       }
     }
     
@@ -67,7 +77,7 @@ const extractMemoFromArgs = (args: SorobanInvokeValue["args"]): string | null =>
   
   for (const key in args) {
     const memoId = extractFromValue(args[key]);
-    if (memoId) return memoId;
+    if (memoId) return memoId; // Return the first memo ID found
   }
   
   return null;
@@ -288,11 +298,12 @@ export const getTxnToSimulate = (
   try {
     const argsToScVals = getScValsFromArgs(value.args, []);
     
-    // Check for muxed addresses and extract memo ID
+    // Check for muxed addresses and extract memo ID for automatic inclusion in transaction
     const memoId = extractMemoFromArgs(value.args);
     let updatedTxnParams = txnParams;
     
     // If a muxed address memo was found, add it to the transaction params
+    // This enables SAC transfers to automatically handle muxed address memo IDs
     if (memoId) {
       updatedTxnParams = {
         ...txnParams,
@@ -550,7 +561,7 @@ const getScValFromPrimitive = (v: any) => {
     return nativeToScVal(new Uint8Array(Buffer.from(v.value, encoding)));
   }
   
-  // Handle muxed addresses for address type
+  // Handle muxed addresses for address type - extract base address for ScVal conversion
   if (v.type === "address" && v.value) {
     const { baseAddress } = processMuxedAddress(v.value);
     return nativeToScVal(baseAddress, { type: v.type });
