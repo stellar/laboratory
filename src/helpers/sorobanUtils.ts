@@ -34,7 +34,7 @@ const processMuxedAddress = (address: string) => {
         baseAddress: result.baseAddress || address, 
         memoId: result.id || null 
       };
-    } catch (error) {
+    } catch {
       // If parsing throws an error, return the original address
       return { baseAddress: address, memoId: null };
     }
