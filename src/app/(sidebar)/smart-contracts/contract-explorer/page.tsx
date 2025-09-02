@@ -169,6 +169,23 @@ export default function ContractExplorer() {
     ) : null;
   };
 
+  const handleLoadContract = async () => {
+    try {
+      // throwOnError will throw an error instead of setting the error state.
+      // This will prevent other queries from running when fetching a contract
+      // type fails.
+      await fetchContractType({ throwOnError: true });
+      await fetchContractInfo({ throwOnError: true });
+      await fetchWasmContractClient();
+      smartContracts.updateExplorerContractId(contractIdInput);
+
+      trackEvent(TrackingEvent.SMART_CONTRACTS_EXPLORER_LOAD_CONTRACT);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {
+      // Do nothing
+    }
+  };
+
   const renderButtons = () => {
     if (isCurrentNetworkSupported) {
       return (
@@ -246,12 +263,7 @@ export default function ContractExplorer() {
         <form
           onSubmit={async (e) => {
             e.preventDefault();
-            await fetchContractType();
-            await fetchContractInfo();
-            await fetchWasmContractClient();
-            smartContracts.updateExplorerContractId(contractIdInput);
-
-            trackEvent(TrackingEvent.SMART_CONTRACTS_EXPLORER_LOAD_CONTRACT);
+            await handleLoadContract();
           }}
           className="ContractExplorer__form"
         >
