@@ -14,6 +14,64 @@ import {
 
 import { TransactionBuildParams } from "@/store/createStore";
 import { SorobanInvokeValue, SorobanOpType, TxnOperation } from "@/types/types";
+import { muxedAccount } from "@/helpers/muxedAccount";
+
+// Utility to handle muxed address processing for SAC transfers
+const processMuxedAddress = (address: string) => {
+  // Check if the address starts with 'M' (muxed address)
+  if (address.startsWith("M")) {
+    const result = muxedAccount.parse({ muxedAddress: address });
+    if (result.error) {
+      // If parsing fails, return the original address (validation will catch it later)
+      return { baseAddress: address, memoId: null };
+    }
+    return { 
+      baseAddress: result.baseAddress || address, 
+      memoId: result.id || null 
+    };
+  }
+  
+  // Check for G...:ID format muxed address
+  if (address.includes(":") && address.startsWith("G")) {
+    const [baseAddr, id] = address.split(":");
+    if (baseAddr && id && !isNaN(Number(id))) {
+      return { baseAddress: baseAddr, memoId: id };
+    }
+  }
+  
+  // Regular address, no changes needed
+  return { baseAddress: address, memoId: null };
+};
+
+// Extract memo IDs from muxed addresses in contract arguments
+const extractMemoFromArgs = (args: SorobanInvokeValue["args"]): string | null => {
+  const extractFromValue = (value: any): string | null => {
+    if (!value) return null;
+    
+    // Handle primitive arguments
+    if (value.type === "address" && value.value) {
+      const { memoId } = processMuxedAddress(value.value);
+      return memoId;
+    }
+    
+    // Handle nested objects and arrays
+    if (typeof value === "object" && value !== null) {
+      for (const key in value) {
+        const result = extractFromValue(value[key]);
+        if (result) return result;
+      }
+    }
+    
+    return null;
+  };
+  
+  for (const key in args) {
+    const memoId = extractFromValue(args[key]);
+    if (memoId) return memoId;
+  }
+  
+  return null;
+};
 
 export const isSorobanOperationType = (operationType: string) =>
   [
@@ -229,8 +287,23 @@ export const getTxnToSimulate = (
 ): { xdr: string; error: string } => {
   try {
     const argsToScVals = getScValsFromArgs(value.args, []);
+    
+    // Check for muxed addresses and extract memo ID
+    const memoId = extractMemoFromArgs(value.args);
+    let updatedTxnParams = txnParams;
+    
+    // If a muxed address memo was found, add it to the transaction params
+    if (memoId) {
+      updatedTxnParams = {
+        ...txnParams,
+        memo: {
+          id: memoId,
+        },
+      };
+    }
+    
     const builtXdr = buildTxWithSorobanData({
-      params: txnParams,
+      params: updatedTxnParams,
       sorobanOp: {
         ...operation,
         params: {
@@ -476,6 +549,13 @@ const getScValFromPrimitive = (v: any) => {
     const encoding = detectBytesEncoding(v.value);
     return nativeToScVal(new Uint8Array(Buffer.from(v.value, encoding)));
   }
+  
+  // Handle muxed addresses for address type
+  if (v.type === "address" && v.value) {
+    const { baseAddress } = processMuxedAddress(v.value);
+    return nativeToScVal(baseAddress, { type: v.type });
+  }
+  
   return nativeToScVal(v.value, { type: v.type });
 };
 
