@@ -302,9 +302,9 @@ export const getTxnToSimulate = (
     const memoId = extractMemoFromArgs(value.args);
     let updatedTxnParams = txnParams;
     
-    // If a muxed address memo was found, add it to the transaction params
+    // If a muxed address memo was found and no memo is already set, add it to the transaction params
     // This enables SAC transfers to automatically handle muxed address memo IDs
-    if (memoId) {
+    if (memoId && (!txnParams.memo || Object.keys(txnParams.memo).length === 0)) {
       updatedTxnParams = {
         ...txnParams,
         memo: {
