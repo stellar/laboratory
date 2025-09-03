@@ -48,9 +48,19 @@ export const ConnectWallet = () => {
       ![undefined, "false", "wallet_connect"].includes(savedWallet?.id) &&
       savedWallet.network.id === network.id
     ) {
-      t = setTimeout(() => {
-        walletKitInstance.walletKit?.setWallet(savedWallet.id);
-        handleSetWalletAddress();
+      t = setTimeout(async () => {
+        if (!walletKitInstance?.walletKit) {
+          return;
+        }
+
+        try {
+          walletKitInstance.walletKit?.setWallet(savedWallet.id);
+          await handleSetWalletAddress({ skipRequestAccess: true });
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (e) {
+          console.log("error");
+          // noop
+        }
         clearTimeout(t);
       }, 750);
     }
@@ -62,9 +72,15 @@ export const ConnectWallet = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [savedWallet?.id, connected, walletKitInstance]);
 
-  async function handleSetWalletAddress(): Promise<boolean> {
+  const handleSetWalletAddress = async ({
+    skipRequestAccess,
+  }: {
+    skipRequestAccess: boolean;
+  }): Promise<boolean> => {
     try {
-      const addressResult = await walletKitInstance.walletKit?.getAddress();
+      const addressResult = await walletKitInstance.walletKit?.getAddress({
+        skipRequestAccess,
+      });
 
       if (!addressResult?.address) {
         return false;
@@ -86,14 +102,16 @@ export const ConnectWallet = () => {
     } catch (e) {
       return false;
     }
-  }
+  };
 
   const connectWallet = async () => {
     try {
       await walletKitInstance.walletKit?.openModal({
         onWalletSelected: async (option: ISupportedWallet) => {
           walletKitInstance.walletKit?.setWallet(option.id);
-          const isWalletConnected = await handleSetWalletAddress();
+          const isWalletConnected = await handleSetWalletAddress({
+            skipRequestAccess: false,
+          });
 
           if (!isWalletConnected) {
             const errorMessage = "Unable to load wallet information";
