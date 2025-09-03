@@ -14,7 +14,7 @@ import {
 
 import { TransactionBuildParams } from "@/store/createStore";
 import { SorobanInvokeValue, SorobanOpType, TxnOperation } from "@/types/types";
-import { muxedAccount } from "@/helpers/muxedAccount";
+import { muxedAccount } from "./muxedAccount";
 
 // Utility to handle muxed address processing for SAC transfers
 const processMuxedAddress = (address: string) => {
