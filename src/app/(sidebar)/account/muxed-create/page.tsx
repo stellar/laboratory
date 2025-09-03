@@ -40,13 +40,13 @@ export default function CreateMuxedAccount() {
       muxedAccountId: muxedId,
     });
 
-    const { error, muxedAddress } = result;
+    const { error, muxedAddress, baseAddress: muxedBaseAddress, id } = result;
 
     if (muxedAddress) {
       setReset(false);
       account.updateGeneratedMuxedAccount({
-        id: muxedId,
-        baseAddress,
+        id,
+        baseAddress: muxedBaseAddress,
         muxedAddress,
       });
 
@@ -121,7 +121,7 @@ export default function CreateMuxedAccount() {
               setReset(true);
               setMuxedId(e.target.value);
 
-              const error = validate.getPositiveIntError(e.target.value);
+              const error = validate.getU64Error(e.target.value);
               setMuxedFieldError(error || "");
             }}
             error={muxedFieldError}
