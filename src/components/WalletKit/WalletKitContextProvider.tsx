@@ -12,7 +12,6 @@ import {
   StellarWalletsKit,
   HotWalletModule,
   xBullModule,
-  XBULL_ID,
 } from "@creit.tech/stellar-wallets-kit";
 import { LedgerModule } from "@creit.tech/stellar-wallets-kit/modules/ledger.module";
 
@@ -114,20 +113,20 @@ export const WalletKitContextProvider = ({
 
     return new StellarWalletsKit({
       network: networkType,
-      selectedWalletId: XBULL_ID,
+      selectedWalletId: savedWallet?.id || "",
       modules: network.id === "mainnet" ? PROD_MODULES : TEST_MODULES,
       ...(theme && {
         buttonTheme: isDarkTheme
           ? {
-            ...commonDarkTheme,
-            buttonPadding: "0.5rem 1.25rem",
-            buttonBorderRadius: "0.5rem",
-          }
+              ...commonDarkTheme,
+              buttonPadding: "0.5rem 1.25rem",
+              buttonBorderRadius: "0.5rem",
+            }
           : {
-            ...commonLightTheme,
-            buttonPadding: "0.5rem 1.25rem",
-            buttonBorderRadius: "0.5rem",
-          },
+              ...commonLightTheme,
+              buttonPadding: "0.5rem 1.25rem",
+              buttonBorderRadius: "0.5rem",
+            },
         modalTheme: isDarkTheme ? modalDarkTheme : modalLightTheme,
       }),
     });

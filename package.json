@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^2.20.1",
-    "@creit.tech/stellar-wallets-kit": "^1.9.1",
+    "@creit.tech/stellar-wallets-kit": "^1.9.3",
     "@ledgerhq/hw-app-str": "^7.2.4",
     "@ledgerhq/hw-transport-webusb": "^6.29.8",
     "@monaco-editor/react": "^4.7.0",
@@ -31,7 +31,7 @@
     "@sentry/nextjs": "^10",
     "@stellar/design-system": "^3.1.5",
     "@stellar/stellar-sdk": "^14.1.1",
-    "@stellar/stellar-xdr-json": "^23.0.0-rc.1",
+    "@stellar/stellar-xdr-json": "^23.0.0",
     "@tanstack/react-query": "^5.83.0",
     "@tanstack/react-query-devtools": "^5.83.0",
     "@trezor/connect-plugin-stellar": "^9.0.6",
