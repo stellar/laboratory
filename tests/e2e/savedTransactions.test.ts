@@ -106,6 +106,7 @@ test.describe("Saved Transactions Page", () => {
 
       // View in builder
       await buildItem.getByText("View in builder", { exact: true }).click();
+      await pageContext.waitForURL("**/transaction/build");
 
       await expect(pageContext.locator("h1")).toHaveText("Build Transaction");
 
