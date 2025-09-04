@@ -3122,10 +3122,10 @@
     toml "^3.0.0"
     urijs "^1.19.1"
 
-"@stellar/stellar-xdr-json@^23.0.0-rc.1":
-  version "23.0.0-rc.1"
-  resolved "https://registry.yarnpkg.com/@stellar/stellar-xdr-json/-/stellar-xdr-json-23.0.0-rc.1.tgz#4a0642a8ea5a91f74d2cf1df257cdd90a022a4d5"
-  integrity sha512-8Xr+iwQxpc1yGJ0wJGHSFzJCqdHbdYuBhTD4Ob/3T0H4rVP+j0i5CXZrKo3kAf51rXOGWfuYxAGRBzid3aZtAA==
+"@stellar/stellar-xdr-json@^23.0.0":
+  version "23.0.0"
+  resolved "https://registry.yarnpkg.com/@stellar/stellar-xdr-json/-/stellar-xdr-json-23.0.0.tgz#b652e8c3b906a6135f10ac033c12c78f1f94db13"
+  integrity sha512-0jxWuaSZY5VfogL9YMPhjxBM7a3jwTQfSCzFUy0lkSoPrl5cNxhzx854+iidNY2Xu3pFB8x61XZ1wJapu7OHMA==
 
 "@stellar/tsconfig@^1.0.2":
   version "1.0.2"
