@@ -69,4 +69,18 @@ test.describe("Create Muxed Account Page", () => {
 
     await expect(muxedValue).toHaveValue(muxedAccount.accountId());
   });
+
+  test("Shows an error with max ID validation when value exceeds u64 limit", async ({
+    page,
+  }) => {
+    const muxedAccountIdInput = page.locator("#muxed-account-id");
+    await muxedAccountIdInput.fill("18446744073709551616");
+
+    await expect(muxedAccountIdInput).toHaveAttribute("aria-invalid", "true");
+    await expect(
+      page.getByText(
+        "Value must be a valid u64 integer (0 to 18446744073709551615)",
+      ),
+    ).toBeVisible();
+  });
 });
