@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { sanitizeUrl } from "@/helpers/sanitizeUrl";
 import { AnyObject, NetworkHeaders } from "@/types/types";
 
 export const useEndpoint = ({
@@ -13,7 +14,7 @@ export const useEndpoint = ({
   const query = useQuery({
     queryKey: ["endpoint", "response", postData],
     queryFn: async () => {
-      const endpointResponse = await fetch(requestUrl, {
+      const endpointResponse = await fetch(sanitizeUrl(requestUrl), {
         headers,
         ...getPostOptions(postData, headers),
       });

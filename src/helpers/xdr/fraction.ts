@@ -13,8 +13,7 @@ export function best_r(rawNumber: string | number | BigNumber) {
   ];
   let i = 2;
 
-  // eslint-disable-next-line no-constant-condition
-  while (true) {
+  while (number.isFinite()) {
     if (number.gt(MAX_INT)) {
       break;
     }
