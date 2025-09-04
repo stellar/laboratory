@@ -59,9 +59,8 @@ export const CodeEditor = ({
   const getFileExtension = () => {
     switch (selectedLanguage) {
       case "xdr":
-        return "txt";
       case "interface":
-        return "spec";
+        return "txt";
       case "json":
       default:
         return selectedLanguage;
