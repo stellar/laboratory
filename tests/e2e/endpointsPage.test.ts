@@ -110,7 +110,7 @@ test.describe("API Explorer page", () => {
 
     test("URL and buttons have correct defaults", async ({ page }) => {
       await expect(page.getByTestId("endpoints-url")).toHaveValue(
-        "https://horizon-testnet.stellar.org/accounts/",
+        "https://horizon-testnet.stellar.org/accounts",
       );
       await expect(page.getByTestId("endpoints-url-method")).toContainText(
         "GET",
@@ -124,13 +124,13 @@ test.describe("API Explorer page", () => {
         .fill("GBV6DGKNXELF3TYU4V3NRCF57Q3477KLUBBINVG5GGR3LJYVQPKPDX4C");
 
       await expect(page.getByTestId("endpoints-url")).toHaveValue(
-        "https://horizon-testnet.stellar.org/accounts/?sponsor=GBV6DGKNXELF3TYU4V3NRCF57Q3477KLUBBINVG5GGR3LJYVQPKPDX4C",
+        "https://horizon-testnet.stellar.org/accounts?sponsor=GBV6DGKNXELF3TYU4V3NRCF57Q3477KLUBBINVG5GGR3LJYVQPKPDX4C",
       );
 
       await page.getByLabel("Limit(optional)").fill("2");
 
       await expect(page.getByTestId("endpoints-url")).toHaveValue(
-        "https://horizon-testnet.stellar.org/accounts/?sponsor=GBV6DGKNXELF3TYU4V3NRCF57Q3477KLUBBINVG5GGR3LJYVQPKPDX4C&limit=2",
+        "https://horizon-testnet.stellar.org/accounts?sponsor=GBV6DGKNXELF3TYU4V3NRCF57Q3477KLUBBINVG5GGR3LJYVQPKPDX4C&limit=2",
       );
     });
   });
