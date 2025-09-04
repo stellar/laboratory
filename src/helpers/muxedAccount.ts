@@ -11,6 +11,8 @@ export const muxedAccount = {
     muxedAccountId: string;
   }): Partial<MuxedAccountFieldType> => {
     let muxedAddress = "";
+    let muxedBaseAddress = "";
+    let muxedId = "";
     let error = "";
 
     try {
@@ -20,23 +22,27 @@ export const muxedAccount = {
       );
 
       muxedAddress = muxedAccount.accountId();
+      muxedBaseAddress = muxedAccount.baseAccount().accountId();
+      muxedId = muxedAccount.id();
     } catch (e: any) {
       error = `Something went wrong. ${e.toString()}`;
     }
 
-    return { muxedAddress, error };
+    return { muxedAddress, baseAddress: muxedBaseAddress, id: muxedId, error };
   },
   parse: ({
     muxedAddress,
   }: {
     muxedAddress: string;
   }): Partial<MuxedAccountFieldType> => {
+    let muxedAddressParsed = "";
     let baseAddress = "";
     let muxedAccountId = "";
     let error = "";
 
     try {
       const muxedAccount = MuxedAccount.fromAddress(muxedAddress, "0");
+      muxedAddressParsed = muxedAccount.accountId();
       baseAddress = muxedAccount.baseAccount().accountId();
       muxedAccountId = muxedAccount.id();
 
@@ -52,6 +58,11 @@ export const muxedAccount = {
     } catch (e: any) {
       error = `Something went wrong. ${e.toString()}`;
     }
-    return { id: muxedAccountId, baseAddress, error };
+    return {
+      muxedAddress: muxedAddressParsed,
+      baseAddress,
+      id: muxedAccountId,
+      error,
+    };
   },
 };
