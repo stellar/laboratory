@@ -58,7 +58,6 @@ export const ConnectWallet = () => {
           await handleSetWalletAddress({ skipRequestAccess: true });
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
-          console.log("error");
           // noop
         }
         clearTimeout(t);
