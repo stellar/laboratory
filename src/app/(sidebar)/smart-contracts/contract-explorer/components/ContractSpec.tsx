@@ -44,7 +44,7 @@ export const ContractSpec = ({
   >({
     contractenvmetav0: "json",
     contractmetav0: "json",
-    contractspecv0: "json",
+    contractspecv0: "interface",
     sac: "json",
   });
   const [contractSections, setContractSections] =
@@ -230,7 +230,7 @@ export const ContractSpec = ({
             title: "Contract Spec",
             infoLink:
               "https://developers.stellar.org/docs/learn/fundamentals/contract-development/overview#contract-spec",
-            languages: ["json", "xdr", "interface"],
+            languages: ["interface", "json", "xdr"],
           })
         : null}
 
