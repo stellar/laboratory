@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button, Icon } from "@stellar/design-system";
 import { parse, stringify } from "lossless-json";
+import { parseContractMetadata } from "@stellar-expert/contract-wasm-interface-parser";
 
 import { CodeEditor, SupportedLanguage } from "@/components/CodeEditor";
 import { Box } from "@/components/layout/Box";
@@ -14,6 +15,8 @@ import * as StellarXdr from "@/helpers/StellarXdr";
 import { downloadFile } from "@/helpers/downloadFile";
 import { renderContractSpecViewStatus } from "@/helpers/renderContractSpecViewStatus";
 import { getWasmContractData } from "@/helpers/getWasmContractData";
+import { formatContractInterface } from "@/helpers/formatContractInterface";
+
 import { STELLAR_ASSET_CONTRACT } from "@/constants/stellarAssetContractData";
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
@@ -41,11 +44,13 @@ export const ContractSpec = ({
   >({
     contractenvmetav0: "json",
     contractmetav0: "json",
-    contractspecv0: "json",
+    contractspecv0: "interface",
     sac: "json",
   });
   const [contractSections, setContractSections] =
     useState<ContractSections | null>();
+  const [contractInterfaceObj, setContractInterfaceObj] =
+    useState<AnyObject | null>(null);
 
   const isXdrInit = useIsXdrInit();
 
@@ -80,7 +85,18 @@ export const ContractSpec = ({
       }
     };
 
+    const parseContractMeta = () => {
+      try {
+        const parsedContractMeta = parseContractMetadata(wasmBinary);
+        setContractInterfaceObj(parsedContractMeta);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (e) {
+        // Do nothing
+      }
+    };
+
     getContractData();
+    parseContractMeta();
   }, [wasmBinary]);
 
   const viewStatus = renderContractSpecViewStatus({
@@ -119,6 +135,19 @@ export const ContractSpec = ({
       : "";
   };
 
+  const formatInterface = (obj: AnyObject | null) => {
+    if (!obj) {
+      return "";
+    }
+
+    try {
+      return formatContractInterface(obj);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {
+      return "";
+    }
+  };
+
   const formatValue = (sectionName: ContractSectionName) => {
     switch (selectedFormat[sectionName]) {
       case "json":
@@ -131,6 +160,11 @@ export const ContractSpec = ({
         return isSacType
           ? formatSacData(sacData, "xdr")
           : `// ${sectionName} \n\n${contractSections?.[sectionName].xdr?.join("\n\n")}`;
+      case "interface":
+        return isSacType
+          ? // We can’t get interface for SAC because there is no Wasm file to parse
+            null
+          : formatInterface(contractInterfaceObj);
       case "text":
       default:
         return "";
@@ -141,11 +175,13 @@ export const ContractSpec = ({
     sectionName,
     title,
     infoLink,
+    languages = ["json", "xdr"],
     height,
   }: {
     sectionName: ContractSectionName;
     title: string;
     infoLink: string;
+    languages?: SupportedLanguage[];
     height?: string;
   }) => (
     <CodeEditor
@@ -153,7 +189,7 @@ export const ContractSpec = ({
       value={formatValue(sectionName) || ""}
       selectedLanguage={selectedFormat[sectionName]}
       fileName={`${wasmHash}-${sectionName}`}
-      languages={["json", "xdr"]}
+      languages={languages}
       onLanguageChange={(newLanguage) => {
         setSelectedFormat({
           ...selectedFormat,
@@ -194,6 +230,7 @@ export const ContractSpec = ({
             title: "Contract Spec",
             infoLink:
               "https://developers.stellar.org/docs/learn/fundamentals/contract-development/overview#contract-spec",
+            languages: ["interface", "json", "xdr"],
           })
         : null}
 
