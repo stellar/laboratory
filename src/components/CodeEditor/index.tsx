@@ -9,7 +9,7 @@ import { downloadFile } from "@/helpers/downloadFile";
 
 import "./styles.scss";
 
-export type SupportedLanguage = "json" | "xdr" | "text";
+export type SupportedLanguage = "json" | "xdr" | "text" | "interface";
 
 type CodeEditorProps = {
   title: string;
@@ -59,6 +59,7 @@ export const CodeEditor = ({
   const getFileExtension = () => {
     switch (selectedLanguage) {
       case "xdr":
+      case "interface":
         return "txt";
       case "json":
       default:
@@ -170,7 +171,9 @@ export const CodeEditor = ({
         <MonacoEditor
           defaultLanguage="javascript"
           defaultValue=""
-          language={selectedLanguage}
+          language={
+            selectedLanguage === "interface" ? "rust" : selectedLanguage
+          }
           value={value}
           options={{
             minimap: { enabled: false },

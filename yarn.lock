@@ -3044,6 +3044,11 @@
     "@stablelib/random" "^1.0.2"
     "@stablelib/wipe" "^1.0.1"
 
+"@stellar-expert/contract-wasm-interface-parser@^3.2.0":
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/@stellar-expert/contract-wasm-interface-parser/-/contract-wasm-interface-parser-3.2.0.tgz#5f60b564f1f8b35560a724f9afe769a9f6065de8"
+  integrity sha512-Y83a6mG0Bj61QJYyzaL0vd5vSL5hTfbilNhDwjRlPZL3KZkWJyypDWPpQyPanUOxVo0RY2Rw59jG1ean2eEMgw==
+
 "@stellar/design-system@^3.1.5":
   version "3.1.5"
   resolved "https://registry.yarnpkg.com/@stellar/design-system/-/design-system-3.1.5.tgz#b1b6957b1d1ce384ce3307c0d10ae772ce3c629d"
