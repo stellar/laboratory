@@ -204,26 +204,25 @@ export const ContractSpec = ({
   return (
     <Box gap="lg">
       {/* Sections */}
-      {/*TODO: put back*/}
-      {/*{contractSections?.contractmetav0*/}
-      {/*  ? renderSectionCodeEditor({*/}
-      {/*      sectionName: "contractmetav0",*/}
-      {/*      title: "Contract Meta",*/}
-      {/*      infoLink:*/}
-      {/*        "https://developers.stellar.org/docs/learn/fundamentals/contract-development/overview#contract-meta",*/}
-      {/*      height: "22",*/}
-      {/*    })*/}
-      {/*  : null}*/}
+      {contractSections?.contractmetav0
+        ? renderSectionCodeEditor({
+            sectionName: "contractmetav0",
+            title: "Contract Meta",
+            infoLink:
+              "https://developers.stellar.org/docs/learn/fundamentals/contract-development/overview#contract-meta",
+            height: "22",
+          })
+        : null}
 
-      {/*{contractSections?.contractenvmetav0*/}
-      {/*  ? renderSectionCodeEditor({*/}
-      {/*      sectionName: "contractenvmetav0",*/}
-      {/*      title: "Contract Env Meta",*/}
-      {/*      infoLink:*/}
-      {/*        "https://developers.stellar.org/docs/learn/fundamentals/contract-development/overview#environment-meta",*/}
-      {/*      height: "15",*/}
-      {/*    })*/}
-      {/*  : null}*/}
+      {contractSections?.contractenvmetav0
+        ? renderSectionCodeEditor({
+            sectionName: "contractenvmetav0",
+            title: "Contract Env Meta",
+            infoLink:
+              "https://developers.stellar.org/docs/learn/fundamentals/contract-development/overview#environment-meta",
+            height: "15",
+          })
+        : null}
 
       {contractSections?.contractspecv0
         ? renderSectionCodeEditor({
