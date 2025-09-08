@@ -261,7 +261,7 @@ export const SorobanOperation = ({
             <>{renderSourceAccount(sorobanOperation.operation_type, 0)}</>
           </Box>
 
-          {sorobanOperation.operation_type !== "invoke_contract" && (
+          {sorobanOperation.operation_type !== "invoke_contract_function" && (
             <Box gap="sm" align="start">
               <Button
                 disabled={Boolean(!network.rpcUrl)}
