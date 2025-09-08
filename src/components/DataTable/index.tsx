@@ -220,6 +220,27 @@ export const DataTable = <T extends AnyObject>({
     );
   };
 
+  const sanitizeCsvField = (value: any): string => {
+    if (value === null || value === undefined) {
+      return "";
+    }
+
+    // Remove or replace dangerous characters that could be interpreted as formulas
+    return String(value).replace(/^[=+\-@]/, "'$&");
+  };
+
+  const sanitizeCsvData = (data: any[]): any[] => {
+    return data.map((row) => {
+      const sanitizedRow: any = {};
+
+      Object.keys(row).forEach((key) => {
+        sanitizedRow[key] = sanitizeCsvField(row[key]);
+      });
+
+      return sanitizedRow;
+    });
+  };
+
   const handleExportToCsv = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     format: "xdr" | "json",
@@ -253,7 +274,11 @@ export const DataTable = <T extends AnyObject>({
         return;
       }
 
-      exportJsonToCsvFile(fileData, `${csvFileName}-${Date.now()}`);
+      // Sanitize the data before export
+      exportJsonToCsvFile(
+        sanitizeCsvData(fileData),
+        `${csvFileName}-${Date.now()}`,
+      );
     }
   };
 

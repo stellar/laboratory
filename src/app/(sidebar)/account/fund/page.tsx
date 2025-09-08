@@ -1,12 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Input, Text, Button } from "@stellar/design-system";
+import { Input, Text, Button, Notification } from "@stellar/design-system";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { useFriendBot } from "@/query/useFriendBot";
 import { useStore } from "@/store/useStore";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
+import { muxedAccount } from "@/helpers/muxedAccount";
 
 import { validate } from "@/validate";
 
@@ -28,6 +29,9 @@ export default function FundAccount() {
   const [generatedPublicKey, setGeneratedPublicKey] = useState<string>("");
   const [inlineErrorMessage, setInlineErrorMessage] = useState<string>("");
 
+  const [muxedBaseAccount, setMuxedBaseAccount] = useState<string>("");
+  const [muxedAccountMsg, setMuxedAccountMsg] = useState<string>("");
+
   const networkRef = useRef(network);
 
   const {
@@ -40,7 +44,7 @@ export default function FundAccount() {
     isFetchedAfterMount,
   } = useFriendBot({
     network,
-    publicKey: generatedPublicKey,
+    publicKey: muxedBaseAccount || generatedPublicKey,
     key: { type: "fund" },
     headers: getNetworkHeaders(network, "horizon"),
   });
@@ -80,6 +84,26 @@ export default function FundAccount() {
     return <SwitchNetwork />;
   }
 
+  const handleMuxedAccount = (muxedAddress: string) => {
+    if (muxedAddress.startsWith("M")) {
+      try {
+        const { baseAddress } = muxedAccount.parse({
+          muxedAddress,
+        });
+
+        if (baseAddress) {
+          setMuxedBaseAccount(baseAddress);
+          setMuxedAccountMsg(`The base account ${baseAddress} will be funded.`);
+          return;
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (e) {
+        // do nothing
+      }
+    }
+  };
+
   return (
     <div className="Account">
       <PageCard heading={`Friendbot: fund a ${network.id} network account`}>
@@ -98,10 +122,22 @@ export default function FundAccount() {
               setGeneratedPublicKey(e.target.value);
               const error = validate.getPublicKeyError(e.target.value);
               setInlineErrorMessage(error || "");
+              setMuxedBaseAccount("");
+              setMuxedAccountMsg("");
+
+              if (!error) {
+                handleMuxedAccount(e.target.value);
+              }
             }}
             placeholder="Ex: GCEXAMPLE5HWNK4AYSTEQ4UWDKHTCKADVS2AHF3UI2ZMO3DPUSM6Q4UG"
             error={inlineErrorMessage}
           />
+
+          {muxedAccountMsg ? (
+            <Notification title="Muxed Account" variant="primary">
+              {muxedAccountMsg}
+            </Notification>
+          ) : null}
 
           <div className="Account__CTA" data-testid="fundAccount-buttons">
             <Button
@@ -137,7 +173,7 @@ export default function FundAccount() {
 
       <SuccessMsg
         isVisible={Boolean(showAlert && isFetchedAfterMount && isSuccess)}
-        publicKey={generatedPublicKey}
+        publicKey={muxedBaseAccount || generatedPublicKey}
         onClose={() => {
           setShowAlert(false);
         }}

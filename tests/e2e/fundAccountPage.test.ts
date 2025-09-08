@@ -116,6 +116,53 @@ test.describe("[futurenet/testnet] Fund Account Page", () => {
     await expect(alertBox).toBeVisible();
   });
 
+  test("Successfully funds a muxed account when clicking 'Get lumens' with a valid muxed address", async ({
+    page,
+  }) => {
+    const publicKeyInput = page.locator("#fund-public-key-input");
+    const getLumenButton = page
+      .getByTestId("fundAccount-buttons")
+      .getByText("Get lumens");
+
+    await publicKeyInput.fill(
+      "MBX6W44ISK6XTBDDJ5ND6KTJHLYEYHMR4SDG635NRARYVJ3G2YXGCAAAAAAAAAAAPP4NS",
+    );
+
+    await expect(publicKeyInput).toHaveAttribute("aria-invalid", "false");
+    await expect(getLumenButton).toBeEnabled();
+
+    // Muxed account notification with the correct base address
+    const muxedNotification = page.locator(".Notification__message");
+    await expect(muxedNotification).toBeVisible();
+    await expect(muxedNotification).toHaveText(
+      "The base account GBX6W44ISK6XTBDDJ5ND6KTJHLYEYHMR4SDG635NRARYVJ3G2YXGDT6Y will be funded.",
+    );
+
+    // Mock the friendbot api call
+    await page.route(
+      "*/**/?addr=GBX6W44ISK6XTBDDJ5ND6KTJHLYEYHMR4SDG635NRARYVJ3G2YXGDT6Y",
+      async (route) => {
+        await route.fulfill({
+          status: 200,
+          contentType: "application/hal+json",
+        });
+      },
+    );
+
+    // Ensure the listener is set up before the action that triggers the request
+    const responsePromise = page.waitForResponse(
+      (response) =>
+        response.url().includes("?addr=") && response.status() === 200,
+    );
+
+    await getLumenButton.click();
+
+    await responsePromise;
+
+    const alertBox = page.getByText(/Successfully funded/);
+    await expect(alertBox).toBeVisible();
+  });
+
   test("Gets an error when submitting 'Get lumens' with a public key that's already been funded", async ({
     page,
   }) => {

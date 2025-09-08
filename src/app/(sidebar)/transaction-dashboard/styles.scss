@@ -197,6 +197,14 @@
     }
   }
 
+  .ExpandBox {
+    .FeeBreakdown__gridTable__row {
+      &:first-child {
+        border-top: 1px solid var(--sds-clr-gray-06);
+      }
+    }
+  }
+
   // Footprint
   ul.FeeBreakdown__footprint {
     display: flex;
