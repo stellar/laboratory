@@ -39,7 +39,8 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
         docsUrl:
           "https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getEvents",
         docsLabel: "getEvents",
-        endpointUrlTemplate: "{?startLedger,cursor,limit,filters,xdrFormat}",
+        endpointUrlTemplate:
+          "{?startLedger,endLedger,cursor,limit,filters,xdrFormat}",
         requestMethod: "POST",
         requiredParams: "startLedger",
         rpcMethod: "getEvents",
