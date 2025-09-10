@@ -20,6 +20,7 @@ import { PageCard } from "@/components/layout/PageCard";
 import { FilePicker } from "@/components/FilePicker";
 import { WalletKitContext } from "@/components/WalletKit/WalletKitContextProvider";
 import { JsonSchemaRenderer } from "@/components/SmartContractJsonSchema/JsonSchemaRenderer";
+import { SwitchNetworkButtons } from "@/components/SwitchNetworkButtons";
 
 import { useStore } from "@/store/useStore";
 import { useBuildRpcTransaction } from "@/query/useBuildRpcTransaction";
@@ -412,9 +413,13 @@ export default function DeployContract() {
     ) : null;
   };
 
-  return (
-    <Box gap="lg">
-      <PageCard heading="Contract Explorer">
+  const renderContent = () => {
+    if (network.id === "mainnet") {
+      return null;
+    }
+
+    return (
+      <>
         {!walletKit?.publicKey ? (
           <Alert variant="warning" placement="inline" title="Connect wallet">
             A connected wallet is required to deploy a contract. Please connect
@@ -463,9 +468,9 @@ export default function DeployContract() {
                   fieldSize="md"
                   hasCopyButton={true}
                   rows={5}
-                >
-                  {uploadTx.preparedXdr}
-                </Textarea>
+                  value={uploadTx.preparedXdr}
+                  readOnly={true}
+                ></Textarea>
               </Box>
             ) : undefined
           }
@@ -498,9 +503,9 @@ export default function DeployContract() {
                   fieldSize="md"
                   hasCopyButton={true}
                   rows={5}
-                >
-                  {signedUploadTx}
-                </Textarea>
+                  value={signedUploadTx}
+                  readOnly={true}
+                ></Textarea>
               </Box>
             ) : undefined
           }
@@ -537,9 +542,9 @@ export default function DeployContract() {
                   fieldSize="md"
                   hasCopyButton={true}
                   rows={1}
-                >
-                  {submitUploadTxResponse.result.txHash}
-                </Textarea>
+                  value={submitUploadTxResponse.result.txHash}
+                  readOnly={true}
+                ></Textarea>
               </Box>
             ) : undefined
           }
@@ -587,9 +592,9 @@ export default function DeployContract() {
                   fieldSize="md"
                   hasCopyButton={true}
                   rows={5}
-                >
-                  {deployTx.preparedXdr}
-                </Textarea>
+                  value={deployTx.preparedXdr}
+                  readOnly={true}
+                ></Textarea>
               </Box>
             ) : undefined
           }
@@ -636,9 +641,9 @@ export default function DeployContract() {
                   fieldSize="md"
                   hasCopyButton={true}
                   rows={5}
-                >
-                  {signedDeployTx}
-                </Textarea>
+                  value={signedDeployTx}
+                  readOnly={true}
+                ></Textarea>
               </Box>
             ) : undefined
           }
@@ -686,6 +691,29 @@ export default function DeployContract() {
             ) : undefined
           }
         />
+      </>
+    );
+  };
+
+  return (
+    <Box gap="lg">
+      <PageCard heading="Contract Explorer">
+        <Notification title="Attention" variant="warning" isFilled={true}>
+          <Box gap="md">
+            This feature is experimental and available only on test networks.
+            {network.id === "mainnet" ? (
+              <Box gap="md" direction="row">
+                <SwitchNetworkButtons
+                  includedNetworks={["testnet", "futurenet", "custom"]}
+                  buttonSize="md"
+                  page="deploy contract"
+                />
+              </Box>
+            ) : null}
+          </Box>
+        </Notification>
+
+        {renderContent()}
       </PageCard>
     </Box>
   );
