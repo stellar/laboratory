@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Alert,
@@ -34,6 +34,7 @@ import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { delayedAction } from "@/helpers/delayedAction";
 import { dereferenceSchema } from "@/helpers/dereferenceSchema";
 import { getScValsFromArgs } from "@/helpers/sorobanUtils";
+import { scrollElIntoView } from "@/helpers/scrollElIntoView";
 
 export default function DeployContract() {
   const CONSTRUCTOR_KEY = "__constructor";
@@ -73,6 +74,13 @@ export default function DeployContract() {
   const [signedDeployTx, setSignedDeployTx] = useState<string | null>(null);
   const [signDeployError, setSignDeployError] = useState<string | null>(null);
 
+  const step1Ref = useRef<HTMLDivElement>(null as any);
+  const step2Ref = useRef<HTMLDivElement>(null as any);
+  const step3Ref = useRef<HTMLDivElement>(null as any);
+  const step4Ref = useRef<HTMLDivElement>(null as any);
+  const step5Ref = useRef<HTMLDivElement>(null as any);
+  const step6Ref = useRef<HTMLDivElement>(null as any);
+
   let timeout: NodeJS.Timeout | null = null;
   const hasFormErrors =
     constructorFormError && Object.keys(constructorFormError).length > 0;
@@ -103,6 +111,25 @@ export default function DeployContract() {
       return null;
     }
   }, []);
+
+  const getStepRef = (stepNumber: number) => {
+    switch (stepNumber) {
+      case 1:
+        return step1Ref;
+      case 2:
+        return step2Ref;
+      case 3:
+        return step3Ref;
+      case 4:
+        return step4Ref;
+      case 5:
+        return step5Ref;
+      case 6:
+        return step6Ref;
+      default:
+        return null;
+    }
+  };
 
   useIsXdrInit();
 
@@ -208,6 +235,24 @@ export default function DeployContract() {
       setCurrentStep(0);
     }
   }, [isSubmitDeployTxSuccess]);
+
+  useEffect(() => {
+    if (selectedFile && currentStep > 0) {
+      const stepRef = getStepRef(currentStep);
+
+      if (stepRef?.current) {
+        scrollElIntoView(stepRef);
+      }
+    }
+
+    if (currentStep === 0 && isSubmitDeployTxSuccess) {
+      const stepRef = getStepRef(6);
+
+      if (stepRef?.current) {
+        scrollElIntoView(stepRef);
+      }
+    }
+  }, [currentStep, selectedFile, isSubmitDeployTxSuccess]);
 
   const handleFileChange = (file?: File) => {
     resetAll();
@@ -371,36 +416,38 @@ export default function DeployContract() {
     children?: React.ReactNode | null;
   }) => {
     return (
-      <Card>
-        <Box gap="md" key={`step-num-${stepNumber}`}>
-          <Box gap="md" addlClassName="DeployContract__step">
-            <div>{`${stepNumber}. ${title}`}</div>
+      <div ref={getStepRef(stepNumber)}>
+        <Card>
+          <Box gap="md" key={`step-num-${stepNumber}`}>
+            <Box gap="md" addlClassName="DeployContract__step">
+              <div>{`${stepNumber}. ${title}`}</div>
 
-            {children ? <Card variant="secondary">{children}</Card> : null}
+              {children ? <Card variant="secondary">{children}</Card> : null}
 
-            <Button
-              variant="tertiary"
-              size="md"
-              disabled={isActionDisabled}
-              isLoading={isActionLoading}
-              onClick={onAction}
-            >
-              {actionLabel}
-            </Button>
+              <Button
+                variant="tertiary"
+                size="md"
+                disabled={isActionDisabled}
+                isLoading={isActionLoading}
+                onClick={onAction}
+              >
+                {actionLabel}
+              </Button>
+            </Box>
+
+            {errorMessage ? (
+              <Notification title="Error" variant="error">
+                {errorMessage}
+              </Notification>
+            ) : null}
+            {successMessage ? (
+              <Notification title="Success" variant="success">
+                {successMessage}
+              </Notification>
+            ) : null}
           </Box>
-
-          {errorMessage ? (
-            <Notification title="Error" variant="error">
-              {errorMessage}
-            </Notification>
-          ) : null}
-          {successMessage ? (
-            <Notification title="Success" variant="success">
-              {successMessage}
-            </Notification>
-          ) : null}
-        </Box>
-      </Card>
+        </Card>
+      </div>
     );
   };
 
