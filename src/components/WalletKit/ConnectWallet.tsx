@@ -17,8 +17,10 @@ import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 export const ConnectWallet = () => {
   const { network, walletKit, updateWalletKit } = useStore();
   const [connected, setConnected] = useState<boolean>(false);
-  const [isModalVisible, setShowModal] = useState(false);
+  const [isModalVisible, setShowModal] = useState<boolean>(false);
   const [errorMessageOnConnect, setErrorMessageOnConnect] = useState("");
+  const [hasAttemptedAutoConnect, setHasAttemptedAutoConnect] =
+    useState<boolean>(false);
   const walletKitInstance = useContext(WalletKitContext);
   const savedWallet = localStorageSavedWallet.get();
 
@@ -36,6 +38,7 @@ export const ConnectWallet = () => {
 
     setShowModal(false);
     setConnected(false);
+    setHasAttemptedAutoConnect(false);
     localStorageSavedWallet.remove();
   };
 
@@ -44,13 +47,31 @@ export const ConnectWallet = () => {
 
     if (
       !connected &&
+      !hasAttemptedAutoConnect &&
       !!savedWallet?.id &&
       ![undefined, "false", "wallet_connect"].includes(savedWallet?.id) &&
       savedWallet.network.id === network.id
     ) {
-      t = setTimeout(() => {
-        walletKitInstance.walletKit?.setWallet(savedWallet.id);
-        handleSetWalletAddress();
+      t = setTimeout(async () => {
+        if (!walletKitInstance?.walletKit) {
+          return;
+        }
+
+        try {
+          walletKitInstance.walletKit?.setWallet(savedWallet.id);
+          const success = await handleSetWalletAddress({
+            skipRequestAccess: true,
+          });
+
+          // Only set the flag if connection failed, so we can retry on successful connections
+          if (!success) {
+            setHasAttemptedAutoConnect(true);
+          }
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (e) {
+          // Set flag on exception as well
+          setHasAttemptedAutoConnect(true);
+        }
         clearTimeout(t);
       }, 750);
     }
@@ -60,11 +81,22 @@ export const ConnectWallet = () => {
     };
     // Not including savedWallet.network.id
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [savedWallet?.id, connected, walletKitInstance]);
+  }, [savedWallet?.id, connected, hasAttemptedAutoConnect, walletKitInstance]);
 
-  async function handleSetWalletAddress(): Promise<boolean> {
+  // Reset auto-connect attempt when network changes
+  useEffect(() => {
+    setHasAttemptedAutoConnect(false);
+  }, [network.id]);
+
+  const handleSetWalletAddress = async ({
+    skipRequestAccess,
+  }: {
+    skipRequestAccess: boolean;
+  }): Promise<boolean> => {
     try {
-      const addressResult = await walletKitInstance.walletKit?.getAddress();
+      const addressResult = await walletKitInstance.walletKit?.getAddress({
+        skipRequestAccess,
+      });
 
       if (!addressResult?.address) {
         return false;
@@ -86,14 +118,16 @@ export const ConnectWallet = () => {
     } catch (e) {
       return false;
     }
-  }
+  };
 
   const connectWallet = async () => {
     try {
       await walletKitInstance.walletKit?.openModal({
         onWalletSelected: async (option: ISupportedWallet) => {
           walletKitInstance.walletKit?.setWallet(option.id);
-          const isWalletConnected = await handleSetWalletAddress();
+          const isWalletConnected = await handleSetWalletAddress({
+            skipRequestAccess: false,
+          });
 
           if (!isWalletConnected) {
             const errorMessage = "Unable to load wallet information";

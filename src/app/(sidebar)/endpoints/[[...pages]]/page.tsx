@@ -37,6 +37,7 @@ import { delayedAction } from "@/helpers/delayedAction";
 import { buildEndpointHref } from "@/helpers/buildEndpointHref";
 import { shareableUrl } from "@/helpers/shareableUrl";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
+import { sanitizeUrl } from "@/helpers/sanitizeUrl";
 
 import { Routes } from "@/constants/routes";
 import {
@@ -199,6 +200,7 @@ export default function Endpoints() {
           params: {
             xdrFormat: params.xdrFormat || "base64",
             startLedger: Number(params.startLedger) || null,
+            endLedger: Number(params.endLedger) || null,
             ...(pagination && { pagination }),
             filters: [
               {
@@ -603,7 +605,9 @@ export default function Endpoints() {
 
     const searchParamString = searchParams.toString();
 
-    return `${baseUrl}${searchParamString ? `?${searchParamString}` : ""}`;
+    return sanitizeUrl(
+      `${baseUrl}${searchParamString ? `?${searchParamString}` : ""}`,
+    );
     // Not including RegEx const
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -862,6 +866,15 @@ export default function Endpoints() {
                     isRequired,
                     onChange: (ledgerSeq: string | undefined) => {
                       handleChange(ledgerSeq, ledgerSeq);
+                    },
+                  });
+                case "endLedger":
+                  return component.render({
+                    value: params[f],
+                    error: formError[f],
+                    isRequired,
+                    onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                      handleChange(e.target.value, e.target.value);
                     },
                   });
                 // Custom endpoint component

@@ -9,7 +9,7 @@ export const Resources = () => {
       id: "youtube",
       title: "YouTube",
       description: "Watch tutorials, hear from us, and get inspired to build.",
-      link: "https://www.youtube.com/@StellarDevelopmentFoundation",
+      link: "https://www.youtube.com/playlist?list=PLmr3tp_7-7GiyTrRhKjlznmWe7AqFPq6i",
       icon: <Logo.Youtube />,
     },
     {
