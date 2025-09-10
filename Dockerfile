@@ -6,6 +6,7 @@ WORKDIR /app
 COPY . .
 # Passing env var to be used on client side
 ARG NEXT_PUBLIC_COMMIT_HASH
+RUN corepack enable
 RUN yarn install
 RUN yarn build
 

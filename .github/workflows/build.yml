@@ -16,7 +16,7 @@ jobs:
       - name: Enable Corepack
         run: corepack enable
       - name: Install dependencies
-        run: yarn install --check-cache --inline-builds
+        run: yarn install
       - name: Install Playwright Browsers
         run: yarn playwright install --with-deps
       - name: Build app
