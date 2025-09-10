@@ -16,7 +16,9 @@ jobs:
       - name: Enable Corepack
         run: corepack enable
       - name: Prepare Yarn
-        run: corepack prepare yarn@4.9.4 --activate
+        run: corepack prepare yarn@3.8.7 --activate
+      - name: Clean Yarn cache
+        run: yarn cache clean
       - name: Install dependencies
         run: yarn install --check-cache --inline-builds
       - name: Install Playwright Browsers
