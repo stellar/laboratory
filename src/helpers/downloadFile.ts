@@ -10,7 +10,15 @@ export const downloadFile = ({
   fileExtension: string;
 }) => {
   // Create blob
-  const blob = new Blob([value], {
+  let blobValue: BlobPart;
+  if (value instanceof Buffer) {
+    blobValue = new Uint8Array(value);
+  } else if (typeof value === "string" || value instanceof ArrayBuffer) {
+    blobValue = value;
+  } else {
+    blobValue = new Uint8Array(value);
+  }
+  const blob = new Blob([blobValue], {
     type: fileType,
   });
 

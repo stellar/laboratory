@@ -7,8 +7,8 @@ COPY . .
 # Passing env var to be used on client side
 ARG NEXT_PUBLIC_COMMIT_HASH
 RUN corepack enable
-RUN yarn install
-RUN yarn build
+RUN pnpm install
+RUN pnpm build
 
 # Run on port 80 for compatibility with laboratory v1
 EXPOSE 80

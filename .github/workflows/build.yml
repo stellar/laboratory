@@ -15,17 +15,13 @@ jobs:
           node-version: 22
       - name: Enable Corepack
         run: corepack enable
-      - name: Prepare Yarn
-        run: corepack prepare yarn@3.8.7 --activate
-      - name: Clean Yarn cache
-        run: yarn cache clean
       - name: Install dependencies
-        run: yarn install --check-cache --inline-builds
+        run: pnpm install --frozen-lockfile
       - name: Install Playwright Browsers
-        run: yarn playwright install --with-deps
+        run: pnpm playwright install --with-deps
       - name: Build app
-        run: yarn build
+        run: pnpm build
       - name: Run Playwright tests
-        run: yarn test:e2e
+        run: pnpm test:e2e
       - name: Run Unit tests
-        run: yarn test:unit
+        run: pnpm test:unit

@@ -99,7 +99,8 @@ export const useWasmGitHubAttestation = ({
 
 const extractSourceRepo = async (wasmBytes: Buffer): Promise<string | null> => {
   try {
-    const mod = await WebAssembly.compile(wasmBytes);
+    const wasmBuffer = new Uint8Array(wasmBytes);
+    const mod = await WebAssembly.compile(wasmBuffer);
 
     // Try different section names that might contain the "source_repo"
     const possibleSections = [
