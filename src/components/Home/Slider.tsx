@@ -438,7 +438,11 @@ export const Slider = ({ imgTheme }: { imgTheme: "light" | "dark" }) => {
               });
             }}
           >
-            <Box gap="xl" align="center">
+            <Box
+              gap="xl"
+              align="center"
+              addlClassName="Lab__home__introCards__fullHeight"
+            >
               <div className="Lab__home__introCards__image">
                 <Image
                   src={i.imagePath}
@@ -448,7 +452,12 @@ export const Slider = ({ imgTheme }: { imgTheme: "light" | "dark" }) => {
                 />
               </div>
 
-              <Box gap="xs" align="center">
+              <Box
+                gap="xs"
+                align="center"
+                justify="space-between"
+                addlClassName="Lab__home__introCards__fullHeight"
+              >
                 <Text
                   as="div"
                   size="md"

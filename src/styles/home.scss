@@ -211,6 +211,10 @@
     gap: pxToRem(12px);
     transition: opacity ease-in-out 0.2s;
 
+    &__fullHeight {
+      height: 100%;
+    }
+
     &__image {
       width: pxToRem(168px);
       height: pxToRem(168px);
