@@ -14,7 +14,7 @@ jobs:
         with:
           node-version: 22
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm install -g pnpm@latest-10 && pnpm install --frozen-lockfile
       - name: Install Playwright Browsers
         run: pnpm playwright install --with-deps
       - name: Build app
