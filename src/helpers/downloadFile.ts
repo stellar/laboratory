@@ -11,9 +11,7 @@ export const downloadFile = ({
 }) => {
   // Create blob
   let blobValue: BlobPart;
-  if (value instanceof Buffer) {
-    blobValue = new Uint8Array(value);
-  } else if (typeof value === "string" || value instanceof ArrayBuffer) {
+  if (typeof value === "string" || value instanceof ArrayBuffer) {
     blobValue = value;
   } else {
     blobValue = new Uint8Array(value);
