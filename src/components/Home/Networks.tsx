@@ -7,6 +7,7 @@ import { Box } from "@/components/layout/Box";
 
 import { capitalizeString } from "@/helpers/capitalizeString";
 import { openUrl } from "@/helpers/openUrl";
+import { getPublicResourcePath } from "@/helpers/getPublicResourcePath";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { EmptyObj, Network, NetworkType } from "@/types/types";
@@ -41,7 +42,9 @@ export const Networks = ({
       id: "testnet",
       title: "Testnet",
       description: "Safely test transactions without real funds.",
-      imagePath: `/images/lab-home-net-test-${imgTheme}.png`,
+      imagePath: getPublicResourcePath(
+        `/images/lab-home-net-test-${imgTheme}.png`,
+      ),
       links: [
         {
           label: "Switch to Testnet",
@@ -52,7 +55,9 @@ export const Networks = ({
       id: "mainnet",
       title: "Mainnet",
       description: "Build, test, and run real transactions on Stellar.",
-      imagePath: `/images/lab-home-net-main-${imgTheme}.png`,
+      imagePath: getPublicResourcePath(
+        `/images/lab-home-net-main-${imgTheme}.png`,
+      ),
       links: [
         {
           label: "Switch to Mainnet",
@@ -63,7 +68,9 @@ export const Networks = ({
       id: "local",
       title: "Local Network",
       description: "Run a local Stellar network for development.",
-      imagePath: `/images/lab-home-net-local-${imgTheme}.png`,
+      imagePath: getPublicResourcePath(
+        `/images/lab-home-net-local-${imgTheme}.png`,
+      ),
       links: [
         {
           label: "Quickstart",

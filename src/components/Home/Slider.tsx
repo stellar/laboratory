@@ -6,6 +6,7 @@ import { Button, Display, Icon, Text } from "@stellar/design-system";
 import { Routes } from "@/constants/routes";
 import { Box } from "@/components/layout/Box";
 import { openUrl } from "@/helpers/openUrl";
+import { getPublicResourcePath } from "@/helpers/getPublicResourcePath";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 export const Slider = ({ imgTheme }: { imgTheme: "light" | "dark" }) => {
@@ -14,25 +15,33 @@ export const Slider = ({ imgTheme }: { imgTheme: "light" | "dark" }) => {
       id: "home-xdr",
       title: "Decode and Inspect",
       description: "Convert XDR data into human-readable JSON",
-      imagePath: `/images/lab-home-intro-xdr-${imgTheme}.png`,
+      imagePath: getPublicResourcePath(
+        `/images/lab-home-intro-xdr-${imgTheme}.png`,
+      ),
     },
     {
       id: "home-tx",
       title: "Build, Sign, Simulate & Submit Transactions",
       description: "Build Stellar transaction with a web interface",
-      imagePath: `/images/lab-home-intro-tx-${imgTheme}.png`,
+      imagePath: getPublicResourcePath(
+        `/images/lab-home-intro-tx-${imgTheme}.png`,
+      ),
     },
     {
       id: "home-api",
       title: "Interact with API Endpoints",
       description: "Explore and test Stellar RPC and Horizon APIs",
-      imagePath: `/images/lab-home-intro-api-${imgTheme}.png`,
+      imagePath: getPublicResourcePath(
+        `/images/lab-home-intro-api-${imgTheme}.png`,
+      ),
     },
     {
       id: "home-contract",
       title: "Contract Explorer",
       description: "Explore smart contracts on the networks with ease",
-      imagePath: `/images/lab-home-intro-contract-${imgTheme}.png`,
+      imagePath: getPublicResourcePath(
+        `/images/lab-home-intro-contract-${imgTheme}.png`,
+      ),
     },
   ];
 
@@ -42,7 +51,9 @@ export const Slider = ({ imgTheme }: { imgTheme: "light" | "dark" }) => {
       title: "Decode and Inspect",
       description:
         "Decode XDR to human-readable JSON for inspection, or back from JSON to XDR for execution. Easily diff XDR to spot changes.",
-      imagePath: `/images/lab-home-intro-xdr-${imgTheme}.png`,
+      imagePath: getPublicResourcePath(
+        `/images/lab-home-intro-xdr-${imgTheme}.png`,
+      ),
       actionButton: {
         label: "XDR to JSON",
         route: Routes.VIEW_XDR,
@@ -67,7 +78,9 @@ export const Slider = ({ imgTheme }: { imgTheme: "light" | "dark" }) => {
       title: "Build, Sign, Simulate & Submit Transactions",
       description:
         "Construct Stellar transactions with ease through a web interface. Lab supports building both classic operations (like payments, account creation) and smart contract transactions.",
-      imagePath: `/images/lab-home-intro-tx-${imgTheme}.png`,
+      imagePath: getPublicResourcePath(
+        `/images/lab-home-intro-tx-${imgTheme}.png`,
+      ),
       actionButton: {
         label: "Build Transaction",
         route: Routes.BUILD_TRANSACTION,
@@ -100,7 +113,9 @@ export const Slider = ({ imgTheme }: { imgTheme: "light" | "dark" }) => {
       title: "Explore RPC and Horizon Endpoints",
       description:
         "Interactively test and explore RPC methods and Horizon endpoints with a comprehensive interface for building requests, submitting them to networks, and viewing formatted responses.",
-      imagePath: `/images/lab-home-intro-api-${imgTheme}.png`,
+      imagePath: getPublicResourcePath(
+        `/images/lab-home-intro-api-${imgTheme}.png`,
+      ),
       actionButton: {
         label: "Use API Explorer",
         route: Routes.ENDPOINTS,
@@ -121,7 +136,9 @@ export const Slider = ({ imgTheme }: { imgTheme: "light" | "dark" }) => {
       title: "Smart Contract Explorer",
       description:
         "Inspect and interact with smart contracts deployed on the networks. Understand their interface, see their codebase, and invoke them in Lab.",
-      imagePath: `/images/lab-home-intro-contract-${imgTheme}.png`,
+      imagePath: getPublicResourcePath(
+        `/images/lab-home-intro-contract-${imgTheme}.png`,
+      ),
       actionButton: {
         label: "Invoke Smart Contract",
         route: Routes.SMART_CONTRACTS_CONTRACT_EXPLORER,

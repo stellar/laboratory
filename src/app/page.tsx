@@ -23,7 +23,10 @@ import { Resources } from "@/components/Home/Resources";
 import { Routes } from "@/constants/routes";
 import { GITHUB_URL } from "@/constants/settings";
 import { useStore } from "@/store/useStore";
+
 import { openUrl } from "@/helpers/openUrl";
+import { getPublicResourcePath } from "@/helpers/getPublicResourcePath";
+
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import "@/styles/home.scss";
@@ -46,7 +49,9 @@ export default function Introduction() {
               </Badge>
 
               <img
-                src={`/images/lab-home-main-${imgTheme}.png`}
+                src={getPublicResourcePath(
+                  `/images/lab-home-main-${imgTheme}.png`,
+                )}
                 alt="Home graphic image"
               />
             </div>
