@@ -564,6 +564,18 @@
     }
   }
 
+  // Save and share
+  &__saveAndShare {
+    position: relative;
+    background-color: var(--sds-clr-gray-02);
+    border-radius: pxToRem(12px);
+    overflow: hidden;
+
+    img {
+      width: 100%;
+    }
+  }
+
   // Resources
   &__resources {
     --sds-logo-fill: var(--sds-clr-base-01);
