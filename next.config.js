@@ -8,6 +8,10 @@ const nextConfig = {
   webpack: (config) => {
     // Needed for stellar-hd-wallet
     config.externals.push("sodium-native");
+    
+    // Disable webpack filesystem cache to avoid pnpm compatibility issues
+    config.cache = false;
+    
     return config;
   },
   // Adding client side redirects to support old URLs in case they were saved or

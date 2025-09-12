@@ -14,12 +14,16 @@ jobs:
         with:
           debug-only: false
           days-before-stale: 60
-          days-before-close: 7
+          # Disable auto-close for PRs
+          days-before-close: -1
           stale-pr-message:
             "This pull request is stale because it has been open for 60 days
-            with no activity. It will be closed in 7 days if no further activity occurs."
-          close-pr-message: "This pull request was closed because it has been stale for 7 days with no activity."
+            with no activity."
           stale-pr-label: stale
+
+          # Disable processing of issues
+          days-before-issue-stale: -1
+          days-before-issue-close: -1
 
           remove-stale-when-updated: true
           delete-branch: true
