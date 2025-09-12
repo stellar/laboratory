@@ -568,12 +568,21 @@ export default function DeployContract() {
           isActionDisabled={!signedUploadTx || currentStep !== 3}
           isActionLoading={currentStep === 3 && isSubmitUploadTxPending}
           onAction={() => {
+            if (submitUploadTxError) {
+              resetSubmitUploadTx();
+            }
+
             if (signedUploadTx) {
-              submitUploadTx({
-                rpcUrl: network.rpcUrl,
-                transactionXdr: signedUploadTx,
-                networkPassphrase: network.passphrase,
-                headers: getNetworkHeaders(network, "rpc"),
+              delayedAction({
+                action: () => {
+                  submitUploadTx({
+                    rpcUrl: network.rpcUrl,
+                    transactionXdr: signedUploadTx,
+                    networkPassphrase: network.passphrase,
+                    headers: getNetworkHeaders(network, "rpc"),
+                  });
+                },
+                delay: submitUploadTxError ? 300 : 0,
               });
             }
           }}
@@ -706,12 +715,21 @@ export default function DeployContract() {
           isActionDisabled={!signedDeployTx || currentStep !== 6}
           isActionLoading={currentStep === 6 && isSubmitDeployTxPending}
           onAction={() => {
+            if (submitDeployTxError) {
+              resetSubmitDeployTx();
+            }
+
             if (signedDeployTx) {
-              submitDeployTx({
-                rpcUrl: network.rpcUrl,
-                transactionXdr: signedDeployTx,
-                networkPassphrase: network.passphrase,
-                headers: getNetworkHeaders(network, "rpc"),
+              delayedAction({
+                action: () => {
+                  submitDeployTx({
+                    rpcUrl: network.rpcUrl,
+                    transactionXdr: signedDeployTx,
+                    networkPassphrase: network.passphrase,
+                    headers: getNetworkHeaders(network, "rpc"),
+                  });
+                },
+                delay: submitDeployTxError ? 300 : 0,
               });
             }
           }}
