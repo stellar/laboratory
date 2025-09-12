@@ -206,6 +206,8 @@ export default function DeployContract() {
       const fn = async () => {
         const schema = await getConstructorSchema(selectedFile);
         setConstructorSchema(schema);
+        // If there are no constructor arguments, set validation to true
+        setIsConstructorArgsFilled(!schema);
       };
 
       fn();
