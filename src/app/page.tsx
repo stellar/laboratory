@@ -18,6 +18,7 @@ import { HomeSection } from "@/components/Home/Section";
 import { Slider } from "@/components/Home/Slider";
 import { Tutorials } from "@/components/Home/Tutorials";
 import { Networks } from "@/components/Home/Networks";
+import { SaveAndShare } from "@/components/Home/SaveAndShare";
 import { Resources } from "@/components/Home/Resources";
 
 import { Routes } from "@/constants/routes";
@@ -138,6 +139,14 @@ export default function Introduction() {
           description="Test safely in testnet and localnet, or connect to the mainnet — Stellar Lab gives you full control."
         >
           <Networks imgTheme={imgTheme} network={network} />
+        </HomeSection>
+
+        <HomeSection
+          title="Save and share your work to revisit experiment and collaborate"
+          eyebrow="Save and share"
+          description="Save or share transactions anytime. They’re stored in your browser’s local storage and can be accessed from the Saved tab in the sidebar for easy reloading."
+        >
+          <SaveAndShare imgTheme={imgTheme} />
         </HomeSection>
 
         <HomeSection

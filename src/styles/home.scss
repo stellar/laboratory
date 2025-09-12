@@ -211,6 +211,10 @@
     gap: pxToRem(12px);
     transition: opacity ease-in-out 0.2s;
 
+    &__fullHeight {
+      height: 100%;
+    }
+
     &__image {
       width: pxToRem(168px);
       height: pxToRem(168px);
@@ -561,6 +565,18 @@
 
     &__description {
       color: var(--sds-clr-gray-11);
+    }
+  }
+
+  // Save and share
+  &__saveAndShare {
+    position: relative;
+    background-color: var(--sds-clr-gray-02);
+    border-radius: pxToRem(12px);
+    overflow: hidden;
+
+    img {
+      width: 100%;
     }
   }
 
