@@ -91,6 +91,10 @@ const SMART_CONTRACTS_NAV = [
     route: Routes.SMART_CONTRACTS_CONTRACT_LIST,
     label: "Smart Contract List",
   },
+  {
+    route: Routes.SMART_CONTRACTS_DEPLOY_CONTRACT,
+    label: "Deploy Contract",
+  },
 ];
 
 const TRANSACTION_NAV = [

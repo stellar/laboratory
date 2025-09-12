@@ -31,3 +31,12 @@
     width: pxToRem(76px);
   }
 }
+
+// Deploy Contract
+.DeployContract {
+  &__step {
+    .Button {
+      width: fit-content;
+    }
+  }
+}
