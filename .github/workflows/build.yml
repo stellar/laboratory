@@ -13,8 +13,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Enable Corepack
+        run: corepack enable pnpm
       - name: Install dependencies
-        run: npm install -g pnpm@latest-10 && pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Install Playwright Browsers
         run: pnpm playwright install --with-deps
       - name: Build app
