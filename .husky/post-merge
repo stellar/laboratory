@@ -1,1 +1,1 @@
-yarn install-if-package-changed
+pnpm install-if-package-changed
