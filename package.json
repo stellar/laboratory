@@ -14,11 +14,11 @@
     "lint:ts": "tsc --noEmit",
     "test:unit": "jest",
     "test:e2e": "playwright test",
-    "test": "yarn test:unit && yarn test:e2e",
-    "install-if-package-changed": "git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD | grep --quiet yarn.lock && yarn install || exit 0",
+    "test": "pnpm test:unit && pnpm test:e2e",
+    "install-if-package-changed": "git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD | grep --quiet pnpm.lock && pnpm install || exit 0",
     "prepare": "husky",
-    "pre-commit": "yarn lint-staged",
-    "pre-push": "yarn lint:ts && yarn test:e2e && yarn test:unit",
+    "pre-commit": "pnpm lint-staged",
+    "pre-push": "pnpm lint:ts && pnpm test:e2e && pnpm test:unit",
     "playwright-ui": "npx playwright test --ui"
   },
   "dependencies": {
@@ -77,5 +77,6 @@
     "sass": "^1.86.3",
     "ts-jest": "^29.4.0",
     "typescript": "^5.8.3"
-  }
+  },
+  "packageManager": "pnpm@10.15.1"
 }

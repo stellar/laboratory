@@ -1,4 +1,4 @@
-import { describe, expect, it } from "@jest/globals";
+// Jest globals (describe, expect, it) are available globally
 import { xdr, ScInt, Address } from "@stellar/stellar-sdk";
 
 import { getScValsFromArgs } from "../../src/helpers/sorobanUtils";

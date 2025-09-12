@@ -3,7 +3,12 @@
 [![Apache 2.0 licensed](https://img.shields.io/badge/license-apache%202.0-blue.svg)](LICENSE)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/stellar/laboratory)
 
-The Stellar Lab is an interactive toolkit for exploring the Stellar network. It helps developers and builders experiment with building, signing, simulating, and submitting transactions, as well as making requests to both RPC and Horizon APIs. With built-in tools for saving and sharing transactions, converting between XDR and JSON, and exploring smart contracts on Stellar, the Stellar Lab is ideal for testing, learning, and exploring on Stellar.
+The Stellar Lab is an interactive toolkit for exploring the Stellar network. It
+helps developers and builders experiment with building, signing, simulating, and
+submitting transactions, as well as making requests to both RPC and Horizon
+APIs. With built-in tools for saving and sharing transactions, converting
+between XDR and JSON, and exploring smart contracts on Stellar, the Stellar Lab
+is ideal for testing, learning, and exploring on Stellar.
 
 ## Overview
 
@@ -22,12 +27,12 @@ viewing.
 - [Zustand](https://docs.pmnd.rs/zustand/getting-started/introduction) for state
   management
 - [Playwright](https://playwright.dev/) for e2e tests
-- [Yarn Classic (v1)](https://classic.yarnpkg.com/lang/en/docs/install/)
+- [pnpm](https://pnpm.io/installation)
 
 ## Developing
 
 ```sh
-yarn dev
+pnpm dev
 ```
 
 Testing hardware wallets requires an HTTPS connection to enable U2F. The
@@ -39,13 +44,13 @@ public URL.
 ./ngrok http 3000
 # in a separate terminal
 # the subdomain will appear in ngrok's output
-yarn start --public randomsubdomain.ngrok.io
+pnpm start --public randomsubdomain.ngrok.io
 ```
 
 ## Building for production
 
 ```sh
-yarn build
+pnpm build
 ```
 
 The app will be built into the `build` directory in Next.js' standalone output
@@ -54,14 +59,14 @@ format.
 To run production build locally this command can be used conveniently:
 
 ```sh
-yarn start
+pnpm start
 ```
 
 To distribute and deploy the production build you need to copy the
-`build/static` directory to the `build/standalone/public/_next/static`
-location, and then the files and directories inside the `build/standalone`
-directory are the only files needed for production and can be distributed to
-the deployment location.
+`build/static` directory to the `build/standalone/public/_next/static` location,
+and then the files and directories inside the `build/standalone` directory are
+the only files needed for production and can be distributed to the deployment
+location.
 
 In the deployment location the following command will run the app:
 
@@ -71,9 +76,12 @@ node server.js
 
 ## Tracking
 
-To improve Lab, we use [Amplitude](https://amplitude.com/) and [Google Analytics](https://developers.google.com/analytics) tracking in production.
+To improve Lab, we use [Amplitude](https://amplitude.com/) and
+[Google Analytics](https://developers.google.com/analytics) tracking in
+production.
 
-If you are running your version of Lab (for Quickstart, for example), you can disable the Google Analytics by setting this `env` variable:
+If you are running your version of Lab (for Quickstart, for example), you can
+disable the Google Analytics by setting this `env` variable:
 
 ```
 NEXT_PUBLIC_DISABLE_GOOGLE_ANALYTICS=true

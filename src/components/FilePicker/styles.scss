@@ -1,0 +1,60 @@
+@use "../../styles/utils.scss" as *;
+
+.FilePicker {
+  display: flex;
+  flex-direction: column;
+  gap: pxToRem(8px);
+  align-items: center;
+  justify-content: center;
+
+  background-color: var(--sds-clr-gray-03);
+  border-radius: pxToRem(8px);
+  padding: pxToRem(24px);
+  transition:
+    border-color var(--sds-anim-transition-default),
+    background-color var(--sds-anim-transition-default);
+
+  &--active {
+    background-color: var(--sds-clr-gray-04);
+  }
+
+  &--disabled {
+    background-color: var(--sds-clr-red-03);
+  }
+
+  &__button {
+    flex-shrink: 0;
+
+    &[aria-disabled="true"] {
+      label {
+        color: var(--Button-color-text-disabled);
+        background-color: var(--Button-color-background-disabled);
+        border-color: var(--Button-color-border-disabled);
+        cursor: not-allowed;
+      }
+    }
+
+    .Button {
+      width: fit-content;
+    }
+  }
+
+  &__message {
+    font-size: pxToRem(14px);
+    line-height: pxToRem(20px);
+    font-weight: var(--sds-fw-medium);
+    color: var(--sds-clr-gray-11);
+
+    &--error {
+      svg {
+        stroke: var(--sds-clr-red-09);
+      }
+    }
+
+    &--success {
+      svg {
+        stroke: var(--sds-clr-green-09);
+      }
+    }
+  }
+}
