@@ -15,6 +15,7 @@ import { AssetMultiPicker } from "@/components/FormElements/AssetMultiPicker";
 import { FiltersPicker } from "@/components/FormElements/FiltersPicker";
 import { MultiLedgerEntriesPicker } from "@/components/FormElements/XdrLedgerKeyPicker";
 import { ConfigSettingIdPicker } from "@/components/FormElements/ConfigSettingIdPicker";
+import { RadioPicker } from "@/components/RadioPicker";
 
 import { parseJsonString } from "@/helpers/parseJsonString";
 import { removeLeadingZeroes } from "@/helpers/removeLeadingZeroes";
@@ -411,25 +412,17 @@ export const formComponentTemplateEndpoints = (
           onChange: (val: any) => void;
           disabled?: boolean;
         }) => (
-          <Select
+          <RadioPicker
             key={id}
             id={`${id}-type`}
-            fieldSize="md"
             label="Durability"
-            value={templ.value || ""}
+            selectedOption={templ.value || ""}
             onChange={templ.onChange}
-            disabled={templ.disabled}
-          >
-            <option value="">Select a durability</option>
-            {[
-              { id: "temporary", label: "Temporary" },
+            options={[
               { id: "persistent", label: "Persistent" },
-            ].map((f) => (
-              <option key={f.id} value={f.id}>
-                {f.label}
-              </option>
-            ))}
-          </Select>
+              { id: "temporary", label: "Temporary" },
+            ]}
+          />
         ),
         validate: null,
       };
