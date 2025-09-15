@@ -1,21 +1,24 @@
-import React from "react";
-import { Banner, Link } from "@stellar/design-system";
+import React, { useState } from "react";
+import { Badge, Icon, IconButton, Link } from "@stellar/design-system";
 
 import { getRelevantMaintenanceMsg } from "@/helpers/getRelevantMaintenanceMsg";
 import { sanitizeHtml } from "@/helpers/sanitizeHtml";
 import { useMaintenanceData } from "@/query/useMaintenanceData";
 import { useStore } from "@/store/useStore";
 
+import { Box } from "@/components/layout/Box";
+import { ExpandBox } from "@/components/ExpandBox";
+
 export const MaintenanceBanner = () => {
   const { network } = useStore();
   const { data, error, isFetching, isLoading } = useMaintenanceData();
 
+  const [isMsgExpanded, setIsMsgExpanded] = useState(false);
+
   const relevantMaintenance = getRelevantMaintenanceMsg(network.id, data);
 
   const renderBanner = (message: React.ReactNode) => (
-    <div className="MaintenanceBanner">
-      <Banner variant="primary">{message}</Banner>
-    </div>
+    <div className="MaintenanceBanner">{message}</div>
   );
 
   if (isFetching || isLoading) {
@@ -44,15 +47,60 @@ export const MaintenanceBanner = () => {
   const nextMaintenance = relevantMaintenance[0];
   const date = new Date(nextMaintenance.scheduled_for);
 
+  const getDaysLeftText = (toDate: Date) => {
+    const today = new Date();
+    const diffTime = toDate.getTime() - today.getTime();
+    const daysLeft = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (daysLeft === 0) {
+      return "today";
+    }
+
+    if (daysLeft === 1) {
+      return "tomorrow";
+    }
+
+    return `${daysLeft} days left`;
+  };
+
   return renderBanner(
-    <>
-      <Link href={`https://status.stellar.org/incidents/${nextMaintenance.id}`}>
-        {nextMaintenance.name}
-      </Link>{" "}
-      on {date.toDateString()} at {date.toTimeString()}
-      {nextMaintenance.incident_updates.map((update) => (
-        <div key={update.id}>{sanitizeHtml(update.body)}</div>
-      ))}
-    </>,
+    <Box gap="md">
+      <Box
+        gap="sm"
+        direction="row"
+        align="center"
+        justify="center"
+        addlClassName="MaintenanceBanner__header"
+      >
+        <Icon.InfoCircle />
+
+        <Link
+          href={`https://status.stellar.org/incidents/${nextMaintenance.id}`}
+        >
+          {nextMaintenance.name}
+        </Link>
+
+        <Badge variant="tertiary" size="sm">
+          {getDaysLeftText(date)}
+        </Badge>
+
+        <IconButton
+          icon={<Icon.ChevronDown />}
+          customSize="16px"
+          customColor="var(--sds-clr-gray-09)"
+          altText={isMsgExpanded ? "Show less" : "Show more"}
+          onClick={() => setIsMsgExpanded(!isMsgExpanded)}
+          data-is-expanded={isMsgExpanded}
+        />
+      </Box>
+      <ExpandBox offsetTop="md" isExpanded={isMsgExpanded}>
+        <div className="MaintenanceBanner__message">
+          on {date.toDateString()} at {date.toTimeString()}
+          {nextMaintenance.incident_updates.map((update) => (
+            <div key={update.id}>{sanitizeHtml(update.body)}</div>
+          ))}
+        </div>
+      </ExpandBox>
+    </Box>,
   );
 };
