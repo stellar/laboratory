@@ -238,7 +238,9 @@ test.describe("URL Params", () => {
       );
       await expect(page.getByLabel("Cursor")).toHaveValue("123123");
       await expect(page.getByLabel("Limit")).toHaveValue("5");
-      await expect(page.getByLabel("XDR Format")).toHaveValue("json");
+
+      const xdrFormatInput = page.locator("#json-xdrFormat-type");
+      await expect(xdrFormatInput).toBeChecked();
     });
 
     test("Horizon Endpoints: Payments for Account", async ({ page }) => {
