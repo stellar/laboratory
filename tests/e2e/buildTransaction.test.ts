@@ -1348,14 +1348,21 @@ test.describe("Build Transaction Page", () => {
         const prepareTxButton = page.getByText(
           "Prepare Soroban Transaction to Sign",
         );
+
+        // Mock simulate transaction RPC call
+        await mockSimulateTx({
+          page,
+          responseXdr: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAtug=",
+        });
+
         await expect(prepareTxButton).toBeEnabled();
         await prepareTxButton.click();
 
         await testOpSuccessHashAndXdr({
           isSorobanOp: true,
           page,
-          hash: "697f7755242fca0a02dad6c154b0285942da75dc0dc8bc89d13edd4f1a66131c",
-          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgABBWwAD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAGQAAAAAAAHUwAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALboAAAAAA==",
+          hash: "6a5f375827ddb91900f160b38e125c20c4b10a64a88842155261fc8e925c8198",
+          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgABu0EAD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAGQAAAAAAAHUwAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALboAAAAAA==",
         });
       });
 
