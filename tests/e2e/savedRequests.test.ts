@@ -7,6 +7,7 @@ test.describe("Saved Requests Page", () => {
   });
 
   test("Loads", async ({ page }) => {
+    await page.waitForSelector("h1", { timeout: 5000 });
     await expect(page.locator("h1")).toHaveText("Saved Requests");
   });
 
@@ -38,12 +39,15 @@ test.describe("Saved Requests Page", () => {
     // local storage data
     let pageContext: Page;
 
-    test.beforeAll(async ({ browser }) => {
+    test.beforeEach(async ({ browser }) => {
       const browserContext = await browser.newContext({
         storageState: MOCK_LOCAL_STORAGE,
       });
       pageContext = await browserContext.newPage();
       await pageContext.goto("http://localhost:3000/endpoints/saved");
+
+      await pageContext.waitForSelector("h1", { timeout: 5000 });
+      await expect(pageContext.locator("h1")).toHaveText("Saved Requests");
     });
 
     test("Loads Horizon endpoints", async () => {
@@ -169,7 +173,7 @@ test.describe("Saved Requests Page", () => {
       await expect(rpcItems).toHaveCount(1);
     });
 
-    test("Horizon endpoint View action", async () => {
+    test("Horizon endpoint View action", async ({ page }) => {
       const horizonItem = pageContext
         .getByTestId("saved-requests-horizon-item")
         .nth(0);
@@ -177,6 +181,7 @@ test.describe("Saved Requests Page", () => {
       await horizonItem.getByText("View", { exact: true }).click();
 
       // Loads All Transactions endpoint page with saved params
+      await page.waitForSelector("h1", { timeout: 5000 });
       await expect(pageContext.locator("h1")).toHaveText("All Transactions");
 
       await expect(pageContext.getByTestId("endpoints-url")).toHaveValue(
@@ -186,7 +191,7 @@ test.describe("Saved Requests Page", () => {
       await expect(pageContext.locator("#desc-order")).toBeChecked();
     });
 
-    test("RPC method View in API Explorer action", async () => {
+    test("RPC method View in API Explorer action", async ({ page }) => {
       await clickRpcTab(pageContext);
 
       const rpcItem = pageContext.getByTestId("saved-requests-rpc-item").nth(0);
@@ -194,6 +199,7 @@ test.describe("Saved Requests Page", () => {
       await rpcItem.getByText("View in API Explorer", { exact: true }).click();
 
       // Loads getTransactions RPC request page with saved params
+      await page.waitForSelector("h1", { timeout: 5000 });
       await expect(pageContext.locator("h1")).toHaveText("getTransactions");
 
       await expect(pageContext.getByTestId("endpoints-url")).toHaveValue(
@@ -215,5 +221,12 @@ const clickRpcTab = async (pageContext: Page) => {
   const container = pageContext.getByTestId("saved-requests-container");
   const rpcTab = container.getByText("RPC Methods", { exact: true });
 
+  await expect(rpcTab).toBeVisible();
+  await expect(rpcTab).toBeEnabled();
   await rpcTab.click();
+
+  // Make sure the RPC tab is active
+  await expect(
+    container.getByTestId("saved-requests-rpc-item").first(),
+  ).toBeVisible();
 };
