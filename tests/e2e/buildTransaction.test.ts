@@ -1,4 +1,5 @@
 import { test, expect, Page } from "@playwright/test";
+import { mockSimulateTx } from "./mock/helpers";
 
 test.describe("Build Transaction Page", () => {
   test.beforeEach(async ({ page }) => {
@@ -1485,14 +1486,22 @@ test.describe("Build Transaction Page", () => {
         const prepareTxButton = page.getByText(
           "Prepare Soroban Transaction to Sign",
         );
+
+        // Mock simulate transaction RPC call
+        await mockSimulateTx({
+          page,
+          responseXdr:
+            "AAAAAAAAAAAAAAABAAAABgAAAAFBCgikPLq53zdaW7+DudgtVK8qXHohkQxEoX4K/7BkzwAAABAAAAABAAAAAgAAAA8AAAAJQWRtaW5zVmVjAAAAAAAABQAAAAAAAAABAAAAAQAAAAAAAADIAAAAyAAAAAAAAWy9",
+        });
+
         await expect(prepareTxButton).toBeEnabled();
         await prepareTxButton.click();
 
         await testOpSuccessHashAndXdr({
           isSorobanOp: true,
           page,
-          hash: "111892cc24b7183aba3bbab8bca4103653d982c8ef67e7808e80354928ced640",
-          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgABbWEAD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAGgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAtqEAAAAA",
+          hash: "5502bae1a7fd4555ad833e79942d02e8d863862eee95dd03dee15dc099bbcede",
+          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgACI30AD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAGgAAAAAAAAABAAAAAAAAAAAAAAABAAAABgAAAAFBCgikPLq53zdaW7+DudgtVK8qXHohkQxEoX4K/7BkzwAAABAAAAABAAAAAgAAAA8AAAAJQWRtaW5zVmVjAAAAAAAABQAAAAAAAAABAAAAAQAAAAAAAADIAAAAyAAAAAAAAWy9AAAAAA==",
         });
       });
 

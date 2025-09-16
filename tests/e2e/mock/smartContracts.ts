@@ -1,4 +1,3 @@
-import { Page } from "@playwright/test";
 import { SAVED_ACCOUNT_1 } from "./localStorage";
 
 export const MOCK_CONTRACT_ID =
@@ -42,21 +41,4 @@ export const MOCK_CONTRACT_INFO_CONTRACT_TYPE_FAILURE = {
     entries: [],
     latestLedger: 245589,
   },
-};
-
-export const mockContractTypeFn = async (page: Page) => {
-  await page.route("https://soroban-testnet.stellar.org", async (route) => {
-    const request = route.request();
-    const postData = request.postDataJSON();
-
-    if (postData?.method === "getLedgerEntries") {
-      await route.fulfill({
-        status: 200,
-        contentType: "application/json",
-        body: JSON.stringify(MOCK_CONTRACT_INFO_CONTRACT_TYPE_SUCCESS),
-      });
-    } else {
-      await route.continue();
-    }
-  });
 };
