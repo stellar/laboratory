@@ -456,11 +456,11 @@ export const XdrLedgerKeyPicker = ({
 
   return (
     <Box gap="lg" addlClassName="XdrLedgerKeyPicker">
-      {activeTabId === "select" ? (
+      {activeTabId === "ledgerKey" ? (
         <Card>
           <Box gap="sm">
             <Select
-              id="ledgerkey"
+              id="ledger-key-type"
               fieldSize="md"
               label="Ledger Key Type"
               value={selectedLedgerKey?.id}
@@ -484,7 +484,7 @@ export const XdrLedgerKeyPicker = ({
             <>{renderLedgerKeyTemplate({ isReadOnly: false })}</>
 
             <XdrPicker
-              id="ledger-key-xdr"
+              id="ledger-key-tab"
               label="Ledger Key XDR"
               value={value}
               hasCopyButton
@@ -500,7 +500,7 @@ export const XdrLedgerKeyPicker = ({
         <Card>
           <Box gap="sm">
             <XdrPicker
-              id="ledger-key-xdr"
+              id="ledger-xdr-tab"
               label="Ledger Key XDR"
               value={value}
               error={ledgerKeyXdrError}
@@ -526,7 +526,7 @@ export const MultiLedgerEntriesPicker = ({
   buttonLabel = "Add another ledger key",
   limit = 100,
 }: MultiPickerProps) => {
-  const [activeTabId, setActiveTabId] = useState<string>("select");
+  const [activeTabId, setActiveTabId] = useState<string>("ledgerKey");
   if (!value || !value.length) {
     value = [];
   }
@@ -537,7 +537,7 @@ export const MultiLedgerEntriesPicker = ({
         <Tabs
           addlClassName="Tab--with-border"
           tabs={[
-            { id: "select", label: "Select Ledger Key" },
+            { id: "ledgerKey", label: "Select Ledger Key" },
             { id: "xdr", label: "Use Ledger XDR" },
           ]}
           activeTabId={activeTabId}
