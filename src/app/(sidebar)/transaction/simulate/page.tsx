@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, Input, Alert, Select } from "@stellar/design-system";
+import { Button, Input, Alert } from "@stellar/design-system";
 import { useRouter } from "next/navigation";
 
 import { Box } from "@/components/layout/Box";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { PrettyJson } from "@/components/PrettyJson";
 import { PageCard } from "@/components/layout/PageCard";
+import { RadioPicker } from "@/components/RadioPicker";
 
 import { useStore } from "@/store/useStore";
 import { useSimulateTx } from "@/query/useSimulateTx";
@@ -131,22 +132,19 @@ export default function SimulateTransaction() {
           hasCopyButton
         />
 
-        <Select
+        <RadioPicker
           id="simulate-tx-xdr-format"
-          fieldSize="md"
           label="XDR Format"
-          value={xdr.format}
-          onChange={(e) => {
-            xdr.updateXdrFormat(e.target.value as XdrFormatType);
+          selectedOption={xdr.format}
+          onChange={(optionId) => {
+            xdr.updateXdrFormat(optionId as XdrFormatType);
+            resetResponse();
           }}
-        >
-          <option id="base64" value="base64">
-            base64
-          </option>
-          <option id="json" value="json">
-            json
-          </option>
-        </Select>
+          options={[
+            { id: "base64", label: "base64" },
+            { id: "json", label: "json" },
+          ]}
+        />
 
         <Input
           id="simulate-tx-instr-leeway"

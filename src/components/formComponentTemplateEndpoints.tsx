@@ -976,21 +976,17 @@ export const formComponentTemplateEndpoints = (
           error: string | undefined;
           onChange: (val: any) => void;
         }) => (
-          <Select
+          <RadioPicker
             key={id}
-            id={id}
-            fieldSize="md"
+            id={`${id}-type`}
             label="XDR Format"
-            value={templ.value || ""}
+            selectedOption={templ.value || ""}
             onChange={templ.onChange}
-          >
-            <option id="base64" value="base64">
-              base64
-            </option>
-            <option id="json" value="json">
-              json
-            </option>
-          </Select>
+            options={[
+              { id: "base64", label: "base64" },
+              { id: "json", label: "json" },
+            ]}
+          />
         ),
         validate: null,
       };
