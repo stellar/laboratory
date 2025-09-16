@@ -6,7 +6,7 @@ import {
   TransactionBuilder,
   xdr,
 } from "@stellar/stellar-sdk";
-import LedgerTransportWebUSB from "@ledgerhq/hw-transport-webusb";
+import TransportWebHID from "@ledgerhq/hw-transport-webhid";
 import Str from "@ledgerhq/hw-app-str";
 import TrezorConnect, { StellarSignedTx } from "@trezor/connect-web";
 import transformTransaction from "@trezor/connect-plugin-stellar";
@@ -192,7 +192,18 @@ const signWithLedger = async ({
   };
 
   try {
-    const transport = await LedgerTransportWebUSB.request();
+    // Close existing connections to avoid the "device already open" error
+    const existingTransports = await TransportWebHID.list();
+
+    await Promise.all(
+      existingTransports.map((existingTransport) =>
+        existingTransport.close().catch(() => {
+          // Ignore close errors - the device might already be closed
+        }),
+      ),
+    );
+
+    const transport = await TransportWebHID.request();
     const ledgerApi = new Str(transport);
     return await signTxWithLedger(ledgerApi, isHash);
   } catch (error) {
