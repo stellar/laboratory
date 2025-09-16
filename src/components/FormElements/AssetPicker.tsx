@@ -40,6 +40,7 @@ type AssetPickerProps = {
   includeLiquidityPoolShares?: boolean;
   includeSingleLiquidityPoolShare?: boolean;
   disabled?: boolean;
+  isReadOnly?: boolean;
 };
 
 export const AssetPicker = ({
@@ -56,6 +57,7 @@ export const AssetPicker = ({
   includeLiquidityPoolShares,
   includeSingleLiquidityPoolShare,
   disabled,
+  isReadOnly,
 }: AssetPickerProps) => {
   let options: AssetObject[] = [];
 
@@ -165,12 +167,13 @@ export const AssetPicker = ({
           key={id}
           id={id}
           label="Liquidity Pool ID"
-          placeholder="Ex: 67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9"
+          placeholder="Ex: LBTSMDCMDAD3EYX7QUNQUP7BIEMUSNV3AIK3F53UI7Y56EMZR2V3SREB"
           value={poolShareValue.pool_share || ""}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             onChange({ ...poolShareValue, pool_share: e.target.value });
           }}
           disabled={disabled}
+          copyButton={isReadOnly ? { position: "right" } : undefined}
         />
       );
     }
@@ -196,6 +199,7 @@ export const AssetPicker = ({
           error: assetError?.issuer || "",
         }}
         disabled={disabled}
+        hasCopyButton={isReadOnly}
       />
     );
   };
@@ -271,6 +275,7 @@ type AssetPickerFieldsProps = {
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   };
   disabled?: boolean;
+  hasCopyButton?: boolean;
 };
 
 const AssetPickerFields = ({
@@ -278,6 +283,7 @@ const AssetPickerFields = ({
   code,
   issuer,
   disabled,
+  hasCopyButton,
 }: AssetPickerFieldsProps) => (
   <div className="RadioPicker__inset">
     <Input
@@ -288,6 +294,7 @@ const AssetPickerFields = ({
       onChange={code.onChange}
       error={code.error}
       disabled={disabled}
+      copyButton={hasCopyButton ? { position: "right" } : undefined}
     />
     <PubKeyPicker
       id={`${id}-issuer`}
@@ -297,6 +304,7 @@ const AssetPickerFields = ({
       onChange={issuer.onChange}
       error={issuer.error}
       disabled={disabled}
+      copyButton={hasCopyButton ? { position: "right" } : undefined}
     />
   </div>
 );

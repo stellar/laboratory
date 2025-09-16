@@ -12,7 +12,6 @@ import { Box } from "@/components/layout/Box";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { Tabs } from "@/components/Tabs";
 import { formComponentTemplateEndpoints } from "@/components/formComponentTemplateEndpoints";
-import { InputSideElement } from "@/components/InputSideElement";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
@@ -37,9 +36,10 @@ type MultiPickerProps = {
 };
 
 type XdrLedgerKeyPicker = {
+  activeTabId: string;
   value: string;
   onChange: (value: string) => void;
-  rightElement: ReactElement | null;
+  deleteElement: ReactElement | null;
 };
 
 // https://github.com/stellar/stellar-xdr/blob/curr/Stellar-ledger-entries.x#L600
@@ -108,11 +108,11 @@ const ledgerKeyFields: {
 export const XdrLedgerKeyPicker = ({
   value,
   onChange,
-  rightElement,
+  deleteElement,
+  activeTabId,
 }: XdrLedgerKeyPicker) => {
   const [selectedLedgerKey, setSelectedLedgerKey] =
     useState<LedgerKeyFieldsType | null>(null);
-  const [activeTabId, setActiveTabId] = useState<string>("select");
   const [formError, setFormError] = useState<AnyObject>({});
   const [ledgerKeyXdrToJsonString, setLedgerKeyXdrToJsonString] =
     useState<string>("");
@@ -278,17 +278,14 @@ export const XdrLedgerKeyPicker = ({
     [reset, xdrDecodeLedgerKeyToJson],
   );
 
-  // Render input fields on mount if there is Ledger Key XDR value
+  // Render input fields based on xdr value
+  // This also gets updated when an item is deleted
   useEffect(() => {
-    if (value && !ledgerKeyXdrToJsonString && !selectedLedgerKey) {
+    if (value) {
       validateLedgerKeyXdr(value);
     }
-  }, [
-    value,
-    ledgerKeyXdrToJsonString,
-    validateLedgerKeyXdr,
-    selectedLedgerKey,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
 
   useEffect(() => {
     // this creates an empty template with default fields based on
@@ -315,7 +312,11 @@ export const XdrLedgerKeyPicker = ({
     }
   }, [ledgerKeyXdrToJsonString, selectedLedgerKey]);
 
-  const renderLedgerKeyTemplate = () => {
+  const renderLedgerKeyTemplate = ({
+    isReadOnly = false,
+  }: {
+    isReadOnly?: boolean;
+  }) => {
     // if there is no selected ledger key or the xdr string is empty, return null
     if (!selectedLedgerKey || !ledgerKeyXdrToJsonString) {
       return null;
@@ -408,6 +409,7 @@ export const XdrLedgerKeyPicker = ({
           error: formError[field],
           isRequired: true,
           disabled: false,
+          isReadOnly,
         };
 
         if (field === "asset") {
@@ -454,16 +456,6 @@ export const XdrLedgerKeyPicker = ({
 
   return (
     <Box gap="lg" addlClassName="XdrLedgerKeyPicker">
-      <Tabs
-        addlClassName="Tab--with-border"
-        tabs={[
-          { id: "select", label: "Select Ledger Key" },
-          { id: "xdr", label: "Use Ledger XDR" },
-        ]}
-        activeTabId={activeTabId}
-        onChange={(id) => setActiveTabId(id)}
-      />
-
       {activeTabId === "select" ? (
         <Card>
           <Box gap="sm">
@@ -489,7 +481,7 @@ export const XdrLedgerKeyPicker = ({
                 </option>
               ))}
             </Select>
-            <>{renderLedgerKeyTemplate()}</>
+            <>{renderLedgerKeyTemplate({ isReadOnly: false })}</>
 
             <XdrPicker
               id="ledger-key-xdr"
@@ -499,7 +491,7 @@ export const XdrLedgerKeyPicker = ({
               error={ledgerKeyXdrError}
               disabled={true}
             />
-            <>{rightElement}</>
+            <>{deleteElement}</>
           </Box>
         </Card>
       ) : null}
@@ -511,7 +503,6 @@ export const XdrLedgerKeyPicker = ({
               id="ledger-key-xdr"
               label="Ledger Key XDR"
               value={value}
-              hasCopyButton
               error={ledgerKeyXdrError}
               onChange={(e) => {
                 onChange(e.target.value);
@@ -519,7 +510,8 @@ export const XdrLedgerKeyPicker = ({
               }}
               disabled={false}
             />
-            <>{rightElement}</>
+            <>{renderLedgerKeyTemplate({ isReadOnly: true })}</>
+            <>{deleteElement}</>
           </Box>
         </Card>
       ) : null}
@@ -534,6 +526,7 @@ export const MultiLedgerEntriesPicker = ({
   buttonLabel = "Add another ledger key",
   limit = 100,
 }: MultiPickerProps) => {
+  const [activeTabId, setActiveTabId] = useState<string>("select");
   if (!value || !value.length) {
     value = [];
   }
@@ -541,33 +534,44 @@ export const MultiLedgerEntriesPicker = ({
   return (
     <Box gap="md">
       <Box gap="lg">
+        <Tabs
+          addlClassName="Tab--with-border"
+          tabs={[
+            { id: "select", label: "Select Ledger Key" },
+            { id: "xdr", label: "Use Ledger XDR" },
+          ]}
+          activeTabId={activeTabId}
+          onChange={(id) => setActiveTabId(id)}
+        />
+
         {value.length
-          ? value.map((singleVal: string, index: number) => (
-              <Card key={`${id}-${index}`}>
+          ? value.map((singleVal: string, index: number) => {
+              return (
                 <XdrLedgerKeyPicker
                   onChange={(val) => {
                     const updatedVal = arrayItem.update(value, index, val);
                     return onChange([...updatedVal]);
                   }}
                   key={`${id}-${index}`}
+                  activeTabId={activeTabId}
                   value={singleVal}
-                  rightElement={
+                  deleteElement={
                     index !== 0 ? (
-                      <InputSideElement
-                        variant="button"
-                        onClick={() => {
+                      <Button
+                        size="md"
+                        variant="tertiary"
+                        icon={<Icon.Trash01 />}
+                        onClick={(e) => {
+                          e.preventDefault();
                           const val = arrayItem.delete(value, index);
                           return onChange([...val]);
                         }}
-                        placement="right"
-                        icon={<Icon.Trash01 />}
-                        addlClassName="MultiPicker__delete"
-                      />
+                      ></Button>
                     ) : null
                   }
                 />
-              </Card>
-            ))
+              );
+            })
           : null}
       </Box>
 
