@@ -202,10 +202,6 @@ test.describe("API Explorer page", () => {
       await expect(ledgerKeyTab).toHaveAttribute("data-is-active", "true");
 
       const selectDropdown = page.getByLabel("Ledger Key Type");
-      const ledgerKeyXdrView = page.getByLabel("Ledger Key XDR");
-
-      await expect(ledgerKeyXdrView).toBeVisible();
-      await expect(ledgerKeyXdrView).toBeDisabled();
 
       await selectDropdown.click();
       const options = await selectDropdown.locator("option").allTextContents();
@@ -225,6 +221,11 @@ test.describe("API Explorer page", () => {
 
       await selectDropdown.selectOption("liquidity_pool");
       await expect(selectDropdown).toHaveValue("liquidity_pool");
+
+      const ledgerKeyXdrView = page.getByLabel("Ledger Key XDR");
+
+      await expect(ledgerKeyXdrView).toBeVisible();
+      await expect(ledgerKeyXdrView).toBeDisabled();
 
       const liquidityPoolInput = page.getByLabel("Liquidity Pool ID");
       await liquidityPoolInput.fill(

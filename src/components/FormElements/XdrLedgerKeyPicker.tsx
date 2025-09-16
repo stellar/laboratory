@@ -483,14 +483,16 @@ export const XdrLedgerKeyPicker = ({
             </Select>
             <>{renderLedgerKeyTemplate({ isReadOnly: false })}</>
 
-            <XdrPicker
-              id="ledger-key-tab"
-              label="Ledger Key XDR"
-              value={value}
-              hasCopyButton
-              error={ledgerKeyXdrError}
-              disabled={true}
-            />
+            {selectedLedgerKey ? (
+              <XdrPicker
+                id="ledger-key-tab"
+                label="Ledger Key XDR"
+                value={value}
+                hasCopyButton
+                error={ledgerKeyXdrError}
+                disabled={true}
+              />
+            ) : null}
             <>{deleteElement}</>
           </Box>
         </Card>
