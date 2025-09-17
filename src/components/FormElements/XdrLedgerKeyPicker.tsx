@@ -284,6 +284,7 @@ export const XdrLedgerKeyPicker = ({
     if (value) {
       validateLedgerKeyXdr(value);
     }
+    // Not validateLedgerKeyXdr()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
