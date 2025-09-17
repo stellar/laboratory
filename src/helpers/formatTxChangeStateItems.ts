@@ -1,3 +1,4 @@
+import { getTxResultMetaJsonVersionData } from "@/helpers/getTxResultMetaJsonVersionData";
 import {
   AnyObject,
   ChangeStateEntityType,
@@ -104,7 +105,8 @@ const addAfterDataToItem = ({
 export const formatTxChangeStateItems = (
   txDetails: RpcTxJsonResponse,
 ): ChangeStateItem[] | null => {
-  const changes = txDetails?.resultMetaJson?.v3?.operations?.[0]?.changes;
+  const changes = getTxResultMetaJsonVersionData(txDetails?.resultMetaJson)
+    ?.operations?.[0]?.changes;
 
   if (!changes?.length) {
     return null;

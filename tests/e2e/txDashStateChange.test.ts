@@ -7,6 +7,7 @@ import {
   TX_ST_CHANGE_KALE_PLANT,
   TX_ST_CHANGE_KALE_WORK,
   TX_ST_CHANGE_NO_STATE_CHANGE,
+  TX_ST_CHANGE_RESULT_META_V4_EXAMPLE,
   TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY,
   TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY,
   TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS,
@@ -87,12 +88,22 @@ test.describe("Transaction Dashboard: State Change", () => {
     });
   });
 
-  test.describe("Blend USDC-XLM Pool V2 ", () => {
+  test.describe("Blend USDC-XLM Pool V2", () => {
     test("submit", async ({ page }) => {
       await testTxStateChange({
         page,
         mockResponse: TX_ST_CHANGE_BLEND_USDC_XLM_V2_SUBMIT,
         stateChangeItemCount: 5,
+      });
+    });
+  });
+
+  test.describe("Result Meta JSON v4", () => {
+    test("submit", async ({ page }) => {
+      await testTxStateChange({
+        page,
+        mockResponse: TX_ST_CHANGE_RESULT_META_V4_EXAMPLE,
+        stateChangeItemCount: 14,
       });
     });
   });
