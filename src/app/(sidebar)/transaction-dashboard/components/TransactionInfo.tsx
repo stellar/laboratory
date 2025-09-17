@@ -357,6 +357,7 @@ export const TransactionInfo = ({
           direction="row"
           align="center"
           addlClassName="TransactionInfo__badges"
+          data-testid="transaction-info-badges"
         >
           {renderTxBadge()}
           {feeBumpTx ? (
