@@ -40,7 +40,7 @@ type AssetPickerProps = {
   includeLiquidityPoolShares?: boolean;
   includeSingleLiquidityPoolShare?: boolean;
   disabled?: boolean;
-  isReadOnly?: boolean;
+  hasCopyButton?: boolean;
 };
 
 export const AssetPicker = ({
@@ -57,7 +57,7 @@ export const AssetPicker = ({
   includeLiquidityPoolShares,
   includeSingleLiquidityPoolShare,
   disabled,
-  isReadOnly,
+  hasCopyButton,
 }: AssetPickerProps) => {
   let options: AssetObject[] = [];
 
@@ -173,7 +173,7 @@ export const AssetPicker = ({
             onChange({ ...poolShareValue, pool_share: e.target.value });
           }}
           disabled={disabled}
-          copyButton={isReadOnly ? { position: "right" } : undefined}
+          copyButton={hasCopyButton ? { position: "right" } : undefined}
         />
       );
     }
@@ -199,7 +199,7 @@ export const AssetPicker = ({
           error: assetError?.issuer || "",
         }}
         disabled={disabled}
-        hasCopyButton={isReadOnly}
+        hasCopyButton={hasCopyButton}
       />
     );
   };

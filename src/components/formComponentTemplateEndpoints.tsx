@@ -124,7 +124,7 @@ export const formComponentTemplateEndpoints = (
               custom?.includeSingleLiquidityPoolShare
             }
             disabled={templ.disabled || templ.isReadOnly}
-            isReadOnly={templ.isReadOnly}
+            hasCopyButton={templ.isReadOnly}
           />
         ),
         validate: validate.getAssetError,

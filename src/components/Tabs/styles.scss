@@ -28,7 +28,7 @@
       &[data-is-active="true"] {
         --Tabs-default-text: var(--sds-clr-lilac-11);
         --Tabs-default-background: transparent;
-        
+
         &:after {
           content: "";
           height: 2px;
