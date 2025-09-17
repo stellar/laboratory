@@ -191,26 +191,87 @@ test.describe("API Explorer page", () => {
     });
   });
 
-  test.describe("getLedgerEntries", () => {
+  test.describe("[RPC Methods] getLedgerEntries", () => {
     test.beforeEach(async ({ page }) => {
       await page.goto("http://localhost:3000/endpoints/rpc/get-ledger-entries");
       await expect(page.locator("h1")).toHaveText("getLedgerEntries");
     });
 
-    test("Input switch", async ({ page }) => {
-      const ledgerKeyXdrInput = page.getByLabel("Ledger Key XDR", {
-        exact: true,
-      });
-      const ledgerKeySelect = page.getByLabel("Ledger Key", { exact: true });
+    test("'Liquidity Pool ID' in 'Select Ledger Key' Tab", async ({ page }) => {
+      const ledgerKeyTab = page.getByTestId("ledgerKey");
+      await expect(ledgerKeyTab).toHaveAttribute("data-is-active", "true");
 
-      await expect(ledgerKeyXdrInput).toBeEnabled();
-      await expect(ledgerKeySelect).toBeDisabled();
+      const selectDropdown = page.getByLabel("Ledger Key Type");
 
-      // Switch inputs
-      await page.getByText("Switch input").click();
+      await selectDropdown.click();
+      const options = await selectDropdown.locator("option").allTextContents();
+      expect(options).toEqual([
+        "Select a key",
+        "Account",
+        "Trustline",
+        "Offer",
+        "Data",
+        "Claimable Balance",
+        "Liquidity Pool",
+        "Contract Data",
+        "Contract Code",
+        "Config Setting",
+        "TTL",
+      ]);
 
-      await expect(ledgerKeyXdrInput).toBeDisabled();
-      await expect(ledgerKeySelect).toBeEnabled();
+      await selectDropdown.selectOption("liquidity_pool");
+      await expect(selectDropdown).toHaveValue("liquidity_pool");
+
+      const ledgerKeyXdrView = page.getByLabel("Ledger Key XDR");
+
+      await expect(ledgerKeyXdrView).toBeVisible();
+      await expect(ledgerKeyXdrView).toBeDisabled();
+
+      const liquidityPoolInput = page.getByLabel("Liquidity Pool ID");
+      await liquidityPoolInput.fill(
+        "LBTSMDCMDAD3EYX7QUNQUP7BIEMUSNV3AIK3F53UI7Y56EMZR2V3SREB",
+      );
+      await expect(ledgerKeyXdrView).toHaveValue(
+        "AAAABWcmDEwYB7Ji/4UbCj/hQRlJNrsCFbL3dEfx3xGZjqu5",
+      );
+    });
+
+    test("'Contract Data' in 'Use Ledger XDR' Tab", async ({ page }) => {
+      const ledgerXdrTab = page.getByTestId("xdr");
+      await ledgerXdrTab.click();
+      await expect(ledgerXdrTab).toHaveAttribute("data-is-active", "true");
+
+      const ledgerKeyXdrView = page.getByLabel("Ledger Key XDR");
+      await ledgerKeyXdrView.fill(
+        "AAAABgAAAAFO2E1JH/0O9mhqJ7e9+wqWhSIEu+cN6NSlPo2I4R9SQQAAABAAAAABAAAAAgAAAA8AAAAHQmFsYW5jZQAAAAASAAAAAcZvjW60jxxDR7GyTPKTj9b5qKU7dwoKWSXdZzwRY5t/AAAAAQ==",
+      );
+
+      const contractInput = page.getByLabel("Contract");
+      await expect(contractInput).toBeDisabled();
+      await expect(contractInput).toHaveValue(
+        "CBHNQTKJD76Q55TINIT3PPP3BKLIKIQEXPTQ32GUUU7I3CHBD5JECZLW",
+      );
+      const keyInput = page.getByLabel("Key (ScVal)");
+      const stringifiedScVal = JSON.stringify(
+        {
+          vec: [
+            {
+              symbol: "Balance",
+            },
+            {
+              address:
+                "CDDG7DLOWSHRYQ2HWGZEZ4UTR7LPTKFFHN3QUCSZEXOWOPARMONX6T65",
+            },
+          ],
+        },
+        null,
+        2,
+      );
+      await expect(keyInput).toBeDisabled();
+      await expect(keyInput).toHaveValue(stringifiedScVal);
+
+      const durabilityInput = page.locator("#persistent-durability-type");
+      await expect(durabilityInput).toBeChecked();
     });
   });
 });
