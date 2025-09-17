@@ -37,46 +37,49 @@ describe("getTxData() fee breakdown", () => {
 
         // If expected fee is provided, verify it matches
         if (expectedMaxFee) {
-          expect(res?.maxFee).toEqual(expectedMaxFee);
+          expect(res?.maxFee).toEqual(String(expectedMaxFee));
         }
       });
 
       it("calculates fees correctly", () => {
         expect(res?.inclusionFee).toEqual(
-          String(res?.maxFee - (res?.maxResourceFee || 0)),
+          String(Number(res?.maxFee) - (Number(res?.maxResourceFee) || 0)),
         );
         expect(res?.finalRefunded).toEqual(
-          String(res?.maxFee - res?.finalFeeCharged),
+          String(Number(res?.maxFee) - Number(res?.finalFeeCharged)),
         );
       });
 
       it("verifies proposed fee calculations", () => {
         // inclusionFee = maxFee - maxResourceFee
-        const expectedInclusionFee = res!.maxFee - res!.maxResourceFee;
+        const expectedInclusionFee =
+          Number(res!.maxFee) - Number(res!.maxResourceFee);
         expect(res?.inclusionFee).toEqual(String(expectedInclusionFee));
 
         // refundable = maxResourceFee - nonRefundable
-        const expectedRefundable = res!.maxResourceFee - res!.nonRefundable;
+        const expectedRefundable =
+          Number(res!.maxResourceFee) - Number(res!.nonRefundable);
         expect(res?.refundable).toEqual(String(expectedRefundable));
       });
 
       it("verifies final fee calculations", () => {
         // finalResourceFeeCharged = finalNonRefundable + finalRefundable
         const expectedFinalResourceFee =
-          res!.finalNonRefundable + res!.finalRefundable;
+          Number(res!.finalNonRefundable) + Number(res!.finalRefundable);
         expect(res?.finalResourceFeeCharged).toEqual(
           String(expectedFinalResourceFee),
         );
 
         // finalInclusionFee = finalFeeCharged - finalResourceFeeCharged
         const expectedFinalInclusionFee =
-          res!.finalFeeCharged - Number(res!.finalResourceFeeCharged);
+          Number(res!.finalFeeCharged) - Number(res!.finalResourceFeeCharged);
         expect(res?.finalInclusionFee).toEqual(
           String(expectedFinalInclusionFee),
         );
 
         // finalRefunded = maxFee - finalFeeCharged
-        const expectedFinalRefunded = res!.maxFee - res!.finalFeeCharged;
+        const expectedFinalRefunded =
+          Number(res!.maxFee) - Number(res!.finalFeeCharged);
         expect(res?.finalRefunded).toEqual(String(expectedFinalRefunded));
       });
 
@@ -90,21 +93,21 @@ describe("getTxData() fee breakdown", () => {
 
         // refundedResourceFee = maxResourceFee - finalResourceFeeCharged
         const expectedRefundedResourceFee =
-          res!.maxResourceFee - Number(res!.finalResourceFeeCharged);
+          Number(res!.maxResourceFee) - Number(res!.finalResourceFeeCharged);
         expect(res?.refundedResourceFee).toEqual(
           String(expectedRefundedResourceFee),
         );
 
         // refundedRefundable = refundable - finalRefundable
         const expectedRefundedRefundable =
-          Number(res!.refundable) - res!.finalRefundable;
+          Number(res!.refundable) - Number(res!.finalRefundable);
         expect(res?.refundedRefundable).toEqual(
           String(expectedRefundedRefundable),
         );
 
         // refundedNonRefundable = nonRefundable - finalNonRefundable
         const expectedRefundedNonRefundable =
-          res!.nonRefundable - res!.finalNonRefundable;
+          Number(res!.nonRefundable) - Number(res!.finalNonRefundable);
         expect(res?.refundedNonRefundable).toEqual(
           String(expectedRefundedNonRefundable),
         );
@@ -125,35 +128,35 @@ describe("getTxData() fee breakdown", () => {
 
         // maxFee should equal inclusionFee + maxResourceFee
         const maxFeeFromComponents =
-          Number(res!.inclusionFee) + res!.maxResourceFee;
-        expect(res?.maxFee).toEqual(maxFeeFromComponents);
+          Number(res!.inclusionFee) + Number(res!.maxResourceFee);
+        expect(Number(res?.maxFee)).toEqual(maxFeeFromComponents);
 
         // finalFeeCharged should equal finalInclusionFee + finalResourceFeeCharged
         const finalFeeFromComponents =
           Number(res!.finalInclusionFee) + Number(res!.finalResourceFeeCharged);
-        expect(res?.finalFeeCharged).toEqual(finalFeeFromComponents);
+        expect(Number(res?.finalFeeCharged)).toEqual(finalFeeFromComponents);
 
         // maxResourceFee should equal nonRefundable + refundable
         const maxResourceFromComponents =
-          res!.nonRefundable + Number(res!.refundable);
-        expect(res?.maxResourceFee).toEqual(maxResourceFromComponents);
+          Number(res!.nonRefundable) + Number(res!.refundable);
+        expect(Number(res?.maxResourceFee)).toEqual(maxResourceFromComponents);
       });
 
       it("verifies fee breakdown totals add up correctly", () => {
         // maxFee should equal inclusionFee + maxResourceFee
         const maxFeeFromComponents =
-          Number(res!.inclusionFee) + res!.maxResourceFee;
-        expect(res?.maxFee).toEqual(maxFeeFromComponents);
+          Number(res!.inclusionFee) + Number(res!.maxResourceFee);
+        expect(Number(res?.maxFee)).toEqual(maxFeeFromComponents);
 
         // finalFeeCharged should equal finalInclusionFee + finalResourceFeeCharged
         const finalFeeFromComponents =
           Number(res!.finalInclusionFee) + Number(res!.finalResourceFeeCharged);
-        expect(res?.finalFeeCharged).toEqual(finalFeeFromComponents);
+        expect(Number(res?.finalFeeCharged)).toEqual(finalFeeFromComponents);
 
         // maxResourceFee should equal nonRefundable + refundable
         const maxResourceFromComponents =
-          res!.nonRefundable + Number(res!.refundable);
-        expect(res?.maxResourceFee).toEqual(maxResourceFromComponents);
+          Number(res!.nonRefundable) + Number(res!.refundable);
+        expect(Number(res?.maxResourceFee)).toEqual(maxResourceFromComponents);
       });
 
       it("returns null for NOT_FOUND status", () => {
@@ -223,12 +226,12 @@ describe("getTxData() fee breakdown", () => {
       // Both should follow the same calculation rules
       // Normal transaction calculations
       const normalInclusionFee =
-        normalTxRes!.maxFee - normalTxRes!.maxResourceFee;
+        Number(normalTxRes!.maxFee) - Number(normalTxRes!.maxResourceFee);
       expect(normalTxRes?.inclusionFee).toEqual(String(normalInclusionFee));
 
       // Fee-bump transaction calculations
       const feeBumpInclusionFee =
-        feeBumpTxRes!.maxFee - feeBumpTxRes!.maxResourceFee;
+        Number(feeBumpTxRes!.maxFee) - Number(feeBumpTxRes!.maxResourceFee);
       expect(feeBumpTxRes?.inclusionFee).toEqual(String(feeBumpInclusionFee));
     });
 
@@ -253,8 +256,8 @@ describe("getTxData() fee breakdown", () => {
       };
 
       const res = getTxData(mockTxWithoutFeeBump).feeBreakdown;
-      expect(res?.maxFee).toEqual(100000);
-      expect(res?.maxResourceFee).toEqual(95000);
+      expect(res?.maxFee).toEqual("100000");
+      expect(res?.maxResourceFee).toEqual("95000");
       expect(res?.inclusionFee).toEqual("5000");
     });
 
@@ -262,14 +265,14 @@ describe("getTxData() fee breakdown", () => {
       const res = getTxData(TX_RESPONSE_SOROBAN_FEE_BUMP.result).feeBreakdown;
 
       // Test specific expected values for fee-bump transaction
-      expect(res?.maxFee).toEqual(298012);
-      expect(res?.maxResourceFee).toEqual(297810);
+      expect(res?.maxFee).toEqual("298012");
+      expect(res?.maxResourceFee).toEqual("297810");
       expect(res?.inclusionFee).toEqual("202");
-      expect(res?.nonRefundable).toEqual(172758);
+      expect(res?.nonRefundable).toEqual("172758");
       expect(res?.refundable).toEqual("125052");
-      expect(res?.finalFeeCharged).toEqual(226598);
-      expect(res?.finalNonRefundable).toEqual(172758);
-      expect(res?.finalRefundable).toEqual(53638);
+      expect(res?.finalFeeCharged).toEqual("226598");
+      expect(res?.finalNonRefundable).toEqual("172758");
+      expect(res?.finalRefundable).toEqual("53638");
       expect(res?.finalResourceFeeCharged).toEqual("226396");
       expect(res?.finalInclusionFee).toEqual("202");
       expect(res?.finalRefunded).toEqual("71414");
