@@ -1,5 +1,6 @@
 import { BigNumber } from "bignumber.js";
 import { isSorobanOperationType } from "@/helpers/sorobanUtils";
+import { getTxResultMetaJsonVersionData } from "@/helpers/getTxResultMetaJsonVersionData";
 import { RpcTxJsonResponse } from "@/types/types";
 
 export const getTxData = (txDetails: RpcTxJsonResponse | null) => {
@@ -34,6 +35,10 @@ export const getTxData = (txDetails: RpcTxJsonResponse | null) => {
 };
 
 const feeBreakdown = (txDetails: RpcTxJsonResponse) => {
+  const resultMetaJson = getTxResultMetaJsonVersionData(
+    txDetails?.resultMetaJson,
+  );
+
   // Proposed fees
   const maxFee =
     txDetails?.envelopeJson?.tx_fee_bump?.tx?.fee ||
@@ -47,7 +52,7 @@ const feeBreakdown = (txDetails: RpcTxJsonResponse) => {
     .minus(maxResourceFee || 0)
     .toString();
   const nonRefundable =
-    txDetails?.resultMetaJson?.v3?.soroban_meta?.ext?.v1
+    resultMetaJson?.soroban_meta?.ext?.v1
       ?.total_non_refundable_resource_fee_charged;
   // refundable = maxResourceFee - nonRefundable
   const refundable =
@@ -59,7 +64,7 @@ const feeBreakdown = (txDetails: RpcTxJsonResponse) => {
   const finalFeeCharged = txDetails?.resultJson?.fee_charged;
   const finalNonRefundable = nonRefundable;
   const finalRefundable =
-    txDetails?.resultMetaJson?.v3?.soroban_meta?.ext?.v1
+    resultMetaJson?.soroban_meta?.ext?.v1
       ?.total_refundable_resource_fee_charged;
   // finalResourceFeeCharged = finalNonRefundable + finalRefundable
   const finalResourceFeeCharged =

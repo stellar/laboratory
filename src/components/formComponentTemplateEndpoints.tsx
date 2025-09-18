@@ -15,6 +15,7 @@ import { AssetMultiPicker } from "@/components/FormElements/AssetMultiPicker";
 import { FiltersPicker } from "@/components/FormElements/FiltersPicker";
 import { MultiLedgerEntriesPicker } from "@/components/FormElements/XdrLedgerKeyPicker";
 import { ConfigSettingIdPicker } from "@/components/FormElements/ConfigSettingIdPicker";
+import { RadioPicker } from "@/components/RadioPicker";
 
 import { parseJsonString } from "@/helpers/parseJsonString";
 import { removeLeadingZeroes } from "@/helpers/removeLeadingZeroes";
@@ -33,6 +34,7 @@ type TemplateRenderProps = {
   onChange: (val: any) => void;
   isRequired?: boolean;
   disabled?: boolean;
+  isReadOnly?: boolean;
 };
 
 type TemplateRenderAssetProps = {
@@ -47,6 +49,7 @@ type TemplateRenderAssetProps = {
   ) => void;
   isRequired?: boolean;
   disabled?: boolean;
+  isReadOnly?: boolean;
 };
 
 type TemplateRenderAssetMultiProps = {
@@ -98,7 +101,8 @@ export const formComponentTemplateEndpoints = (
             value={templ.value || ""}
             error={templ.error}
             onChange={templ.onChange}
-            disabled={templ.disabled}
+            disabled={templ.disabled || templ.isReadOnly}
+            copyButton={templ.isReadOnly ? { position: "right" } : undefined}
           />
         ),
         validate: validate.getPublicKeyError,
@@ -119,7 +123,8 @@ export const formComponentTemplateEndpoints = (
             includeSingleLiquidityPoolShare={
               custom?.includeSingleLiquidityPoolShare
             }
-            disabled={templ.disabled}
+            disabled={templ.disabled || templ.isReadOnly}
+            hasCopyButton={templ.isReadOnly}
           />
         ),
         validate: validate.getAssetError,
@@ -219,7 +224,8 @@ export const formComponentTemplateEndpoints = (
             value={templ.value || ""}
             error={templ.error}
             onChange={templ.onChange}
-            disabled={templ.disabled}
+            disabled={templ.disabled || templ.isReadOnly}
+            copyButton={templ.isReadOnly ? { position: "right" } : undefined}
           />
         ),
         validate: null,
@@ -248,7 +254,7 @@ export const formComponentTemplateEndpoints = (
             value={templ.value || ""}
             error={templ.error}
             onChange={templ?.onChange}
-            disabled={templ.disabled}
+            disabled={templ.disabled || templ.isReadOnly}
           />
         ),
         validate: null,
@@ -260,6 +266,7 @@ export const formComponentTemplateEndpoints = (
           error: string | undefined;
           onChange: (val: any) => void;
           disabled?: boolean;
+          isReadOnly?: boolean;
         }) => (
           <TextPicker
             key={id}
@@ -269,7 +276,8 @@ export const formComponentTemplateEndpoints = (
             value={templ.value || ""}
             error={templ.error}
             onChange={templ.onChange}
-            disabled={templ.disabled}
+            disabled={templ.disabled || templ.isReadOnly}
+            copyButton={templ.isReadOnly ? { position: "right" } : undefined}
           />
         ),
         validate: validate.getContractIdError,
@@ -312,6 +320,7 @@ export const formComponentTemplateEndpoints = (
           error: string | undefined;
           onChange: (val: any) => void;
           disabled?: boolean;
+          isReadOnly?: boolean;
         }) => (
           <TextPicker
             key={id}
@@ -320,7 +329,8 @@ export const formComponentTemplateEndpoints = (
             value={templ.value || ""}
             error={templ.error}
             onChange={templ.onChange}
-            disabled={templ.disabled}
+            disabled={templ.disabled || templ.isReadOnly}
+            copyButton={templ.isReadOnly ? { position: "right" } : undefined}
           />
         ),
         validate: null,
@@ -410,26 +420,24 @@ export const formComponentTemplateEndpoints = (
           error: string | undefined;
           onChange: (val: any) => void;
           disabled?: boolean;
+          isReadOnly?: boolean;
         }) => (
-          <Select
+          <RadioPicker
             key={id}
             id={`${id}-type`}
-            fieldSize="md"
             label="Durability"
-            value={templ.value || ""}
+            selectedOption={templ.value || ""}
             onChange={templ.onChange}
-            disabled={templ.disabled}
-          >
-            <option value="">Select a durability</option>
-            {[
-              { id: "temporary", label: "Temporary" },
+            disabledOptions={
+              templ.disabled || templ.isReadOnly
+                ? ["persistent", "temporary"]
+                : []
+            }
+            options={[
               { id: "persistent", label: "Persistent" },
-            ].map((f) => (
-              <option key={f.id} value={f.id}>
-                {f.label}
-              </option>
-            ))}
-          </Select>
+              { id: "temporary", label: "Temporary" },
+            ]}
+          />
         ),
         validate: null,
       };
@@ -469,8 +477,10 @@ export const formComponentTemplateEndpoints = (
           error: string | undefined;
           onChange: (val: any) => void;
           disabled?: boolean;
+          isReadOnly?: boolean;
         }) => (
           <Textarea
+            hasCopyButton={Boolean(templ.value && templ.isReadOnly)}
             fieldSize="md"
             key={id}
             id={id}
@@ -494,7 +504,7 @@ export const formComponentTemplateEndpoints = (
             }
             error={templ.error}
             onChange={templ.onChange}
-            disabled={templ.disabled}
+            disabled={templ.disabled || templ.isReadOnly}
           />
         ),
         validate: null,
@@ -569,11 +579,12 @@ export const formComponentTemplateEndpoints = (
             id={id}
             label="Liquidity Pool ID"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
-            placeholder="Ex: 67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9"
+            placeholder="Ex: LBTSMDCMDAD3EYX7QUNQUP7BIEMUSNV3AIK3F53UI7Y56EMZR2V3SREB"
             value={templ.value || ""}
             error={templ.error}
             onChange={templ.onChange}
-            disabled={templ.disabled}
+            disabled={templ.disabled || templ.isReadOnly}
+            copyButton={templ.isReadOnly ? { position: "right" } : undefined}
           />
         ),
         validate: null,
@@ -589,7 +600,8 @@ export const formComponentTemplateEndpoints = (
             value={templ.value || ""}
             error={templ.error}
             onChange={templ.onChange}
-            disabled={templ.disabled}
+            disabled={templ.disabled || templ.isReadOnly}
+            copyButton={templ.isReadOnly ? { position: "right" } : undefined}
           />
         ),
         validate: null,
@@ -667,7 +679,8 @@ export const formComponentTemplateEndpoints = (
             value={templ.value || ""}
             error={templ.error}
             onChange={templ.onChange}
-            disabled={templ.disabled}
+            disabled={templ.disabled || templ.isReadOnly}
+            copyButton={templ.isReadOnly ? { position: "right" } : undefined}
           />
         ),
         validate: validate.getPublicKeyError,
@@ -873,7 +886,8 @@ export const formComponentTemplateEndpoints = (
             value={templ.value || ""}
             error={templ.error}
             onChange={templ.onChange}
-            disabled={templ.disabled}
+            disabled={templ.disabled || templ.isReadOnly}
+            copyButton={templ.isReadOnly ? { position: "right" } : undefined}
           />
         ),
         validate: validate.getTransactionHashError,
@@ -891,7 +905,8 @@ export const formComponentTemplateEndpoints = (
             value={templ.value || ""}
             error={templ.error}
             onChange={templ.onChange}
-            disabled={templ.disabled}
+            disabled={templ.disabled || templ.isReadOnly}
+            copyButton={templ.isReadOnly ? { position: "right" } : undefined}
           />
         ),
         validate: validate.getTransactionHashError,
@@ -961,21 +976,17 @@ export const formComponentTemplateEndpoints = (
           error: string | undefined;
           onChange: (val: any) => void;
         }) => (
-          <Select
+          <RadioPicker
             key={id}
-            id={id}
-            fieldSize="md"
+            id={`${id}-type`}
             label="XDR Format"
-            value={templ.value || ""}
+            selectedOption={templ.value || ""}
             onChange={templ.onChange}
-          >
-            <option id="base64" value="base64">
-              base64
-            </option>
-            <option id="json" value="json">
-              json
-            </option>
-          </Select>
+            options={[
+              { id: "base64", label: "base64" },
+              { id: "json", label: "json" },
+            ]}
+          />
         ),
         validate: null,
       };

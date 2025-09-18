@@ -10,6 +10,7 @@
   flex-wrap: wrap;
 
   .Tab {
+    position: relative;
     font-size: pxToRem(14px);
     line-height: pxToRem(20px);
     font-weight: var(--sds-fw-medium);
@@ -22,6 +23,37 @@
     transition:
       color var(--sds-anim-transition-default),
       background-color var(--sds-anim-transition-default);
+
+    &--with-border {
+      &[data-is-active="true"] {
+        --Tabs-default-text: var(--sds-clr-lilac-11);
+        --Tabs-default-background: transparent;
+
+        &:after {
+          content: "";
+          height: 2px;
+          width: 95%;
+          background: var(--sds-clr-lilac-11);
+          position: absolute;
+          bottom: -2px;
+          left: 50%;
+          transform: translateX(-50%);
+        }
+        background-color: transparent;
+        border-radius: 0;
+      }
+
+      &[data-is-disabled="true"] {
+        --Tabs-default-text: var(--sds-clr-gray-08);
+        pointer-events: none;
+
+        &[data-is-active="true"] {
+          --Tabs-default-text: var(--sds-clr-gray-10);
+          --Tabs-default-background: transparent;
+          border-radius: 0;
+        }
+      }
+    }
 
     @media (hover: hover) {
       &:hover {
