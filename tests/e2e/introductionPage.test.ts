@@ -92,8 +92,13 @@ test.describe("Introduction Page", () => {
     ]);
   });
 
-  test("Networks", async ({ page }) => {
-    const networksSection = sections.nth(3);
+  test("Networks", async ({ browser }) => {
+    // Using isolated browser context to make sure the network change won’t affect other tests.
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    await page.goto("http://localhost:3000/");
+
+    const networksSection = page.locator(".Lab__home__section").nth(3);
 
     await assertSectionHeader({
       section: networksSection,
@@ -148,6 +153,8 @@ test.describe("Introduction Page", () => {
 
     await expect(testnetBtn).toBeEnabled();
     await expect(mainnetBtn).toBeDisabled();
+
+    await context.close();
   });
 });
 
