@@ -33,9 +33,9 @@ importers:
       '@ledgerhq/hw-app-str':
         specifier: ^7.2.4
         version: 7.2.6
-      '@ledgerhq/hw-transport-webusb':
-        specifier: ^6.29.8
-        version: 6.29.10
+      '@ledgerhq/hw-transport-webhid':
+        specifier: ^6.30.6
+        version: 6.30.6
       '@monaco-editor/react':
         specifier: ^4.7.0
         version: 4.7.0(monaco-editor@0.53.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -782,8 +782,8 @@ packages:
   '@ledgerhq/hw-app-str@7.2.6':
     resolution: {integrity: sha512-NAi/mg9Q2bQ0Eimpj3PivETjnSPMI4xWh+/zQ0KmX5YEAAOqxmFX/1Wvnk4XC+6vouMmXnbPRGTWLYh+f+H+Pw==}
 
-  '@ledgerhq/hw-transport-webusb@6.29.10':
-    resolution: {integrity: sha512-3op7ipyZrM/Gg2qUBUM6tGKgYVh7k3hvXPE7z4i5ElAFHBdM5XMI4OD2cfl38XE0fij1dk/NCpKntOekIL7lmA==}
+  '@ledgerhq/hw-transport-webhid@6.30.6':
+    resolution: {integrity: sha512-AOzjFv5n1OTMfvEInAZRfLO11G5zfG8pB5zhmjK5d/mVQfFNcKsLZNAC2h4OZZMBtUy8UTT3n03z93e6k6n4pQ==}
 
   '@ledgerhq/hw-transport-webusb@6.29.4':
     resolution: {integrity: sha512-HoGF1LlBT9HEGBQy2XeCHrFdv/FEOZU0+J+yfKcgAQIAiASr2MLvdzwoJbUS8h6Gn+vc+/BjzBSO3JNn7Loqbg==}
@@ -6631,7 +6631,7 @@ snapshots:
       '@ledgerhq/hw-transport': 6.31.10
       bip32-path: 0.4.2
 
-  '@ledgerhq/hw-transport-webusb@6.29.10':
+  '@ledgerhq/hw-transport-webhid@6.30.6':
     dependencies:
       '@ledgerhq/devices': 8.5.1
       '@ledgerhq/errors': 6.25.0
