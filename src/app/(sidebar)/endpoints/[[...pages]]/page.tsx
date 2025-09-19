@@ -904,6 +904,15 @@ export default function Endpoints() {
                       );
                     },
                   });
+                case "xdrFormat":
+                  return component.render({
+                    value: params[f] || "base64",
+                    error: formError[f],
+                    isRequired,
+                    onChange: (optionId: string) => {
+                      handleChange(optionId, optionId);
+                    },
+                  });
                 default:
                   return component.render({
                     value: params[f],
