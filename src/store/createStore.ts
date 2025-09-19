@@ -420,10 +420,17 @@ export const createStore = (options: CreateStoreOptions) =>
         floatNotifications: [],
         addFloatNotification: (notification: FloatNotificationItem) =>
           set((state) => {
-            state.floatNotifications = [
-              ...state.floatNotifications,
-              notification,
-            ];
+            const notifIdExists = state.floatNotifications.find(
+              (n) => n.id === notification.id,
+            );
+
+            // Don’t add duplicate notifications
+            if (!notifIdExists) {
+              state.floatNotifications = [
+                ...state.floatNotifications,
+                notification,
+              ];
+            }
           }),
         removeFloatNotification: (id: string) =>
           set((state) => {

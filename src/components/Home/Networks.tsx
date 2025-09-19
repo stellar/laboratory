@@ -209,12 +209,12 @@ export const Networks = ({
               delayedAction({
                 action: () => {
                   addFloatNotification({
-                    id: `n-${Date.now()}`,
+                    id: `n-${networkLabel}`,
                     title: `Network switched to ${networkLabel}`,
                     description:
                       btnNetwork === "testnet"
                         ? "Your network has been changed to Testnet. Start building by generating keypairs."
-                        : "",
+                        : "Your network has been changed to Mainnet. Start by building a transaction.",
                     type: "success",
                     actions:
                       btnNetwork === "testnet"
@@ -226,7 +226,14 @@ export const Networks = ({
                               },
                             },
                           ]
-                        : [],
+                        : [
+                            {
+                              label: "Build Transaction",
+                              onAction: () => {
+                                router.push(Routes.BUILD_TRANSACTION);
+                              },
+                            },
+                          ],
                   });
                 },
                 delay: 300,
