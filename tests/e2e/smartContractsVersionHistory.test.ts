@@ -2,14 +2,19 @@ import { test, expect } from "@playwright/test";
 import { STELLAR_EXPERT_API } from "@/constants/settings";
 import {
   MOCK_CONTRACT_ID,
+  MOCK_CONTRACT_INFO_CONTRACT_TYPE_SUCCESS,
   MOCK_CONTRACT_INFO_RESPONSE_SUCCESS,
-  mockContractTypeFn,
 } from "./mock/smartContracts";
+import { mockRpcRequest } from "./mock/helpers";
 
 test.describe("Smart Contracts: Version History", () => {
   test.beforeEach(async ({ page }) => {
     // Mock the RPC call for getting the contract type
-    await mockContractTypeFn(page);
+    await mockRpcRequest({
+      page,
+      rpcMethod: "getLedgerEntries",
+      bodyJsonResponse: MOCK_CONTRACT_INFO_CONTRACT_TYPE_SUCCESS,
+    });
 
     // Mock the Contract Info API call
     await page.route(

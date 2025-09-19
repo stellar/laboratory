@@ -46,16 +46,20 @@ test.describe("Create Account Page", () => {
     await expect(fundButton).toBeEnabled();
 
     // Mock the friendbot api call
-    await page.route(
-      "*/**/?addr=GA4X4QMSTEUKWAXXX3TBFRMGWI3O5X5IUUHPKAIH5XKNQ4IBTQ6YSVV3",
-      async (route) => {
+    await page.route("**/friendbot.stellar.org/**", async (route) => {
+      const url = new URL(route.request().url());
+      const addr = url.searchParams.get("addr");
+
+      if (addr) {
         await route.fulfill({
           status: 200,
           contentType: "application/json",
           body: JSON.stringify({}),
         });
-      },
-    );
+      } else {
+        await route.abort();
+      }
+    });
 
     // Ensure the listener is set up before the action that triggers the request
     const responsePromise = page.waitForResponse(

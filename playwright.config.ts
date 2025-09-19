@@ -16,7 +16,7 @@ const baseURL = `http://localhost:${PORT}`;
  */
 export default defineConfig({
   /* Timeout per test */
-  timeout: 30 * 1000,
+  timeout: 20 * 1000,
   /* Tests directory */
   testDir: "./tests/e2e",
   /* Run tests in files in parallel */
@@ -24,9 +24,8 @@ export default defineConfig({
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry */
-  retries: process.env.CI ? 2 : 2,
-  /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  retries: 2,
+  workers: process.env.CI ? 2 : "25%",
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: "list",
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
@@ -34,14 +33,18 @@ export default defineConfig({
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL,
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: "on-first-retry",
+    trace: process.env.CI ? "retain-on-failure" : "off",
+    screenshot: "off",
+    video: "off",
+    actionTimeout: 10 * 1000,
+    navigationTimeout: 15 * 1000,
   },
 
   /* Run your local dev server before starting the tests */
   webServer: {
     command: "pnpm dev",
     url: baseURL,
-    timeout: 120 * 1000,
+    timeout: 60 * 1000,
     reuseExistingServer: !process.env.CI,
   },
 

@@ -93,14 +93,14 @@ const feeBreakdown = (txDetails: RpcTxJsonResponse) => {
     : undefined;
 
   return {
-    maxFee,
-    maxResourceFee,
+    maxFee: maxFee?.toString(),
+    maxResourceFee: maxResourceFee?.toString(),
     inclusionFee,
-    nonRefundable,
+    nonRefundable: nonRefundable?.toString(),
     refundable,
-    finalFeeCharged,
-    finalNonRefundable,
-    finalRefundable,
+    finalFeeCharged: finalFeeCharged?.toString(),
+    finalNonRefundable: finalNonRefundable?.toString(),
+    finalRefundable: finalRefundable?.toString(),
     finalResourceFeeCharged,
     finalInclusionFee,
     finalRefunded,

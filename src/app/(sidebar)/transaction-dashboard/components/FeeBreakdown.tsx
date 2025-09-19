@@ -193,7 +193,7 @@ export const FeeBreakdown = ({
             <GridTableRow>
               <GridTableCell isNested={true}>
                 <FeeType
-                  title="Non-Refundable fee"
+                  title="Non-Refundable Fee"
                   badges={["Instructions", "Read", "Write", "Bandwidth"]}
                 />
               </GridTableCell>

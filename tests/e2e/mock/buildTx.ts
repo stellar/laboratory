@@ -1,0 +1,10 @@
+export const RESTORE_FOOTPRINT_PREPARE_MOCK = {
+  jsonrpc: "2.0",
+  id: 1,
+  result: {
+    transactionData:
+      "AAAAAAAAAAAAAAABAAAABgAAAAFBCgikPLq53zdaW7+DudgtVK8qXHohkQxEoX4K/7BkzwAAABAAAAABAAAAAgAAAA8AAAAJQWRtaW5zVmVjAAAAAAAABQAAAAAAAAABAAAAAQAAAAAAAADIAAAAyAAAAAAAAWy9",
+    minResourceFee: "93373",
+    latestLedger: 567838,
+  },
+};
