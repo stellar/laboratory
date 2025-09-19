@@ -9,6 +9,7 @@ import {
 
 import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
 import { sanitizeObject } from "@/helpers/sanitizeObject";
+import { FloatNotificationItem } from "@/components/FloatNotification";
 import {
   AnyObject,
   EmptyObj,
@@ -85,6 +86,11 @@ export interface Store {
   savedContractId: string;
   setSavedContractId: (contractId: string) => void;
   clearSavedContractId: () => void;
+
+  // Float notifications
+  floatNotifications: FloatNotificationItem[];
+  addFloatNotification: (notification: FloatNotificationItem) => void;
+  removeFloatNotification: (id: string) => void;
 
   // Account
   account: {
@@ -409,6 +415,23 @@ export const createStore = (options: CreateStoreOptions) =>
         clearSavedContractId: () =>
           set((state) => {
             state.savedContractId = "";
+          }),
+        // Float notifications
+        floatNotifications: [],
+        addFloatNotification: (notification: FloatNotificationItem) =>
+          set((state) => {
+            state.floatNotifications = [
+              ...state.floatNotifications,
+              notification,
+            ];
+          }),
+        removeFloatNotification: (id: string) =>
+          set((state) => {
+            state.floatNotifications = [
+              ...state.floatNotifications.filter(
+                (notification) => notification.id !== id,
+              ),
+            ];
           }),
         // Account
         account: {
