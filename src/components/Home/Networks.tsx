@@ -1,14 +1,19 @@
 import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { Button, Modal, Text } from "@stellar/design-system";
 
+import { useStore } from "@/store/useStore";
 import { useSwitchNetwork } from "@/hooks/useSwitchNetwork";
 import { Box } from "@/components/layout/Box";
 
 import { capitalizeString } from "@/helpers/capitalizeString";
 import { openUrl } from "@/helpers/openUrl";
 import { getPublicResourcePath } from "@/helpers/getPublicResourcePath";
+import { delayedAction } from "@/helpers/delayedAction";
+
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
+import { Routes } from "@/constants/routes";
 
 import { EmptyObj, Network, NetworkType } from "@/types/types";
 
@@ -29,6 +34,8 @@ export const Networks = ({
     links: { label: string; url?: string }[];
   };
 
+  const { addFloatNotification } = useStore();
+  const router = useRouter();
   const { getAndSetNetwork } = useSwitchNetwork();
   const [btnNetwork, setBtnNetwork] = useState<BtnNetwork>(null);
 
@@ -198,6 +205,39 @@ export const Networks = ({
             onClick={() => {
               getAndSetNetwork(btnNetwork as NetworkType);
               handleModalClose();
+
+              delayedAction({
+                action: () => {
+                  addFloatNotification({
+                    id: `n-${networkLabel}`,
+                    title: `Network switched to ${networkLabel}`,
+                    description:
+                      btnNetwork === "testnet"
+                        ? "Your network has been changed to Testnet. Start building by generating keypairs."
+                        : "Your network has been changed to Mainnet. Start by building a transaction.",
+                    type: "success",
+                    actions:
+                      btnNetwork === "testnet"
+                        ? [
+                            {
+                              label: "Create Account",
+                              onAction: () => {
+                                router.push(Routes.ACCOUNT_CREATE);
+                              },
+                            },
+                          ]
+                        : [
+                            {
+                              label: "Build Transaction",
+                              onAction: () => {
+                                router.push(Routes.BUILD_TRANSACTION);
+                              },
+                            },
+                          ],
+                  });
+                },
+                delay: 300,
+              });
             }}
           >
             {`Switch to ${networkLabel}`}
