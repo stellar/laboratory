@@ -10,8 +10,8 @@ import { formatAssetValue } from "@/helpers/formatAssetValue";
 
 import { Box } from "@/components/layout/Box";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
+import { Tabs } from "@/components/Tabs";
 import { formComponentTemplateEndpoints } from "@/components/formComponentTemplateEndpoints";
-import { InputSideElement } from "@/components/InputSideElement";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
@@ -24,6 +24,7 @@ import {
   ConfigSettingIdType,
   LedgerKeyFieldsType,
   LedgerKeyType,
+  ContractStorageDurability,
 } from "@/types/types";
 
 type MultiPickerProps = {
@@ -35,9 +36,10 @@ type MultiPickerProps = {
 };
 
 type XdrLedgerKeyPicker = {
+  activeTabId: string;
   value: string;
   onChange: (value: string) => void;
-  rightElement: ReactElement | null;
+  deleteElement: ReactElement | null;
 };
 
 // https://github.com/stellar/stellar-xdr/blob/curr/Stellar-ledger-entries.x#L600
@@ -106,11 +108,11 @@ const ledgerKeyFields: {
 export const XdrLedgerKeyPicker = ({
   value,
   onChange,
-  rightElement,
+  deleteElement,
+  activeTabId,
 }: XdrLedgerKeyPicker) => {
   const [selectedLedgerKey, setSelectedLedgerKey] =
     useState<LedgerKeyFieldsType | null>(null);
-  const [isXdrInputActive, setIsXdrInputActive] = useState(true);
   const [formError, setFormError] = useState<AnyObject>({});
   const [ledgerKeyXdrToJsonString, setLedgerKeyXdrToJsonString] =
     useState<string>("");
@@ -276,17 +278,15 @@ export const XdrLedgerKeyPicker = ({
     [reset, xdrDecodeLedgerKeyToJson],
   );
 
-  // Render input fields on mount if there is Ledger Key XDR value
+  // Render input fields based on xdr value
+  // This also gets updated when an item is deleted
   useEffect(() => {
-    if (value && !ledgerKeyXdrToJsonString && !selectedLedgerKey) {
+    if (value) {
       validateLedgerKeyXdr(value);
     }
-  }, [
-    value,
-    ledgerKeyXdrToJsonString,
-    validateLedgerKeyXdr,
-    selectedLedgerKey,
-  ]);
+    // Not validateLedgerKeyXdr()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
 
   useEffect(() => {
     // this creates an empty template with default fields based on
@@ -313,7 +313,11 @@ export const XdrLedgerKeyPicker = ({
     }
   }, [ledgerKeyXdrToJsonString, selectedLedgerKey]);
 
-  const renderLedgerKeyTemplate = () => {
+  const renderLedgerKeyTemplate = ({
+    isReadOnly = false,
+  }: {
+    isReadOnly?: boolean;
+  }) => {
     // if there is no selected ledger key or the xdr string is empty, return null
     if (!selectedLedgerKey || !ledgerKeyXdrToJsonString) {
       return null;
@@ -405,7 +409,8 @@ export const XdrLedgerKeyPicker = ({
           value: ledgerKeyXdrToJson[selectedLedgerKey.id][field] || "",
           error: formError[field],
           isRequired: true,
-          disabled: isXdrInputActive,
+          disabled: false,
+          isReadOnly,
         };
 
         if (field === "asset") {
@@ -430,6 +435,15 @@ export const XdrLedgerKeyPicker = ({
           });
         }
 
+        if (field === "durability") {
+          return component.render({
+            ...baseProps,
+            onChange: (selectedDurability: ContractStorageDurability) => {
+              handleChange(selectedDurability);
+            },
+          });
+        }
+
         return component.render({
           ...baseProps,
           onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -443,57 +457,67 @@ export const XdrLedgerKeyPicker = ({
 
   return (
     <Box gap="lg" addlClassName="XdrLedgerKeyPicker">
-      <XdrPicker
-        id="ledger-key-xdr"
-        label="Ledger Key XDR"
-        value={value}
-        error={ledgerKeyXdrError}
-        onChange={(e) => {
-          onChange(e.target.value);
-          validateLedgerKeyXdr(e.target.value);
-        }}
-        disabled={!isXdrInputActive}
-      />
+      {activeTabId === "ledgerKey" ? (
+        <Card>
+          <Box gap="sm">
+            <Select
+              id="ledger-key-type"
+              fieldSize="md"
+              label="Ledger Key Type"
+              value={selectedLedgerKey?.id}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                reset();
 
-      <Button
-        size="md"
-        variant="tertiary"
-        icon={<Icon.SwitchVertical01 />}
-        type="button"
-        onClick={() => {
-          setIsXdrInputActive(!isXdrInputActive);
-        }}
-      >
-        Switch input
-      </Button>
+                const selectedVal = e.target.value;
+                setSelectedLedgerKey(
+                  selectedVal ? getLedgerKeyFields(selectedVal)! : null,
+                );
+              }}
+            >
+              <option value="">Select a key</option>
 
-      <Box gap="sm">
-        <Select
-          id="ledgerkey"
-          fieldSize="md"
-          label="Ledger Key"
-          value={selectedLedgerKey?.id}
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-            reset();
+              {ledgerKeyFields.map((f) => (
+                <option key={f.id} value={f.id}>
+                  {f.label}
+                </option>
+              ))}
+            </Select>
+            <>{renderLedgerKeyTemplate({ isReadOnly: false })}</>
 
-            const selectedVal = e.target.value;
-            setSelectedLedgerKey(
-              selectedVal ? getLedgerKeyFields(selectedVal)! : null,
-            );
-          }}
-          disabled={isXdrInputActive}
-        >
-          <option value="">Select a key</option>
+            {selectedLedgerKey ? (
+              <XdrPicker
+                id="ledger-key-tab"
+                label="Ledger Key XDR"
+                value={value}
+                hasCopyButton
+                error={ledgerKeyXdrError}
+                disabled={true}
+              />
+            ) : null}
+            <>{deleteElement}</>
+          </Box>
+        </Card>
+      ) : null}
 
-          {ledgerKeyFields.map((f) => (
-            <option key={f.id} value={f.id}>
-              {f.label}
-            </option>
-          ))}
-        </Select>
-        <>{renderLedgerKeyTemplate()}</>
-        <>{rightElement}</>
-      </Box>
+      {activeTabId === "xdr" ? (
+        <Card>
+          <Box gap="sm">
+            <XdrPicker
+              id="ledger-xdr-tab"
+              label="Ledger Key XDR"
+              value={value}
+              error={ledgerKeyXdrError}
+              onChange={(e) => {
+                onChange(e.target.value);
+                validateLedgerKeyXdr(e.target.value);
+              }}
+              disabled={false}
+            />
+            <>{renderLedgerKeyTemplate({ isReadOnly: true })}</>
+            <>{deleteElement}</>
+          </Box>
+        </Card>
+      ) : null}
     </Box>
   );
 };
@@ -505,6 +529,7 @@ export const MultiLedgerEntriesPicker = ({
   buttonLabel = "Add another ledger key",
   limit = 100,
 }: MultiPickerProps) => {
+  const [activeTabId, setActiveTabId] = useState<string>("ledgerKey");
   if (!value || !value.length) {
     value = [];
   }
@@ -512,33 +537,44 @@ export const MultiLedgerEntriesPicker = ({
   return (
     <Box gap="md">
       <Box gap="lg">
+        <Tabs
+          addlClassName="Tab--with-border"
+          tabs={[
+            { id: "ledgerKey", label: "Select Ledger Key" },
+            { id: "xdr", label: "Use Ledger XDR" },
+          ]}
+          activeTabId={activeTabId}
+          onChange={(id) => setActiveTabId(id)}
+        />
+
         {value.length
-          ? value.map((singleVal: string, index: number) => (
-              <Card key={`${id}-${index}`}>
+          ? value.map((singleVal: string, index: number) => {
+              return (
                 <XdrLedgerKeyPicker
                   onChange={(val) => {
                     const updatedVal = arrayItem.update(value, index, val);
                     return onChange([...updatedVal]);
                   }}
-                  key={index}
+                  key={`${id}-${index}`}
+                  activeTabId={activeTabId}
                   value={singleVal}
-                  rightElement={
+                  deleteElement={
                     index !== 0 ? (
-                      <InputSideElement
-                        variant="button"
-                        onClick={() => {
+                      <Button
+                        size="md"
+                        variant="tertiary"
+                        icon={<Icon.Trash01 />}
+                        onClick={(e) => {
+                          e.preventDefault();
                           const val = arrayItem.delete(value, index);
                           return onChange([...val]);
                         }}
-                        placement="right"
-                        icon={<Icon.Trash01 />}
-                        addlClassName="MultiPicker__delete"
-                      />
+                      ></Button>
                     ) : null
                   }
                 />
-              </Card>
-            ))
+              );
+            })
           : null}
       </Box>
 
