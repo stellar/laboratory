@@ -194,6 +194,7 @@ test.describe("API Explorer page", () => {
   test.describe("[RPC Methods] getLedgerEntries", () => {
     test.beforeEach(async ({ page }) => {
       await page.goto("http://localhost:3000/endpoints/rpc/get-ledger-entries");
+      await page.waitForSelector("h1", { timeout: 5000 });
       await expect(page.locator("h1")).toHaveText("getLedgerEntries");
     });
 
