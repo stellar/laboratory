@@ -199,16 +199,16 @@ export const Slider = ({ imgTheme }: { imgTheme: "light" | "dark" }) => {
     };
   }, []);
 
-  const handleClickOutside = (event: MouseEvent) => {
-    if (sliderEl?.current?.contains(event.target as Node)) {
-      return;
-    }
-
-    setIsSliderVisible(false);
-  };
-
   // Close slider when clicked outside
   useLayoutEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (sliderEl?.current?.contains(event.target as Node)) {
+        return;
+      }
+
+      setIsSliderVisible(false);
+    };
+
     if (isDesktopMode && isSliderVisible) {
       document.addEventListener("pointerup", handleClickOutside);
     } else {
@@ -218,7 +218,7 @@ export const Slider = ({ imgTheme }: { imgTheme: "light" | "dark" }) => {
     return () => {
       document.removeEventListener("pointerup", handleClickOutside);
     };
-  }, [isSliderVisible, isDesktopMode, handleClickOutside]);
+  }, [isSliderVisible, isDesktopMode]);
 
   useEffect(() => {
     const slider = sliderScrollEl?.current;
