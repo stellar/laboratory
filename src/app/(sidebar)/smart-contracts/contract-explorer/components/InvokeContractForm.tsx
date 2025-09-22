@@ -429,7 +429,7 @@ export const InvokeContractForm = ({
       return prepareResult;
     } catch (error: any) {
       setInvokeError({
-        message: error?.message || "Failed to prepare transaction",
+        message: error?.result?.message || "Failed to prepare transaction",
         methodType: "Prepare",
       });
       return null;
