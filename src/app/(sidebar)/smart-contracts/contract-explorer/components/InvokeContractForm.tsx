@@ -178,7 +178,7 @@ export const InvokeContractForm = ({
             reject(
               new Error("Transaction signing timed out. Please try again."),
             );
-          }, 20000);
+          }, 180000);
         });
 
         const signPromise = walletKitInstance.walletKit.signTransaction(
