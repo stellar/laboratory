@@ -1,5 +1,4 @@
 "use client";
-import * as Sentry from "@sentry/nextjs";
 import type { NextPage } from "next";
 import type { ErrorProps } from "next/error";
 import NextError from "next/error";
@@ -54,9 +53,14 @@ const Error: NextPage<ErrorProps> = () => (
 );
 
 Error.getInitialProps = async (contextData) => {
-  // In case this is running in a serverless function, await this in order to give Sentry
-  // time to send the error before the lambda exits
-  await Sentry.captureUnderscoreErrorException(contextData);
+  // Only send to Sentry in production and for truly unhandled errors
+  if (process.env.NODE_ENV === "production") {
+    // In case this is running in a serverless function, await this in order to give Sentry
+    // time to send the error before the lambda exits
+    const Sentry = await import("@sentry/nextjs");
+    await Sentry.captureUnderscoreErrorException(contextData);
+  }
+
   // This will contain the status code of the response
   return NextError.getInitialProps(contextData);
 };

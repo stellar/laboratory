@@ -130,7 +130,7 @@ export const WalletKitContextProvider = ({
         modalTheme: isDarkTheme ? modalDarkTheme : modalLightTheme,
       }),
     });
-  }, [network.id, networkType, theme]);
+  }, [network.id, networkType, savedWallet?.id, theme]);
 
   return (
     <WalletKitContext.Provider

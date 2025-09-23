@@ -49,6 +49,7 @@ export default function Introduction() {
                 Stellar Lab
               </Badge>
 
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={getPublicResourcePath(
                   `/images/lab-home-main-${imgTheme}.png`,
