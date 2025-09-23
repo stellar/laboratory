@@ -138,6 +138,7 @@ export const FetchContractMethodPickerWithQuery = ({
     isContractClientSuccess,
     contractClientError,
     sacDataError,
+    memoizedMethods,
   ]);
 
   const handleContractIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {

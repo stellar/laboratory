@@ -22,7 +22,9 @@ export const useGetRpcTxs = ({
 
       const params: StellarRpc.Api.GetTransactionsRequest = {
         startLedger,
-        limit: 100,
+        pagination: {
+          limit: 100,
+        },
       };
 
       try {

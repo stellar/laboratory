@@ -60,7 +60,7 @@ export const LayoutHeader = () => {
     return () => {
       observer.disconnect();
     };
-  }, []);
+  }, [setTheme]);
 
   const handleNavChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     route.push(event.target.value);

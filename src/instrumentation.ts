@@ -1,5 +1,3 @@
-import * as Sentry from "@sentry/nextjs";
-
 export async function register() {
   if (process.env.NODE_ENV === "production") {
     if (process.env.NEXT_RUNTIME === "nodejs") {
@@ -12,4 +10,9 @@ export async function register() {
   }
 }
 
-export const onRequestError = Sentry.captureRequestError;
+// Only load Sentry's onRequestError in production
+export const onRequestError =
+  process.env.NODE_ENV === "production"
+    ? // eslint-disable-next-line @typescript-eslint/no-require-imports
+      require("@sentry/nextjs").captureRequestError
+    : undefined;
