@@ -764,7 +764,7 @@ export default function DeployContract() {
 
   return (
     <Box gap="lg">
-      <PageCard heading="Contract Explorer">
+      <PageCard heading="Deploy Contract">
         <Notification title="Attention" variant="warning" isFilled={true}>
           <Box gap="md">
             This feature is experimental and available only on test networks.
