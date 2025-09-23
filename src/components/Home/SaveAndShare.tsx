@@ -7,6 +7,7 @@ export const SaveAndShare = ({ imgTheme }: { imgTheme: "light" | "dark" }) => {
   return (
     <>
       <div className="Lab__home__saveAndShare">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={getPublicResourcePath(
             windowWidth && windowWidth < 600
