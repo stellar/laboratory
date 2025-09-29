@@ -1,7 +1,13 @@
 import { useMutation } from "@tanstack/react-query";
-import { rpc as StellarRpc, TransactionBuilder } from "@stellar/stellar-sdk";
+import { parse } from "lossless-json";
+import {
+  xdr,
+  rpc as StellarRpc,
+  TransactionBuilder,
+} from "@stellar/stellar-sdk";
 import { delay } from "@/helpers/delay";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
+import * as StellarXdr from "@/helpers/StellarXdr";
 import {
   NetworkHeaders,
   SubmitRpcError,
@@ -39,6 +45,17 @@ export const useSubmitRpcTx = () => {
         const sentTx = await rpcServer.sendTransaction(transaction);
 
         if (sentTx.status !== "PENDING") {
+          if (sentTx.errorResult) {
+            const errorResult = parse(
+              StellarXdr.decode(
+                "TransactionResult",
+                sentTx.errorResult?.toXDR("base64"),
+              ),
+            ) as xdr.TransactionResult;
+
+            sentTx.errorResult = errorResult;
+          }
+
           throw { status: sentTx.status, result: sentTx };
         }
 
