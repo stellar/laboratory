@@ -17,7 +17,11 @@ import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
 import { RpcTxJsonResponse } from "@/types/types";
 
-export const Signatures = ({ txDetails }: { txDetails: RpcTxJsonResponse }) => {
+export const Signatures = ({
+  txDetails,
+}: {
+  txDetails: RpcTxJsonResponse | null;
+}) => {
   const { transaction, feeBumpTx, signatures, txHash } = getTxData(txDetails);
   const isXdrInit = useIsXdrInit();
   const { network } = useStore();

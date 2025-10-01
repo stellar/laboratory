@@ -263,7 +263,7 @@ export default function TransactionDashboard() {
                 id: "tx-signatures",
                 label: "Signatures",
                 content: isDataLoaded ? (
-                  <Signatures txDetails={txDetails} />
+                  <Signatures txDetails={txDetails || null} />
                 ) : (
                   <NoInfoLoadedView message="Load a transaction" />
                 ),
