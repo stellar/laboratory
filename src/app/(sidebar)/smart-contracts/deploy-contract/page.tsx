@@ -9,6 +9,7 @@ import {
   Link,
   Icon,
   Text,
+  Alert,
 } from "@stellar/design-system";
 import { Address, contract, Operation } from "@stellar/stellar-sdk";
 import { parseContractMetadata } from "@stellar-expert/contract-wasm-interface-parser";
@@ -26,6 +27,7 @@ import { SignTransactionXdr } from "@/components/SignTransactionXdr";
 import { TransactionSuccessCard } from "@/components/TransactionSuccessCard";
 import { RpcErrorResponse } from "@/components/TxErrorResponse";
 import { SdsLink } from "@/components/SdsLink";
+import { SwitchNetworkButtons } from "@/components/SwitchNetworkButtons";
 
 import { useStore } from "@/store/useStore";
 import { useBuildRpcTransaction } from "@/query/useBuildRpcTransaction";
@@ -45,7 +47,6 @@ import { stellarExpertAccountLink } from "@/helpers/stellarExpertAccountLink";
 
 import { NetworkType } from "@/types/types";
 
-// TODO: handle futurenet
 export default function DeployContract() {
   const CONSTRUCTOR_KEY = "__constructor";
 
@@ -423,8 +424,23 @@ export default function DeployContract() {
   };
 
   const renderContent = () => {
-    if (network.id === "mainnet") {
-      return null;
+    if (network.id === "futurenet") {
+      return (
+        <div>
+          <Text size="sm" as="p">
+            Upload and deploy contract is not supported on Futurenet. Please
+            switch to Testnet or Mainnet to get started.
+          </Text>
+
+          <Box gap="md" direction="row">
+            <SwitchNetworkButtons
+              includedNetworks={["testnet", "mainnet"]}
+              buttonSize="md"
+              page="contract list"
+            />
+          </Box>
+        </div>
+      );
     }
 
     return (
@@ -595,6 +611,24 @@ export default function DeployContract() {
                       {pageError}
                     </Notification>
                   ) : null}
+
+                  {constructorSchema ? (
+                    <Alert
+                      title="This contract has a constructor."
+                      variant="primary"
+                      placement="inline"
+                    >
+                      Please add the arguments for the constructor.
+                    </Alert>
+                  ) : (
+                    <Alert
+                      title="This contract has no constructor."
+                      variant="primary"
+                      placement="inline"
+                    >
+                      There are no arguments to add for the constructor.
+                    </Alert>
+                  )}
 
                   {constructorSchema ? (
                     <Card>
@@ -867,7 +901,6 @@ const ExpandArrow = ({
     >
       {children}
 
-      {/* TODO: maybe fix arrow animation */}
       {isActive ? (
         <div className="ExpandArrow__arrow">
           <Icon.ChevronRight />
