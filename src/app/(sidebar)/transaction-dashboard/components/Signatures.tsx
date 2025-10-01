@@ -87,9 +87,9 @@ export const Signatures = ({
   return (
     <Box gap="md" addlClassName="Signatures">
       <div className="Signatures__gridTableContainer">
-        <table role="table">
+        <table>
           <thead>
-            <tr role="row">
+            <tr>
               <th>
                 <SignatureCell isHeader={true}>Signer</SignatureCell>
               </th>

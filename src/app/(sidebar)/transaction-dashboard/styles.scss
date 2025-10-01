@@ -236,18 +236,11 @@
   color: var(--sds-clr-gray-11);
 
   &__text {
-    font-size: pxToRem(14px);
-    line-height: pxToRem(20px);
-    font-weight: var(--sds-fw-medium);
-    white-space: nowrap;
-
     &[data-is-header="true"] {
       text-align: left;
       font-size: pxToRem(12px);
       line-height: pxToRem(18px);
-      font-weight: var(--sds-fw-medium);
       color: var(--sds-clr-gray-11);
-      white-space: nowrap;
     }
 
     &[data-is-signature="true"] {
