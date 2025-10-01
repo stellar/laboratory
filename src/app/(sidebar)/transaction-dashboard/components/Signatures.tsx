@@ -31,8 +31,8 @@ export const Signatures = ({
   }
 
   const feeBumpInnerTxXdr =
+    feeBumpTx?.tx?.inner_tx &&
     isXdrInit &&
-    feeBumpTx.tx.inner_tx &&
     StellarXdr.encode(
       "TransactionEnvelope",
       JSON.stringify(feeBumpTx.tx.inner_tx),
