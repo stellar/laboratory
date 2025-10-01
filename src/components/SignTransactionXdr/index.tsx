@@ -1,36 +1,40 @@
 "use client";
 
-// TODO: group imports
-import { useEffect, useRef, useState } from "react";
-import "./styles.scss";
-import { MultiPicker } from "@/components/FormElements/MultiPicker";
-import { validate } from "@/validate";
-import { useSignWithExtensionWallet } from "@/hooks/useSignWithExtensionWallet";
-import { useStore } from "@/store/useStore";
-import { trackEvent, TrackingEvent } from "@/metrics/tracking";
-import { txHelper } from "@/helpers/txHelper";
+import { useEffect, useState } from "react";
 import {
   FeeBumpTransaction,
   Transaction,
   TransactionBuilder,
   xdr,
 } from "@stellar/stellar-sdk";
-import { scrollElIntoView } from "@/helpers/scrollElIntoView";
-import { arrayItem } from "@/helpers/arrayItem";
-import { Box } from "@/components/layout/Box";
 import { Button, Select, Text } from "@stellar/design-system";
+
+import { MultiPicker } from "@/components/FormElements/MultiPicker";
+import { Box } from "@/components/layout/Box";
 import { MessageField } from "@/components/MessageField";
 import { TextPicker } from "@/components/FormElements/TextPicker";
 import { LabelHeading } from "@/components/LabelHeading";
-import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
 import { WithInfoText } from "@/components/WithInfoText";
+
+import { txHelper } from "@/helpers/txHelper";
+import { arrayItem } from "@/helpers/arrayItem";
+import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
+
+import { validate } from "@/validate";
+import { useSignWithExtensionWallet } from "@/hooks/useSignWithExtensionWallet";
+import { useStore } from "@/store/useStore";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
+
+import "./styles.scss";
 
 type TxSignatureType =
   | "secretKey"
   | "hardwareWallet"
   | "extensionWallet"
   | "signature";
+
+type UniqueTabId = `${string}-${TxSignatureType}`;
 
 type AllSigsCount = {
   secretKey: number;
@@ -72,10 +76,6 @@ export const SignTransactionXdr = ({
   };
 
   const [selectedTab, setSelectedTab] = useState(defaultSignatureType);
-  // TODO: handle no xdrToSign case
-  // TODO: handle error
-
-  const successResponseEl = useRef<HTMLDivElement | null>(null);
 
   // Secret key
   const [secretKeyInputs, setSecretKeyInputs] = useState<string[]>([""]);
@@ -144,13 +144,6 @@ export const SignTransactionXdr = ({
     isClear: isExtensionClear,
     txXdr: xdrToSign,
   });
-
-  // useEffect(() => {
-  //   // Always reset the signed tx since user's signature(s) always get reset as well
-  //   updateSignedTx("");
-  //
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
 
   useEffect(() => {
     if (exSuccessMsg || exErrorMsg) {
@@ -257,8 +250,6 @@ export const SignTransactionXdr = ({
           successMessage: getAllSigsMessage(allSigsCount),
           errorMessage: null,
         });
-
-        scrollElIntoView(successResponseEl);
       }
     } catch (e: any) {
       onDoneAction({
@@ -474,7 +465,7 @@ export const SignTransactionXdr = ({
           </Button>
         ) : (
           <Button
-            disabled={isDisabled}
+            disabled={isDisabled || !xdrToSign}
             size="md"
             variant="secondary"
             onClick={onSign}
@@ -606,8 +597,7 @@ export const SignTransactionXdr = ({
   return (
     <div
       className="SignTransactionXdr"
-      // TODO: handle disabled better
-      data-is-disabled={isDisabled}
+      data-is-disabled={isDisabled || !xdrToSign}
       data-testid={`sign-tx-xdr-${id}`}
     >
       <Box gap="md" direction="column">
@@ -626,7 +616,7 @@ export const SignTransactionXdr = ({
         {/* Tabs */}
         <div className="SignTransactionXdr__tabsContainer">
           <Tab
-            id="secretKey"
+            id={`${id}-secretKey`}
             label="Sign with secret key"
             isSelected={selectedTab === "secretKey"}
             signatureCount={allSigsCount.secretKey}
@@ -635,7 +625,7 @@ export const SignTransactionXdr = ({
             }}
           />
           <Tab
-            id="extensionWallet"
+            id={`${id}-extensionWallet`}
             label="Wallet extension"
             isSelected={selectedTab === "extensionWallet"}
             signatureCount={allSigsCount.extensionWallet}
@@ -644,7 +634,7 @@ export const SignTransactionXdr = ({
             }}
           />
           <Tab
-            id="hardwareWallet"
+            id={`${id}-hardwareWallet`}
             label="Hardware wallet"
             isSelected={selectedTab === "hardwareWallet"}
             signatureCount={allSigsCount.hardwareWallet}
@@ -653,7 +643,7 @@ export const SignTransactionXdr = ({
             }}
           />
           <Tab
-            id="signature"
+            id={`${id}-signature`}
             label="Add a signature to transaction envelope"
             isSelected={selectedTab === "signature"}
             signatureCount={allSigsCount.signature}
@@ -672,9 +662,8 @@ export const SignTransactionXdr = ({
           data-type="secretKey"
           data-is-visible={selectedTab === "secretKey"}
         >
-          {/* TODO: maybe have buttons inline */}
           <MultiPicker
-            id="signer"
+            id={`${id}-signer`}
             label="Sign with secret key"
             value={secretKeyInputs}
             onChange={(val) => {
@@ -695,7 +684,6 @@ export const SignTransactionXdr = ({
             }}
             onClear={async () => {
               await handleSign({ sigType: "secretKey", isClear: true });
-              // TODO: do we want to clear inputs?
             }}
             isDisabled={!HAS_SECRET_KEYS || HAS_INVALID_SECRET_KEYS}
             successMsg={secretKeySuccessMsg}
@@ -738,7 +726,7 @@ export const SignTransactionXdr = ({
         >
           <Box gap="sm" direction="row">
             <TextPicker
-              id="bip-path"
+              id={`${id}-bip-path`}
               label="Sign with hardware wallet"
               placeholder="BIP path in format: 44'/148'/0'"
               onChange={(e) => {
@@ -821,7 +809,7 @@ export const SignTransactionXdr = ({
             {sigInputs.map((_, idx) => (
               <Box gap="xs" key={`${idx}-tx-sig`}>
                 <PubKeyPicker
-                  id={`${idx}-tx-sig-pubkey`}
+                  id={`${id}-${idx}-tx-sig-pubkey`}
                   placeholder="Public key"
                   label=""
                   value={sigInputs[idx]?.publicKey}
@@ -832,7 +820,7 @@ export const SignTransactionXdr = ({
                 />
 
                 <TextPicker
-                  id={`${idx}-tx-sig-b64sig`}
+                  id={`${id}-${idx}-tx-sig-b64sig`}
                   placeholder="Hex encoded 64-byte ed25519 signature"
                   value={sigInputs[idx]?.signature}
                   error={sigInputsError[idx]?.signature}
@@ -887,19 +875,23 @@ const Tab = ({
   signatureCount,
   onTabChange,
 }: {
-  id: TxSignatureType;
+  id: UniqueTabId;
   label: string;
   isSelected: boolean;
   signatureCount: number;
   onTabChange: (tabId: TxSignatureType) => void;
 }) => {
+  const getTabType = (tabId: UniqueTabId): TxSignatureType => {
+    return tabId.split("-").pop() as TxSignatureType;
+  };
+
   return (
     <div
       key={`tab-${id}`}
       className="SignTransactionXdr__tab"
       data-is-selected={isSelected}
       onClick={() => {
-        onTabChange(id);
+        onTabChange(getTabType(id));
       }}
     >
       <div className="SignTransactionXdr__tab__label">{label}</div>

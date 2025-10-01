@@ -14,6 +14,7 @@ import { Address, contract, Operation } from "@stellar/stellar-sdk";
 import { parseContractMetadata } from "@stellar-expert/contract-wasm-interface-parser";
 import { parse } from "lossless-json";
 import { JSONSchema7 } from "json-schema";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { Box } from "@/components/layout/Box";
 import { PageCard } from "@/components/layout/PageCard";
@@ -50,14 +51,16 @@ export default function DeployContract() {
 
   const { network, smartContracts, addFloatNotification } = useStore();
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const [sourceAccount, setSourceAccount] = useState("");
   const [sourceAccountError, setSourceAccountError] = useState("");
 
   const [selectedFile, setSelectedFile] = useState<File | undefined>(undefined);
-  const [parsedContractData, setParsedContractData] = useState<any>(null);
+  const [resetFilePicker, setResetFilePicker] = useState(0);
 
   // Constructor
+  const [parsedContractData, setParsedContractData] = useState<any>(null);
   const [constructorSchema, setConstructorSchema] =
     useState<DereferencedSchemaType | null>(null);
   const [constructorFormValue, setConstructorFormValue] = useState<any>({
@@ -72,6 +75,7 @@ export default function DeployContract() {
 
   // Page-level error
   const [pageError, setPageError] = useState<string>("");
+  const [signTxResetKey, setSignTxResetKey] = useState(0);
 
   // Upload
   const [uploadOp, setUploadOp] = useState<any>(null);
@@ -89,7 +93,7 @@ export default function DeployContract() {
   const [signDeploySuccess, setSignDeploySuccess] = useState<string | null>(
     null,
   );
-  const [isDeployExpanded, setIsDeployExpanded] = useState<boolean>(true);
+  const [isDeployExpanded, setIsDeployExpanded] = useState<boolean>(false);
 
   const hasFormErrors =
     constructorFormError && Object.keys(constructorFormError).length > 0;
@@ -173,12 +177,10 @@ export default function DeployContract() {
     reset: resetSubmitDeployTx,
   } = useSubmitRpcTx();
 
-  // TODO: check this
-  const resetAll = () => {
+  const resetContractState = () => {
     setSelectedFile(undefined);
-    // setCurrentStep(1);
-    // setIsWalletLoading(false);
 
+    setParsedContractData(null);
     setConstructorSchema(null);
     setConstructorFormValue({
       contract_id: "",
@@ -186,17 +188,35 @@ export default function DeployContract() {
       args: {},
     });
     setConstructorFormError(null);
+    setIsConstructorArgsFilled(false);
+
+    setPageError("");
 
     setUploadOp(null);
     setSignedUploadTx(null);
     setSignUploadError(null);
+    setSignUploadSuccess(null);
+    setIsUploadExpanded(true);
 
     setDeployOp(null);
     setSignedDeployTx(null);
     setSignDeployError(null);
+    setSignDeploySuccess(null);
+    setIsDeployExpanded(false);
+
+    queryClient.resetQueries({
+      queryKey: ["buildRpcTransaction"],
+    });
 
     resetSubmitUploadTx();
     resetSubmitDeployTx();
+
+    setSignTxResetKey((prev) => prev + 1);
+  };
+
+  const resetSourceAccount = () => {
+    setSourceAccount("");
+    setSourceAccountError("");
   };
 
   useEffect(() => {
@@ -250,20 +270,17 @@ export default function DeployContract() {
         description: `${selectedFile?.name} file has been uploaded successfully.`,
         type: "success",
       });
-    }
-  }, [addFloatNotification, isSubmitUploadTxSuccess, selectedFile?.name]);
 
-  useEffect(() => {
-    // Collapse the upload block on success
-    if (isSubmitUploadTxSuccess) {
+      // Collapse the upload block on success
       delayedAction({
         action: () => {
           setIsUploadExpanded(false);
+          setIsDeployExpanded(true);
         },
         delay: 300,
       });
     }
-  }, [isSubmitUploadTxSuccess]);
+  }, [addFloatNotification, isSubmitUploadTxSuccess, selectedFile?.name]);
 
   // ===========================================================================
   // Deploy effects
@@ -319,7 +336,7 @@ export default function DeployContract() {
   }, [isSubmitDeployTxSuccess]);
 
   const handleFileChange = (file?: File) => {
-    resetAll();
+    resetContractState();
 
     // Adding a slight delay to make sure the previous state was reset
     delayedAction({
@@ -441,6 +458,7 @@ export default function DeployContract() {
               <ExpandBox offsetTop="sm" isExpanded={isUploadExpanded}>
                 <Box gap="md">
                   <FilePicker
+                    key={`filePicker-${resetFilePicker}`}
                     onChange={handleFileChange}
                     acceptedExtension={[".wasm"]}
                     isDisabled={!sourceAccount || isSubmitUploadTxSuccess}
@@ -479,6 +497,7 @@ export default function DeployContract() {
                   </Box>
 
                   <SignTransactionXdr
+                    key={`upload-tx-${signTxResetKey}`}
                     id="upload-tx"
                     title="Add signature to upload"
                     xdrToSign={uploadTx?.preparedXdr || null}
@@ -648,6 +667,7 @@ export default function DeployContract() {
                   </Box>
 
                   <SignTransactionXdr
+                    key={`deploy-tx-${signTxResetKey}`}
                     id="deploy-tx"
                     title="Add signature to deploy"
                     xdrToSign={deployTx?.preparedXdr || null}
@@ -744,7 +764,11 @@ export default function DeployContract() {
                   <DetailsItem
                     label="Wasm Hash"
                     value={
-                      submitUploadTxResponse?.result?.returnValue?.bytes() || ""
+                      submitUploadTxResponse?.result?.returnValue?.bytes()
+                        ? Buffer.from(
+                            submitUploadTxResponse.result.returnValue.bytes(),
+                          ).toString("hex")
+                        : ""
                     }
                   />
 
@@ -793,7 +817,13 @@ export default function DeployContract() {
             size="md"
             icon={<Icon.RefreshCw01 />}
             iconPosition="right"
-            // TODO: clear action
+            onClick={() => {
+              setSelectedFile(undefined);
+              setResetFilePicker((prev) => prev + 1);
+
+              resetSourceAccount();
+              resetContractState();
+            }}
           >
             Clear
           </Button>
