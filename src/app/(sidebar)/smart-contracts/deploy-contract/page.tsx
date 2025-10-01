@@ -10,6 +10,7 @@ import {
   Icon,
   Text,
   Alert,
+  Loader,
 } from "@stellar/design-system";
 import { Address, contract, Operation } from "@stellar/stellar-sdk";
 import { parseContractMetadata } from "@stellar-expert/contract-wasm-interface-parser";
@@ -32,6 +33,7 @@ import { SwitchNetworkButtons } from "@/components/SwitchNetworkButtons";
 import { useStore } from "@/store/useStore";
 import { useBuildRpcTransaction } from "@/query/useBuildRpcTransaction";
 import { useSubmitRpcTx } from "@/query/useSubmitRpcTx";
+import { useWasmBinaryFromRpc } from "@/query/useWasmBinaryFromRpc";
 import { DereferencedSchemaType } from "@/constants/jsonSchema";
 import { Routes } from "@/constants/routes";
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
@@ -77,6 +79,7 @@ export default function DeployContract() {
   // Page-level error
   const [pageError, setPageError] = useState<string>("");
   const [signTxResetKey, setSignTxResetKey] = useState(0);
+  const [fileWasmHash, setFileWasmHash] = useState<string | null>(null);
 
   // Upload
   const [uploadOp, setUploadOp] = useState<any>(null);
@@ -99,39 +102,88 @@ export default function DeployContract() {
   const hasFormErrors =
     constructorFormError && Object.keys(constructorFormError).length > 0;
 
-  const getConstructorSchema = useCallback(async (wasmFile: File) => {
-    try {
-      const wasmBinary = await fileToBuffer(wasmFile);
-      const parsedData = parseContractMetadata(wasmBinary);
+  const getConstructorSchema = useCallback(
+    async (wasmFile?: File, wasmBuffer?: Buffer<ArrayBufferLike>) => {
+      try {
+        let wasmBinary = wasmBuffer;
 
-      setParsedContractData(parsedData);
+        if (wasmFile) {
+          wasmBinary = await fileToBuffer(wasmFile);
+        }
 
-      const hasConstructor = Boolean(parsedData?.functions?.[CONSTRUCTOR_KEY]);
+        if (!wasmBinary) {
+          return null;
+        }
 
-      if (hasConstructor) {
-        const contractSpec = await contract.Spec.fromWasm(wasmBinary);
-        const constructorSpec = contractSpec?.jsonSchema(CONSTRUCTOR_KEY);
-        const constructorSchema = dereferenceSchema(
-          constructorSpec as JSONSchema7,
-          CONSTRUCTOR_KEY,
+        const parsedData = parseContractMetadata(wasmBinary);
+
+        setParsedContractData(parsedData);
+
+        const hasConstructor = Boolean(
+          parsedData?.functions?.[CONSTRUCTOR_KEY],
         );
 
-        return constructorSchema ?? null;
-      }
+        if (hasConstructor) {
+          const contractSpec = await contract.Spec.fromWasm(wasmBinary);
+          const constructorSpec = contractSpec?.jsonSchema(CONSTRUCTOR_KEY);
+          const constructorSchema = dereferenceSchema(
+            constructorSpec as JSONSchema7,
+            CONSTRUCTOR_KEY,
+          );
 
-      return null;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (e) {
-      setPageError(`Error getting constructor schema: ${e}.`);
-      return null;
+          return constructorSchema ?? null;
+        }
+
+        return null;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (e) {
+        setPageError(`Error getting constructor schema: ${e}.`);
+        return null;
+      }
+    },
+    [],
+  );
+
+  const getWasmHashBytes = () => {
+    // For newly uploaded contracts
+    if (submitUploadTxResponse?.result?.returnValue?.bytes()) {
+      return submitUploadTxResponse.result.returnValue.bytes();
     }
-  }, []);
+
+    // For already uploaded contracts
+    if (isRpcWasmBinarySuccess && fileWasmHash) {
+      return Buffer.from(fileWasmHash, "hex");
+    }
+
+    return null;
+  };
 
   useIsXdrInit();
+
+  const computeWasmFileHash = useCallback(
+    async (file: File): Promise<string> => {
+      const wasmBuffer = (await fileToBuffer(file)) as BufferSource;
+      const hashBuffer = await crypto.subtle.digest("SHA-256", wasmBuffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+    },
+    [],
+  );
 
   // ===========================================================================
   // Queries
   // ===========================================================================
+  const {
+    data: rpcWasmBinary,
+    isSuccess: isRpcWasmBinarySuccess,
+    isLoading: isRpcWasmBinaryLoading,
+    isFetching: isRpcWasmBinaryFetching,
+  } = useWasmBinaryFromRpc({
+    wasmHash: fileWasmHash || "",
+    rpcUrl: network.rpcUrl,
+    isActive: Boolean(fileWasmHash),
+  });
+
   const {
     data: uploadTx,
     error: uploadTxError,
@@ -180,6 +232,7 @@ export default function DeployContract() {
 
   const resetContractState = () => {
     setSelectedFile(undefined);
+    setFileWasmHash(null);
 
     setParsedContractData(null);
     setConstructorSchema(null);
@@ -206,7 +259,7 @@ export default function DeployContract() {
     setIsDeployExpanded(false);
 
     queryClient.resetQueries({
-      queryKey: ["buildRpcTransaction"],
+      queryKey: ["buildRpcTransaction", "useWasmBinaryFromRpc"],
     });
 
     resetSubmitUploadTx();
@@ -221,17 +274,42 @@ export default function DeployContract() {
   };
 
   useEffect(() => {
-    if (selectedFile) {
+    if (selectedFile && (!isRpcWasmBinarySuccess || !isUploadTxSuccess)) {
       const fn = async () => {
-        const schema = await getConstructorSchema(selectedFile);
+        const schema = await getConstructorSchema(
+          selectedFile,
+          rpcWasmBinary || undefined,
+        );
         setConstructorSchema(schema);
         // If there are no constructor arguments, set validation to true
         setIsConstructorArgsFilled(!schema);
+
+        const wasmHash = await computeWasmFileHash(selectedFile);
+
+        if (wasmHash) {
+          setFileWasmHash(wasmHash);
+        } else {
+          setFileWasmHash(null);
+        }
       };
 
       fn();
     }
-  }, [getConstructorSchema, selectedFile]);
+  }, [
+    computeWasmFileHash,
+    getConstructorSchema,
+    isRpcWasmBinarySuccess,
+    isUploadTxSuccess,
+    rpcWasmBinary,
+    selectedFile,
+  ]);
+
+  useEffect(() => {
+    if (isRpcWasmBinarySuccess) {
+      setIsUploadExpanded(false);
+      setIsDeployExpanded(true);
+    }
+  }, [isRpcWasmBinarySuccess]);
 
   // ===========================================================================
   // Upload effects
@@ -423,6 +501,32 @@ export default function DeployContract() {
     );
   };
 
+  const getIsBuildDeployButtonDisabled = () => {
+    if (isSubmitDeployTxSuccess) {
+      return true;
+    }
+
+    return isRpcWasmBinarySuccess
+      ? false
+      : !submitUploadTxResponse || hasFormErrors || !isConstructorArgsFilled;
+  };
+
+  const renderDetailsItemWasmHash = () => {
+    // Wasm hash from the Upload transaction response (for new contracts)
+    if (submitUploadTxResponse?.result?.returnValue?.bytes()) {
+      return Buffer.from(
+        submitUploadTxResponse.result.returnValue.bytes(),
+      ).toString("hex");
+    }
+
+    // Wasm hash from RPC for already uploaded contracts
+    if (isRpcWasmBinarySuccess && fileWasmHash) {
+      return fileWasmHash;
+    }
+
+    return "";
+  };
+
   const renderContent = () => {
     if (network.id === "futurenet") {
       return (
@@ -464,7 +568,7 @@ export default function DeployContract() {
             <Box gap="sm">
               <CardHeading
                 title="Upload contract"
-                isActive={isSubmitUploadTxSuccess}
+                isActive={isRpcWasmBinarySuccess || isSubmitUploadTxSuccess}
                 isExpanded={isUploadExpanded}
                 onDoneAction={setIsUploadExpanded}
                 txHash={submitUploadTxResponse?.result?.txHash}
@@ -477,10 +581,12 @@ export default function DeployContract() {
                     key={`filePicker-${resetFilePicker}`}
                     onChange={handleFileChange}
                     acceptedExtension={[".wasm"]}
-                    isDisabled={!sourceAccount || isSubmitUploadTxSuccess}
+                    isDisabled={
+                      !sourceAccount ||
+                      isSubmitUploadTxSuccess ||
+                      isRpcWasmBinarySuccess
+                    }
                   />
-
-                  {/* TODO: check if wasm hash already uploaded */}
 
                   {uploadTxError ? (
                     <Notification
@@ -495,7 +601,11 @@ export default function DeployContract() {
                     <Button
                       variant="secondary"
                       size="md"
-                      disabled={!selectedFile || Boolean(uploadTx?.preparedXdr)}
+                      disabled={
+                        !selectedFile ||
+                        Boolean(uploadTx?.preparedXdr) ||
+                        isRpcWasmBinarySuccess
+                      }
                       isLoading={isUploadTxLoading || isUploadTxFetching}
                       onClick={async () => {
                         if (selectedFile) {
@@ -589,6 +699,23 @@ export default function DeployContract() {
         </div>
 
         {/* ====================================================================
+        Wasm already uploaded message
+        ==================================================================== */}
+        {isRpcWasmBinarySuccess && fileWasmHash ? (
+          <Text
+            as="div"
+            size="xs"
+            weight="medium"
+          >{`This contract Wasm already has been uploaded. Wasm hash: ${fileWasmHash}`}</Text>
+        ) : null}
+
+        {isRpcWasmBinaryLoading || isRpcWasmBinaryFetching ? (
+          <Box gap="sm" direction="row" align="center" justify="center">
+            <Loader />
+          </Box>
+        ) : null}
+
+        {/* ====================================================================
         Deploy card
         ==================================================================== */}
         <div className="DeployContract__container">
@@ -671,20 +798,13 @@ export default function DeployContract() {
                       variant="secondary"
                       size="md"
                       isLoading={isDeployTxLoading || isDeployTxFetching}
-                      disabled={
-                        !submitUploadTxResponse ||
-                        hasFormErrors ||
-                        !isConstructorArgsFilled ||
-                        isSubmitDeployTxSuccess
-                      }
+                      disabled={getIsBuildDeployButtonDisabled()}
                       onClick={async () => {
-                        if (
-                          sourceAccount &&
-                          submitUploadTxResponse?.result?.returnValue?.bytes()
-                        ) {
+                        const wasmHashBytes = getWasmHashBytes();
+
+                        if (sourceAccount && wasmHashBytes) {
                           const operation = Operation.createCustomContract({
-                            wasmHash:
-                              submitUploadTxResponse.result.returnValue.bytes(),
+                            wasmHash: wasmHashBytes,
                             address: Address.fromString(sourceAccount),
                             constructorArgs: getOrderedConstructorArgs(
                               constructorFormValue.args,
@@ -797,13 +917,7 @@ export default function DeployContract() {
 
                   <DetailsItem
                     label="Wasm Hash"
-                    value={
-                      submitUploadTxResponse?.result?.returnValue?.bytes()
-                        ? Buffer.from(
-                            submitUploadTxResponse.result.returnValue.bytes(),
-                          ).toString("hex")
-                        : ""
-                    }
+                    value={renderDetailsItemWasmHash()}
                   />
 
                   <DetailsItem
