@@ -50,3 +50,36 @@ export const signatureHint = (value: string) => {
 
   return `G${Buffer.alloc(46, "-").toString()}${keypair.publicKey().substring(47, 52)}${Buffer.alloc(4, "-").toString()}`;
 };
+
+// Check if the hint matches the specific key
+export const singatureHintMatchesKey = (hint: string, key: string) => {
+  return signatureHint(hint).substring(47, 52) === key.substring(47, 52);
+};
+
+// Find a key by the signature hint
+export const findKeyBySignatureHint = (hint: string, allKeys: string[]) =>
+  allKeys.find((key) => singatureHintMatchesKey(hint, key));
+
+// Verify publicKey against signature
+// Similar method to WebAuth.gatherTxSigners by js-stellar-sdk
+export const verifySignature = (
+  signature: { hint: string; signature: string },
+  publicKey: string | undefined,
+  txHash: string | undefined,
+) => {
+  if (!publicKey || !txHash) {
+    return false;
+  }
+
+  try {
+    const keypair = Keypair.fromPublicKey(publicKey);
+    // Signature from JSON RPC is hex-encoded
+    const signatureBuffer = Buffer.from(signature.signature, "hex");
+    // txHash from RPC response is hex string
+    const txHashBuffer = Buffer.from(txHash, "hex");
+
+    return keypair.verify(txHashBuffer, signatureBuffer);
+  } catch {
+    return false;
+  }
+};

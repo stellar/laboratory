@@ -35,6 +35,7 @@ export const getTxData = (txDetails: RpcTxJsonResponse | null) => {
       txDetails && txDetails.status !== "NOT_FOUND"
         ? feeBreakdown(txDetails)
         : null,
+    txHash: txDetails?.txHash,
   };
 };
 

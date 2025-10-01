@@ -7,6 +7,8 @@ import {
   TransactionBuilder,
 } from "@stellar/stellar-sdk";
 
+import { getPublicKey } from "@/helpers/decodeMuxedToEd25519";
+
 export const fetchTxSignatures = async ({
   txXdr,
   networkUrl,
@@ -45,7 +47,7 @@ export const fetchTxSignatures = async ({
 
     // Inner transaction
     if (tx instanceof FeeBumpTransaction) {
-      sourceAccounts[convertMuxedAccountToEd25519Account(tx.feeSource)] = [];
+      sourceAccounts[getPublicKey(tx.feeSource)] = [];
       groupedSignatures.push([
         tx.signatures.map((x) => ({ sig: x.signature() })),
         tx.hash(),
@@ -54,11 +56,11 @@ export const fetchTxSignatures = async ({
       tx = tx.innerTransaction;
     }
 
-    sourceAccounts[convertMuxedAccountToEd25519Account(tx.source)] = [];
+    sourceAccounts[getPublicKey(tx.source)] = [];
 
     tx.operations.forEach((op) => {
       if (op.source) {
-        sourceAccounts[convertMuxedAccountToEd25519Account(op.source)] = [];
+        sourceAccounts[getPublicKey(op.source)] = [];
       }
     });
 
@@ -141,9 +143,4 @@ export const fetchTxSignatures = async ({
   } catch (e) {
     return [];
   }
-};
-
-const convertMuxedAccountToEd25519Account = (account: string) => {
-  // TODO: handle muxed account
-  return account;
 };
