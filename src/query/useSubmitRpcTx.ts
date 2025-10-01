@@ -44,6 +44,8 @@ export const useSubmitRpcTx = () => {
         });
         const sentTx = await rpcServer.sendTransaction(transaction);
 
+        await StellarXdr.initialize();
+
         if (sentTx.status !== "PENDING") {
           if (sentTx.errorResult) {
             const errorResult = parse(
