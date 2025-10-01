@@ -116,7 +116,8 @@ export const FetchContractMethodPickerWithQuery = ({
     if (fetchType === "contract") {
       fetchContractClient();
     }
-  }, [fetchContractClient, fetchType]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fetchType]);
 
   // Format contract methods and set the error
   useEffect(() => {
@@ -125,7 +126,13 @@ export const FetchContractMethodPickerWithQuery = ({
         ?.filter((func) => !func.name().toString().includes("__"))
         ?.map((func) => func.name().toString());
 
-      setContractMethods(methodNames);
+      // Only update if the methods have actually changed
+      setContractMethods((prev) => {
+        if (JSON.stringify(prev) === JSON.stringify(methodNames)) {
+          return prev;
+        }
+        return methodNames;
+      });
     }
 
     const errorMsg = contractClientError?.message || sacDataError?.message;
