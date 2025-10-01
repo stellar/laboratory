@@ -1,9 +1,9 @@
-import { rpc as StellarRpc, TransactionBuilder } from "@stellar/stellar-sdk";
+import { TransactionBuilder } from "@stellar/stellar-sdk";
 import { Icon, Text } from "@stellar/design-system";
 
 import { Box } from "@/components/layout/Box";
 
-import { useGetRpcTxDetails } from "@/query/useGetRpcTxDetails";
+import { useStore } from "@/store/useStore";
 
 import { getTxData } from "@/helpers/getTxData";
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
@@ -11,31 +11,40 @@ import {
   findKeyBySignatureHint,
   verifySignature,
 } from "@/helpers/signatureHint";
+import * as StellarXdr from "@/helpers/StellarXdr";
+
+import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
 import { RpcTxJsonResponse } from "@/types/types";
 
-export const Signatures = ({
-  txDetails,
-}: {
-  txDetails: RpcTxJsonResponse | null | undefined;
-}) => {
-  if (!txDetails) {
-    return null;
-  }
-
+export const Signatures = ({ txDetails }: { txDetails: RpcTxJsonResponse }) => {
   const { transaction, feeBumpTx, signatures, txHash } = getTxData(txDetails);
+  const isXdrInit = useIsXdrInit();
+  const { network } = useStore();
 
   if (!signatures || signatures.length === 0 || !txHash) {
     return null;
   }
+
+  const feeBumpInnerTxXdr =
+    isXdrInit &&
+    feeBumpTx.tx.inner_tx &&
+    StellarXdr.encode(
+      "TransactionEnvelope",
+      JSON.stringify(feeBumpTx.tx.inner_tx),
+    );
+
+  const feeBumpInnerTxHash = feeBumpInnerTxXdr
+    ? TransactionBuilder.fromXDR(feeBumpInnerTxXdr, network.passphrase)
+        .hash()
+        .toString("hex")
+    : undefined;
 
   const possibleSigners = getPossibleSigners(
     signatures,
     transaction,
     feeBumpTx,
   );
-
-  console.log("possibleSigners: ", possibleSigners);
 
   const renderTableBody = () => {
     return signatures.map(
@@ -47,7 +56,7 @@ export const Signatures = ({
         const isVerified = verifySignature(
           { hint, signature },
           signerPubKey,
-          txHash,
+          feeBumpInnerTxHash ? feeBumpInnerTxHash : txHash,
         );
 
         return (
@@ -148,6 +157,7 @@ const getPossibleSigners = (
   }
 
   const allPossibleSigners: string[] = [];
+
   const addSigner = (key: string | undefined) => {
     if (key && !allPossibleSigners.includes(key)) {
       allPossibleSigners.push(key);
@@ -173,8 +183,7 @@ const getPossibleSigners = (
       addSigner(operation.source || transaction.source_account);
     }
 
-    // Extra Signers are omitted in Soroban Transactions
+    // Soroban Transaction doesn't use extra signers
   }
-
   return allPossibleSigners;
 };

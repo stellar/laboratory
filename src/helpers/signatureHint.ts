@@ -51,14 +51,11 @@ export const signatureHint = (value: string) => {
   return `G${Buffer.alloc(46, "-").toString()}${keypair.publicKey().substring(47, 52)}${Buffer.alloc(4, "-").toString()}`;
 };
 
-// Check if the hint matches the specific key
-export const singatureHintMatchesKey = (hint: string, key: string) => {
-  return signatureHint(hint).substring(47, 52) === key.substring(47, 52);
-};
-
 // Find a key by the signature hint
 export const findKeyBySignatureHint = (hint: string, allKeys: string[]) =>
-  allKeys.find((key) => singatureHintMatchesKey(hint, key));
+  allKeys.find(
+    (key) => signatureHint(hint).substring(47, 52) === key.substring(47, 52),
+  );
 
 // Verify publicKey against signature
 // Similar method to WebAuth.gatherTxSigners by js-stellar-sdk
