@@ -7,7 +7,7 @@ import {
   TransactionBuilder,
 } from "@stellar/stellar-sdk";
 
-import { getPublicKey } from "@/helpers/decodeMuxedToEd25519";
+import { getPublicKey } from "@/helpers/getPublicKey";
 
 export const fetchTxSignatures = async ({
   txXdr,
