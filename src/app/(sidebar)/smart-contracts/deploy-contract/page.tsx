@@ -502,7 +502,7 @@ export default function DeployContract() {
   };
 
   const getIsBuildDeployButtonDisabled = () => {
-    if (isSubmitDeployTxSuccess) {
+    if (isSubmitDeployTxSuccess || deployTx?.preparedXdr) {
       return true;
     }
 
