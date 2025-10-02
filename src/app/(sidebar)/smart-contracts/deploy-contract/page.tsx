@@ -46,6 +46,7 @@ import { dereferenceSchema } from "@/helpers/dereferenceSchema";
 import { getScValsFromArgs } from "@/helpers/sorobanUtils";
 import { stellarExpertTransactionLink } from "@/helpers/stellarExpertTransactionLink";
 import { stellarExpertAccountLink } from "@/helpers/stellarExpertAccountLink";
+import { isEmptyObject } from "@/helpers/isEmptyObject";
 
 import { NetworkType } from "@/types/types";
 
@@ -101,6 +102,9 @@ export default function DeployContract() {
 
   const hasFormErrors =
     constructorFormError && Object.keys(constructorFormError).length > 0;
+  const hasConstructorArgs = Boolean(
+    constructorSchema && !isEmptyObject(constructorSchema.properties),
+  );
 
   const getConstructorSchema = useCallback(
     async (wasmFile?: File, wasmBuffer?: Buffer<ArrayBufferLike>) => {
@@ -739,7 +743,7 @@ export default function DeployContract() {
                     </Notification>
                   ) : null}
 
-                  {constructorSchema ? (
+                  {hasConstructorArgs ? (
                     <Alert
                       title="This contract has a constructor."
                       variant="primary"
@@ -757,7 +761,7 @@ export default function DeployContract() {
                     </Alert>
                   )}
 
-                  {constructorSchema ? (
+                  {hasConstructorArgs ? (
                     <Card>
                       <Box gap="md">
                         <Text
