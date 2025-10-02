@@ -7,7 +7,7 @@ import {
   Label,
   Loader,
 } from "@stellar/design-system";
-import { stringify } from "lossless-json";
+import { stringify, parse } from "lossless-json";
 
 import { Box } from "@/components/layout/Box";
 import { Dropdown } from "@/components/Dropdown";
@@ -18,6 +18,9 @@ import { exportJsonToCsvFile } from "@/helpers/exportJsonToCsvFile";
 import { capitalizeString } from "@/helpers/capitalizeString";
 import { formatNumber } from "@/helpers/formatNumber";
 import { formatEpochToDate } from "@/helpers/formatEpochToDate";
+import { decodeXdr } from "@/helpers/decodeXdr";
+
+import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
 import { getPublicKeyError } from "@/validate/methods/getPublicKeyError";
 import { getContractIdError } from "@/validate/methods/getContractIdError";
@@ -101,6 +104,8 @@ export const DataTable = <T extends AnyObject>({
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPageCount, setTotalPageCount] = useState(1);
+
+  const isXdrInit = useIsXdrInit();
 
   const hasAppliedFilters =
     appliedFilters.key.length > 0 || appliedFilters.value.length > 0;
@@ -261,13 +266,21 @@ export const DataTable = <T extends AnyObject>({
       }
 
       if (format === "json") {
-        fileData = processedData.map((p) => ({
-          key: stringify(p.keyJson),
-          value: stringify(p.valueJson),
-          durability: capitalizeString(p.durability),
-          ttl: formatNumber(p.ttl),
-          updated: formatEpochToDate(p.updated, "short") || "-",
-        }));
+        fileData = processedData.map((p) => {
+          const decodedValue = decodeXdr({
+            xdrType: "ScVal",
+            xdrBlob: p.value,
+            isReady: isXdrInit,
+          })?.jsonString;
+
+          return {
+            key: stringify(p.keyJson),
+            value: decodedValue ? stringify(parse(decodedValue)) : "",
+            durability: capitalizeString(p.durability),
+            ttl: formatNumber(p.ttl),
+            updated: formatEpochToDate(p.updated, "short") || "-",
+          };
+        });
       }
 
       if (!fileData) {
