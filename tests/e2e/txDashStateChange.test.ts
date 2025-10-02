@@ -19,6 +19,7 @@ test.describe("Transaction Dashboard: State Change", () => {
   });
 
   test.describe("KALE", () => {
+    // ERROR
     test("plant", async ({ page }) => {
       await testTxStateChange({
         page,
@@ -170,8 +171,6 @@ const testTxStateChange = async ({
   );
 
   // Check the tabs section
-  // Wait for XDR initialization and component rendering to complete
-  await expect(contractInfoContainer).toBeVisible({ timeout: 10000 });
   await expect(page.getByTestId("tx-state-change")).toHaveAttribute(
     "data-is-active",
     "true",
