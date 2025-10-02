@@ -170,7 +170,8 @@ const testTxStateChange = async ({
   );
 
   // Check the tabs section
-  await expect(contractInfoContainer).toBeVisible();
+  // Wait for XDR initialization and component rendering to complete
+  await expect(contractInfoContainer).toBeVisible({ timeout: 10000 });
   await expect(page.getByTestId("tx-state-change")).toHaveAttribute(
     "data-is-active",
     "true",
