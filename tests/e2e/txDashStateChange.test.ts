@@ -154,7 +154,11 @@ const testTxStateChange = async ({
     .getByLabel("Transaction Hash", { exact: true })
     .fill(mockResponse.result.txHash);
   await expect(loadTxButton).toBeEnabled();
+
+  // Wait for the network request to complete
+  const responsePromise = page.waitForResponse('https://soroban-testnet.stellar.org/');
   await loadTxButton.click();
+  await responsePromise;
 
   // Check the correct data is displayed by checking the Transaction Info value
   const txInfoContainer = page.getByTestId("transaction-info-container");

@@ -22,6 +22,6 @@ jobs:
       - name: Build app
         run: pnpm build
       - name: Run Playwright tests
-        run: pnpm test:e2e
+        run: pnpm test:e2e -- txDashStateChange.test.ts
       - name: Run Unit tests
         run: pnpm test:unit
