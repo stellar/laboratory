@@ -13,16 +13,17 @@ import {
 } from "@/helpers/signatureHint";
 import * as StellarXdr from "@/helpers/StellarXdr";
 
+import { useIsXdrInit } from "@/hooks/useIsXdrInit";
+
 import { RpcTxJsonResponse } from "@/types/types";
 
 export const Signatures = ({
   txDetails,
-  isXdrInit,
 }: {
   txDetails: RpcTxJsonResponse | null;
-  isXdrInit: boolean;
 }) => {
   const { transaction, feeBumpTx, signatures, txHash } = getTxData(txDetails);
+  const isXdrInit = useIsXdrInit();
   const { network } = useStore();
 
   if (!signatures || signatures.length === 0 || !txHash) {
