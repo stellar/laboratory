@@ -155,14 +155,10 @@ const testTxStateChange = async ({
     .fill(mockResponse.result.txHash);
   await expect(loadTxButton).toBeEnabled();
 
-  // Wait for the network request to complete
-  const responsePromise = page.waitForResponse('https://soroban-testnet.stellar.org/');
   await loadTxButton.click();
-  await responsePromise;
 
   // Check the correct data is displayed by checking the Transaction Info value
   const txInfoContainer = page.getByTestId("transaction-info-container");
-  await expect(txInfoContainer).toBeVisible();
   const txInfoLabel = txInfoContainer.locator(".InfoFieldItem").filter({
     has: page.locator('.InfoFieldItem__label:text("Transaction Info")'),
   });

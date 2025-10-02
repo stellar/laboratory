@@ -122,7 +122,7 @@ const SignatureCell = ({
       size="sm"
       as="div"
       weight="medium"
-      addlClassName="Signatures__text"
+      addlClassName="Signatures__cell"
       {...(isHeader ? { "data-is-header": true } : {})}
       {...(isSignature ? { "data-is-signature": true } : {})}
     >

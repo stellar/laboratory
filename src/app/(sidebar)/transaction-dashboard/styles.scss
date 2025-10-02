@@ -235,7 +235,7 @@
 .Signatures {
   color: var(--sds-clr-gray-11);
 
-  &__text {
+  &__cell {
     &[data-is-header="true"] {
       text-align: left;
       font-size: pxToRem(12px);
