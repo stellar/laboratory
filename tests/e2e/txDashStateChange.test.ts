@@ -158,6 +158,7 @@ const testTxStateChange = async ({
 
   // Check the correct data is displayed by checking the Transaction Info value
   const txInfoContainer = page.getByTestId("transaction-info-container");
+  await expect(txInfoContainer).toBeVisible();
   const txInfoLabel = txInfoContainer.locator(".InfoFieldItem").filter({
     has: page.locator('.InfoFieldItem__label:text("Transaction Info")'),
   });

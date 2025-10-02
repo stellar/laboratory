@@ -22,7 +22,7 @@ import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 import { TransactionInfo } from "./components/TransactionInfo";
 import { StateChange } from "./components/StateChange";
 import { FeeBreakdown } from "./components/FeeBreakdown";
-// import { Signatures } from "./components/Signatures";
+import { Signatures } from "./components/Signatures";
 
 import "./styles.scss";
 
@@ -262,7 +262,7 @@ export default function TransactionDashboard() {
               tab6={{
                 id: "tx-signatures",
                 label: "Signatures",
-                content: <NoInfoLoadedView message="Load a transaction" />,
+                content: <Signatures txDetails={txDetails || null} />,
                 isDisabled: !isDataLoaded,
               }}
               tab7={{
