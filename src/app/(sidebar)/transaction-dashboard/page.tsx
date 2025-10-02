@@ -14,6 +14,7 @@ import { NoInfoLoadedView } from "@/components/NoInfoLoadedView";
 import { validate } from "@/validate";
 import { useStore } from "@/store/useStore";
 import { useFetchRpcTxDetails } from "@/query/useFetchRpcTxDetails";
+import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { getTxData } from "@/helpers/getTxData";
@@ -37,6 +38,7 @@ export default function TransactionDashboard() {
     | "tx-fee-breakdown";
 
   const { network, txDashboard } = useStore();
+  const isXdrInit = useIsXdrInit();
 
   const [transactionHashInput, setTransactionHashInput] = useState("");
   const [transactionHashInputError, setTransactionHashInputError] =
@@ -262,7 +264,12 @@ export default function TransactionDashboard() {
               tab6={{
                 id: "tx-signatures",
                 label: "Signatures",
-                content: <Signatures txDetails={txDetails || null} />,
+                content: (
+                  <Signatures
+                    txDetails={txDetails || null}
+                    isXdrInit={isXdrInit}
+                  />
+                ),
                 isDisabled: !isDataLoaded,
               }}
               tab7={{
