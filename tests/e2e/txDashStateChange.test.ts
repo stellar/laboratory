@@ -19,7 +19,6 @@ test.describe("Transaction Dashboard: State Change", () => {
   });
 
   test.describe("KALE", () => {
-    // ERROR
     test("plant", async ({ page }) => {
       await testTxStateChange({
         page,
