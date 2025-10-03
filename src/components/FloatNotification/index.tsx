@@ -13,6 +13,7 @@ export type FloatNotificationItem = {
     label: string;
     onAction: () => void;
   }[];
+  closeAt?: number;
 };
 
 type FloatNotificationProps = {
