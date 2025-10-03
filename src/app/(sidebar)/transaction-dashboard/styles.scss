@@ -228,3 +228,75 @@
     }
   }
 }
+
+// =============================================================================
+// Signatures
+// =============================================================================
+.Signatures {
+  color: var(--sds-clr-gray-11);
+
+  &__cell {
+    &[data-is-header="true"] {
+      text-align: left;
+      font-size: pxToRem(12px);
+      line-height: pxToRem(18px);
+      color: var(--sds-clr-gray-11);
+    }
+
+    &[data-is-signature="true"] {
+      white-space: normal;
+      word-break: break-all;
+      overflow-wrap: break-word;
+      font-family: var(--sds-ff-monospace);
+    }
+  }
+
+  &__gridTableContainer {
+    width: 100%;
+    overflow-y: auto;
+
+    border: 1px solid var(--sds-clr-gray-06);
+    border-radius: pxToRem(8px);
+    background-color: var(--sds-clr-base-00);
+
+    table {
+      tr {
+        display: grid;
+        grid-template-columns:
+          minmax(pxToRem(160px), 1fr)
+          minmax(pxToRem(160px), 1fr)
+          minmax(pxToRem(160px), 1fr);
+
+        &[data-is-highlighted="true"] {
+          background-color: var(--sds-clr-gray-03);
+        }
+      }
+
+      td,
+      th {
+        display: flex;
+        flex-direction: column;
+        padding: pxToRem(8px) pxToRem(12px);
+        justify-content: center;
+
+        &:not(:last-child) {
+          border-right: 1px solid var(--sds-clr-gray-06);
+        }
+
+        .Badge {
+          --Badge-padding-vertical: 0;
+          --Badge-padding-horizontal: #{pxToRem(6px)};
+
+          font-family: var(--sds-ff-monospace);
+          letter-spacing: pxToRem(-0.24px);
+        }
+      }
+
+      tbody {
+        tr {
+          border-top: 1px solid var(--sds-clr-gray-06);
+        }
+      }
+    }
+  }
+}
