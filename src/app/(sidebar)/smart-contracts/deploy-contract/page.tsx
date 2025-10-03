@@ -162,7 +162,7 @@ export default function DeployContract() {
     return null;
   };
 
-  useIsXdrInit();
+  const isXdrInit = useIsXdrInit();
 
   const computeWasmFileHash = useCallback(
     async (file: File): Promise<string> => {
@@ -451,7 +451,7 @@ export default function DeployContract() {
     try {
       const xdr = submitDeployTxResponse?.result?.envelopeXdr?.toXDR("base64");
 
-      if (StellarXdr && xdr) {
+      if (isXdrInit && xdr) {
         const decodedString = StellarXdr.decode("TransactionEnvelope", xdr);
         const parsedDecoded = parse(decodedString) as any;
 
