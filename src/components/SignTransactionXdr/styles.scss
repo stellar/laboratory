@@ -1,0 +1,96 @@
+@use "../../styles/utils.scss" as *;
+
+.SignTransactionXdr {
+  display: flex;
+  flex-direction: column;
+  gap: pxToRem(16px);
+  padding: pxToRem(16px);
+  border-radius: pxToRem(8px);
+  border: 1px solid var(--sds-clr-gray-06);
+
+  &[data-is-disabled="true"] {
+    opacity: 0.6;
+    pointer-events: none;
+    cursor: not-allowed;
+  }
+
+  &__title {
+    color: var(--sds-clr-gray-11) !important;
+  }
+
+  &__tabsContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: pxToRem(16px);
+    flex-wrap: wrap;
+  }
+
+  &__tab {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: pxToRem(4px);
+    padding: pxToRem(8px);
+    cursor: pointer;
+
+    font-size: pxToRem(12px);
+    line-height: pxToRem(18px);
+    font-weight: var(--sds-fw-semi-bold);
+    color: var(--sds-clr-gray-11);
+    border-bottom: 2px solid transparent;
+
+    transition:
+      color 0.2s ease-in-out,
+      border-bottom-color 0.2s ease-in-out;
+
+    &__count {
+      padding: 0 pxToRem(4px);
+      border-radius: pxToRem(4px);
+      background-color: var(--sds-clr-gray-04);
+
+      &[data-is-filled="true"] {
+        background-color: var(--sds-clr-lilac-04);
+        color: var(--sds-clr-lilac-11);
+      }
+    }
+
+    &[data-is-selected="true"] {
+      color: var(--sds-clr-lilac-11);
+      border-bottom-color: var(--sds-clr-lilac-09);
+      cursor: default;
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        color: var(--sds-clr-lilac-11);
+        border-bottom-color: var(--sds-clr-lilac-09);
+      }
+    }
+  }
+
+  &__tabContent {
+    display: none;
+
+    flex-direction: column;
+    gap: pxToRem(16px);
+    padding: pxToRem(16px);
+    background-color: var(--sds-clr-gray-02);
+    border-radius: pxToRem(8px);
+
+    &--error {
+      border: 1px solid var(--sds-clr-red-06);
+    }
+
+    &[data-is-visible="true"] {
+      display: flex;
+    }
+
+    &[data-type="hardwareWallet"] {
+      // Remove Select border inside the Input field
+      .Select__container {
+        border: 0;
+      }
+    }
+  }
+}

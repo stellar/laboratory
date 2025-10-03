@@ -1,17 +1,7 @@
 import React from "react";
 import "./styles.scss";
 
-export const Box = ({
-  gap,
-  children,
-  customValue,
-  addlClassName,
-  direction = "column",
-  justify = "baseline",
-  align = "stretch",
-  wrap,
-  ...props
-}: (
+type BoxProps = (
   | { gap: "xs" | "sm" | "md" | "lg" | "xl" | "xxl"; customValue?: undefined }
   | { gap: "custom"; customValue: string }
 ) & {
@@ -28,7 +18,20 @@ export const Box = ({
     | "baseline";
   align?: "center" | "end" | "start" | "baseline" | "stretch";
   wrap?: "nowrap" | "wrap";
-}) => {
+  onClick?: () => void;
+};
+
+export const Box = ({
+  gap,
+  children,
+  customValue,
+  addlClassName,
+  direction = "column",
+  justify = "baseline",
+  align = "stretch",
+  wrap,
+  ...props
+}: BoxProps & React.HTMLAttributes<HTMLDivElement>) => {
   const customStyle = {
     "--Box-direction": direction,
     "--Box-justify": justify,

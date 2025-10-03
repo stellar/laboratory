@@ -6,10 +6,8 @@ import { MemoValue } from "@stellar/stellar-sdk";
 import { get, omit, set } from "lodash";
 
 import { Box } from "@/components/layout/Box";
-import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 import { SdsLink } from "@/components/SdsLink";
-import { Routes } from "@/constants/routes";
 import { InputSideElement } from "@/components/InputSideElement";
 import {
   MemoPicker,
@@ -17,6 +15,7 @@ import {
 } from "@/components/FormElements/MemoPicker";
 import { TimeBoundsPicker } from "@/components/FormElements/TimeBoundsPicker";
 import { PageCard } from "@/components/layout/PageCard";
+import { SourceAccountPicker } from "@/components/SourceAccountPicker";
 
 import { sanitizeObject } from "@/helpers/sanitizeObject";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
@@ -35,8 +34,7 @@ import { EmptyObj, KeysOfUnion } from "@/types/types";
 export const Params = () => {
   const requiredParams = ["source_account", "seq_num", "fee"] as const;
 
-  const { transaction, network, walletKit } = useStore();
-  const { publicKey: walletKitPubKey } = walletKit || {};
+  const { transaction, network } = useStore();
   const { params: txnParams } = transaction.build;
   const {
     updateBuildParams,
@@ -135,6 +133,12 @@ export const Params = () => {
     } else if (get(paramsError, id)) {
       setParamsError(sanitizeObject(omit({ ...paramsError }, id), true));
     }
+  };
+
+  const handleSourceAccountChange = (account: string) => {
+    const id = "source_account";
+    handleParamChange(id, account);
+    handleParamsError(id, validateParam(id, account));
   };
 
   const validateParam = (param: ParamsField, value: any) => {
@@ -266,42 +270,10 @@ export const Params = () => {
   return (
     <PageCard heading="Build Transaction">
       <Box gap="lg">
-        <PubKeyPicker
-          id="source_account"
-          label="Source Account"
+        <SourceAccountPicker
           value={txnParams.source_account}
           error={paramsError.source_account}
-          onChange={(e) => {
-            const id = "source_account";
-            handleParamChange(id, e.target.value);
-            handleParamsError(id, validateParam(id, e.target.value));
-          }}
-          rightElement={
-            walletKitPubKey ? (
-              <InputSideElement
-                variant="button"
-                onClick={() => {
-                  const id = "source_account";
-
-                  if (walletKitPubKey) {
-                    handleParamChange(id, walletKitPubKey);
-                    handleParamsError(id, validateParam(id, walletKitPubKey));
-                  }
-                }}
-                placement="right"
-              >
-                Get connected wallet address
-              </InputSideElement>
-            ) : null
-          }
-          note={
-            <>
-              If you don’t have an account yet, you can create and fund a test
-              net account with the{" "}
-              <SdsLink href={Routes.ACCOUNT_CREATE}>account creator</SdsLink>.
-            </>
-          }
-          infoLink="https://developers.stellar.org/docs/learn/glossary#source-account"
+          onChange={handleSourceAccountChange}
         />
 
         <PositiveIntPicker

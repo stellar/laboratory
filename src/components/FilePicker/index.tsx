@@ -26,19 +26,11 @@ export const FilePicker = ({
   const [errorMessage, setErrorMessage] = useState("");
 
   const formatSelectedFileMessage = (file: File) => {
-    const name = file.name;
-    const [fileName, fileExtension] = name.split(".");
     const size = formatFileSize(file.size);
-
-    let formattedName = name;
-
-    if (fileName.length > 14) {
-      formattedName = `${fileName.substring(0, 5)}…${fileName.substring(fileName.length - 5)}.${fileExtension}`;
-    }
 
     return (
       <>
-        <Icon.CheckCircle /> {`${formattedName} (${size})`}
+        <Icon.CheckCircle /> {`${file.name} (${size})`}
       </>
     );
   };
