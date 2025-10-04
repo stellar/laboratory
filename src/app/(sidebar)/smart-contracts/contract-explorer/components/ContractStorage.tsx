@@ -14,6 +14,7 @@ import { formatEpochToDate } from "@/helpers/formatEpochToDate";
 import { formatNumber } from "@/helpers/formatNumber";
 import { capitalizeString } from "@/helpers/capitalizeString";
 import { decodeScVal } from "@/helpers/decodeScVal";
+import { getContractDataXDR } from "@/helpers/sorobanUtils";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { CONTRACT_STORAGE_MAX_ENTRIES } from "@/constants/settings";
@@ -141,20 +142,26 @@ export const ContractStorage = ({
     // reset transaction related stores
     handleResetTransactions();
 
+    const contractDataXdr = getContractDataXDR({
+      contractAddress: contractId,
+      dataKey: key,
+      durability: durability,
+    })?.toXDR("base64");
+
     trackEvent(TrackingEvent.SMART_CONTRACTS_EXPLORER_STORAGE_RESTORE, {
       contractId,
     });
 
     router.push(Routes.BUILD_TRANSACTION);
 
-    transaction.updateSorobanBuildOperation({
-      operation_type: "restore_footprint",
-      params: {
-        contract: contractId,
-        key_xdr: key,
-        durability: durability,
-      },
-    });
+    if (contractDataXdr) {
+      transaction.updateSorobanBuildOperation({
+        operation_type: "restore_footprint",
+        params: {
+          contractDataLedgerKey: contractDataXdr,
+        },
+      });
+    }
   };
 
   return (
