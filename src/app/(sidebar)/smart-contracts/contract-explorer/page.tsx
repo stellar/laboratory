@@ -153,7 +153,7 @@ export default function ContractExplorer() {
   const renderContractInvokeContent = () => {
     let invokeContractSpec;
 
-    if (sacXdrData && isSacType) {
+    if (isSacType && sacXdrData && sacXdrData[0] !== "") {
       invokeContractSpec = new contract.Spec(sacXdrData);
     } else {
       invokeContractSpec = contractClient?.spec;
