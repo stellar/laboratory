@@ -470,19 +470,16 @@ export const formComponentTemplateTxnOps = ({
       };
     case "contractDataLedgerKey":
       return {
-        render: (templ: TemplateRenderProps) => {
-          console.log("templ.value: ", templ.value);
-          return (
-            <MultiLedgerEntriesPicker
-              key={id}
-              id={id}
-              value={templ.value ? [templ.value] : [""]}
-              onChange={templ?.onChange}
-              activeTab="xdr"
-              readOnlyLedgerKey
-            />
-          );
-        },
+        render: (templ: TemplateRenderProps) => (
+          <MultiLedgerEntriesPicker
+            key={id}
+            id={id}
+            value={templ.value ? [templ.value] : [""]}
+            onChange={templ?.onChange}
+            activeTab="xdr"
+            readOnlyLedgerKey
+          />
+        ),
         validate: null,
       };
 
