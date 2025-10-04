@@ -15,6 +15,8 @@ import { formComponentTemplateEndpoints } from "@/components/formComponentTempla
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
+import { LedgerKeyPickerType } from "@/types/types";
+
 import { validate } from "@/validate";
 
 import {
@@ -31,15 +33,18 @@ type MultiPickerProps = {
   id: string;
   onChange: (val: string[]) => void;
   value: string[];
-  buttonLabel?: string;
+  allowMultiple?: boolean;
   limit?: number;
+  activeTab?: LedgerKeyPickerType;
+  readOnlyLedgerKey?: boolean;
 };
 
 type XdrLedgerKeyPicker = {
-  activeTabId: string;
+  activeTabId: LedgerKeyPickerType;
   value: string;
   onChange: (value: string) => void;
   deleteElement: ReactElement | null;
+  readOnlyLedgerKey?: boolean;
 };
 
 // https://github.com/stellar/stellar-xdr/blob/curr/Stellar-ledger-entries.x#L600
@@ -110,6 +115,7 @@ export const XdrLedgerKeyPicker = ({
   onChange,
   deleteElement,
   activeTabId,
+  readOnlyLedgerKey,
 }: XdrLedgerKeyPicker) => {
   const [selectedLedgerKey, setSelectedLedgerKey] =
     useState<LedgerKeyFieldsType | null>(null);
@@ -191,6 +197,7 @@ export const XdrLedgerKeyPicker = ({
     (xdrString: string) => {
       // if the xdr string is empty (by deleting the input or other)
       // reset the form
+
       if (!xdrString) {
         reset();
         setSelectedLedgerKey(null);
@@ -200,6 +207,8 @@ export const XdrLedgerKeyPicker = ({
       // check error
       const error = validate.getXdrError(xdrString, "LedgerKey");
       const decodedXdrJson = xdrDecodeLedgerKeyToJson(xdrString);
+
+      console.log("decodedXdrJson: ", decodedXdrJson);
 
       // check if the xdr string is valid
       if (error?.result === "error") {
@@ -281,12 +290,13 @@ export const XdrLedgerKeyPicker = ({
   // Render input fields based on xdr value
   // This also gets updated when an item is deleted
   useEffect(() => {
-    if (value) {
+    if (value && isXdrInit) {
+      console.log("if value: ", value);
       validateLedgerKeyXdr(value);
     }
     // Not validateLedgerKeyXdr()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value]);
+  }, [value, isXdrInit]);
 
   useEffect(() => {
     // this creates an empty template with default fields based on
@@ -465,6 +475,7 @@ export const XdrLedgerKeyPicker = ({
               fieldSize="md"
               label="Ledger Key Type"
               value={selectedLedgerKey?.id}
+              disabled={readOnlyLedgerKey}
               onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
                 reset();
 
@@ -526,10 +537,13 @@ export const MultiLedgerEntriesPicker = ({
   id,
   onChange,
   value = [""],
-  buttonLabel = "Add another ledger key",
+  allowMultiple,
   limit = 100,
+  activeTab = "ledgerKey",
+  readOnlyLedgerKey,
 }: MultiPickerProps) => {
-  const [activeTabId, setActiveTabId] = useState<string>("ledgerKey");
+  const [activeTabId, setActiveTabId] =
+    useState<LedgerKeyPickerType>(activeTab);
   if (!value || !value.length) {
     value = [];
   }
@@ -544,7 +558,7 @@ export const MultiLedgerEntriesPicker = ({
             { id: "xdr", label: "Use Ledger XDR" },
           ]}
           activeTabId={activeTabId}
-          onChange={(id) => setActiveTabId(id)}
+          onChange={(id) => setActiveTabId(id as LedgerKeyPickerType)}
         />
 
         {value.length
@@ -558,6 +572,7 @@ export const MultiLedgerEntriesPicker = ({
                   key={`${id}-${index}`}
                   activeTabId={activeTabId}
                   value={singleVal}
+                  readOnlyLedgerKey={readOnlyLedgerKey}
                   deleteElement={
                     index !== 0 ? (
                       <Button
@@ -578,19 +593,21 @@ export const MultiLedgerEntriesPicker = ({
           : null}
       </Box>
 
-      <div>
-        <Button
-          disabled={value.length === limit}
-          size="md"
-          variant="tertiary"
-          onClick={(e) => {
-            e.preventDefault();
-            onChange([...value, ""]);
-          }}
-        >
-          {buttonLabel}
-        </Button>
-      </div>
+      {allowMultiple ? (
+        <div>
+          <Button
+            disabled={value.length === limit}
+            size="md"
+            variant="tertiary"
+            onClick={(e) => {
+              e.preventDefault();
+              onChange([...value, ""]);
+            }}
+          >
+            Add another ledger key
+          </Button>
+        </div>
+      ) : null}
     </Box>
   );
 };
