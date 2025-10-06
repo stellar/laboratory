@@ -9,6 +9,9 @@ export const getTxData = (txDetails: RpcTxJsonResponse | null) => {
   const transaction = feeBumpTx
     ? feeBumpTx.tx?.inner_tx?.tx?.tx
     : txDetails?.envelopeJson?.tx?.tx;
+  const signatures = feeBumpTx
+    ? feeBumpTx.tx?.inner_tx?.tx?.signatures
+    : txDetails?.envelopeJson?.tx?.signatures;
   const operations = transaction?.operations;
 
   const isSorobanTx = () => {
@@ -27,10 +30,12 @@ export const getTxData = (txDetails: RpcTxJsonResponse | null) => {
     transaction,
     operations,
     isSorobanTx: isSorobanTx(),
+    signatures,
     feeBreakdown:
       txDetails && txDetails.status !== "NOT_FOUND"
         ? feeBreakdown(txDetails)
         : null,
+    txHash: txDetails?.txHash,
   };
 };
 
