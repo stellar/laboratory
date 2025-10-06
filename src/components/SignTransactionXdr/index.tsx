@@ -7,7 +7,7 @@ import {
   TransactionBuilder,
   xdr,
 } from "@stellar/stellar-sdk";
-import { Button, Select, Text } from "@stellar/design-system";
+import { Button, Icon, Select, Text } from "@stellar/design-system";
 
 import { MultiPicker } from "@/components/FormElements/MultiPicker";
 import { Box } from "@/components/layout/Box";
@@ -75,6 +75,8 @@ export const SignTransactionXdr = ({
     signature: 0,
   };
 
+  const initBipPath = "44'/148'/0'";
+
   const [selectedTab, setSelectedTab] = useState(defaultSignatureType);
 
   // Secret key
@@ -86,7 +88,7 @@ export const SignTransactionXdr = ({
   const [secretKeyErrorMsg, setSecretKeyErrorMsg] = useState("");
 
   // Hardware wallet
-  const [bipPath, setBipPath] = useState("44'/148'/0'");
+  const [bipPath, setBipPath] = useState(initBipPath);
   const [hardwareSignature, setHardwareSignature] = useState<
     xdr.DecoratedSignature[]
   >([]);
@@ -460,8 +462,14 @@ export const SignTransactionXdr = ({
     return (
       <Box gap="md" direction="row" align="center" wrap="wrap">
         {successMsg ? (
-          <Button size="md" variant="tertiary" onClick={onClear}>
-            Clear signature
+          <Button
+            size="md"
+            variant="error"
+            icon={<Icon.RefreshCw01 />}
+            iconPosition="right"
+            onClick={onClear}
+          >
+            Clear
           </Button>
         ) : (
           <Button
@@ -519,10 +527,15 @@ export const SignTransactionXdr = ({
         {sigSuccessMsg ? (
           <Button
             size="md"
-            variant="tertiary"
-            onClick={() => handleSign({ sigType: "signature", isClear: true })}
+            variant="error"
+            icon={<Icon.RefreshCw01 />}
+            iconPosition="right"
+            onClick={() => {
+              handleSign({ sigType: "signature", isClear: true });
+              setSigInputs([sigObj]);
+            }}
           >
-            {`Clear ${signatureText}`}
+            Clear
           </Button>
         ) : (
           <Button
@@ -684,6 +697,7 @@ export const SignTransactionXdr = ({
             }}
             onClear={async () => {
               await handleSign({ sigType: "secretKey", isClear: true });
+              setSecretKeyInputs([""]);
             }}
             isDisabled={!HAS_SECRET_KEYS || HAS_INVALID_SECRET_KEYS}
             successMsg={secretKeySuccessMsg}
@@ -753,6 +767,7 @@ export const SignTransactionXdr = ({
                     <Select
                       fieldSize="md"
                       id="hardware-wallet-select"
+                      value={selectedHardware}
                       onChange={(
                         event: React.ChangeEvent<HTMLSelectElement>,
                       ) => {
@@ -783,12 +798,15 @@ export const SignTransactionXdr = ({
                 sigType: "hardwareWallet",
                 isClear: false,
               });
+              setHardwareErrorMsg("");
             }}
             onClear={() => {
               handleSign({
                 sigType: "hardwareWallet",
                 isClear: true,
               });
+              setSelectedHardware("");
+              setBipPath(initBipPath);
             }}
             isLoading={isHardwareLoading}
             isDisabled={!selectedHardware || !bipPath}
