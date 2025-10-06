@@ -584,7 +584,7 @@ export default function DeployContract() {
                   <FilePicker
                     key={`filePicker-${resetFilePicker}`}
                     onChange={handleFileChange}
-                    acceptedExtension={[".wasm"]}
+                    acceptedExtension={["wasm"]}
                     isDisabled={
                       !sourceAccount ||
                       isSubmitUploadTxSuccess ||
