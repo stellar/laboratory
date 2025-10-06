@@ -43,7 +43,6 @@ export const FetchContractMethodPickerWithQuery = ({
   const queryClient = useQueryClient();
 
   const [contractIdError, setContractIdError] = useState<string>("");
-  const [contractMethods, setContractMethods] = useState<string[]>([]);
   const [fetchError, setFetchError] = useState<string | null>(null);
 
   const [fetchType, setFetchType] = useState<"sac" | "contract" | null>(null);
@@ -100,6 +99,17 @@ export const FetchContractMethodPickerWithQuery = ({
     return invokeContractSpec?.funcs();
   }, [invokeContractSpec]);
 
+  const contractMethods = useMemo(() => {
+    if ((isSacDataSuccess || isContractClientSuccess) && memoizedMethods) {
+      return (
+        memoizedMethods
+          ?.filter((func) => !func.name().toString().includes("__"))
+          ?.map((func) => func.name().toString()) || []
+      );
+    }
+    return [];
+  }, [isSacDataSuccess, isContractClientSuccess, memoizedMethods]);
+
   // Set the fetch type from the contract type
   useEffect(() => {
     if (contractType) {
@@ -119,39 +129,18 @@ export const FetchContractMethodPickerWithQuery = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchType]);
 
-  // Format contract methods and set the error
+  // Set the error
   useEffect(() => {
-    if ((isSacDataSuccess || isContractClientSuccess) && memoizedMethods) {
-      const methodNames = memoizedMethods
-        ?.filter((func) => !func.name().toString().includes("__"))
-        ?.map((func) => func.name().toString());
-
-      // Only update if the methods have actually changed
-      setContractMethods((prev) => {
-        if (JSON.stringify(prev) === JSON.stringify(methodNames)) {
-          return prev;
-        }
-        return methodNames;
-      });
-    }
-
     const errorMsg = contractClientError?.message || sacDataError?.message;
 
     if (errorMsg) {
       setFetchError(errorMsg);
     }
-  }, [
-    isSacDataSuccess,
-    isContractClientSuccess,
-    contractClientError,
-    sacDataError,
-    memoizedMethods,
-  ]);
+  }, [contractClientError, sacDataError]);
 
   const handleContractIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // reset the error and methods
+    // reset the error
     setFetchError("");
-    setContractMethods([]);
 
     // reset queries
     if (contractType) {
