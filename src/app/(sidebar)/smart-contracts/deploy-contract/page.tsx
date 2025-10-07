@@ -277,6 +277,28 @@ export default function DeployContract() {
     setSourceAccountError("");
   };
 
+  const autoCloseFloatNotification = useCallback(
+    ({
+      id,
+      title,
+      description,
+    }: {
+      id: string;
+      title: string;
+      description: string;
+    }) => {
+      addFloatNotification({
+        id,
+        title,
+        description,
+        type: "success",
+        // Close after 3 seconds
+        closeAt: Date.now() + 3000,
+      });
+    },
+    [addFloatNotification],
+  );
+
   useEffect(() => {
     if (selectedFile && (!isRpcWasmBinarySuccess || !isUploadTxSuccess)) {
       const fn = async () => {
@@ -322,36 +344,33 @@ export default function DeployContract() {
   // Show float notification on upload tx created success
   useEffect(() => {
     if (isUploadTxSuccess) {
-      addFloatNotification({
+      autoCloseFloatNotification({
         id: "upload-build-tx-success",
         title: "Upload transaction created",
         description:
           "Upload transaction was created successfully. You can sign it next.",
-        type: "success",
       });
     }
-  }, [addFloatNotification, isUploadTxSuccess]);
+  }, [autoCloseFloatNotification, isUploadTxSuccess]);
 
   // Show float notification when upload tx is signed
   useEffect(() => {
     if (signUploadSuccess) {
-      addFloatNotification({
+      autoCloseFloatNotification({
         id: "upload-sign-tx-success",
         title: "Upload transaction signed",
         description: `${signUploadSuccess}. You can submit it to the network next.`,
-        type: "success",
       });
     }
-  }, [addFloatNotification, signUploadSuccess]);
+  }, [autoCloseFloatNotification, signUploadSuccess]);
 
   // Show float notification when upload tx is submitted
   useEffect(() => {
     if (isSubmitUploadTxSuccess) {
-      addFloatNotification({
+      autoCloseFloatNotification({
         id: "upload-submit-tx-success",
         title: "Contract uploaded to the network",
         description: `${selectedFile?.name} file has been uploaded successfully.`,
-        type: "success",
       });
 
       // Collapse the upload block on success
@@ -363,7 +382,7 @@ export default function DeployContract() {
         delay: 300,
       });
     }
-  }, [addFloatNotification, isSubmitUploadTxSuccess, selectedFile?.name]);
+  }, [autoCloseFloatNotification, isSubmitUploadTxSuccess, selectedFile?.name]);
 
   // ===========================================================================
   // Deploy effects
@@ -372,39 +391,36 @@ export default function DeployContract() {
   // Show float notification on deploy tx created success
   useEffect(() => {
     if (isDeployTxSuccess) {
-      addFloatNotification({
+      autoCloseFloatNotification({
         id: "deploy-build-tx-success",
         title: "Deploy transaction created",
         description:
           "Deploy transaction was created successfully. You can sign it next.",
-        type: "success",
       });
     }
-  }, [addFloatNotification, isDeployTxSuccess]);
+  }, [autoCloseFloatNotification, isDeployTxSuccess]);
 
   // Show float notification when deploy tx is signed
   useEffect(() => {
     if (signDeploySuccess) {
-      addFloatNotification({
+      autoCloseFloatNotification({
         id: "deploy-sign-tx-success",
         title: "Deploy transaction signed",
         description: `${signDeploySuccess}. You can submit it to the network next.`,
-        type: "success",
       });
     }
-  }, [addFloatNotification, signDeploySuccess]);
+  }, [autoCloseFloatNotification, signDeploySuccess]);
 
   // Show float notification when deploy tx is submitted
   useEffect(() => {
     if (isSubmitDeployTxSuccess) {
-      addFloatNotification({
+      autoCloseFloatNotification({
         id: "deploy-submit-tx-success",
         title: "Contract deployed!",
         description: `${selectedFile?.name} file has been successfully deployed.`,
-        type: "success",
       });
     }
-  }, [addFloatNotification, isSubmitDeployTxSuccess, selectedFile?.name]);
+  }, [autoCloseFloatNotification, isSubmitDeployTxSuccess, selectedFile?.name]);
 
   useEffect(() => {
     // Collapse deploy block on success
