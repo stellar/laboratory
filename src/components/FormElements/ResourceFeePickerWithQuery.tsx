@@ -104,6 +104,8 @@ export const ResourceFeePickerWithQuery = ({
 
   // Create a sample transaction to simulate to get the min resource fee
   const buildTxToSimulate = () => {
+    setErrorMessage("");
+
     try {
       let contractDataXDR;
 
