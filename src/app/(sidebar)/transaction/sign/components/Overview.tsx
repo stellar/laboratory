@@ -22,6 +22,7 @@ import { delayedAction } from "@/helpers/delayedAction";
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import { arrayItem } from "@/helpers/arrayItem";
 import { scrollElIntoView } from "@/helpers/scrollElIntoView";
+import { isSorobanOperationType } from "@/helpers/sorobanUtils";
 import { useSignWithExtensionWallet } from "@/hooks/useSignWithExtensionWallet";
 
 import { validate } from "@/validate";
@@ -37,7 +38,6 @@ import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
 import { LabelHeading } from "@/components/LabelHeading";
 import { PageCard } from "@/components/layout/PageCard";
 import { MessageField } from "@/components/MessageField";
-import { isSorobanOperationType } from "@/helpers/sorobanUtils";
 
 const MIN_LENGTH_FOR_FULL_WIDTH_FIELD = 30;
 
