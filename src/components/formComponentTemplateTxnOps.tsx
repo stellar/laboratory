@@ -477,7 +477,7 @@ export const formComponentTemplateTxnOps = ({
             value={templ.value ? [templ.value] : [""]}
             onChange={templ?.onChange}
             activeTab="xdr"
-            readOnlyLedgerKey
+            readOnlyLedgerKey="contract_data"
           />
         ),
         validate: null,

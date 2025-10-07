@@ -192,6 +192,7 @@ export const getTxWithSorobanData = ({
   try {
     // For restore_footprint: use pre-built XDR from contractDataLedgerKey
     // For extend_footprint_ttl: build XDR from contract address, key, and durability
+    // @TODO extend_footprint_ttl should also use contractDataLedgerKey
     const contractDataXDR =
       operation.operation_type === "restore_footprint"
         ? xdr.LedgerKey.fromXDR(

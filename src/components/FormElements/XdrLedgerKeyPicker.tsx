@@ -36,7 +36,7 @@ type MultiPickerProps = {
   allowMultiple?: boolean;
   limit?: number;
   activeTab?: LedgerKeyPickerType;
-  readOnlyLedgerKey?: boolean;
+  readOnlyLedgerKey?: LedgerKeyType;
 };
 
 type XdrLedgerKeyPicker = {
@@ -44,7 +44,7 @@ type XdrLedgerKeyPicker = {
   value: string;
   onChange: (value: string) => void;
   deleteElement: ReactElement | null;
-  readOnlyLedgerKey?: boolean;
+  readOnlyLedgerKey?: LedgerKeyType;
 };
 
 // https://github.com/stellar/stellar-xdr/blob/curr/Stellar-ledger-entries.x#L600
@@ -109,6 +109,9 @@ const ledgerKeyFields: {
     fields: "key_hash",
   },
 ];
+
+export const getLedgerKeyFields = (val: string) =>
+  ledgerKeyFields.find((field) => field.id === val);
 
 export const XdrLedgerKeyPicker = ({
   value,
@@ -189,9 +192,6 @@ export const XdrLedgerKeyPicker = ({
     onChange("");
   }, [onChange]);
 
-  const getLedgerKeyFields = (val: string) =>
-    ledgerKeyFields.find((field) => field.id === val);
-
   // validate the xdr string on input change
   const validateLedgerKeyXdr = useCallback(
     (xdrString: string) => {
@@ -207,8 +207,6 @@ export const XdrLedgerKeyPicker = ({
       // check error
       const error = validate.getXdrError(xdrString, "LedgerKey");
       const decodedXdrJson = xdrDecodeLedgerKeyToJson(xdrString);
-
-      console.log("decodedXdrJson: ", decodedXdrJson);
 
       // check if the xdr string is valid
       if (error?.result === "error") {
@@ -287,7 +285,7 @@ export const XdrLedgerKeyPicker = ({
     [reset, xdrDecodeLedgerKeyToJson],
   );
 
-  // for `restore_footprint` on build operation,
+  // for `restore_footprint` operation,
   // display `contract_data` field by default on mount
   const contractDataLedgerKeyField = getLedgerKeyFields("contract_data");
 
@@ -484,7 +482,7 @@ export const XdrLedgerKeyPicker = ({
               fieldSize="md"
               label="Ledger Key Type"
               value={selectedLedgerKey?.id}
-              disabled={readOnlyLedgerKey}
+              disabled={Boolean(readOnlyLedgerKey)}
               onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
                 reset();
 
@@ -557,15 +555,25 @@ export const MultiLedgerEntriesPicker = ({
     value = [];
   }
 
+  const defaultLedgerKeyField =
+    readOnlyLedgerKey && getLedgerKeyFields(readOnlyLedgerKey);
+
+  const tabs = [
+    {
+      id: "ledgerKey",
+      label: defaultLedgerKeyField
+        ? `Use ${defaultLedgerKeyField?.label} Key`
+        : "Select Ledger Key",
+    },
+    { id: "xdr", label: "Use Ledger XDR" },
+  ];
+
   return (
     <Box gap="md">
       <Box gap="lg">
         <Tabs
           addlClassName="Tab--with-border"
-          tabs={[
-            { id: "ledgerKey", label: "Select Ledger Key" },
-            { id: "xdr", label: "Use Ledger XDR" },
-          ]}
+          tabs={tabs}
           activeTabId={activeTabId}
           onChange={(id) => setActiveTabId(id as LedgerKeyPickerType)}
         />

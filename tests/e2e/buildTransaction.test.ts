@@ -1452,7 +1452,7 @@ test.describe("Build Transaction Page", () => {
 
     // Soroban Restore Footprint
     test.describe("Soroban Restore Footprint", () => {
-      test("Happy path", async ({ page }) => {
+      test("[Use Xdr Ledger Key] Happy path", async ({ page }) => {
         const { operation_0 } = await selectOperationType({
           page,
           opType: "restore_footprint",
@@ -1476,43 +1476,213 @@ test.describe("Build Transaction Page", () => {
         // Add Operation button should be disabled
         await expect(page.getByText("Add Operation")).toBeDisabled();
 
+        // 'Use Ledger Xdr' Tab is the default tab
+        const useLedgerxdrTabButton = page.getByTestId("xdr");
+        await expect(useLedgerxdrTabButton).toHaveAttribute(
+          "data-is-active",
+          "true",
+        );
+
         // Fill in required fields
         await soroban_operation
-          .getByLabel("Contract ID")
-          .fill("CBAQUCFEHS5LTXZXLJN37A5Z3AWVJLZKLR5CDEIMISQX4CX7WBSM7VDJ");
-        await soroban_operation
-          .getByLabel("Key ScVal in XDR")
-          .fill("AAAAEAAAAAEAAAACAAAADwAAAAlBZG1pbnNWZWMAAAAAAAAFAAAAAAAAAAE=");
-        await soroban_operation
-          .getByLabel("Durability")
-          .selectOption({ value: "persistent" });
+          .getByLabel("Ledger Key XDR")
+          .fill(
+            "AAAABgAAAAHnjb/OrjcmZvHY8g977QXKQQPA2B2bkpvYx6AIOObEhQAAABAAAAABAAAAAgAAAA8AAAAHQmFsYW5jZQAAAAASAAAAATF8egab3Cz7/mLNPqSklWLk+ckv622td2TFqMEZm/qcAAAAAQ==",
+          );
+
+        const contractInput = soroban_operation.getByLabel("Contract");
+        await expect(contractInput).toBeDisabled();
+        await expect(contractInput).toHaveValue(
+          "CDTY3P6OVY3SMZXR3DZA667NAXFECA6A3AOZXEU33DD2ACBY43CIKDPT",
+        );
+
+        const scValInput = soroban_operation.getByLabel("Key (ScVal)");
+        const stringifiedScVal = JSON.stringify(
+          {
+            vec: [
+              {
+                symbol: "Balance",
+              },
+              {
+                address:
+                  "CAYXY6QGTPOCZ676MLGT5JFESVROJ6OJF7VW3LLXMTC2RQIZTP5JYNEL",
+              },
+            ],
+          },
+          null,
+          2,
+        );
+        await expect(scValInput).toBeDisabled();
+        await expect(scValInput).toHaveValue(stringifiedScVal);
+
+        const durabilityInput = page.locator("#persistent-durability-type");
+        await expect(durabilityInput).toBeChecked();
+
         await soroban_operation
           .getByLabel("Resource Fee (in stroops)")
-          .fill("46684");
+          .fill("20000");
 
         const prepareTxButton = page.getByText(
           "Prepare Soroban Transaction to Sign",
         );
 
         // Mock simulate transaction RPC call
+        // @TODO update this after investigating restore footprint
         await mockSimulateTx({
           page,
-          responseXdr:
-            "AAAAAAAAAAAAAAABAAAABgAAAAFBCgikPLq53zdaW7+DudgtVK8qXHohkQxEoX4K/7BkzwAAABAAAAABAAAAAgAAAA8AAAAJQWRtaW5zVmVjAAAAAAAABQAAAAAAAAABAAAAAQAAAAAAAADIAAAAyAAAAAAAAWy9",
+          responseXdr: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATiA=",
         });
 
         await expect(prepareTxButton).toBeEnabled();
         await prepareTxButton.click();
 
+        // @TODO update this after investigating restore footprint
         await testOpSuccessHashAndXdr({
           isSorobanOp: true,
           page,
-          hash: "5502bae1a7fd4555ad833e79942d02e8d863862eee95dd03dee15dc099bbcede",
-          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgACI30AD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAGgAAAAAAAAABAAAAAAAAAAAAAAABAAAABgAAAAFBCgikPLq53zdaW7+DudgtVK8qXHohkQxEoX4K/7BkzwAAABAAAAABAAAAAgAAAA8AAAAJQWRtaW5zVmVjAAAAAAAABQAAAAAAAAABAAAAAQAAAAAAAADIAAAAyAAAAAAAAWy9AAAAAA==",
+          hash: "aa5a5bd20265afdee0d01d36add7b9e67364516e69339313be2c174c8ee81313",
+          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgABu0EAD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAGgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATiAAAAAA",
         });
       });
 
-      test("Validation", async ({ page }) => {
+      test("[Use Contract Data Key] Happy path", async ({ page }) => {
+        const { operation_0 } = await selectOperationType({
+          page,
+          opType: "restore_footprint",
+        });
+        // we are going from classic operation to soroban operation
+        // so the classic operation should not be visible
+        await expect(operation_0).not.toBeVisible();
+
+        const soroban_operation = page.getByTestId(
+          "build-soroban-transaction-operation",
+        );
+
+        // Verify warning message about one operation limit
+        await expect(
+          page.getByText(
+            "Note that Soroban transactions can only contain one operation per transaction.",
+          ),
+        ).toBeVisible();
+
+        // Soroban Operation only allows one operation
+        // Add Operation button should be disabled
+        await expect(page.getByText("Add Operation")).toBeDisabled();
+
+        // 'Use Ledger Xdr' Tab is the default tab
+        const useLedgerxdrTabButton = page.getByTestId("xdr");
+        await expect(useLedgerxdrTabButton).toHaveAttribute(
+          "data-is-active",
+          "true",
+        );
+
+        // Mimic the most common behavior which is copy and paste XDR
+        await soroban_operation
+          .getByLabel("Ledger Key XDR")
+          .fill(
+            "AAAABgAAAAHnjb/OrjcmZvHY8g977QXKQQPA2B2bkpvYx6AIOObEhQAAABAAAAABAAAAAgAAAA8AAAAHQmFsYW5jZQAAAAASAAAAATF8egab3Cz7/mLNPqSklWLk+ckv622td2TFqMEZm/qcAAAAAQ==",
+          );
+
+        const useContractDataTabButton = page.getByTestId("ledgerKey");
+        await useContractDataTabButton.click();
+        await expect(useContractDataTabButton).toHaveAttribute(
+          "data-is-active",
+          "true",
+        );
+
+        const contractDataSelect =
+          soroban_operation.getByLabel("Ledger Key Type");
+
+        const selectedValue = await contractDataSelect.inputValue();
+        expect(selectedValue).toBe("contract_data");
+
+        await expect(contractDataSelect).toBeDisabled();
+
+        const contractInput = soroban_operation.getByLabel("Contract");
+        await expect(contractInput).toBeEditable();
+        await expect(contractInput).toHaveValue(
+          "CDTY3P6OVY3SMZXR3DZA667NAXFECA6A3AOZXEU33DD2ACBY43CIKDPT",
+        );
+
+        const scValInput = soroban_operation.getByLabel("Key (ScVal)");
+        const stringifiedScVal = JSON.stringify(
+          {
+            vec: [
+              {
+                symbol: "Balance",
+              },
+              {
+                address:
+                  "CAYXY6QGTPOCZ676MLGT5JFESVROJ6OJF7VW3LLXMTC2RQIZTP5JYNEL",
+              },
+            ],
+          },
+          null,
+          2,
+        );
+        await expect(scValInput).toBeEditable();
+        await expect(scValInput).toHaveValue(stringifiedScVal);
+
+        const ledgerKeyXdrInput =
+          soroban_operation.getByLabel("Ledger Key XDR");
+        await expect(ledgerKeyXdrInput).toBeDisabled();
+        await expect(ledgerKeyXdrInput).toHaveValue(
+          "AAAABgAAAAHnjb/OrjcmZvHY8g977QXKQQPA2B2bkpvYx6AIOObEhQAAABAAAAABAAAAAgAAAA8AAAAHQmFsYW5jZQAAAAASAAAAATF8egab3Cz7/mLNPqSklWLk+ckv622td2TFqMEZm/qcAAAAAQ==",
+        );
+
+        const updatedStringifiedScVal = JSON.stringify(
+          {
+            vec: [
+              {
+                symbol: "Test",
+              },
+              {
+                address:
+                  "CAYXY6QGTPOCZ676MLGT5JFESVROJ6OJF7VW3LLXMTC2RQIZTP5JYNEL",
+              },
+            ],
+          },
+          null,
+          2,
+        );
+
+        await scValInput.fill(updatedStringifiedScVal);
+
+        await expect(ledgerKeyXdrInput).toHaveValue(
+          "AAAABgAAAAHnjb/OrjcmZvHY8g977QXKQQPA2B2bkpvYx6AIOObEhQAAABAAAAABAAAAAgAAAA8AAAAEVGVzdAAAABIAAAABMXx6BpvcLPv+Ys0+pKSVYuT5yS/rba13ZMWowRmb+pwAAAAB",
+        );
+
+        const durabilityInput = page.locator("#persistent-durability-type");
+        await expect(durabilityInput).toBeChecked();
+
+        await soroban_operation
+          .getByLabel("Resource Fee (in stroops)")
+          .fill("20000");
+
+        const prepareTxButton = page.getByText(
+          "Prepare Soroban Transaction to Sign",
+        );
+
+        // Mock simulate transaction RPC call
+        // @TODO update this after investigating restore footprint
+        await mockSimulateTx({
+          page,
+          responseXdr: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATiA=",
+        });
+
+        await expect(prepareTxButton).toBeEnabled();
+        await prepareTxButton.click();
+
+        // @TODO update this after investigating restore footprint
+        await testOpSuccessHashAndXdr({
+          isSorobanOp: true,
+          page,
+          hash: "aa5a5bd20265afdee0d01d36add7b9e67364516e69339313be2c174c8ee81313",
+          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgABu0EAD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAGgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATiAAAAAA",
+        });
+      });
+
+      test("[Use Contract Data Key] Validation", async ({ page }) => {
         const { operation_0 } = await selectOperationType({
           page,
           opType: "restore_footprint",
@@ -1520,20 +1690,36 @@ test.describe("Build Transaction Page", () => {
 
         await expect(operation_0).not.toBeVisible();
 
-        await testInputError({
-          page,
-          isSorobanOp: true,
-          label: "Contract ID",
-          value: "aaa",
-          errorMessage:
-            "Invalid contract ID. Please enter a valid contract ID.",
-        });
+        const soroban_operation = page.getByTestId(
+          "build-soroban-transaction-operation",
+        );
+
+        // 'Use Ledger Xdr' Tab is the default tab
+        const useLedgerxdrTabButton = page.getByTestId("xdr");
+        await expect(useLedgerxdrTabButton).toHaveAttribute(
+          "data-is-active",
+          "true",
+        );
+
+        // Mimic the most common behavior which is copy and paste XDR
+        await soroban_operation
+          .getByLabel("Ledger Key XDR")
+          .fill(
+            "AAAABgAAAAHnjb/OrjcmZvHY8g977QXKQQPA2B2bkpvYx6AIOObEhQAAABAAAAABAAAAAgAAAA8AAAAHQmFsYW5jZQAAAAASAAAAATF8egab3Cz7/mLNPqSklWLk+ckv622td2TFqMEZm/qcAAAAAQ==",
+          );
+
+        const useContractDataTabButton = page.getByTestId("ledgerKey");
+        await useContractDataTabButton.click();
+        await expect(useContractDataTabButton).toHaveAttribute(
+          "data-is-active",
+          "true",
+        );
 
         await testInputError({
           page,
           isSorobanOp: true,
-          label: "Contract ID",
-          value: "CAQP53Z2GMZ6WVOKJWXMCVDL",
+          label: "Contract",
+          value: "aaa",
           errorMessage:
             "Invalid contract ID. Please enter a valid contract ID.",
         });
@@ -1546,6 +1732,32 @@ test.describe("Build Transaction Page", () => {
           errorMessage:
             "Expected a positive number with a period for the decimal point.",
         });
+
+        const scValInput = soroban_operation.getByLabel("Key (ScVal)");
+        const stringifiedScVal = JSON.stringify(
+          {
+            vec: [
+              {
+                symbol: "Balance",
+              },
+              {
+                address:
+                  "CAYXY6QGTPOCZ676MLGT5JFESVROJ6OJF7VW3LLXsssssMTC2RQIZTP5JYNEL",
+              },
+            ],
+          },
+          null,
+          2,
+        );
+
+        await scValInput.fill(stringifiedScVal);
+
+        const errorNote = soroban_operation
+          .locator(".FieldNote--error")
+          .filter({
+            hasText: "Unable to encode JSON as LedgerKey",
+          });
+        await expect(errorNote).toBeVisible();
       });
 
       test("Check rendering between classic and soroban", async ({ page }) => {
