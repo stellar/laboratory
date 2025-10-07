@@ -287,11 +287,14 @@ export const XdrLedgerKeyPicker = ({
     [reset, xdrDecodeLedgerKeyToJson],
   );
 
+  // for `restore_footprint` on build operation,
+  // display `contract_data` field by default on mount
+  const contractDataLedgerKeyField = getLedgerKeyFields("contract_data");
+
   // Render input fields based on xdr value
   // This also gets updated when an item is deleted
   useEffect(() => {
     if (value && isXdrInit) {
-      console.log("if value: ", value);
       validateLedgerKeyXdr(value);
     }
     // Not validateLedgerKeyXdr()
@@ -322,6 +325,12 @@ export const XdrLedgerKeyPicker = ({
       }
     }
   }, [ledgerKeyXdrToJsonString, selectedLedgerKey]);
+
+  useEffect(() => {
+    if (readOnlyLedgerKey && contractDataLedgerKeyField) {
+      setSelectedLedgerKey(contractDataLedgerKeyField);
+    }
+  }, [readOnlyLedgerKey, contractDataLedgerKeyField]);
 
   const renderLedgerKeyTemplate = ({
     isReadOnly = false,
