@@ -375,11 +375,7 @@ export const ContractInfo = ({
       </Card>
 
       <Card>
-        <Box
-          gap="lg"
-          data-testid="contract-info-contract-container"
-          addlClassName="ContractInfo__tabs"
-        >
+        <Box gap="lg" addlClassName="ContractInfo__tabs">
           <Box gap="sm" direction="row" align="center">
             <Text as="h2" size="md" weight="semi-bold">
               Contract

@@ -67,7 +67,7 @@ export const TabView = ({
       <div className="TabView__content">
         {tabContent.map((tc) => (
           <div key={tc.id} data-is-active={activeTabId === tc.id}>
-            {tc.content}
+            {activeTabId === tc.id ? tc.content : null}
           </div>
         ))}
       </div>

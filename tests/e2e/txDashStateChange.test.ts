@@ -153,6 +153,7 @@ const testTxStateChange = async ({
     .getByLabel("Transaction Hash", { exact: true })
     .fill(mockResponse.result.txHash);
   await expect(loadTxButton).toBeEnabled();
+
   await loadTxButton.click();
 
   // Check the correct data is displayed by checking the Transaction Info value
@@ -170,7 +171,6 @@ const testTxStateChange = async ({
   );
 
   // Check the tabs section
-  await expect(contractInfoContainer).toBeVisible();
   await expect(page.getByTestId("tx-state-change")).toHaveAttribute(
     "data-is-active",
     "true",

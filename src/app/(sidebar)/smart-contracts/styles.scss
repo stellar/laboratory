@@ -34,9 +34,68 @@
 
 // Deploy Contract
 .DeployContract {
-  &__step {
-    .Button {
-      width: fit-content;
+  &__container {
+    color: var(--sds-clr-gray-11);
+
+    &__header {
+      &[data-is-success="true"] {
+        color: var(--sds-clr-green-11);
+      }
+    }
+
+    .Card {
+      --Card-radius: #{pxToRem(12px)};
+    }
+
+    .Link {
+      word-break: break-all;
+
+      &__icon {
+        flex-shrink: 0;
+      }
+    }
+  }
+
+  &__darkHeading {
+    color: var(--sds-clr-gray-12);
+  }
+
+  &__detailsItem {
+    font-size: pxToRem(14px);
+    line-height: pxToRem(20px);
+
+    &__label {
+      color: var(--sds-clr-gray-11);
+      width: pxToRem(128px);
+    }
+
+    &__value {
+      color: var(--sds-clr-gray-12);
+    }
+  }
+}
+
+.ExpandArrow {
+  &__arrow {
+    svg {
+      display: block;
+      width: pxToRem(14px);
+      height: pxToRem(14px);
+      stroke: var(--sds-clr-gray-09);
+      transform: rotate(0deg);
+      transition: transform ease-in-out 0.2s;
+    }
+  }
+
+  &[data-is-active="true"] {
+    cursor: pointer;
+  }
+
+  &[data-is-expanded="true"] {
+    .ExpandArrow__arrow {
+      svg {
+        transform: rotate(90deg);
+      }
     }
   }
 }

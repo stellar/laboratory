@@ -12,7 +12,7 @@ export const useSignWithExtensionWallet = ({
 }: {
   isEnabled: boolean;
   isClear: boolean;
-  txXdr: string;
+  txXdr: string | null;
 }) => {
   const { network, walletKit, updateWalletKit } = useStore();
   const networkPassphrase = getWalletKitNetwork(network.id);
@@ -60,7 +60,7 @@ export const useSignWithExtensionWallet = ({
 
     setIsInProgress(true);
 
-    if (walletKit?.publicKey) {
+    if (walletKit?.publicKey && txXdr) {
       try {
         const result = await walletKitInstance.walletKit.signTransaction(
           txXdr,
@@ -87,7 +87,7 @@ export const useSignWithExtensionWallet = ({
             const addressResult =
               await walletKitInstance.walletKit?.getAddress();
 
-            if (addressResult?.address) {
+            if (addressResult?.address && txXdr) {
               updateWalletKit({ publicKey: addressResult.address });
 
               const result = await walletKitInstance.walletKit?.signTransaction(
