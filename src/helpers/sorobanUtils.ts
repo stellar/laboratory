@@ -190,11 +190,19 @@ export const getTxWithSorobanData = ({
   networkPassphrase: string;
 }): { xdr: string; error?: string } => {
   try {
-    const contractDataXDR = getContractDataXDR({
-      contractAddress: operation.params.contract,
-      dataKey: operation.params.key_xdr,
-      durability: operation.params.durability,
-    });
+    // For restore_footprint: use pre-built XDR from contractDataLedgerKey
+    // For extend_footprint_ttl: build XDR from contract address, key, and durability
+    const contractDataXDR =
+      operation.operation_type === "restore_footprint"
+        ? xdr.LedgerKey.fromXDR(
+            operation.params.contractDataLedgerKey,
+            "base64",
+          )
+        : getContractDataXDR({
+            contractAddress: operation.params.contract,
+            dataKey: operation.params.key_xdr,
+            durability: operation.params.durability,
+          });
 
     const sorobanData = getSorobanTxData({
       contractDataXDR,
