@@ -9,7 +9,7 @@ export const Tutorials = () => {
       title: "Create Account",
       description: "Creates and funds a new Stellar account.",
       youTubeLink:
-        "https://www.youtube.com/embed/Sou5wUsfsZw?si=dtQFORe7YBkmApHe",
+        "https://www.youtube.com/embed/7j5t69f40dM?si=4svimk6VRVqnGmCj",
     },
     {
       title: "Payment",

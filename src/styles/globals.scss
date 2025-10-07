@@ -55,7 +55,7 @@
 
   &__header {
     position: relative;
-    z-index: 10;
+    z-index: 20;
   }
 
   // ===========================================================================
@@ -74,6 +74,10 @@
 
   .success-message {
     color: var(--sds-clr-green-11) !important;
+  }
+
+  .error-message {
+    color: var(--sds-clr-red-11) !important;
   }
 
   // SDS logos have hard coded fill colors, adjusting that here for GitHub icon

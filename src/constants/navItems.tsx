@@ -93,7 +93,7 @@ const SMART_CONTRACTS_NAV = [
   },
   {
     route: Routes.SMART_CONTRACTS_DEPLOY_CONTRACT,
-    label: "Deploy Contract",
+    label: "Upload and Deploy Contract",
   },
 ];
 

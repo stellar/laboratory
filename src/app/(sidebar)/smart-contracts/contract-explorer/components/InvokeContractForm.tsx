@@ -178,7 +178,7 @@ export const InvokeContractForm = ({
             reject(
               new Error("Transaction signing timed out. Please try again."),
             );
-          }, 20000);
+          }, 180000);
         });
 
         const signPromise = walletKitInstance.walletKit.signTransaction(
@@ -429,7 +429,7 @@ export const InvokeContractForm = ({
       return prepareResult;
     } catch (error: any) {
       setInvokeError({
-        message: error?.message || "Failed to prepare transaction",
+        message: error?.result?.message || "Failed to prepare transaction",
         methodType: "Prepare",
       });
       return null;

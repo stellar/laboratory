@@ -8,10 +8,10 @@ const nextConfig = {
   webpack: (config) => {
     // Needed for stellar-hd-wallet
     config.externals.push("sodium-native");
-    
+
     // Disable webpack filesystem cache to avoid pnpm compatibility issues
     config.cache = false;
-    
+
     return config;
   },
   // Adding client side redirects to support old URLs in case they were saved or
@@ -252,40 +252,42 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+// Only apply Sentry configuration in production
+if (process.env.NODE_ENV === "production") {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { withSentryConfig } = require("@sentry/nextjs");
 
-// Sentry config
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const { withSentryConfig } = require("@sentry/nextjs");
+  module.exports = withSentryConfig(nextConfig, {
+    // For all available options, see:
+    // https://www.npmjs.com/package/@sentry/webpack-plugin#options
 
-module.exports = withSentryConfig(module.exports, {
-  // For all available options, see:
-  // https://www.npmjs.com/package/@sentry/webpack-plugin#options
+    org: "stellarorg",
+    project: "labv2",
 
-  org: "stellarorg",
-  project: "labv2",
+    // Only print logs for uploading source maps in CI
+    silent: !process.env.CI,
 
-  // Only print logs for uploading source maps in CI
-  silent: !process.env.CI,
+    // For all available options, see:
+    // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
 
-  // For all available options, see:
-  // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
+    // Upload a larger set of source maps for prettier stack traces (increases build time)
+    widenClientFileUpload: false,
 
-  // Upload a larger set of source maps for prettier stack traces (increases build time)
-  widenClientFileUpload: false,
+    // Uncomment to route browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers.
+    // This can increase your server load as well as your hosting bill.
+    // Note: Check that the configured route will not match with your Next.js middleware, otherwise reporting of client-
+    // side errors will fail.
+    // tunnelRoute: "/monitoring",
 
-  // Uncomment to route browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers.
-  // This can increase your server load as well as your hosting bill.
-  // Note: Check that the configured route will not match with your Next.js middleware, otherwise reporting of client-
-  // side errors will fail.
-  // tunnelRoute: "/monitoring",
+    // Automatically tree-shake Sentry logger statements to reduce bundle size
+    disableLogger: true,
 
-  // Automatically tree-shake Sentry logger statements to reduce bundle size
-  disableLogger: true,
-
-  // Enables automatic instrumentation of Vercel Cron Monitors. (Does not yet work with App Router route handlers.)
-  // See the following for more information:
-  // https://docs.sentry.io/product/crons/
-  // https://vercel.com/docs/cron-jobs
-  automaticVercelMonitors: false,
-});
+    // Enables automatic instrumentation of Vercel Cron Monitors. (Does not yet work with App Router route handlers.)
+    // See the following for more information:
+    // https://docs.sentry.io/product/crons/
+    // https://vercel.com/docs/cron-jobs
+    automaticVercelMonitors: false,
+  });
+} else {
+  module.exports = nextConfig;
+}

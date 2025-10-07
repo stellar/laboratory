@@ -8,9 +8,14 @@ import { Hydration } from "@/components/Hydration";
 import { LayoutHeader } from "@/components/layout/LayoutHeader";
 import { LayoutWithSidebar } from "@/components/layout/LayoutWithSidebar";
 import { LayoutSidebarContent } from "@/components/layout/LayoutSidebarContent";
+import { FloatNotification } from "@/components/FloatNotification";
+
 import { initTracking } from "@/metrics/tracking";
+import { useStore } from "@/store/useStore";
 
 export const LayoutMain = ({ children }: { children: ReactNode }) => {
+  const { floatNotifications, removeFloatNotification } = useStore();
+
   // Init tracking
   useEffect(() => {
     initTracking();
@@ -26,7 +31,13 @@ export const LayoutMain = ({ children }: { children: ReactNode }) => {
 
       <Hydration>
         <LayoutWithSidebar>
-          <LayoutSidebarContent>{children}</LayoutSidebarContent>
+          <LayoutSidebarContent>
+            <FloatNotification
+              notifications={floatNotifications}
+              onClose={removeFloatNotification}
+            />
+            {children}
+          </LayoutSidebarContent>
         </LayoutWithSidebar>
       </Hydration>
     </div>

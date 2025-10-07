@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Icon, Link, Loader } from "@stellar/design-system";
+import { Icon, Link, Loader, Text } from "@stellar/design-system";
 import { useRouter } from "next/navigation";
 
 import { Box } from "@/components/layout/Box";
@@ -9,6 +9,7 @@ import { PageCard } from "@/components/layout/PageCard";
 import { MessageField } from "@/components/MessageField";
 import { DataTable } from "@/components/DataTable";
 import { PoweredByStellarExpert } from "@/components/PoweredByStellarExpert";
+import { SwitchNetworkButtons } from "@/components/SwitchNetworkButtons";
 
 import { Routes } from "@/constants/routes";
 import { useSEContractsList } from "@/query/external/useSEContractsList";
@@ -50,6 +51,25 @@ export default function ContractExplorer() {
   };
 
   const renderContent = () => {
+    if (network.id === "futurenet") {
+      return (
+        <div>
+          <Text size="sm" as="p">
+            No contract list found on Futurenet. Please switch to Testnet or
+            Mainnet to view available contracts.
+          </Text>
+
+          <Box gap="md" direction="row">
+            <SwitchNetworkButtons
+              includedNetworks={["testnet", "mainnet"]}
+              buttonSize="md"
+              page="contract list"
+            />
+          </Box>
+        </div>
+      );
+    }
+
     if (!listData) {
       return (
         <Box gap="sm" align="center" justify="center">

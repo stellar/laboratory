@@ -7,4 +7,8 @@ module.exports = {
   extensionsToTreatAsEsm: [".ts"],
   modulePathIgnorePatterns: ["tests/e2e"],
   moduleDirectories: ["node_modules", "<rootDir>"],
+  moduleNameMapper: {
+    // Make sure @ imports work in Jest tests
+    "^@/(.*)$": "<rootDir>/src/$1",
+  },
 };

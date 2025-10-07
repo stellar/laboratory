@@ -4,9 +4,10 @@ import { SAVED_ACCOUNT_1 } from "./mock/localStorage";
 import {
   MOCK_CONTRACT_ID,
   MOCK_CONTRACT_INFO_CONTRACT_TYPE_FAILURE,
+  MOCK_CONTRACT_INFO_CONTRACT_TYPE_SUCCESS,
   MOCK_CONTRACT_INFO_RESPONSE_SUCCESS,
-  mockContractTypeFn,
 } from "./mock/smartContracts";
+import { mockRpcRequest } from "./mock/helpers";
 
 test.describe("Smart Contracts: Contract Info", () => {
   test.beforeEach(async ({ page }) => {
@@ -23,7 +24,11 @@ test.describe("Smart Contracts: Contract Info", () => {
 
   test("Response success", async ({ page }) => {
     // Mock the RPC call for getting the contract type
-    await mockContractTypeFn(page);
+    await mockRpcRequest({
+      page,
+      rpcMethod: "getLedgerEntries",
+      bodyJsonResponse: MOCK_CONTRACT_INFO_CONTRACT_TYPE_SUCCESS,
+    });
 
     // Mock the Stellar Expert API call
     await page.route(
@@ -87,19 +92,10 @@ test.describe("Smart Contracts: Contract Info", () => {
 
   test("Response error", async ({ page }) => {
     // Mock the RPC call for getting the contract type
-    await page.route("https://soroban-testnet.stellar.org", async (route) => {
-      const request = route.request();
-      const postData = request.postDataJSON();
-
-      if (postData?.method === "getLedgerEntries") {
-        await route.fulfill({
-          status: 200,
-          contentType: "application/json",
-          body: JSON.stringify(MOCK_CONTRACT_INFO_CONTRACT_TYPE_FAILURE),
-        });
-      } else {
-        await route.continue();
-      }
+    await mockRpcRequest({
+      page,
+      rpcMethod: "getLedgerEntries",
+      bodyJsonResponse: MOCK_CONTRACT_INFO_CONTRACT_TYPE_FAILURE,
     });
 
     // Mock the API call

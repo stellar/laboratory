@@ -45,6 +45,12 @@
     font-weight: var(--sds-fw-medium);
     color: var(--sds-clr-gray-11);
 
+    svg {
+      width: pxToRem(14px);
+      height: pxToRem(14px);
+      flex-shrink: 0;
+    }
+
     &--error {
       svg {
         stroke: var(--sds-clr-red-09);
@@ -52,8 +58,10 @@
     }
 
     &--success {
+      color: var(--sds-clr-gray-12);
+
       svg {
-        stroke: var(--sds-clr-green-09);
+        stroke: var(--sds-clr-gray-09);
       }
     }
   }
