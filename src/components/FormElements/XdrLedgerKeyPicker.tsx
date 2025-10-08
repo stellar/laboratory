@@ -15,6 +15,8 @@ import { formComponentTemplateEndpoints } from "@/components/formComponentTempla
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
+import { LedgerKeyPickerType } from "@/types/types";
+
 import { validate } from "@/validate";
 
 import {
@@ -31,15 +33,18 @@ type MultiPickerProps = {
   id: string;
   onChange: (val: string[]) => void;
   value: string[];
-  buttonLabel?: string;
+  allowMultiple?: boolean;
   limit?: number;
+  activeTab?: LedgerKeyPickerType;
+  readOnlyLedgerKey?: LedgerKeyType;
 };
 
 type XdrLedgerKeyPicker = {
-  activeTabId: string;
+  activeTabId: LedgerKeyPickerType;
   value: string;
   onChange: (value: string) => void;
   deleteElement: ReactElement | null;
+  readOnlyLedgerKey?: LedgerKeyType;
 };
 
 // https://github.com/stellar/stellar-xdr/blob/curr/Stellar-ledger-entries.x#L600
@@ -105,11 +110,15 @@ const ledgerKeyFields: {
   },
 ];
 
+export const getLedgerKeyFields = (val: string) =>
+  ledgerKeyFields.find((field) => field.id === val);
+
 export const XdrLedgerKeyPicker = ({
   value,
   onChange,
   deleteElement,
   activeTabId,
+  readOnlyLedgerKey,
 }: XdrLedgerKeyPicker) => {
   const [selectedLedgerKey, setSelectedLedgerKey] =
     useState<LedgerKeyFieldsType | null>(null);
@@ -183,14 +192,12 @@ export const XdrLedgerKeyPicker = ({
     onChange("");
   }, [onChange]);
 
-  const getLedgerKeyFields = (val: string) =>
-    ledgerKeyFields.find((field) => field.id === val);
-
   // validate the xdr string on input change
   const validateLedgerKeyXdr = useCallback(
     (xdrString: string) => {
       // if the xdr string is empty (by deleting the input or other)
       // reset the form
+
       if (!xdrString) {
         reset();
         setSelectedLedgerKey(null);
@@ -278,15 +285,19 @@ export const XdrLedgerKeyPicker = ({
     [reset, xdrDecodeLedgerKeyToJson],
   );
 
+  // for `restore_footprint` operation,
+  // display `contract_data` field by default on mount
+  const contractDataLedgerKeyField = getLedgerKeyFields("contract_data");
+
   // Render input fields based on xdr value
   // This also gets updated when an item is deleted
   useEffect(() => {
-    if (value) {
+    if (value && isXdrInit) {
       validateLedgerKeyXdr(value);
     }
     // Not validateLedgerKeyXdr()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value]);
+  }, [value, isXdrInit]);
 
   useEffect(() => {
     // this creates an empty template with default fields based on
@@ -312,6 +323,12 @@ export const XdrLedgerKeyPicker = ({
       }
     }
   }, [ledgerKeyXdrToJsonString, selectedLedgerKey]);
+
+  useEffect(() => {
+    if (readOnlyLedgerKey && contractDataLedgerKeyField) {
+      setSelectedLedgerKey(contractDataLedgerKeyField);
+    }
+  }, [readOnlyLedgerKey, contractDataLedgerKeyField]);
 
   const renderLedgerKeyTemplate = ({
     isReadOnly = false,
@@ -465,6 +482,7 @@ export const XdrLedgerKeyPicker = ({
               fieldSize="md"
               label="Ledger Key Type"
               value={selectedLedgerKey?.id}
+              disabled={Boolean(readOnlyLedgerKey)}
               onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
                 reset();
 
@@ -526,25 +544,38 @@ export const MultiLedgerEntriesPicker = ({
   id,
   onChange,
   value = [""],
-  buttonLabel = "Add another ledger key",
+  allowMultiple,
   limit = 100,
+  activeTab = "ledgerKey",
+  readOnlyLedgerKey,
 }: MultiPickerProps) => {
-  const [activeTabId, setActiveTabId] = useState<string>("ledgerKey");
+  const [activeTabId, setActiveTabId] =
+    useState<LedgerKeyPickerType>(activeTab);
   if (!value || !value.length) {
     value = [];
   }
+
+  const defaultLedgerKeyField =
+    readOnlyLedgerKey && getLedgerKeyFields(readOnlyLedgerKey);
+
+  const tabs = [
+    {
+      id: "ledgerKey",
+      label: defaultLedgerKeyField
+        ? `Use ${defaultLedgerKeyField.label} Key`
+        : "Select Ledger Key",
+    },
+    { id: "xdr", label: "Use Ledger XDR" },
+  ];
 
   return (
     <Box gap="md">
       <Box gap="lg">
         <Tabs
           addlClassName="Tab--with-border"
-          tabs={[
-            { id: "ledgerKey", label: "Select Ledger Key" },
-            { id: "xdr", label: "Use Ledger XDR" },
-          ]}
+          tabs={tabs}
           activeTabId={activeTabId}
-          onChange={(id) => setActiveTabId(id)}
+          onChange={(id) => setActiveTabId(id as LedgerKeyPickerType)}
         />
 
         {value.length
@@ -558,6 +589,7 @@ export const MultiLedgerEntriesPicker = ({
                   key={`${id}-${index}`}
                   activeTabId={activeTabId}
                   value={singleVal}
+                  readOnlyLedgerKey={readOnlyLedgerKey}
                   deleteElement={
                     index !== 0 ? (
                       <Button
@@ -578,19 +610,21 @@ export const MultiLedgerEntriesPicker = ({
           : null}
       </Box>
 
-      <div>
-        <Button
-          disabled={value.length === limit}
-          size="md"
-          variant="tertiary"
-          onClick={(e) => {
-            e.preventDefault();
-            onChange([...value, ""]);
-          }}
-        >
-          {buttonLabel}
-        </Button>
-      </div>
+      {allowMultiple ? (
+        <div>
+          <Button
+            disabled={value.length === limit}
+            size="md"
+            variant="tertiary"
+            onClick={(e) => {
+              e.preventDefault();
+              onChange([...value, ""]);
+            }}
+          >
+            Add another ledger key
+          </Button>
+        </div>
+      ) : null}
     </Box>
   );
 };

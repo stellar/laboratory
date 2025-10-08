@@ -1246,3 +1246,9 @@
     gap: pxToRem(4px);
   }
 }
+
+.FieldNote {
+  &--error {
+    word-break: break-word;
+  }
+}

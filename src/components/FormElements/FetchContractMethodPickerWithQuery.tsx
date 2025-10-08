@@ -89,7 +89,7 @@ export const FetchContractMethodPickerWithQuery = ({
 
   let invokeContractSpec;
 
-  if (sacXdrData && isSacType) {
+  if (sacXdrData && isSacType && sacXdrData[0] !== "") {
     invokeContractSpec = new contract.Spec(sacXdrData);
   } else {
     invokeContractSpec = contractClient?.spec;

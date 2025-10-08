@@ -17,6 +17,7 @@ import { RevokeSponsorshipPicker } from "@/components/FormElements/RevokeSponsor
 import { ClaimantsPicker } from "@/components/FormElements/ClaimantsPicker";
 import { ResourceFeePickerWithQuery } from "@/components/FormElements/ResourceFeePickerWithQuery";
 import { FetchContractMethodPickerWithQuery } from "@/components/FormElements/FetchContractMethodPickerWithQuery";
+import { MultiLedgerEntriesPicker } from "@/components/FormElements/XdrLedgerKeyPicker";
 
 import { removeLeadingZeroes } from "@/helpers/removeLeadingZeroes";
 
@@ -467,6 +468,21 @@ export const formComponentTemplateTxnOps = ({
         ),
         validate: validate.getPublicKeyError,
       };
+    case "contractDataLedgerKey":
+      return {
+        render: (templ: TemplateRenderProps) => (
+          <MultiLedgerEntriesPicker
+            key={id}
+            id={id}
+            value={templ.value ? [templ.value] : [""]}
+            onChange={templ?.onChange}
+            activeTab="xdr"
+            readOnlyLedgerKey="contract_data"
+          />
+        ),
+        validate: null,
+      };
+
     case "key_xdr":
       return {
         render: (templ: TemplateRenderSorobanProps) => (
