@@ -235,6 +235,25 @@ export const SorobanOperation = ({
                           })}
                         </div>
                       );
+                    case "contractDataLedgerKey":
+                      return (
+                        <div key={`soroban-param-${input}`}>
+                          {component.render({
+                            ...sorobanBaseProps,
+                            onChange: (value: string[]) => {
+                              // we passed in an array to re-use XdrLedgerKeyPicker
+                              // but there is only one element
+                              const contractDataValue = value[0];
+
+                              handleSorobanOperationParamChange({
+                                opParam: input,
+                                opValue: contractDataValue,
+                                opType: sorobanOperation.operation_type,
+                              });
+                            },
+                          })}
+                        </div>
+                      );
                     default:
                       return (
                         <div key={`soroban-param-${input}`}>
