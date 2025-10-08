@@ -21,6 +21,34 @@ export const LayoutMain = ({ children }: { children: ReactNode }) => {
     initTracking();
   }, []);
 
+  // Handle auto closing float notifications
+  useEffect(() => {
+    if (floatNotifications.length === 0) {
+      return;
+    }
+
+    // No need to check if there are no auto closing notifications
+    const hasAutoCloseNotifications = floatNotifications.some(
+      (notification) => notification.closeAt,
+    );
+
+    if (!hasAutoCloseNotifications) {
+      return;
+    }
+
+    // Check every 100ms for expired notifications
+    const interval = setInterval(() => {
+      const now = Date.now();
+      floatNotifications.forEach((notification) => {
+        if (notification.closeAt && now >= notification.closeAt) {
+          removeFloatNotification(notification.id);
+        }
+      });
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, [floatNotifications, removeFloatNotification]);
+
   return (
     <div className="LabLayout">
       <div className="LabLayout__header">
