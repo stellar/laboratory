@@ -107,31 +107,32 @@ export const ResourceFeePickerWithQuery = ({
     setErrorMessage("");
 
     try {
-      let contractDataXDR;
+      let contractDataXdr;
 
       // restore_footprint operation already has ContractDataXDR in base64
+      // @TODO update when extend_ttl gets updated
       if (
         operation.operation_type === "restore_footprint" &&
         operation.params.contractDataLedgerKey
       ) {
-        contractDataXDR = xdr.LedgerKey.fromXDR(
+        contractDataXdr = xdr.LedgerKey.fromXDR(
           operation.params.contractDataLedgerKey,
           "base64",
         );
       } else {
-        contractDataXDR = getContractDataXDR({
+        contractDataXdr = getContractDataXDR({
           contractAddress: operation.params.contract,
           dataKey: operation.params.key_xdr,
           durability: operation.params.durability,
         });
       }
 
-      if (!contractDataXDR) {
+      if (!contractDataXdr) {
         throw new Error("Failed to fetch contract data XDR");
       }
 
       const sorobanData = getSorobanTxData({
-        contractDataXDR,
+        contractDataXdr,
         operationType: operation.operation_type as SorobanOpType,
         fee: BASE_FEE, // simulate purpose only
       });

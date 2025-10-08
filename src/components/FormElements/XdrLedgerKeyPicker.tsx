@@ -562,7 +562,7 @@ export const MultiLedgerEntriesPicker = ({
     {
       id: "ledgerKey",
       label: defaultLedgerKeyField
-        ? `Use ${defaultLedgerKeyField?.label} Key`
+        ? `Use ${defaultLedgerKeyField.label} Key`
         : "Select Ledger Key",
     },
     { id: "xdr", label: "Use Ledger XDR" },
