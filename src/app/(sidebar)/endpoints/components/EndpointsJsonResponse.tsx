@@ -77,14 +77,20 @@ export const EndpointsJsonResponse = ({
       return {};
     }
 
-    const url = new URL(val);
+    try {
+      const decodedUrl = decodeURIComponent(val);
+      const url = new URL(decodedUrl);
 
-    const paths = sanitizeArray(url.pathname.split("/")).map((pn) => {
-      // Remove { "%7B" and } "%7D" characters
-      return pn.replaceAll("%7B", "").replaceAll("%7D", "");
-    });
+      const paths = sanitizeArray(url.pathname.split("/")).map((pn) => {
+        // Remove { "%7B" and } "%7D" characters
+        return pn.replaceAll("%7B", "").replaceAll("%7D", "");
+      });
 
-    return { paths, searchParams: url.searchParams };
+      return { paths, searchParams: url.searchParams };
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {
+      return {};
+    }
   };
 
   const handleLinkHref = (val: string) => {
