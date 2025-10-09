@@ -6,6 +6,7 @@ import { useStore } from "@/store/useStore";
 import { localStorageSavedKeypairs } from "@/helpers/localStorageSavedKeypairs";
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 
+import { InputSideElement } from "@/components/InputSideElement";
 import { FloaterDropdown } from "@/components/FloaterDropdown";
 
 import { SavedKeypair } from "@/types/types";
@@ -35,6 +36,32 @@ export const SignerSelector = ({ mode, onChange }: SignerSelectorProps) => {
 
   const savedLocalKeypairs = localStorageSavedKeypairs.get();
 
+  const hasKeypairs = savedLocalKeypairs.length > 0;
+  const hasWallet = !!walletKitPubKey;
+
+  // No sources available
+  if (!hasKeypairs && !hasWallet) {
+    return null;
+  }
+
+  // Secret mode requires saved keypairs
+  if (mode === "secret" && !hasKeypairs) {
+    return null;
+  }
+
+  // Public mode with only wallet - show direct button
+  if (mode === "public" && !hasKeypairs && hasWallet) {
+    return (
+      <InputSideElement
+        variant="button"
+        onClick={() => onChange(walletKitPubKey)}
+        placement="right"
+      >
+        Get connected wallet address
+      </InputSideElement>
+    );
+  }
+
   const getAvailableKeypairs = () => {
     const availableAddress = [];
 
@@ -57,10 +84,6 @@ export const SignerSelector = ({ mode, onChange }: SignerSelectorProps) => {
   };
 
   const signers = getAvailableKeypairs();
-
-  if (!signers.length) {
-    return null;
-  }
 
   return (
     <div className="SignerSelector">
