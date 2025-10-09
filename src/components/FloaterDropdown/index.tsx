@@ -7,6 +7,7 @@ type FloaterDropdownProps = {
   children: React.ReactElement;
   hasActiveInsideClick?: boolean;
   offset?: number;
+  addlClassName?: string;
 };
 
 export const FloaterDropdown = ({
@@ -14,6 +15,7 @@ export const FloaterDropdown = ({
   children,
   hasActiveInsideClick,
   offset,
+  addlClassName,
 }: FloaterDropdownProps) => {
   return (
     <Floater
@@ -23,7 +25,9 @@ export const FloaterDropdown = ({
       isContrast={false}
       offset={offset}
     >
-      <div className="FloaterDropdown__content">{children}</div>
+      <div className={`FloaterDropdown__content ${addlClassName || ""}`}>
+        {children}
+      </div>
     </Floater>
   );
 };

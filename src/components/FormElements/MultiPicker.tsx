@@ -25,6 +25,7 @@ type MultiPickerProps = {
   useAutoAdd?: boolean;
   note?: React.ReactNode;
   isPassword?: boolean;
+  rightElement?: (index: number) => React.ReactNode;
 };
 
 export const MultiPicker = ({
@@ -41,6 +42,7 @@ export const MultiPicker = ({
   useAutoAdd,
   note,
   isPassword,
+  rightElement,
 }: MultiPickerProps) => {
   if (!value || !value.length) {
     value = [];
@@ -74,18 +76,23 @@ export const MultiPicker = ({
                   placeholder={placeholder}
                   autocomplete={autocomplete}
                   rightElement={
-                    index !== 0 ? (
-                      <InputSideElement
-                        variant="button"
-                        onClick={() => {
-                          const val = arrayItem.delete(value, index);
-                          return onChange([...val]);
-                        }}
-                        placement="right"
-                        icon={<Icon.Trash01 />}
-                        addlClassName="MultiPicker__delete"
-                      />
-                    ) : null
+                    <>
+                      {typeof rightElement === "function"
+                        ? rightElement(index)
+                        : rightElement}
+                      {index !== 0 ? (
+                        <InputSideElement
+                          variant="button"
+                          onClick={() => {
+                            const val = arrayItem.delete(value, index);
+                            return onChange([...val]);
+                          }}
+                          placement="right"
+                          icon={<Icon.Trash01 />}
+                          addlClassName="MultiPicker__delete"
+                        />
+                      ) : null}
+                    </>
                   }
                   isPassword={isPassword}
                 />

@@ -1,0 +1,58 @@
+@use "../../styles/utils.scss" as *;
+
+.SignerSelector {
+  margin-right: calc(var(--Input-padding-horizontal) * -1);
+  border-left: 1px solid var(--Input-color-border);
+  border-top-right-radius: var(--Input-border-radius);
+  border-bottom-right-radius: var(--Input-border-radius);
+
+  .Button {
+    border: none;
+  }
+
+  &__dropdown {
+    display: grid;
+    padding: 0;
+  }
+
+  &__options {
+    padding: pxToRem(4);
+    border-radius: pxToRem(4);
+
+    &__item {
+      @media (hover: hover) {
+        &:hover {
+          background-color: var(--sds-clr-gray-04);
+        }
+      }
+
+      &__label {
+        font-size: pxToRem(12px);
+        line-height: pxToRem(18px);
+        color: var(--sds-clr-gray-11);
+        padding: pxToRem(3) pxToRem(8);
+      }
+
+      &__value {
+        color: var(--sds-clr-gray-12);
+        font-size: pxToRem(14px);
+        line-height: pxToRem(20px);
+        font-weight: var(--sds-fw-medium);
+        display: flex;
+        align-items: center;
+
+        gap: pxToRem(8px);
+
+        padding: pxToRem(6) pxToRem(8);
+
+        @media (hover: hover) {
+          cursor: pointer;
+
+          &:hover {
+            background-color: var(--sds-clr-gray-04);
+          }
+        }
+      }
+    }
+  }
+}
