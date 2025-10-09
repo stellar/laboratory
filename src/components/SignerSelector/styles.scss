@@ -10,22 +10,22 @@
     border: none;
   }
 
-  &__dropdown {
-    display: grid;
-    padding: 0;
+  .Floater {
+    &.trigger--active {
+      .Floater__content {
+        transform: translateX(1px) !important;
+      }
+    }
+    .FloaterDropdown__content {
+      display: grid;
+      gap: 0;
+    }
   }
 
   &__options {
-    padding: pxToRem(4);
     border-radius: pxToRem(4);
 
     &__item {
-      @media (hover: hover) {
-        &:hover {
-          background-color: var(--sds-clr-gray-04);
-        }
-      }
-
       &__label {
         font-size: pxToRem(12px);
         line-height: pxToRem(18px);

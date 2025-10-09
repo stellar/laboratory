@@ -68,7 +68,7 @@ export const SignerSelector = ({ mode, onChange }: SignerSelectorProps) => {
     if (walletKitPubKey && mode === "public") {
       const saved = {
         label: "Connected Wallet",
-        items: walletKitPubKey,
+        items: [{ publicKey: walletKitPubKey }],
       };
       availableAddress.push(saved);
     }
@@ -88,7 +88,6 @@ export const SignerSelector = ({ mode, onChange }: SignerSelectorProps) => {
   return (
     <div className="SignerSelector">
       <FloaterDropdown
-        addlClassName="SignerSelector__dropdown"
         hasActiveInsideClick
         triggerEl={
           <Button size="md" variant="tertiary" icon={<Icon.ChevronDown />}>
@@ -121,16 +120,10 @@ const OptionItems = ({
   mode,
 }: {
   label: string;
-  items: string | SavedKeypair[];
+  items: Array<{ publicKey: string }> | SavedKeypair[];
   onChange: (val: string) => void;
   mode: SignerMode;
 }) => {
-  const itemsArray: Array<SavedKeypair | { publicKey: string }> = Array.isArray(
-    items,
-  )
-    ? items
-    : [{ publicKey: items }];
-
   const renderKey = (item: SavedKeypair): { label: string; value: string } => ({
     label: shortenStellarAddress(item.publicKey),
     value: mode === "secret" ? item.secretKey : item.publicKey,
@@ -139,7 +132,7 @@ const OptionItems = ({
   return (
     <div className="SignerSelector__options">
       <div className="SignerSelector__options__item__label">{label}</div>
-      {itemsArray.map((item, index) => {
+      {items.map((item, index) => {
         const isSavedKeypair = "secretKey" in item;
 
         return (

@@ -77,9 +77,7 @@ export const MultiPicker = ({
                   autocomplete={autocomplete}
                   rightElement={
                     <>
-                      {typeof rightElement === "function"
-                        ? rightElement(index)
-                        : rightElement}
+                      {rightElement ? rightElement(index) : null}
                       {index !== 0 ? (
                         <InputSideElement
                           variant="button"
