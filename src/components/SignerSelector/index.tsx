@@ -16,7 +16,7 @@ import "./styles.scss";
 type SignerMode = "public" | "secret";
 
 export type SignerSelectorProps = {
-  mode: "public" | "secret";
+  mode: SignerMode;
   onChange: (val: string) => void;
 };
 
@@ -49,7 +49,7 @@ export const SignerSelector = ({ mode, onChange }: SignerSelectorProps) => {
     return null;
   }
 
-  // Public mode with only wallet - show direct button
+  // Public Signer mode with only wallet - show direct button
   if (mode === "public" && !hasKeypairs && hasWallet) {
     return (
       <InputSideElement
