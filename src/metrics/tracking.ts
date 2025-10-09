@@ -5,6 +5,12 @@ import { AnyObject } from "@/types/types";
 const AMPLITUDE_API_KEY_DEV = "21f9b86405da037f7b9d1f00a235a4fd";
 const AMPLITUDE_API_KEY_PROD = "660a7cac35ad6ee81adc20f74cc74bba";
 
+// Allowlist of domains that can use the production API key
+const ALLOWED_PROD_DOMAINS = ["lab.stellar.org"];
+
+// Allowlist of domains that can use the development API key
+const ALLOWED_DEV_DOMAINS = ["previews.kube001.services.stellar-ops.com"];
+
 declare global {
   interface Window {
     __STELLAR_TRACKING_ENABLED__?: boolean;
@@ -20,9 +26,9 @@ export const initTracking = () => {
 
   const { hostname } = window.location;
 
-  if (hostname === "lab.stellar.org") {
+  if (ALLOWED_PROD_DOMAINS.includes(hostname)) {
     apiKey = AMPLITUDE_API_KEY_PROD;
-  } else if (hostname.includes("previews.kube001.services.stellar-ops.com")) {
+  } else if (ALLOWED_DEV_DOMAINS.includes(hostname)) {
     apiKey = AMPLITUDE_API_KEY_DEV;
   }
 

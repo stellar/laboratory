@@ -80,8 +80,8 @@ export const EndpointsJsonResponse = ({
     const url = new URL(val);
 
     const paths = sanitizeArray(url.pathname.split("/")).map((pn) => {
-      // Remove { "%7B" character
-      return pn.replace("%7B", "");
+      // Remove { "%7B" and } "%7D" characters
+      return pn.replaceAll("%7B", "").replaceAll("%7D", "");
     });
 
     return { paths, searchParams: url.searchParams };
