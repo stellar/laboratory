@@ -125,14 +125,14 @@ const OptionItems = ({
   mode: SignerMode;
 }) => {
   const renderKey = (item: SavedKeypair): { label: string; value: string } => ({
-    label: shortenStellarAddress(item.publicKey),
+    label: `[${shortenStellarAddress(item.publicKey)}] ${item.name}`,
     value: mode === "secret" ? item.secretKey : item.publicKey,
   });
 
   return (
     <div className="SignerSelector__options">
       <div className="SignerSelector__options__item__label">{label}</div>
-      {items.map((item, index) => {
+      {items.map((item) => {
         const isSavedKeypair = "secretKey" in item;
 
         return (
@@ -147,7 +147,7 @@ const OptionItems = ({
             }}
           >
             {isSavedKeypair
-              ? `[Test Keypair ${index + 1}] ${renderKey(item as SavedKeypair).label}`
+              ? `${renderKey(item as SavedKeypair).label}`
               : shortenStellarAddress(item.publicKey)}
           </div>
         );
