@@ -130,7 +130,10 @@ const OptionItems = ({
   });
 
   return (
-    <div className="SignerSelector__options">
+    <div
+      className="SignerSelector__options"
+      data-testid="signer-selector-options"
+    >
       <div className="SignerSelector__options__item__label">{label}</div>
       {items.map((item) => {
         const isSavedKeypair = "secretKey" in item;
