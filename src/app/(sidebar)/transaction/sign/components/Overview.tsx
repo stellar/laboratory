@@ -38,6 +38,7 @@ import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
 import { LabelHeading } from "@/components/LabelHeading";
 import { PageCard } from "@/components/layout/PageCard";
 import { MessageField } from "@/components/MessageField";
+import { SignerSelector } from "@/components/SignerSelector";
 
 const MIN_LENGTH_FOR_FULL_WIDTH_FIELD = 30;
 
@@ -731,12 +732,27 @@ export const Overview = () => {
                   if (secretKeySuccessMsg || secretKeyErrorMsg) {
                     handleSign({ sigType: "secretKey", isClear: true });
                   }
-
                   setSecretKeyInputs(val);
                 }}
                 validate={validate.getSecretKeyError}
                 placeholder="Secret key (starting with S) or hash preimage (in hex)"
                 autocomplete="off"
+                rightElement={(index: number) => (
+                  <SignerSelector
+                    mode="secret"
+                    onChange={(val) => {
+                      const updatedInputs = arrayItem.update(
+                        secretKeyInputs,
+                        index,
+                        val,
+                      );
+                      if (secretKeySuccessMsg || secretKeyErrorMsg) {
+                        handleSign({ sigType: "secretKey", isClear: true });
+                      }
+                      setSecretKeyInputs(updatedInputs);
+                    }}
+                  />
+                )}
                 isPassword
               />
               <SignTxButton

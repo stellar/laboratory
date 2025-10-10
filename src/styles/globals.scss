@@ -1252,3 +1252,7 @@
     word-break: break-word;
   }
 }
+
+.MultiPicker__delete {
+  margin-left: calc(var(--Input-padding-horizontal));
+}
