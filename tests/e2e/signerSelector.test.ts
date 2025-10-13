@@ -30,8 +30,8 @@ async function validateSignerSelectorOptions(page: Page, container?: any) {
   );
 
   await expect(labels).toHaveText("Saved Keypairs");
-  await expect(values.nth(0)).toHaveText("[GA46…GMXG] Account 1");
-  await expect(values.nth(1)).toHaveText("[GC5T…Z6LD] Account 2");
+  await expect(values.nth(0)).toHaveText("[Account 1]GA46…GMXG");
+  await expect(values.nth(1)).toHaveText("[Account 2]GC5T…Z6LD");
 
   return { values };
 }
