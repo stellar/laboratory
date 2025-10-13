@@ -125,11 +125,17 @@ test.describe("Signer Selector", () => {
         SAVED_ACCOUNT_2_SECRET,
       );
 
+      // Wait for the dropdown to close before clicking sign button
+      await expect(
+        pageContext.getByTestId("signer-selector-options").nth(1),
+      ).toBeHidden();
+
       // Sign transaction
       await pageContext
         .getByTestId("sign-tx-secretkeys")
         .getByText("Sign transaction")
         .click();
+
       await expect(
         pageContext.getByText("Successfully added 2 signatures"),
       ).toBeVisible();
