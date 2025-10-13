@@ -23,6 +23,7 @@ import { TransactionInfo } from "./components/TransactionInfo";
 import { StateChange } from "./components/StateChange";
 import { FeeBreakdown } from "./components/FeeBreakdown";
 import { Signatures } from "./components/Signatures";
+import { Events } from "./components/Events";
 
 import "./styles.scss";
 
@@ -240,8 +241,8 @@ export default function TransactionDashboard() {
               tab3={{
                 id: "tx-events",
                 label: "Events",
-                content: <ComingSoonText />,
-                isDisabled: true,
+                content: <Events txEvents={txDetails?.events} />,
+                isDisabled: !isDataLoaded,
               }}
               tab4={{
                 id: "tx-state-change",

@@ -543,9 +543,31 @@ export type ContractSections = Record<ContractSectionName, ContractData>;
 // =============================================================================
 // Smart contract transaction dashboard
 // =============================================================================
+export type RpcTxJsonResponseTxEvent = {
+  body: {
+    [version: string]: {
+      data: any;
+      topics: [{ [key: string]: any }];
+    };
+  };
+  contract_id: string;
+  type_: string;
+  ext: string;
+};
+
+export type RpcTxJsonResponseContractEventsJson = [RpcTxJsonResponseTxEvent[]];
+export type RpcTxJsonResponseTransactionEventsJson = {
+  event: RpcTxJsonResponseTxEvent;
+  stage: string;
+}[];
+
 export type RpcTxJsonResponse = {
   applicationOrder: number;
   createdAt: string;
+  events: {
+    contractEventsJson: RpcTxJsonResponseContractEventsJson;
+    transactionEventsJson: RpcTxJsonResponseTransactionEventsJson;
+  };
   feeBump: boolean;
   ledger: number;
   latestLedger: number;
