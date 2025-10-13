@@ -18,6 +18,7 @@ type SignerMode = "public" | "secret";
 export type SignerSelectorProps = {
   mode: SignerMode;
   onChange: (val: string) => void;
+  containerWidth?: number;
 };
 
 const getTitle = ({ mode }: { mode: SignerMode }) => {
@@ -29,7 +30,11 @@ const getTitle = ({ mode }: { mode: SignerMode }) => {
   }
 };
 
-export const SignerSelector = ({ mode, onChange }: SignerSelectorProps) => {
+export const SignerSelector = ({
+  mode,
+  onChange,
+  containerWidth,
+}: SignerSelectorProps) => {
   const { walletKit } = useStore();
   const { publicKey: walletKitPubKey } = walletKit || {};
   const title = getTitle({ mode });
@@ -89,6 +94,7 @@ export const SignerSelector = ({ mode, onChange }: SignerSelectorProps) => {
     <div className="SignerSelector">
       <FloaterDropdown
         hasActiveInsideClick
+        width={containerWidth}
         triggerEl={
           <Button size="md" variant="tertiary" icon={<Icon.ChevronDown />}>
             {title}
@@ -98,7 +104,7 @@ export const SignerSelector = ({ mode, onChange }: SignerSelectorProps) => {
         <>
           {signers.map((address, index) => {
             return (
-              <OptionItems
+              <OptionItem
                 label={address.label}
                 items={address.items}
                 onChange={onChange}
@@ -113,7 +119,7 @@ export const SignerSelector = ({ mode, onChange }: SignerSelectorProps) => {
   );
 };
 
-const OptionItems = ({
+const OptionItem = ({
   label,
   items,
   onChange,
@@ -124,10 +130,16 @@ const OptionItems = ({
   onChange: (val: string) => void;
   mode: SignerMode;
 }) => {
-  const renderKey = (item: SavedKeypair): { label: string; value: string } => ({
-    label: `[${shortenStellarAddress(item.publicKey)}] ${item.name}`,
-    value: mode === "secret" ? item.secretKey : item.publicKey,
-  });
+  const renderKey = (item: SavedKeypair) => {
+    return (
+      <div className="SignerSelector__options__item__value__keypair">
+        <div className="keypair_name">[{item.name}]</div>
+        <div className="keypair_publickey">
+          {shortenStellarAddress(item.publicKey)}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div
@@ -144,13 +156,15 @@ const OptionItems = ({
             key={item.publicKey}
             onClick={() => {
               const value = isSavedKeypair
-                ? renderKey(item as SavedKeypair).value
+                ? mode === "secret"
+                  ? item.secretKey
+                  : item.publicKey
                 : item.publicKey;
               onChange(value);
             }}
           >
             {isSavedKeypair
-              ? `${renderKey(item as SavedKeypair).label}`
+              ? renderKey(item as SavedKeypair)
               : shortenStellarAddress(item.publicKey)}
           </div>
         );

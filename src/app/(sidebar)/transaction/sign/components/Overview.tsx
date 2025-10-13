@@ -23,7 +23,9 @@ import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import { arrayItem } from "@/helpers/arrayItem";
 import { scrollElIntoView } from "@/helpers/scrollElIntoView";
 import { isSorobanOperationType } from "@/helpers/sorobanUtils";
+
 import { useSignWithExtensionWallet } from "@/hooks/useSignWithExtensionWallet";
+import { useElementSize } from "@/hooks/useElementSize";
 
 import { validate } from "@/validate";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
@@ -64,6 +66,8 @@ export const Overview = () => {
   const successResponseEl = useRef<HTMLDivElement | null>(null);
 
   const [signError, setSignError] = useState("");
+
+  const { width: inputWidth, ref: inputRef } = useElementSize();
 
   // Secret key
   const [secretKeyInputs, setSecretKeyInputs] = useState<string[]>([""]);
@@ -725,6 +729,7 @@ export const Overview = () => {
               data-testid="sign-tx-secretkeys"
             >
               <MultiPicker
+                ref={inputRef}
                 id="signer"
                 label="Sign with secret key"
                 value={secretKeyInputs}
@@ -739,6 +744,7 @@ export const Overview = () => {
                 autocomplete="off"
                 rightElement={(index: number) => (
                   <SignerSelector
+                    containerWidth={inputWidth}
                     mode="secret"
                     onChange={(val) => {
                       const updatedInputs = arrayItem.update(

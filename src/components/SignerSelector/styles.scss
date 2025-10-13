@@ -38,7 +38,7 @@
         font-size: pxToRem(14px);
         line-height: pxToRem(20px);
         font-weight: var(--sds-fw-medium);
-        display: flex;
+        display: grid;
         align-items: center;
 
         gap: pxToRem(8px);
@@ -52,7 +52,19 @@
             background-color: var(--sds-clr-gray-04);
           }
         }
+
+        &__keypair {
+          display: grid;
+          grid-template-columns: auto 120px;
+        }
       }
     }
+  }
+  .keypair_name {
+    color: var(--sds-clr-gray-11);
+  }
+
+  .keypair_publickey {
+    text-align: right;
   }
 }

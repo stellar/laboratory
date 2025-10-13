@@ -7,6 +7,7 @@ type FloaterDropdownProps = {
   children: React.ReactElement;
   hasActiveInsideClick?: boolean;
   offset?: number;
+  width?: number;
 };
 
 export const FloaterDropdown = ({
@@ -14,16 +15,23 @@ export const FloaterDropdown = ({
   children,
   hasActiveInsideClick,
   offset,
+  width,
 }: FloaterDropdownProps) => {
+  const customStyle = {
+    ...(width ? { "--Floater-dropdown-width": `${width}px` } : {}),
+  } as React.CSSProperties;
+
   return (
-    <Floater
-      triggerEl={triggerEl}
-      placement="bottom-end"
-      hasActiveInsideClick={hasActiveInsideClick}
-      isContrast={false}
-      offset={offset}
-    >
-      <div className="FloaterDropdown__content">{children}</div>
-    </Floater>
+    <div style={customStyle}>
+      <Floater
+        triggerEl={triggerEl}
+        placement="bottom-end"
+        hasActiveInsideClick={hasActiveInsideClick}
+        isContrast={false}
+        offset={offset}
+      >
+        <div className="FloaterDropdown__content">{children}</div>
+      </Floater>
+    </div>
   );
 };
