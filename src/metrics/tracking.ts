@@ -20,9 +20,9 @@ export const initTracking = () => {
 
   const { hostname } = window.location;
 
-  if (hostname === "lab.stellar.org") {
+  if (["lab.stellar.org"].includes(hostname)) {
     apiKey = AMPLITUDE_API_KEY_PROD;
-  } else if (hostname.includes("previews.kube001.services.stellar-ops.com")) {
+  } else if (hostname.endsWith(".previews.kube001.services.stellar-ops.com")) {
     apiKey = AMPLITUDE_API_KEY_DEV;
   }
 

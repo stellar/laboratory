@@ -308,6 +308,8 @@ export type FiltersObject = {
 
 export type XdrType = "TransactionEnvelope" | "LedgerKey" | "ScVal";
 
+export type LedgerKeyPickerType = "ledgerKey" | "xdr";
+
 export type LedgerKeyType =
   | "account"
   | "trustline"

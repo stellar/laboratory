@@ -409,8 +409,8 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
       "Builds an operation to restore the archived ledger entries specified by the ledger keys.",
     docsUrl:
       "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#restore-footprint",
-    params: ["contract", "key_xdr", "durability", "resource_fee"],
-    requiredParams: ["contract", "key_xdr", "durability", "resource_fee"],
+    params: ["contractDataLedgerKey", "resource_fee"],
+    requiredParams: ["contractDataLedgerKey", "resource_fee"],
     defaultParams: {
       durability: "persistent",
     },
