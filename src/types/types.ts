@@ -564,7 +564,7 @@ export type RpcTxJsonResponseTransactionEventsJson = {
 export type RpcTxJsonResponse = {
   applicationOrder: number;
   createdAt: string;
-  events: {
+  events?: {
     contractEventsJson: RpcTxJsonResponseContractEventsJson;
     transactionEventsJson: RpcTxJsonResponseTransactionEventsJson;
   };
