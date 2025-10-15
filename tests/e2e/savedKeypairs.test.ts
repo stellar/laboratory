@@ -118,7 +118,10 @@ test.describe("Saved Keypairs Page", () => {
 
   test.describe("Manually add keypair", () => {
     test("Secret key", async ({ page }) => {
-      const addButton = page.getByRole("button", { name: "Add manually" });
+      const addButton = page.getByRole("button", {
+        name: "Add keypair manually",
+        exact: true,
+      });
       const emptyMessage = page.getByText(
         "There are no saved keypairs on Testnet network.",
       );
@@ -131,6 +134,7 @@ test.describe("Saved Keypairs Page", () => {
 
       const addKeypairButton = page.getByRole("button", {
         name: "Add keypair",
+        exact: true,
       });
       const secretKeyInput = page.getByLabel("Secret key or recovery phrase");
       const errorMessage = page.getByText(
@@ -170,13 +174,17 @@ test.describe("Saved Keypairs Page", () => {
     });
 
     test("Recovery phrase", async ({ page }) => {
-      const addButton = page.getByRole("button", { name: "Add manually" });
+      const addButton = page.getByRole("button", {
+        name: "Add keypair manually",
+        exact: true,
+      });
 
       await expect(addButton).toBeVisible();
       await addButton.click();
 
       const addKeypairButton = page.getByRole("button", {
         name: "Add keypair",
+        exact: true,
       });
       const secretKeyInput = page.getByLabel("Secret key or recovery phrase");
       const errorMessage = page.getByText(
