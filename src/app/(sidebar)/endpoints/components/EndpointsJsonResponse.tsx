@@ -3,6 +3,7 @@ import { CustomKeyValueLinkMap, PrettyJson } from "@/components/PrettyJson";
 import { SdsLink } from "@/components/SdsLink";
 import { sanitizeArray } from "@/helpers/sanitizeArray";
 import { buildEndpointHref } from "@/helpers/buildEndpointHref";
+import { validate } from "@/validate";
 
 import { AnyObject } from "@/types/types";
 
@@ -69,6 +70,16 @@ export const EndpointsJsonResponse = ({
 
     return buildEndpointHref(Routes.ENDPOINTS_ACCOUNTS_SINGLE, {
       account_id: val,
+    });
+  };
+
+  const handleLinkTxHash = (val: string) => {
+    if (validate.getTransactionHashError(val)) {
+      return "";
+    }
+
+    return buildEndpointHref(Routes.TRANSACTION_DASHBOARD, {
+      transactionHash: val,
     });
   };
 
@@ -421,6 +432,13 @@ export const EndpointsJsonResponse = ({
 
         return true;
       },
+    },
+    // Transaction
+    txHash: {
+      getHref: handleLinkTxHash,
+    },
+    hash: {
+      getHref: handleLinkTxHash,
     },
   };
 

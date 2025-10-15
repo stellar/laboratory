@@ -3,6 +3,7 @@ import { Box } from "@/components/layout/Box";
 import { TxResponse } from "@/components/TxResponse";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { XdrLink } from "@/components/XdrLink";
+import { TxHashLink } from "@/components/TxHashLink";
 import { getBlockExplorerLink } from "@/helpers/getBlockExplorerLink";
 import { openUrl } from "@/helpers/openUrl";
 import { NetworkType, SubmitRpcResponse } from "@/types/types";
@@ -60,7 +61,7 @@ export const TransactionSuccessCard = ({
           <TxResponse
             data-testid="submit-tx-rpc-success-hash"
             label="Hash:"
-            value={response.hash}
+            item={<TxHashLink txHash={response.hash} />}
           />
           <TxResponse
             data-testid="submit-tx-rpc-success-ledger"

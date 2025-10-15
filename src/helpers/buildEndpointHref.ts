@@ -37,5 +37,10 @@ export const buildEndpointHref = (
     buildParams["xdr"] = params;
   }
 
+  // Transaction Dashboard params
+  if (route.startsWith("/transaction-dashboard")) {
+    buildParams["txDashboard"] = params;
+  }
+
   return `${route}?$=${stringify(buildParams)};;`;
 };
