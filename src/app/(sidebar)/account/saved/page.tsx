@@ -159,7 +159,7 @@ export default function SavedKeypairs() {
               setIsManualModalVisible(true);
             }}
           >
-            Add manually
+            Add keypair manually
           </Button>
         }
       >
