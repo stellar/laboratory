@@ -272,7 +272,6 @@ export default function TransactionDashboard() {
           placement="inline"
           title="This transaction can’t be found here."
         >
-          :q
           <Box gap="md">
             <span>
               Check that you’re using the correct network (Mainnet/Testnet). If
