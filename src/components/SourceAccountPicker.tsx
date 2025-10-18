@@ -1,6 +1,6 @@
-import { Routes } from "@/constants/routes";
+import { useState } from "react";
 
-import { useElementSize } from "@/hooks/useElementSize";
+import { Routes } from "@/constants/routes";
 
 import { SdsLink } from "@/components/SdsLink";
 import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
@@ -17,33 +17,39 @@ export const SourceAccountPicker = ({
   error,
   onChange,
 }: SourceAccountPickerProps) => {
-  const { width: inputWidth, ref: inputRef } = useElementSize();
+  const [isSelectorOpen, setIsSelectorOpen] = useState(false);
 
   return (
-    <PubKeyPicker
-      ref={inputRef}
-      id="source_account"
-      label="Source Account"
-      value={value}
-      error={error}
-      onChange={(e) => {
-        onChange(e.target.value);
-      }}
-      rightElement={
-        <SignerSelector
-          mode="public"
-          onChange={onChange}
-          containerWidth={inputWidth}
-        />
-      }
-      note={
-        <>
-          If you don’t have an account yet, you can create and fund a test net
-          account with the{" "}
-          <SdsLink href={Routes.ACCOUNT_CREATE}>account creator</SdsLink>.
-        </>
-      }
-      infoLink="https://developers.stellar.org/docs/learn/glossary#source-account"
-    />
+    <div className="SourceAccountPicker">
+      <PubKeyPicker
+        id="source_account"
+        label="Source Account"
+        value={value}
+        error={error}
+        onChange={(e) => {
+          onChange(e.target.value);
+        }}
+        rightElement={
+          <SignerSelector.Button
+            mode="public"
+            onClick={() => setIsSelectorOpen(!isSelectorOpen)}
+          />
+        }
+        note={
+          <>
+            If you don’t have an account yet, you can create and fund a test net
+            account with the{" "}
+            <SdsLink href={Routes.ACCOUNT_CREATE}>account creator</SdsLink>.
+          </>
+        }
+        infoLink="https://developers.stellar.org/docs/learn/glossary#source-account"
+      />
+      <SignerSelector.Dropdown
+        mode="public"
+        onChange={onChange}
+        isOpen={isSelectorOpen}
+        onClose={() => setIsSelectorOpen(false)}
+      />
+    </div>
   );
 };
