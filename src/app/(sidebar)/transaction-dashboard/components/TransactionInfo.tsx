@@ -20,8 +20,10 @@ import { AnyObject, RpcTxJsonResponse } from "@/types/types";
 
 export const TransactionInfo = ({
   txDetails,
+  isTxNotFound,
 }: {
   txDetails: RpcTxJsonResponse | null;
+  isTxNotFound: boolean;
 }) => {
   const { network } = useStore();
 
@@ -29,7 +31,6 @@ export const TransactionInfo = ({
   const { feeBumpTx, transaction, operations, isSorobanTx } =
     getTxData(txDetails);
 
-  const isTxNotFound = txDetails?.status === "NOT_FOUND";
   const isNoDataScreen = !isDataLoaded || isTxNotFound;
 
   type InfoFieldItem = {
@@ -376,23 +377,7 @@ export const TransactionInfo = ({
             <>{INFO_FIELDS.map((f) => renderInfoField(f))}</>
           </Box>
           {isNoDataScreen ? (
-            <NoInfoLoadedView
-              message={
-                isTxNotFound ? (
-                  <span>
-                    Couldn’t find that transaction. Please make sure you’re
-                    using the correct network, or the transaction is within the{" "}
-                    <SdsLink href="https://developers.stellar.org/docs/data/apis/rpc#why-run-rpc">
-                      retention window
-                    </SdsLink>{" "}
-                    of the RPC.
-                  </span>
-                ) : (
-                  <>Load a transaction</>
-                )
-              }
-              type={isTxNotFound ? "error" : "info"}
-            />
+            <NoInfoLoadedView message="Load a transaction" type="info" />
           ) : null}
         </div>
       </Box>
