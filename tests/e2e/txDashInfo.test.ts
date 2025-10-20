@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import {
+  TX_NOT_FOUND,
   TX_ST_CHANGE_DOMAIN_SET,
   TX_ST_CHANGE_KALE_PLANT,
 } from "./mock/txStateChange";
@@ -248,13 +249,20 @@ test.describe("Transaction Dashboard", () => {
       .getByLabel("Transaction Hash")
       .fill(TX_ST_CHANGE_KALE_PLANT.result.txHash);
 
+    // Mock the RPC call
+    await mockRpcRequest({
+      page,
+      rpcMethod: "getTransaction",
+      bodyJsonResponse: TX_NOT_FOUND,
+    });
+
     await expect(loadButton).toBeEnabled();
     await loadButton.click();
 
-    const txInfoContainer = page.locator(".TransactionInfo");
-    await expect(txInfoContainer.locator(".NoInfoLoadedView")).toHaveText(
-      "Couldn’t find that transaction. Please make sure you’re using the correct network, or the transaction is within the retention window of the RPC.",
+    const alertContainer = page.getByText(
+      "This transaction can’t be found here",
     );
+    await expect(alertContainer).toBeVisible();
   });
 });
 
