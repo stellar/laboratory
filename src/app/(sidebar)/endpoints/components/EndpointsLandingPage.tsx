@@ -47,6 +47,7 @@ export const EndpointsLandingPage = () => {
         title="API Explorer"
         eyebrow="Introduction"
         description="The API Explorer lets you test, interact with, save, and share Stellar’s RPC and Horizon API requests directly in your browser."
+        isPageTitle={true}
       />
 
       <HomeSection
