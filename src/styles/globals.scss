@@ -1078,6 +1078,15 @@
     gap: pxToRem(12px);
   }
 
+  &__Signs__MultiPicker {
+    position: relative;
+    margin-top: var(--top-offset);
+
+    .SignerSelector__dropdown {
+      top: calc(var(--sds-gap-xxl) + var(--sds-gap-sm));
+    }
+  }
+
   &__Buttons {
     display: flex;
     flex-direction: row;

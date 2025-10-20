@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { Button, Icon } from "@stellar/design-system";
 
@@ -8,6 +8,7 @@ import { TextPicker } from "@/components/FormElements/TextPicker";
 import { Box } from "@/components/layout/Box";
 import { InputSideElement } from "@/components/InputSideElement";
 import { LabelHeading } from "@/components/LabelHeading";
+import { SignerSelector } from "@/components/SignerSelector";
 
 type Values = string[];
 
@@ -26,7 +27,7 @@ type MultiPickerProps = {
   note?: React.ReactNode;
   isPassword?: boolean;
   rightElement?: (index: number) => React.ReactNode;
-  ref?: React.Ref<HTMLDivElement>;
+  useSignerSelector?: boolean;
 };
 
 export const MultiPicker = ({
@@ -43,25 +44,32 @@ export const MultiPicker = ({
   useAutoAdd,
   note,
   isPassword,
-  rightElement,
-  ref,
+  useSignerSelector = false,
 }: MultiPickerProps) => {
   if (!value || !value.length) {
     value = [];
   }
 
-  return (
-    <div ref={ref}>
-      <Box gap="sm" data-testid={`multipicker-${id}`}>
-        <LabelHeading size="md" labelSuffix={labelSuffix}>
-          {label}
-        </LabelHeading>
-        <>
-          {value.length
-            ? value.map((singleVal: string, index: number) => {
-                const errorMessage = singleVal ? validate(singleVal) : false;
+  const [isSelectorOpen, setIsSelectorOpen] = useState<{
+    visible: boolean;
+    index: number | null;
+  }>({
+    visible: false,
+    index: null,
+  });
 
-                return (
+  return (
+    <Box gap="sm" data-testid={`multipicker-${id}`}>
+      <LabelHeading size="md" labelSuffix={labelSuffix}>
+        {label}
+      </LabelHeading>
+      <>
+        {value.length
+          ? value.map((singleVal: string, index: number) => {
+              const errorMessage = singleVal ? validate(singleVal) : false;
+
+              return (
+                <div className="SignTx__Signs__MultiPicker" key={index}>
                   <TextPicker
                     id={`${id}-${index}`}
                     onChange={(e) => {
@@ -77,14 +85,20 @@ export const MultiPicker = ({
                         useAutoAdd && isLastItem ? [...val, ""] : [...val],
                       );
                     }}
-                    key={index}
                     value={singleVal}
                     error={errorMessage}
                     placeholder={placeholder}
                     autocomplete={autocomplete}
                     rightElement={
                       <>
-                        {rightElement ? rightElement(index) : null}
+                        {useSignerSelector ? (
+                          <SignerSelector.Button
+                            mode="public"
+                            onClick={() => {
+                              setIsSelectorOpen({ visible: true, index });
+                            }}
+                          />
+                        ) : null}
                         {index !== 0 ? (
                           <InputSideElement
                             variant="button"
@@ -101,33 +115,51 @@ export const MultiPicker = ({
                     }
                     isPassword={isPassword}
                   />
-                );
-              })
-            : null}
-          {note ? (
-            <div className="FieldNote FieldNote--note FieldNote--md">
-              {note}
-            </div>
-          ) : null}
-        </>
-        <>
-          {!useAutoAdd ? (
-            <div>
-              <Button
-                disabled={value.length === limit}
-                size="md"
-                variant="tertiary"
-                onClick={(e) => {
-                  e.preventDefault();
-                  onChange([...value, ""]);
-                }}
-              >
-                {buttonLabel}
-              </Button>
-            </div>
-          ) : null}
-        </>
-      </Box>
-    </div>
+                  {useSignerSelector ? (
+                    <SignerSelector.Dropdown
+                      mode="secret"
+                      isOpen={
+                        index === isSelectorOpen.index && isSelectorOpen.visible
+                      }
+                      onClose={() => {
+                        setIsSelectorOpen({ visible: false, index: null });
+                      }}
+                      onChange={(selectedSigner) => {
+                        const val = arrayItem.update(
+                          value,
+                          index,
+                          selectedSigner,
+                        );
+                        onChange([...val]);
+                        setIsSelectorOpen({ visible: false, index: null });
+                      }}
+                    />
+                  ) : null}
+                </div>
+              );
+            })
+          : null}
+        {note ? (
+          <div className="FieldNote FieldNote--note FieldNote--md">{note}</div>
+        ) : null}
+      </>
+      <>
+        {!useAutoAdd ? (
+          <div>
+            <Button
+              disabled={value.length === limit}
+              size="md"
+              variant="tertiary"
+              onClick={(e) => {
+                e.preventDefault();
+                onChange([...value, ""]);
+              }}
+            >
+              {buttonLabel}
+            </Button>
+          </div>
+        ) : null}
+      </>
+    </Box>
   );
 };
