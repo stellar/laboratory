@@ -105,7 +105,6 @@ export const EndpointsLandingPage = () => {
             While it will continue to receive updates to maintain compatibility
             with upcoming protocol releases, it won’t receive significant new
             feature development.
-            {/* TODO: Learn more link */}
           </div>
         </IntroCard>
       </HomeSection>
