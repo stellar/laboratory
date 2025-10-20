@@ -1,65 +1,165 @@
 import { Icon, Text, Link } from "@stellar/design-system";
-import { NextLink } from "@/components/NextLink";
-import { InfoCards } from "@/components/InfoCards";
-import { PageCard } from "@/components/layout/PageCard";
-import { Routes } from "@/constants/routes";
-import { openUrl } from "@/helpers/openUrl";
+
+import { Box } from "@/components/layout/Box";
+import { HomeSection } from "@/components/Home/Section";
+import { useStore } from "@/store/useStore";
+import { useWindowSize } from "@/hooks/useWindowSize";
+
+import "@/styles/home.scss";
 
 export const EndpointsLandingPage = () => {
-  const infoCards = [
+  const { theme } = useStore();
+  const { windowWidth } = useWindowSize();
+
+  const imgTheme = theme === "sds-theme-light" ? "light" : "dark";
+  const isMobile = windowWidth && windowWidth < 600;
+
+  const rpcCards = [
     {
-      id: "stellar-rpc",
-      title: "Stellar RPC Methods",
-      description: "Learn about the RPC methods in our Developer Docs.",
-      buttonLabel: "See docs",
-      buttonIcon: <Icon.LinkExternal01 />,
-      buttonAction: () =>
-        openUrl(
-          "https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods",
-        ),
+      id: "rpc-query",
+      title: "RPC Query Methods",
+      description:
+        "Read Stellar blockchain data such as network state, accounts, transactions, and ledgers.",
+      link: "https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods",
+      icon: <Icon.SearchRefraction />,
     },
     {
-      id: "horizon",
-      title: "Horizon Endpoints",
-      description: "Learn about the Horizon endpoints in our Developer Docs.",
-      buttonLabel: "See docs",
-      buttonIcon: <Icon.LinkExternal01 />,
-      buttonAction: () =>
-        openUrl("https://developers.stellar.org/network/horizon/resources"),
+      id: "rpc-sim-fees",
+      title: "Simulation & Fees",
+      description:
+        "Validate and analyze transactions or smart contracts calls before execution. Better understand fees on the network.",
+      link: "https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/simulateTransaction",
+      icon: <Icon.Server05 />,
+    },
+    {
+      id: "rpc-tx",
+      title: "Transaction Execution",
+      description:
+        "Perform actual state change on the network, such as creating, signing, and submitting transactions.",
+      link: "https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/sendTransaction",
+      icon: <Icon.Dataflow03 />,
     },
   ];
 
   return (
-    <>
-      <PageCard heading="API Explorer">
-        <Text size="sm" as="p">
-          The Stellar Lab is a set of tools that enables people to try out and
-          learn about the Stellar network. The Lab can{" "}
-          <NextLink href={Routes.BUILD_TRANSACTION} sds-variant="primary">
-            build transactions
-          </NextLink>
-          ,{" "}
-          <NextLink href={Routes.SIGN_TRANSACTION} sds-variant="primary">
-            sign them
-          </NextLink>
-          , and{" "}
-          <NextLink href={Routes.SUBMIT_TRANSACTION} sds-variant="primary">
-            submit them to the network
-          </NextLink>
-          . In this section of the Lab, you can explore the various endpoints
-          from the RPC and Horizon, make requests to these endpoints, and save
-          them for future use.
-        </Text>
+    <Box gap="custom" customValue="48px" addlClassName="Endpoints__introPage">
+      <HomeSection
+        title="API Explorer"
+        eyebrow="Introduction"
+        description="The API Explorer lets you test, interact with, save, and share Stellar’s RPC and Horizon API requests directly in your browser."
+      />
 
-        <Text size="sm" as="p">
-          For Stellar docs, take a look at the{" "}
-          <Link href="https://developers.stellar.org/">
-            Stellar developers site
-          </Link>
-          .
-        </Text>
-      </PageCard>
-      <InfoCards infoCards={infoCards} />
-    </>
+      <HomeSection
+        title="About RPC Methods"
+        description={
+          <>
+            Multiple infrastructure providers offer Stellar RPC services with
+            plans ranging from free to dedicated instances.{" "}
+            <Link href="https://developers.stellar.org/docs/data/apis/api-providers">
+              Learn more
+            </Link>
+            .
+          </>
+        }
+      >
+        <div className="Endpoints__rpcIntroCards">
+          {rpcCards.map((card) => (
+            <IntroCard
+              key={card.id}
+              title={card.title}
+              icon={card.icon}
+              description={card.description}
+              link={card.link}
+            />
+          ))}
+        </div>
+      </HomeSection>
+
+      <HomeSection
+        title="Save & Sharing"
+        description="You can save methods in the browser’s local storage and get shareable link to provide to others."
+      >
+        <div className="Endpoints__imageBox">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={
+              isMobile
+                ? `/images/lab-endpoints-ss-mobile-${imgTheme}.png`
+                : `/images/lab-endpoints-ss-${imgTheme}.png`
+            }
+            alt="Save & Sharing graphic"
+          />
+        </div>
+      </HomeSection>
+
+      <HomeSection title="About Horizon Endpoints">
+        <IntroCard
+          title="Horizon"
+          icon={<Icon.Data />}
+          description="Horizon provides an HTTP API to certain data in the Stellar network."
+          link="https://developers.stellar.org/docs/data/apis/horizon/admin-guide/overview"
+        >
+          <div className="Endpoints__alert" data-variant="warning">
+            Warning: Horizon is considered deprecated in favor of Stellar RPC.
+            While it will continue to receive updates to maintain compatibility
+            with upcoming protocol releases, it won’t receive significant new
+            feature development.
+            {/* TODO: Learn more link */}
+          </div>
+        </IntroCard>
+      </HomeSection>
+    </Box>
+  );
+};
+
+const IntroCard = ({
+  title,
+  icon,
+  description,
+  link,
+  children,
+}: {
+  title: string;
+  icon: React.ReactElement;
+  description: React.ReactNode;
+  link: string;
+  children?: React.ReactNode;
+}) => {
+  return (
+    <a
+      className="Endpoints__introCard"
+      href={link}
+      target="_blank"
+      rel="noreferrer noopener"
+    >
+      <Box
+        gap="lg"
+        direction="row"
+        align="center"
+        justify="space-between"
+        addlClassName="Endpoints__introCard__header"
+      >
+        <Box
+          gap="sm"
+          direction="row"
+          align="center"
+          addlClassName="Endpoints__introCard__title"
+        >
+          {icon}
+
+          <Text size="md" as="h3" weight="semi-bold">
+            {title}
+          </Text>
+        </Box>
+
+        <Icon.ArrowUpRight />
+      </Box>
+
+      <Text size="sm" as="div">
+        {description}
+      </Text>
+
+      {children}
+    </a>
   );
 };

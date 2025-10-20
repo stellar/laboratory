@@ -10,7 +10,7 @@ export const HomeSection = ({
   title?: string;
   eyebrow?: string;
   description?: React.ReactNode;
-  children: React.ReactElement | React.ReactElement[];
+  children?: React.ReactElement | React.ReactElement[];
 }) => (
   <div className="Lab__home__section" data-no-padding="true">
     <Box gap="xl" addlClassName="Lab__home__content">
