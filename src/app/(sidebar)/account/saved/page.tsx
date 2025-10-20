@@ -17,6 +17,7 @@ import { SavedItemTimestampAndDelete } from "@/components/SavedItemTimestampAndD
 import { PageCard } from "@/components/layout/PageCard";
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 import { SwitchNetworkButtons } from "@/components/SwitchNetworkButtons";
+import { AddKeypairManuallyModal } from "@/components/AddKeypairManuallyModal";
 
 import { localStorageSavedKeypairs } from "@/helpers/localStorageSavedKeypairs";
 import { arrayItem } from "@/helpers/arrayItem";
@@ -37,6 +38,8 @@ export default function SavedKeypairs() {
   const [currentKeypairTimestamp, setCurrentKeypairTimestamp] = useState<
     number | undefined
   >();
+
+  const [isManualModalVisible, setIsManualModalVisible] = useState(false);
 
   const IS_TESTING_NETWORK = useIsTestingNetwork();
 
@@ -144,7 +147,22 @@ export default function SavedKeypairs() {
 
   return (
     <Box gap="md">
-      <PageCard heading="Saved Keypairs">
+      <PageCard
+        heading="Saved Keypairs"
+        rightElement={
+          <Button
+            variant="tertiary"
+            size="md"
+            icon={<Icon.Plus />}
+            iconPosition="right"
+            onClick={() => {
+              setIsManualModalVisible(true);
+            }}
+          >
+            Add keypair manually
+          </Button>
+        }
+      >
         <>
           {IS_TESTING_NETWORK ? (
             <Alert variant="warning" placement="inline">
@@ -179,6 +197,16 @@ export default function SavedKeypairs() {
         }}
         onUpdate={(updatedItems) => {
           localStorageSavedKeypairs.set(updatedItems);
+        }}
+      />
+
+      <AddKeypairManuallyModal
+        isVisible={isManualModalVisible}
+        onClose={() => {
+          setIsManualModalVisible(false);
+        }}
+        onDone={() => {
+          updateSavedKeypairs();
         }}
       />
     </Box>

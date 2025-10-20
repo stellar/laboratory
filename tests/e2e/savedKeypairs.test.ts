@@ -5,6 +5,9 @@ import {
   SAVED_ACCOUNT_1_RECOVERY_PHRASE,
   SAVED_ACCOUNT_1_SECRET,
   SAVED_ACCOUNT_2,
+  SAVED_ACCOUNT_3,
+  SAVED_ACCOUNT_3_RECOVERY_PHRASE,
+  SAVED_ACCOUNT_3_SECRET,
 } from "./mock/localStorage";
 
 test.describe("Saved Keypairs Page", () => {
@@ -60,6 +63,10 @@ test.describe("Saved Keypairs Page", () => {
       );
     });
 
+    test.afterAll(async () => {
+      await pageContext.close();
+    });
+
     test("Loads", async () => {
       await expect(
         pageContext.getByText(
@@ -106,6 +113,115 @@ test.describe("Saved Keypairs Page", () => {
 
       const keypairItems = pageContext.getByTestId("saved-keypair-item");
       await expect(keypairItems).toHaveCount(1);
+    });
+  });
+
+  test.describe("Manually add keypair", () => {
+    test("Secret key", async ({ page }) => {
+      const addButton = page.getByRole("button", {
+        name: "Add keypair manually",
+        exact: true,
+      });
+      const emptyMessage = page.getByText(
+        "There are no saved keypairs on Testnet network.",
+      );
+
+      await expect(addButton).toBeVisible();
+      await expect(emptyMessage).toBeVisible();
+
+      await addButton.click();
+      await expect(page.getByText("Add new keypair")).toBeVisible();
+
+      const addKeypairButton = page.getByRole("button", {
+        name: "Add keypair",
+        exact: true,
+      });
+      const secretKeyInput = page.getByLabel("Secret key or recovery phrase");
+      const errorMessage = page.getByText(
+        "Secret key or recovery phrase is invalid",
+      );
+
+      await expect(addKeypairButton).toBeDisabled();
+
+      await page.getByLabel("Name").fill("Manual Account 1");
+
+      // Invalid secret key input
+      await secretKeyInput.fill("Testing");
+      await expect(errorMessage).toBeVisible();
+
+      // Valid secret key input
+      await secretKeyInput.fill(SAVED_ACCOUNT_1_SECRET);
+      await expect(errorMessage).toBeHidden();
+
+      await expect(addKeypairButton).toBeEnabled();
+      await addKeypairButton.click();
+
+      await expect(emptyMessage).toBeHidden();
+
+      // Correctly added keypair
+      const keypairItem = page.getByTestId("saved-keypair-item").first();
+
+      await expect(keypairItem).toBeVisible();
+      await expect(keypairItem.getByTestId("saved-keypair-name")).toHaveValue(
+        "Manual Account 1",
+      );
+      await expect(keypairItem.getByTestId("saved-keypair-pk")).toHaveValue(
+        SAVED_ACCOUNT_1,
+      );
+      await expect(keypairItem.getByTestId("saved-keypair-sk")).toHaveValue(
+        SAVED_ACCOUNT_1_SECRET,
+      );
+    });
+
+    test("Recovery phrase", async ({ page }) => {
+      const addButton = page.getByRole("button", {
+        name: "Add keypair manually",
+        exact: true,
+      });
+
+      await expect(addButton).toBeVisible();
+      await addButton.click();
+
+      const addKeypairButton = page.getByRole("button", {
+        name: "Add keypair",
+        exact: true,
+      });
+      const secretKeyInput = page.getByLabel("Secret key or recovery phrase");
+      const errorMessage = page.getByText(
+        "Secret key or recovery phrase is invalid",
+      );
+
+      await expect(addKeypairButton).toBeDisabled();
+
+      await page.getByLabel("Name").fill("Manual Account 2");
+
+      // Invalid recovery phrase input
+      await secretKeyInput.fill("Testing");
+      await expect(errorMessage).toBeVisible();
+
+      // Valid recovery phrase input
+      await secretKeyInput.fill(SAVED_ACCOUNT_3_RECOVERY_PHRASE);
+      await expect(errorMessage).toBeHidden();
+
+      await expect(addKeypairButton).toBeEnabled();
+      await addKeypairButton.click();
+
+      // Correctly added keypair
+      const keypairItem = page.getByTestId("saved-keypair-item").first();
+
+      await expect(keypairItem).toBeVisible();
+      await expect(keypairItem.getByTestId("saved-keypair-name")).toHaveValue(
+        "Manual Account 2",
+      );
+      await expect(keypairItem.getByTestId("saved-keypair-pk")).toHaveValue(
+        SAVED_ACCOUNT_3,
+      );
+      await expect(keypairItem.getByTestId("saved-keypair-sk")).toHaveValue(
+        SAVED_ACCOUNT_3_SECRET,
+      );
+      await expect(keypairItem.getByTestId("saved-keypair-rp")).toHaveValue(
+        SAVED_ACCOUNT_3_RECOVERY_PHRASE,
+      );
     });
   });
 });
