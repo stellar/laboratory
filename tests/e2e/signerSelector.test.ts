@@ -23,10 +23,10 @@ async function validateSignerSelectorOptions(page: Page, container?: any) {
     : page.getByTestId("signer-selector-options");
 
   const labels = signerSelectorOptions.locator(
-    ".SignerSelector__options__item__label",
+    ".SignerSelector__dropdown__item__label",
   );
   const values = signerSelectorOptions.locator(
-    ".SignerSelector__options__item__value",
+    ".SignerSelector__dropdown__item__value",
   );
 
   await expect(labels).toHaveText("Saved Keypairs");

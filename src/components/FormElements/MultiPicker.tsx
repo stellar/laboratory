@@ -27,7 +27,7 @@ type MultiPickerProps = {
   note?: React.ReactNode;
   isPassword?: boolean;
   rightElement?: (index: number) => React.ReactNode;
-  useSignerSelector?: boolean;
+  useSecretSelector?: boolean;
 };
 
 export const MultiPicker = ({
@@ -44,7 +44,7 @@ export const MultiPicker = ({
   useAutoAdd,
   note,
   isPassword,
-  useSignerSelector = false,
+  useSecretSelector = false,
 }: MultiPickerProps) => {
   if (!value || !value.length) {
     value = [];
@@ -91,9 +91,9 @@ export const MultiPicker = ({
                     autocomplete={autocomplete}
                     rightElement={
                       <>
-                        {useSignerSelector ? (
+                        {useSecretSelector ? (
                           <SignerSelector.Button
-                            mode="public"
+                            mode="secret"
                             onClick={() => {
                               setIsSelectorOpen({ visible: true, index });
                             }}
@@ -115,7 +115,7 @@ export const MultiPicker = ({
                     }
                     isPassword={isPassword}
                   />
-                  {useSignerSelector ? (
+                  {useSecretSelector ? (
                     <SignerSelector.Dropdown
                       mode="secret"
                       isOpen={

@@ -737,7 +737,7 @@ export const Overview = () => {
                 validate={validate.getSecretKeyError}
                 placeholder="Secret key (starting with S) or hash preimage (in hex)"
                 autocomplete="off"
-                useSignerSelector={true}
+                useSecretSelector={true}
                 isPassword
               />{" "}
               <SignTxButton
