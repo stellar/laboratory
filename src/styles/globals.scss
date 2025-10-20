@@ -773,29 +773,17 @@
         stroke: var(--sds-clr-lilac-09);
       }
     }
+
+    &--warning {
+      color: var(--sds-clr-amber-11);
+      font-weight: var(--sds-fw-medium);
+    }
   }
 
   &__rpcIntroCards {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: pxToRem(16px);
-  }
-
-  &__alert {
-    border-radius: pxToRem(8px);
-    border: 1px solid var(--sds-clr-gray-06);
-    padding: pxToRem(12px);
-    font-size: pxToRem(14px);
-    line-height: pxToRem(20px);
-    font-weight: var(--sds-fw-medium);
-
-    background-color: var(--sds-clr-gray-02);
-    color: var(--sds-clr-gray-11);
-
-    &[data-variant="warning"] {
-      background-color: var(--sds-clr-amber-02);
-      color: var(--sds-clr-amber-11);
-    }
   }
 
   &__imageBox {

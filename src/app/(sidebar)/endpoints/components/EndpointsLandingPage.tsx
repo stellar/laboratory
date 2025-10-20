@@ -93,20 +93,28 @@ export const EndpointsLandingPage = () => {
         </div>
       </HomeSection>
 
-      <HomeSection title="About Horizon Endpoints">
+      <HomeSection
+        title="About Horizon Endpoints"
+        description={
+          <>
+            <span className="Endpoints__introCard--warning">Warning</span>:
+            Horizon is considered deprecated in favor of Stellar RPC. While it
+            will continue to receive updates to maintain compatibility with
+            upcoming protocol releases, it won’t receive significant new feature
+            development.{" "}
+            <Link href="https://developers.stellar.org/docs/data/apis/api-providers">
+              Learn more
+            </Link>
+            .
+          </>
+        }
+      >
         <IntroCard
           title="Horizon"
           icon={<Icon.Data />}
           description="Horizon provides an HTTP API to certain data in the Stellar network."
           link="https://developers.stellar.org/docs/data/apis/horizon/admin-guide/overview"
-        >
-          <div className="Endpoints__alert" data-variant="warning">
-            Warning: Horizon is considered deprecated in favor of Stellar RPC.
-            While it will continue to receive updates to maintain compatibility
-            with upcoming protocol releases, it won’t receive significant new
-            feature development.
-          </div>
-        </IntroCard>
+        />
       </HomeSection>
     </Box>
   );
