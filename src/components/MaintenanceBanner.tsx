@@ -49,8 +49,21 @@ export const MaintenanceBanner = () => {
 
   const getDaysLeftText = (toDate: Date) => {
     const today = new Date();
-    const diffTime = toDate.getTime() - today.getTime();
-    const daysLeft = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    // Reset times to midnight to get accurate day difference
+    const normalizedToDate = new Date(
+      toDate.getFullYear(),
+      toDate.getMonth(),
+      toDate.getDate(),
+    );
+    const normalizedToday = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate(),
+    );
+
+    const diffTime = normalizedToDate.getTime() - normalizedToday.getTime();
+    const daysLeft = Math.round(diffTime / (1000 * 60 * 60 * 24));
 
     if (daysLeft === 0) {
       return "today";
