@@ -739,7 +739,7 @@ export const Overview = () => {
                 autocomplete="off"
                 useSecretSelector={true}
                 isPassword
-              />{" "}
+              />
               <SignTxButton
                 onSign={() => {
                   handleSign({ sigType: "secretKey", isClear: false });

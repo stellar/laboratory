@@ -69,7 +69,7 @@ export const MultiPicker = ({
               const errorMessage = singleVal ? validate(singleVal) : false;
 
               return (
-                <div className="MultiPicker__input" key={index}>
+                <div className="MultiPicker__input" key={`${id}-${index}`}>
                   <TextPicker
                     id={`${id}-${index}`}
                     onChange={(e) => {
