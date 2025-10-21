@@ -17,10 +17,10 @@ async function setupPageContext(browser: Browser, url: string): Promise<Page> {
   return page;
 }
 
-async function validateSignerSelectorOptions(page: Page, container?: any) {
-  const signerSelectorOptions = container
-    ? container.getByTestId("signer-selector-options")
-    : page.getByTestId("signer-selector-options");
+async function validateSignerSelectorOptions(page: Page) {
+  const signerSelectorOptions = page.getByTestId("signer-selector-options");
+
+  await expect(signerSelectorOptions).toBeVisible();
 
   const labels = signerSelectorOptions.locator(
     ".SignerSelector__dropdown__item__label",
@@ -100,6 +100,7 @@ test.describe("Signer Selector", () => {
 
       // First signer
       await pageContext.getByText("Use secret key").click();
+
       const { values } = await validateSignerSelectorOptions(pageContext);
       await values.nth(0).click();
 
