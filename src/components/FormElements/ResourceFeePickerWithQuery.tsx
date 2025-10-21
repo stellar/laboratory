@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useSimulateTx } from "@/query/useSimulateTx";
-import { BASE_FEE } from "@stellar/stellar-sdk";
+import { BASE_FEE, xdr } from "@stellar/stellar-sdk";
 
 import { useStore } from "@/store/useStore";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
@@ -58,6 +58,7 @@ export const ResourceFeePickerWithQuery = ({
   const { network, transaction } = useStore();
   const { params: txnParams, soroban, isValid } = transaction.build;
   const { operation } = soroban;
+
   const {
     mutateAsync: simulateTx,
     data: simulateTxData,
@@ -103,19 +104,35 @@ export const ResourceFeePickerWithQuery = ({
 
   // Create a sample transaction to simulate to get the min resource fee
   const buildTxToSimulate = () => {
-    try {
-      const contractDataXDR = getContractDataXDR({
-        contractAddress: operation.params.contract,
-        dataKey: operation.params.key_xdr,
-        durability: operation.params.durability,
-      });
+    setErrorMessage("");
 
-      if (!contractDataXDR) {
+    try {
+      let contractDataXdr;
+
+      // restore_footprint operation already has ContractDataXDR in base64
+      // @TODO update when extend_ttl gets updated
+      if (
+        operation.operation_type === "restore_footprint" &&
+        operation.params.contractDataLedgerKey
+      ) {
+        contractDataXdr = xdr.LedgerKey.fromXDR(
+          operation.params.contractDataLedgerKey,
+          "base64",
+        );
+      } else {
+        contractDataXdr = getContractDataXDR({
+          contractAddress: operation.params.contract,
+          dataKey: operation.params.key_xdr,
+          durability: operation.params.durability,
+        });
+      }
+
+      if (!contractDataXdr) {
         throw new Error("Failed to fetch contract data XDR");
       }
 
       const sorobanData = getSorobanTxData({
-        contractDataXDR,
+        contractDataXdr,
         operationType: operation.operation_type as SorobanOpType,
         fee: BASE_FEE, // simulate purpose only
       });

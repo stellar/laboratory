@@ -20,9 +20,9 @@ export const initTracking = () => {
 
   const { hostname } = window.location;
 
-  if (hostname === "lab.stellar.org") {
+  if (["lab.stellar.org"].includes(hostname)) {
     apiKey = AMPLITUDE_API_KEY_PROD;
-  } else if (hostname.includes("previews.kube001.services.stellar-ops.com")) {
+  } else if (hostname.endsWith(".previews.kube001.services.stellar-ops.com")) {
     apiKey = AMPLITUDE_API_KEY_DEV;
   }
 
@@ -120,6 +120,7 @@ export enum TrackingEvent {
   ACCOUNT_CREATE_GENERATE_KEYPAIR = "account: create: generate keypair",
   ACCOUNT_CREATE_FUND_ACCOUNT = "account: create: fund account",
   ACCOUNT_CREATE_SAVE = "account: create: save account",
+  ACCOUNT_SAVED_ADD_MANUALLY = "account: saved: add manually",
   ACCOUNT_FUND_FUND_ACCOUNT = "account: fund: fund account",
   ACCOUNT_FUND_FILL = "account: fund: fill generated key",
   ACCOUNT_MUXED_CREATE = "account: muxed: create",

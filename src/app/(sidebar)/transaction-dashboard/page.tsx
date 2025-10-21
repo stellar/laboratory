@@ -10,13 +10,17 @@ import { MessageField } from "@/components/MessageField";
 import { SwitchNetworkButtons } from "@/components/SwitchNetworkButtons";
 import { TabView } from "@/components/TabView";
 import { NoInfoLoadedView } from "@/components/NoInfoLoadedView";
+import { SdsLink } from "@/components/SdsLink";
 
+import { STELLAR_EXPERT } from "@/constants/settings";
 import { validate } from "@/validate";
 import { useStore } from "@/store/useStore";
 import { useFetchRpcTxDetails } from "@/query/useFetchRpcTxDetails";
 
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { getTxData } from "@/helpers/getTxData";
+import { openUrl } from "@/helpers/openUrl";
+import { getStellarExpertNetwork } from "@/helpers/getStellarExpertNetwork";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { TransactionInfo } from "./components/TransactionInfo";
@@ -67,8 +71,42 @@ export default function TransactionDashboard() {
   const isDataLoaded = Boolean(txDetails);
 
   const { isSorobanTx } = getTxData(txDetails || null);
+  const isTxNotFound = txDetails?.status === "NOT_FOUND";
 
   const queryClient = useQueryClient();
+
+  const EXTERNAL_EXPLORERS = [
+    {
+      id: "stellar-expert",
+      label: "Stellar.Expert",
+      onClick: () => {
+        if (transactionHashInput && network.id) {
+          const seNetwork = getStellarExpertNetwork(network.id);
+          openUrl(`${STELLAR_EXPERT}/${seNetwork}/tx/${transactionHashInput}`);
+        }
+      },
+    },
+    {
+      id: "lumenscan",
+      label: "Lumenscan",
+      onClick: () => {
+        if (transactionHashInput && network.id) {
+          const lsUrl =
+            network.id === "mainnet"
+              ? "https://lumenscan.io/txns"
+              : "https://testnet.lumenscan.io/txns";
+          openUrl(`${lsUrl}/${transactionHashInput}`);
+        }
+      },
+    },
+    {
+      id: "goldsky",
+      label: "Goldsky",
+      onClick: () => {
+        openUrl("https://goldsky.com/chains/stellar");
+      },
+    },
+  ];
 
   useEffect(() => {
     if (txDashboard.transactionHash) {
@@ -142,6 +180,25 @@ export default function TransactionDashboard() {
     );
   };
 
+  const renderExternalButtons = () => {
+    return EXTERNAL_EXPLORERS.map((ex) => (
+      <Button
+        key={`ex-btn-${ex.id}`}
+        variant="tertiary"
+        size="md"
+        icon={<Icon.LinkExternal01 />}
+        iconPosition="right"
+        disabled={
+          !(transactionHashInput && network.id && network.id !== "custom")
+        }
+        onClick={ex.onClick}
+        title={network.id === "custom" ? "Custom network is not supported" : ""}
+      >
+        {ex.label}
+      </Button>
+    ));
+  };
+
   const ComingSoonText = () => (
     <Text as="div" size="sm" weight="regular">
       Coming soon
@@ -209,7 +266,34 @@ export default function TransactionDashboard() {
         </form>
       </PageCard>
 
-      <TransactionInfo txDetails={txDetails || null} />
+      {isTxNotFound ? (
+        <Alert
+          variant="warning"
+          placement="inline"
+          title="This transaction can’t be found here."
+        >
+          <Box gap="md">
+            <span>
+              Check that you’re using the correct network (Mainnet/Testnet). If
+              the transaction is old, it may be outside this{" "}
+              <SdsLink href="https://developers.stellar.org/docs/data/apis/rpc#why-run-rpc">
+                RPC’s retention
+              </SdsLink>{" "}
+              window. You can still look up the transaction on Explorers and
+              Indexers:
+            </span>
+
+            <Box gap="sm" direction="row" align="center" wrap="wrap">
+              {renderExternalButtons()}
+            </Box>
+          </Box>
+        </Alert>
+      ) : null}
+
+      <TransactionInfo
+        txDetails={txDetails || null}
+        isTxNotFound={isTxNotFound}
+      />
 
       {isSorobanTx ? (
         <Card>

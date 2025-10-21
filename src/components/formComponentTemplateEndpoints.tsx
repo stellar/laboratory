@@ -935,6 +935,7 @@ export const formComponentTemplateEndpoints = (
               id={id}
               value={parseJsonString(templ.value)}
               onChange={templ?.onChange}
+              allowMultiple
             />
           );
         },

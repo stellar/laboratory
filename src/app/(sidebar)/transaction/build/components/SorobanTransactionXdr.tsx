@@ -36,7 +36,7 @@ export const SorobanTransactionXdr = () => {
 
   if (sorobanXdr) {
     return renderSorobanTxResultDisplay({
-      sorobanXdr: sorobanXdr,
+      sorobanXdr,
       networkPassphrase: network.passphrase,
       onSignClick: () => {
         updateSignImportXdr(sorobanXdr);

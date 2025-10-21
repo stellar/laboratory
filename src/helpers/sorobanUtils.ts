@@ -70,23 +70,23 @@ export const getContractDataXDR = ({
 };
 
 export const getSorobanTxData = ({
-  contractDataXDR,
+  contractDataXdr,
   operationType,
   fee,
 }: {
-  contractDataXDR: xdr.LedgerKey;
+  contractDataXdr: xdr.LedgerKey;
   operationType: SorobanOpType;
   fee: string;
 }): xdr.SorobanTransactionData | undefined => {
   switch (operationType) {
     case "extend_footprint_ttl":
       return buildSorobanData({
-        readOnlyXdrLedgerKey: [contractDataXDR],
+        readOnlyXdrLedgerKey: [contractDataXdr],
         resourceFee: fee,
       });
     case "restore_footprint":
       return buildSorobanData({
-        readWriteXdrLedgerKey: [contractDataXDR],
+        readWriteXdrLedgerKey: [contractDataXdr],
         resourceFee: fee,
       });
     default:
@@ -190,14 +190,23 @@ export const getTxWithSorobanData = ({
   networkPassphrase: string;
 }): { xdr: string; error?: string } => {
   try {
-    const contractDataXDR = getContractDataXDR({
-      contractAddress: operation.params.contract,
-      dataKey: operation.params.key_xdr,
-      durability: operation.params.durability,
-    });
+    // For restore_footprint: use pre-built XDR from contractDataLedgerKey
+    // For extend_footprint_ttl: build XDR from contract address, key, and durability
+    // @TODO extend_footprint_ttl should also use contractDataLedgerKey
+    const contractDataXdr =
+      operation.operation_type === "restore_footprint"
+        ? xdr.LedgerKey.fromXDR(
+            operation.params.contractDataLedgerKey,
+            "base64",
+          )
+        : getContractDataXDR({
+            contractAddress: operation.params.contract,
+            dataKey: operation.params.key_xdr,
+            durability: operation.params.durability,
+          });
 
     const sorobanData = getSorobanTxData({
-      contractDataXDR,
+      contractDataXdr,
       operationType: operation.operation_type as SorobanOpType,
       fee: operation.params.resource_fee,
     });
