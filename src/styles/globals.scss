@@ -1301,3 +1301,24 @@
     word-break: break-word;
   }
 }
+
+.SourceAccountPicker {
+  position: relative;
+}
+
+.MultiPicker {
+  position: relative;
+  margin-top: var(--top-offset);
+
+  &__delete {
+    margin-left: calc(var(--Input-padding-horizontal));
+  }
+
+  &__input {
+    position: relative;
+
+    .SignerSelector__dropdown {
+      top: calc(var(--sds-gap-xxl) + var(--sds-gap-sm));
+    }
+  }
+}
