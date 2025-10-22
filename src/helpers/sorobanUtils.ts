@@ -497,7 +497,6 @@ export const getScValsFromArgs = (
     const primitiveScVals = Object.values(args).map((v) => {
       return getScValFromPrimitive(v);
     });
-
     return primitiveScVals;
   }
 
@@ -539,7 +538,7 @@ export const getScValsFromArgs = (
         const { mapVal, mapType } = convertObjectToMap(argValue);
         const mapScVal = nativeToScVal(mapVal, { type: mapType });
         scVals.push(mapScVal);
-        return scVals;
+        continue;
       }
 
       // Vec Case #1: array of objects or complicated tuple case
@@ -554,7 +553,7 @@ export const getScValsFromArgs = (
         const tupleScValsVec = xdr.ScVal.scvVec(arrayScVals);
 
         scVals.push(tupleScValsVec);
-        return scVals;
+        continue;
       }
 
       // Vec Case #2: array of primitives
@@ -580,7 +579,7 @@ export const getScValsFromArgs = (
         });
 
         scVals.push(scVal);
-        return scVals;
+        continue;
       }
 
       // Tuple Case
@@ -589,7 +588,7 @@ export const getScValsFromArgs = (
         const tupleScValsVec = convertTupleToScVal(argValue);
 
         scVals.push(tupleScValsVec);
-        return scVals;
+        continue;
       }
     }
 
@@ -597,7 +596,7 @@ export const getScValsFromArgs = (
     if (Object.values(argValue).every((v: any) => v.type && v.value)) {
       const convertedObj = convertObjectToScVal(argValue);
       scVals.push(nativeToScVal(convertedObj));
-      return scVals;
+      continue;
     }
 
     if (argValue.type && argValue.value) {
