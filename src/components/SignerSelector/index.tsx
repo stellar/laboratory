@@ -36,6 +36,8 @@ const getTitle = ({ mode }: { mode: SignerMode }) => {
       return "Get address";
     case "secret":
       return "Use secret key";
+    default:
+      return "";
   }
 };
 
@@ -63,22 +65,14 @@ const SignerSelectorButton = ({ mode, onClick }: ButtonProps): JSX.Element => {
   // Public Signer mode with only wallet - show direct button
   if (mode === "public" && !hasKeypairs && hasWallet) {
     return (
-      <InputSideElement
-        variant="button"
-        onClick={() => onClick()}
-        placement="right"
-      >
+      <InputSideElement variant="button" onClick={onClick} placement="right">
         Get connected wallet address
       </InputSideElement>
     );
   }
 
   return (
-    <InputSideElement
-      variant="button"
-      onClick={() => onClick()}
-      placement="right"
-    >
+    <InputSideElement variant="button" onClick={onClick} placement="right">
       {title}
     </InputSideElement>
   );

@@ -22,8 +22,8 @@
 
     background-color: var(--sds-clr-gray-01);
     border: 1px solid var(--sds-clr-gray-06);
-    border-radius: pxToRem(4);
-    padding: pxToRem(3) pxToRem(4);
+    border-radius: pxToRem(4px);
+    padding: pxToRem(3px) pxToRem(4px);
 
     max-height: pxToRem(240px);
     overflow-y: auto;
@@ -33,7 +33,7 @@
         font-size: pxToRem(12px);
         line-height: pxToRem(18px);
 
-        padding: pxToRem(3) pxToRem(8);
+        padding: pxToRem(3px) pxToRem(8px);
       }
 
       &__value {
@@ -46,7 +46,7 @@
 
         gap: pxToRem(8px);
 
-        padding: pxToRem(3) pxToRem(8);
+        padding: pxToRem(3px) pxToRem(8px);
 
         @media (hover: hover) {
           cursor: pointer;
