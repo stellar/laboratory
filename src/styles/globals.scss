@@ -118,6 +118,55 @@
     }
   }
 
+  .MaintenanceBanner {
+    font-size: pxToRem(14px);
+    line-height: pxToRem(20px);
+    font-weight: var(--sds-fw-regular);
+
+    padding: pxToRem(8px) pxToRem(24px);
+    border-bottom: 1px solid var(--sds-clr-gray-06);
+
+    @media screen and (max-width: 1040px) {
+      padding: pxToRem(8px) pxToRem(16px);
+    }
+
+    &__header {
+      svg:first-child {
+        stroke: var(--sds-clr-lilac-09);
+        width: pxToRem(16px);
+        height: pxToRem(16px);
+      }
+
+      .IconButton {
+        svg {
+          transform: rotate(0deg);
+          transition: transform ease-in-out 200ms;
+        }
+
+        &[data-is-expanded="true"] {
+          svg {
+            transform: rotate(180deg);
+          }
+        }
+      }
+    }
+
+    &__message {
+      text-align: center;
+      color: var(--sds-clr-gray-12);
+
+      p {
+        font-size: inherit;
+        line-height: inherit;
+        color: inherit;
+      }
+    }
+
+    .Badge {
+      flex-shrink: 0;
+    }
+  }
+
   // ===========================================================================
   // Layout
   // ===========================================================================
@@ -1336,5 +1385,26 @@
 .FieldNote {
   &--error {
     word-break: break-word;
+  }
+}
+
+.SourceAccountPicker {
+  position: relative;
+}
+
+.MultiPicker {
+  position: relative;
+  margin-top: var(--top-offset);
+
+  &__delete {
+    margin-left: calc(var(--Input-padding-horizontal));
+  }
+
+  &__input {
+    position: relative;
+
+    .SignerSelector__dropdown {
+      top: calc(var(--sds-gap-xxl) + var(--sds-gap-sm));
+    }
   }
 }

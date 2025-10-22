@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { Button, Icon } from "@stellar/design-system";
 
@@ -8,6 +8,7 @@ import { TextPicker } from "@/components/FormElements/TextPicker";
 import { Box } from "@/components/layout/Box";
 import { InputSideElement } from "@/components/InputSideElement";
 import { LabelHeading } from "@/components/LabelHeading";
+import { SignerSelector } from "@/components/SignerSelector";
 
 type Values = string[];
 
@@ -25,6 +26,8 @@ type MultiPickerProps = {
   useAutoAdd?: boolean;
   note?: React.ReactNode;
   isPassword?: boolean;
+  rightElement?: (index: number) => React.ReactNode;
+  useSecretSelector?: boolean;
 };
 
 export const MultiPicker = ({
@@ -41,10 +44,19 @@ export const MultiPicker = ({
   useAutoAdd,
   note,
   isPassword,
+  useSecretSelector = false,
 }: MultiPickerProps) => {
   if (!value || !value.length) {
     value = [];
   }
+
+  const [isSelectorOpen, setIsSelectorOpen] = useState<{
+    visible: boolean;
+    index: number | null;
+  }>({
+    visible: false,
+    index: null,
+  });
 
   return (
     <Box gap="sm" data-testid={`multipicker-${id}`}>
@@ -57,38 +69,73 @@ export const MultiPicker = ({
               const errorMessage = singleVal ? validate(singleVal) : false;
 
               return (
-                <TextPicker
-                  id={`${id}-${index}`}
-                  onChange={(e) => {
-                    const val = arrayItem.update(value, index, e.target.value);
-                    const isLastItem = index === value.length - 1;
+                <div className="MultiPicker__input" key={`${id}-${index}`}>
+                  <TextPicker
+                    id={`${id}-${index}`}
+                    onChange={(e) => {
+                      const val = arrayItem.update(
+                        value,
+                        index,
+                        e.target.value,
+                      );
+                      const isLastItem = index === value.length - 1;
 
-                    // If enabled, automatically add another signer if is last item
-                    return onChange(
-                      useAutoAdd && isLastItem ? [...val, ""] : [...val],
-                    );
-                  }}
-                  key={index}
-                  value={singleVal}
-                  error={errorMessage}
-                  placeholder={placeholder}
-                  autocomplete={autocomplete}
-                  rightElement={
-                    index !== 0 ? (
-                      <InputSideElement
-                        variant="button"
-                        onClick={() => {
-                          const val = arrayItem.delete(value, index);
-                          return onChange([...val]);
-                        }}
-                        placement="right"
-                        icon={<Icon.Trash01 />}
-                        addlClassName="MultiPicker__delete"
-                      />
-                    ) : null
-                  }
-                  isPassword={isPassword}
-                />
+                      // If enabled, automatically add another signer if is last item
+                      return onChange(
+                        useAutoAdd && isLastItem ? [...val, ""] : [...val],
+                      );
+                    }}
+                    value={singleVal}
+                    error={errorMessage}
+                    placeholder={placeholder}
+                    autocomplete={autocomplete}
+                    rightElement={
+                      <>
+                        {useSecretSelector ? (
+                          <SignerSelector.Button
+                            mode="secret"
+                            onClick={() => {
+                              setIsSelectorOpen({ visible: true, index });
+                            }}
+                          />
+                        ) : null}
+                        {index !== 0 ? (
+                          <InputSideElement
+                            variant="button"
+                            onClick={() => {
+                              const val = arrayItem.delete(value, index);
+                              return onChange([...val]);
+                            }}
+                            placement="right"
+                            icon={<Icon.Trash01 />}
+                            addlClassName="MultiPicker__delete"
+                          />
+                        ) : null}
+                      </>
+                    }
+                    isPassword={isPassword}
+                  />
+                  {useSecretSelector ? (
+                    <SignerSelector.Dropdown
+                      mode="secret"
+                      isOpen={
+                        index === isSelectorOpen.index && isSelectorOpen.visible
+                      }
+                      onClose={() => {
+                        setIsSelectorOpen({ visible: false, index: null });
+                      }}
+                      onChange={(selectedSigner) => {
+                        const val = arrayItem.update(
+                          value,
+                          index,
+                          selectedSigner,
+                        );
+                        onChange([...val]);
+                        setIsSelectorOpen({ visible: false, index: null });
+                      }}
+                    />
+                  ) : null}
+                </div>
               );
             })
           : null}

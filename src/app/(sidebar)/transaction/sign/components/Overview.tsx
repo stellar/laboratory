@@ -23,6 +23,7 @@ import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import { arrayItem } from "@/helpers/arrayItem";
 import { scrollElIntoView } from "@/helpers/scrollElIntoView";
 import { isSorobanOperationType } from "@/helpers/sorobanUtils";
+
 import { useSignWithExtensionWallet } from "@/hooks/useSignWithExtensionWallet";
 
 import { validate } from "@/validate";
@@ -731,12 +732,12 @@ export const Overview = () => {
                   if (secretKeySuccessMsg || secretKeyErrorMsg) {
                     handleSign({ sigType: "secretKey", isClear: true });
                   }
-
                   setSecretKeyInputs(val);
                 }}
                 validate={validate.getSecretKeyError}
                 placeholder="Secret key (starting with S) or hash preimage (in hex)"
                 autocomplete="off"
+                useSecretSelector={true}
                 isPassword
               />
               <SignTxButton
