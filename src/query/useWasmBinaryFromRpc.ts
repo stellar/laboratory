@@ -36,6 +36,8 @@ export const useWasmBinaryFromRpc = ({
       }
     },
     enabled: Boolean(wasmHash && rpcUrl && isActive),
+    // Keep data for 60 seconds
+    staleTime: 1000 * 60,
   });
 
   return query;
