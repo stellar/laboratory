@@ -20,6 +20,7 @@ import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { localStorageSettings } from "@/helpers/localStorageSettings";
 import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransactions";
 import { shareableUrl } from "@/helpers/shareableUrl";
+import { parseJsonString } from "@/helpers/parseJsonString";
 
 import { Routes } from "@/constants/routes";
 import {
@@ -33,6 +34,7 @@ import { useCodeWrappedSetting } from "@/hooks/useCodeWrappedSetting";
 
 import { useSubmitRpcTx } from "@/query/useSubmitRpcTx";
 import { useSubmitHorizonTx } from "@/query/useSubmitHorizonTx";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { Box } from "@/components/layout/Box";
 import { PrettyJsonTransaction } from "@/components/PrettyJsonTransaction";
@@ -48,10 +50,8 @@ import {
   HorizonErrorResponse,
   RpcErrorResponse,
 } from "@/components/TxErrorResponse";
-import { trackEvent, TrackingEvent } from "@/metrics/tracking";
-
-import { parseJsonString } from "@/helpers/parseJsonString";
 import { TransactionSuccessCard } from "@/components/TransactionSuccessCard";
+import { TxHashLink } from "@/components/TxHashLink";
 
 const SUBMIT_OPTIONS = [
   {
@@ -379,7 +379,7 @@ export default function SubmitTransaction() {
                 <TxResponse
                   data-testid="submit-tx-success-hash"
                   label="Hash:"
-                  value={submitHorizonResponse.hash}
+                  item={<TxHashLink txHash={submitHorizonResponse.hash} />}
                 />
                 <TxResponse
                   data-testid="submit-tx-success-ledger"

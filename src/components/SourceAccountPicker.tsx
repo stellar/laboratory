@@ -1,8 +1,10 @@
+import { useState } from "react";
+
 import { Routes } from "@/constants/routes";
-import { InputSideElement } from "@/components/InputSideElement";
+
 import { SdsLink } from "@/components/SdsLink";
 import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
-import { useStore } from "@/store/useStore";
+import { SignerSelector } from "@/components/SignerSelector";
 
 type SourceAccountPickerProps = {
   value: string;
@@ -15,41 +17,39 @@ export const SourceAccountPicker = ({
   error,
   onChange,
 }: SourceAccountPickerProps) => {
-  const { walletKit } = useStore();
-  const { publicKey: walletKitPubKey } = walletKit || {};
+  const [isSelectorOpen, setIsSelectorOpen] = useState(false);
 
   return (
-    <PubKeyPicker
-      id="source_account"
-      label="Source Account"
-      value={value}
-      error={error}
-      onChange={(e) => {
-        onChange(e.target.value);
-      }}
-      rightElement={
-        walletKitPubKey ? (
-          <InputSideElement
-            variant="button"
-            onClick={() => {
-              if (walletKitPubKey) {
-                onChange(walletKitPubKey);
-              }
-            }}
-            placement="right"
-          >
-            Get connected wallet address
-          </InputSideElement>
-        ) : null
-      }
-      note={
-        <>
-          If you don’t have an account yet, you can create and fund a test net
-          account with the{" "}
-          <SdsLink href={Routes.ACCOUNT_CREATE}>account creator</SdsLink>.
-        </>
-      }
-      infoLink="https://developers.stellar.org/docs/learn/glossary#source-account"
-    />
+    <div className="SourceAccountPicker">
+      <PubKeyPicker
+        id="source_account"
+        label="Source Account"
+        value={value}
+        error={error}
+        onChange={(e) => {
+          onChange(e.target.value);
+        }}
+        rightElement={
+          <SignerSelector.Button
+            mode="public"
+            onClick={() => setIsSelectorOpen(!isSelectorOpen)}
+          />
+        }
+        note={
+          <>
+            If you don’t have an account yet, you can create and fund a test net
+            account with the{" "}
+            <SdsLink href={Routes.ACCOUNT_CREATE}>account creator</SdsLink>.
+          </>
+        }
+        infoLink="https://developers.stellar.org/docs/learn/glossary#source-account"
+      />
+      <SignerSelector.Dropdown
+        mode="public"
+        onChange={onChange}
+        isOpen={isSelectorOpen}
+        onClose={() => setIsSelectorOpen(false)}
+      />
+    </div>
   );
 };

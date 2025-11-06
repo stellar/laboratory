@@ -120,6 +120,7 @@ export enum TrackingEvent {
   ACCOUNT_CREATE_GENERATE_KEYPAIR = "account: create: generate keypair",
   ACCOUNT_CREATE_FUND_ACCOUNT = "account: create: fund account",
   ACCOUNT_CREATE_SAVE = "account: create: save account",
+  ACCOUNT_SAVED_ADD_MANUALLY = "account: saved: add manually",
   ACCOUNT_FUND_FUND_ACCOUNT = "account: fund: fund account",
   ACCOUNT_FUND_FILL = "account: fund: fill generated key",
   ACCOUNT_MUXED_CREATE = "account: muxed: create",

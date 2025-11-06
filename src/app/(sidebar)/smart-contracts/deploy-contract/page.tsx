@@ -45,7 +45,7 @@ import { delayedAction } from "@/helpers/delayedAction";
 import { dereferenceSchema } from "@/helpers/dereferenceSchema";
 import { getScValsFromArgs } from "@/helpers/sorobanUtils";
 import { stellarExpertTransactionLink } from "@/helpers/stellarExpertTransactionLink";
-import { stellarExpertAccountLink } from "@/helpers/stellarExpertAccountLink";
+import { stellarExpertContractLink } from "@/helpers/stellarExpertContractLink";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 
 import { NetworkType } from "@/types/types";
@@ -512,7 +512,7 @@ export default function DeployContract() {
   const renderContractIdExternalLink = () => {
     const contractId = getContractId();
     return contractId ? (
-      <SdsLink href={stellarExpertAccountLink(contractId, network.id)}>
+      <SdsLink href={stellarExpertContractLink(contractId, network.id)}>
         {contractId || ""}
         <Icon.LinkExternal01 />
       </SdsLink>

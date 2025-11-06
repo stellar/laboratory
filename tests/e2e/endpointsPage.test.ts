@@ -9,11 +9,31 @@ test.describe("API Explorer page", () => {
     await expect(page.locator("h1")).toHaveText("API Explorer");
   });
 
-  test("Renders info cards", async ({ page }) => {
-    await expect(page.locator("h2")).toHaveText([
-      "Stellar RPC Methods",
-      "Horizon Endpoints",
-    ]);
+  test.describe("Introduction", () => {
+    test("Renders About RPC Methods section", async ({ page }) => {
+      const section = page.locator(".Lab__home__content").nth(1);
+      await expect(section.locator("h2")).toHaveText("About RPC Methods");
+
+      const cards = section.locator(".Endpoints__introCard h3");
+      await expect(cards).toHaveCount(3);
+      await expect(cards).toContainText([
+        "RPC Query Methods",
+        "Simulation & Fees",
+        "Transaction Execution",
+      ]);
+    });
+
+    test("Renders Save & Sharing section", async ({ page }) => {
+      const section = page.locator(".Lab__home__content").nth(2);
+      await expect(section.locator("h2")).toHaveText("Save & Sharing");
+    });
+
+    test("Renders About Horizon Endpoints section", async ({ page }) => {
+      const section = page.locator(".Lab__home__content").nth(3);
+      const card = section.locator(".Endpoints__introCard h3");
+
+      await expect(card).toHaveText("Horizon");
+    });
   });
 
   test.describe("Sidebar", () => {

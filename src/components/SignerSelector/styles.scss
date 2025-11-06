@@ -1,0 +1,74 @@
+@use "../../styles/utils.scss" as *;
+
+.SignerSelector {
+  position: relative;
+  margin-right: calc(var(--Input-padding-horizontal) * -1);
+  border-left: 1px solid var(--Input-color-border);
+  border-top-right-radius: var(--Input-border-radius);
+  border-bottom-right-radius: var(--Input-border-radius);
+
+  .Button {
+    border: none;
+  }
+
+  &__dropdown {
+    position: absolute;
+    top: calc(var(--sds-gap-xxl) * 2);
+    transform: translateY(0);
+
+    left: 0;
+    right: 0;
+    z-index: 1000;
+
+    background-color: var(--sds-clr-gray-01);
+    border: 1px solid var(--sds-clr-gray-06);
+    border-radius: pxToRem(4px);
+    padding: pxToRem(3px) pxToRem(4px);
+
+    max-height: pxToRem(240px);
+    overflow-y: auto;
+
+    &__item {
+      &__label {
+        font-size: pxToRem(12px);
+        line-height: pxToRem(18px);
+
+        padding: pxToRem(3px) pxToRem(8px);
+      }
+
+      &__value {
+        color: var(--sds-clr-gray-12);
+        font-size: pxToRem(14px);
+        line-height: pxToRem(20px);
+        font-weight: var(--sds-fw-medium);
+        display: grid;
+        align-items: center;
+
+        gap: pxToRem(8px);
+
+        padding: pxToRem(3px) pxToRem(8px);
+
+        @media (hover: hover) {
+          cursor: pointer;
+
+          &:hover {
+            background-color: var(--sds-clr-gray-04);
+          }
+        }
+
+        &__keypair {
+          display: grid;
+          grid-template-columns: auto 120px;
+
+          .keypair_name {
+            color: var(--sds-clr-gray-11);
+          }
+
+          .keypair_publickey {
+            text-align: right;
+          }
+        }
+      }
+    }
+  }
+}
