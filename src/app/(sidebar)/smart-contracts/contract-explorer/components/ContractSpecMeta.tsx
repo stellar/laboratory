@@ -26,13 +26,15 @@ import {
   AnyObject,
 } from "@/types/types";
 
-export const ContractSpec = ({
+export const ContractSpecMeta = ({
+  sectionsToShow,
   rpcUrl,
   wasmHash,
   isActive,
   isSourceStellarExpert,
   isSacType,
 }: {
+  sectionsToShow: ContractSectionName[];
   rpcUrl: string;
   wasmHash: string;
   isActive: boolean;
@@ -203,47 +205,6 @@ export const ContractSpec = ({
 
   return (
     <Box gap="lg">
-      {/* Sections */}
-      {contractSections?.contractmetav0
-        ? renderSectionCodeEditor({
-            sectionName: "contractmetav0",
-            title: "Contract Meta",
-            infoLink:
-              "https://developers.stellar.org/docs/learn/fundamentals/contract-development/overview#contract-meta",
-            height: "22",
-          })
-        : null}
-
-      {contractSections?.contractenvmetav0
-        ? renderSectionCodeEditor({
-            sectionName: "contractenvmetav0",
-            title: "Contract Env Meta",
-            infoLink:
-              "https://developers.stellar.org/docs/learn/fundamentals/contract-development/overview#environment-meta",
-            height: "15",
-          })
-        : null}
-
-      {contractSections?.contractspecv0
-        ? renderSectionCodeEditor({
-            sectionName: "contractspecv0",
-            title: "Contract Spec",
-            infoLink:
-              "https://developers.stellar.org/docs/learn/fundamentals/contract-development/overview#contract-spec",
-            languages: ["interface", "json", "xdr"],
-          })
-        : null}
-
-      {/* Stellar Asset Contract section */}
-      {isSacType
-        ? renderSectionCodeEditor({
-            sectionName: "sac",
-            title: "Contract Spec",
-            infoLink:
-              "https://developers.stellar.org/docs/tokens/stellar-asset-contract",
-          })
-        : null}
-
       {/* Download Wasm button */}
       {!isSacType ? (
         <Box gap="xs" direction="column" align="end">
@@ -273,6 +234,51 @@ export const ContractSpec = ({
           </WithInfoText>
         </Box>
       ) : null}
+
+      {/* Sections */}
+      {sectionsToShow.includes("contractmetav0") &&
+      contractSections?.contractmetav0
+        ? renderSectionCodeEditor({
+            sectionName: "contractmetav0",
+            title: "Contract Meta",
+            infoLink:
+              "https://developers.stellar.org/docs/learn/fundamentals/contract-development/overview#contract-meta",
+            height: "22",
+          })
+        : null}
+
+      {sectionsToShow.includes("contractenvmetav0") &&
+      contractSections?.contractenvmetav0
+        ? renderSectionCodeEditor({
+            sectionName: "contractenvmetav0",
+            title: "Contract Env Meta",
+            infoLink:
+              "https://developers.stellar.org/docs/learn/fundamentals/contract-development/overview#environment-meta",
+            height: "15",
+          })
+        : null}
+
+      {sectionsToShow.includes("contractspecv0") &&
+      contractSections?.contractspecv0
+        ? renderSectionCodeEditor({
+            sectionName: "contractspecv0",
+            title: "Contract Spec",
+            infoLink:
+              "https://developers.stellar.org/docs/learn/fundamentals/contract-development/overview#contract-spec",
+            languages: ["interface", "json", "xdr"],
+            height: "60",
+          })
+        : null}
+
+      {/* Stellar Asset Contract section */}
+      {sectionsToShow.includes("sac") && isSacType
+        ? renderSectionCodeEditor({
+            sectionName: "sac",
+            title: "Contract Spec",
+            infoLink:
+              "https://developers.stellar.org/docs/tokens/stellar-asset-contract",
+          })
+        : null}
 
       {isSourceStellarExpert ? <PoweredByStellarExpert /> : null}
     </Box>

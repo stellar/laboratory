@@ -117,8 +117,10 @@ test.describe("Signer Selector", () => {
       await expect(multiPickerInputs).toHaveCount(2);
 
       await pageContext.getByText("Use secret key").nth(1).click();
-      const { values: values2 } =
-        await validateSignerSelectorOptions(pageContext);
+      const { values: values2 } = await validateSignerSelectorOptions(
+        pageContext,
+        // multiPickerInputs.nth(1),
+      );
       await values2.nth(1).click();
       await expect(multiPickerInputs.nth(1).locator("input")).toHaveValue(
         SAVED_ACCOUNT_2_SECRET,
