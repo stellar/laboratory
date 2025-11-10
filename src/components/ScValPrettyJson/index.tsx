@@ -21,10 +21,12 @@ export const ScValPrettyJson = ({
   isReady,
   xdrString,
   json,
+  formatAsset,
 }: {
   isReady: boolean;
   xdrString?: string;
   json?: AnyObject | null;
+  formatAsset?: boolean;
 }) => {
   const { network } = useStore();
 
@@ -156,8 +158,28 @@ export const ScValPrettyJson = ({
             {value}
           </Value>
         );
-      case "bool":
       case "string":
+        // Format asset
+        if (formatAsset && value?.split(":")?.length === 2) {
+          const [code, issuer] = value.split(":");
+
+          return (
+            <div className="ScValPrettyJson__value">
+              <div data-type="string">
+                <Quotes>{code}</Quotes>
+                {renderAddress(issuer)}
+              </div>
+              {hasComma ? <Comma /> : null}
+            </div>
+          );
+        }
+
+        return (
+          <Value key={`${type}-${uuidv4()}`} type={type} hasComma={hasComma}>
+            {`${value}`}
+          </Value>
+        );
+      case "bool":
       case "wasm":
       default:
         return isValueOnly ? (

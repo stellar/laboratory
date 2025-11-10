@@ -6,7 +6,7 @@
   --ScValPrettyJson-type-offset-left: #{pxToRem(4px)};
   --ScValPrettyJson-type-offset-top: #{pxToRem(6px)};
 
-  font-family: var(--sds-ff-monospace);
+  font-family: var(--sds-ff-monospace), monospace;
   font-size: pxToRem(14px);
   line-height: pxToRem(20px);
   font-weight: var(--sds-fw-medium);
@@ -97,6 +97,11 @@
     // String
     [data-type="string"] {
       color: var(--sds-clr-gray-12);
+
+      // Gap needed for the asset link
+      .Link {
+        padding-left: pxToRem(4px);
+      }
     }
 
     // Bytes

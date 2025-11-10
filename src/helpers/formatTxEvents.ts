@@ -4,6 +4,18 @@ import {
   RpcTxJsonResponseTxEvent,
 } from "@/types/types";
 
+export type FormattedTxEvent = {
+  contractId: string;
+  topics: AnyObject[];
+  data: AnyObject;
+  rawJson: any;
+};
+
+type TopicItem = {
+  label: string;
+  value: any;
+};
+
 export const formatTxEvents = ({
   contractEvents,
   transactionEvents,
@@ -12,7 +24,6 @@ export const formatTxEvents = ({
   transactionEvents: RpcTxJsonResponseTransactionEventsJson | undefined;
 }) => {
   const formattedContractEvents = contractEvents?.map((ce) => ({
-    title: getTitle(ce.body.v0.topics),
     contractId: ce.contract_id,
     topics: formatTopics(ce.body.v0.topics),
     data: ce.body.v0.data,
@@ -20,12 +31,10 @@ export const formatTxEvents = ({
   }));
 
   const formattedTransactionEvents = transactionEvents?.map((te) => ({
-    title: getTitle(te.event.body.v0.topics),
     contractId: te.event.contract_id,
     topics: formatTopics(te.event.body.v0.topics),
     data: te.event.body.v0.data,
     rawJson: te,
-    stage: te.stage,
   }));
 
   return { formattedContractEvents, formattedTransactionEvents };
@@ -34,12 +43,6 @@ export const formatTxEvents = ({
 // =============================================================================
 // Helpers
 // =============================================================================
-const getTitle = (topics: AnyObject[]) => {
-  return topics?.[0]?.symbol
-    ? `${formatSnakeCaseToTitle(topics[0].symbol)} Event`
-    : "Event";
-};
-
 const formatSnakeCaseToTitle = (text: string): string => {
   if (!text) return text;
 
@@ -47,11 +50,6 @@ const formatSnakeCaseToTitle = (text: string): string => {
     .split("_")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(" ");
-};
-
-type TopicItem = {
-  label: string;
-  value: any;
 };
 
 const formatTopics = (topics: AnyObject[]) => {
@@ -67,21 +65,11 @@ const formatTopics = (topics: AnyObject[]) => {
 const formatTopicItem = (key: string, val: any) => {
   let value = val;
 
-  switch (key) {
-    case "string":
-      if (isAssetValue(val)) {
-        value = val === "native" ? "native (XLM)" : val;
-      }
-      break;
-    // TODO: format map and vec
-    case "map":
-    case "vec":
-      break;
-    default:
-    // Do nothing
+  if (isAssetValue(val)) {
+    value = val === "native" ? "native (XLM)" : val;
   }
 
-  return { label: formatSnakeCaseToTitle(key), value };
+  return { label: formatSnakeCaseToTitle(key), value: { [key]: value } };
 };
 
 const isAssetValue = (val: any) => {
