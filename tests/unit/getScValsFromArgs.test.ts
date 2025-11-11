@@ -294,6 +294,61 @@ describe("convert js arguments to smart contract values using getScValsFromArgs"
     expect(expectedResult).toEqual(scValsResult);
   });
 
+  // Multiple complex arguments (struct, map, etc.)
+  it("resolves multiple struct arguments", () => {
+    const args = {
+      struct1: {
+        a: {
+          value: "10",
+          type: "u32",
+        },
+        b: {
+          value: "false",
+          type: "bool",
+        },
+      },
+      struct2: {
+        c: {
+          value: "20",
+          type: "u32",
+        },
+        d: {
+          value: "true",
+          type: "bool",
+        },
+      },
+    };
+
+    const scVals: xdr.ScVal[] = [];
+    const scValsResult = getScValsFromArgs(args, scVals);
+    const expectedResult: xdr.ScVal[] = [
+      // First argument: struct1
+      xdr.ScVal.scvMap([
+        new xdr.ScMapEntry({
+          key: xdr.ScVal.scvSymbol("a"),
+          val: xdr.ScVal.scvU32(10),
+        }),
+        new xdr.ScMapEntry({
+          key: xdr.ScVal.scvSymbol("b"),
+          val: xdr.ScVal.scvBool(false),
+        }),
+      ]),
+      // Second argument: struct2
+      xdr.ScVal.scvMap([
+        new xdr.ScMapEntry({
+          key: xdr.ScVal.scvSymbol("c"),
+          val: xdr.ScVal.scvU32(20),
+        }),
+        new xdr.ScMapEntry({
+          key: xdr.ScVal.scvSymbol("d"),
+          val: xdr.ScVal.scvBool(true),
+        }),
+      ]),
+    ];
+
+    expect(expectedResult).toEqual(scValsResult);
+  });
+
   // Strings
   it("resolves string", () => {
     const args = {
