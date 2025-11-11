@@ -26,12 +26,13 @@ import { Routes } from "@/constants/routes";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 import {
   ContractInfoApiResponse,
+  ContractSectionName,
   EmptyObj,
   Network,
   WasmData,
 } from "@/types/types";
 
-import { ContractSpec } from "./ContractSpec";
+import { ContractSpecMeta } from "./ContractSpecMeta";
 import { ContractStorage } from "./ContractStorage";
 import { VersionHistory } from "./VersionHistory";
 import { BuildInfo } from "./BuildInfo";
@@ -54,6 +55,7 @@ export const ContractInfo = ({
   type ContractTabId =
     | "contract-bindings"
     | "contract-contract-spec"
+    | "contract-contract-meta"
     | "contract-source-code"
     | "contract-contract-storage"
     | "contract-version-history"
@@ -358,6 +360,17 @@ export const ContractInfo = ({
     );
   }
 
+  const renderContractSpecMeta = (sectionsToShow: ContractSectionName[]) => (
+    <ContractSpecMeta
+      sectionsToShow={sectionsToShow}
+      wasmHash={infoData?.wasm || ""}
+      rpcUrl={network.rpcUrl}
+      isActive={activeTab === "contract-contract-spec"}
+      isSourceStellarExpert={false}
+      isSacType={isSacType}
+    />
+  );
+
   return (
     <Box gap="lg">
       <Card>
@@ -389,19 +402,23 @@ export const ContractInfo = ({
               id: "contract-contract-spec",
               label: "Contract Spec",
               content: isDataLoaded ? (
-                <ContractSpec
-                  wasmHash={infoData?.wasm || ""}
-                  rpcUrl={network.rpcUrl}
-                  isActive={activeTab === "contract-contract-spec"}
-                  isSourceStellarExpert={false}
-                  isSacType={isSacType}
-                />
+                renderContractSpecMeta(["contractspecv0", "sac"])
               ) : (
                 <NoContractLoadedView />
               ),
               isDisabled: !isDataLoaded,
             }}
             tab2={{
+              id: "contract-contract-meta",
+              label: "Contract & Env Meta",
+              content: isDataLoaded ? (
+                renderContractSpecMeta(["contractmetav0", "contractenvmetav0"])
+              ) : (
+                <NoContractLoadedView />
+              ),
+              isDisabled: !isDataLoaded,
+            }}
+            tab3={{
               id: "contract-source-code",
               label: "Source Code",
               content: (
@@ -418,7 +435,7 @@ export const ContractInfo = ({
               ),
               isDisabled: !isDataLoaded,
             }}
-            tab3={{
+            tab4={{
               id: "contract-contract-storage",
               label: "Contract Storage",
               content: infoData ? (
@@ -432,7 +449,7 @@ export const ContractInfo = ({
               ) : null,
               isDisabled: !isDataLoaded,
             }}
-            tab4={{
+            tab5={{
               id: "contract-build-info",
               label: "Build Info",
               content: (
@@ -443,7 +460,13 @@ export const ContractInfo = ({
               ),
               isDisabled: !isDataLoaded || isSacType,
             }}
-            tab5={{
+            tab6={{
+              id: "contract-bindings",
+              label: "Bindings",
+              content: <Bindings />,
+              isDisabled: !isDataLoaded,
+            }}
+            tab7={{
               id: "contract-version-history",
               label: "Version History",
               content: infoData ? (
@@ -455,12 +478,6 @@ export const ContractInfo = ({
                 />
               ) : null,
               isDisabled: !isDataLoaded || isSacType,
-            }}
-            tab6={{
-              id: "contract-bindings",
-              label: "Bindings",
-              content: <Bindings />,
-              isDisabled: !isDataLoaded,
             }}
             activeTabId={activeTab}
             onTabChange={(tabId) => {
