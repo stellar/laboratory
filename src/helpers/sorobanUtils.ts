@@ -502,7 +502,6 @@ export const getScValsFromArgs = (
   args: SorobanInvokeValue["args"],
   scVals: xdr.ScVal[] = [],
 ): xdr.ScVal[] => {
-  console.log("args to convert: ", args);
   // Primitive Case
   if (Object.values(args).every((v: any) => v.type && v.value)) {
     const primitiveScVals = Object.values(args).map((v) => {
