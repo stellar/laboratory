@@ -123,7 +123,6 @@ export const renderOneOf = ({
         id="json-schema-form-renderer-one-of"
         fieldSize="md"
         label={name}
-        value={tagName || ""}
         onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
           const isEnumType = schema?.oneOf?.find(
             (oneOf) =>
