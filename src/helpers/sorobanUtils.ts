@@ -401,16 +401,26 @@ const convertObjectToScVal = (obj: Record<string, any>): xdr.ScVal => {
   //  }
 
   for (const key in obj) {
-    if (obj[key].type === "bool") {
-      convertedValue[key] = obj[key].value === "true" ? true : false;
-      typeHints[key] = ["symbol"];
-    } else {
-      convertedValue[key] = obj[key].value;
-      typeHints[key] = ["symbol", obj[key].type];
-    }
+    const field = obj[key];
+    const { value, typeHint } = convertPrimitiveField(field);
+    convertedValue[key] = value;
+    typeHints[key] = typeHint;
   }
 
   return nativeToScVal(convertedValue, { type: typeHints });
+};
+
+const convertPrimitiveField = (field: any) => {
+  if (field.type === "bool") {
+    return {
+      value: field.value === "true" ? true : false,
+      typeHint: ["symbol"],
+    };
+  }
+  return {
+    value: field.value,
+    typeHint: ["symbol", field.type],
+  };
 };
 
 const convertObjectToMap = (
@@ -492,6 +502,7 @@ export const getScValsFromArgs = (
   args: SorobanInvokeValue["args"],
   scVals: xdr.ScVal[] = [],
 ): xdr.ScVal[] => {
+  console.log("args to convert: ", args);
   // Primitive Case
   if (Object.values(args).every((v: any) => v.type && v.value)) {
     const primitiveScVals = Object.values(args).map((v) => {
@@ -592,10 +603,42 @@ export const getScValsFromArgs = (
       }
     }
 
-    // Object Case
-    if (Object.values(argValue).every((v: any) => v.type && v.value)) {
-      const convertedObj = convertObjectToScVal(argValue);
-      scVals.push(nativeToScVal(convertedObj));
+    // Object Case - Struct with primitives and/or complex fields
+    if (typeof argValue === "object" && !Array.isArray(argValue)) {
+      // Check if all fields are primitives (type + value)
+      const allPrimitives = Object.values(argValue).every(
+        (v: any) => v.type && v.value !== undefined,
+      );
+
+      if (allPrimitives) {
+        // Delegate to convertObjectToScVal for all-primitive structs
+        const convertedObj = convertObjectToScVal(argValue);
+        scVals.push(convertedObj);
+      } else {
+        // Handle mixed struct (primitives, enums, arrays, nested objects)
+        const convertedValue: Record<string, any> = {};
+        const typeHints: Record<string, any> = {};
+
+        for (const key in argValue) {
+          const field = argValue[key];
+
+          // Handle primitive fields using convertObjectToScVal logic
+          if (field.type && field.value !== undefined) {
+            const { value, typeHint } = convertPrimitiveField(field);
+            convertedValue[key] = value;
+            typeHints[key] = typeHint;
+          }
+          // Handle all other field types recursively (enums, arrays, nested objects)
+          else {
+            const fieldScVal = getScValFromArg(field, scVals);
+            convertedValue[key] = fieldScVal;
+            typeHints[key] = ["symbol"];
+          }
+        }
+
+        const structScVal = nativeToScVal(convertedValue, { type: typeHints });
+        scVals.push(structScVal);
+      }
       continue;
     }
 
