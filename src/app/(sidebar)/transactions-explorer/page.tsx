@@ -59,6 +59,11 @@ export default function Explorer() {
     startLedger,
   });
 
+  const isLocalNetwork =
+    network.id === "custom" &&
+    network.rpcUrl.includes("localhost:8000/rpc") &&
+    network.passphrase === "Standalone Network ; February 2017";
+
   useEffect(() => {
     // If rpc url is the same, we don't need to reset state.
     if (
@@ -92,7 +97,11 @@ export default function Explorer() {
         return;
       }
 
-      setNextFetchAt(Date.now() + 3000);
+      if (isLocalNetwork) {
+        setNextFetchAt(Date.now() + 1000);
+      } else {
+        setNextFetchAt(Date.now() + 5000);
+      }
 
       try {
         await txsQuery.refetch();
