@@ -73,17 +73,14 @@ export const renderPrimitivesType = ({
     const scValType = convertSpecTypeToScValType(schemaType);
 
     if (path.length > 0) {
-      // Ensure args is initialized with path[0] when empty
-      const currentArgs = parsedSorobanOperation.args || {};
-      const initialArgs =
-        Object.keys(currentArgs).length === 0 && path.length > 0
-          ? { [path[0]]: {} }
-          : currentArgs;
-
-      const updatedList = jsonSchema.setDeepValue(initialArgs, path.join("."), {
-        value: e.target.value,
-        type: scValType,
-      });
+      const updatedList = jsonSchema.setDeepValue(
+        parsedSorobanOperation.args,
+        path.join("."),
+        {
+          value: e.target.value,
+          type: scValType,
+        },
+      );
 
       onChange({
         ...invokeContractBaseProps,
