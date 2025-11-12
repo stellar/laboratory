@@ -110,6 +110,7 @@ export const Events = ({
             <div
               className="TransactionEvents__card"
               key={`${id}-${cIndex}-${t.contractId}`}
+              data-testid={`${id}-item`}
             >
               <ContractIdBadge>{t.contractId}</ContractIdBadge>
 
