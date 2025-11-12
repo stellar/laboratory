@@ -769,4 +769,125 @@ describe("convert js arguments to smart contract values using getScValsFromArgs"
     const expectedResult: xdr.ScVal[] = [xdr.ScVal.scvVec(vec)];
     expect(expectedResult).toEqual(scValsResult);
   });
+
+  // Resolves Struct with Complex Fields
+  it("resolves a struct with complex fields", () => {
+    const args = {
+      config: {
+        admin: {
+          value: "GBQXC7ZQHOUAM5JBU5YEC7VE2AT3GUQKK5ACH47HM77CDC7QBU5VZEEV",
+          type: "address",
+        },
+        assets: [
+          {
+            tag: "Stellar",
+            values: [
+              {
+                value:
+                  "CAQCFVLOBK5GIULPNZRGATJJMIZL5BSP7X5YJVMGCPTUEPFM4AVSRCJU",
+                type: "address",
+              },
+            ],
+          },
+        ],
+        base_asset: {
+          tag: "Stellar",
+          values: [
+            {
+              value: "CAQCFVLOBK5GIULPNZRGATJJMIZL5BSP7X5YJVMGCPTUEPFM4AVSRCJU",
+              type: "address",
+            },
+          ],
+        },
+        cache_size: {
+          value: "100",
+          type: "u32",
+        },
+        decimals: {
+          value: "200",
+          type: "u32",
+        },
+        fee_config: {
+          tag: "Some",
+          values: [
+            [
+              {
+                value:
+                  "GBQXC7ZQHOUAM5JBU5YEC7VE2AT3GUQKK5ACH47HM77CDC7QBU5VZEEV",
+                type: "address",
+              },
+              {
+                value: "10",
+                type: "i128",
+              },
+            ],
+          ],
+        },
+        history_retention_period: {
+          value: "100",
+          type: "u64",
+        },
+        resolution: {
+          value: "100",
+          type: "u32",
+        },
+      },
+    };
+
+    const scVals: xdr.ScVal[] = [];
+    const scValsResult = getScValsFromArgs(args, scVals);
+
+    const expectedResult: xdr.ScVal[] = [
+      xdr.ScVal.scvMap([
+        new xdr.ScMapEntry({
+          key: xdr.ScVal.scvSymbol("admin"),
+          val: new Address("GBQXC7ZQHOUAM5JBU5YEC7VE2AT3GUQKK5ACH47HM77CDC7QBU5VZEEV").toScVal(),
+        }),
+        new xdr.ScMapEntry({
+          key: xdr.ScVal.scvSymbol("assets"),
+          val: xdr.ScVal.scvVec([
+            xdr.ScVal.scvVec([
+              xdr.ScVal.scvSymbol("Stellar"),
+              new Address("CAQCFVLOBK5GIULPNZRGATJJMIZL5BSP7X5YJVMGCPTUEPFM4AVSRCJU").toScVal(),
+            ]),
+          ]),
+        }),
+        new xdr.ScMapEntry({
+          key: xdr.ScVal.scvSymbol("base_asset"),
+          val: xdr.ScVal.scvVec([
+            xdr.ScVal.scvSymbol("Stellar"),
+            new Address("CAQCFVLOBK5GIULPNZRGATJJMIZL5BSP7X5YJVMGCPTUEPFM4AVSRCJU").toScVal(),
+          ]),
+        }),
+        new xdr.ScMapEntry({
+          key: xdr.ScVal.scvSymbol("cache_size"),
+          val: xdr.ScVal.scvU32(100),
+        }),
+        new xdr.ScMapEntry({
+          key: xdr.ScVal.scvSymbol("decimals"),
+          val: xdr.ScVal.scvU32(200),
+        }),
+        new xdr.ScMapEntry({
+          key: xdr.ScVal.scvSymbol("fee_config"),
+          val: xdr.ScVal.scvVec([
+            xdr.ScVal.scvSymbol("Some"),
+            xdr.ScVal.scvVec([
+              new Address("GBQXC7ZQHOUAM5JBU5YEC7VE2AT3GUQKK5ACH47HM77CDC7QBU5VZEEV").toScVal(),
+              new ScInt("10", { type: "i128" }).toScVal(),
+            ]),
+          ]),
+        }),
+        new xdr.ScMapEntry({
+          key: xdr.ScVal.scvSymbol("history_retention_period"),
+          val: xdr.ScVal.scvU64(new xdr.Uint64("100")),
+        }),
+        new xdr.ScMapEntry({
+          key: xdr.ScVal.scvSymbol("resolution"),
+          val: xdr.ScVal.scvU32(100),
+        }),
+      ]),
+    ];
+
+    expect(expectedResult).toEqual(scValsResult);
+  });
 });
