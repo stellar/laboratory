@@ -34,6 +34,7 @@ export default function Explorer() {
   const [iter, setIter] = useState(0);
   const [nextFetchAt, setNextFetchAt] = useState<number>(0);
   const [startLedger, setStartLedger] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [transactions] = useState<Map<string, NormalizedTransaction>>(() => {
     const map: Map<string, NormalizedTransaction> = new Map();
     const txs = localStorage.getItem(localStorageKey);
@@ -67,6 +68,7 @@ export default function Explorer() {
       return;
     }
 
+    // RPC URL changed, reset everything
     localStorage.removeItem(localStorageKey);
     localStorage.setItem(
       LOCAL_STORAGE_EXPLORER_TRANSACTIONS_RPC_REF,
@@ -90,7 +92,7 @@ export default function Explorer() {
         return;
       }
 
-      setNextFetchAt(Date.now() + 5000);
+      setNextFetchAt(Date.now() + 3000);
 
       try {
         await txsQuery.refetch();
@@ -105,19 +107,30 @@ export default function Explorer() {
           }
 
           const txs = Array.from(transactions.values())
-            .toSorted((tx) => tx.createdAt)
+            .toSorted((a, b) =>
+              a.createdAt > b.createdAt
+                ? 1
+                : a.createdAt < b.createdAt
+                  ? -1
+                  : 0,
+            )
             .splice(-500);
           localStorage.setItem(localStorageKey, jsonStringify(txs)!);
-          setStartLedger(txsQuery.data.latestLedger);
+
+          if (txsQuery.data.latestLedger) {
+            setStartLedger(txsQuery.data.latestLedger);
+          }
         }
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {
-        // do nothing
+        console.error("error in fetchTxs:", e);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     if (network.rpcUrl) {
       fetchTxs();
+      setIsLoading(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -140,7 +153,10 @@ export default function Explorer() {
       <PageCard heading="Transactions Explorer">
         {errorElement}
 
-        <TransactionsTable transactions={Array.from(transactions.values())} />
+        <TransactionsTable
+          transactions={Array.from(transactions.values())}
+          isLoading={isLoading}
+        />
       </PageCard>
     </Box>
   );
