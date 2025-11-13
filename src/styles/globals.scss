@@ -1408,3 +1408,35 @@
     }
   }
 }
+
+// Contract Explorer: Build Info
+.BuildInfoInstructions {
+  &__details {
+    padding-left: pxToRem(24px);
+    font-size: pxToRem(14px);
+    line-height: pxToRem(20px);
+    color: var(--sds-clr-gray-11);
+
+    ul {
+      padding: 0;
+      margin: 0;
+
+      li {
+        list-style-type: disc;
+      }
+    }
+
+    li,
+    pre {
+      font-size: pxToRem(14px);
+      line-height: pxToRem(20px);
+    }
+
+    pre {
+      line-height: pxToRem(24px);
+      letter-spacing: -0.28px;
+      padding: 0;
+      margin: 0;
+    }
+  }
+}
