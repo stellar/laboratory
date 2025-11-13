@@ -43,14 +43,19 @@ export const renderOneOf = ({
     function_name: parsedSorobanOperation.function_name,
   };
 
-  const keyName = Object.keys(parsedSorobanOperation.args)[0];
+  // Use path[0] as keyName, fallback to first key from args if path is empty
+  const keyName = path[0] || Object.keys(parsedSorobanOperation.args || {})[0];
 
   let tagName;
 
   if (path.length > 1) {
-    tagName = get(parsedSorobanOperation.args[keyName], path.join("."))?.tag;
+    // When path is nested, get the tag from the nested path within keyName
+    // e.g., path = ["config", "fee_config"] -> get args.config.fee_config.tag
+    const nestedPath = path.slice(1).join(".");
+    tagName = get(parsedSorobanOperation.args?.[keyName], nestedPath)?.tag;
   } else {
-    tagName = parsedSorobanOperation.args[keyName]?.tag;
+    // When path is single level, get tag directly from keyName
+    tagName = parsedSorobanOperation.args?.[keyName]?.tag;
   }
 
   const selectedSchema = schema.oneOf.find(
@@ -61,18 +66,23 @@ export const renderOneOf = ({
     e: React.ChangeEvent<HTMLSelectElement>,
     isEnumType: boolean,
   ) => {
-    const pathSegments = path[0].split(".");
+    // Use path[0] as keyName, fallback to first key from args if path is empty
+    const keyName =
+      path[0] || Object.keys(parsedSorobanOperation.args || {})[0];
 
-    if (pathSegments.length > 1) {
-      const keyName = Object.keys(parsedSorobanOperation.args)[0];
+    // Path is always an array format like ["config", "fee_config"] or ["config", "0", "fee_config"]
+    if (path.length > 1 && path[0] === keyName) {
+      // Path is nested within the keyName object
+      // e.g., path = ["config", "fee_config"] -> updatedPath = "fee_config"
+      // e.g., path = ["config", "0", "fee_config"] -> updatedPath = "0.fee_config"
+      const updatedPath = path.slice(1).join(".");
 
-      const updatedPath =
-        keyName === pathSegments[0]
-          ? pathSegments.slice(1).join(".")
-          : pathSegments.join(".");
+      // Ensure args[keyName] exists before setting deep value
+      const currentArgs = parsedSorobanOperation.args || {};
+      const currentKeyValue = currentArgs[keyName] || {};
 
       const updatedTupleList = jsonSchema.setDeepValue(
-        parsedSorobanOperation.args[keyName],
+        currentKeyValue,
         updatedPath,
         {
           tag: e.target.value,
@@ -82,15 +92,23 @@ export const renderOneOf = ({
       onChange({
         ...invokeContractBaseProps,
         args: {
-          ...parsedSorobanOperation.args,
+          ...currentArgs,
           [keyName]: updatedTupleList,
         },
       });
     } else {
+      // Single level path or no path, set at root level
+      // If args is empty and we have a path, initialize with path[0]
+      const currentArgs = parsedSorobanOperation.args || {};
+      const initialArgs =
+        Object.keys(currentArgs).length === 0 && path.length > 0
+          ? { [path[0]]: {} }
+          : currentArgs;
+
       onChange({
         ...invokeContractBaseProps,
         args: {
-          ...parsedSorobanOperation.args,
+          ...initialArgs,
           [name]: {
             [isEnumType ? "enum" : "tag"]: e.target.value,
           },
@@ -105,7 +123,6 @@ export const renderOneOf = ({
         id="json-schema-form-renderer-one-of"
         fieldSize="md"
         label={name}
-        value={get(parsedSorobanOperation.args, path.join("."))?.tag}
         onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
           const isEnumType = schema?.oneOf?.find(
             (oneOf) =>
@@ -122,7 +139,7 @@ export const renderOneOf = ({
 
           if (oneOf.enum && oneOf.enum.length > 0) {
             const val = oneOf.enum[0]?.toString();
-          
+
             return (
               <option value={val} key={`${oneOf.title}`}>
                 {oneOf.title} = {val}
