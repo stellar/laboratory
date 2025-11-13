@@ -1,4 +1,4 @@
-import { Alert, Link, Text } from "@stellar/design-system";
+import { Alert, Card, Link, Text } from "@stellar/design-system";
 import { Box } from "@/components/layout/Box";
 import { WasmData } from "@/types/types";
 
@@ -15,26 +15,86 @@ export const BuildInfo = ({
 
   if (!wasmData) {
     return (
-      <Alert variant="warning" placement="inline">
-        <div>
-          This contract has no contract build verification configured, therefore
-          its Build Info is not available.
-        </div>
+      <Box gap="lg">
+        <Alert variant="warning" placement="inline">
+          <div>
+            This contract has no contract build verification configured,
+            therefore its Build Info is not available.
+          </div>
 
-        <div>
-          Verifying your contract’s build helps others understand and trust what
-          it does, and improves transparency across the Stellar ecosystem. To
-          verify, follow the{" "}
-          <Link href="https://stellar.expert/explorer/public/contract/validation">
-            setup instructions on Stellar Expert
-          </Link>
-          . You can also learn more about{" "}
-          <Link href="https://github.com/stellar/stellar-protocol/discussions/1573">
-            Contract Source Validation SEP
-          </Link>
-          .
-        </div>
-      </Alert>
+          <div>
+            Verifying your contract’s build helps others understand and trust
+            what it does, and improves transparency across the Stellar
+            ecosystem. To verify, follow the setup instruction in the{" "}
+            <Link href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0055.md">
+              Contract Build Verification SEP-55
+            </Link>
+            .
+          </div>
+        </Alert>
+
+        <Card>
+          <Box gap="lg" addlClassName="BuildInfoInstructions">
+            <Text as="h3" size="md" weight="medium">
+              Workflow Setup and Configuration
+            </Text>
+
+            <Box gap="xl" addlClassName="BuildInfoInstructions__details">
+              <Box gap="md">
+                <Text as="h4" size="sm" weight="medium">
+                  Prerequisites
+                </Text>
+
+                <ul>
+                  <li>
+                    Create a GitHub Actions workflow file{" "}
+                    <code>.github/workflows/release.yml</code> in your
+                    repository.
+                  </li>
+                  <li>
+                    Decide how the compilation workflow will be triggered. The
+                    recommended way is to configure workflow activation on git
+                    tag creation. This should simplify versioning and ensure
+                    unique release names.
+                  </li>
+                </ul>
+              </Box>
+
+              <Box gap="md">
+                <Text as="h4" size="sm" weight="medium">
+                  Workflow Permissions
+                </Text>
+
+                <Text as="div" size="sm">
+                  In order to create a release, the workflow needs{" "}
+                  <code>id-token: write</code>, <code>contents: write</code> and{" "}
+                  <code>attestations: write</code> permissions. Default workflow
+                  permissions for a repository can be found at{" "}
+                  {'"Settings" -> "Actions" -> "Workflow permissions"'}.{" "}
+                  {`It’s `}
+                  important to specify permissions on the top level in the
+                  workflow file itself:
+                </Text>
+
+                <pre>
+                  {`permissions:
+  id-token: write
+  contents: write
+  attestations: write`}
+                </pre>
+              </Box>
+
+              <Text as="div" size="sm">
+                For more information,{" "}
+                <Link href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0055.md#example-basic-workflow-using-stellar-cli">
+                  see a basic workflow setup using the Stellar CLI
+                </Link>
+                .
+              </Text>
+            </Box>
+          </Box>
+        </Card>
+      </Box>
     );
   }
 
