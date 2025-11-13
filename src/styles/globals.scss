@@ -1423,6 +1423,10 @@
 
       li {
         list-style-type: disc;
+
+        &::before {
+          display: none;
+        }
       }
     }
 
