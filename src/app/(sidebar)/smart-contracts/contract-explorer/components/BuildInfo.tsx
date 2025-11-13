@@ -78,7 +78,8 @@ export const BuildInfo = ({
                   <code>id-token: write</code>, <code>contents: write</code> and{" "}
                   <code>attestations: write</code> permissions. Default workflow
                   permissions for a repository can be found at{" "}
-                  {'"Settings" 🡒 "Actions" 🡒 "Workflow permissions"'}. {`It’s `}
+                  {'"Settings" -> "Actions" -> "Workflow permissions"'}.{" "}
+                  {`It’s `}
                   important to specify permissions on the top level in the
                   workflow file itself:
                 </Text>
