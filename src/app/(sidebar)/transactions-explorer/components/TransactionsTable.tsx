@@ -59,8 +59,10 @@ function underscore(input: string) {
 
 export function TransactionsTable({
   transactions,
+  isLoading,
 }: {
   transactions: NormalizedTransaction[];
+  isLoading: boolean;
 }) {
   const router = useRouter();
   const headers: DataTableHeader[] = [
@@ -81,7 +83,9 @@ export function TransactionsTable({
 
   return (
     <DataTable
-      emptyMessage="No transactions found."
+      emptyMessage={
+        isLoading ? "Loading transactions..." : "No transactions found."
+      }
       pageSize={100}
       tableId="transactions"
       tableHeaders={headers}
