@@ -53,7 +53,7 @@ test.describe("Transaction Dashboard: Fee Breakdown", () => {
     ]);
 
     // Resource fee expanded view
-    const resourceFeeToggle = table.locator(".FeeBreakdown__resourceFeeToggle");
+    const resourceFeeToggle = table.locator(".ExpandToggle");
 
     await expect(resourceFeeToggle).toHaveAttribute(
       "data-is-expanded",
@@ -143,7 +143,7 @@ test.describe("Transaction Dashboard: Fee Breakdown", () => {
     const rows = table.locator(".FeeBreakdown__gridTable__row");
 
     // Resource fee expanded view
-    const resourceFeeToggle = table.locator(".FeeBreakdown__resourceFeeToggle");
+    const resourceFeeToggle = table.locator(".ExpandToggle");
 
     await expect(resourceFeeToggle).toHaveAttribute(
       "data-is-expanded",

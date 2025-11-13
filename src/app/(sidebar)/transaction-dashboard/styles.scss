@@ -1,5 +1,40 @@
 @use "../../../styles/utils.scss" as *;
 
+.ExpandToggle {
+  --ExpandToggle-gap: #{pxToRem(4px)};
+  --ExpandToggle-icon-size: #{pxToRem(12px)};
+  --ExpandToggle-icon-color: var(--sds-clr-gray-09);
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--ExpandToggle-gap);
+  cursor: pointer;
+
+  svg {
+    display: block;
+    width: var(--ExpandToggle-icon-size);
+    height: var(--ExpandToggle-icon-size);
+    stroke: var(--ExpandToggle-icon-color);
+    transform: rotate(0deg);
+    transition: transform ease-in-out 0.2s;
+  }
+
+  &[data-is-expanded="true"] {
+    svg {
+      transform: rotate(90deg);
+    }
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      svg {
+        transform: rotate(90deg);
+      }
+    }
+  }
+}
+
 // =============================================================================
 // State Change
 // =============================================================================
@@ -41,7 +76,7 @@
       }
 
       pre {
-        font-family: var(--sds-ff-monospace);
+        font-family: var(--sds-ff-monospace), monospace;
         line-height: pxToRem(18px);
         word-break: break-all;
       }
@@ -50,7 +85,7 @@
 
   &__noDiff {
     background-color: var(--sds-clr-gray-02);
-    font-family: var(--sds-ff-monospace);
+    font-family: var(--sds-ff-monospace), monospace;
     font-size: pxToRem(14px);
     color: var(--sds-clr-gray-12);
     padding: pxToRem(10px);
@@ -98,37 +133,6 @@
 
     &[data-is-bold="true"] {
       color: var(--sds-clr-gray-12);
-    }
-  }
-
-  &__resourceFeeToggle {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: pxToRem(4px);
-    cursor: pointer;
-
-    svg {
-      display: block;
-      width: pxToRem(12px);
-      height: pxToRem(12px);
-      stroke: var(--sds-clr-gray-09);
-      transform: rotate(0deg);
-      transition: transform ease-in-out 0.2s;
-    }
-
-    &[data-is-expanded="true"] {
-      svg {
-        transform: rotate(90deg);
-      }
-    }
-
-    @media (hover: hover) {
-      &:hover {
-        svg {
-          transform: rotate(90deg);
-        }
-      }
     }
   }
 
@@ -191,7 +195,7 @@
         --Badge-padding-vertical: 0;
         --Badge-padding-horizontal: #{pxToRem(6px)};
 
-        font-family: var(--sds-ff-monospace);
+        font-family: var(--sds-ff-monospace), monospace;
         letter-spacing: pxToRem(-0.24px);
       }
     }
@@ -247,7 +251,7 @@
       white-space: normal;
       word-break: break-all;
       overflow-wrap: break-word;
-      font-family: var(--sds-ff-monospace);
+      font-family: var(--sds-ff-monospace), monospace;
     }
   }
 
@@ -287,7 +291,7 @@
           --Badge-padding-vertical: 0;
           --Badge-padding-horizontal: #{pxToRem(6px)};
 
-          font-family: var(--sds-ff-monospace);
+          font-family: var(--sds-ff-monospace), monospace;
           letter-spacing: pxToRem(-0.24px);
         }
       }
@@ -295,6 +299,109 @@
       tbody {
         tr {
           border-top: 1px solid var(--sds-clr-gray-06);
+        }
+      }
+    }
+  }
+}
+
+// =============================================================================
+// Events
+// =============================================================================
+.TransactionEvents {
+  .Button,
+  .Badge {
+    width: fit-content;
+  }
+
+  .Badge {
+    gap: pxToRem(4px);
+  }
+
+  .Button {
+    svg {
+      transform: rotate(0deg);
+      transition: transform ease-in-out 0.2s;
+    }
+
+    &[data-is-expanded="true"] {
+      svg {
+        transform: rotate(-180deg);
+      }
+    }
+  }
+
+  .Card {
+    display: flex;
+    flex-direction: column;
+    gap: pxToRem(16px);
+  }
+
+  &__card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--sds-clr-gray-06);
+    border-radius: pxToRem(8px);
+    padding: pxToRem(12px);
+    gap: pxToRem(12px);
+
+    &--inset {
+      padding: pxToRem(8px);
+      background-color: var(--sds-clr-gray-03);
+      border: none;
+
+      pre {
+        padding-left: pxToRem(8px);
+        padding-right: pxToRem(8px);
+        margin: 0;
+        font-family: var(--sds-ff-monospace), monospace;
+        font-size: pxToRem(14px);
+        line-height: pxToRem(20px);
+        color: var(--sds-clr-gray-12);
+        overflow: auto;
+      }
+    }
+
+    &--data {
+      gap: pxToRem(4px);
+    }
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    font-size: pxToRem(14px);
+    line-height: pxToRem(18px);
+
+    @media (max-width: 500px) {
+      flex-direction: column;
+    }
+
+    &__label {
+      width: pxToRem(80px);
+      color: var(--sds-clr-gray-12);
+      font-family: var(--sds-ff-monospace), monospace;
+    }
+
+    &__value {
+      flex: 1;
+    }
+  }
+
+  &__badgeLink {
+    cursor: pointer;
+    width: fit-content;
+
+    @media (hover: hover) {
+      .Badge {
+        transition: color var(--sds-anim-transition-default);
+        --Badge-color-icon: currentColor;
+      }
+
+      &:hover {
+        .Badge {
+          --Badge-color-text: #{var(--sds-clr-lilac-12)};
         }
       }
     }

@@ -138,7 +138,7 @@ export const FeeBreakdown = ({
           <GridTableRow>
             <GridTableCell>
               <div
-                className="FeeBreakdown__resourceFeeToggle"
+                className="ExpandToggle"
                 onClick={() => {
                   setIsExpanded(!isExpanded);
                 }}
