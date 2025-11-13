@@ -25,17 +25,9 @@ export const BuildInfo = ({
           <div>
             Verifying your contract’s build helps others understand and trust
             what it does, and improves transparency across the Stellar
-            ecosystem. To verify, follow the{" "}
-            <Link href="https://stellar.expert/explorer/public/contract/validation">
-              setup instructions on Stellar Expert
-            </Link>
-            . You can also learn more about Contract Build Verification{" "}
+            ecosystem. To verify, follow the setup instruction in the{" "}
             <Link href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0055.md">
-              SEP
-            </Link>{" "}
-            and{" "}
-            <Link href="https://github.com/stellar/stellar-protocol/discussions/1573">
-              discussion
+              Contract Build Verification SEP-55
             </Link>
             .
           </div>
@@ -91,6 +83,14 @@ export const BuildInfo = ({
   attestations: write`}
                 </pre>
               </Box>
+
+              <Text as="div" size="sm">
+                For more information,{" "}
+                <Link href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0055.md#example-basic-workflow-using-stellar-cli">
+                  see a basic workflow setup using the Stellar CLI
+                </Link>
+                .
+              </Text>
             </Box>
           </Box>
         </Card>
