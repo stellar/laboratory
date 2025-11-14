@@ -42,12 +42,16 @@ const getTitle = ({ mode }: { mode: SignerMode }) => {
 };
 
 const SignerSelectorButton = ({ mode, onClick }: ButtonProps): JSX.Element => {
-  const { walletKit } = useStore();
+  const { walletKit, network } = useStore();
   const { publicKey: walletKitPubKey } = walletKit || {};
 
   const savedLocalKeypairs = localStorageSavedKeypairs.get();
 
-  const hasKeypairs = savedLocalKeypairs.length > 0;
+  const currentNetworkKeypairs = savedLocalKeypairs.filter(
+    (keypair) => keypair.network.id === network.id,
+  );
+
+  const hasKeypairs = currentNetworkKeypairs.length > 0;
   const hasWallet = !!walletKitPubKey;
 
   const title = getTitle({ mode });
@@ -84,9 +88,13 @@ const SignerSelectorDropdown = ({
   onClose,
   mode,
 }: DropdownProps): JSX.Element => {
-  const { walletKit } = useStore();
+  const { walletKit, network } = useStore();
   const { publicKey: walletKitPubKey } = walletKit || {};
   const savedLocalKeypairs = localStorageSavedKeypairs.get();
+
+  const currentNetworkKeypairs = savedLocalKeypairs.filter(
+    (keypair) => keypair.network.id === network.id,
+  );
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const handleClickOutside = useCallback(
@@ -124,10 +132,10 @@ const SignerSelectorDropdown = ({
       availableAddress.push(saved);
     }
 
-    if (savedLocalKeypairs) {
+    if (currentNetworkKeypairs.length > 0) {
       const saved = {
         label: "Saved Keypairs",
-        items: localStorageSavedKeypairs.get(),
+        items: currentNetworkKeypairs,
       };
       availableAddress.push(saved);
     }
