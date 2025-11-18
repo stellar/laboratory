@@ -190,10 +190,8 @@ const SAVED_TRANSACTIONS = [
       {
         operation_type: "extend_footprint_ttl",
         params: {
-          durability: "persistent",
-          contract: "CAQP53Z2GMZ6WVOKJWXMCVDLZYJ7GYVMWPAMWACPLEZRF2UEZW3B636S",
-          key_xdr:
-            "AAAAEAAAAAEAAAACAAAADwAAAAdDb3VudGVyAAAAABIAAAAAAAAAAH5MvQcuICNqcxGfJ6rKFvwi77h3WDZ2XVzA+LVRkCKD",
+          contractDataLedgerKey:
+            "AAAABgAAAAEg/u86MzPrVcpNrsFUa84T82Kss8DLAE9ZMxLqhM22HwAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAAB+TL0HLiAjanMRnyeqyhb8Iu+4d1g2dl1cwPi1UZAigwAAAAE=",
           extend_ttl_to: "30000",
           resource_fee: "46753",
         },
