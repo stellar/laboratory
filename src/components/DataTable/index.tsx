@@ -45,6 +45,7 @@ type DataTableProps<T> = {
   customHeaderEl?: React.ReactNode;
   customFooterEl?: React.ReactNode;
   csvFileName?: string;
+  hidePagination?: boolean;
   hideFirstLastPageNav?: boolean;
   hidePageCount?: boolean;
   pageSize?: number;
@@ -68,6 +69,7 @@ export const DataTable = <T extends AnyObject>({
   customHeaderEl,
   customFooterEl,
   csvFileName,
+  hidePagination = false,
   hideFirstLastPageNav = false,
   hidePageCount = false,
   pageNavConfig,
@@ -497,6 +499,99 @@ export const DataTable = <T extends AnyObject>({
     });
   };
 
+  const renderPagination = () => {
+    if (hidePagination) {
+      return null;
+    }
+
+    return (
+      <Box gap="md" direction="row" align="center" wrap="wrap">
+        <Box gap="xs" direction="row" align="center">
+          <>{renderFilteredResultCount()}</>
+        </Box>
+
+        <Box gap="xs" direction="row" align="center">
+          {/* First page */}
+          {hideFirstLastPageNav ? (
+            <></>
+          ) : (
+            <Button
+              variant="tertiary"
+              size="sm"
+              onClick={() => {
+                setCurrentPage(1);
+              }}
+              disabled={currentPage === 1}
+            >
+              First
+            </Button>
+          )}
+
+          {/* Previous page */}
+          <Button
+            variant="tertiary"
+            size="sm"
+            icon={<Icon.ArrowLeft />}
+            onClick={() => {
+              if (pageNavConfig?.prev.onClick) {
+                pageNavConfig.prev.onClick();
+              } else {
+                setCurrentPage(currentPage - 1);
+              }
+            }}
+            disabled={
+              pageNavConfig?.prev.disabled !== undefined
+                ? pageNavConfig.prev.disabled
+                : currentPage === 1
+            }
+          ></Button>
+
+          {/* Page count */}
+          {hidePageCount ? (
+            <></>
+          ) : (
+            <div className="DataTable__pagination">{`Page ${currentPage} of ${totalPageCount}`}</div>
+          )}
+
+          {/* Next page */}
+          <Button
+            variant="tertiary"
+            size="sm"
+            icon={<Icon.ArrowRight />}
+            onClick={() => {
+              if (pageNavConfig?.next.onClick) {
+                pageNavConfig.next.onClick();
+              } else {
+                setCurrentPage(currentPage + 1);
+              }
+            }}
+            disabled={
+              pageNavConfig?.next.disabled !== undefined
+                ? pageNavConfig.next.disabled
+                : currentPage === totalPageCount
+            }
+          ></Button>
+
+          {/* Last page */}
+          {hideFirstLastPageNav ? (
+            <></>
+          ) : (
+            <Button
+              variant="tertiary"
+              size="sm"
+              onClick={() => {
+                setCurrentPage(totalPageCount);
+              }}
+              disabled={currentPage === totalPageCount}
+            >
+              Last
+            </Button>
+          )}
+        </Box>
+      </Box>
+    );
+  };
+
   return (
     <Box gap="md">
       {/* Header */}
@@ -630,90 +725,7 @@ export const DataTable = <T extends AnyObject>({
         <div>{customFooterEl || null}</div>
 
         {/* Pagination */}
-        <Box gap="md" direction="row" align="center" wrap="wrap">
-          <Box gap="xs" direction="row" align="center">
-            <>{renderFilteredResultCount()}</>
-          </Box>
-
-          <Box gap="xs" direction="row" align="center">
-            {/* First page */}
-            {hideFirstLastPageNav ? (
-              <></>
-            ) : (
-              <Button
-                variant="tertiary"
-                size="sm"
-                onClick={() => {
-                  setCurrentPage(1);
-                }}
-                disabled={currentPage === 1}
-              >
-                First
-              </Button>
-            )}
-
-            {/* Previous page */}
-            <Button
-              variant="tertiary"
-              size="sm"
-              icon={<Icon.ArrowLeft />}
-              onClick={() => {
-                if (pageNavConfig?.prev.onClick) {
-                  pageNavConfig.prev.onClick();
-                } else {
-                  setCurrentPage(currentPage - 1);
-                }
-              }}
-              disabled={
-                pageNavConfig?.prev.disabled !== undefined
-                  ? pageNavConfig.prev.disabled
-                  : currentPage === 1
-              }
-            ></Button>
-
-            {/* Page count */}
-            {hidePageCount ? (
-              <></>
-            ) : (
-              <div className="DataTable__pagination">{`Page ${currentPage} of ${totalPageCount}`}</div>
-            )}
-
-            {/* Next page */}
-            <Button
-              variant="tertiary"
-              size="sm"
-              icon={<Icon.ArrowRight />}
-              onClick={() => {
-                if (pageNavConfig?.next.onClick) {
-                  pageNavConfig.next.onClick();
-                } else {
-                  setCurrentPage(currentPage + 1);
-                }
-              }}
-              disabled={
-                pageNavConfig?.next.disabled !== undefined
-                  ? pageNavConfig.next.disabled
-                  : currentPage === totalPageCount
-              }
-            ></Button>
-
-            {/* Last page */}
-            {hideFirstLastPageNav ? (
-              <></>
-            ) : (
-              <Button
-                variant="tertiary"
-                size="sm"
-                onClick={() => {
-                  setCurrentPage(totalPageCount);
-                }}
-                disabled={currentPage === totalPageCount}
-              >
-                Last
-              </Button>
-            )}
-          </Box>
-        </Box>
+        {renderPagination()}
       </Box>
     </Box>
   );
