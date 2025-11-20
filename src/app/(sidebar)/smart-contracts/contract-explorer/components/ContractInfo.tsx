@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { useState } from "react";
 import {
   Avatar,
   Card,
@@ -64,9 +64,6 @@ export const ContractInfo = ({
   const [activeTab, setActiveTab] = useState<ContractTabId>(
     "contract-contract-spec",
   );
-  const [isBadgeTooltipVisible, setIsBadgeTooltipVisible] = useState(false);
-
-  const buttonRef = useRef<HTMLButtonElement | null>(null);
 
   const isDataLoaded = Boolean(infoData);
 
@@ -82,27 +79,6 @@ export const ContractInfo = ({
   });
 
   const { sourceRepo, sourceCommit } = getRepoData();
-
-  const handleClickOutside = useCallback((event: MouseEvent) => {
-    if (buttonRef?.current?.contains(event.target as Node)) {
-      return;
-    }
-
-    setIsBadgeTooltipVisible(false);
-  }, []);
-
-  // Close tooltip when clicked outside
-  useLayoutEffect(() => {
-    if (isBadgeTooltipVisible) {
-      document.addEventListener("pointerup", handleClickOutside);
-    } else {
-      document.removeEventListener("pointerup", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("pointerup", handleClickOutside);
-    };
-  }, [handleClickOutside, isBadgeTooltipVisible]);
 
   type ContractExplorerInfoField = {
     id: string;
@@ -314,11 +290,7 @@ export const ContractInfo = ({
             {infoData ? (
               <BuildVerifiedBadge
                 status={
-                  isSacType
-                    ? "builtIn"
-                    : wasmData
-                      ? "verified"
-                      : "unverified"
+                  isSacType ? "builtIn" : wasmData ? "verified" : "unverified"
                 }
               />
             ) : null}

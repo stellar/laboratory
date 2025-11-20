@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { Badge, Icon, Link, Tooltip } from "@stellar/design-system";
 
 export const BuildVerifiedBadge = ({
@@ -8,6 +8,27 @@ export const BuildVerifiedBadge = ({
 }) => {
   const [isBadgeTooltipVisible, setIsBadgeTooltipVisible] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
+
+  const handleClickOutside = useCallback((event: MouseEvent) => {
+    if (buttonRef?.current?.contains(event.target as Node)) {
+      return;
+    }
+
+    setIsBadgeTooltipVisible(false);
+  }, []);
+
+  // Close tooltip when clicked outside
+  useLayoutEffect(() => {
+    if (isBadgeTooltipVisible) {
+      document.addEventListener("pointerup", handleClickOutside);
+    } else {
+      document.removeEventListener("pointerup", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("pointerup", handleClickOutside);
+    };
+  }, [handleClickOutside, isBadgeTooltipVisible]);
 
   const item = {
     verified: {
