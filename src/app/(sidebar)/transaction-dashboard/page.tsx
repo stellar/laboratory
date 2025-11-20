@@ -28,6 +28,7 @@ import { StateChange } from "./components/StateChange";
 import { FeeBreakdown } from "./components/FeeBreakdown";
 import { Signatures } from "./components/Signatures";
 import { Events } from "./components/Events";
+import { TokenSummary } from "./components/TokenSummary";
 
 import "./styles.scss";
 
@@ -313,8 +314,8 @@ export default function TransactionDashboard() {
               tab1={{
                 id: "tx-token-summary",
                 label: "Token Summary",
-                content: <ComingSoonText />,
-                isDisabled: true,
+                content: <TokenSummary txDetails={txDetails} />,
+                isDisabled: !isDataLoaded,
               }}
               tab2={{
                 id: "tx-contracts",

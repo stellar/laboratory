@@ -35,6 +35,17 @@
   }
 }
 
+.TransactionTab {
+  &__emptyMessage {
+    min-height: pxToRem(272px);
+    border-radius: pxToRem(8px);
+    background-color: var(--sds-clr-gray-03);
+    padding: pxToRem(16px);
+
+    color: var(--sds-clr-gray-11);
+  }
+}
+
 // =============================================================================
 // State Change
 // =============================================================================
@@ -403,6 +414,48 @@
         .Badge {
           --Badge-color-text: #{var(--sds-clr-lilac-12)};
         }
+      }
+    }
+  }
+}
+
+// =============================================================================
+// Token Summary
+// =============================================================================
+.TransactionTokenSummary {
+  .DataTable {
+    font-size: pxToRem(14px);
+
+    // Needed for the Copy address tooltip
+    &__container {
+      overflow: visible;
+    }
+  }
+
+  &__address {
+    .Link {
+      font-family: var(--sds-ff-monospace), monospace;
+    }
+
+    .CopyText {
+      line-height: 1;
+    }
+  }
+
+  &__amount {
+    &[data-type="add"] {
+      color: var(--sds-clr-green-11);
+
+      &::before {
+        content: "+ ";
+      }
+    }
+
+    &[data-type="subtract"] {
+      color: var(--sds-clr-gray-11);
+
+      &::before {
+        content: "- ";
       }
     }
   }
