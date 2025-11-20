@@ -21,6 +21,7 @@ import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { getTxData } from "@/helpers/getTxData";
 import { openUrl } from "@/helpers/openUrl";
 import { getStellarExpertNetwork } from "@/helpers/getStellarExpertNetwork";
+import { getTxResourceBreakdown } from "@/helpers/getTxResourceBreakdown";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { TransactionInfo } from "./components/TransactionInfo";
@@ -206,6 +207,135 @@ export default function TransactionDashboard() {
     </Text>
   );
 
+  const renderTempResourceData = () => {
+    if (!txDetails) {
+      return null;
+    }
+
+    const data = getTxResourceBreakdown(txDetails);
+
+    return (
+      <Card>
+        <Box gap="md">
+          <Box gap="sm">
+            <Text as="div" size="sm" weight="semi-bold">
+              CPU and Memory
+            </Text>
+            <Box gap="lg" direction="row">
+              <div>Instructions</div>
+              <div>{data.instructions}</div>
+            </Box>
+
+            <Box gap="lg" direction="row">
+              <div>Memory Usage</div>
+              <div>{data.memory_usage} B</div>
+            </Box>
+
+            <Box gap="lg" direction="row">
+              <div>Invoke Time</div>
+              <div>{data.invoke_time} ns</div>
+            </Box>
+          </Box>
+
+          <Box gap="sm">
+            <Text as="div" size="sm" weight="semi-bold">
+              Footprint
+            </Text>
+            <Box gap="lg" direction="row">
+              <div>Footprint Keys Read Only</div>
+              <div>{data.footprint_keys_read_only}</div>
+            </Box>
+
+            <Box gap="lg" direction="row">
+              <div>Footprint Keys Read Write</div>
+              <div>{data.footprint_keys_read_write}</div>
+            </Box>
+
+            <Box gap="lg" direction="row">
+              <div>Footprint Keys Total</div>
+              <div>{data.footprint_keys_total}</div>
+            </Box>
+          </Box>
+
+          <Box gap="sm">
+            <Text as="div" size="sm" weight="semi-bold">
+              Ledger I/O
+            </Text>
+            <Box gap="lg" direction="row">
+              <div>Entries Read</div>
+              <div>{data.entries_read}</div>
+            </Box>
+
+            <Box gap="lg" direction="row">
+              <div>Entries Write</div>
+              <div>{data.entries_write}</div>
+            </Box>
+
+            <Box gap="lg" direction="row">
+              <div>Ledger Read</div>
+              <div>{data.ledger_read} B</div>
+            </Box>
+
+            <Box gap="lg" direction="row">
+              <div>Ledger Write</div>
+              <div>{data.ledger_write} B</div>
+            </Box>
+          </Box>
+
+          <Box gap="sm">
+            <Text as="div" size="sm" weight="semi-bold">
+              Data I/O
+            </Text>
+            <Box gap="lg" direction="row">
+              <div>Data Read</div>
+              <div>{data.data_read} B</div>
+            </Box>
+
+            <Box gap="lg" direction="row">
+              <div>Data Write</div>
+              <div>{data.data_write} B</div>
+            </Box>
+
+            <Box gap="lg" direction="row">
+              <div>Key Read</div>
+              <div>{data.key_read} B</div>
+            </Box>
+
+            <Box gap="lg" direction="row">
+              <div>Key Write</div>
+              <div>{data.key_write} B</div>
+            </Box>
+
+            <Box gap="lg" direction="row">
+              <div>Code Read</div>
+              <div>{data.code_read} B</div>
+            </Box>
+
+            <Box gap="lg" direction="row">
+              <div>Code Write</div>
+              <div>{data.code_write} B</div>
+            </Box>
+          </Box>
+
+          <Box gap="sm">
+            <Text as="div" size="sm" weight="semi-bold">
+              Events
+            </Text>
+            <Box gap="lg" direction="row">
+              <div>Emit Event Count</div>
+              <div>{data.emit_event_count}</div>
+            </Box>
+
+            <Box gap="lg" direction="row">
+              <div>Emit Event Bytes</div>
+              <div>{data.emit_event_bytes} B</div>
+            </Box>
+          </Box>
+        </Box>
+      </Card>
+    );
+  };
+
   return (
     <Box gap="lg">
       <PageCard heading="Transaction Dashboard">
@@ -295,6 +425,8 @@ export default function TransactionDashboard() {
         txDetails={txDetails || null}
         isTxNotFound={isTxNotFound}
       />
+
+      {renderTempResourceData()}
 
       {isSorobanTx ? (
         <Card>
