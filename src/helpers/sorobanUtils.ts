@@ -494,6 +494,9 @@ const getScValFromPrimitive = (v: any) => {
     const encoding = detectBytesEncoding(v.value);
     return nativeToScVal(new Uint8Array(Buffer.from(v.value, encoding)));
   }
+  if (v.type === "muxed_address") {
+    return Address.fromString(v.value).toScVal();
+  }
   return nativeToScVal(v.value, { type: v.type });
 };
 
@@ -674,6 +677,8 @@ export const convertSpecTypeToScValType = (type: string) => {
   switch (type) {
     case "Address":
       return "address";
+    case "MuxedAddress":
+      return "muxed_address";
     case "U32":
       return "u32";
     case "U64":
