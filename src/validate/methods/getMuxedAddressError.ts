@@ -1,4 +1,5 @@
 import { StrKey } from "@stellar/stellar-sdk";
+import { muxedAccount } from "@/helpers/muxedAccount";
 
 export const getMuxedAddressError = (
   muxedAddress: string,
@@ -18,6 +19,16 @@ export const getMuxedAddressError = (
 
   if (!StrKey.isValidMed25519PublicKey(muxedAddress)) {
     return "Muxed account address is invalid.";
+  }
+
+  const result = muxedAccount.parse({ muxedAddress });
+
+  if (!result.baseAddress) {
+    return "Base address could not be found in the muxed account.";
+  }
+
+  if (result.error) {
+    return result.error;
   }
 
   return false;
