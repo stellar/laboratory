@@ -57,7 +57,6 @@
   "devDependencies": {
     "@next/eslint-plugin-next": "^15.4.4",
     "@playwright/test": "^1.54.1",
-    "@stellar/tsconfig": "^1.0.2",
     "@types/jest": "^30.0.0",
     "@types/json-schema": "^7.0.15",
     "@types/lodash": "^4.17.20",

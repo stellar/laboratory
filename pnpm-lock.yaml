@@ -124,9 +124,6 @@ importers:
       '@playwright/test':
         specifier: ^1.54.1
         version: 1.55.0
-      '@stellar/tsconfig':
-        specifier: ^1.0.2
-        version: 1.0.2
       '@types/jest':
         specifier: ^30.0.0
         version: 30.0.0
@@ -1995,9 +1992,6 @@ packages:
 
   '@stellar/stellar-xdr-json@23.0.0':
     resolution: {integrity: sha512-0jxWuaSZY5VfogL9YMPhjxBM7a3jwTQfSCzFUy0lkSoPrl5cNxhzx854+iidNY2Xu3pFB8x61XZ1wJapu7OHMA==}
-
-  '@stellar/tsconfig@1.0.2':
-    resolution: {integrity: sha512-lC51QSlYRM8K3oGe0/WGPq+p9+u+yPzwZXSKrZXKOe4sq79vzfiqFbQyp5enOffFzXlahcDyTgY67mBOkJytfw==}
 
   '@swc/helpers@0.5.15':
     resolution: {integrity: sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g==}
@@ -8293,8 +8287,6 @@ snapshots:
       - debug
 
   '@stellar/stellar-xdr-json@23.0.0': {}
-
-  '@stellar/tsconfig@1.0.2': {}
 
   '@swc/helpers@0.5.15':
     dependencies:
