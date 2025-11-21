@@ -2290,8 +2290,8 @@ packages:
   '@types/node@12.20.55':
     resolution: {integrity: sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==}
 
-  '@types/node@24.10.0':
-    resolution: {integrity: sha512-qzQZRBqkFsYyaSWXuEHc2WR9c0a0CXwiE5FWUvn7ZM+vdy1uZLfCunD38UzhuB7YN/J11ndbDBcTmOdxJo9Q7A==}
+  '@types/node@24.10.1':
+    resolution: {integrity: sha512-GNWcUTRBgIRJD5zj+Tq0fKOJ5XZajIiBroOF0yvj2bSU1WvNdYS/dn9UxwsujGW4JX06dnHyjV2y9rRaybH0iQ==}
 
   '@types/node@24.3.1':
     resolution: {integrity: sha512-3vXmQDXy+woz+gnrTvuvNrPzekOi+Ds0ReMxw0LzBiK3a+1k0kQn9f2NWk+lgD4rJehFUmYy2gMhJ2ZI+7YP9g==}
@@ -2885,8 +2885,8 @@ packages:
   base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
 
-  baseline-browser-mapping@2.8.25:
-    resolution: {integrity: sha512-2NovHVesVF5TXefsGX1yzx1xgr7+m9JQenvz6FQY3qd+YXkKkYiv+vTCc7OriP9mcDZpTC5mAOYN4ocd29+erA==}
+  baseline-browser-mapping@2.8.29:
+    resolution: {integrity: sha512-sXdt2elaVnhpDNRDz+1BDx1JQoJRuNk7oVlAlbGiFkLikHCAQiccexF/9e91zVi6RCgqspl04aP+6Cnl9zRLrA==}
     hasBin: true
 
   bchaddrjs@0.5.2:
@@ -2962,8 +2962,8 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
 
-  browserslist@4.27.0:
-    resolution: {integrity: sha512-AXVQwdhot1eqLihwasPElhX2tAZiBjWdJ9i/Zcj2S6QYIjkx62OKSfnobkriB81C3l4w0rVy3Nt4jaTBltYEpw==}
+  browserslist@4.28.0:
+    resolution: {integrity: sha512-tbydkR/CxfMwelN0vwdP/pLkDwyAASZ+VfWm4EOwlB6SWhx1sYnWLqo8N5j0rAzPfzfRaxt0mM/4wPU/Su84RQ==}
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
 
@@ -3029,8 +3029,8 @@ packages:
   caniuse-lite@1.0.30001743:
     resolution: {integrity: sha512-e6Ojr7RV14Un7dz6ASD0aZDmQPT/A+eZU+nuTNfjqmRrmkmQlnTNWH0SKmqagx9PeW87UVqapSurtAXifmtdmw==}
 
-  caniuse-lite@1.0.30001754:
-    resolution: {integrity: sha512-x6OeBXueoAceOmotzx3PO4Zpt4rzpeIFsSr6AAePTZxSkXiYDUmpypEl7e2+8NCd9bD7bXjqyef8CJYPC1jfxg==}
+  caniuse-lite@1.0.30001755:
+    resolution: {integrity: sha512-44V+Jm6ctPj7R52Na4TLi3Zri4dWUljJd+RDm+j8LtNCc/ihLCT+X1TzoOAkRETEWqjuLnh9581Tl80FvK7jVA==}
 
   cashaddrjs@0.4.4:
     resolution: {integrity: sha512-xZkuWdNOh0uq/mxJIng6vYWfTowZLd9F4GMAlp2DwFHlcCqCm91NtuAc47RuV4L7r4PYcY5p6Cr2OKNb4hnkWA==}
@@ -3334,8 +3334,8 @@ packages:
   electron-to-chromium@1.5.217:
     resolution: {integrity: sha512-Pludfu5iBxp9XzNl0qq2G87hdD17ZV7h5T4n6rQXDi3nCyloBV3jreE9+8GC6g4X/5yxqVgXEURpcLtM0WS4jA==}
 
-  electron-to-chromium@1.5.248:
-    resolution: {integrity: sha512-zsur2yunphlyAO4gIubdJEXCK6KOVvtpiuDfCIqbM9FjcnMYiyn0ICa3hWfPr0nc41zcLWobgy1iL7VvoOyA2Q==}
+  electron-to-chromium@1.5.255:
+    resolution: {integrity: sha512-Z9oIp4HrFF/cZkDPMpz2XSuVpc1THDpT4dlmATFlJUIBVCy9Vap5/rIXsASP1CscBacBqhabwh8vLctqBwEerQ==}
 
   elliptic@6.6.1:
     resolution: {integrity: sha512-RaddvvMatK2LJHqFJ+YA4WysVN5Ita9E35botqIYspQ4TkRAlCicdzKOjlyv/1Za5RyTNn7di//eEV0uTAfe3g==}
@@ -8860,7 +8860,7 @@ snapshots:
 
   '@types/node@12.20.55': {}
 
-  '@types/node@24.10.0':
+  '@types/node@24.10.1':
     dependencies:
       undici-types: 7.16.0
 
@@ -9749,7 +9749,7 @@ snapshots:
 
   base64-js@1.5.1: {}
 
-  baseline-browser-mapping@2.8.25: {}
+  baseline-browser-mapping@2.8.29: {}
 
   bchaddrjs@0.5.2:
     dependencies:
@@ -9824,13 +9824,13 @@ snapshots:
       node-releases: 2.0.20
       update-browserslist-db: 1.1.3(browserslist@4.25.4)
 
-  browserslist@4.27.0:
+  browserslist@4.28.0:
     dependencies:
-      baseline-browser-mapping: 2.8.25
-      caniuse-lite: 1.0.30001754
-      electron-to-chromium: 1.5.248
+      baseline-browser-mapping: 2.8.29
+      caniuse-lite: 1.0.30001755
+      electron-to-chromium: 1.5.255
       node-releases: 2.0.27
-      update-browserslist-db: 1.1.4(browserslist@4.27.0)
+      update-browserslist-db: 1.1.4(browserslist@4.28.0)
 
   bs-logger@0.2.6:
     dependencies:
@@ -9900,7 +9900,7 @@ snapshots:
 
   caniuse-lite@1.0.30001743: {}
 
-  caniuse-lite@1.0.30001754: {}
+  caniuse-lite@1.0.30001755: {}
 
   cashaddrjs@0.4.4:
     dependencies:
@@ -10195,7 +10195,7 @@ snapshots:
 
   electron-to-chromium@1.5.217: {}
 
-  electron-to-chromium@1.5.248: {}
+  electron-to-chromium@1.5.255: {}
 
   elliptic@6.6.1:
     dependencies:
@@ -11511,7 +11511,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 24.10.0
+      '@types/node': 24.10.1
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
@@ -13012,9 +13012,9 @@ snapshots:
       escalade: 3.2.0
       picocolors: 1.1.1
 
-  update-browserslist-db@1.1.4(browserslist@4.27.0):
+  update-browserslist-db@1.1.4(browserslist@4.28.0):
     dependencies:
-      browserslist: 4.27.0
+      browserslist: 4.28.0
       escalade: 3.2.0
       picocolors: 1.1.1
 
@@ -13094,7 +13094,7 @@ snapshots:
       '@webassemblyjs/wasm-parser': 1.14.1
       acorn: 8.15.0
       acorn-import-phases: 1.0.4(acorn@8.15.0)
-      browserslist: 4.27.0
+      browserslist: 4.28.0
       chrome-trace-event: 1.0.4
       enhanced-resolve: 5.18.3
       es-module-lexer: 1.7.0
