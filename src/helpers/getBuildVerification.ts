@@ -1,7 +1,9 @@
 import { rpc as StellarRpc, Contract, xdr } from "@stellar/stellar-sdk";
+
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { computeWasmHash } from "@/helpers/computeWasmHash";
-import { AnyObject } from "@/types/types";
+
+import { AnyObject, BuildVerificationStatus } from "@/types/types";
 
 export const getBuildVerification = async ({
   contractId,
@@ -11,7 +13,7 @@ export const getBuildVerification = async ({
   contractId: string;
   rpcUrl: string;
   headers?: Record<string, string>;
-}): Promise<"built-in" | "verified" | "unverified"> => {
+}): Promise<BuildVerificationStatus> => {
   try {
     const rpcServer = new StellarRpc.Server(rpcUrl, {
       headers: isEmptyObject(headers) ? undefined : { ...headers },
@@ -34,21 +36,14 @@ export const getBuildVerification = async ({
       xdr.ContractExecutableType.contractExecutableStellarAsset().name;
 
     if (isSAC) {
-      // SACs don't have custom WASM, they're built-in
-      return "built-in"; // or handle SAC verification differently
+      // SACs don't have custom WASM, they're built_in
+      return "built_in";
     }
 
-    // Now safe to get WASM for non-SAC contracts
     const wasmBuffer = await rpcServer.getContractWasmByContractId(contractId);
-    console.log("wasmBuffer: ", wasmBuffer);
     const wasmHash = await computeWasmHash(wasmBuffer);
-    console.log("wasmHash: ", wasmHash);
-
     const wasm = await rpcServer.getContractWasmByHash(wasmHash, "hex");
-    console.log("wasm ", wasm);
     const sourceRepo = await extractSourceRepo(wasm);
-
-    console.log("sourceRepo: ", sourceRepo);
 
     if (!sourceRepo) {
       return "unverified";
@@ -56,25 +51,34 @@ export const getBuildVerification = async ({
 
     const attestationUrl = `https://api.github.com/repos/${sourceRepo}/attestations/sha256:${wasmHash}`;
 
-    console.log("attestationUrl: ", attestationUrl);
-
     const att = await fetch(attestationUrl);
-
-    console.log("att: ", att);
 
     if (att.status !== 200) {
       return "unverified";
     }
 
     const attResponse = await att.json();
+    const attPayload = parseAttestationPayload(attResponse);
 
-    console.log("attResponse: ", attResponse);
-    // const attPayload = parseAttestationPayload(attResponse);
+    // Validate Wasm hash
+    if (attPayload?.subject?.[0]?.digest?.sha256 !== wasmHash) {
+      return "unverified";
+    }
+
+    // Validate source repo
+    if (
+      !(
+        attPayload?.predicate?.buildDefinition?.resolvedDependencies?.[0]
+          ?.uri || ""
+      ).includes(sourceRepo)
+    ) {
+      return "unverified";
+    }
 
     return "verified";
     // Continue with your verification logic...
-  } catch (e: any) {
-    console.log("e: ", e);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (e) {
     return "unverified";
   }
 };

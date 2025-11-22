@@ -505,6 +505,8 @@ export type WasmData = {
   };
 };
 
+export type BuildVerificationStatus = "verified" | "unverified" | "built_in";
+
 // =============================================================================
 // Data table
 // =============================================================================

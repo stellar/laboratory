@@ -1,30 +1,32 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { Badge, Button, Card, Icon, Text } from "@stellar/design-system";
-import { stringify } from "lossless-json";
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  IconButton,
+  CopyText,
+  Icon,
+  Link,
+  Loader,
+  Text,
+} from "@stellar/design-system";
 
 import { useStore } from "@/store/useStore";
 
 import { Box } from "@/components/layout/Box";
 import { DataTable } from "@/components/DataTable";
-import { ExpandBox } from "@/components/ExpandBox";
-import { CopyJsonPayloadButton } from "@/components/CopyJsonPayloadButton";
+import { BuildVerifiedBadge } from "@/components/BuildVerifiedBadge";
 
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import { FormattedTxEvent, formatTxEvents } from "@/helpers/formatTxEvents";
 import { buildContractExplorerHref } from "@/helpers/buildContractExplorerHref";
 import { getBuildVerification } from "@/helpers/getBuildVerification";
+
 import {
-  AnyObject,
   RpcTxJsonResponseContractEventsJson,
   RpcTxJsonResponseTransactionEventsJson,
+  BuildVerificationStatus,
 } from "@/types/types";
-
-// useWasmGitHubAttestation
-// Built-in Contract for SAC
-// Have loading state once rendered
 
 export const Contracts = ({
   txEvents,
@@ -36,6 +38,8 @@ export const Contracts = ({
       }
     | undefined;
 }) => {
+  const { network } = useStore();
+
   const events = txEvents
     ? formatTxEvents({
         contractEvents: txEvents.contractEventsJson[0],
@@ -44,6 +48,8 @@ export const Contracts = ({
     : null;
 
   if (!events?.formattedContractEvents?.length) {
+    // @TODO
+    // Use <NoInfoLoadedView/> component when available
     return (
       <Text as="div" size="sm" weight="regular">
         There are no events in this transaction.
@@ -51,214 +57,151 @@ export const Contracts = ({
     );
   }
 
-  const ContractIdColumn = ({ children }: { children: string }) => {
-    return (
-      <div
-        className="TransactionContracts__contractId"
+  return (
+    <Box gap="lg" addlClassName="TransactionContracts">
+      <TransactionCard
+        id="ev-c"
+        title="Contract Events"
+        events={events.formattedContractEvents ?? undefined}
+        rpcUrl={network.rpcUrl || ""}
+      />
+    </Box>
+  );
+};
+
+const ContractIdColumn = ({ children }: { children: string }) => {
+  return (
+    <div className="TransactionContracts__contractId">
+      <Link
+        addlClassName="ContractLink--withIcon"
         onClick={(e) => {
           e.preventDefault();
-          // No need to sanitize this URL because we built it
           window.open(
             `https://lab.stellar.org${buildContractExplorerHref(children)}`,
             "_blank",
             "noopener,noreferrer",
           );
         }}
-        role="link"
       >
-        ${shortenStellarAddress(children)}
-        {/* <Badge
-          variant="secondary"
-          size="sm"
-          icon={<Icon.LinkExternal01 />}
-        >{`Contract ID: ${shortenStellarAddress(children)}`}</Badge> */}
-      </div>
-    );
-  };
+        {shortenStellarAddress(children)}
+      </Link>
 
-  const TransactionCard = ({
-    id,
-    title,
-    events,
-  }: {
-    id: string;
-    title: string;
-    events: FormattedTxEvent[] | undefined;
-  }) => {
-    console.log("events: ", events);
-
-    if (!events?.length) {
-      return null;
-    }
-
-    const { network } = useStore();
-
-    const contractIds = getAllContractIdsFromEvents({
-      events,
-    });
-
-    const [verifications, setVerifications] = useState<
-      Record<string, "built-in" | "verified" | "unverified">
-    >({});
-    const [isLoading, setIsLoading] = useState(false);
-
-    useEffect(() => {
-      const fetchVerifications = async () => {
-        setIsLoading(true);
-
-        const results = await Promise.all(
-          contractIds.map(async (cid) => {
-            const buildVerification = await getBuildVerification({
-              contractId: cid,
-              rpcUrl: network.rpcUrl || "",
-              headers: getNetworkHeaders(network, "rpc"),
-            });
-            return { cid, buildVerification };
-          }),
-        );
-
-        // Convert array to object for easy lookup
-        const verificationsMap = results.reduce(
-          (acc, { cid, buildVerification }) => {
-            acc[cid] = buildVerification;
-            return acc;
-          },
-          {} as Record<string, "built-in" | "verified" | "unverified">,
-        );
-
-        setVerifications(verificationsMap);
-        setIsLoading(false);
-      };
-
-      if (contractIds.length > 0) {
-        fetchVerifications();
-      }
-    }, [contractIds, network.rpcUrl]); // Dependencies
-
-    return (
-      <Box gap="lg">
-        <DataTable
-          tableId="contract-version-history"
-          tableData={contractIds.map((cid) => ({
-            id: cid,
-            build_verified: verifications[cid] || "unverified",
-          }))}
-          tableHeaders={[
-            { id: "address", value: "Address", isSortable: true },
-            { id: "build_verified", value: "Build verified", isSortable: true },
-          ]}
-          formatDataRow={(vh: {
-            id: string;
-            build_verified: "built-in" | "verified" | "unverified";
-          }) => [
-            { value: <div>{shortenStellarAddress(vh.id)}</div> },
-            { value: vh.build_verified },
-          ]}
-          cssGridTemplateColumns="minmax(210px, 1fr) minmax(210px, 1fr)"
+      <CopyText textToCopy={children}>
+        <IconButton
+          customSize="12px"
+          icon={<Icon.Copy01 />}
+          altText="Copy Contract Id"
+          onClick={(e) => e.preventDefault()}
         />
-      </Box>
-    );
-  };
-
-  return (
-    <Box gap="lg" addlClassName="TransactionContracts">
-      <TransactionCard
-        id="ev-c"
-        title="Contract Events"
-        events={events.formattedContractEvents}
-      />
-    </Box>
+      </CopyText>
+    </div>
   );
 };
 
 // =============================================================================
 // Local Components
 // =============================================================================
-const ExpandSection = ({
-  title,
-  children,
+
+const TransactionCard = ({
+  events,
+  rpcUrl,
 }: {
+  id: string;
   title: string;
-  children: React.ReactNode;
+  events: FormattedTxEvent[] | undefined;
+  rpcUrl: string;
 }) => {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const { network } = useStore();
 
-  return (
-    <Card>
-      <div
-        className="ExpandToggle"
-        onClick={() => {
-          setIsExpanded(!isExpanded);
-        }}
-        data-is-expanded={isExpanded}
-      >
-        <Text as="h3" size="sm" weight="medium">
-          {title}
-        </Text>
-        <Icon.ChevronRight />
-      </div>
+  const contractIds = getAllContractIdsFromEvents({
+    events,
+  });
+  const [verifications, setVerifications] = useState<
+    Record<string, BuildVerificationStatus>
+  >({});
+  const [isLoading, setIsLoading] = useState(false);
 
-      <ExpandBox offsetTop="lg" isExpanded={isExpanded}>
-        <Box gap="lg">{children}</Box>
-      </ExpandBox>
-    </Card>
-  );
-};
+  const fetchVerifications = useCallback(async () => {
+    setIsLoading(true);
 
-const EventJson = ({ json }: { json: AnyObject }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+    const results = await Promise.all(
+      contractIds.map(async (cid) => {
+        const buildVerification = await getBuildVerification({
+          contractId: cid,
+          rpcUrl: rpcUrl,
+          headers: getNetworkHeaders(network, "rpc"),
+        });
+        return { cid, buildVerification };
+      }),
+    );
 
-  const formatJson = () => {
-    try {
-      return stringify(json, null, 2);
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (e) {
-      return "";
+    const verificationsMap = results.reduce(
+      (acc, { cid, buildVerification }) => {
+        acc[cid] = buildVerification;
+        return acc;
+      },
+      {} as Record<string, BuildVerificationStatus>,
+    );
+
+    setVerifications(verificationsMap);
+    setIsLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rpcUrl]);
+
+  useEffect(() => {
+    if (contractIds.length > 0) {
+      fetchVerifications();
     }
-  };
-
-  const formattedJson = formatJson();
-
-  if (!formattedJson) {
-    return null;
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contractIds.length]);
 
   return (
-    <>
-      <Button
-        variant={isExpanded ? "secondary" : "tertiary"}
-        size="sm"
-        icon={<Icon.ChevronDown />}
-        onClick={() => setIsExpanded(!isExpanded)}
-        data-is-expanded={isExpanded}
-      >
-        View JSON
-      </Button>
-
-      <ExpandBox offsetTop="md" isExpanded={isExpanded}>
-        <Box gap="md">
-          <div className="TransactionContracts__card TransactionEvents__card--inset">
-            <pre>{formattedJson}</pre>
-          </div>
-          <Box gap="sm" direction="row" justify="end">
-            <CopyJsonPayloadButton size="sm" jsonString={formattedJson} />
-          </Box>
-        </Box>
-      </ExpandBox>
-    </>
+    <Box gap="lg">
+      <DataTable
+        hidePagination={contractIds.length <= 10}
+        pageSize={10}
+        tableId="contract-version-history"
+        tableData={contractIds.map((cid) => ({
+          id: cid,
+          build_verified: verifications[cid] || "unverified",
+        }))}
+        tableHeaders={[
+          { id: "address", value: "Address", isSortable: true },
+          { id: "build_verified", value: "Build verified", isSortable: true },
+        ]}
+        formatDataRow={(vh: {
+          id: string;
+          build_verified: BuildVerificationStatus;
+        }) => [
+          {
+            value: <ContractIdColumn>{vh.id}</ContractIdColumn>,
+          },
+          {
+            value: (
+              <div>
+                {isLoading ? (
+                  <Loader />
+                ) : (
+                  <BuildVerifiedBadge status={vh.build_verified} />
+                )}
+              </div>
+            ),
+          },
+        ]}
+        cssGridTemplateColumns="minmax(210px, 1fr) minmax(210px, 1fr)"
+      />
+    </Box>
   );
 };
 
 // =============================================================================
 // Helper Function
 // =============================================================================
-
 const getAllContractIdsFromEvents = ({
   events,
 }: {
   events: FormattedTxEvent[] | undefined;
 }) => {
-  console.log("getAllContractIdsFromEvents");
   const contractIds = new Set<string>();
 
   if (events) {
