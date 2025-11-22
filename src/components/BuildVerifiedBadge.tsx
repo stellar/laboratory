@@ -1,10 +1,12 @@
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { Badge, Icon, Link, Tooltip } from "@stellar/design-system";
 
+import { BuildVerificationStatus } from "@/types/types";
+
 export const BuildVerifiedBadge = ({
   status,
 }: {
-  status: "verified" | "unverified" | "builtIn";
+  status: BuildVerificationStatus;
 }) => {
   const [isBadgeTooltipVisible, setIsBadgeTooltipVisible] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -60,7 +62,7 @@ export const BuildVerifiedBadge = ({
         </>
       ),
     },
-    builtIn: {
+    built_in: {
       badge: (
         <Badge variant="success" icon={<Icon.CheckCircle />}>
           Built-in Contract
