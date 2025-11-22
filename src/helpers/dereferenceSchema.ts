@@ -29,7 +29,6 @@ const resolveNestedSchema = (schema: any, fullSchema: JSONSchema7): any => {
       "I128",
       "I256",
       "Address",
-      "MuxedAddress",
       "ScString",
       "ScSymbol",
       "DataUrl",

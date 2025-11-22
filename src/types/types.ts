@@ -279,7 +279,6 @@ export type ScValPrimitiveType =
   | "I128"
   | "I256"
   | "Address"
-  | "MuxedAddress"
   | "ScString"
   | "ScSymbol"
   | "DataUrl"
