@@ -92,7 +92,9 @@ const ContractIdColumn = ({ children }: { children: string }) => {
           customSize="12px"
           icon={<Icon.Copy01 />}
           altText="Copy Contract Id"
-          onClick={(e) => e.preventDefault()}
+          onClick={(e) => {
+            e.preventDefault();
+          }}
         />
       </CopyText>
     </div>
@@ -151,7 +153,10 @@ const TransactionCard = ({
                 {isLoading ? (
                   <Loader />
                 ) : (
-                  <BuildVerifiedBadge status={vh.build_verified} />
+                  <BuildVerifiedBadge
+                    status={vh.build_verified}
+                    disableMessage
+                  />
                 )}
               </div>
             ),

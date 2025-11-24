@@ -5,8 +5,10 @@ import { BuildVerificationStatus } from "@/types/types";
 
 export const BuildVerifiedBadge = ({
   status,
+  disableMessage = false,
 }: {
   status: BuildVerificationStatus;
+  disableMessage?: boolean;
 }) => {
   const [isBadgeTooltipVisible, setIsBadgeTooltipVisible] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -95,6 +97,7 @@ export const BuildVerifiedBadge = ({
           ref={buttonRef}
           className="ContractInfo__badgeButton"
           onClick={() => {
+            if (disableMessage) return;
             setIsBadgeTooltipVisible(!isBadgeTooltipVisible);
           }}
           type="button"
