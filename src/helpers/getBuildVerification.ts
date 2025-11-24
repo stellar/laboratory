@@ -46,7 +46,7 @@ export const getBuildVerification = async ({
     const wasmBuffer = await rpcServer.getContractWasmByContractId(contractId);
     const wasmHash = await computeWasmHash(wasmBuffer);
 
-    const buildVerification = await getAttesationsResponse({
+    const buildVerification = await getAttesationResponse({
       wasmHash,
       rpcServer,
     });
@@ -58,7 +58,7 @@ export const getBuildVerification = async ({
   }
 };
 
-export const getAttesationsResponse = async ({
+export const getAttesationResponse = async ({
   wasmHash,
   rpcServer,
 }: {

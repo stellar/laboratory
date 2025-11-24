@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React from "react";
 import {
   IconButton,
   CopyText,
@@ -20,7 +20,8 @@ import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import { FormattedTxEvent, formatTxEvents } from "@/helpers/formatTxEvents";
 import { buildContractExplorerHref } from "@/helpers/buildContractExplorerHref";
-import { getBuildVerification } from "@/helpers/getBuildVerification";
+
+import { useBuildVerification } from "@/query/useBuildVerification";
 
 import {
   RpcTxJsonResponseContractEventsJson,
@@ -116,44 +117,12 @@ const TransactionCard = ({
   const contractIds = getAllContractIdsFromEvents({
     events,
   });
-  const [verifications, setVerifications] = useState<
-    Record<string, BuildVerificationStatus>
-  >({});
-  const [isLoading, setIsLoading] = useState(false);
 
-  const fetchVerifications = useCallback(async () => {
-    setIsLoading(true);
-
-    const results = await Promise.all(
-      contractIds.map(async (cid) => {
-        const buildVerification = await getBuildVerification({
-          contractId: cid,
-          rpcUrl: rpcUrl,
-          headers: getNetworkHeaders(network, "rpc"),
-        });
-        return { cid, buildVerification };
-      }),
-    );
-
-    const verificationsMap = results.reduce(
-      (acc, { cid, buildVerification }) => {
-        acc[cid] = buildVerification;
-        return acc;
-      },
-      {} as Record<string, BuildVerificationStatus>,
-    );
-
-    setVerifications(verificationsMap);
-    setIsLoading(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rpcUrl]);
-
-  useEffect(() => {
-    if (contractIds.length > 0) {
-      fetchVerifications();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contractIds.length]);
+  const { verifications, isLoading } = useBuildVerification({
+    contractIds,
+    rpcUrl,
+    headers: getNetworkHeaders(network, "rpc"),
+  });
 
   return (
     <Box gap="lg">

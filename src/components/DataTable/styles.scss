@@ -116,6 +116,7 @@
     td {
       font-size: pxToRem(14px);
       line-height: pxToRem(20px);
+      align-self: center;
 
       &[data-style="bold"] {
         color: var(--sds-clr-gray-12);

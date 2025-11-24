@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { rpc as StellarRpc } from "@stellar/stellar-sdk";
 
 import { isEmptyObject } from "@/helpers/isEmptyObject";
-import { getAttesationsResponse } from "@/helpers/getBuildVerification";
+import { getAttesationResponse } from "@/helpers/getBuildVerification";
 
 import { NetworkHeaders, WasmData } from "@/types/types";
 
@@ -30,7 +30,7 @@ export const useWasmGitHubAttestation = ({
           allowHttp: new URL(rpcUrl).hostname === "localhost",
         });
 
-        const attPayload = await getAttesationsResponse({
+        const attPayload = await getAttesationResponse({
           wasmHash,
           rpcServer,
         });
