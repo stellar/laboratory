@@ -3,7 +3,10 @@ import { rpc as StellarRpc, Contract, xdr } from "@stellar/stellar-sdk";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { computeWasmHash } from "@/helpers/computeWasmHash";
 
-import { AnyObject, BuildVerificationStatus } from "@/types/types";
+import {
+  BuildVerificationStatus,
+  BuildVerificationResponse,
+} from "@/types/types";
 
 export const getBuildVerification = async ({
   contractId,
@@ -42,11 +45,34 @@ export const getBuildVerification = async ({
 
     const wasmBuffer = await rpcServer.getContractWasmByContractId(contractId);
     const wasmHash = await computeWasmHash(wasmBuffer);
+
+    const buildVerification = await getAttesationsResponse({
+      wasmHash,
+      rpcServer,
+    });
+
+    return buildVerification?.status || "unverified";
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (e) {
+    return "unverified";
+  }
+};
+
+export const getAttesationsResponse = async ({
+  wasmHash,
+  rpcServer,
+}: {
+  wasmHash: string;
+  rpcServer: StellarRpc.Server;
+}): Promise<BuildVerificationResponse | null> => {
+  try {
     const wasm = await rpcServer.getContractWasmByHash(wasmHash, "hex");
     const sourceRepo = await extractSourceRepo(wasm);
 
     if (!sourceRepo) {
-      return "unverified";
+      return {
+        status: "unverified",
+      };
     }
 
     const attestationUrl = `https://api.github.com/repos/${sourceRepo}/attestations/sha256:${wasmHash}`;
@@ -54,7 +80,7 @@ export const getBuildVerification = async ({
     const att = await fetch(attestationUrl);
 
     if (att.status !== 200) {
-      return "unverified";
+      return { status: "unverified" };
     }
 
     const attResponse = await att.json();
@@ -62,7 +88,7 @@ export const getBuildVerification = async ({
 
     // Validate Wasm hash
     if (attPayload?.subject?.[0]?.digest?.sha256 !== wasmHash) {
-      return "unverified";
+      return { status: "unverified" };
     }
 
     // Validate source repo
@@ -72,20 +98,22 @@ export const getBuildVerification = async ({
           ?.uri || ""
       ).includes(sourceRepo)
     ) {
-      return "unverified";
+      return { status: "unverified" };
     }
 
-    return "verified";
-    // Continue with your verification logic...
+    return {
+      status: "verified",
+      payload: attPayload,
+      sourceRepo,
+      attestationUrl,
+    };
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
-    return "unverified";
+    return null;
   }
 };
 
-export const extractSourceRepo = async (
-  wasmBytes: Buffer,
-): Promise<string | null> => {
+const extractSourceRepo = async (wasmBytes: Buffer): Promise<string | null> => {
   try {
     const wasmBuffer = new Uint8Array(wasmBytes);
     const mod = await WebAssembly.compile(wasmBuffer);
@@ -130,7 +158,7 @@ export const extractSourceRepo = async (
   }
 };
 
-export const parseAttestationPayload = (att: AnyObject) => {
+const parseAttestationPayload = (att: any) => {
   const payload = att.attestations[0].bundle.dsseEnvelope.payload;
 
   try {
