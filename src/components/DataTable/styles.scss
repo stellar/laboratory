@@ -67,6 +67,7 @@
     td,
     th {
       padding: pxToRem(8px) pxToRem(6px);
+      overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
 

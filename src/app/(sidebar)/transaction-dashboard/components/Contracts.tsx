@@ -55,9 +55,7 @@ export const Contracts = ({
 
   return (
     <Box gap="lg" addlClassName="TransactionContracts">
-      <TransactionCard
-        id="ev-c"
-        title="Contract Events"
+      <ContractsTable
         events={events.formattedContractEvents ?? undefined}
         rpcUrl={network.rpcUrl || ""}
       />
@@ -100,12 +98,10 @@ const ContractIdColumn = ({ children }: { children: string }) => {
 // Local Components
 // =============================================================================
 
-const TransactionCard = ({
+const ContractsTable = ({
   events,
   rpcUrl,
 }: {
-  id: string;
-  title: string;
   events: FormattedTxEvent[] | undefined;
   rpcUrl: string;
 }) => {
@@ -124,6 +120,7 @@ const TransactionCard = ({
   return (
     <Box gap="lg">
       <DataTable
+        data-overflow={true}
         hidePagination={contractIds.length <= 10}
         pageSize={10}
         tableId="tx-contracts-summary"
@@ -141,6 +138,7 @@ const TransactionCard = ({
         }) => [
           {
             value: <ContractIdColumn>{vh.id}</ContractIdColumn>,
+            isOverflow: true,
           },
           {
             value: (
@@ -171,6 +169,7 @@ const getAllContractIdsFromEvents = ({
 }: {
   events: FormattedTxEvent[] | undefined;
 }) => {
+  // Remove redundant contract IDs
   const contractIds = new Set<string>();
 
   if (events) {
