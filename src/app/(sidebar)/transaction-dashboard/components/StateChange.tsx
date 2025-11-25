@@ -1,9 +1,10 @@
 "use client";
 
-import { Badge, Card, Text } from "@stellar/design-system";
+import { Badge, Card } from "@stellar/design-system";
 import ReactDiffViewer, { DiffMethod } from "react-diff-viewer";
 import { stringify } from "lossless-json";
 
+import { TransactionTabEmptyMessage } from "@/components/TransactionTabEmptyMessage";
 import { Box } from "@/components/layout/Box";
 import { formatTxChangeStateItems } from "@/helpers/formatTxChangeStateItems";
 import { useWindowSize } from "@/hooks/useWindowSize";
@@ -21,9 +22,9 @@ export const StateChange = ({
 
   if (!formattedData?.length) {
     return (
-      <Text as="div" size="sm" weight="regular">
-        There are no state changes in this transaction.
-      </Text>
+      <TransactionTabEmptyMessage>
+        There are no state changes in this transaction
+      </TransactionTabEmptyMessage>
     );
   }
 
