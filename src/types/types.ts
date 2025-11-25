@@ -567,8 +567,8 @@ export type RpcTxJsonResponse = {
   applicationOrder: number;
   createdAt: string;
   events?: {
-    contractEventsJson: RpcTxJsonResponseContractEventsJson;
-    transactionEventsJson: RpcTxJsonResponseTransactionEventsJson;
+    contractEventsJson?: RpcTxJsonResponseContractEventsJson;
+    transactionEventsJson?: RpcTxJsonResponseTransactionEventsJson;
   };
   feeBump: boolean;
   ledger: number;
