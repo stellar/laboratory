@@ -19,39 +19,54 @@ export const TokenSummary = ({
 }: {
   txDetails: RpcTxJsonResponse | null | undefined;
 }) => {
-  // TODO: remove
-  console.log(">>> txDetails: ", txDetails);
-
-  const { network } = useStore();
-
-  const seNetwork = getStellarExpertNetwork(network.id);
-
   type TokenItem = {
-    address: string;
+    addressFrom: string;
+    addressTo: string;
     amount: string;
-    amountType: "add" | "subtract";
     assetCode: string;
     assetIssuer: string;
   };
 
-  // TODO: use real data
-  const assetTokenList: TokenItem[] = [
-    {
-      address: "CDL74RF5BLYR2YBLCCI7F5FB6TPSCLKEJUBSD2RSVWZ4YHF3VMFAIGWA",
-      amount: "10605945663",
-      assetCode: "USDC",
-      amountType: "add",
-      assetIssuer: "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
-    },
-    {
-      address: "CA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
-      amount: "10605945663",
-      amountType: "subtract",
-      assetCode: "USDC",
-      assetIssuer: "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
-    },
-  ];
-  const nativeTokenList: TokenItem[] = [];
+  type EventGroupsType = {
+    native: {
+      title: string;
+      items: TokenItem[];
+    };
+    asset: {
+      title: string;
+      items: TokenItem[];
+    };
+  };
+
+  const getGroupedTransferEvents = () => {
+    const formattedEvents = getTransferEvents(txDetails);
+
+    const groups: EventGroupsType = {
+      asset: {
+        title: "Contract token transferred",
+        items: [],
+      },
+      native: {
+        title: "Native token (XLM) transferred",
+        items: [],
+      },
+    };
+
+    formattedEvents.forEach((event) => {
+      if (event.assetCode === "XLM" && event.assetIssuer === "native") {
+        groups.native.items.push(event);
+      } else {
+        groups.asset.items.push(event);
+      }
+    });
+
+    // Return only groups with items
+    return Object.values(groups).filter((group) => group.items.length);
+  };
+
+  const { network } = useStore();
+
+  const seNetwork = getStellarExpertNetwork(network.id);
 
   const formatAssetAddress = (address: string) => {
     return (
@@ -76,9 +91,9 @@ export const TokenSummary = ({
     );
   };
 
-  const formatAssetAmount = (amount: string, type: "add" | "subtract") => {
+  const formatAssetAmount = (amount: string) => {
     return (
-      <span className="TransactionTokenSummary__amount" data-type={type}>
+      <span className="TransactionTokenSummary__amount">
         {formatAmount(
           new BigNumber(amount).dividedBy(10_000_000).toNumber(),
           2,
@@ -102,42 +117,75 @@ export const TokenSummary = ({
     );
   };
 
-  if (!(assetTokenList.length || nativeTokenList.length)) {
+  const groupedTransferEvents = getGroupedTransferEvents();
+
+  if (!groupedTransferEvents.length) {
     return (
       <TransactionTabEmptyMessage>
-        No token transaction summary
+        There are no transfer events in this transaction
       </TransactionTabEmptyMessage>
     );
   }
 
   return (
     <Box gap="lg" addlClassName="TransactionTokenSummary">
-      {assetTokenList.length ? (
+      {groupedTransferEvents.map((ev) => (
         <>
           <Box gap="md">
             <Text as="div" size="sm" weight="medium">
-              Contract token transferred
+              {ev.title}
             </Text>
 
             <DataTable
               tableId="tx-dash-token-summary-assets"
-              tableData={assetTokenList}
+              tableData={ev.items}
               tableHeaders={[
-                { id: "address", value: "Address" },
+                { id: "address-from", value: "From" },
+                { id: "address-to", value: "To" },
                 { id: "amount", value: "Amount" },
                 { id: "asset", value: "Asset" },
               ]}
               formatDataRow={(ti: TokenItem) => [
-                { value: formatAssetAddress(ti.address), isOverflow: true },
-                { value: formatAssetAmount(ti.amount, ti.amountType) },
+                { value: formatAssetAddress(ti.addressFrom), isOverflow: true },
+                { value: formatAssetAddress(ti.addressTo), isOverflow: true },
+                { value: formatAssetAmount(ti.amount) },
                 { value: formatAsset(ti.assetCode, ti.assetIssuer) },
               ]}
-              cssGridTemplateColumns="minmax(210px, 2fr) minmax(160px, 1fr) minmax(110px, 1fr)"
+              cssGridTemplateColumns="minmax(210px, 1fr) minmax(210px, 1fr) minmax(160px, 1fr) minmax(110px, 1fr)"
               hidePagination={true}
             />
           </Box>
         </>
-      ) : null}
+      ))}
     </Box>
   );
+};
+
+const getTransferEvents = (data: RpcTxJsonResponse | null | undefined) => {
+  const events = data?.events?.contractEventsJson;
+
+  if (!events) {
+    return [];
+  }
+
+  const contractEvents = Array.isArray(events[0])
+    ? events.flatMap((group: any[]) => group)
+    : events;
+
+  return contractEvents
+    .filter((event: any) => event?.body?.v0?.topics?.[0]?.symbol === "transfer")
+    .map((ev: any) => {
+      const addressFrom = ev.body.v0.topics[1].address;
+      const addressTo = ev.body.v0.topics[2].address;
+      const [assetCode, assetIssuer] = ev.body.v0.topics[3].string.split(":");
+
+      return {
+        addressFrom,
+        addressTo,
+        // Transfer event data type https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0041.md#transfer-event
+        amount: ev.body.v0.data?.i128 || ev.body.v0.data?.amount || "0",
+        assetCode: assetCode === "native" ? "XLM" : assetCode,
+        assetIssuer: assetCode === "native" ? "native" : assetIssuer,
+      };
+    });
 };

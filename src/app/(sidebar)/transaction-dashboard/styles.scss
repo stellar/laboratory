@@ -443,20 +443,6 @@
   }
 
   &__amount {
-    &[data-type="add"] {
-      color: var(--sds-clr-green-11);
-
-      &::before {
-        content: "+ ";
-      }
-    }
-
-    &[data-type="subtract"] {
-      color: var(--sds-clr-gray-11);
-
-      &::before {
-        content: "- ";
-      }
-    }
+    color: var(--sds-clr-gray-11);
   }
 }
