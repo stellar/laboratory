@@ -1320,8 +1320,17 @@
       transition: background-color var(--sds-anim-transition-default);
     }
 
+    &--disabled {
+      cursor: default;
+
+      .Badge--success,
+      .Badge--error {
+        pointer-events: none;
+      }
+    }
+
     @media (hover: hover) {
-      &:hover {
+      :not(:is(.ContractInfo__badgeButton--disabled)) {
         .Badge--success {
           --Badge-color-background: var(--sds-clr-green-04);
         }

@@ -95,9 +95,11 @@ export const BuildVerifiedBadge = ({
       triggerEl={
         <button
           ref={buttonRef}
-          className="ContractInfo__badgeButton"
+          className={`ContractInfo__badgeButton ${disableMessage ? "ContractInfo__badgeButton--disabled" : ""}`}
           onClick={() => {
-            if (disableMessage) return;
+            if (disableMessage) {
+              return;
+            }
             setIsBadgeTooltipVisible(!isBadgeTooltipVisible);
           }}
           type="button"

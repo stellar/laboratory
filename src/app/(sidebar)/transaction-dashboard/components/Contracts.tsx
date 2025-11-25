@@ -33,7 +33,7 @@ export const Contracts = ({
 }: {
   txEvents:
     | {
-        contractEventsJson: RpcTxJsonResponseContractEventsJson;
+        contractEventsJson?: RpcTxJsonResponseContractEventsJson;
       }
     | undefined;
 }) => {
@@ -41,14 +41,14 @@ export const Contracts = ({
 
   const events = txEvents
     ? formatTxEvents({
-        contractEvents: txEvents.contractEventsJson[0],
+        contractEvents: txEvents.contractEventsJson?.[0],
       })
     : null;
 
   if (!events?.formattedContractEvents?.length) {
     return (
       <NoInfoLoadedView
-        message={<>There are no events in this transaction.</>}
+        message={<>There are no contracts in this transaction.</>}
       />
     );
   }
@@ -84,7 +84,7 @@ const ContractIdColumn = ({ children }: { children: string }) => {
         <IconButton
           customSize="12px"
           icon={<Icon.Copy01 />}
-          altText="Copy Contract Id"
+          altText="Copy Contract ID"
           onClick={(e) => {
             e.preventDefault();
           }}
