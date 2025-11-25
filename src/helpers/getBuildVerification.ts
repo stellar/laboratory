@@ -1,7 +1,6 @@
 import { rpc as StellarRpc, Contract, xdr } from "@stellar/stellar-sdk";
 
 import { isEmptyObject } from "@/helpers/isEmptyObject";
-import { computeWasmHash } from "@/helpers/computeWasmHash";
 
 import {
   BuildVerificationStatus,
@@ -44,7 +43,7 @@ export const getBuildVerification = async ({
     }
 
     const wasmBuffer = await rpcServer.getContractWasmByContractId(contractId);
-    const wasmHash = await computeWasmHash(wasmBuffer);
+    const wasmHash = await computeWasmHash(new Uint8Array(wasmBuffer).buffer);
 
     const buildVerification = await getAttesationResponse({
       wasmHash,
@@ -166,4 +165,10 @@ const parseAttestationPayload = (att: any) => {
   } catch (e) {
     throw `Error decoding payload: ${e}`;
   }
+};
+
+const computeWasmHash = async (wasmBuffer: ArrayBuffer): Promise<string> => {
+  const hashBuffer = await crypto.subtle.digest("SHA-256", wasmBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
 };
