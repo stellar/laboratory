@@ -7,7 +7,6 @@ import {
   Icon,
   Link,
   Loader,
-  Text,
 } from "@stellar/design-system";
 
 import { useStore } from "@/store/useStore";
@@ -15,6 +14,7 @@ import { useStore } from "@/store/useStore";
 import { Box } from "@/components/layout/Box";
 import { DataTable } from "@/components/DataTable";
 import { BuildVerifiedBadge } from "@/components/BuildVerifiedBadge";
+import { NoInfoLoadedView } from "@/components/NoInfoLoadedView";
 
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
@@ -49,12 +49,10 @@ export const Contracts = ({
     : null;
 
   if (!events?.formattedContractEvents?.length) {
-    // @TODO
-    // Use <NoInfoLoadedView/> component when available
     return (
-      <Text as="div" size="sm" weight="regular">
-        There are no events in this transaction.
-      </Text>
+      <NoInfoLoadedView
+        message={<>There are no events in this transaction.</>}
+      />
     );
   }
 
@@ -131,7 +129,7 @@ const TransactionCard = ({
       <DataTable
         hidePagination={contractIds.length <= 10}
         pageSize={10}
-        tableId="contract-version-history"
+        tableId="tx-contracts-summary"
         tableData={contractIds.map((cid) => ({
           id: cid,
           build_verified: verifications[cid] || "unverified",
