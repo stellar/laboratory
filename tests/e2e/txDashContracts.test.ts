@@ -25,7 +25,7 @@ test.describe("Transaction Dashboard: Contracts", () => {
     await data({ page, mockResponse: TX_EVENTS_MOCK_RESPONSE_EMPTY });
 
     await expect(
-      page.getByText("There are no events in this transaction."),
+      page.getByText("There are no contracts in this transaction."),
     ).toBeVisible();
   });
 });
