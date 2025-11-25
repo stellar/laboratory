@@ -44,13 +44,9 @@ export const SourceCode = ({
         <div>
           Verifying your contract’s build helps others understand and trust what
           it does, and improves transparency across the Stellar ecosystem. To
-          verify, follow the{" "}
-          <Link href="https://stellar.expert/explorer/public/contract/validation">
-            setup instructions on Stellar Expert
-          </Link>
-          . You can also learn more about{" "}
-          <Link href="https://github.com/stellar/stellar-protocol/discussions/1573">
-            Contract Source Validation SEP
+          verify, follow the setup instruction in the{" "}
+          <Link href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0055.md">
+            Contract Build Verification SEP-55
           </Link>
           .
         </div>

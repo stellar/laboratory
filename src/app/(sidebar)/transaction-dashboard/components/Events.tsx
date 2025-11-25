@@ -25,8 +25,8 @@ export const Events = ({
 }: {
   txEvents:
     | {
-        contractEventsJson: RpcTxJsonResponseContractEventsJson;
-        transactionEventsJson: RpcTxJsonResponseTransactionEventsJson;
+        contractEventsJson?: RpcTxJsonResponseContractEventsJson;
+        transactionEventsJson?: RpcTxJsonResponseTransactionEventsJson;
       }
     | undefined;
 }) => {
@@ -34,7 +34,7 @@ export const Events = ({
 
   const events = txEvents
     ? formatTxEvents({
-        contractEvents: txEvents.contractEventsJson[0],
+        contractEvents: txEvents.contractEventsJson?.[0],
         transactionEvents: txEvents.transactionEventsJson,
       })
     : null;
