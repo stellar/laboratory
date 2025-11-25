@@ -25,7 +25,6 @@ import { useBuildVerification } from "@/query/useBuildVerification";
 
 import {
   RpcTxJsonResponseContractEventsJson,
-  RpcTxJsonResponseTransactionEventsJson,
   BuildVerificationStatus,
 } from "@/types/types";
 
@@ -35,7 +34,6 @@ export const Contracts = ({
   txEvents:
     | {
         contractEventsJson: RpcTxJsonResponseContractEventsJson;
-        transactionEventsJson: RpcTxJsonResponseTransactionEventsJson;
       }
     | undefined;
 }) => {
@@ -44,7 +42,6 @@ export const Contracts = ({
   const events = txEvents
     ? formatTxEvents({
         contractEvents: txEvents.contractEventsJson[0],
-        transactionEvents: txEvents.transactionEventsJson,
       })
     : null;
 
