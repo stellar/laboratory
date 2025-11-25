@@ -1320,6 +1320,18 @@
       transition: background-color var(--sds-anim-transition-default);
     }
 
+    @media (hover: hover) {
+      &:hover {
+        .Badge--success {
+          --Badge-color-background: var(--sds-clr-green-04);
+        }
+
+        .Badge--error {
+          --Badge-color-background: var(--sds-clr-red-04);
+        }
+      }
+    }
+
     &--disabled {
       cursor: default;
 
@@ -1327,16 +1339,16 @@
       .Badge--error {
         pointer-events: none;
       }
-    }
 
-    @media (hover: hover) {
-      :not(:is(.ContractInfo__badgeButton--disabled)) {
-        .Badge--success {
-          --Badge-color-background: var(--sds-clr-green-04);
-        }
+      @media (hover: hover) {
+        &:hover {
+          .Badge--success {
+            --Badge-color-background: var(--sds-clr-green-02);
+          }
 
-        .Badge--error {
-          --Badge-color-background: var(--sds-clr-red-04);
+          .Badge--error {
+            --Badge-color-background: var(--sds-clr-red-02);
+          }
         }
       }
     }
