@@ -32,6 +32,7 @@ import { getI64Error } from "./methods/getI64Error";
 import { getI128Error } from "./methods/getI128Error";
 import { getI256Error } from "./methods/getI256Error";
 import { getDataUrlError } from "./methods/getDataUrlError";
+import { getMuxedAddressError } from "./methods/getMuxedAddressError";
 
 export const validate = {
   getAccountThresholdError,
@@ -49,6 +50,7 @@ export const validate = {
   getEventsFiltersError,
   getHomeDomainError,
   getMemoError,
+  getMuxedAddressError,
   getNumberFractionError,
   getOptionsSignerError,
   getPositiveIntError,
