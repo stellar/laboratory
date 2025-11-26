@@ -154,7 +154,7 @@ export const ContractInfo = ({
                   >
                     This contract has no build verification configured. Please
                     see{" "}
-                    <Link href="https://stellar.expert/explorer/public/contract/validation">
+                    <Link href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0055.md#attestation-verification-flow">
                       verification setup instructions
                     </Link>{" "}
                     for more info.
