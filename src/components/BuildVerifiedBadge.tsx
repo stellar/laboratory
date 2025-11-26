@@ -1,10 +1,14 @@
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { Badge, Icon, Link, Tooltip } from "@stellar/design-system";
 
+import { BuildVerificationStatus } from "@/types/types";
+
 export const BuildVerifiedBadge = ({
   status,
+  disableMessage = false,
 }: {
-  status: "verified" | "unverified" | "builtIn";
+  status: BuildVerificationStatus;
+  disableMessage?: boolean;
 }) => {
   const [isBadgeTooltipVisible, setIsBadgeTooltipVisible] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -60,7 +64,7 @@ export const BuildVerifiedBadge = ({
         </>
       ),
     },
-    builtIn: {
+    built_in: {
       badge: (
         <Badge variant="success" icon={<Icon.CheckCircle />}>
           Built-in Contract
@@ -91,8 +95,11 @@ export const BuildVerifiedBadge = ({
       triggerEl={
         <button
           ref={buttonRef}
-          className="ContractInfo__badgeButton"
+          className={`ContractInfo__badgeButton ${disableMessage ? "ContractInfo__badgeButton--disabled" : ""}`}
           onClick={() => {
+            if (disableMessage) {
+              return;
+            }
             setIsBadgeTooltipVisible(!isBadgeTooltipVisible);
           }}
           type="button"

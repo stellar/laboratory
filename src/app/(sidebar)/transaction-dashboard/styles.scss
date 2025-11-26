@@ -407,3 +407,17 @@
     }
   }
 }
+
+// =============================================================================
+// Contracts
+// =============================================================================
+.TransactionContracts {
+  &__contractId {
+    display: inline;
+    vertical-align: middle;
+
+    .CopyText {
+      padding-left: pxToRem(8px);
+    }
+  }
+}

@@ -504,6 +504,14 @@ export type WasmData = {
   };
 };
 
+export type BuildVerificationStatus = "verified" | "unverified" | "built_in";
+export type BuildVerificationResponse = {
+  status: BuildVerificationStatus;
+  payload?: any;
+  sourceRepo?: string;
+  attestationUrl?: string;
+};
+
 // =============================================================================
 // Data table
 // =============================================================================
