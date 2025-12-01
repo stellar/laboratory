@@ -272,7 +272,6 @@ export default function ContractExplorer() {
               fieldSize="md"
               id="contract-id"
               label="Contract ID"
-              leftElement={<Icon.FileCode02 />}
               placeholder="Ex: CCBWOUL7XW5XSWD3UKL76VWLLFCSZP4D4GUSCFBHUQCEAW23QVKJZ7ON"
               error={contractIdInputError}
               value={contractIdInput}

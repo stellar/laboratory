@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Icon, Link, Loader, Text } from "@stellar/design-system";
+import { Link, Loader, Text } from "@stellar/design-system";
 import { useRouter } from "next/navigation";
 
 import { Box } from "@/components/layout/Box";
@@ -101,7 +101,7 @@ export default function ContractExplorer() {
                 addlClassName="ContractLink--withIcon"
                 onClick={() => handleNavigateToContractExplorer(r.contract)}
               >
-                <Icon.FileCode02 /> {r.contract}
+                {r.contract}
               </Link>
             ),
           },

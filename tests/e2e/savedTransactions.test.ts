@@ -225,11 +225,10 @@ test.describe("Saved Transactions Page", () => {
       await expect(
         pageContext.getByTestId("build-soroban-transaction-operation"),
       ).toBeVisible();
-      await expect(pageContext.getByLabel("Contract ID")).toHaveValue(
-        "CAQP53Z2GMZ6WVOKJWXMCVDLZYJ7GYVMWPAMWACPLEZRF2UEZW3B636S",
-      );
-      await expect(pageContext.getByLabel("Key ScVal in XDR")).toHaveValue(
-        "AAAAEAAAAAEAAAACAAAADwAAAAdDb3VudGVyAAAAABIAAAAAAAAAAH5MvQcuICNqcxGfJ6rKFvwi77h3WDZ2XVzA+LVRkCKD",
+
+      // With the new implementation, extend_footprint_ttl uses Ledger Key XDR
+      await expect(sorobanOperation.getByLabel("Ledger Key XDR")).toHaveValue(
+        "AAAABgAAAAEg/u86MzPrVcpNrsFUa84T82Kss8DLAE9ZMxLqhM22HwAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAAB+TL0HLiAjanMRnyeqyhb8Iu+4d1g2dl1cwPi1UZAigwAAAAE=",
       );
       await expect(pageContext.getByLabel("Extend To")).toHaveValue("30000");
       await expect(

@@ -112,7 +112,8 @@ export const ResourceFeePickerWithQuery = ({
       // restore_footprint operation already has ContractDataXDR in base64
       // @TODO update when extend_ttl gets updated
       if (
-        operation.operation_type === "restore_footprint" &&
+        (operation.operation_type === "restore_footprint" ||
+          operation.operation_type === "extend_footprint_ttl") &&
         operation.params.contractDataLedgerKey
       ) {
         contractDataXdr = xdr.LedgerKey.fromXDR(

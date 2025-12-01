@@ -504,6 +504,14 @@ export type WasmData = {
   };
 };
 
+export type BuildVerificationStatus = "verified" | "unverified" | "built_in";
+export type BuildVerificationResponse = {
+  status: BuildVerificationStatus;
+  payload?: any;
+  sourceRepo?: string;
+  attestationUrl?: string;
+};
+
 // =============================================================================
 // Data table
 // =============================================================================
@@ -567,8 +575,8 @@ export type RpcTxJsonResponse = {
   applicationOrder: number;
   createdAt: string;
   events?: {
-    contractEventsJson: RpcTxJsonResponseContractEventsJson;
-    transactionEventsJson: RpcTxJsonResponseTransactionEventsJson;
+    contractEventsJson?: RpcTxJsonResponseContractEventsJson;
+    transactionEventsJson?: RpcTxJsonResponseTransactionEventsJson;
   };
   feeBump: boolean;
   ledger: number;

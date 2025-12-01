@@ -29,6 +29,7 @@ import { StateChange } from "./components/StateChange";
 import { FeeBreakdown } from "./components/FeeBreakdown";
 import { Signatures } from "./components/Signatures";
 import { Events } from "./components/Events";
+import { Contracts } from "./components/Contracts";
 
 import "./styles.scss";
 
@@ -360,7 +361,6 @@ export default function TransactionDashboard() {
               fieldSize="md"
               id="transaction-hash"
               label="Transaction Hash"
-              leftElement={<Icon.FileCode02 />}
               placeholder="Ex: 6a274e17afb878bc704bfe41ebf456b4c6d9df5ca59bd3e06f5c39263e484017"
               error={transactionHashInputError}
               value={transactionHashInput}
@@ -451,8 +451,8 @@ export default function TransactionDashboard() {
               tab2={{
                 id: "tx-contracts",
                 label: "Contracts",
-                content: <ComingSoonText />,
-                isDisabled: true,
+                content: <Contracts txEvents={txDetails?.events} />,
+                isDisabled: !isDataLoaded,
               }}
               tab3={{
                 id: "tx-events",

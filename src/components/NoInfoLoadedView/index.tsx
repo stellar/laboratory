@@ -19,7 +19,7 @@ export const NoInfoLoadedView = ({
       data-type={type}
     >
       <Box gap="xs" direction="row" align="center" justify="center" wrap="wrap">
-        {type === "error" ? <Icon.XSquare /> : <Icon.FileCode02 />}
+        {type === "error" ? <Icon.XSquare /> : null}
         {message}
       </Box>
     </Box>

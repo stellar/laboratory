@@ -1331,6 +1331,27 @@
         }
       }
     }
+
+    &--disabled {
+      cursor: default;
+
+      .Badge--success,
+      .Badge--error {
+        pointer-events: none;
+      }
+
+      @media (hover: hover) {
+        &:hover {
+          .Badge--success {
+            --Badge-color-background: var(--sds-clr-green-02);
+          }
+
+          .Badge--error {
+            --Badge-color-background: var(--sds-clr-red-02);
+          }
+        }
+      }
+    }
   }
 
   &__tabs {
