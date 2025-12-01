@@ -20,8 +20,8 @@ export const formatTxEvents = ({
   contractEvents,
   transactionEvents,
 }: {
-  contractEvents: RpcTxJsonResponseTxEvent[] | undefined;
-  transactionEvents: RpcTxJsonResponseTransactionEventsJson | undefined;
+  contractEvents?: RpcTxJsonResponseTxEvent[] | undefined;
+  transactionEvents?: RpcTxJsonResponseTransactionEventsJson | undefined;
 }) => {
   const formattedContractEvents = contractEvents?.map((ce) => ({
     contractId: ce.contract_id,
