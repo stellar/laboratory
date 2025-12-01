@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { CopyText, Icon, IconButton, Link, Text } from "@stellar/design-system";
 import { BigNumber } from "bignumber.js";
 
@@ -29,10 +30,12 @@ export const TokenSummary = ({
 
   type EventGroupsType = {
     native: {
+      id: string;
       title: string;
       items: TokenItem[];
     };
     asset: {
+      id: string;
       title: string;
       items: TokenItem[];
     };
@@ -43,10 +46,12 @@ export const TokenSummary = ({
 
     const groups: EventGroupsType = {
       asset: {
+        id: "asset-ev",
         title: "Contract token transferred",
         items: [],
       },
       native: {
+        id: "native-ev",
         title: "Native token (XLM) transferred",
         items: [],
       },
@@ -130,8 +135,8 @@ export const TokenSummary = ({
   return (
     <Box gap="lg" addlClassName="TransactionTokenSummary">
       {groupedTransferEvents.map((ev) => (
-        <>
-          <Box gap="md">
+        <Fragment key={ev.id}>
+          <Box gap="md" data-testid={ev.id}>
             <Text as="div" size="sm" weight="medium">
               {ev.title}
             </Text>
@@ -155,7 +160,7 @@ export const TokenSummary = ({
               hidePagination={true}
             />
           </Box>
-        </>
+        </Fragment>
       ))}
     </Box>
   );
