@@ -40,6 +40,14 @@
       height: fit-content;
     }
   }
+
+  .ModalFooter {
+    &--stack {
+      .CopyText__content {
+        width: 100%;
+      }
+    }
+  }
 }
 
 .LabLayout {

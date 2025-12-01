@@ -43,7 +43,7 @@ export const ConnectedModal = ({
         </Box>
       </Modal.Body>
       <Modal.Footer itemAlignment="stack">
-        <CopyText textToCopy={publicKey} variant="headless">
+        <CopyText textToCopy={publicKey}>
           <Button
             isFullWidth
             size="md"
