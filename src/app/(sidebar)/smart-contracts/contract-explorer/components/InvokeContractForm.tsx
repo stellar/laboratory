@@ -50,8 +50,8 @@ import { SorobanInvokeValue, XdrFormatType, AnyObject } from "@/types/types";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 type SimulatedResponseType = {
-  fullResponse: Api.SimulateTransactionResponse | undefined;
-  resultOnly: AnyObject | undefined;
+  fullResponse: Api.SimulateTransactionResponse;
+  resultOnly: AnyObject;
 };
 
 export const InvokeContractForm = ({
@@ -78,8 +78,10 @@ export const InvokeContractForm = ({
   const [formError, setFormError] = useState<AnyObject>({});
   const [isGetFunction, setIsGetFunction] = useState(false);
 
-  const [jsonResponse, setJsonResponse] = useState<SimulatedResponseType>();
-  const [base64Response, setBase64Response] = useState<SimulatedResponseType>();
+  const [jsonResponse, setJsonResponse] =
+    useState<SimulatedResponseType | null>(null);
+  const [base64Response, setBase64Response] =
+    useState<SimulatedResponseType | null>(null);
   const [isFullResponseEnabled, setIsFullResponseEnabled] =
     useState<boolean>(false);
 
@@ -480,15 +482,8 @@ export const InvokeContractForm = ({
     resetSubmitState();
     resetAssembleTx();
 
-    setJsonResponse({
-      fullResponse: undefined,
-      resultOnly: undefined,
-    });
-
-    setBase64Response({
-      fullResponse: undefined,
-      resultOnly: undefined,
-    });
+    setJsonResponse(null);
+    setBase64Response(null);
   };
 
   useEffect(() => {
