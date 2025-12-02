@@ -1,6 +1,7 @@
 import { RpcTxJsonResponse } from "@/types/types";
 
 // Network limits
+// https://developers.stellar.org/docs/networks/resource-limits-fees
 export const NETWORK_LIMITS = {
   instructions: 100_000_000,
   memory_usage: 41_943_040,
