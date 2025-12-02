@@ -3644,7 +3644,7 @@ export const TX_EVENTS_MOCK_KALE = {
       },
     },
     resultJson: {},
-    resultMetaJson: [],
+    resultMetaJson: {},
     diagnosticEventsJson: [],
     events: {
       transactionEventsJson: [
@@ -3784,5 +3784,273 @@ export const TX_EVENTS_MOCK_KALE = {
     },
     ledger: 60016050,
     createdAt: "1764103095",
+  },
+};
+
+export const TX_EVENTS_MOCK_MUXED = {
+  jsonrpc: "2.0",
+  id: 1,
+  result: {
+    latestLedger: 1895260,
+    latestLedgerCloseTime: "1764683829",
+    oldestLedger: 1774301,
+    oldestLedgerCloseTime: "1764078353",
+    status: "SUCCESS",
+    txHash: "80a57738bc6e0ce01a1ee25dbb1e59a4c4f677e0b8f0a2232c285b3a14990f9a",
+    applicationOrder: 2,
+    feeBump: false,
+    envelopeJson: {
+      tx: {
+        tx: {
+          source_account:
+            "GBQXC7ZQHOUAM5JBU5YEC7VE2AT3GUQKK5ACH47HM77CDC7QBU5VZEEV",
+          fee: 84446,
+          seq_num: "908578856632404",
+          cond: {
+            time: {
+              min_time: "0",
+              max_time: "0",
+            },
+          },
+          memo: "none",
+          operations: [
+            {
+              source_account: null,
+              body: {
+                invoke_host_function: {
+                  host_function: {
+                    invoke_contract: {
+                      contract_address:
+                        "CCPKXJC62SE3XN7C5DDETNKKZLHN6NXUZRHFPGA7H47RIKAJYHKH2PYU",
+                      function_name: "transfer",
+                      args: [
+                        {
+                          address:
+                            "GBQXC7ZQHOUAM5JBU5YEC7VE2AT3GUQKK5ACH47HM77CDC7QBU5VZEEV",
+                        },
+                        {
+                          address:
+                            "MC4NTEZTULYHWOCW6YSLZWAEED6ATRVX2BPKTSWZUKQKUJIMG3SLCAAAAAAAAAAAAGIQE",
+                        },
+                        {
+                          i128: "1000000",
+                        },
+                      ],
+                    },
+                  },
+                  auth: [
+                    {
+                      credentials: "source_account",
+                      root_invocation: {
+                        function: {
+                          contract_fn: {
+                            contract_address:
+                              "CCPKXJC62SE3XN7C5DDETNKKZLHN6NXUZRHFPGA7H47RIKAJYHKH2PYU",
+                            function_name: "transfer",
+                            args: [
+                              {
+                                address:
+                                  "GBQXC7ZQHOUAM5JBU5YEC7VE2AT3GUQKK5ACH47HM77CDC7QBU5VZEEV",
+                              },
+                              {
+                                address:
+                                  "MC4NTEZTULYHWOCW6YSLZWAEED6ATRVX2BPKTSWZUKQKUJIMG3SLCAAAAAAAAAAAAGIQE",
+                              },
+                              {
+                                i128: "1000000",
+                              },
+                            ],
+                          },
+                        },
+                        sub_invocations: [],
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+          ext: {
+            v1: {
+              ext: "v0",
+              resources: {
+                footprint: {
+                  read_only: [
+                    {
+                      contract_data: {
+                        contract:
+                          "CCPKXJC62SE3XN7C5DDETNKKZLHN6NXUZRHFPGA7H47RIKAJYHKH2PYU",
+                        key: "ledger_key_contract_instance",
+                        durability: "persistent",
+                      },
+                    },
+                    {
+                      contract_code: {
+                        hash: "03541799cc4291302d011fd49ed6f3a8d8113fa040a2cbe4a784826dbf515b44",
+                      },
+                    },
+                  ],
+                  read_write: [
+                    {
+                      contract_data: {
+                        contract:
+                          "CCPKXJC62SE3XN7C5DDETNKKZLHN6NXUZRHFPGA7H47RIKAJYHKH2PYU",
+                        key: {
+                          vec: [
+                            {
+                              symbol: "Balance",
+                            },
+                            {
+                              address:
+                                "GBQXC7ZQHOUAM5JBU5YEC7VE2AT3GUQKK5ACH47HM77CDC7QBU5VZEEV",
+                            },
+                          ],
+                        },
+                        durability: "persistent",
+                      },
+                    },
+                    {
+                      contract_data: {
+                        contract:
+                          "CCPKXJC62SE3XN7C5DDETNKKZLHN6NXUZRHFPGA7H47RIKAJYHKH2PYU",
+                        key: {
+                          vec: [
+                            {
+                              symbol: "Balance",
+                            },
+                            {
+                              address:
+                                "GC4NTEZTULYHWOCW6YSLZWAEED6ATRVX2BPKTSWZUKQKUJIMG3SLDMXU",
+                            },
+                          ],
+                        },
+                        durability: "persistent",
+                      },
+                    },
+                  ],
+                },
+                instructions: 909934,
+                disk_read_bytes: 0,
+                write_bytes: 296,
+              },
+              resource_fee: "84246",
+            },
+          },
+        },
+        signatures: [
+          {
+            hint: "f00d3b5c",
+            signature:
+              "e9de8cc4d676c74bc92f9db6570163024671c4eb8f2b32ab921eb3a81e3909b46748ecb0933d61e8c623923437942b3bc56b9dd0e645a9a877356c26d68e860a",
+          },
+        ],
+      },
+    },
+    resultJson: {},
+    resultMetaJson: {},
+    diagnosticEventsJson: [],
+    events: {
+      transactionEventsJson: [
+        {
+          stage: "before_all_txs",
+          event: {
+            ext: "v0",
+            contract_id:
+              "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC",
+            type_: "contract",
+            body: {
+              v0: {
+                topics: [
+                  {
+                    symbol: "fee",
+                  },
+                  {
+                    address:
+                      "GBQXC7ZQHOUAM5JBU5YEC7VE2AT3GUQKK5ACH47HM77CDC7QBU5VZEEV",
+                  },
+                ],
+                data: {
+                  i128: "84346",
+                },
+              },
+            },
+          },
+        },
+        {
+          stage: "after_all_txs",
+          event: {
+            ext: "v0",
+            contract_id:
+              "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC",
+            type_: "contract",
+            body: {
+              v0: {
+                topics: [
+                  {
+                    symbol: "fee",
+                  },
+                  {
+                    address:
+                      "GBQXC7ZQHOUAM5JBU5YEC7VE2AT3GUQKK5ACH47HM77CDC7QBU5VZEEV",
+                  },
+                ],
+                data: {
+                  i128: "-38789",
+                },
+              },
+            },
+          },
+        },
+      ],
+      contractEventsJson: [
+        [
+          {
+            ext: "v0",
+            contract_id:
+              "CCPKXJC62SE3XN7C5DDETNKKZLHN6NXUZRHFPGA7H47RIKAJYHKH2PYU",
+            type_: "contract",
+            body: {
+              v0: {
+                topics: [
+                  {
+                    symbol: "transfer",
+                  },
+                  {
+                    address:
+                      "GBQXC7ZQHOUAM5JBU5YEC7VE2AT3GUQKK5ACH47HM77CDC7QBU5VZEEV",
+                  },
+                  {
+                    address:
+                      "GC4NTEZTULYHWOCW6YSLZWAEED6ATRVX2BPKTSWZUKQKUJIMG3SLDMXU",
+                  },
+                ],
+                data: {
+                  map: [
+                    {
+                      key: {
+                        symbol: "amount",
+                      },
+                      val: {
+                        i128: "1000000",
+                      },
+                    },
+                    {
+                      key: {
+                        symbol: "to_muxed_id",
+                      },
+                      val: {
+                        u64: "1",
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        ],
+      ],
+    },
+    ledger: 1885245,
+    createdAt: "1764633694",
   },
 };

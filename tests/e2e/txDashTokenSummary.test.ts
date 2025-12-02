@@ -1,6 +1,7 @@
 import { expect, Locator, Page, test } from "@playwright/test";
 import {
   TX_EVENTS_MOCK_KALE,
+  TX_EVENTS_MOCK_MUXED,
   TX_EVENTS_MOCK_RESPONSE_EMPTY,
   TX_EVENTS_MOCK_RESPONSE_NO_CONTRACT_EVENTS,
   TX_EVENTS_MOCK_SAC,
@@ -177,6 +178,26 @@ test.describe("Transaction Dashboard: Token Summary", () => {
     await expect(
       page.getByText("There are no transfer events in this transaction"),
     ).toBeVisible();
+  });
+
+  test("Muxed account", async ({ page }) => {
+    await eventsData({
+      page,
+      mockResponse: TX_EVENTS_MOCK_MUXED,
+    });
+
+    // Tokens
+    const contractTokensContainer = page.getByTestId("asset-ev");
+    await expect(contractTokensContainer).toBeVisible();
+    await expect(contractTokensContainer.locator("> .Text")).toHaveText(
+      "Contract token transferred",
+    );
+    const contracTokensRows = contractTokensContainer.locator("tbody tr");
+    await expect(contracTokensRows).toHaveCount(1);
+
+    // Native
+    const assetTokensContainer = page.getByTestId("native-ev");
+    await expect(assetTokensContainer).toBeHidden();
   });
 
   test.describe("No transfer events", () => {

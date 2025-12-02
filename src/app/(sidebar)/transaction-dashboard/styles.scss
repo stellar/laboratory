@@ -435,6 +435,7 @@
   &__address {
     .Link {
       width: pxToRem(96px);
+      white-space: nowrap;
     }
 
     .CopyText {

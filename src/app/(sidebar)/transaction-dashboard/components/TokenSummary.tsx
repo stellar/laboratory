@@ -108,6 +108,10 @@ export const TokenSummary = ({
   };
 
   const formatAsset = (code: string, issuer: string) => {
+    if (!code || !issuer) {
+      return null;
+    }
+
     const assetString =
       code === "XLM" && issuer === "native" ? code : `${code}-${issuer}`;
 
@@ -182,13 +186,25 @@ const getTransferEvents = (data: RpcTxJsonResponse | null | undefined) => {
     .map((ev: any) => {
       const addressFrom = ev.body.v0.topics[1].address;
       const addressTo = ev.body.v0.topics[2].address;
-      const [assetCode, assetIssuer] = ev.body.v0.topics[3].string.split(":");
+
+      const token = ev.body.v0.topics?.[3]?.string;
+
+      let assetCode = "";
+      let assetIssuer = "";
+
+      if (token) {
+        [assetCode, assetIssuer] = token.split(":");
+      }
 
       return {
         addressFrom,
         addressTo,
         // Transfer event data type https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0041.md#transfer-event
-        amount: ev.body.v0.data?.i128 || ev.body.v0.data?.amount || "0",
+        amount:
+          ev.body.v0.data?.map?.[0]?.val?.i128 ||
+          ev.body.v0.data?.i128 ||
+          ev.body.v0.data?.amount ||
+          "0",
         assetCode: assetCode === "native" ? "XLM" : assetCode,
         assetIssuer: assetCode === "native" ? "native" : assetIssuer,
       };
