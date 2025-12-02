@@ -7,7 +7,7 @@ export const getMuxedAddressError = (
 ) => {
   if (!muxedAddress) {
     if (isRequired) {
-      return "Public key is required.";
+      return "Muxed account address is required.";
     } else {
       return false;
     }
