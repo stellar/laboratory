@@ -22,8 +22,8 @@ test.describe("Transaction Dashboard: Resource Profiler", () => {
       headerTitle: "CPU and memory",
       itemRows: [
         [
-          { label: "CPU instructions", value: "12,516,927" },
-          { label: "(limit: 100 M)", value: "12.52% used" },
+          { label: "CPU instructions", value: "19,828,719" },
+          { label: "(limit: 100 M)", value: "19.83% used" },
         ],
         [
           { label: "Memory usage", value: "18,931,120 B" },
@@ -38,11 +38,11 @@ test.describe("Transaction Dashboard: Resource Profiler", () => {
       groupId: "footprint-item",
       headerTitle: "Footprint",
       itemRows: [
-        [{ label: "Footprint keys read only", value: "16" }],
-        [{ label: "Footprint keys read write", value: "16" }],
+        [{ label: "Footprint keys read only", value: "12" }],
+        [{ label: "Footprint keys read write", value: "27" }],
         [
-          { label: "Footprint keys total", value: "32" },
-          { label: "(limit: 100 keys)", value: "32.00% used" },
+          { label: "Footprint keys total", value: "39" },
+          { label: "(limit: 100 keys)", value: "39.00% used" },
         ],
       ],
     });
