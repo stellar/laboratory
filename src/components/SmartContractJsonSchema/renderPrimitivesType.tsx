@@ -39,6 +39,8 @@ export const renderPrimitivesType = ({
 
   const renameType = (type: string) => {
     switch (type) {
+      case "MuxedAddress":
+        return "muxed_address";
       case "ScSymbol":
         return "symbol";
       case "ScString":
@@ -154,6 +156,22 @@ export const renderPrimitivesType = ({
               validate.getPublicKeyError,
               validate.getContractIdError,
             ]);
+          }}
+          key={path.join(".")}
+          infoText={description || ""}
+          leftElement={<Icon.User03 />}
+          note={<>{description}</>}
+          fieldSize="md"
+        />
+      );
+    case "MuxedAddress":
+      return (
+        <Input
+          {...sharedProps}
+          label={InputLabel}
+          onChange={(e) => {
+            handleChange(e, schemaType);
+            handleValidate(e, schemaType, validate.getMuxedAddressError);
           }}
           key={path.join(".")}
           infoText={description || ""}

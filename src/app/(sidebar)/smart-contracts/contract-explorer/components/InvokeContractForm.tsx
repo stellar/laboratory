@@ -36,7 +36,7 @@ import { useStore } from "@/store/useStore";
 import { DereferencedSchemaType } from "@/constants/jsonSchema";
 
 import { useAccountSequenceNumber } from "@/query/useAccountSequenceNumber";
-import { useRpcPrepareTx } from "@/query/useRpcPrepareTx";
+import { useRpcAssembleTx } from "@/query/useRpcAssembleTx";
 import { useSimulateTx } from "@/query/useSimulateTx";
 import { useSubmitRpcTx } from "@/query/useSubmitRpcTx";
 
@@ -78,8 +78,10 @@ export const InvokeContractForm = ({
   const [formError, setFormError] = useState<AnyObject>({});
   const [isGetFunction, setIsGetFunction] = useState(false);
 
-  const [jsonResponse, setJsonResponse] = useState<SimulatedResponseType>();
-  const [base64Response, setBase64Response] = useState<SimulatedResponseType>();
+  const [jsonResponse, setJsonResponse] =
+    useState<SimulatedResponseType | null>(null);
+  const [base64Response, setBase64Response] =
+    useState<SimulatedResponseType | null>(null);
   const [isFullResponseEnabled, setIsFullResponseEnabled] =
     useState<boolean>(false);
 
@@ -137,10 +139,10 @@ export const InvokeContractForm = ({
   } = useSimulateTx();
 
   const {
-    mutateAsync: prepareTx,
-    isPending: isPrepareTxPending,
-    reset: resetPrepareTx,
-  } = useRpcPrepareTx();
+    mutateAsync: assembleTx,
+    isPending: isAssembleTxPending,
+    reset: resetAssembleTx,
+  } = useRpcAssembleTx();
 
   const {
     data: submitRpcResponse,
@@ -273,7 +275,7 @@ export const InvokeContractForm = ({
     isLoadingSequenceNumber ||
     isFetchingSequenceNumber ||
     isSimulateTxPending ||
-    isPrepareTxPending;
+    isAssembleTxPending;
 
   const resetSubmitState = () => {
     if (submitRpcError || submitRpcResponse) {
@@ -287,12 +289,12 @@ export const InvokeContractForm = ({
     }
   };
 
-  const handleSimulateAndSubmit = async () => {
+  const handleSimulateAndSubmit = async (): Promise<void> => {
     const xdr = await getXdrToSimulate();
 
     if (xdr) {
       await handleSimulate(xdr);
-      const prepareResult = await handlePrepareTx(xdr);
+      const prepareResult = await handleAssembleTx(xdr);
 
       if (prepareResult?.transactionXdr) {
         await handleSubmit(prepareResult.transactionXdr);
@@ -413,20 +415,19 @@ export const InvokeContractForm = ({
     }
   };
 
-  const handlePrepareTx = async (xdr: string) => {
+  const handleAssembleTx = async (xdr: string) => {
     if (!xdr) {
       return null;
     }
 
     try {
-      const prepareResult = await prepareTx({
-        rpcUrl: network.rpcUrl,
+      const assembleResult = await assembleTx({
         transactionXdr: xdr,
         networkPassphrase: network.passphrase,
-        headers: getNetworkHeaders(network, "rpc"),
+        simulatedTx: simulateTxData.result,
       });
 
-      return prepareResult;
+      return assembleResult;
     } catch (error: any) {
       setInvokeError({
         message: error?.result?.message || "Failed to prepare transaction",
@@ -479,7 +480,10 @@ export const InvokeContractForm = ({
     setInvokeError(null);
     resetSimulateState();
     resetSubmitState();
-    resetPrepareTx();
+    resetAssembleTx();
+
+    setJsonResponse(null);
+    setBase64Response(null);
   };
 
   useEffect(() => {
@@ -716,7 +720,6 @@ export const InvokeContractForm = ({
 
               if (xdr) {
                 await handleSimulate(xdr);
-                await handlePrepareTx(xdr);
               }
             }}
           >
