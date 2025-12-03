@@ -48,7 +48,7 @@ export default function TransactionDashboard() {
   const [transactionHashInput, setTransactionHashInput] = useState("");
   const [transactionHashInputError, setTransactionHashInputError] =
     useState("");
-  const [activeTab, setActiveTab] = useState<TxTabId>("tx-state-change");
+  const [activeTab, setActiveTab] = useState<TxTabId>("tx-resource-profiler");
 
   const {
     data: txDetails,

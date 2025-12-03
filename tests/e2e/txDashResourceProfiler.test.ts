@@ -138,11 +138,8 @@ const txData = async ({
 
   await loadButton.click();
 
-  // Select Events tab
+  // Check the Resource Profiler tab is selected (default)
   const eventsTabButton = page.getByTestId("tx-resource-profiler");
-  await expect(eventsTabButton).toHaveAttribute("data-is-active", "false");
-
-  await eventsTabButton.click();
   await expect(eventsTabButton).toHaveAttribute("data-is-active", "true");
 };
 
