@@ -8,6 +8,7 @@ import { Box } from "@/components/layout/Box";
 import { ScValPrettyJson } from "@/components/ScValPrettyJson";
 import { ExpandBox } from "@/components/ExpandBox";
 import { CopyJsonPayloadButton } from "@/components/CopyJsonPayloadButton";
+import { TransactionTabEmptyMessage } from "@/components/TransactionTabEmptyMessage";
 
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import { FormattedTxEvent, formatTxEvents } from "@/helpers/formatTxEvents";
@@ -45,9 +46,9 @@ export const Events = ({
     )
   ) {
     return (
-      <Text as="div" size="sm" weight="regular">
-        There are no events in this transaction.
-      </Text>
+      <TransactionTabEmptyMessage>
+        There are no events in this transaction
+      </TransactionTabEmptyMessage>
     );
   }
 
