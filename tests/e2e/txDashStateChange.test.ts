@@ -118,7 +118,7 @@ test.describe("Transaction Dashboard: State Change", () => {
     await expect(
       page
         .getByTestId("contract-info-contract-container")
-        .getByText("There are no state changes in this transaction."),
+        .getByText("There are no state changes in this transaction"),
     ).toBeVisible();
   });
 });

@@ -28,6 +28,7 @@ import { StateChange } from "./components/StateChange";
 import { FeeBreakdown } from "./components/FeeBreakdown";
 import { Signatures } from "./components/Signatures";
 import { Events } from "./components/Events";
+import { TokenSummary } from "./components/TokenSummary";
 import { Contracts } from "./components/Contracts";
 import { ResourceProfiler } from "./components/ResourceProfiler";
 
@@ -202,12 +203,6 @@ export default function TransactionDashboard() {
     ));
   };
 
-  const ComingSoonText = () => (
-    <Text as="div" size="sm" weight="regular">
-      Coming soon
-    </Text>
-  );
-
   return (
     <Box gap="lg">
       <PageCard heading="Transaction Dashboard">
@@ -314,8 +309,8 @@ export default function TransactionDashboard() {
               tab1={{
                 id: "tx-token-summary",
                 label: "Token Summary",
-                content: <ComingSoonText />,
-                isDisabled: true,
+                content: <TokenSummary txDetails={txDetails} />,
+                isDisabled: !isDataLoaded,
               }}
               tab2={{
                 id: "tx-contracts",
