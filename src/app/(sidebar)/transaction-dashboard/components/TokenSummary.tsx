@@ -74,6 +74,8 @@ export const TokenSummary = ({
   const seNetwork = getStellarExpertNetwork(network.id);
 
   const formatAssetAddress = (address: string) => {
+    const isContractAddress = address.startsWith("C");
+
     return (
       <Box
         gap="sm"
@@ -81,7 +83,9 @@ export const TokenSummary = ({
         align="center"
         addlClassName="TransactionTokenSummary__address"
       >
-        <Link href={`${STELLAR_EXPERT}/${seNetwork}/contract/${address}`}>
+        <Link
+          href={`${STELLAR_EXPERT}/${seNetwork}/${isContractAddress ? "contract" : "account"}/${address}`}
+        >
           {shortenStellarAddress(address)}
         </Link>
 
