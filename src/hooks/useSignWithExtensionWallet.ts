@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import { ISupportedWallet } from "@creit.tech/stellar-wallets-kit";
+import { ISupportedWallet } from "@creit-tech/stellar-wallets-kit";
 
 import { WalletKitContext } from "@/components/WalletKit/WalletKitContextProvider";
 import { getWalletKitNetwork } from "@/helpers/getWalletKitNetwork";
@@ -18,6 +18,8 @@ export const useSignWithExtensionWallet = ({
   const networkPassphrase = getWalletKitNetwork(network.id);
 
   const walletKitInstance = useContext(WalletKitContext);
+
+  console.log("walletKitInstance: ", walletKitInstance);
 
   const [signedTxXdr, setSignedTxXdr] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
