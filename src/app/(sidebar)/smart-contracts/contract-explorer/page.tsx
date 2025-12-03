@@ -10,6 +10,7 @@ import { useSEContractInfo } from "@/query/external/useSEContractInfo";
 import { useWasmGitHubAttestation } from "@/query/useWasmGitHubAttestation";
 import { useContractClientFromRpc } from "@/query/useContractClientFromRpc";
 import { useGetContractTypeFromRpcById } from "@/query/useGetContractTypeFromRpcById";
+import { useWasmHashFromRpc } from "@/query/useWasmHashFromRpc";
 import { validate } from "@/validate";
 
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
@@ -39,6 +40,8 @@ export default function ContractExplorer() {
   const [contractIdInput, setContractIdInput] = useState("");
   const [contractIdInputError, setContractIdInputError] = useState("");
   const [isSaveModalVisible, setIsSaveModalVisible] = useState(false);
+
+  const rpcUrl = network.rpcUrl;
 
   const {
     data: contractType,
@@ -74,8 +77,18 @@ export default function ContractExplorer() {
     rpcUrl: network.rpcUrl,
   });
 
-  const rpcUrl = network.rpcUrl;
-  const wasmHash = contractInfoData?.wasm || "";
+  const {
+    data: wasmHashData,
+    isLoading: isWasmHashLoading,
+    isFetching: isWasmHashFetching,
+  } = useWasmHashFromRpc({
+    contractId: contractIdInput,
+    rpcUrl,
+    isActive: Boolean(rpcUrl && contractIdInput),
+    headers: getNetworkHeaders(network, "rpc"),
+  });
+
+  const wasmHash = wasmHashData || contractInfoData?.wasm || "";
   const isDataLoaded = Boolean(contractInfoData);
 
   const {
@@ -97,7 +110,9 @@ export default function ContractExplorer() {
     isContractInfoLoading ||
     isContractInfoFetching ||
     isWasmLoading ||
-    isWasmFetching;
+    isWasmFetching ||
+    isWasmHashLoading ||
+    isWasmHashFetching;
 
   useEffect(() => {
     // Pre-fill on page refresh and initial load
@@ -125,7 +140,11 @@ export default function ContractExplorer() {
   const resetFetchContractInfo = () => {
     if (contractInfoData) {
       queryClient.resetQueries({
-        queryKey: ["useSEContractInfo", "useClientFromRpc"],
+        queryKey: [
+          "useSEContractInfo",
+          "useClientFromRpc",
+          "useWasmHashFromRpc",
+        ],
       });
       smartContracts.resetExplorerContractId();
     }
@@ -326,6 +345,7 @@ export default function ContractExplorer() {
                 <ContractInfo
                   infoData={contractInfoData}
                   wasmData={wasmData}
+                  wasmHash={wasmHashData}
                   network={network}
                   isLoading={isLoading}
                   isSacType={isSacType}
