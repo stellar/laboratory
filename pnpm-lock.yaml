@@ -38,19 +38,19 @@ importers:
         version: 6.30.6
       '@monaco-editor/react':
         specifier: ^4.7.0
-        version: 4.7.0(monaco-editor@0.53.0)(react-dom@19.1.1(react@19.2.1))(react@19.2.1)
+        version: 4.7.0(monaco-editor@0.53.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       '@next/third-parties':
         specifier: ^15.4.4
-        version: 15.5.3(next@15.5.7(@babel/core@7.28.4)(@opentelemetry/api@1.9.0)(@playwright/test@1.55.0)(react-dom@19.1.1(react@19.2.1))(react@19.2.1)(sass@1.92.1))(react@19.2.1)
+        version: 15.5.3(next@15.5.7(@babel/core@7.28.4)(@opentelemetry/api@1.9.0)(@playwright/test@1.55.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(sass@1.92.1))(react@19.2.1)
       '@sentry/nextjs':
         specifier: ^10
-        version: 10.11.0(@opentelemetry/context-async-hooks@2.1.0(@opentelemetry/api@1.9.0))(@opentelemetry/core@2.1.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.1.0(@opentelemetry/api@1.9.0))(next@15.5.7(@babel/core@7.28.4)(@opentelemetry/api@1.9.0)(@playwright/test@1.55.0)(react-dom@19.1.1(react@19.2.1))(react@19.2.1)(sass@1.92.1))(react@19.2.1)(webpack@5.101.3)
+        version: 10.11.0(@opentelemetry/context-async-hooks@2.1.0(@opentelemetry/api@1.9.0))(@opentelemetry/core@2.1.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.1.0(@opentelemetry/api@1.9.0))(next@15.5.7(@babel/core@7.28.4)(@opentelemetry/api@1.9.0)(@playwright/test@1.55.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(sass@1.92.1))(react@19.2.1)(webpack@5.101.3)
       '@stellar-expert/contract-wasm-interface-parser':
         specifier: ^3.2.0
         version: 3.2.0(@stellar/stellar-base@14.0.2)
       '@stellar/design-system':
         specifier: ^3.2.5
-        version: 3.2.5(react-dom@19.1.1(react@19.2.1))(react@19.2.1)
+        version: 3.2.5(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       '@stellar/stellar-sdk':
         specifier: ^14.3.3
         version: 14.3.3
@@ -89,7 +89,7 @@ importers:
         version: 4.2.0
       next:
         specifier: 15.5.7
-        version: 15.5.7(@babel/core@7.28.4)(@opentelemetry/api@1.9.0)(@playwright/test@1.55.0)(react-dom@19.1.1(react@19.2.1))(react@19.2.1)(sass@1.92.1)
+        version: 15.5.7(@babel/core@7.28.4)(@opentelemetry/api@1.9.0)(@playwright/test@1.55.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(sass@1.92.1)
       papaparse:
         specifier: ^5.5.2
         version: 5.5.3
@@ -98,10 +98,10 @@ importers:
         version: 19.2.1
       react-diff-viewer:
         specifier: ^3.1.1
-        version: 3.1.1(react-dom@19.1.1(react@19.2.1))(react@19.2.1)
+        version: 3.1.1(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       react-dom:
-        specifier: ^19.1.1
-        version: 19.1.1(react@19.2.1)
+        specifier: ^19.1.2
+        version: 19.2.1(react@19.2.1)
       stellar-hd-wallet:
         specifier: ^1.0.2
         version: 1.0.2
@@ -4946,10 +4946,10 @@ packages:
       react: ^15.3.0 || ^16.0.0
       react-dom: ^15.3.0 || ^16.0.0
 
-  react-dom@19.1.1:
-    resolution: {integrity: sha512-Dlq/5LAZgF0Gaz6yiqZCf6VCcZs1ghAJyrsu84Q/GT0gV+mCxbfmKNoGRKBYMJ8IEdGPqu49YWXD02GCknEDkw==}
+  react-dom@19.2.1:
+    resolution: {integrity: sha512-ibrK8llX2a4eOskq1mXKu/TGZj9qzomO+sNfO98M6d9zIPOEhlBkMkBUBLd1vgS0gQsLDBzA+8jJBVXDnfHmJg==}
     peerDependencies:
-      react: ^19.1.1
+      react: ^19.2.1
 
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
@@ -5102,8 +5102,8 @@ packages:
     engines: {node: '>=14.0.0'}
     hasBin: true
 
-  scheduler@0.26.0:
-    resolution: {integrity: sha512-NlHwttCI/l5gCPR3D1nNXtWABUmBwvZpEQiD4IXSbIDq8BzLIK/7Ir5gTFSGZDUu37K5cMNp0hFtzO38sC7gWA==}
+  scheduler@0.27.0:
+    resolution: {integrity: sha512-eNv+WrVbKu1f3vbYJT/xtiF5syA5HPIMtf9IgY/nKg0sWqzAUEvqY/xm7OcZc/qafLx/iO9FgOmeSAp4v5ti/Q==}
 
   schema-utils@4.3.3:
     resolution: {integrity: sha512-eflK8wEtyOE6+hsaRVPxvUKYCpRgzLqDTb8krvAsRIwOGlHoSgYLgBXoubGgLd2fT41/OUYdb48v4k4WWHQurA==}
@@ -6800,12 +6800,12 @@ snapshots:
     dependencies:
       state-local: 1.0.7
 
-  '@monaco-editor/react@4.7.0(monaco-editor@0.53.0)(react-dom@19.1.1(react@19.2.1))(react@19.2.1)':
+  '@monaco-editor/react@4.7.0(monaco-editor@0.53.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)':
     dependencies:
       '@monaco-editor/loader': 1.5.0
       monaco-editor: 0.53.0
       react: 19.2.1
-      react-dom: 19.1.1(react@19.2.1)
+      react-dom: 19.2.1(react@19.2.1)
 
   '@motionone/animation@10.18.0':
     dependencies:
@@ -6992,9 +6992,9 @@ snapshots:
   '@next/swc-win32-x64-msvc@15.5.7':
     optional: true
 
-  '@next/third-parties@15.5.3(next@15.5.7(@babel/core@7.28.4)(@opentelemetry/api@1.9.0)(@playwright/test@1.55.0)(react-dom@19.1.1(react@19.2.1))(react@19.2.1)(sass@1.92.1))(react@19.2.1)':
+  '@next/third-parties@15.5.3(next@15.5.7(@babel/core@7.28.4)(@opentelemetry/api@1.9.0)(@playwright/test@1.55.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(sass@1.92.1))(react@19.2.1)':
     dependencies:
-      next: 15.5.7(@babel/core@7.28.4)(@opentelemetry/api@1.9.0)(@playwright/test@1.55.0)(react-dom@19.1.1(react@19.2.1))(react@19.2.1)(sass@1.92.1)
+      next: 15.5.7(@babel/core@7.28.4)(@opentelemetry/api@1.9.0)(@playwright/test@1.55.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(sass@1.92.1)
       react: 19.2.1
       third-party-capital: 1.0.20
 
@@ -7611,7 +7611,7 @@ snapshots:
 
   '@sentry/core@10.11.0': {}
 
-  '@sentry/nextjs@10.11.0(@opentelemetry/context-async-hooks@2.1.0(@opentelemetry/api@1.9.0))(@opentelemetry/core@2.1.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.1.0(@opentelemetry/api@1.9.0))(next@15.5.7(@babel/core@7.28.4)(@opentelemetry/api@1.9.0)(@playwright/test@1.55.0)(react-dom@19.1.1(react@19.2.1))(react@19.2.1)(sass@1.92.1))(react@19.2.1)(webpack@5.101.3)':
+  '@sentry/nextjs@10.11.0(@opentelemetry/context-async-hooks@2.1.0(@opentelemetry/api@1.9.0))(@opentelemetry/core@2.1.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.1.0(@opentelemetry/api@1.9.0))(next@15.5.7(@babel/core@7.28.4)(@opentelemetry/api@1.9.0)(@playwright/test@1.55.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(sass@1.92.1))(react@19.2.1)(webpack@5.101.3)':
     dependencies:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/semantic-conventions': 1.37.0
@@ -7625,7 +7625,7 @@ snapshots:
       '@sentry/vercel-edge': 10.11.0
       '@sentry/webpack-plugin': 4.3.0(webpack@5.101.3)
       chalk: 3.0.0
-      next: 15.5.7(@babel/core@7.28.4)(@opentelemetry/api@1.9.0)(@playwright/test@1.55.0)(react-dom@19.1.1(react@19.2.1))(react@19.2.1)(sass@1.92.1)
+      next: 15.5.7(@babel/core@7.28.4)(@opentelemetry/api@1.9.0)(@playwright/test@1.55.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(sass@1.92.1)
       resolve: 1.22.8
       rollup: 4.50.1
       stacktrace-parser: 0.1.11
@@ -8220,14 +8220,14 @@ snapshots:
     dependencies:
       '@stellar/stellar-base': 14.0.2
 
-  '@stellar/design-system@3.2.5(react-dom@19.1.1(react@19.2.1))(react@19.2.1)':
+  '@stellar/design-system@3.2.5(react-dom@19.2.1(react@19.2.1))(react@19.2.1)':
     dependencies:
       '@floating-ui/dom': 1.7.4
       bignumber.js: 9.3.1
       lodash: 4.17.21
       react: 19.2.1
       react-copy-to-clipboard-ts: 1.3.0(react@19.2.1)
-      react-dom: 19.1.1(react@19.2.1)
+      react-dom: 19.2.1(react@19.2.1)
       tslib: 2.8.1
 
   '@stellar/freighter-api@5.0.0':
@@ -11829,14 +11829,14 @@ snapshots:
 
   neo-async@2.6.2: {}
 
-  next@15.5.7(@babel/core@7.28.4)(@opentelemetry/api@1.9.0)(@playwright/test@1.55.0)(react-dom@19.1.1(react@19.2.1))(react@19.2.1)(sass@1.92.1):
+  next@15.5.7(@babel/core@7.28.4)(@opentelemetry/api@1.9.0)(@playwright/test@1.55.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(sass@1.92.1):
     dependencies:
       '@next/env': 15.5.7
       '@swc/helpers': 0.5.15
       caniuse-lite: 1.0.30001756
       postcss: 8.4.31
       react: 19.2.1
-      react-dom: 19.1.1(react@19.2.1)
+      react-dom: 19.2.1(react@19.2.1)
       styled-jsx: 5.1.6(@babel/core@7.28.4)(react@19.2.1)
     optionalDependencies:
       '@next/swc-darwin-arm64': 15.5.7
@@ -12168,7 +12168,7 @@ snapshots:
       copy-to-clipboard: 3.3.3
       react: 19.2.1
 
-  react-diff-viewer@3.1.1(react-dom@19.1.1(react@19.2.1))(react@19.2.1):
+  react-diff-viewer@3.1.1(react-dom@19.2.1(react@19.2.1))(react@19.2.1):
     dependencies:
       classnames: 2.5.1
       create-emotion: 10.0.27
@@ -12177,14 +12177,14 @@ snapshots:
       memoize-one: 5.2.1
       prop-types: 15.8.1
       react: 19.2.1
-      react-dom: 19.1.1(react@19.2.1)
+      react-dom: 19.2.1(react@19.2.1)
     transitivePeerDependencies:
       - supports-color
 
-  react-dom@19.1.1(react@19.2.1):
+  react-dom@19.2.1(react@19.2.1):
     dependencies:
       react: 19.2.1
-      scheduler: 0.26.0
+      scheduler: 0.27.0
 
   react-is@16.13.1: {}
 
@@ -12399,7 +12399,7 @@ snapshots:
     optionalDependencies:
       '@parcel/watcher': 2.5.1
 
-  scheduler@0.26.0: {}
+  scheduler@0.27.0: {}
 
   schema-utils@4.3.3:
     dependencies:
