@@ -49,8 +49,8 @@ importers:
         specifier: ^3.2.0
         version: 3.2.0(@stellar/stellar-base@14.0.2)
       '@stellar/design-system':
-        specifier: ^3.2.5
-        version: 3.2.5(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+        specifier: ^3.2.6
+        version: 3.2.6(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       '@stellar/stellar-sdk':
         specifier: ^14.3.3
         version: 14.3.3
@@ -1961,8 +1961,8 @@ packages:
     peerDependencies:
       '@stellar/stellar-base': '>=12'
 
-  '@stellar/design-system@3.2.5':
-    resolution: {integrity: sha512-0nf26c8k8j76Fr747Pm44LJhBYdvfYyJyYU4vc23Omr2cYCt5ohUVf5utX6DeYl6j9nLB6aYkI/RUYSS7h8U8w==}
+  '@stellar/design-system@3.2.6':
+    resolution: {integrity: sha512-A2RCUT1K0HC+H19mcKannP0LeAXWjdJWz/o0Gcwr/PmOaBLTDYKBYybCF+0k0LcLXApsKO3qgdbRv1IkhIPcLg==}
     engines: {node: '>=22.0.0'}
     peerDependencies:
       react: '>=18.x'
@@ -8220,7 +8220,7 @@ snapshots:
     dependencies:
       '@stellar/stellar-base': 14.0.2
 
-  '@stellar/design-system@3.2.5(react-dom@19.2.1(react@19.2.1))(react@19.2.1)':
+  '@stellar/design-system@3.2.6(react-dom@19.2.1(react@19.2.1))(react@19.2.1)':
     dependencies:
       '@floating-ui/dom': 1.7.4
       bignumber.js: 9.3.1
