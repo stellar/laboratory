@@ -23,12 +23,9 @@ test.describe("Transaction Dashboard: Resource Profiler", () => {
       itemRows: [
         [
           { label: "CPU instructions", value: "19,828,719" },
-          { label: "(limit: 100 M)", value: "19.83% used" },
+          { hasLimit: true },
         ],
-        [
-          { label: "Memory usage", value: "18,931,120 B" },
-          { label: "(limit: 40 MB)", value: "45.14% used" },
-        ],
+        [{ label: "Memory usage", value: "18,931,120 B" }, { hasLimit: true }],
       ],
     });
 
@@ -40,10 +37,7 @@ test.describe("Transaction Dashboard: Resource Profiler", () => {
       itemRows: [
         [{ label: "Footprint keys read only", value: "12" }],
         [{ label: "Footprint keys read write", value: "27" }],
-        [
-          { label: "Footprint keys total", value: "39" },
-          { label: "(limit: 100 keys)", value: "39.00% used" },
-        ],
+        [{ label: "Footprint keys total", value: "39" }, { hasLimit: true }],
       ],
     });
 
@@ -53,22 +47,10 @@ test.describe("Transaction Dashboard: Resource Profiler", () => {
       groupId: "ledger-io-item",
       headerTitle: "Ledger I/O",
       itemRows: [
-        [
-          { label: "Entries read", value: "32 entries" },
-          { label: "(limit: 100 entries)", value: "32.00% used" },
-        ],
-        [
-          { label: "Entries write", value: "16 entries" },
-          { label: "(limit: 50 entries)", value: "32.00% used" },
-        ],
-        [
-          { label: "Ledger read", value: "0 B" },
-          { label: "(limit: 200 KB)", value: "0.00% used" },
-        ],
-        [
-          { label: "Ledger write", value: "2,480 B" },
-          { label: "(limit: 132 KB)", value: "1.83% used" },
-        ],
+        [{ label: "Entries read", value: "32 entries" }, { hasLimit: true }],
+        [{ label: "Entries write", value: "16 entries" }, { hasLimit: true }],
+        [{ label: "Ledger read", value: "0 B" }, { hasLimit: true }],
+        [{ label: "Ledger write", value: "2,480 B" }, { hasLimit: true }],
       ],
     });
 
@@ -94,10 +76,7 @@ test.describe("Transaction Dashboard: Resource Profiler", () => {
       headerTitle: "Events",
       itemRows: [
         [{ label: "Emit event count", value: "7" }],
-        [
-          { label: "Emit event bytes", value: "1,740 B" },
-          { label: "(limit: 16 KB)", value: "10.62% used" },
-        ],
+        [{ label: "Emit event bytes", value: "1,740 B" }, { hasLimit: true }],
       ],
     });
 
@@ -143,10 +122,7 @@ const txData = async ({
   await expect(eventsTabButton).toHaveAttribute("data-is-active", "true");
 };
 
-type ItemGroup = {
-  label: string;
-  value: string;
-}[];
+type ItemGroup = ({ label: string; value: string } | { hasLimit: true })[];
 
 const checkItemGroup = async ({
   page,
@@ -176,12 +152,22 @@ const checkItemGroup = async ({
       .nth(ir)
       .locator(".TransactionResourceProfiler__item__row");
     for (let ic = 0; ic < itemRows[ir].length; ic++) {
-      await expect(itemRow.nth(ic).locator("> div").nth(0)).toHaveText(
-        itemRows[ir][ic].label,
-      );
-      await expect(itemRow.nth(ic).locator("> div").nth(1)).toHaveText(
-        itemRows[ir][ic].value,
-      );
+      const item = itemRows[ir][ic];
+
+      if ("hasLimit" in item) {
+        // For limits, we want to check only the rendered elements, not their values,
+        // because we fetch them dynamically via a pre-build script.
+        await expect(itemRow.nth(ic).locator("> div").nth(0)).toBeVisible();
+        await expect(itemRow.nth(ic).locator("> div").nth(1)).toBeVisible();
+      } else {
+        // Check exact values
+        await expect(itemRow.nth(ic).locator("> div").nth(0)).toHaveText(
+          item.label,
+        );
+        await expect(itemRow.nth(ic).locator("> div").nth(1)).toHaveText(
+          item.value,
+        );
+      }
     }
   }
 };
