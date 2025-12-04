@@ -2,20 +2,24 @@ import { Card, Icon, Link, Text } from "@stellar/design-system";
 
 import { Box } from "@/components/layout/Box";
 import { getTxResourceBreakdown } from "@/helpers/getTxResourceBreakdown";
+import { formatNumber } from "@/helpers/formatNumber";
+
+import { useStore } from "@/store/useStore";
 
 import { RpcTxJsonResponse } from "@/types/types";
-import { formatNumber } from "@/helpers/formatNumber";
 
 export const ResourceProfiler = ({
   txDetails,
 }: {
   txDetails: RpcTxJsonResponse | null | undefined;
 }) => {
+  const { network } = useStore();
+
   if (!txDetails) {
     return null;
   }
 
-  const data = getTxResourceBreakdown(txDetails);
+  const data = getTxResourceBreakdown(network.id, txDetails);
 
   type ItemGroup = {
     id: string;
