@@ -9,8 +9,7 @@ import { useStore } from "@/store/useStore";
 import { useSEContractInfo } from "@/query/external/useSEContractInfo";
 import { useWasmGitHubAttestation } from "@/query/useWasmGitHubAttestation";
 import { useContractClientFromRpc } from "@/query/useContractClientFromRpc";
-import { useGetContractTypeFromRpcById } from "@/query/useGetContractTypeFromRpcById";
-import { useWasmHashFromRpc } from "@/query/useWasmHashFromRpc";
+import { useGetContractDataFromRpcById } from "@/query/useGetContractDataFromRpcById";
 import { validate } from "@/validate";
 
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
@@ -44,12 +43,12 @@ export default function ContractExplorer() {
   const rpcUrl = network.rpcUrl;
 
   const {
-    data: contractType,
-    isLoading: isContractTypeLoading,
-    isFetching: isContractTypeFetching,
-    error: contractTypeError,
-    refetch: fetchContractType,
-  } = useGetContractTypeFromRpcById({
+    data: contractData,
+    isLoading: isContractDataLoading,
+    isFetching: isContractDataFetching,
+    error: contractDataError,
+    refetch: fetchContractData,
+  } = useGetContractDataFromRpcById({
     contractId: contractIdInput,
     rpcUrl: network.rpcUrl,
     headers: getNetworkHeaders(network, "rpc"),
@@ -77,18 +76,7 @@ export default function ContractExplorer() {
     rpcUrl: network.rpcUrl,
   });
 
-  const {
-    data: wasmHashData,
-    isLoading: isWasmHashLoading,
-    isFetching: isWasmHashFetching,
-  } = useWasmHashFromRpc({
-    contractId: contractIdInput,
-    rpcUrl,
-    isActive: Boolean(rpcUrl && contractIdInput),
-    headers: getNetworkHeaders(network, "rpc"),
-  });
-
-  const wasmHash = wasmHashData || contractInfoData?.wasm || "";
+  const wasmHash = contractData?.wasmHash || "";
   const isDataLoaded = Boolean(contractInfoData);
 
   const {
@@ -105,14 +93,12 @@ export default function ContractExplorer() {
 
   const queryClient = useQueryClient();
   const isLoading =
-    isContractTypeLoading ||
-    isContractTypeFetching ||
+    isContractDataLoading ||
+    isContractDataFetching ||
     isContractInfoLoading ||
     isContractInfoFetching ||
     isWasmLoading ||
-    isWasmFetching ||
-    isWasmHashLoading ||
-    isWasmHashFetching;
+    isWasmFetching;
 
   useEffect(() => {
     // Pre-fill on page refresh and initial load
@@ -161,8 +147,8 @@ export default function ContractExplorer() {
     !contractIdInput ||
     Boolean(contractIdInputError);
 
-  const isSacType = contractType
-    ? contractType === "contractExecutableStellarAsset"
+  const isSacType = contractData?.contractType
+    ? contractData.contractType === "contractExecutableStellarAsset"
     : false;
 
   const { sacXdrData } = useSacXdrData({
@@ -193,7 +179,7 @@ export default function ContractExplorer() {
       // throwOnError will throw an error instead of setting the error state.
       // This will prevent other queries from running when fetching a contract
       // type fails.
-      await fetchContractType({ throwOnError: true });
+      await fetchContractData({ throwOnError: true });
       await fetchContractInfo({ throwOnError: true });
       await fetchWasmContractClient();
       smartContracts.updateExplorerContractId(contractIdInput);
@@ -320,9 +306,9 @@ export default function ContractExplorer() {
                 />
               ) : null}
 
-              {contractTypeError ? (
+              {contractDataError ? (
                 <MessageField
-                  message={contractTypeError.toString()}
+                  message={contractDataError.toString()}
                   isError={true}
                 />
               ) : null}
@@ -345,7 +331,7 @@ export default function ContractExplorer() {
                 <ContractInfo
                   infoData={contractInfoData}
                   wasmData={wasmData}
-                  wasmHash={wasmHashData}
+                  wasmHash={wasmHash}
                   network={network}
                   isLoading={isLoading}
                   isSacType={isSacType}
