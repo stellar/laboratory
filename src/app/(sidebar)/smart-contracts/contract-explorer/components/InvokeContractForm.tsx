@@ -350,6 +350,7 @@ export const InvokeContractForm = ({
         txnParams,
         sorobanOperation,
         network.passphrase,
+        dereferencedSchema || undefined,
       );
 
       if (xdr) {

@@ -13,7 +13,12 @@ import {
 } from "@stellar/stellar-sdk";
 
 import { TransactionBuildParams } from "@/store/createStore";
-import { SorobanInvokeValue, SorobanOpType, TxnOperation } from "@/types/types";
+import {
+  AnyObject,
+  SorobanInvokeValue,
+  SorobanOpType,
+  TxnOperation,
+} from "@/types/types";
 
 export const isSorobanOperationType = (operationType: string) =>
   [
@@ -229,14 +234,75 @@ export const getTxWithSorobanData = ({
   }
 };
 
+// Helper function to order object keys based on schema property order
+const orderArgsBySchema = (
+  args: AnyObject,
+  schema?: Record<string, any>,
+): AnyObject => {
+  if (!schema?.properties || typeof args !== "object" || Array.isArray(args)) {
+    return args;
+  }
+
+  const schemaKeys = Object.keys(schema.properties);
+  const orderedArgs: AnyObject = {};
+
+  for (const key of schemaKeys) {
+    if (key in args) {
+      const value = args[key];
+      const propertySchema = schema.properties[key];
+
+      // Recursively order nested objects
+      // Skip if primitives with type/value
+      if (
+        typeof value === "object" &&
+        !Array.isArray(value) &&
+        value !== null &&
+        !value.type
+      ) {
+        orderedArgs[key] = orderArgsBySchema(
+          value,
+          propertySchema as Record<string, any>,
+        );
+      }
+      // Handle arrays of objects
+      else if (Array.isArray(value) && propertySchema?.items) {
+        orderedArgs[key] = value.map((item) => {
+          // If array items are objects
+          // Skip if primitives with type/value
+          if (
+            typeof item === "object" &&
+            item !== null &&
+            !item.type &&
+            !item.tag
+          ) {
+            return orderArgsBySchema(
+              item,
+              propertySchema.items as Record<string, any>,
+            );
+          }
+          return item;
+        });
+      } else {
+        orderedArgs[key] = value;
+      }
+    }
+  }
+
+  return orderedArgs;
+};
+
 export const getTxnToSimulate = (
   value: SorobanInvokeValue,
   txnParams: TransactionBuildParams,
   operation: TxnOperation,
   networkPassphrase: string,
+  schema?: Record<string, any>,
 ): { xdr: string; error: string } => {
   try {
-    const argsToScVals = getScValsFromArgs(value.args, []);
+    // Order args based on schema to ensure correct field ordering
+    const orderedArgs = orderArgsBySchema(value.args, schema);
+    const argsToScVals = getScValsFromArgs(orderedArgs, []);
+
     const builtXdr = buildTxWithSorobanData({
       params: txnParams,
       sorobanOp: {
