@@ -38,7 +38,9 @@ pnpm dev
 ### Network Limits
 
 The Lab automatically fetches Stellar network limits (Mainnet, Testnet, and
-Futurenet) before each build and dev run. To configure RPC endpoints, edit the
+Futurenet) before every `dev` run.
+
+To configure RPC endpoints, edit the
 `NETWORKS` array in `scripts/fetch-network-limits.js`:
 
 ```javascript
@@ -55,7 +57,7 @@ The script generates `src/constants/networkLimits.ts` with type-safe exports:
 import { MAINNET_LIMITS, NETWORK_LIMITS } from "@/constants/networkLimits";
 ```
 
-To manually fetch limits: `pnpm fetch-limits`
+To manually fetch limits: `pnpm fetch-limits`.
 
 ### Hardware Wallets
 

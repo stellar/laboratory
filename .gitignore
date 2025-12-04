@@ -51,6 +51,3 @@ mise.toml
 
 # Sentry Config File
 .env.sentry-build-plugin
-
-# Auto-generated files
-/src/constants/networkLimits.ts

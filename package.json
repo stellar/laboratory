@@ -10,7 +10,6 @@
     "fetch-limits": "node scripts/fetch-network-limits.mjs",
     "predev": "pnpm fetch-limits",
     "dev": "NEXT_PUBLIC_COMMIT_HASH=$(git rev-parse --short HEAD) NEXT_PUBLIC_ENABLE_EXPLORER=true next dev",
-    "prebuild": "pnpm fetch-limits",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
