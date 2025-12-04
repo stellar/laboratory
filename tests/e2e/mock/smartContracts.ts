@@ -9,7 +9,7 @@ export const MOCK_CONTRACT_INFO_RESPONSE_SUCCESS = {
   creator: SAVED_ACCOUNT_1,
   payments: 300,
   trades: 0,
-  wasm: "df88820e231ad8f3027871e5dd3cf45491d7b7735e785731466bfc2946008608",
+  wasm: "a0db88b6da6f83bf1c2c8fafcc8fa9cf9d2abc7f8507d831d086aa2c6ad5fc1b",
   storage_entries: 10,
   validation: {
     status: "verified",

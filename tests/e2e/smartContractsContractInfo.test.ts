@@ -78,7 +78,7 @@ test.describe("Smart Contracts: Contract Info", () => {
       "Tue, Nov 12, 2024, 09:12:56 UTC",
     );
     await expect(getInfoItem("Wasm Hash")).toHaveText(
-      "df88820e231ad8f3027871e5dd3cf45491d7b7735e785731466bfc2946008608",
+      "a0db88b6da6f83bf1c2c8fafcc8fa9cf9d2abc7f8507d831d086aa2c6ad5fc1b",
     );
     await expect(getInfoItem("Creator")).toHaveText(SAVED_ACCOUNT_1);
     await expect(getInfoItem("Contract Storage")).toHaveText("10 entries");
@@ -119,7 +119,7 @@ test.describe("Smart Contracts: Contract Info", () => {
 
     await expect(
       page.getByText(
-        "Something went wrong getting contract type by contract ID. Could not obtain contract data from server.",
+        "Something went wrong getting contract data by contract ID. Could not obtain contract data from server.",
       ),
     ).toBeVisible();
   });
