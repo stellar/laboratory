@@ -1,7 +1,7 @@
-export const formatAmount = (amount: number) => {
+export const formatAmount = (amount: number | bigint, precision?: number) => {
   const formatter = new Intl.NumberFormat("en-US", {
-    minimumFractionDigits: 1,
-    maximumFractionDigits: 7,
+    minimumFractionDigits: precision || 1,
+    maximumFractionDigits: precision || 7,
   });
 
   return formatter.format(amount);
