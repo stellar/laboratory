@@ -3,7 +3,7 @@ import { Contract, rpc as StellarRpc, xdr } from "@stellar/stellar-sdk";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { NetworkHeaders } from "@/types/types";
 
-export const useGetContractTypeFromRpcById = ({
+export const useGetContractDataFromRpcById = ({
   contractId,
   rpcUrl,
   headers = {},
@@ -17,9 +17,14 @@ export const useGetContractTypeFromRpcById = ({
     xdr.ContractExecutableType.contractExecutableStellarAsset().name;
 
   const query = useQuery<
-    typeof execWasmType | typeof execStellarAssetType | null
+    | {
+        contractType: typeof execWasmType | typeof execStellarAssetType | null;
+        wasmHash: string;
+      }
+    | null
+    | undefined
   >({
-    queryKey: ["useGetContractTypeFromRpcById", contractId, rpcUrl],
+    queryKey: ["useGetContractDataFromRpcById", contractId, rpcUrl],
     queryFn: async () => {
       if (!contractId || !rpcUrl) {
         return null;
@@ -50,14 +55,15 @@ export const useGetContractTypeFromRpcById = ({
         }
 
         const contractType = executable?.switch()?.name;
+        const wasmHash = executable.wasmHash()?.toString("hex");
 
         if ([execWasmType, execStellarAssetType].includes(contractType)) {
-          return contractType;
+          return { contractType, wasmHash };
         }
 
         throw "Unknown contract type.";
       } catch (e: any) {
-        throw `Something went wrong getting contract type by contract ID. ${e.message || e}`;
+        throw `Something went wrong getting contract data by contract ID. ${e.message || e}`;
       }
     },
     enabled: false,
