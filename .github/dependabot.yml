@@ -3,26 +3,23 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "sunday"
-      time: "02:00"
-    open-pull-requests-limit: 2
+      interval: "monthly"
+    open-pull-requests-limit: 1
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
     groups:
-      minor:
+      all-dependencies:
         applies-to: version-updates
-        update-types:
-          - "minor"
-      major:
-        applies-to: version-updates
-        update-types:
-          - "major"
+        patterns: ["*"]
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "sunday"
-      time: "02:00"
-    open-pull-requests-limit: 2
+      interval: "monthly"
+    open-pull-requests-limit: 1
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
     groups:
       all-actions:
         applies-to: version-updates
@@ -30,10 +27,11 @@ updates:
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "sunday"
-      time: "02:00"
-    open-pull-requests-limit: 2
+      interval: "monthly"
+    open-pull-requests-limit: 1
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
     groups:
       all-docker:
         applies-to: version-updates
