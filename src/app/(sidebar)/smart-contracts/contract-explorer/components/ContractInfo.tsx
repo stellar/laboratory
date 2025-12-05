@@ -42,12 +42,14 @@ import { Bindings } from "./Bindings";
 export const ContractInfo = ({
   infoData,
   wasmData,
+  wasmHash,
   network,
   isLoading,
   isSacType,
 }: {
   infoData: ContractInfoApiResponse | undefined;
   wasmData: WasmData | null | undefined;
+  wasmHash: string | null | undefined;
   network: Network | EmptyObj;
   isLoading: boolean;
   isSacType?: boolean;
@@ -181,7 +183,7 @@ export const ContractInfo = ({
             key={field.id}
             isValueLoaded={isDataLoaded}
             label={field.label}
-            value={infoData?.wasm}
+            value={wasmHash}
           />
         );
       case "asset":
@@ -256,7 +258,7 @@ export const ContractInfo = ({
   const renderContractSpecMeta = (sectionsToShow: ContractSectionName[]) => (
     <ContractSpecMeta
       sectionsToShow={sectionsToShow}
-      wasmHash={infoData?.wasm || ""}
+      wasmHash={wasmHash || ""}
       rpcUrl={network.rpcUrl}
       isActive={activeTab === "contract-contract-spec"}
       isSourceStellarExpert={false}
