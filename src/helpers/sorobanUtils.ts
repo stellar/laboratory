@@ -235,7 +235,7 @@ export const getTxWithSorobanData = ({
 };
 
 // Helper function to order object keys based on schema property order
-const orderArgsBySchema = (
+export const orderArgsBySchema = (
   args: AnyObject,
   schema?: Record<string, any>,
 ): AnyObject => {
