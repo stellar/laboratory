@@ -491,6 +491,11 @@ export type ContractListRecord = {
   wasm: string;
 };
 
+export type PopularContractListRecord = {
+  name: string;
+  contract: string;
+};
+
 export type WasmData = {
   sourceRepo: string;
   build: {
