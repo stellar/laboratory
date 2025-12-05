@@ -156,6 +156,13 @@ const testTxStateChange = async ({
 
   await loadTxButton.click();
 
+  // Select State Change tab
+  const eventsTabButton = page.getByTestId("tx-state-change");
+  await expect(eventsTabButton).toHaveAttribute("data-is-active", "false");
+
+  await eventsTabButton.click();
+  await expect(eventsTabButton).toHaveAttribute("data-is-active", "true");
+
   // Check the correct data is displayed by checking the Transaction Info value
   const txInfoContainer = page.getByTestId("transaction-info-container");
   const txInfoLabel = txInfoContainer.locator(".InfoFieldItem").filter({
@@ -168,12 +175,6 @@ const testTxStateChange = async ({
 
   const contractInfoContainer = page.getByTestId(
     "contract-info-contract-container",
-  );
-
-  // Check the tabs section
-  await expect(page.getByTestId("tx-state-change")).toHaveAttribute(
-    "data-is-active",
-    "true",
   );
 
   // Check State Change item count
