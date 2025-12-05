@@ -3,12 +3,12 @@
 import { Link, Text } from "@stellar/design-system";
 import { useRouter } from "next/navigation";
 
-import { useStore } from "@/store/useStore";
-
 import { Box } from "@/components/layout/Box";
 import { PageCard } from "@/components/layout/PageCard";
 import { DataTable } from "@/components/DataTable";
 import { SwitchNetworkButtons } from "@/components/SwitchNetworkButtons";
+
+import { useStore } from "@/store/useStore";
 
 import { Routes } from "@/constants/routes";
 import { POPULAR_SOROBAN_CONTRACTS } from "@/constants/popularSorobanContracts";
@@ -38,8 +38,8 @@ export const PopularList = () => {
       return (
         <div>
           <Text size="sm" as="p">
-            Popular contract list is only available for Mainnet. Please switch
-            to Mainnet to view available contracts.
+            The popular contract list is only available on Mainnet at the
+            moment. Please switch to Mainnet to view available contracts.
           </Text>
 
           <Box gap="md" direction="row">
