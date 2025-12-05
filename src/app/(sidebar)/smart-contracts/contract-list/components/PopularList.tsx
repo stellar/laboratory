@@ -55,7 +55,7 @@ export const PopularList = () => {
 
     return (
       <DataTable
-        tableId="contract-version-history"
+        tableId="popular-contracts-list"
         tableData={POPULAR_SOROBAN_CONTRACTS}
         tableHeaders={[
           { id: "contract", value: "Contract ID", isSortable: false },
