@@ -30,6 +30,7 @@ import { Signatures } from "./components/Signatures";
 import { Events } from "./components/Events";
 import { TokenSummary } from "./components/TokenSummary";
 import { Contracts } from "./components/Contracts";
+import { ResourceProfiler } from "./components/ResourceProfiler";
 
 import "./styles.scss";
 
@@ -48,7 +49,7 @@ export default function TransactionDashboard() {
   const [transactionHashInput, setTransactionHashInput] = useState("");
   const [transactionHashInputError, setTransactionHashInputError] =
     useState("");
-  const [activeTab, setActiveTab] = useState<TxTabId>("tx-state-change");
+  const [activeTab, setActiveTab] = useState<TxTabId>("tx-resource-profiler");
 
   const {
     data: txDetails,
@@ -202,12 +203,6 @@ export default function TransactionDashboard() {
     ));
   };
 
-  const ComingSoonText = () => (
-    <Text as="div" size="sm" weight="regular">
-      Coming soon
-    </Text>
-  );
-
   return (
     <Box gap="lg">
       <PageCard heading="Transaction Dashboard">
@@ -341,9 +336,9 @@ export default function TransactionDashboard() {
               }}
               tab5={{
                 id: "tx-resource-profiler",
-                label: "Resources Profiler",
-                content: <ComingSoonText />,
-                isDisabled: true,
+                label: "Resource Profiler",
+                content: <ResourceProfiler txDetails={txDetails} />,
+                isDisabled: !isDataLoaded,
               }}
               tab6={{
                 id: "tx-signatures",
