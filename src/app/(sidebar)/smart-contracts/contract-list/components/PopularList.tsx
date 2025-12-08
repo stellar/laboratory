@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Link, Text } from "@stellar/design-system";
 import { useRouter } from "next/navigation";
 
@@ -15,11 +16,15 @@ import { POPULAR_SOROBAN_CONTRACTS } from "@/constants/popularSorobanContracts";
 
 import { delayedAction } from "@/helpers/delayedAction";
 
-import { PopularContractListRecord } from "@/types/types";
+import { PopularContractListRecord, SortDirection } from "@/types/types";
 
 export const PopularList = () => {
   const { network, smartContracts } = useStore();
   const router = useRouter();
+  const [sortState, setSortState] = useState<{
+    id: string;
+    direction: SortDirection;
+  }>({ id: "", direction: "default" });
 
   const handleNavigateToContractExplorer = (contractId: string) => {
     smartContracts.updateExplorerContractId(contractId);
@@ -53,6 +58,16 @@ export const PopularList = () => {
       );
     }
 
+    const getEntityLabel = () => {
+      if (sortState.direction === "asc") {
+        return "Entity (A-Z)";
+      }
+      if (sortState.direction === "desc") {
+        return "Entity (Z-A)";
+      }
+      return "Entity (A-Z)";
+    };
+
     return (
       <DataTable
         tableId="popular-contracts-list"
@@ -61,7 +76,7 @@ export const PopularList = () => {
           { id: "contract", value: "Contract ID", isSortable: false },
           {
             id: "name",
-            value: "Entity (A-Z)",
+            value: getEntityLabel(),
             isSortable: true,
           },
         ]}
@@ -81,6 +96,7 @@ export const PopularList = () => {
         cssGridTemplateColumns="minmax(210px, 3fr) minmax(210px, 1fr)"
         hideFirstLastPageNav={true}
         hidePageCount={true}
+        onSortChange={(id, direction) => setSortState({ id, direction })}
       />
     );
   };

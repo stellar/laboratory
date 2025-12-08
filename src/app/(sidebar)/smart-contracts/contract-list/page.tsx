@@ -43,15 +43,15 @@ export default function ContractList() {
     return (
       <TabView
         tab1={{
+          id: "recent",
+          label: "Recent",
+          content: activeTab === "recent" ? <RecentList /> : null,
+        }}
+        tab2={{
           id: "popular",
           label: "Popular",
           content: activeTab === "popular" ? <PopularList /> : null,
           isDisabled: network.id !== "mainnet",
-        }}
-        tab2={{
-          id: "recent",
-          label: "Recent",
-          content: activeTab === "recent" ? <RecentList /> : null,
         }}
         activeTabId={activeTab}
         onTabChange={(tabId) => {
