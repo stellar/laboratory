@@ -18,7 +18,7 @@ export default function ContractList() {
 
   type ContractListTabId = "popular" | "recent";
 
-  const [activeTab, setActiveTab] = useState<ContractListTabId>("recent");
+  const [activeTab, setActiveTab] = useState<ContractListTabId>("popular");
 
   const renderContent = () => {
     if (network.id === "futurenet") {
@@ -44,15 +44,15 @@ export default function ContractList() {
       <TabView
         heading={{ title: "Smart Contract List" }}
         tab1={{
-          id: "recent",
-          label: "Recent",
-          content: activeTab === "recent" ? <RecentList /> : null,
-        }}
-        tab2={{
           id: "popular",
           label: "Popular",
           content: activeTab === "popular" ? <PopularList /> : null,
           isDisabled: network.id !== "mainnet",
+        }}
+        tab2={{
+          id: "recent",
+          label: "Recent",
+          content: activeTab === "recent" ? <RecentList /> : null,
         }}
         activeTabId={activeTab}
         onTabChange={(tabId) => {

@@ -117,15 +117,10 @@ export const RecentList = () => {
           setCurrentCursor("");
           setSortDir(sortDir);
         }}
+        customFooterEl={<PoweredByStellarExpert />}
       />
     );
   };
 
-  return (
-    <Box gap="lg">
-      {renderContent()}
-
-      <PoweredByStellarExpert />
-    </Box>
-  );
+  return <Box gap="lg">{renderContent()}</Box>;
 };
