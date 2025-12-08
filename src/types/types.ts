@@ -590,6 +590,7 @@ export type RpcTxJsonResponse = {
   envelopeJson: AnyObject;
   resultJson: AnyObject;
   resultMetaJson: AnyObject;
+  diagnosticEventsJson: AnyObject;
 };
 
 // =============================================================================
