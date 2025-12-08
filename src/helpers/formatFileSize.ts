@@ -5,14 +5,17 @@ export const formatFileSize = (bytes: number) => {
 
   const kb = bytes / 1024;
   if (kb < 1024) {
-    return `${kb.toFixed(kb < 10 ? 2 : 1)} KB`;
+    const formatted = kb.toFixed(kb < 10 ? 2 : 1);
+    return `${formatted.replace(/\.0+$/, "")} KB`;
   }
 
   const mb = kb / 1024;
   if (mb < 1024) {
-    return `${mb.toFixed(mb < 10 ? 2 : 1)} MB`;
+    const formatted = mb.toFixed(mb < 10 ? 2 : 1);
+    return `${formatted.replace(/\.0+$/, "")} MB`;
   }
 
   const gb = mb / 1024;
-  return `${gb.toFixed(gb < 10 ? 2 : 1)} GB`;
+  const formatted = gb.toFixed(gb < 10 ? 2 : 1);
+  return `${formatted.replace(/\.0+$/, "")} GB`;
 };

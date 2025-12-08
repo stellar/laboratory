@@ -781,13 +781,13 @@ export const SimulatedResponse = ({
   result: SimulatedResponseType;
   isFullResponseEnabled: boolean;
 }) => {
-  const errorClass = Api.isSimulationError(result.fullResponse)
-    ? "PageBody__content--error"
-    : "";
+  const hasSimulationError = Api.isSimulationError(result.fullResponse);
+  const errorClass = hasSimulationError ? "PageBody__content--error" : "";
 
-  const json = isFullResponseEnabled
-    ? result.fullResponse
-    : (result?.resultOnly && { results: result?.resultOnly }) || {};
+  const json =
+    isFullResponseEnabled || hasSimulationError
+      ? result.fullResponse
+      : (result?.resultOnly && { results: result?.resultOnly }) || {};
 
   return (
     <Box gap="md">
