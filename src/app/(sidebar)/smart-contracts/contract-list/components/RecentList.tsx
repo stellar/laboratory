@@ -5,7 +5,6 @@ import { Link, Loader } from "@stellar/design-system";
 import { useRouter } from "next/navigation";
 
 import { Box } from "@/components/layout/Box";
-import { PageCard } from "@/components/layout/PageCard";
 import { MessageField } from "@/components/MessageField";
 import { DataTable } from "@/components/DataTable";
 import { PoweredByStellarExpert } from "@/components/PoweredByStellarExpert";
@@ -124,7 +123,7 @@ export const RecentList = () => {
 
   return (
     <Box gap="lg">
-      <PageCard heading="Smart Contract List">{renderContent()}</PageCard>
+      {renderContent()}
 
       <PoweredByStellarExpert />
     </Box>

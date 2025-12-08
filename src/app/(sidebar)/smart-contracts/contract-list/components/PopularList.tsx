@@ -5,7 +5,6 @@ import { Link, Text } from "@stellar/design-system";
 import { useRouter } from "next/navigation";
 
 import { Box } from "@/components/layout/Box";
-import { PageCard } from "@/components/layout/PageCard";
 import { DataTable } from "@/components/DataTable";
 import { SwitchNetworkButtons } from "@/components/SwitchNetworkButtons";
 
@@ -101,9 +100,5 @@ export const PopularList = () => {
     );
   };
 
-  return (
-    <Box gap="lg">
-      <PageCard heading="Smart Contract List">{renderContent()}</PageCard>
-    </Box>
-  );
+  return <Box gap="lg">{renderContent()}</Box>;
 };

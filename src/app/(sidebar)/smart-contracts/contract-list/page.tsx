@@ -42,6 +42,7 @@ export default function ContractList() {
 
     return (
       <TabView
+        heading={{ title: "Smart Contract List" }}
         tab1={{
           id: "recent",
           label: "Recent",
@@ -63,7 +64,7 @@ export default function ContractList() {
 
   return (
     <Box gap="lg">
-      <PageCard heading="Smart Contract List">{renderContent()}</PageCard>
+      <PageCard>{renderContent()}</PageCard>
     </Box>
   );
 }
