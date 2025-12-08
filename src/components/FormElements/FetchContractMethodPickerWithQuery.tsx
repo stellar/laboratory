@@ -11,7 +11,7 @@ import { MessageField } from "@/components/MessageField";
 import { useStore } from "@/store/useStore";
 import { validate } from "@/validate";
 import { useContractClientFromRpc } from "@/query/useContractClientFromRpc";
-import { useGetContractTypeFromRpcById } from "@/query/useGetContractTypeFromRpcById";
+import { useGetContractDataFromRpcById } from "@/query/useGetContractDataFromRpcById";
 
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { useSacXdrData } from "@/hooks/useSacXdrData";
@@ -50,16 +50,18 @@ export const FetchContractMethodPickerWithQuery = ({
   const contractIdInput = value?.contract_id || "";
 
   const {
-    data: contractType,
-    isLoading: isContractTypeLoading,
-    isFetching: isContractTypeFetching,
-    error: contractTypeError,
-    refetch: fetchContractType,
-  } = useGetContractTypeFromRpcById({
+    data: contractData,
+    isLoading: isContractDataLoading,
+    isFetching: isContractDataFetching,
+    error: contractDataError,
+    refetch: fetchContractData,
+  } = useGetContractDataFromRpcById({
     contractId: contractIdInput,
     rpcUrl: network.rpcUrl,
     headers: getNetworkHeaders(network, "rpc"),
   });
+
+  const contractType = contractData?.contractType;
 
   const isSacType = contractType
     ? contractType === "contractExecutableStellarAsset"
@@ -116,10 +118,10 @@ export const FetchContractMethodPickerWithQuery = ({
       setFetchType(isSacType ? "sac" : "contract");
     }
 
-    if (contractTypeError) {
-      setFetchError(contractTypeError?.message);
+    if (contractDataError) {
+      setFetchError(contractDataError?.message);
     }
-  }, [contractType, contractTypeError, isSacType]);
+  }, [contractType, contractDataError, isSacType]);
 
   // Fetch contract data for a standard Stellar smart contract (SAC will trigger automatically in the hook)
   useEffect(() => {
@@ -176,7 +178,7 @@ export const FetchContractMethodPickerWithQuery = ({
 
   const handleFetch = async () => {
     // Fetch type which will trigger the contract client or SAC data fetch
-    await fetchContractType();
+    await fetchContractData();
     setFetchError("");
   };
 
@@ -201,8 +203,8 @@ export const FetchContractMethodPickerWithQuery = ({
               isSacDataFetching ||
               isSacDataLoading ||
               isContractClientFetching ||
-              isContractTypeFetching ||
-              isContractTypeLoading
+              isContractDataFetching ||
+              isContractDataLoading
             }
             variant="secondary"
             size="md"
