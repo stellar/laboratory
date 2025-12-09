@@ -58,6 +58,7 @@ type DataTableProps<T> = {
   >;
   isExternalUpdating?: boolean;
   externalSort?: (sortDirection: SortDirection) => void;
+  onSortChange?: (sortById: string, sortByDir: SortDirection) => void;
 };
 
 export const DataTable = <T extends AnyObject>({
@@ -77,6 +78,7 @@ export const DataTable = <T extends AnyObject>({
   externalSort,
   pageSize = 20,
   emptyMessage,
+  onSortChange,
 }: DataTableProps<T>) => {
   // Data
   const [processedData, setProcessedData] = useState<
@@ -173,6 +175,10 @@ export const DataTable = <T extends AnyObject>({
       externalSort(sortDir);
     } else {
       setIsUpdating(true);
+    }
+
+    if (onSortChange) {
+      onSortChange(headerId, sortDir);
     }
   };
 

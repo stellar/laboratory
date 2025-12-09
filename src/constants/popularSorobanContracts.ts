@@ -1,0 +1,120 @@
+import { PopularContractListRecord } from "@/types/types";
+
+/**
+ * Popular Soroban contracts with their names and addresses.
+ * This list is hardcoded from the stellar-dbt repository.
+ */
+export const POPULAR_SOROBAN_CONTRACTS: PopularContractListRecord[] = [
+  {
+    name: "Band Protocol",
+    contract: "CCQXWMZVM3KRTXTUPTN53YHL272QGKF32L7XEDNZ2S6OSUFK3NFBGG5M",
+  },
+  {
+    name: "Lightecho",
+    contract: "CDOR3QD27WAAF4TK4MO33TGQXR6RPNANNVLOY277W2XVV6ZVJ6X6X42T",
+  },
+  {
+    name: "Reflector",
+    contract: "CAFJZQWSED6YAWZU3GWRTOCNPPCGBN32L7QV43XX5LZLFTK6JLN34DLN",
+  },
+  {
+    name: "Reflector",
+    contract: "CALI2BYU2JE6WVRUFYTS6MSBNEHGJ35P4AVCZYF3B6QOE3QKOB2PLE6M",
+  },
+  {
+    name: "Soroban Domains",
+    contract: "CATRNPHYKNXAPNLHEYH55REB6YSAJLGCPA4YM6L3WUKSZOPI77M2UMKI",
+  },
+  {
+    name: "Soroswap",
+    contract: "CA4HEQTL2WPEUYKYKCDOHCDNIV4QHNJ7EL4J4NQ6VADP7SYHVRYZ7AW2",
+  },
+  {
+    name: "Soroswap",
+    contract: "CAG5LRYQ5JVEUI5TEID72EYOVX44TTUJT5BQR2J6J77FH65PCCFAJDDH",
+  },
+  {
+    name: "XycLoans",
+    contract: "CBV4OSTRMD2IJJYX3XRNIIVCNA5B2ZLHQMUEUJSKLAH45ONANQ2QV7QN",
+  },
+  {
+    name: "Blend USDC-XLM Pool",
+    contract: "CDVQVKOY2YSXS2IC7KN6MNASSHPAO7UN2UR2ON4OI2SKMFJNVAMDX6DP",
+  },
+  {
+    name: "Blend Backstop Pool",
+    contract: "CAO3AGAMZVRMHITL36EJ2VZQWKYRPWMQAPDQD5YEOF3GIF7T44U4JAL3",
+  },
+  {
+    name: "Blend LP Comet Pool",
+    contract: "CAS3FL6TLZKDGGSISDBWGGPXT3NRR4DYTZD7YOD3HMYO6LTJUVGRVEAM",
+  },
+  {
+    name: "Blend Pool Factory",
+    contract: "CCZD6ESMOGMPWH2KRO4O7RGTAPGTUPFWFQBELQSS7ZUK63V3TZWETGAG",
+  },
+  {
+    name: "Blend Emitter",
+    contract: "CCZD6ESMOGMPWH2KRO4O7RGTAPGTUPFWFQBELQSS7ZUK63V3TZWETGAG",
+  },
+  {
+    name: "Blend Token",
+    contract: "CD25MNVTZDL4Y3XBCPCJXGXATV5WUHHOWMYFF4YBEGU5FCPGMYTVG5JY",
+  },
+  {
+    name: "Blend Yieldblox Pool",
+    contract: "CBP7NO6F7FRDHSOFQBT2L2UWYIZ2PU76JKVRYAQTG3KZSQLYAOKIF2WB",
+  },
+  {
+    name: "Aqua AMM",
+    contract: "CBQDHNBFBZYE4MKPWBSJOPIYLW4SFSXAXUTSXJN76GNKYVYPCKWC6QUK",
+  },
+  {
+    name: "FxDAO Liquidity locking pool",
+    contract: "CDCART6WRSM2K4CKOAOB5YKUVBSJ6KLOVS7ZEJHA4OAQ2FXX7JOHLXIP",
+  },
+  {
+    name: "FxDAO Vault",
+    contract: "CCUN4RXU5VNDHSF4S4RKV4ZJYMX2YWKOH6L4AKEKVNVDQ7HY5QIAO4UB",
+  },
+  {
+    name: "FxDAO Oracle",
+    contract: "CB5OTV4GV24T5USEZHFVYGC3F4A4MPUQ3LN56E76UK2IT7MJ6QXW4TFS",
+  },
+  {
+    name: "Unknown Oracle",
+    contract: "CAWGFKEL4XSE7JHVZLFIXSDVK7HNI57VFU4OPVRV7NHECRXCZ3ZNDNTR",
+  },
+  {
+    name: "Digicus",
+    contract: "CCZLARB46ZUHADIKNVOXFZUY4TO2J2USTA4ZGR3L3CAG45VYYXAUOTUB",
+  },
+  {
+    name: "XLM SAC",
+    contract: "CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA",
+  },
+  {
+    name: "YBX Claim Contract",
+    contract: "CBBM3WOKTRG7VRDZKDDZOSCQDPKFFTUIQWX5WD6UZ66XV7UFH2OSU2LM",
+  },
+  {
+    name: "PHO SAC",
+    contract: "CBZ7M5B3Y4WWBZ5XK5UZCAFOEZ23KSSZXYECYX3IXM6E2JOLQC52DK32",
+  },
+  {
+    name: "USDC SAC",
+    contract: "CCW67TSZV3SSS2HXMBQ5JFGCKJNXKZM7UQUWUZPUTHXSTZLEO7SJMI75",
+  },
+  {
+    name: "Phoenix AMM",
+    contract: "CCLZRD4E72T7JCZCN3P7KNPYNXFYKQCL64ECLX7WP5GNVYPYJGU2IO2G",
+  },
+  {
+    name: "Aqua Rewards",
+    contract: "CCY2PXGMKNQHO7WNYXEWX76L2C5BH3JUW3RCATGUYKY7QQTRILBZIFWV",
+  },
+  {
+    name: "ARB Bot Contract",
+    contract: "CCBVCCNPIFMCXW7S3GBM6IOQBD5TEUCSQ6WWJGB5VIXZCRVJJQHQQE23",
+  },
+];
