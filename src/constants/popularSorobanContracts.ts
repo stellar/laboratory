@@ -38,31 +38,31 @@ export const POPULAR_SOROBAN_CONTRACTS: PopularContractListRecord[] = [
     contract: "CBV4OSTRMD2IJJYX3XRNIIVCNA5B2ZLHQMUEUJSKLAH45ONANQ2QV7QN",
   },
   {
-    name: "Blend USDC-XLM Pool",
+    name: "Blend v2 USDC-XLM Pool",
     contract: "CDVQVKOY2YSXS2IC7KN6MNASSHPAO7UN2UR2ON4OI2SKMFJNVAMDX6DP",
   },
   {
-    name: "Blend Backstop Pool",
+    name: "Blend v2 Backstop Pool",
     contract: "CAO3AGAMZVRMHITL36EJ2VZQWKYRPWMQAPDQD5YEOF3GIF7T44U4JAL3",
   },
   {
-    name: "Blend LP Comet Pool",
+    name: "Blend v2 LP Comet Pool",
     contract: "CAS3FL6TLZKDGGSISDBWGGPXT3NRR4DYTZD7YOD3HMYO6LTJUVGRVEAM",
   },
   {
-    name: "Blend Pool Factory",
+    name: "Blend v2 Pool Factory",
     contract: "CCZD6ESMOGMPWH2KRO4O7RGTAPGTUPFWFQBELQSS7ZUK63V3TZWETGAG",
   },
   {
-    name: "Blend Emitter",
+    name: "Blend v2 Emitter",
     contract: "CCZD6ESMOGMPWH2KRO4O7RGTAPGTUPFWFQBELQSS7ZUK63V3TZWETGAG",
   },
   {
-    name: "Blend Token",
+    name: "Blend v2 Token",
     contract: "CD25MNVTZDL4Y3XBCPCJXGXATV5WUHHOWMYFF4YBEGU5FCPGMYTVG5JY",
   },
   {
-    name: "Blend Yieldblox Pool",
+    name: "Blend v2 Yieldblox Pool",
     contract: "CBP7NO6F7FRDHSOFQBT2L2UWYIZ2PU76JKVRYAQTG3KZSQLYAOKIF2WB",
   },
   {
