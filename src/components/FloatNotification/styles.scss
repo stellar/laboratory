@@ -1,9 +1,10 @@
 @use "../../styles/utils.scss" as *;
 
 .FloatNotification {
+  --FloatNotification-headerHeight: #{pxToRem(52px)};
+
   position: fixed;
-  // Offset header height
-  top: 52px;
+  top: var(--FloatNotification-headerHeight);
   right: 0;
   z-index: 10;
   display: flex;
@@ -18,10 +19,6 @@
   width: 100%;
   max-width: pxToRem(412px);
   padding: pxToRem(24px);
-
-  @media screen and (max-width: 1040px) {
-    top: 68px;
-  }
 
   &__item {
     display: flex;

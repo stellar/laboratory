@@ -15,29 +15,27 @@ import { useStore } from "@/store/useStore";
 
 export const LayoutMain = ({ children }: { children: ReactNode }) => {
   const { floatNotifications, removeFloatNotification } = useStore();
-  const [floatNotificationOffsetTop, setFloatNotificationOffsetTop] =
-    useState(0);
   const headerRef = useRef<HTMLDivElement>(null);
+  const [headerHeight, setHeaderHeight] = useState(52);
 
   // Init tracking
   useEffect(() => {
     initTracking();
   }, []);
 
-  // FloatNotification dynamic position based on header height (with or without banner)
+  // Track header height
   useEffect(() => {
-    const headerEl = headerRef.current;
+    const headerElement = headerRef.current;
+    if (!headerElement) return;
 
-    if (!headerEl) return;
-
-    const updateHeaderHeight = () => {
-      setFloatNotificationOffsetTop(Math.floor(headerEl.offsetHeight));
+    const updateHeight = () => {
+      setHeaderHeight(headerElement.offsetHeight);
     };
 
-    updateHeaderHeight();
+    updateHeight();
 
-    const resizeObserver = new ResizeObserver(updateHeaderHeight);
-    resizeObserver.observe(headerEl);
+    const resizeObserver = new ResizeObserver(updateHeight);
+    resizeObserver.observe(headerElement);
 
     return () => {
       resizeObserver.disconnect();
@@ -50,7 +48,6 @@ export const LayoutMain = ({ children }: { children: ReactNode }) => {
       return;
     }
 
-    // No need to check if there are no auto closing notifications
     const hasAutoCloseNotifications = floatNotifications.some(
       (notification) => notification.closeAt,
     );
@@ -59,7 +56,6 @@ export const LayoutMain = ({ children }: { children: ReactNode }) => {
       return;
     }
 
-    // Check every 100ms for expired notifications
     const interval = setInterval(() => {
       const now = Date.now();
       floatNotifications.forEach((notification) => {
@@ -86,7 +82,7 @@ export const LayoutMain = ({ children }: { children: ReactNode }) => {
             <FloatNotification
               notifications={floatNotifications}
               onClose={removeFloatNotification}
-              offsetTopInPx={floatNotificationOffsetTop}
+              headerHeight={headerHeight}
             />
             {children}
           </LayoutSidebarContent>
