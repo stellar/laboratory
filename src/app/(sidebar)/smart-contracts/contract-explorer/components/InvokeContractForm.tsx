@@ -43,7 +43,7 @@ import { useSubmitRpcTx } from "@/query/useSubmitRpcTx";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { dereferenceSchema } from "@/helpers/dereferenceSchema";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
-import { getTxnToSimulate } from "@/helpers/sorobanUtils";
+import { getTxnToSimulate, initArgsFromSchema } from "@/helpers/sorobanUtils";
 
 import { SorobanInvokeValue, XdrFormatType, AnyObject } from "@/types/types";
 
@@ -71,8 +71,8 @@ export const InvokeContractForm = ({
   const [isExtensionLoading, setIsExtensionLoading] = useState(false);
   const [xdrFormat, setXdrFormat] = useState<XdrFormatType | string>("json");
   const [formValue, setFormValue] = useState<SorobanInvokeValue>({
-    contract_id: contractId,
-    function_name: funcName,
+    contract_id: "",
+    function_name: "",
     args: {},
   });
   const [formError, setFormError] = useState<AnyObject>({});
@@ -241,8 +241,14 @@ export const InvokeContractForm = ({
       );
 
       setDereferencedSchema(schema);
+
+      setFormValue({
+        contract_id: contractId,
+        function_name: funcName,
+        args: initArgsFromSchema(schema),
+      });
     }
-  }, [contractSpec, funcName]);
+  }, [contractSpec, contractId, funcName]);
 
   useEffect(() => {
     const isSuccessfulSimulation =
@@ -268,7 +274,13 @@ export const InvokeContractForm = ({
 
   const handleChange = (value: SorobanInvokeValue) => {
     setInvokeError(null);
-    setFormValue(value);
+    setFormValue((prev) => ({
+      ...prev,
+      args: {
+        ...prev.args,
+        ...value.args,
+      },
+    }));
   };
 
   const isSimulating =

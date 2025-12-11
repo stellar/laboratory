@@ -235,57 +235,33 @@ export const getTxWithSorobanData = ({
 };
 
 // Helper function to order object keys based on schema property order
-export const orderArgsBySchema = (
-  args: AnyObject,
-  schema?: Record<string, any>,
-): AnyObject => {
-  if (!schema?.properties || typeof args !== "object" || Array.isArray(args)) {
-    return args;
-  }
+export const initArgsFromSchema = (schema?: Record<string, any>): AnyObject => {
+  if (!schema?.properties) return {};
 
-  const schemaKeys = Object.keys(schema.properties);
-  const orderedArgs: AnyObject = {};
+  const orderedArgs: Record<string, any> = {};
 
-  for (const key of schemaKeys) {
-    if (key in args) {
-      const value = args[key];
+  if (schema.properties) {
+    // Use Object.keys(properties) to get all fields in definition order
+    // Filter out 'additionalProperties' which is a schema metadata field, not an actual property
+    // https://github.com/stellar/js-stellar-sdk/blob/4de8c7020566d67bbeeeb026e8f843bf25822fbe/src/contract/spec.ts#L371
+    const propertyOrder = Object.keys(schema.properties).filter(
+      (key) => key !== "additionalProperties",
+    );
+
+    propertyOrder.forEach((key) => {
       const propertySchema = schema.properties[key];
 
-      // Recursively order nested objects
-      // Skip if primitives with type/value
-      if (
-        typeof value === "object" &&
-        !Array.isArray(value) &&
-        value !== null &&
-        !value.type
-      ) {
-        orderedArgs[key] = orderArgsBySchema(
-          value,
-          propertySchema as Record<string, any>,
-        );
-      }
-      // Handle arrays of objects
-      else if (Array.isArray(value) && propertySchema?.items) {
-        orderedArgs[key] = value.map((item) => {
-          // If array items are objects
-          // Skip if primitives with type/value
-          if (
-            typeof item === "object" &&
-            item !== null &&
-            !item.type &&
-            !item.tag
-          ) {
-            return orderArgsBySchema(
-              item,
-              propertySchema.items as Record<string, any>,
-            );
-          }
-          return item;
-        });
+      if (propertySchema.properties) {
+        orderedArgs[key] = initArgsFromSchema(propertySchema);
+      } else if (propertySchema.type === "array" || propertySchema.items) {
+        orderedArgs[key] = [];
       } else {
-        orderedArgs[key] = value;
+        orderedArgs[key] = {
+          type: "",
+          value: "",
+        };
       }
-    }
+    });
   }
 
   return orderedArgs;
@@ -296,13 +272,9 @@ export const getTxnToSimulate = (
   txnParams: TransactionBuildParams,
   operation: TxnOperation,
   networkPassphrase: string,
-  schema?: Record<string, any>,
 ): { xdr: string; error: string } => {
   try {
-    // Order args based on schema to ensure correct field ordering
-    const orderedArgs = orderArgsBySchema(value.args, schema);
-    const argsToScVals = getScValsFromArgs(orderedArgs, []);
-
+    const argsToScVals = getScValsFromArgs(value.args, []);
     const builtXdr = buildTxWithSorobanData({
       params: txnParams,
       sorobanOp: {

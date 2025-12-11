@@ -129,7 +129,6 @@ export const JsonSchemaForm = ({
       updatedTxnParams,
       sorobanOperation,
       network.passphrase,
-      dereferencedSchema,
     );
 
     if (xdr) {
