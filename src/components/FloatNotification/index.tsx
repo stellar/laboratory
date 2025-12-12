@@ -19,18 +19,26 @@ export type FloatNotificationItem = {
 type FloatNotificationProps = {
   notifications: FloatNotificationItem[];
   onClose: (id: string) => void;
+  offsetTopInPx: number;
 };
 
 export const FloatNotification = ({
   notifications,
   onClose,
+  offsetTopInPx,
 }: FloatNotificationProps) => {
   if (!notifications.length) {
     return null;
   }
 
+  const customStyle = {
+    ...(offsetTopInPx
+      ? { "--FloatNotification-headerHeight": `${offsetTopInPx - 10}px` }
+      : {}),
+  } as React.CSSProperties;
+
   return (
-    <div className="FloatNotification">
+    <div className="FloatNotification" style={customStyle}>
       {notifications.map((item) => (
         <div
           key={item.id}
