@@ -13,7 +13,12 @@ import {
 } from "@stellar/stellar-sdk";
 
 import { TransactionBuildParams } from "@/store/createStore";
-import { SorobanInvokeValue, SorobanOpType, TxnOperation } from "@/types/types";
+import {
+  AnyObject,
+  SorobanInvokeValue,
+  SorobanOpType,
+  TxnOperation,
+} from "@/types/types";
 
 export const isSorobanOperationType = (operationType: string) =>
   [
@@ -227,6 +232,39 @@ export const getTxWithSorobanData = ({
   } catch (e) {
     return { xdr: "", error: `${e}` };
   }
+};
+
+// Helper function to order object keys based on schema property order
+export const initArgsFromSchema = (schema?: Record<string, any>): AnyObject => {
+  if (!schema?.properties) return {};
+
+  const orderedArgs: Record<string, any> = {};
+
+  if (schema.properties) {
+    // Use Object.keys(properties) to get all fields in definition order
+    // Filter out 'additionalProperties' which is a schema metadata field, not an actual property
+    // https://github.com/stellar/js-stellar-sdk/blob/4de8c7020566d67bbeeeb026e8f843bf25822fbe/src/contract/spec.ts#L371
+    const propertyOrder = Object.keys(schema.properties).filter(
+      (key) => key !== "additionalProperties",
+    );
+
+    propertyOrder.forEach((key) => {
+      const propertySchema = schema.properties[key];
+
+      if (propertySchema.properties) {
+        orderedArgs[key] = initArgsFromSchema(propertySchema);
+      } else if (propertySchema.type === "array" || propertySchema.items) {
+        orderedArgs[key] = [];
+      } else {
+        orderedArgs[key] = {
+          type: "",
+          value: "",
+        };
+      }
+    });
+  }
+
+  return orderedArgs;
 };
 
 export const getTxnToSimulate = (
