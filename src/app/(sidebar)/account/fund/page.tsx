@@ -10,6 +10,7 @@ import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { muxedAccount } from "@/helpers/muxedAccount";
 
 import { validate } from "@/validate";
+import { StrKey } from "@stellar/stellar-sdk";
 
 import { SuccessMsg } from "@/components/FriendBot/SuccessMsg";
 import { ErrorMsg } from "@/components/FriendBot/ErrorMsg";
@@ -110,17 +111,33 @@ export default function FundAccount() {
         <div className="Account__card">
           <Text size="sm" as="div">
             The friendbot is a horizon API endpoint that will fund an account
-            with 10,000 lumens on the {network.id} network.
+            or contract with 10,000 lumens on the {network.id} network.
           </Text>
 
           <Input
             id="fund-public-key-input"
             fieldSize="md"
-            label="Public Key"
+            label="Public Key or Contract ID"
             value={generatedPublicKey}
             onChange={(e) => {
               setGeneratedPublicKey(e.target.value);
-              const error = validate.getPublicKeyError(e.target.value);
+
+              // Validate public key, muxed account, or contract address
+              const value = e.target.value;
+              let error: string | false = false;
+
+              if (value) {
+                if (value.startsWith("C")) {
+                  // Contract address
+                  if (!StrKey.isValidContract(value)) {
+                    error = "Contract address is invalid.";
+                  }
+                } else {
+                  // Public key or muxed account
+                  error = validate.getPublicKeyError(value);
+                }
+              }
+
               setInlineErrorMessage(error || "");
               setMuxedBaseAccount("");
               setMuxedAccountMsg("");
@@ -129,7 +146,7 @@ export default function FundAccount() {
                 handleMuxedAccount(e.target.value);
               }
             }}
-            placeholder="Ex: GCEXAMPLE5HWNK4AYSTEQ4UWDKHTCKADVS2AHF3UI2ZMO3DPUSM6Q4UG"
+            placeholder="Ex: GCEXAMPLE... or CDLZFC3S..."
             error={inlineErrorMessage}
           />
 

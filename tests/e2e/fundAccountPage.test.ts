@@ -205,6 +205,61 @@ test.describe("[futurenet/testnet] Fund Account Page", () => {
     await expect(alertBox).toBeVisible();
   });
 
+  test("Gets an error with an invalid contract address in 'Public Key or Contract ID' field", async ({
+    page,
+  }) => {
+    const publicKeyInput = page.locator("#fund-public-key-input");
+
+    // Type in an invalid contract address (starts with C but wrong format)
+    await publicKeyInput.fill("CINVALIDCONTRACTADDRESS");
+
+    await expect(publicKeyInput).toHaveAttribute("aria-invalid", "true");
+    await expect(
+      page.getByTestId("fundAccount-buttons").getByText("Get lumens"),
+    ).toBeDisabled();
+  });
+
+  test("Successfully funds a contract when clicking 'Get lumens' with a valid contract address", async ({
+    page,
+  }) => {
+    const publicKeyInput = page.locator("#fund-public-key-input");
+    const getLumenButton = page
+      .getByTestId("fundAccount-buttons")
+      .getByText("Get lumens");
+
+    // Use a valid contract address (C...)
+    await publicKeyInput.fill(
+      "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC",
+    );
+
+    await expect(publicKeyInput).toHaveAttribute("aria-invalid", "false");
+    await expect(getLumenButton).toBeEnabled();
+
+    // Mock the friendbot api call
+    await page.route(
+      "*/**/?addr=CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC",
+      async (route) => {
+        await route.fulfill({
+          status: 200,
+          contentType: "application/hal+json",
+        });
+      },
+    );
+
+    // Ensure the listener is set up before the action that triggers the request
+    const responsePromise = page.waitForResponse(
+      (response) =>
+        response.url().includes("?addr=") && response.status() === 200,
+    );
+
+    await getLumenButton.click();
+
+    await responsePromise;
+
+    const alertBox = page.getByText(/Successfully funded/);
+    await expect(alertBox).toBeVisible();
+  });
+
   // @TODO when we work on the button disabled for funding account from mainnet
   //   test("if I switch to 'mainnet' network, I should see 'Not Found' page and no 'Fund account' sidebar", async ({
   //     page,
