@@ -11,9 +11,10 @@ import Str from "@ledgerhq/hw-app-str";
 import TrezorConnect, { StellarSignedTx } from "@trezor/connect-web";
 import transformTransaction from "@trezor/connect-plugin-stellar";
 
-import { LedgerErrorResponse } from "@/types/types";
-
 import { validate } from "@/validate";
+import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
+
+import { LedgerErrorResponse } from "@/types/types";
 
 /* Build Transaction related */
 export type FeeBumpedTxResponse = {
@@ -284,6 +285,17 @@ const decoratedSigFromHexSig = (
   hexSigs: { signature: string; publicKey: string }[],
 ) => {
   try {
+    // Check for duplicates
+    const publicKeys = hexSigs.map((item) => item.publicKey);
+    const seenKeys = new Set<string>();
+
+    for (const key of publicKeys) {
+      if (seenKeys.has(key)) {
+        throw `Duplicate signer detected: ${shortenStellarAddress(key)}. Every account can only sign once.`;
+      }
+      seenKeys.add(key);
+    }
+
     const decoratedSig = hexSigs.reduce((decorated, item) => {
       const sig = Buffer.from(item.signature, "hex");
       const keypair = Keypair.fromPublicKey(item.publicKey);
