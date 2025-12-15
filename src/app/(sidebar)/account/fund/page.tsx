@@ -56,7 +56,7 @@ export default function FundAccount() {
       assetIssuer: USDC_TESTNET_ISSUER,
       label: "Stellar asset",
       currency: "USDC",
-      amount: "10",
+      amount: "1",
     },
     {
       id: "eurc",
@@ -64,7 +64,7 @@ export default function FundAccount() {
       assetIssuer: EURC_TESTNET_ISSUER,
       label: "Stellar asset",
       currency: "EURC",
-      amount: "10",
+      amount: "1",
     },
   ];
 
