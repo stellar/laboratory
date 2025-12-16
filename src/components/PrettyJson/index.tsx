@@ -216,8 +216,12 @@ export const PrettyJson = ({
                                 itemList={Object.keys(v)}
                                 char="["
                               >
-                                {v.map((v2) => {
-                                  return render(v2);
+                                {v.map((v2, v2Index) => {
+                                  return (
+                                    <React.Fragment key={`${keyProp}-${index}-${v2Index}`}>
+                                      {render(v2)}
+                                    </React.Fragment>
+                                  );
                                 })}
                               </Collapsible>
                             );
@@ -233,7 +237,11 @@ export const PrettyJson = ({
                           );
                         }
 
-                        return render(v, key);
+                        return (
+                          <React.Fragment key={`${keyProp}-${index}`}>
+                            {render(v, key)}
+                          </React.Fragment>
+                        );
                       })}
                     </Collapsible>
                   );

@@ -984,8 +984,8 @@ export const formComponentTemplateEndpoints = (
             selectedOption={templ.value || ""}
             onChange={templ.onChange}
             options={[
-              { id: "base64", label: "base64" },
-              { id: "json", label: "json" },
+              { id: "base64", label: "Base64" },
+              { id: "json", label: "JSON" },
             ]}
           />
         ),
