@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 
 import { MaintenanceBanner } from "@/components/MaintenanceBanner";
 import { NetworkNotAvailableBanner } from "@/components/NetworkNotAvailableBanner";
@@ -15,10 +15,33 @@ import { useStore } from "@/store/useStore";
 
 export const LayoutMain = ({ children }: { children: ReactNode }) => {
   const { floatNotifications, removeFloatNotification } = useStore();
+  const [floatNotificationOffsetTop, setFloatNotificationOffsetTop] =
+    useState(0);
+  const headerRef = useRef<HTMLDivElement>(null);
 
   // Init tracking
   useEffect(() => {
     initTracking();
+  }, []);
+
+  // FloatNotification dynamic position based on header height (with or without banner)
+  useEffect(() => {
+    const headerEl = headerRef.current;
+
+    if (!headerEl) return;
+
+    const updateHeaderHeight = () => {
+      setFloatNotificationOffsetTop(Math.floor(headerEl.offsetHeight));
+    };
+
+    updateHeaderHeight();
+
+    const resizeObserver = new ResizeObserver(updateHeaderHeight);
+    resizeObserver.observe(headerEl);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
   }, []);
 
   // Handle auto closing float notifications
@@ -51,7 +74,7 @@ export const LayoutMain = ({ children }: { children: ReactNode }) => {
 
   return (
     <div className="LabLayout">
-      <div className="LabLayout__header">
+      <div className="LabLayout__header" ref={headerRef}>
         <NetworkNotAvailableBanner />
         <MaintenanceBanner />
         <LayoutHeader />
@@ -63,6 +86,7 @@ export const LayoutMain = ({ children }: { children: ReactNode }) => {
             <FloatNotification
               notifications={floatNotifications}
               onClose={removeFloatNotification}
+              offsetTopInPx={floatNotificationOffsetTop}
             />
             {children}
           </LayoutSidebarContent>
