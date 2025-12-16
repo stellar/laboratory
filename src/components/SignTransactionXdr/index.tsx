@@ -50,6 +50,8 @@ export const SignTransactionXdr = ({
   onDoneAction,
   defaultSignatureType = "secretKey",
   isDisabled = false,
+  description,
+  customFooter,
 }: {
   id: string;
   title: string;
@@ -65,6 +67,8 @@ export const SignTransactionXdr = ({
   }) => void;
   defaultSignatureType?: TxSignatureType;
   isDisabled?: boolean;
+  description?: string;
+  customFooter?: React.ReactNode;
 }) => {
   const { network, walletKit } = useStore();
 
@@ -626,6 +630,12 @@ export const SignTransactionXdr = ({
           </Text>
         </WithInfoText>
 
+        {description ? (
+          <Text size="sm" weight="regular" as="div">
+            {description}
+          </Text>
+        ) : null}
+
         {/* Tabs */}
         <div className="SignTransactionXdr__tabsContainer">
           <Tab
@@ -879,6 +889,8 @@ export const SignTransactionXdr = ({
           <AddSignatureButton />
         </div>
       </div>
+
+      {customFooter ?? null}
     </div>
   );
 };
