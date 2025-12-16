@@ -11,13 +11,14 @@ export const SwitchNetwork = () => {
       <div className="Account__card">
         <div className="CardText">
           <Text size="lg" as="h1" weight="medium">
-            Friendbot: fund a Futurenet or Testnet network account
+            Fund a Futurenet or Testnet network account with XLM, USDC, and EURC
           </Text>
 
           <Text size="sm" as="p">
             You must switch your network to Futurenet or Testnet in order to
-            fund keypairs. The friendbot is an API endpoint that will
-            fund an account with 10,000 lumens on Futurenet or Testnet.
+            fund keypairs. The friendbot is an API endpoint that will fund an
+            account with 10,000 XLM, 10 USDC, or 10 EURC on Futurenet or
+            Testnet.
           </Text>
         </div>
 
