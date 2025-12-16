@@ -198,7 +198,7 @@ export default function Endpoints() {
         return {
           ...defaultRpcRequestBody,
           params: {
-            xdrFormat: params.xdrFormat || "base64",
+            xdrFormat: params.xdrFormat || "json",
             startLedger: Number(params.startLedger) || null,
             endLedger: Number(params.endLedger) || null,
             ...(pagination && { pagination }),
@@ -221,7 +221,7 @@ export default function Endpoints() {
               (params.ledgerKeyEntries &&
                 JSON.parse(params.ledgerKeyEntries)) ??
               [],
-            xdrFormat: params.xdrFormat || "base64",
+            xdrFormat: params.xdrFormat || "json",
           },
         };
       }
@@ -232,7 +232,7 @@ export default function Endpoints() {
           params: {
             startLedger: Number(params.startLedger) || null,
             ...(pagination && { pagination }),
-            xdrFormat: params.xdrFormat || "base64",
+            xdrFormat: params.xdrFormat || "json",
           },
         };
       }
@@ -242,7 +242,7 @@ export default function Endpoints() {
           ...defaultRpcRequestBody,
           params: {
             hash: params.transaction ?? "",
-            xdrFormat: params.xdrFormat || "base64",
+            xdrFormat: params.xdrFormat || "json",
           },
         };
       }
@@ -253,7 +253,7 @@ export default function Endpoints() {
           params: {
             startLedger: Number(params.startLedger) || null,
             ...(pagination && { pagination }),
-            xdrFormat: params.xdrFormat || "base64",
+            xdrFormat: params.xdrFormat || "json",
           },
         };
       }
@@ -263,7 +263,7 @@ export default function Endpoints() {
           ...defaultRpcRequestBody,
           params: {
             transaction: params.tx ?? "",
-            xdrFormat: params.xdrFormat || "base64",
+            xdrFormat: params.xdrFormat || "json",
           },
         };
       }
@@ -276,7 +276,7 @@ export default function Endpoints() {
             resourceConfig: sanitizeObject({
               instructionLeeway: Number(params.resourceConfig) || undefined,
             }),
-            xdrFormat: params.xdrFormat || "base64",
+            xdrFormat: params.xdrFormat || "json",
             authMode: params.authMode || "",
           },
         };
@@ -906,7 +906,7 @@ export default function Endpoints() {
                   });
                 case "xdrFormat":
                   return component.render({
-                    value: params[f] || "base64",
+                    value: params[f] || "json",
                     error: formError[f],
                     isRequired,
                     onChange: (optionId: string) => {

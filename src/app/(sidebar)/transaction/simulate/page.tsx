@@ -141,8 +141,8 @@ export default function SimulateTransaction() {
             resetResponse();
           }}
           options={[
-            { id: "base64", label: "base64" },
-            { id: "json", label: "json" },
+            { id: "base64", label: "Base64" },
+            { id: "json", label: "JSON" },
           ]}
         />
 
