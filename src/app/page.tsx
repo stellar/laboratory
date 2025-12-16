@@ -80,7 +80,14 @@ export default function Introduction() {
               <NextLink href={Routes.SUBMIT_TRANSACTION} sds-variant="primary">
                 submit transactions
               </NextLink>{" "}
-              and interact with contracts on the Stellar network.
+              and{" "}
+              <NextLink
+                href={Routes.SMART_CONTRACTS_CONTRACT_EXPLORER}
+                sds-variant="primary"
+              >
+                interact with contracts
+              </NextLink>{" "}
+              on the Stellar network.
             </Text>
 
             <Box
