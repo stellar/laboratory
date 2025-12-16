@@ -34,7 +34,7 @@ export const LayoutSidebarContent = ({ children }: { children: ReactNode }) => {
           <div className="LabLayout__sidebar--bottom">
             <div className="LabLayout__sidebar__wrapper">
               <NextLink
-                href="https://developers.stellar.org/"
+                href="https://developers.stellar.org/docs/tools/lab"
                 className="SidebarLink"
               >
                 <Icon.BookClosed /> Documentation

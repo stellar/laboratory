@@ -210,7 +210,7 @@ test.describe("Saved Requests Page", () => {
       );
       await expect(pageContext.getByLabel("Limit")).toHaveValue("5");
 
-      const xdrFormatInput = pageContext.locator("#base64-xdrFormat-type");
+      const xdrFormatInput = pageContext.locator("#json-xdrFormat-type");
       await expect(xdrFormatInput).toBeChecked();
     });
   });
