@@ -82,6 +82,9 @@ test.describe("[futurenet/testnet] Fund Account Page", () => {
   });
 
   test("Fund new account with XLM and add USDC trustline", async ({ page }) => {
+    // We need to run multiple "accounts" API calls in this flow (initial fetch,
+    // fund XLM, add USDC trustline). We use the counter to make sure we return
+    // correct data for each step.
     let accountsCallCount = 0;
 
     // Mock accounts API call

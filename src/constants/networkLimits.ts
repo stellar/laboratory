@@ -28,16 +28,16 @@ export const MAINNET_LIMITS: NetworkLimits = {
 } as const;
 
 export const TESTNET_LIMITS: NetworkLimits = {
-  "tx_max_instructions": 100000000,
-  "tx_memory_limit": 41943040,
-  "tx_max_footprint_entries": 100,
+  "tx_max_instructions": 2500000,
+  "tx_memory_limit": 2000000,
+  "tx_max_footprint_entries": 3,
   "tx_max_disk_read_entries": 100,
   "tx_max_write_ledger_entries": 50,
   "tx_max_disk_read_bytes": 200000,
   "tx_max_write_bytes": 132096,
-  "tx_max_contract_events_size_bytes": 16384,
-  "contract_data_key_size_bytes": 250,
-  "contract_max_size_bytes": 131072
+  "tx_max_contract_events_size_bytes": 200,
+  "contract_data_key_size_bytes": 200,
+  "contract_max_size_bytes": 2000
 } as const;
 
 export const FUTURENET_LIMITS: NetworkLimits = {
