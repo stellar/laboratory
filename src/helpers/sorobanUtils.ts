@@ -234,9 +234,12 @@ export const getTxnToSimulate = (
   txnParams: TransactionBuildParams,
   operation: TxnOperation,
   networkPassphrase: string,
+  argOrder: string[],
 ): { xdr: string; error: string } => {
   try {
-    const argsToScVals = getScValsFromArgs(value.args, []);
+    const orderedValues = argOrder.map((name) => value.args[name]);
+    const scVals = orderedValues.map((v) => getScValFromArg(v, []));
+
     const builtXdr = buildTxWithSorobanData({
       params: txnParams,
       sorobanOp: {
@@ -245,7 +248,7 @@ export const getTxnToSimulate = (
           ...operation.params,
           contract_id: value.contract_id,
           function_name: value.function_name,
-          args: argsToScVals,
+          args: scVals,
           resource_fee: BASE_FEE, // bogus resource fee for simulation purpose
         },
       },
@@ -279,6 +282,9 @@ const isMap = (arg: any) => {
           return false;
         }
 
+        if (typeof obj["1"] !== "object") return false;
+        if (!("value" in obj["1"]) || !("type" in obj["1"])) return false;
+
         // "1" can be either a simple value with type, or a complex value (array, enum, etc)
         return true;
       })
@@ -290,36 +296,22 @@ const isMap = (arg: any) => {
 };
 
 const getScValFromArg = (arg: any, scVals: xdr.ScVal[]): xdr.ScVal => {
+  if (arg && typeof arg === "object" && (arg.tag || arg.enum)) {
+    return convertEnumToScVal(arg, scVals);
+  }
   // Handle array of arrays with numeric objects
+  if (isMap(arg)) {
+    const { mapVal, mapType } = convertObjectToMap(arg);
+    return nativeToScVal(mapVal, { type: mapType });
+  }
+
   if (Array.isArray(arg) && arg.length > 0) {
-    const arrayScVals = arg.map((subArray) => {
-      if (Array.isArray(subArray) && isMap(subArray)) {
-        const { mapVal, mapType } = convertObjectToMap(subArray);
-
-        if (Object.keys(mapVal).length > 1) {
-          const items = Object.keys(mapVal);
-
-          const mapScValOne = nativeToScVal(mapVal[items[0]], {
-            type: mapType[items[0]],
-          });
-
-          scVals.push(mapScValOne);
-
-          const mapScValTwo = nativeToScVal(mapVal[items[1]], {
-            type: mapType[items[1]],
-          });
-
-          scVals.push(mapScValTwo);
-        }
-
-        return nativeToScVal(mapVal, { type: mapType });
-      }
-      return getScValFromArg(subArray, scVals);
-    });
+    const arrayScVals = arg.map((subArray) =>
+      getScValFromArg(subArray, scVals),
+    );
 
     return xdr.ScVal.scvVec(arrayScVals);
   }
-
   return getScValsFromArgs([arg], scVals || [])[0];
 };
 
@@ -505,7 +497,7 @@ export const getScValsFromArgs = (
   scVals: xdr.ScVal[] = [],
 ): xdr.ScVal[] => {
   // Primitive Case
-  if (Object.values(args).every((v: any) => v.type && v.value)) {
+  if (Object.values(args).every((v: any) => hasTypeAndValue(v))) {
     const primitiveScVals = Object.values(args).map((v) => {
       return getScValFromPrimitive(v);
     });
@@ -516,14 +508,14 @@ export const getScValsFromArgs = (
   if (Object.values(args).some((v) => v.tag || v.enum)) {
     // Check if we have mixed primitive and enum arguments
     const hasEnums = Object.values(args).some((v) => v.tag || v.enum);
-    const hasPrimitives = Object.values(args).some((v) => v.type && v.value);
+    const hasPrimitives = Object.values(args).some((v) => hasTypeAndValue(v));
 
     if (hasEnums && hasPrimitives) {
       // Handle mixed case - return separate arguments
       const mixedScVals = Object.values(args).map((v) => {
         if (v.tag || v.enum) {
           return convertEnumToScVal(v, scVals);
-        } else if (v.type && v.value) {
+        } else if (hasTypeAndValue(v)) {
           return getScValFromPrimitive(v);
         }
         return v;
@@ -595,7 +587,7 @@ export const getScValsFromArgs = (
       }
 
       // Tuple Case
-      const isTupleArray = argValue.every((v: any) => v.type && v.value);
+      const isTupleArray = argValue.every((v: any) => hasTypeAndValue(v));
       if (isTupleArray) {
         const tupleScValsVec = convertTupleToScVal(argValue);
 
@@ -607,8 +599,8 @@ export const getScValsFromArgs = (
     // Object Case - Struct with primitives and/or complex fields
     if (typeof argValue === "object" && !Array.isArray(argValue)) {
       // Check if all fields are primitives (type + value)
-      const allPrimitives = Object.values(argValue).every(
-        (v: any) => v.type && v.value !== undefined,
+      const allPrimitives = Object.values(argValue).every((v: any) =>
+        hasTypeAndValue(v),
       );
 
       if (allPrimitives) {
@@ -707,3 +699,5 @@ export const convertSpecTypeToScValType = (type: string) => {
       return type;
   }
 };
+
+export const hasTypeAndValue = (v: any) => v?.type && v.value !== undefined;

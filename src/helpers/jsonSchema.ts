@@ -116,6 +116,17 @@ const deleteNestedItemError = (
   return newFormError;
 };
 
+const formatPathWithBrackets = (pathArray: string[]): string => {
+  return pathArray.reduce((acc, segment, index) => {
+    if (index === 0) return segment;
+    // Check if segment is a number (array index)
+    if (/^\d+$/.test(segment)) {
+      return `${acc}[${segment}]`;
+    }
+    return `${acc}.${segment}`;
+  }, "");
+};
+
 export const jsonSchema = {
   setDeepValue,
   isSchemaObject,
@@ -127,4 +138,5 @@ export const jsonSchema = {
   isTaggedUnion,
   hasAnyValidationPassed,
   deleteNestedItemError,
+  formatPathWithBrackets,
 };
