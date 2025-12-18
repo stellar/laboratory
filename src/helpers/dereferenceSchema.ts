@@ -125,6 +125,7 @@ export const dereferenceSchema = (
     description: methodSchemaObj.description ?? "",
     properties: resolvedSchema.properties,
     required: requiredFields,
+    argOrder: Object.keys(resolvedSchema.properties || {}),
     additionalProperties: methodSchemaObj.additionalProperties ?? false,
     type: "object",
   };

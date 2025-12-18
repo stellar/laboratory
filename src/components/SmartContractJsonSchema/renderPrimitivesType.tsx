@@ -73,11 +73,12 @@ export const renderPrimitivesType = ({
     schemaType: string,
   ) => {
     const scValType = convertSpecTypeToScValType(schemaType);
+    const formattedPath = jsonSchema.formatPathWithBrackets(path);
 
     if (path.length > 0) {
       const updatedList = jsonSchema.setDeepValue(
         parsedSorobanOperation.args,
-        path.join("."),
+        formattedPath,
         {
           value: e.target.value,
           type: scValType,

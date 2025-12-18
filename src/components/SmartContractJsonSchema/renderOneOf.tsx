@@ -75,26 +75,18 @@ export const renderOneOf = ({
       // Path is nested within the keyName object
       // e.g., path = ["config", "fee_config"] -> updatedPath = "fee_config"
       // e.g., path = ["config", "0", "fee_config"] -> updatedPath = "0.fee_config"
-      const updatedPath = path.slice(1).join(".");
+      const formattedPath = jsonSchema.formatPathWithBrackets(path);
 
-      // Ensure args[keyName] exists before setting deep value
+      // Ensure args exists before setting deep value
       const currentArgs = parsedSorobanOperation.args || {};
-      const currentKeyValue = currentArgs[keyName] || {};
 
-      const updatedTupleList = jsonSchema.setDeepValue(
-        currentKeyValue,
-        updatedPath,
-        {
-          tag: e.target.value,
-        },
-      );
+      const updatedArgs = jsonSchema.setDeepValue(currentArgs, formattedPath, {
+        tag: e.target.value,
+      });
 
       onChange({
         ...invokeContractBaseProps,
-        args: {
-          ...currentArgs,
-          [keyName]: updatedTupleList,
-        },
+        args: updatedArgs,
       });
     } else {
       // Single level path or no path, set at root level
