@@ -116,6 +116,14 @@ const deleteNestedItemError = (
   return newFormError;
 };
 
+/**
+ * Converts a path array to a lodash-compatible path string with bracket notation for array indices.
+ *
+ * @example
+ * formatPathWithBrackets(["tuple_strukt", "1"]) // Returns "tuple_strukt[1]"
+ * formatPathWithBrackets(["config", "fee_config"]) // Returns "config.fee_config"
+ * formatPathWithBrackets(["items", "0", "name"]) // Returns "items[0].name"
+ */
 const formatPathWithBrackets = (pathArray: string[]): string => {
   return pathArray.reduce((acc, segment, index) => {
     if (index === 0) return segment;
