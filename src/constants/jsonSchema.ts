@@ -12,6 +12,7 @@ export type DereferencedSchemaType = {
   description: string;
   properties: Record<string, JSONSchema7Definition>;
   required: string[];
+  argOrder: string[];
   additionalProperties: JSONSchema7Definition | DereferencedSchemaType;
   type: string;
 };
