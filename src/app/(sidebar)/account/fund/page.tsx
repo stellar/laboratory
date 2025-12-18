@@ -378,7 +378,11 @@ export default function FundAccount() {
                 const hasTrustline = Boolean(accountBalances?.[asset]);
 
                 return (
-                  <div key={t.id} className="Account__fundTokens__item">
+                  <div
+                    key={t.id}
+                    className="Account__fundTokens__item"
+                    data-testid="fund-account-token"
+                  >
                     <div className="Account__fundTokens__item__icon">
                       <Image
                         src={`/images/token-icon-${t.id}.png`}
