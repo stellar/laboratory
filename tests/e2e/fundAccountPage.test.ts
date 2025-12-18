@@ -11,6 +11,10 @@ const TEST_ACCOUNT_SECRET_KEY =
 const TEST_MUXED_ACCOUNT =
   "MBIPXRJY4MRSO7IFGTS7KTJOAC2TUKPBOUDY7BF7NOR6WINCZ7FOAAAAAAAAAAAAAEFRU";
 
+const TEST_CONTRACT_ID =
+  "CDLUDNR7VGBRC3RCAG5AVWFF6O54NRYPZVWEISV6M7OFR4GT53Z6IL6P";
+const TEST_CONTRACT_ID_SHORT = shortenStellarAddress(TEST_CONTRACT_ID);
+
 test.describe("[futurenet/testnet] Fund Account Page", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("http://localhost:3000/account/fund");
@@ -21,7 +25,7 @@ test.describe("[futurenet/testnet] Fund Account Page", () => {
       "Testnet",
     );
     await expect(page.locator("h1")).toHaveText(
-      "Friendbot: fund a testnet network account with XLM, USDC, and EURC",
+      "Friendbot: fund a Testnet account or contract with XLM, USDC, and EURC",
     );
   });
 
@@ -53,7 +57,7 @@ test.describe("[futurenet/testnet] Fund Account Page", () => {
       "Futurenet",
     );
     await expect(page.locator("h1")).toHaveText(
-      "Friendbot: fund a futurenet network account with XLM, USDC, and EURC",
+      "Friendbot: fund a Futurenet account or contract with XLM, USDC, and EURC",
     );
   });
 
@@ -349,6 +353,48 @@ test.describe("[futurenet/testnet] Fund Account Page", () => {
       ),
     ).toBeVisible();
   });
+
+  test("Fund contract ID", async ({ page }) => {
+    // Mock the Friendbot API call
+    await page.route(`*/**/?addr=${TEST_CONTRACT_ID}`, async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/hal+json",
+      });
+    });
+
+    const publicKeyInput = page.locator("#fund-public-key-input");
+    const tokens = page.getByTestId("fund-account-token");
+
+    const fundXlmButton = tokens.nth(0).getByRole("button");
+    const fundUsdcButton = tokens.nth(1).getByRole("button");
+    const fundEurcButton = tokens.nth(2).getByRole("button");
+
+    await expect(fundXlmButton).toBeVisible();
+    await expect(fundXlmButton).toBeDisabled();
+
+    await expect(fundUsdcButton).toBeDisabled();
+    await expect(fundEurcButton).toBeDisabled();
+
+    await publicKeyInput.fill(TEST_CONTRACT_ID);
+    await publicKeyInput.blur();
+
+    // Fund XLM
+    await expect(fundXlmButton).toBeEnabled();
+    await fundXlmButton.click();
+
+    await expect(
+      page.getByText(
+        `10,000 XLM was funded to ${TEST_CONTRACT_ID_SHORT} on Testnet.`,
+      ),
+    ).toBeVisible();
+
+    await expect(fundUsdcButton).toBeDisabled();
+    await expect(fundUsdcButton).toHaveText("Add trustline");
+
+    await expect(fundEurcButton).toBeDisabled();
+    await expect(fundEurcButton).toHaveText("Add trustline");
+  });
 });
 
 test.describe("[mainnet] Fund Account Page", () => {
@@ -383,7 +429,7 @@ test.describe("[mainnet] Fund Account Page", () => {
     await page.goto("http://localhost:3000/account/fund");
 
     await expect(page.locator("h1")).toHaveText(
-      "Fund a Futurenet or Testnet network account with XLM, USDC, and EURC",
+      "Fund a Futurenet or Testnet network account or contract with XLM, USDC, and EURC",
     );
   });
 });
