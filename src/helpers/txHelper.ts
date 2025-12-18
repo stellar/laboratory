@@ -281,11 +281,32 @@ const extractLastSignature = ({
   return lastSig.length === 1 ? lastSig : undefined;
 };
 
+const extractSignaturesFromTx = ({
+  txXdr,
+  networkPassphrase,
+}: {
+  txXdr: string;
+  networkPassphrase: string;
+}): { signature: string; hint: string }[] => {
+  try {
+    const tx = TransactionBuilder.fromXDR(txXdr, networkPassphrase);
+
+    return tx.signatures.map((sig) => ({
+      signature: sig.signature().toString("hex"),
+      hint: sig.hint().toString("hex"),
+    }));
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (e) {
+    return [];
+  }
+};
+
 const decoratedSigFromHexSig = (
   hexSigs: { signature: string; publicKey: string }[],
+  existingSigs: { signature: string; hint: string }[] = [],
 ) => {
   try {
-    // Check for duplicates
+    // Check for duplicate public keys
     const publicKeys = hexSigs.map((item) => item.publicKey);
     const seenKeys = new Set<string>();
 
@@ -294,6 +315,39 @@ const decoratedSigFromHexSig = (
         throw `Duplicate signer detected: ${shortenStellarAddress(key)}. Every account can only sign once.`;
       }
       seenKeys.add(key);
+    }
+
+    // Check for duplicate signatures within new signatures
+    const signatures = hexSigs.map((item) => item.signature);
+    const seenSignatures = new Set<string>();
+
+    for (const sig of signatures) {
+      if (seenSignatures.has(sig)) {
+        throw `Duplicate signature detected. The same signature cannot be used multiple times.`;
+      }
+      seenSignatures.add(sig);
+    }
+
+    // Check for duplicate signatures against existing transaction signatures
+    const existingSignatures = existingSigs.map((item) => item.signature);
+
+    for (const newSig of signatures) {
+      if (existingSignatures.includes(newSig)) {
+        throw `Signature already exists in transaction. The same signature cannot be used multiple times.`;
+      }
+    }
+
+    // Check for duplicate public keys against existing transaction signatures
+    // We need to compare signature hints (derived from public keys) with existing hints
+    for (const hexSig of hexSigs) {
+      const keypair = Keypair.fromPublicKey(hexSig.publicKey);
+      const newHint = keypair.signatureHint().toString("hex");
+
+      const existingHints = existingSigs.map((item) => item.hint);
+
+      if (existingHints.includes(newHint)) {
+        throw `Signer ${shortenStellarAddress(hexSig.publicKey)} has already signed this transaction.`;
+      }
     }
 
     const decoratedSig = hexSigs.reduce((decorated, item) => {
@@ -327,6 +381,7 @@ export const txHelper = {
   signWithLedger,
   signWithTrezor,
   extractLastSignature,
+  extractSignaturesFromTx,
   secretKeySignature,
   decoratedSigFromHexSig,
 };

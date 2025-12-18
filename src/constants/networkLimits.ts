@@ -41,7 +41,7 @@ export const TESTNET_LIMITS: NetworkLimits = {
 } as const;
 
 export const FUTURENET_LIMITS: NetworkLimits = {
-  "tx_max_instructions": 100000000,
+  "tx_max_instructions": 600000000,
   "tx_memory_limit": 41943040,
   "tx_max_footprint_entries": 100,
   "tx_max_disk_read_entries": 100,
