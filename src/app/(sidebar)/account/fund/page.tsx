@@ -205,7 +205,11 @@ export default function FundAccount() {
       });
 
       setActiveToken("");
-      fetchAccountInfo();
+
+      // Only fetch for G-address
+      if (!validate.getPublicKeyError(inputPublicKey)) {
+        fetchAccountInfo();
+      }
     }
   }, [
     addFloatNotification,
@@ -217,6 +221,7 @@ export default function FundAccount() {
   ]);
 
   useEffect(() => {
+    // Will fetch only valid G-address account info (will not trigger for C-address)
     if (
       isFetchInfoEnabled &&
       inputPublicKey &&
@@ -285,22 +290,35 @@ export default function FundAccount() {
     }
   };
 
+  const isFundButtonDisabled = () => {
+    // Enable the Fund button for Contract ID
+    if (
+      inputPublicKey &&
+      isFetchInfoEnabled &&
+      !validate.getContractIdError(inputPublicKey)
+    ) {
+      return false;
+    }
+
+    return !accountInfo || isAddTrustlineInProgress || Boolean(addTrustlineTx);
+  };
+
   return (
     <div className="Account">
       <PageCard
-        heading={`Friendbot: fund a ${network.id} network account with XLM, USDC, and EURC`}
+        heading={`Friendbot: fund a ${network.label} account or contract with XLM, USDC, and EURC`}
       >
         <div className="Account__card">
           <Text size="sm" as="div">
-            Friendbot is a Horizon API endpoint that funds your test account
-            with XLM, USDC, and EURC. To use other assets, you’ll need to add a
-            trustline manually before funding other assets.
+            Friendbot is a standalone service that funds your testnet account or
+            contract with XLM. To fund assets such as USDC and EURC, you’ll need
+            to add a trustline manually before funding.
           </Text>
 
           <Input
             id="fund-public-key-input"
             fieldSize="md"
-            label="Public Key"
+            label="Public Key or Contract ID"
             value={generatedPublicKey}
             onChange={(e) => {
               if (accountInfo) {
@@ -308,21 +326,30 @@ export default function FundAccount() {
               }
 
               setIsFetchInfoEnabled(false);
-              setGeneratedPublicKey(e.target.value);
 
-              const error = validate.getPublicKeyError(e.target.value);
+              const value = e.target.value.trim();
+              let error: string | false;
+
+              setGeneratedPublicKey(value);
+
+              if (value && value.startsWith("C")) {
+                error = validate.getContractIdError(value);
+              } else {
+                error = validate.getPublicKeyError(value);
+              }
+
               setInlineErrorMessage(error || "");
               setMuxedBaseAccount("");
               setMuxedAccountMsg("");
 
               if (!error) {
-                handleMuxedAccount(e.target.value);
+                handleMuxedAccount(value);
               }
             }}
             onBlur={() => {
               setIsFetchInfoEnabled(true);
             }}
-            placeholder="Ex: GCEXAMPLE5HWNK4AYSTEQ4UWDKHTCKADVS2AHF3UI2ZMO3DPUSM6Q4UG"
+            placeholder="Ex: GCEX…Q4UG or CDLZ…CYSC"
             error={inlineErrorMessage}
             rightElement={
               <InputSideElement
@@ -378,7 +405,11 @@ export default function FundAccount() {
                 const hasTrustline = Boolean(accountBalances?.[asset]);
 
                 return (
-                  <div key={t.id} className="Account__fundTokens__item">
+                  <div
+                    key={t.id}
+                    className="Account__fundTokens__item"
+                    data-testid="fund-account-token"
+                  >
                     <div className="Account__fundTokens__item__icon">
                       <Image
                         src={`/images/token-icon-${t.id}.png`}
@@ -405,11 +436,7 @@ export default function FundAccount() {
                       <Button
                         variant="secondary"
                         size="md"
-                        disabled={
-                          !accountInfo ||
-                          isAddTrustlineInProgress ||
-                          Boolean(addTrustlineTx)
-                        }
+                        disabled={isFundButtonDisabled()}
                         isLoading={
                           isAccountLoading ||
                           (isFriendBotFundLoading && t.id === activeToken)

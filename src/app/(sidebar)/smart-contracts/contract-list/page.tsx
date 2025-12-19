@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Text } from "@stellar/design-system";
 
 import { TabView } from "@/components/TabView";
@@ -18,7 +18,18 @@ export default function ContractList() {
 
   type ContractListTabId = "popular" | "recent";
 
-  const [activeTab, setActiveTab] = useState<ContractListTabId>("popular");
+  // Default to "recent" on testnet, "popular" on mainnet
+  const [activeTab, setActiveTab] = useState<ContractListTabId>(
+    network.id === "testnet" ? "recent" : "popular",
+  );
+
+  useEffect(() => {
+    if (network.id === "testnet") {
+      setActiveTab("recent");
+    } else if (network.id === "mainnet") {
+      setActiveTab("popular");
+    }
+  }, [network.id]);
 
   const renderContent = () => {
     if (network.id === "futurenet") {
