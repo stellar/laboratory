@@ -358,7 +358,7 @@ export const ContractInfo = ({
                 />
               ) : (
                 <NoDataMessage>
-                  Contract storage data is not available for selected network.
+                  Contract storage is not available for selected network.
                 </NoDataMessage>
               ),
               isDisabled: !isDataLoaded,
