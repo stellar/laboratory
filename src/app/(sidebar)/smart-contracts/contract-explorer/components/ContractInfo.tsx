@@ -1,5 +1,6 @@
 import { useState } from "react";
 import {
+  Alert,
   Avatar,
   Card,
   Icon,
@@ -67,7 +68,7 @@ export const ContractInfo = ({
     "contract-contract-spec",
   );
 
-  const isDataLoaded = Boolean(infoData);
+  const isDataLoaded = Boolean(wasmHash);
 
   const getRepoData = () => ({
     sourceRepo: isSacType
@@ -266,6 +267,14 @@ export const ContractInfo = ({
     />
   );
 
+  const NoDataMessage = ({ children }: { children: React.ReactNode }) => {
+    return (
+      <Alert variant="warning" placement="inline">
+        {children}
+      </Alert>
+    );
+  };
+
   return (
     <Box gap="lg">
       <Card>
@@ -347,7 +356,11 @@ export const ContractInfo = ({
                   totalEntriesCount={infoData.storage_entries}
                   isSourceStellarExpert={true}
                 />
-              ) : null,
+              ) : (
+                <NoDataMessage>
+                  Contract storage is not available for selected network.
+                </NoDataMessage>
+              ),
               isDisabled: !isDataLoaded,
             }}
             tab5={{
@@ -377,7 +390,11 @@ export const ContractInfo = ({
                   networkId={network.id}
                   isSourceStellarExpert={true}
                 />
-              ) : null,
+              ) : (
+                <NoDataMessage>
+                  Version history is not available for selected network.
+                </NoDataMessage>
+              ),
               isDisabled: !isDataLoaded || isSacType,
             }}
             activeTabId={activeTab}

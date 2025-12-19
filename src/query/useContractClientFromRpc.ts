@@ -18,6 +18,7 @@ export const useContractClientFromRpc = ({
           contractId,
           networkPassphrase,
           rpcUrl,
+          allowHttp: new URL(rpcUrl).hostname === "localhost",
         });
 
         return client;
