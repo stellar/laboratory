@@ -420,7 +420,14 @@ export const SignTransactionXdr = ({
     let errorMsg = "";
 
     if (!isClear) {
-      const txSig = txHelper.decoratedSigFromHexSig(sigInputs);
+      const existingSigs = xdrToSign
+        ? txHelper.extractSignaturesFromTx({
+            txXdr: xdrToSign,
+            networkPassphrase: network.passphrase,
+          })
+        : [];
+
+      const txSig = txHelper.decoratedSigFromHexSig(sigInputs, existingSigs);
 
       signature = txSig.signature;
       successMsg = txSig.successMsg || "";

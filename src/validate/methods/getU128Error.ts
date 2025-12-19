@@ -1,14 +1,17 @@
 import { validate } from "@/validate";
 
+const U128_MAX = BigInt("340282366920938463463374607431768211455");
+const U128_PATTERN = /^([1-9][0-9]*|0)$/;
+
 // Primitive Definition U128 comes from
 // https://github.com/stellar/js-stellar-sdk/blob/master/src/contract/spec.ts#L122-L127
 export const getU128Error = (value: string, isRequired?: boolean) => {
   if (!value) {
-    if (isRequired) {
-      return "This field is required.";
-    } else {
-      return false;
-    }
+    return isRequired ? "This field is required." : false;
+  }
+
+  if (value.length > 39) {
+    return "Value must be between 1 and 39 characters long";
   }
 
   const error = validate.getPositiveIntError(value);
@@ -17,20 +20,16 @@ export const getU128Error = (value: string, isRequired?: boolean) => {
     return error;
   }
 
-  // Check pattern for U128
-  const u128Pattern = /^([1-9][0-9]*|0)$/;
-  if (!u128Pattern.test(value)) {
+  if (!U128_PATTERN.test(value)) {
     return "Value must be a valid u128 integer";
   }
 
-  // Check length constraints
-  if (value.length < 1 || value.length > 39) {
-    return "Value must be between 1 and 39 characters long";
-  }
-
   try {
-    // Ensure it can be parsed as a BigInt
-    BigInt(value);
+    const numValue = BigInt(value); // Parse once
+
+    if (numValue > U128_MAX) {
+      return "Value exceeds maximum u128 value (2^128 - 1)";
+    }
   } catch {
     return "Value must be a valid u128 integer";
   }
