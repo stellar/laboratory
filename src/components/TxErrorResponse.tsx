@@ -126,7 +126,12 @@ export const RpcErrorResponse = ({ error }: { error: SubmitRpcError }) => {
 
   return (
     <Card>
-      <Box gap="xs" addlClassName="ValidationResponseCard" data-variant="error">
+      <Box
+        gap="xs"
+        addlClassName="ValidationResponseCard"
+        data-variant="error"
+        data-testid="submit-tx-rpc-error"
+      >
         <>
           <Text
             as="div"

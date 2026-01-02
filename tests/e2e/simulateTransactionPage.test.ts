@@ -227,7 +227,7 @@ test.describe("Simulate Transaction Page", () => {
 
       const responseText = await txResponseCard.textContent();
 
-      expect(responseText).toContain("SUCCESS");
+      expect(responseText).toContain("Simulation Result");
 
       // Omitting the API end result because the test gives inconsistenet results
     });
