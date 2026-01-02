@@ -790,7 +790,7 @@ export const SimulatedResponse = ({
       <div data-testid="invoke-contract-simulate-tx-response">
         <CodeEditor
           isAutoHeight
-          maxHeight="30"
+          maxHeightInRem="30"
           title="Simulation Response"
           value={JSON.stringify(json, null, 2)}
           selectedLanguage={selectedLanguage}
