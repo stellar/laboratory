@@ -588,7 +588,7 @@ export default function SubmitTransaction() {
                 >
                   Transaction Envelope
                 </Text>
-                <div className="PageBody__content PageBody__scrollable">
+                <div className="PageBody__content PageBody__content--border-only PageBody__scrollable">
                   <PrettyJsonTransaction
                     json={parseJsonString(xdrJson.jsonString)}
                     xdr={blob}

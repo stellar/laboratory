@@ -9,6 +9,10 @@
   height: var(--CodeEditor-height);
   position: relative;
 
+  &--error {
+    border-color: var(--sds-clr-red-11);
+  }
+
   &--expanded {
     position: fixed;
     top: 8px;

@@ -28,8 +28,7 @@ import { ErrorText } from "@/components/ErrorText";
 import { JsonSchemaRenderer } from "@/components/SmartContractJsonSchema/JsonSchemaRenderer";
 import { TransactionSuccessCard } from "@/components/TransactionSuccessCard";
 import { WalletKitContext } from "@/components/WalletKit/WalletKitContextProvider";
-import { TabView } from "@/components/TabView";
-import { PrettyJson } from "@/components/PrettyJson";
+import { CodeEditor, SupportedLanguage } from "@/components/CodeEditor";
 
 import { TransactionBuildParams } from "@/store/createStore";
 import { useStore } from "@/store/useStore";
@@ -588,40 +587,21 @@ export const InvokeContractForm = ({
   const renderResponse = () => {
     if (jsonResponse?.fullResponse || base64Response?.fullResponse) {
       return (
-        <TabView
-          tab1={{
-            id: "json",
-            label: "JSON",
-            content: jsonResponse?.fullResponse && (
-              <SimulatedResponse
-                result={jsonResponse}
-                isFullResponseEnabled={isFullResponseEnabled}
-              />
-            ),
-            isDisabled: !jsonResponse?.fullResponse,
-          }}
-          tab2={{
-            id: "base64",
-            label: "Base64",
-            content: base64Response?.fullResponse && (
-              <SimulatedResponse
-                result={base64Response}
-                isFullResponseEnabled={isFullResponseEnabled}
-              />
-            ),
-            isDisabled: !base64Response?.fullResponse,
-          }}
-          activeTabId={xdrFormat}
-          onTabChange={(id) => {
-            setXdrFormat(id);
+        <SimulatedResponse
+          jsonResult={jsonResponse}
+          base64Result={base64Response}
+          isFullResponseEnabled={isFullResponseEnabled}
+          xdrFormat={xdrFormat}
+          onXdrFormatChange={(format: string) => {
+            setXdrFormat(format);
             trackEvent(
               TrackingEvent.SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SELECTED_XDR_FORMAT,
               {
-                xdrFormat: id,
+                xdrFormat: format,
               },
             );
           }}
-          rightElement={
+          isFullResponseToggle={
             <FullResponseToggle
               isChecked={isFullResponseEnabled}
               onChange={setIsFullResponseEnabled}
@@ -776,27 +756,52 @@ export const FullResponseToggle = ({
 };
 
 export const SimulatedResponse = ({
-  result,
+  jsonResult,
+  base64Result,
   isFullResponseEnabled = false,
+  xdrFormat,
+  onXdrFormatChange,
+  isFullResponseToggle,
 }: {
-  result: SimulatedResponseType;
+  jsonResult: SimulatedResponseType | null;
+  base64Result: SimulatedResponseType | null;
   isFullResponseEnabled: boolean;
+  xdrFormat: string;
+  onXdrFormatChange: (format: string) => void;
+  isFullResponseToggle?: React.ReactNode;
 }) => {
+  const result = xdrFormat === "json" ? jsonResult : base64Result;
+
+  if (!result) return null;
+
   const hasSimulationError = Api.isSimulationError(result.fullResponse);
-  const errorClass = hasSimulationError ? "PageBody__content--error" : "";
 
   const json =
     isFullResponseEnabled || hasSimulationError
       ? result.fullResponse
       : (result?.resultOnly && { results: result?.resultOnly }) || {};
 
+  // Map xdrFormat to SupportedLanguage ("base64" -> "xdr")
+  const selectedLanguage: SupportedLanguage =
+    xdrFormat === "base64" ? "xdr" : (xdrFormat as SupportedLanguage);
+
   return (
     <Box gap="md">
-      <div
-        data-testid="invoke-contract-simulate-tx-response"
-        className={`PageBody__content PageBody__scrollable ${errorClass}`}
-      >
-        <PrettyJson json={json} isCodeWrapped={true} />
+      <div data-testid="invoke-contract-simulate-tx-response">
+        <CodeEditor
+          isAutoHeight
+          maxHeight="30"
+          title="Simulation Response"
+          value={JSON.stringify(json, null, 2)}
+          selectedLanguage={selectedLanguage}
+          languages={["json", "xdr"]}
+          onLanguageChange={(newLanguage) => {
+            // Map back to the original format names
+            const format = newLanguage === "xdr" ? "base64" : newLanguage;
+            onXdrFormatChange(format);
+          }}
+          customEl={isFullResponseToggle}
+        />
       </div>
     </Box>
   );

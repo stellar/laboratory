@@ -662,20 +662,10 @@ export default function Endpoints() {
       return (
         <>
           <div className="Endpoints__txTextarea">
-            <PrettyJsonTextarea
-              json={renderedProps}
-              label="Payload"
-              isCodeWrapped={isCodeWrapped}
-            />
+            <PrettyJsonTextarea json={renderedProps} label="Payload" />
           </div>
-          <Box gap="md" direction="row" justify="space-between" align="center">
-            <JsonCodeWrapToggle
-              isChecked={isCodeWrapped}
-              onChange={(isChecked) => {
-                setIsCodeWrapped(isChecked);
-              }}
-            />
 
+          <Box gap="md" direction="row" justify="right" align="center">
             <CopyJsonPayloadButton
               jsonString={stringify(renderedProps, null, 2) || ""}
             />
@@ -1057,7 +1047,7 @@ export default function Endpoints() {
                 </Text>
 
                 <div
-                  className={`PageBody__content PageBody__scrollable ${endpointData.isError ? "PageBody__content--error" : ""}`}
+                  className={`PageBody__content PageBody__content--border-only PageBody__scrollable ${endpointData.isError ? "PageBody__content--error" : ""}`}
                 >
                   <EndpointsJsonResponse
                     json={endpointData.json}
