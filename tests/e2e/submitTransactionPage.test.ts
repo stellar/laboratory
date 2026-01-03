@@ -254,7 +254,7 @@ test.describe("Submit Transaction Page", () => {
       ).toBeVisible();
 
       await expect(
-        errorValidationCard.locator(".TxResponse__value"),
+        errorValidationCard.locator(".ValidationResponseCard__title"),
       ).toBeVisible();
     });
   });

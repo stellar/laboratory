@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 import { Box } from "@/components/layout/Box";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
-import { PrettyJson } from "@/components/PrettyJson";
+import { CodeEditor } from "@/components/CodeEditor";
 import { PageCard } from "@/components/layout/PageCard";
 import { RadioPicker } from "@/components/RadioPicker";
 
@@ -190,11 +190,12 @@ export default function SimulateTransaction() {
 
         <>
           {simulateTxData ? (
-            <div
-              data-testid="simulate-tx-response"
-              className={`PageBody__content PageBody__scrollable ${simulateTxData?.result?.error ? "PageBody__content--error" : ""}`}
-            >
-              <PrettyJson json={simulateTxData} />
+            <div data-testid="simulate-tx-response">
+              <CodeEditor
+                title="Simulation Result"
+                value={JSON.stringify(simulateTxData, null, 2)}
+                selectedLanguage="json"
+              />
             </div>
           ) : null}
         </>
