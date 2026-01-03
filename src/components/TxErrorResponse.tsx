@@ -106,19 +106,12 @@ export const RpcErrorResponse = ({ error }: { error: SubmitRpcError }) => {
           />
         ) : null}
         {diagnosticEvents ? (
-          <Box gap="xs">
-            <TxResponse
-              label="Diagnostic events:"
-              item={
-                <CodeEditor
-                  customCss="CodeEditor--error"
-                  title="Diagnostic Events"
-                  value={JSON.stringify(diagnosticEvents, null, 2)}
-                  selectedLanguage="json"
-                />
-              }
-            />
-          </Box>
+          <CodeEditor
+            isAutoHeight
+            customCss="CodeEditor--error"
+            value={JSON.stringify(diagnosticEvents, null, 2)}
+            selectedLanguage="json"
+          />
         ) : null}
       </>
     );
