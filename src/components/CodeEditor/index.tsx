@@ -11,7 +11,7 @@ import "./styles.scss";
 
 export type SupportedLanguage = "json" | "xdr" | "text" | "interface";
 
-const LINE_HEIGHT_AND_PADDING_IN_PX = 20;
+const CODE_EDITOR_LINE_HEIGHT_PX = 18;
 
 type CodeEditorProps = {
   title?: string;
@@ -78,14 +78,19 @@ export const CodeEditor = ({
   };
 
   const handleEditorDidMount: OnMount = (editor) => {
-    if (!isAutoHeight) return; 
+    if (!isAutoHeight) {
+      return;
+    }
+
     const model = editor.getModel();
     const lineCount = model?.getLineCount() || 0;
     const titleHeight = title ? headerHeight : 0;
 
     if (isAutoHeight) {
       const calculatedHeight =
-        lineCount * LINE_HEIGHT_AND_PADDING_IN_PX + titleHeight;
+        lineCount * CODE_EDITOR_LINE_HEIGHT_PX +
+        CODE_EDITOR_LINE_HEIGHT_PX +
+        titleHeight;
 
       setAutoHeight(`${calculatedHeight}`);
     }
@@ -112,7 +117,9 @@ export const CodeEditor = ({
     }
 
     if (heightInRem) {
-      return { "--CodeEditor-height": `${heightInRem}rem` } as React.CSSProperties;
+      return {
+        "--CodeEditor-height": `${heightInRem}rem`,
+      } as React.CSSProperties;
     }
 
     return {};
