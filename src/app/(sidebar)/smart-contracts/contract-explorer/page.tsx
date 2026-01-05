@@ -21,7 +21,6 @@ import { Box } from "@/components/layout/Box";
 import { PageCard } from "@/components/layout/PageCard";
 import { MessageField } from "@/components/MessageField";
 import { TabView } from "@/components/TabView";
-import { SwitchNetworkButtons } from "@/components/SwitchNetworkButtons";
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
@@ -77,7 +76,7 @@ export default function ContractExplorer() {
   });
 
   const wasmHash = contractData?.wasmHash || "";
-  const isDataLoaded = Boolean(contractInfoData);
+  const isDataLoaded = Boolean(contractData);
 
   const {
     data: wasmData,
@@ -140,12 +139,8 @@ export default function ContractExplorer() {
     }
   };
 
-  const isCurrentNetworkSupported = ["mainnet", "testnet"].includes(network.id);
   const isLoadContractDisabled =
-    !isCurrentNetworkSupported ||
-    !network.rpcUrl ||
-    !contractIdInput ||
-    Boolean(contractIdInputError);
+    !network.rpcUrl || !contractIdInput || Boolean(contractIdInputError);
 
   const isSacType = contractData?.contractType
     ? contractData.contractType === "contractExecutableStellarAsset"
@@ -164,10 +159,10 @@ export default function ContractExplorer() {
       invokeContractSpec = contractClient?.spec;
     }
 
-    return contractInfoData && invokeContractSpec ? (
+    return invokeContractSpec ? (
       <InvokeContract
         contractSpec={invokeContractSpec}
-        contractId={contractInfoData.contract}
+        contractId={contractIdInput}
         isLoading={isFetchingContractClient}
         contractClientError={contractClient?.spec && contractClientError}
       />
@@ -192,65 +187,53 @@ export default function ContractExplorer() {
   };
 
   const renderButtons = () => {
-    if (isCurrentNetworkSupported) {
-      return (
-        <Box gap="sm" direction="row" wrap="wrap">
-          <Button
-            size="md"
-            variant="secondary"
-            type="submit"
-            disabled={isLoadContractDisabled}
-            isLoading={isLoading}
-          >
-            Load contract
-          </Button>
-
-          <>
-            {contractIdInput ? (
-              <>
-                <Button
-                  disabled={isLoadContractDisabled || isLoading}
-                  size="md"
-                  variant="tertiary"
-                  icon={<Icon.Save01 />}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setIsSaveModalVisible(true);
-                  }}
-                >
-                  Save Contract ID
-                </Button>
-
-                <Button
-                  size="md"
-                  variant="error"
-                  icon={<Icon.RefreshCw01 />}
-                  onClick={() => {
-                    resetFetchContractInfo();
-                    setContractIdInput("");
-
-                    trackEvent(
-                      TrackingEvent.SMART_CONTRACTS_EXPLORER_CLEAR_CONTRACT,
-                    );
-                  }}
-                  disabled={isLoading}
-                >
-                  Clear
-                </Button>
-              </>
-            ) : null}
-          </>
-        </Box>
-      );
-    }
-
     return (
-      <Box gap="sm" direction="row">
-        <SwitchNetworkButtons
-          includedNetworks={["testnet", "mainnet"]}
-          buttonSize="md"
-          page="contract explorer"
-        />
+      <Box gap="sm" direction="row" wrap="wrap">
+        <Button
+          size="md"
+          variant="secondary"
+          type="submit"
+          disabled={isLoadContractDisabled}
+          isLoading={isLoading}
+        >
+          Load contract
+        </Button>
+
+        <>
+          {contractIdInput ? (
+            <>
+              <Button
+                disabled={isLoadContractDisabled || isLoading}
+                size="md"
+                variant="tertiary"
+                icon={<Icon.Save01 />}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsSaveModalVisible(true);
+                }}
+              >
+                Save Contract ID
+              </Button>
+
+              <Button
+                size="md"
+                variant="error"
+                icon={<Icon.RefreshCw01 />}
+                onClick={() => {
+                  resetFetchContractInfo();
+                  setContractIdInput("");
+
+                  trackEvent(
+                    TrackingEvent.SMART_CONTRACTS_EXPLORER_CLEAR_CONTRACT,
+                  );
+                }}
+                disabled={isLoading}
+              >
+                Clear
+              </Button>
+            </>
+          ) : null}
+        </>
       </Box>
     );
   };
@@ -289,11 +272,6 @@ export default function ContractExplorer() {
 
                 setContractIdInputError(error || "");
               }}
-              note={
-                isCurrentNetworkSupported
-                  ? ""
-                  : "You must switch your network to Mainnet or Testnet in order to see contract info."
-              }
             />
 
             <>{renderButtons()}</>
@@ -343,9 +321,7 @@ export default function ContractExplorer() {
               id: "contract-invoke",
               label: "Invoke Contract",
               content: renderContractInvokeContent(),
-              isDisabled:
-                !isDataLoaded ||
-                (!contractInfoData && !(contractClient?.spec || isSacType)),
+              isDisabled: !isDataLoaded || !(contractClient?.spec || isSacType),
             }}
             activeTabId={contractActiveTab}
             onTabChange={(tabId) => {
