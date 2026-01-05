@@ -731,6 +731,11 @@
     background-color: var(--sds-clr-gray-03);
     border-radius: pxToRem(8px);
 
+    &--border-only {
+      background-color: transparent;
+      border: 1px solid var(--sds-clr-gray-06);
+    }
+
     &--error {
       border: 1px solid var(--sds-clr-red-06);
     }

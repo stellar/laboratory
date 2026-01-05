@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Button, CopyText, Icon, Select } from "@stellar/design-system";
-import MonacoEditor, { useMonaco } from "@monaco-editor/react";
+import MonacoEditor, { useMonaco, type OnMount } from "@monaco-editor/react";
 
 import { useStore } from "@/store/useStore";
 import { Box } from "@/components/layout/Box";
@@ -11,8 +11,10 @@ import "./styles.scss";
 
 export type SupportedLanguage = "json" | "xdr" | "text" | "interface";
 
+const CODE_EDITOR_LINE_HEIGHT_PX = 18;
+
 type CodeEditorProps = {
-  title: string;
+  title?: string;
   value: string;
   selectedLanguage: SupportedLanguage;
   fileName?: string;
@@ -22,6 +24,9 @@ type CodeEditorProps = {
   onLanguageChange?: (newLanguage: SupportedLanguage) => void;
   heightInRem?: string;
   customEl?: React.ReactNode;
+  customCss?: string;
+  isAutoHeight?: boolean;
+  maxHeightInRem?: string;
 };
 
 export const CodeEditor = ({
@@ -35,6 +40,9 @@ export const CodeEditor = ({
   onLanguageChange,
   heightInRem,
   customEl,
+  customCss,
+  isAutoHeight = false,
+  maxHeightInRem,
 }: CodeEditorProps) => {
   const { theme } = useStore();
   const monaco = useMonaco();
@@ -45,6 +53,8 @@ export const CodeEditor = ({
 
   // Default header height is 43px
   const headerHeight = headerEl?.current?.clientHeight || 43;
+
+  const [autoHeight, setAutoHeight] = useState<string | null>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined" && monaco) {
@@ -67,6 +77,25 @@ export const CodeEditor = ({
     }
   };
 
+  const handleEditorDidMount: OnMount = (editor) => {
+    if (!isAutoHeight) {
+      return;
+    }
+
+    const model = editor.getModel();
+    const lineCount = model?.getLineCount() || 0;
+    const titleHeight = title ? headerHeight : 0;
+
+    if (isAutoHeight) {
+      const calculatedHeight =
+        lineCount * CODE_EDITOR_LINE_HEIGHT_PX +
+        CODE_EDITOR_LINE_HEIGHT_PX +
+        titleHeight;
+
+      setAutoHeight(`${calculatedHeight}`);
+    }
+  };
+
   const renderTitle = () => {
     if (infoText) {
       return <WithInfoText infoText={infoText}>{title}</WithInfoText>;
@@ -79,94 +108,111 @@ export const CodeEditor = ({
     return title;
   };
 
-  const customStyle = {
-    ...(heightInRem ? { "--CodeEditor-height": `${heightInRem}rem` } : {}),
-  } as React.CSSProperties;
+  const getCustomStyle = () => {
+    if (autoHeight) {
+      return {
+        "--CodeEditor-height": `${autoHeight}px`,
+        maxHeight: maxHeightInRem ? `${maxHeightInRem}rem` : "none",
+      } as React.CSSProperties;
+    }
+
+    if (heightInRem) {
+      return {
+        "--CodeEditor-height": `${heightInRem}rem`,
+      } as React.CSSProperties;
+    }
+
+    return {};
+  };
+
+  const customStyle = getCustomStyle();
 
   return (
     <div
-      className={`CodeEditor ${isExpanded ? "CodeEditor--expanded" : ""}`}
+      className={`CodeEditor ${isExpanded ? "CodeEditor--expanded" : ""} ${customCss ? customCss : ""}`}
       style={customStyle}
     >
-      <div className="CodeEditor__header" ref={headerEl}>
-        {/* Title */}
-        <div className="CodeEditor__header__title">{renderTitle()}</div>
+      {title ? (
+        <div className="CodeEditor__header" ref={headerEl}>
+          {/* Title */}
+          <div className="CodeEditor__header__title">{renderTitle()}</div>
 
-        {/* Actions */}
-        <Box
-          gap="xs"
-          direction="row"
-          align="center"
-          justify="end"
-          addlClassName="CodeEditor__actions"
-        >
-          {customEl ?? null}
-          {languages && onLanguageChange ? (
-            <Select
-              id="code-editor-languages"
-              fieldSize="sm"
-              onChange={(e) =>
-                onLanguageChange(e.target.value as SupportedLanguage)
-              }
-              value={selectedLanguage}
-            >
-              {languages.map((l) => (
-                <option value={l} key={`ce-lang-${l}`}>
-                  {l.toUpperCase()}
-                </option>
-              ))}
-            </Select>
-          ) : null}
+          {/* Actions */}
+          <Box
+            gap="xs"
+            direction="row"
+            align="center"
+            justify="end"
+            addlClassName="CodeEditor__actions"
+          >
+            {customEl ?? null}
+            {languages && onLanguageChange ? (
+              <Select
+                id="code-editor-languages"
+                fieldSize="sm"
+                onChange={(e) =>
+                  onLanguageChange(e.target.value as SupportedLanguage)
+                }
+                value={selectedLanguage}
+              >
+                {languages.map((l) => (
+                  <option value={l} key={`ce-lang-${l}`}>
+                    {l.toUpperCase()}
+                  </option>
+                ))}
+              </Select>
+            ) : null}
 
-          {fileName ? (
+            {fileName ? (
+              <Button
+                variant="tertiary"
+                size="sm"
+                icon={<Icon.Download01 />}
+                title="Download"
+                onClick={(e) => {
+                  e.preventDefault();
+
+                  downloadFile({
+                    value,
+                    fileType: "application/json",
+                    fileName,
+                    fileExtension: getFileExtension(),
+                  });
+                }}
+              ></Button>
+            ) : null}
+
+            <CopyText textToCopy={value}>
+              <Button
+                variant="tertiary"
+                size="sm"
+                icon={<Icon.Copy01 />}
+                title="Copy"
+                onClick={(e) => {
+                  e.preventDefault();
+                }}
+              ></Button>
+            </CopyText>
+
             <Button
               variant="tertiary"
               size="sm"
-              icon={<Icon.Download01 />}
-              title="Download"
+              icon={isExpanded ? <Icon.X /> : <Icon.Expand06 />}
+              title={isExpanded ? "Close" : "Expand"}
               onClick={(e) => {
                 e.preventDefault();
-
-                downloadFile({
-                  value,
-                  fileType: "application/json",
-                  fileName,
-                  fileExtension: getFileExtension(),
-                });
+                setIsExpanded(!isExpanded);
               }}
             ></Button>
-          ) : null}
-
-          <CopyText textToCopy={value}>
-            <Button
-              variant="tertiary"
-              size="sm"
-              icon={<Icon.Copy01 />}
-              title="Copy"
-              onClick={(e) => {
-                e.preventDefault();
-              }}
-            ></Button>
-          </CopyText>
-
-          <Button
-            variant="tertiary"
-            size="sm"
-            icon={isExpanded ? <Icon.X /> : <Icon.Expand06 />}
-            title={isExpanded ? "Close" : "Expand"}
-            onClick={(e) => {
-              e.preventDefault();
-              setIsExpanded(!isExpanded);
-            }}
-          ></Button>
-        </Box>
-      </div>
+          </Box>
+        </div>
+      ) : null}
 
       {/* Content / editor */}
       <div
         className="CodeEditor__content"
         // Container must have set height
-        style={{ height: `calc(100% - ${headerHeight}px)` }}
+        style={{ height: title ? `calc(100% - ${headerHeight}px)` : "100%" }}
       >
         <MonacoEditor
           defaultLanguage="javascript"
@@ -175,6 +221,7 @@ export const CodeEditor = ({
             selectedLanguage === "interface" ? "rust" : selectedLanguage
           }
           value={value}
+          onMount={handleEditorDidMount}
           options={{
             minimap: { enabled: false },
             readOnly: true,

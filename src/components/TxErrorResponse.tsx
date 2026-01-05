@@ -2,11 +2,12 @@ import {
   AccountRequiresMemoError,
   BadResponseError,
 } from "@stellar/stellar-sdk";
+import { Card, Text } from "@stellar/design-system";
 
 import { Box } from "@/components/layout/Box";
 import { TxResponse } from "@/components/TxResponse";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
-import { PrettyJson } from "@/components/PrettyJson";
+import { CodeEditor } from "@/components/CodeEditor";
 
 import {
   SubmitHorizonError,
@@ -97,30 +98,45 @@ export const RpcErrorResponse = ({ error }: { error: SubmitRpcError }) => {
           </Box>
         ) : null}
         {errorResult ? (
-          <Box gap="xs" data-testid="submit-tx-rpc-error">
-            <TxResponse
-              label="Error result:"
-              item={<PrettyJson json={errorResult} />}
-            />
-          </Box>
+          <CodeEditor
+            isAutoHeight
+            customCss="CodeEditor--error"
+            value={JSON.stringify(errorResult, null, 2)}
+            selectedLanguage="json"
+          />
         ) : null}
         {diagnosticEvents ? (
-          <Box gap="xs">
-            <TxResponse
-              label="Diagnostic events:"
-              item={<PrettyJson json={diagnosticEvents} />}
-            />
-          </Box>
+          <CodeEditor
+            isAutoHeight
+            customCss="CodeEditor--error"
+            value={JSON.stringify(diagnosticEvents, null, 2)}
+            selectedLanguage="json"
+          />
         ) : null}
       </>
     );
   };
 
   return (
-    <ValidationResponseCard
-      variant="error"
-      title={getTitle(error.status)}
-      response={errorFields()}
-    />
+    <Card>
+      <Box
+        gap="xs"
+        addlClassName="ValidationResponseCard"
+        data-variant="error"
+        data-testid="submit-tx-rpc-error"
+      >
+        <>
+          <Text
+            as="div"
+            size="sm"
+            weight="medium"
+            addlClassName="ValidationResponseCard__title"
+          >
+            {getTitle(error.status)}
+          </Text>
+          {errorFields()}
+        </>
+      </Box>
+    </Card>
   );
 };

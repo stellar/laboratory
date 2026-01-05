@@ -1,11 +1,22 @@
 @use "../../styles/utils.scss" as *;
 
 .PrettyJson {
-  font-family: var(--sds-ff-monospace);
-  font-size: pxToRem(14px);
-  line-height: pxToRem(20px);
-  font-weight: var(--sds-fw-medium);
-  letter-spacing: -0.5px;
+  --PrettyJson-bracket-color: #0431fa;
+  --PrettyJson-nested-bracket-color: #319331;
+  --PrettyJson-string-color: #a31515;
+
+  // Same style as Monaco Editor in <CodeEditor/>
+  font-family: Menlo, Monaco, "Courier New", monospace;
+  font-size: pxToRem(12px);
+  line-height: pxToRem(18px);
+  font-weight: var(--sds-fw-regular);
+  letter-spacing: normal;
+
+  .sds-theme-dark & {
+    --PrettyJson-nested-bracket-color: #da70d6;
+    --PrettyJson-string-color: #ce9178;
+    --PrettyJson-bracket-color: #ffd700;
+  }
 
   &__loaderContainer {
     display: flex;
@@ -15,6 +26,9 @@
   &__nested {
     padding-left: pxToRem(16px);
 
+    .PrettyJson__bracket {
+      color: var(--PrettyJson-nested-bracket-color);
+    }
     // Show "Signatures Checked" message only if signatures are validated
     &[data-is-custom-key] {
       &:has(.PrettyJson--success),
@@ -78,9 +92,12 @@
   &__value,
   &__comma,
   &__quotes,
-  &__bracket,
   &__key {
-    color: var(--sds-clr-gray-12);
+    color: var(--PrettyJson-string-color);
+  }
+
+  &__bracket {
+    color: var(--PrettyJson-bracket-color);
   }
 
   &__key {
