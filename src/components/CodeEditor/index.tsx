@@ -78,6 +78,7 @@ export const CodeEditor = ({
   };
 
   const handleEditorDidMount: OnMount = (editor) => {
+    if (!isAutoHeight) return; 
     const model = editor.getModel();
     const lineCount = model?.getLineCount() || 0;
     const titleHeight = title ? headerHeight : 0;
