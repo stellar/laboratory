@@ -147,16 +147,29 @@ export const NetworkSelector = () => {
             savedPreviousNetwork?.passphrase || networkPreset?.passphrase || "",
         } as Network;
 
+        const mainnetPreset = getNetworkById("mainnet");
+
         // Loaded network settings
-        const newNetwork = {
-          ...network,
-          label: networkPreset?.label,
-        } as Network;
+        const newNetwork =
+          network.passphrase === mainnetPreset?.passphrase
+            ? {
+                ...network,
+                ...mainnetPreset,
+                rpcUrl: network.rpcUrl,
+                horizonUrl: network.horizonUrl,
+              }
+            : ({
+                ...network,
+                label: networkPreset?.label,
+                // Use the default passphrase for Testnet, and Futurenet.
+                // Override the passphrase provided in the URL.
+                passphrase: networkPreset?.passphrase || network.passphrase,
+              } as Network);
 
         // Only on Mainnet with a new network, temporarily set network settings
         // (user will approve new settings in the modal)
         if (
-          network.id === "mainnet" &&
+          newNetwork.id === "mainnet" ||
           !isSameNetwork(currentNetwork, newNetwork)
         ) {
           setActiveNetwork(currentNetwork);
