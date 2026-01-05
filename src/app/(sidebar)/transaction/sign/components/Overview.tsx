@@ -453,7 +453,14 @@ export const Overview = () => {
     let errorMsg = "";
 
     if (!isClear) {
-      const txSig = txHelper.decoratedSigFromHexSig(sigInputs);
+      const existingSigs = sign.importXdr
+        ? txHelper.extractSignaturesFromTx({
+            txXdr: sign.importXdr,
+            networkPassphrase: network.passphrase,
+          })
+        : [];
+
+      const txSig = txHelper.decoratedSigFromHexSig(sigInputs, existingSigs);
 
       signature = txSig.signature;
       successMsg = txSig.successMsg || "";

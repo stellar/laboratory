@@ -79,14 +79,26 @@ export const fetchTxSignatures = async ({
         const res = await fetch(`${networkUrl}/accounts/${srcAccount}`, {
           headers,
         });
+
+        if (!res.ok) {
+          // Showing console warning for accounts that don’t exist
+          if (res.status !== 404) {
+            console.warn(
+              `Failed to fetch account ${srcAccount}: HTTP ${res.status}`,
+            );
+          }
+          continue;
+        }
+
         const resJson = await res.json();
 
         if (sourceAccounts[srcAccount] && resJson?.signers) {
           sourceAccounts[srcAccount] = resJson.signers;
         }
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {
-        // Do nothing
+        // Console warning for errors, we don't want to interrupt checking other
+        // signatures
+        console.warn(`Error fetching account ${srcAccount}:`, e);
       }
     }
 
@@ -140,7 +152,7 @@ export const fetchTxSignatures = async ({
       return result;
     }, []);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  } catch (e) {
-    return [];
+  } catch (e: any) {
+    throw e.message;
   }
 };

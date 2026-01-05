@@ -24,7 +24,7 @@ export const PrettyJsonTransaction = ({
   isCodeWrapped,
 }: PrettyJsonTransactionProps) => {
   const { network } = useStore();
-  const { data, isFetching, isLoading, refetch } = useCheckTxSignatures({
+  const { data, error, isFetching, isLoading, refetch } = useCheckTxSignatures({
     xdr,
     networkPassphrase: network.passphrase,
     networkUrl: network.horizonUrl,
@@ -115,8 +115,20 @@ export const PrettyJsonTransaction = ({
   };
 
   const customKeyRenderer = (item: any, key: string) => {
-    if (key === "signatures" && item?.length > 0) {
-      return <div className="PrettyJson__key__note">· Signatures Checked</div>;
+    if (key === "signatures") {
+      if (error) {
+        return (
+          <div className="PrettyJson--error">
+            <div className="PrettyJson__key__note">{error.toString()}</div>
+          </div>
+        );
+      }
+
+      if (item?.length > 0) {
+        return (
+          <div className="PrettyJson__key__note">· Signatures Checked</div>
+        );
+      }
     }
 
     return null;

@@ -13,9 +13,7 @@ export const getEventsFiltersError = (value: FiltersObject) => {
   const is_contract_ids_empty = value.contract_ids.every(
     (id) => id.length === 0,
   );
-  const is_topics_empty = value.contract_ids.every(
-    (topic) => topic.length === 0,
-  );
+  const is_topics_empty = value.topics.every((topic) => topic.length === 0);
 
   if (is_contract_ids_empty) {
     invalid.contractId = true;
@@ -25,19 +23,17 @@ export const getEventsFiltersError = (value: FiltersObject) => {
     invalid.topics = true;
   }
 
-  value.contract_ids.forEach((val) => {
-    if (val.length > 0) {
-      const is_invalid = Boolean(getContractIdError(val));
-      invalid.contractId = is_invalid;
-    }
-  });
+  invalid.contractId =
+    invalid.contractId ||
+    value.contract_ids.some(
+      (val) => val.length > 0 && Boolean(getContractIdError(val)),
+    );
 
-  value.topics.forEach((val) => {
-    if (val.length > 0) {
-      const is_invalid = Boolean(getArrayOfStringsError(val));
-      invalid.topics = is_invalid;
-    }
-  });
+  invalid.topics =
+    invalid.topics ||
+    value.topics.some(
+      (val) => val.length > 0 && Boolean(getArrayOfStringsError(val)),
+    );
 
   return invalid.contractId || invalid.topics;
 };
