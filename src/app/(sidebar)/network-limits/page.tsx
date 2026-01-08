@@ -65,7 +65,7 @@ export default function NetworkLimits() {
               </Text>
             </Box>
             <Box gap="sm">
-              <Text as="h3" size="md" weight="medium">
+              <Text as="h2" size="md" weight="medium">
                 Resource limits
               </Text>
 
@@ -128,13 +128,13 @@ const ResourceLimitsSection = ({
       ledgerWide: "no explicit limit",
     },
     {
-      setting: "Individual ledger key size",
+      setting: "Individual ledger key size (contract storage key)",
       perTransaction: `${limits.contract_data_key_size_bytes} bytes`,
       ledgerWide: undefined,
     },
     {
-      setting: "Individual ledger entry size",
-      perTransaction: formatBytes(limits.contract_max_size_bytes),
+      setting: "Individual ledger entry size (including Wasm entries)",
+      perTransaction: formatBytes(limits.contract_max_size_bytes, "binary"),
       ledgerWide: undefined,
     },
   ];
@@ -286,6 +286,10 @@ const ResourceFeesSection = ({
       value: `${formatNumber(Number(limits.fee_write_ledger_entry))} (${maxWriteEntriesFee}/max tx)`,
     },
     {
+      setting: "Write 1KB to disk",
+      value: undefined, // @TODO
+    },
+    {
       setting: "1 KB of transaction size (bandwidth)",
       value: `${formatNumber(Number(limits.fee_tx_size_1kb))} (${maxTxSizeFee}/max tx)`,
     },
@@ -309,7 +313,7 @@ const ResourceFeesSection = ({
 
   return (
     <Box gap="sm">
-      <Text as="h3" size="md" weight="medium">
+      <Text as="h2" size="md" weight="medium">
         Resource fees
       </Text>
 
@@ -380,7 +384,9 @@ const GridTableCell = ({
 // // Helpers
 // // =============================================================================
 
-const formatBytes = (bytes: number) => formatFileSize(bytes);
+const formatBytes = (bytes: number, unit: "binary" | "decimal" = "decimal") => {
+  return formatFileSize(bytes, unit);
+};
 
 const getDaysOfRent = (
   write_fee_1kb: number,

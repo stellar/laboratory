@@ -193,10 +193,7 @@ const getNetworkLimitsFromResponse = (response) => {
     fee_read_1kb:
       ledgerCostEntry?.dataJson?.config_setting?.contract_ledger_cost_v0
         ?.fee_disk_read1_kb,
-    fee_write_1kb: Number(
-      ledgerCostEntry?.dataJson?.config_setting?.contract_ledger_cost_v0
-        ?.fee_write_ledger_entry,
-    ),
+    fee_write_1kb: undefined, // @TODO will be filled in later
     fee_tx_size_1kb:
       bandwidthEntry?.dataJson?.config_setting?.contract_bandwidth_v0
         ?.fee_tx_size1_kb,
