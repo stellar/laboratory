@@ -22,6 +22,9 @@ import { NETWORK_LIMITS } from "@/constants/networkLimits";
 
 import "./styles.scss";
 
+// Stellar uses 1024 bytes as "1 KB" for fee calculations (binary, not decimal)
+const BYTES_PER_KB = 1024;
+
 export default function NetworkLimits() {
   const { network } = useStore();
 
@@ -170,7 +173,9 @@ const ResourceLimitsSection = ({
             <GridTableRow key={index}>
               <GridTableCell>{item.setting}</GridTableCell>
               <GridTableCell>{item.perTransaction}</GridTableCell>
-              <GridTableCell>{item.ledgerWide || "—"}</GridTableCell>
+              <GridTableCell isEmpty={!item.ledgerWide}>
+                {item.ledgerWide}
+              </GridTableCell>
             </GridTableRow>
           ))}
         </>
@@ -252,19 +257,24 @@ const ResourceFeesSection = ({
     limits.tx_max_disk_read_entries * Number(limits.fee_read_ledger_entry),
   );
   const maxReadBytesFee = formatNumber(
-    (limits.tx_max_disk_read_bytes / 1024) * Number(limits.fee_read_1kb),
+    (limits.tx_max_disk_read_bytes / BYTES_PER_KB) *
+      Number(limits.fee_read_1kb),
   );
   const maxWriteEntriesFee = formatNumber(
     limits.tx_max_write_ledger_entries * Number(limits.fee_write_ledger_entry),
   );
+  const maxWriteBytesFee = formatNumber(
+    (limits.tx_max_write_bytes / BYTES_PER_KB) * Number(limits.fee_write_1kb),
+  );
   const maxTxSizeFee = formatNumber(
-    (limits.tx_max_write_bytes / 1024) * Number(limits.fee_tx_size_1kb),
+    (limits.tx_max_write_bytes / BYTES_PER_KB) * Number(limits.fee_tx_size_1kb),
   );
   const maxHistoricalFee = formatNumber(
-    (limits.tx_max_write_bytes / 1024) * Number(limits.fee_historical_1kb),
+    (limits.tx_max_write_bytes / BYTES_PER_KB) *
+      Number(limits.fee_historical_1kb),
   );
   const maxEventsFee = formatNumber(
-    (limits.tx_max_contract_events_size_bytes / 1024) *
+    (limits.tx_max_contract_events_size_bytes / BYTES_PER_KB) *
       Number(limits.fee_contract_events_1kb),
   );
 
@@ -287,7 +297,7 @@ const ResourceFeesSection = ({
     },
     {
       setting: "Write 1KB to disk",
-      value: `${formatNumber(Number(limits.fee_write_1kb))} (${maxWriteEntriesFee}/max tx)`, // @TODO maxWriteEntriesFee
+      value: `${formatNumber(Number(limits.fee_write_1kb))} (${maxWriteBytesFee}/max tx)`,
     },
     {
       setting: "1 KB of transaction size (bandwidth)",
@@ -303,11 +313,11 @@ const ResourceFeesSection = ({
     },
     {
       setting: "30 days of rent for 1 KB of persistent storage",
-      value: `~${getDaysOfRent(limits.fee_write_1kb, limits.persistent_rent_rate_denominator, 30)}`,
+      value: `~${getDaysOfRent(limits.persistent_rent_rate_denominator, 30)}`,
     },
     {
       setting: "30 days of rent for 1 KB of temporary storage",
-      value: `~${getDaysOfRent(limits.fee_write_1kb, limits.temp_rent_rate_denominator, 30)}`,
+      value: `~${getDaysOfRent(limits.temp_rent_rate_denominator, 30)}`,
     },
   ];
 
@@ -372,10 +382,15 @@ const GridTableRow = ({
 
 const GridTableCell = ({
   children,
+  isEmpty,
 }: {
   children: React.ReactNode | React.ReactNode[] | null;
+  isEmpty?: boolean;
 }) => (
-  <div className="NetworkLimits__table__cell" role="cell">
+  <div
+    className={`NetworkLimits__table__cell ${isEmpty ? "is--empty" : ""}`}
+    role="cell"
+  >
     {children}
   </div>
 );
@@ -388,13 +403,23 @@ const formatBytes = (bytes: number, unit: "binary" | "decimal" = "decimal") => {
   return formatFileSize(bytes, unit);
 };
 
-const getDaysOfRent = (
-  write_fee_1kb: string,
-  rent_denominator: string,
-  days: number,
-) => {
+const getDaysOfRent = (rent_denominator: string, days: number) => {
   const ledgers_per_day = 86400 / 5; // 1 ledger every 5 seconds
+  const rent_ledgers = days * ledgers_per_day;
+  const entry_size_bytes = BYTES_PER_KB;
+
+  // https://github.com/stellar/rs-soroban-env/blob/main/soroban-env-host/src/fees.rs
+  // The fee_per_rent_1kb is dynamically computed based on network state
+  // We use an approximate value of ~1001 stroops.
+  // This results in ~427k stroops for 30 days of persistent storage and ~214k for temporary.
+  const fee_per_rent_1kb = 1001;
+
+  // Formula from soroban-env-host/src/fees.rs rent_fee_for_size_and_ledgers:
+  // rent_fee = (entry_size × fee_per_rent_1kb × rent_ledgers) / (1024 × storage_rate_denominator)
   const rent =
-    Number(write_fee_1kb) * (ledgers_per_day / Number(rent_denominator)) * days;
-  return formatNumber(rent);
+    (entry_size_bytes * fee_per_rent_1kb * rent_ledgers) /
+    (BYTES_PER_KB * Number(rent_denominator));
+
+  // Note: The Rust implementation uses ceiling division (div_ceil)
+  return formatNumber(Math.ceil(rent));
 };
