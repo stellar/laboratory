@@ -358,8 +358,11 @@ export type ConfigSettingIdType =
   | "contract_data_entry_size_bytes"
   | "state_archival"
   | "contract_execution_lanes"
-  | "bucketlist_size_window"
-  | "eviction_iterator";
+  | "live_soroban_state_size_window"
+  | "eviction_iterator"
+  | "contract_parallel_compute_v0"
+  | "contract_ledger_cost_ext_v0"
+  | "scp_timing";
 
 export type XdrFormatType = "json" | "base64";
 

@@ -68,12 +68,24 @@ export const ConfigSettingIdPicker = ({
       label: "Config Setting Contract Execution Lanes",
     },
     {
-      id: "bucketlist_size_window",
-      label: "Config Setting Bucketlist Size Window",
+      id: "live_soroban_state_size_window",
+      label: "Config Setting Live Soroban State Size Window",
     },
     {
       id: "eviction_iterator",
       label: "Config Setting Eviction Iterator",
+    },
+    {
+      id: "contract_parallel_compute_v0",
+      label: "Config Setting Contract Parallel Compute v0",
+    },
+    {
+      id: "contract_ledger_cost_ext_v0",
+      label: "Config Setting Contract Ledger Cost Ext v0",
+    },
+    {
+      id: "scp_timing",
+      label: "Config Setting SCP Timing",
     },
   ];
 
