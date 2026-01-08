@@ -32,7 +32,7 @@ export interface NetworkLimits {
   fee_read_ledger_entry: string;
   fee_write_ledger_entry: string;
   fee_read_1kb: string;
-  fee_write_1kb: number;
+  fee_write_1kb: string;
   fee_tx_size_1kb: string;
   fee_historical_1kb: string;
   fee_contract_events_1kb: string;

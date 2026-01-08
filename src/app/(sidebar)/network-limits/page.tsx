@@ -389,12 +389,12 @@ const formatBytes = (bytes: number, unit: "binary" | "decimal" = "decimal") => {
 };
 
 const getDaysOfRent = (
-  write_fee_1kb: number,
+  write_fee_1kb: string,
   rent_denominator: string,
   days: number,
 ) => {
   const ledgers_per_day = 86400 / 5; // 1 ledger every 5 seconds
   const rent =
-    write_fee_1kb * (ledgers_per_day / Number(rent_denominator)) * days;
+    Number(write_fee_1kb) * (ledgers_per_day / Number(rent_denominator)) * days;
   return formatNumber(rent);
 };
