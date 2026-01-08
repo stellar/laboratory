@@ -209,11 +209,6 @@ const getNetworkLimitsFromResponse = (response) => {
     temp_rent_rate_denominator:
       stateArchivalEntry?.dataJson?.config_setting?.state_archival
         ?.temp_rent_rate_denominator,
-
-    // Additional rent-related fields for calculation
-    write_fee_1kb:
-      ledgerCostEntry?.dataJson?.config_setting?.contract_ledger_cost_v0
-        ?.fee_write_1kb,
   };
 };
 
