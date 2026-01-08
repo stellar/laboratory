@@ -2,6 +2,7 @@
 // DO NOT EDIT MANUALLY
 
 export interface NetworkLimits {
+  // Per-transaction limits
   tx_max_instructions: number;
   tx_memory_limit: number;
   tx_max_footprint_entries: number;
@@ -12,6 +13,31 @@ export interface NetworkLimits {
   tx_max_contract_events_size_bytes: number;
   contract_data_key_size_bytes: number;
   contract_max_size_bytes: number;
+
+  // Ledger-wide limits
+  ledger_max_instructions: number;
+  ledger_max_disk_read_entries: number;
+  ledger_max_disk_read_bytes: number;
+  ledger_max_write_ledger_entries: number;
+  ledger_max_write_bytes: number;
+  ledger_max_txs_size_bytes: number;
+
+  // State archival TTL extension parameters
+  max_entry_ttl: number;
+  min_temporary_ttl: number;
+  min_persistent_ttl: number;
+
+  // Resource fees (in stroops)
+  fee_rate_per_instructions_increment: number;
+  fee_read_ledger_entry: string;
+  fee_write_ledger_entry: string;
+  fee_read_1kb: string;
+  fee_write_1kb: number;
+  fee_tx_size_1kb: string;
+  fee_historical_1kb: string;
+  fee_contract_events_1kb: string;
+  persistent_rent_rate_denominator: string;
+  temp_rent_rate_denominator: string;
 }
 
 export const MAINNET_LIMITS: NetworkLimits = {
@@ -24,7 +50,26 @@ export const MAINNET_LIMITS: NetworkLimits = {
   "tx_max_write_bytes": 132096,
   "tx_max_contract_events_size_bytes": 16384,
   "contract_data_key_size_bytes": 250,
-  "contract_max_size_bytes": 131072
+  "contract_max_size_bytes": 131072,
+  "ledger_max_instructions": 600000000,
+  "ledger_max_disk_read_entries": 1000,
+  "ledger_max_disk_read_bytes": 7000000,
+  "ledger_max_write_ledger_entries": 500,
+  "ledger_max_write_bytes": 143360,
+  "ledger_max_txs_size_bytes": 133120,
+  "max_entry_ttl": 3110400,
+  "min_temporary_ttl": 17280,
+  "min_persistent_ttl": 2073600,
+  "fee_rate_per_instructions_increment": 25,
+  "fee_read_ledger_entry": "6250",
+  "fee_write_ledger_entry": "10000",
+  "fee_read_1kb": "1786",
+  "fee_write_1kb": 10000,
+  "fee_tx_size_1kb": "1624",
+  "fee_historical_1kb": "16235",
+  "fee_contract_events_1kb": "10000",
+  "persistent_rent_rate_denominator": "1215",
+  "temp_rent_rate_denominator": "2430"
 } as const;
 
 export const TESTNET_LIMITS: NetworkLimits = {
@@ -37,7 +82,26 @@ export const TESTNET_LIMITS: NetworkLimits = {
   "tx_max_write_bytes": 132096,
   "tx_max_contract_events_size_bytes": 16384,
   "contract_data_key_size_bytes": 250,
-  "contract_max_size_bytes": 131072
+  "contract_max_size_bytes": 131072,
+  "ledger_max_instructions": 600000000,
+  "ledger_max_disk_read_entries": 500,
+  "ledger_max_disk_read_bytes": 3500000,
+  "ledger_max_write_ledger_entries": 250,
+  "ledger_max_write_bytes": 143360,
+  "ledger_max_txs_size_bytes": 133120,
+  "max_entry_ttl": 3110400,
+  "min_temporary_ttl": 720,
+  "min_persistent_ttl": 120960,
+  "fee_rate_per_instructions_increment": 25,
+  "fee_read_ledger_entry": "6250",
+  "fee_write_ledger_entry": "10000",
+  "fee_read_1kb": "1786",
+  "fee_write_1kb": 10000,
+  "fee_tx_size_1kb": "1624",
+  "fee_historical_1kb": "16235",
+  "fee_contract_events_1kb": "10000",
+  "persistent_rent_rate_denominator": "1215",
+  "temp_rent_rate_denominator": "2430"
 } as const;
 
 export const FUTURENET_LIMITS: NetworkLimits = {
@@ -50,7 +114,26 @@ export const FUTURENET_LIMITS: NetworkLimits = {
   "tx_max_write_bytes": 132096,
   "tx_max_contract_events_size_bytes": 16384,
   "contract_data_key_size_bytes": 250,
-  "contract_max_size_bytes": 131072
+  "contract_max_size_bytes": 131072,
+  "ledger_max_instructions": 600000000,
+  "ledger_max_disk_read_entries": 500,
+  "ledger_max_disk_read_bytes": 3500000,
+  "ledger_max_write_ledger_entries": 250,
+  "ledger_max_write_bytes": 143360,
+  "ledger_max_txs_size_bytes": 133120,
+  "max_entry_ttl": 3110400,
+  "min_temporary_ttl": 720,
+  "min_persistent_ttl": 120960,
+  "fee_rate_per_instructions_increment": 25,
+  "fee_read_ledger_entry": "6250",
+  "fee_write_ledger_entry": "10000",
+  "fee_read_1kb": "1786",
+  "fee_write_1kb": 10000,
+  "fee_tx_size_1kb": "1624",
+  "fee_historical_1kb": "16235",
+  "fee_contract_events_1kb": "10000",
+  "persistent_rent_rate_denominator": "1215",
+  "temp_rent_rate_denominator": "2430"
 } as const;
 
 export const NETWORK_LIMITS: Record<string, NetworkLimits> = {
