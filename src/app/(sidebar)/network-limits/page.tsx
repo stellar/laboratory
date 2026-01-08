@@ -58,12 +58,13 @@ export default function NetworkLimits() {
             <Box gap="sm">
               <Text as="p" size="sm" weight="regular">
                 Resource limitations and fees only apply to smart contract
-                transactions.{" "}
+                transactions. Read more about the inner workings of fees on
+                Stellar in{" "}
                 <SdsLink
-                  href="https://developers.stellar.org/docs/networks/resource-limits-fees"
+                  href="https://developers.stellar.org/docs/learn/fundamentals/fees-resource-limits-metering"
                   addlClassName="Link--external"
                 >
-                  Learn more
+                  the Fees section
                   <Icon.LinkExternal01 />
                 </SdsLink>
               </Text>
