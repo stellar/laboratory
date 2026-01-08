@@ -41,6 +41,12 @@
       text-align: right;
       color: var(--sds-clr-gray-12);
 
+      &.is--empty {
+        .NetworkLimits__table__row & {
+          background-color: var(--sds-clr-gray-01);
+        }
+      }
+
       &:first-child {
         text-align: left;
         font-weight: var(--sds-fw-regular);
