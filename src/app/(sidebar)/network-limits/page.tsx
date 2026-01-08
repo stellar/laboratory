@@ -287,7 +287,7 @@ const ResourceFeesSection = ({
     },
     {
       setting: "Write 1KB to disk",
-      value: undefined, // @TODO
+      value: `${formatNumber(Number(limits.fee_write_1kb))} (${maxWriteEntriesFee}/max tx)`, // @TODO maxWriteEntriesFee
     },
     {
       setting: "1 KB of transaction size (bandwidth)",
