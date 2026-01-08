@@ -24,6 +24,7 @@ import "./styles.scss";
 
 // Stellar uses 1024 bytes as "1 KB" for fee calculations (binary, not decimal)
 const BYTES_PER_KB = 1024;
+const MINIMUM_RENT_WRITE_FEE_PER_1KB = 1000;
 
 export default function NetworkLimits() {
   const { network } = useStore();
@@ -313,11 +314,11 @@ const ResourceFeesSection = ({
     },
     {
       setting: "30 days of rent for 1 KB of persistent storage",
-      value: `~${getDaysOfRent(limits.persistent_rent_rate_denominator, 30)}`,
+      value: `~${getDaysOfRent(limits.persistent_rent_rate_denominator, 30, limits)}`,
     },
     {
       setting: "30 days of rent for 1 KB of temporary storage",
-      value: `~${getDaysOfRent(limits.temp_rent_rate_denominator, 30)}`,
+      value: `~${getDaysOfRent(limits.temp_rent_rate_denominator, 30, limits)}`,
     },
   ];
 
@@ -403,16 +404,77 @@ const formatBytes = (bytes: number, unit: "binary" | "decimal" = "decimal") => {
   return formatFileSize(bytes, unit);
 };
 
-const getDaysOfRent = (rent_denominator: string, days: number) => {
+/**
+ * Computes the rent write fee per 1KB based on current Soroban state size.
+ * Ported from: https://github.com/stellar/rs-soroban-env/blob/main/soroban-env-host/src/fees.rs
+ */
+const computeRentWriteFeePerKb = (
+  sorobanStateSizeBytes: number,
+  stateTargetSizeBytes: number,
+  rentFee1kbStateSizeLow: number,
+  rentFee1kbStateSizeHigh: number,
+  stateSizeRentFeeGrowthFactor: number,
+): number => {
+  const feeRateMultiplier = rentFee1kbStateSizeHigh - rentFee1kbStateSizeLow;
+
+  let rentWriteFeePerKb: number;
+
+  if (sorobanStateSizeBytes < stateTargetSizeBytes) {
+    // Below target: linear interpolation
+    rentWriteFeePerKb = Math.ceil(
+      (feeRateMultiplier * sorobanStateSizeBytes) /
+        Math.max(stateTargetSizeBytes, 1),
+    );
+    rentWriteFeePerKb += rentFee1kbStateSizeLow;
+  } else {
+    // At or above target: use high fee + growth factor
+    rentWriteFeePerKb = rentFee1kbStateSizeHigh;
+    const bucketListSizeAfterReachingTarget =
+      sorobanStateSizeBytes - stateTargetSizeBytes;
+    const postTargetFee = Math.ceil(
+      (feeRateMultiplier *
+        bucketListSizeAfterReachingTarget *
+        stateSizeRentFeeGrowthFactor) /
+        Math.max(stateTargetSizeBytes, 1),
+    );
+    rentWriteFeePerKb += postTargetFee;
+  }
+
+  return Math.max(rentWriteFeePerKb, MINIMUM_RENT_WRITE_FEE_PER_1KB);
+};
+
+const getDaysOfRent = (
+  rent_denominator: string,
+  days: number,
+  limits:
+    | typeof NETWORK_LIMITS.mainnet
+    | typeof NETWORK_LIMITS.testnet
+    | typeof NETWORK_LIMITS.futurenet,
+) => {
+  const {
+    live_soroban_state_size_window,
+    state_target_size_bytes,
+    rent_fee_1kb_state_size_low,
+    rent_fee_1kb_state_size_high,
+    state_size_rent_fee_growth_factor,
+  } = limits;
   const ledgers_per_day = 86400 / 5; // 1 ledger every 5 seconds
   const rent_ledgers = days * ledgers_per_day;
   const entry_size_bytes = BYTES_PER_KB;
 
-  // https://github.com/stellar/rs-soroban-env/blob/main/soroban-env-host/src/fees.rs
-  // The fee_per_rent_1kb is dynamically computed based on network state
-  // We use an approximate value of ~1001 stroops.
-  // This results in ~427k stroops for 30 days of persistent storage and ~214k for temporary.
-  const fee_per_rent_1kb = 1001;
+  // Calculate average Soroban state size from the live state window
+  const avgStateSizeBytes =
+    live_soroban_state_size_window.reduce((sum, val) => sum + Number(val), 0) /
+    live_soroban_state_size_window.length;
+
+  // Compute fee_per_rent_1kb dynamically based on network state
+  const fee_per_rent_1kb = computeRentWriteFeePerKb(
+    avgStateSizeBytes,
+    Number(state_target_size_bytes),
+    Number(rent_fee_1kb_state_size_low),
+    Number(rent_fee_1kb_state_size_high),
+    Number(state_size_rent_fee_growth_factor),
+  );
 
   // Formula from soroban-env-host/src/fees.rs rent_fee_for_size_and_ledgers:
   // rent_fee = (entry_size × fee_per_rent_1kb × rent_ledgers) / (1024 × storage_rate_denominator)

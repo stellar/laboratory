@@ -43,6 +43,7 @@ const LEDGER_ENTRY_KEYS = [
   "AAAACAAAAA4=", // contract_parallel_compute_v0
   "AAAACAAAAA8=", // contract_ledger_cost_ext_v0
   "AAAACAAAABA=", // scp_timing
+  "AAAACAAAAAw=", // live_soroban_state_size_window
 ];
 
 const MAX_RETRIES = 3;
@@ -114,6 +115,9 @@ const getNetworkLimitsFromResponse = (response) => {
   const stateArchivalEntry = findEntry("state_archival");
   const bandwidthEntry = findEntry("contract_bandwidth_v0");
   const historicalDataEntry = findEntry("contract_historical_data_v0");
+  const liveSorobanStateSizeWindowEntry = findEntry(
+    "live_soroban_state_size_window",
+  );
 
   return {
     // Per-transaction limits
@@ -211,6 +215,23 @@ const getNetworkLimitsFromResponse = (response) => {
     temp_rent_rate_denominator:
       stateArchivalEntry?.dataJson?.config_setting?.state_archival
         ?.temp_rent_rate_denominator,
+
+    // Rent-related config parameters for computing fee_per_rent_1kb
+    live_soroban_state_size_window:
+      liveSorobanStateSizeWindowEntry?.dataJson?.config_setting
+        ?.live_soroban_state_size_window,
+    state_target_size_bytes:
+      ledgerCostEntry?.dataJson?.config_setting?.contract_ledger_cost_v0
+        ?.soroban_state_target_size_bytes,
+    rent_fee_1kb_state_size_low:
+      ledgerCostEntry?.dataJson?.config_setting?.contract_ledger_cost_v0
+        ?.rent_fee1_kb_soroban_state_size_low,
+    rent_fee_1kb_state_size_high:
+      ledgerCostEntry?.dataJson?.config_setting?.contract_ledger_cost_v0
+        ?.rent_fee1_kb_soroban_state_size_high,
+    state_size_rent_fee_growth_factor:
+      ledgerCostEntry?.dataJson?.config_setting?.contract_ledger_cost_v0
+        ?.soroban_state_rent_fee_growth_factor,
   };
 };
 
@@ -255,6 +276,13 @@ export interface NetworkLimits {
   fee_contract_events_1kb: string;
   persistent_rent_rate_denominator: string;
   temp_rent_rate_denominator: string;
+  live_soroban_state_size_window: string[];
+
+  // Rent-related config parameters for computing fee_per_rent_1kb
+  state_target_size_bytes: string;
+  rent_fee_1kb_state_size_low: string;
+  rent_fee_1kb_state_size_high: string;
+  state_size_rent_fee_growth_factor: string;
 }
 
 `;
