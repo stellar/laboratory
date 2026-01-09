@@ -474,7 +474,7 @@ const getDaysOfRent = (
     Number(state_target_size_bytes),
     Number(rent_fee_1kb_state_size_low),
     Number(rent_fee_1kb_state_size_high),
-    Number(state_size_rent_fee_growth_factor),
+    state_size_rent_fee_growth_factor,
   );
 
   // Formula from soroban-env-host/src/fees.rs rent_fee_for_size_and_ledgers:
