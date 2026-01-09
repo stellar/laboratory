@@ -8,10 +8,6 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
 
-      .Label__wrapper {
-        justify-content: flex-end;
-      }
-
       .Label {
         color: var(--sds-clr-gray-12);
       }
@@ -40,6 +36,17 @@
       font-weight: var(--sds-fw-medium);
       text-align: right;
       color: var(--sds-clr-gray-12);
+
+      .Label__wrapper {
+        justify-content: flex-end;
+      }
+
+      &--note {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: pxToRem(4px);
+      }
 
       &.is--empty {
         .NetworkLimits__table__row & {

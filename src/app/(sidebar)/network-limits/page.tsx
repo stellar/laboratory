@@ -1,6 +1,6 @@
 "use client";
 
-import { Alert, Icon, Text } from "@stellar/design-system";
+import { Alert, Icon, Text, Tooltip } from "@stellar/design-system";
 
 import { useStore } from "@/store/useStore";
 
@@ -316,10 +316,12 @@ const ResourceFeesSection = ({
     {
       setting: "30 days of rent for 1 KB of persistent storage",
       value: `~${getDaysOfRent(limits.persistent_rent_rate_denominator, 30, limits)}`,
+      note: "the results may be slightly stale",
     },
     {
       setting: "30 days of rent for 1 KB of temporary storage",
       value: `~${getDaysOfRent(limits.temp_rent_rate_denominator, 30, limits)}`,
+      note: "the results may be slightly stale",
     },
   ];
 
@@ -343,7 +345,24 @@ const ResourceFeesSection = ({
             {resourceFeesLimits.map((item, index) => (
               <GridTableRow key={index}>
                 <GridTableCell>{item.setting}</GridTableCell>
-                <GridTableCell>{item.value}</GridTableCell>
+                <GridTableCell
+                  addlClassName={
+                    item.note ? "NetworkLimits__table__cell--note" : ""
+                  }
+                >
+                  {item.value}{" "}
+                  {item.note ? (
+                    <Tooltip
+                      triggerEl={
+                        <div className="Label__infoButton" role="button">
+                          <Icon.InfoCircle />
+                        </div>
+                      }
+                    >
+                      {item.note}
+                    </Tooltip>
+                  ) : null}
+                </GridTableCell>
               </GridTableRow>
             ))}
           </>
@@ -385,12 +404,14 @@ const GridTableRow = ({
 const GridTableCell = ({
   children,
   isEmpty,
+  addlClassName,
 }: {
   children: React.ReactNode | React.ReactNode[] | null;
   isEmpty?: boolean;
+  addlClassName?: string;
 }) => (
   <div
-    className={`NetworkLimits__table__cell ${isEmpty ? "is--empty" : ""}`}
+    className={`NetworkLimits__table__cell ${isEmpty ? "is--empty " : ""} ${addlClassName || ""}`}
     role="cell"
   >
     {children}
