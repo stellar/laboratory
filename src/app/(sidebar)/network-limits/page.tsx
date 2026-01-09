@@ -103,7 +103,8 @@ const ResourceLimitsSection = ({
       ledgerWide: formatLargeNumber(limits.ledger_max_instructions),
     },
     {
-      setting: "Max memory (RAM)",
+      setting: "Max memory",
+      setting_note: "(RAM)",
       perTransaction: formatBytes(limits.tx_memory_limit),
       ledgerWide: "no explicit limit",
     },
@@ -133,12 +134,14 @@ const ResourceLimitsSection = ({
       ledgerWide: "no explicit limit",
     },
     {
-      setting: "Individual ledger key size (contract storage key)",
+      setting: "Individual ledger key size",
+      setting_note: "contract storage key",
       perTransaction: `${limits.contract_data_key_size_bytes} bytes`,
       ledgerWide: undefined,
     },
     {
-      setting: "Individual ledger entry size (including Wasm entries)",
+      setting: "Individual ledger entry size",
+      setting_note: "including Wasm entries",
       perTransaction: formatBytes(limits.contract_max_size_bytes, "binary"),
       ledgerWide: undefined,
     },
@@ -146,42 +149,138 @@ const ResourceLimitsSection = ({
 
   return (
     <div className="NetworkLimits__table-container">
-      <GridTable>
-        <GridTableRow isHeader={true}>
-          <GridTableCell>
-            <Text as="div" size="xs" weight="semi-bold">
-              Network Settings
-            </Text>
-          </GridTableCell>
-          <GridTableCell>
-            <LabelHeading
-              size="lg"
-              infoText="The maximum resources a single smart contract transaction can consume. Transactions fail if these limits are exceeded."
-            >
-              Per-transaction limits
-            </LabelHeading>
-          </GridTableCell>
-          <GridTableCell>
-            <LabelHeading
-              size="lg"
-              infoText="The maximum total resources all transactions in a single ledger (block) can consume."
-            >
-              Ledger-wide limits
-            </LabelHeading>
-          </GridTableCell>
-        </GridTableRow>
-        <>
+      <div className="NetworkLimits__desktopOnly">
+        <GridTable>
+          <GridTableRow>
+            <GridTableCell isHeader={true}>
+              <Text as="div" size="xs" weight="semi-bold">
+                Network Settings
+              </Text>
+            </GridTableCell>
+            <GridTableCell isHeader={true}>
+              <LabelHeading
+                size="lg"
+                infoText="The maximum resources a single smart contract transaction can consume. Transactions fail if these limits are exceeded."
+              >
+                Per-transaction limits
+              </LabelHeading>
+            </GridTableCell>
+            <GridTableCell isHeader={true}>
+              <LabelHeading
+                size="lg"
+                infoText="The maximum total resources all transactions in a single ledger (block) can consume."
+              >
+                Ledger-wide limits
+              </LabelHeading>
+            </GridTableCell>
+          </GridTableRow>
+          <>
+            {resourceLimits.map((item, index) => (
+              <GridTableRow key={index}>
+                <GridTableCell isRowHeader>
+                  {item.setting}
+                  {item.setting_note ? (
+                    <Text as="div" size="xs">
+                      {item.setting_note}
+                    </Text>
+                  ) : null}
+                </GridTableCell>
+                <GridTableCell
+                  addlClassName={
+                    item.setting_note ? "NetworkLimits__table__cell--note" : ""
+                  }
+                >
+                  {item.perTransaction}
+                </GridTableCell>
+                <GridTableCell
+                  isEmpty={!item.ledgerWide}
+                  addlClassName={
+                    item.setting_note ? "NetworkLimits__table__cell--note" : ""
+                  }
+                >
+                  {item.ledgerWide ?? null}
+                </GridTableCell>
+              </GridTableRow>
+            ))}
+          </>
+        </GridTable>
+      </div>
+
+      {/* Mobile: Per-transaction table */}
+      <Box gap="lg" addlClassName="NetworkLimits__mobileOnly">
+        <GridTable>
+          <GridTableRow>
+            <GridTableCell isHeader>
+              <Text as="div" size="xs" weight="semi-bold">
+                Network Settings
+              </Text>
+            </GridTableCell>
+            <GridTableCell isHeader>
+              <LabelHeading
+                size="lg"
+                infoText="The maximum resources a single smart contract transaction can consume. Transactions fail if these limits are exceeded."
+              >
+                Per-transaction limits
+              </LabelHeading>
+            </GridTableCell>
+          </GridTableRow>
+
           {resourceLimits.map((item, index) => (
-            <GridTableRow key={index}>
-              <GridTableCell>{item.setting}</GridTableCell>
-              <GridTableCell>{item.perTransaction}</GridTableCell>
-              <GridTableCell isEmpty={!item.ledgerWide}>
-                {item.ledgerWide}
+            <GridTableRow key={`per-${index}`}>
+              <GridTableCell isRowHeader>
+                {item.setting}
+                {item.setting_note ? (
+                  <Text as="div" size="xs">
+                    {item.setting_note}
+                  </Text>
+                ) : null}
+              </GridTableCell>
+
+              <GridTableCell
+                addlClassName={
+                  item.setting_note ? "NetworkLimits__table__cell--note" : ""
+                }
+              >
+                {item.perTransaction}
               </GridTableCell>
             </GridTableRow>
           ))}
-        </>
-      </GridTable>
+        </GridTable>
+
+        {/* Mobile: Ledger-wide table */}
+        <GridTable>
+          <GridTableRow>
+            <GridTableCell isHeader>
+              <Text as="div" size="xs" weight="semi-bold">
+                Network Settings
+              </Text>
+            </GridTableCell>
+            <GridTableCell isHeader>
+              <LabelHeading
+                size="lg"
+                infoText="The maximum total resources all transactions in a single ledger (block) can consume."
+              >
+                Ledger-wide limits
+              </LabelHeading>
+            </GridTableCell>
+          </GridTableRow>
+
+          {resourceLimits.map((item, index) => (
+            <GridTableRow key={`ledger-${index}`} isEmpty={!item.ledgerWide}>
+              <GridTableCell isRowHeader>
+                {item.setting}
+                {item.setting_note ? (
+                  <Text as="div" size="xs">
+                    {item.setting_note}
+                  </Text>
+                ) : null}
+              </GridTableCell>
+
+              <GridTableCell>{item.ledgerWide ?? null}</GridTableCell>
+            </GridTableRow>
+          ))}
+        </GridTable>
+      </Box>
     </div>
   );
 };
@@ -213,7 +312,7 @@ const StateArchivalSection = ({
     <Box gap="sm">
       <div className="NetworkLimits__table-container">
         <GridTable>
-          <GridTableRow isHeader={true}>
+          <GridTableRow>
             <GridTableCell>
               <Text as="div" size="xs" weight="semi-bold">
                 Network Settings
@@ -302,11 +401,13 @@ const ResourceFeesSection = ({
       value: `${formatNumber(Number(limits.fee_write_1kb))} (${maxWriteBytesFee}/max tx)`,
     },
     {
-      setting: "1 KB of transaction size (bandwidth)",
+      setting: "1 KB of transaction size",
+      setting_note: "(bandwidth)",
       value: `${formatNumber(Number(limits.fee_tx_size_1kb))} (${maxTxSizeFee}/max tx)`,
     },
     {
-      setting: "1 KB of transaction size (history)",
+      setting: "1 KB of transaction size",
+      setting_note: "(history)",
       value: `${formatNumber(Number(limits.fee_historical_1kb))} (${maxHistoricalFee}/max tx)`,
     },
     {
@@ -333,7 +434,7 @@ const ResourceFeesSection = ({
 
       <div className="NetworkLimits__table-container">
         <GridTable>
-          <GridTableRow isHeader={true}>
+          <GridTableRow>
             <GridTableCell>
               <Text as="div" size="xs" weight="semi-bold">
                 Network Settings
@@ -344,10 +445,19 @@ const ResourceFeesSection = ({
           <>
             {resourceFeesLimits.map((item, index) => (
               <GridTableRow key={index}>
-                <GridTableCell>{item.setting}</GridTableCell>
+                <GridTableCell>
+                  {item.setting}{" "}
+                  {item.setting_note ? (
+                    <Text as="div" size="xs">
+                      {item.setting_note}
+                    </Text>
+                  ) : null}
+                </GridTableCell>
                 <GridTableCell
                   addlClassName={
-                    item.note ? "NetworkLimits__table__cell--note" : ""
+                    item.note || item.setting_note
+                      ? "NetworkLimits__table__cell--note"
+                      : ""
                   }
                 >
                   {item.value}{" "}
@@ -375,11 +485,7 @@ const ResourceFeesSection = ({
 // // =============================================================================
 // // Components
 // // =============================================================================
-const GridTable = ({
-  children,
-}: {
-  children: React.ReactElement | React.ReactElement[];
-}) => (
+const GridTable = ({ children }: { children: React.ReactNode }) => (
   <div className="NetworkLimits__table" role="table">
     {children}
   </div>
@@ -387,15 +493,14 @@ const GridTable = ({
 
 const GridTableRow = ({
   children,
-  isHeader,
+  isEmpty,
 }: {
-  children: React.ReactElement[];
-  isHeader?: boolean;
+  children: React.ReactNode;
+  isEmpty?: boolean;
 }) => (
   <div
-    className="NetworkLimits__table__row"
+    className={`NetworkLimits__table__row ${isEmpty ? "is--empty " : ""}`}
     role="row"
-    {...(isHeader ? { "data-is-header": true } : {})}
   >
     {children}
   </div>
@@ -404,19 +509,34 @@ const GridTableRow = ({
 const GridTableCell = ({
   children,
   isEmpty,
+  isHeader,
+  isRowHeader,
   addlClassName,
 }: {
   children: React.ReactNode | React.ReactNode[] | null;
   isEmpty?: boolean;
+  isHeader?: boolean;
+  isRowHeader?: boolean;
   addlClassName?: string;
-}) => (
-  <div
-    className={`NetworkLimits__table__cell ${isEmpty ? "is--empty " : ""} ${addlClassName || ""}`}
-    role="cell"
-  >
-    {children}
-  </div>
-);
+}) => {
+  let role: "cell" | "columnheader" | "rowheader" = "cell";
+
+  if (isHeader) {
+    role = "columnheader";
+  }
+
+  if (isRowHeader) {
+    role = "rowheader";
+  }
+  return (
+    <div
+      className={`NetworkLimits__table__cell ${isEmpty ? "is--empty " : ""} ${addlClassName || ""}`}
+      role={role}
+    >
+      {children}
+    </div>
+  );
+};
 
 // // =============================================================================
 // // Helpers

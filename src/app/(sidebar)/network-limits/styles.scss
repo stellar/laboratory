@@ -1,6 +1,20 @@
 @use "../../../styles/utils.scss" as *;
 
 .NetworkLimits {
+  &__desktopOnly {
+    display: block;
+
+    @media (max-width: 420px) {
+      display: none;
+    }
+  }
+  &__mobileOnly {
+    display: none;
+
+    @media (max-width: 420px) {
+      display: flex;
+    }
+  }
   &__table {
     min-width: fit-content;
 
@@ -8,20 +22,16 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
 
+      &.is--empty {
+        display: none;
+      }
+
       .Label {
         color: var(--sds-clr-gray-12);
       }
 
       .Floater__content {
         text-align: left;
-      }
-
-      &[data-is-header="true"] {
-        .NetworkLimits__table__cell:first-child {
-          padding-left: 0;
-          font-weight: var(--sds-fw-medium);
-          font-size: pxToRem(12px);
-        }
       }
 
       &:nth-child(even) {
