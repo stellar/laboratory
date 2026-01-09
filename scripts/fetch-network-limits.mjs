@@ -282,7 +282,7 @@ export interface NetworkLimits {
   state_target_size_bytes: string;
   rent_fee_1kb_state_size_low: string;
   rent_fee_1kb_state_size_high: string;
-  state_size_rent_fee_growth_factor: string;
+  state_size_rent_fee_growth_factor: number;
 }
 
 `;
