@@ -1,21 +1,30 @@
-export const formatFileSize = (bytes: number) => {
-  if (bytes < 1024) {
+export const formatFileSize = (
+  bytes: number,
+  unit: "binary" | "decimal" = "decimal",
+) => {
+  const divisor = unit === "binary" ? 1024 : 1000;
+  const threshold = unit === "binary" ? 1024 : 1000;
+
+  if (bytes < threshold) {
     return `${bytes} B`;
   }
 
-  const kb = bytes / 1024;
-  if (kb < 1024) {
+  const kb = bytes / divisor;
+  const kbUnit = unit === "binary" ? "KiB" : "KB";
+  if (kb < threshold) {
     const formatted = kb.toFixed(kb < 10 ? 2 : 1);
-    return `${formatted.replace(/\.0+$/, "")} KB`;
+    return `${formatted.replace(/\.0+$/, "")} ${kbUnit}`;
   }
 
-  const mb = kb / 1024;
-  if (mb < 1024) {
+  const mb = kb / divisor;
+  const mbUnit = unit === "binary" ? "MiB" : "MB";
+  if (mb < threshold) {
     const formatted = mb.toFixed(mb < 10 ? 2 : 1);
-    return `${formatted.replace(/\.0+$/, "")} MB`;
+    return `${formatted.replace(/\.0+$/, "")} ${mbUnit}`;
   }
 
-  const gb = mb / 1024;
+  const gb = mb / divisor;
+  const gbUnit = unit === "binary" ? "GiB" : "GB";
   const formatted = gb.toFixed(gb < 10 ? 2 : 1);
-  return `${formatted.replace(/\.0+$/, "")} GB`;
+  return `${formatted.replace(/\.0+$/, "")} ${gbUnit}`;
 };
