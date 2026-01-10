@@ -55,12 +55,12 @@ test.describe("Transaction Dashboard: Fee Breakdown", () => {
     // Resource fee expanded view
     const resourceFeeToggle = table.locator(".ExpandToggle");
 
+    await expect(resourceFeeToggle).toHaveAttribute("data-is-expanded", "true");
+    await resourceFeeToggle.click();
     await expect(resourceFeeToggle).toHaveAttribute(
       "data-is-expanded",
       "false",
     );
-    await resourceFeeToggle.click();
-    await expect(resourceFeeToggle).toHaveAttribute("data-is-expanded", "true");
 
     // Inclusion fee
     await expect(getTableRow(rows, 1)).toHaveText([
@@ -145,12 +145,12 @@ test.describe("Transaction Dashboard: Fee Breakdown", () => {
     // Resource fee expanded view
     const resourceFeeToggle = table.locator(".ExpandToggle");
 
+    await expect(resourceFeeToggle).toHaveAttribute("data-is-expanded", "true");
+    await resourceFeeToggle.click();
     await expect(resourceFeeToggle).toHaveAttribute(
       "data-is-expanded",
       "false",
     );
-    await resourceFeeToggle.click();
-    await expect(resourceFeeToggle).toHaveAttribute("data-is-expanded", "true");
 
     // Stroops toggle
     const stroopsToggle = page.getByText("Change to Stroops", { exact: true });

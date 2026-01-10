@@ -18,7 +18,7 @@ export const FeeBreakdown = ({
   txDetails: RpcTxJsonResponse | null | undefined;
 }) => {
   const [isStroops, setIsStroops] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
 
   if (!txDetails) {
     return null;
