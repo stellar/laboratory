@@ -103,8 +103,7 @@ const ResourceLimitsSection = ({
       ledgerWide: formatLargeNumber(limits.ledger_max_instructions),
     },
     {
-      setting: "Max memory",
-      setting_note: "(RAM)",
+      setting: "Max memory (RAM)",
       perTransaction: formatBytes(limits.tx_memory_limit),
       ledgerWide: "no explicit limit",
     },
@@ -448,7 +447,7 @@ const ResourceFeesSection = ({
                 <GridTableCell>
                   {item.setting}{" "}
                   {item.setting_note ? (
-                    <Text as="div" size="xs">
+                    <Text as="div" size="xs" addlClassName="desktop--inline">
                       {item.setting_note}
                     </Text>
                   ) : null}

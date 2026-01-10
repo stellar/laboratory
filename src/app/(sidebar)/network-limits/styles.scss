@@ -64,6 +64,16 @@
         }
       }
 
+      .desktop--inline {
+        display: inline;
+        font-size: pxToRem(14px);
+
+        @media (max-width: 420px) {
+          display: block;
+          font-size: pxToRem(12px);
+        }
+      }
+
       &:first-child {
         text-align: left;
         font-weight: var(--sds-fw-regular);
