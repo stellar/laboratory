@@ -205,4 +205,8 @@ export const NAV: NavItem[] = [
         },
       ]
     : []),
+  {
+    route: Routes.NETWORK_LIMITS,
+    label: "Network Limits",
+  },
 ];
