@@ -1,20 +1,6 @@
 @use "../../../styles/utils.scss" as *;
 
 .NetworkLimits {
-  &__desktopOnly {
-    display: block;
-
-    @media (max-width: 420px) {
-      display: none;
-    }
-  }
-  &__mobileOnly {
-    display: none;
-
-    @media (max-width: 420px) {
-      display: flex;
-    }
-  }
   &__table {
     min-width: fit-content;
 

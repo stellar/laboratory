@@ -1,8 +1,10 @@
 "use client";
 
 import { Alert, Icon, Text, Tooltip } from "@stellar/design-system";
+import { useContext } from "react";
 
 import { useStore } from "@/store/useStore";
+import { WindowContext } from "@/components/layout/LayoutContextProvider";
 
 import { PageCard } from "@/components/layout/PageCard";
 import { Box } from "@/components/layout/Box";
@@ -96,6 +98,8 @@ const ResourceLimitsSection = ({
     | typeof NETWORK_LIMITS.testnet
     | typeof NETWORK_LIMITS.futurenet;
 }) => {
+  const { layoutMode } = useContext(WindowContext);
+
   const resourceLimits = [
     {
       setting: "Max CPU instructions",
@@ -146,9 +150,14 @@ const ResourceLimitsSection = ({
     },
   ];
 
+  // Show loading state while determining layout mode
+  if (!layoutMode) {
+    return null;
+  }
+
   return (
     <div className="NetworkLimits__table-container">
-      <div className="NetworkLimits__desktopOnly">
+      {layoutMode === "desktop" ? (
         <GridTable>
           <GridTableRow>
             <GridTableCell isHeader={true}>
@@ -203,83 +212,83 @@ const ResourceLimitsSection = ({
             ))}
           </>
         </GridTable>
-      </div>
-
-      {/* Mobile: Per-transaction table */}
-      <Box gap="lg" addlClassName="NetworkLimits__mobileOnly">
-        <GridTable>
-          <GridTableRow>
-            <GridTableCell isHeader>
-              <Text as="div" size="xs" weight="semi-bold">
-                Network Settings
-              </Text>
-            </GridTableCell>
-            <GridTableCell isHeader>
-              <LabelHeading
-                size="lg"
-                infoText="The maximum resources a single smart contract transaction can consume. Transactions fail if these limits are exceeded."
-              >
-                Per-transaction limits
-              </LabelHeading>
-            </GridTableCell>
-          </GridTableRow>
-
-          {resourceLimits.map((item, index) => (
-            <GridTableRow key={`per-${index}`}>
-              <GridTableCell isRowHeader>
-                {item.setting}
-                {item.setting_note ? (
-                  <Text as="div" size="xs">
-                    {item.setting_note}
-                  </Text>
-                ) : null}
+      ) : (
+        <Box gap="lg">
+          {/* Mobile: Per-transaction table */}
+          <GridTable>
+            <GridTableRow>
+              <GridTableCell isHeader>
+                <Text as="div" size="xs" weight="semi-bold">
+                  Network Settings
+                </Text>
               </GridTableCell>
-
-              <GridTableCell
-                addlClassName={
-                  item.setting_note ? "NetworkLimits__table__cell--note" : ""
-                }
-              >
-                {item.perTransaction}
+              <GridTableCell isHeader>
+                <LabelHeading
+                  size="lg"
+                  infoText="The maximum resources a single smart contract transaction can consume. Transactions fail if these limits are exceeded."
+                >
+                  Per-transaction limits
+                </LabelHeading>
               </GridTableCell>
             </GridTableRow>
-          ))}
-        </GridTable>
 
-        {/* Mobile: Ledger-wide table */}
-        <GridTable>
-          <GridTableRow>
-            <GridTableCell isHeader>
-              <Text as="div" size="xs" weight="semi-bold">
-                Network Settings
-              </Text>
-            </GridTableCell>
-            <GridTableCell isHeader>
-              <LabelHeading
-                size="lg"
-                infoText="The maximum total resources all transactions in a single ledger (block) can consume."
-              >
-                Ledger-wide limits
-              </LabelHeading>
-            </GridTableCell>
-          </GridTableRow>
+            {resourceLimits.map((item, index) => (
+              <GridTableRow key={`per-${index}`}>
+                <GridTableCell isRowHeader>
+                  {item.setting}
+                  {item.setting_note ? (
+                    <Text as="div" size="xs">
+                      {item.setting_note}
+                    </Text>
+                  ) : null}
+                </GridTableCell>
 
-          {resourceLimits.map((item, index) => (
-            <GridTableRow key={`ledger-${index}`} isEmpty={!item.ledgerWide}>
-              <GridTableCell isRowHeader>
-                {item.setting}
-                {item.setting_note ? (
-                  <Text as="div" size="xs">
-                    {item.setting_note}
-                  </Text>
-                ) : null}
+                <GridTableCell
+                  addlClassName={
+                    item.setting_note ? "NetworkLimits__table__cell--note" : ""
+                  }
+                >
+                  {item.perTransaction}
+                </GridTableCell>
+              </GridTableRow>
+            ))}
+          </GridTable>
+
+          {/* Mobile: Ledger-wide table */}
+          <GridTable>
+            <GridTableRow>
+              <GridTableCell isHeader>
+                <Text as="div" size="xs" weight="semi-bold">
+                  Network Settings
+                </Text>
               </GridTableCell>
-
-              <GridTableCell>{item.ledgerWide ?? null}</GridTableCell>
+              <GridTableCell isHeader>
+                <LabelHeading
+                  size="lg"
+                  infoText="The maximum total resources all transactions in a single ledger (block) can consume."
+                >
+                  Ledger-wide limits
+                </LabelHeading>
+              </GridTableCell>
             </GridTableRow>
-          ))}
-        </GridTable>
-      </Box>
+
+            {resourceLimits.map((item, index) => (
+              <GridTableRow key={`ledger-${index}`} isEmpty={!item.ledgerWide}>
+                <GridTableCell isRowHeader>
+                  {item.setting}
+                  {item.setting_note ? (
+                    <Text as="div" size="xs">
+                      {item.setting_note}
+                    </Text>
+                  ) : null}
+                </GridTableCell>
+
+                <GridTableCell>{item.ledgerWide ?? null}</GridTableCell>
+              </GridTableRow>
+            ))}
+          </GridTable>
+        </Box>
+      )}
     </div>
   );
 };
