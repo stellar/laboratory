@@ -28,6 +28,7 @@ import { ErrorText } from "@/components/ErrorText";
 import { JsonSchemaRenderer } from "@/components/SmartContractJsonSchema/JsonSchemaRenderer";
 import { TransactionSuccessCard } from "@/components/TransactionSuccessCard";
 import { WalletKitContext } from "@/components/WalletKit/WalletKitContextProvider";
+import { TabView } from "@/components/TabView";
 import { CodeEditor, SupportedLanguage } from "@/components/CodeEditor";
 
 import { TransactionBuildParams } from "@/store/createStore";
@@ -587,21 +588,42 @@ export const InvokeContractForm = ({
   const renderResponse = () => {
     if (jsonResponse?.fullResponse || base64Response?.fullResponse) {
       return (
-        <SimulatedResponse
-          jsonResult={jsonResponse}
-          base64Result={base64Response}
-          isFullResponseEnabled={isFullResponseEnabled}
-          xdrFormat={xdrFormat}
-          onXdrFormatChange={(format: string) => {
-            setXdrFormat(format);
+        <TabView
+          tab1={{
+            id: "json",
+            label: "JSON",
+            content: jsonResponse?.fullResponse && (
+              <SimulatedResponse
+                xdrFormat="json"
+                result={jsonResponse}
+                isFullResponseEnabled={isFullResponseEnabled}
+              />
+            ),
+            isDisabled: !jsonResponse?.fullResponse,
+          }}
+          tab2={{
+            id: "base64",
+            label: "Base64",
+            content: base64Response?.fullResponse && (
+              <SimulatedResponse
+                xdrFormat="xdr"
+                result={base64Response}
+                isFullResponseEnabled={isFullResponseEnabled}
+              />
+            ),
+            isDisabled: !base64Response?.fullResponse,
+          }}
+          activeTabId={xdrFormat}
+          onTabChange={(id) => {
+            setXdrFormat(id);
             trackEvent(
               TrackingEvent.SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SELECTED_XDR_FORMAT,
               {
-                xdrFormat: format,
+                xdrFormat: id,
               },
             );
           }}
-          isFullResponseToggle={
+          rightElement={
             <FullResponseToggle
               isChecked={isFullResponseEnabled}
               onChange={setIsFullResponseEnabled}
@@ -756,23 +778,17 @@ export const FullResponseToggle = ({
 };
 
 export const SimulatedResponse = ({
-  jsonResult,
-  base64Result,
+  result,
   isFullResponseEnabled = false,
   xdrFormat,
-  onXdrFormatChange,
-  isFullResponseToggle,
 }: {
-  jsonResult: SimulatedResponseType | null;
-  base64Result: SimulatedResponseType | null;
+  result: SimulatedResponseType | null;
   isFullResponseEnabled: boolean;
   xdrFormat: string;
-  onXdrFormatChange: (format: string) => void;
-  isFullResponseToggle?: React.ReactNode;
 }) => {
-  const result = xdrFormat === "json" ? jsonResult : base64Result;
-
-  if (!result) return null;
+  if (!result) {
+    return null;
+  }
 
   const hasSimulationError = Api.isSimulationError(result.fullResponse);
 
@@ -789,18 +805,11 @@ export const SimulatedResponse = ({
     <Box gap="md">
       <div data-testid="invoke-contract-simulate-tx-response">
         <CodeEditor
-          isAutoHeight
-          maxHeightInRem="30"
-          title="Simulation Response"
+          key={`code-editor-${isFullResponseEnabled}`}
+          isAutoHeight={!isFullResponseEnabled}
+          heightInRem={`${isFullResponseEnabled ? "50" : "30"}`}
           value={JSON.stringify(json, null, 2)}
           selectedLanguage={selectedLanguage}
-          languages={["json", "xdr"]}
-          onLanguageChange={(newLanguage) => {
-            // Map back to the original format names
-            const format = newLanguage === "xdr" ? "base64" : newLanguage;
-            onXdrFormatChange(format);
-          }}
-          customEl={isFullResponseToggle}
         />
       </div>
     </Box>
