@@ -301,6 +301,10 @@ const StateArchivalSection = ({
     | typeof NETWORK_LIMITS.testnet
     | typeof NETWORK_LIMITS.futurenet;
 }) => {
+  const { layoutMode } = useContext(WindowContext);
+  const stateArchivalLabel =
+    layoutMode === "desktop" ? "TTL extension parameter" : "TTL ext. parameter";
+
   const stateArchivalLimits = [
     {
       setting: "Persistent entry TTL on creation",
@@ -331,7 +335,7 @@ const StateArchivalSection = ({
                 size="lg"
                 infoText="Defines how long ledger entries live and how much their lifetime can be extended."
               >
-                TTL extension parameter
+                {stateArchivalLabel}
               </LabelHeading>
             </GridTableCell>
           </GridTableRow>
