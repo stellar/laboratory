@@ -176,7 +176,7 @@ test.describe("Transaction Dashboard: Token Summary", () => {
     });
 
     await expect(
-      page.getByText("There are no transfer events in this transaction"),
+      page.getByText("This transaction has no token transfers."),
     ).toBeVisible();
   });
 
@@ -205,7 +205,7 @@ test.describe("Transaction Dashboard: Token Summary", () => {
       await eventsData({ page, mockResponse: TX_EVENTS_MOCK_RESPONSE_EMPTY });
 
       await expect(
-        page.getByText("There are no transfer events in this transaction"),
+        page.getByText("This transaction has no token transfers."),
       ).toBeVisible();
     });
 
@@ -216,7 +216,7 @@ test.describe("Transaction Dashboard: Token Summary", () => {
       });
 
       await expect(
-        page.getByText("There are no transfer events in this transaction"),
+        page.getByText("This transaction has no token transfers."),
       ).toBeVisible();
     });
   });
