@@ -293,7 +293,9 @@ export default function TransactionDashboard() {
         isTxNotFound={isTxNotFound}
       />
 
-      {operations ? <ClassicOperations operations={operations} /> : null}
+      {operations && !isSorobanTx ? (
+        <ClassicOperations operations={operations} />
+      ) : null}
 
       {isSorobanTx ? (
         <Card>
