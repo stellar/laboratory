@@ -17,7 +17,15 @@ export const ClassicOperations = ({ operations }: { operations: any[] }) => {
   }, [operations]);
 
   if (operations.length === 0) {
-    return <div>No operations found.</div>;
+    return (
+      <div className="TransactionClassicOperations">
+        <Card>
+          <Box padding="lg" align="center" justify="center">
+            <Heading as="h4">No operations found</Heading>
+          </Box>
+        </Card>
+      </div>
+    );
   }
 
   // Calculate pagination
