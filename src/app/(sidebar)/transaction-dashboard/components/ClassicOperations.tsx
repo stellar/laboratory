@@ -97,7 +97,7 @@ export const ClassicOperations = ({ operations }: { operations: any[] }) => {
                             <div className="TransactionClassicOperations__operationDetails">
                               {isPrimitive ? (
                                 <InfoField
-                                  label="destination"
+                                  label="value"
                                   value={operationData}
                                 />
                               ) : (
