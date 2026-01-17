@@ -33,6 +33,7 @@ import { Contracts } from "./components/Contracts";
 import { ResourceProfiler } from "./components/ResourceProfiler";
 
 import "./styles.scss";
+import { ClassicOperations } from "./components/ClassicOperations";
 
 export default function TransactionDashboard() {
   type TxTabId =
@@ -74,7 +75,7 @@ export default function TransactionDashboard() {
   const isLoading = isTxDetailsLoading || isTxDetailsFetching;
   const isDataLoaded = Boolean(txDetails);
 
-  const { isSorobanTx } = getTxData(txDetails || null);
+  const { isSorobanTx, operations } = getTxData(txDetails || null);
   const isTxNotFound = txDetails?.status === "NOT_FOUND";
 
   const queryClient = useQueryClient();
@@ -291,6 +292,8 @@ export default function TransactionDashboard() {
         txDetails={txDetails || null}
         isTxNotFound={isTxNotFound}
       />
+
+      {operations ? <ClassicOperations operations={operations} /> : null}
 
       {isSorobanTx ? (
         <Card>

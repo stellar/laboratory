@@ -6,7 +6,7 @@ import { useStore } from "@/store/useStore";
 import { ErrorText } from "@/components/ErrorText";
 import { Box } from "@/components/layout/Box";
 import { DataTable } from "@/components/DataTable";
-import { ScValPrettyJson } from "@/components/ScValPrettyJson";
+import { ScValPrettyJson } from "@/components/StellarDataRenderer";
 import { PoweredByStellarExpert } from "@/components/PoweredByStellarExpert";
 
 import { useSEContractStorage } from "@/query/external/useSEContracStorage";

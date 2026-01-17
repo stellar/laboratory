@@ -1,10 +1,10 @@
 @use "../../styles/utils.scss" as *;
 
-.ScValPrettyJson {
-  --ScValPrettyJson-tab-space: #{pxToRem(16px)};
-  --ScValPrettyJson-inline-gap: #{pxToRem(6px)};
-  --ScValPrettyJson-type-offset-left: #{pxToRem(4px)};
-  --ScValPrettyJson-type-offset-top: #{pxToRem(6px)};
+.StellarDataRenderer {
+  --StellarDataRenderer-tab-space: #{pxToRem(16px)};
+  --StellarDataRenderer-inline-gap: #{pxToRem(6px)};
+  --StellarDataRenderer-type-offset-left: #{pxToRem(4px)};
+  --StellarDataRenderer-type-offset-top: #{pxToRem(6px)};
 
   font-family: var(--sds-ff-monospace), monospace;
   font-size: pxToRem(14px);
@@ -17,24 +17,18 @@
   flex-direction: row;
   flex-wrap: wrap;
 
-  &__bracket {
-  }
-
   &__colon {
-    & + .ScValPrettyJson__bracket {
-      margin-left: var(--ScValPrettyJson-inline-gap);
+    & + .StellarDataRenderer__bracket {
+      margin-left: var(--StellarDataRenderer-inline-gap);
     }
 
-    & + .ScValPrettyJson__value {
-      margin-left: var(--ScValPrettyJson-inline-gap);
+    & + .StellarDataRenderer__value {
+      margin-left: var(--StellarDataRenderer-inline-gap);
     }
   }
 
   &__comma {
     display: inline-block;
-  }
-
-  &__quotes {
   }
 
   &__bracket,
@@ -45,7 +39,7 @@
   }
 
   &__block {
-    padding-left: var(--ScValPrettyJson-tab-space);
+    padding-left: var(--StellarDataRenderer-tab-space);
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -78,8 +72,8 @@
       &::after {
         display: block;
         content: attr(data-type);
-        margin-left: var(--ScValPrettyJson-type-offset-left);
-        margin-top: var(--ScValPrettyJson-type-offset-top);
+        margin-left: var(--StellarDataRenderer-type-offset-left);
+        margin-top: var(--StellarDataRenderer-type-offset-top);
 
         color: var(--sds-clr-gray-09);
         white-space: nowrap;
@@ -138,6 +132,14 @@
     // Address
     [data-type="address"] {
       color: var(--sds-clr-gray-10);
+    }
+
+    // Asset
+    [data-type="asset"] {
+      .Link {
+        font-family: var(--sds-ff-monospace), monospace;
+        padding-left: pxToRem(4px);
+      }
     }
   }
 }
