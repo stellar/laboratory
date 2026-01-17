@@ -7,7 +7,15 @@ import { Box } from "@/components/layout/Box";
 
 const PAGE_SIZE = 5;
 
-export const ClassicOperations = ({ operations }: { operations: any[] }) => {
+type ClassicOperation = {
+  body: any;
+};
+
+export const ClassicOperations = ({
+  operations,
+}: {
+  operations: ClassicOperation[];
+}) => {
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPageCount, setTotalPageCount] = useState(1);
@@ -16,12 +24,15 @@ export const ClassicOperations = ({ operations }: { operations: any[] }) => {
     setTotalPageCount(Math.ceil(operations.length / PAGE_SIZE));
   }, [operations]);
 
-  if (operations.length === 0) {
+  // @TODO to be replaced with an empty state component
+  if (!operations.length) {
     return (
       <div className="TransactionClassicOperations">
         <Card>
-          <Box padding="lg" align="center" justify="center">
-            <Heading as="h4">No operations found</Heading>
+          <Box gap="lg">
+            <Heading size="sm" as="h4">
+              No operations found
+            </Heading>
           </Box>
         </Card>
       </div>
@@ -71,51 +82,42 @@ export const ClassicOperations = ({ operations }: { operations: any[] }) => {
               ? null
               : operation.body[operationType];
 
-            const isPrimitive =
-              operationData !== null &&
-              (typeof operationData !== "object" || operationData === null);
+            const isPrimitive = typeof operationData !== "object";
 
             return (
               <div
                 key={actualIndex}
                 className="TransactionClassicOperations__operation"
               >
-                <Box gap="md">
-                  <Card>
-                    <Box gap="md">
-                      <Box gap="md">
-                        <Box
-                          gap="md"
-                          direction="row"
-                          align="center"
-                          justify="space-between"
-                        >
-                          <Badge variant="secondary">{operationType}</Badge>
-                        </Box>
-                        {operationData !== null && (
-                          <Card variant="secondary">
-                            <div className="TransactionClassicOperations__operationDetails">
-                              {isPrimitive ? (
-                                <InfoField
-                                  label="value"
-                                  value={operationData}
-                                />
-                              ) : (
-                                Object.keys(operationData).map((val, idx) => (
-                                  <InfoField
-                                    label={val}
-                                    value={operationData[val]}
-                                    key={idx}
-                                  />
-                                ))
-                              )}
-                            </div>
-                          </Card>
-                        )}
-                      </Box>
+                <Card>
+                  <Box gap="md">
+                    <Box
+                      gap="md"
+                      direction="row"
+                      align="center"
+                      justify="space-between"
+                    >
+                      <Badge variant="secondary">{operationType}</Badge>
                     </Box>
-                  </Card>
-                </Box>
+                    {operationData !== null && (
+                      <Card variant="secondary">
+                        <div className="TransactionClassicOperations__operationDetails">
+                          {isPrimitive ? (
+                            <InfoField label="value" value={operationData} />
+                          ) : (
+                            Object.keys(operationData).map((val, idx) => (
+                              <InfoField
+                                label={val}
+                                value={operationData[val]}
+                                key={idx}
+                              />
+                            ))
+                          )}
+                        </div>
+                      </Card>
+                    )}
+                  </Box>
+                </Card>
               </div>
             );
           })}
