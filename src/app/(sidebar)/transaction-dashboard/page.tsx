@@ -31,9 +31,9 @@ import { Events } from "./components/Events";
 import { TokenSummary } from "./components/TokenSummary";
 import { Contracts } from "./components/Contracts";
 import { ResourceProfiler } from "./components/ResourceProfiler";
+import { ClassicOperations } from "./components/ClassicOperations";
 
 import "./styles.scss";
-import { ClassicOperations } from "./components/ClassicOperations";
 
 export default function TransactionDashboard() {
   type TxTabId =
@@ -293,7 +293,7 @@ export default function TransactionDashboard() {
         isTxNotFound={isTxNotFound}
       />
 
-      {operations && !isSorobanTx ? (
+      {!isSorobanTx && operations ? (
         <ClassicOperations operations={operations} />
       ) : null}
 
