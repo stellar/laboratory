@@ -47,7 +47,7 @@ test.describe("Transaction Dashboard: Events", () => {
     ).toBeHidden();
 
     await expect(
-      page.getByText("There are no events in this transaction"),
+      page.getByText("This transaction has no events emitted."),
     ).toBeVisible();
   });
 });

@@ -22,8 +22,8 @@ export const StateChange = ({
 
   if (!formattedData?.length) {
     return (
-      <TransactionTabEmptyMessage>
-        There are no state changes in this transaction
+      <TransactionTabEmptyMessage title="No state changes">
+        This transaction has no state changes.
       </TransactionTabEmptyMessage>
     );
   }

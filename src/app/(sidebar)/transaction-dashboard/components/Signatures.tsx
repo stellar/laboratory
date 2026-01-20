@@ -2,6 +2,7 @@ import { TransactionBuilder } from "@stellar/stellar-sdk";
 import { Icon, Text } from "@stellar/design-system";
 
 import { Box } from "@/components/layout/Box";
+import { TransactionTabEmptyMessage } from "@/components/TransactionTabEmptyMessage";
 
 import { useStore } from "@/store/useStore";
 
@@ -27,7 +28,11 @@ export const Signatures = ({
   const { network } = useStore();
 
   if (!signatures || signatures.length === 0 || !txHash) {
-    return null;
+    return (
+      <TransactionTabEmptyMessage title="No signatures">
+        This transaction has no signatures.
+      </TransactionTabEmptyMessage>
+    );
   }
 
   const feeBumpInnerTxXdr =

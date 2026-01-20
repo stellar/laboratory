@@ -46,8 +46,8 @@ export const Events = ({
     )
   ) {
     return (
-      <TransactionTabEmptyMessage>
-        There are no events in this transaction
+      <TransactionTabEmptyMessage title="No events">
+        This transaction has no events emitted.
       </TransactionTabEmptyMessage>
     );
   }
