@@ -183,7 +183,7 @@ export const ClassicOperations = ({
 
 const InfoField = ({ label, value }: { label: string; value: any }) => {
   return (
-    <Box gap="xs" direction="row" align="center" addlClassName="InfoFieldItem">
+    <Box gap="xs" direction="row" addlClassName="InfoFieldItem">
       <div className="InfoFieldItem__label">{getLabel(label)}</div>
       <div className="InfoFieldItem__value">
         <ClassicOpPrettyJson value={value} />

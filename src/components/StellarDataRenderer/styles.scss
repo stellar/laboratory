@@ -132,6 +132,10 @@
     // Address
     [data-type="address"] {
       color: var(--sds-clr-gray-10);
+
+      .Link {
+        font-family: var(--sds-ff-monospace), monospace;
+      }
     }
 
     // Asset
