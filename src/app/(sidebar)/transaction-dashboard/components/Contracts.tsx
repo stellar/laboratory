@@ -14,7 +14,7 @@ import { useStore } from "@/store/useStore";
 import { Box } from "@/components/layout/Box";
 import { DataTable } from "@/components/DataTable";
 import { BuildVerifiedBadge } from "@/components/BuildVerifiedBadge";
-import { NoInfoLoadedView } from "@/components/NoInfoLoadedView";
+import { TransactionTabEmptyMessage } from "@/components/TransactionTabEmptyMessage";
 
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
@@ -47,9 +47,9 @@ export const Contracts = ({
 
   if (!events?.formattedContractEvents?.length) {
     return (
-      <NoInfoLoadedView
-        message={<>There are no contracts in this transaction.</>}
-      />
+      <TransactionTabEmptyMessage title="No contracts">
+        This transaction has not interacted with any contracts.
+      </TransactionTabEmptyMessage>
     );
   }
 
