@@ -31,7 +31,7 @@
     "@monaco-editor/react": "^4.7.0",
     "@next/third-parties": "^15.5.7",
     "@sentry/nextjs": "^10.29.0",
-    "@stellar-expert/contract-wasm-interface-parser": "^3.2.0",
+    "@stellar-expert/contract-wasm-interface-parser": "^4.0.0",
     "@stellar/design-system": "^3.2.7",
     "@stellar/stellar-sdk": "^14.3.3",
     "@stellar/stellar-xdr-json": "^23.0.0",
