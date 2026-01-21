@@ -68,7 +68,10 @@ export const ContractInfo = ({
     "contract-contract-spec",
   );
 
-  const isDataLoaded = Boolean(wasmHash);
+  // We won’t get data on a custom network for SAC, because we get infoData from
+  // StellarExpert (supports only Testnet and Mainnet), and SAC won’t have a
+  // Wasm hash. All the other cases should work.
+  const isDataLoaded = Boolean(infoData || wasmHash);
 
   const getRepoData = () => ({
     sourceRepo: isSacType
