@@ -472,7 +472,11 @@ export const CallStackTrace = ({
         </Alert>
       ) : null}
 
-      <div className="CallStackTrace">{renderNested(data.callStack)}</div>
+      <div className="CallStackTrace">
+        <div className="CallStackTrace__scrollable">
+          {renderNested(data.callStack)}
+        </div>
+      </div>
     </Box>
   );
 };

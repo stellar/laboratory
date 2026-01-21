@@ -558,10 +558,15 @@
   letter-spacing: -0.28px;
   overflow: hidden;
 
+  &__scrollable {
+    overflow: auto;
+  }
+
   &__event {
     display: flex;
     flex-direction: column;
     gap: pxToRem(8px);
+    min-width: fit-content;
 
     &__info {
       display: flex;
