@@ -134,8 +134,8 @@ export const TokenSummary = ({
 
   if (!groupedTransferEvents.length) {
     return (
-      <TransactionTabEmptyMessage>
-        There are no transfer events in this transaction
+      <TransactionTabEmptyMessage title="No token summary">
+        This transaction has no token transfers.
       </TransactionTabEmptyMessage>
     );
   }

@@ -21,11 +21,11 @@ test.describe("Transaction Dashboard: Contracts", () => {
     await expect(items).toHaveCount(5);
   });
 
-  test("No events", async ({ page }) => {
+  test("No contracts", async ({ page }) => {
     await data({ page, mockResponse: TX_EVENTS_MOCK_RESPONSE_EMPTY });
 
     await expect(
-      page.getByText("There are no contracts in this transaction."),
+      page.getByText("This transaction has not interacted with any contracts."),
     ).toBeVisible();
   });
 });

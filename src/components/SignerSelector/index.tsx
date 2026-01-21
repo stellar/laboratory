@@ -4,6 +4,7 @@ import { useStore } from "@/store/useStore";
 
 import { localStorageSavedKeypairs } from "@/helpers/localStorageSavedKeypairs";
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
+import { truncateString } from "@/helpers/truncateString";
 
 import { InputSideElement } from "@/components/InputSideElement";
 
@@ -182,7 +183,7 @@ const OptionItem = ({
   const renderKey = (item: SavedKeypair) => {
     return (
       <div className="SignerSelector__dropdown__item__value__keypair">
-        <div className="keypair_name">[{item.name}]</div>
+        <div className="keypair_name">[{truncateString(item.name, 55)}]</div>
         <div className="keypair_publickey">
           {shortenStellarAddress(item.publicKey)}
         </div>

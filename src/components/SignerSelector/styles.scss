@@ -15,18 +15,19 @@
     position: absolute;
     top: calc(var(--sds-gap-xxl) * 2);
     transform: translateY(0);
-
-    left: 0;
     right: 0;
     z-index: 1000;
-
     background-color: var(--sds-clr-gray-01);
     border: 1px solid var(--sds-clr-gray-06);
     border-radius: pxToRem(4px);
     padding: pxToRem(3px) pxToRem(4px);
-
     max-height: pxToRem(240px);
     overflow-y: auto;
+    width: pxToRem(560px);
+
+    @media screen and (max-width: 700px) {
+      width: 100%;
+    }
 
     &__item {
       &__label {

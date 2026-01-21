@@ -20,9 +20,10 @@ export const Tutorials = () => {
     },
     {
       title: "Change Trust",
-      description: "Add or remove trustlines for assets on Stellar.",
+      description:
+        "Add or remove trustlines for assets on Stellar. Shortcut available.",
       youTubeLink:
-        "https://www.youtube.com/embed/Ln-_2pkkj3k?si=B9XmD2BEkc6cyDpu",
+        "https://www.youtube.com/embed/sv2gV13q7FI?si=78SXorWKfXTneqzn",
     },
     {
       title: "Manage Offers",
