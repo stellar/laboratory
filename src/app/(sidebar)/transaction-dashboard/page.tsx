@@ -31,6 +31,7 @@ import { Events } from "./components/Events";
 import { TokenSummary } from "./components/TokenSummary";
 import { Contracts } from "./components/Contracts";
 import { ResourceProfiler } from "./components/ResourceProfiler";
+import { ClassicOperations } from "./components/ClassicOperations";
 
 import "./styles.scss";
 
@@ -74,7 +75,7 @@ export default function TransactionDashboard() {
   const isLoading = isTxDetailsLoading || isTxDetailsFetching;
   const isDataLoaded = Boolean(txDetails);
 
-  const { isSorobanTx } = getTxData(txDetails || null);
+  const { isSorobanTx, operations } = getTxData(txDetails || null);
   const isTxNotFound = txDetails?.status === "NOT_FOUND";
 
   const queryClient = useQueryClient();
@@ -291,6 +292,10 @@ export default function TransactionDashboard() {
         txDetails={txDetails || null}
         isTxNotFound={isTxNotFound}
       />
+
+      {!isSorobanTx && operations ? (
+        <ClassicOperations operations={operations} />
+      ) : null}
 
       {isSorobanTx ? (
         <Card>

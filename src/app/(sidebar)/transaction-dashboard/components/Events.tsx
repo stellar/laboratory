@@ -5,7 +5,7 @@ import { Badge, Button, Card, Icon, Text } from "@stellar/design-system";
 import { stringify } from "lossless-json";
 
 import { Box } from "@/components/layout/Box";
-import { ScValPrettyJson } from "@/components/ScValPrettyJson";
+import { ScValPrettyJson } from "@/components/StellarDataRenderer";
 import { ExpandBox } from "@/components/ExpandBox";
 import { CopyJsonPayloadButton } from "@/components/CopyJsonPayloadButton";
 import { TransactionTabEmptyMessage } from "@/components/TransactionTabEmptyMessage";

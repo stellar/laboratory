@@ -35,13 +35,13 @@ test.describe("Transaction Dashboard: Token Summary", () => {
       tableRows: contracTokensRows,
       rowIndex: 0,
       cellIndex: 0,
-      cellValue: "GBJX…G7YU",
+      cellValue: "GBJX...G7YU",
     });
     await testTableCellValue({
       tableRows: contracTokensRows,
       rowIndex: 0,
       cellIndex: 1,
-      cellValue: "CDHN…FNJE",
+      cellValue: "CDHN...FNJE",
     });
     await testTableCellValue({
       tableRows: contracTokensRows,
@@ -61,13 +61,13 @@ test.describe("Transaction Dashboard: Token Summary", () => {
       tableRows: contracTokensRows,
       rowIndex: 1,
       cellIndex: 0,
-      cellValue: "CDHN…FNJE",
+      cellValue: "CDHN...FNJE",
     });
     await testTableCellValue({
       tableRows: contracTokensRows,
       rowIndex: 1,
       cellIndex: 1,
-      cellValue: "CA6P…CJBE",
+      cellValue: "CA6P...CJBE",
     });
     await testTableCellValue({
       tableRows: contracTokensRows,
@@ -96,13 +96,13 @@ test.describe("Transaction Dashboard: Token Summary", () => {
       tableRows: contracNativeRows,
       rowIndex: 0,
       cellIndex: 0,
-      cellValue: "CA6P…CJBE",
+      cellValue: "CA6P...CJBE",
     });
     await testTableCellValue({
       tableRows: contracNativeRows,
       rowIndex: 0,
       cellIndex: 1,
-      cellValue: "CDHN…FNJE",
+      cellValue: "CDHN...FNJE",
     });
     await testTableCellValue({
       tableRows: contracNativeRows,
@@ -122,13 +122,13 @@ test.describe("Transaction Dashboard: Token Summary", () => {
       tableRows: contracNativeRows,
       rowIndex: 1,
       cellIndex: 0,
-      cellValue: "CDHN…FNJE",
+      cellValue: "CDHN...FNJE",
     });
     await testTableCellValue({
       tableRows: contracNativeRows,
       rowIndex: 1,
       cellIndex: 1,
-      cellValue: "GBJX…G7YU",
+      cellValue: "GBJX...G7YU",
     });
     await testTableCellValue({
       tableRows: contracNativeRows,
