@@ -78,11 +78,6 @@ export const MAINNET_LIMITS: NetworkLimits = {
   "persistent_rent_rate_denominator": "1215",
   "temp_rent_rate_denominator": "2430",
   "live_soroban_state_size_window": [
-    "749622672",
-    "749631516",
-    "749648176",
-    "749662364",
-    "749672192",
     "749698628",
     "749694628",
     "749723996",
@@ -107,7 +102,12 @@ export const MAINNET_LIMITS: NetworkLimits = {
     "750073064",
     "750101320",
     "750123816",
-    "750146052"
+    "750146052",
+    "750173060",
+    "750724611",
+    "750746779",
+    "750763571",
+    "750782063"
   ],
   "state_target_size_bytes": "3000000000",
   "rent_fee_1kb_state_size_low": "-17000",
@@ -146,11 +146,6 @@ export const TESTNET_LIMITS: NetworkLimits = {
   "persistent_rent_rate_denominator": "1215",
   "temp_rent_rate_denominator": "2430",
   "live_soroban_state_size_window": [
-    "303021101",
-    "303026077",
-    "303533991",
-    "303776435",
-    "303722527",
     "302908282",
     "302996345",
     "303000857",
@@ -175,7 +170,12 @@ export const TESTNET_LIMITS: NetworkLimits = {
     "308782378",
     "308719387",
     "308671623",
-    "308594440"
+    "308594440",
+    "311015954",
+    "311571571",
+    "311601939",
+    "311280910",
+    "309728672"
   ],
   "state_target_size_bytes": "3000000000",
   "rent_fee_1kb_state_size_low": "-17000",

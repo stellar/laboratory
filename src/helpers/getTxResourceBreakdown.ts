@@ -149,7 +149,7 @@ export const getTxResourceBreakdown = (
         e.event?.body?.v0?.topics?.[0]?.symbol === "core_metrics" &&
         e.event?.body?.v0?.topics?.[1]?.symbol === metricName,
     );
-    return event?.event?.body?.v0?.data?.u64 || null;
+    return (event?.event?.body?.v0?.data as any)?.u64 || null;
   };
 
   // Extract footprint data
