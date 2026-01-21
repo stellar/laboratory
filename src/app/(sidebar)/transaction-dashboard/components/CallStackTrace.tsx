@@ -10,6 +10,7 @@ import {
 
 import { Box } from "@/components/layout/Box";
 import { SdsLink } from "@/components/SdsLink";
+import { TransactionTabEmptyMessage } from "@/components/TransactionTabEmptyMessage";
 
 import {
   DiagnosticEventJson,
@@ -24,17 +25,18 @@ import {
 } from "@/helpers/formatDiagnosticEvents";
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import { getStellarExpertNetwork } from "@/helpers/getStellarExpertNetwork";
+import { buildContractExplorerHref } from "@/helpers/buildContractExplorerHref";
+
 import { getContractIdError } from "@/validate/methods/getContractIdError";
 import { useStore } from "@/store/useStore";
-import { NetworkType } from "@/types/types";
 import { STELLAR_EXPERT } from "@/constants/settings";
-import { buildContractExplorerHref } from "@/helpers/buildContractExplorerHref";
-import { TransactionTabEmptyMessage } from "@/components/TransactionTabEmptyMessage";
+
+import { AnyObject, NetworkType } from "@/types/types";
 
 export const CallStackTrace = ({
   diagnosticEvents,
 }: {
-  diagnosticEvents: DiagnosticEventJson[] | undefined;
+  diagnosticEvents: DiagnosticEventJson[] | AnyObject | undefined;
 }) => {
   const { network } = useStore();
   const [testDataId, setTestDataId] = useState<string>("");

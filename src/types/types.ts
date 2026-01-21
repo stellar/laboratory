@@ -599,7 +599,7 @@ export type RpcTxJsonResponse = {
   envelopeJson: AnyObject;
   resultJson: AnyObject;
   resultMetaJson: AnyObject;
-  diagnosticEventsJson: DiagnosticEventJson[] | undefined;
+  diagnosticEventsJson: DiagnosticEventJson[] | AnyObject | undefined;
 };
 
 // =============================================================================
