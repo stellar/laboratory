@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { XdrLargeInt } from "@stellar/stellar-sdk";
+import { StrKey, XdrLargeInt } from "@stellar/stellar-sdk";
 import { parse, stringify } from "lossless-json";
 import { v4 as uuidv4 } from "uuid";
 
@@ -164,7 +164,7 @@ export const ScValPrettyJson = ({
           const [code, issuer] = value.split(":");
 
           return (
-            <div className="ScValPrettyJson__value">
+            <div className="StellarDataRenderer__value">
               <div data-type="string">
                 <Quotes>{code}</Quotes>
                 {renderAddress(issuer)}
@@ -428,10 +428,223 @@ export const ScValPrettyJson = ({
 
   // Entry point: render JSON, if provided, or parse XDR to JSON
   return (
-    <div className="ScValPrettyJson">
+    <div className="StellarDataRenderer">
       {render({ item: json ? json : parseJson() })}
     </div>
   );
+};
+
+// =============================================================================
+// Classic Operations Pretty JSON
+// =============================================================================
+export const ClassicOpPrettyJson = ({ value }: { value: any }) => {
+  const { network } = useStore();
+
+  const getValueType = (val: any): string => {
+    if (val === null || val === undefined) {
+      return "null";
+    }
+    if (typeof val === "boolean") {
+      return "boolean";
+    }
+    if (typeof val === "number") {
+      return "number";
+    }
+    if (typeof val === "string") {
+      if (
+        StrKey.isValidEd25519PublicKey(val) ||
+        StrKey.isValidMed25519PublicKey(val) ||
+        StrKey.isValidContract(val)
+      ) {
+        return "address";
+      }
+      return "string";
+    }
+    if (Array.isArray(val)) {
+      return "array";
+    }
+    if (typeof val === "object") {
+      // Check for asset object
+      if (
+        val.asset_type ||
+        Object.keys(val).includes("credit_alphanum4") ||
+        Object.keys(val).includes("credit_alphanum12")
+      ) {
+        return "asset_object";
+      }
+      // Check for price_r (rational number)
+      if (val.n !== undefined && val.d !== undefined) {
+        return "price_r";
+      }
+      return "object";
+    }
+    return "unknown";
+  };
+
+  const renderAddress = (val: string) => {
+    const seNetwork = getStellarExpertNetwork(network.id);
+    const isContract = !getContractIdError(val);
+
+    if (seNetwork) {
+      const params = isContract
+        ? {
+            href: buildContractExplorerHref(val),
+            target: "_blank",
+          }
+        : {
+            href: `${STELLAR_EXPERT}/${seNetwork}/account/${val}`,
+          };
+
+      return (
+        <SdsLink {...params} variant="secondary" isUnderline title={val}>
+          {shortenStellarAddress(val)}
+        </SdsLink>
+      );
+    }
+
+    return shortenStellarAddress(val);
+  };
+
+  const renderAssetObject = (asset: any, hasComma: boolean = false) => {
+    if (asset?.credit_alphanum4 || asset?.credit_alphanum12) {
+      const assetData = asset.credit_alphanum4 || asset.credit_alphanum12;
+
+      return (
+        <>
+          <div className="StellarDataRenderer__value">
+            <div data-type="asset">
+              <Quotes>{assetData.asset_code}</Quotes>
+              {renderAddress(assetData.issuer)}
+            </div>
+          </div>
+          {hasComma ? <Comma /> : null}
+        </>
+      );
+    }
+
+    if (asset.asset_type === "liquidity_pool_shares") {
+      return renderPrimitiveValue({
+        value: `Liquidity Pool: ${asset.liquidity_pool_id}`,
+        type: "string",
+        hasComma,
+      });
+    }
+
+    return renderObject(asset, hasComma);
+  };
+
+  const renderPriceR = (price: any) => {
+    return (
+      <Row>
+        <Key hasColon={true}>n</Key>
+        <Value hasComma={true}>{price.n}</Value>
+        <Key hasColon={true}>d</Key>
+        <Value>{price.d}</Value>
+      </Row>
+    );
+  };
+
+  const renderPrimitiveValue = ({
+    value: val,
+    type,
+    hasComma = false,
+  }: {
+    value: any;
+    type: string;
+    hasComma?: boolean;
+  }) => {
+    switch (type) {
+      case "address":
+        return (
+          <Value key={`${type}-${uuidv4()}`} type={type} hasComma={hasComma}>
+            {renderAddress(val)}
+          </Value>
+        );
+      case "boolean":
+        return <Value type="bool" hasComma={hasComma}>{`${val}`}</Value>;
+      case "number":
+        return (
+          <Value type="number" hasComma={hasComma}>
+            {val}
+          </Value>
+        );
+      case "string":
+        return (
+          <Value type="string" hasComma={hasComma}>
+            {val}
+          </Value>
+        );
+      case "null":
+        return <Value hasComma={hasComma}>null</Value>;
+      default:
+        return <Value hasComma={hasComma}>{`${val}`}</Value>;
+    }
+  };
+
+  const renderArray = (arr: any[], hasComma: boolean = false) => {
+    if (arr.length === 0) {
+      return <EmptyArray hasComma={hasComma} />;
+    }
+
+    return (
+      <>
+        <Bracket char="[" />
+        <Block>
+          {arr.map((item, idx) => (
+            <Row key={`arr-item-${idx}-${uuidv4()}`}>
+              {renderValue(item, idx !== arr.length - 1)}
+            </Row>
+          ))}
+        </Block>
+        <Bracket char="]" hasComma={hasComma} />
+      </>
+    );
+  };
+
+  const renderObject = (obj: any, hasComma: boolean = false) => {
+    const entries = Object.entries(obj);
+
+    if (entries.length === 0) {
+      return <EmptyObject hasComma={hasComma} />;
+    }
+
+    return (
+      <>
+        <Bracket char="{" />
+        <Block>
+          {entries.map(([key, val], idx) => (
+            <Row key={`obj-${key}-${uuidv4()}`}>
+              <Key hasColon={true}>{key}</Key>
+              {renderValue(val, idx !== entries.length - 1)}
+            </Row>
+          ))}
+        </Block>
+        <Bracket char="}" hasComma={hasComma} />
+      </>
+    );
+  };
+
+  const renderValue = (
+    val: any,
+    hasComma: boolean = false,
+  ): React.ReactNode => {
+    const type = getValueType(val);
+
+    switch (type) {
+      case "asset_object":
+        return renderAssetObject(val, hasComma);
+      case "price_r":
+        return renderPriceR(val);
+      case "array":
+        return renderArray(val, hasComma);
+      case "object":
+        return renderObject(val, hasComma);
+      default:
+        return renderPrimitiveValue({ value: val, type, hasComma });
+    }
+  };
+
+  return <div className="StellarDataRenderer">{renderValue(value)}</div>;
 };
 
 // =============================================================================
@@ -441,11 +654,11 @@ export const ScValPrettyJson = ({
 const getType = (type: string) => (type === "symbol" ? "sym" : type);
 
 const Block = ({ children }: { children: React.ReactNode }) => (
-  <div className="ScValPrettyJson__block">{children}</div>
+  <div className="StellarDataRenderer__block">{children}</div>
 );
 
 const Row = ({ children }: { children: React.ReactNode }) => (
-  <div className="ScValPrettyJson__row">{children}</div>
+  <div className="StellarDataRenderer__row">{children}</div>
 );
 
 const Key = ({
@@ -461,7 +674,7 @@ const Key = ({
 
   return (
     <Fragment key={`key-${type}-${uuidv4()}`}>
-      <div className="ScValPrettyJson__key">
+      <div className="StellarDataRenderer__key">
         <div {...(_type ? { "data-type": _type } : {})}>
           {_type === "sym" ? <Quotes>{children}</Quotes> : children}
         </div>
@@ -485,7 +698,7 @@ const Value = ({
   const hasQuotes = ["sym", "string"].includes(_type);
 
   return (
-    <div className="ScValPrettyJson__value">
+    <div className="StellarDataRenderer__value">
       <div {...(_type ? { "data-type": _type } : {})}>
         {hasQuotes ? <Quotes>{_children}</Quotes> : _children}
       </div>
@@ -501,21 +714,21 @@ const Bracket = ({
   char: "{" | "}" | "[" | "]";
   hasComma?: boolean;
 }) => (
-  <div className="ScValPrettyJson__bracket">
+  <div className="StellarDataRenderer__bracket">
     {char}
     {hasComma ? <Comma /> : null}
   </div>
 );
 
-const Colon = () => <div className="ScValPrettyJson__colon">:</div>;
+const Colon = () => <div className="StellarDataRenderer__colon">:</div>;
 
-const Comma = () => <div className="ScValPrettyJson__comma">,</div>;
+const Comma = () => <div className="StellarDataRenderer__comma">,</div>;
 
 const Quotes = ({ children }: { children: React.ReactNode }) => (
   <>
-    <div className="ScValPrettyJson__quotes">{'"'}</div>
+    <div className="StellarDataRenderer__quotes">{'"'}</div>
     {children}
-    <div className="ScValPrettyJson__quotes">{'"'}</div>
+    <div className="StellarDataRenderer__quotes">{'"'}</div>
   </>
 );
 
