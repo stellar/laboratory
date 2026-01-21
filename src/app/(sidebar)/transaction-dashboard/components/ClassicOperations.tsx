@@ -22,7 +22,7 @@ export const ClassicOperations = ({
 
   useEffect(() => {
     setTotalPageCount(Math.ceil(operations.length / PAGE_SIZE));
-  }, [operations]);
+  }, [operations.length]);
 
   // @TODO to be replaced with an empty state component
   if (!operations.length) {
