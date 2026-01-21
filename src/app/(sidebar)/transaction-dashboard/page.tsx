@@ -31,6 +31,7 @@ import { Events } from "./components/Events";
 import { TokenSummary } from "./components/TokenSummary";
 import { Contracts } from "./components/Contracts";
 import { ResourceProfiler } from "./components/ResourceProfiler";
+import { CallStackTrace } from "./components/CallStackTrace";
 
 import "./styles.scss";
 
@@ -42,7 +43,8 @@ export default function TransactionDashboard() {
     | "tx-state-change"
     | "tx-resource-profiler"
     | "tx-signatures"
-    | "tx-fee-breakdown";
+    | "tx-fee-breakdown"
+    | "tx-call-stack-trace";
 
   const { network, txDashboard } = useStore();
 
@@ -325,6 +327,16 @@ export default function TransactionDashboard() {
                 isDisabled: !isDataLoaded,
               }}
               tab4={{
+                id: "tx-call-stack-trace",
+                label: "Call Stack Trace",
+                content: (
+                  <CallStackTrace
+                    diagnosticEvents={txDetails?.diagnosticEventsJson}
+                  />
+                ),
+                isDisabled: !isDataLoaded,
+              }}
+              tab5={{
                 id: "tx-state-change",
                 label: "State Change",
                 content: isDataLoaded ? (
@@ -334,19 +346,19 @@ export default function TransactionDashboard() {
                 ),
                 isDisabled: !isDataLoaded,
               }}
-              tab5={{
+              tab6={{
                 id: "tx-resource-profiler",
                 label: "Resource Profiler",
                 content: <ResourceProfiler txDetails={txDetails} />,
                 isDisabled: !isDataLoaded,
               }}
-              tab6={{
+              tab7={{
                 id: "tx-signatures",
                 label: "Signatures",
                 content: <Signatures txDetails={txDetails || null} />,
                 isDisabled: !isDataLoaded,
               }}
-              tab7={{
+              tab8={{
                 id: "tx-fee-breakdown",
                 label: "Fee Breakdown",
                 content: <FeeBreakdown txDetails={txDetails} />,
