@@ -49,9 +49,10 @@ export const CallStackTrace = ({
     allFailed: TEMP_FAILED,
   };
 
-  const data = diagnosticEvents
-    ? formatDiagnosticEvents(TEST_DATA[testDataId] || diagnosticEvents)
-    : null;
+  const data =
+    diagnosticEvents && Array.isArray(diagnosticEvents)
+      ? formatDiagnosticEvents(TEST_DATA[testDataId] || diagnosticEvents)
+      : null;
 
   const [isCollapsedView, setIsCollapsedView] = useState(false);
 
@@ -492,7 +493,7 @@ const renderAssetString = (value: string) => {
   if (isAsset(value)) {
     const [code, issuer] = value.split(":");
 
-    return `${code}:${shortenStellarAddress(issuer)}}`;
+    return `${code}:${shortenStellarAddress(issuer)}`;
   }
 
   return value;
