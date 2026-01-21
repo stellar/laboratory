@@ -29,6 +29,7 @@ import { useStore } from "@/store/useStore";
 import { NetworkType } from "@/types/types";
 import { STELLAR_EXPERT } from "@/constants/settings";
 import { buildContractExplorerHref } from "@/helpers/buildContractExplorerHref";
+import { TransactionTabEmptyMessage } from "@/components/TransactionTabEmptyMessage";
 
 export const CallStackTrace = ({
   diagnosticEvents,
@@ -53,8 +54,11 @@ export const CallStackTrace = ({
   const [isCollapsedView, setIsCollapsedView] = useState(false);
 
   if (!data?.callStack) {
-    // TODO: no data case
-    return null;
+    return (
+      <TransactionTabEmptyMessage title="No call stack trace">
+        This transaction has no call stack trace.
+      </TransactionTabEmptyMessage>
+    );
   }
 
   const truncateParams = (
