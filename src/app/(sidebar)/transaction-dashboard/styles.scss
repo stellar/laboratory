@@ -759,7 +759,7 @@
         display: block;
         content: attr(data-type);
         margin-top: pxToRem(6px);
-        padding-left: 2px;
+        padding-left: pxToRem(2px);
 
         white-space: nowrap;
         font-size: pxToRem(12px);
@@ -828,7 +828,7 @@
   }
 
   &__colon {
-    margin-right: 4px;
+    margin-right: pxToRem(4px);
   }
 
   &__icon {

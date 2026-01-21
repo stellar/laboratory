@@ -17,11 +17,6 @@ import {
   formatDiagnosticEvents,
   FormattedEventData,
   ProcessedEvent,
-  TEMP_FAILED,
-  TEMP_KALE,
-  TEMP_LONG_PARAMS,
-  TEMP_MIXED,
-  TEMP_SS,
 } from "@/helpers/formatDiagnosticEvents";
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import { getStellarExpertNetwork } from "@/helpers/getStellarExpertNetwork";
@@ -32,6 +27,15 @@ import { useStore } from "@/store/useStore";
 import { STELLAR_EXPERT } from "@/constants/settings";
 
 import { AnyObject, NetworkType } from "@/types/types";
+
+// TODO: remove before merge
+import {
+  TEMP_FAILED,
+  TEMP_KALE,
+  TEMP_LONG_PARAMS,
+  TEMP_MIXED,
+  TEMP_SS,
+} from "../testData";
 
 export const CallStackTrace = ({
   diagnosticEvents,
@@ -161,7 +165,7 @@ export const CallStackTrace = ({
 
     // Ellipsis (special case) for collapsed params
     if (type === "ellipsis") {
-      return <span className="CallStackTrace__ellipsis">…</span>;
+      return <span className="CallStackTrace__ellipsis">{value}</span>;
     }
 
     // Array
@@ -175,7 +179,7 @@ export const CallStackTrace = ({
       return (
         <span className="CallStackTrace__itemArray">
           {/* Don’t show square brackets for param arrays */}
-          {parentId ? <Bracket char={"["} /> : null}
+          {parentId ? <Bracket char="[" /> : null}
           <span className="CallStackTrace__itemArray__items">
             {renderVal.map((v, vIndex) => {
               const id = `vec-${vIndex}`;
@@ -191,7 +195,7 @@ export const CallStackTrace = ({
               );
             })}
           </span>
-          {parentId ? <Bracket char={"]"} /> : null}
+          {parentId ? <Bracket char="]" /> : null}
         </span>
       );
     }
@@ -200,7 +204,7 @@ export const CallStackTrace = ({
     if (type === "map") {
       return (
         <span className="CallStackTrace__itemObject">
-          <Bracket char={"{"} />
+          <Bracket char="{" />
           {value.map((v, vIndex) => {
             return (
               <span
@@ -214,7 +218,7 @@ export const CallStackTrace = ({
               </span>
             );
           })}
-          <Bracket char={"}"} />
+          <Bracket char="}" />
         </span>
       );
     }
@@ -269,7 +273,7 @@ export const CallStackTrace = ({
               </span>
               {event.dataContractParams?.length ? (
                 <>
-                  <Bracket char={"["} />
+                  <Bracket char="[" />
                   <span className="CallStackTrace__itemFunc__params">
                     {renderData({
                       dataItem: {
@@ -280,7 +284,7 @@ export const CallStackTrace = ({
                       isFnParams: true,
                     })}
                   </span>
-                  <Bracket char={"]"} />
+                  <Bracket char="]" />
                 </>
               ) : null}
             </span>
@@ -309,7 +313,7 @@ export const CallStackTrace = ({
             data-is-collapsed={isCollapsedView}
           >
             <span className="CallStackTrace__itemFunc__func">{event.name}</span>
-            <Bracket char={"("} />
+            <Bracket char="(" />
             <span className="CallStackTrace__itemFunc__params">
               {renderData({
                 dataItem: event.data,
@@ -317,7 +321,7 @@ export const CallStackTrace = ({
                 isFnParams: true,
               })}
             </span>
-            <Bracket char={")"} />
+            <Bracket char=")" />
           </span>
 
           {event.contractId ? renderContractId(event.contractId) : null}
