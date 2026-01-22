@@ -315,7 +315,7 @@ export default function TransactionDashboard() {
             <TabView
               tab1={{
                 id: "tx-token-summary",
-                label: "Token Summary",
+                label: "Token summary",
                 content: <TokenSummary txDetails={txDetails} />,
                 isDisabled: !isDataLoaded,
               }}
@@ -333,7 +333,7 @@ export default function TransactionDashboard() {
               }}
               tab4={{
                 id: "tx-call-stack-trace",
-                label: "Call Stack Trace",
+                label: "Call stack trace",
                 content: (
                   <CallStackTrace
                     diagnosticEvents={txDetails?.diagnosticEventsJson}
@@ -343,7 +343,7 @@ export default function TransactionDashboard() {
               }}
               tab5={{
                 id: "tx-state-change",
-                label: "State Change",
+                label: "State change",
                 content: isDataLoaded ? (
                   <StateChange txDetails={txDetails} />
                 ) : (
@@ -353,7 +353,7 @@ export default function TransactionDashboard() {
               }}
               tab6={{
                 id: "tx-resource-profiler",
-                label: "Resource Profiler",
+                label: "Resource profiler",
                 content: <ResourceProfiler txDetails={txDetails} />,
                 isDisabled: !isDataLoaded,
               }}
@@ -365,7 +365,7 @@ export default function TransactionDashboard() {
               }}
               tab8={{
                 id: "tx-fee-breakdown",
-                label: "Fee Breakdown",
+                label: "Fee breakdown",
                 content: <FeeBreakdown txDetails={txDetails} />,
                 isDisabled: !isDataLoaded,
               }}
