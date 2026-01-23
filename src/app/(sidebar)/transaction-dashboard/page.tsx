@@ -2,7 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Alert, Button, Card, Icon, Input, Text } from "@stellar/design-system";
+import {
+  Alert,
+  Button,
+  Card,
+  Icon,
+  Input,
+  Link,
+  Loader,
+  Text,
+} from "@stellar/design-system";
 
 import { PageCard } from "@/components/layout/PageCard";
 import { Box } from "@/components/layout/Box";
@@ -16,11 +25,13 @@ import { STELLAR_EXPERT } from "@/constants/settings";
 import { validate } from "@/validate";
 import { useStore } from "@/store/useStore";
 import { useFetchRpcTxDetails } from "@/query/useFetchRpcTxDetails";
+import { useLatestTxHash } from "@/query/useLatestTxHash";
 
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { getTxData } from "@/helpers/getTxData";
 import { openUrl } from "@/helpers/openUrl";
 import { getStellarExpertNetwork } from "@/helpers/getStellarExpertNetwork";
+import { delayedAction } from "@/helpers/delayedAction";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { TransactionInfo } from "./components/TransactionInfo";
@@ -64,6 +75,18 @@ export default function TransactionDashboard() {
     rpcUrl: network.rpcUrl,
   });
 
+  const {
+    data: latestTxHash,
+    error: latestTxHashError,
+    isSuccess: isLatestTxHashSuccess,
+    isFetching: isLatestTxHashFetching,
+    isLoading: isLatestTxHashLoading,
+    refetch: fetchLatestTxHash,
+  } = useLatestTxHash(
+    network.horizonUrl,
+    getNetworkHeaders(network, "horizon"),
+  );
+
   const isCurrentNetworkSupported = ["mainnet", "testnet", "custom"].includes(
     network.id,
   );
@@ -74,6 +97,7 @@ export default function TransactionDashboard() {
     Boolean(transactionHashInputError);
   const isLoading = isTxDetailsLoading || isTxDetailsFetching;
   const isDataLoaded = Boolean(txDetails);
+  const isFetchingLatestTxHash = isLatestTxHashFetching || isLatestTxHashLoading;
 
   const { isSorobanTx, operations } = getTxData(txDetails || null);
   const isTxNotFound = txDetails?.status === "NOT_FOUND";
@@ -120,6 +144,13 @@ export default function TransactionDashboard() {
     // Run this only when page loads
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (isLatestTxHashSuccess && latestTxHash) {
+      setTransactionHashInput(latestTxHash);
+      txDashboard.updateTransactionHash(latestTxHash);
+    }
+  }, [isLatestTxHashSuccess, latestTxHash, txDashboard]);
 
   const resetFetchTxDetails = async () => {
     if (transactionHashInputError) {
@@ -246,9 +277,39 @@ export default function TransactionDashboard() {
                 setTransactionHashInputError(error || "");
               }}
               note={
-                isCurrentNetworkSupported
-                  ? ""
-                  : "You must switch your network to Mainnet, Testnet, or Custom in order to see transaction info."
+                isCurrentNetworkSupported ? (
+                  <>
+                    Input a transaction hash,{" "}
+                    <Link
+                      onClick={() => {
+                        if (latestTxHash) {
+                          // Reset query to clear old data
+                          queryClient.resetQueries({
+                            queryKey: ["transaction-dashboard", "latestTxHash"],
+                            exact: true,
+                          });
+                          setTransactionHashInput("");
+                        }
+
+                        delayedAction({
+                          action: () => {
+                            fetchLatestTxHash();
+                            trackEvent(
+                              TrackingEvent.TRANSACTION_DASHBOARD_FETCH_LATEST_TX,
+                            );
+                          },
+                          delay: 500,
+                        });
+                      }}
+                      isDisabled={isFetchingLatestTxHash}
+                      icon={isFetchingLatestTxHash ? <Loader /> : null}
+                    >
+                      or fetch the latest transaction to try it out.
+                    </Link>
+                  </>
+                ) : (
+                  "You must switch your network to Mainnet, Testnet, or Custom in order to see transaction info."
+                )
               }
             />
 
@@ -257,6 +318,13 @@ export default function TransactionDashboard() {
             {txDetailsError ? (
               <MessageField
                 message={txDetailsError.toString()}
+                isError={true}
+              />
+            ) : null}
+
+            {latestTxHashError ? (
+              <MessageField
+                message={latestTxHashError.toString()}
                 isError={true}
               />
             ) : null}
