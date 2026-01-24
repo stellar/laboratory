@@ -53,7 +53,11 @@ export default function ViewXdr() {
     isFetching: isLatestTxnFetching,
     isLoading: isLatestTxnLoading,
     refetch: fetchLatestTxn,
-  } = useLatestTxn(network.horizonUrl, getNetworkHeaders(network, "horizon"));
+  } = useLatestTxn(
+    network.horizonUrl,
+    getNetworkHeaders(network, "horizon"),
+    ["xdr", "latestTxn"],
+  );
 
   const queryClient = useQueryClient();
 

@@ -4,7 +4,7 @@ import { NetworkHeaders } from "@/types/types";
 export const useLatestTxn = (
   horizonUrl: string,
   headers: NetworkHeaders,
-  queryKey: string[] = ["xdr", "latestTxn"],
+  queryKey: string[] = ["latestTxn"],
 ) => {
   const query = useQuery({
     queryKey: [...queryKey, horizonUrl],
