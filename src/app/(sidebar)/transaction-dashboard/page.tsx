@@ -190,6 +190,7 @@ export default function TransactionDashboard() {
                 icon={<Icon.RefreshCw01 />}
                 onClick={async () => {
                   setTransactionHashInput("");
+                  setTransactionHashInputError("");
                   txDashboard.resetTransactionHash();
                   await resetFetchTxDetails();
 
