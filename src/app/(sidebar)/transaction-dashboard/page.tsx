@@ -278,7 +278,7 @@ export default function TransactionDashboard() {
               }}
               note={
                 isCurrentNetworkSupported
-                  ? "Input a transaction hash"
+                  ? ""
                   : "You must switch your network to Mainnet, Testnet, or Custom in order to see transaction info."
               }
             />
