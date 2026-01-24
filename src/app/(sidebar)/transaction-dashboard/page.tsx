@@ -277,39 +277,9 @@ export default function TransactionDashboard() {
                 setTransactionHashInputError(error || "");
               }}
               note={
-                isCurrentNetworkSupported ? (
-                  <>
-                    Input a transaction hash,{" "}
-                    <Link
-                      onClick={() => {
-                        if (latestTxHash) {
-                          // Reset query to clear old data
-                          queryClient.resetQueries({
-                            queryKey: ["transaction-dashboard", "latestTxHash"],
-                            exact: true,
-                          });
-                          setTransactionHashInput("");
-                        }
-
-                        delayedAction({
-                          action: () => {
-                            fetchLatestTxHash();
-                            trackEvent(
-                              TrackingEvent.TRANSACTION_DASHBOARD_FETCH_LATEST_TX,
-                            );
-                          },
-                          delay: 500,
-                        });
-                      }}
-                      isDisabled={isFetchingLatestTxHash}
-                      icon={isFetchingLatestTxHash ? <Loader /> : null}
-                    >
-                      or fetch the latest transaction to try it out.
-                    </Link>
-                  </>
-                ) : (
-                  "You must switch your network to Mainnet, Testnet, or Custom in order to see transaction info."
-                )
+                isCurrentNetworkSupported
+                  ? "Input a transaction hash"
+                  : "You must switch your network to Mainnet, Testnet, or Custom in order to see transaction info."
               }
             />
 
@@ -359,6 +329,41 @@ export default function TransactionDashboard() {
       <TransactionInfo
         txDetails={txDetails || null}
         isTxNotFound={isTxNotFound}
+        fetchLatestAction={
+          isCurrentNetworkSupported ? (
+            <Link
+              onClick={() => {
+                if (latestTxHash) {
+                  // Reset query to clear old data
+                  queryClient.resetQueries({
+                    queryKey: [
+                      "transaction-dashboard",
+                      "latestTxHash",
+                      network.horizonUrl,
+                    ],
+                    exact: true,
+                  });
+                  setTransactionHashInput("");
+                  txDashboard.updateTransactionHash("");
+                }
+
+                delayedAction({
+                  action: () => {
+                    fetchLatestTxHash();
+                    trackEvent(
+                      TrackingEvent.TRANSACTION_DASHBOARD_FETCH_LATEST_TX,
+                    );
+                  },
+                  delay: 500,
+                });
+              }}
+              isDisabled={isFetchingLatestTxHash}
+              icon={isFetchingLatestTxHash ? <Loader /> : null}
+            >
+              or fetch the latest transaction to try it out.
+            </Link>
+          ) : undefined
+        }
       />
 
       {!isSorobanTx && operations ? (
