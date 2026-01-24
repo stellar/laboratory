@@ -59,7 +59,7 @@ export default function ViewXdr() {
 
   useEffect(() => {
     if (isLatestTxnSuccess && latestTxn) {
-      updateXdrBlob(latestTxn);
+      updateXdrBlob(latestTxn.envelope_xdr);
       updateXdrType(XDR_TYPE_TRANSACTION_ENVELOPE);
     }
   }, [isLatestTxnSuccess, latestTxn, updateXdrBlob, updateXdrType]);
@@ -204,7 +204,7 @@ export default function ViewXdr() {
                     if (latestTxn) {
                       // Reset query to clear old data
                       queryClient.resetQueries({
-                        queryKey: ["xdr", "latestTxn"],
+                        queryKey: ["xdr", "latestTxn", network.horizonUrl],
                         exact: true,
                       });
                       updateXdrBlob("");

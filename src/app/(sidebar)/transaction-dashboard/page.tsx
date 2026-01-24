@@ -25,7 +25,7 @@ import { STELLAR_EXPERT } from "@/constants/settings";
 import { validate } from "@/validate";
 import { useStore } from "@/store/useStore";
 import { useFetchRpcTxDetails } from "@/query/useFetchRpcTxDetails";
-import { useLatestTxHash } from "@/query/useLatestTxHash";
+import { useLatestTxn } from "@/query/useLatestTxn";
 
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { getTxData } from "@/helpers/getTxData";
@@ -76,15 +76,16 @@ export default function TransactionDashboard() {
   });
 
   const {
-    data: latestTxHash,
-    error: latestTxHashError,
-    isSuccess: isLatestTxHashSuccess,
-    isFetching: isLatestTxHashFetching,
-    isLoading: isLatestTxHashLoading,
-    refetch: fetchLatestTxHash,
-  } = useLatestTxHash(
+    data: latestTxn,
+    error: latestTxnError,
+    isSuccess: isLatestTxnSuccess,
+    isFetching: isLatestTxnFetching,
+    isLoading: isLatestTxnLoading,
+    refetch: fetchLatestTxn,
+  } = useLatestTxn(
     network.horizonUrl,
     getNetworkHeaders(network, "horizon"),
+    ["transaction-dashboard", "latestTxn"],
   );
 
   const isCurrentNetworkSupported = ["mainnet", "testnet", "custom"].includes(
@@ -97,7 +98,7 @@ export default function TransactionDashboard() {
     Boolean(transactionHashInputError);
   const isLoading = isTxDetailsLoading || isTxDetailsFetching;
   const isDataLoaded = Boolean(txDetails);
-  const isFetchingLatestTxHash = isLatestTxHashFetching || isLatestTxHashLoading;
+  const isFetchingLatestTxn = isLatestTxnFetching || isLatestTxnLoading;
 
   const { isSorobanTx, operations } = getTxData(txDetails || null);
   const isTxNotFound = txDetails?.status === "NOT_FOUND";
@@ -146,11 +147,11 @@ export default function TransactionDashboard() {
   }, []);
 
   useEffect(() => {
-    if (isLatestTxHashSuccess && latestTxHash) {
-      setTransactionHashInput(latestTxHash);
-      txDashboard.updateTransactionHash(latestTxHash);
+    if (isLatestTxnSuccess && latestTxn?.hash) {
+      setTransactionHashInput(latestTxn.hash);
+      txDashboard.updateTransactionHash(latestTxn.hash);
     }
-  }, [isLatestTxHashSuccess, latestTxHash, txDashboard]);
+  }, [isLatestTxnSuccess, latestTxn, txDashboard]);
 
   const resetFetchTxDetails = async () => {
     if (transactionHashInputError) {
@@ -293,9 +294,9 @@ export default function TransactionDashboard() {
               />
             ) : null}
 
-            {latestTxHashError ? (
+            {latestTxnError ? (
               <MessageField
-                message={latestTxHashError.toString()}
+                message={latestTxnError.toString()}
                 isError={true}
               />
             ) : null}
@@ -334,12 +335,12 @@ export default function TransactionDashboard() {
           isCurrentNetworkSupported ? (
             <Link
               onClick={() => {
-                if (latestTxHash) {
+                if (latestTxn) {
                   // Reset query to clear old data
                   queryClient.resetQueries({
                     queryKey: [
                       "transaction-dashboard",
-                      "latestTxHash",
+                      "latestTxn",
                       network.horizonUrl,
                     ],
                     exact: true,
@@ -350,7 +351,7 @@ export default function TransactionDashboard() {
 
                 delayedAction({
                   action: () => {
-                    fetchLatestTxHash();
+                    fetchLatestTxn();
                     trackEvent(
                       TrackingEvent.TRANSACTION_DASHBOARD_FETCH_LATEST_TX,
                     );
@@ -358,8 +359,8 @@ export default function TransactionDashboard() {
                   delay: 500,
                 });
               }}
-              isDisabled={isFetchingLatestTxHash}
-              icon={isFetchingLatestTxHash ? <Loader /> : null}
+              isDisabled={isFetchingLatestTxn}
+              icon={isFetchingLatestTxn ? <Loader /> : null}
             >
               or fetch the latest transaction to try it out.
             </Link>

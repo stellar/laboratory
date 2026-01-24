@@ -1,18 +1,35 @@
 import { useQuery } from "@tanstack/react-query";
 import { NetworkHeaders } from "@/types/types";
 
-export const useLatestTxn = (horizonUrl: string, headers: NetworkHeaders) => {
+export const useLatestTxn = (
+  horizonUrl: string,
+  headers: NetworkHeaders,
+  queryKey: string[] = ["xdr", "latestTxn"],
+) => {
   const query = useQuery({
-    queryKey: ["xdr", "latestTxn"],
+    queryKey: [...queryKey, horizonUrl],
     queryFn: async () => {
       try {
         const request = await fetch(
           `${horizonUrl}/transactions?limit=1&order=desc`,
           { headers },
         );
+
+        if (!request.ok) {
+          throw new Error(
+            `Horizon responded with status ${request.status} ${request.statusText}`,
+          );
+        }
+
         const requestResponse = await request.json();
 
-        return requestResponse._embedded.records[0].envelope_xdr;
+        const records = requestResponse?._embedded?.records;
+
+        if (!Array.isArray(records) || records.length === 0) {
+          throw new Error("No transactions found in Horizon response");
+        }
+
+        return records[0];
       } catch (e) {
         throw new Error(
           `There was a problem fetching the latest transaction: ${e}`,
