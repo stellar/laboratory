@@ -19,8 +19,8 @@ viewing.
 
 ## Prerequisites
 
-- **Node.js >= 22.22.0**
-- pnpm
+- Node.js >= 22.22.0: https://nodejs.org/en/blog/release/v22.22.0
+- pnpm >= 10.15.1: https://pnpm.io/blog/releases/10.15
 
 ## Tech stack
 
