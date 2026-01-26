@@ -4,7 +4,7 @@
   "author": "Stellar Development Foundation <stellar@stellar.org>",
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=22.22.0"
   },
   "scripts": {
     "fetch-limits": "node scripts/fetch-network-limits.mjs",
