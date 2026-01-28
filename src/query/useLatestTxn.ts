@@ -34,13 +34,16 @@ export const useLatestTxn = (
 
         // Return the first (latest) transaction with hash and envelope_xdr
         const latestTx = response.transactions[0];
-        
+
+        // Convert XDR object to base64 string for compatibility with XDR view page
+        const envelopeXdrBase64 = latestTx.envelopeXdr?.toXDR("base64") || "";
+
         return {
-          hash: latestTx.txHash,
-          // Convert XDR object to base64 string for compatibility with XDR view page
-          envelope_xdr: latestTx.envelopeXdr?.toXDR("base64").toString(),
-          // Keep the full transaction data for other uses
+          // Spread the original transaction first to preserve all RPC fields
           ...latestTx,
+          // Then override with normalized fields for backward compatibility
+          hash: latestTx.txHash,
+          envelope_xdr: envelopeXdrBase64,
         };
       } catch (e) {
         throw new Error(
