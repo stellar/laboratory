@@ -21,11 +21,11 @@ import { AnyObject, RpcTxJsonResponse } from "@/types/types";
 export const TransactionInfo = ({
   txDetails,
   isTxNotFound,
-  fetchLatestAction,
+  fetchLatestElement,
 }: {
   txDetails: RpcTxJsonResponse | null;
   isTxNotFound: boolean;
-  fetchLatestAction?: React.ReactNode;
+  fetchLatestElement?: React.ReactNode;
 }) => {
   const { network } = useStore();
 
@@ -382,7 +382,7 @@ export const TransactionInfo = ({
             <NoInfoLoadedView
               message="Load a transaction"
               type="info"
-              action={fetchLatestAction}
+              action={fetchLatestElement}
             />
           ) : null}
         </div>

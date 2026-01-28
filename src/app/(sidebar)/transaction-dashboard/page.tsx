@@ -82,11 +82,10 @@ export default function TransactionDashboard() {
     isFetching: isLatestTxnFetching,
     isLoading: isLatestTxnLoading,
     refetch: fetchLatestTxn,
-  } = useLatestTxn(
-    network.rpcUrl,
-    getNetworkHeaders(network, "rpc"),
-    ["transaction-dashboard", "latestTxn"],
-  );
+  } = useLatestTxn(network.rpcUrl, getNetworkHeaders(network, "rpc"), [
+    "transaction-dashboard",
+    "latestTxn",
+  ]);
 
   const isCurrentNetworkSupported = ["mainnet", "testnet", "custom"].includes(
     network.id,
@@ -151,7 +150,8 @@ export default function TransactionDashboard() {
       setTransactionHashInput(latestTxn.hash);
       txDashboard.updateTransactionHash(latestTxn.hash);
     }
-  }, [isLatestTxnSuccess, latestTxn, txDashboard]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLatestTxnSuccess, latestTxn?.hash]);
 
   const resetFetchTxDetails = async () => {
     if (transactionHashInputError) {
@@ -331,7 +331,7 @@ export default function TransactionDashboard() {
       <TransactionInfo
         txDetails={txDetails || null}
         isTxNotFound={isTxNotFound}
-        fetchLatestAction={
+        fetchLatestElement={
           isCurrentNetworkSupported ? (
             <Link
               onClick={() => {
