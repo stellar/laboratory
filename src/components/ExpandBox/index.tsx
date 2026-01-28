@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useLayoutEffect, useState } from "react";
 import { delayedAction } from "@/helpers/delayedAction";
 import "./styles.scss";

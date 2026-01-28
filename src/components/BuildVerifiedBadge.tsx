@@ -1,3 +1,5 @@
+"use client";
+
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { Badge, Icon, Link, Tooltip } from "@stellar/design-system";
 

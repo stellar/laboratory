@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { Text } from "@stellar/design-system";
 import { Box } from "@/components/layout/Box";

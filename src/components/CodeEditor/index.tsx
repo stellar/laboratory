@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef, useState } from "react";
 import { Button, CopyText, Icon, Select } from "@stellar/design-system";
 import MonacoEditor, { useMonaco, type OnMount } from "@monaco-editor/react";

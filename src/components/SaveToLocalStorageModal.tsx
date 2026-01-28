@@ -1,3 +1,5 @@
+"use client";
+
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { Button, Input, Modal } from "@stellar/design-system";
 import { arrayItem } from "@/helpers/arrayItem";

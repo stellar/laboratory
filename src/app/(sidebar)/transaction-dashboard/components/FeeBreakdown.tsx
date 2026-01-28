@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { Badge, Icon, Label, Text, Toggle } from "@stellar/design-system";
 import { stringify } from "lossless-json";
