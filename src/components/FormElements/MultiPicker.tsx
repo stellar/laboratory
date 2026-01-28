@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 
 import { Button, Icon } from "@stellar/design-system";

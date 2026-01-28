@@ -1,3 +1,5 @@
+"use client";
+
 import { useContext } from "react";
 
 import { Box } from "@/components/layout/Box";

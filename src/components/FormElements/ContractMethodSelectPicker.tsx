@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { Select } from "@stellar/design-system";
 import { contract } from "@stellar/stellar-sdk";

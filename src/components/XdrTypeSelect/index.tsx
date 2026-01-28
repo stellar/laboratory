@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { Badge, Icon, Input } from "@stellar/design-system";
 

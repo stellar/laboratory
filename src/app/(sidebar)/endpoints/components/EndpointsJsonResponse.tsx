@@ -1,3 +1,5 @@
+"use client";
+
 import { Routes } from "@/constants/routes";
 import { CustomKeyValueLinkMap, PrettyJson } from "@/components/PrettyJson";
 import { SdsLink } from "@/components/SdsLink";
