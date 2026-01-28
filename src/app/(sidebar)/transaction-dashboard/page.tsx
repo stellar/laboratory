@@ -83,8 +83,8 @@ export default function TransactionDashboard() {
     isLoading: isLatestTxnLoading,
     refetch: fetchLatestTxn,
   } = useLatestTxn(
-    network.horizonUrl,
-    getNetworkHeaders(network, "horizon"),
+    network.rpcUrl,
+    getNetworkHeaders(network, "rpc"),
     ["transaction-dashboard", "latestTxn"],
   );
 
@@ -341,7 +341,7 @@ export default function TransactionDashboard() {
                     queryKey: [
                       "transaction-dashboard",
                       "latestTxn",
-                      network.horizonUrl,
+                      network.rpcUrl,
                     ],
                     exact: true,
                   });

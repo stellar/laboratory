@@ -54,8 +54,8 @@ export default function ViewXdr() {
     isLoading: isLatestTxnLoading,
     refetch: fetchLatestTxn,
   } = useLatestTxn(
-    network.horizonUrl,
-    getNetworkHeaders(network, "horizon"),
+    network.rpcUrl,
+    getNetworkHeaders(network, "rpc"),
     ["xdr", "latestTxn"],
   );
 
@@ -208,7 +208,7 @@ export default function ViewXdr() {
                     if (latestTxn) {
                       // Reset query to clear old data
                       queryClient.resetQueries({
-                        queryKey: ["xdr", "latestTxn", network.horizonUrl],
+                        queryKey: ["xdr", "latestTxn", network.rpcUrl],
                         exact: true,
                       });
                       updateXdrBlob("");
