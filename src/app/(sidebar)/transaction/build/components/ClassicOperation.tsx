@@ -1,3 +1,5 @@
+"use client";
+
 import { ChangeEvent, Fragment, useState } from "react";
 import { Card, Badge, Button, Icon, Input } from "@stellar/design-system";
 

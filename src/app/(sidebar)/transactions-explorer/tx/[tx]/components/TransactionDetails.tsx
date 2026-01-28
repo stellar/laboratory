@@ -1,3 +1,5 @@
+"use client";
+
 import { StrKey, xdr as XDR } from "@stellar/stellar-sdk";
 import { Icon, Loader, Profile, Text, Tooltip } from "@stellar/design-system";
 import { rpc as StellarRpc } from "@stellar/stellar-sdk";

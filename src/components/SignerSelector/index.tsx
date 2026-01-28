@@ -1,3 +1,5 @@
+"use client";
+
 import { JSX, useCallback, useLayoutEffect, useRef } from "react";
 
 import { useStore } from "@/store/useStore";
