@@ -17,6 +17,11 @@ The `main` branch is deployed to
 bottom right, you can reference a commit hash of the web app version you're
 viewing.
 
+## Prerequisites
+
+- Node.js >= 22.22.0: https://nodejs.org/en/blog/release/v22.22.0
+- pnpm >= 10.15.1: https://pnpm.io/blog/releases/10.15
+
 ## Tech stack
 
 - [Next.js](https://nextjs.org/) framework (React)
@@ -40,8 +45,8 @@ pnpm dev
 The Lab automatically fetches Stellar network limits (Mainnet, Testnet, and
 Futurenet) before every `dev` run.
 
-To configure RPC endpoints, edit the
-`NETWORKS` array in `scripts/fetch-network-limits.js`:
+To configure RPC endpoints, edit the `NETWORKS` array in
+`scripts/fetch-network-limits.js`:
 
 ```javascript
 const NETWORKS = [
