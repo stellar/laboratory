@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { Button, Input, Modal } from "@stellar/design-system";
 import { Keypair } from "@stellar/stellar-sdk";

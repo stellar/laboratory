@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { Button, Icon } from "@stellar/design-system";
 import { parse, stringify } from "lossless-json";
