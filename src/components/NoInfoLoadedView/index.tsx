@@ -6,9 +6,11 @@ import "./styles.scss";
 export const NoInfoLoadedView = ({
   message,
   type = "info",
+  action,
 }: {
   message: React.ReactNode;
   type?: "info" | "error";
+  action?: React.ReactNode;
 }) => {
   return (
     <Box
@@ -21,6 +23,7 @@ export const NoInfoLoadedView = ({
       <Box gap="xs" direction="row" align="center" justify="center" wrap="wrap">
         {type === "error" ? <Icon.XSquare /> : null}
         {message}
+        {action}
       </Box>
     </Box>
   );

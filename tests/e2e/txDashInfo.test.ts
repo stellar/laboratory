@@ -4,7 +4,11 @@ import {
   TX_ST_CHANGE_DOMAIN_SET,
   TX_ST_CHANGE_KALE_PLANT,
 } from "./mock/txStateChange";
-import { TX_DASH_CLASSIC } from "./mock/txDash";
+import {
+  TX_DASH_CLASSIC,
+  TX_DASH_LATEST_LEDGER_RESPONSE,
+  TX_DASH_LATEST_TX_RESPONSE,
+} from "./mock/txDash";
 import { mockRpcRequest } from "./mock/helpers";
 
 test.describe("Transaction Dashboard", () => {
@@ -263,6 +267,37 @@ test.describe("Transaction Dashboard", () => {
       "This transaction can’t be found here",
     );
     await expect(alertContainer).toBeVisible();
+  });
+
+  test("Fetch latest transaction hash", async ({ page }) => {
+    const txHashInput = page.getByLabel("Transaction Hash");
+    await expect(txHashInput).toHaveValue("");
+
+    await mockRpcRequest({
+      page,
+      rpcMethod: "getLatestLedger",
+      bodyJsonResponse: TX_DASH_LATEST_LEDGER_RESPONSE,
+    });
+
+    await mockRpcRequest({
+      page,
+      rpcMethod: "getTransactions",
+      bodyJsonResponse: TX_DASH_LATEST_TX_RESPONSE,
+    });
+
+    const fetchLatestLink = page.getByText(
+      "or fetch the latest transaction to try it out",
+    );
+    await expect(fetchLatestLink).toBeVisible();
+    await fetchLatestLink.click();
+
+    // Wait for the delayed action (500ms) plus query execution
+    await page.waitForTimeout(2000);
+
+    // Verify that the transaction hash was populated
+    await expect(txHashInput).toHaveValue(
+      TX_DASH_LATEST_TX_RESPONSE.result.transactions[0].txHash,
+    );
   });
 });
 

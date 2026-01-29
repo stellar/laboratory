@@ -21,9 +21,11 @@ import { AnyObject, RpcTxJsonResponse } from "@/types/types";
 export const TransactionInfo = ({
   txDetails,
   isTxNotFound,
+  fetchLatestElement,
 }: {
   txDetails: RpcTxJsonResponse | null;
   isTxNotFound: boolean;
+  fetchLatestElement?: React.ReactNode;
 }) => {
   const { network } = useStore();
 
@@ -377,7 +379,11 @@ export const TransactionInfo = ({
             <>{INFO_FIELDS.map((f) => renderInfoField(f))}</>
           </Box>
           {isNoDataScreen ? (
-            <NoInfoLoadedView message="Load a transaction" type="info" />
+            <NoInfoLoadedView
+              message="Load a transaction"
+              type="info"
+              action={fetchLatestElement}
+            />
           ) : null}
         </div>
       </Box>

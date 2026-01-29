@@ -199,4 +199,5 @@ export enum TrackingEvent {
   TRANSACTION_DASHBOARD_LOAD_TX = "transaction dashboard: load tx",
   TRANSACTION_DASHBOARD_CLEAR_TX = "transaction dashboard: clear tx",
   TRANSACTION_DASHBOARD_TAB = "transaction dashboard: explorer: tab",
+  TRANSACTION_DASHBOARD_FETCH_LATEST_TX = "transaction dashboard: fetch latest tx",
 }
