@@ -159,7 +159,7 @@ export default function Explorer() {
 
   return (
     <Box gap="md" data-testid="explorer" addlClassName="TransactionsExplorer">
-      <PageCard heading="Transactions Explorer">
+      <PageCard heading="Transactions explorer">
         {errorElement}
 
         <TransactionsTable

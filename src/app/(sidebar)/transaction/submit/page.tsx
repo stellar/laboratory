@@ -452,7 +452,7 @@ export default function SubmitTransaction() {
 
   return (
     <Box gap="md" data-testid="submit-tx-xdr">
-      <PageCard heading="Submit Transaction">
+      <PageCard heading="Submit transaction">
         <Box gap="lg">
           <XdrPicker
             id="submit-tx-xdr"

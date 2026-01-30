@@ -166,7 +166,7 @@ export default function FeeBumpTransaction() {
   return (
     <Box gap="md">
       <PageCard
-        heading="Fee Bump"
+        heading="Fee bump"
         rightElement={
           <Button
             size="md"

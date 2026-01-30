@@ -49,19 +49,19 @@ export type NavItem = {
 const ACCOUNT_NAV = [
   {
     route: Routes.ACCOUNT_CREATE,
-    label: "Create Account Keypair",
+    label: "Create account keypair",
   },
   {
     route: Routes.ACCOUNT_FUND,
-    label: "Fund Account",
+    label: "Fund account",
   },
   {
     route: Routes.ACCOUNT_CREATE_MUXED,
-    label: "Create Muxed Account",
+    label: "Create muxed account",
   },
   {
     route: Routes.ACCOUNT_PARSE_MUXED,
-    label: "Parse Muxed Account",
+    label: "Parse muxed account",
   },
 ];
 
@@ -85,38 +85,38 @@ const ENDPOINTS_NAV = [
 const SMART_CONTRACTS_NAV = [
   {
     route: Routes.SMART_CONTRACTS_CONTRACT_EXPLORER,
-    label: "Contract Explorer",
+    label: "Contract explorer",
   },
   {
     route: Routes.SMART_CONTRACTS_CONTRACT_LIST,
-    label: "Smart Contract List",
+    label: "Smart contract list",
   },
   {
     route: Routes.SMART_CONTRACTS_DEPLOY_CONTRACT,
-    label: "Upload and Deploy Contract",
+    label: "Upload and deploy contract",
   },
 ];
 
 const TRANSACTION_NAV = [
   {
     route: Routes.BUILD_TRANSACTION,
-    label: "Build Transaction",
+    label: "Build transaction",
   },
   {
     route: Routes.SIGN_TRANSACTION,
-    label: "Sign Transaction",
+    label: "Sign transaction",
   },
   {
     route: Routes.SIMULATE_TRANSACTION,
-    label: "Simulate Transaction",
+    label: "Simulate transaction",
   },
   {
     route: Routes.SUBMIT_TRANSACTION,
-    label: "Submit Transaction",
+    label: "Submit transaction",
   },
   {
     route: Routes.FEE_BUMP_TRANSACTION,
-    label: "Fee Bump",
+    label: "Fee bump",
   },
 ];
 
@@ -195,18 +195,18 @@ export const NAV: NavItem[] = [
       ]),
   {
     route: Routes.TRANSACTION_DASHBOARD,
-    label: "Transaction Dashboard",
+    label: "Transaction dashboard",
   },
   ...(process.env.NEXT_PUBLIC_ENABLE_EXPLORER === "true"
     ? [
         {
           route: Routes.TRANSACTIONS_EXPLORER,
-          label: "Transactions Explorer",
+          label: "Transactions explorer",
         },
       ]
     : []),
   {
     route: Routes.NETWORK_LIMITS,
-    label: "Network Limits",
+    label: "Network limits",
   },
 ];

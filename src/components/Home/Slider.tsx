@@ -84,7 +84,7 @@ export const Slider = ({ imgTheme }: { imgTheme: "light" | "dark" }) => {
         `/images/lab-home-intro-tx-${imgTheme}.png`,
       ),
       actionButton: {
-        label: "Build Transaction",
+        label: "Build transaction",
         route: Routes.BUILD_TRANSACTION,
       },
       buttons: [

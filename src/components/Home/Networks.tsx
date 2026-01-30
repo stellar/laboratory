@@ -230,7 +230,7 @@ export const Networks = ({
                           ]
                         : [
                             {
-                              label: "Build Transaction",
+                              label: "Build transaction",
                               onAction: () => {
                                 router.push(Routes.BUILD_TRANSACTION);
                               },

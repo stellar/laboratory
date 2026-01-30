@@ -665,7 +665,7 @@ export const Overview = () => {
   return (
     <>
       <PageCard
-        heading="Transaction Overview"
+        heading="Transaction overview"
         rightElement={
           <Button
             size="md"

@@ -137,7 +137,7 @@ const SignerSelectorDropdown = ({
 
     if (currentNetworkKeypairs.length > 0) {
       const saved = {
-        label: "Saved Keypairs",
+        label: "Saved keypairs",
         items: currentNetworkKeypairs,
       };
       availableAddress.push(saved);

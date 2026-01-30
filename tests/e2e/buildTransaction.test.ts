@@ -195,7 +195,7 @@ test.describe("Build Transaction Page", () => {
 
       await expect(operationsErrors.getByText("Operation #1")).toBeHidden();
 
-      await page.getByText("Add Operation").click();
+      await page.getByText("Add operation").click();
 
       await expect(operationsErrors.getByText("Operation #1")).toBeVisible();
       await expect(
@@ -266,7 +266,7 @@ test.describe("Build Transaction Page", () => {
         ).toHaveText(["Fix errors"]);
 
         // Clear operations
-        await page.getByText("Clear Operations").click();
+        await page.getByText("Clear operations").click();
         await expect(operation_0.getByLabel("Operation type")).toHaveValue("");
       });
     });
@@ -1035,7 +1035,7 @@ test.describe("Build Transaction Page", () => {
 
         await operation_0.getByLabel("Sponsored ID").fill(ACCOUNT_ONE);
 
-        await page.getByText("Add Operation").click();
+        await page.getByText("Add operation").click();
 
         const operation_1 = page.getByTestId("build-transaction-operation-1");
         await operation_1
@@ -1325,7 +1325,7 @@ test.describe("Build Transaction Page", () => {
 
         // Soroban Operation only allows one operation
         // Add Operation button should be disabled
-        await expect(page.getByText("Add Operation")).toBeDisabled();
+        await expect(page.getByText("Add operation")).toBeDisabled();
 
         // 'Use Ledger Xdr' Tab is the default tab
         const useLedgerxdrTabButton = page.getByTestId("xdr");
@@ -1419,7 +1419,7 @@ test.describe("Build Transaction Page", () => {
 
         // Soroban Operation only allows one operation
         // Add Operation button should be disabled
-        await expect(page.getByText("Add Operation")).toBeDisabled();
+        await expect(page.getByText("Add operation")).toBeDisabled();
 
         // 'Use Ledger Xdr' Tab is the default tab
         const useLedgerxdrTabButton = page.getByTestId("xdr");
@@ -1644,7 +1644,7 @@ test.describe("Build Transaction Page", () => {
 
         // Soroban Operation only allows one operation
         // Add Operation button should be disabled
-        await expect(page.getByText("Add Operation")).toBeDisabled();
+        await expect(page.getByText("Add operation")).toBeDisabled();
 
         // Select Classic Operation
         await soroban_operation.getByLabel("Operation type").selectOption({
@@ -1657,7 +1657,7 @@ test.describe("Build Transaction Page", () => {
 
         await expect(classicOperation).toBeVisible();
 
-        await expect(page.getByText("Add Operation")).toBeVisible();
+        await expect(page.getByText("Add operation")).toBeVisible();
       });
     });
 
@@ -1685,7 +1685,7 @@ test.describe("Build Transaction Page", () => {
 
         // Soroban Operation only allows one operation
         // Add Operation button should be disabled
-        await expect(page.getByText("Add Operation")).toBeDisabled();
+        await expect(page.getByText("Add operation")).toBeDisabled();
 
         // 'Use Ledger Xdr' Tab is the default tab
         const useLedgerxdrTabButton = page.getByTestId("xdr");
@@ -1778,7 +1778,7 @@ test.describe("Build Transaction Page", () => {
 
         // Soroban Operation only allows one operation
         // Add Operation button should be disabled
-        await expect(page.getByText("Add Operation")).toBeDisabled();
+        await expect(page.getByText("Add operation")).toBeDisabled();
 
         // 'Use Ledger Xdr' Tab is the default tab
         const useLedgerxdrTabButton = page.getByTestId("xdr");
@@ -1994,7 +1994,7 @@ test.describe("Build Transaction Page", () => {
 
         // Soroban Operation only allows one operation
         // Add Operation button should be disabled
-        await expect(page.getByText("Add Operation")).toBeDisabled();
+        await expect(page.getByText("Add operation")).toBeDisabled();
 
         // Select Classic Operation
         await soroban_operation.getByLabel("Operation type").selectOption({
@@ -2007,7 +2007,7 @@ test.describe("Build Transaction Page", () => {
 
         await expect(classicOperation).toBeVisible();
 
-        await expect(page.getByText("Add Operation")).toBeVisible();
+        await expect(page.getByText("Add operation")).toBeVisible();
       });
     });
   });

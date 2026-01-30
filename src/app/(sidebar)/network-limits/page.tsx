@@ -36,7 +36,7 @@ export default function NetworkLimits() {
 
   return (
     <div className="NetworkLimits">
-      <PageCard heading="Network Limits">
+      <PageCard heading="Network limits">
         {network.id === "custom" ? (
           <Alert
             placement="inline"

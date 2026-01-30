@@ -326,7 +326,7 @@ export const SorobanOperation = ({
                   /* noop*/
                 }}
               >
-                Add Operation
+                Add operation
               </Button>
 
               <Button
@@ -356,7 +356,7 @@ export const SorobanOperation = ({
                 });
               }}
             >
-              Clear Operation
+              Clear operation
             </Button>
           </Box>
         </Box>

@@ -241,7 +241,7 @@ export default function TransactionDashboard() {
 
   return (
     <Box gap="lg">
-      <PageCard heading="Transaction Dashboard">
+      <PageCard heading="Transaction dashboard">
         {!network.rpcUrl ? (
           <Alert variant="warning" placement="inline" title="Attention">
             RPC URL is required to view transaction information. You can add it

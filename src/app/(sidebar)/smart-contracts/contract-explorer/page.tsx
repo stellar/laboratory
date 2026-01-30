@@ -240,7 +240,7 @@ export default function ContractExplorer() {
 
   return (
     <Box gap="lg">
-      <PageCard heading="Contract Explorer">
+      <PageCard heading="Contract explorer">
         {!network.rpcUrl ? (
           <Alert variant="warning" placement="inline" title="Attention">
             RPC URL is required to view contract information. You can add it in
