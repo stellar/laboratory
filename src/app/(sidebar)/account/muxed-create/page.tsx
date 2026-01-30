@@ -70,7 +70,7 @@ export default function CreateMuxedAccount() {
   return (
     <div className="Account">
       <PageCard
-        heading="Create Multiplexed Account"
+        heading="Create multiplexed account"
         headingInfoLink="https://developers.stellar.org/docs/learn/encyclopedia/transactions-specialized/pooled-accounts-muxed-accounts-memos"
       >
         <div className="Account__card">

@@ -110,7 +110,7 @@ export default function SimulateTransaction() {
   };
 
   return (
-    <PageCard heading="Simulate Transaction">
+    <PageCard heading="Simulate transaction">
       {!network.rpcUrl ? (
         <Alert variant="warning" placement="inline" title="Attention">
           RPC URL is required to simulate a transaction. You can add it in the

@@ -65,7 +65,7 @@ export const Import = () => {
 
   return (
     <Box gap="md">
-      <PageCard heading="Sign Transaction">
+      <PageCard heading="Sign transaction">
         <div className="SignTx__xdr">
           <XdrPicker
             id="sign-tx-xdr"

@@ -268,7 +268,7 @@ export const Params = () => {
   };
 
   return (
-    <PageCard heading="Build Transaction">
+    <PageCard heading="Build transaction">
       <Box gap="lg">
         <SourceAccountPicker
           value={txnParams.source_account}
@@ -378,7 +378,7 @@ export const Params = () => {
             }}
             icon={<Icon.RefreshCw01 />}
           >
-            Clear Params
+            Clear params
           </Button>
         </Box>
       </Box>
