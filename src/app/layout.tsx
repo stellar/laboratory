@@ -43,7 +43,6 @@ export default function RootLayout({
               </QueryProvider>
             </StoreProvider>
           </div>
-
           <GoogleAnalytics />
         </Suspense>
       </body>
