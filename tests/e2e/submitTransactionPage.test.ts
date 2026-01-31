@@ -7,7 +7,7 @@ test.describe("Submit Transaction Page", () => {
   });
 
   test("Loads", async ({ page }) => {
-    await expect(page.locator("h1")).toHaveText("Submit Transaction");
+    await expect(page.locator("h1")).toHaveText("Submit transaction");
   });
 
   test("Save Transaction Flow", async ({ page }) => {
@@ -62,7 +62,7 @@ test.describe("Submit Transaction Page", () => {
 
     await page.waitForURL(/\/transaction\/simulate\?/);
 
-    await expect(page.locator("h1")).toHaveText("Simulate Transaction");
+    await expect(page.locator("h1")).toHaveText("Simulate transaction");
 
     await expect(
       page.getByLabel("Input a base-64 encoded TransactionEnvelope"),

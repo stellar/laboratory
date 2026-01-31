@@ -29,7 +29,7 @@ async function validateSignerSelectorOptions(page: Page) {
     ".SignerSelector__dropdown__item__value",
   );
 
-  await expect(labels).toHaveText("Saved Keypairs");
+  await expect(labels).toHaveText("Saved keypairs");
   await expect(values.nth(0)).toHaveText("[Account 1]GA46...GMXG");
   await expect(values.nth(1)).toHaveText("[Account 2]GC5T...Z6LD");
 
@@ -48,7 +48,7 @@ test.describe("Signer Selector", () => {
     });
 
     test("Loads", async () => {
-      await expect(pageContext.locator("h1")).toHaveText("Build Transaction");
+      await expect(pageContext.locator("h1")).toHaveText("Build transaction");
     });
 
     test("'Get address' dropdown works for source account", async () => {
@@ -82,7 +82,7 @@ test.describe("Signer Selector", () => {
     });
 
     test("Loads", async () => {
-      await expect(pageContext.locator("h1")).toHaveText("Sign Transaction");
+      await expect(pageContext.locator("h1")).toHaveText("Sign transaction");
     });
 
     test("'Use secret key' dropdown works for source account", async () => {

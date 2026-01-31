@@ -41,7 +41,7 @@ test.describe("Smart Contracts: Version History", () => {
     );
 
     await page.goto("http://localhost:3000/smart-contracts/contract-explorer");
-    await expect(page.locator("h1")).toHaveText("Contract Explorer");
+    await expect(page.locator("h1")).toHaveText("Contract explorer");
 
     // Load Contract Info
     await page.getByLabel("Contract ID").fill(MOCK_CONTRACT_ID);

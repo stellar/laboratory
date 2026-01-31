@@ -22,7 +22,7 @@ test.describe("Network Limits page on Mainnet", () => {
       "Mainnet",
     );
 
-    await expect(page.locator("h1")).toHaveText("Network Limits");
+    await expect(page.locator("h1")).toHaveText("Network limits");
   });
 
   test("Displays introduction text and link", async ({ page }) => {

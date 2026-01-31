@@ -7,7 +7,7 @@ test.describe("Saved Smart Contracts Page", () => {
   });
 
   test("Loads", async ({ page }) => {
-    await expect(page.locator("h1")).toHaveText("Saved Smart Contracts");
+    await expect(page.locator("h1")).toHaveText("Saved smart contracts");
   });
 
   test("Show no saved smart contracts message", async ({ page }) => {

@@ -7,7 +7,7 @@ test.describe("Build Transaction Page", () => {
   });
 
   test("Loads", async ({ page }) => {
-    await expect(page.locator("h1")).toHaveText("Build Transaction");
+    await expect(page.locator("h1")).toHaveText("Build transaction");
   });
 
   test("Initial state with errors", async ({ page }) => {

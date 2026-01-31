@@ -6,7 +6,7 @@ test.describe("Fee Bump Page", () => {
   });
 
   test("Loads", async ({ page }) => {
-    await expect(page.locator("h1")).toHaveText("Fee Bump");
+    await expect(page.locator("h1")).toHaveText("Fee bump");
     await expect(page.getByText("Fee bump errors")).toBeVisible();
   });
 
@@ -61,7 +61,7 @@ test.describe("Fee Bump Page", () => {
 
       await page.waitForURL("**/transaction/sign");
 
-      await expect(page.locator("h1")).toHaveText("Transaction Overview");
+      await expect(page.locator("h1")).toHaveText("Transaction overview");
       await expect(page.getByLabel("Transaction Envelope XDR")).toHaveText(
         MOCK_XDR,
       );

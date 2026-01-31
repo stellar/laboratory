@@ -18,7 +18,7 @@ test.describe("Transaction Dashboard", () => {
 
   test("Loads", async ({ page }) => {
     await page.waitForSelector("h1", { timeout: 5000 });
-    await expect(page.locator("h1")).toHaveText("Transaction Dashboard");
+    await expect(page.locator("h1")).toHaveText("Transaction dashboard");
   });
 
   test("Soroban transaction info", async ({ page }) => {
