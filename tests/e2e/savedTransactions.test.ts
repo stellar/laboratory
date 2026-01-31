@@ -7,7 +7,7 @@ test.describe("Saved Transactions Page", () => {
   });
 
   test("Loads", async ({ page }) => {
-    await expect(page.locator("h1")).toHaveText("Saved Transactions");
+    await expect(page.locator("h1")).toHaveText("Saved transactions");
   });
 
   test("Empty message", async ({ page }) => {
@@ -75,7 +75,7 @@ test.describe("Saved Transactions Page", () => {
       await submitItem.getByText("View in submitter").click();
       await pageContext.waitForURL("**/transaction/submit");
 
-      await expect(pageContext.locator("h1")).toHaveText("Submit Transaction");
+      await expect(pageContext.locator("h1")).toHaveText("Submit transaction");
       await expect(
         pageContext.getByLabel("Input a base-64 encoded TransactionEnvelope:"),
       ).toHaveValue(
@@ -108,7 +108,7 @@ test.describe("Saved Transactions Page", () => {
       await buildItem.getByText("View in builder", { exact: true }).click();
       await pageContext.waitForURL("**/transaction/build");
 
-      await expect(pageContext.locator("h1")).toHaveText("Build Transaction");
+      await expect(pageContext.locator("h1")).toHaveText("Build transaction");
 
       // Params
       await expect(
@@ -172,7 +172,7 @@ test.describe("Saved Transactions Page", () => {
       await submitItem.getByText("View in submitter").click();
       await pageContext.waitForURL("**/transaction/submit");
 
-      await expect(pageContext.locator("h1")).toHaveText("Submit Transaction");
+      await expect(pageContext.locator("h1")).toHaveText("Submit transaction");
       await expect(
         pageContext.getByLabel("Input a base-64 encoded TransactionEnvelope:"),
       ).toHaveValue(

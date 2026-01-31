@@ -6,7 +6,7 @@ test.describe("Simulate Transaction Page", () => {
   });
 
   test("Loads", async ({ page }) => {
-    await expect(page.locator("h1")).toHaveText("Simulate Transaction");
+    await expect(page.locator("h1")).toHaveText("Simulate transaction");
   });
 
   test.describe("Instruction Leeway Input", () => {

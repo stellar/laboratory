@@ -144,7 +144,7 @@ const testTxStateChange = async ({
     });
   });
 
-  await expect(page.locator("h1")).toHaveText("Transaction Dashboard");
+  await expect(page.locator("h1")).toHaveText("Transaction dashboard");
 
   // Fill Transaction Hash input and trigger the API call
   const loadTxButton = page.getByRole("button", { name: "Load transaction" });

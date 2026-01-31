@@ -6,7 +6,7 @@ test.describe("Sign Transaction Page", () => {
   });
 
   test("Loads", async ({ page }) => {
-    await expect(page.locator("h1")).toHaveText("Sign Transaction");
+    await expect(page.locator("h1")).toHaveText("Sign transaction");
   });
 
   test("Overview with a VALID Classic Transaction with ONE operation envelope XDR", async ({
