@@ -15,10 +15,37 @@ export const CustomAiButton = () => {
   const [isStellaAvailable, setIsStellaAvailable] = useState(false);
 
   useEffect(() => {
-    // Check if Stella is available
-    if (typeof window !== "undefined" && window.Stella?.open) {
-      setIsStellaAvailable(true);
+    if (typeof window === "undefined") {
+      return;
     }
+
+    const checkStella = () => {
+      if (window.Stella?.open) {
+        setIsStellaAvailable(true);
+        return true;
+      }
+      return false;
+    };
+
+    // Run an immediate check first
+    if (checkStella()) {
+      return;
+    }
+
+    const startTime = Date.now();
+    const intervalId = window.setInterval(() => {
+      const found = checkStella();
+      const elapsed = Date.now() - startTime;
+
+      // Stop polling once Stella is available or after a timeout
+      if (found || elapsed > 10000) {
+        window.clearInterval(intervalId);
+      }
+    }, 500);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
   }, []);
 
   const handleClick = () => {
