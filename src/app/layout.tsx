@@ -38,11 +38,12 @@ export default function RootLayout({
                   <WalletKitContextProvider>
                     <LayoutMain>{children}</LayoutMain>
                   </WalletKitContextProvider>
+                  <CustomAiButton />
                 </LayoutContextProvider>
               </QueryProvider>
             </StoreProvider>
           </div>
-          <CustomAiButton />
+
           <GoogleAnalytics />
         </Suspense>
       </body>

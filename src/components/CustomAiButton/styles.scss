@@ -1,0 +1,32 @@
+@use "../../styles/utils.scss" as *;
+
+.CustomAiButton {
+  position: fixed;
+  bottom: pxToRem(20px);
+  right: pxToRem(20px);
+  border: none;
+  cursor: pointer;
+  z-index: 1000;
+  padding: pxToRem(6px) pxToRem(10px);
+  border-radius: pxToRem(6px);
+  font-weight: var(--sds-fw-bold);
+  font-size: pxToRem(14px);
+  align-items: center;
+  gap: pxToRem(4px);
+  background-color: var(--sds-clr-base-01);
+  color: var(--sds-clr-base-00);
+
+  &--hidden {
+    display: none;
+  }
+
+  &--loaded {
+    display: flex;
+  }
+
+  .icon {
+    path {
+      fill: var(--sds-clr-base-00);
+    }
+  }
+}
