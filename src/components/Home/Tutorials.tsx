@@ -14,11 +14,11 @@ export const Tutorials = () => {
         "https://www.youtube.com/embed/7j5t69f40dM?si=4svimk6VRVqnGmCj",
     },
     {
-      title: "Payment",
+      title: "Payments",
       description:
         "Send an amount in a specific asset to a destination account.",
       youTubeLink:
-        "https://www.youtube.com/embed/Isn5CkEWFs8?si=Fj5UkHk8XzVWzyA_",
+        "https://www.youtube.com/embed/NsDxKZE5ESY?si=FIMKG--d7BwRvk0a",
     },
     {
       title: "Change Trust",
