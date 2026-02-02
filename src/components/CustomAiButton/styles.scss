@@ -24,9 +24,10 @@
     display: flex;
   }
 
-  .icon {
-    path {
-      fill: var(--sds-clr-base-00);
-    }
+  svg {
+    width: pxToRem(18px);
+    height: pxToRem(18px);
+
+    --sds-logo-fill: var(--sds-clr-base-00);
   }
 }
