@@ -741,6 +741,11 @@
     .CallStackTrace__bracket + .CallStackTrace__itemArray__items:not(:empty) {
       padding-left: pxToRem(4px);
       padding-right: pxToRem(4px);
+
+      // Remove padding if there is an ellipsis
+      &[data-has-ellipsis="true"] {
+        padding-right: 0;
+      }
     }
 
     &__item {

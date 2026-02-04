@@ -201,11 +201,16 @@ export const CallStackTrace = ({
         renderVal = truncateParams(value, 4);
       }
 
+      const hasEllipsis = hasEllipsisAnywhere(renderVal);
+
       return (
         <span className="CallStackTrace__itemArray">
           {/* Don’t show square brackets for param arrays */}
           {parentId ? <Bracket char="[" /> : null}
-          <span className="CallStackTrace__itemArray__items">
+          <span
+            className="CallStackTrace__itemArray__items"
+            data-has-ellipsis={hasEllipsis}
+          >
             {renderVal.map((v, vIndex) => {
               const id = `vec-${vIndex}`;
 
@@ -221,9 +226,7 @@ export const CallStackTrace = ({
             })}
           </span>
           {/* We need to hide extra brackets if there is ellipsis */}
-          {parentId && !hasEllipsisAnywhere(renderVal) ? (
-            <Bracket char="]" />
-          ) : null}
+          {parentId && !hasEllipsis ? <Bracket char="]" /> : null}
         </span>
       );
     }
