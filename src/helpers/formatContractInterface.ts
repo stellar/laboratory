@@ -16,6 +16,9 @@ export const formatContractInterface = (
     output += `/// ${contractInterface.doc}\n`;
   }
 
+  // Events
+  output += eventsOutput(contractInterface.events);
+
   // Functions
   output += functionsOutput(contractInterface.functions);
 
@@ -176,4 +179,58 @@ const formatFnOutputs = (outputs: any) => {
   const outputType = outputs?.[0];
 
   return outputType ? `-> ${outputType}` : "";
+};
+
+const eventsOutput = (events: any) => {
+  let eventsString = "";
+
+  if (events && typeof events === "object" && Object.keys(events).length) {
+    eventsString += `// ==========================================\n`;
+    eventsString += `// Events\n`;
+    eventsString += `// ==========================================\n\n`;
+
+    Object.entries(events).forEach((eventItem) => {
+      const key = eventItem[0];
+      const value = eventItem[1] as any;
+
+      if (value.doc) {
+        value.doc.split("\n").forEach((line: string) => {
+          eventsString += `/// ${line}\n`;
+        });
+      }
+
+      // Format the decorator with topics and data_format
+      const topics = value.prefixTopics || [];
+      const topicsStr = topics.map((t: string) => `"${t}"`).join(", ");
+
+      // Convert dataFormat from scSpecEventDataFormatSingleValue to single-value
+      let dataFormat = "single-value";
+      if (value.dataFormat) {
+        if (value.dataFormat.includes("SingleValue")) {
+          dataFormat = "single-value";
+        } else if (value.dataFormat.includes("MultiValue")) {
+          dataFormat = "multi-value";
+        }
+      }
+
+      eventsString += `#[contractevent(topics = [${topicsStr}], data_format = "${dataFormat}")]\n`;
+      eventsString += `struct ${value.name || key} {\n`;
+
+      if (value.params && Array.isArray(value.params) && value.params.length) {
+        value.params.forEach((param: any) => {
+          if (param.doc) {
+            param.doc.split("\n").forEach((line: string) => {
+              eventsString += `${TAB}/// ${line}\n`;
+            });
+          }
+
+          eventsString += `${TAB}${param.name}: ${param.type || param.type_},\n`;
+        });
+      }
+
+      eventsString += "}\n\n";
+    });
+  }
+
+  return eventsString;
 };

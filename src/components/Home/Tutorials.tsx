@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { Text } from "@stellar/design-system";
 import { Box } from "@/components/layout/Box";
@@ -26,17 +28,17 @@ export const Tutorials = () => {
         "https://www.youtube.com/embed/sv2gV13q7FI?si=78SXorWKfXTneqzn",
     },
     {
+      title: "Path Payments",
+      description: "Send one asset, convert through path, receive another.",
+      youTubeLink:
+        "https://www.youtube.com/embed/Q196yYkaLmQ?si=q3kz_7X_FiPPZj1u",
+    },
+    {
       title: "Manage Offers",
       description:
         "Create, update, or delete orders for assets on the Stellar DEX.",
       youTubeLink:
         "https://www.youtube.com/embed/4d558Q0MDso?si=IIslGXLT1clwXIOR",
-    },
-    {
-      title: "Path Payments",
-      description: "Send one asset, convert through path, receive another.",
-      youTubeLink:
-        "https://www.youtube.com/embed/ZNuNrYjpx9s?si=ZAK5L_ZCg9Jb1B0y",
     },
     {
       title: "Account Merge",

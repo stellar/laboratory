@@ -1,3 +1,5 @@
+"use client";
+
 import { useLayoutEffect, useState } from "react";
 import { Banner } from "@stellar/design-system";
 

@@ -1478,3 +1478,8 @@
     }
   }
 }
+
+// Hide default Stella AI button
+#stella-embed > button {
+  display: none !important;
+}

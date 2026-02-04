@@ -2,7 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Alert, Button, Card, Icon, Input, Text } from "@stellar/design-system";
+import {
+  Alert,
+  Button,
+  Card,
+  Icon,
+  Input,
+  Link,
+  Loader,
+  Text,
+} from "@stellar/design-system";
 
 import { PageCard } from "@/components/layout/PageCard";
 import { Box } from "@/components/layout/Box";
@@ -16,11 +25,13 @@ import { STELLAR_EXPERT } from "@/constants/settings";
 import { validate } from "@/validate";
 import { useStore } from "@/store/useStore";
 import { useFetchRpcTxDetails } from "@/query/useFetchRpcTxDetails";
+import { useLatestTxn } from "@/query/useLatestTxn";
 
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { getTxData } from "@/helpers/getTxData";
 import { openUrl } from "@/helpers/openUrl";
 import { getStellarExpertNetwork } from "@/helpers/getStellarExpertNetwork";
+import { delayedAction } from "@/helpers/delayedAction";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { TransactionInfo } from "./components/TransactionInfo";
@@ -66,6 +77,18 @@ export default function TransactionDashboard() {
     rpcUrl: network.rpcUrl,
   });
 
+  const {
+    data: latestTxn,
+    error: latestTxnError,
+    isSuccess: isLatestTxnSuccess,
+    isFetching: isLatestTxnFetching,
+    isLoading: isLatestTxnLoading,
+    refetch: fetchLatestTxn,
+  } = useLatestTxn(network.rpcUrl, getNetworkHeaders(network, "rpc"), [
+    "transaction-dashboard",
+    "latestTxn",
+  ]);
+
   const isCurrentNetworkSupported = ["mainnet", "testnet", "custom"].includes(
     network.id,
   );
@@ -76,6 +99,7 @@ export default function TransactionDashboard() {
     Boolean(transactionHashInputError);
   const isLoading = isTxDetailsLoading || isTxDetailsFetching;
   const isDataLoaded = Boolean(txDetails);
+  const isFetchingLatestTxn = isLatestTxnFetching || isLatestTxnLoading;
 
   const { isSorobanTx, operations } = getTxData(txDetails || null);
   const isTxNotFound = txDetails?.status === "NOT_FOUND";
@@ -123,6 +147,14 @@ export default function TransactionDashboard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (isLatestTxnSuccess && latestTxn?.hash) {
+      setTransactionHashInput(latestTxn.hash);
+      txDashboard.updateTransactionHash(latestTxn.hash);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLatestTxnSuccess, latestTxn?.hash]);
+
   const resetFetchTxDetails = async () => {
     if (transactionHashInputError) {
       setTransactionHashInputError("");
@@ -161,6 +193,7 @@ export default function TransactionDashboard() {
                 icon={<Icon.RefreshCw01 />}
                 onClick={async () => {
                   setTransactionHashInput("");
+                  setTransactionHashInputError("");
                   txDashboard.resetTransactionHash();
                   await resetFetchTxDetails();
 
@@ -262,6 +295,13 @@ export default function TransactionDashboard() {
                 isError={true}
               />
             ) : null}
+
+            {latestTxnError ? (
+              <MessageField
+                message={latestTxnError.toString()}
+                isError={true}
+              />
+            ) : null}
           </Box>
         </form>
       </PageCard>
@@ -293,6 +333,41 @@ export default function TransactionDashboard() {
       <TransactionInfo
         txDetails={txDetails || null}
         isTxNotFound={isTxNotFound}
+        fetchLatestElement={
+          isCurrentNetworkSupported ? (
+            <Link
+              onClick={() => {
+                if (latestTxn) {
+                  // Reset query to clear old data
+                  queryClient.resetQueries({
+                    queryKey: [
+                      "transaction-dashboard",
+                      "latestTxn",
+                      network.rpcUrl,
+                    ],
+                    exact: true,
+                  });
+                  setTransactionHashInput("");
+                  txDashboard.updateTransactionHash("");
+                }
+
+                delayedAction({
+                  action: () => {
+                    fetchLatestTxn();
+                    trackEvent(
+                      TrackingEvent.TRANSACTION_DASHBOARD_FETCH_LATEST_TX,
+                    );
+                  },
+                  delay: 500,
+                });
+              }}
+              isDisabled={isFetchingLatestTxn}
+              icon={isFetchingLatestTxn ? <Loader /> : null}
+            >
+              or fetch the latest transaction to try it out.
+            </Link>
+          ) : undefined
+        }
       />
 
       {!isSorobanTx && operations ? (
