@@ -30,6 +30,7 @@ import { AnyObject, NetworkType } from "@/types/types";
 
 // TODO: remove before merge
 import {
+  TEMP_ARR_OBJ,
   TEMP_FAILED,
   TEMP_KALE,
   TEMP_LONG_PARAMS,
@@ -51,6 +52,7 @@ export const CallStackTrace = ({
     longParams: TEMP_LONG_PARAMS,
     someFailed: TEMP_MIXED,
     allFailed: TEMP_FAILED,
+    arrObj: TEMP_ARR_OBJ,
   };
 
   const data =
@@ -211,7 +213,7 @@ export const CallStackTrace = ({
                 key={`map-${v.key}-${vIndex}`}
                 className="CallStackTrace__itemObject__item"
               >
-                <TypedValueItem value={v.key.value} type={v.key.type} />
+                {renderData({ dataItem: v.key })}
                 <Colon />
                 {renderData({ dataItem: v.val })}
                 <Comma enabled={vIndex !== value.length - 1} />
@@ -403,6 +405,15 @@ export const CallStackTrace = ({
           disabled={testDataId === "longParams"}
         >
           Long params
+        </Button>
+
+        <Button
+          variant="destructive"
+          size="sm"
+          onClick={() => setTestDataId("arrObj")}
+          disabled={testDataId === "arrObj"}
+        >
+          Arr obj params
         </Button>
 
         <Button

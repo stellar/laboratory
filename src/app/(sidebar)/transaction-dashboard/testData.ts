@@ -9721,3 +9721,632 @@ export const TEMP_LONG_PARAMS: DiagnosticEventJson[] = [
     },
   },
 ];
+
+export const TEMP_ARR_OBJ: DiagnosticEventJson[] = [
+  {
+    in_successful_contract_call: true,
+    event: {
+      ext: "v0",
+      contract_id: null,
+      type_: "diagnostic",
+      body: {
+        v0: {
+          topics: [
+            {
+              symbol: "fn_call",
+            },
+            {
+              bytes:
+                "d7fe44bd0af11d602b1091f2f4a1f4df212d444d0321ea32adb3cc1cbbab0a04",
+            },
+            {
+              symbol: "plant",
+            },
+          ],
+          data: {
+            vec: [
+              {
+                address:
+                  "CCXBZIZWH2D44TJUBAGRRBSBP6A43JFTIVLE35OWFKQFLQAEXG6GYS7M",
+              },
+              {
+                i128: "0",
+              },
+            ],
+          },
+        },
+      },
+    },
+  },
+  {
+    in_successful_contract_call: true,
+    event: {
+      ext: "v0",
+      contract_id: "CDL74RF5BLYR2YBLCCI7F5FB6TPSCLKEJUBSD2RSVWZ4YHF3VMFAIGWA",
+      type_: "diagnostic",
+      body: {
+        v0: {
+          topics: [
+            {
+              symbol: "fn_call",
+            },
+            {
+              bytes:
+                "ae1ca3363e87ce4d34080d1886417f81cda4b345564df5d62aa055c004b9bc6c",
+            },
+            {
+              symbol: "__check_auth",
+            },
+          ],
+          data: {
+            vec: [
+              {
+                bytes:
+                  "e664bc680f8b32e448c4733760958e537110f8a5afa23c4c6c64cb752bb359c8",
+              },
+              {
+                vec: [
+                  {
+                    map: [
+                      {
+                        key: {
+                          vec: [
+                            {
+                              symbol: "Ed25519",
+                            },
+                            {
+                              bytes:
+                                "2d201d2373bfc5787040932cf24bac0e6155abff393b3162ee02d2db147bf48c",
+                            },
+                          ],
+                        },
+                        val: {
+                          vec: [
+                            {
+                              symbol: "Ed25519",
+                            },
+                            {
+                              bytes:
+                                "6274c27ef425c3747c3bf102dad3e8c8de29466b13c2620481816dd351a66037e0adf9ae199832d4736f5ef65cdc4578db7b440f73a0b7c2e3f8f78c1d47d102",
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                vec: [
+                  {
+                    vec: [
+                      {
+                        symbol: "Contract",
+                      },
+                      {
+                        map: [
+                          {
+                            key: {
+                              symbol: "args",
+                            },
+                            val: {
+                              vec: [
+                                {
+                                  address:
+                                    "CCXBZIZWH2D44TJUBAGRRBSBP6A43JFTIVLE35OWFKQFLQAEXG6GYS7M",
+                                },
+                                {
+                                  i128: "0",
+                                },
+                              ],
+                            },
+                          },
+                          {
+                            key: {
+                              symbol: "contract",
+                            },
+                            val: {
+                              address:
+                                "CDL74RF5BLYR2YBLCCI7F5FB6TPSCLKEJUBSD2RSVWZ4YHF3VMFAIGWA",
+                            },
+                          },
+                          {
+                            key: {
+                              symbol: "fn_name",
+                            },
+                            val: {
+                              symbol: "plant",
+                            },
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      },
+    },
+  },
+  {
+    in_successful_contract_call: true,
+    event: {
+      ext: "v0",
+      contract_id: "CCXBZIZWH2D44TJUBAGRRBSBP6A43JFTIVLE35OWFKQFLQAEXG6GYS7M",
+      type_: "diagnostic",
+      body: {
+        v0: {
+          topics: [
+            {
+              symbol: "fn_return",
+            },
+            {
+              symbol: "__check_auth",
+            },
+          ],
+          data: "void",
+        },
+      },
+    },
+  },
+  {
+    in_successful_contract_call: true,
+    event: {
+      ext: "v0",
+      contract_id: "CDL74RF5BLYR2YBLCCI7F5FB6TPSCLKEJUBSD2RSVWZ4YHF3VMFAIGWA",
+      type_: "diagnostic",
+      body: {
+        v0: {
+          topics: [
+            {
+              symbol: "fn_return",
+            },
+            {
+              symbol: "plant",
+            },
+          ],
+          data: "void",
+        },
+      },
+    },
+  },
+  {
+    in_successful_contract_call: true,
+    event: {
+      ext: "v0",
+      contract_id: null,
+      type_: "diagnostic",
+      body: {
+        v0: {
+          topics: [
+            {
+              symbol: "core_metrics",
+            },
+            {
+              symbol: "read_entry",
+            },
+          ],
+          data: {
+            u64: "8",
+          },
+        },
+      },
+    },
+  },
+  {
+    in_successful_contract_call: true,
+    event: {
+      ext: "v0",
+      contract_id: null,
+      type_: "diagnostic",
+      body: {
+        v0: {
+          topics: [
+            {
+              symbol: "core_metrics",
+            },
+            {
+              symbol: "write_entry",
+            },
+          ],
+          data: {
+            u64: "4",
+          },
+        },
+      },
+    },
+  },
+  {
+    in_successful_contract_call: true,
+    event: {
+      ext: "v0",
+      contract_id: null,
+      type_: "diagnostic",
+      body: {
+        v0: {
+          topics: [
+            {
+              symbol: "core_metrics",
+            },
+            {
+              symbol: "ledger_read_byte",
+            },
+          ],
+          data: {
+            u64: "0",
+          },
+        },
+      },
+    },
+  },
+  {
+    in_successful_contract_call: true,
+    event: {
+      ext: "v0",
+      contract_id: null,
+      type_: "diagnostic",
+      body: {
+        v0: {
+          topics: [
+            {
+              symbol: "core_metrics",
+            },
+            {
+              symbol: "ledger_write_byte",
+            },
+          ],
+          data: {
+            u64: "1540",
+          },
+        },
+      },
+    },
+  },
+  {
+    in_successful_contract_call: true,
+    event: {
+      ext: "v0",
+      contract_id: null,
+      type_: "diagnostic",
+      body: {
+        v0: {
+          topics: [
+            {
+              symbol: "core_metrics",
+            },
+            {
+              symbol: "read_key_byte",
+            },
+          ],
+          data: {
+            u64: "0",
+          },
+        },
+      },
+    },
+  },
+  {
+    in_successful_contract_call: true,
+    event: {
+      ext: "v0",
+      contract_id: null,
+      type_: "diagnostic",
+      body: {
+        v0: {
+          topics: [
+            {
+              symbol: "core_metrics",
+            },
+            {
+              symbol: "write_key_byte",
+            },
+          ],
+          data: {
+            u64: "0",
+          },
+        },
+      },
+    },
+  },
+  {
+    in_successful_contract_call: true,
+    event: {
+      ext: "v0",
+      contract_id: null,
+      type_: "diagnostic",
+      body: {
+        v0: {
+          topics: [
+            {
+              symbol: "core_metrics",
+            },
+            {
+              symbol: "read_data_byte",
+            },
+          ],
+          data: {
+            u64: "0",
+          },
+        },
+      },
+    },
+  },
+  {
+    in_successful_contract_call: true,
+    event: {
+      ext: "v0",
+      contract_id: null,
+      type_: "diagnostic",
+      body: {
+        v0: {
+          topics: [
+            {
+              symbol: "core_metrics",
+            },
+            {
+              symbol: "write_data_byte",
+            },
+          ],
+          data: {
+            u64: "1540",
+          },
+        },
+      },
+    },
+  },
+  {
+    in_successful_contract_call: true,
+    event: {
+      ext: "v0",
+      contract_id: null,
+      type_: "diagnostic",
+      body: {
+        v0: {
+          topics: [
+            {
+              symbol: "core_metrics",
+            },
+            {
+              symbol: "read_code_byte",
+            },
+          ],
+          data: {
+            u64: "0",
+          },
+        },
+      },
+    },
+  },
+  {
+    in_successful_contract_call: true,
+    event: {
+      ext: "v0",
+      contract_id: null,
+      type_: "diagnostic",
+      body: {
+        v0: {
+          topics: [
+            {
+              symbol: "core_metrics",
+            },
+            {
+              symbol: "write_code_byte",
+            },
+          ],
+          data: {
+            u64: "0",
+          },
+        },
+      },
+    },
+  },
+  {
+    in_successful_contract_call: true,
+    event: {
+      ext: "v0",
+      contract_id: null,
+      type_: "diagnostic",
+      body: {
+        v0: {
+          topics: [
+            {
+              symbol: "core_metrics",
+            },
+            {
+              symbol: "emit_event",
+            },
+          ],
+          data: {
+            u64: "0",
+          },
+        },
+      },
+    },
+  },
+  {
+    in_successful_contract_call: true,
+    event: {
+      ext: "v0",
+      contract_id: null,
+      type_: "diagnostic",
+      body: {
+        v0: {
+          topics: [
+            {
+              symbol: "core_metrics",
+            },
+            {
+              symbol: "emit_event_byte",
+            },
+          ],
+          data: {
+            u64: "4",
+          },
+        },
+      },
+    },
+  },
+  {
+    in_successful_contract_call: true,
+    event: {
+      ext: "v0",
+      contract_id: null,
+      type_: "diagnostic",
+      body: {
+        v0: {
+          topics: [
+            {
+              symbol: "core_metrics",
+            },
+            {
+              symbol: "cpu_insn",
+            },
+          ],
+          data: {
+            u64: "3304503",
+          },
+        },
+      },
+    },
+  },
+  {
+    in_successful_contract_call: true,
+    event: {
+      ext: "v0",
+      contract_id: null,
+      type_: "diagnostic",
+      body: {
+        v0: {
+          topics: [
+            {
+              symbol: "core_metrics",
+            },
+            {
+              symbol: "mem_byte",
+            },
+          ],
+          data: {
+            u64: "3260550",
+          },
+        },
+      },
+    },
+  },
+  {
+    in_successful_contract_call: true,
+    event: {
+      ext: "v0",
+      contract_id: null,
+      type_: "diagnostic",
+      body: {
+        v0: {
+          topics: [
+            {
+              symbol: "core_metrics",
+            },
+            {
+              symbol: "invoke_time_nsecs",
+            },
+          ],
+          data: {
+            u64: "279112",
+          },
+        },
+      },
+    },
+  },
+  {
+    in_successful_contract_call: true,
+    event: {
+      ext: "v0",
+      contract_id: null,
+      type_: "diagnostic",
+      body: {
+        v0: {
+          topics: [
+            {
+              symbol: "core_metrics",
+            },
+            {
+              symbol: "max_rw_key_byte",
+            },
+          ],
+          data: {
+            u64: "116",
+          },
+        },
+      },
+    },
+  },
+  {
+    in_successful_contract_call: true,
+    event: {
+      ext: "v0",
+      contract_id: null,
+      type_: "diagnostic",
+      body: {
+        v0: {
+          topics: [
+            {
+              symbol: "core_metrics",
+            },
+            {
+              symbol: "max_rw_data_byte",
+            },
+          ],
+          data: {
+            u64: "772",
+          },
+        },
+      },
+    },
+  },
+  {
+    in_successful_contract_call: true,
+    event: {
+      ext: "v0",
+      contract_id: null,
+      type_: "diagnostic",
+      body: {
+        v0: {
+          topics: [
+            {
+              symbol: "core_metrics",
+            },
+            {
+              symbol: "max_rw_code_byte",
+            },
+          ],
+          data: {
+            u64: "0",
+          },
+        },
+      },
+    },
+  },
+  {
+    in_successful_contract_call: true,
+    event: {
+      ext: "v0",
+      contract_id: null,
+      type_: "diagnostic",
+      body: {
+        v0: {
+          topics: [
+            {
+              symbol: "core_metrics",
+            },
+            {
+              symbol: "max_emit_event_byte",
+            },
+          ],
+          data: {
+            u64: "0",
+          },
+        },
+      },
+    },
+  },
+];

@@ -650,6 +650,7 @@
     &__func,
     .CallStackTrace__bracket {
       color: var(--sds-clr-gray-12);
+      font-weight: var(--sds-fw-bold);
     }
 
     &__params {
