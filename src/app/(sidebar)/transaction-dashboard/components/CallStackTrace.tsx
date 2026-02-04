@@ -75,10 +75,42 @@ export const CallStackTrace = ({
     maxItems: number,
   ): FormattedEventData[] => {
     let itemCount = 0;
-    let wasTruncated = false;
+    let ellipsisAdded = false;
 
     const isContainer = (type: string): boolean => {
       return type === "vec" || type === "map";
+    };
+
+    const addEllipsisIfNeeded = (items: any[], wasTruncated: boolean) => {
+      if (wasTruncated && !ellipsisAdded && items.length > 0) {
+        items.push({ value: "...", type: "ellipsis" });
+        ellipsisAdded = true;
+      }
+    };
+
+    const truncateArray = (items: any[]) => {
+      const truncatedArray: any[] = [];
+      let wasTruncated = false;
+
+      for (const item of items) {
+        if (itemCount >= maxItems) {
+          wasTruncated = true;
+          break;
+        }
+
+        const result = traverse(item);
+
+        if (result !== undefined) {
+          truncatedArray.push(result);
+        }
+      }
+
+      addEllipsisIfNeeded(truncatedArray, wasTruncated);
+
+      return {
+        truncatedArray,
+        wasTruncated,
+      };
     };
 
     const traverse = (node: any): any => {
@@ -94,7 +126,6 @@ export const CallStackTrace = ({
           itemCount++;
 
           if (itemCount > maxItems) {
-            wasTruncated = true;
             return undefined;
           }
 
@@ -102,22 +133,12 @@ export const CallStackTrace = ({
         }
 
         if (Array.isArray(node.value)) {
-          const truncatedArray: any[] = [];
-
-          for (const item of node.value) {
-            if (itemCount >= maxItems) {
-              wasTruncated = true;
-              break;
-            }
-            const result = traverse(item);
-            if (result !== undefined) {
-              truncatedArray.push(result);
-            }
-          }
+          const { truncatedArray } = truncateArray(node.value);
 
           if (truncatedArray.length > 0) {
             return { ...node, value: truncatedArray };
           }
+
           return undefined;
         }
 
@@ -125,22 +146,7 @@ export const CallStackTrace = ({
       }
 
       if (Array.isArray(node)) {
-        const truncatedArray: any[] = [];
-        for (const item of node) {
-          if (itemCount >= maxItems) {
-            wasTruncated = true;
-            break;
-          }
-          const result = traverse(item);
-          if (result !== undefined) {
-            truncatedArray.push(result);
-          }
-        }
-
-        // Add ellipsis at the root level if truncated
-        if (wasTruncated && truncatedArray.length > 0) {
-          truncatedArray.push({ value: "...", type: "ellipsis" });
-        }
+        const { truncatedArray } = truncateArray(node);
 
         return truncatedArray.length > 0 ? truncatedArray : undefined;
       }
@@ -148,8 +154,25 @@ export const CallStackTrace = ({
       return node;
     };
 
-    const result = traverse(data);
+    const result: FormattedEventData[] | undefined = traverse(data);
+
     return result || [];
+  };
+
+  const hasEllipsisAnywhere = (data: any): boolean => {
+    if (!data) return false;
+
+    if (Array.isArray(data)) {
+      return data.some((item) => {
+        if (item?.type === "ellipsis") return true;
+
+        if (Array.isArray(item?.value)) return hasEllipsisAnywhere(item.value);
+
+        return false;
+      });
+    }
+
+    return false;
   };
 
   const renderData = ({
@@ -197,7 +220,10 @@ export const CallStackTrace = ({
               );
             })}
           </span>
-          {parentId ? <Bracket char="]" /> : null}
+          {/* We need to hide extra brackets if there is ellipsis */}
+          {parentId && !hasEllipsisAnywhere(renderVal) ? (
+            <Bracket char="]" />
+          ) : null}
         </span>
       );
     }
@@ -220,7 +246,9 @@ export const CallStackTrace = ({
               </span>
             );
           })}
-          <Bracket char="}" />
+          {!hasEllipsisAnywhere(value.map((item) => item.val)) && (
+            <Bracket char="}" />
+          )}
         </span>
       );
     }
@@ -334,7 +362,10 @@ export const CallStackTrace = ({
             <span className="CallStackTrace__icon">
               <Icon.ArrowRight />
             </span>
-            {renderData({ dataItem: event.return.data, parentId: event.name })}
+            {renderData({
+              dataItem: event.return.data,
+              parentId: event.name,
+            })}
           </span>
         ) : null}
       </span>
