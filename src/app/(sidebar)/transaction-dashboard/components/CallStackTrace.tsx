@@ -378,7 +378,11 @@ export const CallStackTrace = ({
     );
   };
 
-  const renderNested = (events: ProcessedEvent[], parentId?: string) => {
+  const renderNested = (
+    events: ProcessedEvent[],
+    parentId?: string,
+    depth: number = 0,
+  ) => {
     return events.map((event, eventIndex) => {
       return (
         <div
@@ -392,8 +396,10 @@ export const CallStackTrace = ({
         >
           <EventItem
             event={event}
+            depth={depth}
             renderContent={renderItemContent}
             renderNested={renderNested}
+            allEventsCount={events.length}
           />
         </div>
       );
@@ -657,21 +663,66 @@ const Quotes = ({ children }: { children: React.ReactNode }) => (
 
 const EventItem = ({
   event,
+  depth,
+  allEventsCount,
   renderContent,
   renderNested,
 }: {
   event: ProcessedEvent;
+  depth: number;
+  allEventsCount: number;
   renderContent: (event: ProcessedEvent) => JSX.Element;
-  renderNested: (events: ProcessedEvent[], parentId?: string) => JSX.Element[];
+  renderNested: (
+    events: ProcessedEvent[],
+    parentId?: string,
+    depth?: number,
+  ) => JSX.Element[];
 }) => {
   const [isExpanded, setIsExpanded] = useState(true);
+  const hasNestedItems = event.nested.length > 0;
+
+  const getVerticalLineTop = () => {
+    const basePoint = depth === 1 ? 16 : 0;
+
+    return hasNestedItems ? basePoint + 26 : basePoint;
+  };
+
+  const getVerticalLineHeight = () => {
+    const basePoint = depth === 1 ? 16 : 0;
+
+    return basePoint + verticalLineTop;
+  };
+
+  const verticalLineTop = getVerticalLineTop();
 
   return (
     <>
       <div className="CallStackTrace__event__info">
+        {isExpanded ? (
+          <div
+            className="CallStackTrace__verticalLine"
+            data-depth={depth}
+            // TODO: remove before merge
+            data-all-events-count={allEventsCount}
+            style={{
+              left: `${depth === 0 ? 8 : 27}px`,
+              top: `${verticalLineTop}px`,
+              height:
+                depth === 0
+                  ? "100%"
+                  : `calc(100% - ${getVerticalLineHeight()}px)`,
+              // TODO: keep during dev
+              // backgroundColor:
+              //   depth > 0 && !hasNestedItems && allEventsCount === 1
+              //     ? "red"
+              //     : "black",
+            }}
+          ></div>
+        ) : null}
+
         <span
           className="CallStackTrace__icon"
-          data-visible={event.nested.length > 0}
+          data-visible={hasNestedItems}
           data-is-expanded={isExpanded}
           onClick={() => setIsExpanded(!isExpanded)}
         >
@@ -693,7 +744,7 @@ const EventItem = ({
 
       {event.nested.length && isExpanded ? (
         <div className="CallStackTrace__event__nested">
-          {renderNested(event.nested)}
+          {renderNested(event.nested, undefined, depth + 1)}
         </div>
       ) : null}
     </>

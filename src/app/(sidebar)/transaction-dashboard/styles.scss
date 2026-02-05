@@ -567,6 +567,8 @@
     flex-direction: column;
     gap: pxToRem(8px);
     min-width: fit-content;
+    position: relative;
+    overflow-y: hidden;
 
     &__info {
       display: flex;
@@ -612,6 +614,7 @@
         border-radius: pxToRem(4px);
         padding: pxToRem(16px);
         padding-left: pxToRem(20px);
+        margin-left: pxToRem(26px);
 
         &[data-is-error="true"] {
           background-color: var(--sds-clr-red-05) !important;
@@ -622,9 +625,17 @@
           padding-top: pxToRem(2px);
           padding-bottom: pxToRem(2px);
           padding-right: 0;
+          margin-left: pxToRem(8px);
         }
       }
     }
+  }
+
+  &__verticalLine {
+    width: 1px;
+    background-color: var(--sds-clr-gray-08);
+    position: absolute;
+    // top, left, and height are set in JS
   }
 
   &__itemType {
