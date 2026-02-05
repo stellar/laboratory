@@ -26,7 +26,6 @@ import { GITHUB_URL } from "@/constants/settings";
 import { useStore } from "@/store/useStore";
 
 import { openUrl } from "@/helpers/openUrl";
-import { getPublicResourcePath } from "@/helpers/getPublicResourcePath";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
@@ -48,14 +47,6 @@ export default function Introduction() {
               <Badge size="md" variant="secondary">
                 Stellar Lab
               </Badge>
-
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={getPublicResourcePath(
-                  `/images/lab-home-main-${imgTheme}.png`,
-                )}
-                alt="Home graphic image"
-              />
             </div>
             <Heading as="h1" size="md" weight="semi-bold">
               Simulate, Analyze, and Explore — All in One place

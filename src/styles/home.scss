@@ -8,44 +8,12 @@
     flex-direction: column;
     align-items: center;
     position: relative;
-    overflow: hidden;
 
     &__graphic {
-      margin-top: pxToRem(88px);
-      position: relative;
-      width: 100%;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-
-      @media screen and (min-width: 940px) {
-        margin-top: pxToRem(118px);
-      }
-
-      .Badge {
-        z-index: 2;
-        position: relative;
-      }
-
-      img {
-        display: block;
-        aspect-ratio: 583/205;
-        width: 100%;
-        max-width: pxToRem(583px);
-        min-width: pxToRem(430px);
-        position: absolute;
-        top: 0;
-        transform: translateY(-56%);
-        z-index: 1;
-      }
-    }
-
-    .Heading,
-    .Text,
-    .Box {
-      z-index: 2;
-      position: relative;
     }
 
     .Heading {
