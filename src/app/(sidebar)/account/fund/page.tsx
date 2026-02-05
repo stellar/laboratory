@@ -460,12 +460,7 @@ export default function FundAccount() {
                             Boolean(addTrustlineTx)) &&
                             t.id !== activeToken)
                         }
-                        isLoading={
-                          isAccountLoading ||
-                          ((isAddTrustlineInProgress ||
-                            Boolean(addTrustlineTx)) &&
-                            t.id === activeToken)
-                        }
+                        isLoading={isAccountLoading || isAddTrustlineInProgress}
                         title={
                           !accountInfo?.isFunded
                             ? "Account must be funded with XLM first"
