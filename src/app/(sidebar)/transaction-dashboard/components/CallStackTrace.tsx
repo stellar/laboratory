@@ -369,6 +369,9 @@ export const CallStackTrace = ({
               dataItem: event.return.data,
               parentId: event.name,
             })}
+            {event.return?.contractId
+              ? renderContractId(event.return.contractId)
+              : null}
           </span>
         ) : null}
       </span>

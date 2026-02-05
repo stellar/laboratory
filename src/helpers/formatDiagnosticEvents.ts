@@ -378,23 +378,24 @@ export const formatDiagnosticEvents = (
   dEvents: DiagnosticEventJson[],
 ): {
   callStack: ProcessedEvent[];
-  coreMetrics: CoreMetric[];
+  // In case we want to include core metrics in the future
+  // coreMetrics: CoreMetric[];
   errorLevel: ErrorLevel;
 } => {
   // Early return for empty input
   if (!dEvents || dEvents.length === 0) {
     return {
       callStack: [],
-      coreMetrics: [],
+      // coreMetrics: [],
       errorLevel: undefined,
     };
   }
 
-  const { callStack, coreMetrics } = processEvents(dEvents);
+  const { callStack } = processEvents(dEvents);
 
   return {
     callStack,
-    coreMetrics,
+    // coreMetrics,
     errorLevel: calculateErrorLevel(callStack),
   };
 };

@@ -592,6 +592,15 @@
       }
     }
 
+    &[data-is-error="true"] {
+      & > .CallStackTrace__event__info {
+        background-color: var(--sds-clr-red-05) !important;
+        border-radius: pxToRem(4px);
+        padding-top: pxToRem(2px);
+        padding-bottom: pxToRem(2px);
+      }
+    }
+
     &__nested {
       display: flex;
       gap: pxToRem(8px);
