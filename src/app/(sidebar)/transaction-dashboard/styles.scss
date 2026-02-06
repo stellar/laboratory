@@ -562,6 +562,30 @@
     overflow: auto;
   }
 
+  // All failed: Red background on level 1 items for failed transaction
+  &[data-error-level="all"] {
+    .CallStackTrace__event__nested {
+      & > .CallStackTrace__event {
+        &[data-is-error="true"] {
+          background-color: var(--sds-clr-red-05) !important;
+        }
+      }
+    }
+  }
+
+  // Some failed: Make labels red, no background change
+  &[data-error-level="some"] {
+    .CallStackTrace__event {
+      &[data-is-error="true"] {
+        .CallStackTrace__itemType {
+          --CallStackTrace--itemType-bg-color: #{var(--sds-clr-red-02)};
+          --CallStackTrace--itemType-border-color: #{var(--sds-clr-red-06)};
+          --CallStackTrace--itemType-text-color: #{var(--sds-clr-red-11)};
+        }
+      }
+    }
+  }
+
   &__event {
     display: flex;
     flex-direction: column;
@@ -596,7 +620,6 @@
 
     &[data-is-error="true"] {
       & > .CallStackTrace__event__info {
-        background-color: var(--sds-clr-red-05) !important;
         border-radius: pxToRem(4px);
         padding-top: pxToRem(2px);
         padding-bottom: pxToRem(2px);
@@ -615,10 +638,6 @@
         padding: pxToRem(16px);
         padding-left: pxToRem(20px);
         margin-left: pxToRem(26px);
-
-        &[data-is-error="true"] {
-          background-color: var(--sds-clr-red-05) !important;
-        }
 
         // Level 2 and deeper items
         .CallStackTrace__event__nested > .CallStackTrace__event {

@@ -399,7 +399,6 @@ export const CallStackTrace = ({
             depth={depth}
             renderContent={renderItemContent}
             renderNested={renderNested}
-            allEventsCount={events.length}
           />
         </div>
       );
@@ -531,7 +530,7 @@ export const CallStackTrace = ({
         </Alert>
       ) : null}
 
-      <div className="CallStackTrace">
+      <div className="CallStackTrace" data-error-level={data.errorLevel}>
         <div className="CallStackTrace__scrollable">
           {renderNested(data.callStack)}
         </div>
@@ -664,13 +663,11 @@ const Quotes = ({ children }: { children: React.ReactNode }) => (
 const EventItem = ({
   event,
   depth,
-  allEventsCount,
   renderContent,
   renderNested,
 }: {
   event: ProcessedEvent;
   depth: number;
-  allEventsCount: number;
   renderContent: (event: ProcessedEvent) => JSX.Element;
   renderNested: (
     events: ProcessedEvent[],
@@ -698,12 +695,10 @@ const EventItem = ({
   return (
     <>
       <div className="CallStackTrace__event__info">
-        {isExpanded ? (
+        {hasNestedItems && isExpanded ? (
           <div
             className="CallStackTrace__verticalLine"
             data-depth={depth}
-            // TODO: remove before merge
-            data-all-events-count={allEventsCount}
             style={{
               left: `${depth === 0 ? 8 : 27}px`,
               top: `${verticalLineTop}px`,
@@ -711,23 +706,21 @@ const EventItem = ({
                 depth === 0
                   ? "100%"
                   : `calc(100% - ${getVerticalLineHeight()}px)`,
-              // TODO: keep during dev
-              // backgroundColor:
-              //   depth > 0 && !hasNestedItems && allEventsCount === 1
-              //     ? "red"
-              //     : "black",
             }}
           ></div>
         ) : null}
 
-        <span
-          className="CallStackTrace__icon"
-          data-visible={hasNestedItems}
-          data-is-expanded={isExpanded}
-          onClick={() => setIsExpanded(!isExpanded)}
-        >
-          <Icon.ChevronDown />
-        </span>
+        {/* Don’t render arrow if it’s a top-level item without nested items */}
+        {depth === 0 && !hasNestedItems ? null : (
+          <span
+            className="CallStackTrace__icon"
+            data-visible={hasNestedItems}
+            data-is-expanded={isExpanded}
+            onClick={() => setIsExpanded(!isExpanded)}
+          >
+            <Icon.ChevronDown />
+          </span>
+        )}
 
         {event.isError ? (
           <span className="CallStackTrace__itemError CallStackTrace__icon">
