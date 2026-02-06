@@ -44,7 +44,7 @@ export const FiltersPicker = ({ id, value, onChange }: FiltersPickerProps) => {
       <Select
         id={`${id}-type`}
         fieldSize="md"
-        label="Filters Type"
+        label="Filters type"
         value={value?.type}
         onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
           const val = e.target.value as FiltersType;

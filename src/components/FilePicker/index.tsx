@@ -178,7 +178,7 @@ export const FilePicker = ({
           <span className="Button__icon">
             <Icon.FileCode01 />
           </span>
-          Select a File
+          Select a file
         </label>
         <input
           type="file"

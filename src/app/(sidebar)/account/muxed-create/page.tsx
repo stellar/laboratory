@@ -115,7 +115,7 @@ export default function CreateMuxedAccount() {
             id="muxed-account-id"
             fieldSize="md"
             placeholder="Ex: 1"
-            label="Muxed Account ID"
+            label="Muxed account ID"
             value={muxedId}
             onChange={(e) => {
               setReset(true);

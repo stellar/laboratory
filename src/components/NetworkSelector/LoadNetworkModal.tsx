@@ -31,7 +31,7 @@ export const LoadNetworkModal = ({
           <NetworkItem label="RPC URL" value={loadedNetwork.rpcUrl} />
           <NetworkItem label="Horizon URL" value={loadedNetwork.horizonUrl} />
           <NetworkItem
-            label="Network Passphrase"
+            label="Network passphrase"
             value={loadedNetwork.passphrase}
           />
         </Box>

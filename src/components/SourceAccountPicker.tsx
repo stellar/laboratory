@@ -25,7 +25,7 @@ export const SourceAccountPicker = ({
     <div className="SourceAccountPicker">
       <PubKeyPicker
         id="source_account"
-        label="Source Account"
+        label="Source account"
         value={value}
         error={error}
         onChange={(e) => {

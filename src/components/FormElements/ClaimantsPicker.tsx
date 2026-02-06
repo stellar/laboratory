@@ -318,7 +318,7 @@ const PredicateType = ({
         id={`${parentId}-${index}-${parentPath}-predicate-type`}
         data-testid="predicate-type-picker"
         selectedOption={type}
-        label="Predicate Type"
+        label="Predicate type"
         onChange={(val) => {
           onUpdate({
             parentPath,
@@ -388,7 +388,7 @@ const PredicateTimeType = ({
         id={`${parentId}-${index}-${parentPath}-time-type`}
         data-testid="predicate-time-picker"
         selectedOption={type}
-        label="Time Type"
+        label="Time type"
         onChange={(val) => {
           onUpdate({
             parentPath,
@@ -445,7 +445,7 @@ const PredicateTimeValue = ({
             id={`${parentId}-${index}-${parentPath}-time-value-abs`}
             placeholder="Ex: 1603303504"
             value={nodeValue}
-            label="Time Value"
+            label="Time value"
             onChange={handleUpdate}
             error={error?.[path]}
             note="Unix epoch as a string representing a deadline for when the
@@ -460,7 +460,7 @@ const PredicateTimeValue = ({
             id={`${index}-${parentPath}-time-value-rel`}
             placeholder="Ex: 1603303504"
             value={nodeValue}
-            label="Time Value"
+            label="Time value"
             error={error?.[path]}
             onChange={handleUpdate}
             note="A relative deadline for when the claimable balance can be claimed.

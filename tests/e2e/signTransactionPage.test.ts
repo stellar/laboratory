@@ -51,7 +51,7 @@ test.describe("Sign Transaction Page", () => {
     await expect(overviewTxXDR).toHaveValue(MOCK_TX_XDR);
 
     // TX HASH
-    const overviewTxHash = page.getByLabel("Transaction Hash");
+    const overviewTxHash = page.getByLabel("Transaction hash");
     await expect(overviewTxHash).toHaveValue(
       "794e2073e130dc09d2b7e8b147b51f6ef75ff171c83c603bc8ab4cffa3f341a1",
     );
@@ -259,7 +259,7 @@ test.describe("Sign Transaction Page", () => {
     await expect(overviewTxXDR).toHaveValue(MOCK_SOROBAN_XDR);
 
     // TX HASH
-    const overviewTxHash = page.getByLabel("Transaction Hash");
+    const overviewTxHash = page.getByLabel("Transaction hash");
     await expect(overviewTxHash).toHaveValue(
       "ab12155abb53a5f8177e47683a870976621fcac62cc3441d997cc0aafaac99ad",
     );
@@ -373,7 +373,7 @@ test.describe("Sign Transaction Page", () => {
     await expect(overviewTxXDR).toHaveValue(MOCK_TX_XDR_3_OPERATIONS);
 
     // TX HASH
-    const overviewTxHash = page.getByLabel("Transaction Hash");
+    const overviewTxHash = page.getByLabel("Transaction hash");
     await expect(overviewTxHash).toHaveValue(
       "892110aecc9f30662d5ececcf2a1f2fdd03fc42f3b3ca55c475a05d421838e60",
     );

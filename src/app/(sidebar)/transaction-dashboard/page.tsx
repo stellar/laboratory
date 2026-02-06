@@ -260,7 +260,7 @@ export default function TransactionDashboard() {
             <Input
               fieldSize="md"
               id="transaction-hash"
-              label="Transaction Hash"
+              label="Transaction hash"
               placeholder="Ex: 6a274e17afb878bc704bfe41ebf456b4c6d9df5ca59bd3e06f5c39263e484017"
               error={transactionHashInputError}
               value={transactionHashInput}
@@ -388,7 +388,7 @@ export default function TransactionDashboard() {
             <TabView
               tab1={{
                 id: "tx-token-summary",
-                label: "Token Summary",
+                label: "Token summary",
                 content: <TokenSummary txDetails={txDetails} />,
                 isDisabled: !isDataLoaded,
               }}
@@ -406,7 +406,7 @@ export default function TransactionDashboard() {
               }}
               tab4={{
                 id: "tx-state-change",
-                label: "State Change",
+                label: "State change",
                 content: isDataLoaded ? (
                   <StateChange txDetails={txDetails} />
                 ) : (
@@ -416,7 +416,7 @@ export default function TransactionDashboard() {
               }}
               tab5={{
                 id: "tx-resource-profiler",
-                label: "Resource Profiler",
+                label: "Resource profiler",
                 content: <ResourceProfiler txDetails={txDetails} />,
                 isDisabled: !isDataLoaded,
               }}
@@ -428,7 +428,7 @@ export default function TransactionDashboard() {
               }}
               tab7={{
                 id: "tx-fee-breakdown",
-                label: "Fee Breakdown",
+                label: "Fee breakdown",
                 content: <FeeBreakdown txDetails={txDetails} />,
                 isDisabled: !isDataLoaded,
               }}

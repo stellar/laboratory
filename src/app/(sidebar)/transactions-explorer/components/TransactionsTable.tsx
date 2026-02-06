@@ -66,7 +66,7 @@ export function TransactionsTable({
 }) {
   const router = useRouter();
   const headers: DataTableHeader[] = [
-    { id: "txhash", value: "Transaction Hash" },
+    { id: "txhash", value: "Transaction hash" },
     { id: "type", value: "Type" },
     { id: "created", value: "Created at" },
     { id: "status", value: "Status" },
@@ -108,7 +108,7 @@ export function TransactionsTable({
                 <IconButton
                   customSize="12px"
                   icon={<Icon.Copy01 />}
-                  altText="Copy Transaction Hash"
+                  altText="Copy transaction hash"
                   onClick={(e) => e.preventDefault()}
                 />
               </CopyText>

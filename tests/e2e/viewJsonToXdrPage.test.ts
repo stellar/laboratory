@@ -10,7 +10,7 @@ test.describe("View JSON to XDR Page", () => {
   });
 
   test("Import TransactionEnvelope JSON", async ({ page }) => {
-    const xdrView = page.getByLabel("Base-64 encoded XDR");
+    const xdrView = page.getByLabel("Base64 encoded XDR");
     const clearBtn = page.getByText("Clear JSON");
 
     // XDR not visible
@@ -49,7 +49,7 @@ test.describe("View JSON to XDR Page", () => {
 
     const xdrType = page.getByLabel("XDR type");
     const xdrTypeOptions = page.getByTestId("xdr-type-select-options");
-    const xdrView = page.getByLabel("Base-64 encoded XDR");
+    const xdrView = page.getByLabel("Base64 encoded XDR");
     const decodeErrorMsg = page.getByText(
       "Unable to decode JSON as TransactionEnvelope: unknown variant `fee_charged`, expected one of `tx_v0`, `tx`, `tx_fee_bump` at line 2 column 15",
     );
@@ -83,7 +83,7 @@ test.describe("View JSON to XDR Page", () => {
     await xdrInput.fill("AAA");
 
     await expect(decodeErrorMsg).toBeVisible();
-    await expect(page.getByLabel("Base-64 encoded XDR")).toBeHidden();
+    await expect(page.getByLabel("Base64 encoded XDR")).toBeHidden();
   });
 });
 

@@ -9,7 +9,7 @@ test.describe("URL Params", () => {
       );
 
       await expect(page.locator("h1")).toHaveText("View XDR");
-      await expect(page.getByLabel("Base-64 encoded XDR")).toHaveValue(
+      await expect(page.getByLabel("Base64 encoded XDR")).toHaveValue(
         "AAAAAgAAAAAYheerp3FCahtW+3qusxzklJhfxMPQJERfPKY0lXnVjQAPQkAADQg/AAAAJAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAABAAAAABB90WssODNIgi6BHveqzxTRmIpvAFRyVNM+Hm2GVuCcAAAAAAAAAADGfZUR9pNoQGv+u6uGjdcwVF3zlb/mjyN53fUCn+iBGQAAABdIdugAAAAAAAAAAAKVedWNAAAAQA8JEfXRL2BLjcYHYX+6Dloij4OIR44zsu6hd9CSI/rQSgGulcIFmzY0sX4LIxdwCg/3UMOfXFEpGxIsDvaJEQuGVuCcAAAAQBYyy1VZl3iPQBI4hyv4e91Xv9KfM54jWWLVoh2HEjTWzPUsTlo6e2u/zGi+dcZxbNy/1MV9ipZuflVzLHPKlgs=",
       );
       await expect(page.getByLabel("Transaction hash")).toHaveValue(
@@ -29,7 +29,7 @@ test.describe("URL Params", () => {
       await expect(page.getByLabel("XDR type")).toHaveValue(
         "TransactionEnvelope",
       );
-      await expect(page.getByLabel("Base-64 encoded XDR")).toHaveValue(
+      await expect(page.getByLabel("Base64 encoded XDR")).toHaveValue(
         "AAAAAgAAAAAYheerp3FCahtW+3qusxzklJhfxMPQJERfPKY0lXnVjQAPQkAADQg/AAAAJAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAABAAAAABB90WssODNIgi6BHveqzxTRmIpvAFRyVNM+Hm2GVuCcAAAAAAAAAADGfZUR9pNoQGv+u6uGjdcwVF3zlb/mjyN53fUCn+iBGQAAABdIdugAAAAAAAAAAAKVedWNAAAAQA8JEfXRL2BLjcYHYX+6Dloij4OIR44zsu6hd9CSI/rQSgGulcIFmzY0sX4LIxdwCg/3UMOfXFEpGxIsDvaJEQuGVuCcAAAAQBYyy1VZl3iPQBI4hyv4e91Xv9KfM54jWWLVoh2HEjTWzPUsTlo6e2u/zGi+dcZxbNy/1MV9ipZuflVzLHPKlgs=",
       );
     });
@@ -45,7 +45,7 @@ test.describe("URL Params", () => {
 
       // Params
       await expect(
-        page.getByLabel("Source Account", { exact: true }),
+        page.getByLabel("Source account", { exact: true }),
       ).toHaveValue("GA46LGGOLXJY5OSX6N4LHV4MWDFXNGLK76I4NDNKKYAXRRSKI5AJGMXG");
       await expect(page.getByLabel("Transaction Sequence Number")).toHaveValue(
         "3668692344766465",
@@ -88,12 +88,12 @@ test.describe("URL Params", () => {
       await expect(
         op1.locator("#credit_alphanum4-1-payment-asset"),
       ).toBeChecked();
-      await expect(op1.getByLabel("Asset Code")).toHaveValue("USDC");
+      await expect(op1.getByLabel("Asset code")).toHaveValue("USDC");
       await expect(op1.getByLabel("Issuer Account ID")).toHaveValue(
         "GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5",
       );
       await expect(op1.getByLabel("Amount")).toHaveValue("4000");
-      await expect(op1.getByLabel("Source Account")).toHaveValue(
+      await expect(op1.getByLabel("Source account")).toHaveValue(
         "GA46LGGOLXJY5OSX6N4LHV4MWDFXNGLK76I4NDNKKYAXRRSKI5AJGMXG",
       );
 
@@ -124,7 +124,7 @@ test.describe("URL Params", () => {
       await expect(page.getByLabel("Transaction Envelope XDR")).toHaveValue(
         "AAAAAgAAAAA55ZjOXdOOulfzeLPXjLDLdplq/5HGjapWAXjGSkdAkwAAD6AADQioAAAAAQAAAAEAAAAAAAAAAAAAAABnUbvoAAAAAQAAAAMxMjMAAAAAAgAAAAAAAAAAAAAAALs4fndRzE6mDMvxXqgyh79/PxCtOwb9MTWEeINa/Qr8AAAABvwjrAAAAAABAAAAADnlmM5d0466V/N4s9eMsMt2mWr/kcaNqlYBeMZKR0CTAAAAAQAAAAASBB3qbNO/amClp01Lvg/fRcZsxzvl0ItXd0lfm+7+ggAAAAFVU0RDAAAAAEI+fQXy7K+/7BkrIVo/G+lq7bjY5wJUq+NBPgIH3layAAAACVAvkAAAAAAAAAAAAA==",
       );
-      await expect(page.getByLabel("Transaction Hash")).toHaveValue(
+      await expect(page.getByLabel("Transaction hash")).toHaveValue(
         "44abaabac11c318d595d392c24166965301b48109899bc8e819723afb89d5e37",
       );
     });
@@ -137,7 +137,7 @@ test.describe("URL Params", () => {
       await expect(page.locator("h1")).toHaveText("Simulate transaction");
 
       await expect(
-        page.getByLabel("Input a base-64 encoded TransactionEnvelope"),
+        page.getByLabel("Input a Base64 encoded TransactionEnvelope"),
       ).toHaveValue(
         "AAAAAgAAAAA55ZjOXdOOulfzeLPXjLDLdplq/5HGjapWAXjGSkdAkwAAD6AADQioAAAAAQAAAAEAAAAAAAAAAAAAAABnUbvoAAAAAQAAAAMxMjMAAAAAAgAAAAAAAAAAAAAAALs4fndRzE6mDMvxXqgyh79/PxCtOwb9MTWEeINa/Qr8AAAABvwjrAAAAAABAAAAADnlmM5d0466V/N4s9eMsMt2mWr/kcaNqlYBeMZKR0CTAAAAAQAAAAASBB3qbNO/amClp01Lvg/fRcZsxzvl0ItXd0lfm+7+ggAAAAFVU0RDAAAAAEI+fQXy7K+/7BkrIVo/G+lq7bjY5wJUq+NBPgIH3layAAAACVAvkAAAAAAAAAAAAA==",
       );
@@ -151,7 +151,7 @@ test.describe("URL Params", () => {
       await expect(page.locator("h1")).toHaveText("Submit transaction");
 
       await expect(
-        page.getByLabel("Input a base-64 encoded TransactionEnvelope"),
+        page.getByLabel("Input a Base64 encoded TransactionEnvelope"),
       ).toHaveValue(
         "AAAAAgAAAAA55ZjOXdOOulfzeLPXjLDLdplq/5HGjapWAXjGSkdAkwAAD6AADQioAAAAAQAAAAEAAAAAAAAAAAAAAABnUbvoAAAAAQAAAAMxMjMAAAAAAgAAAAAAAAAAAAAAALs4fndRzE6mDMvxXqgyh79/PxCtOwb9MTWEeINa/Qr8AAAABvwjrAAAAAABAAAAADnlmM5d0466V/N4s9eMsMt2mWr/kcaNqlYBeMZKR0CTAAAAAQAAAAASBB3qbNO/amClp01Lvg/fRcZsxzvl0ItXd0lfm+7+ggAAAAFVU0RDAAAAAEI+fQXy7K+/7BkrIVo/G+lq7bjY5wJUq+NBPgIH3layAAAACVAvkAAAAAAAAAAAAA==",
       );
@@ -169,7 +169,7 @@ test.describe("URL Params", () => {
 
       // Params
       await expect(
-        page.getByLabel("Source Account", { exact: true }),
+        page.getByLabel("Source account", { exact: true }),
       ).toHaveValue("GB7EZPIHFYQCG2TTCGPSPKWKC36CF35YO5MDM5S5LTAPRNKRSARIHWGG");
       await expect(page.getByLabel("Transaction Sequence Number")).toHaveValue(
         "1727208213184538",
@@ -211,12 +211,12 @@ test.describe("URL Params", () => {
 
       await expect(page.locator("h1")).toHaveText("Fee bump");
 
-      await expect(page.getByLabel("Source Account")).toHaveValue(
+      await expect(page.getByLabel("Source account")).toHaveValue(
         "GA46LGGOLXJY5OSX6N4LHV4MWDFXNGLK76I4NDNKKYAXRRSKI5AJGMXG",
       );
       await expect(page.getByLabel("Base Fee")).toHaveValue("2000");
       await expect(
-        page.getByLabel("Input a base-64 encoded TransactionEnvelope"),
+        page.getByLabel("Input a Base64 encoded TransactionEnvelope"),
       ).toHaveValue(
         "AAAAAgAAAAA55ZjOXdOOulfzeLPXjLDLdplq/5HGjapWAXjGSkdAkwAAD6AADQioAAAAAQAAAAEAAAAAAAAAAAAAAABnUbvoAAAAAQAAAAMxMjMAAAAAAgAAAAAAAAAAAAAAALs4fndRzE6mDMvxXqgyh79/PxCtOwb9MTWEeINa/Qr8AAAABvwjrAAAAAABAAAAADnlmM5d0466V/N4s9eMsMt2mWr/kcaNqlYBeMZKR0CTAAAAAQAAAAASBB3qbNO/amClp01Lvg/fRcZsxzvl0ItXd0lfm+7+ggAAAAFVU0RDAAAAAEI+fQXy7K+/7BkrIVo/G+lq7bjY5wJUq+NBPgIH3layAAAACVAvkAAAAAAAAAAAAA==",
       );
@@ -246,7 +246,7 @@ test.describe("URL Params", () => {
         "http://localhost:3000/endpoints/horizon/payments/account?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;&endpoints$params$account_id=GA46LGGOLXJY5OSX6N4LHV4MWDFXNGLK76I4NDNKKYAXRRSKI5AJGMXG&cursor=123123&limit=5&order=desc&include_failed=true;;",
       );
 
-      await expect(page.locator("h1")).toHaveText("Payments for Account");
+      await expect(page.locator("h1")).toHaveText("Payments for account");
 
       await expect(page.getByTestId("endpoints-url")).toHaveValue(
         "https://horizon-testnet.stellar.org/accounts/GA46LGGOLXJY5OSX6N4LHV4MWDFXNGLK76I4NDNKKYAXRRSKI5AJGMXG/payments?cursor=123123&limit=5&order=desc&include_failed=true",

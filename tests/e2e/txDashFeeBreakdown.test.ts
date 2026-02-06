@@ -13,7 +13,7 @@ test.describe("Transaction Dashboard: Fee Breakdown", () => {
 
     await expect(loadButton).toBeDisabled();
     await page
-      .getByLabel("Transaction Hash")
+      .getByLabel("Transaction hash")
       .fill(TX_ST_CHANGE_DOMAIN_SET.result.txHash);
 
     await expect(loadButton).toBeEnabled();
@@ -46,7 +46,7 @@ test.describe("Transaction Dashboard: Fee Breakdown", () => {
 
     // Table columns
     await expect(getTableRow(rows, 0)).toHaveText([
-      "Fee Type",
+      "Fee type",
       "Proposed",
       "Refunded",
       "Final",
@@ -111,7 +111,7 @@ test.describe("Transaction Dashboard: Fee Breakdown", () => {
 
     await expect(loadButton).toBeDisabled();
     await page
-      .getByLabel("Transaction Hash")
+      .getByLabel("Transaction hash")
       .fill(TX_ST_CHANGE_DOMAIN_SET.result.txHash);
 
     await expect(loadButton).toBeEnabled();

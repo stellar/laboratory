@@ -42,7 +42,7 @@ export const StateChange = ({
     const titleProps = isAfterDiffOnly
       ? { leftTitle: "After" }
       : {
-          leftTitle: isSplitView ? "Before" : "Before and After",
+          leftTitle: isSplitView ? "Before" : "Before and after",
           rightTitle: "After",
         };
 

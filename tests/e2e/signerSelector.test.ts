@@ -57,7 +57,7 @@ test.describe("Signer Selector", () => {
 
       const { values } = await validateSignerSelectorOptions(pageContext);
       await values.nth(0).click();
-      await expect(pageContext.getByLabel("Source Account")).toHaveValue(
+      await expect(pageContext.getByLabel("Source account")).toHaveValue(
         SAVED_ACCOUNT_1,
       );
 
@@ -65,7 +65,7 @@ test.describe("Signer Selector", () => {
       const { values: values2 } =
         await validateSignerSelectorOptions(pageContext);
       await values2.nth(1).click();
-      await expect(pageContext.getByLabel("Source Account")).toHaveValue(
+      await expect(pageContext.getByLabel("Source account")).toHaveValue(
         SAVED_ACCOUNT_2,
       );
     });

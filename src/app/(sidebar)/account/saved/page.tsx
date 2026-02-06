@@ -66,7 +66,7 @@ export default function SavedKeypairs() {
   const renderOtherNetworkMessage = () => {
     if (network.id === "testnet" || network.id === "futurenet") {
       const otherNetworkLabel =
-        network.id === "testnet" ? "Futurenet" : "Testnet";
+        network.id === "testnet" ? "futurenet" : "testnet";
 
       return (
         <Alert

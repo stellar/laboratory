@@ -208,7 +208,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
       nestedItems: [
         {
           route: Routes.ENDPOINTS_ACCOUNTS,
-          label: "All Accounts",
+          label: "All accounts",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/list-all-accounts",
@@ -228,7 +228,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
         },
         {
           route: Routes.ENDPOINTS_ACCOUNTS_SINGLE,
-          label: "Single Account",
+          label: "Single account",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/retrieve-an-account",
@@ -247,7 +247,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
       nestedItems: [
         {
           route: Routes.ENDPOINTS_ASSETS,
-          label: "All Assets",
+          label: "All assets",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/list-all-assets",
@@ -263,11 +263,11 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
     },
     {
       route: Routes.ENDPOINTS_CLAIMABLE_BALANCES,
-      label: "Claimable Balances",
+      label: "Claimable balances",
       nestedItems: [
         {
           route: Routes.ENDPOINTS_CLAIMABLE_BALANCES,
-          label: "All Claimable Balances",
+          label: "All claimable balances",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/list-all-claimable-balances",
@@ -281,7 +281,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
         },
         {
           route: Routes.ENDPOINTS_CLAIMABLE_BALANCES_SINGLE,
-          label: "Single Claimable Balance",
+          label: "Single claimable balance",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/retrieve-a-claimable-balance",
@@ -300,7 +300,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
       nestedItems: [
         {
           route: Routes.ENDPOINTS_EFFECTS,
-          label: "All Effects",
+          label: "All effects",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/list-all-effects",
@@ -313,7 +313,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
         },
         {
           route: Routes.ENDPOINTS_EFFECTS_ACCOUNT,
-          label: "Effects for Account",
+          label: "Effects for account",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/get-effects-by-account-id",
@@ -327,7 +327,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
         },
         {
           route: Routes.ENDPOINTS_EFFECTS_LEDGER,
-          label: "Effects for Ledger",
+          label: "Effects for ledger",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/retrieve-a-ledgers-effects",
@@ -341,7 +341,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
         },
         {
           route: Routes.ENDPOINTS_EFFECTS_LIQUIDITY_POOL,
-          label: "Effects for Liquidity Pool",
+          label: "Effects for liquidity pool",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/retrieve-related-effects",
@@ -355,7 +355,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
         },
         {
           route: Routes.ENDPOINTS_EFFECTS_OPERATION,
-          label: "Effects for Operation",
+          label: "Effects for operation",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/retrieve-an-operations-effects",
@@ -369,7 +369,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
         },
         {
           route: Routes.ENDPOINTS_EFFECTS_TRANSACTION,
-          label: "Effects for Transaction",
+          label: "Effects for transaction",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/retrieve-a-transactions-effects",
@@ -385,11 +385,11 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
     },
     {
       route: Routes.ENDPOINTS_FEE_STATS,
-      label: "Fee Stats",
+      label: "Fee stats",
       nestedItems: [
         {
           route: Routes.ENDPOINTS_FEE_STATS,
-          label: "All Fee Stats",
+          label: "All fee stats",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/aggregations/fee-stats/object",
@@ -408,7 +408,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
       nestedItems: [
         {
           route: Routes.ENDPOINTS_LEDGERS,
-          label: "All Ledgers",
+          label: "All ledgers",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/ledgers",
@@ -421,7 +421,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
         },
         {
           route: Routes.ENDPOINTS_LEDGERS_SINGLE,
-          label: "Single Ledger",
+          label: "Single ledger",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/retrieve-a-ledger",
@@ -436,11 +436,11 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
     },
     {
       route: Routes.ENDPOINTS_LIQUIDITY_POOLS,
-      label: "Liquidity Pools",
+      label: "Liquidity pools",
       nestedItems: [
         {
           route: Routes.ENDPOINTS_LIQUIDITY_POOLS,
-          label: "All Liquidity Pools",
+          label: "All liquidity pools",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/list-liquidity-pools",
@@ -454,7 +454,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
         },
         {
           route: Routes.ENDPOINTS_LIQUIDITY_POOLS_SINGLE,
-          label: "Single Liquidity Pool",
+          label: "Single liquidity pool",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/retrieve-a-liquidity-pool",
@@ -473,7 +473,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
       nestedItems: [
         {
           route: Routes.ENDPOINTS_OFFERS,
-          label: "All Offers",
+          label: "All offers",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/offers",
@@ -497,7 +497,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
         },
         {
           route: Routes.ENDPOINTS_OFFERS_SINGLE,
-          label: "Single Offer",
+          label: "Single offer",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/get-offer-by-offer-id",
@@ -510,7 +510,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
         },
         {
           route: Routes.ENDPOINTS_OFFERS_ACCOUNT,
-          label: "Offers for Account",
+          label: "Offers for account",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/get-offers-by-account-id",
@@ -530,7 +530,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
       nestedItems: [
         {
           route: Routes.ENDPOINTS_OPERATIONS,
-          label: "All Operations",
+          label: "All operations",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/operations",
@@ -544,7 +544,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
         },
         {
           route: Routes.ENDPOINTS_OPERATIONS_SINGLE,
-          label: "Single Operation",
+          label: "Single operation",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/retrieve-an-operation",
@@ -557,7 +557,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
         },
         {
           route: Routes.ENDPOINTS_OPERATIONS_ACCOUNT,
-          label: "Operations for Account",
+          label: "Operations for account",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/get-operations-by-account-id",
@@ -571,7 +571,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
         },
         {
           route: Routes.ENDPOINTS_OPERATIONS_LEDGER,
-          label: "Operations for Ledger",
+          label: "Operations for ledger",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/retrieve-a-ledgers-operations",
@@ -585,7 +585,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
         },
         {
           route: Routes.ENDPOINTS_OPERATIONS_LIQUIDITY_POOL,
-          label: "Operations for Liquidity Pool",
+          label: "Operations for liquidity pool",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/lp-retrieve-related-operations",
@@ -599,7 +599,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
         },
         {
           route: Routes.ENDPOINTS_OPERATIONS_TRANSACTION,
-          label: "Operations for Transaction",
+          label: "Operations for transaction",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/retrieve-a-transactions-operations",
@@ -615,7 +615,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
     },
     {
       route: Routes.ENDPOINTS_ORDER_BOOK_DETAILS,
-      label: "Order Book",
+      label: "Order book",
       nestedItems: [
         {
           route: Routes.ENDPOINTS_ORDER_BOOK_DETAILS,
@@ -658,7 +658,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
       nestedItems: [
         {
           route: Routes.ENDPOINTS_PATHS,
-          label: "Find Payment Paths",
+          label: "Find payment paths",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/aggregations/paths",
@@ -685,7 +685,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
         },
         {
           route: Routes.ENDPOINTS_PATHS_STRICT_RECEIVE,
-          label: "Find Strict Receive Payment Paths",
+          label: "Find strict receive payment paths",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/aggregations/paths/strict-receive",
@@ -711,7 +711,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
         },
         {
           route: Routes.ENDPOINTS_PATHS_STRICT_SEND,
-          label: "Find Strict Send Payment Paths",
+          label: "Find strict send payment paths",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/aggregations/paths/strict-send",
@@ -743,7 +743,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
       nestedItems: [
         {
           route: Routes.ENDPOINTS_PAYMENTS,
-          label: "All Payments",
+          label: "All payments",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/list-all-payments",
@@ -757,7 +757,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
         },
         {
           route: Routes.ENDPOINTS_PAYMENTS_ACCOUNT,
-          label: "Payments for Account",
+          label: "Payments for account",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/get-payments-by-account-id",
@@ -771,7 +771,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
         },
         {
           route: Routes.ENDPOINTS_PAYMENTS_LEDGER,
-          label: "Payments for Ledger",
+          label: "Payments for ledger",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/retrieve-a-ledgers-payments",
@@ -785,7 +785,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
         },
         {
           route: Routes.ENDPOINTS_PAYMENTS_TRANSACTION,
-          label: "Payments for Transaction",
+          label: "Payments for transaction",
           form: {
             docsUrl:
               "https://developers.stellar.org/docs/data/horizon/api-reference/retrieve-a-transactions-payments",
@@ -801,11 +801,11 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
     },
     {
       route: Routes.ENDPOINTS_TRADE_AGGREGATIONS,
-      label: "Trade Aggregations",
+      label: "Trade aggregations",
       nestedItems: [
         {
           route: Routes.ENDPOINTS_TRADE_AGGREGATIONS,
-          label: "All Trade Aggregations",
+          label: "All trade aggregations",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/aggregations/trade-aggregations/list",
@@ -844,7 +844,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
       nestedItems: [
         {
           route: Routes.ENDPOINTS_TRADES,
-          label: "All Trades",
+          label: "All trades",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/get-all-trades",
@@ -877,7 +877,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
         },
         {
           route: Routes.ENDPOINTS_TRADES_ACCOUNT,
-          label: "Trades for Account",
+          label: "Trades for account",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/get-trades-by-account-id",
@@ -891,7 +891,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
         },
         {
           route: Routes.ENDPOINTS_TRADES_LIQUIDITY_POOL,
-          label: "Trades for Liquidity Pool",
+          label: "Trades for liquidity pool",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/retrieve-related-trades",
@@ -905,7 +905,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
         },
         {
           route: Routes.ENDPOINTS_TRADES_OFFER,
-          label: "Trades for Offer",
+          label: "Trades for offer",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/get-trades-by-offer-id",
@@ -925,7 +925,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
       nestedItems: [
         {
           route: Routes.ENDPOINTS_TRANSACTIONS,
-          label: "All Transactions",
+          label: "All transactions",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/transactions",
@@ -939,7 +939,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
         },
         {
           route: Routes.ENDPOINTS_TRANSACTIONS_SINGLE,
-          label: "Single Transaction",
+          label: "Single transaction",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/retrieve-a-transaction",
@@ -952,7 +952,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
         },
         {
           route: Routes.ENDPOINTS_TRANSACTIONS_POST,
-          label: "Post Transaction",
+          label: "Post transaction",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/submit-a-transaction",
@@ -965,7 +965,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
         },
         {
           route: Routes.ENDPOINTS_TRANSACTIONS_POST_ASYNC,
-          label: "Post Async Transaction",
+          label: "Post async transaction",
           form: {
             docsUrl:
               "https://developers.stellar.org/docs/data/horizon/api-reference/submit-async-transaction",
@@ -978,7 +978,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
         },
         {
           route: Routes.ENDPOINTS_TRANSACTIONS_ACCOUNT,
-          label: "Transactions for Account",
+          label: "Transactions for account",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/get-transactions-by-account-id",
@@ -992,7 +992,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
         },
         {
           route: Routes.ENDPOINTS_TRANSACTIONS_LEDGER,
-          label: "Transactions for Ledger",
+          label: "Transactions for ledger",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/retrieve-a-ledgers-transactions",
@@ -1006,7 +1006,7 @@ export const ENDPOINTS_PAGES_HORIZON: EndpointsPagesProps = {
         },
         {
           route: Routes.ENDPOINTS_TRANSACTIONS_LIQUIDITY_POOL,
-          label: "Transactions for Liquidity Pool",
+          label: "Transactions for liquidity pool",
           form: {
             docsUrl:
               "https://developers.stellar.org/network/horizon/resources/lp-retrieve-related-transactions",

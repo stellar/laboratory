@@ -492,11 +492,11 @@ export const Overview = () => {
       value: network.passphrase,
     },
     {
-      label: "Transaction Envelope XDR",
+      label: "Transaction envelope XDR",
       value: sign.importXdr,
     },
     {
-      label: "Transaction Hash",
+      label: "Transaction hash",
       value: sign.importTx?.hash().toString("hex"),
     },
   ];
