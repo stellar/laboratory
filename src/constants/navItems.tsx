@@ -72,12 +72,12 @@ const ENDPOINTS_NAV = [
   },
   {
     route: Routes.ENDPOINTS_RPC,
-    label: "RPC Methods",
+    label: "RPC methods",
     subNav: getEndpointsNav(ENDPOINTS_PAGES_RPC),
   },
   {
     route: Routes.ENDPOINTS_HORIZON,
-    label: "Horizon Endpoints",
+    label: "Horizon endpoints",
     subNav: getEndpointsNav(ENDPOINTS_PAGES_HORIZON),
   },
 ];

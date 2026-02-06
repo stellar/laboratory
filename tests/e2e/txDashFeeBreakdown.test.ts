@@ -64,7 +64,7 @@ test.describe("Transaction Dashboard: Fee Breakdown", () => {
 
     // Inclusion fee
     await expect(getTableRow(rows, 1)).toHaveText([
-      "Inclusion Fee",
+      "Inclusion fee",
       "1 XLM",
       "-0.9999623 XLM",
       "0.0000377 XLM",
@@ -72,7 +72,7 @@ test.describe("Transaction Dashboard: Fee Breakdown", () => {
 
     // Resource fee
     await expect(getTableRow(rows, 2)).toHaveText([
-      "Resource Fee",
+      "Resource fee",
       "0.5499079 XLM",
       "-0.073566 XLM",
       "0.4763419 XLM",
@@ -81,7 +81,7 @@ test.describe("Transaction Dashboard: Fee Breakdown", () => {
     // Refundable fee
     await expect(getTableRow(rows, 3)).toHaveText([
       // Including badges
-      "Refundable FeeRentEventReturn Value",
+      "Refundable feeRentEventReturn Value",
       "0.5259301 XLM",
       "-0.073566 XLM",
       "0.4523641 XLM",
@@ -90,7 +90,7 @@ test.describe("Transaction Dashboard: Fee Breakdown", () => {
     // Non-refundable fee
     await expect(getTableRow(rows, 4)).toHaveText([
       // Including badges
-      "Non-Refundable FeeInstructionsReadWriteBandwidth",
+      "Non-refundable feeInstructionsReadWriteBandwidth",
       "0.0239778 XLM",
       "-0 XLM",
       "0.0239778 XLM",
@@ -98,7 +98,7 @@ test.describe("Transaction Dashboard: Fee Breakdown", () => {
 
     // Total fees
     await expect(getTableRow(rows, 5)).toHaveText([
-      "Total Fees",
+      "Total fees",
       "1.5499079 XLM",
       "-1.0735283 XLM",
       "0.4763796 XLM",
@@ -153,12 +153,12 @@ test.describe("Transaction Dashboard: Fee Breakdown", () => {
     );
 
     // Stroops toggle
-    const stroopsToggle = page.getByText("Change to Stroops", { exact: true });
+    const stroopsToggle = page.getByText("Change to stroops", { exact: true });
     await stroopsToggle.click();
 
     // Inclusion fee
     await expect(getTableRow(rows, 1)).toHaveText([
-      "Inclusion Fee",
+      "Inclusion fee",
       "10,000,000 stroops",
       "-9,999,623 stroops",
       "377 stroops",
@@ -166,7 +166,7 @@ test.describe("Transaction Dashboard: Fee Breakdown", () => {
 
     // Resource fee
     await expect(getTableRow(rows, 2)).toHaveText([
-      "Resource Fee",
+      "Resource fee",
       "5,499,079 stroops",
       "-735,660 stroops",
       "4,763,419 stroops",
@@ -175,7 +175,7 @@ test.describe("Transaction Dashboard: Fee Breakdown", () => {
     // Refundable fee
     await expect(getTableRow(rows, 3)).toHaveText([
       // Including badges
-      "Refundable FeeRentEventReturn Value",
+      "Refundable feeRentEventReturn Value",
       "5,259,301 stroops",
       "-735,660 stroops",
       "4,523,641 stroops",
@@ -184,7 +184,7 @@ test.describe("Transaction Dashboard: Fee Breakdown", () => {
     // Non-refundable fee
     await expect(getTableRow(rows, 4)).toHaveText([
       // Including badges
-      "Non-Refundable FeeInstructionsReadWriteBandwidth",
+      "Non-refundable feeInstructionsReadWriteBandwidth",
       "239,778 stroops",
       "-0 stroops",
       "239,778 stroops",
@@ -192,7 +192,7 @@ test.describe("Transaction Dashboard: Fee Breakdown", () => {
 
     // Total fees
     await expect(getTableRow(rows, 5)).toHaveText([
-      "Total Fees",
+      "Total fees",
       "15,499,079 stroops",
       "-10,735,283 stroops",
       "4,763,796 stroops",

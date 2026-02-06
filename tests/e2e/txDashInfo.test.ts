@@ -44,7 +44,7 @@ test.describe("Transaction Dashboard", () => {
     // Badges
     await expect(
       page.getByTestId("transaction-info-badges").locator(".Badge"),
-    ).toHaveText(["Soroban Transaction"]);
+    ).toHaveText(["Soroban transaction"]);
 
     // Info
     const infoContainer = page.getByTestId("transaction-info-container");
@@ -52,7 +52,7 @@ test.describe("Transaction Dashboard", () => {
     // Info labels
     await expect(infoContainer.locator(".InfoFieldItem__label")).toHaveText([
       "Status",
-      "Transaction Info",
+      "Transaction info",
       "Source account",
       "Sequence number",
       "Processed",
@@ -64,7 +64,7 @@ test.describe("Transaction Dashboard", () => {
     await assertInfoItem(infoContainer, "Status", "Success");
     await assertInfoItem(
       infoContainer,
-      "Transaction Info",
+      "Transaction info",
       "2ddb68eb58bfac410a6bcbafa4e409321bd147cc05a0e4e820b69639df2abf49",
     );
     await assertInfoItem(
@@ -117,7 +117,7 @@ test.describe("Transaction Dashboard", () => {
     // Badges
     await expect(
       page.getByTestId("transaction-info-badges").locator(".Badge"),
-    ).toHaveText(["Soroban Transaction", "Fee Bump Transaction"]);
+    ).toHaveText(["Soroban transaction", "Fee bump transaction"]);
 
     // Info
     const infoContainer = page.getByTestId("transaction-info-container");
@@ -125,7 +125,7 @@ test.describe("Transaction Dashboard", () => {
     // Info labels
     await expect(infoContainer.locator(".InfoFieldItem__label")).toHaveText([
       "Status",
-      "Transaction Info",
+      "Transaction info",
       "Source account",
       "Sequence number",
       "Processed",
@@ -138,7 +138,7 @@ test.describe("Transaction Dashboard", () => {
     await assertInfoItem(infoContainer, "Status", "Success");
     await assertInfoItem(
       infoContainer,
-      "Transaction Info",
+      "Transaction info",
       "240a89f6a1cb904c87af1d9ea14dab31cacafb69cd2681e751c21493d2abe390",
     );
     await assertInfoItem(
@@ -204,7 +204,7 @@ test.describe("Transaction Dashboard", () => {
     // Info labels
     await expect(infoContainer.locator(".InfoFieldItem__label")).toHaveText([
       "Status",
-      "Transaction Info",
+      "Transaction info",
       "Source account",
       "Sequence number",
       "Processed",
@@ -218,7 +218,7 @@ test.describe("Transaction Dashboard", () => {
     await assertInfoItem(infoContainer, "Status", "Success");
     await assertInfoItem(
       infoContainer,
-      "Transaction Info",
+      "Transaction info",
       "c724819cd33b9a57d60e26e760aa1cd152ea1612f1860c9e5c9708070799c970",
     );
     await assertInfoItem(

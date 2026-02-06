@@ -97,7 +97,7 @@ test.describe("Saved Transactions Page", () => {
 
       const ops = buildItem.getByTestId("saved-transactions-op");
 
-      await expect(ops.nth(0)).toHaveValue("Create Account");
+      await expect(ops.nth(0)).toHaveValue("Create account");
       await expect(ops.nth(1)).toHaveValue("Payment");
 
       await expect(
@@ -194,7 +194,7 @@ test.describe("Saved Transactions Page", () => {
 
       const ops = buildItem.getByTestId("saved-transactions-op");
 
-      await expect(ops.nth(0)).toHaveValue("Extend Footprint TTL");
+      await expect(ops.nth(0)).toHaveValue("Extend footprint TTL");
 
       await expect(
         buildItem.getByText("Last saved Jan 17, 2025, 7:54 PM UTC"),

@@ -47,7 +47,7 @@ test.describe("[futurenet/testnet] Fund Account Page", () => {
     const submitButton = page.getByTestId("networkSelector-submit-button");
 
     // Select 'Futurenet' in the network dropdown list
-    await expect(submitButton).toHaveText("Switch to Futurenet");
+    await expect(submitButton).toHaveText("Switch to futurenet");
     await expect(submitButton).toBeEnabled();
 
     // Click 'Switch to Futurenet' button

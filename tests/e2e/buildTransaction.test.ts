@@ -20,8 +20,8 @@ test.describe("Build Transaction Page", () => {
 
     // Default errors to fill required params
     await expect(paramsErrors.getByRole("listitem")).toHaveText([
-      "Source Account is a required field",
-      "Transaction Sequence Number is a required field",
+      "Source account is a required field",
+      "Transaction sequence number is a required field",
     ]);
 
     await expect(
@@ -31,7 +31,7 @@ test.describe("Build Transaction Page", () => {
 
   test("Save transaction modal works", async ({ page }) => {
     await page.getByLabel("Source account").fill(SOURCE_ACCOUNT);
-    await page.getByLabel("Transaction Sequence Number").fill(SEQUENCE_NUMBER);
+    await page.getByLabel("Transaction sequence number").fill(SEQUENCE_NUMBER);
 
     const saveTxButton = page.getByTitle("Save transaction");
 
@@ -43,7 +43,7 @@ test.describe("Build Transaction Page", () => {
     });
 
     await operation_0.getByLabel("Destination").fill(ACCOUNT_ONE);
-    await operation_0.getByLabel("Starting Balance").fill("1");
+    await operation_0.getByLabel("Starting balance").fill("1");
 
     await expect(saveTxButton).toBeEnabled();
     await saveTxButton.click();
@@ -51,7 +51,7 @@ test.describe("Build Transaction Page", () => {
     const modal = page.locator(".Modal");
 
     await expect(modal).toBeVisible();
-    await expect(page.locator(".ModalHeading")).toHaveText("Save Transaction");
+    await expect(page.locator(".ModalHeading")).toHaveText("Save transaction");
 
     await modal.getByLabel("Name", { exact: true }).fill("Transaction 1");
     await modal.getByText("Save", { exact: true }).click();
