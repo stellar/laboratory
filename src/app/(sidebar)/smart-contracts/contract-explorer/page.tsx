@@ -212,7 +212,7 @@ export default function ContractExplorer() {
                   setIsSaveModalVisible(true);
                 }}
               >
-                Save Contract ID
+                Save contract ID
               </Button>
 
               <Button
@@ -304,7 +304,7 @@ export default function ContractExplorer() {
           <TabView
             tab1={{
               id: "contract-info",
-              label: "Contract Info",
+              label: "Contract info",
               content: (
                 <ContractInfo
                   infoData={contractInfoData}
@@ -319,7 +319,7 @@ export default function ContractExplorer() {
             }}
             tab2={{
               id: "contract-invoke",
-              label: "Invoke Contract",
+              label: "Invoke contract",
               content: renderContractInvokeContent(),
               isDisabled: !isDataLoaded || !(contractClient?.spec || isSacType),
             }}

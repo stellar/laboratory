@@ -77,7 +77,7 @@ test.describe("Saved Transactions Page", () => {
 
       await expect(pageContext.locator("h1")).toHaveText("Submit transaction");
       await expect(
-        pageContext.getByLabel("Input a base-64 encoded TransactionEnvelope:"),
+        pageContext.getByLabel("Input a Base64 encoded TransactionEnvelope:"),
       ).toHaveValue(
         "AAAAAgAAAAA55ZjOXdOOulfzeLPXjLDLdplq/5HGjapWAXjGSkdAkwAAAGQADQioAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAD4XTdOZpDOMR4vk9NUjYLbGosEJ65W78xLqdY6paYxJwAAAAJUC+QAAAAAAAAAAAFKR0CTAAAAQOvPXZdv0dUdcNAY26wVnVAUjyGRd8yrxDeUO2qaP9XF9Ws2qaCnAnfdoCzp6hk5CHwA/EiA+aJGwnMMxUjoxQw=",
       );
@@ -112,7 +112,7 @@ test.describe("Saved Transactions Page", () => {
 
       // Params
       await expect(
-        pageContext.getByLabel("Source Account").first(),
+        pageContext.getByLabel("Source account").first(),
       ).toHaveValue("GA46LGGOLXJY5OSX6N4LHV4MWDFXNGLK76I4NDNKKYAXRRSKI5AJGMXG");
       await expect(
         pageContext.getByLabel("Transaction Sequence Number"),
@@ -174,7 +174,7 @@ test.describe("Saved Transactions Page", () => {
 
       await expect(pageContext.locator("h1")).toHaveText("Submit transaction");
       await expect(
-        pageContext.getByLabel("Input a base-64 encoded TransactionEnvelope:"),
+        pageContext.getByLabel("Input a Base64 encoded TransactionEnvelope:"),
       ).toHaveValue(
         "AAAAAgAAAAB+TL0HLiAjanMRnyeqyhb8Iu+4d1g2dl1cwPi1UZAigwAAtwUABiLjAAAAGQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAGQAAAAAAAHUwAAAAAQAAAAAAAAABAAAABgAAAAEg/u86MzPrVcpNrsFUa84T82Kss8DLAE9ZMxLqhM22HwAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAAB+TL0HLiAjanMRnyeqyhb8Iu+4d1g2dl1cwPi1UZAigwAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAtqEAAAABUZAigwAAAEADYbntiznotYPblvJQ35DiGEpMTQU9jCYANxV18VVGV6zDFSjB+qK++dF656Pr4oMTpyBVvE15YSo6ITxR5DoE",
       );
@@ -208,7 +208,7 @@ test.describe("Saved Transactions Page", () => {
 
       // Params
       await expect(
-        pageContext.getByLabel("Source Account").first(),
+        pageContext.getByLabel("Source account").first(),
       ).toHaveValue("GB7EZPIHFYQCG2TTCGPSPKWKC36CF35YO5MDM5S5LTAPRNKRSARIHWGG");
       await expect(
         pageContext.getByLabel("Transaction Sequence Number"),

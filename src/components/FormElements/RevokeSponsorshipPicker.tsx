@@ -211,7 +211,7 @@ export const RevokeSponsorshipPicker = ({
             <TextPicker
               key={getInputId(value.type, "balance_id")}
               id={getInputId(value.type, "balance_id")}
-              label="Claimable Balance ID"
+              label="Claimable balance ID"
               value={value.data?.balance_id || ""}
               error={error?.balance_id}
               onChange={(e) => {
@@ -243,7 +243,7 @@ export const RevokeSponsorshipPicker = ({
             <SignerPicker
               key={getInputId(value.type, "signer")}
               id={getInputId(value.type, "signer")}
-              label="Signer Type"
+              label="Signer type"
               value={value.data?.signer}
               error={error?.signer}
               onChange={(signer) => {
@@ -266,7 +266,7 @@ export const RevokeSponsorshipPicker = ({
       <Select
         id={`${id}-type`}
         fieldSize="md"
-        label="Revoke Sponsorship Type"
+        label="Revoke sponsorship type"
         value={value?.type}
         onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
           const val = e.target.value;

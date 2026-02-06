@@ -262,7 +262,7 @@ export default function TransactionDashboard() {
             <Input
               fieldSize="md"
               id="transaction-hash"
-              label="Transaction Hash"
+              label="Transaction hash"
               placeholder="Ex: 6a274e17afb878bc704bfe41ebf456b4c6d9df5ca59bd3e06f5c39263e484017"
               error={transactionHashInputError}
               value={transactionHashInput}

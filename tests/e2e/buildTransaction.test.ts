@@ -30,7 +30,7 @@ test.describe("Build Transaction Page", () => {
   });
 
   test("Save transaction modal works", async ({ page }) => {
-    await page.getByLabel("Source Account").fill(SOURCE_ACCOUNT);
+    await page.getByLabel("Source account").fill(SOURCE_ACCOUNT);
     await page.getByLabel("Transaction Sequence Number").fill(SEQUENCE_NUMBER);
 
     const saveTxButton = page.getByTitle("Save transaction");
@@ -67,7 +67,7 @@ test.describe("Build Transaction Page", () => {
       await expect(fetchNextSeqButton).toBeDisabled();
 
       // Source account
-      await page.getByLabel("Source Account").fill(SOURCE_ACCOUNT);
+      await page.getByLabel("Source account").fill(SOURCE_ACCOUNT);
 
       // Sequence number
       await expect(fetchNextSeqButton).toBeEnabled();
@@ -132,7 +132,7 @@ test.describe("Build Transaction Page", () => {
 
     test("Validation", async ({ page }) => {
       // Source account
-      await page.getByLabel("Source Account").fill("aaa");
+      await page.getByLabel("Source account").fill("aaa");
       await expect(page.getByText("Public key is invalid.")).toBeVisible();
 
       // Sequence number
@@ -180,7 +180,7 @@ test.describe("Build Transaction Page", () => {
   test.describe("Operation", () => {
     test.beforeEach(async ({ page }) => {
       // Set params
-      await page.getByLabel("Source Account").fill(SOURCE_ACCOUNT);
+      await page.getByLabel("Source account").fill(SOURCE_ACCOUNT);
       await page
         .getByLabel("Transaction Sequence Number")
         .fill(SEQUENCE_NUMBER);
@@ -224,7 +224,7 @@ test.describe("Build Transaction Page", () => {
         // Success
         await expect(txnSuccess).toBeVisible();
         await expect(
-          txnSuccess.getByText("Network Passphrase").locator("+ div"),
+          txnSuccess.getByText("Network passphrase").locator("+ div"),
         ).toHaveText("Test SDF Network ; September 2015");
         await expect(txnSuccess.getByText("Hash").locator("+ div")).toHaveText(
           "a93642c2e60a1c1581fc583d0bb48b5da630909e103d36ed1156fdd3e85b1c2c",
@@ -287,7 +287,7 @@ test.describe("Build Transaction Page", () => {
           selectOption: "Alphanumeric 4",
         });
 
-        await operation_0.getByLabel("Asset Code").fill(ASSET_CODE);
+        await operation_0.getByLabel("Asset code").fill(ASSET_CODE);
         await operation_0.getByLabel("Issuer Account ID").fill(ASSET_ISSUER);
         await operation_0.getByLabel("Amount").fill("1");
 
@@ -319,7 +319,7 @@ test.describe("Build Transaction Page", () => {
 
         await testInputError({
           page,
-          label: "Asset Code",
+          label: "Asset code",
           value: "aaaaa",
           errorMessage: "Asset code must be between 1 and 4 characters long.",
         });
@@ -360,7 +360,7 @@ test.describe("Build Transaction Page", () => {
           selectOption: "Alphanumeric 4",
         });
 
-        await operation_0.getByLabel("Asset Code").nth(0).fill(ASSET_CODE);
+        await operation_0.getByLabel("Asset code").nth(0).fill(ASSET_CODE);
         await operation_0
           .getByLabel("Issuer Account ID")
           .nth(0)
@@ -405,7 +405,7 @@ test.describe("Build Transaction Page", () => {
 
         await testInputError({
           page,
-          label: "Asset Code",
+          label: "Asset code",
           value: "aaaaa",
           errorMessage: "Asset code must be between 1 and 4 characters long.",
           nthLabelIndex: 1,
@@ -440,7 +440,7 @@ test.describe("Build Transaction Page", () => {
           selectOption: "Alphanumeric 4",
         });
 
-        await operation_0.getByLabel("Asset Code").nth(0).fill(ASSET_CODE);
+        await operation_0.getByLabel("Asset code").nth(0).fill(ASSET_CODE);
         await operation_0
           .getByLabel("Issuer Account ID")
           .nth(0)
@@ -494,7 +494,7 @@ test.describe("Build Transaction Page", () => {
           nthIndex: 1,
         });
 
-        await operation_0.getByLabel("Asset Code").nth(1).fill(ASSET_CODE);
+        await operation_0.getByLabel("Asset code").nth(1).fill(ASSET_CODE);
         await operation_0
           .getByLabel("Issuer Account ID")
           .nth(1)
@@ -567,7 +567,7 @@ test.describe("Build Transaction Page", () => {
           nthIndex: 1,
         });
 
-        await operation_0.getByLabel("Asset Code").nth(1).fill(ASSET_CODE);
+        await operation_0.getByLabel("Asset code").nth(1).fill(ASSET_CODE);
         await operation_0
           .getByLabel("Issuer Account ID")
           .nth(1)
@@ -610,7 +610,7 @@ test.describe("Build Transaction Page", () => {
           nthIndex: 1,
         });
 
-        await operation_0.getByLabel("Asset Code").nth(1).fill(ASSET_CODE);
+        await operation_0.getByLabel("Asset code").nth(1).fill(ASSET_CODE);
         await operation_0
           .getByLabel("Issuer Account ID")
           .nth(1)
@@ -799,7 +799,7 @@ test.describe("Build Transaction Page", () => {
           nthIndex: 2,
         });
 
-        await operation_0.getByLabel("Asset Code").nth(1).fill(ASSET_CODE);
+        await operation_0.getByLabel("Asset code").nth(1).fill(ASSET_CODE);
         await operation_0
           .getByLabel("Issuer Account ID")
           .nth(1)
@@ -977,7 +977,7 @@ test.describe("Build Transaction Page", () => {
           .getByText("Unconditional", { exact: true })
           .click();
 
-        await expect(page.getByLabel("Claimable Balance ID")).toHaveValue(
+        await expect(page.getByLabel("Claimable balance ID")).toHaveValue(
           "00000000379df3d9e7f90a0de80d452e00ec02168f08479450ba8370aaf13c765ee988bd",
         );
 
@@ -998,7 +998,7 @@ test.describe("Build Transaction Page", () => {
         });
 
         await operation_0
-          .getByLabel("Claimable Balance ID")
+          .getByLabel("Claimable balance ID")
           .fill(
             "00000000379df3d9e7f90a0de80d452e00ec02168f08479450ba8370aaf13c765ee988bd",
           );
@@ -1018,9 +1018,9 @@ test.describe("Build Transaction Page", () => {
 
         await testInputError({
           page,
-          label: "Claimable Balance ID",
+          label: "Claimable balance ID",
           value: "aaa",
-          errorMessage: "Claimable Balance ID is invalid.",
+          errorMessage: "Claimable balance ID is invalid.",
         });
       });
     });
@@ -1088,7 +1088,7 @@ test.describe("Build Transaction Page", () => {
           selectOption: "Alphanumeric 4",
         });
 
-        await operation_0.getByLabel("Asset Code").fill(ASSET_CODE);
+        await operation_0.getByLabel("Asset code").fill(ASSET_CODE);
         await operation_0.getByLabel("Issuer Account ID").fill(ASSET_ISSUER);
         await operation_0.getByLabel("From", { exact: true }).fill(ACCOUNT_ONE);
         await operation_0.getByLabel("Amount", { exact: true }).fill("1");
@@ -1110,7 +1110,7 @@ test.describe("Build Transaction Page", () => {
         });
 
         await operation_0
-          .getByLabel("Claimable Balance ID")
+          .getByLabel("Claimable balance ID")
           .fill(
             "00000000379df3d9e7f90a0de80d452e00ec02168f08479450ba8370aaf13c765ee988bd",
           );
@@ -1137,7 +1137,7 @@ test.describe("Build Transaction Page", () => {
           selectOption: "Alphanumeric 4",
         });
 
-        await operation_0.getByLabel("Asset Code").fill(ASSET_CODE);
+        await operation_0.getByLabel("Asset code").fill(ASSET_CODE);
         await operation_0.getByLabel("Issuer Account ID").fill(ASSET_ISSUER);
         await operation_0.getByLabel("Trustor").fill(ACCOUNT_ONE);
 
@@ -1189,7 +1189,7 @@ test.describe("Build Transaction Page", () => {
         });
 
         await operation_0
-          .getByLabel("Liquidity Pool ID")
+          .getByLabel("Liquidity pool ID")
           .fill(
             "67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9",
           );
@@ -1285,7 +1285,7 @@ test.describe("Build Transaction Page", () => {
         });
 
         await operation_0
-          .getByLabel("Liquidity Pool ID")
+          .getByLabel("Liquidity pool ID")
           .fill(
             "67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9",
           );

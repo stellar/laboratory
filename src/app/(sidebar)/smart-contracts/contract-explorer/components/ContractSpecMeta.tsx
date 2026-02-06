@@ -242,7 +242,7 @@ export const ContractSpecMeta = ({
       contractSections?.contractmetav0
         ? renderSectionCodeEditor({
             sectionName: "contractmetav0",
-            title: "Contract Meta",
+            title: "Contract meta",
             infoLink:
               "https://developers.stellar.org/docs/learn/fundamentals/contract-development/overview#contract-meta",
             height: "22",
@@ -253,7 +253,7 @@ export const ContractSpecMeta = ({
       contractSections?.contractenvmetav0
         ? renderSectionCodeEditor({
             sectionName: "contractenvmetav0",
-            title: "Contract Env Meta",
+            title: "Contract Env meta",
             infoLink:
               "https://developers.stellar.org/docs/learn/fundamentals/contract-development/overview#environment-meta",
             height: "15",
@@ -264,7 +264,7 @@ export const ContractSpecMeta = ({
       contractSections?.contractspecv0
         ? renderSectionCodeEditor({
             sectionName: "contractspecv0",
-            title: "Contract Spec",
+            title: "Contract spec",
             infoLink:
               "https://developers.stellar.org/docs/learn/fundamentals/contract-development/overview#contract-spec",
             languages: ["interface", "json", "xdr"],
@@ -276,7 +276,7 @@ export const ContractSpecMeta = ({
       {sectionsToShow.includes("sac") && isSacType
         ? renderSectionCodeEditor({
             sectionName: "sac",
-            title: "Contract Spec",
+            title: "Contract spec",
             infoLink:
               "https://developers.stellar.org/docs/tokens/stellar-asset-contract",
           })

@@ -8,7 +8,7 @@ import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 export const Tutorials = () => {
   const tutorials = [
     {
-      title: "Create Account",
+      title: "Create account",
       description: "Creates and funds a new Stellar account.",
       youTubeLink:
         "https://www.youtube.com/embed/7j5t69f40dM?si=4svimk6VRVqnGmCj",
@@ -21,57 +21,57 @@ export const Tutorials = () => {
         "https://www.youtube.com/embed/NsDxKZE5ESY?si=FIMKG--d7BwRvk0a",
     },
     {
-      title: "Change Trust",
+      title: "Change trust",
       description:
         "Add or remove trustlines for assets on Stellar. Shortcut available.",
       youTubeLink:
         "https://www.youtube.com/embed/sv2gV13q7FI?si=78SXorWKfXTneqzn",
     },
     {
-      title: "Path Payments",
+      title: "Path payments",
       description: "Send one asset, convert through path, receive another.",
       youTubeLink:
         "https://www.youtube.com/embed/Q196yYkaLmQ?si=q3kz_7X_FiPPZj1u",
     },
     {
-      title: "Manage Offers",
+      title: "Manage offers",
       description:
         "Create, update, or delete orders for assets on the Stellar DEX.",
       youTubeLink:
         "https://www.youtube.com/embed/4d558Q0MDso?si=IIslGXLT1clwXIOR",
     },
     {
-      title: "Account Merge",
+      title: "Account merge",
       description: "Move XLM to another account and delete the source.",
       youTubeLink:
         "https://www.youtube.com/embed/XkzYMQUtyeo?si=VcOGkVJErgdiHip3",
     },
     {
-      title: "Manage Data",
+      title: "Manage data",
       description: "Set, modify, or delete a key-value pair on an account.",
       youTubeLink:
         "https://www.youtube.com/embed/vRq8_cSFdlQ?si=AtsZ-W7uzuZi3Fz4",
     },
     {
-      title: "Set Options Home Domain",
+      title: "Set options home domain",
       description: "Assign a web domain to an account for verification.",
       youTubeLink:
         "https://www.youtube.com/embed/2bEe8DzKUUw?si=kjYopS1IOfUSgiOV",
     },
     {
-      title: "Set Options Weights, Thresholds, and Signers",
+      title: "Set options weights, thresholds, and signers",
       description: "Configure signer keys, weights, and threshold levels.",
       youTubeLink:
         "https://www.youtube.com/embed/RmvIdxkm_JE?si=SkVtyqcJ4leeBFU3",
     },
     {
-      title: "Set Flags",
+      title: "Set flags",
       description: "Enable or clear account flags for asset behavior.",
       youTubeLink:
         "https://www.youtube.com/embed/ovJK8I4qoC0?si=XkXvXZSQEUhlV5Zu",
     },
     {
-      title: "Bump Sequence",
+      title: "Bump sequence",
       description: "Advance an account’s sequence number forward.",
       youTubeLink:
         "https://www.youtube.com/embed/9sCTcK2sYaU?si=E1FoQeiudnWlne7N",
@@ -83,7 +83,7 @@ export const Tutorials = () => {
         "https://www.youtube.com/embed/-MTUtsp_Ovc?si=60EEBVFoYzxszfrc",
     },
     {
-      title: "Claimable Balances",
+      title: "Claimable balances",
       description: "Create a balance claimable later under set conditions.",
       youTubeLink:
         "https://www.youtube.com/embed/cC669NmLyew?si=XAVMNapfqeOVoAeV",
@@ -95,37 +95,37 @@ export const Tutorials = () => {
         "https://www.youtube.com/embed/DWJ-wOydPJQ?si=vW-PF5ffoEoX1H9-",
     },
     {
-      title: "Liquidity Pools",
+      title: "Liquidity pools",
       description: "Deposit assets to enable automated decentralized trading.",
       youTubeLink:
         "https://www.youtube.com/embed/kd5sa5df3oU?si=wK2bkN1_SAUrnfw8",
     },
     {
-      title: "Hello World (Build, Deploy, Invoke)",
+      title: "Hello world (build, deploy, invoke)",
       description: "Build a contract, deploy it, then invoke a method.",
       youTubeLink:
         "https://www.youtube.com/embed/XcFgR_OHKl8?si=-5wdlfi5xqhQyoRX",
     },
     {
-      title: "Auth Store (Store and Retrieve)",
+      title: "Auth store (store and retrieve)",
       description: "Auth users, store and retrieve on-chain data.",
       youTubeLink:
         "https://www.youtube.com/embed/kpyIotaiFfw?si=p9QSbs3hNYguHawP",
     },
     {
-      title: "Reverse Engineer (Decode XDR)",
+      title: "Reverse engineer (decode XDR)",
       description: "Decode XDR into JSON for human-readable view",
       youTubeLink:
         "https://www.youtube.com/embed/ZrmDQKU2dqY?si=iMELpqmM_mn8rbkL",
     },
     {
-      title: "Cross Contract",
+      title: "Cross contract",
       description: "Invoke another contract from within a contract.",
       youTubeLink:
         "https://www.youtube.com/embed/nyGFAA8hcDE?si=1mOFIgEYboi2VgSC",
     },
     {
-      title: "Custom Types (Structs and Enums)",
+      title: "Custom types (structs and enums)",
       description: "Define custom data types like structs and enums.",
       youTubeLink:
         "https://www.youtube.com/embed/Dypune9qagg?si=_geNAtdF07s4hQfN",

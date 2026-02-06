@@ -836,7 +836,7 @@ export default function DeployContract() {
                         }
                       }}
                     >
-                      Build Deploy transaction
+                      Build deploy transaction
                     </Button>
                   </Box>
 

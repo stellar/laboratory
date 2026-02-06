@@ -236,7 +236,7 @@ const eventsData = async ({
   const loadButton = page.getByRole("button", { name: "Load transaction" });
 
   await expect(loadButton).toBeDisabled();
-  await page.getByLabel("Transaction Hash").fill(mockResponse.result.txHash);
+  await page.getByLabel("Transaction hash").fill(mockResponse.result.txHash);
 
   await expect(loadButton).toBeEnabled();
 

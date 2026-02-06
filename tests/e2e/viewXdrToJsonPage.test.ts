@@ -28,7 +28,7 @@ test.describe("View XDR to JSON Page", () => {
     await expect(clearBtn).toBeDisabled();
 
     // XDR input
-    const xdrInput = page.getByLabel("Base-64 encoded XDR");
+    const xdrInput = page.getByLabel("Base64 encoded XDR");
     await xdrInput.fill(MOCK_TX_TRANSACTION_ENVELOPE);
 
     await expect(xdrInput).toHaveValue(MOCK_TX_TRANSACTION_ENVELOPE);
@@ -59,7 +59,7 @@ test.describe("View XDR to JSON Page", () => {
   });
 
   test("Import TransactionResult XDR", async ({ page }) => {
-    const xdrInput = page.getByLabel("Base-64 encoded XDR");
+    const xdrInput = page.getByLabel("Base64 encoded XDR");
     await xdrInput.fill(MOCK_TX_TRANSACTION_RESULT);
 
     const xdrTypeInput = page.getByLabel("XDR type");
@@ -89,7 +89,7 @@ test.describe("View XDR to JSON Page", () => {
   });
 
   test("Import TransactionMeta XDR", async ({ page }) => {
-    const xdrInput = page.getByLabel("Base-64 encoded XDR");
+    const xdrInput = page.getByLabel("Base64 encoded XDR");
     await xdrInput.fill(MOCK_TX_TRANSACTION_META);
 
     const xdrTypeInput = page.getByLabel("XDR type");
@@ -121,7 +121,7 @@ test.describe("View XDR to JSON Page", () => {
   test("Import transaction with claimable balance operation", async ({
     page,
   }) => {
-    const xdrInput = page.getByLabel("Base-64 encoded XDR");
+    const xdrInput = page.getByLabel("Base64 encoded XDR");
     await xdrInput.fill(MOCK_TX_TRANSACTION_ENVELOPE_CLAIMABLE_BALANCE);
 
     const jsonView = page.getByTestId("view-xdr-render-json");
@@ -134,7 +134,7 @@ test.describe("View XDR to JSON Page", () => {
   });
 
   test("Import XDR stream", async ({ page }) => {
-    const xdrInput = page.getByLabel("Base-64 encoded XDR");
+    const xdrInput = page.getByLabel("Base64 encoded XDR");
     const xdrTypeInput = page.getByLabel("XDR type");
     const jsonView = page.getByTestId("view-xdr-render-json");
 
@@ -174,7 +174,7 @@ test.describe("View XDR to JSON Page", () => {
     // XDR input - use the envelope from the RPC response
     const expectedEnvelope =
       TX_DASH_LATEST_TX_RESPONSE.result.transactions[0].envelopeXdr;
-    await expect(page.getByLabel("Base-64 encoded XDR")).toHaveValue(
+    await expect(page.getByLabel("Base64 encoded XDR")).toHaveValue(
       expectedEnvelope,
       { timeout: 5000 },
     );
@@ -197,14 +197,14 @@ test.describe("View XDR to JSON Page", () => {
 
     await expect(decodeErrorMsg).toBeHidden();
 
-    const xdrInput = page.getByLabel("Base-64 encoded XDR");
+    const xdrInput = page.getByLabel("Base64 encoded XDR");
     await xdrInput.fill("AAA");
 
     await expect(decodeErrorMsg).toBeVisible();
   });
 
   test("Remove non-XDR characters", async ({ page }) => {
-    const xdrInput = page.getByLabel("Base-64 encoded XDR");
+    const xdrInput = page.getByLabel("Base64 encoded XDR");
     const jsonView = page.getByTestId("view-xdr-render-json");
 
     // Fill XDR input with non-XDR characters

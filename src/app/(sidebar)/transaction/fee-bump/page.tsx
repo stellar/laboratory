@@ -101,11 +101,11 @@ export default function FeeBumpTransaction() {
   const getFieldLabel = (field: ParamsField) => {
     switch (field) {
       case "fee":
-        return "Base Fee";
+        return "Base fee";
       case "source_account":
-        return "Source Account";
+        return "Source account";
       case "xdr":
-        return "Inner Transaction";
+        return "Inner transaction";
       default:
         return "";
     }
@@ -186,7 +186,7 @@ export default function FeeBumpTransaction() {
         <Box gap="lg">
           <PubKeyPicker
             id="source_account"
-            label="Source Account"
+            label="Source account"
             value={source_account}
             error={paramsError.source_account}
             onChange={(e) => {
@@ -203,7 +203,7 @@ export default function FeeBumpTransaction() {
 
           <PositiveIntPicker
             id="fee"
-            label="Base Fee"
+            label="Base fee"
             value={removeLeadingZeroes(fee)}
             error={paramsError.fee}
             onChange={(e) => {
@@ -231,7 +231,7 @@ export default function FeeBumpTransaction() {
 
           <XdrPicker
             id="xdr"
-            label="Input a base-64 encoded TransactionEnvelope:"
+            label="Input a Base64 encoded TransactionEnvelope:"
             value={xdr}
             error={paramsError.xdr}
             onChange={(e) => {
@@ -242,7 +242,7 @@ export default function FeeBumpTransaction() {
               handleParamsError(id, validateParam(id, e.target.value));
               handleParamsChange(id, e.target.value);
             }}
-            note="Enter a base-64 encoded XDR blob to decode."
+            note="Enter a Base64 encoded XDR blob to decode."
             hasCopyButton
           />
         </Box>
@@ -251,11 +251,11 @@ export default function FeeBumpTransaction() {
         {feeBumpedTx.xdr ? (
           <ValidationResponseCard
             variant="success"
-            title="Success! Transaction Envelope XDR:"
+            title="Success! Transaction envelope XDR:"
             response={
               <Box gap="xs" data-testid="fee-bump-success">
                 <TxResponse
-                  label="Network Passphrase:"
+                  label="Network passphrase:"
                   value={network.passphrase}
                 />
                 <TxResponse label="XDR:" value={feeBumpedTx.xdr} />

@@ -12,7 +12,7 @@ test.describe("Submit Transaction Page", () => {
 
   test("Save Transaction Flow", async ({ page }) => {
     const xdrInput = page.getByLabel(
-      "Input a base-64 encoded TransactionEnvelope",
+      "Input a Base64 encoded TransactionEnvelope",
     );
 
     const saveTxBtn = page.getByRole("button", {
@@ -44,7 +44,7 @@ test.describe("Submit Transaction Page", () => {
 
   test("Simulate Transaction Flow", async ({ page }) => {
     const xdrInput = page.getByLabel(
-      "Input a base-64 encoded TransactionEnvelope",
+      "Input a Base64 encoded TransactionEnvelope",
     );
 
     const simulateTxBtn = page.getByRole("button", {
@@ -65,7 +65,7 @@ test.describe("Submit Transaction Page", () => {
     await expect(page.locator("h1")).toHaveText("Simulate transaction");
 
     await expect(
-      page.getByLabel("Input a base-64 encoded TransactionEnvelope"),
+      page.getByLabel("Input a Base64 encoded TransactionEnvelope"),
     ).toHaveValue(MOCK_VALID_SUCCESS_TX_XDR.XDR);
   });
 
@@ -75,7 +75,7 @@ test.describe("Submit Transaction Page", () => {
         "Unable to decode input as TransactionEnvelope",
       );
       const xdrInput = page.getByLabel(
-        "Input a base-64 encoded TransactionEnvelope",
+        "Input a Base64 encoded TransactionEnvelope",
       );
       await xdrInput.fill("ssdfsdf");
 
@@ -91,7 +91,7 @@ test.describe("Submit Transaction Page", () => {
         "Unable to decode input as TransactionEnvelope",
       );
       const xdrInput = page.getByLabel(
-        "Input a base-64 encoded TransactionEnvelope",
+        "Input a Base64 encoded TransactionEnvelope",
       );
       await xdrInput.fill(MOCK_SC_VAL_XDR);
       await expect(invalidXdrMsg).toBeVisible();
@@ -104,7 +104,7 @@ test.describe("Submit Transaction Page", () => {
   test.describe("Valid XDR with a Failed 400 Submission Flow", () => {
     test("Submit via Horizon", async ({ page }) => {
       const xdrInput = page.getByLabel(
-        "Input a base-64 encoded TransactionEnvelope",
+        "Input a Base64 encoded TransactionEnvelope",
       );
       const validationCard = page.locator(".ValidationResponseCard");
 
@@ -185,7 +185,7 @@ test.describe("Submit Transaction Page", () => {
 
     test("Submit via RPC", async ({ page }) => {
       const xdrInput = page.getByLabel(
-        "Input a base-64 encoded TransactionEnvelope",
+        "Input a Base64 encoded TransactionEnvelope",
       );
       const validationCard = page.locator(".ValidationResponseCard");
       const errorValidationCard = page.getByTestId("submit-tx-rpc-error");
@@ -262,7 +262,7 @@ test.describe("Submit Transaction Page", () => {
   test.describe("Valid XDR with a Successful Submission Flow", () => {
     test("Submit via Horizon", async ({ page }) => {
       const xdrInput = page.getByLabel(
-        "Input a base-64 encoded TransactionEnvelope",
+        "Input a Base64 encoded TransactionEnvelope",
       );
       const validationCard = page.locator(".ValidationResponseCard");
       const submitTxBtn = page.getByRole("button", {
@@ -344,7 +344,7 @@ test.describe("Submit Transaction Page", () => {
 
     test("Submit via RPC", async ({ page }) => {
       const xdrInput = page.getByLabel(
-        "Input a base-64 encoded TransactionEnvelope",
+        "Input a Base64 encoded TransactionEnvelope",
       );
       const submitTxBtn = page.getByRole("button", {
         name: "Submit transaction",
@@ -422,7 +422,7 @@ test.describe("Submit Transaction Page", () => {
   test.describe("Update default submit method to RPC when it is a Soroban XDR", () => {
     test("Submit Soroban", async ({ page }) => {
       const xdrInput = page.getByLabel(
-        "Input a base-64 encoded TransactionEnvelope",
+        "Input a Base64 encoded TransactionEnvelope",
       );
 
       // Input the Soroban XDR

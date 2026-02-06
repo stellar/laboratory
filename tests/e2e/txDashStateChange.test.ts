@@ -150,7 +150,7 @@ const testTxStateChange = async ({
   const loadTxButton = page.getByRole("button", { name: "Load transaction" });
   await expect(loadTxButton).toBeDisabled();
   await page
-    .getByLabel("Transaction Hash", { exact: true })
+    .getByLabel("Transaction hash", { exact: true })
     .fill(mockResponse.result.txHash);
   await expect(loadTxButton).toBeEnabled();
 

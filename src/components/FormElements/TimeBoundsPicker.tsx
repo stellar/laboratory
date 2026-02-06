@@ -48,7 +48,7 @@ export const TimeBoundsPicker = ({
       <Box gap="xs">
         <PositiveIntPicker
           id={`${id}-min-time`}
-          label="Time Bounds"
+          label="Time bounds"
           labelSuffix={labelSuffix}
           placeholder="Lower time bound unix timestamp. Ex: 1479151713"
           value={minTime}
