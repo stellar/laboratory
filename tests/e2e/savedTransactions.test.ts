@@ -61,7 +61,7 @@ test.describe("Saved Transactions Page", () => {
       await submitItem.getByTestId("saved-transactions-edit").click();
 
       await expect(
-        pageContext.getByText("Edit Saved Transaction", { exact: true }),
+        pageContext.getByText("Edit saved transaction", { exact: true }),
       ).toBeVisible();
 
       const newName = "Submit Create Account Tx New";
@@ -158,7 +158,7 @@ test.describe("Saved Transactions Page", () => {
       await submitItem.getByTestId("saved-transactions-edit").click();
 
       await expect(
-        pageContext.getByText("Edit Saved Transaction", { exact: true }),
+        pageContext.getByText("Edit saved transaction", { exact: true }),
       ).toBeVisible();
 
       const newName = "Extend TTL New";

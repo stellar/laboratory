@@ -34,7 +34,7 @@ test.describe("Submit Transaction Page", () => {
 
     // Save TX Modal to appear
     await expect(modal).toBeVisible();
-    await expect(page.locator(".ModalHeading")).toHaveText("Save Transaction");
+    await expect(page.locator(".ModalHeading")).toHaveText("Save transaction");
 
     await modal.getByLabel("Name", { exact: true }).fill("Transaction 1");
     await modal.getByText("Save", { exact: true }).click();
