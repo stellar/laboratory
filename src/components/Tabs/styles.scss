@@ -6,14 +6,15 @@
 
   display: flex;
   align-items: center;
-  gap: pxToRem(8px);
+  gap: pxToRem(4px);
   flex-wrap: wrap;
+  padding: pxToRem(6px) 0;
 
   .Tab {
     position: relative;
     font-size: pxToRem(14px);
     line-height: pxToRem(20px);
-    font-weight: var(--sds-fw-medium);
+    font-weight: var(--sds-fw-semi-bold);
     white-space: nowrap;
     color: var(--Tabs-default-text);
     background-color: var(--Tabs-default-background);
