@@ -66,7 +66,7 @@ test.describe("Network selector", () => {
 
     // Submit button
     const submitButton = page.getByTestId("networkSelector-submit-button");
-    await expect(submitButton).toHaveText("Switch to Testnet");
+    await expect(submitButton).toHaveText("Switch to testnet");
     await expect(submitButton).toBeDisabled();
   });
 
@@ -110,7 +110,7 @@ test.describe("Network selector", () => {
 
     // Submit button
     const submitButton = page.getByTestId("networkSelector-submit-button");
-    await expect(submitButton).toHaveText("Switch to Futurenet");
+    await expect(submitButton).toHaveText("Switch to futurenet");
     await expect(submitButton).toBeEnabled();
 
     // Network not changed until the submit button is clicked

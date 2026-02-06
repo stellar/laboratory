@@ -72,7 +72,7 @@ export const InvokeContract = ({
       <Card>
         <Box gap="lg" data-testid="invoke-contract-container">
           <Text as="h2" size="md" weight="semi-bold">
-            Invoke Contract
+            Invoke contract
           </Text>
 
           {contractSpec ? renderFunctionCard() : null}

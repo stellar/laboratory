@@ -6,7 +6,7 @@ test.describe("Create Account Page", () => {
   });
 
   test("Loads", async ({ page }) => {
-    await expect(page.locator("h1")).toHaveText("Keypair Generator");
+    await expect(page.locator("h1")).toHaveText("Keypair generator");
   });
 
   test("Renders 'Generate keypair' and 'Fund account' button", async ({

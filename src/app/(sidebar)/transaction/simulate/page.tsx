@@ -110,7 +110,7 @@ export default function SimulateTransaction() {
   };
 
   return (
-    <PageCard heading="Simulate Transaction">
+    <PageCard heading="Simulate transaction">
       {!network.rpcUrl ? (
         <Alert variant="warning" placement="inline" title="Attention">
           RPC URL is required to simulate a transaction. You can add it in the
@@ -121,20 +121,20 @@ export default function SimulateTransaction() {
       <Box gap="lg">
         <XdrPicker
           id="simulate-tx-xdr"
-          label="Input a base-64 encoded TransactionEnvelope"
+          label="Input a Base64 encoded TransactionEnvelope"
           value={xdr.blob}
           error={xdrError}
           onChange={(e) => {
             xdr.updateXdrBlob(e.target.value);
             resetResponse();
           }}
-          note="Enter a base-64 encoded XDR blob to decode."
+          note="Enter a Base64 encoded XDR blob to decode."
           hasCopyButton
         />
 
         <RadioPicker
           id="simulate-tx-xdr-format"
-          label="XDR Format"
+          label="XDR format"
           selectedOption={xdr.format}
           onChange={(optionId) => {
             xdr.updateXdrFormat(optionId as XdrFormatType);
@@ -149,7 +149,7 @@ export default function SimulateTransaction() {
         <Input
           id="simulate-tx-instr-leeway"
           fieldSize="md"
-          label="Instruction Leeway"
+          label="Instruction leeway"
           labelSuffix="optional"
           value={simulate.instructionLeeway}
           onChange={(e) => {

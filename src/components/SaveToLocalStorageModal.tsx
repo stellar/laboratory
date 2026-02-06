@@ -141,7 +141,7 @@ export const SaveToLocalStorageModal = <
   if (type === "editName" && itemTimestamp !== undefined) {
     return (
       <Modal visible={isVisible} onClose={handleClose}>
-        <Modal.Heading>{`Edit Saved ${itemTitle}`}</Modal.Heading>
+        <Modal.Heading>{`Edit saved ${itemTitle.toLowerCase()}`}</Modal.Heading>
         <div>
           <Input
             id="saved-ls-name"
@@ -173,7 +173,7 @@ export const SaveToLocalStorageModal = <
   if (type === "save") {
     return (
       <Modal visible={isVisible} onClose={handleClose}>
-        <Modal.Heading>{`Save ${itemTitle}`}</Modal.Heading>
+        <Modal.Heading>{`Save ${itemTitle.toLowerCase()}`}</Modal.Heading>
         <div>
           <Input
             id="saved-ls-name"

@@ -197,12 +197,12 @@ export default function ViewXdr() {
         <Box gap="lg">
           <XdrPicker
             id="view-xdr-blob"
-            label="Base-64 encoded XDR"
+            label="Base64 encoded XDR"
             value={xdr.blob}
             hasCopyButton
             note={
               <>
-                Input a base-64 encoded XDR blob,{" "}
+                Input a Base64 encoded XDR blob,{" "}
                 <Link
                   onClick={() => {
                     if (latestTxn) {
@@ -247,7 +247,7 @@ export default function ViewXdr() {
             {!xdr.blob || !xdr.type ? (
               <Text as="div" size="sm">
                 {!xdr.blob
-                  ? "Enter a base-64 encoded XDR blob to decode."
+                  ? "Enter a Base64 encoded XDR blob to decode."
                   : "Please select a XDR type"}
               </Text>
             ) : null}

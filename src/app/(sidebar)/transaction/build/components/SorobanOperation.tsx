@@ -291,7 +291,7 @@ export const SorobanOperation = ({
                 variant="secondary"
                 onClick={prepareSorobanTx}
               >
-                Prepare Soroban Transaction to Sign
+                Prepare Soroban transaction to sign
               </Button>
 
               {errorMessage && (
@@ -301,7 +301,7 @@ export const SorobanOperation = ({
           )}
 
           <Box gap="sm" direction="row" align="center">
-            <Notification variant="warning" title="Only One Operation Allowed">
+            <Notification variant="warning" title="Only one operation allowed">
               Note that Soroban transactions can only contain one operation per
               transaction.
             </Notification>
@@ -326,7 +326,7 @@ export const SorobanOperation = ({
                   /* noop*/
                 }}
               >
-                Add Operation
+                Add operation
               </Button>
 
               <Button
@@ -356,7 +356,7 @@ export const SorobanOperation = ({
                 });
               }}
             >
-              Clear Operation
+              Clear operation
             </Button>
           </Box>
         </Box>

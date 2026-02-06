@@ -6,7 +6,7 @@ test.describe("Simulate Transaction Page", () => {
   });
 
   test("Loads", async ({ page }) => {
-    await expect(page.locator("h1")).toHaveText("Simulate Transaction");
+    await expect(page.locator("h1")).toHaveText("Simulate transaction");
   });
 
   test.describe("Instruction Leeway Input", () => {
@@ -23,7 +23,7 @@ test.describe("Simulate Transaction Page", () => {
 
       // Getting a success response
       const xdrInput = page.getByLabel(
-        "Input a base-64 encoded TransactionEnvelope",
+        "Input a Base64 encoded TransactionEnvelope",
       );
       const txResponseCard = page.getByTestId("simulate-tx-response");
       const simulateTxBtn = page.getByRole("button", {
@@ -75,7 +75,7 @@ test.describe("Simulate Transaction Page", () => {
         name: "Simulate transaction",
       });
       const xdrInput = page.getByLabel(
-        "Input a base-64 encoded TransactionEnvelope",
+        "Input a Base64 encoded TransactionEnvelope",
       );
 
       await expect(simulateTxBtn).toBeDisabled();
@@ -98,7 +98,7 @@ test.describe("Simulate Transaction Page", () => {
         "Unable to parse input XDR into Transaction Envelope",
       );
       const xdrInput = page.getByLabel(
-        "Input a base-64 encoded TransactionEnvelope",
+        "Input a Base64 encoded TransactionEnvelope",
       );
       await xdrInput.fill("ssdfsdf");
       await expect(invalidXdrMsg).toBeVisible();
@@ -117,7 +117,7 @@ test.describe("Simulate Transaction Page", () => {
         "Unable to parse input XDR into Transaction Envelope",
       );
       const xdrInput = page.getByLabel(
-        "Input a base-64 encoded TransactionEnvelope",
+        "Input a Base64 encoded TransactionEnvelope",
       );
       const simulateTxBtn = page.getByRole("button", {
         name: "Simulate transaction",
@@ -146,7 +146,7 @@ test.describe("Simulate Transaction Page", () => {
   test.describe("Valid XDR with a Failed 400 Submission Flow", () => {
     test("Submit via RPC", async ({ page }) => {
       const xdrInput = page.getByLabel(
-        "Input a base-64 encoded TransactionEnvelope",
+        "Input a Base64 encoded TransactionEnvelope",
       );
       const txResponseCard = page.getByTestId("simulate-tx-response");
 
@@ -187,7 +187,7 @@ test.describe("Simulate Transaction Page", () => {
   test.describe("Valid XDR with a Successful Submission Flow", () => {
     test("Submit via RPC", async ({ page }) => {
       const xdrInput = page.getByLabel(
-        "Input a base-64 encoded TransactionEnvelope",
+        "Input a Base64 encoded TransactionEnvelope",
       );
       const txResponseCard = page.getByTestId("simulate-tx-response");
       const simulateTxBtn = page.getByRole("button", {

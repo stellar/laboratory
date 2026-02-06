@@ -505,7 +505,7 @@ export const ClassicOperation = ({
                   });
                 }}
               >
-                Add Operation
+                Add operation
               </Button>
 
               <Button
@@ -535,7 +535,7 @@ export const ClassicOperation = ({
                 });
               }}
             >
-              Clear Operations
+              Clear operations
             </Button>
           </Box>
         </Box>

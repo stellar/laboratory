@@ -84,16 +84,16 @@ export const Slider = ({ imgTheme }: { imgTheme: "light" | "dark" }) => {
         `/images/lab-home-intro-tx-${imgTheme}.png`,
       ),
       actionButton: {
-        label: "Build Transaction",
+        label: "Build transaction",
         route: Routes.BUILD_TRANSACTION,
       },
       buttons: [
         {
-          label: "Watch Video Tutorial",
+          label: "Watch video tutorial",
           link: "https://youtu.be/Isn5CkEWFs8?si=BUdXoSVYYFZPwKG8",
         },
         {
-          label: "Create Account",
+          label: "Create account",
           link: "https://developers.stellar.org/docs/build/guides/transactions/create-account",
         },
         {
@@ -101,11 +101,11 @@ export const Slider = ({ imgTheme }: { imgTheme: "light" | "dark" }) => {
           link: "https://developers.stellar.org/docs/build/apps/example-application-tutorial/payment",
         },
         {
-          label: "Change Trust",
+          label: "Change trust",
           link: "https://developers.stellar.org/docs/data/apis/horizon/api-reference/errors/result-codes/operation-specific/change-trust",
         },
         {
-          label: "Account Merge",
+          label: "Account merge",
           link: "https://developers.stellar.org/docs/data/apis/horizon/api-reference/errors/result-codes/operation-specific/account-merge",
         },
       ],
@@ -142,24 +142,24 @@ export const Slider = ({ imgTheme }: { imgTheme: "light" | "dark" }) => {
         `/images/lab-home-intro-contract-${imgTheme}.png`,
       ),
       actionButton: {
-        label: "Invoke Smart Contract",
+        label: "Invoke smart contract",
         route: Routes.SMART_CONTRACTS_CONTRACT_EXPLORER,
       },
       buttons: [
         {
-          label: "Watch Video Tutorial",
+          label: "Watch video tutorial",
           link: "https://youtu.be/XcFgR_OHKl8?si=kJ5nEejo_t5ySpIU",
         },
         {
-          label: "Contract Overview",
+          label: "Contract overview",
           link: "https://developers.stellar.org/docs/learn/fundamentals/contract-development/overview",
         },
         {
-          label: "Contract Spec",
+          label: "Contract spec",
           link: "https://developers.stellar.org/docs/learn/fundamentals/contract-development/overview#contract-spec",
         },
         {
-          label: "Contract Source Validation",
+          label: "Contract source validation",
           link: "https://developers.stellar.org/docs/tools/lab/smart-contracts/contract-explorer#build-info",
         },
       ],

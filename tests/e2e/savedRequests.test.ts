@@ -180,9 +180,9 @@ test.describe("Saved Requests Page", () => {
 
       await horizonItem.getByText("View", { exact: true }).click();
 
-      // Loads All Transactions endpoint page with saved params
+      // Loads All transactions endpoint page with saved params
       await page.waitForSelector("h1", { timeout: 5000 });
-      await expect(pageContext.locator("h1")).toHaveText("All Transactions");
+      await expect(pageContext.locator("h1")).toHaveText("All transactions");
 
       await expect(pageContext.getByTestId("endpoints-url")).toHaveValue(
         "https://horizon-testnet.stellar.org/transactions?limit=5&order=desc",

@@ -36,7 +36,7 @@ export const BuildInfo = ({
         <Card>
           <Box gap="lg" addlClassName="BuildInfoInstructions">
             <Text as="h3" size="md" weight="medium">
-              Workflow Setup and Configuration
+              Workflow setup and configuration
             </Text>
 
             <Box gap="xl" addlClassName="BuildInfoInstructions__details">
@@ -62,7 +62,7 @@ export const BuildInfo = ({
 
               <Box gap="md">
                 <Text as="h4" size="sm" weight="medium">
-                  Workflow Permissions
+                  Workflow permissions
                 </Text>
 
                 <Text as="div" size="sm">

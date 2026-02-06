@@ -56,7 +56,7 @@ export const Networks = ({
       ),
       links: [
         {
-          label: "Switch to Testnet",
+          label: "Switch to testnet",
         },
       ],
     },
@@ -69,7 +69,7 @@ export const Networks = ({
       ),
       links: [
         {
-          label: "Switch to Mainnet",
+          label: "Switch to mainnet",
         },
       ],
     },
@@ -230,7 +230,7 @@ export const Networks = ({
                           ]
                         : [
                             {
-                              label: "Build Transaction",
+                              label: "Build transaction",
                               onAction: () => {
                                 router.push(Routes.BUILD_TRANSACTION);
                               },

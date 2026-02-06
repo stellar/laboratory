@@ -52,7 +52,7 @@ const getEntityTitle = (entityType: ChangeStateEntityType) => {
       entityTitle = entityType;
   }
 
-  return `${entityTitle} Entity`;
+  return `${entityTitle} entity`;
 };
 
 const addBeforeDataItem = ({

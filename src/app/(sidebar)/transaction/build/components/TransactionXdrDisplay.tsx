@@ -25,11 +25,11 @@ export const TransactionXdrDisplay = ({
 }: TransactionXdrDisplayProps) => (
   <ValidationResponseCard
     variant="success"
-    title="Success! Transaction Envelope XDR:"
+    title="Success! Transaction envelope XDR:"
     response={
       <Box gap="xs" data-testid={dataTestId}>
         <div>
-          <div>Network Passphrase:</div>
+          <div>Network passphrase:</div>
           <div>{networkPassphrase}</div>
         </div>
         <div>

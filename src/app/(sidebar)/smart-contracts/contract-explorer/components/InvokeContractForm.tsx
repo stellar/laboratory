@@ -738,7 +738,7 @@ export const InvokeContractForm = ({
             disabled={isSubmitDisabled}
             onClick={handleSimulateAndSubmit}
           >
-            Simulate & Submit
+            Simulate & submit
           </Button>
         </Box>
 

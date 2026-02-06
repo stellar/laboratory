@@ -66,7 +66,7 @@ export default function SavedKeypairs() {
   const renderOtherNetworkMessage = () => {
     if (network.id === "testnet" || network.id === "futurenet") {
       const otherNetworkLabel =
-        network.id === "testnet" ? "Futurenet" : "Testnet";
+        network.id === "testnet" ? "futurenet" : "testnet";
 
       return (
         <Alert
@@ -148,7 +148,7 @@ export default function SavedKeypairs() {
   return (
     <Box gap="md">
       <PageCard
-        heading="Saved Keypairs"
+        heading="Saved keypairs"
         rightElement={
           <Button
             variant="tertiary"
@@ -289,7 +289,7 @@ const SavedKeypairItem = ({
           size="md"
           onClick={() => fundWithFriendbot()}
         >
-          Fund with Friendbot
+          Fund with friendbot
         </Button>
       );
     }

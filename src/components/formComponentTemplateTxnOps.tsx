@@ -186,7 +186,7 @@ export const formComponentTemplateTxnOps = ({
           <TextPicker
             key={id}
             id={id}
-            label="Asset Code"
+            label="Asset code"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={templ.value || ""}
             error={templ.error}
@@ -215,7 +215,7 @@ export const formComponentTemplateTxnOps = ({
           <TextPicker
             key={id}
             id={id}
-            label="Claimable Balance ID"
+            label="Claimable balance ID"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={templ.value || ""}
             error={templ.error}
@@ -230,7 +230,7 @@ export const formComponentTemplateTxnOps = ({
           <PositiveIntPicker
             key={id}
             id={id}
-            label="Bump To"
+            label="Bump to"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={templ.value || ""}
             error={templ.error}
@@ -276,7 +276,7 @@ export const formComponentTemplateTxnOps = ({
             key={id}
             id={id}
             selectedOptions={templ.value || []}
-            label="Clear Flags"
+            label="Clear flags"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             note={
               <>
@@ -408,7 +408,7 @@ export const formComponentTemplateTxnOps = ({
           <PositiveIntPicker
             key={id}
             id={id}
-            label={custom?.label || "Extend To"}
+            label={custom?.label || "Extend to"}
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={templ.value ? removeLeadingZeroes(templ.value) : ""}
             error={templ.error}
@@ -441,7 +441,7 @@ export const formComponentTemplateTxnOps = ({
           <TextPicker
             key={id}
             id={id}
-            label="Home Domain"
+            label="Home domain"
             placeholder="Ex: example.com"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={templ.value || ""}
@@ -458,7 +458,7 @@ export const formComponentTemplateTxnOps = ({
           <PubKeyPicker
             key={id}
             id={id}
-            label="Inflation Destination"
+            label="Inflation destination"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={templ.value || ""}
             error={templ.error}
@@ -508,7 +508,7 @@ export const formComponentTemplateTxnOps = ({
         render: (templ: TemplateRenderSorobanProps) => (
           <ResourceFeePickerWithQuery
             id={id}
-            label="Resource Fee (in stroops)"
+            label="Resource fee (in stroops)"
             value={removeLeadingZeroes(templ.value || "")}
             error={templ.error}
             onChange={templ.onChange}
@@ -555,7 +555,7 @@ export const formComponentTemplateTxnOps = ({
           <PositiveIntPicker
             key={id}
             id={id}
-            label={custom?.label || "Trust Limit"}
+            label={custom?.label || "Trust limit"}
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={templ.value || ""}
             error={templ.error}
@@ -600,7 +600,7 @@ export const formComponentTemplateTxnOps = ({
           <TextPicker
             key={id}
             id={id}
-            label="Liquidity Pool ID"
+            label="Liquidity pool ID"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             placeholder="Ex: LBTSMDCMDAD3EYX7QUNQUP7BIEMUSNV3AIK3F53UI7Y56EMZR2V3SREB"
             value={templ.value || ""}
@@ -680,7 +680,7 @@ export const formComponentTemplateTxnOps = ({
           <AssetMultiPicker
             key={id}
             id={id}
-            label="Intermediate Path"
+            label="Intermediate path"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             assetInput="alphanumeric"
             values={templ.value}
@@ -744,7 +744,7 @@ export const formComponentTemplateTxnOps = ({
             key={id}
             id={id}
             selectedOptions={templ.value || []}
-            label="Set Flags"
+            label="Set flags"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             note={
               <>
@@ -768,7 +768,7 @@ export const formComponentTemplateTxnOps = ({
           <SignerPicker
             key={id}
             id={id}
-            label="Signer Type"
+            label="Signer type"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={templ.value}
             error={templ.error}
@@ -785,7 +785,7 @@ export const formComponentTemplateTxnOps = ({
           <PubKeyPicker
             key={id}
             id={id}
-            label="Source Account"
+            label="Source account"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={templ.value || ""}
             error={templ.error}
@@ -815,7 +815,7 @@ export const formComponentTemplateTxnOps = ({
           <TextPicker
             key={id}
             id={id}
-            label="Starting Balance"
+            label="Starting balance"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={templ.value ? removeLeadingZeroes(templ.value) : ""}
             error={templ.error}

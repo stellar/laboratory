@@ -109,7 +109,7 @@ export default function ToXdr() {
             {jsonXdrEncoded?.xdrString ? (
               <XdrPicker
                 id="to-xdr-encoded"
-                label="Base-64 encoded XDR"
+                label="Base64 encoded XDR"
                 value={jsonXdrEncoded.xdrString}
                 hasCopyButton
                 readOnly

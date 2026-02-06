@@ -216,7 +216,7 @@ export const ConnectWallet = () => {
     </>
   ) : (
     <Button size="md" variant="secondary" onClick={connectWallet}>
-      Connect Wallet
+      Connect wallet
       {renderErrorModal()}
     </Button>
   );

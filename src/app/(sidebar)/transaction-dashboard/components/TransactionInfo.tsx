@@ -58,15 +58,15 @@ export const TransactionInfo = ({
     },
     {
       id: "transaction-info",
-      label: "Transaction Info",
+      label: "Transaction info",
     },
     {
       id: "source-account",
-      label: "Source Account",
+      label: "Source account",
     },
     {
       id: "sequence-number",
-      label: "Sequence Number",
+      label: "Sequence number",
     },
     {
       id: "processed",
@@ -75,17 +75,17 @@ export const TransactionInfo = ({
     ...(!isNoDataScreen && !isSorobanTx ? classicTxFields : []),
     {
       id: "max-fee",
-      label: "Max Fee",
+      label: "Max fee",
     },
     {
       id: "transaction-fee",
-      label: "Transaction Fee",
+      label: "Transaction fee",
     },
     ...(feeBumpTx
       ? [
           {
             id: "fee-source-account",
-            label: "Fee Source Account",
+            label: "Fee source account",
           },
         ]
       : []),
@@ -181,11 +181,11 @@ export const TransactionInfo = ({
 
     return isSorobanTx ? (
       <Badge variant="secondary" size="sm">
-        Soroban Transaction
+        Soroban transaction
       </Badge>
     ) : (
       <Badge variant="tertiary" size="sm">
-        Classic Transaction
+        Classic transaction
       </Badge>
     );
   };
@@ -365,7 +365,7 @@ export const TransactionInfo = ({
           {renderTxBadge()}
           {feeBumpTx ? (
             <Badge variant="primary" size="sm">
-              Fee Bump Transaction
+              Fee bump transaction
             </Badge>
           ) : null}
         </Box>

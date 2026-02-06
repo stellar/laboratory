@@ -94,7 +94,7 @@ export const ConfigSettingIdPicker = ({
       <Select
         id={`${id}-type`}
         fieldSize="md"
-        label="Config Setting ID"
+        label="Config setting ID"
         value={value}
         onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
           const val = e.target.value as ConfigSettingIdType;

@@ -36,7 +36,7 @@ export default function NetworkLimits() {
 
   return (
     <div className="NetworkLimits">
-      <PageCard heading="Network Limits">
+      <PageCard heading="Network limits">
         {network.id === "custom" ? (
           <Alert
             placement="inline"
@@ -162,7 +162,7 @@ const ResourceLimitsSection = ({
           <GridTableRow>
             <GridTableCell isHeader={true}>
               <Text as="div" size="xs" weight="semi-bold">
-                Network Settings
+                Network settings
               </Text>
             </GridTableCell>
             <GridTableCell isHeader={true}>
@@ -219,7 +219,7 @@ const ResourceLimitsSection = ({
             <GridTableRow>
               <GridTableCell isHeader>
                 <Text as="div" size="xs" weight="semi-bold">
-                  Network Settings
+                  Network settings
                 </Text>
               </GridTableCell>
               <GridTableCell isHeader>
@@ -259,7 +259,7 @@ const ResourceLimitsSection = ({
             <GridTableRow>
               <GridTableCell isHeader>
                 <Text as="div" size="xs" weight="semi-bold">
-                  Network Settings
+                  Network settings
                 </Text>
               </GridTableCell>
               <GridTableCell isHeader>
@@ -327,7 +327,7 @@ const StateArchivalSection = ({
           <GridTableRow>
             <GridTableCell>
               <Text as="div" size="xs" weight="semi-bold">
-                Network Settings
+                Network settings
               </Text>
             </GridTableCell>
             <GridTableCell>
@@ -449,7 +449,7 @@ const ResourceFeesSection = ({
           <GridTableRow>
             <GridTableCell>
               <Text as="div" size="xs" weight="semi-bold">
-                Network Settings
+                Network settings
               </Text>
             </GridTableCell>
             <GridTableCell>Cost (Stroops)</GridTableCell>

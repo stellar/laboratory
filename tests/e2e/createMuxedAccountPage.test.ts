@@ -8,7 +8,7 @@ test.describe("Create Muxed Account Page", () => {
   });
 
   test("Loads", async ({ page }) => {
-    await expect(page.locator("h1")).toHaveText("Create Multiplexed Account");
+    await expect(page.locator("h1")).toHaveText("Create multiplexed account");
   });
 
   test("Renders 'Base Account G Address' and 'Muxed Account ID' input field", async ({

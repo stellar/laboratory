@@ -15,7 +15,7 @@ test.describe("Smart Contracts: Contract Info", () => {
   });
 
   test("Loads", async ({ page }) => {
-    await expect(page.locator("h1")).toHaveText("Contract Explorer");
+    await expect(page.locator("h1")).toHaveText("Contract explorer");
     await expect(page.getByLabel("Contract ID")).toHaveValue("");
     await expect(
       page.getByRole("button", { name: "Load contract" }),
@@ -64,7 +64,7 @@ test.describe("Smart Contracts: Contract Info", () => {
 
     // Show info
     await expect(
-      page.getByText("Contract Info", { exact: true }).first(),
+      page.getByText("Contract info", { exact: true }).first(),
     ).toHaveAttribute("data-is-active", "true");
 
     const contractInfoContainer = page.getByTestId("contract-info-container");

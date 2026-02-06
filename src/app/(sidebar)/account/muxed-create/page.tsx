@@ -70,7 +70,7 @@ export default function CreateMuxedAccount() {
   return (
     <div className="Account">
       <PageCard
-        heading="Create Multiplexed Account"
+        heading="Create multiplexed account"
         headingInfoLink="https://developers.stellar.org/docs/learn/encyclopedia/transactions-specialized/pooled-accounts-muxed-accounts-memos"
       >
         <div className="Account__card">
@@ -115,7 +115,7 @@ export default function CreateMuxedAccount() {
             id="muxed-account-id"
             fieldSize="md"
             placeholder="Ex: 1"
-            label="Muxed Account ID"
+            label="Muxed account ID"
             value={muxedId}
             onChange={(e) => {
               setReset(true);

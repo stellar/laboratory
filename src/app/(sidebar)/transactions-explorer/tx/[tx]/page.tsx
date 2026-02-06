@@ -42,7 +42,7 @@ export default function Tx({ params }: { params: Promise<{ tx: string }> }) {
 
   return (
     <Box gap="md" data-testid="explorer">
-      <PageCard heading="Transaction Envelope">
+      <PageCard heading="Transaction envelope">
         {errorElement}
 
         {tx.isLoading && (
