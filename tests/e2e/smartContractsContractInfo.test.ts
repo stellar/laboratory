@@ -64,7 +64,7 @@ test.describe("Smart Contracts: Contract Info", () => {
 
     // Show info
     await expect(
-      page.getByText("Contract Info", { exact: true }).first(),
+      page.getByText("Contract info", { exact: true }).first(),
     ).toHaveAttribute("data-is-active", "true");
 
     const contractInfoContainer = page.getByTestId("contract-info-container");
