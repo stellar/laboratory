@@ -186,13 +186,10 @@ export const InvokeContractForm = ({
           }, 180000);
         });
 
-        const signPromise = StellarWalletsKit.signTransaction(
-          xdr || "",
-          {
-            address: walletKit.publicKey,
-            networkPassphrase: network.passphrase,
-          },
-        );
+        const signPromise = StellarWalletsKit.signTransaction(xdr || "", {
+          address: walletKit.publicKey,
+          networkPassphrase: network.passphrase,
+        });
 
         const result = await Promise.race([signPromise, timeoutPromise]);
 

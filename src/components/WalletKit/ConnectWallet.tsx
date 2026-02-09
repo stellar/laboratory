@@ -79,7 +79,12 @@ export const ConnectWallet = () => {
     };
     // Not including savedWallet.network.id
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [savedWallet?.id, connected, hasAttemptedAutoConnect, walletKitContext.isInitialized]);
+  }, [
+    savedWallet?.id,
+    connected,
+    hasAttemptedAutoConnect,
+    walletKitContext.isInitialized,
+  ]);
 
   // Reset auto-connect attempt when network changes
   useEffect(() => {
