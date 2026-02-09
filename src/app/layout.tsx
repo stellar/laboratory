@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 
 import { LayoutMain } from "@/components/layout/LayoutMain";
 import { LayoutContextProvider } from "@/components/layout/LayoutContextProvider";
-import { WalletKitContextProvider } from "@/components/WalletKit/WalletKitContextProvider";
+import { DynamicWalletKitProvider } from "@/components/WalletKit/DynamicWalletKitProvider";
 import { CustomAiButton } from "@/components/CustomAiButton";
 
 import { QueryProvider } from "@/query/QueryProvider";
@@ -35,9 +35,9 @@ export default function RootLayout({
             <StoreProvider>
               <QueryProvider>
                 <LayoutContextProvider>
-                  <WalletKitContextProvider>
+                  <DynamicWalletKitProvider>
                     <LayoutMain>{children}</LayoutMain>
-                  </WalletKitContextProvider>
+                  </DynamicWalletKitProvider>
                   <CustomAiButton />
                 </LayoutContextProvider>
               </QueryProvider>

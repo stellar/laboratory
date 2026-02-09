@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import { ISupportedWallet } from "@creit.tech/stellar-wallets-kit";
+import { StellarWalletsKit } from "@creit-tech/stellar-wallets-kit/sdk";
 
 import { WalletKitContext } from "@/components/WalletKit/WalletKitContextProvider";
 import { getWalletKitNetwork } from "@/helpers/getWalletKitNetwork";
@@ -17,7 +17,7 @@ export const useSignWithExtensionWallet = ({
   const { network, walletKit, updateWalletKit } = useStore();
   const networkPassphrase = getWalletKitNetwork(network.id);
 
-  const walletKitInstance = useContext(WalletKitContext);
+  const walletKitContext = useContext(WalletKitContext);
 
   const [signedTxXdr, setSignedTxXdr] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
@@ -49,12 +49,7 @@ export const useSignWithExtensionWallet = ({
   };
 
   const signTx = useCallback(async () => {
-    if (
-      isInProgress ||
-      !walletKitInstance?.walletKit ||
-      !walletKitInstance?.walletKit?.signTransaction ||
-      typeof walletKitInstance.walletKit.signTransaction !== "function"
-    ) {
+    if (isInProgress || !walletKitContext.isInitialized) {
       return;
     }
 
@@ -62,13 +57,10 @@ export const useSignWithExtensionWallet = ({
 
     if (walletKit?.publicKey && txXdr) {
       try {
-        const result = await walletKitInstance.walletKit.signTransaction(
-          txXdr,
-          {
-            address: walletKit.publicKey,
-            networkPassphrase,
-          },
-        );
+        const result = await StellarWalletsKit.signTransaction(txXdr, {
+          address: walletKit.publicKey,
+          networkPassphrase,
+        });
 
         setSignedTxXdr(result.signedTxXdr);
         setSuccessMsg(SUCCESS_MSG);
@@ -80,51 +72,41 @@ export const useSignWithExtensionWallet = ({
     } else {
       // if a user didn't log in via stellar wallet kit in the main nav
       // open a wallet kit modal to sign in
-      await walletKitInstance.walletKit.openModal({
-        onWalletSelected: async (option: ISupportedWallet) => {
-          try {
-            walletKitInstance.walletKit?.setWallet(option.id);
-            const addressResult =
-              await walletKitInstance.walletKit?.getAddress();
+      try {
+        const { address } = await StellarWalletsKit.authModal();
 
-            if (addressResult?.address && txXdr) {
-              updateWalletKit({ publicKey: addressResult.address });
+        if (address && txXdr) {
+          updateWalletKit({ publicKey: address });
 
-              const result = await walletKitInstance.walletKit?.signTransaction(
-                txXdr,
-                {
-                  // You could send multiple public keys in case the wallet needs to handle multi signatures
-                  address: addressResult.address,
-                  networkPassphrase,
-                },
-              );
+          const result = await StellarWalletsKit.signTransaction(txXdr, {
+            address,
+            networkPassphrase,
+          });
 
-              if (result?.signedTxXdr) {
-                setSignedTxXdr(result.signedTxXdr);
-                setSuccessMsg(SUCCESS_MSG);
-              } else {
-                throw {
-                  message: "Couldn’t sign with wallet, please try again",
-                };
-              }
-            }
-          } catch (error: any) {
-            if (error?.message) {
-              setErrorMsg(getErrorMsg(error));
-            }
+          if (result?.signedTxXdr) {
+            setSignedTxXdr(result.signedTxXdr);
+            setSuccessMsg(SUCCESS_MSG);
+          } else {
+            throw {
+              message: "Couldn't sign with wallet, please try again",
+            };
           }
-        },
-        onClosed: () => {
-          setErrorMsg("The user closed the modal.");
-        },
-      });
+        }
+      } catch (error: any) {
+        if (error?.message) {
+          // Don't show error if user just closed the modal
+          if (error.message !== "The user closed the modal.") {
+            setErrorMsg(getErrorMsg(error));
+          }
+        }
+      }
     }
   }, [
     isInProgress,
     networkPassphrase,
     txXdr,
     updateWalletKit,
-    walletKitInstance.walletKit,
+    walletKitContext.isInitialized,
     walletKit,
   ]);
 

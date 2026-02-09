@@ -4,6 +4,7 @@ export const isExternalError = (error: Error) => {
   if (
     stack.includes("stellar-wallets-kit") ||
     stack.includes("@creit.tech/stellar-wallets-kit") ||
+    stack.includes("@creit-tech/stellar-wallets-kit") ||
     stack.includes("@ledgerhq/") ||
     stack.includes("@trezor/")
   ) {
