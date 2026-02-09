@@ -705,6 +705,7 @@
     display: inline-flex;
     gap: pxToRem(4px);
     padding-left: pxToRem(4px);
+    height: pxToRem(18px);
   }
 
   &__itemData {
