@@ -51,6 +51,11 @@ import { SorobanInvokeValue, XdrFormatType, AnyObject } from "@/types/types";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
+// Placeholder public key for simulation when no wallet is connected
+// This is a valid Stellar public key format but doesn't need to exist or be funded for simulation
+const SIMULATION_PLACEHOLDER_SOURCE =
+  "GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF";
+
 type SimulatedResponseType = {
   fullResponse: Api.SimulateTransactionResponse;
   resultOnly: AnyObject;
@@ -308,14 +313,25 @@ export const InvokeContractForm = ({
     reset();
 
     try {
-      const sequenceResult = await fetchSequenceNumber();
+      // Use wallet public key if connected, otherwise use placeholder for simulation
+      const sourceAccount =
+        walletKit?.publicKey || SIMULATION_PLACEHOLDER_SOURCE;
 
-      if (!sequenceResult?.data || sequenceNumberError) {
-        const errorMessage =
-          sequenceNumberError ||
-          "Failed to fetch sequence number. Please try again.";
+      let sequenceNumber = walletKit?.publicKey ? "0" : "1";
 
-        throw errorMessage;
+      // Only fetch sequence number if wallet is connected
+      if (walletKit?.publicKey) {
+        const sequenceResult = await fetchSequenceNumber();
+
+        if (!sequenceResult?.data || sequenceNumberError) {
+          const errorMessage =
+            sequenceNumberError ||
+            "Failed to fetch sequence number. Please try again.";
+
+          throw errorMessage;
+        }
+
+        sequenceNumber = sequenceResult?.data || sequenceNumberData || "0";
       }
 
       trackEvent(
@@ -326,9 +342,9 @@ export const InvokeContractForm = ({
       );
 
       const txnParams: TransactionBuildParams = {
-        source_account: walletKit?.publicKey || "",
+        source_account: sourceAccount,
         fee: BASE_FEE,
-        seq_num: sequenceResult?.data || sequenceNumberData || "",
+        seq_num: sequenceNumber,
         cond: {
           time: {
             min_time: "0",
@@ -706,7 +722,7 @@ export const InvokeContractForm = ({
 
     const disabled = !isGetFunction && isEmptyArgs;
 
-    return !walletKit?.publicKey || !hasNoFormErrors || disabled;
+    return !hasNoFormErrors || disabled;
   };
 
   return (
