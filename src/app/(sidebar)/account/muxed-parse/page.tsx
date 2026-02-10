@@ -61,7 +61,7 @@ export default function ParseMuxedAccount() {
   return (
     <div className="Account">
       <PageCard
-        heading="Get Muxed Account from M address"
+        heading="Get muxed account from M address"
         headingInfoLink="https://developers.stellar.org/docs/learn/encyclopedia/transactions-specialized/pooled-accounts-muxed-accounts-memos"
       >
         <div className="Account__card">

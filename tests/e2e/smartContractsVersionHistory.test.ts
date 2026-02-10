@@ -41,7 +41,7 @@ test.describe("Smart Contracts: Version History", () => {
     );
 
     await page.goto("http://localhost:3000/smart-contracts/contract-explorer");
-    await expect(page.locator("h1")).toHaveText("Contract Explorer");
+    await expect(page.locator("h1")).toHaveText("Contract explorer");
 
     // Load Contract Info
     await page.getByLabel("Contract ID").fill(MOCK_CONTRACT_ID);
@@ -49,7 +49,7 @@ test.describe("Smart Contracts: Version History", () => {
 
     // Go to Version History tab
     await page
-      .getByText("Version History", {
+      .getByText("Version history", {
         exact: true,
       })
       .click();
@@ -57,7 +57,7 @@ test.describe("Smart Contracts: Version History", () => {
 
   test("Loads", async ({ page }) => {
     await expect(
-      page.getByText("Version History", { exact: true }),
+      page.getByText("Version history", { exact: true }),
     ).toHaveAttribute("data-is-active", "true");
   });
 
@@ -67,7 +67,7 @@ test.describe("Smart Contracts: Version History", () => {
     const colUpdated = table.locator("th").nth(1);
 
     // Table headers
-    await expect(colWasm).toContainText("Contract Wasm Hash");
+    await expect(colWasm).toContainText("Contract Wasm hash");
     await expect(colUpdated).toContainText("Updated");
 
     // Table data

@@ -42,7 +42,7 @@ export default function SavedSmartContracts() {
 
   return (
     <Box gap="md">
-      <PageCard heading="Saved Smart Contracts">
+      <PageCard heading="Saved smart contracts">
         <Box gap="md">
           <>
             {savedContracts.length === 0

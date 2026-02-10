@@ -226,7 +226,7 @@ export default function SavedTransactions() {
 
   return (
     <Box gap="md" data-testid="saved-transactions-container">
-      <PageCard heading="Saved Transactions">
+      <PageCard heading="Saved transactions">
         <Box gap="md">
           <>
             {savedTxns.length === 0

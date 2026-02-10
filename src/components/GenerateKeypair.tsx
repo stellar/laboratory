@@ -16,7 +16,7 @@ export const GenerateKeypair = ({
           readOnly
           id="generate-keypair-publickey"
           fieldSize="md"
-          label="Public Key"
+          label="Public key"
           value={publicKey}
           copyButton={{
             position: "right",
@@ -29,7 +29,7 @@ export const GenerateKeypair = ({
           readOnly
           id="generate-keypair-secretkey"
           fieldSize="md"
-          label="Secret Key"
+          label="Secret key"
           value={secretKey}
           isPassword
           copyButton={{
@@ -43,7 +43,7 @@ export const GenerateKeypair = ({
           readOnly
           id="generate-keypair-recovery-phrase"
           fieldSize="md"
-          label="Recovery Phrase"
+          label="Recovery phrase"
           value={recoveryPhrase}
           isPassword
           copyButton={{

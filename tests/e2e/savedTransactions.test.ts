@@ -7,7 +7,7 @@ test.describe("Saved Transactions Page", () => {
   });
 
   test("Loads", async ({ page }) => {
-    await expect(page.locator("h1")).toHaveText("Saved Transactions");
+    await expect(page.locator("h1")).toHaveText("Saved transactions");
   });
 
   test("Empty message", async ({ page }) => {
@@ -61,7 +61,7 @@ test.describe("Saved Transactions Page", () => {
       await submitItem.getByTestId("saved-transactions-edit").click();
 
       await expect(
-        pageContext.getByText("Edit Saved Transaction", { exact: true }),
+        pageContext.getByText("Edit saved transaction", { exact: true }),
       ).toBeVisible();
 
       const newName = "Submit Create Account Tx New";
@@ -75,9 +75,9 @@ test.describe("Saved Transactions Page", () => {
       await submitItem.getByText("View in submitter").click();
       await pageContext.waitForURL("**/transaction/submit");
 
-      await expect(pageContext.locator("h1")).toHaveText("Submit Transaction");
+      await expect(pageContext.locator("h1")).toHaveText("Submit transaction");
       await expect(
-        pageContext.getByLabel("Input a base-64 encoded TransactionEnvelope:"),
+        pageContext.getByLabel("Input a Base64 encoded TransactionEnvelope:"),
       ).toHaveValue(
         "AAAAAgAAAAA55ZjOXdOOulfzeLPXjLDLdplq/5HGjapWAXjGSkdAkwAAAGQADQioAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAD4XTdOZpDOMR4vk9NUjYLbGosEJ65W78xLqdY6paYxJwAAAAJUC+QAAAAAAAAAAAFKR0CTAAAAQOvPXZdv0dUdcNAY26wVnVAUjyGRd8yrxDeUO2qaP9XF9Ws2qaCnAnfdoCzp6hk5CHwA/EiA+aJGwnMMxUjoxQw=",
       );
@@ -97,7 +97,7 @@ test.describe("Saved Transactions Page", () => {
 
       const ops = buildItem.getByTestId("saved-transactions-op");
 
-      await expect(ops.nth(0)).toHaveValue("Create Account");
+      await expect(ops.nth(0)).toHaveValue("Create account");
       await expect(ops.nth(1)).toHaveValue("Payment");
 
       await expect(
@@ -108,11 +108,11 @@ test.describe("Saved Transactions Page", () => {
       await buildItem.getByText("View in builder", { exact: true }).click();
       await pageContext.waitForURL("**/transaction/build");
 
-      await expect(pageContext.locator("h1")).toHaveText("Build Transaction");
+      await expect(pageContext.locator("h1")).toHaveText("Build transaction");
 
       // Params
       await expect(
-        pageContext.getByLabel("Source Account").first(),
+        pageContext.getByLabel("Source account").first(),
       ).toHaveValue("GA46LGGOLXJY5OSX6N4LHV4MWDFXNGLK76I4NDNKKYAXRRSKI5AJGMXG");
       await expect(
         pageContext.getByLabel("Transaction Sequence Number"),
@@ -158,7 +158,7 @@ test.describe("Saved Transactions Page", () => {
       await submitItem.getByTestId("saved-transactions-edit").click();
 
       await expect(
-        pageContext.getByText("Edit Saved Transaction", { exact: true }),
+        pageContext.getByText("Edit saved transaction", { exact: true }),
       ).toBeVisible();
 
       const newName = "Extend TTL New";
@@ -172,9 +172,9 @@ test.describe("Saved Transactions Page", () => {
       await submitItem.getByText("View in submitter").click();
       await pageContext.waitForURL("**/transaction/submit");
 
-      await expect(pageContext.locator("h1")).toHaveText("Submit Transaction");
+      await expect(pageContext.locator("h1")).toHaveText("Submit transaction");
       await expect(
-        pageContext.getByLabel("Input a base-64 encoded TransactionEnvelope:"),
+        pageContext.getByLabel("Input a Base64 encoded TransactionEnvelope:"),
       ).toHaveValue(
         "AAAAAgAAAAB+TL0HLiAjanMRnyeqyhb8Iu+4d1g2dl1cwPi1UZAigwAAtwUABiLjAAAAGQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAGQAAAAAAAHUwAAAAAQAAAAAAAAABAAAABgAAAAEg/u86MzPrVcpNrsFUa84T82Kss8DLAE9ZMxLqhM22HwAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAAB+TL0HLiAjanMRnyeqyhb8Iu+4d1g2dl1cwPi1UZAigwAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAtqEAAAABUZAigwAAAEADYbntiznotYPblvJQ35DiGEpMTQU9jCYANxV18VVGV6zDFSjB+qK++dF656Pr4oMTpyBVvE15YSo6ITxR5DoE",
       );
@@ -194,7 +194,7 @@ test.describe("Saved Transactions Page", () => {
 
       const ops = buildItem.getByTestId("saved-transactions-op");
 
-      await expect(ops.nth(0)).toHaveValue("Extend Footprint TTL");
+      await expect(ops.nth(0)).toHaveValue("Extend footprint TTL");
 
       await expect(
         buildItem.getByText("Last saved Jan 17, 2025, 7:54 PM UTC"),
@@ -208,7 +208,7 @@ test.describe("Saved Transactions Page", () => {
 
       // Params
       await expect(
-        pageContext.getByLabel("Source Account").first(),
+        pageContext.getByLabel("Source account").first(),
       ).toHaveValue("GB7EZPIHFYQCG2TTCGPSPKWKC36CF35YO5MDM5S5LTAPRNKRSARIHWGG");
       await expect(
         pageContext.getByLabel("Transaction Sequence Number"),

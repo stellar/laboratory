@@ -6,7 +6,7 @@ test.describe("Fee Bump Page", () => {
   });
 
   test("Loads", async ({ page }) => {
-    await expect(page.locator("h1")).toHaveText("Fee Bump");
+    await expect(page.locator("h1")).toHaveText("Fee bump");
     await expect(page.getByText("Fee bump errors")).toBeVisible();
   });
 
@@ -15,10 +15,10 @@ test.describe("Fee Bump Page", () => {
 
     test.beforeEach(async ({ page }) => {
       await page
-        .getByLabel("Source Account")
+        .getByLabel("Source account")
         .fill("GA46LGGOLXJY5OSX6N4LHV4MWDFXNGLK76I4NDNKKYAXRRSKI5AJGMXG");
       await page
-        .getByLabel("Input a base-64 encoded TransactionEnvelope")
+        .getByLabel("Input a Base64 encoded TransactionEnvelope")
         .fill(
           "AAAAAgAAAAA55ZjOXdOOulfzeLPXjLDLdplq/5HGjapWAXjGSkdAkwAAAGQADQioAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAC7OH53UcxOpgzL8V6oMoe/fz8QrTsG/TE1hHiDWv0K/AAAAAJUC+QAAAAAAAAAAAA=",
         );
@@ -61,7 +61,7 @@ test.describe("Fee Bump Page", () => {
 
       await page.waitForURL("**/transaction/sign");
 
-      await expect(page.locator("h1")).toHaveText("Transaction Overview");
+      await expect(page.locator("h1")).toHaveText("Transaction overview");
       await expect(page.getByLabel("Transaction Envelope XDR")).toHaveText(
         MOCK_XDR,
       );
@@ -81,7 +81,7 @@ test.describe("Fee Bump Page", () => {
       await page.waitForURL("**/xdr/view");
 
       await expect(page.locator("h1")).toHaveText("View XDR");
-      await expect(page.getByLabel("Base-64 encoded XDR")).toHaveText(MOCK_XDR);
+      await expect(page.getByLabel("Base64 encoded XDR")).toHaveText(MOCK_XDR);
     });
   });
 });

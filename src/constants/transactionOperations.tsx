@@ -36,7 +36,7 @@ export const SET_TRUSTLINE_FLAGS_CUSTOM_MESSAGE =
 
 export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
   create_account: {
-    label: "Create Account",
+    label: "Create account",
     description:
       "Creates and funds a new account with the specified starting balance.",
     docsUrl:
@@ -54,7 +54,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     requiredParams: ["destination", "asset", "amount"],
   },
   path_payment_strict_send: {
-    label: "Path Payment Strict Send",
+    label: "Path payment strict send",
     description:
       "Sends an amount in a specific asset to a destination account through a path of offers. This allows the asset sent (e.g., 450 XLM) to be different from the asset received (e.g, 6 BTC). A Path Payment Strict Send allows a user to specify the amount of the asset to send. The amount received will vary based on offers in the order books.",
     docsUrl:
@@ -76,24 +76,24 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     ],
     custom: {
       send_asset: {
-        label: "Sending Asset",
+        label: "Sending asset",
         note: "The asset to be deduced from the sender's account.",
       },
       send_amount: {
-        label: "Send Amount",
+        label: "Send amount",
       },
       dest_asset: {
-        label: "Destination Asset",
+        label: "Destination asset",
         note: "The asset to be received by the destination account.",
       },
       dest_min: {
-        label: "Minimum Destination Amount",
+        label: "Minimum destination amount",
         note: "The minimum amount the destination can receive.",
       },
     },
   },
   path_payment_strict_receive: {
-    label: "Path Payment Strict Receive",
+    label: "Path payment strict receive",
     description:
       "Sends an amount in a specific asset to a destination account through a path of offers. This allows the asset sent (e.g., 450 XLM) to be different from the asset received (e.g, 6 BTC). A Path Payment Strict Receive allows a user to specify the amount of the asset received. The amount sent varies based on offers in the order books.",
     docsUrl:
@@ -115,23 +115,23 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     ],
     custom: {
       send_asset: {
-        label: "Sending Asset",
+        label: "Sending asset",
         note: "The asset to be deduced from the sender's account.",
       },
       send_max: {
         label: "Maximum send amount",
       },
       dest_asset: {
-        label: "Destination Asset",
+        label: "Destination asset",
         note: "The asset to be received by the destination account.",
       },
       dest_amount: {
-        label: "Destination Amount",
+        label: "Destination amount",
       },
     },
   },
   manage_sell_offer: {
-    label: "Manage Sell Offer",
+    label: "Manage sell offer",
     description: "Creates, updates, or deletes an offer.",
     docsUrl:
       "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#manage-sell-offer",
@@ -154,7 +154,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     },
   },
   manage_buy_offer: {
-    label: "Manage Buy Offer",
+    label: "Manage buy offer",
     description: "Creates, updates, or deletes an offer.",
     docsUrl:
       "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#manage-buy-offer",
@@ -177,7 +177,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     },
   },
   create_passive_sell_offer: {
-    label: "Create Passive Sell Offer",
+    label: "Create passive sell offer",
     description:
       "Creates an offer that does not take another offer of equal price when created.",
     docsUrl:
@@ -195,7 +195,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     },
   },
   set_options: {
-    label: "Set Options",
+    label: "Set options",
     description: "Sets various configuration options for an account.",
     docsUrl:
       "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#set-options",
@@ -213,7 +213,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     requiredParams: [],
     custom: {
       master_weight: {
-        label: "Master Weight",
+        label: "Master weight",
         infoLink:
           "https://developers.stellar.org/docs/encyclopedia/signatures-multisig#thresholds",
         note: (
@@ -224,12 +224,12 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
         showWarning: true,
       },
       low_threshold: {
-        label: "Low Threshold",
+        label: "Low threshold",
         infoLink:
           "https://developers.stellar.org/docs/encyclopedia/signatures-multisig#thresholds",
       },
       med_threshold: {
-        label: "Medium Threshold",
+        label: "Medium threshold",
         infoLink:
           "https://developers.stellar.org/docs/encyclopedia/signatures-multisig#thresholds",
         note: (
@@ -240,7 +240,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
         showWarning: true,
       },
       high_threshold: {
-        label: "High Threshold",
+        label: "High threshold",
         infoLink:
           "https://developers.stellar.org/docs/encyclopedia/signatures-multisig#thresholds",
         note: (
@@ -259,7 +259,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     },
   },
   change_trust: {
-    label: "Change Trust",
+    label: "Change trust",
     description: "Creates, updates, or deletes a trustline.",
     docsUrl:
       "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#change-trust",
@@ -274,7 +274,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     },
   },
   allow_trust: {
-    label: "Allow Trust",
+    label: "Allow trust",
     description: "Updates the authorized flag of an existing trustline.",
     docsUrl:
       "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#allow-trust",
@@ -282,7 +282,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     requiredParams: ["trustor", "assetCode", "authorize"],
   },
   account_merge: {
-    label: "Account Merge",
+    label: "Account merge",
     description:
       "Transfers the native balance (the amount of XLM an account holds) to another account and removes the source account from the ledger.",
     docsUrl:
@@ -291,7 +291,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     requiredParams: ["destination"],
   },
   manage_data: {
-    label: "Manage Data",
+    label: "Manage data",
     description: "Sets, modifies, or deletes a Data Entry (name/value pair).",
     docsUrl:
       "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#manage-data",
@@ -306,7 +306,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     },
   },
   bump_sequence: {
-    label: "Bump Sequence",
+    label: "Bump sequence",
     description: "Bumps sequence number.",
     docsUrl:
       "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#bump-sequence",
@@ -314,7 +314,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     requiredParams: ["bump_to"],
   },
   create_claimable_balance: {
-    label: "Create Claimable Balance",
+    label: "Create claimable balance",
     description: "Creates a new claimable balance.",
     docsUrl:
       "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#create-claimable-balance",
@@ -322,7 +322,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     requiredParams: ["asset", "amount", "claimants"],
   },
   claim_claimable_balance: {
-    label: "Claim Claimable Balance",
+    label: "Claim claimable balance",
     description: "Claims a claimable balance.",
     docsUrl:
       "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#claim-claimable-balance",
@@ -330,7 +330,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     requiredParams: ["balance_id"],
   },
   begin_sponsoring_future_reserves: {
-    label: "Begin Sponsoring Future Reserves",
+    label: "Begin sponsoring future reserves",
     description:
       "Initiate a sponsorship. There must be a corresponding End Sponsoring Future Reserves operation in the same transaction.",
     docsUrl:
@@ -339,7 +339,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     requiredParams: ["sponsored_id"],
   },
   end_sponsoring_future_reserves: {
-    label: "End Sponsoring Future Reserves",
+    label: "End sponsoring future reserves",
     description: "End a sponsorship.",
     docsUrl:
       "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#end-sponsoring-future-reserves",
@@ -355,7 +355,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     requiredParams: ["asset", "from", "amount"],
   },
   extend_footprint_ttl: {
-    label: "Extend Footprint TTL",
+    label: "Extend footprint TTL",
     description:
       "Extend the time to live (TTL) of entries for Soroban smart contracts. This operation extends the TTL of the entries specified in the readOnly footprint of the transaction so that they will live at least until the extendTo ledger sequence number is reached.",
     docsUrl:
@@ -372,7 +372,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     },
   },
   invoke_contract_function: {
-    label: "Invoke Contract Function",
+    label: "Invoke contract function",
     description:
       "Invoke a function of the deployed contract using 'HOST_FUNCTION_TYPE_INVOKE_CONTRACT' from Invoke Host Function.",
     docsUrl:
@@ -381,7 +381,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     requiredParams: ["invoke_contract"],
   },
   revoke_sponsorship: {
-    label: "Revoke Sponsorship",
+    label: "Revoke sponsorship",
     description: "Revoke sponsorship of a ledger entry.",
     docsUrl:
       "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#revoke-sponsorship",
@@ -389,7 +389,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     requiredParams: ["revokeSponsorship"],
   },
   restore_footprint: {
-    label: "Restore Footprint",
+    label: "Restore footprint",
     description:
       "Builds an operation to restore the archived ledger entries specified by the ledger keys.",
     docsUrl:
@@ -403,7 +403,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     },
   },
   clawback_claimable_balance: {
-    label: "Clawback Claimable Balance",
+    label: "Clawback claimable balance",
     description: "Creates a clawback operation for a claimable balance.",
     docsUrl:
       "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#clawback-claimable-balance",
@@ -411,7 +411,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     requiredParams: ["balance_id"],
   },
   set_trust_line_flags: {
-    label: "Set Trust Line Flags",
+    label: "Set trust line flags",
     description: "Creates a trustline flag configuring operation.",
     docsUrl:
       "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#set-trustline-flags",
@@ -430,7 +430,7 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     },
   },
   liquidity_pool_deposit: {
-    label: "Liquidity Pool Deposit",
+    label: "Liquidity pool deposit",
     description: "Deposits assets into a liquidity pool.",
     docsUrl:
       "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#liquidity-pool-deposit",
@@ -450,23 +450,23 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     ],
     custom: {
       max_amount_a: {
-        label: "Max Amount A",
+        label: "Max amount A",
       },
       max_amount_b: {
-        label: "Max Amount B",
+        label: "Max amount B",
       },
       min_price: {
-        label: "Min Price",
+        label: "Min price",
         note: "Minimum depositA/depositB price.",
       },
       max_price: {
-        label: "Max Price",
+        label: "Max price",
         note: "Maximum depositA/depositB price.",
       },
     },
   },
   liquidity_pool_withdraw: {
-    label: "Liquidity Pool Withdraw",
+    label: "Liquidity pool withdraw",
     description: "Withdraw assets from a liquidity pool.",
     docsUrl:
       "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#liquidity-pool-withdraw",
@@ -479,10 +479,10 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
     ],
     custom: {
       min_amount_a: {
-        label: "Min Amount A",
+        label: "Min amount A",
       },
       min_amount_b: {
-        label: "Min Amount B",
+        label: "Min amount B",
       },
     },
   },

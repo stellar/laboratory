@@ -482,7 +482,7 @@ export const XdrLedgerKeyPicker = ({
             <Select
               id="ledger-key-type"
               fieldSize="md"
-              label="Ledger Key Type"
+              label="Ledger key type"
               value={selectedLedgerKey?.id}
               disabled={Boolean(readOnlyLedgerKey)}
               onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -507,7 +507,7 @@ export const XdrLedgerKeyPicker = ({
             {selectedLedgerKey ? (
               <XdrPicker
                 id="ledger-key-tab"
-                label="Ledger Key XDR"
+                label="Ledger key XDR"
                 value={value}
                 hasCopyButton
                 error={ledgerKeyXdrError}
@@ -524,7 +524,7 @@ export const XdrLedgerKeyPicker = ({
           <Box gap="sm">
             <XdrPicker
               id="ledger-xdr-tab"
-              label="Ledger Key XDR"
+              label="Ledger key XDR"
               value={value}
               error={ledgerKeyXdrError}
               onChange={(e) => {
@@ -564,10 +564,10 @@ export const MultiLedgerEntriesPicker = ({
     {
       id: "ledgerKey",
       label: defaultLedgerKeyField
-        ? `Use ${defaultLedgerKeyField.label} Key`
-        : "Select Ledger Key",
+        ? `Use ${defaultLedgerKeyField.label.toLowerCase()} key`
+        : "Select ledger key",
     },
-    { id: "xdr", label: "Use Ledger XDR" },
+    { id: "xdr", label: "Use ledger XDR" },
   ];
 
   return (

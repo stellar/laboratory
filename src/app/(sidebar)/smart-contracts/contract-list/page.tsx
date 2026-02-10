@@ -53,7 +53,7 @@ export default function ContractList() {
 
     return (
       <TabView
-        heading={{ title: "Smart Contract List" }}
+        heading={{ title: "Smart contract list" }}
         tab1={{
           id: "popular",
           label: "Popular",

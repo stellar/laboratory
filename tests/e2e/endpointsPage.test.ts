@@ -42,13 +42,13 @@ test.describe("API Explorer page", () => {
 
       await expect(
         sidebar.getByTestId("endpoints-sidebar-linkToggle").nth(5),
-      ).toContainText("RPC Methods");
+      ).toContainText("RPC methods");
 
       const horizonToggle = sidebar
         .getByTestId("endpoints-sidebar-linkToggle")
         .nth(6);
 
-      await expect(horizonToggle).toContainText("Horizon Endpoints");
+      await expect(horizonToggle).toContainText("Horizon endpoints");
       await horizonToggle.click();
 
       const horizonLinks = sidebar.getByTestId(
@@ -60,17 +60,17 @@ test.describe("API Explorer page", () => {
       await expect(horizonLinks).toContainText([
         "Accounts",
         "Assets",
-        "Claimable Balances",
+        "Claimable balances",
         "Effects",
-        "Fee Stats",
+        "Fee stats",
         "Ledgers",
-        "Liquidity Pools",
+        "Liquidity pools",
         "Offers",
         "Operations",
-        "Order Book",
+        "Order book",
         "Paths",
         "Payments",
-        "Trade Aggregations",
+        "Trade aggregations",
         "Trades",
         "Transactions",
       ]);
@@ -117,7 +117,7 @@ test.describe("API Explorer page", () => {
     test("Page loads with correct title and view docs link", async ({
       page,
     }) => {
-      await expect(page.locator("h1")).toHaveText("All Accounts");
+      await expect(page.locator("h1")).toHaveText("All accounts");
 
       const docsLink = page.getByTestId("endpoints-docsLink");
 
@@ -165,7 +165,7 @@ test.describe("API Explorer page", () => {
     test("Page loads with correct title and view docs link", async ({
       page,
     }) => {
-      await expect(page.locator("h1")).toHaveText("Effects for Account");
+      await expect(page.locator("h1")).toHaveText("Effects for account");
 
       const docsLink = page.getByTestId("endpoints-docsLink");
 

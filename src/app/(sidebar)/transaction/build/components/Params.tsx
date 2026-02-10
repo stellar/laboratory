@@ -204,13 +204,13 @@ export const Params = () => {
   const getFieldLabel = (field: ParamsField) => {
     switch (field) {
       case "fee":
-        return "Base Fee";
+        return "Base fee";
       case "seq_num":
-        return "Transaction Sequence Number";
+        return "Transaction sequence number";
       case "source_account":
-        return "Source Account";
+        return "Source account";
       case "cond":
-        return "Time Bounds";
+        return "Time bounds";
       case "memo":
         return "Memo";
       default:
@@ -268,7 +268,7 @@ export const Params = () => {
   };
 
   return (
-    <PageCard heading="Build Transaction">
+    <PageCard heading="Build transaction">
       <Box gap="lg">
         <SourceAccountPicker
           value={txnParams.source_account}
@@ -278,7 +278,7 @@ export const Params = () => {
 
         <PositiveIntPicker
           id="seq_num"
-          label="Transaction Sequence Number"
+          label="Transaction sequence number"
           placeholder="Ex: 559234806710273"
           value={txnParams.seq_num}
           error={paramsError.seq_num}
@@ -307,7 +307,7 @@ export const Params = () => {
 
         <PositiveIntPicker
           id="fee"
-          label="Base Fee"
+          label="Base fee"
           value={removeLeadingZeroes(txnParams.fee)}
           error={paramsError.fee}
           onChange={(e) => {
@@ -378,7 +378,7 @@ export const Params = () => {
             }}
             icon={<Icon.RefreshCw01 />}
           >
-            Clear Params
+            Clear params
           </Button>
         </Box>
       </Box>

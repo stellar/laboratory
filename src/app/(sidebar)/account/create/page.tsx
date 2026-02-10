@@ -94,7 +94,7 @@ export default function CreateAccount() {
 
   return (
     <div className="Account">
-      <PageCard heading="Keypair Generator">
+      <PageCard heading="Keypair generator">
         <div className="Account__card">
           <Text size="sm" as="div">
             These keypairs can be used on the Stellar network where one is
@@ -136,7 +136,7 @@ export default function CreateAccount() {
                       setIsSaveModalVisible(true);
                     }}
                   >
-                    Save Keypair
+                    Save keypair
                   </Button>
                 ) : null}
               </>

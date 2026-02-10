@@ -152,7 +152,7 @@ export function TransactionDetails({
 
   return (
     <Box gap="md" data-testid="explorer">
-      <PageCard heading="Transaction Envelope">
+      <PageCard heading="Transaction envelope">
         <Box gap="xs" align="start">
           <InfoField
             label="Status"

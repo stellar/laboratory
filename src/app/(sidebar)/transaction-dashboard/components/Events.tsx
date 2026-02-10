@@ -139,13 +139,13 @@ export const Events = ({
     <Box gap="lg" addlClassName="TransactionEvents">
       <TransactionCard
         id="ev-c"
-        title="Contract Events"
+        title="Contract events"
         events={events.formattedContractEvents}
       />
 
       <TransactionCard
         id="ev-t"
-        title="Transaction Events"
+        title="Transaction events"
         events={events.formattedTransactionEvents}
       />
     </Box>

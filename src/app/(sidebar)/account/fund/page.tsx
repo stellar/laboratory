@@ -318,7 +318,7 @@ export default function FundAccount() {
           <Input
             id="fund-public-key-input"
             fieldSize="md"
-            label="Public Key or Contract ID"
+            label="Public key or contract id"
             value={generatedPublicKey}
             onChange={(e) => {
               if (accountInfo) {
