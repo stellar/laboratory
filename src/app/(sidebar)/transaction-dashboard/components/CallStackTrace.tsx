@@ -1,12 +1,5 @@
 import React, { JSX, useState } from "react";
-import {
-  Alert,
-  Button,
-  Icon,
-  Label,
-  Text,
-  Toggle,
-} from "@stellar/design-system";
+import { Alert, Icon, Label, Text, Toggle } from "@stellar/design-system";
 
 import { Box } from "@/components/layout/Box";
 import { SdsLink } from "@/components/SdsLink";
@@ -28,36 +21,16 @@ import { STELLAR_EXPERT } from "@/constants/settings";
 
 import { AnyObject, NetworkType } from "@/types/types";
 
-// TODO: remove before merge
-import {
-  TEMP_ARR_OBJ,
-  TEMP_FAILED,
-  TEMP_KALE,
-  TEMP_LONG_PARAMS,
-  TEMP_MIXED,
-  TEMP_SS,
-} from "../testData";
-
 export const CallStackTrace = ({
   diagnosticEvents,
 }: {
   diagnosticEvents: DiagnosticEventJson[] | AnyObject | undefined;
 }) => {
   const { network } = useStore();
-  const [testDataId, setTestDataId] = useState<string>("");
-
-  const TEST_DATA: { [key: string]: DiagnosticEventJson[] } = {
-    soroSwap: TEMP_SS,
-    kale: TEMP_KALE,
-    longParams: TEMP_LONG_PARAMS,
-    someFailed: TEMP_MIXED,
-    allFailed: TEMP_FAILED,
-    arrObj: TEMP_ARR_OBJ,
-  };
 
   const data =
     diagnosticEvents && Array.isArray(diagnosticEvents)
-      ? formatDiagnosticEvents(TEST_DATA[testDataId] || diagnosticEvents)
+      ? formatDiagnosticEvents(diagnosticEvents)
       : null;
 
   const [isCollapsedView, setIsCollapsedView] = useState(false);
@@ -407,85 +380,6 @@ export const CallStackTrace = ({
 
   return (
     <Box gap="md">
-      {/* TODO: remove before merge */}
-      <div
-        style={{
-          border: "2px solid #c00",
-          display: "flex",
-          gap: "8px",
-          flexWrap: "wrap",
-          padding: 10,
-          alignItems: "center",
-          fontWeight: "bold",
-          color: "#c00",
-        }}
-      >
-        <span>FOR TESTING:</span>
-
-        <Button
-          variant="destructive"
-          size="sm"
-          onClick={() => setTestDataId("soroSwap")}
-          disabled={testDataId === "soroSwap"}
-        >
-          SoroSwap
-        </Button>
-
-        <Button
-          variant="destructive"
-          size="sm"
-          onClick={() => setTestDataId("kale")}
-          disabled={testDataId === "kale"}
-        >
-          Kale
-        </Button>
-
-        <Button
-          variant="destructive"
-          size="sm"
-          onClick={() => setTestDataId("longParams")}
-          disabled={testDataId === "longParams"}
-        >
-          Long params
-        </Button>
-
-        <Button
-          variant="destructive"
-          size="sm"
-          onClick={() => setTestDataId("arrObj")}
-          disabled={testDataId === "arrObj"}
-        >
-          Arr obj params
-        </Button>
-
-        <Button
-          variant="destructive"
-          size="sm"
-          onClick={() => setTestDataId("someFailed")}
-          disabled={testDataId === "someFailed"}
-        >
-          Some failed
-        </Button>
-
-        <Button
-          variant="destructive"
-          size="sm"
-          onClick={() => setTestDataId("allFailed")}
-          disabled={testDataId === "allFailed"}
-        >
-          All failed
-        </Button>
-
-        <Button
-          variant="destructive"
-          size="sm"
-          onClick={() => setTestDataId("")}
-          disabled={testDataId === ""}
-        >
-          Clear
-        </Button>
-      </div>
-
       <Box
         gap="md"
         direction="row"
