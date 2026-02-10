@@ -317,7 +317,7 @@ export const InvokeContractForm = ({
       const sourceAccount =
         walletKit?.publicKey || SIMULATION_PLACEHOLDER_SOURCE;
 
-      let sequenceNumber = "0";
+      let sequenceNumber = walletKit?.publicKey ? "0" : "1";
 
       // Only fetch sequence number if wallet is connected
       if (walletKit?.publicKey) {
