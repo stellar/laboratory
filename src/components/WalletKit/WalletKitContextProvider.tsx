@@ -4,6 +4,7 @@ import { createContext, useEffect, useState } from "react";
 import { useStore } from "@/store/useStore";
 
 import { StellarWalletsKit } from "@creit-tech/stellar-wallets-kit/sdk";
+import { KitEventType } from "@creit-tech/stellar-wallets-kit/types";
 import { AlbedoModule } from "@creit-tech/stellar-wallets-kit/modules/albedo";
 import { FreighterModule } from "@creit-tech/stellar-wallets-kit/modules/freighter";
 import { HanaModule } from "@creit-tech/stellar-wallets-kit/modules/hana";
@@ -21,10 +22,12 @@ import { SavedWallet } from "@/types/types";
 type WalletKitProps = {
   isInitialized: boolean;
   walletId?: string;
+  selectedWalletId?: string;
 };
 
 export const WalletKitContext = createContext<WalletKitProps>({
   isInitialized: false,
+  selectedWalletId: undefined,
 });
 
 export const WalletKitContextProvider = ({
@@ -32,9 +35,12 @@ export const WalletKitContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const { network, theme, setTheme } = useStore();
+  const { network, setTheme } = useStore();
   const [savedWallet, setSavedWallet] = useState<SavedWallet | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [selectedWalletId, setSelectedWalletId] = useState<string | undefined>(
+    undefined,
+  );
   const networkType = getWalletKitNetwork(network.id);
 
   useEffect(() => {
@@ -77,17 +83,31 @@ export const WalletKitContextProvider = ({
     StellarWalletsKit.init({
       modules: network.id === "mainnet" ? PROD_MODULES : TEST_MODULES,
       network: networkType,
-      selectedWalletId: savedWallet?.id,
+      selectedWalletId:
+        savedWallet?.network.id === network.id ? savedWallet?.id : undefined,
     });
 
+    // Listen for wallet selection events
+    const unsubscribe = StellarWalletsKit.on(
+      KitEventType.WALLET_SELECTED,
+      (event) => {
+        setSelectedWalletId(event.payload.id);
+      },
+    );
+
     setIsInitialized(true);
-  }, [network.id, networkType, savedWallet?.id, theme]);
+
+    return () => {
+      unsubscribe();
+    };
+  }, [network.id, networkType, savedWallet?.id]);
 
   return (
     <WalletKitContext.Provider
       value={{
         isInitialized,
         walletId: savedWallet?.id,
+        selectedWalletId,
       }}
     >
       {children}

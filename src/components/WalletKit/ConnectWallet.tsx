@@ -130,16 +130,14 @@ export const ConnectWallet = () => {
 
       updateWalletKit({
         publicKey: address,
+        walletType: walletKitContext.selectedWalletId,
       });
       setConnected(true);
 
-      // Get the selected wallet ID to save
-      const wallets = await StellarWalletsKit.refreshSupportedWallets();
-      const availableWallet = wallets.find((w) => w.isAvailable);
-
-      if (availableWallet) {
+      // Use the wallet ID from the kit event (set via WALLET_SELECTED event in context)
+      if (walletKitContext.selectedWalletId) {
         localStorageSavedWallet.set({
-          id: availableWallet.id,
+          id: walletKitContext.selectedWalletId,
           network: {
             id: network.id,
             label: network.label,
@@ -147,7 +145,7 @@ export const ConnectWallet = () => {
         });
 
         trackEvent(TrackingEvent.WALLET_KIT_SELECTED, {
-          walletType: availableWallet.id,
+          walletType: walletKitContext.selectedWalletId,
         });
       }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -200,6 +198,10 @@ export const ConnectWallet = () => {
       </Modal>
     );
   };
+
+  if (!walletKitContext.isInitialized) {
+    return;
+  }
 
   return walletKit?.publicKey ? (
     <>
