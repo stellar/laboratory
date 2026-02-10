@@ -2,6 +2,7 @@ import React from "react";
 import { NetworkError, rpc as StellarRpc, xdr } from "@stellar/stellar-sdk";
 import type { JSONSchema7 } from "json-schema";
 import { TransactionBuildParams } from "@/store/createStore";
+import type { DiagnosticEventJson } from "@/helpers/formatDiagnosticEvents";
 
 // =============================================================================
 // Generic
@@ -598,7 +599,7 @@ export type RpcTxJsonResponse = {
   envelopeJson: AnyObject;
   resultJson: AnyObject;
   resultMetaJson: AnyObject;
-  diagnosticEventsJson: AnyObject;
+  diagnosticEventsJson: DiagnosticEventJson[] | AnyObject | undefined;
 };
 
 // =============================================================================
