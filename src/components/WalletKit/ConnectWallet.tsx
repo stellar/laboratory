@@ -2,7 +2,7 @@
 
 import { useContext, useEffect, useState } from "react";
 import { Button, Modal, Text } from "@stellar/design-system";
-import { ISupportedWallet } from "@creit.tech/stellar-wallets-kit";
+import { StellarWalletsKit } from "@creit-tech/stellar-wallets-kit/sdk";
 import { useStore } from "@/store/useStore";
 
 import { useAccountInfo } from "@/query/useAccountInfo";
@@ -23,7 +23,7 @@ export const ConnectWallet = () => {
   const [errorMessageOnConnect, setErrorMessageOnConnect] = useState("");
   const [hasAttemptedAutoConnect, setHasAttemptedAutoConnect] =
     useState<boolean>(false);
-  const walletKitInstance = useContext(WalletKitContext);
+  const walletKitContext = useContext(WalletKitContext);
   const savedWallet = localStorageSavedWallet.get();
 
   const { data: accountInfo, refetch: fetchAccountInfo } = useAccountInfo({
@@ -38,6 +38,7 @@ export const ConnectWallet = () => {
       walletType: undefined,
     });
 
+    StellarWalletsKit.disconnect();
     setShowModal(false);
     setConnected(false);
     setHasAttemptedAutoConnect(false);
@@ -52,18 +53,13 @@ export const ConnectWallet = () => {
       !hasAttemptedAutoConnect &&
       !!savedWallet?.id &&
       ![undefined, "false", "wallet_connect"].includes(savedWallet?.id) &&
-      savedWallet.network.id === network.id
+      savedWallet.network.id === network.id &&
+      walletKitContext.isInitialized
     ) {
       t = setTimeout(async () => {
-        if (!walletKitInstance?.walletKit) {
-          return;
-        }
-
         try {
-          walletKitInstance.walletKit?.setWallet(savedWallet.id);
-          const success = await handleSetWalletAddress({
-            skipRequestAccess: true,
-          });
+          StellarWalletsKit.setWallet(savedWallet.id);
+          const success = await handleSetWalletAddress();
 
           // Only set the flag if connection failed, so we can retry on successful connections
           if (!success) {
@@ -83,22 +79,21 @@ export const ConnectWallet = () => {
     };
     // Not including savedWallet.network.id
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [savedWallet?.id, connected, hasAttemptedAutoConnect, walletKitInstance]);
+  }, [
+    savedWallet?.id,
+    connected,
+    hasAttemptedAutoConnect,
+    walletKitContext.isInitialized,
+  ]);
 
   // Reset auto-connect attempt when network changes
   useEffect(() => {
     setHasAttemptedAutoConnect(false);
   }, [network.id]);
 
-  const handleSetWalletAddress = async ({
-    skipRequestAccess,
-  }: {
-    skipRequestAccess: boolean;
-  }): Promise<boolean> => {
+  const handleSetWalletAddress = async (): Promise<boolean> => {
     try {
-      const addressResult = await walletKitInstance.walletKit?.getAddress({
-        skipRequestAccess,
-      });
+      const addressResult = await StellarWalletsKit.getAddress();
 
       if (!addressResult?.address) {
         return false;
@@ -124,38 +119,43 @@ export const ConnectWallet = () => {
 
   const connectWallet = async () => {
     try {
-      await walletKitInstance.walletKit?.openModal({
-        onWalletSelected: async (option: ISupportedWallet) => {
-          walletKitInstance.walletKit?.setWallet(option.id);
-          const isWalletConnected = await handleSetWalletAddress({
-            skipRequestAccess: false,
-          });
+      const { address } = await StellarWalletsKit.authModal();
 
-          if (!isWalletConnected) {
-            const errorMessage = "Unable to load wallet information";
-            setErrorMessageOnConnect(errorMessage);
-            disconnect();
-            return;
-          }
+      if (!address) {
+        const errorMessage = "Unable to load wallet information";
+        setErrorMessageOnConnect(errorMessage);
+        disconnect();
+        return;
+      }
 
-          localStorageSavedWallet.set({
-            id: option.id,
-            network: {
-              id: network.id,
-              label: network.label,
-            },
-          });
-
-          trackEvent(TrackingEvent.WALLET_KIT_SELECTED, {
-            walletType: option.id,
-          });
-        },
+      updateWalletKit({
+        publicKey: address,
+        walletType: walletKitContext.selectedWalletId,
       });
+      setConnected(true);
+
+      // Use the wallet ID from the kit event (set via WALLET_SELECTED event in context)
+      if (walletKitContext.selectedWalletId) {
+        localStorageSavedWallet.set({
+          id: walletKitContext.selectedWalletId,
+          network: {
+            id: network.id,
+            label: network.label,
+          },
+        });
+
+        trackEvent(TrackingEvent.WALLET_KIT_SELECTED, {
+          walletType: walletKitContext.selectedWalletId,
+        });
+      }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       const errorMessage =
         (e as { message?: string })?.message || "Unknown error occurred";
-      setErrorMessageOnConnect(errorMessage);
+      // Don't show error if user just closed the modal
+      if (errorMessage !== "The user closed the modal.") {
+        setErrorMessageOnConnect(errorMessage);
+      }
       disconnect();
     }
   };
@@ -198,6 +198,10 @@ export const ConnectWallet = () => {
       </Modal>
     );
   };
+
+  if (!walletKitContext.isInitialized) {
+    return;
+  }
 
   return walletKit?.publicKey ? (
     <>

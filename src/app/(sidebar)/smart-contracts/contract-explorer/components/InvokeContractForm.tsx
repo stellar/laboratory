@@ -22,6 +22,7 @@ import {
 import { BASE_FEE, contract } from "@stellar/stellar-sdk";
 import { Api } from "@stellar/stellar-sdk/rpc";
 import { JSONSchema7 } from "json-schema";
+import { StellarWalletsKit } from "@creit-tech/stellar-wallets-kit/sdk";
 
 import { RpcErrorResponse } from "@/components/TxErrorResponse";
 
@@ -156,7 +157,7 @@ export const InvokeContractForm = ({
     reset: resetSubmitRpc,
   } = useSubmitRpcTx();
 
-  const walletKitInstance = useContext(WalletKitContext);
+  const walletKitContext = useContext(WalletKitContext);
 
   const IS_BLOCK_EXPLORER_ENABLED =
     network.id === "testnet" || network.id === "mainnet";
@@ -165,7 +166,7 @@ export const InvokeContractForm = ({
   const responseErrorEl = useRef<HTMLDivElement | null>(null);
 
   const signTx = async (xdr: string): Promise<string | null> => {
-    if (!walletKitInstance?.walletKit || !walletKit?.publicKey) {
+    if (!walletKitContext.isInitialized || !walletKit?.publicKey) {
       return null;
     }
 
@@ -185,13 +186,10 @@ export const InvokeContractForm = ({
           }, 180000);
         });
 
-        const signPromise = walletKitInstance.walletKit.signTransaction(
-          xdr || "",
-          {
-            address: walletKit.publicKey,
-            networkPassphrase: network.passphrase,
-          },
-        );
+        const signPromise = StellarWalletsKit.signTransaction(xdr || "", {
+          address: walletKit.publicKey,
+          networkPassphrase: network.passphrase,
+        });
 
         const result = await Promise.race([signPromise, timeoutPromise]);
 
