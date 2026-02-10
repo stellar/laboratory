@@ -1,4 +1,4 @@
-import { JSX, useState } from "react";
+import React, { JSX, useState } from "react";
 import {
   Alert,
   Button,
@@ -62,7 +62,7 @@ export const CallStackTrace = ({
 
   const [isCollapsedView, setIsCollapsedView] = useState(false);
 
-  if (!data?.callStack) {
+  if (!data?.callStack?.length) {
     return (
       <TransactionTabEmptyMessage title="No call stack trace">
         This transaction has no call stack trace.
@@ -239,7 +239,7 @@ export const CallStackTrace = ({
           {value.map((v, vIndex) => {
             return (
               <span
-                key={`map-${v.key}-${vIndex}`}
+                key={`map-${v.key.type}-${vIndex}`}
                 className="CallStackTrace__itemObject__item"
               >
                 {renderData({ dataItem: v.key })}
@@ -713,6 +713,8 @@ const EventItem = ({
         {/* Don’t render arrow if it’s a top-level item without nested items */}
         {depth === 0 && !hasNestedItems ? null : (
           <span
+            role="button"
+            tabIndex={0}
             className="CallStackTrace__icon"
             data-visible={hasNestedItems}
             data-is-expanded={isExpanded}

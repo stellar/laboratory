@@ -2,7 +2,7 @@ import React from "react";
 import { NetworkError, rpc as StellarRpc, xdr } from "@stellar/stellar-sdk";
 import type { JSONSchema7 } from "json-schema";
 import { TransactionBuildParams } from "@/store/createStore";
-import { DiagnosticEventJson } from "@/helpers/formatDiagnosticEvents";
+import type { DiagnosticEventJson } from "@/helpers/formatDiagnosticEvents";
 
 // =============================================================================
 // Generic
