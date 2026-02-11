@@ -150,8 +150,8 @@ const extractSourceRepo = async (wasmBytes: Buffer): Promise<string | null> => {
             
             // Fallback: try to extract without the prefix for existing contracts
             // Look for source_repo followed by owner/repo pattern (similar to github: prefixed version)
-            // Match anything that's not a null byte or control character after source_repo
-            const regexWithoutPrefix = /source_repo[^\w]+([^%\0]+)/;
+            // Match source_repo followed by common separators (colon/whitespace), then capture the value
+            const regexWithoutPrefix = /source_repo[:\s]+([^%\0\s]+)/;
             const matchWithoutPrefix = sectionText.match(regexWithoutPrefix);
             if (matchWithoutPrefix) {
               // Extract and clean up the matched value
