@@ -141,10 +141,22 @@ const extractSourceRepo = async (wasmBytes: Buffer): Promise<string | null> => {
 
           // Check if this section contains the prop
           if (sectionText.includes(MATCH_PROP)) {
-            const regex = /github:[^%\0]+/;
-            const match = sectionText.match(regex);
-            // Return GitHub name and repo
-            return match ? match[0].replace("github:", "") : null;
+            // First try with the github: prefix (SEP-55 compliant)
+            const regexWithPrefix = /github:[^%\0]+/;
+            const matchWithPrefix = sectionText.match(regexWithPrefix);
+            if (matchWithPrefix) {
+              return matchWithPrefix[0].replace("github:", "");
+            }
+            
+            // Fallback: try to extract without the prefix for existing contracts
+            // Look for source_repo followed by owner/repo pattern
+            const regexWithoutPrefix = /source_repo[^\w]+([\w-]+\/[\w.-]+)/;
+            const matchWithoutPrefix = sectionText.match(regexWithoutPrefix);
+            if (matchWithoutPrefix) {
+              return matchWithoutPrefix[1];
+            }
+            
+            return null;
           }
         }
       }
