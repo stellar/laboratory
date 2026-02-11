@@ -134,9 +134,19 @@ export const ContractSpecMeta = ({
       return `${jsonData.map((d) => stringify(d, null, 2)).join(",\n\n")}`;
     }
 
-    return isXdrInit
-      ? `${jsonData.map((d) => StellarXdr.encode("ScSpecEntry", stringify(d) || "")).join("\n\n")}`
-      : "";
+    if (!isXdrInit) {
+      return "";
+    }
+
+    // Encode each entry to XDR bytes, concatenate them, then base64 encode the result
+    const xdrBuffers = jsonData.map((d) => {
+      const base64 = StellarXdr.encode("ScSpecEntry", stringify(d) || "");
+      return Buffer.from(base64, "base64");
+    });
+
+    // Concatenate all buffers and encode as a single base64 string
+    const combinedBuffer = Buffer.concat(xdrBuffers);
+    return combinedBuffer.toString("base64");
   };
 
   const formatInterface = (obj: AnyObject | null) => {
@@ -163,7 +173,8 @@ export const ContractSpecMeta = ({
       case "xdr":
         return isSacType
           ? formatSacData(sacData, "xdr")
-          : `// ${sectionName} \n\n${contractSections?.[sectionName].xdr?.join("\n\n")}`;
+          : // Use the raw XDR stream instead of individual entries
+            `// ${sectionName} \n\n${contractSections?.[sectionName].xdrStream || ""}`;
       case "interface":
         return isSacType
           ? // We can’t get interface for SAC because there is no Wasm file to parse
