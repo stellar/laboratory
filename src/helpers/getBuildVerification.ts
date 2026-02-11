@@ -142,26 +142,30 @@ const extractSourceRepo = async (wasmBytes: Buffer): Promise<string | null> => {
           // Check if this section contains the prop
           if (sectionText.includes(MATCH_PROP)) {
             // First try with the github: prefix (SEP-55 compliant)
-            const regexWithPrefix = /github:[^%\0]+/;
+            const regexWithPrefix = /github:([a-zA-Z0-9_-]+\/[a-zA-Z0-9_.-]+)/;
             const matchWithPrefix = sectionText.match(regexWithPrefix);
-            if (matchWithPrefix) {
-              return matchWithPrefix[0].replace("github:", "");
-            }
-            
-            // Fallback: try to extract without the prefix for existing contracts
-            // Look for source_repo followed by owner/repo pattern (similar to github: prefixed version)
-            // Match source_repo followed by common separators (colon/whitespace), then capture the value
-            const regexWithoutPrefix = /source_repo[:\s]+([^%\0\s]+)/;
-            const matchWithoutPrefix = sectionText.match(regexWithoutPrefix);
-            if (matchWithoutPrefix) {
-              // Extract and clean up the matched value
-              const value = matchWithoutPrefix[1].trim();
-              // Basic validation: should contain a slash and look like owner/repo
-              if (value.includes('/')) {
-                return value;
+            if (matchWithPrefix && matchWithPrefix[1]) {
+              const value = matchWithPrefix[1].trim();
+              // Strict validation: ensure the entire value is a valid owner/repo
+              const repoMatch = value.match(/^([a-zA-Z0-9_-]+)\/([a-zA-Z0-9_.-]+)$/);
+              if (repoMatch) {
+                return repoMatch[0];
               }
             }
-            
+
+            // Fallback: try to extract without the prefix for existing contracts
+            // Look for source_repo followed by owner/repo pattern (similar to github: prefixed version)
+            const regexWithoutPrefix = /source_repo[^\w]+([a-zA-Z0-9_-]+\/[a-zA-Z0-9_.-]+)/;
+            const matchWithoutPrefix = sectionText.match(regexWithoutPrefix);
+            if (matchWithoutPrefix && matchWithoutPrefix[1]) {
+              // Extract and clean up the matched value
+              const value = matchWithoutPrefix[1].trim();
+              // Strict validation: ensure the entire value is a valid owner/repo
+              const repoMatch = value.match(/^([a-zA-Z0-9_-]+)\/([a-zA-Z0-9_.-]+)$/);
+              if (repoMatch) {
+                return repoMatch[0];
+              }
+            }
             return null;
           }
         }
