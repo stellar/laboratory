@@ -141,12 +141,30 @@ export const ContractSpecMeta = ({
     // Encode each entry to XDR bytes, concatenate them, then base64 encode the result
     const xdrBuffers = jsonData.map((d) => {
       const base64 = StellarXdr.encode("ScSpecEntry", stringify(d) || "");
-      return Buffer.from(base64, "base64");
+      // Decode base64 to bytes using browser-compatible atob
+      const binaryString = atob(base64);
+      const bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      return bytes;
     });
 
-    // Concatenate all buffers and encode as a single base64 string
-    const combinedBuffer = Buffer.concat(xdrBuffers);
-    return combinedBuffer.toString("base64");
+    // Concatenate all byte arrays
+    const totalLength = xdrBuffers.reduce((acc, arr) => acc + arr.length, 0);
+    const combinedBytes = new Uint8Array(totalLength);
+    let offset = 0;
+    for (const buffer of xdrBuffers) {
+      combinedBytes.set(buffer, offset);
+      offset += buffer.length;
+    }
+
+    // Encode as base64 using browser-compatible btoa
+    let binaryString = "";
+    for (let i = 0; i < combinedBytes.length; i++) {
+      binaryString += String.fromCharCode(combinedBytes[i]);
+    }
+    return btoa(binaryString);
   };
 
   const formatInterface = (obj: AnyObject | null) => {
