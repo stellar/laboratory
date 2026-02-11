@@ -394,7 +394,7 @@ export const CallStackTrace = ({
 
         <Box gap="xs" direction="row" align="center">
           <Label htmlFor="call-stack-params-toggle" size="sm">
-            Collapsed view
+            Show all params
           </Label>
 
           <Toggle
