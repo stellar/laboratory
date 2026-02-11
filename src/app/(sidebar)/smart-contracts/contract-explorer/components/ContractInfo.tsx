@@ -272,9 +272,15 @@ export const ContractInfo = ({
     />
   );
 
-  const NoDataMessage = ({ children }: { children: React.ReactNode }) => {
+  const NoDataMessage = ({
+    title,
+    children,
+  }: {
+    title: string;
+    children: React.ReactNode;
+  }) => {
     return (
-      <Alert variant="warning" placement="inline">
+      <Alert variant="primary" placement="inline" title={title}>
         {children}
       </Alert>
     );
@@ -362,7 +368,7 @@ export const ContractInfo = ({
                   isSourceStellarExpert={true}
                 />
               ) : (
-                <NoDataMessage>
+                <NoDataMessage title="Contract storage is not available">
                   Contract storage is not available for selected network.
                 </NoDataMessage>
               ),
@@ -396,8 +402,9 @@ export const ContractInfo = ({
                   isSourceStellarExpert={true}
                 />
               ) : (
-                <NoDataMessage>
-                  Version history is not available for selected network.
+                <NoDataMessage title="Version history is not available">
+                  Version history cannot be displayed because data from
+                  Stellar.Expert is currently unavailable.
                 </NoDataMessage>
               ),
               isDisabled: !isDataLoaded || isSacType,
