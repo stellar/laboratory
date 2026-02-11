@@ -401,8 +401,8 @@ export const ContractInfo = ({
                   title="Version history is not available"
                 >
                   <div>
-                    Version history cannot be displayed because this network is
-                    not accessible by Stellar.expert.
+                    Version history cannot be displayed because data from
+                    Stellar.Expert is currently unavailable.
                   </div>
                 </Alert>
               ),
