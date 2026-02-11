@@ -91,6 +91,10 @@ export const Signatures = ({
 
   return (
     <Box gap="md" addlClassName="Signatures">
+      <Text as="div" size="xs" weight="regular">
+        Cryptographic signatures that authorize this transaction. Each signature
+        includes the signer’s public key, signature value, and hint.
+      </Text>
       <div className="Signatures__gridTableContainer">
         <table>
           <thead>

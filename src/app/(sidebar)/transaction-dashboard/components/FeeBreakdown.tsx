@@ -106,6 +106,10 @@ export const FeeBreakdown = ({
 
   return (
     <Box gap="md" addlClassName="FeeBreakdown">
+      <Text as="div" size="xs" weight="regular">
+        Breakdown of fees charged for this transaction, including inclusion fees
+        and resource fees for smart contract execution.
+      </Text>
       {/* Fees table details */}
       <div className="FeeBreakdown__gridTableContainer">
         <GridTable>

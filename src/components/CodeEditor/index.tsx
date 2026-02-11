@@ -230,6 +230,7 @@ export const CodeEditor = ({
             scrollBeyondLastLine: false,
             padding: { top: 8, bottom: 8 },
             wordWrap: "on",
+            guides: { indentation: false },
           }}
           theme={theme === "sds-theme-light" ? "light" : "vs-dark"}
         />

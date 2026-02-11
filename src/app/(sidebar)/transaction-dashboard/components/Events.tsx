@@ -106,6 +106,10 @@ export const Events = ({
 
     return (
       <Box gap="lg">
+        <Text as="div" size="xs" weight="regular">
+          Events emitted during contract execution. Each event shows the
+          contract ID, topics, and associated data.
+        </Text>
         <ExpandSection title={title}>
           {events.map((t, cIndex) => (
             <div
