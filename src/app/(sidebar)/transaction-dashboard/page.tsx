@@ -382,7 +382,7 @@ export default function TransactionDashboard() {
             addlClassName="ContractInfo__tabs"
           >
             <Box gap="sm" direction="row" align="center">
-              <Text as="h2" size="md" weight="semi-bold">
+              <Text as="h2" size="md" weight="medium">
                 Transaction
               </Text>
             </Box>

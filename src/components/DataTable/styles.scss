@@ -8,6 +8,10 @@
     position: relative;
     overflow: hidden;
 
+    &:has([data-overflow="true"]) {
+      overflow: visible;
+    }
+
     & > .Loader {
       position: absolute;
       top: 5rem;
@@ -25,7 +29,7 @@
     }
 
     &:has([data-overflow="true"]) {
-      overflow-x: visible;
+      overflow: visible;
     }
   }
 

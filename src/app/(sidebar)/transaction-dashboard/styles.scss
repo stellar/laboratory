@@ -453,11 +453,13 @@
 // =============================================================================
 .TransactionContracts {
   &__contractId {
-    display: inline;
-    vertical-align: middle;
+    .Link {
+      width: pxToRem(96px);
+      white-space: nowrap;
+    }
 
     .CopyText {
-      padding-left: pxToRem(8px);
+      line-height: 1;
     }
   }
 }

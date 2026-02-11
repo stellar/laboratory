@@ -207,61 +207,67 @@ export const ResourceProfiler = ({
   };
 
   return (
-    <Card>
-      <Box gap="lg">
-        <Text as="h3" size="md" weight="medium">
-          Resources
-        </Text>
+    <Box gap="lg">
+      <Text as="div" size="xs" weight="regular">
+        Events emitted during contract execution. Each event shows the contract
+        ID, topics, and associated data.
+      </Text>
+      <Card>
+        <Box gap="lg">
+          <Text as="h3" size="md" weight="medium">
+            Resources
+          </Text>
 
-        <div className="TransactionResourceProfiler__items">
-          {itemGroups.map((group) => (
-            <div
-              key={group.id}
-              className="TransactionResourceProfiler__item"
-              data-testid={`${group.id}-item`}
-            >
-              <div className="TransactionResourceProfiler__item__header">
-                <Text as="div" size="xs" weight="medium">
-                  {group.title}
-                </Text>
+          <div className="TransactionResourceProfiler__items">
+            {itemGroups.map((group) => (
+              <div
+                key={group.id}
+                className="TransactionResourceProfiler__item"
+                data-testid={`${group.id}-item`}
+              >
+                <div className="TransactionResourceProfiler__item__header">
+                  <Text as="div" size="xs" weight="medium">
+                    {group.title}
+                  </Text>
 
-                <Text as="div" size="xs" weight="medium">
-                  Used
-                </Text>
-              </div>
-
-              {group.items.map((item) => (
-                <div
-                  key={item.id}
-                  className="TransactionResourceProfiler__item__container"
-                >
-                  <div className="TransactionResourceProfiler__item__row">
-                    <div>{item.label}</div>
-                    <div className="TransactionResourceProfiler__item__value">{`${formatValue(item.value, item.valueEntity)}`}</div>
-                  </div>
-                  {item?.limit && item?.usage ? (
-                    <div
-                      className="TransactionResourceProfiler__item__row"
-                      data-limit
-                    >
-                      <div>{`(limit: ${item.limit})`}</div>
-                      <div>{`${item.usage} used`}</div>
-                    </div>
-                  ) : null}
+                  <Text as="div" size="xs" weight="medium">
+                    Used
+                  </Text>
                 </div>
-              ))}
-            </div>
-          ))}
-        </div>
 
-        <Link
-          href="https://developers.stellar.org/docs/networks/resource-limits-fees"
-          icon={<Icon.LinkExternal01 />}
-          size="sm"
-        >
-          Resource limits & fees
-        </Link>
-      </Box>
-    </Card>
+                {group.items.map((item) => (
+                  <div
+                    key={item.id}
+                    className="TransactionResourceProfiler__item__container"
+                  >
+                    <div className="TransactionResourceProfiler__item__row">
+                      <div>{item.label}</div>
+                      <div className="TransactionResourceProfiler__item__value">{`${formatValue(item.value, item.valueEntity)}`}</div>
+                    </div>
+                    {item?.limit && item?.usage ? (
+                      <div
+                        className="TransactionResourceProfiler__item__row"
+                        data-limit
+                      >
+                        <div>{`(limit: ${item.limit})`}</div>
+                        <div>{`${item.usage} used`}</div>
+                      </div>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+
+          <Link
+            href="https://developers.stellar.org/docs/networks/resource-limits-fees"
+            icon={<Icon.LinkExternal01 />}
+            size="sm"
+          >
+            Resource limits & fees
+          </Link>
+        </Box>
+      </Card>
+    </Box>
   );
 };
