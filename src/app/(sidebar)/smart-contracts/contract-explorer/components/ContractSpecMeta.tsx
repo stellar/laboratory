@@ -143,10 +143,7 @@ export const ContractSpecMeta = ({
       const base64 = StellarXdr.encode("ScSpecEntry", stringify(d) || "");
       // Decode base64 to bytes using browser-compatible atob
       const binaryString = atob(base64);
-      const bytes = new Uint8Array(binaryString.length);
-      for (let i = 0; i < binaryString.length; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
-      }
+      const bytes = Uint8Array.from(binaryString, (c) => c.charCodeAt(0));
       return bytes;
     });
 
@@ -160,10 +157,10 @@ export const ContractSpecMeta = ({
     }
 
     // Encode as base64 using browser-compatible btoa
-    let binaryString = "";
-    for (let i = 0; i < combinedBytes.length; i++) {
-      binaryString += String.fromCharCode(combinedBytes[i]);
-    }
+    const binaryString = Array.from(
+      combinedBytes,
+      (byte) => String.fromCharCode(byte),
+    ).join("");
     return btoa(binaryString);
   };
 
