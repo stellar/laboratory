@@ -224,7 +224,7 @@ export const FeeBreakdown = ({
           {/* Total Fees */}
           <GridTableRow isHighlighted={true}>
             <GridTableCell>
-              <FeeType title="Total transaction fees" isBold={true} />
+              <FeeType title="Total transaction fee" isBold={true} />
             </GridTableCell>
             <GridTableCell>
               <FeeAmount fee={feeBreakdown.maxFee} isBold={true} />
