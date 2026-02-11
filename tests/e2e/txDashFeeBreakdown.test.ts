@@ -4,7 +4,7 @@ import { mockRpcRequest } from "./mock/helpers";
 
 test.describe("Transaction Dashboard: Fee Breakdown", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:3000/transaction-dashboard");
+    await page.goto("http://localhost:3000/transaction/dashboard");
   });
 
   test("Soroban transaction fees in XLM", async ({ page }) => {

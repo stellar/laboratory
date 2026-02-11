@@ -15,7 +15,7 @@ import {
 
 test.describe("Transaction Dashboard: State Change", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:3000/transaction-dashboard");
+    await page.goto("http://localhost:3000/transaction/dashboard");
   });
 
   test.describe("KALE", () => {

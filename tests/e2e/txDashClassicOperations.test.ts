@@ -8,7 +8,7 @@ import { mockRpcRequest } from "./mock/helpers";
 
 test.describe("Transaction Dashboard - Classic Operations", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:3000/transaction-dashboard");
+    await page.goto("http://localhost:3000/transaction/dashboard");
   });
 
   test("Displays single classic operation correctly", async ({ page }) => {
