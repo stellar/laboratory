@@ -105,7 +105,7 @@ export const FeeBreakdown = ({
   };
 
   return (
-    <Box gap="md" addlClassName="FeeBreakdown">
+    <Box gap="lg" addlClassName="FeeBreakdown">
       <Text as="div" size="xs" weight="regular">
         Breakdown of fees charged for this transaction, including inclusion fees
         and resource fees for smart contract execution.
