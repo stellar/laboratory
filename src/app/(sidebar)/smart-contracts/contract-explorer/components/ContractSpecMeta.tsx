@@ -122,7 +122,7 @@ export const ContractSpecMeta = ({
 
   const formatSacData = (
     dataString: string | null | undefined,
-    type: "json" | "xdr",
+    type: "json" | "xdr" | "single-entry-xdr",
   ) => {
     if (!dataString) {
       return "";
@@ -138,7 +138,12 @@ export const ContractSpecMeta = ({
       return "";
     }
 
-    // Encode each entry to XDR bytes, concatenate them, then base64 encode the result
+    // For regular xdr, return individual entries separated by newlines
+    if (type === "xdr") {
+      return `${jsonData.map((d) => StellarXdr.encode("ScSpecEntry", stringify(d) || "")).join("\n\n")}`;
+    }
+
+    // For single-entry-xdr, encode each entry to XDR bytes, concatenate them, then base64 encode the result
     const xdrBuffers = jsonData.map((d) => {
       const base64 = StellarXdr.encode("ScSpecEntry", stringify(d) || "");
       // Decode base64 to bytes using browser-compatible atob
@@ -188,8 +193,11 @@ export const ContractSpecMeta = ({
       case "xdr":
         return isSacType
           ? formatSacData(sacData, "xdr")
-          : // Use the raw XDR stream instead of individual entries
-            `// ${sectionName} \n\n${contractSections?.[sectionName].xdrStream || ""}`;
+          : `// ${sectionName} \n\n${contractSections?.[sectionName].xdr?.join("\n\n")}`;
+      case "single-entry-xdr":
+        return isSacType
+          ? formatSacData(sacData, "single-entry-xdr")
+          : `// ${sectionName} \n\n${contractSections?.[sectionName].xdrStream || ""}`;
       case "interface":
         return isSacType
           ? // We can’t get interface for SAC because there is no Wasm file to parse
@@ -293,7 +301,7 @@ export const ContractSpecMeta = ({
             title: "Contract spec",
             infoLink:
               "https://developers.stellar.org/docs/learn/fundamentals/contract-development/overview#contract-spec",
-            languages: ["interface", "json", "xdr"],
+            languages: ["interface", "json", "xdr", "single-entry-xdr"],
             height: "60",
           })
         : null}
@@ -305,6 +313,7 @@ export const ContractSpecMeta = ({
             title: "Contract spec",
             infoLink:
               "https://developers.stellar.org/docs/tokens/stellar-asset-contract",
+            languages: ["json", "xdr", "single-entry-xdr"],
           })
         : null}
 

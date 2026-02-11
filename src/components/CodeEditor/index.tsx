@@ -11,7 +11,12 @@ import { downloadFile } from "@/helpers/downloadFile";
 
 import "./styles.scss";
 
-export type SupportedLanguage = "json" | "xdr" | "text" | "interface";
+export type SupportedLanguage =
+  | "json"
+  | "xdr"
+  | "single-entry-xdr"
+  | "text"
+  | "interface";
 
 const CODE_EDITOR_LINE_HEIGHT_PX = 18;
 
@@ -68,9 +73,17 @@ export const CodeEditor = ({
     return null;
   }
 
+  const getLanguageLabel = (language: SupportedLanguage): string => {
+    if (language === "single-entry-xdr") {
+      return "Single Entry XDR";
+    }
+    return language.toUpperCase();
+  };
+
   const getFileExtension = () => {
     switch (selectedLanguage) {
       case "xdr":
+      case "single-entry-xdr":
       case "interface":
         return "txt";
       case "json":
@@ -159,7 +172,7 @@ export const CodeEditor = ({
               >
                 {languages.map((l) => (
                   <option value={l} key={`ce-lang-${l}`}>
-                    {l.toUpperCase()}
+                    {getLanguageLabel(l)}
                   </option>
                 ))}
               </Select>
