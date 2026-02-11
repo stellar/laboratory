@@ -6,6 +6,7 @@ import { Text } from "@stellar/design-system";
 import { TabView } from "@/components/TabView";
 import { Box } from "@/components/layout/Box";
 import { PageCard } from "@/components/layout/PageCard";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { SwitchNetworkButtons } from "@/components/SwitchNetworkButtons";
 
 import { useStore } from "@/store/useStore";
@@ -51,6 +52,19 @@ export default function ContractList() {
       );
     }
 
+    // On testnet, show only the recent list without tabs
+    if (network.id === "testnet") {
+      return (
+        <Box gap="lg">
+          <div className="TabView__heading">
+            <PageHeader heading="Smart contract list" />
+          </div>
+          <RecentList />
+        </Box>
+      );
+    }
+
+    // On mainnet, show tabs with Popular and Recent
     return (
       <TabView
         heading={{ title: "Smart contract list" }}
