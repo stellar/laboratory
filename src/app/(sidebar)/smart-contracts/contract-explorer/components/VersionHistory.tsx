@@ -7,10 +7,8 @@ import { PoweredByStellarExpert } from "@/components/PoweredByStellarExpert";
 
 import { useSEContractVersionHistory } from "@/query/external/useSEContractVersionHistory";
 import { formatEpochToDate } from "@/helpers/formatEpochToDate";
-import { getStellarExpertNetwork } from "@/helpers/getStellarExpertNetwork";
 
 import { ContractVersionHistoryResponseItem, NetworkType } from "@/types/types";
-import { StellarExpertNotAvailable } from "./StellarExpertNotAvailable";
 
 export const VersionHistory = ({
   isActive,
@@ -23,9 +21,6 @@ export const VersionHistory = ({
   networkId: NetworkType;
   isSourceStellarExpert: boolean;
 }) => {
-  // Check if network is supported by Stellar Expert
-  const isStellarExpertSupported = getStellarExpertNetwork(networkId) !== null;
-
   const {
     data: versionHistoryData,
     error: versionHistoryError,
@@ -43,16 +38,6 @@ export const VersionHistory = ({
       <Box gap="sm" direction="row" justify="center">
         <Loader />
       </Box>
-    );
-  }
-
-  // Show network not supported message
-  if (!isStellarExpertSupported) {
-    return (
-      <StellarExpertNotAvailable
-        title="Version history not available"
-        message="Version history cannot be displayed because this network is not accessible by Stellar.expert."
-      />
     );
   }
 

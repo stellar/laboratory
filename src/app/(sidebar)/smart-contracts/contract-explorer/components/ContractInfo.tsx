@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import {
+  Alert,
   Avatar,
   Card,
   Icon,
@@ -40,7 +41,6 @@ import { VersionHistory } from "./VersionHistory";
 import { BuildInfo } from "./BuildInfo";
 import { SourceCode } from "./SourceCode";
 import { Bindings } from "./Bindings";
-import { StellarExpertNotAvailable } from "./StellarExpertNotAvailable";
 
 export const ContractInfo = ({
   infoData,
@@ -354,10 +354,16 @@ export const ContractInfo = ({
                   isSourceStellarExpert={true}
                 />
               ) : (
-                <StellarExpertNotAvailable
-                  title="Contract storage not available"
-                  message="Contract storage cannot be displayed because this network is not accessible by Stellar.expert."
-                />
+                <Alert
+                  variant="primary"
+                  placement="inline"
+                  title="Contract storage is not available"
+                >
+                  <div>
+                    Contract storage cannot be displayed because data from
+                    Stellar.Expert is currently unavailable.
+                  </div>
+                </Alert>
               ),
               isDisabled: !isDataLoaded,
             }}
@@ -389,10 +395,16 @@ export const ContractInfo = ({
                   isSourceStellarExpert={true}
                 />
               ) : (
-                <StellarExpertNotAvailable
-                  title="Version history not available"
-                  message="Version history cannot be displayed because this network is not accessible by Stellar.expert."
-                />
+                <Alert
+                  variant="primary"
+                  placement="inline"
+                  title="Version history is not available"
+                >
+                  <div>
+                    Version history cannot be displayed because this network is
+                    not accessible by Stellar.expert.
+                  </div>
+                </Alert>
               ),
               isDisabled: !isDataLoaded || isSacType,
             }}
