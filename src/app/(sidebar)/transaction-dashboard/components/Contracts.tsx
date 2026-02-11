@@ -7,6 +7,7 @@ import {
   Icon,
   Link,
   Loader,
+  Text,
 } from "@stellar/design-system";
 
 import { useStore } from "@/store/useStore";
@@ -55,6 +56,10 @@ export const Contracts = ({
 
   return (
     <Box gap="lg" addlClassName="TransactionContracts">
+      <Text as="div" size="xs" weight="regular">
+        This table shows all contracts involved in this transaction, along with
+        their build verification status.
+      </Text>
       <ContractsTable
         events={events.formattedContractEvents ?? undefined}
         rpcUrl={network.rpcUrl || ""}
@@ -65,7 +70,12 @@ export const Contracts = ({
 
 const ContractIdColumn = ({ children }: { children: string }) => {
   return (
-    <div className="TransactionContracts__contractId">
+    <Box
+      gap="sm"
+      direction="row"
+      align="center"
+      addlClassName="TransactionContracts__contractId"
+    >
       <Link
         addlClassName="ContractLink--withIcon"
         onClick={(e) => {
@@ -82,7 +92,7 @@ const ContractIdColumn = ({ children }: { children: string }) => {
 
       <CopyText textToCopy={children}>
         <IconButton
-          customSize="12px"
+          customSize="0.75rem"
           icon={<Icon.Copy01 />}
           altText="Copy Contract ID"
           onClick={(e) => {
@@ -90,7 +100,7 @@ const ContractIdColumn = ({ children }: { children: string }) => {
           }}
         />
       </CopyText>
-    </div>
+    </Box>
   );
 };
 
@@ -129,7 +139,7 @@ const ContractsTable = ({
           build_verified: verifications[cid] || "unverified",
         }))}
         tableHeaders={[
-          { id: "address", value: "Address", isSortable: true },
+          { id: "contract_id", value: "Contract ID", isSortable: true },
           { id: "build_verified", value: "Build verified", isSortable: true },
         ]}
         formatDataRow={(vh: {
@@ -146,13 +156,11 @@ const ContractsTable = ({
                 {isLoading ? (
                   <Loader />
                 ) : (
-                  <BuildVerifiedBadge
-                    status={vh.build_verified}
-                    disableMessage
-                  />
+                  <BuildVerifiedBadge status={vh.build_verified} />
                 )}
               </div>
             ),
+            isOverflow: true,
           },
         ]}
         cssGridTemplateColumns="minmax(210px, 1fr) minmax(210px, 1fr)"

@@ -137,6 +137,11 @@ export const Events = ({
 
   return (
     <Box gap="lg" addlClassName="TransactionEvents">
+      <Text as="div" size="xs" weight="regular">
+        Events emitted for this transaction. Each event shows the contract ID,
+        topics, and associated data.
+      </Text>
+
       <TransactionCard
         id="ev-c"
         title="Contract events"

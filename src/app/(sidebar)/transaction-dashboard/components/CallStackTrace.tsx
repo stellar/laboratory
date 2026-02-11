@@ -387,7 +387,7 @@ export const CallStackTrace = ({
         justify="space-between"
         wrap="wrap"
       >
-        <Text as="div" size="sm" weight="regular">
+        <Text as="div" size="xs" weight="regular">
           This log shows all contract-related events that occurred during the
           transaction in chronological order.
         </Text>

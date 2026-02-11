@@ -350,25 +350,23 @@ export const TransactionInfo = ({
 
   return (
     <Card>
-      <Box
-        gap="lg"
-        align={isNoDataScreen ? "stretch" : "start"}
-        addlClassName="TransactionInfo"
-      >
-        <Box
-          gap="sm"
-          direction="row"
-          align="center"
-          addlClassName="TransactionInfo__badges"
-          data-testid="transaction-info-badges"
-        >
-          {renderTxBadge()}
-          {feeBumpTx ? (
-            <Badge variant="primary" size="sm">
-              Fee bump transaction
-            </Badge>
-          ) : null}
-        </Box>
+      <Box gap="lg" addlClassName="TransactionInfo">
+        {!isNoDataScreen ? (
+          <Box
+            gap="sm"
+            direction="row"
+            align="center"
+            addlClassName="TransactionInfo__badges"
+            data-testid="transaction-info-badges"
+          >
+            {renderTxBadge()}
+            {feeBumpTx ? (
+              <Badge variant="primary" size="sm">
+                Fee bump transaction
+              </Badge>
+            ) : null}
+          </Box>
+        ) : null}
 
         <div className="ContractInfoWrapper" data-no-data={isNoDataScreen}>
           <Box

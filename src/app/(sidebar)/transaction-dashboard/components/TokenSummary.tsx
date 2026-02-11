@@ -93,7 +93,7 @@ export const TokenSummary = ({
           <IconButton
             icon={<Icon.Copy01 />}
             altText="Copy address"
-            customSize="1rem"
+            customSize="0.75rem"
           />
         </CopyText>
       </Box>
@@ -145,7 +145,7 @@ export const TokenSummary = ({
       {groupedTransferEvents.map((ev) => (
         <Fragment key={ev.id}>
           <Box gap="md" data-testid={ev.id}>
-            <Text as="div" size="sm" weight="medium">
+            <Text as="div" size="xs" weight="regular">
               {ev.title}
             </Text>
 

@@ -1,11 +1,13 @@
+@use "../../styles/utils.scss" as *;
+
 .InfoFieldItem {
-  font-size: 0.75rem;
-  line-height: 1.125rem;
+  font-size: pxToRem(14px);
+  line-height: pxToRem(20px);
 }
 
 .InfoFieldItem__label {
   flex-shrink: 0;
-  width: 8rem;
+  width: pxToRem(144px);
   color: var(--sds-clr-gray-11);
 }
 

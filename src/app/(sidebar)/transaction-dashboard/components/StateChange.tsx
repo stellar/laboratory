@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge, Card } from "@stellar/design-system";
+import { Badge, Card, Text } from "@stellar/design-system";
 import ReactDiffViewer, { DiffMethod } from "react-diff-viewer";
 import { stringify } from "lossless-json";
 
@@ -133,6 +133,12 @@ export const StateChange = ({
 
   return (
     <Box gap="lg">
+      <Text as="div" size="xs" weight="regular">
+        State changes show modifications to ledger entries during transaction
+        execution. Each entry displays the before and after values of the
+        changed data.
+      </Text>
+
       {formattedData.map((item, index) => {
         const dataBefore = stringify(item.before.data, null, 2);
         const dataAfter = stringify(item.after?.data, null, 2);
