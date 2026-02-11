@@ -56,9 +56,7 @@ export default function ContractList() {
     if (network.id === "testnet") {
       return (
         <Box gap="lg">
-          <div className="TabView__heading">
-            <PageHeader heading="Smart contract list" />
-          </div>
+          <PageHeader heading="Smart contract list" />
           <RecentList />
         </Box>
       );
