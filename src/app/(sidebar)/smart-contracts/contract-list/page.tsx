@@ -64,12 +64,13 @@ export default function ContractList() {
                 tabs={[{ id: "recent", label: "Recent" }]}
                 activeTabId="recent"
                 onChange={() => {
-                  // Only one tab on testnet, no action needed
+                  // Single tab - no action needed
                 }}
               />
             </div>
           </div>
           <div className="TabView__content">
+            {/* data-is-active is required for TabView CSS styling */}
             <div data-is-active={true}>
               <RecentList />
             </div>
