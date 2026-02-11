@@ -15,6 +15,7 @@ import { formatNumber } from "@/helpers/formatNumber";
 import { capitalizeString } from "@/helpers/capitalizeString";
 import { decodeScVal } from "@/helpers/decodeScVal";
 import { getContractDataXDR } from "@/helpers/sorobanUtils";
+import { getStellarExpertNetwork } from "@/helpers/getStellarExpertNetwork";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { CONTRACT_STORAGE_MAX_ENTRIES } from "@/constants/settings";
@@ -28,6 +29,7 @@ import {
   ContractStorageResponseItem,
   NetworkType,
 } from "@/types/types";
+import { StellarExpertNotAvailable } from "./StellarExpertNotAvailable";
 
 export const ContractStorage = ({
   isActive,
@@ -45,6 +47,9 @@ export const ContractStorage = ({
   const isXdrInit = useIsXdrInit();
   const { transaction } = useStore();
   const router = useRouter();
+
+  // Check if network is supported by Stellar Expert
+  const isStellarExpertSupported = getStellarExpertNetwork(networkId) !== null;
 
   const {
     data: storageData,
@@ -64,6 +69,16 @@ export const ContractStorage = ({
       <Box gap="sm" direction="row" justify="center">
         <Loader />
       </Box>
+    );
+  }
+
+  // Show network not supported message
+  if (!isStellarExpertSupported) {
+    return (
+      <StellarExpertNotAvailable
+        title="Contract storage not available"
+        message="Contract storage cannot be displayed because this network is not accessible by Stellar.expert."
+      />
     );
   }
 

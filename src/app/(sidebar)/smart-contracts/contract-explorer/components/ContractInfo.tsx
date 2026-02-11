@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import {
-  Alert,
   Avatar,
   Card,
   Icon,
@@ -41,6 +40,7 @@ import { VersionHistory } from "./VersionHistory";
 import { BuildInfo } from "./BuildInfo";
 import { SourceCode } from "./SourceCode";
 import { Bindings } from "./Bindings";
+import { StellarExpertNotAvailable } from "./StellarExpertNotAvailable";
 
 export const ContractInfo = ({
   infoData,
@@ -272,14 +272,6 @@ export const ContractInfo = ({
     />
   );
 
-  const NoDataMessage = ({ children }: { children: React.ReactNode }) => {
-    return (
-      <Alert variant="warning" placement="inline">
-        {children}
-      </Alert>
-    );
-  };
-
   return (
     <Box gap="lg">
       <Card>
@@ -362,9 +354,10 @@ export const ContractInfo = ({
                   isSourceStellarExpert={true}
                 />
               ) : (
-                <NoDataMessage>
-                  Contract storage is not available for selected network.
-                </NoDataMessage>
+                <StellarExpertNotAvailable
+                  title="Contract storage not available"
+                  message="Contract storage cannot be displayed because this network is not accessible by Stellar.expert."
+                />
               ),
               isDisabled: !isDataLoaded,
             }}
@@ -396,9 +389,10 @@ export const ContractInfo = ({
                   isSourceStellarExpert={true}
                 />
               ) : (
-                <NoDataMessage>
-                  Version history is not available for selected network.
-                </NoDataMessage>
+                <StellarExpertNotAvailable
+                  title="Version history not available"
+                  message="Version history cannot be displayed because this network is not accessible by Stellar.expert."
+                />
               ),
               isDisabled: !isDataLoaded || isSacType,
             }}
