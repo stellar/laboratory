@@ -112,7 +112,7 @@ export const getAttesationResponse = async ({
   }
 };
 
-const extractSourceRepo = async (wasmBytes: Buffer): Promise<string | null> => {
+export const extractSourceRepo = async (wasmBytes: Buffer): Promise<string | null> => {
   try {
     const wasmBuffer = new Uint8Array(wasmBytes);
     const mod = await WebAssembly.compile(wasmBuffer);
