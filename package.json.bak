@@ -20,7 +20,7 @@
     "install-if-package-changed": "git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD | grep --quiet pnpm.lock && pnpm install || exit 0",
     "prepare": "husky",
     "pre-commit": "pnpm lint-staged",
-    "pre-push": "pnpm lint:ts",
+    "pre-push": "pnpm lint:ts && pnpm test:e2e && pnpm test:unit",
     "playwright-ui": "npx playwright test --ui"
   },
   "dependencies": {
