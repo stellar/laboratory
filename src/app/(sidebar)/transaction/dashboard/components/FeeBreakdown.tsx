@@ -221,7 +221,7 @@ export const FeeBreakdown = ({
             </GridTableRow>
           </ExpandBox>
 
-          {/* Total Fees */}
+          {/* Total transaction fee */}
           <GridTableRow isHighlighted={true}>
             <GridTableCell>
               <FeeType title="Total transaction fee" isBold={true} />
