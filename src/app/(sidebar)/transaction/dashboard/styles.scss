@@ -1,4 +1,4 @@
-@use "../../../styles/utils.scss" as *;
+@use "../../../../styles/utils.scss" as *;
 
 .ExpandToggle {
   --ExpandToggle-gap: #{pxToRem(4px)};
