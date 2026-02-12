@@ -31,6 +31,7 @@ import { delayedAction } from "@/helpers/delayedAction";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { prettifyJsonString } from "@/helpers/prettifyJsonString";
 import { decodeXdr } from "@/helpers/decodeXdr";
+import { MessageField } from "@/components/MessageField";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { useCodeWrappedSetting } from "@/hooks/useCodeWrappedSetting";
@@ -272,6 +273,12 @@ export default function ViewXdr() {
             {xdrJsonDecoded?.jsonString && xdrJsonDecoded?.jsonArray ? (
               <Box gap="lg">
                 <>{renderClaimableBalanceIds()}</>
+
+                {xdrJsonDecoded.isStream && xdrJsonDecoded.jsonArray.length > 1 ? (
+                  <MessageField
+                    message={`Decoded as XDR stream with ${xdrJsonDecoded.jsonArray.length} entries`}
+                  />
+                ) : null}
 
                 <div
                   className="PageBody__content PageBody__scrollable"

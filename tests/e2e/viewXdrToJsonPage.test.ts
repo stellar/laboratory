@@ -150,6 +150,14 @@ test.describe("View XDR to JSON Page", () => {
     await xdrTypeInput.focus();
     await page.getByText("ScSpecEntry").first().click();
     await expect(jsonView).toBeVisible();
+
+    // Verify stream indicator is shown with correct number of entries
+    await expect(
+      page.getByText("Decoded as XDR stream with 6 entries"),
+    ).toBeVisible();
+
+    // Verify the array displays the correct number of items
+    await expect(page.getByText("6 items")).toBeVisible();
   });
 
   test("Fetch latest transaction", async ({ page }) => {

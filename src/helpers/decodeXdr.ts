@@ -37,6 +37,7 @@ export const decodeXdr = ({
         jsonString: JSON.stringify(streamXdrJson),
         jsonArray: streamXdrJson.map((s) => parseToLosslessJson(s)),
         error: "",
+        isStream: streamXdrJson.length > 1,
       };
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
@@ -48,6 +49,7 @@ export const decodeXdr = ({
       return {
         jsonString: "",
         error: `Unable to decode input as ${xdrType}: ${originalError}. ${customErrorMessage}`,
+        isStream: false,
       };
     }
   };
@@ -60,6 +62,33 @@ export const decodeXdr = ({
     try {
       const xdrJson = StellarXdr.decode(xdrType, xdrBlob);
 
+      // Even though single decode succeeded, also try stream decoding
+      // to check if there are additional XDR values concatenated together.
+      // This handles cases like contract specs where multiple XDR values
+      // are encoded as a single base64 string.
+      try {
+        const streamXdrJson = StellarXdr.decode_stream(xdrType, xdrBlob);
+
+        // If stream decode returns more than one item, use the stream result
+        if (streamXdrJson.length > 1) {
+          if (trackingEvents?.successStream) {
+            trackEvent(trackingEvents.successStream, {
+              xdrType,
+            });
+          }
+
+          return {
+            jsonString: JSON.stringify(streamXdrJson),
+            jsonArray: streamXdrJson.map((s) => parseToLosslessJson(s)),
+            error: "",
+            isStream: true,
+          };
+        }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (streamError) {
+        // Stream decode failed, fall through to return single decode result
+      }
+
       if (trackingEvents?.success) {
         trackEvent(trackingEvents.success, { xdrType: xdrType });
       }
@@ -68,6 +97,7 @@ export const decodeXdr = ({
         jsonString: xdrJson,
         jsonArray: [parseToLosslessJson(xdrJson)],
         error: "",
+        isStream: false,
       };
     } catch (e) {
       // It's possible that the XDR is a stream
