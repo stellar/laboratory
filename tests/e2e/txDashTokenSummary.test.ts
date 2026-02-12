@@ -12,7 +12,7 @@ import { mockRpcRequest } from "./mock/helpers";
 test.describe("Transaction Dashboard: Token Summary", () => {
   test.beforeEach(async ({ page }) => {
     // Load page
-    await page.goto("http://localhost:3000/transaction-dashboard");
+    await page.goto("http://localhost:3000/transaction/dashboard");
   });
 
   test("SAC", async ({ page }) => {

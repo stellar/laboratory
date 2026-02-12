@@ -38,7 +38,7 @@ export const buildEndpointHref = (
   }
 
   // Transaction Dashboard params
-  if (route.startsWith("/transaction-dashboard")) {
+  if (route.startsWith("/transaction/dashboard")) {
     buildParams["txDashboard"] = params;
   }
 

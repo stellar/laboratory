@@ -98,7 +98,7 @@ export enum Routes {
   // Transactions Explorer
   TRANSACTIONS_EXPLORER = "/transactions-explorer",
   // Transaction Dashboard
-  TRANSACTION_DASHBOARD = "/transaction-dashboard",
+  TRANSACTION_DASHBOARD = "/transaction/dashboard",
   // Network Limits
   NETWORK_LIMITS = "/network-limits",
 }

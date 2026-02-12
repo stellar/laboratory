@@ -389,24 +389,6 @@ export default function TransactionDashboard() {
 
             <TabView
               tab1={{
-                id: "tx-token-summary",
-                label: "Token summary",
-                content: <TokenSummary txDetails={txDetails} />,
-                isDisabled: !isDataLoaded,
-              }}
-              tab2={{
-                id: "tx-contracts",
-                label: "Contracts",
-                content: <Contracts txEvents={txDetails?.events} />,
-                isDisabled: !isDataLoaded,
-              }}
-              tab3={{
-                id: "tx-events",
-                label: "Events",
-                content: <Events txEvents={txDetails?.events} />,
-                isDisabled: !isDataLoaded,
-              }}
-              tab4={{
                 id: "tx-call-stack-trace",
                 label: "Call stack trace",
                 content: (
@@ -414,6 +396,24 @@ export default function TransactionDashboard() {
                     diagnosticEvents={txDetails?.diagnosticEventsJson}
                   />
                 ),
+                isDisabled: !isDataLoaded,
+              }}
+              tab2={{
+                id: "tx-events",
+                label: "Events",
+                content: <Events txEvents={txDetails?.events} />,
+                isDisabled: !isDataLoaded,
+              }}
+              tab3={{
+                id: "tx-token-summary",
+                label: "Token summary",
+                content: <TokenSummary txDetails={txDetails} />,
+                isDisabled: !isDataLoaded,
+              }}
+              tab4={{
+                id: "tx-contracts",
+                label: "Contracts",
+                content: <Contracts txEvents={txDetails?.events} />,
                 isDisabled: !isDataLoaded,
               }}
               tab5={{
@@ -433,15 +433,15 @@ export default function TransactionDashboard() {
                 isDisabled: !isDataLoaded,
               }}
               tab7={{
-                id: "tx-signatures",
-                label: "Signatures",
-                content: <Signatures txDetails={txDetails || null} />,
-                isDisabled: !isDataLoaded,
-              }}
-              tab8={{
                 id: "tx-fee-breakdown",
                 label: "Fee breakdown",
                 content: <FeeBreakdown txDetails={txDetails} />,
+                isDisabled: !isDataLoaded,
+              }}
+              tab8={{
+                id: "tx-signatures",
+                label: "Signatures",
+                content: <Signatures txDetails={txDetails || null} />,
                 isDisabled: !isDataLoaded,
               }}
               activeTabId={activeTab}
