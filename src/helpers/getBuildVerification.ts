@@ -112,6 +112,21 @@ export const getAttesationResponse = async ({
   }
 };
 
+/**
+ * Helper function to validate and extract repository name from a regex match
+ */
+const validateAndExtractRepo = (match: RegExpMatchArray | null, captureGroup: number): string | null => {
+  if (match && match[captureGroup]) {
+    const value = match[captureGroup].trim();
+    // Strict validation: ensure the entire value is a valid owner/repo
+    const repoMatch = value.match(/^([a-zA-Z0-9_-]+)\/([a-zA-Z0-9_.-]+)$/);
+    if (repoMatch) {
+      return repoMatch[0];
+    }
+  }
+  return null;
+};
+
 export const extractSourceRepo = async (wasmBytes: Buffer): Promise<string | null> => {
   try {
     const wasmBuffer = new Uint8Array(wasmBytes);
@@ -144,28 +159,20 @@ export const extractSourceRepo = async (wasmBytes: Buffer): Promise<string | nul
             // First try with the github: prefix (SEP-55 compliant)
             const regexWithPrefix = /github:([a-zA-Z0-9_-]+\/[a-zA-Z0-9_.-]+)/;
             const matchWithPrefix = sectionText.match(regexWithPrefix);
-            if (matchWithPrefix && matchWithPrefix[1]) {
-              const value = matchWithPrefix[1].trim();
-              // Strict validation: ensure the entire value is a valid owner/repo
-              const repoMatch = value.match(/^([a-zA-Z0-9_-]+)\/([a-zA-Z0-9_.-]+)$/);
-              if (repoMatch) {
-                return repoMatch[0];
-              }
+            const repoWithPrefix = validateAndExtractRepo(matchWithPrefix, 1);
+            if (repoWithPrefix) {
+              return repoWithPrefix;
             }
 
             // Fallback: try to extract without the prefix for existing contracts
             // Look for source_repo followed by owner/repo pattern (similar to github: prefixed version)
             const regexWithoutPrefix = /source_repo[^\w]+([a-zA-Z0-9_-]+\/[a-zA-Z0-9_.-]+)/;
             const matchWithoutPrefix = sectionText.match(regexWithoutPrefix);
-            if (matchWithoutPrefix && matchWithoutPrefix[1]) {
-              // Extract and clean up the matched value
-              const value = matchWithoutPrefix[1].trim();
-              // Strict validation: ensure the entire value is a valid owner/repo
-              const repoMatch = value.match(/^([a-zA-Z0-9_-]+)\/([a-zA-Z0-9_.-]+)$/);
-              if (repoMatch) {
-                return repoMatch[0];
-              }
+            const repoWithoutPrefix = validateAndExtractRepo(matchWithoutPrefix, 1);
+            if (repoWithoutPrefix) {
+              return repoWithoutPrefix;
             }
+            
             return null;
           }
         }
