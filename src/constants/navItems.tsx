@@ -99,6 +99,10 @@ const SMART_CONTRACTS_NAV = [
 
 const TRANSACTION_NAV = [
   {
+    route: Routes.TRANSACTION_DASHBOARD,
+    label: "Transaction dashboard",
+  },
+  {
     route: Routes.BUILD_TRANSACTION,
     label: "Build transaction",
   },
@@ -193,10 +197,6 @@ export const NAV: NavItem[] = [
           subNav: SMART_CONTRACTS_NAV,
         },
       ]),
-  {
-    route: Routes.TRANSACTION_DASHBOARD,
-    label: "Transaction dashboard",
-  },
   ...(process.env.NEXT_PUBLIC_ENABLE_EXPLORER === "true"
     ? [
         {

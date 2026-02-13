@@ -8,7 +8,7 @@ import { mockRpcRequest } from "./mock/helpers";
 test.describe("Transaction Dashboard: Contracts", () => {
   test.beforeEach(async ({ page }) => {
     // Load page
-    await page.goto("http://localhost:3000/transaction-dashboard");
+    await page.goto("http://localhost:3000/transaction/dashboard");
   });
 
   test("Contracts Summary", async ({ page }) => {
