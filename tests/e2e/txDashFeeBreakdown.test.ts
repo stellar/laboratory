@@ -4,7 +4,7 @@ import { mockRpcRequest } from "./mock/helpers";
 
 test.describe("Transaction Dashboard: Fee Breakdown", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:3000/transaction-dashboard");
+    await page.goto("http://localhost:3000/transaction/dashboard");
   });
 
   test("Soroban transaction fees in XLM", async ({ page }) => {
@@ -47,9 +47,9 @@ test.describe("Transaction Dashboard: Fee Breakdown", () => {
     // Table columns
     await expect(getTableRow(rows, 0)).toHaveText([
       "Fee type",
-      "Proposed",
-      "Refunded",
-      "Final",
+      "Proposed fee",
+      "Refunded fee",
+      "Final fee",
     ]);
 
     // Resource fee expanded view
@@ -96,9 +96,9 @@ test.describe("Transaction Dashboard: Fee Breakdown", () => {
       "0.0239778 XLM",
     ]);
 
-    // Total fees
+    // Total transaction fee
     await expect(getTableRow(rows, 5)).toHaveText([
-      "Total fees",
+      "Total transaction fee",
       "1.5499079 XLM",
       "-1.0735283 XLM",
       "0.4763796 XLM",
@@ -190,9 +190,9 @@ test.describe("Transaction Dashboard: Fee Breakdown", () => {
       "239,778 stroops",
     ]);
 
-    // Total fees
+    // Total transaction fee
     await expect(getTableRow(rows, 5)).toHaveText([
-      "Total fees",
+      "Total transaction fee",
       "15,499,079 stroops",
       "-10,735,283 stroops",
       "4,763,796 stroops",

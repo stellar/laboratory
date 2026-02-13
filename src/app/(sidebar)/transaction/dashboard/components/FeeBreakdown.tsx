@@ -116,9 +116,9 @@ export const FeeBreakdown = ({
           {/* Header */}
           <GridTableRow isHeader={true}>
             <GridTableCell>Fee type</GridTableCell>
-            <GridTableCell>Proposed</GridTableCell>
-            <GridTableCell>Refunded</GridTableCell>
-            <GridTableCell>Final</GridTableCell>
+            <GridTableCell>Proposed fee</GridTableCell>
+            <GridTableCell>Refunded fee</GridTableCell>
+            <GridTableCell>Final fee</GridTableCell>
           </GridTableRow>
 
           {/* Inclusion Fee */}
@@ -221,10 +221,10 @@ export const FeeBreakdown = ({
             </GridTableRow>
           </ExpandBox>
 
-          {/* Total Fees */}
+          {/* Total transaction fee */}
           <GridTableRow isHighlighted={true}>
             <GridTableCell>
-              <FeeType title="Total fees" isBold={true} />
+              <FeeType title="Total transaction fee" isBold={true} />
             </GridTableCell>
             <GridTableCell>
               <FeeAmount fee={feeBreakdown.maxFee} isBold={true} />

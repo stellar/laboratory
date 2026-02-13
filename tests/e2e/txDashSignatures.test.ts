@@ -9,7 +9,7 @@ import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 
 test.describe("Transaction Dashboard: Signatures", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:3000/transaction-dashboard");
+    await page.goto("http://localhost:3000/transaction/dashboard");
   });
 
   test("Soroban Transaction", async ({ page }) => {
