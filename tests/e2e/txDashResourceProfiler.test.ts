@@ -117,9 +117,18 @@ const txData = async ({
 
   await loadButton.click();
 
-  // Check the Resource Profiler tab is selected (default)
-  const eventsTabButton = page.getByTestId("tx-resource-profiler");
-  await expect(eventsTabButton).toHaveAttribute("data-is-active", "true");
+  // Select tab
+  const resourceProfilerTabButton = page.getByTestId("tx-resource-profiler");
+  await expect(resourceProfilerTabButton).toHaveAttribute(
+    "data-is-active",
+    "false",
+  );
+
+  await resourceProfilerTabButton.click();
+  await expect(resourceProfilerTabButton).toHaveAttribute(
+    "data-is-active",
+    "true",
+  );
 };
 
 type ItemGroup = ({ label: string; value: string } | { hasLimit: true })[];
