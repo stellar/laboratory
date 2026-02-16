@@ -8,8 +8,11 @@ TAG ?= stellar/laboratory:$(LABEL)
 # https://github.com/opencontainers/image-spec/blob/master/annotations.md
 BUILD_DATE := $(shell date -u +%FT%TZ)
 
+# Build image
 docker-build:
 	$(SUDO) docker build --pull --label org.opencontainers.image.created="$(BUILD_DATE)" -t $(TAG) --build-arg=NEXT_PUBLIC_COMMIT_HASH="$(shell git rev-parse --short HEAD)" .
 
+
+# Push image
 docker-push:
 	$(SUDO) docker push $(TAG)
