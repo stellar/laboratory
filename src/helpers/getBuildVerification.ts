@@ -112,7 +112,22 @@ export const getAttesationResponse = async ({
   }
 };
 
-const extractSourceRepo = async (wasmBytes: Buffer): Promise<string | null> => {
+/**
+ * Helper function to validate and extract repository name from a regex match
+ */
+const validateAndExtractRepo = (match: RegExpMatchArray | null, captureGroup: number): string | null => {
+  if (match && match[captureGroup]) {
+    const value = match[captureGroup].trim();
+    // Strict validation: ensure the entire value is a valid owner/repo
+    const repoMatch = value.match(/^([a-zA-Z0-9_-]+)\/([a-zA-Z0-9_.-]+)$/);
+    if (repoMatch) {
+      return repoMatch[0];
+    }
+  }
+  return null;
+};
+
+export const extractSourceRepo = async (wasmBytes: Buffer): Promise<string | null> => {
   try {
     const wasmBuffer = new Uint8Array(wasmBytes);
     const mod = await WebAssembly.compile(wasmBuffer);
@@ -141,10 +156,24 @@ const extractSourceRepo = async (wasmBytes: Buffer): Promise<string | null> => {
 
           // Check if this section contains the prop
           if (sectionText.includes(MATCH_PROP)) {
-            const regex = /github:[^%\0]+/;
-            const match = sectionText.match(regex);
-            // Return GitHub name and repo
-            return match ? match[0].replace("github:", "") : null;
+            // First try with the github: prefix (SEP-55 compliant)
+            const regexWithPrefix = /github:([a-zA-Z0-9_-]+\/[a-zA-Z0-9_.-]+)/;
+            const matchWithPrefix = sectionText.match(regexWithPrefix);
+            const repoWithPrefix = validateAndExtractRepo(matchWithPrefix, 1);
+            if (repoWithPrefix) {
+              return repoWithPrefix;
+            }
+
+            // Fallback: try to extract without the prefix for existing contracts
+            // Look for source_repo followed by owner/repo pattern (similar to github: prefixed version)
+            const regexWithoutPrefix = /source_repo[^\w]+([a-zA-Z0-9_-]+\/[a-zA-Z0-9_.-]+)/;
+            const matchWithoutPrefix = sectionText.match(regexWithoutPrefix);
+            const repoWithoutPrefix = validateAndExtractRepo(matchWithoutPrefix, 1);
+            if (repoWithoutPrefix) {
+              return repoWithoutPrefix;
+            }
+            
+            return null;
           }
         }
       }
