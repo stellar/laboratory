@@ -1,5 +1,6 @@
 import React, { JSX, useState } from "react";
 import { Alert, Icon, Label, Text, Toggle } from "@stellar/design-system";
+import { StrKey } from "@stellar/stellar-sdk";
 
 import { Box } from "@/components/layout/Box";
 import { SdsLink } from "@/components/SdsLink";
@@ -490,7 +491,23 @@ export const CallStackTrace = ({
 // Helpers
 // =============================================================================
 const isAsset = (value: unknown) => {
-  return typeof value === "string" && value?.split(":")?.length === 2;
+  if (typeof value !== "string" || !value.includes(":")) {
+    return false;
+  }
+
+  const parts = value.split(":");
+  if (parts.length !== 2) {
+    return false;
+  }
+
+  const [code, issuer] = parts;
+  // Asset code should be 1-12 characters, issuer must be valid G or M address
+  return (
+    code.length > 0 &&
+    code.length <= 12 &&
+    (StrKey.isValidEd25519PublicKey(issuer) ||
+      StrKey.isValidMed25519PublicKey(issuer))
+  );
 };
 
 const renderAssetString = (value: string) => {
