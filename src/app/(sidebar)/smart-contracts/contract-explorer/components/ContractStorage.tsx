@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, Loader, Text } from "@stellar/design-system";
 import { useRouter } from "next/navigation";
 
@@ -79,6 +79,14 @@ export const ContractStorage = ({
     contractId,
     totalEntriesCount,
   });
+
+  useEffect(() => {
+    // Reset when contractId or networkId changes
+    setCurrentCursor(undefined);
+    setCurrentPage(1);
+    setSortBy(undefined);
+    setSortOrder(undefined);
+  }, [contractId, networkId]);
 
   const {
     error: storageError,
@@ -305,6 +313,7 @@ export const ContractStorage = ({
                       }
                     },
                     disabled:
+                      !prevCursor ||
                       currentPage === 1 ||
                       isStorageLoading ||
                       isStorageFetching,
