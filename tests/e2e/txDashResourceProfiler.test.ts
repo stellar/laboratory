@@ -117,6 +117,13 @@ const txData = async ({
 
   await loadButton.click();
 
+  // Verify Call stack trace tab is active by default
+  const callStackTraceTabButton = page.getByTestId("tx-call-stack-trace");
+  await expect(callStackTraceTabButton).toHaveAttribute(
+    "data-is-active",
+    "true",
+  );
+
   // Select tab
   const resourceProfilerTabButton = page.getByTestId("tx-resource-profiler");
   await expect(resourceProfilerTabButton).toHaveAttribute(
