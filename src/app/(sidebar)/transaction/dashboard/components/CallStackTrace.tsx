@@ -501,12 +501,13 @@ const isAsset = (value: unknown) => {
   }
 
   const [code, issuer] = parts;
-  // Asset code should be 1-12 characters, issuer must be valid G or M address
+  // Asset code should be 1-12 characters, issuer must be valid G or M address or contract ID
   return (
     code.length > 0 &&
     code.length <= 12 &&
     (StrKey.isValidEd25519PublicKey(issuer) ||
-      StrKey.isValidMed25519PublicKey(issuer))
+      StrKey.isValidMed25519PublicKey(issuer) ||
+      StrKey.isValidContract(issuer))
   );
 };
 
