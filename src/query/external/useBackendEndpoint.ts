@@ -45,6 +45,10 @@ export const useBackendEndpoint = ({
 
         const response = await fetch(fetchUrl);
 
+        if (!response.ok) {
+          throw new Error(`Fetching data failed: ${response.status}`);
+        }
+
         const responseJson = await response.json();
         return responseJson;
       };
@@ -53,7 +57,7 @@ export const useBackendEndpoint = ({
         const data = await fetchContractStorageData();
         return data;
       } catch (e) {
-        throw `Error fetching data from backend. ${e}`;
+        throw new Error(`Error fetching data from backend. ${e}`);
       }
     },
     enabled: Boolean(isActive && networkId && contractId),

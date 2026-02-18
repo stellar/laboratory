@@ -52,7 +52,7 @@ export const ContractInfo = ({
   isSacType,
 }: {
   infoData: ContractInfoApiResponse | undefined;
-  backendHealthStatus: string;
+  backendHealthStatus?: string;
   wasmData: WasmData | null | undefined;
   wasmHash: string | null | undefined;
   network: Network | EmptyObj;
@@ -264,7 +264,10 @@ export const ContractInfo = ({
   }
 
   const renderContractStorage = () => {
-    if (!infoData && backendHealthStatus !== "healthy") {
+    if (
+      !infoData &&
+      (!backendHealthStatus || backendHealthStatus !== "healthy")
+    ) {
       return (
         <NoDataMessage title="Contract storage is not available">
           Contract storage is not available for selected network.

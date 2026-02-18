@@ -23,5 +23,11 @@ export const useBackendHealthCheck = ({
     },
     refetchInterval: 30000, // Refetch every 30 seconds
     staleTime: 20000,
+    enabled: Boolean(
+      endpoint &&
+        networkId &&
+        networkId !== "futurenet" &&
+        networkId !== "custom",
+    ),
   });
 };
