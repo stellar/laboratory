@@ -14,14 +14,11 @@ export const useBackendHealthCheck = ({
     queryFn: async () => {
       const response = await fetch(`${endpoint}/${networkId}/health`);
 
-      console.log("endpoint: ", endpoint);
-
       if (!response.ok) {
         throw new Error(`Health check failed: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log("Backend health check response: ", data);
       return data;
     },
     refetchInterval: 30000, // Refetch every 30 seconds
