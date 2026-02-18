@@ -1,5 +1,6 @@
 import React, { JSX, useState } from "react";
 import { Alert, Icon, Label, Text, Toggle } from "@stellar/design-system";
+import { StrKey } from "@stellar/stellar-sdk";
 
 import { Box } from "@/components/layout/Box";
 import { SdsLink } from "@/components/SdsLink";
@@ -148,6 +149,37 @@ export const CallStackTrace = ({
     return false;
   };
 
+  const toErrorMapData = (errorValue: unknown): FormattedEventData | null => {
+    if (errorValue === null || errorValue === undefined) {
+      return null;
+    }
+
+    const toErrorNode = (node: unknown): FormattedEventData => {
+      if (Array.isArray(node)) {
+        return {
+          type: "vec",
+          value: node.map((item) => toErrorNode(item)),
+        };
+      }
+
+      if (node && typeof node === "object") {
+        return {
+          type: "map",
+          value: Object.entries(node as Record<string, unknown>).map(
+            ([key, detail]) => ({
+              key: { type: undefined, value: key },
+              val: toErrorNode(detail),
+            }),
+          ),
+        };
+      }
+
+      return { type: undefined, value: node };
+    };
+
+    return toErrorNode(errorValue);
+  };
+
   const renderData = ({
     dataItem,
     parentId,
@@ -212,7 +244,11 @@ export const CallStackTrace = ({
           {value.map((v, vIndex) => {
             return (
               <span
-                key={`map-${v.key.type}-${vIndex}`}
+                key={
+                  parentId
+                    ? `${parentId}-map-${v.key.type}-${vIndex}`
+                    : `map-${v.key.type}-${vIndex}`
+                }
                 className="CallStackTrace__itemObject__item"
               >
                 {renderData({ dataItem: v.key })}
@@ -233,6 +269,24 @@ export const CallStackTrace = ({
     if (type === "void") {
       // For function params, we want to show void as ()
       return <TypedValueItem value={voidAsEmptyFn ? "()" : "void"} />;
+    }
+
+    if (type === "error") {
+      const errorMap = toErrorMapData(value);
+
+      if (errorMap) {
+        return (
+          <span className="CallStackTrace__itemErrorValue">
+            <span>error:</span>
+            {renderData({
+              dataItem: errorMap,
+              parentId: parentId ? `${parentId}-error` : "error",
+            })}
+          </span>
+        );
+      }
+
+      return <TypedValueItem value={`error: ${String(value)}`} type={type} />;
     }
 
     if (type === "address") {
@@ -437,7 +491,24 @@ export const CallStackTrace = ({
 // Helpers
 // =============================================================================
 const isAsset = (value: unknown) => {
-  return typeof value === "string" && value?.split(":")?.length === 2;
+  if (typeof value !== "string" || !value.includes(":")) {
+    return false;
+  }
+
+  const parts = value.split(":");
+  if (parts.length !== 2) {
+    return false;
+  }
+
+  const [code, issuer] = parts;
+  // Asset code should be 1-12 characters, issuer must be valid G or M address or contract ID
+  return (
+    code.length > 0 &&
+    code.length <= 12 &&
+    (StrKey.isValidEd25519PublicKey(issuer) ||
+      StrKey.isValidMed25519PublicKey(issuer) ||
+      StrKey.isValidContract(issuer))
+  );
 };
 
 const renderAssetString = (value: string) => {

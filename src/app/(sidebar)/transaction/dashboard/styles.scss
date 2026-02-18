@@ -751,6 +751,12 @@
     }
   }
 
+  &__itemErrorValue {
+    & > span {
+      padding-right: pxToRem(4px);
+    }
+  }
+
   &__item {
     display: inline;
     vertical-align: top;
