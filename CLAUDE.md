@@ -26,21 +26,42 @@ APIs. The `main` branch is deployed to https://lab.stellar.org/.
 
 ## Tech Stack
 
-- **Framework**: Next.js 15.5.9 (React 19.2.2) with App Router
-- **Language**: TypeScript 5.8.3
+> See `package.json` for exact dependency versions.
+
+- **Framework**: Next.js 15 (React 19) with App Router
+- **Language**: TypeScript 5
 - **UI Framework**: Stellar Design System, Sass
 - **State Management**: Zustand (with querystring persistence via
   zustand-querystring)
 - **API Data Fetching**: TanStack React Query v5
-- **Stellar SDK**: @stellar/stellar-sdk v14.3.3
+- **Stellar SDK**: @stellar/stellar-sdk v14
 - **Hardware Wallets**: Ledger (@ledgerhq/hw-app-str), Trezor
   (@trezor/connect-web)
 - **Testing**: Jest (unit tests), Playwright (e2e tests)
 - **Code Quality**: ESLint, Prettier, Husky pre-commit hooks
-- **Package Manager**: pnpm 10.15.1
+- **Package Manager**: pnpm 10
 - **Deployment**: Docker, Next.js standalone output, Sentry error tracking
 
+## Architecture Constraints
+
+- **All pages are client components**: Every `page.tsx` under `(sidebar)/` has
+  `"use client"`. The root layout (`app/layout.tsx`) is the only server
+  component — it wraps the app in `StoreProvider`, `QueryProvider`,
+  `WalletKitContextProvider`, and `LayoutContextProvider`.
+- **Zustand state syncs to the URL querystring** via `zustand-querystring`.
+  Avoid using `useState` or `useSearchParams` for values that should persist
+  across navigation — use the Zustand store instead. The store is initialized
+  once from the URL in `StoreProvider`.
+- **CSP middleware**: `src/middleware.ts` generates a nonce-based Content
+  Security Policy on every request. When adding new external script/font/image
+  sources, update the CSP directives there.
+- **No Horizon for new features**: Always use RPC endpoints
+  (`src/query/useRpc*`, `src/query/useGetRpc*`). Horizon hooks exist for legacy
+  features only.
+
 ## Prerequisites
+
+> See `package.json` for exact dependency versions.
 
 - **Node.js**: >= 22.22.0 (specified in `.nvmrc` and `package.json`)
 - **pnpm**: >= 10.15.1 (managed via Corepack)
@@ -64,95 +85,6 @@ The `pnpm dev` command automatically runs `pnpm fetch-limits` (via `predev`
 script) to fetch Stellar network limits from RPC endpoints before starting the
 dev server.
 
-### Important Scripts
-
-| Command             | Purpose                                                  |
-| ------------------- | -------------------------------------------------------- |
-| `pnpm dev`          | Start development server (includes network limits fetch) |
-| `pnpm build`        | Production build (creates `build/` directory)            |
-| `pnpm start`        | Run production build locally                             |
-| `pnpm lint`         | ESLint code linting                                      |
-| `pnpm lint:ts`      | TypeScript type checking                                 |
-| `pnpm test:unit`    | Run Jest unit tests                                      |
-| `pnpm test:e2e`     | Run Playwright e2e tests                                 |
-| `pnpm test`         | Run all tests (unit + e2e)                               |
-| `pnpm fetch-limits` | Manually fetch Stellar network limits                    |
-
-## Working with Claude Code
-
-### Effective Task Delegation
-
-When working with Claude Code on this project:
-
-- **Be specific about scope**: Instead of "fix the transaction builder", say
-  "fix XDR encoding error in Classic transaction builder when using memo fields"
-- **Provide context**: Mention related files, recent changes, or error messages
-- **Specify verification**: Tell Claude how to verify the fix (which tests to
-  run, what to check manually)
-- **Reference existing patterns**: Point to similar implementations in the
-  codebase
-
-### Typical Development Workflows
-
-1. **Feature Development**
-
-   ```bash
-   # Start dev server
-   pnpm dev
-
-   # Make changes in feature-specific directories
-   # Verify with linting and tests
-   pnpm lint
-   pnpm test:unit
-
-   # Test manually in browser at http://localhost:3000
-   ```
-
-2. **Bug Fixes**
-
-   ```bash
-   # Reproduce the issue first
-   # Identify affected files using directory structure below
-   # Write/update tests to cover the bug
-   # Implement fix
-
-   # Verify with full test suite
-   pnpm test
-   pnpm lint:ts
-   ```
-
-3. **Refactoring**
-
-   ```bash
-   # Run full test suite before starting
-   pnpm test
-
-   # Make incremental changes
-   # Re-run tests after each significant change
-   pnpm test:unit
-   pnpm lint:ts
-   ```
-
-4. **Adding New Components**
-   - Use existing Stellar Design System components
-   - Follow file organization patterns (component folder with .tsx and .scss)
-   - Add proper TypeScript types
-   - Write unit tests for complex logic
-   - Update relevant constants if adding new routes/nav items
-
-### Verification Checklist
-
-Before considering a task complete:
-
-- [ ] TypeScript compiles without errors (`pnpm lint:ts`)
-- [ ] ESLint passes (`pnpm lint`)
-- [ ] Relevant unit tests pass (`pnpm test:unit`)
-- [ ] Manual testing in dev server shows expected behavior
-- [ ] No console errors or warnings
-- [ ] Follows existing code patterns and conventions
-- [ ] JSDoc comments added for new functions
-- [ ] Types properly defined (no `any` unless absolutely necessary)
-
 ## Common Issues and Solutions
 
 ### Issue 1: Network Limits Fetch Failure
@@ -166,11 +98,7 @@ trying to reach Stellar RPC endpoints.
 
 1. The repository includes a committed `src/constants/networkLimits.ts` file
    with recent values
-2. If the file exists and is recent, skip fetching and start dev server
-   directly:
-   ```bash
-   NEXT_PUBLIC_COMMIT_HASH=$(git rev-parse --short HEAD) NEXT_PUBLIC_ENABLE_EXPLORER=true next dev
-   ```
+2. If the file exists and is recent, skip fetching and start dev server directly
 3. If pre-push hooks fail due to network issues: `git push --no-verify`
 4. To configure different RPC endpoints, edit `NETWORKS` array in
    `scripts/fetch-network-limits.mjs`
@@ -555,66 +483,12 @@ const encoded = StellarXdr.encode("TransactionEnvelope", txObject);
 - **SAC (Stellar Asset Contract)**: Special handling in
   `src/constants/stellarAssetContractData.ts` and `src/hooks/useSacXdrData.ts`
 
-### Working with Accounts
-
-- **Keypair Generation**: Uses `stellar-hd-wallet`. See
-  `src/app/(sidebar)/account/create/page.tsx`
-- **Muxed Accounts**: See `src/app/(sidebar)/account/muxed*/*`
-- **FriendBot**: `src/app/(sidebar)/account/fund/*` and `src/query/useFriendBot`
-- **Trustline**: `src/app/(sidebar)/account/fund/*` and
-  `src/query/useAddTrustline`
-
 ### Working with Network Configuration
 
 - **Network Limits**: Auto-generated file at `src/constants/networkLimits.ts` -
   DO NOT EDIT MANUALLY
-- **RPC Endpoints**: Use existing React Query hooks (`src/query/useRpc*`,
-  `src/query/useGetRpc*`)
 - **Horizon vs RPC**: Different query hooks for each API type. **New features
   should use RPC hooks**
-- **Network Selection**: Handled by Zustand store, see
-  `src/store/createStore.ts`
-
-## Debugging Tips
-
-### Next.js App Router Issues
-
-- Check browser console for client-side errors
-- Check terminal for server-side errors
-- Use React DevTools to inspect component tree
-- Check Network tab for failed API requests
-
-### React Query Issues
-
-- Use React Query DevTools (built into dev mode)
-- Check query keys for cache invalidation issues
-- Verify `queryFn` return values match expected types
-- Check for stale data - use `refetchInterval` if needed
-
-### Zustand State Issues
-
-- Use Redux DevTools extension (Zustand middleware enabled)
-- Check if state is persisting to URL correctly
-- Verify Immer updates are immutable
-- Check for race conditions in async state updates
-
-### Stellar SDK Issues
-
-- Check network configuration (testnet vs mainnet vs futurenet)
-- Verify XDR encoding/decoding with proper types
-- Check transaction fees and sequence numbers
-- Use Stellar Laboratory's XDR viewer for debugging
-
-### Common Error Patterns
-
-1. **"Cannot find module '@/...'"**: Check `tsconfig.json` path aliases
-2. **"Hydration mismatch"**: Server/client rendering mismatch - check for
-   browser-only code in server components
-3. **"Invalid XDR"**: XDR string corruption or wrong type - verify with XDR
-   viewer
-4. **"Network request failed"**: Check network configuration and RPC endpoint
-   availability
-5. **"Transaction simulation failed"**: Check contract invocation args and auth
 
 ## Build and Deployment
 
@@ -627,15 +501,10 @@ pnpm build
 # Output location: build/ directory (standalone format)
 ```
 
-### Deployment Steps
-
-1. Run `pnpm build`
-2. Copy `build/static/` to `build/standalone/public/_next/static/`
-3. Deploy files from `build/standalone/` directory
-4. Run with: `node server.js`
-
 ### Environment Variables
 
+- `NEXT_PUBLIC_STELLAR_LAB_BACKEND_URL` - Backend API URL (set in `.env.local`
+  and `.env.production`)
 - `NEXT_PUBLIC_DISABLE_GOOGLE_ANALYTICS=true` - Disable Google Analytics
   (optional)
 - `NEXT_PUBLIC_COMMIT_HASH` - Auto-set from git in dev/build
@@ -643,24 +512,7 @@ pnpm build
 
 ## Code Quality
 
-### Pre-Commit Hooks
-
-- **Configured via**: Husky (`.husky/pre-commit`)
-- **Runs**: `pnpm pre-commit` → `lint-staged`
-- **Actions**: ESLint auto-fix on staged files
-
-### Pre-Push Hooks
-
-- **Configured via**: Husky (`.husky/pre-push`)
-- **Runs**: `pnpm lint:ts && pnpm test:e2e && pnpm test:unit`
-- **Warning**: May fail in restricted network environments (see Common Issues
-  above)
-
-### Post-Merge Hooks
-
-- **Configured via**: Husky (`.husky/post-merge`)
-- **Runs**: `pnpm install-if-package-changed` (auto-installs deps if lockfile
-  changed)
+Husky runs lint + tests on push; use `--no-verify` to skip
 
 ### Linting Rules
 
@@ -675,30 +527,6 @@ pnpm build
 - **Prettier Config**: `.prettierrc.json`
 - **Settings**: 80 char width, 2 space tabs, semicolons, double quotes, trailing
   commas
-
-## CI/CD
-
-### GitHub Actions Workflow
-
-**File**: `.github/workflows/build.yml`
-
-**Triggers**:
-
-- Push to `main` branch
-- All pull requests
-
-**Steps**:
-
-1. Checkout code
-2. Setup Node.js 22.22.0
-3. Enable Corepack
-4. Install dependencies (`pnpm install --frozen-lockfile`)
-5. Install Playwright browsers
-6. Build app (`pnpm build`)
-7. Run Playwright tests (`pnpm test:e2e`)
-8. Run unit tests (`pnpm test:unit`)
-
-**Timeout**: 60 minutes
 
 ## Additional Resources
 
@@ -716,7 +544,8 @@ When Claude Code completes a task, verify:
 
 - [ ] All requested functionality is implemented
 - [ ] Code follows existing patterns and conventions
-- [ ] TypeScript types are properly defined
+- [ ] TypeScript types are properly defined (no `any` unless absolutely
+      necessary)
 - [ ] JSDoc comments added for new functions
 - [ ] Unit tests written/updated for new logic
 - [ ] No TypeScript errors (`pnpm lint:ts`)
