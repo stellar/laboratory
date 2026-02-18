@@ -76,7 +76,7 @@ export default function ContractExplorer() {
     rpcUrl: network.rpcUrl,
   });
 
-  const { data: backendHealthStatus, isLoading: isBackendHealthLoading } =
+  const { data: backendHealthStatus, isSuccess: isBackendHealthLoaded } =
     useBackendHealthCheck({
       networkId: network.id,
     });
@@ -102,7 +102,6 @@ export default function ContractExplorer() {
     isContractDataFetching ||
     isContractInfoLoading ||
     isContractInfoFetching ||
-    isBackendHealthLoading ||
     isWasmLoading ||
     isWasmFetching;
 
@@ -315,7 +314,9 @@ export default function ContractExplorer() {
               content: (
                 <ContractInfo
                   infoData={contractInfoData}
+                  contractId={contractIdInput}
                   backendHealthStatus={backendHealthStatus?.status}
+                  isBackendHealthLoaded={isBackendHealthLoaded}
                   wasmData={wasmData}
                   wasmHash={wasmHash}
                   network={network}
