@@ -2,9 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 
 import { BEContractStorageResponse, NetworkType } from "@/types/types";
 
-/**
- * StellarExpert API to get smart contract’s storage data
- */
 export const useBackendEndpoint = ({
   isActive,
   networkId,
@@ -46,7 +43,6 @@ export const useBackendEndpoint = ({
           ? `${baseUrl}&cursor=${encodeURIComponent(cursor)}`
           : baseUrl;
 
-        console.log("fetchUrl: ", fetchUrl);
         const response = await fetch(fetchUrl);
 
         const responseJson = await response.json();
