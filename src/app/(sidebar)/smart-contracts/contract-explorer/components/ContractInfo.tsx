@@ -44,7 +44,9 @@ import { Bindings } from "./Bindings";
 
 export const ContractInfo = ({
   infoData,
+  contractId,
   backendHealthStatus,
+  isBackendHealthLoaded,
   wasmData,
   wasmHash,
   network,
@@ -52,7 +54,9 @@ export const ContractInfo = ({
   isSacType,
 }: {
   infoData: ContractInfoApiResponse | undefined;
+  contractId: string;
   backendHealthStatus?: string;
+  isBackendHealthLoaded: boolean;
   wasmData: WasmData | null | undefined;
   wasmHash: string | null | undefined;
   network: Network | EmptyObj;
@@ -264,6 +268,14 @@ export const ContractInfo = ({
   }
 
   const renderContractStorage = () => {
+    if (!isBackendHealthLoaded) {
+      return (
+        <Box gap="sm" direction="row" justify="center">
+          <Loader />
+        </Box>
+      );
+    }
+
     if (
       !infoData &&
       (!backendHealthStatus || backendHealthStatus !== "healthy")
@@ -278,7 +290,7 @@ export const ContractInfo = ({
     return (
       <ContractStorage
         isActive={activeTab === "contract-contract-storage"}
-        contractId={infoData?.contract || ""}
+        contractId={contractId || ""}
         networkId={network.id}
         totalEntriesCount={infoData?.storage_entries}
         isSourceStellarExpert={backendHealthStatus !== "healthy"}
