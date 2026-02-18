@@ -10,6 +10,7 @@ import { useSEContractInfo } from "@/query/external/useSEContractInfo";
 import { useWasmGitHubAttestation } from "@/query/useWasmGitHubAttestation";
 import { useContractClientFromRpc } from "@/query/useContractClientFromRpc";
 import { useGetContractDataFromRpcById } from "@/query/useGetContractDataFromRpcById";
+import { useBackendHealthCheck } from "@/query/external/useBackendHealthCheck";
 import { validate } from "@/validate";
 
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
@@ -75,6 +76,11 @@ export default function ContractExplorer() {
     rpcUrl: network.rpcUrl,
   });
 
+  const { data: backendHealthStatus, isLoading: isBackendHealthLoading } =
+    useBackendHealthCheck({
+      networkId: network.id,
+    });
+
   const wasmHash = contractData?.wasmHash || "";
   const isDataLoaded = Boolean(contractData);
 
@@ -96,6 +102,7 @@ export default function ContractExplorer() {
     isContractDataFetching ||
     isContractInfoLoading ||
     isContractInfoFetching ||
+    isBackendHealthLoading ||
     isWasmLoading ||
     isWasmFetching;
 
@@ -308,6 +315,7 @@ export default function ContractExplorer() {
               content: (
                 <ContractInfo
                   infoData={contractInfoData}
+                  backendHealthStatus={backendHealthStatus?.status}
                   wasmData={wasmData}
                   wasmHash={wasmHash}
                   network={network}

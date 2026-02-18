@@ -44,6 +44,7 @@ import { Bindings } from "./Bindings";
 
 export const ContractInfo = ({
   infoData,
+  backendHealthStatus,
   wasmData,
   wasmHash,
   network,
@@ -51,6 +52,7 @@ export const ContractInfo = ({
   isSacType,
 }: {
   infoData: ContractInfoApiResponse | undefined;
+  backendHealthStatus: string;
   wasmData: WasmData | null | undefined;
   wasmHash: string | null | undefined;
   network: Network | EmptyObj;
@@ -261,6 +263,26 @@ export const ContractInfo = ({
     );
   }
 
+  const renderContractStorage = () => {
+    if (!infoData && backendHealthStatus !== "healthy") {
+      return (
+        <NoDataMessage title="Contract storage is not available">
+          Contract storage is not available for selected network.
+        </NoDataMessage>
+      );
+    }
+
+    return (
+      <ContractStorage
+        isActive={activeTab === "contract-contract-storage"}
+        contractId={infoData?.contract || ""}
+        networkId={network.id}
+        totalEntriesCount={infoData?.storage_entries}
+        isSourceStellarExpert={backendHealthStatus !== "healthy"}
+      />
+    );
+  };
+
   const renderContractSpecMeta = (sectionsToShow: ContractSectionName[]) => (
     <ContractSpecMeta
       sectionsToShow={sectionsToShow}
@@ -359,19 +381,7 @@ export const ContractInfo = ({
             tab4={{
               id: "contract-contract-storage",
               label: "Contract storage",
-              content: infoData ? (
-                <ContractStorage
-                  isActive={activeTab === "contract-contract-storage"}
-                  contractId={infoData.contract}
-                  networkId={network.id}
-                  totalEntriesCount={infoData.storage_entries}
-                  isSourceStellarExpert={true}
-                />
-              ) : (
-                <NoDataMessage title="Contract storage is not available">
-                  Contract storage is not available for selected network.
-                </NoDataMessage>
-              ),
+              content: renderContractStorage(),
               isDisabled: !isDataLoaded,
             }}
             tab5={{
