@@ -95,9 +95,16 @@ export const ContractStorage = ({
   } = isSourceStellarExpert ? seResult : backendResult;
 
   // Normalize data from both sources
-  const storageData = isSourceStellarExpert
-    ? seResult.data
-    : backendResult.data?.results;
+  const storageData = (() => {
+    if (isSourceStellarExpert) {
+      const data = seResult.data;
+      // SE API doesn't support sort_by, so sort by updated descending client-side
+      return data
+        ? [...data].sort((a, b) => (b.updated || 0) - (a.updated || 0))
+        : data;
+    }
+    return backendResult.data?.results;
+  })();
 
   // Pagination cursors (only available from backend)
   const nextCursor = !isSourceStellarExpert
@@ -217,6 +224,7 @@ export const ContractStorage = ({
     <Box gap="lg">
       <Box gap="sm">
         <DataTable
+          key={`contract-storage-${isSourceStellarExpert ? "se" : "be"}`}
           tableId="contract-storage"
           tableData={parsedData}
           hideFirstLastPageNav={!isSourceStellarExpert}
