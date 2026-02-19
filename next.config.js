@@ -248,6 +248,11 @@ const nextConfig = {
         destination: "/endpoints/horizon/transactions/liquidity-pool",
         permanent: true,
       },
+      {
+        source: "/transaction-dashboard",
+        destination: "/transaction/dashboard",
+        permanent: true,
+      },
     ];
   },
 };

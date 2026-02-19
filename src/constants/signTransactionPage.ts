@@ -48,7 +48,7 @@ export const TX_FIELDS = (transaction: Transaction) => [
     value: transaction.sequence,
   },
   {
-    label: "Transaction Fee (stroops)",
+    label: "Transaction fee (stroops)",
     value: transaction.fee,
   },
   {

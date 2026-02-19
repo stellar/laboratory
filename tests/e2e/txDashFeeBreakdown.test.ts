@@ -4,7 +4,7 @@ import { mockRpcRequest } from "./mock/helpers";
 
 test.describe("Transaction Dashboard: Fee Breakdown", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:3000/transaction-dashboard");
+    await page.goto("http://localhost:3000/transaction/dashboard");
   });
 
   test("Soroban transaction fees in XLM", async ({ page }) => {
@@ -13,7 +13,7 @@ test.describe("Transaction Dashboard: Fee Breakdown", () => {
 
     await expect(loadButton).toBeDisabled();
     await page
-      .getByLabel("Transaction Hash")
+      .getByLabel("Transaction hash")
       .fill(TX_ST_CHANGE_DOMAIN_SET.result.txHash);
 
     await expect(loadButton).toBeEnabled();
@@ -46,10 +46,10 @@ test.describe("Transaction Dashboard: Fee Breakdown", () => {
 
     // Table columns
     await expect(getTableRow(rows, 0)).toHaveText([
-      "Fee Type",
-      "Proposed",
-      "Refunded",
-      "Final",
+      "Fee type",
+      "Proposed fee",
+      "Refunded fee",
+      "Final fee",
     ]);
 
     // Resource fee expanded view
@@ -64,7 +64,7 @@ test.describe("Transaction Dashboard: Fee Breakdown", () => {
 
     // Inclusion fee
     await expect(getTableRow(rows, 1)).toHaveText([
-      "Inclusion Fee",
+      "Inclusion fee",
       "1 XLM",
       "-0.9999623 XLM",
       "0.0000377 XLM",
@@ -72,7 +72,7 @@ test.describe("Transaction Dashboard: Fee Breakdown", () => {
 
     // Resource fee
     await expect(getTableRow(rows, 2)).toHaveText([
-      "Resource Fee",
+      "Resource fee",
       "0.5499079 XLM",
       "-0.073566 XLM",
       "0.4763419 XLM",
@@ -81,7 +81,7 @@ test.describe("Transaction Dashboard: Fee Breakdown", () => {
     // Refundable fee
     await expect(getTableRow(rows, 3)).toHaveText([
       // Including badges
-      "Refundable FeeRentEventReturn Value",
+      "Refundable feeRentEventReturn Value",
       "0.5259301 XLM",
       "-0.073566 XLM",
       "0.4523641 XLM",
@@ -90,15 +90,15 @@ test.describe("Transaction Dashboard: Fee Breakdown", () => {
     // Non-refundable fee
     await expect(getTableRow(rows, 4)).toHaveText([
       // Including badges
-      "Non-Refundable FeeInstructionsReadWriteBandwidth",
+      "Non-refundable feeInstructionsReadWriteBandwidth",
       "0.0239778 XLM",
       "-0 XLM",
       "0.0239778 XLM",
     ]);
 
-    // Total fees
+    // Total transaction fee
     await expect(getTableRow(rows, 5)).toHaveText([
-      "Total Fees",
+      "Total transaction fee",
       "1.5499079 XLM",
       "-1.0735283 XLM",
       "0.4763796 XLM",
@@ -111,7 +111,7 @@ test.describe("Transaction Dashboard: Fee Breakdown", () => {
 
     await expect(loadButton).toBeDisabled();
     await page
-      .getByLabel("Transaction Hash")
+      .getByLabel("Transaction hash")
       .fill(TX_ST_CHANGE_DOMAIN_SET.result.txHash);
 
     await expect(loadButton).toBeEnabled();
@@ -153,12 +153,12 @@ test.describe("Transaction Dashboard: Fee Breakdown", () => {
     );
 
     // Stroops toggle
-    const stroopsToggle = page.getByText("Change to Stroops", { exact: true });
+    const stroopsToggle = page.getByText("Change to stroops", { exact: true });
     await stroopsToggle.click();
 
     // Inclusion fee
     await expect(getTableRow(rows, 1)).toHaveText([
-      "Inclusion Fee",
+      "Inclusion fee",
       "10,000,000 stroops",
       "-9,999,623 stroops",
       "377 stroops",
@@ -166,7 +166,7 @@ test.describe("Transaction Dashboard: Fee Breakdown", () => {
 
     // Resource fee
     await expect(getTableRow(rows, 2)).toHaveText([
-      "Resource Fee",
+      "Resource fee",
       "5,499,079 stroops",
       "-735,660 stroops",
       "4,763,419 stroops",
@@ -175,7 +175,7 @@ test.describe("Transaction Dashboard: Fee Breakdown", () => {
     // Refundable fee
     await expect(getTableRow(rows, 3)).toHaveText([
       // Including badges
-      "Refundable FeeRentEventReturn Value",
+      "Refundable feeRentEventReturn Value",
       "5,259,301 stroops",
       "-735,660 stroops",
       "4,523,641 stroops",
@@ -184,15 +184,15 @@ test.describe("Transaction Dashboard: Fee Breakdown", () => {
     // Non-refundable fee
     await expect(getTableRow(rows, 4)).toHaveText([
       // Including badges
-      "Non-Refundable FeeInstructionsReadWriteBandwidth",
+      "Non-refundable feeInstructionsReadWriteBandwidth",
       "239,778 stroops",
       "-0 stroops",
       "239,778 stroops",
     ]);
 
-    // Total fees
+    // Total transaction fee
     await expect(getTableRow(rows, 5)).toHaveText([
-      "Total Fees",
+      "Total transaction fee",
       "15,499,079 stroops",
       "-10,735,283 stroops",
       "4,763,796 stroops",

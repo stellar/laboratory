@@ -102,7 +102,7 @@ export const EndpointsLandingPage = () => {
             will continue to receive updates to maintain compatibility with
             upcoming protocol releases, it won’t receive significant new feature
             development.{" "}
-            <Link href="https://developers.stellar.org/docs/data/apis/api-providers">
+            <Link href="https://developers.stellar.org/docs/data/apis/horizon">
               Learn more
             </Link>
             .

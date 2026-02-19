@@ -16,7 +16,7 @@ test.describe("Saved Keypairs Page", () => {
   });
 
   test("Loads", async ({ page }) => {
-    await expect(page.locator("h1")).toHaveText("Saved Keypairs");
+    await expect(page.locator("h1")).toHaveText("Saved keypairs");
   });
 
   test("Show no saved keypairs message", async ({ page }) => {

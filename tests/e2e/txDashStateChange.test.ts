@@ -15,7 +15,7 @@ import {
 
 test.describe("Transaction Dashboard: State Change", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:3000/transaction-dashboard");
+    await page.goto("http://localhost:3000/transaction/dashboard");
   });
 
   test.describe("KALE", () => {
@@ -144,13 +144,13 @@ const testTxStateChange = async ({
     });
   });
 
-  await expect(page.locator("h1")).toHaveText("Transaction Dashboard");
+  await expect(page.locator("h1")).toHaveText("Transaction dashboard");
 
   // Fill Transaction Hash input and trigger the API call
   const loadTxButton = page.getByRole("button", { name: "Load transaction" });
   await expect(loadTxButton).toBeDisabled();
   await page
-    .getByLabel("Transaction Hash", { exact: true })
+    .getByLabel("Transaction hash", { exact: true })
     .fill(mockResponse.result.txHash);
   await expect(loadTxButton).toBeEnabled();
 

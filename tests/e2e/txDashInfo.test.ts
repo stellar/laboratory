@@ -13,12 +13,12 @@ import { mockRpcRequest } from "./mock/helpers";
 
 test.describe("Transaction Dashboard", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:3000/transaction-dashboard");
+    await page.goto("http://localhost:3000/transaction/dashboard");
   });
 
   test("Loads", async ({ page }) => {
     await page.waitForSelector("h1", { timeout: 5000 });
-    await expect(page.locator("h1")).toHaveText("Transaction Dashboard");
+    await expect(page.locator("h1")).toHaveText("Transaction dashboard");
   });
 
   test("Soroban transaction info", async ({ page }) => {
@@ -27,7 +27,7 @@ test.describe("Transaction Dashboard", () => {
 
     await expect(loadButton).toBeDisabled();
     await page
-      .getByLabel("Transaction Hash")
+      .getByLabel("Transaction hash")
       .fill(TX_ST_CHANGE_DOMAIN_SET.result.txHash);
 
     await expect(loadButton).toBeEnabled();
@@ -44,7 +44,7 @@ test.describe("Transaction Dashboard", () => {
     // Badges
     await expect(
       page.getByTestId("transaction-info-badges").locator(".Badge"),
-    ).toHaveText(["Soroban Transaction"]);
+    ).toHaveText(["Soroban transaction"]);
 
     // Info
     const infoContainer = page.getByTestId("transaction-info-container");
@@ -52,29 +52,29 @@ test.describe("Transaction Dashboard", () => {
     // Info labels
     await expect(infoContainer.locator(".InfoFieldItem__label")).toHaveText([
       "Status",
-      "Transaction Info",
-      "Source Account",
-      "Sequence Number",
+      "Transaction info",
+      "Source account",
+      "Sequence number",
       "Processed",
-      "Max Fee",
-      "Transaction Fee",
+      "Max fee",
+      "Transaction fee",
     ]);
 
     // Info data
     await assertInfoItem(infoContainer, "Status", "Success");
     await assertInfoItem(
       infoContainer,
-      "Transaction Info",
+      "Transaction info",
       "2ddb68eb58bfac410a6bcbafa4e409321bd147cc05a0e4e820b69639df2abf49",
     );
     await assertInfoItem(
       infoContainer,
-      "Source Account",
+      "Source account",
       "GA2Q3TSCKD6GBT5SL4XLAPT4TUXJ5GP7HLIM4OHBWT33GFD2UC7SRNEZ",
     );
     await assertInfoItem(
       infoContainer,
-      "Sequence Number",
+      "Sequence number",
       "245643245676134560",
     );
     await assertInfoItem(
@@ -84,12 +84,12 @@ test.describe("Transaction Dashboard", () => {
     );
     await assertInfoItem(
       infoContainer,
-      "Max Fee",
+      "Max fee",
       "1.5499079 XLM 15,499,079 stroops",
     );
     await assertInfoItem(
       infoContainer,
-      "Transaction Fee",
+      "Transaction fee",
       "0.4763796 XLM 4,763,796 stroops",
     );
   });
@@ -100,7 +100,7 @@ test.describe("Transaction Dashboard", () => {
 
     await expect(loadButton).toBeDisabled();
     await page
-      .getByLabel("Transaction Hash")
+      .getByLabel("Transaction hash")
       .fill(TX_ST_CHANGE_KALE_PLANT.result.txHash);
 
     await expect(loadButton).toBeEnabled();
@@ -117,7 +117,7 @@ test.describe("Transaction Dashboard", () => {
     // Badges
     await expect(
       page.getByTestId("transaction-info-badges").locator(".Badge"),
-    ).toHaveText(["Soroban Transaction", "Fee Bump Transaction"]);
+    ).toHaveText(["Soroban transaction", "Fee bump transaction"]);
 
     // Info
     const infoContainer = page.getByTestId("transaction-info-container");
@@ -125,30 +125,30 @@ test.describe("Transaction Dashboard", () => {
     // Info labels
     await expect(infoContainer.locator(".InfoFieldItem__label")).toHaveText([
       "Status",
-      "Transaction Info",
-      "Source Account",
-      "Sequence Number",
+      "Transaction info",
+      "Source account",
+      "Sequence number",
       "Processed",
-      "Max Fee",
-      "Transaction Fee",
-      "Fee Source Account",
+      "Max fee",
+      "Transaction fee",
+      "Fee source account",
     ]);
 
     // Info data
     await assertInfoItem(infoContainer, "Status", "Success");
     await assertInfoItem(
       infoContainer,
-      "Transaction Info",
+      "Transaction info",
       "240a89f6a1cb904c87af1d9ea14dab31cacafb69cd2681e751c21493d2abe390",
     );
     await assertInfoItem(
       infoContainer,
-      "Source Account",
+      "Source account",
       "GDBOBJ5B5HKVSHSD4W6F3SMSEO3QG43AN3642F2NN7SPFSOIZJ7M7VRS",
     );
     await assertInfoItem(
       infoContainer,
-      "Sequence Number",
+      "Sequence number",
       "248178152554106800",
     );
     await assertInfoItem(
@@ -158,17 +158,17 @@ test.describe("Transaction Dashboard", () => {
     );
     await assertInfoItem(
       infoContainer,
-      "Max Fee",
+      "Max fee",
       "0.0298012 XLM 298,012 stroops",
     );
     await assertInfoItem(
       infoContainer,
-      "Transaction Fee",
+      "Transaction fee",
       "0.0226598 XLM 226,598 stroops",
     );
     await assertInfoItem(
       infoContainer,
-      "Fee Source Account",
+      "Fee source account",
       "GBGWQFSJSOMJ2BTOH5RLZUTZPV544YR2DF5CGYL7WDZ2Y6OSRHR6TUBE",
     );
   });
@@ -179,7 +179,7 @@ test.describe("Transaction Dashboard", () => {
 
     await expect(loadButton).toBeDisabled();
     await page
-      .getByLabel("Transaction Hash")
+      .getByLabel("Transaction hash")
       .fill(TX_DASH_CLASSIC.result.txHash);
 
     await expect(loadButton).toBeEnabled();
@@ -196,7 +196,7 @@ test.describe("Transaction Dashboard", () => {
     // Badges
     await expect(
       page.getByTestId("transaction-info-badges").locator(".Badge"),
-    ).toHaveText(["Classic Transaction"]);
+    ).toHaveText(["Classic transaction"]);
 
     // Info
     const infoContainer = page.getByTestId("transaction-info-container");
@@ -204,31 +204,31 @@ test.describe("Transaction Dashboard", () => {
     // Info labels
     await expect(infoContainer.locator(".InfoFieldItem__label")).toHaveText([
       "Status",
-      "Transaction Info",
-      "Source Account",
-      "Sequence Number",
+      "Transaction info",
+      "Source account",
+      "Sequence number",
       "Processed",
       "Operations",
       "Memo",
-      "Max Fee",
-      "Transaction Fee",
+      "Max fee",
+      "Transaction fee",
     ]);
 
     // Info data
     await assertInfoItem(infoContainer, "Status", "Success");
     await assertInfoItem(
       infoContainer,
-      "Transaction Info",
+      "Transaction info",
       "c724819cd33b9a57d60e26e760aa1cd152ea1612f1860c9e5c9708070799c970",
     );
     await assertInfoItem(
       infoContainer,
-      "Source Account",
+      "Source account",
       "GCMN6GO36KGLJXGLRBCD5CWO25ZXKWMVXKAOZFIPMPRT3BDVJP5QGOHL",
     );
     await assertInfoItem(
       infoContainer,
-      "Sequence Number",
+      "Sequence number",
       "161395112819909083",
     );
     await assertInfoItem(
@@ -238,10 +238,10 @@ test.describe("Transaction Dashboard", () => {
     );
     await assertInfoItem(infoContainer, "Operations", "1");
     await assertInfoItem(infoContainer, "Memo", "none");
-    await assertInfoItem(infoContainer, "Max Fee", "0.0000101 XLM 101 stroops");
+    await assertInfoItem(infoContainer, "Max fee", "0.0000101 XLM 101 stroops");
     await assertInfoItem(
       infoContainer,
-      "Transaction Fee",
+      "Transaction fee",
       "0.00001 XLM 100 stroops",
     );
   });
@@ -250,7 +250,7 @@ test.describe("Transaction Dashboard", () => {
     const loadButton = page.getByRole("button", { name: "Load transaction" });
 
     await page
-      .getByLabel("Transaction Hash")
+      .getByLabel("Transaction hash")
       .fill(TX_ST_CHANGE_KALE_PLANT.result.txHash);
 
     // Mock the RPC call
@@ -270,7 +270,7 @@ test.describe("Transaction Dashboard", () => {
   });
 
   test("Fetch latest transaction hash", async ({ page }) => {
-    const txHashInput = page.getByLabel("Transaction Hash");
+    const txHashInput = page.getByLabel("Transaction hash");
     await expect(txHashInput).toHaveValue("");
 
     await mockRpcRequest({

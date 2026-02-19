@@ -43,6 +43,7 @@ import { TokenSummary } from "./components/TokenSummary";
 import { Contracts } from "./components/Contracts";
 import { ResourceProfiler } from "./components/ResourceProfiler";
 import { ClassicOperations } from "./components/ClassicOperations";
+import { CallStackTrace } from "./components/CallStackTrace";
 
 import "./styles.scss";
 
@@ -54,14 +55,15 @@ export default function TransactionDashboard() {
     | "tx-state-change"
     | "tx-resource-profiler"
     | "tx-signatures"
-    | "tx-fee-breakdown";
+    | "tx-fee-breakdown"
+    | "tx-call-stack-trace";
 
   const { network, txDashboard } = useStore();
 
   const [transactionHashInput, setTransactionHashInput] = useState("");
   const [transactionHashInputError, setTransactionHashInputError] =
     useState("");
-  const [activeTab, setActiveTab] = useState<TxTabId>("tx-resource-profiler");
+  const [activeTab, setActiveTab] = useState<TxTabId>("tx-call-stack-trace");
 
   const {
     data: txDetails,
@@ -239,7 +241,7 @@ export default function TransactionDashboard() {
 
   return (
     <Box gap="lg">
-      <PageCard heading="Transaction Dashboard">
+      <PageCard heading="Transaction dashboard">
         {!network.rpcUrl ? (
           <Alert variant="warning" placement="inline" title="Attention">
             RPC URL is required to view transaction information. You can add it
@@ -260,7 +262,7 @@ export default function TransactionDashboard() {
             <Input
               fieldSize="md"
               id="transaction-hash"
-              label="Transaction Hash"
+              label="Transaction hash"
               placeholder="Ex: 6a274e17afb878bc704bfe41ebf456b4c6d9df5ca59bd3e06f5c39263e484017"
               error={transactionHashInputError}
               value={transactionHashInput}
@@ -380,33 +382,43 @@ export default function TransactionDashboard() {
             addlClassName="ContractInfo__tabs"
           >
             <Box gap="sm" direction="row" align="center">
-              <Text as="h2" size="md" weight="semi-bold">
+              <Text as="h2" size="md" weight="medium">
                 Transaction
               </Text>
             </Box>
 
             <TabView
               tab1={{
-                id: "tx-token-summary",
-                label: "Token Summary",
-                content: <TokenSummary txDetails={txDetails} />,
+                id: "tx-call-stack-trace",
+                label: "Call stack trace",
+                content: (
+                  <CallStackTrace
+                    diagnosticEvents={txDetails?.diagnosticEventsJson}
+                  />
+                ),
                 isDisabled: !isDataLoaded,
               }}
               tab2={{
-                id: "tx-contracts",
-                label: "Contracts",
-                content: <Contracts txEvents={txDetails?.events} />,
-                isDisabled: !isDataLoaded,
-              }}
-              tab3={{
                 id: "tx-events",
                 label: "Events",
                 content: <Events txEvents={txDetails?.events} />,
                 isDisabled: !isDataLoaded,
               }}
+              tab3={{
+                id: "tx-token-summary",
+                label: "Token summary",
+                content: <TokenSummary txDetails={txDetails} />,
+                isDisabled: !isDataLoaded,
+              }}
               tab4={{
+                id: "tx-contracts",
+                label: "Contracts",
+                content: <Contracts txEvents={txDetails?.events} />,
+                isDisabled: !isDataLoaded,
+              }}
+              tab5={{
                 id: "tx-state-change",
-                label: "State Change",
+                label: "State change",
                 content: isDataLoaded ? (
                   <StateChange txDetails={txDetails} />
                 ) : (
@@ -414,22 +426,22 @@ export default function TransactionDashboard() {
                 ),
                 isDisabled: !isDataLoaded,
               }}
-              tab5={{
-                id: "tx-resource-profiler",
-                label: "Resource Profiler",
-                content: <ResourceProfiler txDetails={txDetails} />,
-                isDisabled: !isDataLoaded,
-              }}
               tab6={{
-                id: "tx-signatures",
-                label: "Signatures",
-                content: <Signatures txDetails={txDetails || null} />,
+                id: "tx-resource-profiler",
+                label: "Resource profiler",
+                content: <ResourceProfiler txDetails={txDetails} />,
                 isDisabled: !isDataLoaded,
               }}
               tab7={{
                 id: "tx-fee-breakdown",
-                label: "Fee Breakdown",
+                label: "Fee breakdown",
                 content: <FeeBreakdown txDetails={txDetails} />,
+                isDisabled: !isDataLoaded,
+              }}
+              tab8={{
+                id: "tx-signatures",
+                label: "Signatures",
+                content: <Signatures txDetails={txDetails || null} />,
                 isDisabled: !isDataLoaded,
               }}
               activeTabId={activeTab}

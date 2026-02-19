@@ -7,7 +7,7 @@ test.describe("Parse Muxed Account Page", () => {
 
   test("Loads", async ({ page }) => {
     await expect(page.locator("h1")).toHaveText(
-      "Get Muxed Account from M address",
+      "Get muxed account from M address",
     );
   });
 

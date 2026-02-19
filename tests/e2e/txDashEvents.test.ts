@@ -8,7 +8,7 @@ import { mockRpcRequest } from "./mock/helpers";
 test.describe("Transaction Dashboard: Events", () => {
   test.beforeEach(async ({ page }) => {
     // Load page
-    await page.goto("http://localhost:3000/transaction-dashboard");
+    await page.goto("http://localhost:3000/transaction/dashboard");
   });
 
   test("Contract Events", async ({ page }) => {
@@ -66,7 +66,7 @@ const eventsData = async ({
   const loadButton = page.getByRole("button", { name: "Load transaction" });
 
   await expect(loadButton).toBeDisabled();
-  await page.getByLabel("Transaction Hash").fill(mockResponse.result.txHash);
+  await page.getByLabel("Transaction hash").fill(mockResponse.result.txHash);
 
   await expect(loadButton).toBeEnabled();
 

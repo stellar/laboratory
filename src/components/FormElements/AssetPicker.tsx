@@ -166,7 +166,7 @@ export const AssetPicker = ({
         <TextPicker
           key={id}
           id={id}
-          label="Liquidity Pool ID"
+          label="Liquidity pool ID"
           placeholder="Ex: LBTSMDCMDAD3EYX7QUNQUP7BIEMUSNV3AIK3F53UI7Y56EMZR2V3SREB"
           value={poolShareValue.pool_share || ""}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -289,7 +289,7 @@ const AssetPickerFields = ({
     <Input
       id={`${id}-code`}
       fieldSize="md"
-      label="Asset Code"
+      label="Asset code"
       value={code.value}
       onChange={code.onChange}
       error={code.error}
@@ -298,7 +298,7 @@ const AssetPickerFields = ({
     />
     <PubKeyPicker
       id={`${id}-issuer`}
-      label="Issuer Account ID"
+      label="Issuer account ID"
       placeholder="Example: GCEXAMPLE5HWNK4AYSTEQ4UWDKHTCKADVS2AHF3UI2ZMO3DPUSM6Q4UG"
       value={issuer.value}
       onChange={issuer.onChange}

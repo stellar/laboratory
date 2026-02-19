@@ -107,16 +107,16 @@ export const ContractInfo = ({
       : [
           {
             id: "wasm",
-            label: "Wasm Hash",
+            label: "Wasm hash",
           },
         ]),
     {
       id: "repository",
-      label: "Source Code",
+      label: "Source code",
     },
     {
       id: "storage_entries",
-      label: "Contract Storage",
+      label: "Contract storage",
     },
   ];
 
@@ -272,9 +272,15 @@ export const ContractInfo = ({
     />
   );
 
-  const NoDataMessage = ({ children }: { children: React.ReactNode }) => {
+  const NoDataMessage = ({
+    title,
+    children,
+  }: {
+    title: string;
+    children: React.ReactNode;
+  }) => {
     return (
-      <Alert variant="warning" placement="inline">
+      <Alert variant="primary" placement="inline" title={title}>
         {children}
       </Alert>
     );
@@ -315,7 +321,7 @@ export const ContractInfo = ({
           <TabView
             tab1={{
               id: "contract-contract-spec",
-              label: "Contract Spec",
+              label: "Contract spec",
               content: isDataLoaded ? (
                 renderContractSpecMeta(["contractspecv0", "sac"])
               ) : (
@@ -325,7 +331,7 @@ export const ContractInfo = ({
             }}
             tab2={{
               id: "contract-contract-meta",
-              label: "Contract & Env Meta",
+              label: "Contract & Env meta",
               content: isDataLoaded ? (
                 renderContractSpecMeta(["contractmetav0", "contractenvmetav0"])
               ) : (
@@ -335,7 +341,7 @@ export const ContractInfo = ({
             }}
             tab3={{
               id: "contract-source-code",
-              label: "Source Code",
+              label: "Source code",
               content: (
                 <SourceCode
                   isActive={activeTab === "contract-source-code"}
@@ -352,7 +358,7 @@ export const ContractInfo = ({
             }}
             tab4={{
               id: "contract-contract-storage",
-              label: "Contract Storage",
+              label: "Contract storage",
               content: infoData ? (
                 <ContractStorage
                   isActive={activeTab === "contract-contract-storage"}
@@ -362,7 +368,7 @@ export const ContractInfo = ({
                   isSourceStellarExpert={true}
                 />
               ) : (
-                <NoDataMessage>
+                <NoDataMessage title="Contract storage is not available">
                   Contract storage is not available for selected network.
                 </NoDataMessage>
               ),
@@ -370,7 +376,7 @@ export const ContractInfo = ({
             }}
             tab5={{
               id: "contract-build-info",
-              label: "Build Info",
+              label: "Build info",
               content: (
                 <BuildInfo
                   wasmData={wasmData}
@@ -387,7 +393,7 @@ export const ContractInfo = ({
             }}
             tab7={{
               id: "contract-version-history",
-              label: "Version History",
+              label: "Version history",
               content: infoData ? (
                 <VersionHistory
                   isActive={activeTab === "contract-version-history"}
@@ -396,8 +402,9 @@ export const ContractInfo = ({
                   isSourceStellarExpert={true}
                 />
               ) : (
-                <NoDataMessage>
-                  Version history is not available for selected network.
+                <NoDataMessage title="Version history is not available">
+                  Version history cannot be displayed because data from
+                  Stellar.Expert is currently unavailable.
                 </NoDataMessage>
               ),
               isDisabled: !isDataLoaded || isSacType,

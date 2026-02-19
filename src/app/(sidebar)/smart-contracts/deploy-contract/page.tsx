@@ -638,7 +638,7 @@ export default function DeployContract() {
                         }
                       }}
                     >
-                      Build Upload transaction
+                      Build upload transaction
                     </Button>
                   </Box>
 
@@ -836,7 +836,7 @@ export default function DeployContract() {
                         }
                       }}
                     >
-                      Build Deploy transaction
+                      Build deploy transaction
                     </Button>
                   </Box>
 
@@ -978,7 +978,7 @@ export default function DeployContract() {
   return (
     <Box gap="lg">
       <PageCard
-        heading="Upload and Deploy Contract"
+        heading="Upload and deploy contract"
         rightElement={
           <Button
             variant="error"

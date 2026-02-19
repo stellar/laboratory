@@ -452,18 +452,18 @@ export default function SubmitTransaction() {
 
   return (
     <Box gap="md" data-testid="submit-tx-xdr">
-      <PageCard heading="Submit Transaction">
+      <PageCard heading="Submit transaction">
         <Box gap="lg">
           <XdrPicker
             id="submit-tx-xdr"
-            label="Input a base-64 encoded TransactionEnvelope:"
+            label="Input a Base64 encoded TransactionEnvelope:"
             value={blob}
             error={xdrJson?.error || ""}
             onChange={(e) => {
               updateXdrBlob(e.target.value);
               resetSubmitState();
             }}
-            note="Enter a base-64 encoded XDR blob to decode."
+            note="Enter a Base64 encoded XDR blob to decode."
             hasCopyButton
           />
 

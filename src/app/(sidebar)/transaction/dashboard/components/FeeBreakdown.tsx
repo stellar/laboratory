@@ -105,22 +105,26 @@ export const FeeBreakdown = ({
   };
 
   return (
-    <Box gap="md" addlClassName="FeeBreakdown">
+    <Box gap="lg" addlClassName="FeeBreakdown">
+      <Text as="div" size="xs" weight="regular">
+        Breakdown of fees charged for this transaction, including inclusion fees
+        and resource fees for smart contract execution.
+      </Text>
       {/* Fees table details */}
       <div className="FeeBreakdown__gridTableContainer">
         <GridTable>
           {/* Header */}
           <GridTableRow isHeader={true}>
-            <GridTableCell>Fee Type</GridTableCell>
-            <GridTableCell>Proposed</GridTableCell>
-            <GridTableCell>Refunded</GridTableCell>
-            <GridTableCell>Final</GridTableCell>
+            <GridTableCell>Fee type</GridTableCell>
+            <GridTableCell>Proposed fee</GridTableCell>
+            <GridTableCell>Refunded fee</GridTableCell>
+            <GridTableCell>Final fee</GridTableCell>
           </GridTableRow>
 
           {/* Inclusion Fee */}
           <GridTableRow>
             <GridTableCell>
-              <FeeType title="Inclusion Fee" isBold={true} />
+              <FeeType title="Inclusion fee" isBold={true} />
             </GridTableCell>
             <GridTableCell>
               <FeeAmount fee={feeBreakdown.inclusionFee} />
@@ -146,7 +150,7 @@ export const FeeBreakdown = ({
                 }}
                 data-is-expanded={isExpanded}
               >
-                <FeeType title="Resource Fee" isBold={true} />
+                <FeeType title="Resource fee" isBold={true} />
                 <Icon.ChevronRight />
               </div>
             </GridTableCell>
@@ -173,7 +177,7 @@ export const FeeBreakdown = ({
             <GridTableRow>
               <GridTableCell isNested={true}>
                 <FeeType
-                  title="Refundable Fee"
+                  title="Refundable fee"
                   badges={["Rent", "Event", "Return Value"]}
                 />
               </GridTableCell>
@@ -195,7 +199,7 @@ export const FeeBreakdown = ({
             <GridTableRow>
               <GridTableCell isNested={true}>
                 <FeeType
-                  title="Non-Refundable Fee"
+                  title="Non-refundable fee"
                   badges={["Instructions", "Read", "Write", "Bandwidth"]}
                 />
               </GridTableCell>
@@ -217,10 +221,10 @@ export const FeeBreakdown = ({
             </GridTableRow>
           </ExpandBox>
 
-          {/* Total Fees */}
+          {/* Total transaction fee */}
           <GridTableRow isHighlighted={true}>
             <GridTableCell>
-              <FeeType title="Total Fees" isBold={true} />
+              <FeeType title="Total transaction fee" isBold={true} />
             </GridTableCell>
             <GridTableCell>
               <FeeAmount fee={feeBreakdown.maxFee} isBold={true} />
@@ -242,7 +246,7 @@ export const FeeBreakdown = ({
       {/* Stroops toggle */}
       <Box gap="xs" direction="row" align="center" justify="right">
         <Label htmlFor="fees-stroops-toggle" size="sm">
-          Change to Stroops
+          Change to stroops
         </Label>
         <Toggle
           id="fees-stroops-toggle"
@@ -255,17 +259,17 @@ export const FeeBreakdown = ({
       {/* Footprint */}
       <ul className="FeeBreakdown__footprint">
         <li>
-          Inclusion Fee: The maximum amount the submitter is willing to bid to
+          Inclusion fee: The maximum amount the submitter is willing to bid to
           get the transaction included in the ledger.
         </li>
-        <li>Resource Fee: A fee required for smart contract transaction.</li>
+        <li>Resource fee: A fee required for smart contract transaction.</li>
         <li>
-          Non-Refundable Resource Fee: Fixed portion of the resource fee based
+          Non-refundable resource fee: Fixed portion of the resource fee based
           on CPU instructions, read/write bytes, and transaction size. This part
           is never refunded, regardless of actual usage.
         </li>
         <li>
-          Refundable Resource Fee: Calculated from rent, event size, and return
+          Refundable resource fee: Calculated from rent, event size, and return
           value size. This portion is pre-charged and partially refunded after
           execution based on actual usage.
         </li>
@@ -277,7 +281,7 @@ export const FeeBreakdown = ({
         icon={<Icon.LinkExternal01 />}
         size="xs"
       >
-        Learn more about Fees
+        Learn more about fees
       </SdsLink>
     </Box>
   );

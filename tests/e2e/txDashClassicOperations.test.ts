@@ -8,14 +8,14 @@ import { mockRpcRequest } from "./mock/helpers";
 
 test.describe("Transaction Dashboard - Classic Operations", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:3000/transaction-dashboard");
+    await page.goto("http://localhost:3000/transaction/dashboard");
   });
 
   test("Displays single classic operation correctly", async ({ page }) => {
     const loadButton = page.getByRole("button", { name: "Load transaction" });
 
     await page
-      .getByLabel("Transaction Hash")
+      .getByLabel("Transaction hash")
       .fill(TX_DASH_CLASSIC.result.txHash);
 
     await mockRpcRequest({
@@ -58,7 +58,7 @@ test.describe("Transaction Dashboard - Classic Operations", () => {
     const loadButton = page.getByRole("button", { name: "Load transaction" });
 
     await page
-      .getByLabel("Transaction Hash")
+      .getByLabel("Transaction hash")
       .fill(TX_CLASSIC_OPS_WITH_STRING_BODY.result.txHash);
 
     await mockRpcRequest({
@@ -114,7 +114,7 @@ test.describe("Transaction Dashboard - Classic Operations", () => {
     const loadButton = page.getByRole("button", { name: "Load transaction" });
 
     await page
-      .getByLabel("Transaction Hash")
+      .getByLabel("Transaction hash")
       .fill(TX_CLASSIC_MANY_OPS.result.txHash);
 
     await mockRpcRequest({
@@ -213,7 +213,7 @@ test.describe("Transaction Dashboard - Classic Operations", () => {
     const loadButton = page.getByRole("button", { name: "Load transaction" });
 
     await page
-      .getByLabel("Transaction Hash")
+      .getByLabel("Transaction hash")
       .fill(TX_CLASSIC_MANY_OPS.result.txHash);
 
     await mockRpcRequest({
@@ -257,7 +257,7 @@ test.describe("Transaction Dashboard - Classic Operations", () => {
     const loadButton = page.getByRole("button", { name: "Load transaction" });
 
     await page
-      .getByLabel("Transaction Hash")
+      .getByLabel("Transaction hash")
       .fill(TX_CLASSIC_OPS_WITH_STRING_BODY.result.txHash);
 
     await mockRpcRequest({
@@ -284,7 +284,7 @@ test.describe("Transaction Dashboard - Classic Operations", () => {
     const loadButton = page.getByRole("button", { name: "Load transaction" });
 
     await page
-      .getByLabel("Transaction Hash")
+      .getByLabel("Transaction hash")
       .fill(TX_DASH_CLASSIC.result.txHash);
 
     await mockRpcRequest({

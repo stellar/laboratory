@@ -330,7 +330,7 @@ export const NetworkSelector = () => {
       return "Switch to Custom Network";
     }
 
-    return `Switch to ${getNetworkById(activeNetwork.id)?.label}`;
+    return `Switch to ${getNetworkById(activeNetwork.id)?.label.toLowerCase()}`;
   };
 
   const toggleDropdown = (show: boolean) => {
@@ -424,7 +424,7 @@ export const NetworkSelector = () => {
               />
               <NetworkInput
                 id="rpc-header-name"
-                placeholder="RPC Header Name (optional)"
+                placeholder="RPC header name (optional)"
                 value={activeNetwork.rpcHeaderName || ""}
                 onChange={(e) => {
                   handleInputChange("rpcHeaderName", e.target.value);
@@ -433,7 +433,7 @@ export const NetworkSelector = () => {
               />
               <NetworkInput
                 id="rpc-header-value"
-                placeholder="RPC Header Value (optional)"
+                placeholder="RPC header value (optional)"
                 value={activeNetwork.rpcHeaderValue || ""}
                 onChange={(e) => {
                   handleInputChange("rpcHeaderValue", e.target.value);
@@ -456,7 +456,7 @@ export const NetworkSelector = () => {
               />
               <NetworkInput
                 id="network-header-name"
-                placeholder="Horizon Header Name (optional)"
+                placeholder="Horizon header name (optional)"
                 value={activeNetwork.horizonHeaderName || ""}
                 onChange={(e) => {
                   handleInputChange("horizonHeaderName", e.target.value);
@@ -465,7 +465,7 @@ export const NetworkSelector = () => {
               />
               <NetworkInput
                 id="network-header-value"
-                placeholder="Horizon Header Value (optional)"
+                placeholder="Horizon header value (optional)"
                 value={activeNetwork.horizonHeaderValue || ""}
                 onChange={(e) => {
                   handleInputChange("horizonHeaderValue", e.target.value);
@@ -477,8 +477,8 @@ export const NetworkSelector = () => {
               {/* Passphrase */}
               <NetworkInput
                 id="network-passphrase"
-                label="Network Passphrase"
-                placeholder="Network Passphrase"
+                label="Network passphrase"
+                placeholder="Network passphrase"
                 value={activeNetwork.passphrase || ""}
                 onChange={(e) => {
                   handleInputChange("passphrase", e.target.value);

@@ -5,7 +5,7 @@ import { mockRpcRequest } from "./mock/helpers";
 test.describe("Transaction Dashboard: Resource Profiler", () => {
   test.beforeEach(async ({ page }) => {
     // Load page
-    await page.goto("http://localhost:3000/transaction-dashboard");
+    await page.goto("http://localhost:3000/transaction/dashboard");
   });
 
   test("Resources", async ({ page }) => {
@@ -104,7 +104,7 @@ const txData = async ({
   const loadButton = page.getByRole("button", { name: "Load transaction" });
 
   await expect(loadButton).toBeDisabled();
-  await page.getByLabel("Transaction Hash").fill(mockResponse.result.txHash);
+  await page.getByLabel("Transaction hash").fill(mockResponse.result.txHash);
 
   await expect(loadButton).toBeEnabled();
 
@@ -117,9 +117,25 @@ const txData = async ({
 
   await loadButton.click();
 
-  // Check the Resource Profiler tab is selected (default)
-  const eventsTabButton = page.getByTestId("tx-resource-profiler");
-  await expect(eventsTabButton).toHaveAttribute("data-is-active", "true");
+  // Verify Call stack trace tab is active by default
+  const callStackTraceTabButton = page.getByTestId("tx-call-stack-trace");
+  await expect(callStackTraceTabButton).toHaveAttribute(
+    "data-is-active",
+    "true",
+  );
+
+  // Select tab
+  const resourceProfilerTabButton = page.getByTestId("tx-resource-profiler");
+  await expect(resourceProfilerTabButton).toHaveAttribute(
+    "data-is-active",
+    "false",
+  );
+
+  await resourceProfilerTabButton.click();
+  await expect(resourceProfilerTabButton).toHaveAttribute(
+    "data-is-active",
+    "true",
+  );
 };
 
 type ItemGroup = ({ label: string; value: string } | { hasLimit: true })[];

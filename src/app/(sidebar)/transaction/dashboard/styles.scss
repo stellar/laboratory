@@ -1,4 +1,4 @@
-@use "../../../styles/utils.scss" as *;
+@use "../../../../styles/utils.scss" as *;
 
 .ExpandToggle {
   --ExpandToggle-gap: #{pxToRem(4px)};
@@ -453,11 +453,13 @@
 // =============================================================================
 .TransactionContracts {
   &__contractId {
-    display: inline;
-    vertical-align: middle;
+    .Link {
+      width: pxToRem(96px);
+      white-space: nowrap;
+    }
 
     .CopyText {
-      padding-left: pxToRem(8px);
+      line-height: 1;
     }
   }
 }
@@ -540,6 +542,368 @@
   .InfoFieldItem {
     &__label {
       font-weight: var(--sds-fw-medium);
+    }
+  }
+}
+
+// =============================================================================
+// Call Stack Trace
+// =============================================================================
+.CallStackTrace {
+  border: 1px solid var(--sds-clr-gray-06);
+  padding: pxToRem(24px);
+  border-radius: pxToRem(8px);
+
+  font-family: var(--sds-ff-monospace);
+  font-size: pxToRem(14px);
+  line-height: pxToRem(18px);
+  letter-spacing: -0.28px;
+  overflow: hidden;
+
+  &__scrollable {
+    overflow: auto;
+  }
+
+  // All failed: Red background on level 1 items for failed transaction
+  &[data-error-level="all"] {
+    .CallStackTrace__event__nested {
+      & > .CallStackTrace__event {
+        &[data-is-error="true"] {
+          background-color: var(--sds-clr-red-05) !important;
+        }
+      }
+    }
+  }
+
+  // Some failed: Make labels red, no background change
+  &[data-error-level="some"] {
+    .CallStackTrace__event {
+      &[data-is-error="true"] {
+        .CallStackTrace__itemType {
+          --CallStackTrace--itemType-bg-color: #{var(--sds-clr-red-02)};
+          --CallStackTrace--itemType-border-color: #{var(--sds-clr-red-06)};
+          --CallStackTrace--itemType-text-color: #{var(--sds-clr-red-11)};
+        }
+      }
+    }
+  }
+
+  &__event {
+    display: flex;
+    flex-direction: column;
+    gap: pxToRem(8px);
+    min-width: fit-content;
+    position: relative;
+    overflow-y: hidden;
+
+    &__info {
+      display: flex;
+      flex-direction: row;
+      gap: pxToRem(4px);
+
+      .CallStackTrace__icon {
+        // Match the actual line height (with type offsets)
+        height: pxToRem(22px);
+
+        svg {
+          stroke: var(--sds-clr-gray-09);
+          display: none;
+        }
+
+        &[data-visible="true"] {
+          cursor: pointer;
+
+          svg {
+            display: block;
+          }
+        }
+      }
+    }
+
+    &[data-is-error="true"] {
+      & > .CallStackTrace__event__info {
+        border-radius: pxToRem(4px);
+        padding-top: pxToRem(2px);
+        padding-bottom: pxToRem(2px);
+      }
+    }
+
+    &__nested {
+      display: flex;
+      gap: pxToRem(8px);
+      flex-direction: column;
+
+      // Level 1 items
+      & > .CallStackTrace__event {
+        background-color: var(--sds-clr-gray-03);
+        border-radius: pxToRem(4px);
+        padding: pxToRem(16px);
+        padding-left: pxToRem(20px);
+        margin-left: pxToRem(26px);
+
+        // Level 2 and deeper items
+        .CallStackTrace__event__nested > .CallStackTrace__event {
+          padding-top: pxToRem(2px);
+          padding-bottom: pxToRem(2px);
+          padding-right: 0;
+          margin-left: pxToRem(8px);
+        }
+      }
+    }
+  }
+
+  &__verticalLine {
+    width: 1px;
+    background-color: var(--sds-clr-gray-08);
+    position: absolute;
+    // top, left, and height are set in JS
+  }
+
+  &__itemType {
+    --CallStackTrace--itemType-bg-color: #{var(--sds-clr-teal-03)};
+    --CallStackTrace--itemType-border-color: #{var(--sds-clr-teal-06)};
+    --CallStackTrace--itemType-text-color: #{var(--sds-clr-teal-11)};
+
+    border: 1px solid var(--CallStackTrace--itemType-border-color);
+    color: var(--CallStackTrace--itemType-text-color);
+    background-color: var(--CallStackTrace--itemType-bg-color);
+
+    padding: pxToRem(2px) pxToRem(6px);
+    border-radius: pxToRem(6px);
+    font-size: pxToRem(12px);
+    line-height: pxToRem(16px);
+    font-weight: var(--sds-fw-semi-bold);
+    height: fit-content;
+
+    &[data-type="contract_event"] {
+      --CallStackTrace--itemType-bg-color: #{var(--sds-clr-lilac-03)};
+      --CallStackTrace--itemType-border-color: #{var(--sds-clr-lilac-06)};
+      --CallStackTrace--itemType-text-color: #{var(--sds-clr-lilac-11)};
+    }
+  }
+
+  &__itemContent {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  &__itemFunc {
+    &__func,
+    .CallStackTrace__bracket {
+      color: var(--sds-clr-gray-12);
+      font-weight: var(--sds-fw-bold);
+    }
+
+    &__params {
+      padding: 0 pxToRem(4px);
+
+      .CallStackTrace__comma {
+        padding-right: pxToRem(4px);
+      }
+    }
+  }
+
+  &__itemContract {
+    display: inline-flex;
+    gap: pxToRem(4px);
+    padding-left: pxToRem(4px);
+    height: pxToRem(18px);
+  }
+
+  &__itemData {
+    display: inline;
+    flex-basis: 100%;
+    color: var(--sds-clr-gray-12);
+    padding-top: pxToRem(4px);
+
+    & > span:first-child {
+      padding-right: pxToRem(4px);
+    }
+  }
+
+  &__itemReturn {
+    padding-left: pxToRem(4px);
+    display: inline-flex;
+    gap: pxToRem(4px);
+
+    .CallStackTrace__icon {
+      height: pxToRem(18px);
+
+      svg {
+        stroke: var(--sds-clr-teal-08);
+        display: block;
+      }
+    }
+
+    .CallStackTrace__comma {
+      padding-right: pxToRem(4px);
+    }
+  }
+
+  &__itemError {
+    padding-right: pxToRem(4px);
+
+    &.CallStackTrace__icon {
+      svg {
+        display: block;
+        stroke: var(--sds-clr-red-09);
+      }
+    }
+  }
+
+  &__itemErrorValue {
+    & > span {
+      padding-right: pxToRem(4px);
+    }
+  }
+
+  &__item {
+    display: inline;
+    vertical-align: top;
+  }
+
+  &__itemObject {
+    display: inline;
+    vertical-align: top;
+
+    &__item {
+      display: inline;
+    }
+
+    // Bracket space
+    .CallStackTrace__bracket + .CallStackTrace__itemObject__item,
+    .CallStackTrace__itemObject__item + .CallStackTrace__bracket {
+      padding-left: pxToRem(4px);
+    }
+  }
+
+  &__itemArray {
+    display: inline;
+    vertical-align: top;
+
+    &__items {
+      display: inline;
+    }
+
+    // Bracket space
+    .CallStackTrace__bracket + .CallStackTrace__itemArray__items:not(:empty) {
+      padding-left: pxToRem(4px);
+      padding-right: pxToRem(4px);
+
+      // Remove padding if there is an ellipsis
+      &[data-has-ellipsis="true"] {
+        padding-right: 0;
+      }
+    }
+
+    &__item {
+      display: inline;
+      vertical-align: top;
+    }
+  }
+
+  &__typedValueItem {
+    white-space: nowrap;
+    color: var(--sds-clr-gray-12);
+
+    &[data-type] {
+      display: inline-flex;
+
+      &::after {
+        display: block;
+        content: attr(data-type);
+        margin-top: pxToRem(6px);
+        padding-left: pxToRem(2px);
+
+        white-space: nowrap;
+        font-size: pxToRem(12px);
+        line-height: pxToRem(16px);
+        color: var(--sds-clr-gray-11);
+      }
+    }
+
+    // Colors
+    // Symbol
+    &[data-type="sym"] {
+      color: var(--sds-clr-navy-10);
+    }
+
+    // String
+    &[data-type="string"] {
+      color: var(--sds-clr-gray-12);
+    }
+
+    // Bytes
+    &[data-type="bytes"],
+    &[data-type="bytesN"] {
+      color: var(--sds-clr-gray-10);
+    }
+
+    // Number
+    &[data-type="u8"],
+    &[data-type="u16"],
+    &[data-type="u32"],
+    &[data-type="u64"],
+    &[data-type="i8"],
+    &[data-type="i16"],
+    &[data-type="i32"],
+    &[data-type="i64"] {
+      color: var(--sds-clr-mint-08);
+    }
+
+    // Big int
+    &[data-type="i128"],
+    &[data-type="i256"],
+    &[data-type="u128"],
+    &[data-type="u256"] {
+      color: var(--sds-clr-teal-08);
+    }
+
+    // Bool
+    &[data-type="bool"] {
+      color: var(--sds-clr-pink-10);
+    }
+
+    // Address
+    &[data-type="address"] {
+      color: var(--sds-clr-gray-10);
+    }
+  }
+
+  &__bracket,
+  &__comma,
+  &__colon,
+  &__ellipsis {
+    color: var(--sds-clr-gray-12);
+  }
+
+  &__bracket {
+    font-weight: var(--sds-fw-bold);
+  }
+
+  &__colon {
+    margin-right: pxToRem(4px);
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: pxToRem(16px);
+    height: pxToRem(18px);
+
+    svg {
+      transition: transform ease-in-out 0.2s;
+      transform: rotate(0deg);
+      width: 100%;
+      height: 100%;
+    }
+
+    &[data-is-expanded="false"] {
+      svg {
+        transform: rotate(-90deg);
+      }
     }
   }
 }

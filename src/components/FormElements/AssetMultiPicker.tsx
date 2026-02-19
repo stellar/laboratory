@@ -220,14 +220,14 @@ const AssetPickerFields = ({ id, code, issuer }: AssetPickerFieldsProps) => (
     <Input
       id={`${id}-code`}
       fieldSize="md"
-      label="Asset Code"
+      label="Asset code"
       value={code.value}
       onChange={code.onChange}
       error={code.error}
     />
     <PubKeyPicker
       id={`${id}-issuer`}
-      label="Issuer Account ID"
+      label="Issuer account ID"
       placeholder="Example: GCEXAMPLE5HWNK4AYSTEQ4UWDKHTCKADVS2AHF3UI2ZMO3DPUSM6Q4UG"
       value={issuer.value}
       onChange={issuer.onChange}

@@ -133,10 +133,10 @@ test.describe("Introduction Page", () => {
     // Switch network buttons
     const testnetBtn = networkCards
       .nth(0)
-      .locator("button", { hasText: "Switch to Testnet" });
+      .locator("button", { hasText: "Switch to testnet" });
     const mainnetBtn = networkCards
       .nth(1)
-      .locator("button", { hasText: "Switch to Mainnet" });
+      .locator("button", { hasText: "Switch to mainnet" });
 
     await expect(testnetBtn).toBeDisabled();
     await expect(mainnetBtn).toBeEnabled();
@@ -146,7 +146,7 @@ test.describe("Introduction Page", () => {
     await expect(modal).toBeVisible();
 
     const switchButton = modal.locator("button", {
-      hasText: "Switch to Mainnet",
+      hasText: "Switch to mainnet",
     });
     await expect(switchButton).toBeVisible();
     await switchButton.click();

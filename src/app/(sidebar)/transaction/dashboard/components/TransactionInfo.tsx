@@ -58,15 +58,15 @@ export const TransactionInfo = ({
     },
     {
       id: "transaction-info",
-      label: "Transaction Info",
+      label: "Transaction info",
     },
     {
       id: "source-account",
-      label: "Source Account",
+      label: "Source account",
     },
     {
       id: "sequence-number",
-      label: "Sequence Number",
+      label: "Sequence number",
     },
     {
       id: "processed",
@@ -75,17 +75,17 @@ export const TransactionInfo = ({
     ...(!isNoDataScreen && !isSorobanTx ? classicTxFields : []),
     {
       id: "max-fee",
-      label: "Max Fee",
+      label: "Max fee",
     },
     {
       id: "transaction-fee",
-      label: "Transaction Fee",
+      label: "Transaction fee",
     },
     ...(feeBumpTx
       ? [
           {
             id: "fee-source-account",
-            label: "Fee Source Account",
+            label: "Fee source account",
           },
         ]
       : []),
@@ -181,11 +181,11 @@ export const TransactionInfo = ({
 
     return isSorobanTx ? (
       <Badge variant="secondary" size="sm">
-        Soroban Transaction
+        Soroban transaction
       </Badge>
     ) : (
       <Badge variant="tertiary" size="sm">
-        Classic Transaction
+        Classic transaction
       </Badge>
     );
   };
@@ -350,25 +350,23 @@ export const TransactionInfo = ({
 
   return (
     <Card>
-      <Box
-        gap="lg"
-        align={isNoDataScreen ? "stretch" : "start"}
-        addlClassName="TransactionInfo"
-      >
-        <Box
-          gap="sm"
-          direction="row"
-          align="center"
-          addlClassName="TransactionInfo__badges"
-          data-testid="transaction-info-badges"
-        >
-          {renderTxBadge()}
-          {feeBumpTx ? (
-            <Badge variant="primary" size="sm">
-              Fee Bump Transaction
-            </Badge>
-          ) : null}
-        </Box>
+      <Box gap="lg" addlClassName="TransactionInfo">
+        {!isNoDataScreen ? (
+          <Box
+            gap="sm"
+            direction="row"
+            align="center"
+            addlClassName="TransactionInfo__badges"
+            data-testid="transaction-info-badges"
+          >
+            {renderTxBadge()}
+            {feeBumpTx ? (
+              <Badge variant="primary" size="sm">
+                Fee bump transaction
+              </Badge>
+            ) : null}
+          </Box>
+        ) : null}
 
         <div className="ContractInfoWrapper" data-no-data={isNoDataScreen}>
           <Box

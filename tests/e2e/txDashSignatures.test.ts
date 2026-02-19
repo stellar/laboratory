@@ -9,7 +9,7 @@ import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 
 test.describe("Transaction Dashboard: Signatures", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:3000/transaction-dashboard");
+    await page.goto("http://localhost:3000/transaction/dashboard");
   });
 
   test("Soroban Transaction", async ({ page }) => {
@@ -18,7 +18,7 @@ test.describe("Transaction Dashboard: Signatures", () => {
 
     await expect(loadButton).toBeDisabled();
     await page
-      .getByLabel("Transaction Hash")
+      .getByLabel("Transaction hash")
       .fill(TX_ST_CHANGE_DOMAIN_SET.result.txHash);
 
     await expect(loadButton).toBeEnabled();
@@ -67,7 +67,7 @@ test.describe("Transaction Dashboard: Signatures", () => {
 
     await expect(loadButton).toBeDisabled();
     await page
-      .getByLabel("Transaction Hash")
+      .getByLabel("Transaction hash")
       .fill(TX_ST_CHANGE_KALE_HARVEST.result.txHash);
 
     await expect(loadButton).toBeEnabled();
