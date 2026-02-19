@@ -265,7 +265,7 @@ laboratory/
 - Reusable components are in `src/components/`
 - Page-specific components can be co-located with pages
 - **File organization**: Components with styles should be in their own folder:
-  - ✅ `ComponentName/ComponentName.tsx` + `ComponentName/ComponentName.scss`
+  - ✅ `ComponentName/index.tsx` + `ComponentName/styles.scss`
   - ❌ `ComponentName.tsx` + `ComponentName.scss` mixed with other components
 
 ### Form Validation
@@ -317,7 +317,7 @@ laboratory/
 ### Component Development
 
 - Import existing components from the design system rather than building custom
-  UI elements
+  UI elements if they are available in `@stellar/design-system`
 - Check the [Design System](https://design-system.stellar.org/) for available
   components
 - Common components: Button, Input, Select, Card, Modal, Notification, CopyText,
