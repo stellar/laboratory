@@ -1065,6 +1065,21 @@ export default function Endpoints() {
                     />
                   </div>
                   <div className="PageFooter__right">
+                    {pathname === Routes.ENDPOINTS_GET_TRANSACTION &&
+                    !endpointData.isError &&
+                    params.transaction ? (
+                      <SdsLink
+                        href={buildEndpointHref(
+                          Routes.TRANSACTION_DASHBOARD,
+                          {
+                            transactionHash: params.transaction,
+                          },
+                        )}
+                      >
+                        Debug in Transaction dashboard{" "}
+                        <Icon.ArrowRight />
+                      </SdsLink>
+                    ) : null}
                     <CopyJsonPayloadButton
                       jsonString={stringify(endpointData.json, null, 2) || ""}
                     />
