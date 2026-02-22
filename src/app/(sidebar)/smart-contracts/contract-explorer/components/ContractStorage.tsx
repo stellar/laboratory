@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link, Loader, Text } from "@stellar/design-system";
 import { useRouter } from "next/navigation";
 
@@ -9,7 +10,9 @@ import { DataTable } from "@/components/DataTable";
 import { ScValPrettyJson } from "@/components/StellarDataRenderer";
 import { PoweredByStellarExpert } from "@/components/PoweredByStellarExpert";
 
+import { useBackendEndpoint } from "@/query/external/useBackendEndpoint";
 import { useSEContractStorage } from "@/query/external/useSEContracStorage";
+
 import { formatEpochToDate } from "@/helpers/formatEpochToDate";
 import { formatNumber } from "@/helpers/formatNumber";
 import { capitalizeString } from "@/helpers/capitalizeString";
@@ -27,7 +30,15 @@ import {
   ContractStorageProcessedItem,
   ContractStorageResponseItem,
   NetworkType,
+  SortDirection,
 } from "@/types/types";
+
+// Map DataTable column IDs to API sort_by param values
+const SORT_BY_MAP: Record<string, string> = {
+  durability: "durability",
+  ttl: "ttl",
+  updated: "updated_at",
+};
 
 export const ContractStorage = ({
   isActive,
@@ -39,24 +50,62 @@ export const ContractStorage = ({
   isActive: boolean;
   contractId: string;
   networkId: NetworkType;
-  totalEntriesCount: number | undefined;
+  totalEntriesCount?: number;
   isSourceStellarExpert: boolean;
 }) => {
   const isXdrInit = useIsXdrInit();
   const { transaction } = useStore();
   const router = useRouter();
 
-  const {
-    data: storageData,
-    error: storageError,
-    isLoading: isStorageLoading,
-    isFetching: isStorageFetching,
-  } = useSEContractStorage({
-    isActive,
+  const [currentCursor, setCurrentCursor] = useState<string | undefined>();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sortBy, setSortBy] = useState<string | undefined>();
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | undefined>();
+
+  // Backend data source (used when backend is healthy)
+  const backendResult = useBackendEndpoint({
+    isActive: isActive && !isSourceStellarExpert,
+    networkId,
+    contractId,
+    cursor: currentCursor,
+    sortBy,
+    order: sortOrder,
+  });
+
+  // Stellar Expert data source (fallback)
+  const seResult = useSEContractStorage({
+    isActive: isActive && isSourceStellarExpert,
     networkId,
     contractId,
     totalEntriesCount,
   });
+
+  useEffect(() => {
+    // Reset when contractId or networkId changes
+    setCurrentCursor(undefined);
+    setCurrentPage(1);
+    setSortBy(undefined);
+    setSortOrder(undefined);
+  }, [contractId, networkId]);
+
+  const {
+    error: storageError,
+    isLoading: isStorageLoading,
+    isFetching: isStorageFetching,
+  } = isSourceStellarExpert ? seResult : backendResult;
+
+  // Normalize data from both sources
+  const storageData = isSourceStellarExpert
+    ? seResult.data
+    : backendResult.data?.results;
+
+  // Pagination cursors (only available from backend)
+  const nextCursor = !isSourceStellarExpert
+    ? backendResult.data?._links?.next?.href
+    : undefined;
+  const prevCursor = !isSourceStellarExpert
+    ? backendResult.data?._links?.prev?.href
+    : undefined;
 
   // Loading, error, and no data states
   if (isStorageLoading || isStorageFetching) {
@@ -170,6 +219,7 @@ export const ContractStorage = ({
         <DataTable
           tableId="contract-storage"
           tableData={parsedData}
+          hideFirstLastPageNav={!isSourceStellarExpert}
           tableHeaders={[
             {
               id: "key",
@@ -233,10 +283,62 @@ export const ContractStorage = ({
           ]}
           cssGridTemplateColumns="minmax(210px, 2fr) minmax(210px, 2fr) minmax(100px, 0.8fr) minmax(110px, 0.8fr) minmax(114px, 0.7fr)"
           csvFileName={contractId}
+          {...(!isSourceStellarExpert
+            ? {
+                onSortChange: (headerId: string, dir: SortDirection) => {
+                  const apiSortBy = SORT_BY_MAP[headerId];
+                  if (dir === "default") {
+                    setSortBy(undefined);
+                    setSortOrder(undefined);
+                  } else {
+                    setSortBy(apiSortBy);
+                    setSortOrder(dir);
+                  }
+                  // Reset pagination on sort change
+                  setCurrentCursor(undefined);
+                  setCurrentPage(1);
+                },
+              }
+            : {})}
+          {...(!isSourceStellarExpert
+            ? {
+                pageNavConfig: {
+                  prev: {
+                    onClick: () => {
+                      if (prevCursor) {
+                        const queryString = prevCursor.split("?")[1] || "";
+                        const params = new URLSearchParams(queryString);
+                        setCurrentCursor(params.get("cursor") || undefined);
+                        setCurrentPage(Math.max(currentPage - 1, 1));
+                      }
+                    },
+                    disabled:
+                      !prevCursor ||
+                      currentPage === 1 ||
+                      isStorageLoading ||
+                      isStorageFetching,
+                  },
+                  next: {
+                    onClick: () => {
+                      if (nextCursor) {
+                        const queryString = nextCursor.split("?")[1] || "";
+                        const params = new URLSearchParams(queryString);
+                        setCurrentCursor(params.get("cursor") || undefined);
+                        setCurrentPage(currentPage + 1);
+                      }
+                    },
+                    disabled:
+                      !nextCursor || isStorageLoading || isStorageFetching,
+                  },
+                },
+              }
+            : {})}
         />
 
-        {/* Max entries message */}
-        {totalEntriesCount && totalEntriesCount > parsedData.length ? (
+        {/* Max entries message (SE only) */}
+        {isSourceStellarExpert &&
+        totalEntriesCount &&
+        totalEntriesCount > parsedData.length ? (
           <Box
             gap="md"
             addlClassName="FieldNote FieldNote--note FieldNote--md"
