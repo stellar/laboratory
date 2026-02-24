@@ -274,65 +274,7 @@ the applicable subset of steps.
 **New file:** `src/hooks/useTransactionFlow.ts`
 
 Shared hook used by both `BuildFlow` and `ImportFlow` to eliminate duplicated
-step navigation logic:
-
-```typescript
-export function useTransactionFlow({
-  steps,
-  activeStep,
-  setActiveStep,
-  initialStep,
-}: {
-  steps: TransactionStepName[];
-  activeStep: TransactionStepName;
-  setActiveStep: (step: TransactionStepName) => void;
-  initialStep: TransactionStepName | null; // null = shared-link entry, no prior steps clickable
-}) {
-  const stepIndex = (s: TransactionStepName) => steps.indexOf(s);
-
-  // highestCompletedStep is local — not in URL, not shareable
-  const [highestCompletedStep, setHighestCompletedStep] =
-    useState<TransactionStepName | null>(initialStep);
-
-  // Invariant: activeStep and highestCompletedStep are always valid members of
-  // the current steps array.
-  const handleNext = () => {
-    const nextIdx = stepIndex(activeStep) + 1;
-    if (nextIdx < steps.length) {
-      const nextStep = steps[nextIdx];
-      setActiveStep(nextStep);
-      if (
-        !highestCompletedStep ||
-        stepIndex(nextStep) > stepIndex(highestCompletedStep)
-      ) {
-        setHighestCompletedStep(nextStep);
-      }
-    }
-  };
-
-  const handleBack = () => {
-    const prevIdx = stepIndex(activeStep) - 1;
-    if (prevIdx >= 0) setActiveStep(steps[prevIdx]);
-  };
-
-  const handleStepClick = (step: TransactionStepName) => {
-    if (
-      highestCompletedStep &&
-      stepIndex(step) <= stepIndex(highestCompletedStep)
-    ) {
-      setActiveStep(step);
-    }
-  };
-
-  return {
-    highestCompletedStep,
-    stepIndex,
-    handleNext,
-    handleBack,
-    handleStepClick,
-  };
-}
-```
+step navigation logic.
 
 ### Step 5: Refactor main `page.tsx` as single-page flow
 
