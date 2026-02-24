@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 
 import {
   formatLedgersToDays,
@@ -228,6 +228,64 @@ test.describe("Network Limits page on Mainnet", () => {
     ]);
   });
 
+  test("Displays Table and JSON tabs", async ({ page }) => {
+    const tableTab = page.getByTestId("table");
+    const jsonTab = page.getByTestId("json");
+
+    await expect(tableTab).toBeVisible();
+    await expect(jsonTab).toBeVisible();
+
+    // Table tab is active by default
+    await expect(tableTab).toHaveAttribute("data-is-active", "true");
+    await expect(jsonTab).toHaveAttribute("data-is-active", "false");
+  });
+
+  test("Switches to JSON tab and displays JSON content", async ({ page }) => {
+    // Dismiss the "Review Network Settings" modal if it appears
+    await dismissNetworkSettingsModal(page);
+
+    const jsonTab = page.getByTestId("json");
+    await jsonTab.click();
+
+    // Table content should no longer be visible
+    await expect(page.locator("text=Resource limits")).not.toBeVisible();
+    await expect(page.locator("text=Resource fees")).not.toBeVisible();
+
+    // JSON editor should be visible
+    const jsonContainer = page.locator(".NetworkLimits__json-container");
+    await expect(jsonContainer).toBeVisible();
+
+    // Verify JSON content contains expected data in the Monaco editor
+    const editorContent = jsonContainer.locator(".monaco-editor");
+    await expect(editorContent).toBeVisible();
+    await expect(editorContent).toContainText("updated_entry");
+    await expect(editorContent).toContainText("contract_max_size_bytes");
+
+    // Copy JSON button should be visible
+    await expect(page.locator("button:has-text('Copy JSON')")).toBeVisible();
+  });
+
+  test("Switches back to Table tab from JSON tab", async ({ page }) => {
+    // Dismiss the "Review Network Settings" modal if it appears
+    await dismissNetworkSettingsModal(page);
+
+    const tableTab = page.getByTestId("table");
+    const jsonTab = page.getByTestId("json");
+
+    // Switch to JSON
+    await jsonTab.click();
+    await expect(page.locator("text=Resource limits")).not.toBeVisible();
+
+    // Switch back to Table
+    await tableTab.click();
+    await expect(tableTab).toHaveAttribute("data-is-active", "true");
+    await expect(jsonTab).toHaveAttribute("data-is-active", "false");
+
+    // Table content should be visible again
+    await expect(page.locator("text=Resource limits")).toBeVisible();
+    await expect(page.locator("text=Resource fees")).toBeVisible();
+  });
+
   test("Custom network shows warning message", async ({ page }) => {
     // Navigate directly to custom network
     await page.goto("http://localhost:3000/network-limits?$=network$id=custom");
@@ -247,6 +305,10 @@ test.describe("Network Limits page on Mainnet", () => {
     await expect(page.locator("button:has-text('Mainnet')")).toBeVisible();
     await expect(page.locator("button:has-text('Testnet')")).toBeVisible();
     await expect(page.locator("button:has-text('Futurenet')")).toBeVisible();
+
+    // Table/JSON tabs should NOT be visible on custom network
+    await expect(page.getByTestId("table")).not.toBeVisible();
+    await expect(page.getByTestId("json")).not.toBeVisible();
   });
 });
 
@@ -255,4 +317,16 @@ test.describe("Network Limits page on Mainnet", () => {
 // =============================================================================
 const getTableRow = (rows: any, index: number) => {
   return rows.nth(index).locator(".NetworkLimits__table__cell");
+};
+
+/**
+ * Dismisses the "Review Network Settings" modal that appears on first visit.
+ * Waits for the modal's Accept button and clicks it.
+ */
+const dismissNetworkSettingsModal = async (page: Page) => {
+  const modal = page.locator(".Modal");
+  const acceptButton = modal.locator("button", { hasText: "Accept" });
+  await acceptButton.waitFor({ state: "visible", timeout: 5000 });
+  await acceptButton.click();
+  await modal.waitFor({ state: "hidden" });
 };
