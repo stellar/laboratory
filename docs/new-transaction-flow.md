@@ -602,38 +602,6 @@ Each entry expands to show its own signing UI
 └───────────────────────────────────────────────┘
 ```
 
-## Design (from Figma)
-
-After successful simulation, the page shows:
-
-1. **Success alert** (green) - "Transaction simulation successful" + "This
-   transaction contains **authorization entries** that need to be validated
-   before submitting."
-2. **Simulated result** - JSON code viewer with RPC response
-3. **"View resource usage and fees(simulated)"** - collapsible section
-4. **Auth entries signing card** (white card, border, rounded):
-   - **Header section** (px-24 py-16):
-     - "This transaction requires additional authorization signatures" (medium,
-       14px)
-     - "2 authorization entries detected" (regular, 14px, gray)
-     - "View auth entries" button with chevron (right-aligned, bordered)
-   - **Signing section** (border-top, p-24):
-     - **Radio group**: "Sign all entries" (selected) | "Sign individually"
-     - **Entry list** (collapsible accordion items):
-       - "Entry #1 [Unsigned badge]" with chevron
-       - "Entry #2 [Unsigned badge]" with chevron
-     - **Signatures label** with info icon
-     - **Signing method tabs** (underline style with count badges):
-       - "Add secret key 0" | "Wallet extension 0" | "Hardware wallet 0" |
-         "Transaction envelope 0"
-     - **Secret key input area** (gray bg section):
-       - Label: "Sign with secret key"
-       - Input: placeholder "Secret key (starting with S) or hash preimage (in
-         hex)"
-       - Eye-off icon for masking
-       - "Use secret key" button (attached right)
-       - "Add additional" + "Sign" buttons below
-
 ## Implementation Steps
 
 ### Step 1: Add auth mode to Simulate step
