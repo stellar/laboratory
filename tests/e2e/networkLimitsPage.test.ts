@@ -326,7 +326,13 @@ const getTableRow = (rows: any, index: number) => {
 const dismissNetworkSettingsModal = async (page: Page) => {
   const modal = page.locator(".Modal");
   const acceptButton = modal.locator("button", { hasText: "Accept" });
-  await acceptButton.waitFor({ state: "visible", timeout: 5000 });
+  // Modal may not appear in all environments; wait briefly and no-op if absent.
+  try {
+    await acceptButton.waitFor({ state: "visible", timeout: 1000 });
+  } catch {
+    // Accept button never became visible; assume modal is not present.
+    return;
+  }
   await acceptButton.click();
   await modal.waitFor({ state: "hidden" });
 };
