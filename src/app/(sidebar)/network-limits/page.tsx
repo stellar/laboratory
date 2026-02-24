@@ -1,7 +1,7 @@
 "use client";
 
 import { Alert, Icon, Text, Tooltip } from "@stellar/design-system";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 
 import { useStore } from "@/store/useStore";
 import { WindowContext } from "@/components/layout/LayoutContextProvider";
@@ -11,6 +11,9 @@ import { Box } from "@/components/layout/Box";
 import { SdsLink } from "@/components/SdsLink";
 import { LabelHeading } from "@/components/LabelHeading";
 import { SwitchNetworkButtons } from "@/components/SwitchNetworkButtons";
+import { Tabs } from "@/components/Tabs";
+import { CopyJsonPayloadButton } from "@/components/CopyJsonPayloadButton";
+import { CodeEditor } from "@/components/CodeEditor";
 
 import {
   formatLedgersToDays,
@@ -20,7 +23,7 @@ import { formatLargeNumber } from "@/helpers/formatLargeNumber";
 import { formatFileSize } from "@/helpers/formatFileSize";
 import { formatNumber } from "@/helpers/formatNumber";
 
-import { NETWORK_LIMITS } from "@/constants/networkLimits";
+import { NETWORK_LIMITS, NETWORK_LIMITS_JSON } from "@/constants/networkLimits";
 
 import "./styles.scss";
 
@@ -28,15 +31,35 @@ import "./styles.scss";
 const BYTES_PER_KB = 1024;
 const MINIMUM_RENT_WRITE_FEE_PER_1KB = 1000;
 
+const VIEW_TABS = [
+  { id: "table", label: "Table" },
+  { id: "json", label: "JSON" },
+];
+
 export default function NetworkLimits() {
   const { network } = useStore();
+  const [activeTab, setActiveTab] = useState("table");
 
   // Get network-specific limits, fallback to mainnet if not found
   const limits = NETWORK_LIMITS[network.id] || NETWORK_LIMITS.mainnet;
+  const limitsJson =
+    NETWORK_LIMITS_JSON[network.id] || NETWORK_LIMITS_JSON.mainnet;
+  const limitsJsonString = JSON.stringify(limitsJson, null, 2);
 
   return (
     <div className="NetworkLimits">
-      <PageCard heading="Network limits">
+      <PageCard
+        heading="Network limits"
+        rightElement={
+          network.id !== "custom" ? (
+            <Tabs
+              tabs={VIEW_TABS}
+              activeTabId={activeTab}
+              onChange={setActiveTab}
+            />
+          ) : undefined
+        }
+      >
         {network.id === "custom" ? (
           <Alert
             placement="inline"
@@ -71,18 +94,37 @@ export default function NetworkLimits() {
                 </SdsLink>
               </Text>
             </Box>
-            <Box gap="sm">
-              <Text as="h2" size="md" weight="medium">
-                Resource limits
-              </Text>
+            {activeTab === "table" ? (
+              <>
+                <Box gap="sm">
+                  <Text as="h2" size="md" weight="medium">
+                    Resource limits
+                  </Text>
 
-              <Box gap="lg">
-                <ResourceLimitsSection limits={limits} />
-                <StateArchivalSection limits={limits} />
+                  <Box gap="lg">
+                    <ResourceLimitsSection limits={limits} />
+                    <StateArchivalSection limits={limits} />
+                  </Box>
+                </Box>
+
+                <ResourceFeesSection limits={limits} />
+              </>
+            ) : (
+              <Box gap="sm">
+                <div className="NetworkLimits__json-container">
+                  {limitsJsonString && (
+                    <CodeEditor
+                      heightInRem="30"
+                      value={limitsJsonString}
+                      selectedLanguage="json"
+                    />
+                  )}
+                </div>
+                <Box gap="md" direction="row" justify="right" align="center">
+                  <CopyJsonPayloadButton jsonString={limitsJsonString} />
+                </Box>
               </Box>
-            </Box>
-
-            <ResourceFeesSection limits={limits} />
+            )}
           </>
         )}
       </PageCard>
