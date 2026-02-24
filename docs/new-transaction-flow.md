@@ -5,7 +5,7 @@
 This document covers the new transaction flow redesign:
 
 1. **Single-page transaction flow** - All 5 steps for Soroban (Build, Simulate,
-   Validate, Sign, Submit) or 3 steps for Classic (Build, Sign, Submit) on one
+   Sign, Validate, Submit) or 3 steps for Classic (Build, Sign, Submit) on one
    page with a stepper
 2. **Soroban Auth Entry Signing** - Sign authorization entries after simulation
 3. **Soroban Auth Validation** - Enforce-mode re-simulation after auth signing
@@ -41,22 +41,11 @@ The Simulate step is Soroban-only. The Validate step is Soroban-only and
 conditional — it only appears when the simulation returns auth entries that
 require signing. The steps array updates dynamically after simulation completes.
 
-| Variant                      | Build flow steps                                      | Import flow steps (replaces `"build"` with `"import"`) |
-| ---------------------------- | ----------------------------------------------------- | ------------------------------------------------------ |
-| **Classic**                  | `["build", "sign", "submit"]`                         | `["import", "sign", "submit"]`                         |
-| **Soroban, no auth entries** | `["build", "simulate", "sign", "submit"]`             | `["import", "simulate", "sign", "submit"]`             |
-| **Soroban, auth entries**    | `["build", "simulate", "validate", "sign", "submit"]` | `["import", "simulate", "validate", "sign", "submit"]` |
-
-```
-Soroban (auth entries):     Soroban (no auth):   Classic:
-┌───────────────────────┐   ┌───────────────┐   ┌───────────────┐
-│  ● 1. Build           │   │ ● 1. Build.   │   │  ● 1. Build   │
-│  ○ 2. Simulate        │   │ ○ 2. Simulate │   │  ○ 2. Sign    │
-│  ○ 3. Validate        │   │ ○ 3. Sign     │   │  ○ 3. Submit  │
-│  ○ 4. Sign            │   │ ○ 4. Submit   │   └───────────────┘
-│  ○ 5. Submit          │   └───────────────┘
-└───────────────────────┘
-```
+| Variant                      | Build flow steps                                      | Import flow steps (replaces `"build"` with `"import"`)  |
+| ---------------------------- | ----------------------------------------------------- | ------------------------------------------------------- |
+| **Classic**                  | `["build", "sign", "submit"]`                         | `["import", "sign", "submit"]`                          |
+| **Soroban, no auth entries** | `["build", "simulate", "sign", "submit"]`             | `["import", "simulate", "sign", "submit"]`              |
+| **Soroban, auth entries**    | `["build", "simulate", "sign", "validate", "submit"]` | `["import", "simulate",  "sign", "validate", "submit"]` |
 
 ### Page layout
 
@@ -71,20 +60,19 @@ Soroban (auth entries):     Soroban (no auth):   Classic:
 │  │                             │  │                      │  │
 │  │  activeStep === "build"     │  │  ● 1. Build    ←     │  │
 │  │    → <BuildContent />       │  │  ○ 2. Simulate *     │  │
-│  │                             │  │  ○ 3. Validate *†    │  │
-│  │  activeStep === "simulate"  │  │  ○ 4. Sign           │  │
+│  │                             │  │  ○ 3. Sign           │  │
+│  │  activeStep === "simulate"  │  │  ○ 4. Validate *†    │  │
 │  │    → <SimulateContent />    │  │  ○ 5. Submit         │  │
 │  │    (Soroban only)           │  │  (* Soroban only)    │  │
 │  │                             │  │  († only if auth     │  │
 │  │                             │  │     entries present) │  │
 │  │                             │  └──────────────────────┘  │
+│  │  activeStep === "sign"      │                            │
+│  │    → <SignContent />        │                            │
 │  │                             │                            │
 │  │  activeStep === "validate"  │                            │
 │  │    → <ValidateContent />    │                            │
 │  │    (Soroban, auth only)     │                            │
-│  │                             │                            │
-│  │  activeStep === "sign"      │                            │
-│  │    → <SignContent />        │                            │
 │  │                             │                            │
 │  │  activeStep === "submit"    │                            │
 │  │    → <SubmitContent />      │                            │
@@ -145,8 +133,8 @@ New-flow shared links use the `step` query param directly:
 | ------------------------------------------ | ------------ | ---------------------------------- |
 | `/transaction/build?xdr=...`               | `"build"`    | None                               |
 | `/transaction/build?step=simulate&xdr=...` | `"simulate"` | Build disabled                     |
-| `/transaction/build?step=validate&xdr=...` | `"validate"` | Build, Simulate disabled           |
-| `/transaction/build?step=sign&xdr=...`     | `"sign"`     | Build, Simulate, Validate disabled |
+| `/transaction/build?step=sign&xdr=...`     | `"sign"`     | Build, Simulate disabled           |
+| `/transaction/build?step=validate&xdr=...` | `"validate"` | Build, Simulate, Validate disabled |
 | `/transaction/build?step=submit&xdr=...`   | `"submit"`   | All previous disabled              |
 
 Legacy routes map to new-flow URLs:
@@ -226,13 +214,13 @@ variant. General rules:
 
 **Full example (Soroban with auth entries, 5 steps):**
 
-| Step     | Back button                  | Next button                                                          | Extra                          |
-| -------- | ---------------------------- | -------------------------------------------------------------------- | ------------------------------ |
-| Build    | —                            | "Next: Simulate transaction" (disabled until valid XDR)              | "Save transaction" icon button |
-| Simulate | "Back: Build transaction"    | "Next: Validate" (disabled until simulation + auth signing complete) | N/A                            |
-| Validate | "Back: Simulate transaction" | "Next: Sign transaction" (disabled until enforce sim passes)         | N/A                            |
-| Sign     | "Back: Validate"             | "Next: Submit transaction" (disabled until signed)                   | N/A                            |
-| Submit   | "Back: Sign transaction"     | — (submit button is in the step content)                             | N/A                            |
+| Step     | Back button                  | Next button                                                                  | Extra                          |
+| -------- | ---------------------------- | ---------------------------------------------------------------------------- | ------------------------------ |
+| Build    | —                            | "Next: Simulate transaction" (disabled until valid XDR)                      | "Save transaction" icon button |
+| Simulate | "Back: Build transaction"    | "Next: Sign transaction" (disabled until simulation + auth signing complete) | N/A                            |
+| Sign     | "Back: Simulate transaction" | "Next: Validate" (disabled until signed)                                     | N/A                            |
+| Validate | "Back: Sign transaction      | "Next: Submit transaction" (disabled until enforce sim passes)               | N/A                            |
+| Submit   | "Back: Validate"             | — (submit button is in the step content)                                     | N/A                            |
 
 Shorter variants (4-step Soroban, 3-step Classic) follow the same pattern with
 the applicable subset of steps.
@@ -342,7 +330,7 @@ const isSoroban = /* derived from transaction type in build store */;
 const hasAuthEntries = /* derived from simulation result in store */;
 const steps: TransactionStepName[] = isSoroban
   ? hasAuthEntries
-    ? ["build", "simulate", "validate", "sign", "submit"]
+    ? ["build", "simulate", "sign", "validate", "submit"]
     : ["build", "simulate", "sign", "submit"]
   : ["build", "sign", "submit"];
 
@@ -359,8 +347,8 @@ const { highestCompletedStep, stepIndex, handleNext, handleBack, handleStepClick
   <div className="TransactionFlow__content">
     {activeStep === "build" && <BuildStepContent />}
     {activeStep === "simulate" && <SimulateStepContent />}
-    {activeStep === "validate" && <ValidateStepContent />}
     {activeStep === "sign" && <SignStepContent />}
+    {activeStep === "validate" && <ValidateStepContent />}
     {activeStep === "submit" && <SubmitStepContent />}
 
     <TransactionFlowFooter
@@ -460,8 +448,7 @@ Add events:
 When a Soroban transaction is simulated with `record` auth mode, the RPC
 response may contain `SorobanAuthorizationEntry` values that require signing
 before submission. This feature adds auth entry signing UI to the **Simulate
-step** (step 2 of the single-page Soroban flow), between the simulation result
-display and the footer navigation to the Validate step.
+step** (step 2 of the single-page Soroban flow).
 
 Auth signing lives in the Simulate step (not deferred to the Sign step) because:
 
@@ -492,13 +479,13 @@ Step 1: Build -> Step 2: Simulate (record auth mode)
                            | user signs auth entries
                            | assembleTransaction(tx, recordSimResult)
                            v
-                 Step 3: Validate (enforce-mode re-simulation)
+                 Step 3: Sign (sign the assembled tx envelope)
+                           |
+                           v
+                 Step 4: Validate (enforce-mode re-simulation)
                            | verifies auth signatures are valid
                            | returns final resource data (CAP-71)
                            | assembleTransaction(tx, enforceSimResult)
-                           v
-                 Step 4: Sign (sign the assembled tx envelope)
-                           |
                            v
                  Step 5: Submit
 ```
@@ -571,8 +558,8 @@ Step 1: Build -> Step 2: Simulate (record auth mode)
 │                          │  Attach signed auth + resource data │  │
 │                          │              │                      │  │
 │                          │              ▼                      │  │
-│                          │  [Next: Validate ->]                │  │
-│                          │  Advances to Validate step (step 3) │  │
+│                          │  [Next: Sign ->]                │  │
+│                          │  Advances to Sign step (step 3) │  │
 │                          │  Assembled XDR stored in Zustand    │  │
 │                          └─────────────────────────────────────┘  │
 └───────────────────────────────────────────────────────────────────┘
@@ -719,7 +706,7 @@ After simulation succeeds and auth entries are detected:
 4. Render `<SorobanAuthSigningCard>` with extracted auth entries
 5. On auth entries signed: call `assembleTransaction(tx, simulationResult)` to
    rebuild the transaction with signed auth entries and resource data attached
-6. Set step as "valid" so the footer's "Next: Validate" button enables
+6. Set step as "valid" so the footer's "Next: Sign" button enables
 
 **Store updates needed:**
 
@@ -807,9 +794,9 @@ Add events:
 1. **Simulate step**: Auth mode defaults to "record"; after simulation with auth
    entries: success alert, result viewer, auth signing card appear; "Sign all"
    and "Sign individually" modes work; entry badges update; signing method tabs
-   work; "Next: Validate" advances to Validate step
-2. **End-to-end**: Build → Simulate (record) → sign auth entries → Validate
-   (enforce passes) → Sign (tx envelope) → Submit
+   work; "Next: Sign" advances to Sign step
+2. **End-to-end**: Build → Simulate (record) → sign auth entries → Sign (tx
+   envelope) → Validate (enforce passes) → Submit
 3. **Step navigation**: Can click back to any completed step; form data
    preserved
 
