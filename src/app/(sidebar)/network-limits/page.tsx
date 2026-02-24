@@ -111,18 +111,25 @@ export default function NetworkLimits() {
               </>
             ) : (
               <Box gap="sm">
-                <div className="NetworkLimits__json-container">
-                  {limitsJsonString && (
-                    <CodeEditor
-                      heightInRem="30"
-                      value={limitsJsonString}
-                      selectedLanguage="json"
-                    />
-                  )}
-                </div>
-                <Box gap="md" direction="row" justify="right" align="center">
-                  <CopyJsonPayloadButton jsonString={limitsJsonString} />
-                </Box>
+                {limitsJsonString && (
+                  <>
+                    <div className="NetworkLimits__json-container">
+                      <CodeEditor
+                        heightInRem="30"
+                        value={limitsJsonString}
+                        selectedLanguage="json"
+                      />
+                    </div>
+                    <Box
+                      gap="md"
+                      direction="row"
+                      justify="right"
+                      align="center"
+                    >
+                      <CopyJsonPayloadButton jsonString={limitsJsonString} />
+                    </Box>
+                  </>
+                )}
               </Box>
             )}
           </>
