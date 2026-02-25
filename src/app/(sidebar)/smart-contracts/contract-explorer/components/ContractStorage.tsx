@@ -50,7 +50,7 @@ export const ContractStorage = ({
   isActive: boolean;
   contractId: string;
   networkId: NetworkType;
-  totalEntriesCount?: number;
+  totalEntriesCount: number | undefined;
   isSourceStellarExpert: boolean;
 }) => {
   const isXdrInit = useIsXdrInit();
@@ -247,6 +247,7 @@ export const ContractStorage = ({
           tableId="contract-storage"
           tableData={parsedData}
           hideFirstLastPageNav={!isSourceStellarExpert}
+          hidePageCount={!isSourceStellarExpert}
           tableHeaders={[
             {
               id: "key",
@@ -329,7 +330,6 @@ export const ContractStorage = ({
             : {})}
           {...(!isSourceStellarExpert
             ? {
-                hidePageCount: true,
                 pageNavConfig: {
                   prev: {
                     onClick: () => {
