@@ -1065,7 +1065,7 @@ export default function Endpoints() {
                     />
                   </div>
                   <div className="PageFooter__right">
-                    <Box gap="sm" align="center" direction="row">
+                    <Box gap="sm" align="center" direction="row" wrap="wrap">
                       {pathname === Routes.ENDPOINTS_GET_TRANSACTION &&
                       params.transaction ? (
                         <Button
