@@ -45,8 +45,7 @@ import { Bindings } from "./Bindings";
 export const ContractInfo = ({
   infoData,
   contractId,
-  backendHealthStatus,
-  isBackendHealthLoaded,
+  backendStatus,
   wasmData,
   wasmHash,
   network,
@@ -55,8 +54,7 @@ export const ContractInfo = ({
 }: {
   infoData: ContractInfoApiResponse | undefined;
   contractId: string;
-  backendHealthStatus?: string;
-  isBackendHealthLoaded: boolean;
+  backendStatus: "healthy" | "unhealthy";
   wasmData: WasmData | null | undefined;
   wasmHash: string | null | undefined;
   network: Network | EmptyObj;
@@ -268,18 +266,7 @@ export const ContractInfo = ({
   }
 
   const renderContractStorage = () => {
-    if (!isBackendHealthLoaded) {
-      return (
-        <Box gap="sm" direction="row" justify="center">
-          <Loader />
-        </Box>
-      );
-    }
-
-    if (
-      !infoData &&
-      (!backendHealthStatus || backendHealthStatus !== "healthy")
-    ) {
+    if (!infoData && backendStatus === "unhealthy") {
       return (
         <NoDataMessage title="Contract storage is not available">
           Contract storage is not available for selected network.
@@ -293,7 +280,7 @@ export const ContractInfo = ({
         contractId={contractId || ""}
         networkId={network.id}
         totalEntriesCount={infoData?.storage_entries}
-        isSourceStellarExpert={backendHealthStatus !== "healthy"}
+        isSourceStellarExpert={backendStatus !== "healthy"}
       />
     );
   };
