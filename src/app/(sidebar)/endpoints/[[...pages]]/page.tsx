@@ -6,6 +6,7 @@ import {
   Alert,
   Button,
   Card,
+  CopyText,
   Icon,
   Input,
   Link,
@@ -719,6 +720,21 @@ export default function Endpoints() {
             >
               Submit
             </Button>
+
+            {!isRpcEndpoint && (
+              <CopyText
+                textToCopy={requestUrl}
+                doneLabel="Horizon URL copied"
+              >
+                <Button
+                  size="md"
+                  variant="tertiary"
+                  icon={<Icon.Copy01 />}
+                  type="button"
+                  aria-label="Copy Horizon URL"
+                ></Button>
+              </CopyText>
+            )}
 
             <ShareUrlButton shareableUrl={shareableUrl("requests")} />
 
