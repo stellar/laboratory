@@ -1080,7 +1080,7 @@ export default function Endpoints() {
                               },
                             );
 
-                            window.open(href, "_blank");
+                            window.open(href, "_blank", "noopener,noreferrer");
                           }}
                         >
                           Debug in Transaction dashboard <Icon.ArrowRight />
