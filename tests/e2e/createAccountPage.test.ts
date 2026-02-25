@@ -15,7 +15,7 @@ test.describe("Create Account Page", () => {
     const buttonContainer = page.getByTestId("createAccount-buttons");
     await expect(buttonContainer.getByText("Generate keypair")).toBeVisible();
     await expect(
-      buttonContainer.getByText("Fund account with Friendbot"),
+      buttonContainer.getByText("Fund 10,000 XLM"),
     ).toBeVisible();
   });
 
@@ -41,7 +41,7 @@ test.describe("Create Account Page", () => {
 
     const fundButton = page
       .getByTestId("fundAccount-button")
-      .getByText("Fund account with Friendbot");
+      .getByText("Fund 10,000 XLM");
 
     await expect(fundButton).toBeEnabled();
 
