@@ -10,8 +10,8 @@ import { DataTable } from "@/components/DataTable";
 import { ScValPrettyJson } from "@/components/StellarDataRenderer";
 import { PoweredByStellarExpert } from "@/components/PoweredByStellarExpert";
 
-import { useBackendEndpoint } from "@/query/external/useBackendEndpoint";
-import { useSEContractStorage } from "@/query/external/useSEContracStorage";
+import { useBackendContractStorage } from "@/query/external/useBackendContractStorage";
+import { useSEContractStorage } from "@/query/external/useSEContractStorage";
 
 import { formatEpochToDate } from "@/helpers/formatEpochToDate";
 import { formatNumber } from "@/helpers/formatNumber";
@@ -63,7 +63,7 @@ export const ContractStorage = ({
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | undefined>();
 
   // Backend data source (used when backend is healthy)
-  const backendResult = useBackendEndpoint({
+  const backendResult = useBackendContractStorage({
     isActive: isActive && !isSourceStellarExpert,
     networkId,
     contractId,
