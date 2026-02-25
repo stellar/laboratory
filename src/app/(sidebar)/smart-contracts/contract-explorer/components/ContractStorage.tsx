@@ -329,6 +329,7 @@ export const ContractStorage = ({
             : {})}
           {...(!isSourceStellarExpert
             ? {
+                hidePageCount: true,
                 pageNavConfig: {
                   prev: {
                     onClick: () => {
