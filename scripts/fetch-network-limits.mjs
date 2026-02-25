@@ -108,9 +108,9 @@ const fetchLedgerEntries = async (rpcUrl, retryCount = 0) => {
  * const rawJson = getRawJsonFromResponse(response);
  * // { updated_entry: [{ contract_max_size_bytes: 131072 }, ...] }
  */
-// Internal config settings that are not part of ConfigUpgradeSet.
-// These are maintained internally by the network and excluded from
-// the JSON output to match `stellar network settings` CLI output.
+// Settings not in ConfigUpgradeSet (not validator-upgradeable; maintained internally by the network).
+// Excluded to match `stellar network settings` CLI output.
+// See: https://developers.stellar.org/docs/validators/admin-guide/network-upgrades#upgrading-soroban-settings
 const INTERNAL_CONFIG_SETTINGS = new Set(["live_soroban_state_size_window"]);
 
 const getRawJsonFromResponse = (response) => {
@@ -119,8 +119,7 @@ const getRawJsonFromResponse = (response) => {
 
   for (const entry of entries) {
     // config_setting_id is in keyJson, the value is in dataJson
-    const configSettingId =
-      entry?.keyJson?.config_setting?.config_setting_id;
+    const configSettingId = entry?.keyJson?.config_setting?.config_setting_id;
     const configSetting = entry?.dataJson?.config_setting;
     if (!configSettingId || !configSetting) continue;
 
