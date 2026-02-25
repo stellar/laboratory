@@ -88,11 +88,30 @@ export const ContractStorage = ({
     setSortOrder(undefined);
   }, [contractId, networkId]);
 
+  const activeResult = isSourceStellarExpert ? seResult : backendResult;
+
+  useEffect(() => {
+    if (isActive && activeResult.isSuccess && activeResult.data) {
+      trackEvent(TrackingEvent.SMART_CONTRACTS_EXPLORER_STORAGE_LOADED, {
+        source: isSourceStellarExpert ? "stellar_expert" : "backend",
+      });
+    }
+  }, [isActive, activeResult.isSuccess]);
+
+  useEffect(() => {
+    if (isActive && backendResult.isError) {
+      trackEvent(TrackingEvent.SMART_CONTRACTS_EXPLORER_STORAGE_ERROR, {
+        source: "backend",
+        error: backendResult.error?.message,
+      });
+    }
+  }, [isActive, backendResult.isError]);
+
   const {
     error: storageError,
     isLoading: isStorageLoading,
     isFetching: isStorageFetching,
-  } = isSourceStellarExpert ? seResult : backendResult;
+  } = activeResult;
 
   // Normalize data from both sources
   const storageData = (() => {
