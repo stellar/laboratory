@@ -186,8 +186,8 @@ export enum TrackingEvent {
   SMART_CONTRACTS_EXPLORER_TAB = "smart contracts: explorer: tab",
   SMART_CONTRACTS_EXPLORER_SAVE = "smart contracts: explorer: save contract id",
   SMART_CONTRACTS_SAVED_VIEW_IN_EXPLORER = "smart contracts: saved: view in contract explorer",
-  SMART_CONTRACTS_EXPLORER_STORAGE_LOADED = "smart contracts: explorer: backend storage: loaded",
-  SMART_CONTRACTS_EXPLORER_STORAGE_ERROR = "smart contracts: explorer: backend storage: error",
+  SMART_CONTRACTS_EXPLORER_STORAGE_LOADED = "smart contracts: explorer: storage: loaded",
+  SMART_CONTRACTS_EXPLORER_STORAGE_ERROR = "smart contracts: explorer: storage: error",
   SMART_CONTRACTS_EXPLORER_STORAGE_RESTORE = "smart contracts: explorer: storage: restore",
   // Smart Contracts - Invoke Contract
   SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SELECTED_XDR_FORMAT = "smart contracts: explorer: invoke contract: simulate: xdr format selected",
