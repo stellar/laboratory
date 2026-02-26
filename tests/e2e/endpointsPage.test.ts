@@ -295,4 +295,66 @@ test.describe("API Explorer page", () => {
       await expect(durabilityInput).toBeChecked();
     });
   });
+
+  test.describe("[RPC Methods] getTransaction", () => {
+    test.beforeEach(async ({ page }) => {
+      await page.goto("http://localhost:3000/endpoints/rpc/get-transaction");
+      await page.waitForSelector("h1", { timeout: 5000 });
+      await expect(page.locator("h1")).toHaveText("getTransaction");
+    });
+
+    test("Shows 'Debug in Transaction dashboard' button and navigates with transactionHash", async ({
+      page,
+    }) => {
+      const txHash =
+        "3389e9f0f1a65f19736cacf544c2e825313e8447f569233bb8db39aa607c8889";
+
+      // Mock the RPC response
+      await page.route("https://soroban-testnet.stellar.org", async (route) => {
+        await route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify({
+            jsonrpc: "2.0",
+            id: 8675309,
+            result: {
+              status: "SUCCESS",
+              hash: txHash,
+            },
+          }),
+        });
+      });
+
+      // Fill in the transaction hash
+      const txInput = page.getByLabel("Transaction hash");
+      await txInput.fill(txHash);
+
+      // Submit the form
+      await page.getByTestId("endpoints-submitBtn").click();
+
+      // Wait for response section and verify the debug button is visible
+      const debugBtn = page.getByTestId("endpoints-debugTxDashboardBtn");
+      await expect(debugBtn).toBeVisible();
+      await expect(debugBtn).toContainText("Debug in Transaction dashboard");
+
+      // Click the button and verify it opens the transaction dashboard with the hash
+      const [popup] = await Promise.all([
+        page.waitForEvent("popup"),
+        debugBtn.click(),
+      ]);
+
+      const popupUrl = decodeURIComponent(popup.url());
+      expect(popupUrl).toContain("/transaction/dashboard");
+      expect(popupUrl).toContain("transactionHash");
+      expect(popupUrl).toContain(txHash);
+    });
+
+    test("Does not show 'Debug in Transaction dashboard' button when no transaction hash", async ({
+      page,
+    }) => {
+      // Without filling in a transaction hash and submitting, the button should not exist
+      const debugBtn = page.getByTestId("endpoints-debugTxDashboardBtn");
+      await expect(debugBtn).not.toBeVisible();
+    });
+  });
 });
