@@ -51,6 +51,7 @@ const sectionResult = (
 
   return {
     xdr,
+    xdrStream: sectionXdr, // Keep the raw base64-encoded stream
     json,
     // TODO: add text format
   };

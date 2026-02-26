@@ -555,6 +555,7 @@ export type ContractSectionName = (typeof CONTRACT_SECTIONS)[number];
 
 export type ContractData = {
   xdr?: string[];
+  xdrStream?: string; // The raw base64-encoded XDR stream
   json?: string[];
   text?: string[];
 };
