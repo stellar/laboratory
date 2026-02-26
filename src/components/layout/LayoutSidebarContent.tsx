@@ -8,6 +8,7 @@ import { NAV } from "@/constants/navItems";
 
 import { NextLink } from "@/components/NextLink";
 import { NavLink } from "@/components/NavLink";
+import { LanguageSelector } from "@/components/LanguageSelector";
 
 import { WindowContext } from "./LayoutContextProvider";
 
@@ -33,6 +34,7 @@ export const LayoutSidebarContent = ({ children }: { children: ReactNode }) => {
           {/* External links */}
           <div className="LabLayout__sidebar--bottom">
             <div className="LabLayout__sidebar__wrapper">
+              <LanguageSelector />
               <NextLink
                 href="https://developers.stellar.org/docs/tools/lab"
                 className="SidebarLink"

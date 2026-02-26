@@ -1483,3 +1483,34 @@
 #stella-embed > button {
   display: none !important;
 }
+
+// =============================================================================
+// Google Translate: suppress injected UI and prevent layout shifts
+// =============================================================================
+
+// Prevent Google Translate from shifting the page down when it injects a
+// top banner. The engine sets `body { top: -40px }` via an injected style;
+// this rule wins back that space.
+body {
+  top: 0 !important;
+}
+
+// Hide the Google Translate toolbar banner and its outer wrapper entirely.
+// We drive language selection through our own cookie-based UI.
+.goog-te-banner-frame,
+.skiptranslate {
+  display: none !important;
+}
+
+// =============================================================================
+// Sidebar: allow the language-selector drop-up to escape the sidebar boundary
+// =============================================================================
+
+// The sidebar has overflow-y: hidden and its parent has overflow: hidden, so
+// any absolutely-positioned popup would be clipped. The language selector
+// component must use `position: fixed` for its dropdown so that it paints
+// above both overflow containers. The rule below is a safety net that removes
+// overflow clipping from the bottom area where the trigger button lives.
+.LabLayout__sidebar--bottom {
+  overflow: visible;
+}

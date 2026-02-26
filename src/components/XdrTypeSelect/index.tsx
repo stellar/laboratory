@@ -183,7 +183,7 @@ export const XdrTypeSelect = ({
         />
 
         <div
-          className="XdrTypeSelect__options"
+          className="XdrTypeSelect__options notranslate"
           data-is-visible={isOptionsVisible}
           data-testid="xdr-type-select-options"
         >

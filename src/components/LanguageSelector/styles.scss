@@ -1,0 +1,65 @@
+@use "../../styles/utils.scss" as *;
+
+.LanguageSelector {
+  &__trigger {
+    // Reset <button> defaults so SidebarLink styles apply cleanly
+    width: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  &__menu {
+    // Fixed positioning escapes both `overflow: hidden` ancestors
+    // (LabLayout__withSidebar and LabLayout__sidebar)
+    position: fixed;
+    z-index: 200;
+
+    background-color: var(--sds-clr-gray-01);
+    border: 1px solid var(--sds-clr-gray-06);
+    border-radius: pxToRem(8px);
+    padding: pxToRem(4px);
+    box-shadow:
+      0 pxToRem(4px) pxToRem(8px) rgba(0, 0, 0, 0.08),
+      0 pxToRem(8px) pxToRem(24px) rgba(0, 0, 0, 0.08);
+  }
+
+  &__option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: pxToRem(8px);
+    width: 100%;
+    padding: pxToRem(6px) pxToRem(8px);
+    background: none;
+    border: none;
+    border-radius: pxToRem(4px);
+    cursor: pointer;
+    font-size: pxToRem(14px);
+    line-height: pxToRem(20px);
+    font-weight: var(--sds-fw-medium);
+    color: var(--sds-clr-gray-11);
+    text-align: left;
+    transition: background-color var(--sds-anim-transition-default);
+
+    @media (hover: hover) {
+      &:hover {
+        background-color: var(--sds-clr-gray-03);
+        color: var(--sds-clr-gray-12);
+      }
+    }
+
+    &[data-is-active="true"] {
+      color: var(--sds-clr-lilac-11);
+      font-weight: var(--sds-fw-semi-bold);
+    }
+  }
+
+  &__option__current {
+    font-size: pxToRem(12px);
+    font-weight: var(--sds-fw-medium);
+    color: var(--sds-clr-gray-09);
+    flex-shrink: 0;
+  }
+}

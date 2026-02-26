@@ -13,6 +13,8 @@ import { SavedItemTimestampAndDelete } from "@/components/SavedItemTimestampAndD
 import { PageCard } from "@/components/layout/PageCard";
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 
+import { NetworkName } from "@/components/NetworkName";
+
 import { useStore } from "@/store/useStore";
 import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransactions";
 import { arrayItem } from "@/helpers/arrayItem";
@@ -230,7 +232,8 @@ export default function SavedTransactions() {
         <Box gap="md">
           <>
             {savedTxns.length === 0
-              ? `There are no saved transactions on ${network.label} network.`
+              ? <>There are no saved transactions on <NetworkName>{network.label}</NetworkName> network.</>
+
               : savedTxns.map((t) => (
                   <SavedTxn key={`txn-${t.timestamp}`} txn={t} />
                 ))}

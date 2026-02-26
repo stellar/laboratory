@@ -17,6 +17,8 @@ import { useFriendBot } from "@/query/useFriendBot";
 import { useAccountInfo } from "@/query/useAccountInfo";
 import { useAddTrustline } from "@/query/useAddTrustline";
 import { useSubmitHorizonTx } from "@/query/useSubmitHorizonTx";
+import { NetworkName } from "@/components/NetworkName";
+
 import { useStore } from "@/store/useStore";
 import { EURC_TESTNET_ISSUER, USDC_TESTNET_ISSUER } from "@/constants/settings";
 
@@ -201,7 +203,7 @@ export default function FundAccount() {
         id: `fund-account-success-xlm`,
         type: "success",
         title: "XLM has been successfully funded!",
-        description: `10,000 XLM was funded to ${shortenStellarAddress(inputPublicKey)} on ${network.label}.`,
+        description: <>10,000 XLM was funded to {shortenStellarAddress(inputPublicKey)} on <NetworkName>{network.label}</NetworkName>.</>,
       });
 
       setActiveToken("");
@@ -245,7 +247,7 @@ export default function FundAccount() {
         id: `fund-account-success-${assetCode}`,
         type: "success",
         title: "Trustline added",
-        description: `${assetCode} trustline has been successfully added to ${shortenStellarAddress(inputPublicKey)} on ${network.label}.`,
+        description: <>{assetCode} trustline has been successfully added to {shortenStellarAddress(inputPublicKey)} on <NetworkName>{network.label}</NetworkName>.</>,
       });
     }
   }, [
@@ -306,7 +308,7 @@ export default function FundAccount() {
   return (
     <div className="Account">
       <PageCard
-        heading={`Friendbot: fund a ${network.label} account or contract with XLM, USDC, and EURC`}
+        heading={<>Friendbot: fund a <NetworkName>{network.label}</NetworkName> account or contract with XLM, USDC, and EURC</>}
       >
         <div className="Account__card">
           <Text size="sm" as="div">

@@ -9,6 +9,8 @@ import { useStore } from "@/store/useStore";
 import { useSwitchNetwork } from "@/hooks/useSwitchNetwork";
 import { Box } from "@/components/layout/Box";
 
+import { NetworkName } from "@/components/NetworkName";
+
 import { capitalizeString } from "@/helpers/capitalizeString";
 import { openUrl } from "@/helpers/openUrl";
 import { getPublicResourcePath } from "@/helpers/getPublicResourcePath";
@@ -135,7 +137,7 @@ export const Networks = ({
           }}
           disabled={network.id === item.id}
         >
-          {item.links[0].label}
+          Switch to <NetworkName>{item.id}</NetworkName>
         </Button>
       );
     }
@@ -168,7 +170,7 @@ export const Networks = ({
                   weight="semi-bold"
                   addlClassName="Lab__home__networks__title"
                 >
-                  {i.title}
+                  <NetworkName>{i.title}</NetworkName>
                 </Text>
                 <Text
                   size="md"
@@ -187,12 +189,12 @@ export const Networks = ({
       </div>
 
       <Modal visible={Boolean(btnNetwork)} onClose={handleModalClose}>
-        <Modal.Heading>{`Switch to ${networkLabel}`}</Modal.Heading>
+        <Modal.Heading>Switch to <NetworkName>{networkLabel}</NetworkName></Modal.Heading>
         <Text
           as="div"
           size="sm"
           addlClassName="Lab__home__networks__modalText"
-        >{`You’re currently on ${network.label}. Switch networks to try ${networkLabel}.`}</Text>
+        >{"You’re currently on "}<NetworkName>{network.label}</NetworkName>{". Switch networks to try "}<NetworkName>{networkLabel}</NetworkName>{"."}</Text>
         <Modal.Footer>
           <Button
             size="md"
@@ -242,7 +244,7 @@ export const Networks = ({
               });
             }}
           >
-            {`Switch to ${networkLabel}`}
+            Switch to <NetworkName>{networkLabel}</NetworkName>
           </Button>
         </Modal.Footer>
       </Modal>

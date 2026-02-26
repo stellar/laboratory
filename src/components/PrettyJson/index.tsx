@@ -314,7 +314,10 @@ export const PrettyJson = ({
   }
 
   return (
-    <div className="PrettyJson" data-code-wrapped={Boolean(isCodeWrapped)}>
+    <div
+      className="PrettyJson notranslate"
+      data-code-wrapped={Boolean(isCodeWrapped)}
+    >
       <Bracket char="{" />
       {render(json)}
       <Bracket char="}" isEnd />

@@ -16,6 +16,8 @@ import { arrayItem } from "@/helpers/arrayItem";
 import { delayedAction } from "@/helpers/delayedAction";
 
 import { Routes } from "@/constants/routes";
+import { NetworkName } from "@/components/NetworkName";
+
 import { useStore } from "@/store/useStore";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
@@ -46,7 +48,8 @@ export default function SavedSmartContracts() {
         <Box gap="md">
           <>
             {savedContracts.length === 0
-              ? `There are no saved smart contracts on ${network.label} network.`
+              ? <>There are no saved smart contracts on <NetworkName>{network.label}</NetworkName> network.</>
+
               : savedContracts.map((c) => (
                   <SavedContractItem
                     key={`saved-contract-${c.timestamp}`}
