@@ -131,7 +131,7 @@ export const CodeEditor = ({
 
   return (
     <div
-      className={`CodeEditor ${isExpanded ? "CodeEditor--expanded" : ""} ${customCss ? customCss : ""}`}
+      className={`CodeEditor notranslate ${isExpanded ? "CodeEditor--expanded" : ""} ${customCss ? customCss : ""}`}
       style={customStyle}
     >
       {title ? (

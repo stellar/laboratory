@@ -52,6 +52,12 @@ test.describe("Smart Contracts: Contract Storage", () => {
       .getByTestId("contract-contract-storage")
       .getByText("Contract Storage")
       .click();
+
+    // Wait for the table to be visible, then a further 150ms so the Dropdown
+    // filter components' 100ms mount setTimeout has fully fired before any
+    // test interacts with the filter headers.
+    await page.getByTestId("contract-storage-table").waitFor({ state: "visible" });
+    await page.waitForTimeout(150);
   });
 
   test("Loads", async ({ page }) => {

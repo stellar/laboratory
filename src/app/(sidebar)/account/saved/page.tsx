@@ -24,6 +24,8 @@ import { arrayItem } from "@/helpers/arrayItem";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { getNetworkById } from "@/helpers/getNetworkById";
 
+import { NetworkName } from "@/components/NetworkName";
+
 import { useStore } from "@/store/useStore";
 import { useIsTestingNetwork } from "@/hooks/useIsTestingNetwork";
 import { useFriendBot } from "@/query/useFriendBot";
@@ -97,7 +99,8 @@ export default function SavedKeypairs() {
         <Box gap="md">
           <>
             {savedKeypairs.length === 0
-              ? `There are no saved keypairs on ${network.label} network.`
+              ? <>There are no saved keypairs on <NetworkName>{network.label}</NetworkName> network.</>
+
               : savedKeypairs.map((kp) => (
                   <SavedKeypairItem
                     key={`saved-kp-${kp.timestamp}`}

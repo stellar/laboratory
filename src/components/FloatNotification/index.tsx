@@ -8,7 +8,7 @@ export type FloatNotificationItem = {
   id: string;
   type: "success";
   title: string;
-  description: string;
+  description: React.ReactNode;
   actions?: {
     label: string;
     onAction: () => void;

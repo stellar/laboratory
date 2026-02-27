@@ -10,6 +10,7 @@ import React, {
 import { Button, Icon, Input, Notification } from "@stellar/design-system";
 
 import { NetworkIndicator } from "@/components/NetworkIndicator";
+import { NetworkName } from "@/components/NetworkName";
 import { LoadNetworkModal } from "@/components/NetworkSelector/LoadNetworkModal";
 import { NetworkOptions } from "@/constants/settings";
 import { useStore } from "@/store/useStore";
@@ -327,10 +328,10 @@ export const NetworkSelector = () => {
 
   const getButtonLabel = () => {
     if (activeNetwork.id === "custom") {
-      return "Switch to Custom Network";
+      return <>Switch to <NetworkName>Custom Network</NetworkName></>;
     }
 
-    return `Switch to ${getNetworkById(activeNetwork.id)?.label.toLowerCase()}`;
+    return <>Switch to <NetworkName>{getNetworkById(activeNetwork.id)?.label}</NetworkName></>;
   };
 
   const toggleDropdown = (show: boolean) => {

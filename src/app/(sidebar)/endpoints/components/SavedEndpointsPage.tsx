@@ -30,6 +30,8 @@ import { localStorageSavedRpcMethods } from "@/helpers/localStorageSavedRpcMetho
 import { arrayItem } from "@/helpers/arrayItem";
 import { formatTimestamp } from "@/helpers/formatTimestamp";
 import { getNetworkById } from "@/helpers/getNetworkById";
+import { NetworkName } from "@/components/NetworkName";
+
 import { useStore } from "@/store/useStore";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
@@ -162,7 +164,7 @@ export const SavedEndpointsPage = () => {
 
   const HorizonEndpoints = () => {
     if (savedEndpointsHorizon.length === 0) {
-      return `There are no saved Horizon Endpoints on ${network.label} network`;
+      return <>There are no saved Horizon Endpoints on <NetworkName>{network.label}</NetworkName> network</>;
     }
 
     return (
@@ -272,7 +274,7 @@ export const SavedEndpointsPage = () => {
 
   const RpcEndpoints = () => {
     if (savedRpcMethods.length === 0) {
-      return `There are no saved RPC Methods ${network.label} network`;
+      return <>There are no saved RPC Methods on <NetworkName>{network.label}</NetworkName> network</>;
     }
 
     return (
