@@ -60,6 +60,9 @@
     font-size: pxToRem(12px);
     font-weight: var(--sds-fw-medium);
     color: var(--sds-clr-gray-09);
+    background-color: var(--sds-clr-gray-03);
+    border-radius: pxToRem(4px);
+    padding: pxToRem(2px) pxToRem(6px);
     flex-shrink: 0;
   }
 }
