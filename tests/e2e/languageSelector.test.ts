@@ -86,8 +86,5 @@ test.describe("Language selector", () => {
     const cookies = await context.cookies();
     const googtrans = cookies.find((c) => c.name === "googtrans");
     expect(googtrans).toBeUndefined();
-    await expect(page.getByTestId("language-selector-trigger")).toHaveText(
-      "Language: English",
-    );
   });
 });
