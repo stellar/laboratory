@@ -96,7 +96,7 @@ export const LanguageSelector = () => {
         className="LanguageSelector__trigger SidebarLink"
         onClick={handleToggle}
         aria-expanded={isOpen}
-        aria-haspopup="listbox"
+        aria-haspopup="menu"
         aria-label={`Language: ${activeLabel}`}
         data-testid="language-selector-trigger"
       >
@@ -110,7 +110,7 @@ export const LanguageSelector = () => {
           className="LanguageSelector__menu"
           // eslint-disable-next-line react/forbid-dom-props
           style={menuStyle}
-          role="listbox"
+          role="menu"
           aria-label="Select language"
           data-testid="language-selector-menu"
         >
@@ -119,8 +119,8 @@ export const LanguageSelector = () => {
               key={code}
               className="LanguageSelector__option"
               data-is-active={code === activeCode}
-              role="option"
-              aria-selected={code === activeCode}
+              role="menuitemradio"
+              aria-checked={code === activeCode}
               onClick={() => handleSelect(code)}
               data-testid="language-selector-option"
             >

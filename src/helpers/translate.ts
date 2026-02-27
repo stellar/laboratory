@@ -1,9 +1,31 @@
 /**
+ * Expires the googtrans cookie at every possible domain level.
+ *
+ * Google Translate's own script sets a googtrans cookie scoped to the
+ * registrable domain (e.g. .stellar-ops.com) rather than the exact host.
+ * We must expire it at every parent domain level so it doesn't survive a
+ * language switch and cause the page to re-translate to the old language.
+ */
+const clearGoogTransCookies = (): void => {
+  const expire = "expires=Thu, 01 Jan 1970 00:00:00 UTC";
+  const parts = window.location.hostname.split(".");
+
+  for (let i = 0; i < parts.length - 1; i++) {
+    const domain = parts.slice(i).join(".");
+    document.cookie = `googtrans=; path=/; domain=${domain}; ${expire}`;
+    document.cookie = `googtrans=; path=/; domain=.${domain}; ${expire}`;
+  }
+
+  // Also clear the host-only (no domain attribute) cookie
+  document.cookie = `googtrans=; path=/; ${expire}`;
+};
+
+/**
  * Sets the Google Translate language cookie and reloads the page.
  *
- * The Google Translate engine reads the `googtrans` cookie on each page load
- * to determine the target language. Setting it on both the hostname-scoped and
- * the root-path cookie ensures it is picked up consistently across browsers.
+ * Clears all existing googtrans cookies at every domain level first to
+ * prevent stale cookies (set by Google Translate's own script at a parent
+ * domain) from overriding the new selection on reload.
  *
  * @param languageCode - BCP 47 language code (e.g. 'es', 'fr', 'pt', 'zh-CN')
  *
@@ -11,9 +33,8 @@
  * selectLanguage('es'); // translates to Spanish and reloads
  */
 export const selectLanguage = (languageCode: string): void => {
-  const val = `/en/${languageCode}`;
-  document.cookie = `googtrans=${val}; path=/; domain=${window.location.hostname}`;
-  document.cookie = `googtrans=${val}; path=/`;
+  clearGoogTransCookies();
+  document.cookie = `googtrans=/en/${languageCode}; path=/`;
   window.location.reload();
 };
 
@@ -25,9 +46,7 @@ export const selectLanguage = (languageCode: string): void => {
  * resetLanguage(); // returns to English and reloads
  */
 export const resetLanguage = (): void => {
-  const expire = "expires=Thu, 01 Jan 1970 00:00:00 UTC";
-  document.cookie = `googtrans=/en/en; path=/; domain=${window.location.hostname}; ${expire}`;
-  document.cookie = `googtrans=/en/en; path=/; ${expire}`;
+  clearGoogTransCookies();
   window.location.reload();
 };
 

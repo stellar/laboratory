@@ -50,7 +50,7 @@ test.describe("Language selector", () => {
     await page.getByTestId("language-selector-trigger").click();
 
     await Promise.all([
-      page.waitForLoadState("load"),
+      page.waitForNavigation({ waitUntil: "load" }),
       page
         .getByTestId("language-selector-option")
         .filter({ hasText: "Español" })
@@ -66,7 +66,7 @@ test.describe("Language selector", () => {
     // Set a non-English language first
     await page.getByTestId("language-selector-trigger").click();
     await Promise.all([
-      page.waitForLoadState("load"),
+      page.waitForNavigation({ waitUntil: "load" }),
       page
         .getByTestId("language-selector-option")
         .filter({ hasText: "Español" })
@@ -76,7 +76,7 @@ test.describe("Language selector", () => {
     // Reset back to English
     await page.getByTestId("language-selector-trigger").click();
     await Promise.all([
-      page.waitForLoadState("load"),
+      page.waitForNavigation({ waitUntil: "load" }),
       page
         .getByTestId("language-selector-option")
         .filter({ hasText: "English" })
