@@ -101,7 +101,7 @@ export const LanguageSelector = () => {
         data-testid="language-selector-trigger"
       >
         <Icon.Globe02 />
-        <span>Language: {activeLabel}</span>
+        <span>Language: <span className="notranslate">{activeLabel}</span></span>
       </button>
 
       {isOpen && (
@@ -124,7 +124,7 @@ export const LanguageSelector = () => {
               onClick={() => handleSelect(code)}
               data-testid="language-selector-option"
             >
-              <span>{label}</span>
+              <span className="notranslate">{label}</span>
               {code === activeCode && (
                 <span className="LanguageSelector__option__current">
                   Current
