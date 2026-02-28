@@ -19,21 +19,23 @@ export const useBackendContractStorage = ({
   sortBy?: string;
   order?: "asc" | "desc";
 }) => {
-  const query = useQuery<BEContractStorageResponse | null>({
+  const query = useQuery({
     queryKey: [
       "useBackendContractStorage",
       networkId,
       contractId,
       cursor,
-      sortBy,
-      order,
+      { sortBy, order },
     ],
     queryFn: async () => {
       const network = networkId === "mainnet" ? "pubnet" : networkId;
-      const baseUrl = `${BACKEND_ENDPOINT}/${network}/api/contract/${contractId}/storage?limit=10${sortBy ? `&sort_by=${sortBy}` : ""}${order ? `&order=${order}` : ""}`;
-      const fetchUrl = cursor
-        ? `${baseUrl}&cursor=${encodeURIComponent(cursor)}`
-        : baseUrl;
+      const params = new URLSearchParams({
+        limit: "10",
+        sort_by: sortBy ?? "updated_at",
+        order: order ?? "desc",
+      });
+      if (cursor) params.set("cursor", cursor);
+      const fetchUrl = `${BACKEND_ENDPOINT}/${network}/api/contract/${contractId}/storage?${params}`;
 
       const response = await fetch(fetchUrl);
 
@@ -42,7 +44,7 @@ export const useBackendContractStorage = ({
       }
 
       const responseJson = await response.json();
-      return responseJson;
+      return responseJson as BEContractStorageResponse | null;
     },
     enabled: Boolean(
       isActive &&
@@ -52,7 +54,8 @@ export const useBackendContractStorage = ({
         contractId,
     ),
     // Keep data for 30 seconds
-    staleTime: 1000 * 30,
+    staleTime: 1000 * 60,
+    placeholderData: (previousData) => previousData,
   });
 
   return query;

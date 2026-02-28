@@ -59,8 +59,8 @@ export const ContractStorage = ({
 
   const [currentCursor, setCurrentCursor] = useState<string | undefined>();
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortBy, setSortBy] = useState<string | undefined>();
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | undefined>();
+  const [sortBy, setSortBy] = useState<string>("updated_at");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   // Backend data source (used when backend is healthy)
   const backendResult = useBackendContractStorage({
@@ -84,8 +84,8 @@ export const ContractStorage = ({
     // Reset when contractId or networkId changes
     setCurrentCursor(undefined);
     setCurrentPage(1);
-    setSortBy(undefined);
-    setSortOrder(undefined);
+    setSortBy("updated_at");
+    setSortOrder("desc");
   }, [contractId, networkId]);
 
   const activeResult = isSourceStellarExpert ? seResult : backendResult;
@@ -107,11 +107,7 @@ export const ContractStorage = ({
     }
   }, [isActive, backendResult.isError]);
 
-  const {
-    error: storageError,
-    isLoading: isStorageLoading,
-    isFetching: isStorageFetching,
-  } = activeResult;
+  const { error: storageError, isLoading: isStorageLoading } = activeResult;
 
   // Normalize data from both sources
   const storageData = (() => {
@@ -134,7 +130,7 @@ export const ContractStorage = ({
     : undefined;
 
   // Loading, error, and no data states
-  if (isStorageLoading || isStorageFetching) {
+  if (isStorageLoading) {
     return (
       <Box gap="sm" direction="row" justify="center">
         <Loader />
@@ -153,6 +149,12 @@ export const ContractStorage = ({
       </Text>
     );
   }
+
+  const getCursorFromHref = (href: string) => {
+    const queryString = href.split("?")[1] || "";
+    const params = new URLSearchParams(queryString);
+    return params.get("cursor") || undefined;
+  };
 
   const parsedKeyValueData = () => {
     return storageData.map((i) => ({
@@ -316,8 +318,8 @@ export const ContractStorage = ({
                 onSortChange: (headerId: string, dir: SortDirection) => {
                   const apiSortBy = SORT_BY_MAP[headerId];
                   if (dir === "default") {
-                    setSortBy(undefined);
-                    setSortOrder(undefined);
+                    setSortBy("updated_at");
+                    setSortOrder("desc");
                   } else {
                     setSortBy(apiSortBy);
                     setSortOrder(dir);
@@ -334,29 +336,21 @@ export const ContractStorage = ({
                   prev: {
                     onClick: () => {
                       if (prevCursor) {
-                        const queryString = prevCursor.split("?")[1] || "";
-                        const params = new URLSearchParams(queryString);
-                        setCurrentCursor(params.get("cursor") || undefined);
+                        setCurrentCursor(getCursorFromHref(prevCursor));
                         setCurrentPage(Math.max(currentPage - 1, 1));
                       }
                     },
                     disabled:
-                      !prevCursor ||
-                      currentPage === 1 ||
-                      isStorageLoading ||
-                      isStorageFetching,
+                      !prevCursor || currentPage === 1 || isStorageLoading,
                   },
                   next: {
                     onClick: () => {
                       if (nextCursor) {
-                        const queryString = nextCursor.split("?")[1] || "";
-                        const params = new URLSearchParams(queryString);
-                        setCurrentCursor(params.get("cursor") || undefined);
+                        setCurrentCursor(getCursorFromHref(nextCursor));
                         setCurrentPage(currentPage + 1);
                       }
                     },
-                    disabled:
-                      !nextCursor || isStorageLoading || isStorageFetching,
+                    disabled: !nextCursor || isStorageLoading,
                   },
                 },
               }
