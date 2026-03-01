@@ -118,15 +118,15 @@ export default function TransactionDashboard() {
       },
     },
     {
-      id: "lumenscan",
-      label: "Lumenscan",
+      id: "stellarscan",
+      label: "Stellarscan",
       onClick: () => {
         if (transactionHashInput && network.id) {
-          const lsUrl =
-            network.id === "mainnet"
-              ? "https://lumenscan.io/txns"
-              : "https://testnet.lumenscan.io/txns";
-          openUrl(`${lsUrl}/${transactionHashInput}`);
+          const ssNetwork =
+            network.id === "mainnet" ? "" : "?network=testnet";
+          openUrl(
+            `https://stellarscan.io/tx/${transactionHashInput}${ssNetwork}`,
+          );
         }
       },
     },
