@@ -431,7 +431,10 @@ export default function FundAccount() {
                         size="md"
                         weight="medium"
                         addlClassName="Account__fundTokens__item__amount"
-                      >{`${formatNumber(parseFloat(t.amount))} ${t.currency}`}</Text>
+                      >
+                        {formatNumber(parseFloat(t.amount))}{" "}
+                        <AssetCode>{t.currency}</AssetCode>
+                      </Text>
                     </div>
 
                     {t.id === "xlm" || hasTrustline ? (
