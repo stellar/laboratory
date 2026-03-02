@@ -164,7 +164,7 @@ export const SavedEndpointsPage = () => {
 
   const HorizonEndpoints = () => {
     if (savedEndpointsHorizon.length === 0) {
-      return <>There are no saved Horizon Endpoints on <NetworkName>{network.label}</NetworkName> network</>;
+      return <span>There are no saved Horizon Endpoints on{" "}<NetworkName>{network.label}</NetworkName>{" "}network</span>;
     }
 
     return (
@@ -274,7 +274,7 @@ export const SavedEndpointsPage = () => {
 
   const RpcEndpoints = () => {
     if (savedRpcMethods.length === 0) {
-      return <>There are no saved RPC Methods on <NetworkName>{network.label}</NetworkName> network</>;
+      return <span>There are no saved RPC Methods on{" "}<NetworkName>{network.label}</NetworkName>{" "}network</span>;
     }
 
     return (

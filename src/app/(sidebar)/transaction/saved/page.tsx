@@ -232,7 +232,7 @@ export default function SavedTransactions() {
         <Box gap="md">
           <>
             {savedTxns.length === 0
-              ? <>There are no saved transactions on <NetworkName>{network.label}</NetworkName> network.</>
+              ? <span>There are no saved transactions on{" "}<NetworkName>{network.label}</NetworkName>{" "}network.</span>
 
               : savedTxns.map((t) => (
                   <SavedTxn key={`txn-${t.timestamp}`} txn={t} />

@@ -48,7 +48,7 @@ export default function SavedSmartContracts() {
         <Box gap="md">
           <>
             {savedContracts.length === 0
-              ? <>There are no saved smart contracts on <NetworkName>{network.label}</NetworkName> network.</>
+              ? <span>There are no saved smart contracts on{" "}<NetworkName>{network.label}</NetworkName>{" "}network.</span>
 
               : savedContracts.map((c) => (
                   <SavedContractItem

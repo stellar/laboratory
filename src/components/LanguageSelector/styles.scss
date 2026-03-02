@@ -10,6 +10,15 @@
     text-align: left;
   }
 
+  &__chevron {
+    flex-shrink: 0;
+    transition: transform var(--sds-anim-transition-default);
+
+    [aria-expanded="true"] & {
+      transform: rotate(180deg);
+    }
+  }
+
   &__menu {
     // Fixed positioning escapes both `overflow: hidden` ancestors
     // (LabLayout__withSidebar and LabLayout__sidebar)

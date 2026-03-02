@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Language selector", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:3000/");
+    await page.goto("/");
   });
 
   test("Defaults to English", async ({ page }) => {
@@ -21,6 +21,13 @@ test.describe("Language selector", () => {
       "Français",
       "Português",
       "Deutsch",
+      "中文 (简体)",
+      "日本語",
+      "한국어",
+      "Русский",
+      "العربية",
+      "हिन्दी",
+      "Türkçe",
     ]);
   });
 
@@ -49,13 +56,11 @@ test.describe("Language selector", () => {
   }) => {
     await page.getByTestId("language-selector-trigger").click();
 
-    await Promise.all([
-      page.waitForNavigation({ waitUntil: "load" }),
-      page
-        .getByTestId("language-selector-option")
-        .filter({ hasText: "Español" })
-        .click(),
-    ]);
+    await page
+      .getByTestId("language-selector-option")
+      .filter({ hasText: "Español" })
+      .click();
+    await page.waitForLoadState("load");
 
     const cookies = await context.cookies();
     const googtrans = cookies.find((c) => c.name === "googtrans");
@@ -65,23 +70,19 @@ test.describe("Language selector", () => {
   test("Selecting English resets the language", async ({ page, context }) => {
     // Set a non-English language first
     await page.getByTestId("language-selector-trigger").click();
-    await Promise.all([
-      page.waitForNavigation({ waitUntil: "load" }),
-      page
-        .getByTestId("language-selector-option")
-        .filter({ hasText: "Español" })
-        .click(),
-    ]);
+    await page
+      .getByTestId("language-selector-option")
+      .filter({ hasText: "Español" })
+      .click();
+    await page.waitForLoadState("load");
 
     // Reset back to English
     await page.getByTestId("language-selector-trigger").click();
-    await Promise.all([
-      page.waitForNavigation({ waitUntil: "load" }),
-      page
-        .getByTestId("language-selector-option")
-        .filter({ hasText: "English" })
-        .click(),
-    ]);
+    await page
+      .getByTestId("language-selector-option")
+      .filter({ hasText: "English" })
+      .click();
+    await page.waitForLoadState("load");
 
     const cookies = await context.cookies();
     const googtrans = cookies.find((c) => c.name === "googtrans");

@@ -101,7 +101,8 @@ export const LanguageSelector = () => {
         data-testid="language-selector-trigger"
       >
         <Icon.Globe02 />
-        <span>Language: <span className="notranslate">{activeLabel}</span></span>
+        <span>Language:{" "}<span className="notranslate">{activeLabel}</span></span>
+        <Icon.ChevronDown className="LanguageSelector__chevron" />
       </button>
 
       {isOpen && (

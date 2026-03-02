@@ -99,7 +99,7 @@ export default function SavedKeypairs() {
         <Box gap="md">
           <>
             {savedKeypairs.length === 0
-              ? <>There are no saved keypairs on <NetworkName>{network.label}</NetworkName> network.</>
+              ? <span>There are no saved keypairs on{" "}<NetworkName>{network.label}</NetworkName>{" "}network.</span>
 
               : savedKeypairs.map((kp) => (
                   <SavedKeypairItem

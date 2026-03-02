@@ -18,6 +18,7 @@ import { useAccountInfo } from "@/query/useAccountInfo";
 import { useAddTrustline } from "@/query/useAddTrustline";
 import { useSubmitHorizonTx } from "@/query/useSubmitHorizonTx";
 import { NetworkName } from "@/components/NetworkName";
+import { AssetCode } from "@/components/AssetCode";
 
 import { useStore } from "@/store/useStore";
 import { EURC_TESTNET_ISSUER, USDC_TESTNET_ISSUER } from "@/constants/settings";
@@ -308,13 +309,13 @@ export default function FundAccount() {
   return (
     <div className="Account">
       <PageCard
-        heading={<>Friendbot: fund a <NetworkName>{network.label}</NetworkName> account or contract with XLM, USDC, and EURC</>}
+        heading={<>Friendbot: fund a{" "}<NetworkName>{network.label}</NetworkName>{" "}account or contract with XLM,{" "}<AssetCode>USDC</AssetCode>, and{" "}<AssetCode>EURC</AssetCode></>}
       >
         <div className="Account__card">
           <Text size="sm" as="div">
             Friendbot is a standalone service that funds your testnet account or
-            contract with XLM. To fund assets such as USDC and EURC, you’ll need
-            to add a trustline manually before funding.
+            contract with XLM. Adding a trustline is required to fund assets
+            such as{" "}<AssetCode>USDC</AssetCode>{" "}and{" "}<AssetCode>EURC</AssetCode>.
           </Text>
 
           <Input
