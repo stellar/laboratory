@@ -224,13 +224,11 @@ const EventJson = ({ json }: { json: AnyObject }) => {
 
       <ExpandBox offsetTop="md" isExpanded={isExpanded}>
         <Box gap="md">
-          <div className="TransactionEvents__card TransactionEvents__card--inset">
-            <CodeEditor
-              value={formattedJson}
-              selectedLanguage="json"
-              isAutoHeight
-            />
-          </div>
+          <CodeEditor
+            value={formattedJson}
+            selectedLanguage="json"
+            isAutoHeight
+          />
           <Box gap="sm" direction="row" justify="end">
             <CopyJsonPayloadButton size="sm" jsonString={formattedJson} />
           </Box>
