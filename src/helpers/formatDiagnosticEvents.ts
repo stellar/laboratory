@@ -352,8 +352,9 @@ const processEvents = (
       nested: [],
     };
 
-    // Get host function name from error message so host_fn_failed can
-    // display a meaningful function name without relying on event ordering.
+    // Get host function name from the most recent diagnostic error message so
+    // subsequent host_fn_failed events can display a meaningful function name.
+    // Note: This relies on the ordering of dEvents as emitted by the host.
     if (evType === EVENT_TYPES.DIAGNOSTIC && topicSymbol === "error") {
       const message = ev.event?.body?.v0?.data;
 
