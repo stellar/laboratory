@@ -77,7 +77,9 @@ export const useSEContractStorage = ({
           await fetchData(lastRecord?.paging_token);
         }
 
-        return allRecords;
+        return allRecords.length
+          ? [...allRecords].sort((a, b) => (b.updated || 0) - (a.updated || 0))
+          : allRecords;
       } catch (e: any) {
         throw `Something went wrong. ${e}`;
       }

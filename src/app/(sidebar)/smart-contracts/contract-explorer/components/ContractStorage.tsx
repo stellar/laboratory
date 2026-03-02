@@ -113,10 +113,8 @@ export const ContractStorage = ({
   const storageData = (() => {
     if (isSourceStellarExpert) {
       const data = seResult.data;
-      // SE API doesn't support sort_by, so sort by updated descending client-side
-      return data
-        ? [...data].sort((a, b) => (b.updated || 0) - (a.updated || 0))
-        : data;
+
+      return data;
     }
     return backendResult.data?.results;
   })();
