@@ -38,6 +38,21 @@ export default defineConfig({
     video: "off",
     actionTimeout: 10 * 1000,
     navigationTimeout: 15 * 1000,
+    launchOptions: {
+      args: [
+        // Block Google Translate CDN requests so they don't slow down page
+        // loads in test environments. The app loads the GT script on every
+        // page (src/app/layout.tsx), and in environments with restricted or
+        // slow access to Google's CDN the external requests can push page
+        // loads past navigationTimeout, causing flaky failures in unrelated
+        // tests. Mapping these hosts to 127.0.0.1 makes connections fail
+        // immediately ("connection refused") rather than hanging. The async
+        // GT script handles the failure gracefully without blocking page load.
+        // Language selector tests are unaffected — they only verify cookie
+        // behaviour and UI state, not that the page is actually translated.
+        "--host-rules=MAP translate.google.com 127.0.0.1, MAP translate.googleapis.com 127.0.0.1",
+      ],
+    },
   },
 
   /* Run your local dev server before starting the tests */
