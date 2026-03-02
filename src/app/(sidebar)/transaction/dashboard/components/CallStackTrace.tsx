@@ -1,5 +1,12 @@
 import React, { JSX, useState } from "react";
-import { Alert, Icon, Label, Text, Toggle } from "@stellar/design-system";
+import {
+  Alert,
+  Button,
+  Icon,
+  Label,
+  Text,
+  Toggle,
+} from "@stellar/design-system";
 import { StrKey } from "@stellar/stellar-sdk";
 
 import { Box } from "@/components/layout/Box";
@@ -22,6 +29,9 @@ import { STELLAR_EXPERT } from "@/constants/settings";
 
 import { AnyObject, NetworkType } from "@/types/types";
 
+// TODO: remove temp data
+import { TEST1, TEST2, TEST3, TEST4 } from "./errorTestData";
+
 export const CallStackTrace = ({
   diagnosticEvents,
 }: {
@@ -29,9 +39,15 @@ export const CallStackTrace = ({
 }) => {
   const { network } = useStore();
 
+  // TODO: remove test data
+  const TEST_DATA: any[] = [TEST1, TEST2, TEST3, TEST4];
+  const [testDataId, setTestDataId] = useState(0);
+
   const data =
     diagnosticEvents && Array.isArray(diagnosticEvents)
-      ? formatDiagnosticEvents(diagnosticEvents)
+      ? formatDiagnosticEvents(
+          testDataId > 0 ? TEST_DATA[testDataId - 1] : diagnosticEvents,
+        )
       : null;
 
   const [isCollapsedView, setIsCollapsedView] = useState(false);
@@ -373,15 +389,20 @@ export const CallStackTrace = ({
             data-is-collapsed={isCollapsedView}
           >
             <span className="CallStackTrace__itemFunc__func">{event.name}</span>
-            <Bracket char="(" />
-            <span className="CallStackTrace__itemFunc__params">
-              {renderData({
-                dataItem: event.data,
-                voidAsEmptyFn: true,
-                isFnParams: true,
-              })}
-            </span>
-            <Bracket char=")" />
+            {/* Don't show arguments for host_fn_failed */}
+            {event.type === "host_fn_failed" ? null : (
+              <>
+                <Bracket char="(" />
+                <span className="CallStackTrace__itemFunc__params">
+                  {renderData({
+                    dataItem: event.data,
+                    voidAsEmptyFn: true,
+                    isFnParams: true,
+                  })}
+                </span>
+                <Bracket char=")" />
+              </>
+            )}
           </span>
 
           {event.contractId ? renderContractId(event.contractId) : null}
@@ -459,6 +480,69 @@ export const CallStackTrace = ({
           />
         </Box>
       </Box>
+
+      {/* TODO: remove test data */}
+      <div
+        style={{
+          border: "2px solid var(--sds-clr-red-11)",
+          padding: 10,
+          color: "var(--sds-clr-red-11)",
+        }}
+      >
+        <Box gap="md" direction="row" align="center" wrap="wrap">
+          TESTING:
+          <Button
+            variant="error"
+            size="md"
+            onClick={() => {
+              setTestDataId(1);
+            }}
+            disabled={testDataId === 1}
+          >
+            One
+          </Button>
+          <Button
+            variant="error"
+            size="md"
+            onClick={() => {
+              setTestDataId(2);
+            }}
+            disabled={testDataId === 2}
+          >
+            Two
+          </Button>
+          <Button
+            variant="error"
+            size="md"
+            onClick={() => {
+              setTestDataId(3);
+            }}
+            disabled={testDataId === 3}
+          >
+            Three
+          </Button>
+          <Button
+            variant="error"
+            size="md"
+            onClick={() => {
+              setTestDataId(4);
+            }}
+            disabled={testDataId === 4}
+          >
+            Four
+          </Button>
+          <Button
+            variant="error"
+            size="md"
+            onClick={() => {
+              setTestDataId(0);
+            }}
+            disabled={testDataId === 0}
+          >
+            Clear
+          </Button>
+        </Box>
+      </div>
 
       {data.errorLevel === "all" ? (
         <Alert placement="inline" variant="error" title="Transaction failed">
