@@ -1,5 +1,6 @@
 import { buildEndpointHref } from "@/helpers/buildEndpointHref";
 import { SdsLink } from "./SdsLink";
+import { NoTranslate } from "@/components/NoTranslate";
 import { Routes } from "@/constants/routes";
 
 export const XdrLink = ({ xdr, type }: { xdr: string; type: string }) => (
@@ -12,6 +13,6 @@ export const XdrLink = ({ xdr, type }: { xdr: string; type: string }) => (
     isUnderline
     variant="secondary"
   >
-    {xdr}
+    <NoTranslate>{xdr}</NoTranslate>
   </SdsLink>
 );

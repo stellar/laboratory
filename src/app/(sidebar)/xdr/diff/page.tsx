@@ -191,7 +191,7 @@ export default function DiffXdr() {
         ) : null}
 
         <div
-          className={`CodeEditor ${isExpanded ? "CodeEditor--expanded" : ""}`}
+          className={`CodeEditor notranslate ${isExpanded ? "CodeEditor--expanded" : ""}`}
           data-testid="diff-xdr-editor"
         >
           <div className="CodeEditor__header">

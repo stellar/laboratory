@@ -12,13 +12,13 @@ export function middleware(request: NextRequest) {
   const cspHeader = `
     default-src 'self';
     script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: 'unsafe-inline' 'unsafe-eval';
-    script-src-elem 'self' 'nonce-${nonce}' 'strict-dynamic' https://www.googletagmanager.com/ https: 'unsafe-inline';
+    script-src-elem 'self' 'nonce-${nonce}' 'strict-dynamic' https://www.googletagmanager.com/ https://translate.google.com https://translate.googleapis.com https: 'unsafe-inline';
     style-src 'self' https: 'unsafe-inline';
-    img-src 'self' https://stellar.creit.tech/wallet-icons/ https://www.googletagmanager.com/ https://storage.herewallet.app/ blob: data:;
+    img-src 'self' https://stellar.creit.tech/wallet-icons/ https://www.googletagmanager.com/ https://storage.herewallet.app/ https://www.gstatic.com/ https://fonts.gstatic.com/ https://www.google.com/ https://translate.google.com https://translate.googleapis.com blob: data:;
     connect-src 'self' http://localhost:* https:;
-    font-src 'self' https://fonts.gstatic.com/ https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs/base/browser/ui/codicons/codicon/codicon.ttf;
+    font-src 'self' https://fonts.gstatic.com/ https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs/base/browser/ui/codicons/codicon/codicon.ttf data:;
     object-src 'none';
-    frame-src 'self' https://connect.trezor.io/ https://hot-labs.org/ https://www.youtube.com/;
+    frame-src 'self' https://connect.trezor.io/ https://hot-labs.org/ https://www.youtube.com/ https://translate.google.com https://translate.googleapis.com;
     base-uri 'self';
     form-action 'self';
     frame-ancestors 'none';

@@ -30,7 +30,7 @@ test.describe("Saved Requests Page", () => {
     await rpcTab.click();
 
     await expect(
-      container.getByText("There are no saved RPC Methods Testnet network"),
+      container.getByText("There are no saved RPC Methods on Testnet network"),
     ).toBeVisible();
   });
 

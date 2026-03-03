@@ -105,6 +105,20 @@ In the deployment location the following command will run the app:
 node server.js
 ```
 
+## Adding a language
+
+Add an entry to the `LANGUAGES` array in
+`src/components/LanguageSelector/index.tsx`:
+
+```typescript
+{ code: "it", label: "Italiano" }
+```
+
+`code` must be a
+[BCP 47 tag supported by Google Translate](https://cloud.google.com/translate/docs/languages)
+(e.g. `"zh-CN"`, `"pt"`, `"ar"`). `label` should be the language's own name,
+not its English translation.
+
 ## Tracking
 
 To improve Lab, we use [Amplitude](https://amplitude.com/) and

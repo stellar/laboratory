@@ -8,7 +8,7 @@ export const NetworkIndicator = ({
   networkLabel: string;
 }) => {
   return (
-    <div className="NetworkIndicator">
+    <div className="NetworkIndicator notranslate">
       <span
         className="NetworkIndicator__dot"
         aria-hidden="true"

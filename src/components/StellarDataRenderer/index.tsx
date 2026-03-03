@@ -428,7 +428,7 @@ export const ScValPrettyJson = ({
 
   // Entry point: render JSON, if provided, or parse XDR to JSON
   return (
-    <div className="StellarDataRenderer">
+    <div className="StellarDataRenderer notranslate">
       {render({ item: json ? json : parseJson() })}
     </div>
   );
@@ -644,7 +644,9 @@ export const ClassicOpPrettyJson = ({ value }: { value: any }) => {
     }
   };
 
-  return <div className="StellarDataRenderer">{renderValue(value)}</div>;
+  return (
+    <div className="StellarDataRenderer notranslate">{renderValue(value)}</div>
+  );
 };
 
 // =============================================================================

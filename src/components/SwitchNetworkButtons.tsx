@@ -1,4 +1,5 @@
 import { Button } from "@stellar/design-system";
+import { NetworkName } from "@/components/NetworkName";
 import { useSwitchNetwork } from "@/hooks/useSwitchNetwork";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 import { NetworkType } from "@/types/types";
@@ -29,7 +30,7 @@ export const SwitchNetworkButtons = ({
             });
           }}
         >
-          {`Switch to ${n}`}
+          Switch to <NetworkName>{n}</NetworkName>
         </Button>
       ))}
     </>

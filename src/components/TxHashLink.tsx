@@ -1,4 +1,5 @@
 import { SdsLink } from "@/components/SdsLink";
+import { NoTranslate } from "@/components/NoTranslate";
 import { buildEndpointHref } from "@/helpers/buildEndpointHref";
 import { Routes } from "@/constants/routes";
 
@@ -11,6 +12,6 @@ export const TxHashLink = ({ txHash }: { txHash: string }) => (
     isUnderline
     variant="secondary"
   >
-    {txHash}
+    <NoTranslate>{txHash}</NoTranslate>
   </SdsLink>
 );

@@ -17,6 +17,9 @@ import { useFriendBot } from "@/query/useFriendBot";
 import { useAccountInfo } from "@/query/useAccountInfo";
 import { useAddTrustline } from "@/query/useAddTrustline";
 import { useSubmitHorizonTx } from "@/query/useSubmitHorizonTx";
+import { NetworkName } from "@/components/NetworkName";
+import { AssetCode } from "@/components/AssetCode";
+
 import { useStore } from "@/store/useStore";
 import { EURC_TESTNET_ISSUER, USDC_TESTNET_ISSUER } from "@/constants/settings";
 
@@ -201,7 +204,7 @@ export default function FundAccount() {
         id: `fund-account-success-xlm`,
         type: "success",
         title: "XLM has been successfully funded!",
-        description: `10,000 XLM was funded to ${shortenStellarAddress(inputPublicKey)} on ${network.label}.`,
+        description: <>10,000 XLM was funded to {shortenStellarAddress(inputPublicKey)} on <NetworkName>{network.label}</NetworkName>.</>,
       });
 
       setActiveToken("");
@@ -245,7 +248,7 @@ export default function FundAccount() {
         id: `fund-account-success-${assetCode}`,
         type: "success",
         title: "Trustline added",
-        description: `${assetCode} trustline has been successfully added to ${shortenStellarAddress(inputPublicKey)} on ${network.label}.`,
+        description: <>{assetCode} trustline has been successfully added to {shortenStellarAddress(inputPublicKey)} on <NetworkName>{network.label}</NetworkName>.</>,
       });
     }
   }, [
@@ -306,13 +309,13 @@ export default function FundAccount() {
   return (
     <div className="Account">
       <PageCard
-        heading={`Friendbot: fund a ${network.label} account or contract with XLM, USDC, and EURC`}
+        heading={<>Friendbot: fund a{" "}<NetworkName>{network.label}</NetworkName>{" "}account or contract with XLM,{" "}<AssetCode>USDC</AssetCode>, and{" "}<AssetCode>EURC</AssetCode></>}
       >
         <div className="Account__card">
           <Text size="sm" as="div">
             Friendbot is a standalone service that funds your testnet account or
-            contract with XLM. To fund assets such as USDC and EURC, you’ll need
-            to add a trustline manually before funding.
+            contract with XLM. Adding a trustline is required to fund assets
+            such as{" "}<AssetCode>USDC</AssetCode>{" "}and{" "}<AssetCode>EURC</AssetCode>.
           </Text>
 
           <Input
@@ -428,7 +431,10 @@ export default function FundAccount() {
                         size="md"
                         weight="medium"
                         addlClassName="Account__fundTokens__item__amount"
-                      >{`${formatNumber(parseFloat(t.amount))} ${t.currency}`}</Text>
+                      >
+                        {formatNumber(parseFloat(t.amount))}{" "}
+                        <AssetCode>{t.currency}</AssetCode>
+                      </Text>
                     </div>
 
                     {t.id === "xlm" || hasTrustline ? (
