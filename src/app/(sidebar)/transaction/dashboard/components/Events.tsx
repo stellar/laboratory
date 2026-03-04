@@ -9,6 +9,7 @@ import { ScValPrettyJson } from "@/components/StellarDataRenderer";
 import { ExpandBox } from "@/components/ExpandBox";
 import { CopyJsonPayloadButton } from "@/components/CopyJsonPayloadButton";
 import { TransactionTabEmptyMessage } from "@/components/TransactionTabEmptyMessage";
+import { CodeEditor } from "@/components/CodeEditor";
 
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import { FormattedTxEvent, formatTxEvents } from "@/helpers/formatTxEvents";
@@ -223,9 +224,11 @@ const EventJson = ({ json }: { json: AnyObject }) => {
 
       <ExpandBox offsetTop="md" isExpanded={isExpanded}>
         <Box gap="md">
-          <div className="TransactionEvents__card TransactionEvents__card--inset">
-            <pre>{formattedJson}</pre>
-          </div>
+          <CodeEditor
+            value={formattedJson}
+            selectedLanguage="json"
+            isAutoHeight
+          />
           <Box gap="sm" direction="row" justify="end">
             <CopyJsonPayloadButton size="sm" jsonString={formattedJson} />
           </Box>
