@@ -253,13 +253,15 @@ export const ContractStorage = ({
               id: "key",
               value: "Key",
               isSortable: false,
-              filter: keyValueFilters.key,
+              // @TODO add backend filtering for SE source as well when it's ready
+              filter: isSourceStellarExpert ? keyValueFilters.key : undefined,
             },
             {
               id: "value",
               value: "Value",
               isSortable: false,
-              filter: keyValueFilters.value,
+              // @TODO add backend filtering for SE source as well when it's ready
+              filter: isSourceStellarExpert ? keyValueFilters.value : undefined,
             },
             { id: "durability", value: "Durability", isSortable: true },
             { id: "ttl", value: "TTL", isSortable: true },
