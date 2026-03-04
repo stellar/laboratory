@@ -32,8 +32,8 @@ The tabs at the top are navigation links (`<Link href="/transaction/import">`);
 switching tabs is a page navigation, not local state. Within each page, all
 steps are rendered on that single URL. The stepper tracks which step is active
 and users can navigate back to any previously completed step. Step content is
-conditionally rendered based on the active step — the `?step=` URL param updates
-but there is no page navigation or reload between steps within a flow.
+conditionally rendered based on the active step. There is no page navigation or
+reload between steps within a flow.
 
 ### Step variants
 
@@ -96,7 +96,7 @@ type TransactionStepName =
 
 - `activeStep: TransactionStepName` — controls which content renders
 - `highestCompletedStep: TransactionStepName | null` — tracks the furthest step
-  reached (`null` when entering mid-flow via shared link)
+  reached (`null` on fresh page load with no session state)
 - **Build flow and Import flow each own their own `steps` array** — they live on
   separate routes (`/transaction/build` → `BuildFlow`; `/transaction/import` →
   `ImportFlow`). Each `page.tsx` is self-contained.
@@ -112,48 +112,166 @@ type TransactionStepName =
   users can navigate back to any completed step, but cannot skip forward.
   Forward navigation always goes through the "Next" footer button
 
-### Shared link handling (MVP)
+### State Persistence Model
 
-When a user opens a link that targets a specific step (whether from a legacy
-route or shared from the new flow), previous steps are **disabled** in the
-stepper. This is both a practical and UX decision:
+Flow state is stored in **`sessionStorage`**, not the URL. This is an
+intentional departure from the `zustand-querystring` pattern used elsewhere in
+the app.
 
-1. **URL length limit** — Persisting XDR for all completed steps in the URL
-   would easily exceed browser URL limits (~2KB). Only the current step's XDR is
-   included in the shared link.
-2. **Missing context** — The recipient doesn't have the intermediate state
-   (build params, simulation result) that earlier steps produced.
+**Why sessionStorage instead of URL params:**
 
-Legacy routes (`/transaction/simulate`, `/transaction/sign`,
-`/transaction/submit`) redirect to `/transaction/build?step=<step>&xdr=...`.
+The current codebase already excludes large data from the URL —
+`transaction.build.classic.xdr` and `transaction.build.soroban.xdr` are set to
+`xdr: false` in the store's `select()` config. Only build parameters, operation
+config, and form inputs are URL-persisted today (~1–3 KB).
 
-New-flow shared links use the `step` query param directly:
+The new transaction flow introduces additional state that cannot fit in the URL:
 
-| URL                                        | Initial step | Previous steps                     |
-| ------------------------------------------ | ------------ | ---------------------------------- |
-| `/transaction/build?xdr=...`               | `"build"`    | None                               |
-| `/transaction/build?step=simulate&xdr=...` | `"simulate"` | Build disabled                     |
-| `/transaction/build?step=sign&xdr=...`     | `"sign"`     | Build, Simulate disabled           |
-| `/transaction/build?step=validate&xdr=...` | `"validate"` | Build, Simulate, Validate disabled |
-| `/transaction/build?step=submit&xdr=...`   | `"submit"`   | All previous disabled              |
+- `simulationResult` — full RPC response JSON (5–50 KB)
+- `signedAuthEntries` — XDR blobs (1–5 KB each)
+- `assembledXdr` / `signedXdr` — base64 XDR strings (5–25 KB each)
 
-Legacy routes map to new-flow URLs:
+Rather than splitting state across two persistence layers (some fields in URL,
+some in sessionStorage), **all** transaction flow state — including build params
+and operations — lives in sessionStorage. This avoids split-brain
+inconsistencies where URL-persisted build params and sessionStorage-persisted
+step state could contradict each other.
 
-| Legacy route                    | Redirects to                               |
-| ------------------------------- | ------------------------------------------ |
-| `/transaction/simulate?xdr=...` | `/transaction/build?step=simulate&xdr=...` |
-| `/transaction/sign?xdr=...`     | `/transaction/build?step=sign&xdr=...`     |
-| `/transaction/submit?xdr=...`   | `/transaction/build?step=submit&xdr=...`   |
+**URL sharing vs. transaction sharing:** URL sharing is not supported for this
+flow. However, sharing partially-signed transactions (e.g., for multi-sig
+workflows) is a separate concern — that is handled by the Import flow, where
+users paste XDR directly. The existing `/transaction/sign` URL-based import path
+also remains available as a legacy option.
 
-When `step` is omitted, defaults to `"build"`.
+**What persists where:**
 
-This means `highestCompletedStep` starts at `null` (no previous steps
-clickable), so the stepper only allows forward navigation from the entry point.
-Users can start fresh to go through all steps from the beginning.
+| Storage          | Scope                                                     | What it holds                                                                                           |
+| ---------------- | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `sessionStorage` | Current browser tab; survives refresh and back navigation | Full flow state: `activeStep`, `highestCompletedStep`, build params, XDR, simulation result, signed XDR |
+| `localStorage`   | Cross-session; explicit user action                       | Saved transactions (via "Save transaction" button)                                                      |
+| URL (querystring)| App-wide, shareable                                       | Network settings only (network ID, Horizon URL, RPC URL, passphrase) — managed by the main store via `zustand-querystring` |
 
-### Save vs Share
+**Network settings remain in the URL** via the main store's existing querystring
+sync. Network config is app-wide (used by XDR page, endpoints, smart contracts,
+etc.), tiny in size, and genuinely useful to share ("here's Lab pointed at
+testnet"). The transaction flow store reads `network` from the main store as a
+read-only cross-store dependency — it is not duplicated into sessionStorage.
 
-URL sharing only includes the current step's XDR (URL length limit).
+**Lifecycle:**
+
+- State is **preserved** on page refresh and browser back/forward navigation
+  within the same session
+- State is **cleared** when the tab is closed (sessionStorage is tab-scoped)
+- State is **cleared** by "Clear all" (explicit user action)
+- Navigating between Build and Import tabs does **not** clear the other tab's
+  state; each flow has its own session storage key
+- **`beforeunload` warning**: When the flow store has unsaved state (i.e., the
+  user has progressed past the initial step or modified build params), closing
+  or navigating away from the tab triggers a browser confirmation dialog. This
+  protects against accidental tab close (Cmd+W), browser crash recovery prompts,
+  and mobile tab kills. The warning is suppressed after "Clear all" or when the
+  flow is in its initial empty state.
+
+**Implementation — Separate Zustand Store:**
+
+Create a new `TransactionFlowStore`, completely separate from the main store.
+The new flow store uses `persist(immer(...))` with sessionStorage — no
+`zustand-querystring` involvement. The main store (with `querystring(immer(...))`)
+continues to serve the rest of the app (XDR page, endpoints, account, smart
+contracts, etc.) but is **not used for transaction flow state**.
+
+The only thing the flow reads from the main store is `network` config (needed
+for signing and simulation). All transaction data — build params, operations,
+XDR strings, simulation results, step navigation — lives exclusively in the
+flow store.
+
+```typescript
+// New file: src/store/createTransactionFlowStore.ts
+import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
+import { immer } from "zustand/middleware/immer";
+
+const useTransactionFlowStore = create<TransactionFlowState>()(
+  persist(
+    immer((set) => ({
+      activeStep: "build",
+      highestCompletedStep: null,
+      buildParams: { /* ... */ },
+      operations: [],
+      buildXdr: "",
+      simulationResultJson: "",
+      authEntriesXdr: [],
+      signedAuthEntriesXdr: [],
+      assembledXdr: "",
+      signedXdr: "",
+      validateResultJson: "",
+      // actions...
+    })),
+    {
+      name: "stellar_lab_tx_flow_build", // or _import
+      storage: createJSONStorage(() => sessionStorage),
+    },
+  ),
+);
+```
+
+Key design decisions:
+
+- **Fully self-contained**: The flow store owns all transaction state. No
+  transaction data in the main store's `querystring` sync. The only cross-store
+  dependency is `network` (read-only from main store).
+- **Two storage keys**: `stellar_lab_tx_flow_build` and
+  `stellar_lab_tx_flow_import` for independent flow isolation
+- **All SDK objects stored as base64 XDR strings** — never persist SDK object
+  instances. Parse back to SDK objects lazily at point of use (e.g.,
+  `xdr.SorobanAuthorizationEntry.fromXDR(str, 'base64')`)
+- **Hydration**: Use `skipHydration: true` with `rehydrate()` in a client-side
+  `useEffect` (sessionStorage is not available during SSR)
+- **`highestCompletedStep`** is part of the persisted store (not
+  component-local state), so browser back navigation correctly restores which
+  steps are accessible in the stepper
+
+**Error handling:**
+
+All sessionStorage access must be wrapped in try-catch. The existing codebase
+has no error handling around storage APIs — this flow must not repeat that
+pattern.
+
+- **Write failure** (QuotaExceededError, security restrictions): fall back to
+  in-memory only. The flow still works within the tab, just won't survive
+  refresh. Log a warning via console.
+- **Read failure** (corrupted JSON, missing keys): reset to default state
+  instead of crashing. Log a warning.
+- **Private/incognito mode**: sessionStorage works in private mode on modern
+  browsers (cleared on tab close, which is the same behavior as normal
+  sessionStorage). Older browsers or restricted environments may throw — the
+  try-catch fallback handles this.
+
+**Backward compatibility with old URLs:**
+
+Existing URLs with transaction state in query params (e.g.,
+`?transaction.build.params.source_account=G...&transaction.build.classic.operations=...`)
+will continue to work through a one-time migration handled at the **app level**
+(e.g., in `StoreProvider` or root layout), so it catches any old bookmarked or
+shared URL regardless of which route the user lands on:
+
+1. On app initialization, check if the URL contains legacy
+   `transaction.build.*` or `transaction.sign.*` query params
+2. If found, parse them and write the values into the
+   `TransactionFlowStore` (sessionStorage)
+3. Redirect to the clean path (`/transaction/build` or `/transaction/import`)
+   with no query params (replace state, no history entry)
+4. The flow store now holds the migrated state; the user continues in the new
+   single-page flow
+
+This is a single centralized handler — individual pages do not need to know
+about legacy URL formats.
+
+This ensures bookmarked or shared URLs from before the migration still load
+correctly.
+
+### Save
+
 localStorage save captures the full flow state across all steps, enabling
 complete restore with all previous steps accessible. Save always restores to the
 Build/Import step — simulation/signing is fast to redo.
@@ -268,10 +386,9 @@ step navigation logic.
 
 **Modify:** `src/app/(sidebar)/transaction/build/page.tsx`
 
-This page now owns the Build flow end-to-end. `activeStep` lives in the Zustand
-transaction store and is synced to the `?step=` query param via
-`zustand-querystring`. `highestCompletedStep` is local state (session-only, not
-URL-persisted).
+This page now owns the Build flow end-to-end. `activeStep` and
+`highestCompletedStep` both live in the Zustand transaction store, persisted to
+`sessionStorage`. Neither is synced to URL query params.
 
 New structure — `page.tsx` renders `<BuildFlow />` directly; the `<Tabs />`
 component contains nav links, not local state:
@@ -339,8 +456,7 @@ const { highestCompletedStep, stepIndex, handleNext, handleBack, handleStepClick
     steps,
     activeStep,
     setActiveStep,
-    initialStep: activeStep === "build" ? "build" : null,
-    //           ^ null = opened via shared link; previous steps disabled
+    // highestCompletedStep is restored from sessionStorage; null on first visit
   });
 
 <div className="TransactionFlow__layout">
@@ -391,7 +507,7 @@ const { highestCompletedStep, stepIndex, handleNext, handleBack, handleStepClick
 `src/app/(sidebar)/transaction/build/components/ClassicOperation.tsx`
 
 - Remove "Clear operations" button (replaced by page-level "Clear all")
-- Keep "Add operation", save icon button, and share URL button
+- Keep "Add operation" and save icon button
 
 **Modify:**
 `src/app/(sidebar)/transaction/build/components/SorobanOperation.tsx`
@@ -431,8 +547,8 @@ Add events:
 - Tab navigation between Build and Import pages works
 - Two-column layout with stepper on right; stepper hides on narrow screens
 - "Clear all" resets both params and operations
-- "Next: Simulate" advances to Simulate step (same page — URL updates to
-  `?step=simulate`, no page reload)
+- "Next: Simulate" advances to Simulate step (same page, no page reload; active
+  step persisted to `sessionStorage`)
 - "Back: Build transaction" returns to Build step with form data preserved
 - Stepper highlights active step; completed steps are clickable, future steps
   are not
