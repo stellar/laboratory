@@ -356,23 +356,6 @@
     padding: pxToRem(12px);
     gap: pxToRem(12px);
 
-    &--inset {
-      padding: pxToRem(8px);
-      background-color: var(--sds-clr-gray-03);
-      border: none;
-
-      pre {
-        padding-left: pxToRem(8px);
-        padding-right: pxToRem(8px);
-        margin: 0;
-        font-family: var(--sds-ff-monospace), monospace;
-        font-size: pxToRem(14px);
-        line-height: pxToRem(20px);
-        color: var(--sds-clr-gray-12);
-        overflow: auto;
-      }
-    }
-
     &--data {
       gap: pxToRem(4px);
     }
