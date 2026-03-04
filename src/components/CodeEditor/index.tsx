@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Button, CopyText, Icon, Select } from "@stellar/design-system";
-import MonacoEditor, { useMonaco, type OnMount } from "@monaco-editor/react";
+import MonacoEditor, { type OnMount } from "@monaco-editor/react";
+import loader from "@monaco-editor/loader";
 
 import { useStore } from "@/store/useStore";
 import { Box } from "@/components/layout/Box";
@@ -47,10 +48,13 @@ export const CodeEditor = ({
   maxHeightInRem,
 }: CodeEditorProps) => {
   const { theme } = useStore();
-  const monaco = useMonaco();
   const headerEl = useRef<HTMLDivElement | null>(null);
 
-  const [isReady, setIsReady] = useState(false);
+  const [isReady, setIsReady] = useState(
+    // If Monaco is already loaded (e.g., another editor was mounted first),
+    // skip the async init to avoid a flicker.
+    () => loader.__getMonacoInstance() !== null,
+  );
   const [isExpanded, setIsExpanded] = useState(false);
 
   // Default header height is 43px
@@ -58,11 +62,27 @@ export const CodeEditor = ({
 
   const [autoHeight, setAutoHeight] = useState<string | null>(null);
 
+  // Load Monaco without the unhandled-rejection bug that exists in the
+  // useMonaco() hook shipped by @monaco-editor/react: its internal
+  // loader.init().then(...) call has NO .catch(), so when React StrictMode
+  // double-invokes effects the cleanup calls loader.cancel() which rejects
+  // the promise with a plain { type: 'cancelation' } object, surfacing as
+  // '[object Object]' in Next.js's onUnhandledRejection handler.
   useEffect(() => {
-    if (typeof window !== "undefined" && monaco) {
-      setIsReady(true);
-    }
-  }, [monaco]);
+    if (isReady) return;
+
+    const initPromise = loader.init();
+    initPromise
+      .then(() => setIsReady(true))
+      // Swallow both intentional cancellations and unexpected errors so the
+      // promise rejection never escapes to the global unhandledrejection event.
+      .catch(() => {});
+
+    return () => {
+      initPromise.cancel();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (!isReady) {
     return null;
