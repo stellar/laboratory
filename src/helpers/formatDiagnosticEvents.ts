@@ -164,6 +164,19 @@ const getEventName = (event: DiagnosticEvent): string => {
   return "";
 };
 
+// Extracts the host function name from an error message string
+const extractHostFunctionName = (message: string): string | undefined => {
+  if (!message || typeof message !== "string") {
+    return undefined;
+  }
+
+  // Example: escalating error to VM trap from failed host function call: has_contract_data
+  // We want to extract "has_contract_data" as the host function name
+  const match = message.match(/failed host function call:\s*([A-Za-z0-9_]+)/);
+
+  return match?.[1];
+};
+
 type PrimitiveKey = Exclude<keyof ScValType, "vec" | "map">;
 
 const isPrimitiveKey = (key: keyof ScValType): key is PrimitiveKey =>
@@ -300,6 +313,7 @@ const processEvents = (
   const currentStack: ProcessedEvent[] = [];
   const result: ProcessedEvent[] = [];
   const coreMetrics: CoreMetric[] = [];
+  let lastHostFnName: string | undefined;
 
   dEvents.forEach((ev) => {
     const evType = ev.event?.type_;
@@ -338,6 +352,17 @@ const processEvents = (
       nested: [],
     };
 
+    // Get host function name from the most recent diagnostic error message so
+    // subsequent host_fn_failed events can display a meaningful function name.
+    // Note: This relies on the ordering of dEvents as emitted by the host.
+    if (evType === EVENT_TYPES.DIAGNOSTIC && topicSymbol === "error") {
+      const message = ev.event?.body?.v0?.data;
+
+      if (message && typeof message === "object" && "string" in message) {
+        lastHostFnName = extractHostFunctionName(message.string as string);
+      }
+    }
+
     const addEvent = (event: ProcessedEvent): void => {
       if (currentStack.length > 0) {
         currentStack[currentStack.length - 1].nested.push(event);
@@ -362,7 +387,10 @@ const processEvents = (
           result.push(eventObj);
         }
       } else {
-        // Add to current stack
+        // Show host_fn_failed events with the host function name if available
+        if (topicSymbol === "host_fn_failed") {
+          eventObj.name = lastHostFnName || "unknown";
+        }
         addEvent(eventObj);
       }
     } else if (evType === EVENT_TYPES.CONTRACT) {

@@ -21,7 +21,6 @@ import { TabView } from "@/components/TabView";
 import { NoInfoLoadedView } from "@/components/NoInfoLoadedView";
 import { SdsLink } from "@/components/SdsLink";
 
-import { STELLAR_EXPERT } from "@/constants/settings";
 import { validate } from "@/validate";
 import { useStore } from "@/store/useStore";
 import { useFetchRpcTxDetails } from "@/query/useFetchRpcTxDetails";
@@ -30,7 +29,7 @@ import { useLatestTxn } from "@/query/useLatestTxn";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { getTxData } from "@/helpers/getTxData";
 import { openUrl } from "@/helpers/openUrl";
-import { getStellarExpertNetwork } from "@/helpers/getStellarExpertNetwork";
+import { getBlockExplorerLink } from "@/helpers/getBlockExplorerLink";
 import { delayedAction } from "@/helpers/delayedAction";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
@@ -109,32 +108,22 @@ export default function TransactionDashboard() {
   const EXTERNAL_EXPLORERS = [
     {
       id: "stellar-expert",
-      label: "Stellar.Expert",
+      label: "stellar.expert",
       onClick: () => {
         if (transactionHashInput && network.id) {
-          const seNetwork = getStellarExpertNetwork(network.id);
-          openUrl(`${STELLAR_EXPERT}/${seNetwork}/tx/${transactionHashInput}`);
+          const baseUrl = getBlockExplorerLink("stellar.expert")[network.id];
+          openUrl(`${baseUrl}/tx/${transactionHashInput}`);
         }
       },
     },
     {
-      id: "lumenscan",
-      label: "Lumenscan",
+      id: "stellarchain",
+      label: "stellarchain.io",
       onClick: () => {
         if (transactionHashInput && network.id) {
-          const lsUrl =
-            network.id === "mainnet"
-              ? "https://lumenscan.io/txns"
-              : "https://testnet.lumenscan.io/txns";
-          openUrl(`${lsUrl}/${transactionHashInput}`);
+          const baseUrl = getBlockExplorerLink("stellarchain.io")[network.id];
+          openUrl(`${baseUrl}/transactions/${transactionHashInput}`);
         }
-      },
-    },
-    {
-      id: "goldsky",
-      label: "Goldsky",
-      onClick: () => {
-        openUrl("https://goldsky.com/chains/stellar");
       },
     },
   ];
