@@ -145,11 +145,11 @@ also remains available as a legacy option.
 
 **What persists where:**
 
-| Storage          | Scope                                                     | What it holds                                                                                           |
-| ---------------- | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| `sessionStorage` | Current browser tab; survives refresh and back navigation | Full flow state: `activeStep`, `highestCompletedStep`, build params, XDR, simulation result, signed XDR |
-| `localStorage`   | Cross-session; explicit user action                       | Saved transactions (via "Save transaction" button)                                                      |
-| URL (querystring)| App-wide, shareable                                       | Network settings only (network ID, Horizon URL, RPC URL, passphrase) — managed by the main store via `zustand-querystring` |
+| Storage           | Scope                                                     | What it holds                                                                                                              |
+| ----------------- | --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `sessionStorage`  | Current browser tab; survives refresh and back navigation | Full flow state: `activeStep`, `highestCompletedStep`, build params, XDR, simulation result, signed XDR                    |
+| `localStorage`    | Cross-session; explicit user action                       | Saved transactions (via "Save transaction" button)                                                                         |
+| URL (querystring) | App-wide, shareable                                       | Network settings only (network ID, Horizon URL, RPC URL, passphrase) — managed by the main store via `zustand-querystring` |
 
 **Network settings remain in the URL** via the main store's existing querystring
 sync. Network config is app-wide (used by XDR page, endpoints, smart contracts,
@@ -176,14 +176,15 @@ read-only cross-store dependency — it is not duplicated into sessionStorage.
 
 Create a new `TransactionFlowStore`, completely separate from the main store.
 The new flow store uses `persist(immer(...))` with sessionStorage — no
-`zustand-querystring` involvement. The main store (with `querystring(immer(...))`)
-continues to serve the rest of the app (XDR page, endpoints, account, smart
-contracts, etc.) but is **not used for transaction flow state**.
+`zustand-querystring` involvement. The main store (with
+`querystring(immer(...))`) continues to serve the rest of the app (XDR page,
+endpoints, account, smart contracts, etc.) but is **not used for transaction
+flow state**.
 
 The only thing the flow reads from the main store is `network` config (needed
 for signing and simulation). All transaction data — build params, operations,
-XDR strings, simulation results, step navigation — lives exclusively in the
-flow store.
+XDR strings, simulation results, step navigation — lives exclusively in the flow
+store.
 
 ```typescript
 // New file: src/store/createTransactionFlowStore.ts
@@ -196,7 +197,9 @@ const useTransactionFlowStore = create<TransactionFlowState>()(
     immer((set) => ({
       activeStep: "build",
       highestCompletedStep: null,
-      buildParams: { /* ... */ },
+      buildParams: {
+        /* ... */
+      },
       operations: [],
       buildXdr: "",
       simulationResultJson: "",
@@ -227,9 +230,9 @@ Key design decisions:
   `xdr.SorobanAuthorizationEntry.fromXDR(str, 'base64')`)
 - **Hydration**: Use `skipHydration: true` with `rehydrate()` in a client-side
   `useEffect` (sessionStorage is not available during SSR)
-- **`highestCompletedStep`** is part of the persisted store (not
-  component-local state), so browser back navigation correctly restores which
-  steps are accessible in the stepper
+- **`highestCompletedStep`** is part of the persisted store (not component-local
+  state), so browser back navigation correctly restores which steps are
+  accessible in the stepper
 
 **Error handling:**
 
@@ -255,10 +258,10 @@ will continue to work through a one-time migration handled at the **app level**
 (e.g., in `StoreProvider` or root layout), so it catches any old bookmarked or
 shared URL regardless of which route the user lands on:
 
-1. On app initialization, check if the URL contains legacy
-   `transaction.build.*` or `transaction.sign.*` query params
-2. If found, parse them and write the values into the
-   `TransactionFlowStore` (sessionStorage)
+1. On app initialization, check if the URL contains legacy `transaction.build.*`
+   or `transaction.sign.*` query params
+2. If found, parse them and write the values into the `TransactionFlowStore`
+   (sessionStorage)
 3. Redirect to the clean path (`/transaction/build` or `/transaction/import`)
    with no query params (replace state, no history entry)
 4. The flow store now holds the migrated state; the user continues in the new
@@ -384,6 +387,9 @@ step navigation logic.
 
 ### Step 5: Refactor main `page.tsx` as single-page flow
 
+Keep the existing flow `src/app/(sidebar)/transaction/build/page.tsx` under
+another route.
+
 **Modify:** `src/app/(sidebar)/transaction/build/page.tsx`
 
 This page now owns the Build flow end-to-end. `activeStep` and
@@ -445,11 +451,13 @@ step logic. Step navigation is handled by `useTransactionFlow`:
 const { activeStep, setActiveStep } = useStore(transactionStore);
 const isSoroban = /* derived from transaction type in build store */;
 const hasAuthEntries = /* derived from simulation result in store */;
-const steps: TransactionStepName[] = isSoroban
-  ? hasAuthEntries
-    ? ["build", "simulate", "sign", "validate", "submit"]
-    : ["build", "simulate", "sign", "submit"]
-  : ["build", "sign", "submit"];
+
+const getSteps = (): TransactionStepName[] => {
+  if (!isSoroban) return ["build", "sign", "submit"];
+  if (hasAuthEntries) return ["build", "simulate", "sign", "validate", "submit"];
+  return ["build", "simulate", "sign", "submit"];
+};
+const steps = getSteps();
 
 const { highestCompletedStep, stepIndex, handleNext, handleBack, handleStepClick } =
   useTransactionFlow({
@@ -574,8 +582,8 @@ Auth signing lives in the Simulate step (not deferred to the Sign step) because:
    are signed, `assembleTransaction(tx, simulationResult)` attaches the signed
    auth + resource data to produce the final XDR. The Sign step then signs this
    assembled envelope — a completely different operation
-3. **Short expiration window** — auth entry signatures expire after ~12–60
-   ledgers (~1–5 minutes)
+3. User sets `validUntilLedgerSeq`
+   ([authorizeEntry code](https://github.com/stellar/js-stellar-base/blob/e3d6fc3351e7d242b374c7c6057668366364a279/src/auth.js#L50-L52))
 
 **Two distinct signing operations** (per
 [Stellar docs](https://developers.stellar.org/docs/build/guides/transactions/signing-soroban-invocations)):
@@ -974,10 +982,8 @@ Once XDR is pasted, there are three possible states:
 - Existing signatures shown in a signatures table
 - Stepper reflects `parsedTxType`; Sign step is where additional signatures can
   be added (not a separate stepper node)
-- **Footer**: "Next: Submit transaction" (skip directly to Submit) + "Save
-  transaction" icon button
-- Users who want to add more signatures can click Back from Submit to reach the
-  Sign step
+- **Footer**: "Next: Submit transaction" (skip directly to Submit) + "Add
+  signature" + "Save transaction" icon button
 
 ### Invalid XDR
 
