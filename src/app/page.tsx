@@ -49,7 +49,7 @@ export default function Introduction() {
               </Badge>
             </div>
             <Heading as="h1" size="md" weight="semi-bold">
-              Simulate, Analyze, and Explore — All in One place
+              Hello World!
             </Heading>
             <Text as="div" size="md">
               The all-in-one web tool to{" "}
