@@ -600,9 +600,9 @@ export const formComponentTemplateTxnOps = ({
           <TextPicker
             key={id}
             id={id}
-            label="Liquidity pool ID"
+            label="Liquidity Pool ID (hex)"
             labelSuffix={!templ.isRequired ? "optional" : undefined}
-            placeholder="Ex: LBTSMDCMDAD3EYX7QUNQUP7BIEMUSNV3AIK3F53UI7Y56EMZR2V3SREB"
+            placeholder="Ex: 67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9"
             value={templ.value || ""}
             error={templ.error}
             onChange={templ.onChange}
