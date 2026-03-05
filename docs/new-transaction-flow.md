@@ -111,6 +111,11 @@ type TransactionStepName =
 - Clicking a step in the stepper only works for **already-completed steps** —
   users can navigate back to any completed step, but cannot skip forward.
   Forward navigation always goes through the "Next" footer button
+- After a user has gone through all steps and then they decide to change a param
+  during the Build transaction, a confirmation dialog will warn that simulation
+  and signing progress will be lost. If confirmed, `highestCompletedStep` is
+  reset and all downstream step data (simulation result, signed auth entries,
+  assembled XDR) is cleared
 
 ### State Persistence Model
 
@@ -120,36 +125,33 @@ the app.
 
 **Why sessionStorage instead of URL params:**
 
-The current codebase already excludes large data from the URL —
-`transaction.build.classic.xdr` and `transaction.build.soroban.xdr` are set to
-`xdr: false` in the store's `select()` config. Only build parameters, operation
-config, and form inputs are URL-persisted today (~1–3 KB).
+The current codebase URL-persists build parameters, operation config, form
+inputs, and transaction XDR. The new flow intentionally moves all of this out of
+the URL — only network settings remain in the querystring.
 
-The new transaction flow introduces additional state that cannot fit in the URL:
+The new flow introduces state that cannot fit in the URL:
 
 - `simulationResult` — full RPC response JSON (5–50 KB)
 - `signedAuthEntries` — XDR blobs (1–5 KB each)
 - `assembledXdr` / `signedXdr` — base64 XDR strings (5–25 KB each)
 
 Rather than splitting state across two persistence layers (some fields in URL,
-some in sessionStorage), **all** transaction flow state — including build params
-and operations — lives in sessionStorage. This avoids split-brain
-inconsistencies where URL-persisted build params and sessionStorage-persisted
-step state could contradict each other.
+some in sessionStorage), **all** transaction flow state — build params,
+operations, XDR, simulation results, step navigation — lives in sessionStorage.
+This avoids split-brain inconsistencies and keeps the URL clean.
 
 **URL sharing vs. transaction sharing:** URL sharing is not supported for this
-flow. However, sharing partially-signed transactions (e.g., for multi-sig
+flow. However, **sharing partially-signed transactions** (e.g., for multi-sig
 workflows) is a separate concern — that is handled by the Import flow, where
-users paste XDR directly. The existing `/transaction/sign` URL-based import path
-also remains available as a legacy option.
+users paste XDR directly.
 
 **What persists where:**
 
-| Storage           | Scope                                                     | What it holds                                                                                                              |
-| ----------------- | --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `sessionStorage`  | Current browser tab; survives refresh and back navigation | Full flow state: `activeStep`, `highestCompletedStep`, build params, XDR, simulation result, signed XDR                    |
-| `localStorage`    | Cross-session; explicit user action                       | Saved transactions (via "Save transaction" button)                                                                         |
-| URL (querystring) | App-wide, shareable                                       | Network settings only (network ID, Horizon URL, RPC URL, passphrase) — managed by the main store via `zustand-querystring` |
+| Storage           | Scope                                                     | What it holds                                                                                                                    |
+| ----------------- | --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `sessionStorage`  | Current browser tab; survives refresh and back navigation | Full flow state: `activeStep`, `highestCompletedStep`, build params, XDR, simulation result, signed XDR                          |
+| `localStorage`    | Cross-session; explicit user action                       | Saved transactions (via "Save transaction" button)                                                                               |
+| URL (querystring) | App-wide, shareable                                       | Network settings only (network ID, Horizon URL, RPC URL, passphrase) — build params and XDR are **not** in the URL for this flow |
 
 **Network settings remain in the URL** via the main store's existing querystring
 sync. Network config is app-wide (used by XDR page, endpoints, smart contracts,
@@ -165,12 +167,12 @@ read-only cross-store dependency — it is not duplicated into sessionStorage.
 - State is **cleared** by "Clear all" (explicit user action)
 - Navigating between Build and Import tabs does **not** clear the other tab's
   state; each flow has its own session storage key
-- **`beforeunload` warning**: When the flow store has unsaved state (i.e., the
-  user has progressed past the initial step or modified build params), closing
-  or navigating away from the tab triggers a browser confirmation dialog. This
-  protects against accidental tab close (Cmd+W), browser crash recovery prompts,
-  and mobile tab kills. The warning is suppressed after "Clear all" or when the
-  flow is in its initial empty state.
+- **`beforeunload` warning (Nice to Have)**: When the flow store has unsaved
+  state (i.e., the user has progressed past the initial step or modified build
+  params), closing or navigating away from the tab triggers a browser
+  confirmation dialog. This protects against accidental tab close (Cmd+W),
+  browser crash recovery prompts, and mobile tab kills. The warning is
+  suppressed after "Clear all" or when the flow is in its initial empty state.
 
 **Implementation — Separate Zustand Store:**
 
