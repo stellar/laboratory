@@ -469,6 +469,15 @@ export type ContractVersionHistoryResponseItem = {
 
 export type ContractStorageDurability = "instance" | "persistent" | "temporary";
 
+export type BEContractStorageResponse = {
+  _links: {
+    self: { href: string };
+    next?: { href: string };
+    prev?: { href: string };
+  };
+  results: ContractStorageResponseItem[];
+};
+
 export type ContractStorageResponseItem = {
   durability: ContractStorageDurability;
   key: string;

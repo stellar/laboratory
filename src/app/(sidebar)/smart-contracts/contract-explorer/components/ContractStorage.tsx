@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link, Loader, Text } from "@stellar/design-system";
 import { useRouter } from "next/navigation";
 
@@ -9,7 +10,9 @@ import { DataTable } from "@/components/DataTable";
 import { ScValPrettyJson } from "@/components/StellarDataRenderer";
 import { PoweredByStellarExpert } from "@/components/PoweredByStellarExpert";
 
-import { useSEContractStorage } from "@/query/external/useSEContracStorage";
+import { useBackendContractStorage } from "@/query/external/useBackendContractStorage";
+import { useSEContractStorage } from "@/query/external/useSEContractStorage";
+
 import { formatEpochToDate } from "@/helpers/formatEpochToDate";
 import { formatNumber } from "@/helpers/formatNumber";
 import { capitalizeString } from "@/helpers/capitalizeString";
@@ -27,7 +30,15 @@ import {
   ContractStorageProcessedItem,
   ContractStorageResponseItem,
   NetworkType,
+  SortDirection,
 } from "@/types/types";
+
+// Map DataTable column IDs to API sort_by param values
+const SORT_BY_MAP: Record<string, string> = {
+  durability: "durability",
+  ttl: "ttl",
+  updated: "updated_at",
+};
 
 export const ContractStorage = ({
   isActive,
@@ -46,20 +57,78 @@ export const ContractStorage = ({
   const { transaction } = useStore();
   const router = useRouter();
 
-  const {
-    data: storageData,
-    error: storageError,
-    isLoading: isStorageLoading,
-    isFetching: isStorageFetching,
-  } = useSEContractStorage({
-    isActive,
+  const [currentCursor, setCurrentCursor] = useState<string | undefined>();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sortBy, setSortBy] = useState<string>("updated_at");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+
+  // Backend data source (used when backend is healthy)
+  const backendResult = useBackendContractStorage({
+    isActive: isActive && !isSourceStellarExpert,
+    networkId,
+    contractId,
+    cursor: currentCursor,
+    sortBy,
+    order: sortOrder,
+  });
+
+  // Stellar Expert data source (fallback)
+  const seResult = useSEContractStorage({
+    isActive: isActive && isSourceStellarExpert,
     networkId,
     contractId,
     totalEntriesCount,
   });
 
+  useEffect(() => {
+    // Reset when contractId or networkId changes
+    setCurrentCursor(undefined);
+    setCurrentPage(1);
+    setSortBy("updated_at");
+    setSortOrder("desc");
+  }, [contractId, networkId]);
+
+  const activeResult = isSourceStellarExpert ? seResult : backendResult;
+
+  useEffect(() => {
+    if (isActive && activeResult.isSuccess && activeResult.data) {
+      trackEvent(TrackingEvent.SMART_CONTRACTS_EXPLORER_STORAGE_LOADED, {
+        source: isSourceStellarExpert ? "stellar_expert" : "backend",
+      });
+    }
+  }, [isActive, activeResult.isSuccess]);
+
+  useEffect(() => {
+    if (isActive && backendResult.isError) {
+      trackEvent(TrackingEvent.SMART_CONTRACTS_EXPLORER_STORAGE_ERROR, {
+        source: "backend",
+        error: backendResult.error?.message,
+      });
+    }
+  }, [isActive, backendResult.isError]);
+
+  const { error: storageError, isLoading: isStorageLoading } = activeResult;
+
+  // Normalize data from both sources
+  const storageData = (() => {
+    if (isSourceStellarExpert) {
+      const data = seResult.data;
+
+      return data;
+    }
+    return backendResult.data?.results;
+  })();
+
+  // Pagination cursors (only available from backend)
+  const nextCursor = !isSourceStellarExpert
+    ? backendResult.data?._links?.next?.href
+    : undefined;
+  const prevCursor = !isSourceStellarExpert
+    ? backendResult.data?._links?.prev?.href
+    : undefined;
+
   // Loading, error, and no data states
-  if (isStorageLoading || isStorageFetching) {
+  if (isStorageLoading) {
     return (
       <Box gap="sm" direction="row" justify="center">
         <Loader />
@@ -78,6 +147,12 @@ export const ContractStorage = ({
       </Text>
     );
   }
+
+  const getCursorFromHref = (href: string) => {
+    const queryString = href.split("?")[1] || "";
+    const params = new URLSearchParams(queryString);
+    return params.get("cursor") || undefined;
+  };
 
   const parsedKeyValueData = () => {
     return storageData.map((i) => ({
@@ -168,20 +243,25 @@ export const ContractStorage = ({
     <Box gap="lg">
       <Box gap="sm">
         <DataTable
+          key={`contract-storage-${isSourceStellarExpert ? "se" : "be"}`}
           tableId="contract-storage"
           tableData={parsedData}
+          hideFirstLastPageNav={!isSourceStellarExpert}
+          hidePageCount={!isSourceStellarExpert}
           tableHeaders={[
             {
               id: "key",
               value: "Key",
               isSortable: false,
-              filter: keyValueFilters.key,
+              // @TODO add backend filtering for SE source as well when it's ready
+              filter: isSourceStellarExpert ? keyValueFilters.key : undefined,
             },
             {
               id: "value",
               value: "Value",
               isSortable: false,
-              filter: keyValueFilters.value,
+              // @TODO add backend filtering for SE source as well when it's ready
+              filter: isSourceStellarExpert ? keyValueFilters.value : undefined,
             },
             { id: "durability", value: "Durability", isSortable: true },
             { id: "ttl", value: "TTL", isSortable: true },
@@ -233,10 +313,54 @@ export const ContractStorage = ({
           ]}
           cssGridTemplateColumns="minmax(210px, 2fr) minmax(210px, 2fr) minmax(100px, 0.8fr) minmax(110px, 0.8fr) minmax(114px, 0.7fr)"
           csvFileName={contractId}
+          {...(!isSourceStellarExpert
+            ? {
+                onSortChange: (headerId: string, dir: SortDirection) => {
+                  const apiSortBy = SORT_BY_MAP[headerId];
+                  if (dir === "default") {
+                    setSortBy("updated_at");
+                    setSortOrder("desc");
+                  } else {
+                    setSortBy(apiSortBy);
+                    setSortOrder(dir);
+                  }
+                  // Reset pagination on sort change
+                  setCurrentCursor(undefined);
+                  setCurrentPage(1);
+                },
+              }
+            : {})}
+          {...(!isSourceStellarExpert
+            ? {
+                pageNavConfig: {
+                  prev: {
+                    onClick: () => {
+                      if (prevCursor) {
+                        setCurrentCursor(getCursorFromHref(prevCursor));
+                        setCurrentPage(Math.max(currentPage - 1, 1));
+                      }
+                    },
+                    disabled:
+                      !prevCursor || currentPage === 1 || isStorageLoading,
+                  },
+                  next: {
+                    onClick: () => {
+                      if (nextCursor) {
+                        setCurrentCursor(getCursorFromHref(nextCursor));
+                        setCurrentPage(currentPage + 1);
+                      }
+                    },
+                    disabled: !nextCursor || isStorageLoading,
+                  },
+                },
+              }
+            : {})}
         />
 
-        {/* Max entries message */}
-        {totalEntriesCount && totalEntriesCount > parsedData.length ? (
+        {/* Max entries message (SE only) */}
+        {isSourceStellarExpert &&
+        totalEntriesCount &&
+        totalEntriesCount > parsedData.length ? (
           <Box
             gap="md"
             addlClassName="FieldNote FieldNote--note FieldNote--md"

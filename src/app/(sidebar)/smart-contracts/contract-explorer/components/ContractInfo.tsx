@@ -44,6 +44,8 @@ import { Bindings } from "./Bindings";
 
 export const ContractInfo = ({
   infoData,
+  contractId,
+  backendStatus,
   wasmData,
   wasmHash,
   network,
@@ -51,6 +53,8 @@ export const ContractInfo = ({
   isSacType,
 }: {
   infoData: ContractInfoApiResponse | undefined;
+  contractId: string;
+  backendStatus: "healthy" | "unhealthy";
   wasmData: WasmData | null | undefined;
   wasmHash: string | null | undefined;
   network: Network | EmptyObj;
@@ -261,6 +265,26 @@ export const ContractInfo = ({
     );
   }
 
+  const renderContractStorage = () => {
+    if (!infoData && backendStatus === "unhealthy") {
+      return (
+        <NoDataMessage title="Contract storage is not available">
+          Contract storage is not available for selected network.
+        </NoDataMessage>
+      );
+    }
+
+    return (
+      <ContractStorage
+        isActive={activeTab === "contract-contract-storage"}
+        contractId={contractId || ""}
+        networkId={network.id}
+        totalEntriesCount={infoData?.storage_entries}
+        isSourceStellarExpert={backendStatus !== "healthy"}
+      />
+    );
+  };
+
   const renderContractSpecMeta = (sectionsToShow: ContractSectionName[]) => (
     <ContractSpecMeta
       sectionsToShow={sectionsToShow}
@@ -359,19 +383,7 @@ export const ContractInfo = ({
             tab4={{
               id: "contract-contract-storage",
               label: "Contract storage",
-              content: infoData ? (
-                <ContractStorage
-                  isActive={activeTab === "contract-contract-storage"}
-                  contractId={infoData.contract}
-                  networkId={network.id}
-                  totalEntriesCount={infoData.storage_entries}
-                  isSourceStellarExpert={true}
-                />
-              ) : (
-                <NoDataMessage title="Contract storage is not available">
-                  Contract storage is not available for selected network.
-                </NoDataMessage>
-              ),
+              content: renderContractStorage(),
               isDisabled: !isDataLoaded,
             }}
             tab5={{

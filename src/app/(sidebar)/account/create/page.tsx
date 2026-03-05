@@ -156,7 +156,7 @@ export default function CreateAccount() {
                   }}
                   data-testid="fundAccount-button"
                 >
-                  Fund account with Friendbot
+                  Fund 10,000 XLM
                 </Button>
               ) : null}
             </>

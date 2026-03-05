@@ -373,15 +373,20 @@ export const CallStackTrace = ({
             data-is-collapsed={isCollapsedView}
           >
             <span className="CallStackTrace__itemFunc__func">{event.name}</span>
-            <Bracket char="(" />
-            <span className="CallStackTrace__itemFunc__params">
-              {renderData({
-                dataItem: event.data,
-                voidAsEmptyFn: true,
-                isFnParams: true,
-              })}
-            </span>
-            <Bracket char=")" />
+            {/* Don't show arguments for host_fn_failed */}
+            {event.type === "host_fn_failed" ? null : (
+              <>
+                <Bracket char="(" />
+                <span className="CallStackTrace__itemFunc__params">
+                  {renderData({
+                    dataItem: event.data,
+                    voidAsEmptyFn: true,
+                    isFnParams: true,
+                  })}
+                </span>
+                <Bracket char=")" />
+              </>
+            )}
           </span>
 
           {event.contractId ? renderContractId(event.contractId) : null}

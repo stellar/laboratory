@@ -1189,7 +1189,7 @@ test.describe("Build Transaction Page", () => {
         });
 
         await operation_0
-          .getByLabel("Liquidity pool ID")
+          .getByLabel("Liquidity Pool ID (hex)")
           .fill(
             "67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9",
           );
@@ -1285,7 +1285,7 @@ test.describe("Build Transaction Page", () => {
         });
 
         await operation_0
-          .getByLabel("Liquidity pool ID")
+          .getByLabel("Liquidity Pool ID (hex)")
           .fill(
             "67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9",
           );

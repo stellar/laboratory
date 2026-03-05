@@ -1,6 +1,11 @@
 @use "../../../styles/utils.scss" as *;
 
 .NetworkLimits {
+  &__json-container {
+    display: block;
+    width: 100%;
+  }
+
   &__table {
     min-width: fit-content;
 

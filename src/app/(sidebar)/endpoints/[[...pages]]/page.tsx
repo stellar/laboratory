@@ -6,6 +6,7 @@ import {
   Alert,
   Button,
   Card,
+  CopyText,
   Icon,
   Input,
   Link,
@@ -720,6 +721,21 @@ export default function Endpoints() {
               Submit
             </Button>
 
+            {!isRpcEndpoint && (
+              <CopyText
+                textToCopy={requestUrl}
+                doneLabel="Horizon URL copied"
+              >
+                <Button
+                  size="md"
+                  variant="tertiary"
+                  icon={<Icon.Copy01 />}
+                  type="button"
+                  aria-label="Copy Horizon URL"
+                ></Button>
+              </CopyText>
+            )}
+
             <ShareUrlButton shareableUrl={shareableUrl("requests")} />
 
             <Button
@@ -1065,9 +1081,32 @@ export default function Endpoints() {
                     />
                   </div>
                   <div className="PageFooter__right">
-                    <CopyJsonPayloadButton
-                      jsonString={stringify(endpointData.json, null, 2) || ""}
-                    />
+                    <Box gap="sm" align="center" direction="row" wrap="wrap">
+                      {pathname === Routes.ENDPOINTS_GET_TRANSACTION &&
+                      params.transaction ? (
+                        <Button
+                          variant="tertiary"
+                          size="md"
+                          data-testid="endpoints-debugTxDashboardBtn"
+                          onClick={() => {
+                            const href = buildEndpointHref(
+                              Routes.TRANSACTION_DASHBOARD,
+                              {
+                                transactionHash: params.transaction,
+                              },
+                            );
+
+                            window.open(href, "_blank", "noopener,noreferrer");
+                          }}
+                        >
+                          Debug in Transaction dashboard <Icon.ArrowRight />
+                        </Button>
+                      ) : null}
+
+                      <CopyJsonPayloadButton
+                        jsonString={stringify(endpointData.json, null, 2) || ""}
+                      />
+                    </Box>
                   </div>
                 </div>
                 {renderPostAsyncTxResponseMessage()}
