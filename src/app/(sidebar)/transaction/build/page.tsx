@@ -1,10 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
 import { Card, Link, Text } from "@stellar/design-system";
 
 import { useStore } from "@/store/useStore";
-import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 
 import { Box } from "@/components/layout/Box";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
@@ -26,17 +24,14 @@ import "./styles.scss";
 export default function BuildTransaction() {
   const { transaction } = useStore();
 
-  // Hydrate from sessionStorage on mount (SSR-safe)
-  useEffect(() => {
-    useBuildFlowStore.persist.rehydrate();
-  }, []);
-
-  const activeStep = useBuildFlowStore((s) => s.activeStep);
-  const highestCompletedStep = useBuildFlowStore((s) => s.highestCompletedStep);
-  const setActiveStep = useBuildFlowStore((s) => s.setActiveStep);
-  const goToNextStep = useBuildFlowStore((s) => s.goToNextStep);
-  const goToPreviousStep = useBuildFlowStore((s) => s.goToPreviousStep);
-  const resetAll = useBuildFlowStore((s) => s.resetAll);
+  // TODO: replace with useBuildFlowStore
+  const activeStep: TransactionStepName = "build";
+  const highestCompletedStep: TransactionStepName | null = null;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const setActiveStep = (_step: TransactionStepName) => {};
+  const goToNextStep = () => {};
+  const goToPreviousStep = () => {};
+  const resetAll = () => {};
 
   // For Classic
   const { params: paramsError, operations: operationsError } =
@@ -167,8 +162,8 @@ export default function BuildTransaction() {
             <TransactionFlowFooter
               steps={steps}
               activeStep={activeStep}
-              onNext={() => goToNextStep(steps)}
-              onBack={() => goToPreviousStep(steps)}
+              onNext={() => goToNextStep()}
+              onBack={() => goToPreviousStep()}
               isNextDisabled={isNextDisabled}
               xdr={currentXdr}
             />
