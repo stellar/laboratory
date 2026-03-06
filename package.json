@@ -43,7 +43,7 @@
     "dompurify": "^3.2.5",
     "html-react-parser": "^5.2.6",
     "immer": "^10.1.1",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "lossless-json": "^4.0.2",
     "next": "15.5.9",
     "papaparse": "^5.5.2",
