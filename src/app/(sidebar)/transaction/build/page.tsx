@@ -2,7 +2,7 @@
 
 import { Card, Link, Text } from "@stellar/design-system";
 
-export { useBuildFlowStore } from "@/store/createTransactionFlowStore";
+import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 
 import { Box } from "@/components/layout/Box";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
