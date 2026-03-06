@@ -1,18 +1,42 @@
 "use client";
 
-import { Alert } from "@stellar/design-system";
+import { useEffect } from "react";
+import { Card, Link, Text } from "@stellar/design-system";
 
 import { useStore } from "@/store/useStore";
+import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
+
 import { Box } from "@/components/layout/Box";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
+import {
+  TransactionStepper,
+  TransactionStepName,
+} from "@/components/TransactionStepper";
+import { TransactionFlowFooter } from "@/components/TransactionFlowFooter";
+import { Tabs } from "@/components/Tabs";
+import { PageHeader } from "@/components/layout/PageHeader";
 
 import { Params } from "./components/Params";
 import { Operations } from "./components/Operations";
 import { ClassicTransactionXdr } from "./components/ClassicTransactionXdr";
 import { SorobanTransactionXdr } from "./components/SorobanTransactionXdr";
 
+import "./styles.scss";
+
 export default function BuildTransaction() {
   const { transaction } = useStore();
+
+  // Hydrate from sessionStorage on mount (SSR-safe)
+  useEffect(() => {
+    useBuildFlowStore.persist.rehydrate();
+  }, []);
+
+  const activeStep = useBuildFlowStore((s) => s.activeStep);
+  const highestCompletedStep = useBuildFlowStore((s) => s.highestCompletedStep);
+  const setActiveStep = useBuildFlowStore((s) => s.setActiveStep);
+  const goToNextStep = useBuildFlowStore((s) => s.goToNextStep);
+  const goToPreviousStep = useBuildFlowStore((s) => s.goToPreviousStep);
+  const resetAll = useBuildFlowStore((s) => s.resetAll);
 
   // For Classic
   const { params: paramsError, operations: operationsError } =
@@ -20,7 +44,21 @@ export default function BuildTransaction() {
 
   // For Soroban
   const { soroban } = transaction.build;
-  const IS_SOROBAN_TX = Boolean(soroban.operation.operation_type);
+  const isSoroban = Boolean(soroban.operation.operation_type);
+
+  const steps: TransactionStepName[] = isSoroban
+    ? ["build", "simulate", "sign", "submit"]
+    : ["build", "sign", "submit"];
+
+  const currentXdr = isSoroban
+    ? transaction.build.soroban.xdr
+    : transaction.build.classic.xdr;
+
+  const isNextDisabled = activeStep === "build" && !currentXdr;
+
+  const handleStepClick = (step: TransactionStepName) => {
+    setActiveStep(step);
+  };
 
   const renderError = () => {
     if (paramsError.length > 0 || operationsError.length > 0) {
@@ -73,21 +111,79 @@ export default function BuildTransaction() {
     return null;
   };
 
-  return (
+  const renderBuildStep = () => (
     <Box gap="md">
-      <Params />
+      <Card>
+        <Params />
+      </Card>
       <Operations />
-
-      <Alert variant="primary" placement="inline">
-        The transaction builder lets you build a new Stellar transaction. This
-        transaction will start out with no signatures. To make it into the
-        ledger, this transaction will then need to be signed and submitted to
-        the network.
-      </Alert>
 
       <>{renderError()}</>
 
-      {IS_SOROBAN_TX ? <SorobanTransactionXdr /> : <ClassicTransactionXdr />}
+      {isSoroban ? <SorobanTransactionXdr /> : <ClassicTransactionXdr />}
+    </Box>
+  );
+
+  return (
+    <Box gap="xxl">
+      <div className="BuildTransaction__tabs">
+        <Tabs
+          tabs={[
+            {
+              id: "new-transaction",
+              label: "New transaction",
+              href: "/transaction/build",
+            },
+            {
+              id: "import-xdr",
+              label: "Import transaction XDR",
+              href: "/transaction/import",
+            },
+          ]}
+          addlClassName="Tabs--gap-md"
+        />
+      </div>
+
+      <div className="BuildTransaction__layout">
+        <div className="BuildTransaction__content">
+          <div className="BuildTransaction__header">
+            <PageHeader heading="Build transaction" as="h1" />
+            <Text as="div" size="xs">
+              <Link
+                variant="secondary"
+                onClick={() => {
+                  transaction.resetBuild();
+                  resetAll();
+                }}
+              >
+                Clear all
+              </Link>
+            </Text>
+          </div>
+
+          <Box gap="xxl">
+            {activeStep === "build" && renderBuildStep()}
+
+            <TransactionFlowFooter
+              steps={steps}
+              activeStep={activeStep}
+              onNext={() => goToNextStep(steps)}
+              onBack={() => goToPreviousStep(steps)}
+              isNextDisabled={isNextDisabled}
+              xdr={currentXdr}
+            />
+          </Box>
+        </div>
+
+        <div className="BuildTransaction__stepper">
+          <TransactionStepper
+            steps={steps}
+            activeStep={activeStep}
+            highestCompletedStep={highestCompletedStep}
+            onStepClick={handleStepClick}
+          />
+        </div>
+      </div>
     </Box>
   );
 }
