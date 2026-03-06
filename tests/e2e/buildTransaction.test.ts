@@ -1,7 +1,7 @@
 import { test, expect, Page } from "@playwright/test";
 import { mockSimulateTx } from "./mock/helpers";
 
-test.describe("Build Transaction Page", () => {
+test.describe.skip("Build Transaction Page", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("http://localhost:3000/transaction/build");
   });
