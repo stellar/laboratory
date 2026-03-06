@@ -1,0 +1,47 @@
+@use "../../../../styles/utils.scss" as *;
+
+.BuildTransaction {
+  &__layout {
+    display: flex;
+    gap: pxToRem(32px);
+    max-width: pxToRem(960px);
+    margin: 0 auto;
+  }
+  &__tabs {
+    display: flex;
+    gap: pxToRem(32px);
+    width: pxToRem(960px);
+    margin: 0 auto;
+  }
+  &__content {
+    flex: 1;
+    min-width: 0;
+    max-width: pxToRem(738px);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: pxToRem(16px);
+
+    .Link {
+      color: var(--sds-clr-lilac-11);
+    }
+  }
+
+  &__stepper {
+    flex-shrink: 0;
+    width: pxToRem(190px);
+  }
+
+  @media (max-width: 960px) {
+    &__layout {
+      flex-direction: column;
+    }
+
+    &__stepper {
+      display: none;
+    }
+  }
+}
