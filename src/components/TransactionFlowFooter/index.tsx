@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { Button, Icon } from "@stellar/design-system";
 
-import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransactions";
+
+import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 import {
   TransactionStepName,
   getStepLabel,
@@ -53,8 +54,7 @@ export const TransactionFlowFooter = ({
   const currentIndex = steps.indexOf(activeStep);
   const isFirstStep = currentIndex === 0;
   const isLastStep = currentIndex === steps.length - 1;
-  const showSaveButton =
-    activeStep === "build" || activeStep === "import";
+  const showSaveButton = activeStep === "build" || activeStep === "import";
 
   const prevStep = !isFirstStep ? steps[currentIndex - 1] : null;
   const nextStep = !isLastStep ? steps[currentIndex + 1] : null;
