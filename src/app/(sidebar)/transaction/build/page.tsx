@@ -2,7 +2,7 @@
 
 import { Card, Link, Text } from "@stellar/design-system";
 
-import { useStore } from "@/store/useStore";
+export { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 
 import { Box } from "@/components/layout/Box";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
@@ -22,32 +22,27 @@ import { SorobanTransactionXdr } from "./components/SorobanTransactionXdr";
 import "./styles.scss";
 
 export default function BuildTransaction() {
-  const { transaction } = useStore();
-
-  // TODO: replace with useBuildFlowStore
-  const activeStep: TransactionStepName = "build";
-  const highestCompletedStep: TransactionStepName | null = null;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const setActiveStep = (_step: TransactionStepName) => {};
-  const goToNextStep = () => {};
-  const goToPreviousStep = () => {};
-  const resetAll = () => {};
+  const {
+    build,
+    activeStep,
+    highestCompletedStep,
+    setActiveStep,
+    goToNextStep,
+    resetAll,
+  } = useBuildFlowStore();
 
   // For Classic
-  const { params: paramsError, operations: operationsError } =
-    transaction.build.error;
+  const { params: paramsError, operations: operationsError } = build.error;
 
   // For Soroban
-  const { soroban } = transaction.build;
+  const { soroban } = build;
   const isSoroban = Boolean(soroban.operation.operation_type);
 
   const steps: TransactionStepName[] = isSoroban
     ? ["build", "simulate", "sign", "submit"]
     : ["build", "sign", "submit"];
 
-  const currentXdr = isSoroban
-    ? transaction.build.soroban.xdr
-    : transaction.build.classic.xdr;
+  const currentXdr = isSoroban ? build.soroban.xdr : build.classic.xdr;
 
   const isNextDisabled = activeStep === "build" && !currentXdr;
 
@@ -147,7 +142,6 @@ export default function BuildTransaction() {
               <Link
                 variant="secondary"
                 onClick={() => {
-                  transaction.resetBuild();
                   resetAll();
                 }}
               >
@@ -162,8 +156,7 @@ export default function BuildTransaction() {
             <TransactionFlowFooter
               steps={steps}
               activeStep={activeStep}
-              onNext={() => goToNextStep()}
-              onBack={() => goToPreviousStep()}
+              onNext={() => goToNextStep(steps)}
               isNextDisabled={isNextDisabled}
               xdr={currentXdr}
             />
