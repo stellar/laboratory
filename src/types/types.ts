@@ -162,6 +162,9 @@ export type PrepareRpcErrorResponse = {
   result: StellarRpc.Api.SimulateTransactionErrorResponse;
 };
 
+// Simulate Transaction
+export type AuthModeType = "enforce" | "record" | "record_allow_nonroot";
+
 export type SubmitRpcResponse = {
   hash: string;
   result: StellarRpc.Api.GetSuccessfulTransactionResponse;
