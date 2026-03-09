@@ -2,8 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Button, CopyText, Icon, Select } from "@stellar/design-system";
-import MonacoEditor, { type OnMount } from "@monaco-editor/react";
-import loader from "@monaco-editor/loader";
+import MonacoEditor, { type OnMount, loader } from "@monaco-editor/react";
 
 import { useStore } from "@/store/useStore";
 import { Box } from "@/components/layout/Box";
