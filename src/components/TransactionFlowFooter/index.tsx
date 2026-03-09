@@ -44,8 +44,8 @@ export const TransactionFlowFooter = ({
 }: {
   steps: TransactionStepName[];
   activeStep: TransactionStepName;
-  onNext: () => void;
-  onBack: () => void;
+  onNext?: () => void;
+  onBack?: () => void;
   isNextDisabled: boolean;
   xdr?: string;
 }) => {
