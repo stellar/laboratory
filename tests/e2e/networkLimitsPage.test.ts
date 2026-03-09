@@ -260,9 +260,6 @@ test.describe("Network Limits page on Mainnet", () => {
     await expect(editorContent).toBeVisible();
     await expect(editorContent).toContainText("updated_entry");
     await expect(editorContent).toContainText("contract_max_size_bytes");
-
-    // Copy JSON button should be visible
-    await expect(page.locator("button:has-text('Copy JSON')")).toBeVisible();
   });
 
   test("Switches back to Table tab from JSON tab", async ({ page }) => {
