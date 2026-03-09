@@ -207,7 +207,7 @@ const useTransactionFlowStore = create<TransactionFlowState>()(
       simulationResultJson: "",
       authEntriesXdr: [],
       signedAuthEntriesXdr: [],
-      assembledXdr: "",
+      assembledXdr: "", // output of assembleTransaction(); passed to Sign step
       signedXdr: "",
       validateResultJson: "",
       // actions...
@@ -838,7 +838,10 @@ After simulation succeeds and auth entries are detected:
 
 - Add `authEntries: xdr.SorobanAuthorizationEntry[]` to simulate state
 - Add `signedAuthEntries: xdr.SorobanAuthorizationEntry[]` to simulate state
-- Add `assembledXdr: string` for rebuilt transaction XDR with signed auth
+- Add `assembledXdr: string` — output of `assembleTransaction(tx, simResult)`
+  with signed auth entries and resource data attached; this is what the Sign
+  step consumes (`signedAuthEntries` stay in local component state and are not
+  persisted)
 
 ### Step 7: Create `ValidateStepContent` component
 
