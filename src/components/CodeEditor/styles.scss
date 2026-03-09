@@ -63,9 +63,15 @@
   &__content {
     width: 100%;
     background-color: var(--sds-clr-gray-02);
+    position: relative;
   }
 
   &__actions {
+    position: absolute;
+    top: pxToRem(8px);
+    right: pxToRem(16px);
+    z-index: 1;
+
     & > .Select {
       width: pxToRem(120px);
     }
