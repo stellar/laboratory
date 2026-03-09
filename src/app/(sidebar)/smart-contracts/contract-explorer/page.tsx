@@ -133,6 +133,18 @@ export default function ContractExplorer() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Automatically load contract when a valid contract ID is entered
+  useEffect(() => {
+    if (
+      contractIdInput &&
+      network.rpcUrl &&
+      !validate.getContractIdError(contractIdInput)
+    ) {
+      handleLoadContract();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contractIdInput]);
+
   const resetFetchContractInfo = () => {
     if (contractInfoData) {
       queryClient.resetQueries({
