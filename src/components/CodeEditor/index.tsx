@@ -83,8 +83,7 @@ export const CodeEditor = ({
     return () => {
       initPromise.cancel();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isReady]);
 
   if (!isReady) {
     return null;
