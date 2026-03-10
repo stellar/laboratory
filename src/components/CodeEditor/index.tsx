@@ -52,7 +52,10 @@ export const CodeEditor = ({
   const [isReady, setIsReady] = useState(
     // If Monaco is already loaded (e.g., another editor was mounted first),
     // skip the async init to avoid a flicker.
-    () => loader.__getMonacoInstance() !== null,
+    () => {
+      const getMonacoInstance = (loader as any).__getMonacoInstance;
+      return typeof getMonacoInstance === "function" && getMonacoInstance() !== null;
+    },
   );
   const [isExpanded, setIsExpanded] = useState(false);
 
