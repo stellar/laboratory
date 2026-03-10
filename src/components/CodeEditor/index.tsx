@@ -157,77 +157,7 @@ export const CodeEditor = ({
     >
       {title ? (
         <div className="CodeEditor__header" ref={headerEl}>
-          {/* Title */}
           <div className="CodeEditor__header__title">{renderTitle()}</div>
-
-          {/* Actions */}
-          <Box
-            gap="xs"
-            direction="row"
-            align="center"
-            justify="end"
-            addlClassName="CodeEditor__actions"
-          >
-            {customEl ?? null}
-            {languages && onLanguageChange ? (
-              <Select
-                id="code-editor-languages"
-                fieldSize="sm"
-                onChange={(e) =>
-                  onLanguageChange(e.target.value as SupportedLanguage)
-                }
-                value={selectedLanguage}
-              >
-                {languages.map((l) => (
-                  <option value={l} key={`ce-lang-${l}`}>
-                    {l.toUpperCase()}
-                  </option>
-                ))}
-              </Select>
-            ) : null}
-
-            {fileName ? (
-              <Button
-                variant="tertiary"
-                size="sm"
-                icon={<Icon.Download01 />}
-                title="Download"
-                onClick={(e) => {
-                  e.preventDefault();
-
-                  downloadFile({
-                    value,
-                    fileType: "application/json",
-                    fileName,
-                    fileExtension: getFileExtension(),
-                  });
-                }}
-              ></Button>
-            ) : null}
-
-            <CopyText textToCopy={value}>
-              <Button
-                variant="tertiary"
-                size="sm"
-                icon={<Icon.Copy01 />}
-                title="Copy"
-                onClick={(e) => {
-                  e.preventDefault();
-                }}
-              ></Button>
-            </CopyText>
-
-            <Button
-              variant="tertiary"
-              size="sm"
-              icon={isExpanded ? <Icon.X /> : <Icon.Expand06 />}
-              title={isExpanded ? "Close" : "Expand"}
-              onClick={(e) => {
-                e.preventDefault();
-                setIsExpanded(!isExpanded);
-              }}
-            ></Button>
-          </Box>
         </div>
       ) : null}
 
@@ -237,6 +167,75 @@ export const CodeEditor = ({
         // Container must have set height
         style={{ height: title ? `calc(100% - ${headerHeight}px)` : "100%" }}
       >
+        {/* Actions floating over the editor */}
+        <Box
+          gap="xs"
+          direction="row"
+          align="center"
+          justify="end"
+          addlClassName="CodeEditor__actions"
+        >
+          {customEl ?? null}
+          {languages && onLanguageChange ? (
+            <Select
+              id="code-editor-languages"
+              fieldSize="sm"
+              onChange={(e) =>
+                onLanguageChange(e.target.value as SupportedLanguage)
+              }
+              value={selectedLanguage}
+            >
+              {languages.map((l) => (
+                <option value={l} key={`ce-lang-${l}`}>
+                  {l.toUpperCase()}
+                </option>
+              ))}
+            </Select>
+          ) : null}
+
+          {fileName ? (
+            <Button
+              variant="tertiary"
+              size="sm"
+              icon={<Icon.Download01 />}
+              title="Download"
+              onClick={(e) => {
+                e.preventDefault();
+
+                downloadFile({
+                  value,
+                  fileType: "application/json",
+                  fileName,
+                  fileExtension: getFileExtension(),
+                });
+              }}
+            ></Button>
+          ) : null}
+
+          <CopyText textToCopy={value}>
+            <Button
+              variant="tertiary"
+              size="sm"
+              icon={<Icon.Copy01 />}
+              title="Copy"
+              onClick={(e) => {
+                e.preventDefault();
+              }}
+            ></Button>
+          </CopyText>
+
+          <Button
+            variant="tertiary"
+            size="sm"
+            icon={isExpanded ? <Icon.X /> : <Icon.Expand06 />}
+            title={isExpanded ? "Close" : "Expand"}
+            onClick={(e) => {
+              e.preventDefault();
+              setIsExpanded(!isExpanded);
+            }}
+          ></Button>
+        </Box>
+
         <MonacoEditor
           defaultLanguage="javascript"
           defaultValue=""
