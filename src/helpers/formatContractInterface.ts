@@ -168,6 +168,14 @@ const formatFnInputs = (inputs: any) => {
     return "";
   }
 
+  // inputs is an array of {name, type} objects from parseContractMetadata
+  if (Array.isArray(inputs)) {
+    return inputs
+      .map((input: any) => `${input.name}: ${input.type}`)
+      .join(", ");
+  }
+
+  // Fallback for object format {paramName: {type}}
   return Object.entries(inputs)
     .map(([key, value]) => {
       return `${key}: ${(value as any).type}`;
