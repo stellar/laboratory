@@ -1,3 +1,4 @@
+import { baseURL } from "../../playwright.config";
 import { expect, Locator, Page, test } from "@playwright/test";
 import {
   TX_EVENTS_MOCK_KALE,
@@ -12,7 +13,7 @@ import { mockRpcRequest } from "./mock/helpers";
 test.describe("Transaction Dashboard: Token Summary", () => {
   test.beforeEach(async ({ page }) => {
     // Load page
-    await page.goto("http://localhost:3000/transaction/dashboard");
+    await page.goto(`${baseURL}/transaction/dashboard`);
   });
 
   test("SAC", async ({ page }) => {

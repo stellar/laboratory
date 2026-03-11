@@ -1,4 +1,6 @@
+import { baseURL } from "../../playwright.config";
 import { test, expect, type Page } from "@playwright/test";
+
 
 import {
   formatLedgersToDays,
@@ -13,7 +15,7 @@ import { MAINNET_LIMITS } from "@/constants/networkLimits";
 test.describe("Network Limits page on Mainnet", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto(
-      "http://localhost:3000/network-limits?$=network$id=mainnet",
+      `${baseURL}/network-limits?$=network$id=mainnet`,
     );
   });
 
@@ -288,7 +290,7 @@ test.describe("Network Limits page on Mainnet", () => {
 
   test("Custom network shows warning message", async ({ page }) => {
     // Navigate directly to custom network
-    await page.goto("http://localhost:3000/network-limits?$=network$id=custom");
+    await page.goto(`${baseURL}/network-limits?$=network$id=custom`);
 
     // Verify we're on custom network
     await expect(page.getByTestId("networkSelector-button")).toHaveText(

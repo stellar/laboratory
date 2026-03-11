@@ -1,8 +1,9 @@
+import { baseURL } from "../../playwright.config";
 import { test, expect } from "@playwright/test";
 
 test.describe("View JSON to XDR Page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:3000/xdr/to");
+    await page.goto(`${baseURL}/xdr/to`);
   });
 
   test("Loads", async ({ page }) => {

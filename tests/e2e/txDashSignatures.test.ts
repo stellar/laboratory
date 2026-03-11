@@ -1,3 +1,4 @@
+import { baseURL } from "../../playwright.config";
 import { test, expect } from "@playwright/test";
 import {
   TX_ST_CHANGE_KALE_HARVEST,
@@ -9,7 +10,7 @@ import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 
 test.describe("Transaction Dashboard: Signatures", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:3000/transaction/dashboard");
+    await page.goto(`${baseURL}/transaction/dashboard`);
   });
 
   test("Soroban Transaction", async ({ page }) => {

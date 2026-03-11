@@ -1,3 +1,4 @@
+import { baseURL } from "../../playwright.config";
 import { test, expect, Page } from "@playwright/test";
 import {
   MOCK_LOCAL_STORAGE,
@@ -12,7 +13,7 @@ import {
 
 test.describe("Saved Keypairs Page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:3000/account/saved");
+    await page.goto(`${baseURL}/account/saved`);
   });
 
   test("Loads", async ({ page }) => {
@@ -36,7 +37,7 @@ test.describe("Saved Keypairs Page", () => {
       });
       pageContext = await browserContext.newPage();
 
-      await pageContext.goto("http://localhost:3000/account/saved");
+      await pageContext.goto(`${baseURL}/account/saved`);
 
       // Account 1 response (funded)
       await pageContext.route(

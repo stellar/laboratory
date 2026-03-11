@@ -1,3 +1,4 @@
+import { baseURL } from "../../playwright.config";
 import { expect, Page, test } from "@playwright/test";
 import { TX_EVENTS_MOCK_SOROSWAP } from "./mock/txEvents";
 import { mockRpcRequest } from "./mock/helpers";
@@ -5,7 +6,7 @@ import { mockRpcRequest } from "./mock/helpers";
 test.describe("Transaction Dashboard: Resource Profiler", () => {
   test.beforeEach(async ({ page }) => {
     // Load page
-    await page.goto("http://localhost:3000/transaction/dashboard");
+    await page.goto(`${baseURL}/transaction/dashboard`);
   });
 
   test("Resources", async ({ page }) => {

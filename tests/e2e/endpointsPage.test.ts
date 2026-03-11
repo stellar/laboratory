@@ -1,8 +1,10 @@
+import { baseURL } from "../../playwright.config";
 import { test, expect } from "@playwright/test";
+
 
 test.describe("API Explorer page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:3000/endpoints");
+    await page.goto(`${baseURL}/endpoints`);
   });
 
   test("Loads", async ({ page }) => {
@@ -78,7 +80,7 @@ test.describe("API Explorer page", () => {
 
     test("Dropdown shows correct links on page load", async ({ page }) => {
       await page.goto(
-        "http://localhost:3000/endpoints/horizon/accounts/single",
+        `${baseURL}/endpoints/horizon/accounts/single`,
       );
       const sidebar = page.getByTestId("sidebar-links");
 
@@ -111,7 +113,7 @@ test.describe("API Explorer page", () => {
 
   test.describe("All Accounts", () => {
     test.beforeEach(async ({ page }) => {
-      await page.goto("http://localhost:3000/endpoints/accounts");
+      await page.goto(`${baseURL}/endpoints/accounts`);
     });
 
     test("Page loads with correct title and view docs link", async ({
@@ -158,7 +160,7 @@ test.describe("API Explorer page", () => {
   test.describe("Effects for Account", () => {
     test.beforeEach(async ({ page }) => {
       await page.goto(
-        "http://localhost:3000/endpoints/horizon/effects/account",
+        `${baseURL}/endpoints/horizon/effects/account`,
       );
     });
 
@@ -213,7 +215,7 @@ test.describe("API Explorer page", () => {
 
   test.describe("[RPC Methods] getLedgerEntries", () => {
     test.beforeEach(async ({ page }) => {
-      await page.goto("http://localhost:3000/endpoints/rpc/get-ledger-entries");
+      await page.goto(`${baseURL}/endpoints/rpc/get-ledger-entries`);
       await page.waitForSelector("h1", { timeout: 5000 });
       await expect(page.locator("h1")).toHaveText("getLedgerEntries");
     });
@@ -298,7 +300,7 @@ test.describe("API Explorer page", () => {
 
   test.describe("[RPC Methods] getTransaction", () => {
     test.beforeEach(async ({ page }) => {
-      await page.goto("http://localhost:3000/endpoints/rpc/get-transaction");
+      await page.goto(`${baseURL}/endpoints/rpc/get-transaction`);
       await page.waitForSelector("h1", { timeout: 5000 });
       await expect(page.locator("h1")).toHaveText("getTransaction");
     });

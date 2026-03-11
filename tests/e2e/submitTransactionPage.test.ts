@@ -1,9 +1,10 @@
+import { baseURL } from "../../playwright.config";
 import { STELLAR_EXPERT } from "@/constants/settings";
 import { test, expect, Page } from "@playwright/test";
 
 test.describe("Submit Transaction Page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:3000/transaction/submit");
+    await page.goto(`${baseURL}/transaction/submit`);
   });
 
   test("Loads", async ({ page }) => {

@@ -1,3 +1,4 @@
+import { baseURL } from "../../playwright.config";
 import { test, expect } from "@playwright/test";
 import { mockRpcRequest } from "./mock/helpers";
 import {
@@ -7,7 +8,7 @@ import {
 
 test.describe("View XDR to JSON Page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:3000/xdr/view");
+    await page.goto(`${baseURL}/xdr/view`);
   });
 
   test("Loads", async ({ page }) => {

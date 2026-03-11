@@ -1,4 +1,7 @@
+import { baseURL } from "../../playwright.config";
 import { test, expect, Page, Browser } from "@playwright/test";
+
+
 import {
   MOCK_LOCAL_STORAGE,
   SAVED_ACCOUNT_1,
@@ -43,7 +46,7 @@ test.describe("Signer Selector", () => {
     test.beforeAll(async ({ browser }) => {
       pageContext = await setupPageContext(
         browser,
-        "http://localhost:3000/transaction/build",
+        `${baseURL}/transaction/build`,
       );
     });
 
@@ -77,7 +80,7 @@ test.describe("Signer Selector", () => {
     test.beforeAll(async ({ browser }) => {
       pageContext = await setupPageContext(
         browser,
-        "http://localhost:3000/transaction/sign",
+        `${baseURL}/transaction/sign`,
       );
     });
 
