@@ -11,7 +11,7 @@ import { mockRpcRequest } from "./mock/helpers";
 
 test.describe("Smart Contracts: Contract Info", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:3000/smart-contracts/contract-explorer");
+    await page.goto("/smart-contracts/contract-explorer");
   });
 
   test("Loads", async ({ page }) => {

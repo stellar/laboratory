@@ -17,7 +17,7 @@ const TEST_CONTRACT_ID_SHORT = shortenStellarAddress(TEST_CONTRACT_ID);
 
 test.describe("[futurenet/testnet] Fund Account Page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:3000/account/fund");
+    await page.goto("/account/fund");
   });
 
   test("Shows testnet network in the title by default", async ({ page }) => {
@@ -399,7 +399,7 @@ test.describe("[futurenet/testnet] Fund Account Page", () => {
 
 test.describe("[mainnet] Fund Account Page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:3000/account");
+    await page.goto("/account");
 
     // Switch to mainnet network
     await page.getByTestId("networkSelector-button").click();
@@ -426,7 +426,7 @@ test.describe("[mainnet] Fund Account Page", () => {
   test("I should see 'Switch Network' page on /account/fund", async ({
     page,
   }) => {
-    await page.goto("http://localhost:3000/account/fund");
+    await page.goto("/account/fund");
 
     await expect(page.locator("h1")).toHaveText(
       "Fund a Futurenet or Testnet network account or contract with XLM, USDC, and EURC",

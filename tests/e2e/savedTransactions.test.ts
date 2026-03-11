@@ -3,7 +3,7 @@ import { MOCK_LOCAL_STORAGE } from "./mock/localStorage";
 
 test.describe("Saved Transactions Page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:3000/transaction/saved");
+    await page.goto("/transaction/saved");
   });
 
   test("Loads", async ({ page }) => {
@@ -30,7 +30,7 @@ test.describe("Saved Transactions Page", () => {
         storageState: MOCK_LOCAL_STORAGE,
       });
       pageContext = await browserContext.newPage();
-      await pageContext.goto("http://localhost:3000/transaction/saved");
+      await pageContext.goto("/transaction/saved");
     });
 
     test("Loads", async () => {

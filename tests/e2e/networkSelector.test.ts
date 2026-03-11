@@ -1,8 +1,10 @@
 import { test, expect } from "@playwright/test";
 
+const BASE_URL = `http://localhost:${process.env.PORT || 3000}`;
+
 test.describe("Network selector", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:3000/");
+    await page.goto("/");
   });
 
   test("Defaults to Testnet", async ({ page }) => {
@@ -171,7 +173,7 @@ test.describe("Network selector", () => {
 
   test("Selects network from search params", async ({ page }) => {
     await page.goto(
-      "http://localhost:3000/?$=network$id=futurenet&label=Futurenet&horizonUrl=https:////horizon-futurenet.stellar.org&rpcUrl=https:////rpc-futurenet.stellar.org&passphrase=Test%20SDF%20Future%20Network%20/;%20October%202022;;",
+      `${BASE_URL}/?$=network$id=futurenet&label=Futurenet&horizonUrl=https:////horizon-futurenet.stellar.org&rpcUrl=https:////rpc-futurenet.stellar.org&passphrase=Test%20SDF%20Future%20Network%20/;%20October%202022;;`,
     );
     await expect(page.getByTestId("networkSelector-button")).toHaveText(
       "Futurenet",

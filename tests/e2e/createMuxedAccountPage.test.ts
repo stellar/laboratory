@@ -4,7 +4,7 @@ import { Account, MuxedAccount } from "@stellar/stellar-sdk";
 
 test.describe("Create Muxed Account Page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:3000/account/muxed-create");
+    await page.goto("/account/muxed-create");
   });
 
   test("Loads", async ({ page }) => {

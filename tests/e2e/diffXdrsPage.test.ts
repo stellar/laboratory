@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Diff XDRs Page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:3000/xdr/diff");
+    await page.goto("/xdr/diff");
   });
 
   test("Loads", async ({ page }) => {

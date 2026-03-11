@@ -4,7 +4,7 @@ test.describe("Introduction Page", () => {
   let sections: Locator;
 
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:3000/");
+    await page.goto("/");
     sections = page.locator(".Lab__home__section");
   });
 
@@ -96,7 +96,7 @@ test.describe("Introduction Page", () => {
     // Using isolated browser context to make sure the network change won’t affect other tests.
     const context = await browser.newContext();
     const page = await context.newPage();
-    await page.goto("http://localhost:3000/");
+    await page.goto("/");
 
     const networksSection = page.locator(".Lab__home__section").nth(3);
 

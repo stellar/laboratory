@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Simulate Transaction Page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:3000/transaction/simulate");
+    await page.goto("/transaction/simulate");
   });
 
   test("Loads", async ({ page }) => {

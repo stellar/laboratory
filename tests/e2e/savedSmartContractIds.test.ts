@@ -3,7 +3,7 @@ import { MOCK_LOCAL_STORAGE, SAVED_CONTRACT_1 } from "./mock/localStorage";
 
 test.describe("Saved Smart Contracts Page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:3000/smart-contracts/saved");
+    await page.goto("/smart-contracts/saved");
   });
 
   test("Loads", async ({ page }) => {
@@ -28,7 +28,7 @@ test.describe("Saved contract IDs", () => {
     });
     pageContext = await browserContext.newPage();
 
-    await pageContext.goto("http://localhost:3000/smart-contracts/saved");
+    await pageContext.goto("/smart-contracts/saved");
   });
 
   test("Loads", async () => {

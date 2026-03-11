@@ -7,7 +7,7 @@ import {
 
 test.describe("View XDR to JSON Page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:3000/xdr/view");
+    await page.goto("/xdr/view");
   });
 
   test("Loads", async ({ page }) => {

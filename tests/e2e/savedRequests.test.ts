@@ -3,7 +3,7 @@ import { MOCK_LOCAL_STORAGE } from "./mock/localStorage";
 
 test.describe("Saved Requests Page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:3000/endpoints/saved");
+    await page.goto("/endpoints/saved");
   });
 
   test("Loads", async ({ page }) => {
@@ -44,7 +44,7 @@ test.describe("Saved Requests Page", () => {
         storageState: MOCK_LOCAL_STORAGE,
       });
       pageContext = await browserContext.newPage();
-      await pageContext.goto("http://localhost:3000/endpoints/saved");
+      await pageContext.goto("/endpoints/saved");
 
       await pageContext.waitForSelector("h1", { timeout: 5000 });
       await expect(pageContext.locator("h1")).toHaveText("Saved Requests");

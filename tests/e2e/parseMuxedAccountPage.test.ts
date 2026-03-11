@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Parse Muxed Account Page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:3000/account/muxed-parse");
+    await page.goto("/account/muxed-parse");
   });
 
   test("Loads", async ({ page }) => {

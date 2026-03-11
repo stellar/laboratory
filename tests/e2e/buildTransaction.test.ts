@@ -3,7 +3,7 @@ import { mockSimulateTx } from "./mock/helpers";
 
 test.describe("Build Transaction Page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:3000/transaction/build");
+    await page.goto("/transaction/build");
   });
 
   test("Loads", async ({ page }) => {

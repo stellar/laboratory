@@ -1,4 +1,7 @@
 import { test, expect, Page, Browser } from "@playwright/test";
+
+const BASE_URL = `http://localhost:${process.env.PORT || 3000}`;
+
 import {
   MOCK_LOCAL_STORAGE,
   SAVED_ACCOUNT_1,
@@ -43,7 +46,7 @@ test.describe("Signer Selector", () => {
     test.beforeAll(async ({ browser }) => {
       pageContext = await setupPageContext(
         browser,
-        "http://localhost:3000/transaction/build",
+        `${BASE_URL}/transaction/build`,
       );
     });
 
@@ -77,7 +80,7 @@ test.describe("Signer Selector", () => {
     test.beforeAll(async ({ browser }) => {
       pageContext = await setupPageContext(
         browser,
-        "http://localhost:3000/transaction/sign",
+        `${BASE_URL}/transaction/sign`,
       );
     });
 
