@@ -1,10 +1,11 @@
+import { baseURL } from "../../playwright.config";
 import { test, expect } from "@playwright/test";
 
 import { Account, MuxedAccount } from "@stellar/stellar-sdk";
 
 test.describe("Create Muxed Account Page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/account/muxed-create");
+    await page.goto(`${baseURL}/account/muxed-create`);
   });
 
   test("Loads", async ({ page }) => {

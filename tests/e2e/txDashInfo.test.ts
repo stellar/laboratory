@@ -1,3 +1,4 @@
+import { baseURL } from "../../playwright.config";
 import { expect, test } from "@playwright/test";
 import {
   TX_NOT_FOUND,
@@ -13,7 +14,7 @@ import { mockRpcRequest } from "./mock/helpers";
 
 test.describe("Transaction Dashboard", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/transaction/dashboard");
+    await page.goto(`${baseURL}/transaction/dashboard`);
   });
 
   test("Loads", async ({ page }) => {

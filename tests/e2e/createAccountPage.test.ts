@@ -1,8 +1,9 @@
+import { baseURL } from "../../playwright.config";
 import { test, expect } from "@playwright/test";
 
 test.describe("Create Account Page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/account/create");
+    await page.goto(`${baseURL}/account/create`);
   });
 
   test("Loads", async ({ page }) => {

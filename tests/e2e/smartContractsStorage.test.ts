@@ -1,3 +1,4 @@
+import { baseURL } from "../../playwright.config";
 import { test, expect, Page } from "@playwright/test";
 import { STELLAR_EXPERT_API } from "@/constants/settings";
 import {
@@ -36,7 +37,7 @@ const setupCommonMocks = async (page: Page) => {
  * Navigates to the Contract Storage tab with the mock contract loaded.
  */
 const navigateToContractStorage = async (page: Page) => {
-  await page.goto("/smart-contracts/contract-explorer");
+  await page.goto(`${baseURL}/smart-contracts/contract-explorer`);
   await expect(page.locator("h1")).toHaveText("Contract explorer");
 
   await page.getByLabel("Contract ID").fill(MOCK_CONTRACT_ID);

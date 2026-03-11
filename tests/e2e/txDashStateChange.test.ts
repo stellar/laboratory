@@ -1,3 +1,4 @@
+import { baseURL } from "../../playwright.config";
 import { test, expect, Page } from "@playwright/test";
 import {
   TX_ST_CHANGE_BLEND_USDC_XLM_V2_SUBMIT,
@@ -15,7 +16,7 @@ import {
 
 test.describe("Transaction Dashboard: State Change", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/transaction/dashboard");
+    await page.goto(`${baseURL}/transaction/dashboard`);
   });
 
   test.describe("KALE", () => {

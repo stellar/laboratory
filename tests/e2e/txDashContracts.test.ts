@@ -1,3 +1,4 @@
+import { baseURL } from "../../playwright.config";
 import { expect, Page, test } from "@playwright/test";
 import {
   TX_EVENTS_MOCK_RESPONSE,
@@ -8,7 +9,7 @@ import { mockRpcRequest } from "./mock/helpers";
 test.describe("Transaction Dashboard: Contracts", () => {
   test.beforeEach(async ({ page }) => {
     // Load page
-    await page.goto("/transaction/dashboard");
+    await page.goto(`${baseURL}/transaction/dashboard`);
   });
 
   test("Contracts Summary", async ({ page }) => {

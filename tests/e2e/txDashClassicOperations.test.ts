@@ -1,3 +1,4 @@
+import { baseURL } from "../../playwright.config";
 import { expect, test } from "@playwright/test";
 import {
   TX_CLASSIC_MANY_OPS,
@@ -8,7 +9,7 @@ import { mockRpcRequest } from "./mock/helpers";
 
 test.describe("Transaction Dashboard - Classic Operations", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/transaction/dashboard");
+    await page.goto(`${baseURL}/transaction/dashboard`);
   });
 
   test("Displays single classic operation correctly", async ({ page }) => {

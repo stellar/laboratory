@@ -1,3 +1,4 @@
+import { baseURL } from "../../playwright.config";
 import { test, expect } from "@playwright/test";
 import { STELLAR_EXPERT_API } from "@/constants/settings";
 import { SAVED_ACCOUNT_1 } from "./mock/localStorage";
@@ -11,7 +12,7 @@ import { mockRpcRequest } from "./mock/helpers";
 
 test.describe("Smart Contracts: Contract Info", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/smart-contracts/contract-explorer");
+    await page.goto(`${baseURL}/smart-contracts/contract-explorer`);
   });
 
   test("Loads", async ({ page }) => {

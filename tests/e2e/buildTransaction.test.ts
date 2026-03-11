@@ -1,9 +1,10 @@
+import { baseURL } from "../../playwright.config";
 import { test, expect, Page } from "@playwright/test";
 import { mockSimulateTx } from "./mock/helpers";
 
 test.describe("Build Transaction Page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/transaction/build");
+    await page.goto(`${baseURL}/transaction/build`);
   });
 
   test("Loads", async ({ page }) => {

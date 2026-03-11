@@ -1,10 +1,11 @@
+import { baseURL } from "../../playwright.config";
 import { expect, test } from "@playwright/test";
 import { TX_ST_CHANGE_DOMAIN_SET } from "./mock/txStateChange";
 import { mockRpcRequest } from "./mock/helpers";
 
 test.describe("Transaction Dashboard: Fee Breakdown", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/transaction/dashboard");
+    await page.goto(`${baseURL}/transaction/dashboard`);
   });
 
   test("Soroban transaction fees in XLM", async ({ page }) => {

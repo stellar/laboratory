@@ -1,9 +1,10 @@
+import { baseURL } from "../../playwright.config";
 import { expect, Page, test } from "@playwright/test";
 import { MOCK_LOCAL_STORAGE, SAVED_CONTRACT_1 } from "./mock/localStorage";
 
 test.describe("Saved Smart Contracts Page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/smart-contracts/saved");
+    await page.goto(`${baseURL}/smart-contracts/saved`);
   });
 
   test("Loads", async ({ page }) => {
@@ -28,7 +29,7 @@ test.describe("Saved contract IDs", () => {
     });
     pageContext = await browserContext.newPage();
 
-    await pageContext.goto("/smart-contracts/saved");
+    await pageContext.goto(`${baseURL}/smart-contracts/saved`);
   });
 
   test("Loads", async () => {

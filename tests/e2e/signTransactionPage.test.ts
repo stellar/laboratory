@@ -1,8 +1,9 @@
+import { baseURL } from "../../playwright.config";
 import { test, expect } from "@playwright/test";
 
 test.describe("Sign Transaction Page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/transaction/sign");
+    await page.goto(`${baseURL}/transaction/sign`);
   });
 
   test("Loads", async ({ page }) => {

@@ -1,3 +1,4 @@
+import { baseURL } from "../../playwright.config";
 import { test, expect } from "@playwright/test";
 import { shortenStellarAddress } from "../../src/helpers/shortenStellarAddress";
 
@@ -17,7 +18,7 @@ const TEST_CONTRACT_ID_SHORT = shortenStellarAddress(TEST_CONTRACT_ID);
 
 test.describe("[futurenet/testnet] Fund Account Page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/account/fund");
+    await page.goto(`${baseURL}/account/fund`);
   });
 
   test("Shows testnet network in the title by default", async ({ page }) => {
@@ -399,7 +400,7 @@ test.describe("[futurenet/testnet] Fund Account Page", () => {
 
 test.describe("[mainnet] Fund Account Page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/account");
+    await page.goto(`${baseURL}/account`);
 
     // Switch to mainnet network
     await page.getByTestId("networkSelector-button").click();
@@ -426,7 +427,7 @@ test.describe("[mainnet] Fund Account Page", () => {
   test("I should see 'Switch Network' page on /account/fund", async ({
     page,
   }) => {
-    await page.goto("/account/fund");
+    await page.goto(`${baseURL}/account/fund`);
 
     await expect(page.locator("h1")).toHaveText(
       "Fund a Futurenet or Testnet network account or contract with XLM, USDC, and EURC",

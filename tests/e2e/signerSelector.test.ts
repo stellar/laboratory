@@ -1,6 +1,6 @@
+import { baseURL } from "../../playwright.config";
 import { test, expect, Page, Browser } from "@playwright/test";
 
-const BASE_URL = `http://localhost:${process.env.PORT || 3000}`;
 
 import {
   MOCK_LOCAL_STORAGE,
@@ -46,7 +46,7 @@ test.describe("Signer Selector", () => {
     test.beforeAll(async ({ browser }) => {
       pageContext = await setupPageContext(
         browser,
-        `${BASE_URL}/transaction/build`,
+        `${baseURL}/transaction/build`,
       );
     });
 
@@ -80,7 +80,7 @@ test.describe("Signer Selector", () => {
     test.beforeAll(async ({ browser }) => {
       pageContext = await setupPageContext(
         browser,
-        `${BASE_URL}/transaction/sign`,
+        `${baseURL}/transaction/sign`,
       );
     });
 
