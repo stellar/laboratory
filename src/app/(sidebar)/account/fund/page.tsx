@@ -389,102 +389,124 @@ export default function FundAccount() {
               <Text size="xs" as="div" weight="medium">
                 Choose asset to fund
               </Text>
-
-              <Link
-                href="https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/accounts#trustlines"
-                icon={<Icon.LinkExternal01 />}
-                size="sm"
-              >
-                What is a trustline?
-              </Link>
             </Box>
 
             <div className="Account__fundTokens">
-              {fundTokens.map((t) => {
-                const asset = `${t.assetCode}:${t.assetIssuer}`;
-                const hasTrustline = Boolean(accountBalances?.[asset]);
+              {fundTokens
+                .filter((t) => {
+                  // Hide XLM if the account is already funded
+                  if (t.id === "xlm" && accountInfo?.isFunded) {
+                    return false;
+                  }
+                  return true;
+                })
+                .map((t) => {
+                  const asset = `${t.assetCode}:${t.assetIssuer}`;
+                  const hasTrustline = Boolean(accountBalances?.[asset]);
 
-                return (
-                  <div
-                    key={t.id}
-                    className="Account__fundTokens__item"
-                    data-testid="fund-account-token"
-                  >
-                    <div className="Account__fundTokens__item__icon">
-                      <Image
-                        src={`/images/token-icon-${t.id}.png`}
-                        alt={`${t.label} icon`}
-                        width={32}
-                        height={32}
-                      />
+                  return (
+                    <div
+                      key={t.id}
+                      className="Account__fundTokens__item"
+                      data-testid="fund-account-token"
+                    >
+                      <div className="Account__fundTokens__item__icon">
+                        <Image
+                          src={`/images/token-icon-${t.id}.png`}
+                          alt={`${t.label} icon`}
+                          width={32}
+                          height={32}
+                        />
+                      </div>
+
+                      <div className="Account__fundTokens__item__info">
+                        <Text as="div" size="xs" weight="medium">
+                          {t.label}
+                        </Text>
+                        <Text
+                          as="div"
+                          size="md"
+                          weight="medium"
+                          addlClassName="Account__fundTokens__item__amount"
+                        >{`${formatNumber(parseFloat(t.amount))} ${t.currency}`}</Text>
+                      </div>
+
+                      {t.id === "xlm" || hasTrustline ? (
+                        // Fund button
+                        <Button
+                          variant="secondary"
+                          size="md"
+                          disabled={isFundButtonDisabled()}
+                          isLoading={
+                            isAccountLoading ||
+                            (isFriendBotFundLoading && t.id === activeToken)
+                          }
+                          onClick={() => {
+                            handleFund(t.id);
+                          }}
+                        >
+                          Fund
+                        </Button>
+                      ) : (
+                        // Add trustline button
+                        <Button
+                          variant="secondary"
+                          size="md"
+                          disabled={
+                            !accountInfo ||
+                            !accountInfo?.isFunded ||
+                            isFriendBotFundLoading ||
+                            ((isAddTrustlineInProgress ||
+                              Boolean(addTrustlineTx)) &&
+                              t.id !== activeToken)
+                          }
+                          isLoading={
+                            isAccountLoading || isAddTrustlineInProgress
+                          }
+                          title={
+                            !accountInfo?.isFunded
+                              ? "Account must be funded with XLM first"
+                              : undefined
+                          }
+                          onClick={() => {
+                            setActiveToken(t.id);
+
+                            delayedAction({
+                              action: () => {
+                                resetFriendBotQuery();
+                                addTrustline();
+                              },
+                              delay: 300,
+                            });
+                          }}
+                        >
+                          Add trustline
+                        </Button>
+                      )}
                     </div>
-
-                    <div className="Account__fundTokens__item__info">
-                      <Text as="div" size="xs" weight="medium">
-                        {t.label}
-                      </Text>
-                      <Text
-                        as="div"
-                        size="md"
-                        weight="medium"
-                        addlClassName="Account__fundTokens__item__amount"
-                      >{`${formatNumber(parseFloat(t.amount))} ${t.currency}`}</Text>
-                    </div>
-
-                    {t.id === "xlm" || hasTrustline ? (
-                      // Fund button
-                      <Button
-                        variant="secondary"
-                        size="md"
-                        disabled={isFundButtonDisabled()}
-                        isLoading={
-                          isAccountLoading ||
-                          (isFriendBotFundLoading && t.id === activeToken)
-                        }
-                        onClick={() => {
-                          handleFund(t.id);
-                        }}
-                      >
-                        Fund
-                      </Button>
-                    ) : (
-                      // Add trustline button
-                      <Button
-                        variant="secondary"
-                        size="md"
-                        disabled={
-                          !accountInfo ||
-                          !accountInfo?.isFunded ||
-                          isFriendBotFundLoading ||
-                          ((isAddTrustlineInProgress ||
-                            Boolean(addTrustlineTx)) &&
-                            t.id !== activeToken)
-                        }
-                        isLoading={isAccountLoading || isAddTrustlineInProgress}
-                        title={
-                          !accountInfo?.isFunded
-                            ? "Account must be funded with XLM first"
-                            : undefined
-                        }
-                        onClick={() => {
-                          setActiveToken(t.id);
-
-                          delayedAction({
-                            action: () => {
-                              resetFriendBotQuery();
-                              addTrustline();
-                            },
-                            delay: 300,
-                          });
-                        }}
-                      >
-                        Add trustline
-                      </Button>
-                    )}
-                  </div>
-                );
-              })}
+                  );
+                })}
             </div>
+
+            <Box
+              gap="md"
+              direction="row"
+              justify="space-between"
+              align="center"
+              wrap="wrap"
+            >
+              <Text size="xs" as="div" weight="medium">
+                A trustline lets your account hold and receive this asset. Your
+                address must have XLM to submit the transaction.{" "}
+                <Link
+                  href="https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/accounts#trustlines"
+                  icon={<Icon.LinkExternal01 />}
+                  size="xs"
+                >
+                  What is a trustline?
+                </Link>
+              </Text>
+            </Box>
           </Box>
 
           {isFriendBotFetchedAfterMount && friendBotError ? (

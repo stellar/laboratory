@@ -141,6 +141,7 @@ test.describe("[futurenet/testnet] Fund Account Page", () => {
 
     const tokens = page.getByTestId("fund-account-token");
 
+    // Before funding: XLM is at index 0, USDC at 1, EURC at 2
     const fundXlmButton = tokens.nth(0).getByRole("button");
     const fundUsdcButton = tokens.nth(1).getByRole("button");
     const fundEurcButton = tokens.nth(2).getByRole("button");
@@ -169,14 +170,18 @@ test.describe("[futurenet/testnet] Fund Account Page", () => {
       ),
     ).toBeVisible();
 
-    await expect(fundUsdcButton).toBeEnabled();
-    await expect(fundEurcButton).toBeEnabled();
+    // After funding XLM, the XLM token is hidden. USDC is now at index 0, EURC at 1.
+    const fundUsdcButtonAfterFund = tokens.nth(0).getByRole("button");
+    const fundEurcButtonAfterFund = tokens.nth(1).getByRole("button");
+
+    await expect(fundUsdcButtonAfterFund).toBeEnabled();
+    await expect(fundEurcButtonAfterFund).toBeEnabled();
 
     // Add USDC trustline
     const signTxBox = page.getByTestId("sign-tx-xdr-fund-account-sign-tx");
 
     await expect(signTxBox).toBeHidden();
-    await fundUsdcButton.click();
+    await fundUsdcButtonAfterFund.click();
     await expect(signTxBox).toBeVisible();
 
     const signTxButton = signTxBox
@@ -204,8 +209,8 @@ test.describe("[futurenet/testnet] Fund Account Page", () => {
         `USDC trustline has been successfully added to ${TEST_ACCOUNT_PUBLICK_KEY_SHORT} on Testnet.`,
       ),
     ).toBeVisible();
-    await expect(fundUsdcButton).toHaveText("Fund");
-    await expect(fundEurcButton).toHaveText("Add trustline");
+    await expect(fundUsdcButtonAfterFund).toHaveText("Fund");
+    await expect(fundEurcButtonAfterFund).toHaveText("Add trustline");
   });
 
   test("Load funded account wiht USDC trustline", async ({ page }) => {
@@ -225,6 +230,7 @@ test.describe("[futurenet/testnet] Fund Account Page", () => {
 
     const tokens = page.getByTestId("fund-account-token");
 
+    // Before entering key: all 3 tokens visible (XLM at 0, USDC at 1, EURC at 2)
     const fundXlmButton = tokens.nth(0).getByRole("button");
     const fundUsdcButton = tokens.nth(1).getByRole("button");
     const fundEurcButton = tokens.nth(2).getByRole("button");
@@ -243,13 +249,16 @@ test.describe("[futurenet/testnet] Fund Account Page", () => {
     await publicKeyInput.fill(TEST_ACCOUNT_PUBLIC_KEY);
     await publicKeyInput.blur();
 
-    await expect(fundXlmButton).toBeEnabled();
+    // After loading a funded account with USDC trustline, XLM is hidden.
+    // USDC is now at index 0, EURC at index 1.
+    const fundUsdcButtonAfterLoad = tokens.nth(0).getByRole("button");
+    const fundEurcButtonAfterLoad = tokens.nth(1).getByRole("button");
 
-    await expect(fundUsdcButton).toBeEnabled();
-    await expect(fundUsdcButton).toHaveText("Fund");
+    await expect(fundUsdcButtonAfterLoad).toBeEnabled();
+    await expect(fundUsdcButtonAfterLoad).toHaveText("Fund");
 
-    await expect(fundEurcButton).toBeEnabled();
-    await expect(fundEurcButton).toHaveText("Add trustline");
+    await expect(fundEurcButtonAfterLoad).toBeEnabled();
+    await expect(fundEurcButtonAfterLoad).toHaveText("Add trustline");
   });
 
   test("Fund muxed account with XLM", async ({ page }) => {
@@ -313,15 +322,28 @@ test.describe("[futurenet/testnet] Fund Account Page", () => {
   });
 
   test("Error when funding already funded account", async ({ page }) => {
-    // Mock accounts API call
+    // Mock accounts API call - return unfunded first so XLM button is visible,
+    // then funded after the fund attempt
+    let accountsCallCount = 0;
+
     await page.route(
       `*/**/accounts/${TEST_ACCOUNT_PUBLIC_KEY}`,
       async (route) => {
-        await route.fulfill({
-          status: 200,
-          contentType: "application/hal+json; charset=utf-8",
-          body: JSON.stringify(MOCK_ACCOUNT_FUNDED_RESPONSE),
-        });
+        if (accountsCallCount === 0) {
+          await route.fulfill({
+            status: 200,
+            contentType: "application/hal+json; charset=utf-8",
+            body: JSON.stringify(MOCK_ACCOUNT_UNFUNDED_RESPONSE),
+          });
+        } else {
+          await route.fulfill({
+            status: 200,
+            contentType: "application/hal+json; charset=utf-8",
+            body: JSON.stringify(MOCK_ACCOUNT_FUNDED_RESPONSE),
+          });
+        }
+
+        accountsCallCount++;
       },
     );
 

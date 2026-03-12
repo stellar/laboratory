@@ -230,7 +230,6 @@ export const SignTransactionXdr = ({
         signatureSigs = sigSignature;
       }
 
-      const tx = TransactionBuilder.fromXDR(xdrToSign, network.passphrase);
       const allSigs = [
         ...secretKeySigs,
         ...hardwareSigs,
@@ -248,9 +247,29 @@ export const SignTransactionXdr = ({
       setAllSigsCount(allSigsCount);
 
       if (allSigs.length > 0) {
-        tx.signatures.push(...allSigs);
+        // When only the extension wallet signed, use its signed XDR directly.
+        // This avoids issues where wallets may modify the transaction
+        // (e.g., fee adjustments), making the extracted signature invalid
+        // for the original unsigned transaction.
+        const isExtensionWalletOnly =
+          extensionSigs.length > 0 &&
+          secretKeySigs.length === 0 &&
+          hardwareSigs.length === 0 &&
+          signatureSigs.length === 0;
 
-        const signedTx = tx.toEnvelope().toXDR("base64");
+        let signedTx: string;
+
+        if (isExtensionWalletOnly && exSignedTxXdr) {
+          signedTx = exSignedTxXdr;
+        } else {
+          const tx = TransactionBuilder.fromXDR(
+            xdrToSign,
+            network.passphrase,
+          );
+          tx.signatures.push(...allSigs);
+          signedTx = tx.toEnvelope().toXDR("base64");
+        }
+
         onDoneAction({
           signedXdr: signedTx,
           successMessage: getAllSigsMessage(allSigsCount),
