@@ -3,6 +3,8 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { Select, Notification, Icon } from "@stellar/design-system";
 
+import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
+
 import { formComponentTemplateTxnOps } from "@/components/formComponentTemplateTxnOps";
 import { SdsLink } from "@/components/SdsLink";
 import { SorobanOperation } from "./SorobanOperation";
@@ -19,8 +21,6 @@ import {
   TRANSACTION_OPERATIONS,
   SET_TRUSTLINE_FLAGS_CUSTOM_MESSAGE,
 } from "@/constants/transactionOperations";
-import { useStore } from "@/store/useStore";
-
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 import {
   AnyObject,
@@ -33,27 +33,26 @@ import {
 } from "@/types/types";
 
 export const Operations = () => {
-  const { transaction } = useStore();
-  const { classic, soroban } = transaction.build;
+  const {
+    build,
+    setBuildSorobanOperation,
+    setBuildSorobanXdr,
+    setBuildClassicOperations,
+    setBuildClassicSingleOperation,
+    setBuildOperationsError,
+    updateBuildIsValid,
+  } = useBuildFlowStore();
+
+  const { classic, soroban } = build;
 
   // Classic Operations
   const { operations: txnOperations } = classic;
   // Soroban Operation
   const { operation: sorobanOperation } = soroban;
 
-  const {
-    // Classic
-    updateBuildOperations,
-    updateBuildSingleOperation,
-    // Soroban
-    updateSorobanBuildOperation,
-    updateSorobanBuildXdr,
-    // Either Classic or Soroban
-    updateBuildIsValid,
-    setBuildOperationsError,
-  } = transaction;
-
   const [operationsError, setOperationsError] = useState<OperationError[]>([]);
+
+  console.log({ classic });
 
   // For Classic Operations
   const updateOptionParamAndError = ({
@@ -74,19 +73,21 @@ export const Operations = () => {
     switch (type) {
       case "add":
         if (item !== undefined) {
-          updateBuildOperations([...txnOperations, item]);
+          setBuildClassicOperations([...txnOperations, item]);
           setOperationsError([...operationsError, EMPTY_OPERATION_ERROR]);
         }
         break;
       case "duplicate":
         if (index !== undefined) {
-          updateBuildOperations([...arrayItem.duplicate(txnOperations, index)]);
+          setBuildClassicOperations([
+            ...arrayItem.duplicate(txnOperations, index),
+          ]);
           setOperationsError([...arrayItem.duplicate(operationsError, index)]);
         }
         break;
       case "move-after":
         if (index !== undefined) {
-          updateBuildOperations([
+          setBuildClassicOperations([
             ...arrayItem.move(txnOperations, index, "after"),
           ]);
           setOperationsError([
@@ -96,7 +97,7 @@ export const Operations = () => {
         break;
       case "move-before":
         if (index !== undefined) {
-          updateBuildOperations([
+          setBuildClassicOperations([
             ...arrayItem.move(txnOperations, index, "before"),
           ]);
           setOperationsError([
@@ -106,12 +107,14 @@ export const Operations = () => {
         break;
       case "delete":
         if (index !== undefined) {
-          updateBuildOperations([...arrayItem.delete(txnOperations, index)]);
+          setBuildClassicOperations([
+            ...arrayItem.delete(txnOperations, index),
+          ]);
           setOperationsError([...arrayItem.delete(operationsError, index)]);
         }
         break;
       case "reset":
-        updateBuildOperations([INITIAL_OPERATION]);
+        setBuildClassicOperations([INITIAL_OPERATION]);
         setOperationsError([EMPTY_OPERATION_ERROR]);
         break;
 
@@ -122,9 +125,9 @@ export const Operations = () => {
 
   // For Soroban Operation
   const resetSorobanOperation = () => {
-    updateSorobanBuildOperation(INITIAL_OPERATION);
+    setBuildSorobanOperation(INITIAL_OPERATION);
     setOperationsError([EMPTY_OPERATION_ERROR]);
-    updateSorobanBuildXdr("");
+    setBuildSorobanXdr("");
   };
 
   // Preserve values and validate inputs when components mounts
@@ -637,14 +640,14 @@ export const Operations = () => {
   ) => {
     if (isSoroban) {
       // Handle Soroban operation
-      updateSorobanBuildOperation({
+      setBuildSorobanOperation({
         ...sorobanOperation,
         source_account: opValue,
       });
     } else {
       // Handle classic operation
       const op = txnOperations[opIndex];
-      updateBuildSingleOperation(opIndex, {
+      setBuildClassicSingleOperation(opIndex, {
         ...op,
         source_account: opValue,
       });
@@ -791,11 +794,11 @@ export const Operations = () => {
               // reset both the soroban and classic operation
               // we reset soroban operation because its invoke host function
               // will have a nested operation
-              updateBuildOperations([INITIAL_OPERATION]);
+              setBuildClassicOperations([INITIAL_OPERATION]);
 
               resetSorobanOperation();
               updateOptionParamAndError({ type: "reset" });
-              updateSorobanBuildOperation({
+              setBuildSorobanOperation({
                 operation_type: newOpType,
                 params: defaultParams,
                 source_account: "",
@@ -803,7 +806,7 @@ export const Operations = () => {
             } else {
               // if it's classic, reset the soroban operation
               resetSorobanOperation();
-              updateBuildSingleOperation(index, {
+              setBuildClassicSingleOperation(index, {
                 operation_type: newOpType,
                 params: defaultParams,
                 source_account: "",

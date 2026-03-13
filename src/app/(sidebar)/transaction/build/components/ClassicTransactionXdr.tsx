@@ -16,6 +16,7 @@ import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
 import { useStore } from "@/store/useStore";
 import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
+
 import {
   OP_SET_TRUST_LINE_FLAGS,
   OPERATION_CLEAR_FLAGS,
@@ -40,23 +41,19 @@ import { TransactionXdrDisplay } from "./TransactionXdrDisplay";
 const MAX_INT64 = "9223372036854775807";
 
 export const ClassicTransactionXdr = () => {
-  const { transaction, network } = useStore();
-  const { classic, params: txnParams, isValid } = transaction.build;
-  const { updateBuildXdr } = transaction;
+  const { network } = useStore();
+  const { build, setBuildClassicXdr } = useBuildFlowStore();
+  const { classic, params: txnParams, isValid } = build;
   const { operations: txnOperations } = classic;
-  const setBuildClassicXdr = useBuildFlowStore(
-    (state) => state.setBuildClassicXdr,
-  );
 
   const isXdrInit = useIsXdrInit();
 
   useEffect(() => {
     // Reset transaction.xdr if the transaction is not valid
     if (!(isValid.params && isValid.operations)) {
-      updateBuildXdr("");
       setBuildClassicXdr("");
     }
-    // Not including updateBuildXdr, setBuildClassicXdr
+    // Not including setBuildClassicXdr
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isValid.params, isValid.operations]);
 
@@ -478,14 +475,12 @@ export const ClassicTransactionXdr = () => {
         jsonString || "",
       );
 
-      updateBuildXdr(txnXdr);
       setBuildClassicXdr(txnXdr);
 
       return {
         xdr: txnXdr,
       };
     } catch (e) {
-      updateBuildXdr("");
       setBuildClassicXdr("");
 
       return { error: `${e}` };

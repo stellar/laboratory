@@ -8,6 +8,7 @@ import {
   Card,
   Icon,
   Notification,
+  Text,
 } from "@stellar/design-system";
 
 import { useStore } from "@/store/useStore";
@@ -300,13 +301,6 @@ export const SorobanOperation = ({
             </Box>
           )}
 
-          <Box gap="sm" direction="row" align="center">
-            <Notification variant="warning" title="Only one operation allowed">
-              Note that Soroban transactions can only contain one operation per
-              transaction.
-            </Notification>
-          </Box>
-
           {/* Operations bottom buttons */}
           <Box
             gap="lg"
@@ -315,36 +309,43 @@ export const SorobanOperation = ({
             justify="space-between"
             addlClassName="Operation__buttons"
           >
-            <Box gap="sm" direction="row" align="center">
-              <Button
-                size="md"
-                variant="tertiary"
-                // Only one operation allowed for Soroban
-                disabled={true}
-                icon={<Icon.PlusCircle />}
-                onClick={() => {
-                  /* noop*/
-                }}
-              >
-                Add operation
-              </Button>
+            <Box gap="xs">
+              <Box gap="xs" direction="row" align="center">
+                <Button
+                  size="md"
+                  variant="tertiary"
+                  // Only one operation allowed for Soroban
+                  disabled={true}
+                  icon={<Icon.PlusCircle />}
+                  onClick={() => {
+                    /* noop*/
+                  }}
+                >
+                  Add operation
+                </Button>
 
-              <Button
-                size="md"
-                variant="tertiary"
-                icon={<Icon.Save01 />}
-                onClick={() => {
-                  setIsSaveTxnModalVisible(true);
-                }}
-                title="Save transaction"
-                disabled={!sorobanTxnXdr}
-              ></Button>
+                <Button
+                  size="md"
+                  variant="tertiary"
+                  icon={<Icon.Save01 />}
+                  onClick={() => {
+                    setIsSaveTxnModalVisible(true);
+                  }}
+                  title="Save transaction"
+                  disabled={!sorobanTxnXdr}
+                ></Button>
 
-              <ShareUrlButton
-                shareableUrl={shareableUrl("transactions-build")}
-              />
+                <ShareUrlButton
+                  shareableUrl={shareableUrl("transactions-build")}
+                />
+              </Box>
+              <Box gap="sm" direction="row" align="center">
+                <Text as="div" size="xs">
+                  Soroban transaction can only contain one operation per
+                  transaction.
+                </Text>
+              </Box>
             </Box>
-
             <Button
               size="md"
               variant="error"

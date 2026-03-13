@@ -16,6 +16,7 @@ import { shareableUrl } from "@/helpers/shareableUrl";
 import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransactions";
 
 import { useStore } from "@/store/useStore";
+import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 
 import { OP_SET_TRUST_LINE_FLAGS } from "@/constants/settings";
 import {
@@ -69,13 +70,12 @@ export const ClassicOperation = ({
   }) => OperationError;
   renderSourceAccount: (opType: string, index: number) => React.ReactNode;
 }) => {
-  const { transaction, network } = useStore();
-  const { classic } = transaction.build;
+  const { network } = useStore();
+  const { build, setBuildClassicSingleOperation } = useBuildFlowStore();
+  const { classic } = build;
   const { operations: txnOperations, xdr: txnXdr } = classic;
 
   const [isSaveTxnModalVisible, setIsSaveTxnModalVisible] = useState(false);
-
-  const { updateBuildSingleOperation } = transaction;
 
   /* Classic Operations */
   const handleOperationParamChange = ({
@@ -91,7 +91,7 @@ export const ClassicOperation = ({
   }) => {
     const op = txnOperations[opIndex];
 
-    updateBuildSingleOperation(opIndex, {
+    setBuildClassicSingleOperation(opIndex, {
       ...op,
       params: sanitizeObject({
         ...op?.params,
@@ -508,7 +508,7 @@ export const ClassicOperation = ({
                 Add operation
               </Button>
 
-              <Button
+              {/* <Button
                 size="md"
                 variant="tertiary"
                 icon={<Icon.Save01 />}
@@ -517,7 +517,7 @@ export const ClassicOperation = ({
                 }}
                 title="Save transaction"
                 disabled={!txnXdr}
-              ></Button>
+              ></Button> */}
 
               <ShareUrlButton
                 shareableUrl={shareableUrl("transactions-build")}
@@ -548,8 +548,8 @@ export const ClassicOperation = ({
           xdr: txnXdr,
           page: "build",
           shareableUrl: shareableUrl("transactions-build"),
-          params: transaction.build.params,
-          operations: transaction.build.classic.operations,
+          params: build.params,
+          operations: build.classic.operations,
         }}
         allSavedItems={localStorageSavedTransactions.get()}
         isVisible={isSaveTxnModalVisible}

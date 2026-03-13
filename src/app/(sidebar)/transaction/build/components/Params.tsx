@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, Icon } from "@stellar/design-system";
 import { MemoValue } from "@stellar/stellar-sdk";
 import { get, omit, set } from "lodash";
 
@@ -26,7 +25,6 @@ import { useAccountSequenceNumber } from "@/query/useAccountSequenceNumber";
 
 import { validate } from "@/validate";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
-import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { EmptyObj, KeysOfUnion } from "@/types/types";
 
@@ -35,12 +33,8 @@ export const Params = () => {
 
   const { transaction, network } = useStore();
   const { params: txnParams } = transaction.build;
-  const {
-    updateBuildParams,
-    updateBuildIsValid,
-    resetBuildParams,
-    setBuildParamsError,
-  } = transaction;
+  const { updateBuildParams, updateBuildIsValid, setBuildParamsError } =
+    transaction;
 
   const [paramsError, setParamsError] = useState<ParamsError>({});
 
@@ -358,27 +352,6 @@ export const Params = () => {
         }}
         infoLink="https://developers.stellar.org/docs/learn/glossary#time-bounds"
       />
-
-      <Box
-        gap="md"
-        direction="row"
-        align="center"
-        justify="end"
-        addlClassName="Params__buttons"
-      >
-        <Button
-          size="md"
-          variant="error"
-          onClick={() => {
-            resetBuildParams();
-            setParamsError({});
-            trackEvent(TrackingEvent.TRANSACTION_BUILD_CLEAR_PARAMS);
-          }}
-          icon={<Icon.RefreshCw01 />}
-        >
-          Clear params
-        </Button>
-      </Box>
     </Box>
   );
 };
