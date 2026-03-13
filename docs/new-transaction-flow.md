@@ -579,6 +579,11 @@ Add events:
   navigation).
 - [ ] Remove or deprecate `transaction.sign.importXdr` and
   `updateSignActiveView` from the old store once all flows are migrated.
+- [ ] Remove `updateBuildXdr` from `ClassicTransactionXdr` — it writes to the
+  old store (`transaction.build.xdr`) and is now redundant with
+  `setBuildClassicXdr` from `useBuildFlowStore`. Still used by `saved/page.tsx`
+  and `ContractStorage.tsx`, so the store method stays; just remove it from
+  `ClassicTransactionXdr` once the new flow is fully wired.
 
 ---
 
