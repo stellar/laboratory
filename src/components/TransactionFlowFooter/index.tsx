@@ -71,7 +71,7 @@ export const TransactionFlowFooter = ({
         {nextStep && (
           <Button
             size="md"
-            variant="tertiary"
+            variant="secondary"
             onClick={onNext}
             disabled={isNextDisabled}
           >

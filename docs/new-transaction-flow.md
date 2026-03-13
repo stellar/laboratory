@@ -98,8 +98,8 @@ type TransactionStepName =
 - `highestCompletedStep: TransactionStepName | null` — tracks the furthest step
   reached (`null` on fresh page load with no session state)
 - **Build flow and Import flow each own their own `steps` array** — they live on
-  separate routes (`/transaction/build` → `BuildFlow`; `/transaction/import` →
-  `ImportFlow`). Each `page.tsx` is self-contained.
+  separate routes (`/transaction/build` → `BuildTransaction`;
+  `/transaction/import` → `ImportFlow`). Each `page.tsx` is self-contained.
 - Steps are derived from the step variants table above; ordering uses array
   position: `const stepIndex = (s: TransactionStepName) => steps.indexOf(s)`
 - Stepper only renders the applicable steps for the current transaction type
@@ -384,8 +384,8 @@ the applicable subset of steps.
 
 **New file:** `src/hooks/useTransactionFlow.ts`
 
-Shared hook used by both `BuildFlow` and `ImportFlow` to eliminate duplicated
-step navigation logic.
+Shared hook used by both `BuildTransaction` and `ImportFlow` to eliminate
+duplicated step navigation logic.
 
 ### Step 5: Refactor main `page.tsx` as single-page flow
 
@@ -398,8 +398,8 @@ This page now owns the Build flow end-to-end. `activeStep` and
 `highestCompletedStep` both live in the Zustand transaction store, persisted to
 `sessionStorage`. Neither is synced to URL query params.
 
-New structure — `page.tsx` renders `<BuildFlow />` directly; the `<Tabs />`
-component contains nav links, not local state:
+New structure — `page.tsx` renders `<BuildTransaction />` directly; the
+`<Tabs />` component contains nav links, not local state:
 
 > **Tabs component concern:** The existing `src/components/Tabs/index.tsx` uses
 > `div` elements with `onClick` handlers — it has no `href` support. Extending
@@ -441,15 +441,15 @@ tab and flow component differ:
     activeTabHref="/transaction/build"
     addlClassName="Tab--with-border"
   />
-  <BuildFlow />
+  <BuildTransaction />
 </div>
 ```
 
-**`BuildFlow` component** (new file `BuildFlow.tsx`) owns all build-specific
-step logic. Step navigation is handled by `useTransactionFlow`:
+**`BuildTransaction` component** (new file `BuildTransaction.tsx`) owns all
+build-specific step logic. Step navigation is handled by `useTransactionFlow`:
 
 ```typescript
-// BuildFlow.tsx
+// transaction/build/page.tsx
 const { activeStep, setActiveStep } = useStore(transactionStore);
 const isSoroban = /* derived from transaction type in build store */;
 const hasAuthEntries = /* derived from simulation result in store */;
@@ -537,20 +537,18 @@ Add events:
 
 ## Part 1 Files Summary
 
-| Action     | File                                                                          |
-| ---------- | ----------------------------------------------------------------------------- |
-| **Create** | `src/hooks/useTransactionFlow.ts`                                             |
-| **Create** | `src/components/TransactionStepper/index.tsx`                                 |
-| **Create** | `src/components/TransactionStepper/styles.scss`                               |
-| **Modify** | `src/components/Tabs/index.tsx` (add optional `href` mode for nav-link tabs)  |
-| **Create** | `src/app/(sidebar)/transaction/build/components/BuildFlow.tsx`                |
-| **Create** | `src/app/(sidebar)/transaction/build/components/TransactionFlowFooter.tsx`    |
-| **Create** | `src/app/(sidebar)/transaction/build/styles.scss`                             |
-| **Modify** | `src/app/(sidebar)/transaction/build/page.tsx` (renders BuildFlow + nav tabs) |
-| **Modify** | `src/app/(sidebar)/transaction/build/components/Params.tsx`                   |
-| **Modify** | `src/app/(sidebar)/transaction/build/components/ClassicOperation.tsx`         |
-| **Modify** | `src/app/(sidebar)/transaction/build/components/SorobanOperation.tsx`         |
-| **Modify** | `src/metrics/tracking.ts`                                                     |
+| Action     | File                                                                                 |
+| ---------- | ------------------------------------------------------------------------------------ |
+| **Create** | `src/hooks/useTransactionFlow.ts`                                                    |
+| **Create** | `src/components/TransactionStepper/index.tsx`                                        |
+| **Create** | `src/components/TransactionStepper/styles.scss`                                      |
+| **Create** | `src/app/(sidebar)/transaction/build/components/TransactionFlowFooter.tsx`           |
+| **Modify** | `src/components/Tabs/index.tsx` (add optional `href` mode for nav-link tabs)         |
+| **Modify** | `src/app/(sidebar)/transaction/build/page.tsx` (renders BuildTransaction + nav tabs) |
+| **Modify** | `src/app/(sidebar)/transaction/build/components/Params.tsx`                          |
+| **Modify** | `src/app/(sidebar)/transaction/build/components/ClassicOperation.tsx`                |
+| **Modify** | `src/app/(sidebar)/transaction/build/components/SorobanOperation.tsx`                |
+| **Modify** | `src/metrics/tracking.ts`                                                            |
 
 ## Part 1 Verification
 
@@ -564,6 +562,28 @@ Add events:
   are not
 - "Save transaction" opens save modal (available on Build)
 - Loading a saved transaction restores full flow state and step position
+
+## Pre-launch Checklist
+
+- [ ] Confirm `transaction.sign.importXdr` (`updateSignImportXdr`) is no longer
+  needed in the new flow — the old build page used it to hand the XDR to the
+  sign page via `router.push(Routes.SIGN_TRANSACTION)`. The new flow keeps
+  everything on one page and reads the built XDR from `useBuildFlowStore`
+  (`buildClassicXdr` / `buildSorobanXdr`) instead. Verify the sign step
+  component reads from the flow store, not from `transaction.sign.importXdr`.
+- [ ] Confirm `updateSignActiveView("overview")` is not needed — the old flow
+  set this before navigating to the sign page. In the new single-page flow the
+  sign step renders its own content directly.
+- [ ] Confirm `TRANSACTION_BUILD_SIGN_IN_TX_SIGNER` tracking event is replaced
+  or no longer applicable (signing is now a step transition, not a separate page
+  navigation).
+- [ ] Remove or deprecate `transaction.sign.importXdr` and
+  `updateSignActiveView` from the old store once all flows are migrated.
+- [ ] Remove `updateBuildXdr` from `ClassicTransactionXdr` — it writes to the
+  old store (`transaction.build.xdr`) and is now redundant with
+  `setBuildClassicXdr` from `useBuildFlowStore`. Still used by `saved/page.tsx`
+  and `ContractStorage.tsx`, so the store method stays; just remove it from
+  `ClassicTransactionXdr` once the new flow is fully wired.
 
 ---
 
@@ -1005,8 +1025,8 @@ Once XDR is pasted, there are three possible states:
 
 **New file:** `src/app/(sidebar)/transaction/import/components/ImportFlow.tsx`
 
-Mirrors `BuildFlow` (same two-column layout, same `useTransactionFlow` hook) but
-uses the import store. Key differences:
+Mirrors `BuildTransaction` (same two-column layout, same `useTransactionFlow`
+hook) but uses the import store. Key differences:
 
 - First step is `"import"` instead of `"build"`
 - Steps derived from `parsedTxType` (from import store) instead of build store

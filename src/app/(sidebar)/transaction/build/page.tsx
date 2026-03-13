@@ -4,6 +4,8 @@ import { Card, Link, Text } from "@stellar/design-system";
 
 import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 
+import { useTransactionFlow } from "@/hooks/useTransactionFlow";
+
 import { Box } from "@/components/layout/Box";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import {
@@ -28,6 +30,7 @@ export default function BuildTransaction() {
     highestCompletedStep,
     setActiveStep,
     goToNextStep,
+    goToPreviousStep,
     resetAll,
   } = useBuildFlowStore();
 
@@ -42,13 +45,18 @@ export default function BuildTransaction() {
     ? ["build", "simulate", "sign", "submit"]
     : ["build", "sign", "submit"];
 
+  const { handleNext, handleBack, handleStepClick } = useTransactionFlow({
+    steps,
+    activeStep,
+    highestCompletedStep,
+    goToNextStep,
+    goToPreviousStep,
+    setActiveStep,
+  });
+
   const currentXdr = isSoroban ? build.soroban.xdr : build.classic.xdr;
 
   const isNextDisabled = activeStep === "build" && !currentXdr;
-
-  const handleStepClick = (step: TransactionStepName) => {
-    setActiveStep(step);
-  };
 
   const renderError = () => {
     if (paramsError.length > 0 || operationsError.length > 0) {
@@ -156,7 +164,8 @@ export default function BuildTransaction() {
             <TransactionFlowFooter
               steps={steps}
               activeStep={activeStep}
-              onNext={() => goToNextStep(steps)}
+              onNext={handleNext}
+              onBack={handleBack}
               isNextDisabled={isNextDisabled}
               xdr={currentXdr}
             />
