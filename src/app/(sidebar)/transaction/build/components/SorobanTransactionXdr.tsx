@@ -53,7 +53,7 @@ export const SorobanTransactionXdr = () => {
           networkPassphrase={network.passphrase}
           txnHash={txnHash}
           dataTestId="build-soroban-transaction-envelope-xdr"
-          txType="smart contract"
+          txType="smart-contract"
         />
       );
     } catch (e: any) {
