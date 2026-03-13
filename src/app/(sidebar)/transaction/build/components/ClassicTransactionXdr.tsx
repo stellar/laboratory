@@ -5,7 +5,6 @@ import { stringify } from "lossless-json";
 import { StrKey, TransactionBuilder } from "@stellar/stellar-sdk";
 import { set } from "lodash";
 import * as StellarXdr from "@/helpers/StellarXdr";
-import { useRouter } from "next/navigation";
 
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 
@@ -16,7 +15,7 @@ import { formatAssetValue } from "@/helpers/formatAssetValue";
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
 import { useStore } from "@/store/useStore";
-import { Routes } from "@/constants/routes";
+import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 import {
   OP_SET_TRUST_LINE_FLAGS,
   OPERATION_CLEAR_FLAGS,
@@ -26,7 +25,6 @@ import {
   XDR_TYPE_TRANSACTION_ENVELOPE,
 } from "@/constants/settings";
 
-import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 import {
   AnyObject,
   AssetObjectValue,
@@ -43,11 +41,12 @@ const MAX_INT64 = "9223372036854775807";
 
 export const ClassicTransactionXdr = () => {
   const { transaction, network } = useStore();
-  const router = useRouter();
   const { classic, params: txnParams, isValid } = transaction.build;
-  const { updateSignActiveView, updateSignImportXdr, updateBuildXdr } =
-    transaction;
+  const { updateBuildXdr } = transaction;
   const { operations: txnOperations } = classic;
+  const setBuildClassicXdr = useBuildFlowStore(
+    (state) => state.setBuildClassicXdr,
+  );
 
   const isXdrInit = useIsXdrInit();
 
@@ -55,8 +54,9 @@ export const ClassicTransactionXdr = () => {
     // Reset transaction.xdr if the transaction is not valid
     if (!(isValid.params && isValid.operations)) {
       updateBuildXdr("");
+      setBuildClassicXdr("");
     }
-    // Not including updateBuildXdr
+    // Not including updateBuildXdr, setBuildClassicXdr
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isValid.params, isValid.operations]);
 
@@ -479,12 +479,14 @@ export const ClassicTransactionXdr = () => {
       );
 
       updateBuildXdr(txnXdr);
+      setBuildClassicXdr(txnXdr);
 
       return {
         xdr: txnXdr,
       };
     } catch (e) {
       updateBuildXdr("");
+      setBuildClassicXdr("");
 
       return { error: `${e}` };
     }
@@ -514,21 +516,7 @@ export const ClassicTransactionXdr = () => {
           networkPassphrase={network.passphrase}
           txnHash={txnHash}
           dataTestId="build-transaction-envelope-xdr"
-          onSignClick={() => {
-            updateSignImportXdr(txnXdr.xdr);
-            updateSignActiveView("overview");
-
-            trackEvent(TrackingEvent.TRANSACTION_BUILD_SIGN_IN_TX_SIGNER, {
-              txType: "classic",
-            });
-
-            router.push(Routes.SIGN_TRANSACTION);
-          }}
-          onViewXdrClick={() => {
-            trackEvent(TrackingEvent.TRANSACTION_BUILD_VIEW_IN_XDR, {
-              txType: "classic",
-            });
-          }}
+          txType="classic"
         />
       );
     } catch (e: any) {
