@@ -19,7 +19,8 @@ import { sanitizeObject } from "@/helpers/sanitizeObject";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { removeLeadingZeroes } from "@/helpers/removeLeadingZeroes";
 
-import { TransactionBuildParams } from "@/store/createStore";
+import { TransactionBuildParams } from "@/store/createTransactionFlowStore";
+import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 import { useStore } from "@/store/useStore";
 import { useAccountSequenceNumber } from "@/query/useAccountSequenceNumber";
 
@@ -31,10 +32,10 @@ import { EmptyObj, KeysOfUnion } from "@/types/types";
 export const Params = () => {
   const requiredParams = ["source_account", "seq_num", "fee"] as const;
 
-  const { transaction, network } = useStore();
-  const { params: txnParams } = transaction.build;
-  const { updateBuildParams, updateBuildIsValid, setBuildParamsError } =
-    transaction;
+  const { network } = useStore();
+  const { build, setBuildParams, updateBuildIsValid, setBuildParamsError } =
+    useBuildFlowStore();
+  const { params: txnParams } = build;
 
   const [paramsError, setParamsError] = useState<ParamsError>({});
 
@@ -117,7 +118,7 @@ export const Params = () => {
   }, [txnParams, setBuildParamsError]);
 
   const handleParamChange = <T,>(paramPath: string, value: T) => {
-    updateBuildParams(set({}, `${paramPath}`, value));
+    setBuildParams(set({}, `${paramPath}`, value));
   };
 
   const handleParamsError = <T,>(id: string, error: T) => {

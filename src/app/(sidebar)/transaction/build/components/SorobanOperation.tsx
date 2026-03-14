@@ -2,20 +2,12 @@
 
 import { ChangeEvent, useState } from "react";
 
-import {
-  Badge,
-  Button,
-  Card,
-  Icon,
-  Notification,
-  Text,
-} from "@stellar/design-system";
+import { Badge, Button, Card, Notification } from "@stellar/design-system";
 
 import { useStore } from "@/store/useStore";
 
 import { Box } from "@/components/layout/Box";
 import { formComponentTemplateTxnOps } from "@/components/formComponentTemplateTxnOps";
-import { ShareUrlButton } from "@/components/ShareUrlButton";
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 import { ErrorText } from "@/components/ErrorText";
 
@@ -27,23 +19,21 @@ import { sanitizeObject } from "@/helpers/sanitizeObject";
 
 import { useRpcPrepareTx } from "@/query/useRpcPrepareTx";
 
-import {
-  EMPTY_OPERATION_ERROR,
-  INITIAL_OPERATION,
-  TRANSACTION_OPERATIONS,
-} from "@/constants/transactionOperations";
+import { TRANSACTION_OPERATIONS } from "@/constants/transactionOperations";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { OperationError, SorobanInvokeValue } from "@/types/types";
 
 export const SorobanOperation = ({
   operationTypeSelector,
+  operationActions,
   operationsError,
   setOperationsError,
   validateOperationParam,
   renderSourceAccount,
 }: {
   operationTypeSelector: React.ReactElement;
+  operationActions: React.ReactNode;
   operationsError: OperationError[];
   setOperationsError: (operationsError: OperationError[]) => void;
   validateOperationParam: (params: {
@@ -93,11 +83,6 @@ export const SorobanOperation = ({
       setErrorMessage(e?.result?.message || "Failed to prepare transaction");
       updateSorobanBuildXdr("");
     }
-  };
-
-  const resetSorobanOperation = () => {
-    updateSorobanBuildOperation(INITIAL_OPERATION);
-    setOperationsError([EMPTY_OPERATION_ERROR]);
   };
 
   const handleSorobanOperationParamChange = ({
@@ -302,64 +287,7 @@ export const SorobanOperation = ({
           )}
 
           {/* Operations bottom buttons */}
-          <Box
-            gap="lg"
-            direction="row"
-            align="center"
-            justify="space-between"
-            addlClassName="Operation__buttons"
-          >
-            <Box gap="xs">
-              <Box gap="xs" direction="row" align="center">
-                <Button
-                  size="md"
-                  variant="tertiary"
-                  // Only one operation allowed for Soroban
-                  disabled={true}
-                  icon={<Icon.PlusCircle />}
-                  onClick={() => {
-                    /* noop*/
-                  }}
-                >
-                  Add operation
-                </Button>
-
-                <Button
-                  size="md"
-                  variant="tertiary"
-                  icon={<Icon.Save01 />}
-                  onClick={() => {
-                    setIsSaveTxnModalVisible(true);
-                  }}
-                  title="Save transaction"
-                  disabled={!sorobanTxnXdr}
-                ></Button>
-
-                <ShareUrlButton
-                  shareableUrl={shareableUrl("transactions-build")}
-                />
-              </Box>
-              <Box gap="sm" direction="row" align="center">
-                <Text as="div" size="xs">
-                  Soroban transaction can only contain one operation per
-                  transaction.
-                </Text>
-              </Box>
-            </Box>
-            <Button
-              size="md"
-              variant="error"
-              icon={<Icon.RefreshCw01 />}
-              onClick={() => {
-                resetSorobanOperation();
-                trackEvent(TrackingEvent.TRANSACTION_BUILD_ADD_OPERATION, {
-                  txType: "smart contract",
-                });
-              }}
-            >
-              Clear operation
-            </Button>
-          </Box>
+          {operationActions}
         </Box>
       </Card>
 

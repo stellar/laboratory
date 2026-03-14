@@ -616,9 +616,8 @@ export const formComponentTemplateTxnOps = ({
     case "high_threshold":
       return {
         render: (templ: TemplateRenderProps) => (
-          <Box gap="xs">
+          <Box gap="xs" key={id}>
             <PositiveIntPicker
-              key={id}
               id={id}
               label={custom?.label || "Threshold"}
               labelSuffix={!templ.isRequired ? "optional" : undefined}

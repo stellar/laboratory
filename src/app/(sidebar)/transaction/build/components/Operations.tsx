@@ -1,18 +1,28 @@
 "use client";
 
 import { ChangeEvent, useEffect, useState } from "react";
-import { Select, Notification, Icon } from "@stellar/design-system";
+import {
+  Select,
+  Notification,
+  Icon,
+  Button,
+  Text,
+} from "@stellar/design-system";
 
 import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
+import { useStore } from "@/store/useStore";
 
+import { Box } from "@/components/layout/Box";
 import { formComponentTemplateTxnOps } from "@/components/formComponentTemplateTxnOps";
 import { SdsLink } from "@/components/SdsLink";
+import { ShareUrlButton } from "@/components/ShareUrlButton";
 import { SorobanOperation } from "./SorobanOperation";
 import { ClassicOperation } from "./ClassicOperation";
 
 import { arrayItem } from "@/helpers/arrayItem";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { isSorobanOperationType } from "@/helpers/sorobanUtils";
+import { shareableUrl } from "@/helpers/shareableUrl";
 
 import { OP_SET_TRUST_LINE_FLAGS } from "@/constants/settings";
 import {
@@ -33,10 +43,12 @@ import {
 } from "@/types/types";
 
 export const Operations = () => {
+  const { transaction } = useStore();
   const {
     build,
     setBuildSorobanOperation,
     setBuildSorobanXdr,
+    setBuildClassicXdr,
     setBuildClassicOperations,
     setBuildClassicSingleOperation,
     setBuildOperationsError,
@@ -51,8 +63,6 @@ export const Operations = () => {
   const { operation: sorobanOperation } = soroban;
 
   const [operationsError, setOperationsError] = useState<OperationError[]>([]);
-
-  console.log({ classic });
 
   // For Classic Operations
   const updateOptionParamAndError = ({
@@ -128,6 +138,17 @@ export const Operations = () => {
     setBuildSorobanOperation(INITIAL_OPERATION);
     setOperationsError([EMPTY_OPERATION_ERROR]);
     setBuildSorobanXdr("");
+    // @TODO Remove after completion of Soroban flow when the legacy store is removed. This is to prevent confusion where the Soroban XDR is not cleared on reset because the reset function only clears the operation and errors, but not the XDR.
+    // Also clear the legacy store so the SorobanTransactionXdr sync effect
+    // doesn't overwrite the reset when the component remounts.
+    transaction.updateSorobanBuildXdr("");
+  };
+
+  // For Classic Operation
+  const resetClassicOperations = () => {
+    setBuildClassicOperations([INITIAL_OPERATION]);
+    setOperationsError([EMPTY_OPERATION_ERROR]);
+    setBuildClassicXdr("");
   };
 
   // Preserve values and validate inputs when components mounts
@@ -794,8 +815,7 @@ export const Operations = () => {
               // reset both the soroban and classic operation
               // we reset soroban operation because its invoke host function
               // will have a nested operation
-              setBuildClassicOperations([INITIAL_OPERATION]);
-
+              resetClassicOperations();
               resetSorobanOperation();
               updateOptionParamAndError({ type: "reset" });
               setBuildSorobanOperation({
@@ -924,6 +944,61 @@ export const Operations = () => {
     );
   };
 
+  const OperationActions = ({
+    onAdd,
+    onClear,
+    clearLabel,
+    addDisabled = false,
+    addHelperText,
+  }: {
+    onAdd: () => void;
+    onClear: () => void;
+    clearLabel: string;
+    addDisabled?: boolean;
+    addHelperText?: string;
+  }) => (
+    <Box
+      gap="lg"
+      direction="row"
+      align="center"
+      justify="space-between"
+      addlClassName="Operation__buttons"
+    >
+      <Box gap={addHelperText ? "xs" : "sm"}>
+        <Box gap="sm" direction="row" align="center">
+          <Button
+            size="md"
+            variant="tertiary"
+            icon={<Icon.PlusCircle />}
+            disabled={addDisabled}
+            onClick={onAdd}
+          >
+            Add operation
+          </Button>
+
+          <ShareUrlButton shareableUrl={shareableUrl("transactions-build")} />
+        </Box>
+
+        {addHelperText ? (
+          <Box gap="sm" direction="row" align="center">
+            <Text as="div" size="xs">
+              {addHelperText}
+            </Text>
+          </Box>
+        ) : null}
+      </Box>
+
+      <Button
+        size="md"
+        variant="error"
+        icon={<Icon.RefreshCw01 />}
+        onClick={onClear}
+      >
+        {clearLabel}
+      </Button>
+    </Box>
+  );
+
   /* Soroban Operations */
   // Unlike classic transactions, Soroban tx can only have one operation
   if (soroban.operation.operation_type) {
@@ -933,6 +1008,22 @@ export const Operations = () => {
           <OperationTypeSelector
             index={0}
             operationType={soroban.operation.operation_type}
+          />
+        }
+        operationActions={
+          <OperationActions
+            addDisabled
+            addHelperText="Soroban transaction can only contain one operation per transaction."
+            onAdd={() => {
+              // noop: Soroban allows only one operation per transaction
+            }}
+            onClear={() => {
+              resetSorobanOperation();
+              trackEvent(TrackingEvent.TRANSACTION_BUILD_ADD_OPERATION, {
+                txType: "smart contract",
+              });
+            }}
+            clearLabel="Clear operation"
           />
         }
         operationsError={operationsError}
@@ -946,6 +1037,27 @@ export const Operations = () => {
   return (
     <ClassicOperation
       operationTypeSelector={OperationTypeSelector}
+      operationActions={
+        <OperationActions
+          onAdd={() => {
+            updateOptionParamAndError({
+              type: "add",
+              item: INITIAL_OPERATION,
+            });
+
+            trackEvent(TrackingEvent.TRANSACTION_BUILD_ADD_OPERATION, {
+              txType: "classic",
+            });
+          }}
+          onClear={() => {
+            updateOptionParamAndError({ type: "reset" });
+            trackEvent(TrackingEvent.TRANSACTION_BUILD_OPERATIONS_CLEAR, {
+              txType: "classic",
+            });
+          }}
+          clearLabel="Clear operations"
+        />
+      }
       operationsError={operationsError}
       setOperationsError={setOperationsError}
       updateOptionParamAndError={updateOptionParamAndError}
