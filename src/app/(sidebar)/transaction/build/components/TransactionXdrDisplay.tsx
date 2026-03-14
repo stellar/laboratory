@@ -9,7 +9,7 @@ interface TransactionXdrDisplayProps {
   networkPassphrase: string;
   txnHash: string;
   dataTestId: string;
-  txType: "classic" | "smart contract";
+  txType: "classic" | "smart-contract";
 }
 
 /**
