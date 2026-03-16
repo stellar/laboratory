@@ -10,6 +10,7 @@ import { WithInfoText } from "@/components/WithInfoText";
 import { downloadFile } from "@/helpers/downloadFile";
 
 import "./styles.scss";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 export type SupportedLanguage = "json" | "xdr" | "text" | "interface";
 
@@ -54,7 +55,9 @@ export const CodeEditor = ({
     // skip the async init to avoid a flicker.
     () => {
       const getMonacoInstance = (loader as any).__getMonacoInstance;
-      return typeof getMonacoInstance === "function" && getMonacoInstance() !== null;
+      return (
+        typeof getMonacoInstance === "function" && getMonacoInstance() !== null
+      );
     },
   );
   const [isExpanded, setIsExpanded] = useState(false);
@@ -224,6 +227,10 @@ export const CodeEditor = ({
               title={isExpanded ? "Close" : "Expand"}
               onClick={(e) => {
                 e.preventDefault();
+
+                if (!isExpanded) {
+                  trackEvent(TrackingEvent.CODE_EDITOR_FULL_SCREEN_MODE);
+                }
                 setIsExpanded(!isExpanded);
               }}
             ></Button>
@@ -246,6 +253,7 @@ export const CodeEditor = ({
           value={value}
           onMount={handleEditorDidMount}
           options={{
+            scrollbar: { alwaysConsumeMouseWheel: false },
             minimap: { enabled: false },
             readOnly: true,
             scrollBeyondLastLine: false,
