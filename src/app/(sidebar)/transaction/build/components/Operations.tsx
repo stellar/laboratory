@@ -951,7 +951,7 @@ export const Operations = () => {
     addDisabled = false,
     addHelperText,
   }: {
-    onAdd: () => void;
+    onAdd?: () => void;
     onClear: () => void;
     clearLabel: string;
     addDisabled?: boolean;
@@ -971,7 +971,7 @@ export const Operations = () => {
             variant="tertiary"
             icon={<Icon.PlusCircle />}
             disabled={addDisabled}
-            onClick={onAdd}
+            onClick={() => onAdd?.()}
           >
             Add operation
           </Button>
