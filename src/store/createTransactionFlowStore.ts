@@ -126,6 +126,10 @@ interface TransactionFlowActions {
   setBuildSorobanOperation: (operation: TxnOperation) => void;
   setBuildSorobanXdr: (xdr: string) => void;
 
+  setBuildClassicSingleOperation: (
+    index: number,
+    operation: TxnOperation,
+  ) => void;
   setBuildClassicOperations: (operations: TxnOperation[]) => void;
   /** Store the built XDR after a successful build. */
   setBuildClassicXdr: (xdr: string) => void;
@@ -342,6 +346,12 @@ const createTransactionFlowStore = (
               ...state.build.params,
               ...params,
             };
+          }),
+        setBuildClassicSingleOperation: (index, operation) =>
+          set((state) => {
+            if (state.build.classic.operations.length > index) {
+              state.build.classic.operations[index] = operation;
+            }
           }),
         setBuildClassicOperations: (operations) =>
           set((state) => {

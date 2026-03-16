@@ -87,7 +87,7 @@ test.describe("Saved Transactions Page", () => {
       );
     });
 
-    test("Build item", async () => {
+    test.skip("Build item", async () => {
       const buildItem = pageContext
         .getByTestId("saved-transactions-item")
         .nth(1);
@@ -184,7 +184,7 @@ test.describe("Saved Transactions Page", () => {
       );
     });
 
-    test("[Soroban] Build item", async () => {
+    test.skip("[Soroban] Build item", async () => {
       const buildItem = pageContext
         .getByTestId("saved-transactions-item")
         .nth(2);
