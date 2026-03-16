@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import { StrKey, XdrLargeInt } from "@stellar/stellar-sdk";
 import { parse, stringify } from "lossless-json";
+import { v4 as uuidv4 } from "uuid";
 
 import { SdsLink } from "@/components/SdsLink";
 import { STELLAR_EXPERT } from "@/constants/settings";
@@ -267,7 +268,9 @@ export const ScValPrettyJson = ({
             const isLast = idx === keyValue.length - 1;
 
             return (
-              <Fragment key={`vec-key-${itemType}-${stringify(itemVal)}-${idx}`}>
+              <Fragment
+                key={`vec-key-${itemType}-${stringify(itemVal)}-${idx}`}
+              >
                 <Key type={itemType} hasColon={isLast}>
                   {renderPrimitive({
                     value: itemVal,
