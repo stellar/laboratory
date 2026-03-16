@@ -105,25 +105,33 @@ test.describe("Smart Contracts: Contract Storage (Backend)", () => {
     await expect(colTTL).toContainText("TTL");
     await expect(colUpdated).toContainText("Updated");
 
-    // Table data
+    // Table data - first row is a tuple key: Collectibles(Address, u32)
     const firstRow = table.locator("tr").nth(1);
-    await expect(firstRow.locator("td").nth(0)).toContainText(
+    const firstRowKey = firstRow.locator("td").nth(0);
+    await expect(firstRowKey).toContainText("Collectibles");
+    await expect(firstRowKey).toContainText("0");
+    await expect(firstRow.locator("td").nth(2)).toContainText("Persistent");
+    await expect(firstRow.locator("td").nth(3)).toContainText("50,000,000");
+
+    // Second row is a 2-element vec key: ["Block", u32]
+    const secondRow = table.locator("tr").nth(2);
+    await expect(secondRow.locator("td").nth(0)).toContainText(
       '["Block",124526]',
     );
-    await expect(firstRow.locator("td").nth(1)).toContainText("entropy");
-    await expect(firstRow.locator("td").nth(2)).toContainText("Temporary");
-    await expect(firstRow.locator("td").nth(3)).toContainText("61,212,509");
-    await expect(firstRow.locator("td").nth(4)).toContainText(
+    await expect(secondRow.locator("td").nth(1)).toContainText("entropy");
+    await expect(secondRow.locator("td").nth(2)).toContainText("Temporary");
+    await expect(secondRow.locator("td").nth(3)).toContainText("61,212,509");
+    await expect(secondRow.locator("td").nth(4)).toContainText(
       "02/12/2026, 05:56:48 UTC",
     );
 
-    const secondRow = table.locator("tr").nth(2);
-    await expect(secondRow.locator("td").nth(0)).toContainText(
+    const thirdRow = table.locator("tr").nth(3);
+    await expect(thirdRow.locator("td").nth(0)).toContainText(
       '["Block",127562]',
     );
-    await expect(secondRow.locator("td").nth(2)).toContainText("Temporary");
-    await expect(secondRow.locator("td").nth(3)).toContainText("61,373,268");
-    await expect(secondRow.locator("td").nth(4)).toContainText(
+    await expect(thirdRow.locator("td").nth(2)).toContainText("Temporary");
+    await expect(thirdRow.locator("td").nth(3)).toContainText("61,373,268");
+    await expect(thirdRow.locator("td").nth(4)).toContainText(
       "02/23/2026, 01:38:18 UTC",
     );
   });
@@ -269,6 +277,19 @@ const MOCK_BACKEND_STORAGE_RESPONSE = {
     },
   },
   results: [
+    {
+      // Tuple key: Collectibles(Address, u32) → Vec([Symbol, Address, U32])
+      durability: "persistent",
+      expired: false,
+      key_hash:
+        "aabbccdd00112233445566778899aabbccddeeff00112233445566778899aabb",
+      key: "AAAAEAAAAAEAAAADAAAADwAAAAxDb2xsZWN0aWJsZXMAAAASAAAAAVbOtn8uRZnyN7ntQV+cU1imHJXQJg8GvLdoFE6xrCUgAAAAAwAAAAA=",
+      ttl: 50000000,
+      updated: 1772000000,
+      value:
+        "AAAAEgAAAAAAAAAAOXwGQieGTe8W6MAPCOEn6gKRkekQ8CE5VQIQJgq69PU=",
+      paging_token: "",
+    },
     {
       durability: "temporary",
       expired: true,
