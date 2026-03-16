@@ -241,7 +241,7 @@ export const ScValPrettyJson = ({
     }
 
     return (
-      <Fragment key={`${type}-${stringify(arrItems)}`}>
+      <Fragment key={`${type}-${uuidv4()}`}>
         <Bracket char={isMap ? "{" : "["} />
         <Block>
           {arrItems.map((itm: any, idx: number) =>
@@ -268,9 +268,7 @@ export const ScValPrettyJson = ({
             const isLast = idx === keyValue.length - 1;
 
             return (
-              <Fragment
-                key={`vec-key-${itemType}-${stringify(itemVal)}-${idx}`}
-              >
+              <Fragment key={`vec-key-${itemType}-${uuidv4()}`}>
                 <Key type={itemType} hasColon={isLast}>
                   {renderPrimitive({
                     value: itemVal,
