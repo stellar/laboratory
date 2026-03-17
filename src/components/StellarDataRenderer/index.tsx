@@ -261,16 +261,26 @@ export const ScValPrettyJson = ({
   const renderKey = (keyType: string, keyValue: any) => {
     // Key type can be a vector, handling it here
     if (keyType === "vec") {
-      const [vecType, vecVal] = Object.entries(keyValue[0])[0];
-
       return (
-        <Key type={vecType} hasColon={true}>
-          {renderPrimitive({
-            value: vecVal,
-            type: vecType,
-            isValueOnly: true,
+        <>
+          {keyValue.map((item: any, idx: number) => {
+            const [itemType, itemVal] = Object.entries(item)[0];
+            const isLast = idx === keyValue.length - 1;
+
+            return (
+              <Fragment key={`vec-key-${itemType}-${uuidv4()}`}>
+                <Key type={itemType} hasColon={isLast}>
+                  {renderPrimitive({
+                    value: itemVal,
+                    type: itemType,
+                    isValueOnly: true,
+                  })}
+                </Key>
+                {!isLast ? <Comma /> : null}
+              </Fragment>
+            );
           })}
-        </Key>
+        </>
       );
     }
 
