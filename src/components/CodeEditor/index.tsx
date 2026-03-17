@@ -8,9 +8,9 @@ import { useStore } from "@/store/useStore";
 import { Box } from "@/components/layout/Box";
 import { WithInfoText } from "@/components/WithInfoText";
 import { downloadFile } from "@/helpers/downloadFile";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import "./styles.scss";
-import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 export type SupportedLanguage = "json" | "xdr" | "text" | "interface";
 
