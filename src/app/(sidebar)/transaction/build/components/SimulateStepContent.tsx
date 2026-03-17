@@ -273,7 +273,6 @@ export const SimulateStepContent = () => {
             value={simulate.instructionLeeway || ""}
             onChange={(e) => {
               setSimulateInstructionLeeway(e.target.value || undefined);
-
               if (hasSimulationResult) {
                 resetSimulateTx();
               }
