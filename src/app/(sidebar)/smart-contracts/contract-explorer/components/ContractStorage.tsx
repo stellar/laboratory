@@ -67,7 +67,7 @@ export const ContractStorage = ({
     isActive: isActive && !isSourceStellarExpert,
     networkId,
     contractId,
-    cursor: currentCursor,
+    paginationHref: currentCursor,
     sortBy,
     order: sortOrder,
   });
@@ -147,12 +147,6 @@ export const ContractStorage = ({
       </Text>
     );
   }
-
-  const getCursorFromHref = (href: string) => {
-    const queryString = href.split("?")[1] || "";
-    const params = new URLSearchParams(queryString);
-    return params.get("cursor") || undefined;
-  };
 
   const parsedKeyValueData = () => {
     return storageData.map((i) => ({
@@ -336,7 +330,7 @@ export const ContractStorage = ({
                   prev: {
                     onClick: () => {
                       if (prevCursor) {
-                        setCurrentCursor(getCursorFromHref(prevCursor));
+                        setCurrentCursor(prevCursor);
                         setCurrentPage(Math.max(currentPage - 1, 1));
                       }
                     },
@@ -346,7 +340,7 @@ export const ContractStorage = ({
                   next: {
                     onClick: () => {
                       if (nextCursor) {
-                        setCurrentCursor(getCursorFromHref(nextCursor));
+                        setCurrentCursor(nextCursor);
                         setCurrentPage(currentPage + 1);
                       }
                     },

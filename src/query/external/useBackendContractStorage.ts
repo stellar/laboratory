@@ -8,14 +8,14 @@ export const useBackendContractStorage = ({
   isActive,
   networkId,
   contractId,
-  cursor,
+  paginationHref,
   sortBy,
   order,
 }: {
   isActive: boolean;
   networkId: NetworkType;
   contractId: string;
-  cursor?: string;
+  paginationHref?: string;
   sortBy?: string;
   order?: "asc" | "desc";
 }) => {
@@ -24,18 +24,23 @@ export const useBackendContractStorage = ({
       "useBackendContractStorage",
       networkId,
       contractId,
-      cursor,
+      paginationHref,
       { sortBy, order },
     ],
     queryFn: async () => {
-      const network = networkId === "mainnet" ? "pubnet" : networkId;
-      const params = new URLSearchParams({
-        limit: "10",
-        sort_by: sortBy ?? "updated_at",
-        order: order ?? "desc",
-      });
-      if (cursor) params.set("cursor", cursor);
-      const fetchUrl = `${BACKEND_ENDPOINT}/${network}/api/contract/${contractId}/storage?${params}`;
+      let fetchUrl: string;
+
+      if (paginationHref) {
+        fetchUrl = `${BACKEND_ENDPOINT}${paginationHref}`;
+      } else {
+        const network = networkId === "mainnet" ? "pubnet" : networkId;
+        const params = new URLSearchParams({
+          limit: "10",
+          sort_by: sortBy ?? "updated_at",
+          order: order ?? "desc",
+        });
+        fetchUrl = `${BACKEND_ENDPOINT}/${network}/api/contract/${contractId}/storage?${params}`;
+      }
 
       const response = await fetch(fetchUrl);
 
