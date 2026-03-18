@@ -2,7 +2,7 @@
 
 import { useContext, useEffect, useState } from "react";
 import { Button, Modal, Text } from "@stellar/design-system";
-import { ISupportedWallet } from "@creit.tech/stellar-wallets-kit";
+import { StellarWalletsKit } from "@creit.tech/stellar-wallets-kit";
 import { useStore } from "@/store/useStore";
 
 import { useAccountInfo } from "@/query/useAccountInfo";
@@ -55,12 +55,12 @@ export const ConnectWallet = () => {
       savedWallet.network.id === network.id
     ) {
       t = setTimeout(async () => {
-        if (!walletKitInstance?.walletKit) {
+        if (!walletKitInstance?.isInitialized) {
           return;
         }
 
         try {
-          walletKitInstance.walletKit?.setWallet(savedWallet.id);
+          StellarWalletsKit.setWallet(savedWallet.id);
           const success = await handleSetWalletAddress({
             skipRequestAccess: true,
           });
@@ -96,7 +96,7 @@ export const ConnectWallet = () => {
     skipRequestAccess: boolean;
   }): Promise<boolean> => {
     try {
-      const addressResult = await walletKitInstance.walletKit?.getAddress({
+      const addressResult = await StellarWalletsKit.selectedModule.getAddress({
         skipRequestAccess,
       });
 
@@ -124,39 +124,36 @@ export const ConnectWallet = () => {
 
   const connectWallet = async () => {
     try {
-      await walletKitInstance.walletKit?.openModal({
-        onWalletSelected: async (option: ISupportedWallet) => {
-          walletKitInstance.walletKit?.setWallet(option.id);
-          const isWalletConnected = await handleSetWalletAddress({
-            skipRequestAccess: false,
-          });
+      const { address } = await StellarWalletsKit.authModal();
 
-          if (!isWalletConnected) {
-            const errorMessage = "Unable to load wallet information";
-            setErrorMessageOnConnect(errorMessage);
-            disconnect();
-            return;
-          }
+      if (!address) {
+        setErrorMessageOnConnect("No wallet address received");
+        return;
+      }
 
-          localStorageSavedWallet.set({
-            id: option.id,
-            network: {
-              id: network.id,
-              label: network.label,
-            },
-          });
+      const walletId = StellarWalletsKit.selectedModule.productId;
 
-          trackEvent(TrackingEvent.WALLET_KIT_SELECTED, {
-            walletType: option.id,
-          });
+      updateWalletKit({
+        publicKey: address,
+        walletType: walletId,
+      });
+      setConnected(true);
+
+      localStorageSavedWallet.set({
+        id: walletId,
+        network: {
+          id: network.id,
+          label: network.label,
         },
       });
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+      trackEvent(TrackingEvent.WALLET_KIT_SELECTED, {
+        walletType: walletId,
+      });
     } catch (e) {
       const errorMessage =
         (e as { message?: string })?.message || "Unknown error occurred";
       setErrorMessageOnConnect(errorMessage);
-      disconnect();
     }
   };
 
