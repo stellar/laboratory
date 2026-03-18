@@ -825,9 +825,9 @@ export const SimulatedResponse = ({
         <CodeEditor
           key={`code-editor-${isFullResponseEnabled}`}
           isAutoHeight={!isFullResponseEnabled}
-          heightInRem={`${isFullResponseEnabled ? "50" : "30"}`}
           value={JSON.stringify(json, null, 2)}
           selectedLanguage={selectedLanguage}
+          maxHeightInRem="20"
         />
       </div>
     </Box>

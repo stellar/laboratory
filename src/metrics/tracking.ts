@@ -197,6 +197,8 @@ export enum TrackingEvent {
   SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SUBMIT = "smart contracts: explorer: invoke contract: submit",
   SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SUBMIT_SUCCESS = "smart contracts: explorer: invoke contract: submit: success",
   SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SUBMIT_ERROR = "smart contracts: explorer: invoke contract: submit: error",
+  // Code Editor
+  CODE_EDITOR_FULL_SCREEN_MODE = "code editor: full screen mode",
   // Transaction Dashboard
   TRANSACTION_DASHBOARD_LOAD_TX = "transaction dashboard: load tx",
   TRANSACTION_DASHBOARD_CLEAR_TX = "transaction dashboard: clear tx",
