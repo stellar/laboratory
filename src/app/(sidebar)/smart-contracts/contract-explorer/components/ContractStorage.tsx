@@ -57,7 +57,7 @@ export const ContractStorage = ({
   const { transaction } = useStore();
   const router = useRouter();
 
-  const [currentCursor, setCurrentCursor] = useState<string | undefined>();
+  const [currentHref, setCurrentHref] = useState<string | undefined>();
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState<string>("updated_at");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
@@ -67,7 +67,7 @@ export const ContractStorage = ({
     isActive: isActive && !isSourceStellarExpert,
     networkId,
     contractId,
-    paginationHref: currentCursor,
+    paginationHref: currentHref,
     sortBy,
     order: sortOrder,
   });
@@ -82,7 +82,7 @@ export const ContractStorage = ({
 
   useEffect(() => {
     // Reset when contractId or networkId changes
-    setCurrentCursor(undefined);
+    setCurrentHref(undefined);
     setCurrentPage(1);
     setSortBy("updated_at");
     setSortOrder("desc");
