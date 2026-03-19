@@ -319,7 +319,7 @@ export const ContractStorage = ({
                     setSortOrder(dir);
                   }
                   // Reset pagination on sort change
-                  setCurrentCursor(undefined);
+                  setCurrentHref(undefined);
                   setCurrentPage(1);
                 },
               }
@@ -330,7 +330,7 @@ export const ContractStorage = ({
                   prev: {
                     onClick: () => {
                       if (prevCursor) {
-                        setCurrentCursor(prevCursor);
+                        setCurrentHref(prevCursor);
                         setCurrentPage(Math.max(currentPage - 1, 1));
                       }
                     },
@@ -340,7 +340,7 @@ export const ContractStorage = ({
                   next: {
                     onClick: () => {
                       if (nextCursor) {
-                        setCurrentCursor(nextCursor);
+                        setCurrentHref(nextCursor);
                         setCurrentPage(currentPage + 1);
                       }
                     },
