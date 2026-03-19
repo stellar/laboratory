@@ -31,7 +31,8 @@ export const useBackendContractStorage = ({
       let fetchUrl: string;
 
       if (paginationHref) {
-        fetchUrl = `${BACKEND_ENDPOINT}${paginationHref}`;
+        const url = new URL(paginationHref, BACKEND_ENDPOINT);
+        fetchUrl = url.toString();
       } else {
         const network = networkId === "mainnet" ? "pubnet" : networkId;
         const params = new URLSearchParams({
