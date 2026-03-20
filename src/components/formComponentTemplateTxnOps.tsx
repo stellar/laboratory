@@ -5,6 +5,7 @@ import { Box } from "@/components/layout/Box";
 import { SdsLink } from "@/components/SdsLink";
 
 import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
+import { PubKeyPickerWithSignerSelector } from "@/components/FormElements/PubKeyPickerWithSignerSelector";
 import { TextPicker } from "@/components/FormElements/TextPicker";
 import { AssetPicker } from "@/components/FormElements/AssetPicker";
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
@@ -782,7 +783,7 @@ export const formComponentTemplateTxnOps = ({
     case "source_account":
       return {
         render: (templ: TemplateRenderProps) => (
-          <PubKeyPicker
+          <PubKeyPickerWithSignerSelector
             key={id}
             id={id}
             label="Source account"
@@ -790,6 +791,11 @@ export const formComponentTemplateTxnOps = ({
             value={templ.value || ""}
             error={templ.error}
             onChange={templ.onChange}
+            onValueChange={(val) =>
+              templ.onChange({
+                target: { value: val },
+              } as React.ChangeEvent<HTMLInputElement>)
+            }
           />
         ),
         validate: validate.getPublicKeyError,

@@ -1,5 +1,5 @@
-import React from "react";
-import { Icon, Input, Select } from "@stellar/design-system";
+import React, { useState } from "react";
+import { Icon, Input, InputProps, Select } from "@stellar/design-system";
 import type { JSONSchema7 } from "json-schema";
 import { get } from "lodash";
 
@@ -10,8 +10,46 @@ import { validate } from "@/validate";
 
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 import { ColorTypePill } from "@/components/ColorTypePill";
+import { SignerSelector } from "@/components/SignerSelector";
 
 import type { AnyObject, SorobanInvokeValue } from "@/types/types";
+
+/**
+ * Address Input with SignerSelector for selecting from saved keypairs or
+ * connected wallet.
+ */
+const AddressInputWithSignerSelector = (
+  props: InputProps &
+    React.InputHTMLAttributes<HTMLInputElement> & {
+      onValueSelect: (val: string) => void;
+    },
+) => {
+  const [isSelectorOpen, setIsSelectorOpen] = useState(false);
+  const { onValueSelect, ...inputProps } = props;
+
+  return (
+    <div className="SignerSelectorWrapper">
+      <Input
+        {...inputProps}
+        rightElement={
+          <SignerSelector.Button
+            mode="public"
+            onClick={() => setIsSelectorOpen(!isSelectorOpen)}
+          />
+        }
+      />
+      <SignerSelector.Dropdown
+        mode="public"
+        onChange={(val) => {
+          onValueSelect(val);
+          setIsSelectorOpen(false);
+        }}
+        isOpen={isSelectorOpen}
+        onClose={() => setIsSelectorOpen(false)}
+      />
+    </div>
+  );
+};
 
 export const renderPrimitivesType = ({
   name,
@@ -148,12 +186,22 @@ export const renderPrimitivesType = ({
   switch (schemaType) {
     case "Address":
       return (
-        <Input
+        <AddressInputWithSignerSelector
           {...sharedProps}
           label={InputLabel}
           onChange={(e) => {
             handleChange(e, schemaType);
             handleValidate(e, schemaType, [
+              validate.getPublicKeyError,
+              validate.getContractIdError,
+            ]);
+          }}
+          onValueSelect={(val) => {
+            const syntheticEvent = {
+              target: { value: val },
+            } as React.ChangeEvent<HTMLInputElement>;
+            handleChange(syntheticEvent, schemaType);
+            handleValidate(syntheticEvent, schemaType, [
               validate.getPublicKeyError,
               validate.getContractIdError,
             ]);

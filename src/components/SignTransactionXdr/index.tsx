@@ -14,8 +14,8 @@ import { Box } from "@/components/layout/Box";
 import { MessageField } from "@/components/MessageField";
 import { TextPicker } from "@/components/FormElements/TextPicker";
 import { LabelHeading } from "@/components/LabelHeading";
-import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
 import { WithInfoText } from "@/components/WithInfoText";
+import { PubKeyPickerWithSignerSelector } from "@/components/FormElements/PubKeyPickerWithSignerSelector";
 
 import { txHelper } from "@/helpers/txHelper";
 import { arrayItem } from "@/helpers/arrayItem";
@@ -726,6 +726,7 @@ export const SignTransactionXdr = ({
             placeholder="Secret key (starting with S) or hash preimage (in hex)"
             autocomplete="off"
             isPassword
+            useSecretSelector
           />
           <SignTxButton
             onSign={async () => {
@@ -862,7 +863,7 @@ export const SignTransactionXdr = ({
           <>
             {sigInputs.map((_, idx) => (
               <Box gap="xs" key={`${idx}-tx-sig`}>
-                <PubKeyPicker
+                <PubKeyPickerWithSignerSelector
                   id={`${id}-${idx}-tx-sig-pubkey`}
                   placeholder="Public key"
                   label=""
@@ -870,6 +871,9 @@ export const SignTransactionXdr = ({
                   error={sigInputsError[idx]?.publicKey}
                   onChange={(e) =>
                     handleSignatureOnChange(e.target.value, "publicKey", idx)
+                  }
+                  onValueChange={(val) =>
+                    handleSignatureOnChange(val, "publicKey", idx)
                   }
                 />
 
