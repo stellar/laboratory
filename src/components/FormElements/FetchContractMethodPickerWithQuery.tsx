@@ -146,16 +146,17 @@ export const FetchContractMethodPickerWithQuery = ({
     // reset the error
     setFetchError("");
 
+    // reset fetch type so the fetch chain re-triggers on next fetch
+    setFetchType(null);
+
     // reset queries
-    if (contractType) {
-      queryClient.resetQueries({
-        queryKey: [
-          "useGetContractTypeFromRpcById",
-          "useClientFromRpc",
-          "useGitHubFile",
-        ],
-      });
-    }
+    queryClient.resetQueries({
+      queryKey: [
+        "useGetContractTypeFromRpcById",
+        "useClientFromRpc",
+        "useGitHubFile",
+      ],
+    });
 
     // validate the contract id
     if (e.target.value) {
@@ -169,10 +170,11 @@ export const FetchContractMethodPickerWithQuery = ({
       }
     }
 
+    // Clear stale method and args from the previous contract
     const newValue: SorobanInvokeValue = {
       contract_id: e.target.value || "",
-      function_name: value?.function_name || "",
-      args: value?.args || {},
+      function_name: "",
+      args: {},
     };
 
     onChange(newValue);
@@ -220,7 +222,7 @@ export const FetchContractMethodPickerWithQuery = ({
       </Box>
 
       <>
-        {contractMethods.length && invokeContractSpec && value ? (
+        {contractMethods.length > 0 && invokeContractSpec && value ? (
           <ContractMethodSelectPicker
             value={value}
             onChange={onChange}
