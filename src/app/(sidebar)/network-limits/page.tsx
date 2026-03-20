@@ -14,6 +14,11 @@ import { SwitchNetworkButtons } from "@/components/SwitchNetworkButtons";
 import { Tabs } from "@/components/Tabs";
 import { CopyJsonPayloadButton } from "@/components/CopyJsonPayloadButton";
 import { CodeEditor } from "@/components/CodeEditor";
+import {
+  GridTable,
+  GridTableRow,
+  GridTableCell,
+} from "@/components/GridTable";
 
 import {
   formatLedgersToDays,
@@ -244,7 +249,7 @@ const ResourceLimitsSection = ({
                 </GridTableCell>
                 <GridTableCell
                   addlClassName={
-                    item.setting_note ? "NetworkLimits__table__cell--note" : ""
+                    item.setting_note ? "GridTable__cell--note" : ""
                   }
                 >
                   {item.perTransaction}
@@ -252,7 +257,7 @@ const ResourceLimitsSection = ({
                 <GridTableCell
                   isEmpty={!item.ledgerWide}
                   addlClassName={
-                    item.setting_note ? "NetworkLimits__table__cell--note" : ""
+                    item.setting_note ? "GridTable__cell--note" : ""
                   }
                 >
                   {item.ledgerWide ?? null}
@@ -294,7 +299,7 @@ const ResourceLimitsSection = ({
 
                 <GridTableCell
                   addlClassName={
-                    item.setting_note ? "NetworkLimits__table__cell--note" : ""
+                    item.setting_note ? "GridTable__cell--note" : ""
                   }
                 >
                   {item.perTransaction}
@@ -517,7 +522,7 @@ const ResourceFeesSection = ({
                 <GridTableCell
                   addlClassName={
                     item.note || item.setting_note
-                      ? "NetworkLimits__table__cell--note"
+                      ? "GridTable__cell--note"
                       : ""
                   }
                 >
@@ -543,61 +548,6 @@ const ResourceFeesSection = ({
   );
 };
 
-// // =============================================================================
-// // Components
-// // =============================================================================
-const GridTable = ({ children }: { children: React.ReactNode }) => (
-  <div className="NetworkLimits__table" role="table">
-    {children}
-  </div>
-);
-
-const GridTableRow = ({
-  children,
-  isEmpty,
-}: {
-  children: React.ReactNode;
-  isEmpty?: boolean;
-}) => (
-  <div
-    className={`NetworkLimits__table__row ${isEmpty ? "is--empty " : ""}`}
-    role="row"
-  >
-    {children}
-  </div>
-);
-
-const GridTableCell = ({
-  children,
-  isEmpty,
-  isHeader,
-  isRowHeader,
-  addlClassName,
-}: {
-  children: React.ReactNode | React.ReactNode[] | null;
-  isEmpty?: boolean;
-  isHeader?: boolean;
-  isRowHeader?: boolean;
-  addlClassName?: string;
-}) => {
-  let role: "cell" | "columnheader" | "rowheader" = "cell";
-
-  if (isHeader) {
-    role = "columnheader";
-  }
-
-  if (isRowHeader) {
-    role = "rowheader";
-  }
-  return (
-    <div
-      className={`NetworkLimits__table__cell ${isEmpty ? "is--empty " : ""} ${addlClassName || ""}`}
-      role={role}
-    >
-      {children}
-    </div>
-  );
-};
 
 // =============================================================================
 // Helpers

@@ -6,15 +6,12 @@ import {
   Button,
   Card,
   Icon,
+  Link,
   Input,
   Select,
   Text,
 } from "@stellar/design-system";
-import {
-  rpc as StellarRpc,
-  TransactionBuilder,
-  xdr,
-} from "@stellar/stellar-sdk";
+import { xdr } from "@stellar/stellar-sdk";
 
 import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 import { useStore } from "@/store/useStore";
@@ -27,6 +24,8 @@ import { PageCard } from "@/components/layout/PageCard";
 import { CodeEditor } from "@/components/CodeEditor";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { XdrFormat } from "@/components/XdrFormat";
+import { SdsLink } from "@/components/SdsLink";
+import { ExpandBox } from "@/components/ExpandBox";
 
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 
@@ -35,7 +34,11 @@ import { validate } from "@/validate";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { AuthModeType, XdrFormatType } from "@/types/types";
-import { SdsLink } from "@/components/SdsLink";
+
+import {
+  SimulationResourceTable,
+  getSimulationResourceInfo,
+} from "./SimulationResourceTable";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type SimulationResponse = Record<string, any>;
@@ -57,8 +60,6 @@ export const SimulateStepContent = () => {
     simulate,
     setSimulateInstructionLeeway,
     setSimulationResult,
-    setAuthEntriesXdr,
-    setAssembledXdr,
     setSimulationReadOnly,
   } = useBuildFlowStore();
 
@@ -66,6 +67,7 @@ export const SimulateStepContent = () => {
   const [isResourcesExpanded, setIsResourcesExpanded] = useState(false);
   const [xdrFormat, setXdrFormat] = useState<XdrFormatType | string>("json");
   const [authMode, selectAuthMode] = useState<AuthModeType | string>("");
+  const [simulationDisplay, setSimulationDisplayResult] = useState<string>("");
 
   // Derive the built XDR from whichever operation type was used
   const builtXdr = build.soroban.xdr || build.classic.xdr;
@@ -131,10 +133,8 @@ export const SimulateStepContent = () => {
     (responseData: SimulationResponse): boolean => {
       try {
         const result = responseData?.result;
-        if (!result) return false;
 
-        const authEntries = extractAuthEntries(responseData);
-        if (authEntries.length > 0) return false;
+        if (!result) return false;
 
         // Check if there's a transaction data with no write footprint
         const transactionData = result?.transactionData as string | undefined;
@@ -155,39 +155,7 @@ export const SimulateStepContent = () => {
         return false;
       }
     },
-    [extractAuthEntries],
-  );
-
-  /**
-   * Attempts to assemble the transaction using the simulation result.
-   * This attaches resource data and (if present) signed auth entries to produce
-   * the final XDR for the Sign step.
-   */
-  const assembleTransaction = useCallback(
-    (responseData: SimulationResponse) => {
-      try {
-        if (!builtXdr || !network.passphrase) return;
-
-        // Build a simulated response object for the SDK's assembleTransaction
-        const simResponse =
-          responseData.result as StellarRpc.Api.SimulateTransactionResponse;
-
-        const transaction = TransactionBuilder.fromXDR(
-          builtXdr,
-          network.passphrase,
-        );
-
-        const assembled = StellarRpc.assembleTransaction(
-          transaction,
-          simResponse,
-        ).build();
-
-        setAssembledXdr(assembled.toXDR());
-      } catch (e) {
-        console.warn("Failed to assemble transaction:", e);
-      }
-    },
-    [builtXdr, network.passphrase, setAssembledXdr],
+    [],
   );
 
   /**
@@ -199,63 +167,46 @@ export const SimulateStepContent = () => {
     trackEvent(TrackingEvent.TRANSACTION_SIMULATE);
 
     try {
-      const result = await simulateTx({
-        rpcUrl: network.rpcUrl,
-        transactionXdr: builtXdr,
-        instructionLeeway: simulate.instructionLeeway,
-        headers: getNetworkHeaders(network, "rpc"),
-        xdrFormat: xdrFormat as XdrFormatType,
-        authMode: simulate.authMode,
-      });
+      const [simJsonResponse, simBase64Response] = await Promise.all([
+        xdrFormat === "json"
+          ? simulateTx({
+              rpcUrl: network.rpcUrl,
+              transactionXdr: builtXdr,
+              headers: getNetworkHeaders(network, "rpc"),
+              xdrFormat: "json",
+              // authMode: simulate.authMode,
+            })
+          : null,
+        simulateTx({
+          rpcUrl: network.rpcUrl,
+          transactionXdr: builtXdr,
+          headers: getNetworkHeaders(network, "rpc"),
+          xdrFormat: "base64",
+          // authMode: simulate.authMode,
+        }),
+      ]);
 
-      if (result) {
-        // Store the full simulation result JSON
-        setSimulationResult(JSON.stringify(result, null, 2));
+      if (xdrFormat === "json" && simJsonResponse) {
+        setSimulationDisplayResult(JSON.stringify(simJsonResponse, null, 2));
+      } else if (simBase64Response) {
+        setSimulationDisplayResult(JSON.stringify(simBase64Response, null, 2));
+      }
 
+      if (simBase64Response) {
+        setSimulationResult(JSON.stringify(simBase64Response, null, 2));
         // Check for errors in the response
-        const hasError = Boolean(result?.error || result?.result?.error);
+        const hasError = Boolean(
+          simBase64Response?.error || simBase64Response?.result?.error,
+        );
 
         if (!hasError) {
-          // Extract and store auth entries
-          const authEntries = extractAuthEntries(result);
-          if (authEntries.length > 0) {
-            setAuthEntriesXdr(authEntries);
-          }
-
           // Check if read-only
-          const isReadOnly = checkIsReadOnly(result);
+          const isReadOnly = checkIsReadOnly(simBase64Response);
           setSimulationReadOnly(isReadOnly);
-
-          // If no auth entries need signing, assemble immediately
-          if (authEntries.length === 0) {
-            assembleTransaction(result);
-          }
         }
       }
     } catch {
       // Error is captured by React Query's error state
-    }
-  };
-
-  /**
-   * Parse resource usage from the simulation result for display.
-   */
-  const getResourceInfo = (): {
-    cpuInsns?: string;
-    memBytes?: string;
-    minResourceFee?: string;
-  } | null => {
-    try {
-      if (!simulateTxData?.result) return null;
-
-      const result = simulateTxData.result;
-      return {
-        cpuInsns: result.cost?.cpuInsns,
-        memBytes: result.cost?.memBytes,
-        minResourceFee: result.minResourceFee,
-      };
-    } catch {
-      return null;
     }
   };
 
@@ -266,7 +217,7 @@ export const SimulateStepContent = () => {
   const isSimulationSuccess = hasSimulationResult && !hasError;
   const authEntries = simulateTxData ? extractAuthEntries(simulateTxData) : [];
   const hasAuthEntries = authEntries.length > 0;
-  const resourceInfo = getResourceInfo();
+  const resourceInfo = getSimulationResourceInfo(simulateTxData);
 
   const getErrorMessage = (): string => {
     if (simulateTxError) {
@@ -289,7 +240,6 @@ export const SimulateStepContent = () => {
   return (
     <Box gap="md">
       <PageHeader heading="Simulate transaction" as="h1" />
-
       <PageCard>
         {!network.rpcUrl ? (
           <Alert variant="warning" placement="inline" title="Attention">
@@ -307,10 +257,10 @@ export const SimulateStepContent = () => {
             hasCopyButton
           />
 
-          {/* Xdr format selector */}
           <XdrFormat
-            selectedFormat={simulate.xdrFormat}
+            selectedFormat={xdrFormat || "json"}
             onChange={(format) => {
+              console.log({ format });
               setXdrFormat(format);
 
               if (hasSimulationResult) {
@@ -328,6 +278,7 @@ export const SimulateStepContent = () => {
             value={simulate.instructionLeeway || ""}
             onChange={(e) => {
               setSimulateInstructionLeeway(e.target.value || undefined);
+
               if (hasSimulationResult) {
                 resetSimulateTx();
               }
@@ -365,7 +316,7 @@ export const SimulateStepContent = () => {
             {[
               { id: "record", label: "Record" },
               { id: "enforce", label: "Enforce" },
-              { id: "record_allow_nonroot", label: "Record (allow non-root)" },
+              { id: "record-allow-nonroot", label: "Record (allow non-root)" },
             ].map((f) => (
               <option key={f.id} value={f.id}>
                 {f.label}
@@ -382,144 +333,87 @@ export const SimulateStepContent = () => {
               variant="secondary"
               onClick={onSimulate}
             >
-              Simulate transaction
+              Simulate
             </Button>
           </Box>
         </Box>
       </PageCard>
 
-      {/* Simulation error */}
-      {hasError && (
-        <Alert variant="error" placement="inline" title="Simulation failed">
-          {getErrorMessage()}
-        </Alert>
-      )}
+      {renderAlert({
+        isReadOnly: Boolean(simulate.isSimulationReadOnly),
+        isSimulationSuccess,
+        hasAuthEntries,
+        authEntriesCount: authEntries.length,
+        hasError,
+        errorMessage: hasError ? getErrorMessage() : "",
+      })}
 
       {/* Simulation success */}
       {isSimulationSuccess && (
-        <Box gap="md">
-          {/* Success alert */}
-          <Alert
-            variant="success"
-            placement="inline"
-            title="Transaction simulation successful"
-            icon={<Icon.CheckCircle />}
-          >
-            {hasAuthEntries
-              ? `${authEntries.length} authorization ${authEntries.length === 1 ? "entry" : "entries"} detected. Auth entries must be signed before the transaction can be submitted.`
-              : simulate.isSimulationReadOnly
-                ? "This is a read-only transaction. No signatures required."
-                : ""}
-          </Alert>
+        <Card>
+          <Box gap="md">
+            {/* Simulation result JSON viewer */}
+            <div data-testid="simulate-step-response">
+              <CodeEditor
+                title="Simulation Result"
+                value={simulationDisplay}
+                selectedLanguage="json"
+                maxHeightInRem="20"
+              />
+            </div>
 
-          {/* Simulation result JSON viewer */}
-          <div data-testid="simulate-step-response">
-            <CodeEditor
-              title="Simulation Result"
-              value={
-                simulate.simulationResultJson ||
-                JSON.stringify(simulateTxData, null, 2)
-              }
-              selectedLanguage="json"
-            />
-          </div>
-
-          {/* Resource usage and fees (collapsible) */}
-          {resourceInfo && (
-            <Card>
+            {/* Resource usage and fees (collapsible) */}
+            {resourceInfo && (
               <Box gap="sm">
-                <Box
-                  gap="sm"
-                  direction="row"
-                  align="center"
-                  justify="space-between"
-                  addlClassName="SimulateStepContent__resource-toggle"
+                <Link
+                  onClick={() => setIsResourcesExpanded(!isResourcesExpanded)}
+                  icon={
+                    isResourcesExpanded ? (
+                      <Icon.ChevronUp />
+                    ) : (
+                      <Icon.ChevronDown />
+                    )
+                  }
+                  size="sm"
                 >
-                  <Text as="div" size="sm" weight="medium">
-                    Resource usage and fees
-                  </Text>
-                  <Button
-                    size="sm"
-                    variant="tertiary"
-                    icon={
-                      isResourcesExpanded ? (
-                        <Icon.ChevronUp />
-                      ) : (
-                        <Icon.ChevronDown />
-                      )
-                    }
-                    onClick={() => setIsResourcesExpanded(!isResourcesExpanded)}
+                  View resources and fees from simulation
+                </Link>
+
+                <ExpandBox isExpanded={isResourcesExpanded} offsetTop="sm">
+                  <SimulationResourceTable resourceInfo={resourceInfo} />
+                </ExpandBox>
+              </Box>
+            )}
+
+            {/* Auth entries info */}
+            {hasAuthEntries && (
+              <Card>
+                <Box gap="md">
+                  <Alert
+                    variant="primary"
+                    placement="inline"
+                    title={`${authEntries.length} authorization ${authEntries.length === 1 ? "entry" : "entries"} detected`}
                   >
-                    {isResourcesExpanded ? "Hide" : "View"}
-                  </Button>
-                </Box>
+                    These auth entries must be signed before the transaction
+                    envelope can be assembled and submitted. Auth signing will
+                    be available in a future update.
+                  </Alert>
 
-                {isResourcesExpanded && (
-                  <Box gap="xs">
-                    {resourceInfo.minResourceFee && (
-                      <Box gap="xs" direction="row" justify="space-between">
-                        <Text as="div" size="xs">
-                          Min resource fee
-                        </Text>
-                        <Text as="div" size="xs" weight="medium">
-                          {resourceInfo.minResourceFee} stroops
-                        </Text>
-                      </Box>
-                    )}
-                    {resourceInfo.cpuInsns && (
-                      <Box gap="xs" direction="row" justify="space-between">
-                        <Text as="div" size="xs">
-                          CPU instructions
-                        </Text>
-                        <Text as="div" size="xs" weight="medium">
-                          {resourceInfo.cpuInsns}
-                        </Text>
-                      </Box>
-                    )}
-                    {resourceInfo.memBytes && (
-                      <Box gap="xs" direction="row" justify="space-between">
-                        <Text as="div" size="xs">
-                          Memory bytes
-                        </Text>
-                        <Text as="div" size="xs" weight="medium">
-                          {resourceInfo.memBytes}
-                        </Text>
-                      </Box>
-                    )}
+                  {/* Auth entry list */}
+                  <Box gap="sm">
+                    {authEntries.map((entry, index) => (
+                      <AuthEntryPreview
+                        key={`auth-entry-${index}`}
+                        index={index}
+                        entryXdr={entry}
+                      />
+                    ))}
                   </Box>
-                )}
-              </Box>
-            </Card>
-          )}
-
-          {/* Auth entries info */}
-          {hasAuthEntries && (
-            <Card>
-              <Box gap="md">
-                <Alert
-                  variant="primary"
-                  placement="inline"
-                  title={`${authEntries.length} authorization ${authEntries.length === 1 ? "entry" : "entries"} detected`}
-                >
-                  These auth entries must be signed before the transaction
-                  envelope can be assembled and submitted. Auth signing will be
-                  available in a future update.
-                </Alert>
-
-                {/* Auth entry list */}
-                <Box gap="sm">
-                  {authEntries.map((entry, index) => (
-                    <AuthEntryPreview
-                      key={`auth-entry-${index}`}
-                      index={index}
-                      entryXdr={entry}
-                    />
-                  ))}
                 </Box>
-              </Box>
-            </Card>
-          )}
-        </Box>
+              </Card>
+            )}
+          </Box>
+        </Card>
       )}
     </Box>
   );
@@ -653,4 +547,70 @@ const AuthEntryPreview = ({
       </Box>
     </Card>
   );
+};
+
+const renderAlert = ({
+  isReadOnly,
+  isSimulationSuccess,
+  hasAuthEntries,
+  authEntriesCount,
+  hasError,
+  errorMessage,
+}: {
+  isReadOnly: boolean;
+  isSimulationSuccess: boolean;
+  hasAuthEntries: boolean;
+  authEntriesCount: number;
+  hasError: boolean;
+  errorMessage: string;
+}) => {
+  if (isReadOnly && isSimulationSuccess) {
+    return (
+      <Alert
+        variant="warning"
+        placement="inline"
+        title="This transaction is read only."
+        icon={<Icon.CheckCircle />}
+      >
+        Read-only transactions don’t modify the ledger, and submitting to the
+        network will still incur a fee.
+      </Alert>
+    );
+  }
+
+  if (isSimulationSuccess && !hasAuthEntries) {
+    return (
+      <Alert
+        variant="success"
+        placement="inline"
+        title="Transaction simulation successful"
+        icon={<Icon.CheckCircle />}
+      >
+        Simulation completed successfully.
+      </Alert>
+    );
+  }
+
+  if (hasAuthEntries && isSimulationSuccess) {
+    return (
+      <Alert
+        variant="primary"
+        placement="inline"
+        title="Auth entries detected"
+        icon={<Icon.CheckCircle />}
+      >
+        {`${authEntriesCount} authorization ${authEntriesCount === 1 ? "entry" : "entries"} detected. Auth entries must be signed before the transaction can be submitted.`}
+      </Alert>
+    );
+  }
+
+  if (hasError) {
+    return (
+      <Alert variant="error" placement="inline" title="Simulation failed">
+        {errorMessage}
+      </Alert>
+    );
+  }
+
+  return null;
 };

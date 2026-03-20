@@ -231,6 +231,12 @@ laboratory/
   `TxBuilderParams`)
 - **Constants**: SCREAMING_SNAKE_CASE for true constants, camelCase for config
   objects
+- **Variables/Properties in Code**: camelCase (e.g., `userId`, `isRequired`,
+  `minI32`)
+- **HTML Data Attributes**: Use dashes (e.g., `data-user-id`, `data-is-active`)
+- **CSS Class Names**: Use dashes (e.g., `user-card`, `transaction-builder`)
+- **File/Folder Names**: Use dashes over underscores (e.g., `smart-contracts/`,
+  `network-limits.ts` instead of `smart_contracts/`, `network_limits.ts`)
 
 ### State Management
 

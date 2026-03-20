@@ -15,7 +15,6 @@ import {
 import { TransactionFlowFooter } from "@/components/TransactionFlowFooter";
 import { Tabs } from "@/components/Tabs";
 import { PageHeader } from "@/components/layout/PageHeader";
-
 import { Params } from "./components/Params";
 import { Operations } from "./components/Operations";
 import { ClassicTransactionXdr } from "./components/ClassicTransactionXdr";
@@ -70,7 +69,7 @@ export default function BuildTransaction() {
       // Simulation must be complete. If auth entries exist, they must be signed
       // (assembledXdr is set after auth signing + assembly, or after auto-assembly
       // when no auth entries are present).
-      return !simulate.simulationResultJson || !simulate.assembledXdr;
+      return !simulate.simulationResultJson;
     }
     return false;
   };

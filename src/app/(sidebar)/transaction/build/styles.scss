@@ -47,15 +47,15 @@
   }
 }
 
+.ResourceTable__header {
+  color: var(--sds-clr-gray-12);
+}
+
 .SimulateStepContent {
   &__xdr-preview {
     padding: pxToRem(12px) pxToRem(16px);
     word-break: break-all;
     color: var(--sds-clr-gray-11);
-  }
-
-  &__resource-toggle {
-    cursor: pointer;
   }
 
   &__badge {
