@@ -37,7 +37,7 @@ Run e2e and unit tests that are relevant to the files changed on the current bra
    - `src/app/(sidebar)/xdr/**` -> `tests/e2e/viewXdrToJsonPage.test.ts`, `tests/e2e/jsonToXdrPage.test.ts`
    - `src/app/(sidebar)/endpoints/**` -> `tests/e2e/endpointsPage*.test.ts`
    - `src/app/(sidebar)/smart-contracts/**` -> `tests/e2e/contractExplorer*.test.ts`
-   - `src/helpers/**`, `src/store/**`, `src/constants/**` -> run ALL e2e tests (these are shared)
+   - **Shared code — run ALL e2e tests:** `src/components/**`, `src/helpers/**`, `src/hooks/**`, `src/store/**`, `src/constants/**`, `src/types/**`, `src/validate/**`, `src/styles/**`, `src/middleware.ts`
    - `tests/e2e/mock/**` -> run ALL e2e tests that import from mock/
    - `tests/e2e/*.test.ts` changed directly -> run those tests
    - `tests/unit/**` changed -> run unit tests
