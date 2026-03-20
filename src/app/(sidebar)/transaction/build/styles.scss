@@ -52,6 +52,21 @@
 }
 
 .SimulateStepContent {
+  &__expand-toggle {
+    cursor: pointer;
+
+    svg {
+      transform: rotate(0deg);
+      transition: transform ease-in-out 0.2s;
+    }
+
+    &[data-is-expanded="true"] {
+      svg {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
   &__xdr-preview {
     padding: pxToRem(12px) pxToRem(16px);
     word-break: break-all;

@@ -365,19 +365,15 @@ export const SimulateStepContent = () => {
             {/* Resource usage and fees (collapsible) */}
             {resourceInfo && (
               <Box gap="sm">
-                <Link
+                <div
+                  className="SimulateStepContent__expand-toggle"
                   onClick={() => setIsResourcesExpanded(!isResourcesExpanded)}
-                  icon={
-                    isResourcesExpanded ? (
-                      <Icon.ChevronUp />
-                    ) : (
-                      <Icon.ChevronDown />
-                    )
-                  }
-                  size="sm"
+                  data-is-expanded={isResourcesExpanded}
                 >
-                  View resources and fees from simulation
-                </Link>
+                  <Link size="sm" icon={<Icon.ChevronDown />}>
+                    View resources and fees from simulation
+                  </Link>
+                </div>
 
                 <ExpandBox isExpanded={isResourcesExpanded} offsetTop="sm">
                   <SimulationResourceTable resourceInfo={resourceInfo} />
