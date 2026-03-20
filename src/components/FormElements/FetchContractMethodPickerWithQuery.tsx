@@ -150,13 +150,9 @@ export const FetchContractMethodPickerWithQuery = ({
     setFetchType(null);
 
     // reset queries
-    queryClient.resetQueries({
-      queryKey: [
-        "useGetContractTypeFromRpcById",
-        "useClientFromRpc",
-        "useGitHubFile",
-      ],
-    });
+    queryClient.resetQueries({ queryKey: ["useGetContractDataFromRpcById"] });
+    queryClient.resetQueries({ queryKey: ["useClientFromRpc"] });
+    queryClient.resetQueries({ queryKey: ["useGitHubFile"] });
 
     // validate the contract id
     if (e.target.value) {
