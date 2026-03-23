@@ -790,8 +790,7 @@ export const formComponentTemplateTxnOps = ({
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={templ.value || ""}
             error={templ.error}
-            onChange={templ.onChange}
-            onValueChange={(val) =>
+            onChange={(val) =>
               templ.onChange({
                 target: { value: val },
               } as React.ChangeEvent<HTMLInputElement>)

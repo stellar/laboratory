@@ -262,10 +262,7 @@ export const SignTransactionXdr = ({
         if (isExtensionWalletOnly && exSignedTxXdr) {
           signedTx = exSignedTxXdr;
         } else {
-          const tx = TransactionBuilder.fromXDR(
-            xdrToSign,
-            network.passphrase,
-          );
+          const tx = TransactionBuilder.fromXDR(xdrToSign, network.passphrase);
           tx.signatures.push(...allSigs);
           signedTx = tx.toEnvelope().toXDR("base64");
         }
@@ -869,10 +866,7 @@ export const SignTransactionXdr = ({
                   label=""
                   value={sigInputs[idx]?.publicKey}
                   error={sigInputsError[idx]?.publicKey}
-                  onChange={(e) =>
-                    handleSignatureOnChange(e.target.value, "publicKey", idx)
-                  }
-                  onValueChange={(val) =>
+                  onChange={(val) =>
                     handleSignatureOnChange(val, "publicKey", idx)
                   }
                 />

@@ -12,17 +12,21 @@ type PubKeyPickerWithSignerSelectorProps = {
   placeholder?: string;
   value: string;
   error: string | undefined;
-  onChange: (e: React.ChangeEvent<any>) => void;
-  onValueChange?: (val: string) => void;
+  onChange: (val: string) => void;
 };
 
 /**
  * PubKeyPicker wrapped with SignerSelector to allow selecting from
  * saved keypairs or connected wallet.
  *
- * @param onChange - standard input change handler (e.target.value)
- * @param onValueChange - optional direct value change handler used by
- *   SignerSelector dropdown (receives the selected address string directly)
+ * @param id - unique HTML id for the input element
+ * @param label - visible label text for the input
+ * @param labelSuffix - optional suffix rendered next to the label (e.g. "optional")
+ * @param placeholder - placeholder text for the input
+ * @param value - controlled input value
+ * @param error - validation error message to display, or undefined if valid
+ * @param onChange - called with the new value string on both text input and
+ *   SignerSelector dropdown selection
  *
  * @example
  * <PubKeyPickerWithSignerSelector
@@ -30,8 +34,7 @@ type PubKeyPickerWithSignerSelectorProps = {
  *   label="Source account"
  *   value={value}
  *   error={error}
- *   onChange={(e) => handleChange(e.target.value)}
- *   onValueChange={(val) => handleChange(val)}
+ *   onChange={(val) => handleChange(val)}
  * />
  */
 export const PubKeyPickerWithSignerSelector = ({
@@ -42,7 +45,6 @@ export const PubKeyPickerWithSignerSelector = ({
   value,
   error,
   onChange,
-  onValueChange,
 }: PubKeyPickerWithSignerSelectorProps) => {
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
 
@@ -55,7 +57,7 @@ export const PubKeyPickerWithSignerSelector = ({
         placeholder={placeholder}
         value={value}
         error={error}
-        onChange={onChange}
+        onChange={(e) => onChange(e.target.value)}
         rightElement={
           <SignerSelector.Button
             mode="public"
@@ -66,9 +68,7 @@ export const PubKeyPickerWithSignerSelector = ({
       <SignerSelector.Dropdown
         mode="public"
         onChange={(val) => {
-          if (onValueChange) {
-            onValueChange(val);
-          }
+          onChange(val);
           setIsSelectorOpen(false);
         }}
         isOpen={isSelectorOpen}
