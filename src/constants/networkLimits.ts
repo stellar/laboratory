@@ -151,7 +151,6 @@ export const TESTNET_LIMITS: NetworkLimits = {
   "persistent_rent_rate_denominator": "1215",
   "temp_rent_rate_denominator": "2430",
   "live_soroban_state_size_window": [
-    "939067261",
     "939112517",
     "939123049",
     "939108233",
@@ -180,7 +179,8 @@ export const TESTNET_LIMITS: NetworkLimits = {
     "936156482",
     "936220154",
     "935943594",
-    "935953954"
+    "935953954",
+    "935769014"
   ],
   "state_target_size_bytes": "3000000000",
   "rent_fee_1kb_state_size_low": "-17000",

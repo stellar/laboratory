@@ -521,3 +521,11 @@ export const useBuildFlowStore = createTransactionFlowStore(
   "stellar_lab_tx_flow_build",
   "build",
 );
+
+// Rehydrate from sessionStorage eagerly at module-load time (client only).
+// This must happen before any component renders, because child-component
+// mount effects can call store actions that write default state back to
+// sessionStorage — overwriting the previously persisted data.
+if (typeof window !== "undefined") {
+  useBuildFlowStore.persist.rehydrate();
+}

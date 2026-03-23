@@ -20,7 +20,7 @@ import "./styles.scss";
  * @param steps - Ordered array of step names for the current flow
  * @param activeStep - The currently active step
  * @param onNext - Callback to advance to the next step
- * @param onBack - Callback to go back to the previous step
+ * @param onBack - Callback to go to the previous step
  * @param isNextDisabled - Whether the Next button should be disabled
  * @param xdr - Built XDR string, used for saving on the build/import step
  *
@@ -63,11 +63,15 @@ export const TransactionFlowFooter = ({
     <div className="TransactionFlowFooter">
       <div className="TransactionFlowFooter__nav">
         {prevStep && (
-          <Button size="md" variant="tertiary" onClick={onBack}>
+          <Button
+            size="md"
+            variant="tertiary"
+            onClick={onBack}
+            icon={<Icon.ArrowLeft />}
+          >
             {`Back: ${getStepLabel(prevStep)}`}
           </Button>
         )}
-
         {nextStep && (
           <Button
             size="md"

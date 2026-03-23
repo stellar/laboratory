@@ -15,17 +15,18 @@ import {
 import { TransactionFlowFooter } from "@/components/TransactionFlowFooter";
 import { Tabs } from "@/components/Tabs";
 import { PageHeader } from "@/components/layout/PageHeader";
-
 import { Params } from "./components/Params";
 import { Operations } from "./components/Operations";
 import { ClassicTransactionXdr } from "./components/ClassicTransactionXdr";
 import { SorobanTransactionXdr } from "./components/SorobanTransactionXdr";
+import { SimulateStepContent } from "./components/SimulateStepContent";
 
 import "./styles.scss";
 
 export default function BuildTransaction() {
   const {
     build,
+    simulate,
     activeStep,
     highestCompletedStep,
     setActiveStep,
@@ -56,7 +57,24 @@ export default function BuildTransaction() {
 
   const currentXdr = isSoroban ? build.soroban.xdr : build.classic.xdr;
 
-  const isNextDisabled = activeStep === "build" && !currentXdr;
+  const getIsNextDisabled = (): boolean => {
+    if (activeStep === "build") {
+      // Classic: XDR must be built. Soroban: params + operations must be valid
+      // (simulation happens in the next step).
+      return isSoroban
+        ? !(build.isValid.params && build.isValid.operations)
+        : !currentXdr;
+    }
+    if (activeStep === "simulate") {
+      // Simulation must be complete. If auth entries exist, they must be signed
+      // (assembledXdr is set after auth signing + assembly, or after auto-assembly
+      // when no auth entries are present).
+      return !simulate.simulationResultJson;
+    }
+    return false;
+  };
+
+  const isNextDisabled = getIsNextDisabled();
 
   const renderError = () => {
     if (paramsError.length > 0 || operationsError.length > 0) {
@@ -111,6 +129,21 @@ export default function BuildTransaction() {
 
   const renderBuildStep = () => (
     <Box gap="md">
+      <Box gap="md" direction="row" justify="space-between" align="center">
+        <PageHeader heading="Build transaction" as="h1" />
+
+        <Text as="div" size="xs">
+          <Link
+            variant="primary"
+            onClick={() => {
+              resetAll();
+            }}
+          >
+            Clear all
+          </Link>
+        </Text>
+      </Box>
+
       <Card>
         <Params />
       </Card>
@@ -144,22 +177,9 @@ export default function BuildTransaction() {
 
       <div className="BuildTransaction__layout">
         <div className="BuildTransaction__content">
-          <div className="BuildTransaction__header">
-            <PageHeader heading="Build transaction" as="h1" />
-            <Text as="div" size="xs">
-              <Link
-                variant="secondary"
-                onClick={() => {
-                  resetAll();
-                }}
-              >
-                Clear all
-              </Link>
-            </Text>
-          </div>
-
           <Box gap="xxl">
             {activeStep === "build" && renderBuildStep()}
+            {activeStep === "simulate" && <SimulateStepContent />}
 
             <TransactionFlowFooter
               steps={steps}

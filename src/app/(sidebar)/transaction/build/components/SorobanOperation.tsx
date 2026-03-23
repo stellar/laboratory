@@ -2,22 +2,18 @@
 
 import { ChangeEvent, useState } from "react";
 
-import { Badge, Button, Card, Notification } from "@stellar/design-system";
+import { Badge, Card, Notification } from "@stellar/design-system";
 
 import { useStore } from "@/store/useStore";
+import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 
 import { Box } from "@/components/layout/Box";
 import { formComponentTemplateTxnOps } from "@/components/formComponentTemplateTxnOps";
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
-import { ErrorText } from "@/components/ErrorText";
 
 import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransactions";
 import { shareableUrl } from "@/helpers/shareableUrl";
-import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
-import { getTxWithSorobanData } from "@/helpers/sorobanUtils";
 import { sanitizeObject } from "@/helpers/sanitizeObject";
-
-import { useRpcPrepareTx } from "@/query/useRpcPrepareTx";
 
 import { TRANSACTION_OPERATIONS } from "@/constants/transactionOperations";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
@@ -44,46 +40,12 @@ export const SorobanOperation = ({
   }) => OperationError;
   renderSourceAccount: (opType: string, index: number) => React.ReactNode;
 }) => {
-  const { transaction, network } = useStore();
-  const { soroban, params: txnParams } = transaction.build;
+  const { network } = useStore();
+  const { build, setBuildSorobanOperation } = useBuildFlowStore();
+  const { soroban } = build;
   const { operation: sorobanOperation, xdr: sorobanTxnXdr } = soroban;
-  const { updateSorobanBuildOperation, updateSorobanBuildXdr } = transaction;
 
   const [isSaveTxnModalVisible, setIsSaveTxnModalVisible] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const {
-    mutateAsync: prepareTx,
-    isPending: isPrepareTxPending,
-    reset: resetPrepareTx,
-  } = useRpcPrepareTx();
-
-  const prepareSorobanTx = async () => {
-    resetPrepareTx();
-    setErrorMessage("");
-
-    try {
-      const sorobanTx = getTxWithSorobanData({
-        operation: sorobanOperation,
-        txnParams,
-        networkPassphrase: network.passphrase,
-      });
-
-      const preparedTx = await prepareTx({
-        rpcUrl: network.rpcUrl,
-        transactionXdr: sorobanTx.xdr,
-        headers: getNetworkHeaders(network, "rpc"),
-        networkPassphrase: network.passphrase,
-      });
-
-      if (preparedTx.transactionXdr) {
-        updateSorobanBuildXdr(preparedTx.transactionXdr);
-      }
-    } catch (e: any) {
-      setErrorMessage(e?.result?.message || "Failed to prepare transaction");
-      updateSorobanBuildXdr("");
-    }
-  };
 
   const handleSorobanOperationParamChange = ({
     opParam,
@@ -103,7 +65,7 @@ export const SorobanOperation = ({
       }),
     };
 
-    updateSorobanBuildOperation(updatedOperation);
+    setBuildSorobanOperation(updatedOperation);
 
     // Validate the parameter
     const validatedOpParam = validateOperationParam({
@@ -268,24 +230,6 @@ export const SorobanOperation = ({
             <>{renderSourceAccount(sorobanOperation.operation_type, 0)}</>
           </Box>
 
-          {sorobanOperation.operation_type !== "invoke_contract_function" && (
-            <Box gap="sm" align="start">
-              <Button
-                disabled={Boolean(!network.rpcUrl)}
-                isLoading={isPrepareTxPending}
-                size="md"
-                variant="secondary"
-                onClick={prepareSorobanTx}
-              >
-                Prepare Soroban transaction to sign
-              </Button>
-
-              {errorMessage && (
-                <ErrorText errorMessage={errorMessage} size="sm" />
-              )}
-            </Box>
-          )}
-
           {/* Operations bottom buttons */}
           {operationActions}
         </Box>
@@ -298,8 +242,8 @@ export const SorobanOperation = ({
           xdr: sorobanTxnXdr,
           page: "build",
           shareableUrl: shareableUrl("transactions-build"),
-          params: transaction.build.params,
-          operations: [transaction.build.soroban.operation],
+          params: build.params,
+          operations: [build.soroban.operation],
         }}
         allSavedItems={localStorageSavedTransactions.get()}
         isVisible={isSaveTxnModalVisible}
