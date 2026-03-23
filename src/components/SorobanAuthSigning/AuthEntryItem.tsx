@@ -2,23 +2,21 @@
 
 import { useState } from "react";
 import { Button, Icon, Text } from "@stellar/design-system";
-import { xdr } from "@stellar/stellar-sdk";
 
 import { Box } from "@/components/layout/Box";
-import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
+import { CodeEditor } from "@/components/CodeEditor";
 
-type AuthEntryInfo = {
-  credentialsType: string;
-  contractId?: string;
-  functionName?: string;
-};
+import { decodeXdr } from "@/helpers/decodeXdr";
+import { useIsXdrInit } from "@/hooks/useIsXdrInit";
+import { prettifyJsonString } from "@/helpers/prettifyJsonString";
 
 /**
  * A single auth entry row: "Entry #N" + Unsigned/Signed badge + chevron.
  *
- * Chevron expands to show entry details (credentials, contract, function).
- * When `showSigningArea` is true ("Sign individually" mode), the expanded
- * view also includes an embedded signing area for this specific entry.
+ * Chevron expands to show the decoded auth entry JSON (via StellarXdr WASM
+ * decode, same approach as XDR viewer/diff pages). When `showSigningArea` is
+ * true ("Sign individually" mode), the expanded view also includes an
+ * embedded signing area for this specific entry.
  *
  * @example
  * <AuthEntryItem index={0} entryXdr="AAAAAA..." isSigned={false} showSigningArea={false} />
@@ -35,8 +33,20 @@ export const AuthEntryItem = ({
   showSigningArea: boolean;
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const isXdrInit = useIsXdrInit();
 
-  const info = parseAuthEntryInfo(entryXdr);
+  // Decode the auth entry XDR to JSON for display
+  const decoded = isExpanded
+    ? decodeXdr({
+        xdrType: "SorobanAuthorizationEntry",
+        xdrBlob: entryXdr,
+        isReady: isXdrInit,
+      })
+    : null;
+
+  const decodedJson = decoded?.jsonString
+    ? prettifyJsonString(decoded.jsonString)
+    : "";
 
   return (
     <div
@@ -71,27 +81,21 @@ export const AuthEntryItem = ({
 
       {isExpanded && (
         <div className="SorobanAuthSigning__entry-details">
-          <AuthEntryInfoRow
-            label="Credentials type"
-            value={info.credentialsType}
-          />
-          {info.contractId && (
-            <AuthEntryInfoRow
-              label="Contract ID"
-              value={shortenStellarAddress(info.contractId)}
+          {decodedJson ? (
+            <CodeEditor
+              value={decodedJson}
+              selectedLanguage="json"
+              maxHeightInRem="20"
             />
-          )}
-          {info.functionName && (
-            <AuthEntryInfoRow label="Function" value={info.functionName} />
-          )}
-          <div className="SorobanAuthSigning__entry-xdr">
-            <Text as="div" size="xs" weight="medium">
-              Raw XDR
-            </Text>
+          ) : decoded?.error ? (
             <Text as="div" size="xs">
-              {`${entryXdr.substring(0, 80)}...`}
+              {decoded.error}
             </Text>
-          </div>
+          ) : (
+            <Text as="div" size="xs">
+              Decoding...
+            </Text>
+          )}
 
           {/* Per-entry signing area — only in "Sign individually" mode */}
           {showSigningArea && !isSigned && (
@@ -111,68 +115,3 @@ export const AuthEntryItem = ({
     </div>
   );
 };
-
-/**
- * Parses a base64-encoded SorobanAuthorizationEntry XDR to extract
- * human-readable info for display.
- *
- * @param entryXdr - Base64-encoded SorobanAuthorizationEntry
- * @returns Parsed info with credentials type, contract ID, and function name
- */
-const parseAuthEntryInfo = (entryXdr: string): AuthEntryInfo => {
-  const info: AuthEntryInfo = { credentialsType: "unknown" };
-
-  try {
-    const entry = xdr.SorobanAuthorizationEntry.fromXDR(entryXdr, "base64");
-    const credentials = entry.credentials();
-
-    if (
-      credentials.switch().name === "sorobanCredentialsSourceAccount" ||
-      credentials.switch().value === 0
-    ) {
-      info.credentialsType = "Source Account";
-    } else {
-      info.credentialsType = "Address";
-
-      try {
-        const rootInvocation = entry.rootInvocation();
-        const contractFn = rootInvocation.function();
-
-        if (
-          contractFn.switch().name ===
-          "sorobanAuthorizedFunctionTypeContractFn"
-        ) {
-          const invokeContract = contractFn.contractFn();
-          const contractIdBuf = invokeContract.contractAddress().contractId();
-          info.contractId = Array.from(contractIdBuf as unknown as Uint8Array)
-            .map((b) => b.toString(16).padStart(2, "0"))
-            .join("");
-          info.functionName = invokeContract.functionName().toString();
-        }
-      } catch {
-        // Parsing inner details may fail for complex entries
-      }
-    }
-  } catch {
-    // If XDR parsing fails, show "unknown"
-  }
-
-  return info;
-};
-
-const AuthEntryInfoRow = ({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) => (
-  <Box gap="xs" direction="row" justify="space-between">
-    <Text as="div" size="xs">
-      {label}
-    </Text>
-    <Text as="div" size="xs" weight="medium">
-      {value}
-    </Text>
-  </Box>
-);

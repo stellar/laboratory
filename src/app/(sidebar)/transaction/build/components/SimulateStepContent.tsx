@@ -25,7 +25,6 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { XdrFormat } from "@/components/XdrFormat";
 import { SdsLink } from "@/components/SdsLink";
 import { ExpandBox } from "@/components/ExpandBox";
-
 import { SorobanAuthSigningCard } from "@/components/SorobanAuthSigning";
 
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";

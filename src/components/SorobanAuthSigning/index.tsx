@@ -44,10 +44,15 @@ export const SorobanAuthSigningCard = ({
       {/* Header: title + "View auth entries" button */}
       <div className="SorobanAuthSigning__header">
         <div className="SorobanAuthSigning__header-text">
-          <Text as="div" size="sm" weight="medium">
+          <Text
+            as="div"
+            size="sm"
+            weight="medium"
+            addlClassName="SorobanAuthSigning__header-title"
+          >
             This transaction requires additional authorization signatures
           </Text>
-          <Text as="div" size="xs">
+          <Text as="div" size="sm">
             {`${entryCount} authorization ${entryCount === 1 ? "entry" : "entries"} detected`}
           </Text>
         </div>
@@ -76,7 +81,7 @@ export const SorobanAuthSigningCard = ({
                 checked={signMode === "all"}
                 onChange={() => setSignMode("all")}
               />
-              <Text as="span" size="sm">
+              <Text as="span" size="xs" weight="bold">
                 Sign all entries
               </Text>
             </label>
@@ -88,7 +93,7 @@ export const SorobanAuthSigningCard = ({
                 checked={signMode === "individual"}
                 onChange={() => setSignMode("individual")}
               />
-              <Text as="span" size="sm">
+              <Text as="span" size="xs" weight="bold">
                 Sign individually
               </Text>
             </label>

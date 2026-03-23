@@ -7,18 +7,23 @@
 
   // Header section — title + "View auth entries" button
   &__header {
-    display: flex;
+    display: grid;
     align-items: flex-start;
     justify-content: space-between;
     gap: pxToRem(16px);
     padding: pxToRem(16px);
     border-bottom: 1px solid var(--sds-clr-gray-06);
+    grid-template-columns: auto 137px;
   }
 
   &__header-text {
     display: flex;
     flex-direction: column;
     gap: pxToRem(4px);
+  }
+
+  &__header-title {
+    color: var(--sds-clr-gray-12);
   }
 
   // Body section — radio, entries, signing area
@@ -55,6 +60,10 @@
     display: flex;
     flex-direction: column;
     gap: pxToRem(8px);
+
+    .CodeEditor {
+      border: none;
+    }
   }
 
   // Single entry row
@@ -80,8 +89,6 @@
   &__entry-details {
     display: flex;
     flex-direction: column;
-    gap: pxToRem(8px);
-    padding: 0 pxToRem(16px) pxToRem(12px);
     border-top: 1px solid var(--sds-clr-gray-04);
   }
 
