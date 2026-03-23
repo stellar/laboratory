@@ -14,9 +14,10 @@ type SignMode = "all" | "individual";
 /**
  * Card component that orchestrates Soroban auth entry signing.
  *
- * Matches the Figma design: a bordered card containing a header with entry
- * count + "View auth entries" toggle, sign mode radio, entry list, and
- * signing area placeholder.
+ * - Collapsed: only shows header with entry count + "View auth entries"
+ * - Expanded "Sign all": entry list (no per-entry signing) + one shared
+ *   signing area at the bottom
+ * - Expanded "Sign individually": each entry has its own embedded signing area
  *
  * @example
  * <SorobanAuthSigningCard
@@ -31,7 +32,7 @@ export const SorobanAuthSigningCard = ({
   authEntriesXdr: string[];
   signedAuthEntriesXdr: string[];
 }) => {
-  const [isEntriesExpanded, setIsEntriesExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [signMode, setSignMode] = useState<SignMode>("all");
 
   const entryCount = authEntriesXdr.length;
@@ -54,81 +55,81 @@ export const SorobanAuthSigningCard = ({
         <Button
           size="sm"
           variant="tertiary"
-          icon={
-            isEntriesExpanded ? <Icon.ChevronUp /> : <Icon.ChevronDown />
-          }
+          icon={isExpanded ? <Icon.ChevronUp /> : <Icon.ChevronDown />}
           iconPosition="right"
-          onClick={() => setIsEntriesExpanded(!isEntriesExpanded)}
+          onClick={() => setIsExpanded(!isExpanded)}
         >
           View auth entries
         </Button>
       </div>
 
-      {/* Body: radio + entries + signing area */}
-      <div className="SorobanAuthSigning__body">
-        {/* Sign mode radio */}
-        <div className="SorobanAuthSigning__sign-mode">
-          <label className="SorobanAuthSigning__radio">
-            <input
-              type="radio"
-              name="sign-mode"
-              value="all"
-              checked={signMode === "all"}
-              onChange={() => setSignMode("all")}
-            />
-            <Text as="span" size="sm">
-              Sign all entries
-            </Text>
-          </label>
-          <label className="SorobanAuthSigning__radio">
-            <input
-              type="radio"
-              name="sign-mode"
-              value="individual"
-              checked={signMode === "individual"}
-              onChange={() => setSignMode("individual")}
-            />
-            <Text as="span" size="sm">
-              Sign individually
-            </Text>
-          </label>
-        </div>
-
-        {/* Entry list — always visible */}
-        <div className="SorobanAuthSigning__entries">
-          {authEntriesXdr.map((entryXdr, index) => (
-            <AuthEntryItem
-              key={`auth-entry-${index}`}
-              index={index}
-              entryXdr={entryXdr}
-              isSigned={Boolean(signedAuthEntriesXdr[index])}
-              isExpanded={isEntriesExpanded}
-            />
-          ))}
-        </div>
-
-        {/* Signing UI placeholder — AuthSignatureInput goes here */}
-        {signMode === "all" && !allSigned && (
-          <div className="SorobanAuthSigning__signing-area">
-            <Text as="div" size="sm" weight="medium">
-              Add signature to sign
-            </Text>
-            <Box gap="sm">
-              <Text as="div" size="xs">
-                Signing UI will be wired here (AuthSignatureInput).
+      {/* Body — only visible when expanded */}
+      {isExpanded && (
+        <div className="SorobanAuthSigning__body">
+          {/* Sign mode radio */}
+          <div className="SorobanAuthSigning__sign-mode">
+            <label className="SorobanAuthSigning__radio">
+              <input
+                type="radio"
+                name="sign-mode"
+                value="all"
+                checked={signMode === "all"}
+                onChange={() => setSignMode("all")}
+              />
+              <Text as="span" size="sm">
+                Sign all entries
               </Text>
-            </Box>
+            </label>
+            <label className="SorobanAuthSigning__radio">
+              <input
+                type="radio"
+                name="sign-mode"
+                value="individual"
+                checked={signMode === "individual"}
+                onChange={() => setSignMode("individual")}
+              />
+              <Text as="span" size="sm">
+                Sign individually
+              </Text>
+            </label>
           </div>
-        )}
 
-        {allSigned && (
-          <div className="SorobanAuthSigning__signed-status">
-            <Text as="div" size="sm" weight="medium">
-              All authorization entries signed
-            </Text>
+          {/* Entry list */}
+          <div className="SorobanAuthSigning__entries">
+            {authEntriesXdr.map((entryXdr, index) => (
+              <AuthEntryItem
+                key={`auth-entry-${index}`}
+                index={index}
+                entryXdr={entryXdr}
+                isSigned={Boolean(signedAuthEntriesXdr[index])}
+                showSigningArea={signMode === "individual"}
+              />
+            ))}
           </div>
-        )}
-      </div>
+
+          {/* Shared signing area — only in "Sign all" mode */}
+          {signMode === "all" && !allSigned && (
+            <div className="SorobanAuthSigning__signing-area">
+              <Text as="div" size="sm" weight="medium">
+                Add signature to sign
+              </Text>
+              <Box gap="sm">
+                <Text as="div" size="xs">
+                  Signing UI will be wired here (AuthSignatureInput).
+                </Text>
+              </Box>
+            </div>
+          )}
+
+          {allSigned && (
+            <div className="SorobanAuthSigning__signed-status">
+              <Text as="div" size="sm" weight="medium">
+                All authorization entries signed
+              </Text>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
