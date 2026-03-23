@@ -28,6 +28,7 @@ import { SdsLink } from "@/components/SdsLink";
 import { ExpandBox } from "@/components/ExpandBox";
 
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
+import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 
 import { validate } from "@/validate";
 
@@ -102,22 +103,16 @@ export const SimulateStepContent = () => {
   const extractAuthEntries = useCallback(
     (responseData: SimulationResponse): string[] => {
       const authEntries: string[] = [];
+      const results = responseData?.result?.results as
+        | Array<{ auth?: string[] }>
+        | undefined;
 
-      try {
-        const result = responseData?.result;
-        const results = result?.results as
-          | Array<{ auth?: string[] }>
-          | undefined;
-
-        if (Array.isArray(results)) {
-          for (const r of results) {
-            if (Array.isArray(r.auth)) {
-              authEntries.push(...r.auth);
-            }
+      if (Array.isArray(results)) {
+        for (const r of results) {
+          if (Array.isArray(r.auth)) {
+            authEntries.push(...r.auth);
           }
         }
-      } catch {
-        // If parsing fails, return empty — no auth entries detected
       }
 
       return authEntries;
@@ -502,33 +497,18 @@ const AuthEntryPreview = ({
 
         {isExpanded && (
           <Box gap="xs">
-            <Box gap="xs" direction="row" justify="space-between">
-              <Text as="div" size="xs">
-                Credentials type
-              </Text>
-              <Text as="div" size="xs" weight="medium">
-                {info.credentialsType}
-              </Text>
-            </Box>
+            <AuthEntryInfoRow
+              label="Credentials type"
+              value={info.credentialsType}
+            />
             {info.contractId && (
-              <Box gap="xs" direction="row" justify="space-between">
-                <Text as="div" size="xs">
-                  Contract ID
-                </Text>
-                <Text as="div" size="xs" weight="medium">
-                  {`${info.contractId.substring(0, 8)}...${info.contractId.substring(info.contractId.length - 8)}`}
-                </Text>
-              </Box>
+              <AuthEntryInfoRow
+                label="Contract ID"
+                value={shortenStellarAddress(info.contractId)}
+              />
             )}
             {info.functionName && (
-              <Box gap="xs" direction="row" justify="space-between">
-                <Text as="div" size="xs">
-                  Function
-                </Text>
-                <Text as="div" size="xs" weight="medium">
-                  {info.functionName}
-                </Text>
-              </Box>
+              <AuthEntryInfoRow label="Function" value={info.functionName} />
             )}
             <Box gap="xs">
               <Text as="div" size="xs" weight="medium">
@@ -544,6 +524,23 @@ const AuthEntryPreview = ({
     </Card>
   );
 };
+
+const AuthEntryInfoRow = ({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) => (
+  <Box gap="xs" direction="row" justify="space-between">
+    <Text as="div" size="xs">
+      {label}
+    </Text>
+    <Text as="div" size="xs" weight="medium">
+      {value}
+    </Text>
+  </Box>
+);
 
 const renderAlert = ({
   isReadOnly,
