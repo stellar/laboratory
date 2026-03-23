@@ -1,17 +1,35 @@
 @use "../../styles/utils.scss" as *;
 
 .SorobanAuthSigning {
-  display: flex;
-  flex-direction: column;
-  gap: pxToRem(16px);
+  border: 1px solid var(--sds-clr-gray-06);
+  border-radius: pxToRem(8px);
+  overflow: hidden;
 
+  // Header section — title + "View auth entries" button
   &__header {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     gap: pxToRem(16px);
+    padding: pxToRem(16px);
+    border-bottom: 1px solid var(--sds-clr-gray-06);
   }
 
+  &__header-text {
+    display: flex;
+    flex-direction: column;
+    gap: pxToRem(4px);
+  }
+
+  // Body section — radio, entries, signing area
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: pxToRem(16px);
+    padding: pxToRem(16px);
+  }
+
+  // Radio buttons
   &__sign-mode {
     display: flex;
     gap: pxToRem(24px);
@@ -32,12 +50,14 @@
     }
   }
 
+  // Entry list
   &__entries {
     display: flex;
     flex-direction: column;
     gap: pxToRem(8px);
   }
 
+  // Single entry row
   &__entry {
     border: 1px solid var(--sds-clr-gray-06);
     border-radius: pxToRem(8px);
@@ -49,11 +69,12 @@
     align-items: center;
     justify-content: space-between;
     padding: pxToRem(12px) pxToRem(16px);
-    cursor: pointer;
+  }
 
-    &:hover {
-      background-color: var(--sds-clr-gray-02);
-    }
+  &__entry-label {
+    display: flex;
+    align-items: center;
+    gap: pxToRem(8px);
   }
 
   &__entry-details {
@@ -64,6 +85,15 @@
     border-top: 1px solid var(--sds-clr-gray-04);
   }
 
+  &__entry-xdr {
+    display: flex;
+    flex-direction: column;
+    gap: pxToRem(4px);
+    word-break: break-all;
+    color: var(--sds-clr-gray-11);
+  }
+
+  // Badge (Unsigned / Signed)
   &__badge {
     display: inline-flex;
     align-items: center;
@@ -83,26 +113,17 @@
     }
   }
 
-  &__xdr-preview {
-    display: flex;
-    flex-direction: column;
-    gap: pxToRem(4px);
-    padding: pxToRem(12px) pxToRem(16px);
-    word-break: break-all;
-    color: var(--sds-clr-gray-11);
-    background-color: var(--sds-clr-gray-02);
-    border-radius: pxToRem(4px);
-  }
-
+  // Signing area (placeholder for AuthSignatureInput)
   &__signing-area {
     display: flex;
     flex-direction: column;
-    gap: pxToRem(12px);
+    gap: pxToRem(16px);
     padding: pxToRem(16px);
     border: 1px solid var(--sds-clr-gray-06);
     border-radius: pxToRem(8px);
   }
 
+  // All-signed confirmation
   &__signed-status {
     padding: pxToRem(12px) pxToRem(16px);
     background-color: var(--sds-clr-green-03);

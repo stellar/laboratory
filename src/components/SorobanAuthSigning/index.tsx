@@ -1,10 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Card, Icon, Text } from "@stellar/design-system";
+import { Button, Icon, Text } from "@stellar/design-system";
 
 import { Box } from "@/components/layout/Box";
-import { ExpandBox } from "@/components/ExpandBox";
 
 import { AuthEntryItem } from "./AuthEntryItem";
 
@@ -15,17 +14,14 @@ type SignMode = "all" | "individual";
 /**
  * Card component that orchestrates Soroban auth entry signing.
  *
- * Shows entry count, a toggle to view auth entry details, a sign mode
- * selector (sign all vs individually), and the signing UI. When all entries
- * are signed, calls `onAuthEntriesSigned` with the signed XDR strings.
+ * Matches the Figma design: a bordered card containing a header with entry
+ * count + "View auth entries" toggle, sign mode radio, entry list, and
+ * signing area placeholder.
  *
  * @example
  * <SorobanAuthSigningCard
  *   authEntriesXdr={["AAAAAA...", "BBBBBB..."]}
  *   signedAuthEntriesXdr={[]}
- *   networkPassphrase="Test SDF Network ; September 2015"
- *   onSignEntry={(index, signedXdr) => { ... }}
- *   onSignAllEntries={(signedEntries) => { ... }}
  * />
  */
 export const SorobanAuthSigningCard = ({
@@ -35,7 +31,7 @@ export const SorobanAuthSigningCard = ({
   authEntriesXdr: string[];
   signedAuthEntriesXdr: string[];
 }) => {
-  const [isEntriesVisible, setIsEntriesVisible] = useState(false);
+  const [isEntriesExpanded, setIsEntriesExpanded] = useState(false);
   const [signMode, setSignMode] = useState<SignMode>("all");
 
   const entryCount = authEntriesXdr.length;
@@ -43,32 +39,33 @@ export const SorobanAuthSigningCard = ({
   const allSigned = signedCount === entryCount && entryCount > 0;
 
   return (
-    <Card>
-      <div className="SorobanAuthSigning">
-        {/* Header */}
-        <div className="SorobanAuthSigning__header">
-          <Box gap="xs">
-            <Text as="div" size="sm" weight="medium">
-              This transaction requires additional authorization signatures
-            </Text>
-            <Text as="div" size="xs">
-              {`${entryCount} authorization ${entryCount === 1 ? "entry" : "entries"} detected`}
-            </Text>
-          </Box>
-
-          <Button
-            size="sm"
-            variant="tertiary"
-            icon={
-              isEntriesVisible ? <Icon.ChevronUp /> : <Icon.ChevronDown />
-            }
-            iconPosition="right"
-            onClick={() => setIsEntriesVisible(!isEntriesVisible)}
-          >
-            View auth entries
-          </Button>
+    <div className="SorobanAuthSigning">
+      {/* Header: title + "View auth entries" button */}
+      <div className="SorobanAuthSigning__header">
+        <div className="SorobanAuthSigning__header-text">
+          <Text as="div" size="sm" weight="medium">
+            This transaction requires additional authorization signatures
+          </Text>
+          <Text as="div" size="xs">
+            {`${entryCount} authorization ${entryCount === 1 ? "entry" : "entries"} detected`}
+          </Text>
         </div>
 
+        <Button
+          size="sm"
+          variant="tertiary"
+          icon={
+            isEntriesExpanded ? <Icon.ChevronUp /> : <Icon.ChevronDown />
+          }
+          iconPosition="right"
+          onClick={() => setIsEntriesExpanded(!isEntriesExpanded)}
+        >
+          View auth entries
+        </Button>
+      </div>
+
+      {/* Body: radio + entries + signing area */}
+      <div className="SorobanAuthSigning__body">
         {/* Sign mode radio */}
         <div className="SorobanAuthSigning__sign-mode">
           <label className="SorobanAuthSigning__radio">
@@ -97,7 +94,7 @@ export const SorobanAuthSigningCard = ({
           </label>
         </div>
 
-        {/* Entry list */}
+        {/* Entry list — always visible */}
         <div className="SorobanAuthSigning__entries">
           {authEntriesXdr.map((entryXdr, index) => (
             <AuthEntryItem
@@ -105,38 +102,22 @@ export const SorobanAuthSigningCard = ({
               index={index}
               entryXdr={entryXdr}
               isSigned={Boolean(signedAuthEntriesXdr[index])}
+              isExpanded={isEntriesExpanded}
             />
           ))}
         </div>
 
-        {/* Auth entries detail (collapsible) */}
-        <ExpandBox isExpanded={isEntriesVisible} offsetTop="sm">
-          <Box gap="sm">
-            {authEntriesXdr.map((entryXdr, index) => (
-              <div
-                key={`auth-detail-${index}`}
-                className="SorobanAuthSigning__xdr-preview"
-              >
-                <Text as="div" size="xs" weight="medium">
-                  {`Entry #${index + 1} XDR`}
-                </Text>
-                <Text as="div" size="xs">
-                  {`${entryXdr.substring(0, 120)}...`}
-                </Text>
-              </div>
-            ))}
-          </Box>
-        </ExpandBox>
-
-        {/* Signing UI placeholder — AuthSignatureInput will go here */}
+        {/* Signing UI placeholder — AuthSignatureInput goes here */}
         {signMode === "all" && !allSigned && (
           <div className="SorobanAuthSigning__signing-area">
             <Text as="div" size="sm" weight="medium">
               Add signature to sign
             </Text>
-            <Text as="div" size="xs">
-              Signing UI will be wired here (AuthSignatureInput).
-            </Text>
+            <Box gap="sm">
+              <Text as="div" size="xs">
+                Signing UI will be wired here (AuthSignatureInput).
+              </Text>
+            </Box>
           </div>
         )}
 
@@ -148,6 +129,6 @@ export const SorobanAuthSigningCard = ({
           </div>
         )}
       </div>
-    </Card>
+    </div>
   );
 };
