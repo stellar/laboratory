@@ -13,7 +13,7 @@
     gap: pxToRem(16px);
     padding: pxToRem(16px);
     border-bottom: 1px solid var(--sds-clr-gray-06);
-    grid-template-columns: auto 137px;
+    grid-template-columns: auto pxToRem(137px);
   }
 
   &__header-text {
