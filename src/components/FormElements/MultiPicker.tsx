@@ -163,7 +163,7 @@ export const MultiPicker = ({
             </Button>
           </div>
         ) : null}
-        {submitButton ? <div>{submitButton}</div> : null}
+        {submitButton || null}
       </Box>
     </Box>
   );
