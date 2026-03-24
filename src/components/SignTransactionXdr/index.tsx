@@ -724,7 +724,7 @@ export const SignTransactionXdr = ({
             autocomplete="off"
             isPassword
             useSecretSelector
-            submitbutton={
+            submitButton={
               <SignTxButton
                 onSign={async () => {
                   await handleSign({ sigType: "secretKey", isClear: false });
