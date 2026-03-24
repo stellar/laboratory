@@ -22,6 +22,7 @@ import { SorobanTransactionXdr } from "./components/SorobanTransactionXdr";
 import { SimulateStepContent } from "./components/SimulateStepContent";
 import { SignStepContent } from "./components/SignStepContent";
 import { ValidateStepContent } from "./components/ValidateStepContent";
+import { SubmitStepContent } from "./components/SubmitStepContent";
 
 import "./styles.scss";
 
@@ -197,6 +198,7 @@ export default function BuildTransaction() {
             {activeStep === "simulate" && <SimulateStepContent />}
             {activeStep === "sign" && <SignStepContent />}
             {activeStep === "validate" && <ValidateStepContent />}
+            {activeStep === "submit" && <SubmitStepContent />}
 
             <TransactionFlowFooter
               steps={steps}
