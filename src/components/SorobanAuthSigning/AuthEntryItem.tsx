@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Badge, Button, Icon, Text } from "@stellar/design-system";
+import { Badge, Icon, IconButton, Text } from "@stellar/design-system";
 
 import { Box } from "@/components/layout/Box";
 import { CodeEditor } from "@/components/CodeEditor";
@@ -68,17 +68,16 @@ export const AuthEntryItem = ({
         className="SorobanAuthSigning__entry-header"
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <Box gap="sm" direction="row">
-          <Text as="span" size="sm" weight="medium">
+        <Box gap="sm" direction="row" align="center">
+          <Text as="span" size="xs" weight="bold">
             {`Entry #${index + 1}`}
           </Text>
           <Badge variant={isSigned ? "success" : "tertiary"} size="sm">
             {isSigned ? "Signed" : "Unsigned"}
           </Badge>
         </Box>
-        <Button
-          size="sm"
-          variant="tertiary"
+        <IconButton
+          altText="chevron"
           icon={isExpanded ? <Icon.ChevronUp /> : <Icon.ChevronDown />}
           onClick={(e) => {
             e.stopPropagation();

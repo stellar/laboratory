@@ -55,6 +55,10 @@
   &__expand-toggle {
     cursor: pointer;
 
+    .Link {
+      font-weight: var(--sds-fw-bold);
+    }
+
     svg {
       transform: rotate(0deg);
       transition: transform ease-in-out 0.2s;

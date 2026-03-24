@@ -53,7 +53,9 @@ export const SorobanAuthSigningCard = ({
   return (
     <div className="SorobanAuthSigning">
       {/* Header: title + "View auth entries" button */}
-      <div className="SorobanAuthSigning__header">
+      <div
+        className={`SorobanAuthSigning__header${isExpanded ? " SorobanAuthSigning__header--expanded" : ""}`}
+      >
         <div className="SorobanAuthSigning__header-text">
           <Text
             as="div"
