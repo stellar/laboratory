@@ -8,7 +8,6 @@ import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 import { SignTransactionXdr } from "@/components/SignTransactionXdr";
 import { Box } from "@/components/layout/Box";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { SdsLink } from "@/components/SdsLink";
 
 /**
  * Sign step content for the single-page transaction flow.
@@ -25,7 +24,6 @@ export const SignStepContent = () => {
   const { build, simulate, sign, setSignedXdr, resetAll } = useBuildFlowStore();
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [isAlertDismissed, setIsAlertDismissed] = useState(false);
 
   // Use assembled XDR (post-simulation) if available, otherwise the built XDR
   const xdrToSign =
@@ -34,7 +32,7 @@ export const SignStepContent = () => {
   return (
     <Box gap="md">
       <Box gap="md" direction="row" justify="space-between" align="center">
-        <PageHeader heading="Sign transaction" as="h1" />
+        <PageHeader heading="Sign transaction" />
 
         <Text as="div" size="xs">
           <Link
@@ -60,7 +58,6 @@ export const SignStepContent = () => {
         onDoneAction={({ signedXdr, errorMessage }) => {
           setSignedXdr(signedXdr ?? "");
           setErrorMessage(errorMessage);
-          setIsAlertDismissed(false);
         }}
       />
 
@@ -73,51 +70,50 @@ export const SignStepContent = () => {
       {sign.signedXdr ? (
         <Card>
           <Box gap="md">
-            {!isAlertDismissed ? (
-              <Alert variant="success" placement="inline">
-                Transaction signed and ready to submit.
-              </Alert>
-            ) : null}
+            <Alert variant="success" placement="inline">
+              Transaction signed and ready to submit.
+            </Alert>
 
-            <Box gap="xs">
-              <Text
-                size="xs"
-                weight="medium"
-                as="div"
-                addlClassName="SignStepContent__label"
-              >
-                Signed transaction (Base64 XDR)
-              </Text>
+            <Box gap="xxl">
+              <Box gap="xs">
+                <Text
+                  size="xs"
+                  weight="medium"
+                  as="div"
+                  addlClassName="SignStepContent__label"
+                >
+                  Signed transaction (Base64 XDR)
+                </Text>
 
-              <div className="SignStepContent__xdrBox">
+                <div className="SignStepContent__xdrBox">
+                  <Text
+                    size="sm"
+                    as="div"
+                    addlClassName="SignStepContent__xdrText"
+                  >
+                    {sign.signedXdr}
+                  </Text>
+                </div>
+              </Box>
+
+              <Box gap="xs" direction="row" align="center" justify="end">
+                <Icon.InfoCircle size="md" color="var(--sds-clr-gray-08)" />
                 <Text
                   size="sm"
+                  weight="medium"
                   as="div"
-                  addlClassName="SignStepContent__xdrText"
+                  addlClassName="SignStepContent__feeBumpText"
                 >
-                  {sign.signedXdr}
+                  Want another account to pay the fee?{" "}
                 </Text>
-              </div>
-            </Box>
 
-            <Box
-              gap="xs"
-              direction="row"
-              align="center"
-              justify="end"
-              addlClassName="SignStepContent__feeBumpRow"
-            >
-              <Icon.InfoCircle />
-              <Text
-                size="sm"
-                weight="medium"
-                as="div"
-                addlClassName="SignStepContent__feeBumpText"
-              >
-                Want another account to pay the fee?{" "}
-              </Text>
-
-              <Link href="/transaction/fee-bump">Wrap with fee bump</Link>
+                <Link
+                  addlClassName="SignStepContent__feeBumpLink"
+                  href="/transaction/fee-bump"
+                >
+                  Wrap with fee bump
+                </Link>
+              </Box>
             </Box>
           </Box>
         </Card>

@@ -135,7 +135,7 @@ export default function BuildTransaction() {
   const renderBuildStep = () => (
     <Box gap="md">
       <Box gap="md" direction="row" justify="space-between" align="center">
-        <PageHeader heading="Build transaction" as="h1" />
+        <PageHeader heading="Build transaction" />
 
         <Link
           variant="primary"

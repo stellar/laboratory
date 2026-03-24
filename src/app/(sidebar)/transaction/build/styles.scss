@@ -134,12 +134,11 @@
       font-size: pxToRem(14px);
       font-weight: var(--sds-fw-semi-bold);
     }
+  }
 
-    svg {
-      width: pxToRem(14px);
-      height: pxToRem(14px);
-      color: var(--sds-clr-gray-08);
-    }
+  &__feeBumpLink {
+    font-size: pxToRem(14px);
+    font-weight: var(--sds-fw-semi-bold);
   }
 
   &__feeBumpText {
