@@ -37,7 +37,9 @@
   // Entry list
   &__entries {
     .CodeEditor {
-      border: none;
+      border: 1px solid var(--sds-clr-gray-06);
+      border-top: none;
+      border-radius: 0 0 pxToRem(8px) pxToRem(8px);
     }
   }
 
