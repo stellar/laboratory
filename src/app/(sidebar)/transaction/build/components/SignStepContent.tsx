@@ -22,8 +22,7 @@ import { SdsLink } from "@/components/SdsLink";
  * {activeStep === "sign" && <SignStepContent />}
  */
 export const SignStepContent = () => {
-  const { build, simulate, sign, setSignedXdr, resetAll } =
-    useBuildFlowStore();
+  const { build, simulate, sign, setSignedXdr, resetAll } = useBuildFlowStore();
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isAlertDismissed, setIsAlertDismissed] = useState(false);
@@ -75,24 +74,27 @@ export const SignStepContent = () => {
         <Card>
           <Box gap="md">
             {!isAlertDismissed ? (
-              <Alert
-                variant="success"
-                placement="inline"
-                onClose={() => {
-                  setIsAlertDismissed(true);
-                }}
-              >
+              <Alert variant="success" placement="inline">
                 Transaction signed and ready to submit.
               </Alert>
             ) : null}
 
             <Box gap="xs">
-              <Text size="xs" weight="medium" as="div" addlClassName="SignStepContent__label">
+              <Text
+                size="xs"
+                weight="medium"
+                as="div"
+                addlClassName="SignStepContent__label"
+              >
                 Signed transaction (Base64 XDR)
               </Text>
 
               <div className="SignStepContent__xdrBox">
-                <Text size="sm" as="div" addlClassName="SignStepContent__xdrText">
+                <Text
+                  size="sm"
+                  as="div"
+                  addlClassName="SignStepContent__xdrText"
+                >
                   {sign.signedXdr}
                 </Text>
               </div>
@@ -106,12 +108,16 @@ export const SignStepContent = () => {
               addlClassName="SignStepContent__feeBumpRow"
             >
               <Icon.InfoCircle />
-              <Text size="sm" weight="medium" as="div" addlClassName="SignStepContent__feeBumpText">
+              <Text
+                size="sm"
+                weight="medium"
+                as="div"
+                addlClassName="SignStepContent__feeBumpText"
+              >
                 Want another account to pay the fee?{" "}
               </Text>
-              <SdsLink href="/transaction/fee-bump">
-                Wrap with fee bump
-              </SdsLink>
+
+              <Link href="/transaction/fee-bump">Wrap with fee bump</Link>
             </Box>
           </Box>
         </Card>

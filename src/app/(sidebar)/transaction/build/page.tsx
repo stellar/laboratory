@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, Link, Text } from "@stellar/design-system";
+import { Card, Link } from "@stellar/design-system";
 
 import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 
@@ -137,16 +137,15 @@ export default function BuildTransaction() {
       <Box gap="md" direction="row" justify="space-between" align="center">
         <PageHeader heading="Build transaction" as="h1" />
 
-        <Text as="div" size="xs">
-          <Link
-            variant="primary"
-            onClick={() => {
-              resetAll();
-            }}
-          >
-            Clear all
-          </Link>
-        </Text>
+        <Link
+          variant="primary"
+          addlClassName="resetButton"
+          onClick={() => {
+            resetAll();
+          }}
+        >
+          Clear all
+        </Link>
       </Box>
 
       <Card>
