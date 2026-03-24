@@ -56,12 +56,13 @@ git add src/store/createTransactionFlowStore.ts
 
 Write commit message following the project's conventions:
 - **Style**: Informal, descriptive, present tense
-- **Prefix**: Use `[New Tx]` for new transaction flow work
+- **Prefix**: Use a context-aware prefix reflecting the feature/page (e.g., `[Smart Contract Page]`, `[View XDR]`, `[New Tx]`, `[Endpoints]`)
 - **Format**: Short summary line; no body needed for small changes
 - **Examples from this repo**:
   - `[New Tx] Add Simulate Step`
   - `[New Tx] Wire sign step into page layout`
-  - `animate chevron`
+  - `[Smart Contract Page] Add contract deployment UI`
+  - `[View XDR] Fix XDR decoding for auth entries`
   - `fix auth entry parsing for empty credentials`
 
 ```bash

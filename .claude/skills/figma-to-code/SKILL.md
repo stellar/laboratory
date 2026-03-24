@@ -12,6 +12,9 @@ HTML/CSS). This skill bridges the gap between that output and the project's
 actual conventions: `@stellar/design-system` components, SCSS with BEM-ish
 naming, and specific layout patterns.
 
+> For the full SDS component catalog, props, SCSS conventions, and usage
+> examples, invoke `/component-with-design-system`.
+
 ## Workflow
 
 ### 1. Get the Figma design context
@@ -43,103 +46,36 @@ states.
 
 ## Element Mapping Rules
 
-### Layout elements
+Map Figma's generic HTML to `@stellar/design-system` components:
 
 | Figma output | Use instead |
 |---|---|
-| `<div>` with flex layout | `<Box gap="sm|md|lg">` from design system, or a `<div>` with SCSS class |
+| `<div>` with flex layout | `<Box gap="sm\|md\|lg">` or `<div>` with SCSS class |
 | `<div>` as card/section | `<PageCard heading="...">` or `<Card>` |
 | Page title | `<PageHeader heading="..." as="h1" />` |
-| Generic container | `<div className="ComponentName">` with SCSS |
-
-### Form elements
-
-| Figma output | Use instead |
-|---|---|
-| `<input>` | `<Input>` from `@stellar/design-system` |
-| `<select>` | `<Select>` from `@stellar/design-system` |
+| `<input>` | `<Input>` from SDS |
+| `<select>` | `<Select>` from SDS |
 | `<textarea>` for XDR | `<XdrPicker>` component |
-| Memo field | `<MemoPicker>` component |
-| Number input | `<PositiveIntPicker>` component |
-| Time bounds | `<TimeBoundsPicker>` component |
-
-### Action elements
-
-| Figma output | Use instead |
-|---|---|
-| `<button>` primary | `<Button variant="primary">` |
-| `<button>` secondary | `<Button variant="secondary">` |
-| `<button>` destructive | `<Button variant="destructive">` |
-| `<button>` text/link style | `<Button variant="tertiary">` |
-| Icon button | `<Button variant="tertiary" icon={<Icon.Name />}>` |
-| `<a>` link | `<Link>` from design system, or Next.js `<Link>` for routes |
-
-### Feedback elements
-
-| Figma output | Use instead |
-|---|---|
-| Alert/banner | `<Alert variant="primary|success|warning|error" title="...">` |
-| Inline text | `<Text size="sm|md|lg" as="span|p">` |
+| `<button>` | `<Button variant="primary\|secondary\|tertiary\|destructive">` |
+| `<a>` link | `<Link>` from SDS, or Next.js `<Link>` for routes |
+| Alert/banner | `<Alert variant="..." title="...">` |
+| Inline text | `<Text size="..." as="span\|p">` |
 | Copy-able text | `<CopyText textToCopy={value}>` |
-| Code display | `<CodeEditor>` component (for JSON/XDR) |
+| Code display | `<CodeEditor>` component |
+| Icons | `<Icon.Name />` from SDS |
 
-### Icons
+For domain-specific pickers (`<MemoPicker>`, `<TimeBoundsPicker>`,
+`<PositiveIntPicker>`, etc.), check `src/components/`.
 
-Always use icons from `@stellar/design-system`:
-```typescript
-import { Icon } from "@stellar/design-system";
-<Icon.ChevronRight />
-```
+## Spacing and Layout
 
-## SCSS Naming Convention
-
-### Class naming (BEM-ish)
-
-```scss
-.ComponentName {
-  // root element
-
-  &__header {
-    // child element
-  }
-
-  &__content {
-    // child element
-  }
-
-  &__footer {
-    // child element
-  }
-
-  &--active {
-    // modifier
-  }
-}
-```
-
-### File structure
-
-```
-ComponentName/
-├── index.tsx
-└── styles.scss
-```
-
-Import in the component:
-```typescript
-import "./styles.scss";
-```
-
-### Spacing and layout
-
-Use the design system's spacing scale. Do NOT use arbitrary pixel values from
-Figma. Common patterns:
+Use `pxToRem()` for spacing. Do NOT use arbitrary pixel values from Figma.
 
 ```scss
 .ComponentName {
   display: flex;
   flex-direction: column;
-  gap: pxToRem(16px);    // Use the pxToRem function if available
+  gap: pxToRem(16px);
 
   &__layout {
     display: flex;
@@ -177,11 +113,10 @@ Figma. Common patterns:
 
 When `get_variable_defs` returns Figma design tokens:
 
-- **Colors**: Map to design system CSS variables (e.g., `--color-gray-70`), not
-  raw hex values
-- **Typography**: Map to design system `<Text>` sizes, not raw font specs
-- **Spacing**: Map to the spacing scale used in the project
-- **Shadows/borders**: Check if design system has equivalent, otherwise use SCSS
+- **Colors**: Map to SDS CSS variables (`--sds-clr-*`), not raw hex values
+- **Typography**: Map to SDS `<Text>` sizes, not raw font specs
+- **Spacing**: Map to the `pxToRem()` scale used in the project
+- **Shadows/borders**: Check if SDS has equivalent, otherwise use SCSS
 
 ## Common Pitfalls
 
@@ -189,17 +124,10 @@ When `get_variable_defs` returns Figma design tokens:
    design purposes, not component architecture. Think about what makes sense as
    React components.
 
-2. **Don't use inline styles** — Always use SCSS classes. The project has a
-   strict no-inline-style convention.
+2. **Don't use arbitrary colors** — Figma may show raw hex values. Map them to
+   SDS color tokens (`--sds-clr-*`).
 
-3. **Don't create custom buttons/inputs** — Always check if
-   `@stellar/design-system` has the component. Visit
-   https://design-system.stellar.org/ for the catalog.
-
-4. **Don't use arbitrary colors** — Figma may show raw hex values. Map them to
-   the design system's color tokens.
-
-5. **Don't ignore interactive states** — Figma may show one state. Consider
+3. **Don't ignore interactive states** — Figma may show one state. Consider
    hover, focus, disabled, loading, and error states using design system props.
 
 ## Page-Level Layout Pattern (Transaction Flow)
