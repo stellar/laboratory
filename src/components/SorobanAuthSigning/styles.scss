@@ -68,7 +68,6 @@
 
   // Single entry row
   &__entry {
-    border: 1px solid var(--sds-clr-gray-06);
     border-radius: pxToRem(8px);
     overflow: hidden;
   }
@@ -78,6 +77,13 @@
     align-items: center;
     justify-content: space-between;
     padding: pxToRem(12px) pxToRem(16px);
+    border: 1px solid var(--sds-clr-gray-06);
+    border-radius: pxToRem(8px);
+
+    [data-is-expanded] > & {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
   }
 
   &__entry-label {
@@ -87,9 +93,8 @@
   }
 
   &__entry-details {
-    display: flex;
-    flex-direction: column;
-    border-top: 1px solid var(--sds-clr-gray-04);
+    border: 1px solid var(--sds-clr-gray-04);
+    border-top: none;
   }
 
   &__entry-xdr {

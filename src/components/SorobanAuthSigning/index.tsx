@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button, Icon, Text } from "@stellar/design-system";
 
-import { Box } from "@/components/layout/Box";
+import { SignTransactionXdr } from "@/components/SignTransactionXdr";
 
 import { AuthEntryItem } from "./AuthEntryItem";
 
@@ -28,9 +28,19 @@ type SignMode = "all" | "individual";
 export const SorobanAuthSigningCard = ({
   authEntriesXdr,
   signedAuthEntriesXdr,
+  builtXdr,
+  onAuthSigned,
 }: {
   authEntriesXdr: string[];
   signedAuthEntriesXdr: string[];
+  /** The built transaction XDR — passed to SignTransactionXdr for signing. */
+  builtXdr: string;
+  /** Called when auth entries are signed via the shared "Sign all" mode. */
+  onAuthSigned: (result: {
+    signedXdr: string | null;
+    successMessage: string | null;
+    errorMessage: string | null;
+  }) => void;
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [signMode, setSignMode] = useState<SignMode>("all");
@@ -101,29 +111,27 @@ export const SorobanAuthSigningCard = ({
 
           {/* Entry list */}
           <div className="SorobanAuthSigning__entries">
-            {authEntriesXdr.map((entryXdr, index) => (
+            {authEntriesXdr.map((entryXdr, idx) => (
               <AuthEntryItem
-                key={`auth-entry-${index}`}
-                index={index}
+                key={`auth-entry-${idx}`}
+                index={idx}
                 entryXdr={entryXdr}
-                isSigned={Boolean(signedAuthEntriesXdr[index])}
+                isSigned={Boolean(signedAuthEntriesXdr[idx])}
                 showSigningArea={signMode === "individual"}
+                builtXdr={builtXdr}
+                onAuthSigned={onAuthSigned}
               />
             ))}
           </div>
 
           {/* Shared signing area — only in "Sign all" mode */}
           {signMode === "all" && !allSigned && (
-            <div className="SorobanAuthSigning__signing-area">
-              <Text as="div" size="sm" weight="medium">
-                Add signature to sign
-              </Text>
-              <Box gap="sm">
-                <Text as="div" size="xs">
-                  Signing UI will be wired here (AuthSignatureInput).
-                </Text>
-              </Box>
-            </div>
+            <SignTransactionXdr
+              id="auth-sign-all"
+              title="Add signature to sign"
+              xdrToSign={builtXdr}
+              onDoneAction={onAuthSigned}
+            />
           )}
 
           {allSigned && (

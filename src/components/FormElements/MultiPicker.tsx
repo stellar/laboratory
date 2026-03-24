@@ -30,6 +30,7 @@ type MultiPickerProps = {
   isPassword?: boolean;
   rightElement?: (index: number) => React.ReactNode;
   useSecretSelector?: boolean;
+  submitbutton?: React.ReactNode;
 };
 
 export const MultiPicker = ({
@@ -47,6 +48,7 @@ export const MultiPicker = ({
   note,
   isPassword,
   useSecretSelector = false,
+  submitbutton,
 }: MultiPickerProps) => {
   if (!value || !value.length) {
     value = [];
@@ -145,7 +147,7 @@ export const MultiPicker = ({
           <div className="FieldNote FieldNote--note FieldNote--md">{note}</div>
         ) : null}
       </>
-      <>
+      <Box gap="sm" direction="row" align="center">
         {!useAutoAdd ? (
           <div>
             <Button
@@ -161,7 +163,8 @@ export const MultiPicker = ({
             </Button>
           </div>
         ) : null}
-      </>
+        {submitbutton ? <div>{submitbutton}</div> : null}
+      </Box>
     </Box>
   );
 };

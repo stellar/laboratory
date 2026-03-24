@@ -5,6 +5,7 @@ import { Button, Icon, Text } from "@stellar/design-system";
 
 import { Box } from "@/components/layout/Box";
 import { CodeEditor } from "@/components/CodeEditor";
+import { SignTransactionXdr } from "@/components/SignTransactionXdr";
 
 import { decodeXdr } from "@/helpers/decodeXdr";
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
@@ -26,11 +27,21 @@ export const AuthEntryItem = ({
   entryXdr,
   isSigned,
   showSigningArea,
+  builtXdr,
+  onAuthSigned,
 }: {
   index: number;
   entryXdr: string;
   isSigned: boolean;
   showSigningArea: boolean;
+  /** The built transaction XDR — passed to SignTransactionXdr for signing. */
+  builtXdr: string;
+  /** Called when this entry is signed in "Sign individually" mode. */
+  onAuthSigned: (result: {
+    signedXdr: string | null;
+    successMessage: string | null;
+    errorMessage: string | null;
+  }) => void;
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const isXdrInit = useIsXdrInit();
@@ -80,37 +91,39 @@ export const AuthEntryItem = ({
       </div>
 
       {isExpanded && (
-        <div className="SorobanAuthSigning__entry-details">
-          {decodedJson ? (
-            <CodeEditor
-              value={decodedJson}
-              selectedLanguage="json"
-              maxHeightInRem="20"
-            />
-          ) : decoded?.error ? (
-            <Text as="div" size="xs">
-              {decoded.error}
-            </Text>
-          ) : (
-            <Text as="div" size="xs">
-              Decoding...
-            </Text>
-          )}
-
-          {/* Per-entry signing area — only in "Sign individually" mode */}
-          {showSigningArea && !isSigned && (
-            <div className="SorobanAuthSigning__signing-area">
-              <Text as="div" size="sm" weight="medium">
-                Add signature to sign
+        <Box
+          gap="md"
+          // className="SorobanAuthSigning__entry-body"
+        >
+          <div className="SorobanAuthSigning__entry-details">
+            {decodedJson ? (
+              <CodeEditor
+                value={decodedJson}
+                selectedLanguage="json"
+                maxHeightInRem="20"
+              />
+            ) : decoded?.error ? (
+              <Text as="div" size="xs">
+                {decoded.error}
               </Text>
-              <Box gap="sm">
-                <Text as="div" size="xs">
-                  Signing UI will be wired here (AuthSignatureInput).
-                </Text>
-              </Box>
-            </div>
-          )}
-        </div>
+            ) : (
+              <Text as="div" size="xs">
+                Decoding...
+              </Text>
+            )}
+          </div>
+          <Box gap="sm">
+            {/* Per-entry signing area — only in "Sign individually" mode */}
+            {showSigningArea && !isSigned && (
+              <SignTransactionXdr
+                id={`auth-sign-entry-${index}`}
+                title={`Sign entry #${index + 1}`}
+                xdrToSign={builtXdr}
+                onDoneAction={onAuthSigned}
+              />
+            )}
+          </Box>
+        </Box>
       )}
     </div>
   );

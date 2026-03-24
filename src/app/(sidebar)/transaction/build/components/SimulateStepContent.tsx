@@ -62,6 +62,7 @@ export const SimulateStepContent = () => {
     setSimulationResult,
     setSimulationReadOnly,
     setAuthEntriesXdr,
+    setSignedAuthEntriesXdr,
   } = useBuildFlowStore();
 
   const [instrLeewayError, setInstrLeewayError] = useState("");
@@ -386,6 +387,16 @@ export const SimulateStepContent = () => {
               <SorobanAuthSigningCard
                 authEntriesXdr={authEntries}
                 signedAuthEntriesXdr={simulate.signedAuthEntriesXdr || []}
+                builtXdr={builtXdr}
+                onAuthSigned={({ signedXdr }) => {
+                  // TODO: Replace with authorizeEntry() logic — SignTransactionXdr
+                  // signs the transaction envelope, but auth entries need
+                  // authorizeEntry() from @stellar/stellar-sdk to sign each
+                  // SorobanAuthorizationEntry individually.
+                  if (signedXdr) {
+                    setSignedAuthEntriesXdr(authEntries);
+                  }
+                }}
               />
             )}
           </Box>
