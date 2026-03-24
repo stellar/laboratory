@@ -122,17 +122,17 @@ export const SorobanAuthSigningCard = ({
                 onAuthSigned={onAuthSigned}
               />
             ))}
-          </div>
 
-          {/* Shared signing area — only in "Sign all" mode */}
-          {signMode === "all" && !allSigned && (
-            <SignTransactionXdr
-              id="auth-sign-all"
-              title="Add signature to sign"
-              xdrToSign={builtXdr}
-              onDoneAction={onAuthSigned}
-            />
-          )}
+            {/* Shared signing area — only in "Sign all" mode */}
+            {signMode === "all" && !allSigned && (
+              <SignTransactionXdr
+                id="auth-sign-all"
+                title="Add signature to sign"
+                xdrToSign={builtXdr}
+                onDoneAction={onAuthSigned}
+              />
+            )}
+          </div>
 
           {allSigned && (
             <div className="SorobanAuthSigning__signed-status">

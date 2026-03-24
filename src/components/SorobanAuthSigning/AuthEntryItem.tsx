@@ -91,10 +91,7 @@ export const AuthEntryItem = ({
       </div>
 
       {isExpanded && (
-        <Box
-          gap="md"
-          // className="SorobanAuthSigning__entry-body"
-        >
+        <Box gap="sm">
           <div className="SorobanAuthSigning__entry-details">
             {decodedJson ? (
               <CodeEditor
@@ -112,17 +109,15 @@ export const AuthEntryItem = ({
               </Text>
             )}
           </div>
-          <Box gap="sm">
-            {/* Per-entry signing area — only in "Sign individually" mode */}
-            {showSigningArea && !isSigned && (
-              <SignTransactionXdr
-                id={`auth-sign-entry-${index}`}
-                title={`Sign entry #${index + 1}`}
-                xdrToSign={builtXdr}
-                onDoneAction={onAuthSigned}
-              />
-            )}
-          </Box>
+          {/* Per-entry signing area — only in "Sign individually" mode */}
+          {showSigningArea && !isSigned && (
+            <SignTransactionXdr
+              id={`auth-sign-entry-${index}`}
+              title={`Sign entry #${index + 1}`}
+              xdrToSign={builtXdr}
+              onDoneAction={onAuthSigned}
+            />
+          )}
         </Box>
       )}
     </div>
