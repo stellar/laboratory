@@ -20,6 +20,7 @@ import { Operations } from "./components/Operations";
 import { ClassicTransactionXdr } from "./components/ClassicTransactionXdr";
 import { SorobanTransactionXdr } from "./components/SorobanTransactionXdr";
 import { SimulateStepContent } from "./components/SimulateStepContent";
+import { SignStepContent } from "./components/SignStepContent";
 
 import "./styles.scss";
 
@@ -27,6 +28,7 @@ export default function BuildTransaction() {
   const {
     build,
     simulate,
+    sign,
     activeStep,
     highestCompletedStep,
     setActiveStep,
@@ -70,6 +72,9 @@ export default function BuildTransaction() {
       // (assembledXdr is set after auth signing + assembly, or after auto-assembly
       // when no auth entries are present).
       return !simulate.simulationResultJson;
+    }
+    if (activeStep === "sign") {
+      return !sign.signedXdr;
     }
     return false;
   };
@@ -180,6 +185,7 @@ export default function BuildTransaction() {
           <Box gap="xxl">
             {activeStep === "build" && renderBuildStep()}
             {activeStep === "simulate" && <SimulateStepContent />}
+            {activeStep === "sign" && <SignStepContent />}
 
             <TransactionFlowFooter
               steps={steps}
