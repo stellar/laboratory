@@ -1,14 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Alert, Link, Text } from "@stellar/design-system";
+import { Alert, Card, Icon, Link, Text } from "@stellar/design-system";
 
 import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 
 import { SignTransactionXdr } from "@/components/SignTransactionXdr";
 import { Box } from "@/components/layout/Box";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { SdsLink } from "@/components/SdsLink";
 
 /**
@@ -26,8 +25,8 @@ export const SignStepContent = () => {
   const { build, simulate, sign, setSignedXdr, resetAll } =
     useBuildFlowStore();
 
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isAlertDismissed, setIsAlertDismissed] = useState(false);
 
   // Use assembled XDR (post-simulation) if available, otherwise the built XDR
   const xdrToSign =
@@ -59,18 +58,12 @@ export const SignStepContent = () => {
         id="sign-step"
         title="Sign transaction"
         xdrToSign={xdrToSign || null}
-        onDoneAction={({ signedXdr, successMessage, errorMessage }) => {
+        onDoneAction={({ signedXdr, errorMessage }) => {
           setSignedXdr(signedXdr ?? "");
-          setSuccessMessage(successMessage);
           setErrorMessage(errorMessage);
+          setIsAlertDismissed(false);
         }}
       />
-
-      {successMessage && sign.signedXdr ? (
-        <Alert variant="success" placement="inline">
-          {successMessage}. Transaction signed and ready to submit.
-        </Alert>
-      ) : null}
 
       {errorMessage ? (
         <Alert variant="error" placement="inline">
@@ -79,23 +72,49 @@ export const SignStepContent = () => {
       ) : null}
 
       {sign.signedXdr ? (
-        <Box gap="sm">
-          <XdrPicker
-            id="signed-tx-xdr"
-            label="Signed transaction (Base64 XDR)"
-            value={sign.signedXdr}
-            readOnly
-          />
+        <Card>
+          <Box gap="md">
+            {!isAlertDismissed ? (
+              <Alert
+                variant="success"
+                placement="inline"
+                onClose={() => {
+                  setIsAlertDismissed(true);
+                }}
+              >
+                Transaction signed and ready to submit.
+              </Alert>
+            ) : null}
 
-          <Box gap="xs" direction="row" align="center" justify="center">
-            <Text size="xs" as="div">
-              Want another account to pay the fee?
-            </Text>
-            <SdsLink href="/transaction/fee-bump">
-              Wrap with fee bump
-            </SdsLink>
+            <Box gap="xs">
+              <Text size="xs" weight="medium" as="div" addlClassName="SignStepContent__label">
+                Signed transaction (Base64 XDR)
+              </Text>
+
+              <div className="SignStepContent__xdrBox">
+                <Text size="sm" as="div" addlClassName="SignStepContent__xdrText">
+                  {sign.signedXdr}
+                </Text>
+              </div>
+            </Box>
+
+            <Box
+              gap="xs"
+              direction="row"
+              align="center"
+              justify="end"
+              addlClassName="SignStepContent__feeBumpRow"
+            >
+              <Icon.InfoCircle />
+              <Text size="sm" weight="medium" as="div" addlClassName="SignStepContent__feeBumpText">
+                Want another account to pay the fee?{" "}
+              </Text>
+              <SdsLink href="/transaction/fee-bump">
+                Wrap with fee bump
+              </SdsLink>
+            </Box>
           </Box>
-        </Box>
+        </Card>
       ) : null}
     </Box>
   );
