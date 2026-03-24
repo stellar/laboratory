@@ -1,15 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Icon, Text } from "@stellar/design-system";
+import { Badge, Button, Icon, Text } from "@stellar/design-system";
 
 import { Box } from "@/components/layout/Box";
 import { CodeEditor } from "@/components/CodeEditor";
 import { SignTransactionXdr } from "@/components/SignTransactionXdr";
 
 import { decodeXdr } from "@/helpers/decodeXdr";
-import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { prettifyJsonString } from "@/helpers/prettifyJsonString";
+import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
 /**
  * A single auth entry row: "Entry #N" + Unsigned/Signed badge + chevron.
@@ -68,17 +68,14 @@ export const AuthEntryItem = ({
         className="SorobanAuthSigning__entry-header"
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <div className="SorobanAuthSigning__entry-label">
+        <Box gap="sm" direction="row">
           <Text as="span" size="sm" weight="medium">
             {`Entry #${index + 1}`}
           </Text>
-          <span
-            className="SorobanAuthSigning__badge"
-            data-variant={isSigned ? "signed" : "unsigned"}
-          >
+          <Badge variant={isSigned ? "success" : "tertiary"} size="sm">
             {isSigned ? "Signed" : "Unsigned"}
-          </span>
-        </div>
+          </Badge>
+        </Box>
         <Button
           size="sm"
           variant="tertiary"

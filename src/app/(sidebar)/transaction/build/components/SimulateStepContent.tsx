@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   Button,
@@ -10,7 +10,6 @@ import {
   Input,
   Select,
 } from "@stellar/design-system";
-import { xdr } from "@stellar/stellar-sdk";
 
 import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 import { useStore } from "@/store/useStore";
@@ -28,6 +27,8 @@ import { ExpandBox } from "@/components/ExpandBox";
 import { SorobanAuthSigningCard } from "@/components/SorobanAuthSigning";
 
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
+import { checkIsReadOnly } from "@/helpers/sorobanUtils";
+import { extractAuthEntries } from "@/helpers/sorobanAuthUtils";
 
 import { validate } from "@/validate";
 
@@ -39,9 +40,6 @@ import {
   SimulationResourceTable,
   getSimulationResourceInfo,
 } from "./SimulationResourceTable";
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type SimulationResponse = Record<string, any>;
 
 /**
  * Simulate step content for the single-page transaction flow (Soroban only).
@@ -96,63 +94,6 @@ export const SimulateStepContent = () => {
 
   const isActionDisabled =
     !network.rpcUrl || !builtXdr || Boolean(instrLeewayError);
-
-  /**
-   * Extracts auth entries from the simulation response.
-   * Auth entries live in result.results[].auth[] in the RPC response.
-   */
-  const extractAuthEntries = useCallback(
-    (responseData: SimulationResponse): string[] => {
-      const authEntries: string[] = [];
-      const results = responseData?.result?.results as
-        | Array<{ auth?: string[] }>
-        | undefined;
-
-      if (Array.isArray(results)) {
-        for (const r of results) {
-          if (Array.isArray(r.auth)) {
-            authEntries.push(...r.auth);
-          }
-        }
-      }
-
-      return authEntries;
-    },
-    [],
-  );
-
-  /**
-   * Determines if the simulation result indicates a read-only transaction
-   * (no auth entries and no write footprint).
-   */
-  const checkIsReadOnly = useCallback(
-    (responseData: SimulationResponse): boolean => {
-      try {
-        const result = responseData?.result;
-
-        if (!result) return false;
-
-        // Check if there's a transaction data with no write footprint
-        const transactionData = result?.transactionData as string | undefined;
-        if (transactionData) {
-          const sorobanData = xdr.SorobanTransactionData.fromXDR(
-            transactionData,
-            "base64",
-          );
-          const writeKeys = sorobanData
-            .resources()
-            .footprint()
-            .readWrite().length;
-          return writeKeys === 0;
-        }
-
-        return false;
-      } catch {
-        return false;
-      }
-    },
-    [],
-  );
 
   /**
    * Run the simulation against the RPC endpoint.

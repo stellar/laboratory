@@ -34,33 +34,8 @@
     padding: pxToRem(16px);
   }
 
-  // Radio buttons
-  &__sign-mode {
-    display: flex;
-    gap: pxToRem(24px);
-  }
-
-  &__radio {
-    display: flex;
-    align-items: center;
-    gap: pxToRem(8px);
-    cursor: pointer;
-
-    input[type="radio"] {
-      accent-color: var(--sds-clr-lilac-09);
-      width: pxToRem(16px);
-      height: pxToRem(16px);
-      margin: 0;
-      cursor: pointer;
-    }
-  }
-
   // Entry list
   &__entries {
-    display: flex;
-    flex-direction: column;
-    gap: pxToRem(8px);
-
     .CodeEditor {
       border: none;
     }
@@ -84,62 +59,5 @@
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
     }
-  }
-
-  &__entry-label {
-    display: flex;
-    align-items: center;
-    gap: pxToRem(8px);
-  }
-
-  &__entry-details {
-    border: 1px solid var(--sds-clr-gray-04);
-    border-top: none;
-  }
-
-  &__entry-xdr {
-    display: flex;
-    flex-direction: column;
-    gap: pxToRem(4px);
-    word-break: break-all;
-    color: var(--sds-clr-gray-11);
-  }
-
-  // Badge (Unsigned / Signed)
-  &__badge {
-    display: inline-flex;
-    align-items: center;
-    padding: pxToRem(2px) pxToRem(8px);
-    border-radius: pxToRem(4px);
-    font-size: pxToRem(11px);
-    line-height: pxToRem(16px);
-
-    &[data-variant="unsigned"] {
-      background-color: var(--sds-clr-gray-04);
-      color: var(--sds-clr-gray-11);
-    }
-
-    &[data-variant="signed"] {
-      background-color: var(--sds-clr-green-03);
-      color: var(--sds-clr-green-11);
-    }
-  }
-
-  // Signing area (placeholder for AuthSignatureInput)
-  &__signing-area {
-    display: flex;
-    flex-direction: column;
-    gap: pxToRem(16px);
-    padding: pxToRem(16px);
-    border: 1px solid var(--sds-clr-gray-06);
-    border-radius: pxToRem(8px);
-  }
-
-  // All-signed confirmation
-  &__signed-status {
-    padding: pxToRem(12px) pxToRem(16px);
-    background-color: var(--sds-clr-green-03);
-    border-radius: pxToRem(8px);
-    color: var(--sds-clr-green-11);
   }
 }

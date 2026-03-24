@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Icon, Text } from "@stellar/design-system";
+import { Button, Icon, RadioButton, Text } from "@stellar/design-system";
 
 import { SignTransactionXdr } from "@/components/SignTransactionXdr";
+import { Box } from "@/components/layout/Box";
 
 import { AuthEntryItem } from "./AuthEntryItem";
 
@@ -82,46 +83,42 @@ export const SorobanAuthSigningCard = ({
       {isExpanded && (
         <div className="SorobanAuthSigning__body">
           {/* Sign mode radio */}
-          <div className="SorobanAuthSigning__sign-mode">
-            <label className="SorobanAuthSigning__radio">
-              <input
-                type="radio"
-                name="sign-mode"
-                value="all"
-                checked={signMode === "all"}
-                onChange={() => setSignMode("all")}
-              />
-              <Text as="span" size="xs" weight="bold">
-                Sign all entries
-              </Text>
-            </label>
-            <label className="SorobanAuthSigning__radio">
-              <input
-                type="radio"
-                name="sign-mode"
-                value="individual"
-                checked={signMode === "individual"}
-                onChange={() => setSignMode("individual")}
-              />
-              <Text as="span" size="xs" weight="bold">
-                Sign individually
-              </Text>
-            </label>
-          </div>
+          <Box gap="md" direction="row">
+            <RadioButton
+              id="sign-mode-all"
+              label="Sign all entries"
+              fieldSize="sm"
+              name="sign-mode"
+              value="all"
+              checked={signMode === "all"}
+              onChange={() => setSignMode("all")}
+            />
+            <RadioButton
+              id="sign-mode-individual"
+              label="Sign individually"
+              fieldSize="sm"
+              name="sign-mode"
+              value="individual"
+              checked={signMode === "individual"}
+              onChange={() => setSignMode("individual")}
+            />
+          </Box>
 
           {/* Entry list */}
-          <div className="SorobanAuthSigning__entries">
-            {authEntriesXdr.map((entryXdr, idx) => (
-              <AuthEntryItem
-                key={`auth-entry-${idx}`}
-                index={idx}
-                entryXdr={entryXdr}
-                isSigned={Boolean(signedAuthEntriesXdr[idx])}
-                showSigningArea={signMode === "individual"}
-                builtXdr={builtXdr}
-                onAuthSigned={onAuthSigned}
-              />
-            ))}
+          <Box gap="md">
+            <div className="SorobanAuthSigning__entries">
+              {authEntriesXdr.map((entryXdr, idx) => (
+                <AuthEntryItem
+                  key={`auth-entry-${idx}`}
+                  index={idx}
+                  entryXdr={entryXdr}
+                  isSigned={Boolean(signedAuthEntriesXdr[idx])}
+                  showSigningArea={signMode === "individual"}
+                  builtXdr={builtXdr}
+                  onAuthSigned={onAuthSigned}
+                />
+              ))}
+            </div>
 
             {/* Shared signing area — only in "Sign all" mode */}
             {signMode === "all" && !allSigned && (
@@ -132,15 +129,7 @@ export const SorobanAuthSigningCard = ({
                 onDoneAction={onAuthSigned}
               />
             )}
-          </div>
-
-          {allSigned && (
-            <div className="SorobanAuthSigning__signed-status">
-              <Text as="div" size="sm" weight="medium">
-                All authorization entries signed
-              </Text>
-            </div>
-          )}
+          </Box>
         </div>
       )}
     </div>
