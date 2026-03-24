@@ -8,7 +8,7 @@ description: Guide for building React components using @stellar/design-system an
 ## Before Building Anything Custom
 
 Check if `@stellar/design-system` already has the component:
-https://design-system.stellar.org/
+https://github.com/stellar/stellar-design-system
 
 ## Commonly Used Design System Components
 
