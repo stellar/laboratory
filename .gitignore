@@ -51,7 +51,3 @@ mise.toml
 
 # Sentry Config File
 .env.sentry-build-plugin
-
-.claude/skills/new-tx-flow/SKILL.md
-.claude/skills/new-tx-step-content/SKILL.md
-.claude/skills/stellar-xdr-patterns/SKILL.md
