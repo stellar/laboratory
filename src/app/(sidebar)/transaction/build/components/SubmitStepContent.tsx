@@ -7,21 +7,30 @@ import {
   useRef,
   useState,
 } from "react";
-import { Button, Icon, Link, Text } from "@stellar/design-system";
+import { Button, Card, Icon } from "@stellar/design-system";
 
 import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 import { useStore } from "@/store/useStore";
+
+import {
+  SETTINGS_SUBMIT_METHOD,
+  XDR_TYPE_TRANSACTION_ENVELOPE,
+} from "@/constants/settings";
+import { Routes } from "@/constants/routes";
 
 import { useSubmitRpcTx } from "@/query/useSubmitRpcTx";
 import { useSubmitHorizonTx } from "@/query/useSubmitHorizonTx";
 
 import { Box } from "@/components/layout/Box";
-import { PageHeader } from "@/components/layout/PageHeader";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { TransactionHashReadOnlyField } from "@/components/TransactionHashReadOnlyField";
 import { CodeEditor } from "@/components/CodeEditor";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { TxResponse } from "@/components/TxResponse";
+import {
+  RpcErrorResponse,
+  HorizonErrorResponse,
+} from "@/components/TxErrorResponse";
 import { XdrLink } from "@/components/XdrLink";
 import { TxHashLink } from "@/components/TxHashLink";
 
@@ -31,17 +40,13 @@ import { openUrl } from "@/helpers/openUrl";
 import { delayedAction } from "@/helpers/delayedAction";
 import { localStorageSettings } from "@/helpers/localStorageSettings";
 import * as StellarXdr from "@/helpers/StellarXdr";
-import {
-  SETTINGS_SUBMIT_METHOD,
-  XDR_TYPE_TRANSACTION_ENVELOPE,
-} from "@/constants/settings";
-import { Routes } from "@/constants/routes";
+import { buildEndpointHref } from "@/helpers/buildEndpointHref";
 
 import { useScrollIntoView } from "@/hooks/useScrollIntoView";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
-import { buildEndpointHref } from "@/helpers/buildEndpointHref";
+import { BuildStepHeader } from "./BuildStepHeader";
 
 const SUBMIT_OPTIONS = [
   {
@@ -82,6 +87,7 @@ export const SubmitStepContent = () => {
 
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const responseSuccessEl = useRef<HTMLDivElement | null>(null);
+  const responseErrorEl = useRef<HTMLDivElement | null>(null);
 
   const {
     data: submitRpcResponse,
@@ -126,7 +132,10 @@ export const SubmitStepContent = () => {
         XDR_TYPE_TRANSACTION_ENVELOPE,
         xdrBlob,
       );
-      return { jsonString, error: "" };
+      return {
+        jsonString: JSON.stringify(JSON.parse(jsonString), null, 2),
+        error: "",
+      };
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       return { jsonString: "", error: "Unable to decode XDR" };
@@ -159,8 +168,11 @@ export const SubmitStepContent = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRpcAvailable, isSoroban]);
 
-  // Scroll to success response
+  const isError = Boolean(submitRpcError || submitHorizonError);
+
+  // Scroll to success/error response
   useScrollIntoView(isSuccess, responseSuccessEl);
+  useScrollIntoView(isError, responseErrorEl);
 
   // Track submit events
   useEffect(() => {
@@ -275,6 +287,9 @@ export const SubmitStepContent = () => {
 
   const isSubmitDisabled = !submitMethod || !xdrBlob;
 
+  console.log({ submitHorizonResponse });
+  console.log({ submitRpcResponse });
+
   const renderSuccess = () => {
     if (isSubmitRpcSuccess && submitRpcResponse && network.id) {
       return (
@@ -290,12 +305,9 @@ export const SubmitStepContent = () => {
                 variant="secondary"
                 icon={<Icon.ArrowUpRight />}
                 onClick={() => {
-                  const href = buildEndpointHref(
-                    Routes.TRANSACTION_DASHBOARD,
-                    {
-                      transactionHash: submitRpcResponse.hash,
-                    },
-                  );
+                  const href = buildEndpointHref(Routes.TRANSACTION_DASHBOARD, {
+                    transactionHash: submitRpcResponse.hash,
+                  });
                   openUrl(href);
                 }}
               >
@@ -403,12 +415,9 @@ export const SubmitStepContent = () => {
                 variant="secondary"
                 icon={<Icon.ArrowUpRight />}
                 onClick={() => {
-                  const href = buildEndpointHref(
-                    Routes.TRANSACTION_DASHBOARD,
-                    {
-                      transactionHash: submitHorizonResponse.hash,
-                    },
-                  );
+                  const href = buildEndpointHref(Routes.TRANSACTION_DASHBOARD, {
+                    transactionHash: submitHorizonResponse.hash,
+                  });
                   openUrl(href);
                 }}
               >
@@ -502,47 +511,59 @@ export const SubmitStepContent = () => {
     return null;
   };
 
+  const renderError = () => {
+    if (submitRpcError) {
+      return (
+        <div ref={responseErrorEl}>
+          <RpcErrorResponse error={submitRpcError} />
+        </div>
+      );
+    }
+
+    if (submitHorizonError) {
+      return (
+        <div ref={responseErrorEl}>
+          <HorizonErrorResponse error={submitHorizonError} />
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <Box gap="md">
-      <Box gap="md" direction="row" justify="space-between" align="center">
-        <PageHeader heading="Submit transaction" as="h1" />
+      <BuildStepHeader
+        heading="Submit transaction"
+        headingAs="h1"
+        onClearAll={resetAll}
+      />
 
-        <Text as="div" size="xs">
-          <Link
-            variant="primary"
-            onClick={() => {
-              resetAll();
-            }}
-          >
-            Clear all
-          </Link>
-        </Text>
-      </Box>
-
-      {!isSuccess ? (
-        <>
-          <XdrPicker
-            id="submit-tx-xdr"
-            label="Base-64 encoded XDR"
-            value={xdrBlob}
-            error=""
-            readOnly
-            hasCopyButton
-          />
-
-          <TransactionHashReadOnlyField
-            xdr={xdrBlob}
-            networkPassphrase={network.passphrase}
-          />
-
-          {xdrJson?.jsonString ? (
-            <CodeEditor
-              title="Transaction envelope"
-              value={xdrJson.jsonString}
-              selectedLanguage="json"
+      <Card>
+        <Box gap="xl">
+          <Box gap="md">
+            <XdrPicker
+              id="submit-tx-xdr"
+              label="Base-64 encoded XDR"
+              value={xdrBlob}
+              error=""
+              readOnly
+              hasCopyButton
             />
-          ) : null}
 
+            <TransactionHashReadOnlyField
+              xdr={xdrBlob}
+              networkPassphrase={network.passphrase}
+            />
+
+            {xdrJson?.jsonString ? (
+              <CodeEditor
+                title="Transaction envelope"
+                value={xdrJson.jsonString}
+                selectedLanguage="json"
+              />
+            ) : null}
+          </Box>
           <Box gap="sm" direction="row" align="center" justify="left">
             <Button
               disabled={isSubmitDisabled}
@@ -615,10 +636,11 @@ export const SubmitStepContent = () => {
               </div>
             </div>
           </Box>
-        </>
-      ) : null}
+        </Box>
+      </Card>
 
       {renderSuccess()}
+      {renderError()}
     </Box>
   );
 };

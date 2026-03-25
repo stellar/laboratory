@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, Link } from "@stellar/design-system";
+import { Card } from "@stellar/design-system";
 
 import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 
@@ -23,6 +23,7 @@ import { SimulateStepContent } from "./components/SimulateStepContent";
 import { SignStepContent } from "./components/SignStepContent";
 import { ValidateStepContent } from "./components/ValidateStepContent";
 import { SubmitStepContent } from "./components/SubmitStepContent";
+import { BuildStepHeader } from "./components/BuildStepHeader";
 
 import "./styles.scss";
 
@@ -146,19 +147,12 @@ export default function BuildTransaction() {
 
   const renderBuildStep = () => (
     <Box gap="md">
-      <Box gap="md" direction="row" justify="space-between" align="center">
-        <PageHeader heading="Build transaction" />
-
-        <Link
-          variant="primary"
-          addlClassName="resetButton"
-          onClick={() => {
-            resetAll();
-          }}
-        >
-          Clear all
-        </Link>
-      </Box>
+      <BuildStepHeader
+        heading="Build transaction"
+        onClearAll={resetAll}
+        clearAllLinkClassName="resetButton"
+        wrapClearAllInText={false}
+      />
 
       <Card>
         <Params />
