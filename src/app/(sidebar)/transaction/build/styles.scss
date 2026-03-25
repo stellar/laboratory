@@ -18,6 +18,16 @@
     flex: 1;
     min-width: 0;
     max-width: pxToRem(738px);
+
+    .SignTransactionXdr {
+      background-color: var(--sds-clr-gray-01);
+    }
+
+    .resetButton {
+      font-weight: var(--sds-fw-semi-bold);
+      font-size: pxToRem(12px);
+      line-height: pxToRem(20px);
+    }
   }
 
   &__header {
@@ -94,5 +104,44 @@
       background-color: var(--sds-clr-green-03);
       color: var(--sds-clr-green-11);
     }
+  }
+}
+
+.SignStepContent {
+  &__label {
+    color: var(--sds-clr-gray-09);
+  }
+
+  &__xdrBox {
+    background-color: var(--sds-clr-gray-03);
+    border-radius: pxToRem(12px);
+    padding: pxToRem(16px);
+    word-break: break-all;
+  }
+
+  &__xdrText {
+    font-family: var(--sds-ff-monospace);
+    font-size: pxToRem(14px);
+    line-height: pxToRem(18px);
+    letter-spacing: -0.02em;
+    color: var(--sds-clr-gray-12);
+  }
+
+  &__feeBumpRow {
+    padding-top: pxToRem(16px);
+
+    .Link {
+      font-size: pxToRem(14px);
+      font-weight: var(--sds-fw-semi-bold);
+    }
+  }
+
+  &__feeBumpLink {
+    font-size: pxToRem(14px);
+    font-weight: var(--sds-fw-semi-bold);
+  }
+
+  &__feeBumpText {
+    color: var(--sds-clr-gray-09);
   }
 }
