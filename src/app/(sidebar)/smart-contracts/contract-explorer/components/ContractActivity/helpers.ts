@@ -1,4 +1,5 @@
-import { Address, xdr } from "@stellar/stellar-sdk";
+import { Address, scValToNative, xdr } from "@stellar/stellar-sdk";
+import { rpc as StellarRpc } from "@stellar/stellar-sdk";
 
 // =============================================================================
 // Relative timestamp formatting
@@ -184,4 +185,60 @@ export const parseScVal = (scVal: xdr.ScVal): ParsedScVal => {
       };
     }
   }
+};
+
+// =============================================================================
+// humanizeEvents-based parsing
+// =============================================================================
+
+export interface HumanizedEvent {
+  /** Event type: "contract", "system", or "diagnostic" */
+  type: string;
+  /** Contract ID (C... strkey), if present */
+  contractId?: string;
+  /** Topics converted to native JS values via scValToNative */
+  topics: unknown[];
+  /** Event data converted to native JS value via scValToNative */
+  data: unknown;
+}
+
+export interface HumanizedEventWithMeta extends HumanizedEvent {
+  /** Transaction hash */
+  txHash: string;
+  /** Ledger number */
+  ledger: number;
+  /** ISO timestamp of ledger close */
+  ledgerClosedAt: string;
+  /** Original event ID */
+  id: string;
+}
+
+/**
+ * Parses raw RPC event responses using the SDK's `scValToNative` utility.
+ * Converts XDR ScVal topics and data into native JS values (strings, BigInts,
+ * addresses, etc.) while preserving event metadata (txHash, ledger, timestamp).
+ *
+ * This is a higher-level alternative to the manual `parseScVal` approach —
+ * it delegates type conversion to the SDK's `scValToNative`.
+ *
+ * @param events - Array of raw event responses from `getEvents()`
+ * @returns Array of humanized events with metadata attached
+ *
+ * @example
+ * const humanized = humanizeContractEvents(eventsData.events);
+ * // [{ type: "contract", topics: ["transfer", "G...", "G..."], data: 1000n, txHash: "abc...", ... }]
+ */
+export const humanizeContractEvents = (
+  events: StellarRpc.Api.EventResponse[],
+): HumanizedEventWithMeta[] => {
+  return events.map((e) => ({
+    type: e.type,
+    contractId: e.contractId?.toString(),
+    topics: e.topic.map((t: xdr.ScVal) => scValToNative(t)),
+    data: scValToNative(e.value),
+    txHash: e.txHash,
+    ledger: e.ledger,
+    ledgerClosedAt: e.ledgerClosedAt,
+    id: e.id,
+  }));
 };
