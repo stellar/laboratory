@@ -55,9 +55,13 @@ export const ContractActivityCard = ({
       {/* Header row */}
       <div className="ContractActivity__cardHeader">
         <SdsLink href={txDashboardUrl}>
-          <Badge variant="secondary" size="sm">
+          <Badge
+            variant="secondary"
+            size="sm"
+            icon={<Icon.LinkExternal01 />}
+            iconPosition="right"
+          >
             {truncateHash(event.txHash)}
-            <Icon.LinkExternal01 />
           </Badge>
         </SdsLink>
 

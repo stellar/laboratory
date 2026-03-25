@@ -37,6 +37,7 @@ import {
 
 import { ContractSpecMeta } from "./ContractSpecMeta";
 import { ContractStorage } from "./ContractStorage";
+import { ContractActivity } from "./ContractActivity";
 import { VersionHistory } from "./VersionHistory";
 import { BuildInfo } from "./BuildInfo";
 import { SourceCode } from "./SourceCode";
@@ -68,7 +69,8 @@ export const ContractInfo = ({
     | "contract-source-code"
     | "contract-contract-storage"
     | "contract-version-history"
-    | "contract-build-info";
+    | "contract-build-info"
+    | "contract-activity";
 
   const [activeTab, setActiveTab] = useState<ContractTabId>(
     "contract-contract-spec",
@@ -420,6 +422,18 @@ export const ContractInfo = ({
                 </NoDataMessage>
               ),
               isDisabled: !isDataLoaded || isSacType,
+            }}
+            tab8={{
+              id: "contract-activity",
+              label: "Activity (events)",
+              content: (
+                <ContractActivity
+                  isActive={activeTab === "contract-activity"}
+                  contractId={contractId || ""}
+                  rpcUrl={network.rpcUrl}
+                />
+              ),
+              isDisabled: !isDataLoaded,
             }}
             activeTabId={activeTab}
             onTabChange={(tabId) => {

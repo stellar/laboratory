@@ -73,7 +73,9 @@ const i128ToString = (parts: xdr.Int128Parts): string => {
   const hi = BigInt(parts.hi().toString());
   const lo = BigInt(parts.lo().toString());
   // hi is the high 64 bits, lo is the unsigned low 64 bits
-  const value = (hi << 64n) | (lo & ((1n << 64n) - 1n));
+  const SHIFT = BigInt(64);
+  const MASK = (BigInt(1) << SHIFT) - BigInt(1);
+  const value = (hi << SHIFT) | (lo & MASK);
   return value.toString();
 };
 
@@ -86,7 +88,9 @@ const i128ToString = (parts: xdr.Int128Parts): string => {
 const u128ToString = (parts: xdr.UInt128Parts): string => {
   const hi = BigInt(parts.hi().toString());
   const lo = BigInt(parts.lo().toString());
-  const value = (hi << 64n) | (lo & ((1n << 64n) - 1n));
+  const SHIFT = BigInt(64);
+  const MASK = (BigInt(1) << SHIFT) - BigInt(1);
+  const value = (hi << SHIFT) | (lo & MASK);
   return value.toString();
 };
 
