@@ -21,6 +21,7 @@ import { ClassicTransactionXdr } from "./components/ClassicTransactionXdr";
 import { SorobanTransactionXdr } from "./components/SorobanTransactionXdr";
 import { SimulateStepContent } from "./components/SimulateStepContent";
 import { SignStepContent } from "./components/SignStepContent";
+import { ValidateStepContent } from "./components/ValidateStepContent";
 
 import "./styles.scss";
 
@@ -29,6 +30,7 @@ export default function BuildTransaction() {
     build,
     simulate,
     sign,
+    validate,
     activeStep,
     highestCompletedStep,
     setActiveStep,
@@ -44,8 +46,14 @@ export default function BuildTransaction() {
   const { soroban } = build;
   const isSoroban = Boolean(soroban.operation.operation_type);
 
+  const hasAuthEntries = Boolean(
+    simulate.authEntriesXdr && simulate.authEntriesXdr.length > 0,
+  );
+
   const steps: TransactionStepName[] = isSoroban
-    ? ["build", "simulate", "sign", "submit"]
+    ? hasAuthEntries
+      ? ["build", "simulate", "sign", "validate", "submit"]
+      : ["build", "simulate", "sign", "submit"]
     : ["build", "sign", "submit"];
 
   const { handleNext, handleBack, handleStepClick } = useTransactionFlow({
@@ -75,6 +83,9 @@ export default function BuildTransaction() {
     }
     if (activeStep === "sign") {
       return !sign.signedXdr;
+    }
+    if (activeStep === "validate") {
+      return !validate?.validatedXdr;
     }
     return false;
   };
@@ -185,6 +196,7 @@ export default function BuildTransaction() {
             {activeStep === "build" && renderBuildStep()}
             {activeStep === "simulate" && <SimulateStepContent />}
             {activeStep === "sign" && <SignStepContent />}
+            {activeStep === "validate" && <ValidateStepContent />}
 
             <TransactionFlowFooter
               steps={steps}

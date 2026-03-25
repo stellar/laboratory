@@ -155,6 +155,9 @@ export enum TrackingEvent {
   TRANSACTION_SIGN_FEE_BUMP = "transaction: sign: fee bump",
   // Transactions - simulate
   TRANSACTION_SIMULATE = "transaction: simulate",
+  // Transactions - validate
+  TRANSACTION_VALIDATE_AUTH_ENFORCE_SUCCESS = "transaction: validate: auth enforce: success",
+  TRANSACTION_VALIDATE_AUTH_ENFORCE_FAILURE = "transaction: validate: auth enforce: failure",
   // Transactions - submit
   TRANSACTION_SUBMIT_SUCCESS = "transaction: submit: success",
   TRANSACTION_SUBMIT_ERROR = "transaction: submit: error",

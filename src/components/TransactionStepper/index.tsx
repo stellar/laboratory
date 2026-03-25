@@ -1,5 +1,7 @@
 "use client";
 
+import { Text } from "@stellar/design-system";
+
 import "./styles.scss";
 
 export type TransactionStepName =
@@ -17,6 +19,11 @@ const STEP_LABELS: Record<TransactionStepName, string> = {
   validate: "Validate transaction",
   sign: "Sign transaction",
   submit: "Submit transaction",
+};
+
+const STEP_DESCRIPTIONS: Partial<Record<TransactionStepName, string>> = {
+  validate:
+    "This transaction contains authorization entries that need to be validated before submitting.",
 };
 
 /**
@@ -81,6 +88,15 @@ export const TransactionStepper = ({
             </div>
             <div className="TransactionStepper__label">
               {STEP_LABELS[step]}
+              {STEP_DESCRIPTIONS[step] && (
+                <Text
+                  size="xs"
+                  as="div"
+                  addlClassName="TransactionStepper__description"
+                >
+                  {STEP_DESCRIPTIONS[step]}
+                </Text>
+              )}
             </div>
           </div>
         );

@@ -52,7 +52,7 @@
 
   &__label {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     padding-top: pxToRem(5px);
     font-size: pxToRem(14px);
     line-height: pxToRem(20px);
@@ -71,5 +71,11 @@
         }
       }
     }
+  }
+
+  &__description {
+    white-space: normal;
+    color: var(--sds-clr-gray-09);
+    padding-top: pxToRem(2px);
   }
 }
