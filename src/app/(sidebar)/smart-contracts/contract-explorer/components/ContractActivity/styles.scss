@@ -1,0 +1,147 @@
+@use "../../../../../../styles/utils.scss" as *;
+
+.ContractActivity {
+  display: flex;
+  flex-direction: column;
+  gap: pxToRem(16px);
+
+  &__toolbar {
+    display: flex;
+    align-items: center;
+    gap: pxToRem(12px);
+
+    .Text {
+      color: var(--sds-clr-gray-09);
+    }
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: pxToRem(16px);
+  }
+
+  // Event card
+  &__card {
+    background: var(--sds-clr-gray-01);
+    border: 1px solid var(--sds-clr-gray-04);
+    border-radius: pxToRem(12px);
+    padding: pxToRem(24px);
+    display: flex;
+    flex-direction: column;
+    gap: pxToRem(16px);
+  }
+
+  // Header: tx hash badge + timestamp
+  &__cardHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: pxToRem(8px);
+
+    .Badge {
+      display: inline-flex;
+      align-items: center;
+      gap: pxToRem(4px);
+      font-family: var(--sds-ff-monospace);
+
+      svg {
+        width: pxToRem(12px);
+        height: pxToRem(12px);
+      }
+    }
+  }
+
+  &__timestamp {
+    font-size: pxToRem(13px);
+    color: var(--sds-clr-gray-09);
+    white-space: nowrap;
+  }
+
+  // Gray event body box
+  &__body {
+    background: var(--sds-clr-gray-03);
+    border-radius: pxToRem(8px);
+    padding: pxToRem(12px);
+    display: flex;
+    flex-direction: column;
+    gap: pxToRem(8px);
+  }
+
+  // Individual data row
+  &__row {
+    display: flex;
+    align-items: flex-start;
+    gap: pxToRem(12px);
+    font-family: var(--sds-ff-monospace);
+    font-size: pxToRem(13px);
+    line-height: pxToRem(20px);
+    word-break: break-all;
+  }
+
+  &__rowLabel {
+    color: var(--sds-clr-gray-09);
+    min-width: pxToRem(80px);
+    flex-shrink: 0;
+    font-family: var(--sds-ff-body);
+    font-size: pxToRem(13px);
+  }
+
+  &__rowValue {
+    color: var(--sds-clr-gray-12);
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: pxToRem(6px);
+  }
+
+  // Type annotation subscript
+  &__typeAnnotation {
+    font-family: var(--sds-ff-body);
+    font-size: pxToRem(11px);
+    color: var(--sds-clr-gray-08);
+    flex-shrink: 0;
+  }
+
+  // Address link styling
+  &__addressLink {
+    text-decoration: underline;
+  }
+
+  // Pagination page count
+  &__pageCount {
+    font-size: pxToRem(14px);
+    color: var(--sds-clr-gray-09);
+    white-space: nowrap;
+    padding: 0 pxToRem(4px);
+  }
+
+  // Collapsible JSON section
+  &__json {
+    display: flex;
+    flex-direction: column;
+    gap: pxToRem(8px);
+  }
+
+  &__jsonToggle {
+    display: inline-flex;
+    align-items: center;
+    gap: pxToRem(4px);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-size: pxToRem(13px);
+    color: var(--sds-clr-lilac-09);
+    font-family: var(--sds-ff-body);
+
+    svg {
+      width: pxToRem(14px);
+      height: pxToRem(14px);
+    }
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
