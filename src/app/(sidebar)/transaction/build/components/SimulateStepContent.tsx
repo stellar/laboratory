@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   Button,
@@ -9,9 +9,7 @@ import {
   Link,
   Input,
   Select,
-  Text,
 } from "@stellar/design-system";
-import { xdr } from "@stellar/stellar-sdk";
 
 import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 import { useStore } from "@/store/useStore";
@@ -26,9 +24,11 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { XdrFormat } from "@/components/XdrFormat";
 import { SdsLink } from "@/components/SdsLink";
 import { ExpandBox } from "@/components/ExpandBox";
+import { SorobanAuthSigningCard } from "@/components/SorobanAuthSigning";
 
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
-import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
+import { checkIsReadOnly } from "@/helpers/sorobanUtils";
+import { extractAuthEntries } from "@/helpers/sorobanAuthUtils";
 
 import { validate } from "@/validate";
 
@@ -40,9 +40,6 @@ import {
   SimulationResourceTable,
   getSimulationResourceInfo,
 } from "./SimulationResourceTable";
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type SimulationResponse = Record<string, any>;
 
 /**
  * Simulate step content for the single-page transaction flow (Soroban only).
@@ -62,6 +59,8 @@ export const SimulateStepContent = () => {
     setSimulateInstructionLeeway,
     setSimulationResult,
     setSimulationReadOnly,
+    setAuthEntriesXdr,
+    setSignedAuthEntriesXdr,
   } = useBuildFlowStore();
 
   const [instrLeewayError, setInstrLeewayError] = useState("");
@@ -95,63 +94,6 @@ export const SimulateStepContent = () => {
 
   const isActionDisabled =
     !network.rpcUrl || !builtXdr || Boolean(instrLeewayError);
-
-  /**
-   * Extracts auth entries from the simulation response.
-   * Auth entries live in result.results[].auth[] in the RPC response.
-   */
-  const extractAuthEntries = useCallback(
-    (responseData: SimulationResponse): string[] => {
-      const authEntries: string[] = [];
-      const results = responseData?.result?.results as
-        | Array<{ auth?: string[] }>
-        | undefined;
-
-      if (Array.isArray(results)) {
-        for (const r of results) {
-          if (Array.isArray(r.auth)) {
-            authEntries.push(...r.auth);
-          }
-        }
-      }
-
-      return authEntries;
-    },
-    [],
-  );
-
-  /**
-   * Determines if the simulation result indicates a read-only transaction
-   * (no auth entries and no write footprint).
-   */
-  const checkIsReadOnly = useCallback(
-    (responseData: SimulationResponse): boolean => {
-      try {
-        const result = responseData?.result;
-
-        if (!result) return false;
-
-        // Check if there's a transaction data with no write footprint
-        const transactionData = result?.transactionData as string | undefined;
-        if (transactionData) {
-          const sorobanData = xdr.SorobanTransactionData.fromXDR(
-            transactionData,
-            "base64",
-          );
-          const writeKeys = sorobanData
-            .resources()
-            .footprint()
-            .readWrite().length;
-          return writeKeys === 0;
-        }
-
-        return false;
-      } catch {
-        return false;
-      }
-    },
-    [],
-  );
 
   /**
    * Run the simulation against the RPC endpoint.
@@ -198,6 +140,12 @@ export const SimulateStepContent = () => {
           // Check if read-only
           const isReadOnly = checkIsReadOnly(simBase64Response);
           setSimulationReadOnly(isReadOnly);
+
+          // Extract and store auth entries
+          const entries = extractAuthEntries(simBase64Response);
+          if (entries.length > 0) {
+            setAuthEntriesXdr(entries);
+          }
         }
       }
     } catch {
@@ -338,7 +286,6 @@ export const SimulateStepContent = () => {
         isReadOnly: Boolean(simulate.isSimulationReadOnly),
         isSimulationSuccess,
         hasAuthEntries,
-        authEntriesCount: authEntries.length,
         hasError,
         errorMessage: hasError ? getErrorMessage() : "",
       })}
@@ -376,32 +323,22 @@ export const SimulateStepContent = () => {
               </Box>
             )}
 
-            {/* Auth entries info */}
+            {/* Auth entry signing card */}
             {hasAuthEntries && (
-              <Card>
-                <Box gap="md">
-                  <Alert
-                    variant="primary"
-                    placement="inline"
-                    title={`${authEntries.length} authorization ${authEntries.length === 1 ? "entry" : "entries"} detected`}
-                  >
-                    These auth entries must be signed before the transaction
-                    envelope can be assembled and submitted. Auth signing will
-                    be available in a future update.
-                  </Alert>
-
-                  {/* Auth entry list */}
-                  <Box gap="sm">
-                    {authEntries.map((entry, index) => (
-                      <AuthEntryPreview
-                        key={`auth-entry-${index}`}
-                        index={index}
-                        entryXdr={entry}
-                      />
-                    ))}
-                  </Box>
-                </Box>
-              </Card>
+              <SorobanAuthSigningCard
+                authEntriesXdr={authEntries}
+                signedAuthEntriesXdr={simulate.signedAuthEntriesXdr || []}
+                builtXdr={builtXdr}
+                onAuthSigned={({ signedXdr }) => {
+                  // TODO: Replace with authorizeEntry() logic — SignTransactionXdr
+                  // signs the transaction envelope, but auth entries need
+                  // authorizeEntry() from @stellar/stellar-sdk to sign each
+                  // SorobanAuthorizationEntry individually.
+                  if (signedXdr) {
+                    setSignedAuthEntriesXdr(authEntries);
+                  }
+                }}
+              />
             )}
           </Box>
         </Card>
@@ -410,150 +347,16 @@ export const SimulateStepContent = () => {
   );
 };
 
-/**
- * Displays a preview of a single auth entry in the simulation results.
- *
- * @param index - The entry index (0-based)
- * @param entryXdr - The base64-encoded SorobanAuthorizationEntry XDR
- */
-const AuthEntryPreview = ({
-  index,
-  entryXdr,
-}: {
-  index: number;
-  entryXdr: string;
-}) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  const info: {
-    credentialsType: string;
-    contractId?: string;
-    functionName?: string;
-  } = { credentialsType: "unknown" };
-
-  try {
-    const entry = xdr.SorobanAuthorizationEntry.fromXDR(entryXdr, "base64");
-    const credentials = entry.credentials();
-
-    if (
-      credentials.switch().name === "sorobanCredentialsSourceAccount" ||
-      credentials.switch().value === 0
-    ) {
-      info.credentialsType = "Source Account";
-    } else {
-      info.credentialsType = "Address";
-
-      try {
-        const rootInvocation = entry.rootInvocation();
-        const contractFn = rootInvocation.function();
-
-        if (
-          contractFn.switch().name === "sorobanAuthorizedFunctionTypeContractFn"
-        ) {
-          const invokeContract = contractFn.contractFn();
-          const contractIdBuf = invokeContract.contractAddress().contractId();
-          info.contractId = Array.from(contractIdBuf as unknown as Uint8Array)
-            .map((b) => b.toString(16).padStart(2, "0"))
-            .join("");
-          info.functionName = invokeContract.functionName().toString();
-        }
-      } catch {
-        // Parsing inner details may fail for complex entries
-      }
-    }
-  } catch {
-    // If XDR parsing fails, show raw entry
-  }
-
-  return (
-    <Card variant="secondary">
-      <Box gap="sm">
-        <Box
-          gap="sm"
-          direction="row"
-          align="center"
-          justify="space-between"
-          wrap="wrap"
-        >
-          <Box gap="sm" direction="row" align="center">
-            <Text as="div" size="sm" weight="medium">
-              {`Entry #${index + 1}`}
-            </Text>
-            <Text
-              as="span"
-              size="xs"
-              addlClassName="SimulateStepContent__badge SimulateStepContent__badge--unsigned"
-            >
-              Unsigned
-            </Text>
-          </Box>
-          <Button
-            size="sm"
-            variant="tertiary"
-            icon={isExpanded ? <Icon.ChevronUp /> : <Icon.ChevronDown />}
-            onClick={() => setIsExpanded(!isExpanded)}
-          />
-        </Box>
-
-        {isExpanded && (
-          <Box gap="xs">
-            <AuthEntryInfoRow
-              label="Credentials type"
-              value={info.credentialsType}
-            />
-            {info.contractId && (
-              <AuthEntryInfoRow
-                label="Contract ID"
-                value={shortenStellarAddress(info.contractId)}
-              />
-            )}
-            {info.functionName && (
-              <AuthEntryInfoRow label="Function" value={info.functionName} />
-            )}
-            <Box gap="xs">
-              <Text as="div" size="xs" weight="medium">
-                Raw XDR
-              </Text>
-              <Text as="div" size="xs">
-                {`${entryXdr.substring(0, 80)}...`}
-              </Text>
-            </Box>
-          </Box>
-        )}
-      </Box>
-    </Card>
-  );
-};
-
-const AuthEntryInfoRow = ({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) => (
-  <Box gap="xs" direction="row" justify="space-between">
-    <Text as="div" size="xs">
-      {label}
-    </Text>
-    <Text as="div" size="xs" weight="medium">
-      {value}
-    </Text>
-  </Box>
-);
-
 const renderAlert = ({
   isReadOnly,
   isSimulationSuccess,
   hasAuthEntries,
-  authEntriesCount,
   hasError,
   errorMessage,
 }: {
   isReadOnly: boolean;
   isSimulationSuccess: boolean;
   hasAuthEntries: boolean;
-  authEntriesCount: number;
   hasError: boolean;
   errorMessage: string;
 }) => {
@@ -587,12 +390,13 @@ const renderAlert = ({
   if (hasAuthEntries && isSimulationSuccess) {
     return (
       <Alert
-        variant="primary"
+        variant="success"
         placement="inline"
-        title="Auth entries detected"
+        title="Transaction simulation successful"
         icon={<Icon.CheckCircle />}
       >
-        {`${authEntriesCount} authorization ${authEntriesCount === 1 ? "entry" : "entries"} detected. Auth entries must be signed before the transaction can be submitted.`}
+        This transaction contains <strong>authorization entries</strong> that
+        need to be validated before submitting.
       </Alert>
     );
   }

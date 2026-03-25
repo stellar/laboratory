@@ -470,7 +470,7 @@ export const SignTransactionXdr = ({
   };
 
   const SignTxButton = ({
-    label = "Sign transaction",
+    label = "Sign",
     onSign,
     onClear,
     isDisabled,
@@ -690,7 +690,7 @@ export const SignTransactionXdr = ({
           />
           <Tab
             id={`${id}-signature`}
-            label="Add a signature to transaction envelope"
+            label="Transaction envelope"
             isSelected={selectedTab === "signature"}
             signatureCount={allSigsCount.signature}
             onTabChange={(tabId) => {
@@ -724,18 +724,20 @@ export const SignTransactionXdr = ({
             autocomplete="off"
             isPassword
             useSecretSelector
-          />
-          <SignTxButton
-            onSign={async () => {
-              await handleSign({ sigType: "secretKey", isClear: false });
-            }}
-            onClear={async () => {
-              await handleSign({ sigType: "secretKey", isClear: true });
-              setSecretKeyInputs([""]);
-            }}
-            isDisabled={!HAS_SECRET_KEYS || HAS_INVALID_SECRET_KEYS}
-            successMsg={secretKeySuccessMsg}
-            errorMsg={secretKeyErrorMsg}
+            submitButton={
+              <SignTxButton
+                onSign={async () => {
+                  await handleSign({ sigType: "secretKey", isClear: false });
+                }}
+                onClear={async () => {
+                  await handleSign({ sigType: "secretKey", isClear: true });
+                  setSecretKeyInputs([""]);
+                }}
+                isDisabled={!HAS_SECRET_KEYS || HAS_INVALID_SECRET_KEYS}
+                successMsg={secretKeySuccessMsg}
+                errorMsg={secretKeyErrorMsg}
+              />
+            }
           />
         </div>
 
