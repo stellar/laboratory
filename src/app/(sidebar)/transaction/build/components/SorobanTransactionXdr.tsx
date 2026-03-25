@@ -2,99 +2,66 @@
 
 import { useEffect } from "react";
 import { useStore } from "@/store/useStore";
+import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 import { TransactionBuilder } from "@stellar/stellar-sdk";
-import { useRouter } from "next/navigation";
-
-import { Routes } from "@/constants/routes";
 
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
-
-import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { TransactionXdrDisplay } from "./TransactionXdrDisplay";
 
 export const SorobanTransactionXdr = () => {
   const { network, transaction } = useStore();
-  const { updateSignActiveView, updateSignImportXdr, updateSorobanBuildXdr } =
-    transaction;
-  const { soroban, isValid } = transaction.build;
-  const { xdr: sorobanXdr } = soroban;
-  const router = useRouter();
+  const { isValid } = transaction.build;
+  const { build, setBuildSorobanXdr } = useBuildFlowStore();
+  const { soroban } = build;
 
   useEffect(() => {
     // Reset transaction.xdr if the transaction is not valid
     if (!(isValid.params && isValid.operations)) {
-      updateSorobanBuildXdr("");
+      setBuildSorobanXdr("");
     }
-    // Not including updateBuildXdr
+    // Not including setBuildSorobanXdr
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isValid.params, isValid.operations]);
+
+  // Sync soroban XDR to the new flow store
+  useEffect(() => {
+    setBuildSorobanXdr(soroban.xdr);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [soroban.xdr]);
 
   if (!(isValid.params && isValid.operations)) {
     return null;
   }
 
-  if (sorobanXdr) {
-    return renderSorobanTxResultDisplay({
-      sorobanXdr,
-      networkPassphrase: network.passphrase,
-      onSignClick: () => {
-        updateSignImportXdr(sorobanXdr);
-        updateSignActiveView("overview");
+  if (soroban.xdr) {
+    try {
+      const txnHash = TransactionBuilder.fromXDR(
+        soroban.xdr,
+        network.passphrase,
+      )
+        .hash()
+        .toString("hex");
 
-        trackEvent(TrackingEvent.TRANSACTION_BUILD_SIGN_IN_TX_SIGNER, {
-          txType: "smart contract",
-        });
-
-        router.push(Routes.SIGN_TRANSACTION);
-      },
-      onViewXdrClick: () => {
-        trackEvent(TrackingEvent.TRANSACTION_BUILD_VIEW_IN_XDR, {
-          txType: "smart contract",
-        });
-      },
-    });
-  }
-  return null;
-};
-
-export const renderSorobanTxResultDisplay = ({
-  sorobanXdr,
-  networkPassphrase,
-  onSignClick,
-  onViewXdrClick,
-}: {
-  sorobanXdr: string;
-  networkPassphrase: string;
-  onSignClick: () => void;
-  onViewXdrClick: () => void;
-}) => {
-  try {
-    if (!sorobanXdr) {
-      return null;
+      return (
+        <TransactionXdrDisplay
+          xdr={soroban.xdr}
+          networkPassphrase={network.passphrase}
+          txnHash={txnHash}
+          dataTestId="build-soroban-transaction-envelope-xdr"
+          txType="smart-contract"
+        />
+      );
+    } catch (e: any) {
+      return (
+        <ValidationResponseCard
+          variant="error"
+          title="Transaction Error:"
+          response={e.toString()}
+        />
+      );
     }
-
-    const txnHash = TransactionBuilder.fromXDR(sorobanXdr, networkPassphrase)
-      .hash()
-      .toString("hex");
-
-    return (
-      <TransactionXdrDisplay
-        xdr={sorobanXdr}
-        networkPassphrase={networkPassphrase}
-        txnHash={txnHash}
-        dataTestId="build-soroban-transaction-envelope-xdr"
-        onSignClick={onSignClick}
-        onViewXdrClick={onViewXdrClick}
-      />
-    );
-  } catch (e: any) {
-    return (
-      <ValidationResponseCard
-        variant="error"
-        title="Transaction Error:"
-        response={e.toString()}
-      />
-    );
   }
+
+  return null;
 };

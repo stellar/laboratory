@@ -1,0 +1,13 @@
+@use "../../styles/utils.scss" as *;
+
+.TransactionFlowFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &__nav {
+    display: flex;
+    align-items: center;
+    gap: pxToRem(8px);
+  }
+}

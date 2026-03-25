@@ -701,3 +701,30 @@ export const convertSpecTypeToScValType = (type: string) => {
 };
 
 export const hasTypeAndValue = (v: any) => v?.type && v.value !== undefined;
+
+/**
+ * Determines if the simulation result indicates a read-only transaction
+ * (no auth entries and no write footprint).
+ */
+export const checkIsReadOnly = (responseData: Record<string, any>): boolean => {
+  try {
+    const result = responseData?.result;
+
+    if (!result) return false;
+
+    // Check if there's a transaction data with no write footprint
+    const transactionData = result?.transactionData as string | undefined;
+    if (transactionData) {
+      const sorobanData = xdr.SorobanTransactionData.fromXDR(
+        transactionData,
+        "base64",
+      );
+      const writeKeys = sorobanData.resources().footprint().readWrite().length;
+      return writeKeys === 0;
+    }
+
+    return false;
+  } catch {
+    return false;
+  }
+};

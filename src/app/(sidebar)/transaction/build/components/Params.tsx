@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, Icon } from "@stellar/design-system";
 import { MemoValue } from "@stellar/stellar-sdk";
 import { get, omit, set } from "lodash";
 
@@ -14,34 +13,29 @@ import {
   MemoPickerValue,
 } from "@/components/FormElements/MemoPicker";
 import { TimeBoundsPicker } from "@/components/FormElements/TimeBoundsPicker";
-import { PageCard } from "@/components/layout/PageCard";
 import { SourceAccountPicker } from "@/components/SourceAccountPicker";
 
 import { sanitizeObject } from "@/helpers/sanitizeObject";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { removeLeadingZeroes } from "@/helpers/removeLeadingZeroes";
 
-import { TransactionBuildParams } from "@/store/createStore";
+import { TransactionBuildParams } from "@/store/createTransactionFlowStore";
+import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 import { useStore } from "@/store/useStore";
 import { useAccountSequenceNumber } from "@/query/useAccountSequenceNumber";
 
 import { validate } from "@/validate";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
-import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { EmptyObj, KeysOfUnion } from "@/types/types";
 
 export const Params = () => {
   const requiredParams = ["source_account", "seq_num", "fee"] as const;
 
-  const { transaction, network } = useStore();
-  const { params: txnParams } = transaction.build;
-  const {
-    updateBuildParams,
-    updateBuildIsValid,
-    resetBuildParams,
-    setBuildParamsError,
-  } = transaction;
+  const { network } = useStore();
+  const { build, setBuildParams, updateBuildIsValid, setBuildParamsError } =
+    useBuildFlowStore();
+  const { params: txnParams } = build;
 
   const [paramsError, setParamsError] = useState<ParamsError>({});
 
@@ -124,7 +118,7 @@ export const Params = () => {
   }, [txnParams, setBuildParamsError]);
 
   const handleParamChange = <T,>(paramPath: string, value: T) => {
-    updateBuildParams(set({}, `${paramPath}`, value));
+    setBuildParams(set({}, `${paramPath}`, value));
   };
 
   const handleParamsError = <T,>(id: string, error: T) => {
@@ -268,120 +262,97 @@ export const Params = () => {
   };
 
   return (
-    <PageCard heading="Build transaction">
-      <Box gap="lg">
-        <SourceAccountPicker
-          value={txnParams.source_account}
-          error={paramsError.source_account}
-          onChange={handleSourceAccountChange}
-        />
+    <Box gap="lg">
+      <SourceAccountPicker
+        value={txnParams.source_account}
+        error={paramsError.source_account}
+        onChange={handleSourceAccountChange}
+      />
 
-        <PositiveIntPicker
-          id="seq_num"
-          label="Transaction sequence number"
-          placeholder="Ex: 559234806710273"
-          value={txnParams.seq_num}
-          error={paramsError.seq_num}
-          onChange={(e) => {
-            const id = "seq_num";
-            handleParamChange(id, e.target.value);
-            handleParamsError(id, validateParam(id, e.target.value));
-          }}
-          note="The transaction sequence number is usually one higher than current account sequence number."
-          rightElement={
-            <InputSideElement
-              variant="button"
-              onClick={() => {
-                handleParamChange("seq_num", "");
-                fetchSequenceNumber();
-              }}
-              placement="right"
-              disabled={!txnParams.source_account || paramsError.source_account}
-              isLoading={isFetchingSequenceNumber || isLoadingSequenceNumber}
-            >
-              Fetch next sequence
-            </InputSideElement>
-          }
-          infoLink="https://developers.stellar.org/docs/glossary#sequence-number"
-        />
-
-        <PositiveIntPicker
-          id="fee"
-          label="Base fee"
-          value={removeLeadingZeroes(txnParams.fee)}
-          error={paramsError.fee}
-          onChange={(e) => {
-            const id = "fee";
-            handleParamChange(id, e.target.value);
-            handleParamsError(id, validateParam(id, e.target.value));
-          }}
-          note={
-            <>
-              The base inclusion fee is currently set to 100 stroops (0.00001
-              lumens). For more real time inclusion fee, please see{" "}
-              <SdsLink href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getFeeStats">
-                getFeeStats
-              </SdsLink>{" "}
-              from the RPC. To learn more about fees, please see{" "}
-              <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/fees-resource-limits-metering">
-                Fees & Metering
-              </SdsLink>
-              .
-            </>
-          }
-          infoLink="https://developers.stellar.org/docs/learn/glossary#base-fee"
-        />
-
-        <MemoPicker
-          id="memo"
-          value={getMemoPickerValue()}
-          labelSuffix="optional"
-          error={paramsError.memo}
-          onChange={(_, memo) => {
-            const id = "memo";
-            handleParamChange(id, getMemoValue(memo));
-            handleParamsError(id, validateParam(id, memo));
-          }}
-          infoLink="https://developers.stellar.org/docs/encyclopedia/memos"
-        />
-
-        <TimeBoundsPicker
-          id="time"
-          value={{
-            min_time: txnParams.cond?.time?.min_time,
-            max_time: txnParams.cond?.time?.max_time,
-          }}
-          labelSuffix="optional"
-          error={paramsError.cond?.time}
-          onChange={(timeBounds) => {
-            const id = "cond.time";
-            handleParamChange(id, timeBounds);
-            handleParamsError(id, validateParam("cond", timeBounds));
-          }}
-          infoLink="https://developers.stellar.org/docs/learn/glossary#time-bounds"
-        />
-
-        <Box
-          gap="md"
-          direction="row"
-          align="center"
-          justify="end"
-          addlClassName="Params__buttons"
-        >
-          <Button
-            size="md"
-            variant="error"
+      <PositiveIntPicker
+        id="seq_num"
+        label="Transaction sequence number"
+        placeholder="Ex: 559234806710273"
+        value={txnParams.seq_num}
+        error={paramsError.seq_num}
+        onChange={(e) => {
+          const id = "seq_num";
+          handleParamChange(id, e.target.value);
+          handleParamsError(id, validateParam(id, e.target.value));
+        }}
+        note="The transaction sequence number is usually one higher than current account sequence number."
+        rightElement={
+          <InputSideElement
+            variant="button"
             onClick={() => {
-              resetBuildParams();
-              setParamsError({});
-              trackEvent(TrackingEvent.TRANSACTION_BUILD_CLEAR_PARAMS);
+              handleParamChange("seq_num", "");
+              fetchSequenceNumber();
             }}
-            icon={<Icon.RefreshCw01 />}
+            placement="right"
+            disabled={!txnParams.source_account || paramsError.source_account}
+            isLoading={isFetchingSequenceNumber || isLoadingSequenceNumber}
           >
-            Clear params
-          </Button>
-        </Box>
-      </Box>
-    </PageCard>
+            Fetch next sequence
+          </InputSideElement>
+        }
+        infoLink="https://developers.stellar.org/docs/glossary#sequence-number"
+      />
+
+      <PositiveIntPicker
+        id="fee"
+        label="Base fee"
+        value={removeLeadingZeroes(txnParams.fee)}
+        error={paramsError.fee}
+        onChange={(e) => {
+          const id = "fee";
+          handleParamChange(id, e.target.value);
+          handleParamsError(id, validateParam(id, e.target.value));
+        }}
+        note={
+          <>
+            The base inclusion fee is currently set to 100 stroops (0.00001
+            lumens). For more real time inclusion fee, please see{" "}
+            <SdsLink href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getFeeStats">
+              getFeeStats
+            </SdsLink>{" "}
+            from the RPC. To learn more about fees, please see{" "}
+            <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/fees-resource-limits-metering">
+              Fees & Metering
+            </SdsLink>
+            .
+          </>
+        }
+        infoLink="https://developers.stellar.org/docs/learn/glossary#base-fee"
+      />
+
+      <MemoPicker
+        id="memo"
+        value={getMemoPickerValue()}
+        labelSuffix="optional"
+        error={paramsError.memo}
+        onChange={(_, memo) => {
+          const id = "memo";
+          handleParamChange(id, getMemoValue(memo));
+          handleParamsError(id, validateParam(id, memo));
+        }}
+        infoLink="https://developers.stellar.org/docs/encyclopedia/memos"
+      />
+
+      <TimeBoundsPicker
+        id="time"
+        value={{
+          min_time: txnParams.cond?.time?.min_time,
+          max_time: txnParams.cond?.time?.max_time,
+        }}
+        labelSuffix="optional"
+        error={paramsError.cond?.time}
+        onChange={(timeBounds) => {
+          const id = "cond.time";
+          handleParamChange(id, timeBounds);
+          handleParamsError(id, validateParam("cond", timeBounds));
+        }}
+        infoLink="https://developers.stellar.org/docs/learn/glossary#time-bounds"
+      />
+    </Box>
   );
 };
