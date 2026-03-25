@@ -88,12 +88,17 @@ export const ClassicTransactionXdr = () => {
             // eslint-disable-next-line no-case-declarations
             const maxTime = value?.time?.max_time;
 
-            val = {
-              time: {
-                min_time: minTime ? BigInt(minTime) : 0,
-                max_time: maxTime ? BigInt(maxTime) : 0,
-              },
-            };
+            // When both time bounds are empty, use no preconditions
+            if (!minTime && !maxTime) {
+              val = "none";
+            } else {
+              val = {
+                time: {
+                  min_time: minTime ? BigInt(minTime) : BigInt(0),
+                  max_time: maxTime ? BigInt(maxTime) : BigInt(0),
+                },
+              };
+            }
             break;
           case "memo":
             // eslint-disable-next-line no-case-declarations
