@@ -14,7 +14,6 @@ import {
 } from "@/components/TransactionStepper";
 import { TransactionFlowFooter } from "@/components/TransactionFlowFooter";
 import { Tabs } from "@/components/Tabs";
-import { PageHeader } from "@/components/layout/PageHeader";
 import { Params } from "./components/Params";
 import { Operations } from "./components/Operations";
 import { ClassicTransactionXdr } from "./components/ClassicTransactionXdr";
