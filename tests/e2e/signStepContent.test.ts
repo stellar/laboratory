@@ -118,7 +118,7 @@ test.describe("Sign Step in Build Flow", () => {
 
     // Click sign button
     const signButton = signComponent.getByRole("button", {
-      name: "Sign transaction",
+      name: "Sign",
     });
     await signButton.click();
 
@@ -156,7 +156,7 @@ test.describe("Sign Step in Build Flow", () => {
     );
     await secretKeyInput.first().fill(MOCK_SECRET_KEY);
     await signComponent
-      .getByRole("button", { name: "Sign transaction" })
+      .getByRole("button", { name: "Sign" })
       .click();
 
     // Verify signed state
