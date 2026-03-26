@@ -78,12 +78,11 @@ export const TransactionStepper = ({
             data-is-active={isActive || undefined}
             data-is-completed={isCompleted || undefined}
             data-is-clickable={isClickable || undefined}
+            data-has-description={!!STEP_DESCRIPTIONS[step] || undefined}
             onClick={isClickable ? () => onStepClick(step) : undefined}
           >
             <div className="TransactionStepper__indicator">
-              <div className="TransactionStepper__badge">
-                {index + 1}
-              </div>
+              <div className="TransactionStepper__badge">{index + 1}</div>
               {!isLast && <div className="TransactionStepper__connector" />}
             </div>
             <div className="TransactionStepper__label">

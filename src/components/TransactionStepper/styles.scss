@@ -48,6 +48,10 @@
     height: pxToRem(24px);
     background-color: var(--sds-clr-gray-06);
     flex-shrink: 0;
+
+    [data-has-description="true"] & {
+      height: pxToRem(100px);
+    }
   }
 
   &__label {
@@ -59,6 +63,10 @@
     font-weight: var(--sds-fw-medium);
     color: var(--sds-clr-gray-09);
     white-space: nowrap;
+
+    [data-has-description="true"] > & {
+      padding-bottom: pxToRem(24px);
+    }
 
     [data-is-active="true"] > & {
       color: var(--sds-clr-gray-12);
