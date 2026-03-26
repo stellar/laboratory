@@ -287,9 +287,6 @@ export const SubmitStepContent = () => {
 
   const isSubmitDisabled = !submitMethod || !xdrBlob;
 
-  console.log({ submitHorizonResponse });
-  console.log({ submitRpcResponse });
-
   const renderSuccess = () => {
     if (isSubmitRpcSuccess && submitRpcResponse && network.id) {
       return (
