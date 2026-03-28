@@ -1,6 +1,8 @@
 ---
 name: component-with-design-system
 description: Guide for building React components using @stellar/design-system and project SCSS conventions. Invoke when creating new components or reviewing component code.
+read_files:
+  - .claude/skills/component-with-design-system/reference/*.md
 ---
 
 # Component with Design System
@@ -10,38 +12,8 @@ description: Guide for building React components using @stellar/design-system an
 Check if `@stellar/design-system` already has the component:
 https://github.com/stellar/stellar-design-system
 
-## Commonly Used Design System Components
-
-### Layout & Structure
-- `<Box gap="sm|md|lg">` — flex container with gap
-- `<Card>` — bordered card container
-- `<PageCard heading="...">` — card with heading, optional `rightElement`
-- `<PageHeader heading="..." as="h1|h2">` — page/section title
-
-### Form Inputs
-- `<Input>` — text input with label, error, note props
-- `<Select>` — dropdown with `fieldSize` prop
-- `<Textarea>` — multiline text
-- `<RadioButton id label fieldSize="sm|md|lg">` — radio input, extends native
-  `<input>` attributes (`name`, `value`, `checked`, `onChange`, etc.)
-
-### Actions
-- `<Button variant="primary|secondary|tertiary|destructive">` — with optional
-  `icon`, `isLoading`, `disabled` props
-- `<CopyText textToCopy={value}>` — text with copy button
-
-### Feedback
-- `<Alert variant="primary|success|warning|error" title="...">` — alert banner
-  with optional children for body
-- `<Text size="xs|sm|md|lg" as="span|p|div">` — typography
-- `<Link>` — styled link
-- `<Icon.[Name] />` — icon from icon set
-
-### Display
-- `<Badge variant="primary|secondary|tertiary|success|warning|error" size="sm|md|lg">`
-  — status label with optional `icon`, `iconPosition`, `isOutlined`, `isSquare`,
-  `isStatus` props
-- `<Text size="xs|sm|md|lg" as="span|p|div">` — typography for displaying text
+> For the full SDS component catalog and props patterns, see
+> `reference/sds-components.md` (loaded automatically).
 
 ## Component File Structure
 
@@ -147,95 +119,6 @@ export const ComponentName = ({ propName }: ComponentNameProps) => {
 - Put styles in the component file — always separate into `.scss`
 - Use `className` string concatenation — use template literals or classnames lib
 - Use conditional CSS classes for state — prefer `data-*` attributes
-
-## Design System Props Patterns
-
-### Input with validation
-
-```typescript
-<Input
-  id="source-account"
-  fieldSize="md"
-  label="Source Account"
-  value={sourceAccount}
-  onChange={(e) => setSourceAccount(e.target.value)}
-  error={getPublicKeyError(sourceAccount)}
-  note="The account that originates the transaction"
-/>
-```
-
-### Button with loading state
-
-```typescript
-<Button
-  variant="primary"
-  size="md"
-  isLoading={isSubmitting}
-  disabled={!isValid}
-  onClick={handleSubmit}
->
-  Submit Transaction
-</Button>
-```
-
-### Alert with details
-
-```typescript
-<Alert variant="warning" title="Auth entries require signing">
-  This transaction has {authCount} authorization entries that must be
-  signed before the transaction envelope can be signed.
-</Alert>
-```
-
-### RadioButton group
-
-```typescript
-<RadioButton
-  id="network-testnet"
-  name="network"
-  label="Testnet"
-  fieldSize="md"
-  checked={network === "testnet"}
-  onChange={() => setNetwork("testnet")}
-/>
-<RadioButton
-  id="network-mainnet"
-  name="network"
-  label="Mainnet"
-  fieldSize="md"
-  checked={network === "mainnet"}
-  onChange={() => setNetwork("mainnet")}
-/>
-```
-
-### Badge with icon
-
-```typescript
-<Badge variant="success" size="sm" icon={<Icon.CheckCircle />} iconPosition="right">
-  Verified
-</Badge>
-
-<Badge variant="error">Failed</Badge>
-
-<Badge variant="secondary" size="sm">
-  {itemCount} items
-</Badge>
-```
-
-### PageCard with action
-
-```typescript
-<PageCard
-  heading="Transaction Parameters"
-  rightElement={
-    <Button variant="tertiary" onClick={handleClear}>
-      Clear all
-    </Button>
-  }
->
-  {/* Card content */}
-</PageCard>
-```
 
 ## Data Attribute Pattern for State-Driven Styling
 
