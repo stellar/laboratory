@@ -21,6 +21,11 @@
     flex-shrink: 0;
   }
 
+  &__badgeWrapper {
+    position: relative;
+    flex-shrink: 0;
+  }
+
   &__badge {
     display: flex;
     align-items: center;
@@ -36,11 +41,24 @@
     border: 1px solid var(--sds-clr-gray-06);
     color: var(--sds-clr-gray-09);
 
-    [data-is-active="true"] > .TransactionStepper__indicator > & {
+    [data-is-active="true"] > .TransactionStepper__indicator > .TransactionStepper__badgeWrapper > & {
       background-color: var(--sds-clr-gray-12);
       border-color: var(--sds-clr-gray-12);
       color: var(--sds-clr-gray-01);
     }
+  }
+
+  &__checkmark {
+    position: absolute;
+    bottom: pxToRem(-1px);
+    right: pxToRem(-1px);
+    width: pxToRem(14px);
+    height: pxToRem(14px);
+    border-radius: 50%;
+    background-color: var(--sds-clr-green-09);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   &__connector {
@@ -68,7 +86,8 @@
       padding-bottom: pxToRem(24px);
     }
 
-    [data-is-active="true"] > & {
+    [data-is-active="true"] > &,
+    [data-is-completed="true"] > & {
       color: var(--sds-clr-gray-12);
     }
 

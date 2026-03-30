@@ -82,7 +82,28 @@ export const TransactionStepper = ({
             onClick={isClickable ? () => onStepClick(step) : undefined}
           >
             <div className="TransactionStepper__indicator">
-              <div className="TransactionStepper__badge">{index + 1}</div>
+              <div className="TransactionStepper__badgeWrapper">
+                <div className="TransactionStepper__badge">{index + 1}</div>
+                {isCompleted && (
+                  <div className="TransactionStepper__checkmark">
+                    <svg
+                      width="6"
+                      height="5"
+                      viewBox="0 0 6 5"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M1 2.5L2.5 4L5 1"
+                        stroke="white"
+                        strokeWidth="1.2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </div>
+                )}
+              </div>
               {!isLast && <div className="TransactionStepper__connector" />}
             </div>
             <div className="TransactionStepper__label">
