@@ -12,8 +12,6 @@ interface BuildStepHeaderProps {
   onClearAll: () => void;
   /** Optional class for the clear-all link to support page-specific styles. */
   clearAllLinkClassName?: string;
-  /** Wrap the clear-all link with xs text sizing. */
-  wrapClearAllInText?: boolean;
 }
 
 /**
@@ -27,29 +25,19 @@ export const BuildStepHeader = ({
   headingAs,
   onClearAll,
   clearAllLinkClassName,
-  wrapClearAllInText = true,
 }: BuildStepHeaderProps) => {
-  const clearAllLink = (
-    <Link
-      variant="primary"
-      addlClassName={clearAllLinkClassName}
-      onClick={onClearAll}
-    >
-      Clear all
-    </Link>
-  );
-
   return (
     <Box gap="md" direction="row" justify="space-between" align="center">
       <PageHeader heading={heading} as={headingAs} />
 
-      {wrapClearAllInText ? (
-        <Text as="div" size="xs">
-          {clearAllLink}
-        </Text>
-      ) : (
-        clearAllLink
-      )}
+      <Link
+        variant="primary"
+        addlClassName={clearAllLinkClassName}
+        onClick={onClearAll}
+        size="xs"
+      >
+        Clear all
+      </Link>
     </Box>
   );
 };

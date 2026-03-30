@@ -150,7 +150,6 @@ export default function BuildTransaction() {
         heading="Build transaction"
         onClearAll={resetAll}
         clearAllLinkClassName="resetButton"
-        wrapClearAllInText={false}
       />
 
       <Card>
