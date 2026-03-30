@@ -47,7 +47,7 @@ export default function BuildTransaction() {
   const isSoroban = Boolean(soroban.operation.operation_type);
 
   const hasAuthEntries = Boolean(
-    simulate.authEntriesXdr && simulate.authEntriesXdr.length > 0,
+    simulate.authEntriesXdr?.length > 0,
   );
 
   const steps: TransactionStepName[] = isSoroban
