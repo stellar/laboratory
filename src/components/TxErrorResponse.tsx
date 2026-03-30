@@ -2,7 +2,7 @@ import {
   AccountRequiresMemoError,
   BadResponseError,
 } from "@stellar/stellar-sdk";
-import { Card, Text } from "@stellar/design-system";
+import { Alert, Card } from "@stellar/design-system";
 
 import { Box } from "@/components/layout/Box";
 import { TxResponse } from "@/components/TxResponse";
@@ -120,22 +120,16 @@ export const RpcErrorResponse = ({ error }: { error: SubmitRpcError }) => {
   return (
     <Card>
       <Box
-        gap="xs"
+        gap="md"
         addlClassName="ValidationResponseCard"
         data-variant="error"
         data-testid="submit-tx-rpc-error"
       >
-        <>
-          <Text
-            as="div"
-            size="sm"
-            weight="medium"
-            addlClassName="ValidationResponseCard__title"
-          >
-            {getTitle(error.status)}
-          </Text>
-          {errorFields()}
-        </>
+        <Alert variant="error" placement="inline">
+          {getTitle(error.status)}
+        </Alert>
+
+        {errorFields()}
       </Box>
     </Card>
   );

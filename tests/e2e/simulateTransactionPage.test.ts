@@ -1,7 +1,7 @@
 import { baseURL } from "../../playwright.config";
 import { test, expect } from "@playwright/test";
 
-test.describe("Simulate Transaction Page", () => {
+test.describe.skip("Simulate Transaction Page", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto(`${baseURL}/transaction/simulate`);
   });

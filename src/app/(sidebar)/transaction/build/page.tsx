@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, Link } from "@stellar/design-system";
+import { Card } from "@stellar/design-system";
 
 import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 
@@ -14,7 +14,6 @@ import {
 } from "@/components/TransactionStepper";
 import { TransactionFlowFooter } from "@/components/TransactionFlowFooter";
 import { Tabs } from "@/components/Tabs";
-import { PageHeader } from "@/components/layout/PageHeader";
 import { Params } from "./components/Params";
 import { Operations } from "./components/Operations";
 import { ClassicTransactionXdr } from "./components/ClassicTransactionXdr";
@@ -22,6 +21,8 @@ import { SorobanTransactionXdr } from "./components/SorobanTransactionXdr";
 import { SimulateStepContent } from "./components/SimulateStepContent";
 import { SignStepContent } from "./components/SignStepContent";
 import { ValidateStepContent } from "./components/ValidateStepContent";
+import { SubmitStepContent } from "./components/SubmitStepContent";
+import { BuildStepHeader } from "./components/BuildStepHeader";
 
 import "./styles.scss";
 
@@ -145,19 +146,11 @@ export default function BuildTransaction() {
 
   const renderBuildStep = () => (
     <Box gap="md">
-      <Box gap="md" direction="row" justify="space-between" align="center">
-        <PageHeader heading="Build transaction" />
-
-        <Link
-          variant="primary"
-          addlClassName="resetButton"
-          onClick={() => {
-            resetAll();
-          }}
-        >
-          Clear all
-        </Link>
-      </Box>
+      <BuildStepHeader
+        heading="Build transaction"
+        onClearAll={resetAll}
+        clearAllLinkClassName="resetButton"
+      />
 
       <Card>
         <Params />
@@ -197,6 +190,7 @@ export default function BuildTransaction() {
             {activeStep === "simulate" && <SimulateStepContent />}
             {activeStep === "sign" && <SignStepContent />}
             {activeStep === "validate" && <ValidateStepContent />}
+            {activeStep === "submit" && <SubmitStepContent />}
 
             <TransactionFlowFooter
               steps={steps}
