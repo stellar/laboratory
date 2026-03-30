@@ -143,15 +143,6 @@ import { useStore } from "@/store/createStore";
   `ComponentName__element`)
 - **File/Folder Names**: dashes over underscores (e.g., `smart-contracts/`)
 
-### Component Organization
-
-- Features grouped by domain under `src/app/(sidebar)/`
-- Reusable components in `src/components/`
-- Components with styles: `ComponentName/index.tsx` +
-  `ComponentName/styles.scss`
-- Use `@stellar/design-system` components; never inline `style={}`
-- Use `data-*` attributes for state-driven styling (not CSS modifier classes)
-
 ### Form Validation
 
 - Validation functions in `src/validate/methods/`
@@ -159,7 +150,6 @@ import { useStore } from "@/store/createStore";
 
 ### Stellar-Specific Rules
 
-- Always use RPC (`src/query/useRpc*`) instead of Horizon for new features
 - Never edit `src/constants/networkLimits.ts` manually (auto-generated)
 - Store XDR as base64 strings; parse lazily at point of use
 
