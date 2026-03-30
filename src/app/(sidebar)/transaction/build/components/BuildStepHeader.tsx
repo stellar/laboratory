@@ -1,4 +1,4 @@
-import { Link, Text } from "@stellar/design-system";
+import { Link } from "@stellar/design-system";
 
 import { Box } from "@/components/layout/Box";
 import { PageHeader } from "@/components/layout/PageHeader";
