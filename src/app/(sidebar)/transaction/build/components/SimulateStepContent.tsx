@@ -1,16 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { Alert, Button, Card, Icon, Link, Input } from "@stellar/design-system";
 import {
-  Alert,
-  Button,
-  Card,
-  Icon,
-  Link,
-  Input,
-} from "@stellar/design-system";
-import { TransactionBuilder, xdr } from "@stellar/stellar-sdk";
-import { rpc as StellarRpc } from "@stellar/stellar-sdk";
+  TransactionBuilder,
+  xdr,
+  rpc as StellarRpc,
+} from "@stellar/stellar-sdk";
 
 import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 import { useStore } from "@/store/useStore";
@@ -71,22 +67,10 @@ export const SimulateStepContent = () => {
   const [xdrFormat, setXdrFormat] = useState<XdrFormatType | string>("json");
   const [authMode, selectAuthMode] = useState<AuthModeType | string>("");
   const [simulationDisplay, setSimulationDisplayResult] = useState<string>("");
+  const [validUntilLedgerSeq, setValidUntilLedgerSeq] = useState(0);
 
   // Derive the built XDR from whichever operation type was used
   const builtXdr = build.soroban.xdr || build.classic.xdr;
-
-  // Compute validUntilLedgerSeq from simulation response's latestLedger
-  const validUntilLedgerSeq = useMemo(() => {
-    if (!simulate.simulationResultJson) return 0;
-    try {
-      const parsed = JSON.parse(simulate.simulationResultJson);
-      const latestLedger = Number(parsed?.result?.latestLedger ?? 0);
-      // ~42 minutes buffer at 5 seconds per ledger
-      return latestLedger + 500;
-    } catch {
-      return 0;
-    }
-  }, [simulate.simulationResultJson]);
 
   /**
    * After all auth entries are signed, assemble the transaction with the
@@ -117,10 +101,7 @@ export const SimulateStepContent = () => {
         const ops = envelope.v1().tx().operations();
 
         for (const op of ops) {
-          if (
-            op.body().switch() ===
-            xdr.OperationType.invokeHostFunction()
-          ) {
+          if (op.body().switch() === xdr.OperationType.invokeHostFunction()) {
             const ihf = op.body().invokeHostFunctionOp();
             const signedAuth = signedEntries.map((entryBase64) =>
               xdr.SorobanAuthorizationEntry.fromXDR(entryBase64, "base64"),
@@ -184,7 +165,7 @@ export const SimulateStepContent = () => {
               transactionXdr: builtXdr,
               headers: getNetworkHeaders(network, "rpc"),
               xdrFormat: "json",
-              // authMode: simulate.authMode,
+              authMode: simulate.authMode,
             })
           : null,
         simulateTx({
@@ -192,7 +173,7 @@ export const SimulateStepContent = () => {
           transactionXdr: builtXdr,
           headers: getNetworkHeaders(network, "rpc"),
           xdrFormat: "base64",
-          // authMode: simulate.authMode,
+          authMode: simulate.authMode,
         }),
       ]);
 
@@ -214,8 +195,18 @@ export const SimulateStepContent = () => {
           const isReadOnly = checkIsReadOnly(simBase64Response);
           setSimulationReadOnly(isReadOnly);
 
+          // Compute validUntilLedgerSeq from latestLedger in response
+          const latestLedger = Number(
+            simBase64Response?.result?.latestLedger ?? 0,
+          );
+          if (latestLedger > 0) {
+            // ~42 minutes buffer at 5 seconds per ledger
+            setValidUntilLedgerSeq(latestLedger + 500);
+          }
+
           // Extract and store auth entries
           const entries = extractAuthEntries(simBase64Response);
+
           if (entries.length > 0) {
             setAuthEntriesXdr(entries);
           }
@@ -231,7 +222,7 @@ export const SimulateStepContent = () => {
     simulateTxError || simulateTxData?.error || simulateTxData?.result?.error,
   );
   const isSimulationSuccess = hasSimulationResult && !hasError;
-  const authEntries = simulateTxData ? extractAuthEntries(simulateTxData) : [];
+  const authEntries = simulate.authEntriesXdr || [];
   const hasAuthEntries = authEntries.length > 0;
   const resourceInfo = getSimulationResourceInfo(simulateTxData);
 
@@ -276,7 +267,6 @@ export const SimulateStepContent = () => {
           <XdrFormat
             selectedFormat={xdrFormat || "json"}
             onChange={(format) => {
-              console.log({ format });
               setXdrFormat(format);
 
               if (hasSimulationResult) {
@@ -387,9 +377,7 @@ export const SimulateStepContent = () => {
                 validUntilLedgerSeq={validUntilLedgerSeq}
                 networkPassphrase={network.passphrase}
                 onAuthEntrySigned={(index, signedEntryXdr) => {
-                  const updated = [
-                    ...(simulate.signedAuthEntriesXdr || []),
-                  ];
+                  const updated = [...(simulate.signedAuthEntriesXdr || [])];
                   updated[index] = signedEntryXdr;
                   setSignedAuthEntriesXdr(updated);
                 }}

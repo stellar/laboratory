@@ -79,6 +79,7 @@ export const SignTransactionXdr = ({
    * The component manages its own UI state (tabs, messages) around this.
    */
   customSignFn?: (params: {
+    sigType: TxSignatureType;
     secretKeys: string[];
   }) => Promise<{ successMessage: string; errorMessage: string }>;
 }) => {
@@ -184,9 +185,12 @@ export const SignTransactionXdr = ({
     }
 
     // Custom sign mode: delegate signing to external handler
-    if (customSignFn && sigType === "secretKey" && !isClear) {
+    if (customSignFn && !isClear) {
       try {
-        const result = await customSignFn({ secretKeys: secretKeyInputs });
+        const result = await customSignFn({
+          sigType,
+          secretKeys: secretKeyInputs,
+        });
 
         if (result.successMessage) {
           setSecretKeySuccessMsg(result.successMessage);
@@ -769,6 +773,7 @@ export const SignTransactionXdr = ({
             autocomplete="off"
             isPassword
             useSecretSelector
+            limit={customSignFn ? 1 : undefined}
             submitButton={
               <SignTxButton
                 onSign={async () => {

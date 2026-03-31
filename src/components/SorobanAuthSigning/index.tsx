@@ -43,22 +43,18 @@ const signAuthEntries = async ({
     // Only sign entries with address credentials — source account
     // credentials are authorized by the transaction envelope signature
     if (entry.credentials().switch().name === "sorobanCredentialsAddress") {
-      let signed = entry;
-      for (const secretKey of secretKeys) {
-        if (secretKey && !validate.getSecretKeyError(secretKey)) {
-          const keypair = Keypair.fromSecret(secretKey);
-          signed = await authorizeEntry(
-            signed,
-            keypair,
-            validUntilLedgerSeq,
-            networkPassphrase,
-          );
-        }
+      const secretKey = secretKeys[0];
+
+      if (secretKey && !validate.getSecretKeyError(secretKey)) {
+        const keypair = Keypair.fromSecret(secretKey);
+        const signed = await authorizeEntry(
+          entry,
+          keypair,
+          validUntilLedgerSeq,
+          networkPassphrase,
+        );
+        results.push({ index: idx, signedEntryXdr: signed.toXDR("base64") });
       }
-      results.push({ index: idx, signedEntryXdr: signed.toXDR("base64") });
-    } else {
-      // Pass through non-address entries as-is
-      results.push({ index: idx, signedEntryXdr: authEntriesXdr[idx] });
     }
   }
 
@@ -123,7 +119,7 @@ export const SorobanAuthSigningCard = ({
    * instead of its default envelope signing logic.
    */
   const handleCustomSignAll = useCallback(
-    async ({ secretKeys }: { secretKeys: string[] }) => {
+    async ({ secretKeys }: { sigType: string; secretKeys: string[] }) => {
       try {
         const results = await signAuthEntries({
           authEntriesXdr,
@@ -169,7 +165,6 @@ export const SorobanAuthSigningCard = ({
 
   return (
     <div className="SorobanAuthSigning">
-      {/* Header: title + "View auth entries" button */}
       <div
         className={`SorobanAuthSigning__header${isExpanded ? " SorobanAuthSigning__header--expanded" : ""}`}
       >
@@ -198,7 +193,6 @@ export const SorobanAuthSigningCard = ({
         </Button>
       </div>
 
-      {/* Body — only visible when expanded */}
       {isExpanded && (
         <div className="SorobanAuthSigning__body">
           {/* Sign mode radio */}

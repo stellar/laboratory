@@ -69,7 +69,7 @@ export const AuthEntryItem = ({
    * SignTransactionXdr instead of its default envelope signing.
    */
   const handleCustomSign = useCallback(
-    async ({ secretKeys }: { secretKeys: string[] }) => {
+    async ({ secretKeys }: { sigType: string; secretKeys: string[] }) => {
       try {
         const entry = xdr.SorobanAuthorizationEntry.fromXDR(
           authEntriesXdr[index],
@@ -77,19 +77,18 @@ export const AuthEntryItem = ({
         );
 
         if (entry.credentials().switch().name === "sorobanCredentialsAddress") {
-          let signed = entry;
-          for (const secretKey of secretKeys) {
-            if (secretKey && !validate.getSecretKeyError(secretKey)) {
-              const keypair = Keypair.fromSecret(secretKey);
-              signed = await authorizeEntry(
-                signed,
-                keypair,
-                validUntilLedgerSeq,
-                networkPassphrase,
-              );
-            }
+          const secretKey = secretKeys[0];
+
+          if (secretKey && !validate.getSecretKeyError(secretKey)) {
+            const keypair = Keypair.fromSecret(secretKey);
+            const signed = await authorizeEntry(
+              entry,
+              keypair,
+              validUntilLedgerSeq,
+              networkPassphrase,
+            );
+            onAuthSigned(index, signed.toXDR("base64"));
           }
-          onAuthSigned(index, signed.toXDR("base64"));
         } else {
           onAuthSigned(index, authEntriesXdr[index]);
         }
