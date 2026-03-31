@@ -22,10 +22,7 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { CodeEditor } from "@/components/CodeEditor";
 import { ExpandBox } from "@/components/ExpandBox";
 import { SdsLink } from "@/components/SdsLink";
-import { SorobanAuthSigningCard } from "@/components/SorobanAuthSigning";
-
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
-import { extractAuthEntries } from "@/helpers/sorobanAuthUtils";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
@@ -50,14 +47,11 @@ import {
 export const ValidateStepContent = () => {
   const { network } = useStore();
   const {
-    build,
-    simulate,
     sign,
     validate,
     setValidateResult,
     setValidateAuthMode,
     setValidatedXdr,
-    setSignedAuthEntriesXdr,
   } = useBuildFlowStore();
 
   const [isResourcesExpanded, setIsResourcesExpanded] = useState(false);
@@ -120,9 +114,7 @@ export const ValidateStepContent = () => {
   );
   const isValidationSuccess = hasValidationResult && !hasError;
   const resourceInfo = getSimulationResourceInfo(simulateTxData);
-  const authEntries = simulateTxData ? extractAuthEntries(simulateTxData) : [];
-  const hasAuthEntries = authEntries.length > 0;
-  const builtXdr = build.soroban.xdr || build.classic.xdr;
+
 
   return (
     <Box gap="md">
@@ -237,19 +229,6 @@ export const ValidateStepContent = () => {
               </Box>
             )}
 
-            {/* Auth entry signing card */}
-            {hasAuthEntries && (
-              <SorobanAuthSigningCard
-                authEntriesXdr={authEntries}
-                signedAuthEntriesXdr={simulate.signedAuthEntriesXdr || []}
-                builtXdr={builtXdr}
-                onAuthSigned={({ signedXdr: signed }) => {
-                  if (signed) {
-                    setSignedAuthEntriesXdr(authEntries);
-                  }
-                }}
-              />
-            )}
           </Box>
         </Card>
       )}

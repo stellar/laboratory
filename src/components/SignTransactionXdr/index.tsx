@@ -52,6 +52,7 @@ export const SignTransactionXdr = ({
   isDisabled = false,
   description,
   customFooter,
+  customSignFn,
 }: {
   id: string;
   title: string;
@@ -69,6 +70,17 @@ export const SignTransactionXdr = ({
   isDisabled?: boolean;
   description?: string;
   customFooter?: React.ReactNode;
+  /**
+   * Optional custom signing function. When provided, replaces the default
+   * envelope signing logic. Used for Soroban auth entry signing where
+   * `authorizeEntry()` is needed instead of `tx.sign()`.
+   *
+   * Receives the secret key inputs and should return success/error messages.
+   * The component manages its own UI state (tabs, messages) around this.
+   */
+  customSignFn?: (params: {
+    secretKeys: string[];
+  }) => Promise<{ successMessage: string; errorMessage: string }>;
 }) => {
   const { network, walletKit } = useStore();
 
@@ -168,6 +180,39 @@ export const SignTransactionXdr = ({
     isClear?: boolean;
   }) => {
     if (!xdrToSign) {
+      return;
+    }
+
+    // Custom sign mode: delegate signing to external handler
+    if (customSignFn && sigType === "secretKey" && !isClear) {
+      try {
+        const result = await customSignFn({ secretKeys: secretKeyInputs });
+
+        if (result.successMessage) {
+          setSecretKeySuccessMsg(result.successMessage);
+          setSecretKeyErrorMsg("");
+          setAllSigsCount((prev) => ({ ...prev, secretKey: 1 }));
+        }
+
+        if (result.errorMessage) {
+          setSecretKeyErrorMsg(result.errorMessage);
+          setSecretKeySuccessMsg("");
+        }
+
+        onDoneAction({
+          signedXdr: null,
+          successMessage: result.successMessage || null,
+          errorMessage: result.errorMessage || null,
+        });
+      } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : String(e);
+        setSecretKeyErrorMsg(msg);
+        onDoneAction({
+          signedXdr: null,
+          successMessage: null,
+          errorMessage: msg,
+        });
+      }
       return;
     }
 

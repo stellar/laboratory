@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Alert,
   Button,
@@ -9,6 +9,8 @@ import {
   Link,
   Input,
 } from "@stellar/design-system";
+import { TransactionBuilder, xdr } from "@stellar/stellar-sdk";
+import { rpc as StellarRpc } from "@stellar/stellar-sdk";
 
 import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 import { useStore } from "@/store/useStore";
@@ -61,6 +63,7 @@ export const SimulateStepContent = () => {
     setSimulationReadOnly,
     setAuthEntriesXdr,
     setSignedAuthEntriesXdr,
+    setAssembledXdr,
   } = useBuildFlowStore();
 
   const [instrLeewayError, setInstrLeewayError] = useState("");
@@ -71,6 +74,76 @@ export const SimulateStepContent = () => {
 
   // Derive the built XDR from whichever operation type was used
   const builtXdr = build.soroban.xdr || build.classic.xdr;
+
+  // Compute validUntilLedgerSeq from simulation response's latestLedger
+  const validUntilLedgerSeq = useMemo(() => {
+    if (!simulate.simulationResultJson) return 0;
+    try {
+      const parsed = JSON.parse(simulate.simulationResultJson);
+      const latestLedger = Number(parsed?.result?.latestLedger ?? 0);
+      // ~42 minutes buffer at 5 seconds per ledger
+      return latestLedger + 500;
+    } catch {
+      return 0;
+    }
+  }, [simulate.simulationResultJson]);
+
+  /**
+   * After all auth entries are signed, assemble the transaction with the
+   * signed auth entries and store the assembled XDR for the Sign step.
+   */
+  const assembleWithSignedAuth = useCallback(
+    (signedEntries: string[]) => {
+      if (!simulate.simulationResultJson || !builtXdr || !network.passphrase) {
+        return;
+      }
+
+      try {
+        // Parse the original transaction
+        const rawTx = TransactionBuilder.fromXDR(builtXdr, network.passphrase);
+
+        // Parse the stored simulation result
+        const rawResponse = JSON.parse(simulate.simulationResultJson);
+        const parsedSim = StellarRpc.parseRawSimulation(rawResponse.result);
+
+        // Assemble with resources and fees from simulation
+        const assembled = StellarRpc.assembleTransaction(
+          rawTx,
+          parsedSim,
+        ).build();
+
+        // Replace auth entries on the assembled transaction with signed versions
+        const envelope = assembled.toEnvelope();
+        const ops = envelope.v1().tx().operations();
+
+        for (const op of ops) {
+          if (
+            op.body().switch() ===
+            xdr.OperationType.invokeHostFunction()
+          ) {
+            const ihf = op.body().invokeHostFunctionOp();
+            const signedAuth = signedEntries.map((entryBase64) =>
+              xdr.SorobanAuthorizationEntry.fromXDR(entryBase64, "base64"),
+            );
+            ihf.auth(signedAuth);
+          }
+        }
+
+        const finalXdr = envelope.toXDR("base64");
+        setAssembledXdr(finalXdr);
+        setSignedAuthEntriesXdr(signedEntries);
+      } catch (e) {
+        console.error("Assembly with signed auth entries failed:", e);
+      }
+    },
+    [
+      simulate.simulationResultJson,
+      builtXdr,
+      network.passphrase,
+      setAssembledXdr,
+      setSignedAuthEntriesXdr,
+    ],
+  );
 
   const {
     mutateAsync: simulateTx,
@@ -311,14 +384,17 @@ export const SimulateStepContent = () => {
                 authEntriesXdr={authEntries}
                 signedAuthEntriesXdr={simulate.signedAuthEntriesXdr || []}
                 builtXdr={builtXdr}
-                onAuthSigned={({ signedXdr }) => {
-                  // TODO: Replace with authorizeEntry() logic — SignTransactionXdr
-                  // signs the transaction envelope, but auth entries need
-                  // authorizeEntry() from @stellar/stellar-sdk to sign each
-                  // SorobanAuthorizationEntry individually.
-                  if (signedXdr) {
-                    setSignedAuthEntriesXdr(authEntries);
-                  }
+                validUntilLedgerSeq={validUntilLedgerSeq}
+                networkPassphrase={network.passphrase}
+                onAuthEntrySigned={(index, signedEntryXdr) => {
+                  const updated = [
+                    ...(simulate.signedAuthEntriesXdr || []),
+                  ];
+                  updated[index] = signedEntryXdr;
+                  setSignedAuthEntriesXdr(updated);
+                }}
+                onAllEntriesSigned={(signedEntries) => {
+                  assembleWithSignedAuth(signedEntries);
                 }}
               />
             )}
