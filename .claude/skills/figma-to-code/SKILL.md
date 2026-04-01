@@ -15,7 +15,7 @@ actual conventions: `@stellar/design-system` components, SCSS with BEM-ish
 naming, and specific layout patterns.
 
 > For the full SDS component catalog, props, SCSS conventions, and usage
-> examples, invoke `/component-with-design-system`.
+> examples, invoke `/component-guide`.
 
 > For element mapping tables, spacing/layout patterns, and Figma variable
 > mappings, see `reference/figma-mapping.md` (loaded automatically).

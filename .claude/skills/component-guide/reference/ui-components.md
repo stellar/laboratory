@@ -1,14 +1,9 @@
-# SDS Component Catalog and Props Patterns
+# UI Component Catalog
 
-Quick reference for `@stellar/design-system` components used in this project.
+Quick reference for components used in this project — both from
+`@stellar/design-system` (SDS) and local layout wrappers.
 
-## Commonly Used Components
-
-### Layout & Structure
-- `<Box gap="sm|md|lg">` — flex container with gap
-- `<Card>` — bordered card container
-- `<PageCard heading="...">` — card with heading, optional `rightElement`
-- `<PageHeader heading="..." as="h1|h2">` — page/section title
+## SDS Components (`@stellar/design-system`)
 
 ### Form Inputs
 - `<Input>` — text input with label, error, note props
@@ -30,10 +25,24 @@ Quick reference for `@stellar/design-system` components used in this project.
 - `<Icon.[Name] />` — icon from icon set
 
 ### Display
+- `<Card>` — bordered card container
 - `<Badge variant="primary|secondary|tertiary|success|warning|error" size="sm|md|lg">`
   — status label with optional `icon`, `iconPosition`, `isOutlined`, `isSquare`,
   `isStatus` props
-- `<Text size="xs|sm|md|lg" as="span|p|div">` — typography for displaying text
+
+## Local Layout Components (`@/components/layout/`)
+
+These are project-specific wrappers — import from `@/components/layout/`, **not**
+from `@stellar/design-system`.
+
+- `<Box gap="xs|sm|md|lg|xl|xxl|custom">` — flex container with gap, direction,
+  justify, align, and wrap props. Use `gap="custom" customValue="..."` for
+  arbitrary gap values.
+- `<PageCard heading="...">` — wraps SDS `<Card>` with a `<PageHeader>` and
+  optional `rightElement`. Use for top-level page sections.
+- `<PageHeader heading="..." as="h1|h2">` — section heading with optional
+  `headingInfoLink` and `rightElement`. Usually used via `<PageCard>`, not
+  directly.
 
 ## Props Patterns
 
@@ -112,6 +121,8 @@ Quick reference for `@stellar/design-system` components used in this project.
 ### PageCard with action
 
 ```typescript
+import { PageCard } from "@/components/layout/PageCard";
+
 <PageCard
   heading="Transaction Parameters"
   rightElement={
@@ -122,4 +133,15 @@ Quick reference for `@stellar/design-system` components used in this project.
 >
   {/* Card content */}
 </PageCard>
+```
+
+### Box layout
+
+```typescript
+import { Box } from "@/components/layout/Box";
+
+<Box gap="md" direction="row" align="center">
+  <Input ... />
+  <Button ...>Submit</Button>
+</Box>
 ```

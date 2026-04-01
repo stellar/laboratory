@@ -1,19 +1,19 @@
 ---
-name: component-with-design-system
+name: component-guide
 description: Guide for building React components using @stellar/design-system and project SCSS conventions. Invoke when creating new components or reviewing component code.
 read_files:
-  - .claude/skills/component-with-design-system/reference/*.md
+  - .claude/skills/component-guide/reference/*.md
 ---
 
-# Component with Design System
+# Component Guide
 
 ## Before Building Anything Custom
 
 Check if `@stellar/design-system` already has the component:
 https://github.com/stellar/stellar-design-system
 
-> For the full SDS component catalog and props patterns, see
-> `reference/sds-components.md` (loaded automatically).
+> For the full component catalog (SDS + local layout wrappers) and props
+> patterns, see `reference/ui-components.md` (loaded automatically).
 
 ## Component File Structure
 

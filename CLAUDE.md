@@ -181,14 +181,10 @@ Husky runs lint + tests on push; use `--no-verify` to skip.
 Detailed patterns are in on-demand skills (`.claude/skills/`). Use these for
 deep context when working in specific areas:
 
-- `/new-tx-flow` — single-page transaction flow architecture and progress
-- `/new-tx-step-content` — implementing step content components
-- `/stellar-xdr-patterns` — XDR encode/decode/validate patterns
 - `/zustand-store-patterns` — store selection, hydration, cross-store reads
 - `/figma-to-code` — translating Figma MCP output to project conventions
-- `/component-with-design-system` — SDS component catalog and SCSS conventions
+- `/component-guide` — UI component catalog (SDS + local) and SCSS conventions
 - `/commit-progress` — commit logical units of work
-- `/react-rerender-mental-models` — React performance and memoization
 
 ## Task Completion Checklist
 
