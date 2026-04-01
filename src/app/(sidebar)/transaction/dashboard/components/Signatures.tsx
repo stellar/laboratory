@@ -103,7 +103,6 @@ export const Signatures = ({
   const renderAuthEntriesTableBody = () => {
     return authEntries.map((entry, index) => {
       const rowKey = `auth-entry-row-${index}`;
-      console.log({ entry });
       const isMatch = verifyAuthEntryPublicKey(entry.publicKey, entry.address);
 
       return (
@@ -153,7 +152,9 @@ export const Signatures = ({
               <thead>
                 <tr>
                   <th>
-                    <SignatureCell isHeader={true}>Signer</SignatureCell>
+                    <SignatureCell isHeader={true}>
+                      Transaction signer
+                    </SignatureCell>
                   </th>
                   <th>
                     <SignatureCell isHeader={true}>Signature</SignatureCell>
@@ -179,15 +180,15 @@ export const Signatures = ({
               <thead>
                 <tr>
                   <th>
-                    <SignatureCell isHeader={true}>Address</SignatureCell>
+                    <SignatureCell isHeader={true}>
+                      Auth entry signer
+                    </SignatureCell>
                   </th>
                   <th>
                     <SignatureCell isHeader={true}>Signature</SignatureCell>
                   </th>
                   <th>
-                    <SignatureCell isHeader={true}>
-                      Contract Function
-                    </SignatureCell>
+                    <SignatureCell isHeader={true}>Contract</SignatureCell>
                   </th>
                 </tr>
               </thead>
