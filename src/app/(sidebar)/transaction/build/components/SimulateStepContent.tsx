@@ -8,7 +8,6 @@ import {
   Icon,
   Link,
   Input,
-  Select,
 } from "@stellar/design-system";
 
 import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
@@ -16,6 +15,7 @@ import { useStore } from "@/store/useStore";
 
 import { useSimulateTx } from "@/query/useSimulateTx";
 
+import { AuthModePicker } from "@/components/FormElements/AuthModePicker";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { Box } from "@/components/layout/Box";
 import { PageCard } from "@/components/layout/PageCard";
@@ -230,42 +230,24 @@ export const SimulateStepContent = () => {
           />
 
           {/* Auth mode selector */}
-          <Select
-            id="ledger-key-type"
-            fieldSize="md"
-            label="Auth mode"
+          <AuthModePicker
+            id="simulate-auth-mode"
             value={authMode}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+            onChange={(mode) => {
               resetSimulateTx();
-
-              const selectedVal = e.target.value;
-              selectAuthMode(selectedVal);
+              selectAuthMode(mode);
             }}
             note={
               <>
                 This simulation shows which signatures are required. It doesn’t
                 validate signatures or calculate final fees.{" "}
-                {
-                  <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/contract-development/contract-interactions/transaction-simulation#authorization">
-                    Learn more
-                  </SdsLink>
-                }
+                <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/contract-development/contract-interactions/transaction-simulation#authorization">
+                  Learn more
+                </SdsLink>
                 .
               </>
             }
-          >
-            <option value="">Select a key</option>
-
-            {[
-              { id: "record", label: "Record" },
-              { id: "enforce", label: "Enforce" },
-              { id: "record-allow-nonroot", label: "Record (allow non-root)" },
-            ].map((f) => (
-              <option key={f.id} value={f.id}>
-                {f.label}
-              </option>
-            ))}
-          </Select>
+          />
 
           {/* Simulate button */}
           <Box gap="md" direction="row">

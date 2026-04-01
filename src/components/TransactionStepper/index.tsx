@@ -1,5 +1,7 @@
 "use client";
 
+import { Text } from "@stellar/design-system";
+
 import "./styles.scss";
 
 export type TransactionStepName =
@@ -17,6 +19,11 @@ const STEP_LABELS: Record<TransactionStepName, string> = {
   validate: "Validate transaction",
   sign: "Sign transaction",
   submit: "Submit transaction",
+};
+
+const STEP_DESCRIPTIONS: Partial<Record<TransactionStepName, string>> = {
+  validate:
+    "This transaction contains authorization entries that need to be validated before submitting.",
 };
 
 /**
@@ -71,16 +78,24 @@ export const TransactionStepper = ({
             data-is-active={isActive || undefined}
             data-is-completed={isCompleted || undefined}
             data-is-clickable={isClickable || undefined}
+            data-has-description={!!STEP_DESCRIPTIONS[step] || undefined}
             onClick={isClickable ? () => onStepClick(step) : undefined}
           >
             <div className="TransactionStepper__indicator">
-              <div className="TransactionStepper__badge">
-                {index + 1}
-              </div>
+              <div className="TransactionStepper__badge">{index + 1}</div>
               {!isLast && <div className="TransactionStepper__connector" />}
             </div>
             <div className="TransactionStepper__label">
               {STEP_LABELS[step]}
+              {STEP_DESCRIPTIONS[step] && (
+                <Text
+                  size="xs"
+                  as="div"
+                  addlClassName="TransactionStepper__description"
+                >
+                  {STEP_DESCRIPTIONS[step]}
+                </Text>
+              )}
             </div>
           </div>
         );

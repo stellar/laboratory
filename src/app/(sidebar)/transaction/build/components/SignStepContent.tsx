@@ -7,7 +7,8 @@ import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 
 import { SignTransactionXdr } from "@/components/SignTransactionXdr";
 import { Box } from "@/components/layout/Box";
-import { PageHeader } from "@/components/layout/PageHeader";
+
+import { BuildStepHeader } from "./BuildStepHeader";
 
 /**
  * Sign step content for the single-page transaction flow.
@@ -31,20 +32,7 @@ export const SignStepContent = () => {
 
   return (
     <Box gap="md">
-      <Box gap="md" direction="row" justify="space-between" align="center">
-        <PageHeader heading="Sign transaction" />
-
-        <Text as="div" size="xs">
-          <Link
-            variant="primary"
-            onClick={() => {
-              resetAll();
-            }}
-          >
-            Clear all
-          </Link>
-        </Text>
-      </Box>
+      <BuildStepHeader heading="Sign transaction" onClearAll={resetAll} />
 
       <Text size="sm" as="div">
         To be included in the ledger, the transaction must be signed and
