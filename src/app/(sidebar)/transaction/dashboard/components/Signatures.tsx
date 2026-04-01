@@ -1,8 +1,5 @@
-import { TransactionBuilder } from "@stellar/stellar-sdk";
-import { Icon, Text } from "@stellar/design-system";
-
-import { Box } from "@/components/layout/Box";
-import { TransactionTabEmptyMessage } from "@/components/TransactionTabEmptyMessage";
+import { StrKey, TransactionBuilder } from "@stellar/stellar-sdk";
+import { Icon, Link, Text } from "@stellar/design-system";
 
 import { useStore } from "@/store/useStore";
 
@@ -13,8 +10,12 @@ import {
   verifySignature,
 } from "@/helpers/signatureHint";
 import * as StellarXdr from "@/helpers/StellarXdr";
+import { buildContractExplorerHref } from "@/helpers/buildContractExplorerHref";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
+
+import { Box } from "@/components/layout/Box";
+import { TransactionTabEmptyMessage } from "@/components/TransactionTabEmptyMessage";
 
 import { RpcTxJsonResponse } from "@/types/types";
 
@@ -23,11 +24,17 @@ export const Signatures = ({
 }: {
   txDetails: RpcTxJsonResponse | null;
 }) => {
-  const { transaction, feeBumpTx, signatures, txHash } = getTxData(txDetails);
+  const { transaction, feeBumpTx, signatures, operations, txHash } =
+    getTxData(txDetails);
   const isXdrInit = useIsXdrInit();
   const { network } = useStore();
 
-  if (!signatures || signatures.length === 0 || !txHash) {
+  const authEntries = getAuthEntries(operations);
+
+  if (
+    (!signatures || signatures.length === 0 || !txHash) &&
+    authEntries.length === 0
+  ) {
     return (
       <TransactionTabEmptyMessage title="No signatures">
         This transaction has no signatures.
@@ -56,6 +63,10 @@ export const Signatures = ({
   );
 
   const renderTableBody = () => {
+    if (!signatures || signatures.length === 0) {
+      return null;
+    }
+
     return signatures.map(
       ({ hint, signature }: { hint: string; signature: string }) => {
         const rowKey = `table-row-${hint}`;
@@ -89,30 +100,103 @@ export const Signatures = ({
     );
   };
 
+  const renderAuthEntriesTableBody = () => {
+    return authEntries.map((entry, index) => {
+      const rowKey = `auth-entry-row-${index}`;
+      const isMatch = verifyAuthEntryPublicKey(entry.publicKey, entry.address);
+
+      return (
+        <tr role="row" key={rowKey}>
+          <td>
+            <SignatureCell>
+              {renderSigner(isMatch, entry.address)}
+            </SignatureCell>
+          </td>
+          <td>
+            <SignatureCell isSignature={true}>
+              <code>{entry.signature}</code>
+            </SignatureCell>
+          </td>
+          <td>
+            <SignatureCell>
+              <Link
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.open(
+                    `https://lab.stellar.org${buildContractExplorerHref(entry.contractId)}`,
+                    "_blank",
+                    "noopener,noreferrer",
+                  );
+                }}
+              >
+                {shortenStellarAddress(entry.contractId)}
+              </Link>
+            </SignatureCell>
+          </td>
+        </tr>
+      );
+    });
+  };
+
   return (
     <Box gap="lg" addlClassName="Signatures">
-      <Text as="div" size="xs" weight="regular">
-        Cryptographic signatures that authorize this transaction. Each signature
-        includes the signer’s public key, signature value, and hint.
-      </Text>
-      <div className="Signatures__gridTableContainer">
-        <table>
-          <thead>
-            <tr>
-              <th>
-                <SignatureCell isHeader={true}>Signer</SignatureCell>
-              </th>
-              <th>
-                <SignatureCell isHeader={true}>Signature</SignatureCell>
-              </th>
-              <th>
-                <SignatureCell isHeader={true}>Hint</SignatureCell>
-              </th>
-            </tr>
-          </thead>
-          <tbody>{renderTableBody()}</tbody>
-        </table>
-      </div>
+      {signatures && signatures.length > 0 && txHash && (
+        <>
+          <Text as="div" size="xs" weight="regular">
+            Cryptographic signatures that authorize this transaction. Each
+            signature includes the signer&apos;s public key, signature value,
+            and hint.
+          </Text>
+          <div className="Signatures__gridTableContainer">
+            <table>
+              <thead>
+                <tr>
+                  <th>
+                    <SignatureCell isHeader={true}>
+                      Transaction signer
+                    </SignatureCell>
+                  </th>
+                  <th>
+                    <SignatureCell isHeader={true}>Signature</SignatureCell>
+                  </th>
+                  <th>
+                    <SignatureCell isHeader={true}>Hint</SignatureCell>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>{renderTableBody()}</tbody>
+            </table>
+          </div>
+        </>
+      )}
+
+      {authEntries.length > 0 && (
+        <>
+          <Text as="div" size="xs" weight="regular">
+            Soroban authorization entry signatures.
+          </Text>
+          <div className="Signatures__gridTableContainer">
+            <table>
+              <thead>
+                <tr>
+                  <th>
+                    <SignatureCell isHeader={true}>
+                      Auth entry signer
+                    </SignatureCell>
+                  </th>
+                  <th>
+                    <SignatureCell isHeader={true}>Signature</SignatureCell>
+                  </th>
+                  <th>
+                    <SignatureCell isHeader={true}>Contract</SignatureCell>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>{renderAuthEntriesTableBody()}</tbody>
+            </table>
+          </div>
+        </>
+      )}
     </Box>
   );
 };
@@ -157,6 +241,71 @@ const renderSigner = (isVerified: boolean, signer: string) => {
       <span>{shortenStellarAddress(signer)}</span>
     </Box>
   );
+};
+
+/**
+ * Verifies that the public key bytes in an auth entry signature match the
+ * credential address (G... key).
+ */
+const verifyAuthEntryPublicKey = (
+  publicKeyHex: string,
+  address: string,
+): boolean => {
+  try {
+    const publicKeyBytes = Buffer.from(publicKeyHex, "hex");
+    const derivedAddress = StrKey.encodeEd25519PublicKey(publicKeyBytes);
+    return derivedAddress === address;
+  } catch {
+    return false;
+  }
+};
+
+// Helper to extract auth entry signatures from operations
+type AuthEntryInfo = {
+  address: string;
+  publicKey: string;
+  signature: string;
+  contractId: string;
+};
+
+const getAuthEntries = (operations: any[] | undefined): AuthEntryInfo[] => {
+  if (!operations) {
+    return [];
+  }
+
+  return operations
+    .flatMap((op) => op?.body?.invoke_host_function?.auth ?? [])
+    .map(parseAuthEntry)
+    .filter((entry): entry is AuthEntryInfo => entry !== null);
+};
+
+const parseAuthEntry = (authEntry: any): AuthEntryInfo | null => {
+  const creds = authEntry?.credentials?.address;
+  const sigMap = creds?.signature?.vec?.[0]?.map;
+
+  if (!Array.isArray(sigMap)) {
+    return null;
+  }
+
+  const publicKey = sigMap.find(
+    (item: any) => item?.key?.symbol === "public_key",
+  )?.val?.bytes;
+  const signature = sigMap.find(
+    (item: any) => item?.key?.symbol === "signature",
+  )?.val?.bytes;
+
+  if (!signature || !publicKey) {
+    return null;
+  }
+
+  const contractFn = authEntry?.root_invocation?.function?.contract_fn;
+
+  return {
+    address: creds.address || "",
+    publicKey,
+    signature,
+    contractId: contractFn ? contractFn.contract_address : "-",
+  };
 };
 
 // Helper function to get possible signers
