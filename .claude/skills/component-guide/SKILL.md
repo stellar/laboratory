@@ -102,7 +102,9 @@ export const ComponentName = ({ propName }: ComponentNameProps) => {
 ### Do
 - Use design system components for all standard UI elements
 - Use SCSS with BEM-ish class naming (`ComponentName__element--modifier`)
-- Use `pxToRem()` for spacing values in SCSS
+- Use `pxToRem()` for spacing values in SCSS (skip for trivial values like
+  `1px` or `-1px` — e.g., borders, outlines, offsets — where rem scaling is
+  not meaningful)
 - Use SDS CSS custom properties for colors/fonts/gaps: `var(--sds-clr-gray-06)`,
   `var(--sds-ff-monospace)`, `var(--sds-gap-md)`
 - Use `data-*` attributes for state-driven styling instead of modifier classes:
