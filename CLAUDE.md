@@ -143,15 +143,6 @@ import { useStore } from "@/store/createStore";
   `ComponentName__element`)
 - **File/Folder Names**: dashes over underscores (e.g., `smart-contracts/`)
 
-### Component Organization
-
-- Features grouped by domain under `src/app/(sidebar)/`
-- Reusable components in `src/components/`
-- Components with styles: `ComponentName/index.tsx` +
-  `ComponentName/styles.scss`
-- Use `@stellar/design-system` components; never inline `style={}`
-- Use `data-*` attributes for state-driven styling (not CSS modifier classes)
-
 ### Form Validation
 
 - Validation functions in `src/validate/methods/`
@@ -159,7 +150,6 @@ import { useStore } from "@/store/createStore";
 
 ### Stellar-Specific Rules
 
-- Always use RPC (`src/query/useRpc*`) instead of Horizon for new features
 - Never edit `src/constants/networkLimits.ts` manually (auto-generated)
 - Store XDR as base64 strings; parse lazily at point of use
 
@@ -191,14 +181,10 @@ Husky runs lint + tests on push; use `--no-verify` to skip.
 Detailed patterns are in on-demand skills (`.claude/skills/`). Use these for
 deep context when working in specific areas:
 
-- `/new-tx-flow` — single-page transaction flow architecture and progress
-- `/new-tx-step-content` — implementing step content components
-- `/stellar-xdr-patterns` — XDR encode/decode/validate patterns
 - `/zustand-store-patterns` — store selection, hydration, cross-store reads
 - `/figma-to-code` — translating Figma MCP output to project conventions
-- `/component-with-design-system` — SDS component catalog and SCSS conventions
+- `/component-guide` — UI component catalog (SDS + local) and SCSS conventions
 - `/commit-progress` — commit logical units of work
-- `/react-rerender-mental-models` — React performance and memoization
 
 ## Task Completion Checklist
 

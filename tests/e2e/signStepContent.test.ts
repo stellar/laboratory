@@ -155,9 +155,7 @@ test.describe("Sign Step in Build Flow", () => {
       "Secret key (starting with S) or hash preimage (in hex)",
     );
     await secretKeyInput.first().fill(MOCK_SECRET_KEY);
-    await signComponent
-      .getByRole("button", { name: "Sign" })
-      .click();
+    await signComponent.getByRole("button", { name: "Sign" }).click();
 
     // Verify signed state
     await expect(
