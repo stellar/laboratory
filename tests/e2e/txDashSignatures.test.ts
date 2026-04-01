@@ -50,7 +50,7 @@ test.describe("Transaction Dashboard: Signatures", () => {
 
     // Table columns
     await expect(getTableRow(rows, 0)).toHaveText([
-      "Signer",
+      "Transaction signer",
       "Signature",
       "Hint",
     ]);
@@ -99,7 +99,7 @@ test.describe("Transaction Dashboard: Signatures", () => {
 
     // Table columns
     await expect(getTableRow(rows, 0)).toHaveText([
-      "Signer",
+      "Transaction signer",
       "Signature",
       "Hint",
     ]);
@@ -140,7 +140,7 @@ test.describe("Transaction Dashboard: Signatures", () => {
     // First table: transaction signatures
     const txRows = tables.nth(0).locator("tr");
     await expect(getTableRow(txRows, 0)).toHaveText([
-      "Signer",
+      "Transaction signer",
       "Signature",
       "Hint",
     ]);
@@ -148,9 +148,9 @@ test.describe("Transaction Dashboard: Signatures", () => {
     // Second table: auth entry signatures
     const authRows = tables.nth(1).locator("tr");
     await expect(getTableRow(authRows, 0)).toHaveText([
-      "Address",
+      "Auth entry signer",
       "Signature",
-      "Contract Function",
+      "Contract",
     ]);
 
     const authEntry =
