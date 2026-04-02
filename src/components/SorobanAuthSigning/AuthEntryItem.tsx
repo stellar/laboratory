@@ -95,7 +95,7 @@ export const AuthEntryItem = ({
         }
 
         trackEvent(TrackingEvent.SOROBAN_AUTH_SIGN_ENTRY_SUCCESS, {
-          entryIndex: index,
+          entryIndex: index + 1,
         });
         return {
           successMessage: `Signed entry #${index + 1}`,
@@ -109,7 +109,13 @@ export const AuthEntryItem = ({
         return { successMessage: "", errorMessage: msg };
       }
     },
-    [authEntriesXdr, index, validUntilLedgerSeq, networkPassphrase, onAuthSigned],
+    [
+      authEntriesXdr,
+      index,
+      validUntilLedgerSeq,
+      networkPassphrase,
+      onAuthSigned,
+    ],
   );
 
   return (

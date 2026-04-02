@@ -183,18 +183,10 @@ export const SorobanOperation = ({
                               ) {
                                 trackEvent(
                                   TrackingEvent.SOROBAN_BUILD_FUNCTION_SELECT,
-                                  {
-                                    operationType:
-                                      sorobanOperation.operation_type,
-                                  },
                                 );
                               } else if (value?.args !== prevParsed?.args) {
                                 trackEvent(
                                   TrackingEvent.SOROBAN_BUILD_ARG_CHANGE,
-                                  {
-                                    operationType:
-                                      sorobanOperation.operation_type,
-                                  },
                                 );
                               }
 
