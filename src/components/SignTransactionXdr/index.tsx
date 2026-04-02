@@ -55,7 +55,7 @@ export const SignTransactionXdr = ({
   customSignFn,
 }: {
   id: string;
-  title: string;
+  title?: string;
   xdrToSign: string | null;
   onDoneAction: ({
     signedXdr,
@@ -691,16 +691,18 @@ export const SignTransactionXdr = ({
     >
       <Box gap="md" direction="column">
         {/* Title */}
-        <WithInfoText href="https://developers.stellar.org/docs/learn/encyclopedia/signatures-multisig">
-          <Text
-            as="div"
-            size="sm"
-            weight="medium"
-            addlClassName="SignTransactionXdr__title"
-          >
-            {title}
-          </Text>
-        </WithInfoText>
+        {title ? (
+          <WithInfoText href="https://developers.stellar.org/docs/learn/encyclopedia/signatures-multisig">
+            <Text
+              as="div"
+              size="sm"
+              weight="medium"
+              addlClassName="SignTransactionXdr__title"
+            >
+              {title}
+            </Text>
+          </WithInfoText>
+        ) : null}
 
         {description ? (
           <Text size="sm" weight="regular" as="div">

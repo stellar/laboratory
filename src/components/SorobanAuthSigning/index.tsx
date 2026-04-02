@@ -228,8 +228,7 @@ export const SorobanAuthSigningCard = ({
                   isSigned={Boolean(signedAuthEntriesXdr[idx])}
                   showSigningArea={signMode === "individual"}
                   autoExpand={
-                    signMode === "individual" &&
-                    idx === unsignedIndices[0]
+                    signMode === "individual" && idx === unsignedIndices[0]
                   }
                   builtXdr={builtXdr}
                   authEntriesXdr={authEntriesXdr}
@@ -244,7 +243,7 @@ export const SorobanAuthSigningCard = ({
             {signMode === "all" && !allSigned && (
               <SignTransactionXdr
                 id="auth-sign-all"
-                title="Sign auth entries"
+                title="Add signature to sign all entries"
                 xdrToSign={builtXdr}
                 customSignFn={handleCustomSignAll}
                 onDoneAction={() => {

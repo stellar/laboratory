@@ -112,7 +112,13 @@ export const AuthEntryItem = ({
         return { successMessage: "", errorMessage: msg };
       }
     },
-    [authEntriesXdr, index, validUntilLedgerSeq, networkPassphrase, onAuthSigned],
+    [
+      authEntriesXdr,
+      index,
+      validUntilLedgerSeq,
+      networkPassphrase,
+      onAuthSigned,
+    ],
   );
 
   return (
@@ -165,7 +171,7 @@ export const AuthEntryItem = ({
           {showSigningArea && (
             <SignTransactionXdr
               id={`auth-sign-entry-${index}`}
-              title={`Sign entry #${index + 1}`}
+              title={`Add signature to sign entry #${index + 1}`}
               xdrToSign={builtXdr}
               customSignFn={handleCustomSign}
               onDoneAction={() => {

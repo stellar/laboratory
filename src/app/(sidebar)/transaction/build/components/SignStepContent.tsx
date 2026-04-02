@@ -41,7 +41,6 @@ export const SignStepContent = () => {
 
       <SignTransactionXdr
         id="sign-step"
-        title="Sign transaction"
         xdrToSign={xdrToSign || null}
         onDoneAction={({ signedXdr, errorMessage }) => {
           setSignedXdr(signedXdr ?? "");

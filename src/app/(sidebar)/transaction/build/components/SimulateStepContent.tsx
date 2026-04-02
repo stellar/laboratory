@@ -1,7 +1,15 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Alert, Button, Card, Icon, Link, Input } from "@stellar/design-system";
+import {
+  Alert,
+  Button,
+  Card,
+  Icon,
+  Link,
+  Input,
+  Text,
+} from "@stellar/design-system";
 import {
   TransactionBuilder,
   xdr,
@@ -450,8 +458,11 @@ const renderAlert = ({
         title="Transaction simulation successful"
         icon={<Icon.CheckCircle />}
       >
-        This transaction contains <strong>authorization entries</strong> that
-        need to be validated before submitting.
+        This transaction contains{" "}
+        <Text as="span" weight="semi-bold" size="sm">
+          authorization entries
+        </Text>{" "}
+        that need to be validated before submitting.
       </Alert>
     );
   }
