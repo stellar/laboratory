@@ -23,6 +23,7 @@ import { XdrFormat } from "@/components/XdrFormat";
 import { SdsLink } from "@/components/SdsLink";
 import { ExpandBox } from "@/components/ExpandBox";
 import { SorobanAuthSigningCard } from "@/components/SorobanAuthSigning";
+import { TransactionStepName } from "@/components/TransactionStepper";
 
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { checkIsReadOnly } from "@/helpers/sorobanUtils";
@@ -49,7 +50,11 @@ import {
  * @example
  * {activeStep === "simulate" && <SimulateStepContent />}
  */
-export const SimulateStepContent = () => {
+export const SimulateStepContent = ({
+  steps,
+}: {
+  steps: TransactionStepName[];
+}) => {
   const { network } = useStore();
   const {
     build,
@@ -60,6 +65,7 @@ export const SimulateStepContent = () => {
     setAuthEntriesXdr,
     setSignedAuthEntriesXdr,
     setAssembledXdr,
+    resetDownstreamState,
   } = useBuildFlowStore();
 
   const [instrLeewayError, setInstrLeewayError] = useState("");
@@ -154,6 +160,9 @@ export const SimulateStepContent = () => {
    */
   const onSimulate = async () => {
     if (!network.rpcUrl || !builtXdr) return;
+
+    // Reset sign/validate/submit state and stepper completed marks
+    resetDownstreamState("sign", steps);
 
     trackEvent(TrackingEvent.TRANSACTION_SIMULATE);
 
