@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Badge, Icon, IconButton, Text } from "@stellar/design-system";
 import { authorizeEntry, Keypair, xdr } from "@stellar/stellar-sdk";
 
@@ -27,6 +27,7 @@ export const AuthEntryItem = ({
   entryXdr,
   isSigned,
   showSigningArea,
+  autoExpand,
   builtXdr,
   authEntriesXdr,
   validUntilLedgerSeq,
@@ -37,6 +38,8 @@ export const AuthEntryItem = ({
   entryXdr: string;
   isSigned: boolean;
   showSigningArea: boolean;
+  /** When true, automatically expand this entry */
+  autoExpand?: boolean;
   /** The built transaction XDR — passed to SignTransactionXdr */
   builtXdr: string;
   /** All auth entry XDR strings */
@@ -48,8 +51,15 @@ export const AuthEntryItem = ({
   /** Called when this entry is signed (index + signed XDR) */
   onAuthSigned: (index: number, signedEntryXdr: string) => void;
 }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(Boolean(autoExpand));
   const isXdrInit = useIsXdrInit();
+
+  // Auto-expand when this entry becomes the next unsigned entry
+  useEffect(() => {
+    if (autoExpand) {
+      setIsExpanded(true);
+    }
+  }, [autoExpand]);
 
   // Decode the auth entry XDR to JSON for display
   const decoded = isExpanded
@@ -152,7 +162,7 @@ export const AuthEntryItem = ({
             )}
           </div>
           {/* Per-entry signing area — only in "Sign individually" mode */}
-          {showSigningArea && !isSigned && (
+          {showSigningArea && (
             <SignTransactionXdr
               id={`auth-sign-entry-${index}`}
               title={`Sign entry #${index + 1}`}

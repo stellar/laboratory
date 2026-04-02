@@ -3,7 +3,6 @@
 .SorobanAuthSigning {
   border: 1px solid var(--sds-clr-gray-06);
   border-radius: pxToRem(8px);
-  overflow: hidden;
 
   // Header section — title + "View auth entries" button
   &__header {
@@ -52,7 +51,6 @@
   // Single entry row
   &__entry {
     border-radius: pxToRem(8px);
-    overflow: hidden;
   }
 
   &__entry-header {

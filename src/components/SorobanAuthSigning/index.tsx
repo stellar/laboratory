@@ -184,7 +184,7 @@ export const SorobanAuthSigningCard = ({
 
         <Button
           size="sm"
-          variant="tertiary"
+          variant="secondary"
           icon={isExpanded ? <Icon.ChevronUp /> : <Icon.ChevronDown />}
           iconPosition="right"
           onClick={() => setIsExpanded(!isExpanded)}
@@ -227,6 +227,10 @@ export const SorobanAuthSigningCard = ({
                   entryXdr={entryXdr}
                   isSigned={Boolean(signedAuthEntriesXdr[idx])}
                   showSigningArea={signMode === "individual"}
+                  autoExpand={
+                    signMode === "individual" &&
+                    idx === unsignedIndices[0]
+                  }
                   builtXdr={builtXdr}
                   authEntriesXdr={authEntriesXdr}
                   validUntilLedgerSeq={validUntilLedgerSeq}

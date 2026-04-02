@@ -358,7 +358,7 @@ export const SimulateStepContent = () => {
                   data-is-expanded={isResourcesExpanded}
                 >
                   <Link size="sm" icon={<Icon.ChevronDown />}>
-                    View resources and fees from simulation
+                    View resource usage and fees(simulated)
                   </Link>
                 </div>
 
