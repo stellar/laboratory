@@ -13,6 +13,7 @@ import { prettifyJsonString } from "@/helpers/prettifyJsonString";
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
 import { validate } from "@/validate";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 /**
  * A single auth entry row: "Entry #N" + Unsigned/Signed badge + chevron.
@@ -93,12 +94,18 @@ export const AuthEntryItem = ({
           onAuthSigned(index, authEntriesXdr[index]);
         }
 
+        trackEvent(TrackingEvent.SOROBAN_AUTH_SIGN_ENTRY_SUCCESS, {
+          entryIndex: index,
+        });
         return {
           successMessage: `Signed entry #${index + 1}`,
           errorMessage: "",
         };
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
+        trackEvent(TrackingEvent.SOROBAN_AUTH_SIGN_ENTRY_ERROR, {
+          entryIndex: index,
+        });
         return { successMessage: "", errorMessage: msg };
       }
     },

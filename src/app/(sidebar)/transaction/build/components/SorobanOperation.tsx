@@ -170,6 +170,34 @@ export const SorobanOperation = ({
                           {component.render({
                             ...sorobanBaseProps,
                             onChange: (value: SorobanInvokeValue) => {
+                              // Track meaningful contract invocation changes
+                              const prev = sorobanOperation.params[input];
+                              const prevParsed = prev
+                                ? JSON.parse(prev as string)
+                                : null;
+
+                              if (
+                                value?.function_name &&
+                                value.function_name !==
+                                  prevParsed?.function_name
+                              ) {
+                                trackEvent(
+                                  TrackingEvent.SOROBAN_BUILD_FUNCTION_SELECT,
+                                  {
+                                    operationType:
+                                      sorobanOperation.operation_type,
+                                  },
+                                );
+                              } else if (value?.args !== prevParsed?.args) {
+                                trackEvent(
+                                  TrackingEvent.SOROBAN_BUILD_ARG_CHANGE,
+                                  {
+                                    operationType:
+                                      sorobanOperation.operation_type,
+                                  },
+                                );
+                              }
+
                               handleSorobanOperationParamChange({
                                 opParam: input,
                                 // invoke_contract has a nested object within params

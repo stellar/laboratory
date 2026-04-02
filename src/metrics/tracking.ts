@@ -155,6 +155,19 @@ export enum TrackingEvent {
   TRANSACTION_SIGN_FEE_BUMP = "transaction: sign: fee bump",
   // Transactions - simulate
   TRANSACTION_SIMULATE = "transaction: simulate",
+  // Transactions - Soroban auth
+  SOROBAN_AUTH_ENTRIES_DETECTED = "soroban auth: entries detected",
+  SOROBAN_AUTH_CARD_EXPAND = "soroban auth: card expand",
+  SOROBAN_AUTH_SIGN_MODE_CHANGE = "soroban auth: sign mode change",
+  SOROBAN_AUTH_SIGN_ALL_SUCCESS = "soroban auth: sign all: success",
+  SOROBAN_AUTH_SIGN_ALL_ERROR = "soroban auth: sign all: error",
+  SOROBAN_AUTH_SIGN_ENTRY_SUCCESS = "soroban auth: sign entry: success",
+  SOROBAN_AUTH_SIGN_ENTRY_ERROR = "soroban auth: sign entry: error",
+  SOROBAN_AUTH_ASSEMBLY_SUCCESS = "soroban auth: assembly: success",
+  SOROBAN_AUTH_ASSEMBLY_ERROR = "soroban auth: assembly: error",
+  // Transactions - Soroban build
+  SOROBAN_BUILD_FUNCTION_SELECT = "soroban build: function select",
+  SOROBAN_BUILD_ARG_CHANGE = "soroban build: arg change",
   // Transactions - validate
   TRANSACTION_VALIDATE_AUTH_ENFORCE_SUCCESS = "transaction: validate: auth enforce: success",
   TRANSACTION_VALIDATE_AUTH_ENFORCE_FAILURE = "transaction: validate: auth enforce: failure",
