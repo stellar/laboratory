@@ -109,7 +109,7 @@ export const SubmitStepContent = () => {
 
   // Derive the XDR to submit: validated > signed > assembled
   const xdrBlob =
-    validate?.validatedXdr || sign.signedXdr || simulate?.assembledXdr;
+    validate?.validatedXdr || sign.signedXdr || simulate?.assembledXdr || "";
 
   const isSoroban = Boolean(build.soroban.operation.operation_type);
   const isRpcAvailable = Boolean(network.rpcUrl);
