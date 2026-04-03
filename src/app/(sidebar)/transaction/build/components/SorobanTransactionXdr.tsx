@@ -10,9 +10,9 @@ import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { TransactionXdrDisplay } from "./TransactionXdrDisplay";
 
 export const SorobanTransactionXdr = () => {
-  const { network, transaction } = useStore();
-  const { isValid } = transaction.build;
+  const { network } = useStore();
   const { build, setBuildSorobanXdr } = useBuildFlowStore();
+  const { isValid } = build;
   const { soroban } = build;
 
   useEffect(() => {
@@ -23,12 +23,6 @@ export const SorobanTransactionXdr = () => {
     // Not including setBuildSorobanXdr
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isValid.params, isValid.operations]);
-
-  // Sync soroban XDR to the new flow store
-  useEffect(() => {
-    setBuildSorobanXdr(soroban.xdr);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [soroban.xdr]);
 
   if (!(isValid.params && isValid.operations)) {
     return null;
