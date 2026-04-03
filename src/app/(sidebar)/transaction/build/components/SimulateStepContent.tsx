@@ -85,6 +85,8 @@ export const SimulateStepContent = ({
 
   // Derive the built XDR from whichever operation type was used
   const builtXdr = build.soroban.xdr || build.classic.xdr;
+  const isInvokeContract =
+    build.soroban.operation.operation_type === "invoke_contract_function";
 
   /**
    * After all auth entries are signed, assemble the transaction with the
@@ -184,7 +186,7 @@ export const SimulateStepContent = ({
               transactionXdr: builtXdr,
               headers: getNetworkHeaders(network, "rpc"),
               xdrFormat: "json",
-              authMode: simulate.authMode,
+              ...(isInvokeContract ? { authMode: simulate.authMode } : {}),
             })
           : null,
         simulateTx({
@@ -192,7 +194,7 @@ export const SimulateStepContent = ({
           transactionXdr: builtXdr,
           headers: getNetworkHeaders(network, "rpc"),
           xdrFormat: "base64",
-          authMode: simulate.authMode,
+          ...(isInvokeContract ? { authMode: simulate.authMode } : {}),
         }),
       ]);
 
@@ -231,6 +233,26 @@ export const SimulateStepContent = ({
             trackEvent(TrackingEvent.SOROBAN_AUTH_ENTRIES_DETECTED, {
               entryCount: entries.length,
             });
+          } else {
+            // No auth entries — auto-assemble the transaction with
+            // simulation resources (fees, sorobanData) so the Sign step
+            // receives a complete XDR ready for signing.
+            try {
+              const rawTx = TransactionBuilder.fromXDR(
+                builtXdr,
+                network.passphrase,
+              );
+              const parsedSim = StellarRpc.parseRawSimulation(
+                simBase64Response.result,
+              );
+              const assembled = StellarRpc.assembleTransaction(
+                rawTx,
+                parsedSim,
+              ).build();
+              setAssembledXdr(assembled.toXDR());
+            } catch (e) {
+              console.error("Auto-assembly after simulation failed:", e);
+            }
           }
         }
       }
@@ -314,25 +336,27 @@ export const SimulateStepContent = ({
             error={instrLeewayError}
           />
 
-          {/* Auth mode selector */}
-          <AuthModePicker
-            id="simulate-auth-mode"
-            value={authMode}
-            onChange={(mode) => {
-              resetSimulateTx();
-              selectAuthMode(mode);
-            }}
-            note={
-              <>
-                This simulation shows which signatures are required. It doesn’t
-                validate signatures or calculate final fees.{" "}
-                <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/contract-development/contract-interactions/transaction-simulation#authorization">
-                  Learn more
-                </SdsLink>
-                .
-              </>
-            }
-          />
+          {/* Auth mode selector — only relevant for InvokeHostFunction */}
+          {isInvokeContract ? (
+            <AuthModePicker
+              id="simulate-auth-mode"
+              value={authMode}
+              onChange={(mode) => {
+                resetSimulateTx();
+                selectAuthMode(mode);
+              }}
+              note={
+                <>
+                  This simulation shows which signatures are required. It
+                  doesn’t validate signatures or calculate final fees.{" "}
+                  <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/contract-development/contract-interactions/transaction-simulation#authorization">
+                    Learn more
+                  </SdsLink>
+                  .
+                </>
+              }
+            />
+          ) : null}
 
           {/* Simulate button */}
           <Box gap="md" direction="row">
