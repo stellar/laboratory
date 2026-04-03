@@ -127,8 +127,10 @@ export const SimulateStepContent = ({
         const finalXdr = envelope.toXDR("base64");
         setAssembledXdr(finalXdr);
         setSignedAuthEntriesXdr(signedEntries);
+        trackEvent(TrackingEvent.SOROBAN_AUTH_ASSEMBLY_SUCCESS);
       } catch (e) {
         console.error("Assembly with signed auth entries failed:", e);
+        trackEvent(TrackingEvent.SOROBAN_AUTH_ASSEMBLY_ERROR);
       }
     },
     [
@@ -226,6 +228,9 @@ export const SimulateStepContent = ({
 
           if (entries.length > 0) {
             setAuthEntriesXdr(entries);
+            trackEvent(TrackingEvent.SOROBAN_AUTH_ENTRIES_DETECTED, {
+              entryCount: entries.length,
+            });
           }
         }
       }
