@@ -789,11 +789,7 @@ export const formComponentTemplateTxnOps = ({
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={templ.value || ""}
             error={templ.error}
-            onChange={(val) =>
-              templ.onChange({
-                target: { value: val },
-              })
-            }
+            onChange={templ.onChange}
           />
         ),
         validate: validate.getPublicKeyError,
