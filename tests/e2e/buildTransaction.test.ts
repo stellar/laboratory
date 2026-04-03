@@ -1,8 +1,7 @@
 import { baseURL } from "../../playwright.config";
 import { test, expect, Page } from "@playwright/test";
-import { mockSimulateTx } from "./mock/helpers";
 
-test.describe.skip("Build Transaction Page", () => {
+test.describe("Build Transaction Page", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto(`${baseURL}/transaction/build`);
   });
@@ -34,10 +33,6 @@ test.describe.skip("Build Transaction Page", () => {
     await page.getByLabel("Source account").fill(SOURCE_ACCOUNT);
     await page.getByLabel("Transaction sequence number").fill(SEQUENCE_NUMBER);
 
-    const saveTxButton = page.getByTitle("Save transaction");
-
-    await expect(saveTxButton).toBeDisabled();
-
     const { operation_0 } = await selectOperationType({
       page,
       opType: "create_account",
@@ -46,7 +41,11 @@ test.describe.skip("Build Transaction Page", () => {
     await operation_0.getByLabel("Destination").fill(ACCOUNT_ONE);
     await operation_0.getByLabel("Starting balance").fill("1");
 
-    await expect(saveTxButton).toBeEnabled();
+    const saveTxButton = page.getByRole("button", {
+      name: "Save transaction",
+    });
+
+    await expect(saveTxButton).toBeVisible();
     await saveTxButton.click();
 
     const modal = page.locator(".Modal");
@@ -127,7 +126,7 @@ test.describe.skip("Build Transaction Page", () => {
 
       // Clear params
       await expect(paramsErrors).toBeHidden();
-      await page.getByText("Clear Params").click();
+      await page.getByText("Clear all").click();
       await expect(paramsErrors).toBeVisible();
     });
 
@@ -1320,7 +1319,7 @@ test.describe.skip("Build Transaction Page", () => {
         // Verify warning message about one operation limit
         await expect(
           page.getByText(
-            "Note that Soroban transactions can only contain one operation per transaction.",
+            "Soroban transaction can only contain one operation per transaction.",
           ),
         ).toBeVisible();
 
@@ -1376,26 +1375,12 @@ test.describe.skip("Build Transaction Page", () => {
           .getByLabel("Resource Fee (in stroops)")
           .fill("60528");
 
-        const prepareTxButton = page.getByText(
-          "Prepare Soroban Transaction to Sign",
-        );
-
-        // Mock simulate transaction RPC call
-        await mockSimulateTx({
-          page,
-          responseXdr:
-            "AAAAAAAAAAEAAAAGAAAAASAi1W4KumRRb25iYE0pYjK+hk/9+4TVhhPnQjys4CsoAAAAEAAAAAEAAAACAAAADwAAAAdCYWxhbmNlAAAAABIAAAABhJOf5nl4Ckvd0A0luFhIy7AmbhcWcGZUrcpt0K5oj5wAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOxy",
+        // In the new flow, extend_footprint_ttl does not produce XDR on
+        // the build step — verify the Next button is enabled (form valid).
+        const nextButton = page.getByRole("button", {
+          name: /Next: Simulate/,
         });
-
-        await expect(prepareTxButton).toBeEnabled();
-        await prepareTxButton.click();
-
-        await testOpSuccessHashAndXdr({
-          isSorobanOp: true,
-          page,
-          hash: "6eaff5a4593b5387b5898d4575fa857fa58754817c8ddb80a6c6008e2191b11c",
-          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgACWZEAD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAGQAAAAAAJA8xAAAAAQAAAAAAAAABAAAABgAAAAEgItVuCrpkUW9uYmBNKWIyvoZP/fuE1YYT50I8rOArKAAAABAAAAABAAAAAgAAAA8AAAAHQmFsYW5jZQAAAAASAAAAAYSTn+Z5eApL3dANJbhYSMuwJm4XFnBmVK3KbdCuaI+cAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAADscgAAAAA=",
-        });
+        await expect(nextButton).toBeEnabled();
       });
 
       test("[Use Contract Data Key] Happy path", async ({ page }) => {
@@ -1414,7 +1399,7 @@ test.describe.skip("Build Transaction Page", () => {
         // Verify warning message about one operation limit
         await expect(
           page.getByText(
-            "Note that Soroban transactions can only contain one operation per transaction.",
+            "Soroban transaction can only contain one operation per transaction.",
           ),
         ).toBeVisible();
 
@@ -1514,26 +1499,12 @@ test.describe.skip("Build Transaction Page", () => {
           .getByLabel("Resource Fee (in stroops)")
           .fill("60528");
 
-        const prepareTxButton = page.getByText(
-          "Prepare Soroban Transaction to Sign",
-        );
-
-        // Mock simulate transaction RPC call
-        await mockSimulateTx({
-          page,
-          responseXdr:
-            "AAAAAAAAAAEAAAAGAAAAASAi1W4KumRRb25iYE0pYjK+hk/9+4TVhhPnQjys4CsoAAAAEAAAAAEAAAACAAAADwAAAAdCYWxhbmNlAAAAABIAAAABhJOf5nl4Ckvd0A0luFhIy7AmbhcWcGZUrcpt0K5oj5wAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOxy",
+        // In the new flow, extend_footprint_ttl does not produce XDR on
+        // the build step — verify the Next button is enabled (form valid).
+        const nextButton = page.getByRole("button", {
+          name: /Next: Simulate/,
         });
-
-        await expect(prepareTxButton).toBeEnabled();
-        await prepareTxButton.click();
-
-        await testOpSuccessHashAndXdr({
-          isSorobanOp: true,
-          page,
-          hash: "6eaff5a4593b5387b5898d4575fa857fa58754817c8ddb80a6c6008e2191b11c",
-          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgACWZEAD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAGQAAAAAAJA8xAAAAAQAAAAAAAAABAAAABgAAAAEgItVuCrpkUW9uYmBNKWIyvoZP/fuE1YYT50I8rOArKAAAABAAAAABAAAAAgAAAA8AAAAHQmFsYW5jZQAAAAASAAAAAYSTn+Z5eApL3dANJbhYSMuwJm4XFnBmVK3KbdCuaI+cAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAADscgAAAAA=",
-        });
+        await expect(nextButton).toBeEnabled();
       });
 
       test("[Use Contract Data Key] Validation", async ({ page }) => {
@@ -1639,7 +1610,7 @@ test.describe.skip("Build Transaction Page", () => {
         // Verify warning message about one operation limit
         await expect(
           page.getByText(
-            "Note that Soroban transactions can only contain one operation per transaction.",
+            "Soroban transaction can only contain one operation per transaction.",
           ),
         ).toBeVisible();
 
@@ -1680,7 +1651,7 @@ test.describe.skip("Build Transaction Page", () => {
         // Verify warning message about one operation limit
         await expect(
           page.getByText(
-            "Note that Soroban transactions can only contain one operation per transaction.",
+            "Soroban transaction can only contain one operation per transaction.",
           ),
         ).toBeVisible();
 
@@ -1734,27 +1705,12 @@ test.describe.skip("Build Transaction Page", () => {
           .getByLabel("Resource Fee (in stroops)")
           .fill("20000");
 
-        const prepareTxButton = page.getByText(
-          "Prepare Soroban Transaction to Sign",
-        );
-
-        // Mock simulate transaction RPC call
-        // @TODO update this after investigating restore footprint
-        await mockSimulateTx({
-          page,
-          responseXdr: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATiA=",
+        // In the new flow, restore_footprint does not produce XDR on
+        // the build step — verify the Next button is enabled (form valid).
+        const nextButton = page.getByRole("button", {
+          name: /Next: Simulate/,
         });
-
-        await expect(prepareTxButton).toBeEnabled();
-        await prepareTxButton.click();
-
-        // @TODO update this after investigating restore footprint
-        await testOpSuccessHashAndXdr({
-          isSorobanOp: true,
-          page,
-          hash: "aa5a5bd20265afdee0d01d36add7b9e67364516e69339313be2c174c8ee81313",
-          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgABu0EAD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAGgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATiAAAAAA",
-        });
+        await expect(nextButton).toBeEnabled();
       });
 
       test("[Use Contract Data Key] Happy path", async ({ page }) => {
@@ -1773,7 +1729,7 @@ test.describe.skip("Build Transaction Page", () => {
         // Verify warning message about one operation limit
         await expect(
           page.getByText(
-            "Note that Soroban transactions can only contain one operation per transaction.",
+            "Soroban transaction can only contain one operation per transaction.",
           ),
         ).toBeVisible();
 
@@ -1871,27 +1827,12 @@ test.describe.skip("Build Transaction Page", () => {
           .getByLabel("Resource Fee (in stroops)")
           .fill("20000");
 
-        const prepareTxButton = page.getByText(
-          "Prepare Soroban Transaction to Sign",
-        );
-
-        // Mock simulate transaction RPC call
-        // @TODO update this after investigating restore footprint
-        await mockSimulateTx({
-          page,
-          responseXdr: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATiA=",
+        // In the new flow, restore_footprint does not produce XDR on
+        // the build step — verify the Next button is enabled (form valid).
+        const nextButton = page.getByRole("button", {
+          name: /Next: Simulate/,
         });
-
-        await expect(prepareTxButton).toBeEnabled();
-        await prepareTxButton.click();
-
-        // @TODO update this after investigating restore footprint
-        await testOpSuccessHashAndXdr({
-          isSorobanOp: true,
-          page,
-          hash: "aa5a5bd20265afdee0d01d36add7b9e67364516e69339313be2c174c8ee81313",
-          xdr: "AAAAAgAAAAANLHqVohDTxPKQ3fawTPgHahe0TzJjJkWV1WakcbeADgABu0EAD95QAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAGgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATiAAAAAA",
-        });
+        await expect(nextButton).toBeEnabled();
       });
 
       test("[Use Contract Data Key] Validation", async ({ page }) => {
@@ -1989,7 +1930,7 @@ test.describe.skip("Build Transaction Page", () => {
         // Verify warning message about one operation limit
         await expect(
           page.getByText(
-            "Note that Soroban transactions can only contain one operation per transaction.",
+            "Soroban transaction can only contain one operation per transaction.",
           ),
         ).toBeVisible();
 
