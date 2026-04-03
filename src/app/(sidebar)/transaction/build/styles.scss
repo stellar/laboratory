@@ -113,6 +113,8 @@
   }
 
   &__xdrBox {
+    max-height: pxToRem(400px);
+    overflow: auto;
     background-color: var(--sds-clr-gray-03);
     border-radius: pxToRem(12px);
     padding: pxToRem(16px);

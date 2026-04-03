@@ -1,13 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Alert,
-  Button,
-  Card,
-  Icon,
-  Link,
-} from "@stellar/design-system";
+import { Alert, Button, Card, Icon, Link } from "@stellar/design-system";
 
 import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 import { useStore } from "@/store/useStore";
@@ -115,7 +109,6 @@ export const ValidateStepContent = () => {
   const isValidationSuccess = hasValidationResult && !hasError;
   const resourceInfo = getSimulationResourceInfo(simulateTxData);
 
-
   return (
     <Box gap="md">
       <PageHeader heading="Validate auth entries" as="h1" />
@@ -211,7 +204,7 @@ export const ValidateStepContent = () => {
             </div>
 
             {/* Resource usage (collapsible) */}
-            {resourceInfo && (
+            {isValidationSuccess && resourceInfo && (
               <Box gap="sm">
                 <div
                   className="SimulateStepContent__expand-toggle"
@@ -228,7 +221,6 @@ export const ValidateStepContent = () => {
                 </ExpandBox>
               </Box>
             )}
-
           </Box>
         </Card>
       )}

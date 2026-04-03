@@ -187,7 +187,7 @@ export default function BuildTransaction() {
         <div className="BuildTransaction__content">
           <Box gap="xxl">
             {activeStep === "build" && renderBuildStep()}
-            {activeStep === "simulate" && <SimulateStepContent />}
+            {activeStep === "simulate" && <SimulateStepContent steps={steps} />}
             {activeStep === "sign" && <SignStepContent />}
             {activeStep === "validate" && <ValidateStepContent />}
             {activeStep === "submit" && <SubmitStepContent />}
