@@ -10,6 +10,7 @@ import { Box } from "@/components/layout/Box";
 import { AuthEntryItem } from "./AuthEntryItem";
 
 import { validate } from "@/validate";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import "./styles.scss";
 
@@ -143,12 +144,16 @@ export const SorobanAuthSigningCard = ({
         }
 
         const count = results.length;
+        trackEvent(TrackingEvent.SOROBAN_AUTH_SIGN_ALL_SUCCESS, {
+          entryCount: count,
+        });
         return {
           successMessage: `Signed ${count} auth ${count === 1 ? "entry" : "entries"}`,
           errorMessage: "",
         };
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
+        trackEvent(TrackingEvent.SOROBAN_AUTH_SIGN_ALL_ERROR);
         return { successMessage: "", errorMessage: msg };
       }
     },
@@ -187,7 +192,14 @@ export const SorobanAuthSigningCard = ({
           variant="tertiary"
           icon={isExpanded ? <Icon.ChevronUp /> : <Icon.ChevronDown />}
           iconPosition="right"
-          onClick={() => setIsExpanded(!isExpanded)}
+          onClick={() => {
+            if (!isExpanded) {
+              trackEvent(TrackingEvent.SOROBAN_AUTH_CARD_EXPAND, {
+                entryCount,
+              });
+            }
+            setIsExpanded(!isExpanded);
+          }}
         >
           View auth entries
         </Button>
@@ -204,7 +216,12 @@ export const SorobanAuthSigningCard = ({
               name="sign-mode"
               value="all"
               checked={signMode === "all"}
-              onChange={() => setSignMode("all")}
+              onChange={() => {
+                setSignMode("all");
+                trackEvent(TrackingEvent.SOROBAN_AUTH_SIGN_MODE_CHANGE, {
+                  mode: "all",
+                });
+              }}
             />
             <RadioButton
               id="sign-mode-individual"
@@ -213,7 +230,12 @@ export const SorobanAuthSigningCard = ({
               name="sign-mode"
               value="individual"
               checked={signMode === "individual"}
-              onChange={() => setSignMode("individual")}
+              onChange={() => {
+                setSignMode("individual");
+                trackEvent(TrackingEvent.SOROBAN_AUTH_SIGN_MODE_CHANGE, {
+                  mode: "individual",
+                });
+              }}
             />
           </Box>
 
