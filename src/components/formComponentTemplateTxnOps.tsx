@@ -359,7 +359,7 @@ export const formComponentTemplateTxnOps = ({
     case "destination":
       return {
         render: (templ: TemplateRenderProps) => (
-          <PubKeyPicker
+          <PubKeyPickerWithSignerSelector
             key={id}
             id={id}
             label="Destination"
@@ -792,7 +792,7 @@ export const formComponentTemplateTxnOps = ({
             onChange={(val) =>
               templ.onChange({
                 target: { value: val },
-              } as React.ChangeEvent<HTMLInputElement>)
+              })
             }
           />
         ),
