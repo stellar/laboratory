@@ -48,18 +48,7 @@ export const ClassicTransactionXdr = () => {
 
   const isXdrInit = useIsXdrInit();
 
-  useEffect(() => {
-    // Reset transaction.xdr if the transaction is not valid
-    if (!(isValid.params && isValid.operations)) {
-      setBuildClassicXdr("");
-    }
-    // Not including setBuildClassicXdr
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isValid.params, isValid.operations]);
-
-  if (!(isXdrInit && isValid.params && isValid.operations)) {
-    return null;
-  }
+  const isReady = isXdrInit && isValid.params && isValid.operations;
 
   const txnJsonToXdr = () => {
     try {
@@ -480,21 +469,27 @@ export const ClassicTransactionXdr = () => {
         jsonString || "",
       );
 
-      setBuildClassicXdr(txnXdr);
-
       return {
         xdr: txnXdr,
       };
     } catch (e) {
-      setBuildClassicXdr("");
-
       return { error: `${e}` };
     }
   };
 
-  const txnXdr = txnJsonToXdr();
+  const txnXdr = isReady ? txnJsonToXdr() : null;
 
-  if (txnXdr.error) {
+  useEffect(() => {
+    setBuildClassicXdr(txnXdr?.xdr ?? "");
+    // Not including setBuildClassicXdr
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [txnXdr?.xdr]);
+
+  if (!isReady) {
+    return null;
+  }
+
+  if (txnXdr?.error) {
     return (
       <ValidationResponseCard
         variant="error"
@@ -504,7 +499,7 @@ export const ClassicTransactionXdr = () => {
     );
   }
 
-  if (txnXdr.xdr) {
+  if (txnXdr?.xdr) {
     try {
       const txnHash = TransactionBuilder.fromXDR(txnXdr.xdr, network.passphrase)
         .hash()

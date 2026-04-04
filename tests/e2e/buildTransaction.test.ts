@@ -1371,10 +1371,6 @@ test.describe("Build Transaction Page", () => {
 
         await soroban_operation.getByLabel("Extend To").fill("2363185");
 
-        await soroban_operation
-          .getByLabel("Resource Fee (in stroops)")
-          .fill("60528");
-
         // In the new flow, extend_footprint_ttl does not produce XDR on
         // the build step — verify the Next button is enabled (form valid).
         const nextButton = page.getByRole("button", {
@@ -1495,10 +1491,6 @@ test.describe("Build Transaction Page", () => {
 
         await soroban_operation.getByLabel("Extend To").fill("2363185");
 
-        await soroban_operation
-          .getByLabel("Resource Fee (in stroops)")
-          .fill("60528");
-
         // In the new flow, extend_footprint_ttl does not produce XDR on
         // the build step — verify the Next button is enabled (form valid).
         const nextButton = page.getByRole("button", {
@@ -1555,15 +1547,6 @@ test.describe("Build Transaction Page", () => {
           label: "Extend To",
           value: "aaa",
           errorMessage: "Expected a whole number.",
-        });
-
-        await testInputError({
-          page,
-          isSorobanOp: true,
-          label: "Resource Fee (in stroops)",
-          value: "aaa",
-          errorMessage:
-            "Expected a positive number with a period for the decimal point.",
         });
 
         const scValInput = soroban_operation.getByLabel("Key (ScVal)");
@@ -1701,10 +1684,6 @@ test.describe("Build Transaction Page", () => {
         const durabilityInput = page.locator("#persistent-durability-type");
         await expect(durabilityInput).toBeChecked();
 
-        await soroban_operation
-          .getByLabel("Resource Fee (in stroops)")
-          .fill("20000");
-
         // In the new flow, restore_footprint does not produce XDR on
         // the build step — verify the Next button is enabled (form valid).
         const nextButton = page.getByRole("button", {
@@ -1823,10 +1802,6 @@ test.describe("Build Transaction Page", () => {
         const durabilityInput = page.locator("#persistent-durability-type");
         await expect(durabilityInput).toBeChecked();
 
-        await soroban_operation
-          .getByLabel("Resource Fee (in stroops)")
-          .fill("20000");
-
         // In the new flow, restore_footprint does not produce XDR on
         // the build step — verify the Next button is enabled (form valid).
         const nextButton = page.getByRole("button", {
@@ -1875,15 +1850,6 @@ test.describe("Build Transaction Page", () => {
           value: "aaa",
           errorMessage:
             "Invalid contract ID. Please enter a valid contract ID.",
-        });
-
-        await testInputError({
-          page,
-          isSorobanOp: true,
-          label: "Resource Fee (in stroops)",
-          value: "aaa",
-          errorMessage:
-            "Expected a positive number with a period for the decimal point.",
         });
 
         const scValInput = soroban_operation.getByLabel("Key (ScVal)");

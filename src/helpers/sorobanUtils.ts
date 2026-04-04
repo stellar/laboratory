@@ -111,7 +111,8 @@ export const buildTxWithSorobanData = ({
   const account = new Account(params.source_account, txSeq);
 
   // https://developers.stellar.org/docs/learn/fundamentals/fees-resource-limits-metering
-  const totalTxFee = BigInt(params.fee) + BigInt(sorobanOp.params.resource_fee);
+  const totalTxFee =
+    BigInt(params.fee) + BigInt(sorobanOp.params.resource_fee || BASE_FEE);
 
   const getMemoValue = (memoType: string, memoValue: string) => {
     switch (memoType) {
@@ -207,7 +208,7 @@ export const getTxWithSorobanData = ({
     const sorobanData = getSorobanTxData({
       contractDataXdr,
       operationType: operation.operation_type as SorobanOpType,
-      fee: operation.params.resource_fee,
+      fee: operation.params.resource_fee || BASE_FEE,
     });
 
     if (sorobanData) {
