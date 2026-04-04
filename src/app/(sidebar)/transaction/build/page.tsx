@@ -93,21 +93,8 @@ export default function BuildTransaction() {
 
   const isNextDisabled = getIsNextDisabled();
 
-  // Only show validation errors once the user has started filling in the form.
-  // After "clear all" the params reset to empty defaults, and the validation
-  // effect immediately re-fires producing "required field" errors — hiding
-  // those avoids a flash of errors on a blank form.
-  const hasFormContent =
-    Boolean(build.params.source_account) ||
-    Boolean(build.params.seq_num) ||
-    build.classic.operations.some((op) => Boolean(op.operation_type)) ||
-    Boolean(build.soroban.operation.operation_type);
-
   const renderError = () => {
-    if (
-      hasFormContent &&
-      (paramsError.length > 0 || operationsError.length > 0)
-    ) {
+    if (paramsError.length > 0 || operationsError.length > 0) {
       return (
         <ValidationResponseCard
           variant="error"

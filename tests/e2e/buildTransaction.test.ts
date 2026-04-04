@@ -14,20 +14,19 @@ test.describe("Build Transaction Page", () => {
     const { paramsErrors, operationsErrors, txnSuccess } =
       getOperationsErrorsAndSuccessElements(page);
 
-    // Validation errors are hidden on a blank form (no form content yet)
-    await expect(paramsErrors).toBeHidden();
-    await expect(operationsErrors).toBeHidden();
+    await expect(paramsErrors).toBeVisible();
+    await expect(operationsErrors).toBeVisible();
     await expect(txnSuccess).toBeHidden();
 
-    // After filling in a required field, errors for other missing fields appear
-    await page
-      .getByLabel("Transaction Sequence Number")
-      .fill("12345");
-
-    await expect(paramsErrors).toBeVisible();
-    await expect(paramsErrors.getByRole("listitem")).toContainText([
+    // Default errors to fill required params
+    await expect(paramsErrors.getByRole("listitem")).toHaveText([
       "Source account is a required field",
+      "Transaction sequence number is a required field",
     ]);
+
+    await expect(
+      operationsErrors.getByText("Operation #0").locator("+ ul"),
+    ).toHaveText(["Select operation type"]);
   });
 
   test("Save transaction modal works", async ({ page }) => {
@@ -128,8 +127,7 @@ test.describe("Build Transaction Page", () => {
       // Clear params
       await expect(paramsErrors).toBeHidden();
       await page.getByText("Clear all").click();
-      // After clear all, errors are hidden because the form is empty
-      await expect(paramsErrors).toBeHidden();
+      await expect(paramsErrors).toBeVisible();
     });
 
     test("Validation", async ({ page }) => {
