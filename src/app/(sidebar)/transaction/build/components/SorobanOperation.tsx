@@ -148,7 +148,6 @@ export const SorobanOperation = ({
                     case "contract":
                     case "key_xdr":
                     case "extend_ttl_to":
-                    case "resource_fee":
                     case "durability":
                       return (
                         <div key={`soroban-param-${input}`}>
