@@ -107,9 +107,9 @@ export const SubmitStepContent = () => {
     reset: resetSubmitHorizon,
   } = useSubmitHorizonTx();
 
-  // Derive the XDR to submit: validated > assembled > signed
+  // Derive the XDR to submit: validated > signed > assembled
   const xdrBlob =
-    validate?.validatedXdr || simulate?.assembledXdr || sign.signedXdr;
+    validate?.validatedXdr || sign.signedXdr || simulate?.assembledXdr || "";
 
   const isSoroban = Boolean(build.soroban.operation.operation_type);
   const isRpcAvailable = Boolean(network.rpcUrl);
@@ -156,15 +156,16 @@ export const SubmitStepContent = () => {
     init();
   }, [getXdrJson]);
 
-  // Set default submit method
+  // Set default submit method — force RPC for Soroban operations since
+  // Horizon doesn't support them.
   useEffect(() => {
-    const localStorageMethod = localStorageSettings.get(SETTINGS_SUBMIT_METHOD);
-
-    if (localStorageMethod) {
-      setSubmitMethod(localStorageMethod);
-    } else {
-      setSubmitMethod(isSoroban && isRpcAvailable ? "rpc" : "horizon");
+    if (isSoroban && isRpcAvailable) {
+      setSubmitMethod("rpc");
+      return;
     }
+
+    const localStorageMethod = localStorageSettings.get(SETTINGS_SUBMIT_METHOD);
+    setSubmitMethod(localStorageMethod || "horizon");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRpcAvailable, isSoroban]);
 
@@ -305,7 +306,7 @@ export const SubmitStepContent = () => {
                   const href = buildEndpointHref(Routes.TRANSACTION_DASHBOARD, {
                     transactionHash: submitRpcResponse.hash,
                   });
-                  openUrl(href);
+                  openUrl(`${window.location.origin}${href}`);
                 }}
               >
                 View in transaction dashboard
@@ -415,7 +416,7 @@ export const SubmitStepContent = () => {
                   const href = buildEndpointHref(Routes.TRANSACTION_DASHBOARD, {
                     transactionHash: submitHorizonResponse.hash,
                   });
-                  openUrl(href);
+                  openUrl(`${window.location.origin}${href}`);
                 }}
               >
                 View in transaction dashboard

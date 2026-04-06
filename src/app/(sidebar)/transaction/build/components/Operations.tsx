@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Select,
   Notification,
@@ -151,7 +151,9 @@ export const Operations = () => {
     setBuildClassicXdr("");
   };
 
-  // Preserve values and validate inputs when components mounts
+  // Initialise or re-validate operations.
+  // Runs on mount AND whenever the store operations are externally reset to
+  // empty (e.g. "Clear all"), since the component stays mounted.
   useEffect(() => {
     // If no operations to preserve, add inital operation and error template
     if (txnOperations.length === 0 && !soroban.operation.operation_type) {
@@ -285,9 +287,9 @@ export const Operations = () => {
 
       setOperationsError([...errors]);
     }
-    // Check this only when mounts, don't need to check any dependencies
+    // Re-run when operations are externally reset (e.g. "Clear all")
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [txnOperations.length, soroban.operation.operation_type]);
 
   // Update operations error when operations change
   useEffect(() => {
@@ -761,10 +763,10 @@ export const Operations = () => {
           value: currentOperation.source_account,
           error: operationsError[index]?.error?.["source_account"],
           isRequired: false,
-          onChange: (e: ChangeEvent<HTMLInputElement>) => {
+          onChange: (value: string) => {
             handleOperationSourceAccountChange(
               index,
-              e.target.value,
+              value,
               opType,
               isSorobanOperationType(opType),
             );

@@ -455,6 +455,19 @@ export const ClassicOperation = ({
                                 });
                               },
                             });
+                          case "destination":
+                          case "source_account":
+                            return component.render({
+                              ...baseProps,
+                              onChange: (value: string) => {
+                                handleOperationParamChange({
+                                  opIndex: idx,
+                                  opParam: input,
+                                  opValue: value,
+                                  opType: op.operation_type,
+                                });
+                              },
+                            });
                           default:
                             return component.render({
                               ...baseProps,

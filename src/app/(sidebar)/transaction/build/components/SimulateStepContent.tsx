@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   Button,
@@ -77,6 +77,7 @@ export const SimulateStepContent = ({
   } = useBuildFlowStore();
 
   const [instrLeewayError, setInstrLeewayError] = useState("");
+  const [assemblyWarning, setAssemblyWarning] = useState("");
   const [isResourcesExpanded, setIsResourcesExpanded] = useState(false);
   const [xdrFormat, setXdrFormat] = useState<XdrFormatType | string>("json");
   const [authMode, selectAuthMode] = useState<AuthModeType | string>("");
@@ -85,62 +86,56 @@ export const SimulateStepContent = ({
 
   // Derive the built XDR from whichever operation type was used
   const builtXdr = build.soroban.xdr || build.classic.xdr;
+  const isInvokeContract =
+    build.soroban.operation.operation_type === "invoke_contract_function";
 
   /**
    * After all auth entries are signed, assemble the transaction with the
    * signed auth entries and store the assembled XDR for the Sign step.
    */
-  const assembleWithSignedAuth = useCallback(
-    (signedEntries: string[]) => {
-      if (!simulate.simulationResultJson || !builtXdr || !network.passphrase) {
-        return;
-      }
+  const assembleWithSignedAuth = (signedEntries: string[]) => {
+    if (!simulate.simulationResultJson || !builtXdr || !network.passphrase) {
+      return;
+    }
 
-      try {
-        // Parse the original transaction
-        const rawTx = TransactionBuilder.fromXDR(builtXdr, network.passphrase);
+    try {
+      // Parse the original transaction
+      const rawTx = TransactionBuilder.fromXDR(builtXdr, network.passphrase);
 
-        // Parse the stored simulation result
-        const rawResponse = JSON.parse(simulate.simulationResultJson);
-        const parsedSim = StellarRpc.parseRawSimulation(rawResponse.result);
+      // Parse the stored simulation result
+      const rawResponse = JSON.parse(simulate.simulationResultJson);
+      const parsedSim = StellarRpc.parseRawSimulation(rawResponse.result);
 
-        // Assemble with resources and fees from simulation
-        const assembled = StellarRpc.assembleTransaction(
-          rawTx,
-          parsedSim,
-        ).build();
+      // Assemble with resources and fees from simulation
+      const assembled = StellarRpc.assembleTransaction(
+        rawTx,
+        parsedSim,
+      ).build();
 
-        // Replace auth entries on the assembled transaction with signed versions
-        const envelope = assembled.toEnvelope();
-        const ops = envelope.v1().tx().operations();
+      // Replace auth entries on the assembled transaction with signed versions
+      const envelope = assembled.toEnvelope();
+      const ops = envelope.v1().tx().operations();
 
-        for (const op of ops) {
-          if (op.body().switch() === xdr.OperationType.invokeHostFunction()) {
-            const ihf = op.body().invokeHostFunctionOp();
-            const signedAuth = signedEntries.map((entryBase64) =>
-              xdr.SorobanAuthorizationEntry.fromXDR(entryBase64, "base64"),
-            );
-            ihf.auth(signedAuth);
-          }
+      for (const op of ops) {
+        if (op.body().switch() === xdr.OperationType.invokeHostFunction()) {
+          const ihf = op.body().invokeHostFunctionOp();
+          const signedAuth = signedEntries.map((entryBase64) =>
+            xdr.SorobanAuthorizationEntry.fromXDR(entryBase64, "base64"),
+          );
+          ihf.auth(signedAuth);
         }
-
-        const finalXdr = envelope.toXDR("base64");
-        setAssembledXdr(finalXdr);
-        setSignedAuthEntriesXdr(signedEntries);
-        trackEvent(TrackingEvent.SOROBAN_AUTH_ASSEMBLY_SUCCESS);
-      } catch (e) {
-        console.error("Assembly with signed auth entries failed:", e);
-        trackEvent(TrackingEvent.SOROBAN_AUTH_ASSEMBLY_ERROR);
       }
-    },
-    [
-      simulate.simulationResultJson,
-      builtXdr,
-      network.passphrase,
-      setAssembledXdr,
-      setSignedAuthEntriesXdr,
-    ],
-  );
+
+      const finalXdr = envelope.toXDR("base64");
+      setAssembledXdr(finalXdr);
+      setSignedAuthEntriesXdr(signedEntries);
+      trackEvent(TrackingEvent.SOROBAN_AUTH_ASSEMBLY_SUCCESS);
+    } catch (e) {
+      trackEvent(TrackingEvent.SOROBAN_AUTH_ASSEMBLY_ERROR, {
+        error: String(e),
+      });
+    }
+  };
 
   const {
     mutateAsync: simulateTx,
@@ -173,6 +168,7 @@ export const SimulateStepContent = ({
 
     // Reset sign/validate/submit state and stepper completed marks
     resetDownstreamState("sign", steps);
+    setAssemblyWarning("");
 
     trackEvent(TrackingEvent.TRANSACTION_SIMULATE);
 
@@ -184,7 +180,7 @@ export const SimulateStepContent = ({
               transactionXdr: builtXdr,
               headers: getNetworkHeaders(network, "rpc"),
               xdrFormat: "json",
-              authMode: simulate.authMode,
+              ...(isInvokeContract ? { authMode: simulate.authMode } : {}),
             })
           : null,
         simulateTx({
@@ -192,7 +188,7 @@ export const SimulateStepContent = ({
           transactionXdr: builtXdr,
           headers: getNetworkHeaders(network, "rpc"),
           xdrFormat: "base64",
-          authMode: simulate.authMode,
+          ...(isInvokeContract ? { authMode: simulate.authMode } : {}),
         }),
       ]);
 
@@ -231,6 +227,31 @@ export const SimulateStepContent = ({
             trackEvent(TrackingEvent.SOROBAN_AUTH_ENTRIES_DETECTED, {
               entryCount: entries.length,
             });
+          } else {
+            // No auth entries — auto-assemble the transaction with
+            // simulation resources (fees, sorobanData) so the Sign step
+            // receives a complete XDR ready for signing.
+            try {
+              const rawTx = TransactionBuilder.fromXDR(
+                builtXdr,
+                network.passphrase,
+              );
+              const parsedSim = StellarRpc.parseRawSimulation(
+                simBase64Response.result,
+              );
+              const assembled = StellarRpc.assembleTransaction(
+                rawTx,
+                parsedSim,
+              ).build();
+              setAssembledXdr(assembled.toXDR());
+            } catch (e) {
+              trackEvent(TrackingEvent.SOROBAN_AUTO_ASSEMBLY_ERROR, {
+                error: String(e),
+              });
+              setAssemblyWarning(
+                "Auto-assembly failed. Please try again later.",
+              );
+            }
           }
         }
       }
@@ -314,25 +335,27 @@ export const SimulateStepContent = ({
             error={instrLeewayError}
           />
 
-          {/* Auth mode selector */}
-          <AuthModePicker
-            id="simulate-auth-mode"
-            value={authMode}
-            onChange={(mode) => {
-              resetSimulateTx();
-              selectAuthMode(mode);
-            }}
-            note={
-              <>
-                This simulation shows which signatures are required. It doesn’t
-                validate signatures or calculate final fees.{" "}
-                <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/contract-development/contract-interactions/transaction-simulation#authorization">
-                  Learn more
-                </SdsLink>
-                .
-              </>
-            }
-          />
+          {/* Auth mode selector — only relevant for InvokeHostFunction */}
+          {isInvokeContract ? (
+            <AuthModePicker
+              id="simulate-auth-mode"
+              value={authMode}
+              onChange={(mode) => {
+                resetSimulateTx();
+                selectAuthMode(mode);
+              }}
+              note={
+                <>
+                  This simulation shows which signatures are required. It
+                  doesn’t validate signatures or calculate final fees.{" "}
+                  <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/contract-development/contract-interactions/transaction-simulation#authorization">
+                    Learn more
+                  </SdsLink>
+                  .
+                </>
+              }
+            />
+          ) : null}
 
           {/* Simulate button */}
           <Box gap="md" direction="row">
@@ -356,6 +379,12 @@ export const SimulateStepContent = ({
         hasError,
         errorMessage: hasError ? getErrorMessage() : "",
       })}
+
+      {assemblyWarning ? (
+        <Alert variant="warning" placement="inline" title="Assembly warning">
+          {assemblyWarning}
+        </Alert>
+      ) : null}
 
       {/* Simulation success */}
       {isSimulationSuccess && (

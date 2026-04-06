@@ -199,13 +199,13 @@ const OptionItem = ({
       data-testid="signer-selector-options"
     >
       <div className="SignerSelector__dropdown__item__label">{label}</div>
-      {items.map((item) => {
+      {items.map((item, index) => {
         const isSavedKeypair = "secretKey" in item;
 
         return (
           <div
             className="SignerSelector__dropdown__item__value"
-            key={item.publicKey}
+            key={`${item.publicKey}-${index}`}
             onClick={() => {
               const value = isSavedKeypair
                 ? mode === "secret"

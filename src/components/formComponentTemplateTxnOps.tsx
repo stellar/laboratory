@@ -359,7 +359,7 @@ export const formComponentTemplateTxnOps = ({
     case "destination":
       return {
         render: (templ: TemplateRenderProps) => (
-          <PubKeyPicker
+          <PubKeyPickerWithSignerSelector
             key={id}
             id={id}
             label="Destination"
@@ -789,11 +789,7 @@ export const formComponentTemplateTxnOps = ({
             labelSuffix={!templ.isRequired ? "optional" : undefined}
             value={templ.value || ""}
             error={templ.error}
-            onChange={(val) =>
-              templ.onChange({
-                target: { value: val },
-              } as React.ChangeEvent<HTMLInputElement>)
-            }
+            onChange={templ.onChange}
           />
         ),
         validate: validate.getPublicKeyError,
