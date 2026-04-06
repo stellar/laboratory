@@ -165,6 +165,7 @@ export enum TrackingEvent {
   SOROBAN_AUTH_SIGN_ENTRY_ERROR = "soroban auth: sign entry: error",
   SOROBAN_AUTH_ASSEMBLY_SUCCESS = "soroban auth: assembly: success",
   SOROBAN_AUTH_ASSEMBLY_ERROR = "soroban auth: assembly: error",
+  SOROBAN_AUTO_ASSEMBLY_ERROR = "soroban: auto-assembly: error",
   // Transactions - Soroban build
   SOROBAN_BUILD_FUNCTION_SELECT = "soroban build: invoke contract - function select",
   SOROBAN_BUILD_ARG_CHANGE = "soroban build: invoke contract - arg change",

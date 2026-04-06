@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   Button,
@@ -77,6 +77,7 @@ export const SimulateStepContent = ({
   } = useBuildFlowStore();
 
   const [instrLeewayError, setInstrLeewayError] = useState("");
+  const [assemblyWarning, setAssemblyWarning] = useState("");
   const [isResourcesExpanded, setIsResourcesExpanded] = useState(false);
   const [xdrFormat, setXdrFormat] = useState<XdrFormatType | string>("json");
   const [authMode, selectAuthMode] = useState<AuthModeType | string>("");
@@ -92,57 +93,49 @@ export const SimulateStepContent = ({
    * After all auth entries are signed, assemble the transaction with the
    * signed auth entries and store the assembled XDR for the Sign step.
    */
-  const assembleWithSignedAuth = useCallback(
-    (signedEntries: string[]) => {
-      if (!simulate.simulationResultJson || !builtXdr || !network.passphrase) {
-        return;
-      }
+  const assembleWithSignedAuth = (signedEntries: string[]) => {
+    if (!simulate.simulationResultJson || !builtXdr || !network.passphrase) {
+      return;
+    }
 
-      try {
-        // Parse the original transaction
-        const rawTx = TransactionBuilder.fromXDR(builtXdr, network.passphrase);
+    try {
+      // Parse the original transaction
+      const rawTx = TransactionBuilder.fromXDR(builtXdr, network.passphrase);
 
-        // Parse the stored simulation result
-        const rawResponse = JSON.parse(simulate.simulationResultJson);
-        const parsedSim = StellarRpc.parseRawSimulation(rawResponse.result);
+      // Parse the stored simulation result
+      const rawResponse = JSON.parse(simulate.simulationResultJson);
+      const parsedSim = StellarRpc.parseRawSimulation(rawResponse.result);
 
-        // Assemble with resources and fees from simulation
-        const assembled = StellarRpc.assembleTransaction(
-          rawTx,
-          parsedSim,
-        ).build();
+      // Assemble with resources and fees from simulation
+      const assembled = StellarRpc.assembleTransaction(
+        rawTx,
+        parsedSim,
+      ).build();
 
-        // Replace auth entries on the assembled transaction with signed versions
-        const envelope = assembled.toEnvelope();
-        const ops = envelope.v1().tx().operations();
+      // Replace auth entries on the assembled transaction with signed versions
+      const envelope = assembled.toEnvelope();
+      const ops = envelope.v1().tx().operations();
 
-        for (const op of ops) {
-          if (op.body().switch() === xdr.OperationType.invokeHostFunction()) {
-            const ihf = op.body().invokeHostFunctionOp();
-            const signedAuth = signedEntries.map((entryBase64) =>
-              xdr.SorobanAuthorizationEntry.fromXDR(entryBase64, "base64"),
-            );
-            ihf.auth(signedAuth);
-          }
+      for (const op of ops) {
+        if (op.body().switch() === xdr.OperationType.invokeHostFunction()) {
+          const ihf = op.body().invokeHostFunctionOp();
+          const signedAuth = signedEntries.map((entryBase64) =>
+            xdr.SorobanAuthorizationEntry.fromXDR(entryBase64, "base64"),
+          );
+          ihf.auth(signedAuth);
         }
-
-        const finalXdr = envelope.toXDR("base64");
-        setAssembledXdr(finalXdr);
-        setSignedAuthEntriesXdr(signedEntries);
-        trackEvent(TrackingEvent.SOROBAN_AUTH_ASSEMBLY_SUCCESS);
-      } catch (e) {
-        console.error("Assembly with signed auth entries failed:", e);
-        trackEvent(TrackingEvent.SOROBAN_AUTH_ASSEMBLY_ERROR);
       }
-    },
-    [
-      simulate.simulationResultJson,
-      builtXdr,
-      network.passphrase,
-      setAssembledXdr,
-      setSignedAuthEntriesXdr,
-    ],
-  );
+
+      const finalXdr = envelope.toXDR("base64");
+      setAssembledXdr(finalXdr);
+      setSignedAuthEntriesXdr(signedEntries);
+      trackEvent(TrackingEvent.SOROBAN_AUTH_ASSEMBLY_SUCCESS);
+    } catch (e) {
+      trackEvent(TrackingEvent.SOROBAN_AUTH_ASSEMBLY_ERROR, {
+        error: String(e),
+      });
+    }
+  };
 
   const {
     mutateAsync: simulateTx,
@@ -175,6 +168,7 @@ export const SimulateStepContent = ({
 
     // Reset sign/validate/submit state and stepper completed marks
     resetDownstreamState("sign", steps);
+    setAssemblyWarning("");
 
     trackEvent(TrackingEvent.TRANSACTION_SIMULATE);
 
@@ -251,7 +245,12 @@ export const SimulateStepContent = ({
               ).build();
               setAssembledXdr(assembled.toXDR());
             } catch (e) {
-              console.error("Auto-assembly after simulation failed:", e);
+              trackEvent(TrackingEvent.SOROBAN_AUTO_ASSEMBLY_ERROR, {
+                error: String(e),
+              });
+              setAssemblyWarning(
+                "Auto-assembly failed. Please try again later.",
+              );
             }
           }
         }
@@ -380,6 +379,12 @@ export const SimulateStepContent = ({
         hasError,
         errorMessage: hasError ? getErrorMessage() : "",
       })}
+
+      {assemblyWarning ? (
+        <Alert variant="warning" placement="inline" title="Assembly warning">
+          {assemblyWarning}
+        </Alert>
+      ) : null}
 
       {/* Simulation success */}
       {isSimulationSuccess && (
