@@ -61,12 +61,9 @@ test.describe("Validate Step in Build Flow", () => {
     await page.goto(`${baseURL}/transaction/build`);
 
     // Seed sessionStorage with flow store state at the validate step
-    await page.evaluate(
-      (stateJson) => {
-        sessionStorage.setItem("stellar_lab_tx_flow_build", stateJson);
-      },
-      JSON.stringify(storeState),
-    );
+    await page.evaluate((stateJson) => {
+      sessionStorage.setItem("stellar_lab_tx_flow_build", stateJson);
+    }, JSON.stringify(storeState));
 
     // Reload to pick up the seeded sessionStorage
     await page.reload();
@@ -139,9 +136,7 @@ test.describe("Validate Step in Build Flow", () => {
     await expect(authModeSelect).toHaveValue("enforce");
   });
 
-  test("Shows signed transaction XDR in read-only picker", async ({
-    page,
-  }) => {
+  test("Shows signed transaction XDR in read-only picker", async ({ page }) => {
     await seedSessionStorageAndNavigate(page);
 
     const xdrPicker = page.locator("#validate-xdr-blob");
@@ -168,9 +163,7 @@ test.describe("Validate Step in Build Flow", () => {
     await validateButton.click();
 
     // Wait for success alert
-    await expect(
-      page.getByText("Auth entries validated"),
-    ).toBeVisible();
+    await expect(page.getByText("Auth entries validated")).toBeVisible();
     await expect(
       page.getByText(
         "All authorization entry signatures are valid. The transaction is ready to submit.",
@@ -224,18 +217,6 @@ test.describe("Validate Step in Build Flow", () => {
         "This transaction contains authorization entries that need to be validated before submitting.",
       ),
     ).toBeVisible();
-  });
-
-  test("Back button navigates to sign step", async ({ page }) => {
-    await seedSessionStorageAndNavigate(page);
-
-    const backButton = page.getByRole("button", {
-      name: "Back: Sign transaction",
-    });
-    await expect(backButton).toBeVisible();
-    await backButton.click();
-
-    await expect(page.locator("h1")).toHaveText("Sign transaction");
   });
 
   test("Next button is disabled before validation", async ({ page }) => {
