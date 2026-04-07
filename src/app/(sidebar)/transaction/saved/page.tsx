@@ -14,19 +14,17 @@ import { PageCard } from "@/components/layout/PageCard";
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 
 import { useStore } from "@/store/useStore";
+import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransactions";
 import { arrayItem } from "@/helpers/arrayItem";
 import { isSorobanOperationType } from "@/helpers/sorobanUtils";
 
-import {
-  TRANSACTION_OPERATIONS,
-  INITIAL_OPERATION,
-} from "@/constants/transactionOperations";
+import { TRANSACTION_OPERATIONS } from "@/constants/transactionOperations";
 import { SavedTransaction, SavedTransactionPage } from "@/types/types";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 export default function SavedTransactions() {
-  const { network, transaction, xdr } = useStore();
+  const { network } = useStore();
   const router = useRouter();
 
   const [savedTxns, setSavedTxns] = useState<SavedTransaction[]>([]);
@@ -55,45 +53,38 @@ export default function SavedTransactions() {
     const found = findLocalStorageTx(timestamp);
 
     if (found) {
-      let isSorobanTx = false;
+      const flowStore = useBuildFlowStore.getState();
 
-      // reset both the classic and soroban related states
-      transaction.updateBuildOperations([INITIAL_OPERATION]);
-      transaction.updateBuildXdr("");
-      transaction.updateSorobanBuildOperation(INITIAL_OPERATION);
-      transaction.updateSorobanBuildXdr("");
+      // Reset the flow store to a clean state before populating
+      flowStore.resetAll();
 
       trackEvent(TrackingEvent.TRANSACTION_SAVED_VIEW_BUILDER);
 
-      router.push(Routes.BUILD_TRANSACTION);
-
       if (found.params) {
-        transaction.setBuildParams(found.params);
+        flowStore.setBuildParams(found.params);
       }
 
       if (found.operations) {
-        isSorobanTx = isSorobanOperationType(
+        const isSorobanTx = isSorobanOperationType(
           found?.operations?.[0]?.operation_type,
         );
 
         if (isSorobanTx) {
-          // reset the classic operation
-          transaction.updateBuildOperations([INITIAL_OPERATION]);
-          transaction.updateSorobanBuildOperation(found.operations[0]);
+          flowStore.setBuildSorobanOperation(found.operations[0]);
         } else {
-          // reset the soroban operation
-          transaction.updateSorobanBuildOperation(INITIAL_OPERATION);
-          transaction.updateBuildOperations(found.operations);
+          flowStore.setBuildClassicOperations(found.operations);
+        }
+
+        if (found.xdr) {
+          if (isSorobanTx) {
+            flowStore.setBuildSorobanXdr(found.xdr);
+          } else {
+            flowStore.setBuildClassicXdr(found.xdr);
+          }
         }
       }
 
-      if (found.xdr) {
-        if (isSorobanTx) {
-          transaction.updateSorobanBuildXdr(found.xdr);
-        } else {
-          transaction.updateBuildXdr(found.xdr);
-        }
-      }
+      router.push(Routes.BUILD_TRANSACTION);
     }
   };
 
@@ -101,13 +92,21 @@ export default function SavedTransactions() {
     const found = findLocalStorageTx(timestamp);
 
     if (found) {
+      const flowStore = useBuildFlowStore.getState();
+
       trackEvent(TrackingEvent.TRANSACTION_SAVED_VIEW_SUBMITTER);
 
-      router.push(Routes.SUBMIT_TRANSACTION);
+      // Reset and seed the flow store at the submit step with the signed XDR
+      flowStore.resetAll();
 
       if (found.xdr) {
-        xdr.updateXdrBlob(found.xdr);
+        flowStore.setSignedXdr(found.xdr);
       }
+
+      flowStore.setActiveStep("submit");
+      useBuildFlowStore.setState({ highestCompletedStep: "sign" });
+
+      router.push(Routes.BUILD_TRANSACTION);
     }
   };
 
