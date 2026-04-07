@@ -9,7 +9,6 @@ import { TransactionStepName } from "@/components/TransactionStepper";
  * @param activeStep - The currently active step (from store)
  * @param highestCompletedStep - The furthest completed step (from store)
  * @param goToNextStep - Store action to advance to the next step
- * @param goToPreviousStep - Store action to go back to the previous step
  * @param setActiveStep - Store action to jump to a specific step
  * @returns Step navigation state and handlers
  *
@@ -29,14 +28,12 @@ export const useTransactionFlow = ({
   activeStep,
   highestCompletedStep,
   goToNextStep,
-  goToPreviousStep,
   setActiveStep,
 }: {
   steps: TransactionStepName[];
   activeStep: TransactionStepName;
   highestCompletedStep: TransactionStepName | null;
   goToNextStep: (steps: TransactionStepName[]) => void;
-  goToPreviousStep: (steps: TransactionStepName[]) => void;
   setActiveStep: (step: TransactionStepName) => void;
 }) => {
   const stepIndex = steps.indexOf(activeStep);
@@ -45,7 +42,6 @@ export const useTransactionFlow = ({
     : -1;
 
   const handleNext = () => goToNextStep(steps);
-  const handleBack = () => goToPreviousStep(steps);
   const handleStepClick = (step: TransactionStepName) => {
     if (steps.indexOf(step) <= highestCompletedIndex) {
       setActiveStep(step);
@@ -56,7 +52,6 @@ export const useTransactionFlow = ({
     highestCompletedStep,
     stepIndex,
     handleNext,
-    handleBack,
     handleStepClick,
   };
 };

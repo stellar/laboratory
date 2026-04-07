@@ -115,12 +115,6 @@ interface TransactionFlowActions {
    */
   goToNextStep: (steps: TransactionStepName[]) => void;
 
-  /**
-   * Go back to the previous step. Only changes activeStep —
-   * highestCompletedStep is not lowered.
-   */
-  goToPreviousStep: (steps: TransactionStepName[]) => void;
-
   setBuildParams: (params: TransactionBuildParamsObj) => void;
 
   setBuildSorobanOperation: (operation: TxnOperation) => void;
@@ -333,13 +327,6 @@ const createTransactionFlowStore = (
             }
           }),
 
-        goToPreviousStep: (steps) =>
-          set((state) => {
-            const currentIndex = steps.indexOf(state.activeStep);
-            if (currentIndex > 0) {
-              state.activeStep = steps[currentIndex - 1];
-            }
-          }),
         setBuildParams: (params) =>
           set((state) => {
             state.build.params = {

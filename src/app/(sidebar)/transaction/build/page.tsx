@@ -36,7 +36,6 @@ export default function BuildTransaction() {
     highestCompletedStep,
     setActiveStep,
     goToNextStep,
-    goToPreviousStep,
     resetAll,
   } = useBuildFlowStore();
 
@@ -57,12 +56,11 @@ export default function BuildTransaction() {
       : ["build", "simulate", "sign", "submit"]
     : ["build", "sign", "submit"];
 
-  const { handleNext, handleBack, handleStepClick } = useTransactionFlow({
+  const { handleNext, handleStepClick } = useTransactionFlow({
     steps,
     activeStep,
     highestCompletedStep,
     goToNextStep,
-    goToPreviousStep,
     setActiveStep,
   });
 
@@ -70,11 +68,9 @@ export default function BuildTransaction() {
 
   const getIsNextDisabled = (): boolean => {
     if (activeStep === "build") {
-      // Classic: XDR must be built. Soroban: params + operations must be valid
+      // Classic & Soroban: XDR must be built. Soroban: params + operations must be valid
       // (simulation happens in the next step).
-      return isSoroban
-        ? !(build.isValid.params && build.isValid.operations)
-        : !currentXdr;
+      return !currentXdr || !(build.isValid.params && build.isValid.operations);
     }
     if (activeStep === "simulate") {
       // Simulation must be complete. If auth entries exist, they must be signed
@@ -173,11 +169,11 @@ export default function BuildTransaction() {
               label: "New transaction",
               href: "/transaction/build",
             },
-            {
-              id: "import-xdr",
-              label: "Import transaction XDR",
-              href: "/transaction/import",
-            },
+            // {
+            //   id: "import-xdr",
+            //   label: "Import transaction XDR",
+            //   href: "/transaction/import",
+            // },
           ]}
           addlClassName="Tabs--gap-md"
         />
@@ -196,7 +192,6 @@ export default function BuildTransaction() {
               steps={steps}
               activeStep={activeStep}
               onNext={handleNext}
-              onBack={handleBack}
               isNextDisabled={isNextDisabled}
               xdr={currentXdr}
             />
