@@ -5,6 +5,7 @@ import { Card } from "@stellar/design-system";
 import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 
 import { useTransactionFlow } from "@/hooks/useTransactionFlow";
+import { useLegacyUrlMigration } from "@/hooks/useLegacyUrlMigration";
 
 import { Box } from "@/components/layout/Box";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
@@ -38,6 +39,9 @@ export default function BuildTransaction() {
     goToNextStep,
     resetAll,
   } = useBuildFlowStore();
+
+  // Bridge legacy querystring params into the flow store (one-time migration)
+  useLegacyUrlMigration();
 
   // For Classic
   const { params: paramsError, operations: operationsError } = build.error;

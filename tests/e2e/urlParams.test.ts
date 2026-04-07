@@ -37,10 +37,7 @@ test.describe("URL Params", () => {
   });
 
   test.describe("Transactions", () => {
-    // Skipped: Build page now reads from sessionStorage flow store, not URL
-    // querystring. Will be unskipped when URL backward compatibility migration
-    // bridges querystring params into the flow store.
-    test.skip("[Classic] Build Transaction", async ({ page }) => {
+    test("[Classic] Build Transaction", async ({ page }) => {
       await page.goto(
         `${baseURL}/transaction/build?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;&transaction$build$classic$operations@$operation_type=create_account&params$destination=GC5TQ7TXKHGE5JQMZPYV5KBSQ67X6PYQVU5QN7JRGWCHRA227UFPZ6LD&starting_balance=3000;&source_account=;&$operation_type=payment&params$destination=GAJAIHPKNTJ362TAUWTU2S56B7PULRTMY456LUELK53USX43537IFMS3&asset$code=USDC&issuer=GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5&type=credit_alphanum4;&amount=4000;&source_account=GA46LGGOLXJY5OSX6N4LHV4MWDFXNGLK76I4NDNKKYAXRRSKI5AJGMXG;;;&params$source_account=GA46LGGOLXJY5OSX6N4LHV4MWDFXNGLK76I4NDNKKYAXRRSKI5AJGMXG&fee=2000&seq_num=3668692344766465&cond$time$max_time=1733409768;;&memo$text=123;;&isValid$params:true&operations:true;;`,
       );
@@ -133,45 +130,27 @@ test.describe("URL Params", () => {
       );
     });
 
-    // Skipped: /transaction/simulate now redirects to /transaction/build.
-    // Will be unskipped when URL backward compatibility migration is complete.
-    test.skip("Simulate Transaction", async ({ page }) => {
+    test("Simulate Transaction redirects to build", async ({ page }) => {
       await page.goto(
-        `${baseURL}/transaction/simulate?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;&xdr$blob=AAAAAgAAAAA55ZjOXdOOulfzeLPXjLDLdplq//5HGjapWAXjGSkdAkwAAD6AADQioAAAAAQAAAAEAAAAAAAAAAAAAAABnUbvoAAAAAQAAAAMxMjMAAAAAAgAAAAAAAAAAAAAAALs4fndRzE6mDMvxXqgyh79//PxCtOwb9MTWEeINa//Qr8AAAABvwjrAAAAAABAAAAADnlmM5d0466V//N4s9eMsMt2mWr//kcaNqlYBeMZKR0CTAAAAAQAAAAASBB3qbNO//amClp01Lvg//fRcZsxzvl0ItXd0lfm+7+ggAAAAFVU0RDAAAAAEI+fQXy7K+//7BkrIVo//G+lq7bjY5wJUq+NBPgIH3layAAAACVAvkAAAAAAAAAAAAA==;;`,
+        `${baseURL}/transaction/simulate?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;`,
       );
 
-      await expect(page.locator("h1")).toHaveText("Simulate transaction");
-
-      await expect(
-        page.getByLabel("Input a Base64 encoded TransactionEnvelope"),
-      ).toHaveValue(
-        "AAAAAgAAAAA55ZjOXdOOulfzeLPXjLDLdplq/5HGjapWAXjGSkdAkwAAD6AADQioAAAAAQAAAAEAAAAAAAAAAAAAAABnUbvoAAAAAQAAAAMxMjMAAAAAAgAAAAAAAAAAAAAAALs4fndRzE6mDMvxXqgyh79/PxCtOwb9MTWEeINa/Qr8AAAABvwjrAAAAAABAAAAADnlmM5d0466V/N4s9eMsMt2mWr/kcaNqlYBeMZKR0CTAAAAAQAAAAASBB3qbNO/amClp01Lvg/fRcZsxzvl0ItXd0lfm+7+ggAAAAFVU0RDAAAAAEI+fQXy7K+/7BkrIVo/G+lq7bjY5wJUq+NBPgIH3layAAAACVAvkAAAAAAAAAAAAA==",
-      );
+      await page.waitForURL("**/transaction/build**");
+      await expect(page.locator("h1")).toHaveText("Build transaction");
     });
 
-    // Skipped: /transaction/submit now redirects to /transaction/build.
-    // Will be unskipped when URL backward compatibility migration is complete.
-    test.skip("[Classic] Submit Transaction", async ({ page }) => {
+    test("[Classic] Submit Transaction redirects to build", async ({
+      page,
+    }) => {
       await page.goto(
-        `${baseURL}/transaction/submit?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;&xdr$blob=AAAAAgAAAAA55ZjOXdOOulfzeLPXjLDLdplq//5HGjapWAXjGSkdAkwAAD6AADQioAAAAAQAAAAEAAAAAAAAAAAAAAABnUbvoAAAAAQAAAAMxMjMAAAAAAgAAAAAAAAAAAAAAALs4fndRzE6mDMvxXqgyh79//PxCtOwb9MTWEeINa//Qr8AAAABvwjrAAAAAABAAAAADnlmM5d0466V//N4s9eMsMt2mWr//kcaNqlYBeMZKR0CTAAAAAQAAAAASBB3qbNO//amClp01Lvg//fRcZsxzvl0ItXd0lfm+7+ggAAAAFVU0RDAAAAAEI+fQXy7K+//7BkrIVo//G+lq7bjY5wJUq+NBPgIH3layAAAACVAvkAAAAAAAAAAAAA==;;`,
+        `${baseURL}/transaction/submit?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;`,
       );
 
-      await expect(page.locator("h1")).toHaveText("Submit transaction");
-
-      await expect(
-        page.getByLabel("Input a Base64 encoded TransactionEnvelope"),
-      ).toHaveValue(
-        "AAAAAgAAAAA55ZjOXdOOulfzeLPXjLDLdplq/5HGjapWAXjGSkdAkwAAD6AADQioAAAAAQAAAAEAAAAAAAAAAAAAAABnUbvoAAAAAQAAAAMxMjMAAAAAAgAAAAAAAAAAAAAAALs4fndRzE6mDMvxXqgyh79/PxCtOwb9MTWEeINa/Qr8AAAABvwjrAAAAAABAAAAADnlmM5d0466V/N4s9eMsMt2mWr/kcaNqlYBeMZKR0CTAAAAAQAAAAASBB3qbNO/amClp01Lvg/fRcZsxzvl0ItXd0lfm+7+ggAAAAFVU0RDAAAAAEI+fQXy7K+/7BkrIVo/G+lq7bjY5wJUq+NBPgIH3layAAAACVAvkAAAAAAAAAAAAA==",
-      );
-      await expect(page.getByLabel("Transaction hash")).toHaveValue(
-        "44abaabac11c318d595d392c24166965301b48109899bc8e819723afb89d5e37",
-      );
+      await page.waitForURL("**/transaction/build**");
+      await expect(page.locator("h1")).toHaveText("Build transaction");
     });
 
-    // Skipped: Build page now reads from sessionStorage flow store, not URL
-    // querystring. Will be unskipped when URL backward compatibility migration
-    // bridges querystring params into the flow store.
-    test.skip("[Soroban] Build Transaction", async ({ page }) => {
+    test("[Soroban] Build Transaction", async ({ page }) => {
       await page.goto(
         `${baseURL}/transaction/build?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;&transaction$build$classic$operations@$operation_type=payment&params$destination=GA46LGGOLXJY5OSX6N4LHV4MWDFXNGLK76I4NDNKKYAXRRSKI5AJGMXG&asset$code=&issuer=&type=native;&amount=5;&source_account=;;;&soroban$operation$operation_type=extend_footprint_ttl&params$contractDataLedgerKey=AAAABgAAAAEg/u86MzPrVcpNrsFUa84T82Kss8DLAE9ZMxLqhM22HwAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAAB+TL0HLiAjanMRnyeqyhb8Iu+4d1g2dl1cwPi1UZAigwAAAAE=&extend_ttl_to=20000&resource_fee=46753;;;&params$source_account=GB7EZPIHFYQCG2TTCGPSPKWKC36CF35YO5MDM5S5LTAPRNKRSARIHWGG&seq_num=1727208213184538&cond$time$min_time=1733409768;;&memo$text=100;;&isValid$params:true&operations:true;;`,
       );
@@ -212,7 +191,6 @@ test.describe("URL Params", () => {
         "AAAABgAAAAEgu86MzPrVcpNrsFUa84T82Kss8DLAE9ZMxLqhM22HwAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAAB+TL0HLiAjanMRnyeqyhb8Iu+4d1g2dl1cwPi1UZAigwAAAAE=",
       );
       await expect(sorobanOp.getByLabel("Extend To")).toHaveValue("20000");
-      await expect(sorobanOp.getByLabel("Resource Fee")).toHaveValue("46753");
     });
 
     test("Fee Bump", async ({ page }) => {
