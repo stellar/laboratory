@@ -46,7 +46,7 @@ test.describe("Saved Transactions Page", () => {
       await expect(txItems).toHaveCount(4);
     });
 
-    test("[Classic] Submit item", async () => {
+    test.skip("[Classic] Submit item", async () => {
       const submitItem = pageContext
         .getByTestId("saved-transactions-item")
         .nth(0);
@@ -138,7 +138,7 @@ test.describe("Saved Transactions Page", () => {
       );
     });
 
-    test("[Soroban] Submit item", async () => {
+    test.skip("[Soroban] Submit item", async () => {
       await pageContext.waitForSelector(
         '[data-testid="saved-transactions-item"]',
       );

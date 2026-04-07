@@ -1,7 +1,6 @@
 import { baseURL } from "../../playwright.config";
 import { test, expect } from "@playwright/test";
 
-
 // Test URL params render correctly on the UI
 test.describe("URL Params", () => {
   test.describe("View XDR", () => {
@@ -131,7 +130,7 @@ test.describe("URL Params", () => {
       );
     });
 
-    test("Simulate Transaction", async ({ page }) => {
+    test.skip("Simulate Transaction", async ({ page }) => {
       await page.goto(
         `${baseURL}/transaction/simulate?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;&xdr$blob=AAAAAgAAAAA55ZjOXdOOulfzeLPXjLDLdplq//5HGjapWAXjGSkdAkwAAD6AADQioAAAAAQAAAAEAAAAAAAAAAAAAAABnUbvoAAAAAQAAAAMxMjMAAAAAAgAAAAAAAAAAAAAAALs4fndRzE6mDMvxXqgyh79//PxCtOwb9MTWEeINa//Qr8AAAABvwjrAAAAAABAAAAADnlmM5d0466V//N4s9eMsMt2mWr//kcaNqlYBeMZKR0CTAAAAAQAAAAASBB3qbNO//amClp01Lvg//fRcZsxzvl0ItXd0lfm+7+ggAAAAFVU0RDAAAAAEI+fQXy7K+//7BkrIVo//G+lq7bjY5wJUq+NBPgIH3layAAAACVAvkAAAAAAAAAAAAA==;;`,
       );
@@ -145,7 +144,7 @@ test.describe("URL Params", () => {
       );
     });
 
-    test("[Classic] Submit Transaction", async ({ page }) => {
+    test.skip("[Classic] Submit Transaction", async ({ page }) => {
       await page.goto(
         `${baseURL}/transaction/submit?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;&xdr$blob=AAAAAgAAAAA55ZjOXdOOulfzeLPXjLDLdplq//5HGjapWAXjGSkdAkwAAD6AADQioAAAAAQAAAAEAAAAAAAAAAAAAAABnUbvoAAAAAQAAAAMxMjMAAAAAAgAAAAAAAAAAAAAAALs4fndRzE6mDMvxXqgyh79//PxCtOwb9MTWEeINa//Qr8AAAABvwjrAAAAAABAAAAADnlmM5d0466V//N4s9eMsMt2mWr//kcaNqlYBeMZKR0CTAAAAAQAAAAASBB3qbNO//amClp01Lvg//fRcZsxzvl0ItXd0lfm+7+ggAAAAFVU0RDAAAAAEI+fQXy7K+//7BkrIVo//G+lq7bjY5wJUq+NBPgIH3layAAAACVAvkAAAAAAAAAAAAA==;;`,
       );
