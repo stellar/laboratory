@@ -168,16 +168,4 @@ test.describe("Sign Step in Build Flow", () => {
     // Should reset to build step
     await expect(page.locator("h1")).toHaveText("Build transaction");
   });
-
-  test("Back button navigates to build step", async ({ page }) => {
-    await seedSessionStorageAndNavigate(page);
-
-    const backButton = page.getByRole("button", {
-      name: "Back: Build transaction",
-    });
-    await expect(backButton).toBeVisible();
-    await backButton.click();
-
-    await expect(page.locator("h1")).toHaveText("Build transaction");
-  });
 });

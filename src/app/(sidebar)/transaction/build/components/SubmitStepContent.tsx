@@ -306,7 +306,13 @@ export const SubmitStepContent = () => {
                   const href = buildEndpointHref(Routes.TRANSACTION_DASHBOARD, {
                     transactionHash: submitRpcResponse.hash,
                   });
-                  openUrl(`${window.location.origin}${href}`);
+                  // openUrl's sanitizeUrl breaks the encoding which prevents the
+                  // dashboard page from parsing the hash out of the URL
+                  window.open(
+                    `${window.location.origin}${href}`,
+                    "_blank",
+                    "noopener,noreferrer",
+                  );
                 }}
               >
                 View in transaction dashboard
@@ -416,7 +422,13 @@ export const SubmitStepContent = () => {
                   const href = buildEndpointHref(Routes.TRANSACTION_DASHBOARD, {
                     transactionHash: submitHorizonResponse.hash,
                   });
-                  openUrl(`${window.location.origin}${href}`);
+                  // openUrl's sanitizeUrl breaks the encoding which prevents the
+                  // dashboard page from parsing the hash out of the URL
+                  window.open(
+                    `${window.location.origin}${href}`,
+                    "_blank",
+                    "noopener,noreferrer",
+                  );
                 }}
               >
                 View in transaction dashboard

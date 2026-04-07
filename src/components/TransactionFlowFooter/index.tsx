@@ -20,7 +20,6 @@ import "./styles.scss";
  * @param steps - Ordered array of step names for the current flow
  * @param activeStep - The currently active step
  * @param onNext - Callback to advance to the next step
- * @param onBack - Callback to go to the previous step
  * @param isNextDisabled - Whether the Next button should be disabled
  * @param xdr - Built XDR string, used for saving on the build/import step
  *
@@ -29,7 +28,6 @@ import "./styles.scss";
  *   steps={["build", "simulate", "sign", "submit"]}
  *   activeStep="build"
  *   onNext={handleNext}
- *   onBack={handleBack}
  *   isNextDisabled={!isValid}
  *   xdr={builtXdr}
  * />
@@ -38,40 +36,26 @@ export const TransactionFlowFooter = ({
   steps,
   activeStep,
   onNext,
-  onBack,
   isNextDisabled,
   xdr,
 }: {
   steps: TransactionStepName[];
   activeStep: TransactionStepName;
   onNext?: () => void;
-  onBack?: () => void;
   isNextDisabled: boolean;
   xdr?: string;
 }) => {
   const [isSaveModalVisible, setIsSaveModalVisible] = useState(false);
 
   const currentIndex = steps.indexOf(activeStep);
-  const isFirstStep = currentIndex === 0;
   const isLastStep = currentIndex === steps.length - 1;
   const showSaveButton = activeStep === "build" || activeStep === "import";
 
-  const prevStep = !isFirstStep ? steps[currentIndex - 1] : null;
   const nextStep = !isLastStep ? steps[currentIndex + 1] : null;
 
   return (
     <div className="TransactionFlowFooter">
       <div className="TransactionFlowFooter__nav">
-        {prevStep && (
-          <Button
-            size="md"
-            variant="tertiary"
-            onClick={onBack}
-            icon={<Icon.ArrowLeft />}
-          >
-            {`Back: ${getStepLabel(prevStep)}`}
-          </Button>
-        )}
         {nextStep && (
           <Button
             size="md"
