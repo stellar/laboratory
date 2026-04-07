@@ -306,6 +306,8 @@ export const SubmitStepContent = () => {
                   const href = buildEndpointHref(Routes.TRANSACTION_DASHBOARD, {
                     transactionHash: submitRpcResponse.hash,
                   });
+                  // openUrl's sanitizeUrl breaks the encoding which prevents the
+                  // dashboard page from parsing the hash out of the URL
                   window.open(
                     `${window.location.origin}${href}`,
                     "_blank",
@@ -420,6 +422,8 @@ export const SubmitStepContent = () => {
                   const href = buildEndpointHref(Routes.TRANSACTION_DASHBOARD, {
                     transactionHash: submitHorizonResponse.hash,
                   });
+                  // openUrl's sanitizeUrl breaks the encoding which prevents the
+                  // dashboard page from parsing the hash out of the URL
                   window.open(
                     `${window.location.origin}${href}`,
                     "_blank",
