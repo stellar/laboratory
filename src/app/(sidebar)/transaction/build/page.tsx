@@ -73,10 +73,11 @@ export default function BuildTransaction() {
       return !currentXdr || !(build.isValid.params && build.isValid.operations);
     }
     if (activeStep === "simulate") {
-      // Simulation must be complete. If auth entries exist, they must be signed
-      // (assembledXdr is set after auth signing + assembly, or after auto-assembly
-      // when no auth entries are present).
-      return !simulate.simulationResultJson;
+      // Simulation must be complete and assembledXdr must exist (set after auth
+      // signing + assembly, or after auto-assembly when no auth entries are
+      // present) so the sign step receives a transaction with
+      // simulation-derived resources/fees.
+      return !simulate.simulationResultJson || !simulate.assembledXdr;
     }
     if (activeStep === "sign") {
       return !sign.signedXdr;

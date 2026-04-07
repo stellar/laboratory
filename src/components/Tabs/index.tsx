@@ -29,7 +29,7 @@ export const Tabs = ({
         const isActive = t.href ? pathname === t.href : t.id === activeTabId;
         const className = `Tab ${addlClassName ?? ""}`;
 
-        if (t.href) {
+        if (t.href && !t.isDisabled) {
           return (
             <Link
               key={t.id}
@@ -37,7 +37,6 @@ export const Tabs = ({
               className={`external-link ${className}`}
               data-testid={t.id}
               data-is-active={isActive}
-              data-is-disabled={t.isDisabled ?? undefined}
             >
               {t.label}
             </Link>
