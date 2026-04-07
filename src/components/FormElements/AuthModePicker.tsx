@@ -5,7 +5,7 @@ import { AuthModeType } from "@/types/types";
 const AUTH_MODE_OPTIONS: { id: string; label: string }[] = [
   { id: "record", label: "Record" },
   { id: "enforce", label: "Enforce" },
-  { id: "record-allow-nonroot", label: "Record (allow non-root)" },
+  { id: "record_allow_nonroot", label: "Record (allow non-root)" },
 ];
 
 /**
