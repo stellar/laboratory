@@ -346,9 +346,8 @@ export const SimulateStepContent = ({
               }}
               note={
                 <>
-                  &quot;Record&quot; is recommended for simulation.
-                  &quot;Record&quot; discovers which authorization entries are
-                  required.
+                  “Record” is recommended for simulation. “Record” discovers
+                  which authorization entries are required.
                   <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/contract-development/contract-interactions/transaction-simulation#authorization">
                     Learn more
                   </SdsLink>

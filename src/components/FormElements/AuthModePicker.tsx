@@ -5,6 +5,7 @@ import { AuthModeType } from "@/types/types";
 const AUTH_MODE_OPTIONS: { id: string; label: string }[] = [
   { id: "record", label: "Record" },
   { id: "enforce", label: "Enforce" },
+  // 'record_allow_nonroot' is what simulation expects for non-root auth entries
   { id: "record_allow_nonroot", label: "Record (allow non-root)" },
 ];
 
