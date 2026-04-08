@@ -54,11 +54,17 @@ test.describe("Validate Step in Build Flow", () => {
     version: 0,
   });
 
+  // Testnet network params for the URL querystring so the main store
+  // initializes with rpcUrl immediately (avoids waiting for NetworkSelector's
+  // useEffect, which races on slower CI machines).
+  const TESTNET_QUERY =
+    "$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;;";
+
   const seedSessionStorageAndNavigate = async (page: Page) => {
     const storeState = buildStoreState(MOCK_SIGNED_XDR, MOCK_AUTH_ENTRY_XDR);
 
     // Navigate to the build page first so sessionStorage is on the right origin
-    await page.goto(`${baseURL}/transaction/build`);
+    await page.goto(`${baseURL}/transaction/build?${TESTNET_QUERY}`);
 
     // Seed sessionStorage with flow store state at the validate step
     await page.evaluate((stateJson) => {

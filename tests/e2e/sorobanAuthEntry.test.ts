@@ -61,11 +61,17 @@ const buildStoreState = () => ({
   version: 0,
 });
 
+// Testnet network params for the URL querystring so the main store
+// initializes with rpcUrl immediately (avoids waiting for NetworkSelector's
+// useEffect, which races on slower CI machines).
+const TESTNET_QUERY =
+  "$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;;";
+
 const seedSessionStorageAndNavigate = async (page: Page) => {
   const storeState = buildStoreState();
 
   // Navigate first so sessionStorage is on the correct origin
-  await page.goto(`${baseURL}/transaction/build`);
+  await page.goto(`${baseURL}/transaction/build?${TESTNET_QUERY}`);
 
   await page.evaluate(
     (stateJson) => {
