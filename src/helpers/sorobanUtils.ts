@@ -705,7 +705,7 @@ export const hasTypeAndValue = (v: any) => v?.type && v.value !== undefined;
 
 /**
  * Determines if the simulation result indicates a read-only transaction
- * (no auth entries and no write footprint).
+ * (no write footprint).
  */
 export const checkIsReadOnly = (responseData: Record<string, any>): boolean => {
   try {

@@ -72,6 +72,10 @@ export const ValidateStepContent = () => {
   const onValidate = async () => {
     if (!network.rpcUrl || !signedXdr) return;
 
+    // Clear previous validated result so a failed re-validation can't leave
+    // stale validatedXdr enabling the next step.
+    setValidatedXdr(undefined);
+
     try {
       const response = await simulateTx({
         rpcUrl: network.rpcUrl,
