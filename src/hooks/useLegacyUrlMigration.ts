@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { useStore } from "@/store/useStore";
 import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
@@ -12,19 +12,11 @@ import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
  * (sessionStorage). This hook detects legacy params and seeds the flow store
  * so old URLs continue to work.
  *
- * Should be called once in the build page component.
+ * @returns `isLegacyUrl` — true when data was migrated from a legacy URL.
  */
 export const useLegacyUrlMigration = () => {
+  const [isLegacyUrl, setIsLegacyUrl] = useState(false);
   const { transaction } = useStore();
-
-  // Use primitive values as dependencies so the effect re-fires when the
-  // main store hydrates from the URL querystring.
-  const legacySourceAccount = transaction.build.params.source_account;
-  const legacySorobanOpType =
-    transaction.build.soroban.operation.operation_type;
-  const legacyClassicOpCount = transaction.build.classic.operations.length;
-  const legacyFirstClassicOpType =
-    transaction.build.classic.operations[0]?.operation_type || "";
 
   useEffect(() => {
     const legacyParams = transaction.build.params;
@@ -44,9 +36,12 @@ export const useLegacyUrlMigration = () => {
 
     const flowStore = useBuildFlowStore.getState();
 
+    let didMigrate = false;
+
     // Seed params if the flow store doesn't have them yet
     if (hasLegacyParams && !flowStore.build.params.source_account) {
       flowStore.setBuildParams(legacyParams);
+      didMigrate = true;
     }
 
     // Seed operations if the flow store doesn't have them yet
@@ -63,18 +58,22 @@ export const useLegacyUrlMigration = () => {
       if (transaction.build.soroban.xdr) {
         flowStore.setBuildSorobanXdr(transaction.build.soroban.xdr);
       }
+      didMigrate = true;
     } else if (hasLegacyClassicOps && !flowHasOps) {
       flowStore.setBuildClassicOperations(legacyClassicOps);
 
       if (transaction.build.classic.xdr) {
         flowStore.setBuildClassicXdr(transaction.build.classic.xdr);
       }
+      didMigrate = true;
     }
-  }, [
-    legacySourceAccount,
-    legacySorobanOpType,
-    legacyClassicOpCount,
-    legacyFirstClassicOpType,
-    transaction,
-  ]);
+
+    if (didMigrate) {
+      setIsLegacyUrl(true);
+    }
+  }, [transaction]);
+
+  const dismissLegacyAlert = () => setIsLegacyUrl(false);
+
+  return { isLegacyUrl, dismissLegacyAlert };
 };
