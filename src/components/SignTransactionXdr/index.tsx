@@ -14,7 +14,6 @@ import { Box } from "@/components/layout/Box";
 import { MessageField } from "@/components/MessageField";
 import { TextPicker } from "@/components/FormElements/TextPicker";
 import { LabelHeading } from "@/components/LabelHeading";
-import { WithInfoText } from "@/components/WithInfoText";
 import { PubKeyPickerWithSignerSelector } from "@/components/FormElements/PubKeyPickerWithSignerSelector";
 
 import { txHelper } from "@/helpers/txHelper";
@@ -692,16 +691,14 @@ export const SignTransactionXdr = ({
       <Box gap="md" direction="column">
         {/* Title */}
         {title ? (
-          <WithInfoText href="https://developers.stellar.org/docs/learn/encyclopedia/signatures-multisig">
-            <Text
-              as="div"
-              size="sm"
-              weight="medium"
-              addlClassName="SignTransactionXdr__title"
-            >
-              {title}
-            </Text>
-          </WithInfoText>
+          <Text
+            as="div"
+            size="sm"
+            weight="medium"
+            addlClassName="SignTransactionXdr__title"
+          >
+            {title}
+          </Text>
         ) : null}
 
         {description ? (

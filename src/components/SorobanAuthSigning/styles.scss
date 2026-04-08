@@ -7,11 +7,11 @@
   // Header section — title + "View auth entries" button
   &__header {
     display: grid;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
     gap: pxToRem(16px);
     padding: pxToRem(16px);
-    grid-template-columns: auto pxToRem(137px);
+    grid-template-columns: auto pxToRem(167px);
 
     &--expanded {
       border-bottom: 1px solid var(--sds-clr-gray-06);
@@ -21,7 +21,6 @@
   &__header-text {
     display: flex;
     flex-direction: column;
-    gap: pxToRem(4px);
   }
 
   &__header-title {
