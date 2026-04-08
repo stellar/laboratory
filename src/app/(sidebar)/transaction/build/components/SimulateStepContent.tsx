@@ -67,6 +67,7 @@ export const SimulateStepContent = ({
   const {
     build,
     simulate,
+    highestCompletedStep,
     setSimulateInstructionLeeway,
     setSimulationResult,
     setSimulationReadOnly,
@@ -159,6 +160,14 @@ export const SimulateStepContent = ({
 
   const isActionDisabled =
     !network.rpcUrl || !builtXdr || Boolean(instrLeewayError);
+
+  // Show re-simulate warning when the user has previously completed this step
+  const wasSimulatePreviouslyCompleted = (() => {
+    if (!highestCompletedStep) return false;
+    const simulateIndex = steps.indexOf("simulate");
+    const hcIndex = steps.indexOf(highestCompletedStep);
+    return hcIndex >= simulateIndex;
+  })();
 
   /**
    * Run the simulation against the RPC endpoint.
@@ -358,7 +367,7 @@ export const SimulateStepContent = ({
           ) : null}
 
           {/* Simulate button */}
-          <Box gap="md" direction="row">
+          <Box gap="md" direction="row" align="center">
             <Button
               disabled={Boolean(isActionDisabled)}
               isLoading={isSimulateTxPending}
@@ -368,6 +377,16 @@ export const SimulateStepContent = ({
             >
               Simulate
             </Button>
+
+            {wasSimulatePreviouslyCompleted && (
+              <Text
+                size="xs"
+                as="span"
+                addlClassName="SimulateStepContent__resimulate-note"
+              >
+                Re-simulating resets completed steps.
+              </Text>
+            )}
           </Box>
         </Box>
       </PageCard>

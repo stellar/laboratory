@@ -66,7 +66,7 @@
     cursor: pointer;
 
     .Link {
-      font-weight: var(--sds-fw-bold);
+      font-weight: var(--sds-fw-semi-bold);
     }
 
     svg {
@@ -85,6 +85,10 @@
     padding: pxToRem(12px) pxToRem(16px);
     word-break: break-all;
     color: var(--sds-clr-gray-11);
+  }
+
+  &__resimulate-note {
+    color: var(--sds-clr-amber-11);
   }
 
   &__badge {
