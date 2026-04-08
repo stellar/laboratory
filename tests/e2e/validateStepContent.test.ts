@@ -54,21 +54,28 @@ test.describe("Validate Step in Build Flow", () => {
     version: 0,
   });
 
-  // Testnet network params for the URL querystring so the main store
-  // initializes with rpcUrl immediately (avoids waiting for NetworkSelector's
-  // useEffect, which races on slower CI machines).
-  const TESTNET_QUERY =
-    "$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;;";
-
   const seedSessionStorageAndNavigate = async (page: Page) => {
     const storeState = buildStoreState(MOCK_SIGNED_XDR, MOCK_AUTH_ENTRY_XDR);
 
     // Navigate to the build page first so sessionStorage is on the right origin
-    await page.goto(`${baseURL}/transaction/build?${TESTNET_QUERY}`);
+    await page.goto(`${baseURL}/transaction/build`);
 
     // Seed sessionStorage with flow store state at the validate step
     await page.evaluate((stateJson) => {
       sessionStorage.setItem("stellar_lab_tx_flow_build", stateJson);
+
+      // Seed localStorage with testnet so the NetworkSelector doesn't open
+      // a "Load Network" modal on reload (CI has no saved network).
+      localStorage.setItem(
+        "stellar_lab_network",
+        JSON.stringify({
+          id: "testnet",
+          label: "Testnet",
+          horizonUrl: "https://horizon-testnet.stellar.org",
+          rpcUrl: "https://soroban-testnet.stellar.org",
+          passphrase: "Test SDF Network ; September 2015",
+        }),
+      );
     }, JSON.stringify(storeState));
 
     // Reload to pick up the seeded sessionStorage
@@ -155,7 +162,7 @@ test.describe("Validate Step in Build Flow", () => {
   }) => {
     await seedSessionStorageAndNavigate(page);
 
-    const validateButton = page.getByRole("button", { name: "Validate" });
+    const validateButton = page.getByRole("button", { name: "Validate", exact: true });
     await expect(validateButton).toBeEnabled();
   });
 
@@ -165,7 +172,7 @@ test.describe("Validate Step in Build Flow", () => {
     await mockEnforceSimulationSuccess(page);
     await seedSessionStorageAndNavigate(page);
 
-    const validateButton = page.getByRole("button", { name: "Validate" });
+    const validateButton = page.getByRole("button", { name: "Validate", exact: true });
     await validateButton.click();
 
     // Wait for success alert
@@ -185,7 +192,7 @@ test.describe("Validate Step in Build Flow", () => {
     await mockEnforceSimulationFailure(page);
     await seedSessionStorageAndNavigate(page);
 
-    const validateButton = page.getByRole("button", { name: "Validate" });
+    const validateButton = page.getByRole("button", { name: "Validate", exact: true });
     await validateButton.click();
 
     await expect(page.getByText("Validation failed")).toBeVisible();
@@ -197,7 +204,7 @@ test.describe("Validate Step in Build Flow", () => {
     await mockEnforceSimulationSuccess(page);
     await seedSessionStorageAndNavigate(page);
 
-    const validateButton = page.getByRole("button", { name: "Validate" });
+    const validateButton = page.getByRole("button", { name: "Validate", exact: true });
     await validateButton.click();
 
     await expect(
@@ -240,7 +247,7 @@ test.describe("Validate Step in Build Flow", () => {
     await mockEnforceSimulationSuccess(page);
     await seedSessionStorageAndNavigate(page);
 
-    const validateButton = page.getByRole("button", { name: "Validate" });
+    const validateButton = page.getByRole("button", { name: "Validate", exact: true });
     await validateButton.click();
 
     // Wait for success
