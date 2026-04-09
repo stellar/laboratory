@@ -417,7 +417,6 @@ export const SubmitStepContent = () => {
               <Button
                 size="md"
                 variant="secondary"
-                icon={<Icon.ArrowUpRight />}
                 onClick={() => {
                   const href = buildEndpointHref(Routes.TRANSACTION_DASHBOARD, {
                     transactionHash: submitHorizonResponse.hash,

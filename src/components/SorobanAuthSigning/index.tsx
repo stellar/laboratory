@@ -190,7 +190,7 @@ export const SorobanAuthSigningCard = ({
         </div>
 
         <Button
-          size="sm"
+          size="md"
           variant="secondary"
           icon={isExpanded ? <Icon.ChevronUp /> : <Icon.ChevronDown />}
           iconPosition="right"
