@@ -99,6 +99,9 @@ test.describe("Sign Step in Build Flow", () => {
   test("Next button is disabled before signing", async ({ page }) => {
     await seedSessionStorageAndNavigate(page);
 
+    // Wait for the sign step to hydrate from sessionStorage
+    await expect(page.locator("h1")).toHaveText("Sign transaction");
+
     const nextButton = page.getByRole("button", {
       name: "Next: Submit transaction",
     });

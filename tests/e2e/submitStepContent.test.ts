@@ -244,6 +244,7 @@ test.describe("Submit Step in Build Flow", () => {
 
     const submitButton = page.getByRole("button", {
       name: "Submit transaction",
+      exact: true,
     });
     await expect(submitButton).toBeEnabled();
   });
@@ -260,6 +261,7 @@ test.describe("Submit Step in Build Flow", () => {
 
       const submitButton = page.getByRole("button", {
         name: "Submit transaction",
+        exact: true,
       });
       await submitButton.click();
 
@@ -300,6 +302,7 @@ test.describe("Submit Step in Build Flow", () => {
 
       const submitButton = page.getByRole("button", {
         name: "Submit transaction",
+        exact: true,
       });
       await submitButton.click();
 
@@ -328,6 +331,7 @@ test.describe("Submit Step in Build Flow", () => {
 
       const submitButton = page.getByRole("button", {
         name: "Submit transaction",
+        exact: true,
       });
       await submitButton.click();
 
@@ -405,6 +409,7 @@ test.describe("Submit Step in Build Flow", () => {
 
       const submitButton = page.getByRole("button", {
         name: "Submit transaction",
+        exact: true,
       });
       await submitButton.click();
 
