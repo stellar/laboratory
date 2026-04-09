@@ -73,6 +73,7 @@ export const TransactionStepper = ({
 
         return (
           <div
+            role="button"
             key={step}
             className="TransactionStepper__step"
             data-is-active={isActive || undefined}

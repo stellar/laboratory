@@ -114,7 +114,7 @@ export const AuthEntryItem = ({
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
         trackEvent(TrackingEvent.SOROBAN_AUTH_SIGN_ENTRY_ERROR, {
-          entryIndex: index,
+          entryIndex: index + 1,
         });
         return { successMessage: "", errorMessage: msg };
       }

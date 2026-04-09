@@ -69,6 +69,7 @@ export const SimulateStepContent = ({
     simulate,
     highestCompletedStep,
     setSimulateInstructionLeeway,
+    setSimulateAuthMode,
     setSimulationResult,
     setSimulationReadOnly,
     setAuthEntriesXdr,
@@ -81,7 +82,6 @@ export const SimulateStepContent = ({
   const [assemblyWarning, setAssemblyWarning] = useState("");
   const [isResourcesExpanded, setIsResourcesExpanded] = useState(false);
   const [xdrFormat, setXdrFormat] = useState<XdrFormatType | string>("json");
-  const [authMode, selectAuthMode] = useState<AuthModeType | string>("");
   const [simulationDisplay, setSimulationDisplayResult] = useState<string>("");
   const [validUntilLedgerSeq, setValidUntilLedgerSeq] = useState(0);
 
@@ -348,15 +348,15 @@ export const SimulateStepContent = ({
           {isInvokeContract ? (
             <AuthModePicker
               id="simulate-auth-mode"
-              value={authMode}
+              value={simulate.authMode}
               onChange={(mode) => {
                 resetSimulateTx();
-                selectAuthMode(mode);
+                setSimulateAuthMode(mode as AuthModeType);
               }}
               note={
                 <>
-                  This simulation shows which signatures are required. It
-                  doesn’t validate signatures or calculate final fees.{" "}
+                  “Record” is recommended for simulation. “Record” discovers
+                  which authorization entries are required.
                   <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/contract-development/contract-interactions/transaction-simulation#authorization">
                     Learn more
                   </SdsLink>

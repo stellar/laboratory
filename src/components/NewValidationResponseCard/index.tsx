@@ -42,7 +42,7 @@ export const NewValidationResponseCard = ({
         {/* @TODO to update the SDS design system */}
         <Alert
           placement="inline"
-          variant="success"
+          variant={variant}
           title="Your transaction envelope XDR is ready."
           icon={<Icon.CheckCircle />}
         >
@@ -83,7 +83,13 @@ export const NewValidationResponseCard = ({
                   gap="sm"
                   direction="row"
                   align="center"
-                  justify={footerLeftEl && footerRightEl ? "space-between" : footerRightEl ? "end" : "left"}
+                  justify={
+                    footerLeftEl && footerRightEl
+                      ? "space-between"
+                      : footerRightEl
+                        ? "end"
+                        : "left"
+                  }
                   addlClassName="ValidationResponseCard__footer"
                   wrap="wrap"
                 >

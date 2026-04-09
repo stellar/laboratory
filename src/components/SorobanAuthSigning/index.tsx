@@ -102,9 +102,11 @@ export const SorobanAuthSigningCard = ({
   const signedCount = signedAuthEntriesXdr.filter(Boolean).length;
   const allSigned = signedCount === entryCount && entryCount > 0;
 
-  // Trigger onAllEntriesSigned when individual signing completes all entries
+  // Trigger onAllEntriesSigned when individual signing completes all entries.
+  // Only needed in individual mode — "Sign all" calls onAllEntriesSigned
+  // directly in handleCustomSignAll.
   useEffect(() => {
-    if (allSigned) {
+    if (allSigned && signMode === "individual") {
       onAllEntriesSigned(signedAuthEntriesXdr);
     }
     // Only trigger when allSigned changes to true

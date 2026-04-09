@@ -171,8 +171,8 @@ interface TransactionFlowActions {
   /** Set the auth mode for the validate step. */
   setValidateAuthMode: (mode: AuthModeType) => void;
 
-  /** Store the validated transaction XDR. */
-  setValidatedXdr: (xdr: string) => void;
+  /** Store (or clear) the validated transaction XDR. */
+  setValidatedXdr: (xdr: string | undefined) => void;
 
   /** Update fee bump params. */
   setFeeBumpParams: (params: FeeBumpParamsObj) => void;
