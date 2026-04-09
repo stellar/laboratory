@@ -287,9 +287,10 @@ export const Operations = () => {
 
       setOperationsError([...errors]);
     }
-    // Re-run when operations are externally reset (e.g. "Clear all")
+    // Re-run when operations are externally reset (e.g. "Clear all") or when
+    // the first operation type changes (e.g. legacy URL migration seeding data).
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [txnOperations.length, soroban.operation.operation_type]);
+  }, [txnOperations.length, txnOperations[0]?.operation_type, soroban.operation.operation_type]);
 
   // Update operations error when operations change
   useEffect(() => {

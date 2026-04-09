@@ -1,10 +1,10 @@
 "use client";
-
-import { Card } from "@stellar/design-system";
+import { Alert, Card } from "@stellar/design-system";
 
 import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 
 import { useTransactionFlow } from "@/hooks/useTransactionFlow";
+import { useLegacyUrlMigration } from "@/hooks/useLegacyUrlMigration";
 
 import { Box } from "@/components/layout/Box";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
@@ -38,6 +38,9 @@ export default function BuildTransaction() {
     goToNextStep,
     resetAll,
   } = useBuildFlowStore();
+
+  // Bridge legacy querystring params into the flow store (one-time migration)
+  const { isLegacyUrl, dismissLegacyAlert } = useLegacyUrlMigration();
 
   // For Classic
   const { params: paramsError, operations: operationsError } = build.error;
@@ -145,9 +148,20 @@ export default function BuildTransaction() {
     <Box gap="md">
       <BuildStepHeader
         heading="Build transaction"
-        onClearAll={resetAll}
+        onClearAll={() => {
+          resetAll();
+          dismissLegacyAlert();
+        }}
         clearAllLinkClassName="resetButton"
       />
+
+      {isLegacyUrl ? (
+        <Alert variant="warning" placement="inline" title="">
+          This transaction was loaded from a legacy URL format that will be
+          removed in a future update. Please save your transaction to preserve
+          it.
+        </Alert>
+      ) : null}
 
       <Card>
         <Params />
