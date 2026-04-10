@@ -33,8 +33,7 @@ export const JsonSchemaForm = ({
   onChange: (value: SorobanInvokeValue) => void;
   funcSchema: JSONSchema7;
 }) => {
-  const { network, transaction } = useStore();
-  const { updateSorobanBuildXdr } = transaction;
+  const { network } = useStore();
   const { build, setBuildSorobanXdr } = useBuildFlowStore();
   const { soroban, params: txnParams } = build;
 
@@ -83,11 +82,6 @@ export const JsonSchemaForm = ({
       setSubmitTxError("");
     }
   }, [prevValue, value.args]);
-
-  useEffect(() => {
-    updateSorobanBuildXdr("");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     setSubmitTxError("");

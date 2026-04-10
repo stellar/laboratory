@@ -460,6 +460,8 @@ const createTransactionFlowStore = (
         setSubmitResult: (json) =>
           set((state) => {
             state.submit.submitResultJson = json;
+            // Mark "submit" as completed so the stepper shows a checkmark
+            state.highestCompletedStep = "submit";
           }),
 
         resetDownstreamState: (

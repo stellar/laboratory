@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Alert, Card, Icon, Link, Text } from "@stellar/design-system";
+import { Alert, Card, Text } from "@stellar/design-system";
 
 import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 
@@ -83,7 +83,7 @@ export const SignStepContent = () => {
                 </div>
               </Box>
 
-              <Box gap="xs" direction="row" align="center" justify="end">
+              {/* @TODO: <Box gap="xs" direction="row" align="center" justify="end">
                 <Icon.InfoCircle size="md" color="var(--sds-clr-gray-08)" />
                 <Text
                   size="sm"
@@ -100,7 +100,7 @@ export const SignStepContent = () => {
                 >
                   Wrap with fee bump
                 </Link>
-              </Box>
+              </Box>*/}
             </Box>
           </Box>
         </Card>
