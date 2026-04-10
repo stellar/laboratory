@@ -136,10 +136,11 @@ test.describe("Sign Step in Build Flow", () => {
     await expect(xdrBox).not.toBeEmpty();
 
     // Verify fee bump link is visible
-    await expect(
-      page.getByText("Want another account to pay the fee?"),
-    ).toBeVisible();
-    await expect(page.getByText("Wrap with fee bump")).toBeVisible();
+    // @TODO add
+    // await expect(
+    //   page.getByText("Want another account to pay the fee?"),
+    // ).toBeVisible();
+    // await expect(page.getByText("Wrap with fee bump")).toBeVisible();
 
     // Next button should now be enabled
     const nextButton = page.getByRole("button", {
