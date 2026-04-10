@@ -166,7 +166,8 @@ export const SimulateStepContent = ({
     if (!highestCompletedStep) return false;
     const simulateIndex = steps.indexOf("simulate");
     const hcIndex = steps.indexOf(highestCompletedStep);
-    return hcIndex >= simulateIndex;
+
+    return hcIndex > simulateIndex;
   })();
 
   /**

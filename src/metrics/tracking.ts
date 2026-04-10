@@ -135,7 +135,6 @@ export enum TrackingEvent {
   TRANSACTION_BUILD_OPERATIONS_ACTION_UP = "transaction: build: operations: action: up",
   TRANSACTION_BUILD_OPERATIONS_ACTION_DOWN = "transaction: build: operations: action: down",
   TRANSACTION_BUILD_OPERATIONS_ACTION_DELETE = "transaction: build: operations: action: delete",
-  TRANSACTION_BUILD_SIGN_IN_TX_SIGNER = "transaction: build: sign in transaction signer",
   TRANSACTION_BUILD_VIEW_IN_XDR = "transaction: build: view in xdr",
   TRANSACTION_BUILD_INVOKE_CONTRACT = "transaction: build: invoke contract",
   // Transactions - sign

@@ -10,7 +10,6 @@ import {
 } from "@stellar/design-system";
 
 import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
-import { useStore } from "@/store/useStore";
 
 import { Box } from "@/components/layout/Box";
 import { formComponentTemplateTxnOps } from "@/components/formComponentTemplateTxnOps";
@@ -43,7 +42,6 @@ import {
 } from "@/types/types";
 
 export const Operations = () => {
-  const { transaction } = useStore();
   const {
     build,
     setBuildSorobanOperation,
@@ -138,10 +136,6 @@ export const Operations = () => {
     setBuildSorobanOperation(INITIAL_OPERATION);
     setOperationsError([EMPTY_OPERATION_ERROR]);
     setBuildSorobanXdr("");
-    // @TODO Remove after completion of Soroban flow when the legacy store is removed. This is to prevent confusion where the Soroban XDR is not cleared on reset because the reset function only clears the operation and errors, but not the XDR.
-    // Also clear the legacy store so the SorobanTransactionXdr sync effect
-    // doesn't overwrite the reset when the component remounts.
-    transaction.updateSorobanBuildXdr("");
   };
 
   // For Classic Operation
@@ -154,6 +148,7 @@ export const Operations = () => {
   // Initialise or re-validate operations.
   // Runs on mount AND whenever the store operations are externally reset to
   // empty (e.g. "Clear all"), since the component stays mounted.
+  const firstClassicOpType = txnOperations[0]?.operation_type;
   useEffect(() => {
     // If no operations to preserve, add inital operation and error template
     if (txnOperations.length === 0 && !soroban.operation.operation_type) {
@@ -290,7 +285,7 @@ export const Operations = () => {
     // Re-run when operations are externally reset (e.g. "Clear all") or when
     // the first operation type changes (e.g. legacy URL migration seeding data).
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [txnOperations.length, txnOperations[0]?.operation_type, soroban.operation.operation_type]);
+  }, [txnOperations.length, firstClassicOpType, soroban.operation.operation_type]);
 
   // Update operations error when operations change
   useEffect(() => {
@@ -1017,9 +1012,6 @@ export const Operations = () => {
           <OperationActions
             addDisabled
             addHelperText="Soroban transaction can only contain one operation per transaction."
-            onAdd={() => {
-              // noop: Soroban allows only one operation per transaction
-            }}
             onClear={() => {
               resetSorobanOperation();
               trackEvent(TrackingEvent.TRANSACTION_BUILD_ADD_OPERATION, {

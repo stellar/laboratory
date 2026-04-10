@@ -296,7 +296,6 @@ export const SubmitStepContent = () => {
             variant="success"
             title="Transaction submitted!"
             subtitle={`Transaction successfully submitted with ${submitRpcResponse.operationCount} operation(s)`}
-            note={<></>}
             footerLeftEl={
               <Button
                 size="md"
@@ -412,7 +411,6 @@ export const SubmitStepContent = () => {
             variant="success"
             title="Transaction submitted!"
             subtitle={`Transaction successfully submitted with ${submitHorizonResponse.operation_count} operation(s)`}
-            note={<></>}
             footerLeftEl={
               <Button
                 size="md"
