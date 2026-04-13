@@ -21,6 +21,15 @@ const STEP_LABELS: Record<TransactionStepName, string> = {
   submit: "Submit transaction",
 };
 
+const STEP_SHORT_LABELS: Record<TransactionStepName, string> = {
+  build: "Build",
+  import: "Import",
+  simulate: "Simulate",
+  validate: "Validate",
+  sign: "Sign",
+  submit: "Submit",
+};
+
 const STEP_DESCRIPTIONS: Partial<Record<TransactionStepName, string>> = {
   validate:
     "This transaction contains authorization entries that need to be validated before submitting.",
@@ -108,7 +117,12 @@ export const TransactionStepper = ({
               {!isLast && <div className="TransactionStepper__connector" />}
             </div>
             <div className="TransactionStepper__label">
-              {STEP_LABELS[step]}
+              <span className="TransactionStepper__labelFull">
+                {STEP_LABELS[step]}
+              </span>
+              <span className="TransactionStepper__labelShort">
+                {STEP_SHORT_LABELS[step]}
+              </span>
               {STEP_DESCRIPTIONS[step] && (
                 <Text
                   size="xs"

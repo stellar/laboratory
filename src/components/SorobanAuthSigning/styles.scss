@@ -16,6 +16,10 @@
     &--expanded {
       border-bottom: 1px solid var(--sds-clr-gray-06);
     }
+
+    @media (max-width: 960px) {
+      grid-template-columns: 1fr;
+    }
   }
 
   &__header-text {

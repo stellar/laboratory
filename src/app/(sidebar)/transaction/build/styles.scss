@@ -47,12 +47,17 @@
   }
 
   @media (max-width: 960px) {
+    &__tabs {
+      width: 100%;
+    }
+
     &__layout {
       flex-direction: column;
     }
 
     &__stepper {
-      display: none;
+      width: 100%;
+      order: -1;
     }
   }
 }
