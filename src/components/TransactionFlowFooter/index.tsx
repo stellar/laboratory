@@ -11,6 +11,9 @@ import {
   getStepLabel,
 } from "@/components/TransactionStepper";
 
+import { TransactionBuildParams } from "@/store/createTransactionFlowStore";
+import { TxnOperation } from "@/types/types";
+
 import "./styles.scss";
 
 /**
@@ -22,6 +25,8 @@ import "./styles.scss";
  * @param onNext - Callback to advance to the next step
  * @param isNextDisabled - Whether the Next button should be disabled
  * @param xdr - Built XDR string, used for saving on the build/import step
+ * @param params - Transaction build params for saving
+ * @param operations - Transaction operations for saving
  *
  * @example
  * <TransactionFlowFooter
@@ -30,6 +35,8 @@ import "./styles.scss";
  *   onNext={handleNext}
  *   isNextDisabled={!isValid}
  *   xdr={builtXdr}
+ *   params={build.params}
+ *   operations={build.classic.operations}
  * />
  */
 export const TransactionFlowFooter = ({
@@ -38,12 +45,16 @@ export const TransactionFlowFooter = ({
   onNext,
   isNextDisabled,
   xdr,
+  params,
+  operations,
 }: {
   steps: TransactionStepName[];
   activeStep: TransactionStepName;
   onNext?: () => void;
   isNextDisabled: boolean;
   xdr?: string;
+  params?: TransactionBuildParams;
+  operations?: TxnOperation[];
 }) => {
   const [isSaveModalVisible, setIsSaveModalVisible] = useState(false);
 
@@ -86,6 +97,8 @@ export const TransactionFlowFooter = ({
             itemProps={{
               xdr: xdr || "",
               page: "build",
+              ...(params ? { params } : {}),
+              ...(operations ? { operations } : {}),
             }}
             allSavedItems={localStorageSavedTransactions.get()}
             isVisible={isSaveModalVisible}
