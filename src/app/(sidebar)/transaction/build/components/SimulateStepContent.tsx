@@ -176,6 +176,12 @@ export const SimulateStepContent = ({
   const onSimulate = async () => {
     if (!network.rpcUrl || !builtXdr) return;
 
+    // Clear previous assembly and auth state so stale data from the last
+    // simulation can't leak through to downstream steps.
+    setAssembledXdr(undefined);
+    setAuthEntriesXdr([]);
+    setSignedAuthEntriesXdr([]);
+
     // Reset sign/validate/submit state and stepper completed marks
     resetDownstreamState("sign", steps);
     setAssemblyWarning("");
