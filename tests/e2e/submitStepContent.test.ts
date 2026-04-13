@@ -54,7 +54,7 @@ const buildClassicStoreState = (signedXdr: string) => ({
     },
     sign: { signedXdr },
     submit: { submitResultJson: "" },
-    feeBump: { source_account: "", fee: "", xdr: "" },
+    feeBump: { source_account: "", fee: "200", signedXdr: "", isEnabled: false },
   },
   version: 0,
 });
@@ -93,7 +93,7 @@ const buildSorobanStoreState = (signedXdr: string) => ({
     },
     sign: { signedXdr },
     submit: { submitResultJson: "" },
-    feeBump: { source_account: "", fee: "", xdr: "" },
+    feeBump: { source_account: "", fee: "200", signedXdr: "", isEnabled: false },
   },
   version: 0,
 });

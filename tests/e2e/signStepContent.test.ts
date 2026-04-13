@@ -53,7 +53,7 @@ test.describe("Sign Step in Build Flow", () => {
             },
             sign: { signedXdr: "" },
             submit: { submitResultJson: "" },
-            feeBump: { source_account: "", fee: "", xdr: "" },
+            feeBump: { source_account: "", fee: "200", signedXdr: "", isEnabled: false },
           },
           version: 0,
         };
