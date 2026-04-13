@@ -147,8 +147,8 @@ interface TransactionFlowActions {
   /** Store signed auth entries XDR (base64) for per-entry badge display. */
   setSignedAuthEntriesXdr: (entries: string[]) => void;
 
-  /** Store the assembled transaction XDR (post-simulation). */
-  setAssembledXdr: (xdr: string) => void;
+  /** Store (or clear) the assembled transaction XDR (post-simulation). */
+  setAssembledXdr: (xdr: string | undefined) => void;
 
   /** Store the signed transaction envelope XDR. */
   setSignedXdr: (xdr: string) => void;
