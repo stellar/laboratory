@@ -24,6 +24,7 @@ import {
   SimulationResourceTable,
   getSimulationResourceInfo,
 } from "./SimulationResourceTable";
+import { FeeBumpTrigger } from "./FeeBumpTrigger";
 
 /**
  * Validate step content for the single-page transaction flow (Soroban only).
@@ -225,6 +226,9 @@ export const ValidateStepContent = () => {
                 </ExpandBox>
               </Box>
             )}
+
+            {/* Fee bump trigger — only after successful validation */}
+            {isValidationSuccess && <FeeBumpTrigger />}
           </Box>
         </Card>
       )}

@@ -9,6 +9,7 @@ import { SignTransactionXdr } from "@/components/SignTransactionXdr";
 import { Box } from "@/components/layout/Box";
 
 import { BuildStepHeader } from "./BuildStepHeader";
+import { FeeBumpTrigger } from "./FeeBumpTrigger";
 
 /**
  * Sign step content for the single-page transaction flow.
@@ -18,10 +19,18 @@ import { BuildStepHeader } from "./BuildStepHeader";
  * signature. The signed XDR is stored in the flow store so the page's
  * `isNextDisabled` logic picks it up automatically.
  *
+ * @param showFeeBumpTrigger - When true, show the "Wrap with fee bump" action
+ *   in the signed-transaction card. Set to false when a validate step follows
+ *   (Soroban with auth entries) so the trigger appears there instead.
+ *
  * @example
- * {activeStep === "sign" && <SignStepContent />}
+ * {activeStep === "sign" && <SignStepContent showFeeBumpTrigger={!hasValidateStep} />}
  */
-export const SignStepContent = () => {
+export const SignStepContent = ({
+  showFeeBumpTrigger = true,
+}: {
+  showFeeBumpTrigger?: boolean;
+}) => {
   const { build, simulate, sign, setSignedXdr, resetAll } = useBuildFlowStore();
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -83,24 +92,7 @@ export const SignStepContent = () => {
                 </div>
               </Box>
 
-              {/* @TODO: <Box gap="xs" direction="row" align="center" justify="end">
-                <Icon.InfoCircle size="md" color="var(--sds-clr-gray-08)" />
-                <Text
-                  size="sm"
-                  weight="medium"
-                  as="div"
-                  addlClassName="SignStepContent__feeBumpText"
-                >
-                  Want another account to pay the fee?{" "}
-                </Text>
-
-                <Link
-                  addlClassName="SignStepContent__feeBumpLink"
-                  href="/transaction/fee-bump"
-                >
-                  Wrap with fee bump
-                </Link>
-              </Box>*/}
+              {showFeeBumpTrigger && <FeeBumpTrigger />}
             </Box>
           </Box>
         </Card>

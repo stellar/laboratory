@@ -21,6 +21,7 @@ import { SorobanTransactionXdr } from "./components/SorobanTransactionXdr";
 import { SimulateStepContent } from "./components/SimulateStepContent";
 import { SignStepContent } from "./components/SignStepContent";
 import { ValidateStepContent } from "./components/ValidateStepContent";
+import { FeeBumpStepContent } from "./components/FeeBumpStepContent";
 import { SubmitStepContent } from "./components/SubmitStepContent";
 import { BuildStepHeader } from "./components/BuildStepHeader";
 
@@ -32,10 +33,12 @@ export default function BuildTransaction() {
     simulate,
     sign,
     validate,
+    feeBump,
     activeStep,
     highestCompletedStep,
     setActiveStep,
     goToNextStep,
+    setFeeBumpEnabled,
     resetAll,
   } = useBuildFlowStore();
 
@@ -49,15 +52,19 @@ export default function BuildTransaction() {
   const { soroban } = build;
   const isSoroban = Boolean(soroban.operation.operation_type);
 
-  const hasAuthEntries = Boolean(
-    simulate.authEntriesXdr && simulate.authEntriesXdr.length > 0,
-  );
+  const hasAuthEntries =
+    isSoroban &&
+    Boolean(simulate.authEntriesXdr && simulate.authEntriesXdr.length > 0);
 
-  const steps: TransactionStepName[] = isSoroban
+  const baseSteps: TransactionStepName[] = isSoroban
     ? hasAuthEntries
-      ? ["build", "simulate", "sign", "validate", "submit"]
-      : ["build", "simulate", "sign", "submit"]
-    : ["build", "sign", "submit"];
+      ? ["build", "simulate", "sign", "validate"]
+      : ["build", "simulate", "sign"]
+    : ["build", "sign"];
+
+  const steps: TransactionStepName[] = feeBump.isEnabled
+    ? [...baseSteps, "fee-bump", "submit"]
+    : [...baseSteps, "submit"];
 
   const { handleNext, handleStepClick } = useTransactionFlow({
     steps,
@@ -87,6 +94,9 @@ export default function BuildTransaction() {
     }
     if (activeStep === "validate") {
       return !validate?.validatedXdr;
+    }
+    if (activeStep === "fee-bump") {
+      return !feeBump.signedXdr;
     }
     return false;
   };
@@ -199,8 +209,20 @@ export default function BuildTransaction() {
           <Box gap="xxl">
             {activeStep === "build" && renderBuildStep()}
             {activeStep === "simulate" && <SimulateStepContent steps={steps} />}
-            {activeStep === "sign" && <SignStepContent />}
+            {activeStep === "sign" && (
+              <SignStepContent showFeeBumpTrigger={!hasAuthEntries} />
+            )}
             {activeStep === "validate" && <ValidateStepContent />}
+            {activeStep === "fee-bump" && (
+              <FeeBumpStepContent
+                onCancel={() => {
+                  setFeeBumpEnabled(false);
+                  // Go back to the last step before fee-bump was inserted
+                  const prev = baseSteps[baseSteps.length - 1];
+                  setActiveStep(prev);
+                }}
+              />
+            )}
             {activeStep === "submit" && <SubmitStepContent />}
 
             <TransactionFlowFooter

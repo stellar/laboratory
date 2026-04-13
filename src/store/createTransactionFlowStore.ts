@@ -19,11 +19,15 @@ import {
 export type FeeBumpParams = {
   source_account: string;
   fee: string;
-  xdr: string;
+  /** Signed fee bump envelope XDR (output of the fee bump step). */
+  signedXdr: string;
+  /** Whether the user opted into wrapping with a fee bump. */
+  isEnabled: boolean;
 };
 
 type FeeBumpParamsObj = {
-  [K in keyof FeeBumpParams]?: FeeBumpParams[K];
+  source_account?: string;
+  fee?: string;
 };
 
 export type WalletKit = {
@@ -147,8 +151,8 @@ interface TransactionFlowActions {
   /** Store signed auth entries XDR (base64) for per-entry badge display. */
   setSignedAuthEntriesXdr: (entries: string[]) => void;
 
-  /** Store the assembled transaction XDR (post-simulation). */
-  setAssembledXdr: (xdr: string) => void;
+  /** Store (or clear) the assembled transaction XDR (post-simulation). */
+  setAssembledXdr: (xdr: string | undefined) => void;
 
   /** Store the signed transaction envelope XDR. */
   setSignedXdr: (xdr: string) => void;
@@ -174,8 +178,14 @@ interface TransactionFlowActions {
   /** Store (or clear) the validated transaction XDR. */
   setValidatedXdr: (xdr: string | undefined) => void;
 
-  /** Update fee bump params. */
+  /** Update fee bump input params (source_account, fee). */
   setFeeBumpParams: (params: FeeBumpParamsObj) => void;
+
+  /** Store the signed fee bump envelope XDR. */
+  setFeeBumpSignedXdr: (xdr: string) => void;
+
+  /** Enable/disable the fee bump step. */
+  setFeeBumpEnabled: (enabled: boolean) => void;
 
   /** Store the submit result JSON. */
   setSubmitResult: (json: string) => void;
@@ -255,10 +265,11 @@ const initTransactionSignState = {
   signedXdr: "",
 };
 
-const initTransactionFeeBumpState = {
+const initTransactionFeeBumpState: FeeBumpParams = {
   source_account: "",
-  fee: "",
-  xdr: "",
+  fee: "200",
+  signedXdr: "",
+  isEnabled: false,
 };
 
 const initTransactionSubmitState = {
@@ -457,6 +468,19 @@ const createTransactionFlowStore = (
             };
           }),
 
+        setFeeBumpSignedXdr: (xdr) =>
+          set((state) => {
+            state.feeBump.signedXdr = xdr;
+          }),
+
+        setFeeBumpEnabled: (enabled) =>
+          set((state) => {
+            state.feeBump.isEnabled = enabled;
+            if (!enabled) {
+              state.feeBump = { ...initTransactionFeeBumpState };
+            }
+          }),
+
         setSubmitResult: (json) =>
           set((state) => {
             state.submit.submitResultJson = json;
@@ -479,6 +503,9 @@ const createTransactionFlowStore = (
             }
             if (fromIndex <= steps.indexOf("validate")) {
               state.validate = undefined;
+            }
+            if (fromIndex <= steps.indexOf("fee-bump")) {
+              state.feeBump = { ...initTransactionFeeBumpState };
             }
             if (fromIndex <= steps.indexOf("submit")) {
               state.submit = initTransactionSubmitState;

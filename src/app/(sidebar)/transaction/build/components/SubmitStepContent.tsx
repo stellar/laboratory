@@ -76,8 +76,15 @@ const SUBMIT_OPTIONS = [
  */
 export const SubmitStepContent = () => {
   const { network } = useStore();
-  const { build, sign, validate, simulate, setSubmitResult, resetAll } =
-    useBuildFlowStore();
+  const {
+    build,
+    sign,
+    validate,
+    simulate,
+    feeBump,
+    setSubmitResult,
+    resetAll,
+  } = useBuildFlowStore();
 
   const [submitMethod, setSubmitMethod] = useState<"horizon" | "rpc" | string>(
     "",
@@ -107,9 +114,13 @@ export const SubmitStepContent = () => {
     reset: resetSubmitHorizon,
   } = useSubmitHorizonTx();
 
-  // Derive the XDR to submit: validated > signed > assembled
+  // Derive the XDR to submit: fee-bumped > validated > signed > assembled
   const xdrBlob =
-    validate?.validatedXdr || sign.signedXdr || simulate?.assembledXdr || "";
+    (feeBump.isEnabled && feeBump.signedXdr) ||
+    validate?.validatedXdr ||
+    sign.signedXdr ||
+    simulate?.assembledXdr ||
+    "";
 
   const isSoroban = Boolean(build.soroban.operation.operation_type);
   const isRpcAvailable = Boolean(network.rpcUrl);

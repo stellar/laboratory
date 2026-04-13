@@ -10,6 +10,7 @@ export type TransactionStepName =
   | "simulate"
   | "validate"
   | "sign"
+  | "fee-bump"
   | "submit";
 
 const STEP_LABELS: Record<TransactionStepName, string> = {
@@ -18,6 +19,7 @@ const STEP_LABELS: Record<TransactionStepName, string> = {
   simulate: "Simulate transaction",
   validate: "Validate transaction",
   sign: "Sign transaction",
+  "fee-bump": "Fee bump transaction",
   submit: "Submit transaction",
 };
 
