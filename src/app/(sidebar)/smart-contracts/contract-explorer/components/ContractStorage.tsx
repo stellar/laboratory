@@ -57,7 +57,7 @@ export const ContractStorage = ({
   const { transaction } = useStore();
   const router = useRouter();
 
-  const [currentCursor, setCurrentCursor] = useState<string | undefined>();
+  const [currentHref, setCurrentHref] = useState<string | undefined>();
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState<string>("updated_at");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
@@ -67,7 +67,7 @@ export const ContractStorage = ({
     isActive: isActive && !isSourceStellarExpert,
     networkId,
     contractId,
-    cursor: currentCursor,
+    paginationHref: currentHref,
     sortBy,
     order: sortOrder,
   });
@@ -82,7 +82,7 @@ export const ContractStorage = ({
 
   useEffect(() => {
     // Reset when contractId or networkId changes
-    setCurrentCursor(undefined);
+    setCurrentHref(undefined);
     setCurrentPage(1);
     setSortBy("updated_at");
     setSortOrder("desc");
@@ -147,12 +147,6 @@ export const ContractStorage = ({
       </Text>
     );
   }
-
-  const getCursorFromHref = (href: string) => {
-    const queryString = href.split("?")[1] || "";
-    const params = new URLSearchParams(queryString);
-    return params.get("cursor") || undefined;
-  };
 
   const parsedKeyValueData = () => {
     return storageData.map((i) => ({
@@ -325,7 +319,7 @@ export const ContractStorage = ({
                     setSortOrder(dir);
                   }
                   // Reset pagination on sort change
-                  setCurrentCursor(undefined);
+                  setCurrentHref(undefined);
                   setCurrentPage(1);
                 },
               }
@@ -336,7 +330,7 @@ export const ContractStorage = ({
                   prev: {
                     onClick: () => {
                       if (prevCursor) {
-                        setCurrentCursor(getCursorFromHref(prevCursor));
+                        setCurrentHref(prevCursor);
                         setCurrentPage(Math.max(currentPage - 1, 1));
                       }
                     },
@@ -346,7 +340,7 @@ export const ContractStorage = ({
                   next: {
                     onClick: () => {
                       if (nextCursor) {
-                        setCurrentCursor(getCursorFromHref(nextCursor));
+                        setCurrentHref(nextCursor);
                         setCurrentPage(currentPage + 1);
                       }
                     },

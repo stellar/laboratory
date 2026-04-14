@@ -1,3 +1,4 @@
+minimumReleaseAge: 10080
 overrides:
   "debug@4.4.2": "4.4.1"
   "chalk@5.6.1": "5.6.2"
