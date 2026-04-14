@@ -371,6 +371,14 @@ export type NetworkLimitsJson = {
 const main = async () => {
   console.log("🚀 Fetching Stellar network limits...\n");
 
+  const outputPath = path.join(
+    __dirname,
+    "..",
+    "src",
+    "constants",
+    "networkLimits.ts",
+  );
+
   const networkLimits = {};
   const networkLimitsJson = {};
 
@@ -407,18 +415,20 @@ const main = async () => {
       console.error(
         `  ❌ Failed to fetch limits for ${network.name}: ${error.message}\n`,
       );
+
+      // If the output file already exists, fall back to using the cached version
+      if (fs.existsSync(outputPath)) {
+        console.warn(
+          `  ⚠️  Network unavailable — using existing ${outputPath}\n`,
+        );
+        return;
+      }
+
       process.exit(1);
     }
   }
 
   // Generate TypeScript file
-  const outputPath = path.join(
-    __dirname,
-    "..",
-    "src",
-    "constants",
-    "networkLimits.ts",
-  );
   const fileContent = generateTypeScriptFile(networkLimits, networkLimitsJson);
 
   // Ensure the directory exists
