@@ -209,6 +209,12 @@ export default function BuildTransaction() {
               onNext={handleNext}
               isNextDisabled={isNextDisabled}
               xdr={currentXdr}
+              params={build.params}
+              operations={
+                isSoroban
+                  ? [build.soroban.operation]
+                  : build.classic.operations
+              }
             />
           </Box>
         </div>
