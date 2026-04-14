@@ -12,7 +12,6 @@ import { SdsLink } from "@/components/SdsLink";
 import { LabelHeading } from "@/components/LabelHeading";
 import { SwitchNetworkButtons } from "@/components/SwitchNetworkButtons";
 import { Tabs } from "@/components/Tabs";
-import { CopyJsonPayloadButton } from "@/components/CopyJsonPayloadButton";
 import { CodeEditor } from "@/components/CodeEditor";
 
 import {
@@ -48,18 +47,7 @@ export default function NetworkLimits() {
 
   return (
     <div className="NetworkLimits">
-      <PageCard
-        heading="Network limits"
-        rightElement={
-          network.id !== "custom" ? (
-            <Tabs
-              tabs={VIEW_TABS}
-              activeTabId={activeTab}
-              onChange={setActiveTab}
-            />
-          ) : undefined
-        }
-      >
+      <PageCard heading="Network limits">
         {network.id === "custom" ? (
           <Alert
             placement="inline"
@@ -94,6 +82,13 @@ export default function NetworkLimits() {
                 </SdsLink>
               </Text>
             </Box>
+
+            <Tabs
+              tabs={VIEW_TABS}
+              activeTabId={activeTab}
+              onChange={setActiveTab}
+            />
+
             {activeTab === "table" ? (
               <>
                 <Box gap="sm">
@@ -110,27 +105,15 @@ export default function NetworkLimits() {
                 <ResourceFeesSection limits={limits} />
               </>
             ) : (
-              <Box gap="sm">
-                {limitsJsonString && (
-                  <>
-                    <div className="NetworkLimits__json-container">
-                      <CodeEditor
-                        heightInRem="30"
-                        value={limitsJsonString}
-                        selectedLanguage="json"
-                      />
-                    </div>
-                    <Box
-                      gap="md"
-                      direction="row"
-                      justify="right"
-                      align="center"
-                    >
-                      <CopyJsonPayloadButton jsonString={limitsJsonString} />
-                    </Box>
-                  </>
-                )}
-              </Box>
+              <div className="NetworkLimits__json-container">
+                <CodeEditor
+                  title="JSON response"
+                  heightInRem="30"
+                  value={limitsJsonString}
+                  selectedLanguage="json"
+                  fileName="network-limits"
+                />
+              </div>
             )}
           </>
         )}

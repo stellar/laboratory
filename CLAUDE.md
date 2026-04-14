@@ -368,74 +368,13 @@ export const decodeXdr = (xdr: string, type: string) => {
 - Leverage union types and discriminated unions
 - Use `const` assertions for literal types
 
-## Testing Guidelines
+## Testing
 
-### Unit Tests (Jest)
-
-- **Location**: `tests/unit` (convention: `*.test.ts`)
-- **Configuration**: `jest.config.js`
-- **Run**: `pnpm test:unit`
-- **Coverage**: Collects from `src/**/*.ts`
-- **Path Aliases**: `@/` imports work via `moduleNameMapper`
-
-**Example Test Pattern**:
-
-```typescript
-import { myFunction } from "./myFunction";
-
-describe("myFunction", () => {
-  it("should return expected value for valid input", () => {
-    const result = myFunction("input");
-    expect(result).toBe("expected");
-  });
-
-  it("should throw error for invalid input", () => {
-    expect(() => myFunction("")).toThrow("Error message");
-  });
-});
-```
-
-### E2E Tests (Playwright)
-
-- **Location**: `tests/e2e/`
-- **Configuration**: `playwright.config.ts`
-- **Run**: `pnpm test:e2e`
-- **Browser**: Chromium only (Firefox and Safari commented out)
-- **Dev Server**: Automatically started via `webServer` config
-- **Timeout**: 20s per test, 60s for dev server startup
-- **Retries**: 2 retries on failure
-- **Workers**: 2 parallel workers
-
-**Example E2E Test Pattern**:
-
-```typescript
-import { test, expect } from "@playwright/test";
-
-test("user can create keypair", async ({ page }) => {
-  await page.goto("/account/create");
-  await page.click('button:has-text("Generate Keypair")');
-  await expect(page.locator('[data-testid="public-key"]')).toBeVisible();
-});
-```
-
-### Running Tests
-
-```bash
-# Run all tests
-pnpm test
-
-# Run unit tests only
-pnpm test:unit
-
-# Run e2e tests only
-pnpm test:e2e
-
-# Run e2e tests in UI mode (interactive)
-pnpm playwright-ui
-
-# Run specific test file
-pnpm test:unit src/helpers/xdr/decodeXdr.test.ts
-```
+- **Unit tests** (Jest): `tests/unit/`, run with `pnpm test:unit`
+- **E2E tests** (Playwright): `tests/e2e/`, run with `pnpm test:e2e`
+- Use `/test-changed` to run only tests relevant to your changed files
+- Playwright reuses a running dev server on port 3000 — kill stale servers
+  before running e2e tests in worktrees
 
 ## Stellar-Specific Development Notes
 
@@ -550,7 +489,7 @@ When Claude Code completes a task, verify:
 - [ ] Unit tests written/updated for new logic
 - [ ] No TypeScript errors (`pnpm lint:ts`)
 - [ ] No ESLint errors (`pnpm lint`)
-- [ ] Tests pass (`pnpm test:unit` at minimum)
+- [ ] Tests pass (use `/test-changed` to run relevant tests)
 - [ ] Manual testing performed in browser
 - [ ] No console errors or warnings
 - [ ] Changes work with existing features
