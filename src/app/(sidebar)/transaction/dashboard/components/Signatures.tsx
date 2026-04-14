@@ -1,4 +1,10 @@
-import { StrKey, TransactionBuilder } from "@stellar/stellar-sdk";
+import {
+  hash,
+  Keypair,
+  StrKey,
+  TransactionBuilder,
+  xdr,
+} from "@stellar/stellar-sdk";
 import { Icon, Link, Text } from "@stellar/design-system";
 
 import { useStore } from "@/store/useStore";
@@ -103,7 +109,14 @@ export const Signatures = ({
   const renderAuthEntriesTableBody = () => {
     return authEntries.map((entry, index) => {
       const rowKey = `auth-entry-row-${index}`;
-      const isMatch = verifyAuthEntryPublicKey(entry.publicKey, entry.address);
+      const isMatch =
+        isXdrInit &&
+        verifyAuthEntrySignature(
+          entry.rawEntry,
+          entry.publicKey,
+          entry.signature,
+          network.passphrase,
+        );
 
       return (
         <tr role="row" key={rowKey}>
@@ -244,17 +257,55 @@ const renderSigner = (isVerified: boolean, signer: string) => {
 };
 
 /**
- * Verifies that the public key bytes in an auth entry signature match the
- * credential address (G... key).
+ * Verifies a Soroban authorization entry signature cryptographically.
+ *
+ * Reconstructs the HashIdPreimage (network ID, nonce, invocation,
+ * signatureExpirationLedger), hashes it, and verifies the Ed25519 signature.
+ *
+ * @param rawEntry - The JSON-decoded SorobanAuthorizationEntry
+ * @param publicKeyHex - The hex-encoded public key from the signature map
+ * @param signatureHex - The hex-encoded signature bytes from the signature map
+ * @param networkPassphrase - The network passphrase (e.g. "Test SDF Network ; September 2015")
+ * @returns true if the signature is cryptographically valid
+ *
+ * @example
+ * const isValid = verifyAuthEntrySignature(entry.rawEntry, entry.publicKey, entry.signature, network.passphrase);
  */
-const verifyAuthEntryPublicKey = (
+const verifyAuthEntrySignature = (
+  rawEntry: any,
   publicKeyHex: string,
-  address: string,
+  signatureHex: string,
+  networkPassphrase: string,
 ): boolean => {
   try {
-    const publicKeyBytes = Buffer.from(publicKeyHex, "hex");
-    const derivedAddress = StrKey.encodeEd25519PublicKey(publicKeyBytes);
-    return derivedAddress === address;
+    const entryXdrBase64 = StellarXdr.encode(
+      "SorobanAuthorizationEntry",
+      JSON.stringify(rawEntry),
+    );
+    const authEntry = xdr.SorobanAuthorizationEntry.fromXDR(
+      entryXdrBase64,
+      "base64",
+    );
+
+    const addrAuth = authEntry.credentials().address();
+    const networkId = hash(Buffer.from(networkPassphrase));
+
+    const preimage = xdr.HashIdPreimage.envelopeTypeSorobanAuthorization(
+      new xdr.HashIdPreimageSorobanAuthorization({
+        networkId,
+        nonce: addrAuth.nonce(),
+        invocation: authEntry.rootInvocation(),
+        signatureExpirationLedger: addrAuth.signatureExpirationLedger(),
+      }),
+    );
+
+    const payload = hash(preimage.toXDR());
+    const stellarAddress = StrKey.encodeEd25519PublicKey(
+      Buffer.from(publicKeyHex, "hex"),
+    );
+    const keypair = Keypair.fromPublicKey(stellarAddress);
+
+    return keypair.verify(payload, Buffer.from(signatureHex, "hex"));
   } catch {
     return false;
   }
@@ -266,6 +317,7 @@ type AuthEntryInfo = {
   publicKey: string;
   signature: string;
   contractId: string;
+  rawEntry: any;
 };
 
 const getAuthEntries = (operations: any[] | undefined): AuthEntryInfo[] => {
@@ -305,6 +357,7 @@ const parseAuthEntry = (authEntry: any): AuthEntryInfo | null => {
     publicKey,
     signature,
     contractId: contractFn ? contractFn.contract_address : "-",
+    rawEntry: authEntry,
   };
 };
 
