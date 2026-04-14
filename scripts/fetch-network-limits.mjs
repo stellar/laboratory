@@ -417,9 +417,13 @@ const main = async () => {
       );
 
       // If the output file already exists, fall back to using the cached version
+      // instead of blocking the dev server from starting.
       if (fs.existsSync(outputPath)) {
         console.warn(
-          `  ⚠️  Network unavailable — using existing ${outputPath}\n`,
+          `  ⚠️  Network unavailable for all networks — using cached ${outputPath}\n`,
+        );
+        console.warn(
+          "  💡 Tip: Run 'pnpm fetch-limits' with network access to refresh the file.\n",
         );
         return;
       }
