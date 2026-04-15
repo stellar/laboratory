@@ -20,11 +20,9 @@ import { xBullModule } from "@creit.tech/stellar-wallets-kit/modules/xbull";
 import { getWalletKitNetwork } from "@/helpers/getWalletKitNetwork";
 import { localStorageSavedTheme } from "@/helpers/localStorageSavedTheme";
 import { localStorageSavedWallet } from "@/helpers/localStorageSavedWallet";
-import { SavedWallet } from "@/types/types";
 
 type WalletKitProps = {
   isInitialized: boolean;
-  walletId?: string;
 };
 
 export const WalletKitContext = createContext<WalletKitProps>({
@@ -37,7 +35,6 @@ export const WalletKitContextProvider = ({
   children: React.ReactNode;
 }) => {
   const { network, theme, setTheme } = useStore();
-  const [savedWallet, setSavedWallet] = useState<SavedWallet | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
   const networkType = getWalletKitNetwork(network.id);
 
@@ -52,19 +49,16 @@ export const WalletKitContextProvider = ({
   }, []);
 
   useEffect(() => {
-    const savedWallet = localStorageSavedWallet.get();
-
-    if (savedWallet && savedWallet.network.id === network.id) {
-      setSavedWallet(savedWallet);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
     // Only initialize on client side to avoid "window is not defined" errors in terminal
     if (typeof window === "undefined") {
       return;
     }
+
+    // Re-read the saved wallet whenever the network changes so we don't pass
+    // a wallet id that was persisted for a different network.
+    const savedWallet = localStorageSavedWallet.get();
+    const walletIdForNetwork =
+      savedWallet?.network.id === network.id ? savedWallet.id : "";
 
     const isDarkTheme = theme === "sds-theme-dark";
 
@@ -82,19 +76,18 @@ export const WalletKitContextProvider = ({
 
     StellarWalletsKit.init({
       network: networkType,
-      selectedWalletId: savedWallet?.id || "",
+      selectedWalletId: walletIdForNetwork,
       modules: network.id === "mainnet" ? PROD_MODULES : TEST_MODULES,
       theme: isDarkTheme ? SwkAppDarkTheme : SwkAppLightTheme,
     });
 
     setIsInitialized(true);
-  }, [network.id, networkType, savedWallet?.id, theme]);
+  }, [network.id, networkType, theme]);
 
   return (
     <WalletKitContext.Provider
       value={{
         isInitialized,
-        walletId: savedWallet?.id,
       }}
     >
       {children}
