@@ -160,13 +160,13 @@ queryClient.invalidateQueries({ queryKey: ["relevant-key"] });
 **Problem**: Playwright e2e tests fail on one branch but pass on another, even
 though the code is correct.
 
-**Root Cause**: Playwright reuses a running dev server on port 3000. If you
-switch branches without restarting the dev server, tests run against the old
-branch's code.
+**Root Cause**: Playwright reuses a running dev server on the configured
+`PORT` (default 3000). If you switch branches without restarting the dev
+server, tests run against the old branch's code.
 
 **Solution**:
 
-1. Kill any stale dev server: `lsof -i :3000` and kill the process
+1. Kill any stale dev server on the configured port: `PORT="${PORT:-3000}"; lsof -i :"$PORT"` and kill the process
 2. Clear the Next.js cache: `rm -rf .next`
 3. Restart the dev server: `pnpm dev`
 4. Then run tests: `pnpm test:e2e`
