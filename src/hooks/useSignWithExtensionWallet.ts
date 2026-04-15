@@ -55,8 +55,8 @@ export const useSignWithExtensionWallet = ({
 
     setIsInProgress(true);
 
-    if (walletKit?.publicKey && txXdr) {
-      try {
+    try {
+      if (walletKit?.publicKey && txXdr) {
         const result = await StellarWalletsKit.signTransaction(txXdr, {
           address: walletKit.publicKey,
           networkPassphrase,
@@ -64,15 +64,9 @@ export const useSignWithExtensionWallet = ({
 
         setSignedTxXdr(result.signedTxXdr);
         setSuccessMsg(SUCCESS_MSG);
-      } catch (error: any) {
-        if (error?.message) {
-          setErrorMsg(getErrorMsg(error));
-        }
-      }
-    } else {
-      // if a user didn't log in via stellar wallet kit in the main nav
-      // open a wallet kit modal to sign in
-      try {
+      } else {
+        // if a user didn't log in via stellar wallet kit in the main nav
+        // open a wallet kit modal to sign in
         const { address } = await StellarWalletsKit.authModal();
 
         if (address && txXdr) {
@@ -93,11 +87,13 @@ export const useSignWithExtensionWallet = ({
             };
           }
         }
-      } catch (error: any) {
-        if (error?.message) {
-          setErrorMsg(getErrorMsg(error));
-        }
       }
+    } catch (error: any) {
+      if (error?.message) {
+        setErrorMsg(getErrorMsg(error));
+      }
+    } finally {
+      setIsInProgress(false);
     }
   }, [
     isInProgress,
@@ -118,12 +114,6 @@ export const useSignWithExtensionWallet = ({
   useEffect(() => {
     reset();
   }, [isClear]);
-
-  useEffect(() => {
-    if (successMsg || errorMsg) {
-      setIsInProgress(false);
-    }
-  }, [errorMsg, successMsg]);
 
   return { signedTxXdr, successMsg, errorMsg };
 };
