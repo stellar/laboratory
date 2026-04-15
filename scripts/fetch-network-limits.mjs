@@ -381,6 +381,7 @@ const main = async () => {
 
   const networkLimits = {};
   const networkLimitsJson = {};
+  let successCount = 0;
 
   for (const network of NETWORKS) {
     console.log(`📡 Fetching limits for ${network.name}...`);
@@ -410,26 +411,29 @@ const main = async () => {
 
       networkLimits[network.name] = limits;
       networkLimitsJson[network.name] = rawJson;
+      successCount++;
       console.log(`  ✅ Successfully fetched limits for ${network.name}\n`);
     } catch (error) {
       console.error(
         `  ❌ Failed to fetch limits for ${network.name}: ${error.message}\n`,
       );
-
-      // If the output file already exists, fall back to using the cached version
-      // instead of blocking the dev server from starting.
-      if (fs.existsSync(outputPath)) {
-        console.warn(
-          `  ⚠️  Network unavailable for all networks — using cached ${outputPath}\n`,
-        );
-        console.warn(
-          "  💡 Tip: Run 'pnpm fetch-limits' with network access to refresh the file.\n",
-        );
-        return;
-      }
-
-      process.exit(1);
     }
+  }
+
+  // If no networks were fetched successfully, fall back to the cached output
+  // file (if it exists) instead of blocking the dev server from starting.
+  if (successCount === 0) {
+    if (fs.existsSync(outputPath)) {
+      console.warn(
+        `  ⚠️  Network unavailable for all networks — using cached ${outputPath}\n`,
+      );
+      console.warn(
+        "  💡 Tip: Run 'pnpm fetch-limits' with network access to refresh the file.\n",
+      );
+      return;
+    }
+
+    process.exit(1);
   }
 
   // Generate TypeScript file
