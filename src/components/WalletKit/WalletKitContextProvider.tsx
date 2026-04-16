@@ -58,7 +58,7 @@ export const WalletKitContextProvider = ({
     // a wallet id that was persisted for a different network.
     const savedWallet = localStorageSavedWallet.get();
     const walletIdForNetwork =
-      savedWallet?.network.id === network.id ? savedWallet.id : "";
+      savedWallet && savedWallet.network.id === network.id ? savedWallet.id : "";
 
     const isDarkTheme = theme === "sds-theme-dark";
 
