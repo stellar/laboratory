@@ -477,9 +477,10 @@ const createTransactionFlowStore = (
             if (fromIndex <= steps.indexOf("sign")) {
               state.sign = initTransactionSignState;
             }
-            if (fromIndex <= steps.indexOf("validate")) {
-              state.validate = undefined;
-            }
+            // Always clear validate — it's bound to a specific simulation
+            // and becomes stale even when the steps array changes to exclude
+            // the validate step (e.g. new tx has no address auth entries).
+            state.validate = undefined;
             if (fromIndex <= steps.indexOf("submit")) {
               state.submit = initTransactionSubmitState;
             }
