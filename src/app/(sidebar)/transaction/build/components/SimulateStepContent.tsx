@@ -239,14 +239,41 @@ export const SimulateStepContent = ({
           const entries = extractAuthEntries(simBase64Response);
 
           if (entries.length > 0) {
-            setAuthEntriesXdr(entries);
             trackEvent(TrackingEvent.SOROBAN_AUTH_ENTRIES_DETECTED, {
               entryCount: entries.length,
             });
+          }
+
+          // Source account credential entries are authorized by the
+          // transaction envelope signature — pre-populate them so
+          // only address credential entries require user signing.
+          const prePopulated: string[] = [];
+          let needsAuthSigning = false;
+
+          for (let i = 0; i < entries.length; i++) {
+            const entry = xdr.SorobanAuthorizationEntry.fromXDR(
+              entries[i],
+              "base64",
+            );
+            if (
+              entry.credentials().switch().name ===
+              "sorobanCredentialsAddress"
+            ) {
+              needsAuthSigning = true;
+            } else {
+              prePopulated[i] = entries[i];
+            }
+          }
+
+          if (needsAuthSigning) {
+            // Show auth signing card — source account entries are
+            // pre-populated, only address entries need user signing
+            setAuthEntriesXdr(entries);
+            setSignedAuthEntriesXdr(prePopulated);
           } else {
-            // No auth entries — auto-assemble the transaction with
-            // simulation resources (fees, sorobanData) so the Sign step
-            // receives a complete XDR ready for signing.
+            // No address credential entries — auto-assemble the
+            // transaction with simulation resources (fees, sorobanData)
+            // so the Sign step receives a complete XDR ready for signing.
             try {
               const rawTx = TransactionBuilder.fromXDR(
                 builtXdr,
