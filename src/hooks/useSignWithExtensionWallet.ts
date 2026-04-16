@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { StellarWalletsKit } from "@creit.tech/stellar-wallets-kit";
 
 import { WalletKitContext } from "@/components/WalletKit/WalletKitContextProvider";
@@ -23,7 +23,7 @@ export const useSignWithExtensionWallet = ({
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
 
-  const [isInProgress, setIsInProgress] = useState(false);
+  const isInProgress = useRef(false);
 
   const SUCCESS_MSG = "1 signature added";
 
@@ -49,11 +49,11 @@ export const useSignWithExtensionWallet = ({
   };
 
   const signTx = useCallback(async () => {
-    if (isInProgress || !walletKitInstance?.isInitialized) {
+    if (isInProgress.current || !walletKitInstance?.isInitialized) {
       return;
     }
 
-    setIsInProgress(true);
+    isInProgress.current = true;
 
     try {
       if (walletKit?.publicKey && txXdr) {
@@ -93,10 +93,9 @@ export const useSignWithExtensionWallet = ({
         setErrorMsg(getErrorMsg(error));
       }
     } finally {
-      setIsInProgress(false);
+      isInProgress.current = false;
     }
   }, [
-    isInProgress,
     networkPassphrase,
     txXdr,
     updateWalletKit,
