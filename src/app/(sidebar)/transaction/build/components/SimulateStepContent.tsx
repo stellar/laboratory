@@ -245,10 +245,9 @@ export const SimulateStepContent = ({
           }
 
           // Source account credential entries are authorized by the
-          // transaction envelope signature — pre-populate them so
-          // only address credential entries require user signing.
-          const prePopulated: string[] = [];
-          let needsAuthSigning = false;
+          // transaction envelope signature — pre-populate them as
+          // already signed so only address entries require user action.
+          const preSignedEntries: string[] = [];
 
           for (let i = 0; i < entries.length; i++) {
             const entry = xdr.SorobanAuthorizationEntry.fromXDR(
@@ -256,20 +255,21 @@ export const SimulateStepContent = ({
               "base64",
             );
             if (
-              entry.credentials().switch().name ===
-              "sorobanCredentialsAddress"
+              entry.credentials().switch().name !== "sorobanCredentialsAddress"
             ) {
-              needsAuthSigning = true;
-            } else {
-              prePopulated[i] = entries[i];
+              preSignedEntries[i] = entries[i];
             }
           }
 
-          if (needsAuthSigning) {
-            // Show auth signing card — source account entries are
-            // pre-populated, only address entries need user signing
+          // check if entries include addresses that aren't a source account
+          const hasAddressEntries =
+            entries.length > preSignedEntries.filter(Boolean).length;
+
+          if (hasAddressEntries) {
+            // Show auth signing card for address entries that aren't a source account
             setAuthEntriesXdr(entries);
-            setSignedAuthEntriesXdr(prePopulated);
+            // since source account entries are pre-signed, we can set it in setSignedAuthEntriesXdr
+            setSignedAuthEntriesXdr(preSignedEntries);
           } else {
             // No address credential entries — auto-assemble the
             // transaction with simulation resources (fees, sorobanData)
