@@ -1374,7 +1374,7 @@ test.describe("Build Transaction Page", () => {
         // In the new flow, extend_footprint_ttl does not produce XDR on
         // the build step — verify the Next button is enabled (form valid).
         const nextButton = page.getByRole("button", {
-          name: /Next: Simulate/,
+          name: /Simulate/,
         });
         await expect(nextButton).toBeEnabled();
       });
@@ -1494,7 +1494,7 @@ test.describe("Build Transaction Page", () => {
         // In the new flow, extend_footprint_ttl does not produce XDR on
         // the build step — verify the Next button is enabled (form valid).
         const nextButton = page.getByRole("button", {
-          name: /Next: Simulate/,
+          name: /Simulate/,
         });
         await expect(nextButton).toBeEnabled();
       });
@@ -1687,7 +1687,7 @@ test.describe("Build Transaction Page", () => {
         // In the new flow, restore_footprint does not produce XDR on
         // the build step — verify the Next button is enabled (form valid).
         const nextButton = page.getByRole("button", {
-          name: /Next: Simulate/,
+          name: /Simulate/,
         });
         await expect(nextButton).toBeEnabled();
       });
@@ -1805,7 +1805,7 @@ test.describe("Build Transaction Page", () => {
         // In the new flow, restore_footprint does not produce XDR on
         // the build step — verify the Next button is enabled (form valid).
         const nextButton = page.getByRole("button", {
-          name: /Next: Simulate/,
+          name: /Simulate/,
         });
         await expect(nextButton).toBeEnabled();
       });

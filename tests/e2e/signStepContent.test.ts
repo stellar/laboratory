@@ -103,7 +103,7 @@ test.describe("Sign Step in Build Flow", () => {
     await expect(page.locator("h1")).toHaveText("Sign transaction");
 
     const nextButton = page.getByRole("button", {
-      name: "Next: Submit transaction",
+      name: "Submit transaction",
     });
     await expect(nextButton).toBeDisabled();
   });
@@ -144,7 +144,7 @@ test.describe("Sign Step in Build Flow", () => {
 
     // Next button should now be enabled
     const nextButton = page.getByRole("button", {
-      name: "Next: Submit transaction",
+      name: "Submit transaction",
     });
     await expect(nextButton).toBeEnabled();
   });

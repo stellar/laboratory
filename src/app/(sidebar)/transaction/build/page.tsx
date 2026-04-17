@@ -59,7 +59,7 @@ export default function BuildTransaction() {
       : ["build", "simulate", "sign", "submit"]
     : ["build", "sign", "submit"];
 
-  const { handleNext, handleStepClick } = useTransactionFlow({
+  const { handleNext, handleBack, handleStepClick } = useTransactionFlow({
     steps,
     activeStep,
     highestCompletedStep,
@@ -152,7 +152,12 @@ export default function BuildTransaction() {
           resetAll();
           dismissLegacyAlert();
         }}
-        clearAllLinkClassName="resetButton"
+        xdr={currentXdr}
+        params={build.params}
+        activeStep={activeStep}
+        operations={
+          isSoroban ? [build.soroban.operation] : build.classic.operations
+        }
       />
 
       {isLegacyUrl ? (
@@ -207,14 +212,8 @@ export default function BuildTransaction() {
               steps={steps}
               activeStep={activeStep}
               onNext={handleNext}
+              onBack={handleBack}
               isNextDisabled={isNextDisabled}
-              xdr={currentXdr}
-              params={build.params}
-              operations={
-                isSoroban
-                  ? [build.soroban.operation]
-                  : build.classic.operations
-              }
             />
           </Box>
         </div>

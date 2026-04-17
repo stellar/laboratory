@@ -42,6 +42,11 @@ export const useTransactionFlow = ({
     : -1;
 
   const handleNext = () => goToNextStep(steps);
+  const handleBack = () => {
+    if (stepIndex > 0) {
+      setActiveStep(steps[stepIndex - 1]);
+    }
+  };
   const handleStepClick = (step: TransactionStepName) => {
     if (steps.indexOf(step) <= highestCompletedIndex) {
       setActiveStep(step);
@@ -52,6 +57,7 @@ export const useTransactionFlow = ({
     highestCompletedStep,
     stepIndex,
     handleNext,
+    handleBack,
     handleStepClick,
   };
 };

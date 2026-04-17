@@ -31,10 +31,10 @@
   }
 
   &__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-bottom: pxToRem(16px);
+    .Button {
+      width: pxToRem(32px);
+      height: pxToRem(32px);
+    }
 
     .Link {
       color: var(--sds-clr-lilac-11);
