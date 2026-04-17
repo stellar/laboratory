@@ -20,9 +20,15 @@ export const useGitHubReadmeText = ({
       }
 
       try {
-        const response = await fetch(
+        let response = await fetch(
           `https://raw.githubusercontent.com/${repo}/${commit}/README.md`,
         );
+
+        if (response.status !== 200) {
+          response = await fetch(
+            `https://raw.githubusercontent.com/${repo}/${commit}/readme.md`,
+          );
+        }
 
         if (response.status !== 200) {
           return null;
