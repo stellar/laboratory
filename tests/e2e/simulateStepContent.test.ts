@@ -12,9 +12,14 @@ import { test, expect, Page } from "@playwright/test";
 const MOCK_BUILT_XDR =
   "AAAAAgAAAABehlCJLiX4z1uDtAEfSWKNdd8o4ToBBlBhd6irPT7lVgAAAMgAFrXYAAAAEwAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAGAAAAAAAAAABfR984Fi8pqygq69PddL9vXaSLgP7qLlpsaqO5YL+IZsAAAAEc3dhcAAAAAgAAAASAAAAAAAAAAAh5dYXbG+vCChQsGMYfg8k2ABTTz0GHlyHZd1Q+bf9dAAAABIAAAAAAAAAAMwJGsOjTzw4CL/dwI16iaHPIxQi4W5zveD3yDEJrwyeAAAAEgAAAAHXkotywnA8z+r365/0701QSlWouXn8m0UOoshCtNHOYQAAABIAAAABUEXNXsBymnaP1a0CUFhS308Cjc6DDlrFIgm6SEg7LwEAAAAKAAAAAAAAAAAAAAAAAAAACgAAAAoAAAAAAAAAAAAAAAAAAAAyAAAACgAAAAAAAAAAAAAAAAAAAGQAAAAKAAAAAAAAAAAAAAAAAAAABQAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 
-// A mock auth entry XDR
+// A mock auth entry XDR (sorobanCredentialsAddress — requires explicit signing)
 const MOCK_AUTH_ENTRY_XDR =
   "AAAAAQAAAAAAAAAAIeXWF2xvrwgoULBjGH4PJNgAU089Bh5ch2XdUPm3/XRzFw9PTWlqNwAAAAAAAAABAAAAAAAAAAF9H3zgWLymrKCrr0910v29dpIuA/uouWmxqo7lgv4hmwAAAARzd2FwAAAABAAAABIAAAAB15KLcsJwPM/q9+uf9O9NUEpVqLl5/JtFDqLIQrTRzmEAAAASAAAAAVBFzV7Acpp2j9WtAlBYUt9PAo3Ogw5axSIJukhIOy8BAAAACgAAAAAAAAAAAAAAAAAAAAoAAAAKAAAAAAAAAAAAAAAAAAAAMgAAAAEAAAAAAAAAAdeSi3LCcDzP6vfrn/TvTVBKVai5efybRQ6iyEK00c5hAAAACHRyYW5zZmVyAAAAAwAAABIAAAAAAAAAACHl1hdsb68IKFCwYxh+DyTYAFNPPQYeXIdl3VD5t/10AAAAEgAAAAF9H3zgWLymrKCrr0910v29dpIuA/uouWmxqo7lgv4hmwAAAAoAAAAAAAAAAAAAAAAAAAAKAAAAAA==";
+
+// A mock auth entry XDR (sorobanCredentialsSourceAccount — authorized by
+// the transaction envelope signature, no separate signing needed)
+const MOCK_SOURCE_ACCOUNT_AUTH_ENTRY_XDR =
+  "AAAAAAAAAAAAAAABfR984Fi8pqygq69PddL9vXaSLgP7qLlpsaqO5YL+IZsAAAAEc3dhcAAAAAAAAAAA";
 
 // Fake assembled XDR — just needs to be non-empty to represent stale data
 const STALE_ASSEMBLED_XDR = "STALE_ASSEMBLED_XDR_PLACEHOLDER";
@@ -94,9 +99,9 @@ const seedSessionStorageAndNavigate = async (page: Page) => {
 };
 
 /**
- * Mock simulateTransaction to return a response WITH auth entries.
+ * Mock simulateTransaction to return a response with the given auth entries.
  */
-const mockSimulateWithAuthEntries = async (page: Page) => {
+const mockSimulateWithAuth = async (page: Page, authEntries: string[]) => {
   await page.route("https://soroban-testnet.stellar.org", async (route) => {
     const request = route.request();
     const postData = request.postDataJSON();
@@ -114,7 +119,7 @@ const mockSimulateWithAuthEntries = async (page: Page) => {
             latestLedger: 1901916,
             results: [
               {
-                auth: [MOCK_AUTH_ENTRY_XDR],
+                auth: authEntries,
                 xdr: "AAAAAQ==",
               },
             ],
@@ -131,7 +136,7 @@ test.describe("Simulate Step — Re-simulation clears stale state", () => {
   test("Re-simulating clears stale assembledXdr so Next is disabled until auth entries are signed", async ({
     page,
   }) => {
-    await mockSimulateWithAuthEntries(page);
+    await mockSimulateWithAuth(page, [MOCK_AUTH_ENTRY_XDR]);
     await seedSessionStorageAndNavigate(page);
 
     // Precondition: Next button should be enabled because stale
@@ -161,6 +166,87 @@ test.describe("Simulate Step — Re-simulation clears stale state", () => {
     // Next button should now be DISABLED because:
     // 1. assembledXdr was cleared at the start of re-simulation
     // 2. New auth entries need signing before assembly can happen
+    await expect(nextButton).toBeDisabled();
+  });
+});
+
+test.describe("Simulate Step — Source account auth entries skip signing", () => {
+  test("All source account auth entries auto-assemble without showing the auth signing card", async ({
+    page,
+  }) => {
+    await mockSimulateWithAuth(page, [MOCK_SOURCE_ACCOUNT_AUTH_ENTRY_XDR]);
+    await seedSessionStorageAndNavigate(page);
+
+    const simulateButton = page.getByRole("button", {
+      name: "Simulate",
+      exact: true,
+    });
+    await simulateButton.click();
+
+    // Wait for simulation result
+    await expect(page.getByTestId("simulate-step-response")).toBeVisible();
+
+    // Auth signing card should NOT appear — source account entries are
+    // authorized by the transaction envelope signature
+    await expect(
+      page.getByText(
+        "This transaction requires additional authorization signatures",
+      ),
+    ).not.toBeVisible();
+
+    // Next button should be ENABLED — auto-assembly happened
+    const nextButton = page.getByRole("button", {
+      name: /^Next:/,
+    });
+    await expect(nextButton).toBeEnabled();
+  });
+
+  test("Mixed entries: auth signing card shows, but only address entries need signing", async ({
+    page,
+  }) => {
+    await mockSimulateWithAuth(page, [
+      MOCK_SOURCE_ACCOUNT_AUTH_ENTRY_XDR,
+      MOCK_AUTH_ENTRY_XDR,
+    ]);
+    await seedSessionStorageAndNavigate(page);
+
+    const simulateButton = page.getByRole("button", {
+      name: "Simulate",
+      exact: true,
+    });
+    await simulateButton.click();
+
+    // Wait for simulation result
+    await expect(page.getByTestId("simulate-step-response")).toBeVisible();
+
+    // Auth signing card SHOULD appear — there's an address credential entry
+    await expect(
+      page.getByText(
+        "This transaction requires additional authorization signatures",
+      ),
+    ).toBeVisible();
+
+    // Source account entry (#1) should be pre-signed, address entry (#2) unsigned
+    const viewButton = page.getByRole("button", {
+      name: "View auth entries",
+    });
+    await viewButton.click();
+
+    await expect(page.getByText("Entry #1")).toBeVisible();
+    await expect(page.getByText("Entry #2")).toBeVisible();
+
+    // Entry #1 (source account) is pre-populated as Signed
+    const entry1 = page.locator(".SorobanAuthSigning__entry").nth(0);
+    await expect(entry1.getByText("Signed")).toBeVisible();
+
+    // Entry #2 (address) still needs signing
+    const entry2 = page.locator(".SorobanAuthSigning__entry").nth(1);
+    await expect(entry2.getByText("Unsigned")).toBeVisible();
+
+    // Next button should be DISABLED — address entry still needs signing
+    const nextButton = page.getByRole("button", {
+      name: /^Next:/,
+    });
     await expect(nextButton).toBeDisabled();
   });
 });

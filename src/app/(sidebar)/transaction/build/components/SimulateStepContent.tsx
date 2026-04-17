@@ -239,14 +239,41 @@ export const SimulateStepContent = ({
           const entries = extractAuthEntries(simBase64Response);
 
           if (entries.length > 0) {
-            setAuthEntriesXdr(entries);
             trackEvent(TrackingEvent.SOROBAN_AUTH_ENTRIES_DETECTED, {
               entryCount: entries.length,
             });
+          }
+
+          // Source account credential entries are authorized by the
+          // transaction envelope signature — pre-populate them as
+          // already signed so only address entries require user action.
+          const preSignedEntries: string[] = [];
+
+          for (let i = 0; i < entries.length; i++) {
+            const entry = xdr.SorobanAuthorizationEntry.fromXDR(
+              entries[i],
+              "base64",
+            );
+            if (
+              entry.credentials().switch().name !== "sorobanCredentialsAddress"
+            ) {
+              preSignedEntries[i] = entries[i];
+            }
+          }
+
+          // check if entries include addresses that aren't a source account
+          const hasAddressEntries =
+            entries.length > preSignedEntries.filter(Boolean).length;
+
+          if (hasAddressEntries) {
+            // Show auth signing card for address entries that aren't a source account
+            setAuthEntriesXdr(entries);
+            // since source account entries are pre-signed, we can set it in setSignedAuthEntriesXdr
+            setSignedAuthEntriesXdr(preSignedEntries);
           } else {
-            // No auth entries — auto-assemble the transaction with
-            // simulation resources (fees, sorobanData) so the Sign step
-            // receives a complete XDR ready for signing.
+            // No address credential entries — auto-assemble the
+            // transaction with simulation resources (fees, sorobanData)
+            // so the Sign step receives a complete XDR ready for signing.
             try {
               const rawTx = TransactionBuilder.fromXDR(
                 builtXdr,
