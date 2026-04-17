@@ -477,7 +477,8 @@ const createTransactionFlowStore = (
             if (fromIndex <= steps.indexOf("sign")) {
               state.sign = initTransactionSignState;
             }
-            if (fromIndex <= steps.indexOf("validate")) {
+            const validateIndex = steps.indexOf("validate");
+            if (validateIndex === -1 || fromIndex <= validateIndex) {
               state.validate = undefined;
             }
             if (fromIndex <= steps.indexOf("submit")) {
