@@ -20,14 +20,12 @@ export const useGitHubReadmeText = ({
       }
 
       try {
-        let response = await fetch(
-          `https://raw.githubusercontent.com/${repo}/${commit}/README.md`,
-        );
+        const githubRawPath = `https://raw.githubusercontent.com/${repo}/${commit}/`;
+
+        let response = await fetch(`${githubRawPath}README.md`);
 
         if (response.status !== 200) {
-          response = await fetch(
-            `https://raw.githubusercontent.com/${repo}/${commit}/readme.md`,
-          );
+          response = await fetch(`${githubRawPath}readme.md`);
         }
 
         if (response.status !== 200) {
