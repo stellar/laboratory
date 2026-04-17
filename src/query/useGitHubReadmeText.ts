@@ -24,7 +24,7 @@ export const useGitHubReadmeText = ({
 
         let response = await fetch(`${githubRawPath}README.md`);
 
-        if (response.status !== 200) {
+        if (response.status === 404) {
           response = await fetch(`${githubRawPath}readme.md`);
         }
 
