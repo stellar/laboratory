@@ -141,9 +141,7 @@ test.describe("Simulate Step — Re-simulation clears stale state", () => {
 
     // Precondition: Next button should be enabled because stale
     // assembledXdr exists from the previous simulation.
-    const nextButton = page.getByRole("button", {
-      name: /^Next:/,
-    });
+    const nextButton = page.locator('[data-position="right"]');
     await expect(nextButton).toBeEnabled();
 
     // Re-simulate
@@ -195,9 +193,7 @@ test.describe("Simulate Step — Source account auth entries skip signing", () =
     ).not.toBeVisible();
 
     // Next button should be ENABLED — auto-assembly happened
-    const nextButton = page.getByRole("button", {
-      name: /^Next:/,
-    });
+    const nextButton = page.locator('[data-position="right"]');
     await expect(nextButton).toBeEnabled();
   });
 
@@ -244,9 +240,7 @@ test.describe("Simulate Step — Source account auth entries skip signing", () =
     await expect(entry2.getByText("Unsigned")).toBeVisible();
 
     // Next button should be DISABLED — address entry still needs signing
-    const nextButton = page.getByRole("button", {
-      name: /^Next:/,
-    });
+    const nextButton = page.locator('[data-position="right"]');
     await expect(nextButton).toBeDisabled();
   });
 });

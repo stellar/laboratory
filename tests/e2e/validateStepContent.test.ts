@@ -247,9 +247,7 @@ test.describe("Validate Step in Build Flow", () => {
   test("Next button is disabled before validation", async ({ page }) => {
     await seedSessionStorageAndNavigate(page);
 
-    const nextButton = page.getByRole("button", {
-      name: "Submit transaction",
-    });
+    const nextButton = page.locator('[data-position="right"]');
     await expect(nextButton).toBeDisabled();
   });
 
@@ -268,9 +266,7 @@ test.describe("Validate Step in Build Flow", () => {
     // Wait for success
     await expect(page.getByText("Auth entries validated")).toBeVisible();
 
-    const nextButton = page.getByRole("button", {
-      name: "Submit transaction",
-    });
+    const nextButton = page.locator('[data-position="right"]');
     await expect(nextButton).toBeEnabled();
   });
 });

@@ -69,50 +69,51 @@ export const BuildStepHeader = ({
     >
       <PageHeader heading={heading} as={headingAs} />
 
-      {showHeaderButtons && (
-        <Box gap="sm" direction="row" justify="center" align="center">
-          <Button
-            size="md"
-            variant="tertiary"
-            onClick={() => setIsClearModalVisible(true)}
-          >
-            <IconButton
-              icon={<Icon.RefreshCcw01 />}
-              customSize="14px"
-              customColor="var(--sds-clr-gray-09)"
-              altText="Clear transaction"
-            />
-          </Button>
+      <Box gap="sm" direction="row" justify="center" align="center">
+        <Button
+          size="md"
+          variant="tertiary"
+          data-testid="clear-all-button"
+          onClick={() => setIsClearModalVisible(true)}
+        >
+          <IconButton
+            icon={<Icon.RefreshCcw01 />}
+            customSize="14px"
+            customColor="var(--sds-clr-gray-09)"
+            altText="Clear transaction"
+          />
+        </Button>
 
-          <Modal
-            visible={isClearModalVisible}
-            onClose={() => setIsClearModalVisible(false)}
-          >
-            <Modal.Heading>Clear everything?</Modal.Heading>
-            <Modal.Body>
-              This will remove all entered data in the form.
-            </Modal.Body>
-            <Modal.Footer>
-              <Button
-                size="md"
-                variant="tertiary"
-                onClick={() => setIsClearModalVisible(false)}
-              >
-                Cancel
-              </Button>
-              <Button
-                size="md"
-                variant="error"
-                onClick={() => {
-                  onClearAll();
-                  setIsClearModalVisible(false);
-                }}
-              >
-                Clear all
-              </Button>
-            </Modal.Footer>
-          </Modal>
+        <Modal
+          visible={isClearModalVisible}
+          onClose={() => setIsClearModalVisible(false)}
+        >
+          <Modal.Heading>Clear everything?</Modal.Heading>
+          <Modal.Body>
+            This will remove all entered data in the form.
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              size="md"
+              variant="tertiary"
+              onClick={() => setIsClearModalVisible(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              size="md"
+              variant="error"
+              onClick={() => {
+                onClearAll();
+                setIsClearModalVisible(false);
+              }}
+            >
+              Clear all
+            </Button>
+          </Modal.Footer>
+        </Modal>
 
+        {showHeaderButtons && (
           <>
             <Button
               size="md"
@@ -146,8 +147,8 @@ export const BuildStepHeader = ({
               }}
             />
           </>
-        </Box>
-      )}
+        )}
+      </Box>
     </Box>
   );
 };

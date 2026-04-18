@@ -102,9 +102,7 @@ test.describe("Sign Step in Build Flow", () => {
     // Wait for the sign step to hydrate from sessionStorage
     await expect(page.locator("h1")).toHaveText("Sign transaction");
 
-    const nextButton = page.getByRole("button", {
-      name: "Submit transaction",
-    });
+    const nextButton = page.locator('[data-position="right"]');
     await expect(nextButton).toBeDisabled();
   });
 
@@ -143,9 +141,7 @@ test.describe("Sign Step in Build Flow", () => {
     // await expect(page.getByText("Wrap with fee bump")).toBeVisible();
 
     // Next button should now be enabled
-    const nextButton = page.getByRole("button", {
-      name: "Submit transaction",
-    });
+    const nextButton = page.locator('[data-position="right"]');
     await expect(nextButton).toBeEnabled();
   });
 
@@ -166,8 +162,9 @@ test.describe("Sign Step in Build Flow", () => {
       page.getByText("Transaction signed and ready to submit."),
     ).toBeVisible();
 
-    // Click Clear all
-    await page.getByText("Clear all").click();
+    // Click Clear all (opens confirmation modal, then confirm)
+    await page.getByTestId("clear-all-button").click();
+    await page.getByRole("button", { name: "Clear all" }).click();
 
     // Should reset to build step
     await expect(page.locator("h1")).toHaveText("Build transaction");
