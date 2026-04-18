@@ -34,6 +34,12 @@
     .Button {
       width: pxToRem(32px);
       height: pxToRem(32px);
+
+      svg {
+        width: pxToRem(14px);
+        height: pxToRem(14px);
+        color: var(--sds-clr-gray-09);
+      }
     }
 
     .Link {

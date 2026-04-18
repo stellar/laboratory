@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Icon, IconButton, Modal } from "@stellar/design-system";
+import { Button, Icon, Modal } from "@stellar/design-system";
 
 import { TransactionBuildParams } from "@/store/createTransactionFlowStore";
 
@@ -76,12 +76,7 @@ export const BuildStepHeader = ({
           data-testid="clear-all-button"
           onClick={() => setIsClearModalVisible(true)}
         >
-          <IconButton
-            icon={<Icon.RefreshCcw01 />}
-            customSize="14px"
-            customColor="var(--sds-clr-gray-09)"
-            altText="Clear transaction"
-          />
+          <Icon.RefreshCcw01 />
         </Button>
 
         <Modal
@@ -120,12 +115,7 @@ export const BuildStepHeader = ({
               variant="tertiary"
               onClick={() => setIsSaveModalVisible(true)}
             >
-              <IconButton
-                icon={<Icon.Save01 />}
-                customSize="14px"
-                customColor="var(--sds-clr-gray-09)"
-                altText="Save transaction"
-              />
+              <Icon.Save01 />
             </Button>
 
             <SaveToLocalStorageModal
