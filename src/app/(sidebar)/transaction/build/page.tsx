@@ -1,4 +1,5 @@
 "use client";
+import { useEffect } from "react";
 import { Alert, Card } from "@stellar/design-system";
 
 import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
@@ -36,6 +37,7 @@ export default function BuildTransaction() {
     highestCompletedStep,
     setActiveStep,
     goToNextStep,
+    markStepCompleted,
     resetAll,
   } = useBuildFlowStore();
 
@@ -92,6 +94,13 @@ export default function BuildTransaction() {
   };
 
   const isNextDisabled = getIsNextDisabled();
+
+  useEffect(() => {
+    if (!isNextDisabled && activeStep !== "submit") {
+      markStepCompleted(activeStep, steps);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isNextDisabled, activeStep]);
 
   const renderError = () => {
     if (paramsError.length > 0 || operationsError.length > 0) {

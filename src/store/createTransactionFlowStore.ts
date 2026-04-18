@@ -115,6 +115,16 @@ interface TransactionFlowActions {
    */
   goToNextStep: (steps: TransactionStepName[]) => void;
 
+  /**
+   * Mark a step as completed without changing activeStep. Used to
+   * auto-enable stepper navigation when the current step becomes valid
+   * before the user clicks Next.
+   */
+  markStepCompleted: (
+    step: TransactionStepName,
+    steps: TransactionStepName[],
+  ) => void;
+
   setBuildParams: (params: TransactionBuildParamsObj) => void;
 
   setBuildSorobanOperation: (operation: TxnOperation) => void;
@@ -324,6 +334,17 @@ const createTransactionFlowStore = (
               if (currentIndex > highestIndex) {
                 state.highestCompletedStep = steps[currentIndex];
               }
+            }
+          }),
+
+        markStepCompleted: (step, steps) =>
+          set((state) => {
+            const stepIndex = steps.indexOf(step);
+            const highestIndex = state.highestCompletedStep
+              ? steps.indexOf(state.highestCompletedStep)
+              : -1;
+            if (stepIndex > highestIndex) {
+              state.highestCompletedStep = step;
             }
           }),
 

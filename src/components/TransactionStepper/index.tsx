@@ -77,7 +77,11 @@ export const TransactionStepper = ({
       {steps.map((step, index) => {
         const isActive = step === activeStep;
         const isCompleted = index <= highestCompletedIndex;
-        const isClickable = isCompleted && !isActive;
+        // The step immediately after the highest completed step is accessible
+        // but not yet completed — no checkmark, but clickable.
+        const isAccessible =
+          !isCompleted && index === highestCompletedIndex + 1;
+        const isClickable = (isCompleted || isAccessible) && !isActive;
         const isLast = index === steps.length - 1;
 
         return (
@@ -87,6 +91,7 @@ export const TransactionStepper = ({
             className="TransactionStepper__step"
             data-is-active={isActive || undefined}
             data-is-completed={isCompleted || undefined}
+            data-is-accessible={isAccessible || undefined}
             data-is-clickable={isClickable || undefined}
             data-has-description={!!STEP_DESCRIPTIONS[step] || undefined}
             onClick={isClickable ? () => onStepClick(step) : undefined}
