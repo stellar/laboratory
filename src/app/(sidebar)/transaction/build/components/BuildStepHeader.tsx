@@ -113,6 +113,7 @@ export const BuildStepHeader = ({
             <Button
               size="md"
               variant="tertiary"
+              data-testid="save-to-local-storage-button"
               onClick={() => setIsSaveModalVisible(true)}
             >
               <Icon.Save01 />

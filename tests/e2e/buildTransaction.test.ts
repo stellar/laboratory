@@ -41,12 +41,7 @@ test.describe("Build Transaction Page", () => {
     await operation_0.getByLabel("Destination").fill(ACCOUNT_ONE);
     await operation_0.getByLabel("Starting balance").fill("1");
 
-    const saveTxButton = page.getByRole("button", {
-      name: "Save transaction",
-    });
-
-    await expect(saveTxButton).toBeVisible();
-    await saveTxButton.click();
+    await page.getByTestId("save-to-local-storage-button").click();
 
     const modal = page.locator(".Modal");
 
