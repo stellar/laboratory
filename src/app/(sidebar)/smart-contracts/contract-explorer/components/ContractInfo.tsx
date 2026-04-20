@@ -39,7 +39,6 @@ import { ContractSpecMeta } from "./ContractSpecMeta";
 import { ContractStorage } from "./ContractStorage";
 import { VersionHistory } from "./VersionHistory";
 import { BuildInfo } from "./BuildInfo";
-import { SourceCode } from "./SourceCode";
 import { Bindings } from "./Bindings";
 
 export const ContractInfo = ({
@@ -363,30 +362,30 @@ export const ContractInfo = ({
               ),
               isDisabled: !isDataLoaded,
             }}
+            // tab3={{
+            //   id: "contract-source-code",
+            //   label: "Source code",
+            //   content: (
+            //     <SourceCode
+            //       isActive={activeTab === "contract-source-code"}
+            //       repo={sourceRepo}
+            //       commit={sourceCommit}
+            //       isSourceStellarExpert={
+            //         // isSacType can also be undefined, so we need to make sure
+            //         // the value was set here
+            //         isSacType === false && !wasmData?.sourceRepo
+            //       }
+            //     />
+            //   ),
+            //   isDisabled: !isDataLoaded,
+            // }}
             tab3={{
-              id: "contract-source-code",
-              label: "Source code",
-              content: (
-                <SourceCode
-                  isActive={activeTab === "contract-source-code"}
-                  repo={sourceRepo}
-                  commit={sourceCommit}
-                  isSourceStellarExpert={
-                    // isSacType can also be undefined, so we need to make sure
-                    // the value was set here
-                    isSacType === false && !wasmData?.sourceRepo
-                  }
-                />
-              ),
-              isDisabled: !isDataLoaded,
-            }}
-            tab4={{
               id: "contract-contract-storage",
               label: "Contract storage",
               content: renderContractStorage(),
               isDisabled: !isDataLoaded,
             }}
-            tab5={{
+            tab4={{
               id: "contract-build-info",
               label: "Build info",
               content: (
@@ -397,13 +396,13 @@ export const ContractInfo = ({
               ),
               isDisabled: !isDataLoaded || isSacType,
             }}
-            tab6={{
+            tab5={{
               id: "contract-bindings",
               label: "Bindings",
               content: <Bindings />,
               isDisabled: !isDataLoaded,
             }}
-            tab7={{
+            tab6={{
               id: "contract-version-history",
               label: "Version history",
               content: infoData ? (
