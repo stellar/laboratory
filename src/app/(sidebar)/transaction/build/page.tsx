@@ -1,26 +1,106 @@
 "use client";
+import { useEffect } from "react";
+import { Alert, Card } from "@stellar/design-system";
 
-import { Alert } from "@stellar/design-system";
+import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 
-import { useStore } from "@/store/useStore";
+import { useTransactionFlow } from "@/hooks/useTransactionFlow";
+import { useLegacyUrlMigration } from "@/hooks/useLegacyUrlMigration";
+
 import { Box } from "@/components/layout/Box";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
-
+import {
+  TransactionStepper,
+  TransactionStepName,
+} from "@/components/TransactionStepper";
+import { TransactionFlowFooter } from "@/components/TransactionFlowFooter";
+import { Tabs } from "@/components/Tabs";
 import { Params } from "./components/Params";
 import { Operations } from "./components/Operations";
 import { ClassicTransactionXdr } from "./components/ClassicTransactionXdr";
 import { SorobanTransactionXdr } from "./components/SorobanTransactionXdr";
+import { SimulateStepContent } from "./components/SimulateStepContent";
+import { SignStepContent } from "./components/SignStepContent";
+import { ValidateStepContent } from "./components/ValidateStepContent";
+import { SubmitStepContent } from "./components/SubmitStepContent";
+import { BuildStepHeader } from "./components/BuildStepHeader";
+
+import "./styles.scss";
 
 export default function BuildTransaction() {
-  const { transaction } = useStore();
+  const {
+    build,
+    simulate,
+    sign,
+    validate,
+    activeStep,
+    highestCompletedStep,
+    setActiveStep,
+    goToNextStep,
+    markStepCompleted,
+    resetAll,
+  } = useBuildFlowStore();
+
+  // Bridge legacy querystring params into the flow store (one-time migration)
+  const { isLegacyUrl, dismissLegacyAlert } = useLegacyUrlMigration();
 
   // For Classic
-  const { params: paramsError, operations: operationsError } =
-    transaction.build.error;
+  const { params: paramsError, operations: operationsError } = build.error;
 
   // For Soroban
-  const { soroban } = transaction.build;
-  const IS_SOROBAN_TX = Boolean(soroban.operation.operation_type);
+  const { soroban } = build;
+  const isSoroban = Boolean(soroban.operation.operation_type);
+
+  const hasAuthEntries = Boolean(
+    simulate.authEntriesXdr && simulate.authEntriesXdr.length > 0,
+  );
+
+  const steps: TransactionStepName[] = isSoroban
+    ? hasAuthEntries
+      ? ["build", "simulate", "sign", "validate", "submit"]
+      : ["build", "simulate", "sign", "submit"]
+    : ["build", "sign", "submit"];
+
+  const { handleNext, handleBack, handleStepClick } = useTransactionFlow({
+    steps,
+    activeStep,
+    highestCompletedStep,
+    goToNextStep,
+    setActiveStep,
+  });
+
+  const currentXdr = isSoroban ? build.soroban.xdr : build.classic.xdr;
+
+  const getIsNextDisabled = (): boolean => {
+    if (activeStep === "build") {
+      // Classic & Soroban: XDR must be built. Soroban: params + operations must be valid
+      // (simulation happens in the next step).
+      return !currentXdr || !(build.isValid.params && build.isValid.operations);
+    }
+    if (activeStep === "simulate") {
+      // Simulation must be complete and assembledXdr must exist (set after auth
+      // signing + assembly, or after auto-assembly when no auth entries are
+      // present) so the sign step receives a transaction with
+      // simulation-derived resources/fees.
+      return !simulate.simulationResultJson || !simulate.assembledXdr;
+    }
+    if (activeStep === "sign") {
+      return !sign.signedXdr;
+    }
+    if (activeStep === "validate") {
+      return !validate?.validatedXdr;
+    }
+    return false;
+  };
+
+  const isNextDisabled = getIsNextDisabled();
+
+  useEffect(() => {
+    if (!isNextDisabled && activeStep !== "submit") {
+      markStepCompleted(activeStep, steps);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isNextDisabled, activeStep]);
 
   const renderError = () => {
     if (paramsError.length > 0 || operationsError.length > 0) {
@@ -73,21 +153,89 @@ export default function BuildTransaction() {
     return null;
   };
 
-  return (
+  const renderBuildStep = () => (
     <Box gap="md">
-      <Params />
-      <Operations />
+      <BuildStepHeader
+        heading="Build transaction"
+        onClearAll={() => {
+          resetAll();
+          dismissLegacyAlert();
+        }}
+        xdr={currentXdr}
+        params={build.params}
+        activeStep={activeStep}
+        operations={
+          isSoroban ? [build.soroban.operation] : build.classic.operations
+        }
+      />
 
-      <Alert variant="primary" placement="inline">
-        The transaction builder lets you build a new Stellar transaction. This
-        transaction will start out with no signatures. To make it into the
-        ledger, this transaction will then need to be signed and submitted to
-        the network.
-      </Alert>
+      {isLegacyUrl ? (
+        <Alert variant="warning" placement="inline" title="">
+          This transaction was loaded from a legacy URL format that will be
+          removed in a future update. Please save your transaction to preserve
+          it.
+        </Alert>
+      ) : null}
+
+      <Card>
+        <Params />
+      </Card>
+      <Operations />
 
       <>{renderError()}</>
 
-      {IS_SOROBAN_TX ? <SorobanTransactionXdr /> : <ClassicTransactionXdr />}
+      {isSoroban ? <SorobanTransactionXdr /> : <ClassicTransactionXdr />}
+    </Box>
+  );
+
+  return (
+    <Box gap="xxl">
+      <div className="BuildTransaction__tabs">
+        <Tabs
+          tabs={[
+            {
+              id: "new-transaction",
+              label: "New transaction",
+              href: "/transaction/build",
+            },
+            // {
+            //   id: "import-xdr",
+            //   label: "Import transaction XDR",
+            //   href: "/transaction/import",
+            // },
+          ]}
+          addlClassName="Tabs--gap-md"
+        />
+      </div>
+
+      <div className="BuildTransaction__layout">
+        <div className="BuildTransaction__content">
+          <Box gap="xxl">
+            {activeStep === "build" && renderBuildStep()}
+            {activeStep === "simulate" && <SimulateStepContent steps={steps} />}
+            {activeStep === "sign" && <SignStepContent />}
+            {activeStep === "validate" && <ValidateStepContent />}
+            {activeStep === "submit" && <SubmitStepContent />}
+
+            <TransactionFlowFooter
+              steps={steps}
+              activeStep={activeStep}
+              onNext={handleNext}
+              onBack={handleBack}
+              isNextDisabled={isNextDisabled}
+            />
+          </Box>
+        </div>
+
+        <div className="BuildTransaction__stepper">
+          <TransactionStepper
+            steps={steps}
+            activeStep={activeStep}
+            highestCompletedStep={highestCompletedStep}
+            onStepClick={handleStepClick}
+          />
+        </div>
+      </div>
     </Box>
   );
 }

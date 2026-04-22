@@ -132,9 +132,7 @@ export default function TransactionDashboard() {
     if (txDashboard.transactionHash) {
       setTransactionHashInput(txDashboard.transactionHash);
     }
-    // Run this only when page loads
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [txDashboard.transactionHash]);
 
   useEffect(() => {
     if (isLatestTxnSuccess && latestTxn?.hash) {

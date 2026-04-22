@@ -25,7 +25,9 @@ export const ContractMethodSelectPicker = ({
   id: string;
   onChange: (val: SorobanInvokeValue) => void;
 }) => {
-  const [selectedMethod, setSelectedMethod] = useState<string>("");
+  const [selectedMethod, setSelectedMethod] = useState<string>(
+    value?.function_name || "",
+  );
 
   const onSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (e.target.value) {

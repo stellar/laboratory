@@ -14,7 +14,6 @@ import { Box } from "@/components/layout/Box";
 import { MessageField } from "@/components/MessageField";
 import { TextPicker } from "@/components/FormElements/TextPicker";
 import { LabelHeading } from "@/components/LabelHeading";
-import { WithInfoText } from "@/components/WithInfoText";
 import { PubKeyPickerWithSignerSelector } from "@/components/FormElements/PubKeyPickerWithSignerSelector";
 
 import { txHelper } from "@/helpers/txHelper";
@@ -52,9 +51,10 @@ export const SignTransactionXdr = ({
   isDisabled = false,
   description,
   customFooter,
+  customSignFn,
 }: {
   id: string;
-  title: string;
+  title?: string;
   xdrToSign: string | null;
   onDoneAction: ({
     signedXdr,
@@ -69,6 +69,18 @@ export const SignTransactionXdr = ({
   isDisabled?: boolean;
   description?: string;
   customFooter?: React.ReactNode;
+  /**
+   * Optional custom signing function. When provided, replaces the default
+   * envelope signing logic. Used for Soroban auth entry signing where
+   * `authorizeEntry()` is needed instead of `tx.sign()`.
+   *
+   * Receives the secret key inputs and should return success/error messages.
+   * The component manages its own UI state (tabs, messages) around this.
+   */
+  customSignFn?: (params: {
+    sigType: TxSignatureType;
+    secretKeys: string[];
+  }) => Promise<{ successMessage: string; errorMessage: string }>;
 }) => {
   const { network, walletKit } = useStore();
 
@@ -168,6 +180,42 @@ export const SignTransactionXdr = ({
     isClear?: boolean;
   }) => {
     if (!xdrToSign) {
+      return;
+    }
+
+    // Custom sign mode: delegate signing to external handler
+    if (customSignFn && !isClear) {
+      try {
+        const result = await customSignFn({
+          sigType,
+          secretKeys: secretKeyInputs,
+        });
+
+        if (result.successMessage) {
+          setSecretKeySuccessMsg(result.successMessage);
+          setSecretKeyErrorMsg("");
+          setAllSigsCount((prev) => ({ ...prev, secretKey: 1 }));
+        }
+
+        if (result.errorMessage) {
+          setSecretKeyErrorMsg(result.errorMessage);
+          setSecretKeySuccessMsg("");
+        }
+
+        onDoneAction({
+          signedXdr: null,
+          successMessage: result.successMessage || null,
+          errorMessage: result.errorMessage || null,
+        });
+      } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : String(e);
+        setSecretKeyErrorMsg(msg);
+        onDoneAction({
+          signedXdr: null,
+          successMessage: null,
+          errorMessage: msg,
+        });
+      }
       return;
     }
 
@@ -470,7 +518,7 @@ export const SignTransactionXdr = ({
   };
 
   const SignTxButton = ({
-    label = "Sign transaction",
+    label = "Sign",
     onSign,
     onClear,
     isDisabled,
@@ -642,7 +690,7 @@ export const SignTransactionXdr = ({
     >
       <Box gap="md" direction="column">
         {/* Title */}
-        <WithInfoText href="https://developers.stellar.org/docs/learn/encyclopedia/signatures-multisig">
+        {title ? (
           <Text
             as="div"
             size="sm"
@@ -651,7 +699,7 @@ export const SignTransactionXdr = ({
           >
             {title}
           </Text>
-        </WithInfoText>
+        ) : null}
 
         {description ? (
           <Text size="sm" weight="regular" as="div">
@@ -690,7 +738,7 @@ export const SignTransactionXdr = ({
           />
           <Tab
             id={`${id}-signature`}
-            label="Add a signature to transaction envelope"
+            label="Transaction envelope"
             isSelected={selectedTab === "signature"}
             signatureCount={allSigsCount.signature}
             onTabChange={(tabId) => {
@@ -724,18 +772,21 @@ export const SignTransactionXdr = ({
             autocomplete="off"
             isPassword
             useSecretSelector
-          />
-          <SignTxButton
-            onSign={async () => {
-              await handleSign({ sigType: "secretKey", isClear: false });
-            }}
-            onClear={async () => {
-              await handleSign({ sigType: "secretKey", isClear: true });
-              setSecretKeyInputs([""]);
-            }}
-            isDisabled={!HAS_SECRET_KEYS || HAS_INVALID_SECRET_KEYS}
-            successMsg={secretKeySuccessMsg}
-            errorMsg={secretKeyErrorMsg}
+            limit={customSignFn ? 1 : undefined}
+            submitButton={
+              <SignTxButton
+                onSign={async () => {
+                  await handleSign({ sigType: "secretKey", isClear: false });
+                }}
+                onClear={async () => {
+                  await handleSign({ sigType: "secretKey", isClear: true });
+                  setSecretKeyInputs([""]);
+                }}
+                isDisabled={!HAS_SECRET_KEYS || HAS_INVALID_SECRET_KEYS}
+                successMsg={secretKeySuccessMsg}
+                errorMsg={secretKeyErrorMsg}
+              />
+            }
           />
         </div>
 

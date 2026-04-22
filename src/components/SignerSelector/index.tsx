@@ -214,11 +214,11 @@ const OptionItem = ({
     >
       {getLabel(label, isSavedKeypair)}
 
-      {items.map((item, key) => {
+      {items.map((item, index) => {
         return (
           <div
             className="SignerSelector__dropdown__item__value"
-            key={`${key}-${item.publicKey}`}
+            key={`${item.publicKey}-${index}`}
             onClick={() => {
               const value = isSavedKeypair
                 ? mode === "secret"

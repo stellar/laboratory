@@ -72,16 +72,11 @@ test.describe("Saved Transactions Page", () => {
 
       await expect(nameInput).toHaveValue(newName);
 
-      // View in submitter
+      // View in submitter — navigates to build flow at submit step
       await submitItem.getByText("View in submitter").click();
-      await pageContext.waitForURL("**/transaction/submit");
+      await pageContext.waitForURL("**/transaction/build");
 
       await expect(pageContext.locator("h1")).toHaveText("Submit transaction");
-      await expect(
-        pageContext.getByLabel("Input a Base64 encoded TransactionEnvelope:"),
-      ).toHaveValue(
-        "AAAAAgAAAAA55ZjOXdOOulfzeLPXjLDLdplq/5HGjapWAXjGSkdAkwAAAGQADQioAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAPhdN05mkM4xHi+T01SNgtsaiwQnrlbvzEup1jqlpjEnAAAAAlQL5AAAAAAAAAAAAUpHQJMAAABA689dl2/R1R1w0BjbrBWdUBSPIZF3zKvEN5Q7apo/1cX1azapoKcCd92gLOnqGTkIfAD8SID5okbCcwzFSOjFDA==",
-      );
       await expect(pageContext.getByLabel("Transaction hash")).toHaveValue(
         "510b76e2cb10e73b05eae02628421d832d340bde5c6c013b11f1a598806b4a3a",
       );
@@ -169,16 +164,11 @@ test.describe("Saved Transactions Page", () => {
 
       await expect(nameInput).toHaveValue(newName);
 
-      // View in submitter
+      // View in submitter — navigates to build flow at submit step
       await submitItem.getByText("View in submitter").click();
-      await pageContext.waitForURL("**/transaction/submit");
+      await pageContext.waitForURL("**/transaction/build");
 
       await expect(pageContext.locator("h1")).toHaveText("Submit transaction");
-      await expect(
-        pageContext.getByLabel("Input a Base64 encoded TransactionEnvelope:"),
-      ).toHaveValue(
-        "AAAAAgAAAAB+TL0HLiAjanMRnyeqyhb8Iu+4d1g2dl1cwPi1UZAigwAAtwUABiLjAAAAGQAAAAAAAAAAAAAAAQAAAAAAAAAZAAAAAAAAdTAAAAABAAAAAAAAAAEAAAAGAAAAASD+7zozM+tVyk2uwVRrzhPzYqyzwMsAT1kzEuqEzbYfAAAAEAAAAAEAAAACAAAADwAAAAdDb3VudGVyAAAAABIAAAAAAAAAAH5MvQcuICNqcxGfJ6rKFvwi77h3WDZ2XVzA+LVRkCKDAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAC2oQAAAAFRkCKDAAAAQANhue2LOei1g9uW8lDfkOIYSkxNBT2MJgA3FXXxVUZXrMMVKMH6or750Xrno+vigxOnIFW8TXlhKjohPFHkOgQ=",
-      );
       await expect(pageContext.getByLabel("Transaction hash")).toHaveValue(
         "77bba537ae20e1011737604224f70215445c23ee5851b42824711c8bc80f527f",
       );
@@ -232,9 +222,6 @@ test.describe("Saved Transactions Page", () => {
         "AAAABgAAAAEg/u86MzPrVcpNrsFUa84T82Kss8DLAE9ZMxLqhM22HwAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAAB+TL0HLiAjanMRnyeqyhb8Iu+4d1g2dl1cwPi1UZAigwAAAAE=",
       );
       await expect(pageContext.getByLabel("Extend To")).toHaveValue("30000");
-      await expect(
-        pageContext.getByLabel("Resource Fee (in stroops)"),
-      ).toHaveValue("46753");
     });
 
     test("Delete transaction", async () => {

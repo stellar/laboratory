@@ -135,7 +135,6 @@ export enum TrackingEvent {
   TRANSACTION_BUILD_OPERATIONS_ACTION_UP = "transaction: build: operations: action: up",
   TRANSACTION_BUILD_OPERATIONS_ACTION_DOWN = "transaction: build: operations: action: down",
   TRANSACTION_BUILD_OPERATIONS_ACTION_DELETE = "transaction: build: operations: action: delete",
-  TRANSACTION_BUILD_SIGN_IN_TX_SIGNER = "transaction: build: sign in transaction signer",
   TRANSACTION_BUILD_VIEW_IN_XDR = "transaction: build: view in xdr",
   TRANSACTION_BUILD_INVOKE_CONTRACT = "transaction: build: invoke contract",
   // Transactions - sign
@@ -155,6 +154,23 @@ export enum TrackingEvent {
   TRANSACTION_SIGN_FEE_BUMP = "transaction: sign: fee bump",
   // Transactions - simulate
   TRANSACTION_SIMULATE = "transaction: simulate",
+  // Transactions - Soroban auth
+  SOROBAN_AUTH_ENTRIES_DETECTED = "soroban auth: entries detected",
+  SOROBAN_AUTH_CARD_EXPAND = "soroban auth: card expand",
+  SOROBAN_AUTH_SIGN_MODE_CHANGE = "soroban auth: sign mode change",
+  SOROBAN_AUTH_SIGN_ALL_SUCCESS = "soroban auth: sign all: success",
+  SOROBAN_AUTH_SIGN_ALL_ERROR = "soroban auth: sign all: error",
+  SOROBAN_AUTH_SIGN_ENTRY_SUCCESS = "soroban auth: sign entry: success",
+  SOROBAN_AUTH_SIGN_ENTRY_ERROR = "soroban auth: sign entry: error",
+  SOROBAN_AUTH_ASSEMBLY_SUCCESS = "soroban auth: assembly: success",
+  SOROBAN_AUTH_ASSEMBLY_ERROR = "soroban auth: assembly: error",
+  SOROBAN_AUTO_ASSEMBLY_ERROR = "soroban: auto-assembly: error",
+  // Transactions - Soroban build
+  SOROBAN_BUILD_FUNCTION_SELECT = "soroban build: invoke contract - function select",
+  SOROBAN_BUILD_ARG_CHANGE = "soroban build: invoke contract - arg change",
+  // Transactions - validate
+  TRANSACTION_VALIDATE_AUTH_ENFORCE_SUCCESS = "transaction: validate: auth enforce: success",
+  TRANSACTION_VALIDATE_AUTH_ENFORCE_FAILURE = "transaction: validate: auth enforce: failure",
   // Transactions - submit
   TRANSACTION_SUBMIT_SUCCESS = "transaction: submit: success",
   TRANSACTION_SUBMIT_ERROR = "transaction: submit: error",

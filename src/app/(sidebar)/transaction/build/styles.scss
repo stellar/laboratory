@@ -1,0 +1,165 @@
+@use "../../../../styles/utils.scss" as *;
+
+.BuildTransaction {
+  &__layout {
+    display: flex;
+    gap: pxToRem(32px);
+    max-width: pxToRem(960px);
+    width: 100%;
+    margin: 0 auto;
+  }
+  &__tabs {
+    display: flex;
+    gap: pxToRem(32px);
+    width: pxToRem(960px);
+    margin: 0 auto;
+  }
+  &__content {
+    flex: 1;
+    min-width: 0;
+    max-width: pxToRem(738px);
+
+    .SignTransactionXdr {
+      background-color: var(--sds-clr-gray-01);
+    }
+
+    .resetButton {
+      font-weight: var(--sds-fw-semi-bold);
+      font-size: pxToRem(12px);
+      line-height: pxToRem(20px);
+    }
+  }
+
+  &__header {
+    .Button {
+      width: pxToRem(32px);
+      height: pxToRem(32px);
+      padding: 0;
+
+      svg {
+        width: pxToRem(14px);
+        height: pxToRem(14px);
+        color: var(--sds-clr-gray-09);
+      }
+    }
+
+    .Link {
+      color: var(--sds-clr-lilac-11);
+    }
+  }
+
+  &__stepper {
+    flex-shrink: 0;
+    width: pxToRem(190px);
+  }
+
+  @media (max-width: 960px) {
+    &__tabs {
+      width: 100%;
+    }
+
+    &__layout {
+      flex-direction: column;
+    }
+
+    &__stepper {
+      width: 100%;
+      order: -1;
+    }
+  }
+}
+
+.ResourceTable__header {
+  color: var(--sds-clr-gray-12);
+}
+
+.SimulateStepContent {
+  &__expand-toggle {
+    cursor: pointer;
+
+    .Link {
+      font-weight: var(--sds-fw-semi-bold);
+    }
+
+    svg {
+      transform: rotate(0deg);
+      transition: transform ease-in-out 0.2s;
+    }
+
+    &[data-is-expanded="true"] {
+      svg {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  &__xdr-preview {
+    padding: pxToRem(12px) pxToRem(16px);
+    word-break: break-all;
+    color: var(--sds-clr-gray-11);
+  }
+
+  &__resimulate-note {
+    color: var(--sds-clr-amber-11);
+  }
+
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    padding: pxToRem(2px) pxToRem(8px);
+    border-radius: pxToRem(4px);
+    font-size: pxToRem(11px);
+    line-height: pxToRem(16px);
+
+    &--unsigned {
+      background-color: var(--sds-clr-gray-04);
+      color: var(--sds-clr-gray-11);
+    }
+
+    &--signed {
+      background-color: var(--sds-clr-green-03);
+      color: var(--sds-clr-green-11);
+    }
+  }
+}
+
+.SignStepContent {
+  &__label {
+    color: var(--sds-clr-gray-09);
+  }
+
+  &__xdrBox {
+    max-height: pxToRem(400px);
+    overflow: auto;
+    background-color: var(--sds-clr-gray-03);
+    border-radius: pxToRem(12px);
+    padding: pxToRem(16px);
+    word-break: break-all;
+  }
+
+  &__xdrText {
+    font-family: var(--sds-ff-monospace);
+    font-size: pxToRem(14px);
+    line-height: pxToRem(18px);
+    letter-spacing: -0.02em;
+    color: var(--sds-clr-gray-12);
+  }
+
+  &__feeBumpRow {
+    padding-top: pxToRem(16px);
+
+    .Link {
+      font-size: pxToRem(14px);
+      font-weight: var(--sds-fw-semi-bold);
+    }
+  }
+
+  &__feeBumpLink {
+    font-size: pxToRem(14px);
+    font-weight: var(--sds-fw-semi-bold);
+  }
+
+  &__feeBumpText {
+    color: var(--sds-clr-gray-09);
+  }
+}

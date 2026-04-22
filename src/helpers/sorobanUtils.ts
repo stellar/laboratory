@@ -111,7 +111,8 @@ export const buildTxWithSorobanData = ({
   const account = new Account(params.source_account, txSeq);
 
   // https://developers.stellar.org/docs/learn/fundamentals/fees-resource-limits-metering
-  const totalTxFee = BigInt(params.fee) + BigInt(sorobanOp.params.resource_fee);
+  const totalTxFee =
+    BigInt(params.fee) + BigInt(sorobanOp.params.resource_fee || BASE_FEE);
 
   const getMemoValue = (memoType: string, memoValue: string) => {
     switch (memoType) {
@@ -207,7 +208,7 @@ export const getTxWithSorobanData = ({
     const sorobanData = getSorobanTxData({
       contractDataXdr,
       operationType: operation.operation_type as SorobanOpType,
-      fee: operation.params.resource_fee,
+      fee: operation.params.resource_fee || BASE_FEE,
     });
 
     if (sorobanData) {
@@ -701,3 +702,30 @@ export const convertSpecTypeToScValType = (type: string) => {
 };
 
 export const hasTypeAndValue = (v: any) => v?.type && v.value !== undefined;
+
+/**
+ * Determines if the simulation result indicates a read-only transaction
+ * (no write footprint).
+ */
+export const checkIsReadOnly = (responseData: Record<string, any>): boolean => {
+  try {
+    const result = responseData?.result;
+
+    if (!result) return false;
+
+    // Check if there's a transaction data with no write footprint
+    const transactionData = result?.transactionData as string | undefined;
+    if (transactionData) {
+      const sorobanData = xdr.SorobanTransactionData.fromXDR(
+        transactionData,
+        "base64",
+      );
+      const writeKeys = sorobanData.resources().footprint().readWrite().length;
+      return writeKeys === 0;
+    }
+
+    return false;
+  } catch {
+    return false;
+  }
+};
