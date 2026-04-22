@@ -76,7 +76,7 @@ export const BuildStepHeader = ({
           data-testid="clear-all-button"
           onClick={() => setIsClearModalVisible(true)}
         >
-          <Icon.RefreshCcw01 />
+          <Icon.RefreshCw01 />
         </Button>
 
         <Modal
