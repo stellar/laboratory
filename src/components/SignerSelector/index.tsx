@@ -169,6 +169,18 @@ const SignerSelectorDropdown = ({
   );
 };
 
+const getLabel = (label: string, isSavedKeypair: boolean) => (
+  <div className="SignerSelector__dropdown__item__label">
+    <div>{label}</div>
+
+    {isSavedKeypair ? (
+      <div className="SignerSelector__dropdown__item__label__savedKeypairs">
+        Public key
+      </div>
+    ) : null}
+  </div>
+);
+
 const OptionItem = ({
   label,
   items,
@@ -182,6 +194,8 @@ const OptionItem = ({
   onClose: () => void;
   mode: SignerMode;
 }) => {
+  const isSavedKeypair = items.every((item) => "secretKey" in item);
+
   const renderKey = (item: SavedKeypair) => {
     return (
       <div className="SignerSelector__dropdown__item__value__keypair">
@@ -198,10 +212,9 @@ const OptionItem = ({
       className="SignerSelector__dropdown__item"
       data-testid="signer-selector-options"
     >
-      <div className="SignerSelector__dropdown__item__label">{label}</div>
-      {items.map((item, index) => {
-        const isSavedKeypair = "secretKey" in item;
+      {getLabel(label, isSavedKeypair)}
 
+      {items.map((item, index) => {
         return (
           <div
             className="SignerSelector__dropdown__item__value"
@@ -209,7 +222,7 @@ const OptionItem = ({
             onClick={() => {
               const value = isSavedKeypair
                 ? mode === "secret"
-                  ? item.secretKey
+                  ? (item as SavedKeypair).secretKey
                   : item.publicKey
                 : item.publicKey;
               onChange(value);
