@@ -1,18 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import { Button, Icon } from "@stellar/design-system";
 
-import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransactions";
-
-import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 import {
   TransactionStepName,
   getStepLabel,
 } from "@/components/TransactionStepper";
-
-import { TransactionBuildParams } from "@/store/createTransactionFlowStore";
-import { TxnOperation } from "@/types/types";
 
 import "./styles.scss";
 
@@ -24,9 +17,6 @@ import "./styles.scss";
  * @param activeStep - The currently active step
  * @param onNext - Callback to advance to the next step
  * @param isNextDisabled - Whether the Next button should be disabled
- * @param xdr - Built XDR string, used for saving on the build/import step
- * @param params - Transaction build params for saving
- * @param operations - Transaction operations for saving
  *
  * @example
  * <TransactionFlowFooter
@@ -34,82 +24,54 @@ import "./styles.scss";
  *   activeStep="build"
  *   onNext={handleNext}
  *   isNextDisabled={!isValid}
- *   xdr={builtXdr}
- *   params={build.params}
- *   operations={build.classic.operations}
  * />
  */
 export const TransactionFlowFooter = ({
   steps,
   activeStep,
   onNext,
+  onBack,
   isNextDisabled,
-  xdr,
-  params,
-  operations,
 }: {
   steps: TransactionStepName[];
   activeStep: TransactionStepName;
   onNext?: () => void;
+  onBack?: () => void;
   isNextDisabled: boolean;
-  xdr?: string;
-  params?: TransactionBuildParams;
-  operations?: TxnOperation[];
 }) => {
-  const [isSaveModalVisible, setIsSaveModalVisible] = useState(false);
-
   const currentIndex = steps.indexOf(activeStep);
+  const isFirstStep = currentIndex === 0;
   const isLastStep = currentIndex === steps.length - 1;
-  const showSaveButton = activeStep === "build" || activeStep === "import";
 
+  const prevStep = !isFirstStep ? steps[currentIndex - 1] : null;
   const nextStep = !isLastStep ? steps[currentIndex + 1] : null;
 
   return (
     <div className="TransactionFlowFooter">
-      <div className="TransactionFlowFooter__nav">
-        {nextStep && (
-          <Button
-            size="md"
-            variant="secondary"
-            onClick={onNext}
-            disabled={isNextDisabled}
-          >
-            {`Next: ${getStepLabel(nextStep)}`}
-          </Button>
-        )}
-      </div>
-
-      {showSaveButton && (
-        <>
-          <Button
-            size="md"
-            variant="tertiary"
-            icon={<Icon.Save01 />}
-            iconPosition="right"
-            onClick={() => setIsSaveModalVisible(true)}
-          >
-            Save transaction
-          </Button>
-
-          <SaveToLocalStorageModal
-            type="save"
-            itemTitle="Transaction"
-            itemProps={{
-              xdr: xdr || "",
-              page: "build",
-              ...(params ? { params } : {}),
-              ...(operations ? { operations } : {}),
-            }}
-            allSavedItems={localStorageSavedTransactions.get()}
-            isVisible={isSaveModalVisible}
-            onClose={() => {
-              setIsSaveModalVisible(false);
-            }}
-            onUpdate={(updatedItems) => {
-              localStorageSavedTransactions.set(updatedItems);
-            }}
-          />
-        </>
+      {prevStep && (
+        <Button
+          size="md"
+          variant="tertiary"
+          icon={<Icon.ArrowLeft />}
+          iconPosition="left"
+          onClick={onBack}
+          data-position="left"
+        >
+          {`${getStepLabel(prevStep)}`}
+        </Button>
+      )}
+      {nextStep && (
+        <Button
+          size="md"
+          variant="secondary"
+          icon={<Icon.ArrowRight />}
+          iconPosition="right"
+          onClick={onNext}
+          disabled={isNextDisabled}
+          data-position="right"
+        >
+          {`${getStepLabel(nextStep)}`}
+        </Button>
       )}
     </div>
   );

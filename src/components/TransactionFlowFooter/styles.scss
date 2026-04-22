@@ -2,12 +2,14 @@
 
 .TransactionFlowFooter {
   display: flex;
+  width: 100%;
   align-items: center;
-  justify-content: space-between;
 
-  &__nav {
-    display: flex;
-    align-items: center;
-    gap: pxToRem(8px);
+  [data-position="left"] {
+    margin-right: auto;
+  }
+
+  [data-position="right"] {
+    margin-left: auto;
   }
 }

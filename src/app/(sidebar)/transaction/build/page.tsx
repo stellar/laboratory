@@ -1,4 +1,5 @@
 "use client";
+import { useEffect } from "react";
 import { Alert, Card } from "@stellar/design-system";
 
 import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
@@ -36,6 +37,7 @@ export default function BuildTransaction() {
     highestCompletedStep,
     setActiveStep,
     goToNextStep,
+    markStepCompleted,
     resetAll,
   } = useBuildFlowStore();
 
@@ -59,7 +61,7 @@ export default function BuildTransaction() {
       : ["build", "simulate", "sign", "submit"]
     : ["build", "sign", "submit"];
 
-  const { handleNext, handleStepClick } = useTransactionFlow({
+  const { handleNext, handleBack, handleStepClick } = useTransactionFlow({
     steps,
     activeStep,
     highestCompletedStep,
@@ -92,6 +94,13 @@ export default function BuildTransaction() {
   };
 
   const isNextDisabled = getIsNextDisabled();
+
+  useEffect(() => {
+    if (!isNextDisabled && activeStep !== "submit") {
+      markStepCompleted(activeStep, steps);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isNextDisabled, activeStep]);
 
   const renderError = () => {
     if (paramsError.length > 0 || operationsError.length > 0) {
@@ -152,7 +161,12 @@ export default function BuildTransaction() {
           resetAll();
           dismissLegacyAlert();
         }}
-        clearAllLinkClassName="resetButton"
+        xdr={currentXdr}
+        params={build.params}
+        activeStep={activeStep}
+        operations={
+          isSoroban ? [build.soroban.operation] : build.classic.operations
+        }
       />
 
       {isLegacyUrl ? (
@@ -207,14 +221,8 @@ export default function BuildTransaction() {
               steps={steps}
               activeStep={activeStep}
               onNext={handleNext}
+              onBack={handleBack}
               isNextDisabled={isNextDisabled}
-              xdr={currentXdr}
-              params={build.params}
-              operations={
-                isSoroban
-                  ? [build.soroban.operation]
-                  : build.classic.operations
-              }
             />
           </Box>
         </div>

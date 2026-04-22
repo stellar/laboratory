@@ -162,7 +162,10 @@ test.describe("Validate Step in Build Flow", () => {
   }) => {
     await seedSessionStorageAndNavigate(page);
 
-    const validateButton = page.getByRole("button", { name: "Validate", exact: true });
+    const validateButton = page.getByRole("button", {
+      name: "Validate",
+      exact: true,
+    });
     await expect(validateButton).toBeEnabled();
   });
 
@@ -172,7 +175,10 @@ test.describe("Validate Step in Build Flow", () => {
     await mockEnforceSimulationSuccess(page);
     await seedSessionStorageAndNavigate(page);
 
-    const validateButton = page.getByRole("button", { name: "Validate", exact: true });
+    const validateButton = page.getByRole("button", {
+      name: "Validate",
+      exact: true,
+    });
     await validateButton.click();
 
     // Wait for success alert
@@ -192,7 +198,10 @@ test.describe("Validate Step in Build Flow", () => {
     await mockEnforceSimulationFailure(page);
     await seedSessionStorageAndNavigate(page);
 
-    const validateButton = page.getByRole("button", { name: "Validate", exact: true });
+    const validateButton = page.getByRole("button", {
+      name: "Validate",
+      exact: true,
+    });
     await validateButton.click();
 
     await expect(page.getByText("Validation failed")).toBeVisible();
@@ -204,7 +213,10 @@ test.describe("Validate Step in Build Flow", () => {
     await mockEnforceSimulationSuccess(page);
     await seedSessionStorageAndNavigate(page);
 
-    const validateButton = page.getByRole("button", { name: "Validate", exact: true });
+    const validateButton = page.getByRole("button", {
+      name: "Validate",
+      exact: true,
+    });
     await validateButton.click();
 
     await expect(
@@ -235,9 +247,7 @@ test.describe("Validate Step in Build Flow", () => {
   test("Next button is disabled before validation", async ({ page }) => {
     await seedSessionStorageAndNavigate(page);
 
-    const nextButton = page.getByRole("button", {
-      name: "Next: Submit transaction",
-    });
+    const nextButton = page.locator('[data-position="right"]');
     await expect(nextButton).toBeDisabled();
   });
 
@@ -247,15 +257,16 @@ test.describe("Validate Step in Build Flow", () => {
     await mockEnforceSimulationSuccess(page);
     await seedSessionStorageAndNavigate(page);
 
-    const validateButton = page.getByRole("button", { name: "Validate", exact: true });
+    const validateButton = page.getByRole("button", {
+      name: "Validate",
+      exact: true,
+    });
     await validateButton.click();
 
     // Wait for success
     await expect(page.getByText("Auth entries validated")).toBeVisible();
 
-    const nextButton = page.getByRole("button", {
-      name: "Next: Submit transaction",
-    });
+    const nextButton = page.locator('[data-position="right"]');
     await expect(nextButton).toBeEnabled();
   });
 });

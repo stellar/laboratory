@@ -41,12 +41,7 @@ test.describe("Build Transaction Page", () => {
     await operation_0.getByLabel("Destination").fill(ACCOUNT_ONE);
     await operation_0.getByLabel("Starting balance").fill("1");
 
-    const saveTxButton = page.getByRole("button", {
-      name: "Save transaction",
-    });
-
-    await expect(saveTxButton).toBeVisible();
-    await saveTxButton.click();
+    await page.getByTestId("save-to-local-storage-button").click();
 
     const modal = page.locator(".Modal");
 
@@ -126,7 +121,8 @@ test.describe("Build Transaction Page", () => {
 
       // Clear params
       await expect(paramsErrors).toBeHidden();
-      await page.getByText("Clear all").click();
+      await page.getByTestId("clear-all-button").click();
+      await page.getByRole("button", { name: "Clear all" }).click();
       await expect(paramsErrors).toBeVisible();
     });
 
@@ -1373,9 +1369,7 @@ test.describe("Build Transaction Page", () => {
 
         // In the new flow, extend_footprint_ttl does not produce XDR on
         // the build step — verify the Next button is enabled (form valid).
-        const nextButton = page.getByRole("button", {
-          name: /Next: Simulate/,
-        });
+        const nextButton = page.locator('[data-position="right"]');
         await expect(nextButton).toBeEnabled();
       });
 
@@ -1493,9 +1487,7 @@ test.describe("Build Transaction Page", () => {
 
         // In the new flow, extend_footprint_ttl does not produce XDR on
         // the build step — verify the Next button is enabled (form valid).
-        const nextButton = page.getByRole("button", {
-          name: /Next: Simulate/,
-        });
+        const nextButton = page.locator('[data-position="right"]');
         await expect(nextButton).toBeEnabled();
       });
 
@@ -1686,9 +1678,7 @@ test.describe("Build Transaction Page", () => {
 
         // In the new flow, restore_footprint does not produce XDR on
         // the build step — verify the Next button is enabled (form valid).
-        const nextButton = page.getByRole("button", {
-          name: /Next: Simulate/,
-        });
+        const nextButton = page.locator('[data-position="right"]');
         await expect(nextButton).toBeEnabled();
       });
 
@@ -1804,9 +1794,7 @@ test.describe("Build Transaction Page", () => {
 
         // In the new flow, restore_footprint does not produce XDR on
         // the build step — verify the Next button is enabled (form valid).
-        const nextButton = page.getByRole("button", {
-          name: /Next: Simulate/,
-        });
+        const nextButton = page.locator('[data-position="right"]');
         await expect(nextButton).toBeEnabled();
       });
 

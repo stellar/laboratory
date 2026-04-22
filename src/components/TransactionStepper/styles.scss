@@ -44,6 +44,10 @@
     [data-is-completed="true"]
       > .TransactionStepper__indicator
       > .TransactionStepper__badgeWrapper
+      > &,
+    [data-is-accessible="true"]
+      > .TransactionStepper__indicator
+      > .TransactionStepper__badgeWrapper
       > & {
       color: var(--sds-clr-gray-12);
     }
@@ -97,7 +101,8 @@
     }
 
     [data-is-active="true"] > &,
-    [data-is-completed="true"] > & {
+    [data-is-completed="true"] > &,
+    [data-is-accessible="true"] > & {
       color: var(--sds-clr-gray-12);
     }
 
