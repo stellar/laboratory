@@ -174,9 +174,7 @@ export const Overview = () => {
   const onViewSubmitTxn = () => {
     if (sign.signedTx) {
       endpoints.updateParams({ tx: sign.signedTx });
-      endpoints.updateCurrentEndpoint(
-        Routes.ENDPOINTS_SEND_TRANSACTION.replace(Routes.ENDPOINTS, ""),
-      );
+      endpoints.updateCurrentEndpoint(Routes.ENDPOINTS_SEND_TRANSACTION);
 
       delayedAction({
         action: () => {
