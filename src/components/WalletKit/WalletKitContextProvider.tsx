@@ -1,32 +1,32 @@
 "use client";
 
-import { createContext, useEffect, useMemo, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { useStore } from "@/store/useStore";
 
 import {
-  AlbedoModule,
-  FreighterModule,
-  HanaModule,
-  LobstrModule,
-  RabetModule,
   StellarWalletsKit,
-  HotWalletModule,
-  xBullModule,
+  SwkAppDarkTheme,
+  SwkAppLightTheme,
 } from "@creit.tech/stellar-wallets-kit";
-import { LedgerModule } from "@creit.tech/stellar-wallets-kit/modules/ledger.module";
+import { AlbedoModule } from "@creit.tech/stellar-wallets-kit/modules/albedo";
+import { FreighterModule } from "@creit.tech/stellar-wallets-kit/modules/freighter";
+import { HanaModule } from "@creit.tech/stellar-wallets-kit/modules/hana";
+import { HotWalletModule } from "@creit.tech/stellar-wallets-kit/modules/hotwallet";
+import { LedgerModule } from "@creit.tech/stellar-wallets-kit/modules/ledger";
+import { LobstrModule } from "@creit.tech/stellar-wallets-kit/modules/lobstr";
+import { RabetModule } from "@creit.tech/stellar-wallets-kit/modules/rabet";
+import { xBullModule } from "@creit.tech/stellar-wallets-kit/modules/xbull";
 
 import { getWalletKitNetwork } from "@/helpers/getWalletKitNetwork";
 import { localStorageSavedTheme } from "@/helpers/localStorageSavedTheme";
 import { localStorageSavedWallet } from "@/helpers/localStorageSavedWallet";
-import { SavedWallet } from "@/types/types";
 
 type WalletKitProps = {
-  walletKit?: StellarWalletsKit;
-  walletId?: string;
+  isInitialized: boolean;
 };
 
 export const WalletKitContext = createContext<WalletKitProps>({
-  walletKit: undefined,
+  isInitialized: false,
 });
 
 export const WalletKitContextProvider = ({
@@ -35,7 +35,7 @@ export const WalletKitContextProvider = ({
   children: React.ReactNode;
 }) => {
   const { network, theme, setTheme } = useStore();
-  const [savedWallet, setSavedWallet] = useState<SavedWallet | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
   const networkType = getWalletKitNetwork(network.id);
 
   useEffect(() => {
@@ -49,55 +49,18 @@ export const WalletKitContextProvider = ({
   }, []);
 
   useEffect(() => {
-    const savedWallet = localStorageSavedWallet.get();
-
-    if (savedWallet && savedWallet.network.id === network.id) {
-      setSavedWallet(savedWallet);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const walletKitInstance = useMemo(() => {
     // Only initialize on client side to avoid "window is not defined" errors in terminal
     if (typeof window === "undefined") {
-      return undefined;
+      return;
     }
 
+    // Re-read the saved wallet whenever the network changes so we don't pass
+    // a wallet id that was persisted for a different network.
+    const savedWallet = localStorageSavedWallet.get();
+    const walletIdForNetwork =
+      savedWallet && savedWallet.network.id === network.id ? savedWallet.id : "";
+
     const isDarkTheme = theme === "sds-theme-dark";
-
-    const commonDarkTheme = {
-      bgColor: "#161616",
-      textColor: "#fcfcfc",
-      solidTextColor: "#fcfcfc",
-      dividerColor: "#fcfcfc",
-    };
-
-    const commonLightTheme = {
-      bgColor: "#fcfcfc",
-      textColor: "#161616",
-      solidTextColor: "#161616",
-      dividerColor: "#161616",
-    };
-
-    const modalDarkTheme = {
-      ...commonDarkTheme,
-      dividerColor: "#161616",
-      headerButtonColor: "#161616",
-      helpBgColor: "#161616",
-      notAvailableTextColor: "#fcfcfc",
-      notAvailableBgColor: "#161616",
-      notAvailableBorderColor: "#fcfcfc",
-    };
-
-    const modalLightTheme = {
-      ...commonLightTheme,
-      dividerColor: "#fcfcfc",
-      headerButtonColor: "#fcfcfc",
-      helpBgColor: "#fcfcfc",
-      notAvailableTextColor: "#161616",
-      notAvailableBgColor: "#fcfcfc",
-      notAvailableBorderColor: "#161616",
-    };
 
     const TEST_MODULES = [
       new AlbedoModule(),
@@ -111,32 +74,20 @@ export const WalletKitContextProvider = ({
 
     const PROD_MODULES = [...TEST_MODULES, new HotWalletModule()];
 
-    return new StellarWalletsKit({
+    StellarWalletsKit.init({
       network: networkType,
-      selectedWalletId: savedWallet?.id || "",
+      selectedWalletId: walletIdForNetwork,
       modules: network.id === "mainnet" ? PROD_MODULES : TEST_MODULES,
-      ...(theme && {
-        buttonTheme: isDarkTheme
-          ? {
-              ...commonDarkTheme,
-              buttonPadding: "0.5rem 1.25rem",
-              buttonBorderRadius: "0.5rem",
-            }
-          : {
-              ...commonLightTheme,
-              buttonPadding: "0.5rem 1.25rem",
-              buttonBorderRadius: "0.5rem",
-            },
-        modalTheme: isDarkTheme ? modalDarkTheme : modalLightTheme,
-      }),
+      theme: isDarkTheme ? SwkAppDarkTheme : SwkAppLightTheme,
     });
-  }, [network.id, networkType, savedWallet?.id, theme]);
+
+    setIsInitialized(true);
+  }, [network.id, networkType, theme]);
 
   return (
     <WalletKitContext.Provider
       value={{
-        walletKit: walletKitInstance,
-        walletId: savedWallet?.id,
+        isInitialized,
       }}
     >
       {children}

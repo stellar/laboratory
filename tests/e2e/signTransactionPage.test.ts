@@ -159,10 +159,10 @@ test.describe("Sign Transaction Page", () => {
     await walletExtSignBtn.click();
 
     await expect(
-      page.getByRole("heading", { name: "Connect a Wallet" }),
+      page.getByRole("heading", { name: "Connect Wallet" }),
     ).toBeVisible();
 
-    // Wallet Extension to display 6 wallets
+    // Wallet Extension to display 7 wallets
     await expect(page.getByRole("listitem")).toHaveCount(7);
 
     // Exit out of the wallet extension modal
