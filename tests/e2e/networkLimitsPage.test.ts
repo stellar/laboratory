@@ -38,8 +38,8 @@ test.describe("Network Limits page on Mainnet", () => {
     page,
   }) => {
     const resourceLimitsHeading = page.locator("text=Resource limits");
-    const table = page.locator(".NetworkLimits__table");
-    const rows = table.locator(".NetworkLimits__table__row");
+    const table = page.locator(".GridTable");
+    const rows = table.locator(".GridTable__row");
 
     await expect(resourceLimitsHeading).toBeVisible();
 
@@ -105,9 +105,9 @@ test.describe("Network Limits page on Mainnet", () => {
     const stateArchivalHeading = page.locator("text=TTL extension parameter");
     await expect(stateArchivalHeading).toBeVisible();
 
-    const tables = page.locator(".NetworkLimits__table");
+    const tables = page.locator(".GridTable");
     const stateArchivalTable = tables.nth(1);
-    const rows = stateArchivalTable.locator(".NetworkLimits__table__row");
+    const rows = stateArchivalTable.locator(".GridTable__row");
 
     await expect(getTableRow(rows, 1)).toHaveText([
       "Persistent entry TTL on creation",
@@ -131,9 +131,9 @@ test.describe("Network Limits page on Mainnet", () => {
     const resourceFeesHeading = page.locator("text=Resource fees");
     await expect(resourceFeesHeading).toBeVisible();
 
-    const tables = page.locator(".NetworkLimits__table");
+    const tables = page.locator(".GridTable");
     const feesTable = tables.nth(2);
-    const rows = feesTable.locator(".NetworkLimits__table__row");
+    const rows = feesTable.locator(".GridTable__row");
 
     const BYTES_PER_KB = 1024;
 
@@ -315,7 +315,7 @@ test.describe("Network Limits page on Mainnet", () => {
 // Helpers
 // =============================================================================
 const getTableRow = (rows: any, index: number) => {
-  return rows.nth(index).locator(".NetworkLimits__table__cell");
+  return rows.nth(index).locator(".GridTable__cell");
 };
 
 /**

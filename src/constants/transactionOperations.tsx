@@ -360,8 +360,8 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
       "Extend the time to live (TTL) of entries for Soroban smart contracts. This operation extends the TTL of the entries specified in the readOnly footprint of the transaction so that they will live at least until the extendTo ledger sequence number is reached.",
     docsUrl:
       "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#extend-footprint-ttl",
-    params: ["contractDataLedgerKey", "extend_ttl_to", "resource_fee"],
-    requiredParams: ["contractDataLedgerKey", "extend_ttl_to", "resource_fee"],
+    params: ["contractDataLedgerKey", "extend_ttl_to"],
+    requiredParams: ["contractDataLedgerKey", "extend_ttl_to"],
     custom: {
       extend_ttl_to: {
         note: "The ledger sequence number the entries will live until.",
@@ -394,8 +394,8 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
       "Builds an operation to restore the archived ledger entries specified by the ledger keys.",
     docsUrl:
       "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#restore-footprint",
-    params: ["contractDataLedgerKey", "resource_fee"],
-    requiredParams: ["contractDataLedgerKey", "resource_fee"],
+    params: ["contractDataLedgerKey"],
+    requiredParams: ["contractDataLedgerKey"],
     custom: {
       durability: {
         note: "TTL for the temporary data can be extended; however, it is unsafe to rely on the extensions to preserve data since there is always a risk of losing temporary data",

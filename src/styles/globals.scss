@@ -19,13 +19,13 @@
   min-height: auto !important;
   display: block !important;
 
+  .Card {
+    --Card-padding: #{pxToRem(16px)};
+  }
+
   @media screen and (max-width: 1040px) {
     position: relative;
     z-index: 10;
-
-    .Card {
-      --Card-padding: #{pxToRem(16px)};
-    }
   }
 
   .Modal {
@@ -392,7 +392,7 @@
 
   // Content
   &__container {
-    padding: pxToRem(24px);
+    padding: pxToRem(32px);
     overflow-x: auto;
 
     @media screen and (max-width: 1040px) {

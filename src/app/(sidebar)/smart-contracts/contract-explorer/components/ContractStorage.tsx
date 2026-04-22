@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, Loader, Text } from "@stellar/design-system";
 import { useRouter } from "next/navigation";
 
-import { useStore } from "@/store/useStore";
+import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 
 import { ErrorText } from "@/components/ErrorText";
 import { Box } from "@/components/layout/Box";
@@ -21,7 +21,6 @@ import { getContractDataXDR } from "@/helpers/sorobanUtils";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { CONTRACT_STORAGE_MAX_ENTRIES } from "@/constants/settings";
-import { INITIAL_OPERATION } from "@/constants/transactionOperations";
 import { Routes } from "@/constants/routes";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
@@ -54,7 +53,7 @@ export const ContractStorage = ({
   isSourceStellarExpert: boolean;
 }) => {
   const isXdrInit = useIsXdrInit();
-  const { transaction } = useStore();
+  const { resetAll, setBuildSorobanOperation } = useBuildFlowStore();
   const router = useRouter();
 
   const [currentHref, setCurrentHref] = useState<string | undefined>();
@@ -199,17 +198,9 @@ export const ContractStorage = ({
 
   const keyValueFilters = getKeyValueFilters();
 
-  const handleResetTransactions = () => {
-    // reset transaction related stores
-    transaction.updateBuildOperations([INITIAL_OPERATION]);
-    transaction.updateBuildXdr("");
-    transaction.updateSorobanBuildOperation(INITIAL_OPERATION);
-    transaction.updateSorobanBuildXdr("");
-  };
-
   const handleRestore = (key: string, durability: string) => {
-    // reset transaction related stores
-    handleResetTransactions();
+    // Reset the flow store to a clean state
+    resetAll();
 
     const contractDataXdr = getContractDataXDR({
       contractAddress: contractId,
@@ -221,16 +212,17 @@ export const ContractStorage = ({
       contractId,
     });
 
-    router.push(Routes.BUILD_TRANSACTION);
-
     if (contractDataXdr) {
-      transaction.updateSorobanBuildOperation({
+      setBuildSorobanOperation({
         operation_type: "restore_footprint",
         params: {
           contractDataLedgerKey: contractDataXdr,
         },
+        source_account: "",
       });
     }
+
+    router.push(Routes.BUILD_TRANSACTION);
   };
 
   return (

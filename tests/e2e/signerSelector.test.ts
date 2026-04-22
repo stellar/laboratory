@@ -32,7 +32,10 @@ async function validateSignerSelectorOptions(page: Page) {
     ".SignerSelector__dropdown__item__value",
   );
 
-  await expect(labels).toHaveText("Saved keypairs");
+  await expect(labels.locator("div").first()).toHaveText("Saved keypairs");
+  await expect(
+    labels.locator(".SignerSelector__dropdown__item__label__savedKeypairs"),
+  ).toHaveText("Public key");
   await expect(values.nth(0)).toHaveText("[Account 1]GA46...GMXG");
   await expect(values.nth(1)).toHaveText("[Account 2]GC5T...Z6LD");
 
