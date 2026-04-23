@@ -35,6 +35,13 @@
         line-height: pxToRem(18px);
 
         padding: pxToRem(3px) pxToRem(8px);
+
+        display: grid;
+        grid-template-columns: auto 120px;
+
+        &__savedKeypairs {
+          text-align: right;
+        }
       }
 
       &__value {

@@ -2,99 +2,97 @@
 
 import { useEffect } from "react";
 import { useStore } from "@/store/useStore";
+import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 import { TransactionBuilder } from "@stellar/stellar-sdk";
-import { useRouter } from "next/navigation";
-
-import { Routes } from "@/constants/routes";
 
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
-
-import { trackEvent, TrackingEvent } from "@/metrics/tracking";
+import { getTxWithSorobanData } from "@/helpers/sorobanUtils";
 
 import { TransactionXdrDisplay } from "./TransactionXdrDisplay";
 
 export const SorobanTransactionXdr = () => {
-  const { network, transaction } = useStore();
-  const { updateSignActiveView, updateSignImportXdr, updateSorobanBuildXdr } =
-    transaction;
-  const { soroban, isValid } = transaction.build;
-  const { xdr: sorobanXdr } = soroban;
-  const router = useRouter();
+  const { network } = useStore();
+  const { build, setBuildSorobanXdr } = useBuildFlowStore();
+  const { isValid, params: txnParams } = build;
+  const { soroban } = build;
+
+  const isReady = isValid.params && isValid.operations;
+
+  // Build XDR for non-invoke Soroban operations (restore_footprint,
+  // extend_footprint_ttl). These don't need a real resource_fee at build time
+  // — the simulation step calculates it. For invoke_contract, the XDR is built
+  // within the SorobanOperation component's invoke flow.
+  const buildResult = (() => {
+    if (!isReady) return null;
+
+    const opType = soroban.operation.operation_type;
+
+    // invoke_contract builds its own XDR via a different path
+    if (opType === "invoke_contract_function") {
+      // Use already-built XDR if present
+      return soroban.xdr ? { xdr: soroban.xdr } : null;
+    }
+
+    // restore_footprint / extend_footprint_ttl
+    if (opType && soroban.operation.params.contractDataLedgerKey) {
+      return getTxWithSorobanData({
+        operation: soroban.operation,
+        txnParams,
+        networkPassphrase: network.passphrase,
+      });
+    }
+
+    return null;
+  })();
 
   useEffect(() => {
-    // Reset transaction.xdr if the transaction is not valid
-    if (!(isValid.params && isValid.operations)) {
-      updateSorobanBuildXdr("");
-    }
-    // Not including updateBuildXdr
+    setBuildSorobanXdr(buildResult?.xdr ?? "");
+    // Not including setBuildSorobanXdr
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isValid.params, isValid.operations]);
+  }, [buildResult?.xdr]);
 
-  if (!(isValid.params && isValid.operations)) {
+  if (!isReady) {
     return null;
   }
 
-  if (sorobanXdr) {
-    return renderSorobanTxResultDisplay({
-      sorobanXdr,
-      networkPassphrase: network.passphrase,
-      onSignClick: () => {
-        updateSignImportXdr(sorobanXdr);
-        updateSignActiveView("overview");
-
-        trackEvent(TrackingEvent.TRANSACTION_BUILD_SIGN_IN_TX_SIGNER, {
-          txType: "smart contract",
-        });
-
-        router.push(Routes.SIGN_TRANSACTION);
-      },
-      onViewXdrClick: () => {
-        trackEvent(TrackingEvent.TRANSACTION_BUILD_VIEW_IN_XDR, {
-          txType: "smart contract",
-        });
-      },
-    });
-  }
-  return null;
-};
-
-export const renderSorobanTxResultDisplay = ({
-  sorobanXdr,
-  networkPassphrase,
-  onSignClick,
-  onViewXdrClick,
-}: {
-  sorobanXdr: string;
-  networkPassphrase: string;
-  onSignClick: () => void;
-  onViewXdrClick: () => void;
-}) => {
-  try {
-    if (!sorobanXdr) {
-      return null;
-    }
-
-    const txnHash = TransactionBuilder.fromXDR(sorobanXdr, networkPassphrase)
-      .hash()
-      .toString("hex");
-
-    return (
-      <TransactionXdrDisplay
-        xdr={sorobanXdr}
-        networkPassphrase={networkPassphrase}
-        txnHash={txnHash}
-        dataTestId="build-soroban-transaction-envelope-xdr"
-        onSignClick={onSignClick}
-        onViewXdrClick={onViewXdrClick}
-      />
-    );
-  } catch (e: any) {
+  if (buildResult?.error) {
     return (
       <ValidationResponseCard
         variant="error"
-        title="Transaction Error:"
-        response={e.toString()}
+        title="Transaction Envelope XDR Error:"
+        response={buildResult.error}
       />
     );
   }
+
+  if (buildResult?.xdr) {
+    try {
+      const txnHash = TransactionBuilder.fromXDR(
+        buildResult.xdr,
+        network.passphrase,
+      )
+        .hash()
+        .toString("hex");
+
+      return (
+        <TransactionXdrDisplay
+          xdr={buildResult.xdr}
+          networkPassphrase={network.passphrase}
+          txnHash={txnHash}
+          dataTestId="build-soroban-transaction-envelope-xdr"
+          txType="smart-contract"
+        />
+      );
+    } catch (e: any) {
+      return (
+        <ValidationResponseCard
+          variant="error"
+          title="Transaction Error:"
+          response={e.toString()}
+        />
+      );
+    }
+  }
+
+  return null;
 };

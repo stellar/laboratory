@@ -1,0 +1,193 @@
+"use client";
+
+import { useCallback, useEffect, useState } from "react";
+import { Badge, Icon, IconButton, Text } from "@stellar/design-system";
+import { authorizeEntry, Keypair, xdr } from "@stellar/stellar-sdk";
+
+import { Box } from "@/components/layout/Box";
+import { CodeEditor } from "@/components/CodeEditor";
+import { SignTransactionXdr } from "@/components/SignTransactionXdr";
+
+import { decodeXdr } from "@/helpers/decodeXdr";
+import { prettifyJsonString } from "@/helpers/prettifyJsonString";
+import { useIsXdrInit } from "@/hooks/useIsXdrInit";
+
+import { validate } from "@/validate";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
+
+/**
+ * A single auth entry row: "Entry #N" + Unsigned/Signed badge + chevron.
+ *
+ * Chevron expands to show the decoded auth entry JSON (via StellarXdr WASM
+ * decode, same approach as XDR viewer/diff pages). When `showSigningArea` is
+ * true ("Sign individually" mode), the expanded view includes an embedded
+ * `SignTransactionXdr` with `customSignFn` for auth-entry-specific signing.
+ */
+export const AuthEntryItem = ({
+  index,
+  entryXdr,
+  isSigned,
+  showSigningArea,
+  autoExpand,
+  builtXdr,
+  authEntriesXdr,
+  validUntilLedgerSeq,
+  networkPassphrase,
+  onAuthSigned,
+}: {
+  index: number;
+  entryXdr: string;
+  isSigned: boolean;
+  showSigningArea: boolean;
+  /** When true, automatically expand this entry */
+  autoExpand?: boolean;
+  /** The built transaction XDR — passed to SignTransactionXdr */
+  builtXdr: string;
+  /** All auth entry XDR strings */
+  authEntriesXdr: string[];
+  /** Ledger sequence after which the auth entry expires */
+  validUntilLedgerSeq: number;
+  /** Network passphrase for signing */
+  networkPassphrase: string;
+  /** Called when this entry is signed (index + signed XDR) */
+  onAuthSigned: (index: number, signedEntryXdr: string) => void;
+}) => {
+  const [isExpanded, setIsExpanded] = useState(Boolean(autoExpand));
+  const isXdrInit = useIsXdrInit();
+
+  // Auto-expand when this entry becomes the next unsigned entry
+  useEffect(() => {
+    if (autoExpand) {
+      setIsExpanded(true);
+    }
+  }, [autoExpand]);
+
+  // Decode the auth entry XDR to JSON for display
+  const decoded = isExpanded
+    ? decodeXdr({
+        xdrType: "SorobanAuthorizationEntry",
+        xdrBlob: entryXdr,
+        isReady: isXdrInit,
+      })
+    : null;
+
+  const decodedJson = decoded?.jsonString
+    ? prettifyJsonString(decoded.jsonString)
+    : "";
+
+  /**
+   * Custom sign function for this specific entry. Called by
+   * SignTransactionXdr instead of its default envelope signing.
+   */
+  const handleCustomSign = useCallback(
+    async ({ secretKeys }: { sigType: string; secretKeys: string[] }) => {
+      try {
+        const entry = xdr.SorobanAuthorizationEntry.fromXDR(
+          authEntriesXdr[index],
+          "base64",
+        );
+
+        if (entry.credentials().switch().name === "sorobanCredentialsAddress") {
+          const secretKey = secretKeys[0];
+
+          if (secretKey && !validate.getSecretKeyError(secretKey)) {
+            const keypair = Keypair.fromSecret(secretKey);
+            const signed = await authorizeEntry(
+              entry,
+              keypair,
+              validUntilLedgerSeq,
+              networkPassphrase,
+            );
+            onAuthSigned(index, signed.toXDR("base64"));
+          }
+        } else {
+          onAuthSigned(index, authEntriesXdr[index]);
+        }
+
+        trackEvent(TrackingEvent.SOROBAN_AUTH_SIGN_ENTRY_SUCCESS, {
+          entryIndex: index + 1,
+        });
+        return {
+          successMessage: `Signed entry #${index + 1}`,
+          errorMessage: "",
+        };
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : String(e);
+        trackEvent(TrackingEvent.SOROBAN_AUTH_SIGN_ENTRY_ERROR, {
+          entryIndex: index + 1,
+        });
+        return { successMessage: "", errorMessage: msg };
+      }
+    },
+    [
+      authEntriesXdr,
+      index,
+      validUntilLedgerSeq,
+      networkPassphrase,
+      onAuthSigned,
+    ],
+  );
+
+  return (
+    <div
+      className="SorobanAuthSigning__entry"
+      data-is-expanded={isExpanded || undefined}
+    >
+      <div
+        className="SorobanAuthSigning__entry-header"
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
+        <Box gap="sm" direction="row" align="center">
+          <Text as="span" size="xs" weight="bold">
+            {`Entry #${index + 1}`}
+          </Text>
+          <Badge variant={isSigned ? "success" : "tertiary"} size="sm">
+            {isSigned ? "Signed" : "Unsigned"}
+          </Badge>
+        </Box>
+        <IconButton
+          altText="chevron"
+          icon={isExpanded ? <Icon.ChevronUp /> : <Icon.ChevronDown />}
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsExpanded(!isExpanded);
+          }}
+        />
+      </div>
+
+      {isExpanded && (
+        <Box gap="sm">
+          <div className="SorobanAuthSigning__entry-details">
+            {decodedJson ? (
+              <CodeEditor
+                value={decodedJson}
+                selectedLanguage="json"
+                maxHeightInRem="20"
+              />
+            ) : decoded?.error ? (
+              <Text as="div" size="xs">
+                {decoded.error}
+              </Text>
+            ) : (
+              <Text as="div" size="xs">
+                Decoding...
+              </Text>
+            )}
+          </div>
+          {/* Per-entry signing area — only in "Sign individually" mode */}
+          {showSigningArea && (
+            <SignTransactionXdr
+              id={`auth-sign-entry-${index}`}
+              title={`Add signature to sign entry #${index + 1}`}
+              xdrToSign={builtXdr}
+              customSignFn={handleCustomSign}
+              onDoneAction={() => {
+                // Success/error handled by customSignFn callback
+              }}
+            />
+          )}
+        </Box>
+      )}
+    </div>
+  );
+};

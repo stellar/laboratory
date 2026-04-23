@@ -186,7 +186,7 @@ test.describe("[futurenet/testnet] Fund Account Page", () => {
 
     const signTxButton = signTxBox
       .getByRole("button")
-      .getByText("Sign transaction");
+      .getByText("Sign", { exact: true });
     const addTrustlineButton = page
       .getByRole("button")
       .getByText("Add trustline")

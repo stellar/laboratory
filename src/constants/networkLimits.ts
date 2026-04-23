@@ -83,36 +83,36 @@ export const MAINNET_LIMITS: NetworkLimits = {
   "persistent_rent_rate_denominator": "1215",
   "temp_rent_rate_denominator": "2430",
   "live_soroban_state_size_window": [
-    "698933560",
-    "699854984",
-    "700498804",
-    "700342140",
-    "700482104",
-    "700881920",
-    "701866036",
-    "702327232",
-    "702236112",
-    "702418272",
-    "702794004",
-    "703655676",
-    "703906824",
-    "704134152",
-    "704376184",
-    "704566128",
-    "704783500",
-    "705684296",
-    "706367628",
-    "706533156",
-    "706697884",
-    "706985136",
-    "707803656",
-    "707819944",
-    "707582232",
-    "708142500",
-    "708686816",
-    "709541828",
-    "710004992",
-    "709889972"
+    "781933647",
+    "782078375",
+    "782135867",
+    "782596095",
+    "783170191",
+    "783569803",
+    "783904215",
+    "784078487",
+    "784674523",
+    "785751931",
+    "786163411",
+    "786566451",
+    "786814407",
+    "787155975",
+    "787722895",
+    "788420867",
+    "789173775",
+    "789299847",
+    "790252915",
+    "791201007",
+    "791059079",
+    "791654971",
+    "791742723",
+    "792495863",
+    "792944731",
+    "792834319",
+    "793450811",
+    "793709095",
+    "794299287",
+    "794592439"
   ],
   "state_target_size_bytes": "3000000000",
   "rent_fee_1kb_state_size_low": "-17000",
@@ -151,36 +151,36 @@ export const TESTNET_LIMITS: NetworkLimits = {
   "persistent_rent_rate_denominator": "1215",
   "temp_rent_rate_denominator": "2430",
   "live_soroban_state_size_window": [
-    "1056094012",
-    "1056110820",
-    "1056122744",
-    "1056144036",
-    "1056165652",
-    "1056199296",
-    "1056237568",
-    "1056111820",
-    "1056132616",
-    "1054811063",
-    "1051914996",
-    "1051938276",
-    "1051964392",
-    "1051990536",
-    "1052023580",
-    "1052055240",
-    "1052077332",
-    "1052101084",
-    "1052119060",
-    "1052135908",
-    "1052154432",
-    "1052174020",
-    "1052179092",
-    "1052185260",
-    "1052189220",
-    "1052192112",
-    "1052195920",
-    "1052050520",
-    "1052052120",
-    "1051275947"
+    "1304430934",
+    "1304469694",
+    "1304704049",
+    "1304744133",
+    "1306209679",
+    "1306080297",
+    "1306298704",
+    "1306994469",
+    "1307021109",
+    "1308084052",
+    "1309079412",
+    "1309085316",
+    "1309298706",
+    "1309309038",
+    "1308962501",
+    "1310735207",
+    "1310681223",
+    "1310553263",
+    "1309577531",
+    "1308072093",
+    "1308080665",
+    "1308091365",
+    "1308127111",
+    "1307871414",
+    "1307123658",
+    "1307832294",
+    "1307923106",
+    "1307938210",
+    "1307913998",
+    "1307940706"
   ],
   "state_target_size_bytes": "3000000000",
   "rent_fee_1kb_state_size_low": "-17000",
@@ -219,36 +219,36 @@ export const FUTURENET_LIMITS: NetworkLimits = {
   "persistent_rent_rate_denominator": "1215",
   "temp_rent_rate_denominator": "2430",
   "live_soroban_state_size_window": [
-    "71567703",
-    "71567703",
-    "71567703",
-    "71567703",
-    "71567703",
-    "71567703",
-    "71567703",
-    "71567703",
-    "71567703",
-    "71567703",
-    "71567703",
-    "71567703",
-    "71567703",
-    "71567703",
-    "71567703",
-    "71567703",
-    "71567703",
-    "71566291",
-    "71566291",
-    "71566291",
-    "71566291",
-    "71566291",
-    "71566291",
-    "71566291",
-    "71566291",
-    "71566291",
-    "71566291",
-    "71566291",
-    "71566291",
-    "71566291"
+    "67327390",
+    "67327390",
+    "67327390",
+    "67327390",
+    "67327390",
+    "67327390",
+    "67327390",
+    "67327390",
+    "67327390",
+    "67327390",
+    "67327390",
+    "67327390",
+    "67327390",
+    "67327390",
+    "67327390",
+    "67327390",
+    "67327390",
+    "67327390",
+    "67327390",
+    "67327390",
+    "67327390",
+    "67327390",
+    "67327390",
+    "67327390",
+    "67327390",
+    "67327390",
+    "67327390",
+    "67327390",
+    "67327390",
+    "67327390"
   ],
   "state_target_size_bytes": "3000000000",
   "rent_fee_1kb_state_size_low": "-17000",
@@ -1547,18 +1547,18 @@ export const TESTNET_LIMITS_JSON: NetworkLimitsJson = {
         },
         {
           "ext": "v0",
-          "const_term": "2426722",
-          "linear_term": "96397671"
+          "const_term": "2347584",
+          "linear_term": "94135478"
         },
         {
           "ext": "v0",
-          "const_term": "1541554",
+          "const_term": "1020885",
           "linear_term": "0"
         },
         {
           "ext": "v0",
-          "const_term": "3211191",
-          "linear_term": "6713"
+          "const_term": "2638451",
+          "linear_term": "6803"
         },
         {
           "ext": "v0",
@@ -1572,18 +1572,18 @@ export const TESTNET_LIMITS_JSON: NetworkLimitsJson = {
         },
         {
           "ext": "v0",
-          "const_term": "8035968",
-          "linear_term": "309667335"
+          "const_term": "7663880",
+          "linear_term": "298580871"
         },
         {
           "ext": "v0",
-          "const_term": "2420202",
+          "const_term": "1856539",
           "linear_term": "0"
         },
         {
           "ext": "v0",
-          "const_term": "7050564",
-          "linear_term": "6797"
+          "const_term": "6315452",
+          "linear_term": "7232"
         },
         {
           "ext": "v0",
@@ -1642,7 +1642,7 @@ export const TESTNET_LIMITS_JSON: NetworkLimitsJson = {
         },
         {
           "ext": "v0",
-          "const_term": "2937755",
+          "const_term": "1706052",
           "linear_term": "0"
         },
         {
@@ -1694,6 +1694,11 @@ export const TESTNET_LIMITS_JSON: NetworkLimitsJson = {
           "ext": "v0",
           "const_term": "33151",
           "linear_term": "0"
+        },
+        {
+          "ext": "v0",
+          "const_term": "1185193",
+          "linear_term": "41568084"
         }
       ]
     },
@@ -1977,16 +1982,16 @@ export const TESTNET_LIMITS_JSON: NetworkLimitsJson = {
         {
           "ext": "v0",
           "const_term": "109494",
-          "linear_term": "354667"
+          "linear_term": "266603"
         },
         {
           "ext": "v0",
-          "const_term": "5552",
+          "const_term": "2776",
           "linear_term": "0"
         },
         {
           "ext": "v0",
-          "const_term": "9424",
+          "const_term": "5896",
           "linear_term": "0"
         },
         {
@@ -2002,16 +2007,16 @@ export const TESTNET_LIMITS_JSON: NetworkLimitsJson = {
         {
           "ext": "v0",
           "const_term": "219654",
-          "linear_term": "354667"
+          "linear_term": "266603"
         },
         {
           "ext": "v0",
-          "const_term": "3344",
+          "const_term": "1672",
           "linear_term": "0"
         },
         {
           "ext": "v0",
-          "const_term": "6816",
+          "const_term": "3960",
           "linear_term": "0"
         },
         {
@@ -2123,6 +2128,11 @@ export const TESTNET_LIMITS_JSON: NetworkLimitsJson = {
           "ext": "v0",
           "const_term": "0",
           "linear_term": "0"
+        },
+        {
+          "ext": "v0",
+          "const_term": "73061",
+          "linear_term": "229779"
         }
       ]
     },
@@ -2503,18 +2513,18 @@ export const FUTURENET_LIMITS_JSON: NetworkLimitsJson = {
         },
         {
           "ext": "v0",
-          "const_term": "2426722",
-          "linear_term": "96397671"
+          "const_term": "2347584",
+          "linear_term": "94135478"
         },
         {
           "ext": "v0",
-          "const_term": "1541554",
+          "const_term": "1020885",
           "linear_term": "0"
         },
         {
           "ext": "v0",
-          "const_term": "3211191",
-          "linear_term": "6713"
+          "const_term": "2638451",
+          "linear_term": "6803"
         },
         {
           "ext": "v0",
@@ -2528,18 +2538,18 @@ export const FUTURENET_LIMITS_JSON: NetworkLimitsJson = {
         },
         {
           "ext": "v0",
-          "const_term": "8035968",
-          "linear_term": "309667335"
+          "const_term": "7663880",
+          "linear_term": "298580871"
         },
         {
           "ext": "v0",
-          "const_term": "2420202",
+          "const_term": "1856539",
           "linear_term": "0"
         },
         {
           "ext": "v0",
-          "const_term": "7050564",
-          "linear_term": "6797"
+          "const_term": "6315452",
+          "linear_term": "7232"
         },
         {
           "ext": "v0",
@@ -2598,7 +2608,7 @@ export const FUTURENET_LIMITS_JSON: NetworkLimitsJson = {
         },
         {
           "ext": "v0",
-          "const_term": "2937755",
+          "const_term": "1706052",
           "linear_term": "0"
         },
         {
@@ -2650,6 +2660,11 @@ export const FUTURENET_LIMITS_JSON: NetworkLimitsJson = {
           "ext": "v0",
           "const_term": "33151",
           "linear_term": "0"
+        },
+        {
+          "ext": "v0",
+          "const_term": "1185193",
+          "linear_term": "41568084"
         }
       ]
     },
@@ -2933,16 +2948,16 @@ export const FUTURENET_LIMITS_JSON: NetworkLimitsJson = {
         {
           "ext": "v0",
           "const_term": "109494",
-          "linear_term": "354667"
+          "linear_term": "266603"
         },
         {
           "ext": "v0",
-          "const_term": "5552",
+          "const_term": "2776",
           "linear_term": "0"
         },
         {
           "ext": "v0",
-          "const_term": "9424",
+          "const_term": "5896",
           "linear_term": "0"
         },
         {
@@ -2958,16 +2973,16 @@ export const FUTURENET_LIMITS_JSON: NetworkLimitsJson = {
         {
           "ext": "v0",
           "const_term": "219654",
-          "linear_term": "354667"
+          "linear_term": "266603"
         },
         {
           "ext": "v0",
-          "const_term": "3344",
+          "const_term": "1672",
           "linear_term": "0"
         },
         {
           "ext": "v0",
-          "const_term": "6816",
+          "const_term": "3960",
           "linear_term": "0"
         },
         {
@@ -3079,6 +3094,11 @@ export const FUTURENET_LIMITS_JSON: NetworkLimitsJson = {
           "ext": "v0",
           "const_term": "0",
           "linear_term": "0"
+        },
+        {
+          "ext": "v0",
+          "const_term": "73061",
+          "linear_term": "229779"
         }
       ]
     },

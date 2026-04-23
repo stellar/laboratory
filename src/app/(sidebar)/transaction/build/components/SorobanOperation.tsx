@@ -2,47 +2,34 @@
 
 import { ChangeEvent, useState } from "react";
 
-import {
-  Badge,
-  Button,
-  Card,
-  Icon,
-  Notification,
-} from "@stellar/design-system";
+import { Badge, Card, Notification } from "@stellar/design-system";
 
 import { useStore } from "@/store/useStore";
+import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 
 import { Box } from "@/components/layout/Box";
 import { formComponentTemplateTxnOps } from "@/components/formComponentTemplateTxnOps";
-import { ShareUrlButton } from "@/components/ShareUrlButton";
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
-import { ErrorText } from "@/components/ErrorText";
 
 import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransactions";
 import { shareableUrl } from "@/helpers/shareableUrl";
-import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
-import { getTxWithSorobanData } from "@/helpers/sorobanUtils";
 import { sanitizeObject } from "@/helpers/sanitizeObject";
 
-import { useRpcPrepareTx } from "@/query/useRpcPrepareTx";
-
-import {
-  EMPTY_OPERATION_ERROR,
-  INITIAL_OPERATION,
-  TRANSACTION_OPERATIONS,
-} from "@/constants/transactionOperations";
+import { TRANSACTION_OPERATIONS } from "@/constants/transactionOperations";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { OperationError, SorobanInvokeValue } from "@/types/types";
 
 export const SorobanOperation = ({
   operationTypeSelector,
+  operationActions,
   operationsError,
   setOperationsError,
   validateOperationParam,
   renderSourceAccount,
 }: {
   operationTypeSelector: React.ReactElement;
+  operationActions: React.ReactNode;
   operationsError: OperationError[];
   setOperationsError: (operationsError: OperationError[]) => void;
   validateOperationParam: (params: {
@@ -53,51 +40,12 @@ export const SorobanOperation = ({
   }) => OperationError;
   renderSourceAccount: (opType: string, index: number) => React.ReactNode;
 }) => {
-  const { transaction, network } = useStore();
-  const { soroban, params: txnParams } = transaction.build;
+  const { network } = useStore();
+  const { build, setBuildSorobanOperation } = useBuildFlowStore();
+  const { soroban } = build;
   const { operation: sorobanOperation, xdr: sorobanTxnXdr } = soroban;
-  const { updateSorobanBuildOperation, updateSorobanBuildXdr } = transaction;
 
   const [isSaveTxnModalVisible, setIsSaveTxnModalVisible] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const {
-    mutateAsync: prepareTx,
-    isPending: isPrepareTxPending,
-    reset: resetPrepareTx,
-  } = useRpcPrepareTx();
-
-  const prepareSorobanTx = async () => {
-    resetPrepareTx();
-    setErrorMessage("");
-
-    try {
-      const sorobanTx = getTxWithSorobanData({
-        operation: sorobanOperation,
-        txnParams,
-        networkPassphrase: network.passphrase,
-      });
-
-      const preparedTx = await prepareTx({
-        rpcUrl: network.rpcUrl,
-        transactionXdr: sorobanTx.xdr,
-        headers: getNetworkHeaders(network, "rpc"),
-        networkPassphrase: network.passphrase,
-      });
-
-      if (preparedTx.transactionXdr) {
-        updateSorobanBuildXdr(preparedTx.transactionXdr);
-      }
-    } catch (e: any) {
-      setErrorMessage(e?.result?.message || "Failed to prepare transaction");
-      updateSorobanBuildXdr("");
-    }
-  };
-
-  const resetSorobanOperation = () => {
-    updateSorobanBuildOperation(INITIAL_OPERATION);
-    setOperationsError([EMPTY_OPERATION_ERROR]);
-  };
 
   const handleSorobanOperationParamChange = ({
     opParam,
@@ -117,7 +65,7 @@ export const SorobanOperation = ({
       }),
     };
 
-    updateSorobanBuildOperation(updatedOperation);
+    setBuildSorobanOperation(updatedOperation);
 
     // Validate the parameter
     const validatedOpParam = validateOperationParam({
@@ -200,7 +148,6 @@ export const SorobanOperation = ({
                     case "contract":
                     case "key_xdr":
                     case "extend_ttl_to":
-                    case "resource_fee":
                     case "durability":
                       return (
                         <div key={`soroban-param-${input}`}>
@@ -222,6 +169,26 @@ export const SorobanOperation = ({
                           {component.render({
                             ...sorobanBaseProps,
                             onChange: (value: SorobanInvokeValue) => {
+                              // Track meaningful contract invocation changes
+                              const prev = sorobanOperation.params[input];
+                              const prevParsed = prev
+                                ? JSON.parse(prev as string)
+                                : null;
+
+                              if (
+                                value?.function_name &&
+                                value.function_name !==
+                                  prevParsed?.function_name
+                              ) {
+                                trackEvent(
+                                  TrackingEvent.SOROBAN_BUILD_FUNCTION_SELECT,
+                                );
+                              } else if (value?.args !== prevParsed?.args) {
+                                trackEvent(
+                                  TrackingEvent.SOROBAN_BUILD_ARG_CHANGE,
+                                );
+                              }
+
                               handleSorobanOperationParamChange({
                                 opParam: input,
                                 // invoke_contract has a nested object within params
@@ -282,83 +249,8 @@ export const SorobanOperation = ({
             <>{renderSourceAccount(sorobanOperation.operation_type, 0)}</>
           </Box>
 
-          {sorobanOperation.operation_type !== "invoke_contract_function" && (
-            <Box gap="sm" align="start">
-              <Button
-                disabled={Boolean(!network.rpcUrl)}
-                isLoading={isPrepareTxPending}
-                size="md"
-                variant="secondary"
-                onClick={prepareSorobanTx}
-              >
-                Prepare Soroban transaction to sign
-              </Button>
-
-              {errorMessage && (
-                <ErrorText errorMessage={errorMessage} size="sm" />
-              )}
-            </Box>
-          )}
-
-          <Box gap="sm" direction="row" align="center">
-            <Notification variant="warning" title="Only one operation allowed">
-              Note that Soroban transactions can only contain one operation per
-              transaction.
-            </Notification>
-          </Box>
-
           {/* Operations bottom buttons */}
-          <Box
-            gap="lg"
-            direction="row"
-            align="center"
-            justify="space-between"
-            addlClassName="Operation__buttons"
-          >
-            <Box gap="sm" direction="row" align="center">
-              <Button
-                size="md"
-                variant="tertiary"
-                // Only one operation allowed for Soroban
-                disabled={true}
-                icon={<Icon.PlusCircle />}
-                onClick={() => {
-                  /* noop*/
-                }}
-              >
-                Add operation
-              </Button>
-
-              <Button
-                size="md"
-                variant="tertiary"
-                icon={<Icon.Save01 />}
-                onClick={() => {
-                  setIsSaveTxnModalVisible(true);
-                }}
-                title="Save transaction"
-                disabled={!sorobanTxnXdr}
-              ></Button>
-
-              <ShareUrlButton
-                shareableUrl={shareableUrl("transactions-build")}
-              />
-            </Box>
-
-            <Button
-              size="md"
-              variant="error"
-              icon={<Icon.RefreshCw01 />}
-              onClick={() => {
-                resetSorobanOperation();
-                trackEvent(TrackingEvent.TRANSACTION_BUILD_ADD_OPERATION, {
-                  txType: "smart contract",
-                });
-              }}
-            >
-              Clear operation
-            </Button>
-          </Box>
+          {operationActions}
         </Box>
       </Card>
 
@@ -369,8 +261,8 @@ export const SorobanOperation = ({
           xdr: sorobanTxnXdr,
           page: "build",
           shareableUrl: shareableUrl("transactions-build"),
-          params: transaction.build.params,
-          operations: [transaction.build.soroban.operation],
+          params: build.params,
+          operations: [build.soroban.operation],
         }}
         allSavedItems={localStorageSavedTransactions.get()}
         isVisible={isSaveTxnModalVisible}
