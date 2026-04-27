@@ -8,7 +8,7 @@ import { TransactionBuilder } from "@stellar/stellar-sdk";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { getTxWithSorobanData } from "@/helpers/sorobanUtils";
 
-import { TransactionXdrDisplay } from "./TransactionXdrDisplay";
+import { TransactionXdrDisplay } from "../../components/TransactionXdrDisplay";
 
 export const SorobanTransactionXdr = () => {
   const { network } = useStore();

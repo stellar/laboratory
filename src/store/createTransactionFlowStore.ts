@@ -16,15 +16,6 @@ import {
 // ============================================================================
 // Types
 // ============================================================================
-export type FeeBumpParams = {
-  source_account: string;
-  fee: string;
-  xdr: string;
-};
-
-type FeeBumpParamsObj = {
-  [K in keyof FeeBumpParams]?: FeeBumpParams[K];
-};
 
 export type WalletKit = {
   publicKey?: string;
@@ -101,7 +92,6 @@ interface TransactionFlowState {
   submit: {
     submitResultJson?: string;
   };
-  feeBump: FeeBumpParams;
 }
 
 interface TransactionFlowActions {
@@ -184,9 +174,6 @@ interface TransactionFlowActions {
   /** Store (or clear) the validated transaction XDR. */
   setValidatedXdr: (xdr: string | undefined) => void;
 
-  /** Update fee bump params. */
-  setFeeBumpParams: (params: FeeBumpParamsObj) => void;
-
   /** Store the submit result JSON. */
   setSubmitResult: (json: string) => void;
 
@@ -265,17 +252,11 @@ const initTransactionSignState = {
   signedXdr: "",
 };
 
-const initTransactionFeeBumpState = {
-  source_account: "",
-  fee: "",
-  xdr: "",
-};
-
 const initTransactionSubmitState = {
   submitResultJson: "",
 };
 
-const INITIAL_STATE: TransactionFlowState = {
+const INITIAL_TRANSACTION_STATE: TransactionFlowState = {
   activeStep: "build",
   highestCompletedStep: null,
   build: initTransactionBuildState,
@@ -283,7 +264,6 @@ const INITIAL_STATE: TransactionFlowState = {
   sign: initTransactionSignState,
   // validate is omitted — only present for Soroban transactions with auth entries
   submit: initTransactionSubmitState,
-  feeBump: initTransactionFeeBumpState,
 };
 
 // ============================================================================
@@ -311,7 +291,7 @@ const createTransactionFlowStore = (
     persist(
       immer((set) => ({
         // State
-        ...INITIAL_STATE,
+        ...INITIAL_TRANSACTION_STATE,
         activeStep: initialStep,
 
         // Actions
@@ -470,14 +450,6 @@ const createTransactionFlowStore = (
             state.validate.validatedXdr = xdr;
           }),
 
-        setFeeBumpParams: (params) =>
-          set((state) => {
-            state.feeBump = {
-              ...state.feeBump,
-              ...params,
-            };
-          }),
-
         setSubmitResult: (json) =>
           set((state) => {
             state.submit.submitResultJson = json;
@@ -510,7 +482,7 @@ const createTransactionFlowStore = (
         resetAll: () =>
           set((state) => {
             Object.assign(state, {
-              ...INITIAL_STATE,
+              ...INITIAL_TRANSACTION_STATE,
               activeStep: initialStep,
             });
           }),

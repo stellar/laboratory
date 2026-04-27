@@ -20,11 +20,11 @@ import {
   ThemeColorType,
   XdrFormatType,
 } from "@/types/types";
-
 export type FeeBumpParams = {
   source_account: string;
   fee: string;
-  xdr: string;
+  innerXdr: string;
+  signedTx: string;
 };
 
 type FeeBumpParamsObj = {
@@ -169,7 +169,7 @@ export interface Store {
     updateBipPath: (bipPath: string) => void;
     resetSign: () => void;
     updateFeeBumpParams: (params: FeeBumpParamsObj) => void;
-    resetBaseFee: () => void;
+    resetFeeBump: () => void;
     // [Transaction] Simulate Transaction actions
     updateSimulateTriggerOnLaunch: (trigger: boolean) => void;
   };
@@ -288,7 +288,8 @@ const initTransactionState = {
   feeBump: {
     source_account: "",
     fee: "",
-    xdr: "",
+    innerXdr: "",
+    signedTx: "",
   },
 };
 
@@ -540,7 +541,7 @@ export const createStore = (options: CreateStoreOptions) =>
                 ...params,
               };
             }),
-          resetBaseFee: () =>
+          resetFeeBump: () =>
             set((state) => {
               state.transaction.feeBump = initTransactionState.feeBump;
             }),

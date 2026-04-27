@@ -7,12 +7,12 @@ export const TxResponse = ({
   value,
   item,
 }: {
-  label: string;
+  label?: string;
   value?: string | number;
   item?: React.ReactNode;
 }) => (
   <Box gap="xs">
-    <div>{label}</div>
+    {label ? <div>{label}</div> : null}
     <div className="TxResponse__value">{value || item}</div>
   </Box>
 );

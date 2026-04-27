@@ -46,7 +46,7 @@ import { useScrollIntoView } from "@/hooks/useScrollIntoView";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
-import { BuildStepHeader } from "./BuildStepHeader";
+import { BuildStepHeader } from "../build/components/BuildStepHeader";
 
 const SUBMIT_OPTIONS = [
   {
@@ -65,7 +65,7 @@ const SUBMIT_OPTIONS = [
 ];
 
 /**
- * Submit step content for the single-page transaction flow.
+ * Submit step content for the single-page transaction and fee bump flow.
  *
  * Reads the signed (or validated) XDR from the flow store, displays it
  * alongside the transaction hash and decoded JSON, then submits via RPC
