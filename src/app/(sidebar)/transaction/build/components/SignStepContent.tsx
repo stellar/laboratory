@@ -82,25 +82,6 @@ export const SignStepContent = () => {
                   </Text>
                 </div>
               </Box>
-
-              {/* @TODO: <Box gap="xs" direction="row" align="center" justify="end">
-                <Icon.InfoCircle size="md" color="var(--sds-clr-gray-08)" />
-                <Text
-                  size="sm"
-                  weight="medium"
-                  as="div"
-                  addlClassName="SignStepContent__feeBumpText"
-                >
-                  Want another account to pay the fee?{" "}
-                </Text>
-
-                <Link
-                  addlClassName="SignStepContent__feeBumpLink"
-                  href="/transaction/fee-bump"
-                >
-                  Wrap with fee bump
-                </Link>
-              </Box>*/}
             </Box>
           </Box>
         </Card>

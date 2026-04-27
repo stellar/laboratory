@@ -10,7 +10,8 @@ export type TransactionStepName =
   | "simulate"
   | "validate"
   | "sign"
-  | "submit";
+  | "submit"
+  | "feeBump";
 
 const STEP_LABELS: Record<TransactionStepName, string> = {
   build: "Build transaction",
@@ -19,6 +20,7 @@ const STEP_LABELS: Record<TransactionStepName, string> = {
   validate: "Validate transaction",
   sign: "Sign transaction",
   submit: "Submit transaction",
+  feeBump: "Fee bump transaction",
 };
 
 const STEP_SHORT_LABELS: Record<TransactionStepName, string> = {
@@ -28,6 +30,7 @@ const STEP_SHORT_LABELS: Record<TransactionStepName, string> = {
   validate: "Validate",
   sign: "Sign",
   submit: "Submit",
+  feeBump: "Fee bump",
 };
 
 const STEP_DESCRIPTIONS: Partial<Record<TransactionStepName, string>> = {

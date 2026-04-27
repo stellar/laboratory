@@ -15,6 +15,7 @@ import {
 } from "@/components/TransactionStepper";
 import { TransactionFlowFooter } from "@/components/TransactionFlowFooter";
 import { Tabs } from "@/components/Tabs";
+import { SubmitStepContent } from "../components/SubmitStepContent";
 import { Params } from "./components/Params";
 import { Operations } from "./components/Operations";
 import { ClassicTransactionXdr } from "./components/ClassicTransactionXdr";
@@ -22,7 +23,6 @@ import { SorobanTransactionXdr } from "./components/SorobanTransactionXdr";
 import { SimulateStepContent } from "./components/SimulateStepContent";
 import { SignStepContent } from "./components/SignStepContent";
 import { ValidateStepContent } from "./components/ValidateStepContent";
-import { SubmitStepContent } from "./components/SubmitStepContent";
 import { BuildStepHeader } from "./components/BuildStepHeader";
 
 import "./styles.scss";
