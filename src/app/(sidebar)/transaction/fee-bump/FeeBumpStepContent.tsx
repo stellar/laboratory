@@ -103,6 +103,8 @@ export const FeeBumpStepContent = ({
     const feeErr = validate.getPositiveIntError(fee);
 
     if (pubKeyError || feeErr) {
+      setFeeBumpedTx({ errors: [], xdr: "" });
+      onBuilt?.("");
       return;
     }
 
