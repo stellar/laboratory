@@ -21,7 +21,13 @@ import { ValidationResponseCard } from "@/components/ValidationResponseCard";
  * @example
  * {activeStep === "sign" && <SignStepContent xdrToSign={feeBumpXdr} />}
  */
-export const SignStepContent = ({ xdrToSign }: { xdrToSign: string }) => {
+export const SignStepContent = ({
+  xdrToSign,
+  onReset,
+}: {
+  xdrToSign: string;
+  onReset: () => void;
+}) => {
   const { transaction } = useStore();
   const { feeBump, updateFeeBumpParams } = transaction;
 
@@ -30,7 +36,13 @@ export const SignStepContent = ({ xdrToSign }: { xdrToSign: string }) => {
   return (
     <Box gap="lg">
       <Box gap="xs">
-        <TransactionFlowHeader heading="Sign transaction" />
+        <TransactionFlowHeader
+          heading="Sign transaction"
+          onClearAll={() => {
+            onReset();
+            setErrorMessage(null);
+          }}
+        />
         <Text size="sm" as="p">
           To be included in the ledger, the transaction must be signed and
           submitted to the network.
