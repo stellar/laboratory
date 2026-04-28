@@ -106,5 +106,3 @@ export const OperationNamesFromXdr = ({
     return null;
   }
 };
-
-// See the transaction envelope above for the complete list or
