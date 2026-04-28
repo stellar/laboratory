@@ -16,7 +16,7 @@ interface TransactionFlowHeaderProps {
   /** Optional right element */
   rightElement?: React.ReactElement | null;
   /** Callback for resetting the entire transaction build flow. */
-  onClearAll?: () => void;
+  onClearAll: () => void;
 }
 
 export const TransactionFlowHeader = ({

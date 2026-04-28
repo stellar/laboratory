@@ -46,12 +46,16 @@ import { OperationNamesFromXdr } from "./OperationNamesFromXdr";
  */
 interface FeeBumpStepContentProps {
   onBuilt?: (xdr: string) => void;
+  onReset?: () => void;
 }
 
-export const FeeBumpStepContent = ({ onBuilt }: FeeBumpStepContentProps) => {
+export const FeeBumpStepContent = ({
+  onBuilt,
+  onReset,
+}: FeeBumpStepContentProps) => {
   const { network, transaction } = useStore();
 
-  const { feeBump, updateFeeBumpParams, resetFeeBump } = transaction;
+  const { feeBump, updateFeeBumpParams } = transaction;
   const { source_account, fee, innerXdr } = feeBump;
 
   const [feeBumpedTx, setFeeBumpedTx] = useState<FeeBumpedTxResponse>({
@@ -174,7 +178,7 @@ export const FeeBumpStepContent = ({ onBuilt }: FeeBumpStepContentProps) => {
         <TransactionFlowHeader
           heading="Fee bump transaction"
           onClearAll={() => {
-            resetFeeBump();
+            onReset?.();
           }}
         />
         <Text size="sm" as="p">
@@ -183,7 +187,7 @@ export const FeeBumpStepContent = ({ onBuilt }: FeeBumpStepContentProps) => {
         </Text>
       </Box>
       <PageCard>
-        <Box gap="lg">
+        <Box gap="xl">
           <XdrPicker
             id="view-xdr-blob"
             label="Base64 encoded XDR"
