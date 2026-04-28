@@ -17,7 +17,6 @@
   &__content {
     flex: 1;
     min-width: 0;
-    max-width: pxToRem(738px);
 
     .SignTransactionXdr {
       background-color: var(--sds-clr-gray-01);
@@ -33,6 +32,7 @@
   &__stepper {
     flex-shrink: 0;
     width: pxToRem(190px);
+    margin-top: pxToRem(70px);
   }
 
   @media (max-width: 960px) {

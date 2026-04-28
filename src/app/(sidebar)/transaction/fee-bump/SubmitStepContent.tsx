@@ -543,6 +543,7 @@ export const SubmitStepContent = ({ onReset }: { onReset: () => void }) => {
               value={xdrBlob}
               error=""
               readOnly
+              disabled
               hasCopyButton
             />
 

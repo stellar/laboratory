@@ -122,7 +122,7 @@ test.describe("Build Transaction Page", () => {
       // Clear params
       await expect(paramsErrors).toBeHidden();
       await page.getByTestId("clear-all-button").click();
-      await page.getByRole("button", { name: "Clear all" }).click();
+      await page.getByText("Clear all").click();
       await expect(paramsErrors).toBeVisible();
     });
 

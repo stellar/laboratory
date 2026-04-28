@@ -45,7 +45,7 @@ test.describe("Fee Bump Page", () => {
 
       // Clear
       await page.getByTestId("clear-all-button").click();
-      await page.getByRole("button", { name: "Clear all" }).click();
+      await page.getByText("Clear all").click();
       await expect(successCard).toBeHidden();
     });
 
