@@ -90,6 +90,8 @@ export const FeeBumpStepContent = ({
   // Build fee bump whenever inputs change
   useEffect(() => {
     setBuildError(null);
+    // Any input change means the previous signature is stale
+    updateFeeBumpParams({ signedTx: "" });
 
     if (!fee || !source_account || !innerXdr) {
       setFeeBumpedTx({ errors: [], xdr: "" });

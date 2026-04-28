@@ -42,6 +42,7 @@ export const TransactionFlowHeader = ({
           size="md"
           variant="tertiary"
           data-testid="clear-all-button"
+          aria-label="Clear all"
           onClick={() => setIsClearModalVisible(true)}
         >
           <Icon.RefreshCw01 />
