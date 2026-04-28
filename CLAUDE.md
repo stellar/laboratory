@@ -97,6 +97,22 @@ only, not blocking. May need ESLint CLI migration when upgrading to Next.js 16.
 Skip pre-push hooks: `git push --no-verify` or `HUSKY=0 git push`. Fix tests
 before pushing (preferred).
 
+### Issue 6: E2E Tests Fail After Switching Branches
+
+**Problem**: Playwright e2e tests fail on one branch but pass on another, even
+though the code is correct.
+
+**Root Cause**: Playwright reuses a running dev server on the configured
+`PORT` (default 3000). If you switch branches without restarting the dev
+server, tests run against the old branch's code.
+
+**Solution**:
+
+1. Kill any stale dev server on the configured port: `PORT="${PORT:-3000}"; lsof -i :"$PORT"` and kill the process
+2. Clear the Next.js cache: `rm -rf .next`
+3. Restart the dev server: `pnpm dev`
+4. Then run tests: `pnpm test:e2e`
+
 ## Key Directories
 
 ```
