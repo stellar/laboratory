@@ -7,8 +7,7 @@ test.describe("Fee Bump Page", () => {
   });
 
   test("Loads", async ({ page }) => {
-    await expect(page.locator("h1")).toHaveText("Fee bump");
-    await expect(page.getByText("Fee bump errors")).toBeVisible();
+    await expect(page.locator("h1")).toHaveText("Fee bump transaction");
   });
 
   test.describe("Render", () => {
@@ -16,10 +15,10 @@ test.describe("Fee Bump Page", () => {
 
     test.beforeEach(async ({ page }) => {
       await page
-        .getByLabel("Source account")
+        .getByLabel("Fee-paying account")
         .fill("GA46LGGOLXJY5OSX6N4LHV4MWDFXNGLK76I4NDNKKYAXRRSKI5AJGMXG");
       await page
-        .getByLabel("Input a Base64 encoded TransactionEnvelope")
+        .getByLabel("Base64 encoded XDR")
         .fill(
           "AAAAAgAAAAA55ZjOXdOOulfzeLPXjLDLdplq/5HGjapWAXjGSkdAkwAAAGQADQioAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAC7OH53UcxOpgzL8V6oMoe/fz8QrTsG/TE1hHiDWv0K/AAAAAJUC+QAAAAAAAAAAAA=",
         );
@@ -45,27 +44,23 @@ test.describe("Fee Bump Page", () => {
       );
 
       // Clear
-      await page.getByText("Clear and import new").click();
+      await page.getByTestId("clear-all-button").click();
+      await page.getByRole("button", { name: "Clear all" }).click();
       await expect(successCard).toBeHidden();
     });
 
-    test("Sign in Transaction Signer", async ({ page }) => {
+    test("Advance to Sign step", async ({ page }) => {
       await page.getByLabel("Base Fee").fill(BASE_FEE);
 
-      const signButton = page.getByRole("button", {
-        name: "Sign in Transaction Signer",
+      const nextButton = page.getByRole("button", {
+        name: "Sign transaction",
         exact: true,
       });
 
-      await expect(signButton).toBeVisible();
-      await signButton.click();
+      await expect(nextButton).toBeVisible();
+      await nextButton.click();
 
-      await page.waitForURL("**/transaction/sign");
-
-      await expect(page.locator("h1")).toHaveText("Transaction overview");
-      await expect(page.getByLabel("Transaction Envelope XDR")).toHaveText(
-        MOCK_XDR,
-      );
+      await expect(page.locator("h1")).toHaveText("Sign transaction");
     });
 
     test("View in XDR viewer", async ({ page }) => {
