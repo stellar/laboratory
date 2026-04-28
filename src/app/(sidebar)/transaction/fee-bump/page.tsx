@@ -1,322 +1,114 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Button, Icon } from "@stellar/design-system";
-import { get, omit, set } from "lodash";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 
-import { FeeBumpParams } from "@/store/createStore";
 import { useStore } from "@/store/useStore";
 
-import { validate } from "@/validate";
-
-import { sanitizeObject } from "@/helpers/sanitizeObject";
-import { txHelper, FeeBumpedTxResponse } from "@/helpers/txHelper";
-import { removeLeadingZeroes } from "@/helpers/removeLeadingZeroes";
-
 import { Box } from "@/components/layout/Box";
-import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
-import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
-import { SdsLink } from "@/components/SdsLink";
-import { TxResponse } from "@/components/TxResponse";
-import { ValidationResponseCard } from "@/components/ValidationResponseCard";
-import { XdrPicker } from "@/components/FormElements/XdrPicker";
-import { ViewInXdrButton } from "@/components/ViewInXdrButton";
-import { PageCard } from "@/components/layout/PageCard";
+import {
+  TransactionStepName,
+  TransactionStepper,
+} from "@/components/TransactionStepper";
+import { TransactionFlowFooter } from "@/components/TransactionFlowFooter";
 
-import { Routes } from "@/constants/routes";
-import { KeysOfUnion } from "@/types/types";
-import { trackEvent, TrackingEvent } from "@/metrics/tracking";
+import { FeeBumpStepContent } from "./FeeBumpStepContent";
+import { SignStepContent } from "./SignStepContent";
+import { SubmitStepContent } from "./SubmitStepContent";
+
+import "./styles.scss";
 
 export default function FeeBumpTransaction() {
-  const router = useRouter();
-  const { network, transaction } = useStore();
-  const {
-    feeBump,
-    updateFeeBumpParams,
-    updateSignActiveView,
-    updateSignImportXdr,
-    resetBaseFee,
-  } = transaction;
-  const { source_account, fee, xdr } = feeBump;
+  const steps: TransactionStepName[] = ["feeBump", "sign", "submit"];
+  const { transaction } = useStore();
+  const { feeBump, resetFeeBump } = transaction;
+  const [activeStep, setActiveStep] = useState<TransactionStepName>("feeBump");
+  const [highestCompletedStep, setHighestCompletedStep] =
+    useState<TransactionStepName | null>(null);
+  const [builtXdr, setBuiltXdr] = useState("");
 
-  type ParamsField = KeysOfUnion<typeof feeBump>;
-
-  type ParamsError = {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    [K in keyof FeeBumpParams]?: any;
-  };
-
-  // buildFeeBumpTransaction status result
-  const [feeBumpedTx, setFeeBumpedTx] = useState<FeeBumpedTxResponse>({
-    errors: [],
-    xdr: "",
-  });
-  const [paramsError, setParamsError] = useState<ParamsError>({});
-
-  useEffect(() => {
-    Object.entries(feeBump).forEach(([key, val]) => {
-      if (val) {
-        handleParamsError(key, validateParam(key as ParamsField, val));
-      }
-    });
-
-    // Run this only when page loads
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (source_account && fee && xdr) {
-      handleFieldChange(source_account, fee, xdr);
-    }
-
-    // Not inlcuding handleFieldChange
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [source_account, fee, xdr]);
-
-  const resetResult = () => {
-    // reset messages onChange
-    setFeeBumpedTx({
-      errors: [],
-      xdr: "",
-    });
-  };
-
-  const validateParam = (param: ParamsField, value: any) => {
-    switch (param) {
-      case "source_account":
-        return validate.getPublicKeyError(value);
-      case "fee":
-        return validate.getPositiveIntError(value);
-      case "xdr":
-        if (validate.getXdrError(value)?.result === "success") {
-          return false;
-        }
-        return validate.getXdrError(value)?.message;
-      default:
-        return false;
-    }
-  };
-
-  const getFieldLabel = (field: ParamsField) => {
-    switch (field) {
-      case "fee":
-        return "Base fee";
-      case "source_account":
-        return "Source account";
-      case "xdr":
-        return "Inner transaction";
-      default:
-        return "";
-    }
-  };
-
-  const getMissingFieldErrors = () => {
-    const allErrorMessages: string[] = [];
-    const missingParams = Object.fromEntries(
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      Object.entries(feeBump).filter(([_, value]) => !value),
-    );
-
-    const missingParamsKeys = Object.keys(missingParams);
-
-    if (missingParamsKeys.length > 0) {
-      const errorMsg = missingParamsKeys.reduce((res, cur) => {
-        return [
-          ...res,
-          `${getFieldLabel(cur as ParamsField)} is a required field`,
-        ];
-      }, [] as string[]);
-
-      allErrorMessages.push(...errorMsg);
-    }
-
-    return allErrorMessages;
-  };
-
-  const handleParamsChange = <T,>(paramPath: string, value: T) => {
-    updateFeeBumpParams(set({}, `${paramPath}`, value));
-  };
-
-  const handleParamsError = <T,>(id: string, error: T) => {
-    if (error) {
-      setParamsError(set({ ...paramsError }, id, error));
-    } else if (get(paramsError, id)) {
-      setParamsError(sanitizeObject(omit({ ...paramsError }, id), true));
-    }
-  };
-
-  const handleFieldChange = (
-    source_account: string,
-    fee: string,
-    xdr: string,
+  const advanceStep = (
+    current: TransactionStepName,
+    next: TransactionStepName,
   ) => {
-    const result = txHelper.buildFeeBumpTx({
-      innerTxXdr: xdr,
-      maxFee: fee,
-      sourceAccount: source_account,
-      networkPassphrase: network.passphrase,
-    });
-
-    if (result) {
-      setFeeBumpedTx(result);
+    setActiveStep(next);
+    const currentIndex = steps.indexOf(current);
+    const highestIndex = highestCompletedStep
+      ? steps.indexOf(highestCompletedStep)
+      : -1;
+    if (currentIndex > highestIndex) {
+      setHighestCompletedStep(current);
     }
+  };
+
+  const handleNext = () => {
+    if (activeStep === "feeBump") {
+      advanceStep("feeBump", "sign");
+    }
+    if (activeStep === "sign") {
+      advanceStep("sign", "submit");
+    }
+  };
+
+  const handleBack = () => {
+    if (activeStep === "sign") {
+      setActiveStep("feeBump");
+    }
+    if (activeStep === "submit") {
+      setActiveStep("sign");
+    }
+  };
+
+  const getIsNextDisabled = () => {
+    if (activeStep === "feeBump") {
+      return !builtXdr;
+    }
+    if (activeStep === "sign") {
+      return !feeBump.signedTx;
+    }
+    return false;
+  };
+
+  const isNextDisabled = getIsNextDisabled();
+
+  const onReset = () => {
+    setActiveStep("feeBump");
+    setHighestCompletedStep(null);
+    setBuiltXdr("");
+    resetFeeBump();
   };
 
   return (
-    <Box gap="md">
-      <PageCard
-        heading="Fee bump"
-        rightElement={
-          <Button
-            size="md"
-            variant="error"
-            icon={<Icon.RefreshCw01 />}
-            iconPosition="right"
-            onClick={() => {
-              resetResult();
-              resetBaseFee();
-              trackEvent(TrackingEvent.TRANSACTION_FEE_BUMP_CLEAR);
-            }}
-          >
-            Clear and import new
-          </Button>
-        }
-      >
-        <Box gap="lg">
-          <PubKeyPicker
-            id="source_account"
-            label="Source account"
-            value={source_account}
-            error={paramsError.source_account}
-            onChange={(e) => {
-              const id = "source_account";
+    <Box gap="xxl">
+      <div className="FeeBumpTransaction__layout">
+        <div className="FeeBumpTransaction__content">
+          <Box gap="xxl">
+            {activeStep === "feeBump" && (
+              <FeeBumpStepContent onBuilt={setBuiltXdr} onReset={onReset} />
+            )}
+            {activeStep === "sign" && (
+              <SignStepContent xdrToSign={builtXdr} onReset={onReset} />
+            )}
+            {activeStep === "submit" && <SubmitStepContent onReset={onReset} />}
 
-              resetResult();
+            <TransactionFlowFooter
+              steps={steps}
+              activeStep={activeStep}
+              onNext={handleNext}
+              onBack={handleBack}
+              isNextDisabled={isNextDisabled}
+            />
+          </Box>
+        </div>
 
-              handleParamsError(id, validateParam(id, e.target.value));
-              handleParamsChange(id, e.target.value);
-            }}
-            note="The account responsible for paying the transaction fee."
-            infoLink="https://developers.stellar.org/docs/learn/glossary#source-account"
+        <div className="FeeBumpTransaction__stepper">
+          <TransactionStepper
+            steps={steps}
+            activeStep={activeStep}
+            highestCompletedStep={highestCompletedStep}
+            onStepClick={setActiveStep}
           />
-
-          <PositiveIntPicker
-            id="fee"
-            label="Base fee"
-            value={removeLeadingZeroes(fee)}
-            error={paramsError.fee}
-            onChange={(e) => {
-              const id = "fee";
-
-              resetResult();
-
-              handleParamsError(id, validateParam(id, e.target.value));
-              handleParamsChange(id, e.target.value);
-            }}
-            note={
-              <>
-                The{" "}
-                <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/fees-resource-limits-metering">
-                  network base fee
-                </SdsLink>{" "}
-                fee is currently set to 100 stroops (0.00001 lumens). Based on
-                current network activity, we suggest setting it to 100 stroops.
-                Final transaction fee is equal to base fee times number of
-                operations in this transaction.
-              </>
-            }
-            infoLink="https://developers.stellar.org/docs/learn/glossary#base-fee"
-          />
-
-          <XdrPicker
-            id="xdr"
-            label="Input a Base64 encoded TransactionEnvelope:"
-            value={xdr}
-            error={paramsError.xdr}
-            onChange={(e) => {
-              const id = "xdr";
-
-              resetResult();
-
-              handleParamsError(id, validateParam(id, e.target.value));
-              handleParamsChange(id, e.target.value);
-            }}
-            note="Enter a Base64 encoded XDR blob to decode."
-            hasCopyButton
-          />
-        </Box>
-      </PageCard>
-      <>
-        {feeBumpedTx.xdr ? (
-          <ValidationResponseCard
-            variant="success"
-            title="Success! Transaction envelope XDR:"
-            response={
-              <Box gap="xs" data-testid="fee-bump-success">
-                <TxResponse
-                  label="Network passphrase:"
-                  value={network.passphrase}
-                />
-                <TxResponse label="XDR:" value={feeBumpedTx.xdr} />
-              </Box>
-            }
-            note={<></>}
-            footerLeftEl={
-              <>
-                <Button
-                  size="md"
-                  variant="secondary"
-                  onClick={() => {
-                    updateSignImportXdr(feeBumpedTx.xdr);
-                    updateSignActiveView("overview");
-
-                    trackEvent(
-                      TrackingEvent.TRANSACTION_FEE_BUMP_SIGN_IN_TX_SIGNER,
-                    );
-
-                    router.push(Routes.SIGN_TRANSACTION);
-                  }}
-                >
-                  Sign in Transaction Signer
-                </Button>
-
-                <ViewInXdrButton
-                  xdrBlob={feeBumpedTx.xdr}
-                  callback={() => {
-                    trackEvent(TrackingEvent.TRANSACTION_FEE_BUMP_VIEW_XDR);
-                  }}
-                />
-              </>
-            }
-          />
-        ) : null}
-      </>
-      <>
-        {feeBumpedTx.errors.length ? (
-          <ValidationResponseCard
-            variant="error"
-            title="Transaction Sign Error:"
-            response={feeBumpedTx.errors}
-          />
-        ) : null}
-      </>
-
-      <>
-        {getMissingFieldErrors().length > 0 ? (
-          <ValidationResponseCard
-            variant="primary"
-            title="Fee bump errors:"
-            response={
-              <ul>
-                {getMissingFieldErrors().map((e, i) => (
-                  <li key={`e-${i}`}>{e}</li>
-                ))}
-              </ul>
-            }
-          />
-        ) : null}
-      </>
+        </div>
+      </div>
     </Box>
   );
 }

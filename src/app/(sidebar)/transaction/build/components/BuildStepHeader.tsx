@@ -1,15 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Icon, Modal } from "@stellar/design-system";
+import { Button, Icon } from "@stellar/design-system";
 
 import { TransactionBuildParams } from "@/store/createTransactionFlowStore";
 
 import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransactions";
 
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
-import { Box } from "@/components/layout/Box";
-import { PageHeader } from "@/components/layout/PageHeader";
+import { TransactionFlowHeader } from "@/components/TransactionFlowHeader";
 
 import { TxnOperation } from "@/types/types";
 
@@ -30,22 +29,6 @@ interface BuildStepHeaderProps {
   onClearAll: () => void;
 }
 
-/**
- * Shared header for transaction build steps with a Clear all action.
- *
- * @example
- * <BuildStepHeader
- *   heading="Submit transaction"
- *   headingAs="h1"
- *   activeStep="build"
- *   xdr={builtXdr}
- *   params={build.params}
- *   operations={build.classic.operations}
- *   onClearAll={resetAll}
- *   xdr={builtXdr}
- *   params={build.params}
- *   operations={build.classic.operations} />
- */
 export const BuildStepHeader = ({
   heading,
   headingAs,
@@ -57,58 +40,14 @@ export const BuildStepHeader = ({
 }: BuildStepHeaderProps) => {
   const showHeaderButtons = activeStep === "build" || activeStep === "import";
   const [isSaveModalVisible, setIsSaveModalVisible] = useState(false);
-  const [isClearModalVisible, setIsClearModalVisible] = useState(false);
 
   return (
-    <Box
-      gap="md"
-      direction="row"
-      justify="space-between"
-      align="center"
-      addlClassName="BuildTransaction__header"
-    >
-      <PageHeader heading={heading} as={headingAs} />
-
-      <Box gap="sm" direction="row" justify="center" align="center">
-        <Button
-          size="md"
-          variant="tertiary"
-          data-testid="clear-all-button"
-          onClick={() => setIsClearModalVisible(true)}
-        >
-          <Icon.RefreshCw01 />
-        </Button>
-
-        <Modal
-          visible={isClearModalVisible}
-          onClose={() => setIsClearModalVisible(false)}
-        >
-          <Modal.Heading>Clear everything?</Modal.Heading>
-          <Modal.Body>
-            This will remove all entered data in the form.
-          </Modal.Body>
-          <Modal.Footer>
-            <Button
-              size="md"
-              variant="tertiary"
-              onClick={() => setIsClearModalVisible(false)}
-            >
-              Cancel
-            </Button>
-            <Button
-              size="md"
-              variant="error"
-              onClick={() => {
-                onClearAll();
-                setIsClearModalVisible(false);
-              }}
-            >
-              Clear all
-            </Button>
-          </Modal.Footer>
-        </Modal>
-
-        {showHeaderButtons && (
+    <TransactionFlowHeader
+      heading={heading}
+      headingAs={headingAs}
+      onClearAll={onClearAll}
+      rightElement={
+        showHeaderButtons ? (
           <>
             <Button
               size="md"
@@ -138,8 +77,8 @@ export const BuildStepHeader = ({
               }}
             />
           </>
-        )}
-      </Box>
-    </Box>
+        ) : null
+      }
+    />
   );
 };

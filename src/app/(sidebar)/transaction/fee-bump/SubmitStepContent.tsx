@@ -9,7 +9,6 @@ import {
 } from "react";
 import { Button, Card, Icon } from "@stellar/design-system";
 
-import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 import { useStore } from "@/store/useStore";
 
 import {
@@ -46,7 +45,7 @@ import { useScrollIntoView } from "@/hooks/useScrollIntoView";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
-import { BuildStepHeader } from "./BuildStepHeader";
+import { BuildStepHeader } from "../build/components/BuildStepHeader";
 
 const SUBMIT_OPTIONS = [
   {
@@ -74,10 +73,9 @@ const SUBMIT_OPTIONS = [
  * @example
  * {activeStep === "submit" && <SubmitStepContent />}
  */
-export const SubmitStepContent = () => {
-  const { network } = useStore();
-  const { build, sign, validate, simulate, setSubmitResult, resetAll } =
-    useBuildFlowStore();
+export const SubmitStepContent = ({ onReset }: { onReset: () => void }) => {
+  const { network, transaction } = useStore();
+  const { feeBump } = transaction;
 
   const [submitMethod, setSubmitMethod] = useState<"horizon" | "rpc" | string>(
     "",
@@ -108,10 +106,9 @@ export const SubmitStepContent = () => {
   } = useSubmitHorizonTx();
 
   // Derive the XDR to submit: validated > signed > assembled
-  const xdrBlob =
-    validate?.validatedXdr || sign.signedXdr || simulate?.assembledXdr || "";
+  const xdrBlob = feeBump.signedTx || "";
 
-  const isSoroban = Boolean(build.soroban.operation.operation_type);
+  //   const isSoroban = Boolean(build.soroban.operation.operation_type);
   const isRpcAvailable = Boolean(network.rpcUrl);
   const isSubmitInProgress = isSubmitRpcPending || isSubmitHorizonPending;
 
@@ -159,7 +156,7 @@ export const SubmitStepContent = () => {
   // Set default submit method — force RPC for Soroban operations since
   // Horizon doesn't support them.
   useEffect(() => {
-    if (isSoroban && isRpcAvailable) {
+    if (isRpcAvailable) {
       setSubmitMethod("rpc");
       return;
     }
@@ -167,7 +164,7 @@ export const SubmitStepContent = () => {
     const localStorageMethod = localStorageSettings.get(SETTINGS_SUBMIT_METHOD);
     setSubmitMethod(localStorageMethod || "horizon");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isRpcAvailable, isSoroban]);
+  }, [isRpcAvailable]);
 
   const isError = Boolean(submitRpcError || submitHorizonError);
 
@@ -265,19 +262,6 @@ export const SubmitStepContent = () => {
       delay: 300,
     });
   };
-
-  // Store submit result in flow store when successful
-  useEffect(() => {
-    if (isSubmitRpcSuccess && submitRpcResponse) {
-      setSubmitResult(JSON.stringify(submitRpcResponse));
-    }
-  }, [isSubmitRpcSuccess, submitRpcResponse, setSubmitResult]);
-
-  useEffect(() => {
-    if (isSubmitHorizonSuccess && submitHorizonResponse) {
-      setSubmitResult(JSON.stringify(submitHorizonResponse));
-    }
-  }, [isSubmitHorizonSuccess, submitHorizonResponse, setSubmitResult]);
 
   const getButtonLabel = () => {
     return (
@@ -543,7 +527,11 @@ export const SubmitStepContent = () => {
       <BuildStepHeader
         heading="Submit transaction"
         headingAs="h1"
-        onClearAll={resetAll}
+        onClearAll={() => {
+          onReset?.();
+          resetSubmitHorizon();
+          resetSubmitRpc();
+        }}
       />
 
       <Card>

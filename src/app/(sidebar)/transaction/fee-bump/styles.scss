@@ -1,0 +1,52 @@
+@use "../../../../styles/utils.scss" as *;
+
+.FeeBumpTransaction {
+  &__layout {
+    display: flex;
+    gap: pxToRem(32px);
+    max-width: pxToRem(960px);
+    width: 100%;
+    margin: 0 auto;
+  }
+  &__tabs {
+    display: flex;
+    gap: pxToRem(32px);
+    width: pxToRem(960px);
+    margin: 0 auto;
+  }
+  &__content {
+    flex: 1;
+    min-width: 0;
+    max-width: pxToRem(738px);
+
+    .SignTransactionXdr {
+      background-color: var(--sds-clr-gray-01);
+    }
+
+    .resetButton {
+      font-weight: var(--sds-fw-semi-bold);
+      font-size: pxToRem(12px);
+      line-height: pxToRem(20px);
+    }
+  }
+
+  &__stepper {
+    flex-shrink: 0;
+    width: pxToRem(190px);
+  }
+
+  @media (max-width: 960px) {
+    &__tabs {
+      width: 100%;
+    }
+
+    &__layout {
+      flex-direction: column;
+    }
+
+    &__stepper {
+      width: 100%;
+      order: -1;
+    }
+  }
+}
