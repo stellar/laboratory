@@ -262,23 +262,23 @@ export const FeeBumpStepContent = ({
         <ValidationResponseCard
           variant="success"
           title="Success! Transaction envelope XDR:"
-          response={
-            <Box gap="xs" data-testid="fee-bump-success">
-              <TxResponse
-                label="Network passphrase:"
-                value={
-                  getHashAndNetwork()?.hash
-                    ? getHashAndNetwork()?.networkPassphrase
-                    : "Error decoding XDR"
-                }
-              />
-              <TxResponse
-                label="Hash:"
-                value={getHashAndNetwork()?.hash || "Error decoding XDR"}
-              />
-              <TxResponse label="XDR:" value={feeBumpedTx.xdr} />
-            </Box>
-          }
+          response={(() => {
+            const hashAndNetwork = getHashAndNetwork();
+
+            return (
+              <Box gap="xs" data-testid="fee-bump-success">
+                <TxResponse
+                  label="Network passphrase:"
+                  value={network.passphrase}
+                />
+                <TxResponse
+                  label="Hash:"
+                  value={hashAndNetwork?.hash || "Error decoding XDR"}
+                />
+                <TxResponse label="XDR:" value={feeBumpedTx.xdr} />
+              </Box>
+            );
+          })()}
           footerLeftEl={<></>}
           footerRightEl={
             <>
