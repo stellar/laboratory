@@ -36,7 +36,7 @@ import {
   TxnOperation,
 } from "@/types/types";
 
-import { TransactionXdrDisplay } from "../../components/TransactionXdrDisplay";
+import { TransactionXdrDisplay } from "./TransactionXdrDisplay";
 
 const MAX_INT64 = "9223372036854775807";
 
