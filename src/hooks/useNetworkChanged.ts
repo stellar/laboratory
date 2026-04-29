@@ -6,9 +6,9 @@ export const useNetworkChanged = (onChange: () => void) => {
   const networkIdRef = useRef(network.id);
 
   useEffect(() => {
-    if (networkIdRef.current !== network.id) {
-      networkIdRef.current = network.id;
+    if (networkIdRef.current && networkIdRef.current !== network.id) {
       onChange();
     }
+    networkIdRef.current = network.id;
   }, [network.id, onChange]);
 };

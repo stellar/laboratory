@@ -1,5 +1,5 @@
 "use client";
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode, useEffect, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { createStore } from "@/store/createStore";
 import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
@@ -12,17 +12,17 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
   const searchParams = useSearchParams();
   const url = `${pathname}?${searchParams}`;
 
-  const [store] = useState(() => {
-    const s = createStore({ url });
+  const [store] = useState(() => createStore({ url }));
 
-    s.subscribe((state, prevState) => {
-      if (state.network.id !== prevState.network.id) {
+  useEffect(() => {
+    const unsubscribe = store.subscribe((state, prevState) => {
+      if (prevState.network.id && state.network.id !== prevState.network.id) {
         useBuildFlowStore.getState().resetAll();
       }
     });
 
-    return s;
-  });
+    return unsubscribe;
+  }, [store]);
 
   return (
     <ZustandContext.Provider value={store}>{children}</ZustandContext.Provider>
