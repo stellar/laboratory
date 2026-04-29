@@ -60,7 +60,6 @@ export type SignTxActiveView = "import" | "overview";
 export interface Store {
   // Shared
   network: Network | EmptyObj;
-  previousNetwork: Network | EmptyObj;
   // Theme Color
   theme: ThemeColorType | null;
   // isDynamicNetworkSelect flag to indicate network update outside of the dropdown
@@ -328,7 +327,6 @@ export const createStore = (options: CreateStoreOptions) =>
       immer((set) => ({
         // Shared
         network: initNetwork,
-        previousNetwork: {},
         theme: null,
         isDynamicNetworkSelect: false,
         walletKit: {
@@ -337,8 +335,15 @@ export const createStore = (options: CreateStoreOptions) =>
         },
         selectNetwork: (network: Network) =>
           set((state) => {
-            state.previousNetwork = state.network;
             state.network = network;
+            state.transaction = {
+              ...state.transaction,
+              ...initTransactionState,
+            };
+            state.xdr = {
+              ...state.xdr,
+              ...initXdrState,
+            };
           }),
         updateIsDynamicNetworkSelect: (isDynamic: boolean) =>
           set((state) => {

@@ -258,11 +258,6 @@ const nextConfig = {
         destination: "/transaction/build",
         permanent: true,
       },
-      {
-        source: "/transaction/submit",
-        destination: "/transaction/build",
-        permanent: true,
-      },
     ];
   },
 };

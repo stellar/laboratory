@@ -1,12 +1,14 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useStore } from "@/store/useStore";
 
 export const useNetworkChanged = (onChange: () => void) => {
-  const { network, previousNetwork } = useStore();
+  const { network } = useStore();
+  const networkIdRef = useRef(network.id);
 
   useEffect(() => {
-    if (previousNetwork.id && previousNetwork.id !== network.id) {
+    if (networkIdRef.current !== network.id) {
+      networkIdRef.current = network.id;
       onChange();
     }
-  }, [previousNetwork.id, network.id, onChange]);
+  }, [network.id, onChange]);
 };
