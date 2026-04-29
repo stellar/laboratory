@@ -3,14 +3,10 @@
 import { useEffect, useState } from "react";
 import { TransactionBuilder } from "@stellar/stellar-sdk";
 import { Alert, Text } from "@stellar/design-system";
-import { get, omit, set } from "lodash";
-
-import { FeeBumpParams } from "@/store/createStore";
 import { useStore } from "@/store/useStore";
 
 import { validate } from "@/validate";
 
-import { sanitizeObject } from "@/helpers/sanitizeObject";
 import { FeeBumpedTxResponse, txHelper } from "@/helpers/txHelper";
 import { removeLeadingZeroes } from "@/helpers/removeLeadingZeroes";
 
@@ -27,10 +23,21 @@ import { SdsLink } from "@/components/SdsLink";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
-import { KeysOfUnion } from "@/types/types";
-
 import { OperationNamesFromXdr } from "./OperationNamesFromXdr";
 
+/**
+ * Fee bump step content for the fee bump flow.
+ *
+ * Collects the inner transaction XDR, fee-paying account, and base fee, then
+ * builds the fee bump envelope. The resulting XDR is passed to the parent via
+ * `onBuiltXdr` so the sign step can pick it up.
+ *
+ * @param onBuiltXdr - Called with the built fee bump XDR, or an empty string
+ *   when inputs are incomplete or invalid.
+ * @param onReset - Callback to reset the entire flow.
+ * @param onParamsChange - Called on any input change; used by the parent to
+ *   invalidate downstream stepper state (sign/submit).
+ */
 interface FeeBumpStepContentProps {
   onBuiltXdr?: (xdr: string) => void;
   onReset?: () => void;
@@ -52,34 +59,15 @@ export const FeeBumpStepContent = ({
   });
   const [sourceAccountError, setSourceAccountError] = useState<
     string | undefined
-  >();
-  const [feeError, setFeeError] = useState<string | undefined>();
+  >(source_account ? validate.getPublicKeyError(source_account) || undefined : undefined);
+  const [feeError, setFeeError] = useState<string | undefined>(
+    fee ? validate.getPositiveIntError(fee) || undefined : undefined,
+  );
   const [buildError, setBuildError] = useState<string | null>(null);
-
-  type ParamsField = KeysOfUnion<typeof feeBump>;
-  type ParamsError = {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    [K in keyof FeeBumpParams]?: any;
-  };
-
-  const [paramsError, setParamsError] = useState<ParamsError>({});
-
-  useEffect(() => {
-    Object.entries(feeBump).forEach(([key, val]) => {
-      if (val) {
-        handleParamsError(key, validateParam(key as ParamsField, val));
-      }
-    });
-
-    // Run this only when page loads
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   // Build fee bump whenever inputs change
   useEffect(() => {
     setBuildError(null);
-    // Any input change means the previous signature is stale
-    updateFeeBumpParams({ signedTx: "" });
 
     if (!fee || !source_account || !xdr) {
       setFeeBumpedTx({ errors: [], xdr: "" });
@@ -116,30 +104,6 @@ export const FeeBumpStepContent = ({
       onBuiltXdr?.(result.xdr);
     }
   }, [xdr, source_account, fee, network.passphrase]);
-
-  const handleParamsError = <T,>(id: string, error: T) => {
-    if (error) {
-      setParamsError(set({ ...paramsError }, id, error));
-    } else if (get(paramsError, id)) {
-      setParamsError(sanitizeObject(omit({ ...paramsError }, id), true));
-    }
-  };
-
-  const validateParam = (param: ParamsField, value: any) => {
-    switch (param) {
-      case "source_account":
-        return validate.getPublicKeyError(value);
-      case "fee":
-        return validate.getPositiveIntError(value);
-      case "xdr":
-        if (validate.getXdrError(value)?.result === "success") {
-          return false;
-        }
-        return validate.getXdrError(value)?.message;
-      default:
-        return false;
-    }
-  };
 
   const getHashAndNetwork = (): {
     hash: string;
@@ -187,7 +151,7 @@ export const FeeBumpStepContent = ({
             note="Enter a Base64 encoded XDR blob to decode."
             onChange={(e) => {
               const val = e.target.value;
-              updateFeeBumpParams({ xdr: val });
+              updateFeeBumpParams({ xdr: val, signedTx: "" });
               onParamsChange?.();
             }}
           />
@@ -209,7 +173,7 @@ export const FeeBumpStepContent = ({
               setSourceAccountError(
                 val ? validate.getPublicKeyError(val) || undefined : undefined,
               );
-              updateFeeBumpParams({ source_account: val });
+              updateFeeBumpParams({ source_account: val, signedTx: "" });
               onParamsChange?.();
             }}
           />
@@ -225,7 +189,7 @@ export const FeeBumpStepContent = ({
                   ? validate.getPositiveIntError(val) || undefined
                   : undefined,
               );
-              updateFeeBumpParams({ fee: val });
+              updateFeeBumpParams({ fee: val, signedTx: "" });
               onParamsChange?.();
             }}
             note={

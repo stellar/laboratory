@@ -18,8 +18,10 @@ import { ValidationResponseCard } from "@/components/ValidationResponseCard";
  * previous step. The signed fee bump XDR is stored in the transaction store
  * (`feeBump.signedTx`) so the flow can proceed to Submit.
  *
- * @example
- * {activeStep === "sign" && <SignStepContent xdrToSign={feeBumpXdr} />}
+ * @param xdrToSign - The fee bump envelope XDR to sign.
+ * @param onReset - Callback to reset the entire flow.
+ * @param isDisabled - When true (after a successful submit), all signing fields
+ *   are disabled so the user cannot re-sign a submitted transaction.
  */
 export const SignStepContent = ({
   xdrToSign,

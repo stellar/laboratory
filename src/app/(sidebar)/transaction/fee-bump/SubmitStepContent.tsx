@@ -64,14 +64,15 @@ const SUBMIT_OPTIONS = [
 ];
 
 /**
- * Submit step content for the single-page transaction and fee bump flow.
+ * Submit step content for the fee bump flow.
  *
- * Reads the signed (or validated) XDR from the flow store, displays it
+ * Reads the signed XDR from the store (`feeBump.signedTx`), displays it
  * alongside the transaction hash and decoded JSON, then submits via RPC
  * or Horizon. On success, shows the result with block-explorer links.
  *
- * @example
- * {activeStep === "submit" && <SubmitStepContent />}
+ * @param onReset - Callback to reset the entire flow.
+ * @param onSuccess - Called once when the transaction is successfully submitted,
+ *   used to lock the sign step and mark submit as the highest completed step.
  */
 export const SubmitStepContent = ({
   onReset,
