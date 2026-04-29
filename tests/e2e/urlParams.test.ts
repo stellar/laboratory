@@ -201,13 +201,11 @@ test.describe("URL Params", () => {
 
       await expect(page.locator("h1")).toHaveText("Fee bump transaction");
 
-      await expect(page.getByLabel("Source account")).toHaveValue(
+      await expect(page.getByLabel("Fee-paying account")).toHaveValue(
         "GA46LGGOLXJY5OSX6N4LHV4MWDFXNGLK76I4NDNKKYAXRRSKI5AJGMXG",
       );
       await expect(page.getByLabel("Base Fee")).toHaveValue("2000");
-      await expect(
-        page.getByLabel("Input a Base64 encoded TransactionEnvelope"),
-      ).toHaveValue(
+      await expect(page.getByLabel("Base64 encoded XDR")).toHaveValue(
         "AAAAAgAAAAA55ZjOXdOOulfzeLPXjLDLdplq/5HGjapWAXjGSkdAkwAAD6AADQioAAAAAQAAAAEAAAAAAAAAAAAAAABnUbvoAAAAAQAAAAMxMjMAAAAAAgAAAAAAAAAAAAAAALs4fndRzE6mDMvxXqgyh79/PxCtOwb9MTWEeINa/Qr8AAAABvwjrAAAAAABAAAAADnlmM5d0466V/N4s9eMsMt2mWr/kcaNqlYBeMZKR0CTAAAAAQAAAAASBB3qbNO/amClp01Lvg/fRcZsxzvl0ItXd0lfm+7+ggAAAAFVU0RDAAAAAEI+fQXy7K+/7BkrIVo/G+lq7bjY5wJUq+NBPgIH3layAAAACVAvkAAAAAAAAAAAAA==",
       );
     });

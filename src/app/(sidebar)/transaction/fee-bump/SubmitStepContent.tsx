@@ -73,7 +73,13 @@ const SUBMIT_OPTIONS = [
  * @example
  * {activeStep === "submit" && <SubmitStepContent />}
  */
-export const SubmitStepContent = ({ onReset }: { onReset: () => void }) => {
+export const SubmitStepContent = ({
+  onReset,
+  onSuccess,
+}: {
+  onReset: () => void;
+  onSuccess: () => void;
+}) => {
   const { network, transaction } = useStore();
   const { feeBump } = transaction;
 
@@ -119,6 +125,13 @@ export const SubmitStepContent = ({ onReset }: { onReset: () => void }) => {
     (isSubmitRpcSuccess && submitRpcResponse) ||
       (isSubmitHorizonSuccess && submitHorizonResponse),
   );
+
+  useEffect(() => {
+    if (isSuccess) {
+      onSuccess();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess]);
 
   // Decode XDR to JSON for the transaction envelope display
   const getXdrJson = useCallback(() => {

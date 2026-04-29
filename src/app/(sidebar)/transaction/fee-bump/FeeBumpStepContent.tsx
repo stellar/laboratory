@@ -31,32 +31,20 @@ import { KeysOfUnion } from "@/types/types";
 
 import { OperationNamesFromXdr } from "./OperationNamesFromXdr";
 
-/**
- * Fee bump step content for the single-page transaction flow.
- *
- * Wraps the signed inner transaction in a fee bump envelope, then lets the
- * user sign the envelope with the fee-paying account's key. The signed fee
- * bump XDR is stored in the flow store so the submit step picks it up.
- *
- * @param onCancel - Callback to cancel the fee bump and return to the
- *   previous step (disables fee bump and navigates back).
- *
- * @example
- * {activeStep === "fee-bump" && <FeeBumpStepContent onCancel={handleCancel} />}
- */
 interface FeeBumpStepContentProps {
-  onBuilt?: (xdr: string) => void;
+  onBuiltXdr?: (xdr: string) => void;
   onReset?: () => void;
+  onParamsChange?: () => void;
 }
 
 export const FeeBumpStepContent = ({
-  onBuilt,
+  onBuiltXdr,
   onReset,
+  onParamsChange,
 }: FeeBumpStepContentProps) => {
   const { network, transaction } = useStore();
-
   const { feeBump, updateFeeBumpParams } = transaction;
-  const { source_account, fee, innerXdr } = feeBump;
+  const { source_account, fee, xdr } = feeBump;
 
   const [feeBumpedTx, setFeeBumpedTx] = useState<FeeBumpedTxResponse>({
     errors: [],
@@ -93,9 +81,9 @@ export const FeeBumpStepContent = ({
     // Any input change means the previous signature is stale
     updateFeeBumpParams({ signedTx: "" });
 
-    if (!fee || !source_account || !innerXdr) {
+    if (!fee || !source_account || !xdr) {
       setFeeBumpedTx({ errors: [], xdr: "" });
-      onBuilt?.("");
+      onBuiltXdr?.("");
       return;
     }
 
@@ -104,12 +92,12 @@ export const FeeBumpStepContent = ({
 
     if (pubKeyError || feeErr) {
       setFeeBumpedTx({ errors: [], xdr: "" });
-      onBuilt?.("");
+      onBuiltXdr?.("");
       return;
     }
 
     const rawResult = txHelper.buildFeeBumpTx({
-      innerTxXdr: innerXdr,
+      innerTxXdr: xdr,
       maxFee: fee,
       sourceAccount: source_account,
       networkPassphrase: network.passphrase,
@@ -122,12 +110,12 @@ export const FeeBumpStepContent = ({
 
     if (result.errors.length > 0) {
       setBuildError(result.errors.join(". "));
-      onBuilt?.("");
+      onBuiltXdr?.("");
     } else {
       setFeeBumpedTx(result);
-      onBuilt?.(result.xdr);
+      onBuiltXdr?.(result.xdr);
     }
-  }, [innerXdr, source_account, fee, network.passphrase]);
+  }, [xdr, source_account, fee, network.passphrase]);
 
   const handleParamsError = <T,>(id: string, error: T) => {
     if (error) {
@@ -143,7 +131,7 @@ export const FeeBumpStepContent = ({
         return validate.getPublicKeyError(value);
       case "fee":
         return validate.getPositiveIntError(value);
-      case "innerXdr":
+      case "xdr":
         if (validate.getXdrError(value)?.result === "success") {
           return false;
         }
@@ -195,16 +183,16 @@ export const FeeBumpStepContent = ({
           <XdrPicker
             id="view-xdr-blob"
             label="Base64 encoded XDR"
-            value={innerXdr}
+            value={xdr}
             note="Enter a Base64 encoded XDR blob to decode."
             onChange={(e) => {
               const val = e.target.value;
-              updateFeeBumpParams({ innerXdr: val });
+              updateFeeBumpParams({ xdr: val });
+              onParamsChange?.();
             }}
           />
-
           <OperationNamesFromXdr
-            xdr={innerXdr}
+            xdr={xdr}
             networkPassphrase={network.passphrase}
           />
         </Box>
@@ -222,9 +210,9 @@ export const FeeBumpStepContent = ({
                 val ? validate.getPublicKeyError(val) || undefined : undefined,
               );
               updateFeeBumpParams({ source_account: val });
+              onParamsChange?.();
             }}
           />
-
           <PositiveIntPicker
             id="fee-bump-fee"
             label="Base fee"
@@ -238,6 +226,7 @@ export const FeeBumpStepContent = ({
                   : undefined,
               );
               updateFeeBumpParams({ fee: val });
+              onParamsChange?.();
             }}
             note={
               <>

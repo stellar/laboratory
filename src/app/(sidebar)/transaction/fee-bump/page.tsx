@@ -25,6 +25,7 @@ export default function FeeBumpTransaction() {
   const [highestCompletedStep, setHighestCompletedStep] =
     useState<TransactionStepName | null>(null);
   const [builtXdr, setBuiltXdr] = useState("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const advanceStep = (
     current: TransactionStepName,
@@ -75,6 +76,17 @@ export default function FeeBumpTransaction() {
     setHighestCompletedStep(null);
     setBuiltXdr("");
     resetFeeBump();
+    setIsSubmitted(false);
+  };
+
+  const onSubmitSuccess = () => {
+    setIsSubmitted(true);
+    setHighestCompletedStep("submit");
+  };
+
+  const handleParamsChange = () => {
+    setHighestCompletedStep(null);
+    setIsSubmitted(false);
   };
 
   return (
@@ -83,12 +95,25 @@ export default function FeeBumpTransaction() {
         <div className="FeeBumpTransaction__content">
           <Box gap="xxl">
             {activeStep === "feeBump" && (
-              <FeeBumpStepContent onBuilt={setBuiltXdr} onReset={onReset} />
+              <FeeBumpStepContent
+                onBuiltXdr={setBuiltXdr}
+                onReset={onReset}
+                onParamsChange={handleParamsChange}
+              />
             )}
             {activeStep === "sign" && (
-              <SignStepContent xdrToSign={builtXdr} onReset={onReset} />
+              <SignStepContent
+                xdrToSign={builtXdr}
+                onReset={onReset}
+                isDisabled={isSubmitted}
+              />
             )}
-            {activeStep === "submit" && <SubmitStepContent onReset={onReset} />}
+            {activeStep === "submit" && (
+              <SubmitStepContent
+                onReset={onReset}
+                onSuccess={onSubmitSuccess}
+              />
+            )}
 
             <TransactionFlowFooter
               steps={steps}

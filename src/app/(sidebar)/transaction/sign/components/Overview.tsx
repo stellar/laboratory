@@ -205,7 +205,7 @@ export const Overview = () => {
 
   const onWrapWithFeeBump = () => {
     if (sign.signedTx) {
-      updateFeeBumpParams({ innerXdr: sign.signedTx });
+      updateFeeBumpParams({ xdr: sign.signedTx });
 
       delayedAction({
         action: () => {

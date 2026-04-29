@@ -24,7 +24,7 @@ import {
 export type FeeBumpParams = {
   source_account: string;
   fee: string;
-  innerXdr: string;
+  xdr: string;
   signedTx: string;
 };
 
@@ -289,7 +289,7 @@ const initTransactionState = {
   feeBump: {
     source_account: "",
     fee: "",
-    innerXdr: "",
+    xdr: "",
     signedTx: "",
   },
 };

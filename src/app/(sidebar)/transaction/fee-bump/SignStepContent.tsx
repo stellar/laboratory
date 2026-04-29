@@ -24,9 +24,11 @@ import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 export const SignStepContent = ({
   xdrToSign,
   onReset,
+  isDisabled,
 }: {
   xdrToSign: string;
   onReset: () => void;
+  isDisabled: boolean;
 }) => {
   const { transaction } = useStore();
   const { feeBump, updateFeeBumpParams } = transaction;
@@ -52,6 +54,7 @@ export const SignStepContent = ({
       <SignTransactionXdr
         id="sign-step"
         xdrToSign={xdrToSign || null}
+        isDisabled={isDisabled}
         onDoneAction={({ signedXdr, errorMessage }) => {
           updateFeeBumpParams({ signedTx: signedXdr ?? "" });
           setErrorMessage(errorMessage);
