@@ -335,15 +335,19 @@ export const createStore = (options: CreateStoreOptions) =>
         },
         selectNetwork: (network: Network) =>
           set((state) => {
+            const isNetworkChange =
+              state.network.id && state.network.id !== network.id;
             state.network = network;
-            state.transaction = {
-              ...state.transaction,
-              ...initTransactionState,
-            };
-            state.xdr = {
-              ...state.xdr,
-              ...initXdrState,
-            };
+            if (isNetworkChange) {
+              state.transaction = {
+                ...state.transaction,
+                ...initTransactionState,
+              };
+              state.xdr = {
+                ...state.xdr,
+                ...initXdrState,
+              };
+            }
           }),
         updateIsDynamicNetworkSelect: (isDynamic: boolean) =>
           set((state) => {
