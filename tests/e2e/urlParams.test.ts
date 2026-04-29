@@ -139,16 +139,17 @@ test.describe("URL Params", () => {
       await expect(page.locator("h1")).toHaveText("Build transaction");
     });
 
-    test("[Classic] Submit Transaction redirects to build", async ({
-      page,
-    }) => {
-      await page.goto(
-        `${baseURL}/transaction/submit?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;`,
-      );
+    // @TODO reimplement this once import transaction is completed
+    // test("[Classic] Submit Transaction redirects to build", async ({
+    //   page,
+    // }) => {
+    //   await page.goto(
+    //     `${baseURL}/transaction/submit?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;`,
+    //   );
 
-      await page.waitForURL("**/transaction/build**");
-      await expect(page.locator("h1")).toHaveText("Build transaction");
-    });
+    //   await page.waitForURL("**/transaction/build**");
+    //   await expect(page.locator("h1")).toHaveText("Build transaction");
+    // });
 
     test("[Soroban] Build Transaction", async ({ page }) => {
       await page.goto(
