@@ -55,8 +55,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1
       '@stellar/stellar-xdr-json':
-        specifier: ^23.0.1
-        version: 23.0.1
+        specifier: ^26.0.0
+        version: 26.0.0
       '@tanstack/react-query':
         specifier: ^5.83.0
         version: 5.87.4(react@19.2.3)
@@ -2042,8 +2042,8 @@ packages:
     engines: {node: '>=20.0.0'}
     hasBin: true
 
-  '@stellar/stellar-xdr-json@23.0.1':
-    resolution: {integrity: sha512-tFY2Oz+AD5/VF2cjnfbrHC3D+WIHgPHCORVjMEcZN2ah+aRGY3WVb++Lc9qrPYDwZMfQVTqlTEs02OEEJLTS0Q==}
+  '@stellar/stellar-xdr-json@26.0.0':
+    resolution: {integrity: sha512-yopCAdWndVkArd2908K4jSf5lr/k/CCVPxxhz4s3PHPZKAr/P/et+HyWgBIc3kk/SPeKgj4dKs1XexS8u3wpLg==}
 
   '@swc/helpers@0.5.15':
     resolution: {integrity: sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g==}
@@ -8548,7 +8548,7 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  '@stellar/stellar-xdr-json@23.0.1': {}
+  '@stellar/stellar-xdr-json@26.0.0': {}
 
   '@swc/helpers@0.5.15':
     dependencies:
