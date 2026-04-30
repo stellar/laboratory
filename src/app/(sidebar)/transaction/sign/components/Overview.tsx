@@ -9,7 +9,6 @@ import {
   xdr,
 } from "@stellar/stellar-sdk";
 import { useRouter } from "next/navigation";
-import { set } from "lodash";
 
 import { FEE_BUMP_TX_FIELDS, TX_FIELDS } from "@/constants/signTransactionPage";
 import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
@@ -49,7 +48,7 @@ type TxSignatureType =
   | "signature";
 
 export const Overview = () => {
-  const { network, transaction, xdr, walletKit, endpoints } = useStore();
+  const { network, transaction, xdr, walletKit } = useStore();
   const {
     sign,
     updateSignActiveView,
@@ -173,13 +172,13 @@ export const Overview = () => {
 
   const onViewSubmitTxn = () => {
     if (sign.signedTx) {
-      endpoints.updateParams({ tx: sign.signedTx });
-      endpoints.updateCurrentEndpoint(Routes.ENDPOINTS_SEND_TRANSACTION);
+      xdr.updateXdrBlob(sign.signedTx);
+      xdr.updateXdrType(XDR_TYPE_TRANSACTION_ENVELOPE);
 
       delayedAction({
         action: () => {
           trackEvent(TrackingEvent.TRANSACTION_SIGN_SUBMIT_IN_TX_SUBMITTER);
-          router.push(Routes.ENDPOINTS_SEND_TRANSACTION);
+          router.push(Routes.SUBMIT_TRANSACTION);
         },
         delay: 200,
       });
@@ -206,7 +205,7 @@ export const Overview = () => {
 
   const onWrapWithFeeBump = () => {
     if (sign.signedTx) {
-      updateFeeBumpParams(set({}, "xdr", sign.signedTx));
+      updateFeeBumpParams({ xdr: sign.signedTx });
 
       delayedAction({
         action: () => {

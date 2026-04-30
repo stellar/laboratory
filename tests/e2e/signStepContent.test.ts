@@ -164,7 +164,7 @@ test.describe("Sign Step in Build Flow", () => {
 
     // Click Clear all (opens confirmation modal, then confirm)
     await page.getByTestId("clear-all-button").click();
-    await page.getByRole("button", { name: "Clear all" }).click();
+    await page.getByText("Clear all").click();
 
     // Should reset to build step
     await expect(page.locator("h1")).toHaveText("Build transaction");

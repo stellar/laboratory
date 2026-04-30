@@ -139,16 +139,17 @@ test.describe("URL Params", () => {
       await expect(page.locator("h1")).toHaveText("Build transaction");
     });
 
-    test("[Classic] Submit Transaction redirects to build", async ({
-      page,
-    }) => {
-      await page.goto(
-        `${baseURL}/transaction/submit?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;`,
-      );
+    // @TODO reimplement this once import transaction is completed
+    // test("[Classic] Submit Transaction redirects to build", async ({
+    //   page,
+    // }) => {
+    //   await page.goto(
+    //     `${baseURL}/transaction/submit?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;`,
+    //   );
 
-      await page.waitForURL("**/transaction/build**");
-      await expect(page.locator("h1")).toHaveText("Build transaction");
-    });
+    //   await page.waitForURL("**/transaction/build**");
+    //   await expect(page.locator("h1")).toHaveText("Build transaction");
+    // });
 
     test("[Soroban] Build Transaction", async ({ page }) => {
       await page.goto(
@@ -198,15 +199,13 @@ test.describe("URL Params", () => {
         `${baseURL}/transaction/fee-bump?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;&transaction$feeBump$source_account=GA46LGGOLXJY5OSX6N4LHV4MWDFXNGLK76I4NDNKKYAXRRSKI5AJGMXG&fee=2000&xdr=AAAAAgAAAAA55ZjOXdOOulfzeLPXjLDLdplq//5HGjapWAXjGSkdAkwAAD6AADQioAAAAAQAAAAEAAAAAAAAAAAAAAABnUbvoAAAAAQAAAAMxMjMAAAAAAgAAAAAAAAAAAAAAALs4fndRzE6mDMvxXqgyh79//PxCtOwb9MTWEeINa//Qr8AAAABvwjrAAAAAABAAAAADnlmM5d0466V//N4s9eMsMt2mWr//kcaNqlYBeMZKR0CTAAAAAQAAAAASBB3qbNO//amClp01Lvg//fRcZsxzvl0ItXd0lfm+7+ggAAAAFVU0RDAAAAAEI+fQXy7K+//7BkrIVo//G+lq7bjY5wJUq+NBPgIH3layAAAACVAvkAAAAAAAAAAAAA==;;`,
       );
 
-      await expect(page.locator("h1")).toHaveText("Fee bump");
+      await expect(page.locator("h1")).toHaveText("Fee bump transaction");
 
-      await expect(page.getByLabel("Source account")).toHaveValue(
+      await expect(page.getByLabel("Fee-paying account")).toHaveValue(
         "GA46LGGOLXJY5OSX6N4LHV4MWDFXNGLK76I4NDNKKYAXRRSKI5AJGMXG",
       );
       await expect(page.getByLabel("Base Fee")).toHaveValue("2000");
-      await expect(
-        page.getByLabel("Input a Base64 encoded TransactionEnvelope"),
-      ).toHaveValue(
+      await expect(page.getByLabel("Base64 encoded XDR")).toHaveValue(
         "AAAAAgAAAAA55ZjOXdOOulfzeLPXjLDLdplq/5HGjapWAXjGSkdAkwAAD6AADQioAAAAAQAAAAEAAAAAAAAAAAAAAABnUbvoAAAAAQAAAAMxMjMAAAAAAgAAAAAAAAAAAAAAALs4fndRzE6mDMvxXqgyh79/PxCtOwb9MTWEeINa/Qr8AAAABvwjrAAAAAABAAAAADnlmM5d0466V/N4s9eMsMt2mWr/kcaNqlYBeMZKR0CTAAAAAQAAAAASBB3qbNO/amClp01Lvg/fRcZsxzvl0ItXd0lfm+7+ggAAAAFVU0RDAAAAAEI+fQXy7K+/7BkrIVo/G+lq7bjY5wJUq+NBPgIH3layAAAACVAvkAAAAAAAAAAAAA==",
       );
     });

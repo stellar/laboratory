@@ -25,6 +25,7 @@ export type FeeBumpParams = {
   source_account: string;
   fee: string;
   xdr: string;
+  signedTx: string;
 };
 
 type FeeBumpParamsObj = {
@@ -60,7 +61,6 @@ export type SignTxActiveView = "import" | "overview";
 export interface Store {
   // Shared
   network: Network | EmptyObj;
-  previousNetwork: Network | EmptyObj;
   // Theme Color
   theme: ThemeColorType | null;
   // isDynamicNetworkSelect flag to indicate network update outside of the dropdown
@@ -170,7 +170,7 @@ export interface Store {
     updateBipPath: (bipPath: string) => void;
     resetSign: () => void;
     updateFeeBumpParams: (params: FeeBumpParamsObj) => void;
-    resetBaseFee: () => void;
+    resetFeeBump: () => void;
     // [Transaction] Simulate Transaction actions
     updateSimulateTriggerOnLaunch: (trigger: boolean) => void;
   };
@@ -290,6 +290,7 @@ const initTransactionState = {
     source_account: "",
     fee: "",
     xdr: "",
+    signedTx: "",
   },
 };
 
@@ -328,7 +329,6 @@ export const createStore = (options: CreateStoreOptions) =>
       immer((set) => ({
         // Shared
         network: initNetwork,
-        previousNetwork: {},
         theme: null,
         isDynamicNetworkSelect: false,
         walletKit: {
@@ -337,8 +337,19 @@ export const createStore = (options: CreateStoreOptions) =>
         },
         selectNetwork: (network: Network) =>
           set((state) => {
-            state.previousNetwork = state.network;
+            const isNetworkChange =
+              state.network.id && state.network.id !== network.id;
             state.network = network;
+            if (isNetworkChange) {
+              state.transaction = {
+                ...state.transaction,
+                ...initTransactionState,
+              };
+              state.xdr = {
+                ...state.xdr,
+                ...initXdrState,
+              };
+            }
           }),
         updateIsDynamicNetworkSelect: (isDynamic: boolean) =>
           set((state) => {
@@ -531,7 +542,7 @@ export const createStore = (options: CreateStoreOptions) =>
                 ...params,
               };
             }),
-          resetBaseFee: () =>
+          resetFeeBump: () =>
             set((state) => {
               state.transaction.feeBump = initTransactionState.feeBump;
             }),

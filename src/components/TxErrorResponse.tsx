@@ -14,6 +14,7 @@ import {
   SubmitRpcError,
   SubmitRpcErrorStatus,
 } from "@/types/types";
+import { XdrLink } from "./XdrLink";
 
 export const HorizonErrorResponse = ({
   error,
@@ -44,7 +45,10 @@ export const HorizonErrorResponse = ({
           value={JSON.stringify(result_codes)}
         />
 
-        <TxResponse label="Result XDR:" value={result_xdr} />
+        <TxResponse
+          label="Result XDR:"
+          item={<XdrLink xdr={result_xdr} type="TransactionResult" />}
+        />
       </Box>
     );
   } else {
