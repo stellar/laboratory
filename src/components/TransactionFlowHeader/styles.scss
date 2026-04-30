@@ -1,0 +1,19 @@
+@use "../../styles/utils.scss" as *;
+
+.TransactionFlowHeader {
+  .Button {
+    width: pxToRem(32px);
+    height: pxToRem(32px);
+    padding: 0;
+
+    svg {
+      width: pxToRem(14px);
+      height: pxToRem(14px);
+      color: var(--sds-clr-gray-09);
+    }
+  }
+
+  .Link {
+    color: var(--sds-clr-lilac-11);
+  }
+}
