@@ -529,7 +529,8 @@ export type WasmData = {
 export type BuildVerificationStatus =
   | "built_in"
   | "verified_build"
-  | "unverified_build";
+  | "unverified_build"
+  | "source_code_unverified";
 
 export type BuildVerificationResponse = {
   status: BuildVerificationStatus;

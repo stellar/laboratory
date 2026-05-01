@@ -67,16 +67,16 @@ export const BuildVerifiedBadge = ({
       ),
       message: (
         <>
-          In 
+          In{" "}
           <Link
             variant="primary"
             href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0055.md"
           >
             SEP-55
           </Link>{" "}
-          , contract build verification proves a deployed smart contract’s
-          binary (Wasm) was produced by a specific, verifiable build process
-          (e.g., GitHub + CI) It confirms build provenance not source code
+          contract build verification proves a deployed smart contract’s binary
+          (Wasm) was produced by a specific, verifiable build process (e.g.,
+          GitHub + CI). It confirms build provenance, not source code
           correctness or safety.
         </>
       ),
@@ -91,6 +91,19 @@ export const BuildVerifiedBadge = ({
         <>
           This contract has no build verification. The origin of deployed Wasm
           is not verified.
+        </>
+      ),
+    },
+    source_code_unverified: {
+      badge: (
+        <Badge variant="warning" icon={<Icon.XCircle />}>
+          Unverified Source Code
+        </Badge>
+      ),
+      message: (
+        <>
+          The source code is not verified and may not reflect the contract’s
+          on-chain behavior.
         </>
       ),
     },
