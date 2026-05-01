@@ -444,7 +444,7 @@ export type ContractInfoApiResponse = {
   wasm?: string;
   storage_entries?: number;
   validation?: {
-    status?: "verified" | "unverified";
+    status?: "verified_build" | "unverified_build";
     repository?: string;
     commit?: string;
     package?: string;
@@ -526,7 +526,11 @@ export type WasmData = {
   };
 };
 
-export type BuildVerificationStatus = "verified" | "unverified" | "built_in";
+export type BuildVerificationStatus =
+  | "built_in"
+  | "verified_build"
+  | "unverified_build";
+
 export type BuildVerificationResponse = {
   status: BuildVerificationStatus;
   payload?: any;

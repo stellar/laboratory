@@ -336,7 +336,11 @@ export const ContractInfo = ({
             {infoData ? (
               <BuildVerifiedBadge
                 status={
-                  isSacType ? "built_in" : wasmData ? "verified" : "unverified"
+                  isSacType
+                    ? "built_in"
+                    : wasmData
+                      ? "verified_build"
+                      : "unverified_build"
                 }
               />
             ) : null}

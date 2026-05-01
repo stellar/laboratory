@@ -12,7 +12,7 @@ export const MOCK_CONTRACT_INFO_RESPONSE_SUCCESS = {
   wasm: "a0db88b6da6f83bf1c2c8fafcc8fa9cf9d2abc7f8507d831d086aa2c6ad5fc1b",
   storage_entries: 10,
   validation: {
-    status: "verified",
+    status: "verified_build",
     repository: "https://github.com/test-org/test-repo",
     commit: "391f37e39a849ddf7543a5d7f1488e055811cb68",
     ts: 1731402776,

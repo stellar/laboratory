@@ -37,35 +37,6 @@ export const BuildVerifiedBadge = ({
   }, [handleClickOutside, isBadgeTooltipVisible]);
 
   const item = {
-    verified: {
-      badge: (
-        <Badge variant="success" icon={<Icon.CheckCircle />}>
-          Build Verified
-        </Badge>
-      ),
-      message: (
-        <>
-          <code>Build Verified</code> means that a GitHub Action run has
-          attested to have built the Wasm, but does not verify the source code.
-        </>
-      ),
-    },
-    unverified: {
-      badge: (
-        <Badge variant="error" icon={<Icon.XCircle />}>
-          Build Unverified
-        </Badge>
-      ),
-      message: (
-        <>
-          This contract has no build verification configured. Please see{" "}
-          <Link href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0055.md#attestation-verification-flow">
-            verification setup instructions
-          </Link>{" "}
-          for more info.
-        </>
-      ),
-    },
     built_in: {
       badge: (
         <Badge variant="success" icon={<Icon.CheckCircle />}>
@@ -85,6 +56,41 @@ export const BuildVerifiedBadge = ({
             CAP-46-06
           </Link>
           .
+        </>
+      ),
+    },
+    verified_build: {
+      badge: (
+        <Badge variant="primary" icon={<Icon.CheckCircle />}>
+          Verified Build
+        </Badge>
+      ),
+      message: (
+        <>
+          In 
+          <Link
+            variant="primary"
+            href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0055.md"
+          >
+            SEP-55
+          </Link>{" "}
+          , contract build verification proves a deployed smart contract’s
+          binary (Wasm) was produced by a specific, verifiable build process
+          (e.g., GitHub + CI) It confirms build provenance not source code
+          correctness or safety.
+        </>
+      ),
+    },
+    unverified_build: {
+      badge: (
+        <Badge variant="error" icon={<Icon.XCircle />}>
+          Unverified Build
+        </Badge>
+      ),
+      message: (
+        <>
+          This contract has no build verification. The origin of deployed Wasm
+          is not verified.
         </>
       ),
     },

@@ -1371,6 +1371,12 @@
     .NoInfoLoadedView {
       min-height: pxToRem(320px);
     }
+
+    .Floater {
+      .Link--primary {
+        --Link-color-default: var(--sds-clr-lilac-08);
+      }
+    }
   }
 }
 
