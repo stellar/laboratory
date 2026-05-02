@@ -198,11 +198,11 @@ export default function BuildTransaction() {
               label: "New transaction",
               href: "/transaction/build",
             },
-            // {
-            //   id: "import-xdr",
-            //   label: "Import transaction XDR",
-            //   href: "/transaction/import",
-            // },
+            {
+              id: "import-xdr",
+              label: "Import transaction XDR",
+              href: "/transaction/import",
+            },
           ]}
           addlClassName="Tabs--gap-md"
         />

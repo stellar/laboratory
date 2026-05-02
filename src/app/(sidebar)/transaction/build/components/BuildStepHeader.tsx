@@ -48,7 +48,7 @@ export const BuildStepHeader = ({
       onClearAll={onClearAll}
       rightElement={
         showHeaderButtons ? (
-          <>
+          <div className="additional-buttons">
             <Button
               size="md"
               variant="tertiary"
@@ -76,7 +76,7 @@ export const BuildStepHeader = ({
                 localStorageSavedTransactions.set(updatedItems);
               }}
             />
-          </>
+          </div>
         ) : null
       }
     />
