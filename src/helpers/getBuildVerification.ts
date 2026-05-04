@@ -50,10 +50,10 @@ export const getBuildVerification = async ({
       rpcServer,
     });
 
-    return buildVerification?.status || "unverified";
+    return buildVerification?.status || "unverified_build";
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
-    return "unverified";
+    return "unverified_build";
   }
 };
 
@@ -70,7 +70,7 @@ export const getAttesationResponse = async ({
 
     if (!sourceRepo) {
       return {
-        status: "unverified",
+        status: "unverified_build",
       };
     }
 
@@ -79,7 +79,7 @@ export const getAttesationResponse = async ({
     const att = await fetch(attestationUrl);
 
     if (att.status !== 200) {
-      return { status: "unverified" };
+      return { status: "unverified_build" };
     }
 
     const attResponse = await att.json();
@@ -87,7 +87,7 @@ export const getAttesationResponse = async ({
 
     // Validate Wasm hash
     if (attPayload?.subject?.[0]?.digest?.sha256 !== wasmHash) {
-      return { status: "unverified" };
+      return { status: "unverified_build" };
     }
 
     // Validate source repo
@@ -97,11 +97,11 @@ export const getAttesationResponse = async ({
           ?.uri || ""
       ).includes(sourceRepo)
     ) {
-      return { status: "unverified" };
+      return { status: "unverified_build" };
     }
 
     return {
-      status: "verified",
+      status: "verified_build",
       payload: attPayload,
       sourceRepo,
       attestationUrl,
@@ -115,7 +115,10 @@ export const getAttesationResponse = async ({
 /**
  * Helper function to validate and extract repository name from a regex match
  */
-const validateAndExtractRepo = (match: RegExpMatchArray | null, captureGroup: number): string | null => {
+const validateAndExtractRepo = (
+  match: RegExpMatchArray | null,
+  captureGroup: number,
+): string | null => {
   if (match && match[captureGroup]) {
     const value = match[captureGroup].trim();
     // Strict validation: ensure the entire value is a valid owner/repo
@@ -127,7 +130,9 @@ const validateAndExtractRepo = (match: RegExpMatchArray | null, captureGroup: nu
   return null;
 };
 
-export const extractSourceRepo = async (wasmBytes: Buffer): Promise<string | null> => {
+export const extractSourceRepo = async (
+  wasmBytes: Buffer,
+): Promise<string | null> => {
   try {
     const wasmBuffer = new Uint8Array(wasmBytes);
     const mod = await WebAssembly.compile(wasmBuffer);
@@ -166,13 +171,17 @@ export const extractSourceRepo = async (wasmBytes: Buffer): Promise<string | nul
 
             // Fallback: try to extract without the prefix for existing contracts
             // Look for source_repo followed by owner/repo pattern (similar to github: prefixed version)
-            const regexWithoutPrefix = /source_repo[^\w]+([a-zA-Z0-9_-]+\/[a-zA-Z0-9_.-]+)/;
+            const regexWithoutPrefix =
+              /source_repo[^\w]+([a-zA-Z0-9_-]+\/[a-zA-Z0-9_.-]+)/;
             const matchWithoutPrefix = sectionText.match(regexWithoutPrefix);
-            const repoWithoutPrefix = validateAndExtractRepo(matchWithoutPrefix, 1);
+            const repoWithoutPrefix = validateAndExtractRepo(
+              matchWithoutPrefix,
+              1,
+            );
             if (repoWithoutPrefix) {
               return repoWithoutPrefix;
             }
-            
+
             return null;
           }
         }

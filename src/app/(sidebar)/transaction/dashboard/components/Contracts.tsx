@@ -136,7 +136,7 @@ const ContractsTable = ({
         tableId="tx-contracts-summary"
         tableData={contractIds.map((cid) => ({
           id: cid,
-          build_verified: verifications[cid] || "unverified",
+          build_verified: verifications[cid] || "unverified_build",
         }))}
         tableHeaders={[
           { id: "contract_id", value: "Contract ID", isSortable: true },
