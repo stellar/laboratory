@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import { Alert } from "@stellar/design-system";
 
 import { useImportFlowStore } from "@/store/createTransactionFlowStore";
 
@@ -40,9 +39,8 @@ export const ImportFlow = () => {
     markStepCompleted,
   } = useImportFlowStore();
 
-  // Default to the Soroban variant until the user pastes XDR — matches the
-  // doc's behavior so the stepper doesn't shift after a successful parse.
-  const parsedTxType = importState?.parsedTxType ?? "soroban";
+  // Default to the Classic variant until the user pastes XDR
+  const parsedTxType = importState?.parsedTxType ?? "classic";
 
   const steps: TransactionStepName[] =
     parsedTxType === "classic"
@@ -87,11 +85,11 @@ export const ImportFlow = () => {
       <div className="BuildTransaction__content">
         <Box gap="xxl">
           {activeStep === "import" && <ImportStepContent />}
-          {activeStep !== "import" && (
+          {/* {activeStep !== "import" && (
             <Alert variant="primary" placement="inline" title="Coming soon">
               The {activeStep} step for the import flow is not wired up yet.
             </Alert>
-          )}
+          )} */}
 
           <TransactionFlowFooter
             steps={steps}

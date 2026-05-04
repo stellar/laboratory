@@ -48,7 +48,7 @@ export const BuildStepHeader = ({
       onClearAll={onClearAll}
       rightElement={
         showHeaderButtons ? (
-          <div>
+          <div className="AdditionalButtons">
             <Button
               size="md"
               variant="tertiary"

@@ -120,7 +120,7 @@ export const ImportStepContent = () => {
 
   // Build the overview field list, mirroring the sign page's Transaction
   // overview (constants/signTransactionPage.ts).
-  const overviewFields = useMemo(() => {
+  const getOverviewFields = () => {
     if (!parsedTx) return null;
 
     const requiredFields = [
@@ -133,7 +133,9 @@ export const ImportStepContent = () => {
       return [...requiredFields, ...FEE_BUMP_TX_FIELDS(parsedTx)];
     }
     return [...requiredFields, ...TX_FIELDS(parsedTx)];
-  }, [parsedTx, importXdr, network.passphrase]);
+  };
+
+  const overviewFields = getOverviewFields();
 
   return (
     <Box gap="md">
@@ -143,7 +145,6 @@ export const ImportStepContent = () => {
         xdr={importXdr}
         activeStep="import"
       />
-
       {importState?.importXdr && !importState?.parseError ? (
         <Alert
           variant="success"
