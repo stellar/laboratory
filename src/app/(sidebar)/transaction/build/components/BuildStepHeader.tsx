@@ -10,7 +10,7 @@ import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransa
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 import { TransactionFlowHeader } from "@/components/TransactionFlowHeader";
 
-import { TxnOperation } from "@/types/types";
+import { TxnOperation, SavedTransaction } from "@/types/types";
 
 interface BuildStepHeaderProps {
   /** Step title displayed on the left. */
@@ -48,7 +48,7 @@ export const BuildStepHeader = ({
       onClearAll={onClearAll}
       rightElement={
         showHeaderButtons ? (
-          <div className="additional-buttons">
+          <div>
             <Button
               size="md"
               variant="tertiary"
@@ -72,7 +72,7 @@ export const BuildStepHeader = ({
               onClose={() => {
                 setIsSaveModalVisible(false);
               }}
-              onUpdate={(updatedItems) => {
+              onUpdate={(updatedItems: SavedTransaction[]) => {
                 localStorageSavedTransactions.set(updatedItems);
               }}
             />
