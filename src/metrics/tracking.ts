@@ -137,6 +137,13 @@ export enum TrackingEvent {
   TRANSACTION_BUILD_OPERATIONS_ACTION_DELETE = "transaction: build: operations: action: delete",
   TRANSACTION_BUILD_VIEW_IN_XDR = "transaction: build: view in xdr",
   TRANSACTION_BUILD_INVOKE_CONTRACT = "transaction: build: invoke contract",
+  // Transactions - import
+  TRANSACTION_IMPORT_XDR_PASTE = "transaction: import: xdr paste",
+  TRANSACTION_IMPORT_XDR_VALID = "transaction: import: xdr valid",
+  TRANSACTION_IMPORT_XDR_INVALID = "transaction: import: xdr invalid",
+  TRANSACTION_IMPORT_NEXT_SIMULATE = "transaction: import: next simulate",
+  TRANSACTION_IMPORT_NEXT_SIGN = "transaction: import: next sign",
+  TRANSACTION_IMPORT_NEXT_SUBMIT = "transaction: import: next submit",
   // Transactions - sign
   TRANSACTION_SIGN_IMPORT_SUCCESS = "transaction: sign: import: success",
   TRANSACTION_SIGN_IMPORT_ERROR = "transaction: sign: import: error",
