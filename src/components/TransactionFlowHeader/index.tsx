@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Icon, Modal } from "@stellar/design-system";
+import { Button, Modal } from "@stellar/design-system";
 
 import { Box } from "@/components/layout/Box";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -45,7 +45,7 @@ export const TransactionFlowHeader = ({
           aria-label="Clear all"
           onClick={() => setIsClearModalVisible(true)}
         >
-          <Icon.RefreshCw01 />
+          New transaction
         </Button>
 
         <Modal
