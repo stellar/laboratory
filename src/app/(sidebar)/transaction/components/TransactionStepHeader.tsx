@@ -46,6 +46,7 @@ export const TransactionStepHeader = ({
       heading={heading}
       headingAs={headingAs}
       onClearAll={onClearAll}
+      isResetDisabled={!xdr}
       rightElement={
         showHeaderButtons ? (
           <div className="AdditionalButtons">
