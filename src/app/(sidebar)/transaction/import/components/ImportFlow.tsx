@@ -14,6 +14,7 @@ import {
 import { TransactionFlowFooter } from "@/components/TransactionFlowFooter";
 
 import { ImportStepContent } from "./ImportStepContent";
+import { SignStepContent } from "@/app/(sidebar)/transaction/components/SignStepContent";
 
 /**
  * Import flow shell — mirrors `BuildTransaction` for the import variant.
@@ -32,11 +33,14 @@ import { ImportStepContent } from "./ImportStepContent";
 export const ImportFlow = () => {
   const {
     import: importState,
+    sign,
     activeStep,
     highestCompletedStep,
     setActiveStep,
     goToNextStep,
     markStepCompleted,
+    setSignedXdr,
+    resetAll,
   } = useImportFlowStore();
 
   // Default to the Classic variant until the user pastes XDR
@@ -85,6 +89,16 @@ export const ImportFlow = () => {
       <div className="BuildTransaction__content">
         <Box gap="xxl">
           {activeStep === "import" && <ImportStepContent />}
+          {activeStep === "sign" && (
+            <SignStepContent
+              xdrToSign={importState?.importXdr || ""}
+              signedXdr={sign.signedXdr || ""}
+              onSigned={(signedXdr) => {
+                setSignedXdr(signedXdr);
+              }}
+              onClearAll={resetAll}
+            />
+          )}
           {/* {activeStep !== "import" && (
             <Alert variant="primary" placement="inline" title="Coming soon">
               The {activeStep} step for the import flow is not wired up yet.

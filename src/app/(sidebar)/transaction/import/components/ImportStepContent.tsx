@@ -18,12 +18,11 @@ import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { FEE_BUMP_TX_FIELDS, TX_FIELDS } from "@/constants/signTransactionPage";
 
+import { TransactionStepHeader } from "@/app/(sidebar)/transaction/components/TransactionStepHeader";
 import { Box } from "@/components/layout/Box";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { TextPicker } from "@/components/FormElements/TextPicker";
 import { PageCard } from "@/components/layout/PageCard";
-
-import { BuildStepHeader } from "../../build/components/BuildStepHeader";
 
 const MIN_LENGTH_FOR_FULL_WIDTH_FIELD = 30;
 
@@ -139,7 +138,7 @@ export const ImportStepContent = () => {
 
   return (
     <Box gap="md">
-      <BuildStepHeader
+      <TransactionStepHeader
         heading="Import transaction"
         onClearAll={resetAll}
         xdr={importXdr}

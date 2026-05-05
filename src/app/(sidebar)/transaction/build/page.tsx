@@ -14,16 +14,16 @@ import {
   TransactionStepName,
 } from "@/components/TransactionStepper";
 import { TransactionFlowFooter } from "@/components/TransactionFlowFooter";
+import { TransactionStepHeader } from "@/app/(sidebar)/transaction/components/TransactionStepHeader";
 import { Tabs } from "@/components/Tabs";
+import { SignStepContent } from "@/app/(sidebar)/transaction/components/SignStepContent";
 import { SubmitStepContent } from "./components/SubmitStepContent";
 import { Params } from "./components/Params";
 import { Operations } from "./components/Operations";
 import { ClassicTransactionXdr } from "./components/ClassicTransactionXdr";
 import { SorobanTransactionXdr } from "./components/SorobanTransactionXdr";
 import { SimulateStepContent } from "./components/SimulateStepContent";
-import { SignStepContent } from "./components/SignStepContent";
 import { ValidateStepContent } from "./components/ValidateStepContent";
-import { BuildStepHeader } from "./components/BuildStepHeader";
 
 import "./styles.scss";
 
@@ -35,6 +35,7 @@ export default function BuildTransaction() {
     validate,
     activeStep,
     highestCompletedStep,
+    setSignedXdr,
     setActiveStep,
     goToNextStep,
     markStepCompleted,
@@ -155,7 +156,7 @@ export default function BuildTransaction() {
 
   const renderBuildStep = () => (
     <Box gap="md">
-      <BuildStepHeader
+      <TransactionStepHeader
         heading="Build transaction"
         onClearAll={() => {
           resetAll();
@@ -213,7 +214,18 @@ export default function BuildTransaction() {
           <Box gap="xxl">
             {activeStep === "build" && renderBuildStep()}
             {activeStep === "simulate" && <SimulateStepContent steps={steps} />}
-            {activeStep === "sign" && <SignStepContent />}
+            {activeStep === "sign" && (
+              <SignStepContent
+                xdrToSign={
+                  simulate.assembledXdr ||
+                  build.soroban.xdr ||
+                  build.classic.xdr
+                }
+                signedXdr={sign.signedXdr}
+                onSigned={setSignedXdr}
+                onClearAll={resetAll}
+              />
+            )}
             {activeStep === "validate" && <ValidateStepContent />}
             {activeStep === "submit" && <SubmitStepContent />}
 

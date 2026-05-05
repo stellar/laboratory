@@ -12,7 +12,7 @@ import { TransactionFlowHeader } from "@/components/TransactionFlowHeader";
 
 import { TxnOperation, SavedTransaction } from "@/types/types";
 
-interface BuildStepHeaderProps {
+interface TransactionStepHeaderProps {
   /** Step title displayed on the left. */
   heading: string;
   /** Semantic heading element for the page header. */
@@ -29,7 +29,7 @@ interface BuildStepHeaderProps {
   onClearAll: () => void;
 }
 
-export const BuildStepHeader = ({
+export const TransactionStepHeader = ({
   heading,
   headingAs,
   activeStep = "",
@@ -37,7 +37,7 @@ export const BuildStepHeader = ({
   params,
   operations,
   onClearAll,
-}: BuildStepHeaderProps) => {
+}: TransactionStepHeaderProps) => {
   const showHeaderButtons = activeStep === "build" || activeStep === "import";
   const [isSaveModalVisible, setIsSaveModalVisible] = useState(false);
 

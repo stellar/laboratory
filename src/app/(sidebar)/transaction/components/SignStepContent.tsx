@@ -3,36 +3,47 @@
 import { useState } from "react";
 import { Alert, Card, Text } from "@stellar/design-system";
 
-import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
-
 import { SignTransactionXdr } from "@/components/SignTransactionXdr";
 import { Box } from "@/components/layout/Box";
 
-import { BuildStepHeader } from "./BuildStepHeader";
+import { TransactionStepHeader } from "./TransactionStepHeader";
+
+type Props = {
+  xdrToSign: string;
+  signedXdr: string;
+  onSigned: (signedXdr: string) => void;
+  onClearAll: () => void;
+};
 
 /**
  * Sign step content for the single-page transaction flow.
  *
  * Wraps `<SignTransactionXdr />` to let users sign the built (or assembled)
  * transaction via secret key, wallet extension, hardware wallet, or raw
- * signature. The signed XDR is stored in the flow store so the page's
- * `isNextDisabled` logic picks it up automatically.
+ * signature. Flow-agnostic: the parent flow (build or import) reads its own
+ * store, derives `xdrToSign`, and persists the signed XDR via `onSigned`.
  *
  * @example
- * {activeStep === "sign" && <SignStepContent />}
+ * {activeStep === "sign" && (
+ *   <SignStepContent
+ *     xdrToSign={simulate.assembledXdr || build.soroban.xdr || build.classic.xdr}
+ *     signedXdr={sign.signedXdr}
+ *     onSigned={setSignedXdr}
+ *     onClearAll={resetAll}
+ *   />
+ * )}
  */
-export const SignStepContent = () => {
-  const { build, simulate, sign, setSignedXdr, resetAll } = useBuildFlowStore();
-
+export const SignStepContent = ({
+  xdrToSign,
+  signedXdr,
+  onSigned,
+  onClearAll,
+}: Props) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-  // Use assembled XDR (post-simulation) if available, otherwise the built XDR
-  const xdrToSign =
-    simulate.assembledXdr || build.soroban.xdr || build.classic.xdr;
 
   return (
     <Box gap="md">
-      <BuildStepHeader heading="Sign transaction" onClearAll={resetAll} />
+      <TransactionStepHeader heading="Sign transaction" onClearAll={onClearAll} />
 
       <Text size="sm" as="div">
         To be included in the ledger, the transaction must be signed and
@@ -43,7 +54,7 @@ export const SignStepContent = () => {
         id="sign-step"
         xdrToSign={xdrToSign || null}
         onDoneAction={({ signedXdr, errorMessage }) => {
-          setSignedXdr(signedXdr ?? "");
+          onSigned(signedXdr ?? "");
           setErrorMessage(errorMessage);
         }}
       />
@@ -54,7 +65,7 @@ export const SignStepContent = () => {
         </Alert>
       ) : null}
 
-      {sign.signedXdr ? (
+      {signedXdr ? (
         <Card>
           <Box gap="md">
             <Alert variant="success" placement="inline">
@@ -78,7 +89,7 @@ export const SignStepContent = () => {
                     as="div"
                     addlClassName="SignStepContent__xdrText"
                   >
-                    {sign.signedXdr}
+                    {signedXdr}
                   </Text>
                 </div>
               </Box>
