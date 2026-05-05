@@ -43,7 +43,11 @@ export const SignStepContent = ({
 
   return (
     <Box gap="md">
-      <TransactionStepHeader heading="Sign transaction" onClearAll={onClearAll} />
+      <TransactionStepHeader
+        heading="Sign transaction"
+        onClearAll={onClearAll}
+        xdr={xdrToSign}
+      />
 
       <Text size="sm" as="div">
         To be included in the ledger, the transaction must be signed and

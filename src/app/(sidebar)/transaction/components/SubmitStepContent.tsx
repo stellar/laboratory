@@ -559,6 +559,7 @@ export const SubmitStepContent = ({
           onReset();
           resetSubmitState();
         }}
+        xdr={xdrBlob}
       />
 
       <Card>
