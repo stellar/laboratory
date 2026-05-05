@@ -45,7 +45,7 @@ import { useScrollIntoView } from "@/hooks/useScrollIntoView";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
-import { BuildStepHeader } from "../build/components/BuildStepHeader";
+import { TransactionStepHeader } from "./TransactionStepHeader";
 
 const SUBMIT_OPTIONS = [
   {
@@ -552,13 +552,14 @@ export const SubmitStepContent = ({
 
   return (
     <Box gap="md">
-      <BuildStepHeader
+      <TransactionStepHeader
         heading="Submit transaction"
         headingAs="h1"
         onClearAll={() => {
           onReset();
           resetSubmitState();
         }}
+        xdr={xdrBlob}
       />
 
       <Card>
