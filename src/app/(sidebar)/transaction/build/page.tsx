@@ -7,6 +7,8 @@ import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 import { useTransactionFlow } from "@/hooks/useTransactionFlow";
 import { useLegacyUrlMigration } from "@/hooks/useLegacyUrlMigration";
 
+import { TransactionStepHeader } from "@/app/(sidebar)/transaction/components/TransactionStepHeader";
+import { SignStepContent } from "@/app/(sidebar)/transaction/components/SignStepContent";
 import { Box } from "@/components/layout/Box";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import {
@@ -14,9 +16,7 @@ import {
   TransactionStepName,
 } from "@/components/TransactionStepper";
 import { TransactionFlowFooter } from "@/components/TransactionFlowFooter";
-import { TransactionStepHeader } from "@/app/(sidebar)/transaction/components/TransactionStepHeader";
 import { Tabs } from "@/components/Tabs";
-import { SignStepContent } from "@/app/(sidebar)/transaction/components/SignStepContent";
 import { SubmitStepContent } from "./components/SubmitStepContent";
 import { Params } from "./components/Params";
 import { Operations } from "./components/Operations";
