@@ -1,7 +1,6 @@
 import { baseURL } from "../../playwright.config";
 import { test, expect, Page, Browser } from "@playwright/test";
 
-
 import {
   MOCK_LOCAL_STORAGE,
   SAVED_ACCOUNT_1,
@@ -99,7 +98,9 @@ test.describe("Signer Selector", () => {
       await expect(
         pageContext.getByText("Valid Transaction Envelope XDR"),
       ).toBeVisible();
-      await pageContext.getByText("Import transaction").click();
+      await pageContext
+        .getByRole("button", { name: "Import transaction" })
+        .click();
 
       // Verify overview is visible
       await expect(pageContext.getByTestId("sign-tx-overview")).toBeVisible();

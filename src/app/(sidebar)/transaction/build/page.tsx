@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect } from "react";
 import { Alert, Card } from "@stellar/design-system";
 
@@ -24,7 +25,7 @@ import { SorobanTransactionXdr } from "./components/SorobanTransactionXdr";
 import { SimulateStepContent } from "./components/SimulateStepContent";
 import { ValidateStepContent } from "./components/ValidateStepContent";
 
-import "./styles.scss";
+import "../styles.scss";
 
 export default function BuildTransaction() {
   const {
