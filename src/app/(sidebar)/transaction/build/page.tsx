@@ -14,7 +14,6 @@ import {
   TransactionStepName,
 } from "@/components/TransactionStepper";
 import { TransactionFlowFooter } from "@/components/TransactionFlowFooter";
-import { Tabs } from "@/components/Tabs";
 import { SubmitStepContent } from "./components/SubmitStepContent";
 import { Params } from "./components/Params";
 import { Operations } from "./components/Operations";
@@ -190,24 +189,6 @@ export default function BuildTransaction() {
 
   return (
     <Box gap="xxl">
-      <div className="BuildTransaction__tabs">
-        <Tabs
-          tabs={[
-            {
-              id: "new-transaction",
-              label: "New transaction",
-              href: "/transaction/build",
-            },
-            // {
-            //   id: "import-xdr",
-            //   label: "Import transaction XDR",
-            //   href: "/transaction/import",
-            // },
-          ]}
-          addlClassName="Tabs--gap-md"
-        />
-      </div>
-
       <div className="BuildTransaction__layout">
         <div className="BuildTransaction__content">
           <Box gap="xxl">
