@@ -107,6 +107,10 @@ const TRANSACTION_NAV = [
     label: "Build transaction",
   },
   {
+    route: Routes.IMPORT_TRANSACTION,
+    label: "Import transaction",
+  },
+  {
     route: Routes.SIGN_TRANSACTION,
     label: "Sign transaction",
   },
