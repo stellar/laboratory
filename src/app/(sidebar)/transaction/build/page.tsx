@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect } from "react";
 import { Alert, Card } from "@stellar/design-system";
 
@@ -16,7 +17,6 @@ import {
   TransactionStepName,
 } from "@/components/TransactionStepper";
 import { TransactionFlowFooter } from "@/components/TransactionFlowFooter";
-import { Tabs } from "@/components/Tabs";
 import { SubmitStepContent } from "./components/SubmitStepContent";
 import { Params } from "./components/Params";
 import { Operations } from "./components/Operations";
@@ -25,7 +25,7 @@ import { SorobanTransactionXdr } from "./components/SorobanTransactionXdr";
 import { SimulateStepContent } from "./components/SimulateStepContent";
 import { ValidateStepContent } from "./components/ValidateStepContent";
 
-import "./styles.scss";
+import "../styles.scss";
 
 export default function BuildTransaction() {
   const {
@@ -191,24 +191,6 @@ export default function BuildTransaction() {
 
   return (
     <Box gap="xxl">
-      <div className="BuildTransaction__tabs">
-        <Tabs
-          tabs={[
-            {
-              id: "new-transaction",
-              label: "New transaction",
-              href: "/transaction/build",
-            },
-            {
-              id: "import-xdr",
-              label: "Import transaction XDR",
-              href: "/transaction/import",
-            },
-          ]}
-          addlClassName="Tabs--gap-md"
-        />
-      </div>
-
       <div className="BuildTransaction__layout">
         <div className="BuildTransaction__content">
           <Box gap="xxl">

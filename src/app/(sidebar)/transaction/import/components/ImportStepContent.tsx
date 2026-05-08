@@ -165,47 +165,49 @@ export const ImportStepContent = () => {
       )}
 
       {overviewFields ? (
-        <PageCard heading="Transaction overview" headingAs="h2">
-          <div className="SignTx__FieldViewer">
-            {overviewFields.map((field) => {
-              const valueStr =
-                field.value === undefined || field.value === null
-                  ? ""
-                  : field.value.toString();
-              const className =
-                valueStr.length >= MIN_LENGTH_FOR_FULL_WIDTH_FIELD
-                  ? "full-width"
-                  : "half-width";
+        <>
+          <PageCard heading="Transaction overview" headingAs="h2">
+            <div className="SignTx__FieldViewer">
+              {overviewFields.map((field) => {
+                const valueStr =
+                  field.value === undefined || field.value === null
+                    ? ""
+                    : field.value.toString();
+                const className =
+                  valueStr.length >= MIN_LENGTH_FOR_FULL_WIDTH_FIELD
+                    ? "full-width"
+                    : "half-width";
 
-              if (field.label.includes("XDR")) {
+                if (field.label.includes("XDR")) {
+                  return (
+                    <div className={className} key={field.label}>
+                      <XdrPicker
+                        readOnly
+                        id={field.label}
+                        label={field.label}
+                        value={valueStr}
+                      />
+                    </div>
+                  );
+                }
+
                 return (
                   <div className={className} key={field.label}>
-                    <XdrPicker
+                    <TextPicker
                       readOnly
                       id={field.label}
                       label={field.label}
                       value={valueStr}
+                      copyButton={{
+                        position: "right",
+                      }}
                     />
                   </div>
                 );
-              }
-
-              return (
-                <div className={className} key={field.label}>
-                  <TextPicker
-                    readOnly
-                    id={field.label}
-                    label={field.label}
-                    value={valueStr}
-                    copyButton={{
-                      position: "right",
-                    }}
-                  />
-                </div>
-              );
-            })}
-          </div>
-        </PageCard>
+              })}
+            </div>
+          </PageCard>
+        </>
       ) : null}
     </Box>
   );
