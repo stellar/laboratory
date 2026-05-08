@@ -89,6 +89,10 @@ export const useSignWithExtensionWallet = ({
         }
       }
     } catch (error: any) {
+      // Kit rejects with code -1 when the user dismisses the modal
+      if (error?.code === -1) {
+        return;
+      }
       if (error?.message) {
         setErrorMsg(getErrorMsg(error));
       }

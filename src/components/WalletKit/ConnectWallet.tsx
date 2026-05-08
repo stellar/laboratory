@@ -151,9 +151,12 @@ export const ConnectWallet = () => {
         walletType: walletId,
       });
     } catch (e) {
-      const errorMessage =
-        (e as { message?: string })?.message || "Unknown error occurred";
-      setErrorMessageOnConnect(errorMessage);
+      const err = e as { code?: number; message?: string };
+      // Kit rejects with code -1 when the user dismisses the modal
+      if (err?.code === -1) {
+        return;
+      }
+      setErrorMessageOnConnect(err?.message || "Unknown error occurred");
     }
   };
 
