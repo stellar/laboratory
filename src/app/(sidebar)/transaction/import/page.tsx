@@ -15,10 +15,8 @@ import { TransactionFlowFooter } from "@/components/TransactionFlowFooter";
 import { SignStepContent } from "@/app/(sidebar)/transaction/components/SignStepContent";
 import { SubmitStepContent } from "@/app/(sidebar)/transaction/components/SubmitStepContent";
 import { ImportStepContent } from "./components/ImportStepContent";
-<<<<<<< HEAD
+
 import { SimulateStepContent } from "./components/SimulateStepContent";
-=======
->>>>>>> 2a810faa ([Import Tx] Add SubmitContent for Classic (#2071))
 
 import "../styles.scss";
 
@@ -32,20 +30,11 @@ import "../styles.scss";
  * Soroban / classic step variants:
  * - Classic:  ["import", "sign", "submit"]
  * - Soroban:  ["import", "simulate", "sign", "submit"]
-<<<<<<< HEAD
-=======
- *
- * The Soroban "validate" step is added dynamically after simulation surfaces
- * auth entries (handled inside the simulate step, same as the build flow).
->>>>>>> 2a810faa ([Import Tx] Add SubmitContent for Classic (#2071))
  */
 export default function ImportTransaction() {
   const {
     import: importState,
-<<<<<<< HEAD
     simulate,
-=======
->>>>>>> 2a810faa ([Import Tx] Add SubmitContent for Classic (#2071))
     sign,
     activeStep,
     highestCompletedStep,
@@ -82,7 +71,7 @@ export default function ImportTransaction() {
     if (activeStep === "import") {
       return !isImportValid;
     }
-<<<<<<< HEAD
+
     if (activeStep === "simulate") {
       // Simulation must be complete and assembledXdr must exist (set after
       // auth signing + assembly, or after auto-assembly when no auth entries
@@ -90,8 +79,7 @@ export default function ImportTransaction() {
       // simulation-derived resources/fees.
       return !simulate.simulationResultJson || !simulate.assembledXdr;
     }
-=======
->>>>>>> 2a810faa ([Import Tx] Add SubmitContent for Classic (#2071))
+
     if (activeStep === "sign") {
       return !sign.signedXdr;
     }
