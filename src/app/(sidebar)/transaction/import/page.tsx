@@ -15,6 +15,7 @@ import { TransactionFlowFooter } from "@/components/TransactionFlowFooter";
 import { SignStepContent } from "@/app/(sidebar)/transaction/components/SignStepContent";
 import { SubmitStepContent } from "@/app/(sidebar)/transaction/components/SubmitStepContent";
 import { ImportStepContent } from "./components/ImportStepContent";
+import { SimulateStepContent } from "./components/SimulateStepContent";
 
 import "../styles.scss";
 
@@ -35,6 +36,7 @@ import "../styles.scss";
 export default function ImportTransaction() {
   const {
     import: importState,
+    simulate,
     sign,
     activeStep,
     highestCompletedStep,
@@ -71,6 +73,13 @@ export default function ImportTransaction() {
     if (activeStep === "import") {
       return !isImportValid;
     }
+    if (activeStep === "simulate") {
+      // Simulation must be complete and assembledXdr must exist (set after
+      // auth signing + assembly, or after auto-assembly when no auth entries
+      // are present) so the sign step receives a transaction with
+      // simulation-derived resources/fees.
+      return !simulate.simulationResultJson || !simulate.assembledXdr;
+    }
     if (activeStep === "sign") {
       return !sign.signedXdr;
     }
@@ -95,7 +104,9 @@ export default function ImportTransaction() {
             {activeStep === "import" && <ImportStepContent />}
             {activeStep === "sign" && (
               <SignStepContent
-                xdrToSign={importState?.importXdr || ""}
+                xdrToSign={
+                  simulate.assembledXdr || importState?.importXdr || ""
+                }
                 signedXdr={sign.signedXdr || ""}
                 onSigned={(signedXdr) => {
                   setSignedXdr(signedXdr);
@@ -103,6 +114,7 @@ export default function ImportTransaction() {
                 onClearAll={resetAll}
               />
             )}
+            {activeStep === "simulate" && <SimulateStepContent steps={steps} />}
             {activeStep === "submit" && (
               <SubmitStepContent
                 xdrBlob={sign.signedXdr || ""}

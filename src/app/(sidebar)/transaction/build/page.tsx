@@ -91,7 +91,7 @@ export default function BuildTransaction() {
     if (activeStep === "validate") {
       return !validate?.validatedXdr;
     }
-    return false;
+    return true;
   };
 
   const isNextDisabled = getIsNextDisabled();

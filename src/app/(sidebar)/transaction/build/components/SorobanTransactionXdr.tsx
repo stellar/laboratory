@@ -9,6 +9,7 @@ import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { getTxWithSorobanData } from "@/helpers/sorobanUtils";
 
 import { TransactionXdrDisplay } from "./TransactionXdrDisplay";
+import { NewValidationResponseCard } from "@/components/NewValidationResponseCard";
 
 export const SorobanTransactionXdr = () => {
   const { network } = useStore();
@@ -57,11 +58,7 @@ export const SorobanTransactionXdr = () => {
 
   if (buildResult?.error) {
     return (
-      <ValidationResponseCard
-        variant="error"
-        title="Transaction Envelope XDR Error:"
-        response={buildResult.error}
-      />
+      <NewValidationResponseCard variant="error" response={buildResult.error} />
     );
   }
 
