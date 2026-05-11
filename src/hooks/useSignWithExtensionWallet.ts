@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import { ISupportedWallet } from "@creit.tech/stellar-wallets-kit";
+import type { ISupportedWallet } from "@creit.tech/stellar-wallets-kit";
 
 import { WalletKitContext } from "@/components/WalletKit/WalletKitContextProvider";
 import { getWalletKitNetwork } from "@/helpers/getWalletKitNetwork";

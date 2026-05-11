@@ -2,7 +2,7 @@
 
 import { useContext, useEffect, useState } from "react";
 import { Button, Modal, Text } from "@stellar/design-system";
-import { ISupportedWallet } from "@creit.tech/stellar-wallets-kit";
+import type { ISupportedWallet } from "@creit.tech/stellar-wallets-kit";
 import { useStore } from "@/store/useStore";
 
 import { useAccountInfo } from "@/query/useAccountInfo";
