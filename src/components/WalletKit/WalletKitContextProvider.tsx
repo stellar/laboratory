@@ -4,25 +4,84 @@ import { createContext, useEffect, useMemo, useState } from "react";
 import { useStore } from "@/store/useStore";
 
 import {
-  AlbedoModule,
-  FreighterModule,
-  HanaModule,
-  LobstrModule,
-  RabetModule,
+  type AuthModalParams,
+  type ISupportedWallet,
+  type ModuleInterface,
   StellarWalletsKit,
-  HotWalletModule,
-  xBullModule,
+  type StellarWalletsKitInitParams,
+  SwkAppDarkTheme,
+  SwkAppLightTheme,
 } from "@creit.tech/stellar-wallets-kit";
-import { LedgerModule } from "@creit.tech/stellar-wallets-kit/modules/ledger.module";
+import { AlbedoModule } from "@creit.tech/stellar-wallets-kit/modules/albedo";
+import { CactusLinkModule } from "@creit.tech/stellar-wallets-kit/modules/cactuslink";
+import { FreighterModule } from "@creit.tech/stellar-wallets-kit/modules/freighter";
+import { HanaModule } from "@creit.tech/stellar-wallets-kit/modules/hana";
+import { LobstrModule } from "@creit.tech/stellar-wallets-kit/modules/lobstr";
+import { RabetModule } from "@creit.tech/stellar-wallets-kit/modules/rabet";
+import { HotWalletModule } from "@creit.tech/stellar-wallets-kit/modules/hotwallet";
+import { xBullModule } from "@creit.tech/stellar-wallets-kit/modules/xbull";
+import { LedgerModule } from "@creit.tech/stellar-wallets-kit/modules/ledger";
 
 import { getWalletKitNetwork } from "@/helpers/getWalletKitNetwork";
 import { localStorageSavedTheme } from "@/helpers/localStorageSavedTheme";
 import { localStorageSavedWallet } from "@/helpers/localStorageSavedWallet";
 import { SavedWallet } from "@/types/types";
 
+type StellarWalletsKitAdapter = Omit<
+  typeof StellarWalletsKit,
+  "getAddress" | "init"
+> & {
+  init: (params: StellarWalletsKitInitParams) => typeof StellarWalletsKit;
+  getAddress: (params?: { skipRequestAccess?: boolean }) => Promise<{
+    address: string;
+  }>;
+  openModal: (
+    params?: AuthModalParams & {
+      onWalletSelected?: (option: ISupportedWallet) => Promise<void>;
+      onClosed?: () => void;
+    },
+  ) => Promise<{ address: string }>;
+};
+
 type WalletKitProps = {
-  walletKit?: StellarWalletsKit;
+  walletKit?: StellarWalletsKitAdapter;
   walletId?: string;
+};
+
+const walletKit = StellarWalletsKit as unknown as StellarWalletsKitAdapter;
+
+walletKit.openModal = async ({ onWalletSelected, onClosed, ...params } = {}) => {
+  try {
+    const addressResult = await StellarWalletsKit.authModal(params);
+    const selectedWallet = await StellarWalletsKit.refreshSupportedWallets().then(
+      (wallets) =>
+        wallets.find(
+          (wallet) => wallet.id === StellarWalletsKit.selectedModule.productId,
+        ),
+    );
+
+    if (selectedWallet) {
+      await onWalletSelected?.(selectedWallet);
+    }
+
+    return addressResult;
+  } catch (error) {
+    if ((error as { message?: string })?.message === "The user closed the modal.") {
+      onClosed?.();
+    }
+
+    throw error;
+  }
+};
+
+walletKit.getAddress = async (params) => {
+  if (params?.skipRequestAccess) {
+    return StellarWalletsKit.fetchAddress();
+  }
+
+  return StellarWalletsKit.getAddress().catch(() =>
+    StellarWalletsKit.fetchAddress(),
+  );
 };
 
 export const WalletKitContext = createContext<WalletKitProps>({
@@ -63,73 +122,30 @@ export const WalletKitContextProvider = ({
       return undefined;
     }
 
-    const isDarkTheme = theme === "sds-theme-dark";
-
-    const commonDarkTheme = {
-      bgColor: "#161616",
-      textColor: "#fcfcfc",
-      solidTextColor: "#fcfcfc",
-      dividerColor: "#fcfcfc",
-    };
-
-    const commonLightTheme = {
-      bgColor: "#fcfcfc",
-      textColor: "#161616",
-      solidTextColor: "#161616",
-      dividerColor: "#161616",
-    };
-
-    const modalDarkTheme = {
-      ...commonDarkTheme,
-      dividerColor: "#161616",
-      headerButtonColor: "#161616",
-      helpBgColor: "#161616",
-      notAvailableTextColor: "#fcfcfc",
-      notAvailableBgColor: "#161616",
-      notAvailableBorderColor: "#fcfcfc",
-    };
-
-    const modalLightTheme = {
-      ...commonLightTheme,
-      dividerColor: "#fcfcfc",
-      headerButtonColor: "#fcfcfc",
-      helpBgColor: "#fcfcfc",
-      notAvailableTextColor: "#161616",
-      notAvailableBgColor: "#fcfcfc",
-      notAvailableBorderColor: "#161616",
-    };
-
-    const TEST_MODULES = [
+    const TEST_MODULES: ModuleInterface[] = [
       new AlbedoModule(),
       new xBullModule(),
       new FreighterModule(),
       new LobstrModule(),
       new RabetModule(),
       new HanaModule(),
+      new CactusLinkModule(),
       new LedgerModule(),
     ];
 
     const PROD_MODULES = [...TEST_MODULES, new HotWalletModule()];
 
-    return new StellarWalletsKit({
+    walletKit.init({
       network: networkType,
       selectedWalletId: savedWallet?.id || "",
       modules: network.id === "mainnet" ? PROD_MODULES : TEST_MODULES,
       ...(theme && {
-        buttonTheme: isDarkTheme
-          ? {
-              ...commonDarkTheme,
-              buttonPadding: "0.5rem 1.25rem",
-              buttonBorderRadius: "0.5rem",
-            }
-          : {
-              ...commonLightTheme,
-              buttonPadding: "0.5rem 1.25rem",
-              buttonBorderRadius: "0.5rem",
-            },
-        modalTheme: isDarkTheme ? modalDarkTheme : modalLightTheme,
+        theme:
+          theme === "sds-theme-dark" ? SwkAppDarkTheme : SwkAppLightTheme,
       }),
     });
+
+    return walletKit;
   }, [network.id, networkType, savedWallet?.id, theme]);
 
   return (
