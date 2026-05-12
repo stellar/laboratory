@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Modal } from "@stellar/design-system";
+import { Button, Icon, Modal } from "@stellar/design-system";
 
 import { Box } from "@/components/layout/Box";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -49,7 +49,7 @@ export const TransactionFlowHeader = ({
           disabled={isResetDisabled}
           onClick={() => setIsClearModalVisible(true)}
         >
-          New transaction
+          Start over <Icon.RefreshCw01 />
         </Button>
 
         <Modal

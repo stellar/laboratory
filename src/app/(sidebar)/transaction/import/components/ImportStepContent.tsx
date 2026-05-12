@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
 import {
   FeeBumpTransaction,
   Transaction,
@@ -52,12 +51,8 @@ export const ImportStepContent = () => {
   const parseError = importState?.parseError ?? null;
   const parsedTxType = importState?.parsedTxType ?? null;
 
-  // Re-parse the imported XDR for the overview. SDK objects aren't persisted
-  // (the store keeps base64 strings) so we rebuild the transaction here.
-  const parsedTx = useMemo<Transaction | FeeBumpTransaction | null>(() => {
-    if (!importXdr || parseError || !parsedTxType) {
-      return null;
-    }
+  const parsedTx: Transaction | FeeBumpTransaction | null = (() => {
+    if (!importXdr || parseError || !parsedTxType) return null;
     try {
       return TransactionBuilder.fromXDR(importXdr, network.passphrase) as
         | Transaction
@@ -65,7 +60,7 @@ export const ImportStepContent = () => {
     } catch {
       return null;
     }
-  }, [importXdr, parseError, parsedTxType, network.passphrase]);
+  })();
 
   const onChange = (value: string) => {
     setImportXdr(value);

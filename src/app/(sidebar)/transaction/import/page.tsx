@@ -29,9 +29,6 @@ import "../styles.scss";
  * Soroban / classic step variants:
  * - Classic:  ["import", "sign", "submit"]
  * - Soroban:  ["import", "simulate", "sign", "submit"]
- *
- * The Soroban "validate" step is added dynamically after simulation surfaces
- * auth entries (handled inside the simulate step, same as the build flow).
  */
 export default function ImportTransaction() {
   const {
