@@ -83,7 +83,7 @@ export const useSignWithExtensionWallet = ({
             setSuccessMsg(SUCCESS_MSG);
           } else {
             throw {
-              message: "Couldn't sign with wallet, please try again",
+              message: "Couldn’t sign with wallet, please try again",
             };
           }
         }

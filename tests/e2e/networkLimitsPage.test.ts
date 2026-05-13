@@ -1,7 +1,6 @@
 import { baseURL } from "../../playwright.config";
 import { test, expect, type Page } from "@playwright/test";
 
-
 import {
   formatLedgersToDays,
   formatLedgersToMonths,
@@ -14,9 +13,7 @@ import { MAINNET_LIMITS } from "@/constants/networkLimits";
 
 test.describe("Network Limits page on Mainnet", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto(
-      `${baseURL}/network-limits?$=network$id=mainnet`,
-    );
+    await page.goto(`${baseURL}/network-limits?$=network$id=mainnet`);
   });
 
   test("Loads the page", async ({ page }) => {
@@ -327,7 +324,7 @@ const dismissNetworkSettingsModal = async (page: Page) => {
   const acceptButton = modal.locator("button", { hasText: "Accept" });
   // Modal may not appear in all environments; wait briefly and no-op if absent.
   try {
-    await acceptButton.waitFor({ state: "visible", timeout: 5000 });
+    await acceptButton.waitFor({ state: "visible", timeout: 1000 });
   } catch {
     // Accept button never became visible; assume modal is not present.
     return;
