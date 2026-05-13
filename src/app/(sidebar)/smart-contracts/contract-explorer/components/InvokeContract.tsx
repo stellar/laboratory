@@ -1,10 +1,10 @@
-import { Alert, Card, Loader, Text } from "@stellar/design-system";
+import { useState } from "react";
+import { Alert, Card, Loader, RadioButton, Text } from "@stellar/design-system";
 import { contract } from "@stellar/stellar-sdk";
-import { useStore } from "@/store/useStore";
 
 import { Box } from "@/components/layout/Box";
 
-import { InvokeContractForm } from "./InvokeContractForm";
+import { InvokeContractForm, SigningMethod } from "./InvokeContractForm";
 
 export const InvokeContract = ({
   isLoading,
@@ -17,7 +17,7 @@ export const InvokeContract = ({
   contractSpec: contract.Spec;
   contractClientError: Error | null | undefined;
 }) => {
-  const { walletKit } = useStore();
+  const [signingMethod, setSigningMethod] = useState<SigningMethod>("wallet");
 
   const renderFunctionCard = () => {
     const invokeContractSpecFuncs = contractSpec?.funcs();
@@ -33,6 +33,7 @@ export const InvokeContract = ({
             key={funcName}
             contractId={contractId}
             funcName={funcName}
+            signingMethod={signingMethod}
           />
         );
       });
@@ -63,12 +64,30 @@ export const InvokeContract = ({
 
   return (
     <Box gap="md" addlClassName="InvokeContractForm">
-      {!walletKit?.publicKey ? (
-        <Alert variant="warning" placement="inline" title="Connect wallet">
-          A connected wallet is required to invoke this contract. Please connect
-          your wallet to proceed.
-        </Alert>
-      ) : null}
+      <Box gap="md" direction="row" justify="end">
+        <RadioButton
+          id="invoke-contract-signing-wallet"
+          label="Use connected wallet"
+          fieldSize="md"
+          name="invoke-contract-signing-method"
+          value="wallet"
+          checked={signingMethod === "wallet"}
+          onChange={() => {
+            setSigningMethod("wallet");
+          }}
+        />
+        <RadioButton
+          id="invoke-contract-signing-another"
+          label="Use another signing method"
+          fieldSize="md"
+          name="invoke-contract-signing-method"
+          value="another"
+          checked={signingMethod === "another"}
+          onChange={() => {
+            setSigningMethod("another");
+          }}
+        />
+      </Box>
       <Card>
         <Box gap="lg" data-testid="invoke-contract-container">
           <Text as="h2" size="md" weight="semi-bold">
