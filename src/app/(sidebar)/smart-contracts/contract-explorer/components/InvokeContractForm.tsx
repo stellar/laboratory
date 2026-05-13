@@ -799,7 +799,9 @@ export const InvokeContractForm = ({
                 : handleSimulateAndSubmit
             }
           >
-            Simulate & submit
+            {isAnotherSigningMethod
+              ? "Continue to builder"
+              : "Simulate & submit"}
           </Button>
         </Box>
 

@@ -1,6 +1,9 @@
+"use client";
+
 import { useState } from "react";
 import { Alert, Card, Loader, RadioButton, Text } from "@stellar/design-system";
 import { contract } from "@stellar/stellar-sdk";
+import { useStore } from "@/store/useStore";
 
 import { Box } from "@/components/layout/Box";
 
@@ -17,6 +20,7 @@ export const InvokeContract = ({
   contractSpec: contract.Spec;
   contractClientError: Error | null | undefined;
 }) => {
+  const { walletKit } = useStore();
   const [signingMethod, setSigningMethod] = useState<SigningMethod>("wallet");
 
   const renderFunctionCard = () => {
@@ -88,6 +92,14 @@ export const InvokeContract = ({
           }}
         />
       </Box>
+
+      {!walletKit?.publicKey && signingMethod === "wallet" ? (
+        <Alert variant="warning" placement="inline" title="Connect wallet">
+          A connected wallet is required to invoke this contract. Please connect
+          your wallet to proceed.
+        </Alert>
+      ) : null}
+
       <Card>
         <Box gap="lg" data-testid="invoke-contract-container">
           <Text as="h2" size="md" weight="semi-bold">
