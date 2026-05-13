@@ -787,6 +787,7 @@ export const InvokeContractForm = ({
           <Button
             size="md"
             variant="secondary"
+            icon={isAnotherSigningMethod ? <Icon.ArrowRight /> : null}
             isLoading={
               isAnotherSigningMethod
                 ? false
@@ -799,9 +800,7 @@ export const InvokeContractForm = ({
                 : handleSimulateAndSubmit
             }
           >
-            {isAnotherSigningMethod
-              ? "Continue to builder"
-              : "Simulate & submit"}
+            {isAnotherSigningMethod ? "Build transaction" : "Simulate & submit"}
           </Button>
         </Box>
 
