@@ -18,6 +18,7 @@ import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 import { FEE_BUMP_TX_FIELDS, TX_FIELDS } from "@/constants/signTransactionPage";
 
 import { TransactionStepHeader } from "@/app/(sidebar)/transaction/components/TransactionStepHeader";
+import { Signatures } from "@/app/(sidebar)/transaction/components/Signatures";
 import { Box } from "@/components/layout/Box";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { TextPicker } from "@/components/FormElements/TextPicker";
@@ -130,6 +131,7 @@ export const ImportStepContent = () => {
   };
 
   const overviewFields = getOverviewFields();
+  const hasSignatures = Boolean(parsedTx?.signatures.length);
 
   return (
     <Box gap="md">
@@ -202,6 +204,8 @@ export const ImportStepContent = () => {
               })}
             </div>
           </PageCard>
+
+          {hasSignatures ? <Signatures tx={parsedTx} /> : null}
         </>
       ) : null}
     </Box>
