@@ -22,6 +22,7 @@ import {
 import { BASE_FEE, contract } from "@stellar/stellar-sdk";
 import { Api } from "@stellar/stellar-sdk/rpc";
 import { JSONSchema7 } from "json-schema";
+import { useRouter } from "next/navigation";
 
 import { RpcErrorResponse } from "@/components/TxErrorResponse";
 
@@ -35,7 +36,9 @@ import { CodeEditor, SupportedLanguage } from "@/components/CodeEditor";
 
 import { TransactionBuildParams } from "@/store/createStore";
 import { useStore } from "@/store/useStore";
+import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 import { DereferencedSchemaType } from "@/constants/jsonSchema";
+import { Routes } from "@/constants/routes";
 
 import { useAccountSequenceNumber } from "@/query/useAccountSequenceNumber";
 import { useRpcAssembleTx } from "@/query/useRpcAssembleTx";
@@ -61,16 +64,23 @@ type SimulatedResponseType = {
   resultOnly: AnyObject;
 };
 
+export type SigningMethod = "wallet" | "another";
+
 export const InvokeContractForm = ({
   contractId,
   funcName,
   contractSpec,
+  signingMethod = "wallet",
 }: {
   contractId: string;
   funcName: string;
   contractSpec: contract.Spec;
+  signingMethod?: SigningMethod;
 }) => {
   const { network, walletKit } = useStore();
+  const { resetAll, setBuildParams, setBuildSorobanOperation } =
+    useBuildFlowStore();
+  const router = useRouter();
   const [invokeError, setInvokeError] = useState<{
     message: string;
     methodType: string;
@@ -307,6 +317,28 @@ export const InvokeContractForm = ({
         await handleSubmit(prepareResult.transactionXdr);
       }
     }
+  };
+
+  const handleRedirectToBuildFlow = () => {
+    resetAll();
+
+    setBuildParams({
+      source_account: "",
+      fee: BASE_FEE,
+      seq_num: "",
+      cond: { time: { min_time: "", max_time: "" } },
+      memo: {},
+    });
+
+    setBuildSorobanOperation({
+      operation_type: "invoke_contract_function",
+      params: {
+        invoke_contract: JSON.stringify(formValue),
+      },
+      source_account: "",
+    });
+
+    router.push(Routes.BUILD_TRANSACTION);
   };
 
   const getXdrToSimulate = async () => {
@@ -707,14 +739,6 @@ export const InvokeContractForm = ({
     simulateTxData?.result?.transactionData ||
     simulateTxData?.result?.transactionDataJson;
 
-  const isSubmitDisabled =
-    !!invokeError?.message ||
-    isSubmitRpcError ||
-    isSimulating ||
-    !walletKit?.publicKey ||
-    !hasNoFormErrors ||
-    !simulatedResultResponse;
-
   const isSimulationDisabled = () => {
     const currentKey = Object.keys(formValue.args)[0];
     const isEmptyArgs =
@@ -724,6 +748,19 @@ export const InvokeContractForm = ({
 
     return !hasNoFormErrors || disabled;
   };
+
+  const isAnotherSigningMethod = signingMethod === "another";
+
+  // When redirecting to /transaction/build, only form validity is required:
+  // simulation, wallet connection, and prior submit errors don't apply.
+  const isSubmitDisabled = isAnotherSigningMethod
+    ? isSimulationDisabled()
+    : !!invokeError?.message ||
+      isSubmitRpcError ||
+      isSimulating ||
+      !walletKit?.publicKey ||
+      !hasNoFormErrors ||
+      !simulatedResultResponse;
 
   return (
     <Card>
@@ -750,11 +787,20 @@ export const InvokeContractForm = ({
           <Button
             size="md"
             variant="secondary"
-            isLoading={isExtensionLoading || isSubmitRpcPending}
+            icon={isAnotherSigningMethod ? <Icon.ArrowRight /> : null}
+            isLoading={
+              isAnotherSigningMethod
+                ? false
+                : isExtensionLoading || isSubmitRpcPending
+            }
             disabled={isSubmitDisabled}
-            onClick={handleSimulateAndSubmit}
+            onClick={
+              isAnotherSigningMethod
+                ? handleRedirectToBuildFlow
+                : handleSimulateAndSubmit
+            }
           >
-            Simulate & submit
+            {isAnotherSigningMethod ? "Build transaction" : "Simulate & submit"}
           </Button>
         </Box>
 
