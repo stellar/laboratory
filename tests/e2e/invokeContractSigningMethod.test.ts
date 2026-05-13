@@ -71,16 +71,13 @@ test.describe("Smart Contracts: Invoke Contract — Use another signing method",
     });
     await expect(decimalsTitle).toBeVisible();
 
-    // Select "Use another signing method". RadioButton has a custom span
-    // overlay that intercepts pointer events, so click the label directly.
+    // Select "Use another signing method"
     await page.locator('label[for="invoke-contract-signing-another"]').click();
     await expect(page.getByLabel("Use another signing method")).toBeChecked();
 
     // Click "Build transaction" on the `decimals` card. When "Use another
     // signing method" is selected, the per-function action button text
-    // changes from "Simulate & submit" to "Build transaction". Walk up from
-    // the unique "decimals" title to its closest Card ancestor so the click
-    // is scoped to that function's card.
+    // changes from "Simulate & submit" to "Build transaction"
     const decimalsCard = decimalsTitle.locator(
       'xpath=ancestor::*[contains(@class, "Card")][1]',
     );
