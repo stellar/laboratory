@@ -326,7 +326,7 @@ export const InvokeContractForm = ({
       source_account: "",
       fee: BASE_FEE,
       seq_num: "",
-      cond: { time: { min_time: "0", max_time: "0" } },
+      cond: { time: { min_time: "", max_time: "" } },
       memo: {},
     });
 
