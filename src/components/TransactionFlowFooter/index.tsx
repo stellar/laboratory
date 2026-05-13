@@ -68,34 +68,32 @@ export const TransactionFlowFooter = ({
           {`${getStepLabel(prevStep)}`}
         </Button>
       )}
-      {(nextStep || nextOverride) && (
-        <div data-position="right">
-          {nextOverride ? (
-            <Button
-              size="md"
-              variant="secondary"
-              icon={<Icon.ArrowRight />}
-              iconPosition="right"
-              onClick={nextOverride.onClick}
-              disabled={nextOverride.disabled}
-            >
-              {nextOverride.label}
-            </Button>
-          ) : (
-            nextStep && (
-              <Button
-                size="md"
-                variant="secondary"
-                icon={<Icon.ArrowRight />}
-                iconPosition="right"
-                onClick={onNext}
-                disabled={isNextDisabled}
-              >
-                {`${getStepLabel(nextStep)}`}
-              </Button>
-            )
-          )}
-        </div>
+      {nextOverride ? (
+        <Button
+          size="md"
+          variant="secondary"
+          icon={<Icon.ArrowRight />}
+          iconPosition="right"
+          onClick={nextOverride.onClick}
+          disabled={nextOverride.disabled}
+          data-position="right"
+        >
+          {nextOverride.label}
+        </Button>
+      ) : (
+        nextStep && (
+          <Button
+            size="md"
+            variant="secondary"
+            icon={<Icon.ArrowRight />}
+            iconPosition="right"
+            onClick={onNext}
+            disabled={isNextDisabled}
+            data-position="right"
+          >
+            {`${getStepLabel(nextStep)}`}
+          </Button>
+        )
       )}
     </div>
   );
