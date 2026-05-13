@@ -86,6 +86,29 @@ export default function ImportTransaction() {
 
   const isNextDisabled = getIsNextDisabled();
 
+  // On classic imports where the pasted tx already carries any signatures,
+  // default the import-step Next button to "Submit transaction" (skipping
+  // the sign step). We can't always confirm offline that the sigs are
+  // sufficient (multisig with on-chain cosigners is invisible to the
+  // offline check), so we let the network be the source of truth: an
+  // insufficient signature set fails with a clear protocol error (e.g.
+  // txBadAuth) on submit, which is recoverable. The alternative — gating
+  // on signatureCheck.isReady — strands multisig users on the sign step
+  // with no signature they can add.
+  const isClassicReadyToSubmit =
+    activeStep === "import" &&
+    parsedTxType === "classic" &&
+    Boolean(importState?.hasSignatures) &&
+    Boolean(importState?.importXdr);
+
+  const handleSkipToSubmit = () => {
+    if (importState?.importXdr) {
+      setSignedXdr(importState.importXdr);
+    }
+    markStepCompleted("sign", steps);
+    setActiveStep("submit");
+  };
+
   useEffect(() => {
     if (!isNextDisabled && activeStep !== "submit") {
       markStepCompleted(activeStep, steps);
@@ -125,6 +148,14 @@ export default function ImportTransaction() {
               onNext={handleNext}
               onBack={handleBack}
               isNextDisabled={isNextDisabled}
+              nextOverride={
+                isClassicReadyToSubmit
+                  ? {
+                      label: "Submit transaction",
+                      onClick: handleSkipToSubmit,
+                    }
+                  : undefined
+              }
             />
           </Box>
         </div>
