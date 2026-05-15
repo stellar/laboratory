@@ -10,9 +10,9 @@ import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransa
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 import { TransactionFlowHeader } from "@/components/TransactionFlowHeader";
 
-import { TxnOperation } from "@/types/types";
+import { TxnOperation, SavedTransaction } from "@/types/types";
 
-interface BuildStepHeaderProps {
+interface TransactionStepHeaderProps {
   /** Step title displayed on the left. */
   heading: string;
   /** Semantic heading element for the page header. */
@@ -29,7 +29,7 @@ interface BuildStepHeaderProps {
   onClearAll: () => void;
 }
 
-export const BuildStepHeader = ({
+export const TransactionStepHeader = ({
   heading,
   headingAs,
   activeStep = "",
@@ -37,7 +37,7 @@ export const BuildStepHeader = ({
   params,
   operations,
   onClearAll,
-}: BuildStepHeaderProps) => {
+}: TransactionStepHeaderProps) => {
   const showHeaderButtons = activeStep === "build" || activeStep === "import";
   const [isSaveModalVisible, setIsSaveModalVisible] = useState(false);
 
@@ -46,9 +46,10 @@ export const BuildStepHeader = ({
       heading={heading}
       headingAs={headingAs}
       onClearAll={onClearAll}
+      isResetDisabled={!xdr}
       rightElement={
         showHeaderButtons ? (
-          <>
+          <div className="AdditionalButtons">
             <Button
               size="md"
               variant="tertiary"
@@ -72,11 +73,11 @@ export const BuildStepHeader = ({
               onClose={() => {
                 setIsSaveModalVisible(false);
               }}
-              onUpdate={(updatedItems) => {
+              onUpdate={(updatedItems: SavedTransaction[]) => {
                 localStorageSavedTransactions.set(updatedItems);
               }}
             />
-          </>
+          </div>
         ) : null
       }
     />

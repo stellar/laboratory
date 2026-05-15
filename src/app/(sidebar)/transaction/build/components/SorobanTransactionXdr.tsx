@@ -6,6 +6,7 @@ import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 import { TransactionBuilder } from "@stellar/stellar-sdk";
 
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
+import { NewValidationResponseCard } from "@/components/NewValidationResponseCard";
 import { getTxWithSorobanData } from "@/helpers/sorobanUtils";
 
 import { TransactionXdrDisplay } from "./TransactionXdrDisplay";
@@ -57,11 +58,7 @@ export const SorobanTransactionXdr = () => {
 
   if (buildResult?.error) {
     return (
-      <ValidationResponseCard
-        variant="error"
-        title="Transaction Envelope XDR Error:"
-        response={buildResult.error}
-      />
+      <NewValidationResponseCard variant="error" response={buildResult.error} />
     );
   }
 

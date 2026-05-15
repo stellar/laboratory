@@ -45,10 +45,23 @@ type TransactionBuildParamsObj = {
   [K in keyof TransactionBuildParams]?: TransactionBuildParams[K];
 };
 
+/**
+ * Slice that tracks the pasted XDR and the result of parsing it.
+ * Only present in the import flow; absent in the build flow.
+ */
+export type TransactionImportState = {
+  importXdr: string;
+  parsedTxType: "classic" | "soroban" | null;
+  hasSignatures: boolean;
+  parseError: string | null;
+};
+
 interface TransactionFlowState {
   // Step navigation
   activeStep: TransactionStepName;
   highestCompletedStep: TransactionStepName | null;
+  /** Only present in the import flow. */
+  import?: TransactionImportState;
   build: {
     classic: {
       operations: TxnOperation[];
@@ -177,6 +190,18 @@ interface TransactionFlowActions {
   /** Store the submit result JSON. */
   setSubmitResult: (json: string) => void;
 
+  /** Store the pasted import XDR string. */
+  setImportXdr: (xdr: string) => void;
+
+  /** Store the parsed transaction type detected from the imported XDR. */
+  setImportParsedType: (type: "classic" | "soroban" | null) => void;
+
+  /** Store whether the imported XDR already contains signatures. */
+  setImportHasSignatures: (hasSignatures: boolean) => void;
+
+  /** Store the parse error message (or null when XDR is valid/empty). */
+  setImportParseError: (error: string | null) => void;
+
   /**
    * Reset all downstream data when the user modifies build params after
    * having progressed past the build step. Resets highestCompletedStep to
@@ -256,6 +281,13 @@ const initTransactionSubmitState = {
   submitResultJson: "",
 };
 
+const initTransactionImportState: TransactionImportState = {
+  importXdr: "",
+  parsedTxType: null,
+  hasSignatures: false,
+  parseError: null,
+};
+
 const INITIAL_TRANSACTION_STATE: TransactionFlowState = {
   activeStep: "build",
   highestCompletedStep: null,
@@ -264,6 +296,7 @@ const INITIAL_TRANSACTION_STATE: TransactionFlowState = {
   sign: initTransactionSignState,
   // validate is omitted — only present for Soroban transactions with auth entries
   submit: initTransactionSubmitState,
+  // import is omitted by default — only present in the import flow
 };
 
 // ============================================================================
@@ -293,6 +326,11 @@ const createTransactionFlowStore = (
         // State
         ...INITIAL_TRANSACTION_STATE,
         activeStep: initialStep,
+        // Initialize the import slice up-front for the import flow so
+        // components can read default values without optional chaining.
+        ...(initialStep === "import"
+          ? { import: { ...initTransactionImportState } }
+          : {}),
 
         // Actions
         setActiveStep: (step) =>
@@ -457,6 +495,38 @@ const createTransactionFlowStore = (
             state.highestCompletedStep = "submit";
           }),
 
+        setImportXdr: (xdr) =>
+          set((state) => {
+            if (!state.import) {
+              state.import = { ...initTransactionImportState };
+            }
+            state.import.importXdr = xdr;
+          }),
+
+        setImportParsedType: (type) =>
+          set((state) => {
+            if (!state.import) {
+              state.import = { ...initTransactionImportState };
+            }
+            state.import.parsedTxType = type;
+          }),
+
+        setImportHasSignatures: (hasSignatures) =>
+          set((state) => {
+            if (!state.import) {
+              state.import = { ...initTransactionImportState };
+            }
+            state.import.hasSignatures = hasSignatures;
+          }),
+
+        setImportParseError: (error) =>
+          set((state) => {
+            if (!state.import) {
+              state.import = { ...initTransactionImportState };
+            }
+            state.import.parseError = error;
+          }),
+
         resetDownstreamState: (
           from: TransactionStepName,
           steps: TransactionStepName[],
@@ -484,6 +554,11 @@ const createTransactionFlowStore = (
             Object.assign(state, {
               ...INITIAL_TRANSACTION_STATE,
               activeStep: initialStep,
+              // Re-initialize the import slice for the import flow so the
+              // store stays in a consistent shape after a reset.
+              ...(initialStep === "import"
+                ? { import: { ...initTransactionImportState } }
+                : {}),
             });
           }),
       })),
@@ -505,10 +580,17 @@ export const useBuildFlowStore = createTransactionFlowStore(
   "build",
 );
 
+/** Store for the Import flow (/transaction/import). */
+export const useImportFlowStore = createTransactionFlowStore(
+  "stellar_lab_tx_flow_import",
+  "import",
+);
+
 // Rehydrate from sessionStorage eagerly at module-load time (client only).
 // This must happen before any component renders, because child-component
 // mount effects can call store actions that write default state back to
 // sessionStorage — overwriting the previously persisted data.
 if (typeof window !== "undefined") {
   useBuildFlowStore.persist.rehydrate();
+  useImportFlowStore.persist.rehydrate();
 }

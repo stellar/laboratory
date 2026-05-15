@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect } from "react";
 import { Alert, Card } from "@stellar/design-system";
 
@@ -7,6 +8,8 @@ import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 import { useTransactionFlow } from "@/hooks/useTransactionFlow";
 import { useLegacyUrlMigration } from "@/hooks/useLegacyUrlMigration";
 
+import { TransactionStepHeader } from "@/app/(sidebar)/transaction/components/TransactionStepHeader";
+import { SignStepContent } from "@/app/(sidebar)/transaction/components/SignStepContent";
 import { Box } from "@/components/layout/Box";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import {
@@ -20,11 +23,9 @@ import { Operations } from "./components/Operations";
 import { ClassicTransactionXdr } from "./components/ClassicTransactionXdr";
 import { SorobanTransactionXdr } from "./components/SorobanTransactionXdr";
 import { SimulateStepContent } from "./components/SimulateStepContent";
-import { SignStepContent } from "./components/SignStepContent";
 import { ValidateStepContent } from "./components/ValidateStepContent";
-import { BuildStepHeader } from "./components/BuildStepHeader";
 
-import "./styles.scss";
+import "../styles.scss";
 
 export default function BuildTransaction() {
   const {
@@ -34,6 +35,7 @@ export default function BuildTransaction() {
     validate,
     activeStep,
     highestCompletedStep,
+    setSignedXdr,
     setActiveStep,
     goToNextStep,
     markStepCompleted,
@@ -89,7 +91,7 @@ export default function BuildTransaction() {
     if (activeStep === "validate") {
       return !validate?.validatedXdr;
     }
-    return false;
+    return true;
   };
 
   const isNextDisabled = getIsNextDisabled();
@@ -154,7 +156,7 @@ export default function BuildTransaction() {
 
   const renderBuildStep = () => (
     <Box gap="md">
-      <BuildStepHeader
+      <TransactionStepHeader
         heading="Build transaction"
         onClearAll={() => {
           resetAll();
@@ -194,7 +196,18 @@ export default function BuildTransaction() {
           <Box gap="xxl">
             {activeStep === "build" && renderBuildStep()}
             {activeStep === "simulate" && <SimulateStepContent steps={steps} />}
-            {activeStep === "sign" && <SignStepContent />}
+            {activeStep === "sign" && (
+              <SignStepContent
+                xdrToSign={
+                  simulate.assembledXdr ||
+                  build.soroban.xdr ||
+                  build.classic.xdr
+                }
+                signedXdr={sign.signedXdr}
+                onSigned={setSignedXdr}
+                onClearAll={resetAll}
+              />
+            )}
             {activeStep === "validate" && <ValidateStepContent />}
             {activeStep === "submit" && <SubmitStepContent />}
 
