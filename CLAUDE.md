@@ -168,6 +168,10 @@ import { useStore } from "@/store/createStore";
 
 - Never edit `src/constants/networkLimits.ts` manually (auto-generated)
 - Store XDR as base64 strings; parse lazily at point of use
+- When updating `@stellar/stellar-sdk` or `@stellar/stellar-xdr-json`, also
+  check whether `@stellar-expert/contract-wasm-interface-parser` needs to be
+  bumped — it depends on matching XDR definitions to parse contract wasm
+  correctly, and an outdated version will silently fail to decode XDR.
 
 ## Build and Deployment
 
