@@ -360,7 +360,7 @@
         {
           "doc": "",
           "name": "to_muxed_id",
-          "type_": "u32",
+          "type_": "u64",
           "location": "data"
         },
         {
