@@ -42,3 +42,29 @@ export const MOCK_CONTRACT_INFO_CONTRACT_TYPE_FAILURE = {
     latestLedger: 245589,
   },
 };
+
+// A Stellar Asset Contract (SAC) contract id matching the executable XDR below
+export const MOCK_SAC_CONTRACT_ID =
+  "CAQP53Z2GMZ6WVOKJWXMCVDLZYJ7GYVMWPAMWACPLEZRF2UEZW3B636S";
+
+// getLedgerEntries response whose val decodes to a ContractData entry with
+// executable type contractExecutableStellarAsset (a SAC). Generated via the
+// Stellar SDK from MOCK_SAC_CONTRACT_ID; tests rely on the resulting
+// contractType so they can exercise the SAC-spec path in the Invoke contract
+// tab without going through wasm decoding.
+export const MOCK_SAC_CONTRACT_TYPE_RESPONSE = {
+  jsonrpc: "2.0",
+  id: 1,
+  result: {
+    entries: [
+      {
+        key: "AAAABgAAAAEg/u86MzPrVcpNrsFUa84T82Kss8DLAE9ZMxLqhM22HwAAABQAAAAB",
+        xdr: "AAAABgAAAAAAAAABIP7vOjMz61XKTa7BVGvOE/NirLPAywBPWTMS6oTNth8AAAAUAAAAAQAAABMAAAABAAAAAA==",
+        lastModifiedLedgerSeq: 245559,
+        liveUntilLedgerSeq: 366382,
+        extXdr: "AAAAAA==",
+      },
+    ],
+    latestLedger: 245589,
+  },
+};
