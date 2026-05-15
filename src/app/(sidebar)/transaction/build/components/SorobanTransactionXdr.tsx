@@ -6,10 +6,10 @@ import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 import { TransactionBuilder } from "@stellar/stellar-sdk";
 
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
+import { NewValidationResponseCard } from "@/components/NewValidationResponseCard";
 import { getTxWithSorobanData } from "@/helpers/sorobanUtils";
 
 import { TransactionXdrDisplay } from "./TransactionXdrDisplay";
-import { NewValidationResponseCard } from "@/components/NewValidationResponseCard";
 
 export const SorobanTransactionXdr = () => {
   const { network } = useStore();
