@@ -447,7 +447,7 @@ export const formComponentTemplateTxnOps = ({
             value={templ.value || ""}
             error={templ.error}
             onChange={templ.onChange}
-            infoLink="https://developers.stellar.org/docs/glossary#home-domain"
+            infoLink="https://developers.stellar.org/docs/learn/glossary#home-domain"
           />
         ),
         validate: validate.getHomeDomainError,
@@ -463,7 +463,7 @@ export const formComponentTemplateTxnOps = ({
             value={templ.value || ""}
             error={templ.error}
             onChange={templ.onChange}
-            infoLink="https://developers.stellar.org/docs/learn/encyclopedia/inflation"
+            infoLink="https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/ledgers#inflation-sequence"
           />
         ),
         validate: validate.getPublicKeyError,
@@ -745,7 +745,7 @@ export const formComponentTemplateTxnOps = ({
             error={templ.error}
             onChange={templ.onChange}
             note="Used to add/remove or adjust weight of an additional signer on the account."
-            infoLink="https://developers.stellar.org/docs/encyclopedia/signatures-multisig#multisig"
+            infoLink="https://developers.stellar.org/docs/learn/fundamentals/transactions/signatures-multisig#multisig"
           />
         ),
         validate: validate.getOptionsSignerError,

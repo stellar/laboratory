@@ -122,7 +122,7 @@ export default function ToXdr() {
       <Alert variant="primary" placement="inline">
         <div>
           You can use use this tool to encode XDR into JSON.{" "}
-          <SdsLink href="https://developers.stellar.org/docs/encyclopedia/xdr">
+          <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/data-format/xdr">
             XDR (External Data Representation)
           </SdsLink>{" "}
           is a standardized data format that the Stellar network uses to encode
@@ -133,7 +133,7 @@ export default function ToXdr() {
         <div>
           To learn more about converting between XDR and JSON, including
           libraries for JavaScript (npm), Go, and Rust, check out the{" "}
-          <SdsLink href="https://developers.stellar.org/docs/learn/encyclopedia/data-format/xdr-json">
+          <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/data-format/xdr-json">
             XDR ⇄ JSON guide
           </SdsLink>{" "}
           on the Stellar Developer Docs. To see the XDR ⇄ JSON conversion
