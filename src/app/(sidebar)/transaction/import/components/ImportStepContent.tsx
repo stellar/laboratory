@@ -10,7 +10,10 @@ import { Alert } from "@stellar/design-system";
 import { useImportFlowStore } from "@/store/createTransactionFlowStore";
 import { useStore } from "@/store/useStore";
 
-import { isSorobanOperationType } from "@/helpers/sorobanUtils";
+import {
+  hasSorobanData,
+  isSorobanOperationType,
+} from "@/helpers/sorobanUtils";
 
 import { validate } from "@/validate";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
@@ -18,6 +21,7 @@ import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 import { FEE_BUMP_TX_FIELDS, TX_FIELDS } from "@/constants/signTransactionPage";
 
 import { TransactionStepHeader } from "@/app/(sidebar)/transaction/components/TransactionStepHeader";
+import { Signatures } from "@/app/(sidebar)/transaction/components/Signatures";
 import { Box } from "@/components/layout/Box";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { TextPicker } from "@/components/FormElements/TextPicker";
@@ -43,6 +47,7 @@ export const ImportStepContent = () => {
     setImportXdr,
     setImportParsedType,
     setImportHasSignatures,
+    setImportIsSimulated,
     setImportParseError,
     resetAll,
   } = useImportFlowStore();
@@ -69,6 +74,7 @@ export const ImportStepContent = () => {
       setImportParseError(null);
       setImportParsedType(null);
       setImportHasSignatures(false);
+      setImportIsSimulated(false);
       return;
     }
 
@@ -80,6 +86,7 @@ export const ImportStepContent = () => {
       setImportParseError(xdrValidation.message ?? "Invalid XDR");
       setImportParsedType(null);
       setImportHasSignatures(false);
+      setImportIsSimulated(false);
       trackEvent(TrackingEvent.TRANSACTION_IMPORT_XDR_INVALID);
       return;
     }
@@ -98,6 +105,7 @@ export const ImportStepContent = () => {
 
       setImportParsedType(isSoroban ? "soroban" : "classic");
       setImportHasSignatures(tx.signatures.length > 0);
+      setImportIsSimulated(isSoroban && hasSorobanData(tx));
       setImportParseError(null);
       trackEvent(TrackingEvent.TRANSACTION_IMPORT_XDR_VALID);
     } catch (e) {
@@ -108,6 +116,7 @@ export const ImportStepContent = () => {
       );
       setImportParsedType(null);
       setImportHasSignatures(false);
+      setImportIsSimulated(false);
       trackEvent(TrackingEvent.TRANSACTION_IMPORT_XDR_INVALID);
     }
   };
@@ -130,6 +139,7 @@ export const ImportStepContent = () => {
   };
 
   const overviewFields = getOverviewFields();
+  const hasSignatures = Boolean(parsedTx?.signatures.length);
 
   return (
     <Box gap="md">
@@ -202,6 +212,10 @@ export const ImportStepContent = () => {
               })}
             </div>
           </PageCard>
+
+          {hasSignatures ? (
+            <Signatures tx={parsedTx} parsedTxType={parsedTxType} />
+          ) : null}
         </>
       ) : null}
     </Box>

@@ -9,22 +9,28 @@ import {
 
 import "./styles.scss";
 
+type FooterAction = {
+  label: string;
+  onClick: () => void;
+  disabled?: boolean;
+};
+
 /**
  * Shared footer for the single-page transaction flow. Renders Back/Next
- * navigation buttons and an optional Save button on the build/import step.
+ * navigation buttons.
+ *
+ * Optional overrides let a flow customize the primary Next button (label
+ * + handler) and surface a secondary action — used by the Import flow to
+ * default to "Submit transaction" when the imported tx is already valid,
+ * while still offering "Sign transaction" alongside.
  *
  * @param steps - Ordered array of step names for the current flow
  * @param activeStep - The currently active step
- * @param onNext - Callback to advance to the next step
- * @param isNextDisabled - Whether the Next button should be disabled
- *
- * @example
- * <TransactionFlowFooter
- *   steps={["build", "simulate", "sign", "submit"]}
- *   activeStep="build"
- *   onNext={handleNext}
- *   isNextDisabled={!isValid}
- * />
+ * @param onNext - Callback to advance to the next step (used when no
+ *   nextOverride is provided)
+ * @param isNextDisabled - Whether the default Next button should be disabled
+ * @param nextOverride - Replaces the default Next button entirely. Use to
+ *   skip ahead (e.g., go directly to Submit when the imported tx is signed).
  */
 export const TransactionFlowFooter = ({
   steps,
@@ -32,12 +38,14 @@ export const TransactionFlowFooter = ({
   onNext,
   onBack,
   isNextDisabled,
+  nextOverride,
 }: {
   steps: TransactionStepName[];
   activeStep: TransactionStepName;
   onNext?: () => void;
   onBack?: () => void;
   isNextDisabled: boolean;
+  nextOverride?: FooterAction;
 }) => {
   const currentIndex = steps.indexOf(activeStep);
   const isFirstStep = currentIndex === 0;
@@ -60,18 +68,32 @@ export const TransactionFlowFooter = ({
           {`${getStepLabel(prevStep)}`}
         </Button>
       )}
-      {nextStep && (
+      {nextOverride ? (
         <Button
           size="md"
           variant="secondary"
           icon={<Icon.ArrowRight />}
           iconPosition="right"
-          onClick={onNext}
-          disabled={isNextDisabled}
+          onClick={nextOverride.onClick}
+          disabled={nextOverride.disabled}
           data-position="right"
         >
-          {`${getStepLabel(nextStep)}`}
+          {nextOverride.label}
         </Button>
+      ) : (
+        nextStep && (
+          <Button
+            size="md"
+            variant="secondary"
+            icon={<Icon.ArrowRight />}
+            iconPosition="right"
+            onClick={onNext}
+            disabled={isNextDisabled}
+            data-position="right"
+          >
+            {`${getStepLabel(nextStep)}`}
+          </Button>
+        )
       )}
     </div>
   );

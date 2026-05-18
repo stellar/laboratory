@@ -1,6 +1,7 @@
 import {
   Address,
   Contract,
+  FeeBumpTransaction,
   Operation,
   TransactionBuilder,
   xdr,
@@ -26,6 +27,20 @@ export const isSorobanOperationType = (operationType: string) =>
     "invoke_host_function",
     "invokeHostFunction",
   ].includes(operationType);
+
+// True when the envelope already carries SorobanTransactionData (footprint,
+// resource fees) — i.e. the tx has been simulated/assembled. The v1 envelope
+// tx.ext is a union: switch value 0 = none, 1 = sorobanData.
+export const hasSorobanData = (
+  tx: Transaction | FeeBumpTransaction,
+): boolean => {
+  const inner = tx instanceof FeeBumpTransaction ? tx.innerTransaction : tx;
+  try {
+    return inner.toEnvelope().v1().tx().ext().switch() !== 0;
+  } catch {
+    return false;
+  }
+};
 
 // https://developers.stellar.org/docs/learn/glossary#ledgerkey
 // https://developers.stellar.org/docs/build/guides/archival/restore-data-js
