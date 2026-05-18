@@ -463,7 +463,7 @@ export const formComponentTemplateTxnOps = ({
             value={templ.value || ""}
             error={templ.error}
             onChange={templ.onChange}
-            infoLink="https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/ledgers#inflation-sequence"
+            infoLink="https://developers.stellar.org/docs/learn/glossary#inflation"
           />
         ),
         validate: validate.getPublicKeyError,
