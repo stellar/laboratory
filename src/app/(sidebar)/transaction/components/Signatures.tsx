@@ -1,5 +1,5 @@
 import { FeeBumpTransaction, Transaction, xdr } from "@stellar/stellar-sdk";
-import { Icon, Text } from "@stellar/design-system";
+import { Card, Icon, Text } from "@stellar/design-system";
 
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import {
@@ -11,6 +11,7 @@ import {
   Envelope,
   getRequiredSigners,
 } from "@/helpers/checkRequiredSignatures";
+import { hasSorobanData } from "@/helpers/sorobanUtils";
 
 import { Box } from "@/components/layout/Box";
 import { TransactionTabEmptyMessage } from "@/components/TransactionTabEmptyMessage";
@@ -18,8 +19,14 @@ import { TransactionTabEmptyMessage } from "@/components/TransactionTabEmptyMess
 import "../styles.scss";
 
 const ENVELOPE_LABELS: Record<Envelope, string> = {
-  outer: "Fee-bump envelope signatures",
-  inner: "Inner transaction signatures",
+  outer: "Fee-bump envelope signature",
+  inner: "Inner transaction signature(s)",
+};
+
+const hasMaxTimeSet = (tx: Transaction | FeeBumpTransaction): boolean => {
+  const inner = tx instanceof FeeBumpTransaction ? tx.innerTransaction : tx;
+  const max = inner.timeBounds?.maxTime;
+  return Boolean(max) && max !== "0";
 };
 
 type MatchStatus = "valid" | "invalid" | "unknown";
@@ -29,6 +36,37 @@ type ResolvedSignatureRow = {
   signature: string;
   signerPubKey?: string;
   matchStatus: MatchStatus;
+};
+
+type EnvelopeSummaryContext = {
+  isSoroban: boolean;
+  isSimulated: boolean;
+  hasTimebound: boolean;
+};
+
+const getEnvelopeSummary = (
+  rows: ResolvedSignatureRow[],
+  ctx: EnvelopeSummaryContext,
+): string => {
+  const hasUnknown = rows.some((r) => r.matchStatus === "unknown");
+  const hasInvalid = rows.some((r) => r.matchStatus === "invalid");
+
+  if (hasInvalid) {
+    return "Invalid signature(s) detected — they won’t be accepted at submission.";
+  }
+  if (hasUnknown) {
+    return "Signature(s) from unrecognized signers detected — couldn’t be matched to a signer derivable from the envelope.";
+  }
+
+  if (ctx.isSoroban && !ctx.isSimulated) {
+    return "This Soroban transaction needs simulation, which will invalidate the existing signature(s). Re-sign after simulating.";
+  }
+  if (ctx.isSoroban && ctx.isSimulated) {
+    return ctx.hasTimebound
+      ? "Signatures look valid. Soroban simulation is time-sensitive — submit soon, or re-simulate if it’s been a while."
+      : "Signatures look valid. No timebounds set — submit soon, since Soroban footprint entries can expire.";
+  }
+  return "Signatures look valid.";
 };
 
 const resolveRows = (
@@ -55,14 +93,19 @@ const resolveRows = (
 
 export const Signatures = ({
   tx,
+  parsedTxType,
 }: {
   tx: Transaction | FeeBumpTransaction | null;
+  parsedTxType?: "classic" | "soroban" | null;
 }) => {
   if (!tx) {
     return null;
   }
 
   const isFeeBump = tx instanceof FeeBumpTransaction;
+  const isSoroban = parsedTxType === "soroban";
+  const isSimulated = isSoroban && hasSorobanData(tx);
+  const hasTimebound = hasMaxTimeSet(tx);
 
   const envelopes = getRequiredSigners(tx).map((env) => {
     const signatures =
@@ -81,9 +124,6 @@ export const Signatures = ({
   });
 
   const hasAnyEnvelopeSig = envelopes.some((e) => e.signatures.length > 0);
-  const hasUnknownSigner = envelopes.some((e) =>
-    e.rows.some((r) => r.matchStatus === "unknown"),
-  );
 
   if (!hasAnyEnvelopeSig) {
     return (
@@ -95,22 +135,29 @@ export const Signatures = ({
 
   return (
     <Box gap="lg" addlClassName="Signatures">
-      {envelopes.map((env) =>
-        env.rows.length === 0 ? null : (
+      {envelopes.map((env) => {
+        if (env.rows.length === 0) return null;
+
+        // Soroban semantics (simulation, timebounds) only apply to the inner
+        // transaction envelope. For a fee-bump's outer envelope, that's just
+        // the fee-source signature — treat it as classic.
+        const isInnerOrPlain = env.envelope === "inner" || !isFeeBump;
+        const summaryContext: EnvelopeSummaryContext = {
+          isSoroban: isSoroban && isInnerOrPlain,
+          isSimulated,
+          hasTimebound,
+        };
+
+        return (
           <EnvelopeSignaturesTable
             key={env.envelope}
             envelope={env.envelope}
             rows={env.rows}
             showLabel={isFeeBump}
+            summaryContext={summaryContext}
           />
-        ),
-      )}
-
-      {hasUnknownSigner && (
-        <Text as="div" size="xs" weight="regular" addlClassName="info-message">
-          Signatures from unrecognized signers detected. Submit to verify.
-        </Text>
-      )}
+        );
+      })}
     </Box>
   );
 };
@@ -119,61 +166,63 @@ const EnvelopeSignaturesTable = ({
   envelope,
   rows,
   showLabel,
+  summaryContext,
 }: {
   envelope: Envelope;
   rows: ResolvedSignatureRow[];
   showLabel: boolean;
+  summaryContext: EnvelopeSummaryContext;
 }) => {
+  const submitToConfirmMessage = getEnvelopeSummary(rows, summaryContext);
   return (
-    <>
-      {showLabel ? (
-        <Text as="h3" size="sm" weight="medium">
-          {ENVELOPE_LABELS[envelope]}
+    <Card>
+      <Box gap="md">
+        {showLabel ? (
+          <Text as="h3" size="sm" weight="medium">
+            {ENVELOPE_LABELS[envelope]}
+          </Text>
+        ) : null}
+        <Text as="div" size="xs" weight="medium">
+          {submitToConfirmMessage}
         </Text>
-      ) : null}
-      <Text as="div" size="xs" weight="regular">
-        Cryptographic signatures that authorize this transaction. Each signature
-        includes the signer’s public key, signature value, and hint.
-      </Text>
-      <div className="Signatures__gridTableContainer">
-        <table>
-          <thead>
-            <tr>
-              <th>
-                <SignatureCell isHeader={true}>
-                  Transaction signer
-                </SignatureCell>
-              </th>
-              <th>
-                <SignatureCell isHeader={true}>Signature</SignatureCell>
-              </th>
-              <th>
-                <SignatureCell isHeader={true}>Hint</SignatureCell>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row, index) => (
-              <tr role="row" key={`${envelope}-${index}-${row.hint}`}>
-                <td>
-                  <SignatureCell>
-                    {renderSigner(row.matchStatus, row.signerPubKey)}
-                  </SignatureCell>
-                </td>
-                <td>
-                  <SignatureCell isSignature={true}>
-                    <code>{row.signature}</code>
-                  </SignatureCell>
-                </td>
-                <td>
-                  <SignatureCell>{row.hint}</SignatureCell>
-                </td>
+        <div className="Signatures__gridTableContainer">
+          <table>
+            <thead>
+              <tr>
+                <th>
+                  <SignatureCell isHeader={true}>Signer</SignatureCell>
+                </th>
+                <th>
+                  <SignatureCell isHeader={true}>Signature</SignatureCell>
+                </th>
+                <th>
+                  <SignatureCell isHeader={true}>Hint</SignatureCell>
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </>
+            </thead>
+            <tbody>
+              {rows.map((row, index) => (
+                <tr role="row" key={`${envelope}-${index}-${row.hint}`}>
+                  <td>
+                    <SignatureCell>
+                      {renderSigner(row.matchStatus, row.signerPubKey)}
+                    </SignatureCell>
+                  </td>
+                  <td>
+                    <SignatureCell isSignature={true}>
+                      <code>{row.signature}</code>
+                    </SignatureCell>
+                  </td>
+                  <td>
+                    <SignatureCell>{row.hint}</SignatureCell>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Box>
+    </Card>
   );
 };
 

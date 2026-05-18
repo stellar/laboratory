@@ -10,7 +10,10 @@ import { Alert } from "@stellar/design-system";
 import { useImportFlowStore } from "@/store/createTransactionFlowStore";
 import { useStore } from "@/store/useStore";
 
-import { isSorobanOperationType } from "@/helpers/sorobanUtils";
+import {
+  hasSorobanData,
+  isSorobanOperationType,
+} from "@/helpers/sorobanUtils";
 
 import { validate } from "@/validate";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
@@ -44,6 +47,7 @@ export const ImportStepContent = () => {
     setImportXdr,
     setImportParsedType,
     setImportHasSignatures,
+    setImportIsSimulated,
     setImportParseError,
     resetAll,
   } = useImportFlowStore();
@@ -70,6 +74,7 @@ export const ImportStepContent = () => {
       setImportParseError(null);
       setImportParsedType(null);
       setImportHasSignatures(false);
+      setImportIsSimulated(false);
       return;
     }
 
@@ -81,6 +86,7 @@ export const ImportStepContent = () => {
       setImportParseError(xdrValidation.message ?? "Invalid XDR");
       setImportParsedType(null);
       setImportHasSignatures(false);
+      setImportIsSimulated(false);
       trackEvent(TrackingEvent.TRANSACTION_IMPORT_XDR_INVALID);
       return;
     }
@@ -99,6 +105,7 @@ export const ImportStepContent = () => {
 
       setImportParsedType(isSoroban ? "soroban" : "classic");
       setImportHasSignatures(tx.signatures.length > 0);
+      setImportIsSimulated(isSoroban && hasSorobanData(tx));
       setImportParseError(null);
       trackEvent(TrackingEvent.TRANSACTION_IMPORT_XDR_VALID);
     } catch (e) {
@@ -109,6 +116,7 @@ export const ImportStepContent = () => {
       );
       setImportParsedType(null);
       setImportHasSignatures(false);
+      setImportIsSimulated(false);
       trackEvent(TrackingEvent.TRANSACTION_IMPORT_XDR_INVALID);
     }
   };
@@ -205,7 +213,9 @@ export const ImportStepContent = () => {
             </div>
           </PageCard>
 
-          {hasSignatures ? <Signatures tx={parsedTx} /> : null}
+          {hasSignatures ? (
+            <Signatures tx={parsedTx} parsedTxType={parsedTxType} />
+          ) : null}
         </>
       ) : null}
     </Box>

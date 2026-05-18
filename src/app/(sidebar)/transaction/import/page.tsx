@@ -86,20 +86,30 @@ export default function ImportTransaction() {
 
   const isNextDisabled = getIsNextDisabled();
 
-  // On classic imports where the pasted tx already carries any signatures,
-  // default the import-step Next button to "Submit transaction" (skipping
-  // the sign step). We can't always confirm offline that the sigs are
-  // sufficient (multisig with on-chain cosigners is invisible to the
-  // offline check), so we let the network be the source of truth: an
-  // insufficient signature set fails with a clear protocol error (e.g.
-  // txBadAuth) on submit, which is recoverable. The alternative — gating
-  // on signatureCheck.isReady — strands multisig users on the sign step
-  // with no signature they can add.
-  const isClassicReadyToSubmit =
+  // On the import step, when the pasted tx already carries signatures,
+  // default the Next button to "Submit transaction" so the existing
+  // signatures are preserved through to submission. Otherwise the flow's
+  // simulate/sign steps would discard them: StellarRpc.assembleTransaction
+  // builds a fresh envelope without the original signatures, and the sign
+  // step then substitutes the user's own sig — destroying a co-signed
+  // envelope that the importer can't recover.
+  //
+  // For Soroban we also require the envelope to already carry
+  // SorobanTransactionData (isSimulated), since an unsimulated Soroban tx
+  // can't be submitted as-is — it would fail at the protocol level.
+  //
+  // We can't always confirm offline that the sigs are sufficient (multisig
+  // with on-chain cosigners is invisible to the offline check), so we let
+  // the network be the source of truth: an insufficient signature set
+  // fails with a clear protocol error (e.g. txBadAuth) on submit, which is
+  // recoverable. The alternative — gating on signatureCheck.isReady —
+  // strands multisig users on the sign step with no signature they can add.
+  const isReadyToSubmit =
     activeStep === "import" &&
-    parsedTxType === "classic" &&
+    Boolean(importState?.importXdr) &&
     Boolean(importState?.hasSignatures) &&
-    Boolean(importState?.importXdr);
+    (parsedTxType === "classic" ||
+      (parsedTxType === "soroban" && Boolean(importState?.isSimulated)));
 
   const handleSkipToSubmit = () => {
     if (importState?.importXdr) {
@@ -149,7 +159,7 @@ export default function ImportTransaction() {
               onBack={handleBack}
               isNextDisabled={isNextDisabled}
               nextOverride={
-                isClassicReadyToSubmit
+                isReadyToSubmit
                   ? {
                       label: "Submit transaction",
                       onClick: handleSkipToSubmit,
