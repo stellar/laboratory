@@ -121,7 +121,7 @@ export default function ToXdr() {
 
       <Alert variant="primary" placement="inline">
         <div>
-          You can use use this tool to encode XDR into JSON.{" "}
+          You can use this tool to encode JSON into XDR.{" "}
           <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/data-format/xdr">
             XDR (External Data Representation)
           </SdsLink>{" "}
