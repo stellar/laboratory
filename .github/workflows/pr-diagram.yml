@@ -1,0 +1,134 @@
+name: PR Diagram
+
+# Generates a Mermaid architecture diagram for the PR description when the
+# `needs-diagram` label is applied. Label-only (one-shot): remove and re-add
+# the label to refresh after new commits.
+
+on:
+  pull_request:
+    types: [labeled]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: pr-diagram-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  diagram:
+    if: github.event.label.name == 'needs-diagram'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fetch PR diff
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          gh pr diff "$PR" > /tmp/pr.diff
+          SIZE=$(wc -c < /tmp/pr.diff)
+          MAX=200000
+          if [ "$SIZE" -gt "$MAX" ]; then
+            head -c "$MAX" /tmp/pr.diff > /tmp/pr.diff.trim
+            mv /tmp/pr.diff.trim /tmp/pr.diff
+            echo "TRUNCATED=true" >> "$GITHUB_ENV"
+          fi
+
+      - name: Generate Mermaid diagram
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.request, urllib.error, sys
+
+          with open('/tmp/pr.diff') as f:
+              diff = f.read()
+
+          system = (
+              "You are reviewing a pull request diff and producing ONE Mermaid "
+              "diagram for the PR description. Auto-pick the best diagram type "
+              "for what changed: sequenceDiagram for new flows or signing/submit "
+              "paths, flowchart for branching logic, classDiagram for new modules "
+              "or types, graph for component/import structure. Keep it under 30 "
+              "nodes. Be specific to this diff — do not produce a generic template. "
+              "Respond with ONLY a fenced ```mermaid``` block, no prose before or after."
+          )
+
+          payload = {
+              "model": "claude-sonnet-4-6",
+              "max_tokens": 4096,
+              "system": system,
+              "messages": [{
+                  "role": "user",
+                  "content": (
+                      "Generate a Mermaid diagram summarizing the architectural "
+                      "changes in this PR diff:\n\n" + diff
+                  ),
+              }],
+          }
+
+          req = urllib.request.Request(
+              "https://api.anthropic.com/v1/messages",
+              data=json.dumps(payload).encode("utf-8"),
+              headers={
+                  "x-api-key": os.environ["ANTHROPIC_API_KEY"],
+                  "anthropic-version": "2023-06-01",
+                  "content-type": "application/json",
+              },
+          )
+
+          try:
+              with urllib.request.urlopen(req, timeout=120) as resp:
+                  data = json.load(resp)
+          except urllib.error.HTTPError as e:
+              print("API error:", e.code, e.read().decode("utf-8"), file=sys.stderr)
+              sys.exit(1)
+
+          text = data["content"][0]["text"].strip()
+          with open('/tmp/mermaid.md', 'w') as f:
+              f.write(text)
+          PY
+
+      - name: Update PR body
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          gh pr view "$PR" --json body -q '.body // ""' > /tmp/body.md
+
+          python3 - <<'PY'
+          import os, re
+
+          with open('/tmp/body.md') as f:
+              body = f.read()
+          with open('/tmp/mermaid.md') as f:
+              mermaid = f.read().strip()
+
+          # Extract the fenced mermaid block in case the model wrapped it in prose.
+          match = re.search(r'```mermaid.*?```', mermaid, re.DOTALL)
+          if match:
+              mermaid = match.group(0)
+
+          trunc = os.environ.get('TRUNCATED') == 'true'
+          note = '\n\n_Note: diff was truncated to fit context; diagram covers the first ~200KB of changes._' if trunc else ''
+          block = f"\n\n<!-- pr-diagram:start -->\n## Architecture diagram\n\n{mermaid}{note}\n<!-- pr-diagram:end -->"
+
+          if '<!-- pr-diagram:start -->' in body:
+              body = re.sub(
+                  r'\n*<!-- pr-diagram:start -->.*?<!-- pr-diagram:end -->\n*',
+                  block,
+                  body,
+                  flags=re.DOTALL,
+              )
+          else:
+              body = body.rstrip() + block
+
+          with open('/tmp/new_body.md', 'w') as f:
+              f.write(body)
+          PY
+
+          gh pr edit "$PR" --body-file /tmp/new_body.md
