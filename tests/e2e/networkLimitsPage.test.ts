@@ -1,7 +1,6 @@
 import { baseURL } from "../../playwright.config";
 import { test, expect, type Page } from "@playwright/test";
 
-
 import {
   formatLedgersToDays,
   formatLedgersToMonths,
@@ -14,9 +13,7 @@ import { MAINNET_LIMITS } from "@/constants/networkLimits";
 
 test.describe("Network Limits page on Mainnet", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto(
-      `${baseURL}/network-limits?$=network$id=mainnet`,
-    );
+    await page.goto(`${baseURL}/network-limits?$=network$id=mainnet`);
   });
 
   test("Loads the page", async ({ page }) => {
