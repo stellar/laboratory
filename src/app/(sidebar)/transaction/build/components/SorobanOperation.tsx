@@ -18,7 +18,11 @@ import { sanitizeObject } from "@/helpers/sanitizeObject";
 import { TRANSACTION_OPERATIONS } from "@/constants/transactionOperations";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
-import { OperationError, SorobanInvokeValue } from "@/types/types";
+import {
+  OperationError,
+  SavedTransaction,
+  SorobanInvokeValue,
+} from "@/types/types";
 
 export const SorobanOperation = ({
   operationTypeSelector,
@@ -269,7 +273,7 @@ export const SorobanOperation = ({
         onClose={() => {
           setIsSaveTxnModalVisible(false);
         }}
-        onUpdate={(updatedItems) => {
+        onUpdate={(updatedItems: SavedTransaction[]) => {
           localStorageSavedTransactions.set(updatedItems);
 
           trackEvent(TrackingEvent.TRANSACTION_BUILD_SAVE, {

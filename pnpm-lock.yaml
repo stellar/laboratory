@@ -46,8 +46,8 @@ importers:
         specifier: ^10.29.0
         version: 10.29.0(@opentelemetry/context-async-hooks@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/core@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.2.0(@opentelemetry/api@1.9.0))(next@15.5.15(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.57.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.92.1))(react@19.2.3)(webpack@5.101.3)
       '@stellar-expert/contract-wasm-interface-parser':
-        specifier: ^4.0.0
-        version: 4.0.0(@stellar/stellar-base@15.0.0)
+        specifier: ^4.1.0
+        version: 4.1.0(@stellar/stellar-base@15.0.0)
       '@stellar/design-system':
         specifier: ^3.2.7
         version: 3.2.7(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -2340,8 +2340,8 @@ packages:
   '@solana/web3.js@1.98.4':
     resolution: {integrity: sha512-vv9lfnvjUsRiq//+j5pBdXig0IQdtzA0BRZ3bXEP4KaIyF1CcaydWqgyzQgfZMNIsWNWmG+AUHwPy4AHOD6gpw==}
 
-  '@stellar-expert/contract-wasm-interface-parser@4.0.0':
-    resolution: {integrity: sha512-Vnjhr/fZVq+Aex3RjYrRxCIP1PoZag+2Uuq69Eij3I6bjgqU5EZLIczFm2kY6e11gWO3z2jn8SdUgWMUjR0TNQ==}
+  '@stellar-expert/contract-wasm-interface-parser@4.1.0':
+    resolution: {integrity: sha512-inC741s65l6qpkPBQcdkSY/PMnEMwilNkpQWpj06qodbYLx/Q5L13+ZXLbK+ZNdHUD//D+IiI8A1EZnDT5+wsg==}
     peerDependencies:
       '@stellar/stellar-base': '>=14'
 
@@ -9680,7 +9680,7 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@stellar-expert/contract-wasm-interface-parser@4.0.0(@stellar/stellar-base@15.0.0)':
+  '@stellar-expert/contract-wasm-interface-parser@4.1.0(@stellar/stellar-base@15.0.0)':
     dependencies:
       '@stellar/stellar-base': 15.0.0
 

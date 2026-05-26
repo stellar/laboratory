@@ -119,8 +119,17 @@ test.describe("Build Transaction Page", () => {
         /Mon, Oct 21, 2024, 13:29:00 UTC/,
       );
 
+      // Add an operation so an XDR is built — Clear all is disabled until then
+      const { operation_0 } = await selectOperationType({
+        page,
+        opType: "create_account",
+      });
+      await operation_0.getByLabel("Destination").fill(ACCOUNT_ONE);
+      await operation_0.getByLabel("Starting balance").fill("1");
+
       // Clear params
       await expect(paramsErrors).toBeHidden();
+      await expect(page.getByTestId("clear-all-button")).toBeEnabled();
       await page.getByTestId("clear-all-button").click();
       await page.getByText("Clear all").click();
       await expect(paramsErrors).toBeVisible();

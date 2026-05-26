@@ -15,6 +15,8 @@ interface TransactionFlowHeaderProps {
   headingAs?: "h1" | "h2";
   /** Optional right element */
   rightElement?: React.ReactElement | null;
+  /** Disable the reset button */
+  isResetDisabled?: boolean;
   /** Callback for resetting the entire transaction build flow. */
   onClearAll: () => void;
 }
@@ -23,6 +25,7 @@ export const TransactionFlowHeader = ({
   heading,
   headingAs,
   rightElement,
+  isResetDisabled,
   onClearAll,
 }: TransactionFlowHeaderProps) => {
   const [isClearModalVisible, setIsClearModalVisible] = useState(false);
@@ -43,9 +46,10 @@ export const TransactionFlowHeader = ({
           variant="tertiary"
           data-testid="clear-all-button"
           aria-label="Clear all"
+          disabled={isResetDisabled}
           onClick={() => setIsClearModalVisible(true)}
         >
-          <Icon.RefreshCw01 />
+          Start over <Icon.RefreshCw01 />
         </Button>
 
         <Modal

@@ -270,7 +270,7 @@ export default function SavedTransactions() {
             updateSavedTxns();
           }
         }}
-        onUpdate={(updatedItems) => {
+        onUpdate={(updatedItems: SavedTransaction[]) => {
           localStorageSavedTransactions.set(updatedItems);
 
           trackEvent(TrackingEvent.TRANSACTION_SAVED_EDIT_SAVE);

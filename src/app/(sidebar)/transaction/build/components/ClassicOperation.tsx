@@ -33,6 +33,7 @@ import {
   OperationError,
   OptionSigner,
   RevokeSponsorshipValue,
+  SavedTransaction,
 } from "@/types/types";
 
 export const ClassicOperation = ({
@@ -514,7 +515,7 @@ export const ClassicOperation = ({
         onClose={() => {
           setIsSaveTxnModalVisible(false);
         }}
-        onUpdate={(updatedItems) => {
+        onUpdate={(updatedItems: SavedTransaction[]) => {
           localStorageSavedTransactions.set(updatedItems);
 
           trackEvent(TrackingEvent.TRANSACTION_BUILD_SAVE, {

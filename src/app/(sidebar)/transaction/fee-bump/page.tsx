@@ -66,7 +66,7 @@ export default function FeeBumpTransaction() {
     if (activeStep === "sign") {
       return !feeBump.signedTx;
     }
-    return false;
+    return true;
   };
 
   const isNextDisabled = getIsNextDisabled();

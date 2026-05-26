@@ -23,7 +23,7 @@ import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 import {
   SimulationResourceTable,
   getSimulationResourceInfo,
-} from "./SimulationResourceTable";
+} from "../../components/SimulationResourceTable";
 
 /**
  * Validate step content for the single-page transaction flow (Soroban only).
