@@ -9,6 +9,7 @@ import {
   SwkAppLightTheme,
 } from "@creit.tech/stellar-wallets-kit";
 import { AlbedoModule } from "@creit.tech/stellar-wallets-kit/modules/albedo";
+import { CactusLinkModule } from "@creit.tech/stellar-wallets-kit/modules/cactuslink";
 import { FreighterModule } from "@creit.tech/stellar-wallets-kit/modules/freighter";
 import { HanaModule } from "@creit.tech/stellar-wallets-kit/modules/hana";
 import { HotWalletModule } from "@creit.tech/stellar-wallets-kit/modules/hotwallet";
@@ -64,6 +65,7 @@ export const WalletKitContextProvider = ({
 
     const TEST_MODULES = [
       new AlbedoModule(),
+      new CactusLinkModule(),
       new xBullModule(),
       new FreighterModule(),
       new LobstrModule(),
