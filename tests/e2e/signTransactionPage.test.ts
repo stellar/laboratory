@@ -162,9 +162,13 @@ test.describe("Sign Transaction Page", () => {
       page.getByRole("heading", { name: "Connect Wallet" }),
     ).toBeVisible();
 
+    const connectWalletModal = page.locator(".stellar-wallets-kit").filter({
+      has: page.getByRole("heading", { name: "Connect Wallet" }),
+    });
+
     // Wallet Extension to display 8 wallets
-    await expect(page.getByRole("listitem")).toHaveCount(8);
-    await expect(page.getByText("Cactus Link")).toBeVisible();
+    await expect(connectWalletModal.getByRole("listitem")).toHaveCount(8);
+    await expect(connectWalletModal.getByText("Cactus Link")).toBeVisible();
 
     // Exit out of the wallet extension modal
     await page.click("body", { position: { x: 10, y: 10 } });
