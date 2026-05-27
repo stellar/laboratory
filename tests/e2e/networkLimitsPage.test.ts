@@ -320,15 +320,18 @@ const getTableRow = (rows: any, index: number) => {
  * Waits for the modal's Accept button and clicks it.
  */
 const dismissNetworkSettingsModal = async (page: Page) => {
-  const modal = page.locator(".Modal");
-  const acceptButton = modal.locator("button", { hasText: "Accept" });
+  const modal = page.locator(".Modal").filter({
+    has: page.getByRole("heading", { name: "Review Network Settings" }),
+  });
+
   // Modal may not appear in all environments; wait briefly and no-op if absent.
   try {
-    await acceptButton.waitFor({ state: "visible", timeout: 1000 });
+    await modal.waitFor({ state: "visible", timeout: 5000 });
   } catch {
-    // Accept button never became visible; assume modal is not present.
+    // Modal never became visible; assume it is not present.
     return;
   }
-  await acceptButton.click();
-  await modal.waitFor({ state: "hidden" });
+
+  await modal.getByRole("button", { name: "Accept" }).click();
+  await expect(modal).toBeHidden();
 };
