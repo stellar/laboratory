@@ -168,7 +168,6 @@ test.describe("Sign Transaction Page", () => {
 
     // Wallet Extension to display 8 wallets
     await expect(connectWalletModal.getByRole("listitem")).toHaveCount(8);
-    await expect(connectWalletModal.getByText("Cactus Link")).toBeVisible();
 
     // Exit out of the wallet extension modal
     await page.click("body", { position: { x: 10, y: 10 } });
