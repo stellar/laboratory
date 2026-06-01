@@ -2,7 +2,6 @@ import {
   AccountRequiresMemoError,
   BadResponseError,
 } from "@stellar/stellar-sdk";
-import { Card, Text } from "@stellar/design-system";
 
 import { Box } from "@/components/layout/Box";
 import { TxResponse } from "@/components/TxResponse";
@@ -14,6 +13,7 @@ import {
   SubmitRpcError,
   SubmitRpcErrorStatus,
 } from "@/types/types";
+import { XdrLink } from "./XdrLink";
 
 export const HorizonErrorResponse = ({
   error,
@@ -44,7 +44,10 @@ export const HorizonErrorResponse = ({
           value={JSON.stringify(result_codes)}
         />
 
-        <TxResponse label="Result XDR:" value={result_xdr} />
+        <TxResponse
+          label="Result XDR:"
+          item={<XdrLink xdr={result_xdr} type="TransactionResult" />}
+        />
       </Box>
     );
   } else {
@@ -118,25 +121,10 @@ export const RpcErrorResponse = ({ error }: { error: SubmitRpcError }) => {
   };
 
   return (
-    <Card>
-      <Box
-        gap="xs"
-        addlClassName="ValidationResponseCard"
-        data-variant="error"
-        data-testid="submit-tx-rpc-error"
-      >
-        <>
-          <Text
-            as="div"
-            size="sm"
-            weight="medium"
-            addlClassName="ValidationResponseCard__title"
-          >
-            {getTitle(error.status)}
-          </Text>
-          {errorFields()}
-        </>
-      </Box>
-    </Card>
+    <ValidationResponseCard
+      variant="error"
+      title={getTitle(error.status)}
+      response={errorFields()}
+    />
   );
 };

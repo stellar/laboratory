@@ -14,6 +14,7 @@ import { PoweredByStellarExpert } from "@/components/PoweredByStellarExpert";
 
 import { useGitHubReadmeText } from "@/query/useGitHubReadmeText";
 import { openUrl } from "@/helpers/openUrl";
+import { NoInfoLoadedView } from "@/components/NoInfoLoadedView";
 
 export const SourceCode = ({
   isActive,
@@ -35,22 +36,19 @@ export const SourceCode = ({
 
   if (!repo) {
     return (
-      <Alert variant="warning" placement="inline">
-        <div>
-          This contract has no contract build verification configured, therefore
-          its Source Code is not available.
-        </div>
-
-        <div>
-          Verifying your contract’s build helps others understand and trust what
-          it does, and improves transparency across the Stellar ecosystem. To
-          verify, follow the setup instruction in the{" "}
-          <Link href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0055.md">
-            Contract Build Verification SEP-55
-          </Link>
-          .
-        </div>
-      </Alert>
+      <NoInfoLoadedView
+        message={
+          <Box gap="sm" justify="center" align="center">
+            <Text size="sm" weight="medium" as="div">
+              No source code available
+            </Text>
+            <Text size="sm" weight="regular" as="div">
+              This contract has not been build verified, so its source code is
+              unavailable.
+            </Text>
+          </Box>
+        }
+      />
     );
   }
 

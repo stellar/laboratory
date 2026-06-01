@@ -28,6 +28,7 @@
     padding: pxToRem(16px);
     word-wrap: break-word;
     overflow-y: auto;
+    max-height: pxToRem(400px);
 
     ul {
       font-size: inherit;

@@ -1,0 +1,77 @@
+@use "../../styles/utils.scss" as *;
+
+.SorobanAuthSigning {
+  border: 1px solid var(--sds-clr-gray-06);
+  border-radius: pxToRem(8px);
+
+  // Header section — title + "View auth entries" button
+  &__header {
+    display: grid;
+    align-items: center;
+    justify-content: space-between;
+    gap: pxToRem(16px);
+    padding: pxToRem(16px);
+    grid-template-columns: auto pxToRem(167px);
+
+    &--expanded {
+      border-bottom: 1px solid var(--sds-clr-gray-06);
+    }
+
+    @media (max-width: 960px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__header-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__header-title {
+    color: var(--sds-clr-gray-12);
+  }
+
+  // Body section — radio, entries, signing area
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: pxToRem(16px);
+    padding: pxToRem(16px);
+  }
+
+  // Entry list
+  &__entries {
+    display: grid;
+    gap: pxToRem(8px);
+
+    .CodeEditor {
+      border: 1px solid var(--sds-clr-gray-06);
+      border-top: none;
+      border-radius: 0 0 pxToRem(8px) pxToRem(8px);
+    }
+  }
+
+  // Single entry row
+  &__entry {
+    border-radius: pxToRem(8px);
+  }
+
+  &__entry-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: pxToRem(12px) pxToRem(16px);
+    border: 1px solid var(--sds-clr-gray-06);
+    border-radius: pxToRem(8px);
+    background: var(--sds-clr-gray-02);
+
+    .IconButton {
+      --IconButton-size: #{pxToRem(12px)};
+    }
+
+    [data-is-expanded] > & {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import { Card, Text } from "@stellar/design-system";
+import { Alert, Card, Text } from "@stellar/design-system";
 import { Box } from "@/components/layout/Box";
 import "./styles.scss";
 
@@ -24,29 +24,14 @@ export const ValidationResponseCard = ({
   return (
     <Card>
       <Box
-        gap="xs"
+        gap="lg"
         addlClassName="ValidationResponseCard"
         data-variant={variant}
       >
         <>
-          <Text
-            as="div"
-            size="sm"
-            weight="medium"
-            addlClassName="ValidationResponseCard__title"
-          >
-            {title}
-          </Text>
-          {subtitle ? (
-            <Text
-              as="div"
-              size="xs"
-              weight="medium"
-              addlClassName="ValidationResponseCard__subtitle"
-            >
-              {subtitle}
-            </Text>
-          ) : null}
+          <Alert variant={variant} placement="inline" title={title}>
+            {subtitle ?? null}
+          </Alert>
 
           <Card variant="secondary" noPadding>
             <div className="ValidationResponseCard__content">{response}</div>

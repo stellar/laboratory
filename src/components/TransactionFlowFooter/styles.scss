@@ -1,0 +1,15 @@
+@use "../../styles/utils.scss" as *;
+
+.TransactionFlowFooter {
+  display: flex;
+  width: 100%;
+  align-items: center;
+
+  [data-position="left"] {
+    margin-right: auto;
+  }
+
+  [data-position="right"] {
+    margin-left: auto;
+  }
+}

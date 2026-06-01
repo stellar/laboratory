@@ -1,0 +1,78 @@
+@use "../../styles/utils.scss" as *;
+
+.GridTable {
+  min-width: fit-content;
+
+  &__row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+
+    &--empty {
+      display: none;
+    }
+
+    &--section {
+      display: block;
+      padding: pxToRem(8px) pxToRem(8px) pxToRem(4px);
+      font-size: pxToRem(12px);
+      line-height: pxToRem(18px);
+      font-weight: var(--sds-fw-semi-bold);
+      color: var(--sds-clr-gray-11);
+      background-color: transparent;
+    }
+
+    &:nth-child(even) {
+      background-color: var(--sds-clr-gray-03);
+    }
+
+    .Label {
+      color: var(--sds-clr-gray-12);
+    }
+
+    .Floater__content {
+      text-align: left;
+    }
+  }
+
+  &__cell {
+    padding: pxToRem(4px) pxToRem(8px);
+    font-size: pxToRem(14px);
+    line-height: pxToRem(20px);
+    font-weight: var(--sds-fw-medium);
+    text-align: right;
+    color: var(--sds-clr-gray-12);
+
+    .Label__wrapper {
+      justify-content: flex-end;
+    }
+
+    &--empty {
+      .GridTable__row & {
+        background-color: var(--sds-clr-gray-01);
+      }
+    }
+
+    &--note {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: pxToRem(4px);
+    }
+
+    .desktop--inline {
+      display: inline;
+      font-size: pxToRem(14px);
+
+      @media (max-width: 420px) {
+        display: block;
+        font-size: pxToRem(12px);
+      }
+    }
+
+    &:first-child {
+      text-align: left;
+      font-weight: var(--sds-fw-regular);
+      color: var(--sds-clr-gray-11);
+    }
+  }
+}

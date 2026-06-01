@@ -142,6 +142,15 @@ export const FetchContractMethodPickerWithQuery = ({
     }
   }, [contractClientError, sacDataError]);
 
+  // Auto-fetch contract methods when remounting with a saved contract_id
+  useEffect(() => {
+    if (contractIdInput && value?.function_name && !contractMethods.length) {
+      fetchContractData();
+    }
+    // Run only on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleContractIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // reset the error
     setFetchError("");

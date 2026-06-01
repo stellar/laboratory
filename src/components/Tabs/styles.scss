@@ -10,6 +10,14 @@
   flex-wrap: wrap;
   padding: pxToRem(6px) 0;
 
+  &--gap-md {
+    gap: pxToRem(16px);
+  }
+
+  .external-link {
+    text-decoration: none;
+  }
+
   .Tab {
     position: relative;
     font-size: pxToRem(14px);

@@ -1,12 +1,11 @@
 "use client";
 
 import { ChangeEvent, Fragment, useState } from "react";
-import { Card, Badge, Button, Icon, Input } from "@stellar/design-system";
+import { Card, Badge, Icon, Input } from "@stellar/design-system";
 
 import { TabbedButtons } from "@/components/TabbedButtons";
 import { Box } from "@/components/layout/Box";
 import { formComponentTemplateTxnOps } from "@/components/formComponentTemplateTxnOps";
-import { ShareUrlButton } from "@/components/ShareUrlButton";
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 
 import { arrayItem } from "@/helpers/arrayItem";
@@ -16,10 +15,10 @@ import { shareableUrl } from "@/helpers/shareableUrl";
 import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransactions";
 
 import { useStore } from "@/store/useStore";
+import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 
 import { OP_SET_TRUST_LINE_FLAGS } from "@/constants/settings";
 import {
-  INITIAL_OPERATION,
   SET_TRUSTLINE_FLAGS_CUSTOM_MESSAGE,
   TRANSACTION_OPERATIONS,
 } from "@/constants/transactionOperations";
@@ -34,10 +33,12 @@ import {
   OperationError,
   OptionSigner,
   RevokeSponsorshipValue,
+  SavedTransaction,
 } from "@/types/types";
 
 export const ClassicOperation = ({
   operationTypeSelector: OperationTypeSelector,
+  operationActions,
   operationsError,
   setOperationsError,
   updateOptionParamAndError,
@@ -48,6 +49,7 @@ export const ClassicOperation = ({
     index: number;
     operationType: string;
   }>;
+  operationActions: React.ReactNode;
   operationsError: OperationError[];
   setOperationsError: (operationsError: OperationError[]) => void;
   updateOptionParamAndError: (params: {
@@ -69,13 +71,12 @@ export const ClassicOperation = ({
   }) => OperationError;
   renderSourceAccount: (opType: string, index: number) => React.ReactNode;
 }) => {
-  const { transaction, network } = useStore();
-  const { classic } = transaction.build;
+  const { network } = useStore();
+  const { build, setBuildClassicSingleOperation } = useBuildFlowStore();
+  const { classic } = build;
   const { operations: txnOperations, xdr: txnXdr } = classic;
 
   const [isSaveTxnModalVisible, setIsSaveTxnModalVisible] = useState(false);
-
-  const { updateBuildSingleOperation } = transaction;
 
   /* Classic Operations */
   const handleOperationParamChange = ({
@@ -91,7 +92,7 @@ export const ClassicOperation = ({
   }) => {
     const op = txnOperations[opIndex];
 
-    updateBuildSingleOperation(opIndex, {
+    setBuildClassicSingleOperation(opIndex, {
       ...op,
       params: sanitizeObject({
         ...op?.params,
@@ -455,6 +456,19 @@ export const ClassicOperation = ({
                                 });
                               },
                             });
+                          case "destination":
+                          case "source_account":
+                            return component.render({
+                              ...baseProps,
+                              onChange: (value: string) => {
+                                handleOperationParamChange({
+                                  opIndex: idx,
+                                  opParam: input,
+                                  opValue: value,
+                                  opType: op.operation_type,
+                                });
+                              },
+                            });
                           default:
                             return component.render({
                               ...baseProps,
@@ -482,62 +496,7 @@ export const ClassicOperation = ({
           </>
 
           {/* Operations bottom buttons */}
-          <Box
-            gap="lg"
-            direction="row"
-            align="center"
-            justify="space-between"
-            addlClassName="Operation__buttons"
-          >
-            <Box gap="sm" direction="row" align="center">
-              <Button
-                size="md"
-                variant="tertiary"
-                icon={<Icon.PlusCircle />}
-                onClick={() => {
-                  updateOptionParamAndError({
-                    type: "add",
-                    item: INITIAL_OPERATION,
-                  });
-
-                  trackEvent(TrackingEvent.TRANSACTION_BUILD_ADD_OPERATION, {
-                    txType: "classic",
-                  });
-                }}
-              >
-                Add operation
-              </Button>
-
-              <Button
-                size="md"
-                variant="tertiary"
-                icon={<Icon.Save01 />}
-                onClick={() => {
-                  setIsSaveTxnModalVisible(true);
-                }}
-                title="Save transaction"
-                disabled={!txnXdr}
-              ></Button>
-
-              <ShareUrlButton
-                shareableUrl={shareableUrl("transactions-build")}
-              />
-            </Box>
-
-            <Button
-              size="md"
-              variant="error"
-              icon={<Icon.RefreshCw01 />}
-              onClick={() => {
-                updateOptionParamAndError({ type: "reset" });
-                trackEvent(TrackingEvent.TRANSACTION_BUILD_OPERATIONS_CLEAR, {
-                  txType: "classic",
-                });
-              }}
-            >
-              Clear operations
-            </Button>
-          </Box>
+          {operationActions}
         </Box>
       </Card>
 
@@ -548,15 +507,15 @@ export const ClassicOperation = ({
           xdr: txnXdr,
           page: "build",
           shareableUrl: shareableUrl("transactions-build"),
-          params: transaction.build.params,
-          operations: transaction.build.classic.operations,
+          params: build.params,
+          operations: build.classic.operations,
         }}
         allSavedItems={localStorageSavedTransactions.get()}
         isVisible={isSaveTxnModalVisible}
         onClose={() => {
           setIsSaveTxnModalVisible(false);
         }}
-        onUpdate={(updatedItems) => {
+        onUpdate={(updatedItems: SavedTransaction[]) => {
           localStorageSavedTransactions.set(updatedItems);
 
           trackEvent(TrackingEvent.TRANSACTION_BUILD_SAVE, {

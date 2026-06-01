@@ -24,7 +24,7 @@ test.describe("Sign Transaction Page", () => {
     const signedXdr = page.getByTestId("validation-card-response");
 
     // Import Screen
-    const importBtn = page.getByText("Import transaction");
+    const importBtn = page.getByRole("button", { name: "Import transaction" });
     const validMsg = page.getByText("Valid Transaction Envelope XDR");
 
     const xdrInput = page.getByLabel(
@@ -159,11 +159,15 @@ test.describe("Sign Transaction Page", () => {
     await walletExtSignBtn.click();
 
     await expect(
-      page.getByRole("heading", { name: "Connect a Wallet" }),
+      page.getByRole("heading", { name: "Connect Wallet" }),
     ).toBeVisible();
 
-    // Wallet Extension to display 6 wallets
-    await expect(page.getByRole("listitem")).toHaveCount(7);
+    const connectWalletModal = page.locator(".stellar-wallets-kit").filter({
+      has: page.getByRole("heading", { name: "Connect Wallet" }),
+    });
+
+    // Wallet Extension to display 8 wallets
+    await expect(connectWalletModal.getByRole("listitem")).toHaveCount(8);
 
     // Exit out of the wallet extension modal
     await page.click("body", { position: { x: 10, y: 10 } });
@@ -232,7 +236,7 @@ test.describe("Sign Transaction Page", () => {
     const signedXdr = page.getByTestId("validation-card-response");
 
     // Import Screen
-    const importBtn = page.getByText("Import transaction");
+    const importBtn = page.getByRole("button", { name: "Import transaction" });
     const validMsg = page.getByText("Valid Transaction Envelope XDR");
 
     const xdrInput = page.getByLabel(
@@ -346,7 +350,7 @@ test.describe("Sign Transaction Page", () => {
     const signaturesView = page.getByTestId("sign-tx-sigs");
 
     // Import Screen
-    const importBtn = page.getByText("Import transaction");
+    const importBtn = page.getByRole("button", { name: "Import transaction" });
     const validMsg = page.getByText("Valid Transaction Envelope XDR");
 
     const xdrInput = page.getByLabel(

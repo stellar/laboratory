@@ -187,7 +187,7 @@ export default function SubmitTransaction() {
     if (localStorageMethod) {
       setSubmitMethod(localStorageMethod);
     } else {
-      setSubmitMethod(isSoroban && isRpcAvailable ? "rpc" : "horizon");
+      setSubmitMethod(isRpcAvailable ? "rpc" : "horizon");
     }
 
     resetSubmitState();

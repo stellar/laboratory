@@ -25,6 +25,7 @@ export type FeeBumpParams = {
   source_account: string;
   fee: string;
   xdr: string;
+  signedTx: string;
 };
 
 type FeeBumpParamsObj = {
@@ -55,16 +56,11 @@ export type TransactionBuildParams = {
     | EmptyObj;
 };
 
-type TransactionBuildParamsObj = {
-  [K in keyof TransactionBuildParams]?: TransactionBuildParams[K];
-};
-
 export type SignTxActiveView = "import" | "overview";
 
 export interface Store {
   // Shared
   network: Network | EmptyObj;
-  previousNetwork: Network | EmptyObj;
   // Theme Color
   theme: ThemeColorType | null;
   // isDynamicNetworkSelect flag to indicate network update outside of the dropdown
@@ -166,30 +162,6 @@ export interface Store {
       triggerOnLaunch?: boolean;
     };
     feeBump: FeeBumpParams;
-    // [Transaction] Build Classic Transaction actions
-    updateBuildParams: (params: TransactionBuildParamsObj) => void;
-    updateBuildOperations: (operations: TxnOperation[]) => void;
-    updateBuildXdr: (xdr: string) => void;
-    updateBuildSingleOperation: (
-      index: number,
-      operation: TxnOperation,
-    ) => void;
-    updateBuildIsValid: ({
-      params,
-      operations,
-    }: {
-      params?: boolean;
-      operations?: boolean;
-    }) => void;
-    setBuildParams: (params: TransactionBuildParamsObj) => void;
-    setBuildParamsError: (error: string[]) => void;
-    setBuildOperationsError: (error: OpBuildingError[]) => void;
-    resetBuildParams: () => void;
-    // [Transaction] Build Soroban Transaction actions
-    updateSorobanBuildOperation: (operation: TxnOperation) => void;
-    updateSorobanBuildXdr: (xdr: string) => void;
-    // [Transaction] Both Classic & Soroban Transaction actions
-    resetBuild: () => void;
     // [Transaction] Sign Transaction actions
     updateSignActiveView: (viewId: SignTxActiveView) => void;
     updateSignImportTx: (tx: FeeBumpTransaction | Transaction) => void;
@@ -198,9 +170,8 @@ export interface Store {
     updateBipPath: (bipPath: string) => void;
     resetSign: () => void;
     updateFeeBumpParams: (params: FeeBumpParamsObj) => void;
-    resetBaseFee: () => void;
+    resetFeeBump: () => void;
     // [Transaction] Simulate Transaction actions
-    updateSimulateInstructionLeeway: (instrLeeway?: string) => void;
     updateSimulateTriggerOnLaunch: (trigger: boolean) => void;
   };
 
@@ -319,6 +290,7 @@ const initTransactionState = {
     source_account: "",
     fee: "",
     xdr: "",
+    signedTx: "",
   },
 };
 
@@ -357,7 +329,6 @@ export const createStore = (options: CreateStoreOptions) =>
       immer((set) => ({
         // Shared
         network: initNetwork,
-        previousNetwork: {},
         theme: null,
         isDynamicNetworkSelect: false,
         walletKit: {
@@ -366,8 +337,19 @@ export const createStore = (options: CreateStoreOptions) =>
         },
         selectNetwork: (network: Network) =>
           set((state) => {
-            state.previousNetwork = state.network;
+            const isNetworkChange =
+              state.network.id && state.network.id !== network.id;
             state.network = network;
+            if (isNetworkChange) {
+              state.transaction = {
+                ...state.transaction,
+                ...initTransactionState,
+              };
+              state.xdr = {
+                ...state.xdr,
+                ...initXdrState,
+              };
+            }
           }),
         updateIsDynamicNetworkSelect: (isDynamic: boolean) =>
           set((state) => {
@@ -524,74 +506,6 @@ export const createStore = (options: CreateStoreOptions) =>
         // Transaction
         transaction: {
           ...initTransactionState,
-          // Classic Build
-          updateBuildParams: (params: TransactionBuildParamsObj) =>
-            set((state) => {
-              state.transaction.build.params = {
-                ...state.transaction.build.params,
-                ...params,
-              };
-            }),
-          updateBuildOperations: (operations) =>
-            set((state) => {
-              state.transaction.build.classic.operations = operations;
-            }),
-          updateBuildXdr: (xdr) =>
-            set((state) => {
-              state.transaction.build.classic.xdr = xdr;
-            }),
-          updateBuildSingleOperation: (index, operation) =>
-            set((state) => {
-              state.transaction.build.classic.operations[index] = operation;
-            }),
-          updateBuildIsValid: ({
-            params,
-            operations,
-          }: {
-            params?: boolean;
-            operations?: boolean;
-          }) =>
-            set((state) => {
-              if (params !== undefined) {
-                state.transaction.build.isValid.params = params;
-              }
-              if (operations !== undefined) {
-                state.transaction.build.isValid.operations = operations;
-              }
-            }),
-          setBuildParams: (params: TransactionBuildParamsObj) =>
-            set((state) => {
-              state.transaction.build.params = {
-                ...initTransactionParamsState,
-                ...params,
-              };
-            }),
-          setBuildParamsError: (error: string[]) =>
-            set((state) => {
-              state.transaction.build.error.params = error;
-            }),
-          setBuildOperationsError: (error: OpBuildingError[]) =>
-            set((state) => {
-              state.transaction.build.error.operations = error;
-            }),
-          resetBuildParams: () =>
-            set((state) => {
-              state.transaction.build.params = initTransactionParamsState;
-            }),
-          // Soroban Build
-          updateSorobanBuildOperation: (operation) =>
-            set((state) => {
-              state.transaction.build.soroban.operation = operation;
-            }),
-          updateSorobanBuildXdr: (xdr: string) =>
-            set((state) => {
-              state.transaction.build.soroban.xdr = xdr;
-            }),
-          // Classic & Soroban
-          resetBuild: () =>
-            set((state) => {
-              state.transaction.build = initTransactionState.build;
-            }),
           // Sign
           updateSignActiveView: (viewId: SignTxActiveView) =>
             set((state) => {
@@ -617,10 +531,6 @@ export const createStore = (options: CreateStoreOptions) =>
             set((state) => {
               state.transaction.sign = initTransactionState.sign;
             }),
-          updateSimulateInstructionLeeway: (instrLeeway?: string) =>
-            set((state) => {
-              state.transaction.simulate.instructionLeeway = instrLeeway;
-            }),
           updateSimulateTriggerOnLaunch: (trigger: boolean) =>
             set((state) => {
               state.transaction.simulate.triggerOnLaunch = trigger;
@@ -632,7 +542,7 @@ export const createStore = (options: CreateStoreOptions) =>
                 ...params,
               };
             }),
-          resetBaseFee: () =>
+          resetFeeBump: () =>
             set((state) => {
               state.transaction.feeBump = initTransactionState.feeBump;
             }),

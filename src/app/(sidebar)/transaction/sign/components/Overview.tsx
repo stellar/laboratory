@@ -9,7 +9,6 @@ import {
   xdr,
 } from "@stellar/stellar-sdk";
 import { useRouter } from "next/navigation";
-import { set } from "lodash";
 
 import { FEE_BUMP_TX_FIELDS, TX_FIELDS } from "@/constants/signTransactionPage";
 import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
@@ -206,7 +205,7 @@ export const Overview = () => {
 
   const onWrapWithFeeBump = () => {
     if (sign.signedTx) {
-      updateFeeBumpParams(set({}, "xdr", sign.signedTx));
+      updateFeeBumpParams({ xdr: sign.signedTx });
 
       delayedAction({
         action: () => {

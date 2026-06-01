@@ -253,6 +253,11 @@ const nextConfig = {
         destination: "/transaction/dashboard",
         permanent: true,
       },
+      {
+        source: "/transaction/simulate",
+        destination: "/transaction/build",
+        permanent: true,
+      },
     ];
   },
 };

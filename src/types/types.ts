@@ -162,6 +162,9 @@ export type PrepareRpcErrorResponse = {
   result: StellarRpc.Api.SimulateTransactionErrorResponse;
 };
 
+// Simulate Transaction
+export type AuthModeType = "enforce" | "record" | "record_allow_nonroot";
+
 export type SubmitRpcResponse = {
   hash: string;
   result: StellarRpc.Api.GetSuccessfulTransactionResponse;
@@ -441,7 +444,7 @@ export type ContractInfoApiResponse = {
   wasm?: string;
   storage_entries?: number;
   validation?: {
-    status?: "verified" | "unverified";
+    status?: "verified_build" | "unverified_build";
     repository?: string;
     commit?: string;
     package?: string;
@@ -523,7 +526,12 @@ export type WasmData = {
   };
 };
 
-export type BuildVerificationStatus = "verified" | "unverified" | "built_in";
+export type BuildVerificationStatus =
+  | "built_in"
+  | "verified_build"
+  | "unverified_build"
+  | "source_code_unverified";
+
 export type BuildVerificationResponse = {
   status: BuildVerificationStatus;
   payload?: any;

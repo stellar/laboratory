@@ -1,26 +1,18 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import {
-  Button,
-  Card,
-  Notification,
-  Text,
-  Textarea,
-} from "@stellar/design-system";
+import { Card, Notification, Text, Textarea } from "@stellar/design-system";
 import type { JSONSchema7 } from "json-schema";
 import { parse, stringify } from "lossless-json";
 import { usePrevious } from "@/hooks/usePrevious";
 import { useStore } from "@/store/useStore";
+import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 
 import { type DereferencedSchemaType } from "@/constants/jsonSchema";
 
 import { dereferenceSchema } from "@/helpers/dereferenceSchema";
 import { getTxnToSimulate } from "@/helpers/sorobanUtils";
-import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
-
-import { useRpcPrepareTx } from "@/query/useRpcPrepareTx";
 
 import { Box } from "@/components/layout/Box";
 import { ErrorText } from "@/components/ErrorText";
@@ -29,6 +21,7 @@ import { AnyObject, SorobanInvokeValue } from "@/types/types";
 
 import { JsonSchemaRenderer } from "./JsonSchemaRenderer";
 
+// Used in Build Transaction's smart contract methods
 export const JsonSchemaForm = ({
   name,
   value,
@@ -40,20 +33,9 @@ export const JsonSchemaForm = ({
   onChange: (value: SorobanInvokeValue) => void;
   funcSchema: JSONSchema7;
 }) => {
-  const { network, transaction } = useStore();
-  const { updateSorobanBuildXdr } = transaction;
-  const { isValid } = transaction.build;
-  const { params: txnParams, soroban } = transaction.build;
-  const { operation: sorobanOperation } = soroban;
-  const {
-    mutate: prepareTx,
-    isPending: isPrepareTxPending,
-    isError: isPrepareTxError,
-    error: prepareTxError,
-    isSuccess: isPrepareTxSuccess,
-    data: prepareTxData,
-    reset: resetPrepareTx,
-  } = useRpcPrepareTx();
+  const { network } = useStore();
+  const { build, setBuildSorobanXdr } = useBuildFlowStore();
+  const { soroban, params: txnParams } = build;
 
   const dereferencedSchema: DereferencedSchemaType = dereferenceSchema(
     funcSchema,
@@ -102,57 +84,26 @@ export const JsonSchemaForm = ({
   }, [prevValue, value.args]);
 
   useEffect(() => {
-    if (prepareTxData) {
-      updateSorobanBuildXdr(prepareTxData.transactionXdr);
-    } else {
-      updateSorobanBuildXdr("");
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [prepareTxData]);
+    setSubmitTxError("");
+  }, []);
 
   useEffect(() => {
-    if (isPrepareTxError) {
-      setSubmitTxError(prepareTxError?.result.toString() || "");
-    } else {
-      setSubmitTxError("");
-    }
-  }, [isPrepareTxError, prepareTxError?.result]);
+    // @TODO we need to add validation for required forms
+    if (!missingReqFields.length && !hasFormError) {
+      const { xdr, error } = getTxnToSimulate(
+        value,
+        txnParams,
+        soroban.operation,
+        network.passphrase,
+        dereferencedSchema.argOrder,
+      );
 
-  const handlePrepareTx = () => {
-    setSubmitTxError("");
-    resetPrepareTx();
-
-    const updatedTxnParams = {
-      ...txnParams,
-      memo: {}, // starting with p23, soroban tx no longer support memos
-    };
-    const { xdr, error } = getTxnToSimulate(
-      value,
-      updatedTxnParams,
-      sorobanOperation,
-      network.passphrase,
-      dereferencedSchema.argOrder,
-    );
-
-    if (xdr) {
-      prepareTx({
-        rpcUrl: network.rpcUrl,
-        transactionXdr: xdr,
-        networkPassphrase: network.passphrase,
-        headers: getNetworkHeaders(network, "rpc"),
-      });
-    }
-
-    if (error) {
-      if (error.includes("Missing field")) {
-        setSubmitTxError(
-          `Missing required field(s): ${requiredFields.join(", ")}`,
-        );
-      } else {
-        setSubmitTxError(error);
+      if (xdr && !error) {
+        setBuildSorobanXdr(xdr);
       }
     }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value, missingReqFields.length, hasFormError]);
 
   const render = (schema: DereferencedSchemaType): React.ReactElement => {
     const { name, description } = schema;
@@ -168,7 +119,7 @@ export const JsonSchemaForm = ({
             onChange={onChange}
             parsedSorobanOperation={
               parse(
-                sorobanOperation.params.invoke_contract,
+                soroban.operation.params.invoke_contract,
               ) as SorobanInvokeValue
             }
             formError={formError}
@@ -176,22 +127,7 @@ export const JsonSchemaForm = ({
           />
         </Box>
 
-        <Box gap="md" direction="row" wrap="wrap">
-          <Button
-            variant="secondary"
-            disabled={
-              !isValid.params || hasFormError || missingReqFields.length > 0
-            }
-            isLoading={isPrepareTxPending}
-            size="md"
-            onClick={handlePrepareTx}
-            type="submit"
-          >
-            Prepare Transaction
-          </Button>
-        </Box>
-
-        {isPrepareTxSuccess && txnParams.memo && (
+        {txnParams.memo && (
           <Box
             gap="md"
             addlClassName="FieldNote FieldNote--note FieldNote--md"

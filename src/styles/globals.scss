@@ -19,13 +19,13 @@
   min-height: auto !important;
   display: block !important;
 
+  .Card {
+    --Card-padding: #{pxToRem(16px)};
+  }
+
   @media screen and (max-width: 1040px) {
     position: relative;
     z-index: 10;
-
-    .Card {
-      --Card-padding: #{pxToRem(16px)};
-    }
   }
 
   .Modal {
@@ -392,7 +392,7 @@
 
   // Content
   &__container {
-    padding: pxToRem(24px);
+    padding: pxToRem(32px);
     overflow-x: auto;
 
     @media screen and (max-width: 1040px) {
@@ -1191,7 +1191,7 @@
     gap: pxToRem(16px);
 
     @media screen and (min-width: 640px) {
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
 
       .half-width {
         grid-template-columns: 1fr 1fr;
@@ -1370,6 +1370,12 @@
   &__tabs {
     .NoInfoLoadedView {
       min-height: pxToRem(320px);
+    }
+
+    .Floater {
+      .Link--primary {
+        --Link-color-default: var(--sds-clr-lilac-08);
+      }
     }
   }
 }

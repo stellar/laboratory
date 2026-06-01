@@ -3,7 +3,7 @@ import { scrollElIntoView } from "@/helpers/scrollElIntoView";
 
 export const useScrollIntoView = (
   isEnabled: boolean,
-  scrollEl: React.MutableRefObject<HTMLDivElement | null>,
+  scrollEl: React.RefObject<HTMLDivElement | null>,
 ) => {
   useEffect(() => {
     if (isEnabled) {
