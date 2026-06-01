@@ -223,6 +223,7 @@ export enum TrackingEvent {
   // Code Editor
   CODE_EDITOR_FULL_SCREEN_MODE = "code editor: full screen mode",
   // Transaction Dashboard
+  TRANSACTION_DASHBOARD_LOAD_TX_AUTO = "transaction dashboard: autoload tx",
   TRANSACTION_DASHBOARD_LOAD_TX = "transaction dashboard: load tx",
   TRANSACTION_DASHBOARD_CLEAR_TX = "transaction dashboard: clear tx",
   TRANSACTION_DASHBOARD_TAB = "transaction dashboard: explorer: tab",

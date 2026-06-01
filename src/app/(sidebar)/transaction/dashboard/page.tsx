@@ -129,21 +129,24 @@ export default function TransactionDashboard() {
   ];
 
   useEffect(() => {
+    const transactionHashError =
+      validate.getTransactionHashError(transactionHashInput);
+
     if (
       transactionHashInput &&
-      !transactionHashInputError &&
+      !transactionHashError &&
       isCurrentNetworkSupported &&
       network.rpcUrl
     ) {
       fetchTxDetails();
-      trackEvent(TrackingEvent.TRANSACTION_DASHBOARD_LOAD_TX, {});
+      trackEvent(TrackingEvent.TRANSACTION_DASHBOARD_LOAD_TX_AUTO, {});
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     transactionHashInput,
-    transactionHashInputError,
     isCurrentNetworkSupported,
     network.rpcUrl,
+    fetchTxDetails,
   ]);
 
   useEffect(() => {
