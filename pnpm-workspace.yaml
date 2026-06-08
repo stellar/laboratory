@@ -1,6 +1,7 @@
 minimumReleaseAge: 10080
 minimumReleaseAgeExclude:
   - "@stellar/stellar-sdk"
+  - "@stellar/js-xdr"
   - "@stellar/design-system"
   - "@stellar/stellar-xdr-json"
 overrides:
