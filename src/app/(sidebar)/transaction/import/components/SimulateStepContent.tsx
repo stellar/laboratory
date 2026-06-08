@@ -2,7 +2,7 @@
 
 import {
   FeeBumpTransaction,
-  Operation,
+  OperationRecord,
   Transaction,
   TransactionBuilder,
 } from "@stellar/stellar-sdk";
@@ -24,7 +24,7 @@ const isInvokeContractTx = (xdr: string, passphrase: string): boolean => {
       tx instanceof FeeBumpTransaction
         ? tx.innerTransaction.operations
         : tx.operations;
-    const firstOp = operations?.[0] as Operation | undefined;
+    const firstOp = operations?.[0] as OperationRecord | undefined;
     if (firstOp?.type !== "invokeHostFunction") return false;
     return firstOp.func.switch().name === "hostFunctionTypeInvokeContract";
   } catch {
