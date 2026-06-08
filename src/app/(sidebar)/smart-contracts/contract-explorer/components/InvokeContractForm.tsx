@@ -31,6 +31,7 @@ import { ErrorText } from "@/components/ErrorText";
 import { JsonSchemaRenderer } from "@/components/SmartContractJsonSchema/JsonSchemaRenderer";
 import { TransactionSuccessCard } from "@/components/TransactionSuccessCard";
 import { WalletKitContext } from "@/components/WalletKit/WalletKitContextProvider";
+import { StellarWalletsKit } from "@creit.tech/stellar-wallets-kit";
 import { TabView } from "@/components/TabView";
 import { CodeEditor, SupportedLanguage } from "@/components/CodeEditor";
 
@@ -180,7 +181,7 @@ export const InvokeContractForm = ({
   const responseErrorEl = useRef<HTMLDivElement | null>(null);
 
   const signTx = async (xdr: string): Promise<string | null> => {
-    if (!walletKitInstance?.walletKit || !walletKit?.publicKey) {
+    if (!walletKitInstance?.isInitialized || !walletKit?.publicKey) {
       return null;
     }
 
@@ -200,13 +201,10 @@ export const InvokeContractForm = ({
           }, 180000);
         });
 
-        const signPromise = walletKitInstance.walletKit.signTransaction(
-          xdr || "",
-          {
-            address: walletKit.publicKey,
-            networkPassphrase: network.passphrase,
-          },
-        );
+        const signPromise = StellarWalletsKit.signTransaction(xdr || "", {
+          address: walletKit.publicKey,
+          networkPassphrase: network.passphrase,
+        });
 
         const result = await Promise.race([signPromise, timeoutPromise]);
 
