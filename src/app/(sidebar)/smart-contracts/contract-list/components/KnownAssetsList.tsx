@@ -38,8 +38,8 @@ export const KnownAssetsList = () => {
   };
 
   const renderContent = () => {
-    // in case where user is already on known assets tab on mainnet and switches to testnet
-    if (network.id === "testnet") {
+    // In case the user is on Known assets tab on Mainnet and switches to another network
+    if (network.id !== "mainnet") {
       return (
         <div>
           <Text size="sm" as="p">
