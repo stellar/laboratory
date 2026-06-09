@@ -14,6 +14,7 @@ import { Routes } from "@/constants/routes";
 import { KNOWN_ASSETS } from "@/constants/knownAssets";
 
 import { delayedAction } from "@/helpers/delayedAction";
+import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 
 import { KnownAssetListRecord, SortDirection } from "@/types/types";
 
@@ -84,12 +85,12 @@ export const KnownAssetsList = () => {
                 addlClassName="ContractLink--withIcon"
                 onClick={() => handleNavigateToContractExplorer(r.contract)}
               >
-                {r.contract}
+                {shortenStellarAddress(r.contract)}
               </Link>
             ),
           },
         ]}
-        cssGridTemplateColumns="minmax(100px, 1fr) minmax(160px, 1.5fr) minmax(160px, 1.5fr) minmax(210px, 3fr)"
+        cssGridTemplateColumns="1fr 1fr 1fr 1fr"
         hideFirstLastPageNav={true}
         hidePageCount={true}
         onSortChange={(id, direction) => setSortState({ id, direction })}

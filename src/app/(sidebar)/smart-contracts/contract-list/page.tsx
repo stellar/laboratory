@@ -13,7 +13,7 @@ import { SwitchNetworkButtons } from "@/components/SwitchNetworkButtons";
 import { useStore } from "@/store/useStore";
 
 import { RecentList } from "./components/RecentList";
-import { PopularList } from "./components/PopularList";
+import { DefiList } from "./components/DefiList";
 import { KnownAssetsList } from "./components/KnownAssetsList";
 
 export default function ContractList() {
@@ -87,7 +87,7 @@ export default function ContractList() {
         tab1={{
           id: "defi",
           label: "DeFi",
-          content: activeTab === "defi" ? <PopularList /> : null,
+          content: activeTab === "defi" ? <DefiList /> : null,
           isDisabled: network.id !== "mainnet",
         }}
         tab2={{
