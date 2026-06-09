@@ -655,7 +655,7 @@ export const KNOWN_ASSETS: KnownAssetListRecord[] = [
   },
   {
     assetCode: "BTC",
-    entity: "Ultracapital",
+    entity: "UltraCapital",
     assetClass: "Representational Crypto",
     contract: "CAO7DDJNGMOYQPRYDY5JVZ5YEK4UQBSMGLAEWRCUOTRMDSBMGWSAATDZ",
   },
