@@ -61,6 +61,10 @@
 .Signatures {
   color: var(--sds-clr-gray-11);
 
+  &__note {
+    color: var(--sds-clr-gray-09);
+  }
+
   &__cell {
     &[data-is-header="true"] {
       text-align: left;

@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useImportFlowStore } from "@/store/createTransactionFlowStore";
 
 import { useTransactionFlow } from "@/hooks/useTransactionFlow";
+import { useImportSignatureCompleteness } from "@/hooks/useImportSignatureCompleteness";
 
 import { Box } from "@/components/layout/Box";
 import {
@@ -44,11 +45,23 @@ export default function ImportTransaction() {
     resetAll,
   } = useImportFlowStore();
 
-  // Default to the Classic variant until the user pastes XDR
   const parsedTxType = importState?.parsedTxType ?? "classic";
+  const signatureCompleteness = useImportSignatureCompleteness();
+
+  // A signed Soroban tx is necessarily already simulated — it carries
+  // SorobanTransactionData (footprint/resource fees), which is what the
+  // signatures were produced over. Offering the simulate step would only let
+  // the user re-assemble a fresh envelope and silently drop those signatures,
+  // so omit it entirely for this case.
+  const isSignedSimulatedSoroban =
+    parsedTxType === "soroban" &&
+    Boolean(importState?.hasSignatures) &&
+    Boolean(importState?.isSimulated);
+
+  const isFeeBump = Boolean(importState?.isFeeBump);
 
   const steps: TransactionStepName[] =
-    parsedTxType === "classic"
+    parsedTxType === "classic" || isFeeBump || isSignedSimulatedSoroban
       ? ["import", "sign", "submit"]
       : ["import", "simulate", "sign", "submit"];
 
@@ -86,7 +99,7 @@ export default function ImportTransaction() {
 
   const isNextDisabled = getIsNextDisabled();
 
-  // On the import step, when the pasted tx already carries signatures,
+  // When the pasted tx already carries all the signatures it needs,
   // default the Next button to "Submit transaction" so the existing
   // signatures are preserved through to submission. Otherwise the flow's
   // simulate/sign steps would discard them: StellarRpc.assembleTransaction
@@ -98,16 +111,15 @@ export default function ImportTransaction() {
   // SorobanTransactionData (isSimulated), since an unsimulated Soroban tx
   // can't be submitted as-is — it would fail at the protocol level.
   //
-  // We can't always confirm offline that the sigs are sufficient (multisig
-  // with on-chain cosigners is invisible to the offline check), so we let
-  // the network be the source of truth: an insufficient signature set
-  // fails with a clear protocol error (e.g. txBadAuth) on submit, which is
-  // recoverable. The alternative — gating on signatureCheck.isReady —
-  // strands multisig users on the sign step with no signature they can add.
+  // We also require every required signer to already have a valid signature
+  // (signatureCompleteness.isComplete). When a required source account hasn't
+  // signed, we leave isReadyToSubmit false so the footer falls back to its
+  // default Next button — "Sign transaction"
   const isReadyToSubmit =
     activeStep === "import" &&
     Boolean(importState?.importXdr) &&
     Boolean(importState?.hasSignatures) &&
+    Boolean(signatureCompleteness?.isComplete) &&
     (parsedTxType === "classic" ||
       (parsedTxType === "soroban" && Boolean(importState?.isSimulated)));
 
@@ -131,7 +143,9 @@ export default function ImportTransaction() {
       <div className="BuildTransaction__layout">
         <div className="BuildTransaction__content">
           <Box gap="xxl">
-            {activeStep === "import" && <ImportStepContent />}
+            {activeStep === "import" && (
+              <ImportStepContent isReadyToSubmit={isReadyToSubmit} />
+            )}
             {activeStep === "sign" && (
               <SignStepContent
                 xdrToSign={

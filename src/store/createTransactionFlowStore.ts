@@ -56,6 +56,10 @@ export type TransactionImportState = {
   // True when the imported envelope already carries SorobanTransactionData
   // (footprint, resource fees) — i.e. has been simulated/assembled.
   isSimulated: boolean;
+  // True when the imported envelope is a fee-bump transaction. A fee-bump
+  // wraps an already-complete, immutable inner transaction, so it never goes
+  // through the simulate step — even when the inner tx is Soroban.
+  isFeeBump: boolean;
   parseError: string | null;
 };
 
@@ -208,6 +212,9 @@ interface TransactionFlowActions {
    */
   setImportIsSimulated: (isSimulated: boolean) => void;
 
+  /** Store whether the imported XDR is a fee-bump transaction. */
+  setImportIsFeeBump: (isFeeBump: boolean) => void;
+
   /** Store the parse error message (or null when XDR is valid/empty). */
   setImportParseError: (error: string | null) => void;
 
@@ -295,6 +302,7 @@ const initTransactionImportState: TransactionImportState = {
   parsedTxType: null,
   hasSignatures: false,
   isSimulated: false,
+  isFeeBump: false,
   parseError: null,
 };
 
@@ -535,6 +543,14 @@ const createTransactionFlowStore = (
               state.import = { ...initTransactionImportState };
             }
             state.import.isSimulated = isSimulated;
+          }),
+
+        setImportIsFeeBump: (isFeeBump) =>
+          set((state) => {
+            if (!state.import) {
+              state.import = { ...initTransactionImportState };
+            }
+            state.import.isFeeBump = isFeeBump;
           }),
 
         setImportParseError: (error) =>

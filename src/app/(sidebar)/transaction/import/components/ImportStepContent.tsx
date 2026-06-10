@@ -10,10 +10,9 @@ import { Alert } from "@stellar/design-system";
 import { useImportFlowStore } from "@/store/createTransactionFlowStore";
 import { useStore } from "@/store/useStore";
 
-import {
-  hasSorobanData,
-  isSorobanOperationType,
-} from "@/helpers/sorobanUtils";
+import { useImportSignatureCompleteness } from "@/hooks/useImportSignatureCompleteness";
+
+import { hasSorobanData, isSorobanOperationType } from "@/helpers/sorobanUtils";
 
 import { validate } from "@/validate";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
@@ -29,6 +28,10 @@ import { PageCard } from "@/components/layout/PageCard";
 
 const MIN_LENGTH_FOR_FULL_WIDTH_FIELD = 30;
 
+const isFeeBumpTransaction = (
+  tx: Transaction | FeeBumpTransaction,
+): tx is FeeBumpTransaction => "innerTransaction" in tx;
+
 /**
  * Import step content for the single-page transaction flow.
  *
@@ -40,7 +43,11 @@ const MIN_LENGTH_FOR_FULL_WIDTH_FIELD = 30;
  * @example
  * {activeStep === "import" && <ImportStepContent />}
  */
-export const ImportStepContent = () => {
+export const ImportStepContent = ({
+  isReadyToSubmit,
+}: {
+  isReadyToSubmit?: boolean;
+}) => {
   const { network } = useStore();
   const {
     import: importState,
@@ -48,6 +55,7 @@ export const ImportStepContent = () => {
     setImportParsedType,
     setImportHasSignatures,
     setImportIsSimulated,
+    setImportIsFeeBump,
     setImportParseError,
     resetAll,
   } = useImportFlowStore();
@@ -55,6 +63,11 @@ export const ImportStepContent = () => {
   const importXdr = importState?.importXdr ?? "";
   const parseError = importState?.parseError ?? null;
   const parsedTxType = importState?.parsedTxType ?? null;
+
+  const signatureCompleteness = useImportSignatureCompleteness();
+  const isMultisigDeferred =
+    Boolean(isReadyToSubmit) &&
+    (signatureCompleteness?.missingSigners.length ?? 0) > 0;
 
   const parsedTx: Transaction | FeeBumpTransaction | null = (() => {
     if (!importXdr || parseError || !parsedTxType) return null;
@@ -75,6 +88,7 @@ export const ImportStepContent = () => {
       setImportParsedType(null);
       setImportHasSignatures(false);
       setImportIsSimulated(false);
+      setImportIsFeeBump(false);
       return;
     }
 
@@ -87,6 +101,7 @@ export const ImportStepContent = () => {
       setImportParsedType(null);
       setImportHasSignatures(false);
       setImportIsSimulated(false);
+      setImportIsFeeBump(false);
       trackEvent(TrackingEvent.TRANSACTION_IMPORT_XDR_INVALID);
       return;
     }
@@ -96,16 +111,16 @@ export const ImportStepContent = () => {
         | Transaction
         | FeeBumpTransaction;
 
-      const operations =
-        tx instanceof FeeBumpTransaction
-          ? tx.innerTransaction.operations
-          : tx.operations;
+      const operations = isFeeBumpTransaction(tx)
+        ? tx.innerTransaction.operations
+        : tx.operations;
 
       const isSoroban = isSorobanOperationType(operations?.[0]?.type ?? "");
 
       setImportParsedType(isSoroban ? "soroban" : "classic");
       setImportHasSignatures(tx.signatures.length > 0);
       setImportIsSimulated(isSoroban && hasSorobanData(tx));
+      setImportIsFeeBump(isFeeBumpTransaction(tx));
       setImportParseError(null);
       trackEvent(TrackingEvent.TRANSACTION_IMPORT_XDR_VALID);
     } catch (e) {
@@ -117,8 +132,43 @@ export const ImportStepContent = () => {
       setImportParsedType(null);
       setImportHasSignatures(false);
       setImportIsSimulated(false);
+      setImportIsFeeBump(false);
       trackEvent(TrackingEvent.TRANSACTION_IMPORT_XDR_INVALID);
     }
+  };
+
+  const renderSuccessImportAlert = () => {
+    if (isMultisigDeferred) {
+      return (
+        <Alert
+          variant="primary"
+          title="Transaction imported."
+          placement="inline"
+        >
+          Signatures from unrecognized signers detected. Submit to verify.
+        </Alert>
+      );
+    }
+    if (isReadyToSubmit) {
+      return (
+        <Alert
+          variant="success"
+          title="Transaction imported. All required signatures are included."
+          placement="inline"
+        >
+          You can proceed to submit
+        </Alert>
+      );
+    }
+    return (
+      <Alert
+        variant="success"
+        title="Transaction imported successfully."
+        placement="inline"
+      >
+        Review the details and continue to the next step.
+      </Alert>
+    );
   };
 
   // Build the overview field list, mirroring the sign page's Transaction
@@ -132,7 +182,7 @@ export const ImportStepContent = () => {
       { label: "Transaction hash", value: parsedTx.hash().toString("hex") },
     ];
 
-    if (parsedTx instanceof FeeBumpTransaction) {
+    if (isFeeBumpTransaction(parsedTx)) {
       return [...requiredFields, ...FEE_BUMP_TX_FIELDS(parsedTx)];
     }
     return [...requiredFields, ...TX_FIELDS(parsedTx)];
@@ -150,13 +200,7 @@ export const ImportStepContent = () => {
         activeStep="import"
       />
       {importState?.importXdr && !importState?.parseError ? (
-        <Alert
-          variant="success"
-          title="Transaction imported successfully."
-          placement="inline"
-        >
-          Review the details and proceed to signing and submission.
-        </Alert>
+        renderSuccessImportAlert()
       ) : (
         <PageCard>
           <XdrPicker
