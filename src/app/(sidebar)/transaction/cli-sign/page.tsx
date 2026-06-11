@@ -8,16 +8,25 @@ import { Routes } from "@/constants/routes";
 import { NetworkOptions } from "@/constants/settings";
 import { useStore } from "@/store/useStore";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
+import { useImportFlowStore } from "@/store/createTransactionFlowStore";
+import { delayedAction } from "@/helpers/delayedAction";
 
+/**
+ * Deep-link adapter for the Stellar CLI sign flow.
+ *
+ * The CLI opens `/transaction/cli-sign?xdr=...&networkPassphrase=...`. We
+ * select the matching network, hand the XDR off to the import flow store, and
+ * redirect to the import page — which parses the envelope and renders the
+ * transaction overview.
+ */
 export default function CliSignTransaction() {
-  const { network, updateIsDynamicNetworkSelect, transaction, selectNetwork } =
-    useStore();
+  const { updateIsDynamicNetworkSelect, selectNetwork } = useStore();
+  const { setImportXdr } = useImportFlowStore();
   const searchParams = useSearchParams();
-
-  const getNetworkByPassphrase = (passphrase: string) => {
-    return NetworkOptions.find((network) => network.passphrase === passphrase);
-  };
   const router = useRouter();
+
+  const getNetworkByPassphrase = (passphrase: string) =>
+    NetworkOptions.find((network) => network.passphrase === passphrase);
 
   useEffect(() => {
     const networkPassphrase = searchParams?.get("networkPassphrase");
@@ -32,16 +41,21 @@ export default function CliSignTransaction() {
     }
 
     if (xdr) {
-      transaction.updateSignActiveView("overview");
-      transaction.updateSignImportXdr(xdr);
+      setImportXdr(xdr);
     }
 
     trackEvent(TrackingEvent.TRANSACTION_CLI_SIGN);
 
-    router.push(Routes.IMPORT_TRANSACTION);
-    // Not including other deps
+    delayedAction({
+      action() {
+        router.push(Routes.IMPORT_TRANSACTION);
+      },
+      delay: 0,
+    });
+
+    // Run once for the deep link's search params; the import page owns parsing.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [transaction.sign.importXdr, network.id]);
+  }, [searchParams]);
 
   return <Loader />;
 }
