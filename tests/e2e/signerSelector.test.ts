@@ -93,25 +93,26 @@ test.describe("Signer Selector", () => {
     test("'Use secret key' dropdown works for source account", async () => {
       // Import transaction
       await pageContext
-        .getByLabel("Import a transaction envelope in XDR format")
+        .getByLabel("Transaction envelope in XDR")
         .fill(MOCK_TX_XDR);
       await expect(
-        pageContext.getByText("Valid Transaction Envelope XDR"),
+        pageContext.getByText("Transaction imported successfully"),
       ).toBeVisible();
+
+      // Advance to the Sign step
       await pageContext
-        .getByRole("button", { name: "Import transaction" })
+        .getByRole("button", { name: "Sign transaction", exact: true })
         .click();
 
-      // Verify overview is visible
-      await expect(pageContext.getByTestId("sign-tx-overview")).toBeVisible();
-
       // First signer
-      await pageContext.getByText("Use secret key").click();
+      await pageContext.getByText("Use secret key").first().click();
 
       const { values } = await validateSignerSelectorOptions(pageContext);
       await values.nth(0).click();
 
-      const multipickers = pageContext.getByTestId("multipicker-signer");
+      const multipickers = pageContext.getByTestId(
+        "multipicker-sign-step-signer",
+      );
       const multiPickerInputs = multipickers.locator(".Input");
       await expect(multiPickerInputs.nth(0).locator("input")).toHaveValue(
         SAVED_ACCOUNT_1_SECRET,
@@ -138,8 +139,7 @@ test.describe("Signer Selector", () => {
 
       // Sign transaction
       await pageContext
-        .getByTestId("sign-tx-secretkeys")
-        .getByText("Sign transaction")
+        .getByRole("button", { name: "Sign", exact: true })
         .click();
 
       await expect(
