@@ -38,7 +38,7 @@ export default function CliSignTransaction() {
 
     trackEvent(TrackingEvent.TRANSACTION_CLI_SIGN);
 
-    router.push(Routes.SIGN_TRANSACTION);
+    router.push(Routes.IMPORT_TRANSACTION);
     // Not including other deps
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transaction.sign.importXdr, network.id]);
