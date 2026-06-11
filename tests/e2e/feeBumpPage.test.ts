@@ -60,7 +60,7 @@ test.describe("Fee Bump Page", () => {
       await expect(nextButton).toBeVisible();
       await nextButton.click();
 
-      await expect(page.locator("h1")).toHaveText("Sign transaction");
+      await expect(page.locator("h1")).toHaveText("Import transaction");
     });
 
     test("View in XDR viewer", async ({ page }) => {

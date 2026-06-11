@@ -80,7 +80,7 @@ export const Signatures = ({
         );
 
         return (
-          <tr role="row" key={rowKey}>
+          <tr key={rowKey}>
             <td>
               <SignatureCell>
                 {signerPubKey ? renderSigner(isVerified, signerPubKey) : "-"}
@@ -106,7 +106,7 @@ export const Signatures = ({
       const isMatch = verifyAuthEntryPublicKey(entry.publicKey, entry.address);
 
       return (
-        <tr role="row" key={rowKey}>
+        <tr key={rowKey}>
           <td>
             <SignatureCell>
               {renderSigner(isMatch, entry.address)}

@@ -87,7 +87,7 @@ test.describe("Signer Selector", () => {
     });
 
     test("Loads", async () => {
-      await expect(pageContext.locator("h1")).toHaveText("Sign transaction");
+      await expect(pageContext.locator("h1")).toHaveText("Import transaction");
     });
 
     test("'Use secret key' dropdown works for source account", async () => {

@@ -74,7 +74,7 @@ test.describe("Sign Step in Build Flow", () => {
   }) => {
     await seedSessionStorageAndNavigate(page);
 
-    await expect(page.locator("h1")).toHaveText("Sign transaction");
+    await expect(page.locator("h1")).toHaveText("Import transaction");
     await expect(
       page.getByText(
         "To be included in the ledger, the transaction must be signed and submitted to the network.",
@@ -100,7 +100,7 @@ test.describe("Sign Step in Build Flow", () => {
     await seedSessionStorageAndNavigate(page);
 
     // Wait for the sign step to hydrate from sessionStorage
-    await expect(page.locator("h1")).toHaveText("Sign transaction");
+    await expect(page.locator("h1")).toHaveText("Import transaction");
 
     const nextButton = page.locator('[data-position="right"]');
     await expect(nextButton).toBeDisabled();
