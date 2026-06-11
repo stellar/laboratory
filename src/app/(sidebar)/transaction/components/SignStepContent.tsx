@@ -58,6 +58,11 @@ export const SignStepContent = ({
         id="sign-step"
         xdrToSign={xdrToSign || null}
         onDoneAction={({ signedXdr, errorMessage }) => {
+          // DEBUG: confirm signing preserves sorobanData. Compare the
+          // [sign-in] xdr against [sign-out] — if the in-xdr already has
+          // resourceFee 0, the problem is upstream (assembly).
+          console.log("[sign-in] xdrToSign:", xdrToSign);
+          console.log("[sign-out] signedXdr:", signedXdr);
           onSigned(signedXdr ?? "");
           setErrorMessage(errorMessage);
         }}

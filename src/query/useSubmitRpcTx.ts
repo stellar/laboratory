@@ -38,6 +38,28 @@ export const useSubmitRpcTx = () => {
           transactionXdr,
           networkPassphrase,
         );
+
+        // DEBUG: log the resource fee of the XDR actually being submitted.
+        // resourceFee === 0/NONE here means sorobanData never made it onto
+        // the submitted envelope (likely a raw pre-simulation XDR fallback).
+        try {
+          const env = transaction.toEnvelope();
+          const inner =
+            env.switch().name === "envelopeTypeTxFeeBump"
+              ? env.feeBump().tx().innerTx().v1().tx()
+              : env.v1().tx();
+          const ext = inner.ext();
+          const sd = ext.switch() === 1 ? ext.sorobanData() : null;
+          console.log("[submit] xdr:", transactionXdr);
+          console.log("[submit] fee:", {
+            fee: transaction.fee,
+            hasSorobanData: !!sd,
+            resourceFee: sd ? sd.resourceFee().toString() : "NONE",
+          });
+        } catch (e) {
+          console.log("[submit] fee decode failed", e);
+        }
+
         const rpcServer = new StellarRpc.Server(rpcUrl, {
           headers: isEmptyObject(headers) ? undefined : { ...headers },
           allowHttp: new URL(rpcUrl).hostname === "localhost",

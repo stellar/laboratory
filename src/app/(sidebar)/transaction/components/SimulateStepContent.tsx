@@ -129,6 +129,31 @@ export const SimulateStepContent = ({
   const [simulationDisplay, setSimulationDisplayResult] = useState<string>("");
   const [validUntilLedgerSeq, setValidUntilLedgerSeq] = useState(0);
 
+  // DEBUG: decode and log the resource fee carried by an assembled XDR.
+  const logFee = (label: string, b64?: string) => {
+    if (!b64) {
+      console.log(`[fee] ${label}: <empty xdr>`);
+      return;
+    }
+    try {
+      const tx = TransactionBuilder.fromXDR(b64, network.passphrase);
+      const env = tx.toEnvelope();
+      const inner =
+        env.switch().name === "envelopeTypeTxFeeBump"
+          ? env.feeBump().tx().innerTx().v1().tx()
+          : env.v1().tx();
+      const ext = inner.ext();
+      const sd = ext.switch() === 1 ? ext.sorobanData() : null;
+      console.log(`[fee] ${label}:`, {
+        fee: tx.fee,
+        hasSorobanData: !!sd,
+        resourceFee: sd ? sd.resourceFee().toString() : "NONE",
+      });
+    } catch (e) {
+      console.log(`[fee] ${label}: decode failed`, e);
+    }
+  };
+
   /**
    * After all auth entries are signed, assemble the transaction with the
    * signed auth entries and store the assembled XDR for the Sign step.
@@ -171,10 +196,14 @@ export const SimulateStepContent = ({
       }
 
       const finalXdr = envelope.toXDR("base64");
+      logFee("assembled (auth path)", finalXdr);
       actions.setAssembledXdr(finalXdr);
       actions.setSignedAuthEntriesXdr(signedEntries);
       trackEvent(TrackingEvent.SOROBAN_AUTH_ASSEMBLY_SUCCESS);
     } catch (e) {
+      // DEBUG: if this fires, assembledXdr stays undefined and submit falls
+      // back to the raw built XDR (resourceFee 0). Leading suspect.
+      console.error("[assemble] assembleWithSignedAuth FAILED", e);
       trackEvent(TrackingEvent.SOROBAN_AUTH_ASSEMBLY_ERROR, {
         error: String(e),
       });
@@ -259,6 +288,10 @@ export const SimulateStepContent = ({
 
       if (simBase64Response) {
         actions.setSimulationResult(JSON.stringify(simBase64Response, null, 2));
+        console.log(
+          "simulation response: ",
+          JSON.stringify(simBase64Response, null, 2),
+        );
         const hasError = Boolean(
           simBase64Response?.error || simBase64Response?.result?.error,
         );
@@ -322,8 +355,11 @@ export const SimulateStepContent = ({
                 rawTx,
                 parsedSim,
               ).build();
+              logFee("assembled (auto path)", assembled.toXDR());
               actions.setAssembledXdr(assembled.toXDR());
             } catch (e) {
+              // DEBUG: auto-assembly failure also leaves assembledXdr undefined.
+              console.error("[assemble] auto-assembly FAILED", e);
               trackEvent(TrackingEvent.SOROBAN_AUTO_ASSEMBLY_ERROR, {
                 error: String(e),
               });
@@ -347,6 +383,8 @@ export const SimulateStepContent = ({
   const authEntries = simulate.authEntriesXdr || [];
   const hasAuthEntries = authEntries.length > 0;
   const resourceInfo = getSimulationResourceInfo(simulateTxData);
+  console.log("simulateTxData: ", simulateTxData);
+  console.log("hasAuthEntries: ", hasAuthEntries);
 
   const getErrorMessage = (): string => {
     if (simulateTxError) {
