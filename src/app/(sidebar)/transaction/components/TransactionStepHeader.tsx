@@ -38,7 +38,7 @@ export const TransactionStepHeader = ({
   operations,
   onClearAll,
 }: TransactionStepHeaderProps) => {
-  const showHeaderButtons = activeStep === "build" || activeStep === "import";
+  const showHeaderButtons = activeStep === "build";
   const [isSaveModalVisible, setIsSaveModalVisible] = useState(false);
 
   return (
