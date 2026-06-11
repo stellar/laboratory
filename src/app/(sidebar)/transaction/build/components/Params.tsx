@@ -295,7 +295,7 @@ export const Params = () => {
             Fetch next sequence
           </InputSideElement>
         }
-        infoLink="https://developers.stellar.org/docs/glossary#sequence-number"
+        infoLink="https://developers.stellar.org/docs/learn/glossary#sequence-number"
       />
 
       <PositiveIntPicker
@@ -335,7 +335,7 @@ export const Params = () => {
           handleParamChange(id, getMemoValue(memo));
           handleParamsError(id, validateParam(id, memo));
         }}
-        infoLink="https://developers.stellar.org/docs/encyclopedia/memos"
+        infoLink="https://developers.stellar.org/docs/learn/fundamentals/transactions/operations-and-transactions#memo"
       />
 
       <TimeBoundsPicker
