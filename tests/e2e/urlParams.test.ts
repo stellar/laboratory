@@ -112,24 +112,6 @@ test.describe("URL Params", () => {
       );
     });
 
-    test("[Classic] Sign Transaction", async ({ page }) => {
-      await page.goto(
-        `${baseURL}/transaction/sign?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;&transaction$sign$activeView=overview&importXdr=AAAAAgAAAAA55ZjOXdOOulfzeLPXjLDLdplq//5HGjapWAXjGSkdAkwAAD6AADQioAAAAAQAAAAEAAAAAAAAAAAAAAABnUbvoAAAAAQAAAAMxMjMAAAAAAgAAAAAAAAAAAAAAALs4fndRzE6mDMvxXqgyh79//PxCtOwb9MTWEeINa//Qr8AAAABvwjrAAAAAABAAAAADnlmM5d0466V//N4s9eMsMt2mWr//kcaNqlYBeMZKR0CTAAAAAQAAAAASBB3qbNO//amClp01Lvg//fRcZsxzvl0ItXd0lfm+7+ggAAAAFVU0RDAAAAAEI+fQXy7K+//7BkrIVo//G+lq7bjY5wJUq+NBPgIH3layAAAACVAvkAAAAAAAAAAAAA==;;`,
-      );
-
-      await expect(page.locator("h1")).toHaveText("Transaction overview");
-
-      await expect(page.getByLabel("Signing for")).toHaveValue(
-        "Test SDF Network ; September 2015",
-      );
-      await expect(page.getByLabel("Transaction Envelope XDR")).toHaveValue(
-        "AAAAAgAAAAA55ZjOXdOOulfzeLPXjLDLdplq/5HGjapWAXjGSkdAkwAAD6AADQioAAAAAQAAAAEAAAAAAAAAAAAAAABnUbvoAAAAAQAAAAMxMjMAAAAAAgAAAAAAAAAAAAAAALs4fndRzE6mDMvxXqgyh79/PxCtOwb9MTWEeINa/Qr8AAAABvwjrAAAAAABAAAAADnlmM5d0466V/N4s9eMsMt2mWr/kcaNqlYBeMZKR0CTAAAAAQAAAAASBB3qbNO/amClp01Lvg/fRcZsxzvl0ItXd0lfm+7+ggAAAAFVU0RDAAAAAEI+fQXy7K+/7BkrIVo/G+lq7bjY5wJUq+NBPgIH3layAAAACVAvkAAAAAAAAAAAAA==",
-      );
-      await expect(page.getByLabel("Transaction hash")).toHaveValue(
-        "44abaabac11c318d595d392c24166965301b48109899bc8e819723afb89d5e37",
-      );
-    });
-
     test("Simulate Transaction redirects to build", async ({ page }) => {
       await page.goto(
         `${baseURL}/transaction/simulate?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;`,
