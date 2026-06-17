@@ -512,6 +512,13 @@ export type PopularContractListRecord = {
   contract: string;
 };
 
+export type KnownAssetListRecord = {
+  assetCode: string;
+  entity: string;
+  assetClass: string;
+  contract: string;
+};
+
 export type WasmData = {
   sourceRepo: string;
   build: {

@@ -13,23 +13,24 @@ import { SwitchNetworkButtons } from "@/components/SwitchNetworkButtons";
 import { useStore } from "@/store/useStore";
 
 import { RecentList } from "./components/RecentList";
-import { PopularList } from "./components/PopularList";
+import { DefiList } from "./components/DefiList";
+import { KnownAssetsList } from "./components/KnownAssetsList";
 
 export default function ContractList() {
   const { network } = useStore();
 
-  type ContractListTabId = "popular" | "recent";
+  type ContractListTabId = "defi" | "known-assets" | "recent";
 
-  // Default to "recent" on testnet, "popular" on mainnet
+  // Default to "recent" on testnet, "defi" on mainnet
   const [activeTab, setActiveTab] = useState<ContractListTabId>(
-    network.id === "testnet" ? "recent" : "popular",
+    network.id === "testnet" ? "recent" : "defi",
   );
 
   useEffect(() => {
     if (network.id === "testnet") {
       setActiveTab("recent");
     } else if (network.id === "mainnet") {
-      setActiveTab("popular");
+      setActiveTab("defi");
     }
   }, [network.id]);
 
@@ -79,17 +80,23 @@ export default function ContractList() {
       );
     }
 
-    // On mainnet, show tabs with Popular and Recent
+    // On mainnet, show tabs with DeFi, Known assets, and Recent
     return (
       <TabView
         heading={{ title: "Smart contract list" }}
         tab1={{
-          id: "popular",
-          label: "Popular",
-          content: activeTab === "popular" ? <PopularList /> : null,
+          id: "defi",
+          label: "DeFi",
+          content: activeTab === "defi" ? <DefiList /> : null,
           isDisabled: network.id !== "mainnet",
         }}
         tab2={{
+          id: "known-assets",
+          label: "Known assets",
+          content: activeTab === "known-assets" ? <KnownAssetsList /> : null,
+          isDisabled: network.id !== "mainnet",
+        }}
+        tab3={{
           id: "recent",
           label: "Recent",
           content: activeTab === "recent" ? <RecentList /> : null,
