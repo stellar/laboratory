@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import {
   Button,
   Card,
-  Notification,
   Link,
   Icon,
   Text,
@@ -609,12 +608,13 @@ export default function DeployContract() {
                   />
 
                   {uploadTxError ? (
-                    <Notification
+                    <Alert
                       title="Upload transaction error"
                       variant="error"
+                      placement="inline"
                     >
                       {`There was an error building the Upload transaction: ${uploadTxError.toString()}`}
-                    </Notification>
+                    </Alert>
                   ) : null}
 
                   <Box gap="sm" direction="row" justify="end">
@@ -662,13 +662,14 @@ export default function DeployContract() {
                   />
 
                   {signUploadError ? (
-                    <Notification
+                    <Alert
                       title="Sign upload transaction error"
                       variant="error"
+                      placement="inline"
                     >
                       There was an error signing the Upload transaction:{" "}
                       {signUploadError}
-                    </Notification>
+                    </Alert>
                   ) : null}
 
                   <Box gap="sm" direction="row" justify="end">
@@ -754,9 +755,9 @@ export default function DeployContract() {
                 <Box gap="md">
                   {/* Generic deploy error */}
                   {pageError ? (
-                    <Notification title="Error" variant="error">
+                    <Alert title="Error" variant="error" placement="inline">
                       {pageError}
-                    </Notification>
+                    </Alert>
                   ) : null}
 
                   {hasConstructorArgs ? (
@@ -805,12 +806,13 @@ export default function DeployContract() {
                   ) : null}
 
                   {deployTxError ? (
-                    <Notification
+                    <Alert
                       title="Deploy transaction error"
                       variant="error"
+                      placement="inline"
                     >
                       {`There was an error building the Deploy transaction: ${deployTxError.toString()}`}
-                    </Notification>
+                    </Alert>
                   ) : null}
 
                   <Box gap="sm" direction="row" justify="end">
@@ -860,13 +862,14 @@ export default function DeployContract() {
                   />
 
                   {signDeployError ? (
-                    <Notification
+                    <Alert
                       title="Sign deploy transaction error"
                       variant="error"
+                      placement="inline"
                     >
                       There was an error signing the Deploy transaction:{" "}
                       {signDeployError}
-                    </Notification>
+                    </Alert>
                   ) : null}
 
                   <Box gap="sm" direction="row" justify="end">
