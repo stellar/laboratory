@@ -33,6 +33,12 @@ test.describe("Sign Message Page", () => {
     const resultPublicKey = page.locator("#sign-message-result-public-key");
     const resultSignature = page.locator("#sign-message-result-signature");
 
+    // Message signing produces a single signature, so there is no
+    // "Add additional" secret-key button.
+    await expect(
+      secretKeyContainer.getByRole("button", { name: "Add additional" }),
+    ).toHaveCount(0);
+
     // Sign button is disabled until both a message and a valid key are present.
     await expect(signBtn).toBeDisabled();
 

@@ -301,6 +301,7 @@ export const SignShell = ({
               isPassword
               useSecretSelector
               limit={secretKey.limit}
+              hideAddButton={secretKey.limit === 1}
               submitButton={
                 <SignButton
                   onSign={signSecretKey}
