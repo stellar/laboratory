@@ -67,7 +67,7 @@ export const KNOWN_ASSETS: KnownAssetListRecord[] = [
   },
   {
     assetCode: "PYUSD",
-    entity: "Paxos",
+    entity: "PayPal USD",
     assetClass: "Stablecoins",
     contract: "CCCRWH6Q3FNP3I2I57BDLM5AFAT7O6OF6GKQOC6SSJNDAVRZ57SPHGU2",
   },
@@ -736,12 +736,6 @@ export const KNOWN_ASSETS: KnownAssetListRecord[] = [
     entity: "MyKobo",
     assetClass: "Stablecoins",
     contract: "CBVDRT5474OBUEXF5MJB3UGQ5CG7CKGCAH5M4RV5NBCDJUBZ5OXHJLOU",
-  },
-  {
-    assetCode: "EURT",
-    entity: "Tempo",
-    assetClass: "Stablecoins",
-    contract: "CDRHA23ZDS7PZDOV33277HKZOBCCVPU4W5WNQHWW63D3GFPPHISEVRYA",
   },
   {
     assetCode: "IDRT",
