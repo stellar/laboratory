@@ -49,6 +49,11 @@ import { isEmptyObject } from "@/helpers/isEmptyObject";
 
 import { NetworkType } from "@/types/types";
 
+// Time bound (in seconds) for the upload/deploy transactions. Generous enough
+// to cover the manual build -> sign -> submit steps (including hardware
+// wallets) so the transaction doesn't expire (txTooLate) before submission.
+const DEPLOY_TX_TIMEOUT_SECONDS = 300;
+
 export default function DeployContract() {
   const CONSTRUCTOR_KEY = "__constructor";
 
@@ -199,6 +204,7 @@ export default function DeployContract() {
     rpcUrl: network.rpcUrl,
     headers: getNetworkHeaders(network, "rpc"),
     operation: uploadOp,
+    timeoutInSeconds: DEPLOY_TX_TIMEOUT_SECONDS,
   });
 
   const {
@@ -222,6 +228,7 @@ export default function DeployContract() {
     rpcUrl: network.rpcUrl,
     headers: getNetworkHeaders(network, "rpc"),
     operation: deployOp,
+    timeoutInSeconds: DEPLOY_TX_TIMEOUT_SECONDS,
   });
 
   const {
@@ -261,9 +268,10 @@ export default function DeployContract() {
     setSignDeploySuccess(null);
     setIsDeployExpanded(false);
 
-    queryClient.resetQueries({
-      queryKey: ["buildRpcTransaction", "useWasmBinaryFromRpc"],
-    });
+    // Reset each query family separately. resetQueries matches by key prefix,
+    // so a single composite key would match neither family.
+    queryClient.resetQueries({ queryKey: ["buildRpcTransaction"] });
+    queryClient.resetQueries({ queryKey: ["useWasmBinaryFromRpc"] });
 
     resetSubmitUploadTx();
     resetSubmitDeployTx();
