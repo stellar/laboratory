@@ -62,7 +62,7 @@ export default function ParseMuxedAccount() {
     <div className="Account">
       <PageCard
         heading="Get muxed account from M address"
-        headingInfoLink="https://developers.stellar.org/docs/learn/encyclopedia/transactions-specialized/pooled-accounts-muxed-accounts-memos"
+        headingInfoLink="https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos"
       >
         <div className="Account__card">
           <PubKeyPicker
@@ -128,7 +128,7 @@ export default function ParseMuxedAccount() {
       >
         Don’t use in a production environment unless you know what you’re doing.
         Read more about Muxed accounts{" "}
-        <Link href="https://developers.stellar.org/docs/learn/encyclopedia/transactions-specialized/pooled-accounts-muxed-accounts-memos#muxed-accounts">
+        <Link href="https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos#muxed-accounts">
           here
         </Link>
         .

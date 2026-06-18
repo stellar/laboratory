@@ -71,7 +71,7 @@ export default function CreateMuxedAccount() {
     <div className="Account">
       <PageCard
         heading="Create multiplexed account"
-        headingInfoLink="https://developers.stellar.org/docs/learn/encyclopedia/transactions-specialized/pooled-accounts-muxed-accounts-memos"
+        headingInfoLink="https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos"
       >
         <div className="Account__card">
           <Text size="sm" as="div">
@@ -167,7 +167,7 @@ export default function CreateMuxedAccount() {
       >
         Don’t use in a production environment unless you know what you’re doing.
         Read more about Muxed accounts{" "}
-        <Link href="https://developers.stellar.org/docs/learn/encyclopedia/transactions-specialized/pooled-accounts-muxed-accounts-memos#muxed-accounts">
+        <Link href="https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos#muxed-accounts">
           here
         </Link>
         .

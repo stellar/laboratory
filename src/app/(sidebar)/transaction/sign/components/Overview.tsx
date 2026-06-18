@@ -721,7 +721,7 @@ export const Overview = () => {
       <div className="SignTx__Signs" data-testid="sign-tx-sigs">
         <PageCard
           heading="Signatures"
-          headingInfoLink="https://developers.stellar.org/docs/learn/encyclopedia/signatures-multisig"
+          headingInfoLink="https://developers.stellar.org/docs/learn/fundamentals/transactions/signatures-multisig"
           headingAs="h2"
         >
           <Box gap="lg">

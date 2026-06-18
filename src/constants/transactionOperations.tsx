@@ -215,9 +215,9 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
       master_weight: {
         label: "Master weight",
         infoLink:
-          "https://developers.stellar.org/docs/encyclopedia/signatures-multisig#thresholds",
+          "https://developers.stellar.org/docs/learn/fundamentals/transactions/signatures-multisig#thresholds",
         note: (
-          <SdsLink href="https://developers.stellar.org/docs/encyclopedia/signatures-multisig">
+          <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/transactions/signatures-multisig">
             See documentation for multisignature accounts
           </SdsLink>
         ),
@@ -226,14 +226,14 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
       low_threshold: {
         label: "Low threshold",
         infoLink:
-          "https://developers.stellar.org/docs/encyclopedia/signatures-multisig#thresholds",
+          "https://developers.stellar.org/docs/learn/fundamentals/transactions/signatures-multisig#thresholds",
       },
       med_threshold: {
         label: "Medium threshold",
         infoLink:
-          "https://developers.stellar.org/docs/encyclopedia/signatures-multisig#thresholds",
+          "https://developers.stellar.org/docs/learn/fundamentals/transactions/signatures-multisig#thresholds",
         note: (
-          <SdsLink href="https://developers.stellar.org/docs/encyclopedia/signatures-multisig">
+          <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/transactions/signatures-multisig">
             See documentation for multisignature accounts
           </SdsLink>
         ),
@@ -242,9 +242,9 @@ export const TRANSACTION_OPERATIONS: { [key: string]: TransactionOperation } = {
       high_threshold: {
         label: "High threshold",
         infoLink:
-          "https://developers.stellar.org/docs/encyclopedia/signatures-multisig#thresholds",
+          "https://developers.stellar.org/docs/learn/fundamentals/transactions/signatures-multisig#thresholds",
         note: (
-          <SdsLink href="https://developers.stellar.org/docs/encyclopedia/signatures-multisig">
+          <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/transactions/signatures-multisig">
             See documentation for multisignature accounts
           </SdsLink>
         ),
