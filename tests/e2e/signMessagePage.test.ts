@@ -16,6 +16,22 @@ test.describe("Sign Message Page", () => {
     await expect(page.locator("h1").first()).toHaveText("Sign message");
   });
 
+  test("Toggles between the Sign and Verify tabs", async ({ page }) => {
+    // Defaults to the Sign tab.
+    await expect(page.locator("#sign-message-input")).toBeVisible();
+    await expect(page.locator("#verify-message-public-key")).toHaveCount(0);
+
+    await page.getByTestId("verify").click();
+
+    await expect(page.locator("#verify-message-public-key")).toBeVisible();
+    await expect(page.locator("#sign-message-input")).toHaveCount(0);
+
+    await page.getByTestId("sign").click();
+
+    await expect(page.locator("#sign-message-input")).toBeVisible();
+    await expect(page.locator("#verify-message-public-key")).toHaveCount(0);
+  });
+
   test("Signs a message with a secret key and verifies it (round-trip)", async ({
     page,
   }) => {
@@ -53,7 +69,9 @@ test.describe("Sign Message Page", () => {
     await expect(resultPublicKey).toHaveValue(MOCK_PUBLIC);
     await expect(resultSignature).not.toHaveValue("");
 
-    // The verify card is prefilled from the signed result.
+    // Switch to the Verify tab — it is prefilled from the signed result.
+    await page.getByTestId("verify").click();
+
     const verifyPublicKey = page.locator("#verify-message-public-key");
     const verifyMessage = page.locator("#verify-message-message");
     const verifySignature = page.locator("#verify-message-signature");
@@ -85,8 +103,10 @@ test.describe("Sign Message Page", () => {
       MOCK_PUBLIC,
     );
 
-    // Tamper with the message in the verify card, keeping the prefilled
-    // signature + public key.
+    // Switch to the Verify tab, then tamper with the message in the verify
+    // card, keeping the prefilled signature + public key.
+    await page.getByTestId("verify").click();
+
     const verifyMessage = page.locator("#verify-message-message");
     await verifyMessage.fill("a different message");
 
