@@ -280,13 +280,13 @@ const getAuthEntries = (operations: any[] | undefined): AuthEntryInfo[] => {
 };
 
 const parseAuthEntry = (authEntry: any): AuthEntryInfo | null => {
-  // Address credentials may be legacy (`address`), CAP-71 V2 (`address_v2`),
-  // or wrapped in a delegates entry (`address_with_delegates.address_credentials`).
-  // All three carry the same SorobanAddressCredentials shape.
+  // Address credentials may be legacy (`address`) or CAP-71 V2 (`address_v2`);
+  // both carry the same SorobanAddressCredentials shape. Delegates entries
+  // (`address_with_delegates`) need recursive parsing of the delegate tree —
+  // a top-level signature can be Void with the real signatures under
+  // `delegates[*].signature` — and are handled as part of #2103, not here.
   const creds =
-    authEntry?.credentials?.address ??
-    authEntry?.credentials?.address_v2 ??
-    authEntry?.credentials?.address_with_delegates?.address_credentials;
+    authEntry?.credentials?.address ?? authEntry?.credentials?.address_v2;
   const sigMap = creds?.signature?.vec?.[0]?.map;
 
   if (!Array.isArray(sigMap)) {
