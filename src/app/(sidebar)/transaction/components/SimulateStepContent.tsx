@@ -34,7 +34,10 @@ import { TransactionStepName } from "@/components/TransactionStepper";
 
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { checkIsReadOnly } from "@/helpers/sorobanUtils";
-import { extractAuthEntries } from "@/helpers/sorobanAuthUtils";
+import {
+  extractAuthEntries,
+  isAddressAuthEntry,
+} from "@/helpers/sorobanAuthUtils";
 
 import { validate } from "@/validate";
 
@@ -293,9 +296,7 @@ export const SimulateStepContent = ({
               entries[i],
               "base64",
             );
-            if (
-              entry.credentials().switch().name !== "sorobanCredentialsAddress"
-            ) {
+            if (!isAddressAuthEntry(entry)) {
               preSignedEntries[i] = entries[i];
             }
           }

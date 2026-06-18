@@ -280,7 +280,13 @@ const getAuthEntries = (operations: any[] | undefined): AuthEntryInfo[] => {
 };
 
 const parseAuthEntry = (authEntry: any): AuthEntryInfo | null => {
-  const creds = authEntry?.credentials?.address;
+  // Address credentials may be legacy (`address`), CAP-71 V2 (`address_v2`),
+  // or wrapped in a delegates entry (`address_with_delegates.address_credentials`).
+  // All three carry the same SorobanAddressCredentials shape.
+  const creds =
+    authEntry?.credentials?.address ??
+    authEntry?.credentials?.address_v2 ??
+    authEntry?.credentials?.address_with_delegates?.address_credentials;
   const sigMap = creds?.signature?.vec?.[0]?.map;
 
   if (!Array.isArray(sigMap)) {

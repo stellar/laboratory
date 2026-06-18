@@ -22,6 +22,12 @@ const MOCK_AUTH_ENTRY_XDR_1 =
 const MOCK_AUTH_ENTRY_XDR_2 =
   "AAAAAQAAAAAAAAAAzAkaw6NPPDgIv93AjXqJoc8jFCLhbnO94PfIMQmvDJ5cUEEAVfhFCAAAAAAAAAABAAAAAAAAAAF9H3zgWLymrKCrr0910v29dpIuA/uouWmxqo7lgv4hmwAAAARzd2FwAAAABAAAABIAAAABUEXNXsBymnaP1a0CUFhS308Cjc6DDlrFIgm6SEg7LwEAAAASAAAAAdeSi3LCcDzP6vfrn/TvTVBKVai5efybRQ6iyEK00c5hAAAACgAAAAAAAAAAAAAAAAAAAGQAAAAKAAAAAAAAAAAAAAAAAAAABQAAAAEAAAAAAAAAAVBFzV7Acpp2j9WtAlBYUt9PAo3Ogw5axSIJukhIOy8BAAAACHRyYW5zZmVyAAAAAwAAABIAAAAAAAAAAMwJGsOjTzw4CL/dwI16iaHPIxQi4W5zveD3yDEJrwyeAAAAEgAAAAF9H3zgWLymrKCrr0910v29dpIuA/uouWmxqo7lgv4hmwAAAAoAAAAAAAAAAAAAAAAAAABkAAAAAA==";
 
+// A SOROBAN_CREDENTIALS_ADDRESS_V2 (CAP-71 / protocol 27) auth entry. The Lab
+// must detect this as requiring a signature just like the legacy ADDRESS type;
+// before protocol 27 support it was wrongly treated as already-signed.
+const MOCK_AUTH_ENTRY_XDR_V2 =
+  "AAAAAgAAAAAAAAAA6kpsY+KcUgq+9VB7Ey7F+ZVHdq6+vnuSQh7qaRRG0iyjH+a44M2NewAPQkAAAAAQAAAAAQAAAAEAAAARAAAAAQAAAAIAAAAPAAAACnB1YmxpY19rZXkAAAAAAA0AAAAg6kpsY+KcUgq+9VB7Ey7F+ZVHdq6+vnuSQh7qaRRG0iwAAAAPAAAACXNpZ25hdHVyZQAAAAAAAA0AAABAbiLr/lbqLCLz7KSVDT7d2Ub8w0hKehozlcU0GsLPimmpeaMC5JF8OSuwhbQ+3iWHSzT4FxeDpBmMZJHDW1ydCwAAAAAAAAAB15KLcsJwPM/q9+uf9O9NUEpVqLl5/JtFDqLIQrTRzmEAAAAIdHJhbnNmZXIAAAABAAAACgAAAAAAAAAAAAAAAAAAAAEAAAAA";
+
 const buildStoreState = () => ({
   state: {
     activeStep: "simulate",
@@ -163,6 +169,44 @@ const mockSimulateWithoutAuthEntries = async (page: Page) => {
   });
 };
 
+/**
+ * Mock simulateTransaction to return a response with a single
+ * SOROBAN_CREDENTIALS_ADDRESS_V2 (CAP-71) auth entry.
+ */
+const mockSimulateWithV2AuthEntry = async (page: Page) => {
+  await page.route("https://soroban-testnet.stellar.org", async (route) => {
+    const request = route.request();
+    const postData = request.postDataJSON();
+
+    if (postData?.method === "simulateTransaction") {
+      const responseBody = {
+        jsonrpc: "2.0",
+        id: 1,
+        result: {
+          transactionData:
+            "AAAAAAAAAAUAAAAAAAAAAEI+fQXy7K+/7BkrIVo/G+lq7bjY5wJUq+NBPgIH3layAAAABgAAAAFQRc1ewHKado/VrQJQWFLfTwKNzoMOWsUiCbpISDsvAQAAABQAAAABAAAABgAAAAF9H3zgWLymrKCrr0910v29dpIuA/uouWmxqo7lgv4hmwAAABQAAAABAAAABgAAAAHXkotywnA8z+r365/0701QSlWouXn8m0UOoshCtNHOYQAAABQAAAABAAAAB0rCp4XpzUPVfkGwEWAJ/P/1rsfXSQqmV88QO9jclRq+AAAACAAAAAAAAAAAIeXWF2xvrwgoULBjGH4PJNgAU089Bh5ch2XdUPm3/XQAAAAAAAAAAMwJGsOjTzw4CL/dwI16iaHPIxQi4W5zveD3yDEJrwyeAAAAAQAAAAAh5dYXbG+vCChQsGMYfg8k2ABTTz0GHlyHZd1Q+bf9dAAAAAFVU0RDAAAAAEI+fQXy7K+/7BkrIVo/G+lq7bjY5wJUq+NBPgIH3layAAAAAQAAAADMCRrDo088OAi/3cCNeomhzyMUIuFuc73g98gxCa8MngAAAAFVU0RDAAAAAEI+fQXy7K+/7BkrIVo/G+lq7bjY5wJUq+NBPgIH3layAAAABgAAAAAAAAAAIeXWF2xvrwgoULBjGH4PJNgAU089Bh5ch2XdUPm3/XQAAAAVcxcPT01pajcAAAAAAAAABgAAAAAAAAAAzAkaw6NPPDgIv93AjXqJoc8jFCLhbnO94PfIMQmvDJ4AAAAVXFBBAFX4RQgAAAAAAAAABgAAAAFQRc1ewHKado/VrQJQWFLfTwKNzoMOWsUiCbpISDsvAQAAABAAAAABAAAAAgAAAA8AAAAHQmFsYW5jZQAAAAASAAAAAX0ffOBYvKasoKuvT3XS/b12ki4D+6i5abGqjuWC/iGbAAAAAQAAAAYAAAAB15KLcsJwPM/q9+uf9O9NUEpVqLl5/JtFDqLIQrTRzmEAAAAQAAAAAQAAAAIAAAAPAAAAB0JhbGFuY2UAAAAAEgAAAAF9H3zgWLymrKCrr0910v29dpIuA/uouWmxqo7lgv4hmwAAAAEAJlGtAAAC/AAABLgAAAAAAAetVQ==",
+          minResourceFee: "503125",
+          latestLedger: 1901916,
+          results: [
+            {
+              auth: [MOCK_AUTH_ENTRY_XDR_V2],
+              xdr: "AAAAAQ==",
+            },
+          ],
+        },
+      };
+
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(responseBody),
+      });
+    } else {
+      await route.continue();
+    }
+  });
+};
+
 test.describe("Soroban Auth Entry Detection and Signing", () => {
   test.describe("Auth entry detection after simulation", () => {
     test("Shows auth signing card when simulation returns auth entries", async ({
@@ -188,6 +232,33 @@ test.describe("Soroban Auth Entry Detection and Signing", () => {
 
       await expect(
         page.getByText("2 authorization entries detected"),
+      ).toBeVisible();
+    });
+
+    test("Shows auth signing card for CAP-71 ADDRESS_V2 auth entries", async ({
+      page,
+    }) => {
+      await mockSimulateWithV2AuthEntry(page);
+      await seedSessionStorageAndNavigate(page);
+
+      const simulateButton = page.getByRole("button", {
+        name: "Simulate",
+        exact: true,
+      });
+      await simulateButton.click();
+
+      await expect(page.getByTestId("simulate-step-response")).toBeVisible();
+
+      // A V2 entry must be detected as requiring a signature, not silently
+      // treated as already-signed.
+      await expect(
+        page.getByText(
+          "This transaction requires additional authorization signatures",
+        ),
+      ).toBeVisible();
+
+      await expect(
+        page.getByText("1 authorization entry detected"),
       ).toBeVisible();
     });
 
