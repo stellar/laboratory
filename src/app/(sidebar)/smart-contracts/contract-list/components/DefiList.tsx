@@ -17,7 +17,7 @@ import { delayedAction } from "@/helpers/delayedAction";
 
 import { PopularContractListRecord, SortDirection } from "@/types/types";
 
-export const PopularList = () => {
+export const DefiList = () => {
   const { network, smartContracts } = useStore();
   const router = useRouter();
   const [sortState, setSortState] = useState<{
