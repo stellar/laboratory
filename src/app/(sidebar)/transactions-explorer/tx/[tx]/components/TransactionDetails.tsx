@@ -1,8 +1,7 @@
 "use client";
 
-import { StrKey, xdr as XDR } from "@stellar/stellar-sdk";
+import { StrKey, xdr as XDR, rpc as StellarRpc } from "@stellar/stellar-sdk";
 import { Icon, Loader, Profile, Text, Tooltip } from "@stellar/design-system";
-import { rpc as StellarRpc } from "@stellar/stellar-sdk";
 import { useEffect, useState, ReactNode, MouseEventHandler } from "react";
 import { useRouter } from "next/navigation";
 import { parseNumberAndBigInt, parse as jsonParse } from "lossless-json";

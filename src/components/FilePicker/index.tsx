@@ -15,6 +15,25 @@ interface FilePickerProps {
   isDisabled?: boolean;
 }
 
+/**
+ * Validates a file against the accepted extensions.
+ *
+ * @returns an error message if the file is invalid, otherwise `undefined`.
+ */
+const getFileError = (
+  file: File,
+  acceptedExtension: string[],
+): string | undefined => {
+  const extension = file.name.toLowerCase().split(".").pop();
+
+  if (!extension || !acceptedExtension.includes(extension)) {
+    // Handling only the first extension for now
+    return `The uploaded file is not a valid ${capitalizeString(acceptedExtension[0])} file. Please upload a .${acceptedExtension[0]} file.`;
+  }
+
+  return undefined;
+};
+
 export const FilePicker = ({
   onChange,
   acceptedExtension,
@@ -67,10 +86,6 @@ export const FilePicker = ({
 
       const files = event?.dataTransfer?.files;
       const droppedFile = files?.[0];
-      const droppedFiledExtension = droppedFile?.name
-        .toLowerCase()
-        .split(".")
-        .pop();
 
       onChange(undefined);
       setSelectedFile(undefined);
@@ -80,12 +95,11 @@ export const FilePicker = ({
         return;
       }
 
-      if (droppedFile && droppedFiledExtension) {
-        if (!acceptedExtension.includes(droppedFiledExtension)) {
-          // Handling only the first extension for now
-          setErrorMessage(
-            `Invalid file type. Please select a ${capitalizeString(acceptedExtension[0])} file.`,
-          );
+      if (droppedFile) {
+        const fileError = getFileError(droppedFile, acceptedExtension);
+
+        if (fileError) {
+          setErrorMessage(fileError);
           return;
         }
 
@@ -122,14 +136,26 @@ export const FilePicker = ({
     event.preventDefault();
     const inputFile = event.target?.files?.[0];
 
-    onChange(inputFile);
-    setSelectedFile(inputFile);
-    setErrorMessage("");
-
     // We need to clear the previous file/value to make it work when the same
     // file is selected again. Without clearing, the browser is caching the
     // file, so it won’t change even if it’s updated and selected again.
     event.target.value = "";
+
+    onChange(undefined);
+    setSelectedFile(undefined);
+
+    if (inputFile) {
+      const fileError = getFileError(inputFile, acceptedExtension);
+
+      if (fileError) {
+        setErrorMessage(fileError);
+        return;
+      }
+
+      onChange(inputFile);
+      setSelectedFile(inputFile);
+      setErrorMessage("");
+    }
   };
 
   const Message = ({

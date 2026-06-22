@@ -1,4 +1,9 @@
 minimumReleaseAge: 10080
+minimumReleaseAgeExclude:
+  - "@stellar/stellar-sdk"
+  - "@stellar/js-xdr"
+  - "@stellar/design-system"
+  - "@stellar/stellar-xdr-json"
 overrides:
   "debug@4.4.2": "4.4.1"
   "chalk@5.6.1": "5.6.2"
