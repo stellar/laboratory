@@ -9,6 +9,7 @@ import { CodeEditor } from "@/components/CodeEditor";
 import { SignTransactionXdr } from "@/components/SignTransactionXdr";
 
 import { decodeXdr } from "@/helpers/decodeXdr";
+import { isAddressAuthEntry } from "@/helpers/sorobanAuthUtils";
 import { prettifyJsonString } from "@/helpers/prettifyJsonString";
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
@@ -87,7 +88,7 @@ export const AuthEntryItem = ({
           "base64",
         );
 
-        if (entry.credentials().switch().name === "sorobanCredentialsAddress") {
+        if (isAddressAuthEntry(entry)) {
           const secretKey = secretKeys[0];
 
           if (secretKey && !validate.getSecretKeyError(secretKey)) {

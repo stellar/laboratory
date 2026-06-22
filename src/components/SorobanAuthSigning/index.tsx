@@ -10,6 +10,7 @@ import { Box } from "@/components/layout/Box";
 import { AuthEntryItem } from "./AuthEntryItem";
 
 import { validate } from "@/validate";
+import { isAddressAuthEntry } from "@/helpers/sorobanAuthUtils";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import "./styles.scss";
@@ -43,7 +44,7 @@ const signAuthEntries = async ({
 
     // Only sign entries with address credentials — source account
     // credentials are authorized by the transaction envelope signature
-    if (entry.credentials().switch().name === "sorobanCredentialsAddress") {
+    if (isAddressAuthEntry(entry)) {
       const secretKey = secretKeys[0];
 
       if (secretKey && !validate.getSecretKeyError(secretKey)) {
