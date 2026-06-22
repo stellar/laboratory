@@ -15,8 +15,6 @@ import { FeeBumpStepContent } from "./FeeBumpStepContent";
 import { SignStepContent } from "./SignStepContent";
 import { SubmitStepContent } from "./SubmitStepContent";
 
-import "./styles.scss";
-
 export default function FeeBumpTransaction() {
   const steps: TransactionStepName[] = ["feeBump", "sign", "submit"];
   const { transaction } = useStore();
@@ -91,8 +89,8 @@ export default function FeeBumpTransaction() {
 
   return (
     <Box gap="xxl">
-      <div className="FeeBumpTransaction__layout">
-        <div className="FeeBumpTransaction__content">
+      <div className="BuildTransaction__layout">
+        <div className="BuildTransaction__content">
           <Box gap="xxl">
             {activeStep === "feeBump" && (
               <FeeBumpStepContent
@@ -125,7 +123,7 @@ export default function FeeBumpTransaction() {
           </Box>
         </div>
 
-        <div className="FeeBumpTransaction__stepper">
+        <div className="BuildTransaction__stepper BuildTransaction__stepper--feeBump">
           <TransactionStepper
             steps={steps}
             activeStep={activeStep}

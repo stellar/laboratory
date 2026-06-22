@@ -3,6 +3,7 @@
 .TransactionStepper {
   display: flex;
   flex-direction: column;
+  padding-top: pxToRem(44px);
 
   &__step {
     display: flex;
