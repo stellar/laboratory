@@ -15,6 +15,8 @@ import { FeeBumpStepContent } from "./FeeBumpStepContent";
 import { SignStepContent } from "./SignStepContent";
 import { SubmitStepContent } from "./SubmitStepContent";
 
+import "../styles.scss";
+
 export default function FeeBumpTransaction() {
   const steps: TransactionStepName[] = ["feeBump", "sign", "submit"];
   const { transaction } = useStore();
