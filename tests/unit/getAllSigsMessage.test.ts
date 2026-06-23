@@ -57,8 +57,8 @@ describe("getAllSigsMessage", () => {
   });
 
   it("leaves the raw signature type unlabeled", () => {
-    // The "signature" (transaction envelope) source has no label, leaving a
-    // double space between the count and the word "signature".
+    // The "signature" (transaction envelope) source has no label, so the count
+    // and the word "signature" are joined with a single space.
     expect(
       getAllSigsMessage({
         secretKey: 0,
@@ -66,7 +66,7 @@ describe("getAllSigsMessage", () => {
         hardwareWallet: 0,
         signature: 2,
       }),
-    ).toBe("2  signatures added");
+    ).toBe("2 signatures added");
   });
 
   it("joins multiple signature sources in a fixed order", () => {
@@ -78,7 +78,7 @@ describe("getAllSigsMessage", () => {
         signature: 1,
       }),
     ).toBe(
-      "1 secret key signature, 2 hardware wallet signatures, 1 extension wallet signature, 1  signature added",
+      "1 secret key signature, 2 hardware wallet signatures, 1 extension wallet signature, 1 signature added",
     );
   });
 });

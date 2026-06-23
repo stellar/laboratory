@@ -24,7 +24,9 @@ export const getAllSigsMessage = ({
   const allMsgs = [];
 
   const getMsg = (count: number, label: string) =>
-    `${count} ${label} signature${count > 1 ? "s" : ""}`;
+    [count, label, `signature${count > 1 ? "s" : ""}`]
+      .filter((part) => part !== "")
+      .join(" ");
 
   if (secretKey > 0) {
     allMsgs.push(getMsg(secretKey, "secret key"));
