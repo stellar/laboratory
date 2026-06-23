@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, Input, Notification, Textarea } from "@stellar/design-system";
+import { Button, Input, Textarea } from "@stellar/design-system";
 
 import { Box } from "@/components/layout/Box";
-import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
+
 import { verifyMessage, SignedMessage } from "@/helpers/messageHelper";
 import { validate } from "@/validate";
 
-type VerifyResult = { isValid: boolean; publicKey: string } | null;
+export type VerifyResult = { isValid: boolean; publicKey: string } | null;
 
 /**
  * Verify a SEP-53 message signature: given a signer public key, the original
@@ -19,19 +19,25 @@ type VerifyResult = { isValid: boolean; publicKey: string } | null;
  * round-trip their own signature; the fields stay editable for verifying
  * someone else's.
  */
-export const VerifyMessage = ({ prefill }: { prefill?: SignedMessage | null }) => {
+export const VerifyMessage = ({
+  prefill,
+  onVerify,
+}: {
+  prefill?: SignedMessage | null;
+  onVerify: (result: VerifyResult) => void;
+}) => {
   const [publicKey, setPublicKey] = useState("");
   const [message, setMessage] = useState("");
   const [signature, setSignature] = useState("");
-  const [result, setResult] = useState<VerifyResult>(null);
 
   useEffect(() => {
     if (prefill) {
       setPublicKey(prefill.publicKey);
       setMessage(prefill.message);
       setSignature(prefill.signature);
-      setResult(null);
+      onVerify?.(null);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prefill]);
 
   const publicKeyError = publicKey
@@ -43,22 +49,17 @@ export const VerifyMessage = ({ prefill }: { prefill?: SignedMessage | null }) =
 
   const canVerify =
     Boolean(publicKey) &&
+    Boolean(message) &&
     Boolean(signature) &&
     !publicKeyError &&
     !signatureError;
 
-  const resetResult = () => {
-    if (result) {
-      setResult(null);
-    }
-  };
-
   const handleVerify = () => {
     try {
       const isValid = verifyMessage({ publicKey, message, signature });
-      setResult({ isValid, publicKey });
+      onVerify?.({ isValid, publicKey });
     } catch {
-      setResult({ isValid: false, publicKey });
+      onVerify?.({ isValid: false, publicKey });
     }
   };
 
@@ -73,7 +74,9 @@ export const VerifyMessage = ({ prefill }: { prefill?: SignedMessage | null }) =
         error={publicKeyError || undefined}
         onChange={(e) => {
           setPublicKey(e.target.value);
-          resetResult();
+          if (publicKey) {
+            onVerify?.(null);
+          }
         }}
       />
 
@@ -86,7 +89,9 @@ export const VerifyMessage = ({ prefill }: { prefill?: SignedMessage | null }) =
         value={message}
         onChange={(e) => {
           setMessage(e.target.value);
-          resetResult();
+          if (message) {
+            onVerify?.(null);
+          }
         }}
       />
 
@@ -100,7 +105,9 @@ export const VerifyMessage = ({ prefill }: { prefill?: SignedMessage | null }) =
         error={signatureError || undefined}
         onChange={(e) => {
           setSignature(e.target.value);
-          resetResult();
+          if (signature) {
+            onVerify?.(null);
+          }
         }}
       />
 
@@ -114,19 +121,6 @@ export const VerifyMessage = ({ prefill }: { prefill?: SignedMessage | null }) =
           Verify
         </Button>
       </Box>
-
-      {result ? (
-        <Notification
-          variant={result.isValid ? "success" : "error"}
-          title={result.isValid ? "Signature is valid" : "Signature is invalid"}
-        >
-          {result.isValid
-            ? `Signed by ${shortenStellarAddress(result.publicKey)} for this message.`
-            : `This signature was not produced by ${shortenStellarAddress(
-                result.publicKey,
-              )} for this message.`}
-        </Notification>
-      ) : null}
     </Box>
   );
 };

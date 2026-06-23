@@ -12,16 +12,14 @@ export const getMessageSignatureError = (
     return isRequired ? "Signature is required." : false;
   }
 
-  let decoded: Buffer;
+  // Buffer.from never throws on bad input — it silently drops non-base64
+  // characters — so validate by confirming the decoded bytes round-trip.
+  const decoded = Buffer.from(signature, "base64");
 
-  try {
-    decoded = Buffer.from(signature, "base64");
-  } catch {
-    return "Signature must be valid base64.";
-  }
-
-  // Buffer.from is lenient with non-base64 input, so confirm it round-trips.
-  if (decoded.toString("base64").replace(/=+$/, "") !== signature.replace(/=+$/, "")) {
+  if (
+    decoded.toString("base64").replace(/=+$/, "") !==
+    signature.replace(/=+$/, "")
+  ) {
     return "Signature must be valid base64.";
   }
 

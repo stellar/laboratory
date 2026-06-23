@@ -9,7 +9,7 @@ const MOCK_MESSAGE = "Hello, Stellar!";
 
 test.describe("Sign Message Page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto(`${baseURL}/transaction/sign-message`);
+    await page.goto(`${baseURL}/sign-message`);
   });
 
   test("Loads", async ({ page }) => {
@@ -46,9 +46,6 @@ test.describe("Sign Message Page", () => {
       .locator('[data-type="secretKey"]')
       .getByRole("button", { name: "Sign", exact: true });
 
-    const resultPublicKey = page.locator("#sign-message-result-public-key");
-    const resultSignature = page.locator("#sign-message-result-signature");
-
     // Message signing produces a single signature, so there is no
     // "Add additional" secret-key button.
     await expect(
@@ -66,11 +63,13 @@ test.describe("Sign Message Page", () => {
 
     // Success message + structured result (public key, signature — no XDR).
     await expect(page.getByText("Signed with", { exact: false })).toBeVisible();
-    await expect(resultPublicKey).toHaveValue(MOCK_PUBLIC);
-    await expect(resultSignature).not.toHaveValue("");
+    await expect(page.getByText("Message signed")).toBeVisible();
+    await expect(page.getByText(MOCK_PUBLIC)).toBeVisible();
 
-    // Switch to the Verify tab — it is prefilled from the signed result.
-    await page.getByTestId("verify").click();
+    // Click the "Verify" button on the signed-result card. This is the only
+    // path that carries the signed result into the Verify tab (prefilled) and
+    // surfaces the verification outcome — routing via the tab bar does not.
+    await page.getByRole("button", { name: "Verify", exact: true }).click();
 
     const verifyPublicKey = page.locator("#verify-message-public-key");
     const verifyMessage = page.locator("#verify-message-message");
@@ -99,13 +98,12 @@ test.describe("Sign Message Page", () => {
     await secretKeyInput.fill(MOCK_SECRET);
     await signBtn.click();
 
-    await expect(page.locator("#sign-message-result-public-key")).toHaveValue(
-      MOCK_PUBLIC,
-    );
+    await expect(page.getByText(MOCK_PUBLIC)).toBeVisible();
 
-    // Switch to the Verify tab, then tamper with the message in the verify
-    // card, keeping the prefilled signature + public key.
-    await page.getByTestId("verify").click();
+    // Go to the Verify tab via the signed-result card's "Verify" button (the
+    // path that prefills the form), then tamper with the message while keeping
+    // the prefilled signature + public key.
+    await page.getByRole("button", { name: "Verify", exact: true }).click();
 
     const verifyMessage = page.locator("#verify-message-message");
     await verifyMessage.fill("a different message");
