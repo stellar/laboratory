@@ -3,6 +3,8 @@
 .TransactionStepper {
   display: flex;
   flex-direction: column;
+  // height of header (32px) + header gap (12px)
+  padding-top: pxToRem(44px);
 
   &__step {
     display: flex;
