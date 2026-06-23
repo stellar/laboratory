@@ -53,207 +53,207 @@ export type NetworkLimitsJson = {
 };
 
 export const MAINNET_LIMITS: NetworkLimits = {
-  "tx_max_instructions": 400000000,
-  "tx_memory_limit": 41943040,
-  "tx_max_footprint_entries": 400,
-  "tx_max_disk_read_entries": 200,
-  "tx_max_write_ledger_entries": 200,
-  "tx_max_disk_read_bytes": 200000,
-  "tx_max_write_bytes": 132096,
-  "tx_max_contract_events_size_bytes": 16384,
-  "contract_data_key_size_bytes": 250,
-  "contract_max_size_bytes": 131072,
-  "ledger_max_instructions": 580000000,
-  "ledger_max_disk_read_entries": 1000,
-  "ledger_max_disk_read_bytes": 400000,
-  "ledger_max_write_ledger_entries": 1000,
-  "ledger_max_write_bytes": 286720,
-  "ledger_max_txs_size_bytes": 266240,
-  "max_entry_ttl": 3110400,
-  "min_temporary_ttl": 17280,
-  "min_persistent_ttl": 2073600,
-  "fee_rate_per_instructions_increment": 7,
-  "fee_read_ledger_entry": "1563",
-  "fee_write_ledger_entry": "2500",
-  "fee_read_1kb": "447",
-  "fee_write_1kb": "875",
-  "fee_tx_size_1kb": "406",
-  "fee_historical_1kb": "4059",
-  "fee_contract_events_1kb": "5000",
-  "persistent_rent_rate_denominator": "1215",
-  "temp_rent_rate_denominator": "2430",
-  "live_soroban_state_size_window": [
-    "1006254476",
-    "1007414560",
-    "1008039560",
-    "1008508640",
-    "1009587388",
-    "1010610656",
-    "1011303148",
-    "1011869340",
-    "1012523977",
-    "1013544069",
-    "1014655421",
-    "1015004765",
-    "1015217769",
-    "1015778301",
-    "1017002321",
-    "1017974405",
-    "1018970009",
-    "1020131329",
-    "1021107545",
-    "1022725713",
-    "1024103769",
-    "1025180421",
-    "1025777481",
-    "1026553189",
-    "1027820141",
-    "1028871973",
-    "1029737529",
-    "1030214169",
-    "1031184057",
-    "1032106621"
+  tx_max_instructions: 400000000,
+  tx_memory_limit: 41943040,
+  tx_max_footprint_entries: 400,
+  tx_max_disk_read_entries: 200,
+  tx_max_write_ledger_entries: 200,
+  tx_max_disk_read_bytes: 200000,
+  tx_max_write_bytes: 132096,
+  tx_max_contract_events_size_bytes: 16384,
+  contract_data_key_size_bytes: 250,
+  contract_max_size_bytes: 131072,
+  ledger_max_instructions: 580000000,
+  ledger_max_disk_read_entries: 1000,
+  ledger_max_disk_read_bytes: 400000,
+  ledger_max_write_ledger_entries: 1000,
+  ledger_max_write_bytes: 286720,
+  ledger_max_txs_size_bytes: 266240,
+  max_entry_ttl: 3110400,
+  min_temporary_ttl: 17280,
+  min_persistent_ttl: 2073600,
+  fee_rate_per_instructions_increment: 7,
+  fee_read_ledger_entry: "1563",
+  fee_write_ledger_entry: "2500",
+  fee_read_1kb: "447",
+  fee_write_1kb: "875",
+  fee_tx_size_1kb: "406",
+  fee_historical_1kb: "4059",
+  fee_contract_events_1kb: "5000",
+  persistent_rent_rate_denominator: "1215",
+  temp_rent_rate_denominator: "2430",
+  live_soroban_state_size_window: [
+    "1147011547",
+    "1147157707",
+    "1147482415",
+    "1147874611",
+    "1148779459",
+    "1149963167",
+    "1150402339",
+    "1150970167",
+    "1152034127",
+    "1153157943",
+    "1153979247",
+    "1154200711",
+    "1155370887",
+    "1155982715",
+    "1156069199",
+    "1156047395",
+    "1156696995",
+    "1157604319",
+    "1158040083",
+    "1158930783",
+    "1159705171",
+    "1161022183",
+    "1161879175",
+    "1162643899",
+    "1163426739",
+    "1164375455",
+    "1165541871",
+    "1166480431",
+    "1167361311",
+    "1168198807",
   ],
-  "state_target_size_bytes": "3000000000",
-  "rent_fee_1kb_state_size_low": "-17000",
-  "rent_fee_1kb_state_size_high": "10000",
-  "state_size_rent_fee_growth_factor": 5000
+  state_target_size_bytes: "3000000000",
+  rent_fee_1kb_state_size_low: "-17000",
+  rent_fee_1kb_state_size_high: "10000",
+  state_size_rent_fee_growth_factor: 5000,
 } as const;
 
 export const TESTNET_LIMITS: NetworkLimits = {
-  "tx_max_instructions": 400000000,
-  "tx_memory_limit": 41943040,
-  "tx_max_footprint_entries": 400,
-  "tx_max_disk_read_entries": 200,
-  "tx_max_write_ledger_entries": 200,
-  "tx_max_disk_read_bytes": 200000,
-  "tx_max_write_bytes": 132096,
-  "tx_max_contract_events_size_bytes": 16384,
-  "contract_data_key_size_bytes": 250,
-  "contract_max_size_bytes": 131072,
-  "ledger_max_instructions": 580000000,
-  "ledger_max_disk_read_entries": 1000,
-  "ledger_max_disk_read_bytes": 400000,
-  "ledger_max_write_ledger_entries": 1000,
-  "ledger_max_write_bytes": 286720,
-  "ledger_max_txs_size_bytes": 266240,
-  "max_entry_ttl": 3110400,
-  "min_temporary_ttl": 720,
-  "min_persistent_ttl": 120960,
-  "fee_rate_per_instructions_increment": 7,
-  "fee_read_ledger_entry": "1563",
-  "fee_write_ledger_entry": "2500",
-  "fee_read_1kb": "447",
-  "fee_write_1kb": "875",
-  "fee_tx_size_1kb": "406",
-  "fee_historical_1kb": "4059",
-  "fee_contract_events_1kb": "5000",
-  "persistent_rent_rate_denominator": "1215",
-  "temp_rent_rate_denominator": "2430",
-  "live_soroban_state_size_window": [
-    "2138032132",
-    "2139660649",
-    "2139692105",
-    "2139892805",
-    "2140735406",
-    "2142540707",
-    "2145581820",
-    "2145612864",
-    "2145636028",
-    "2147077615",
-    "2147763411",
-    "2147989391",
-    "2147694574",
-    "2148017297",
-    "2148128769",
-    "2150311204",
-    "2150370336",
-    "2151581187",
-    "2151446136",
-    "2143403786",
-    "2139142226",
-    "2140306602",
-    "2141143836",
-    "2142399740",
-    "2143206069",
-    "2143632994",
-    "2143989560",
-    "2144039808",
-    "2144292693",
-    "2144716688"
+  tx_max_instructions: 400000000,
+  tx_memory_limit: 41943040,
+  tx_max_footprint_entries: 400,
+  tx_max_disk_read_entries: 200,
+  tx_max_write_ledger_entries: 200,
+  tx_max_disk_read_bytes: 200000,
+  tx_max_write_bytes: 132096,
+  tx_max_contract_events_size_bytes: 16384,
+  contract_data_key_size_bytes: 250,
+  contract_max_size_bytes: 131072,
+  ledger_max_instructions: 580000000,
+  ledger_max_disk_read_entries: 1000,
+  ledger_max_disk_read_bytes: 400000,
+  ledger_max_write_ledger_entries: 1000,
+  ledger_max_write_bytes: 286720,
+  ledger_max_txs_size_bytes: 266240,
+  max_entry_ttl: 3110400,
+  min_temporary_ttl: 720,
+  min_persistent_ttl: 120960,
+  fee_rate_per_instructions_increment: 7,
+  fee_read_ledger_entry: "1563",
+  fee_write_ledger_entry: "2500",
+  fee_read_1kb: "447",
+  fee_write_1kb: "875",
+  fee_tx_size_1kb: "406",
+  fee_historical_1kb: "4059",
+  fee_contract_events_1kb: "5000",
+  persistent_rent_rate_denominator: "1215",
+  temp_rent_rate_denominator: "2430",
+  live_soroban_state_size_window: [
+    "2187145875",
+    "2188234710",
+    "2189056996",
+    "2189078264",
+    "2189151927",
+    "2190523585",
+    "2190549581",
+    "2190983840",
+    "2192215387",
+    "2192817299",
+    "2193604288",
+    "2194371553",
+    "2194370689",
+    "2194298698",
+    "2194346582",
+    "2195373743",
+    "2195434959",
+    "2196160981",
+    "2199873092",
+    "2199898468",
+    "2199938640",
+    "2200859676",
+    "2201581614",
+    "2202064735",
+    "2203460207",
+    "2204646974",
+    "2205500624",
+    "2205781880",
+    "2206414450",
+    "2206489229",
   ],
-  "state_target_size_bytes": "3000000000",
-  "rent_fee_1kb_state_size_low": "-17000",
-  "rent_fee_1kb_state_size_high": "10000",
-  "state_size_rent_fee_growth_factor": 5000
+  state_target_size_bytes: "3000000000",
+  rent_fee_1kb_state_size_low: "-17000",
+  rent_fee_1kb_state_size_high: "10000",
+  state_size_rent_fee_growth_factor: 5000,
 } as const;
 
 export const FUTURENET_LIMITS: NetworkLimits = {
-  "tx_max_instructions": 400000000,
-  "tx_memory_limit": 41943040,
-  "tx_max_footprint_entries": 400,
-  "tx_max_disk_read_entries": 200,
-  "tx_max_write_ledger_entries": 200,
-  "tx_max_disk_read_bytes": 200000,
-  "tx_max_write_bytes": 132096,
-  "tx_max_contract_events_size_bytes": 16384,
-  "contract_data_key_size_bytes": 250,
-  "contract_max_size_bytes": 131072,
-  "ledger_max_instructions": 580000000,
-  "ledger_max_disk_read_entries": 1000,
-  "ledger_max_disk_read_bytes": 400000,
-  "ledger_max_write_ledger_entries": 1000,
-  "ledger_max_write_bytes": 286720,
-  "ledger_max_txs_size_bytes": 266240,
-  "max_entry_ttl": 3110400,
-  "min_temporary_ttl": 720,
-  "min_persistent_ttl": 120960,
-  "fee_rate_per_instructions_increment": 7,
-  "fee_read_ledger_entry": "1563",
-  "fee_write_ledger_entry": "2500",
-  "fee_read_1kb": "447",
-  "fee_write_1kb": "875",
-  "fee_tx_size_1kb": "406",
-  "fee_historical_1kb": "4059",
-  "fee_contract_events_1kb": "5000",
-  "persistent_rent_rate_denominator": "1215",
-  "temp_rent_rate_denominator": "2430",
-  "live_soroban_state_size_window": [
-    "63172641",
-    "63172641",
-    "63171753",
-    "63171753",
-    "63171753",
-    "63171753",
-    "63171753",
-    "63171753",
-    "63171753",
-    "63171753",
-    "63171753",
-    "63171753",
-    "63171753",
-    "63171753",
-    "63171753",
-    "63171753",
-    "63171753",
-    "63171753",
-    "63171753",
-    "63171753",
-    "63171753",
-    "63171753",
-    "63171753",
-    "63171753",
-    "63171753",
-    "63171753",
-    "63171753",
-    "63171753",
-    "63171753",
-    "63171753"
+  tx_max_instructions: 400000000,
+  tx_memory_limit: 41943040,
+  tx_max_footprint_entries: 400,
+  tx_max_disk_read_entries: 200,
+  tx_max_write_ledger_entries: 200,
+  tx_max_disk_read_bytes: 200000,
+  tx_max_write_bytes: 132096,
+  tx_max_contract_events_size_bytes: 16384,
+  contract_data_key_size_bytes: 250,
+  contract_max_size_bytes: 131072,
+  ledger_max_instructions: 580000000,
+  ledger_max_disk_read_entries: 1000,
+  ledger_max_disk_read_bytes: 400000,
+  ledger_max_write_ledger_entries: 1000,
+  ledger_max_write_bytes: 286720,
+  ledger_max_txs_size_bytes: 266240,
+  max_entry_ttl: 3110400,
+  min_temporary_ttl: 720,
+  min_persistent_ttl: 120960,
+  fee_rate_per_instructions_increment: 7,
+  fee_read_ledger_entry: "1563",
+  fee_write_ledger_entry: "2500",
+  fee_read_1kb: "447",
+  fee_write_1kb: "875",
+  fee_tx_size_1kb: "406",
+  fee_historical_1kb: "4059",
+  fee_contract_events_1kb: "5000",
+  persistent_rent_rate_denominator: "1215",
+  temp_rent_rate_denominator: "2430",
+  live_soroban_state_size_window: [
+    "65373539",
+    "65373539",
+    "65373539",
+    "65373539",
+    "65373539",
+    "65373539",
+    "65373539",
+    "65373539",
+    "65373539",
+    "65373539",
+    "65373539",
+    "65373539",
+    "65373539",
+    "65373539",
+    "65373539",
+    "65373539",
+    "65373539",
+    "65373539",
+    "65373539",
+    "65373803",
+    "65374191",
+    "65374191",
+    "65374191",
+    "65374983",
+    "65374983",
+    "65374983",
+    "65374983",
+    "65374983",
+    "65374983",
+    "65374983",
   ],
-  "state_target_size_bytes": "3000000000",
-  "rent_fee_1kb_state_size_low": "-17000",
-  "rent_fee_1kb_state_size_high": "10000",
-  "state_size_rent_fee_growth_factor": 5000
+  state_target_size_bytes: "3000000000",
+  rent_fee_1kb_state_size_low: "-17000",
+  rent_fee_1kb_state_size_high: "10000",
+  state_size_rent_fee_growth_factor: 5000,
 } as const;
 
 export const NETWORK_LIMITS: Record<string, NetworkLimits> = {
@@ -263,2901 +263,2901 @@ export const NETWORK_LIMITS: Record<string, NetworkLimits> = {
 } as const;
 
 export const MAINNET_LIMITS_JSON: NetworkLimitsJson = {
-  "updated_entry": [
+  updated_entry: [
     {
-      "contract_max_size_bytes": 131072
+      contract_max_size_bytes: 131072,
     },
     {
-      "contract_compute_v0": {
-        "ledger_max_instructions": "580000000",
-        "tx_max_instructions": "400000000",
-        "fee_rate_per_instructions_increment": "7",
-        "tx_memory_limit": 41943040
-      }
+      contract_compute_v0: {
+        ledger_max_instructions: "580000000",
+        tx_max_instructions: "400000000",
+        fee_rate_per_instructions_increment: "7",
+        tx_memory_limit: 41943040,
+      },
     },
     {
-      "contract_ledger_cost_v0": {
-        "ledger_max_disk_read_entries": 1000,
-        "ledger_max_disk_read_bytes": 400000,
-        "ledger_max_write_ledger_entries": 1000,
-        "ledger_max_write_bytes": 286720,
-        "tx_max_disk_read_entries": 200,
-        "tx_max_disk_read_bytes": 200000,
-        "tx_max_write_ledger_entries": 200,
-        "tx_max_write_bytes": 132096,
-        "fee_disk_read_ledger_entry": "1563",
-        "fee_write_ledger_entry": "2500",
-        "fee_disk_read1_kb": "447",
-        "soroban_state_target_size_bytes": "3000000000",
-        "rent_fee1_kb_soroban_state_size_low": "-17000",
-        "rent_fee1_kb_soroban_state_size_high": "10000",
-        "soroban_state_rent_fee_growth_factor": 5000
-      }
+      contract_ledger_cost_v0: {
+        ledger_max_disk_read_entries: 1000,
+        ledger_max_disk_read_bytes: 400000,
+        ledger_max_write_ledger_entries: 1000,
+        ledger_max_write_bytes: 286720,
+        tx_max_disk_read_entries: 200,
+        tx_max_disk_read_bytes: 200000,
+        tx_max_write_ledger_entries: 200,
+        tx_max_write_bytes: 132096,
+        fee_disk_read_ledger_entry: "1563",
+        fee_write_ledger_entry: "2500",
+        fee_disk_read1_kb: "447",
+        soroban_state_target_size_bytes: "3000000000",
+        rent_fee1_kb_soroban_state_size_low: "-17000",
+        rent_fee1_kb_soroban_state_size_high: "10000",
+        soroban_state_rent_fee_growth_factor: 5000,
+      },
     },
     {
-      "contract_historical_data_v0": {
-        "fee_historical1_kb": "4059"
-      }
+      contract_historical_data_v0: {
+        fee_historical1_kb: "4059",
+      },
     },
     {
-      "contract_events_v0": {
-        "tx_max_contract_events_size_bytes": 16384,
-        "fee_contract_events1_kb": "5000"
-      }
+      contract_events_v0: {
+        tx_max_contract_events_size_bytes: 16384,
+        fee_contract_events1_kb: "5000",
+      },
     },
     {
-      "contract_bandwidth_v0": {
-        "ledger_max_txs_size_bytes": 266240,
-        "tx_max_size_bytes": 132096,
-        "fee_tx_size1_kb": "406"
-      }
+      contract_bandwidth_v0: {
+        ledger_max_txs_size_bytes: 266240,
+        tx_max_size_bytes: 132096,
+        fee_tx_size1_kb: "406",
+      },
     },
     {
-      "contract_cost_params_cpu_instructions": [
+      contract_cost_params_cpu_instructions: [
         {
-          "ext": "v0",
-          "const_term": "4",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "4",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "434",
-          "linear_term": "16"
+          ext: "v0",
+          const_term: "434",
+          linear_term: "16",
         },
         {
-          "ext": "v0",
-          "const_term": "42",
-          "linear_term": "16"
+          ext: "v0",
+          const_term: "42",
+          linear_term: "16",
         },
         {
-          "ext": "v0",
-          "const_term": "44",
-          "linear_term": "16"
+          ext: "v0",
+          const_term: "44",
+          linear_term: "16",
         },
         {
-          "ext": "v0",
-          "const_term": "295",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "295",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "60",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "60",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "221",
-          "linear_term": "26"
+          ext: "v0",
+          const_term: "221",
+          linear_term: "26",
         },
         {
-          "ext": "v0",
-          "const_term": "331",
-          "linear_term": "4369"
+          ext: "v0",
+          const_term: "331",
+          linear_term: "4369",
         },
         {
-          "ext": "v0",
-          "const_term": "3636",
-          "linear_term": "7013"
+          ext: "v0",
+          const_term: "3636",
+          linear_term: "7013",
         },
         {
-          "ext": "v0",
-          "const_term": "40256",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "40256",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "377551",
-          "linear_term": "4059"
+          ext: "v0",
+          const_term: "377551",
+          linear_term: "4059",
         },
         {
-          "ext": "v0",
-          "const_term": "417482",
-          "linear_term": "45712"
+          ext: "v0",
+          const_term: "417482",
+          linear_term: "45712",
         },
         {
-          "ext": "v0",
-          "const_term": "41142",
-          "linear_term": "634"
+          ext: "v0",
+          const_term: "41142",
+          linear_term: "634",
         },
         {
-          "ext": "v0",
-          "const_term": "1945",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1945",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "6481",
-          "linear_term": "5943"
+          ext: "v0",
+          const_term: "6481",
+          linear_term: "5943",
         },
         {
-          "ext": "v0",
-          "const_term": "711",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "711",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "2314804",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "2314804",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "4176",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "4176",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "4716",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "4716",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "4680",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "4680",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "4256",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "4256",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "884",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "884",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "1059",
-          "linear_term": "502"
+          ext: "v0",
+          const_term: "1059",
+          linear_term: "502",
         },
         {
-          "ext": "v0",
-          "const_term": "73077",
-          "linear_term": "25410"
+          ext: "v0",
+          const_term: "73077",
+          linear_term: "25410",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "540752"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "540752",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "176363"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "176363",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "29989"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "29989",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "1061449"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "1061449",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "237336"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "237336",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "328476"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "328476",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "701845"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "701845",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "429383"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "429383",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "28"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "28",
         },
         {
-          "ext": "v0",
-          "const_term": "43030",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "43030",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "7556"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "7556",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "10711"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "10711",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "3300"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "3300",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "23038"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "23038",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "42488"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "42488",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "828974"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "828974",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "297100"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "297100",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "14"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "14",
         },
         {
-          "ext": "v0",
-          "const_term": "1882",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1882",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "3000906",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "3000906",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "661",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "661",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "985",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "985",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "1934",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1934",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "730510",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "730510",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "5921",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "5921",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "1057822",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1057822",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "92642",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "92642",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "100742",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "100742",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "7689",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "7689",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "2458985",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "2458985",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "2347584",
-          "linear_term": "94135478"
+          ext: "v0",
+          const_term: "2347584",
+          linear_term: "94135478",
         },
         {
-          "ext": "v0",
-          "const_term": "1020885",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1020885",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "2638451",
-          "linear_term": "6803"
+          ext: "v0",
+          const_term: "2638451",
+          linear_term: "6803",
         },
         {
-          "ext": "v0",
-          "const_term": "25207",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "25207",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "7873219",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "7873219",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "7663880",
-          "linear_term": "298580871"
+          ext: "v0",
+          const_term: "7663880",
+          linear_term: "298580871",
         },
         {
-          "ext": "v0",
-          "const_term": "1856539",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1856539",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "6315452",
-          "linear_term": "7232"
+          ext: "v0",
+          const_term: "6315452",
+          linear_term: "7232",
         },
         {
-          "ext": "v0",
-          "const_term": "10558948",
-          "linear_term": "632860943"
+          ext: "v0",
+          const_term: "10558948",
+          linear_term: "632860943",
         },
         {
-          "ext": "v0",
-          "const_term": "1994",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1994",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "1155",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1155",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "74",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "74",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "332",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "332",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "691",
-          "linear_term": "74558"
+          ext: "v0",
+          const_term: "691",
+          linear_term: "74558",
         },
         {
-          "ext": "v0",
-          "const_term": "35421",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "35421",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "344",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "344",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "476",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "476",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "904",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "904",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "2811",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "2811",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "1706052",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1706052",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "61",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "61",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "3623",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "3623",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "1150435",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1150435",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "5263916",
-          "linear_term": "392472814"
+          ext: "v0",
+          const_term: "5263916",
+          linear_term: "392472814",
         },
         {
-          "ext": "v0",
-          "const_term": "2052",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "2052",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "1133",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1133",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "74",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "74",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "332",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "332",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "755",
-          "linear_term": "68930"
+          ext: "v0",
+          const_term: "755",
+          linear_term: "68930",
         },
         {
-          "ext": "v0",
-          "const_term": "33151",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "33151",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "1185193",
-          "linear_term": "41568084"
-        }
-      ]
+          ext: "v0",
+          const_term: "1185193",
+          linear_term: "41568084",
+        },
+      ],
     },
     {
-      "contract_cost_params_memory_bytes": [
+      contract_cost_params_memory_bytes: [
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "16",
-          "linear_term": "128"
+          ext: "v0",
+          const_term: "16",
+          linear_term: "128",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "242",
-          "linear_term": "384"
+          ext: "v0",
+          const_term: "242",
+          linear_term: "384",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "384"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "384",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "132773",
-          "linear_term": "4903"
+          ext: "v0",
+          const_term: "132773",
+          linear_term: "4903",
         },
         {
-          "ext": "v0",
-          "const_term": "69472",
-          "linear_term": "1217"
+          ext: "v0",
+          const_term: "69472",
+          linear_term: "1217",
         },
         {
-          "ext": "v0",
-          "const_term": "14",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "14",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "181",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "181",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "99",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "99",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "99",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "99",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "99",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "99",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "99",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "99",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "99",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "99",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "17564",
-          "linear_term": "6457"
+          ext: "v0",
+          const_term: "17564",
+          linear_term: "6457",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "47464"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "47464",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "13420"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "13420",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "6285"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "6285",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "64670"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "64670",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "29074"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "29074",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "48095"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "48095",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "103229"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "103229",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "36394"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "36394",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "257"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "257",
         },
         {
-          "ext": "v0",
-          "const_term": "70704",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "70704",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "14613"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "14613",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "6833"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "6833",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "1025"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "1025",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "129632"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "129632",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "13665"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "13665",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "97637"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "97637",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "9176"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "9176",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "126"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "126",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "109494",
-          "linear_term": "266603"
+          ext: "v0",
+          const_term: "109494",
+          linear_term: "266603",
         },
         {
-          "ext": "v0",
-          "const_term": "2776",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "2776",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "5896",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "5896",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "219654",
-          "linear_term": "266603"
+          ext: "v0",
+          const_term: "219654",
+          linear_term: "266603",
         },
         {
-          "ext": "v0",
-          "const_term": "1672",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1672",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "3960",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "3960",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "2204",
-          "linear_term": "9340474"
+          ext: "v0",
+          const_term: "2204",
+          linear_term: "9340474",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "248",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "248",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "128"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "128",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "1821",
-          "linear_term": "6232546"
+          ext: "v0",
+          const_term: "1821",
+          linear_term: "6232546",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "312",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "312",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "73061",
-          "linear_term": "229779"
-        }
-      ]
+          ext: "v0",
+          const_term: "73061",
+          linear_term: "229779",
+        },
+      ],
     },
     {
-      "contract_data_key_size_bytes": 250
+      contract_data_key_size_bytes: 250,
     },
     {
-      "contract_data_entry_size_bytes": 65536
+      contract_data_entry_size_bytes: 65536,
     },
     {
-      "state_archival": {
-        "max_entry_ttl": 3110400,
-        "min_temporary_ttl": 17280,
-        "min_persistent_ttl": 2073600,
-        "persistent_rent_rate_denominator": "1215",
-        "temp_rent_rate_denominator": "2430",
-        "max_entries_to_archive": 1000,
-        "live_soroban_state_size_window_sample_size": 30,
-        "live_soroban_state_size_window_sample_period": 64,
-        "eviction_scan_size": 500000,
-        "starting_eviction_scan_level": 7
-      }
+      state_archival: {
+        max_entry_ttl: 3110400,
+        min_temporary_ttl: 17280,
+        min_persistent_ttl: 2073600,
+        persistent_rent_rate_denominator: "1215",
+        temp_rent_rate_denominator: "2430",
+        max_entries_to_archive: 1000,
+        live_soroban_state_size_window_sample_size: 30,
+        live_soroban_state_size_window_sample_period: 64,
+        eviction_scan_size: 500000,
+        starting_eviction_scan_level: 7,
+      },
     },
     {
-      "contract_execution_lanes": {
-        "ledger_max_tx_count": 2000
-      }
+      contract_execution_lanes: {
+        ledger_max_tx_count: 2000,
+      },
     },
     {
-      "contract_parallel_compute_v0": {
-        "ledger_max_dependent_tx_clusters": 2
-      }
+      contract_parallel_compute_v0: {
+        ledger_max_dependent_tx_clusters: 2,
+      },
     },
     {
-      "contract_ledger_cost_ext_v0": {
-        "tx_max_footprint_entries": 400,
-        "fee_write1_kb": "875"
-      }
+      contract_ledger_cost_ext_v0: {
+        tx_max_footprint_entries: 400,
+        fee_write1_kb: "875",
+      },
     },
     {
-      "scp_timing": {
-        "ledger_target_close_time_milliseconds": 5000,
-        "nomination_timeout_initial_milliseconds": 1000,
-        "nomination_timeout_increment_milliseconds": 1000,
-        "ballot_timeout_initial_milliseconds": 1000,
-        "ballot_timeout_increment_milliseconds": 1000
-      }
-    }
-  ]
+      scp_timing: {
+        ledger_target_close_time_milliseconds: 5000,
+        nomination_timeout_initial_milliseconds: 1000,
+        nomination_timeout_increment_milliseconds: 1000,
+        ballot_timeout_initial_milliseconds: 1000,
+        ballot_timeout_increment_milliseconds: 1000,
+      },
+    },
+  ],
 };
 
 export const TESTNET_LIMITS_JSON: NetworkLimitsJson = {
-  "updated_entry": [
+  updated_entry: [
     {
-      "contract_max_size_bytes": 131072
+      contract_max_size_bytes: 131072,
     },
     {
-      "contract_compute_v0": {
-        "ledger_max_instructions": "580000000",
-        "tx_max_instructions": "400000000",
-        "fee_rate_per_instructions_increment": "7",
-        "tx_memory_limit": 41943040
-      }
+      contract_compute_v0: {
+        ledger_max_instructions: "580000000",
+        tx_max_instructions: "400000000",
+        fee_rate_per_instructions_increment: "7",
+        tx_memory_limit: 41943040,
+      },
     },
     {
-      "contract_ledger_cost_v0": {
-        "ledger_max_disk_read_entries": 1000,
-        "ledger_max_disk_read_bytes": 400000,
-        "ledger_max_write_ledger_entries": 1000,
-        "ledger_max_write_bytes": 286720,
-        "tx_max_disk_read_entries": 200,
-        "tx_max_disk_read_bytes": 200000,
-        "tx_max_write_ledger_entries": 200,
-        "tx_max_write_bytes": 132096,
-        "fee_disk_read_ledger_entry": "1563",
-        "fee_write_ledger_entry": "2500",
-        "fee_disk_read1_kb": "447",
-        "soroban_state_target_size_bytes": "3000000000",
-        "rent_fee1_kb_soroban_state_size_low": "-17000",
-        "rent_fee1_kb_soroban_state_size_high": "10000",
-        "soroban_state_rent_fee_growth_factor": 5000
-      }
+      contract_ledger_cost_v0: {
+        ledger_max_disk_read_entries: 1000,
+        ledger_max_disk_read_bytes: 400000,
+        ledger_max_write_ledger_entries: 1000,
+        ledger_max_write_bytes: 286720,
+        tx_max_disk_read_entries: 200,
+        tx_max_disk_read_bytes: 200000,
+        tx_max_write_ledger_entries: 200,
+        tx_max_write_bytes: 132096,
+        fee_disk_read_ledger_entry: "1563",
+        fee_write_ledger_entry: "2500",
+        fee_disk_read1_kb: "447",
+        soroban_state_target_size_bytes: "3000000000",
+        rent_fee1_kb_soroban_state_size_low: "-17000",
+        rent_fee1_kb_soroban_state_size_high: "10000",
+        soroban_state_rent_fee_growth_factor: 5000,
+      },
     },
     {
-      "contract_historical_data_v0": {
-        "fee_historical1_kb": "4059"
-      }
+      contract_historical_data_v0: {
+        fee_historical1_kb: "4059",
+      },
     },
     {
-      "contract_events_v0": {
-        "tx_max_contract_events_size_bytes": 16384,
-        "fee_contract_events1_kb": "5000"
-      }
+      contract_events_v0: {
+        tx_max_contract_events_size_bytes: 16384,
+        fee_contract_events1_kb: "5000",
+      },
     },
     {
-      "contract_bandwidth_v0": {
-        "ledger_max_txs_size_bytes": 266240,
-        "tx_max_size_bytes": 132096,
-        "fee_tx_size1_kb": "406"
-      }
+      contract_bandwidth_v0: {
+        ledger_max_txs_size_bytes: 266240,
+        tx_max_size_bytes: 132096,
+        fee_tx_size1_kb: "406",
+      },
     },
     {
-      "contract_cost_params_cpu_instructions": [
+      contract_cost_params_cpu_instructions: [
         {
-          "ext": "v0",
-          "const_term": "4",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "4",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "434",
-          "linear_term": "16"
+          ext: "v0",
+          const_term: "434",
+          linear_term: "16",
         },
         {
-          "ext": "v0",
-          "const_term": "42",
-          "linear_term": "16"
+          ext: "v0",
+          const_term: "42",
+          linear_term: "16",
         },
         {
-          "ext": "v0",
-          "const_term": "44",
-          "linear_term": "16"
+          ext: "v0",
+          const_term: "44",
+          linear_term: "16",
         },
         {
-          "ext": "v0",
-          "const_term": "295",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "295",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "60",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "60",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "221",
-          "linear_term": "26"
+          ext: "v0",
+          const_term: "221",
+          linear_term: "26",
         },
         {
-          "ext": "v0",
-          "const_term": "331",
-          "linear_term": "4369"
+          ext: "v0",
+          const_term: "331",
+          linear_term: "4369",
         },
         {
-          "ext": "v0",
-          "const_term": "3636",
-          "linear_term": "7013"
+          ext: "v0",
+          const_term: "3636",
+          linear_term: "7013",
         },
         {
-          "ext": "v0",
-          "const_term": "40256",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "40256",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "377551",
-          "linear_term": "4059"
+          ext: "v0",
+          const_term: "377551",
+          linear_term: "4059",
         },
         {
-          "ext": "v0",
-          "const_term": "417482",
-          "linear_term": "45712"
+          ext: "v0",
+          const_term: "417482",
+          linear_term: "45712",
         },
         {
-          "ext": "v0",
-          "const_term": "41142",
-          "linear_term": "634"
+          ext: "v0",
+          const_term: "41142",
+          linear_term: "634",
         },
         {
-          "ext": "v0",
-          "const_term": "1945",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1945",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "6481",
-          "linear_term": "5943"
+          ext: "v0",
+          const_term: "6481",
+          linear_term: "5943",
         },
         {
-          "ext": "v0",
-          "const_term": "711",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "711",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "2314804",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "2314804",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "4176",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "4176",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "4716",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "4716",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "4680",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "4680",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "4256",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "4256",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "884",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "884",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "1059",
-          "linear_term": "502"
+          ext: "v0",
+          const_term: "1059",
+          linear_term: "502",
         },
         {
-          "ext": "v0",
-          "const_term": "73077",
-          "linear_term": "25410"
+          ext: "v0",
+          const_term: "73077",
+          linear_term: "25410",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "540752"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "540752",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "176363"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "176363",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "29989"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "29989",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "1061449"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "1061449",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "237336"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "237336",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "328476"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "328476",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "701845"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "701845",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "429383"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "429383",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "28"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "28",
         },
         {
-          "ext": "v0",
-          "const_term": "43030",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "43030",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "7556"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "7556",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "10711"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "10711",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "3300"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "3300",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "23038"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "23038",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "42488"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "42488",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "828974"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "828974",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "297100"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "297100",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "14"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "14",
         },
         {
-          "ext": "v0",
-          "const_term": "1882",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1882",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "3000906",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "3000906",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "661",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "661",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "985",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "985",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "1934",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1934",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "730510",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "730510",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "5921",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "5921",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "1057822",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1057822",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "92642",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "92642",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "100742",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "100742",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "7689",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "7689",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "2458985",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "2458985",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "2347584",
-          "linear_term": "94135478"
+          ext: "v0",
+          const_term: "2347584",
+          linear_term: "94135478",
         },
         {
-          "ext": "v0",
-          "const_term": "1020885",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1020885",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "2638451",
-          "linear_term": "6803"
+          ext: "v0",
+          const_term: "2638451",
+          linear_term: "6803",
         },
         {
-          "ext": "v0",
-          "const_term": "25207",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "25207",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "7873219",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "7873219",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "7663880",
-          "linear_term": "298580871"
+          ext: "v0",
+          const_term: "7663880",
+          linear_term: "298580871",
         },
         {
-          "ext": "v0",
-          "const_term": "1856539",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1856539",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "6315452",
-          "linear_term": "7232"
+          ext: "v0",
+          const_term: "6315452",
+          linear_term: "7232",
         },
         {
-          "ext": "v0",
-          "const_term": "10558948",
-          "linear_term": "632860943"
+          ext: "v0",
+          const_term: "10558948",
+          linear_term: "632860943",
         },
         {
-          "ext": "v0",
-          "const_term": "1994",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1994",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "1155",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1155",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "74",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "74",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "332",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "332",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "691",
-          "linear_term": "74558"
+          ext: "v0",
+          const_term: "691",
+          linear_term: "74558",
         },
         {
-          "ext": "v0",
-          "const_term": "35421",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "35421",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "344",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "344",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "476",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "476",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "904",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "904",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "2811",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "2811",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "1706052",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1706052",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "61",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "61",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "3623",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "3623",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "1150435",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1150435",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "5263916",
-          "linear_term": "392472814"
+          ext: "v0",
+          const_term: "5263916",
+          linear_term: "392472814",
         },
         {
-          "ext": "v0",
-          "const_term": "2052",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "2052",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "1133",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1133",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "74",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "74",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "332",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "332",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "755",
-          "linear_term": "68930"
+          ext: "v0",
+          const_term: "755",
+          linear_term: "68930",
         },
         {
-          "ext": "v0",
-          "const_term": "33151",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "33151",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "1185193",
-          "linear_term": "41568084"
-        }
-      ]
+          ext: "v0",
+          const_term: "1185193",
+          linear_term: "41568084",
+        },
+      ],
     },
     {
-      "contract_cost_params_memory_bytes": [
+      contract_cost_params_memory_bytes: [
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "16",
-          "linear_term": "128"
+          ext: "v0",
+          const_term: "16",
+          linear_term: "128",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "242",
-          "linear_term": "384"
+          ext: "v0",
+          const_term: "242",
+          linear_term: "384",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "384"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "384",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "132773",
-          "linear_term": "4903"
+          ext: "v0",
+          const_term: "132773",
+          linear_term: "4903",
         },
         {
-          "ext": "v0",
-          "const_term": "69472",
-          "linear_term": "1217"
+          ext: "v0",
+          const_term: "69472",
+          linear_term: "1217",
         },
         {
-          "ext": "v0",
-          "const_term": "14",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "14",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "181",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "181",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "99",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "99",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "99",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "99",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "99",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "99",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "99",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "99",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "99",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "99",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "17564",
-          "linear_term": "6457"
+          ext: "v0",
+          const_term: "17564",
+          linear_term: "6457",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "47464"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "47464",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "13420"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "13420",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "6285"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "6285",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "64670"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "64670",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "29074"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "29074",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "48095"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "48095",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "103229"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "103229",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "36394"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "36394",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "257"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "257",
         },
         {
-          "ext": "v0",
-          "const_term": "70704",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "70704",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "14613"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "14613",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "6833"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "6833",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "1025"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "1025",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "129632"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "129632",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "13665"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "13665",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "97637"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "97637",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "9176"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "9176",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "126"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "126",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "109494",
-          "linear_term": "266603"
+          ext: "v0",
+          const_term: "109494",
+          linear_term: "266603",
         },
         {
-          "ext": "v0",
-          "const_term": "2776",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "2776",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "5896",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "5896",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "219654",
-          "linear_term": "266603"
+          ext: "v0",
+          const_term: "219654",
+          linear_term: "266603",
         },
         {
-          "ext": "v0",
-          "const_term": "1672",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1672",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "3960",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "3960",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "2204",
-          "linear_term": "9340474"
+          ext: "v0",
+          const_term: "2204",
+          linear_term: "9340474",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "248",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "248",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "128"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "128",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "1821",
-          "linear_term": "6232546"
+          ext: "v0",
+          const_term: "1821",
+          linear_term: "6232546",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "312",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "312",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "73061",
-          "linear_term": "229779"
-        }
-      ]
+          ext: "v0",
+          const_term: "73061",
+          linear_term: "229779",
+        },
+      ],
     },
     {
-      "contract_data_key_size_bytes": 250
+      contract_data_key_size_bytes: 250,
     },
     {
-      "contract_data_entry_size_bytes": 65536
+      contract_data_entry_size_bytes: 65536,
     },
     {
-      "state_archival": {
-        "max_entry_ttl": 3110400,
-        "min_temporary_ttl": 720,
-        "min_persistent_ttl": 120960,
-        "persistent_rent_rate_denominator": "1215",
-        "temp_rent_rate_denominator": "2430",
-        "max_entries_to_archive": 1000,
-        "live_soroban_state_size_window_sample_size": 30,
-        "live_soroban_state_size_window_sample_period": 64,
-        "eviction_scan_size": 500000,
-        "starting_eviction_scan_level": 7
-      }
+      state_archival: {
+        max_entry_ttl: 3110400,
+        min_temporary_ttl: 720,
+        min_persistent_ttl: 120960,
+        persistent_rent_rate_denominator: "1215",
+        temp_rent_rate_denominator: "2430",
+        max_entries_to_archive: 1000,
+        live_soroban_state_size_window_sample_size: 30,
+        live_soroban_state_size_window_sample_period: 64,
+        eviction_scan_size: 500000,
+        starting_eviction_scan_level: 7,
+      },
     },
     {
-      "contract_execution_lanes": {
-        "ledger_max_tx_count": 2000
-      }
+      contract_execution_lanes: {
+        ledger_max_tx_count: 2000,
+      },
     },
     {
-      "contract_parallel_compute_v0": {
-        "ledger_max_dependent_tx_clusters": 2
-      }
+      contract_parallel_compute_v0: {
+        ledger_max_dependent_tx_clusters: 2,
+      },
     },
     {
-      "contract_ledger_cost_ext_v0": {
-        "tx_max_footprint_entries": 400,
-        "fee_write1_kb": "875"
-      }
+      contract_ledger_cost_ext_v0: {
+        tx_max_footprint_entries: 400,
+        fee_write1_kb: "875",
+      },
     },
     {
-      "scp_timing": {
-        "ledger_target_close_time_milliseconds": 5000,
-        "nomination_timeout_initial_milliseconds": 1000,
-        "nomination_timeout_increment_milliseconds": 1000,
-        "ballot_timeout_initial_milliseconds": 1000,
-        "ballot_timeout_increment_milliseconds": 1000
-      }
-    }
-  ]
+      scp_timing: {
+        ledger_target_close_time_milliseconds: 5000,
+        nomination_timeout_initial_milliseconds: 1000,
+        nomination_timeout_increment_milliseconds: 1000,
+        ballot_timeout_initial_milliseconds: 1000,
+        ballot_timeout_increment_milliseconds: 1000,
+      },
+    },
+  ],
 };
 
 export const FUTURENET_LIMITS_JSON: NetworkLimitsJson = {
-  "updated_entry": [
+  updated_entry: [
     {
-      "contract_max_size_bytes": 131072
+      contract_max_size_bytes: 131072,
     },
     {
-      "contract_compute_v0": {
-        "ledger_max_instructions": "580000000",
-        "tx_max_instructions": "400000000",
-        "fee_rate_per_instructions_increment": "7",
-        "tx_memory_limit": 41943040
-      }
+      contract_compute_v0: {
+        ledger_max_instructions: "580000000",
+        tx_max_instructions: "400000000",
+        fee_rate_per_instructions_increment: "7",
+        tx_memory_limit: 41943040,
+      },
     },
     {
-      "contract_ledger_cost_v0": {
-        "ledger_max_disk_read_entries": 1000,
-        "ledger_max_disk_read_bytes": 400000,
-        "ledger_max_write_ledger_entries": 1000,
-        "ledger_max_write_bytes": 286720,
-        "tx_max_disk_read_entries": 200,
-        "tx_max_disk_read_bytes": 200000,
-        "tx_max_write_ledger_entries": 200,
-        "tx_max_write_bytes": 132096,
-        "fee_disk_read_ledger_entry": "1563",
-        "fee_write_ledger_entry": "2500",
-        "fee_disk_read1_kb": "447",
-        "soroban_state_target_size_bytes": "3000000000",
-        "rent_fee1_kb_soroban_state_size_low": "-17000",
-        "rent_fee1_kb_soroban_state_size_high": "10000",
-        "soroban_state_rent_fee_growth_factor": 5000
-      }
+      contract_ledger_cost_v0: {
+        ledger_max_disk_read_entries: 1000,
+        ledger_max_disk_read_bytes: 400000,
+        ledger_max_write_ledger_entries: 1000,
+        ledger_max_write_bytes: 286720,
+        tx_max_disk_read_entries: 200,
+        tx_max_disk_read_bytes: 200000,
+        tx_max_write_ledger_entries: 200,
+        tx_max_write_bytes: 132096,
+        fee_disk_read_ledger_entry: "1563",
+        fee_write_ledger_entry: "2500",
+        fee_disk_read1_kb: "447",
+        soroban_state_target_size_bytes: "3000000000",
+        rent_fee1_kb_soroban_state_size_low: "-17000",
+        rent_fee1_kb_soroban_state_size_high: "10000",
+        soroban_state_rent_fee_growth_factor: 5000,
+      },
     },
     {
-      "contract_historical_data_v0": {
-        "fee_historical1_kb": "4059"
-      }
+      contract_historical_data_v0: {
+        fee_historical1_kb: "4059",
+      },
     },
     {
-      "contract_events_v0": {
-        "tx_max_contract_events_size_bytes": 16384,
-        "fee_contract_events1_kb": "5000"
-      }
+      contract_events_v0: {
+        tx_max_contract_events_size_bytes: 16384,
+        fee_contract_events1_kb: "5000",
+      },
     },
     {
-      "contract_bandwidth_v0": {
-        "ledger_max_txs_size_bytes": 266240,
-        "tx_max_size_bytes": 132096,
-        "fee_tx_size1_kb": "406"
-      }
+      contract_bandwidth_v0: {
+        ledger_max_txs_size_bytes: 266240,
+        tx_max_size_bytes: 132096,
+        fee_tx_size1_kb: "406",
+      },
     },
     {
-      "contract_cost_params_cpu_instructions": [
+      contract_cost_params_cpu_instructions: [
         {
-          "ext": "v0",
-          "const_term": "4",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "4",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "434",
-          "linear_term": "16"
+          ext: "v0",
+          const_term: "434",
+          linear_term: "16",
         },
         {
-          "ext": "v0",
-          "const_term": "42",
-          "linear_term": "16"
+          ext: "v0",
+          const_term: "42",
+          linear_term: "16",
         },
         {
-          "ext": "v0",
-          "const_term": "44",
-          "linear_term": "16"
+          ext: "v0",
+          const_term: "44",
+          linear_term: "16",
         },
         {
-          "ext": "v0",
-          "const_term": "295",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "295",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "60",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "60",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "221",
-          "linear_term": "26"
+          ext: "v0",
+          const_term: "221",
+          linear_term: "26",
         },
         {
-          "ext": "v0",
-          "const_term": "331",
-          "linear_term": "4369"
+          ext: "v0",
+          const_term: "331",
+          linear_term: "4369",
         },
         {
-          "ext": "v0",
-          "const_term": "3636",
-          "linear_term": "7013"
+          ext: "v0",
+          const_term: "3636",
+          linear_term: "7013",
         },
         {
-          "ext": "v0",
-          "const_term": "40256",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "40256",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "377551",
-          "linear_term": "4059"
+          ext: "v0",
+          const_term: "377551",
+          linear_term: "4059",
         },
         {
-          "ext": "v0",
-          "const_term": "417482",
-          "linear_term": "45712"
+          ext: "v0",
+          const_term: "417482",
+          linear_term: "45712",
         },
         {
-          "ext": "v0",
-          "const_term": "41142",
-          "linear_term": "634"
+          ext: "v0",
+          const_term: "41142",
+          linear_term: "634",
         },
         {
-          "ext": "v0",
-          "const_term": "1945",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1945",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "6481",
-          "linear_term": "5943"
+          ext: "v0",
+          const_term: "6481",
+          linear_term: "5943",
         },
         {
-          "ext": "v0",
-          "const_term": "711",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "711",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "2314804",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "2314804",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "4176",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "4176",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "4716",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "4716",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "4680",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "4680",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "4256",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "4256",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "884",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "884",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "1059",
-          "linear_term": "502"
+          ext: "v0",
+          const_term: "1059",
+          linear_term: "502",
         },
         {
-          "ext": "v0",
-          "const_term": "73077",
-          "linear_term": "25410"
+          ext: "v0",
+          const_term: "73077",
+          linear_term: "25410",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "540752"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "540752",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "176363"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "176363",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "29989"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "29989",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "1061449"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "1061449",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "237336"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "237336",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "328476"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "328476",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "701845"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "701845",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "429383"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "429383",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "28"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "28",
         },
         {
-          "ext": "v0",
-          "const_term": "43030",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "43030",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "7556"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "7556",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "10711"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "10711",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "3300"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "3300",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "23038"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "23038",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "42488"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "42488",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "828974"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "828974",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "297100"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "297100",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "14"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "14",
         },
         {
-          "ext": "v0",
-          "const_term": "1882",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1882",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "3000906",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "3000906",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "661",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "661",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "985",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "985",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "1934",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1934",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "730510",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "730510",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "5921",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "5921",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "1057822",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1057822",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "92642",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "92642",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "100742",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "100742",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "7689",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "7689",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "2458985",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "2458985",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "2347584",
-          "linear_term": "94135478"
+          ext: "v0",
+          const_term: "2347584",
+          linear_term: "94135478",
         },
         {
-          "ext": "v0",
-          "const_term": "1020885",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1020885",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "2638451",
-          "linear_term": "6803"
+          ext: "v0",
+          const_term: "2638451",
+          linear_term: "6803",
         },
         {
-          "ext": "v0",
-          "const_term": "25207",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "25207",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "7873219",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "7873219",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "7663880",
-          "linear_term": "298580871"
+          ext: "v0",
+          const_term: "7663880",
+          linear_term: "298580871",
         },
         {
-          "ext": "v0",
-          "const_term": "1856539",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1856539",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "6315452",
-          "linear_term": "7232"
+          ext: "v0",
+          const_term: "6315452",
+          linear_term: "7232",
         },
         {
-          "ext": "v0",
-          "const_term": "10558948",
-          "linear_term": "632860943"
+          ext: "v0",
+          const_term: "10558948",
+          linear_term: "632860943",
         },
         {
-          "ext": "v0",
-          "const_term": "1994",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1994",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "1155",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1155",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "74",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "74",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "332",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "332",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "691",
-          "linear_term": "74558"
+          ext: "v0",
+          const_term: "691",
+          linear_term: "74558",
         },
         {
-          "ext": "v0",
-          "const_term": "35421",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "35421",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "344",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "344",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "476",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "476",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "904",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "904",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "2811",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "2811",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "1706052",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1706052",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "61",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "61",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "3623",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "3623",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "1150435",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1150435",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "5263916",
-          "linear_term": "392472814"
+          ext: "v0",
+          const_term: "5263916",
+          linear_term: "392472814",
         },
         {
-          "ext": "v0",
-          "const_term": "2052",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "2052",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "1133",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1133",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "74",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "74",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "332",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "332",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "755",
-          "linear_term": "68930"
+          ext: "v0",
+          const_term: "755",
+          linear_term: "68930",
         },
         {
-          "ext": "v0",
-          "const_term": "33151",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "33151",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "1185193",
-          "linear_term": "41568084"
-        }
-      ]
+          ext: "v0",
+          const_term: "1185193",
+          linear_term: "41568084",
+        },
+      ],
     },
     {
-      "contract_cost_params_memory_bytes": [
+      contract_cost_params_memory_bytes: [
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "16",
-          "linear_term": "128"
+          ext: "v0",
+          const_term: "16",
+          linear_term: "128",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "242",
-          "linear_term": "384"
+          ext: "v0",
+          const_term: "242",
+          linear_term: "384",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "384"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "384",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "132773",
-          "linear_term": "4903"
+          ext: "v0",
+          const_term: "132773",
+          linear_term: "4903",
         },
         {
-          "ext": "v0",
-          "const_term": "69472",
-          "linear_term": "1217"
+          ext: "v0",
+          const_term: "69472",
+          linear_term: "1217",
         },
         {
-          "ext": "v0",
-          "const_term": "14",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "14",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "181",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "181",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "99",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "99",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "99",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "99",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "99",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "99",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "99",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "99",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "99",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "99",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "17564",
-          "linear_term": "6457"
+          ext: "v0",
+          const_term: "17564",
+          linear_term: "6457",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "47464"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "47464",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "13420"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "13420",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "6285"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "6285",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "64670"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "64670",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "29074"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "29074",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "48095"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "48095",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "103229"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "103229",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "36394"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "36394",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "257"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "257",
         },
         {
-          "ext": "v0",
-          "const_term": "70704",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "70704",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "14613"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "14613",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "6833"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "6833",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "1025"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "1025",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "129632"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "129632",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "13665"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "13665",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "97637"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "97637",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "9176"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "9176",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "126"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "126",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "109494",
-          "linear_term": "266603"
+          ext: "v0",
+          const_term: "109494",
+          linear_term: "266603",
         },
         {
-          "ext": "v0",
-          "const_term": "2776",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "2776",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "5896",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "5896",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "219654",
-          "linear_term": "266603"
+          ext: "v0",
+          const_term: "219654",
+          linear_term: "266603",
         },
         {
-          "ext": "v0",
-          "const_term": "1672",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "1672",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "3960",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "3960",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "2204",
-          "linear_term": "9340474"
+          ext: "v0",
+          const_term: "2204",
+          linear_term: "9340474",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "248",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "248",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "128"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "128",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "1821",
-          "linear_term": "6232546"
+          ext: "v0",
+          const_term: "1821",
+          linear_term: "6232546",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "312",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "312",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "0",
-          "linear_term": "0"
+          ext: "v0",
+          const_term: "0",
+          linear_term: "0",
         },
         {
-          "ext": "v0",
-          "const_term": "73061",
-          "linear_term": "229779"
-        }
-      ]
+          ext: "v0",
+          const_term: "73061",
+          linear_term: "229779",
+        },
+      ],
     },
     {
-      "contract_data_key_size_bytes": 250
+      contract_data_key_size_bytes: 250,
     },
     {
-      "contract_data_entry_size_bytes": 65536
+      contract_data_entry_size_bytes: 65536,
     },
     {
-      "state_archival": {
-        "max_entry_ttl": 3110400,
-        "min_temporary_ttl": 720,
-        "min_persistent_ttl": 120960,
-        "persistent_rent_rate_denominator": "1215",
-        "temp_rent_rate_denominator": "2430",
-        "max_entries_to_archive": 1000,
-        "live_soroban_state_size_window_sample_size": 30,
-        "live_soroban_state_size_window_sample_period": 64,
-        "eviction_scan_size": 500000,
-        "starting_eviction_scan_level": 7
-      }
+      state_archival: {
+        max_entry_ttl: 3110400,
+        min_temporary_ttl: 720,
+        min_persistent_ttl: 120960,
+        persistent_rent_rate_denominator: "1215",
+        temp_rent_rate_denominator: "2430",
+        max_entries_to_archive: 1000,
+        live_soroban_state_size_window_sample_size: 30,
+        live_soroban_state_size_window_sample_period: 64,
+        eviction_scan_size: 500000,
+        starting_eviction_scan_level: 7,
+      },
     },
     {
-      "contract_execution_lanes": {
-        "ledger_max_tx_count": 2000
-      }
+      contract_execution_lanes: {
+        ledger_max_tx_count: 2000,
+      },
     },
     {
-      "contract_parallel_compute_v0": {
-        "ledger_max_dependent_tx_clusters": 2
-      }
+      contract_parallel_compute_v0: {
+        ledger_max_dependent_tx_clusters: 2,
+      },
     },
     {
-      "contract_ledger_cost_ext_v0": {
-        "tx_max_footprint_entries": 400,
-        "fee_write1_kb": "875"
-      }
+      contract_ledger_cost_ext_v0: {
+        tx_max_footprint_entries: 400,
+        fee_write1_kb: "875",
+      },
     },
     {
-      "scp_timing": {
-        "ledger_target_close_time_milliseconds": 5000,
-        "nomination_timeout_initial_milliseconds": 1000,
-        "nomination_timeout_increment_milliseconds": 1000,
-        "ballot_timeout_initial_milliseconds": 1000,
-        "ballot_timeout_increment_milliseconds": 1000
-      }
-    }
-  ]
+      scp_timing: {
+        ledger_target_close_time_milliseconds: 5000,
+        nomination_timeout_initial_milliseconds: 1000,
+        nomination_timeout_increment_milliseconds: 1000,
+        ballot_timeout_initial_milliseconds: 1000,
+        ballot_timeout_increment_milliseconds: 1000,
+      },
+    },
+  ],
 };
 
 export const NETWORK_LIMITS_JSON: Record<string, NetworkLimitsJson> = {
