@@ -10,6 +10,10 @@
     --ValidationResponseCard-title-color: var(--sds-clr-red-11);
   }
 
+  .Card {
+    --Card-padding: #{pxToRem(16px)};
+  }
+
   &__title {
     color: var(--ValidationResponseCard-title-color);
   }

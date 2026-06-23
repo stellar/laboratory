@@ -244,7 +244,7 @@ export const ClassicOperation = ({
             {txnOperations.map((op, idx) => (
               <Box
                 key={`op-${idx}`}
-                gap="lg"
+                gap="sm"
                 addlClassName="PageBody__content"
                 data-testid={`build-transaction-operation-${idx}`}
               >
