@@ -2,6 +2,18 @@ import { test, expect } from "@playwright/test";
 import { baseURL } from "../../playwright.config";
 import { SAVED_ACCOUNT_1 } from "./mock/localStorage";
 
+/**
+ * These tests cover the Deploy Contract page's pre-transaction UI states:
+ * initial load, source account validation, file picker validation/reset, and
+ * the Futurenet unsupported-network branch.
+ *
+ * They intentionally do not cover the full upload/deploy transaction workflow.
+ * That path requires mocking RPC account lookup, transaction preparation,
+ * Wasm lookup, signing, and submission responses; keeping those out of this
+ * spec gives us stable page-level coverage without coupling these tests to
+ * generated XDR details or Stellar RPC response internals.
+ */
+
 const DEPLOY_CONTRACT_ROUTE = `${baseURL}/smart-contracts/deploy-contract`;
 const FUTURENET_ROUTE = `${DEPLOY_CONTRACT_ROUTE}?$=network$id=futurenet&label=Futurenet&horizonUrl=https:////horizon-futurenet.stellar.org&rpcUrl=https:////rpc-futurenet.stellar.org&passphrase=Test%20SDF%20Future%20Network%20/;%20October%202022;;`;
 
@@ -15,6 +27,7 @@ test.describe("Smart Contracts: Deploy Contract", () => {
     await expect(page.getByLabel("Source account")).toHaveValue("");
 
     await expect(page.locator("#file-picker")).toBeDisabled();
+    // Upload/deploy transaction paths are intentionally out of scope here.
     await expect(
       page.getByRole("button", { name: "Build upload transaction" }),
     ).toBeDisabled();
