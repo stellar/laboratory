@@ -13,7 +13,7 @@ export const useBuildVerification = ({
 }) => {
   const queries = useQueries({
     queries: contractIds.map((contractId) => ({
-      queryKey: ["buildVerification", contractId, rpcUrl],
+      queryKey: ["buildVerification", contractId, rpcUrl, headers],
       queryFn: () =>
         getBuildVerification({
           contractId,
