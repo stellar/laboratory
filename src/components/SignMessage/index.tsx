@@ -87,11 +87,18 @@ export const SignMessage = ({
         return {};
       }
 
-      const { signedMessage, signerAddress } =
-        await StellarWalletsKit.signMessage(message, {
+      const { signedMessage, signerAddress } = await StellarWalletsKit.signMessage(
+        message,
+        {
           address,
           networkPassphrase,
-        });
+        },
+      );
+
+      if (!signedMessage) {
+        onSigned?.(null);
+        return { errorMessage: "Couldn’t sign with wallet, please try again" };
+      }
 
       const result: SignedMessage = {
         publicKey: signerAddress ?? address,
@@ -99,7 +106,6 @@ export const SignMessage = ({
         // The kit returns the signature already base64-encoded.
         signature: signedMessage,
       };
-
       onSigned?.(result);
 
       return {
