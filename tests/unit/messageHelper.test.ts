@@ -27,14 +27,13 @@ describe("SEP-53 messageHelper", () => {
     ).toBe(true);
   });
 
-  it("applies the SEP-53 prefix (raw-message signature does not verify)", () => {
+  it("does not match a raw-message signature (SEP-53 signs a prefixed hash)", () => {
     const message = "prove ownership";
     const { signature } = signMessageWithSecretKey({ secretKey: SECRET, message });
 
-    // A signature over the prefixed payload must NOT verify against an
-    // unprefixed message, confirming the prefix is part of the signed payload.
-    const unprefixedHash = kp.sign(Buffer.from(message, "utf8"));
-    expect(unprefixedHash.toString("base64")).not.toBe(signature);
+    // A signature over the SEP-53 payload must not match a raw-message signature.
+    const rawMessageSignature = kp.sign(Buffer.from(message, "utf8"));
+    expect(rawMessageSignature.toString("base64")).not.toBe(signature);
   });
 
   it("fails verification for a tampered message", () => {
