@@ -94,7 +94,13 @@ export const SignShell = ({
   const applyResult = (type: SignSourceType, result: SignActionResult) => {
     const success = result.successMessage ?? "";
     const error = result.errorMessage ?? "";
-    const count = error ? 0 : (result.count ?? 1);
+    const count = error
+      ? 0
+      : typeof result.count === "number"
+        ? result.count
+        : success
+          ? 1
+          : 0;
 
     setCounts((prev) => ({ ...prev, [type]: count }));
 
