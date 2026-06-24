@@ -10,7 +10,7 @@ export const useHorizonHealthCheckUntilReady = (
   headers: AnyObject,
 ) => {
   const query = useQuery({
-    queryKey: ["useHorizonHealthCheckUntilReady", horizonUrl],
+    queryKey: ["useHorizonHealthCheckUntilReady", horizonUrl, headers],
     queryFn: async () => {
       if (!horizonUrl) {
         return null;

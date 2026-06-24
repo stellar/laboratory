@@ -13,7 +13,7 @@ export const useGetRpcTxs = ({
   startLedger: number;
 }) => {
   const query = useQuery({
-    queryKey: ["useGetRpcTxs", rpcUrl, startLedger],
+    queryKey: ["useGetRpcTxs", rpcUrl, startLedger, headers],
     queryFn: async () => {
       const rpcServer = new StellarRpc.Server(rpcUrl, {
         headers,

@@ -18,7 +18,7 @@ export const useWasmGitHubAttestation = ({
   headers?: NetworkHeaders;
 }) => {
   const query = useQuery<WasmData | null | undefined>({
-    queryKey: ["useWasmGitHubAttestation", wasmHash, rpcUrl],
+    queryKey: ["useWasmGitHubAttestation", wasmHash, rpcUrl, headers],
     queryFn: async () => {
       if (!wasmHash || !rpcUrl) {
         return null;

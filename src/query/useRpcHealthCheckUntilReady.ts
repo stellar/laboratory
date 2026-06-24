@@ -10,7 +10,7 @@ export const useRpcHealthCheckUntilReady = (
   headers: AnyObject,
 ) => {
   const query = useQuery({
-    queryKey: ["useRpcHealthCheckUntilReady", rpcUrl],
+    queryKey: ["useRpcHealthCheckUntilReady", rpcUrl, headers],
     queryFn: async () => {
       if (!rpcUrl) {
         return null;
