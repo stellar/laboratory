@@ -31,6 +31,8 @@ type MultiPickerProps = {
   rightElement?: (index: number) => React.ReactNode;
   useSecretSelector?: boolean;
   submitButton?: React.ReactNode;
+  /** Hide the "Add additional" button (e.g. for single-value pickers). */
+  hideAddButton?: boolean;
 };
 
 export const MultiPicker = ({
@@ -49,6 +51,7 @@ export const MultiPicker = ({
   isPassword,
   useSecretSelector = false,
   submitButton,
+  hideAddButton = false,
 }: MultiPickerProps) => {
   if (!value || !value.length) {
     value = [];
@@ -148,7 +151,7 @@ export const MultiPicker = ({
         ) : null}
       </>
       <Box gap="sm" direction="row" align="center">
-        {!useAutoAdd ? (
+        {!useAutoAdd && !hideAddButton ? (
           <div>
             <Button
               disabled={value.length === limit}
