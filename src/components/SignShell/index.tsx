@@ -334,7 +334,16 @@ const Tab = ({
       key={`tab-${id}`}
       className="SignShell__tab"
       data-is-selected={isSelected}
+      role="button"
+      aria-pressed={isSelected}
+      tabIndex={0}
       onClick={() => onTabChange(getTabType(id))}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onTabChange(getTabType(id));
+        }
+      }}
     >
       <div className="SignShell__tab__label">{label}</div>
       <div className="SignShell__tab__count" data-is-filled={count > 0}>
