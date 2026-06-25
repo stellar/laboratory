@@ -5,6 +5,7 @@ minimumReleaseAgeExclude:
   - "@stellar/design-system"
   - "@stellar/stellar-xdr-json"
 overrides:
+  "@stellar/stellar-base": "file:./local-pkgs/stellar-base-cap0084.tgz"
   "debug@4.4.2": "4.4.1"
   "chalk@5.6.1": "5.6.2"
   "ansi-regex@6.2.1": "6.2.2"
