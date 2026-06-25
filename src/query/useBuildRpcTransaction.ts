@@ -33,6 +33,7 @@ export const useBuildRpcTransaction = ({
     queryKey: [
       "buildRpcTransaction",
       publicKey,
+      rpcUrl,
       operation,
       networkPassphrase,
       timeoutInSeconds,
