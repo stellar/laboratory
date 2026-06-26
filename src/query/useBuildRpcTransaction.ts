@@ -38,6 +38,7 @@ export const useBuildRpcTransaction = ({
       networkPassphrase,
       timeoutInSeconds,
       headers,
+      rpcUrl,
     ],
     queryFn: async () => {
       if (!publicKey) {
