@@ -34,12 +34,14 @@ const AddressInputWithSignerSelector = (
         rightElement={
           <SignerSelector.Button
             mode="public"
+            includeContracts
             onClick={() => setIsSelectorOpen(!isSelectorOpen)}
           />
         }
       />
       <SignerSelector.Dropdown
         mode="public"
+        includeContracts
         onChange={(val) => {
           onValueSelect(val);
           setIsSelectorOpen(false);
