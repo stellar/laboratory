@@ -3,6 +3,22 @@ import { rpc as StellarRpc } from "@stellar/stellar-sdk";
 
 import { useQuery } from "@tanstack/react-query";
 
+const getErrorMessage = (error: unknown) => {
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  if (typeof error === "string") {
+    return error;
+  }
+
+  try {
+    return JSON.stringify(error);
+  } catch {
+    return String(error);
+  }
+};
+
 export const useGetRpcTxs = ({
   rpcUrl,
   headers,
@@ -33,7 +49,9 @@ export const useGetRpcTxs = ({
           params.startLedger = latestLedger.sequence;
         }
       } catch (error) {
-        throw `there was an error with fetching latest ledger. e: ${error}`;
+        throw new Error(
+          `there was an error with fetching latest ledger. e: ${getErrorMessage(error)}`,
+        );
       }
 
       try {
@@ -41,7 +59,9 @@ export const useGetRpcTxs = ({
 
         return response;
       } catch (error) {
-        throw `there was an error with fetching transactions. e: ${error}`;
+        throw new Error(
+          `there was an error with fetching transactions. e: ${getErrorMessage(error)}`,
+        );
       }
     },
     enabled: false,
