@@ -52,11 +52,9 @@ test.describe("Transaction Dashboard: Call stack trace", () => {
   }) => {
     await loadCallStack({ page, mockResponse: CST_LONG_PARAMS });
 
-    // The SDS Toggle hides its <input>; click the visible toggle control
-    // (its <label class="Toggle">) to flip it.
-    const collapseToggle = page.locator(
-      'label.Toggle[for="call-stack-params-toggle"]',
-    );
+    // The SDS Toggle hides its <input>; click the "Collapse params" label
+    // (a <label for=...>) to flip it.
+    const collapseToggle = page.getByText("Collapse params");
 
     // Expanded (default): all params shown, no ellipsis.
     await expect(page.getByTestId("cst-ellipsis")).toHaveCount(0);
