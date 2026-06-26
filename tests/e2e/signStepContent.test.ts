@@ -14,6 +14,9 @@ test.describe("Sign Step in Build Flow", () => {
   const MOCK_SECRET_KEY =
     "SCAM6CZNCLJFQOGSC7LLE2KMBYCBD7S5IYV447MZX5NHPGCHRHPYITCF";
 
+  const MOCK_SECRET_KEY_2 =
+    "SADVGAH3VA3NGZ5VLX2ZICV7JQAINB2ZJZYOPMBXUNI3YRLGWLOA2OFY";
+
   const seedSessionStorageAndNavigate = async (page: Page) => {
     // Navigate to the build page first so sessionStorage is on the right origin
     await page.goto(`${baseURL}/transaction/build`);
@@ -168,5 +171,216 @@ test.describe("Sign Step in Build Flow", () => {
 
     // Should reset to build step
     await expect(page.locator("h1")).toHaveText("Build transaction");
+  });
+
+  test("Switching tabs reveals the matching tab content", async ({ page }) => {
+    await seedSessionStorageAndNavigate(page);
+
+    const signComponent = page.getByTestId("sign-tx-xdr-sign-step");
+
+    const content = (type: string) =>
+      signComponent.locator(
+        `.SignTransactionXdr__tabContent[data-type="${type}"]`,
+      );
+    const tabLabel = (label: string) =>
+      signComponent.locator(".SignTransactionXdr__tab__label", {
+        hasText: label,
+      });
+
+    // Secret key tab is selected by default.
+    await expect(content("secretKey")).toHaveAttribute(
+      "data-is-visible",
+      "true",
+    );
+    await expect(content("signature")).toHaveAttribute(
+      "data-is-visible",
+      "false",
+    );
+
+    // Switching to the Transaction envelope tab flips visibility.
+    await tabLabel("Transaction envelope").click();
+    await expect(content("signature")).toHaveAttribute(
+      "data-is-visible",
+      "true",
+    );
+    await expect(content("secretKey")).toHaveAttribute(
+      "data-is-visible",
+      "false",
+    );
+
+    // And to the Hardware wallet tab.
+    await tabLabel("Hardware wallet").click();
+    await expect(content("hardwareWallet")).toHaveAttribute(
+      "data-is-visible",
+      "true",
+    );
+    await expect(content("signature")).toHaveAttribute(
+      "data-is-visible",
+      "false",
+    );
+  });
+
+  test("Invalid secret key shows a validation error and keeps Sign disabled", async ({
+    page,
+  }) => {
+    await seedSessionStorageAndNavigate(page);
+
+    const signComponent = page.getByTestId("sign-tx-xdr-sign-step");
+
+    const secretKeyInput = signComponent.getByPlaceholder(
+      "Secret key (starting with S) or hash preimage (in hex)",
+    );
+    await secretKeyInput.first().fill("SNOTAVALIDKEY");
+
+    // Validation error surfaces and the Sign button stays disabled.
+    await expect(signComponent.getByText("Invalid secret key")).toBeVisible();
+    await expect(
+      signComponent.getByRole("button", { name: "Sign" }),
+    ).toBeDisabled();
+  });
+
+  test("Signing with secret key fills the tab signature count badge", async ({
+    page,
+  }) => {
+    await seedSessionStorageAndNavigate(page);
+
+    const signComponent = page.getByTestId("sign-tx-xdr-sign-step");
+
+    await signComponent
+      .getByPlaceholder(
+        "Secret key (starting with S) or hash preimage (in hex)",
+      )
+      .first()
+      .fill(MOCK_SECRET_KEY);
+    await signComponent.getByRole("button", { name: "Sign" }).click();
+
+    // In-component success message reflects the single signature.
+    await expect(
+      signComponent.getByText("Successfully added 1 signature", {
+        exact: true,
+      }),
+    ).toBeVisible();
+
+    // The secret key tab's count badge updates to 1 and is marked filled.
+    const secretKeyCount = signComponent
+      .locator(".SignTransactionXdr__tab", { hasText: "Sign with secret key" })
+      .locator(".SignTransactionXdr__tab__count");
+    await expect(secretKeyCount).toHaveText("1");
+    await expect(secretKeyCount).toHaveAttribute("data-is-filled", "true");
+  });
+
+  test("Per-tab Clear resets the secret key signature", async ({ page }) => {
+    await seedSessionStorageAndNavigate(page);
+
+    const signComponent = page.getByTestId("sign-tx-xdr-sign-step");
+
+    await signComponent
+      .getByPlaceholder(
+        "Secret key (starting with S) or hash preimage (in hex)",
+      )
+      .first()
+      .fill(MOCK_SECRET_KEY);
+    await signComponent.getByRole("button", { name: "Sign" }).click();
+
+    await expect(
+      signComponent.getByText("Successfully added 1 signature", {
+        exact: true,
+      }),
+    ).toBeVisible();
+
+    // The component's own Clear button (not the flow's "Clear all").
+    await signComponent.getByRole("button", { name: "Clear" }).click();
+
+    // Success message is gone, badge is back to 0, and Sign is available again.
+    await expect(
+      signComponent.getByText("Successfully added 1 signature", {
+        exact: true,
+      }),
+    ).toBeHidden();
+
+    const secretKeyCount = signComponent
+      .locator(".SignTransactionXdr__tab", { hasText: "Sign with secret key" })
+      .locator(".SignTransactionXdr__tab__count");
+    await expect(secretKeyCount).toHaveText("0");
+    await expect(secretKeyCount).toHaveAttribute("data-is-filled", "false");
+    await expect(
+      signComponent.getByRole("button", { name: "Sign" }),
+    ).toBeVisible();
+  });
+
+  test("Signing with multiple secret keys reports both signatures", async ({
+    page,
+  }) => {
+    await seedSessionStorageAndNavigate(page);
+
+    const signComponent = page.getByTestId("sign-tx-xdr-sign-step");
+
+    const secretKeyInputs = signComponent.getByPlaceholder(
+      "Secret key (starting with S) or hash preimage (in hex)",
+    );
+    await secretKeyInputs.first().fill(MOCK_SECRET_KEY);
+
+    // Add a second secret key input and fill it.
+    await signComponent.getByRole("button", { name: "Add additional" }).click();
+    await secretKeyInputs.nth(1).fill(MOCK_SECRET_KEY_2);
+
+    await signComponent.getByRole("button", { name: "Sign" }).click();
+
+    // Pluralized message and badge reflect two signatures.
+    await expect(
+      signComponent.getByText("Successfully added 2 signatures", {
+        exact: true,
+      }),
+    ).toBeVisible();
+
+    const secretKeyCount = signComponent
+      .locator(".SignTransactionXdr__tab", { hasText: "Sign with secret key" })
+      .locator(".SignTransactionXdr__tab__count");
+    await expect(secretKeyCount).toHaveText("2");
+  });
+
+  test("Transaction envelope tab supports adding, validating, and removing signature rows", async ({
+    page,
+  }) => {
+    await seedSessionStorageAndNavigate(page);
+
+    const signComponent = page.getByTestId("sign-tx-xdr-sign-step");
+
+    await signComponent
+      .locator(".SignTransactionXdr__tab__label", {
+        hasText: "Transaction envelope",
+      })
+      .click();
+
+    const signatureContent = signComponent.locator(
+      '.SignTransactionXdr__tabContent[data-type="signature"]',
+    );
+
+    // With empty fields, the "add to transaction" button is disabled.
+    const addToTxButton = signatureContent.getByRole("button", {
+      name: "Add signature to transaction",
+    });
+    await expect(addToTxButton).toBeDisabled();
+
+    // An invalid public key surfaces a validation error.
+    await signatureContent.getByPlaceholder("Public key").fill("GNOTVALID");
+    await expect(
+      signatureContent.getByText("Public key is invalid."),
+    ).toBeVisible();
+
+    // "Add additional signature" creates a second row (a Remove button appears).
+    await signatureContent
+      .getByRole("button", { name: "Add additional signature" })
+      .click();
+    const removeButton = signatureContent.getByRole("button", {
+      name: "Remove",
+    });
+    await expect(removeButton).toBeVisible();
+
+    // Removing it returns to a single row.
+    await removeButton.click();
+    await expect(
+      signatureContent.getByRole("button", { name: "Remove" }),
+    ).toHaveCount(0);
   });
 });

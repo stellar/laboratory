@@ -101,4 +101,6 @@ export enum Routes {
   TRANSACTION_DASHBOARD = "/transaction/dashboard",
   // Network Limits
   NETWORK_LIMITS = "/network-limits",
+  // Sign message
+  SIGN_MESSAGE = "/sign-message",
 }

@@ -201,4 +201,8 @@ export const NAV: NavItem[] = [
     route: Routes.NETWORK_LIMITS,
     label: "Network limits",
   },
+  {
+    route: Routes.SIGN_MESSAGE,
+    label: "Sign message",
+  },
 ];

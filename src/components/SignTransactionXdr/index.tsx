@@ -19,6 +19,10 @@ import { PubKeyPickerWithSignerSelector } from "@/components/FormElements/PubKey
 import { txHelper } from "@/helpers/txHelper";
 import { arrayItem } from "@/helpers/arrayItem";
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
+import {
+  getAllSigsMessage,
+  type AllSigsCount,
+} from "@/helpers/getAllSigsMessage";
 
 import { validate } from "@/validate";
 import { useSignWithExtensionWallet } from "@/hooks/useSignWithExtensionWallet";
@@ -34,13 +38,6 @@ type TxSignatureType =
   | "signature";
 
 type UniqueTabId = `${string}-${TxSignatureType}`;
-
-type AllSigsCount = {
-  secretKey: number;
-  extensionWallet: number;
-  hardwareWallet: number;
-  signature: number;
-};
 
 export const SignTransactionXdr = ({
   id,
@@ -646,40 +643,6 @@ export const SignTransactionXdr = ({
         </>
       </Box>
     );
-  };
-
-  const getAllSigsMessage = ({
-    secretKey,
-    extensionWallet,
-    hardwareWallet,
-    signature,
-  }: AllSigsCount) => {
-    const allMsgs = [];
-
-    const getMsg = (count: number, label: string) =>
-      `${count} ${label} signature${count > 1 ? "s" : ""}`;
-
-    if (secretKey > 0) {
-      allMsgs.push(getMsg(secretKey, "secret key"));
-    }
-
-    if (hardwareWallet > 0) {
-      allMsgs.push(getMsg(hardwareWallet, "hardware wallet"));
-    }
-
-    if (extensionWallet > 0) {
-      allMsgs.push(getMsg(extensionWallet, "extension wallet"));
-    }
-
-    if (signature > 0) {
-      allMsgs.push(getMsg(signature, ""));
-    }
-
-    if (allMsgs.length > 0) {
-      return `${allMsgs.join(", ")} added`;
-    }
-
-    return "";
   };
 
   return (
