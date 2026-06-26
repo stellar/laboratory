@@ -1,23 +1,8 @@
+import { getErrorMessage } from "@/helpers/errorUtils";
 import { NetworkHeaders } from "@/types/types";
 import { rpc as StellarRpc } from "@stellar/stellar-sdk";
 
 import { useQuery } from "@tanstack/react-query";
-
-const getErrorMessage = (error: unknown) => {
-  if (error instanceof Error) {
-    return error.message;
-  }
-
-  if (typeof error === "string") {
-    return error;
-  }
-
-  try {
-    return JSON.stringify(error);
-  } catch {
-    return String(error);
-  }
-};
 
 export const useGetRpcTxs = ({
   rpcUrl,
