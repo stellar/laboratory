@@ -21,7 +21,7 @@ export const useSEContractsList = ({
       records: ContractListRecord[];
       prevCursor: string | null;
       nextCursor: string | null;
-    } | null> => {
+    }> => {
       const network = getStellarExpertNetwork(networkId);
 
       if (!network) {
