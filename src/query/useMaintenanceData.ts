@@ -2,9 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import { StatusPageScheduled } from "@/types/types";
 
 export const useMaintenanceData = () => {
-  const query = useQuery<StatusPageScheduled[]>({
+  const query = useQuery({
     queryKey: ["maintenanceData"],
-    queryFn: async () => {
+    queryFn: async (): Promise<StatusPageScheduled[]> => {
       try {
         const scheduleResponse = await fetch(
           "https://9sl3dhr1twv1.statuspage.io/api/v2/summary.json",

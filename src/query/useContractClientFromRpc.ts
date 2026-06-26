@@ -10,9 +10,9 @@ export const useContractClientFromRpc = ({
   networkPassphrase: string;
   rpcUrl: string;
 }) => {
-  const query = useQuery<contract.Client | null>({
+  const query = useQuery({
     queryKey: ["useClientFromRpc", contractId, networkPassphrase, rpcUrl],
-    queryFn: async () => {
+    queryFn: async (): Promise<contract.Client | null> => {
       try {
         const client = await contract.Client.from({
           contractId,

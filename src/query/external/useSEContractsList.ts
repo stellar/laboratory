@@ -15,13 +15,13 @@ export const useSEContractsList = ({
   cursor?: string;
   order?: "asc" | "desc";
 }) => {
-  const query = useQuery<{
-    records: ContractListRecord[];
-    prevCursor: string | null;
-    nextCursor: string | null;
-  } | null>({
+  const query = useQuery({
     queryKey: ["useSEContractsList", networkId, cursor, order],
-    queryFn: async () => {
+    queryFn: async (): Promise<{
+      records: ContractListRecord[];
+      prevCursor: string | null;
+      nextCursor: string | null;
+    } | null> => {
       const network = getStellarExpertNetwork(networkId);
 
       if (!network) {
