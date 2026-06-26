@@ -489,7 +489,7 @@ export const DataTable = <T extends AnyObject>({
       const rowKey = `${tableId}-row-${rowIdx}`;
 
       return (
-        <tr data-style="row" role="row" key={rowKey}>
+        <tr data-style="row" key={rowKey}>
           {row.map((cell, cellIdx) => (
             <td
               key={`${rowKey}-cell-${cellIdx}`}
@@ -690,7 +690,7 @@ export const DataTable = <T extends AnyObject>({
               data-disabled={isUpdating || isExternalUpdating}
             >
               <thead>
-                <tr data-style="row" role="row">
+                <tr data-style="row">
                   {tableHeaders.map((th, idx) => (
                     <th key={`col-${idx}-${th.id}`} role="cell">
                       <div {...getCustomProps(th)}>

@@ -111,10 +111,6 @@ const TRANSACTION_NAV = [
     label: "Import transaction",
   },
   {
-    route: Routes.SIGN_TRANSACTION,
-    label: "Sign transaction",
-  },
-  {
     route: Routes.FEE_BUMP_TRANSACTION,
     label: "Fee bump",
   },
