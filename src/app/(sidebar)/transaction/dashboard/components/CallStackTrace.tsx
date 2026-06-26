@@ -1,6 +1,5 @@
 import React, { JSX, useState } from "react";
 import { Alert, Icon, Label, Text, Toggle } from "@stellar/design-system";
-import { StrKey } from "@stellar/stellar-sdk";
 
 import { Box } from "@/components/layout/Box";
 import { SdsLink } from "@/components/SdsLink";
@@ -15,6 +14,11 @@ import {
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import { getStellarExpertNetwork } from "@/helpers/getStellarExpertNetwork";
 import { buildContractExplorerHref } from "@/helpers/buildContractExplorerHref";
+import { truncateParams } from "@/helpers/callStackTrace/truncateParams";
+import { hasEllipsisAnywhere } from "@/helpers/callStackTrace/hasEllipsisAnywhere";
+import { toErrorMapData } from "@/helpers/callStackTrace/toErrorMapData";
+import { isAsset } from "@/helpers/callStackTrace/isAsset";
+import { renderAssetString } from "@/helpers/callStackTrace/renderAssetString";
 
 import { getContractIdError } from "@/validate/methods/getContractIdError";
 import { useStore } from "@/store/useStore";
@@ -43,142 +47,6 @@ export const CallStackTrace = ({
       </TransactionTabEmptyMessage>
     );
   }
-
-  const truncateParams = (
-    data: FormattedEventData[],
-    maxItems: number,
-  ): FormattedEventData[] => {
-    let itemCount = 0;
-    let ellipsisAdded = false;
-
-    const isContainer = (type: string): boolean => {
-      return type === "vec" || type === "map";
-    };
-
-    const addEllipsisIfNeeded = (items: any[], wasTruncated: boolean) => {
-      if (wasTruncated && !ellipsisAdded && items.length > 0) {
-        items.push({ value: "...", type: "ellipsis" });
-        ellipsisAdded = true;
-      }
-    };
-
-    const truncateArray = (items: any[]) => {
-      const truncatedArray: any[] = [];
-      let wasTruncated = false;
-
-      for (const item of items) {
-        if (itemCount >= maxItems) {
-          wasTruncated = true;
-          break;
-        }
-
-        const result = traverse(item);
-
-        if (result !== undefined) {
-          truncatedArray.push(result);
-        }
-      }
-
-      addEllipsisIfNeeded(truncatedArray, wasTruncated);
-
-      return {
-        truncatedArray,
-        wasTruncated,
-      };
-    };
-
-    const traverse = (node: any): any => {
-      if (
-        node &&
-        typeof node === "object" &&
-        "type" in node &&
-        "value" in node
-      ) {
-        const isContainerType = isContainer(node.type);
-
-        if (!isContainerType) {
-          itemCount++;
-
-          if (itemCount > maxItems) {
-            return undefined;
-          }
-
-          return node;
-        }
-
-        if (Array.isArray(node.value)) {
-          const { truncatedArray } = truncateArray(node.value);
-
-          if (truncatedArray.length > 0) {
-            return { ...node, value: truncatedArray };
-          }
-
-          return undefined;
-        }
-
-        return node;
-      }
-
-      if (Array.isArray(node)) {
-        const { truncatedArray } = truncateArray(node);
-
-        return truncatedArray.length > 0 ? truncatedArray : undefined;
-      }
-
-      return node;
-    };
-
-    const result: FormattedEventData[] | undefined = traverse(data);
-
-    return result || [];
-  };
-
-  const hasEllipsisAnywhere = (data: any): boolean => {
-    if (!data) return false;
-
-    if (Array.isArray(data)) {
-      return data.some((item) => {
-        if (item?.type === "ellipsis") return true;
-
-        if (Array.isArray(item?.value)) return hasEllipsisAnywhere(item.value);
-
-        return false;
-      });
-    }
-
-    return false;
-  };
-
-  const toErrorMapData = (errorValue: unknown): FormattedEventData | null => {
-    if (errorValue === null || errorValue === undefined) {
-      return null;
-    }
-
-    const toErrorNode = (node: unknown): FormattedEventData => {
-      if (Array.isArray(node)) {
-        return {
-          type: "vec",
-          value: node.map((item) => toErrorNode(item)),
-        };
-      }
-
-      if (node && typeof node === "object") {
-        return {
-          type: "map",
-          value: Object.entries(node as Record<string, unknown>).map(
-            ([key, detail]) => ({
-              key: { type: undefined, value: key },
-              val: toErrorNode(detail),
-            }),
-          ),
-        };
-      }
-
-      return { type: undefined, value: node };
-    };
-
-    return toErrorNode(errorValue);
-  };
 
   const renderData = ({
     dataItem,
@@ -490,40 +358,6 @@ export const CallStackTrace = ({
       </div>
     </Box>
   );
-};
-
-// =============================================================================
-// Helpers
-// =============================================================================
-const isAsset = (value: unknown) => {
-  if (typeof value !== "string" || !value.includes(":")) {
-    return false;
-  }
-
-  const parts = value.split(":");
-  if (parts.length !== 2) {
-    return false;
-  }
-
-  const [code, issuer] = parts;
-  // Asset code should be 1-12 characters, issuer must be valid G or M address or contract ID
-  return (
-    code.length > 0 &&
-    code.length <= 12 &&
-    (StrKey.isValidEd25519PublicKey(issuer) ||
-      StrKey.isValidMed25519PublicKey(issuer) ||
-      StrKey.isValidContract(issuer))
-  );
-};
-
-const renderAssetString = (value: string) => {
-  if (isAsset(value)) {
-    const [code, issuer] = value.split(":");
-
-    return `${code}:${shortenStellarAddress(issuer)}`;
-  }
-
-  return value;
 };
 
 // =============================================================================
