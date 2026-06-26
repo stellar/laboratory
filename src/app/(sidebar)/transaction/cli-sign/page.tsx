@@ -21,7 +21,7 @@ import { delayedAction } from "@/helpers/delayedAction";
  */
 export default function CliSignTransaction() {
   const { updateIsDynamicNetworkSelect, selectNetwork } = useStore();
-  const { setImportXdr } = useImportFlowStore();
+  const { resetAll, setImportXdr } = useImportFlowStore();
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -41,6 +41,7 @@ export default function CliSignTransaction() {
     }
 
     if (xdr) {
+      resetAll();
       setImportXdr(xdr);
     }
 
