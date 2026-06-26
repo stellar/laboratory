@@ -52,7 +52,7 @@ export const ContractInfo = ({
   isLoading,
   isSacType,
 }: {
-  infoData: ContractInfoApiResponse | undefined;
+  infoData: ContractInfoApiResponse | null | undefined;
   contractId: string;
   backendStatus: "healthy" | "unhealthy";
   wasmData: WasmData | null | undefined;

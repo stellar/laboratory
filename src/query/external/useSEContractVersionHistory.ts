@@ -15,9 +15,9 @@ export const useSEContractVersionHistory = ({
   networkId: NetworkType;
   contractId: string;
 }) => {
-  const query = useQuery<ContractVersionHistoryResponseItem[]>({
+  const query = useQuery({
     queryKey: ["useSEContractVersionHistory", networkId, contractId],
-    queryFn: async () => {
+    queryFn: async (): Promise<ContractVersionHistoryResponseItem[] | null> => {
       const network = getStellarExpertNetwork(networkId);
 
       if (!network) {
