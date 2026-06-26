@@ -63,7 +63,11 @@ export const CallStackTrace = ({
 
     // Ellipsis (special case) for collapsed params
     if (type === "ellipsis") {
-      return <span className="CallStackTrace__ellipsis">{value}</span>;
+      return (
+        <span className="CallStackTrace__ellipsis" data-testid="cst-ellipsis">
+          {value}
+        </span>
+      );
     }
 
     // Array
@@ -293,6 +297,7 @@ export const CallStackTrace = ({
           }
           className="CallStackTrace__event"
           data-is-error={event.isError}
+          data-testid="cst-event"
         >
           <EventItem
             event={event}
@@ -351,7 +356,11 @@ export const CallStackTrace = ({
         </Alert>
       ) : null}
 
-      <div className="CallStackTrace" data-error-level={data.errorLevel}>
+      <div
+        className="CallStackTrace"
+        data-error-level={data.errorLevel}
+        data-testid="cst-root"
+      >
         <div className="CallStackTrace__scrollable">
           {renderNested(data.callStack)}
         </div>
@@ -520,6 +529,7 @@ const EventItem = ({
             role="button"
             tabIndex={0}
             className="CallStackTrace__icon"
+            data-testid="cst-chevron"
             data-visible={hasNestedItems}
             data-is-expanded={isExpanded}
             onClick={() => setIsExpanded(!isExpanded)}
