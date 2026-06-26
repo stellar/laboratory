@@ -1,5 +1,6 @@
 import { baseURL } from "../../playwright.config";
 import { test, expect, Page, Browser } from "@playwright/test";
+import { STELLAR_EXPERT_API } from "@/constants/settings";
 
 import {
   MOCK_LOCAL_STORAGE,
@@ -7,7 +8,16 @@ import {
   SAVED_ACCOUNT_1_SECRET,
   SAVED_ACCOUNT_2,
   SAVED_ACCOUNT_2_SECRET,
+  SAVED_CONTRACT_1,
+  SAVED_CONTRACT_2,
 } from "./mock/localStorage";
+import {
+  MOCK_SAC_CONTRACT_ID,
+  MOCK_SAC_CONTRACT_TYPE_RESPONSE,
+} from "./mock/smartContracts";
+import { mockRpcRequest } from "./mock/helpers";
+import stellarAssetSpec from "./mock/stellarAssetSpec.json";
+import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 
 // Helper functions
 async function setupPageContext(browser: Browser, url: string): Promise<Page> {
@@ -17,6 +27,38 @@ async function setupPageContext(browser: Browser, url: string): Promise<Page> {
   const page = await browserContext.newPage();
   await page.goto(url);
   return page;
+}
+
+// Registers the mocks needed to load a SAC contract (real contract.Spec, no
+// wasm decoding) so the Invoke contract tab renders its function cards.
+async function mockSacContract(page: Page) {
+  await mockRpcRequest({
+    page,
+    rpcMethod: "getLedgerEntries",
+    bodyJsonResponse: MOCK_SAC_CONTRACT_TYPE_RESPONSE,
+  });
+
+  await page.route(
+    "https://raw.githubusercontent.com/stellar/stellar-asset-contract-spec/refs/heads/main/stellar-asset-spec.json",
+    async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(stellarAssetSpec),
+      });
+    },
+  );
+
+  await page.route(
+    `${STELLAR_EXPERT_API}/testnet/contract/${MOCK_SAC_CONTRACT_ID}`,
+    async (route) => {
+      await route.fulfill({
+        status: 404,
+        contentType: "application/json",
+        body: "{}",
+      });
+    },
+  );
 }
 
 async function validateSignerSelectorOptions(page: Page) {
@@ -145,6 +187,66 @@ test.describe("Signer Selector", () => {
       await expect(
         pageContext.getByText("Successfully added 2 signatures"),
       ).toBeVisible();
+    });
+  });
+  test.describe("in Address field on Invoke Contract Page", () => {
+    let pageContext: Page;
+
+    test.beforeAll(async ({ browser }) => {
+      const browserContext = await browser.newContext({
+        storageState: MOCK_LOCAL_STORAGE,
+      });
+      pageContext = await browserContext.newPage();
+
+      await mockSacContract(pageContext);
+
+      await pageContext.goto(`${baseURL}/smart-contracts/contract-explorer`);
+    });
+
+    test("'Get address' dropdown shows both saved keypairs and saved contracts", async () => {
+      // Load the SAC contract and open the Invoke contract tab.
+      await pageContext.getByLabel("Contract ID").fill(MOCK_SAC_CONTRACT_ID);
+      await pageContext.getByRole("button", { name: "Load contract" }).click();
+      await pageContext.getByTestId("contract-invoke").click();
+
+      const invokeContainer = pageContext.getByTestId(
+        "invoke-contract-container",
+      );
+      await expect(invokeContainer).toBeVisible();
+
+      // `balance` takes a single `id: address` argument, so its card has the
+      // address input with the "Get address" selector.
+      const balanceTitle = invokeContainer.getByText("balance", {
+        exact: true,
+      });
+      await expect(balanceTitle).toBeVisible();
+      const balanceCard = balanceTitle.locator(
+        'xpath=ancestor::*[contains(@class, "Card")][1]',
+      );
+
+      await balanceCard.getByText("Get address").click();
+
+      // Two groups render: saved keypairs and saved contracts.
+      const groups = balanceCard.getByTestId("signer-selector-options");
+      const labels = groups.locator(".SignerSelector__dropdown__item__label");
+      await expect(labels.filter({ hasText: "Saved keypairs" })).toBeVisible();
+      await expect(labels.filter({ hasText: "Saved contracts" })).toBeVisible();
+
+      const values = groups.locator(".SignerSelector__dropdown__item__value");
+      await expect(
+        values.filter({ hasText: shortenStellarAddress(SAVED_ACCOUNT_1) }),
+      ).toBeVisible();
+      await expect(
+        values.filter({ hasText: shortenStellarAddress(SAVED_CONTRACT_1) }),
+      ).toBeVisible();
+
+      // Selecting a contract fills the address input with its contract ID.
+      await values
+        .filter({ hasText: shortenStellarAddress(SAVED_CONTRACT_2) })
+        .click();
+      await expect(balanceCard.locator("input").first()).toHaveValue(
+        SAVED_CONTRACT_2,
+      );
     });
   });
 });
