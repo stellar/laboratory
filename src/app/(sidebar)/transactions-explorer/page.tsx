@@ -53,7 +53,11 @@ export default function Explorer() {
     return map;
   });
 
-  const txsQuery = useGetRpcTxs({
+  const {
+    refetch: refetchTxs,
+    isError,
+    error,
+  } = useGetRpcTxs({
     rpcUrl: network.rpcUrl,
     headers: getNetworkHeaders(network, "rpc"),
     startLedger,
@@ -104,10 +108,10 @@ export default function Explorer() {
       }
 
       try {
-        await txsQuery.refetch();
+        const txsResult = await refetchTxs();
 
-        if (txsQuery.data?.transactions && !txsQuery.error) {
-          for (const txinfo of txsQuery.data.transactions) {
+        if (txsResult.data?.transactions && !txsResult.error) {
+          for (const txinfo of txsResult.data.transactions) {
             const normalizedTx = await normalizeTransaction(txinfo);
 
             if (normalizedTx) {
@@ -126,8 +130,8 @@ export default function Explorer() {
             .splice(-500);
           localStorage.setItem(localStorageKey, jsonStringify(txs)!);
 
-          if (txsQuery.data.latestLedger) {
-            setStartLedger(txsQuery.data.latestLedger);
+          if (txsResult.data.latestLedger) {
+            setStartLedger(txsResult.data.latestLedger);
           }
         }
       } catch (e) {
@@ -144,16 +148,16 @@ export default function Explorer() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     network?.rpcUrl,
-    txsQuery,
+    refetchTxs,
     iter,
     nextFetchAt,
     transactions,
     localStorageKey,
   ]);
 
-  const errorElement = txsQuery.isError ? (
+  const errorElement = isError ? (
     <Alert variant="error" placement="inline">
-      {txsQuery.error.message}
+      {error?.message}
     </Alert>
   ) : null;
 
