@@ -155,7 +155,7 @@ export const NAV: NavItem[] = [
       },
       {
         route: Routes.SAVED_SMART_CONTRACTS,
-        label: "Smart Contracts",
+        label: "Smart contracts",
       },
     ],
   },
@@ -180,7 +180,7 @@ export const NAV: NavItem[] = [
   },
   {
     route: Routes.ENDPOINTS,
-    label: "API Explorer",
+    label: "API explorer",
     subNav: ENDPOINTS_NAV,
   },
   ...(process.env.NEXT_PUBLIC_ENABLE_EXPLORER === "true" &&
@@ -189,7 +189,7 @@ export const NAV: NavItem[] = [
     : [
         {
           route: Routes.SMART_CONTRACTS,
-          label: "Smart Contracts",
+          label: "Smart contracts",
           subNav: SMART_CONTRACTS_NAV,
         },
       ]),
@@ -202,11 +202,11 @@ export const NAV: NavItem[] = [
       ]
     : []),
   {
-    route: Routes.NETWORK_LIMITS,
-    label: "Network limits",
-  },
-  {
     route: Routes.SIGN_MESSAGE,
     label: "Sign message",
+  },
+  {
+    route: Routes.NETWORK_LIMITS,
+    label: "Network limits",
   },
 ];
