@@ -21,7 +21,12 @@ export const useSEContractStorage = ({
   totalEntriesCount: number | undefined;
 }) => {
   const query = useQuery<ContractStorageResponseItem[] | null>({
-    queryKey: ["useSEContractStorage", networkId, contractId],
+    queryKey: [
+      "useSEContractStorage",
+      networkId,
+      contractId,
+      totalEntriesCount,
+    ],
     queryFn: async () => {
       // No entries
       if (!totalEntriesCount) {

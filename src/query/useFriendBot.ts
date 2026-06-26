@@ -20,7 +20,14 @@ export const useFriendBot = ({
       : "https://friendbot.stellar.org";
 
   const query = useQuery({
-    queryKey: ["friendBot", publicKey, key],
+    queryKey: [
+      "friendBot",
+      publicKey,
+      key,
+      network,
+      knownFriendbotURL,
+      headers,
+    ],
     queryFn: async () => {
       if (!network.horizonUrl) {
         throw new Error(`Please use a network that supports Horizon`);

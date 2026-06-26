@@ -24,7 +24,14 @@ export const useGetContractDataFromRpcById = ({
     | null
     | undefined
   >({
-    queryKey: ["useGetContractDataFromRpcById", contractId, rpcUrl],
+    queryKey: [
+      "useGetContractDataFromRpcById",
+      contractId,
+      rpcUrl,
+      execWasmType,
+      execStellarAssetType,
+      headers,
+    ],
     queryFn: async () => {
       if (!contractId || !rpcUrl) {
         return null;

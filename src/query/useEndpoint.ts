@@ -12,7 +12,7 @@ export const useEndpoint = ({
   headers: NetworkHeaders;
 }) => {
   const query = useQuery({
-    queryKey: ["endpoint", "response", postData],
+    queryKey: ["endpoint", "response", postData, requestUrl, headers],
     queryFn: async () => {
       const endpointResponse = await fetch(sanitizeUrl(requestUrl), {
         headers,
