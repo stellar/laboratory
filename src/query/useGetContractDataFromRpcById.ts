@@ -27,7 +27,6 @@ export const useGetContractDataFromRpcById = ({
           wasmHash: string;
         }
       | null
-      | undefined
     > => {
       if (!contractId || !rpcUrl) {
         return null;
