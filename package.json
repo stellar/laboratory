@@ -33,7 +33,7 @@
     "@sentry/nextjs": "^10.29.0",
     "@stellar-expert/contract-wasm-interface-parser": "^4.1.0",
     "@stellar/design-system": "^3.2.7",
-    "@stellar/stellar-sdk": "file:./local-pkgs/stellar-sdk-cap0084.tgz",
+    "@stellar/stellar-sdk": "file:./local-pkgs/stellar-sdk-cap0084-v2.tgz",
     "@stellar/stellar-xdr-json": "file:./local-pkgs/stellar-xdr-json-cap0084.tgz",
     "@tanstack/react-query": "^5.83.0",
     "@tanstack/react-query-devtools": "^5.83.0",
