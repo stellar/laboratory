@@ -155,9 +155,11 @@ export default function Explorer() {
     localStorageKey,
   ]);
 
-  const errorElement = isError ? (
+  const errorMessage = isError ? error?.message : null;
+
+  const errorElement = errorMessage ? (
     <Alert variant="error" placement="inline">
-      {error?.message}
+      {errorMessage}
     </Alert>
   ) : null;
 
