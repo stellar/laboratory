@@ -8,7 +8,7 @@ export const useLatestTxn = (
   queryKey: string[] = ["latestTxn"],
 ) => {
   const query = useQuery({
-    queryKey: [...queryKey, rpcUrl],
+    queryKey: [...queryKey, rpcUrl, headers],
     queryFn: async () => {
       try {
         const rpcServer = new StellarRpc.Server(rpcUrl, {

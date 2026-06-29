@@ -1,3 +1,4 @@
+import { getErrorMessage } from "@/helpers/errorUtils";
 import { NetworkHeaders } from "@/types/types";
 import { rpc as StellarRpc } from "@stellar/stellar-sdk";
 
@@ -13,7 +14,7 @@ export const useGetRpcTxs = ({
   startLedger: number;
 }) => {
   const query = useQuery({
-    queryKey: ["useGetRpcTxs", rpcUrl, startLedger],
+    queryKey: ["useGetRpcTxs", rpcUrl, startLedger, headers],
     queryFn: async () => {
       const rpcServer = new StellarRpc.Server(rpcUrl, {
         headers,
@@ -33,7 +34,9 @@ export const useGetRpcTxs = ({
           params.startLedger = latestLedger.sequence;
         }
       } catch (error) {
-        throw `there was an error with fetching latest ledger. e: ${error}`;
+        throw new Error(
+          `there was an error with fetching latest ledger. e: ${getErrorMessage(error)}`,
+        );
       }
 
       try {
@@ -41,7 +44,9 @@ export const useGetRpcTxs = ({
 
         return response;
       } catch (error) {
-        throw `there was an error with fetching transactions. e: ${error}`;
+        throw new Error(
+          `there was an error with fetching transactions. e: ${getErrorMessage(error)}`,
+        );
       }
     },
     enabled: false,

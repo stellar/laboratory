@@ -11,7 +11,7 @@ export const useFetchRpcTxDetails = ({
   txHash: string;
 }) => {
   const query = useQuery({
-    queryKey: ["useFetchRpcTxDetails", rpcUrl, txHash],
+    queryKey: ["useFetchRpcTxDetails", rpcUrl, txHash, headers],
     queryFn: async () => {
       try {
         const response = await fetch(rpcUrl, {
