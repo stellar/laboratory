@@ -142,14 +142,22 @@ export const FetchContractMethodPickerWithQuery = ({
     }
   }, [contractClientError, sacDataError]);
 
-  // Auto-fetch contract methods when remounting with a saved contract_id
+  // Auto-fetch contract methods once a valid contract id is filled in.
+  // Debounced so we only fetch after the user stops typing/pasting, and
+  // gated on validation so we never fetch an incomplete/invalid id. This also
+  // covers remounting with a saved contract_id.
   useEffect(() => {
-    if (contractIdInput && value?.function_name && !contractMethods.length) {
-      fetchContractData();
+    if (!contractIdInput || validate.getContractIdError(contractIdInput)) {
+      return;
     }
-    // Run only on mount
+
+    const timeoutId = setTimeout(() => {
+      fetchContractData();
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [contractIdInput]);
 
   const handleContractIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // reset the error

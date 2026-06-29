@@ -45,6 +45,7 @@ next-env.d.ts
 /.idea/
 /.vscode/
 /.kiro/
+/.claude/notes
 
 # versions
 mise.toml

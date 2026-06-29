@@ -12,9 +12,9 @@ export const useGitHubReadmeText = ({
   commit: string;
   isActive: boolean;
 }) => {
-  const query = useQuery<string | null>({
+  const query = useQuery({
     queryKey: ["useGitHubReadmeText", repo, commit],
-    queryFn: async () => {
+    queryFn: async (): Promise<string | null> => {
       if (!repo || !commit) {
         return null;
       }
