@@ -57,8 +57,8 @@ export default function Introduction() {
                 build
               </NextLink>
               ,{" "}
-              <NextLink href={Routes.SIGN_TRANSACTION} sds-variant="primary">
-                sign
+              <NextLink href={Routes.IMPORT_TRANSACTION} sds-variant="primary">
+                import
               </NextLink>
               ,{" "}
               <NextLink

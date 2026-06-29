@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import {
   FeeBumpTransaction,
   Transaction,
@@ -12,9 +13,8 @@ import { useStore } from "@/store/useStore";
 
 import { useImportSignatureCompleteness } from "@/hooks/useImportSignatureCompleteness";
 
-import { hasSorobanData, isSorobanOperationType } from "@/helpers/sorobanUtils";
+import { parseImportXdr, ParsedImportXdr } from "@/helpers/parseImportXdr";
 
-import { validate } from "@/validate";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { FEE_BUMP_TX_FIELDS, TX_FIELDS } from "@/constants/signTransactionPage";
@@ -80,62 +80,45 @@ export const ImportStepContent = ({
     }
   })();
 
+  // Push parse-derived fields into the import flow store as a unit so every
+  // entry point (paste here, or the cli-sign deep link) leaves identical state.
+  const applyParseResult = (result: ParsedImportXdr) => {
+    setImportParsedType(result.parsedTxType);
+    setImportHasSignatures(result.hasSignatures);
+    setImportIsSimulated(result.isSimulated);
+    setImportIsFeeBump(result.isFeeBump);
+    setImportParseError(result.parseError);
+  };
+
   const onChange = (value: string) => {
     setImportXdr(value);
 
-    if (!value) {
-      setImportParseError(null);
-      setImportParsedType(null);
-      setImportHasSignatures(false);
-      setImportIsSimulated(false);
-      setImportIsFeeBump(false);
-      return;
+    if (value) {
+      trackEvent(TrackingEvent.TRANSACTION_IMPORT_XDR_PASTE);
     }
 
-    trackEvent(TrackingEvent.TRANSACTION_IMPORT_XDR_PASTE);
+    const result = parseImportXdr(value, network.passphrase);
+    applyParseResult(result);
 
-    const xdrValidation = validate.getXdrError(value);
-
-    if (xdrValidation?.result === "error") {
-      setImportParseError(xdrValidation.message ?? "Invalid XDR");
-      setImportParsedType(null);
-      setImportHasSignatures(false);
-      setImportIsSimulated(false);
-      setImportIsFeeBump(false);
-      trackEvent(TrackingEvent.TRANSACTION_IMPORT_XDR_INVALID);
-      return;
-    }
-
-    try {
-      const tx = TransactionBuilder.fromXDR(value, network.passphrase) as
-        | Transaction
-        | FeeBumpTransaction;
-
-      const operations = isFeeBumpTransaction(tx)
-        ? tx.innerTransaction.operations
-        : tx.operations;
-
-      const isSoroban = isSorobanOperationType(operations?.[0]?.type ?? "");
-
-      setImportParsedType(isSoroban ? "soroban" : "classic");
-      setImportHasSignatures(tx.signatures.length > 0);
-      setImportIsSimulated(isSoroban && hasSorobanData(tx));
-      setImportIsFeeBump(isFeeBumpTransaction(tx));
-      setImportParseError(null);
-      trackEvent(TrackingEvent.TRANSACTION_IMPORT_XDR_VALID);
-    } catch (e) {
-      setImportParseError(
-        e instanceof Error
-          ? e.message
-          : "Unable to parse transaction envelope XDR",
+    if (value) {
+      trackEvent(
+        result.parseError
+          ? TrackingEvent.TRANSACTION_IMPORT_XDR_INVALID
+          : TrackingEvent.TRANSACTION_IMPORT_XDR_VALID,
       );
-      setImportParsedType(null);
-      setImportHasSignatures(false);
-      setImportIsSimulated(false);
-      setImportIsFeeBump(false);
-      trackEvent(TrackingEvent.TRANSACTION_IMPORT_XDR_INVALID);
     }
   };
+
+  // Parse XDR that arrived from an external entry point — e.g. the CLI deep
+  // link at `/transaction/cli-sign`, which sets only `importXdr` before
+  // redirecting here. Without this, the derived fields stay empty and the
+  // overview never renders. Runs once on mount; pasting goes through onChange.
+  useEffect(() => {
+    if (importXdr && !parsedTxType && !parseError) {
+      applyParseResult(parseImportXdr(importXdr, network.passphrase));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const renderSuccessImportAlert = () => {
     if (isMultisigDeferred) {
