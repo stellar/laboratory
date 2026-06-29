@@ -14,9 +14,9 @@ export const useGitHubFile = ({
   file: string;
   isActive: boolean;
 }) => {
-  const query = useQuery<string | null>({
+  const query = useQuery({
     queryKey: ["useGitHubFile", repo, path, file],
-    queryFn: async () => {
+    queryFn: async (): Promise<string | null> => {
       if (!repo || !path || !file) {
         return null;
       }

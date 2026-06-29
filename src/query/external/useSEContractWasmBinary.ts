@@ -13,9 +13,9 @@ export const useSEContractWasmBinary = ({
   networkId: NetworkType;
   wasmHash: string;
 }) => {
-  const query = useQuery<ArrayBuffer | null>({
+  const query = useQuery({
     queryKey: ["useSEContractWasmBinary", networkId, wasmHash],
-    queryFn: async () => {
+    queryFn: async (): Promise<ArrayBuffer | null> => {
       const network = getStellarExpertNetwork(networkId);
 
       if (!network) {
