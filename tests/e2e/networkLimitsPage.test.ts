@@ -84,12 +84,18 @@ test.describe("Network Limits page on Mainnet", () => {
     ]);
 
     await expect(getTableRow(rows, 8)).toHaveText([
+      "Max dependent transaction clustersparallel execution",
+      "",
+      `${MAINNET_LIMITS.ledger_max_dependent_tx_clusters}`,
+    ]);
+
+    await expect(getTableRow(rows, 9)).toHaveText([
       "Individual ledger key sizecontract storage key",
       `${MAINNET_LIMITS.contract_data_key_size_bytes} bytes`,
       "",
     ]);
 
-    await expect(getTableRow(rows, 9)).toHaveText([
+    await expect(getTableRow(rows, 10)).toHaveText([
       "Individual ledger entry sizeincluding Wasm entries",
       `${formatFileSize(MAINNET_LIMITS.contract_max_size_bytes, "binary")}`,
       "",
