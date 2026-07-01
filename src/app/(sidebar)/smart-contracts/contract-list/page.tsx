@@ -60,15 +60,15 @@ export default function ContractList() {
         <Box gap="lg" addlClassName="TabView">
           <div className="TabView__heading">
             <PageHeader heading="Smart contract list" />
-            <div className="TabView__tabContainer">
-              <Tabs
-                tabs={[{ id: "recent", label: "Recent" }]}
-                activeTabId="recent"
-                onChange={() => {
-                  // Single tab - no action needed
-                }}
-              />
-            </div>
+          </div>
+          <div className="TabView__tabContainer">
+            <Tabs
+              tabs={[{ id: "recent", label: "Recent" }]}
+              activeTabId="recent"
+              onChange={() => {
+                // Single tab - no action needed
+              }}
+            />
           </div>
           <div className="TabView__content">
             {/* data-is-active is required for TabView CSS styling */}
