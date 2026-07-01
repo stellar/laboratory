@@ -32,7 +32,6 @@ import { JsonSchemaRenderer } from "@/components/SmartContractJsonSchema/JsonSch
 import { TransactionSuccessCard } from "@/components/TransactionSuccessCard";
 import { WalletKitContext } from "@/components/WalletKit/WalletKitContextProvider";
 import { StellarWalletsKit } from "@creit.tech/stellar-wallets-kit";
-import { TabView } from "@/components/TabView";
 import { CodeEditor, SupportedLanguage } from "@/components/CodeEditor";
 
 import { TransactionBuildParams } from "@/store/createStore";
@@ -87,7 +86,7 @@ export const InvokeContractForm = ({
     methodType: string;
   } | null>(null);
   const [isExtensionLoading, setIsExtensionLoading] = useState(false);
-  const [xdrFormat, setXdrFormat] = useState<XdrFormatType | string>("json");
+  const [xdrFormat, setXdrFormat] = useState<XdrFormatType>("json");
   const [formValue, setFormValue] = useState<SorobanInvokeValue>({
     contract_id: contractId,
     function_name: funcName,
@@ -636,48 +635,23 @@ export const InvokeContractForm = ({
   const renderResponse = () => {
     if (jsonResponse?.fullResponse || base64Response?.fullResponse) {
       return (
-        <TabView
-          tab1={{
-            id: "json",
-            label: "JSON",
-            content: jsonResponse?.fullResponse && (
-              <SimulatedResponse
-                xdrFormat="json"
-                result={jsonResponse}
-                isFullResponseEnabled={isFullResponseEnabled}
-              />
-            ),
-            isDisabled: !jsonResponse?.fullResponse,
-          }}
-          tab2={{
-            id: "base64",
-            label: "Base64",
-            content: base64Response?.fullResponse && (
-              <SimulatedResponse
-                xdrFormat="xdr"
-                result={base64Response}
-                isFullResponseEnabled={isFullResponseEnabled}
-              />
-            ),
-            isDisabled: !base64Response?.fullResponse,
-          }}
-          activeTabId={xdrFormat}
-          onTabChange={(id) => {
-            setXdrFormat(id);
+        <SimulatedResponse
+          xdrFormat={xdrFormat}
+          result={xdrFormat === "json" ? jsonResponse : base64Response}
+          isFullResponseEnabled={isFullResponseEnabled}
+          onFullResponseChange={setIsFullResponseEnabled}
+          funcName={funcName}
+          onLanguageChange={(id) => {
+            const selectedValue = id === "xdr" ? "base64" : "json";
+
+            setXdrFormat(selectedValue);
             trackEvent(
               TrackingEvent.SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SELECTED_XDR_FORMAT,
               {
-                xdrFormat: id,
+                xdrFormat: selectedValue,
               },
             );
           }}
-          rightElement={
-            <FullResponseToggle
-              isChecked={isFullResponseEnabled}
-              onChange={setIsFullResponseEnabled}
-              id={funcName}
-            />
-          }
         />
       );
     }
@@ -842,11 +816,17 @@ export const FullResponseToggle = ({
 export const SimulatedResponse = ({
   result,
   isFullResponseEnabled = false,
+  onFullResponseChange,
+  funcName,
   xdrFormat,
+  onLanguageChange,
 }: {
   result: SimulatedResponseType | null;
   isFullResponseEnabled: boolean;
-  xdrFormat: string;
+  onFullResponseChange: (isChecked: boolean) => void;
+  funcName: string;
+  xdrFormat: XdrFormatType;
+  onLanguageChange: (format: string) => void;
 }) => {
   if (!result) {
     return null;
@@ -867,10 +847,20 @@ export const SimulatedResponse = ({
     <Box gap="md">
       <div data-testid="invoke-contract-simulate-tx-response">
         <CodeEditor
+          title="Simulated result"
+          languages={["json", "xdr"]}
+          onLanguageChange={onLanguageChange}
+          selectedLanguage={selectedLanguage}
+          customEl={
+            <FullResponseToggle
+              isChecked={isFullResponseEnabled}
+              onChange={onFullResponseChange}
+              id={funcName}
+            />
+          }
           key={`code-editor-${isFullResponseEnabled}`}
           isAutoHeight={!isFullResponseEnabled}
           value={JSON.stringify(json, null, 2)}
-          selectedLanguage={selectedLanguage}
           maxHeightInRem="20"
         />
       </div>
