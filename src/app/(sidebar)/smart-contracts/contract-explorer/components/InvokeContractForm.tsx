@@ -86,7 +86,7 @@ export const InvokeContractForm = ({
     methodType: string;
   } | null>(null);
   const [isExtensionLoading, setIsExtensionLoading] = useState(false);
-  const [xdrFormat, setXdrFormat] = useState<XdrFormatType | string>("json");
+  const [xdrFormat, setXdrFormat] = useState<XdrFormatType>("json");
   const [formValue, setFormValue] = useState<SorobanInvokeValue>({
     contract_id: contractId,
     function_name: funcName,
@@ -642,11 +642,13 @@ export const InvokeContractForm = ({
           onFullResponseChange={setIsFullResponseEnabled}
           funcName={funcName}
           onLanguageChange={(id) => {
-            setXdrFormat(id);
+            const selectedValue = id === "xdr" ? "base64" : "json";
+
+            setXdrFormat(selectedValue);
             trackEvent(
               TrackingEvent.SMART_CONTRACTS_EXPLORER_INVOKE_CONTRACT_SELECTED_XDR_FORMAT,
               {
-                xdrFormat: id,
+                xdrFormat: selectedValue,
               },
             );
           }}
@@ -823,7 +825,7 @@ export const SimulatedResponse = ({
   isFullResponseEnabled: boolean;
   onFullResponseChange: (isChecked: boolean) => void;
   funcName: string;
-  xdrFormat: string;
+  xdrFormat: XdrFormatType;
   onLanguageChange: (format: string) => void;
 }) => {
   if (!result) {
