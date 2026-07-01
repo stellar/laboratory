@@ -51,9 +51,9 @@ export const TabView = ({
 
   return (
     <Box gap="lg" addlClassName="TabView">
-      <div className="TabView__heading">
-        {heading ? <TabViewHeading {...heading} /> : null}
+      {heading ? <TabViewHeading {...heading} /> : null}
 
+      <div className="TabView__heading">
         <div className="TabView__tabContainer">
           <Tabs
             tabs={tabItems}
