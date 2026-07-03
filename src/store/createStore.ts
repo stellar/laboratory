@@ -216,9 +216,12 @@ interface CreateStoreOptions {
 const defaultCustomNetwork = {
   id: "custom",
   label: "Custom",
-  horizonUrl: "http://localhost:8000",
-  rpcUrl: "http://localhost:8000/rpc",
-  passphrase: "Standalone Network ; February 2017",
+  horizonUrl:
+    process.env.NEXT_PUBLIC_CUSTOM_HORIZON_URL || "http://localhost:8000",
+  rpcUrl: process.env.NEXT_PUBLIC_CUSTOM_RPC_URL || "http://localhost:8000/rpc",
+  passphrase:
+    process.env.NEXT_PUBLIC_CUSTOM_PASSPHRASE ||
+    "Standalone Network ; February 2017",
 };
 
 const initNetwork =
