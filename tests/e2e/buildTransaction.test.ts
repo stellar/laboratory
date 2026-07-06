@@ -1,5 +1,6 @@
 import { baseURL } from "../../playwright.config";
 import { test, expect, Page } from "@playwright/test";
+import { TransactionBuilder, Networks } from "@stellar/stellar-sdk";
 
 test.describe("Build Transaction Page", () => {
   test.beforeEach(async ({ page }) => {
@@ -1914,6 +1915,42 @@ test.describe("Build Transaction Page", () => {
 
         await expect(page.getByText("Add operation")).toBeVisible();
       });
+    });
+  });
+
+  test.describe("Account Merge — hydrated params", () => {
+    // account_merge op params { a: ATTACKER, destination: ACCOUNT_ONE }, with
+    // "a" ordered before "destination", serialized via zustand-querystring.
+    const CRAFTED_QUERYSTRING =
+      "$=transaction$build$classic$operations@$operation_type=account_merge&source_account=&params$a=GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5&destination=GC3N3GAECL3PJOWIKAAKPOB677WHCUNWZRULANQMHEIL4WDX5FICMF3I;;;;&params$source_account=GAGSY6UVUIINHRHSSDO7NMCM7ADWUF5UJ4ZGGJSFSXKWNJDRW6AA4H3Q&fee=100&seq_num=4466559829409793&cond$time$min_time=&max_time=;;&memo$;;&isValid$params:true&operations:true;;";
+
+    test("encodes the displayed destination, not the injected key", async ({
+      page,
+    }) => {
+      await page.goto(`${baseURL}/transaction/build?${CRAFTED_QUERYSTRING}`);
+
+      // The operation form shows the "destination" param (benign account).
+      const destinationInput = page
+        .getByTestId("build-transaction-operation-0")
+        .getByLabel("Destination");
+      await expect(destinationInput).toHaveValue(ACCOUNT_ONE);
+
+      // The built XDR must encode ACCOUNT_ONE — the destination the form shows —
+      // and never the injected key GBBD... A positional read would encode GBBD.
+      const txnSuccess = page.getByTestId("build-transaction-envelope-xdr");
+      await expect(txnSuccess).toBeVisible();
+      const xdr = await txnSuccess
+        .getByText("XDR")
+        .locator("+ div")
+        .textContent();
+
+      const decoded = TransactionBuilder.fromXDR(xdr ?? "", Networks.TESTNET);
+      const op = (decoded as any).operations[0];
+      expect(op.type).toBe("accountMerge");
+      expect(op.destination).toBe(ACCOUNT_ONE);
+      expect(op.destination).not.toBe(
+        "GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5",
+      );
     });
   });
 });
