@@ -257,7 +257,7 @@ const EnvelopeSignaturesTable = ({
             </thead>
             <tbody>
               {rows.map((row, index) => (
-                <tr role="row" key={`${envelope}-${index}-${row.hint}`}>
+                <tr key={`${envelope}-${index}-${row.hint}`}>
                   <td>
                     <SignatureCell>
                       {renderSigner(row.matchStatus, row.signerPubKey)}

@@ -174,6 +174,12 @@ const ResourceLimitsSection = ({
       ledgerWide: "no explicit limit",
     },
     {
+      setting: "Max dependent transaction clusters",
+      setting_note: "parallel execution",
+      perTransaction: undefined,
+      ledgerWide: limits.ledger_max_dependent_tx_clusters.toString(),
+    },
+    {
       setting: "Individual ledger key size",
       setting_note: "contract storage key",
       perTransaction: `${limits.contract_data_key_size_bytes} bytes`,
@@ -231,11 +237,12 @@ const ResourceLimitsSection = ({
                   ) : null}
                 </GridTableCell>
                 <GridTableCell
+                  isEmpty={!item.perTransaction}
                   addlClassName={
                     item.setting_note ? "GridTable__cell--note" : ""
                   }
                 >
-                  {item.perTransaction}
+                  {item.perTransaction ?? null}
                 </GridTableCell>
                 <GridTableCell
                   isEmpty={!item.ledgerWide}
@@ -270,7 +277,10 @@ const ResourceLimitsSection = ({
             </GridTableRow>
 
             {resourceLimits.map((item, index) => (
-              <GridTableRow key={`per-${index}`}>
+              <GridTableRow
+                key={`per-${index}`}
+                isEmpty={!item.perTransaction}
+              >
                 <GridTableCell isRowHeader>
                   {item.setting}
                   {item.setting_note ? (
@@ -285,7 +295,7 @@ const ResourceLimitsSection = ({
                     item.setting_note ? "GridTable__cell--note" : ""
                   }
                 >
-                  {item.perTransaction}
+                  {item.perTransaction ?? null}
                 </GridTableCell>
               </GridTableRow>
             ))}

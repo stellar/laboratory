@@ -153,6 +153,7 @@ const getNetworkLimitsFromResponse = (response) => {
   const stateArchivalEntry = findEntry("state_archival");
   const bandwidthEntry = findEntry("contract_bandwidth_v0");
   const historicalDataEntry = findEntry("contract_historical_data_v0");
+  const parallelComputeEntry = findEntry("contract_parallel_compute_v0");
   const liveSorobanStateSizeWindowEntry = findEntry(
     "live_soroban_state_size_window",
   );
@@ -209,6 +210,9 @@ const getNetworkLimitsFromResponse = (response) => {
     ledger_max_txs_size_bytes:
       bandwidthEntry?.dataJson?.config_setting?.contract_bandwidth_v0
         ?.ledger_max_txs_size_bytes,
+    ledger_max_dependent_tx_clusters:
+      parallelComputeEntry?.dataJson?.config_setting
+        ?.contract_parallel_compute_v0?.ledger_max_dependent_tx_clusters,
 
     // State archival TTL extension parameters
     max_entry_ttl:
@@ -297,6 +301,7 @@ export interface NetworkLimits {
   ledger_max_write_ledger_entries: number;
   ledger_max_write_bytes: number;
   ledger_max_txs_size_bytes: number;
+  ledger_max_dependent_tx_clusters: number;
 
   // State archival TTL extension parameters
   max_entry_ttl: number;

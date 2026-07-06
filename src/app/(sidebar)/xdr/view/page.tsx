@@ -53,11 +53,10 @@ export default function ViewXdr() {
     isFetching: isLatestTxnFetching,
     isLoading: isLatestTxnLoading,
     refetch: fetchLatestTxn,
-  } = useLatestTxn(
-    network.rpcUrl,
-    getNetworkHeaders(network, "rpc"),
-    ["xdr", "latestTxn"],
-  );
+  } = useLatestTxn(network.rpcUrl, getNetworkHeaders(network, "rpc"), [
+    "xdr",
+    "latestTxn",
+  ]);
 
   const queryClient = useQueryClient();
 
@@ -208,7 +207,12 @@ export default function ViewXdr() {
                     if (latestTxn) {
                       // Reset query to clear old data
                       queryClient.resetQueries({
-                        queryKey: ["xdr", "latestTxn", network.rpcUrl],
+                        queryKey: [
+                          "xdr",
+                          "latestTxn",
+                          network.rpcUrl,
+                          getNetworkHeaders(network, "rpc"),
+                        ],
                         exact: true,
                       });
                       updateXdrBlob("");

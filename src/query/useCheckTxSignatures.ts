@@ -14,7 +14,7 @@ export const useCheckTxSignatures = ({
   headers: NetworkHeaders;
 }) => {
   const query = useQuery({
-    queryKey: ["tx", "signatures"],
+    queryKey: ["tx", "signatures", xdr, networkPassphrase, networkUrl, headers],
     queryFn: async () => {
       try {
         return await fetchTxSignatures({

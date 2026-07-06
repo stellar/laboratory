@@ -30,7 +30,16 @@ export const useBuildRpcTransaction = ({
   timeoutInSeconds?: number;
 }) => {
   const query = useQuery({
-    queryKey: ["buildRpcTransaction", publicKey, operation],
+    queryKey: [
+      "buildRpcTransaction",
+      publicKey,
+      rpcUrl,
+      operation,
+      networkPassphrase,
+      timeoutInSeconds,
+      headers,
+      rpcUrl,
+    ],
     queryFn: async () => {
       if (!publicKey) {
         throw "Public key is required.";

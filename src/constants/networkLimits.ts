@@ -21,6 +21,7 @@ export interface NetworkLimits {
   ledger_max_write_ledger_entries: number;
   ledger_max_write_bytes: number;
   ledger_max_txs_size_bytes: number;
+  ledger_max_dependent_tx_clusters: number;
 
   // State archival TTL extension parameters
   max_entry_ttl: number;

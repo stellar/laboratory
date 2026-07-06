@@ -1,0 +1,41 @@
+name: Build and push laboratory
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Determine image label
+        id: vars
+        run: echo "label=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: ECR login
+        id: ecr-login
+        uses: stellar/actions/sdf-ecr-login@main
+
+      - name: Build and push docker image
+        env:
+          ECR_REGISTRY: ${{ steps.ecr-login.outputs.ecr-registry }}
+          LABEL: ${{ steps.vars.outputs.label }}
+        run: |
+          set -eu
+          export TAG="${ECR_REGISTRY}/dev/laboratory-v2:${LABEL}"
+          export TAG_PRD="${ECR_REGISTRY}/prd/laboratory-v2:${LABEL}"
+
+          make docker-build
+          ecr-push "${TAG}"
+
+          docker tag "${TAG}" "${TAG_PRD}"
+          ecr-push "${TAG_PRD}"

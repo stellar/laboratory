@@ -13,9 +13,9 @@ export const useSEContractInfo = ({
   networkId: NetworkType;
   contractId: string;
 }) => {
-  const query = useQuery<ContractInfoApiResponse>({
+  const query = useQuery({
     queryKey: ["useSEContractInfo", networkId, contractId],
-    queryFn: async () => {
+    queryFn: async (): Promise<ContractInfoApiResponse | null> => {
       const network = getStellarExpertNetwork(networkId);
 
       if (!network) {

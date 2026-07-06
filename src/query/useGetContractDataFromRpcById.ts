@@ -16,16 +16,19 @@ export const useGetContractDataFromRpcById = ({
   const execStellarAssetType =
     xdr.ContractExecutableType.contractExecutableStellarAsset().name;
 
-  const query = useQuery<
-    | {
-        contractType: typeof execWasmType | typeof execStellarAssetType | null;
-        wasmHash: string;
-      }
-    | null
-    | undefined
-  >({
-    queryKey: ["useGetContractDataFromRpcById", contractId, rpcUrl],
-    queryFn: async () => {
+  const query = useQuery({
+    queryKey: [
+      "useGetContractDataFromRpcById",
+      contractId,
+      rpcUrl,
+      execWasmType,
+      execStellarAssetType,
+      headers,
+    ],
+    queryFn: async (): Promise<{
+      contractType: typeof execWasmType | typeof execStellarAssetType | null;
+      wasmHash: string;
+    } | null> => {
       if (!contractId || !rpcUrl) {
         return null;
       }
