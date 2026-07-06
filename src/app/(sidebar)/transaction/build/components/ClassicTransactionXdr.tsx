@@ -336,7 +336,7 @@ export const ClassicTransactionXdr = () => {
         params: AnyObject;
       }) => {
         if (opType === "account_merge") {
-          return Object.values(params)[0];
+          return params.destination;
         }
 
         if (opType === "revoke_sponsorship") {
