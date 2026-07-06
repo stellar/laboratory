@@ -87,16 +87,20 @@ export const ClassicTransactionXdr = () => {
             }
             break;
           case "memo":
-            // eslint-disable-next-line no-case-declarations
-            const memoId = value?.id;
-
-            if (memoId) {
-              val = { id: BigInt(memoId) };
+            if (typeof value !== "object" || isEmptyObject(value)) {
+              val = "none";
             } else {
+              // Read the memo by its first entry — the same key the form
+              // displays (Params.tsx getMemoPickerValue). Do NOT special-case
+              // `value.id` by key: hydrated state can carry extra params keys,
+              // so an injected key ordered before the real one would let the
+              // encoded memo differ from the one shown in the form.
+              // eslint-disable-next-line no-case-declarations
+              const [memoType, memoVal] = Object.entries(value)[0];
               val =
-                typeof value === "object" && isEmptyObject(value)
-                  ? "none"
-                  : value;
+                memoType === "id"
+                  ? { id: BigInt(memoVal as string) }
+                  : { [memoType]: memoVal };
             }
 
             break;
