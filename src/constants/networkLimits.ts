@@ -70,6 +70,7 @@ export const MAINNET_LIMITS: NetworkLimits = {
   "ledger_max_write_ledger_entries": 1000,
   "ledger_max_write_bytes": 286720,
   "ledger_max_txs_size_bytes": 266240,
+  "ledger_max_dependent_tx_clusters": 2,
   "max_entry_ttl": 3110400,
   "min_temporary_ttl": 17280,
   "min_persistent_ttl": 2073600,
@@ -84,7 +85,6 @@ export const MAINNET_LIMITS: NetworkLimits = {
   "persistent_rent_rate_denominator": "1215",
   "temp_rent_rate_denominator": "2430",
   "live_soroban_state_size_window": [
-    "1588709938",
     "1589710826",
     "1590855414",
     "1592181134",
@@ -113,7 +113,8 @@ export const MAINNET_LIMITS: NetworkLimits = {
     "1612834121",
     "1613864969",
     "1614660853",
-    "1615286025"
+    "1615286025",
+    "1615572513"
   ],
   "state_target_size_bytes": "3000000000",
   "rent_fee_1kb_state_size_low": "-17000",
@@ -138,6 +139,7 @@ export const TESTNET_LIMITS: NetworkLimits = {
   "ledger_max_write_ledger_entries": 1000,
   "ledger_max_write_bytes": 286720,
   "ledger_max_txs_size_bytes": 266240,
+  "ledger_max_dependent_tx_clusters": 2,
   "max_entry_ttl": 3110400,
   "min_temporary_ttl": 720,
   "min_persistent_ttl": 120960,
@@ -206,6 +208,7 @@ export const FUTURENET_LIMITS: NetworkLimits = {
   "ledger_max_write_ledger_entries": 1000,
   "ledger_max_write_bytes": 286720,
   "ledger_max_txs_size_bytes": 266240,
+  "ledger_max_dependent_tx_clusters": 2,
   "max_entry_ttl": 3110400,
   "min_temporary_ttl": 720,
   "min_persistent_ttl": 120960,
