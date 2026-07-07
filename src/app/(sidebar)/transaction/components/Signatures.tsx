@@ -87,7 +87,7 @@ const getEnvelopeSummary = (
     if (hasUnrecognized) {
       return {
         message:
-          "Includes signature(s) from signers that can’t be verified offline (e.g. multisig cosigners). Submit to verify.",
+          "Includes signature(s) from signers that can’t be verified offline (e.g. multisig cosigners). You can submit to verify.",
       };
     }
     return {

@@ -13,6 +13,12 @@ type Props = {
   signedXdr: string;
   onSigned: (signedXdr: string) => void;
   onClearAll: () => void;
+  /**
+   * Optional slot rendered above the signing UI — the import flow passes a
+   * signature-status panel here so a co-signer can review existing signatures
+   * before adding their own. Omitted by the build flow.
+   */
+  signatureContext?: React.ReactNode;
 };
 
 /**
@@ -38,6 +44,7 @@ export const SignStepContent = ({
   signedXdr,
   onSigned,
   onClearAll,
+  signatureContext,
 }: Props) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -48,6 +55,8 @@ export const SignStepContent = ({
         onClearAll={onClearAll}
         xdr={xdrToSign}
       />
+
+      {signatureContext}
 
       <Text size="sm" as="div">
         To be included in the ledger, the transaction must be signed and

@@ -17,6 +17,7 @@ import { SignStepContent } from "@/app/(sidebar)/transaction/components/SignStep
 import { SubmitStepContent } from "@/app/(sidebar)/transaction/components/SubmitStepContent";
 import { ImportStepContent } from "./components/ImportStepContent";
 import { SimulateStepContent } from "./components/SimulateStepContent";
+import { SignStepSignatureContext } from "./components/SignStepSignatureContext";
 
 import "../styles.scss";
 
@@ -146,18 +147,28 @@ export default function ImportTransaction() {
             {activeStep === "import" && (
               <ImportStepContent isReadyToSubmit={isReadyToSubmit} />
             )}
-            {activeStep === "sign" && (
-              <SignStepContent
-                xdrToSign={
-                  simulate.assembledXdr || importState?.importXdr || ""
-                }
-                signedXdr={sign.signedXdr || ""}
-                onSigned={(signedXdr) => {
-                  setSignedXdr(signedXdr);
-                }}
-                onClearAll={resetAll}
-              />
-            )}
+            {activeStep === "sign" &&
+              (() => {
+                const xdrToSign =
+                  simulate.assembledXdr || importState?.importXdr || "";
+
+                return (
+                  <SignStepContent
+                    xdrToSign={xdrToSign}
+                    signedXdr={sign.signedXdr || ""}
+                    onSigned={(signedXdr) => {
+                      setSignedXdr(signedXdr);
+                    }}
+                    onClearAll={resetAll}
+                    signatureContext={
+                      <SignStepSignatureContext
+                        xdr={sign.signedXdr || xdrToSign}
+                        parsedTxType={importState?.parsedTxType}
+                      />
+                    }
+                  />
+                );
+              })()}
             {activeStep === "simulate" && <SimulateStepContent steps={steps} />}
             {activeStep === "submit" && (
               <SubmitStepContent

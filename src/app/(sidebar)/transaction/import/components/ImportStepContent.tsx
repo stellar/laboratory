@@ -11,8 +11,6 @@ import { Alert } from "@stellar/design-system";
 import { useImportFlowStore } from "@/store/createTransactionFlowStore";
 import { useStore } from "@/store/useStore";
 
-import { useImportSignatureCompleteness } from "@/hooks/useImportSignatureCompleteness";
-
 import { parseImportXdr, ParsedImportXdr } from "@/helpers/parseImportXdr";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
@@ -63,11 +61,6 @@ export const ImportStepContent = ({
   const importXdr = importState?.importXdr ?? "";
   const parseError = importState?.parseError ?? null;
   const parsedTxType = importState?.parsedTxType ?? null;
-
-  const signatureCompleteness = useImportSignatureCompleteness();
-  const isMultisigDeferred =
-    Boolean(isReadyToSubmit) &&
-    (signatureCompleteness?.missingSigners.length ?? 0) > 0;
 
   const parsedTx: Transaction | FeeBumpTransaction | null = (() => {
     if (!importXdr || parseError || !parsedTxType) return null;
@@ -121,17 +114,6 @@ export const ImportStepContent = ({
   }, []);
 
   const renderSuccessImportAlert = () => {
-    if (isMultisigDeferred) {
-      return (
-        <Alert
-          variant="primary"
-          title="Transaction imported."
-          placement="inline"
-        >
-          Signatures from unrecognized signers detected. Submit to verify.
-        </Alert>
-      );
-    }
     if (isReadyToSubmit) {
       return (
         <Alert
