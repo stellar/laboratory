@@ -165,12 +165,21 @@ export const Params = () => {
   };
 
   const getMemoPickerValue = () => {
-    return typeof txnParams.memo === "string"
-      ? { type: txnParams.memo, value: "" }
-      : {
-          type: Object.keys(txnParams.memo)[0],
-          value: Object.values(txnParams.memo)[0],
-        };
+    if (typeof txnParams.memo === "string") {
+      return { type: txnParams.memo, value: "" };
+    }
+
+    // Guard against null / non-object memo from hydrated state (e.g. a crafted
+    // `memo:null` querystring). Treat it like the default empty memo.
+    const memo =
+      txnParams.memo && typeof txnParams.memo === "object"
+        ? txnParams.memo
+        : {};
+
+    return {
+      type: Object.keys(memo)[0],
+      value: Object.values(memo)[0],
+    };
   };
 
   const getMemoValue = (memo?: MemoPickerValue) => {
@@ -234,6 +243,7 @@ export const Params = () => {
     const memoValue = txnParams.memo;
 
     if (
+      memoValue &&
       typeof memoValue === "object" &&
       !isEmptyObject(memoValue) &&
       !Object.values(memoValue)[0]

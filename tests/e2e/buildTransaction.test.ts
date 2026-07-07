@@ -1990,6 +1990,29 @@ test.describe("Build Transaction Page", () => {
       expect(decoded.memo.value?.toString()).toBe("benign note");
       expect(decoded.memo.type).not.toBe("id");
     });
+
+    // A crafted link can hydrate memo as null (lodash merge overrides the
+    // default {} with null). The build page must not crash — the form treats
+    // it as no memo and the built XDR encodes memo "none".
+    const NULL_MEMO_QUERYSTRING =
+      "$=transaction$build$classic$operations@$operation_type=account_merge&source_account=&params$destination=GC3N3GAECL3PJOWIKAAKPOB677WHCUNWZRULANQMHEIL4WDX5FICMF3I;;;;&params$source_account=GAGSY6UVUIINHRHSSDO7NMCM7ADWUF5UJ4ZGGJSFSXKWNJDRW6AA4H3Q&fee=100&seq_num=4466559829409793&cond$time$min_time=&max_time=;;&memo:null;&isValid$params:true&operations:true;;";
+
+    test("builds with no memo when memo hydrates as null", async ({ page }) => {
+      await page.goto(`${baseURL}/transaction/build?${NULL_MEMO_QUERYSTRING}`);
+
+      const txnSuccess = page.getByTestId("build-transaction-envelope-xdr");
+      await expect(txnSuccess).toBeVisible();
+      const xdr = await txnSuccess
+        .getByText("XDR")
+        .locator("+ div")
+        .textContent();
+
+      const decoded = TransactionBuilder.fromXDR(
+        xdr ?? "",
+        Networks.TESTNET,
+      ) as any;
+      expect(decoded.memo.type).toBe("none");
+    });
   });
 });
 
