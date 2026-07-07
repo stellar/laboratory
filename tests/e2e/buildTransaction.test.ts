@@ -1953,6 +1953,67 @@ test.describe("Build Transaction Page", () => {
       );
     });
   });
+
+  // Security regression: the transaction memo must be encoded as the type the
+  // form displays. A crafted share link can inject an extra memo key (e.g.
+  // { text: "…", id: "…" }); the form shows the first entry (Text) while a
+  // by-key `value.id` read would encode a numeric ID memo instead — signing a
+  // different memo than the one shown, which can misroute custodial deposits.
+  test.describe("Memo — hydrated params", () => {
+    // params.memo { text: "benign note", id: "666" }, "text" ordered first,
+    // serialized via zustand-querystring the same way the store hydrates it.
+    const CRAFTED_QUERYSTRING =
+      "$=transaction$build$classic$operations@$operation_type=account_merge&source_account=&params$destination=GC3N3GAECL3PJOWIKAAKPOB677WHCUNWZRULANQMHEIL4WDX5FICMF3I;;;;&params$source_account=GAGSY6UVUIINHRHSSDO7NMCM7ADWUF5UJ4ZGGJSFSXKWNJDRW6AA4H3Q&fee=100&seq_num=4466559829409793&cond$time$min_time=&max_time=;;&memo$text=benign%20note&id=666;;&isValid$params:true&operations:true;;";
+
+    test("encodes the displayed memo type, not an injected key", async ({
+      page,
+    }) => {
+      await page.goto(`${baseURL}/transaction/build?${CRAFTED_QUERYSTRING}`);
+
+      // The form shows a Text memo "benign note" (the first entry), not "666".
+      await expect(page.locator("#memo_value")).toHaveValue("benign note");
+
+      // The built XDR must carry that Text memo — never a MEMO_ID 666. A by-key
+      // `value.id` read would encode the injected id and diverge from the form.
+      const txnSuccess = page.getByTestId("build-transaction-envelope-xdr");
+      await expect(txnSuccess).toBeVisible();
+      const xdr = await txnSuccess
+        .getByText("XDR")
+        .locator("+ div")
+        .textContent();
+
+      const decoded = TransactionBuilder.fromXDR(
+        xdr ?? "",
+        Networks.TESTNET,
+      ) as any;
+      expect(decoded.memo.type).toBe("text");
+      expect(decoded.memo.value?.toString()).toBe("benign note");
+      expect(decoded.memo.type).not.toBe("id");
+    });
+
+    // A crafted link can hydrate memo as null (lodash merge overrides the
+    // default {} with null). The build page must not crash — the form treats
+    // it as no memo and the built XDR encodes memo "none".
+    const NULL_MEMO_QUERYSTRING =
+      "$=transaction$build$classic$operations@$operation_type=account_merge&source_account=&params$destination=GC3N3GAECL3PJOWIKAAKPOB677WHCUNWZRULANQMHEIL4WDX5FICMF3I;;;;&params$source_account=GAGSY6UVUIINHRHSSDO7NMCM7ADWUF5UJ4ZGGJSFSXKWNJDRW6AA4H3Q&fee=100&seq_num=4466559829409793&cond$time$min_time=&max_time=;;&memo:null;&isValid$params:true&operations:true;;";
+
+    test("builds with no memo when memo hydrates as null", async ({ page }) => {
+      await page.goto(`${baseURL}/transaction/build?${NULL_MEMO_QUERYSTRING}`);
+
+      const txnSuccess = page.getByTestId("build-transaction-envelope-xdr");
+      await expect(txnSuccess).toBeVisible();
+      const xdr = await txnSuccess
+        .getByText("XDR")
+        .locator("+ div")
+        .textContent();
+
+      const decoded = TransactionBuilder.fromXDR(
+        xdr ?? "",
+        Networks.TESTNET,
+      ) as any;
+      expect(decoded.memo.type).toBe("none");
+    });
+  });
 });
 
 // =============================================================================
