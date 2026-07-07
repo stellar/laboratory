@@ -87,7 +87,11 @@ export const ClassicTransactionXdr = () => {
             }
             break;
           case "memo":
-            if (typeof value !== "object" || isEmptyObject(value)) {
+            if (
+              value === null ||
+              typeof value !== "object" ||
+              isEmptyObject(value)
+            ) {
               val = "none";
             } else {
               // Read the memo by its first entry — the same key the form
