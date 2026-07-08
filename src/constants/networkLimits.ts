@@ -88,6 +88,7 @@ export const MAINNET_LIMITS: NetworkLimits = {
   "temp_rent_rate_denominator": "2430",
   "live_soroban_state_size_window": [
 <<<<<<< HEAD
+<<<<<<< HEAD
     "1382170210",
     "1382711686",
     "1383187538",
@@ -150,6 +151,38 @@ export const MAINNET_LIMITS: NetworkLimits = {
     "1606365101",
     "1607115565"
 >>>>>>> 703f29e7 (Add <Signatures /> and leave the default as it is for multisig)
+=======
+    "1824702520",
+    "1825370796",
+    "1825884784",
+    "1826645404",
+    "1827741496",
+    "1828933511",
+    "1829625639",
+    "1830261271",
+    "1830947527",
+    "1831761783",
+    "1832789439",
+    "1833430431",
+    "1834034963",
+    "1837138656",
+    "1838128164",
+    "1839126184",
+    "1839717780",
+    "1840252056",
+    "1836775452",
+    "1832952020",
+    "1829233432",
+    "1814610592",
+    "1799958072",
+    "1785781632",
+    "1771430184",
+    "1766487436",
+    "1766880572",
+    "1767641060",
+    "1768503904",
+    "1769522984"
+>>>>>>> e1de4efd (Update import transaction)
   ],
   "state_target_size_bytes": "3000000000",
   "rent_fee_1kb_state_size_low": "-17000",
@@ -190,6 +223,7 @@ export const TESTNET_LIMITS: NetworkLimits = {
   "persistent_rent_rate_denominator": "1215",
   "temp_rent_rate_denominator": "2430",
   "live_soroban_state_size_window": [
+<<<<<<< HEAD
 <<<<<<< HEAD
     "2579727827",
     "2579795127",
@@ -253,6 +287,38 @@ export const TESTNET_LIMITS: NetworkLimits = {
     "2934078159",
     "2933863551"
 >>>>>>> 703f29e7 (Add <Signatures /> and leave the default as it is for multisig)
+=======
+    "2928809545",
+    "2929693355",
+    "2930579542",
+    "2930840345",
+    "2933317568",
+    "2934535968",
+    "2934587816",
+    "2935070927",
+    "2934494131",
+    "2932740922",
+    "2932945611",
+    "2934085182",
+    "2934012846",
+    "2934010098",
+    "2933704258",
+    "2933038382",
+    "2915530925",
+    "2884682083",
+    "2878582076",
+    "2879132665",
+    "2879165429",
+    "2879786275",
+    "2880513936",
+    "2880540580",
+    "2880282516",
+    "2882574792",
+    "2882631764",
+    "2882651220",
+    "2883057164",
+    "2883075692"
+>>>>>>> e1de4efd (Update import transaction)
   ],
   "state_target_size_bytes": "4000000000",
   "rent_fee_1kb_state_size_low": "-17000",
@@ -293,6 +359,7 @@ export const FUTURENET_LIMITS: NetworkLimits = {
   "persistent_rent_rate_denominator": "1215",
   "temp_rent_rate_denominator": "2430",
   "live_soroban_state_size_window": [
+<<<<<<< HEAD
 <<<<<<< HEAD
     "1370772",
     "1370772",
@@ -356,6 +423,38 @@ export const FUTURENET_LIMITS: NetworkLimits = {
     "45570439",
     "45570439"
 >>>>>>> 703f29e7 (Add <Signatures /> and leave the default as it is for multisig)
+=======
+    "44963498",
+    "44963498",
+    "44963498",
+    "44963498",
+    "44963498",
+    "44963498",
+    "44963498",
+    "44963498",
+    "44963498",
+    "44963498",
+    "44963498",
+    "44963498",
+    "44963498",
+    "44963498",
+    "44963498",
+    "44963498",
+    "44963498",
+    "42013563",
+    "42008151",
+    "42007211",
+    "42007211",
+    "42007211",
+    "42007211",
+    "42007211",
+    "42007211",
+    "42007211",
+    "42007211",
+    "42007211",
+    "42007211",
+    "42007211"
+>>>>>>> e1de4efd (Update import transaction)
   ],
   "state_target_size_bytes": "4000000000",
   "rent_fee_1kb_state_size_low": "-17000",
