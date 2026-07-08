@@ -112,14 +112,10 @@ export default function BuildTransaction() {
   // transaction.
   const prevBuiltXdrRef = useRef<string | null>(null);
   useEffect(() => {
-    // Ignore empty values: the built XDR is transiently cleared while the build
-    // step remounts (XDR encoder init) or while inputs are mid-edit/invalid.
-    // Treating those as edits would wipe downstream state on plain navigation.
     if (!currentXdr) {
       return;
     }
-    // Record the first real XDR (initial build / sessionStorage rehydrate)
-    // without resetting, so restored progress isn't wiped on page load.
+
     if (prevBuiltXdrRef.current === null) {
       prevBuiltXdrRef.current = currentXdr;
       return;
