@@ -86,6 +86,8 @@ export const SignStepContent = ({
         submitted to the network.
       </Text>
 
+      {signatureContext}
+
       <SignTransactionXdr
         id="sign-step"
         xdrToSign={xdrToSign || null}
@@ -94,8 +96,6 @@ export const SignStepContent = ({
           setErrorMessage(errorMessage);
         }}
       />
-
-      {signatureContext}
 
       {errorMessage ? (
         <Alert variant="error" placement="inline">

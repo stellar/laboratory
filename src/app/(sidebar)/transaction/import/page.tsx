@@ -144,6 +144,8 @@ export default function ImportTransaction() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isNextDisabled, activeStep]);
 
+  const xdrToSign = simulate.assembledXdr || importState?.importXdr || "";
+
   return (
     <Box gap="xxl">
       <div className="BuildTransaction__layout">
@@ -152,37 +154,26 @@ export default function ImportTransaction() {
             {activeStep === "import" && (
               <ImportStepContent isReadyToSubmit={isReadyToSubmit} />
             )}
-            {activeStep === "sign" &&
-              (() => {
-                const xdrToSign =
-                  simulate.assembledXdr || importState?.importXdr || "";
-
-                return (
-                  <SignStepContent
-                    xdrToSign={xdrToSign}
-                    signedXdr={sign.signedXdr || ""}
-                    onSigned={(signedXdr) => {
-                      setSignedXdr(signedXdr);
-                    }}
-                    onClearAll={resetAll}
-                    signatureContext={
-                      <SignStepSignatureContext
-                        xdr={sign.signedXdr || xdrToSign}
-                        parsedTxType={importState?.parsedTxType}
-                      />
-                    }
+            {activeStep === "sign" && (
+              <SignStepContent
+                xdrToSign={xdrToSign}
+                signedXdr={sign.signedXdr || ""}
+                onSigned={(signedXdr) => {
+                  setSignedXdr(signedXdr);
+                }}
+                onClearAll={resetAll}
+                signatureContext={
+                  <SignStepSignatureContext
+                    xdr={sign.signedXdr || xdrToSign}
+                    parsedTxType={importState?.parsedTxType}
                   />
-                );
-              })()}
+                }
+              />
+            )}
             {activeStep === "simulate" && <SimulateStepContent steps={steps} />}
             {activeStep === "submit" && (
               <SubmitStepContent
-                xdrBlob={
-                  sign.signedXdr ||
-                  simulate.assembledXdr ||
-                  importState?.importXdr ||
-                  ""
-                }
+                xdrBlob={sign.signedXdr || xdrToSign}
                 onReset={resetAll}
               />
             )}

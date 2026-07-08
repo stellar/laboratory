@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import {
   FeeBumpTransaction,
   Transaction,
@@ -28,14 +27,6 @@ const hasAnySignature = (tx: Transaction | FeeBumpTransaction): boolean =>
     ? tx.signatures.length > 0 || tx.innerTransaction.signatures.length > 0
     : tx.signatures.length > 0;
 
-/**
- * The one actionable takeaway for the sign step. Deliberately generic — the
- * `<Signatures />` table below carries the per-signer specifics. We never claim
- * "this step is optional" nor hard-assert a signature is missing: offline we
- * can't tell whether a multisig account's threshold is met (a single signature
- * can cover several accounts via on-chain cosigning), so the copy leaves that
- * decision to the user and always keeps submit on the table.
- */
 const getContextMessage = (
   completeness: TxSignatureCompleteness,
 ): { variant: AlertVariant; message: string } => {
@@ -47,10 +38,6 @@ const getContextMessage = (
     };
   }
 
-  // Either a required signer has no signature we can attribute, or there are
-  // signatures we can't verify offline (e.g. multisig cosigners). Both are
-  // inconclusive — we can't confirm the transaction is complete, but we also
-  // can't rule it out, so keep both options open.
   if (
     completeness.missingSigners.length > 0 ||
     completeness.hasUnrecognizedSigners
@@ -65,34 +52,23 @@ const getContextMessage = (
   return {
     variant: "success",
     message:
-      "This transaction already has every signature that can be verified offline. Adding more may be rejected as unnecessary — you can continue to submit.",
+      "This transaction already has every signature that can be verified offline.",
   };
 };
 
-/**
- * Signature context shown at the top of the sign step for the import flow.
- *
- * Renders an accurate, state-driven message plus the full `<Signatures />`
- * breakdown so a co-signer can see who has signed (and who hasn't) before
- * deciding whether to add their signature. Reflects the freshly-signed
- * envelope once the user signs, so an added signature shows immediately.
- *
- * Returns `null` when the transaction has no signatures (e.g. the build flow,
- * or an unsigned import), leaving the sign step unchanged for those cases.
- */
 export const SignStepSignatureContext = ({ xdr, parsedTxType }: Props) => {
   const { network } = useStore();
 
-  const tx = useMemo(() => {
-    if (!xdr) return null;
+  let tx: Transaction | FeeBumpTransaction | null = null;
+  if (xdr) {
     try {
-      return TransactionBuilder.fromXDR(xdr, network.passphrase) as
+      tx = TransactionBuilder.fromXDR(xdr, network.passphrase) as
         | Transaction
         | FeeBumpTransaction;
     } catch {
-      return null;
+      tx = null;
     }
-  }, [xdr, network.passphrase]);
+  }
 
   if (!tx || !hasAnySignature(tx)) {
     return null;

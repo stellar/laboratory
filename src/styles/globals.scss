@@ -1037,7 +1037,11 @@
   &__floater {
     --Floater-background-color: var(--sds-clr-gray-01);
 
-    z-index: 2;
+    // Must sit above the sticky TransactionFlowFooter (z-index: 4), otherwise
+    // the footer overlaps and intercepts clicks on the dropdown options when
+    // the submit button sits near the bottom of the viewport. !important is
+    // required to beat the SDS base
+    z-index: 5 !important;
     top: calc(100% + 0.5rem);
     right: 0;
     left: auto !important;

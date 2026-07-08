@@ -131,10 +131,14 @@ test.describe("Sign Step in Build Flow", () => {
       page.getByText("Transaction signed and ready to submit."),
     ).toBeVisible();
 
-    // Verify signed XDR is displayed in the result card
-    const xdrBox = page.locator(".SignStepContent__xdrBox");
-    await expect(xdrBox).toBeVisible();
-    await expect(xdrBox).not.toBeEmpty();
+    // Verify the signed transaction is shown in the result card's code editor,
+    // with the JSON/XDR format toggle available.
+    await expect(
+      page.locator(".CodeEditor__header__title", {
+        hasText: "Signed transaction",
+      }),
+    ).toBeVisible();
+    await expect(page.locator("#code-editor-languages")).toBeVisible();
 
     // Verify fee bump link is visible
     // @TODO add
