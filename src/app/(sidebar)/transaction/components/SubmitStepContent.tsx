@@ -23,7 +23,6 @@ import { useSubmitHorizonTx } from "@/query/useSubmitHorizonTx";
 import { Box } from "@/components/layout/Box";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { TransactionHashReadOnlyField } from "@/components/TransactionHashReadOnlyField";
-import { CodeEditor } from "@/components/CodeEditor";
 import { ValidationResponseCard } from "@/components/ValidationResponseCard";
 import { TxResponse } from "@/components/TxResponse";
 import {
@@ -32,6 +31,7 @@ import {
 } from "@/components/TxErrorResponse";
 import { XdrLink } from "@/components/XdrLink";
 import { TxHashLink } from "@/components/TxHashLink";
+import { PrettyJsonTransaction } from "@/components/PrettyJsonTransaction";
 
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { getBlockExplorerLink } from "@/helpers/getBlockExplorerLink";
@@ -40,6 +40,7 @@ import { delayedAction } from "@/helpers/delayedAction";
 import { localStorageSettings } from "@/helpers/localStorageSettings";
 import * as StellarXdr from "@/helpers/StellarXdr";
 import { buildEndpointHref } from "@/helpers/buildEndpointHref";
+import { parseToLosslessJson } from "@/helpers/parseToLosslessJson";
 
 import { useScrollIntoView } from "@/hooks/useScrollIntoView";
 
@@ -145,16 +146,22 @@ export const SubmitStepContent = ({
       );
       return {
         jsonString: JSON.stringify(JSON.parse(jsonString), null, 2),
+        jsonObject: parseToLosslessJson(jsonString),
         error: "",
       };
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
-      return { jsonString: "", error: "Unable to decode XDR" };
+      return {
+        jsonString: "",
+        jsonObject: null,
+        error: "Unable to decode XDR",
+      };
     }
   }, [xdrBlob]);
 
   const [xdrJson, setXdrJson] = useState<{
     jsonString: string;
+    jsonObject: Record<string, unknown> | null;
     error: string;
   } | null>(null);
 
@@ -580,13 +587,15 @@ export const SubmitStepContent = ({
               networkPassphrase={network.passphrase}
             />
 
-            {xdrJson?.jsonString ? (
-              <CodeEditor
-                title="Transaction envelope"
-                value={xdrJson.jsonString}
-                selectedLanguage="json"
-              />
-            ) : null}
+            <div className="PageBody__content">
+              {xdrJson?.jsonObject ? (
+                <PrettyJsonTransaction
+                  json={xdrJson.jsonObject}
+                  xdr={xdrBlob}
+                  isCodeWrapped={true}
+                />
+              ) : null}
+            </div>
           </Box>
           <Box gap="sm" direction="row" align="center" justify="left">
             <Button
