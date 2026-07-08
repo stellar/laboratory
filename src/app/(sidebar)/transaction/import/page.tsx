@@ -92,7 +92,12 @@ export default function ImportTransaction() {
       return !simulate.simulationResultJson || !simulate.assembledXdr;
     }
     if (activeStep === "sign") {
-      return !sign.signedXdr;
+      // Offline analysis can't verify on-chain multisig thresholds, so a tx
+      // that already carries signatures must remain submittable without adding
+      // another (adding an unnecessary one is rejected as txBadAuthExtra). Only
+      // require a new signature when the imported tx has none. The network is
+      // the final judge of whether the signature set is sufficient.
+      return !(sign.signedXdr || importState?.hasSignatures);
     }
 
     return true;
@@ -172,7 +177,12 @@ export default function ImportTransaction() {
             {activeStep === "simulate" && <SimulateStepContent steps={steps} />}
             {activeStep === "submit" && (
               <SubmitStepContent
-                xdrBlob={sign.signedXdr || ""}
+                xdrBlob={
+                  sign.signedXdr ||
+                  simulate.assembledXdr ||
+                  importState?.importXdr ||
+                  ""
+                }
                 onReset={resetAll}
               />
             )}

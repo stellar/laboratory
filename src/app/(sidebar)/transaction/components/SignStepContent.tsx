@@ -3,10 +3,19 @@
 import { useState } from "react";
 import { Alert, Card, Text } from "@stellar/design-system";
 
+import { useStore } from "@/store/useStore";
+
+import { decodeXdr } from "@/helpers/decodeXdr";
+
+import { useIsXdrInit } from "@/hooks/useIsXdrInit";
+
 import { SignTransactionXdr } from "@/components/SignTransactionXdr";
 import { Box } from "@/components/layout/Box";
+import { TransactionHashReadOnlyField } from "@/components/TransactionHashReadOnlyField";
+import { prettifyJsonString } from "@/helpers/prettifyJsonString";
 
 import { TransactionStepHeader } from "./TransactionStepHeader";
+import { CodeEditor } from "@/components/CodeEditor";
 
 type Props = {
   xdrToSign: string;
@@ -46,7 +55,23 @@ export const SignStepContent = ({
   onClearAll,
   signatureContext,
 }: Props) => {
+  const { network } = useStore();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [selectedLanguage, setSelectedLanguage] = useState<"json" | "xdr">(
+    "json",
+  );
+
+  const isXdrInit = useIsXdrInit();
+
+  const xdrJsonDecoded = decodeXdr({
+    xdrType: "TransactionEnvelope",
+    xdrBlob: xdrToSign,
+    isReady: isXdrInit,
+  });
+
+  const signedXdrJsonString = xdrJsonDecoded?.jsonString
+    ? `${prettifyJsonString(xdrJsonDecoded.jsonString)}\n`
+    : "";
 
   return (
     <Box gap="md">
@@ -55,8 +80,6 @@ export const SignStepContent = ({
         onClearAll={onClearAll}
         xdr={xdrToSign}
       />
-
-      {signatureContext}
 
       <Text size="sm" as="div">
         To be included in the ledger, the transaction must be signed and
@@ -72,6 +95,8 @@ export const SignStepContent = ({
         }}
       />
 
+      {signatureContext}
+
       {errorMessage ? (
         <Alert variant="error" placement="inline">
           {errorMessage}
@@ -86,25 +111,29 @@ export const SignStepContent = ({
             </Alert>
 
             <Box gap="xxl">
-              <Box gap="xs">
-                <Text
-                  size="xs"
-                  weight="medium"
-                  as="div"
-                  addlClassName="SignStepContent__label"
-                >
-                  Signed transaction (Base64 XDR)
-                </Text>
+              <Box gap="lg">
+                <TransactionHashReadOnlyField
+                  xdr={signedXdr}
+                  networkPassphrase={network.passphrase}
+                />
 
-                <div className="SignStepContent__xdrBox">
-                  <Text
-                    size="sm"
-                    as="div"
-                    addlClassName="SignStepContent__xdrText"
-                  >
-                    {signedXdr}
-                  </Text>
-                </div>
+                {signedXdrJsonString ? (
+                  <CodeEditor
+                    title="Signed transaction"
+                    value={
+                      selectedLanguage === "json"
+                        ? signedXdrJsonString
+                        : signedXdr
+                    }
+                    languages={["json", "xdr"]}
+                    selectedLanguage={selectedLanguage}
+                    onLanguageChange={(id) => {
+                      const selectedValue = id === "xdr" ? "xdr" : "json";
+                      setSelectedLanguage(selectedValue);
+                    }}
+                    maxHeightInRem="20"
+                  />
+                ) : null}
               </Box>
             </Box>
           </Box>

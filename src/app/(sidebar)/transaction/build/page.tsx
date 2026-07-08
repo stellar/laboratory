@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Alert, Card } from "@stellar/design-system";
 
 import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
@@ -39,6 +39,7 @@ export default function BuildTransaction() {
     setActiveStep,
     goToNextStep,
     markStepCompleted,
+    resetDownstreamState,
     resetAll,
   } = useBuildFlowStore();
 
@@ -102,6 +103,43 @@ export default function BuildTransaction() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isNextDisabled, activeStep]);
+
+  // When the user edits the transaction on the build step after having already
+  // progressed past it, the rebuilt XDR no longer matches what was simulated,
+  // signed, or validated downstream — those results are now stale. Reset them
+  // so a signature produced against the previous transaction can't be carried
+  // through to submit; the user must re-run the later steps against the edited
+  // transaction.
+  const prevBuiltXdrRef = useRef<string | null>(null);
+  useEffect(() => {
+    // Ignore empty values: the built XDR is transiently cleared while the build
+    // step remounts (XDR encoder init) or while inputs are mid-edit/invalid.
+    // Treating those as edits would wipe downstream state on plain navigation.
+    if (!currentXdr) {
+      return;
+    }
+    // Record the first real XDR (initial build / sessionStorage rehydrate)
+    // without resetting, so restored progress isn't wiped on page load.
+    if (prevBuiltXdrRef.current === null) {
+      prevBuiltXdrRef.current = currentXdr;
+      return;
+    }
+    if (prevBuiltXdrRef.current === currentXdr) {
+      return;
+    }
+    prevBuiltXdrRef.current = currentXdr;
+
+    const buildIndex = steps.indexOf("build");
+    const highestIndex = highestCompletedStep
+      ? steps.indexOf(highestCompletedStep)
+      : -1;
+
+    // Only reset when there is downstream progress to invalidate.
+    if (highestIndex > buildIndex) {
+      resetDownstreamState(steps[buildIndex + 1], steps);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentXdr]);
 
   const renderError = () => {
     if (paramsError.length > 0 || operationsError.length > 0) {

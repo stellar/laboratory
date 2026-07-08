@@ -91,7 +91,7 @@ const getEnvelopeSummary = (
       };
     }
     return {
-      message: `Missing signature${missing.length > 1 ? "s" : ""} from ${missing.join(", ")}.`,
+      message: `Couldn’t verify a signature for ${missing.join(", ")} offline. If it’s a multisig account, an existing signature may already cover it on-chain — you can submit to let the network verify, or add a signature first.`,
     };
   }
 
@@ -106,7 +106,9 @@ const getEnvelopeSummary = (
     );
   }
   if (hasUnrecognized) {
-    notes.push("Signature(s) from unrecognized signers were also found.");
+    notes.push(
+      "Signature(s) from unverified existing signers were also found.",
+    );
   }
 
   return {
@@ -339,7 +341,7 @@ const renderSigner = (matchStatus: MatchStatus, signer?: string) => {
   return (
     <Box gap="xs" direction="row" align="center" addlClassName="info-message">
       <Icon.InfoCircle />
-      <span>Unrecognized signer</span>
+      <span>Existing signer (unverified)</span>
     </Box>
   );
 };
