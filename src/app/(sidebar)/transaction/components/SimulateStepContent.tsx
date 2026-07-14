@@ -527,6 +527,31 @@ export const SimulateStepContent = ({
                 }}
               />
             )}
+
+            {simulate.assembledXdr && (
+              <Box gap="xxl">
+                <Box gap="xs">
+                  <Text
+                    size="xs"
+                    weight="medium"
+                    as="div"
+                    addlClassName="SignStepContent__label"
+                  >
+                    Simulated transaction (Base64 XDR)
+                  </Text>
+
+                  <div className="SignStepContent__xdrBox">
+                    <Text
+                      size="sm"
+                      as="div"
+                      addlClassName="SignStepContent__xdrText"
+                    >
+                      {simulate.assembledXdr}
+                    </Text>
+                  </div>
+                </Box>
+              </Box>
+            )}
           </Box>
         </Card>
       )}
