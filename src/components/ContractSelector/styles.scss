@@ -1,6 +1,10 @@
 @use "../../styles/utils.scss" as *;
 
 .ContractSelector {
+  &__wrapper {
+    position: relative;
+  }
+
   &__dropdown {
     position: absolute;
     top: calc(var(--sds-gap-xxl) * 2);
@@ -35,6 +39,15 @@
       }
 
       &__value {
+        // Reset native <button> styles — the option is a real button (for
+        // keyboard focus + Enter/Space activation) but should look like a row.
+        width: 100%;
+        border: none;
+        background: none;
+        appearance: none;
+        text-align: left;
+        font-family: inherit;
+
         color: var(--sds-clr-gray-12);
         font-size: pxToRem(14px);
         line-height: pxToRem(20px);
@@ -45,6 +58,11 @@
         gap: pxToRem(8px);
 
         padding: pxToRem(3px) pxToRem(8px);
+
+        &:focus-visible {
+          outline: 2px solid var(--sds-clr-gray-09);
+          outline-offset: -2px;
+        }
 
         @media (hover: hover) {
           cursor: pointer;

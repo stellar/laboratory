@@ -103,7 +103,8 @@ const ContractSelectorDropdown = ({
         </div>
 
         {savedContracts.map((contract, index) => (
-          <div
+          <button
+            type="button"
             className="ContractSelector__dropdown__item__value"
             key={`${contract.contractId}-${index}`}
             onClick={() => {
@@ -119,7 +120,7 @@ const ContractSelectorDropdown = ({
                 {shortenStellarAddress(contract.contractId)}
               </div>
             </div>
-          </div>
+          </button>
         ))}
       </div>
     </div>

@@ -301,7 +301,7 @@ export default function ContractExplorer() {
           className="ContractExplorer__form"
         >
           <Box gap="lg">
-            <div className="SignerSelectorWrapper">
+            <div className="ContractSelector__wrapper">
               <Input
                 fieldSize="md"
                 id="contract-id"
