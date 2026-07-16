@@ -15,15 +15,25 @@ import { RecentList } from "./components/RecentList";
 import { DefiList } from "./components/DefiList";
 import { KnownAssetsList } from "./components/KnownAssetsList";
 
-type ContractListTabId = "defi" | "known-assets" | "recent";
+import { ContractListTabId } from "@/types/types";
 
 export default function ContractList() {
   const { network, smartContracts } = useStore();
   const { contractList, updateContractListActiveTab } = smartContracts;
 
   // Persisted to the URL so a tab can be shared; defaults to "defi".
-  const activeTab = contractList.activeTab as ContractListTabId;
-  const setActiveTab = updateContractListActiveTab;
+  const isContractListTabId = (value: string): value is ContractListTabId =>
+    value === "defi" || value === "known-assets" || value === "recent";
+  const activeTab: ContractListTabId = isContractListTabId(
+    contractList.activeTab,
+  )
+    ? contractList.activeTab
+    : "defi";
+  const setActiveTab = (tabId: string) => {
+    if (isContractListTabId(tabId)) {
+      updateContractListActiveTab(tabId);
+    }
+  };
 
   const renderContent = () => {
     if (network.id === "futurenet") {

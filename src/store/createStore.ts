@@ -19,6 +19,7 @@ import {
   OpBuildingError,
   ThemeColorType,
   XdrFormatType,
+  ContractListTabId,
 } from "@/types/types";
 
 export type FeeBumpParams = {
@@ -195,7 +196,7 @@ export interface Store {
       contractId: string;
     };
     contractList: {
-      activeTab: string;
+      activeTab: ContractListTabId;
     };
     updateExplorerContractId: (contractId: string) => void;
     resetExplorerContractId: () => void;
