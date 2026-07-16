@@ -200,7 +200,7 @@ export interface Store {
     };
     updateExplorerContractId: (contractId: string) => void;
     resetExplorerContractId: () => void;
-    updateContractListActiveTab: (tabId: string) => void;
+    updateContractListActiveTab: (tabId: ContractListTabId) => void;
   };
 
   // Transaction Dashboard
