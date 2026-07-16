@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Alert, Button, Icon, Input } from "@stellar/design-system";
+import { Alert, Badge, Button, Icon, Input } from "@stellar/design-system";
 import { useQueryClient } from "@tanstack/react-query";
 import { contract } from "@stellar/stellar-sdk";
 
@@ -23,6 +23,7 @@ import { PageCard } from "@/components/layout/PageCard";
 import { MessageField } from "@/components/MessageField";
 import { TabView } from "@/components/TabView";
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
+import { ContractSelector } from "@/components/ContractSelector";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
@@ -39,6 +40,7 @@ export default function ContractExplorer() {
   const [contractIdInput, setContractIdInput] = useState("");
   const [contractIdInputError, setContractIdInputError] = useState("");
   const [isSaveModalVisible, setIsSaveModalVisible] = useState(false);
+  const [isContractSelectorOpen, setIsContractSelectorOpen] = useState(false);
 
   const rpcUrl = network.rpcUrl;
 
@@ -162,6 +164,26 @@ export default function ContractExplorer() {
     }
   };
 
+  const handleContractIdChange = (value: string) => {
+    resetFetchContractInfo();
+    setContractIdInput(value);
+
+    const error = value && validate.getContractIdError(value);
+    setContractIdInputError(error || "");
+  };
+
+  // If the entered contract ID matches one saved in localStorage for the
+  // current network, surface its name as a badge next to the label.
+  const matchedSavedContract = contractIdInput
+    ? localStorageSavedContracts
+        .get()
+        .find(
+          (contract) =>
+            contract.network.id === network.id &&
+            contract.contractId === contractIdInput,
+        )
+    : undefined;
+
   const isLoadContractDisabled =
     !network.rpcUrl || !contractIdInput || Boolean(contractIdInputError);
 
@@ -279,23 +301,49 @@ export default function ContractExplorer() {
           className="ContractExplorer__form"
         >
           <Box gap="lg">
-            <Input
-              fieldSize="md"
-              id="contract-id"
-              label="Contract ID"
-              placeholder="Ex: CCBWOUL7XW5XSWD3UKL76VWLLFCSZP4D4GUSCFBHUQCEAW23QVKJZ7ON"
-              error={contractIdInputError}
-              value={contractIdInput}
-              onChange={(e) => {
-                resetFetchContractInfo();
-                setContractIdInput(e.target.value);
+            <div className="ContractSelector__wrapper">
+              <Input
+                fieldSize="md"
+                id="contract-id"
+                label={
+                  <Box
+                    gap="xs"
+                    direction="row"
+                    align="center"
+                    data-testid="contract-id-label"
+                  >
+                    Contract ID
+                    {matchedSavedContract ? (
+                      <Badge variant="secondary" size="sm">
+                        {matchedSavedContract.name}
+                      </Badge>
+                    ) : null}
+                  </Box>
+                }
+                placeholder="Ex: CCBWOUL7XW5XSWD3UKL76VWLLFCSZP4D4GUSCFBHUQCEAW23QVKJZ7ON"
+                error={contractIdInputError}
+                value={contractIdInput}
+                onChange={(e) => {
+                  handleContractIdChange(e.target.value);
+                }}
+                rightElement={
+                  <ContractSelector.Button
+                    onClick={() =>
+                      setIsContractSelectorOpen(!isContractSelectorOpen)
+                    }
+                  />
+                }
+              />
 
-                const error =
-                  e.target.value && validate.getContractIdError(e.target.value);
-
-                setContractIdInputError(error || "");
-              }}
-            />
+              <ContractSelector.Dropdown
+                isOpen={isContractSelectorOpen}
+                onClose={() => setIsContractSelectorOpen(false)}
+                onChange={(val) => {
+                  handleContractIdChange(val);
+                  setIsContractSelectorOpen(false);
+                }}
+              />
+            </div>
 
             <>{renderButtons()}</>
 

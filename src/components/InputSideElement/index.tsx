@@ -52,6 +52,7 @@ export const InputSideElement = ({
       {...props}
     >
       <Button
+        type="button"
         size="md"
         variant="tertiary"
         onClick={onClick}

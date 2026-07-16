@@ -1,6 +1,6 @@
 "use client";
 
-import { JSX, useCallback, useLayoutEffect, useRef } from "react";
+import { JSX, useEffect, useRef } from "react";
 
 import { useStore } from "@/store/useStore";
 
@@ -100,29 +100,28 @@ const SignerSelectorDropdown = ({
   );
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
-  const handleClickOutside = useCallback(
-    (event: MouseEvent) => {
-      // Ignore the dropdown
-      if (dropdownRef?.current?.contains(event.target as Node)) {
+  // Close the dropdown on any click outside of it. The listener lives on
+  // `document` (an external system), so it's attached imperatively in an effect
+  // and torn down when the dropdown closes or unmounts.
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    const handleClickOutside = (event: MouseEvent) => {
+      // Ignore clicks inside the dropdown itself
+      if (dropdownRef.current?.contains(event.target as Node)) {
         return;
       }
 
       onClose();
-    },
-    [onClose],
-  );
+    };
 
-  useLayoutEffect(() => {
-    if (isOpen) {
-      document.addEventListener("pointerup", handleClickOutside);
-    } else {
-      document.removeEventListener("pointerup", handleClickOutside);
-    }
-
+    document.addEventListener("pointerup", handleClickOutside);
     return () => {
       document.removeEventListener("pointerup", handleClickOutside);
     };
-  }, [isOpen, handleClickOutside]);
+  }, [isOpen, onClose]);
 
   const getAvailableKeypairs = () => {
     const availableAddress = [];
