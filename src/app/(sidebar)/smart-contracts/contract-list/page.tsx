@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { Text } from "@stellar/design-system";
 
 import { TabView } from "@/components/TabView";
@@ -16,23 +15,25 @@ import { RecentList } from "./components/RecentList";
 import { DefiList } from "./components/DefiList";
 import { KnownAssetsList } from "./components/KnownAssetsList";
 
+import { ContractListTabId } from "@/types/types";
+
 export default function ContractList() {
-  const { network } = useStore();
+  const { network, smartContracts } = useStore();
+  const { contractList, updateContractListActiveTab } = smartContracts;
 
-  type ContractListTabId = "defi" | "known-assets" | "recent";
-
-  // Default to "recent" on testnet, "defi" on mainnet
-  const [activeTab, setActiveTab] = useState<ContractListTabId>(
-    network.id === "testnet" ? "recent" : "defi",
-  );
-
-  useEffect(() => {
-    if (network.id === "testnet") {
-      setActiveTab("recent");
-    } else if (network.id === "mainnet") {
-      setActiveTab("defi");
+  // Persisted to the URL so a tab can be shared; defaults to "defi".
+  const isContractListTabId = (value: string): value is ContractListTabId =>
+    value === "defi" || value === "known-assets" || value === "recent";
+  const activeTab: ContractListTabId = isContractListTabId(
+    contractList.activeTab,
+  )
+    ? contractList.activeTab
+    : "defi";
+  const setActiveTab = (tabId: string) => {
+    if (isContractListTabId(tabId)) {
+      updateContractListActiveTab(tabId);
     }
-  }, [network.id]);
+  };
 
   const renderContent = () => {
     if (network.id === "futurenet") {
@@ -103,7 +104,7 @@ export default function ContractList() {
         }}
         activeTabId={activeTab}
         onTabChange={(tabId) => {
-          setActiveTab(tabId as ContractListTabId);
+          setActiveTab(tabId);
         }}
       />
     );

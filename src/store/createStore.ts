@@ -19,6 +19,7 @@ import {
   OpBuildingError,
   ThemeColorType,
   XdrFormatType,
+  ContractListTabId,
 } from "@/types/types";
 
 export type FeeBumpParams = {
@@ -194,8 +195,12 @@ export interface Store {
     explorer: {
       contractId: string;
     };
+    contractList: {
+      activeTab: string;
+    };
     updateExplorerContractId: (contractId: string) => void;
     resetExplorerContractId: () => void;
+    updateContractListActiveTab: (tabId: ContractListTabId) => void;
   };
 
   // Transaction Dashboard
@@ -314,6 +319,9 @@ const initXdrState = {
 const initSmartContractsState = {
   explorer: {
     contractId: "",
+  },
+  contractList: {
+    activeTab: "defi",
   },
 };
 
@@ -590,6 +598,10 @@ export const createStore = (options: CreateStoreOptions) =>
             set((state) => {
               state.smartContracts.explorer.contractId = "";
             }),
+          updateContractListActiveTab: (tabId) =>
+            set((state) => {
+              state.smartContracts.contractList.activeTab = tabId;
+            }),
         },
         // Transaction Dashboard
         txDashboard: {
@@ -656,6 +668,9 @@ export const createStore = (options: CreateStoreOptions) =>
             smartContracts: {
               explorer: {
                 contractId: true,
+              },
+              contractList: {
+                activeTab: true,
               },
             },
             savedContractId: true,

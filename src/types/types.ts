@@ -546,6 +546,8 @@ export type BuildVerificationResponse = {
   attestationUrl?: string;
 };
 
+export type ContractListTabId = "defi" | "known-assets" | "recent";
+
 // =============================================================================
 // Data table
 // =============================================================================
