@@ -196,7 +196,7 @@ export interface Store {
       contractId: string;
     };
     contractList: {
-      activeTab: ContractListTabId;
+      activeTab: string;
     };
     updateExplorerContractId: (contractId: string) => void;
     resetExplorerContractId: () => void;
