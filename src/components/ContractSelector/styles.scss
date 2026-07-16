@@ -1,0 +1,72 @@
+@use "../../styles/utils.scss" as *;
+
+.ContractSelector {
+  &__dropdown {
+    position: absolute;
+    top: calc(var(--sds-gap-xxl) * 2);
+    transform: translateY(0);
+    right: 0;
+    z-index: 1000;
+    background-color: var(--sds-clr-gray-01);
+    border: 1px solid var(--sds-clr-gray-06);
+    border-radius: pxToRem(4px);
+    padding: pxToRem(3px) pxToRem(4px);
+    max-height: pxToRem(240px);
+    overflow-y: auto;
+    width: pxToRem(560px);
+
+    @media screen and (max-width: 700px) {
+      width: 100%;
+    }
+
+    &__item {
+      &__label {
+        font-size: pxToRem(12px);
+        line-height: pxToRem(18px);
+
+        padding: pxToRem(3px) pxToRem(8px);
+
+        display: grid;
+        grid-template-columns: auto 120px;
+
+        &__note {
+          text-align: right;
+        }
+      }
+
+      &__value {
+        color: var(--sds-clr-gray-12);
+        font-size: pxToRem(14px);
+        line-height: pxToRem(20px);
+        font-weight: var(--sds-fw-medium);
+        display: grid;
+        align-items: center;
+
+        gap: pxToRem(8px);
+
+        padding: pxToRem(3px) pxToRem(8px);
+
+        @media (hover: hover) {
+          cursor: pointer;
+
+          &:hover {
+            background-color: var(--sds-clr-gray-04);
+          }
+        }
+
+        &__contract {
+          display: grid;
+          grid-template-columns: auto 120px;
+
+          .contract_name {
+            color: var(--sds-clr-gray-11);
+          }
+
+          .contract_id {
+            text-align: right;
+          }
+        }
+      }
+    }
+  }
+}
