@@ -5,20 +5,37 @@ import { JSX, useEffect, useRef } from "react";
 import { useStore } from "@/store/useStore";
 
 import { localStorageSavedKeypairs } from "@/helpers/localStorageSavedKeypairs";
+import { localStorageSavedContracts } from "@/helpers/localStorageSavedContracts";
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import { truncateString } from "@/helpers/truncateString";
 
 import { InputSideElement } from "@/components/InputSideElement";
 
-import { SavedKeypair } from "@/types/types";
+import { SavedContract, SavedKeypair } from "@/types/types";
 
 import "./styles.scss";
 
 type SignerMode = "public" | "secret";
 
+// "wallet" and "keypair" resolve to a public/secret key, while "contract"
+// resolves to a contract address.
+type SignerOptionKind = "wallet" | "keypair" | "contract";
+
+type WalletItem = { publicKey: string };
+type SignerOptionItem = WalletItem | SavedKeypair | SavedContract;
+
+type SignerOptionGroup = {
+  label: string;
+  kind: SignerOptionKind;
+  items: SignerOptionItem[];
+};
+
 type ButtonProps = {
   mode: SignerMode;
   onClick: () => void;
+  // Smart contract addresses are only valid in some contexts (e.g. the
+  // JsonSchema `address` field), so they are opt-in.
+  includeContracts?: boolean;
 };
 
 type DropdownProps = {
@@ -26,6 +43,7 @@ type DropdownProps = {
   isOpen: boolean;
   onClose: () => void;
   mode: SignerMode;
+  includeContracts?: boolean;
 };
 
 interface SignerSelectorComponent {
@@ -44,7 +62,11 @@ const getTitle = ({ mode }: { mode: SignerMode }) => {
   }
 };
 
-const SignerSelectorButton = ({ mode, onClick }: ButtonProps): JSX.Element => {
+const SignerSelectorButton = ({
+  mode,
+  onClick,
+  includeContracts = false,
+}: ButtonProps): JSX.Element => {
   const { walletKit, network } = useStore();
   const { publicKey: walletKitPubKey } = walletKit || {};
 
@@ -54,13 +76,22 @@ const SignerSelectorButton = ({ mode, onClick }: ButtonProps): JSX.Element => {
     (keypair) => keypair.network.id === network.id,
   );
 
+  // Contracts only apply in public mode (they have no secret key to sign with).
+  const showContracts = includeContracts && mode === "public";
+  const currentNetworkContracts = showContracts
+    ? localStorageSavedContracts
+        .get()
+        .filter((contract) => contract.network.id === network.id)
+    : [];
+
   const hasKeypairs = currentNetworkKeypairs.length > 0;
+  const hasContracts = currentNetworkContracts.length > 0;
   const hasWallet = !!walletKitPubKey;
 
   const title = getTitle({ mode });
 
   // No sources available
-  if (!hasKeypairs && !hasWallet) {
+  if (!hasKeypairs && !hasWallet && !hasContracts) {
     return <></>;
   }
 
@@ -70,7 +101,7 @@ const SignerSelectorButton = ({ mode, onClick }: ButtonProps): JSX.Element => {
   }
 
   // Public Signer mode with only wallet - show direct button
-  if (mode === "public" && !hasKeypairs && hasWallet) {
+  if (mode === "public" && !hasKeypairs && !hasContracts && hasWallet) {
     return (
       <InputSideElement variant="button" onClick={onClick} placement="right">
         Get connected wallet address
@@ -90,6 +121,7 @@ const SignerSelectorDropdown = ({
   isOpen,
   onClose,
   mode,
+  includeContracts = false,
 }: DropdownProps): JSX.Element => {
   const { walletKit, network } = useStore();
   const { publicKey: walletKitPubKey } = walletKit || {};
@@ -98,6 +130,14 @@ const SignerSelectorDropdown = ({
   const currentNetworkKeypairs = savedLocalKeypairs.filter(
     (keypair) => keypair.network.id === network.id,
   );
+
+  // Contracts only apply in public mode (they have no secret key to sign with).
+  const showContracts = includeContracts && mode === "public";
+  const currentNetworkContracts = showContracts
+    ? localStorageSavedContracts
+        .get()
+        .filter((contract) => contract.network.id === network.id)
+    : [];
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   // Close the dropdown on any click outside of it. The listener lives on
@@ -123,28 +163,37 @@ const SignerSelectorDropdown = ({
     };
   }, [isOpen, onClose]);
 
-  const getAvailableKeypairs = () => {
-    const availableAddress = [];
+  const getAvailableOptions = (): SignerOptionGroup[] => {
+    const availableOptions: SignerOptionGroup[] = [];
 
     if (walletKitPubKey && mode === "public") {
-      const saved = {
+      availableOptions.push({
         label: "Connected Wallet",
+        kind: "wallet",
         items: [{ publicKey: walletKitPubKey }],
-      };
-      availableAddress.push(saved);
+      });
     }
 
     if (currentNetworkKeypairs.length > 0) {
-      const saved = {
+      availableOptions.push({
         label: "Saved keypairs",
+        kind: "keypair",
         items: currentNetworkKeypairs,
-      };
-      availableAddress.push(saved);
+      });
     }
-    return availableAddress;
+
+    if (currentNetworkContracts.length > 0) {
+      availableOptions.push({
+        label: "Saved contracts",
+        kind: "contract",
+        items: currentNetworkContracts,
+      });
+    }
+
+    return availableOptions;
   };
 
-  const signers = getAvailableKeypairs();
+  const options = getAvailableOptions();
 
   if (!isOpen) {
     return <></>;
@@ -152,11 +201,12 @@ const SignerSelectorDropdown = ({
 
   return (
     <div ref={dropdownRef} className="SignerSelector__dropdown">
-      {signers.map((address, index) => {
+      {options.map((option, index) => {
         return (
           <OptionItem
-            label={address.label}
-            items={address.items}
+            label={option.label}
+            kind={option.kind}
+            items={option.items}
             onChange={onChange}
             onClose={onClose}
             mode={mode}
@@ -168,13 +218,13 @@ const SignerSelectorDropdown = ({
   );
 };
 
-const getLabel = (label: string, isSavedKeypair: boolean) => (
+const getLabel = (label: string, columnLabel: string | null) => (
   <div className="SignerSelector__dropdown__item__label">
     <div>{label}</div>
 
-    {isSavedKeypair ? (
+    {columnLabel ? (
       <div className="SignerSelector__dropdown__item__label__savedKeypairs">
-        Public key
+        {columnLabel}
       </div>
     ) : null}
   </div>
@@ -182,28 +232,67 @@ const getLabel = (label: string, isSavedKeypair: boolean) => (
 
 const OptionItem = ({
   label,
+  kind,
   items,
   onChange,
   onClose,
   mode,
 }: {
   label: string;
-  items: Array<{ publicKey: string }> | SavedKeypair[];
+  kind: SignerOptionKind;
+  items: SignerOptionItem[];
   onChange: (val: string) => void;
   onClose: () => void;
   mode: SignerMode;
 }) => {
-  const isSavedKeypair = items.every((item) => "secretKey" in item);
+  // The address a given item resolves to in the input field.
+  const getAddress = (item: SignerOptionItem) => {
+    if (kind === "contract") {
+      return (item as SavedContract).contractId;
+    }
 
-  const renderKey = (item: SavedKeypair) => {
+    if (kind === "keypair" && mode === "secret") {
+      return (item as SavedKeypair).secretKey;
+    }
+
+    return (item as WalletItem).publicKey;
+  };
+
+  // Tag shown in the right column of the group label.
+  const getColumnLabel = () => {
+    switch (kind) {
+      case "keypair":
+        return "Public key";
+      case "contract":
+        return "Contract ID";
+      default:
+        return null;
+    }
+  };
+
+  const renderNamedItem = (name: string, address: string) => {
     return (
       <div className="SignerSelector__dropdown__item__value__keypair">
-        <div className="keypair_name">[{truncateString(item.name, 55)}]</div>
+        <div className="keypair_name">[{truncateString(name, 55)}]</div>
         <div className="keypair_publickey">
-          {shortenStellarAddress(item.publicKey)}
+          {shortenStellarAddress(address)}
         </div>
       </div>
     );
+  };
+
+  const renderItem = (item: SignerOptionItem) => {
+    if (kind === "keypair") {
+      const keypair = item as SavedKeypair;
+      return renderNamedItem(keypair.name, keypair.publicKey);
+    }
+
+    if (kind === "contract") {
+      const contract = item as SavedContract;
+      return renderNamedItem(contract.name, contract.contractId);
+    }
+
+    return shortenStellarAddress((item as WalletItem).publicKey);
   };
 
   return (
@@ -211,26 +300,21 @@ const OptionItem = ({
       className="SignerSelector__dropdown__item"
       data-testid="signer-selector-options"
     >
-      {getLabel(label, isSavedKeypair)}
+      {getLabel(label, getColumnLabel())}
 
       {items.map((item, index) => {
+        const address = getAddress(item);
+
         return (
           <div
             className="SignerSelector__dropdown__item__value"
-            key={`${item.publicKey}-${index}`}
+            key={`${address}-${index}`}
             onClick={() => {
-              const value = isSavedKeypair
-                ? mode === "secret"
-                  ? (item as SavedKeypair).secretKey
-                  : item.publicKey
-                : item.publicKey;
-              onChange(value);
+              onChange(address);
               onClose();
             }}
           >
-            {isSavedKeypair
-              ? renderKey(item as SavedKeypair)
-              : shortenStellarAddress(item.publicKey)}
+            {renderItem(item)}
           </div>
         );
       })}
