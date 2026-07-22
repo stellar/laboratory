@@ -298,10 +298,10 @@ export const getTxResourceBreakdown = (
     ),
     max_rw_data_byte: maxRwDataByte,
     max_rw_data_byte_network_limit:
-      CURRENT_NETWORK_LIMITS.contract_max_size_bytes,
+      CURRENT_NETWORK_LIMITS.contract_data_entry_size_bytes,
     max_rw_data_byte_usage_percent: calculateUsagePercent(
       maxRwDataByte,
-      CURRENT_NETWORK_LIMITS.contract_max_size_bytes,
+      CURRENT_NETWORK_LIMITS.contract_data_entry_size_bytes,
     ),
     max_rw_code_byte: maxRwCodeByte,
     max_emit_event_byte: maxEmitEventByte,

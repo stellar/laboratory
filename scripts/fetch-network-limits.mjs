@@ -149,6 +149,7 @@ const getNetworkLimitsFromResponse = (response) => {
   const ledgerCostExtEntry = findEntry("contract_ledger_cost_ext_v0");
   const eventsEntry = findEntry("contract_events_v0");
   const dataKeySizeEntry = findEntry("contract_data_key_size_bytes");
+  const dataEntrySizeEntry = findEntry("contract_data_entry_size_bytes");
   const maxSizeEntry = findEntry("contract_max_size_bytes");
   const stateArchivalEntry = findEntry("state_archival");
   const bandwidthEntry = findEntry("contract_bandwidth_v0");
@@ -187,6 +188,9 @@ const getNetworkLimitsFromResponse = (response) => {
         ?.tx_max_contract_events_size_bytes,
     contract_data_key_size_bytes:
       dataKeySizeEntry?.dataJson?.config_setting?.contract_data_key_size_bytes,
+    contract_data_entry_size_bytes:
+      dataEntrySizeEntry?.dataJson?.config_setting
+        ?.contract_data_entry_size_bytes,
     contract_max_size_bytes:
       maxSizeEntry?.dataJson?.config_setting?.contract_max_size_bytes,
 
@@ -292,6 +296,7 @@ export interface NetworkLimits {
   tx_max_write_bytes: number;
   tx_max_contract_events_size_bytes: number;
   contract_data_key_size_bytes: number;
+  contract_data_entry_size_bytes: number;
   contract_max_size_bytes: number;
 
   // Ledger-wide limits
