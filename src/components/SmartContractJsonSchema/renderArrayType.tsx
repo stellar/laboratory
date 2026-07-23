@@ -12,6 +12,7 @@ import type {
   AnyObject,
   JsonSchemaFormProps,
   SorobanInvokeValue,
+  TokenInfo,
 } from "@/types/types";
 
 export const renderArrayType = ({
@@ -22,6 +23,7 @@ export const renderArrayType = ({
   onChange,
   formError,
   setFormError,
+  tokenInfo,
 }: {
   schema: JSONSchema7;
   path: string[];
@@ -30,6 +32,7 @@ export const renderArrayType = ({
   onChange: (value: SorobanInvokeValue) => void;
   formError: AnyObject;
   setFormError: (error: AnyObject) => void;
+  tokenInfo?: TokenInfo;
 }) => {
   const name = path.join(".");
   const invokeContractBaseProps = {
@@ -58,6 +61,7 @@ export const renderArrayType = ({
         onChange,
         formError,
         setFormError,
+        tokenInfo,
       });
     });
   }
@@ -102,6 +106,7 @@ export const renderArrayType = ({
                           onChange,
                           formError,
                           setFormError,
+                          tokenInfo,
                         });
                       })}
                     </>
@@ -116,6 +121,7 @@ export const renderArrayType = ({
                         onChange,
                         formError,
                         setFormError,
+                        tokenInfo,
                       })}
                     </Box>
                   )}
