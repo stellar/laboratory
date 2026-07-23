@@ -7,7 +7,15 @@ import { useStore } from "@/store/useStore";
 
 import { Box } from "@/components/layout/Box";
 
+import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
+import { useGetTokenInfoFromRpc } from "@/query/useGetTokenInfoFromRpc";
+
 import { InvokeContractForm, SigningMethod } from "./InvokeContractForm";
+
+// SEP-41 core functions used to decide whether a contract is token-shaped
+// before spending a simulation on `decimals()`. Requiring all three avoids
+// firing on non-token contracts that coincidentally expose a `decimals`.
+const TOKEN_SHAPE_FUNCS = ["decimals", "transfer", "balance"];
 
 export const InvokeContract = ({
   isLoading,
@@ -20,8 +28,23 @@ export const InvokeContract = ({
   contractSpec: contract.Spec;
   contractClientError: Error | null | undefined;
 }) => {
-  const { walletKit } = useStore();
+  const { network, walletKit } = useStore();
   const [signingMethod, setSigningMethod] = useState<SigningMethod>("wallet");
+
+  const funcNames = new Set(
+    contractSpec?.funcs()?.map((func) => func.name().toString()) || [],
+  );
+  const isTokenShaped = TOKEN_SHAPE_FUNCS.every((fn) => funcNames.has(fn));
+
+  // Resolve decimals/symbol once per contract. When this returns null (not a
+  // token, or simulation failed), amount fields render as plain integers.
+  const { data: tokenInfo } = useGetTokenInfoFromRpc({
+    contractId,
+    networkPassphrase: network.passphrase,
+    rpcUrl: network.rpcUrl,
+    headers: getNetworkHeaders(network, "rpc"),
+    enabled: isTokenShaped && Boolean(network.rpcUrl),
+  });
 
   const renderFunctionCard = () => {
     const invokeContractSpecFuncs = contractSpec?.funcs();
@@ -38,6 +61,7 @@ export const InvokeContract = ({
             contractId={contractId}
             funcName={funcName}
             signingMethod={signingMethod}
+            tokenInfo={tokenInfo || undefined}
           />
         );
       });

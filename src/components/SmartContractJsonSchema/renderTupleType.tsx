@@ -9,6 +9,7 @@ import {
   AnyObject,
   JsonSchemaFormProps,
   SorobanInvokeValue,
+  TokenInfo,
 } from "@/types/types";
 
 export const renderTupleType = ({
@@ -19,6 +20,7 @@ export const renderTupleType = ({
   renderer,
   formError,
   setFormError,
+  tokenInfo,
 }: {
   path: string[];
   schema: JSONSchema7;
@@ -27,6 +29,7 @@ export const renderTupleType = ({
   renderer: (props: JsonSchemaFormProps) => React.ReactNode;
   formError: AnyObject;
   setFormError: (error: AnyObject) => void;
+  tokenInfo?: TokenInfo;
 }) => {
   const getKeyName = get(parsedSorobanOperation.args, path.join("."));
 
@@ -58,6 +61,7 @@ export const renderTupleType = ({
                 onChange,
                 formError,
                 setFormError,
+                tokenInfo,
               })}
             </Box>
           </Card>
