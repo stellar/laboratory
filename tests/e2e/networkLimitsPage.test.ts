@@ -96,7 +96,13 @@ test.describe("Network Limits page on Mainnet", () => {
     ]);
 
     await expect(getTableRow(rows, 10)).toHaveText([
-      "Individual ledger entry sizeincluding Wasm entries",
+      "Individual ledger entry sizecontract data entry",
+      `${formatFileSize(MAINNET_LIMITS.contract_data_entry_size_bytes, "binary")}`,
+      "",
+    ]);
+
+    await expect(getTableRow(rows, 11)).toHaveText([
+      "Contract code (Wasm) sizecontract code entry",
       `${formatFileSize(MAINNET_LIMITS.contract_max_size_bytes, "binary")}`,
       "",
     ]);

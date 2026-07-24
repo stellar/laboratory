@@ -111,7 +111,7 @@ export interface TxResourceBreakdown {
   max_rw_key_byte_network_limit: number;
   max_rw_key_byte_usage_percent: string;
 
-  /** Maximum size in bytes of a single ledger entry data value accessed (network limit: 128 KiB = 131,072 bytes) */
+  /** Maximum size in bytes of a single ledger entry data value accessed (network limit: 64 KiB = 65,536 bytes) */
   max_rw_data_byte: number;
   max_rw_data_byte_network_limit: number;
   max_rw_data_byte_usage_percent: string;
@@ -298,10 +298,10 @@ export const getTxResourceBreakdown = (
     ),
     max_rw_data_byte: maxRwDataByte,
     max_rw_data_byte_network_limit:
-      CURRENT_NETWORK_LIMITS.contract_max_size_bytes,
+      CURRENT_NETWORK_LIMITS.contract_data_entry_size_bytes,
     max_rw_data_byte_usage_percent: calculateUsagePercent(
       maxRwDataByte,
-      CURRENT_NETWORK_LIMITS.contract_max_size_bytes,
+      CURRENT_NETWORK_LIMITS.contract_data_entry_size_bytes,
     ),
     max_rw_code_byte: maxRwCodeByte,
     max_emit_event_byte: maxEmitEventByte,

@@ -187,7 +187,16 @@ const ResourceLimitsSection = ({
     },
     {
       setting: "Individual ledger entry size",
-      setting_note: "including Wasm entries",
+      setting_note: "contract data entry",
+      perTransaction: formatBytes(
+        limits.contract_data_entry_size_bytes,
+        "binary",
+      ),
+      ledgerWide: undefined,
+    },
+    {
+      setting: "Contract code (Wasm) size",
+      setting_note: "contract code entry",
       perTransaction: formatBytes(limits.contract_max_size_bytes, "binary"),
       ledgerWide: undefined,
     },
