@@ -5,10 +5,9 @@ import {
   Input,
   Text,
   Button,
-  Notification,
   Link,
   Icon,
-  Alert,
+  Notification,
 } from "@stellar/design-system";
 import { useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
@@ -510,8 +509,7 @@ export default function FundAccount() {
           </Box>
 
           {isFriendBotFetchedAfterMount && friendBotError ? (
-            <Alert
-              placement="inline"
+            <Notification
               variant="error"
               title="Error funding XLM"
               onClose={() => {
@@ -519,12 +517,11 @@ export default function FundAccount() {
               }}
             >
               {friendBotError.message}
-            </Alert>
+            </Notification>
           ) : null}
 
           {addTrustlineError ? (
-            <Alert
-              placement="inline"
+            <Notification
               variant="error"
               title="Error adding trustline"
               onClose={() => {
@@ -532,12 +529,11 @@ export default function FundAccount() {
               }}
             >
               {addTrustlineError.message}
-            </Alert>
+            </Notification>
           ) : null}
 
           {accountInfoError ? (
-            <Alert
-              placement="inline"
+            <Notification
               variant="error"
               title="Error fetching account info"
               onClose={() => {
@@ -545,7 +541,7 @@ export default function FundAccount() {
               }}
             >
               {accountInfoError.message}
-            </Alert>
+            </Notification>
           ) : null}
 
           {addTrustlineTx ? (
@@ -560,13 +556,12 @@ export default function FundAccount() {
               customFooter={
                 <Box gap="lg">
                   {submitError ? (
-                    <Alert
-                      placement="inline"
+                    <Notification
                       variant="error"
                       title="Error submitting transaction"
                     >
                       {submitError.message}
-                    </Alert>
+                    </Notification>
                   ) : null}
 
                   <Box gap="lg" direction="row" justify="end">

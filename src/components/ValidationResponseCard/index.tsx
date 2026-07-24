@@ -1,10 +1,10 @@
-import { Alert, Card, Text } from "@stellar/design-system";
+import { Notification, Card, Text } from "@stellar/design-system";
 import { Box } from "@/components/layout/Box";
 import "./styles.scss";
 
 type ValidationResponseCard = {
   variant: "primary" | "success" | "error";
-  title: string | React.ReactNode;
+  title: string;
   response: string | React.ReactNode;
   subtitle?: string | React.ReactNode;
   note?: string | React.ReactNode;
@@ -30,9 +30,9 @@ export const ValidationResponseCard = ({
           data-variant={variant}
         >
           <>
-            <Alert variant={variant} placement="inline" title={title}>
+            <Notification variant={variant} title={title}>
               {subtitle ?? null}
-            </Alert>
+            </Notification>
 
             <Card variant="secondary" noPadding>
               <div className="ValidationResponseCard__content">{response}</div>

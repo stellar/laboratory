@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { Alert, Card } from "@stellar/design-system";
+import { Notification, Card } from "@stellar/design-system";
 
 import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 
@@ -171,11 +171,11 @@ export default function BuildTransaction() {
       />
 
       {isLegacyUrl ? (
-        <Alert variant="warning" placement="inline" title="">
+        <Notification variant="warning" title="">
           This transaction was loaded from a legacy URL format that will be
           removed in a future update. Please save your transaction to preserve
           it.
-        </Alert>
+        </Notification>
       ) : null}
 
       <Card>

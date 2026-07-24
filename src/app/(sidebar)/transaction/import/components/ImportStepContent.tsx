@@ -6,7 +6,7 @@ import {
   Transaction,
   TransactionBuilder,
 } from "@stellar/stellar-sdk";
-import { Alert } from "@stellar/design-system";
+import { Notification } from "@stellar/design-system";
 
 import { useImportFlowStore } from "@/store/createTransactionFlowStore";
 import { useStore } from "@/store/useStore";
@@ -123,34 +123,28 @@ export const ImportStepContent = ({
   const renderSuccessImportAlert = () => {
     if (isMultisigDeferred) {
       return (
-        <Alert
-          variant="primary"
-          title="Transaction imported."
-          placement="inline"
-        >
+        <Notification variant="primary" title="Transaction imported.">
           Signatures from unrecognized signers detected. Submit to verify.
-        </Alert>
+        </Notification>
       );
     }
     if (isReadyToSubmit) {
       return (
-        <Alert
+        <Notification
           variant="success"
           title="Transaction imported. All required signatures are included."
-          placement="inline"
         >
           You can proceed to submit
-        </Alert>
+        </Notification>
       );
     }
     return (
-      <Alert
+      <Notification
         variant="success"
         title="Transaction imported successfully."
-        placement="inline"
       >
         Review the details and continue to the next step.
-      </Alert>
+      </Notification>
     );
   };
 

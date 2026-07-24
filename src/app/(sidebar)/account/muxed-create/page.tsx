@@ -1,7 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Alert, Button, Input, Link, Text } from "@stellar/design-system";
+import {
+  Notification,
+  Button,
+  Input,
+  Link,
+  Text,
+} from "@stellar/design-system";
 
 import { useStore } from "@/store/useStore";
 
@@ -160,22 +166,17 @@ export default function CreateMuxedAccount() {
         </div>
       </PageCard>
 
-      <Alert
-        placement="inline"
-        variant="warning"
-        title="Muxed accounts are uncommon"
-      >
+      <Notification variant="warning" title="Muxed accounts are uncommon">
         Don’t use in a production environment unless you know what you’re doing.
-        Read more about Muxed accounts{" "}
+        Read more about Muxed accounts
         <Link href="https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos#muxed-accounts">
           here
         </Link>
         .
-      </Alert>
+      </Notification>
 
       {Boolean(sdkError) && (
-        <Alert
-          placement="inline"
+        <Notification
           variant="error"
           onClose={() => {
             setSdkError("");
@@ -183,7 +184,7 @@ export default function CreateMuxedAccount() {
           title={sdkError}
         >
           {""}
-        </Alert>
+        </Notification>
       )}
     </div>
   );

@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import {
   Text,
-  Alert,
+  Notification,
   Link,
   Loader,
   Button,
@@ -310,7 +310,7 @@ export default function ViewXdr() {
         </Box>
       </PageCard>
 
-      <Alert variant="primary" placement="inline">
+      <Notification variant="primary" title="">
         <div>
           You can use use this tool to decode XDR into JSON.{" "}
           <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/data-format/xdr">
@@ -334,7 +334,7 @@ export default function ViewXdr() {
           </SdsLink>
           .
         </div>
-      </Alert>
+      </Notification>
     </Box>
   );
 }

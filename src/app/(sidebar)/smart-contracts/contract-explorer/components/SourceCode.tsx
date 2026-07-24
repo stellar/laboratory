@@ -1,5 +1,5 @@
 import {
-  Alert,
+  Notification,
   Code,
   Link,
   Loader,
@@ -129,13 +129,13 @@ export const SourceCode = ({
 
       {isSourceStellarExpert ? (
         <>
-          <Alert variant="primary" placement="inline">
+          <Notification variant="primary" title="Source Code Information">
             Please note that the source code provided is from the{" "}
             <Link href="https://stellar.expert">Stellar.Expert</Link> API and
             not from contract build verification. This contract has no build
             verification configured. As such, it may not reflect the contract
             deployed on-chain.
-          </Alert>
+          </Notification>
 
           <PoweredByStellarExpert />
         </>

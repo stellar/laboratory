@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import {
-  Alert,
+  Notification,
   Badge,
   Button,
   Icon,
@@ -443,15 +443,14 @@ export const SavedEndpointsPage = () => {
         />
       </PageCard>
 
-      <Alert
+      <Notification
         variant="primary"
         title="Looking for your saved transactions?"
-        placement="inline"
       >
         <NextLink href={Routes.SAVED_TRANSACTIONS} sds-variant="primary">
           See saved transactions
         </NextLink>
-      </Alert>
+      </Notification>
 
       <Modal
         visible={

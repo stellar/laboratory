@@ -1,6 +1,12 @@
 "use client";
 
-import { Text, Alert, Button, Icon, Textarea } from "@stellar/design-system";
+import {
+  Text,
+  Notification,
+  Button,
+  Icon,
+  Textarea,
+} from "@stellar/design-system";
 import * as StellarXdr from "@/helpers/StellarXdr";
 
 import { Box } from "@/components/layout/Box";
@@ -119,7 +125,7 @@ export default function ToXdr() {
         </Box>
       </PageCard>
 
-      <Alert variant="primary" placement="inline">
+      <Notification variant="primary" title="">
         <div>
           You can use this tool to encode JSON into XDR.{" "}
           <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/data-format/xdr">
@@ -143,7 +149,7 @@ export default function ToXdr() {
           </SdsLink>
           .
         </div>
-      </Alert>
+      </Notification>
     </Box>
   );
 }

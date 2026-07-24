@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import {
-  Alert,
+  Notification,
   Text,
   Input,
   Icon,
@@ -69,10 +69,9 @@ export default function SavedKeypairs() {
         network.id === "testnet" ? "futurenet" : "testnet";
 
       return (
-        <Alert
+        <Notification
           variant="primary"
           title={`Looking for ${otherNetworkLabel} keypairs?`}
-          placement="inline"
           actionLabel={`Switch to ${otherNetworkLabel}`}
           onAction={() => {
             const newNetworkId =
@@ -84,7 +83,7 @@ export default function SavedKeypairs() {
           {`You must switch your network to ${otherNetworkLabel} in order to see those saved
           keypairs. This feature is only available on Futurenet and Testnet for
           security reasons.`}
-        </Alert>
+        </Notification>
       );
     }
 
@@ -165,7 +164,7 @@ export default function SavedKeypairs() {
       >
         <>
           {IS_TESTING_NETWORK ? (
-            <Alert variant="warning" placement="inline">
+            <Notification variant="warning" title="Security warning">
               Saved keypairs are stored in the browser’s localstorage
               unencrypted and with no protection. Anyone using this browser will
               be able to access the keys and the keys could be easily lost. Do
@@ -173,7 +172,7 @@ export default function SavedKeypairs() {
               mainnet. Do not reuse keypairs from futurenet or testnet on
               mainnet for security. For keys that will hold value, please
               consider using a Stellar wallet.
-            </Alert>
+            </Notification>
           ) : null}
         </>
 

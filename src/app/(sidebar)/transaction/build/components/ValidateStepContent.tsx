@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Alert, Button, Card, Icon, Link } from "@stellar/design-system";
+import { Notification, Button, Card, Icon, Link } from "@stellar/design-system";
 
 import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 import { useStore } from "@/store/useStore";
@@ -119,10 +119,10 @@ export const ValidateStepContent = () => {
 
       <PageCard>
         {!network.rpcUrl ? (
-          <Alert variant="warning" placement="inline" title="Attention">
+          <Notification variant="warning" title="Attention">
             RPC URL is required to validate auth entries. You can add it in the
             network settings in the upper right corner.
-          </Alert>
+          </Notification>
         ) : null}
 
         <Box gap="lg">
@@ -176,27 +176,22 @@ export const ValidateStepContent = () => {
       {hasValidationResult && (
         <Card>
           <Box gap="md">
-            {/* Success alert */}
+            {/* Success Notification */}
             {isValidationSuccess && (
-              <Alert
+              <Notification
                 variant="success"
-                placement="inline"
                 title="Auth entries validated"
                 icon={<Icon.CheckCircle />}
               >
                 All authorization entry signatures are valid. The transaction is
                 ready to submit.
-              </Alert>
+              </Notification>
             )}
-            {/* Error alert */}
+            {/* Error Notification */}
             {hasError && (
-              <Alert
-                variant="error"
-                placement="inline"
-                title="Validation failed"
-              >
+              <Notification variant="error" title="Validation failed">
                 {""}
-              </Alert>
+              </Notification>
             )}
             <div data-testid="validate-step-response">
               <CodeEditor

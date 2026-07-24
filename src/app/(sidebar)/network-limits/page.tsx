@@ -1,6 +1,6 @@
 "use client";
 
-import { Alert, Icon, Text, Tooltip } from "@stellar/design-system";
+import { Notification, Icon, Text, Tooltip } from "@stellar/design-system";
 import { useContext, useState } from "react";
 
 import { useStore } from "@/store/useStore";
@@ -13,11 +13,7 @@ import { LabelHeading } from "@/components/LabelHeading";
 import { SwitchNetworkButtons } from "@/components/SwitchNetworkButtons";
 import { Tabs } from "@/components/Tabs";
 import { CodeEditor } from "@/components/CodeEditor";
-import {
-  GridTable,
-  GridTableRow,
-  GridTableCell,
-} from "@/components/GridTable";
+import { GridTable, GridTableRow, GridTableCell } from "@/components/GridTable";
 
 import {
   formatLedgersToDays,
@@ -54,11 +50,7 @@ export default function NetworkLimits() {
     <div className="NetworkLimits">
       <PageCard heading="Network limits">
         {network.id === "custom" ? (
-          <Alert
-            placement="inline"
-            variant="warning"
-            title="Network limits unavailable"
-          >
+          <Notification variant="warning" title="Network limits unavailable">
             <Box gap="md">
               Network limit data is not available for the selected custom
               network.
@@ -70,7 +62,7 @@ export default function NetworkLimits() {
                 />
               </Box>
             </Box>
-          </Alert>
+          </Notification>
         ) : (
           <>
             <Box gap="sm">
@@ -286,10 +278,7 @@ const ResourceLimitsSection = ({
             </GridTableRow>
 
             {resourceLimits.map((item, index) => (
-              <GridTableRow
-                key={`per-${index}`}
-                isEmpty={!item.perTransaction}
-              >
+              <GridTableRow key={`per-${index}`} isEmpty={!item.perTransaction}>
                 <GridTableCell isRowHeader>
                   {item.setting}
                   {item.setting_note ? (
@@ -549,7 +538,6 @@ const ResourceFeesSection = ({
     </Box>
   );
 };
-
 
 // =============================================================================
 // Helpers

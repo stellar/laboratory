@@ -1,9 +1,9 @@
-import { Alert } from "@stellar/design-system";
+import { Notification } from "@stellar/design-system";
 import { SdsLink } from "@/components/SdsLink";
 
 export const Bindings = () => {
   return (
-    <Alert variant="primary" placement="inline">
+    <Notification variant="primary" title="">
       Bindings are a feature of the Stellar CLI that generate fully typed client
       libraries for your smart contracts, tailored to your chosen programming
       language, including TypeScript, JSON, Rust, Python, and Java. This makes
@@ -15,6 +15,6 @@ export const Bindings = () => {
         Stellar CLI’s bindings command
       </SdsLink>
       .
-    </Alert>
+    </Notification>
   );
 };

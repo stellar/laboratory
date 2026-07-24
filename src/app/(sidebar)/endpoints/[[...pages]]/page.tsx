@@ -3,7 +3,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import {
-  Alert,
   Button,
   Card,
   CopyText,
@@ -722,10 +721,7 @@ export default function Endpoints() {
             </Button>
 
             {!isRpcEndpoint && (
-              <CopyText
-                textToCopy={requestUrl}
-                doneLabel="Horizon URL copied"
-              >
+              <CopyText textToCopy={requestUrl} doneLabel="Horizon URL copied">
                 <Button
                   size="md"
                   variant="tertiary"
@@ -1040,9 +1036,9 @@ export default function Endpoints() {
       {endpointData || endpointError ? (
         <div ref={responseEl}>
           {endpointError ? (
-            <Alert placement="inline" variant="error" title="Error">
+            <Notification variant="error" title="Error">
               {`${endpointError}`}
-            </Alert>
+            </Notification>
           ) : null}
 
           {endpointData ? (
@@ -1116,9 +1112,9 @@ export default function Endpoints() {
         </div>
       ) : null}
 
-      <Alert variant="primary" placement="inline">
+      <Notification variant="primary" title="">
         {renderInfoMessage()}
-      </Alert>
+      </Notification>
 
       <SaveToLocalStorageModal
         type="save"

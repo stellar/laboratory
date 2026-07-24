@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Alert, Input, Icon, Button } from "@stellar/design-system";
+import { Notification, Input, Icon, Button } from "@stellar/design-system";
 import { useRouter } from "next/navigation";
 
 import { NextLink } from "@/components/NextLink";
@@ -154,7 +154,6 @@ export default function SavedTransactions() {
         rightElement={
           <InputSideElement
             variant="button"
-            placement="right"
             onClick={() => {
               setCurrentTxnTimestamp(txn.timestamp);
             }}
@@ -237,25 +236,20 @@ export default function SavedTransactions() {
         </Box>
       </PageCard>
 
-      <Alert
+      <Notification
         variant="primary"
         title="Looking for your other saved transactions?"
-        placement="inline"
         icon={<Icon.Server06 />}
       >
         Switch your network in the top right to see your other saved
         transactions.
-      </Alert>
+      </Notification>
 
-      <Alert
-        variant="primary"
-        title="Looking for your saved requests?"
-        placement="inline"
-      >
+      <Notification variant="primary" title="Looking for your saved requests?">
         <NextLink href={`${Routes.SAVED_ENDPOINTS}`} sds-variant="primary">
           See saved requests
         </NextLink>
-      </Alert>
+      </Notification>
 
       <SaveToLocalStorageModal
         type="editName"

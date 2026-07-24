@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Text, Button, Icon, Alert } from "@stellar/design-system";
+import { Text, Button, Icon, Notification } from "@stellar/design-system";
 import StellarHDWallet from "stellar-hd-wallet";
 
 import { useStore } from "@/store/useStore";
@@ -195,8 +195,7 @@ export default function CreateAccount() {
       />
 
       {!IS_TESTING_NETWORK ? (
-        <Alert
-          placement="inline"
+        <Notification
           variant="warning"
           title="Please Avoid Using Private Keys Directly on Mainnet"
         >
@@ -206,7 +205,7 @@ export default function CreateAccount() {
           accidental misuse. Instead, connect your wallet and sign transactions
           securely. Wallets are designed to manage keys safely and protect your
           assets.
-        </Alert>
+        </Notification>
       ) : null}
 
       <SaveToLocalStorageModal

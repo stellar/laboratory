@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Alert } from "@stellar/design-system";
+import { Notification } from "@stellar/design-system";
 import {
   parse as jsonParse,
   stringify as jsonStringify,
@@ -158,9 +158,9 @@ export default function Explorer() {
   const errorMessage = isError ? error?.message : null;
 
   const errorElement = errorMessage ? (
-    <Alert variant="error" placement="inline">
+    <Notification variant="error" title="Error">
       {errorMessage}
-    </Alert>
+    </Notification>
   ) : null;
 
   return (

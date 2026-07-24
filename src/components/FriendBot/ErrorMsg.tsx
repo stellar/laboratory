@@ -1,4 +1,4 @@
-import { Alert } from "@stellar/design-system";
+import { Notification } from "@stellar/design-system";
 
 export const ErrorMsg = ({
   onClose,
@@ -10,12 +10,7 @@ export const ErrorMsg = ({
   errorMsg: string | undefined;
 }) =>
   isVisible ? (
-    <Alert
-      placement="inline"
-      variant="error"
-      onClose={onClose}
-      title={errorMsg}
-    >
+    <Notification variant="error" onClose={onClose} title={errorMsg || ""}>
       {""}
-    </Alert>
+    </Notification>
   ) : null;

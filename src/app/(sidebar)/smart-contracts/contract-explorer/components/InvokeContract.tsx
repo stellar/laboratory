@@ -1,7 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Alert, Card, Loader, RadioButton, Text } from "@stellar/design-system";
+import {
+  Notification,
+  Card,
+  Loader,
+  RadioButton,
+  Text,
+} from "@stellar/design-system";
 import { contract } from "@stellar/stellar-sdk";
 import { useStore } from "@/store/useStore";
 
@@ -46,15 +52,15 @@ export const InvokeContract = ({
   const renderError = () => {
     if (contractClientError?.message) {
       return (
-        <Alert variant="error" placement="inline" title="Error">
+        <Notification variant="error" title="Error">
           {contractClientError?.message}
-        </Alert>
+        </Notification>
       );
     }
     return (
-      <Alert variant="error" placement="inline" title="Error">
+      <Notification variant="error" title="Error">
         An unexpected error occurred while fetching the contract specification.
-      </Alert>
+      </Notification>
     );
   };
 
@@ -94,10 +100,10 @@ export const InvokeContract = ({
       </Box>
 
       {!walletKit?.publicKey && signingMethod === "wallet" ? (
-        <Alert variant="warning" placement="inline" title="Connect wallet">
+        <Notification variant="warning" title="Connect wallet">
           A connected wallet is required to invoke this contract. Please connect
           your wallet to proceed.
-        </Alert>
+        </Notification>
       ) : null}
 
       <Card>

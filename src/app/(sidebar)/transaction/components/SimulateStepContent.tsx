@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import {
-  Alert,
+  Notification,
   Button,
   Card,
   Icon,
@@ -372,10 +372,10 @@ export const SimulateStepContent = ({
       <PageHeader heading="Simulate transaction" as="h1" />
       <PageCard>
         {!network.rpcUrl ? (
-          <Alert variant="warning" placement="inline" title="Attention">
+          <Notification variant="warning" title="Attention">
             RPC URL is required to simulate a transaction. You can add it in the
             network settings in the upper right corner.
-          </Alert>
+          </Notification>
         ) : null}
 
         <Box gap="lg">
@@ -471,9 +471,9 @@ export const SimulateStepContent = ({
       })}
 
       {assemblyWarning ? (
-        <Alert variant="warning" placement="inline" title="Assembly warning">
+        <Notification variant="warning" title="Assembly warning">
           {assemblyWarning}
-        </Alert>
+        </Notification>
       ) : null}
 
       {/* Simulation success */}
@@ -574,36 +574,33 @@ const renderAlert = ({
 }) => {
   if (isReadOnly && isSimulationSuccess) {
     return (
-      <Alert
+      <Notification
         variant="warning"
-        placement="inline"
         title="This transaction is read only."
         icon={<Icon.CheckCircle />}
       >
         Read-only transactions don’t modify the ledger, and submitting to the
         network will still incur a fee.
-      </Alert>
+      </Notification>
     );
   }
 
   if (isSimulationSuccess && !hasAuthEntries) {
     return (
-      <Alert
+      <Notification
         variant="success"
-        placement="inline"
         title="Transaction simulation successful"
         icon={<Icon.CheckCircle />}
       >
         Simulation completed successfully.
-      </Alert>
+      </Notification>
     );
   }
 
   if (hasAuthEntries && isSimulationSuccess) {
     return (
-      <Alert
+      <Notification
         variant="success"
-        placement="inline"
         title="Transaction simulation successful"
         icon={<Icon.CheckCircle />}
       >
@@ -612,15 +609,15 @@ const renderAlert = ({
           authorization entries
         </Text>{" "}
         that need to be validated before submitting.
-      </Alert>
+      </Notification>
     );
   }
 
   if (hasError) {
     return (
-      <Alert variant="error" placement="inline" title="Simulation failed">
+      <Notification variant="error" title="Simulation failed">
         {errorMessage}
-      </Alert>
+      </Notification>
     );
   }
 

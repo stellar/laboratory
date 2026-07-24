@@ -1,7 +1,7 @@
 "use client";
 
 import { use } from "react";
-import { Alert, Loader } from "@stellar/design-system";
+import { Notification, Loader } from "@stellar/design-system";
 import { rpc as StellarRpc } from "@stellar/stellar-sdk";
 
 import { PageCard } from "@/components/layout/PageCard";
@@ -23,9 +23,9 @@ export default function Tx({ params }: { params: Promise<{ tx: string }> }) {
   });
 
   const errorElement = tx.error && (
-    <Alert variant="error" placement="inline">
+    <Notification variant="error" title="Error">
       {String(tx.error)}
-    </Alert>
+    </Notification>
   );
 
   if (tx.data && !tx.error && "envelopeXdr" in tx.data) {

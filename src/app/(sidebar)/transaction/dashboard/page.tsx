@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
-  Alert,
+  Notification,
   Button,
   Card,
   Icon,
@@ -251,10 +251,10 @@ export default function TransactionDashboard() {
     <Box gap="lg">
       <PageCard heading="Transaction dashboard">
         {!network.rpcUrl ? (
-          <Alert variant="warning" placement="inline" title="Attention">
+          <Notification variant="warning" title="Attention">
             RPC URL is required to view transaction information. You can add it
             in the network settings in the upper right corner.
-          </Alert>
+          </Notification>
         ) : null}
 
         <form
@@ -315,9 +315,8 @@ export default function TransactionDashboard() {
       </PageCard>
 
       {isTxNotFound ? (
-        <Alert
+        <Notification
           variant="warning"
-          placement="inline"
           title="This transaction can’t be found here."
         >
           <Box gap="md">
@@ -335,7 +334,7 @@ export default function TransactionDashboard() {
               {renderExternalButtons()}
             </Box>
           </Box>
-        </Alert>
+        </Notification>
       ) : null}
 
       <TransactionInfo
