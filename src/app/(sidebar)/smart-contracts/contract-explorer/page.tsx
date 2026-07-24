@@ -23,7 +23,6 @@ import { PageCard } from "@/components/layout/PageCard";
 import { MessageField } from "@/components/MessageField";
 import { TabView } from "@/components/TabView";
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
-import { ContractSelector } from "@/components/ContractSelector";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
@@ -31,6 +30,7 @@ import { useSacXdrData } from "@/hooks/useSacXdrData";
 
 import { ContractInfo } from "./components/ContractInfo";
 import { InvokeContract } from "./components/InvokeContract";
+import { AddressSelector } from "@/components/AddressSelector";
 
 export default function ContractExplorer() {
   const { network, smartContracts, savedContractId, clearSavedContractId } =
@@ -327,7 +327,8 @@ export default function ContractExplorer() {
                   handleContractIdChange(e.target.value);
                 }}
                 rightElement={
-                  <ContractSelector.Button
+                  <AddressSelector.Button
+                    mode="contract"
                     onClick={() =>
                       setIsContractSelectorOpen(!isContractSelectorOpen)
                     }
@@ -335,7 +336,8 @@ export default function ContractExplorer() {
                 }
               />
 
-              <ContractSelector.Dropdown
+              <AddressSelector.Dropdown
+                mode="contract"
                 isOpen={isContractSelectorOpen}
                 onClose={() => setIsContractSelectorOpen(false)}
                 onChange={(val) => {

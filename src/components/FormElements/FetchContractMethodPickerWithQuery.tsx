@@ -211,10 +211,12 @@ export const FetchContractMethodPickerWithQuery = ({
         onChange={(e) => handleContractIdChange(e.target.value)}
         disabled={disabled}
         rightElement={
-          <AddressSelector.Button
-            mode="contract"
-            onClick={() => setIsSelectorOpen(!isSelectorOpen)}
-          />
+          !disabled && (
+            <AddressSelector.Button
+              mode="contract"
+              onClick={() => setIsSelectorOpen(!isSelectorOpen)}
+            />
+          )
         }
       />
       <AddressSelector.Dropdown

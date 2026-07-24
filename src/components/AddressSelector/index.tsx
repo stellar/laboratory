@@ -311,7 +311,8 @@ const OptionItem = ({
         const address = getAddress(item);
 
         return (
-          <div
+          <button
+            type="button"
             className="AddressSelector__dropdown__item__value"
             key={`${address}-${index}`}
             onClick={() => {
@@ -320,7 +321,7 @@ const OptionItem = ({
             }}
           >
             {renderItem(item)}
-          </div>
+          </button>
         );
       })}
     </div>
