@@ -1433,7 +1433,9 @@
 }
 
 .SourceAccountPicker,
-.SignerSelectorWrapper {
+.FetchContractMethodPicker,
+.SignerSelectorWrapper,
+.AddressSelectorWrapper {
   position: relative;
 }
 
@@ -1448,7 +1450,7 @@
   &__input {
     position: relative;
 
-    .SignerSelector__dropdown {
+    .AddressSelector__dropdown {
       top: calc(var(--sds-gap-xxl) + var(--sds-gap-sm));
     }
   }

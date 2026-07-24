@@ -1,6 +1,7 @@
 "use client";
 
 import { JSX, useEffect, useRef } from "react";
+import { Icon } from "@stellar/design-system";
 
 import { useStore } from "@/store/useStore";
 
@@ -15,58 +16,53 @@ import { SavedContract, SavedKeypair } from "@/types/types";
 
 import "./styles.scss";
 
-type SignerMode = "public" | "secret";
-
-// "wallet" and "keypair" resolve to a public/secret key, while "contract"
-// resolves to a contract address.
-type SignerOptionKind = "wallet" | "keypair" | "contract";
+// "ScAddress" - built in type 'address' in Soroban which can
+// include both a 'classic' Stellar account, custom account, or contract
+type AddressMode = "public" | "secret" | "ScAddress" | "contract";
+type AddressOptionKind = "wallet" | "keypair" | "contract";
 
 type WalletItem = { publicKey: string };
-type SignerOptionItem = WalletItem | SavedKeypair | SavedContract;
+type AddressOptionItem = WalletItem | SavedKeypair | SavedContract;
 
-type SignerOptionGroup = {
+type AddressOptionGroup = {
   label: string;
-  kind: SignerOptionKind;
-  items: SignerOptionItem[];
+  kind: AddressOptionKind;
+  items: AddressOptionItem[];
 };
 
 type ButtonProps = {
-  mode: SignerMode;
+  mode: AddressMode;
   onClick: () => void;
-  // Smart contract addresses are only valid in some contexts (e.g. the
-  // JsonSchema `address` field), so they are opt-in.
-  includeContracts?: boolean;
 };
 
 type DropdownProps = {
+  // Called with the selected address (public key, secret key, or contract id).
   onChange: (val: string) => void;
   isOpen: boolean;
   onClose: () => void;
-  mode: SignerMode;
-  includeContracts?: boolean;
+  mode: AddressMode;
 };
 
-interface SignerSelectorComponent {
+interface AddressSelectorComponent {
   Button: (props: ButtonProps) => JSX.Element;
   Dropdown: (props: DropdownProps) => JSX.Element;
 }
 
-const getTitle = ({ mode }: { mode: SignerMode }) => {
+const getTitle = ({ mode }: { mode: AddressMode }) => {
   switch (mode) {
     case "public":
+    case "ScAddress":
       return "Get address";
     case "secret":
       return "Use secret key";
+    case "contract":
+      return "Get contract ID";
     default:
       return "";
   }
 };
 
-const SignerSelectorButton = ({
-  mode,
-  onClick,
-  includeContracts = false,
-}: ButtonProps): JSX.Element => {
+const AddressSelectorButton = ({ mode, onClick }: ButtonProps): JSX.Element => {
   const { walletKit, network } = useStore();
   const { publicKey: walletKitPubKey } = walletKit || {};
 
@@ -76,13 +72,12 @@ const SignerSelectorButton = ({
     (keypair) => keypair.network.id === network.id,
   );
 
-  // Contracts only apply in public mode (they have no secret key to sign with).
-  const showContracts = includeContracts && mode === "public";
-  const currentNetworkContracts = showContracts
-    ? localStorageSavedContracts
-        .get()
-        .filter((contract) => contract.network.id === network.id)
-    : [];
+  const currentNetworkContracts =
+    mode === "ScAddress" || mode === "contract"
+      ? localStorageSavedContracts
+          .get()
+          .filter((contract) => contract.network.id === network.id)
+      : [];
 
   const hasKeypairs = currentNetworkKeypairs.length > 0;
   const hasContracts = currentNetworkContracts.length > 0;
@@ -91,16 +86,14 @@ const SignerSelectorButton = ({
   const title = getTitle({ mode });
 
   // No sources available
-  if (!hasKeypairs && !hasWallet && !hasContracts) {
-    return <></>;
-  }
+  if (!hasKeypairs && !hasWallet && !hasContracts) return <></>;
 
   // Secret mode requires saved keypairs
-  if (mode === "secret" && !hasKeypairs) {
-    return <></>;
-  }
+  if (mode === "secret" && !hasKeypairs) return <></>;
 
-  // Public Signer mode with only wallet - show direct button
+  if (mode === "contract" && !hasContracts) return <></>;
+
+  // Public Address mode with only wallet - show direct button
   if (mode === "public" && !hasKeypairs && !hasContracts && hasWallet) {
     return (
       <InputSideElement variant="button" onClick={onClick} placement="right">
@@ -110,18 +103,22 @@ const SignerSelectorButton = ({
   }
 
   return (
-    <InputSideElement variant="button" onClick={onClick} placement="right">
+    <InputSideElement
+      variant="button"
+      onClick={onClick}
+      placement="right"
+      icon={<Icon.ChevronDown />}
+    >
       {title}
     </InputSideElement>
   );
 };
 
-const SignerSelectorDropdown = ({
+const AddressSelectorDropdown = ({
   onChange,
   isOpen,
   onClose,
   mode,
-  includeContracts = false,
 }: DropdownProps): JSX.Element => {
   const { walletKit, network } = useStore();
   const { publicKey: walletKitPubKey } = walletKit || {};
@@ -131,13 +128,12 @@ const SignerSelectorDropdown = ({
     (keypair) => keypair.network.id === network.id,
   );
 
-  // Contracts only apply in public mode (they have no secret key to sign with).
-  const showContracts = includeContracts && mode === "public";
-  const currentNetworkContracts = showContracts
-    ? localStorageSavedContracts
-        .get()
-        .filter((contract) => contract.network.id === network.id)
-    : [];
+  const currentNetworkContracts =
+    mode === "ScAddress" || mode === "contract"
+      ? localStorageSavedContracts
+          .get()
+          .filter((contract) => contract.network.id === network.id)
+      : [];
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   // Close the dropdown on any click outside of it. The listener lives on
@@ -163,10 +159,19 @@ const SignerSelectorDropdown = ({
     };
   }, [isOpen, onClose]);
 
-  const getAvailableOptions = (): SignerOptionGroup[] => {
-    const availableOptions: SignerOptionGroup[] = [];
+  const getAvailableOptions = (): AddressOptionGroup[] => {
+    const availableOptions: AddressOptionGroup[] = [];
 
-    if (walletKitPubKey && mode === "public") {
+    if (mode === "contract") {
+      availableOptions.push({
+        label: "Saved contracts",
+        kind: "contract",
+        items: currentNetworkContracts,
+      });
+      return availableOptions;
+    }
+
+    if (walletKitPubKey && (mode === "public" || mode === "ScAddress")) {
       availableOptions.push({
         label: "Connected Wallet",
         kind: "wallet",
@@ -200,7 +205,7 @@ const SignerSelectorDropdown = ({
   }
 
   return (
-    <div ref={dropdownRef} className="SignerSelector__dropdown">
+    <div ref={dropdownRef} className="AddressSelector__dropdown">
       {options.map((option, index) => {
         return (
           <OptionItem
@@ -219,11 +224,11 @@ const SignerSelectorDropdown = ({
 };
 
 const getLabel = (label: string, columnLabel: string | null) => (
-  <div className="SignerSelector__dropdown__item__label">
+  <div className="AddressSelector__dropdown__item__label">
     <div>{label}</div>
 
     {columnLabel ? (
-      <div className="SignerSelector__dropdown__item__label__savedKeypairs">
+      <div className="AddressSelector__dropdown__item__label__savedKeypairs">
         {columnLabel}
       </div>
     ) : null}
@@ -239,14 +244,14 @@ const OptionItem = ({
   mode,
 }: {
   label: string;
-  kind: SignerOptionKind;
-  items: SignerOptionItem[];
+  kind: AddressOptionKind;
+  items: AddressOptionItem[];
   onChange: (val: string) => void;
   onClose: () => void;
-  mode: SignerMode;
+  mode: AddressMode;
 }) => {
   // The address a given item resolves to in the input field.
-  const getAddress = (item: SignerOptionItem) => {
+  const getAddress = (item: AddressOptionItem) => {
     if (kind === "contract") {
       return (item as SavedContract).contractId;
     }
@@ -272,7 +277,7 @@ const OptionItem = ({
 
   const renderNamedItem = (name: string, address: string) => {
     return (
-      <div className="SignerSelector__dropdown__item__value__keypair">
+      <div className="AddressSelector__dropdown__item__value__keypair">
         <div className="keypair_name">[{truncateString(name, 55)}]</div>
         <div className="keypair_publickey">
           {shortenStellarAddress(address)}
@@ -281,7 +286,7 @@ const OptionItem = ({
     );
   };
 
-  const renderItem = (item: SignerOptionItem) => {
+  const renderItem = (item: AddressOptionItem) => {
     if (kind === "keypair") {
       const keypair = item as SavedKeypair;
       return renderNamedItem(keypair.name, keypair.publicKey);
@@ -297,8 +302,8 @@ const OptionItem = ({
 
   return (
     <div
-      className="SignerSelector__dropdown__item"
-      data-testid="signer-selector-options"
+      className="AddressSelector__dropdown__item"
+      data-testid="address-selector-options"
     >
       {getLabel(label, getColumnLabel())}
 
@@ -307,7 +312,7 @@ const OptionItem = ({
 
         return (
           <div
-            className="SignerSelector__dropdown__item__value"
+            className="AddressSelector__dropdown__item__value"
             key={`${address}-${index}`}
             onClick={() => {
               onChange(address);
@@ -322,7 +327,7 @@ const OptionItem = ({
   );
 };
 
-export const SignerSelector = {
-  Button: SignerSelectorButton,
-  Dropdown: SignerSelectorDropdown,
-} as SignerSelectorComponent;
+export const AddressSelector = {
+  Button: AddressSelectorButton,
+  Dropdown: AddressSelectorDropdown,
+} as AddressSelectorComponent;

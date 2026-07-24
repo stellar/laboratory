@@ -10,7 +10,7 @@ import { TextPicker } from "@/components/FormElements/TextPicker";
 import { Box } from "@/components/layout/Box";
 import { InputSideElement } from "@/components/InputSideElement";
 import { LabelHeading } from "@/components/LabelHeading";
-import { SignerSelector } from "@/components/SignerSelector";
+import { AddressSelector } from "@/components/AddressSelector";
 
 type Values = string[];
 
@@ -99,7 +99,7 @@ export const MultiPicker = ({
                     rightElement={
                       <>
                         {useSecretSelector ? (
-                          <SignerSelector.Button
+                          <AddressSelector.Button
                             mode="secret"
                             onClick={() => {
                               setIsSelectorOpen({ visible: true, index });
@@ -123,7 +123,7 @@ export const MultiPicker = ({
                     isPassword={isPassword}
                   />
                   {useSecretSelector ? (
-                    <SignerSelector.Dropdown
+                    <AddressSelector.Dropdown
                       mode="secret"
                       isOpen={
                         index === isSelectorOpen.index && isSelectorOpen.visible

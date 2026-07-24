@@ -9,6 +9,7 @@ import { Box } from "@/components/layout/Box";
 import { ContractMethodSelectPicker } from "@/components/FormElements/ContractMethodSelectPicker";
 import { TextPicker } from "@/components/FormElements/TextPicker";
 import { MessageField } from "@/components/MessageField";
+import { AddressSelector } from "@/components/AddressSelector";
 
 import { useStore } from "@/store/useStore";
 import { validate } from "@/validate";
@@ -46,6 +47,7 @@ export const FetchContractMethodPickerWithQuery = ({
 
   const [contractIdError, setContractIdError] = useState<string>("");
   const [fetchError, setFetchError] = useState<string | null>(null);
+  const [isSelectorOpen, setIsSelectorOpen] = useState(false);
 
   const [fetchType, setFetchType] = useState<"sac" | "contract" | null>(null);
 
@@ -159,7 +161,7 @@ export const FetchContractMethodPickerWithQuery = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contractIdInput]);
 
-  const handleContractIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleContractIdChange = (contractId: string) => {
     // reset the error
     setFetchError("");
 
@@ -172,10 +174,8 @@ export const FetchContractMethodPickerWithQuery = ({
     queryClient.resetQueries({ queryKey: ["useGitHubFile"] });
 
     // validate the contract id
-    if (e.target.value) {
-      const validatedContractIdError = validate.getContractIdError(
-        e.target.value,
-      );
+    if (contractId) {
+      const validatedContractIdError = validate.getContractIdError(contractId);
       if (validatedContractIdError) {
         setContractIdError(validatedContractIdError);
       } else {
@@ -185,7 +185,7 @@ export const FetchContractMethodPickerWithQuery = ({
 
     // Clear stale method and args from the previous contract
     const newValue: SorobanInvokeValue = {
-      contract_id: e.target.value || "",
+      contract_id: contractId || "",
       function_name: "",
       args: {},
     };
@@ -200,7 +200,7 @@ export const FetchContractMethodPickerWithQuery = ({
   };
 
   return (
-    <Box gap="md">
+    <Box gap="md" addlClassName="FetchContractMethodPicker">
       <TextPicker
         key={id}
         id={id}
@@ -208,8 +208,20 @@ export const FetchContractMethodPickerWithQuery = ({
         placeholder="Ex: CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC"
         value={contractIdInput}
         error={error || contractIdError}
-        onChange={handleContractIdChange}
+        onChange={(e) => handleContractIdChange(e.target.value)}
         disabled={disabled}
+        rightElement={
+          <AddressSelector.Button
+            mode="contract"
+            onClick={() => setIsSelectorOpen(!isSelectorOpen)}
+          />
+        }
+      />
+      <AddressSelector.Dropdown
+        mode="contract"
+        onChange={handleContractIdChange}
+        isOpen={isSelectorOpen}
+        onClose={() => setIsSelectorOpen(false)}
       />
 
       <Box gap="sm">

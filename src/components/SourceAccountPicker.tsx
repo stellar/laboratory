@@ -6,7 +6,7 @@ import { Routes } from "@/constants/routes";
 
 import { SdsLink } from "@/components/SdsLink";
 import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
-import { SignerSelector } from "@/components/SignerSelector";
+import { AddressSelector } from "@/components/AddressSelector";
 
 type SourceAccountPickerProps = {
   value: string;
@@ -32,7 +32,7 @@ export const SourceAccountPicker = ({
           onChange(e.target.value);
         }}
         rightElement={
-          <SignerSelector.Button
+          <AddressSelector.Button
             mode="public"
             onClick={() => setIsSelectorOpen(!isSelectorOpen)}
           />
@@ -46,7 +46,7 @@ export const SourceAccountPicker = ({
         }
         infoLink="https://developers.stellar.org/docs/learn/glossary#source-account"
       />
-      <SignerSelector.Dropdown
+      <AddressSelector.Dropdown
         mode="public"
         onChange={onChange}
         isOpen={isSelectorOpen}

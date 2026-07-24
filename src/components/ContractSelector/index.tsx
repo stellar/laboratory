@@ -1,6 +1,7 @@
 "use client";
 
 import { JSX, useEffect, useRef } from "react";
+import { Icon } from "@stellar/design-system";
 
 import { useStore } from "@/store/useStore";
 
@@ -48,7 +49,12 @@ const ContractSelectorButton = ({ onClick }: ButtonProps): JSX.Element => {
   }
 
   return (
-    <InputSideElement variant="button" onClick={onClick} placement="right">
+    <InputSideElement
+      variant="button"
+      onClick={onClick}
+      placement="right"
+      icon={<Icon.ChevronDown />}
+    >
       Saved contracts
     </InputSideElement>
   );
