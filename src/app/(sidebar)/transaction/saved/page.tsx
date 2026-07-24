@@ -153,6 +153,7 @@ export default function SavedTransactions() {
         readOnly
         rightElement={
           <InputSideElement
+            placement="right"
             variant="button"
             onClick={() => {
               setCurrentTxnTimestamp(txn.timestamp);
