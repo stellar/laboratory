@@ -50,7 +50,12 @@ import { dereferenceSchema } from "@/helpers/dereferenceSchema";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { getTxnToSimulate } from "@/helpers/sorobanUtils";
 
-import { SorobanInvokeValue, XdrFormatType, AnyObject } from "@/types/types";
+import {
+  SorobanInvokeValue,
+  XdrFormatType,
+  AnyObject,
+  TokenInfo,
+} from "@/types/types";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
@@ -71,11 +76,13 @@ export const InvokeContractForm = ({
   funcName,
   contractSpec,
   signingMethod = "wallet",
+  tokenInfo,
 }: {
   contractId: string;
   funcName: string;
   contractSpec: contract.Spec;
   signingMethod?: SigningMethod;
+  tokenInfo?: TokenInfo;
 }) => {
   const { network, walletKit } = useStore();
   const { resetAll, setBuildParams, setBuildSorobanOperation } =
@@ -626,6 +633,7 @@ export const InvokeContractForm = ({
               schema={dereferencedSchema as JSONSchema7}
               onChange={handleChange}
               parsedSorobanOperation={formValue}
+              tokenInfo={tokenInfo}
             />
           )}
       </Box>

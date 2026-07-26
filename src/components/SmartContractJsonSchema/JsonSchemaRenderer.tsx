@@ -21,6 +21,7 @@ export const JsonSchemaRenderer = ({
   parsedSorobanOperation,
   formError,
   setFormError,
+  tokenInfo,
 }: JsonSchemaFormProps) => {
   const schemaType = jsonSchema.getSchemaType(schema);
 
@@ -64,6 +65,7 @@ export const JsonSchemaRenderer = ({
                         parsedSorobanOperation={parsedSorobanOperation}
                         formError={formError}
                         setFormError={setFormError}
+                        tokenInfo={tokenInfo}
                       />
                     </Card>
                   </Box>
@@ -81,6 +83,7 @@ export const JsonSchemaRenderer = ({
                 parsedSorobanOperation={parsedSorobanOperation}
                 formError={formError}
                 setFormError={setFormError}
+                tokenInfo={tokenInfo}
               />
             );
           },
@@ -98,6 +101,7 @@ export const JsonSchemaRenderer = ({
       renderer: JsonSchemaRenderer,
       formError,
       setFormError,
+      tokenInfo,
     });
   }
 
@@ -111,6 +115,7 @@ export const JsonSchemaRenderer = ({
       renderer: JsonSchemaRenderer,
       formError,
       setFormError,
+      tokenInfo,
     });
   }
 
@@ -123,5 +128,6 @@ export const JsonSchemaRenderer = ({
     onChange,
     formError,
     setFormError,
+    tokenInfo,
   });
 };

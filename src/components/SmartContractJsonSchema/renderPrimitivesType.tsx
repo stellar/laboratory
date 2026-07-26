@@ -5,14 +5,18 @@ import { get } from "lodash";
 
 import { jsonSchema } from "@/helpers/jsonSchema";
 import { convertSpecTypeToScValType } from "@/helpers/sorobanUtils";
+import { baseUnitsToTokenAmount } from "@/helpers/tokenAmount";
 
 import { validate } from "@/validate";
 
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 import { ColorTypePill } from "@/components/ColorTypePill";
 import { SignerSelector } from "@/components/SignerSelector";
+import { TokenAmountInput } from "@/components/SmartContractJsonSchema/TokenAmountInput";
 
-import type { AnyObject, SorobanInvokeValue } from "@/types/types";
+import { isSep41AmountArg } from "@/constants/sep41AmountArgs";
+
+import type { AnyObject, SorobanInvokeValue, TokenInfo } from "@/types/types";
 
 /**
  * Address Input with SignerSelector for selecting from saved keypairs or
@@ -59,6 +63,7 @@ export const renderPrimitivesType = ({
   onChange,
   formError,
   setFormError,
+  tokenInfo,
 }: {
   name: string;
   schema: Partial<JSONSchema7>;
@@ -67,6 +72,7 @@ export const renderPrimitivesType = ({
   onChange: (value: SorobanInvokeValue) => void;
   formError: AnyObject;
   setFormError: (error: AnyObject) => void;
+  tokenInfo?: TokenInfo;
 }) => {
   const { description } = schema;
 
@@ -183,6 +189,61 @@ export const renderPrimitivesType = ({
     </div>
   );
 
+  // Set or clear a single field's error (mirrors handleValidate's behavior).
+  const setFieldError = (error: string | false) => {
+    if (error) {
+      setFormError({ ...formError, [formErrorKey]: error });
+    } else {
+      setFormError((prev: AnyObject) => {
+        const newFormError = { ...prev };
+        delete newFormError[formErrorKey];
+        return newFormError;
+      });
+    }
+  };
+
+  // Write a raw value directly (used by decimals-aware token entry, which
+  // computes the scaled base-unit integer itself).
+  const setRawValue = (raw: string, schemaType: string) => {
+    handleChange(
+      { target: { value: raw } } as React.ChangeEvent<HTMLInputElement>,
+      schemaType,
+    );
+  };
+
+  // Phase 2 passive note: for i128/u128 fields on a token contract, show the
+  // human-readable token equivalent of whatever raw value is entered.
+  const tokenUnitsNote = (rawValue: string) => {
+    if (!tokenInfo || tokenInfo.decimals === 0) {
+      return undefined;
+    }
+
+    if (!rawValue || !/^-?\d+$/.test(rawValue)) {
+      return undefined;
+    }
+
+    try {
+      const label = tokenInfo.symbol || "tokens";
+      const amount = baseUnitsToTokenAmount(rawValue, tokenInfo.decimals);
+
+      return `= ${amount} ${label} (${tokenInfo.decimals} ${
+        tokenInfo.decimals === 1 ? "decimal" : "decimals"
+      })`;
+    } catch {
+      return undefined;
+    }
+  };
+
+  // Phase 3: allowlisted top-level SEP-41 amount args get the token-units
+  // entry mode. A direct function argument reaches here with a single-segment
+  // path (e.g. ["amount"]); nested amounts (structs/vecs, path.length > 1) get
+  // the passive note only.
+  const isTokenAmountArg =
+    Boolean(tokenInfo) &&
+    (tokenInfo?.decimals ?? 0) > 0 &&
+    path.length <= 1 &&
+    isSep41AmountArg(parsedSorobanOperation.function_name, name);
+
   switch (schemaType) {
     case "Address":
       return (
@@ -259,11 +320,29 @@ export const renderPrimitivesType = ({
         />
       );
     case "U128":
+      if (isTokenAmountArg && tokenInfo) {
+        return (
+          <TokenAmountInput
+            key={path.join(".")}
+            id={path.join(".")}
+            label={InputLabel}
+            value={sharedProps.value}
+            decimals={tokenInfo.decimals}
+            symbol={tokenInfo.symbol}
+            isSigned={false}
+            error={sharedProps.error}
+            onRawChange={(raw) => setRawValue(raw, schemaType)}
+            onError={setFieldError}
+          />
+        );
+      }
+
       return (
         <PositiveIntPicker
           {...sharedProps}
           label={InputLabel}
           key={path.join(".")}
+          note={tokenUnitsNote(sharedProps.value)}
           onChange={(e) => {
             handleChange(e, schemaType);
             handleValidate(e, schemaType, validate.getU128Error);
@@ -309,11 +388,29 @@ export const renderPrimitivesType = ({
         />
       );
     case "I128":
+      if (isTokenAmountArg && tokenInfo) {
+        return (
+          <TokenAmountInput
+            key={path.join(".")}
+            id={path.join(".")}
+            label={InputLabel}
+            value={sharedProps.value}
+            decimals={tokenInfo.decimals}
+            symbol={tokenInfo.symbol}
+            isSigned={true}
+            error={sharedProps.error}
+            onRawChange={(raw) => setRawValue(raw, schemaType)}
+            onError={setFieldError}
+          />
+        );
+      }
+
       return (
         <Input
           {...sharedProps}
           key={path.join(".")}
           label={InputLabel}
+          note={tokenUnitsNote(sharedProps.value)}
           onChange={(e) => {
             handleChange(e, schemaType);
             handleValidate(e, schemaType, validate.getI128Error);

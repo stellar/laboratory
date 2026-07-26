@@ -289,6 +289,17 @@ export type ScValPrimitiveType =
   | "DataUrl"
   | "Bool";
 
+/**
+ * Token metadata resolved via read-only simulation of a SEP-41 token's
+ * `decimals()` / `symbol()`. Present only when the invoked contract is
+ * token-shaped and the simulation succeeded; otherwise amount inputs behave
+ * exactly as plain integers.
+ */
+export type TokenInfo = {
+  decimals: number;
+  symbol?: string;
+};
+
 export type JsonSchemaFormProps = {
   name: string;
   schema: JSONSchema7;
@@ -299,6 +310,7 @@ export type JsonSchemaFormProps = {
   parsedSorobanOperation: SorobanInvokeValue;
   formError: AnyObject;
   setFormError: (error: AnyObject) => void;
+  tokenInfo?: TokenInfo;
 };
 // =============================================================================
 // RPC

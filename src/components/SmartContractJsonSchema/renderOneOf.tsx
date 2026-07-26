@@ -10,6 +10,7 @@ import {
   AnyObject,
   JsonSchemaFormProps,
   SorobanInvokeValue,
+  TokenInfo,
 } from "@/types/types";
 import { renderTupleType } from "./renderTupleType";
 
@@ -24,6 +25,7 @@ export const renderOneOf = ({
   onChange,
   formError,
   setFormError,
+  tokenInfo,
 }: {
   name: string;
   schema: JSONSchema7;
@@ -33,6 +35,7 @@ export const renderOneOf = ({
   onChange: (value: SorobanInvokeValue) => void;
   formError: AnyObject;
   setFormError: (error: AnyObject) => void;
+  tokenInfo?: TokenInfo;
 }) => {
   if (!schema?.oneOf) {
     return null;
@@ -162,6 +165,7 @@ export const renderOneOf = ({
             renderer,
             formError,
             setFormError,
+            tokenInfo,
           })
         : null}
     </Box>

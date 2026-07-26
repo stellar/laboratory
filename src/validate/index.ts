@@ -22,6 +22,7 @@ import { getPublicKeyError } from "./methods/getPublicKeyError";
 import { getRevokeSponsorshipError } from "./methods/getRevokeSponsorshipError";
 import { getSecretKeyError } from "./methods/getSecretKeyError";
 import { getTimeBoundsError } from "./methods/getTimeBoundsError";
+import { getTokenAmountError } from "./methods/getTokenAmountError";
 import { getTransactionHashError } from "./methods/getTransactionHashError";
 import { getXdrError } from "./methods/getXdrError";
 import { getU32Error } from "./methods/getU32Error";
@@ -61,6 +62,7 @@ export const validate = {
   getRevokeSponsorshipError,
   getSecretKeyError,
   getTimeBoundsError,
+  getTokenAmountError,
   getTransactionHashError,
   getXdrError,
   getU32Error,
