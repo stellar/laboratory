@@ -1,21 +1,8 @@
 @use "../../styles/utils.scss" as *;
 
 .ValidationResponseCard {
-  --ValidationResponseCard-title-color: var(--sds-clr-gray-12);
-
-  &[data-variant="success"] {
-    --ValidationResponseCard-title-color: var(--sds-clr-green-11);
-  }
-  &[data-variant="error"] {
-    --ValidationResponseCard-title-color: var(--sds-clr-red-11);
-  }
-
   .Card {
     --Card-padding: #{pxToRem(16px)};
-  }
-
-  &__title {
-    color: var(--ValidationResponseCard-title-color);
   }
 
   &__subtitle,

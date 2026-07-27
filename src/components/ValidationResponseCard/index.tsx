@@ -24,11 +24,7 @@ export const ValidationResponseCard = ({
   return (
     <div className="ValidationResponseCard">
       <Card>
-        <Box
-          gap="lg"
-          // addlClassName="ValidationResponseCard"
-          data-variant={variant}
-        >
+        <Box gap="lg">
           <>
             <Notification variant={variant} title={title}>
               {subtitle ?? null}
