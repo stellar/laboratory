@@ -167,12 +167,14 @@ export default function CreateMuxedAccount() {
       </PageCard>
 
       <Notification variant="warning" title="Muxed accounts are uncommon">
-        Don’t use in a production environment unless you know what you’re doing.
-        Read more about Muxed accounts
-        <Link href="https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos#muxed-accounts">
-          here
-        </Link>
-        .
+        <div>
+          Don’t use in a production environment unless you know what you’re
+          doing. Read more about Muxed accounts
+          <Link href="https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos#muxed-accounts">
+            here
+          </Link>
+          .
+        </div>
       </Notification>
 
       {Boolean(sdkError) && (

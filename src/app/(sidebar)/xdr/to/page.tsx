@@ -65,6 +65,35 @@ export default function ToXdr() {
 
   const jsonXdrEncoded = jsonEncodeXdr();
 
+  const renderInfoMessage = () => {
+    return (
+      <>
+        <div>
+          You can use this tool to encode JSON into XDR.{" "}
+          <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/data-format/xdr">
+            XDR (External Data Representation)
+          </SdsLink>{" "}
+          is a standardized data format that the Stellar network uses to encode
+          data. The XDR ⇄ JSON tool helps you convert Stellar XDR blobs into a
+          human-readable JSON format, and vice versa.
+        </div>
+        <div>
+          To learn more about converting between XDR and JSON, including
+          libraries for JavaScript (npm), Go, and Rust, check out the{" "}
+          <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/data-format/xdr-json">
+            XDR ⇄ JSON guide
+          </SdsLink>{" "}
+          on the Stellar Developer Docs. To see the XDR ⇄ JSON conversion
+          specification, please see{" "}
+          <SdsLink href="https://stellar.org/protocol/sep-51">
+            SEP-51 XDR-JSON
+          </SdsLink>
+          .
+        </div>{" "}
+      </>
+    );
+  };
+
   return (
     <Box gap="md">
       <PageCard heading="To XDR">
@@ -125,31 +154,7 @@ export default function ToXdr() {
         </Box>
       </PageCard>
 
-      <Notification variant="primary" title="">
-        <div>
-          You can use this tool to encode JSON into XDR.{" "}
-          <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/data-format/xdr">
-            XDR (External Data Representation)
-          </SdsLink>{" "}
-          is a standardized data format that the Stellar network uses to encode
-          data. The XDR ⇄ JSON tool helps you convert Stellar XDR blobs into a
-          human-readable JSON format, and vice versa.
-        </div>
-
-        <div>
-          To learn more about converting between XDR and JSON, including
-          libraries for JavaScript (npm), Go, and Rust, check out the{" "}
-          <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/data-format/xdr-json">
-            XDR ⇄ JSON guide
-          </SdsLink>{" "}
-          on the Stellar Developer Docs. To see the XDR ⇄ JSON conversion
-          specification, please see{" "}
-          <SdsLink href="https://stellar.org/protocol/sep-51">
-            SEP-51 XDR-JSON
-          </SdsLink>
-          .
-        </div>
-      </Notification>
+      <Notification variant="primary" title={renderInfoMessage()} />
     </Box>
   );
 }

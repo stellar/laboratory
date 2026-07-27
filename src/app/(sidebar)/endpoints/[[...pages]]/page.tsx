@@ -1112,9 +1112,7 @@ export default function Endpoints() {
         </div>
       ) : null}
 
-      <Notification variant="primary" title="">
-        {renderInfoMessage()}
-      </Notification>
+      <Notification variant="primary" title={renderInfoMessage()} />
 
       <SaveToLocalStorageModal
         type="save"
