@@ -614,7 +614,7 @@ export const SubmitStepContent = ({
                 {getButtonLabel()}
               </Button>
               <div
-                className="SubmitTx__floater Floater__content Floater__content--light"
+                className="SubmitTx__floater SubmitTx__floater--up Floater__content Floater__content--light"
                 data-is-active={isDropdownActive}
                 data-is-visible={isDropdownVisible}
                 ref={dropdownRef}

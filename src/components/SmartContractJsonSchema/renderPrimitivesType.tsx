@@ -10,15 +10,15 @@ import { validate } from "@/validate";
 
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 import { ColorTypePill } from "@/components/ColorTypePill";
-import { SignerSelector } from "@/components/SignerSelector";
+import { AddressSelector as AddressSelectorComponent } from "@/components/AddressSelector";
 
 import type { AnyObject, SorobanInvokeValue } from "@/types/types";
 
 /**
- * Address Input with SignerSelector for selecting from saved keypairs or
+ * Address Input with AddressSelector for selecting from saved keypairs or
  * connected wallet.
  */
-const AddressInputWithSignerSelector = (
+const AddressInputSelector = (
   props: InputProps &
     React.InputHTMLAttributes<HTMLInputElement> & {
       onValueSelect: (val: string) => void;
@@ -28,18 +28,18 @@ const AddressInputWithSignerSelector = (
   const { onValueSelect, ...inputProps } = props;
 
   return (
-    <div className="SignerSelectorWrapper">
+    <div className="AddressSelectorWrapper">
       <Input
         {...inputProps}
         rightElement={
-          <SignerSelector.Button
-            mode="public"
+          <AddressSelectorComponent.Button
+            mode="ScAddress"
             onClick={() => setIsSelectorOpen(!isSelectorOpen)}
           />
         }
       />
-      <SignerSelector.Dropdown
-        mode="public"
+      <AddressSelectorComponent.Dropdown
+        mode="ScAddress"
         onChange={(val) => {
           onValueSelect(val);
           setIsSelectorOpen(false);
@@ -186,7 +186,7 @@ export const renderPrimitivesType = ({
   switch (schemaType) {
     case "Address":
       return (
-        <AddressInputWithSignerSelector
+        <AddressInputSelector
           {...sharedProps}
           label={InputLabel}
           onChange={(e) => {

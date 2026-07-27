@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 
 import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
-import { SignerSelector } from "@/components/SignerSelector";
+import { AddressSelector } from "@/components/AddressSelector";
 
 type PubKeyPickerWithSignerSelectorProps = {
   id: string;
@@ -59,13 +59,13 @@ export const PubKeyPickerWithSignerSelector = ({
         error={error}
         onChange={(e) => onChange(e.target.value)}
         rightElement={
-          <SignerSelector.Button
+          <AddressSelector.Button
             mode="public"
             onClick={() => setIsSelectorOpen(!isSelectorOpen)}
           />
         }
       />
-      <SignerSelector.Dropdown
+      <AddressSelector.Dropdown
         mode="public"
         onChange={(val) => {
           onChange(val);

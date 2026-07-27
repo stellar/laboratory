@@ -164,23 +164,23 @@ test.describe("Smart Contracts: Contract Selector", () => {
     // The selector button only appears when there are saved contracts for the
     // current network.
     const savedContractsBtn = pageContext.getByRole("button", {
-      name: "Saved contracts",
+      name: "Get contract ID",
     });
     await expect(savedContractsBtn).toBeVisible();
     await savedContractsBtn.click();
 
-    const options = pageContext.getByTestId("contract-selector-options");
+    const options = pageContext.getByTestId("address-selector-options");
     await expect(options).toBeVisible();
 
     // Group label + column note
-    const label = options.locator(".ContractSelector__dropdown__item__label");
+    const label = options.locator(".AddressSelector__dropdown__item__label");
     await expect(label.locator("div").first()).toHaveText("Saved contracts");
     await expect(
-      label.locator(".ContractSelector__dropdown__item__label__note"),
+      label.locator(".AddressSelector__dropdown__item__label__savedKeypairs"),
     ).toHaveText("Contract ID");
 
     // Each saved contract is listed as "[name]shortenedId"
-    const values = options.locator(".ContractSelector__dropdown__item__value");
+    const values = options.locator(".AddressSelector__dropdown__item__value");
     await expect(values.nth(0)).toHaveText("[Contract 1]CA7E...DQQB");
     await expect(values.nth(1)).toHaveText("[Contract 2]CBAS...JMUQ");
 
@@ -198,10 +198,10 @@ test.describe("Smart Contracts: Contract Selector", () => {
 
   test("Saved contract options are keyboard focusable and activatable", async () => {
     await pageContext
-      .getByRole("button", { name: "Saved contracts" })
+      .getByRole("button", { name: "Get contract ID" })
       .click();
 
-    const options = pageContext.getByTestId("contract-selector-options");
+    const options = pageContext.getByTestId("address-selector-options");
     await expect(options).toBeVisible();
 
     // The options are real buttons: focusable and activatable via the keyboard
