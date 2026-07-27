@@ -195,6 +195,21 @@ test.describe("Simulate Step — Source account auth entries skip signing", () =
     // Next button should be ENABLED — auto-assembly happened
     const nextButton = page.locator('[data-position="right"]');
     await expect(nextButton).toBeEnabled();
+
+    // Successful assembly renders the assembled XDR label and value
+    await expect(
+      page.getByText("Simulated transaction (Base64 XDR)"),
+    ).toBeVisible();
+
+    const assembledXdr = await page.evaluate(() => {
+      const stored = sessionStorage.getItem("stellar_lab_tx_flow_build");
+      return stored ? JSON.parse(stored).state.simulate.assembledXdr : "";
+    });
+    expect(assembledXdr).toBeTruthy();
+
+    await expect(page.locator(".SignStepContent__xdrText")).toHaveText(
+      assembledXdr,
+    );
   });
 
   test("Mixed entries: auth signing card shows, but only address entries need signing", async ({
