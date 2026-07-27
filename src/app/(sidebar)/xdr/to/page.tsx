@@ -18,6 +18,7 @@ import { PageCard } from "@/components/layout/PageCard";
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { useStore } from "@/store/useStore";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
+import { openUrl } from "@/helpers/openUrl";
 
 export default function ToXdr() {
   const { xdr } = useStore();
@@ -68,28 +69,13 @@ export default function ToXdr() {
   const renderInfoMessage = () => {
     return (
       <>
-        <div>
-          You can use this tool to encode JSON into XDR.{" "}
-          <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/data-format/xdr">
-            XDR (External Data Representation)
-          </SdsLink>{" "}
-          is a standardized data format that the Stellar network uses to encode
-          data. The XDR ⇄ JSON tool helps you convert Stellar XDR blobs into a
-          human-readable JSON format, and vice versa.
-        </div>
-        <div>
-          To learn more about converting between XDR and JSON, including
-          libraries for JavaScript (npm), Go, and Rust, check out the{" "}
-          <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/data-format/xdr-json">
-            XDR ⇄ JSON guide
-          </SdsLink>{" "}
-          on the Stellar Developer Docs. To see the XDR ⇄ JSON conversion
-          specification, please see{" "}
-          <SdsLink href="https://stellar.org/protocol/sep-51">
-            SEP-51 XDR-JSON
-          </SdsLink>
-          .
-        </div>{" "}
+        Decode and encode Stellar{" "}
+        <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/data-format/xdr">
+          XDR (External Data Representation)
+        </SdsLink>
+        , the binary format Stellar uses to encode network data, into
+        human-readable JSON, and vice versa. Libraries available for JavaScript
+        (npm), Go, and Rust.
       </>
     );
   };
@@ -154,7 +140,16 @@ export default function ToXdr() {
         </Box>
       </PageCard>
 
-      <Notification variant="primary" title={renderInfoMessage()} />
+      <Notification
+        variant="primary"
+        title={renderInfoMessage()}
+        onAction={() => {
+          openUrl(
+            "https://developers.stellar.org/docs/learn/fundamentals/data-format/xdr-json",
+          );
+        }}
+        actionLabel="XDR ⇄ JSON guide"
+      />
     </Box>
   );
 }
