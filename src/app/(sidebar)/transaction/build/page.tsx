@@ -171,11 +171,12 @@ export default function BuildTransaction() {
       />
 
       {isLegacyUrl ? (
-        <Notification variant="warning" title="">
-          This transaction was loaded from a legacy URL format that will be
+        <Notification
+          variant="warning"
+          title="This transaction was loaded from a legacy URL format that will be
           removed in a future update. Please save your transaction to preserve
-          it.
-        </Notification>
+          it."
+        />
       ) : null}
 
       <Card>

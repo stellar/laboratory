@@ -10,7 +10,5 @@ export const ErrorMsg = ({
   errorMsg: string | undefined;
 }) =>
   isVisible ? (
-    <Notification variant="error" onClose={onClose} title={errorMsg || ""}>
-      {""}
-    </Notification>
+    <Notification variant="error" onClose={onClose} title={errorMsg || ""} />
   ) : null;

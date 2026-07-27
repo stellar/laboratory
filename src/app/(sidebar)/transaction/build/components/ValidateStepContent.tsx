@@ -189,9 +189,7 @@ export const ValidateStepContent = () => {
             )}
             {/* Error Notification */}
             {hasError && (
-              <Notification variant="error" title="Validation failed">
-                {""}
-              </Notification>
+              <Notification variant="error" title="Validation failed" />
             )}
             <div data-testid="validate-step-response">
               <CodeEditor
