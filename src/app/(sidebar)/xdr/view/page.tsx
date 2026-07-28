@@ -25,6 +25,7 @@ import { TransactionHashReadOnlyField } from "@/components/TransactionHashReadOn
 import { LabelHeading } from "@/components/LabelHeading";
 import { CopyJsonPayloadButton } from "@/components/CopyJsonPayloadButton";
 import { PageCard } from "@/components/layout/PageCard";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { JsonCodeWrapToggle } from "@/components/JsonCodeWrapToggle";
 
 import { delayedAction } from "@/helpers/delayedAction";
@@ -196,7 +197,8 @@ export default function ViewXdr() {
 
   return (
     <Box gap="md">
-      <PageCard heading="View XDR">
+      <PageHeader heading="View XDR" />
+      <PageCard>
         <Box gap="lg">
           <XdrPicker
             id="view-xdr-blob"

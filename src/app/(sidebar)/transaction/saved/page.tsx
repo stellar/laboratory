@@ -11,6 +11,7 @@ import { InputSideElement } from "@/components/InputSideElement";
 import { ShareUrlButton } from "@/components/ShareUrlButton";
 import { SavedItemTimestampAndDelete } from "@/components/SavedItemTimestampAndDelete";
 import { PageCard } from "@/components/layout/PageCard";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 
 import { useStore } from "@/store/useStore";
@@ -225,7 +226,8 @@ export default function SavedTransactions() {
 
   return (
     <Box gap="md" data-testid="saved-transactions-container">
-      <PageCard heading="Saved transactions">
+      <PageHeader heading="Saved transactions" />
+      <PageCard>
         <Box gap="md">
           <>
             {savedTxns.length === 0

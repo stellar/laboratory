@@ -23,6 +23,7 @@ import { PrettyJsonTextarea } from "@/components/PrettyJsonTextarea";
 import { ShareUrlButton } from "@/components/ShareUrlButton";
 import { CopyJsonPayloadButton } from "@/components/CopyJsonPayloadButton";
 import { PageCard } from "@/components/layout/PageCard";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 import { JsonCodeWrapToggle } from "@/components/JsonCodeWrapToggle";
 
@@ -1004,7 +1005,7 @@ export default function Endpoints() {
 
   return (
     <>
-      <PageCard
+      <PageHeader
         heading={page?.label}
         rightElement={
           <SdsLink
@@ -1015,7 +1016,8 @@ export default function Endpoints() {
             View Docs
           </SdsLink>
         }
-      >
+      />
+      <PageCard>
         <form className="PageBody" onSubmit={handleSubmit}>
           {renderEndpointUrl()}
 

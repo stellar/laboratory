@@ -9,6 +9,7 @@ import { ExpandBox } from "@/components/ExpandBox";
 import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
 import { MuxedAccountResult } from "@/components/MuxedAccountResult";
 import { PageCard } from "@/components/layout/PageCard";
+import { PageHeader } from "@/components/layout/PageHeader";
 
 import { muxedAccount } from "@/helpers/muxedAccount";
 
@@ -60,10 +61,11 @@ export default function ParseMuxedAccount() {
 
   return (
     <div className="Account">
-      <PageCard
+      <PageHeader
         heading="Get muxed account from M address"
         headingInfoLink="https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos"
-      >
+      />
+      <PageCard>
         <div className="Account__card">
           <PubKeyPicker
             id="muxed-account-address"

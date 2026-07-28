@@ -15,6 +15,7 @@ import { Box } from "@/components/layout/Box";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { XdrTypeSelect } from "@/components/XdrTypeSelect";
 import { PageCard } from "@/components/layout/PageCard";
+import { PageHeader } from "@/components/layout/PageHeader";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { useStore } from "@/store/useStore";
@@ -70,7 +71,8 @@ export default function ToXdr() {
 
   return (
     <Box gap="md">
-      <PageCard heading="To XDR">
+      <PageHeader heading="To XDR" />
+      <PageCard>
         <Box gap="lg">
           <Textarea
             id="to-xdr-json"

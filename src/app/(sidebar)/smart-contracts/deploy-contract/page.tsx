@@ -19,6 +19,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import { Box } from "@/components/layout/Box";
 import { PageCard } from "@/components/layout/PageCard";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { FilePicker } from "@/components/FilePicker";
 import { JsonSchemaRenderer } from "@/components/SmartContractJsonSchema/JsonSchemaRenderer";
 import { SourceAccountPicker } from "@/components/SourceAccountPicker";
@@ -982,7 +983,7 @@ export default function DeployContract() {
 
   return (
     <Box gap="lg">
-      <PageCard
+      <PageHeader
         heading="Upload and deploy contract"
         rightElement={
           <Button
@@ -1001,9 +1002,8 @@ export default function DeployContract() {
             Clear
           </Button>
         }
-      >
-        {renderContent()}
-      </PageCard>
+      />
+      <PageCard>{renderContent()}</PageCard>
     </Box>
   );
 }

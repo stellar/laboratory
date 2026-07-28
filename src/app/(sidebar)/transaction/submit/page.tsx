@@ -44,6 +44,7 @@ import { TxResponse } from "@/components/TxResponse";
 import { XdrLink } from "@/components/XdrLink";
 import { TransactionHashReadOnlyField } from "@/components/TransactionHashReadOnlyField";
 import { PageCard } from "@/components/layout/PageCard";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 import { JsonCodeWrapToggle } from "@/components/JsonCodeWrapToggle";
 import {
@@ -452,7 +453,8 @@ export default function SubmitTransaction() {
 
   return (
     <Box gap="md" data-testid="submit-tx-xdr">
-      <PageCard heading="Submit transaction">
+      <PageHeader heading="Submit transaction" />
+      <PageCard>
         <Box gap="lg">
           <XdrPicker
             id="submit-tx-xdr"

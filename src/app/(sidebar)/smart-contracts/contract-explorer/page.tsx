@@ -26,6 +26,7 @@ import { delayedAction } from "@/helpers/delayedAction";
 
 import { Box } from "@/components/layout/Box";
 import { PageCard } from "@/components/layout/PageCard";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { MessageField } from "@/components/MessageField";
 import { TabView } from "@/components/TabView";
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
@@ -291,7 +292,8 @@ export default function ContractExplorer() {
 
   return (
     <Box gap="lg">
-      <PageCard heading="Contract explorer">
+      <PageHeader heading="Contract explorer" />
+      <PageCard>
         {!network.rpcUrl ? (
           <Notification variant="warning" title="Attention">
             RPC URL is required to view contract information. You can add it in

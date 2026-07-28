@@ -29,6 +29,7 @@ import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import { validate } from "@/validate";
 
 import { PageCard } from "@/components/layout/PageCard";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { Box } from "@/components/layout/Box";
 import { InputSideElement } from "@/components/InputSideElement";
 import { SignTransactionXdr } from "@/components/SignTransactionXdr";
@@ -304,16 +305,16 @@ export default function FundAccount() {
 
   return (
     <div className="Account">
-      <PageCard
-        heading={`Friendbot: fund a ${network.label} account or contract with XLM, USDC, and EURC`}
-      >
+      <PageHeader
+        heading={`Fund a ${network.label} account or contract with XLM, USDC, and EURC`}
+      />
+      <Text size="sm" as="div">
+        Friendbot is a standalone service that funds your testnet account or
+        contract with XLM. To fund assets such as USDC and EURC, you’ll need to
+        add a trustline manually before funding.
+      </Text>
+      <PageCard>
         <div className="Account__card">
-          <Text size="sm" as="div">
-            Friendbot is a standalone service that funds your testnet account or
-            contract with XLM. To fund assets such as USDC and EURC, you’ll need
-            to add a trustline manually before funding.
-          </Text>
-
           <Input
             id="fund-public-key-input"
             fieldSize="md"

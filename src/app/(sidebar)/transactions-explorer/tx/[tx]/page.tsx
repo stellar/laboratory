@@ -5,6 +5,7 @@ import { Notification, Loader } from "@stellar/design-system";
 import { rpc as StellarRpc } from "@stellar/stellar-sdk";
 
 import { PageCard } from "@/components/layout/PageCard";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { Box } from "@/components/layout/Box";
 
 import { useStore } from "@/store/useStore";
@@ -42,7 +43,8 @@ export default function Tx({ params }: { params: Promise<{ tx: string }> }) {
 
   return (
     <Box gap="md" data-testid="explorer">
-      <PageCard heading="Transaction envelope">
+      <PageHeader heading="Transaction envelope" />
+      <PageCard>
         {errorElement}
 
         {tx.isLoading && (

@@ -9,6 +9,7 @@ import {
 } from "lossless-json";
 
 import { PageCard } from "@/components/layout/PageCard";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { Box } from "@/components/layout/Box";
 
 import { useStore } from "@/store/useStore";
@@ -165,7 +166,8 @@ export default function Explorer() {
 
   return (
     <Box gap="md" data-testid="explorer" addlClassName="TransactionsExplorer">
-      <PageCard heading="Transactions explorer">
+      <PageHeader heading="Transactions explorer" />
+      <PageCard>
         {errorElement}
 
         <TransactionsTable

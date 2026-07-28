@@ -192,7 +192,7 @@ export const ImportStepContent = ({
 
       {overviewFields ? (
         <>
-          <PageCard heading="Transaction overview" headingAs="h2">
+          <PageCard>
             <div className="SignTx__FieldViewer">
               {overviewFields.map((field) => {
                 const valueStr =

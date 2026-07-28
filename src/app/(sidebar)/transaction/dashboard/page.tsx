@@ -14,6 +14,7 @@ import {
 } from "@stellar/design-system";
 
 import { PageCard } from "@/components/layout/PageCard";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { Box } from "@/components/layout/Box";
 import { MessageField } from "@/components/MessageField";
 import { SwitchNetworkButtons } from "@/components/SwitchNetworkButtons";
@@ -249,7 +250,8 @@ export default function TransactionDashboard() {
 
   return (
     <Box gap="lg">
-      <PageCard heading="Transaction dashboard">
+      <PageHeader heading="Transaction dashboard" />
+      <PageCard>
         {!network.rpcUrl ? (
           <Notification variant="warning" title="Attention">
             RPC URL is required to view transaction information. You can add it

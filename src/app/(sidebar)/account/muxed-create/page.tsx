@@ -16,6 +16,7 @@ import { MuxedAccountResult } from "@/components/MuxedAccountResult";
 import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
 import { SdsLink } from "@/components/SdsLink";
 import { PageCard } from "@/components/layout/PageCard";
+import { PageHeader } from "@/components/layout/PageHeader";
 
 import { muxedAccount } from "@/helpers/muxedAccount";
 
@@ -75,24 +76,21 @@ export default function CreateMuxedAccount() {
 
   return (
     <div className="Account">
-      <PageCard
-        heading="Create multiplexed account"
-        headingInfoLink="https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos"
-      >
+      <PageHeader heading="Create multiplexed account" />
+      <Text size="sm" as="div">
+        A muxed (or multiplexed) account (defined in{" "}
+        <SdsLink href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0027.md">
+          CAP-27
+        </SdsLink>{" "}
+        and briefly{" "}
+        <SdsLink href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0023.md">
+          SEP-23
+        </SdsLink>
+        ) is one that resolves a single Stellar G...account to many different
+        underlying IDs.
+      </Text>
+      <PageCard>
         <div className="Account__card">
-          <Text size="sm" as="div">
-            A muxed (or multiplexed) account (defined in{" "}
-            <SdsLink href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0027.md">
-              CAP-27
-            </SdsLink>{" "}
-            and briefly{" "}
-            <SdsLink href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0023.md">
-              SEP-23
-            </SdsLink>
-            ) is one that resolves a single Stellar G...account to many
-            different underlying IDs.
-          </Text>
-
           <PubKeyPicker
             id="muxed-public-key"
             label="Base Account G Address"
