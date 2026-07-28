@@ -20,7 +20,7 @@ import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { useStore } from "@/store/useStore";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
-import { renderViewXdrInfoMessage } from "../view/page";
+import { renderViewXdrInfoMessage } from "../components/renderViewXdrInfoMessage";
 
 export default function ToXdr() {
   const { xdr } = useStore();

@@ -17,7 +17,7 @@ import { useLatestTxn } from "@/query/useLatestTxn";
 import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
 
 import { Box } from "@/components/layout/Box";
-import { SdsLink } from "@/components/SdsLink";
+
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { XdrTypeSelect } from "@/components/XdrTypeSelect";
 import { PrettyJsonTransaction } from "@/components/PrettyJsonTransaction";
@@ -41,19 +41,7 @@ import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 import { AnyObject } from "@/types/types";
 
-export const renderViewXdrInfoMessage = () => {
-  return (
-    <>
-      Decode and encode Stellar{" "}
-      <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/data-format/xdr">
-        XDR (External Data Representation)
-      </SdsLink>
-      , the binary format Stellar uses to encode network data, into
-      human-readable JSON, and vice versa. Libraries available for JavaScript
-      (npm), Go, and Rust.
-    </>
-  );
-};
+import { renderViewXdrInfoMessage } from "../components/renderViewXdrInfoMessage";
 
 export default function ViewXdr() {
   const { xdr, network } = useStore();
