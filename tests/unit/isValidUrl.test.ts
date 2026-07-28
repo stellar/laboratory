@@ -59,4 +59,12 @@ describe("isValidUrl", () => {
     expect(isValidUrl("https://notalbedo.link")).toBe(true);
     expect(isValidUrl("https://albedo.link.evil.com")).toBe(true);
   });
+
+  it("should disallow subdomains of known wallet signer domains", () => {
+    expect(isValidUrl("https://app.freighter.app")).toBe(false);
+    expect(isValidUrl("https://wallet.xbull.app")).toBe(false);
+    expect(isValidUrl("https://www.mycactus.com")).toBe(false);
+    expect(isValidUrl("https://www.ledger.com")).toBe(false);
+    expect(isValidUrl("https://evil.sub.albedo.link")).toBe(false);
+  });
 });

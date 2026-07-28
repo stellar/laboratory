@@ -8,20 +8,21 @@ export const isValidUrl = (url: string) => {
     const notAllowedDomains = [
       "albedo.link",
       "mycactus.com",
-      "www.mycactus.com",
       "xbull.app",
-      "wallet.xbull.app",
       "freighter.app",
       "lobstr.co",
       "rabet.io",
       "hanawallet.io",
       "ledger.com",
-      "www.ledger.com",
       "hot-labs.org",
     ];
     const hostname = parsedUrl.hostname.replace(/\.+$/, "");
 
-    if (notAllowedDomains.includes(hostname)) {
+    if (
+      notAllowedDomains.some(
+        (domain) => hostname === domain || hostname.endsWith(`.${domain}`),
+      )
+    ) {
       return false;
     }
 
