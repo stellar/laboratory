@@ -7,10 +7,11 @@ import {
   Icon,
   Textarea,
 } from "@stellar/design-system";
+
 import * as StellarXdr from "@/helpers/StellarXdr";
+import { openUrl } from "@/helpers/openUrl";
 
 import { Box } from "@/components/layout/Box";
-import { SdsLink } from "@/components/SdsLink";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { XdrTypeSelect } from "@/components/XdrTypeSelect";
 import { PageCard } from "@/components/layout/PageCard";
@@ -18,7 +19,8 @@ import { PageCard } from "@/components/layout/PageCard";
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { useStore } from "@/store/useStore";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
-import { openUrl } from "@/helpers/openUrl";
+
+import { renderViewXdrInfoMessage } from "../view/page";
 
 export default function ToXdr() {
   const { xdr } = useStore();
@@ -65,20 +67,6 @@ export default function ToXdr() {
   };
 
   const jsonXdrEncoded = jsonEncodeXdr();
-
-  const renderInfoMessage = () => {
-    return (
-      <>
-        Decode and encode Stellar{" "}
-        <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/data-format/xdr">
-          XDR (External Data Representation)
-        </SdsLink>
-        , the binary format Stellar uses to encode network data, into
-        human-readable JSON, and vice versa. Libraries available for JavaScript
-        (npm), Go, and Rust.
-      </>
-    );
-  };
 
   return (
     <Box gap="md">
@@ -142,7 +130,7 @@ export default function ToXdr() {
 
       <Notification
         variant="primary"
-        title={renderInfoMessage()}
+        title={renderViewXdrInfoMessage()}
         onAction={() => {
           openUrl(
             "https://developers.stellar.org/docs/learn/fundamentals/data-format/xdr-json",

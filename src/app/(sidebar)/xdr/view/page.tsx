@@ -31,14 +31,29 @@ import { delayedAction } from "@/helpers/delayedAction";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { prettifyJsonString } from "@/helpers/prettifyJsonString";
 import { decodeXdr } from "@/helpers/decodeXdr";
+import { openUrl } from "@/helpers/openUrl";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { useCodeWrappedSetting } from "@/hooks/useCodeWrappedSetting";
 import { useStore } from "@/store/useStore";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
+
 import { AnyObject } from "@/types/types";
-import { openUrl } from "@/helpers/openUrl";
+
+export const renderViewXdrInfoMessage = () => {
+  return (
+    <>
+      Decode and encode Stellar{" "}
+      <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/data-format/xdr">
+        XDR (External Data Representation)
+      </SdsLink>
+      , the binary format Stellar uses to encode network data, into
+      human-readable JSON, and vice versa. Libraries available for JavaScript
+      (npm), Go, and Rust.
+    </>
+  );
+};
 
 export default function ViewXdr() {
   const { xdr, network } = useStore();
@@ -191,20 +206,6 @@ export default function ViewXdr() {
     return null;
   };
 
-  const renderInfoMessage = () => {
-    return (
-      <>
-        Decode and encode Stellar{" "}
-        <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/data-format/xdr">
-          XDR (External Data Representation)
-        </SdsLink>
-        , the binary format Stellar uses to encode network data, into
-        human-readable JSON, and vice versa. Libraries available for JavaScript
-        (npm), Go, and Rust.
-      </>
-    );
-  };
-
   return (
     <Box gap="md">
       <PageCard heading="View XDR">
@@ -327,7 +328,7 @@ export default function ViewXdr() {
 
       <Notification
         variant="primary"
-        title={renderInfoMessage()}
+        title={renderViewXdrInfoMessage()}
         onAction={() => {
           openUrl(
             "https://developers.stellar.org/docs/learn/fundamentals/data-format/xdr-json",

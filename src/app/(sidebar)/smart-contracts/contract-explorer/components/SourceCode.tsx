@@ -13,8 +13,9 @@ import { ErrorText } from "@/components/ErrorText";
 import { PoweredByStellarExpert } from "@/components/PoweredByStellarExpert";
 
 import { useGitHubReadmeText } from "@/query/useGitHubReadmeText";
-import { openUrl } from "@/helpers/openUrl";
 import { NoInfoLoadedView } from "@/components/NoInfoLoadedView";
+
+import { openUrl } from "@/helpers/openUrl";
 
 export const SourceCode = ({
   isActive,
