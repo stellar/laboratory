@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import {
-  Alert,
+  Notification,
   Text,
   Input,
   Icon,
@@ -15,6 +15,7 @@ import { Box } from "@/components/layout/Box";
 import { InputSideElement } from "@/components/InputSideElement";
 import { SavedItemTimestampAndDelete } from "@/components/SavedItemTimestampAndDelete";
 import { PageCard } from "@/components/layout/PageCard";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 import { SwitchNetworkButtons } from "@/components/SwitchNetworkButtons";
 import { AddKeypairManuallyModal } from "@/components/AddKeypairManuallyModal";
@@ -69,10 +70,9 @@ export default function SavedKeypairs() {
         network.id === "testnet" ? "futurenet" : "testnet";
 
       return (
-        <Alert
+        <Notification
           variant="primary"
           title={`Looking for ${otherNetworkLabel} keypairs?`}
-          placement="inline"
           actionLabel={`Switch to ${otherNetworkLabel}`}
           onAction={() => {
             const newNetworkId =
@@ -84,7 +84,7 @@ export default function SavedKeypairs() {
           {`You must switch your network to ${otherNetworkLabel} in order to see those saved
           keypairs. This feature is only available on Futurenet and Testnet for
           security reasons.`}
-        </Alert>
+        </Notification>
       );
     }
 
@@ -147,7 +147,7 @@ export default function SavedKeypairs() {
 
   return (
     <Box gap="md">
-      <PageCard
+      <PageHeader
         heading="Saved keypairs"
         rightElement={
           <Button
@@ -162,23 +162,20 @@ export default function SavedKeypairs() {
             Add keypair manually
           </Button>
         }
-      >
-        <>
-          {IS_TESTING_NETWORK ? (
-            <Alert variant="warning" placement="inline">
-              Saved keypairs are stored in the browser’s localstorage
-              unencrypted and with no protection. Anyone using this browser will
-              be able to access the keys and the keys could be easily lost. Do
-              not save keys that are intended to hold or control value on
-              mainnet. Do not reuse keypairs from futurenet or testnet on
-              mainnet for security. For keys that will hold value, please
-              consider using a Stellar wallet.
-            </Alert>
-          ) : null}
-        </>
-
-        {renderContent()}
-      </PageCard>
+      />
+      <>
+        {IS_TESTING_NETWORK ? (
+          <Notification variant="warning" title="Security warning">
+            Saved keypairs are stored in the browser’s localstorage unencrypted
+            and with no protection. Anyone using this browser will be able to
+            access the keys and the keys could be easily lost. Do not save keys
+            that are intended to hold or control value on mainnet. Do not reuse
+            keypairs from futurenet or testnet on mainnet for security. For keys
+            that will hold value, please consider using a Stellar wallet.
+          </Notification>
+        ) : null}
+      </>
+      <PageCard>{renderContent()}</PageCard>
 
       <>{renderOtherNetworkMessage()}</>
 

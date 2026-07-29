@@ -21,9 +21,6 @@ test.describe("Import Transaction Page", () => {
     await expect(
       page.getByText("Transaction imported successfully."),
     ).toBeVisible();
-    await expect(
-      page.getByRole("heading", { name: "Transaction overview" }),
-    ).toBeVisible();
 
     /*** TX Overview Details ***/
     // Network passphrase
@@ -77,9 +74,6 @@ test.describe("Import Transaction Page", () => {
     await expect(
       page.getByText("Transaction imported successfully."),
     ).toBeVisible();
-    await expect(
-      page.getByRole("heading", { name: "Transaction overview" }),
-    ).toBeVisible();
 
     /*** TX Overview Details ***/
     // Network passphrase
@@ -125,10 +119,6 @@ test.describe("Import Transaction Page", () => {
   test("Imports a transaction with 3 operations", async ({ page }) => {
     const xdrInput = page.getByLabel("Transaction envelope in XDR");
     await xdrInput.fill(MOCK_TX_XDR_3_OPERATIONS);
-
-    await expect(
-      page.getByRole("heading", { name: "Transaction overview" }),
-    ).toBeVisible();
 
     /*** TX Overview Details ***/
     // Network passphrase

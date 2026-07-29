@@ -8,7 +8,7 @@ import {
   Link,
   Icon,
   Text,
-  Alert,
+  Notification,
   Loader,
 } from "@stellar/design-system";
 import { Address, contract, Operation } from "@stellar/stellar-sdk";
@@ -19,6 +19,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import { Box } from "@/components/layout/Box";
 import { PageCard } from "@/components/layout/PageCard";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { FilePicker } from "@/components/FilePicker";
 import { JsonSchemaRenderer } from "@/components/SmartContractJsonSchema/JsonSchemaRenderer";
 import { SourceAccountPicker } from "@/components/SourceAccountPicker";
@@ -616,13 +617,12 @@ export default function DeployContract() {
                   />
 
                   {uploadTxError ? (
-                    <Alert
+                    <Notification
                       title="Upload transaction error"
                       variant="error"
-                      placement="inline"
                     >
                       {`There was an error building the Upload transaction: ${uploadTxError.toString()}`}
-                    </Alert>
+                    </Notification>
                   ) : null}
 
                   <Box gap="sm" direction="row" justify="end">
@@ -670,14 +670,13 @@ export default function DeployContract() {
                   />
 
                   {signUploadError ? (
-                    <Alert
+                    <Notification
                       title="Sign upload transaction error"
                       variant="error"
-                      placement="inline"
                     >
                       There was an error signing the Upload transaction:{" "}
                       {signUploadError}
-                    </Alert>
+                    </Notification>
                   ) : null}
 
                   <Box gap="sm" direction="row" justify="end">
@@ -763,27 +762,25 @@ export default function DeployContract() {
                 <Box gap="md">
                   {/* Generic deploy error */}
                   {pageError ? (
-                    <Alert title="Error" variant="error" placement="inline">
+                    <Notification title="Error" variant="error">
                       {pageError}
-                    </Alert>
+                    </Notification>
                   ) : null}
 
                   {hasConstructorArgs ? (
-                    <Alert
+                    <Notification
                       title="This contract has a constructor."
                       variant="primary"
-                      placement="inline"
                     >
                       Please add the arguments for the constructor.
-                    </Alert>
+                    </Notification>
                   ) : (
-                    <Alert
+                    <Notification
                       title="This contract has no constructor."
                       variant="primary"
-                      placement="inline"
                     >
                       There are no arguments to add for the constructor.
-                    </Alert>
+                    </Notification>
                   )}
 
                   {hasConstructorArgs ? (
@@ -814,13 +811,12 @@ export default function DeployContract() {
                   ) : null}
 
                   {deployTxError ? (
-                    <Alert
+                    <Notification
                       title="Deploy transaction error"
                       variant="error"
-                      placement="inline"
                     >
                       {`There was an error building the Deploy transaction: ${deployTxError.toString()}`}
-                    </Alert>
+                    </Notification>
                   ) : null}
 
                   <Box gap="sm" direction="row" justify="end">
@@ -870,14 +866,13 @@ export default function DeployContract() {
                   />
 
                   {signDeployError ? (
-                    <Alert
+                    <Notification
                       title="Sign deploy transaction error"
                       variant="error"
-                      placement="inline"
                     >
                       There was an error signing the Deploy transaction:{" "}
                       {signDeployError}
-                    </Alert>
+                    </Notification>
                   ) : null}
 
                   <Box gap="sm" direction="row" justify="end">
@@ -988,7 +983,7 @@ export default function DeployContract() {
 
   return (
     <Box gap="lg">
-      <PageCard
+      <PageHeader
         heading="Upload and deploy contract"
         rightElement={
           <Button
@@ -1007,9 +1002,8 @@ export default function DeployContract() {
             Clear
           </Button>
         }
-      >
-        {renderContent()}
-      </PageCard>
+      />
+      <PageCard>{renderContent()}</PageCard>
     </Box>
   );
 }

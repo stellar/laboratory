@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import {
-  Alert,
+  Notification,
   Avatar,
   Card,
   Icon,
@@ -304,9 +304,9 @@ export const ContractInfo = ({
     children: React.ReactNode;
   }) => {
     return (
-      <Alert variant="primary" placement="inline" title={title}>
+      <Notification variant="primary" title={title}>
         {children}
-      </Alert>
+      </Notification>
     );
   };
 
@@ -351,9 +351,8 @@ export const ContractInfo = ({
           </Box>
 
           {!isSacType && wasmData && sourceRepo && (
-            <Alert
+            <Notification
               variant="warning"
-              placement="inline"
               title="Verified Build ≠ Source Code Verified"
             >
               The source code below comes from the GitHub repo at the specific
@@ -366,7 +365,7 @@ export const ContractInfo = ({
               <Link href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0055.md">
                 Learn more about SEP-55 Contract Build Verification
               </Link>
-            </Alert>
+            </Notification>
           )}
           <TabView
             tab1={{

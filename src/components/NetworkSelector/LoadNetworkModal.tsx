@@ -1,4 +1,4 @@
-import { Alert, Button, Modal, Text } from "@stellar/design-system";
+import { Notification, Button, Modal, Text } from "@stellar/design-system";
 import { Box } from "@/components/layout/Box";
 import { Network } from "@/types/types";
 
@@ -36,11 +36,11 @@ export const LoadNetworkModal = ({
           />
         </Box>
 
-        <Alert variant="warning" placement="inline">
+        <Notification variant="warning" title="Security warning">
           You should only use Horizon and RPC URLs that you trust. Using
           unknown/untrusted Horizon and RPC URLs can make your connection
           insecure.
-        </Alert>
+        </Notification>
       </Modal.Body>
 
       <Modal.Footer>

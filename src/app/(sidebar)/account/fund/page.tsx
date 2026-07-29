@@ -5,10 +5,9 @@ import {
   Input,
   Text,
   Button,
-  Notification,
   Link,
   Icon,
-  Alert,
+  Notification,
 } from "@stellar/design-system";
 import { useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
@@ -30,6 +29,7 @@ import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import { validate } from "@/validate";
 
 import { PageCard } from "@/components/layout/PageCard";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { Box } from "@/components/layout/Box";
 import { InputSideElement } from "@/components/InputSideElement";
 import { SignTransactionXdr } from "@/components/SignTransactionXdr";
@@ -305,16 +305,16 @@ export default function FundAccount() {
 
   return (
     <div className="Account">
-      <PageCard
-        heading={`Friendbot: fund a ${network.label} account or contract with XLM, USDC, and EURC`}
-      >
+      <PageHeader
+        heading={`Fund a ${network.label} account or contract with XLM, USDC, and EURC`}
+      />
+      <Text size="sm" as="div">
+        Friendbot is a standalone service that funds your testnet account or
+        contract with XLM. To fund assets such as USDC and EURC, you’ll need to
+        add a trustline manually before funding.
+      </Text>
+      <PageCard>
         <div className="Account__card">
-          <Text size="sm" as="div">
-            Friendbot is a standalone service that funds your testnet account or
-            contract with XLM. To fund assets such as USDC and EURC, you’ll need
-            to add a trustline manually before funding.
-          </Text>
-
           <Input
             id="fund-public-key-input"
             fieldSize="md"
@@ -510,8 +510,7 @@ export default function FundAccount() {
           </Box>
 
           {isFriendBotFetchedAfterMount && friendBotError ? (
-            <Alert
-              placement="inline"
+            <Notification
               variant="error"
               title="Error funding XLM"
               onClose={() => {
@@ -519,12 +518,11 @@ export default function FundAccount() {
               }}
             >
               {friendBotError.message}
-            </Alert>
+            </Notification>
           ) : null}
 
           {addTrustlineError ? (
-            <Alert
-              placement="inline"
+            <Notification
               variant="error"
               title="Error adding trustline"
               onClose={() => {
@@ -532,12 +530,11 @@ export default function FundAccount() {
               }}
             >
               {addTrustlineError.message}
-            </Alert>
+            </Notification>
           ) : null}
 
           {accountInfoError ? (
-            <Alert
-              placement="inline"
+            <Notification
               variant="error"
               title="Error fetching account info"
               onClose={() => {
@@ -545,7 +542,7 @@ export default function FundAccount() {
               }}
             >
               {accountInfoError.message}
-            </Alert>
+            </Notification>
           ) : null}
 
           {addTrustlineTx ? (
@@ -560,13 +557,12 @@ export default function FundAccount() {
               customFooter={
                 <Box gap="lg">
                   {submitError ? (
-                    <Alert
-                      placement="inline"
+                    <Notification
                       variant="error"
                       title="Error submitting transaction"
                     >
                       {submitError.message}
-                    </Alert>
+                    </Notification>
                   ) : null}
 
                   <Box gap="lg" direction="row" justify="end">

@@ -25,9 +25,8 @@ test.describe("Transaction Dashboard: Call stack trace", () => {
 
   test("All calls failed shows error alert", async ({ page }) => {
     await loadCallStack({ page, mockResponse: CST_ALL_FAIL });
-
     await expect(
-      page.getByRole("heading", { name: "Transaction failed" }),
+      page.getByText("Transaction failed", { exact: true }),
     ).toBeVisible();
     await expect(page.getByTestId("cst-root")).toHaveAttribute(
       "data-error-level",
@@ -37,9 +36,8 @@ test.describe("Transaction Dashboard: Call stack trace", () => {
 
   test("Some calls failed shows warning alert", async ({ page }) => {
     await loadCallStack({ page, mockResponse: CST_PARTIAL_FAIL });
-
     await expect(
-      page.getByRole("heading", { name: "Transaction partially failed" }),
+      page.getByText("Transaction partially failed", { exact: true }),
     ).toBeVisible();
     await expect(page.getByTestId("cst-root")).toHaveAttribute(
       "data-error-level",

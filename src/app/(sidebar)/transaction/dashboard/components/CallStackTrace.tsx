@@ -1,5 +1,11 @@
 import React, { JSX, useState } from "react";
-import { Alert, Icon, Label, Text, Toggle } from "@stellar/design-system";
+import {
+  Notification,
+  Icon,
+  Label,
+  Text,
+  Toggle,
+} from "@stellar/design-system";
 
 import { Box } from "@/components/layout/Box";
 import { SdsLink } from "@/components/SdsLink";
@@ -339,21 +345,17 @@ export const CallStackTrace = ({
       </Box>
 
       {data.errorLevel === "all" ? (
-        <Alert placement="inline" variant="error" title="Transaction failed">
+        <Notification variant="error" title="Transaction failed">
           This transaction failed and was fully rolled back. All state changes
           were reverted, and no contract effects were applied.
-        </Alert>
+        </Notification>
       ) : null}
 
       {data.errorLevel === "some" ? (
-        <Alert
-          placement="inline"
-          variant="warning"
-          title="Transaction partially failed"
-        >
+        <Notification variant="warning" title="Transaction partially failed">
           This transaction succeeded, but some internal contract calls failed
           and their effects were rolled back.
-        </Alert>
+        </Notification>
       ) : null}
 
       <div

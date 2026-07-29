@@ -3,7 +3,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import {
-  Alert,
   Button,
   Card,
   CopyText,
@@ -24,6 +23,7 @@ import { PrettyJsonTextarea } from "@/components/PrettyJsonTextarea";
 import { ShareUrlButton } from "@/components/ShareUrlButton";
 import { CopyJsonPayloadButton } from "@/components/CopyJsonPayloadButton";
 import { PageCard } from "@/components/layout/PageCard";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 import { JsonCodeWrapToggle } from "@/components/JsonCodeWrapToggle";
 
@@ -722,10 +722,7 @@ export default function Endpoints() {
             </Button>
 
             {!isRpcEndpoint && (
-              <CopyText
-                textToCopy={requestUrl}
-                doneLabel="Horizon URL copied"
-              >
+              <CopyText textToCopy={requestUrl} doneLabel="Horizon URL copied">
                 <Button
                   size="md"
                   variant="tertiary"
@@ -1008,7 +1005,7 @@ export default function Endpoints() {
 
   return (
     <>
-      <PageCard
+      <PageHeader
         heading={page?.label}
         rightElement={
           <SdsLink
@@ -1019,7 +1016,8 @@ export default function Endpoints() {
             View Docs
           </SdsLink>
         }
-      >
+      />
+      <PageCard>
         <form className="PageBody" onSubmit={handleSubmit}>
           {renderEndpointUrl()}
 
@@ -1040,9 +1038,9 @@ export default function Endpoints() {
       {endpointData || endpointError ? (
         <div ref={responseEl}>
           {endpointError ? (
-            <Alert placement="inline" variant="error" title="Error">
+            <Notification variant="error" title="Error">
               {`${endpointError}`}
-            </Alert>
+            </Notification>
           ) : null}
 
           {endpointData ? (
@@ -1116,9 +1114,7 @@ export default function Endpoints() {
         </div>
       ) : null}
 
-      <Alert variant="primary" placement="inline">
-        {renderInfoMessage()}
-      </Alert>
+      <Notification variant="primary" title={renderInfoMessage()} />
 
       <SaveToLocalStorageModal
         type="save"

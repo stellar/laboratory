@@ -1,17 +1,27 @@
 "use client";
 
-import { Text, Alert, Button, Icon, Textarea } from "@stellar/design-system";
+import {
+  Text,
+  Notification,
+  Button,
+  Icon,
+  Textarea,
+} from "@stellar/design-system";
+
 import * as StellarXdr from "@/helpers/StellarXdr";
+import { openUrl } from "@/helpers/openUrl";
 
 import { Box } from "@/components/layout/Box";
-import { SdsLink } from "@/components/SdsLink";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { XdrTypeSelect } from "@/components/XdrTypeSelect";
 import { PageCard } from "@/components/layout/PageCard";
+import { PageHeader } from "@/components/layout/PageHeader";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { useStore } from "@/store/useStore";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
+
+import { renderViewXdrInfoMessage } from "../components/renderViewXdrInfoMessage";
 
 export default function ToXdr() {
   const { xdr } = useStore();
@@ -61,7 +71,8 @@ export default function ToXdr() {
 
   return (
     <Box gap="md">
-      <PageCard heading="To XDR">
+      <PageHeader heading="To XDR" />
+      <PageCard>
         <Box gap="lg">
           <Textarea
             id="to-xdr-json"
@@ -119,31 +130,16 @@ export default function ToXdr() {
         </Box>
       </PageCard>
 
-      <Alert variant="primary" placement="inline">
-        <div>
-          You can use this tool to encode JSON into XDR.{" "}
-          <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/data-format/xdr">
-            XDR (External Data Representation)
-          </SdsLink>{" "}
-          is a standardized data format that the Stellar network uses to encode
-          data. The XDR ⇄ JSON tool helps you convert Stellar XDR blobs into a
-          human-readable JSON format, and vice versa.
-        </div>
-
-        <div>
-          To learn more about converting between XDR and JSON, including
-          libraries for JavaScript (npm), Go, and Rust, check out the{" "}
-          <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/data-format/xdr-json">
-            XDR ⇄ JSON guide
-          </SdsLink>{" "}
-          on the Stellar Developer Docs. To see the XDR ⇄ JSON conversion
-          specification, please see{" "}
-          <SdsLink href="https://stellar.org/protocol/sep-51">
-            SEP-51 XDR-JSON
-          </SdsLink>
-          .
-        </div>
-      </Alert>
+      <Notification
+        variant="primary"
+        title={renderViewXdrInfoMessage()}
+        onAction={() => {
+          openUrl(
+            "https://developers.stellar.org/docs/learn/fundamentals/data-format/xdr-json",
+          );
+        }}
+        actionLabel="XDR ⇄ JSON guide"
+      />
     </Box>
   );
 }

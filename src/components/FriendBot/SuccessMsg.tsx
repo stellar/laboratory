@@ -1,9 +1,10 @@
-import { Alert } from "@stellar/design-system";
+import { Notification } from "@stellar/design-system";
 
 import { useStore } from "@/store/useStore";
 
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import { getBlockExplorerLink } from "@/helpers/getBlockExplorerLink";
+import { openUrl } from "@/helpers/openUrl";
 
 export const SuccessMsg = ({
   onClose,
@@ -22,20 +23,18 @@ export const SuccessMsg = ({
     getBlockExplorerLink("stellar.expert")[network.id];
 
   return isVisible ? (
-    <Alert
-      placement="inline"
+    <Notification
       variant="success"
       actionLabel={BLOCK_EXPLORER_LINK ? "View on stellar.expert" : undefined}
-      actionLink={
-        BLOCK_EXPLORER_LINK
-          ? `${BLOCK_EXPLORER_LINK}/account/${publicKey}`
-          : undefined
+      onAction={() =>
+        BLOCK_EXPLORER_LINK &&
+        openUrl(`${BLOCK_EXPLORER_LINK}/account/${publicKey}`)
       }
       onClose={onClose}
       title={`Successfully funded ${shortenStellarAddress(publicKey)} on 
     ${network.id}`}
     >
       {""}
-    </Alert>
+    </Notification>
   ) : null;
 };

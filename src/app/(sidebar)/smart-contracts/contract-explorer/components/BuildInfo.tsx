@@ -1,4 +1,4 @@
-import { Alert, Card, Link, Text } from "@stellar/design-system";
+import { Notification, Card, Link, Text } from "@stellar/design-system";
 import { Box } from "@/components/layout/Box";
 import { WasmData } from "@/types/types";
 
@@ -16,7 +16,7 @@ export const BuildInfo = ({
   if (!wasmData) {
     return (
       <Box gap="lg">
-        <Alert variant="warning" placement="inline">
+        <Notification variant="warning" title="Build Info Not Available">
           <div>
             This contract has no contract build verification configured,
             therefore its Build Info is not available.
@@ -31,7 +31,7 @@ export const BuildInfo = ({
             </Link>
             .
           </div>
-        </Alert>
+        </Notification>
 
         <Card>
           <Box gap="lg" addlClassName="BuildInfoInstructions">

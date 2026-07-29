@@ -2,8 +2,8 @@
 import type { NextPage } from "next";
 import type { ErrorProps } from "next/error";
 import NextError from "next/error";
-
 import { Button, Card, Heading, Icon, Text } from "@stellar/design-system";
+
 import { Box } from "@/components/layout/Box";
 import { openUrl } from "@/helpers/openUrl";
 

@@ -1,4 +1,4 @@
-import { Alert, Text, Loader } from "@stellar/design-system";
+import { Notification, Text, Loader } from "@stellar/design-system";
 import { ErrorText } from "@/components/ErrorText";
 import { Box } from "@/components/layout/Box";
 
@@ -25,10 +25,10 @@ export const renderContractSpecViewStatus = ({
 
   if (!rpcUrl) {
     return (
-      <Alert variant="warning" placement="inline" title="Attention">
+      <Notification variant="warning" title="Attention">
         RPC URL is required to view this section. You can add it in the network
         settings in the upper right corner.
-      </Alert>
+      </Notification>
     );
   }
 
@@ -46,10 +46,10 @@ export const renderContractSpecViewStatus = ({
 
     if (errorString.toLowerCase().includes("network error")) {
       networkMessage = (
-        <Alert variant="warning" placement="inline" title="Attention">
+        <Notification variant="warning" title="Attention">
           There may be an issue with the RPC server. You can change it in the
           network settings in the upper right corner.
-        </Alert>
+        </Notification>
       );
     }
 
