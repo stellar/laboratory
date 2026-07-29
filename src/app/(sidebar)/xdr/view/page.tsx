@@ -12,6 +12,7 @@ import {
 } from "@stellar/design-system";
 import { TransactionBuilder } from "@stellar/stellar-sdk";
 import { useQueryClient } from "@tanstack/react-query";
+import { stringify as stringifyLosslessJson } from "lossless-json";
 
 import { useLatestTxn } from "@/query/useLatestTxn";
 import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
@@ -30,7 +31,7 @@ import { JsonCodeWrapToggle } from "@/components/JsonCodeWrapToggle";
 import { delayedAction } from "@/helpers/delayedAction";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { prettifyJsonString } from "@/helpers/prettifyJsonString";
-import { decodeXdr } from "@/helpers/decodeXdr";
+import { decodeXdr, decodeXdrList } from "@/helpers/decodeXdr";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { useCodeWrappedSetting } from "@/hooks/useCodeWrappedSetting";
@@ -38,6 +39,7 @@ import { useStore } from "@/store/useStore";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 import { AnyObject } from "@/types/types";
+import { splitXdrBlocks } from "@/helpers/splitXdrBlocks";
 
 export default function ViewXdr() {
   const { xdr, network } = useStore();
@@ -69,16 +71,38 @@ export default function ViewXdr() {
 
   const isFetchingLatestTxn = isLatestTxnFetching || isLatestTxnLoading;
 
-  const xdrJsonDecoded = decodeXdr({
-    xdrType: xdr.type,
-    xdrBlob: xdr.blob,
-    isReady: isXdrInit,
-    trackingEvents: {
-      success: TrackingEvent.XDR_TO_JSON_SUCCESS,
-      successStream: TrackingEvent.XDR_TO_JSON_STREAM_SUCCESS,
-      error: TrackingEvent.XDR_FROM_JSON_ERROR,
-    },
-  });
+  const blocks = splitXdrBlocks(xdr.blob);
+  const isMulti = blocks.length > 1;
+
+  const multiDecoded = isMulti
+    ? decodeXdrList({
+        xdrBlobs: blocks,
+        isReady: isXdrInit,
+        trackingEvents: {
+          success: TrackingEvent.XDR_TO_JSON_SUCCESS,
+          successStream: TrackingEvent.XDR_TO_JSON_STREAM_SUCCESS,
+          error: TrackingEvent.XDR_FROM_JSON_ERROR,
+        },
+      })
+    : null;
+
+  // Flatten every successfully decoded entry into a single array for rendering,
+  // and collect any entries that could not be decoded.
+  const multiJsonArray = multiDecoded?.flatMap((r) => r.jsonArray) ?? [];
+  const multiErrors = multiDecoded?.filter((r) => r.error) ?? [];
+
+  const xdrJsonDecoded = !isMulti
+    ? decodeXdr({
+        xdrType: xdr.type,
+        xdrBlob: xdr.blob,
+        isReady: isXdrInit,
+        trackingEvents: {
+          success: TrackingEvent.XDR_TO_JSON_SUCCESS,
+          successStream: TrackingEvent.XDR_TO_JSON_STREAM_SUCCESS,
+          error: TrackingEvent.XDR_FROM_JSON_ERROR,
+        },
+      })
+    : null;
 
   const txnFromXdr = () => {
     try {
@@ -162,15 +186,13 @@ export default function ViewXdr() {
             <span className="PrettyJson__expandSize">{`${jsonArray.length} items`}</span>
           </div>
           {jsonArray.map((j, index) => (
-            <>
-              <PrettyJsonTransaction
-                // Using index here because we can't get something unique from the JSON
-                key={`pretty-json-${index}`}
-                json={j}
-                xdr={xdr}
-                isCodeWrapped={isCodeWrapped}
-              />
-            </>
+            <PrettyJsonTransaction
+              // Using index here because we can't get something unique from the JSON
+              key={`pretty-json-${index}`}
+              json={j}
+              xdr={xdr}
+              isCodeWrapped={isCodeWrapped}
+            />
           ))}
           <span className="PrettyJson__bracket">]</span>
         </div>
@@ -240,19 +262,25 @@ export default function ViewXdr() {
             disabled={isFetchingLatestTxn}
           />
 
-          <TransactionHashReadOnlyField
-            xdr={xdr.blob}
-            networkPassphrase={network.passphrase}
-          />
+          {!isMulti ? (
+            <>
+              <TransactionHashReadOnlyField
+                xdr={xdr.blob}
+                networkPassphrase={network.passphrase}
+              />
 
-          <XdrTypeSelect error={xdrJsonDecoded?.error} />
+              <XdrTypeSelect error={xdrJsonDecoded?.error} />
+            </>
+          ) : null}
 
           <>
-            {!xdr.blob || !xdr.type ? (
+            {!xdr.blob ? (
               <Text as="div" size="sm">
-                {!xdr.blob
-                  ? "Enter a Base64 encoded XDR blob to decode."
-                  : "Please select a XDR type"}
+                Enter a Base64 encoded XDR blob to decode.
+              </Text>
+            ) : !isMulti && !xdr.type ? (
+              <Text as="div" size="sm">
+                Please select a XDR type
               </Text>
             ) : null}
           </>
@@ -273,7 +301,61 @@ export default function ViewXdr() {
           </Box>
 
           <>
-            {xdrJsonDecoded?.jsonString && xdrJsonDecoded?.jsonArray ? (
+            {isMulti ? (
+              multiJsonArray.length > 0 || multiErrors.length > 0 ? (
+                <Box gap="lg">
+                  {multiErrors.length > 0 ? (
+                    <Alert
+                      variant="warning"
+                      placement="inline"
+                      title={`${multiErrors.length} of ${blocks.length} entries could not be decoded`}
+                    >
+                      <>
+                        {multiErrors.map((e) => (
+                          <div key={`view-xdr-decode-error-${e.index}`}>
+                            {e.error}
+                          </div>
+                        ))}
+                      </>
+                    </Alert>
+                  ) : null}
+
+                  {multiJsonArray.length > 0 ? (
+                    <>
+                      <div
+                        className="PageBody__content PageBody__scrollable"
+                        data-testid="view-xdr-render-json"
+                      >
+                        {renderJsonContent({
+                          jsonArray: multiJsonArray,
+                          xdr: "",
+                        })}
+                      </div>
+
+                      <Box
+                        gap="md"
+                        direction="row"
+                        justify="space-between"
+                        align="center"
+                      >
+                        <JsonCodeWrapToggle
+                          isChecked={isCodeWrapped}
+                          onChange={(isChecked) => {
+                            setIsCodeWrapped(isChecked);
+                          }}
+                        />
+
+                        <CopyJsonPayloadButton
+                          jsonString={
+                            stringifyLosslessJson(multiJsonArray, null, 2) || ""
+                          }
+                        />
+                      </Box>
+                    </>
+                  ) : null}
+                </Box>
+              ) : null
+            ) : xdrJsonDecoded?.jsonString && xdrJsonDecoded?.jsonArray ? (
               <Box gap="lg">
                 <>{renderClaimableBalanceIds()}</>
 

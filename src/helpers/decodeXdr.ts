@@ -77,3 +77,57 @@ export const decodeXdr = ({
 
   return decoded();
 };
+
+/**
+ * Decodes a list of Base64 XDR blocks, guessing the XDR type of each block
+ * independently. Used by the View XDR page when several XDR values are pasted
+ * at once (e.g. the per-entry `ScSpecEntry` output of the Contract Explorer).
+ *
+ * For each block it runs `StellarXdr.guess()` and decodes with the first
+ * candidate type that succeeds. Blocks that no candidate can decode are
+ * returned with an `error` and an empty `jsonArray`, so callers can render the
+ * successful entries alongside a list of failures.
+ */
+export const decodeXdrList = ({
+  xdrBlobs,
+  isReady,
+  trackingEvents,
+}: {
+  xdrBlobs: string[];
+  isReady: boolean;
+  trackingEvents?: {
+    success: TrackingEvent;
+    successStream: TrackingEvent;
+    error: TrackingEvent;
+  };
+}) => {
+  if (!isReady) {
+    return null;
+  }
+
+  return xdrBlobs.map((xdrBlob, index) => {
+    let guesses: string[] = [];
+
+    try {
+      guesses = StellarXdr.guess(xdrBlob);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {
+      guesses = [];
+    }
+
+    for (const xdrType of guesses) {
+      const res = decodeXdr({ xdrType, xdrBlob, isReady, trackingEvents });
+
+      if (res?.jsonString) {
+        return { index, xdrType, jsonArray: res.jsonArray ?? [], error: "" };
+      }
+    }
+
+    return {
+      index,
+      xdrType: "",
+      jsonArray: [] as ReturnType<typeof parseToLosslessJson>[],
+      error: `Entry ${index + 1}: unable to decode as any known XDR type.`,
+    };
+  });
+};
