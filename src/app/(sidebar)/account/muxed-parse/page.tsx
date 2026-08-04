@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Alert, Link, Button } from "@stellar/design-system";
+import { Notification, Link, Button } from "@stellar/design-system";
 
 import { useStore } from "@/store/useStore";
 
@@ -9,6 +9,7 @@ import { ExpandBox } from "@/components/ExpandBox";
 import { PubKeyPicker } from "@/components/FormElements/PubKeyPicker";
 import { MuxedAccountResult } from "@/components/MuxedAccountResult";
 import { PageCard } from "@/components/layout/PageCard";
+import { PageHeader } from "@/components/layout/PageHeader";
 
 import { muxedAccount } from "@/helpers/muxedAccount";
 
@@ -60,10 +61,11 @@ export default function ParseMuxedAccount() {
 
   return (
     <div className="Account">
-      <PageCard
+      <PageHeader
         heading="Get muxed account from M address"
         headingInfoLink="https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos"
-      >
+      />
+      <PageCard>
         <div className="Account__card">
           <PubKeyPicker
             id="muxed-account-address"
@@ -121,22 +123,17 @@ export default function ParseMuxedAccount() {
         </div>
       </PageCard>
 
-      <Alert
-        placement="inline"
-        variant="warning"
-        title="Muxed accounts are uncommon"
-      >
+      <Notification variant="warning" title="Muxed accounts are uncommon">
         Don’t use in a production environment unless you know what you’re doing.
         Read more about Muxed accounts{" "}
         <Link href="https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos#muxed-accounts">
           here
         </Link>
         .
-      </Alert>
+      </Notification>
 
       {Boolean(sdkError) && (
-        <Alert
-          placement="inline"
+        <Notification
           variant="error"
           onClose={() => {
             setSdkError("");
@@ -144,7 +141,7 @@ export default function ParseMuxedAccount() {
           title={sdkError}
         >
           {""}
-        </Alert>
+        </Notification>
       )}
     </div>
   );

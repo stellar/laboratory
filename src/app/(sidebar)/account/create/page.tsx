@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Text, Button, Icon, Alert } from "@stellar/design-system";
+import { Text, Button, Icon, Notification } from "@stellar/design-system";
 import StellarHDWallet from "stellar-hd-wallet";
 
 import { useStore } from "@/store/useStore";
@@ -19,6 +19,7 @@ import { SuccessMsg } from "@/components/FriendBot/SuccessMsg";
 import { ErrorMsg } from "@/components/FriendBot/ErrorMsg";
 import { Box } from "@/components/layout/Box";
 import { PageCard } from "@/components/layout/PageCard";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
@@ -94,14 +95,15 @@ export default function CreateAccount() {
 
   return (
     <div className="Account">
-      <PageCard heading="Keypair generator">
+      <PageHeader heading="Keypair generator" />
+      <Text size="sm" as="div">
+        This keypair is generated temporarily for testing and experimentation on
+        the Stellar network. It exists only for the current browser session, and
+        you must save it to continue using it. Once the page is closed or
+        refreshed, the keypair cannot be recovered.
+      </Text>
+      <PageCard>
         <div className="Account__card">
-          <Text size="sm" as="div">
-            These keypairs can be used on the Stellar network where one is
-            required. For example, it can be used as an account master key,
-            account signer, and/or as a stellar-core node key.
-          </Text>
-
           <Box
             gap="sm"
             direction="row"
@@ -195,8 +197,7 @@ export default function CreateAccount() {
       />
 
       {!IS_TESTING_NETWORK ? (
-        <Alert
-          placement="inline"
+        <Notification
           variant="warning"
           title="Please Avoid Using Private Keys Directly on Mainnet"
         >
@@ -206,7 +207,7 @@ export default function CreateAccount() {
           accidental misuse. Instead, connect your wallet and sign transactions
           securely. Wallets are designed to manage keys safely and protect your
           assets.
-        </Alert>
+        </Notification>
       ) : null}
 
       <SaveToLocalStorageModal

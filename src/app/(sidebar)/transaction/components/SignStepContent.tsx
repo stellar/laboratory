@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Alert, Card, Text } from "@stellar/design-system";
+import { Notification, Card, Text } from "@stellar/design-system";
 
 import { SignTransactionXdr } from "@/components/SignTransactionXdr";
 import { Box } from "@/components/layout/Box";
@@ -64,17 +64,17 @@ export const SignStepContent = ({
       />
 
       {errorMessage ? (
-        <Alert variant="error" placement="inline">
+        <Notification variant="error" title="Signing failed">
           {errorMessage}
-        </Alert>
+        </Notification>
       ) : null}
 
       {signedXdr ? (
         <Card>
           <Box gap="md">
-            <Alert variant="success" placement="inline">
+            <Notification variant="success" title="Transaction signed">
               Transaction signed and ready to submit.
-            </Alert>
+            </Notification>
 
             <Box gap="xxl">
               <Box gap="xs">

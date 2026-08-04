@@ -1,4 +1,4 @@
-import { Alert } from "@stellar/design-system";
+import { Notification } from "@stellar/design-system";
 
 import { Box } from "@/components/layout/Box";
 
@@ -10,8 +10,8 @@ export const TransactionTabEmptyMessage = ({
   children: React.ReactNode;
 }) => (
   <Box gap="sm" align="center" justify="center">
-    <Alert placement="inline" variant="primary" title={title}>
+    <Notification variant="primary" title={title}>
       {children}
-    </Alert>
+    </Notification>
   </Box>
 );

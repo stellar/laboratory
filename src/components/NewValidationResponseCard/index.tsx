@@ -1,4 +1,4 @@
-import { Alert, Card, Icon, Text } from "@stellar/design-system";
+import { Notification, Card, Icon, Text } from "@stellar/design-system";
 import { Box } from "@/components/layout/Box";
 import "../ValidationResponseCard/styles.scss";
 
@@ -13,7 +13,7 @@ type NewValidationResponseCard = {
 
 /**
  * Updated validation response card for the new transaction flow.
- * Replaces the title with an inline Alert banner. Will eventually
+ * Replaces the title with an inline Notification banner. Will eventually
  * replace ValidationResponseCard once all consumers are migrated.
  *
  * @example
@@ -39,15 +39,13 @@ export const NewValidationResponseCard = ({
         addlClassName="ValidationResponseCard"
         data-variant={variant}
       >
-        {/* @TODO to update the SDS design system */}
-        <Alert
-          placement="inline"
+        <Notification
           variant={variant}
           title="Your transaction envelope XDR is ready."
           icon={<Icon.CheckCircle />}
         >
           {""}
-        </Alert>
+        </Notification>
 
         {subtitle ? (
           <Text

@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import {
   Text,
-  Alert,
+  Notification,
   Link,
   Loader,
   Button,
@@ -17,7 +17,7 @@ import { useLatestTxn } from "@/query/useLatestTxn";
 import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
 
 import { Box } from "@/components/layout/Box";
-import { SdsLink } from "@/components/SdsLink";
+
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { XdrTypeSelect } from "@/components/XdrTypeSelect";
 import { PrettyJsonTransaction } from "@/components/PrettyJsonTransaction";
@@ -25,19 +25,24 @@ import { TransactionHashReadOnlyField } from "@/components/TransactionHashReadOn
 import { LabelHeading } from "@/components/LabelHeading";
 import { CopyJsonPayloadButton } from "@/components/CopyJsonPayloadButton";
 import { PageCard } from "@/components/layout/PageCard";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { JsonCodeWrapToggle } from "@/components/JsonCodeWrapToggle";
 
 import { delayedAction } from "@/helpers/delayedAction";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { prettifyJsonString } from "@/helpers/prettifyJsonString";
 import { decodeXdr } from "@/helpers/decodeXdr";
+import { openUrl } from "@/helpers/openUrl";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { useCodeWrappedSetting } from "@/hooks/useCodeWrappedSetting";
 import { useStore } from "@/store/useStore";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
+
 import { AnyObject } from "@/types/types";
+
+import { renderViewXdrInfoMessage } from "../components/renderViewXdrInfoMessage";
 
 export default function ViewXdr() {
   const { xdr, network } = useStore();
@@ -192,7 +197,8 @@ export default function ViewXdr() {
 
   return (
     <Box gap="md">
-      <PageCard heading="View XDR">
+      <PageHeader heading="View XDR" />
+      <PageCard>
         <Box gap="lg">
           <XdrPicker
             id="view-xdr-blob"
@@ -310,31 +316,16 @@ export default function ViewXdr() {
         </Box>
       </PageCard>
 
-      <Alert variant="primary" placement="inline">
-        <div>
-          You can use use this tool to decode XDR into JSON.{" "}
-          <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/data-format/xdr">
-            XDR (External Data Representation)
-          </SdsLink>{" "}
-          is a standardized data format that the Stellar network uses to encode
-          data. The XDR ⇄ JSON tool helps you convert Stellar XDR blobs into a
-          human-readable JSON format, and vice versa.
-        </div>
-
-        <div>
-          To learn more about converting between XDR and JSON, including
-          libraries for JavaScript (npm), Go, and Rust, check out the{" "}
-          <SdsLink href="https://developers.stellar.org/docs/learn/fundamentals/data-format/xdr-json">
-            XDR ⇄ JSON guide
-          </SdsLink>{" "}
-          on the Stellar Developer Docs. To see the XDR ⇄ JSON conversion
-          specification, please see{" "}
-          <SdsLink href="https://stellar.org/protocol/sep-51">
-            SEP-51 XDR-JSON
-          </SdsLink>
-          .
-        </div>
-      </Alert>
+      <Notification
+        variant="primary"
+        title={renderViewXdrInfoMessage()}
+        onAction={() => {
+          openUrl(
+            "https://developers.stellar.org/docs/learn/fundamentals/data-format/xdr-json",
+          );
+        }}
+        actionLabel="XDR ⇄ JSON guide"
+      />
     </Box>
   );
 }

@@ -8,6 +8,7 @@ import { Box } from "@/components/layout/Box";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { XdrTypeSelect } from "@/components/XdrTypeSelect";
 import { PageCard } from "@/components/layout/PageCard";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { ErrorText } from "@/components/ErrorText";
 import { CopyJsonPayloadButton } from "@/components/CopyJsonPayloadButton";
 
@@ -119,11 +120,11 @@ export default function DiffXdr() {
 
   return (
     <Box gap="md">
-      <PageCard heading="Diff XDRs">
-        <Text as="div" size="sm">
-          Enter two Base-64 encoded XDRs to compare their JSON.
-        </Text>
-
+      <PageHeader heading="Diff XDRs" />
+      <Text as="div" size="sm">
+        Enter two Base-64 encoded XDRs to compare their JSON.
+      </Text>
+      <PageCard>
         <Box gap="lg" direction="row">
           <XdrPicker
             id="diff-xdr-one"

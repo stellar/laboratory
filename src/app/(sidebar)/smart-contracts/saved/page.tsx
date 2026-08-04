@@ -8,6 +8,7 @@ import { Box } from "@/components/layout/Box";
 import { InputSideElement } from "@/components/InputSideElement";
 import { SavedItemTimestampAndDelete } from "@/components/SavedItemTimestampAndDelete";
 import { PageCard } from "@/components/layout/PageCard";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 import { ShareUrlButton } from "@/components/ShareUrlButton";
 
@@ -42,7 +43,8 @@ export default function SavedSmartContracts() {
 
   return (
     <Box gap="md">
-      <PageCard heading="Saved smart contracts">
+      <PageHeader heading="Saved smart contracts" />
+      <PageCard>
         <Box gap="md">
           <>
             {savedContracts.length === 0

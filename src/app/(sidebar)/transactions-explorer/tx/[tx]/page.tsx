@@ -1,10 +1,11 @@
 "use client";
 
 import { use } from "react";
-import { Alert, Loader } from "@stellar/design-system";
+import { Notification, Loader } from "@stellar/design-system";
 import { rpc as StellarRpc } from "@stellar/stellar-sdk";
 
 import { PageCard } from "@/components/layout/PageCard";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { Box } from "@/components/layout/Box";
 
 import { useStore } from "@/store/useStore";
@@ -23,9 +24,9 @@ export default function Tx({ params }: { params: Promise<{ tx: string }> }) {
   });
 
   const errorElement = tx.error && (
-    <Alert variant="error" placement="inline">
+    <Notification variant="error" title="Error">
       {String(tx.error)}
-    </Alert>
+    </Notification>
   );
 
   if (tx.data && !tx.error && "envelopeXdr" in tx.data) {
@@ -42,7 +43,8 @@ export default function Tx({ params }: { params: Promise<{ tx: string }> }) {
 
   return (
     <Box gap="md" data-testid="explorer">
-      <PageCard heading="Transaction envelope">
+      <PageHeader heading="Transaction envelope" />
+      <PageCard>
         {errorElement}
 
         {tx.isLoading && (

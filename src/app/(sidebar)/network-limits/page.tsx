@@ -1,23 +1,20 @@
 "use client";
 
-import { Alert, Icon, Text, Tooltip } from "@stellar/design-system";
+import { Notification, Icon, Text, Tooltip } from "@stellar/design-system";
 import { useContext, useState } from "react";
 
 import { useStore } from "@/store/useStore";
 import { WindowContext } from "@/components/layout/LayoutContextProvider";
 
 import { PageCard } from "@/components/layout/PageCard";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { Box } from "@/components/layout/Box";
 import { SdsLink } from "@/components/SdsLink";
 import { LabelHeading } from "@/components/LabelHeading";
 import { SwitchNetworkButtons } from "@/components/SwitchNetworkButtons";
 import { Tabs } from "@/components/Tabs";
 import { CodeEditor } from "@/components/CodeEditor";
-import {
-  GridTable,
-  GridTableRow,
-  GridTableCell,
-} from "@/components/GridTable";
+import { GridTable, GridTableRow, GridTableCell } from "@/components/GridTable";
 
 import {
   formatLedgersToDays,
@@ -51,14 +48,25 @@ export default function NetworkLimits() {
   const limitsJsonString = JSON.stringify(limitsJson, null, 2);
 
   return (
-    <div className="NetworkLimits">
-      <PageCard heading="Network limits">
-        {network.id === "custom" ? (
-          <Alert
-            placement="inline"
-            variant="warning"
-            title="Network limits unavailable"
+    <Box addlClassName="NetworkLimits" gap="lg">
+      <PageHeader heading="Network limits" />
+
+      <Box gap="sm">
+        <Text as="p" size="sm" weight="regular">
+          Resource limitations and fees only apply to smart contract
+          transactions. Read more about the inner workings of fees on Stellar in{" "}
+          <SdsLink
+            href="https://developers.stellar.org/docs/learn/fundamentals/fees-resource-limits-metering"
+            addlClassName="Link--external"
           >
+            the Fees section
+            <Icon.LinkExternal01 />
+          </SdsLink>
+        </Text>
+      </Box>
+      <PageCard>
+        {network.id === "custom" ? (
+          <Notification variant="warning" title="Network limits unavailable">
             <Box gap="md">
               Network limit data is not available for the selected custom
               network.
@@ -70,24 +78,9 @@ export default function NetworkLimits() {
                 />
               </Box>
             </Box>
-          </Alert>
+          </Notification>
         ) : (
           <>
-            <Box gap="sm">
-              <Text as="p" size="sm" weight="regular">
-                Resource limitations and fees only apply to smart contract
-                transactions. Read more about the inner workings of fees on
-                Stellar in{" "}
-                <SdsLink
-                  href="https://developers.stellar.org/docs/learn/fundamentals/fees-resource-limits-metering"
-                  addlClassName="Link--external"
-                >
-                  the Fees section
-                  <Icon.LinkExternal01 />
-                </SdsLink>
-              </Text>
-            </Box>
-
             <Tabs
               tabs={VIEW_TABS}
               activeTabId={activeTab}
@@ -123,7 +116,7 @@ export default function NetworkLimits() {
           </>
         )}
       </PageCard>
-    </div>
+    </Box>
   );
 }
 
@@ -286,10 +279,7 @@ const ResourceLimitsSection = ({
             </GridTableRow>
 
             {resourceLimits.map((item, index) => (
-              <GridTableRow
-                key={`per-${index}`}
-                isEmpty={!item.perTransaction}
-              >
+              <GridTableRow key={`per-${index}`} isEmpty={!item.perTransaction}>
                 <GridTableCell isRowHeader>
                   {item.setting}
                   {item.setting_note ? (
@@ -549,7 +539,6 @@ const ResourceFeesSection = ({
     </Box>
   );
 };
-
 
 // =============================================================================
 // Helpers

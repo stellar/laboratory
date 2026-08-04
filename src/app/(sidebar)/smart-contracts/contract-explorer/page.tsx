@@ -1,7 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Alert, Badge, Button, Icon, Input } from "@stellar/design-system";
+import {
+  Notification,
+  Badge,
+  Button,
+  Icon,
+  Input,
+} from "@stellar/design-system";
 import { useQueryClient } from "@tanstack/react-query";
 import { contract } from "@stellar/stellar-sdk";
 
@@ -20,6 +26,7 @@ import { delayedAction } from "@/helpers/delayedAction";
 
 import { Box } from "@/components/layout/Box";
 import { PageCard } from "@/components/layout/PageCard";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { MessageField } from "@/components/MessageField";
 import { TabView } from "@/components/TabView";
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
@@ -285,12 +292,13 @@ export default function ContractExplorer() {
 
   return (
     <Box gap="lg">
-      <PageCard heading="Contract explorer">
+      <PageHeader heading="Contract explorer" />
+      <PageCard>
         {!network.rpcUrl ? (
-          <Alert variant="warning" placement="inline" title="Attention">
+          <Notification variant="warning" title="Attention">
             RPC URL is required to view contract information. You can add it in
             the network settings in the upper right corner.
-          </Alert>
+          </Notification>
         ) : null}
 
         <form

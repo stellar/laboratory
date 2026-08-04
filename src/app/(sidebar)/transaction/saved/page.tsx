@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Alert, Input, Icon, Button } from "@stellar/design-system";
+import { Notification, Input, Icon, Button } from "@stellar/design-system";
 import { useRouter } from "next/navigation";
 
 import { NextLink } from "@/components/NextLink";
@@ -11,6 +11,7 @@ import { InputSideElement } from "@/components/InputSideElement";
 import { ShareUrlButton } from "@/components/ShareUrlButton";
 import { SavedItemTimestampAndDelete } from "@/components/SavedItemTimestampAndDelete";
 import { PageCard } from "@/components/layout/PageCard";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 
 import { useStore } from "@/store/useStore";
@@ -153,8 +154,8 @@ export default function SavedTransactions() {
         readOnly
         rightElement={
           <InputSideElement
-            variant="button"
             placement="right"
+            variant="button"
             onClick={() => {
               setCurrentTxnTimestamp(txn.timestamp);
             }}
@@ -225,7 +226,8 @@ export default function SavedTransactions() {
 
   return (
     <Box gap="md" data-testid="saved-transactions-container">
-      <PageCard heading="Saved transactions">
+      <PageHeader heading="Saved transactions" />
+      <PageCard>
         <Box gap="md">
           <>
             {savedTxns.length === 0
@@ -237,25 +239,20 @@ export default function SavedTransactions() {
         </Box>
       </PageCard>
 
-      <Alert
+      <Notification
         variant="primary"
         title="Looking for your other saved transactions?"
-        placement="inline"
         icon={<Icon.Server06 />}
       >
         Switch your network in the top right to see your other saved
         transactions.
-      </Alert>
+      </Notification>
 
-      <Alert
-        variant="primary"
-        title="Looking for your saved requests?"
-        placement="inline"
-      >
+      <Notification variant="primary" title="Looking for your saved requests?">
         <NextLink href={`${Routes.SAVED_ENDPOINTS}`} sds-variant="primary">
           See saved requests
         </NextLink>
-      </Alert>
+      </Notification>
 
       <SaveToLocalStorageModal
         type="editName"

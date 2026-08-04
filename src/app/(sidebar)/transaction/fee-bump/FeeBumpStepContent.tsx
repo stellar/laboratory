@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { TransactionBuilder } from "@stellar/stellar-sdk";
-import { Alert, Text } from "@stellar/design-system";
+import { Notification, Text } from "@stellar/design-system";
 import { useStore } from "@/store/useStore";
 
 import { validate } from "@/validate";
@@ -59,7 +59,11 @@ export const FeeBumpStepContent = ({
   });
   const [sourceAccountError, setSourceAccountError] = useState<
     string | undefined
-  >(source_account ? validate.getPublicKeyError(source_account) || undefined : undefined);
+  >(
+    source_account
+      ? validate.getPublicKeyError(source_account) || undefined
+      : undefined,
+  );
   const [feeError, setFeeError] = useState<string | undefined>(
     fee ? validate.getPositiveIntError(fee) || undefined : undefined,
   );
@@ -210,9 +214,9 @@ export const FeeBumpStepContent = ({
       </PageCard>
 
       {buildError ? (
-        <Alert variant="error" placement="inline" title="Fee bump error">
+        <Notification variant="error" title="Fee bump error">
           {buildError}
-        </Alert>
+        </Notification>
       ) : null}
 
       {!buildError && feeBumpedTx?.xdr ? (

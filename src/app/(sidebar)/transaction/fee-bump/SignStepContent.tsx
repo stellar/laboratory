@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Alert, Text } from "@stellar/design-system";
+import { Notification, Text } from "@stellar/design-system";
 
 import { useStore } from "@/store/useStore";
 
@@ -64,9 +64,9 @@ export const SignStepContent = ({
       />
 
       {errorMessage ? (
-        <Alert variant="error" placement="inline">
+        <Notification variant="error" title="Error">
           {errorMessage}
-        </Alert>
+        </Notification>
       ) : null}
 
       {feeBump.signedTx ? (

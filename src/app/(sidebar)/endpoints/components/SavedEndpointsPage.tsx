@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import {
-  Alert,
+  Notification,
   Badge,
   Button,
   Icon,
@@ -21,7 +21,6 @@ import { ShareUrlButton } from "@/components/ShareUrlButton";
 import { PrettyJsonTextarea } from "@/components/PrettyJsonTextarea";
 import { SavedItemTimestampAndDelete } from "@/components/SavedItemTimestampAndDelete";
 import { CopyJsonPayloadButton } from "@/components/CopyJsonPayloadButton";
-import { PageCard } from "@/components/layout/PageCard";
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 
 import { Routes } from "@/constants/routes";
@@ -39,6 +38,7 @@ import {
   SavedRpcMethod,
   LocalStorageSavedNetwork,
 } from "@/types/types";
+import { PageCard } from "@/components/layout/PageCard";
 
 export const SavedEndpointsPage = () => {
   const { endpoints, network, selectNetwork, updateIsDynamicNetworkSelect } =
@@ -419,39 +419,44 @@ export const SavedEndpointsPage = () => {
 
   return (
     <Box gap="md" data-testid="saved-requests-container">
-      <PageCard>
-        <TabView
-          heading={{ title: "Saved Requests" }}
-          tab1={{
-            id: "rpc",
-            label: "RPC Methods",
-            content: isRpcTab ? <RpcEndpoints /> : null,
-          }}
-          tab2={{
-            id: "horizon",
-            label: "Horizon Endpoints",
-            content: !isRpcTab ? <HorizonEndpoints /> : null,
-          }}
-          activeTabId={saved.activeTab}
-          onTabChange={(id) => {
-            updateSavedActiveTab(id);
+      <TabView
+        heading={{ title: "Saved Requests" }}
+        tab1={{
+          id: "rpc",
+          label: "RPC Methods",
+          content: isRpcTab ? (
+            <PageCard>
+              <RpcEndpoints />
+            </PageCard>
+          ) : null,
+        }}
+        tab2={{
+          id: "horizon",
+          label: "Horizon Endpoints",
+          content: !isRpcTab ? (
+            <PageCard>
+              <HorizonEndpoints />
+            </PageCard>
+          ) : null,
+        }}
+        activeTabId={saved.activeTab}
+        onTabChange={(id) => {
+          updateSavedActiveTab(id);
 
-            trackEvent(TrackingEvent.ENDPOINTS_SAVED_TAB, {
-              tab: saved.activeTab,
-            });
-          }}
-        />
-      </PageCard>
+          trackEvent(TrackingEvent.ENDPOINTS_SAVED_TAB, {
+            tab: saved.activeTab,
+          });
+        }}
+      />
 
-      <Alert
+      <Notification
         variant="primary"
         title="Looking for your saved transactions?"
-        placement="inline"
       >
         <NextLink href={Routes.SAVED_TRANSACTIONS} sds-variant="primary">
           See saved transactions
         </NextLink>
-      </Alert>
+      </Notification>
 
       <Modal
         visible={

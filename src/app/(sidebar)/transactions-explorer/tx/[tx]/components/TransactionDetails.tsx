@@ -9,6 +9,7 @@ import { parseNumberAndBigInt, parse as jsonParse } from "lossless-json";
 import { JsonCodeWrapToggle } from "@/components/JsonCodeWrapToggle";
 import { Box } from "@/components/layout/Box";
 import { PageCard } from "@/components/layout/PageCard";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { PrettyJsonTransaction } from "@/components/PrettyJsonTransaction";
 import { SdsLink } from "@/components/SdsLink";
 
@@ -151,7 +152,8 @@ export function TransactionDetails({
 
   return (
     <Box gap="md" data-testid="explorer">
-      <PageCard heading="Transaction envelope">
+      <PageHeader heading="Transaction envelope" />
+      <PageCard>
         <Box gap="xs" align="start">
           <InfoField
             label="Status"

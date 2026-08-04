@@ -1,10 +1,10 @@
-import { Alert, Card, Text } from "@stellar/design-system";
+import { Notification, Card, Text } from "@stellar/design-system";
 import { Box } from "@/components/layout/Box";
 import "./styles.scss";
 
 type ValidationResponseCard = {
   variant: "primary" | "success" | "error";
-  title: string | React.ReactNode;
+  title: string;
   response: string | React.ReactNode;
   subtitle?: string | React.ReactNode;
   note?: string | React.ReactNode;
@@ -22,75 +22,73 @@ export const ValidationResponseCard = ({
   footerRightEl,
 }: ValidationResponseCard) => {
   return (
-    <Card>
-      <Box
-        gap="lg"
-        addlClassName="ValidationResponseCard"
-        data-variant={variant}
-      >
-        <>
-          <Alert variant={variant} placement="inline" title={title}>
-            {subtitle ?? null}
-          </Alert>
+    <div className="ValidationResponseCard">
+      <Card>
+        <Box gap="lg">
+          <>
+            <Notification variant={variant} title={title}>
+              {subtitle ?? null}
+            </Notification>
 
-          <Card variant="secondary" noPadding>
-            <div className="ValidationResponseCard__content">{response}</div>
-          </Card>
+            <Card variant="secondary" noPadding>
+              <div className="ValidationResponseCard__content">{response}</div>
+            </Card>
 
-          {footerLeftEl || footerRightEl || note ? (
-            <Box gap="lg">
-              <>
-                {note ? (
-                  <Text
-                    as="div"
-                    size="xs"
-                    weight="regular"
-                    addlClassName="ValidationResponseCard__note"
-                  >
-                    {note}
-                  </Text>
-                ) : null}
+            {footerLeftEl || footerRightEl || note ? (
+              <Box gap="lg">
+                <>
+                  {note ? (
+                    <Text
+                      as="div"
+                      size="xs"
+                      weight="regular"
+                      addlClassName="ValidationResponseCard__note"
+                    >
+                      {note}
+                    </Text>
+                  ) : null}
 
-                {footerLeftEl || footerRightEl ? (
-                  <Box
-                    gap="sm"
-                    direction="row"
-                    align="center"
-                    justify="space-between"
-                    addlClassName="ValidationResponseCard__footer"
-                    wrap="wrap"
-                  >
-                    <>
-                      {footerLeftEl ? (
-                        <Box
-                          gap="sm"
-                          direction="row"
-                          addlClassName="ValidationResponseCard__footer--leftEl"
-                          wrap="wrap"
-                        >
-                          <>{footerLeftEl}</>
-                        </Box>
-                      ) : null}
+                  {footerLeftEl || footerRightEl ? (
+                    <Box
+                      gap="sm"
+                      direction="row"
+                      align="center"
+                      justify="space-between"
+                      addlClassName="ValidationResponseCard__footer"
+                      wrap="wrap"
+                    >
+                      <>
+                        {footerLeftEl ? (
+                          <Box
+                            gap="sm"
+                            direction="row"
+                            addlClassName="ValidationResponseCard__footer--leftEl"
+                            wrap="wrap"
+                          >
+                            <>{footerLeftEl}</>
+                          </Box>
+                        ) : null}
 
-                      {footerRightEl ? (
-                        <Box
-                          gap="sm"
-                          direction="row"
-                          justify="right"
-                          addlClassName="ValidationResponseCard__footer--rightEl"
-                          wrap="wrap"
-                        >
-                          <>{footerRightEl}</>
-                        </Box>
-                      ) : null}
-                    </>
-                  </Box>
-                ) : null}
-              </>
-            </Box>
-          ) : null}
-        </>
-      </Box>
-    </Card>
+                        {footerRightEl ? (
+                          <Box
+                            gap="sm"
+                            direction="row"
+                            justify="right"
+                            addlClassName="ValidationResponseCard__footer--rightEl"
+                            wrap="wrap"
+                          >
+                            <>{footerRightEl}</>
+                          </Box>
+                        ) : null}
+                      </>
+                    </Box>
+                  ) : null}
+                </>
+              </Box>
+            ) : null}
+          </>
+        </Box>
+      </Card>
+    </div>
   );
 };

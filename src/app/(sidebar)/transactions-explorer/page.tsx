@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Alert } from "@stellar/design-system";
+import { Notification } from "@stellar/design-system";
 import {
   parse as jsonParse,
   stringify as jsonStringify,
@@ -9,6 +9,7 @@ import {
 } from "lossless-json";
 
 import { PageCard } from "@/components/layout/PageCard";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { Box } from "@/components/layout/Box";
 
 import { useStore } from "@/store/useStore";
@@ -158,14 +159,15 @@ export default function Explorer() {
   const errorMessage = isError ? error?.message : null;
 
   const errorElement = errorMessage ? (
-    <Alert variant="error" placement="inline">
+    <Notification variant="error" title="Error">
       {errorMessage}
-    </Alert>
+    </Notification>
   ) : null;
 
   return (
     <Box gap="md" data-testid="explorer" addlClassName="TransactionsExplorer">
-      <PageCard heading="Transactions explorer">
+      <PageHeader heading="Transactions explorer" />
+      <PageCard>
         {errorElement}
 
         <TransactionsTable
