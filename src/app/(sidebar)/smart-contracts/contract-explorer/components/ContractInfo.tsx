@@ -355,7 +355,7 @@ export const ContractInfo = ({
             )}
           </Box>
 
-          {infoData && !isSacType && wasmData && (
+          {!isSacType && wasmData && (
             <Notification variant="primary" title="Verified Build">
               <VerifiedBuildMessage />
             </Notification>
