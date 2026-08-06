@@ -3,7 +3,7 @@ import {
   Transaction,
   TransactionBuilder,
 } from "@stellar/stellar-sdk";
-import { Alert } from "@stellar/design-system";
+import { Notification } from "@stellar/design-system";
 
 import { useStore } from "@/store/useStore";
 import {
@@ -80,9 +80,7 @@ export const SignStepSignatureContext = ({ xdr, parsedTxType }: Props) => {
 
   return (
     <Box gap="md">
-      <Alert variant={variant} placement="inline">
-        {message}
-      </Alert>
+      <Notification variant={variant} title={message} />
 
       <Signatures tx={tx} parsedTxType={parsedTxType} />
     </Box>
