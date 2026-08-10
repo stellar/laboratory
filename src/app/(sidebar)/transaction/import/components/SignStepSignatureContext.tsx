@@ -1,10 +1,8 @@
-import {
-  FeeBumpTransaction,
-  Transaction,
-  TransactionBuilder,
-} from "@stellar/stellar-sdk";
+import { FeeBumpTransaction, Transaction } from "@stellar/stellar-sdk";
 
 import { useStore } from "@/store/useStore";
+
+import { parseTxXdr } from "@/helpers/parseTxXdr";
 
 import { Box } from "@/components/layout/Box";
 import { Signatures } from "@/app/(sidebar)/transaction/components/Signatures";
@@ -23,16 +21,7 @@ const hasAnySignature = (tx: Transaction | FeeBumpTransaction): boolean =>
 export const SignStepSignatureContext = ({ xdr, parsedTxType }: Props) => {
   const { network } = useStore();
 
-  let tx: Transaction | FeeBumpTransaction | null = null;
-  if (xdr) {
-    try {
-      tx = TransactionBuilder.fromXDR(xdr, network.passphrase) as
-        | Transaction
-        | FeeBumpTransaction;
-    } catch {
-      tx = null;
-    }
-  }
+  const tx = parseTxXdr(xdr, network.passphrase);
 
   if (!tx || !hasAnySignature(tx)) {
     return null;

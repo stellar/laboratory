@@ -1,16 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import {
-  FeeBumpTransaction,
-  Transaction,
-  TransactionBuilder,
-} from "@stellar/stellar-sdk";
 import { Notification, Card, Text } from "@stellar/design-system";
 
 import { useStore } from "@/store/useStore";
 
 import { decodeXdr } from "@/helpers/decodeXdr";
+import { parseTxXdr } from "@/helpers/parseTxXdr";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
@@ -71,15 +67,17 @@ export const SignStepContent = ({
   );
 
   const isXdrInit = useIsXdrInit();
-  const xdr = xdrToSign || signedXdr;
-  const tx = TransactionBuilder.fromXDR(xdr, network.passphrase) as
-    | Transaction
-    | FeeBumpTransaction;
+  // Signed XDR first: once a signature lands, the guidance message below has
+  // to reflect it. Falls back to the unsigned XDR before anything is signed.
+  const xdr = signedXdr || xdrToSign;
+  const tx = parseTxXdr(xdr, network.passphrase);
 
-  const { message } = getContextMessage(getTxSignatureCompleteness(tx));
+  const message = tx
+    ? getContextMessage(getTxSignatureCompleteness(tx)).message
+    : null;
   const xdrJsonDecoded = decodeXdr({
     xdrType: "TransactionEnvelope",
-    xdrBlob: xdrToSign,
+    xdrBlob: signedXdr,
     isReady: isXdrInit,
   });
 
@@ -95,9 +93,11 @@ export const SignStepContent = ({
         xdr={xdrToSign}
       />
 
-      <Text size="sm" as="div">
-        {message}
-      </Text>
+      {message ? (
+        <Text size="sm" as="div">
+          {message}
+        </Text>
+      ) : null}
 
       <SignTransactionXdr
         id="sign-step"
