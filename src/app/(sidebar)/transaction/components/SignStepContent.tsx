@@ -1,6 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import {
+  FeeBumpTransaction,
+  Transaction,
+  TransactionBuilder,
+} from "@stellar/stellar-sdk";
 import { Notification, Card, Text } from "@stellar/design-system";
 
 import { useStore } from "@/store/useStore";
@@ -16,6 +21,10 @@ import { prettifyJsonString } from "@/helpers/prettifyJsonString";
 
 import { TransactionStepHeader } from "./TransactionStepHeader";
 import { CodeEditor } from "@/components/CodeEditor";
+import {
+  getTxSignatureCompleteness,
+  TxSignatureCompleteness,
+} from "@/helpers/checkRequiredSignatures";
 
 type Props = {
   xdrToSign: string;
@@ -62,7 +71,12 @@ export const SignStepContent = ({
   );
 
   const isXdrInit = useIsXdrInit();
+  const xdr = xdrToSign || signedXdr;
+  const tx = TransactionBuilder.fromXDR(xdr, network.passphrase) as
+    | Transaction
+    | FeeBumpTransaction;
 
+  const { message } = getContextMessage(getTxSignatureCompleteness(tx));
   const xdrJsonDecoded = decodeXdr({
     xdrType: "TransactionEnvelope",
     xdrBlob: xdrToSign,
@@ -82,11 +96,8 @@ export const SignStepContent = ({
       />
 
       <Text size="sm" as="div">
-        To be included in the ledger, the transaction must be signed and
-        submitted to the network.
+        {message}
       </Text>
-
-      {signatureContext}
 
       <SignTransactionXdr
         id="sign-step"
@@ -102,6 +113,8 @@ export const SignStepContent = ({
           {errorMessage}
         </Notification>
       ) : null}
+
+      {signatureContext}
 
       {signedXdr ? (
         <Card>
@@ -141,4 +154,33 @@ export const SignStepContent = ({
       ) : null}
     </Box>
   );
+};
+
+const getContextMessage = (
+  completeness: TxSignatureCompleteness,
+): { message: string } => {
+  if (completeness.hasInvalid) {
+    return {
+      message:
+        "This transaction carries invalid signature(s) that won’t be accepted at submission. Review the signatures below before signing.",
+    };
+  }
+
+  if (completeness.hasUnrecognizedSigners) {
+    return {
+      message:
+        "This step is optional. You can skip this step or add a signature if needed.",
+    };
+  }
+
+  if (completeness.missingSigners.length > 0) {
+    return {
+      message: "This transaction needs signature(s).",
+    };
+  }
+
+  return {
+    message:
+      "This transaction already has every signature that can be verified offline.",
+  };
 };

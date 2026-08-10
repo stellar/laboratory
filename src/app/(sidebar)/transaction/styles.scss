@@ -17,6 +17,13 @@
     flex: 1;
     min-width: 0;
 
+    .TransactionFlowFooter {
+      --TransactionFlowFooter-shadow-color: rgba(0, 0, 0, 0.16);
+
+      box-shadow: 0 pxToRem(-12px) pxToRem(12px) pxToRem(-16px)
+        var(--TransactionFlowFooter-shadow-color);
+    }
+
     .SignTransactionXdr {
       background-color: var(--sds-clr-gray-01);
     }
