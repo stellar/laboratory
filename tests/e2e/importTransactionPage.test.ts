@@ -219,10 +219,9 @@ test.describe("Import Transaction Page", () => {
     await nextButton.click();
 
     await expect(page.locator("h1")).toHaveText("Sign transaction");
+
     await expect(
-      page.getByText(
-        "To be included in the ledger, the transaction must be signed and submitted to the network.",
-      ),
+      page.getByText("This transaction needs signature(s)."),
     ).toBeVisible();
   });
 

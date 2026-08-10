@@ -70,6 +70,7 @@ test.describe("Sign Step in Build Flow", () => {
 
     // Reload to pick up the seeded sessionStorage
     await page.reload();
+    await expect(page.locator("h1")).toHaveText("Sign transaction");
   };
 
   test("Loads the sign step with correct heading and description", async ({
@@ -78,10 +79,9 @@ test.describe("Sign Step in Build Flow", () => {
     await seedSessionStorageAndNavigate(page);
 
     await expect(page.locator("h1")).toHaveText("Sign transaction");
+
     await expect(
-      page.getByText(
-        "To be included in the ledger, the transaction must be signed and submitted to the network.",
-      ),
+      page.getByText("This transaction needs signature(s)."),
     ).toBeVisible();
   });
 
@@ -129,6 +129,14 @@ test.describe("Sign Step in Build Flow", () => {
     // Verify success alert appears
     await expect(
       page.getByText("Transaction signed and ready to submit."),
+    ).toBeVisible();
+    await expect(
+      page.getByText("This transaction needs signature(s)."),
+    ).toBeHidden();
+    await expect(
+      page.getByText(
+        "This step is optional. You can skip this step or add a signature if needed.",
+      ),
     ).toBeVisible();
 
     // Verify the signed transaction is shown in the result card's code editor,
