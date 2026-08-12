@@ -206,7 +206,7 @@ export const ContractStorage = ({
       contractAddress: contractId,
       dataKey: key,
       durability: durability,
-    })?.toXDR("base64");
+    })?.toXdr("base64");
 
     trackEvent(TrackingEvent.SMART_CONTRACTS_EXPLORER_STORAGE_RESTORE, {
       contractId,

@@ -10,7 +10,10 @@ import {
   TransactionBuilder,
 } from "@stellar/stellar-sdk";
 
-import { getRequiredSigners } from "../../src/helpers/checkRequiredSignatures";
+import {
+  getRequiredSigners,
+  getTxSignatureCompleteness,
+} from "../../src/helpers/checkRequiredSignatures";
 
 const NETWORK = Networks.TESTNET;
 const DESTINATION = Keypair.random().publicKey();
@@ -64,7 +67,7 @@ describe("getRequiredSigners()", () => {
 
       const [outer] = getRequiredSigners(tx);
 
-      expect(outer.hash.toString("hex")).toBe(tx.hash().toString("hex"));
+      expect(Array.from(outer.hash)).toEqual(Array.from(tx.hash()));
     });
 
     it("includes distinct operation source accounts alongside the tx source", () => {
@@ -137,12 +140,27 @@ describe("getRequiredSigners()", () => {
       const outer = result.find((e) => e.envelope === "outer");
       const inner = result.find((e) => e.envelope === "inner");
 
-      expect(outer?.hash.toString("hex")).toBe(
-        feeBumpTx.hash().toString("hex"),
+      expect(Array.from(outer?.hash ?? [])).toEqual(
+        Array.from(feeBumpTx.hash()),
       );
-      expect(inner?.hash.toString("hex")).toBe(
-        feeBumpTx.innerTransaction.hash().toString("hex"),
+      expect(Array.from(inner?.hash ?? [])).toEqual(
+        Array.from(feeBumpTx.innerTransaction.hash()),
       );
+    });
+  });
+});
+
+describe("getTxSignatureCompleteness()", () => {
+  it("recognizes a valid v17 decorated signature", () => {
+    const signer = Keypair.random();
+    const tx = buildTx(signer.publicKey());
+    tx.sign(signer);
+
+    expect(getTxSignatureCompleteness(tx)).toEqual({
+      isComplete: true,
+      hasInvalid: false,
+      missingSigners: [],
+      hasUnrecognizedSigners: false,
     });
   });
 });

@@ -109,8 +109,8 @@ export const FetchContractMethodPickerWithQuery = ({
     if ((isSacDataSuccess || isContractClientSuccess) && memoizedMethods) {
       return (
         memoizedMethods
-          ?.filter((func) => !func.name().toString().includes("__"))
-          ?.map((func) => func.name().toString()) || []
+          ?.filter((func) => !func.name.toString().includes("__"))
+          ?.map((func) => func.name.toString()) || []
       );
     }
     return [];

@@ -27,7 +27,7 @@ export const useImportSignatureCompleteness =
         return null;
       }
       try {
-        const tx = TransactionBuilder.fromXDR(
+        const tx = TransactionBuilder.fromXdr(
           importState.importXdr,
           network.passphrase,
         );

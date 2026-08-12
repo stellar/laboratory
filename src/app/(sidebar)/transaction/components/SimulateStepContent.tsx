@@ -37,6 +37,7 @@ import { checkIsReadOnly } from "@/helpers/sorobanUtils";
 import {
   extractAuthEntries,
   isAddressAuthEntry,
+  replaceAuthEntries,
 } from "@/helpers/sorobanAuthUtils";
 
 import { validate } from "@/validate";
@@ -146,7 +147,7 @@ export const SimulateStepContent = ({
     }
 
     try {
-      const rawTx = TransactionBuilder.fromXDR(
+      const rawTx = TransactionBuilder.fromXdr(
         xdrToSimulate,
         network.passphrase,
       );
@@ -160,20 +161,8 @@ export const SimulateStepContent = ({
       ).build();
 
       // Replace auth entries on the assembled transaction with signed versions
-      const envelope = assembled.toEnvelope();
-      const ops = envelope.v1().tx().operations();
+      const finalXdr = replaceAuthEntries(assembled, signedEntries);
 
-      for (const op of ops) {
-        if (op.body().switch() === xdr.OperationType.invokeHostFunction()) {
-          const ihf = op.body().invokeHostFunctionOp();
-          const signedAuth = signedEntries.map((entryBase64) =>
-            xdr.SorobanAuthorizationEntry.fromXDR(entryBase64, "base64"),
-          );
-          ihf.auth(signedAuth);
-        }
-      }
-
-      const finalXdr = envelope.toXDR("base64");
       actions.setAssembledXdr(finalXdr);
       actions.setSignedAuthEntriesXdr(signedEntries);
       trackEvent(TrackingEvent.SOROBAN_AUTH_ASSEMBLY_SUCCESS);
@@ -292,7 +281,7 @@ export const SimulateStepContent = ({
           const preSignedEntries: string[] = [];
 
           for (let i = 0; i < entries.length; i++) {
-            const entry = xdr.SorobanAuthorizationEntry.fromXDR(
+            const entry = xdr.SorobanAuthorizationEntry.fromXdr(
               entries[i],
               "base64",
             );
@@ -312,7 +301,7 @@ export const SimulateStepContent = ({
             // transaction with simulation resources (fees, sorobanData)
             // so the Sign step receives a complete XDR ready for signing.
             try {
-              const rawTx = TransactionBuilder.fromXDR(
+              const rawTx = TransactionBuilder.fromXdr(
                 xdrToSimulate,
                 network.passphrase,
               );
@@ -323,7 +312,7 @@ export const SimulateStepContent = ({
                 rawTx,
                 parsedSim,
               ).build();
-              actions.setAssembledXdr(assembled.toXDR());
+              actions.setAssembledXdr(assembled.toXdr());
             } catch (e) {
               trackEvent(TrackingEvent.SOROBAN_AUTO_ASSEMBLY_ERROR, {
                 error: String(e),

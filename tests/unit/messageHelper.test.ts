@@ -29,11 +29,16 @@ describe("SEP-53 messageHelper", () => {
 
   it("does not match a raw-message signature (SEP-53 signs a prefixed hash)", () => {
     const message = "prove ownership";
-    const { signature } = signMessageWithSecretKey({ secretKey: SECRET, message });
+    const { signature } = signMessageWithSecretKey({
+      secretKey: SECRET,
+      message,
+    });
 
     // A signature over the SEP-53 payload must not match a raw-message signature.
     const rawMessageSignature = kp.sign(Buffer.from(message, "utf8"));
-    expect(rawMessageSignature.toString("base64")).not.toBe(signature);
+    expect(Buffer.from(rawMessageSignature).toString("base64")).not.toBe(
+      signature,
+    );
   });
 
   it("fails verification for a tampered message", () => {
@@ -42,9 +47,9 @@ describe("SEP-53 messageHelper", () => {
       message: "original",
     });
 
-    expect(
-      verifyMessage({ publicKey, message: "tampered", signature }),
-    ).toBe(false);
+    expect(verifyMessage({ publicKey, message: "tampered", signature })).toBe(
+      false,
+    );
   });
 
   it("fails verification for a different signer", () => {

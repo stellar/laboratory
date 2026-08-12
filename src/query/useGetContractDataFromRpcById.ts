@@ -3,6 +3,11 @@ import { Contract, rpc as StellarRpc, xdr } from "@stellar/stellar-sdk";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { NetworkHeaders } from "@/types/types";
 
+type ContractType = Extract<
+  xdr.ContractExecutableVariantName,
+  "contractExecutableWasm" | "contractExecutableStellarAsset"
+>;
+
 export const useGetContractDataFromRpcById = ({
   contractId,
   rpcUrl,
@@ -12,21 +17,10 @@ export const useGetContractDataFromRpcById = ({
   rpcUrl: string;
   headers?: NetworkHeaders;
 }) => {
-  const execWasmType = xdr.ContractExecutableType.contractExecutableWasm().name;
-  const execStellarAssetType =
-    xdr.ContractExecutableType.contractExecutableStellarAsset().name;
-
   const query = useQuery({
-    queryKey: [
-      "useGetContractDataFromRpcById",
-      contractId,
-      rpcUrl,
-      execWasmType,
-      execStellarAssetType,
-      headers,
-    ],
+    queryKey: ["useGetContractDataFromRpcById", contractId, rpcUrl, headers],
     queryFn: async (): Promise<{
-      contractType: typeof execWasmType | typeof execStellarAssetType | null;
+      contractType: ContractType | null;
       wasmHash: string;
     } | null> => {
       if (!contractId || !rpcUrl) {
@@ -43,24 +37,34 @@ export const useGetContractDataFromRpcById = ({
         const ledgerEntries =
           await rpcServer.getLedgerEntries(contractLedgerKey);
 
-        if (!ledgerEntries?.entries?.[0]?.val) {
+        const ledgerEntryData = ledgerEntries?.entries?.[0]?.val;
+
+        if (!ledgerEntryData || ledgerEntryData.type !== "contractData") {
           throw "Could not obtain contract data from server.";
         }
 
-        const executable = ledgerEntries.entries[0].val
-          .contractData()
-          ?.val()
-          ?.instance()
-          ?.executable();
+        const contractValue = ledgerEntryData.contractData.val;
+
+        if (contractValue.type !== "scvContractInstance") {
+          throw "Could not get executable from contract data.";
+        }
+
+        const executable = contractValue.instance.executable;
 
         if (!executable) {
           throw "Could not get executable from contract data.";
         }
 
-        const contractType = executable?.switch()?.name;
-        const wasmHash = executable.wasmHash()?.toString("hex");
+        const contractType = executable.type;
+        const wasmHash =
+          contractType === "contractExecutableWasm"
+            ? Buffer.from(executable.wasmHash.toBytes()).toString("hex")
+            : "";
 
-        if ([execWasmType, execStellarAssetType].includes(contractType)) {
+        if (
+          contractType === "contractExecutableWasm" ||
+          contractType === "contractExecutableStellarAsset"
+        ) {
           return { contractType, wasmHash };
         }
 

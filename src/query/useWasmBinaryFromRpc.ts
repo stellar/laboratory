@@ -19,7 +19,7 @@ export const useWasmBinaryFromRpc = ({
 }) => {
   const query = useQuery({
     queryKey: ["useWasmBinaryFromRpc", wasmHash, rpcUrl, headers],
-    queryFn: async (): Promise<Buffer | null> => {
+    queryFn: async (): Promise<Uint8Array | null> => {
       if (!wasmHash || !rpcUrl) {
         return null;
       }

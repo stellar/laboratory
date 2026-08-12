@@ -50,7 +50,9 @@ export const PrettyJsonTransaction = ({
 
     // Signature check
     if (data && parentKey === "signatures" && key === "signature") {
-      const match = data.find((s) => s.sig.equals(Buffer.from(item, "hex")));
+      const match = data.find((s) =>
+        Buffer.from(s.sig).equals(Buffer.from(item, "hex")),
+      );
 
       if (match) {
         return PrettyJson.renderStringValue({

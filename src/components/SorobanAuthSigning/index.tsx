@@ -37,7 +37,7 @@ const signAuthEntries = async ({
   const results: { index: number; signedEntryXdr: string }[] = [];
 
   for (const idx of entryIndices) {
-    const entry = xdr.SorobanAuthorizationEntry.fromXDR(
+    const entry = xdr.SorobanAuthorizationEntry.fromXdr(
       authEntriesXdr[idx],
       "base64",
     );
@@ -55,7 +55,7 @@ const signAuthEntries = async ({
           validUntilLedgerSeq,
           networkPassphrase,
         );
-        results.push({ index: idx, signedEntryXdr: signed.toXDR("base64") });
+        results.push({ index: idx, signedEntryXdr: signed.toXdr("base64") });
       }
     }
   }

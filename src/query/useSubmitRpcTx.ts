@@ -34,7 +34,7 @@ export const useSubmitRpcTx = () => {
       headers,
     }: SubmitRpcTxProps) => {
       try {
-        const transaction = TransactionBuilder.fromXDR(
+        const transaction = TransactionBuilder.fromXdr(
           transactionXdr,
           networkPassphrase,
         );
@@ -51,7 +51,7 @@ export const useSubmitRpcTx = () => {
             const errorResult = parse(
               StellarXdr.decode(
                 "TransactionResult",
-                sentTx.errorResult?.toXDR("base64"),
+                sentTx.errorResult?.toXdr("base64"),
               ),
             ) as xdr.TransactionResult;
 
@@ -84,7 +84,7 @@ export const useSubmitRpcTx = () => {
           throw { status: "TIMEOUT", result: txResponse };
         }
 
-        const submittedTx = TransactionBuilder.fromXDR(
+        const submittedTx = TransactionBuilder.fromXdr(
           txResponse.envelopeXdr,
           networkPassphrase,
         );

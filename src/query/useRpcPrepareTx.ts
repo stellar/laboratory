@@ -30,7 +30,7 @@ export const useRpcPrepareTx = () => {
       headers,
     }: PrepareRpcTxProps) => {
       try {
-        const transaction = TransactionBuilder.fromXDR(
+        const transaction = TransactionBuilder.fromXdr(
           transactionXdr,
           networkPassphrase,
         );
@@ -41,7 +41,7 @@ export const useRpcPrepareTx = () => {
         const preparedTx = await rpcServer.prepareTransaction(transaction);
 
         return {
-          transactionXdr: preparedTx.toXDR(),
+          transactionXdr: preparedTx.toXdr(),
         };
       } catch (e) {
         throw {

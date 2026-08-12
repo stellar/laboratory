@@ -24,8 +24,8 @@ function toXDRPrice(price: string) {
 }
 
 function fromXDRPrice(price: xdr.Price) {
-  const n = new BigNumber(price.n());
-  return n.div(new BigNumber(price.d())).toString();
+  const n = new BigNumber(price.n);
+  return n.div(new BigNumber(price.d)).toString();
 }
 
 export const xdrUtils = {

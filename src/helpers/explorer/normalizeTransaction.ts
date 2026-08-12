@@ -38,7 +38,7 @@ export async function normalizeTransaction(
 ): Promise<NormalizedTransaction | null> {
   await StellarXdr.initialize();
 
-  const xdr = txinfo.envelopeXdr.toXDR().toString("base64");
+  const xdr = txinfo.envelopeXdr.toXdr("base64");
   const guesses = StellarXdr.guess(xdr);
 
   const decodedTx = guesses

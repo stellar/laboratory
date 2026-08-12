@@ -21,7 +21,7 @@ export type SignedMessage = {
  * The message is treated as UTF-8 text. ed25519 signing/verification operates on
  * this 32-byte hash, never on the raw message.
  */
-const sep53PayloadHash = (message: string): Buffer => {
+const sep53PayloadHash = (message: string): Uint8Array => {
   const payload = Buffer.concat([
     Buffer.from(SEP53_PREFIX, "utf8"),
     Buffer.from(message, "utf8"),
@@ -48,7 +48,7 @@ export const signMessageWithSecretKey = ({
   return {
     publicKey: keypair.publicKey(),
     message,
-    signature: signature.toString("base64"),
+    signature: Buffer.from(signature).toString("base64"),
   };
 };
 

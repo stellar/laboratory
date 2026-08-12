@@ -1,4 +1,4 @@
-import { xdr } from "@stellar/stellar-sdk";
+import { Transaction, xdr } from "@stellar/stellar-sdk";
 
 type SimulationResponse = Record<string, any>;
 
@@ -26,8 +26,7 @@ const ADDRESS_CREDENTIAL_TYPE_NAMES = new Set([
  */
 export const isAddressAuthEntry = (
   entry: xdr.SorobanAuthorizationEntry,
-): boolean =>
-  ADDRESS_CREDENTIAL_TYPE_NAMES.has(entry.credentials().switch().name);
+): boolean => ADDRESS_CREDENTIAL_TYPE_NAMES.has(entry.credentials.type);
 
 /**
  * Extracts auth entries from the simulation response.
@@ -50,4 +49,35 @@ export const extractAuthEntries = (
   }
 
   return authEntries;
+};
+
+/**
+ * Replaces the auth entries on every `invokeHostFunction` operation with signed
+ * versions, returning the base64 transaction envelope XDR.
+ *
+ * Operates on the envelope from `toEnvelope()`, which is a fresh copy, so the
+ * source transaction is left untouched.
+ */
+export const replaceAuthEntries = (
+  transaction: Transaction,
+  signedEntriesXdr: string[],
+): string => {
+  const envelope = transaction.toEnvelope();
+  const txEnvelope = xdr.expectUnionVariant(envelope, "envelopeTypeTx");
+  const signedAuth = signedEntriesXdr.map((entryBase64) =>
+    xdr.SorobanAuthorizationEntry.fromXdr(entryBase64, "base64"),
+  );
+
+  for (const op of txEnvelope.v1.tx.operations) {
+    if (op.body.type === "invokeHostFunction") {
+      const ihf = op.body.invokeHostFunctionOp;
+      // `auth` is readonly-typed but the array itself is live, and `envelope`
+      // is the object serialized below — so replacing the contents in place is
+      // what lands the signed entries in the XDR. Assigning to `ihf.auth`, or
+      // reassigning a copy, would silently drop them.
+      ihf.auth.splice(0, ihf.auth.length, ...signedAuth);
+    }
+  }
+
+  return envelope.toXdr("base64");
 };

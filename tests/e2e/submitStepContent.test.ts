@@ -103,6 +103,21 @@ const seedSessionStorage = async (page: Page, storeState: object) => {
 
   await page.evaluate((stateJson) => {
     sessionStorage.setItem("stellar_lab_tx_flow_build", stateJson);
+
+    // Seed the network so it is set on first render. Otherwise the store starts
+    // with no network and testnet is only applied by NetworkSelector's
+    // "set default network on launch" effect — anything deriving from
+    // network.passphrase (the transaction hash field) is absent until then.
+    localStorage.setItem(
+      "stellar_lab_network",
+      JSON.stringify({
+        id: "testnet",
+        label: "Testnet",
+        horizonUrl: "https://horizon-testnet.stellar.org",
+        rpcUrl: "https://soroban-testnet.stellar.org",
+        passphrase: "Test SDF Network ; September 2015",
+      }),
+    );
   }, JSON.stringify(storeState));
 
   await page.reload();
@@ -417,6 +432,5 @@ test.describe("Submit Step in Build Flow", () => {
         timeout: 15000,
       });
     });
-
   });
 });

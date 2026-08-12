@@ -83,7 +83,7 @@ export const AuthEntryItem = ({
   const handleCustomSign = useCallback(
     async ({ secretKeys }: { sigType: string; secretKeys: string[] }) => {
       try {
-        const entry = xdr.SorobanAuthorizationEntry.fromXDR(
+        const entry = xdr.SorobanAuthorizationEntry.fromXdr(
           authEntriesXdr[index],
           "base64",
         );
@@ -99,7 +99,7 @@ export const AuthEntryItem = ({
               validUntilLedgerSeq,
               networkPassphrase,
             );
-            onAuthSigned(index, signed.toXDR("base64"));
+            onAuthSigned(index, signed.toXdr("base64"));
           }
         } else {
           onAuthSigned(index, authEntriesXdr[index]);

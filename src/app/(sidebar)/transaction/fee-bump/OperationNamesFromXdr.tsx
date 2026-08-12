@@ -55,7 +55,7 @@ export const OperationNamesFromXdr = ({
   }
 
   try {
-    const transaction = TransactionBuilder.fromXDR(xdr, networkPassphrase) as
+    const transaction = TransactionBuilder.fromXdr(xdr, networkPassphrase) as
       | Transaction
       | FeeBumpTransaction;
     const operationNames = getOperations(transaction).map(({ type }) =>

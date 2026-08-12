@@ -22,7 +22,7 @@ export const useSubmitHorizonTx = () => {
       networkPassphrase,
       headers,
     }: SubmitHorizonTxProps) => {
-      const transaction = TransactionBuilder.fromXDR(
+      const transaction = TransactionBuilder.fromXdr(
         transactionXdr,
         networkPassphrase,
       );

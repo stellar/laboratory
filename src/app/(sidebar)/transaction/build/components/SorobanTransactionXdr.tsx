@@ -64,12 +64,9 @@ export const SorobanTransactionXdr = () => {
 
   if (buildResult?.xdr) {
     try {
-      const txnHash = TransactionBuilder.fromXDR(
-        buildResult.xdr,
-        network.passphrase,
-      )
-        .hash()
-        .toString("hex");
+      const txnHash = Buffer.from(
+        TransactionBuilder.fromXdr(buildResult.xdr, network.passphrase).hash(),
+      ).toString("hex");
 
       return (
         <TransactionXdrDisplay

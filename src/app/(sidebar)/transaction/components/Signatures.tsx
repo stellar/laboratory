@@ -1,16 +1,18 @@
-import { FeeBumpTransaction, Transaction, xdr } from "@stellar/stellar-sdk";
+import { FeeBumpTransaction, Transaction } from "@stellar/stellar-sdk";
 import { Card, Icon, Text } from "@stellar/design-system";
 
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
-import {
-  findKeyBySignatureHint,
-  verifySignature,
-} from "@/helpers/signatureHint";
 import {
   Envelope,
   getRequiredSigners,
 } from "@/helpers/checkRequiredSignatures";
 import { hasSorobanData } from "@/helpers/sorobanUtils";
+
+import {
+  MatchStatus,
+  ResolvedSignatureRow,
+  resolveSignatureRows,
+} from "./resolveSignatureRows";
 
 import { Box } from "@/components/layout/Box";
 import { TransactionTabEmptyMessage } from "@/components/TransactionTabEmptyMessage";
@@ -26,15 +28,6 @@ const hasMaxTimeSet = (tx: Transaction | FeeBumpTransaction): boolean => {
   const inner = tx instanceof FeeBumpTransaction ? tx.innerTransaction : tx;
   const max = inner.timeBounds?.maxTime;
   return Boolean(max) && max !== "0";
-};
-
-type MatchStatus = "valid" | "invalid" | "unknown";
-
-type ResolvedSignatureRow = {
-  hint: string;
-  signature: string;
-  signerPubKey?: string;
-  matchStatus: MatchStatus;
 };
 
 type EnvelopeSummaryContext = {
@@ -115,28 +108,6 @@ const getEnvelopeSummary = (
   };
 };
 
-const resolveRows = (
-  signatures: xdr.DecoratedSignature[],
-  signers: string[],
-  hashHex: string,
-): ResolvedSignatureRow[] =>
-  signatures.map((sig) => {
-    const hint = sig.hint().toString("hex");
-    const signature = sig.signature().toString("hex");
-    const signerPubKey = findKeyBySignatureHint(hint, signers);
-
-    let matchStatus: MatchStatus;
-    if (!signerPubKey) {
-      matchStatus = "unknown";
-    } else if (verifySignature({ hint, signature }, signerPubKey, hashHex)) {
-      matchStatus = "valid";
-    } else {
-      matchStatus = "invalid";
-    }
-
-    return { hint, signature, signerPubKey, matchStatus };
-  });
-
 export const Signatures = ({
   tx,
   parsedTxType,
@@ -158,14 +129,12 @@ export const Signatures = ({
       env.envelope === "outer"
         ? tx.signatures
         : (tx as FeeBumpTransaction).innerTransaction.signatures;
-    const hashHex = env.hash.toString("hex");
 
     return {
       envelope: env.envelope,
       signers: env.signers,
-      hashHex,
       signatures,
-      rows: resolveRows(signatures, env.signers, hashHex),
+      rows: resolveSignatureRows(signatures, env.signers, env.hash),
     };
   });
 

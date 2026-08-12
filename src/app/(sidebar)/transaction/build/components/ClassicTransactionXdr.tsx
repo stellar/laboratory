@@ -509,9 +509,9 @@ export const ClassicTransactionXdr = () => {
 
   if (txnXdr?.xdr) {
     try {
-      const txnHash = TransactionBuilder.fromXDR(txnXdr.xdr, network.passphrase)
-        .hash()
-        .toString("hex");
+      const txnHash = Buffer.from(
+        TransactionBuilder.fromXdr(txnXdr.xdr, network.passphrase).hash(),
+      ).toString("hex");
 
       return (
         <TransactionXdrDisplay

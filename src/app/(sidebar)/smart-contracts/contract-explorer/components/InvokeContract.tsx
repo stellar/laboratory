@@ -33,9 +33,9 @@ export const InvokeContract = ({
     const invokeContractSpecFuncs = contractSpec?.funcs();
 
     return invokeContractSpecFuncs
-      ?.filter((func) => !func.name().toString().includes("__"))
+      ?.filter((func) => !func.name.toString().includes("__"))
       ?.map((func) => {
-        const funcName = func.name().toString();
+        const funcName = func.name.toString();
 
         return (
           <InvokeContractForm

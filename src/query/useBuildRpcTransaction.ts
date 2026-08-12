@@ -69,7 +69,7 @@ export const useBuildRpcTransaction = ({
 
         return {
           preparedTxn,
-          preparedXdr: preparedTxn.toEnvelope().toXDR("base64"),
+          preparedXdr: preparedTxn.toEnvelope().toXdr("base64"),
         };
       } catch (error) {
         throw `Error building RPC transaction: ${error}.`;

@@ -118,12 +118,9 @@ export const FeeBumpStepContent = ({
     }
 
     try {
-      const txnHash = TransactionBuilder.fromXDR(
-        feeBumpedTx.xdr,
-        network.passphrase,
-      )
-        .hash()
-        .toString("hex");
+      const txnHash = Buffer.from(
+        TransactionBuilder.fromXdr(feeBumpedTx.xdr, network.passphrase).hash(),
+      ).toString("hex");
 
       return { hash: txnHash, networkPassphrase: network.passphrase };
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
