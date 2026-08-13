@@ -17,10 +17,6 @@ export const baseURL = `http://localhost:${PORT}`;
 export default defineConfig({
   /* Timeout per test */
   timeout: 20 * 1000,
-  /* Assertion timeout. Higher than Playwright's 5s default because `next dev`
-   * compiles routes lazily: whichever test hits a route first pays a multi-second
-   * compile, which can outlast a shorter assertion window. */
-  expect: { timeout: 10 * 1000 },
   /* Tests directory */
   testDir: "./tests/e2e",
   /* Run tests in files in parallel */
@@ -44,15 +40,11 @@ export default defineConfig({
     navigationTimeout: 15 * 1000,
   },
 
-  /* Run your local dev server before starting the tests.
-   * CI builds first so routes are compiled up front rather than lazily on first
-   * hit, which is what makes dev-mode runs timing-sensitive. Locally we stay on
-   * `next dev` to keep HMR and a fast edit/re-run loop. */
+  /* Run your local dev server before starting the tests */
   webServer: {
-    command: process.env.CI ? "pnpm build && pnpm start" : "pnpm dev",
+    command: "pnpm dev",
     url: baseURL,
-    /* The CI budget has to cover a full production build, not just server boot. */
-    timeout: process.env.CI ? 300 * 1000 : 60 * 1000,
+    timeout: 60 * 1000,
     reuseExistingServer: !process.env.CI,
   },
 
