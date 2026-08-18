@@ -66,17 +66,18 @@ To manually fetch limits: `pnpm fetch-limits`.
 
 ### WalletConnect
 
-Connecting mobile wallets over WalletConnect requires a project id from
-[Reown Cloud](https://cloud.reown.com/). Set it before starting the app:
+WalletConnect is offered on mainnet and testnet only, since those are the only
+Stellar chains it exposes (`stellar:pubnet` and `stellar:testnet`). It uses a
+[Reown Cloud](https://cloud.reown.com/) project id committed in
+`src/components/WalletKit/walletConnect.ts`.
 
-```
-NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=your_project_id
-```
-
-Without it, WalletConnect is left out of the Connect Wallet modal and everything
-else works as before. WalletConnect is only offered on mainnet and testnet,
-since those are the only Stellar chains it exposes (`stellar:pubnet` and
-`stellar:testnet`).
+**Testing it locally needs an https origin.** From `http://localhost`, Freighter
+mobile approves the session and returns the account, but then refuses to sign,
+reporting the domain as not connected. Use a tunnel (see Hardware Wallets below)
+or a deployed preview, and add that origin to the Reown project's allowed
+domains — the relay rejects unlisted origins outright with
+`3000 (Unauthorized: origin not allowed)`. Allowlist changes can take a few
+hours to propagate.
 
 ### Hardware Wallets
 

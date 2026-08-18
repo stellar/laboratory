@@ -21,16 +21,16 @@ export const WALLET_CONNECT_ID = "wallet_connect";
  * refuses origins missing from the project's allowlist with
  * `3000 (Unauthorized: origin not allowed)`.
  *
- * It is committed because `NEXT_PUBLIC_*` values are inlined at build time and
- * the kube PR preview pipeline can't inject build-time env vars, so a preview
- * build would otherwise have no id and hide WalletConnect entirely.
+ * It is committed rather than injected because `NEXT_PUBLIC_*` values are
+ * inlined at build time, and not every pipeline that builds Lab can supply
+ * build-time env vars — without a default those builds would hide WalletConnect
+ * entirely.
  *
- * Deployments should override it with `NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID`
- * (wired to the `WALLET_CONNECT_PROJECT_ID` GitHub secret in
- * `laboratory-build.yml`) so production runs against an SDF-owned project
- * rather than this one's quota and dashboard. Whichever project is used, its
- * allowlist must include the deployed origin — `https://lab.stellar.org` — or
- * WalletConnect cannot connect there at all.
+ * A build can still override it by setting
+ * `NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID`, which is worth doing so production
+ * runs against an SDF-owned project rather than this one's quota and dashboard.
+ * Whichever project is used, its allowlist must include the deployed origin —
+ * `https://lab.stellar.org` — or WalletConnect cannot connect there at all.
  *
  * See https://github.com/stellar/laboratory/issues/2172
  */
