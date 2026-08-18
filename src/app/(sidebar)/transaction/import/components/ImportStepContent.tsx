@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   FeeBumpTransaction,
   Transaction,
@@ -21,12 +21,21 @@ import { FEE_BUMP_TX_FIELDS, TX_FIELDS } from "@/constants/signTransactionPage";
 
 import { TransactionStepHeader } from "@/app/(sidebar)/transaction/components/TransactionStepHeader";
 import { Signatures } from "@/app/(sidebar)/transaction/components/Signatures";
+import { Operations } from "@/app/(sidebar)/transaction/components/Operations";
 import { Box } from "@/components/layout/Box";
+import { Tabs } from "@/components/Tabs";
 import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { TextPicker } from "@/components/FormElements/TextPicker";
 import { PageCard } from "@/components/layout/PageCard";
 
 const MIN_LENGTH_FOR_FULL_WIDTH_FIELD = 30;
+
+type OverviewTab = "operations" | "signatures";
+
+const OVERVIEW_TABS = [
+  { id: "operations", label: "Operations" },
+  { id: "signatures", label: "Signatures" },
+];
 
 const isFeeBumpTransaction = (
   tx: Transaction | FeeBumpTransaction,
@@ -48,6 +57,10 @@ export const ImportStepContent = ({
 }: {
   isReadyToSubmit?: boolean;
 }) => {
+  // View-only state — deliberately not in the flow store, since the selected
+  // tab shouldn't persist across navigation or reloads.
+  const [activeTab, setActiveTab] = useState<OverviewTab>("operations");
+
   const { network } = useStore();
   const {
     import: importState,
@@ -166,7 +179,6 @@ export const ImportStepContent = ({
   };
 
   const overviewFields = getOverviewFields();
-  const hasSignatures = Boolean(parsedTx?.signatures.length);
 
   return (
     <Box gap="md">
@@ -234,9 +246,19 @@ export const ImportStepContent = ({
             </div>
           </PageCard>
 
-          {hasSignatures ? (
-            <Signatures tx={parsedTx} parsedTxType={parsedTxType} />
-          ) : null}
+          <Box gap="md">
+            <Tabs
+              tabs={OVERVIEW_TABS}
+              activeTabId={activeTab}
+              onChange={(id) => setActiveTab(id as OverviewTab)}
+            />
+
+            {activeTab === "operations" ? (
+              <Operations tx={parsedTx} />
+            ) : (
+              <Signatures tx={parsedTx} parsedTxType={parsedTxType} />
+            )}
+          </Box>
         </>
       ) : null}
     </Box>

@@ -155,6 +155,36 @@ test.describe("Import Transaction Page", () => {
     await expect(page.getByLabel("Number of operations")).toHaveValue("3");
   });
 
+  test("Switches between the Operations and Signatures tabs", async ({
+    page,
+  }) => {
+    const xdrInput = page.getByLabel("Transaction envelope in XDR");
+    await xdrInput.fill(MOCK_TX_XDR_3_OPERATIONS);
+
+    // Operations is the default tab.
+    await expect(page.getByTestId("operations")).toHaveAttribute(
+      "data-is-active",
+      "true",
+    );
+    await expect(page.getByText("create_account")).toBeVisible();
+    await expect(
+      page.getByText("begin_sponsoring_future_reserves"),
+    ).toBeVisible();
+
+    // Filtering by type narrows the list to that operation.
+    await page.getByRole("button", { name: "Create account" }).click();
+    await expect(page.getByText("create_account")).toBeVisible();
+    await expect(
+      page.getByText("begin_sponsoring_future_reserves"),
+    ).toBeHidden();
+
+    // This envelope carries no signatures, so the Signatures tab is empty.
+    await page.getByTestId("signatures").click();
+    await expect(
+      page.getByText("This transaction has no signatures."),
+    ).toBeVisible();
+  });
+
   test("Advances to the sign step", async ({ page }) => {
     const xdrInput = page.getByLabel("Transaction envelope in XDR");
     await xdrInput.fill(MOCK_TX_XDR);
