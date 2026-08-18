@@ -1,0 +1,25 @@
+@use "../../styles/utils.scss" as *;
+
+.ClassicOperationsList {
+  &__operation {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--sds-clr-gray-06);
+    border-radius: pxToRem(8px);
+
+    .Card {
+      --Card-padding: #{pxToRem(12px)};
+    }
+  }
+
+  &__operationDetails {
+    display: grid;
+    gap: pxToRem(6px);
+  }
+
+  .InfoFieldItem {
+    &__label {
+      font-weight: var(--sds-fw-medium);
+    }
+  }
+}

@@ -244,21 +244,21 @@ export const ImportStepContent = ({
                 );
               })}
             </div>
+
+            <Box gap="md">
+              <Tabs
+                tabs={OVERVIEW_TABS}
+                activeTabId={activeTab}
+                onChange={(id) => setActiveTab(id as OverviewTab)}
+              />
+
+              {activeTab === "operations" ? (
+                <Operations tx={parsedTx} />
+              ) : (
+                <Signatures tx={parsedTx} parsedTxType={parsedTxType} />
+              )}
+            </Box>
           </PageCard>
-
-          <Box gap="md">
-            <Tabs
-              tabs={OVERVIEW_TABS}
-              activeTabId={activeTab}
-              onChange={(id) => setActiveTab(id as OverviewTab)}
-            />
-
-            {activeTab === "operations" ? (
-              <Operations tx={parsedTx} />
-            ) : (
-              <Signatures tx={parsedTx} parsedTxType={parsedTxType} />
-            )}
-          </Box>
         </>
       ) : null}
     </Box>

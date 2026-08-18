@@ -431,29 +431,9 @@
 // Transaction Dashboard - Classic Operations
 // =============================================================================
 .TransactionClassicOperations {
-  &__operation {
-    display: flex;
-    flex-direction: column;
-
-    .Card {
-      --Card-padding: #{pxToRem(16px)};
-    }
-  }
-
   h2 {
     font-size: pxToRem(16px);
     line-height: pxToRem(24px);
-  }
-
-  &__operationDetails {
-    display: grid;
-    gap: pxToRem(6px);
-  }
-
-  .InfoFieldItem {
-    &__label {
-      font-weight: var(--sds-fw-medium);
-    }
   }
 }
 

@@ -43,7 +43,7 @@ test.describe("Transaction Dashboard - Classic Operations", () => {
 
     // Check operation details are displayed
     const operationDetails = page.locator(
-      ".TransactionClassicOperations__operationDetails",
+      ".ClassicOperationsList__operationDetails",
     );
     await expect(operationDetails).toBeVisible();
 
@@ -90,7 +90,7 @@ test.describe("Transaction Dashboard - Classic Operations", () => {
 
     // Check we have 3 operation cards
     const operationCards = page.locator(
-      ".TransactionClassicOperations__operation",
+      ".ClassicOperationsList__operation",
     );
     await expect(operationCards).toHaveCount(3);
 
@@ -106,7 +106,7 @@ test.describe("Transaction Dashboard - Classic Operations", () => {
     // Verify end_sponsoring_future_reserves has no details (string-body operation)
     const endSponsoringOp = operationCards.nth(2);
     const endSponsoringDetails = endSponsoringOp.locator(
-      ".TransactionClassicOperations__operationDetails",
+      ".ClassicOperationsList__operationDetails",
     );
     await expect(endSponsoringDetails).not.toBeVisible();
   });
@@ -140,7 +140,7 @@ test.describe("Transaction Dashboard - Classic Operations", () => {
 
     // Check we see 5 operations on first page (PAGE_SIZE = 5)
     const operationCards = page.locator(
-      ".TransactionClassicOperations__operation",
+      ".ClassicOperationsList__operation",
     );
     await expect(operationCards).toHaveCount(5);
 
@@ -249,7 +249,7 @@ test.describe("Transaction Dashboard - Classic Operations", () => {
 
     // Verify some operation details
     const operationDetails = page
-      .locator(".TransactionClassicOperations__operationDetails")
+      .locator(".ClassicOperationsList__operationDetails")
       .first();
     await expect(operationDetails.getByText("Sponsored id")).toBeVisible();
   });
@@ -273,7 +273,7 @@ test.describe("Transaction Dashboard - Classic Operations", () => {
     await page.waitForSelector("text=Operations", { timeout: 5000 });
 
     const operationDetails = page.locator(
-      ".TransactionClassicOperations__operationDetails",
+      ".ClassicOperationsList__operationDetails",
     );
 
     // Check that labels are formatted correctly (underscores replaced with spaces, capitalized)
