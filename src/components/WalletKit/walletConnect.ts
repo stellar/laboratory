@@ -203,6 +203,15 @@ export const loadWalletConnectModule = async ({
 
   const { walletConnectModule, chainFor } = await loadedWalletConnect;
 
+  // The kit's `isAvailable()` is just `!!signClient && !!modal`, and the module
+  // assigns `signClient` asynchronously in its constructor. Callers here open
+  // the wallet modal right after this resolves, and the kit snapshots
+  // availability at that moment — so without waiting, WalletConnect is listed
+  // as unavailable with an "Install" link that sends the user to
+  // walletconnect.com. Returns either way: a module that's merely slow to
+  // initialise should still be registered for the next attempt.
+  await waitForSignClient(walletConnectModule);
+
   // Network and theme can change after the module exists, so keep them in sync
   // on the one instance instead of rebuilding it. Note that `allowedChains`
   // only affects the *next* pairing — it cannot renegotiate a session that the

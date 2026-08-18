@@ -28,6 +28,7 @@ export const ConnectWallet = () => {
   const [connected, setConnected] = useState<boolean>(false);
   const [isModalVisible, setShowModal] = useState<boolean>(false);
   const [errorMessageOnConnect, setErrorMessageOnConnect] = useState("");
+  const [isPreparingWallets, setIsPreparingWallets] = useState<boolean>(false);
   const [hasAttemptedAutoConnect, setHasAttemptedAutoConnect] =
     useState<boolean>(false);
   const walletKitInstance = useContext(WalletKitContext);
@@ -219,8 +220,17 @@ export const ConnectWallet = () => {
   const connectWallet = async () => {
     try {
       // Register WalletConnect before the modal opens: the kit snapshots its
-      // wallet list on open, so a module added later wouldn't appear.
-      await walletKitInstance.ensureWalletConnect();
+      // wallet list on open, so a module added later wouldn't appear. This
+      // fetches a chunk and waits for the sign client, roughly a second, so the
+      // button shows a loading state until the modal is ready to open. Only this
+      // step is covered — `authModal` then waits on the user scanning a QR code.
+      setIsPreparingWallets(true);
+
+      try {
+        await walletKitInstance.ensureWalletConnect();
+      } finally {
+        setIsPreparingWallets(false);
+      }
 
       const { address } = await StellarWalletsKit.authModal();
 
@@ -313,7 +323,13 @@ export const ConnectWallet = () => {
       {renderModal()}
     </>
   ) : (
-    <Button size="md" variant="secondary" onClick={connectWallet}>
+    <Button
+      size="md"
+      variant="secondary"
+      isLoading={isPreparingWallets}
+      disabled={isPreparingWallets}
+      onClick={connectWallet}
+    >
       Connect wallet
       {renderErrorModal()}
     </Button>
