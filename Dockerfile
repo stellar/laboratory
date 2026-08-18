@@ -10,6 +10,10 @@ COPY . .
 
 # Passing env var to be used on client side
 ARG NEXT_PUBLIC_COMMIT_HASH
+# Reown (WalletConnect) project id. WalletConnect is left out of the Connect
+# Wallet modal when this is empty.
+ARG NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID
+ENV NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=$NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID
 
 RUN corepack enable
 RUN pnpm install

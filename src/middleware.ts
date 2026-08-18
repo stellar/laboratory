@@ -9,16 +9,22 @@ export function middleware(request: NextRequest) {
 
   // script-src 'unsafe-eval' is needed for XDR JSON WebAssembly scripts
   // connect-src http://localhost:* to allow local network
+  // connect-src wss://relay.walletconnect.org is the WalletConnect relay
+  //   (the `https:` source doesn't cover the `wss:` scheme)
+  // img-src/font-src api.web3modal.org and fonts.reown.com are used by the
+  //   Reown modal that renders the WalletConnect QR code
+  // frame-src verify.walletconnect.org is the iframe WalletConnect uses to
+  //   attest the dapp's domain to the wallet
   const cspHeader = `
     default-src 'self';
     script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: 'unsafe-inline' 'unsafe-eval';
     script-src-elem 'self' 'nonce-${nonce}' 'strict-dynamic' https://www.googletagmanager.com/ https: 'unsafe-inline';
     style-src 'self' https: 'unsafe-inline';
-    img-src 'self' https://stellar.creit.tech/wallet-icons/ https://www.googletagmanager.com/ https://storage.herewallet.app/ blob: data:;
-    connect-src 'self' http://localhost:* https:;
-    font-src 'self' https://fonts.gstatic.com/ https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs/base/browser/ui/codicons/codicon/codicon.ttf;
+    img-src 'self' https://stellar.creit.tech/wallet-icons/ https://www.googletagmanager.com/ https://storage.herewallet.app/ https://api.web3modal.org/ blob: data:;
+    connect-src 'self' http://localhost:* https: wss://relay.walletconnect.org;
+    font-src 'self' https://fonts.gstatic.com/ https://fonts.reown.com/ https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs/base/browser/ui/codicons/codicon/codicon.ttf;
     object-src 'none';
-    frame-src 'self' https://connect.trezor.io/ https://hot-labs.org/ https://www.youtube.com/;
+    frame-src 'self' https://connect.trezor.io/ https://hot-labs.org/ https://www.youtube.com/ https://verify.walletconnect.org/;
     base-uri 'self';
     form-action 'self';
     frame-ancestors 'none';

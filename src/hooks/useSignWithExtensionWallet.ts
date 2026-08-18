@@ -67,6 +67,10 @@ export const useSignWithExtensionWallet = ({
       } else {
         // if a user didn't log in via stellar wallet kit in the main nav
         // open a wallet kit modal to sign in
+        // Register WalletConnect first — the kit snapshots its wallet list when
+        // the modal opens, so a module added later wouldn't appear in it.
+        await walletKitInstance.ensureWalletConnect();
+
         const { address } = await StellarWalletsKit.authModal();
 
         if (address && txXdr) {

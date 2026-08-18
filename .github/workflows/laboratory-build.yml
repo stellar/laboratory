@@ -29,6 +29,9 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.ecr-login.outputs.ecr-registry }}
           LABEL: ${{ steps.vars.outputs.label }}
+          # Reown (WalletConnect) project id. When unset, WalletConnect is left
+          # out of the Connect Wallet modal.
+          NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID: ${{ secrets.WALLET_CONNECT_PROJECT_ID }}
         run: |
           set -eu
           export TAG="${ECR_REGISTRY}/dev/laboratory-v2:${LABEL}"

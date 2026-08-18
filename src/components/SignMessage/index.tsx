@@ -74,6 +74,10 @@ export const SignMessage = ({
 
       // Not connected via the main nav — open the kit's auth modal to pick one.
       if (!address) {
+        // Register WalletConnect first — the kit snapshots its wallet list when
+        // the modal opens, so a module added later wouldn't appear in it.
+        await walletKitInstance.ensureWalletConnect();
+
         const auth = await StellarWalletsKit.authModal();
         address = auth.address;
 

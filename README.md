@@ -64,6 +64,20 @@ import { MAINNET_LIMITS, NETWORK_LIMITS } from "@/constants/networkLimits";
 
 To manually fetch limits: `pnpm fetch-limits`.
 
+### WalletConnect
+
+Connecting mobile wallets over WalletConnect requires a project id from
+[Reown Cloud](https://cloud.reown.com/). Set it before starting the app:
+
+```
+NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=your_project_id
+```
+
+Without it, WalletConnect is left out of the Connect Wallet modal and everything
+else works as before. WalletConnect is only offered on mainnet and testnet,
+since those are the only Stellar chains it exposes (`stellar:pubnet` and
+`stellar:testnet`).
+
 ### Hardware Wallets
 
 Testing hardware wallets requires an HTTPS connection to enable U2F. The
