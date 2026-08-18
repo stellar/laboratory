@@ -38,6 +38,7 @@ export const useRpcPrepareTx = () => {
           headers: isEmptyObject(headers) ? undefined : { ...headers },
           allowHttp: new URL(rpcUrl).hostname === "localhost",
         });
+        // TODO: handle CAP-71 v2 auth flag
         const preparedTx = await rpcServer.prepareTransaction(transaction);
 
         return {

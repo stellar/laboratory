@@ -41,7 +41,7 @@ const InfoField = ({
 // pre-v17 behavior of only handling the ed25519 variant.
 const encodeSourceAccount = (sourceAccount: XDR.MuxedAccount) =>
   XDR.isUnionVariant(sourceAccount, "keyTypeEd25519")
-    ? StrKey.encodeEd25519PublicKey(sourceAccount.ed25519)
+    ? StrKey.encodeEd25519PublicKey(sourceAccount.ed25519.toBytes())
     : null;
 
 // An envelope is one of three variants. Handling all three means legacy v0
@@ -52,7 +52,7 @@ const getEnvelopeDetails = (envelope: XDR.TransactionEnvelope) => {
     case "envelopeTypeTxV0":
       return {
         sourceAccount: StrKey.encodeEd25519PublicKey(
-          envelope.v0.tx.sourceAccountEd25519,
+          envelope.v0.tx.sourceAccountEd25519.toBytes(),
         ),
         seqNum: envelope.v0.tx.seqNum,
         maxFee: envelope.v0.tx.fee,

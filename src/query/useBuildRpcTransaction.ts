@@ -65,6 +65,7 @@ export const useBuildRpcTransaction = ({
           .setTimeout(timeoutInSeconds)
           .build();
 
+        // TODO: handle CAP-71 v2 auth flag
         const preparedTxn = await rpcServer.prepareTransaction(transaction);
 
         return {

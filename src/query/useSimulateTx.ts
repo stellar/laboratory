@@ -32,6 +32,7 @@ export const useSimulateTx = () => {
             jsonrpc: "2.0",
             id: 1,
             method: "simulateTransaction",
+            // TODO: handle CAP-71 v2 auth flag
             params: {
               xdrFormat: xdrFormat || "base64",
               transaction: transactionXdr,

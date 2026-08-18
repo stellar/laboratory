@@ -189,6 +189,7 @@ export const ENDPOINTS_PAGES_RPC: EndpointsPagesProps = {
         docsUrl:
           "https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/simulateTransaction",
         docsLabel: "simulateTransaction",
+        // TODO: handle CAP-71 v2 auth flag
         endpointUrlTemplate: "{?tx,resourceConfig,authMode,xdrFormat}",
         requestMethod: "POST",
         requiredParams: "tx",
