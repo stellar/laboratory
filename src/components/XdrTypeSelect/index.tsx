@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Badge, Icon, Input } from "@stellar/design-system";
 
-import { ALL_XDR_TYPES } from "@/constants/xdr";
+import { getAllXdrTypes } from "@/constants/xdr";
 import { delayedAction } from "@/helpers/delayedAction";
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { useStore } from "@/store/useStore";
@@ -38,16 +38,21 @@ export const XdrTypeSelect = ({
 
   const isXdrInit = useIsXdrInit();
 
+  const allXdrTypes = useMemo(
+    () => (isXdrInit ? getAllXdrTypes() : []),
+    [isXdrInit],
+  );
+
   useEffect(() => {
     if (searchValue) {
-      const res = ALL_XDR_TYPES.filter((t) =>
+      const res = allXdrTypes.filter((t) =>
         t.toLowerCase().includes(searchValue.toLowerCase()),
       );
       setDisplayOptions(res);
     } else {
       setDisplayOptions([]);
     }
-  }, [searchValue]);
+  }, [searchValue, allXdrTypes]);
 
   useEffect(() => {
     if (isXdrInit && _xdrBlob) {
@@ -132,7 +137,7 @@ export const XdrTypeSelect = ({
 
           <OptionItem sectionTitle="All" />
 
-          {ALL_XDR_TYPES.map((o) => (
+          {allXdrTypes.map((o) => (
             <OptionItem key={`all-${o}`} option={o} />
           ))}
         </>
