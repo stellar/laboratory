@@ -11,6 +11,7 @@ import {
 import { AlbedoModule } from "@creit.tech/stellar-wallets-kit/modules/albedo";
 import { CactusLinkModule } from "@creit.tech/stellar-wallets-kit/modules/cactuslink";
 import { FreighterModule } from "@creit.tech/stellar-wallets-kit/modules/freighter";
+import { FordefiModule } from "@creit.tech/stellar-wallets-kit/modules/fordefi";
 import { HanaModule } from "@creit.tech/stellar-wallets-kit/modules/hana";
 import { HotWalletModule } from "@creit.tech/stellar-wallets-kit/modules/hotwallet";
 import { LedgerModule } from "@creit.tech/stellar-wallets-kit/modules/ledger";
@@ -59,7 +60,9 @@ export const WalletKitContextProvider = ({
     // a wallet id that was persisted for a different network.
     const savedWallet = localStorageSavedWallet.get();
     const walletIdForNetwork =
-      savedWallet && savedWallet.network.id === network.id ? savedWallet.id : "";
+      savedWallet && savedWallet.network.id === network.id
+        ? savedWallet.id
+        : "";
 
     const isDarkTheme = theme === "sds-theme-dark";
 
@@ -68,6 +71,7 @@ export const WalletKitContextProvider = ({
       new CactusLinkModule(),
       new xBullModule(),
       new FreighterModule(),
+      new FordefiModule(),
       new LobstrModule(),
       new RabetModule(),
       new HanaModule(),
