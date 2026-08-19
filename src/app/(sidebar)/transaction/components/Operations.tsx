@@ -154,6 +154,7 @@ const FilterChip = ({
     variant={isActive ? "secondary" : "tertiary"}
     onClick={onClick}
     data-is-active={isActive}
+    aria-pressed={isActive}
   >
     {label}
   </Button>
