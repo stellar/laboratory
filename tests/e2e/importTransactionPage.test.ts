@@ -185,6 +185,31 @@ test.describe("Import Transaction Page", () => {
     ).toBeVisible();
   });
 
+  test("Resets to the Operations tab after starting over", async ({ page }) => {
+    const xdrInput = page.getByLabel("Transaction envelope in XDR");
+    await xdrInput.fill(MOCK_TX_XDR_3_OPERATIONS);
+
+    await page.getByTestId("signatures").click();
+    await expect(page.getByTestId("signatures")).toHaveAttribute(
+      "data-is-active",
+      "true",
+    );
+
+    // The selected tab is local state, so it survives "Start over", which only
+    // resets the flow store.
+    await page.getByTestId("clear-all-button").click();
+    await page.getByText("Clear all").click();
+
+    await page
+      .getByLabel("Transaction envelope in XDR")
+      .fill(MOCK_TX_XDR_3_OPERATIONS);
+
+    await expect(page.getByTestId("operations")).toHaveAttribute(
+      "data-is-active",
+      "true",
+    );
+  });
+
   test("Advances to the sign step", async ({ page }) => {
     const xdrInput = page.getByLabel("Transaction envelope in XDR");
     await xdrInput.fill(MOCK_TX_XDR);

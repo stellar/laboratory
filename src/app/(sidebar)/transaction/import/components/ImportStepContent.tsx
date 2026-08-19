@@ -133,6 +133,12 @@ export const ImportStepContent = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (!importXdr) {
+      setActiveTab("operations");
+    }
+  }, [importXdr]);
+
   const renderSuccessImportAlert = () => {
     if (isMultisigDeferred) {
       return (
