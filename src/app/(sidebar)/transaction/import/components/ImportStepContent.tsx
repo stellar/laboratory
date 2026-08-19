@@ -247,6 +247,7 @@ export const ImportStepContent = ({
 
             <Box gap="md">
               <Tabs
+                addlClassName="Tab--with-border"
                 tabs={OVERVIEW_TABS}
                 activeTabId={activeTab}
                 onChange={(id) => setActiveTab(id as OverviewTab)}
