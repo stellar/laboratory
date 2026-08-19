@@ -154,6 +154,15 @@ export const WalletKitContextProvider = ({
       }
     };
 
+    // A returning WalletConnect user needs the module either way, so start
+    // loading it now instead of making the restore path wait for the chunk and
+    // the sign client after its 750ms delay. Everyone else still never fetches
+    // it. Deliberately not awaited: this only warms the cache that
+    // `ensureWalletConnect` reads, and failures surface there instead.
+    if (walletIdForNetwork === WALLET_CONNECT_ID) {
+      registerWalletConnect.current().catch(() => undefined);
+    }
+
     return () => {
       isStale = true;
     };
