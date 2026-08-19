@@ -144,6 +144,7 @@ export const ClassicOperationsList = ({
               variant="tertiary"
               size="sm"
               icon={<Icon.ArrowLeft />}
+              aria-label="Previous page"
               onClick={handlePrevPage}
               disabled={currentPage === 1}
             />
