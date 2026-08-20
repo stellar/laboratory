@@ -248,7 +248,7 @@ export const ImportStepContent = ({
               {activeTab === "operations" ? (
                 <Operations tx={parsedTx} />
               ) : (
-                <Signatures tx={parsedTx} parsedTxType={parsedTxType} />
+                <Signatures tx={parsedTx} />
               )}
             </Box>
           </PageCard>

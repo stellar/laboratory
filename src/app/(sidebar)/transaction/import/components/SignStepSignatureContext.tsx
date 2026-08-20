@@ -1,16 +1,15 @@
 import { FeeBumpTransaction, Transaction } from "@stellar/stellar-sdk";
+import { Card } from "@stellar/design-system";
 
 import { useStore } from "@/store/useStore";
 
 import { parseTxXdr } from "@/helpers/parseTxXdr";
 
-import { Box } from "@/components/layout/Box";
 import { Signatures } from "@/app/(sidebar)/transaction/components/Signatures";
 
 type Props = {
   /** The transaction to show signature context for (imported or freshly signed). */
   xdr: string;
-  parsedTxType?: "classic" | "soroban" | null;
 };
 
 const hasAnySignature = (tx: Transaction | FeeBumpTransaction): boolean =>
@@ -18,7 +17,7 @@ const hasAnySignature = (tx: Transaction | FeeBumpTransaction): boolean =>
     ? tx.signatures.length > 0 || tx.innerTransaction.signatures.length > 0
     : tx.signatures.length > 0;
 
-export const SignStepSignatureContext = ({ xdr, parsedTxType }: Props) => {
+export const SignStepSignatureContext = ({ xdr }: Props) => {
   const { network } = useStore();
 
   const tx = parseTxXdr(xdr, network.passphrase);
@@ -28,8 +27,8 @@ export const SignStepSignatureContext = ({ xdr, parsedTxType }: Props) => {
   }
 
   return (
-    <Box gap="md">
-      <Signatures tx={tx} parsedTxType={parsedTxType} />
-    </Box>
+    <Card>
+      <Signatures tx={tx} />
+    </Card>
   );
 };

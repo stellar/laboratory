@@ -10,7 +10,6 @@ import {
   Envelope,
   getRequiredSigners,
 } from "@/helpers/checkRequiredSignatures";
-import { hasSorobanData } from "@/helpers/sorobanUtils";
 
 import { Box } from "@/components/layout/Box";
 import { TransactionTabEmptyMessage } from "@/components/TransactionTabEmptyMessage";
@@ -22,12 +21,6 @@ const ENVELOPE_LABELS: Record<Envelope, string> = {
   inner: "Inner transaction signature(s)",
 };
 
-const hasMaxTimeSet = (tx: Transaction | FeeBumpTransaction): boolean => {
-  const inner = tx instanceof FeeBumpTransaction ? tx.innerTransaction : tx;
-  const max = inner.timeBounds?.maxTime;
-  return Boolean(max) && max !== "0";
-};
-
 type MatchStatus = "valid" | "invalid" | "unknown";
 
 type ResolvedSignatureRow = {
@@ -35,86 +28,6 @@ type ResolvedSignatureRow = {
   signature: string;
   signerPubKey?: string;
   matchStatus: MatchStatus;
-};
-
-type EnvelopeSummaryContext = {
-  isSoroban: boolean;
-  isSimulated: boolean;
-  hasTimebound: boolean;
-};
-
-type EnvelopeSummary = {
-  message: string;
-  // Optional secondary caution (Soroban freshness, unrecognized signers).
-  note?: string;
-};
-
-const getEnvelopeSummary = (
-  rows: ResolvedSignatureRow[],
-  requiredSigners: string[],
-  ctx: EnvelopeSummaryContext,
-): EnvelopeSummary => {
-  const hasInvalid = rows.some((r) => r.matchStatus === "invalid");
-
-  if (hasInvalid) {
-    return {
-      message:
-        "Invalid signature(s) detected — they won’t be accepted at submission.",
-    };
-  }
-
-  if (ctx.isSoroban && !ctx.isSimulated) {
-    return {
-      message:
-        "This Soroban transaction needs simulation, which will invalidate the existing signature(s). Re-sign after simulating.",
-    };
-  }
-
-  // Coverage check: every required signer (the distinct source accounts
-  // derivable from the envelope) must have a *valid* signature present.
-  // Validity alone isn't enough — a tx with two source accounts signed by
-  // only one is still incomplete. requiredSigners is an offline lower bound,
-  // so this can't see on-chain multisig cosigners (per the no-RPC trade-off).
-  const validSignerKeys = new Set(
-    rows.filter((r) => r.matchStatus === "valid").map((r) => r.signerPubKey),
-  );
-  const missing = requiredSigners.filter((s) => !validSignerKeys.has(s));
-  const hasUnrecognized = rows.some((r) => r.matchStatus === "unknown");
-
-  if (missing.length > 0) {
-    // A multisig account is often signed by on-chain cosigners instead of the
-    // account key, which surface here as unrecognized signatures.
-    if (hasUnrecognized) {
-      return {
-        message:
-          "Includes signature(s) that can't be verified offline (e.g. from multisig cosigners)",
-      };
-    }
-    return {
-      message: `Couldn’t verify a signature for ${missing.join(", ")} offline. If it’s a multisig account, an existing signature may already cover it on-chain — you can submit to let the network verify, or add a signature first.`,
-    };
-  }
-
-  // Every required signer has a valid signature. Surface Soroban freshness and
-  // unrecognized-signer cautions as a secondary note, leaving the verdict crisp.
-  const notes: string[] = [];
-  if (ctx.isSoroban) {
-    notes.push(
-      ctx.hasTimebound
-        ? "Soroban simulation is time-sensitive — submit soon, or re-simulate if it’s been a while."
-        : "No timebounds set — submit soon, since Soroban footprint entries can expire.",
-    );
-  }
-  if (hasUnrecognized) {
-    notes.push(
-      "Signature(s) from unverified existing signers were also found.",
-    );
-  }
-
-  return {
-    message: "All required signatures are included.",
-    note: notes.length > 0 ? notes.join(" ") : undefined,
-  };
 };
 
 const resolveRows = (
@@ -141,19 +54,14 @@ const resolveRows = (
 
 export const Signatures = ({
   tx,
-  parsedTxType,
 }: {
   tx: Transaction | FeeBumpTransaction | null;
-  parsedTxType?: "classic" | "soroban" | null;
 }) => {
   if (!tx) {
     return null;
   }
 
   const isFeeBump = tx instanceof FeeBumpTransaction;
-  const isSoroban = parsedTxType === "soroban";
-  const isSimulated = isSoroban && hasSorobanData(tx);
-  const hasTimebound = hasMaxTimeSet(tx);
 
   const envelopes = getRequiredSigners(tx).map((env) => {
     const signatures =
@@ -182,65 +90,41 @@ export const Signatures = ({
   }
 
   return (
-    <Box gap="lg" addlClassName="Signatures">
+    <div className="Signatures">
       {envelopes.map((env) => {
         if (env.rows.length === 0) return null;
-
-        // Soroban semantics (simulation, timebounds) only apply to the inner
-        // transaction envelope. For a fee-bump's outer envelope, that's just
-        // the fee-source signature — treat it as classic.
-        const isInnerOrPlain = env.envelope === "inner" || !isFeeBump;
-        const summaryContext: EnvelopeSummaryContext = {
-          isSoroban: isSoroban && isInnerOrPlain,
-          isSimulated,
-          hasTimebound,
-        };
 
         return (
           <EnvelopeSignaturesTable
             key={env.envelope}
             envelope={env.envelope}
             rows={env.rows}
-            requiredSigners={env.signers}
             showLabel={isFeeBump}
-            summaryContext={summaryContext}
           />
         );
       })}
-    </Box>
+    </div>
   );
 };
 
 const EnvelopeSignaturesTable = ({
   envelope,
   rows,
-  requiredSigners,
   showLabel,
-  summaryContext,
 }: {
   envelope: Envelope;
   rows: ResolvedSignatureRow[];
-  requiredSigners: string[];
-  showLabel: boolean;
-  summaryContext: EnvelopeSummaryContext;
-}) => {
-  const summary = getEnvelopeSummary(rows, requiredSigners, summaryContext);
 
+  showLabel: boolean;
+}) => {
   return (
-    <Box gap="md">
+    <>
       {showLabel ? (
         <Text as="h3" size="sm" weight="medium">
           {ENVELOPE_LABELS[envelope]}
         </Text>
       ) : null}
-      <Text as="div" size="xs" weight="medium">
-        {summary.message}
-      </Text>
-      {summary.note ? (
-        <Text as="div" size="xs" addlClassName="Signatures__note">
-          {summary.note}
-        </Text>
-      ) : null}
+
       <div className="Signatures__gridTableContainer">
         <table>
           <thead>
@@ -277,7 +161,7 @@ const EnvelopeSignaturesTable = ({
           </tbody>
         </table>
       </div>
-    </Box>
+    </>
   );
 };
 
