@@ -163,10 +163,7 @@ export default function ImportTransaction() {
                 }}
                 onClearAll={resetAll}
                 signatureContext={
-                  <SignStepSignatureContext
-                    xdr={sign.signedXdr || xdrToSign}
-                    parsedTxType={importState?.parsedTxType}
-                  />
+                  <SignStepSignatureContext xdr={sign.signedXdr || xdrToSign} />
                 }
               />
             )}
