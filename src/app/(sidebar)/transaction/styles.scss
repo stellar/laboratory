@@ -26,6 +26,12 @@
       font-size: pxToRem(12px);
       line-height: pxToRem(20px);
     }
+
+    .Operations__filters {
+      .Button {
+        border-radius: pxToRem(16px);
+      }
+    }
   }
 
   &__stepper {
