@@ -104,6 +104,8 @@ export default function BuildTransaction() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isNextDisabled, activeStep]);
 
+  const isBuildFormValid = build.isValid.params && build.isValid.operations;
+
   // When the user edits the transaction on the build step after having already
   // progressed past it, the rebuilt XDR no longer matches what was simulated,
   // signed, or validated downstream — those results are now stale. Reset them
@@ -112,18 +114,24 @@ export default function BuildTransaction() {
   // transaction.
   const prevBuiltXdrRef = useRef<string | null>(null);
   useEffect(() => {
-    if (!currentXdr) {
+    // The XDR builders write "" for two reasons: the form went invalid (a real
+    // edit) and, transiently on remount, the XDR encoder not being ready yet
+    // (useIsXdrInit). Only the first invalidates downstream results — ignoring
+    // the second keeps plain step navigation from wiping them.
+    if (!currentXdr && isBuildFormValid) {
       return;
     }
 
-    if (prevBuiltXdrRef.current === null) {
-      prevBuiltXdrRef.current = currentXdr;
-      return;
-    }
-    if (prevBuiltXdrRef.current === currentXdr) {
-      return;
-    }
+    const prevBuiltXdr = prevBuiltXdrRef.current;
     prevBuiltXdrRef.current = currentXdr;
+
+    // First observation of a built XDR is the baseline, not an edit.
+    if (prevBuiltXdr === null && currentXdr) {
+      return;
+    }
+    if (prevBuiltXdr === currentXdr) {
+      return;
+    }
 
     const buildIndex = steps.indexOf("build");
     const highestIndex = highestCompletedStep
@@ -135,7 +143,7 @@ export default function BuildTransaction() {
       resetDownstreamState(steps[buildIndex + 1], steps);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentXdr]);
+  }, [currentXdr, isBuildFormValid]);
 
   const renderError = () => {
     if (paramsError.length > 0 || operationsError.length > 0) {

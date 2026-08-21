@@ -22,9 +22,7 @@ test.describe("Build flow — reset downstream on build edit", () => {
 
   const buildValidClassicTx = async (page: Page, startingBalance: string) => {
     await page.getByLabel("Source account").fill(SOURCE_ACCOUNT);
-    await page
-      .getByLabel("Transaction sequence number")
-      .fill(SEQUENCE_NUMBER);
+    await page.getByLabel("Transaction sequence number").fill(SEQUENCE_NUMBER);
 
     const operation_0 = page.getByTestId("build-transaction-operation-0");
     await operation_0
@@ -53,6 +51,11 @@ test.describe("Build flow — reset downstream on build edit", () => {
 
   const nextButton = (page: Page) => page.locator('[data-position="right"]');
   const backButton = (page: Page) => page.locator('[data-position="left"]');
+
+  const stepperStep = (page: Page, label: string) =>
+    page.locator(".TransactionStepper__step").filter({
+      has: page.locator(".TransactionStepper__labelFull", { hasText: label }),
+    });
 
   test("Editing a build input after signing clears the signature", async ({
     page,
@@ -86,6 +89,52 @@ test.describe("Build flow — reset downstream on build edit", () => {
 
     // Back on the sign step the previous signature is gone and Next is blocked.
     await nextButton(page).click();
+    await expect(page.locator("h1")).toHaveText("Sign transaction");
+    await expect(page.getByText(SIGNED_MESSAGE)).toBeHidden();
+    await expect(nextButton(page)).toBeDisabled();
+  });
+
+  test("Invalidating a build input after signing clears the signature", async ({
+    page,
+  }) => {
+    await page.goto(`${baseURL}/transaction/build`);
+
+    // Build a valid classic tx, advance to sign, and sign it.
+    await buildValidClassicTx(page, "1");
+    await nextButton(page).click();
+    await expect(page.locator("h1")).toHaveText("Sign transaction");
+    await signWithSecretKey(page);
+    await expect(stepperStep(page, "Sign transaction")).toHaveAttribute(
+      "data-is-completed",
+      "true",
+    );
+
+    // Back on the build step, clear a required field. The transaction is now
+    // invalid, so the builder clears the XDR to "" instead of rebuilding it —
+    // that must still invalidate the signature produced against the previous
+    // transaction.
+    await backButton(page).click();
+    await expect(page.locator("h1")).toHaveText("Build transaction");
+    await page
+      .getByTestId("build-transaction-operation-0")
+      .getByLabel("Starting balance")
+      .fill("");
+    await expect(
+      page.getByTestId("build-transaction-envelope-xdr"),
+    ).toBeHidden();
+
+    // Sign is no longer complete and submit is no longer reachable.
+    await expect(stepperStep(page, "Sign transaction")).not.toHaveAttribute(
+      "data-is-completed",
+      "true",
+    );
+    await expect(stepperStep(page, "Submit transaction")).not.toHaveAttribute(
+      "data-is-clickable",
+      "true",
+    );
+
+    // The previous signature is gone from the sign step.
+    await stepperStep(page, "Sign transaction").click();
     await expect(page.locator("h1")).toHaveText("Sign transaction");
     await expect(page.getByText(SIGNED_MESSAGE)).toBeHidden();
     await expect(nextButton(page)).toBeDisabled();
