@@ -17,6 +17,7 @@ import { SignStepContent } from "@/app/(sidebar)/transaction/components/SignStep
 import { SubmitStepContent } from "@/app/(sidebar)/transaction/components/SubmitStepContent";
 import { ImportStepContent } from "./components/ImportStepContent";
 import { SimulateStepContent } from "./components/SimulateStepContent";
+import { SignStepSignatureContext } from "./components/SignStepSignatureContext";
 
 import "../styles.scss";
 
@@ -91,7 +92,12 @@ export default function ImportTransaction() {
       return !simulate.simulationResultJson || !simulate.assembledXdr;
     }
     if (activeStep === "sign") {
-      return !sign.signedXdr;
+      // Offline analysis can't verify on-chain multisig thresholds, so a tx
+      // that already carries signatures must remain submittable without adding
+      // another (adding an unnecessary one is rejected as txBadAuthExtra). Only
+      // require a new signature when the imported tx has none. The network is
+      // the final judge of whether the signature set is sufficient.
+      return !(sign.signedXdr || importState?.hasSignatures);
     }
 
     return true;
@@ -138,6 +144,8 @@ export default function ImportTransaction() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isNextDisabled, activeStep]);
 
+  const xdrToSign = simulate.assembledXdr || importState?.importXdr || "";
+
   return (
     <Box gap="xxl">
       <div className="BuildTransaction__layout">
@@ -148,20 +156,21 @@ export default function ImportTransaction() {
             )}
             {activeStep === "sign" && (
               <SignStepContent
-                xdrToSign={
-                  simulate.assembledXdr || importState?.importXdr || ""
-                }
+                xdrToSign={xdrToSign}
                 signedXdr={sign.signedXdr || ""}
                 onSigned={(signedXdr) => {
                   setSignedXdr(signedXdr);
                 }}
                 onClearAll={resetAll}
+                signatureContext={
+                  <SignStepSignatureContext xdr={sign.signedXdr || xdrToSign} />
+                }
               />
             )}
             {activeStep === "simulate" && <SimulateStepContent steps={steps} />}
             {activeStep === "submit" && (
               <SubmitStepContent
-                xdrBlob={sign.signedXdr || ""}
+                xdrBlob={sign.signedXdr || xdrToSign}
                 onReset={resetAll}
               />
             )}
