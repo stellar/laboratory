@@ -53,8 +53,8 @@ importers:
         specifier: ^4.0.2
         version: 4.0.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@stellar/stellar-sdk':
-        specifier: 17.0.0-rc.2
-        version: 17.0.0-rc.2
+        specifier: 17.0.0
+        version: 17.0.0
       '@stellar/stellar-xdr-json':
         specifier: ^27.0.0
         version: 27.0.0
@@ -66,7 +66,7 @@ importers:
         version: 5.87.4(@tanstack/react-query@5.87.4(react@19.2.3))(react@19.2.3)
       '@trezor/connect-plugin-stellar':
         specifier: ^9.2.3
-        version: 9.2.3(@stellar/stellar-sdk@17.0.0-rc.2)(@trezor/connect@9.7.2(@solana/sysvars@5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.2))(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(tslib@2.8.1)(typescript@5.9.2)(utf-8-validate@6.0.6)(ws@8.21.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)))(tslib@2.8.1)
+        version: 9.2.3(@stellar/stellar-sdk@17.0.0)(@trezor/connect@9.7.2(@solana/sysvars@5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.2))(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(tslib@2.8.1)(typescript@5.9.2)(utf-8-validate@6.0.6)(ws@8.21.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)))(tslib@2.8.1)
       '@trezor/connect-web':
         specifier: ^9.6.4
         version: 9.6.4(@solana/sysvars@5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.2))(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(tslib@2.8.1)(typescript@5.9.2)(utf-8-validate@6.0.6)(ws@8.21.0(bufferutil@4.1.0)(utf-8-validate@6.0.6))
@@ -2422,8 +2422,8 @@ packages:
     resolution: {integrity: sha512-+NmNa7Tk5BI5XFdy/6xGTqAN4J9a9KgCrCGhj2uEUTCBhLkch0M+QbKzNH8zEnejWe0p8w+0q5hUVX6L3OzoVA==}
     engines: {node: '>=20.0.0', pnpm: '>=9.0.0'}
 
-  '@stellar/js-xdr@5.0.0-rc.2':
-    resolution: {integrity: sha512-aLvQeRXFmEXkLTebNv9VYQJV7SCST+9nB4WKfyfXekK9O2Mig5EMoG/SxLPME1SXIEa7ecHIkD9T32pglLws7g==}
+  '@stellar/js-xdr@5.0.0':
+    resolution: {integrity: sha512-HBDNKnxr+ecdaEmbZ0mcKkirOF8tXXEbWSw34P3wT40Tn3g+u+cCH17xAWZymzscq8cojHB8340pR8QNVaD32w==}
     engines: {node: '>=22.0.0', pnpm: '>=10.0.0'}
 
   '@stellar/stellar-base@13.1.0':
@@ -2453,9 +2453,9 @@ packages:
     engines: {node: '>=22.0.0'}
     hasBin: true
 
-  '@stellar/stellar-sdk@17.0.0-rc.2':
-    resolution: {integrity: sha512-2TpznndlHG6za50Foz8QE1GcssJ3aUwYxXU1QhUiMDdTnfg70W0MqF+lHZDaAN03q4q1SiqFFo0ERsuriYp32w==}
-    engines: {node: '>=22.0.0'}
+  '@stellar/stellar-sdk@17.0.0':
+    resolution: {integrity: sha512-L9Y+xXmBMK44rxQQPkbgHuEL0fYh3F1OZKVDBfG0+r00KAxXJejw1E5xRRRBWDja7stnpf0+mhSP4bXkTLG3AQ==}
+    engines: {node: '>=22.12.0'}
     hasBin: true
 
   '@stellar/stellar-xdr-json@27.0.0':
@@ -10017,7 +10017,7 @@ snapshots:
 
   '@stellar/js-xdr@4.0.0': {}
 
-  '@stellar/js-xdr@5.0.0-rc.2': {}
+  '@stellar/js-xdr@5.0.0': {}
 
   '@stellar/stellar-base@13.1.0':
     dependencies:
@@ -10094,12 +10094,12 @@ snapshots:
       - debug
       - supports-color
 
-  '@stellar/stellar-sdk@17.0.0-rc.2':
+  '@stellar/stellar-sdk@17.0.0':
     dependencies:
       '@exodus/bytes': 1.15.1(@noble/hashes@2.2.0)
       '@noble/ed25519': 3.1.0
       '@noble/hashes': 2.2.0
-      '@stellar/js-xdr': 5.0.0-rc.2
+      '@stellar/js-xdr': 5.0.0
       '@types/json-schema': 7.0.15
       axios: 1.18.0
       bignumber.js: 11.1.5
@@ -10363,9 +10363,9 @@ snapshots:
       '@trezor/utils': 10.0.0-alpha.1(tslib@2.8.1)
       tslib: 2.8.1
 
-  '@trezor/connect-plugin-stellar@9.2.3(@stellar/stellar-sdk@17.0.0-rc.2)(@trezor/connect@9.7.2(@solana/sysvars@5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.2))(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(tslib@2.8.1)(typescript@5.9.2)(utf-8-validate@6.0.6)(ws@8.21.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)))(tslib@2.8.1)':
+  '@trezor/connect-plugin-stellar@9.2.3(@stellar/stellar-sdk@17.0.0)(@trezor/connect@9.7.2(@solana/sysvars@5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.2))(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(tslib@2.8.1)(typescript@5.9.2)(utf-8-validate@6.0.6)(ws@8.21.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)))(tslib@2.8.1)':
     dependencies:
-      '@stellar/stellar-sdk': 17.0.0-rc.2
+      '@stellar/stellar-sdk': 17.0.0
       '@trezor/connect': 9.7.2(@solana/sysvars@5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.2))(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(tslib@2.8.1)(typescript@5.9.2)(utf-8-validate@6.0.6)(ws@8.21.0(bufferutil@4.1.0)(utf-8-validate@6.0.6))
       '@trezor/utils': 9.4.3(tslib@2.8.1)
       tslib: 2.8.1

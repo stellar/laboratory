@@ -1,5 +1,5 @@
 import { FeeBumpTransaction, Transaction } from "@stellar/stellar-sdk";
-import { Card, Icon, Text } from "@stellar/design-system";
+import { Icon, Text } from "@stellar/design-system";
 
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import {
@@ -194,59 +194,57 @@ const EnvelopeSignaturesTable = ({
   const summary = getEnvelopeSummary(rows, requiredSigners, summaryContext);
 
   return (
-    <Card>
-      <Box gap="md">
-        {showLabel ? (
-          <Text as="h3" size="sm" weight="medium">
-            {ENVELOPE_LABELS[envelope]}
-          </Text>
-        ) : null}
-        <Text as="div" size="xs" weight="medium">
-          {summary.message}
+    <Box gap="md">
+      {showLabel ? (
+        <Text as="h3" size="sm" weight="medium">
+          {ENVELOPE_LABELS[envelope]}
         </Text>
-        {summary.note ? (
-          <Text as="div" size="xs" addlClassName="Signatures__note">
-            {summary.note}
-          </Text>
-        ) : null}
-        <div className="Signatures__gridTableContainer">
-          <table>
-            <thead>
-              <tr>
-                <th>
-                  <SignatureCell isHeader={true}>Signer</SignatureCell>
-                </th>
-                <th>
-                  <SignatureCell isHeader={true}>Signature</SignatureCell>
-                </th>
-                <th>
-                  <SignatureCell isHeader={true}>Hint</SignatureCell>
-                </th>
+      ) : null}
+      <Text as="div" size="xs" weight="medium">
+        {summary.message}
+      </Text>
+      {summary.note ? (
+        <Text as="div" size="xs" addlClassName="Signatures__note">
+          {summary.note}
+        </Text>
+      ) : null}
+      <div className="Signatures__gridTableContainer">
+        <table>
+          <thead>
+            <tr>
+              <th>
+                <SignatureCell isHeader={true}>Signer</SignatureCell>
+              </th>
+              <th>
+                <SignatureCell isHeader={true}>Signature</SignatureCell>
+              </th>
+              <th>
+                <SignatureCell isHeader={true}>Hint</SignatureCell>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row, index) => (
+              <tr key={`${envelope}-${index}-${row.hint}`}>
+                <td>
+                  <SignatureCell>
+                    {renderSigner(row.matchStatus, row.signerPubKey)}
+                  </SignatureCell>
+                </td>
+                <td>
+                  <SignatureCell isSignature={true}>
+                    <code>{row.signature}</code>
+                  </SignatureCell>
+                </td>
+                <td>
+                  <SignatureCell>{row.hint}</SignatureCell>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {rows.map((row, index) => (
-                <tr key={`${envelope}-${index}-${row.hint}`}>
-                  <td>
-                    <SignatureCell>
-                      {renderSigner(row.matchStatus, row.signerPubKey)}
-                    </SignatureCell>
-                  </td>
-                  <td>
-                    <SignatureCell isSignature={true}>
-                      <code>{row.signature}</code>
-                    </SignatureCell>
-                  </td>
-                  <td>
-                    <SignatureCell>{row.hint}</SignatureCell>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </Box>
-    </Card>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </Box>
   );
 };
 
