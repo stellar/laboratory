@@ -114,10 +114,14 @@ export default function BuildTransaction() {
   // transaction.
   const prevBuiltXdrRef = useRef<string | null>(null);
   useEffect(() => {
-    // The XDR builders write "" for two reasons: the form went invalid (a real
-    // edit) and, transiently on remount, the XDR encoder not being ready yet
-    // (useIsXdrInit). Only the first invalidates downstream results — ignoring
-    // the second keeps plain step navigation from wiping them.
+    // An empty XDR happens for two different reasons, and the form tells them
+    // apart:
+    //   - form invalid: the user edited the transaction and broke it, so
+    //     anything built downstream is now stale.
+    //   - form valid: the XDR encoder is still starting up (useIsXdrInit).
+    //     This happens every time the build step remounts.
+    // Only the first one is an edit. Ignoring the second is what stops simple
+    // step navigation from throwing away a signature.
     if (!currentXdr && isBuildFormValid) {
       return;
     }
@@ -125,8 +129,14 @@ export default function BuildTransaction() {
     const prevBuiltXdr = prevBuiltXdrRef.current;
     prevBuiltXdrRef.current = currentXdr;
 
-    // First observation of a built XDR is the baseline, not an edit.
-    if (prevBuiltXdr === null && currentXdr) {
+    // On the first run there is no earlier XDR to compare against, so nothing
+    // has been edited yet. That is true even when the XDR is empty, because
+    // this page can also be opened from a previously saved transaction:
+    // "View in submitter" on the Saved transactions page
+    // (transaction/saved/page.tsx) passes in only the saved signed XDR and
+    // opens the submit step, so the build form is empty while the signature
+    // is real and must be kept.
+    if (prevBuiltXdr === null) {
       return;
     }
     if (prevBuiltXdr === currentXdr) {
