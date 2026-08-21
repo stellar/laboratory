@@ -14,25 +14,13 @@ import { NetworkType } from "@/types/types";
 export const WALLET_CONNECT_ID = "wallet_connect";
 
 /**
- * Default Reown project id, used when no env var is supplied.
+ * Default Reown project id
  *
  * This is not a secret — it ships in every client bundle and appears in the
  * relay URL — and it can't be used from an arbitrary domain, because the relay
  * refuses origins missing from the project's allowlist with
  * `3000 (Unauthorized: origin not allowed)`.
  *
- * It is committed rather than injected because `NEXT_PUBLIC_*` values are
- * inlined at build time, and not every pipeline that builds Lab can supply
- * build-time env vars — without a default those builds would hide WalletConnect
- * entirely.
- *
- * A build can still override it by setting
- * `NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID`, which is worth doing so production
- * runs against an SDF-owned project rather than this one's quota and dashboard.
- * Whichever project is used, its allowlist must include the deployed origin —
- * `https://lab.stellar.org` — or WalletConnect cannot connect there at all.
- *
- * See https://github.com/stellar/laboratory/issues/2172
  */
 const DEFAULT_PROJECT_ID = "4f7610b5e90f0af6984d5e4a53da7024";
 
@@ -43,18 +31,15 @@ const PROJECT_ID =
   process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || DEFAULT_PROJECT_ID;
 
 /**
- * WalletConnect exposes Stellar as `stellar:pubnet` and `stellar:testnet` only,
- * so the module is registered on mainnet and testnet and left out on futurenet
- * and custom networks.
+ * WalletConnect exposes Stellar as `stellar:pubnet` and `stellar:testnet` only
  */
 const SUPPORTED_NETWORKS: NetworkType[] = ["mainnet", "testnet"];
 
 /**
- * Whether WalletConnect can be offered on the given network. Requires a Reown
- * project id, which is only set in deployments that have one configured.
+ * Whether WalletConnect can be offered on the given network.
  */
 export const isWalletConnectSupported = (networkId: NetworkType): boolean =>
-  Boolean(PROJECT_ID) && SUPPORTED_NETWORKS.includes(networkId);
+  SUPPORTED_NETWORKS.includes(networkId);
 
 type LoadedWalletConnect = {
   walletConnectModule: WalletConnectModule;
