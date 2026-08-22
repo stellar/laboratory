@@ -108,26 +108,21 @@ export const WalletKitContextProvider = ({
     // transport a connected Ledger is holding onto).
     const modules = network.id === "mainnet" ? PROD_MODULES : TEST_MODULES;
 
-    const initKit = (
-      kitModules: ModuleInterface[],
-      selectedWalletId: string,
-    ) => {
+    const initKit = (kitModules: ModuleInterface[], walletId: string) => {
       StellarWalletsKit.init({
         network: networkType,
-        selectedWalletId,
+        // `init` calls `setWallet`, which throws on an id that isn't in the
+        // module list — and WalletConnect is registered lazily. Passing "" skips
+        // that call, and the kit rehydrates `selectedModuleId` from localStorage
+        // anyway, so the saved selection survives.
+        selectedWalletId:
+          kitModules.find((m) => m.productId === walletId)?.productId ?? "",
         modules: kitModules,
         theme: isDarkTheme ? SwkAppDarkTheme : SwkAppLightTheme,
       });
     };
 
-    // `init` throws when `selectedWalletId` isn't in the module list, and
-    // WalletConnect isn't registered until something asks for it. The kit
-    // rehydrates its own `selectedModuleId` from localStorage regardless, so
-    // nothing is lost by leaving the id out here.
-    const selectedWalletId =
-      walletIdForNetwork === WALLET_CONNECT_ID ? "" : walletIdForNetwork;
-
-    initKit(modules, selectedWalletId);
+    initKit(modules, walletIdForNetwork);
     setIsInitialized(true);
 
     let isStale = false;
@@ -145,7 +140,7 @@ export const WalletKitContextProvider = ({
           return false;
         }
 
-        initKit([...modules, walletConnectModule], selectedWalletId);
+        initKit([...modules, walletConnectModule], walletIdForNetwork);
 
         return true;
       } catch {

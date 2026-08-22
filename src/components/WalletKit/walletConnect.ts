@@ -20,13 +20,8 @@ export const WALLET_CONNECT_ID = "wallet_connect";
  * relay URL — and it can't be used from an arbitrary domain, because the relay
  * refuses origins missing from the project's allowlist with
  * `3000 (Unauthorized: origin not allowed)`.
- *
  */
 const DEFAULT_PROJECT_ID = "4f7610b5e90f0af6984d5e4a53da7024";
-
-// An explicit `||` fallback rather than a committed `.env`: the Dockerfile sets
-// this as an ENV, which would be an empty string when no build-arg is passed
-// and would take precedence over any `.env` file.
 const PROJECT_ID =
   process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || DEFAULT_PROJECT_ID;
 
@@ -47,28 +42,20 @@ type LoadedWalletConnect = {
 };
 
 /**
- * The in-flight (or settled) load. This caches the *promise* rather than the
- * resolved module on purpose: the provider effect can run twice in quick
- * succession — theme hydration re-runs it — and a check against a not-yet-set
- * instance after an `await` lets both callers construct a module. That starts
- * two sign clients on one relay ("Init() was called 2 times"), and the wallet's
- * reply then lands on the client that has no matching key for it, which surfaces
- * as "No matching key. proposal:" and "Pending session not found for topic".
+ * The cached load. This holds the promise rather than the resolved module, so a
+ * second caller awaits the first load instead of starting its own.
+ *
+ * That matters because the provider effect can fire twice in quick succession —
+ * theme hydration re-runs it. If only the resolved module were cached, the
+ * second call would find it still unset and build a module of its own, putting
+ * two sign clients on one relay. It fails as "Init() was called 2 times", then
+ * "No matching key. proposal:" once the wallet replies to whichever client
+ * didn't send the request.
  */
 let loadedWalletConnect: Promise<LoadedWalletConnect> | undefined;
 
-/**
- * How long to give the relay to come up once pairing has started. Generous on
- * purpose: overshooting only delays an error message, while undershooting would
- * wrongly reject a working wallet on a slow connection.
- */
-const RELAY_READY_TIMEOUT_MS = 8000;
-
 /** How long to wait for the sign client, which the module creates async. */
 const SIGN_CLIENT_READY_TIMEOUT_MS = 4000;
-
-const isRelayConnected = (loaded: WalletConnectModule): boolean =>
-  Boolean(loaded.signClient?.core?.relayer?.connected);
 
 const waitForSignClient = async (
   loaded: WalletConnectModule,
@@ -82,28 +69,12 @@ const waitForSignClient = async (
   return Boolean(loaded.signClient);
 };
 
-/**
- * Waits for the WalletConnect relay to report a live connection.
- *
- * This has to be called *after* pairing has been initiated: the relay socket is
- * opened by `connect()`, not when the sign client is constructed, so before that
- * point `connected` is legitimately false and says nothing about health.
- */
-const waitForRelay = async (loaded: WalletConnectModule): Promise<boolean> => {
-  const deadline = Date.now() + RELAY_READY_TIMEOUT_MS;
-
-  while (!isRelayConnected(loaded) && Date.now() < deadline) {
-    await new Promise((resolve) => setTimeout(resolve, 200));
-  }
-
-  return isRelayConnected(loaded);
-};
-
 const importAndCreate = async (
   networkId: NetworkType,
 ): Promise<LoadedWalletConnect> => {
-  const { WalletConnectModule: Module, WalletConnectTargetChain } =
-    await import("@creit.tech/stellar-wallets-kit/modules/wallet-connect");
+  const { LabWalletConnectModule, WalletConnectTargetChain } = await import(
+    "./labWalletConnectModule"
+  );
 
   const chainFor = (id: NetworkType) =>
     id === "mainnet"
@@ -112,7 +83,7 @@ const importAndCreate = async (
 
   // Constructing the module starts a sign client (which opens a relay
   // websocket) and a Reown modal, so this must happen exactly once.
-  const walletConnectModule = new Module({
+  const walletConnectModule = new LabWalletConnectModule({
     projectId: PROJECT_ID,
     metadata: {
       name: "Stellar Lab",
@@ -123,38 +94,6 @@ const importAndCreate = async (
     },
     allowedChains: [chainFor(networkId)],
   });
-
-  // The kit lists the module as available as soon as the sign client object
-  // exists, but `SignClient.init` resolves before the relay handshake finishes.
-  // If the relay then refuses the origin — it closes with
-  // `3000 (Unauthorized: origin not allowed)` when the page's domain isn't on
-  // the Reown project's allowlist — the user gets a QR code that can never
-  // pair, and the only clue is a console message. Fail loudly instead.
-  const originalGetAddress =
-    walletConnectModule.getAddress.bind(walletConnectModule);
-
-  walletConnectModule.getAddress = async () => {
-    // Start pairing first — this is what opens the relay socket — then watch for
-    // the connection to come up. Only the relay is raced, never the user: once
-    // it's live they can take as long as they need to scan.
-    const addressPromise = originalGetAddress();
-
-    // Keeps a rejection from being reported as unhandled while we wait; the
-    // real rejection still reaches the caller when the promise is returned.
-    addressPromise.catch(() => undefined);
-
-    if (!(await waitForRelay(walletConnectModule))) {
-      // The kit uses code -1 for "the user dismissed the modal", which Lab
-      // deliberately swallows, so this needs a code of its own to be shown.
-      throw {
-        code: -2,
-        message:
-          "Couldn’t reach WalletConnect. The relay refused the connection — this domain may not be allowed for Lab’s WalletConnect project.",
-      };
-    }
-
-    return addressPromise;
-  };
 
   return { walletConnectModule, chainFor };
 };

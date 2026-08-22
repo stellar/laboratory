@@ -180,7 +180,7 @@ export const InvokeContractForm = ({
   const responseErrorEl = useRef<HTMLDivElement | null>(null);
 
   const signTx = async (xdr: string): Promise<string | null> => {
-    if (!walletKitInstance?.isInitialized || !walletKit?.publicKey) {
+    if (!walletKitInstance.isInitialized || !walletKit?.publicKey) {
       return null;
     }
 

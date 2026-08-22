@@ -63,7 +63,7 @@ export const SignMessage = ({
   };
 
   const onSignExtension = async (): Promise<SignActionResult> => {
-    if (!walletKitInstance?.isInitialized) {
+    if (!walletKitInstance.isInitialized) {
       return { errorMessage: "Wallet is not initialized, please try again" };
     }
 
@@ -91,13 +91,11 @@ export const SignMessage = ({
         return {};
       }
 
-      const { signedMessage, signerAddress } = await StellarWalletsKit.signMessage(
-        message,
-        {
+      const { signedMessage, signerAddress } =
+        await StellarWalletsKit.signMessage(message, {
           address,
           networkPassphrase,
-        },
-      );
+        });
 
       if (!signedMessage) {
         onSigned?.(null);

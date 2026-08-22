@@ -87,7 +87,7 @@ export const ConnectWallet = () => {
       savedWallet.network.id === network.id
     ) {
       t = setTimeout(async () => {
-        if (!walletKitInstance?.isInitialized) {
+        if (!walletKitInstance.isInitialized) {
           return;
         }
 
