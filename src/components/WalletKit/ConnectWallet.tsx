@@ -327,7 +327,6 @@ export const ConnectWallet = () => {
       size="md"
       variant="secondary"
       isLoading={isPreparingWallets}
-      disabled={isPreparingWallets}
       onClick={connectWallet}
     >
       Connect wallet

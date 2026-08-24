@@ -68,7 +68,7 @@ To manually fetch limits: `pnpm fetch-limits`.
 
 WalletConnect is offered on mainnet and testnet only, since those are the only
 Stellar chains it exposes (`stellar:pubnet` and `stellar:testnet`). It uses a
-[Reown Cloud](https://cloud.reown.com/) project id committed in
+[Reown Cloud](https://cloud.reown.com/) project ID committed in
 `src/components/WalletKit/walletConnect.ts`.
 
 **Testing it locally needs an https origin.** From `http://localhost`, Freighter
