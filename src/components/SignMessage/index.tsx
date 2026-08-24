@@ -63,7 +63,7 @@ export const SignMessage = ({
   };
 
   const onSignExtension = async (): Promise<SignActionResult> => {
-    if (!walletKitInstance?.isInitialized) {
+    if (!walletKitInstance.isInitialized) {
       return { errorMessage: "Wallet is not initialized, please try again" };
     }
 
@@ -74,6 +74,10 @@ export const SignMessage = ({
 
       // Not connected via the main nav — open the kit's auth modal to pick one.
       if (!address) {
+        // Register WalletConnect first — the kit snapshots its wallet list when
+        // the modal opens, so a module added later wouldn't appear in it.
+        await walletKitInstance.ensureWalletConnect();
+
         const auth = await StellarWalletsKit.authModal();
         address = auth.address;
 
@@ -87,13 +91,11 @@ export const SignMessage = ({
         return {};
       }
 
-      const { signedMessage, signerAddress } = await StellarWalletsKit.signMessage(
-        message,
-        {
+      const { signedMessage, signerAddress } =
+        await StellarWalletsKit.signMessage(message, {
           address,
           networkPassphrase,
-        },
-      );
+        });
 
       if (!signedMessage) {
         onSigned?.(null);

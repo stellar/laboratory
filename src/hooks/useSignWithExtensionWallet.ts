@@ -49,7 +49,7 @@ export const useSignWithExtensionWallet = ({
   };
 
   const signTx = useCallback(async () => {
-    if (isInProgress.current || !walletKitInstance?.isInitialized) {
+    if (isInProgress.current || !walletKitInstance.isInitialized) {
       return;
     }
 
@@ -65,8 +65,10 @@ export const useSignWithExtensionWallet = ({
         setSignedTxXdr(result.signedTxXdr);
         setSuccessMsg(SUCCESS_MSG);
       } else {
-        // if a user didn't log in via stellar wallet kit in the main nav
-        // open a wallet kit modal to sign in
+        // Register WalletConnect first — the kit snapshots its wallet list when
+        // the modal opens, so a module added later wouldn't appear in it
+        await walletKitInstance.ensureWalletConnect();
+
         const { address } = await StellarWalletsKit.authModal();
 
         if (address && txXdr) {
@@ -99,13 +101,7 @@ export const useSignWithExtensionWallet = ({
     } finally {
       isInProgress.current = false;
     }
-  }, [
-    networkPassphrase,
-    txXdr,
-    updateWalletKit,
-    walletKitInstance.isInitialized,
-    walletKit,
-  ]);
+  }, [networkPassphrase, txXdr, updateWalletKit, walletKitInstance, walletKit]);
 
   useEffect(() => {
     if (isEnabled) {

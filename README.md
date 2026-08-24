@@ -64,6 +64,21 @@ import { MAINNET_LIMITS, NETWORK_LIMITS } from "@/constants/networkLimits";
 
 To manually fetch limits: `pnpm fetch-limits`.
 
+### WalletConnect
+
+WalletConnect is offered on mainnet and testnet only, since those are the only
+Stellar chains it exposes (`stellar:pubnet` and `stellar:testnet`). It uses a
+[Reown Cloud](https://cloud.reown.com/) project ID committed in
+`src/components/WalletKit/walletConnect.ts`.
+
+**Testing it locally needs an https origin.** From `http://localhost`, Freighter
+mobile approves the session and returns the account, but then refuses to sign,
+reporting the domain as not connected. Use a tunnel (see Hardware Wallets below)
+or a deployed preview, and add that origin to the Reown project's allowed
+domains — the relay rejects unlisted origins outright with
+`3000 (Unauthorized: origin not allowed)`. Allowlist changes can take a few
+hours to propagate.
+
 ### Hardware Wallets
 
 Testing hardware wallets requires an HTTPS connection to enable U2F. The
