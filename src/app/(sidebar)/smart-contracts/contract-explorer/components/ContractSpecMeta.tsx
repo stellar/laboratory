@@ -90,8 +90,16 @@ export const ContractSpecMeta = ({
     };
 
     const parseContractMeta = () => {
+      if (!wasmBinary) {
+        return;
+      }
+
       try {
-        const parsedContractMeta = parseContractMetadata(wasmBinary);
+        // The parser reads the Wasm with Buffer-only methods (readUint8), but
+        // RPC returns a Uint8Array as of SDK v17 — pass a Buffer or it throws.
+        const parsedContractMeta = parseContractMetadata(
+          Buffer.from(wasmBinary),
+        );
         setContractInterfaceObj(parsedContractMeta);
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {

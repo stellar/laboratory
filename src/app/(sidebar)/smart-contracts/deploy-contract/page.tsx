@@ -124,7 +124,9 @@ export default function DeployContract() {
           return null;
         }
 
-        const parsedData = parseContractMetadata(wasmBinary);
+        // The parser reads the Wasm with Buffer-only methods (readUint8), so
+        // a Uint8Array (what RPC returns as of SDK v17) has to be wrapped.
+        const parsedData = parseContractMetadata(Buffer.from(wasmBinary));
 
         setParsedContractData(parsedData);
 

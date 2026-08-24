@@ -128,7 +128,9 @@ export const fetchTxSignatures = async ({
               const hashXSigner = StrKey.decodeSha256Hash(signer.key);
               // eslint-disable-next-line no-case-declarations
               const hashXSignature = hash(sigObj.sig);
-              isValid = Buffer.from(hashXSigner).equals(hashXSignature);
+              isValid = Buffer.from(hashXSigner).equals(
+                Buffer.from(hashXSignature),
+              );
               break;
             case "ed25519_public_key":
               // eslint-disable-next-line no-case-declarations

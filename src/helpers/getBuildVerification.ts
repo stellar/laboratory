@@ -28,6 +28,10 @@ export const getBuildVerification = async ({
 
     const ledgerEntryData = ledgerEntries.entries[0]?.val;
 
+    // No contract data entry: the contract doesn't exist on this network, or
+    // the entry isn't the shape we expect. That's really "not found"/"unknown"
+    // rather than a verification verdict, but BuildVerificationStatus has no
+    // such variant, so fall back to the most conservative one.
     if (ledgerEntryData?.type !== "contractData") {
       return "unverified_build";
     }
