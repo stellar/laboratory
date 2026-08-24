@@ -49,7 +49,7 @@ const getOperationLabel = (opType: string): string => {
 const getOperationsJson = (tx: Transaction): ClassicOperationJson[] => {
   try {
     const envelopeJson = JSON.parse(
-      StellarXdr.decode(XDR_TYPE_TRANSACTION_ENVELOPE, tx.toXDR()),
+      StellarXdr.decode(XDR_TYPE_TRANSACTION_ENVELOPE, tx.toXdr()),
     );
 
     // v1 (`tx`) and the legacy v0 (`tx_v0`) envelopes hold operations in the
