@@ -80,6 +80,7 @@ test.describe("Validate Step in Build Flow", () => {
 
     // Reload to pick up the seeded sessionStorage
     await page.reload();
+    await expect(page.locator("h1")).toHaveText("Validate auth entries");
   };
 
   const mockEnforceSimulationSuccess = async (page: Page) => {

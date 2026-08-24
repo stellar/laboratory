@@ -145,11 +145,6 @@ export const Signatures = ({
     <Box gap="lg" addlClassName="Signatures">
       {signatures && signatures.length > 0 && txHash && (
         <>
-          <Text as="div" size="xs" weight="regular">
-            Cryptographic signatures that authorize this transaction. Each
-            signature includes the signer&apos;s public key, signature value,
-            and hint.
-          </Text>
           <div className="Signatures__gridTableContainer">
             <table>
               <thead>
@@ -175,9 +170,6 @@ export const Signatures = ({
 
       {authEntries.length > 0 && (
         <>
-          <Text as="div" size="xs" weight="regular">
-            Soroban authorization entry signatures.
-          </Text>
           <div className="Signatures__gridTableContainer">
             <table>
               <thead>

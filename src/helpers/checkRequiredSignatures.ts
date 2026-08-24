@@ -88,13 +88,18 @@ export type TxSignatureCompleteness = {
  *
  * Multisig caveat: a multisig account is often signed by on-chain cosigners
  * rather than the account key itself, so the required source account can show
- * as "missing" while the tx is actually fully signed. Those cosigner
- * signatures surface as unrecognized (their hints match no required signer).
- * When unrecognized signatures are present we therefore can't claim the tx is
- * incomplete — we defer to the network, which is the authority on whether the
- * signature set satisfies account thresholds. Use the result to decide whether
- * to route the user to submit (complete) versus the sign step (a required
- * source account hasn't signed and nothing could be standing in for it).
+ * as "missing" while the tx may in fact satisfy the account's thresholds. Those
+ * cosigner signatures surface as unrecognized (their hints match no required
+ * signer), flagged separately via `hasUnrecognizedSigners`.
+ *
+ * `isComplete` reflects only what can be verified offline: it is true only when
+ * every envelope-derivable required signer has a valid signature. It does NOT
+ * defer to the network for the unrecognized case — a multisig tx signed solely
+ * by cosigners reads as incomplete here so the flow routes the user through the
+ * sign step (rather than skipping straight to submit), where they can review
+ * the existing signatures and add their own if needed. `hasUnrecognizedSigners`
+ * is surfaced so the UI can explain that offline completeness is inconclusive
+ * and the network remains the final authority on thresholds.
  */
 export const getTxSignatureCompleteness = (
   tx: Transaction | FeeBumpTransaction,
@@ -137,10 +142,7 @@ export const getTxSignatureCompleteness = (
   }
 
   return {
-    // Unrecognized signatures may cover the missing required signer(s) via
-    // on-chain multisig — let the network be the judge rather than blocking.
-    isComplete:
-      !hasInvalid && (missingSigners.length === 0 || hasUnrecognizedSigners),
+    isComplete: !hasInvalid && missingSigners.length === 0,
     hasInvalid,
     missingSigners,
     hasUnrecognizedSigners,

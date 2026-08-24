@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import { TransactionBuilder } from "@stellar/stellar-sdk";
 
 import { useImportFlowStore } from "@/store/createTransactionFlowStore";
 import { useStore } from "@/store/useStore";
@@ -8,6 +7,7 @@ import {
   getTxSignatureCompleteness,
   TxSignatureCompleteness,
 } from "@/helpers/checkRequiredSignatures";
+import { parseTxXdr } from "@/helpers/parseTxXdr";
 
 /**
  * Offline assessment of whether the imported transaction already carries every
@@ -23,18 +23,13 @@ export const useImportSignatureCompleteness =
     const { network } = useStore();
 
     return useMemo(() => {
-      if (!importState?.hasSignatures || !importState.importXdr) {
+      if (!importState?.hasSignatures) {
         return null;
       }
-      try {
-        const tx = TransactionBuilder.fromXdr(
-          importState.importXdr,
-          network.passphrase,
-        );
-        return getTxSignatureCompleteness(tx);
-      } catch {
-        return null;
-      }
+
+      const tx = parseTxXdr(importState.importXdr, network.passphrase);
+
+      return tx ? getTxSignatureCompleteness(tx) : null;
     }, [
       importState?.hasSignatures,
       importState?.importXdr,
