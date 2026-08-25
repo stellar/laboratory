@@ -405,7 +405,7 @@ export const TX_DASH_CLASSIC = {
               ext: "v0",
               contract_id:
                 "CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -436,7 +436,7 @@ export const TX_DASH_CLASSIC = {
             ext: "v0",
             contract_id:
               "CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [

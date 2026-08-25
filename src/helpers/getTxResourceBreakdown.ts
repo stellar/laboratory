@@ -145,7 +145,7 @@ export const getTxResourceBreakdown = (
     const event = diagnosticEvents.find(
       (e: any) =>
         e.in_successful_contract_call &&
-        e.event?.type_ === "diagnostic" &&
+        (e.event?.type ?? e.event?.type_) === "diagnostic" &&
         e.event?.body?.v0?.topics?.[0]?.symbol === "core_metrics" &&
         e.event?.body?.v0?.topics?.[1]?.symbol === metricName,
     );

@@ -102,7 +102,7 @@ export const TX_EVENTS_MOCK_RESPONSE = {
             ext: "v0",
             contract_id:
               "CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -127,7 +127,7 @@ export const TX_EVENTS_MOCK_RESPONSE = {
             ext: "v0",
             contract_id:
               "CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -153,7 +153,7 @@ export const TX_EVENTS_MOCK_RESPONSE = {
             ext: "v0",
             contract_id:
               "CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -182,7 +182,7 @@ export const TX_EVENTS_MOCK_RESPONSE = {
             ext: "v0",
             contract_id:
               "CCW67TSZV3SSS2HXMBQ5JFGCKJNXKZM7UQUWUZPUTHXSTZLEO7SJMI75",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -212,7 +212,7 @@ export const TX_EVENTS_MOCK_RESPONSE = {
             ext: "v0",
             contract_id:
               "CA6PUJLBYKZKUEKLZJMKBZLEKP2OTHANDEOWSFF44FTSYLKQPIICCJBE",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -252,7 +252,7 @@ export const TX_EVENTS_MOCK_RESPONSE = {
             ext: "v0",
             contract_id:
               "CCQWSCDRVVF7UMMZ7JO6CDNE4BFL4A2WNNHQWORJ7T46EJFU32UP7H3Q",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -323,7 +323,7 @@ export const TX_EVENTS_MOCK_RESPONSE = {
             ext: "v0",
             contract_id:
               "CBQDHNBFBZYE4MKPWBSJOPIYLW4SFSXAXUTSXJN76GNKYVYPCKWC6QUK",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -1064,7 +1064,7 @@ export const TX_EVENTS_MOCK_SAC = {
             ext: "v0",
             contract_id:
               "CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -1089,7 +1089,7 @@ export const TX_EVENTS_MOCK_SAC = {
             ext: "v0",
             contract_id:
               "CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -1115,7 +1115,7 @@ export const TX_EVENTS_MOCK_SAC = {
             ext: "v0",
             contract_id:
               "CCW67TSZV3SSS2HXMBQ5JFGCKJNXKZM7UQUWUZPUTHXSTZLEO7SJMI75",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -1145,7 +1145,7 @@ export const TX_EVENTS_MOCK_SAC = {
             ext: "v0",
             contract_id:
               "CCW67TSZV3SSS2HXMBQ5JFGCKJNXKZM7UQUWUZPUTHXSTZLEO7SJMI75",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -1175,7 +1175,7 @@ export const TX_EVENTS_MOCK_SAC = {
             ext: "v0",
             contract_id:
               "CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -1204,7 +1204,7 @@ export const TX_EVENTS_MOCK_SAC = {
             ext: "v0",
             contract_id:
               "CA6PUJLBYKZKUEKLZJMKBZLEKP2OTHANDEOWSFF44FTSYLKQPIICCJBE",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -1244,7 +1244,7 @@ export const TX_EVENTS_MOCK_SAC = {
             ext: "v0",
             contract_id:
               "CA6PUJLBYKZKUEKLZJMKBZLEKP2OTHANDEOWSFF44FTSYLKQPIICCJBE",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -1269,7 +1269,7 @@ export const TX_EVENTS_MOCK_SAC = {
             ext: "v0",
             contract_id:
               "CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -3797,7 +3797,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
                 ext: "v0",
                 contract_id:
                   "CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -3826,7 +3826,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
                 ext: "v0",
                 contract_id:
                   "CCW67TSZV3SSS2HXMBQ5JFGCKJNXKZM7UQUWUZPUTHXSTZLEO7SJMI75",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -3856,7 +3856,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
                 ext: "v0",
                 contract_id:
                   "CAM7DY53G63XA4AJRS24Z6VFYAFSSF76C3RZ45BE5YU3FQS5255OOABP",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -3882,7 +3882,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
                 ext: "v0",
                 contract_id:
                   "CAM7DY53G63XA4AJRS24Z6VFYAFSSF76C3RZ45BE5YU3FQS5255OOABP",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -3920,7 +3920,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
                 ext: "v0",
                 contract_id:
                   "CAM7DY53G63XA4AJRS24Z6VFYAFSSF76C3RZ45BE5YU3FQS5255OOABP",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -3991,7 +3991,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
                 ext: "v0",
                 contract_id:
                   "CAG5LRYQ5JVEUI5TEID72EYOVX44TTUJT5BQR2J6J77FH65PCCFAJDDH",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -4073,7 +4073,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
                 ext: "v0",
                 contract_id:
                   "CAIQKRDH6FCVEK7RL4EZ57PR2ODPWCYKHLJK2EBDQUHXDVNTCWFLHAJB",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -4123,7 +4123,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -4148,7 +4148,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -4174,7 +4174,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -4226,7 +4226,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAIQKRDH6FCVEK7RL4EZ57PR2ODPWCYKHLJK2EBDQUHXDVNTCWFLHAJB",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -4349,7 +4349,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CCNHYCMBEZFWDRYMWHWB52MRCRLFEORSOK5QYWUZXYSLFKQSO2PRWYYZ",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -4371,7 +4371,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAIQKRDH6FCVEK7RL4EZ57PR2ODPWCYKHLJK2EBDQUHXDVNTCWFLHAJB",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -4408,7 +4408,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAG5LRYQ5JVEUI5TEID72EYOVX44TTUJT5BQR2J6J77FH65PCCFAJDDH",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -4433,7 +4433,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAIQKRDH6FCVEK7RL4EZ57PR2ODPWCYKHLJK2EBDQUHXDVNTCWFLHAJB",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -4459,7 +4459,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAM7DY53G63XA4AJRS24Z6VFYAFSSF76C3RZ45BE5YU3FQS5255OOABP",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -4484,7 +4484,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAIQKRDH6FCVEK7RL4EZ57PR2ODPWCYKHLJK2EBDQUHXDVNTCWFLHAJB",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -4510,7 +4510,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAM7DY53G63XA4AJRS24Z6VFYAFSSF76C3RZ45BE5YU3FQS5255OOABP",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -4541,7 +4541,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAIQKRDH6FCVEK7RL4EZ57PR2ODPWCYKHLJK2EBDQUHXDVNTCWFLHAJB",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -4579,7 +4579,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAG5LRYQ5JVEUI5TEID72EYOVX44TTUJT5BQR2J6J77FH65PCCFAJDDH",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -4603,7 +4603,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAIQKRDH6FCVEK7RL4EZ57PR2ODPWCYKHLJK2EBDQUHXDVNTCWFLHAJB",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -4641,7 +4641,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAG5LRYQ5JVEUI5TEID72EYOVX44TTUJT5BQR2J6J77FH65PCCFAJDDH",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -4665,7 +4665,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAIQKRDH6FCVEK7RL4EZ57PR2ODPWCYKHLJK2EBDQUHXDVNTCWFLHAJB",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -4721,7 +4721,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAG5LRYQ5JVEUI5TEID72EYOVX44TTUJT5BQR2J6J77FH65PCCFAJDDH",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -4758,7 +4758,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CA4HEQTL2WPEUYKYKCDOHCDNIV4QHNJ7EL4J4NQ6VADP7SYHVRYZ7AW2",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -4782,7 +4782,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAG5LRYQ5JVEUI5TEID72EYOVX44TTUJT5BQR2J6J77FH65PCCFAJDDH",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -4808,7 +4808,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAM7DY53G63XA4AJRS24Z6VFYAFSSF76C3RZ45BE5YU3FQS5255OOABP",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -4839,7 +4839,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAG5LRYQ5JVEUI5TEID72EYOVX44TTUJT5BQR2J6J77FH65PCCFAJDDH",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -4879,7 +4879,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -4911,7 +4911,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -4933,7 +4933,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAG5LRYQ5JVEUI5TEID72EYOVX44TTUJT5BQR2J6J77FH65PCCFAJDDH",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -4973,7 +4973,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CCW67TSZV3SSS2HXMBQ5JFGCKJNXKZM7UQUWUZPUTHXSTZLEO7SJMI75",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -5006,7 +5006,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CCW67TSZV3SSS2HXMBQ5JFGCKJNXKZM7UQUWUZPUTHXSTZLEO7SJMI75",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -5028,7 +5028,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAG5LRYQ5JVEUI5TEID72EYOVX44TTUJT5BQR2J6J77FH65PCCFAJDDH",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -5057,7 +5057,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAM7DY53G63XA4AJRS24Z6VFYAFSSF76C3RZ45BE5YU3FQS5255OOABP",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -5086,7 +5086,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -5110,7 +5110,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAM7DY53G63XA4AJRS24Z6VFYAFSSF76C3RZ45BE5YU3FQS5255OOABP",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -5139,7 +5139,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CCW67TSZV3SSS2HXMBQ5JFGCKJNXKZM7UQUWUZPUTHXSTZLEO7SJMI75",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -5163,7 +5163,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAM7DY53G63XA4AJRS24Z6VFYAFSSF76C3RZ45BE5YU3FQS5255OOABP",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -5189,7 +5189,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CA4HEQTL2WPEUYKYKCDOHCDNIV4QHNJ7EL4J4NQ6VADP7SYHVRYZ7AW2",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -5213,7 +5213,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAM7DY53G63XA4AJRS24Z6VFYAFSSF76C3RZ45BE5YU3FQS5255OOABP",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -5242,7 +5242,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAM7DY53G63XA4AJRS24Z6VFYAFSSF76C3RZ45BE5YU3FQS5255OOABP",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -5283,7 +5283,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAM7DY53G63XA4AJRS24Z6VFYAFSSF76C3RZ45BE5YU3FQS5255OOABP",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -5357,7 +5357,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAM7DY53G63XA4AJRS24Z6VFYAFSSF76C3RZ45BE5YU3FQS5255OOABP",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -5381,7 +5381,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAG5LRYQ5JVEUI5TEID72EYOVX44TTUJT5BQR2J6J77FH65PCCFAJDDH",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -5466,7 +5466,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAG5LRYQ5JVEUI5TEID72EYOVX44TTUJT5BQR2J6J77FH65PCCFAJDDH",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -5500,7 +5500,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAIQKRDH6FCVEK7RL4EZ57PR2ODPWCYKHLJK2EBDQUHXDVNTCWFLHAJB",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -5535,7 +5535,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
               ext: "v0",
               contract_id:
                 "CAIQKRDH6FCVEK7RL4EZ57PR2ODPWCYKHLJK2EBDQUHXDVNTCWFLHAJB",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -5556,7 +5556,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -5579,7 +5579,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -5602,7 +5602,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -5625,7 +5625,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -5648,7 +5648,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -5671,7 +5671,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -5694,7 +5694,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -5717,7 +5717,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -5740,7 +5740,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -5763,7 +5763,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -5786,7 +5786,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -5809,7 +5809,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -5832,7 +5832,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -5855,7 +5855,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -5878,7 +5878,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -5901,7 +5901,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -5924,7 +5924,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -5947,7 +5947,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -5970,7 +5970,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -5997,7 +5997,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -6049,7 +6049,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CAIQKRDH6FCVEK7RL4EZ57PR2ODPWCYKHLJK2EBDQUHXDVNTCWFLHAJB",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -6172,7 +6172,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CCNHYCMBEZFWDRYMWHWB52MRCRLFEORSOK5QYWUZXYSLFKQSO2PRWYYZ",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -6194,7 +6194,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CAIQKRDH6FCVEK7RL4EZ57PR2ODPWCYKHLJK2EBDQUHXDVNTCWFLHAJB",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -6231,7 +6231,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CAG5LRYQ5JVEUI5TEID72EYOVX44TTUJT5BQR2J6J77FH65PCCFAJDDH",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -6256,7 +6256,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CAIQKRDH6FCVEK7RL4EZ57PR2ODPWCYKHLJK2EBDQUHXDVNTCWFLHAJB",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -6282,7 +6282,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CAM7DY53G63XA4AJRS24Z6VFYAFSSF76C3RZ45BE5YU3FQS5255OOABP",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -6307,7 +6307,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CAIQKRDH6FCVEK7RL4EZ57PR2ODPWCYKHLJK2EBDQUHXDVNTCWFLHAJB",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -6333,7 +6333,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CAM7DY53G63XA4AJRS24Z6VFYAFSSF76C3RZ45BE5YU3FQS5255OOABP",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -6364,7 +6364,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CAIQKRDH6FCVEK7RL4EZ57PR2ODPWCYKHLJK2EBDQUHXDVNTCWFLHAJB",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -6402,7 +6402,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CAG5LRYQ5JVEUI5TEID72EYOVX44TTUJT5BQR2J6J77FH65PCCFAJDDH",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -6426,7 +6426,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CAIQKRDH6FCVEK7RL4EZ57PR2ODPWCYKHLJK2EBDQUHXDVNTCWFLHAJB",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -6464,7 +6464,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CAG5LRYQ5JVEUI5TEID72EYOVX44TTUJT5BQR2J6J77FH65PCCFAJDDH",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -6488,7 +6488,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CAIQKRDH6FCVEK7RL4EZ57PR2ODPWCYKHLJK2EBDQUHXDVNTCWFLHAJB",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -6544,7 +6544,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CAG5LRYQ5JVEUI5TEID72EYOVX44TTUJT5BQR2J6J77FH65PCCFAJDDH",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -6581,7 +6581,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CA4HEQTL2WPEUYKYKCDOHCDNIV4QHNJ7EL4J4NQ6VADP7SYHVRYZ7AW2",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -6605,7 +6605,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CAG5LRYQ5JVEUI5TEID72EYOVX44TTUJT5BQR2J6J77FH65PCCFAJDDH",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -6631,7 +6631,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CAM7DY53G63XA4AJRS24Z6VFYAFSSF76C3RZ45BE5YU3FQS5255OOABP",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -6662,7 +6662,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CAG5LRYQ5JVEUI5TEID72EYOVX44TTUJT5BQR2J6J77FH65PCCFAJDDH",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -6702,7 +6702,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA",
-          type_: "contract",
+          type: "contract",
           body: {
             v0: {
               topics: [
@@ -6734,7 +6734,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -6756,7 +6756,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CAG5LRYQ5JVEUI5TEID72EYOVX44TTUJT5BQR2J6J77FH65PCCFAJDDH",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -6796,7 +6796,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CCW67TSZV3SSS2HXMBQ5JFGCKJNXKZM7UQUWUZPUTHXSTZLEO7SJMI75",
-          type_: "contract",
+          type: "contract",
           body: {
             v0: {
               topics: [
@@ -6829,7 +6829,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CCW67TSZV3SSS2HXMBQ5JFGCKJNXKZM7UQUWUZPUTHXSTZLEO7SJMI75",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -6851,7 +6851,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CAG5LRYQ5JVEUI5TEID72EYOVX44TTUJT5BQR2J6J77FH65PCCFAJDDH",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -6880,7 +6880,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CAM7DY53G63XA4AJRS24Z6VFYAFSSF76C3RZ45BE5YU3FQS5255OOABP",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -6909,7 +6909,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -6933,7 +6933,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CAM7DY53G63XA4AJRS24Z6VFYAFSSF76C3RZ45BE5YU3FQS5255OOABP",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -6962,7 +6962,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CCW67TSZV3SSS2HXMBQ5JFGCKJNXKZM7UQUWUZPUTHXSTZLEO7SJMI75",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -6986,7 +6986,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CAM7DY53G63XA4AJRS24Z6VFYAFSSF76C3RZ45BE5YU3FQS5255OOABP",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -7012,7 +7012,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CA4HEQTL2WPEUYKYKCDOHCDNIV4QHNJ7EL4J4NQ6VADP7SYHVRYZ7AW2",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -7036,7 +7036,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CAM7DY53G63XA4AJRS24Z6VFYAFSSF76C3RZ45BE5YU3FQS5255OOABP",
-          type_: "contract",
+          type: "contract",
           body: {
             v0: {
               topics: [
@@ -7065,7 +7065,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CAM7DY53G63XA4AJRS24Z6VFYAFSSF76C3RZ45BE5YU3FQS5255OOABP",
-          type_: "contract",
+          type: "contract",
           body: {
             v0: {
               topics: [
@@ -7106,7 +7106,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CAM7DY53G63XA4AJRS24Z6VFYAFSSF76C3RZ45BE5YU3FQS5255OOABP",
-          type_: "contract",
+          type: "contract",
           body: {
             v0: {
               topics: [
@@ -7180,7 +7180,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CAM7DY53G63XA4AJRS24Z6VFYAFSSF76C3RZ45BE5YU3FQS5255OOABP",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -7204,7 +7204,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CAG5LRYQ5JVEUI5TEID72EYOVX44TTUJT5BQR2J6J77FH65PCCFAJDDH",
-          type_: "contract",
+          type: "contract",
           body: {
             v0: {
               topics: [
@@ -7289,7 +7289,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CAG5LRYQ5JVEUI5TEID72EYOVX44TTUJT5BQR2J6J77FH65PCCFAJDDH",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -7323,7 +7323,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CAIQKRDH6FCVEK7RL4EZ57PR2ODPWCYKHLJK2EBDQUHXDVNTCWFLHAJB",
-          type_: "contract",
+          type: "contract",
           body: {
             v0: {
               topics: [
@@ -7358,7 +7358,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
           ext: "v0",
           contract_id:
             "CAIQKRDH6FCVEK7RL4EZ57PR2ODPWCYKHLJK2EBDQUHXDVNTCWFLHAJB",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -7379,7 +7379,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -7402,7 +7402,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -7425,7 +7425,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -7448,7 +7448,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -7471,7 +7471,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -7494,7 +7494,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -7517,7 +7517,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -7540,7 +7540,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -7563,7 +7563,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -7586,7 +7586,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -7609,7 +7609,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -7632,7 +7632,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -7655,7 +7655,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -7678,7 +7678,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -7701,7 +7701,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -7724,7 +7724,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -7747,7 +7747,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -7770,7 +7770,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -7793,7 +7793,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -7820,7 +7820,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             ext: "v0",
             contract_id:
               "CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -7845,7 +7845,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             ext: "v0",
             contract_id:
               "CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -7871,7 +7871,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             ext: "v0",
             contract_id:
               "CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -7900,7 +7900,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             ext: "v0",
             contract_id:
               "CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -7929,7 +7929,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             ext: "v0",
             contract_id:
               "CBEM2CAIYLM3HBOPU5HLQL7V5BUAKM3N77DYQKX4FNHTQLQUUD2ZFBOX",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -7959,7 +7959,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             ext: "v0",
             contract_id:
               "CDLMAKG5TSJA6FGP7LLC2FKJRQW6DQYMEPP6FURFVULDEQMP3PRZ4ISI",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -7997,7 +7997,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             ext: "v0",
             contract_id:
               "CDLMAKG5TSJA6FGP7LLC2FKJRQW6DQYMEPP6FURFVULDEQMP3PRZ4ISI",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -8060,7 +8060,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             ext: "v0",
             contract_id:
               "CBEM2CAIYLM3HBOPU5HLQL7V5BUAKM3N77DYQKX4FNHTQLQUUD2ZFBOX",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -8090,7 +8090,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             ext: "v0",
             contract_id:
               "CCKCKCPHYVXQD4NECBFJTFSCU2AMSJGCNG4O6K4JVRE2BLPR7WNDBQIQ",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -8120,7 +8120,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             ext: "v0",
             contract_id:
               "CDXADLBNIQK5STJVEBOK2CMJPCN6EUUZ3MYPUOMXQ5VBNREGFEIF3PT5",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -8158,7 +8158,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             ext: "v0",
             contract_id:
               "CDXADLBNIQK5STJVEBOK2CMJPCN6EUUZ3MYPUOMXQ5VBNREGFEIF3PT5",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -8221,7 +8221,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             ext: "v0",
             contract_id:
               "CCKCKCPHYVXQD4NECBFJTFSCU2AMSJGCNG4O6K4JVRE2BLPR7WNDBQIQ",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -8251,7 +8251,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             ext: "v0",
             contract_id:
               "CAUIKL3IYGMERDRUN6YSCLWVAKIFG5Q4YJHUKM4S4NJZQIA3BAS6OJPK",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -8281,7 +8281,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             ext: "v0",
             contract_id:
               "CAQENB7J57NTUWKTPDJ6CRIMI734US7Q2U2VXRWTNMMFSVXDTPWEUJGU",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -8321,7 +8321,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             ext: "v0",
             contract_id:
               "CAQENB7J57NTUWKTPDJ6CRIMI734US7Q2U2VXRWTNMMFSVXDTPWEUJGU",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -8346,7 +8346,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             ext: "v0",
             contract_id:
               "CAUIKL3IYGMERDRUN6YSCLWVAKIFG5Q4YJHUKM4S4NJZQIA3BAS6OJPK",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -8376,7 +8376,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             ext: "v0",
             contract_id:
               "CAFD2IS6FEBUXWHAOH3G5LM4LMXIHVH6LAYRHUPYUU62NXH3I4TUCI2C",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -8406,7 +8406,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             ext: "v0",
             contract_id:
               "CDCT6W2XW64ZCIUEMRG46CJVE734SZDL6WDEH2QQOABBNU2XUSCTQEMR",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -8446,7 +8446,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             ext: "v0",
             contract_id:
               "CDCT6W2XW64ZCIUEMRG46CJVE734SZDL6WDEH2QQOABBNU2XUSCTQEMR",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -8471,7 +8471,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             ext: "v0",
             contract_id:
               "CAFD2IS6FEBUXWHAOH3G5LM4LMXIHVH6LAYRHUPYUU62NXH3I4TUCI2C",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -8501,7 +8501,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             ext: "v0",
             contract_id:
               "CCW67TSZV3SSS2HXMBQ5JFGCKJNXKZM7UQUWUZPUTHXSTZLEO7SJMI75",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -8531,7 +8531,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             ext: "v0",
             contract_id:
               "CBN2N5L4UM5PPQE5UQNC3HVGT56TDQMAXMT3LVFMNN6XLFXZMCJY6KOU",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -8571,7 +8571,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             ext: "v0",
             contract_id:
               "CBN2N5L4UM5PPQE5UQNC3HVGT56TDQMAXMT3LVFMNN6XLFXZMCJY6KOU",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -8596,7 +8596,7 @@ export const TX_EVENTS_MOCK_SOROSWAP = {
             ext: "v0",
             contract_id:
               "CAUIKL3IYGMERDRUN6YSCLWVAKIFG5Q4YJHUKM4S4NJZQIA3BAS6OJPK",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -8908,7 +8908,7 @@ export const TX_EVENTS_MOCK_KALE = {
             ext: "v0",
             contract_id:
               "CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -8933,7 +8933,7 @@ export const TX_EVENTS_MOCK_KALE = {
             ext: "v0",
             contract_id:
               "CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -8959,7 +8959,7 @@ export const TX_EVENTS_MOCK_KALE = {
             ext: "v0",
             contract_id:
               "CB23WRDQWGSP6YPMY4UV5C4OW5CBTXKYN3XEATG7KJEZCXMJBYEHOUOV",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -8985,7 +8985,7 @@ export const TX_EVENTS_MOCK_KALE = {
             ext: "v0",
             contract_id:
               "CB23WRDQWGSP6YPMY4UV5C4OW5CBTXKYN3XEATG7KJEZCXMJBYEHOUOV",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -9011,7 +9011,7 @@ export const TX_EVENTS_MOCK_KALE = {
             ext: "v0",
             contract_id:
               "CB23WRDQWGSP6YPMY4UV5C4OW5CBTXKYN3XEATG7KJEZCXMJBYEHOUOV",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -9211,7 +9211,7 @@ export const TX_EVENTS_MOCK_MUXED = {
             ext: "v0",
             contract_id:
               "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -9236,7 +9236,7 @@ export const TX_EVENTS_MOCK_MUXED = {
             ext: "v0",
             contract_id:
               "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -9262,7 +9262,7 @@ export const TX_EVENTS_MOCK_MUXED = {
             ext: "v0",
             contract_id:
               "CCPKXJC62SE3XN7C5DDETNKKZLHN6NXUZRHFPGA7H47RIKAJYHKH2PYU",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [

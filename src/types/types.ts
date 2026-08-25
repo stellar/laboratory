@@ -597,7 +597,9 @@ export type RpcTxJsonResponseTxEvent = {
     };
   };
   contract_id: string;
-  type_: string;
+  // XDR JSON v27 names this key `type_`; v28 renames it to `type`.
+  type?: string;
+  type_?: string;
   ext: string;
 };
 

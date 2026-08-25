@@ -4,7 +4,7 @@ export const TEST1 = [
     event: {
       ext: "v0",
       contract_id: null,
-      type_: "diagnostic",
+      type: "diagnostic",
       body: {
         v0: {
           topics: [
@@ -43,7 +43,7 @@ export const TEST1 = [
     event: {
       ext: "v0",
       contract_id: "CDL74RF5BLYR2YBLCCI7F5FB6TPSCLKEJUBSD2RSVWZ4YHF3VMFAIGWA",
-      type_: "diagnostic",
+      type: "diagnostic",
       body: {
         v0: {
           topics: [
@@ -75,7 +75,7 @@ export const TEST1 = [
     event: {
       ext: "v0",
       contract_id: "CDL74RF5BLYR2YBLCCI7F5FB6TPSCLKEJUBSD2RSVWZ4YHF3VMFAIGWA",
-      type_: "diagnostic",
+      type: "diagnostic",
       body: {
         v0: {
           topics: [
@@ -101,7 +101,7 @@ export const TEST1 = [
     event: {
       ext: "v0",
       contract_id: "CDL74RF5BLYR2YBLCCI7F5FB6TPSCLKEJUBSD2RSVWZ4YHF3VMFAIGWA",
-      type_: "diagnostic",
+      type: "diagnostic",
       body: {
         v0: {
           topics: [
@@ -133,7 +133,7 @@ export const TEST1 = [
     event: {
       ext: "v0",
       contract_id: null,
-      type_: "diagnostic",
+      type: "diagnostic",
       body: {
         v0: {
           topics: [
@@ -159,7 +159,7 @@ export const TEST2 = [
     event: {
       ext: "v0",
       contract_id: null,
-      type_: "diagnostic",
+      type: "diagnostic",
       body: {
         v0: {
           topics: [
@@ -194,7 +194,7 @@ export const TEST2 = [
     event: {
       ext: "v0",
       contract_id: "CDL74RF5BLYR2YBLCCI7F5FB6TPSCLKEJUBSD2RSVWZ4YHF3VMFAIGWA",
-      type_: "diagnostic",
+      type: "diagnostic",
       body: {
         v0: {
           topics: [
@@ -306,7 +306,7 @@ export const TEST2 = [
     event: {
       ext: "v0",
       contract_id: "CC5QB2IOWFW2BZZEJY2JFCH3SSGYRYEX62G66WK6RTQQLMC7BSRSLJSD",
-      type_: "diagnostic",
+      type: "diagnostic",
       body: {
         v0: {
           topics: [
@@ -327,7 +327,7 @@ export const TEST2 = [
     event: {
       ext: "v0",
       contract_id: "CDL74RF5BLYR2YBLCCI7F5FB6TPSCLKEJUBSD2RSVWZ4YHF3VMFAIGWA",
-      type_: "diagnostic",
+      type: "diagnostic",
       body: {
         v0: {
           topics: [
@@ -359,7 +359,7 @@ export const TEST2 = [
     event: {
       ext: "v0",
       contract_id: "CDL74RF5BLYR2YBLCCI7F5FB6TPSCLKEJUBSD2RSVWZ4YHF3VMFAIGWA",
-      type_: "diagnostic",
+      type: "diagnostic",
       body: {
         v0: {
           topics: [
@@ -385,7 +385,7 @@ export const TEST2 = [
     event: {
       ext: "v0",
       contract_id: "CDL74RF5BLYR2YBLCCI7F5FB6TPSCLKEJUBSD2RSVWZ4YHF3VMFAIGWA",
-      type_: "diagnostic",
+      type: "diagnostic",
       body: {
         v0: {
           topics: [
@@ -417,7 +417,7 @@ export const TEST2 = [
     event: {
       ext: "v0",
       contract_id: null,
-      type_: "diagnostic",
+      type: "diagnostic",
       body: {
         v0: {
           topics: [
@@ -443,7 +443,7 @@ export const TEST3 = [
     event: {
       ext: "v0",
       contract_id: null,
-      type_: "diagnostic",
+      type: "diagnostic",
       body: {
         v0: {
           topics: [
@@ -478,7 +478,7 @@ export const TEST3 = [
     event: {
       ext: "v0",
       contract_id: "CDL74RF5BLYR2YBLCCI7F5FB6TPSCLKEJUBSD2RSVWZ4YHF3VMFAIGWA",
-      type_: "diagnostic",
+      type: "diagnostic",
       body: {
         v0: {
           topics: [
@@ -590,7 +590,7 @@ export const TEST3 = [
     event: {
       ext: "v0",
       contract_id: "CCAOKMZA52AB3RMNJHVDL46M2RXOP6UGUTH6S7CCMUVV3MHDIXATSTSU",
-      type_: "diagnostic",
+      type: "diagnostic",
       body: {
         v0: {
           topics: [
@@ -611,7 +611,7 @@ export const TEST3 = [
     event: {
       ext: "v0",
       contract_id: "CDL74RF5BLYR2YBLCCI7F5FB6TPSCLKEJUBSD2RSVWZ4YHF3VMFAIGWA",
-      type_: "diagnostic",
+      type: "diagnostic",
       body: {
         v0: {
           topics: [
@@ -650,7 +650,7 @@ export const TEST3 = [
     event: {
       ext: "v0",
       contract_id: "CDL74RF5BLYR2YBLCCI7F5FB6TPSCLKEJUBSD2RSVWZ4YHF3VMFAIGWA",
-      type_: "diagnostic",
+      type: "diagnostic",
       body: {
         v0: {
           topics: [
@@ -676,7 +676,7 @@ export const TEST3 = [
     event: {
       ext: "v0",
       contract_id: "CDL74RF5BLYR2YBLCCI7F5FB6TPSCLKEJUBSD2RSVWZ4YHF3VMFAIGWA",
-      type_: "diagnostic",
+      type: "diagnostic",
       body: {
         v0: {
           topics: [
@@ -708,7 +708,7 @@ export const TEST3 = [
     event: {
       ext: "v0",
       contract_id: null,
-      type_: "diagnostic",
+      type: "diagnostic",
       body: {
         v0: {
           topics: [
@@ -734,7 +734,7 @@ export const TEST4 = [
     event: {
       ext: "v0",
       contract_id: null,
-      type_: "diagnostic",
+      type: "diagnostic",
       body: {
         v0: {
           topics: [
@@ -773,7 +773,7 @@ export const TEST4 = [
     event: {
       ext: "v0",
       contract_id: "CDL74RF5BLYR2YBLCCI7F5FB6TPSCLKEJUBSD2RSVWZ4YHF3VMFAIGWA",
-      type_: "diagnostic",
+      type: "diagnostic",
       body: {
         v0: {
           topics: [
@@ -817,7 +817,7 @@ export const TEST4 = [
     event: {
       ext: "v0",
       contract_id: "CDL74RF5BLYR2YBLCCI7F5FB6TPSCLKEJUBSD2RSVWZ4YHF3VMFAIGWA",
-      type_: "diagnostic",
+      type: "diagnostic",
       body: {
         v0: {
           topics: [
@@ -843,7 +843,7 @@ export const TEST4 = [
     event: {
       ext: "v0",
       contract_id: "CDL74RF5BLYR2YBLCCI7F5FB6TPSCLKEJUBSD2RSVWZ4YHF3VMFAIGWA",
-      type_: "diagnostic",
+      type: "diagnostic",
       body: {
         v0: {
           topics: [
@@ -875,7 +875,7 @@ export const TEST4 = [
     event: {
       ext: "v0",
       contract_id: null,
-      type_: "diagnostic",
+      type: "diagnostic",
       body: {
         v0: {
           topics: [
