@@ -59,7 +59,7 @@ export const parseImportXdr = (
   }
 
   try {
-    const tx = TransactionBuilder.fromXDR(value, networkPassphrase) as
+    const tx = TransactionBuilder.fromXdr(value, networkPassphrase) as
       | Transaction
       | FeeBumpTransaction;
 

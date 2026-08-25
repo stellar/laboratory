@@ -1,4 +1,4 @@
-import { rpc as StellarRpc, Contract, xdr } from "@stellar/stellar-sdk";
+import { rpc as StellarRpc, Contract } from "@stellar/stellar-sdk";
 
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 
@@ -26,16 +26,24 @@ export const getBuildVerification = async ({
     const contractLedgerKey = new Contract(contractId).getFootprint();
     const ledgerEntries = await rpcServer.getLedgerEntries(contractLedgerKey);
 
-    const executable = ledgerEntries.entries[0].val
-      .contractData()
-      ?.val()
-      ?.instance()
-      ?.executable();
+    const ledgerEntryData = ledgerEntries.entries[0]?.val;
 
-    const contractType = executable?.switch()?.name;
-    const isSAC =
-      contractType ===
-      xdr.ContractExecutableType.contractExecutableStellarAsset().name;
+    // No contract data entry: the contract doesn't exist on this network, or
+    // the entry isn't the shape we expect. That's really "not found"/"unknown"
+    // rather than a verification verdict, but BuildVerificationStatus has no
+    // such variant, so fall back to the most conservative one.
+    if (ledgerEntryData?.type !== "contractData") {
+      return "unverified_build";
+    }
+
+    const contractValue = ledgerEntryData.contractData.val;
+
+    if (contractValue?.type !== "scvContractInstance") {
+      return "unverified_build";
+    }
+
+    const executable = contractValue.instance?.executable;
+    const isSAC = executable?.type === "contractExecutableStellarAsset";
 
     if (isSAC) {
       // SACs don't have custom WASM, they're built_in
@@ -131,7 +139,7 @@ const validateAndExtractRepo = (
 };
 
 export const extractSourceRepo = async (
-  wasmBytes: Buffer,
+  wasmBytes: Uint8Array,
 ): Promise<string | null> => {
   try {
     const wasmBuffer = new Uint8Array(wasmBytes);

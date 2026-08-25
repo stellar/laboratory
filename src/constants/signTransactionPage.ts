@@ -15,7 +15,7 @@ export const FEE_BUMP_TX_FIELDS = (feeBumpTx: FeeBumpTransaction) => [
   },
   {
     label: "Inner transaction hash",
-    value: feeBumpTx.innerTransaction.hash().toString("hex"),
+    value: Buffer.from(feeBumpTx.innerTransaction.hash()).toString("hex"),
   },
   {
     label: "Inner transaction source account",

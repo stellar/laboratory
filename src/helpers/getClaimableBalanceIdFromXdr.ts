@@ -13,7 +13,7 @@ export const getClaimableBalanceIdFromXdr = ({
     return "";
   }
 
-  const txn = TransactionBuilder.fromXDR(xdr, networkPassphrase);
+  const txn = TransactionBuilder.fromXdr(xdr, networkPassphrase);
   let balanceId = "";
 
   try {

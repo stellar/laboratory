@@ -278,6 +278,7 @@ export default function Endpoints() {
               instructionLeeway: Number(params.resourceConfig) || undefined,
             }),
             xdrFormat: params.xdrFormat || "json",
+            // TODO: handle CAP-71 v2 auth flag
             authMode: params.authMode || "",
           },
         };

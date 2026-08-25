@@ -21,7 +21,7 @@ export const fetchTxSignatures = async ({
   headers: NetworkHeaders;
 }) => {
   try {
-    let tx = TransactionBuilder.fromXDR(txXdr, networkPassphrase);
+    let tx = TransactionBuilder.fromXdr(txXdr, networkPassphrase);
 
     type SourceAccount = {
       [key: string]: {
@@ -31,10 +31,10 @@ export const fetchTxSignatures = async ({
       }[];
     };
 
-    type GroupedSignature = [{ sig: Buffer }[], Buffer];
+    type GroupedSignature = [{ sig: Uint8Array }[], Uint8Array];
 
     type SigObj = {
-      sig: Buffer;
+      sig: Uint8Array;
       isValid?: boolean;
     };
 
@@ -49,7 +49,7 @@ export const fetchTxSignatures = async ({
     if (tx instanceof FeeBumpTransaction) {
       sourceAccounts[getPublicKey(tx.feeSource)] = [];
       groupedSignatures.push([
-        tx.signatures.map((x) => ({ sig: x.signature() })),
+        tx.signatures.map((x) => ({ sig: x.signature.toBytes() })),
         tx.hash(),
       ]);
 
@@ -65,7 +65,7 @@ export const fetchTxSignatures = async ({
     });
 
     groupedSignatures.push([
-      tx.signatures.map((x) => ({ sig: x.signature() })),
+      tx.signatures.map((x) => ({ sig: x.signature.toBytes() })),
       tx.hash(),
     ]);
 
@@ -128,7 +128,9 @@ export const fetchTxSignatures = async ({
               const hashXSigner = StrKey.decodeSha256Hash(signer.key);
               // eslint-disable-next-line no-case-declarations
               const hashXSignature = hash(sigObj.sig);
-              isValid = hashXSigner.equals(hashXSignature);
+              isValid = Buffer.from(hashXSigner).equals(
+                Buffer.from(hashXSignature),
+              );
               break;
             case "ed25519_public_key":
               // eslint-disable-next-line no-case-declarations

@@ -36,7 +36,11 @@ export const hasSorobanData = (
 ): boolean => {
   const inner = tx instanceof FeeBumpTransaction ? tx.innerTransaction : tx;
   try {
-    return inner.toEnvelope().v1().tx().ext().switch() !== 0;
+    const envelope = xdr.expectUnionVariant(
+      inner.toEnvelope(),
+      "envelopeTypeTx",
+    );
+    return envelope.v1.tx.ext.type === "sorobanData";
   } catch {
     return false;
   }
@@ -63,22 +67,22 @@ export const getContractDataXDR = ({
   const getXdrDurability = (durability: string) => {
     switch (durability) {
       case "persistent":
-        return xdr.ContractDataDurability.persistent();
+        return xdr.ContractDataDurability.persistent;
       // https://developers.stellar.org/docs/build/guides/storage/choosing-the-right-storage#temporary-storage
       // TTL for the temporary data can be extended; however,
       // it is unsafe to rely on the extensions to preserve data since
       // there is always a risk of losing temporary data
       case "temporary":
-        return xdr.ContractDataDurability.temporary();
+        return xdr.ContractDataDurability.temporary;
       default:
-        return xdr.ContractDataDurability.persistent();
+        return xdr.ContractDataDurability.persistent;
     }
   };
 
   return xdr.LedgerKey.contractData(
     new xdr.LedgerKeyContractData({
       contract: address.toScAddress(),
-      key: xdr.ScVal.fromXDR(xdrBinary),
+      key: xdr.ScVal.fromXdr(xdrBinary),
       durability: getXdrDurability(durability),
     }),
   );
@@ -193,7 +197,7 @@ export const buildTxWithSorobanData = ({
     .build();
 };
 
-/* 
+/*
   get a transaction xdr with Soroban data to simulate with
 */
 export const getTxWithSorobanData = ({
@@ -210,7 +214,7 @@ export const getTxWithSorobanData = ({
     const contractDataXdr =
       operation.operation_type === "restore_footprint" ||
       operation.operation_type === "extend_footprint_ttl"
-        ? xdr.LedgerKey.fromXDR(
+        ? xdr.LedgerKey.fromXdr(
             operation.params.contractDataLedgerKey,
             "base64",
           )
@@ -234,7 +238,7 @@ export const getTxWithSorobanData = ({
         networkPassphrase: networkPassphrase,
       });
 
-      const sorobanTxXdrString = sorobanTx.toXDR();
+      const sorobanTxXdrString = sorobanTx.toXdr();
 
       return { xdr: sorobanTxXdrString, error: undefined };
     } else {
@@ -271,7 +275,7 @@ export const getTxnToSimulate = (
       networkPassphrase,
     });
 
-    return { xdr: builtXdr.toXDR(), error: "" };
+    return { xdr: builtXdr.toXdr(), error: "" };
   } catch (e: any) {
     return { xdr: "", error: e.message };
   }
@@ -731,11 +735,11 @@ export const checkIsReadOnly = (responseData: Record<string, any>): boolean => {
     // Check if there's a transaction data with no write footprint
     const transactionData = result?.transactionData as string | undefined;
     if (transactionData) {
-      const sorobanData = xdr.SorobanTransactionData.fromXDR(
+      const sorobanData = xdr.SorobanTransactionData.fromXdr(
         transactionData,
         "base64",
       );
-      const writeKeys = sorobanData.resources().footprint().readWrite().length;
+      const writeKeys = sorobanData.resources.footprint.readWrite.length;
       return writeKeys === 0;
     }
 

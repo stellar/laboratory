@@ -64,7 +64,7 @@ describe("convert js arguments to smart contract values using getScValsFromArgs"
     const scVals: xdr.ScVal[] = [];
     const scValsResult = getScValsFromArgs(args, scVals);
     const expectedResult: xdr.ScVal[] = [
-      xdr.ScVal.scvI64(new xdr.Int64(args.i64.value)),
+      xdr.ScVal.scvI64(xdr.Int64(args.i64.value)),
     ];
     expect(expectedResult).toEqual(scValsResult);
   });
@@ -80,7 +80,7 @@ describe("convert js arguments to smart contract values using getScValsFromArgs"
     const scVals: xdr.ScVal[] = [];
     const scValsResult = getScValsFromArgs(args, scVals);
     const expectedResult: xdr.ScVal[] = [
-      xdr.ScVal.scvI64(new xdr.Int64(args.i64.value)),
+      xdr.ScVal.scvI64(xdr.Int64(args.i64.value)),
     ];
 
     expect(expectedResult).toEqual(scValsResult);
@@ -97,7 +97,7 @@ describe("convert js arguments to smart contract values using getScValsFromArgs"
     const scVals: xdr.ScVal[] = [];
     const scValsResult = getScValsFromArgs(args, scVals);
     const expectedResult: xdr.ScVal[] = [
-      xdr.ScVal.scvU64(new xdr.Uint64(args.u64.value)),
+      xdr.ScVal.scvU64(xdr.Uint64(args.u64.value)),
     ];
 
     expect(expectedResult).toEqual(scValsResult);
@@ -841,14 +841,18 @@ describe("convert js arguments to smart contract values using getScValsFromArgs"
       xdr.ScVal.scvMap([
         new xdr.ScMapEntry({
           key: xdr.ScVal.scvSymbol("admin"),
-          val: new Address("GBQXC7ZQHOUAM5JBU5YEC7VE2AT3GUQKK5ACH47HM77CDC7QBU5VZEEV").toScVal(),
+          val: new Address(
+            "GBQXC7ZQHOUAM5JBU5YEC7VE2AT3GUQKK5ACH47HM77CDC7QBU5VZEEV",
+          ).toScVal(),
         }),
         new xdr.ScMapEntry({
           key: xdr.ScVal.scvSymbol("assets"),
           val: xdr.ScVal.scvVec([
             xdr.ScVal.scvVec([
               xdr.ScVal.scvSymbol("Stellar"),
-              new Address("CAQCFVLOBK5GIULPNZRGATJJMIZL5BSP7X5YJVMGCPTUEPFM4AVSRCJU").toScVal(),
+              new Address(
+                "CAQCFVLOBK5GIULPNZRGATJJMIZL5BSP7X5YJVMGCPTUEPFM4AVSRCJU",
+              ).toScVal(),
             ]),
           ]),
         }),
@@ -856,7 +860,9 @@ describe("convert js arguments to smart contract values using getScValsFromArgs"
           key: xdr.ScVal.scvSymbol("base_asset"),
           val: xdr.ScVal.scvVec([
             xdr.ScVal.scvSymbol("Stellar"),
-            new Address("CAQCFVLOBK5GIULPNZRGATJJMIZL5BSP7X5YJVMGCPTUEPFM4AVSRCJU").toScVal(),
+            new Address(
+              "CAQCFVLOBK5GIULPNZRGATJJMIZL5BSP7X5YJVMGCPTUEPFM4AVSRCJU",
+            ).toScVal(),
           ]),
         }),
         new xdr.ScMapEntry({
@@ -872,14 +878,16 @@ describe("convert js arguments to smart contract values using getScValsFromArgs"
           val: xdr.ScVal.scvVec([
             xdr.ScVal.scvSymbol("Some"),
             xdr.ScVal.scvVec([
-              new Address("GBQXC7ZQHOUAM5JBU5YEC7VE2AT3GUQKK5ACH47HM77CDC7QBU5VZEEV").toScVal(),
+              new Address(
+                "GBQXC7ZQHOUAM5JBU5YEC7VE2AT3GUQKK5ACH47HM77CDC7QBU5VZEEV",
+              ).toScVal(),
               new ScInt("10", { type: "i128" }).toScVal(),
             ]),
           ]),
         }),
         new xdr.ScMapEntry({
           key: xdr.ScVal.scvSymbol("history_retention_period"),
-          val: xdr.ScVal.scvU64(new xdr.Uint64("100")),
+          val: xdr.ScVal.scvU64(xdr.Uint64("100")),
         }),
         new xdr.ScMapEntry({
           key: xdr.ScVal.scvSymbol("resolution"),

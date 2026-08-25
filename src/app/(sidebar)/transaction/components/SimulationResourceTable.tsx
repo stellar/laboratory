@@ -48,20 +48,20 @@ export const getSimulationResourceInfo = (
     const transactionData = result.transactionData as string | undefined;
     if (transactionData) {
       try {
-        const sorobanData = xdr.SorobanTransactionData.fromXDR(
+        const sorobanData = xdr.SorobanTransactionData.fromXdr(
           transactionData,
           "base64",
         );
-        const resources = sorobanData.resources();
-        const footprint = resources.footprint();
+        const resources = sorobanData.resources;
+        const footprint = resources.footprint;
 
-        info.instructions = resources.instructions();
-        info.readBytes = resources.diskReadBytes();
-        info.writeBytes = resources.writeBytes();
-        info.footprintKeysReadOnly = footprint.readOnly().length;
-        info.footprintKeysReadWrite = footprint.readWrite().length;
+        info.instructions = resources.instructions;
+        info.readBytes = resources.diskReadBytes;
+        info.writeBytes = resources.writeBytes;
+        info.footprintKeysReadOnly = footprint.readOnly.length;
+        info.footprintKeysReadWrite = footprint.readWrite.length;
         info.footprintKeysTotal =
-          footprint.readOnly().length + footprint.readWrite().length;
+          footprint.readOnly.length + footprint.readWrite.length;
       } catch {
         // transactionData parsing may fail for some responses
       }

@@ -73,7 +73,7 @@ export const TransactionSuccessCard = ({
             label="Envelope XDR:"
             item={
               <XdrLink
-                xdr={response.result.envelopeXdr.toXDR("base64").toString()}
+                xdr={response.result.envelopeXdr.toXdr("base64").toString()}
                 type="TransactionEnvelope"
               />
             }
@@ -83,7 +83,7 @@ export const TransactionSuccessCard = ({
             label="Result XDR:"
             item={
               <XdrLink
-                xdr={response.result.resultXdr.toXDR("base64").toString()}
+                xdr={response.result.resultXdr.toXdr("base64").toString()}
                 type="TransactionResult"
               />
             }
@@ -93,7 +93,7 @@ export const TransactionSuccessCard = ({
             label="Result Meta XDR:"
             item={
               <XdrLink
-                xdr={response.result.resultMetaXdr.toXDR("base64").toString()}
+                xdr={response.result.resultMetaXdr.toXdr("base64").toString()}
                 type="TransactionMeta"
               />
             }

@@ -6,7 +6,7 @@ import {
   ContractSectionName,
 } from "@/types/types";
 
-export const getWasmContractData = async (wasmBytes: Buffer) => {
+export const getWasmContractData = async (wasmBytes: Uint8Array) => {
   try {
     const wasmBuffer = new Uint8Array(wasmBytes);
     const mod = await WebAssembly.compile(wasmBuffer);

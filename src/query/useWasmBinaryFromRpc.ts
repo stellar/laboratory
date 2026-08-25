@@ -4,7 +4,7 @@ import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { NetworkHeaders } from "@/types/types";
 
 /**
- * Fetch Wasm binary from RPC (returns wasm binary as buffer).
+ * Fetch Wasm binary from RPC (returns wasm binary as a Uint8Array).
  */
 export const useWasmBinaryFromRpc = ({
   wasmHash,
@@ -19,7 +19,7 @@ export const useWasmBinaryFromRpc = ({
 }) => {
   const query = useQuery({
     queryKey: ["useWasmBinaryFromRpc", wasmHash, rpcUrl, headers],
-    queryFn: async (): Promise<Buffer | null> => {
+    queryFn: async (): Promise<Uint8Array | null> => {
       if (!wasmHash || !rpcUrl) {
         return null;
       }

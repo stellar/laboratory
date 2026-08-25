@@ -3,6 +3,7 @@ import init, {
   decode_stream,
   encode,
   guess,
+  types,
 } from "@stellar/stellar-xdr-json";
 
 // A wrapper for the Stellar XDR JSON
@@ -19,4 +20,4 @@ const initialize = async () => {
   }
 };
 
-export { initialize, decode, decode_stream, encode, guess };
+export { initialize, decode, decode_stream, encode, guess, types };

@@ -1,15 +1,17 @@
-import { FeeBumpTransaction, Transaction, xdr } from "@stellar/stellar-sdk";
+import { FeeBumpTransaction, Transaction } from "@stellar/stellar-sdk";
 import { Icon, Text } from "@stellar/design-system";
 
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import {
-  findKeyBySignatureHint,
-  verifySignature,
-} from "@/helpers/signatureHint";
-import {
   Envelope,
   getRequiredSigners,
 } from "@/helpers/checkRequiredSignatures";
+
+import {
+  MatchStatus,
+  ResolvedSignatureRow,
+  resolveSignatureRows,
+} from "./resolveSignatureRows";
 
 import { Box } from "@/components/layout/Box";
 import { TransactionTabEmptyMessage } from "@/components/TransactionTabEmptyMessage";
@@ -20,37 +22,6 @@ const ENVELOPE_LABELS: Record<Envelope, string> = {
   outer: "Fee-bump envelope signature",
   inner: "Inner transaction signature(s)",
 };
-
-type MatchStatus = "valid" | "invalid" | "unknown";
-
-type ResolvedSignatureRow = {
-  hint: string;
-  signature: string;
-  signerPubKey?: string;
-  matchStatus: MatchStatus;
-};
-
-const resolveRows = (
-  signatures: xdr.DecoratedSignature[],
-  signers: string[],
-  hashHex: string,
-): ResolvedSignatureRow[] =>
-  signatures.map((sig) => {
-    const hint = sig.hint().toString("hex");
-    const signature = sig.signature().toString("hex");
-    const signerPubKey = findKeyBySignatureHint(hint, signers);
-
-    let matchStatus: MatchStatus;
-    if (!signerPubKey) {
-      matchStatus = "unknown";
-    } else if (verifySignature({ hint, signature }, signerPubKey, hashHex)) {
-      matchStatus = "valid";
-    } else {
-      matchStatus = "invalid";
-    }
-
-    return { hint, signature, signerPubKey, matchStatus };
-  });
 
 export const Signatures = ({
   tx,
@@ -68,14 +39,11 @@ export const Signatures = ({
       env.envelope === "outer"
         ? tx.signatures
         : (tx as FeeBumpTransaction).innerTransaction.signatures;
-    const hashHex = env.hash.toString("hex");
-
     return {
       envelope: env.envelope,
       signers: env.signers,
-      hashHex,
       signatures,
-      rows: resolveRows(signatures, env.signers, hashHex),
+      rows: resolveSignatureRows(signatures, env.signers, env.hash),
     };
   });
 

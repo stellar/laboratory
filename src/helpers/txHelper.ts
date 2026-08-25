@@ -41,7 +41,7 @@ const buildFeeBumpTx = ({
   let innerTx: Transaction;
 
   try {
-    innerTx = TransactionBuilder.fromXDR(
+    innerTx = TransactionBuilder.fromXdr(
       innerTxXdr,
       networkPassphrase,
     ) as Transaction;
@@ -63,7 +63,7 @@ const buildFeeBumpTx = ({
       innerTx,
       networkPassphrase,
     );
-    result.xdr = feeBumpTx.toEnvelope().toXDR("base64");
+    result.xdr = feeBumpTx.toEnvelope().toXdr("base64");
   } catch (err) {
     if (err instanceof Error) {
       result.errors.push(err.message);
@@ -87,7 +87,7 @@ const secretKeySignature = ({
   successMsg?: string;
   errorMsg?: string;
 } => {
-  const tx = TransactionBuilder.fromXDR(txXdr, networkPassphrase);
+  const tx = TransactionBuilder.fromXdr(txXdr, networkPassphrase);
   const signature: xdr.DecoratedSignature[] = [];
 
   // Validate secret keys
@@ -167,13 +167,13 @@ const signWithLedger = async ({
       if (isHash) {
         const { signature } = await ledgerApi.signHash(
           bipPath,
-          transaction.hash(),
+          Buffer.from(transaction.hash()),
         );
         ledgerSignature = signature;
       } else {
         const { signature } = await ledgerApi.signTransaction(
           bipPath,
-          transaction.signatureBase(),
+          Buffer.from(transaction.signatureBase()),
         );
         ledgerSignature = signature;
       }
@@ -275,7 +275,7 @@ const extractLastSignature = ({
   txXdr: string;
   networkPassphrase: string;
 }) => {
-  const tx = TransactionBuilder.fromXDR(txXdr, networkPassphrase);
+  const tx = TransactionBuilder.fromXdr(txXdr, networkPassphrase);
   const lastSig = tx.signatures.slice(-1);
 
   return lastSig.length === 1 ? lastSig : undefined;
@@ -289,11 +289,11 @@ const extractSignaturesFromTx = ({
   networkPassphrase: string;
 }): { signature: string; hint: string }[] => {
   try {
-    const tx = TransactionBuilder.fromXDR(txXdr, networkPassphrase);
+    const tx = TransactionBuilder.fromXdr(txXdr, networkPassphrase);
 
     return tx.signatures.map((sig) => ({
-      signature: sig.signature().toString("hex"),
-      hint: sig.hint().toString("hex"),
+      signature: Buffer.from(sig.signature.toBytes()).toString("hex"),
+      hint: Buffer.from(sig.hint.toBytes()).toString("hex"),
     }));
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
@@ -341,7 +341,7 @@ const decoratedSigFromHexSig = (
     // We need to compare signature hints (derived from public keys) with existing hints
     for (const hexSig of hexSigs) {
       const keypair = Keypair.fromPublicKey(hexSig.publicKey);
-      const newHint = keypair.signatureHint().toString("hex");
+      const newHint = Buffer.from(keypair.signatureHint()).toString("hex");
 
       const existingHints = existingSigs.map((item) => item.hint);
 

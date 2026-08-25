@@ -4,7 +4,7 @@ export const downloadFile = ({
   fileName,
   fileExtension,
 }: {
-  value: string | ArrayBuffer | Buffer;
+  value: string | ArrayBuffer | Uint8Array;
   fileType: string;
   fileName: string;
   fileExtension: string;

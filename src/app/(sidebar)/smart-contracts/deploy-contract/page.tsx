@@ -112,7 +112,7 @@ export default function DeployContract() {
   );
 
   const getConstructorSchema = useCallback(
-    async (wasmFile?: File, wasmBuffer?: Buffer<ArrayBufferLike>) => {
+    async (wasmFile?: File, wasmBuffer?: Uint8Array) => {
       try {
         let wasmBinary = wasmBuffer;
 
@@ -124,7 +124,9 @@ export default function DeployContract() {
           return null;
         }
 
-        const parsedData = parseContractMetadata(wasmBinary);
+        // The parser reads the Wasm with Buffer-only methods (readUint8), so
+        // a Uint8Array (what RPC returns as of SDK v17) has to be wrapped.
+        const parsedData = parseContractMetadata(Buffer.from(wasmBinary));
 
         setParsedContractData(parsedData);
 
@@ -154,9 +156,11 @@ export default function DeployContract() {
   );
 
   const getWasmHashBytes = () => {
+    const returnValue = submitUploadTxResponse?.result?.returnValue;
+
     // For newly uploaded contracts
-    if (submitUploadTxResponse?.result?.returnValue?.bytes()) {
-      return submitUploadTxResponse.result.returnValue.bytes();
+    if (returnValue?.type === "scvBytes") {
+      return returnValue.bytes.toBytes();
     }
 
     // For already uploaded contracts
@@ -473,7 +477,7 @@ export default function DeployContract() {
 
   const getContractId = () => {
     try {
-      const xdr = submitDeployTxResponse?.result?.envelopeXdr?.toXDR("base64");
+      const xdr = submitDeployTxResponse?.result?.envelopeXdr?.toXdr("base64");
 
       if (isXdrInit && xdr) {
         const decodedString = StellarXdr.decode("TransactionEnvelope", xdr);
@@ -540,11 +544,11 @@ export default function DeployContract() {
   };
 
   const renderDetailsItemWasmHash = () => {
+    const returnValue = submitUploadTxResponse?.result?.returnValue;
+
     // Wasm hash from the Upload transaction response (for new contracts)
-    if (submitUploadTxResponse?.result?.returnValue?.bytes()) {
-      return Buffer.from(
-        submitUploadTxResponse.result.returnValue.bytes(),
-      ).toString("hex");
+    if (returnValue?.type === "scvBytes") {
+      return Buffer.from(returnValue.bytes.toBytes()).toString("hex");
     }
 
     // Wasm hash from RPC for already uploaded contracts

@@ -17,7 +17,7 @@ import { SimulateStepContent as SharedSimulateStepContent } from "../../componen
 const isInvokeContractTx = (xdr: string, passphrase: string): boolean => {
   if (!xdr || !passphrase) return false;
   try {
-    const tx = TransactionBuilder.fromXDR(xdr, passphrase) as
+    const tx = TransactionBuilder.fromXdr(xdr, passphrase) as
       | Transaction
       | FeeBumpTransaction;
     const operations =
@@ -26,7 +26,7 @@ const isInvokeContractTx = (xdr: string, passphrase: string): boolean => {
         : tx.operations;
     const firstOp = operations?.[0] as OperationRecord | undefined;
     if (firstOp?.type !== "invokeHostFunction") return false;
-    return firstOp.func.switch().name === "hostFunctionTypeInvokeContract";
+    return firstOp.func.type === "hostFunctionTypeInvokeContract";
   } catch {
     return false;
   }

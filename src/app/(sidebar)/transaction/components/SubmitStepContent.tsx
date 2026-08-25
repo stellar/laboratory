@@ -387,7 +387,7 @@ export const SubmitStepContent = ({
                   item={
                     <XdrLink
                       xdr={submitRpcResponse.result.envelopeXdr
-                        .toXDR("base64")
+                        .toXdr("base64")
                         .toString()}
                       type="TransactionEnvelope"
                     />
@@ -398,7 +398,7 @@ export const SubmitStepContent = ({
                   item={
                     <XdrLink
                       xdr={submitRpcResponse.result.resultXdr
-                        .toXDR("base64")
+                        .toXdr("base64")
                         .toString()}
                       type="TransactionResult"
                     />
@@ -409,7 +409,7 @@ export const SubmitStepContent = ({
                   item={
                     <XdrLink
                       xdr={submitRpcResponse.result.resultMetaXdr
-                        .toXDR("base64")
+                        .toXdr("base64")
                         .toString()}
                       type="TransactionMeta"
                     />

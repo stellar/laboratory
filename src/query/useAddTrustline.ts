@@ -58,7 +58,7 @@ export const useAddTrustline = ({
         .setTimeout(60)
         .build();
 
-      return transaction.toEnvelope().toXDR("base64");
+      return transaction.toEnvelope().toXdr("base64");
     },
     enabled: false,
   });

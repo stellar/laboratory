@@ -307,9 +307,9 @@ export const SignTransactionXdr = ({
         if (isExtensionWalletOnly && exSignedTxXdr) {
           signedTx = exSignedTxXdr;
         } else {
-          const tx = TransactionBuilder.fromXDR(xdrToSign, network.passphrase);
+          const tx = TransactionBuilder.fromXdr(xdrToSign, network.passphrase);
           tx.signatures.push(...allSigs);
-          signedTx = tx.toEnvelope().toXDR("base64");
+          signedTx = tx.toEnvelope().toXdr("base64");
         }
 
         onDoneAction({
@@ -392,7 +392,7 @@ export const SignTransactionXdr = ({
   const signHardwareWallet = async (txXdr: string, isClear?: boolean) => {
     setIsHardwareLoading(true);
 
-    const txToSign = TransactionBuilder.fromXDR(txXdr, network.passphrase) as
+    const txToSign = TransactionBuilder.fromXdr(txXdr, network.passphrase) as
       | FeeBumpTransaction
       | Transaction;
     let signature: xdr.DecoratedSignature[] = [];

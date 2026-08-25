@@ -78,7 +78,7 @@ export const ImportStepContent = ({
   const parsedTx: Transaction | FeeBumpTransaction | null = (() => {
     if (!importXdr || parseError || !parsedTxType) return null;
     try {
-      return TransactionBuilder.fromXDR(importXdr, network.passphrase) as
+      return TransactionBuilder.fromXdr(importXdr, network.passphrase) as
         | Transaction
         | FeeBumpTransaction;
     } catch {
@@ -161,7 +161,10 @@ export const ImportStepContent = ({
     const requiredFields = [
       { label: "Signing for", value: network.passphrase },
       { label: "Transaction envelope XDR", value: importXdr },
-      { label: "Transaction hash", value: parsedTx.hash().toString("hex") },
+      {
+        label: "Transaction hash",
+        value: Buffer.from(parsedTx.hash()).toString("hex"),
+      },
     ];
 
     if (isFeeBumpTransaction(parsedTx)) {

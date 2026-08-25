@@ -1944,7 +1944,7 @@ test.describe("Build Transaction Page", () => {
         .locator("+ div")
         .textContent();
 
-      const decoded = TransactionBuilder.fromXDR(xdr ?? "", Networks.TESTNET);
+      const decoded = TransactionBuilder.fromXdr(xdr ?? "", Networks.TESTNET);
       const op = (decoded as any).operations[0];
       expect(op.type).toBe("accountMerge");
       expect(op.destination).toBe(ACCOUNT_ONE);
@@ -1982,12 +1982,12 @@ test.describe("Build Transaction Page", () => {
         .locator("+ div")
         .textContent();
 
-      const decoded = TransactionBuilder.fromXDR(
+      const decoded = TransactionBuilder.fromXdr(
         xdr ?? "",
         Networks.TESTNET,
       ) as any;
       expect(decoded.memo.type).toBe("text");
-      expect(decoded.memo.value?.toString()).toBe("benign note");
+      expect(Buffer.from(decoded.memo.value)?.toString()).toBe("benign note");
       expect(decoded.memo.type).not.toBe("id");
     });
 
@@ -2007,7 +2007,7 @@ test.describe("Build Transaction Page", () => {
         .locator("+ div")
         .textContent();
 
-      const decoded = TransactionBuilder.fromXDR(
+      const decoded = TransactionBuilder.fromXdr(
         xdr ?? "",
         Networks.TESTNET,
       ) as any;

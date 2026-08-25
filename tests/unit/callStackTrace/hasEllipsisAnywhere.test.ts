@@ -12,7 +12,10 @@ describe("hasEllipsisAnywhere", () => {
   });
 
   it("detects an ellipsis node at the top level", () => {
-    const data = [{ type: "u32", value: 1 }, { type: "ellipsis", value: "..." }];
+    const data = [
+      { type: "u32", value: 1 },
+      { type: "ellipsis", value: "..." },
+    ];
 
     expect(hasEllipsisAnywhere(data)).toBe(true);
   });
@@ -21,7 +24,10 @@ describe("hasEllipsisAnywhere", () => {
     const data = [
       {
         type: "vec",
-        value: [{ type: "u32", value: 1 }, { type: "ellipsis", value: "..." }],
+        value: [
+          { type: "u32", value: 1 },
+          { type: "ellipsis", value: "..." },
+        ],
       },
     ];
 

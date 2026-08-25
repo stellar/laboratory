@@ -8,7 +8,7 @@ import {
  * Parse a transaction envelope XDR, returning `null` instead of throwing when
  * it's empty or malformed.
  *
- * `TransactionBuilder.fromXDR` throws on unusable input, which is fatal when
+ * `TransactionBuilder.fromXdr` throws on unusable input, which is fatal when
  * it runs during render. Both failure cases are routine in the transaction
  * flows: the XDR is empty before anything has been built or imported, and it
  * can be malformed while the user is pasting an envelope.
@@ -29,9 +29,7 @@ export const parseTxXdr = (
   }
 
   try {
-    return TransactionBuilder.fromXDR(xdr, networkPassphrase) as
-      | Transaction
-      | FeeBumpTransaction;
+    return TransactionBuilder.fromXdr(xdr, networkPassphrase);
   } catch {
     return null;
   }

@@ -88,7 +88,7 @@ export default function ViewXdr() {
   const txnFromXdr = () => {
     try {
       return xdrJsonDecoded?.jsonString
-        ? TransactionBuilder.fromXDR(xdr.blob, network.passphrase)
+        ? TransactionBuilder.fromXdr(xdr.blob, network.passphrase)
         : null;
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {

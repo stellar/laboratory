@@ -27,7 +27,7 @@ export const useRpcAssembleTx = () => {
           throw "Simulated transaction data is required for assembling the transaction.";
         }
 
-        const transaction = TransactionBuilder.fromXDR(
+        const transaction = TransactionBuilder.fromXdr(
           transactionXdr,
           networkPassphrase,
         );
@@ -38,7 +38,7 @@ export const useRpcAssembleTx = () => {
         ).build();
 
         return {
-          transactionXdr: assembledTx.toXDR(),
+          transactionXdr: assembledTx.toXdr(),
         };
       } catch (e) {
         throw {

@@ -11,9 +11,9 @@ module.exports = {
     ],
   },
   extensionsToTreatAsEsm: [".ts"],
-  // JS Stellar SDK v16 pulls in ESM-only dependencies; pnpm stores scoped packages as @scope+name.
+  // The Stellar SDK pulls in ESM-only dependencies; pnpm stores scoped packages as @scope+name.
   transformIgnorePatterns: [
-    "/node_modules/.pnpm/(?!(?:@stellar\\+stellar-sdk|@noble\\+hashes|@noble\\+ed25519|uint8array-extras)@)",
+    "/node_modules/.pnpm/(?!(?:@stellar\\+stellar-sdk|@exodus\\+bytes|@noble\\+hashes|@noble\\+ed25519|uint8array-extras)@)",
   ],
   modulePathIgnorePatterns: ["tests/e2e"],
   moduleDirectories: ["node_modules", "<rootDir>"],

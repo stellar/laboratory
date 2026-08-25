@@ -34,7 +34,7 @@ APIs. The `main` branch is deployed to https://lab.stellar.org/.
 - **State Management**: Zustand (with querystring persistence via
   zustand-querystring)
 - **API Data Fetching**: TanStack React Query v5
-- **Stellar SDK**: @stellar/stellar-sdk v14
+- **Stellar SDK**: @stellar/stellar-sdk
 - **Hardware Wallets**: Ledger (@ledgerhq/hw-app-str), Trezor
   (@trezor/connect-web)
 - **Testing**: Jest (unit tests), Playwright (e2e tests)

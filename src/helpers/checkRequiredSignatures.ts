@@ -11,7 +11,7 @@ export type Envelope = "outer" | "inner";
 export type EnvelopeRequirement = {
   envelope: Envelope;
   signers: string[];
-  hash: Buffer;
+  hash: Uint8Array;
 };
 
 /**
@@ -113,11 +113,11 @@ export const getTxSignatureCompleteness = (
       env.envelope === "outer"
         ? tx.signatures
         : (tx as FeeBumpTransaction).innerTransaction.signatures;
-    const hashHex = env.hash.toString("hex");
+    const hashHex = Buffer.from(env.hash).toString("hex");
 
     const validSignerKeys = new Set<string>();
     for (const sig of signatures) {
-      const hint = sig.hint().toString("hex");
+      const hint = Buffer.from(sig.hint.toBytes()).toString("hex");
       const signerPubKey = findKeyBySignatureHint(hint, env.signers);
       // Signature from a signer not derivable from the envelope (e.g. an
       // on-chain multisig cosigner) — can't be verified offline.
@@ -126,7 +126,7 @@ export const getTxSignatureCompleteness = (
         continue;
       }
 
-      const signature = sig.signature().toString("hex");
+      const signature = Buffer.from(sig.signature.toBytes()).toString("hex");
       if (verifySignature({ hint, signature }, signerPubKey, hashHex)) {
         validSignerKeys.add(signerPubKey);
       } else {

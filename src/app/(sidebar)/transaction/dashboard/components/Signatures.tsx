@@ -51,9 +51,12 @@ export const Signatures = ({
     );
 
   const feeBumpInnerTxHash = feeBumpInnerTxXdr
-    ? TransactionBuilder.fromXDR(feeBumpInnerTxXdr, network.passphrase)
-        .hash()
-        .toString("hex")
+    ? Buffer.from(
+        TransactionBuilder.fromXdr(
+          feeBumpInnerTxXdr,
+          network.passphrase,
+        ).hash(),
+      ).toString("hex")
     : undefined;
 
   const possibleSigners = getPossibleSigners(

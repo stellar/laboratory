@@ -30,7 +30,7 @@ export const useRpcPrepareTx = () => {
       headers,
     }: PrepareRpcTxProps) => {
       try {
-        const transaction = TransactionBuilder.fromXDR(
+        const transaction = TransactionBuilder.fromXdr(
           transactionXdr,
           networkPassphrase,
         );
@@ -38,10 +38,11 @@ export const useRpcPrepareTx = () => {
           headers: isEmptyObject(headers) ? undefined : { ...headers },
           allowHttp: new URL(rpcUrl).hostname === "localhost",
         });
+        // TODO: handle CAP-71 v2 auth flag
         const preparedTx = await rpcServer.prepareTransaction(transaction);
 
         return {
-          transactionXdr: preparedTx.toXDR(),
+          transactionXdr: preparedTx.toXdr(),
         };
       } catch (e) {
         throw {

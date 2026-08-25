@@ -65,11 +65,12 @@ export const useBuildRpcTransaction = ({
           .setTimeout(timeoutInSeconds)
           .build();
 
+        // TODO: handle CAP-71 v2 auth flag
         const preparedTxn = await rpcServer.prepareTransaction(transaction);
 
         return {
           preparedTxn,
-          preparedXdr: preparedTxn.toEnvelope().toXDR("base64"),
+          preparedXdr: preparedTxn.toEnvelope().toXdr("base64"),
         };
       } catch (error) {
         throw `Error building RPC transaction: ${error}.`;

@@ -36,7 +36,7 @@ export const useLatestTxn = (
         const latestTx = response.transactions[0];
 
         // Convert XDR object to base64 string for compatibility with XDR view page
-        const envelopeXdrBase64 = latestTx.envelopeXdr?.toXDR("base64") || "";
+        const envelopeXdrBase64 = latestTx.envelopeXdr?.toXdr("base64") || "";
 
         return {
           // Spread the original transaction first to preserve all RPC fields

@@ -31,9 +31,9 @@ export const getXdrError = (value: string, type?: XdrType) => {
 
   try {
     if (type === "LedgerKey") {
-      stellarXDR.LedgerKey.fromXDR(sanitizedXdr, "base64");
+      stellarXDR.LedgerKey.fromXdr(sanitizedXdr, "base64");
     } else {
-      stellarXDR.TransactionEnvelope.fromXDR(sanitizedXdr, "base64");
+      stellarXDR.TransactionEnvelope.fromXdr(sanitizedXdr, "base64");
     }
 
     // TODO: See, if we can make this response match all the other validations.
