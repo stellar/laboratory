@@ -608,7 +608,7 @@ export const TX_CLASSIC_MANY_OPS = {
                 ext: "v0",
                 contract_id:
                   "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -1100,7 +1100,7 @@ export const TX_CLASSIC_MANY_OPS = {
                 ext: "v0",
                 contract_id:
                   "CCD3O4DJDPBTHSCJIHLSYTQ4WEWMHBGLNJIGC2DR7AACSCFKEH4BLDDU",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -1331,7 +1331,7 @@ export const TX_CLASSIC_MANY_OPS = {
                 ext: "v0",
                 contract_id:
                   "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -3113,7 +3113,7 @@ export const TX_CLASSIC_MANY_OPS = {
               ext: "v0",
               contract_id:
                 "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -3144,7 +3144,7 @@ export const TX_CLASSIC_MANY_OPS = {
             ext: "v0",
             contract_id:
               "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -3171,7 +3171,7 @@ export const TX_CLASSIC_MANY_OPS = {
             ext: "v0",
             contract_id:
               "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -3204,7 +3204,7 @@ export const TX_CLASSIC_MANY_OPS = {
             ext: "v0",
             contract_id:
               "CCD3O4DJDPBTHSCJIHLSYTQ4WEWMHBGLNJIGC2DR7AACSCFKEH4BLDDU",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -3232,7 +3232,7 @@ export const TX_CLASSIC_MANY_OPS = {
             ext: "v0",
             contract_id:
               "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -3597,7 +3597,7 @@ export const TX_CLASSIC_OPS_WITH_STRING_BODY = {
                 ext: "v0",
                 contract_id:
                   "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -3639,7 +3639,7 @@ export const TX_CLASSIC_OPS_WITH_STRING_BODY = {
               ext: "v0",
               contract_id:
                 "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -3670,7 +3670,7 @@ export const TX_CLASSIC_OPS_WITH_STRING_BODY = {
             ext: "v0",
             contract_id:
               "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [
@@ -3697,7 +3697,7 @@ export const TX_CLASSIC_OPS_WITH_STRING_BODY = {
             ext: "v0",
             contract_id:
               "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC",
-            type_: "contract",
+            type: "contract",
             body: {
               v0: {
                 topics: [

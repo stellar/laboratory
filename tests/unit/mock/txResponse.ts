@@ -1158,7 +1158,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
               ext: "v0",
               contract_id:
                 "75bb4470b1a4ff61ecc7295e8b8eb74419dd586eee404cdf5249915d890e0877",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -1191,7 +1191,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1230,7 +1230,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
                 ext: "v0",
                 contract_id:
                   "d7fe44bd0af11d602b1091f2f4a1f4df212d444d0321ea32adb3cc1cbbab0a04",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1269,7 +1269,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
                 ext: "v0",
                 contract_id:
                   "75bb4470b1a4ff61ecc7295e8b8eb74419dd586eee404cdf5249915d890e0877",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -1301,7 +1301,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
                 ext: "v0",
                 contract_id:
                   "75bb4470b1a4ff61ecc7295e8b8eb74419dd586eee404cdf5249915d890e0877",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1323,7 +1323,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
                 ext: "v0",
                 contract_id:
                   "d7fe44bd0af11d602b1091f2f4a1f4df212d444d0321ea32adb3cc1cbbab0a04",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1344,7 +1344,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1367,7 +1367,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1390,7 +1390,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1413,7 +1413,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1436,7 +1436,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1459,7 +1459,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1482,7 +1482,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1505,7 +1505,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1528,7 +1528,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1551,7 +1551,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1574,7 +1574,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1597,7 +1597,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1620,7 +1620,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1643,7 +1643,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1666,7 +1666,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1689,7 +1689,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1712,7 +1712,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1735,7 +1735,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1758,7 +1758,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1786,7 +1786,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -1825,7 +1825,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
           ext: "v0",
           contract_id:
             "d7fe44bd0af11d602b1091f2f4a1f4df212d444d0321ea32adb3cc1cbbab0a04",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -1864,7 +1864,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
           ext: "v0",
           contract_id:
             "75bb4470b1a4ff61ecc7295e8b8eb74419dd586eee404cdf5249915d890e0877",
-          type_: "contract",
+          type: "contract",
           body: {
             v0: {
               topics: [
@@ -1896,7 +1896,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
           ext: "v0",
           contract_id:
             "75bb4470b1a4ff61ecc7295e8b8eb74419dd586eee404cdf5249915d890e0877",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -1918,7 +1918,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
           ext: "v0",
           contract_id:
             "d7fe44bd0af11d602b1091f2f4a1f4df212d444d0321ea32adb3cc1cbbab0a04",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -1939,7 +1939,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -1962,7 +1962,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -1985,7 +1985,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -2008,7 +2008,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -2031,7 +2031,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -2054,7 +2054,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -2077,7 +2077,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -2100,7 +2100,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -2123,7 +2123,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -2146,7 +2146,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -2169,7 +2169,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -2192,7 +2192,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -2215,7 +2215,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -2238,7 +2238,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -2261,7 +2261,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -2284,7 +2284,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -2307,7 +2307,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -2330,7 +2330,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -2353,7 +2353,7 @@ export const TX_RESPONSE_SOROBAN_FEE_BUMP = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -3157,7 +3157,7 @@ export const TX_RESPONSE_SOROBAN = {
               ext: "v0",
               contract_id:
                 "25b4fcd859aec2fa6348438c489b3c3c10c98b6d21be4fd3cb30cb68953ef977",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -3193,7 +3193,7 @@ export const TX_RESPONSE_SOROBAN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3239,7 +3239,7 @@ export const TX_RESPONSE_SOROBAN = {
                 ext: "v0",
                 contract_id:
                   "2716bcf8536e07b567260fdec481f62404acc2783986797bb5152cb9e8ffd9aa",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3265,7 +3265,7 @@ export const TX_RESPONSE_SOROBAN = {
                 ext: "v0",
                 contract_id:
                   "0a9cc2d220fd805b34d9ad19b84d7bc460b77a5fe15e6ef7eaf2b2cd5e4adbbe",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3289,7 +3289,7 @@ export const TX_RESPONSE_SOROBAN = {
                 ext: "v0",
                 contract_id:
                   "2716bcf8536e07b567260fdec481f62404acc2783986797bb5152cb9e8ffd9aa",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3324,7 +3324,7 @@ export const TX_RESPONSE_SOROBAN = {
                 ext: "v0",
                 contract_id:
                   "0a9cc2d220fd805b34d9ad19b84d7bc460b77a5fe15e6ef7eaf2b2cd5e4adbbe",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3368,7 +3368,7 @@ export const TX_RESPONSE_SOROBAN = {
                 ext: "v0",
                 contract_id:
                   "2716bcf8536e07b567260fdec481f62404acc2783986797bb5152cb9e8ffd9aa",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3411,7 +3411,7 @@ export const TX_RESPONSE_SOROBAN = {
                 ext: "v0",
                 contract_id:
                   "25b4fcd859aec2fa6348438c489b3c3c10c98b6d21be4fd3cb30cb68953ef977",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -3446,7 +3446,7 @@ export const TX_RESPONSE_SOROBAN = {
                 ext: "v0",
                 contract_id:
                   "25b4fcd859aec2fa6348438c489b3c3c10c98b6d21be4fd3cb30cb68953ef977",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3468,7 +3468,7 @@ export const TX_RESPONSE_SOROBAN = {
                 ext: "v0",
                 contract_id:
                   "2716bcf8536e07b567260fdec481f62404acc2783986797bb5152cb9e8ffd9aa",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3489,7 +3489,7 @@ export const TX_RESPONSE_SOROBAN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3512,7 +3512,7 @@ export const TX_RESPONSE_SOROBAN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3535,7 +3535,7 @@ export const TX_RESPONSE_SOROBAN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3558,7 +3558,7 @@ export const TX_RESPONSE_SOROBAN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3581,7 +3581,7 @@ export const TX_RESPONSE_SOROBAN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3604,7 +3604,7 @@ export const TX_RESPONSE_SOROBAN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3627,7 +3627,7 @@ export const TX_RESPONSE_SOROBAN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3650,7 +3650,7 @@ export const TX_RESPONSE_SOROBAN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3673,7 +3673,7 @@ export const TX_RESPONSE_SOROBAN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3696,7 +3696,7 @@ export const TX_RESPONSE_SOROBAN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3719,7 +3719,7 @@ export const TX_RESPONSE_SOROBAN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3742,7 +3742,7 @@ export const TX_RESPONSE_SOROBAN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3765,7 +3765,7 @@ export const TX_RESPONSE_SOROBAN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3788,7 +3788,7 @@ export const TX_RESPONSE_SOROBAN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3811,7 +3811,7 @@ export const TX_RESPONSE_SOROBAN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3834,7 +3834,7 @@ export const TX_RESPONSE_SOROBAN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3857,7 +3857,7 @@ export const TX_RESPONSE_SOROBAN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3880,7 +3880,7 @@ export const TX_RESPONSE_SOROBAN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3903,7 +3903,7 @@ export const TX_RESPONSE_SOROBAN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3931,7 +3931,7 @@ export const TX_RESPONSE_SOROBAN = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -3977,7 +3977,7 @@ export const TX_RESPONSE_SOROBAN = {
           ext: "v0",
           contract_id:
             "2716bcf8536e07b567260fdec481f62404acc2783986797bb5152cb9e8ffd9aa",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -4003,7 +4003,7 @@ export const TX_RESPONSE_SOROBAN = {
           ext: "v0",
           contract_id:
             "0a9cc2d220fd805b34d9ad19b84d7bc460b77a5fe15e6ef7eaf2b2cd5e4adbbe",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -4027,7 +4027,7 @@ export const TX_RESPONSE_SOROBAN = {
           ext: "v0",
           contract_id:
             "2716bcf8536e07b567260fdec481f62404acc2783986797bb5152cb9e8ffd9aa",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -4062,7 +4062,7 @@ export const TX_RESPONSE_SOROBAN = {
           ext: "v0",
           contract_id:
             "0a9cc2d220fd805b34d9ad19b84d7bc460b77a5fe15e6ef7eaf2b2cd5e4adbbe",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -4106,7 +4106,7 @@ export const TX_RESPONSE_SOROBAN = {
           ext: "v0",
           contract_id:
             "2716bcf8536e07b567260fdec481f62404acc2783986797bb5152cb9e8ffd9aa",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -4149,7 +4149,7 @@ export const TX_RESPONSE_SOROBAN = {
           ext: "v0",
           contract_id:
             "25b4fcd859aec2fa6348438c489b3c3c10c98b6d21be4fd3cb30cb68953ef977",
-          type_: "contract",
+          type: "contract",
           body: {
             v0: {
               topics: [
@@ -4184,7 +4184,7 @@ export const TX_RESPONSE_SOROBAN = {
           ext: "v0",
           contract_id:
             "25b4fcd859aec2fa6348438c489b3c3c10c98b6d21be4fd3cb30cb68953ef977",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -4206,7 +4206,7 @@ export const TX_RESPONSE_SOROBAN = {
           ext: "v0",
           contract_id:
             "2716bcf8536e07b567260fdec481f62404acc2783986797bb5152cb9e8ffd9aa",
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -4227,7 +4227,7 @@ export const TX_RESPONSE_SOROBAN = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -4250,7 +4250,7 @@ export const TX_RESPONSE_SOROBAN = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -4273,7 +4273,7 @@ export const TX_RESPONSE_SOROBAN = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -4296,7 +4296,7 @@ export const TX_RESPONSE_SOROBAN = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -4319,7 +4319,7 @@ export const TX_RESPONSE_SOROBAN = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -4342,7 +4342,7 @@ export const TX_RESPONSE_SOROBAN = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -4365,7 +4365,7 @@ export const TX_RESPONSE_SOROBAN = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -4388,7 +4388,7 @@ export const TX_RESPONSE_SOROBAN = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -4411,7 +4411,7 @@ export const TX_RESPONSE_SOROBAN = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -4434,7 +4434,7 @@ export const TX_RESPONSE_SOROBAN = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -4457,7 +4457,7 @@ export const TX_RESPONSE_SOROBAN = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -4480,7 +4480,7 @@ export const TX_RESPONSE_SOROBAN = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -4503,7 +4503,7 @@ export const TX_RESPONSE_SOROBAN = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -4526,7 +4526,7 @@ export const TX_RESPONSE_SOROBAN = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -4549,7 +4549,7 @@ export const TX_RESPONSE_SOROBAN = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -4572,7 +4572,7 @@ export const TX_RESPONSE_SOROBAN = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -4595,7 +4595,7 @@ export const TX_RESPONSE_SOROBAN = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -4618,7 +4618,7 @@ export const TX_RESPONSE_SOROBAN = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [
@@ -4641,7 +4641,7 @@ export const TX_RESPONSE_SOROBAN = {
         event: {
           ext: "v0",
           contract_id: null,
-          type_: "diagnostic",
+          type: "diagnostic",
           body: {
             v0: {
               topics: [

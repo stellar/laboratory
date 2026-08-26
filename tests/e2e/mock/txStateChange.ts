@@ -1159,7 +1159,7 @@ export const TX_ST_CHANGE_KALE_PLANT = {
               ext: "v0",
               contract_id:
                 "75bb4470b1a4ff61ecc7295e8b8eb74419dd586eee404cdf5249915d890e0877",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -1192,7 +1192,7 @@ export const TX_ST_CHANGE_KALE_PLANT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1231,7 +1231,7 @@ export const TX_ST_CHANGE_KALE_PLANT = {
                 ext: "v0",
                 contract_id:
                   "d7fe44bd0af11d602b1091f2f4a1f4df212d444d0321ea32adb3cc1cbbab0a04",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1270,7 +1270,7 @@ export const TX_ST_CHANGE_KALE_PLANT = {
                 ext: "v0",
                 contract_id:
                   "75bb4470b1a4ff61ecc7295e8b8eb74419dd586eee404cdf5249915d890e0877",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -1302,7 +1302,7 @@ export const TX_ST_CHANGE_KALE_PLANT = {
                 ext: "v0",
                 contract_id:
                   "75bb4470b1a4ff61ecc7295e8b8eb74419dd586eee404cdf5249915d890e0877",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1324,7 +1324,7 @@ export const TX_ST_CHANGE_KALE_PLANT = {
                 ext: "v0",
                 contract_id:
                   "d7fe44bd0af11d602b1091f2f4a1f4df212d444d0321ea32adb3cc1cbbab0a04",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1345,7 +1345,7 @@ export const TX_ST_CHANGE_KALE_PLANT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1368,7 +1368,7 @@ export const TX_ST_CHANGE_KALE_PLANT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1391,7 +1391,7 @@ export const TX_ST_CHANGE_KALE_PLANT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1414,7 +1414,7 @@ export const TX_ST_CHANGE_KALE_PLANT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1437,7 +1437,7 @@ export const TX_ST_CHANGE_KALE_PLANT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1460,7 +1460,7 @@ export const TX_ST_CHANGE_KALE_PLANT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1483,7 +1483,7 @@ export const TX_ST_CHANGE_KALE_PLANT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1506,7 +1506,7 @@ export const TX_ST_CHANGE_KALE_PLANT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1529,7 +1529,7 @@ export const TX_ST_CHANGE_KALE_PLANT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1552,7 +1552,7 @@ export const TX_ST_CHANGE_KALE_PLANT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1575,7 +1575,7 @@ export const TX_ST_CHANGE_KALE_PLANT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1598,7 +1598,7 @@ export const TX_ST_CHANGE_KALE_PLANT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1621,7 +1621,7 @@ export const TX_ST_CHANGE_KALE_PLANT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1644,7 +1644,7 @@ export const TX_ST_CHANGE_KALE_PLANT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1667,7 +1667,7 @@ export const TX_ST_CHANGE_KALE_PLANT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1690,7 +1690,7 @@ export const TX_ST_CHANGE_KALE_PLANT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1713,7 +1713,7 @@ export const TX_ST_CHANGE_KALE_PLANT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1736,7 +1736,7 @@ export const TX_ST_CHANGE_KALE_PLANT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -1759,7 +1759,7 @@ export const TX_ST_CHANGE_KALE_PLANT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -2980,7 +2980,7 @@ export const TX_ST_CHANGE_KALE_WORK = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3020,7 +3020,7 @@ export const TX_ST_CHANGE_KALE_WORK = {
                 ext: "v0",
                 contract_id:
                   "d7fe44bd0af11d602b1091f2f4a1f4df212d444d0321ea32adb3cc1cbbab0a04",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3043,7 +3043,7 @@ export const TX_ST_CHANGE_KALE_WORK = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3066,7 +3066,7 @@ export const TX_ST_CHANGE_KALE_WORK = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3089,7 +3089,7 @@ export const TX_ST_CHANGE_KALE_WORK = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3112,7 +3112,7 @@ export const TX_ST_CHANGE_KALE_WORK = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3135,7 +3135,7 @@ export const TX_ST_CHANGE_KALE_WORK = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3158,7 +3158,7 @@ export const TX_ST_CHANGE_KALE_WORK = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3181,7 +3181,7 @@ export const TX_ST_CHANGE_KALE_WORK = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3204,7 +3204,7 @@ export const TX_ST_CHANGE_KALE_WORK = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3227,7 +3227,7 @@ export const TX_ST_CHANGE_KALE_WORK = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3250,7 +3250,7 @@ export const TX_ST_CHANGE_KALE_WORK = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3273,7 +3273,7 @@ export const TX_ST_CHANGE_KALE_WORK = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3296,7 +3296,7 @@ export const TX_ST_CHANGE_KALE_WORK = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3319,7 +3319,7 @@ export const TX_ST_CHANGE_KALE_WORK = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3342,7 +3342,7 @@ export const TX_ST_CHANGE_KALE_WORK = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3365,7 +3365,7 @@ export const TX_ST_CHANGE_KALE_WORK = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3388,7 +3388,7 @@ export const TX_ST_CHANGE_KALE_WORK = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3411,7 +3411,7 @@ export const TX_ST_CHANGE_KALE_WORK = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3434,7 +3434,7 @@ export const TX_ST_CHANGE_KALE_WORK = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -3457,7 +3457,7 @@ export const TX_ST_CHANGE_KALE_WORK = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -4434,7 +4434,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
               ext: "v0",
               contract_id:
                 "75bb4470b1a4ff61ecc7295e8b8eb74419dd586eee404cdf5249915d890e0877",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -4467,7 +4467,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
               ext: "v0",
               contract_id:
                 "75bb4470b1a4ff61ecc7295e8b8eb74419dd586eee404cdf5249915d890e0877",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -4500,7 +4500,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
               ext: "v0",
               contract_id:
                 "75bb4470b1a4ff61ecc7295e8b8eb74419dd586eee404cdf5249915d890e0877",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -4558,7 +4558,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -4604,7 +4604,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
                 ext: "v0",
                 contract_id:
                   "4d20ab0cc3bce618f0bddae0c4d5a0cb41d45abac5b95dcdec7526dd0b8fee25",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -4640,7 +4640,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
                 ext: "v0",
                 contract_id:
                   "d7fe44bd0af11d602b1091f2f4a1f4df212d444d0321ea32adb3cc1cbbab0a04",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -4679,7 +4679,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
                 ext: "v0",
                 contract_id:
                   "75bb4470b1a4ff61ecc7295e8b8eb74419dd586eee404cdf5249915d890e0877",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -4715,7 +4715,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
                 ext: "v0",
                 contract_id:
                   "75bb4470b1a4ff61ecc7295e8b8eb74419dd586eee404cdf5249915d890e0877",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -4737,7 +4737,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
                 ext: "v0",
                 contract_id:
                   "d7fe44bd0af11d602b1091f2f4a1f4df212d444d0321ea32adb3cc1cbbab0a04",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -4764,7 +4764,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
                 ext: "v0",
                 contract_id:
                   "4d20ab0cc3bce618f0bddae0c4d5a0cb41d45abac5b95dcdec7526dd0b8fee25",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -4800,7 +4800,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
                 ext: "v0",
                 contract_id:
                   "d7fe44bd0af11d602b1091f2f4a1f4df212d444d0321ea32adb3cc1cbbab0a04",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -4839,7 +4839,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
                 ext: "v0",
                 contract_id:
                   "75bb4470b1a4ff61ecc7295e8b8eb74419dd586eee404cdf5249915d890e0877",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -4875,7 +4875,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
                 ext: "v0",
                 contract_id:
                   "75bb4470b1a4ff61ecc7295e8b8eb74419dd586eee404cdf5249915d890e0877",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -4897,7 +4897,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
                 ext: "v0",
                 contract_id:
                   "d7fe44bd0af11d602b1091f2f4a1f4df212d444d0321ea32adb3cc1cbbab0a04",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -4924,7 +4924,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
                 ext: "v0",
                 contract_id:
                   "4d20ab0cc3bce618f0bddae0c4d5a0cb41d45abac5b95dcdec7526dd0b8fee25",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -4960,7 +4960,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
                 ext: "v0",
                 contract_id:
                   "d7fe44bd0af11d602b1091f2f4a1f4df212d444d0321ea32adb3cc1cbbab0a04",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -4999,7 +4999,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
                 ext: "v0",
                 contract_id:
                   "75bb4470b1a4ff61ecc7295e8b8eb74419dd586eee404cdf5249915d890e0877",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -5035,7 +5035,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
                 ext: "v0",
                 contract_id:
                   "75bb4470b1a4ff61ecc7295e8b8eb74419dd586eee404cdf5249915d890e0877",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -5057,7 +5057,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
                 ext: "v0",
                 contract_id:
                   "d7fe44bd0af11d602b1091f2f4a1f4df212d444d0321ea32adb3cc1cbbab0a04",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -5084,7 +5084,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
                 ext: "v0",
                 contract_id:
                   "4d20ab0cc3bce618f0bddae0c4d5a0cb41d45abac5b95dcdec7526dd0b8fee25",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -5126,7 +5126,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -5149,7 +5149,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -5172,7 +5172,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -5195,7 +5195,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -5218,7 +5218,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -5241,7 +5241,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -5264,7 +5264,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -5287,7 +5287,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -5310,7 +5310,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -5333,7 +5333,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -5356,7 +5356,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -5379,7 +5379,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -5402,7 +5402,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -5425,7 +5425,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -5448,7 +5448,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -5471,7 +5471,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -5494,7 +5494,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -5517,7 +5517,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -5540,7 +5540,7 @@ export const TX_ST_CHANGE_KALE_HARVEST = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -6348,7 +6348,7 @@ export const TX_ST_CHANGE_DOMAIN_SET = {
               ext: "v0",
               contract_id:
                 "25b4fcd859aec2fa6348438c489b3c3c10c98b6d21be4fd3cb30cb68953ef977",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -6384,7 +6384,7 @@ export const TX_ST_CHANGE_DOMAIN_SET = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -6430,7 +6430,7 @@ export const TX_ST_CHANGE_DOMAIN_SET = {
                 ext: "v0",
                 contract_id:
                   "2716bcf8536e07b567260fdec481f62404acc2783986797bb5152cb9e8ffd9aa",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -6456,7 +6456,7 @@ export const TX_ST_CHANGE_DOMAIN_SET = {
                 ext: "v0",
                 contract_id:
                   "0a9cc2d220fd805b34d9ad19b84d7bc460b77a5fe15e6ef7eaf2b2cd5e4adbbe",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -6480,7 +6480,7 @@ export const TX_ST_CHANGE_DOMAIN_SET = {
                 ext: "v0",
                 contract_id:
                   "2716bcf8536e07b567260fdec481f62404acc2783986797bb5152cb9e8ffd9aa",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -6515,7 +6515,7 @@ export const TX_ST_CHANGE_DOMAIN_SET = {
                 ext: "v0",
                 contract_id:
                   "0a9cc2d220fd805b34d9ad19b84d7bc460b77a5fe15e6ef7eaf2b2cd5e4adbbe",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -6559,7 +6559,7 @@ export const TX_ST_CHANGE_DOMAIN_SET = {
                 ext: "v0",
                 contract_id:
                   "2716bcf8536e07b567260fdec481f62404acc2783986797bb5152cb9e8ffd9aa",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -6602,7 +6602,7 @@ export const TX_ST_CHANGE_DOMAIN_SET = {
                 ext: "v0",
                 contract_id:
                   "25b4fcd859aec2fa6348438c489b3c3c10c98b6d21be4fd3cb30cb68953ef977",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -6637,7 +6637,7 @@ export const TX_ST_CHANGE_DOMAIN_SET = {
                 ext: "v0",
                 contract_id:
                   "25b4fcd859aec2fa6348438c489b3c3c10c98b6d21be4fd3cb30cb68953ef977",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -6659,7 +6659,7 @@ export const TX_ST_CHANGE_DOMAIN_SET = {
                 ext: "v0",
                 contract_id:
                   "2716bcf8536e07b567260fdec481f62404acc2783986797bb5152cb9e8ffd9aa",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -6680,7 +6680,7 @@ export const TX_ST_CHANGE_DOMAIN_SET = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -6703,7 +6703,7 @@ export const TX_ST_CHANGE_DOMAIN_SET = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -6726,7 +6726,7 @@ export const TX_ST_CHANGE_DOMAIN_SET = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -6749,7 +6749,7 @@ export const TX_ST_CHANGE_DOMAIN_SET = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -6772,7 +6772,7 @@ export const TX_ST_CHANGE_DOMAIN_SET = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -6795,7 +6795,7 @@ export const TX_ST_CHANGE_DOMAIN_SET = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -6818,7 +6818,7 @@ export const TX_ST_CHANGE_DOMAIN_SET = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -6841,7 +6841,7 @@ export const TX_ST_CHANGE_DOMAIN_SET = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -6864,7 +6864,7 @@ export const TX_ST_CHANGE_DOMAIN_SET = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -6887,7 +6887,7 @@ export const TX_ST_CHANGE_DOMAIN_SET = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -6910,7 +6910,7 @@ export const TX_ST_CHANGE_DOMAIN_SET = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -6933,7 +6933,7 @@ export const TX_ST_CHANGE_DOMAIN_SET = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -6956,7 +6956,7 @@ export const TX_ST_CHANGE_DOMAIN_SET = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -6979,7 +6979,7 @@ export const TX_ST_CHANGE_DOMAIN_SET = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -7002,7 +7002,7 @@ export const TX_ST_CHANGE_DOMAIN_SET = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -7025,7 +7025,7 @@ export const TX_ST_CHANGE_DOMAIN_SET = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -7048,7 +7048,7 @@ export const TX_ST_CHANGE_DOMAIN_SET = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -7071,7 +7071,7 @@ export const TX_ST_CHANGE_DOMAIN_SET = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -7094,7 +7094,7 @@ export const TX_ST_CHANGE_DOMAIN_SET = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -7863,7 +7863,7 @@ export const TX_ST_CHANGE_DOMAIN_BURN = {
               ext: "v0",
               contract_id:
                 "25b4fcd859aec2fa6348438c489b3c3c10c98b6d21be4fd3cb30cb68953ef977",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -7899,7 +7899,7 @@ export const TX_ST_CHANGE_DOMAIN_BURN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -7935,7 +7935,7 @@ export const TX_ST_CHANGE_DOMAIN_BURN = {
                 ext: "v0",
                 contract_id:
                   "2716bcf8536e07b567260fdec481f62404acc2783986797bb5152cb9e8ffd9aa",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -7978,7 +7978,7 @@ export const TX_ST_CHANGE_DOMAIN_BURN = {
                 ext: "v0",
                 contract_id:
                   "25b4fcd859aec2fa6348438c489b3c3c10c98b6d21be4fd3cb30cb68953ef977",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -8013,7 +8013,7 @@ export const TX_ST_CHANGE_DOMAIN_BURN = {
                 ext: "v0",
                 contract_id:
                   "25b4fcd859aec2fa6348438c489b3c3c10c98b6d21be4fd3cb30cb68953ef977",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -8035,7 +8035,7 @@ export const TX_ST_CHANGE_DOMAIN_BURN = {
                 ext: "v0",
                 contract_id:
                   "2716bcf8536e07b567260fdec481f62404acc2783986797bb5152cb9e8ffd9aa",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -8056,7 +8056,7 @@ export const TX_ST_CHANGE_DOMAIN_BURN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -8079,7 +8079,7 @@ export const TX_ST_CHANGE_DOMAIN_BURN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -8102,7 +8102,7 @@ export const TX_ST_CHANGE_DOMAIN_BURN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -8125,7 +8125,7 @@ export const TX_ST_CHANGE_DOMAIN_BURN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -8148,7 +8148,7 @@ export const TX_ST_CHANGE_DOMAIN_BURN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -8171,7 +8171,7 @@ export const TX_ST_CHANGE_DOMAIN_BURN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -8194,7 +8194,7 @@ export const TX_ST_CHANGE_DOMAIN_BURN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -8217,7 +8217,7 @@ export const TX_ST_CHANGE_DOMAIN_BURN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -8240,7 +8240,7 @@ export const TX_ST_CHANGE_DOMAIN_BURN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -8263,7 +8263,7 @@ export const TX_ST_CHANGE_DOMAIN_BURN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -8286,7 +8286,7 @@ export const TX_ST_CHANGE_DOMAIN_BURN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -8309,7 +8309,7 @@ export const TX_ST_CHANGE_DOMAIN_BURN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -8332,7 +8332,7 @@ export const TX_ST_CHANGE_DOMAIN_BURN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -8355,7 +8355,7 @@ export const TX_ST_CHANGE_DOMAIN_BURN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -8378,7 +8378,7 @@ export const TX_ST_CHANGE_DOMAIN_BURN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -8401,7 +8401,7 @@ export const TX_ST_CHANGE_DOMAIN_BURN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -8424,7 +8424,7 @@ export const TX_ST_CHANGE_DOMAIN_BURN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -8447,7 +8447,7 @@ export const TX_ST_CHANGE_DOMAIN_BURN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -8470,7 +8470,7 @@ export const TX_ST_CHANGE_DOMAIN_BURN = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -9800,7 +9800,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
               ext: "v0",
               contract_id:
                 "25b4fcd859aec2fa6348438c489b3c3c10c98b6d21be4fd3cb30cb68953ef977",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -9832,7 +9832,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
               ext: "v0",
               contract_id:
                 "9ba59af5fd36b5c60d05ccf87eead267a799942b963cce4b2894da5c9b857041",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -9865,7 +9865,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
               ext: "v0",
               contract_id:
                 "0f250dfef4b0236219db68b36584a49bdcfbf4287001a6a26deaaaec9f7ab11e",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -9894,7 +9894,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
               ext: "v0",
               contract_id:
                 "0f250dfef4b0236219db68b36584a49bdcfbf4287001a6a26deaaaec9f7ab11e",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -9938,7 +9938,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
               ext: "v0",
               contract_id:
                 "0f250dfef4b0236219db68b36584a49bdcfbf4287001a6a26deaaaec9f7ab11e",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -10024,7 +10024,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
               ext: "v0",
               contract_id:
                 "0dd5c710ea6a4a23b32207fd130eadf9c9ce899f4308e93e4ffe53fbaf108a04",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -10140,7 +10140,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -10208,7 +10208,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "0dd5c710ea6a4a23b32207fd130eadf9c9ce899f4308e93e4ffe53fbaf108a04",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -10245,7 +10245,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "3872426bd59e4a61585086e3886d457903b53f22f89e361ea806ffcb07ac719f",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -10269,7 +10269,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "0dd5c710ea6a4a23b32207fd130eadf9c9ce899f4308e93e4ffe53fbaf108a04",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -10295,7 +10295,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "0f250dfef4b0236219db68b36584a49bdcfbf4287001a6a26deaaaec9f7ab11e",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -10332,7 +10332,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "0dd5c710ea6a4a23b32207fd130eadf9c9ce899f4308e93e4ffe53fbaf108a04",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -10375,7 +10375,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "25b4fcd859aec2fa6348438c489b3c3c10c98b6d21be4fd3cb30cb68953ef977",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -10410,7 +10410,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "25b4fcd859aec2fa6348438c489b3c3c10c98b6d21be4fd3cb30cb68953ef977",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -10432,7 +10432,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "0dd5c710ea6a4a23b32207fd130eadf9c9ce899f4308e93e4ffe53fbaf108a04",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -10475,7 +10475,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "9ba59af5fd36b5c60d05ccf87eead267a799942b963cce4b2894da5c9b857041",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -10511,7 +10511,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "9ba59af5fd36b5c60d05ccf87eead267a799942b963cce4b2894da5c9b857041",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -10533,7 +10533,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "0dd5c710ea6a4a23b32207fd130eadf9c9ce899f4308e93e4ffe53fbaf108a04",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -10562,7 +10562,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "0f250dfef4b0236219db68b36584a49bdcfbf4287001a6a26deaaaec9f7ab11e",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -10591,7 +10591,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "25b4fcd859aec2fa6348438c489b3c3c10c98b6d21be4fd3cb30cb68953ef977",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -10618,7 +10618,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "0f250dfef4b0236219db68b36584a49bdcfbf4287001a6a26deaaaec9f7ab11e",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -10647,7 +10647,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "9ba59af5fd36b5c60d05ccf87eead267a799942b963cce4b2894da5c9b857041",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -10674,7 +10674,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "0f250dfef4b0236219db68b36584a49bdcfbf4287001a6a26deaaaec9f7ab11e",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -10700,7 +10700,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "3872426bd59e4a61585086e3886d457903b53f22f89e361ea806ffcb07ac719f",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -10724,7 +10724,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "0f250dfef4b0236219db68b36584a49bdcfbf4287001a6a26deaaaec9f7ab11e",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -10756,7 +10756,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "0f250dfef4b0236219db68b36584a49bdcfbf4287001a6a26deaaaec9f7ab11e",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -10803,7 +10803,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "0f250dfef4b0236219db68b36584a49bdcfbf4287001a6a26deaaaec9f7ab11e",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -10892,7 +10892,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "0f250dfef4b0236219db68b36584a49bdcfbf4287001a6a26deaaaec9f7ab11e",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -10919,7 +10919,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "0dd5c710ea6a4a23b32207fd130eadf9c9ce899f4308e93e4ffe53fbaf108a04",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -11013,7 +11013,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "0dd5c710ea6a4a23b32207fd130eadf9c9ce899f4308e93e4ffe53fbaf108a04",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -11055,7 +11055,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -11078,7 +11078,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -11101,7 +11101,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -11124,7 +11124,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -11147,7 +11147,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -11170,7 +11170,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -11193,7 +11193,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -11216,7 +11216,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -11239,7 +11239,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -11262,7 +11262,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -11285,7 +11285,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -11308,7 +11308,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -11331,7 +11331,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -11354,7 +11354,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -11377,7 +11377,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -11400,7 +11400,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -11423,7 +11423,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -11446,7 +11446,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -11469,7 +11469,7 @@ export const TX_ST_CHANGE_SOROSWAP_ADD_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -12748,7 +12748,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
               ext: "v0",
               contract_id:
                 "b0f58cf4262c9239194cef43f7cd5a20b560d1e9f412160c0e0dd40b66eea05e",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -12777,7 +12777,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
               ext: "v0",
               contract_id:
                 "b0f58cf4262c9239194cef43f7cd5a20b560d1e9f412160c0e0dd40b66eea05e",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -12802,7 +12802,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
               ext: "v0",
               contract_id:
                 "75af65c4c5e6178f70218019a712566a17e9e09111259b720b26de889c86695c",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -12835,7 +12835,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
               ext: "v0",
               contract_id:
                 "adefce59aee52968f76061d494c2525b75659fa4296a65f499ef29e56477e496",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -12868,7 +12868,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
               ext: "v0",
               contract_id:
                 "b0f58cf4262c9239194cef43f7cd5a20b560d1e9f412160c0e0dd40b66eea05e",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -12912,7 +12912,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
               ext: "v0",
               contract_id:
                 "b0f58cf4262c9239194cef43f7cd5a20b560d1e9f412160c0e0dd40b66eea05e",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -12998,7 +12998,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
               ext: "v0",
               contract_id:
                 "0dd5c710ea6a4a23b32207fd130eadf9c9ce899f4308e93e4ffe53fbaf108a04",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -13108,7 +13108,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -13170,7 +13170,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "0dd5c710ea6a4a23b32207fd130eadf9c9ce899f4308e93e4ffe53fbaf108a04",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -13207,7 +13207,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "3872426bd59e4a61585086e3886d457903b53f22f89e361ea806ffcb07ac719f",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -13231,7 +13231,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "0dd5c710ea6a4a23b32207fd130eadf9c9ce899f4308e93e4ffe53fbaf108a04",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -13274,7 +13274,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "b0f58cf4262c9239194cef43f7cd5a20b560d1e9f412160c0e0dd40b66eea05e",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -13306,7 +13306,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "b0f58cf4262c9239194cef43f7cd5a20b560d1e9f412160c0e0dd40b66eea05e",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -13328,7 +13328,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "0dd5c710ea6a4a23b32207fd130eadf9c9ce899f4308e93e4ffe53fbaf108a04",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -13357,7 +13357,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "b0f58cf4262c9239194cef43f7cd5a20b560d1e9f412160c0e0dd40b66eea05e",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -13386,7 +13386,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "75af65c4c5e6178f70218019a712566a17e9e09111259b720b26de889c86695c",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -13413,7 +13413,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "b0f58cf4262c9239194cef43f7cd5a20b560d1e9f412160c0e0dd40b66eea05e",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -13442,7 +13442,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "adefce59aee52968f76061d494c2525b75659fa4296a65f499ef29e56477e496",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -13469,7 +13469,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "b0f58cf4262c9239194cef43f7cd5a20b560d1e9f412160c0e0dd40b66eea05e",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -13495,7 +13495,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "3872426bd59e4a61585086e3886d457903b53f22f89e361ea806ffcb07ac719f",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -13519,7 +13519,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "b0f58cf4262c9239194cef43f7cd5a20b560d1e9f412160c0e0dd40b66eea05e",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -13547,7 +13547,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "b0f58cf4262c9239194cef43f7cd5a20b560d1e9f412160c0e0dd40b66eea05e",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -13590,7 +13590,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "75af65c4c5e6178f70218019a712566a17e9e09111259b720b26de889c86695c",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -13626,7 +13626,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "75af65c4c5e6178f70218019a712566a17e9e09111259b720b26de889c86695c",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -13648,7 +13648,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "b0f58cf4262c9239194cef43f7cd5a20b560d1e9f412160c0e0dd40b66eea05e",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -13691,7 +13691,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "adefce59aee52968f76061d494c2525b75659fa4296a65f499ef29e56477e496",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -13727,7 +13727,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "adefce59aee52968f76061d494c2525b75659fa4296a65f499ef29e56477e496",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -13749,7 +13749,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "b0f58cf4262c9239194cef43f7cd5a20b560d1e9f412160c0e0dd40b66eea05e",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -13778,7 +13778,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "75af65c4c5e6178f70218019a712566a17e9e09111259b720b26de889c86695c",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -13805,7 +13805,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "b0f58cf4262c9239194cef43f7cd5a20b560d1e9f412160c0e0dd40b66eea05e",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -13834,7 +13834,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "adefce59aee52968f76061d494c2525b75659fa4296a65f499ef29e56477e496",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -13861,7 +13861,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "b0f58cf4262c9239194cef43f7cd5a20b560d1e9f412160c0e0dd40b66eea05e",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -13908,7 +13908,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "b0f58cf4262c9239194cef43f7cd5a20b560d1e9f412160c0e0dd40b66eea05e",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -13997,7 +13997,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "b0f58cf4262c9239194cef43f7cd5a20b560d1e9f412160c0e0dd40b66eea05e",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -14034,7 +14034,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "0dd5c710ea6a4a23b32207fd130eadf9c9ce899f4308e93e4ffe53fbaf108a04",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -14128,7 +14128,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
                 ext: "v0",
                 contract_id:
                   "0dd5c710ea6a4a23b32207fd130eadf9c9ce899f4308e93e4ffe53fbaf108a04",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -14164,7 +14164,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -14187,7 +14187,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -14210,7 +14210,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -14233,7 +14233,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -14256,7 +14256,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -14279,7 +14279,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -14302,7 +14302,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -14325,7 +14325,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -14348,7 +14348,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -14371,7 +14371,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -14394,7 +14394,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -14417,7 +14417,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -14440,7 +14440,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -14463,7 +14463,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -14486,7 +14486,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -14509,7 +14509,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -14532,7 +14532,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -14555,7 +14555,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -14578,7 +14578,7 @@ export const TX_ST_CHANGE_SOROSWAP_REMOVE_LIQUIDITY = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -15717,7 +15717,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
               ext: "v0",
               contract_id:
                 "25b4fcd859aec2fa6348438c489b3c3c10c98b6d21be4fd3cb30cb68953ef977",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -15749,7 +15749,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
               ext: "v0",
               contract_id:
                 "adefce59aee52968f76061d494c2525b75659fa4296a65f499ef29e56477e496",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -15782,7 +15782,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
               ext: "v0",
               contract_id:
                 "19f1e3bb37b77070098cb5ccfaa5c00b2917fe16e39e7424ee29b2c25dd77ae7",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -15826,7 +15826,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
               ext: "v0",
               contract_id:
                 "19f1e3bb37b77070098cb5ccfaa5c00b2917fe16e39e7424ee29b2c25dd77ae7",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -15901,7 +15901,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
               ext: "v0",
               contract_id:
                 "0dd5c710ea6a4a23b32207fd130eadf9c9ce899f4308e93e4ffe53fbaf108a04",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -15989,7 +15989,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -16049,7 +16049,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
                 ext: "v0",
                 contract_id:
                   "0dd5c710ea6a4a23b32207fd130eadf9c9ce899f4308e93e4ffe53fbaf108a04",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -16075,7 +16075,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
                 ext: "v0",
                 contract_id:
                   "19f1e3bb37b77070098cb5ccfaa5c00b2917fe16e39e7424ee29b2c25dd77ae7",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -16112,7 +16112,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
                 ext: "v0",
                 contract_id:
                   "0dd5c710ea6a4a23b32207fd130eadf9c9ce899f4308e93e4ffe53fbaf108a04",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -16155,7 +16155,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
                 ext: "v0",
                 contract_id:
                   "25b4fcd859aec2fa6348438c489b3c3c10c98b6d21be4fd3cb30cb68953ef977",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -16190,7 +16190,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
                 ext: "v0",
                 contract_id:
                   "25b4fcd859aec2fa6348438c489b3c3c10c98b6d21be4fd3cb30cb68953ef977",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -16212,7 +16212,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
                 ext: "v0",
                 contract_id:
                   "0dd5c710ea6a4a23b32207fd130eadf9c9ce899f4308e93e4ffe53fbaf108a04",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -16257,7 +16257,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
                 ext: "v0",
                 contract_id:
                   "19f1e3bb37b77070098cb5ccfaa5c00b2917fe16e39e7424ee29b2c25dd77ae7",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -16300,7 +16300,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
                 ext: "v0",
                 contract_id:
                   "adefce59aee52968f76061d494c2525b75659fa4296a65f499ef29e56477e496",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -16336,7 +16336,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
                 ext: "v0",
                 contract_id:
                   "adefce59aee52968f76061d494c2525b75659fa4296a65f499ef29e56477e496",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -16358,7 +16358,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
                 ext: "v0",
                 contract_id:
                   "19f1e3bb37b77070098cb5ccfaa5c00b2917fe16e39e7424ee29b2c25dd77ae7",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -16387,7 +16387,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
                 ext: "v0",
                 contract_id:
                   "25b4fcd859aec2fa6348438c489b3c3c10c98b6d21be4fd3cb30cb68953ef977",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -16414,7 +16414,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
                 ext: "v0",
                 contract_id:
                   "19f1e3bb37b77070098cb5ccfaa5c00b2917fe16e39e7424ee29b2c25dd77ae7",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -16443,7 +16443,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
                 ext: "v0",
                 contract_id:
                   "adefce59aee52968f76061d494c2525b75659fa4296a65f499ef29e56477e496",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -16470,7 +16470,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
                 ext: "v0",
                 contract_id:
                   "19f1e3bb37b77070098cb5ccfaa5c00b2917fe16e39e7424ee29b2c25dd77ae7",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -16517,7 +16517,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
                 ext: "v0",
                 contract_id:
                   "19f1e3bb37b77070098cb5ccfaa5c00b2917fe16e39e7424ee29b2c25dd77ae7",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -16595,7 +16595,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
                 ext: "v0",
                 contract_id:
                   "19f1e3bb37b77070098cb5ccfaa5c00b2917fe16e39e7424ee29b2c25dd77ae7",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -16617,7 +16617,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
                 ext: "v0",
                 contract_id:
                   "0dd5c710ea6a4a23b32207fd130eadf9c9ce899f4308e93e4ffe53fbaf108a04",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -16689,7 +16689,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
                 ext: "v0",
                 contract_id:
                   "0dd5c710ea6a4a23b32207fd130eadf9c9ce899f4308e93e4ffe53fbaf108a04",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -16725,7 +16725,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -16748,7 +16748,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -16771,7 +16771,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -16794,7 +16794,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -16817,7 +16817,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -16840,7 +16840,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -16863,7 +16863,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -16886,7 +16886,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -16909,7 +16909,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -16932,7 +16932,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -16955,7 +16955,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -16978,7 +16978,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -17001,7 +17001,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -17024,7 +17024,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -17047,7 +17047,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -17070,7 +17070,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -17093,7 +17093,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -17116,7 +17116,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -17139,7 +17139,7 @@ export const TX_ST_CHANGE_SOROSWAP_SWAP_EXACT_TOKENS = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -18352,7 +18352,7 @@ export const TX_ST_CHANGE_BLEND_USDC_XLM_V2_SUBMIT = {
               ext: "v0",
               contract_id:
                 "129cc8cc6336f1fdbbdcc0f3983434c3cdb85fd9ea85697a3782d318d874a580",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -18391,7 +18391,7 @@ export const TX_ST_CHANGE_BLEND_USDC_XLM_V2_SUBMIT = {
               ext: "v0",
               contract_id:
                 "adefce59aee52968f76061d494c2525b75659fa4296a65f499ef29e56477e496",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -18467,7 +18467,7 @@ export const TX_ST_CHANGE_BLEND_USDC_XLM_V2_SUBMIT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -18544,7 +18544,7 @@ export const TX_ST_CHANGE_BLEND_USDC_XLM_V2_SUBMIT = {
                 ext: "v0",
                 contract_id:
                   "129cc8cc6336f1fdbbdcc0f3983434c3cdb85fd9ea85697a3782d318d874a580",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -18586,7 +18586,7 @@ export const TX_ST_CHANGE_BLEND_USDC_XLM_V2_SUBMIT = {
                 ext: "v0",
                 contract_id:
                   "129cc8cc6336f1fdbbdcc0f3983434c3cdb85fd9ea85697a3782d318d874a580",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -18629,7 +18629,7 @@ export const TX_ST_CHANGE_BLEND_USDC_XLM_V2_SUBMIT = {
                 ext: "v0",
                 contract_id:
                   "adefce59aee52968f76061d494c2525b75659fa4296a65f499ef29e56477e496",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -18665,7 +18665,7 @@ export const TX_ST_CHANGE_BLEND_USDC_XLM_V2_SUBMIT = {
                 ext: "v0",
                 contract_id:
                   "adefce59aee52968f76061d494c2525b75659fa4296a65f499ef29e56477e496",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -18687,7 +18687,7 @@ export const TX_ST_CHANGE_BLEND_USDC_XLM_V2_SUBMIT = {
                 ext: "v0",
                 contract_id:
                   "129cc8cc6336f1fdbbdcc0f3983434c3cdb85fd9ea85697a3782d318d874a580",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -18747,7 +18747,7 @@ export const TX_ST_CHANGE_BLEND_USDC_XLM_V2_SUBMIT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -18770,7 +18770,7 @@ export const TX_ST_CHANGE_BLEND_USDC_XLM_V2_SUBMIT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -18793,7 +18793,7 @@ export const TX_ST_CHANGE_BLEND_USDC_XLM_V2_SUBMIT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -18816,7 +18816,7 @@ export const TX_ST_CHANGE_BLEND_USDC_XLM_V2_SUBMIT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -18839,7 +18839,7 @@ export const TX_ST_CHANGE_BLEND_USDC_XLM_V2_SUBMIT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -18862,7 +18862,7 @@ export const TX_ST_CHANGE_BLEND_USDC_XLM_V2_SUBMIT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -18885,7 +18885,7 @@ export const TX_ST_CHANGE_BLEND_USDC_XLM_V2_SUBMIT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -18908,7 +18908,7 @@ export const TX_ST_CHANGE_BLEND_USDC_XLM_V2_SUBMIT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -18931,7 +18931,7 @@ export const TX_ST_CHANGE_BLEND_USDC_XLM_V2_SUBMIT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -18954,7 +18954,7 @@ export const TX_ST_CHANGE_BLEND_USDC_XLM_V2_SUBMIT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -18977,7 +18977,7 @@ export const TX_ST_CHANGE_BLEND_USDC_XLM_V2_SUBMIT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -19000,7 +19000,7 @@ export const TX_ST_CHANGE_BLEND_USDC_XLM_V2_SUBMIT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -19023,7 +19023,7 @@ export const TX_ST_CHANGE_BLEND_USDC_XLM_V2_SUBMIT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -19046,7 +19046,7 @@ export const TX_ST_CHANGE_BLEND_USDC_XLM_V2_SUBMIT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -19069,7 +19069,7 @@ export const TX_ST_CHANGE_BLEND_USDC_XLM_V2_SUBMIT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -19092,7 +19092,7 @@ export const TX_ST_CHANGE_BLEND_USDC_XLM_V2_SUBMIT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -19115,7 +19115,7 @@ export const TX_ST_CHANGE_BLEND_USDC_XLM_V2_SUBMIT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -19138,7 +19138,7 @@ export const TX_ST_CHANGE_BLEND_USDC_XLM_V2_SUBMIT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -19161,7 +19161,7 @@ export const TX_ST_CHANGE_BLEND_USDC_XLM_V2_SUBMIT = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -19486,7 +19486,7 @@ export const TX_ST_CHANGE_NO_STATE_CHANGE = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -19512,7 +19512,7 @@ export const TX_ST_CHANGE_NO_STATE_CHANGE = {
                 ext: "v0",
                 contract_id:
                   "d0524e457bdf141a9216e947f1dc4cec6b0e676d5ea24c0a27c6866f56e0983a",
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -19536,7 +19536,7 @@ export const TX_ST_CHANGE_NO_STATE_CHANGE = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -19559,7 +19559,7 @@ export const TX_ST_CHANGE_NO_STATE_CHANGE = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -19582,7 +19582,7 @@ export const TX_ST_CHANGE_NO_STATE_CHANGE = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -19605,7 +19605,7 @@ export const TX_ST_CHANGE_NO_STATE_CHANGE = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -19628,7 +19628,7 @@ export const TX_ST_CHANGE_NO_STATE_CHANGE = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -19651,7 +19651,7 @@ export const TX_ST_CHANGE_NO_STATE_CHANGE = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -19674,7 +19674,7 @@ export const TX_ST_CHANGE_NO_STATE_CHANGE = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -19697,7 +19697,7 @@ export const TX_ST_CHANGE_NO_STATE_CHANGE = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -19720,7 +19720,7 @@ export const TX_ST_CHANGE_NO_STATE_CHANGE = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -19743,7 +19743,7 @@ export const TX_ST_CHANGE_NO_STATE_CHANGE = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -19766,7 +19766,7 @@ export const TX_ST_CHANGE_NO_STATE_CHANGE = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -19789,7 +19789,7 @@ export const TX_ST_CHANGE_NO_STATE_CHANGE = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -19812,7 +19812,7 @@ export const TX_ST_CHANGE_NO_STATE_CHANGE = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -19835,7 +19835,7 @@ export const TX_ST_CHANGE_NO_STATE_CHANGE = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -19858,7 +19858,7 @@ export const TX_ST_CHANGE_NO_STATE_CHANGE = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -19881,7 +19881,7 @@ export const TX_ST_CHANGE_NO_STATE_CHANGE = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -19904,7 +19904,7 @@ export const TX_ST_CHANGE_NO_STATE_CHANGE = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -19927,7 +19927,7 @@ export const TX_ST_CHANGE_NO_STATE_CHANGE = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -19950,7 +19950,7 @@ export const TX_ST_CHANGE_NO_STATE_CHANGE = {
               event: {
                 ext: "v0",
                 contract_id: null,
-                type_: "diagnostic",
+                type: "diagnostic",
                 body: {
                   v0: {
                     topics: [
@@ -21403,7 +21403,7 @@ export const TX_ST_CHANGE_RESULT_META_V4_EXAMPLE = {
                 ext: "v0",
                 contract_id:
                   "CDVQVKOY2YSXS2IC7KN6MNASSHPAO7UN2UR2ON4OI2SKMFJNVAMDX6DP",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -21436,7 +21436,7 @@ export const TX_ST_CHANGE_RESULT_META_V4_EXAMPLE = {
                 ext: "v0",
                 contract_id:
                   "CCW67TSZV3SSS2HXMBQ5JFGCKJNXKZM7UQUWUZPUTHXSTZLEO7SJMI75",
-                type_: "contract",
+                type: "contract",
                 body: {
                   v0: {
                     topics: [
@@ -21511,7 +21511,7 @@ export const TX_ST_CHANGE_RESULT_META_V4_EXAMPLE = {
               ext: "v0",
               contract_id:
                 "CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -21536,7 +21536,7 @@ export const TX_ST_CHANGE_RESULT_META_V4_EXAMPLE = {
               ext: "v0",
               contract_id:
                 "CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -21562,7 +21562,7 @@ export const TX_ST_CHANGE_RESULT_META_V4_EXAMPLE = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -21636,7 +21636,7 @@ export const TX_ST_CHANGE_RESULT_META_V4_EXAMPLE = {
               ext: "v0",
               contract_id:
                 "CDVQVKOY2YSXS2IC7KN6MNASSHPAO7UN2UR2ON4OI2SKMFJNVAMDX6DP",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -21672,7 +21672,7 @@ export const TX_ST_CHANGE_RESULT_META_V4_EXAMPLE = {
               ext: "v0",
               contract_id:
                 "CDVQVKOY2YSXS2IC7KN6MNASSHPAO7UN2UR2ON4OI2SKMFJNVAMDX6DP",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -21712,7 +21712,7 @@ export const TX_ST_CHANGE_RESULT_META_V4_EXAMPLE = {
               ext: "v0",
               contract_id:
                 "CCW67TSZV3SSS2HXMBQ5JFGCKJNXKZM7UQUWUZPUTHXSTZLEO7SJMI75",
-              type_: "contract",
+              type: "contract",
               body: {
                 v0: {
                   topics: [
@@ -21745,7 +21745,7 @@ export const TX_ST_CHANGE_RESULT_META_V4_EXAMPLE = {
               ext: "v0",
               contract_id:
                 "CCW67TSZV3SSS2HXMBQ5JFGCKJNXKZM7UQUWUZPUTHXSTZLEO7SJMI75",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -21767,7 +21767,7 @@ export const TX_ST_CHANGE_RESULT_META_V4_EXAMPLE = {
               ext: "v0",
               contract_id:
                 "CDVQVKOY2YSXS2IC7KN6MNASSHPAO7UN2UR2ON4OI2SKMFJNVAMDX6DP",
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -21815,7 +21815,7 @@ export const TX_ST_CHANGE_RESULT_META_V4_EXAMPLE = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -21838,7 +21838,7 @@ export const TX_ST_CHANGE_RESULT_META_V4_EXAMPLE = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -21861,7 +21861,7 @@ export const TX_ST_CHANGE_RESULT_META_V4_EXAMPLE = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -21884,7 +21884,7 @@ export const TX_ST_CHANGE_RESULT_META_V4_EXAMPLE = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -21907,7 +21907,7 @@ export const TX_ST_CHANGE_RESULT_META_V4_EXAMPLE = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -21930,7 +21930,7 @@ export const TX_ST_CHANGE_RESULT_META_V4_EXAMPLE = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -21953,7 +21953,7 @@ export const TX_ST_CHANGE_RESULT_META_V4_EXAMPLE = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -21976,7 +21976,7 @@ export const TX_ST_CHANGE_RESULT_META_V4_EXAMPLE = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -21999,7 +21999,7 @@ export const TX_ST_CHANGE_RESULT_META_V4_EXAMPLE = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -22022,7 +22022,7 @@ export const TX_ST_CHANGE_RESULT_META_V4_EXAMPLE = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -22045,7 +22045,7 @@ export const TX_ST_CHANGE_RESULT_META_V4_EXAMPLE = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -22068,7 +22068,7 @@ export const TX_ST_CHANGE_RESULT_META_V4_EXAMPLE = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -22091,7 +22091,7 @@ export const TX_ST_CHANGE_RESULT_META_V4_EXAMPLE = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -22114,7 +22114,7 @@ export const TX_ST_CHANGE_RESULT_META_V4_EXAMPLE = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -22137,7 +22137,7 @@ export const TX_ST_CHANGE_RESULT_META_V4_EXAMPLE = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -22160,7 +22160,7 @@ export const TX_ST_CHANGE_RESULT_META_V4_EXAMPLE = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -22183,7 +22183,7 @@ export const TX_ST_CHANGE_RESULT_META_V4_EXAMPLE = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -22206,7 +22206,7 @@ export const TX_ST_CHANGE_RESULT_META_V4_EXAMPLE = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [
@@ -22229,7 +22229,7 @@ export const TX_ST_CHANGE_RESULT_META_V4_EXAMPLE = {
             event: {
               ext: "v0",
               contract_id: null,
-              type_: "diagnostic",
+              type: "diagnostic",
               body: {
                 v0: {
                   topics: [

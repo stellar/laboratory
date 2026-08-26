@@ -95,7 +95,7 @@ const fnCall = ({
   event: {
     ext: "v0",
     contract_id: contractId,
-    type_: "diagnostic",
+    type: "diagnostic",
     body: {
       v0: {
         topics: [{ symbol: "fn_call" }, { bytes: FN_HASH }, { symbol: name }],
@@ -119,7 +119,7 @@ const fnReturn = ({
   event: {
     ext: "v0",
     contract_id: contractId,
-    type_: "diagnostic",
+    type: "diagnostic",
     body: {
       v0: {
         topics: [{ symbol: "fn_return" }, { symbol: name }],

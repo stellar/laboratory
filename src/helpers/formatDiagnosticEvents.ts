@@ -115,7 +115,9 @@ interface DiagnosticEventBody {
 interface DiagnosticEvent {
   ext: string;
   contract_id: string | null;
-  type_: EventType;
+  // XDR JSON v27 names this key `type_`; v28 renames it to `type`.
+  type?: EventType;
+  type_?: EventType;
   body: DiagnosticEventBody;
 }
 
@@ -127,8 +129,11 @@ export interface DiagnosticEventJson {
 // =============================================================================
 // Helper Functions
 // =============================================================================
+const readEventType = (event?: DiagnosticEvent): EventType | undefined =>
+  event?.type ?? event?.type_;
+
 const getEventType = (event: DiagnosticEvent): string => {
-  switch (event.type_) {
+  switch (readEventType(event)) {
     case EVENT_TYPES.DIAGNOSTIC:
       return event.body?.v0?.topics[0]?.symbol || "";
     case EVENT_TYPES.CONTRACT:
@@ -143,8 +148,9 @@ const getEventName = (event: DiagnosticEvent): string => {
   if (!topics || topics.length === 0) return "";
 
   const topicSymbol = topics[0]?.symbol;
+  const eventType = readEventType(event);
 
-  if (event.type_ === EVENT_TYPES.DIAGNOSTIC) {
+  if (eventType === EVENT_TYPES.DIAGNOSTIC) {
     if (topicSymbol === EVENT_TOPIC_SYMBOLS.FN_RETURN) {
       // Use the function name (2nd topic)
       return topics?.[1]?.symbol || "";
@@ -157,7 +163,7 @@ const getEventName = (event: DiagnosticEvent): string => {
   }
 
   // No name for contract events
-  if (event.type_ === EVENT_TYPES.CONTRACT) {
+  if (eventType === EVENT_TYPES.CONTRACT) {
     return "";
   }
 
@@ -316,7 +322,7 @@ const processEvents = (
   let lastHostFnName: string | undefined;
 
   dEvents.forEach((ev) => {
-    const evType = ev.event?.type_;
+    const evType = readEventType(ev.event);
     const evTopics = ev.event?.body?.v0?.topics;
     const topicSymbol = evTopics?.[0]?.symbol;
 
