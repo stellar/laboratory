@@ -11,7 +11,7 @@ import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 import { type DereferencedSchemaType } from "@/constants/jsonSchema";
 
 import { dereferenceSchema } from "@/helpers/dereferenceSchema";
-import { getTxnToSimulate } from "@/helpers/sorobanUtils";
+import { getTxnToSimulate, isEmptyArgValue } from "@/helpers/sorobanUtils";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 
 import { Box } from "@/components/layout/Box";
@@ -51,11 +51,7 @@ export const JsonSchemaForm = ({
   const prevValue = usePrevious(stringify(value.args));
 
   const missingReqFields = requiredFields.reduce((res, cur) => {
-    if (value.args[cur]?.length === 0) {
-      return [...res, cur];
-    }
-
-    if (!value.args[cur]) {
+    if (isEmptyArgValue(value.args[cur]) || value.args[cur]?.length === 0) {
       return [...res, cur];
     }
 
@@ -96,6 +92,7 @@ export const JsonSchemaForm = ({
         soroban.operation,
         network.passphrase,
         dereferencedSchema.argOrder,
+        requiredFields,
       );
 
       if (xdr && !error) {

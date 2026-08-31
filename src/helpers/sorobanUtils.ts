@@ -255,10 +255,24 @@ export const getTxnToSimulate = (
   operation: TxnOperation,
   networkPassphrase: string,
   argOrder: string[],
+  requiredArgs: string[] = [],
 ): { xdr: string; error: string } => {
   try {
-    const orderedValues = argOrder.map((name) => value.args[name]);
-    const scVals = orderedValues.map((v) => getScValFromArg(v, []));
+    const scVals = argOrder.map((name) => {
+      const argValue = value.args[name];
+
+      // Args not listed in the schema's required list are Option<T>; an
+      // unfilled value means None, which is represented as ScVoid.
+      if (isEmptyArgValue(argValue)) {
+        if (requiredArgs.includes(name)) {
+          throw new Error(`Missing required argument: ${name}`);
+        }
+
+        return xdr.ScVal.scvVoid();
+      }
+
+      return getScValFromArg(argValue, []);
+    });
 
     const builtXdr = buildTxWithSorobanData({
       params: txnParams,
@@ -721,6 +735,36 @@ export const convertSpecTypeToScValType = (type: string) => {
 };
 
 export const hasTypeAndValue = (v: any) => v?.type && v.value !== undefined;
+
+/**
+ * Checks whether a user-entered argument value is empty (never touched or
+ * cleared out). Used to detect unfilled Option<T> args that should be passed
+ * to the contract as ScVoid (None).
+ */
+export const isEmptyArgValue = (value: any): boolean => {
+  if (value === undefined || value === null) {
+    return true;
+  }
+
+  if (typeof value === "string") {
+    return value === "";
+  }
+
+  if (Array.isArray(value)) {
+    return false;
+  }
+
+  if (typeof value === "object") {
+    if (Object.keys(value).length === 0) {
+      return true;
+    }
+
+    // Primitive input ({ value, type }) the user cleared out
+    return Boolean(hasTypeAndValue(value)) && value.value === "";
+  }
+
+  return false;
+};
 
 /**
  * Determines if the simulation result indicates a read-only transaction
