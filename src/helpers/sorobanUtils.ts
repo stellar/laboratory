@@ -305,6 +305,9 @@ const isMap = (arg: any) => {
   try {
     return (
       Array.isArray(arg) &&
+      // every() always returns true on [], but an emptied array must encode
+      // as an empty Vec, never as a map
+      arg.length > 0 &&
       arg.every((obj: any) => {
         // Check if object has exactly two keys: "0" and "1"
         const keys = Object.keys(obj);
@@ -350,7 +353,8 @@ const getScValFromArg = (arg: any, scVals: xdr.ScVal[]): xdr.ScVal => {
     return nativeToScVal(mapVal, { type: mapType });
   }
 
-  if (Array.isArray(arg) && arg.length > 0) {
+  // [] encodes as an empty Vec (Some([]) for an Option<Vec<T>>)
+  if (Array.isArray(arg)) {
     const arrayScVals = arg.map((subArray) =>
       getScValFromArg(subArray, scVals),
     );
@@ -591,6 +595,14 @@ export const getScValsFromArgs = (
 
     // Check if it's an array of map objects
     if (Array.isArray(argValue)) {
+      // An emptied Vec encodes as an empty ScVec; the every() checks below
+      // all return true on [] and would misroute it (e.g. reading
+      // argValue[0].type)
+      if (argValue.length === 0) {
+        scVals.push(xdr.ScVal.scvVec([]));
+        continue;
+      }
+
       // Map Case
       if (isMap(argValue)) {
         const { mapVal, mapType } = convertObjectToMap(argValue);
@@ -776,6 +788,14 @@ export const isEmptyArgValue = (value: any): boolean => {
 
   if (typeof value === "object") {
     if (Object.keys(value).length === 0) {
+      return true;
+    }
+
+    // Union/enum selection the user returned to the blank option
+    if ("tag" in value && value.tag === "") {
+      return true;
+    }
+    if ("enum" in value && value.enum === "") {
       return true;
     }
 

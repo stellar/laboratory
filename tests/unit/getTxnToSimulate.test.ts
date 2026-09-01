@@ -139,6 +139,61 @@ describe("getTxnToSimulate with Option<T> arguments", () => {
     expect(invokeArgs[1].type).toBe("scvVoid");
   });
 
+  it("passes ScVoid (None) for an optional union the user returned to the blank option", () => {
+    const value: SorobanInvokeValue = {
+      contract_id: CONTRACT_ID,
+      function_name: "set_mode",
+      args: {
+        mode: { tag: "" },
+      },
+    };
+
+    const { xdr: builtXdr, error } = getTxnToSimulate(
+      value,
+      txnParams,
+      operation,
+      NETWORK_PASSPHRASE,
+      ["mode"],
+      [],
+      { mode: { oneOf: [] } as any },
+    );
+
+    expect(error).toBe("");
+
+    const invokeArgs = getInvokeArgs(builtXdr);
+
+    expect(invokeArgs).toHaveLength(1);
+    expect(invokeArgs[0].type).toBe("scvVoid");
+  });
+
+  it("passes an empty Vec (Some([])) for an optional array the user emptied out", () => {
+    const value: SorobanInvokeValue = {
+      contract_id: CONTRACT_ID,
+      function_name: "set_items",
+      args: {
+        items: [],
+      },
+    };
+
+    const { xdr: builtXdr, error } = getTxnToSimulate(
+      value,
+      txnParams,
+      operation,
+      NETWORK_PASSPHRASE,
+      ["items"],
+      [],
+      { items: { type: "array", items: { type: "U32" } } as any },
+    );
+
+    expect(error).toBe("");
+
+    const invokeArgs = getInvokeArgs(builtXdr);
+
+    expect(invokeArgs).toHaveLength(1);
+    expect(invokeArgs[0].type).toBe("scvVec");
+    expect(scValToNative(invokeArgs[0])).toEqual([]);
+  });
+
   it("returns an error for an unfilled required argument", () => {
     const value: SorobanInvokeValue = {
       contract_id: CONTRACT_ID,
@@ -170,6 +225,11 @@ describe("isEmptyArgValue", () => {
     expect(isEmptyArgValue("")).toBe(true);
     expect(isEmptyArgValue({})).toBe(true);
     expect(isEmptyArgValue({ value: "", type: "address" })).toBe(true);
+  });
+
+  it("treats a union/enum selection returned to the blank option as empty", () => {
+    expect(isEmptyArgValue({ tag: "" })).toBe(true);
+    expect(isEmptyArgValue({ enum: "" })).toBe(true);
   });
 
   it("treats filled values as not empty", () => {
