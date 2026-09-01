@@ -274,6 +274,14 @@ export const getTxnToSimulate = (
         return xdr.ScVal.scvVoid();
       }
 
+      // [] carries no type info: an emptied Map arg and an emptied Vec arg
+      // look identical, so pick the container the schema declares
+      if (Array.isArray(argValue) && argValue.length === 0) {
+        return isMapSchema(argSchemas[name])
+          ? xdr.ScVal.scvMap([])
+          : xdr.ScVal.scvVec([]);
+      }
+
       return getScValFromArg(
         normalizeOptionalArgs(argValue, argSchemas[name]),
         [],
@@ -553,6 +561,7 @@ const getScValFromPrimitive = (v: any) => {
 export const getScValsFromArgs = (
   args: SorobanInvokeValue["args"],
   scVals: xdr.ScVal[] = [],
+  argSchemas: Record<string, JSONSchema7Definition> = {},
 ): xdr.ScVal[] => {
   // Primitive Case
   if (Object.values(args).every((v: any) => hasTypeAndValue(v))) {
@@ -595,11 +604,16 @@ export const getScValsFromArgs = (
 
     // Check if it's an array of map objects
     if (Array.isArray(argValue)) {
-      // An emptied Vec encodes as an empty ScVec; the every() checks below
-      // all return true on [] and would misroute it (e.g. reading
-      // argValue[0].type)
+      // The every() checks below all return true on [] and would misroute it
+      // (e.g. reading argValue[0].type). [] carries no type info — an emptied
+      // Map and an emptied Vec look identical — so pick the container the
+      // schema declares.
       if (argValue.length === 0) {
-        scVals.push(xdr.ScVal.scvVec([]));
+        scVals.push(
+          isMapSchema(argSchemas[argKey])
+            ? xdr.ScVal.scvMap([])
+            : xdr.ScVal.scvVec([]),
+        );
         continue;
       }
 
@@ -767,6 +781,33 @@ export const convertSpecTypeToScValType = (type: string) => {
 };
 
 export const hasTypeAndValue = (v: any) => v?.type && v.value !== undefined;
+
+/**
+ * Detects the JSON schema shape the SDK emits for Map<K, V>: an array whose
+ * items schema is a fixed two-element [key, value] tuple. Vec<T> has a single
+ * (non-array) items schema and a tuple has its items array at the top level,
+ * so neither matches. Vec<Tuple<A, B>> produces the same schema shape as
+ * Map<A, B> and cannot be told apart here.
+ */
+export const isMapSchema = (
+  schema: JSONSchema7Definition | undefined,
+): boolean => {
+  if (!schema || typeof schema === "boolean") {
+    return false;
+  }
+
+  const { items } = schema;
+
+  return (
+    schema.type === "array" &&
+    !!items &&
+    !Array.isArray(items) &&
+    typeof items === "object" &&
+    items.type === "array" &&
+    Array.isArray(items.items) &&
+    items.items.length === 2
+  );
+};
 
 /**
  * Checks whether a user-entered argument value is empty (never touched or

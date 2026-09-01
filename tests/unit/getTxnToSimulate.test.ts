@@ -4,6 +4,7 @@ import { scValToNative, xdr } from "@stellar/stellar-sdk";
 import {
   getTxnToSimulate,
   isEmptyArgValue,
+  isMapSchema,
   normalizeOptionalArgs,
 } from "../../src/helpers/sorobanUtils";
 
@@ -194,6 +195,45 @@ describe("getTxnToSimulate with Option<T> arguments", () => {
     expect(scValToNative(invokeArgs[0])).toEqual([]);
   });
 
+  it("passes an empty Map for a Map argument the user emptied out", () => {
+    const value: SorobanInvokeValue = {
+      contract_id: CONTRACT_ID,
+      function_name: "set_flags",
+      args: {
+        flags: [],
+      },
+    };
+
+    const { xdr: builtXdr, error } = getTxnToSimulate(
+      value,
+      txnParams,
+      operation,
+      NETWORK_PASSPHRASE,
+      ["flags"],
+      [],
+      {
+        // Map<ScString, Bool>
+        flags: {
+          type: "array",
+          items: {
+            type: "array",
+            items: [{ type: "ScString" }, { type: "Bool" }],
+            minItems: 2,
+            maxItems: 2,
+          },
+        } as any,
+      },
+    );
+
+    expect(error).toBe("");
+
+    const invokeArgs = getInvokeArgs(builtXdr);
+
+    expect(invokeArgs).toHaveLength(1);
+    expect(invokeArgs[0].type).toBe("scvMap");
+    expect(scValToNative(invokeArgs[0])).toEqual({});
+  });
+
   it("returns an error for an unfilled required argument", () => {
     const value: SorobanInvokeValue = {
       contract_id: CONTRACT_ID,
@@ -239,6 +279,48 @@ describe("isEmptyArgValue", () => {
     expect(isEmptyArgValue({ enum: "1" })).toBe(false);
     expect(isEmptyArgValue([])).toBe(false);
     expect(isEmptyArgValue([{ value: "1", type: "u32" }])).toBe(false);
+  });
+});
+
+describe("isMapSchema", () => {
+  it("matches the Map<K, V> schema shape (array of [key, value] tuples)", () => {
+    expect(
+      isMapSchema({
+        type: "array",
+        items: {
+          type: "array",
+          items: [{ type: "ScString" } as any, { type: "Bool" } as any],
+          minItems: 2,
+          maxItems: 2,
+        },
+      }),
+    ).toBe(true);
+  });
+
+  it("does not match Vec<T> (single items schema)", () => {
+    expect(
+      isMapSchema({
+        type: "array",
+        items: { type: "U32" } as any,
+      }),
+    ).toBe(false);
+  });
+
+  it("does not match a tuple (items array at the top level)", () => {
+    expect(
+      isMapSchema({
+        type: "array",
+        items: [{ type: "ScString" } as any, { type: "U32" } as any],
+        minItems: 2,
+        maxItems: 2,
+      }),
+    ).toBe(false);
+  });
+
+  it("does not match missing or non-array schemas", () => {
+    expect(isMapSchema(undefined)).toBe(false);
+    expect(isMapSchema(true)).toBe(false);
+    expect(isMapSchema({ type: "object" })).toBe(false);
   });
 });
 

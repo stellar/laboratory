@@ -898,4 +898,48 @@ describe("convert js arguments to smart contract values using getScValsFromArgs"
 
     expect(expectedResult).toEqual(scValsResult);
   });
+
+  // [] carries no type info, so the schema decides the container type
+  it("resolves an empty array to an empty ScVec by default", () => {
+    const args = {
+      items: [],
+    };
+
+    const scValsResult = getScValsFromArgs(args, []);
+
+    expect(scValsResult).toEqual([xdr.ScVal.scvVec([])]);
+  });
+
+  it("resolves an empty array to an empty ScVec for a Vec schema", () => {
+    const args = {
+      items: [],
+    };
+
+    const scValsResult = getScValsFromArgs(args, [], {
+      items: { type: "array", items: { type: "U32" } as any },
+    });
+
+    expect(scValsResult).toEqual([xdr.ScVal.scvVec([])]);
+  });
+
+  it("resolves an empty array to an empty ScMap for a Map schema", () => {
+    const args = {
+      flags: [],
+    };
+
+    const scValsResult = getScValsFromArgs(args, [], {
+      // Map<ScString, Bool>
+      flags: {
+        type: "array",
+        items: {
+          type: "array",
+          items: [{ type: "ScString" } as any, { type: "Bool" } as any],
+          minItems: 2,
+          maxItems: 2,
+        },
+      },
+    });
+
+    expect(scValsResult).toEqual([xdr.ScVal.scvMap([])]);
+  });
 });
