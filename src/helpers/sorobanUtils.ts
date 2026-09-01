@@ -874,11 +874,7 @@ export const normalizeOptionalArgs = (
     !schema.properties ||
     argValue === null ||
     typeof argValue !== "object" ||
-    Array.isArray(argValue) ||
-    // Union selections ({ tag }/{ enum }) and primitive leaves are not structs
-    argValue.tag ||
-    argValue.enum ||
-    hasTypeAndValue(argValue)
+    Array.isArray(argValue)
   ) {
     return argValue;
   }

@@ -496,13 +496,41 @@ describe("normalizeOptionalArgs", () => {
   });
 
   it("leaves union selections and primitive leaves untouched", () => {
+    // Union args dereference to { oneOf } with no properties; primitive args
+    // dereference to a bare type — neither is a struct schema
+    const unionSchema: any = {
+      oneOf: [{ type: "object", title: "Some", properties: { tag: {} } }],
+    };
+    const primitiveSchema: any = { type: "U32" };
     const unionValue = { tag: "Some" };
     const primitiveValue = { value: "7", type: "u32" };
 
-    expect(normalizeOptionalArgs(unionValue, configSchema)).toBe(unionValue);
-    expect(normalizeOptionalArgs(primitiveValue, configSchema)).toBe(
+    expect(normalizeOptionalArgs(unionValue, unionSchema)).toBe(unionValue);
+    expect(normalizeOptionalArgs(primitiveValue, primitiveSchema)).toBe(
       primitiveValue,
     );
+  });
+
+  it("normalizes a struct that has a field named tag", () => {
+    const taggedSchema: any = {
+      type: "object",
+      properties: {
+        tag: { type: "ScSymbol" },
+        fee_bps: { type: "U32" },
+      },
+      required: ["tag"],
+      additionalProperties: false,
+    };
+
+    const normalized = normalizeOptionalArgs(
+      { tag: { value: "release", type: "symbol" } },
+      taggedSchema,
+    );
+
+    expect(normalized).toEqual({
+      tag: { value: "release", type: "symbol" },
+      fee_bps: null,
+    });
   });
 
   it("passes values through when there is no schema", () => {
