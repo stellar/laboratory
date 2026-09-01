@@ -398,6 +398,7 @@ export const InvokeContractForm = ({
         network.passphrase,
         dereferencedSchema?.argOrder || [],
         dereferencedSchema?.required || [],
+        dereferencedSchema?.properties || {},
       );
 
       if (xdr) {

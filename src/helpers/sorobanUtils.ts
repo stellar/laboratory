@@ -13,6 +13,8 @@ import {
   nativeToScVal,
 } from "@stellar/stellar-sdk";
 
+import type { JSONSchema7Definition } from "json-schema";
+
 import { TransactionBuildParams } from "@/store/createStore";
 import { SorobanInvokeValue, SorobanOpType, TxnOperation } from "@/types/types";
 
@@ -256,6 +258,7 @@ export const getTxnToSimulate = (
   networkPassphrase: string,
   argOrder: string[],
   requiredArgs: string[] = [],
+  argSchemas: Record<string, JSONSchema7Definition> = {},
 ): { xdr: string; error: string } => {
   try {
     const scVals = argOrder.map((name) => {
@@ -271,7 +274,10 @@ export const getTxnToSimulate = (
         return xdr.ScVal.scvVoid();
       }
 
-      return getScValFromArg(argValue, []);
+      return getScValFromArg(
+        normalizeOptionalArgs(argValue, argSchemas[name]),
+        [],
+      );
     });
 
     const builtXdr = buildTxWithSorobanData({
@@ -330,6 +336,11 @@ const isMap = (arg: any) => {
 };
 
 const getScValFromArg = (arg: any, scVals: xdr.ScVal[]): xdr.ScVal => {
+  // An unset Option<T> (normalized to null) means None, encoded as ScVoid
+  if (arg === null || arg === undefined) {
+    return xdr.ScVal.scvVoid();
+  }
+
   if (arg && typeof arg === "object" && (arg.tag || arg.enum)) {
     return convertEnumToScVal(arg, scVals);
   }
@@ -427,6 +438,15 @@ const convertObjectToScVal = (obj: Record<string, any>): xdr.ScVal => {
 
   for (const key in obj) {
     const field = obj[key];
+
+    // An unset Option<T> field (normalized to null); nativeToScVal encodes
+    // a null value as ScVoid (None)
+    if (field === null) {
+      convertedValue[key] = null;
+      typeHints[key] = ["symbol"];
+      continue;
+    }
+
     const { value, typeHint } = convertPrimitiveField(field);
     convertedValue[key] = value;
     typeHints[key] = typeHint;
@@ -650,7 +670,7 @@ export const getScValsFromArgs = (
           const field = argValue[key];
 
           // Handle primitive fields using convertObjectToScVal logic
-          if (field.type && field.value !== undefined) {
+          if (hasTypeAndValue(field)) {
             const { value, typeHint } = convertPrimitiveField(field);
             convertedValue[key] = value;
             typeHints[key] = typeHint;
@@ -764,6 +784,60 @@ export const isEmptyArgValue = (value: any): boolean => {
   }
 
   return false;
+};
+
+/**
+ * Recursively fills unset Option<T> fields inside struct values with `null`
+ * so the serializer encodes them as ScVoid (None). The form value only holds
+ * the keys the user filled in; the schema knows the struct's full field list
+ * and which fields are required (non-Option). Walks object (struct)
+ * properties and array items; union (oneOf) payloads are left untouched —
+ * options nested inside union variants are not supported yet.
+ */
+export const normalizeOptionalArgs = (
+  argValue: any,
+  schema: JSONSchema7Definition | undefined,
+): any => {
+  if (!schema || typeof schema === "boolean") {
+    return argValue;
+  }
+
+  // Vec<T>: normalize each item (e.g. Vec<Struct> with optional fields).
+  // Tuple items (schema.items as an array) are left as is.
+  if (Array.isArray(argValue) && schema.items) {
+    const itemSchema = Array.isArray(schema.items) ? undefined : schema.items;
+    return argValue.map((item) => normalizeOptionalArgs(item, itemSchema));
+  }
+
+  if (
+    !schema.properties ||
+    argValue === null ||
+    typeof argValue !== "object" ||
+    Array.isArray(argValue) ||
+    // Union selections ({ tag }/{ enum }) and primitive leaves are not structs
+    argValue.tag ||
+    argValue.enum ||
+    hasTypeAndValue(argValue)
+  ) {
+    return argValue;
+  }
+
+  const required = schema.required ?? [];
+  const normalized: Record<string, any> = { ...argValue };
+
+  Object.entries(schema.properties).forEach(([key, propSchema]) => {
+    if (!propSchema || typeof propSchema === "boolean") {
+      return;
+    }
+
+    if (!required.includes(key) && isEmptyArgValue(argValue[key])) {
+      normalized[key] = null;
+    } else if (argValue[key] !== undefined) {
+      normalized[key] = normalizeOptionalArgs(argValue[key], propSchema);
+    }
+  });
+
+  return normalized;
 };
 
 /**

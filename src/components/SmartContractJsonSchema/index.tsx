@@ -93,6 +93,7 @@ export const JsonSchemaForm = ({
         network.passphrase,
         dereferencedSchema.argOrder,
         requiredFields,
+        dereferencedSchema.properties,
       );
 
       if (xdr && !error) {

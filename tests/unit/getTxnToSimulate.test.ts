@@ -1,9 +1,10 @@
 // Jest globals (describe, expect, it) are available globally
-import { xdr } from "@stellar/stellar-sdk";
+import { scValToNative, xdr } from "@stellar/stellar-sdk";
 
 import {
   getTxnToSimulate,
   isEmptyArgValue,
+  normalizeOptionalArgs,
 } from "../../src/helpers/sorobanUtils";
 
 import type { TransactionBuildParams } from "../../src/store/createStore";
@@ -49,6 +50,13 @@ const getInvokeArgs = (builtXdr: string): xdr.ScVal[] => {
 };
 
 describe("getTxnToSimulate with Option<T> arguments", () => {
+  // add_reward(to_add: Address, to_remove: Option<Address>), matching the
+  // dereferenced schema properties the invoke form always passes along
+  const addRewardArgSchemas: any = {
+    to_add: { type: "Address" },
+    to_remove: { type: "Address" },
+  };
+
   it("passes ScVoid (None) for an unfilled optional argument", () => {
     const value: SorobanInvokeValue = {
       contract_id: CONTRACT_ID,
@@ -65,6 +73,7 @@ describe("getTxnToSimulate with Option<T> arguments", () => {
       NETWORK_PASSPHRASE,
       ["to_add", "to_remove"],
       ["to_add"],
+      addRewardArgSchemas,
     );
 
     expect(error).toBe("");
@@ -93,6 +102,7 @@ describe("getTxnToSimulate with Option<T> arguments", () => {
       NETWORK_PASSPHRASE,
       ["to_add", "to_remove"],
       ["to_add"],
+      addRewardArgSchemas,
     );
 
     expect(error).toBe("");
@@ -117,6 +127,7 @@ describe("getTxnToSimulate with Option<T> arguments", () => {
       NETWORK_PASSPHRASE,
       ["to_add", "to_remove"],
       [],
+      addRewardArgSchemas,
     );
 
     expect(error).toBe("");
@@ -144,6 +155,7 @@ describe("getTxnToSimulate with Option<T> arguments", () => {
       NETWORK_PASSPHRASE,
       ["to_add", "to_remove"],
       ["to_add"],
+      addRewardArgSchemas,
     );
 
     expect(builtXdr).toBe("");
@@ -167,5 +179,193 @@ describe("isEmptyArgValue", () => {
     expect(isEmptyArgValue({ enum: "1" })).toBe(false);
     expect(isEmptyArgValue([])).toBe(false);
     expect(isEmptyArgValue([{ value: "1", type: "u32" }])).toBe(false);
+  });
+});
+
+// Dereferenced schema for a struct with a nested optional field:
+// struct Config { admin: Address, fee_bps: Option<u32> }
+const configSchema: any = {
+  type: "object",
+  description: "Contract configuration",
+  properties: {
+    admin: { type: "Address" },
+    fee_bps: { type: "U32" },
+  },
+  required: ["admin"],
+  additionalProperties: false,
+};
+
+describe("getTxnToSimulate with nested Option<T> struct fields", () => {
+  // set_config(config: Config, note: Option<Symbol>)
+  const argSchemas = {
+    config: configSchema,
+    note: { type: "ScSymbol" } as any,
+  };
+  const argOrder = ["config", "note"];
+  const requiredArgs = ["config"];
+
+  const buildAndGetArgs = (args: SorobanInvokeValue["args"]) => {
+    const value: SorobanInvokeValue = {
+      contract_id: CONTRACT_ID,
+      function_name: "set_config",
+      args,
+    };
+
+    return getTxnToSimulate(
+      value,
+      txnParams,
+      operation,
+      NETWORK_PASSPHRASE,
+      argOrder,
+      requiredArgs,
+      argSchemas,
+    );
+  };
+
+  it("encodes an unfilled nested optional struct field as ScVoid", () => {
+    const { xdr: builtXdr, error } = buildAndGetArgs({
+      config: { admin: { value: SOURCE_ACCOUNT, type: "address" } },
+    });
+
+    expect(error).toBe("");
+
+    const invokeArgs = getInvokeArgs(builtXdr);
+
+    expect(invokeArgs).toHaveLength(2);
+    expect(scValToNative(invokeArgs[0])).toEqual({
+      admin: SOURCE_ACCOUNT,
+      fee_bps: null,
+    });
+    expect(invokeArgs[1].type).toBe("scvVoid");
+  });
+
+  it("encodes a cleared nested optional struct field as ScVoid", () => {
+    const { xdr: builtXdr, error } = buildAndGetArgs({
+      config: {
+        admin: { value: SOURCE_ACCOUNT, type: "address" },
+        fee_bps: { value: "", type: "u32" },
+      },
+    });
+
+    expect(error).toBe("");
+
+    const invokeArgs = getInvokeArgs(builtXdr);
+
+    expect(scValToNative(invokeArgs[0])).toEqual({
+      admin: SOURCE_ACCOUNT,
+      fee_bps: null,
+    });
+  });
+
+  it("keeps a filled nested optional struct field", () => {
+    const { xdr: builtXdr, error } = buildAndGetArgs({
+      config: {
+        admin: { value: SOURCE_ACCOUNT, type: "address" },
+        fee_bps: { value: "25", type: "u32" },
+      },
+      note: { value: "hello", type: "symbol" },
+    });
+
+    expect(error).toBe("");
+
+    const invokeArgs = getInvokeArgs(builtXdr);
+
+    expect(scValToNative(invokeArgs[0])).toEqual({
+      admin: SOURCE_ACCOUNT,
+      fee_bps: 25,
+    });
+    expect(scValToNative(invokeArgs[1])).toBe("hello");
+  });
+});
+
+describe("normalizeOptionalArgs", () => {
+  it("fills an unset optional struct field with null", () => {
+    const normalized = normalizeOptionalArgs(
+      { admin: { value: SOURCE_ACCOUNT, type: "address" } },
+      configSchema,
+    );
+
+    expect(normalized).toEqual({
+      admin: { value: SOURCE_ACCOUNT, type: "address" },
+      fee_bps: null,
+    });
+  });
+
+  it("fills a cleared optional struct field with null", () => {
+    const normalized = normalizeOptionalArgs(
+      {
+        admin: { value: SOURCE_ACCOUNT, type: "address" },
+        fee_bps: { value: "", type: "u32" },
+      },
+      configSchema,
+    );
+
+    expect(normalized.fee_bps).toBeNull();
+  });
+
+  it("does not fill missing required fields", () => {
+    const normalized = normalizeOptionalArgs({}, configSchema);
+
+    expect(normalized).toEqual({ fee_bps: null });
+  });
+
+  it("recurses into nested structs", () => {
+    const nestedSchema: any = {
+      type: "object",
+      properties: {
+        inner: configSchema,
+      },
+      required: ["inner"],
+    };
+
+    const normalized = normalizeOptionalArgs(
+      { inner: { admin: { value: SOURCE_ACCOUNT, type: "address" } } },
+      nestedSchema,
+    );
+
+    // configSchema's optional field (fee_bps) is normalized one level down
+    expect(normalized).toEqual({
+      inner: {
+        admin: { value: SOURCE_ACCOUNT, type: "address" },
+        fee_bps: null,
+      },
+    });
+  });
+
+  it("normalizes each item of a Vec of structs", () => {
+    const vecSchema: any = {
+      type: "array",
+      items: configSchema,
+    };
+
+    const normalized = normalizeOptionalArgs(
+      [
+        { admin: { value: SOURCE_ACCOUNT, type: "address" } },
+        {
+          admin: { value: SOURCE_ACCOUNT, type: "address" },
+          fee_bps: { value: "5", type: "u32" },
+        },
+      ],
+      vecSchema,
+    );
+
+    expect(normalized[0].fee_bps).toBeNull();
+    expect(normalized[1].fee_bps).toEqual({ value: "5", type: "u32" });
+  });
+
+  it("leaves union selections and primitive leaves untouched", () => {
+    const unionValue = { tag: "Some" };
+    const primitiveValue = { value: "7", type: "u32" };
+
+    expect(normalizeOptionalArgs(unionValue, configSchema)).toBe(unionValue);
+    expect(normalizeOptionalArgs(primitiveValue, configSchema)).toBe(
+      primitiveValue,
+    );
+  });
+
+  it("passes values through when there is no schema", () => {
+    const value = { admin: { value: SOURCE_ACCOUNT, type: "address" } };
+
+    expect(normalizeOptionalArgs(value, undefined)).toBe(value);
   });
 });
