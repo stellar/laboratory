@@ -13,6 +13,8 @@ import {
   nativeToScVal,
 } from "@stellar/stellar-sdk";
 
+import type { JSONSchema7Definition } from "json-schema";
+
 import { TransactionBuildParams } from "@/store/createStore";
 import { SorobanInvokeValue, SorobanOpType, TxnOperation } from "@/types/types";
 
@@ -255,10 +257,36 @@ export const getTxnToSimulate = (
   operation: TxnOperation,
   networkPassphrase: string,
   argOrder: string[],
+  requiredArgs: string[] = [],
+  argSchemas: Record<string, JSONSchema7Definition> = {},
 ): { xdr: string; error: string } => {
   try {
-    const orderedValues = argOrder.map((name) => value.args[name]);
-    const scVals = orderedValues.map((v) => getScValFromArg(v, []));
+    const scVals = argOrder.map((name) => {
+      const argValue = value.args[name];
+
+      // Args not listed in the schema's required list are Option<T>; an
+      // unfilled value means None, which is represented as ScVoid.
+      if (isEmptyArgValue(argValue)) {
+        if (requiredArgs.includes(name)) {
+          throw new Error(`Missing required argument: ${name}`);
+        }
+
+        return xdr.ScVal.scvVoid();
+      }
+
+      // [] carries no type info: an emptied Map arg and an emptied Vec arg
+      // look identical, so pick the container the schema declares
+      if (Array.isArray(argValue) && argValue.length === 0) {
+        return isMapSchema(argSchemas[name])
+          ? xdr.ScVal.scvMap([])
+          : xdr.ScVal.scvVec([]);
+      }
+
+      return getScValFromArg(
+        normalizeOptionalArgs(argValue, argSchemas[name]),
+        [],
+      );
+    });
 
     const builtXdr = buildTxWithSorobanData({
       params: txnParams,
@@ -285,6 +313,9 @@ const isMap = (arg: any) => {
   try {
     return (
       Array.isArray(arg) &&
+      // every() always returns true on [], but an emptied array must encode
+      // as an empty Vec, never as a map
+      arg.length > 0 &&
       arg.every((obj: any) => {
         // Check if object has exactly two keys: "0" and "1"
         const keys = Object.keys(obj);
@@ -316,6 +347,11 @@ const isMap = (arg: any) => {
 };
 
 const getScValFromArg = (arg: any, scVals: xdr.ScVal[]): xdr.ScVal => {
+  // An unset Option<T> (normalized to null) means None, encoded as ScVoid
+  if (arg === null || arg === undefined) {
+    return xdr.ScVal.scvVoid();
+  }
+
   if (arg && typeof arg === "object" && (arg.tag || arg.enum)) {
     return convertEnumToScVal(arg, scVals);
   }
@@ -325,7 +361,8 @@ const getScValFromArg = (arg: any, scVals: xdr.ScVal[]): xdr.ScVal => {
     return nativeToScVal(mapVal, { type: mapType });
   }
 
-  if (Array.isArray(arg) && arg.length > 0) {
+  // [] encodes as an empty Vec (Some([]) for an Option<Vec<T>>)
+  if (Array.isArray(arg)) {
     const arrayScVals = arg.map((subArray) =>
       getScValFromArg(subArray, scVals),
     );
@@ -413,6 +450,15 @@ const convertObjectToScVal = (obj: Record<string, any>): xdr.ScVal => {
 
   for (const key in obj) {
     const field = obj[key];
+
+    // An unset Option<T> field (normalized to null); nativeToScVal encodes
+    // a null value as ScVoid (None)
+    if (field === null) {
+      convertedValue[key] = null;
+      typeHints[key] = ["symbol"];
+      continue;
+    }
+
     const { value, typeHint } = convertPrimitiveField(field);
     convertedValue[key] = value;
     typeHints[key] = typeHint;
@@ -515,6 +561,7 @@ const getScValFromPrimitive = (v: any) => {
 export const getScValsFromArgs = (
   args: SorobanInvokeValue["args"],
   scVals: xdr.ScVal[] = [],
+  argSchemas: Record<string, JSONSchema7Definition> = {},
 ): xdr.ScVal[] => {
   // Primitive Case
   if (Object.values(args).every((v: any) => hasTypeAndValue(v))) {
@@ -557,6 +604,19 @@ export const getScValsFromArgs = (
 
     // Check if it's an array of map objects
     if (Array.isArray(argValue)) {
+      // The every() checks below all return true on [] and would misroute it
+      // (e.g. reading argValue[0].type). [] carries no type info — an emptied
+      // Map and an emptied Vec look identical — so pick the container the
+      // schema declares.
+      if (argValue.length === 0) {
+        scVals.push(
+          isMapSchema(argSchemas[argKey])
+            ? xdr.ScVal.scvMap([])
+            : xdr.ScVal.scvVec([]),
+        );
+        continue;
+      }
+
       // Map Case
       if (isMap(argValue)) {
         const { mapVal, mapType } = convertObjectToMap(argValue);
@@ -636,7 +696,7 @@ export const getScValsFromArgs = (
           const field = argValue[key];
 
           // Handle primitive fields using convertObjectToScVal logic
-          if (field.type && field.value !== undefined) {
+          if (hasTypeAndValue(field)) {
             const { value, typeHint } = convertPrimitiveField(field);
             convertedValue[key] = value;
             typeHints[key] = typeHint;
@@ -721,6 +781,121 @@ export const convertSpecTypeToScValType = (type: string) => {
 };
 
 export const hasTypeAndValue = (v: any) => v?.type && v.value !== undefined;
+
+/**
+ * Detects the JSON schema shape the SDK emits for Map<K, V>: an array whose
+ * items schema is a fixed two-element [key, value] tuple. Vec<T> has a single
+ * (non-array) items schema and a tuple has its items array at the top level,
+ * so neither matches. Vec<Tuple<A, B>> produces the same schema shape as
+ * Map<A, B> and cannot be told apart here.
+ */
+export const isMapSchema = (
+  schema: JSONSchema7Definition | undefined,
+): boolean => {
+  if (!schema || typeof schema === "boolean") {
+    return false;
+  }
+
+  const { items } = schema;
+
+  return (
+    schema.type === "array" &&
+    !!items &&
+    !Array.isArray(items) &&
+    typeof items === "object" &&
+    items.type === "array" &&
+    Array.isArray(items.items) &&
+    items.items.length === 2
+  );
+};
+
+/**
+ * Checks whether a user-entered argument value is empty (never touched or
+ * cleared out). Used to detect unfilled Option<T> args that should be passed
+ * to the contract as ScVoid (None).
+ */
+export const isEmptyArgValue = (value: any): boolean => {
+  if (value === undefined || value === null) {
+    return true;
+  }
+
+  if (typeof value === "string") {
+    return value === "";
+  }
+
+  if (Array.isArray(value)) {
+    return false;
+  }
+
+  if (typeof value === "object") {
+    if (Object.keys(value).length === 0) {
+      return true;
+    }
+
+    // Union/enum selection the user returned to the blank option
+    if ("tag" in value && value.tag === "") {
+      return true;
+    }
+    if ("enum" in value && value.enum === "") {
+      return true;
+    }
+
+    // Primitive input ({ value, type }) the user cleared out
+    return Boolean(hasTypeAndValue(value)) && value.value === "";
+  }
+
+  return false;
+};
+
+/**
+ * Recursively fills unset Option<T> fields inside struct values with `null`
+ * so the serializer encodes them as ScVoid (None). The form value only holds
+ * the keys the user filled in; the schema knows the struct's full field list
+ * and which fields are required (non-Option). Walks object (struct)
+ * properties and array items; union (oneOf) payloads are left untouched —
+ * options nested inside union variants are not supported yet.
+ */
+export const normalizeOptionalArgs = (
+  argValue: any,
+  schema: JSONSchema7Definition | undefined,
+): any => {
+  if (!schema || typeof schema === "boolean") {
+    return argValue;
+  }
+
+  // Vec<T>: normalize each item (e.g. Vec<Struct> with optional fields).
+  // Tuple items (schema.items as an array) are left as is.
+  if (Array.isArray(argValue) && schema.items) {
+    const itemSchema = Array.isArray(schema.items) ? undefined : schema.items;
+    return argValue.map((item) => normalizeOptionalArgs(item, itemSchema));
+  }
+
+  if (
+    !schema.properties ||
+    argValue === null ||
+    typeof argValue !== "object" ||
+    Array.isArray(argValue)
+  ) {
+    return argValue;
+  }
+
+  const required = schema.required ?? [];
+  const normalized: Record<string, any> = { ...argValue };
+
+  Object.entries(schema.properties).forEach(([key, propSchema]) => {
+    if (!propSchema || typeof propSchema === "boolean") {
+      return;
+    }
+
+    if (!required.includes(key) && isEmptyArgValue(argValue[key])) {
+      normalized[key] = null;
+    } else if (argValue[key] !== undefined) {
+      normalized[key] = normalizeOptionalArgs(argValue[key], propSchema);
+    }
+  });
+
+  return normalized;
+};
 
 /**
  * Determines if the simulation result indicates a read-only transaction

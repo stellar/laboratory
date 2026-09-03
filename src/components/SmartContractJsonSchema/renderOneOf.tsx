@@ -24,6 +24,7 @@ export const renderOneOf = ({
   onChange,
   formError,
   setFormError,
+  isOptional,
 }: {
   name: string;
   schema: JSONSchema7;
@@ -33,6 +34,7 @@ export const renderOneOf = ({
   onChange: (value: SorobanInvokeValue) => void;
   formError: AnyObject;
   setFormError: (error: AnyObject) => void;
+  isOptional?: boolean;
 }) => {
   if (!schema?.oneOf) {
     return null;
@@ -115,6 +117,7 @@ export const renderOneOf = ({
         id="json-schema-form-renderer-one-of"
         fieldSize="md"
         label={name}
+        labelSuffix={isOptional ? "optional" : undefined}
         onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
           const isEnumType = schema?.oneOf?.find(
             (oneOf) =>

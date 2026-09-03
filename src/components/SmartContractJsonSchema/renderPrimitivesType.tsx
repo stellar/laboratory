@@ -59,6 +59,7 @@ export const renderPrimitivesType = ({
   onChange,
   formError,
   setFormError,
+  isOptional,
 }: {
   name: string;
   schema: Partial<JSONSchema7>;
@@ -67,6 +68,7 @@ export const renderPrimitivesType = ({
   onChange: (value: SorobanInvokeValue) => void;
   formError: AnyObject;
   setFormError: (error: AnyObject) => void;
+  isOptional?: boolean;
 }) => {
   const { description } = schema;
 
@@ -99,6 +101,7 @@ export const renderPrimitivesType = ({
     id: path.join("."),
     value: get(parsedSorobanOperation.args, path.join("."))?.value || "",
     error: formError?.[formErrorKey] || undefined,
+    labelSuffix: isOptional ? "optional" : undefined,
   };
 
   const invokeContractBaseProps = {
@@ -345,7 +348,7 @@ export const renderPrimitivesType = ({
             handleChange(e, schemaType);
           }}
         >
-          <option key="bool-empty" value="" disabled={true}>
+          <option key="bool-empty" value="" disabled={!isOptional}>
             Select
           </option>
           <option key="bool-true" value="true">
