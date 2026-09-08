@@ -863,11 +863,12 @@ export const normalizeOptionalArgs = (
     return argValue;
   }
 
-  // Vec<T>: normalize each item (e.g. Vec<Struct> with optional fields).
-  // Tuple items (schema.items as an array) are left as is.
-  if (Array.isArray(argValue) && schema.items) {
-    const itemSchema = Array.isArray(schema.items) ? undefined : schema.items;
-    return argValue.map((item) => normalizeOptionalArgs(item, itemSchema));
+  // Normalize homogeneous arrays and fixed-length tuples against their item schemas.
+  const { items } = schema;
+  if (Array.isArray(argValue) && items) {
+    return argValue.map((item, index) =>
+      normalizeOptionalArgs(item, Array.isArray(items) ? items[index] : items),
+    );
   }
 
   if (
