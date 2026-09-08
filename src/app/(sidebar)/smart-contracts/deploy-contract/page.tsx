@@ -510,15 +510,18 @@ export default function DeployContract() {
       return [];
     }
 
-    const orderedArgValues = schema.required
-      .map((paramName: string) => {
-        return formArgs[paramName];
-      })
-      .filter(Boolean);
-
-    return orderedArgValues.map(
-      (arg) => getScValsFromArgs({ temp: arg }, [])[0],
-    );
+    return schema.required
+      .map((paramName: string) => ({
+        paramName,
+        arg: formArgs[paramName],
+      }))
+      .filter(({ arg }) => Boolean(arg))
+      .map(
+        ({ paramName, arg }) =>
+          getScValsFromArgs({ temp: arg }, [], {
+            temp: schema.properties?.[paramName],
+          })[0],
+      );
   };
 
   const renderContractIdExternalLink = () => {

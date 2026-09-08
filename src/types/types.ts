@@ -296,6 +296,7 @@ export type JsonSchemaFormProps = {
   onChange: (value: SorobanInvokeValue) => void;
   index?: number;
   requiredFields?: string[];
+  isOptional?: boolean;
   parsedSorobanOperation: SorobanInvokeValue;
   formError: AnyObject;
   setFormError: (error: AnyObject) => void;

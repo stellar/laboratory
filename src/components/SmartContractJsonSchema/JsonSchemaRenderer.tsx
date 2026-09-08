@@ -21,6 +21,7 @@ export const JsonSchemaRenderer = ({
   parsedSorobanOperation,
   formError,
   setFormError,
+  isOptional,
 }: JsonSchemaFormProps) => {
   const schemaType = jsonSchema.getSchemaType(schema);
 
@@ -40,11 +41,18 @@ export const JsonSchemaRenderer = ({
             )
               ? propertySchema
               : undefined;
+            // Optional (Option<T>) properties are excluded from the schema's
+            // required list
+            const isPropertyOptional = !(schema.required ?? []).includes(key);
 
             if (propertySchemaType === "object" && propertySchemaObject) {
               return (
                 <React.Fragment key={`${key}-${index}`}>
-                  <LabelHeading size="md" infoText={schema.description}>
+                  <LabelHeading
+                    size="md"
+                    infoText={schema.description}
+                    labelSuffix={isPropertyOptional ? "optional" : undefined}
+                  >
                     {key}
                   </LabelHeading>
 
@@ -81,6 +89,7 @@ export const JsonSchemaRenderer = ({
                 parsedSorobanOperation={parsedSorobanOperation}
                 formError={formError}
                 setFormError={setFormError}
+                isOptional={isPropertyOptional}
               />
             );
           },
@@ -98,6 +107,7 @@ export const JsonSchemaRenderer = ({
       renderer: JsonSchemaRenderer,
       formError,
       setFormError,
+      isOptional,
     });
   }
 
@@ -111,6 +121,7 @@ export const JsonSchemaRenderer = ({
       renderer: JsonSchemaRenderer,
       formError,
       setFormError,
+      isOptional,
     });
   }
 
@@ -123,5 +134,6 @@ export const JsonSchemaRenderer = ({
     onChange,
     formError,
     setFormError,
+    isOptional,
   });
 };

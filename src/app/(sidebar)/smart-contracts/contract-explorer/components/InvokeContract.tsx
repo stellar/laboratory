@@ -1,13 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Notification,
-  Card,
-  Loader,
-  RadioButton,
-  Text,
-} from "@stellar/design-system";
+import { Notification, Loader, RadioButton } from "@stellar/design-system";
 import { contract } from "@stellar/stellar-sdk";
 import { useStore } from "@/store/useStore";
 
@@ -106,16 +100,10 @@ export const InvokeContract = ({
         </Notification>
       ) : null}
 
-      <Card>
-        <Box gap="lg" data-testid="invoke-contract-container">
-          <Text as="h2" size="md" weight="semi-bold">
-            Invoke contract
-          </Text>
-
-          {contractSpec ? renderFunctionCard() : null}
-          {contractClientError ? renderError() : null}
-        </Box>
-      </Card>
+      <Box gap="lg" data-testid="invoke-contract-container">
+        {contractSpec ? renderFunctionCard() : null}
+        {contractClientError ? renderError() : null}
+      </Box>
     </Box>
   );
 };

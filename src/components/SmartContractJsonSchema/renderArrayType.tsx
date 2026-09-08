@@ -22,6 +22,7 @@ export const renderArrayType = ({
   onChange,
   formError,
   setFormError,
+  isOptional,
 }: {
   schema: JSONSchema7;
   path: string[];
@@ -30,6 +31,7 @@ export const renderArrayType = ({
   onChange: (value: SorobanInvokeValue) => void;
   formError: AnyObject;
   setFormError: (error: AnyObject) => void;
+  isOptional?: boolean;
 }) => {
   const name = path.join(".");
   const invokeContractBaseProps = {
@@ -64,7 +66,11 @@ export const renderArrayType = ({
 
   return (
     <Box gap="md" key={`${name}`}>
-      <LabelHeading size="md" infoText={schema.description}>
+      <LabelHeading
+        size="md"
+        infoText={schema.description}
+        labelSuffix={isOptional ? "optional" : undefined}
+      >
         {name}
       </LabelHeading>
 
