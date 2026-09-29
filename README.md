@@ -42,27 +42,9 @@ pnpm dev
 
 ### Network Limits
 
-The Lab automatically fetches Stellar network limits (Mainnet, Testnet, and
-Futurenet) before every `dev` run.
-
-To configure RPC endpoints, edit the `NETWORKS` array in
-`scripts/fetch-network-limits.js`:
-
-```javascript
-const NETWORKS = [
-  { name: "mainnet", rpcUrl: "MAINNET_RPC_URL" },
-  { name: "testnet", rpcUrl: "TESTNET_RPC_URL" },
-  { name: "futurenet", rpcUrl: "FUTURENET_RPC_URL" },
-];
-```
-
-The script generates `src/constants/networkLimits.ts` with type-safe exports:
-
-```typescript
-import { MAINNET_LIMITS, NETWORK_LIMITS } from "@/constants/networkLimits";
-```
-
-To manually fetch limits: `pnpm fetch-limits`.
+Network limits and resource fees are fetched at runtime from the Lab backend
+(`/api/network_limits`) using the selected network's RPC URL. Only Mainnet and
+Testnet are supported. See `src/query/external/useBackendNetworkLimits.ts`.
 
 ### WalletConnect
 

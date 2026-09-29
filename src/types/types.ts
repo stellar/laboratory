@@ -482,6 +482,77 @@ export type BEContractStorageResponse = {
   results: ContractStorageResponseItem[];
 };
 
+/**
+ * Soroban network limits and resource fees from the backend
+ * `/api/network_limits` endpoint. `normalizeNetworkLimits()` converts the
+ * numeric string fields to numbers.
+ */
+export type NetworkLimits = {
+  // Per-transaction limits
+  tx_max_instructions: number;
+  tx_memory_limit: number;
+  tx_max_footprint_entries: number;
+  tx_max_disk_read_entries: number;
+  tx_max_write_ledger_entries: number;
+  tx_max_disk_read_bytes: number;
+  tx_max_write_bytes: number;
+  tx_max_contract_events_size_bytes: number;
+  contract_data_key_size_bytes: number;
+  // The backend does not return this field yet
+  contract_data_entry_size_bytes?: number;
+  contract_max_size_bytes: number;
+
+  // Ledger-wide limits
+  ledger_max_instructions: number;
+  ledger_max_disk_read_entries: number;
+  ledger_max_disk_read_bytes: number;
+  ledger_max_write_ledger_entries: number;
+  ledger_max_write_bytes: number;
+  ledger_max_txs_size_bytes: number;
+  ledger_max_dependent_tx_clusters: number;
+
+  // State archival TTL extension parameters
+  max_entry_ttl: number;
+  min_temporary_ttl: number;
+  min_persistent_ttl: number;
+
+  // Resource fees (in stroops)
+  fee_rate_per_instructions_increment: number;
+  fee_disk_read_ledger_entry: string;
+  fee_write_ledger_entry: string;
+  fee_disk_read_1kb: string;
+  fee_write_1kb: string;
+  fee_tx_size_1kb: string;
+  fee_historical_1kb: string;
+  fee_contract_events_1kb: string;
+  persistent_rent_rate_denominator: string;
+  temp_rent_rate_denominator: string;
+  live_soroban_state_size_window: string[];
+
+  // Rent-related config parameters for computing fee_per_rent_1kb
+  state_target_size_bytes: string;
+  rent_fee_1kb_state_size_low: string;
+  rent_fee_1kb_state_size_high: string;
+  state_size_rent_fee_growth_factor: number;
+
+  network_passphrase: string;
+};
+
+/**
+ * Raw response from the backend `/api/network_limits` endpoint.
+ * The backend sends some 64-bit values as strings.
+ */
+export type BENetworkLimitsResponse = Omit<
+  NetworkLimits,
+  | "tx_max_instructions"
+  | "ledger_max_instructions"
+  | "fee_rate_per_instructions_increment"
+> & {
+  tx_max_instructions: string | number;
+  ledger_max_instructions: string | number;
+  fee_rate_per_instructions_increment: string | number;
+};
+
 export type ContractStorageResponseItem = {
   durability: ContractStorageDurability;
   key: string;
