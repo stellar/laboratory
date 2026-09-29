@@ -2,9 +2,20 @@ import { baseURL } from "../../playwright.config";
 import { expect, Page, test } from "@playwright/test";
 import { TX_EVENTS_MOCK_SOROSWAP } from "./mock/txEvents";
 import { mockRpcRequest } from "./mock/helpers";
+import { MOCK_NETWORK_LIMITS_MAINNET } from "./mock/networkLimits";
 
 test.describe("Transaction Dashboard: Resource Profiler", () => {
   test.beforeEach(async ({ page }) => {
+    // The profiler fetches network limits from the backend. The test checks
+    // only that the limit rows show, so the Mainnet snapshot is sufficient.
+    await page.route("**/api/network_limits**", async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(MOCK_NETWORK_LIMITS_MAINNET),
+      });
+    });
+
     // Load page
     await page.goto(`${baseURL}/transaction/dashboard`);
   });
@@ -172,8 +183,7 @@ const checkItemGroup = async ({
       const item = itemRows[ir][ic];
 
       if ("hasLimit" in item) {
-        // For limits, we want to check only the rendered elements, not their values,
-        // because we fetch them dynamically via a pre-build script.
+        // For limits, check only that the elements show, not their values.
         await expect(itemRow.nth(ic).locator("> div").nth(0)).toBeVisible();
         await expect(itemRow.nth(ic).locator("> div").nth(1)).toBeVisible();
       } else {
