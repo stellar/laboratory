@@ -1,7 +1,7 @@
 import { getTxResourceBreakdown } from "../../src/helpers/getTxResourceBreakdown";
 import { normalizeNetworkLimits } from "../../src/query/external/useBackendNetworkLimits";
 import { TX_RESPONSE_SOROBAN } from "./mock/txResponse";
-import { MOCK_NETWORK_LIMITS_MAINNET } from "../e2e/mock/networkLimits";
+import { MOCK_NETWORK_LIMITS_MAINNET } from "../mock/networkLimits";
 
 const LIMITS = normalizeNetworkLimits(MOCK_NETWORK_LIMITS_MAINNET);
 

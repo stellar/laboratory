@@ -2,7 +2,7 @@ import { baseURL } from "../../playwright.config";
 import { expect, Page, test } from "@playwright/test";
 import { TX_EVENTS_MOCK_SOROSWAP } from "./mock/txEvents";
 import { mockRpcRequest } from "./mock/helpers";
-import { MOCK_NETWORK_LIMITS_MAINNET } from "./mock/networkLimits";
+import { MOCK_NETWORK_LIMITS_MAINNET } from "../mock/networkLimits";
 
 test.describe("Transaction Dashboard: Resource Profiler", () => {
   test.beforeEach(async ({ page }) => {

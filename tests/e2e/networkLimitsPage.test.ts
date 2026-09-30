@@ -11,7 +11,7 @@ import { formatNumber } from "@/helpers/formatNumber";
 
 import { normalizeNetworkLimits } from "@/query/external/useBackendNetworkLimits";
 
-import { MOCK_NETWORK_LIMITS_MAINNET } from "./mock/networkLimits";
+import { MOCK_NETWORK_LIMITS_MAINNET } from "../mock/networkLimits";
 
 const BACKEND_DEV_URL = "https://laboratory-backend-dev.stellar.org";
 const NETWORK_LIMITS_URL = `${BACKEND_DEV_URL}/*/api/network_limits**`;
