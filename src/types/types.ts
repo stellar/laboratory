@@ -496,6 +496,7 @@ export type NetworkLimits = {
   tx_max_write_ledger_entries: number;
   tx_max_disk_read_bytes: number;
   tx_max_write_bytes: number;
+  tx_max_size_bytes: number;
   tx_max_contract_events_size_bytes: number;
   contract_data_key_size_bytes: number;
   // The backend does not return this field yet

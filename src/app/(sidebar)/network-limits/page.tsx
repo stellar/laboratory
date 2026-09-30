@@ -61,7 +61,7 @@ export default function NetworkLimits() {
   });
 
   const renderContent = () => {
-    if (!network.rpcUrl) {
+    if (!network.rpcUrl && network.id === "mainnet") {
       return (
         <Notification variant="warning" title="Attention">
           RPC URL is required to view network limits. You can add it in the
