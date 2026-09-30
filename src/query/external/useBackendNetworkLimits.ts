@@ -38,10 +38,10 @@ export const useBackendNetworkLimits = ({
     queryKey: ["useBackendNetworkLimits", networkId, rpcUrl],
     queryFn: async () => {
       const backendNetwork = networkId === "mainnet" ? "pubnet" : networkId;
-      const params = new URLSearchParams({
-        network: networkId,
-        rpc_url: rpcUrl,
-      });
+      const params = new URLSearchParams({ network: networkId });
+      if (rpcUrl) {
+        params.set("rpc_url", rpcUrl);
+      }
 
       const response = await fetch(
         `${BACKEND_ENDPOINT}/${backendNetwork}/api/network_limits?${params}`,
@@ -55,7 +55,10 @@ export const useBackendNetworkLimits = ({
 
       return { limits: normalizeNetworkLimits(json), json };
     },
-    enabled: Boolean(isNetworkLimitsSupported(networkId) && rpcUrl),
+    enabled: Boolean(
+      isNetworkLimitsSupported(networkId) &&
+        (networkId === "testnet" || rpcUrl),
+    ),
     staleTime: 1000 * 60 * 5,
   });
 };
