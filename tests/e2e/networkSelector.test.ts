@@ -1,7 +1,6 @@
 import { baseURL } from "../../playwright.config";
 import { test, expect } from "@playwright/test";
 
-
 test.describe("Network selector", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto(`${baseURL}/`);
@@ -177,6 +176,56 @@ test.describe("Network selector", () => {
     );
     await expect(page.getByTestId("networkSelector-button")).toHaveText(
       "Futurenet",
+    );
+  });
+
+  test("Ignores spoofed Mainnet label from search params when it matches saved network", async ({
+    page,
+  }) => {
+    await page.evaluate(() => {
+      localStorage.setItem(
+        "stellar_lab_network",
+        JSON.stringify({
+          id: "mainnet",
+          label: "Mainnet",
+          horizonUrl: "https://horizon.stellar.org",
+          passphrase: "Public Global Stellar Network ; September 2015",
+        }),
+      );
+    });
+
+    await page.goto(
+      `${baseURL}/transaction/build?$=network$id=mainnet&label=Testnet&horizonUrl=https:////horizon.stellar.org&passphrase=Public%20Global%20Stellar%20Network%20/;%20September%202015;;`,
+    );
+
+    await expect(page.getByTestId("networkSelector-button")).toHaveText(
+      "Mainnet",
+    );
+    await expect(page).toHaveURL(/label=Mainnet/);
+  });
+
+  test("Ignores spoofed Custom label from search params when it matches saved network", async ({
+    page,
+  }) => {
+    await page.evaluate(() => {
+      localStorage.setItem(
+        "stellar_lab_network",
+        JSON.stringify({
+          id: "custom",
+          label: "Custom",
+          horizonUrl: "https://custom-horizon.net",
+          rpcUrl: "https://custom-rpc.net",
+          passphrase: "Custom Passphrase",
+        }),
+      );
+    });
+
+    await page.goto(
+      `${baseURL}/?$=network$id=custom&label=Mainnet&horizonUrl=https:////custom-horizon.net&rpcUrl=https:////custom-rpc.net&passphrase=Custom%20Passphrase;;`,
+    );
+
+    await expect(page.getByTestId("networkSelector-button")).toHaveText(
+      "Custom",
     );
   });
 });
