@@ -8,7 +8,8 @@ export const MOCK_NETWORK_LIMITS_MAINNET: BENetworkLimitsResponse = {
   tx_max_disk_read_entries: 200,
   tx_max_write_ledger_entries: 200,
   tx_max_disk_read_bytes: 200000,
-  tx_max_write_bytes: 132096,
+  tx_max_size_bytes: 132096,
+  tx_max_write_bytes: 132096
   tx_max_contract_events_size_bytes: 16384,
   contract_data_key_size_bytes: 250,
   contract_max_size_bytes: 131072,
