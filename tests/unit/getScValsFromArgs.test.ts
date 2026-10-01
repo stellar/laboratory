@@ -596,6 +596,38 @@ describe("convert js arguments to smart contract values using getScValsFromArgs"
     expect(expectedResult).toEqual(scValsResult);
   });
 
+  it("resolves a struct with a bytes field", () => {
+    const args = {
+      s: {
+        data: {
+          value: "deadbeef",
+          type: "bytes",
+        },
+        n: {
+          value: "7",
+          type: "u32",
+        },
+      },
+    };
+
+    const scVals: xdr.ScVal[] = [];
+    const scValsResult = getScValsFromArgs(args, scVals);
+    const expectedResult: xdr.ScVal[] = [
+      xdr.ScVal.scvMap([
+        new xdr.ScMapEntry({
+          key: xdr.ScVal.scvSymbol("data"),
+          val: xdr.ScVal.scvBytes(Buffer.from("deadbeef", "hex")),
+        }),
+        new xdr.ScMapEntry({
+          key: xdr.ScVal.scvSymbol("n"),
+          val: xdr.ScVal.scvU32(7),
+        }),
+      ]),
+    ];
+
+    expect(expectedResult).toEqual(scValsResult);
+  });
+
   // Complex Enum with Struct
   it("resolves a complex enum with a struct", () => {
     const args = {
