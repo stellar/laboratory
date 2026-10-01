@@ -9,11 +9,28 @@ import { formatLargeNumber } from "@/helpers/formatLargeNumber";
 import { formatFileSize } from "@/helpers/formatFileSize";
 import { formatNumber } from "@/helpers/formatNumber";
 
-import { MAINNET_LIMITS } from "@/constants/networkLimits";
+import { normalizeNetworkLimits } from "@/query/external/useBackendNetworkLimits";
+
+import { MOCK_NETWORK_LIMITS_MAINNET } from "../mock/networkLimits";
+
+const BACKEND_DEV_URL = "https://laboratory-backend-dev.stellar.org";
+const NETWORK_LIMITS_URL = `${BACKEND_DEV_URL}/*/api/network_limits**`;
+// Mainnet has no default RPC URL. The backend requires an RPC URL.
+const MAINNET_WITH_RPC_ROUTE = `${baseURL}/network-limits?$=network$id=mainnet&label=Mainnet&horizonUrl=https:////horizon.stellar.org&rpcUrl=https:////mainnet.sorobanrpc.com&passphrase=Public%20Global%20Stellar%20Network%20/;%20September%202015;;`;
+const MAINNET_LIMITS = normalizeNetworkLimits(MOCK_NETWORK_LIMITS_MAINNET);
 
 test.describe("Network Limits page on Mainnet", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto(`${baseURL}/network-limits?$=network$id=mainnet`);
+    await page.route(NETWORK_LIMITS_URL, async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(MOCK_NETWORK_LIMITS_MAINNET),
+      });
+    });
+
+    await page.goto(MAINNET_WITH_RPC_ROUTE);
+    await dismissNetworkSettingsModal(page);
   });
 
   test("Loads the page", async ({ page }) => {
@@ -73,7 +90,7 @@ test.describe("Network Limits page on Mainnet", () => {
 
     await expect(getTableRow(rows, 6)).toHaveText([
       "Transaction size",
-      `${formatFileSize(MAINNET_LIMITS.tx_max_write_bytes)}`,
+      `${formatFileSize(MAINNET_LIMITS.tx_max_size_bytes)}`,
       `${formatFileSize(MAINNET_LIMITS.ledger_max_txs_size_bytes)}`,
     ]);
 
@@ -95,9 +112,10 @@ test.describe("Network Limits page on Mainnet", () => {
       "",
     ]);
 
+    // The backend does not return contract_data_entry_size_bytes yet
     await expect(getTableRow(rows, 10)).toHaveText([
       "Individual ledger entry sizecontract data entry",
-      `${formatFileSize(MAINNET_LIMITS.contract_data_entry_size_bytes, "binary")}`,
+      "",
       "",
     ]);
 
@@ -154,12 +172,12 @@ test.describe("Network Limits page on Mainnet", () => {
 
     const maxReadEntriesFee = formatNumber(
       MAINNET_LIMITS.tx_max_disk_read_entries *
-        Number(MAINNET_LIMITS.fee_read_ledger_entry),
+        Number(MAINNET_LIMITS.fee_disk_read_ledger_entry),
     );
 
     const maxReadBytesFee = formatNumber(
       (MAINNET_LIMITS.tx_max_disk_read_bytes / BYTES_PER_KB) *
-        Number(MAINNET_LIMITS.fee_read_1kb),
+        Number(MAINNET_LIMITS.fee_disk_read_1kb),
     );
 
     const maxWriteEntriesFee = formatNumber(
@@ -173,12 +191,12 @@ test.describe("Network Limits page on Mainnet", () => {
     );
 
     const maxTxSizeFee = formatNumber(
-      (MAINNET_LIMITS.tx_max_write_bytes / BYTES_PER_KB) *
+      (MAINNET_LIMITS.tx_max_size_bytes / BYTES_PER_KB) *
         Number(MAINNET_LIMITS.fee_tx_size_1kb),
     );
 
     const maxHistoricalFee = formatNumber(
-      (MAINNET_LIMITS.tx_max_write_bytes / BYTES_PER_KB) *
+      (MAINNET_LIMITS.tx_max_size_bytes / BYTES_PER_KB) *
         Number(MAINNET_LIMITS.fee_historical_1kb),
     );
 
@@ -194,12 +212,12 @@ test.describe("Network Limits page on Mainnet", () => {
 
     await expect(getTableRow(rows, 2)).toHaveText([
       "Read 1 ledger entry from disk",
-      `${formatNumber(Number(MAINNET_LIMITS.fee_read_ledger_entry))} (${maxReadEntriesFee}/max tx)`,
+      `${formatNumber(Number(MAINNET_LIMITS.fee_disk_read_ledger_entry))} (${maxReadEntriesFee}/max tx)`,
     ]);
 
     await expect(getTableRow(rows, 3)).toHaveText([
       "Read 1 KB from disk",
-      `${formatNumber(Number(MAINNET_LIMITS.fee_read_1kb))} (${maxReadBytesFee}/max tx)`,
+      `${formatNumber(Number(MAINNET_LIMITS.fee_disk_read_1kb))} (${maxReadBytesFee}/max tx)`,
     ]);
 
     await expect(getTableRow(rows, 4)).toHaveText([
@@ -252,9 +270,6 @@ test.describe("Network Limits page on Mainnet", () => {
   });
 
   test("Switches to JSON tab and displays JSON content", async ({ page }) => {
-    // Dismiss the "Review Network Settings" modal if it appears
-    await dismissNetworkSettingsModal(page);
-
     const jsonTab = page.getByTestId("json");
     await jsonTab.click();
 
@@ -269,14 +284,11 @@ test.describe("Network Limits page on Mainnet", () => {
     // Verify JSON content contains expected data in the Monaco editor
     const editorContent = jsonContainer.locator(".monaco-editor");
     await expect(editorContent).toBeVisible();
-    await expect(editorContent).toContainText("updated_entry");
+    await expect(editorContent).toContainText("tx_max_instructions");
     await expect(editorContent).toContainText("contract_max_size_bytes");
   });
 
   test("Switches back to Table tab from JSON tab", async ({ page }) => {
-    // Dismiss the "Review Network Settings" modal if it appears
-    await dismissNetworkSettingsModal(page);
-
     const tableTab = page.getByTestId("table");
     const jsonTab = page.getByTestId("json");
 
@@ -292,6 +304,40 @@ test.describe("Network Limits page on Mainnet", () => {
     // Table content should be visible again
     await expect(page.locator("text=Resource limits")).toBeVisible();
     await expect(page.locator("text=Resource fees")).toBeVisible();
+  });
+
+  test("Shows error message when the backend request fails", async ({
+    page,
+  }) => {
+    await page.route(NETWORK_LIMITS_URL, async (route) => {
+      await route.fulfill({
+        status: 400,
+        contentType: "application/json",
+        body: JSON.stringify({
+          error: 'RPC URL "https://example.com" is not on the allowlist.',
+        }),
+      });
+    });
+
+    await page.goto(`${baseURL}/network-limits?$=network$id=testnet`);
+
+    await expect(page.getByText("Network limits unavailable")).toBeVisible();
+    await expect(
+      page.getByText('RPC URL "https://example.com" is not on the allowlist.'),
+    ).toBeVisible();
+    await expect(page.getByTestId("table")).not.toBeVisible();
+  });
+
+  test("Futurenet shows warning message", async ({ page }) => {
+    await page.goto(`${baseURL}/network-limits?$=network$id=futurenet`);
+
+    await expect(page.getByTestId("networkSelector-button")).toHaveText(
+      "Futurenet",
+    );
+    await expect(
+      page.getByText("Network limit data is not available for Futurenet."),
+    ).toBeVisible();
+    await expect(page.getByTestId("table")).not.toBeVisible();
   });
 
   test("Custom network shows warning message", async ({ page }) => {
@@ -312,11 +358,22 @@ test.describe("Network Limits page on Mainnet", () => {
     // Switch network buttons should be visible
     await expect(page.locator("button:has-text('Mainnet')")).toBeVisible();
     await expect(page.locator("button:has-text('Testnet')")).toBeVisible();
-    await expect(page.locator("button:has-text('Futurenet')")).toBeVisible();
+    await expect(page.locator("button:has-text('Futurenet')")).toHaveCount(0);
 
     // Table/JSON tabs should NOT be visible on custom network
     await expect(page.getByTestId("table")).not.toBeVisible();
     await expect(page.getByTestId("json")).not.toBeVisible();
+  });
+});
+
+test.describe("Network Limits page without RPC URL", () => {
+  test("Shows warning when no RPC URL is set", async ({ page }) => {
+    await page.goto(`${baseURL}/network-limits?$=network$id=mainnet`);
+
+    await expect(
+      page.getByText("RPC URL is required to view network limits"),
+    ).toBeVisible();
+    await expect(page.getByTestId("table")).not.toBeVisible();
   });
 });
 
