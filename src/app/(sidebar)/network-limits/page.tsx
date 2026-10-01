@@ -196,7 +196,7 @@ const ResourceLimitsSection = ({ limits }: { limits: NetworkLimitsType }) => {
     },
     {
       setting: "Transaction size",
-      perTransaction: formatBytes(limits.tx_max_write_bytes),
+      perTransaction: formatBytes(limits.tx_max_size_bytes),
       ledgerWide: formatBytes(limits.ledger_max_txs_size_bytes),
     },
     {
@@ -450,10 +450,10 @@ const ResourceFeesSection = ({ limits }: { limits: NetworkLimitsType }) => {
     (limits.tx_max_write_bytes / BYTES_PER_KB) * Number(limits.fee_write_1kb),
   );
   const maxTxSizeFee = formatNumber(
-    (limits.tx_max_write_bytes / BYTES_PER_KB) * Number(limits.fee_tx_size_1kb),
+    (limits.tx_max_size_bytes / BYTES_PER_KB) * Number(limits.fee_tx_size_1kb),
   );
   const maxHistoricalFee = formatNumber(
-    (limits.tx_max_write_bytes / BYTES_PER_KB) *
+    (limits.tx_max_size_bytes / BYTES_PER_KB) *
       Number(limits.fee_historical_1kb),
   );
   const maxEventsFee = formatNumber(

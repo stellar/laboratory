@@ -90,7 +90,7 @@ test.describe("Network Limits page on Mainnet", () => {
 
     await expect(getTableRow(rows, 6)).toHaveText([
       "Transaction size",
-      `${formatFileSize(MAINNET_LIMITS.tx_max_write_bytes)}`,
+      `${formatFileSize(MAINNET_LIMITS.tx_max_size_bytes)}`,
       `${formatFileSize(MAINNET_LIMITS.ledger_max_txs_size_bytes)}`,
     ]);
 
@@ -191,12 +191,12 @@ test.describe("Network Limits page on Mainnet", () => {
     );
 
     const maxTxSizeFee = formatNumber(
-      (MAINNET_LIMITS.tx_max_write_bytes / BYTES_PER_KB) *
+      (MAINNET_LIMITS.tx_max_size_bytes / BYTES_PER_KB) *
         Number(MAINNET_LIMITS.fee_tx_size_1kb),
     );
 
     const maxHistoricalFee = formatNumber(
-      (MAINNET_LIMITS.tx_max_write_bytes / BYTES_PER_KB) *
+      (MAINNET_LIMITS.tx_max_size_bytes / BYTES_PER_KB) *
         Number(MAINNET_LIMITS.fee_historical_1kb),
     );
 
