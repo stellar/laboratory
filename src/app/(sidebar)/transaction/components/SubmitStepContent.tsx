@@ -198,7 +198,11 @@ export const SubmitStepContent = ({
     if (isSubmitRpcSuccess) {
       trackEvent(TrackingEvent.TRANSACTION_SUBMIT_SUCCESS, { method: "rpc" });
     }
-  }, [isSubmitRpcSuccess]);
+
+    if (submitRpcError) {
+      trackEvent(TrackingEvent.TRANSACTION_SUBMIT_ERROR, { method: "rpc" });
+    }
+  }, [isSubmitRpcSuccess, submitRpcError]);
 
   useEffect(() => {
     if (isSubmitHorizonSuccess) {
@@ -206,7 +210,11 @@ export const SubmitStepContent = ({
         method: "horizon",
       });
     }
-  }, [isSubmitHorizonSuccess]);
+
+    if (submitHorizonError) {
+      trackEvent(TrackingEvent.TRANSACTION_SUBMIT_ERROR, { method: "horizon" });
+    }
+  }, [isSubmitHorizonSuccess, submitHorizonError]);
 
   useEffect(() => {
     if (isSubmitRpcSuccess && submitRpcResponse) {
