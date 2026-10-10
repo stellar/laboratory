@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Notification, Card } from "@stellar/design-system";
 
 import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
@@ -39,6 +39,7 @@ export default function BuildTransaction() {
     setActiveStep,
     goToNextStep,
     markStepCompleted,
+    resetDownstreamState,
     resetAll,
   } = useBuildFlowStore();
 
@@ -102,6 +103,57 @@ export default function BuildTransaction() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isNextDisabled, activeStep]);
+
+  const isBuildFormValid = build.isValid.params && build.isValid.operations;
+
+  // When the user edits the transaction on the build step after having already
+  // progressed past it, the rebuilt XDR no longer matches what was simulated,
+  // signed, or validated downstream — those results are now stale. Reset them
+  // so a signature produced against the previous transaction can't be carried
+  // through to submit; the user must re-run the later steps against the edited
+  // transaction.
+  const prevBuiltXdrRef = useRef<string | null>(null);
+  useEffect(() => {
+    // An empty XDR happens for two different reasons, and the form tells them
+    // apart:
+    //   - form invalid: the user edited the transaction and broke it, so
+    //     anything built downstream is now stale.
+    //   - form valid: the XDR encoder is still starting up (useIsXdrInit).
+    //     This happens every time the build step remounts.
+    // Only the first one is an edit. Ignoring the second is what stops simple
+    // step navigation from throwing away a signature.
+    if (!currentXdr && isBuildFormValid) {
+      return;
+    }
+
+    const prevBuiltXdr = prevBuiltXdrRef.current;
+    prevBuiltXdrRef.current = currentXdr;
+
+    // On the first run there is no earlier XDR to compare against, so nothing
+    // has been edited yet. That is true even when the XDR is empty, because
+    // this page can also be opened from a previously saved transaction:
+    // "View in submitter" on the Saved transactions page
+    // (transaction/saved/page.tsx) passes in only the saved signed XDR and
+    // opens the submit step, so the build form is empty while the signature
+    // is real and must be kept.
+    if (prevBuiltXdr === null) {
+      return;
+    }
+    if (prevBuiltXdr === currentXdr) {
+      return;
+    }
+
+    const buildIndex = steps.indexOf("build");
+    const highestIndex = highestCompletedStep
+      ? steps.indexOf(highestCompletedStep)
+      : -1;
+
+    // Only reset when there is downstream progress to invalidate.
+    if (highestIndex > buildIndex) {
+      resetDownstreamState(steps[buildIndex + 1], steps);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentXdr, isBuildFormValid]);
 
   const renderError = () => {
     if (paramsError.length > 0 || operationsError.length > 0) {
