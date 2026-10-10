@@ -5,6 +5,7 @@ import { getTxResourceBreakdown } from "@/helpers/getTxResourceBreakdown";
 import { formatNumber } from "@/helpers/formatNumber";
 
 import { useStore } from "@/store/useStore";
+import { useBackendNetworkLimits } from "@/query/external/useBackendNetworkLimits";
 
 import { RpcTxJsonResponse } from "@/types/types";
 
@@ -14,12 +15,16 @@ export const ResourceProfiler = ({
   txDetails: RpcTxJsonResponse | null | undefined;
 }) => {
   const { network } = useStore();
+  const { data: networkLimitsData } = useBackendNetworkLimits({
+    networkId: network.id,
+    rpcUrl: network.rpcUrl,
+  });
 
   if (!txDetails) {
     return null;
   }
 
-  const data = getTxResourceBreakdown(network.id, txDetails);
+  const data = getTxResourceBreakdown(networkLimitsData?.limits, txDetails);
 
   type ItemGroup = {
     id: string;
