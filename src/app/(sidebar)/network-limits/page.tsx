@@ -1,9 +1,19 @@
 "use client";
 
-import { Notification, Icon, Text, Tooltip } from "@stellar/design-system";
+import {
+  Notification,
+  Icon,
+  Loader,
+  Text,
+  Tooltip,
+} from "@stellar/design-system";
 import { useContext, useState } from "react";
 
 import { useStore } from "@/store/useStore";
+import {
+  isNetworkLimitsSupported,
+  useBackendNetworkLimits,
+} from "@/query/external/useBackendNetworkLimits";
 import { WindowContext } from "@/components/layout/LayoutContextProvider";
 
 import { PageCard } from "@/components/layout/PageCard";
@@ -24,7 +34,7 @@ import { formatLargeNumber } from "@/helpers/formatLargeNumber";
 import { formatFileSize } from "@/helpers/formatFileSize";
 import { formatNumber } from "@/helpers/formatNumber";
 
-import { NETWORK_LIMITS, NETWORK_LIMITS_JSON } from "@/constants/networkLimits";
+import { NetworkLimits as NetworkLimitsType } from "@/types/types";
 
 import "./styles.scss";
 
@@ -41,11 +51,80 @@ export default function NetworkLimits() {
   const { network } = useStore();
   const [activeTab, setActiveTab] = useState("table");
 
-  // Get network-specific limits, fallback to mainnet if not found
-  const limits = NETWORK_LIMITS[network.id] || NETWORK_LIMITS.mainnet;
-  const limitsJson =
-    NETWORK_LIMITS_JSON[network.id] || NETWORK_LIMITS_JSON.mainnet;
-  const limitsJsonString = JSON.stringify(limitsJson, null, 2);
+  const {
+    data: networkLimitsData,
+    error: networkLimitsError,
+    isLoading: isNetworkLimitsLoading,
+  } = useBackendNetworkLimits({
+    networkId: network.id,
+    rpcUrl: network.rpcUrl,
+  });
+
+  const renderContent = () => {
+    if (!network.rpcUrl && network.id === "mainnet") {
+      return (
+        <Notification variant="warning" title="Attention">
+          RPC URL is required to view network limits. You can add it in the
+          network settings in the upper right corner.
+        </Notification>
+      );
+    }
+
+    if (isNetworkLimitsLoading) {
+      return (
+        <Box gap="md" direction="row" justify="center">
+          <Loader />
+        </Box>
+      );
+    }
+
+    if (networkLimitsError || !networkLimitsData) {
+      return (
+        <Notification variant="error" title="Network limits unavailable">
+          {`Couldn’t fetch network limits for ${network.label}. ${networkLimitsError?.message ?? ""}`}
+        </Notification>
+      );
+    }
+
+    const { limits, json } = networkLimitsData;
+
+    return (
+      <>
+        <Tabs
+          tabs={VIEW_TABS}
+          activeTabId={activeTab}
+          onChange={setActiveTab}
+        />
+
+        {activeTab === "table" ? (
+          <>
+            <Box gap="sm">
+              <Text as="h2" size="md" weight="medium">
+                Resource limits
+              </Text>
+
+              <Box gap="lg">
+                <ResourceLimitsSection limits={limits} />
+                <StateArchivalSection limits={limits} />
+              </Box>
+            </Box>
+
+            <ResourceFeesSection limits={limits} />
+          </>
+        ) : (
+          <div className="NetworkLimits__json-container">
+            <CodeEditor
+              title="JSON response"
+              heightInRem="30"
+              value={JSON.stringify(json, null, 2)}
+              selectedLanguage="json"
+              fileName="network-limits"
+            />
+          </div>
+        )}
+      </>
+    );
+  };
 
   return (
     <Box addlClassName="NetworkLimits" gap="lg">
@@ -65,14 +144,13 @@ export default function NetworkLimits() {
         </Text>
       </Box>
       <PageCard>
-        {network.id === "custom" ? (
+        {!isNetworkLimitsSupported(network.id) ? (
           <Notification variant="warning" title="Network limits unavailable">
             <Box gap="md">
-              Network limit data is not available for the selected custom
-              network.
+              {`Network limit data is not available for ${network.id === "custom" ? "the selected custom network" : network.label}.`}
               <Box gap="md" direction="row">
                 <SwitchNetworkButtons
-                  includedNetworks={["mainnet", "testnet", "futurenet"]}
+                  includedNetworks={["mainnet", "testnet"]}
                   buttonSize="md"
                   page="network limits"
                 />
@@ -80,54 +158,14 @@ export default function NetworkLimits() {
             </Box>
           </Notification>
         ) : (
-          <>
-            <Tabs
-              tabs={VIEW_TABS}
-              activeTabId={activeTab}
-              onChange={setActiveTab}
-            />
-
-            {activeTab === "table" ? (
-              <>
-                <Box gap="sm">
-                  <Text as="h2" size="md" weight="medium">
-                    Resource limits
-                  </Text>
-
-                  <Box gap="lg">
-                    <ResourceLimitsSection limits={limits} />
-                    <StateArchivalSection limits={limits} />
-                  </Box>
-                </Box>
-
-                <ResourceFeesSection limits={limits} />
-              </>
-            ) : (
-              <div className="NetworkLimits__json-container">
-                <CodeEditor
-                  title="JSON response"
-                  heightInRem="30"
-                  value={limitsJsonString}
-                  selectedLanguage="json"
-                  fileName="network-limits"
-                />
-              </div>
-            )}
-          </>
+          renderContent()
         )}
       </PageCard>
     </Box>
   );
 }
 
-const ResourceLimitsSection = ({
-  limits,
-}: {
-  limits:
-    | typeof NETWORK_LIMITS.mainnet
-    | typeof NETWORK_LIMITS.testnet
-    | typeof NETWORK_LIMITS.futurenet;
-}) => {
+const ResourceLimitsSection = ({ limits }: { limits: NetworkLimitsType }) => {
   const { layoutMode } = useContext(WindowContext);
 
   const resourceLimits = [
@@ -158,7 +196,7 @@ const ResourceLimitsSection = ({
     },
     {
       setting: "Transaction size",
-      perTransaction: formatBytes(limits.tx_max_write_bytes),
+      perTransaction: formatBytes(limits.tx_max_size_bytes),
       ledgerWide: formatBytes(limits.ledger_max_txs_size_bytes),
     },
     {
@@ -181,10 +219,10 @@ const ResourceLimitsSection = ({
     {
       setting: "Individual ledger entry size",
       setting_note: "contract data entry",
-      perTransaction: formatBytes(
-        limits.contract_data_entry_size_bytes,
-        "binary",
-      ),
+      perTransaction:
+        limits.contract_data_entry_size_bytes === undefined
+          ? undefined
+          : formatBytes(limits.contract_data_entry_size_bytes, "binary"),
       ledgerWide: undefined,
     },
     {
@@ -339,14 +377,7 @@ const ResourceLimitsSection = ({
   );
 };
 
-const StateArchivalSection = ({
-  limits,
-}: {
-  limits:
-    | typeof NETWORK_LIMITS.mainnet
-    | typeof NETWORK_LIMITS.testnet
-    | typeof NETWORK_LIMITS.futurenet;
-}) => {
+const StateArchivalSection = ({ limits }: { limits: NetworkLimitsType }) => {
   const { layoutMode } = useContext(WindowContext);
   const stateArchivalLabel =
     layoutMode === "desktop" ? "TTL extension parameter" : "TTL ext. parameter";
@@ -399,25 +430,18 @@ const StateArchivalSection = ({
   );
 };
 
-const ResourceFeesSection = ({
-  limits,
-}: {
-  limits:
-    | typeof NETWORK_LIMITS.mainnet
-    | typeof NETWORK_LIMITS.testnet
-    | typeof NETWORK_LIMITS.futurenet;
-}) => {
+const ResourceFeesSection = ({ limits }: { limits: NetworkLimitsType }) => {
   // Calculate max fees based on transaction limits
   const maxCpuInstructionsFee = formatNumber(
     (limits.tx_max_instructions / 10000) *
       limits.fee_rate_per_instructions_increment,
   );
   const maxReadEntriesFee = formatNumber(
-    limits.tx_max_disk_read_entries * Number(limits.fee_read_ledger_entry),
+    limits.tx_max_disk_read_entries * Number(limits.fee_disk_read_ledger_entry),
   );
   const maxReadBytesFee = formatNumber(
     (limits.tx_max_disk_read_bytes / BYTES_PER_KB) *
-      Number(limits.fee_read_1kb),
+      Number(limits.fee_disk_read_1kb),
   );
   const maxWriteEntriesFee = formatNumber(
     limits.tx_max_write_ledger_entries * Number(limits.fee_write_ledger_entry),
@@ -426,10 +450,10 @@ const ResourceFeesSection = ({
     (limits.tx_max_write_bytes / BYTES_PER_KB) * Number(limits.fee_write_1kb),
   );
   const maxTxSizeFee = formatNumber(
-    (limits.tx_max_write_bytes / BYTES_PER_KB) * Number(limits.fee_tx_size_1kb),
+    (limits.tx_max_size_bytes / BYTES_PER_KB) * Number(limits.fee_tx_size_1kb),
   );
   const maxHistoricalFee = formatNumber(
-    (limits.tx_max_write_bytes / BYTES_PER_KB) *
+    (limits.tx_max_size_bytes / BYTES_PER_KB) *
       Number(limits.fee_historical_1kb),
   );
   const maxEventsFee = formatNumber(
@@ -444,11 +468,11 @@ const ResourceFeesSection = ({
     },
     {
       setting: "Read 1 ledger entry from disk",
-      value: `${formatNumber(Number(limits.fee_read_ledger_entry))} (${maxReadEntriesFee}/max tx)`,
+      value: `${formatNumber(Number(limits.fee_disk_read_ledger_entry))} (${maxReadEntriesFee}/max tx)`,
     },
     {
       setting: "Read 1 KB from disk",
-      value: `${formatNumber(Number(limits.fee_read_1kb))} (${maxReadBytesFee}/max tx)`,
+      value: `${formatNumber(Number(limits.fee_disk_read_1kb))} (${maxReadBytesFee}/max tx)`,
     },
     {
       setting: "Write 1 ledger entry",
@@ -590,10 +614,7 @@ const computeRentWriteFeePerKb = (
 const getDaysOfRent = (
   rent_denominator: string,
   days: number,
-  limits:
-    | typeof NETWORK_LIMITS.mainnet
-    | typeof NETWORK_LIMITS.testnet
-    | typeof NETWORK_LIMITS.futurenet,
+  limits: NetworkLimitsType,
 ) => {
   const {
     live_soroban_state_size_window,

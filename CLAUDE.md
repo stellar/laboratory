@@ -4,7 +4,7 @@
 
 ```bash
 # Development
-pnpm dev                    # Start dev server (auto-fetches network limits)
+pnpm dev                    # Start dev server
 pnpm build                  # Production build
 pnpm lint                   # ESLint
 pnpm lint:ts                # TypeScript check
@@ -13,8 +13,7 @@ pnpm test:unit              # Jest unit tests
 pnpm test:e2e               # Playwright e2e tests
 
 # Common Workflows
-pnpm fetch-limits           # Manually fetch Stellar network limits
-git push --no-verify        # Skip pre-push hooks (network issues)
+git push --no-verify        # Skip pre-push hooks
 ```
 
 ## Repository Overview
@@ -74,18 +73,7 @@ pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-The `pnpm dev` command automatically runs `pnpm fetch-limits` (via `predev`
-script) to fetch Stellar network limits from RPC endpoints before starting the
-dev server.
-
 ## Common Issues and Solutions
-
-### Network Limits Fetch Failure
-
-`pnpm fetch-limits` or `pnpm dev` fails with "fetch failed" — network
-restrictions blocking Stellar RPC endpoints. The repo includes a committed
-`src/constants/networkLimits.ts` with recent values; if it exists, skip
-fetching. If pre-push hooks fail due to network: `git push --no-verify`.
 
 ### Next.js Lint Deprecation Warning
 
@@ -102,13 +90,14 @@ before pushing (preferred).
 **Problem**: Playwright e2e tests fail on one branch but pass on another, even
 though the code is correct.
 
-**Root Cause**: Playwright reuses a running dev server on the configured
-`PORT` (default 3000). If you switch branches without restarting the dev
-server, tests run against the old branch's code.
+**Root Cause**: Playwright reuses a running dev server on the configured `PORT`
+(default 3000). If you switch branches without restarting the dev server, tests
+run against the old branch's code.
 
 **Solution**:
 
-1. Kill any stale dev server on the configured port: `PORT="${PORT:-3000}"; lsof -i :"$PORT"` and kill the process
+1. Kill any stale dev server on the configured port:
+   `PORT="${PORT:-3000}"; lsof -i :"$PORT"` and kill the process
 2. Clear the Next.js cache: `rm -rf .next`
 3. Restart the dev server: `pnpm dev`
 4. Then run tests: `pnpm test:e2e`
@@ -166,7 +155,6 @@ import { useStore } from "@/store/createStore";
 
 ### Stellar-Specific Rules
 
-- Never edit `src/constants/networkLimits.ts` manually (auto-generated)
 - Store XDR as base64 strings; parse lazily at point of use
 - When updating `@stellar/stellar-sdk` or `@stellar/stellar-xdr-json`, also
   check whether `@stellar-expert/contract-wasm-interface-parser` needs to be
