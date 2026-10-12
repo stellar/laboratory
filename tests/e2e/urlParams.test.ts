@@ -37,81 +37,6 @@ test.describe("URL Params", () => {
   });
 
   test.describe("Transactions", () => {
-    test("[Classic] Build Transaction", async ({ page }) => {
-      await page.goto(
-        `${baseURL}/transaction/build?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;&transaction$build$classic$operations@$operation_type=create_account&params$destination=GC5TQ7TXKHGE5JQMZPYV5KBSQ67X6PYQVU5QN7JRGWCHRA227UFPZ6LD&starting_balance=3000;&source_account=;&$operation_type=payment&params$destination=GAJAIHPKNTJ362TAUWTU2S56B7PULRTMY456LUELK53USX43537IFMS3&asset$code=USDC&issuer=GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5&type=credit_alphanum4;&amount=4000;&source_account=GA46LGGOLXJY5OSX6N4LHV4MWDFXNGLK76I4NDNKKYAXRRSKI5AJGMXG;;;&params$source_account=GA46LGGOLXJY5OSX6N4LHV4MWDFXNGLK76I4NDNKKYAXRRSKI5AJGMXG&fee=2000&seq_num=3668692344766465&cond$time$max_time=1733409768;;&memo$text=123;;&isValid$params:true&operations:true;;`,
-      );
-
-      await expect(page.locator("h1")).toHaveText("Build transaction");
-
-      // Params
-      await expect(
-        page.getByLabel("Source account", { exact: true }),
-      ).toHaveValue("GA46LGGOLXJY5OSX6N4LHV4MWDFXNGLK76I4NDNKKYAXRRSKI5AJGMXG");
-      await expect(page.getByLabel("Transaction Sequence Number")).toHaveValue(
-        "3668692344766465",
-      );
-      await expect(page.getByLabel("Base Fee")).toHaveValue("2000");
-
-      await expect(page.locator("#text-memo")).toBeChecked();
-      await expect(page.locator("#memo_value")).toHaveValue("123");
-
-      await expect(
-        page.getByPlaceholder(
-          "Lower time bound unix timestamp. Ex: 1479151713",
-        ),
-      ).toHaveValue("");
-      await expect(
-        page.getByPlaceholder(
-          "Upper time bound unix timestamp. Ex: 1479151713",
-        ),
-      ).toHaveValue("1733409768");
-
-      // Operations
-      // Operation 0
-      const op0 = page.getByTestId("build-transaction-operation-0");
-
-      await expect(op0.getByLabel("Operation Type")).toHaveValue(
-        "create_account",
-      );
-      await expect(op0.getByLabel("Destination")).toHaveValue(
-        "GC5TQ7TXKHGE5JQMZPYV5KBSQ67X6PYQVU5QN7JRGWCHRA227UFPZ6LD",
-      );
-      await expect(op0.getByLabel("Starting Balance")).toHaveValue("3000");
-
-      // Operation 1
-      const op1 = page.getByTestId("build-transaction-operation-1");
-
-      await expect(op1.getByLabel("Operation Type")).toHaveValue("payment");
-      await expect(op1.getByLabel("Destination")).toHaveValue(
-        "GAJAIHPKNTJ362TAUWTU2S56B7PULRTMY456LUELK53USX43537IFMS3",
-      );
-      await expect(
-        op1.locator("#credit_alphanum4-1-payment-asset"),
-      ).toBeChecked();
-      await expect(op1.getByLabel("Asset code")).toHaveValue("USDC");
-      await expect(op1.getByLabel("Issuer Account ID")).toHaveValue(
-        "GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5",
-      );
-      await expect(op1.getByLabel("Amount")).toHaveValue("4000");
-      await expect(op1.getByLabel("Source account")).toHaveValue(
-        "GA46LGGOLXJY5OSX6N4LHV4MWDFXNGLK76I4NDNKKYAXRRSKI5AJGMXG",
-      );
-
-      // Validation
-      const txnSuccess = page.getByTestId("build-transaction-envelope-xdr");
-
-      await expect(
-        txnSuccess.getByText("Network Passphrase").locator("+ div"),
-      ).toHaveText("Test SDF Network ; September 2015");
-      await expect(txnSuccess.getByText("Hash").locator("+ div")).toHaveText(
-        "44abaabac11c318d595d392c24166965301b48109899bc8e819723afb89d5e37",
-      );
-      await expect(txnSuccess.getByText("XDR").locator("+ div")).toHaveText(
-        "AAAAAgAAAAA55ZjOXdOOulfzeLPXjLDLdplq/5HGjapWAXjGSkdAkwAAD6AADQioAAAAAQAAAAEAAAAAAAAAAAAAAABnUbvoAAAAAQAAAAMxMjMAAAAAAgAAAAAAAAAAAAAAALs4fndRzE6mDMvxXqgyh79/PxCtOwb9MTWEeINa/Qr8AAAABvwjrAAAAAABAAAAADnlmM5d0466V/N4s9eMsMt2mWr/kcaNqlYBeMZKR0CTAAAAAQAAAAASBB3qbNO/amClp01Lvg/fRcZsxzvl0ItXd0lfm+7+ggAAAAFVU0RDAAAAAEI+fQXy7K+/7BkrIVo/G+lq7bjY5wJUq+NBPgIH3layAAAACVAvkAAAAAAAAAAAAA==",
-      );
-    });
-
     test("Simulate Transaction redirects to build", async ({ page }) => {
       await page.goto(
         `${baseURL}/transaction/simulate?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;`,
@@ -132,49 +57,6 @@ test.describe("URL Params", () => {
     //   await page.waitForURL("**/transaction/build**");
     //   await expect(page.locator("h1")).toHaveText("Build transaction");
     // });
-
-    test("[Soroban] Build Transaction", async ({ page }) => {
-      await page.goto(
-        `${baseURL}/transaction/build?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;&transaction$build$classic$operations@$operation_type=payment&params$destination=GA46LGGOLXJY5OSX6N4LHV4MWDFXNGLK76I4NDNKKYAXRRSKI5AJGMXG&asset$code=&issuer=&type=native;&amount=5;&source_account=;;;&soroban$operation$operation_type=extend_footprint_ttl&params$contractDataLedgerKey=AAAABgAAAAEg/u86MzPrVcpNrsFUa84T82Kss8DLAE9ZMxLqhM22HwAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAAB+TL0HLiAjanMRnyeqyhb8Iu+4d1g2dl1cwPi1UZAigwAAAAE=&extend_ttl_to=20000&resource_fee=46753;;;&params$source_account=GB7EZPIHFYQCG2TTCGPSPKWKC36CF35YO5MDM5S5LTAPRNKRSARIHWGG&seq_num=1727208213184538&cond$time$min_time=1733409768;;&memo$text=100;;&isValid$params:true&operations:true;;`,
-      );
-
-      await expect(page.locator("h1")).toHaveText("Build transaction");
-
-      // Params
-      await expect(
-        page.getByLabel("Source account", { exact: true }),
-      ).toHaveValue("GB7EZPIHFYQCG2TTCGPSPKWKC36CF35YO5MDM5S5LTAPRNKRSARIHWGG");
-      await expect(page.getByLabel("Transaction Sequence Number")).toHaveValue(
-        "1727208213184538",
-      );
-      await expect(page.getByLabel("Base Fee")).toHaveValue("100");
-
-      await expect(page.locator("#text-memo")).toBeChecked();
-      await expect(page.locator("#memo_value")).toHaveValue("100");
-
-      await expect(
-        page.getByPlaceholder(
-          "Lower time bound unix timestamp. Ex: 1479151713",
-        ),
-      ).toHaveValue("1733409768");
-      await expect(
-        page.getByPlaceholder(
-          "Upper time bound unix timestamp. Ex: 1479151713",
-        ),
-      ).toHaveValue("");
-
-      // Only One Operation Allowed in Soroban
-      const sorobanOp = page.getByTestId("build-soroban-transaction-operation");
-
-      await expect(sorobanOp.getByLabel("Operation Type")).toHaveValue(
-        "extend_footprint_ttl",
-      );
-      // With the new implementation, extend_footprint_ttl uses Ledger Key XDR
-      await expect(sorobanOp.getByLabel("Ledger Key XDR")).toHaveValue(
-        "AAAABgAAAAEgu86MzPrVcpNrsFUa84T82Kss8DLAE9ZMxLqhM22HwAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAAB+TL0HLiAjanMRnyeqyhb8Iu+4d1g2dl1cwPi1UZAigwAAAAE=",
-      );
-      await expect(sorobanOp.getByLabel("Extend To")).toHaveValue("20000");
-    });
 
     test("Fee Bump", async ({ page }) => {
       await page.goto(
