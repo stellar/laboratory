@@ -142,3 +142,12 @@ export const USDC_TESTNET_ISSUER =
   "GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5";
 export const EURC_TESTNET_ISSUER =
   "GB3Q6QDZYTHWT7E5PVS3W7FUT5GVAFC5KSZFFLPU25GO7VTC3NM2ZTVO";
+
+// NeevAI chat widget ("Ask Stellar")
+export const NEEVAI_AGENT_ID = "9d63e5c1-61ef-419a-aeee-51f70faf726e";
+export const NEEVAI_SCRIPT_URL = `https://cdn.neevai.io/v1/embed/${NEEVAI_AGENT_ID}.js`;
+export const NEEVAI_CHAT_ORIGIN = "https://prism-chat.neevai.io";
+// NeevaiChat.submit() rejects messages longer than this
+export const NEEVAI_MAX_MESSAGE_LENGTH = 2000;
+// The full-page chat URL `q` param must stay under this
+export const NEEVAI_MAX_URL_QUESTION_LENGTH = 200;

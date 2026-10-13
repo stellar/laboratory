@@ -99,6 +99,8 @@ export enum TrackingEvent {
   WALLET_KIT_SELECTED = "wallet kit selected",
   // Home
   HOME_TOP_BTN = "home: top btn",
+  HOME_START_BUILDING = "home: start building",
+  HOME_EXPLORE = "home: explore & inspect",
   HOME_SLIDER_CARD = "home: slider card",
   HOME_SLIDER_DETAILS_BTN = "home: slider details btn",
   HOME_TUTORIAL = "home: tutorial",
