@@ -14,14 +14,12 @@ import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 import { Box } from "@/components/layout/Box";
 import { formComponentTemplateTxnOps } from "@/components/formComponentTemplateTxnOps";
 import { SdsLink } from "@/components/SdsLink";
-import { ShareUrlButton } from "@/components/ShareUrlButton";
 import { SorobanOperation } from "./SorobanOperation";
 import { ClassicOperation } from "./ClassicOperation";
 
 import { arrayItem } from "@/helpers/arrayItem";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { isSorobanOperationType } from "@/helpers/sorobanUtils";
-import { shareableUrl } from "@/helpers/shareableUrl";
 
 import { OP_SET_TRUST_LINE_FLAGS } from "@/constants/settings";
 import {
@@ -283,9 +281,13 @@ export const Operations = () => {
       setOperationsError([...errors]);
     }
     // Re-run when operations are externally reset (e.g. "Clear all") or when
-    // the first operation type changes (e.g. legacy URL migration seeding data).
+    // the first operation type changes (e.g. restored from sessionStorage).
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [txnOperations.length, firstClassicOpType, soroban.operation.operation_type]);
+  }, [
+    txnOperations.length,
+    firstClassicOpType,
+    soroban.operation.operation_type,
+  ]);
 
   // Update operations error when operations change
   useEffect(() => {
@@ -973,8 +975,6 @@ export const Operations = () => {
           >
             Add operation
           </Button>
-
-          <ShareUrlButton shareableUrl={shareableUrl("transactions-build")} />
         </Box>
 
         {addHelperText ? (

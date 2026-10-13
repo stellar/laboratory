@@ -1,12 +1,11 @@
 "use client";
 
 import { useEffect } from "react";
-import { Notification, Card } from "@stellar/design-system";
+import { Card } from "@stellar/design-system";
 
 import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 
 import { useTransactionFlow } from "@/hooks/useTransactionFlow";
-import { useLegacyUrlMigration } from "@/hooks/useLegacyUrlMigration";
 
 import { TransactionStepHeader } from "@/app/(sidebar)/transaction/components/TransactionStepHeader";
 import { SignStepContent } from "@/app/(sidebar)/transaction/components/SignStepContent";
@@ -41,9 +40,6 @@ export default function BuildTransaction() {
     markStepCompleted,
     resetAll,
   } = useBuildFlowStore();
-
-  // Bridge legacy querystring params into the flow store (one-time migration)
-  const { isLegacyUrl, dismissLegacyAlert } = useLegacyUrlMigration();
 
   // For Classic
   const { params: paramsError, operations: operationsError } = build.error;
@@ -158,10 +154,7 @@ export default function BuildTransaction() {
     <Box gap="md">
       <TransactionStepHeader
         heading="Build transaction"
-        onClearAll={() => {
-          resetAll();
-          dismissLegacyAlert();
-        }}
+        onClearAll={resetAll}
         xdr={currentXdr}
         params={build.params}
         activeStep={activeStep}
@@ -169,15 +162,6 @@ export default function BuildTransaction() {
           isSoroban ? [build.soroban.operation] : build.classic.operations
         }
       />
-
-      {isLegacyUrl ? (
-        <Notification
-          variant="warning"
-          title="This transaction was loaded from a legacy URL format that will be
-          removed in a future update. Please save your transaction to preserve
-          it."
-        />
-      ) : null}
 
       <Card>
         <Params />
