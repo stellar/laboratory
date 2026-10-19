@@ -11,16 +11,6 @@
   border-top: 1px solid var(--sds-clr-gray-06);
   z-index: 4;
 
-  &::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    height: pxToRem(32px);
-    background: inherit;
-  }
-
   [data-position="left"] {
     margin-right: auto;
   }
