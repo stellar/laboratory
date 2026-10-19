@@ -11,6 +11,7 @@ import { parseTxXdr } from "@/helpers/parseTxXdr";
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
 import { SignTransactionXdr } from "@/components/SignTransactionXdr";
+import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { Box } from "@/components/layout/Box";
 import { TransactionHashReadOnlyField } from "@/components/TransactionHashReadOnlyField";
 import { prettifyJsonString } from "@/helpers/prettifyJsonString";
@@ -33,6 +34,13 @@ type Props = {
    * before adding their own. Omitted by the build flow.
    */
   signatureContext?: React.ReactNode;
+  /**
+   * Simulated (assembled) transaction XDR from the simulate step. When
+   * present, it is shown read-only above the signing UI so the user can
+   * review and copy exactly what they are about to sign. Omitted when the
+   * transaction was not simulated.
+   */
+  simulatedXdr?: string;
 };
 
 /**
@@ -59,6 +67,7 @@ export const SignStepContent = ({
   onSigned,
   onClearAll,
   signatureContext,
+  simulatedXdr,
 }: Props) => {
   const { network } = useStore();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -85,6 +94,17 @@ export const SignStepContent = ({
     ? `${prettifyJsonString(xdrJsonDecoded.jsonString)}\n`
     : "";
 
+  const signTransactionXdr = (
+    <SignTransactionXdr
+      id="sign-step"
+      xdrToSign={xdrToSign || null}
+      onDoneAction={({ signedXdr, errorMessage }) => {
+        onSigned(signedXdr ?? "");
+        setErrorMessage(errorMessage);
+      }}
+    />
+  );
+
   return (
     <Box gap="md">
       <TransactionStepHeader
@@ -93,20 +113,33 @@ export const SignStepContent = ({
         xdr={xdrToSign}
       />
 
-      {message ? (
+      {/* Signature-status guidance only matters when reviewing an existing
+          transaction's signatures (import flow); a freshly built transaction
+          always just "needs signature(s)" */}
+      {message && signatureContext ? (
         <Text size="sm" as="div">
           {message}
         </Text>
       ) : null}
 
-      <SignTransactionXdr
-        id="sign-step"
-        xdrToSign={xdrToSign || null}
-        onDoneAction={({ signedXdr, errorMessage }) => {
-          onSigned(signedXdr ?? "");
-          setErrorMessage(errorMessage);
-        }}
-      />
+      {simulatedXdr ? (
+        // Simulated flow: the simulated XDR and the signing UI share one card
+        <div className="SignStepContent__card">
+          <Box gap="lg">
+            <XdrPicker
+              id="sign-step-simulated-xdr"
+              label="Simulated transaction (Base64 XDR)"
+              value={simulatedXdr}
+              disabled
+              hasCopyButton
+            />
+
+            {signTransactionXdr}
+          </Box>
+        </div>
+      ) : (
+        signTransactionXdr
+      )}
 
       {errorMessage ? (
         <Notification variant="error" title="Signing failed">
