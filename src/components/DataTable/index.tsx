@@ -61,6 +61,8 @@ type DataTableProps<T> = {
   isExternalUpdating?: boolean;
   externalSort?: (sortDirection: SortDirection) => void;
   onSortChange?: (sortById: string, sortByDir: SortDirection) => void;
+  /** Draws a 1px border with rounded corners around the table */
+  isOutlined?: boolean;
 };
 
 export const DataTable = <T extends AnyObject>({
@@ -81,6 +83,7 @@ export const DataTable = <T extends AnyObject>({
   pageSize = 20,
   emptyMessage,
   onSortChange,
+  isOutlined,
 }: DataTableProps<T>) => {
   // Data
   const [processedData, setProcessedData] = useState<
@@ -508,7 +511,9 @@ export const DataTable = <T extends AnyObject>({
   };
 
   const renderPagination = () => {
-    if (hidePagination) {
+    // Nothing to paginate: everything fits on one page (external cursor-based
+    // pagination via pageNavConfig keeps its controls)
+    if (hidePagination || (!pageNavConfig && totalPageCount <= 1)) {
       return null;
     }
 
@@ -682,7 +687,7 @@ export const DataTable = <T extends AnyObject>({
       <Card noPadding={true}>
         <div className="DataTable__container">
           {isUpdating || isExternalUpdating ? <Loader /> : null}
-          <div className="DataTable__scroll">
+          <div className="DataTable__scroll" data-is-outlined={isOutlined}>
             <table
               className="DataTable__table"
               style={customStyle}
