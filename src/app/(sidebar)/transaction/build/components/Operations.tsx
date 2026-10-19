@@ -887,14 +887,14 @@ export const Operations = () => {
           }
         >
           <option value="">Select operation type</option>
+          <option value="invoke_contract_function">
+            [Smart Contract] Invoke Contract Function
+          </option>
           <option value="extend_footprint_ttl">
             [Smart Contract] Extend Footprint TTL
           </option>
           <option value="restore_footprint">
             [Smart Contract] Restore Footprint
-          </option>
-          <option value="invoke_contract_function">
-            [Smart Contract] Invoke Contract Function
           </option>
           <option value="create_account">Create Account</option>
           <option value="payment">Payment</option>
