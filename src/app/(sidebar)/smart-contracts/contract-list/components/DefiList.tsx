@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Link, Text } from "@stellar/design-system";
+import { Card, Link, Text } from "@stellar/design-system";
 import { useRouter } from "next/navigation";
 
 import { Box } from "@/components/layout/Box";
@@ -17,7 +17,12 @@ import { delayedAction } from "@/helpers/delayedAction";
 
 import { PopularContractListRecord, SortDirection } from "@/types/types";
 
-export const DefiList = () => {
+type DefiListProps = {
+  /** Free-text search, matched against contract ID and name */
+  searchValue?: string;
+};
+
+export const DefiList = ({ searchValue = "" }: DefiListProps) => {
   const { network, smartContracts } = useStore();
   const router = useRouter();
   const [sortState, setSortState] = useState<{
@@ -35,6 +40,15 @@ export const DefiList = () => {
       delay: 0,
     });
   };
+
+  const query = searchValue.trim().toLowerCase();
+  const filteredContracts = query
+    ? POPULAR_SOROBAN_CONTRACTS.filter(
+        (c) =>
+          c.contract.toLowerCase().includes(query) ||
+          c.name.toLowerCase().includes(query),
+      )
+    : POPULAR_SOROBAN_CONTRACTS;
 
   const renderContent = () => {
     // in case where user is already on popular tab on mainnet and switches to testnet
@@ -67,36 +81,50 @@ export const DefiList = () => {
       return "Entity (A-Z)";
     };
 
+    // No matches: just the message, no table chrome
+    if (filteredContracts.length === 0) {
+      return (
+        <Card>
+          <Text size="sm" as="p" addlClassName="ContractList__emptyMessage">
+            No contracts match your search
+          </Text>
+        </Card>
+      );
+    }
+
     return (
-      <DataTable
-        tableId="popular-contracts-list"
-        tableData={POPULAR_SOROBAN_CONTRACTS}
-        tableHeaders={[
-          { id: "contract", value: "Contract ID", isSortable: false },
-          {
-            id: "name",
-            value: getEntityLabel(),
-            isSortable: true,
-          },
-        ]}
-        formatDataRow={(r: PopularContractListRecord) => [
-          {
-            value: (
-              <Link
-                addlClassName="ContractLink--withIcon"
-                onClick={() => handleNavigateToContractExplorer(r.contract)}
-              >
-                {r.contract}
-              </Link>
-            ),
-          },
-          { value: r.name },
-        ]}
-        cssGridTemplateColumns="minmax(210px, 3fr) minmax(210px, 1fr)"
-        hideFirstLastPageNav={true}
-        hidePageCount={true}
-        onSortChange={(id, direction) => setSortState({ id, direction })}
-      />
+      <Card>
+        <DataTable
+          tableId="popular-contracts-list"
+          tableData={filteredContracts}
+          tableHeaders={[
+            { id: "contract", value: "Contract ID", isSortable: false },
+            {
+              id: "name",
+              value: getEntityLabel(),
+              isSortable: true,
+            },
+          ]}
+          formatDataRow={(r: PopularContractListRecord) => [
+            {
+              value: (
+                <Link
+                  addlClassName="ContractLink--withIcon"
+                  onClick={() => handleNavigateToContractExplorer(r.contract)}
+                >
+                  {r.contract}
+                </Link>
+              ),
+            },
+            { value: r.name },
+          ]}
+          cssGridTemplateColumns="minmax(210px, 3fr) minmax(210px, 1fr)"
+          hideFirstLastPageNav={true}
+          hidePageCount={true}
+          isOutlined={true}
+          onSortChange={(id, direction) => setSortState({ id, direction })}
+        />
+      </Card>
     );
   };
 

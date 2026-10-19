@@ -1,6 +1,7 @@
 "use client";
 
-import { Text } from "@stellar/design-system";
+import { useMemo, useState } from "react";
+import { Card, Icon, Input, Text } from "@stellar/design-system";
 
 import { TabView } from "@/components/TabView";
 import { Tabs } from "@/components/Tabs";
@@ -10,6 +11,8 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { SwitchNetworkButtons } from "@/components/SwitchNetworkButtons";
 
 import { useStore } from "@/store/useStore";
+
+import { KNOWN_ASSETS } from "@/constants/knownAssets";
 
 import { RecentList } from "./components/RecentList";
 import { DefiList } from "./components/DefiList";
@@ -35,10 +38,60 @@ export default function ContractList() {
     }
   };
 
+  // Search (tab row) applies to DeFi and Known assets; asset class filter
+  // lives in the Known assets table header
+  const [assetSearch, setAssetSearch] = useState("");
+  const [assetClassFilter, setAssetClassFilter] = useState("");
+
+  // Distinct asset classes, in the order they first appear in the list
+  const assetClasses = useMemo(
+    () =>
+      KNOWN_ASSETS.reduce<string[]>((res, a) => {
+        if (a.assetClass && !res.includes(a.assetClass)) {
+          res.push(a.assetClass);
+        }
+        return res;
+      }, []),
+    [],
+  );
+
+  const filteredAssets = useMemo(() => {
+    const query = assetSearch.trim().toLowerCase();
+
+    return KNOWN_ASSETS.filter((a) => {
+      if (assetClassFilter && a.assetClass !== assetClassFilter) {
+        return false;
+      }
+
+      if (!query) {
+        return true;
+      }
+
+      return (
+        a.assetCode.toLowerCase().includes(query) ||
+        a.entity.toLowerCase().includes(query)
+      );
+    });
+  }, [assetSearch, assetClassFilter]);
+
+  const renderSearch = () => (
+    <div className="ContractList__search">
+      <Input
+        id="contract-list-search"
+        fieldSize="md"
+        placeholder="Search DeFi, asset, or entity"
+        leftElement={<Icon.SearchSm />}
+        value={assetSearch}
+        onChange={(e) => setAssetSearch(e.target.value)}
+        autoComplete="off"
+      />
+    </div>
+  );
+
   const renderContent = () => {
     if (network.id === "futurenet") {
       return (
-        <div>
+        <PageCard heading="Smart contract list">
           <Text size="sm" as="p">
             No contract list found on Futurenet. Please switch to Testnet or
             Mainnet to view available contracts.
@@ -51,7 +104,7 @@ export default function ContractList() {
               page="contract list"
             />
           </Box>
-        </div>
+        </PageCard>
       );
     }
 
@@ -74,7 +127,9 @@ export default function ContractList() {
           <div className="TabView__content">
             {/* data-is-active is required for TabView CSS styling */}
             <div data-is-active={true}>
-              <RecentList />
+              <Card>
+                <RecentList />
+              </Card>
             </div>
           </div>
         </Box>
@@ -88,31 +143,46 @@ export default function ContractList() {
         tab1={{
           id: "defi",
           label: "DeFi",
-          content: activeTab === "defi" ? <DefiList /> : null,
+          content:
+            activeTab === "defi" ? (
+              <DefiList searchValue={assetSearch} />
+            ) : null,
           isDisabled: network.id !== "mainnet",
         }}
         tab2={{
           id: "known-assets",
           label: "Known assets",
-          content: activeTab === "known-assets" ? <KnownAssetsList /> : null,
+          content:
+            activeTab === "known-assets" ? (
+              <KnownAssetsList
+                assets={filteredAssets}
+                assetClasses={assetClasses}
+                assetClassFilter={assetClassFilter}
+                onAssetClassChange={setAssetClassFilter}
+              />
+            ) : null,
           isDisabled: network.id !== "mainnet",
         }}
         tab3={{
           id: "recent",
           label: "Recent",
-          content: activeTab === "recent" ? <RecentList /> : null,
+          content:
+            activeTab === "recent" ? (
+              <Card>
+                <RecentList searchValue={assetSearch} />
+              </Card>
+            ) : null,
         }}
         activeTabId={activeTab}
         onTabChange={(tabId) => {
           setActiveTab(tabId);
         }}
+        rightElement={renderSearch()}
       />
     );
   };
 
-  return (
-    <Box gap="lg">
-      <PageCard>{renderContent()}</PageCard>
-    </Box>
-  );
+  // Heading and tabs sit outside the card, like the other pages; only the
+  // tab content is in a card
+  return <Box gap="lg">{renderContent()}</Box>;
 }

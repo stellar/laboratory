@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Link, Loader } from "@stellar/design-system";
+import { Button, Icon, Link, Loader, Text } from "@stellar/design-system";
 import { useRouter } from "next/navigation";
 
 import { Box } from "@/components/layout/Box";
@@ -14,10 +14,16 @@ import { useSEContractsList } from "@/query/external/useSEContractsList";
 import { useStore } from "@/store/useStore";
 import { formatEpochToDate } from "@/helpers/formatEpochToDate";
 import { delayedAction } from "@/helpers/delayedAction";
+import { getContractIdError } from "@/validate/methods/getContractIdError";
 
 import { ContractListRecord, SortDirection } from "@/types/types";
 
-export const RecentList = () => {
+type RecentListProps = {
+  /** Free-text search, matched against contract ID (current page only) */
+  searchValue?: string;
+};
+
+export const RecentList = ({ searchValue = "" }: RecentListProps) => {
   const { network, smartContracts } = useStore();
   const router = useRouter();
 
@@ -61,10 +67,65 @@ export const RecentList = () => {
       <MessageField message={listError.toString()} isError={true} />;
     }
 
+    const trimmedQuery = searchValue.trim();
+    const query = trimmedQuery.toLowerCase();
+
+    // The list API has no search, so a full contract ID is a direct jump to
+    // the explorer (e.g. a contract the user just deployed) — the list only
+    // shows one page at a time
+    const isContractId =
+      Boolean(trimmedQuery) && !getContractIdError(trimmedQuery.toUpperCase());
+
+    if (isContractId) {
+      const contractId = trimmedQuery.toUpperCase();
+
+      return (
+        <Box
+          gap="md"
+          direction="row"
+          align="center"
+          justify="space-between"
+          addlClassName="RecentList__jumpTo"
+        >
+          <Link
+            addlClassName="ContractLink--withIcon"
+            onClick={() => handleNavigateToContractExplorer(contractId)}
+          >
+            {contractId}
+          </Link>
+
+          <Button
+            size="sm"
+            variant="tertiary"
+            icon={<Icon.ArrowRight />}
+            iconPosition="right"
+            onClick={() => handleNavigateToContractExplorer(contractId)}
+          >
+            Open in Contract explorer
+          </Button>
+        </Box>
+      );
+    }
+
+    const records = query
+      ? listData.records.filter((r: ContractListRecord) =>
+          r.contract.toLowerCase().includes(query),
+        )
+      : listData.records;
+
+    // No matches: just the message, no table chrome
+    if (query && records.length === 0) {
+      return (
+        <Text size="sm" as="p" addlClassName="ContractList__emptyMessage">
+          No matches on this page.
+        </Text>
+      );
+    }
+
     return (
       <DataTable
         tableId="recent-contracts-list"
-        tableData={listData.records}
+        tableData={records}
         tableHeaders={[
           { id: "contract", value: "Contract ID", isSortable: false },
           {
@@ -89,6 +150,7 @@ export const RecentList = () => {
         cssGridTemplateColumns="minmax(210px, 3fr) minmax(210px, 1fr)"
         hideFirstLastPageNav={true}
         hidePageCount={true}
+        isOutlined={true}
         isExternalUpdating={isListLoading || isListFetching}
         pageNavConfig={{
           prev: {
