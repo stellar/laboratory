@@ -17,7 +17,10 @@ test.describe("Sign Step in Build Flow", () => {
   const MOCK_SECRET_KEY_2 =
     "SADVGAH3VA3NGZ5VLX2ZICV7JQAINB2ZJZYOPMBXUNI3YRLGWLOA2OFY";
 
-  const seedSessionStorageAndNavigate = async (page: Page) => {
+  const seedSessionStorageAndNavigate = async (
+    page: Page,
+    options: { assembledXdr?: string } = {},
+  ) => {
     // Seed sessionStorage with flow store state at the sign step, before any
     // app script runs. Seeding after page load races with mount effects that
     // write the default flow state back to sessionStorage, which makes the
@@ -53,6 +56,9 @@ test.describe("Sign Step in Build Flow", () => {
               authMode: "record",
               simulationResultJson: "",
               isValid: false,
+              ...(options.assembledXdr
+                ? { assembledXdr: options.assembledXdr }
+                : {}),
             },
             sign: { signedXdr: "" },
             submit: { submitResultJson: "" },
@@ -72,16 +78,37 @@ test.describe("Sign Step in Build Flow", () => {
     await expect(page.locator("h1")).toHaveText("Sign transaction");
   };
 
-  test("Loads the sign step with correct heading and description", async ({
-    page,
-  }) => {
+  test("Loads the sign step with correct heading", async ({ page }) => {
     await seedSessionStorageAndNavigate(page);
 
     await expect(page.locator("h1")).toHaveText("Sign transaction");
 
+    // The signature-status guidance is only shown in the import flow, where
+    // existing signatures are reviewed; a freshly built tx doesn't need it
     await expect(
       page.getByText("This transaction needs signature(s)."),
+    ).toBeHidden();
+  });
+
+  test("Shows the simulated XDR above the signing UI when the tx was simulated", async ({
+    page,
+  }) => {
+    await seedSessionStorageAndNavigate(page, { assembledXdr: MOCK_TX_XDR });
+
+    const simulatedXdr = page.locator("#sign-step-simulated-xdr");
+    await expect(simulatedXdr).toBeVisible();
+    await expect(simulatedXdr).toHaveValue(MOCK_TX_XDR);
+    await expect(
+      page.getByText("Simulated transaction (Base64 XDR)"),
     ).toBeVisible();
+  });
+
+  test("Hides the simulated XDR when the tx was not simulated", async ({
+    page,
+  }) => {
+    await seedSessionStorageAndNavigate(page);
+
+    await expect(page.locator("#sign-step-simulated-xdr")).toBeHidden();
   });
 
   test("Shows SignTransactionXdr component with tabs", async ({ page }) => {
@@ -128,14 +155,6 @@ test.describe("Sign Step in Build Flow", () => {
     // Verify success alert appears
     await expect(
       page.getByText("Transaction signed and ready to submit."),
-    ).toBeVisible();
-    await expect(
-      page.getByText("This transaction needs signature(s)."),
-    ).toBeHidden();
-    await expect(
-      page.getByText(
-        "This step is optional. You can skip this step or add a signature if needed.",
-      ),
     ).toBeVisible();
 
     // Verify the signed transaction is shown in the result card's code editor,
