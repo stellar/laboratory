@@ -188,6 +188,7 @@ export default function BuildTransaction() {
                   build.soroban.xdr ||
                   build.classic.xdr
                 }
+                simulatedXdr={simulate.assembledXdr}
                 signedXdr={sign.signedXdr}
                 onSigned={setSignedXdr}
                 onClearAll={resetAll}
