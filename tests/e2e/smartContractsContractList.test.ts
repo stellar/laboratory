@@ -211,28 +211,30 @@ test.describe("Smart contract list: Recent tab", () => {
     await expect(prevPage(page)).toBeHidden();
   });
 
-  test("Search filters the loaded page and can page on", async ({ page }) => {
+  test("Search filters the loaded page without paging", async ({ page }) => {
     const rows = tableRows(page, "recent-contracts-list");
 
     await expect(rows).toHaveCount(20);
+    await expect(nextPage(page)).toBeVisible();
 
-    // Matches on page 1 only; paging stays available since the search covers
-    // one page at a time
+    // Search only covers the loaded page, so paging is hidden while searching
     await search(page).fill("AAAA");
 
     await expect(rows).toHaveCount(1);
-    await expect(nextPage(page)).toBeEnabled();
+    await expect(nextPage(page)).toBeHidden();
 
-    // Page 2 has no AAAA records: message, with paging still there to go back
-    await nextPage(page).click();
-
-    await expect(page.getByText("No matches on this page.")).toBeVisible();
-    await expect(prevPage(page)).toBeEnabled();
-
-    // Query that matches on page 2
+    // No matches on this page: just the message, no table or paging
     await search(page).fill("CCCC");
 
-    await expect(rows).toHaveCount(3);
+    await expect(page.getByText("No matches on this page.")).toBeVisible();
+    await expect(rows).toHaveCount(0);
+    await expect(nextPage(page)).toBeHidden();
+
+    // Clearing the search brings the page and its paging back
+    await search(page).fill("");
+
+    await expect(rows).toHaveCount(20);
+    await expect(nextPage(page)).toBeVisible();
   });
 
   test("A full contract ID jumps straight to Contract explorer", async ({

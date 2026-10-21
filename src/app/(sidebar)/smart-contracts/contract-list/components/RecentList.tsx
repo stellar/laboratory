@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Icon, Link, Loader } from "@stellar/design-system";
+import { Button, Icon, Link, Loader, Text } from "@stellar/design-system";
 import { useRouter } from "next/navigation";
 
 import { Box } from "@/components/layout/Box";
@@ -122,8 +122,15 @@ export const RecentList = ({ searchValue = "" }: RecentListProps) => {
         )
       : listData.records;
 
-    // No matches on this page: keep the table (and its paging) so the user
-    // can move on to the next page, since the search only covers one page
+    // No matches: just the message, no table chrome
+    if (query && records.length === 0) {
+      return (
+        <Text size="sm" as="p" addlClassName="ContractList__emptyMessage">
+          No matches on this page.
+        </Text>
+      );
+    }
+
     return (
       <DataTable
         tableId="recent-contracts-list"
@@ -155,8 +162,10 @@ export const RecentList = ({ searchValue = "" }: RecentListProps) => {
         isOutlined={true}
         emptyMessage="No matches on this page."
         isExternalUpdating={isListLoading || isListFetching}
-        // Nothing to page through when everything fits on the first page
-        hidePagination={currentPage === 1 && isLastPage}
+        // Search only covers the loaded page, so paging while searching would
+        // land on (mostly) empty pages; and nothing to page through when
+        // everything fits on the first page
+        hidePagination={Boolean(query) || (currentPage === 1 && isLastPage)}
         pageNavConfig={{
           prev: {
             onClick: () => {
