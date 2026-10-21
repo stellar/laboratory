@@ -143,11 +143,14 @@ export const USDC_TESTNET_ISSUER =
 export const EURC_TESTNET_ISSUER =
   "GB3Q6QDZYTHWT7E5PVS3W7FUT5GVAFC5KSZFFLPU25GO7VTC3NM2ZTVO";
 
-// NeevAI chat widget ("Ask Stellar")
+// NeevAI chat ("Ask Stellar"). Lab embeds only NeevAI's cross-origin chat
+// iframe; no NeevAI script runs on Lab's origin.
 export const NEEVAI_AGENT_ID = "9d63e5c1-61ef-419a-aeee-51f70faf726e";
-export const NEEVAI_SCRIPT_URL = `https://cdn.neevai.io/v1/embed/${NEEVAI_AGENT_ID}.js`;
 export const NEEVAI_CHAT_ORIGIN = "https://prism-chat.neevai.io";
-// NeevaiChat.submit() rejects messages longer than this
+// The chat iframe ignores questions longer than this
 export const NEEVAI_MAX_MESSAGE_LENGTH = 2000;
+// Embed protocol version the chat iframe reports in NEEVAI_READY. From this
+// version on, the chat acknowledges each question (NEEVAI_ASK_RECEIVED).
+export const NEEVAI_EMBED_PROTOCOL = 2;
 // The full-page chat URL `q` param must stay under this
 export const NEEVAI_MAX_URL_QUESTION_LENGTH = 200;

@@ -1,0 +1,121 @@
+@use "../../styles/utils.scss" as *;
+
+.AskStellar {
+  &__launcher {
+    --AskStellar-offset: #{pxToRem(20px)};
+
+    position: fixed;
+    right: var(--AskStellar-offset);
+    bottom: var(--AskStellar-offset);
+    z-index: 102;
+    display: flex;
+    align-items: center;
+    gap: pxToRem(8px);
+    height: pxToRem(44px);
+    padding: 0 pxToRem(18px) 0 pxToRem(14px);
+
+    border: 1px solid var(--sds-clr-gray-06);
+    border-radius: pxToRem(999px);
+    background-color: var(--sds-clr-gray-01);
+    color: var(--sds-clr-gray-12);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    font-size: pxToRem(15px);
+    font-weight: var(--sds-fw-semi-bold);
+    cursor: pointer;
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: scale(1.04);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--sds-clr-lilac-09);
+      outline-offset: 2px;
+    }
+
+    // While the panel is open the button is a round close button
+    &[data-is-open="true"] {
+      padding: 0;
+      width: pxToRem(44px);
+      justify-content: center;
+    }
+
+    svg {
+      width: pxToRem(20px);
+      height: pxToRem(20px);
+      stroke: currentColor;
+    }
+  }
+
+  &__panel {
+    position: fixed;
+    right: pxToRem(20px);
+    // Sit above the launcher button
+    bottom: pxToRem(76px);
+    z-index: 101;
+    width: min(#{pxToRem(400px)}, calc(100vw - #{pxToRem(40px)}));
+    height: min(#{pxToRem(700px)}, calc(100vh - #{pxToRem(96px)}));
+    overflow: hidden;
+
+    border-radius: pxToRem(20px);
+    background-color: var(--sds-clr-gray-01);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.16);
+
+    opacity: 0;
+    transform: scale(0.96);
+    transform-origin: bottom right;
+    pointer-events: none;
+    transition:
+      opacity 0.22s ease,
+      transform 0.22s ease;
+
+    // Hidden until first open so it doesn't block clicks or take focus
+    &[data-state="collapsed"] {
+      visibility: hidden;
+    }
+
+    &:not([data-state="collapsed"]) {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: auto;
+    }
+
+    &[data-state="expanded"] {
+      width: min(#{pxToRem(700px)}, calc(100vw - #{pxToRem(40px)}));
+      height: min(#{pxToRem(800px)}, calc(100vh - #{pxToRem(96px)}));
+    }
+
+    &[data-state="fullscreen"] {
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      border-radius: 0;
+    }
+
+    @media (max-width: 640px) {
+      &:not([data-state="fullscreen"]) {
+        right: pxToRem(8px);
+        left: pxToRem(8px);
+        width: auto;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+
+  &__frame {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  &__backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+}

@@ -8,7 +8,7 @@ import { WalletKitContextProvider } from "@/components/WalletKit/WalletKitContex
 import { QueryProvider } from "@/query/QueryProvider";
 import { StoreProvider } from "@/store/StoreProvider";
 import { GoogleAnalytics } from "@/metrics/GoogleAnalytics";
-import { NeevaiChatScript } from "@/components/NeevaiChatScript";
+import { AskStellar } from "@/components/AskStellar";
 
 import "@stellar/design-system/build/styles.min.css";
 import "@/styles/globals.scss";
@@ -37,13 +37,13 @@ export default function RootLayout({
                 <LayoutContextProvider>
                   <WalletKitContextProvider>
                     <LayoutMain>{children}</LayoutMain>
+                    <AskStellar />
                   </WalletKitContextProvider>
                 </LayoutContextProvider>
               </QueryProvider>
             </StoreProvider>
           </div>
           <GoogleAnalytics />
-          <NeevaiChatScript />
         </Suspense>
       </body>
     </html>
