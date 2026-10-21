@@ -127,17 +127,28 @@ test.describe("Smart contract list (mainnet)", () => {
     await page.getByTestId("known-assets").click();
 
     const rows = tableRows(page, "known-assets-list");
-
-    await page.locator("[data-asset-class-trigger]").click();
-    await page
+    const classHeader = page.locator("[data-asset-class-trigger]");
+    const stablecoinsOption = page
       .getByTestId("known-assets-class-dropdown")
-      .getByRole("button", { name: "Stablecoins" })
-      .click();
+      .getByRole("button", { name: "Stablecoins" });
+
+    await expect(rows.first()).toBeVisible();
+
+    // The header toggles the dropdown; open it (once the page is ready to
+    // respond) without a second click closing it again
+    await expect(async () => {
+      if (!(await stablecoinsOption.isVisible())) {
+        await classHeader.click();
+      }
+
+      await expect(stablecoinsOption).toBeVisible({ timeout: 1000 });
+    }).toPass();
+
+    await stablecoinsOption.click();
 
     // Header shows the selected class; every visible row is in it
-    await expect(
-      page.getByText("Stablecoins", { exact: true }).first(),
-    ).toBeVisible();
+    await expect(stablecoinsOption).toBeHidden();
+    await expect(classHeader).toContainText("Stablecoins");
     await expect(rows.first()).toContainText("Stablecoins");
     await expect(rows.filter({ hasNotText: "Stablecoins" })).toHaveCount(0);
 
