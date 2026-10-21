@@ -100,4 +100,15 @@ test.describe("Ask Stellar chat", () => {
       page.frameLocator(".AskStellar__frame").locator("#parent-access"),
     ).toHaveText("blocked");
   });
+
+  test("Removes chat UTM tags on landing and keeps store state", async ({
+    page,
+  }) => {
+    await page.goto(
+      `${baseURL}/xdr/view?utm_source=neevai&utm_medium=chat&$=network$id=futurenet;;`,
+    );
+
+    await expect(page).toHaveURL(/\/xdr\/view\?\$=network\$id=futurenet/);
+    expect(page.url()).not.toContain("utm_");
+  });
 });

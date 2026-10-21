@@ -10,7 +10,7 @@ import { LayoutWithSidebar } from "@/components/layout/LayoutWithSidebar";
 import { LayoutSidebarContent } from "@/components/layout/LayoutSidebarContent";
 import { FloatNotification } from "@/components/FloatNotification";
 
-import { initTracking } from "@/metrics/tracking";
+import { initTracking, trackNeevaiReferralLanding } from "@/metrics/tracking";
 import { useStore } from "@/store/useStore";
 
 export const LayoutMain = ({ children }: { children: ReactNode }) => {
@@ -19,9 +19,10 @@ export const LayoutMain = ({ children }: { children: ReactNode }) => {
     useState(0);
   const headerRef = useRef<HTMLDivElement>(null);
 
-  // Init tracking
+  // Init tracking, then record Ask Stellar chat landings (needs tracking on)
   useEffect(() => {
     initTracking();
+    trackNeevaiReferralLanding();
   }, []);
 
   // FloatNotification dynamic position based on header height (with or without banner)

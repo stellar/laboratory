@@ -1,5 +1,6 @@
 import * as amplitude from "@amplitude/analytics-browser";
-import { parse } from "zustand-querystring";
+import { getStoreQueryState } from "@/helpers/storeQueryState";
+import { parseNeevaiReferral, stripUtmParams } from "@/helpers/neevaiReferral";
 import { AnyObject } from "@/types/types";
 
 const AMPLITUDE_API_KEY_DEV = "21f9b86405da037f7b9d1f00a235a4fd";
@@ -67,10 +68,7 @@ export const trackEvent = (type: TrackingEvent, properties?: AnyObject) => {
     return;
   }
 
-  const trimmedParams = window.location.search
-    ? window.location.search.substring(3)
-    : "";
-  const searchParams: AnyObject | null = parse(trimmedParams);
+  const searchParams = getStoreQueryState(window.location.search);
 
   const props = {
     network: searchParams?.network?.id,
@@ -89,6 +87,31 @@ export const trackEvent = (type: TrackingEvent, properties?: AnyObject) => {
   }
 };
 
+/**
+ * Records a landing from an Ask Stellar chat link (`utm_source=neevai`), then
+ * removes the `utm_*` tags from the URL so copied links don't carry them.
+ * Must run after `initTracking()`, or the event is dropped.
+ */
+export const trackNeevaiReferralLanding = () => {
+  const { pathname, search, hash } = window.location;
+  const referral = parseNeevaiReferral(search);
+
+  if (!referral) {
+    return;
+  }
+
+  trackEvent(TrackingEvent.ASK_STELLAR_REFERRAL, {
+    path: pathname,
+    ...referral,
+  });
+
+  window.history.replaceState(
+    window.history.state,
+    "",
+    `${pathname}${stripUtmParams(search)}${hash}`,
+  );
+};
+
 export enum TrackingEvent {
   // Global
   MAIN_NAV_CLICKED = "main nav clicked",
@@ -97,6 +120,8 @@ export enum TrackingEvent {
   NETWORK_SWITCH = "network: switch",
   THEME_SET = "theme set",
   WALLET_KIT_SELECTED = "wallet kit selected",
+  // Ask Stellar
+  ASK_STELLAR_REFERRAL = "ask stellar: referral",
   // Home
   HOME_TOP_BTN = "home: top btn",
   HOME_START_BUILDING = "home: start building",

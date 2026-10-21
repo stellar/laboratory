@@ -1,22 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(request: NextRequest) {
-  // Strip the NeevAI chat's UTM tags so its resource links land on clean Lab
-  // URLs. These are appended by the hosted NeevAI widget, not by this app, so
-  // removing them here keeps them out of the address bar and the
-  // querystring-synced store. Scoped to utm_source=neevai so campaign tags from
-  // other sources are untouched. (To stop them at the source instead, change
-  // the agent config in the NeevAI portal.)
-  if (request.nextUrl.searchParams.get("utm_source") === "neevai") {
-    const cleanUrl = request.nextUrl.clone();
-
-    [...cleanUrl.searchParams.keys()]
-      .filter((key) => key.startsWith("utm_"))
-      .forEach((key) => cleanUrl.searchParams.delete(key));
-
-    return NextResponse.redirect(cleanUrl);
-  }
-
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
 
   const isLocalhost = Boolean(

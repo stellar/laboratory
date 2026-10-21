@@ -1,11 +1,11 @@
-import { stringify, parse } from "zustand-querystring";
+import { stringify } from "zustand-querystring";
+import { getStoreQueryState } from "@/helpers/storeQueryState";
 import { Store } from "@/store/createStore";
 import { Routes } from "@/constants/routes";
 import { AnyObject } from "@/types/types";
 
 export const buildContractExplorerHref = (contractId: string) => {
-  const trimmedSearch = window.location.search.substring(3);
-  const parsedParams = parse(trimmedSearch) as Store;
+  const parsedParams = getStoreQueryState(window.location.search) as Store;
 
   const buildParams = Object.entries(parsedParams).reduce((res, cur) => {
     const [key, value] = cur;
