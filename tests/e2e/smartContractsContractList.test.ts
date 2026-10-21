@@ -194,21 +194,45 @@ test.describe("Smart contract list: Recent tab", () => {
     await expect(nextPage(page)).toBeDisabled();
   });
 
-  test("Search filters the loaded page and hides pagination", async ({
-    page,
-  }) => {
+  test("A single short page shows no pagination", async ({ page }) => {
+    await page.route(SE_CONTRACT_LIST_URL, async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(MOCK_RECENT_SINGLE_PAGE),
+      });
+    });
+    await page.reload();
+
+    const rows = tableRows(page, "recent-contracts-list");
+
+    await expect(rows).toHaveCount(3);
+    await expect(nextPage(page)).toBeHidden();
+    await expect(prevPage(page)).toBeHidden();
+  });
+
+  test("Search filters the loaded page and can page on", async ({ page }) => {
     const rows = tableRows(page, "recent-contracts-list");
 
     await expect(rows).toHaveCount(20);
 
+    // Matches on page 1 only; paging stays available since the search covers
+    // one page at a time
     await search(page).fill("AAAA");
 
     await expect(rows).toHaveCount(1);
-    await expect(nextPage(page)).toBeHidden();
+    await expect(nextPage(page)).toBeEnabled();
 
-    await search(page).fill("zzzz");
+    // Page 2 has no AAAA records: message, with paging still there to go back
+    await nextPage(page).click();
 
     await expect(page.getByText("No matches on this page.")).toBeVisible();
+    await expect(prevPage(page)).toBeEnabled();
+
+    // Query that matches on page 2
+    await search(page).fill("CCCC");
+
+    await expect(rows).toHaveCount(3);
   });
 
   test("A full contract ID jumps straight to Contract explorer", async ({
@@ -267,6 +291,18 @@ const MOCK_RECENT_PAGE_1 = {
       mockRecord(0, "AAAA"),
       ...Array.from({ length: 19 }, (_, i) => mockRecord(i + 1, "BBBB")),
     ],
+  },
+};
+
+// First page with fewer records than the page size: nothing to paginate
+const MOCK_RECENT_SINGLE_PAGE = {
+  _links: {
+    self: { href: "/explorer/testnet/contract?limit=20&order=desc" },
+    prev: { href: "/explorer/testnet/contract?limit=20&order=asc&cursor=100" },
+    next: { href: "/explorer/testnet/contract?limit=20&order=desc&cursor=97" },
+  },
+  _embedded: {
+    records: Array.from({ length: 3 }, (_, i) => mockRecord(i, "DDDD")),
   },
 };
 
