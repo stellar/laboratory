@@ -38,8 +38,8 @@ export default function ContractList() {
     }
   };
 
-  // Search (tab row) applies to DeFi and Known assets; asset class filter
-  // lives in the Known assets table header
+  // Search (tab row) applies to every tab; asset class filter lives in the
+  // Known assets table header
   const [assetSearch, setAssetSearch] = useState("");
   const [assetClassFilter, setAssetClassFilter] = useState("");
 
@@ -79,7 +79,11 @@ export default function ContractList() {
       <Input
         id="contract-list-search"
         fieldSize="md"
-        placeholder="Search DeFi, asset, or entity"
+        placeholder={
+          network.id === "testnet"
+            ? "Search contract ID"
+            : "Search DeFi, asset, or entity"
+        }
         leftElement={<Icon.SearchSm />}
         value={assetSearch}
         onChange={(e) => setAssetSearch(e.target.value)}
@@ -115,20 +119,24 @@ export default function ContractList() {
           <div className="TabView__heading">
             <PageHeader heading="Smart contract list" />
           </div>
-          <div className="TabView__tabContainer">
-            <Tabs
-              tabs={[{ id: "recent", label: "Recent" }]}
-              activeTabId="recent"
-              onChange={() => {
-                // Single tab - no action needed
-              }}
-            />
+          {/* Same tab row as TabView: tabs on the left, search on the right */}
+          <div className="TabView__heading">
+            <div className="TabView__tabContainer">
+              <Tabs
+                tabs={[{ id: "recent", label: "Recent" }]}
+                activeTabId="recent"
+                onChange={() => {
+                  // Single tab - no action needed
+                }}
+              />
+            </div>
+            <div className="TabView__rightElement">{renderSearch()}</div>
           </div>
           <div className="TabView__content">
             {/* data-is-active is required for TabView CSS styling */}
             <div data-is-active={true}>
               <Card>
-                <RecentList />
+                <RecentList searchValue={assetSearch} />
               </Card>
             </div>
           </div>
@@ -159,6 +167,7 @@ export default function ContractList() {
                 assetClasses={assetClasses}
                 assetClassFilter={assetClassFilter}
                 onAssetClassChange={setAssetClassFilter}
+                searchValue={assetSearch}
               />
             ) : null,
           isDisabled: network.id !== "mainnet",

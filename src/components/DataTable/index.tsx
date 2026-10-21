@@ -63,6 +63,8 @@ type DataTableProps<T> = {
   onSortChange?: (sortById: string, sortByDir: SortDirection) => void;
   /** Draws a 1px border with rounded corners around the table */
   isOutlined?: boolean;
+  /** Go back to page 1 whenever this value changes (e.g. the search query) */
+  resetPageKey?: string | number;
 };
 
 export const DataTable = <T extends AnyObject>({
@@ -84,6 +86,7 @@ export const DataTable = <T extends AnyObject>({
   emptyMessage,
   onSortChange,
   isOutlined,
+  resetPageKey,
 }: DataTableProps<T>) => {
   // Data
   const [processedData, setProcessedData] = useState<
@@ -135,6 +138,11 @@ export const DataTable = <T extends AnyObject>({
     setIsUpdating(false);
     setTotalPageCount(Math.ceil(processedData.length / pageSize));
   }, [processedData, pageSize]);
+
+  // A new search / filter starts from the first page
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [resetPageKey]);
 
   const getCustomProps = (th: DataTableHeader) => {
     if (th.isSortable) {

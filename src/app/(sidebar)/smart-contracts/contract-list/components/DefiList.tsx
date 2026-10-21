@@ -97,6 +97,7 @@ export const DefiList = ({ searchValue = "" }: DefiListProps) => {
         <DataTable
           tableId="popular-contracts-list"
           tableData={filteredContracts}
+          resetPageKey={query}
           tableHeaders={[
             { id: "contract", value: "Contract ID", isSortable: false },
             {

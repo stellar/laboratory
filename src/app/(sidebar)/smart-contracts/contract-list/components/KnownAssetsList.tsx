@@ -27,6 +27,8 @@ type KnownAssetsListProps = {
   /** Selected asset class; empty string means all */
   assetClassFilter?: string;
   onAssetClassChange?: (assetClass: string) => void;
+  /** Current search query; a change resets the table to page 1 */
+  searchValue?: string;
 };
 
 export const KnownAssetsList = ({
@@ -34,6 +36,7 @@ export const KnownAssetsList = ({
   assetClasses = [],
   assetClassFilter = "",
   onAssetClassChange,
+  searchValue = "",
 }: KnownAssetsListProps) => {
   const { network, smartContracts } = useStore();
   const router = useRouter();
@@ -136,6 +139,7 @@ export const KnownAssetsList = ({
         <DataTable
           tableId="known-assets-list"
           tableData={assets}
+          resetPageKey={`${searchValue}|${assetClassFilter}`}
           tableHeaders={[
             { id: "assetCode", value: "Asset code", isSortable: true },
             { id: "entity", value: getEntityLabel(), isSortable: true },
