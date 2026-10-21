@@ -81,7 +81,7 @@ export default function ViewXdr() {
     trackingEvents: {
       success: TrackingEvent.XDR_TO_JSON_SUCCESS,
       successStream: TrackingEvent.XDR_TO_JSON_STREAM_SUCCESS,
-      error: TrackingEvent.XDR_FROM_JSON_ERROR,
+      error: TrackingEvent.XDR_TO_JSON_ERROR,
     },
   });
 

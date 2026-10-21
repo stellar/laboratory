@@ -19,6 +19,7 @@ package-lock.json
 # misc
 .DS_Store
 *.pem
+/ai-summary
 
 # debug
 npm-debug.log*

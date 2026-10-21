@@ -60,6 +60,16 @@ export const renderOneOf = ({
     tagName = parsedSorobanOperation.args?.[keyName]?.tag;
   }
 
+  // Read the selection back from the store so the dropdown always shows the
+  // variant that will be encoded. Unions store `tag`; top-level integer enums
+  // store `enum`.
+  const storedValue = get(parsedSorobanOperation.args, path.join("."));
+  const selectedValue = (
+    storedValue?.tag ??
+    storedValue?.enum ??
+    ""
+  ).toString();
+
   const selectedSchema = schema.oneOf.find(
     (oneOf) => jsonSchema.isSchemaObject(oneOf) && oneOf?.title === tagName,
   );
@@ -115,6 +125,7 @@ export const renderOneOf = ({
     <Box gap="md" key={`${path.join(".")}`}>
       <Select
         id="json-schema-form-renderer-one-of"
+        value={selectedValue}
         fieldSize="md"
         label={name}
         labelSuffix={isOptional ? "optional" : undefined}

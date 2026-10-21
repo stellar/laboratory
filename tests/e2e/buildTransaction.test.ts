@@ -1,6 +1,5 @@
 import { baseURL } from "../../playwright.config";
 import { test, expect, Page } from "@playwright/test";
-import { TransactionBuilder, Networks } from "@stellar/stellar-sdk";
 
 test.describe("Build Transaction Page", () => {
   test.beforeEach(async ({ page }) => {
@@ -1918,100 +1917,27 @@ test.describe("Build Transaction Page", () => {
     });
   });
 
-  test.describe("Account Merge — hydrated params", () => {
-    // account_merge op params { a: ATTACKER, destination: ACCOUNT_ONE }, with
-    // "a" ordered before "destination", serialized via zustand-querystring.
-    const CRAFTED_QUERYSTRING =
-      "$=transaction$build$classic$operations@$operation_type=account_merge&source_account=&params$a=GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5&destination=GC3N3GAECL3PJOWIKAAKPOB677WHCUNWZRULANQMHEIL4WDX5FICMF3I;;;;&params$source_account=GAGSY6UVUIINHRHSSDO7NMCM7ADWUF5UJ4ZGGJSFSXKWNJDRW6AA4H3Q&fee=100&seq_num=4466559829409793&cond$time$min_time=&max_time=;;&memo$;;&isValid$params:true&operations:true;;";
-
-    test("encodes the displayed destination, not the injected key", async ({
-      page,
-    }) => {
-      await page.goto(`${baseURL}/transaction/build?${CRAFTED_QUERYSTRING}`);
-
-      // The operation form shows the "destination" param (benign account).
-      const destinationInput = page
-        .getByTestId("build-transaction-operation-0")
-        .getByLabel("Destination");
-      await expect(destinationInput).toHaveValue(ACCOUNT_ONE);
-
-      // The built XDR must encode ACCOUNT_ONE — the destination the form shows —
-      // and never the injected key GBBD... A positional read would encode GBBD.
-      const txnSuccess = page.getByTestId("build-transaction-envelope-xdr");
-      await expect(txnSuccess).toBeVisible();
-      const xdr = await txnSuccess
-        .getByText("XDR")
-        .locator("+ div")
-        .textContent();
-
-      const decoded = TransactionBuilder.fromXdr(xdr ?? "", Networks.TESTNET);
-      const op = (decoded as any).operations[0];
-      expect(op.type).toBe("accountMerge");
-      expect(op.destination).toBe(ACCOUNT_ONE);
-      expect(op.destination).not.toBe(
-        "GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5",
-      );
-    });
-  });
-
-  // Security regression: the transaction memo must be encoded as the type the
-  // form displays. A crafted share link can inject an extra memo key (e.g.
-  // { text: "…", id: "…" }); the form shows the first entry (Text) while a
-  // by-key `value.id` read would encode a numeric ID memo instead — signing a
-  // different memo than the one shown, which can misroute custodial deposits.
-  test.describe("Memo — hydrated params", () => {
-    // params.memo { text: "benign note", id: "666" }, "text" ordered first,
-    // serialized via zustand-querystring the same way the store hydrates it.
+  // Security regression: build state is no longer read from the URL. A crafted
+  // share link used to seed fields the form didn't display faithfully (e.g. an
+  // injected memo key or contract argument variant) while the encoder signed
+  // them. The build flow now only restores from sessionStorage.
+  test.describe("Legacy URL params", () => {
     const CRAFTED_QUERYSTRING =
       "$=transaction$build$classic$operations@$operation_type=account_merge&source_account=&params$destination=GC3N3GAECL3PJOWIKAAKPOB677WHCUNWZRULANQMHEIL4WDX5FICMF3I;;;;&params$source_account=GAGSY6UVUIINHRHSSDO7NMCM7ADWUF5UJ4ZGGJSFSXKWNJDRW6AA4H3Q&fee=100&seq_num=4466559829409793&cond$time$min_time=&max_time=;;&memo$text=benign%20note&id=666;;&isValid$params:true&operations:true;;";
 
-    test("encodes the displayed memo type, not an injected key", async ({
-      page,
-    }) => {
+    test("ignores build params in the URL", async ({ page }) => {
       await page.goto(`${baseURL}/transaction/build?${CRAFTED_QUERYSTRING}`);
 
-      // The form shows a Text memo "benign note" (the first entry), not "666".
-      await expect(page.locator("#memo_value")).toHaveValue("benign note");
-
-      // The built XDR must carry that Text memo — never a MEMO_ID 666. A by-key
-      // `value.id` read would encode the injected id and diverge from the form.
-      const txnSuccess = page.getByTestId("build-transaction-envelope-xdr");
-      await expect(txnSuccess).toBeVisible();
-      const xdr = await txnSuccess
-        .getByText("XDR")
-        .locator("+ div")
-        .textContent();
-
-      const decoded = TransactionBuilder.fromXdr(
-        xdr ?? "",
-        Networks.TESTNET,
-      ) as any;
-      expect(decoded.memo.type).toBe("text");
-      expect(Buffer.from(decoded.memo.value)?.toString()).toBe("benign note");
-      expect(decoded.memo.type).not.toBe("id");
-    });
-
-    // A crafted link can hydrate memo as null (lodash merge overrides the
-    // default {} with null). The build page must not crash — the form treats
-    // it as no memo and the built XDR encodes memo "none".
-    const NULL_MEMO_QUERYSTRING =
-      "$=transaction$build$classic$operations@$operation_type=account_merge&source_account=&params$destination=GC3N3GAECL3PJOWIKAAKPOB677WHCUNWZRULANQMHEIL4WDX5FICMF3I;;;;&params$source_account=GAGSY6UVUIINHRHSSDO7NMCM7ADWUF5UJ4ZGGJSFSXKWNJDRW6AA4H3Q&fee=100&seq_num=4466559829409793&cond$time$min_time=&max_time=;;&memo:null;&isValid$params:true&operations:true;;";
-
-    test("builds with no memo when memo hydrates as null", async ({ page }) => {
-      await page.goto(`${baseURL}/transaction/build?${NULL_MEMO_QUERYSTRING}`);
-
-      const txnSuccess = page.getByTestId("build-transaction-envelope-xdr");
-      await expect(txnSuccess).toBeVisible();
-      const xdr = await txnSuccess
-        .getByText("XDR")
-        .locator("+ div")
-        .textContent();
-
-      const decoded = TransactionBuilder.fromXdr(
-        xdr ?? "",
-        Networks.TESTNET,
-      ) as any;
-      expect(decoded.memo.type).toBe("none");
+      await expect(page.locator("h1")).toHaveText("Build transaction");
+      await expect(page.getByLabel("Source account")).toHaveValue("");
+      await expect(
+        page
+          .getByTestId("build-transaction-operation-0")
+          .getByLabel("Operation type"),
+      ).toHaveValue("");
+      await expect(
+        page.getByTestId("build-transaction-envelope-xdr"),
+      ).toBeHidden();
     });
   });
 });

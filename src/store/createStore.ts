@@ -639,19 +639,9 @@ export const createStore = (options: CreateStoreOptions) =>
               saved: true,
             },
             transaction: {
-              build: {
-                classic: {
-                  operations: true,
-                  xdr: false,
-                },
-                soroban: {
-                  operation: true,
-                  xdr: false,
-                },
-                params: true,
-                error: false,
-                isValid: true,
-              },
+              // The build flow keeps its state in sessionStorage
+              // (createTransactionFlowStore), not the URL
+              build: false,
               sign: {
                 activeView: true,
                 importXdr: true,
