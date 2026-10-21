@@ -1,0 +1,283 @@
+import { baseURL } from "../../playwright.config";
+import { expect, Page, test } from "@playwright/test";
+
+/**
+ * Smart contract list: tab-row search, asset class filter, page reset on
+ * search, and the Recent tab (StellarExpert list API, mocked).
+ */
+
+const CONTRACT_LIST_URL = `${baseURL}/smart-contracts/contract-list`;
+const SE_CONTRACT_LIST_URL = "https://api.stellar.expert/explorer/*/contract?*";
+
+const switchToMainnet = async (page: Page) => {
+  await page.getByTestId("networkSelector-button").click();
+  await expect(page.getByTestId("networkSelector-dropdown")).toBeVisible();
+
+  await page
+    .getByTestId("networkSelector-dropdown")
+    .getByTestId("networkSelector-option")
+    .filter({ has: page.getByText("Mainnet") })
+    .click();
+
+  await page.getByTestId("networkSelector-submit-button").click();
+
+  await expect(page.getByTestId("networkSelector-button")).toHaveText(
+    "Mainnet",
+  );
+};
+
+const search = (page: Page) => page.locator("#contract-list-search");
+const tableRows = (page: Page, tableId: string) =>
+  page.getByTestId(`${tableId}-table`).locator("tbody tr");
+const nextPage = (page: Page) =>
+  page.getByRole("button", { name: "Next page" });
+const prevPage = (page: Page) =>
+  page.getByRole("button", { name: "Previous page" });
+
+test.describe("Smart contract list (mainnet)", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto(CONTRACT_LIST_URL);
+    await switchToMainnet(page);
+  });
+
+  test("Loads with DeFi, Known assets, and Recent tabs", async ({ page }) => {
+    await expect(page.locator("h1")).toHaveText("Smart contract list");
+    await expect(page.getByTestId("defi")).toBeVisible();
+    await expect(page.getByTestId("known-assets")).toBeVisible();
+    await expect(page.getByTestId("recent")).toBeVisible();
+    await expect(search(page)).toBeVisible();
+  });
+
+  test("DeFi: search filters by name", async ({ page }) => {
+    const rows = tableRows(page, "popular-contracts-list");
+
+    await expect(rows).toHaveCount(20);
+
+    await search(page).fill("blend");
+
+    await expect(rows).toHaveCount(5);
+    await expect(rows.first()).toContainText("Blend");
+
+    await search(page).fill("zzzz");
+
+    await expect(
+      page.getByText("No contracts match your search"),
+    ).toBeVisible();
+    await expect(page.getByTestId("popular-contracts-list-table")).toBeHidden();
+  });
+
+  test("DeFi: searching from page 2 shows results from page 1", async ({
+    page,
+  }) => {
+    const rows = tableRows(page, "popular-contracts-list");
+
+    await nextPage(page).click();
+    await expect(rows).toHaveCount(7);
+    await expect(prevPage(page)).toBeEnabled();
+
+    await search(page).fill("blend");
+
+    await expect(rows).toHaveCount(5);
+    await expect(rows.first()).toContainText("Blend");
+    // One page of results: no pagination controls
+    await expect(nextPage(page)).toBeHidden();
+  });
+
+  test("Known assets: search matches asset code and entity", async ({
+    page,
+  }) => {
+    await page.getByTestId("known-assets").click();
+
+    const rows = tableRows(page, "known-assets-list");
+
+    await expect(rows).toHaveCount(20);
+
+    // Asset code
+    await search(page).fill("xlm");
+    await expect(rows.first()).toContainText("XLM");
+
+    // Entity
+    await search(page).fill("circle");
+    await expect(rows.first()).toContainText("Circle");
+
+    await search(page).fill("zzzz");
+    await expect(page.getByText("No assets match your search")).toBeVisible();
+  });
+
+  test("Known assets: searching from a later page resets to page 1", async ({
+    page,
+  }) => {
+    await page.getByTestId("known-assets").click();
+
+    const rows = tableRows(page, "known-assets-list");
+
+    await nextPage(page).click();
+    await nextPage(page).click();
+    await expect(prevPage(page)).toBeEnabled();
+
+    await search(page).fill("xlm");
+
+    await expect(rows.first()).toContainText("XLM");
+    await expect(rows).not.toHaveCount(0);
+  });
+
+  test("Known assets: asset class filter in the table header", async ({
+    page,
+  }) => {
+    await page.getByTestId("known-assets").click();
+
+    const rows = tableRows(page, "known-assets-list");
+
+    await page.locator("[data-asset-class-trigger]").click();
+    await page
+      .getByTestId("known-assets-class-dropdown")
+      .getByRole("button", { name: "Stablecoins" })
+      .click();
+
+    // Header shows the selected class; every visible row is in it
+    await expect(
+      page.getByText("Stablecoins", { exact: true }).first(),
+    ).toBeVisible();
+    await expect(rows.first()).toContainText("Stablecoins");
+    await expect(rows.filter({ hasNotText: "Stablecoins" })).toHaveCount(0);
+
+    // Search applies on top of the filter
+    await search(page).fill("circle");
+    await expect(rows.first()).toContainText("Circle");
+    await expect(rows.filter({ hasNotText: "Circle" })).toHaveCount(0);
+  });
+});
+
+test.describe("Smart contract list: Recent tab", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.route(SE_CONTRACT_LIST_URL, async (route) => {
+      const url = new URL(route.request().url());
+      const cursor = url.searchParams.get("cursor");
+
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(cursor ? MOCK_RECENT_PAGE_2 : MOCK_RECENT_PAGE_1),
+      });
+    });
+
+    await page.goto(CONTRACT_LIST_URL);
+  });
+
+  test("Testnet shows the Recent tab with search", async ({ page }) => {
+    await expect(page.getByTestId("recent")).toBeVisible();
+    await expect(page.getByTestId("defi")).toBeHidden();
+    await expect(search(page)).toBeVisible();
+    await expect(search(page)).toHaveAttribute(
+      "placeholder",
+      "Search contract ID",
+    );
+  });
+
+  test("Lists recent contracts and pages with the API cursor", async ({
+    page,
+  }) => {
+    const rows = tableRows(page, "recent-contracts-list");
+
+    await expect(rows).toHaveCount(20);
+    await expect(rows.first()).toContainText(
+      MOCK_RECENT_PAGE_1._embedded.records[0].contract,
+    );
+    await expect(prevPage(page)).toBeDisabled();
+    await expect(nextPage(page)).toBeEnabled();
+
+    await nextPage(page).click();
+
+    // Short last page: Next is disabled instead of leading to an empty page
+    await expect(rows).toHaveCount(3);
+    await expect(prevPage(page)).toBeEnabled();
+    await expect(nextPage(page)).toBeDisabled();
+  });
+
+  test("Search filters the loaded page and hides pagination", async ({
+    page,
+  }) => {
+    const rows = tableRows(page, "recent-contracts-list");
+
+    await expect(rows).toHaveCount(20);
+
+    await search(page).fill("AAAA");
+
+    await expect(rows).toHaveCount(1);
+    await expect(nextPage(page)).toBeHidden();
+
+    await search(page).fill("zzzz");
+
+    await expect(page.getByText("No matches on this page.")).toBeVisible();
+  });
+
+  test("A full contract ID jumps straight to Contract explorer", async ({
+    page,
+  }) => {
+    // Navigates to another page, which compiles on first load in dev
+    test.slow();
+
+    await search(page).fill(SAMPLE_CONTRACT_ID.toLowerCase());
+
+    await expect(page.getByText(SAMPLE_CONTRACT_ID)).toBeVisible();
+
+    await page
+      .getByRole("button", { name: "Open in Contract explorer" })
+      .click();
+
+    // The contract ID is stored before navigating; the explorer page itself
+    // may take a while to compile in dev
+    await expect(page).toHaveURL(/explorer\$contractId=/);
+    await expect(page).toHaveURL(/smart-contracts\/contract-explorer/, {
+      timeout: 60000,
+    });
+    await expect(page.locator("#contract-id")).toHaveValue(SAMPLE_CONTRACT_ID);
+  });
+});
+
+// =============================================================================
+// Mock data
+// =============================================================================
+const SAMPLE_CONTRACT_ID =
+  "CCQXWMZVM3KRTXTUPTN53YHL272QGKF32L7XEDNZ2S6OSUFK3NFBGG5M";
+
+const mockRecord = (index: number, prefix: string) => {
+  // Contract IDs are 56 chars: "C" + 55 base32 chars. Build a distinct, valid
+  // looking ID per record so search and keys are stable.
+  const body = `${prefix}${String(index).padStart(2, "0")}`.padEnd(55, "X");
+
+  return {
+    account: `GA${body.slice(0, 54)}`,
+    contract: `C${body}`,
+    created: 1700000000 - index * 3600,
+    creator: `GA${body.slice(0, 54)}`,
+    paging_token: String(100 - index),
+    payments: 0,
+  };
+};
+
+const MOCK_RECENT_PAGE_1 = {
+  _links: {
+    self: { href: "/explorer/testnet/contract?limit=20&order=desc" },
+    prev: { href: "/explorer/testnet/contract?limit=20&order=asc&cursor=100" },
+    next: { href: "/explorer/testnet/contract?limit=20&order=desc&cursor=81" },
+  },
+  _embedded: {
+    records: [
+      mockRecord(0, "AAAA"),
+      ...Array.from({ length: 19 }, (_, i) => mockRecord(i + 1, "BBBB")),
+    ],
+  },
+};
+
+const MOCK_RECENT_PAGE_2 = {
+  _links: {
+    self: { href: "/explorer/testnet/contract?limit=20&order=desc&cursor=81" },
+    prev: { href: "/explorer/testnet/contract?limit=20&order=asc&cursor=80" },
+    // The API still returns a next link on the last page
+    next: { href: "/explorer/testnet/contract?limit=20&order=desc&cursor=78" },
+  },
+  _embedded: {
+    records: Array.from({ length: 3 }, (_, i) => mockRecord(i + 20, "CCCC")),
+  },
+};
