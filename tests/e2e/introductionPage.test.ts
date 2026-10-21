@@ -13,7 +13,9 @@ test.describe("Introduction Page", () => {
 
     // Ask chat field
     await expect(page.locator("#home-ask-input")).toBeVisible();
-    await expect(page.locator("button", { hasText: "Start" })).toBeDisabled();
+    await expect(
+      page.getByRole("button", { name: "Start", exact: true }),
+    ).toBeDisabled();
   });
 
   test("Section headers", async ({ page }) => {
