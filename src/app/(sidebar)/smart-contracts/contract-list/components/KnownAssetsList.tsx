@@ -169,6 +169,7 @@ export const KnownAssetsList = ({
           hideFirstLastPageNav={true}
           hidePageCount={true}
           isOutlined={true}
+          emptyMessage="No assets match your search"
           onSortChange={(id, direction) => setSortState({ id, direction })}
         />
       </Card>

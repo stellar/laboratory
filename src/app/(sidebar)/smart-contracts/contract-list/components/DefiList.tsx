@@ -123,6 +123,7 @@ export const DefiList = ({ searchValue = "" }: DefiListProps) => {
           hideFirstLastPageNav={true}
           hidePageCount={true}
           isOutlined={true}
+          emptyMessage="No contracts match your search"
           onSortChange={(id, direction) => setSortState({ id, direction })}
         />
       </Card>

@@ -151,6 +151,7 @@ export const RecentList = ({ searchValue = "" }: RecentListProps) => {
         hideFirstLastPageNav={true}
         hidePageCount={true}
         isOutlined={true}
+        emptyMessage="No matches on this page."
         isExternalUpdating={isListLoading || isListFetching}
         pageNavConfig={{
           prev: {
