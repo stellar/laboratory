@@ -35,12 +35,14 @@ export const RecentList = ({ searchValue = "" }: RecentListProps) => {
   const router = useRouter();
 
   const [sortDir, setSortDir] = useState<SortDirection>("default");
-  // Paging belongs to the query it was done for: a new query starts over
+  // Cursors of the pages visited so far, so Previous goes back to exactly
+  // the page that was shown (the API's prev link flips the order, which
+  // doesn't fit a list read in one direction). Paging belongs to the query
+  // it was done for: a new query starts over.
   const [paging, setPaging] = useState<{
     query: string;
-    cursor: string;
-    page: number;
-  }>({ query: "", cursor: "", page: 1 });
+    cursors: string[];
+  }>({ query: "", cursors: [] });
 
   const trimmedQuery = searchValue.trim();
   const prefix = trimmedQuery.toUpperCase();
@@ -48,8 +50,9 @@ export const RecentList = ({ searchValue = "" }: RecentListProps) => {
   const isValidPrefix = CONTRACT_ID_CHARS.test(prefix);
   const order = sortDir === "default" ? "desc" : sortDir;
 
-  const currentCursor = paging.query === prefix ? paging.cursor : "";
-  const currentPage = paging.query === prefix ? paging.page : 1;
+  const visitedCursors = paging.query === prefix ? paging.cursors : [];
+  const currentCursor = visitedCursors[visitedCursors.length - 1] || "";
+  const currentPage = visitedCursors.length + 1;
 
   // The list is ordered by contract ID, so a search jumps the cursor to the
   // first ID with that prefix and pages on from there
@@ -62,7 +65,6 @@ export const RecentList = ({ searchValue = "" }: RecentListProps) => {
     error: listError,
     isLoading: isListLoading,
     isFetching: isListFetching,
-    refetch: fetchListData,
   } = useSEContractsList({
     networkId: network.id,
     cursor,
@@ -70,9 +72,12 @@ export const RecentList = ({ searchValue = "" }: RecentListProps) => {
     enabled: !isSearching || isValidPrefix,
   });
 
-  const goToPage = (nextCursor: string, page: number) => {
-    setPaging({ query: prefix, cursor: nextCursor, page });
-    fetchListData();
+  const goToNextPage = (nextCursor: string) => {
+    setPaging({ query: prefix, cursors: [...visitedCursors, nextCursor] });
+  };
+
+  const goToPrevPage = () => {
+    setPaging({ query: prefix, cursors: visitedCursors.slice(0, -1) });
   };
 
   const handleNavigateToContractExplorer = (contractId: string) => {
@@ -204,24 +209,20 @@ export const RecentList = ({ searchValue = "" }: RecentListProps) => {
         hidePagination={currentPage === 1 && isLastPage}
         pageNavConfig={{
           prev: {
-            onClick: () => {
-              if (listData?.prevCursor) {
-                goToPage(listData.prevCursor, Math.max(currentPage - 1, 1));
-              }
-            },
+            onClick: goToPrevPage,
             disabled: currentPage === 1 || isListLoading || isListFetching,
           },
           next: {
             onClick: () => {
               if (listData?.nextCursor) {
-                goToPage(listData.nextCursor, currentPage + 1);
+                goToNextPage(listData.nextCursor);
               }
             },
             disabled: isLastPage || isListLoading || isListFetching,
           },
         }}
         externalSort={(sortDir) => {
-          setPaging({ query: prefix, cursor: "", page: 1 });
+          setPaging({ query: prefix, cursors: [] });
           setSortDir(sortDir);
         }}
         customFooterEl={<PoweredByStellarExpert />}

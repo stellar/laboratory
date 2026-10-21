@@ -206,6 +206,16 @@ test.describe("Smart contract list: Recent tab", () => {
     await expect(rows).toHaveCount(3);
     await expect(prevPage(page)).toBeEnabled();
     await expect(nextPage(page)).toBeDisabled();
+
+    // Previous goes back to exactly the first page
+    await prevPage(page).click();
+
+    await expect(rows).toHaveCount(20);
+    await expect(rows.first()).toContainText(
+      MOCK_RECENT_PAGE_1._embedded.records[0].contract,
+    );
+    await expect(prevPage(page)).toBeDisabled();
+    await expect(nextPage(page)).toBeEnabled();
   });
 
   test("A single short page shows no pagination", async ({ page }) => {
@@ -246,6 +256,16 @@ test.describe("Smart contract list: Recent tab", () => {
     await expect(rows.filter({ hasNotText: "CBBBB" })).toHaveCount(0);
     await expect(prevPage(page)).toBeEnabled();
     await expect(nextPage(page)).toBeDisabled();
+
+    // Previous from the end goes back to the full first page of matches
+    await prevPage(page).click();
+
+    await expect(rows).toHaveCount(20);
+    await expect(rows.first()).toContainText(
+      MOCK_SEARCH_PAGE_1._embedded.records[0].contract,
+    );
+    await expect(prevPage(page)).toBeDisabled();
+    await expect(nextPage(page)).toBeEnabled();
 
     // A new query starts over from its own first page
     await search(page).fill("CZZZZ");
