@@ -10,7 +10,10 @@ import { DataTable } from "@/components/DataTable";
 import { PoweredByStellarExpert } from "@/components/PoweredByStellarExpert";
 
 import { Routes } from "@/constants/routes";
-import { useSEContractsList } from "@/query/external/useSEContractsList";
+import {
+  SE_CONTRACTS_LIST_PAGE_SIZE,
+  useSEContractsList,
+} from "@/query/external/useSEContractsList";
 import { useStore } from "@/store/useStore";
 import { formatEpochToDate } from "@/helpers/formatEpochToDate";
 import { delayedAction } from "@/helpers/delayedAction";
@@ -153,6 +156,9 @@ export const RecentList = ({ searchValue = "" }: RecentListProps) => {
         isOutlined={true}
         emptyMessage="No matches on this page."
         isExternalUpdating={isListLoading || isListFetching}
+        // Search only covers the loaded page, so paging while searching would
+        // land on (mostly) empty pages
+        hidePagination={Boolean(query)}
         pageNavConfig={{
           prev: {
             onClick: () => {
@@ -172,7 +178,13 @@ export const RecentList = ({ searchValue = "" }: RecentListProps) => {
                 fetchListData();
               }
             },
-            disabled: !listData?.nextCursor || isListLoading || isListFetching,
+            // The API keeps returning a next link on the last page; a short
+            // page means there is nothing after it
+            disabled:
+              !listData?.nextCursor ||
+              listData.records.length < SE_CONTRACTS_LIST_PAGE_SIZE ||
+              isListLoading ||
+              isListFetching,
           },
         }}
         externalSort={(sortDir) => {

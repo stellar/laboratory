@@ -552,6 +552,7 @@ export const DataTable = <T extends AnyObject>({
           <Button
             variant="tertiary"
             size="sm"
+            aria-label="Previous page"
             icon={<Icon.ArrowLeft />}
             onClick={() => {
               if (pageNavConfig?.prev.onClick) {
@@ -578,6 +579,7 @@ export const DataTable = <T extends AnyObject>({
           <Button
             variant="tertiary"
             size="sm"
+            aria-label="Next page"
             icon={<Icon.ArrowRight />}
             onClick={() => {
               if (pageNavConfig?.next.onClick) {

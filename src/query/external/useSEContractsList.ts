@@ -3,6 +3,9 @@ import { STELLAR_EXPERT_API } from "@/constants/settings";
 import { getStellarExpertNetwork } from "@/helpers/getStellarExpertNetwork";
 import { ContractListRecord, NetworkType } from "@/types/types";
 
+/** Records per page requested from the list API */
+export const SE_CONTRACTS_LIST_PAGE_SIZE = 20;
+
 /**
  * StellarExpert API to get smart contracts list
  */
@@ -30,7 +33,7 @@ export const useSEContractsList = ({
 
       const params = new URLSearchParams();
 
-      params.append("limit", "20");
+      params.append("limit", String(SE_CONTRACTS_LIST_PAGE_SIZE));
       params.append("order", order || "desc");
 
       if (cursor) {
