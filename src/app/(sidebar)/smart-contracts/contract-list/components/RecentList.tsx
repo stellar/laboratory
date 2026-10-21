@@ -11,6 +11,7 @@ import { PoweredByStellarExpert } from "@/components/PoweredByStellarExpert";
 
 import { Routes } from "@/constants/routes";
 import {
+  getSEContractsPrefixCursor,
   SE_CONTRACTS_LIST_PAGE_SIZE,
   useSEContractsList,
 } from "@/query/external/useSEContractsList";
@@ -22,17 +23,39 @@ import { getContractIdError } from "@/validate/methods/getContractIdError";
 import { ContractListRecord, SortDirection } from "@/types/types";
 
 type RecentListProps = {
-  /** Free-text search, matched against contract ID (current page only) */
+  /** Contract ID prefix to search for across the whole list */
   searchValue?: string;
 };
+
+/** Contract IDs are base32: A–Z and 2–7 */
+const CONTRACT_ID_CHARS = /^[A-Z2-7]+$/;
 
 export const RecentList = ({ searchValue = "" }: RecentListProps) => {
   const { network, smartContracts } = useStore();
   const router = useRouter();
 
-  const [currentCursor, setCurrentCursor] = useState<string>("");
-  const [currentPage, setCurrentPage] = useState<number>(1);
   const [sortDir, setSortDir] = useState<SortDirection>("default");
+  // Paging belongs to the query it was done for: a new query starts over
+  const [paging, setPaging] = useState<{
+    query: string;
+    cursor: string;
+    page: number;
+  }>({ query: "", cursor: "", page: 1 });
+
+  const trimmedQuery = searchValue.trim();
+  const prefix = trimmedQuery.toUpperCase();
+  const isSearching = Boolean(prefix);
+  const isValidPrefix = CONTRACT_ID_CHARS.test(prefix);
+  const order = sortDir === "default" ? "desc" : sortDir;
+
+  const currentCursor = paging.query === prefix ? paging.cursor : "";
+  const currentPage = paging.query === prefix ? paging.page : 1;
+
+  // The list is ordered by contract ID, so a search jumps the cursor to the
+  // first ID with that prefix and pages on from there
+  const cursor =
+    currentCursor ||
+    (isSearching ? getSEContractsPrefixCursor(prefix, order) : "");
 
   const {
     data: listData,
@@ -42,9 +65,15 @@ export const RecentList = ({ searchValue = "" }: RecentListProps) => {
     refetch: fetchListData,
   } = useSEContractsList({
     networkId: network.id,
-    cursor: currentCursor,
-    order: sortDir === "default" ? undefined : sortDir,
+    cursor,
+    order,
+    enabled: !isSearching || isValidPrefix,
   });
+
+  const goToPage = (nextCursor: string, page: number) => {
+    setPaging({ query: prefix, cursor: nextCursor, page });
+    fetchListData();
+  };
 
   const handleNavigateToContractExplorer = (contractId: string) => {
     smartContracts.updateExplorerContractId(contractId);
@@ -58,6 +87,15 @@ export const RecentList = ({ searchValue = "" }: RecentListProps) => {
   };
 
   const renderContent = () => {
+    // Can't be the start of a contract ID: nothing to look up
+    if (isSearching && !isValidPrefix) {
+      return (
+        <Text size="sm" as="p" addlClassName="ContractList__emptyMessage">
+          No contracts match your search
+        </Text>
+      );
+    }
+
     if (!listData) {
       return (
         <Box gap="sm" align="center" justify="center">
@@ -69,9 +107,6 @@ export const RecentList = ({ searchValue = "" }: RecentListProps) => {
     if (listError) {
       <MessageField message={listError.toString()} isError={true} />;
     }
-
-    const trimmedQuery = searchValue.trim();
-    const query = trimmedQuery.toLowerCase();
 
     // The list API has no search, so a full contract ID is a direct jump to
     // the explorer (e.g. a contract the user just deployed) — the list only
@@ -110,23 +145,26 @@ export const RecentList = ({ searchValue = "" }: RecentListProps) => {
       );
     }
 
-    // The API keeps returning a next link on the last page; a short page
-    // means there is nothing after it
-    const isLastPage =
-      !listData.nextCursor ||
-      listData.records.length < SE_CONTRACTS_LIST_PAGE_SIZE;
-
-    const records = query
+    // The page starts at the prefix; once an ID without it shows up, the
+    // rest of the list is past the matches
+    const records = isSearching
       ? listData.records.filter((r: ContractListRecord) =>
-          r.contract.toLowerCase().includes(query),
+          r.contract.startsWith(prefix),
         )
       : listData.records;
 
+    // The API keeps returning a next link on the last page; a short page
+    // (or one that ran past the prefix) means there is nothing after it
+    const isLastPage =
+      !listData.nextCursor ||
+      listData.records.length < SE_CONTRACTS_LIST_PAGE_SIZE ||
+      records.length < listData.records.length;
+
     // No matches: just the message, no table chrome
-    if (query && records.length === 0) {
+    if (isSearching && records.length === 0) {
       return (
         <Text size="sm" as="p" addlClassName="ContractList__emptyMessage">
-          No matches on this page.
+          No contracts match your search
         </Text>
       );
     }
@@ -160,19 +198,15 @@ export const RecentList = ({ searchValue = "" }: RecentListProps) => {
         hideFirstLastPageNav={true}
         hidePageCount={true}
         isOutlined={true}
-        emptyMessage="No matches on this page."
+        emptyMessage="No contracts match your search"
         isExternalUpdating={isListLoading || isListFetching}
-        // Search only covers the loaded page, so paging while searching would
-        // land on (mostly) empty pages; and nothing to page through when
-        // everything fits on the first page
-        hidePagination={Boolean(query) || (currentPage === 1 && isLastPage)}
+        // Nothing to page through when everything fits on the first page
+        hidePagination={currentPage === 1 && isLastPage}
         pageNavConfig={{
           prev: {
             onClick: () => {
               if (listData?.prevCursor) {
-                setCurrentCursor(listData.prevCursor);
-                setCurrentPage(Math.max(currentPage - 1, 1));
-                fetchListData();
+                goToPage(listData.prevCursor, Math.max(currentPage - 1, 1));
               }
             },
             disabled: currentPage === 1 || isListLoading || isListFetching,
@@ -180,17 +214,14 @@ export const RecentList = ({ searchValue = "" }: RecentListProps) => {
           next: {
             onClick: () => {
               if (listData?.nextCursor) {
-                setCurrentCursor(listData.nextCursor);
-                setCurrentPage(currentPage + 1);
-                fetchListData();
+                goToPage(listData.nextCursor, currentPage + 1);
               }
             },
             disabled: isLastPage || isListLoading || isListFetching,
           },
         }}
         externalSort={(sortDir) => {
-          setCurrentPage(1);
-          setCurrentCursor("");
+          setPaging({ query: prefix, cursor: "", page: 1 });
           setSortDir(sortDir);
         }}
         customFooterEl={<PoweredByStellarExpert />}

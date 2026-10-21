@@ -154,10 +154,24 @@ test.describe("Smart contract list: Recent tab", () => {
       const url = new URL(route.request().url());
       const cursor = url.searchParams.get("cursor");
 
+      // A search is a cursor jump to the prefix: the mock answers those with
+      // the matching pages, and real page cursors with page 2
+      let body = MOCK_RECENT_PAGE_1;
+
+      if (cursor === MOCK_SEARCH_NEXT_CURSOR) {
+        body = MOCK_SEARCH_PAGE_2;
+      } else if (cursor?.startsWith("CBBBB")) {
+        body = MOCK_SEARCH_PAGE_1;
+      } else if (cursor?.startsWith("CZZZZ")) {
+        body = MOCK_SEARCH_EMPTY;
+      } else if (cursor) {
+        body = MOCK_RECENT_PAGE_2;
+      }
+
       await route.fulfill({
         status: 200,
         contentType: "application/json",
-        body: JSON.stringify(cursor ? MOCK_RECENT_PAGE_2 : MOCK_RECENT_PAGE_1),
+        body: JSON.stringify(body),
       });
     });
 
@@ -211,29 +225,49 @@ test.describe("Smart contract list: Recent tab", () => {
     await expect(prevPage(page)).toBeHidden();
   });
 
-  test("Search filters the loaded page without paging", async ({ page }) => {
+  test("Search finds contracts by ID prefix across pages", async ({ page }) => {
     const rows = tableRows(page, "recent-contracts-list");
 
     await expect(rows).toHaveCount(20);
-    await expect(nextPage(page)).toBeVisible();
 
-    // Search only covers the loaded page, so paging is hidden while searching
-    await search(page).fill("AAAA");
+    // The list is ordered by contract ID, so a prefix search asks the API for
+    // the IDs starting at that prefix and pages on through the matches
+    await search(page).fill("cbbbb");
 
-    await expect(rows).toHaveCount(1);
-    await expect(nextPage(page)).toBeHidden();
+    await expect(rows).toHaveCount(20);
+    await expect(rows.first()).toContainText("CBBBB");
+    await expect(nextPage(page)).toBeEnabled();
 
-    // No matches on this page: just the message, no table or paging
-    await search(page).fill("CCCC");
+    await nextPage(page).click();
 
-    await expect(page.getByText("No matches on this page.")).toBeVisible();
+    // Second page of matches runs past the prefix: only the matches show and
+    // Next is disabled
+    await expect(rows).toHaveCount(3);
+    await expect(rows.filter({ hasNotText: "CBBBB" })).toHaveCount(0);
+    await expect(prevPage(page)).toBeEnabled();
+    await expect(nextPage(page)).toBeDisabled();
+
+    // A new query starts over from its own first page
+    await search(page).fill("CZZZZ");
+
+    await expect(
+      page.getByText("No contracts match your search"),
+    ).toBeVisible();
     await expect(rows).toHaveCount(0);
     await expect(nextPage(page)).toBeHidden();
 
-    // Clearing the search brings the page and its paging back
+    // Not a possible contract ID: no lookup, just the message
+    await search(page).fill("hello!");
+
+    await expect(
+      page.getByText("No contracts match your search"),
+    ).toBeVisible();
+
+    // Clearing the search brings the list and its paging back
     await search(page).fill("");
 
     await expect(rows).toHaveCount(20);
+    await expect(rows.first()).toContainText("CAAAA");
     await expect(nextPage(page)).toBeVisible();
   });
 
@@ -305,6 +339,53 @@ const MOCK_RECENT_SINGLE_PAGE = {
   },
   _embedded: {
     records: Array.from({ length: 3 }, (_, i) => mockRecord(i, "DDDD")),
+  },
+};
+
+// Prefix search for "CBBBB": a full page of matches, then a page that runs
+// past the prefix into "CCCC..." IDs
+const MOCK_SEARCH_NEXT_CURSOR = mockRecord(39, "BBBB").contract;
+
+const MOCK_SEARCH_PAGE_1 = {
+  _links: {
+    self: {
+      href: "/explorer/testnet/contract?limit=20&order=desc&cursor=CBBBB",
+    },
+    prev: { href: "/explorer/testnet/contract?limit=20&order=asc&cursor=x" },
+    next: {
+      href: `/explorer/testnet/contract?limit=20&order=desc&cursor=${MOCK_SEARCH_NEXT_CURSOR}`,
+    },
+  },
+  _embedded: {
+    records: Array.from({ length: 20 }, (_, i) => mockRecord(i + 20, "BBBB")),
+  },
+};
+
+const MOCK_SEARCH_PAGE_2 = {
+  _links: {
+    self: {
+      href: `/explorer/testnet/contract?limit=20&order=desc&cursor=${MOCK_SEARCH_NEXT_CURSOR}`,
+    },
+    prev: { href: "/explorer/testnet/contract?limit=20&order=asc&cursor=x" },
+    next: { href: "/explorer/testnet/contract?limit=20&order=desc&cursor=y" },
+  },
+  _embedded: {
+    records: [
+      ...Array.from({ length: 3 }, (_, i) => mockRecord(i + 40, "BBBB")),
+      ...Array.from({ length: 17 }, (_, i) => mockRecord(i + 43, "CCCC")),
+    ],
+  },
+};
+
+// Prefix with nothing under it: the API returns whatever comes after it
+const MOCK_SEARCH_EMPTY = {
+  _links: {
+    self: { href: "/explorer/testnet/contract?limit=20&order=desc&cursor=z" },
+    prev: { href: "/explorer/testnet/contract?limit=20&order=asc&cursor=x" },
+    next: { href: "/explorer/testnet/contract?limit=20&order=desc&cursor=y" },
+  },
+  _embedded: {
+    records: Array.from({ length: 20 }, (_, i) => mockRecord(i + 60, "DDDD")),
   },
 };
 
