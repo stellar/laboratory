@@ -70,30 +70,25 @@ const buildStoreState = () => ({
 const seedSessionStorageAndNavigate = async (page: Page) => {
   const storeState = buildStoreState();
 
-  // Navigate first so sessionStorage is on the correct origin
+  // Seed storage before any app script runs. Seeding after page load races
+  // with mount effects that write the default flow state back to
+  // sessionStorage, which makes the page open on the build step.
+  await page.addInitScript((stateJson) => {
+    sessionStorage.setItem("stellar_lab_tx_flow_build", stateJson);
+
+    localStorage.setItem(
+      "stellar_lab_network",
+      JSON.stringify({
+        id: "testnet",
+        label: "Testnet",
+        horizonUrl: "https://horizon-testnet.stellar.org",
+        rpcUrl: "https://soroban-testnet.stellar.org",
+        passphrase: "Test SDF Network ; September 2015",
+      }),
+    );
+  }, JSON.stringify(storeState));
+
   await page.goto(`${baseURL}/transaction/build`);
-
-  await page.evaluate(
-    (stateJson) => {
-      sessionStorage.setItem("stellar_lab_tx_flow_build", stateJson);
-
-      // Seed localStorage with testnet so the NetworkSelector doesn't open
-      // a "Load Network" modal on reload (CI has no saved network).
-      localStorage.setItem(
-        "stellar_lab_network",
-        JSON.stringify({
-          id: "testnet",
-          label: "Testnet",
-          horizonUrl: "https://horizon-testnet.stellar.org",
-          rpcUrl: "https://soroban-testnet.stellar.org",
-          passphrase: "Test SDF Network ; September 2015",
-        }),
-      );
-    },
-    JSON.stringify(storeState),
-  );
-
-  await page.reload();
 };
 
 /**
@@ -215,13 +210,14 @@ test.describe("Soroban Auth Entry Detection and Signing", () => {
       await mockSimulateWithAuthEntries(page);
       await seedSessionStorageAndNavigate(page);
 
-      const simulateButton = page.getByRole("button", { name: "Simulate", exact: true });
+      const simulateButton = page.getByRole("button", {
+        name: "Simulate",
+        exact: true,
+      });
       await simulateButton.click();
 
       // Wait for simulation result
-      await expect(
-        page.getByTestId("simulate-step-response"),
-      ).toBeVisible();
+      await expect(page.getByTestId("simulate-step-response")).toBeVisible();
 
       // Auth signing card should appear
       await expect(
@@ -268,13 +264,14 @@ test.describe("Soroban Auth Entry Detection and Signing", () => {
       await mockSimulateWithoutAuthEntries(page);
       await seedSessionStorageAndNavigate(page);
 
-      const simulateButton = page.getByRole("button", { name: "Simulate", exact: true });
+      const simulateButton = page.getByRole("button", {
+        name: "Simulate",
+        exact: true,
+      });
       await simulateButton.click();
 
       // Wait for simulation result
-      await expect(
-        page.getByTestId("simulate-step-response"),
-      ).toBeVisible();
+      await expect(page.getByTestId("simulate-step-response")).toBeVisible();
 
       // Auth signing card should NOT appear
       await expect(
@@ -292,7 +289,10 @@ test.describe("Soroban Auth Entry Detection and Signing", () => {
       await mockSimulateWithAuthEntries(page);
       await seedSessionStorageAndNavigate(page);
 
-      const simulateButton = page.getByRole("button", { name: "Simulate", exact: true });
+      const simulateButton = page.getByRole("button", {
+        name: "Simulate",
+        exact: true,
+      });
       await simulateButton.click();
 
       await expect(
@@ -319,7 +319,10 @@ test.describe("Soroban Auth Entry Detection and Signing", () => {
       await mockSimulateWithAuthEntries(page);
       await seedSessionStorageAndNavigate(page);
 
-      const simulateButton = page.getByRole("button", { name: "Simulate", exact: true });
+      const simulateButton = page.getByRole("button", {
+        name: "Simulate",
+        exact: true,
+      });
       await simulateButton.click();
 
       await expect(
@@ -342,7 +345,10 @@ test.describe("Soroban Auth Entry Detection and Signing", () => {
       await mockSimulateWithAuthEntries(page);
       await seedSessionStorageAndNavigate(page);
 
-      const simulateButton = page.getByRole("button", { name: "Simulate", exact: true });
+      const simulateButton = page.getByRole("button", {
+        name: "Simulate",
+        exact: true,
+      });
       await simulateButton.click();
 
       await expect(

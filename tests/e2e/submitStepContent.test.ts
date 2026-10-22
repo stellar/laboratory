@@ -99,9 +99,10 @@ const buildSorobanStoreState = (signedXdr: string) => ({
 });
 
 const seedSessionStorage = async (page: Page, storeState: object) => {
-  await page.goto(`${baseURL}/transaction/build`);
-
-  await page.evaluate((stateJson) => {
+  // Seed storage before any app script runs. Seeding after page load races
+  // with mount effects that write the default flow state back to
+  // sessionStorage, which makes the page open on the build step.
+  await page.addInitScript((stateJson) => {
     sessionStorage.setItem("stellar_lab_tx_flow_build", stateJson);
 
     // Seed the network so it is set on first render. Otherwise the store starts
@@ -120,7 +121,7 @@ const seedSessionStorage = async (page: Page, storeState: object) => {
     );
   }, JSON.stringify(storeState));
 
-  await page.reload();
+  await page.goto(`${baseURL}/transaction/build`);
 };
 
 /**
