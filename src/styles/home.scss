@@ -81,20 +81,25 @@
       border-color: var(--sds-clr-gray-08);
     }
 
-    &__input {
-      width: 100%;
-      padding: pxToRem(2px);
-      border: none;
-      outline: none;
-      resize: none;
-      background: transparent;
-      color: var(--sds-clr-gray-12);
-      font-family: inherit;
-      font-size: pxToRem(16px);
-      line-height: pxToRem(24px);
+    // SDS Textarea (fieldSize="lg": 16px / 24px) drawn borderless inside the
+    // pill, which owns the border and focus state. Nested under the block so
+    // it outranks SDS's `.Textarea textarea` rules.
+    .Textarea {
+      --Textarea-color-background: transparent;
+      --Textarea-color-border: transparent;
+      --Textarea-color-border-hover: transparent;
+      --Textarea-color-text: var(--sds-clr-gray-12);
+      --Textarea-padding-vertical: #{pxToRem(2px)};
+      --Textarea-padding-horizontal: #{pxToRem(2px)};
+      --Textarea-border-radius: 0;
+      --Textarea-box-shadow-color: transparent;
 
-      &::placeholder {
-        color: var(--sds-clr-gray-11);
+      textarea {
+        resize: none;
+
+        &::placeholder {
+          color: var(--sds-clr-gray-11);
+        }
       }
     }
 
@@ -150,12 +155,12 @@
     --CardGrid-columns: 3;
   }
 
-  // Open variant: no visible outer border or radius, but the border is kept at
+  // Borderless: no visible outer border or radius, but the border is kept at
   // 1px transparent so the column math and the content inset stay identical to
-  // the bordered variant — that's what lines the two rows up on the same left
+  // the bordered grid — that's what lines the two rows up on the same left
   // edge. background-clip keeps the gray-06 fill off the transparent border, so
   // it shows only through the 1px column gaps.
-  &[data-variant="open"] {
+  &[data-is-borderless="true"] {
     border-color: transparent;
     border-radius: 0;
     background-clip: padding-box;
@@ -181,9 +186,9 @@
     transition: background-color 0.15s ease;
   }
 
-  // Only bordered cells hover as a whole. Open cells decide their own hover
-  // (Explore & inspect lights its tile border instead).
-  &[data-variant="bordered"] {
+  // Only bordered cells hover as a whole. Borderless cells decide their own
+  // hover (Explore & inspect lights its tile border instead).
+  &:not([data-is-borderless="true"]) {
     @media (hover: hover) {
       .CardGrid__cell[data-is-link="true"]:hover {
         background-color: var(--sds-clr-gray-02);

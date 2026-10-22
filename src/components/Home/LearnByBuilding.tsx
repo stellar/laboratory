@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Button, Icon, Text } from "@stellar/design-system";
 
 import { Box } from "@/components/layout/Box";
+import { CardGrid } from "@/components/Home/CardGrid";
 import { NextLink } from "@/components/NextLink";
 
 import { getPublicResourcePath } from "@/helpers/getPublicResourcePath";
@@ -48,9 +49,9 @@ export const LearnByBuilding = () => {
 
   return (
     <Box gap="sm" addlClassName="LearnByBuilding">
-      <div className="CardGrid" data-columns="3">
+      <CardGrid columns={3}>
         {TUTORIALS.map((item) => (
-          <div className="CardGrid__cell" key={item.id}>
+          <CardGrid.Cell key={item.id}>
             <NextLink
               href={item.youTubeLink}
               className="LearnByBuilding__thumbnail"
@@ -83,9 +84,9 @@ export const LearnByBuilding = () => {
             <Text as="p" size="sm" addlClassName="LearnByBuilding__description">
               {item.description}
             </Text>
-          </div>
+          </CardGrid.Cell>
         ))}
-      </div>
+      </CardGrid>
 
       <div className="LearnByBuilding__viewAll">
         <Button

@@ -1,14 +1,10 @@
 import { useState } from "react";
-import { Button, Icon } from "@stellar/design-system";
+import { Button, Icon, Textarea } from "@stellar/design-system";
 
 import { NEEVAI_MAX_MESSAGE_LENGTH } from "@/constants/settings";
 import { askNeevai } from "@/helpers/askNeevai";
 
 /**
- * Homepage "What are you building?" chat field (full width, with the Ask
- * button inside the field). Sends the question to the NeevAI
- * chat widget.
- *
  * The value is local `useState` on purpose: it is a transient draft that should
  * not sync to the URL through Zustand.
  */
@@ -32,9 +28,9 @@ export const AskInput = () => {
         handleSubmit();
       }}
     >
-      <textarea
+      <Textarea
         id="home-ask-input"
-        className="Lab__home__ask__input"
+        fieldSize="lg"
         aria-label="What are you building?"
         placeholder="What are you building?"
         rows={2}

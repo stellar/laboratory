@@ -45,7 +45,7 @@ const EXPLORE_INSPECT: {
 ];
 
 export const ExploreInspect = () => (
-  <CardGrid columns={4} variant="open" addlClassName="ExploreInspect">
+  <CardGrid columns={4} isBorderless addlClassName="ExploreInspect">
     {EXPLORE_INSPECT.map((item) => (
       <CardGrid.Cell
         key={item.id}

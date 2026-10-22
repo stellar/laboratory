@@ -10,27 +10,33 @@ import { NextLink } from "@/components/NextLink";
  * Instead the container paints the divider colour and the cells paint over it,
  * so the 1px grid gap reads as a hairline — and stays correct when the grid
  * collapses at narrow widths.
+ *
+ * @example
+ * <CardGrid columns={4} isBorderless>
+ *   <CardGrid.Cell href={Routes.VIEW_XDR}>…</CardGrid.Cell>
+ * </CardGrid>
  */
 export const CardGrid = ({
   columns,
-  variant = "bordered",
+  isBorderless,
   children,
   addlClassName,
 }: {
   /** Number of columns at full width. Collapses to 2, then 1. */
   columns: 3 | 4;
   /**
-   * "bordered" is the boxed card row. "open" drops the outer border and radius
-   * but keeps identical column math, dividers, and cell padding.
+   * Drops the outer border and radius but keeps identical column math,
+   * dividers, and cell padding. Link cells don't get the whole-cell hover, so
+   * the caller decides its own hover treatment.
    */
-  variant?: "bordered" | "open";
+  isBorderless?: boolean;
   children: React.ReactNode;
   addlClassName?: string;
 }) => (
   <div
     className={`CardGrid ${addlClassName ?? ""}`}
     data-columns={columns}
-    data-variant={variant}
+    data-is-borderless={isBorderless || undefined}
   >
     {children}
   </div>
