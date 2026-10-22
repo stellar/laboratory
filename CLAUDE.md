@@ -63,7 +63,7 @@ APIs. The `main` branch is deployed to https://lab.stellar.org/.
 
 > See `package.json` for exact dependency versions.
 
-- **Node.js**: >= 22.22.0 (specified in `.nvmrc` and `package.json`)
+- **Node.js**: >= 22.23.4 (specified in `.nvmrc` and `package.json`)
 - **pnpm**: >= 10.15.1 (managed via Corepack)
 
 ## Development Setup
