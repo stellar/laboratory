@@ -51,7 +51,6 @@ export const KnownAssetsList = ({
     <div
       className="KnownAssetsList__classHeader"
       data-asset-class-trigger="true"
-      data-overflow="true"
       onClick={() => setIsClassDropdownVisible(!isClassDropdownVisible)}
     >
       {assetClassFilter || "Asset class"}
