@@ -145,7 +145,11 @@ export const EURC_TESTNET_ISSUER =
 
 // NeevAI chat widget ("Ask Stellar")
 export const NEEVAI_AGENT_ID = "9d63e5c1-61ef-419a-aeee-51f70faf726e";
-export const NEEVAI_SCRIPT_URL = `https://cdn.neevai.io/v1/embed/${NEEVAI_AGENT_ID}.js`;
+// Versioned, immutable loader pinned with SRI. It loads the launcher with its
+// own SRI hash. To upgrade, get the new URL + hash from NeevAI.
+export const NEEVAI_SCRIPT_URL = "https://cdn.neevai.io/v1/embed.fC6O4Wt71d.js";
+export const NEEVAI_SCRIPT_INTEGRITY =
+  "sha384-pgtBw9qkfU0JByIEYQ4WGFJ6eDhMMsjSGLmK4QTkIaBhm8RPLLGgkqChWUTpc2U9";
 export const NEEVAI_CHAT_ORIGIN = "https://prism-chat.neevai.io";
 // NeevaiChat.submit() rejects messages longer than this
 export const NEEVAI_MAX_MESSAGE_LENGTH = 2000;
