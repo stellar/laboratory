@@ -5,15 +5,9 @@ const nextConfig = {
     : undefined,
   distDir: "build",
   basePath: process.env.NEXT_BASE_PATH || undefined,
-  webpack: (config) => {
-    // Needed for stellar-hd-wallet
-    config.externals.push("sodium-native");
-
-    // Disable webpack filesystem cache to avoid pnpm compatibility issues
-    config.cache = false;
-
-    return config;
-  },
+  // Needed for stellar-hd-wallet. Client bundles are covered by
+  // @stellar/stellar-base's `browser` field, which stubs out sodium-native.
+  serverExternalPackages: ["sodium-native"],
   // Adding client side redirects to support old URLs in case they were saved or
   // bookmarked.
   async redirects() {
