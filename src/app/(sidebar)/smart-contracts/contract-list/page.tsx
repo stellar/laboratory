@@ -69,7 +69,8 @@ export default function ContractList() {
 
       return (
         a.assetCode.toLowerCase().includes(query) ||
-        a.entity.toLowerCase().includes(query)
+        a.entity.toLowerCase().includes(query) ||
+        a.assetClass.toLowerCase().includes(query)
       );
     });
   }, [assetSearch, assetClassFilter]);

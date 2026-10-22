@@ -83,7 +83,7 @@ test.describe("Smart contract list (mainnet)", () => {
     await expect(nextPage(page)).toBeHidden();
   });
 
-  test("Known assets: search matches asset code and entity", async ({
+  test("Known assets: search matches asset code, entity, and asset class", async ({
     page,
   }) => {
     await page.getByTestId("known-assets").click();
@@ -99,6 +99,12 @@ test.describe("Smart contract list (mainnet)", () => {
     // Entity
     await search(page).fill("circle");
     await expect(rows.first()).toContainText("Circle");
+
+    // Asset class: every stablecoin, across more than one page
+    await search(page).fill("stablecoins");
+    await expect(rows).toHaveCount(20);
+    await expect(rows.filter({ hasNotText: "Stablecoins" })).toHaveCount(0);
+    await expect(nextPage(page)).toBeEnabled();
 
     await search(page).fill("zzzz");
     await expect(page.getByText("No assets match your search")).toBeVisible();
