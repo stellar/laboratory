@@ -153,5 +153,3 @@ export const NEEVAI_SCRIPT_INTEGRITY =
 export const NEEVAI_CHAT_ORIGIN = "https://prism-chat.neevai.io";
 // NeevaiChat.submit() rejects messages longer than this
 export const NEEVAI_MAX_MESSAGE_LENGTH = 2000;
-// The full-page chat URL `q` param must stay under this
-export const NEEVAI_MAX_URL_QUESTION_LENGTH = 200;

@@ -22,7 +22,10 @@ export const CardGrid = ({
   children,
   addlClassName,
 }: {
-  /** Number of columns at full width. Collapses to 2, then 1. */
+  /**
+   * Number of columns at full width. 4 collapses to 2, then 1; 3 collapses
+   * straight to 1 so no row is left with an empty slot.
+   */
   columns: 3 | 4;
   /**
    * Drops the outer border and radius but keeps identical column math,
