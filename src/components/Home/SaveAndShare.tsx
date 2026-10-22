@@ -6,12 +6,15 @@ import { Box } from "@/components/layout/Box";
 import { SectionHeader } from "@/components/Home/SectionHeader";
 
 import { getPublicResourcePath } from "@/helpers/getPublicResourcePath";
+import { useStore } from "@/store/useStore";
 
 import { Routes } from "@/constants/routes";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
 export const SaveAndShare = () => {
   const router = useRouter();
+  const { theme } = useStore();
+  const imgSuffix = theme === "sds-theme-light" ? "" : "-dark";
 
   return (
     <div className="SaveAndShare">
@@ -37,11 +40,14 @@ export const SaveAndShare = () => {
         </div>
       </Box>
 
-      {/* 3x export (1773x537) rendered at 591x179 CSS, so it stays sharp on
-          retina; next/image serves an appropriate srcset. */}
+      {/* Light (1773x537) and dark (2711x824) exports share an aspect ratio and
+          render at 591x179 CSS, so they stay sharp on retina; next/image serves
+          an appropriate srcset. */}
       <div className="SaveAndShare__art" aria-hidden="true">
         <Image
-          src={getPublicResourcePath("/images/lab-home-save-share-v2.png")}
+          src={getPublicResourcePath(
+            `/images/lab-home-save-share-v2${imgSuffix}.png`,
+          )}
           alt=""
           width={591}
           height={179}
