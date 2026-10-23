@@ -2,116 +2,75 @@ import { baseURL } from "../../playwright.config";
 import { test, expect, Locator } from "@playwright/test";
 
 test.describe("Introduction Page", () => {
-  let sections: Locator;
-
   test.beforeEach(async ({ page }) => {
     await page.goto(`${baseURL}/`);
-    sections = page.locator(".Lab__home__section");
   });
 
   test("Loads", async ({ page }) => {
     await expect(page.locator("h1")).toHaveText(
-      "Simulate, Analyze, and Explore — All in One place",
-    );
-    await expect(sections).toHaveCount(6);
-  });
-
-  test("Slider", async ({ page }) => {
-    const sliderCards = page.locator(
-      ".Lab__home__introCards > .Lab__home__intro__card",
+      "Simulate, analyze, and explore — all in one place",
     );
 
-    await expect(sliderCards).toHaveCount(4);
-
-    await assertSliderCardTitle({
-      sliderCards,
-      index: 0,
-      title: "Decode and Inspect",
-    });
-
-    await assertSliderCardTitle({
-      sliderCards,
-      index: 1,
-      title: "Build, Sign, Simulate & Submit Transactions",
-    });
-
-    await assertSliderCardTitle({
-      sliderCards,
-      index: 2,
-      title: "Interact with API Endpoints",
-    });
-
-    await assertSliderCardTitle({
-      sliderCards,
-      index: 3,
-      title: "Contract Explorer",
-    });
+    // Ask chat field
+    await expect(page.locator("#home-ask-input")).toBeVisible();
+    await expect(page.getByText("Start", { exact: true })).toBeDisabled();
   });
 
-  test("Tutorials", async () => {
-    const tutorialsSection = sections.nth(2);
-
-    await assertSectionHeader({
-      section: tutorialsSection,
-      eyebrow: "Learn from tutorials",
-      heading: "Follow our step-by-step tutorials to start building",
-    });
-
-    await expect(
-      tutorialsSection.locator(".Lab__home__tutorials__item"),
-    ).toHaveCount(20);
+  test("Section headers", async ({ page }) => {
+    await expect(page.locator(".SectionHeader h2")).toHaveText([
+      "Start building",
+      "Explore & inspect",
+      "Network",
+      "Learn by building",
+      "Save and share your work",
+    ]);
   });
 
-  test("Save and Share", async () => {
-    const saveShareSection = sections.nth(4);
+  test("Start building", async ({ page }) => {
+    const cards = page.locator(".StartBuilding .CardGrid__cell");
 
-    await assertSectionHeader({
-      section: saveShareSection,
-      eyebrow: "Save and share",
-      heading: "Save and share your work to revisit experiment and collaborate",
-    });
+    await expect(cards).toHaveCount(4);
+    await expect(cards.locator(".StartBuilding__heading")).toHaveText([
+      "Fund account",
+      "Build a transaction",
+      "Deploy a smart contract",
+      "Sign message",
+    ]);
   });
 
-  test("Resources", async () => {
-    const resourcesSection = sections.nth(5);
+  test("Explore & inspect", async ({ page }) => {
+    const cards = page.locator(".ExploreInspect .CardGrid__cell");
 
-    await assertSectionHeader({
-      section: resourcesSection,
-      eyebrow: "Resources",
-      heading: "Everything you need to build and connect",
-    });
+    await expect(cards).toHaveCount(4);
+    await expect(cards.locator(".ExploreInspect__title")).toHaveText([
+      "Transactions.",
+      "Smart contracts.",
+      "API explorer.",
+      "XDR tools.",
+    ]);
+  });
 
-    const items = resourcesSection.locator(".Lab__home__resources__item");
+  test("Learn by building", async ({ page }) => {
+    const cards = page.locator(".LearnByBuilding .CardGrid__cell");
 
-    await expect(items).toHaveCount(5);
-    await expect(items.locator(".Lab__home__resources__title")).toHaveText([
-      "YouTube",
-      "Discord",
-      "Stellar Quest",
-      "X (Twitter)",
-      "Developer Docs",
+    await expect(cards).toHaveCount(3);
+    await expect(cards.locator(".LearnByBuilding__title")).toHaveText([
+      "Create an account",
+      "Payments",
+      "Hello world",
     ]);
   });
 
   test("Networks", async ({ browser }) => {
-    // Using isolated browser context to make sure the network change won’t affect other tests.
+    // Isolated context so the network change won’t affect other tests.
     const context = await browser.newContext();
     const page = await context.newPage();
     await page.goto(`${baseURL}/`);
 
-    const networksSection = page.locator(".Lab__home__section").nth(3);
-
-    await assertSectionHeader({
-      section: networksSection,
-      eyebrow: "Use on multiple networks",
-      heading: "Choose your network to get started",
-    });
-
-    const networkCards = networksSection.locator(".Lab__home__networks__item");
+    const networkCards = page.locator(".NetworkPicker .CardGrid__cell");
 
     await expect(networkCards).toHaveCount(3);
 
-    // Cards
     await assertNetworkCardContent({
       cards: networkCards,
       index: 0,
@@ -127,33 +86,39 @@ test.describe("Introduction Page", () => {
     await assertNetworkCardContent({
       cards: networkCards,
       index: 2,
-      title: "Local Network",
+      title: "Local network",
       description: "Run a local Stellar network for development.",
     });
 
-    // Switch network buttons
-    const testnetBtn = networkCards
-      .nth(0)
-      .locator("button", { hasText: "Switch to testnet" });
-    const mainnetBtn = networkCards
-      .nth(1)
-      .locator("button", { hasText: "Switch to mainnet" });
+    // Testnet is the default network, so its card shows the active status and
+    // Mainnet offers a Switch button.
+    await expect(
+      networkCards.nth(0).locator(".NetworkPicker__status"),
+    ).toHaveText("You’re on Testnet");
 
-    await expect(testnetBtn).toBeDisabled();
-    await expect(mainnetBtn).toBeEnabled();
-    await mainnetBtn.click({ timeout: 2000 });
+    const mainnetSwitch = networkCards
+      .nth(1)
+      .locator("button", { hasText: "Switch" });
+
+    await expect(mainnetSwitch).toBeEnabled();
+    await mainnetSwitch.click({ timeout: 2000 });
 
     const modal = page.locator(".Modal__container");
     await expect(modal).toBeVisible();
 
     const switchButton = modal.locator("button", {
-      hasText: "Switch to mainnet",
+      hasText: "Switch to Mainnet",
     });
     await expect(switchButton).toBeVisible();
     await switchButton.click();
 
-    await expect(testnetBtn).toBeEnabled();
-    await expect(mainnetBtn).toBeDisabled();
+    // Mainnet is now active; Testnet offers the Switch button instead.
+    await expect(
+      networkCards.nth(1).locator(".NetworkPicker__status"),
+    ).toHaveText("You’re on Mainnet");
+    await expect(
+      networkCards.nth(0).locator("button", { hasText: "Switch" }),
+    ).toBeEnabled();
 
     await context.close();
   });
@@ -162,33 +127,6 @@ test.describe("Introduction Page", () => {
 // =============================================================================
 // Helpers
 // =============================================================================
-const assertSliderCardTitle = async ({
-  sliderCards,
-  index,
-  title,
-}: {
-  sliderCards: Locator;
-  index: number;
-  title: string;
-}) => {
-  await expect(
-    sliderCards.nth(index).locator(".Lab__home__introCards__title"),
-  ).toHaveText(title);
-};
-
-const assertSectionHeader = async ({
-  section,
-  eyebrow,
-  heading,
-}: {
-  section: Locator;
-  eyebrow: string;
-  heading: string;
-}) => {
-  await expect(section.locator(".Lab__home__eyebrow")).toHaveText(eyebrow);
-  await expect(section.locator("h2")).toHaveText(heading);
-};
-
 const assertNetworkCardContent = async ({
   cards,
   index,
@@ -200,10 +138,10 @@ const assertNetworkCardContent = async ({
   title: string;
   description: string;
 }) => {
+  await expect(cards.nth(index).locator(".NetworkIndicator")).toContainText(
+    title,
+  );
   await expect(
-    cards.nth(index).locator(".Lab__home__networks__title"),
-  ).toHaveText(title);
-  await expect(
-    cards.nth(index).locator(".Lab__home__networks__description"),
+    cards.nth(index).locator(".NetworkPicker__description"),
   ).toHaveText(description);
 };
