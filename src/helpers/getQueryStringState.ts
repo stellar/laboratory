@@ -3,8 +3,7 @@ import { AnyObject } from "@/types/types";
 
 // Same matcher zustand-querystring uses to find its state (`$=...;;`)
 // anywhere in the query string, so these helpers and the store always agree.
-// It must stay greedy: nested objects produce `;;` mid-string
-// (e.g. `a$b$c:1;;&d:2`).
+// nested objects produce `;;` mid-string (e.g. `a$b$c:1;;&d:2`).
 const STATE_MATCHER = /\$=(.*);;|\$=(.*)$/;
 
 /**
