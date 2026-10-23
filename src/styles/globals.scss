@@ -1282,6 +1282,126 @@
 }
 
 // Smart Contract List
+.ContractList {
+  &__emptyMessage {
+    // Same height as the table's empty row, so the card doesn't jump
+    padding: pxToRem(150px) 0;
+    text-align: center;
+    color: var(--sds-clr-gray-11);
+  }
+
+  &__search {
+    width: pxToRem(312px);
+
+    @media screen and (max-width: 600px) {
+      width: 100%;
+    }
+  }
+}
+
+// Keep the table's own horizontal scroll (so it doesn't push the page wider
+// on small screens) and, while the Asset class dropdown is open, leave room
+// for it inside the table, like the DataTable filter dropdowns
+.DataTable__scroll:has(.KnownAssetsList__classDropdown[data-is-active="true"]) {
+  min-height: pxToRem(320px);
+}
+
+.KnownAssetsList {
+  &__classHeader {
+    display: inline-flex;
+    align-items: center;
+    gap: pxToRem(4px);
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+
+    svg {
+      width: pxToRem(14px);
+      height: pxToRem(14px);
+      stroke: var(--sds-clr-gray-09);
+    }
+
+    // Everything inside is the trigger for the click-outside check
+    * {
+      pointer-events: none;
+    }
+
+    .Dropdown,
+    .Dropdown * {
+      pointer-events: auto;
+    }
+  }
+
+  &__classDropdown {
+    --Floater-background-color: var(--sds-clr-gray-01);
+
+    min-width: pxToRem(220px);
+    border: 1px solid var(--sds-clr-gray-06);
+    font-weight: var(--sds-fw-regular);
+    cursor: default;
+
+    // Doubled up to win over the shared .Floater__content positioning
+    .KnownAssetsList__classHeader & {
+      position: absolute;
+      top: calc(100% + #{pxToRem(8px)});
+      left: pxToRem(-12px);
+      right: auto;
+
+      // Narrow tables: open towards the left so it stays inside the table
+      @media screen and (max-width: 600px) {
+        left: auto;
+        right: pxToRem(-12px);
+      }
+    }
+  }
+
+  &__classOption {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: pxToRem(8px);
+    width: 100%;
+    padding: pxToRem(8px) pxToRem(12px);
+    border: none;
+    border-radius: pxToRem(4px);
+    background: transparent;
+    text-align: left;
+    font-family: inherit;
+    font-size: pxToRem(14px);
+    line-height: pxToRem(20px);
+    color: var(--sds-clr-gray-12);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--sds-clr-gray-03);
+    }
+
+    &[data-is-selected="true"] {
+      font-weight: var(--sds-fw-medium);
+    }
+
+    svg {
+      width: pxToRem(16px);
+      height: pxToRem(16px);
+      stroke: var(--sds-clr-gray-12);
+    }
+  }
+}
+
+.RecentList {
+  &__jumpTo {
+    padding: pxToRem(12px) pxToRem(16px);
+    border: 1px solid var(--sds-clr-gray-06);
+    border-radius: pxToRem(8px);
+
+    .Link {
+      font-size: pxToRem(14px);
+      line-height: pxToRem(20px);
+      word-break: break-all;
+    }
+  }
+}
+
 .ContractLink {
   &--withIcon {
     gap: pxToRem(4px) !important;

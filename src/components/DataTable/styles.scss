@@ -31,6 +31,16 @@
     &:has([data-overflow="true"]) {
       overflow: visible;
     }
+
+    &[data-is-outlined="true"] {
+      border: 1px solid var(--sds-clr-gray-06);
+      border-radius: pxToRem(8px);
+
+      td,
+      th {
+        padding: pxToRem(10px) pxToRem(12px);
+      }
+    }
   }
 
   &__table {
