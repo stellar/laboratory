@@ -1,4 +1,5 @@
-import { parse, stringify } from "zustand-querystring";
+import { stringify } from "zustand-querystring";
+import { getQueryStringState } from "@/helpers/getQueryStringState";
 
 export const shareableUrl = (
   type: "requests" | "transactions-build" | "transactions-save",
@@ -23,9 +24,7 @@ export const shareableUrl = (
     // Do nothing
   }
 
-  // Removing extra chars
-  const trimmedSearch = search.substring(3);
-  const searchParams = Object.entries(parse(trimmedSearch) || {}).reduce(
+  const searchParams = Object.entries(getQueryStringState(search) || {}).reduce(
     (res, cur) => {
       const [key, value] = cur;
 

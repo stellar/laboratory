@@ -1,5 +1,5 @@
 import * as amplitude from "@amplitude/analytics-browser";
-import { parse } from "zustand-querystring";
+import { getQueryStringState } from "@/helpers/getQueryStringState";
 import { AnyObject } from "@/types/types";
 
 const AMPLITUDE_API_KEY_DEV = "21f9b86405da037f7b9d1f00a235a4fd";
@@ -67,10 +67,7 @@ export const trackEvent = (type: TrackingEvent, properties?: AnyObject) => {
     return;
   }
 
-  const trimmedParams = window.location.search
-    ? window.location.search.substring(3)
-    : "";
-  const searchParams: AnyObject | null = parse(trimmedParams);
+  const searchParams = getQueryStringState(window.location.search);
 
   const props = {
     network: searchParams?.network?.id,
