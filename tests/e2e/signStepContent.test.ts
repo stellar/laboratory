@@ -1,5 +1,6 @@
 import { baseURL } from "../../playwright.config";
 import { test, expect, Page } from "@playwright/test";
+import { Networks, TransactionBuilder } from "@stellar/stellar-sdk";
 
 /**
  * E2E tests for the Sign step in the single-page transaction build flow.
@@ -11,6 +12,12 @@ test.describe("Sign Step in Build Flow", () => {
   const MOCK_TX_XDR =
     "AAAAAgAAAADJrq4b4AopDZibkeBWpDxuWKUcY4FUUNQdIEF3Nm9dkQAAAGQAAAIiAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAQAAAACXlGN76T6NQcaUJxbEkH3mi1HHWsHnLqMDdlLl9NlJgQAAAAAAAAAABfXhAAAAAAAAAAAA";
 
+  const MOCK_TX_BEFORE_SIMULATION_XDR =
+    "AAAAAgAAAAAEBW1n0nAevyLINGQshSBzpSIjWfA/0Z6Kg3CRxRl8jwAAAMgAPSFNAAAAHQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAGAAAAAAAAAABUEXNXsBymnaP1a0CUFhS308Cjc6DDlrFIgm6SEg7LwEAAAAIdHJhbnNmZXIAAAADAAAAEgAAAAAAAAAABAVtZ9JwHr8iyDRkLIUgc6UiI1nwP9GeioNwkcUZfI8AAAASAAAAAAAAAAAh5dYXbG+vCChQsGMYfg8k2ABTTz0GHlyHZd1Q+bf9dAAAAAoAAAAAAAAAAAAAAAAAAABkAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+
+  const MOCK_TX_SIMULATED_XDR =
+    "AAAAAgAAAAAEBW1n0nAevyLINGQshSBzpSIjWfA/0Z6Kg3CRxRl8jwAAL9AAPSFNAAAAHQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAGAAAAAAAAAABUEXNXsBymnaP1a0CUFhS308Cjc6DDlrFIgm6SEg7LwEAAAAIdHJhbnNmZXIAAAADAAAAEgAAAAAAAAAABAVtZ9JwHr8iyDRkLIUgc6UiI1nwP9GeioNwkcUZfI8AAAASAAAAAAAAAAAh5dYXbG+vCChQsGMYfg8k2ABTTz0GHlyHZd1Q+bf9dAAAAAoAAAAAAAAAAAAAAAAAAABkAAAAAQAAAAAAAAAAAAAAAVBFzV7Acpp2j9WtAlBYUt9PAo3Ogw5axSIJukhIOy8BAAAACHRyYW5zZmVyAAAAAwAAABIAAAAAAAAAAAQFbWfScB6/Isg0ZCyFIHOlIiNZ8D/RnoqDcJHFGXyPAAAAEgAAAAAAAAAAIeXWF2xvrwgoULBjGH4PJNgAU089Bh5ch2XdUPm3/XQAAAAKAAAAAAAAAAAAAAAAAAAAZAAAAAAAAAABAAAAAAAAAAEAAAAGAAAAAVBFzV7Acpp2j9WtAlBYUt9PAo3Ogw5axSIJukhIOy8BAAAAFAAAAAEAAAACAAAAAQAAAAAEBW1n0nAevyLINGQshSBzpSIjWfA/0Z6Kg3CRxRl8jwAAAAFVU0RDAAAAAEI+fQXy7K+/7BkrIVo/G+lq7bjY5wJUq+NBPgIH3layAAAAAQAAAAAh5dYXbG+vCChQsGMYfg8k2ABTTz0GHlyHZd1Q+bf9dAAAAAFVU0RDAAAAAEI+fQXy7K+/7BkrIVo/G+lq7bjY5wJUq+NBPgIH3layAAOdHwAAAOgAAADoAAAAAAAALwgAAAAA";
+
   const MOCK_SECRET_KEY =
     "SCAM6CZNCLJFQOGSC7LLE2KMBYCBD7S5IYV447MZX5NHPGCHRHPYITCF";
 
@@ -19,14 +26,16 @@ test.describe("Sign Step in Build Flow", () => {
 
   const seedSessionStorageAndNavigate = async (
     page: Page,
-    options: { assembledXdr?: string } = {},
+    options: { buildXdr?: string; assembledXdr?: string } = {},
   ) => {
     // Seed sessionStorage with flow store state at the sign step, before any
     // app script runs. Seeding after page load races with mount effects that
     // write the default flow state back to sessionStorage, which makes the
     // page open on the build step.
+    // The init script is serialized and runs in the browser, so it can only
+    // read values passed through its argument, not variables from this scope.
     await page.addInitScript(
-      ({ xdr }) => {
+      ({ xdr, assembledXdr }) => {
         const storeState = {
           state: {
             activeStep: "sign",
@@ -56,9 +65,7 @@ test.describe("Sign Step in Build Flow", () => {
               authMode: "record",
               simulationResultJson: "",
               isValid: false,
-              ...(options.assembledXdr
-                ? { assembledXdr: options.assembledXdr }
-                : {}),
+              ...(assembledXdr ? { assembledXdr } : {}),
             },
             sign: { signedXdr: "" },
             submit: { submitResultJson: "" },
@@ -71,7 +78,10 @@ test.describe("Sign Step in Build Flow", () => {
           JSON.stringify(storeState),
         );
       },
-      { xdr: MOCK_TX_XDR },
+      {
+        xdr: options.buildXdr ?? MOCK_TX_XDR,
+        assembledXdr: options.assembledXdr,
+      },
     );
 
     await page.goto(`${baseURL}/transaction/build`);
@@ -93,14 +103,54 @@ test.describe("Sign Step in Build Flow", () => {
   test("Shows the simulated XDR above the signing UI when the tx was simulated", async ({
     page,
   }) => {
-    await seedSessionStorageAndNavigate(page, { assembledXdr: MOCK_TX_XDR });
+    await seedSessionStorageAndNavigate(page, {
+      assembledXdr: MOCK_TX_SIMULATED_XDR,
+    });
 
     const simulatedXdr = page.locator("#sign-step-simulated-xdr");
     await expect(simulatedXdr).toBeVisible();
-    await expect(simulatedXdr).toHaveValue(MOCK_TX_XDR);
+    await expect(simulatedXdr).toHaveValue(MOCK_TX_SIMULATED_XDR);
     await expect(
       page.getByText("Simulated transaction (Base64 XDR)"),
     ).toBeVisible();
+  });
+
+  test("Signs the simulated transaction, not the pre-simulation one", async ({
+    page,
+  }) => {
+    await seedSessionStorageAndNavigate(page, {
+      buildXdr: MOCK_TX_BEFORE_SIMULATION_XDR,
+      assembledXdr: MOCK_TX_SIMULATED_XDR,
+    });
+
+    const signComponent = page.getByTestId("sign-tx-xdr-sign-step");
+    await signComponent
+      .getByPlaceholder(
+        "Secret key (starting with S) or hash preimage (in hex)",
+      )
+      .first()
+      .fill(MOCK_SECRET_KEY);
+    await signComponent.getByRole("button", { name: "Sign" }).click();
+
+    await expect(
+      page.getByText("Transaction signed and ready to submit."),
+    ).toBeVisible();
+
+    const signedXdr = await page.evaluate(
+      () =>
+        JSON.parse(sessionStorage.getItem("stellar_lab_tx_flow_build") ?? "{}")
+          .state?.sign?.signedXdr as string,
+    );
+
+    // The tx hash excludes signatures, so it identifies which envelope was
+    // signed. The two inputs differ in fee and Soroban resource data.
+    const txHash = (xdr: string) =>
+      Buffer.from(
+        TransactionBuilder.fromXdr(xdr, Networks.TESTNET).hash(),
+      ).toString("hex");
+
+    expect(txHash(signedXdr)).toBe(txHash(MOCK_TX_SIMULATED_XDR));
+    expect(txHash(signedXdr)).not.toBe(txHash(MOCK_TX_BEFORE_SIMULATION_XDR));
   });
 
   test("Hides the simulated XDR when the tx was not simulated", async ({
