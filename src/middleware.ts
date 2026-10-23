@@ -1,6 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(request: NextRequest) {
+  // Strip the NeevAI chat's UTM tags so its resource links land on clean Lab
+  // URLs. These are appended by the hosted NeevAI widget, not by this app, so
+  // removing them here keeps them out of the address bar and the
+  // querystring-synced store. Scoped to utm_source=neevai so campaign tags from
+  // other sources are untouched. (To stop them at the source instead, change
+  // the agent config in the NeevAI portal.)
+  if (request.nextUrl.searchParams.get("utm_source") === "neevai") {
+    const cleanUrl = request.nextUrl.clone();
+
+    [...cleanUrl.searchParams.keys()]
+      .filter((key) => key.startsWith("utm_"))
+      .forEach((key) => cleanUrl.searchParams.delete(key));
+
+    return NextResponse.redirect(cleanUrl);
+  }
+
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
 
   const isLocalhost = Boolean(
@@ -15,6 +31,7 @@ export function middleware(request: NextRequest) {
   //   Reown modal that renders the WalletConnect QR code
   // frame-src verify.walletconnect.org is the iframe WalletConnect uses to
   //   attest the dapp's domain to the wallet
+  // frame-src prism-chat.neevai.io is the NeevAI chat ("Ask Stellar") iframe
   const cspHeader = `
     default-src 'self';
     script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: 'unsafe-inline' 'unsafe-eval';
@@ -24,7 +41,7 @@ export function middleware(request: NextRequest) {
     connect-src 'self' http://localhost:* https: wss://relay.walletconnect.org;
     font-src 'self' https://fonts.gstatic.com/ https://fonts.reown.com/ https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs/base/browser/ui/codicons/codicon/codicon.ttf;
     object-src 'none';
-    frame-src 'self' https://connect.trezor.io/ https://hot-labs.org/ https://www.youtube.com/ https://verify.walletconnect.org/;
+    frame-src 'self' https://connect.trezor.io/ https://hot-labs.org/ https://www.youtube.com/ https://verify.walletconnect.org/ https://prism-chat.neevai.io/;
     base-uri 'self';
     form-action 'self';
     frame-ancestors 'none';

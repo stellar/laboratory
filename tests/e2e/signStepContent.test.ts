@@ -18,11 +18,11 @@ test.describe("Sign Step in Build Flow", () => {
     "SADVGAH3VA3NGZ5VLX2ZICV7JQAINB2ZJZYOPMBXUNI3YRLGWLOA2OFY";
 
   const seedSessionStorageAndNavigate = async (page: Page) => {
-    // Navigate to the build page first so sessionStorage is on the right origin
-    await page.goto(`${baseURL}/transaction/build`);
-
-    // Seed sessionStorage with flow store state at the sign step
-    await page.evaluate(
+    // Seed sessionStorage with flow store state at the sign step, before any
+    // app script runs. Seeding after page load races with mount effects that
+    // write the default flow state back to sessionStorage, which makes the
+    // page open on the build step.
+    await page.addInitScript(
       ({ xdr }) => {
         const storeState = {
           state: {
@@ -68,8 +68,7 @@ test.describe("Sign Step in Build Flow", () => {
       { xdr: MOCK_TX_XDR },
     );
 
-    // Reload to pick up the seeded sessionStorage
-    await page.reload();
+    await page.goto(`${baseURL}/transaction/build`);
     await expect(page.locator("h1")).toHaveText("Sign transaction");
   };
 

@@ -63,7 +63,7 @@ APIs. The `main` branch is deployed to https://lab.stellar.org/.
 
 > See `package.json` for exact dependency versions.
 
-- **Node.js**: >= 22.22.0 (specified in `.nvmrc` and `package.json`)
+- **Node.js**: >= 22.23.4 (specified in `.nvmrc` and `package.json`)
 - **pnpm**: >= 10.15.1 (managed via Corepack)
 
 ## Development Setup
@@ -158,6 +158,29 @@ import { useStore } from "@/store/createStore";
 - **CSS Class Names**: BEM-ish PascalCase block with dashes for elements (e.g.,
   `ComponentName__element`)
 - **File/Folder Names**: dashes over underscores (e.g., `smart-contracts/`)
+
+### Layout Spacing (`Box` gap)
+
+`@/components/layout/Box` takes a `gap` token that maps to `--sds-gap-*`. Always
+use a token when the value matches; only use `gap="custom"` + `customValue` when
+no token fits.
+
+| Token | Value |
+| ----- | ----- |
+| `xs`  | 4px   |
+| `sm`  | 8px   |
+| `md`  | 12px  |
+| `lg`  | 16px  |
+| `xl`  | 24px  |
+| `xxl` | 32px  |
+
+```tsx
+<Box gap="lg">…</Box>                          // ✅ 16px
+<Box gap="custom" customValue="16px">…</Box>   // ❌ use gap="lg"
+<Box gap="custom" customValue="96px">…</Box>   // ✅ no token for 96px
+```
+
+Match by exact px value (16px is `lg`, not `md`); don't round to the nearest token.
 
 ### Form Validation
 

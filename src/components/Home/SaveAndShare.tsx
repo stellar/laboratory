@@ -1,22 +1,58 @@
-import { getPublicResourcePath } from "@/helpers/getPublicResourcePath";
-import { useWindowSize } from "@/hooks/useWindowSize";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { Button, Icon } from "@stellar/design-system";
 
-export const SaveAndShare = ({ imgTheme }: { imgTheme: "light" | "dark" }) => {
-  const { windowWidth } = useWindowSize();
+import { Box } from "@/components/layout/Box";
+import { SectionHeader } from "@/components/Home/SectionHeader";
+
+import { getPublicResourcePath } from "@/helpers/getPublicResourcePath";
+import { useStore } from "@/store/useStore";
+
+import { Routes } from "@/constants/routes";
+import { trackEvent, TrackingEvent } from "@/metrics/tracking";
+
+export const SaveAndShare = () => {
+  const router = useRouter();
+  const { theme } = useStore();
+  const imgSuffix = theme === "sds-theme-light" ? "" : "-dark";
 
   return (
-    <>
-      <div className="Lab__home__saveAndShare">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+    <div className="SaveAndShare">
+      <Box gap="lg" addlClassName="SaveAndShare__copy">
+        <SectionHeader
+          title="Save and share your work"
+          description="Save transactions and experiments to revisit later or share with others."
+        />
+
+        <div>
+          <Button
+            size="md"
+            variant="tertiary"
+            icon={<Icon.ArrowRight />}
+            iconPosition="right"
+            onClick={() => {
+              trackEvent(TrackingEvent.HOME_TOP_BTN, { type: "view saved" });
+              router.push(Routes.SAVED_TRANSACTIONS);
+            }}
+          >
+            View saved
+          </Button>
+        </div>
+      </Box>
+
+      {/* Light (1773x537) and dark (2711x824) exports share an aspect ratio and
+          render at 591x179 CSS, so they stay sharp on retina; next/image serves
+          an appropriate srcset. */}
+      <div className="SaveAndShare__art" aria-hidden="true">
+        <Image
           src={getPublicResourcePath(
-            windowWidth && windowWidth < 600
-              ? `/images/lab-home-save-share-mobile-${imgTheme}.png`
-              : `/images/lab-home-save-share-${imgTheme}.png`,
+            `/images/lab-home-save-share-v2${imgSuffix}.png`,
           )}
-          alt="Save and share graphic"
+          alt=""
+          width={591}
+          height={179}
         />
       </div>
-    </>
+    </div>
   );
 };
