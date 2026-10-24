@@ -18,6 +18,7 @@ import { useStore } from "@/store/useStore";
 import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransactions";
 import { arrayItem } from "@/helpers/arrayItem";
+import { sortByNewest } from "@/helpers/sortByNewest";
 import { isSorobanOperationType } from "@/helpers/sorobanUtils";
 
 import { TRANSACTION_OPERATIONS } from "@/constants/transactionOperations";
@@ -37,7 +38,7 @@ export default function SavedTransactions() {
     const txns = localStorageSavedTransactions
       .get()
       .filter((s) => s.network.id === network.id);
-    setSavedTxns(txns);
+    setSavedTxns(sortByNewest(txns));
   }, [network.id]);
 
   useEffect(() => {
