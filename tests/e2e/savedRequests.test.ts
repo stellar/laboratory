@@ -57,8 +57,22 @@ test.describe("Saved Requests Page", () => {
       );
       await expect(horizonItems).toHaveCount(2);
 
-      // Item 1
-      const txItem = horizonItems.nth(0);
+      // Sorted by most recent first
+      const accItem = horizonItems.nth(0);
+
+      await expect(accItem.getByTestId("saved-horizon-name")).toHaveValue(
+        "Account",
+      );
+      await expect(accItem.getByTestId("saved-horizon-url")).toHaveValue(
+        "https://horizon-testnet.stellar.org/accounts/GA46LGGOLXJY5OSX6N4LHV4MWDFXNGLK76I4NDNKKYAXRRSKI5AJGMXG",
+      );
+      await expect(
+        accItem.getByText("Last saved Dec 3, 2024, 1:47 PM UTC", {
+          exact: true,
+        }),
+      ).toBeVisible();
+
+      const txItem = horizonItems.nth(1);
 
       await expect(txItem.getByTestId("saved-horizon-name")).toHaveValue(
         "Transactions",
@@ -87,24 +101,10 @@ test.describe("Saved Requests Page", () => {
 
       await pageContext.getByText("Save", { exact: true }).click();
 
-      await expect(txItem.getByTestId("saved-horizon-name")).toHaveValue(
-        newName,
-      );
-
-      // Item 2
-      const accItem = horizonItems.nth(1);
-
-      await expect(accItem.getByTestId("saved-horizon-name")).toHaveValue(
-        "Account",
-      );
-      await expect(accItem.getByTestId("saved-horizon-url")).toHaveValue(
-        "https://horizon-testnet.stellar.org/accounts/GA46LGGOLXJY5OSX6N4LHV4MWDFXNGLK76I4NDNKKYAXRRSKI5AJGMXG",
-      );
+      // Renaming updates the timestamp, so the item moves to the top
       await expect(
-        accItem.getByText("Last saved Dec 3, 2024, 1:47 PM UTC", {
-          exact: true,
-        }),
-      ).toBeVisible();
+        horizonItems.nth(0).getByTestId("saved-horizon-name"),
+      ).toHaveValue(newName);
     });
 
     test("Delete Horizon endpoint", async () => {
@@ -121,7 +121,11 @@ test.describe("Saved Requests Page", () => {
       await clickRpcTab(pageContext);
 
       const rpcItems = pageContext.getByTestId("saved-requests-rpc-item");
-      const txItem = rpcItems.nth(0);
+      // Sorted by most recent first
+      await expect(rpcItems.nth(0).getByTestId("saved-rpc-name")).toHaveValue(
+        "Simulate",
+      );
+      const txItem = rpcItems.nth(1);
 
       await expect(
         txItem.getByText("getTransactions", { exact: true }),
@@ -154,13 +158,18 @@ test.describe("Saved Requests Page", () => {
 
       await pageContext.getByText("Save", { exact: true }).click();
 
-      await expect(txItem.getByTestId("saved-rpc-name")).toHaveValue(newName);
+      // Renaming updates the timestamp, so the item moves to the top
+      const renamedItem = rpcItems.nth(0);
+
+      await expect(renamedItem.getByTestId("saved-rpc-name")).toHaveValue(
+        newName,
+      );
 
       // View payload
-      const rpcPayload = txItem.getByTestId("saved-rpc-payload");
+      const rpcPayload = renamedItem.getByTestId("saved-rpc-payload");
 
       await expect(rpcPayload).toBeHidden();
-      await txItem.getByText("View payload", { exact: true }).click();
+      await renamedItem.getByText("View payload", { exact: true }).click();
       await expect(rpcPayload).toBeVisible();
     });
 
@@ -177,7 +186,7 @@ test.describe("Saved Requests Page", () => {
     test("Horizon endpoint View action", async ({ page }) => {
       const horizonItem = pageContext
         .getByTestId("saved-requests-horizon-item")
-        .nth(0);
+        .nth(1);
 
       await horizonItem.getByText("View", { exact: true }).click();
 
@@ -195,7 +204,7 @@ test.describe("Saved Requests Page", () => {
     test("RPC method View in API Explorer action", async ({ page }) => {
       await clickRpcTab(pageContext);
 
-      const rpcItem = pageContext.getByTestId("saved-requests-rpc-item").nth(0);
+      const rpcItem = pageContext.getByTestId("saved-requests-rpc-item").nth(1);
 
       await rpcItem.getByText("View in API Explorer", { exact: true }).click();
 
