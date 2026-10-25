@@ -53,6 +53,32 @@ test.describe("URL Params", () => {
       // The state must not be re-encoded (`$=` -> `%24=`)
       expect(page.url()).toContain("$=network$id=futurenet");
     });
+
+    test("Saves UTM params for the tab session", async ({ page }) => {
+      const getSaved = () =>
+        page.evaluate(() =>
+          JSON.parse(
+            sessionStorage.getItem("stellar_lab_attribution") || "null",
+          ),
+        );
+      const neevai = {
+        utm_source: "neevai",
+        utm_medium: "chat",
+        utm_campaign: "stellar-lab-chat",
+        landing_path: "/network-limits",
+      };
+
+      await page.goto(
+        `${baseURL}/network-limits?utm_source=neevai&utm_medium=chat&utm_campaign=stellar-lab-chat`,
+      );
+      await expect(page.locator("h1")).toBeVisible();
+      await expect.poll(getSaved).toEqual(neevai);
+
+      // A later page in the same tab, without UTM params, keeps attribution
+      await page.goto(`${baseURL}/xdr/view`);
+      await expect(page.locator("h1")).toHaveText("View XDR");
+      expect(await getSaved()).toEqual(neevai);
+    });
   });
 
   test.describe("Transactions", () => {
