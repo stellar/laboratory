@@ -129,14 +129,16 @@
 
   @media (max-width: 960px) {
     flex-direction: row;
-    justify-content: center;
-    gap: pxToRem(22px);
+    gap: 0;
     padding: pxToRem(8px) 0;
 
+    // Steps share the full width equally; each connector spans from its
+    // badge's right edge to the next badge's left edge (badge is 30px)
     &__step {
       flex-direction: column;
       align-items: center;
-      width: pxToRem(60px);
+      flex: 1;
+      min-width: 0;
       position: relative;
       gap: 0;
     }
@@ -144,7 +146,7 @@
     &__connector {
       position: absolute;
       height: 1px;
-      width: pxToRem(52px);
+      width: calc(100% - #{pxToRem(30px)});
       top: pxToRem(14px);
       left: calc(50% + #{pxToRem(15px)});
 
