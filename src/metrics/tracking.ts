@@ -1,5 +1,6 @@
 import * as amplitude from "@amplitude/analytics-browser";
 import { getQueryStringState } from "@/helpers/getQueryStringState";
+import { getAttribution } from "@/metrics/attribution";
 import { AnyObject } from "@/types/types";
 
 const AMPLITUDE_API_KEY_DEV = "21f9b86405da037f7b9d1f00a235a4fd";
@@ -71,6 +72,8 @@ export const trackEvent = (type: TrackingEvent, properties?: AnyObject) => {
 
   const props = {
     network: searchParams?.network?.id,
+    // Campaign UTM params saved on landing (e.g. from the NeevAI chat)
+    ...getAttribution(),
     ...properties,
   };
 
@@ -88,6 +91,7 @@ export const trackEvent = (type: TrackingEvent, properties?: AnyObject) => {
 
 export enum TrackingEvent {
   // Global
+  PAGE_VIEW = "page view",
   MAIN_NAV_CLICKED = "main nav clicked",
   MOBILE_NAV_CLICKED = "mobile nav clicked",
   SUBNAV_CLICKED = "subnav clicked",

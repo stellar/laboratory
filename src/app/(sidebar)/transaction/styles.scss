@@ -1,11 +1,18 @@
 @use "../../../styles/utils.scss" as *;
 
+// Stretch the transaction flow to fill the page height so the sticky
+// TransactionFlowFooter sits at the bottom of the viewport even on short steps
+.LabLayout__content > .Box:has(> .BuildTransaction__layout) {
+  flex: 1;
+}
+
 .BuildTransaction {
   &__layout {
     display: flex;
     gap: pxToRem(32px);
     width: 100%;
     margin: 0 auto;
+    flex: 1;
   }
   &__tabs {
     display: flex;
@@ -16,9 +23,20 @@
   &__content {
     flex: 1;
     min-width: 0;
+    display: flex;
+    flex-direction: column;
+
+    > .Box {
+      flex: 1;
+    }
+
+    .TransactionFlowFooter {
+      margin-top: auto;
+    }
 
     .SignTransactionXdr {
       background-color: var(--sds-clr-gray-01);
+      border-radius: pxToRem(8px);
     }
 
     .resetButton {
@@ -118,6 +136,17 @@
 }
 
 .SignStepContent {
+  &__card {
+    padding: pxToRem(24px);
+    background-color: var(--sds-clr-gray-01);
+    border-radius: pxToRem(8px);
+
+    // The card already provides the padding
+    .SignTransactionXdr {
+      padding: 0;
+    }
+  }
+
   &__label {
     color: var(--sds-clr-gray-09);
   }

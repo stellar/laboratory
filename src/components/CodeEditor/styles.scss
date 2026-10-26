@@ -8,6 +8,9 @@
   overflow: hidden;
   height: var(--CodeEditor-height);
   position: relative;
+  // Keep Monaco's internal z-indexes (e.g. its scrollbar, z-index: 11) inside
+  // the editor so they don't paint over the sticky TransactionFlowFooter
+  isolation: isolate;
 
   &--error {
     border-color: var(--sds-clr-red-11);

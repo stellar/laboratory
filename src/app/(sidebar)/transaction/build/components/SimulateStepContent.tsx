@@ -30,6 +30,7 @@ export const SimulateStepContent = ({
     setSignedAuthEntriesXdr,
     setAssembledXdr,
     resetDownstreamState,
+    resetAll,
   } = useBuildFlowStore();
 
   const xdrToSimulate = build.soroban.xdr || build.classic.xdr;
@@ -53,6 +54,7 @@ export const SimulateStepContent = ({
         setAssembledXdr,
         resetDownstreamState,
       }}
+      onClearAll={resetAll}
     />
   );
 };
