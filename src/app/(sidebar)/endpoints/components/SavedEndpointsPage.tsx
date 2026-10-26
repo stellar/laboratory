@@ -26,7 +26,7 @@ import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 import { Routes } from "@/constants/routes";
 import { localStorageSavedEndpointsHorizon } from "@/helpers/localStorageSavedEndpointsHorizon";
 import { localStorageSavedRpcMethods } from "@/helpers/localStorageSavedRpcMethods";
-import { arrayItem } from "@/helpers/arrayItem";
+import { sortByNewest } from "@/helpers/sortByNewest";
 import { formatTimestamp } from "@/helpers/formatTimestamp";
 import { getNetworkById } from "@/helpers/getNetworkById";
 import { useStore } from "@/store/useStore";
@@ -69,14 +69,14 @@ export const SavedEndpointsPage = () => {
     const horizonItems = localStorageSavedEndpointsHorizon
       .get()
       .filter((h) => h.network.id === network.id);
-    setSavedEndpointsHorizon(horizonItems);
+    setSavedEndpointsHorizon(sortByNewest(horizonItems));
   }, [network.id]);
 
   const updateSavedRpcRequests = useCallback(() => {
     const rpcItems = localStorageSavedRpcMethods
       .get()
       .filter((r) => r.network.id === network.id);
-    setSavedRpcMethods(rpcItems);
+    setSavedRpcMethods(sortByNewest(rpcItems));
   }, [network.id]);
 
   useEffect(() => {
@@ -249,13 +249,12 @@ export const SavedEndpointsPage = () => {
                   icon={<Icon.Trash01 />}
                   type="button"
                   onClick={() => {
-                    const updatedList = arrayItem.delete(
-                      savedEndpointsHorizon,
-                      idx,
-                    );
+                    const updatedList = localStorageSavedEndpointsHorizon
+                      .get()
+                      .filter((h) => h.timestamp !== e.timestamp);
 
                     localStorageSavedEndpointsHorizon.set(updatedList);
-                    setSavedEndpointsHorizon(updatedList);
+                    updateSavedHorizonEndpoints();
 
                     trackEvent(TrackingEvent.ENDPOINTS_SAVED_DELETE, {
                       tab: saved.activeTab,
@@ -386,10 +385,12 @@ export const SavedEndpointsPage = () => {
                 <SavedItemTimestampAndDelete
                   timestamp={e.timestamp}
                   onDelete={() => {
-                    const updatedList = arrayItem.delete(savedRpcMethods, idx);
+                    const updatedList = localStorageSavedRpcMethods
+                      .get()
+                      .filter((r) => r.timestamp !== e.timestamp);
 
                     localStorageSavedRpcMethods.set(updatedList);
-                    setSavedRpcMethods(updatedList);
+                    updateSavedRpcRequests();
                   }}
                 />
               </Box>

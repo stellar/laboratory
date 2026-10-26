@@ -22,6 +22,7 @@ import { AddKeypairManuallyModal } from "@/components/AddKeypairManuallyModal";
 
 import { localStorageSavedKeypairs } from "@/helpers/localStorageSavedKeypairs";
 import { arrayItem } from "@/helpers/arrayItem";
+import { sortByNewest } from "@/helpers/sortByNewest";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { getNetworkById } from "@/helpers/getNetworkById";
 
@@ -48,7 +49,7 @@ export default function SavedKeypairs() {
     const keypairs = localStorageSavedKeypairs
       .get()
       .filter((s) => s.network.id === network.id);
-    setSavedKeypairs(keypairs);
+    setSavedKeypairs(sortByNewest(keypairs));
   }, [network.id]);
 
   useEffect(() => {
