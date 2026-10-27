@@ -1,6 +1,6 @@
 "use client";
 
-import { Heading, Logo, Text } from "@stellar/design-system";
+import { Heading, Link, Logo, Text } from "@stellar/design-system";
 
 import { SdsLink } from "@/components/SdsLink";
 import { Box } from "@/components/layout/Box";
@@ -89,6 +89,12 @@ export default function Introduction() {
           >
             Terms of Service
           </SdsLink>
+          <Link href="/llms.txt" variant="secondary">
+            llms.txt
+          </Link>
+          <Link href="/llms-full.txt" variant="secondary">
+            llms-full.txt
+          </Link>
         </Box>
 
         <Box gap="sm" direction="row">

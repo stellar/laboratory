@@ -50,6 +50,10 @@ test.describe("Smart Contracts: Invoke Contract — Use another signing method",
   test("'Use another signing method' + Build transaction redirects to /transaction/build with prefilled state", async ({
     page,
   }) => {
+    // Loads a contract, then client-side navigates to /transaction/build,
+    // which the CI dev server compiles on demand. Needs more than 20s in CI.
+    test.slow();
+
     await page.goto(`${baseURL}/smart-contracts/contract-explorer`);
 
     await page.getByLabel("Contract ID").fill(MOCK_SAC_CONTRACT_ID);
@@ -86,7 +90,9 @@ test.describe("Smart Contracts: Invoke Contract — Use another signing method",
       .click();
 
     // Should land on /transaction/build with the build store seeded.
-    await expect(page).toHaveURL(/\/transaction\/build/);
+    // `toHaveURL` gives up after the 5s expect timeout, too short for the
+    // router.push in CI. `waitForURL` uses the navigation timeout.
+    await page.waitForURL("**/transaction/build**");
 
     const stored = await page.evaluate(() =>
       sessionStorage.getItem("stellar_lab_tx_flow_build"),
