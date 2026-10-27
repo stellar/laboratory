@@ -1,6 +1,7 @@
 import {
   FeeBumpTransaction,
   Keypair,
+  Networks,
   StrKey,
   Transaction,
   TransactionBuilder,
@@ -9,10 +10,15 @@ import {
 import TransportWebHID from "@ledgerhq/hw-transport-webhid";
 import Str from "@ledgerhq/hw-app-str";
 import TrezorConnect, { StellarSignedTx } from "@trezor/connect-web";
-import transformTransaction from "@trezor/connect-plugin-stellar";
 
 import { validate } from "@/validate";
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
+import {
+  assertTrezorCanSign,
+  needsTrezorObjectForm,
+  transformTrezorTransaction,
+} from "@/helpers/trezorTransform";
+import { getErrorMessage } from "@/helpers/errorUtils";
 
 import { LedgerErrorResponse } from "@/types/types";
 
@@ -213,25 +219,103 @@ const signWithLedger = async ({
   }
 };
 
+const TREZOR_MANIFEST = {
+  appName: "Stellar Lab",
+  email: "accounts+trezor@stellar.org",
+  appUrl: "https://lab.stellar.org/",
+};
+
+let trezorInit: Promise<void> | undefined;
+
+/**
+ * Initializes Trezor Connect once per page load. In "auto" mode Connect uses
+ * Trezor Suite Desktop when it is running and the Suite Web tab otherwise.
+ */
+const initTrezorConnect = () => {
+  if (!trezorInit) {
+    trezorInit = TrezorConnect.init({
+      manifest: TREZOR_MANIFEST,
+      coreMode: "auto",
+    }).catch((error) => {
+      trezorInit = undefined;
+      throw error;
+    });
+  }
+
+  return trezorInit;
+};
+
+/** Initializes Trezor Connect ahead of signing; errors surface on sign. */
+const prepareTrezor = () => initTrezorConnect().catch(() => undefined);
+
+const getTrezorErrorMessage = (error: {
+  code?: string;
+  message?: string;
+}): string => {
+  const reason = error.message || error.code || "";
+
+  if (reason.includes("popup-blocked")) {
+    return `The browser blocked the Trezor Suite tab. Allow popups for this site and try again. (${reason})`;
+  }
+
+  if (reason.includes("iframe-blocked") || reason.includes("iframe-timeout")) {
+    return `The Trezor Suite bootstrap frame could not load. Check content blockers and the Content Security Policy for suite.trezor.io. (${reason})`;
+  }
+
+  if (error.code === "Browser_LocalNetworkPermissionMissing") {
+    return 'The browser denied this site access to Trezor Suite Desktop. Allow "apps on your device" (local network access) for this site and try again.';
+  }
+
+  if (error.message && error.code && !error.message.includes(error.code)) {
+    return `${error.message} (${error.code})`;
+  }
+
+  return reason || "Couldn't sign transaction with Trezor device.";
+};
+
 const signWithTrezor = async ({
   bipPath,
   transaction,
 }: {
   bipPath: string;
-  transaction: Transaction;
+  transaction: Transaction | FeeBumpTransaction;
 }): Promise<{
   signature: xdr.DecoratedSignature[] | undefined;
   error: string | undefined;
 }> => {
-  TrezorConnect.manifest({
-    email: "accounts+trezor@stellar.org",
-    appUrl: "https://lab.stellar.org/",
-    appName: "Stellar Lab",
-  });
+  if (!(transaction instanceof Transaction)) {
+    return {
+      signature: undefined,
+      error: "Trezor does not support signing fee bump transactions.",
+    };
+  }
 
   try {
-    const trezorParams = transformTransaction(bipPath, transaction);
-    const response = await TrezorConnect.stellarSignTransaction(trezorParams);
+    // Both throw early for anything Trezor cannot sign as is.
+    assertTrezorCanSign(transaction);
+    const trezorTransaction = transformTrezorTransaction(transaction);
+
+    await initTrezorConnect();
+
+    const { networkPassphrase } = transaction;
+    const isTestnet = networkPassphrase === Networks.TESTNET;
+    const isPublic = networkPassphrase === Networks.PUBLIC;
+
+    // Connect only knows the public and test networks by flag; other networks
+    // (and Manage Data removals) go in object form with an explicit passphrase.
+    const response = await TrezorConnect.stellarSignTransaction(
+      (isPublic || isTestnet) && !needsTrezorObjectForm(transaction)
+        ? {
+            path: bipPath,
+            xdrBase64: transaction.toXdr(),
+            testnet: isTestnet,
+          }
+        : {
+            path: bipPath,
+            networkPassphrase,
+            transaction: trezorTransaction,
+          },
+    );
 
     if (response.success) {
       return {
@@ -239,17 +323,18 @@ const signWithTrezor = async ({
         error: undefined,
       };
     } else {
-      const errorPayload = response.payload as { error: string };
       return {
         signature: undefined,
-        error:
-          errorPayload.error || "Couldn't sign transaction with Trezor device.",
+        error: getTrezorErrorMessage(response.error),
       };
     }
   } catch (error) {
     return {
       signature: undefined,
-      error: `Couldn't sign transaction with Trezor device. Details: ${error}`,
+      error: getTrezorErrorMessage({
+        code: (error as { code?: string })?.code,
+        message: getErrorMessage(error),
+      }),
     };
   }
 };
@@ -380,6 +465,7 @@ export const txHelper = {
   buildFeeBumpTx,
   signWithLedger,
   signWithTrezor,
+  prepareTrezor,
   extractLastSignature,
   extractSignaturesFromTx,
   secretKeySignature,

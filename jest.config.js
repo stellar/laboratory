@@ -11,10 +11,11 @@ module.exports = {
     ],
   },
   extensionsToTreatAsEsm: [".ts"],
-  // The Stellar SDK and zustand-querystring (via lodash-es) pull in ESM-only
-  // dependencies; pnpm stores scoped packages as @scope+name.
+  // The Stellar SDK, Trezor Connect 10 and zustand-querystring (via lodash-es)
+  // are or pull in ESM-only dependencies; pnpm stores scoped packages as
+  // @scope+name.
   transformIgnorePatterns: [
-    "/node_modules/.pnpm/(?!(?:@stellar\\+stellar-sdk|@exodus\\+bytes|@noble\\+hashes|@noble\\+ed25519|uint8array-extras|lodash-es)@)",
+    "/node_modules/.pnpm/(?!(?:@stellar\\+stellar-sdk|@exodus\\+bytes|@noble\\+hashes|@noble\\+ed25519|uint8array-extras|lodash-es|@trezor\\+[a-z-]+)@)",
   ],
   modulePathIgnorePatterns: ["tests/e2e"],
   moduleDirectories: ["node_modules", "<rootDir>"],
