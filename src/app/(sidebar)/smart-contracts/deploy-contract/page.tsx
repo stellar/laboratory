@@ -146,7 +146,6 @@ export default function DeployContract() {
         }
 
         return null;
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {
         setPageError(`Error getting constructor schema: ${e}.`);
         return null;

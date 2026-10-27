@@ -1,5 +1,7 @@
 # Claude Code Instructions for Stellar Laboratory
 
+@AGENTS.md
+
 ## Quick Reference
 
 ```bash
@@ -53,8 +55,9 @@ APIs. The `main` branch is deployed to https://lab.stellar.org/.
   across navigation — use the Zustand store instead. The store is initialized
   once from the URL in `StoreProvider`.
 - **CSP proxy**: `src/proxy.ts` (Next.js 16 proxy, formerly middleware)
-  generates a nonce-based Content Security Policy on every request. When adding new external script/font/image
-  sources, update the CSP directives there.
+  generates a nonce-based Content Security Policy on every request. When
+  adding new external script/font/image sources, update the CSP directives
+  there.
 - **No Horizon for new features**: Always use RPC endpoints
   (`src/query/useRpc*`, `src/query/useGetRpc*`). Horizon hooks exist for legacy
   features only.

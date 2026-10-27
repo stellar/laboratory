@@ -32,12 +32,8 @@ const eslintConfig = [
     },
   },
   {
-    ignores: [
-      "build/**",
-      "playwright-report/**",
-      "test-results/**",
-      "src/temp/stellar-xdr-web/**",
-    ],
+    // eslint-config-next already ignores build/, .next/, out/ and next-env.d.ts
+    ignores: ["playwright-report/**", "test-results/**"],
   },
 ];
 
