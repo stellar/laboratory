@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export function proxy(request: NextRequest) {
+  // Don't rewrite the query string here (e.g. to strip UTM tags): editing
+  // `searchParams` re-encodes the whole query, turning the store's `$=...;;`
+  // state into `%24=...`, which zustand-querystring can't read.
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
 
   const isLocalhost = Boolean(
