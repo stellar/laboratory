@@ -63,7 +63,7 @@ export const JsonSchemaRenderer = ({
                   ) : null}
 
                   <Box gap="md">
-                    <Card>
+                    <Card variant="secondary">
                       <JsonSchemaRenderer
                         name={path.length > 0 ? path.join(".") : key}
                         path={[...path, key]}

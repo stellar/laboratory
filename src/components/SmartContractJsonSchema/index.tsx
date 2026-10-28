@@ -125,18 +125,19 @@ export const JsonSchemaForm = ({
           />
         </Box>
 
-        {txnParams.memo && (
-          <Box
-            gap="md"
-            addlClassName="FieldNote FieldNote--note FieldNote--md"
-            direction="row"
-          >
-            <Notification
-              variant="warning"
-              title="Note: Your memo was removed because Soroban transactions no longer support memos as of Protocol 23."
-            ></Notification>
-          </Box>
-        )}
+        {Object.keys(txnParams.memo).length > 0 &&
+          txnParams.memo !== "none" && (
+            <Box
+              gap="md"
+              addlClassName="FieldNote FieldNote--note FieldNote--md"
+              direction="row"
+            >
+              <Notification
+                variant="warning"
+                title="Note: Your memo was removed because Soroban transactions no longer support memos as of Protocol 23."
+              ></Notification>
+            </Box>
+          )}
 
         {submitTxError && <ErrorText errorMessage={submitTxError} size="sm" />}
       </Box>

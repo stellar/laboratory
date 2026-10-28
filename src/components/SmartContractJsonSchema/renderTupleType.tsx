@@ -43,7 +43,7 @@ export const renderTupleType = ({
         {getKeyName.tag}
       </LabelHeading>
 
-      <Card>
+      <Card variant="secondary">
         <Box gap="md">
           <LabelHeading size="md" infoText={schema.description}>
             {label}
