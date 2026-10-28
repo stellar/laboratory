@@ -5,8 +5,7 @@ const nextConfig = {
     : undefined,
   distDir: "build",
   basePath: process.env.NEXT_BASE_PATH || undefined,
-  // Needed for stellar-hd-wallet. Client bundles are covered by
-  // @stellar/stellar-base's `browser` field, which stubs out sodium-native.
+  // Needed for stellar-hd-wallet
   serverExternalPackages: ["sodium-native"],
   // Adding client side redirects to support old URLs in case they were saved or
   // bookmarked.
