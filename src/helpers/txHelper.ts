@@ -329,20 +329,15 @@ const signWithTrezor = async ({
     const isTestnet = networkPassphrase === Networks.TESTNET;
     const isPublic = networkPassphrase === Networks.PUBLIC;
 
-    // Connect only knows the public and test networks by flag; other networks
-    // (and Manage Data removals) go in object form with an explicit passphrase.
+    // Connect's XDR form picks the network from a `testnet` boolean
+    // (true → testnet, false → public), so other networks need the object form.
+    const canUseXdrForm =
+      (isPublic || isTestnet) && !needsTrezorObjectForm(transaction);
+
     const response = await TrezorConnect.stellarSignTransaction(
-      (isPublic || isTestnet) && !needsTrezorObjectForm(transaction)
-        ? {
-            path: bipPath,
-            xdrBase64: transaction.toXdr(),
-            testnet: isTestnet,
-          }
-        : {
-            path: bipPath,
-            networkPassphrase,
-            transaction: trezorTransaction,
-          },
+      canUseXdrForm
+        ? { path: bipPath, xdrBase64: transaction.toXdr(), testnet: isTestnet }
+        : { path: bipPath, networkPassphrase, transaction: trezorTransaction },
     );
 
     if (response.success) {
