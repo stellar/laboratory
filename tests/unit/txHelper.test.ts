@@ -77,3 +77,60 @@ describe("txHelper signature encoding", () => {
     expect(result.errorMsg).toContain("has already signed this transaction");
   });
 });
+describe("txHelper.getVerifiedHardwareSignature", () => {
+  it("wraps a valid signature with the signer's hint", () => {
+    const { signer, transaction } = buildSignedTransaction();
+    const signature = signer.sign(transaction.hash());
+
+    const [decorated] = txHelper.getVerifiedHardwareSignature({
+      publicKey: signer.publicKey(),
+      signature,
+      transaction,
+    });
+
+    expect(Buffer.from(decorated.hint.toBytes())).toEqual(
+      Buffer.from(signer.signatureHint()),
+    );
+    expect(Buffer.from(decorated.signature.toBytes())).toEqual(
+      Buffer.from(signature),
+    );
+  });
+
+  it("rejects a signature made by a different key", () => {
+    const { signer, transaction } = buildSignedTransaction();
+    const otherSigner = Keypair.random();
+
+    expect(() =>
+      txHelper.getVerifiedHardwareSignature({
+        publicKey: signer.publicKey(),
+        signature: otherSigner.sign(transaction.hash()),
+        transaction,
+      }),
+    ).toThrow("doesn’t match this transaction");
+  });
+
+  it("rejects a signature of a different transaction", () => {
+    const { signer, transaction } = buildSignedTransaction();
+    const { transaction: otherTransaction } = buildSignedTransaction();
+
+    expect(() =>
+      txHelper.getVerifiedHardwareSignature({
+        publicKey: signer.publicKey(),
+        signature: signer.sign(otherTransaction.hash()),
+        transaction,
+      }),
+    ).toThrow("doesn’t match this transaction");
+  });
+
+  it("rejects a malformed signature", () => {
+    const { signer, transaction } = buildSignedTransaction();
+
+    expect(() =>
+      txHelper.getVerifiedHardwareSignature({
+        publicKey: signer.publicKey(),
+        signature: Buffer.alloc(10),
+        transaction,
+      }),
+    ).toThrow();
+  });
+});

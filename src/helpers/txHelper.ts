@@ -130,6 +130,34 @@ const secretKeySignature = ({
   };
 };
 
+/**
+ * Wraps a signature returned by a hardware wallet as a decorated signature,
+ * after checking it is a valid signature of the transaction hash by the
+ * device's public key. Throws otherwise, so a signature the network would
+ * reject is never added to the transaction.
+ */
+const getVerifiedHardwareSignature = ({
+  publicKey,
+  signature,
+  transaction,
+}: {
+  publicKey: string;
+  signature: Uint8Array;
+  transaction: FeeBumpTransaction | Transaction;
+}): xdr.DecoratedSignature[] => {
+  const keyPair = Keypair.fromPublicKey(publicKey);
+
+  if (!keyPair.verify(transaction.hash(), signature)) {
+    throw new Error(
+      "The hardware wallet returned a signature that doesn’t match this transaction, so it wasn’t added. Try signing again.",
+    );
+  }
+
+  return [
+    new xdr.DecoratedSignature({ hint: keyPair.signatureHint(), signature }),
+  ];
+};
+
 const signWithLedger = async ({
   bipPath,
   transaction,
@@ -184,14 +212,14 @@ const signWithLedger = async ({
         ledgerSignature = signature;
       }
 
-      const keyPair = Keypair.fromPublicKey(publicKey);
-      const hint = keyPair.signatureHint();
-      const decorated = new xdr.DecoratedSignature({
-        hint,
-        signature: ledgerSignature,
-      });
-
-      return { signature: [decorated], error: undefined };
+      return {
+        signature: getVerifiedHardwareSignature({
+          publicKey,
+          signature: ledgerSignature,
+          transaction,
+        }),
+        error: undefined,
+      };
     } catch (error) {
       const ledgerError = error as LedgerErrorResponse;
       return { signature: undefined, error: onError(ledgerError) };
@@ -319,7 +347,7 @@ const signWithTrezor = async ({
 
     if (response.success) {
       return {
-        signature: getTrezorDecoratedSignature(response.payload),
+        signature: getTrezorDecoratedSignature(response.payload, transaction),
         error: undefined,
       };
     } else {
@@ -341,16 +369,15 @@ const signWithTrezor = async ({
 
 const getTrezorDecoratedSignature = (
   payload: StellarSignedTx,
+  transaction: Transaction,
 ): xdr.DecoratedSignature[] => {
-  const signature = Buffer.from(payload.signature, "hex");
   const publicKeyBytes = Buffer.from(payload.publicKey, "hex");
-  const encodedPublicKey = StrKey.encodeEd25519PublicKey(publicKeyBytes);
 
-  const keyPair = Keypair.fromPublicKey(encodedPublicKey);
-  const hint = keyPair.signatureHint();
-  const decorated = new xdr.DecoratedSignature({ hint, signature });
-
-  return [decorated];
+  return getVerifiedHardwareSignature({
+    publicKey: StrKey.encodeEd25519PublicKey(publicKeyBytes),
+    signature: Buffer.from(payload.signature, "hex"),
+    transaction,
+  });
 };
 
 const extractLastSignature = ({
@@ -466,6 +493,7 @@ export const txHelper = {
   signWithLedger,
   signWithTrezor,
   prepareTrezor,
+  getVerifiedHardwareSignature,
   extractLastSignature,
   extractSignaturesFromTx,
   secretKeySignature,
