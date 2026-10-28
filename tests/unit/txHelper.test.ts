@@ -5,10 +5,25 @@ import {
   Keypair,
   Networks,
   Operation,
+  Transaction,
   TransactionBuilder,
+  xdr,
 } from "@stellar/stellar-sdk";
+import TrezorConnect from "@trezor/connect-web";
 
 import { txHelper } from "../../src/helpers/txHelper";
+import { transformTrezorTransaction } from "../../src/helpers/trezorTransform";
+
+jest.mock("@trezor/connect-web", () => ({
+  __esModule: true,
+  default: {
+    init: jest.fn().mockResolvedValue(undefined),
+    stellarSignTransaction: jest.fn(),
+  },
+}));
+
+const stellarSignTransaction =
+  TrezorConnect.stellarSignTransaction as jest.Mock;
 
 const buildSignedTransaction = () => {
   const signer = Keypair.random();
@@ -132,5 +147,95 @@ describe("txHelper.getVerifiedHardwareSignature", () => {
         transaction,
       }),
     ).toThrow();
+  });
+});
+
+describe("txHelper.signWithTrezor", () => {
+  const BIP_PATH = "m/44'/148'/0'";
+  const signer = Keypair.random();
+
+  const buildTrezorTx = (
+    networkPassphrase: string,
+    operation: xdr.Operation = Operation.payment({
+      destination: Keypair.random().publicKey(),
+      asset: Asset.native(),
+      amount: "1",
+    }),
+  ) =>
+    new TransactionBuilder(new Account(signer.publicKey(), "0"), {
+      fee: BASE_FEE,
+      networkPassphrase,
+    })
+      .addOperation(operation)
+      .setTimeout(30)
+      .build();
+
+  // Signs with a mocked Trezor and returns the params sent to Connect.
+  const signAndGetParams = async (transaction: Transaction) => {
+    stellarSignTransaction.mockResolvedValueOnce({
+      success: true,
+      payload: {
+        publicKey: Buffer.from(signer.rawPublicKey()).toString("hex"),
+        signature: Buffer.from(signer.sign(transaction.hash())).toString("hex"),
+      },
+    });
+
+    const result = await txHelper.signWithTrezor({
+      bipPath: BIP_PATH,
+      transaction,
+    });
+
+    expect(result.error).toBeUndefined();
+    expect(result.signature).toHaveLength(1);
+    expect(stellarSignTransaction).toHaveBeenCalledTimes(1);
+
+    return stellarSignTransaction.mock.calls[0][0];
+  };
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("sends the XDR form with testnet false on public", async () => {
+    const transaction = buildTrezorTx(Networks.PUBLIC);
+
+    expect(await signAndGetParams(transaction)).toEqual({
+      path: BIP_PATH,
+      xdrBase64: transaction.toXdr(),
+      testnet: false,
+    });
+  });
+
+  it("sends the XDR form with testnet true on testnet", async () => {
+    const transaction = buildTrezorTx(Networks.TESTNET);
+
+    expect(await signAndGetParams(transaction)).toEqual({
+      path: BIP_PATH,
+      xdrBase64: transaction.toXdr(),
+      testnet: true,
+    });
+  });
+
+  it("sends the object form with the passphrase on other networks", async () => {
+    const transaction = buildTrezorTx(Networks.FUTURENET);
+
+    expect(await signAndGetParams(transaction)).toEqual({
+      path: BIP_PATH,
+      networkPassphrase: Networks.FUTURENET,
+      transaction: transformTrezorTransaction(transaction),
+    });
+  });
+
+  it("sends the object form for a Manage Data removal on public", async () => {
+    const transaction = buildTrezorTx(
+      Networks.PUBLIC,
+      Operation.manageData({ name: "k", value: null }),
+    );
+
+    expect(await signAndGetParams(transaction)).toEqual({
+      path: BIP_PATH,
+      networkPassphrase: Networks.PUBLIC,
+      transaction: transformTrezorTransaction(transaction),
+    });
   });
 });
