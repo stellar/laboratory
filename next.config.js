@@ -5,15 +5,8 @@ const nextConfig = {
     : undefined,
   distDir: "build",
   basePath: process.env.NEXT_BASE_PATH || undefined,
-  webpack: (config) => {
-    // Needed for stellar-hd-wallet
-    config.externals.push("sodium-native");
-
-    // Disable webpack filesystem cache to avoid pnpm compatibility issues
-    config.cache = false;
-
-    return config;
-  },
+  // Needed for stellar-hd-wallet
+  serverExternalPackages: ["sodium-native"],
   // Adding client side redirects to support old URLs in case they were saved or
   // bookmarked.
   async redirects() {
@@ -293,9 +286,6 @@ if (process.env.NODE_ENV === "production") {
     // Note: Check that the configured route will not match with your Next.js middleware, otherwise reporting of client-
     // side errors will fail.
     // tunnelRoute: "/monitoring",
-
-    // Automatically tree-shake Sentry logger statements to reduce bundle size
-    disableLogger: true,
 
     // Enables automatic instrumentation of Vercel Cron Monitors. (Does not yet work with App Router route handlers.)
     // See the following for more information:

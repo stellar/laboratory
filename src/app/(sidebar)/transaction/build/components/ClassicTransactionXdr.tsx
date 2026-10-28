@@ -99,7 +99,6 @@ export const ClassicTransactionXdr = () => {
               // `value.id` by key: hydrated state can carry extra params keys,
               // so an injected key ordered before the real one would let the
               // encoded memo differ from the one shown in the form.
-              // eslint-disable-next-line no-case-declarations
               const [memoType, memoVal] = Object.entries(value)[0];
               val =
                 memoType === "id"

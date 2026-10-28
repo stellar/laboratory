@@ -184,7 +184,6 @@ export const SubmitStepContent = ({
 
     const localStorageMethod = localStorageSettings.get(SETTINGS_SUBMIT_METHOD);
     setSubmitMethod(localStorageMethod || "horizon");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRpcAvailable, isSoroban]);
 
   const isError = Boolean(submitRpcError || submitHorizonError);

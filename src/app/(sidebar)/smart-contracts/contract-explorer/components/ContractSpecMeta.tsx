@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Button, Icon } from "@stellar/design-system";
 import { parse, stringify } from "lossless-json";
 import { parseContractMetadata } from "@stellar-expert/contract-wasm-interface-parser";
+import { Buffer } from "buffer";
 
 import { CodeEditor, SupportedLanguage } from "@/components/CodeEditor";
 import { Box } from "@/components/layout/Box";
@@ -97,6 +98,8 @@ export const ContractSpecMeta = ({
       try {
         // The parser reads the Wasm with Buffer-only methods (readUint8), but
         // RPC returns a Uint8Array as of SDK v17 — pass a Buffer or it throws.
+        // Buffer is imported from buffer@6 explicitly: Turbopack's global
+        // Buffer polyfill is an older version without the lowercase aliases.
         const parsedContractMeta = parseContractMetadata(
           Buffer.from(wasmBinary),
         );
