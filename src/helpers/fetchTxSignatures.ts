@@ -153,7 +153,6 @@ export const fetchTxSignatures = async ({
 
       return result;
     }, []);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e: any) {
     throw e.message;
   }

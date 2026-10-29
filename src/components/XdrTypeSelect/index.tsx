@@ -68,7 +68,6 @@ export const XdrTypeSelect = ({
       setGuessedTypes([]);
     }
     // Not adding xdr
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [_xdrBlob, isXdrInit]);
 
   const OptionItem = ({

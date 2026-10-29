@@ -1,5 +1,7 @@
 # Claude Code Instructions for Stellar Laboratory
 
+@AGENTS.md
+
 ## Quick Reference
 
 ```bash
@@ -28,7 +30,7 @@ APIs. The `main` branch is deployed to https://lab.stellar.org/.
 
 > See `package.json` for exact dependency versions.
 
-- **Framework**: Next.js 15 (React 19) with App Router
+- **Framework**: Next.js 16 (React 19) with App Router
 - **Language**: TypeScript 5
 - **UI Framework**: Stellar Design System, Sass
 - **State Management**: Zustand (with querystring persistence via
@@ -52,9 +54,10 @@ APIs. The `main` branch is deployed to https://lab.stellar.org/.
   Avoid using `useState` or `useSearchParams` for values that should persist
   across navigation — use the Zustand store instead. The store is initialized
   once from the URL in `StoreProvider`.
-- **CSP middleware**: `src/middleware.ts` generates a nonce-based Content
-  Security Policy on every request. When adding new external script/font/image
-  sources, update the CSP directives there.
+- **CSP proxy**: `src/proxy.ts` (Next.js 16 proxy, formerly middleware)
+  generates a nonce-based Content Security Policy on every request. When
+  adding new external script/font/image sources, update the CSP directives
+  there.
 - **No Horizon for new features**: Always use RPC endpoints
   (`src/query/useRpc*`, `src/query/useGetRpc*`). Horizon hooks exist for legacy
   features only.
@@ -86,11 +89,6 @@ dev server.
 restrictions blocking Stellar RPC endpoints. The repo includes a committed
 `src/constants/networkLimits.ts` with recent values; if it exists, skip
 fetching. If pre-push hooks fail due to network: `git push --no-verify`.
-
-### Next.js Lint Deprecation Warning
-
-`pnpm lint` shows deprecation warning for `next lint` in Next.js 16. Warning
-only, not blocking. May need ESLint CLI migration when upgrading to Next.js 16.
 
 ### Husky Hooks Failing
 
@@ -130,7 +128,7 @@ src/
 ├── store/             # Zustand state stores
 ├── types/             # TypeScript type definitions
 ├── validate/          # Validation logic (get*Error() convention)
-└── middleware.ts      # CSP middleware
+└── proxy.ts           # CSP proxy (formerly middleware)
 tests/
 ├── e2e/               # Playwright e2e tests
 └── unit/              # Jest unit tests
@@ -213,8 +211,8 @@ pnpm build  # Output: build/ directory (standalone format)
 
 Husky runs lint + tests on push; use `--no-verify` to skip.
 
-- **ESLint**: `.eslintrc.json` — extends `eslint:recommended`,
-  `@typescript-eslint/recommended`, `next/core-web-vitals`, `prettier`
+- **ESLint**: `eslint.config.mjs` (flat config) — `@eslint/js` recommended,
+  `eslint-config-next` core-web-vitals + typescript, TanStack Query, `prettier`
 - **Prettier**: `.prettierrc.json` — 80 chars, 2 spaces, semicolons, double
   quotes, trailing commas
 - **Known exception**: `@typescript-eslint/no-explicit-any` disabled
