@@ -288,12 +288,15 @@ export const ContractInfo = ({
     );
   };
 
-  const renderContractSpecMeta = (sectionsToShow: ContractSectionName[]) => (
+  const renderContractSpecMeta = (
+    sectionsToShow: ContractSectionName[],
+    tabId: string,
+  ) => (
     <ContractSpecMeta
       sectionsToShow={sectionsToShow}
       wasmHash={wasmHash || ""}
       rpcUrl={network.rpcUrl}
-      isActive={activeTab === "contract-contract-spec"}
+      isActive={activeTab === tabId}
       isSourceStellarExpert={false}
       isSacType={isSacType}
     />
@@ -379,7 +382,7 @@ export const ContractInfo = ({
               id: "contract-contract-spec",
               label: "Contract spec",
               content: isDataLoaded ? (
-                renderContractSpecMeta(["contractspecv0", "sac"])
+                renderContractSpecMeta(["contractspecv0", "sac"], activeTab)
               ) : (
                 <NoContractLoadedView />
               ),
@@ -388,10 +391,24 @@ export const ContractInfo = ({
             tab2={{
               id: "contract-contract-meta",
               label: "Contract & Env meta",
-              content: isDataLoaded ? (
-                renderContractSpecMeta(["contractmetav0", "contractenvmetav0"])
-              ) : (
+              content: !isDataLoaded ? (
                 <NoContractLoadedView />
+              ) : isSacType ? (
+                // Contract and env meta are Wasm custom sections, and the SAC
+                // is built into the protocol, so there is no Wasm to read
+                <NoDataMessage title="No Wasm for this contract">
+                  Stellar Asset Contracts are built into the Stellar protocol
+                  and don’t have a Wasm file, so there’s no contract or
+                  environment meta to show.{" "}
+                  <Link href="https://developers.stellar.org/docs/tokens/stellar-asset-contract">
+                    Learn more about the Stellar Asset Contract
+                  </Link>
+                </NoDataMessage>
+              ) : (
+                renderContractSpecMeta(
+                  ["contractmetav0", "contractenvmetav0"],
+                  activeTab,
+                )
               ),
               isDisabled: !isDataLoaded,
             }}

@@ -11,6 +11,8 @@ import {
   MOCK_CONTRACT_INFO_CONTRACT_TYPE_FAILURE,
   MOCK_CONTRACT_INFO_CONTRACT_TYPE_SUCCESS,
   MOCK_CONTRACT_INFO_RESPONSE_SUCCESS,
+  MOCK_SAC_CONTRACT_ID,
+  MOCK_SAC_CONTRACT_TYPE_RESPONSE,
 } from "./mock/smartContracts";
 import { mockRpcRequest } from "./mock/helpers";
 
@@ -128,6 +130,58 @@ test.describe("Smart Contracts: Contract Info", () => {
       ),
     ).toBeVisible();
   });
+
+  test("Contract & Env meta explains there is no Wasm for a SAC", async ({
+    page,
+  }) => {
+    await mockRpcRequest({
+      page,
+      rpcMethod: "getLedgerEntries",
+      bodyJsonResponse: MOCK_SAC_CONTRACT_TYPE_RESPONSE,
+    });
+
+    // A SAC has no Wasm hash, so the tabs are enabled by the SE contract info
+    await page.route(
+      `${STELLAR_EXPERT_API}/testnet/contract/${MOCK_SAC_CONTRACT_ID}`,
+      async (route) => {
+        await route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify({
+            contract: MOCK_SAC_CONTRACT_ID,
+            account: MOCK_SAC_CONTRACT_ID,
+            created: 1731402776,
+            creator: SAVED_ACCOUNT_1,
+            payments: 0,
+            trades: 0,
+            storage_entries: 0,
+          }),
+        });
+      },
+    );
+
+    await page.getByLabel("Contract ID").fill(MOCK_SAC_CONTRACT_ID);
+    await page.getByRole("button", { name: "Load contract" }).click();
+
+    await expect(page.getByText("Built-in Contract")).toBeVisible();
+
+    await page.getByText("Contract & Env meta", { exact: true }).click();
+
+    await expect(page.getByText("No Wasm for this contract")).toBeVisible();
+    await expect(
+      page.getByText(
+        "Stellar Asset Contracts are built into the Stellar protocol and don’t have a Wasm file",
+      ),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("link", {
+        name: "Learn more about the Stellar Asset Contract",
+      }),
+    ).toHaveAttribute(
+      "href",
+      "https://developers.stellar.org/docs/tokens/stellar-asset-contract",
+    );
+  });
 });
 
 test.describe("Smart Contracts: Contract Selector", () => {
@@ -197,9 +251,7 @@ test.describe("Smart Contracts: Contract Selector", () => {
   });
 
   test("Saved contract options are keyboard focusable and activatable", async () => {
-    await pageContext
-      .getByRole("button", { name: "Get contract ID" })
-      .click();
+    await pageContext.getByRole("button", { name: "Get contract ID" }).click();
 
     const options = pageContext.getByTestId("address-selector-options");
     await expect(options).toBeVisible();
