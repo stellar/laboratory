@@ -581,7 +581,8 @@ export const CONTRACT_SECTIONS = [
 export type ContractSectionName = (typeof CONTRACT_SECTIONS)[number];
 
 export type ContractData = {
-  xdr?: string[];
+  // Base64 encoded stream of all section entries, as stored in the Wasm
+  xdr?: string;
   json?: string[];
   text?: string[];
 };
