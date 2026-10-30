@@ -61,6 +61,10 @@ type DataTableProps<T> = {
   isExternalUpdating?: boolean;
   externalSort?: (sortDirection: SortDirection) => void;
   onSortChange?: (sortById: string, sortByDir: SortDirection) => void;
+  /** Draws a 1px border with rounded corners around the table */
+  isOutlined?: boolean;
+  /** Go back to page 1 whenever this value changes (e.g. the search query) */
+  resetPageKey?: string | number;
 };
 
 export const DataTable = <T extends AnyObject>({
@@ -81,6 +85,8 @@ export const DataTable = <T extends AnyObject>({
   pageSize = 20,
   emptyMessage,
   onSortChange,
+  isOutlined,
+  resetPageKey,
 }: DataTableProps<T>) => {
   // Data
   const [processedData, setProcessedData] = useState<
@@ -132,6 +138,11 @@ export const DataTable = <T extends AnyObject>({
     setIsUpdating(false);
     setTotalPageCount(Math.ceil(processedData.length / pageSize));
   }, [processedData, pageSize]);
+
+  // A new search / filter starts from the first page
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [resetPageKey]);
 
   const getCustomProps = (th: DataTableHeader) => {
     if (th.isSortable) {
@@ -508,7 +519,9 @@ export const DataTable = <T extends AnyObject>({
   };
 
   const renderPagination = () => {
-    if (hidePagination) {
+    // Nothing to paginate: everything fits on one page (external cursor-based
+    // pagination via pageNavConfig keeps its controls)
+    if (hidePagination || (!pageNavConfig && totalPageCount <= 1)) {
       return null;
     }
 
@@ -539,6 +552,7 @@ export const DataTable = <T extends AnyObject>({
           <Button
             variant="tertiary"
             size="sm"
+            aria-label="Previous page"
             icon={<Icon.ArrowLeft />}
             onClick={() => {
               if (pageNavConfig?.prev.onClick) {
@@ -565,6 +579,7 @@ export const DataTable = <T extends AnyObject>({
           <Button
             variant="tertiary"
             size="sm"
+            aria-label="Next page"
             icon={<Icon.ArrowRight />}
             onClick={() => {
               if (pageNavConfig?.next.onClick) {
@@ -682,7 +697,7 @@ export const DataTable = <T extends AnyObject>({
       <Card noPadding={true}>
         <div className="DataTable__container">
           {isUpdating || isExternalUpdating ? <Loader /> : null}
-          <div className="DataTable__scroll">
+          <div className="DataTable__scroll" data-is-outlined={isOutlined}>
             <table
               className="DataTable__table"
               style={customStyle}
