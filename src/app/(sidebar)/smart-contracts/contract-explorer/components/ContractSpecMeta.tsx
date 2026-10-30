@@ -19,6 +19,7 @@ import { downloadFile } from "@/helpers/downloadFile";
 import { renderContractSpecViewStatus } from "@/helpers/renderContractSpecViewStatus";
 import { getWasmContractData } from "@/helpers/getWasmContractData";
 import { formatContractInterface } from "@/helpers/formatContractInterface";
+import { joinXdrStream } from "@/helpers/xdrStream";
 
 import { STELLAR_ASSET_CONTRACT } from "@/constants/stellarAssetContractData";
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
@@ -145,8 +146,13 @@ export const ContractSpecMeta = ({
       return `${jsonData.map((d) => stringify(d, null, 2)).join(",\n\n")}`;
     }
 
+    // Show as a single base64 stream of all entries (same as stellar-cli)
     return isXdrInit
-      ? `${jsonData.map((d) => StellarXdr.encode("ScSpecEntry", stringify(d) || "")).join("\n\n")}`
+      ? joinXdrStream(
+          jsonData.map((d) =>
+            StellarXdr.encode("ScSpecEntry", stringify(d) || ""),
+          ),
+        )
       : "";
   };
 
@@ -174,7 +180,7 @@ export const ContractSpecMeta = ({
       case "xdr":
         return isSacType
           ? formatSacData(sacData, "xdr")
-          : `// ${sectionName} \n\n${contractSections?.[sectionName].xdr?.join("\n\n")}`;
+          : `// ${sectionName} \n\n${contractSections?.[sectionName].xdr ?? ""}`;
       case "interface":
         return isSacType
           ? // We can’t get interface for SAC because there is no Wasm file to parse
