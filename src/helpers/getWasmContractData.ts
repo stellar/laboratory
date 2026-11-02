@@ -47,10 +47,11 @@ const sectionResult = (
 ) => {
   const sectionData = new Uint8Array(section);
   const sectionXdr = Buffer.from(sectionData).toString("base64");
-  const { json, xdr } = getJsonAndXdr(sectionName, sectionXdr);
+  const json = getJson(sectionName, sectionXdr);
 
   return {
-    xdr,
+    // The section is already a stream of XDR values, so keep it as is
+    xdr: json.length > 0 ? sectionXdr : "",
     json,
     // TODO: add text format
   };
@@ -63,21 +64,16 @@ const TYPE_VARIANT: Record<ContractSectionName, string> = {
   sac: "SAC",
 };
 
-const getJsonAndXdr = (sectionName: ContractSectionName, xdr: string) => {
+const getJson = (sectionName: ContractSectionName, xdr: string) => {
   try {
     const jsonStringArray = StellarXdr.decode_stream(
       TYPE_VARIANT[sectionName],
       xdr,
     );
 
-    return {
-      json: jsonStringArray.map((s) => prettifyJsonString(s)),
-      xdr: jsonStringArray.map((s) =>
-        StellarXdr.encode(TYPE_VARIANT[sectionName], s),
-      ),
-    };
+    return jsonStringArray.map((s) => prettifyJsonString(s));
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
-    return { json: [], xdr: [] };
+    return [];
   }
 };

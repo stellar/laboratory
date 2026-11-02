@@ -5,6 +5,7 @@ import { Badge, Icon, Input } from "@stellar/design-system";
 
 import { getAllXdrTypes } from "@/constants/xdr";
 import { delayedAction } from "@/helpers/delayedAction";
+import { guessXdrStreamTypes } from "@/helpers/guessXdrStreamTypes";
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { useStore } from "@/store/useStore";
 
@@ -35,6 +36,7 @@ export const XdrTypeSelect = ({
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [displayOptions, setDisplayOptions] = useState<string[]>([]);
   const [guessedTypes, setGuessedTypes] = useState<string[]>([]);
+  const [isGuessedStream, setIsGuessedStream] = useState(false);
 
   const isXdrInit = useIsXdrInit();
 
@@ -58,14 +60,20 @@ export const XdrTypeSelect = ({
     if (isXdrInit && _xdrBlob) {
       try {
         const guessed = StellarXdr.guess(_xdrBlob);
+        const streamGuessed =
+          guessed.length > 0 ? [] : guessXdrStreamTypes(_xdrBlob);
 
-        setGuessedTypes(guessed.length > 0 ? guessed : []);
+        setGuessedTypes(guessed.length > 0 ? guessed : streamGuessed);
+        setIsGuessedStream(streamGuessed.length > 0);
+
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {
         setGuessedTypes([]);
+        setIsGuessedStream(false);
       }
     } else {
       setGuessedTypes([]);
+      setIsGuessedStream(false);
     }
     // Not adding xdr
   }, [_xdrBlob, isXdrInit]);
@@ -103,7 +111,7 @@ export const XdrTypeSelect = ({
           {option}
           {guessedTypes.includes(option) ? (
             <Badge variant="secondary" size="sm">
-              Possible Type
+              {isGuessedStream ? "Stream" : "Possible Type"}
             </Badge>
           ) : null}
         </div>

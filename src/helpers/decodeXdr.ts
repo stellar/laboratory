@@ -1,6 +1,7 @@
 import * as StellarXdr from "@/helpers/StellarXdr";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 import { parseToLosslessJson } from "@/helpers/parseToLosslessJson";
+import { normalizeXdrStream } from "@/helpers/xdrStream";
 
 export const decodeXdr = ({
   xdrType,
@@ -25,7 +26,10 @@ export const decodeXdr = ({
     originalError: any,
   ) => {
     try {
-      const streamXdrJson = StellarXdr.decode_stream(xdrType, xdrString);
+      const streamXdrJson = StellarXdr.decode_stream(
+        xdrType,
+        normalizeXdrStream(xdrString),
+      );
 
       if (trackingEvents?.successStream) {
         trackEvent(trackingEvents.successStream, {
