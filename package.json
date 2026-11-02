@@ -28,6 +28,7 @@
     "@creit.tech/stellar-wallets-kit": "^2.5.0",
     "@ledgerhq/hw-app-str": "^7.2.9",
     "@ledgerhq/hw-transport-webhid": "^6.30.9",
+    "@mcp-b/webmcp-polyfill": "6.0.3",
     "@monaco-editor/react": "^4.7.0",
     "@next/third-parties": "^16.4.2",
     "@sentry/nextjs": "^10.29.0",
