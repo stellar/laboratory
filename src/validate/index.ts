@@ -1,4 +1,5 @@
 import { getAccountThresholdError } from "./methods/getAccountThresholdError";
+import { getAddressError } from "./methods/getAddressError";
 import { getAmountError } from "./methods/getAmountError";
 import { getArrayOfStringsError } from "./methods/getArrayOfStringsError";
 import { getAssetError } from "./methods/getAssetError";
@@ -37,6 +38,7 @@ import { getMuxedAddressError } from "./methods/getMuxedAddressError";
 
 export const validate = {
   getAccountThresholdError,
+  getAddressError,
   getAmountError,
   getArrayOfStringsError,
   getAssetError,

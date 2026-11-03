@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Notification, Link, Button } from "@stellar/design-system";
+import { StrKey } from "@stellar/stellar-sdk";
 
 import { useStore } from "@/store/useStore";
 
@@ -62,14 +63,14 @@ export default function ParseMuxedAccount() {
   return (
     <div className="Account">
       <PageHeader
-        heading="Get muxed account from M address"
+        heading="Get muxed account from M or W address"
         headingInfoLink="https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos"
       />
       <PageCard>
         <div className="Account__card">
           <PubKeyPicker
             id="muxed-account-address"
-            label="Muxed Account M Address"
+            label="Muxed Account M or Contract W Address"
             placeholder="Ex: MBRWSVNURRYVIYSWLRFQ5AAAUWPKOZZNZVVVIXHFGUSGIRVKLVIDYAAAAAAAAAAD5GJ4U"
             value={muxedAddress}
             error={muxedFieldError}
@@ -82,8 +83,12 @@ export default function ParseMuxedAccount() {
 
               let error = "";
 
-              if (!e.target.value.startsWith("M")) {
-                error = "Muxed account address should start with M";
+              if (e.target.value.startsWith("W")) {
+                error = StrKey.isValidMuxedContract(e.target.value)
+                  ? ""
+                  : "Muxed contract address is invalid.";
+              } else if (!e.target.value.startsWith("M")) {
+                error = "Muxed address should start with M or W";
               } else {
                 error = validate.getPublicKeyError(e.target.value) || "";
               }

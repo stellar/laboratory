@@ -6,13 +6,12 @@ import {
   MOCK_SAC_CONTRACT_TYPE_RESPONSE,
 } from "./mock/smartContracts";
 import { mockRpcRequest } from "./mock/helpers";
-import stellarAssetSpec from "./mock/stellarAssetSpec.json";
 
 /**
  * E2E test for the "Use another signing method" radio on the Invoke contract
  * tab. Exercises the SAC spec path (no wasm decoding required) by serving a
- * SAC contract data ledger entry from getLedgerEntries and the SAC spec JSON
- * from raw.githubusercontent.com.
+ * SAC contract data ledger entry from getLedgerEntries. Lab bundles the SAC
+ * spec, so nothing else needs mocking.
  */
 test.describe("Smart Contracts: Invoke Contract — Use another signing method", () => {
   test.beforeEach(async ({ page }) => {
@@ -21,17 +20,6 @@ test.describe("Smart Contracts: Invoke Contract — Use another signing method",
       rpcMethod: "getLedgerEntries",
       bodyJsonResponse: MOCK_SAC_CONTRACT_TYPE_RESPONSE,
     });
-
-    await page.route(
-      "https://raw.githubusercontent.com/stellar/stellar-asset-contract-spec/refs/heads/main/stellar-asset-spec.json",
-      async (route) => {
-        await route.fulfill({
-          status: 200,
-          contentType: "application/json",
-          body: JSON.stringify(stellarAssetSpec),
-        });
-      },
-    );
 
     // SE Contract Info isn't relevant here; respond 404 so the query fails
     // fast rather than hitting the real network.

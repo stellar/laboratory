@@ -93,6 +93,28 @@ const withoutPreconditions = (tx: Transaction) => {
   return new Transaction(envelope, Networks.FUTURENET);
 };
 
+// A Soroban transaction with a memo (the builder rejects a memo on a Soroban
+// transaction, so this has to be assembled from XDR).
+const withMemo = (tx: Transaction, memo: Memo) => {
+  const v1 = tx.tx as xdr.Transaction;
+  const envelope = xdr.TransactionEnvelope.envelopeTypeTx(
+    new xdr.TransactionV1Envelope({
+      tx: new xdr.Transaction({
+        sourceAccount: v1.sourceAccount,
+        fee: v1.fee,
+        seqNum: v1.seqNum,
+        cond: v1.cond,
+        memo: memo.toXdrObject(),
+        operations: v1.operations,
+        ext: v1.ext,
+      }),
+      signatures: [],
+    }),
+  );
+
+  return new Transaction(envelope, Networks.FUTURENET);
+};
+
 const signedPayloadSigner = () => {
   const key = Keypair.random();
   const payload = new xdr.SignerKeyEd25519SignedPayload({
@@ -240,11 +262,13 @@ describe("assertTrezorCanSign", () => {
     [
       "a memo on a Soroban transaction",
       () =>
-        buildTx({
-          operations: [invokeContract().operation],
-          memo: Memo.text("hello"),
-          sorobanData,
-        }),
+        withMemo(
+          buildTx({
+            operations: [invokeContract().operation],
+            sorobanData,
+          }),
+          Memo.text("hello"),
+        ),
       /memo on a Soroban transaction/,
     ],
     [

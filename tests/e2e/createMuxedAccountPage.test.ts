@@ -1,7 +1,11 @@
 import { baseURL } from "../../playwright.config";
 import { test, expect } from "@playwright/test";
 
-import { Account, MuxedAccount } from "@stellar/stellar-sdk";
+import {
+  Account,
+  encodeMuxedContractAddress,
+  MuxedAccount,
+} from "@stellar/stellar-sdk";
 
 test.describe("Create Muxed Account Page", () => {
   test.beforeEach(async ({ page }) => {
@@ -29,7 +33,7 @@ test.describe("Create Muxed Account Page", () => {
 
     await expect(publicKeyInput).toHaveAttribute("aria-invalid", "true");
     await expect(
-      page.getByText("Base account address should start with G"),
+      page.getByText("Base address should start with G or C"),
     ).toBeVisible();
   });
 
@@ -69,6 +73,31 @@ test.describe("Create Muxed Account Page", () => {
     const muxedAccount = new MuxedAccount(new Account(publicKey, "0"), muxedId);
 
     await expect(muxedValue).toHaveValue(muxedAccount.accountId());
+  });
+
+  test("Successfully creates a muxed contract (W) address", async ({
+    page,
+  }) => {
+    const contractId =
+      "CBHQGTSBJWA54K67RSG3JPXSZY5IXIZ4FSLJM4PQ33FA3FYCU5YZV7MZ";
+    const muxedId = "42";
+    const publicKeyInput = page.locator("#muxed-public-key");
+    await publicKeyInput.fill(contractId);
+
+    const muxedAccountIdInput = page.locator("#muxed-account-id");
+    await muxedAccountIdInput.fill(muxedId);
+
+    await expect(publicKeyInput).toHaveAttribute("aria-invalid", "false");
+
+    await page.getByRole("button").getByText("Create").click();
+
+    await expect(page.getByTestId("createAccount-success")).toBeVisible();
+    await expect(page.getByLabel("Muxed Contract W Address")).toHaveValue(
+      encodeMuxedContractAddress(contractId, muxedId),
+    );
+    await expect(page.getByLabel("Base Contract C Address")).toHaveValue(
+      contractId,
+    );
   });
 
   test("Shows an error with max ID validation when value exceeds u64 limit", async ({

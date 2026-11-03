@@ -9,7 +9,6 @@ import {
   Input,
 } from "@stellar/design-system";
 import { useQueryClient } from "@tanstack/react-query";
-import { contract } from "@stellar/stellar-sdk";
 
 import { useStore } from "@/store/useStore";
 import { useSEContractInfo } from "@/query/external/useSEContractInfo";
@@ -23,6 +22,7 @@ import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
 import { localStorageSavedContracts } from "@/helpers/localStorageSavedContracts";
 import { buildContractExplorerHref } from "@/helpers/buildContractExplorerHref";
 import { delayedAction } from "@/helpers/delayedAction";
+import { SAC_SPEC } from "@/helpers/sacSpec";
 
 import { Box } from "@/components/layout/Box";
 import { PageCard } from "@/components/layout/PageCard";
@@ -30,14 +30,12 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { MessageField } from "@/components/MessageField";
 import { TabView } from "@/components/TabView";
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
+import { AddressSelector } from "@/components/AddressSelector";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
-import { useSacXdrData } from "@/hooks/useSacXdrData";
-
 import { ContractInfo } from "./components/ContractInfo";
 import { InvokeContract } from "./components/InvokeContract";
-import { AddressSelector } from "@/components/AddressSelector";
 
 export default function ContractExplorer() {
   const { network, smartContracts, savedContractId, clearSavedContractId } =
@@ -198,18 +196,8 @@ export default function ContractExplorer() {
     ? contractData.contractType === "contractExecutableStellarAsset"
     : false;
 
-  const { sacXdrData } = useSacXdrData({
-    isActive: Boolean(network.rpcUrl && isSacType),
-  });
-
   const renderContractInvokeContent = () => {
-    let invokeContractSpec;
-
-    if (isSacType && sacXdrData && sacXdrData[0] !== "") {
-      invokeContractSpec = new contract.Spec(sacXdrData);
-    } else {
-      invokeContractSpec = contractClient?.spec;
-    }
+    const invokeContractSpec = isSacType ? SAC_SPEC : contractClient?.spec;
 
     return invokeContractSpec ? (
       <InvokeContract
