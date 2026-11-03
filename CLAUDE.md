@@ -188,6 +188,9 @@ Match by exact px value (16px is `lg`, not `md`); don't round to the nearest tok
 ### Stellar-Specific Rules
 
 - Never edit `src/constants/networkLimits.ts` manually (auto-generated)
+- Never edit `src/constants/stellarAssetContractSpec.ts` manually. Regenerate it
+  with `pnpm fetch-sac-spec` (needs the stellar CLI) after a protocol or stellar
+  CLI release that changes the SAC interface
 - Store XDR as base64 strings; parse lazily at point of use
 - When updating `@stellar/stellar-sdk` or `@stellar/stellar-xdr-json`, also
   check whether `@stellar-expert/contract-wasm-interface-parser` needs to be

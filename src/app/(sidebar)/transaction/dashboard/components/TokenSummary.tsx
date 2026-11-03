@@ -9,6 +9,7 @@ import { TransactionTabEmptyMessage } from "@/components/TransactionTabEmptyMess
 import { formatAmount } from "@/helpers/formatAmount";
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import { getStellarExpertNetwork } from "@/helpers/getStellarExpertNetwork";
+import { getTransferEvents, TransferEvent } from "@/helpers/getTransferEvents";
 
 import { STELLAR_EXPERT } from "@/constants/settings";
 import { useStore } from "@/store/useStore";
@@ -20,24 +21,16 @@ export const TokenSummary = ({
 }: {
   txDetails: RpcTxJsonResponse | null | undefined;
 }) => {
-  type TokenItem = {
-    addressFrom: string;
-    addressTo: string;
-    amount: string;
-    assetCode: string;
-    assetIssuer: string;
-  };
-
   type EventGroupsType = {
     native: {
       id: string;
       title: string;
-      items: TokenItem[];
+      items: TransferEvent[];
     };
     asset: {
       id: string;
       title: string;
-      items: TokenItem[];
+      items: TransferEvent[];
     };
   };
 
@@ -73,29 +66,56 @@ export const TokenSummary = ({
 
   const seNetwork = getStellarExpertNetwork(network.id);
 
-  const formatAssetAddress = (address: string) => {
+  const formatAssetAddress = ({
+    address,
+    muxedId,
+    muxedAddress,
+    memo,
+  }: {
+    address: string;
+    muxedId?: string;
+    muxedAddress?: string;
+    memo?: string;
+  }) => {
     const isContractAddress = address.startsWith("C");
+    // Show the muxed (M... or W...) recipient, but link to its base address
+    const displayAddress = muxedAddress || address;
 
     return (
-      <Box
-        gap="sm"
-        direction="row"
-        align="center"
-        addlClassName="TransactionTokenSummary__address"
-      >
-        <Link
-          href={`${STELLAR_EXPERT}/${seNetwork}/${isContractAddress ? "contract" : "account"}/${address}`}
+      <Box gap="xs">
+        <Box
+          gap="sm"
+          direction="row"
+          align="center"
+          addlClassName="TransactionTokenSummary__address"
         >
-          {shortenStellarAddress(address)}
-        </Link>
+          <Link
+            href={`${STELLAR_EXPERT}/${seNetwork}/${isContractAddress ? "contract" : "account"}/${address}`}
+            title={displayAddress}
+          >
+            {shortenStellarAddress(displayAddress)}
+          </Link>
 
-        <CopyText textToCopy={address} tooltipPlacement="top">
-          <IconButton
-            icon={<Icon.Copy01 />}
-            altText="Copy address"
-            customSize="0.75rem"
-          />
-        </CopyText>
+          <CopyText textToCopy={displayAddress} tooltipPlacement="top">
+            <IconButton
+              icon={<Icon.Copy01 />}
+              altText="Copy address"
+              customSize="0.75rem"
+            />
+          </CopyText>
+        </Box>
+
+        {muxedId ? (
+          <Text as="div" size="xs" weight="regular">
+            Muxed ID: {muxedId}
+          </Text>
+        ) : null}
+
+        {memo ? (
+          <Text as="div" size="xs" weight="regular">
+            Memo: {memo}
+          </Text>
+        ) : null}
       </Box>
     );
   };
@@ -158,9 +178,20 @@ export const TokenSummary = ({
                 { id: "amount", value: "Amount" },
                 { id: "asset", value: "Asset" },
               ]}
-              formatDataRow={(ti: TokenItem) => [
-                { value: formatAssetAddress(ti.addressFrom), isOverflow: true },
-                { value: formatAssetAddress(ti.addressTo), isOverflow: true },
+              formatDataRow={(ti: TransferEvent) => [
+                {
+                  value: formatAssetAddress({ address: ti.addressFrom }),
+                  isOverflow: true,
+                },
+                {
+                  value: formatAssetAddress({
+                    address: ti.addressTo,
+                    muxedId: ti.toMuxedId,
+                    muxedAddress: ti.addressToMuxed,
+                    memo: ti.toMemo,
+                  }),
+                  isOverflow: true,
+                },
                 { value: formatAssetAmount(ti.amount) },
                 { value: formatAsset(ti.assetCode, ti.assetIssuer) },
               ]}
@@ -172,45 +203,4 @@ export const TokenSummary = ({
       ))}
     </Box>
   );
-};
-
-const getTransferEvents = (data: RpcTxJsonResponse | null | undefined) => {
-  const events = data?.events?.contractEventsJson;
-
-  if (!events) {
-    return [];
-  }
-
-  const contractEvents = Array.isArray(events[0])
-    ? events.flatMap((group: any[]) => group)
-    : events;
-
-  return contractEvents
-    .filter((event: any) => event?.body?.v0?.topics?.[0]?.symbol === "transfer")
-    .map((ev: any) => {
-      const addressFrom = ev.body.v0.topics[1].address;
-      const addressTo = ev.body.v0.topics[2].address;
-
-      const token = ev.body.v0.topics?.[3]?.string;
-
-      let assetCode = "";
-      let assetIssuer = "";
-
-      if (token) {
-        [assetCode, assetIssuer] = token.split(":");
-      }
-
-      return {
-        addressFrom,
-        addressTo,
-        // Transfer event data type https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0041.md#transfer-event
-        amount:
-          ev.body.v0.data?.map?.[0]?.val?.i128 ||
-          ev.body.v0.data?.i128 ||
-          ev.body.v0.data?.amount ||
-          "0",
-        assetCode: assetCode === "native" ? "XLM" : assetCode,
-        assetIssuer: assetCode === "native" ? "native" : assetIssuer,
-      };
-    });
 };

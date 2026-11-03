@@ -1,7 +1,24 @@
 // Jest globals (describe, expect, it) are available globally
-import { xdr, ScInt, Address } from "@stellar/stellar-sdk";
+import {
+  xdr,
+  ScInt,
+  Account,
+  Address,
+  MuxedAccount,
+  StrKey,
+  encodeMuxedContractAddress,
+} from "@stellar/stellar-sdk";
 
 import { getScValsFromArgs } from "../../src/helpers/sorobanUtils";
+
+const ACCOUNT = "GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ";
+const CONTRACT = "CBHQGTSBJWA54K67RSG3JPXSZY5IXIZ4FSLJM4PQ33FA3FYCU5YZV7MZ";
+// Non-zero IDs, so a dropped ID can't pass as the default 0
+const MUXED_ACCOUNT = new MuxedAccount(
+  new Account(ACCOUNT, "0"),
+  "7",
+).accountId();
+const MUXED_CONTRACT = encodeMuxedContractAddress(CONTRACT, "42");
 
 describe("convert js arguments to smart contract values using getScValsFromArgs", () => {
   // Primitive Types
@@ -467,6 +484,148 @@ describe("convert js arguments to smart contract values using getScValsFromArgs"
     const scValsResult = getScValsFromArgs(args, scVals);
     const expectedResult: xdr.ScVal[] = [
       new Address(args.address.value).toScVal(),
+    ];
+
+    expect(expectedResult).toEqual(scValsResult);
+  });
+
+  // Muxed Account Address
+  it("resolves a muxed account (M) address", () => {
+    const args = {
+      to: {
+        value: MUXED_ACCOUNT,
+        type: "muxed_address",
+      },
+    };
+
+    const [scVal] = getScValsFromArgs(args, []);
+
+    // Muxed account address, not a plain account or a string
+    if (
+      scVal.type !== "scvAddress" ||
+      scVal.address.type !== "scAddressTypeMuxedAccount"
+    ) {
+      throw new Error(`Expected a muxed account address, got ${scVal.type}`);
+    }
+
+    // Holds the base G account and the muxed ID
+    const { ed25519, id } = scVal.address.muxedAccount;
+    expect(StrKey.encodeEd25519PublicKey(Buffer.from(ed25519.value))).toBe(
+      ACCOUNT,
+    );
+    expect(id).toBe(BigInt(7));
+
+    // Decodes back to the same M address
+    expect(Address.fromScVal(scVal).toString()).toBe(MUXED_ACCOUNT);
+  });
+
+  // Muxed Contract Address (CAP-84)
+  it("resolves a muxed contract (W) address", () => {
+    const args = {
+      to: {
+        value: MUXED_CONTRACT,
+        type: "muxed_address",
+      },
+    };
+
+    const [scVal] = getScValsFromArgs(args, []);
+
+    // Muxed contract address, not a plain contract or a string
+    if (
+      scVal.type !== "scvAddress" ||
+      scVal.address.type !== "scAddressTypeMuxedContract"
+    ) {
+      throw new Error(`Expected a muxed contract address, got ${scVal.type}`);
+    }
+
+    // Holds the base C contract and the muxed ID
+    const { contractId, id } = scVal.address.muxedContract;
+    expect(StrKey.encodeContract(Buffer.from(contractId.value))).toBe(CONTRACT);
+    expect(id).toBe(BigInt(42));
+
+    // Decodes back to the same W address
+    expect(Address.fromScVal(scVal).toString()).toBe(MUXED_CONTRACT);
+  });
+
+  it("resolves a complex enum with a muxed address", () => {
+    const args = {
+      complex: {
+        tag: "Destination",
+        values: [{ value: MUXED_CONTRACT, type: "muxed_address" }],
+      },
+    };
+
+    const scVals: xdr.ScVal[] = [];
+    const scValsResult = getScValsFromArgs(args, scVals);
+    const vec = [
+      xdr.ScVal.scvSymbol(args.complex.tag),
+      new Address(MUXED_CONTRACT).toScVal(),
+    ];
+
+    expect([xdr.ScVal.scvVec(vec)]).toEqual(scValsResult);
+  });
+
+  it("resolves a vec of muxed addresses", () => {
+    const args = {
+      recipients: [
+        { value: MUXED_ACCOUNT, type: "muxed_address" },
+        { value: MUXED_CONTRACT, type: "muxed_address" },
+      ],
+    };
+
+    const scVals: xdr.ScVal[] = [];
+    const scValsResult = getScValsFromArgs(args, scVals);
+    const expectedResult: xdr.ScVal[] = [
+      xdr.ScVal.scvVec([
+        new Address(MUXED_ACCOUNT).toScVal(),
+        new Address(MUXED_CONTRACT).toScVal(),
+      ]),
+    ];
+
+    expect(expectedResult).toEqual(scValsResult);
+  });
+
+  it("resolves a tuple with a muxed address", () => {
+    const args = {
+      payout: [
+        { value: MUXED_CONTRACT, type: "muxed_address" },
+        { value: "10", type: "i128" },
+      ],
+    };
+
+    const scVals: xdr.ScVal[] = [];
+    const scValsResult = getScValsFromArgs(args, scVals);
+    const expectedResult: xdr.ScVal[] = [
+      xdr.ScVal.scvVec([
+        new Address(MUXED_CONTRACT).toScVal(),
+        new ScInt("10", { type: "i128" }).toScVal(),
+      ]),
+    ];
+
+    expect(expectedResult).toEqual(scValsResult);
+  });
+
+  it("resolves a struct with a muxed address field", () => {
+    const args = {
+      payout: {
+        amount: { value: "10", type: "i128" },
+        to: { value: MUXED_ACCOUNT, type: "muxed_address" },
+      },
+    };
+
+    const scVals: xdr.ScVal[] = [];
+    const scValsResult = getScValsFromArgs(args, scVals);
+    const expectedResult: xdr.ScVal[] = [
+      xdr.ScVal.scvMap([
+        new xdr.ScMapEntry({
+          key: xdr.ScVal.scvSymbol("amount"),
+          val: new ScInt("10", { type: "i128" }).toScVal(),
+        }),
+        new xdr.ScMapEntry({
+          key: xdr.ScVal.scvSymbol("to"),
+          val: new Address(MUXED_ACCOUNT).toScVal(),
+        }),
+      ]),
     ];
 
     expect(expectedResult).toEqual(scValsResult);

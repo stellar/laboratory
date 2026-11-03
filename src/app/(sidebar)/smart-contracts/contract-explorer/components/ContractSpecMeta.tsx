@@ -12,7 +12,6 @@ import { WithInfoText } from "@/components/WithInfoText";
 import { PoweredByStellarExpert } from "@/components/PoweredByStellarExpert";
 
 import { useWasmBinaryFromRpc } from "@/query/useWasmBinaryFromRpc";
-import { useGitHubFile } from "@/query/useGitHubFile";
 
 import * as StellarXdr from "@/helpers/StellarXdr";
 import { downloadFile } from "@/helpers/downloadFile";
@@ -21,7 +20,7 @@ import { getWasmContractData } from "@/helpers/getWasmContractData";
 import { formatContractInterface } from "@/helpers/formatContractInterface";
 import { joinXdrStream } from "@/helpers/xdrStream";
 
-import { STELLAR_ASSET_CONTRACT } from "@/constants/stellarAssetContractData";
+import { STELLAR_ASSET_CONTRACT_SPEC } from "@/constants/stellarAssetContractSpec";
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
 import {
@@ -71,18 +70,6 @@ export const ContractSpecMeta = ({
     isActive,
   });
 
-  const {
-    data: sacData,
-    error: sacDataError,
-    isFetching: isSacDataFetching,
-    isLoading: isSacDataLoading,
-  } = useGitHubFile({
-    repo: STELLAR_ASSET_CONTRACT.contractSpecRepo,
-    path: STELLAR_ASSET_CONTRACT.contractSpecPath,
-    file: `${STELLAR_ASSET_CONTRACT.contractSpecFileName}.json`,
-    isActive: Boolean(isActive && isSacType),
-  });
-
   useEffect(() => {
     const getContractData = async () => {
       if (wasmBinary) {
@@ -121,10 +108,8 @@ export const ContractSpecMeta = ({
     isLoading:
       isWasmBinaryLoading ||
       isWasmBinaryFetching ||
-      isSacDataLoading ||
-      isSacDataFetching ||
       (isSacType === false && !contractSections),
-    error: wasmBinaryError || sacDataError,
+    error: wasmBinaryError,
     isSacType: Boolean(isSacType),
   });
 
@@ -132,28 +117,17 @@ export const ContractSpecMeta = ({
     return viewStatus;
   }
 
-  const formatSacData = (
-    dataString: string | null | undefined,
-    type: "json" | "xdr",
-  ) => {
-    if (!dataString) {
-      return "";
-    }
-
-    const jsonData = parse(dataString) as AnyObject[];
-
+  const formatSacData = (type: "json" | "xdr") => {
     if (type === "json") {
-      return `${jsonData.map((d) => stringify(d, null, 2)).join(",\n\n")}`;
+      return isXdrInit
+        ? STELLAR_ASSET_CONTRACT_SPEC.map((xdr) =>
+            stringify(parse(StellarXdr.decode("ScSpecEntry", xdr)), null, 2),
+          ).join(",\n\n")
+        : "";
     }
 
     // Show as a single base64 stream of all entries (same as stellar-cli)
-    return isXdrInit
-      ? joinXdrStream(
-          jsonData.map((d) =>
-            StellarXdr.encode("ScSpecEntry", stringify(d) || ""),
-          ),
-        )
-      : "";
+    return joinXdrStream(STELLAR_ASSET_CONTRACT_SPEC);
   };
 
   const formatInterface = (obj: AnyObject | null) => {
@@ -173,14 +147,14 @@ export const ContractSpecMeta = ({
     switch (selectedFormat[sectionName]) {
       case "json":
         return isSacType
-          ? formatSacData(sacData, "json")
+          ? formatSacData("json")
           : // Adding the first line as a comment with a section name. For example:
             // // contractspecv0
             `// ${sectionName} \n\n${contractSections?.[sectionName].json?.join(",\n\n")}`;
       case "xdr":
         return isSacType
-          ? formatSacData(sacData, "xdr")
-          : `// ${sectionName} \n\n${contractSections?.[sectionName].xdr ?? ""}`;
+          ? formatSacData("xdr")
+          : (contractSections?.[sectionName].xdr ?? "");
       case "interface":
         return isSacType
           ? // We can’t get interface for SAC because there is no Wasm file to parse

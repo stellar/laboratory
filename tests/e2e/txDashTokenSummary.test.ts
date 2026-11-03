@@ -196,6 +196,20 @@ test.describe("Transaction Dashboard: Token Summary", () => {
     const contracTokensRows = contractTokensContainer.locator("tbody tr");
     await expect(contracTokensRows).toHaveCount(1);
 
+    // `to_muxed_id` 1 on GC4N...DMXU shows as its M address and the ID
+    await testTableCellValue({
+      tableRows: contracTokensRows,
+      rowIndex: 0,
+      cellIndex: 1,
+      cellValue: "MC4N...GIQE",
+    });
+    await testTableCellValue({
+      tableRows: contracTokensRows,
+      rowIndex: 0,
+      cellIndex: 1,
+      cellValue: "Muxed ID: 1",
+    });
+
     // Native
     const assetTokensContainer = page.getByTestId("native-ev");
     await expect(assetTokensContainer).toBeHidden();

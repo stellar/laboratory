@@ -87,13 +87,17 @@ export default function CreateMuxedAccount() {
           SEP-23
         </SdsLink>
         ) is one that resolves a single Stellar G...account to many different
-        underlying IDs.
+        underlying IDs. A muxed contract address (W..., defined in{" "}
+        <SdsLink href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0084.md">
+          CAP-84
+        </SdsLink>
+        ) does the same for a C... contract.
       </Text>
       <PageCard>
         <div className="Account__card">
           <PubKeyPicker
             id="muxed-public-key"
-            label="Base Account G Address"
+            label="Base Account G or Contract C Address"
             value={baseAddress}
             onChange={(e) => {
               setReset(true);
@@ -101,8 +105,10 @@ export default function CreateMuxedAccount() {
 
               let error = "";
 
-              if (!e.target.value.startsWith("G")) {
-                error = "Base account address should start with G";
+              if (e.target.value.startsWith("C")) {
+                error = validate.getContractIdError(e.target.value) || "";
+              } else if (!e.target.value.startsWith("G")) {
+                error = "Base address should start with G or C";
               } else {
                 error = validate.getPublicKeyError(e.target.value) || "";
               }

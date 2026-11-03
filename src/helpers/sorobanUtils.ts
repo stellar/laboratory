@@ -467,6 +467,11 @@ const convertObjectToScVal = (obj: Record<string, any>): xdr.ScVal => {
   return nativeToScVal(convertedValue, { type: typeHints });
 };
 
+// nativeToScVal has no "muxed_address" type. A muxed address (M or W) encodes
+// as an ScAddress just like a plain one, so hint it as "address".
+const getScValTypeHint = (type: any) =>
+  type === "muxed_address" ? "address" : type;
+
 const convertPrimitiveField = (field: any) => {
   if (field.type === "bool") {
     return {
@@ -476,7 +481,7 @@ const convertPrimitiveField = (field: any) => {
   }
   return {
     value: field.value,
-    typeHint: ["symbol", field.type],
+    typeHint: ["symbol", getScValTypeHint(field.type)],
   };
 };
 
@@ -494,7 +499,10 @@ const convertObjectToMap = (
   }, {});
 
   const mapType = mapArray.reduce((acc: any, pair: any) => {
-    acc[pair["0"].value] = [pair["0"].type, pair["1"].type];
+    acc[pair["0"].value] = [
+      getScValTypeHint(pair["0"].type),
+      getScValTypeHint(pair["1"].type),
+    ];
     return acc;
   }, {});
 
@@ -535,7 +543,7 @@ const convertTupleToScVal = (tupleArray: any) => {
       const encoding = detectBytesEncoding(v.value);
       return nativeToScVal(new Uint8Array(Buffer.from(v.value, encoding)));
     }
-    return nativeToScVal(v.value, { type: v.type });
+    return nativeToScVal(v.value, { type: getScValTypeHint(v.type) });
   });
 
   // JS SDK's nativeToScval doesn't support an array of different types
@@ -552,10 +560,7 @@ const getScValFromPrimitive = (v: any) => {
     const encoding = detectBytesEncoding(v.value);
     return nativeToScVal(new Uint8Array(Buffer.from(v.value, encoding)));
   }
-  if (v.type === "muxed_address") {
-    return Address.fromString(v.value).toScVal();
-  }
-  return nativeToScVal(v.value, { type: v.type });
+  return nativeToScVal(v.value, { type: getScValTypeHint(v.type) });
 };
 
 export const getScValsFromArgs = (
@@ -659,7 +664,7 @@ export const getScValsFromArgs = (
         }, []);
 
         const scVal = nativeToScVal(arrayScVals, {
-          type: argValue[0].type,
+          type: getScValTypeHint(argValue[0].type),
         });
 
         scVals.push(scVal);

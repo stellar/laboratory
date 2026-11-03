@@ -16,7 +16,6 @@ import {
   MOCK_SAC_CONTRACT_TYPE_RESPONSE,
 } from "./mock/smartContracts";
 import { mockRpcRequest } from "./mock/helpers";
-import stellarAssetSpec from "./mock/stellarAssetSpec.json";
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 
 // Helper functions
@@ -37,17 +36,6 @@ async function mockSacContract(page: Page) {
     rpcMethod: "getLedgerEntries",
     bodyJsonResponse: MOCK_SAC_CONTRACT_TYPE_RESPONSE,
   });
-
-  await page.route(
-    "https://raw.githubusercontent.com/stellar/stellar-asset-contract-spec/refs/heads/main/stellar-asset-spec.json",
-    async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: "application/json",
-        body: JSON.stringify(stellarAssetSpec),
-      });
-    },
-  );
 
   await page.route(
     `${STELLAR_EXPERT_API}/testnet/contract/${MOCK_SAC_CONTRACT_ID}`,

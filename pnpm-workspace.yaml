@@ -20,3 +20,13 @@ overrides:
   "error-ex@1.3.3": "1.3.2"
   "supports-color@10.2.1": "10.2.2"
   "viem>ox": "0.14.25"
+  "@trezor/network-stellar>@stellar/stellar-sdk": "17.4.0"
+  "use-sync-external-store@1.2.0": "1.7.0"
+peerDependencyRules:
+  allowedVersions:
+    # @twind/* (via stellar-wallets-kit) is unmaintained and still declares TS 4
+    "@twind/core>typescript": "5"
+    "@twind/preset-autoprefix>typescript": "5"
+    "@twind/preset-tailwind>typescript": "5"
+    # ws 7 (via @solana/web3.js > jayson) declares utf-8-validate 5; 6 is compatible
+    "ws>utf-8-validate": "6"
