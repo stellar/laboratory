@@ -31,7 +31,7 @@
     "@ledgerhq/hw-transport-webhid": "^6.30.9",
     "@monaco-editor/react": "^4.7.0",
     "@next/third-parties": "^16.4.2",
-    "@sentry/nextjs": "^10.29.0",
+    "@sentry/nextjs": "^10.75.2",
     "@stellar-expert/contract-wasm-interface-parser": "^6.0.1",
     "@stellar/design-system": "^4.0.2",
     "@stellar/stellar-sdk": "17.4.0",
