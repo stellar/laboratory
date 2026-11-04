@@ -7,19 +7,16 @@ import {
   TX_EVENTS_MOCK_RESPONSE_NO_CONTRACT_EVENTS,
   TX_EVENTS_MOCK_SAC,
   TX_EVENTS_MOCK_SOROSWAP,
+  TX_EVENTS_MOCK_SPOOFED_NATIVE,
 } from "./mock/txEvents";
 import { mockRpcRequest } from "./mock/helpers";
 
 test.describe("Transaction Dashboard: Token Summary", () => {
-  test.beforeEach(async ({ page }) => {
-    // Load page
-    await page.goto(`${baseURL}/transaction/dashboard`);
-  });
-
   test("SAC", async ({ page }) => {
     await eventsData({
       page,
       mockResponse: TX_EVENTS_MOCK_SAC,
+      networkId: "mainnet",
     });
 
     // Tokens
@@ -149,6 +146,7 @@ test.describe("Transaction Dashboard: Token Summary", () => {
     await eventsData({
       page,
       mockResponse: TX_EVENTS_MOCK_SOROSWAP,
+      networkId: "mainnet",
     });
 
     // Tokens
@@ -168,6 +166,53 @@ test.describe("Transaction Dashboard: Token Summary", () => {
     );
     const contracNativeRows = assetTokensContainer.locator("tbody tr");
     await expect(contracNativeRows).toHaveCount(2);
+  });
+
+  test("Non-SAC transfer with 'native' asset topic", async ({ page }) => {
+    await eventsData({
+      page,
+      mockResponse: TX_EVENTS_MOCK_SPOOFED_NATIVE,
+      networkId: "mainnet",
+    });
+
+    // The spoofed event is listed as a contract token with no asset
+    const contractTokensContainer = page.getByTestId("asset-ev");
+    await expect(contractTokensContainer).toBeVisible();
+    const contracTokensRows = contractTokensContainer.locator("tbody tr");
+    await expect(contracTokensRows).toHaveCount(3);
+
+    await testTableCellValue({
+      tableRows: contracTokensRows,
+      rowIndex: 2,
+      cellIndex: 0,
+      cellValue: "CA6P...CJBE",
+    });
+    await testTableCellValue({
+      tableRows: contracTokensRows,
+      rowIndex: 2,
+      cellIndex: 1,
+      cellValue: "CDHN...FNJE",
+    });
+    await expect(contracTokensRows.nth(2).locator("td").nth(3)).toHaveText("");
+
+    // Only the real native SAC transfer is in the XLM group
+    const nativeContainer = page.getByTestId("native-ev");
+    await expect(nativeContainer).toBeVisible();
+    const nativeRows = nativeContainer.locator("tbody tr");
+    await expect(nativeRows).toHaveCount(1);
+
+    await testTableCellValue({
+      tableRows: nativeRows,
+      rowIndex: 0,
+      cellIndex: 0,
+      cellValue: "CDHN...FNJE",
+    });
+    await testTableCellValue({
+      tableRows: nativeRows,
+      rowIndex: 0,
+      cellIndex: 3,
+      cellValue: "XLM",
+    });
   });
 
   test("KALE: no transfer events", async ({ page }) => {
@@ -240,13 +285,37 @@ test.describe("Transaction Dashboard: Token Summary", () => {
 // =============================================================================
 // Helpers
 // =============================================================================
+// Mainnet has no default RPC URL, so mainnet tests use a mock one
+const MAINNET_MOCK_RPC_URL = "https://mainnet-rpc.mock";
+
 const eventsData = async ({
   page,
   mockResponse,
+  networkId = "testnet",
 }: {
   page: Page;
   mockResponse: any;
+  // Must match the fixture's network: the SAC contract ID depends on it
+  networkId?: "testnet" | "mainnet";
 }) => {
+  if (networkId === "mainnet") {
+    // Saved network is used on load when the URL has none (no confirm modal)
+    await page.addInitScript((rpcUrl) => {
+      localStorage.setItem(
+        "stellar_lab_network",
+        JSON.stringify({
+          id: "mainnet",
+          label: "Mainnet",
+          horizonUrl: "https://horizon.stellar.org",
+          rpcUrl,
+          passphrase: "Public Global Stellar Network ; September 2015",
+        }),
+      );
+    }, MAINNET_MOCK_RPC_URL);
+  }
+
+  await page.goto(`${baseURL}/transaction/dashboard`);
+
   // Input transaction hash
   const loadButton = page.getByRole("button", { name: "Load transaction" });
 
@@ -260,6 +329,7 @@ const eventsData = async ({
     page,
     rpcMethod: "getTransaction",
     bodyJsonResponse: mockResponse,
+    rpcUrl: networkId === "mainnet" ? MAINNET_MOCK_RPC_URL : undefined,
   });
 
   await loadButton.click();

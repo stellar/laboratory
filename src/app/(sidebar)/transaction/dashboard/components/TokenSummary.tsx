@@ -34,8 +34,10 @@ export const TokenSummary = ({
     };
   };
 
+  const { network } = useStore();
+
   const getGroupedTransferEvents = () => {
-    const formattedEvents = getTransferEvents(txDetails);
+    const formattedEvents = getTransferEvents(txDetails, network.passphrase);
 
     const groups: EventGroupsType = {
       asset: {
@@ -61,8 +63,6 @@ export const TokenSummary = ({
     // Return only groups with items
     return Object.values(groups).filter((group) => group.items.length);
   };
-
-  const { network } = useStore();
 
   const seNetwork = getStellarExpertNetwork(network.id);
 
