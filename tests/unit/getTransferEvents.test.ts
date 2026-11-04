@@ -1,7 +1,9 @@
 import {
   Account,
+  Asset,
   encodeMuxedContractAddress,
   MuxedAccount,
+  Networks,
 } from "@stellar/stellar-sdk";
 
 import { getTransferEvents } from "../../src/helpers/getTransferEvents";
@@ -10,8 +12,15 @@ import { RpcTxJsonResponse } from "../../src/types/types";
 const FROM = "GBQXC7ZQHOUAM5JBU5YEC7VE2AT3GUQKK5ACH47HM77CDC7QBU5VZEEV";
 const ACCOUNT = "GC4NTEZTULYHWOCW6YSLZWAEED6ATRVX2BPKTSWZUKQKUJIMG3SLDMXU";
 const CONTRACT = "CBHQGTSBJWA54K67RSG3JPXSZY5IXIZ4FSLJM4PQ33FA3FYCU5YZV7MZ";
+const PASSPHRASE = Networks.TESTNET;
+const NATIVE_SAC = Asset.native().contractId(PASSPHRASE);
 
-const transferEvent = (to: string, data: any) => ({
+const transferEvent = (
+  to: string,
+  data: any,
+  contractId: string = NATIVE_SAC,
+) => ({
+  contract_id: contractId,
   body: {
     v0: {
       topics: [
@@ -39,6 +48,7 @@ describe("getTransferEvents", () => {
   it("reads a plain transfer with no muxed ID", () => {
     const [event] = getTransferEvents(
       txWithEvents([transferEvent(ACCOUNT, { i128: "250" })]),
+      PASSPHRASE,
     );
 
     expect(event).toEqual({
@@ -53,6 +63,7 @@ describe("getTransferEvents", () => {
   it("builds an M address for a u64 ID on an account", () => {
     const [event] = getTransferEvents(
       txWithEvents([transferEvent(ACCOUNT, muxedData({ u64: "1" }))]),
+      PASSPHRASE,
     );
 
     expect(event.addressTo).toBe(ACCOUNT);
@@ -67,6 +78,7 @@ describe("getTransferEvents", () => {
   it("builds a W address for a u64 ID on a contract (CAP-84)", () => {
     const [event] = getTransferEvents(
       txWithEvents([transferEvent(CONTRACT, muxedData({ u64: "42" }))]),
+      PASSPHRASE,
     );
 
     expect(event.addressTo).toBe(CONTRACT);
@@ -82,6 +94,7 @@ describe("getTransferEvents", () => {
         transferEvent(ACCOUNT, muxedData({ string: "invoice 7" })),
         transferEvent(ACCOUNT, muxedData({ bytes: "abcd" })),
       ]),
+      PASSPHRASE,
     );
 
     expect(textEvent.toMuxedId).toBeUndefined();
@@ -100,8 +113,20 @@ describe("getTransferEvents", () => {
           ],
         }),
       ]),
+      PASSPHRASE,
     );
 
     expect(event.amount).toBe("77");
+  });
+
+  it("leaves the asset empty when the emitter is not that asset's SAC", () => {
+    const [event] = getTransferEvents(
+      txWithEvents([transferEvent(ACCOUNT, { i128: "250" }, CONTRACT)]),
+      PASSPHRASE,
+    );
+
+    expect(event.assetCode).toBe("");
+    expect(event.assetIssuer).toBe("");
+    expect(event.amount).toBe("250");
   });
 });

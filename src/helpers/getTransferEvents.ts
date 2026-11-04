@@ -1,4 +1,5 @@
 import { muxedAccount } from "@/helpers/muxedAccount";
+import { getSacTransferAsset } from "@/helpers/getSacTransferAsset";
 
 import { RpcTxJsonResponse } from "@/types/types";
 
@@ -55,13 +56,17 @@ const getMuxedRecipient = (
 
 /**
  * Gets token transfer events from a transaction's contract events, including
- * the recipient's muxed ID (`to_muxed_id`) when there is one.
+ * the recipient's muxed ID (`to_muxed_id`) when there is one. The asset is set
+ * only when the emitting contract is that asset's SAC; other emitters get an
+ * empty asset (see `getSacTransferAsset`).
  *
  * @param data - RPC `getTransaction` response as XDR-JSON
+ * @param networkPassphrase - Passphrase used to derive SAC contract IDs
  * @returns One entry per `transfer` event
  */
 export const getTransferEvents = (
   data: RpcTxJsonResponse | null | undefined,
+  networkPassphrase: string | undefined,
 ): TransferEvent[] => {
   const events = data?.events?.contractEventsJson;
 
@@ -80,14 +85,11 @@ export const getTransferEvents = (
       const addressTo = ev.body.v0.topics[2].address;
       const data = ev.body.v0.data;
 
-      const token = ev.body.v0.topics?.[3]?.string;
-
-      let assetCode = "";
-      let assetIssuer = "";
-
-      if (token) {
-        [assetCode, assetIssuer] = token.split(":");
-      }
+      const { assetCode, assetIssuer } = getSacTransferAsset({
+        contractId: ev.contract_id,
+        assetTopic: ev.body.v0.topics?.[3]?.string,
+        networkPassphrase,
+      });
 
       return {
         addressFrom,
@@ -99,8 +101,8 @@ export const getTransferEvents = (
           data?.i128 ||
           data?.amount ||
           "0",
-        assetCode: assetCode === "native" ? "XLM" : assetCode,
-        assetIssuer: assetCode === "native" ? "native" : assetIssuer,
+        assetCode,
+        assetIssuer,
       };
     });
 };
