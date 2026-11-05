@@ -149,12 +149,12 @@ test.describe("Smart Contracts: Contract Info", () => {
           contentType: "application/json",
           body: JSON.stringify({
             contract: MOCK_SAC_CONTRACT_ID,
-            account: MOCK_SAC_CONTRACT_ID,
             created: 1731402776,
             creator: SAVED_ACCOUNT_1,
-            payments: 0,
-            trades: 0,
-            storage_entries: 0,
+            invocations: 0,
+            subinvocation: 0,
+            events: 0,
+            errors: 0,
           }),
         });
       },

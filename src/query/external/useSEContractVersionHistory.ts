@@ -3,8 +3,11 @@ import { STELLAR_EXPERT_API } from "@/constants/settings";
 import { getStellarExpertNetwork } from "@/helpers/getStellarExpertNetwork";
 import { ContractVersionHistoryResponseItem, NetworkType } from "@/types/types";
 
+// Most contracts have only a few versions, so one page usually covers them all
+const VERSION_HISTORY_PAGE_LIMIT = 20;
+
 /**
- * StellarExpert API to get smart contract’s version history
+ * StellarExpert API to get smart contract’s version history (all pages)
  */
 export const useSEContractVersionHistory = ({
   isActive,
@@ -24,9 +27,22 @@ export const useSEContractVersionHistory = ({
         return null;
       }
 
-      try {
+      // The API defaults to `limit=10`, so page through all versions with the
+      // `ts`-based `paging_token` cursor until a short page is returned.
+      const fetchPage = async (
+        cursor?: string,
+      ): Promise<ContractVersionHistoryResponseItem[]> => {
+        const searchParams = new URLSearchParams({
+          order: "asc",
+          limit: `${VERSION_HISTORY_PAGE_LIMIT}`,
+        });
+
+        if (cursor) {
+          searchParams.append("cursor", cursor);
+        }
+
         const response = await fetch(
-          `${STELLAR_EXPERT_API}/${network}/contract/${contractId}/version`,
+          `${STELLAR_EXPERT_API}/${network}/contract/${contractId}/version?${searchParams.toString()}`,
         );
 
         const responseJson = await response.json();
@@ -36,6 +52,25 @@ export const useSEContractVersionHistory = ({
         }
 
         return responseJson?._embedded?.records || [];
+      };
+
+      try {
+        let allRecords: ContractVersionHistoryResponseItem[] = [];
+        let cursor: string | undefined;
+
+        while (true) {
+          const records = await fetchPage(cursor);
+
+          allRecords = [...allRecords, ...records];
+
+          if (records.length < VERSION_HISTORY_PAGE_LIMIT) {
+            break;
+          }
+
+          cursor = records[records.length - 1].paging_token;
+        }
+
+        return allRecords;
       } catch (e: any) {
         throw `Something went wrong. ${e}`;
       }

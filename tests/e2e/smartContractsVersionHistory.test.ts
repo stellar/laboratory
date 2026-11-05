@@ -31,7 +31,7 @@ test.describe("Smart Contracts: Version History", () => {
 
     // Mock the Version History API call
     await page.route(
-      `${STELLAR_EXPERT_API}/testnet/contract/${MOCK_CONTRACT_ID}/version`,
+      `${STELLAR_EXPERT_API}/testnet/contract/${MOCK_CONTRACT_ID}/version?order=asc&limit=20`,
       async (route) => {
         await route.fulfill({
           status: 200,
