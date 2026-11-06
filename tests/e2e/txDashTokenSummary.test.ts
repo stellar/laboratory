@@ -314,6 +314,15 @@ const eventsData = async ({
     }, MAINNET_MOCK_RPC_URL);
   }
 
+  // Mock before filling the hash: a valid hash auto-fetches the tx, and an
+  // unmocked request to live RPC keeps the Load button disabled while pending
+  await mockRpcRequest({
+    page,
+    rpcMethod: "getTransaction",
+    bodyJsonResponse: mockResponse,
+    rpcUrl: networkId === "mainnet" ? MAINNET_MOCK_RPC_URL : undefined,
+  });
+
   await page.goto(`${baseURL}/transaction/dashboard`);
 
   // Input transaction hash
@@ -323,15 +332,6 @@ const eventsData = async ({
   await page.getByLabel("Transaction hash").fill(mockResponse.result.txHash);
 
   await expect(loadButton).toBeEnabled();
-
-  // Mock response
-  await mockRpcRequest({
-    page,
-    rpcMethod: "getTransaction",
-    bodyJsonResponse: mockResponse,
-    rpcUrl: networkId === "mainnet" ? MAINNET_MOCK_RPC_URL : undefined,
-  });
-
   await loadButton.click();
 
   // Select Token Summary tab
