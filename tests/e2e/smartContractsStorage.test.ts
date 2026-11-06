@@ -260,6 +260,91 @@ test.describe("Smart Contracts: Contract Storage (Stellar Expert fallback)", () 
 });
 
 // =============================================================================
+// Stellar Expert fallback (healthy backend, failing storage request)
+// =============================================================================
+test.describe("Smart Contracts: Contract Storage (backend storage error)", () => {
+  /**
+   * The health check passes but the storage request fails, as happens when
+   * the backend can’t reach or parse its ledger source.
+   */
+  const setupFailingBackendStorage = async (page: Page) => {
+    await page.route(`${BACKEND_DEV_URL}/testnet/health`, async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ status: "healthy" }),
+      });
+    });
+
+    await page.route(
+      `${BACKEND_DEV_URL}/testnet/api/contract/${MOCK_CONTRACT_ID}/storage**`,
+      async (route) => {
+        await route.fulfill({
+          status: 500,
+          contentType: "application/json",
+          body: JSON.stringify({ error: "Internal Server Error" }),
+        });
+      },
+    );
+
+    await page.route(
+      `${STELLAR_EXPERT_API}/testnet/contract-state/${MOCK_CONTRACT_ID}?order=desc&limit=200`,
+      async (route) => {
+        await route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify(MOCK_SE_RESPONSE_SUCCESS),
+        });
+      },
+    );
+
+    await setupCommonMocks(page);
+  };
+
+  test("Falls back to Stellar Expert", async ({ page }) => {
+    await setupFailingBackendStorage(page);
+    await navigateToContractStorage(page);
+
+    const table = page.getByTestId("contract-storage-table");
+    await expect(table).toBeVisible();
+
+    // SE data, sorted by updated desc (UserBalance record is newest)
+    const firstRow = table.locator("tr").nth(1);
+    await expect(firstRow.locator("td").nth(0)).toContainText(
+      '["UserBalance",',
+    );
+
+    await expect(page.getByText("Powered by")).toBeVisible();
+    await expect(page.getByText("Fetching data failed")).toHaveCount(0);
+  });
+
+  test("Shows the backend error without SE entry count", async ({ page }) => {
+    await setupFailingBackendStorage(page);
+
+    // Registered after the common mocks, so this route takes precedence
+    const { storage_entries, ...infoWithoutEntries } =
+      MOCK_CONTRACT_INFO_RESPONSE_SUCCESS;
+    expect(storage_entries).toBeDefined();
+
+    await page.route(
+      `${STELLAR_EXPERT_API}/testnet/contract/${MOCK_CONTRACT_ID}`,
+      async (route) => {
+        await route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify(infoWithoutEntries),
+        });
+      },
+    );
+
+    await navigateToContractStorage(page);
+
+    await expect(page.getByText("Fetching data failed: 500")).toBeVisible();
+    await expect(page.getByTestId("contract-storage-table")).toHaveCount(0);
+  });
+});
+
+// =============================================================================
 // Mock data: Backend
 // =============================================================================
 const MOCK_BACKEND_STORAGE_RESPONSE = {
