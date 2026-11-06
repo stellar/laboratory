@@ -15,15 +15,16 @@ test.describe("Transaction Dashboard - Classic Operations", () => {
   test("Displays single classic operation correctly", async ({ page }) => {
     const loadButton = page.getByRole("button", { name: "Load transaction" });
 
-    await page
-      .getByLabel("Transaction hash")
-      .fill(TX_DASH_CLASSIC.result.txHash);
-
+    // Mock before filling the hash: a valid hash auto-fetches the tx
     await mockRpcRequest({
       page,
       rpcMethod: "getTransaction",
       bodyJsonResponse: TX_DASH_CLASSIC,
     });
+
+    await page
+      .getByLabel("Transaction hash")
+      .fill(TX_DASH_CLASSIC.result.txHash);
 
     await loadButton.click();
 
@@ -58,15 +59,16 @@ test.describe("Transaction Dashboard - Classic Operations", () => {
   }) => {
     const loadButton = page.getByRole("button", { name: "Load transaction" });
 
-    await page
-      .getByLabel("Transaction hash")
-      .fill(TX_CLASSIC_OPS_WITH_STRING_BODY.result.txHash);
-
+    // Mock before filling the hash: a valid hash auto-fetches the tx
     await mockRpcRequest({
       page,
       rpcMethod: "getTransaction",
       bodyJsonResponse: TX_CLASSIC_OPS_WITH_STRING_BODY,
     });
+
+    await page
+      .getByLabel("Transaction hash")
+      .fill(TX_CLASSIC_OPS_WITH_STRING_BODY.result.txHash);
 
     await loadButton.click();
 
@@ -89,9 +91,7 @@ test.describe("Transaction Dashboard - Classic Operations", () => {
     ).toBeVisible();
 
     // Check we have 3 operation cards
-    const operationCards = page.locator(
-      ".ClassicOperationsList__operation",
-    );
+    const operationCards = page.locator(".ClassicOperationsList__operation");
     await expect(operationCards).toHaveCount(3);
 
     // Verify begin_sponsoring_future_reserves operation details
@@ -114,15 +114,16 @@ test.describe("Transaction Dashboard - Classic Operations", () => {
   test("Pagination works correctly with many operations", async ({ page }) => {
     const loadButton = page.getByRole("button", { name: "Load transaction" });
 
-    await page
-      .getByLabel("Transaction hash")
-      .fill(TX_CLASSIC_MANY_OPS.result.txHash);
-
+    // Mock before filling the hash: a valid hash auto-fetches the tx
     await mockRpcRequest({
       page,
       rpcMethod: "getTransaction",
       bodyJsonResponse: TX_CLASSIC_MANY_OPS,
     });
+
+    await page
+      .getByLabel("Transaction hash")
+      .fill(TX_CLASSIC_MANY_OPS.result.txHash);
 
     await loadButton.click();
 
@@ -139,9 +140,7 @@ test.describe("Transaction Dashboard - Classic Operations", () => {
     );
 
     // Check we see 5 operations on first page (PAGE_SIZE = 5)
-    const operationCards = page.locator(
-      ".ClassicOperationsList__operation",
-    );
+    const operationCards = page.locator(".ClassicOperationsList__operation");
     await expect(operationCards).toHaveCount(5);
 
     // Check first page navigation buttons
@@ -213,15 +212,16 @@ test.describe("Transaction Dashboard - Classic Operations", () => {
   test("Displays various operation types correctly", async ({ page }) => {
     const loadButton = page.getByRole("button", { name: "Load transaction" });
 
-    await page
-      .getByLabel("Transaction hash")
-      .fill(TX_CLASSIC_MANY_OPS.result.txHash);
-
+    // Mock before filling the hash: a valid hash auto-fetches the tx
     await mockRpcRequest({
       page,
       rpcMethod: "getTransaction",
       bodyJsonResponse: TX_CLASSIC_MANY_OPS,
     });
+
+    await page
+      .getByLabel("Transaction hash")
+      .fill(TX_CLASSIC_MANY_OPS.result.txHash);
 
     await loadButton.click();
 
@@ -257,15 +257,16 @@ test.describe("Transaction Dashboard - Classic Operations", () => {
   test("Formats operation field labels correctly", async ({ page }) => {
     const loadButton = page.getByRole("button", { name: "Load transaction" });
 
-    await page
-      .getByLabel("Transaction hash")
-      .fill(TX_CLASSIC_OPS_WITH_STRING_BODY.result.txHash);
-
+    // Mock before filling the hash: a valid hash auto-fetches the tx
     await mockRpcRequest({
       page,
       rpcMethod: "getTransaction",
       bodyJsonResponse: TX_CLASSIC_OPS_WITH_STRING_BODY,
     });
+
+    await page
+      .getByLabel("Transaction hash")
+      .fill(TX_CLASSIC_OPS_WITH_STRING_BODY.result.txHash);
 
     await loadButton.click();
 
@@ -284,15 +285,16 @@ test.describe("Transaction Dashboard - Classic Operations", () => {
   test("No pagination controls shown for few operations", async ({ page }) => {
     const loadButton = page.getByRole("button", { name: "Load transaction" });
 
-    await page
-      .getByLabel("Transaction hash")
-      .fill(TX_DASH_CLASSIC.result.txHash);
-
+    // Mock before filling the hash: a valid hash auto-fetches the tx
     await mockRpcRequest({
       page,
       rpcMethod: "getTransaction",
       bodyJsonResponse: TX_DASH_CLASSIC,
     });
+
+    await page
+      .getByLabel("Transaction hash")
+      .fill(TX_DASH_CLASSIC.result.txHash);
 
     await loadButton.click();
 

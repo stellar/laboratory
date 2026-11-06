@@ -263,7 +263,7 @@ const nextConfig = {
 // Only apply Sentry configuration in production
 if (process.env.NODE_ENV === "production") {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { withSentryConfig } = require("@sentry/nextjs");
+  const { withSentryConfig } = require("@sentry/nextjs/config");
 
   module.exports = withSentryConfig(nextConfig, {
     // For all available options, see:
@@ -291,7 +291,9 @@ if (process.env.NODE_ENV === "production") {
     // See the following for more information:
     // https://docs.sentry.io/product/crons/
     // https://vercel.com/docs/cron-jobs
-    automaticVercelMonitors: false,
+    webpack: {
+      automaticVercelMonitors: false,
+    },
   });
 } else {
   module.exports = nextConfig;
