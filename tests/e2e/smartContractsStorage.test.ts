@@ -173,7 +173,7 @@ test.describe("Smart Contracts: Contract Storage (Stellar Expert fallback)", () 
 
     // Mock the SE Contract Storage API call (fallback)
     await page.route(
-      `${STELLAR_EXPERT_API}/testnet/contract-data/${MOCK_CONTRACT_ID}?order=desc&limit=200`,
+      `${STELLAR_EXPERT_API}/testnet/contract-state/${MOCK_CONTRACT_ID}?order=desc&limit=200`,
       async (route) => {
         await route.fulfill({
           status: 200,
@@ -236,9 +236,7 @@ test.describe("Smart Contracts: Contract Storage (Stellar Expert fallback)", () 
 
     // Sort by TTL (ascending) - lowest TTL first
     await colTTL.click();
-    await expect(firstRow.locator("td").nth(0)).toContainText(
-      '["Balance",',
-    );
+    await expect(firstRow.locator("td").nth(0)).toContainText('["Balance",');
     await expect(firstRow.locator("td").nth(3)).toContainText("53,573,513");
 
     // Sort by Updated (ascending) - oldest first
@@ -286,8 +284,7 @@ const MOCK_BACKEND_STORAGE_RESPONSE = {
       key: "AAAAEAAAAAEAAAADAAAADwAAAAxDb2xsZWN0aWJsZXMAAAASAAAAAVbOtn8uRZnyN7ntQV+cU1imHJXQJg8GvLdoFE6xrCUgAAAAAwAAAAA=",
       ttl: 50000000,
       updated: 1772000000,
-      value:
-        "AAAAEgAAAAAAAAAAOXwGQieGTe8W6MAPCOEn6gKRkekQ8CE5VQIQJgq69PU=",
+      value: "AAAAEgAAAAAAAAAAOXwGQieGTe8W6MAPCOEn6gKRkekQ8CE5VQIQJgq69PU=",
       paging_token: "",
     },
     {

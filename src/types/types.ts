@@ -435,33 +435,45 @@ export interface SavedRpcMethod extends LocalStorageSavedItem {
 // =============================================================================
 // Smart Contract Explorer
 // =============================================================================
+/**
+ * StellarExpert `GET /contract/{address}` response.
+ * Optional fields are omitted when they don't apply to the contract type
+ * (WASM vs SAC vs SEP-41) or when the value is zero.
+ */
 export type ContractInfoApiResponse = {
   contract: string;
   created: number;
-  creator: string;
-  account?: string;
-  payments?: number;
-  trades?: number;
+  creator?: string;
+  // Number of top-level contract invocations
+  invocations?: number;
+  // Number of times the contract was invoked by other contracts (singular key)
+  subinvocation?: number;
+  events?: number;
+  // Number of failed invocations
+  errors?: number;
+  // WASM-based contracts only
   wasm?: string;
+  // Stellar Asset Contracts only
+  asset?: string;
+  // Contracts created from an issuer account with a salt
+  issuer?: string;
+  salt?: string;
+  // Custom SEP-41 token contracts only
+  code?: string;
+  token_name?: string;
+  // Detected contract interface features (e.g. "sep41")
+  features?: string[];
+  // Present only when greater than zero
   storage_entries?: number;
+  // Number of WASM updates; present only if upgraded at least once
+  versions?: number;
+  // WASM-based contracts only
   validation?: {
-    status?: "verified_build" | "unverified_build";
+    status?: "verified" | "unverified";
+    ts?: number;
     repository?: string;
     commit?: string;
-    package?: string;
-    make?: string;
-    ts?: number;
   };
-  versions?: number;
-  salt?: string;
-  asset?: string;
-  code?: string;
-  issuer?: string;
-  functions?: {
-    invocations: number;
-    subinvocations: number;
-    function: string;
-  }[];
 };
 
 export type ContractVersionHistoryResponseItem = {
@@ -485,6 +497,11 @@ export type BEContractStorageResponse = {
 export type ContractStorageResponseItem = {
   durability: ContractStorageDurability;
   key: string;
+  // StellarExpert `contract-state` only: hash of `key`, also used as
+  // `paging_token`
+  keyHash?: string;
+  // StellarExpert `contract-state` only: contract that owns the entry
+  owner?: string;
   paging_token: string;
   ttl: number;
   updated: number;
@@ -497,15 +514,22 @@ export type ContractStorageProcessedItem<T> = T & {
   valueJson?: AnyObject | null;
 };
 
+/**
+ * A record from StellarExpert `GET /contract` (all contracts list).
+ * Note: `paging_token` is the contract address, so the list is ordered by
+ * contract ID, not by creation time.
+ */
 export type ContractListRecord = {
-  account: string;
   contract: string;
   created: number;
-  creator: string;
+  creator?: string;
+  wasm?: string;
+  invocations?: number;
+  // Number of times the contract was invoked by other contracts (singular key)
+  subinvocation?: number;
+  events?: number;
+  errors?: number;
   paging_token: string;
-  payments: number;
-  trades: number;
-  wasm: string;
 };
 
 export type PopularContractListRecord = {

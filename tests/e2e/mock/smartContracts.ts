@@ -4,15 +4,16 @@ export const MOCK_CONTRACT_ID =
   "CAQP53Z2GMZ6WVOKJWXMCVDLZYJ7GYVMWPAMWACPLEZRF2UEZW3B636S";
 export const MOCK_CONTRACT_INFO_RESPONSE_SUCCESS = {
   contract: MOCK_CONTRACT_ID,
-  account: MOCK_CONTRACT_ID,
   created: 1731402776,
   creator: SAVED_ACCOUNT_1,
-  payments: 300,
-  trades: 0,
+  invocations: 300,
+  subinvocation: 12,
+  events: 450,
+  errors: 2,
   wasm: "a0db88b6da6f83bf1c2c8fafcc8fa9cf9d2abc7f8507d831d086aa2c6ad5fc1b",
   storage_entries: 10,
   validation: {
-    status: "verified_build",
+    status: "verified",
     repository: "https://github.com/test-org/test-repo",
     commit: "391f37e39a849ddf7543a5d7f1488e055811cb68",
     ts: 1731402776,
