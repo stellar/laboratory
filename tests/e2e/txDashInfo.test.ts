@@ -26,19 +26,19 @@ test.describe("Transaction Dashboard", () => {
     // Fill transaction hash input
     const loadButton = page.getByRole("button", { name: "Load transaction" });
 
+    // Mock before filling the hash: a valid hash auto-fetches the tx
+    await mockRpcRequest({
+      page,
+      rpcMethod: "getTransaction",
+      bodyJsonResponse: TX_ST_CHANGE_DOMAIN_SET,
+    });
+
     await expect(loadButton).toBeDisabled();
     await page
       .getByLabel("Transaction hash")
       .fill(TX_ST_CHANGE_DOMAIN_SET.result.txHash);
 
     await expect(loadButton).toBeEnabled();
-
-    // Mock the RPC call for getting the contract type
-    await mockRpcRequest({
-      page,
-      rpcMethod: "getTransaction",
-      bodyJsonResponse: TX_ST_CHANGE_DOMAIN_SET,
-    });
 
     await loadButton.click();
 
@@ -99,19 +99,19 @@ test.describe("Transaction Dashboard", () => {
     // Fill transaction hash input
     const loadButton = page.getByRole("button", { name: "Load transaction" });
 
+    // Mock before filling the hash: a valid hash auto-fetches the tx
+    await mockRpcRequest({
+      page,
+      rpcMethod: "getTransaction",
+      bodyJsonResponse: TX_ST_CHANGE_KALE_PLANT,
+    });
+
     await expect(loadButton).toBeDisabled();
     await page
       .getByLabel("Transaction hash")
       .fill(TX_ST_CHANGE_KALE_PLANT.result.txHash);
 
     await expect(loadButton).toBeEnabled();
-
-    // Mock the RPC call for getting the contract type
-    await mockRpcRequest({
-      page,
-      rpcMethod: "getTransaction",
-      bodyJsonResponse: TX_ST_CHANGE_KALE_PLANT,
-    });
 
     await loadButton.click();
 
@@ -178,19 +178,19 @@ test.describe("Transaction Dashboard", () => {
     // Fill transaction hash input
     const loadButton = page.getByRole("button", { name: "Load transaction" });
 
+    // Mock before filling the hash: a valid hash auto-fetches the tx
+    await mockRpcRequest({
+      page,
+      rpcMethod: "getTransaction",
+      bodyJsonResponse: TX_DASH_CLASSIC,
+    });
+
     await expect(loadButton).toBeDisabled();
     await page
       .getByLabel("Transaction hash")
       .fill(TX_DASH_CLASSIC.result.txHash);
 
     await expect(loadButton).toBeEnabled();
-
-    // Mock the RPC call for getting the contract type
-    await mockRpcRequest({
-      page,
-      rpcMethod: "getTransaction",
-      bodyJsonResponse: TX_DASH_CLASSIC,
-    });
 
     await loadButton.click();
 
@@ -250,16 +250,16 @@ test.describe("Transaction Dashboard", () => {
   test("Could not find transaction view", async ({ page }) => {
     const loadButton = page.getByRole("button", { name: "Load transaction" });
 
-    await page
-      .getByLabel("Transaction hash")
-      .fill(TX_ST_CHANGE_KALE_PLANT.result.txHash);
-
-    // Mock the RPC call
+    // Mock before filling the hash: a valid hash auto-fetches the tx
     await mockRpcRequest({
       page,
       rpcMethod: "getTransaction",
       bodyJsonResponse: TX_NOT_FOUND,
     });
+
+    await page
+      .getByLabel("Transaction hash")
+      .fill(TX_ST_CHANGE_KALE_PLANT.result.txHash);
 
     await expect(loadButton).toBeEnabled();
     await loadButton.click();
