@@ -71,9 +71,19 @@ export const ContractStorage = ({
     order: sortOrder,
   });
 
+  // `isSourceStellarExpert` only reflects the backend health check, which
+  // doesn't touch the storage query path. Also fall back to Stellar Expert when
+  // the backend storage request itself fails. That needs SE’s entry count
+  // (from SE contract info), so without it we show the backend error instead.
+  const isBackendStorageFailed =
+    !isSourceStellarExpert &&
+    backendResult.isError &&
+    totalEntriesCount !== undefined;
+  const isUsingStellarExpert = isSourceStellarExpert || isBackendStorageFailed;
+
   // Stellar Expert data source (fallback)
   const seResult = useSEContractStorage({
-    isActive: isActive && isSourceStellarExpert,
+    isActive: isActive && isUsingStellarExpert,
     networkId,
     contractId,
     totalEntriesCount,
@@ -87,12 +97,13 @@ export const ContractStorage = ({
     setSortOrder("desc");
   }, [contractId, networkId]);
 
-  const activeResult = isSourceStellarExpert ? seResult : backendResult;
+  const activeResult = isUsingStellarExpert ? seResult : backendResult;
 
   useEffect(() => {
     if (isActive && activeResult.isSuccess && activeResult.data) {
       trackEvent(TrackingEvent.SMART_CONTRACTS_EXPLORER_STORAGE_LOADED, {
-        source: isSourceStellarExpert ? "stellar_expert" : "backend",
+        source: isUsingStellarExpert ? "stellar_expert" : "backend",
+        ...(isBackendStorageFailed ? { fallback: "backend_error" } : {}),
       });
     }
   }, [isActive, activeResult.isSuccess]);
@@ -110,7 +121,7 @@ export const ContractStorage = ({
 
   // Normalize data from both sources
   const storageData = (() => {
-    if (isSourceStellarExpert) {
+    if (isUsingStellarExpert) {
       const data = seResult.data;
 
       return data;
@@ -119,10 +130,10 @@ export const ContractStorage = ({
   })();
 
   // Pagination cursors (only available from backend)
-  const nextCursor = !isSourceStellarExpert
+  const nextCursor = !isUsingStellarExpert
     ? backendResult.data?._links?.next?.href
     : undefined;
-  const prevCursor = !isSourceStellarExpert
+  const prevCursor = !isUsingStellarExpert
     ? backendResult.data?._links?.prev?.href
     : undefined;
 
@@ -229,25 +240,25 @@ export const ContractStorage = ({
     <Box gap="lg">
       <Box gap="sm">
         <DataTable
-          key={`contract-storage-${isSourceStellarExpert ? "se" : "be"}`}
+          key={`contract-storage-${isUsingStellarExpert ? "se" : "be"}`}
           tableId="contract-storage"
           tableData={parsedData}
-          hideFirstLastPageNav={!isSourceStellarExpert}
-          hidePageCount={!isSourceStellarExpert}
+          hideFirstLastPageNav={!isUsingStellarExpert}
+          hidePageCount={!isUsingStellarExpert}
           tableHeaders={[
             {
               id: "key",
               value: "Key",
               isSortable: false,
               // @TODO add backend filtering for SE source as well when it's ready
-              filter: isSourceStellarExpert ? keyValueFilters.key : undefined,
+              filter: isUsingStellarExpert ? keyValueFilters.key : undefined,
             },
             {
               id: "value",
               value: "Value",
               isSortable: false,
               // @TODO add backend filtering for SE source as well when it's ready
-              filter: isSourceStellarExpert ? keyValueFilters.value : undefined,
+              filter: isUsingStellarExpert ? keyValueFilters.value : undefined,
             },
             { id: "durability", value: "Durability", isSortable: true },
             { id: "ttl", value: "TTL", isSortable: true },
@@ -299,7 +310,7 @@ export const ContractStorage = ({
           ]}
           cssGridTemplateColumns="minmax(210px, 2fr) minmax(210px, 2fr) minmax(100px, 0.8fr) minmax(110px, 0.8fr) minmax(114px, 0.7fr)"
           csvFileName={contractId}
-          {...(!isSourceStellarExpert
+          {...(!isUsingStellarExpert
             ? {
                 onSortChange: (headerId: string, dir: SortDirection) => {
                   const apiSortBy = SORT_BY_MAP[headerId];
@@ -316,7 +327,7 @@ export const ContractStorage = ({
                 },
               }
             : {})}
-          {...(!isSourceStellarExpert
+          {...(!isUsingStellarExpert
             ? {
                 pageNavConfig: {
                   prev: {
@@ -344,7 +355,7 @@ export const ContractStorage = ({
         />
 
         {/* Max entries message (SE only) */}
-        {isSourceStellarExpert &&
+        {isUsingStellarExpert &&
         totalEntriesCount &&
         totalEntriesCount > parsedData.length ? (
           <Box
@@ -358,7 +369,7 @@ export const ContractStorage = ({
         ) : null}
       </Box>
 
-      {isSourceStellarExpert ? <PoweredByStellarExpert /> : null}
+      {isUsingStellarExpert ? <PoweredByStellarExpert /> : null}
     </Box>
   );
 };
