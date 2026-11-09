@@ -544,7 +544,7 @@ export type KnownAssetListRecord = {
   contract: string;
 };
 
-export type WasmData = {
+export type BuildAttestation = {
   sourceRepo: string;
   build: {
     attestation: string;

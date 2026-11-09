@@ -1,19 +1,19 @@
 import { Notification, Card, Link, Text } from "@stellar/design-system";
 import { Box } from "@/components/layout/Box";
-import { WasmData } from "@/types/types";
+import { BuildAttestation } from "@/types/types";
 
 export const BuildInfo = ({
-  wasmData,
+  buildVerification,
   isActive,
 }: {
-  wasmData: WasmData | null | undefined;
+  buildVerification: BuildAttestation | null | undefined;
   isActive: boolean;
 }) => {
   if (!isActive) {
     return null;
   }
 
-  if (!wasmData) {
+  if (!buildVerification) {
     return (
       <Box gap="lg">
         <Notification variant="warning" title="Build Info Not Available">
@@ -121,8 +121,8 @@ export const BuildInfo = ({
           <div>Attestation</div>
           <div>
             {renderLink(
-              wasmData.build.attestationUrl,
-              wasmData.build.attestation,
+              buildVerification.build.attestationUrl,
+              buildVerification.build.attestation,
             )}
           </div>
         </div>
@@ -130,14 +130,20 @@ export const BuildInfo = ({
         <div className="BuildInfo__data__item">
           <div>Commit</div>
           <div>
-            {renderLink(wasmData.build.commitUrl, wasmData.build.commit)}
+            {renderLink(
+              buildVerification.build.commitUrl,
+              buildVerification.build.commit,
+            )}
           </div>
         </div>
 
         <div className="BuildInfo__data__item">
           <div>Build Summary</div>
           <div>
-            {renderLink(wasmData.build.summaryUrl, wasmData.build.summary)}
+            {renderLink(
+              buildVerification.build.summaryUrl,
+              buildVerification.build.summary,
+            )}
           </div>
         </div>
 
@@ -145,8 +151,8 @@ export const BuildInfo = ({
           <div>Workflow File</div>
           <div>
             {renderLink(
-              wasmData.build.workflowFileUrl,
-              wasmData.build.workflowFile,
+              buildVerification.build.workflowFileUrl,
+              buildVerification.build.workflowFile,
             )}
           </div>
         </div>
