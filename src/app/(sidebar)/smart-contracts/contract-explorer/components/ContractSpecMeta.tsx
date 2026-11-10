@@ -11,8 +11,6 @@ import { Box } from "@/components/layout/Box";
 import { WithInfoText } from "@/components/WithInfoText";
 import { PoweredByStellarExpert } from "@/components/PoweredByStellarExpert";
 
-import { useWasmBinaryFromRpc } from "@/query/useWasmBinaryFromRpc";
-
 import * as StellarXdr from "@/helpers/StellarXdr";
 import { downloadFile } from "@/helpers/downloadFile";
 import { renderContractSpecViewStatus } from "@/helpers/renderContractSpecViewStatus";
@@ -33,14 +31,19 @@ export const ContractSpecMeta = ({
   sectionsToShow,
   rpcUrl,
   wasmHash,
-  isActive,
+  wasmBinary,
+  isWasmBinaryLoading,
+  wasmBinaryError,
   isSourceStellarExpert,
   isSacType,
 }: {
   sectionsToShow: ContractSectionName[];
   rpcUrl: string;
   wasmHash: string;
-  isActive: boolean;
+  // Downloaded once by the explorer page and passed down
+  wasmBinary: Uint8Array | null | undefined;
+  isWasmBinaryLoading: boolean;
+  wasmBinaryError: Error | null;
   isSourceStellarExpert: boolean;
   isSacType?: boolean;
 }) => {
@@ -58,17 +61,6 @@ export const ContractSpecMeta = ({
     useState<AnyObject | null>(null);
 
   const isXdrInit = useIsXdrInit();
-
-  const {
-    data: wasmBinary,
-    error: wasmBinaryError,
-    isLoading: isWasmBinaryLoading,
-    isFetching: isWasmBinaryFetching,
-  } = useWasmBinaryFromRpc({
-    wasmHash,
-    rpcUrl,
-    isActive,
-  });
 
   useEffect(() => {
     const getContractData = async () => {
@@ -106,9 +98,7 @@ export const ContractSpecMeta = ({
     wasmHash,
     rpcUrl,
     isLoading:
-      isWasmBinaryLoading ||
-      isWasmBinaryFetching ||
-      (isSacType === false && !contractSections),
+      isWasmBinaryLoading || (isSacType === false && !contractSections),
     error: wasmBinaryError,
     isSacType: Boolean(isSacType),
   });
@@ -220,7 +210,7 @@ export const ContractSpecMeta = ({
                   });
                 }
               }}
-              isLoading={isWasmBinaryLoading || isWasmBinaryFetching}
+              isLoading={isWasmBinaryLoading}
             >
               Download Wasm
             </Button>

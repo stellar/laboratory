@@ -8,14 +8,14 @@ import {
   Icon,
   Input,
 } from "@stellar/design-system";
-import { useQueryClient } from "@tanstack/react-query";
 
 import { useStore } from "@/store/useStore";
 import { useSEContractInfo } from "@/query/external/useSEContractInfo";
 import { useWasmGitHubAttestation } from "@/query/useWasmGitHubAttestation";
-import { useContractClientFromRpc } from "@/query/useContractClientFromRpc";
+import { useWasmBinaryFromRpc } from "@/query/useWasmBinaryFromRpc";
 import { useGetContractDataFromRpcById } from "@/query/useGetContractDataFromRpcById";
 import { useBackendHealthCheck } from "@/query/external/useBackendHealthCheck";
+import { useContractSpecFromWasm } from "@/hooks/useContractSpecFromWasm";
 import { validate } from "@/validate";
 
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
@@ -48,17 +48,28 @@ export default function ContractExplorer() {
   const [isContractSelectorOpen, setIsContractSelectorOpen] = useState(false);
 
   const rpcUrl = network.rpcUrl;
+  const rpcHeaders = getNetworkHeaders(network, "rpc");
+
+  // Queries run declaratively off the contract ID. A contract already in the
+  // cache renders immediately; if its data is older than `staleTime`, it is
+  // also refetched in the background. Partial/invalid IDs don't fetch at all.
+  // The "Load contract" button refetches even when the cached data is fresh.
+  const canLoadContract = Boolean(
+    rpcUrl && contractIdInput && !validate.getContractIdError(contractIdInput),
+  );
 
   const {
     data: contractData,
+    isSuccess: isContractDataSuccess,
     isLoading: isContractDataLoading,
     isFetching: isContractDataFetching,
     error: contractDataError,
     refetch: fetchContractData,
   } = useGetContractDataFromRpcById({
     contractId: contractIdInput,
-    rpcUrl: network.rpcUrl,
-    headers: getNetworkHeaders(network, "rpc"),
+    rpcUrl,
+    headers: rpcHeaders,
+    enabled: canLoadContract,
   });
 
   const {
@@ -70,17 +81,7 @@ export default function ContractExplorer() {
   } = useSEContractInfo({
     networkId: network.id,
     contractId: contractIdInput,
-  });
-
-  const {
-    data: contractClient,
-    isFetching: isFetchingContractClient,
-    error: contractClientError,
-    refetch: fetchWasmContractClient,
-  } = useContractClientFromRpc({
-    contractId: contractIdInput,
-    networkPassphrase: network.passphrase,
-    rpcUrl: network.rpcUrl,
+    enabled: canLoadContract,
   });
 
   const {
@@ -96,26 +97,43 @@ export default function ContractExplorer() {
   const wasmHash = contractData?.wasmHash || "";
   const isDataLoaded = Boolean(contractData);
 
+  // Download the Wasm once (cached by hash) and reuse it for the build
+  // attestation, the contract spec (Invoke tab), and the spec/meta tabs. This
+  // page is the only observer; children get the result as props.
   const {
-    data: wasmData,
-    error: wasmError,
-    isLoading: isWasmLoading,
-    isFetching: isWasmFetching,
-  } = useWasmGitHubAttestation({
+    data: wasmBinary,
+    isLoading: isWasmBinaryLoading,
+    isError: isWasmBinaryError,
+    error: wasmBinaryError,
+    refetch: fetchWasmBinary,
+  } = useWasmBinaryFromRpc({
     wasmHash,
     rpcUrl,
-    isActive: Boolean(rpcUrl && wasmHash),
-    headers: getNetworkHeaders(network, "rpc"),
+    isActive: Boolean(wasmHash),
+    headers: rpcHeaders,
   });
 
-  const queryClient = useQueryClient();
-  const isLoading =
+  const {
+    data: buildVerification,
+    error: wasmError,
+    isLoading: isAttestationLoading,
+  } = useWasmGitHubAttestation({
+    wasmHash,
+    wasmBinary,
+  });
+
+  const { spec: wasmContractSpec, error: wasmContractSpecError } =
+    useContractSpecFromWasm(wasmBinary);
+
+  // `isLoading` is only true while there is no data yet. Background refetches
+  // of cached data must not replace the rendered contract with a loader.
+  const isInitialLoading =
     isContractDataLoading ||
-    isContractDataFetching ||
     isContractInfoLoading ||
-    isContractInfoFetching ||
-    isWasmLoading ||
-    isWasmFetching;
+    isWasmBinaryLoading ||
+    isAttestationLoading;
+  const isFetching =
+    isInitialLoading || isContractDataFetching || isContractInfoFetching;
 
   useEffect(() => {
     // Pre-fill on page refresh and initial load
@@ -140,27 +158,21 @@ export default function ContractExplorer() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Automatically load contract when a valid contract ID is entered
+  // Once a contract loads (from the network or the cache), keep its ID in the
+  // URL so a refresh or shared link restores it
   useEffect(() => {
-    if (
-      contractIdInput &&
-      network.rpcUrl &&
-      !validate.getContractIdError(contractIdInput)
-    ) {
-      handleLoadContract();
+    if (isContractDataSuccess && contractData) {
+      smartContracts.updateExplorerContractId(contractIdInput);
+      trackEvent(TrackingEvent.SMART_CONTRACTS_EXPLORER_LOAD_CONTRACT);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contractIdInput]);
+  }, [isContractDataSuccess, contractIdInput]);
 
   const resetFetchContractInfo = () => {
-    if (contractInfoData) {
-      queryClient.resetQueries({
-        queryKey: [
-          "useSEContractInfo",
-          "useClientFromRpc",
-          "useWasmHashFromRpc",
-        ],
-      });
+    // Cached query data is keyed by contract ID, so changing the ID is enough
+    // to stop showing the previous contract. Don't reset the queries: that
+    // would throw away the cache we want to reuse on revisit.
+    if (contractData) {
       smartContracts.resetExplorerContractId();
     }
 
@@ -196,33 +208,36 @@ export default function ContractExplorer() {
     ? contractData.contractType === "contractExecutableStellarAsset"
     : false;
 
-  const renderContractInvokeContent = () => {
-    const invokeContractSpec = isSacType ? SAC_SPEC : contractClient?.spec;
+  const invokeContractSpec = isSacType ? SAC_SPEC : wasmContractSpec;
 
+  const renderContractInvokeContent = () => {
     return invokeContractSpec ? (
       <InvokeContract
         contractSpec={invokeContractSpec}
         contractId={contractIdInput}
-        isLoading={isFetchingContractClient}
-        contractClientError={contractClient?.spec && contractClientError}
+        isLoading={isWasmBinaryLoading}
+        contractClientError={wasmContractSpecError}
       />
     ) : null;
   };
 
+  // Explicit "Load contract": bypass the cache and refetch. The Wasm and its
+  // attestation are keyed by Wasm hash, so they refetch on their own if the
+  // contract was upgraded to a new hash. A failed Wasm download stays failed
+  // while the page is mounted, so retry it here.
   const handleLoadContract = async () => {
-    try {
-      // throwOnError will throw an error instead of setting the error state.
-      // This will prevent other queries from running when fetching a contract
-      // type fails.
-      await fetchContractData({ throwOnError: true });
-      await fetchContractInfo({ throwOnError: true });
-      await fetchWasmContractClient();
-      smartContracts.updateExplorerContractId(contractIdInput);
+    if (!canLoadContract) {
+      return;
+    }
 
+    const [contractDataResult] = await Promise.all([
+      fetchContractData(),
+      fetchContractInfo(),
+      ...(isWasmBinaryError ? [fetchWasmBinary()] : []),
+    ]);
+
+    if (contractDataResult.isSuccess) {
       trackEvent(TrackingEvent.SMART_CONTRACTS_EXPLORER_LOAD_CONTRACT);
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (e) {
-      // Do nothing
     }
   };
 
@@ -234,7 +249,7 @@ export default function ContractExplorer() {
           variant="secondary"
           type="submit"
           disabled={isLoadContractDisabled}
-          isLoading={isLoading}
+          isLoading={isFetching}
         >
           Load contract
         </Button>
@@ -243,7 +258,7 @@ export default function ContractExplorer() {
           {contractIdInput ? (
             <>
               <Button
-                disabled={isLoadContractDisabled || isLoading}
+                disabled={isLoadContractDisabled || isFetching}
                 size="md"
                 variant="tertiary"
                 icon={<Icon.Save01 />}
@@ -267,7 +282,7 @@ export default function ContractExplorer() {
                     TrackingEvent.SMART_CONTRACTS_EXPLORER_CLEAR_CONTRACT,
                   );
                 }}
-                disabled={isLoading}
+                disabled={isFetching}
               >
                 Clear
               </Button>
@@ -346,7 +361,7 @@ export default function ContractExplorer() {
             <>{renderButtons()}</>
 
             <>
-              {contractInfoError ? (
+              {contractInfoError && !contractDataError ? (
                 <MessageField
                   message={contractInfoError.toString()}
                   isError={true}
@@ -379,10 +394,13 @@ export default function ContractExplorer() {
                   infoData={contractInfoData}
                   contractId={contractIdInput}
                   backendStatus={isBackendHealthy ? "healthy" : "unhealthy"}
-                  wasmData={wasmData}
+                  buildVerification={buildVerification}
                   wasmHash={wasmHash}
+                  wasmBinary={wasmBinary}
+                  isWasmBinaryLoading={isWasmBinaryLoading}
+                  wasmBinaryError={wasmBinaryError}
                   network={network}
-                  isLoading={isLoading || isBackendHealthLoading}
+                  isLoading={isInitialLoading || isBackendHealthLoading}
                   isSacType={isSacType}
                 />
               ),
@@ -392,7 +410,7 @@ export default function ContractExplorer() {
               id: "contract-invoke",
               label: "Invoke contract",
               content: renderContractInvokeContent(),
-              isDisabled: !isDataLoaded || !(contractClient?.spec || isSacType),
+              isDisabled: !isDataLoaded || !invokeContractSpec,
             }}
             activeTabId={contractActiveTab}
             onTabChange={(tabId) => {

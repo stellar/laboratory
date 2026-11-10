@@ -1,4 +1,7 @@
-import { extractSourceRepo } from "../../src/helpers/getBuildVerification";
+import {
+  extractSourceRepo,
+  getAttestationResponseFromWasm,
+} from "../../src/helpers/getBuildVerification";
 
 /**
  * Helper function to encode a number in LEB128 format
@@ -320,5 +323,89 @@ describe("extractSourceRepo", () => {
       const result = await extractSourceRepo(wasmBuffer);
       expect(result).toBe("stellar/soroban-examples");
     });
+  });
+});
+
+describe("getAttestationResponseFromWasm", () => {
+  const WASM_HASH = "a".repeat(64);
+  const SOURCE_REPO = "stellar/soroban-examples";
+
+  const mockAttestationFetch = ({
+    sha256,
+    uri,
+  }: {
+    sha256: string;
+    uri: string;
+  }) => {
+    const payload = Buffer.from(
+      JSON.stringify({
+        subject: [{ digest: { sha256 } }],
+        predicate: { buildDefinition: { resolvedDependencies: [{ uri }] } },
+      }),
+    ).toString("base64");
+
+    return jest.spyOn(global, "fetch").mockResolvedValue({
+      status: 200,
+      json: async () => ({
+        attestations: [{ bundle: { dsseEnvelope: { payload } } }],
+      }),
+    } as Response);
+  };
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it("returns unverified without calling GitHub when the Wasm has no source repo", async () => {
+    const fetchSpy = jest.spyOn(global, "fetch");
+    const wasm = createWasmWithCustomSection("contractmetav0", "rsver 1.80");
+
+    const result = await getAttestationResponseFromWasm({
+      wasmHash: WASM_HASH,
+      wasm,
+    });
+
+    expect(result).toEqual({ status: "unverified_build" });
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
+  it("returns verified when the attestation matches the hash and repo", async () => {
+    const fetchSpy = mockAttestationFetch({
+      sha256: WASM_HASH,
+      uri: `git+https://github.com/${SOURCE_REPO}@refs/heads/main`,
+    });
+    const wasm = createWasmWithCustomSection(
+      "contractmetav0",
+      `source_repo github:${SOURCE_REPO}`,
+    );
+
+    const result = await getAttestationResponseFromWasm({
+      wasmHash: WASM_HASH,
+      wasm,
+    });
+
+    expect(fetchSpy).toHaveBeenCalledWith(
+      `https://api.github.com/repos/${SOURCE_REPO}/attestations/sha256:${WASM_HASH}`,
+    );
+    expect(result?.status).toBe("verified_build");
+    expect(result?.sourceRepo).toBe(SOURCE_REPO);
+  });
+
+  it("returns unverified when the attested hash doesn't match the Wasm hash", async () => {
+    mockAttestationFetch({
+      sha256: "b".repeat(64),
+      uri: `git+https://github.com/${SOURCE_REPO}@refs/heads/main`,
+    });
+    const wasm = createWasmWithCustomSection(
+      "contractmetav0",
+      `source_repo github:${SOURCE_REPO}`,
+    );
+
+    const result = await getAttestationResponseFromWasm({
+      wasmHash: WASM_HASH,
+      wasm,
+    });
+
+    expect(result).toEqual({ status: "unverified_build" });
   });
 });

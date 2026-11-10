@@ -74,6 +74,30 @@ export const getAttesationResponse = async ({
 }): Promise<BuildVerificationResponse | null> => {
   try {
     const wasm = await rpcServer.getContractWasmByHash(wasmHash, "hex");
+    return await getAttestationResponseFromWasm({ wasmHash, wasm });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (e) {
+    return null;
+  }
+};
+
+/**
+ * Looks up the GitHub build attestation (SEP-55) for an already-downloaded
+ * Wasm binary. Use this when the caller has the Wasm bytes already, so the
+ * binary isn't downloaded from RPC a second time.
+ *
+ * @param wasmHash - Hex-encoded SHA-256 hash of the Wasm
+ * @param wasm - The Wasm binary matching `wasmHash`
+ * @returns The verification result, or `null` if the lookup failed
+ */
+export const getAttestationResponseFromWasm = async ({
+  wasmHash,
+  wasm,
+}: {
+  wasmHash: string;
+  wasm: Uint8Array;
+}): Promise<BuildVerificationResponse | null> => {
+  try {
     const sourceRepo = await extractSourceRepo(wasm);
 
     if (!sourceRepo) {
