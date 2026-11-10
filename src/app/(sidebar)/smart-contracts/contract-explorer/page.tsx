@@ -50,9 +50,10 @@ export default function ContractExplorer() {
   const rpcUrl = network.rpcUrl;
   const rpcHeaders = getNetworkHeaders(network, "rpc");
 
-  // Queries run declaratively off the contract ID, so a contract that is
-  // already in the cache renders immediately without hitting the network.
-  // Only the "Load contract" button forces a refetch.
+  // Queries run declaratively off the contract ID. A contract already in the
+  // cache renders immediately; if its data is older than `staleTime`, it is
+  // also refetched in the background. Partial/invalid IDs don't fetch at all.
+  // The "Load contract" button refetches even when the cached data is fresh.
   const canLoadContract = Boolean(
     rpcUrl && contractIdInput && !validate.getContractIdError(contractIdInput),
   );
@@ -229,12 +230,15 @@ export default function ContractExplorer() {
       return;
     }
 
-    await Promise.all([
+    const [contractDataResult] = await Promise.all([
       fetchContractData(),
       fetchContractInfo(),
       ...(isWasmBinaryError ? [fetchWasmBinary()] : []),
     ]);
-    trackEvent(TrackingEvent.SMART_CONTRACTS_EXPLORER_LOAD_CONTRACT);
+
+    if (contractDataResult.isSuccess) {
+      trackEvent(TrackingEvent.SMART_CONTRACTS_EXPLORER_LOAD_CONTRACT);
+    }
   };
 
   const renderButtons = () => {
