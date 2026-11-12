@@ -7,6 +7,14 @@ const nextConfig = {
   basePath: process.env.NEXT_BASE_PATH || undefined,
   // Needed for stellar-hd-wallet
   serverExternalPackages: ["sodium-native"],
+  // sodium-native loads its native binary dynamically (via require-addon), so
+  // standalone file tracing misses it. Include the Linux prebuilds the Docker
+  // image needs.
+  outputFileTracingIncludes: {
+    "/*": [
+      "./node_modules/.pnpm/sodium-native@*/node_modules/sodium-native/prebuilds/linux-*/**",
+    ],
+  },
   // Adding client side redirects to support old URLs in case they were saved or
   // bookmarked.
   async redirects() {
