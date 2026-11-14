@@ -580,7 +580,7 @@ export type SortDirection = "default" | "asc" | "desc";
 
 export type DataTableHeader = {
   id: string;
-  value: string;
+  value: React.ReactNode;
   isSortable?: boolean;
   filter?: string[];
 };
