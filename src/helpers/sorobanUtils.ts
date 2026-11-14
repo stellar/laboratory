@@ -479,6 +479,13 @@ const convertPrimitiveField = (field: any) => {
       typeHint: ["symbol"],
     };
   }
+  if (field.type === "bytes") {
+    const encoding = detectBytesEncoding(field.value);
+    return {
+      value: new Uint8Array(Buffer.from(field.value, encoding)),
+      typeHint: ["symbol", "bytes"],
+    };
+  }
   return {
     value: field.value,
     typeHint: ["symbol", getScValTypeHint(field.type)],
