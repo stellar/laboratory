@@ -1,118 +1,61 @@
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { StellarWalletsKit } from "@creit.tech/stellar-wallets-kit";
 
 import { WalletKitContext } from "@/components/WalletKit/WalletKitContextProvider";
 import { getWalletKitNetwork } from "@/helpers/getWalletKitNetwork";
 import { useStore } from "@/store/useStore";
 
-export const useSignWithExtensionWallet = ({
-  isEnabled,
-  isClear,
-  txXdr,
-}: {
-  isEnabled: boolean;
-  isClear: boolean;
-  txXdr: string | null;
-}) => {
+export const useSignWithExtensionWallet = () => {
   const { network, walletKit, updateWalletKit } = useStore();
-  const networkPassphrase = getWalletKitNetwork(network.id);
-
   const walletKitInstance = useContext(WalletKitContext);
-
-  const [signedTxXdr, setSignedTxXdr] = useState("");
-  const [successMsg, setSuccessMsg] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
-
   const isInProgress = useRef(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const SUCCESS_MSG = "1 signature added";
-
-  const reset = () => {
-    setSignedTxXdr("");
-    setSuccessMsg("");
-    setErrorMsg("");
-  };
-
-  const getErrorMsg = (error: any) => {
-    const errorMessage =
-      error?.message || error || "Something went wrong, please try again";
-    const busyMessage = "is busy";
-
-    // Wallets Kit's Ledger returns a busy message as an error when the device is busy
-    // ex: TransportError: Ledger Device is busy (lock signHash)
-    // We don't want to show this error to the user
-    if (errorMessage.includes(busyMessage)) {
-      return "";
-    }
-
-    return errorMessage;
-  };
-
-  const signTx = useCallback(async () => {
+  // Sign only on an explicit user action. Store updates (including switching
+  // accounts in the chooser) must not trigger another signing request.
+  const signTx = async (txXdr: string, chooseWallet = false) => {
     if (isInProgress.current || !walletKitInstance.isInitialized) {
-      return;
+      return null;
     }
 
     isInProgress.current = true;
+    setIsLoading(true);
 
     try {
-      if (walletKit?.publicKey && txXdr) {
-        const result = await StellarWalletsKit.signTransaction(txXdr, {
-          address: walletKit.publicKey,
-          networkPassphrase,
-        });
-
-        setSignedTxXdr(result.signedTxXdr);
-        setSuccessMsg(SUCCESS_MSG);
-      } else {
-        // Register WalletConnect first — the kit snapshots its wallet list when
-        // the modal opens, so a module added later wouldn't appear in it
+      let address = walletKit?.publicKey;
+      if (chooseWallet || !address) {
         await walletKitInstance.ensureWalletConnect();
-
-        const { address } = await StellarWalletsKit.authModal();
-
-        if (address && txXdr) {
+        ({ address } = await StellarWalletsKit.authModal());
+        if (address) {
           updateWalletKit({ publicKey: address });
-
-          const result = await StellarWalletsKit.signTransaction(txXdr, {
-            // You could send multiple public keys in case the wallet needs to handle multi signatures
-            address,
-            networkPassphrase,
-          });
-
-          if (result?.signedTxXdr) {
-            setSignedTxXdr(result.signedTxXdr);
-            setSuccessMsg(SUCCESS_MSG);
-          } else {
-            throw {
-              message: "Couldn’t sign with wallet, please try again",
-            };
-          }
         }
       }
+
+      if (!address) {
+        return null;
+      }
+
+      const result = await StellarWalletsKit.signTransaction(txXdr, {
+        address,
+        networkPassphrase: getWalletKitNetwork(network.id),
+      });
+
+      if (!result?.signedTxXdr) {
+        throw new Error("Couldn’t sign with wallet, please try again");
+      }
+
+      return result.signedTxXdr;
     } catch (error: any) {
-      // Kit rejects with code -1 when the user dismisses the modal
+      // Kit rejects with code -1 when the user dismisses the modal.
       if (error?.code === -1) {
-        return;
+        return null;
       }
-      if (error?.message) {
-        setErrorMsg(getErrorMsg(error));
-      }
+      throw error;
     } finally {
       isInProgress.current = false;
+      setIsLoading(false);
     }
-  }, [networkPassphrase, txXdr, updateWalletKit, walletKitInstance, walletKit]);
+  };
 
-  useEffect(() => {
-    if (isEnabled) {
-      reset();
-      signTx();
-    }
-  }, [isEnabled, signTx]);
-
-  useEffect(() => {
-    reset();
-  }, [isClear]);
-
-  return { signedTxXdr, successMsg, errorMsg };
+  return { signTx, isLoading };
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   FeeBumpTransaction,
   Transaction,
@@ -17,6 +17,10 @@ import { LabelHeading } from "@/components/LabelHeading";
 import { PubKeyPickerWithSignerSelector } from "@/components/FormElements/PubKeyPickerWithSignerSelector";
 
 import { txHelper } from "@/helpers/txHelper";
+import {
+  mergeTransactionSignatures,
+  getWalletSignatures,
+} from "@/helpers/mergeTransactionSignatures";
 import { arrayItem } from "@/helpers/arrayItem";
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 import {
@@ -117,8 +121,10 @@ export const SignTransactionXdr = ({
     xdr.DecoratedSignature[]
   >([]);
 
-  const [isExtensionLoading, setIsExtensionLoading] = useState(false);
-  const [isExtensionClear, setIsExtensionClear] = useState(false);
+  const [extensionSuccessMsg, setExtensionSuccessMsg] = useState("");
+  const [extensionErrorMsg, setExtensionErrorMsg] = useState("");
+  const { signTx: signWithExtension, isLoading: isExtensionLoading } =
+    useSignWithExtensionWallet();
 
   type SigObj = {
     publicKey: string;
@@ -149,25 +155,6 @@ export const SignTransactionXdr = ({
     }
     return false;
   });
-
-  const {
-    signedTxXdr: exSignedTxXdr,
-    successMsg: exSuccessMsg,
-    errorMsg: exErrorMsg,
-  } = useSignWithExtensionWallet({
-    isEnabled: isExtensionLoading,
-    isClear: isExtensionClear,
-    txXdr: xdrToSign,
-  });
-
-  useEffect(() => {
-    if (exSuccessMsg || exErrorMsg) {
-      handleSign({ sigType: "extensionWallet", isClear: false });
-      setIsExtensionLoading(false);
-    }
-    // Not including handleSign
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [exErrorMsg, exSuccessMsg]);
 
   const handleSign = async ({
     sigType,
@@ -216,12 +203,6 @@ export const SignTransactionXdr = ({
       return;
     }
 
-    onDoneAction({
-      signedXdr: null,
-      successMessage: null,
-      errorMessage: null,
-    });
-
     // Initial state
     let secretKeySigs: xdr.DecoratedSignature[] = [];
     let hardwareSigs: xdr.DecoratedSignature[] = [];
@@ -238,18 +219,28 @@ export const SignTransactionXdr = ({
             .signature;
           break;
         case "extensionWallet":
-          if (!isClear && exSignedTxXdr) {
-            extensionSigs =
-              txHelper.extractLastSignature({
-                txXdr: exSignedTxXdr,
-                networkPassphrase: network.passphrase,
-              }) || [];
-
-            setExtensionSignature(extensionSigs);
-          } else {
+          if (isClear) {
             setExtensionSignature([]);
+            setExtensionSuccessMsg("");
+            setExtensionErrorMsg("");
+          } else {
+            setExtensionErrorMsg("");
+            const signedXdr = await signWithExtension(
+              xdrToSign,
+              extensionSignature.length > 0,
+            );
+            if (!signedXdr) {
+              return;
+            }
+            extensionSigs = mergeTransactionSignatures(
+              extensionSignature,
+              getWalletSignatures(xdrToSign, signedXdr, network.passphrase),
+            );
+            setExtensionSignature(extensionSigs);
+            setExtensionSuccessMsg(
+              `Successfully added ${extensionSigs.length} wallet signature${extensionSigs.length === 1 ? "" : "s"}`,
+            );
           }
-
           break;
         case "signature":
           signatureSigs = signSignature(isClear).signature;
@@ -267,7 +258,7 @@ export const SignTransactionXdr = ({
         hardwareSigs = hardwareSignature;
       }
 
-      if (sigType !== "extensionWallet" && exSuccessMsg) {
+      if (sigType !== "extensionWallet" && extensionSignature.length > 0) {
         extensionSigs = extensionSignature;
       }
 
@@ -292,38 +283,33 @@ export const SignTransactionXdr = ({
       setAllSigsCount(allSigsCount);
 
       if (allSigs.length > 0) {
-        // When only the extension wallet signed, use its signed XDR directly.
-        // This avoids issues where wallets may modify the transaction
-        // (e.g., fee adjustments), making the extracted signature invalid
-        // for the original unsigned transaction.
-        const isExtensionWalletOnly =
-          extensionSigs.length > 0 &&
-          secretKeySigs.length === 0 &&
-          hardwareSigs.length === 0 &&
-          signatureSigs.length === 0;
-
-        let signedTx: string;
-
-        if (isExtensionWalletOnly && exSignedTxXdr) {
-          signedTx = exSignedTxXdr;
-        } else {
-          const tx = TransactionBuilder.fromXdr(xdrToSign, network.passphrase);
-          tx.signatures.push(...allSigs);
-          signedTx = tx.toEnvelope().toXdr("base64");
-        }
+        const tx = TransactionBuilder.fromXdr(xdrToSign, network.passphrase);
+        const signatures = mergeTransactionSignatures(tx.signatures, allSigs);
+        tx.signatures.splice(0, tx.signatures.length, ...signatures);
+        const signedTx = tx.toEnvelope().toXdr("base64");
 
         onDoneAction({
           signedXdr: signedTx,
           successMessage: getAllSigsMessage(allSigsCount),
           errorMessage: null,
         });
+      } else {
+        onDoneAction({
+          signedXdr: null,
+          successMessage: null,
+          errorMessage: null,
+        });
       }
     } catch (e: any) {
-      onDoneAction({
-        signedXdr: null,
-        successMessage: null,
-        errorMessage: e.toString(),
-      });
+      if (sigType === "extensionWallet") {
+        setExtensionErrorMsg(e?.message || String(e));
+      } else {
+        onDoneAction({
+          signedXdr: null,
+          successMessage: null,
+          errorMessage: e.toString(),
+        });
+      }
     }
   };
 
@@ -456,8 +442,16 @@ export const SignTransactionXdr = ({
     }
 
     setIsHardwareLoading(false);
+    // A failed or cancelled attempt must retain signatures already collected.
+    signature = isClear
+      ? []
+      : mergeTransactionSignatures(hardwareSignature, signature);
     setHardwareSignature(signature);
-    setHardwareSuccessMsg(successMsg);
+    setHardwareSuccessMsg(
+      signature.length
+        ? `Successfully added ${signature.length} hardware wallet signature${signature.length === 1 ? "" : "s"}`
+        : "",
+    );
     setHardwareErrorMsg(errorMsg);
 
     if (successMsg) {
@@ -522,6 +516,7 @@ export const SignTransactionXdr = ({
     isLoading,
     successMsg,
     errorMsg,
+    allowAdditional = false,
   }: {
     label?: string;
     onSign: () => void;
@@ -530,9 +525,26 @@ export const SignTransactionXdr = ({
     isLoading?: boolean;
     successMsg: string;
     errorMsg: string;
+    allowAdditional?: boolean;
   }) => {
     return (
       <Box gap="md" direction="row" align="center" wrap="wrap">
+        {allowAdditional || !successMsg ? (
+          <Button
+            disabled={
+              isDisabled ||
+              !xdrToSign ||
+              isHardwareLoading ||
+              isExtensionLoading
+            }
+            size="md"
+            variant="secondary"
+            onClick={onSign}
+            isLoading={isLoading}
+          >
+            {successMsg ? "Add additional signer" : label}
+          </Button>
+        ) : null}
         {successMsg ? (
           <Button
             size="md"
@@ -540,25 +552,16 @@ export const SignTransactionXdr = ({
             icon={<Icon.RefreshCw01 />}
             iconPosition="right"
             onClick={onClear}
+            disabled={isLoading || isHardwareLoading || isExtensionLoading}
           >
             Clear
           </Button>
-        ) : (
-          <Button
-            disabled={isDisabled || !xdrToSign}
-            size="md"
-            variant="secondary"
-            onClick={onSign}
-            isLoading={isLoading}
-          >
-            {label}
-          </Button>
-        )}
+        ) : null}
 
         <>
           {successMsg || errorMsg ? (
             <MessageField
-              message={successMsg || errorMsg}
+              message={errorMsg || successMsg}
               isError={Boolean(errorMsg)}
             />
           ) : null}
@@ -648,7 +651,9 @@ export const SignTransactionXdr = ({
   return (
     <div
       className="SignTransactionXdr"
-      data-is-disabled={isDisabled || !xdrToSign}
+      data-is-disabled={
+        isDisabled || !xdrToSign || isHardwareLoading || isExtensionLoading
+      }
       data-testid={`sign-tx-xdr-${id}`}
     >
       <Box gap="md" direction="column">
@@ -764,19 +769,17 @@ export const SignTransactionXdr = ({
           <SignTxButton
             label={`Sign with ${walletKit?.publicKey ? shortenStellarAddress(walletKit?.publicKey) : "wallet"}`}
             onSign={() => {
-              setIsExtensionClear(false);
-              setIsExtensionLoading(true);
-
+              handleSign({ sigType: "extensionWallet" });
               trackEvent(TrackingEvent.TRANSACTION_SIGN_WALLET);
             }}
             onClear={() => {
-              setIsExtensionClear(true);
               handleSign({ sigType: "extensionWallet", isClear: true });
             }}
-            isDisabled={!xdrToSign}
+            allowAdditional
+            isDisabled={!xdrToSign || isHardwareLoading}
             isLoading={isExtensionLoading}
-            successMsg={exSuccessMsg}
-            errorMsg={exErrorMsg}
+            successMsg={extensionSuccessMsg}
+            errorMsg={extensionErrorMsg}
           />
         </div>
 
@@ -814,12 +817,7 @@ export const SignTransactionXdr = ({
                       onChange={(
                         event: React.ChangeEvent<HTMLSelectElement>,
                       ) => {
-                        if (hardwareSuccessMsg || hardwareErrorMsg) {
-                          handleSign({
-                            sigType: "hardwareWallet",
-                            isClear: true,
-                          });
-                        }
+                        setHardwareErrorMsg("");
 
                         setSelectedHardware(event.target.value);
 
@@ -856,7 +854,13 @@ export const SignTransactionXdr = ({
               setBipPath(initBipPath);
             }}
             isLoading={isHardwareLoading}
-            isDisabled={!selectedHardware || !bipPath}
+            allowAdditional
+            isDisabled={
+              !selectedHardware ||
+              !bipPath ||
+              Boolean(bipPathErrorMsg) ||
+              isExtensionLoading
+            }
             successMsg={hardwareSuccessMsg}
             errorMsg={hardwareErrorMsg}
           />
