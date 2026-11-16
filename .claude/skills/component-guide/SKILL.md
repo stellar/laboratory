@@ -158,3 +158,26 @@ Prefer `data-*` attributes over CSS modifier classes for dynamic state:
 ```
 
 Pass `undefined` (not `false`) to omit the attribute from the DOM entirely.
+
+## Layout Spacing (`Box` gap)
+
+`@/components/layout/Box` takes a `gap` token that maps to `--sds-gap-*`. Always
+use a token when the value matches; only use `gap="custom"` + `customValue` when
+no token fits.
+
+| Token | Value |
+| ----- | ----- |
+| `xs`  | 4px   |
+| `sm`  | 8px   |
+| `md`  | 12px  |
+| `lg`  | 16px  |
+| `xl`  | 24px  |
+| `xxl` | 32px  |
+
+```tsx
+<Box gap="lg">…</Box>                          // ✅ 16px
+<Box gap="custom" customValue="16px">…</Box>   // ❌ use gap="lg"
+<Box gap="custom" customValue="96px">…</Box>   // ✅ no token for 96px
+```
+
+Match by exact px value (16px is `lg`, not `md`); don't round to the nearest token.
