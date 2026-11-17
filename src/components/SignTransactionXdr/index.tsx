@@ -19,6 +19,7 @@ import { PubKeyPickerWithSignerSelector } from "@/components/FormElements/PubKey
 import { txHelper } from "@/helpers/txHelper";
 import {
   mergeTransactionSignatures,
+  collectTransactionSignatures,
   getWalletSigningResult,
 } from "@/helpers/mergeTransactionSignatures";
 import { arrayItem } from "@/helpers/arrayItem";
@@ -333,24 +334,26 @@ const SigningSession = ({
         ...signatureSigs,
       ];
 
-      const allSigsCount = {
-        secretKey: secretKeySigs.length,
-        extensionWallet: extensionSigs.length,
-        hardwareWallet: hardwareSigs.length,
-        signature: signatureSigs.length,
-      };
-
+      const tx = TransactionBuilder.fromXdr(baseXdr, network.passphrase);
+      const { signatures, counts: allSigsCount } = collectTransactionSignatures(
+        tx.signatures,
+        {
+          secretKey: secretKeySigs,
+          hardwareWallet: hardwareSigs,
+          extensionWallet: extensionSigs,
+          signature: signatureSigs,
+        },
+      );
       setAllSigsCount(allSigsCount);
 
       if (allSigs.length > 0) {
-        const tx = TransactionBuilder.fromXdr(baseXdr, network.passphrase);
-        const signatures = mergeTransactionSignatures(tx.signatures, allSigs);
         tx.signatures.splice(0, tx.signatures.length, ...signatures);
         const signedTx = tx.toEnvelope().toXdr("base64");
 
         onDoneAction({
           signedXdr: signedTx,
-          successMessage: getAllSigsMessage(allSigsCount),
+          successMessage:
+            getAllSigsMessage(allSigsCount) || "No new signatures added",
           errorMessage: null,
         });
       } else {
@@ -703,7 +706,12 @@ const SigningSession = ({
         <>
           {sigSuccessMsg || sigErrorMsg ? (
             <MessageField
-              message={sigSuccessMsg || sigErrorMsg}
+              message={
+                sigErrorMsg ||
+                (sigSuccessMsg
+                  ? signatureCountMessage(allSigsCount.signature)
+                  : "")
+              }
               isError={Boolean(sigErrorMsg)}
             />
           ) : null}
@@ -815,7 +823,13 @@ const SigningSession = ({
                   setSecretKeyInputs([""]);
                 }}
                 isDisabled={!HAS_SECRET_KEYS || HAS_INVALID_SECRET_KEYS}
-                successMsg={secretKeySuccessMsg}
+                successMsg={
+                  secretKeySuccessMsg
+                    ? customSignFn
+                      ? secretKeySuccessMsg
+                      : signatureCountMessage(allSigsCount.secretKey)
+                    : ""
+                }
                 errorMsg={secretKeyErrorMsg}
               />
             }
@@ -842,7 +856,11 @@ const SigningSession = ({
             allowAdditional
             isDisabled={!xdrToSign || isHardwareLoading}
             isLoading={isExtensionLoading}
-            successMsg={extensionSuccessMsg}
+            successMsg={
+              extensionSuccessMsg
+                ? signatureCountMessage(allSigsCount.extensionWallet, "wallet")
+                : ""
+            }
             errorMsg={extensionErrorMsg}
           />
         </div>
@@ -925,7 +943,14 @@ const SigningSession = ({
               Boolean(bipPathErrorMsg) ||
               isExtensionLoading
             }
-            successMsg={hardwareSuccessMsg}
+            successMsg={
+              hardwareSuccessMsg
+                ? signatureCountMessage(
+                    allSigsCount.hardwareWallet,
+                    "hardware wallet",
+                  )
+                : ""
+            }
             errorMsg={hardwareErrorMsg}
           />
         </div>
@@ -999,6 +1024,11 @@ const SigningSession = ({
     </div>
   );
 };
+
+const signatureCountMessage = (count: number, label = "") =>
+  count === 0
+    ? "No new signatures added"
+    : `Successfully added ${count} ${label ? `${label} ` : ""}signature${count === 1 ? "" : "s"}`;
 
 // =============================================================================
 // Local Components

@@ -1,3 +1,4 @@
+import type { AllSigsCount } from "@/helpers/getAllSigsMessage";
 import { Buffer } from "buffer";
 import {
   FeeBumpTransaction,
@@ -18,6 +19,34 @@ export const mergeTransactionSignatures = (
     seen.add(encoded);
     return true;
   });
+};
+
+/** Attribute each new signature to one method, in a stable order.
+ * Imported signatures are retained but are not counted as newly added.
+ * Keep source groups intact so clearing a method can reattribute a duplicate.
+ */
+export const collectTransactionSignatures = (
+  existing: xdr.DecoratedSignature[],
+  groups: Record<keyof AllSigsCount, xdr.DecoratedSignature[]>,
+): { signatures: xdr.DecoratedSignature[]; counts: AllSigsCount } => {
+  let signatures = mergeTransactionSignatures(existing);
+  const counts: AllSigsCount = {
+    secretKey: 0,
+    hardwareWallet: 0,
+    extensionWallet: 0,
+    signature: 0,
+  };
+  for (const method of [
+    "secretKey",
+    "hardwareWallet",
+    "extensionWallet",
+    "signature",
+  ] as const) {
+    const merged = mergeTransactionSignatures(signatures, groups[method]);
+    counts[method] = merged.length - signatures.length;
+    signatures = merged;
+  }
+  return { signatures, counts };
 };
 
 /** Adopt wallet edits only while no collected signature would be invalidated. */
