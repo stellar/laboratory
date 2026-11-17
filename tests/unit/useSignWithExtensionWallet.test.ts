@@ -1,11 +1,12 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { StellarWalletsKit } from "@creit.tech/stellar-wallets-kit";
 import { useStore } from "../../src/store/useStore";
 import { useSignWithExtensionWallet } from "../../src/hooks/useSignWithExtensionWallet";
 
 jest.mock("react", () => ({
   useContext: jest.fn(),
-  useRef: () => ({ current: false }),
+  useRef: (initial: unknown) => ({ current: initial }),
+  useEffect: jest.fn(),
   useState: jest.fn(),
 }));
 jest.mock("@creit.tech/stellar-wallets-kit", () => ({
@@ -89,4 +90,39 @@ it("does not open a second prompt while a request is pending", async () => {
   expect(sign).toHaveBeenCalledTimes(1);
   finish({ signedTxXdr: "signed-envelope" });
   await pending;
+});
+
+it("ignores a wallet result after its transaction signing session unmounts", async () => {
+  let finish!: (value: { signedTxXdr: string }) => void;
+  sign.mockReturnValueOnce(
+    new Promise((resolve) => {
+      finish = resolve;
+    }),
+  );
+  const hook = useSignWithExtensionWallet();
+  const cleanup = (useEffect as jest.Mock).mock.calls[0][0]();
+  const pending = hook.signTx("transaction-A");
+  cleanup();
+  finish({ signedTxXdr: "signed-A" });
+  await expect(pending).resolves.toBeNull();
+  await expect(hook.signTx("transaction-A")).resolves.toBeNull();
+  expect(sign).toHaveBeenCalledTimes(1);
+});
+
+it("does not update the connected account or sign after a stale chooser completes", async () => {
+  let finish!: (value: { address: string }) => void;
+  choose.mockReturnValueOnce(
+    new Promise((resolve) => {
+      finish = resolve;
+    }),
+  );
+  const hook = useSignWithExtensionWallet();
+  const cleanup = (useEffect as jest.Mock).mock.calls[0][0]();
+  const pending = hook.signTx("transaction-A", true);
+  await Promise.resolve();
+  cleanup();
+  finish({ address: "stale-account" });
+  await expect(pending).resolves.toBeNull();
+  expect(updateWalletKit).not.toHaveBeenCalled();
+  expect(sign).not.toHaveBeenCalled();
 });
