@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useLayoutEffect, useState } from "react";
 import { StellarWalletsKit } from "@creit.tech/stellar-wallets-kit";
 import { useStore } from "../../src/store/useStore";
 import { useSignWithExtensionWallet } from "../../src/hooks/useSignWithExtensionWallet";
@@ -6,7 +6,7 @@ import { useSignWithExtensionWallet } from "../../src/hooks/useSignWithExtension
 jest.mock("react", () => ({
   useContext: jest.fn(),
   useRef: (initial: unknown) => ({ current: initial }),
-  useEffect: jest.fn(),
+  useLayoutEffect: jest.fn(),
   useState: jest.fn(),
 }));
 jest.mock("@creit.tech/stellar-wallets-kit", () => ({
@@ -100,7 +100,7 @@ it("ignores a wallet result after its transaction signing session unmounts", asy
     }),
   );
   const hook = useSignWithExtensionWallet();
-  const cleanup = (useEffect as jest.Mock).mock.calls[0][0]();
+  const cleanup = (useLayoutEffect as jest.Mock).mock.calls[0][0]();
   const pending = hook.signTx("transaction-A");
   cleanup();
   finish({ signedTxXdr: "signed-A" });
@@ -117,7 +117,7 @@ it("does not update the connected account or sign after a stale chooser complete
     }),
   );
   const hook = useSignWithExtensionWallet();
-  const cleanup = (useEffect as jest.Mock).mock.calls[0][0]();
+  const cleanup = (useLayoutEffect as jest.Mock).mock.calls[0][0]();
   const pending = hook.signTx("transaction-A", true);
   await Promise.resolve();
   cleanup();

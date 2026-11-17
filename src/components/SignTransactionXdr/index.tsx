@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import {
   FeeBumpTransaction,
   Transaction,
@@ -77,6 +77,7 @@ type Props = {
 /** A new transaction/network owns a fresh set of inputs, signatures and requests. */
 export const SignTransactionXdr = (props: Props) => {
   const { network } = useStore();
+  const { onDoneAction } = props;
   const signingKey = JSON.stringify([
     props.xdrToSign,
     network.id,
@@ -84,16 +85,16 @@ export const SignTransactionXdr = (props: Props) => {
   ]);
   const previousKey = useRef(signingKey);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (previousKey.current !== signingKey) {
       previousKey.current = signingKey;
-      props.onDoneAction({
+      onDoneAction({
         signedXdr: null,
         successMessage: null,
         errorMessage: null,
       });
     }
-  }, [signingKey, props.onDoneAction]);
+  }, [signingKey, onDoneAction]);
 
   return <SigningSession key={signingKey} {...props} />;
 };
@@ -111,7 +112,7 @@ const SigningSession = ({
 }: Props) => {
   const { network, walletKit } = useStore();
   const isMounted = useRef(true);
-  useEffect(() => {
+  useLayoutEffect(() => {
     isMounted.current = true;
     return () => {
       isMounted.current = false;

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useLayoutEffect, useRef, useState } from "react";
 import { StellarWalletsKit } from "@creit.tech/stellar-wallets-kit";
 
 import { WalletKitContext } from "@/components/WalletKit/WalletKitContextProvider";
@@ -10,7 +10,7 @@ export const useSignWithExtensionWallet = () => {
   const walletKitInstance = useContext(WalletKitContext);
   const isInProgress = useRef(false);
   const isMounted = useRef(true);
-  useEffect(() => {
+  useLayoutEffect(() => {
     isMounted.current = true;
     return () => {
       isMounted.current = false;
