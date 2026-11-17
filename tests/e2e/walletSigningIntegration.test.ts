@@ -326,10 +326,30 @@ test("wallet dismissal and rejection preserve collected signatures and allow ret
   expect(await signedXdr(page)).toBe(before);
   expect(bridge.submissions()).toHaveLength(0);
 
+  // Inject the transport error at the wallet boundary: the real hook must
+  // suppress it without losing signatures or leaving the form busy.
+  const busyMessage = "TransportError: Ledger Device is busy (lock signHash)";
+  bridge.respond(async () => ({
+    apiError: { code: -4, message: busyMessage },
+  }));
+  await signWithWallet(page);
+  await bridge.completed(1);
+  await expect(
+    content(page, "extensionWallet").getByText(busyMessage, { exact: true }),
+  ).toBeHidden();
+  await expect(
+    content(page, "extensionWallet").getByRole("button", {
+      name: /^Sign with/,
+    }),
+  ).toBeEnabled();
+  expect(await signedXdr(page)).toBe(before);
+
   bridge.respond(async () => ({
     apiError: { code: -4, message: "User declined the signature" },
   }));
-  await signWithWallet(page);
+  await content(page, "extensionWallet")
+    .getByRole("button", { name: /^Sign with/ })
+    .click();
   await expect(
     content(page, "extensionWallet").getByText("User declined the signature", {
       exact: true,
@@ -358,7 +378,7 @@ test("wallet dismissal and rejection preserve collected signatures and allow ret
     TransactionBuilder.fromXdr(await signedXdr(page), networkPassphrase),
     [existing, wallet],
   );
-  expect(bridge.submissions()).toHaveLength(2);
+  expect(bridge.submissions()).toHaveLength(3);
 });
 
 test("late wallet response cannot sign the transaction after a network change", async ({

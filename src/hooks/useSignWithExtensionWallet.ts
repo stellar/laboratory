@@ -60,8 +60,15 @@ export const useSignWithExtensionWallet = () => {
 
       return result.signedTxXdr;
     } catch (error: any) {
+      // Preserve the prior Ledger transport behavior: a concurrent request
+      // may report "is busy" without needing a user-facing signing error.
+      const message = typeof error === "string" ? error : error?.message;
       // Kit rejects with code -1 when the user dismisses the modal.
-      if (!isMounted.current || error?.code === -1) {
+      if (
+        !isMounted.current ||
+        error?.code === -1 ||
+        (typeof message === "string" && message.includes("is busy"))
+      ) {
         return null;
       }
       throw error;

@@ -126,3 +126,26 @@ it("does not update the connected account or sign after a stale chooser complete
   expect(updateWalletKit).not.toHaveBeenCalled();
   expect(sign).not.toHaveBeenCalled();
 });
+
+it.each([
+  new Error("TransportError: Ledger Device is busy (lock signHash)"),
+  { message: "Ledger Device is busy (lock signTransaction)" },
+  "Ledger Device is busy (lock signHash)",
+])(
+  "suppresses a Ledger busy response and releases the signing lock: %p",
+  async (error) => {
+    sign.mockRejectedValueOnce(error);
+    const hook = useSignWithExtensionWallet();
+    await expect(hook.signTx("envelope")).resolves.toBeNull();
+    expect(setLoading.mock.calls).toEqual([[true], [false]]);
+    await expect(hook.signTx("envelope")).resolves.toBe("signed-envelope");
+    expect(sign).toHaveBeenCalledTimes(2);
+  },
+);
+
+it("does not suppress other Ledger failures", async () => {
+  sign.mockRejectedValueOnce(new Error("Ledger transport disconnected"));
+  await expect(useSignWithExtensionWallet().signTx("envelope")).rejects.toThrow(
+    "Ledger transport disconnected",
+  );
+});
