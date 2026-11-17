@@ -19,7 +19,7 @@ import { PubKeyPickerWithSignerSelector } from "@/components/FormElements/PubKey
 import { txHelper } from "@/helpers/txHelper";
 import {
   mergeTransactionSignatures,
-  getWalletSignatures,
+  getWalletSigningResult,
 } from "@/helpers/mergeTransactionSignatures";
 import { arrayItem } from "@/helpers/arrayItem";
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
@@ -159,6 +159,9 @@ const SigningSession = ({
     xdr.DecoratedSignature[]
   >([]);
 
+  const [walletTransactionXdr, setWalletTransactionXdr] = useState<
+    string | null
+  >(null);
   const [extensionSuccessMsg, setExtensionSuccessMsg] = useState("");
   const [extensionErrorMsg, setExtensionErrorMsg] = useState("");
   const { signTx: signWithExtension, isLoading: isExtensionLoading } =
@@ -243,6 +246,9 @@ const SigningSession = ({
       return;
     }
 
+    // A wallet may have adopted a modified envelope before other signers joined.
+    let baseXdr = walletTransactionXdr || xdrToSign;
+
     // Initial state
     let secretKeySigs: xdr.DecoratedSignature[] = [];
     let hardwareSigs: xdr.DecoratedSignature[] = [];
@@ -252,11 +258,10 @@ const SigningSession = ({
     try {
       switch (sigType) {
         case "secretKey":
-          secretKeySigs = signSecretKey(xdrToSign, isClear).signature;
+          secretKeySigs = signSecretKey(baseXdr, isClear).signature;
           break;
         case "hardwareWallet":
-          hardwareSigs = (await signHardwareWallet(xdrToSign, isClear))
-            .signature;
+          hardwareSigs = (await signHardwareWallet(baseXdr, isClear)).signature;
           break;
         case "extensionWallet":
           if (isClear) {
@@ -266,15 +271,28 @@ const SigningSession = ({
           } else {
             setExtensionErrorMsg("");
             const signedXdr = await signWithExtension(
-              xdrToSign,
+              baseXdr,
               extensionSignature.length > 0,
             );
             if (!signedXdr || !isMounted.current) {
               return;
             }
+            const result = getWalletSigningResult(
+              baseXdr,
+              signedXdr,
+              network.passphrase,
+              [
+                ...secretKeySignature,
+                ...hardwareSignature,
+                ...extensionSignature,
+                ...sigSignature,
+              ],
+            );
+            baseXdr = result.xdrToSign;
+            setWalletTransactionXdr(baseXdr);
             extensionSigs = mergeTransactionSignatures(
               extensionSignature,
-              getWalletSignatures(xdrToSign, signedXdr, network.passphrase),
+              result.signatures,
             );
             setExtensionSignature(extensionSigs);
             setExtensionSuccessMsg(
@@ -325,7 +343,7 @@ const SigningSession = ({
       setAllSigsCount(allSigsCount);
 
       if (allSigs.length > 0) {
-        const tx = TransactionBuilder.fromXdr(xdrToSign, network.passphrase);
+        const tx = TransactionBuilder.fromXdr(baseXdr, network.passphrase);
         const signatures = mergeTransactionSignatures(tx.signatures, allSigs);
         tx.signatures.splice(0, tx.signatures.length, ...signatures);
         const signedTx = tx.toEnvelope().toXdr("base64");
@@ -336,6 +354,7 @@ const SigningSession = ({
           errorMessage: null,
         });
       } else {
+        setWalletTransactionXdr(null);
         onDoneAction({
           signedXdr: null,
           successMessage: null,
@@ -522,7 +541,7 @@ const SigningSession = ({
     if (!isClear) {
       const existingSigs = xdrToSign
         ? txHelper.extractSignaturesFromTx({
-            txXdr: xdrToSign,
+            txXdr: walletTransactionXdr || xdrToSign,
             networkPassphrase: network.passphrase,
           })
         : [];
