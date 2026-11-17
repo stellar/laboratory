@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { SignTransactionXdr } from "../../src/components/SignTransactionXdr";
 import { useStore } from "../../src/store/useStore";
+import { useSignWithExtensionWallet } from "../../src/hooks/useSignWithExtensionWallet";
 import { txHelper } from "../../src/helpers/txHelper";
 import {
   Account,
@@ -51,7 +52,7 @@ jest.mock("../../src/metrics/tracking", () => ({
   TrackingEvent: {},
 }));
 jest.mock("../../src/hooks/useSignWithExtensionWallet", () => ({
-  useSignWithExtensionWallet: () => ({ signTx: jest.fn(), isLoading: false }),
+  useSignWithExtensionWallet: jest.fn(),
 }));
 jest.mock("../../src/store/useStore", () => ({ useStore: jest.fn() }));
 
@@ -83,6 +84,10 @@ const find = (node: any, predicate: (node: any) => boolean): any => {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  (useSignWithExtensionWallet as jest.Mock).mockReturnValue({
+    signTx: jest.fn(),
+    isLoading: false,
+  });
   cells = [];
   cursor = 0;
   effects = [];
@@ -210,4 +215,145 @@ it("drops a late hardware signature after its transaction session unmounts", asy
   finish({ signature: tx.signatures });
   await new Promise((resolve) => setImmediate(resolve));
   expect(onDoneAction).not.toHaveBeenCalled();
+});
+
+it("keeps an extension-modified envelope when adding and clearing hardware signatures", async () => {
+  const signer = Keypair.random();
+  const hardwareSigner = Keypair.random();
+  const build = (fee: string) =>
+    new TransactionBuilder(new Account(signer.publicKey(), "1"), {
+      fee,
+      networkPassphrase: Networks.TESTNET,
+    })
+      .addOperation(Operation.manageData({ name: "wallet", value: "test" }))
+      .setTimeout(0)
+      .build();
+  const original = build("100");
+  const modified = build("200");
+  modified.sign(signer);
+  const signTx = jest.fn().mockResolvedValue(modified.toXDR());
+  (useSignWithExtensionWallet as jest.Mock).mockReturnValue({
+    signTx,
+    isLoading: false,
+  });
+  (txHelper.signWithLedger as jest.Mock).mockImplementation(
+    async ({ transaction }) => {
+      transaction.sign(hardwareSigner);
+      return { signature: transaction.signatures.slice(-1) };
+    },
+  );
+  const onDoneAction = jest.fn();
+  const boundary = render(() =>
+    SignTransactionXdr({
+      id: "test",
+      xdrToSign: original.toXDR(),
+      onDoneAction,
+    }),
+  );
+  cells = [];
+  const draw = () => boundary.type(boundary.props);
+  const button = (session: any, type: string) =>
+    find(
+      find(session, (node) => node.props?.["data-type"] === type),
+      (node) => node.type?.name === "SignTxButton",
+    );
+  button(render(draw), "extensionWallet").props.onSign();
+  await new Promise((resolve) => setImmediate(resolve));
+  let output = TransactionBuilder.fromXdr(
+    onDoneAction.mock.calls.at(-1)[0].signedXdr,
+    Networks.TESTNET,
+  );
+  expect(Buffer.from(output.hash())).toEqual(Buffer.from(modified.hash()));
+  expect(output.signatures).toHaveLength(1);
+
+  find(render(draw), (node) => node.type === "select").props.onChange({
+    target: { value: "ledger" },
+  });
+  button(render(draw), "hardwareWallet").props.onSign();
+  await new Promise((resolve) => setImmediate(resolve));
+  output = TransactionBuilder.fromXdr(
+    onDoneAction.mock.calls.at(-1)[0].signedXdr,
+    Networks.TESTNET,
+  );
+  expect(Buffer.from(output.hash())).toEqual(Buffer.from(modified.hash()));
+  expect(output.signatures).toHaveLength(2);
+  expect(
+    hardwareSigner.verify(
+      output.hash(),
+      output.signatures[0].signature.toBytes(),
+    ),
+  ).toBe(true);
+  expect(
+    signer.verify(output.hash(), output.signatures[1].signature.toBytes()),
+  ).toBe(true);
+
+  button(render(draw), "extensionWallet").props.onClear();
+  output = TransactionBuilder.fromXdr(
+    onDoneAction.mock.calls.at(-1)[0].signedXdr,
+    Networks.TESTNET,
+  );
+  expect(output.signatures).toHaveLength(1);
+  expect(
+    hardwareSigner.verify(
+      output.hash(),
+      output.signatures[0].signature.toBytes(),
+    ),
+  ).toBe(true);
+  button(render(draw), "hardwareWallet").props.onClear();
+  await new Promise((resolve) => setImmediate(resolve));
+  expect(onDoneAction.mock.calls.at(-1)[0].signedXdr).toBeNull();
+});
+
+it("preserves the previous signed result when a later extension changes the adopted transaction", async () => {
+  const signer = Keypair.random();
+  const build = (fee: string) =>
+    new TransactionBuilder(new Account(signer.publicKey(), "1"), {
+      fee,
+      networkPassphrase: Networks.TESTNET,
+    })
+      .addOperation(Operation.manageData({ name: "wallet", value: "test" }))
+      .setTimeout(0)
+      .build();
+  const original = build("100");
+  const modified = build("200");
+  modified.sign(signer);
+  const next = build("300");
+  next.sign(signer);
+  const signTx = jest
+    .fn()
+    .mockResolvedValueOnce(modified.toXDR())
+    .mockResolvedValueOnce(next.toXDR());
+  (useSignWithExtensionWallet as jest.Mock).mockReturnValue({
+    signTx,
+    isLoading: false,
+  });
+  const onDoneAction = jest.fn();
+  const boundary = render(() =>
+    SignTransactionXdr({
+      id: "test",
+      xdrToSign: original.toXDR(),
+      onDoneAction,
+    }),
+  );
+  cells = [];
+  const draw = () => boundary.type(boundary.props);
+  const button = (session: any) =>
+    find(
+      find(session, (node) => node.props?.["data-type"] === "extensionWallet"),
+      (node) => node.type?.name === "SignTxButton",
+    );
+  button(render(draw)).props.onSign();
+  await new Promise((resolve) => setImmediate(resolve));
+  expect(onDoneAction).toHaveBeenCalledTimes(1);
+  button(render(draw)).props.onSign();
+  await new Promise((resolve) => setImmediate(resolve));
+  expect(onDoneAction).toHaveBeenCalledTimes(1);
+  expect(button(render(draw)).props.errorMsg).toContain(
+    "wallet changed the transaction",
+  );
+  const input = TransactionBuilder.fromXdr(
+    signTx.mock.calls[1][0],
+    Networks.TESTNET,
+  );
+  expect(Buffer.from(input.hash())).toEqual(Buffer.from(modified.hash()));
 });
