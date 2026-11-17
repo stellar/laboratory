@@ -279,3 +279,194 @@ test("real signing component accumulates two wallet accounts, deduplicates a sec
     [first, second],
   );
 });
+
+test("wallet dismissal and rejection preserve collected signatures and allow retry", async ({
+  page,
+}) => {
+  const existing = Keypair.random();
+  const wallet = Keypair.random();
+  const bridge = await walletBridge(page, wallet);
+  await seed(page, build(existing).toXDR());
+  await content(page, "secretKey")
+    .getByPlaceholder("Secret key (starting with S) or hash preimage (in hex)")
+    .fill(existing.secret());
+  await content(page, "secretKey")
+    .getByRole("button", { name: "Sign", exact: true })
+    .click();
+  await expect(
+    content(page, "secretKey").getByText("Successfully added 1 signature", {
+      exact: true,
+    }),
+  ).toBeVisible();
+  const before = await signedXdr(page);
+  await selectTab(page, "Wallet extension");
+  await content(page, "extensionWallet")
+    .getByRole("button", { name: /^Sign with/ })
+    .click();
+  await expect(page.locator(".stellar-wallets-kit")).toBeVisible();
+  await page.locator(".stellar-wallets-kit header button").last().click();
+  await expect(page.locator(".stellar-wallets-kit")).toHaveCount(0);
+  await expect(
+    content(page, "extensionWallet").getByRole("button", {
+      name: /^Sign with/,
+    }),
+  ).toBeEnabled();
+  expect(await signedXdr(page)).toBe(before);
+  expect(bridge.submissions()).toHaveLength(0);
+
+  bridge.respond(async () => ({
+    apiError: { code: -4, message: "User declined the signature" },
+  }));
+  await signWithWallet(page);
+  await expect(
+    content(page, "extensionWallet").getByText("User declined the signature", {
+      exact: true,
+    }),
+  ).toBeVisible();
+  expect(await signedXdr(page)).toBe(before);
+  bridge.respond(async (request) => {
+    const tx = TransactionBuilder.fromXdr(
+      request.transactionXdr!,
+      request.networkPassphrase!,
+    );
+    tx.sign(wallet);
+    return { signedTransaction: tx.toXDR(), signerAddress: wallet.publicKey() };
+  });
+  // The failed chooser connected the account, so retry uses it directly.
+  await content(page, "extensionWallet")
+    .getByRole("button", { name: /^Sign with/ })
+    .click();
+  await expect(
+    content(page, "extensionWallet").getByText(
+      "Successfully added 1 wallet signature",
+      { exact: true },
+    ),
+  ).toBeVisible();
+  expectSignatures(
+    TransactionBuilder.fromXdr(await signedXdr(page), networkPassphrase),
+    [existing, wallet],
+  );
+  expect(bridge.submissions()).toHaveLength(2);
+});
+
+test("late wallet response cannot sign the transaction after a network change", async ({
+  page,
+}) => {
+  const signer = Keypair.random();
+  const bridge = await walletBridge(page, signer);
+  let release!: () => void;
+  const pending = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  bridge.respond(async (request) => {
+    await pending;
+    const tx = TransactionBuilder.fromXdr(
+      request.transactionXdr!,
+      request.networkPassphrase!,
+    );
+    tx.sign(signer);
+    return { signedTransaction: tx.toXDR(), signerAddress: signer.publicKey() };
+  });
+  await seed(page, build(signer).toXDR());
+  await signWithWallet(page);
+  await expect.poll(() => bridge.submissions().length).toBe(1);
+  await page.getByTestId("networkSelector-button").click();
+  await page
+    .getByTestId("networkSelector-option")
+    .filter({ hasText: "Futurenet" })
+    .click();
+  await page.getByTestId("networkSelector-submit-button").click();
+  await expect(page.locator("h1")).toHaveText("Build transaction");
+  release();
+  await bridge.completed(1);
+  expect(await signedXdr(page)).toBe("");
+  await expect(
+    page.getByText("Transaction signed and ready to submit."),
+  ).toBeHidden();
+});
+
+test("signs both inner-transaction accounts before wrapping, then adds fee-bump wallet signatures without losing inner signatures", async ({
+  page,
+}) => {
+  const innerFirst = Keypair.random();
+  const innerSecond = Keypair.random();
+  const feeFirst = Keypair.random();
+  const feeSecond = Keypair.random();
+  await seed(page, build(innerFirst).toXDR());
+  const inputs = content(page, "secretKey").getByPlaceholder(
+    "Secret key (starting with S) or hash preimage (in hex)",
+  );
+  await inputs.first().fill(innerFirst.secret());
+  await content(page, "secretKey")
+    .getByRole("button", { name: "Sign", exact: true })
+    .click();
+  await expect(
+    content(page, "secretKey").getByText("Successfully added 1 signature", {
+      exact: true,
+    }),
+  ).toBeVisible();
+  await content(page, "secretKey")
+    .getByRole("button", { name: "Add additional", exact: true })
+    .click();
+  await inputs.nth(1).fill(innerSecond.secret());
+  await content(page, "secretKey")
+    .getByRole("button", { name: "Sign", exact: true })
+    .click();
+  await expect(
+    content(page, "secretKey").getByText("Successfully added 2 signatures", {
+      exact: true,
+    }),
+  ).toBeVisible();
+  const innerXdr = await signedXdr(page);
+  const inner = TransactionBuilder.fromXdr(innerXdr, networkPassphrase);
+  if (!(inner instanceof Transaction))
+    throw new Error("Expected inner transaction");
+  expectSignatures(inner, [innerFirst, innerSecond]);
+  const outer = TransactionBuilder.buildFeeBumpTransaction(
+    feeFirst.publicKey(),
+    "100",
+    inner,
+    networkPassphrase,
+  );
+
+  const feePage = await page.context().newPage();
+  try {
+    const bridge = await walletBridge(feePage, feeFirst);
+    await seed(feePage, outer.toXDR());
+    await signWithWallet(feePage);
+    await expect(
+      content(feePage, "extensionWallet").getByText(
+        "Successfully added 1 wallet signature",
+        { exact: true },
+      ),
+    ).toBeVisible();
+    bridge.selectSigner(feeSecond);
+    await signWithWallet(feePage, true);
+    await expect(
+      content(feePage, "extensionWallet").getByText(
+        "Successfully added 2 wallet signatures",
+        { exact: true },
+      ),
+    ).toBeVisible();
+    const result = TransactionBuilder.fromXdr(
+      await signedXdr(feePage),
+      networkPassphrase,
+    );
+    if (!(result instanceof FeeBumpTransaction))
+      throw new Error("Expected fee bump transaction");
+    expectSignatures(result, [feeFirst, feeSecond]);
+    expectSignatures(result.innerTransaction, [innerFirst, innerSecond]);
+    expect(result.innerTransaction.toXDR()).toBe(innerXdr);
+    for (const request of bridge.submissions()) {
+      const requested = TransactionBuilder.fromXdr(
+        request.transactionXdr!,
+        networkPassphrase,
+      );
+      if (!(requested instanceof FeeBumpTransaction))
+        throw new Error("Wallet must receive fee bump envelope");
+      expectSignatures(requested.innerTransaction, [innerFirst, innerSecond]);
+    }
+  } finally {
+    await feePage.close();
+  }
+});
