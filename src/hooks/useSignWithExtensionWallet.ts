@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { StellarWalletsKit } from "@creit.tech/stellar-wallets-kit";
 
 import { WalletKitContext } from "@/components/WalletKit/WalletKitContextProvider";
@@ -9,12 +9,23 @@ export const useSignWithExtensionWallet = () => {
   const { network, walletKit, updateWalletKit } = useStore();
   const walletKitInstance = useContext(WalletKitContext);
   const isInProgress = useRef(false);
+  const isMounted = useRef(true);
+  useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
   const [isLoading, setIsLoading] = useState(false);
 
   // Sign only on an explicit user action. Store updates (including switching
   // accounts in the chooser) must not trigger another signing request.
   const signTx = async (txXdr: string, chooseWallet = false) => {
-    if (isInProgress.current || !walletKitInstance.isInitialized) {
+    if (
+      !isMounted.current ||
+      isInProgress.current ||
+      !walletKitInstance.isInitialized
+    ) {
       return null;
     }
 
@@ -25,7 +36,9 @@ export const useSignWithExtensionWallet = () => {
       let address = walletKit?.publicKey;
       if (chooseWallet || !address) {
         await walletKitInstance.ensureWalletConnect();
+        if (!isMounted.current) return null;
         ({ address } = await StellarWalletsKit.authModal());
+        if (!isMounted.current) return null;
         if (address) {
           updateWalletKit({ publicKey: address });
         }
@@ -40,6 +53,7 @@ export const useSignWithExtensionWallet = () => {
         networkPassphrase: getWalletKitNetwork(network.id),
       });
 
+      if (!isMounted.current) return null;
       if (!result?.signedTxXdr) {
         throw new Error("Couldn’t sign with wallet, please try again");
       }
@@ -47,13 +61,13 @@ export const useSignWithExtensionWallet = () => {
       return result.signedTxXdr;
     } catch (error: any) {
       // Kit rejects with code -1 when the user dismisses the modal.
-      if (error?.code === -1) {
+      if (!isMounted.current || error?.code === -1) {
         return null;
       }
       throw error;
     } finally {
       isInProgress.current = false;
-      setIsLoading(false);
+      if (isMounted.current) setIsLoading(false);
     }
   };
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   FeeBumpTransaction,
   Transaction,
@@ -43,17 +43,7 @@ type TxSignatureType =
 
 type UniqueTabId = `${string}-${TxSignatureType}`;
 
-export const SignTransactionXdr = ({
-  id,
-  title,
-  xdrToSign,
-  onDoneAction,
-  defaultSignatureType = "secretKey",
-  isDisabled = false,
-  description,
-  customFooter,
-  customSignFn,
-}: {
+type Props = {
   id: string;
   title?: string;
   xdrToSign: string | null;
@@ -82,8 +72,55 @@ export const SignTransactionXdr = ({
     sigType: TxSignatureType;
     secretKeys: string[];
   }) => Promise<{ successMessage: string; errorMessage: string }>;
-}) => {
+};
+
+/** A new transaction/network owns a fresh set of inputs, signatures and requests. */
+export const SignTransactionXdr = (props: Props) => {
+  const { network } = useStore();
+  const signingKey = JSON.stringify([
+    props.xdrToSign,
+    network.id,
+    network.passphrase,
+  ]);
+  const previousKey = useRef(signingKey);
+
+  useEffect(() => {
+    if (previousKey.current !== signingKey) {
+      previousKey.current = signingKey;
+      props.onDoneAction({
+        signedXdr: null,
+        successMessage: null,
+        errorMessage: null,
+      });
+    }
+  }, [signingKey, props.onDoneAction]);
+
+  return <SigningSession key={signingKey} {...props} />;
+};
+
+const SigningSession = ({
+  id,
+  title,
+  xdrToSign,
+  onDoneAction: onDone,
+  defaultSignatureType = "secretKey",
+  isDisabled = false,
+  description,
+  customFooter,
+  customSignFn,
+}: Props) => {
   const { network, walletKit } = useStore();
+  const isMounted = useRef(true);
+  useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
+  const onDoneAction: Props["onDoneAction"] = (result) => {
+    if (isMounted.current) onDone(result);
+  };
 
   const initSigsCount: AllSigsCount = {
     secretKey: 0,
@@ -163,7 +200,7 @@ export const SignTransactionXdr = ({
     sigType: TxSignatureType;
     isClear?: boolean;
   }) => {
-    if (!xdrToSign) {
+    if (!xdrToSign || !isMounted.current) {
       return;
     }
 
@@ -174,6 +211,8 @@ export const SignTransactionXdr = ({
           sigType,
           secretKeys: secretKeyInputs,
         });
+
+        if (!isMounted.current) return;
 
         if (result.successMessage) {
           setSecretKeySuccessMsg(result.successMessage);
@@ -229,7 +268,7 @@ export const SignTransactionXdr = ({
               xdrToSign,
               extensionSignature.length > 0,
             );
-            if (!signedXdr) {
+            if (!signedXdr || !isMounted.current) {
               return;
             }
             extensionSigs = mergeTransactionSignatures(
@@ -248,6 +287,8 @@ export const SignTransactionXdr = ({
         default:
         // Do nothing
       }
+
+      if (!isMounted.current) return;
 
       // Previously added signatures from other types
       if (sigType !== "secretKey" && secretKeySuccessMsg) {
@@ -301,6 +342,7 @@ export const SignTransactionXdr = ({
         });
       }
     } catch (e: any) {
+      if (!isMounted.current) return;
       if (sigType === "extensionWallet") {
         setExtensionErrorMsg(e?.message || String(e));
       } else {
@@ -440,6 +482,8 @@ export const SignTransactionXdr = ({
         errorMsg = `An unexpected error occurred: ${err}`;
       }
     }
+
+    if (!isMounted.current) return { signature: [], errorMsg: "" };
 
     setIsHardwareLoading(false);
     // A failed or cancelled attempt must retain signatures already collected.
