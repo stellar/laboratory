@@ -92,7 +92,7 @@ const selectTab = (page: Page, label: string) =>
     .locator(".SignTransactionXdr__tab__label", { hasText: label })
     .click();
 // Wallets Kit exposes its prior wallet list before its 1-second availability
-// scan finishes. Advance that documented scan timer before interacting; the
+// scan finishes. Advance that scan timer before interacting; the
 // component, wallet API, chooser and event subscriptions remain unmocked.
 const chooserReady = async (page: Page) => {
   await expect(page.locator(".stellar-wallets-kit")).toBeVisible();
@@ -397,38 +397,36 @@ test("late wallet response cannot sign the transaction after a network change", 
   ).toBeHidden();
 });
 
-test("signs both inner-transaction accounts before wrapping, then adds fee-bump wallet signatures without losing inner signatures", async ({
+test("signs the inner transaction with two wallet accounts before wrapping, then preserves them while signing the fee bump", async ({
   page,
 }) => {
   const innerFirst = Keypair.random();
   const innerSecond = Keypair.random();
   const feeFirst = Keypair.random();
   const feeSecond = Keypair.random();
+  const innerBridge = await walletBridge(page, innerFirst);
   await seed(page, build(innerFirst).toXDR());
-  const inputs = content(page, "secretKey").getByPlaceholder(
-    "Secret key (starting with S) or hash preimage (in hex)",
-  );
-  await inputs.first().fill(innerFirst.secret());
-  await content(page, "secretKey")
-    .getByRole("button", { name: "Sign", exact: true })
-    .click();
+  await signWithWallet(page);
   await expect(
-    content(page, "secretKey").getByText("Successfully added 1 signature", {
-      exact: true,
-    }),
+    content(page, "extensionWallet").getByText(
+      "Successfully added 1 wallet signature",
+      { exact: true },
+    ),
   ).toBeVisible();
-  await content(page, "secretKey")
-    .getByRole("button", { name: "Add additional", exact: true })
-    .click();
-  await inputs.nth(1).fill(innerSecond.secret());
-  await content(page, "secretKey")
-    .getByRole("button", { name: "Sign", exact: true })
-    .click();
+  innerBridge.selectSigner(innerSecond);
+  await signWithWallet(page, true);
   await expect(
-    content(page, "secretKey").getByText("Successfully added 2 signatures", {
-      exact: true,
-    }),
+    content(page, "extensionWallet").getByText(
+      "Successfully added 2 wallet signatures",
+      { exact: true },
+    ),
   ).toBeVisible();
+  expect(innerBridge.submissions()).toHaveLength(2);
+  for (const request of innerBridge.submissions()) {
+    expect(
+      TransactionBuilder.fromXdr(request.transactionXdr!, networkPassphrase),
+    ).toBeInstanceOf(Transaction);
+  }
   const innerXdr = await signedXdr(page);
   const inner = TransactionBuilder.fromXdr(innerXdr, networkPassphrase);
   if (!(inner instanceof Transaction))
@@ -545,7 +543,7 @@ test("rejects wallet edits to a signed inner transaction even before the fee-bum
   differentInner.sign(innerSigner);
   const invalid = TransactionBuilder.buildFeeBumpTransaction(
     payer.publicKey(),
-    "100",
+    "200",
     differentInner,
     networkPassphrase,
   );
