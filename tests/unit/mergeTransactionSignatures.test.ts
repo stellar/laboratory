@@ -7,6 +7,7 @@ import {
   xdr,
 } from "@stellar/stellar-sdk";
 import {
+  collectTransactionSignatures,
   getWalletSignatures,
   getWalletSigningResult,
   mergeTransactionSignatures,
@@ -210,4 +211,40 @@ it("permits a fee-bump fee adjustment while preserving signed inner transactions
   expect(() =>
     getWalletSigningResult(original.toXDR(), invalid.toXDR(), Networks.TESTNET),
   ).toThrow("wallet changed the transaction");
+});
+
+it("counts unique added signatures across methods, excluding imported signatures", () => {
+  const tx = buildTransaction();
+  tx.sign(Keypair.random(), Keypair.random(), Keypair.random());
+  const [imported, repeated, unique] = tx.signatures;
+  const groups = {
+    secretKey: [repeated, repeated],
+    hardwareWallet: [repeated, unique],
+    extensionWallet: [imported, repeated],
+    signature: [unique],
+  };
+  const collected = collectTransactionSignatures([imported], groups);
+  expect(collected.signatures).toHaveLength(3);
+  expect(collected.counts).toEqual({
+    secretKey: 1,
+    hardwareWallet: 1,
+    extensionWallet: 0,
+    signature: 0,
+  });
+  expect(
+    Object.values(collected.counts).reduce((sum, value) => sum + value, 0),
+  ).toBe(collected.signatures.length - 1);
+  // Clearing one source keeps duplicate signatures owned by another source.
+  const cleared = collectTransactionSignatures([imported], {
+    ...groups,
+    secretKey: [],
+  });
+  expect(cleared.signatures).toHaveLength(3);
+  expect(cleared.counts).toEqual({
+    secretKey: 0,
+    hardwareWallet: 2,
+    extensionWallet: 0,
+    signature: 0,
+  });
+  expect(groups.secretKey).toHaveLength(2);
 });
