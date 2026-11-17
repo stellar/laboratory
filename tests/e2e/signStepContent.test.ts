@@ -419,6 +419,77 @@ test.describe("Sign Step in Build Flow", () => {
     await expect(secretKeyCount).toHaveText("2");
   });
 
+  test("Duplicate secret-key inputs count as one unique added signature", async ({
+    page,
+  }) => {
+    await seedSessionStorageAndNavigate(page);
+    const signing = page.getByTestId("sign-tx-xdr-sign-step");
+    const inputs = signing.getByPlaceholder(
+      "Secret key (starting with S) or hash preimage (in hex)",
+    );
+    await inputs.first().fill(MOCK_SECRET_KEY);
+    await signing
+      .getByRole("button", { name: "Add additional", exact: true })
+      .click();
+    await inputs.nth(1).fill(MOCK_SECRET_KEY);
+    await signing.getByRole("button", { name: "Sign", exact: true }).click();
+    await expect(
+      signing.getByText("Successfully added 1 signature", { exact: true }),
+    ).toBeVisible();
+    await expect(signing.locator(".SignTransactionXdr__tab__count")).toHaveText(
+      ["1", "0", "0", "0"],
+    );
+    const signed = await page.evaluate(
+      () =>
+        JSON.parse(sessionStorage.getItem("stellar_lab_tx_flow_build") ?? "{}")
+          .state?.sign?.signedXdr,
+    );
+    expect(
+      TransactionBuilder.fromXdr(signed, Networks.TESTNET).signatures,
+    ).toHaveLength(1);
+  });
+
+  test("Changing the network clears collected signatures and the signed result", async ({
+    page,
+  }) => {
+    await seedSessionStorageAndNavigate(page);
+    const signComponent = page.getByTestId("sign-tx-xdr-sign-step");
+    await signComponent
+      .getByPlaceholder(
+        "Secret key (starting with S) or hash preimage (in hex)",
+      )
+      .first()
+      .fill(MOCK_SECRET_KEY);
+    await signComponent
+      .getByRole("button", { name: "Sign", exact: true })
+      .click();
+    await expect(
+      page.getByText("Transaction signed and ready to submit."),
+    ).toBeVisible();
+
+    await page.getByTestId("networkSelector-button").click();
+    await page
+      .getByTestId("networkSelector-option")
+      .filter({ hasText: "Futurenet" })
+      .click();
+    await page.getByTestId("networkSelector-submit-button").click();
+    await expect(page.getByTestId("networkSelector-button")).toHaveText(
+      "Futurenet",
+    );
+    await expect(
+      page.getByText("Transaction signed and ready to submit."),
+    ).toBeHidden();
+    // Network switching resets the enclosing transaction flow as well.
+    await expect(page.locator("h1")).toHaveText("Build transaction");
+    await expect(signComponent).toBeHidden();
+    const signed = await page.evaluate(
+      () =>
+        JSON.parse(sessionStorage.getItem("stellar_lab_tx_flow_build") ?? "{}")
+          .state?.sign?.signedXdr,
+    );
+    expect(signed).toBe("");
+  });
+
   test("Transaction envelope tab supports adding, validating, and removing signature rows", async ({
     page,
   }) => {

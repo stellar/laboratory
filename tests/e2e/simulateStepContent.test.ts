@@ -84,6 +84,9 @@ const seedSessionStorageAndNavigate = async (page: Page) => {
   // with mount effects that write the default flow state back to
   // sessionStorage, which makes the page open on the build step.
   await page.addInitScript((stateJson) => {
+    // Init scripts also run in child frames. Only seed the app document so
+    // a later same-origin frame cannot restore the stale fixture over live state.
+    if (window !== window.top) return;
     sessionStorage.setItem("stellar_lab_tx_flow_build", stateJson);
 
     localStorage.setItem(
@@ -204,15 +207,24 @@ test.describe("Simulate Step — Source account auth entries skip signing", () =
       page.getByText("Simulated transaction (Base64 XDR)"),
     ).toBeVisible();
 
-    const assembledXdr = await page.evaluate(() => {
-      const stored = sessionStorage.getItem("stellar_lab_tx_flow_build");
-      return stored ? JSON.parse(stored).state.simulate.assembledXdr : "";
-    });
-    expect(assembledXdr).toBeTruthy();
-
-    await expect(page.locator(".SignStepContent__xdrText")).toHaveText(
-      assembledXdr,
-    );
+    // The response panel, Next button and label also existed in the seeded
+    // state. Wait for fresh persisted assembly instead of capturing a transient
+    // value and then asking the UI to match it forever.
+    await expect
+      .poll(async () => {
+        const assembledXdr = await page.evaluate(() => {
+          const stored = sessionStorage.getItem("stellar_lab_tx_flow_build");
+          return stored ? JSON.parse(stored).state.simulate.assembledXdr : "";
+        });
+        return {
+          isFresh:
+            Boolean(assembledXdr) && assembledXdr !== STALE_ASSEMBLED_XDR,
+          matchesDisplay:
+            (await page.locator(".SignStepContent__xdrText").textContent()) ===
+            assembledXdr,
+        };
+      })
+      .toEqual({ isFresh: true, matchesDisplay: true });
   });
 
   test("Mixed entries: auth signing card shows, but only address entries need signing", async ({
