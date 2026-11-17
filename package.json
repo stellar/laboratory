@@ -47,7 +47,7 @@
     "immer": "^10.1.1",
     "lodash": "^4.17.21",
     "lossless-json": "^4.0.2",
-    "next": "16.4.2",
+    "next": "16.4.5",
     "papaparse": "^5.5.2",
     "react": "^19.2.2",
     "react-diff-viewer-continued": "^4.4.0",
