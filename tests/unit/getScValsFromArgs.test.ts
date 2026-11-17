@@ -436,6 +436,93 @@ describe("convert js arguments to smart contract values using getScValsFromArgs"
     expect(expectedResult).toEqual(scValsResult);
   });
 
+  it("resolves a map with u32 values", () => {
+    const args = {
+      map: [
+        {
+          0: {
+            value: "first",
+            type: "symbol",
+          },
+          1: {
+            value: "1",
+            type: "u32",
+          },
+        },
+        {
+          0: {
+            value: "second",
+            type: "symbol",
+          },
+          1: {
+            value: "2",
+            type: "u32",
+          },
+        },
+      ],
+    };
+
+    const scVals: xdr.ScVal[] = [];
+    const scValsResult = getScValsFromArgs(args, scVals);
+    const expectedResult: xdr.ScVal[] = [
+      xdr.ScVal.scvMap(
+        args.map.map((v) => {
+          return new xdr.ScMapEntry({
+            key: xdr.ScVal.scvSymbol(v[0].value),
+            val: xdr.ScVal.scvU32(parseInt(v[1].value)),
+          });
+        }),
+      ),
+    ];
+
+    expect(expectedResult).toEqual(scValsResult);
+  });
+
+  it("resolves a map with bytes values", () => {
+    const args = {
+      map: [
+        {
+          0: {
+            value: "base64",
+            type: "symbol",
+          },
+          1: {
+            value: "CXbR7wfbSJ9Toe8OOkJv8B0pUeNMegP8PFxWuMTuFK4=",
+            type: "bytes",
+          },
+        },
+        {
+          0: {
+            value: "hex",
+            type: "symbol",
+          },
+          1: {
+            value:
+              "099761ef07dac89f53a1ef0e3a426ef01d2951e34c7a03f1c35c56b8c4e14ae3",
+            type: "bytes",
+          },
+        },
+      ],
+    };
+
+    const scVals: xdr.ScVal[] = [];
+    const scValsResult = getScValsFromArgs(args, scVals);
+    const expectedResult: xdr.ScVal[] = [
+      xdr.ScVal.scvMap([
+        new xdr.ScMapEntry({
+          key: xdr.ScVal.scvSymbol(args.map[0][0].value),
+          val: xdr.ScVal.scvBytes(Buffer.from(args.map[0][1].value, "base64")),
+        }),
+        new xdr.ScMapEntry({
+          key: xdr.ScVal.scvSymbol(args.map[1][0].value),
+          val: xdr.ScVal.scvBytes(Buffer.from(args.map[1][1].value, "hex")),
+        }),
+      ]),
+    ];
+
+    expect(expectedResult).toEqual(scValsResult);
+  });
+
   // Public Key Address
   it("resolves a public key address", () => {
     const args = {
