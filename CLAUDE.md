@@ -2,47 +2,12 @@
 
 @AGENTS.md
 
-## Quick Reference
-
-```bash
-# Development
-pnpm dev                    # Start dev server (auto-fetches network limits)
-pnpm build                  # Production build
-pnpm lint                   # ESLint
-pnpm lint:ts                # TypeScript check
-pnpm test                   # Run all tests
-pnpm test:unit              # Jest unit tests
-pnpm test:e2e               # Playwright e2e tests
-
-# Common Workflows
-pnpm fetch-limits           # Manually fetch Stellar network limits
-git push --no-verify        # Skip pre-push hooks (network issues)
-```
-
 ## Repository Overview
 
 Stellar Lab is an interactive toolkit for exploring the Stellar blockchain
 network. It helps developers experiment with building, signing, simulating, and
 submitting transactions, as well as making requests to both RPC and Horizon
 APIs. The `main` branch is deployed to https://lab.stellar.org/.
-
-## Tech Stack
-
-> See `package.json` for exact dependency versions.
-
-- **Framework**: Next.js 16 (React 19) with App Router
-- **Language**: TypeScript 5
-- **UI Framework**: Stellar Design System, Sass
-- **State Management**: Zustand (with querystring persistence via
-  zustand-querystring)
-- **API Data Fetching**: TanStack React Query v5
-- **Stellar SDK**: @stellar/stellar-sdk
-- **Hardware Wallets**: Ledger (@ledgerhq/hw-app-str), Trezor
-  (@trezor/connect-web)
-- **Testing**: Jest (unit tests), Playwright (e2e tests)
-- **Code Quality**: ESLint, Prettier, Husky pre-commit hooks
-- **Package Manager**: pnpm 10
-- **Deployment**: Docker, Next.js standalone output, Sentry error tracking
 
 ## Architecture Constraints
 
@@ -61,25 +26,6 @@ APIs. The `main` branch is deployed to https://lab.stellar.org/.
 - **No Horizon for new features**: Always use RPC endpoints
   (`src/query/useRpc*`, `src/query/useGetRpc*`). Horizon hooks exist for legacy
   features only.
-
-## Prerequisites
-
-> See `package.json` for exact dependency versions.
-
-- **Node.js**: >= 22.23.4 (specified in `.nvmrc` and `package.json`)
-- **pnpm**: >= 10.15.1 (managed via Corepack)
-
-## Development Setup
-
-```bash
-corepack enable
-pnpm install --frozen-lockfile
-pnpm dev
-```
-
-The `pnpm dev` command automatically runs `pnpm fetch-limits` (via `predev`
-script) to fetch Stellar network limits from RPC endpoints before starting the
-dev server.
 
 ## Common Issues and Solutions
 
@@ -111,39 +57,7 @@ server, tests run against the old branch's code.
 3. Restart the dev server: `pnpm dev`
 4. Then run tests: `pnpm test:e2e`
 
-## Key Directories
-
-```
-src/
-├── app/               # Next.js App Router pages
-│   ├── (sidebar)/     # Route group: account, endpoints, smart-contracts,
-│   │                  #   transaction, xdr, network-limits, etc.
-│   └── layout.tsx     # Root layout with providers
-├── components/        # Reusable React components
-├── constants/         # Configuration and static data
-├── helpers/           # Utility functions (including xdr/, explorer/)
-├── hooks/             # Custom React hooks
-├── metrics/           # GA and Amplitude analytics tracking
-├── query/             # React Query hooks (useRpc*, useGetRpc*)
-├── store/             # Zustand state stores
-├── types/             # TypeScript type definitions
-├── validate/          # Validation logic (get*Error() convention)
-└── proxy.ts           # CSP proxy (formerly middleware)
-tests/
-├── e2e/               # Playwright e2e tests
-└── unit/              # Jest unit tests
-```
-
 ## Code Patterns and Conventions
-
-### Import Paths
-
-Use `@/` path alias for imports from `src/`:
-
-```typescript
-import { helper } from "@/helpers/utils";
-import { useStore } from "@/store/createStore";
-```
 
 ### Naming Conventions
 
@@ -156,29 +70,6 @@ import { useStore } from "@/store/createStore";
 - **CSS Class Names**: BEM-ish PascalCase block with dashes for elements (e.g.,
   `ComponentName__element`)
 - **File/Folder Names**: dashes over underscores (e.g., `smart-contracts/`)
-
-### Layout Spacing (`Box` gap)
-
-`@/components/layout/Box` takes a `gap` token that maps to `--sds-gap-*`. Always
-use a token when the value matches; only use `gap="custom"` + `customValue` when
-no token fits.
-
-| Token | Value |
-| ----- | ----- |
-| `xs`  | 4px   |
-| `sm`  | 8px   |
-| `md`  | 12px  |
-| `lg`  | 16px  |
-| `xl`  | 24px  |
-| `xxl` | 32px  |
-
-```tsx
-<Box gap="lg">…</Box>                          // ✅ 16px
-<Box gap="custom" customValue="16px">…</Box>   // ❌ use gap="lg"
-<Box gap="custom" customValue="96px">…</Box>   // ✅ no token for 96px
-```
-
-Match by exact px value (16px is `lg`, not `md`); don't round to the nearest token.
 
 ### Form Validation
 
@@ -214,12 +105,6 @@ pnpm build  # Output: build/ directory (standalone format)
 
 Husky runs lint + tests on push; use `--no-verify` to skip.
 
-- **ESLint**: `eslint.config.mjs` (flat config) — `@eslint/js` recommended,
-  `eslint-config-next` core-web-vitals + typescript, TanStack Query, `prettier`
-- **Prettier**: `.prettierrc.json` — 80 chars, 2 spaces, semicolons, double
-  quotes, trailing commas
-- **Known exception**: `@typescript-eslint/no-explicit-any` disabled
-
 ## Skills
 
 Detailed patterns are in on-demand skills (`.claude/skills/`). Use these for
@@ -228,7 +113,6 @@ deep context when working in specific areas:
 - `/zustand-store-patterns` — store selection, hydration, cross-store reads
 - `/figma-to-code` — translating Figma MCP output to project conventions
 - `/component-guide` — UI component catalog (SDS + local) and SCSS conventions
-- `/commit-progress` — commit logical units of work
 
 ## Task Completion Checklist
 
