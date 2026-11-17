@@ -8,6 +8,7 @@ import {
 } from "@stellar/stellar-sdk";
 import {
   getWalletSignatures,
+  getWalletSigningResult,
   mergeTransactionSignatures,
 } from "../../src/helpers/mergeTransactionSignatures";
 
@@ -79,6 +80,7 @@ describe.each(["classic", "fee bump"])("%s wallet signatures", (type) => {
 
   it("rejects wallet modifications that would invalidate other signatures", () => {
     const original = build();
+    original.sign(Keypair.random());
     const different = build();
     different.sign(Keypair.random());
     expect(() =>
@@ -86,6 +88,61 @@ describe.each(["classic", "fee bump"])("%s wallet signatures", (type) => {
         original.toXDR(),
         different.toXDR(),
         Networks.TESTNET,
+      ),
+    ).toThrow("wallet changed the transaction");
+  });
+
+  it("adopts a wallet-modified envelope when no prior signatures need preserving", () => {
+    const original = build();
+    const modified = build();
+    const signer = Keypair.random();
+    modified.sign(signer);
+    const result = getWalletSigningResult(
+      original.toXDR(),
+      modified.toXDR(),
+      Networks.TESTNET,
+    );
+    const adopted = TransactionBuilder.fromXdr(
+      result.xdrToSign,
+      Networks.TESTNET,
+    );
+    expect(Buffer.from(adopted.hash())).toEqual(Buffer.from(modified.hash()));
+    expect(adopted.signatures).toHaveLength(0);
+    expect(result.signatures).toHaveLength(1);
+    expect(
+      signer.verify(adopted.hash(), result.signatures[0].signature.toBytes()),
+    ).toBe(true);
+
+    const secondSigner = Keypair.random();
+    adopted.sign(secondSigner);
+    const next = getWalletSigningResult(
+      result.xdrToSign,
+      adopted.toXDR(),
+      Networks.TESTNET,
+      result.signatures,
+    );
+    const signatures = mergeTransactionSignatures(
+      result.signatures,
+      next.signatures,
+    );
+    expect(signatures).toHaveLength(2);
+    expect(
+      secondSigner.verify(adopted.hash(), signatures[1].signature.toBytes()),
+    ).toBe(true);
+  });
+
+  it("rejects modifications when earlier signatures were collected separately", () => {
+    const original = build();
+    original.sign(Keypair.random());
+    const preserved = original.signatures.splice(0);
+    const modified = build();
+    modified.sign(Keypair.random());
+    expect(() =>
+      getWalletSigningResult(
+        original.toXDR(),
+        modified.toXDR(),
+        Networks.TESTNET,
+        preserved,
       ),
     ).toThrow("wallet changed the transaction");
   });
@@ -111,4 +168,46 @@ it("deduplicates full signatures without dropping colliding hints", () => {
   });
   const copy = xdr.DecoratedSignature.fromXDR(a.toXDR());
   expect(mergeTransactionSignatures([a], [copy, b])).toEqual([a, b]);
+});
+
+it("permits a fee-bump fee adjustment while preserving signed inner transactions", () => {
+  const inner = buildTransaction();
+  inner.sign(Keypair.random());
+  const feeSource = Keypair.random();
+  const original = TransactionBuilder.buildFeeBumpTransaction(
+    feeSource.publicKey(),
+    "100",
+    inner,
+    Networks.TESTNET,
+  );
+  const adjusted = TransactionBuilder.buildFeeBumpTransaction(
+    feeSource.publicKey(),
+    "200",
+    inner,
+    Networks.TESTNET,
+  );
+  adjusted.sign(feeSource);
+  const result = getWalletSigningResult(
+    original.toXDR(),
+    adjusted.toXDR(),
+    Networks.TESTNET,
+  );
+  expect(result.signatures).toHaveLength(1);
+  expect(
+    Buffer.from(
+      TransactionBuilder.fromXdr(result.xdrToSign, Networks.TESTNET).hash(),
+    ),
+  ).toEqual(Buffer.from(adjusted.hash()));
+
+  const changedInner = buildTransaction();
+  const invalid = TransactionBuilder.buildFeeBumpTransaction(
+    feeSource.publicKey(),
+    "200",
+    changedInner,
+    Networks.TESTNET,
+  );
+  invalid.sign(feeSource);
+  expect(() =>
+    getWalletSigningResult(original.toXDR(), invalid.toXDR(), Networks.TESTNET),
+  ).toThrow("wallet changed the transaction");
 });
