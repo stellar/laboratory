@@ -483,3 +483,113 @@ test("signs both inner-transaction accounts before wrapping, then adds fee-bump 
     await feePage.close();
   }
 });
+
+test("wallet modifications are adopted only before any signature is collected", async ({
+  page,
+}) => {
+  const signer = Keypair.random();
+  const bridge = await walletBridge(page, signer);
+  const original = build(signer);
+  const modified = build(signer, "200");
+  modified.sign(signer);
+  bridge.respond(async () => ({
+    signedTransaction: modified.toXDR(),
+    signerAddress: signer.publicKey(),
+  }));
+  await seed(page, original.toXDR());
+  await signWithWallet(page);
+  await expect(
+    content(page, "extensionWallet").getByText(
+      "Successfully added 1 wallet signature",
+      { exact: true },
+    ),
+  ).toBeVisible();
+  const before = await signedXdr(page);
+  const accepted = TransactionBuilder.fromXdr(before, networkPassphrase);
+  expect(Buffer.from(accepted.hash())).toEqual(Buffer.from(modified.hash()));
+  expectSignatures(accepted, [signer]);
+  const incompatible = build(signer, "300");
+  incompatible.sign(signer);
+  bridge.respond(async () => ({
+    signedTransaction: incompatible.toXDR(),
+    signerAddress: signer.publicKey(),
+  }));
+  await signWithWallet(page, true);
+  await expect(
+    content(page, "extensionWallet").getByText(
+      /The wallet changed the transaction/,
+    ),
+  ).toBeVisible();
+  expect(await signedXdr(page)).toBe(before);
+  const requested = TransactionBuilder.fromXdr(
+    bridge.submissions()[1].transactionXdr!,
+    networkPassphrase,
+  );
+  expect(Buffer.from(requested.hash())).toEqual(Buffer.from(modified.hash()));
+});
+
+test("rejects wallet edits to a signed inner transaction even before the fee-bump envelope has outer signatures", async ({
+  page,
+}) => {
+  const innerSigner = Keypair.random();
+  const payer = Keypair.random();
+  const inner = build(innerSigner);
+  inner.sign(innerSigner);
+  const original = TransactionBuilder.buildFeeBumpTransaction(
+    payer.publicKey(),
+    "100",
+    inner,
+    networkPassphrase,
+  );
+  const differentInner = build(innerSigner, "200");
+  differentInner.sign(innerSigner);
+  const invalid = TransactionBuilder.buildFeeBumpTransaction(
+    payer.publicKey(),
+    "100",
+    differentInner,
+    networkPassphrase,
+  );
+  invalid.sign(payer);
+  const bridge = await walletBridge(page, payer);
+  bridge.respond(async () => ({
+    signedTransaction: invalid.toXDR(),
+    signerAddress: payer.publicKey(),
+  }));
+  await seed(page, original.toXDR());
+  await signWithWallet(page);
+  await expect(
+    content(page, "extensionWallet").getByText(
+      /The wallet changed the transaction/,
+    ),
+  ).toBeVisible();
+  expect(await signedXdr(page)).toBe("");
+  await expect(
+    component(page).locator(".SignTransactionXdr__tab__count"),
+  ).toHaveText(["0", "0", "0", "0"]);
+  bridge.respond(async (request) => {
+    const tx = TransactionBuilder.fromXdr(
+      request.transactionXdr!,
+      request.networkPassphrase!,
+    );
+    tx.sign(payer);
+    return { signedTransaction: tx.toXDR(), signerAddress: payer.publicKey() };
+  });
+  await content(page, "extensionWallet")
+    .getByRole("button", { name: /^Sign with/ })
+    .click();
+  await expect(
+    content(page, "extensionWallet").getByText(
+      "Successfully added 1 wallet signature",
+      { exact: true },
+    ),
+  ).toBeVisible();
+  const result = TransactionBuilder.fromXdr(
+    await signedXdr(page),
+    networkPassphrase,
+  );
+  if (!(result instanceof FeeBumpTransaction))
+    throw new Error("Expected fee bump transaction");
+  expectSignatures(result, [payer]);
+  expectSignatures(result.innerTransaction, [innerSigner]);
+  expect(result.innerTransaction.toXDR()).toBe(inner.toXDR());
+});
