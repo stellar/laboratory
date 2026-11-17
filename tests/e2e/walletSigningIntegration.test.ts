@@ -10,6 +10,10 @@ import {
 } from "@stellar/stellar-sdk";
 import { baseURL } from "../../playwright.config";
 
+test.beforeEach(async ({ page }) => {
+  await page.clock.install();
+});
+
 const networkPassphrase = Networks.TESTNET;
 const build = (source: Keypair, fee = "100") =>
   new TransactionBuilder(new Account(source.publicKey(), "1"), {
@@ -87,7 +91,15 @@ const selectTab = (page: Page, label: string) =>
   component(page)
     .locator(".SignTransactionXdr__tab__label", { hasText: label })
     .click();
+// Wallets Kit exposes its prior wallet list before its 1-second availability
+// scan finishes. Advance that documented scan timer before interacting; the
+// component, wallet API, chooser and event subscriptions remain unmocked.
+const chooserReady = async (page: Page) => {
+  await expect(page.locator(".stellar-wallets-kit")).toBeVisible();
+  await page.clock.runFor(1100);
+};
 const chooseFreighter = async (page: Page) => {
+  await chooserReady(page);
   await page
     .locator(".stellar-wallets-kit")
     .getByText("Freighter", { exact: true })
@@ -303,7 +315,7 @@ test("wallet dismissal and rejection preserve collected signatures and allow ret
   await content(page, "extensionWallet")
     .getByRole("button", { name: /^Sign with/ })
     .click();
-  await expect(page.locator(".stellar-wallets-kit")).toBeVisible();
+  await chooserReady(page);
   await page.locator(".stellar-wallets-kit header button").last().click();
   await expect(page.locator(".stellar-wallets-kit")).toHaveCount(0);
   await expect(
@@ -430,6 +442,7 @@ test("signs both inner-transaction accounts before wrapping, then adds fee-bump 
   );
 
   const feePage = await page.context().newPage();
+  await feePage.clock.install();
   try {
     const bridge = await walletBridge(feePage, feeFirst);
     await seed(feePage, outer.toXDR());
