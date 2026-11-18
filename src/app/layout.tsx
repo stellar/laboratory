@@ -9,6 +9,7 @@ import { QueryProvider } from "@/query/QueryProvider";
 import { StoreProvider } from "@/store/StoreProvider";
 import { GoogleAnalytics } from "@/metrics/GoogleAnalytics";
 import { NeevaiChatScript } from "@/components/NeevaiChatScript";
+import { WebMcpBridge } from "@/components/WebMcpBridge";
 
 import "@stellar/design-system/build/styles.min.css";
 import "@/styles/globals.scss";
@@ -40,6 +41,11 @@ export default function RootLayout({
                   </WalletKitContextProvider>
                 </LayoutContextProvider>
               </QueryProvider>
+              {/* Experimental: exposes Lab tools to desktop agents (Claude,
+                  Codex) via WebMCP and a local relay. Off unless enabled. */}
+              {process.env.NEXT_PUBLIC_ENABLE_WEBMCP === "true" ? (
+                <WebMcpBridge />
+              ) : null}
             </StoreProvider>
           </div>
           <GoogleAnalytics />
