@@ -13,6 +13,7 @@ import {
 } from "@stellar/design-system";
 import { Address, contract, Operation } from "@stellar/stellar-sdk";
 import { parseContractMetadata } from "@stellar-expert/contract-wasm-interface-parser";
+import { Buffer } from "buffer";
 import { parse } from "lossless-json";
 import { JSONSchema7 } from "json-schema";
 import { useQueryClient } from "@tanstack/react-query";
@@ -126,6 +127,8 @@ export default function DeployContract() {
 
         // The parser reads the Wasm with Buffer-only methods (readUint8), so
         // a Uint8Array (what RPC returns as of SDK v17) has to be wrapped.
+        // Buffer is imported from buffer@6 explicitly: Turbopack's global
+        // Buffer polyfill is an older version without the lowercase aliases.
         const parsedData = parseContractMetadata(Buffer.from(wasmBinary));
 
         setParsedContractData(parsedData);
@@ -146,7 +149,6 @@ export default function DeployContract() {
         }
 
         return null;
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {
         setPageError(`Error getting constructor schema: ${e}.`);
         return null;
@@ -510,15 +512,18 @@ export default function DeployContract() {
       return [];
     }
 
-    const orderedArgValues = schema.required
-      .map((paramName: string) => {
-        return formArgs[paramName];
-      })
-      .filter(Boolean);
-
-    return orderedArgValues.map(
-      (arg) => getScValsFromArgs({ temp: arg }, [])[0],
-    );
+    return schema.required
+      .map((paramName: string) => ({
+        paramName,
+        arg: formArgs[paramName],
+      }))
+      .filter(({ arg }) => Boolean(arg))
+      .map(
+        ({ paramName, arg }) =>
+          getScValsFromArgs({ temp: arg }, [], {
+            temp: schema.properties?.[paramName],
+          })[0],
+      );
   };
 
   const renderContractIdExternalLink = () => {

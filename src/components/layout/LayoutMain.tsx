@@ -1,6 +1,7 @@
 "use client";
 
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useContext, useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 
 import { MaintenanceBanner } from "@/components/MaintenanceBanner";
 import { NetworkNotAvailableBanner } from "@/components/NetworkNotAvailableBanner";
@@ -10,19 +11,43 @@ import { LayoutWithSidebar } from "@/components/layout/LayoutWithSidebar";
 import { LayoutSidebarContent } from "@/components/layout/LayoutSidebarContent";
 import { FloatNotification } from "@/components/FloatNotification";
 
-import { initTracking } from "@/metrics/tracking";
+import { captureAttribution } from "@/metrics/attribution";
+import { initTracking, trackEvent, TrackingEvent } from "@/metrics/tracking";
 import { useStore } from "@/store/useStore";
+import { ZustandContext } from "@/store/StoreProvider";
 
 export const LayoutMain = ({ children }: { children: ReactNode }) => {
   const { floatNotifications, removeFloatNotification } = useStore();
   const [floatNotificationOffsetTop, setFloatNotificationOffsetTop] =
     useState(0);
   const headerRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+  const trackedPathnameRef = useRef<string | null>(null);
+  const store = useContext(ZustandContext);
 
-  // Init tracking
+  // Init tracking. Save the landing UTM params first, so every event
+  // (including the first page view) is attributed.
   useEffect(() => {
+    captureAttribution(window.location.search, window.location.pathname);
     initTracking();
   }, []);
+
+  // Track page views. Only the path is sent: the query string holds store
+  // state (e.g. XDR) that we don't want to track. The ref skips the duplicate
+  // run from React Strict Mode.
+  useEffect(() => {
+    if (trackedPathnameRef.current === pathname) {
+      return;
+    }
+
+    trackedPathnameRef.current = pathname;
+    trackEvent(TrackingEvent.PAGE_VIEW, {
+      path: pathname,
+      // Read the network from the store: the URL `$=` state isn't written
+      // yet on landing or right after a route change
+      network: store?.getState().network.id,
+    });
+  }, [pathname, store]);
 
   // FloatNotification dynamic position based on header height (with or without banner)
   useEffect(() => {

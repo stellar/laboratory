@@ -41,6 +41,8 @@ export const TransactionFlowHeader = ({
       <PageHeader heading={heading} as={headingAs} />
 
       <Box gap="sm" direction="row" justify="center" align="center">
+        {rightElement && rightElement}
+
         <Button
           size="md"
           variant="tertiary"
@@ -80,8 +82,6 @@ export const TransactionFlowHeader = ({
             </Button>
           </Modal.Footer>
         </Modal>
-
-        {rightElement && rightElement}
       </Box>
     </Box>
   );

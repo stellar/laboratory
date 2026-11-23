@@ -10,6 +10,7 @@ import { validate } from "@/validate";
 
 import { PositiveIntPicker } from "@/components/FormElements/PositiveIntPicker";
 import { ColorTypePill } from "@/components/ColorTypePill";
+import { SdsLink } from "@/components/SdsLink";
 import { AddressSelector as AddressSelectorComponent } from "@/components/AddressSelector";
 
 import type { AnyObject, SorobanInvokeValue } from "@/types/types";
@@ -59,6 +60,7 @@ export const renderPrimitivesType = ({
   onChange,
   formError,
   setFormError,
+  isOptional,
 }: {
   name: string;
   schema: Partial<JSONSchema7>;
@@ -67,6 +69,7 @@ export const renderPrimitivesType = ({
   onChange: (value: SorobanInvokeValue) => void;
   formError: AnyObject;
   setFormError: (error: AnyObject) => void;
+  isOptional?: boolean;
 }) => {
   const { description } = schema;
 
@@ -99,6 +102,7 @@ export const renderPrimitivesType = ({
     id: path.join("."),
     value: get(parsedSorobanOperation.args, path.join("."))?.value || "",
     error: formError?.[formErrorKey] || undefined,
+    labelSuffix: isOptional ? "optional" : undefined,
   };
 
   const invokeContractBaseProps = {
@@ -142,7 +146,6 @@ export const renderPrimitivesType = ({
 
   const handleValidate = (
     e: React.ChangeEvent<HTMLInputElement>,
-    schemaType: string,
     validateFn?:
       | ((value: string, required?: boolean) => string | false)
       | ((value: string, required?: boolean) => string | false)[],
@@ -153,11 +156,7 @@ export const renderPrimitivesType = ({
       const errors = validateFn.map((fn) => fn(e.target.value));
       const hasNoError = jsonSchema.hasAnyValidationPassed(errors);
 
-      if (schemaType === "Address") {
-        error = hasNoError ? "" : "Invalid Public key or contract ID";
-      } else {
-        error = hasNoError ? "" : errors.join(" ");
-      }
+      error = hasNoError ? "" : errors.join(" ");
     } else {
       error = validateFn?.(e.target.value);
     }
@@ -179,6 +178,8 @@ export const renderPrimitivesType = ({
   const InputLabel = (
     <div className="InvokeContractForm__label">
       {renameType(nestedItemLabel as string)}
+      {/* A MuxedAddress takes a plain address too, so show both (CAP-67) */}
+      {schemaType === "MuxedAddress" ? <ColorTypePill type="address" /> : null}
       <ColorTypePill type={renameType(schemaType)} />
     </div>
   );
@@ -191,20 +192,14 @@ export const renderPrimitivesType = ({
           label={InputLabel}
           onChange={(e) => {
             handleChange(e, schemaType);
-            handleValidate(e, schemaType, [
-              validate.getPublicKeyError,
-              validate.getContractIdError,
-            ]);
+            handleValidate(e, validate.getAddressError);
           }}
           onValueSelect={(val) => {
             const syntheticEvent = {
               target: { value: val },
             } as React.ChangeEvent<HTMLInputElement>;
             handleChange(syntheticEvent, schemaType);
-            handleValidate(syntheticEvent, schemaType, [
-              validate.getPublicKeyError,
-              validate.getContractIdError,
-            ]);
+            handleValidate(syntheticEvent, validate.getAddressError);
           }}
           key={path.join(".")}
           infoText={description || ""}
@@ -220,10 +215,22 @@ export const renderPrimitivesType = ({
           label={InputLabel}
           onChange={(e) => {
             handleChange(e, schemaType);
-            handleValidate(e, schemaType, validate.getMuxedAddressError);
+            handleValidate(e, validate.getMuxedAddressError);
           }}
           key={path.join(".")}
-          infoText={description || ""}
+          infoText={
+            <>
+              <div>
+                In addition to plain address, the Stellar Asset Contract’s{" "}
+                <code>transfer</code> takes a muxed address for <code>to</code>{" "}
+                so custodians can identify the recipient without a memo, which
+                Soroban transactions don’t allow.{" "}
+                <SdsLink href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0067.md#update-the-sac-transfer-function-to-support-muxed-addresses">
+                  (CAP 0067)
+                </SdsLink>
+              </div>
+            </>
+          }
           leftElement={<Icon.User03 />}
           note={<>{description}</>}
           fieldSize="md"
@@ -237,7 +244,7 @@ export const renderPrimitivesType = ({
           key={path.join(".")}
           onChange={(e) => {
             handleChange(e, schemaType);
-            handleValidate(e, schemaType, validate.getU32Error);
+            handleValidate(e, validate.getU32Error);
           }}
         />
       );
@@ -254,7 +261,7 @@ export const renderPrimitivesType = ({
           key={path.join(".")}
           onChange={(e) => {
             handleChange(e, schemaType);
-            handleValidate(e, schemaType, validate.getU64Error);
+            handleValidate(e, validate.getU64Error);
           }}
         />
       );
@@ -266,7 +273,7 @@ export const renderPrimitivesType = ({
           key={path.join(".")}
           onChange={(e) => {
             handleChange(e, schemaType);
-            handleValidate(e, schemaType, validate.getU128Error);
+            handleValidate(e, validate.getU128Error);
           }}
         />
       );
@@ -278,7 +285,7 @@ export const renderPrimitivesType = ({
           label={InputLabel}
           onChange={(e) => {
             handleChange(e, schemaType);
-            handleValidate(e, schemaType, validate.getU256Error);
+            handleValidate(e, validate.getU256Error);
           }}
         />
       );
@@ -290,7 +297,7 @@ export const renderPrimitivesType = ({
           label={InputLabel}
           onChange={(e) => {
             handleChange(e, schemaType);
-            handleValidate(e, schemaType, validate.getI32Error);
+            handleValidate(e, validate.getI32Error);
           }}
           fieldSize="md"
         />
@@ -303,7 +310,7 @@ export const renderPrimitivesType = ({
           label={InputLabel}
           onChange={(e) => {
             handleChange(e, schemaType);
-            handleValidate(e, schemaType, validate.getI64Error);
+            handleValidate(e, validate.getI64Error);
           }}
           fieldSize="md"
         />
@@ -316,7 +323,7 @@ export const renderPrimitivesType = ({
           label={InputLabel}
           onChange={(e) => {
             handleChange(e, schemaType);
-            handleValidate(e, schemaType, validate.getI128Error);
+            handleValidate(e, validate.getI128Error);
           }}
           fieldSize="md"
         />
@@ -329,7 +336,7 @@ export const renderPrimitivesType = ({
           label={InputLabel}
           onChange={(e) => {
             handleChange(e, schemaType);
-            handleValidate(e, schemaType, validate.getI256Error);
+            handleValidate(e, validate.getI256Error);
           }}
           fieldSize="md"
         />
@@ -345,7 +352,7 @@ export const renderPrimitivesType = ({
             handleChange(e, schemaType);
           }}
         >
-          <option key="bool-empty" value="" disabled={true}>
+          <option key="bool-empty" value="" disabled={!isOptional}>
             Select
           </option>
           <option key="bool-true" value="true">
@@ -365,7 +372,7 @@ export const renderPrimitivesType = ({
           label={InputLabel}
           onChange={(e) => {
             handleChange(e, schemaType);
-            handleValidate(e, schemaType);
+            handleValidate(e);
           }}
           note={<>{description}</>}
           fieldSize="md"
@@ -379,7 +386,7 @@ export const renderPrimitivesType = ({
           label={InputLabel}
           onChange={(e) => {
             handleChange(e, schemaType);
-            handleValidate(e, schemaType, validate.getDataUrlError);
+            handleValidate(e, validate.getDataUrlError);
           }}
           fieldSize="md"
         />

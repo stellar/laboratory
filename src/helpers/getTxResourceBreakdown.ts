@@ -187,36 +187,58 @@ export const getTxResourceBreakdown = (
   const maxRwCodeByte = getCoreMetric("max_rw_code_byte") || 0;
   const maxEmitEventByte = getCoreMetric("max_emit_event_byte") || 0;
 
+  // Placeholder shown when a network limit is unavailable (e.g. local network)
+  const EMPTY_VALUE = "-";
+
+  const isMissingLimit = (limit?: number): boolean =>
+    limit === undefined || limit === null || Number.isNaN(limit);
+
   // Calculate usage percentage with 2 decimal precision
-  const calculateUsagePercent = (value: number, limit: number): string => {
+  const calculateUsagePercent = (value: number, limit?: number): string => {
+    if (isMissingLimit(limit)) {
+      return EMPTY_VALUE;
+    }
+
     if (limit === 0) {
       return "0.00%";
     }
 
-    return `${((value / limit) * 100).toFixed(2)}%`;
+    return `${((value / (limit as number)) * 100).toFixed(2)}%`;
   };
+
+  // Format a limit as a large number, falling back to "-" when unavailable
+  const formatLargeNumberLimit = (limit?: number): string =>
+    isMissingLimit(limit) ? EMPTY_VALUE : formatLargeNumber(limit as number);
+
+  // Format a limit as a file size, falling back to "-" when unavailable
+  const formatFileSizeLimit = (limit?: number): string =>
+    isMissingLimit(limit) ? EMPTY_VALUE : formatFileSize(limit as number);
+
+  // Format a limit with a unit suffix, falling back to "-" when unavailable
+  const formatUnitLimit = (limit: number | undefined, unit: string): string =>
+    isMissingLimit(limit) ? EMPTY_VALUE : `${limit} ${unit}`;
 
   const CURRENT_NETWORK_LIMITS = NETWORK_LIMITS[networkId];
 
   return {
     // CPU and Memory
     instructions,
-    instructions_network_limit: CURRENT_NETWORK_LIMITS.tx_max_instructions,
-    instructions_network_limit_display: formatLargeNumber(
-      CURRENT_NETWORK_LIMITS.tx_max_instructions,
+    instructions_network_limit: CURRENT_NETWORK_LIMITS?.tx_max_instructions,
+    instructions_network_limit_display: formatLargeNumberLimit(
+      CURRENT_NETWORK_LIMITS?.tx_max_instructions,
     ),
     instructions_usage_percent: calculateUsagePercent(
       instructions,
-      CURRENT_NETWORK_LIMITS.tx_max_instructions,
+      CURRENT_NETWORK_LIMITS?.tx_max_instructions,
     ),
     memory_usage: memoryUsage,
-    memory_usage_network_limit: CURRENT_NETWORK_LIMITS.tx_memory_limit,
-    memory_usage_network_limit_display: formatFileSize(
-      CURRENT_NETWORK_LIMITS.tx_memory_limit,
+    memory_usage_network_limit: CURRENT_NETWORK_LIMITS?.tx_memory_limit,
+    memory_usage_network_limit_display: formatFileSizeLimit(
+      CURRENT_NETWORK_LIMITS?.tx_memory_limit,
     ),
     memory_usage_usage_percent: calculateUsagePercent(
       memoryUsage,
-      CURRENT_NETWORK_LIMITS.tx_memory_limit,
+      CURRENT_NETWORK_LIMITS?.tx_memory_limit,
     ),
     invoke_time: invokeTime,
 
@@ -225,46 +247,56 @@ export const getTxResourceBreakdown = (
     footprint_keys_read_write: readWriteKeys,
     footprint_keys_total: totalKeys,
     footprint_keys_total_network_limit:
-      CURRENT_NETWORK_LIMITS.tx_max_footprint_entries,
-    footprint_keys_total_network_limit_display: `${CURRENT_NETWORK_LIMITS.tx_max_footprint_entries} keys`,
+      CURRENT_NETWORK_LIMITS?.tx_max_footprint_entries,
+    footprint_keys_total_network_limit_display: formatUnitLimit(
+      CURRENT_NETWORK_LIMITS?.tx_max_footprint_entries,
+      "keys",
+    ),
     footprint_keys_total_usage_percent: calculateUsagePercent(
       totalKeys,
-      CURRENT_NETWORK_LIMITS.tx_max_footprint_entries,
+      CURRENT_NETWORK_LIMITS?.tx_max_footprint_entries,
     ),
 
     // Ledger I/O
     entries_read: entriesRead,
-    entries_read_network_limit: CURRENT_NETWORK_LIMITS.tx_max_disk_read_entries,
-    entries_read_network_limit_display: `${CURRENT_NETWORK_LIMITS.tx_max_disk_read_entries} entries`,
+    entries_read_network_limit:
+      CURRENT_NETWORK_LIMITS?.tx_max_disk_read_entries,
+    entries_read_network_limit_display: formatUnitLimit(
+      CURRENT_NETWORK_LIMITS?.tx_max_disk_read_entries,
+      "entries",
+    ),
     entries_read_usage_percent: calculateUsagePercent(
       entriesRead,
-      CURRENT_NETWORK_LIMITS.tx_max_disk_read_entries,
+      CURRENT_NETWORK_LIMITS?.tx_max_disk_read_entries,
     ),
     entries_write: entriesWrite,
     entries_write_network_limit:
-      CURRENT_NETWORK_LIMITS.tx_max_write_ledger_entries,
-    entries_write_network_limit_display: `${CURRENT_NETWORK_LIMITS.tx_max_write_ledger_entries} entries`,
+      CURRENT_NETWORK_LIMITS?.tx_max_write_ledger_entries,
+    entries_write_network_limit_display: formatUnitLimit(
+      CURRENT_NETWORK_LIMITS?.tx_max_write_ledger_entries,
+      "entries",
+    ),
     entries_write_usage_percent: calculateUsagePercent(
       entriesWrite,
-      CURRENT_NETWORK_LIMITS.tx_max_write_ledger_entries,
+      CURRENT_NETWORK_LIMITS?.tx_max_write_ledger_entries,
     ),
     ledger_read: ledgerRead,
-    ledger_read_network_limit: CURRENT_NETWORK_LIMITS.tx_max_disk_read_bytes,
-    ledger_read_network_limit_display: formatFileSize(
-      CURRENT_NETWORK_LIMITS.tx_max_disk_read_bytes,
+    ledger_read_network_limit: CURRENT_NETWORK_LIMITS?.tx_max_disk_read_bytes,
+    ledger_read_network_limit_display: formatFileSizeLimit(
+      CURRENT_NETWORK_LIMITS?.tx_max_disk_read_bytes,
     ),
     ledger_read_usage_percent: calculateUsagePercent(
       ledgerRead,
-      CURRENT_NETWORK_LIMITS.tx_max_disk_read_bytes,
+      CURRENT_NETWORK_LIMITS?.tx_max_disk_read_bytes,
     ),
     ledger_write: ledgerWrite,
-    ledger_write_network_limit: CURRENT_NETWORK_LIMITS.tx_max_write_bytes,
-    ledger_write_network_limit_display: formatFileSize(
-      CURRENT_NETWORK_LIMITS.tx_max_write_bytes,
+    ledger_write_network_limit: CURRENT_NETWORK_LIMITS?.tx_max_write_bytes,
+    ledger_write_network_limit_display: formatFileSizeLimit(
+      CURRENT_NETWORK_LIMITS?.tx_max_write_bytes,
     ),
     ledger_write_usage_percent: calculateUsagePercent(
       ledgerWrite,
-      CURRENT_NETWORK_LIMITS.tx_max_write_bytes,
+      CURRENT_NETWORK_LIMITS?.tx_max_write_bytes,
     ),
 
     // Data I/O
@@ -279,29 +311,29 @@ export const getTxResourceBreakdown = (
     emit_event_count: emitEventCount,
     emit_event_bytes: emitEventBytes,
     emit_event_bytes_network_limit:
-      CURRENT_NETWORK_LIMITS.tx_max_contract_events_size_bytes,
-    emit_event_bytes_network_limit_display: formatFileSize(
-      CURRENT_NETWORK_LIMITS.tx_max_contract_events_size_bytes,
+      CURRENT_NETWORK_LIMITS?.tx_max_contract_events_size_bytes,
+    emit_event_bytes_network_limit_display: formatFileSizeLimit(
+      CURRENT_NETWORK_LIMITS?.tx_max_contract_events_size_bytes,
     ),
     emit_event_bytes_usage_percent: calculateUsagePercent(
       emitEventBytes,
-      CURRENT_NETWORK_LIMITS.tx_max_contract_events_size_bytes,
+      CURRENT_NETWORK_LIMITS?.tx_max_contract_events_size_bytes,
     ),
 
     // Max values
     max_rw_key_byte: maxRwKeyByte,
     max_rw_key_byte_network_limit:
-      CURRENT_NETWORK_LIMITS.contract_data_key_size_bytes,
+      CURRENT_NETWORK_LIMITS?.contract_data_key_size_bytes,
     max_rw_key_byte_usage_percent: calculateUsagePercent(
       maxRwKeyByte,
-      CURRENT_NETWORK_LIMITS.contract_data_key_size_bytes,
+      CURRENT_NETWORK_LIMITS?.contract_data_key_size_bytes,
     ),
     max_rw_data_byte: maxRwDataByte,
     max_rw_data_byte_network_limit:
-      CURRENT_NETWORK_LIMITS.contract_data_entry_size_bytes,
+      CURRENT_NETWORK_LIMITS?.contract_data_entry_size_bytes,
     max_rw_data_byte_usage_percent: calculateUsagePercent(
       maxRwDataByte,
-      CURRENT_NETWORK_LIMITS.contract_data_entry_size_bytes,
+      CURRENT_NETWORK_LIMITS?.contract_data_entry_size_bytes,
     ),
     max_rw_code_byte: maxRwCodeByte,
     max_emit_event_byte: maxEmitEventByte,

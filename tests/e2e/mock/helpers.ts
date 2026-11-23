@@ -5,12 +5,14 @@ export const mockRpcRequest = async ({
   page,
   rpcMethod,
   bodyJsonResponse,
+  rpcUrl = "https://soroban-testnet.stellar.org",
 }: {
   page: Page;
   rpcMethod: string;
   bodyJsonResponse: AnyObject;
+  rpcUrl?: string;
 }) => {
-  await page.route("https://soroban-testnet.stellar.org", async (route) => {
+  await page.route(rpcUrl, async (route) => {
     const request = route.request();
     const postData = request.postDataJSON();
 
@@ -21,7 +23,8 @@ export const mockRpcRequest = async ({
         body: JSON.stringify(bodyJsonResponse),
       });
     } else {
-      await route.continue();
+      // Let other handlers (e.g. another mocked method) handle it
+      await route.fallback();
     }
   });
 };

@@ -1,0 +1,239 @@
+# Stellar Lab
+
+> Stellar Lab (https://lab.stellar.org) is a free, browser-based toolkit for building on the Stellar network. Developers use it to create and fund accounts, build, simulate, sign, and submit transactions, deploy and invoke Soroban smart contracts, call Stellar RPC and Horizon APIs, and convert XDR to and from JSON. It is open source (https://github.com/stellar/laboratory).
+
+This file is the full reference for Stellar Lab. A shorter index is at https://lab.stellar.org/llms.txt.
+
+## Key concepts
+
+### Networks
+
+Select a network with the network picker in the top-right corner of Lab. Available networks:
+
+- Testnet: Horizon `https://horizon-testnet.stellar.org`, RPC `https://soroban-testnet.stellar.org`.
+- Mainnet: Horizon `https://horizon.stellar.org`. Lab does not include a default Mainnet RPC URL. Add an RPC provider URL in the network settings to use RPC-based tools (simulation, contract explorer, transaction dashboard) on Mainnet.
+- Futurenet: Horizon `https://horizon-futurenet.stellar.org`, RPC `https://rpc-futurenet.stellar.org`.
+- Custom: Enter your own Horizon URL, RPC URL, and network passphrase. Use this for a local network (for example, Stellar Quickstart on `http://localhost:8000`).
+
+Funding with Friendbot is only available on test networks.
+
+### RPC vs. Horizon
+
+Stellar RPC is the recommended API for new work. Horizon is a legacy API. Lab supports both in the API explorer, and uses RPC for simulation, smart contract tools, and the transaction dashboard.
+
+### Sharing links
+
+Lab stores most page state (network, form inputs, XDR, selected operations) in the URL query string. Copy the URL, or use a page’s share button, to give someone a link that opens the same state. Do not share links that contain secret keys.
+
+### Saved items
+
+Lab can save keypairs, API requests, transactions, and smart contract IDs in your browser’s local storage. Saved items are not sent to a server. Find them under “Saved” in the sidebar:
+
+- Keypairs: https://lab.stellar.org/account/saved
+- Requests: https://lab.stellar.org/endpoints/saved
+- Transactions: https://lab.stellar.org/transaction/saved
+- Smart contracts: https://lab.stellar.org/smart-contracts/saved
+
+### Signing
+
+Lab can sign transactions in these ways:
+
+- Secret key: Paste one or more secret keys (S...). Use only test keys; never paste a Mainnet secret key into a website.
+- Wallet: Connect a browser or mobile wallet through Stellar Wallets Kit (for example Freighter, xBull, Albedo, Lobstr, Rabet, Hana, Ledger, and others).
+- Hardware wallet: Sign with a Ledger or Trezor device.
+- Signature: Add a signature that was made somewhere else.
+
+Lab can also sign Soroban authorization entries during the build flow.
+
+## Accounts
+
+### Create account keypair
+
+URL: https://lab.stellar.org/account/create
+
+Generate a random keypair (public key G... and secret key S...). On a test network you can fund the new account with 10,000 XLM from Friendbot and save the keypair. The keypair exists only in the current browser session unless you save it.
+
+### Fund account
+
+URL: https://lab.stellar.org/account/fund
+
+Fund an account (G...), muxed account (M...), or contract (C...) on a test network with XLM from Friendbot. You can also add trustlines for, and get, test USDC and EURC. Not available on Mainnet.
+
+### Create muxed account
+
+URL: https://lab.stellar.org/account/muxed-create
+
+Create a multiplexed account address (M...) from a base account (G...) and a 64-bit ID.
+
+### Parse muxed account
+
+URL: https://lab.stellar.org/account/muxed-parse
+
+Get the base account (G...) and the ID from a muxed account address (M...).
+
+## Transactions
+
+### Build transaction
+
+URL: https://lab.stellar.org/transaction/build
+
+A single-page flow to build, simulate, sign, and submit a transaction:
+
+1. Build: Set the source account, sequence number, base fee, memo, and time bounds, then add one or more operations.
+2. Simulate: For Soroban transactions, simulate with RPC to get the resource footprint, fees, and authorization entries. Lab can sign authorization entries.
+3. Sign: Sign with a secret key, wallet, hardware wallet, or an existing signature.
+4. Submit: Submit with RPC (`sendTransaction`) or Horizon.
+
+Supported operations: Create account, Payment, Path payment strict send, Path payment strict receive, Manage sell offer, Manage buy offer, Create passive sell offer, Set options, Change trust, Allow trust, Account merge, Manage data, Bump sequence, Create claimable balance, Claim claimable balance, Begin sponsoring future reserves, End sponsoring future reserves, Revoke sponsorship, Clawback, Clawback claimable balance, Set trust line flags, Liquidity pool deposit, Liquidity pool withdraw, Invoke contract function, Extend footprint TTL, Restore footprint.
+
+For Invoke contract function, Lab reads the contract spec and shows a form for each function’s arguments.
+
+### Import transaction
+
+URL: https://lab.stellar.org/transaction/import
+
+Paste a base64 transaction envelope XDR. Lab decodes it, shows an overview and the existing signatures, and lets you sign and submit it.
+
+The Stellar CLI can open a transaction in Lab for signing with this deep link:
+
+`https://lab.stellar.org/transaction/cli-sign?xdr=<base64 XDR>&networkPassphrase=<network passphrase>`
+
+Lab selects the matching network and opens the transaction in the import flow.
+
+### Fee bump
+
+URL: https://lab.stellar.org/transaction/fee-bump
+
+Wrap a signed transaction in a fee bump transaction. Enter the inner transaction XDR, the fee-paying account, and the base fee. Then sign and submit the fee bump transaction.
+
+### Transaction dashboard
+
+URL: https://lab.stellar.org/transaction/dashboard
+
+Enter a transaction hash to see details from RPC. Tabs include: Call stack trace, Events, Token summary, Contracts, State change, Resource profiler, Fee breakdown, and Signatures. Requires an RPC URL for the selected network. Works on Mainnet, Testnet, and Custom networks.
+
+## Smart contracts
+
+### Contract explorer
+
+URL: https://lab.stellar.org/smart-contracts/contract-explorer
+
+Enter a contract ID (C...) to see:
+
+- Contract info: Contract spec, Contract & Env meta, Source code, Contract storage, Build info, Bindings, and Version history.
+- Invoke contract: Call the contract’s functions with a generated form, then simulate, sign, and submit.
+
+Direct link to a contract:
+
+`https://lab.stellar.org/r/<network>/contract/<contractId>`
+
+`<network>` is `testnet`, `mainnet`, or `futurenet`. For example: `https://lab.stellar.org/r/testnet/contract/CA...`.
+
+### Smart contract list
+
+URL: https://lab.stellar.org/smart-contracts/contract-list
+
+Browse a list of popular Soroban contracts and open them in the contract explorer.
+
+### Upload and deploy contract
+
+URL: https://lab.stellar.org/smart-contracts/deploy-contract
+
+Upload a compiled contract WASM file, then deploy a contract instance from it.
+
+## API explorer
+
+URL: https://lab.stellar.org/endpoints
+
+Build requests to Stellar RPC methods and Horizon endpoints with a form, send them, and see the response. You can copy the request (for example as a URL or JSON payload), share it as a link, or save it.
+
+### RPC methods
+
+Reference: https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods
+
+- [getEvents](https://lab.stellar.org/endpoints/rpc/get-events)
+- [getFeeStats](https://lab.stellar.org/endpoints/rpc/get-fee-stats)
+- [getHealth](https://lab.stellar.org/endpoints/rpc/get-health)
+- [getLatestLedger](https://lab.stellar.org/endpoints/rpc/get-latest-ledger)
+- [getLedgerEntries](https://lab.stellar.org/endpoints/rpc/get-ledger-entries)
+- [getLedgers](https://lab.stellar.org/endpoints/rpc/get-ledgers)
+- [getNetwork](https://lab.stellar.org/endpoints/rpc/get-network)
+- [getTransaction](https://lab.stellar.org/endpoints/rpc/get-transaction)
+- [getTransactions](https://lab.stellar.org/endpoints/rpc/get-transactions)
+- [getVersionInfo](https://lab.stellar.org/endpoints/rpc/get-version-info)
+- [sendTransaction](https://lab.stellar.org/endpoints/rpc/send-transaction)
+- [simulateTransaction](https://lab.stellar.org/endpoints/rpc/simulate-transaction)
+
+### Horizon endpoints
+
+Reference: https://developers.stellar.org/docs/data/apis/horizon/api-reference
+
+- Accounts: [All accounts](https://lab.stellar.org/endpoints/horizon/accounts), [Single account](https://lab.stellar.org/endpoints/horizon/accounts/single)
+- Assets: [All assets](https://lab.stellar.org/endpoints/horizon/assets)
+- Claimable balances: [All claimable balances](https://lab.stellar.org/endpoints/horizon/claimable-balances), [Single claimable balance](https://lab.stellar.org/endpoints/horizon/claimable-balances/single)
+- Effects: [All effects](https://lab.stellar.org/endpoints/horizon/effects), [For account](https://lab.stellar.org/endpoints/horizon/effects/account), [For ledger](https://lab.stellar.org/endpoints/horizon/effects/ledger), [For liquidity pool](https://lab.stellar.org/endpoints/horizon/effects/liquidity-pool), [For operation](https://lab.stellar.org/endpoints/horizon/effects/operation), [For transaction](https://lab.stellar.org/endpoints/horizon/effects/transaction)
+- Fee stats: [All fee stats](https://lab.stellar.org/endpoints/horizon/fee-stats)
+- Ledgers: [All ledgers](https://lab.stellar.org/endpoints/horizon/ledgers), [Single ledger](https://lab.stellar.org/endpoints/horizon/ledgers/single)
+- Liquidity pools: [All liquidity pools](https://lab.stellar.org/endpoints/horizon/liquidity-pools), [Single liquidity pool](https://lab.stellar.org/endpoints/horizon/liquidity-pools/single)
+- Offers: [All offers](https://lab.stellar.org/endpoints/horizon/offers), [Single offer](https://lab.stellar.org/endpoints/horizon/offers/single), [For account](https://lab.stellar.org/endpoints/horizon/offers/account)
+- Operations: [All operations](https://lab.stellar.org/endpoints/horizon/operations), [Single operation](https://lab.stellar.org/endpoints/horizon/operations/single), [For account](https://lab.stellar.org/endpoints/horizon/operations/account), [For ledger](https://lab.stellar.org/endpoints/horizon/operations/ledger), [For liquidity pool](https://lab.stellar.org/endpoints/horizon/operations/liquidity-pool), [For transaction](https://lab.stellar.org/endpoints/horizon/operations/transaction)
+- Order book: [Details](https://lab.stellar.org/endpoints/horizon/order-book/details)
+- Paths: [Find payment paths](https://lab.stellar.org/endpoints/horizon/paths), [Strict receive](https://lab.stellar.org/endpoints/horizon/paths/strict-receive), [Strict send](https://lab.stellar.org/endpoints/horizon/paths/strict-send)
+- Payments: [All payments](https://lab.stellar.org/endpoints/horizon/payments), [For account](https://lab.stellar.org/endpoints/horizon/payments/account), [For ledger](https://lab.stellar.org/endpoints/horizon/payments/ledger), [For transaction](https://lab.stellar.org/endpoints/horizon/payments/transaction)
+- Trade aggregations: [All trade aggregations](https://lab.stellar.org/endpoints/horizon/trade-aggregations)
+- Trades: [All trades](https://lab.stellar.org/endpoints/horizon/trades), [For account](https://lab.stellar.org/endpoints/horizon/trades/account), [For liquidity pool](https://lab.stellar.org/endpoints/horizon/trades/liquidity-pool), [For offer](https://lab.stellar.org/endpoints/horizon/trades/offer)
+- Transactions: [All transactions](https://lab.stellar.org/endpoints/horizon/transactions), [Single transaction](https://lab.stellar.org/endpoints/horizon/transactions/single), [Post transaction](https://lab.stellar.org/endpoints/horizon/transactions/post), [Post async transaction](https://lab.stellar.org/endpoints/horizon/transactions/post-async), [For account](https://lab.stellar.org/endpoints/horizon/transactions/account), [For ledger](https://lab.stellar.org/endpoints/horizon/transactions/ledger), [For liquidity pool](https://lab.stellar.org/endpoints/horizon/transactions/liquidity-pool)
+
+## XDR
+
+XDR is the binary format Stellar uses for transactions, ledger entries, and other data. Lab shows XDR as base64 strings.
+
+### XDR to JSON
+
+URL: https://lab.stellar.org/xdr/view
+
+Paste a base64 XDR value and select its XDR type (for example `TransactionEnvelope`, `TransactionResult`, `LedgerEntry`, `ScVal`) to decode it to JSON.
+
+### JSON to XDR
+
+URL: https://lab.stellar.org/xdr/to
+
+Select an XDR type and enter JSON to encode it to base64 XDR.
+
+### Diff XDRs
+
+URL: https://lab.stellar.org/xdr/diff
+
+Enter two base64 XDR values of the same type to compare them as JSON.
+
+## Other tools
+
+### Sign message
+
+URL: https://lab.stellar.org/sign-message
+
+Sign an arbitrary message with a Stellar account, or verify a signed message, as defined in SEP-53 (https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0053.md).
+
+### Network limits
+
+URL: https://lab.stellar.org/network-limits
+
+See the current Soroban resource limits (for example CPU instructions, memory, ledger reads and writes, and transaction size) for Mainnet, Testnet, and Futurenet.
+
+## Common tasks
+
+- Create and fund a test account: Select Testnet, open https://lab.stellar.org/account/create, click “Generate keypair”, then click “Fund 10,000 XLM”.
+- Send a payment: Open https://lab.stellar.org/transaction/build, set the source account, add a Payment operation, then sign and submit.
+- Call a smart contract function: Open the contract in https://lab.stellar.org/smart-contracts/contract-explorer, go to “Invoke contract”, fill in the function arguments, then simulate, sign, and submit.
+- Decode a transaction result: Copy the result XDR, open https://lab.stellar.org/xdr/view, paste it, and select `TransactionResult`.
+- Debug a failed Soroban transaction: Open https://lab.stellar.org/transaction/dashboard and enter the transaction hash to see the call stack trace, events, and resource use.
+
+## Resources
+
+- Stellar developer docs: https://developers.stellar.org/docs
+- Stellar RPC API reference: https://developers.stellar.org/docs/data/apis/rpc/api-reference
+- Horizon API reference: https://developers.stellar.org/docs/data/apis/horizon/api-reference
+- Lab tutorial videos: https://www.youtube.com/playlist?list=PLmr3tp_7-7GiyTrRhKjlznmWe7AqFPq6i
+- Lab source code: https://github.com/stellar/laboratory
+- Privacy policy: https://www.stellar.org/privacy-policy
+- Terms of service: https://www.stellar.org/terms-of-service

@@ -1,35 +1,27 @@
 import { StrKey } from "@stellar/stellar-sdk";
-import { muxedAccount } from "@/helpers/muxedAccount";
 
-export const getMuxedAddressError = (
-  muxedAddress: string,
-  isRequired?: boolean,
-) => {
-  if (!muxedAddress) {
+/**
+ * Validates a value for a Soroban `MuxedAddress` contract parameter, which
+ * takes any account or contract address, muxed or not: G..., M..., C..., or
+ * W... (CAP-84 muxed contract).
+ */
+export const getMuxedAddressError = (value: string, isRequired?: boolean) => {
+  if (!value) {
     if (isRequired) {
-      return "Muxed account address is required.";
+      return "Address is required.";
     } else {
       return false;
     }
   }
 
-  if (!muxedAddress.startsWith("M")) {
-    return "Muxed account address must start with 'M'.";
+  if (
+    StrKey.isValidEd25519PublicKey(value) ||
+    StrKey.isValidMed25519PublicKey(value) ||
+    StrKey.isValidContract(value) ||
+    StrKey.isValidMuxedContract(value)
+  ) {
+    return false;
   }
 
-  if (!StrKey.isValidMed25519PublicKey(muxedAddress)) {
-    return "Muxed account address is invalid.";
-  }
-
-  const result = muxedAccount.parse({ muxedAddress });
-
-  if (!result.baseAddress) {
-    return "Base address could not be found in the muxed account.";
-  }
-
-  if (result.error) {
-    return result.error;
-  }
-
-  return false;
+  return "Invalid address. Enter a G... or M... account, or a C... or W... contract address.";
 };

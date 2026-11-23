@@ -9308,3 +9308,21 @@ export const TX_EVENTS_MOCK_MUXED = {
     createdAt: "1764633694",
   },
 };
+
+// Same as TX_EVENTS_MOCK_SAC (mainnet), but the first native `transfer` event
+// is emitted by a contract that is not the native SAC. Its `topics[3]` is
+// still "native", so Token summary must not label it as XLM.
+export const TX_EVENTS_MOCK_SPOOFED_NATIVE = (() => {
+  const mock = structuredClone(TX_EVENTS_MOCK_SAC);
+  const events = mock.result.events.contractEventsJson.flat() as any[];
+  const spoofed = events.find(
+    (ev) =>
+      ev.body?.v0?.topics?.[0]?.symbol === "transfer" &&
+      ev.body?.v0?.topics?.[3]?.string === "native",
+  );
+
+  spoofed.contract_id =
+    "CA6PUJLBYKZKUEKLZJMKBZLEKP2OTHANDEOWSFF44FTSYLKQPIICCJBE";
+
+  return mock;
+})();

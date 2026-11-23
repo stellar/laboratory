@@ -5,14 +5,15 @@ const nextConfig = {
     : undefined,
   distDir: "build",
   basePath: process.env.NEXT_BASE_PATH || undefined,
-  webpack: (config) => {
-    // Needed for stellar-hd-wallet
-    config.externals.push("sodium-native");
-
-    // Disable webpack filesystem cache to avoid pnpm compatibility issues
-    config.cache = false;
-
-    return config;
+  // Needed for stellar-hd-wallet
+  serverExternalPackages: ["sodium-native"],
+  // sodium-native loads its native binary dynamically (via require-addon), so
+  // standalone file tracing misses it. Include the Linux prebuilds the Docker
+  // image needs.
+  outputFileTracingIncludes: {
+    "/*": [
+      "./node_modules/.pnpm/sodium-native@*/node_modules/sodium-native/prebuilds/linux-*/**",
+    ],
   },
   // Adding client side redirects to support old URLs in case they were saved or
   // bookmarked.
@@ -270,7 +271,7 @@ const nextConfig = {
 // Only apply Sentry configuration in production
 if (process.env.NODE_ENV === "production") {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { withSentryConfig } = require("@sentry/nextjs");
+  const { withSentryConfig } = require("@sentry/nextjs/config");
 
   module.exports = withSentryConfig(nextConfig, {
     // For all available options, see:
@@ -294,14 +295,13 @@ if (process.env.NODE_ENV === "production") {
     // side errors will fail.
     // tunnelRoute: "/monitoring",
 
-    // Automatically tree-shake Sentry logger statements to reduce bundle size
-    disableLogger: true,
-
     // Enables automatic instrumentation of Vercel Cron Monitors. (Does not yet work with App Router route handlers.)
     // See the following for more information:
     // https://docs.sentry.io/product/crons/
     // https://vercel.com/docs/cron-jobs
-    automaticVercelMonitors: false,
+    webpack: {
+      automaticVercelMonitors: false,
+    },
   });
 } else {
   module.exports = nextConfig;

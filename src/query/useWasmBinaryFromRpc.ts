@@ -5,6 +5,10 @@ import { NetworkHeaders } from "@/types/types";
 
 /**
  * Fetch Wasm binary from RPC (returns wasm binary as a Uint8Array).
+ *
+ * The bytes behind a Wasm hash never change, so the result is cached for the
+ * session (no refetch on mount) and every consumer of the same hash (contract
+ * explorer page, spec/meta tabs, deploy page) shares one download.
  */
 export const useWasmBinaryFromRpc = ({
   wasmHash,
@@ -36,8 +40,10 @@ export const useWasmBinaryFromRpc = ({
       }
     },
     enabled: Boolean(wasmHash && rpcUrl && isActive),
-    // Keep data for 60 seconds
-    staleTime: 1000 * 60,
+    // Content-addressed: the Wasm for a given hash is immutable
+    staleTime: Infinity,
+    // Keep unused Wasm around for 30 minutes so revisits don't re-download it
+    gcTime: 1000 * 60 * 30,
   });
 
   return query;

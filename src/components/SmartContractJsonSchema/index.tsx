@@ -11,7 +11,7 @@ import { useBuildFlowStore } from "@/store/createTransactionFlowStore";
 import { type DereferencedSchemaType } from "@/constants/jsonSchema";
 
 import { dereferenceSchema } from "@/helpers/dereferenceSchema";
-import { getTxnToSimulate } from "@/helpers/sorobanUtils";
+import { getTxnToSimulate, isEmptyArgValue } from "@/helpers/sorobanUtils";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 
 import { Box } from "@/components/layout/Box";
@@ -51,11 +51,7 @@ export const JsonSchemaForm = ({
   const prevValue = usePrevious(stringify(value.args));
 
   const missingReqFields = requiredFields.reduce((res, cur) => {
-    if (value.args[cur]?.length === 0) {
-      return [...res, cur];
-    }
-
-    if (!value.args[cur]) {
+    if (isEmptyArgValue(value.args[cur])) {
       return [...res, cur];
     }
 
@@ -96,6 +92,8 @@ export const JsonSchemaForm = ({
         soroban.operation,
         network.passphrase,
         dereferencedSchema.argOrder,
+        requiredFields,
+        dereferencedSchema.properties,
       );
 
       if (xdr && !error) {
@@ -127,18 +125,19 @@ export const JsonSchemaForm = ({
           />
         </Box>
 
-        {txnParams.memo && (
-          <Box
-            gap="md"
-            addlClassName="FieldNote FieldNote--note FieldNote--md"
-            direction="row"
-          >
-            <Notification
-              variant="warning"
-              title="Note: Your memo was removed because Soroban transactions no longer support memos as of Protocol 23."
-            ></Notification>
-          </Box>
-        )}
+        {Object.keys(txnParams.memo).length > 0 &&
+          txnParams.memo !== "none" && (
+            <Box
+              gap="md"
+              addlClassName="FieldNote FieldNote--note FieldNote--md"
+              direction="row"
+            >
+              <Notification
+                variant="warning"
+                title="Note: Your memo was removed because Soroban transactions no longer support memos as of Protocol 23."
+              ></Notification>
+            </Box>
+          )}
 
         {submitTxError && <ErrorText errorMessage={submitTxError} size="sm" />}
       </Box>

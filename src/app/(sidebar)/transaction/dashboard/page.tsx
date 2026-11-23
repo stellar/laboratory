@@ -142,7 +142,6 @@ export default function TransactionDashboard() {
       fetchTxDetails();
       trackEvent(TrackingEvent.TRANSACTION_DASHBOARD_LOAD_TX_AUTO, {});
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     transactionHashInput,
     isCurrentNetworkSupported,

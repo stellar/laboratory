@@ -67,7 +67,12 @@ const buildStoreStateWithStaleAssembly = () => ({
     },
     sign: { signedXdr: "" },
     submit: { submitResultJson: "" },
-    feeBump: { source_account: "", fee: "200", signedXdr: "", isEnabled: false },
+    feeBump: {
+      source_account: "",
+      fee: "200",
+      signedXdr: "",
+      isEnabled: false,
+    },
   },
   version: 0,
 });
@@ -75,27 +80,25 @@ const buildStoreStateWithStaleAssembly = () => ({
 const seedSessionStorageAndNavigate = async (page: Page) => {
   const storeState = buildStoreStateWithStaleAssembly();
 
+  // Seed storage before any app script runs. Seeding after page load races
+  // with mount effects that write the default flow state back to
+  // sessionStorage, which makes the page open on the build step.
+  await page.addInitScript((stateJson) => {
+    sessionStorage.setItem("stellar_lab_tx_flow_build", stateJson);
+
+    localStorage.setItem(
+      "stellar_lab_network",
+      JSON.stringify({
+        id: "testnet",
+        label: "Testnet",
+        horizonUrl: "https://horizon-testnet.stellar.org",
+        rpcUrl: "https://soroban-testnet.stellar.org",
+        passphrase: "Test SDF Network ; September 2015",
+      }),
+    );
+  }, JSON.stringify(storeState));
+
   await page.goto(`${baseURL}/transaction/build`);
-
-  await page.evaluate(
-    (stateJson) => {
-      sessionStorage.setItem("stellar_lab_tx_flow_build", stateJson);
-
-      localStorage.setItem(
-        "stellar_lab_network",
-        JSON.stringify({
-          id: "testnet",
-          label: "Testnet",
-          horizonUrl: "https://horizon-testnet.stellar.org",
-          rpcUrl: "https://soroban-testnet.stellar.org",
-          passphrase: "Test SDF Network ; September 2015",
-        }),
-      );
-    },
-    JSON.stringify(storeState),
-  );
-
-  await page.reload();
 };
 
 /**

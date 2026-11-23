@@ -394,9 +394,19 @@
   &__container {
     padding: pxToRem(32px);
     overflow-x: auto;
+    // Always reserve space for the vertical scrollbar so the content width
+    // doesn't shift between short pages (no scrollbar) and long pages
+    scrollbar-gutter: stable;
 
     @media screen and (max-width: 1040px) {
       padding: pxToRem(16px);
+    }
+
+    // Pages with a sticky flow footer: the footer itself sits flush with the
+    // bottom edge, so drop the bottom padding (the footer's 80px height keeps
+    // the buttons centered, 24px above and below)
+    &:has(.TransactionFlowFooter) {
+      padding-bottom: 0;
     }
 
     // Remove padding for full content width background

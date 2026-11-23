@@ -1,0 +1,51 @@
+# Stellar Lab
+
+> Stellar Lab (https://lab.stellar.org) is a free, browser-based toolkit for building on the Stellar network. Developers use it to create and fund accounts, build, simulate, sign, and submit transactions, deploy and invoke Soroban smart contracts, call Stellar RPC and Horizon APIs, and convert XDR to and from JSON. It is open source (https://github.com/stellar/laboratory).
+
+Lab supports Testnet, Mainnet, Futurenet, and custom (including local) networks. Most page state is stored in the URL, so a Lab link can be shared to reproduce a transaction, request, or XDR. Prefer Stellar RPC over Horizon for new work; Horizon tools remain for legacy use.
+
+For the full reference in one file, see [llms-full.txt](https://lab.stellar.org/llms-full.txt).
+
+## Accounts
+
+- [Create account keypair](https://lab.stellar.org/account/create): Generate a random test keypair and fund it on Testnet.
+- [Fund account](https://lab.stellar.org/account/fund): Fund a test-network account or contract with XLM (Friendbot), USDC, and EURC. Not available on Mainnet.
+- [Create muxed account](https://lab.stellar.org/account/muxed-create): Make a multiplexed (M...) address from a G address and an ID.
+- [Parse muxed account](https://lab.stellar.org/account/muxed-parse): Get the base G address and ID from an M address.
+
+## Transactions
+
+- [Build transaction](https://lab.stellar.org/transaction/build): Build, simulate, sign, and submit a transaction, including Soroban contract calls.
+- [Import transaction](https://lab.stellar.org/transaction/import): Paste a transaction XDR to inspect, sign, and submit it.
+- [Fee bump](https://lab.stellar.org/transaction/fee-bump): Wrap a signed transaction in a fee bump transaction.
+- [Transaction dashboard](https://lab.stellar.org/transaction/dashboard): Inspect a transaction by hash: call stack trace, events, state changes, resource use, fees, and signatures.
+
+## Smart contracts
+
+- [Contract explorer](https://lab.stellar.org/smart-contracts/contract-explorer): View a contract's spec, metadata, source code, storage, build info, bindings, and version history, and invoke its functions.
+- [Smart contract list](https://lab.stellar.org/smart-contracts/contract-list): Browse popular Soroban contracts.
+- [Upload and deploy contract](https://lab.stellar.org/smart-contracts/deploy-contract): Upload a WASM file and deploy a contract.
+
+## API explorer
+
+- [About API explorer](https://lab.stellar.org/endpoints): Build and send requests to Stellar RPC methods and Horizon endpoints.
+- [RPC methods](https://lab.stellar.org/endpoints/rpc): getEvents, getFeeStats, getHealth, getLatestLedger, getLedgerEntries, getLedgers, getNetwork, getTransaction, getTransactions, getVersionInfo, sendTransaction, simulateTransaction.
+- [Horizon endpoints](https://lab.stellar.org/endpoints/horizon): Accounts, assets, claimable balances, effects, fee stats, ledgers, liquidity pools, offers, operations, order book, paths, payments, trades, and transactions.
+
+## XDR
+
+- [XDR to JSON](https://lab.stellar.org/xdr/view): Decode a base64 XDR value of any type to JSON.
+- [JSON to XDR](https://lab.stellar.org/xdr/to): Encode JSON to base64 XDR.
+- [Diff XDRs](https://lab.stellar.org/xdr/diff): Compare two XDR values as JSON.
+
+## Other tools
+
+- [Sign message](https://lab.stellar.org/sign-message): Sign and verify arbitrary messages with a Stellar account (SEP-53).
+- [Network limits](https://lab.stellar.org/network-limits): Current Soroban resource limits for each network.
+
+## Optional
+
+- [Stellar developer docs](https://developers.stellar.org/docs): Official Stellar documentation.
+- [Stellar RPC API reference](https://developers.stellar.org/docs/data/apis/rpc/api-reference): Reference for RPC methods.
+- [Lab tutorial videos](https://www.youtube.com/playlist?list=PLmr3tp_7-7GiyTrRhKjlznmWe7AqFPq6i): Create an account, send payments, and deploy a Hello World contract.
+- [Source code](https://github.com/stellar/laboratory): Stellar Lab on GitHub.

@@ -4,7 +4,6 @@ import { xdr } from "@stellar/stellar-sdk";
 import { GridTable, GridTableRow, GridTableCell } from "@/components/GridTable";
 import { Box } from "@/components/layout/Box";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type SimulationResponse = Record<string, any>;
 
 export type SimulationResourceInfo = {

@@ -57,11 +57,10 @@ test.describe("Validate Step in Build Flow", () => {
   const seedSessionStorageAndNavigate = async (page: Page) => {
     const storeState = buildStoreState(MOCK_SIGNED_XDR, MOCK_AUTH_ENTRY_XDR);
 
-    // Navigate to the build page first so sessionStorage is on the right origin
-    await page.goto(`${baseURL}/transaction/build`);
-
-    // Seed sessionStorage with flow store state at the validate step
-    await page.evaluate((stateJson) => {
+    // Seed storage before any app script runs. Seeding after page load races
+    // with mount effects that write the default flow state back to
+    // sessionStorage, which makes the page open on the build step.
+    await page.addInitScript((stateJson) => {
       sessionStorage.setItem("stellar_lab_tx_flow_build", stateJson);
 
       // Seed localStorage with testnet so the NetworkSelector doesn't open
@@ -78,8 +77,7 @@ test.describe("Validate Step in Build Flow", () => {
       );
     }, JSON.stringify(storeState));
 
-    // Reload to pick up the seeded sessionStorage
-    await page.reload();
+    await page.goto(`${baseURL}/transaction/build`);
     await expect(page.locator("h1")).toHaveText("Validate auth entries");
   };
 

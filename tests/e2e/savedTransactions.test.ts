@@ -47,13 +47,14 @@ test.describe("Saved Transactions Page", () => {
     });
 
     test("[Classic] Submit item", async () => {
+      // Items are sorted by most recent first
       const submitItem = pageContext
         .getByTestId("saved-transactions-item")
-        .nth(0);
+        .nth(3);
 
-      const nameInput = submitItem.getByTestId("saved-transactions-name");
-
-      await expect(nameInput).toHaveValue("Submit Create Account Tx");
+      await expect(
+        submitItem.getByTestId("saved-transactions-name"),
+      ).toHaveValue("Submit Create Account Tx");
       await expect(
         submitItem.getByText("Last saved Dec 3, 2024, 8:58 PM UTC"),
       ).toBeVisible();
@@ -70,10 +71,17 @@ test.describe("Saved Transactions Page", () => {
       await pageContext.getByLabel("Name").fill(newName);
       await pageContext.getByText("Save", { exact: true }).click();
 
-      await expect(nameInput).toHaveValue(newName);
+      // Renaming updates the timestamp, so the item moves to the top
+      const renamedItem = pageContext
+        .getByTestId("saved-transactions-item")
+        .first();
+
+      await expect(
+        renamedItem.getByTestId("saved-transactions-name"),
+      ).toHaveValue(newName);
 
       // View in submitter — navigates to build flow at submit step
-      await submitItem.getByText("View in submitter").click();
+      await renamedItem.getByText("View in submitter").click();
       await pageContext.waitForURL("**/transaction/build");
 
       await expect(pageContext.locator("h1")).toHaveText("Submit transaction");
@@ -85,7 +93,7 @@ test.describe("Saved Transactions Page", () => {
     test("Build item", async () => {
       const buildItem = pageContext
         .getByTestId("saved-transactions-item")
-        .nth(1);
+        .nth(2);
 
       await expect(
         buildItem.getByTestId("saved-transactions-name"),
@@ -139,7 +147,7 @@ test.describe("Saved Transactions Page", () => {
       );
       const items = pageContext.getByTestId("saved-transactions-item");
 
-      const submitItem = items.last();
+      const submitItem = items.first();
       await expect(submitItem).toBeVisible();
 
       const nameInput = submitItem.getByTestId("saved-transactions-name");
@@ -177,7 +185,7 @@ test.describe("Saved Transactions Page", () => {
     test("[Soroban] Build item", async () => {
       const buildItem = pageContext
         .getByTestId("saved-transactions-item")
-        .nth(2);
+        .nth(1);
 
       await expect(
         buildItem.getByTestId("saved-transactions-name"),

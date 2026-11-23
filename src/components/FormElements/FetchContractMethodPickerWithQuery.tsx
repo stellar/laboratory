@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { contract } from "@stellar/stellar-sdk";
 import { Button } from "@stellar/design-system";
 
 import { Box } from "@/components/layout/Box";
@@ -17,7 +16,7 @@ import { useContractClientFromRpc } from "@/query/useContractClientFromRpc";
 import { useGetContractDataFromRpcById } from "@/query/useGetContractDataFromRpcById";
 
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
-import { useSacXdrData } from "@/hooks/useSacXdrData";
+import { SAC_SPEC } from "@/helpers/sacSpec";
 
 import { SorobanInvokeValue } from "@/types/types";
 
@@ -83,30 +82,14 @@ export const FetchContractMethodPickerWithQuery = ({
     rpcUrl: network.rpcUrl,
   });
 
-  const {
-    sacXdrData,
-    isSacDataSuccess,
-    sacDataError,
-    isSacDataFetching,
-    isSacDataLoading,
-  } = useSacXdrData({
-    isActive: Boolean(network.rpcUrl && fetchType === "sac"),
-  });
-
-  let invokeContractSpec;
-
-  if (sacXdrData && isSacType && sacXdrData[0] !== "") {
-    invokeContractSpec = new contract.Spec(sacXdrData);
-  } else {
-    invokeContractSpec = contractClient?.spec;
-  }
+  const invokeContractSpec = isSacType ? SAC_SPEC : contractClient?.spec;
 
   const memoizedMethods = useMemo(() => {
     return invokeContractSpec?.funcs();
   }, [invokeContractSpec]);
 
   const contractMethods = useMemo(() => {
-    if ((isSacDataSuccess || isContractClientSuccess) && memoizedMethods) {
+    if ((isSacType || isContractClientSuccess) && memoizedMethods) {
       return (
         memoizedMethods
           ?.filter((func) => !func.name.toString().includes("__"))
@@ -114,7 +97,7 @@ export const FetchContractMethodPickerWithQuery = ({
       );
     }
     return [];
-  }, [isSacDataSuccess, isContractClientSuccess, memoizedMethods]);
+  }, [isSacType, isContractClientSuccess, memoizedMethods]);
 
   // Set the fetch type from the contract type
   useEffect(() => {
@@ -127,7 +110,7 @@ export const FetchContractMethodPickerWithQuery = ({
     }
   }, [contractType, contractDataError, isSacType]);
 
-  // Fetch contract data for a standard Stellar smart contract (SAC will trigger automatically in the hook)
+  // Fetch contract data for a standard Stellar smart contract (the SAC spec is bundled)
   useEffect(() => {
     if (fetchType === "contract") {
       fetchContractClient();
@@ -137,12 +120,10 @@ export const FetchContractMethodPickerWithQuery = ({
 
   // Set the error
   useEffect(() => {
-    const errorMsg = contractClientError?.message || sacDataError?.message;
-
-    if (errorMsg) {
-      setFetchError(errorMsg);
+    if (contractClientError?.message) {
+      setFetchError(contractClientError.message);
     }
-  }, [contractClientError, sacDataError]);
+  }, [contractClientError]);
 
   // Auto-fetch contract methods once a valid contract id is filled in.
   // Debounced so we only fetch after the user stops typing/pasting, and
@@ -171,7 +152,6 @@ export const FetchContractMethodPickerWithQuery = ({
     // reset queries
     queryClient.resetQueries({ queryKey: ["useGetContractDataFromRpcById"] });
     queryClient.resetQueries({ queryKey: ["useClientFromRpc"] });
-    queryClient.resetQueries({ queryKey: ["useGitHubFile"] });
 
     // validate the contract id
     if (contractId) {
@@ -231,8 +211,6 @@ export const FetchContractMethodPickerWithQuery = ({
           <Button
             disabled={!contractIdInput || Boolean(contractIdError)}
             isLoading={
-              isSacDataFetching ||
-              isSacDataLoading ||
               isContractClientFetching ||
               isContractDataFetching ||
               isContractDataLoading

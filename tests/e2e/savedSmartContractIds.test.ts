@@ -44,7 +44,8 @@ test.describe("Saved contract IDs", () => {
   });
 
   test("Saved item", async () => {
-    const contractItem = pageContext.getByTestId("saved-contract-item").first();
+    // Items are sorted by most recent first, so the oldest one is last
+    const contractItem = pageContext.getByTestId("saved-contract-item").last();
 
     await expect(contractItem).toBeVisible();
     await expect(contractItem.getByTestId("saved-contract-name")).toHaveValue(

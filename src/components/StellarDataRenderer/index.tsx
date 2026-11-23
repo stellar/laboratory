@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { StrKey, XdrLargeInt } from "@stellar/stellar-sdk";
+import { extractBaseAddress, StrKey, XdrLargeInt } from "@stellar/stellar-sdk";
 import { parse, stringify } from "lossless-json";
 import { v4 as uuidv4 } from "uuid";
 
@@ -61,12 +61,16 @@ export const ScValPrettyJson = ({
 
   const renderAddress = (value: string) => {
     const seNetwork = getStellarExpertNetwork(network.id);
-    const isContract = !getContractIdError(value);
+    // A muxed contract (W...) links to its base contract (C...)
+    const isMuxedContract = StrKey.isValidMuxedContract(value);
+    const isContract = isMuxedContract || !getContractIdError(value);
 
     if (seNetwork) {
       const params = isContract
         ? {
-            href: buildContractExplorerHref(value),
+            href: buildContractExplorerHref(
+              isMuxedContract ? extractBaseAddress(value) : value,
+            ),
             target: "_blank",
           }
         : {

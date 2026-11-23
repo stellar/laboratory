@@ -6,13 +6,12 @@ import {
   MOCK_SAC_CONTRACT_TYPE_RESPONSE,
 } from "./mock/smartContracts";
 import { mockRpcRequest } from "./mock/helpers";
-import stellarAssetSpec from "./mock/stellarAssetSpec.json";
 
 /**
  * E2E test for the "Use another signing method" radio on the Invoke contract
  * tab. Exercises the SAC spec path (no wasm decoding required) by serving a
- * SAC contract data ledger entry from getLedgerEntries and the SAC spec JSON
- * from raw.githubusercontent.com.
+ * SAC contract data ledger entry from getLedgerEntries. Lab bundles the SAC
+ * spec, so nothing else needs mocking.
  */
 test.describe("Smart Contracts: Invoke Contract — Use another signing method", () => {
   test.beforeEach(async ({ page }) => {
@@ -21,17 +20,6 @@ test.describe("Smart Contracts: Invoke Contract — Use another signing method",
       rpcMethod: "getLedgerEntries",
       bodyJsonResponse: MOCK_SAC_CONTRACT_TYPE_RESPONSE,
     });
-
-    await page.route(
-      "https://raw.githubusercontent.com/stellar/stellar-asset-contract-spec/refs/heads/main/stellar-asset-spec.json",
-      async (route) => {
-        await route.fulfill({
-          status: 200,
-          contentType: "application/json",
-          body: JSON.stringify(stellarAssetSpec),
-        });
-      },
-    );
 
     // SE Contract Info isn't relevant here; respond 404 so the query fails
     // fast rather than hitting the real network.
@@ -50,6 +38,10 @@ test.describe("Smart Contracts: Invoke Contract — Use another signing method",
   test("'Use another signing method' + Build transaction redirects to /transaction/build with prefilled state", async ({
     page,
   }) => {
+    // Loads a contract, then client-side navigates to /transaction/build,
+    // which the CI dev server compiles on demand. Needs more than 20s in CI.
+    test.slow();
+
     await page.goto(`${baseURL}/smart-contracts/contract-explorer`);
 
     await page.getByLabel("Contract ID").fill(MOCK_SAC_CONTRACT_ID);
@@ -86,7 +78,9 @@ test.describe("Smart Contracts: Invoke Contract — Use another signing method",
       .click();
 
     // Should land on /transaction/build with the build store seeded.
-    await expect(page).toHaveURL(/\/transaction\/build/);
+    // `toHaveURL` gives up after the 5s expect timeout, too short for the
+    // router.push in CI. `waitForURL` uses the navigation timeout.
+    await page.waitForURL("**/transaction/build**");
 
     const stored = await page.evaluate(() =>
       sessionStorage.getItem("stellar_lab_tx_flow_build"),

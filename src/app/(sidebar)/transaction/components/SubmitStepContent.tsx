@@ -184,7 +184,6 @@ export const SubmitStepContent = ({
 
     const localStorageMethod = localStorageSettings.get(SETTINGS_SUBMIT_METHOD);
     setSubmitMethod(localStorageMethod || "horizon");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRpcAvailable, isSoroban]);
 
   const isError = Boolean(submitRpcError || submitHorizonError);
@@ -198,7 +197,11 @@ export const SubmitStepContent = ({
     if (isSubmitRpcSuccess) {
       trackEvent(TrackingEvent.TRANSACTION_SUBMIT_SUCCESS, { method: "rpc" });
     }
-  }, [isSubmitRpcSuccess]);
+
+    if (submitRpcError) {
+      trackEvent(TrackingEvent.TRANSACTION_SUBMIT_ERROR, { method: "rpc" });
+    }
+  }, [isSubmitRpcSuccess, submitRpcError]);
 
   useEffect(() => {
     if (isSubmitHorizonSuccess) {
@@ -206,7 +209,11 @@ export const SubmitStepContent = ({
         method: "horizon",
       });
     }
-  }, [isSubmitHorizonSuccess]);
+
+    if (submitHorizonError) {
+      trackEvent(TrackingEvent.TRANSACTION_SUBMIT_ERROR, { method: "horizon" });
+    }
+  }, [isSubmitHorizonSuccess, submitHorizonError]);
 
   useEffect(() => {
     if (isSubmitRpcSuccess && submitRpcResponse) {

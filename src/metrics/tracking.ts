@@ -1,5 +1,6 @@
 import * as amplitude from "@amplitude/analytics-browser";
-import { parse } from "zustand-querystring";
+import { getQueryStringState } from "@/helpers/getQueryStringState";
+import { getAttribution } from "@/metrics/attribution";
 import { AnyObject } from "@/types/types";
 
 const AMPLITUDE_API_KEY_DEV = "21f9b86405da037f7b9d1f00a235a4fd";
@@ -67,13 +68,12 @@ export const trackEvent = (type: TrackingEvent, properties?: AnyObject) => {
     return;
   }
 
-  const trimmedParams = window.location.search
-    ? window.location.search.substring(3)
-    : "";
-  const searchParams: AnyObject | null = parse(trimmedParams);
+  const searchParams = getQueryStringState(window.location.search);
 
   const props = {
     network: searchParams?.network?.id,
+    // Campaign UTM params saved on landing (e.g. from the NeevAI chat)
+    ...getAttribution(),
     ...properties,
   };
 
@@ -91,6 +91,7 @@ export const trackEvent = (type: TrackingEvent, properties?: AnyObject) => {
 
 export enum TrackingEvent {
   // Global
+  PAGE_VIEW = "page view",
   MAIN_NAV_CLICKED = "main nav clicked",
   MOBILE_NAV_CLICKED = "mobile nav clicked",
   SUBNAV_CLICKED = "subnav clicked",
@@ -99,6 +100,8 @@ export enum TrackingEvent {
   WALLET_KIT_SELECTED = "wallet kit selected",
   // Home
   HOME_TOP_BTN = "home: top btn",
+  HOME_START_BUILDING = "home: start building",
+  HOME_EXPLORE = "home: explore & inspect",
   HOME_SLIDER_CARD = "home: slider card",
   HOME_SLIDER_DETAILS_BTN = "home: slider details btn",
   HOME_TUTORIAL = "home: tutorial",

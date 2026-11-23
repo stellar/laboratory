@@ -57,6 +57,7 @@ export const SimulateStepContent = ({
     setSignedAuthEntriesXdr,
     setAssembledXdr,
     resetDownstreamState,
+    resetAll,
   } = useImportFlowStore();
 
   const importXdr = importState?.importXdr ?? "";
@@ -79,6 +80,7 @@ export const SimulateStepContent = ({
         setAssembledXdr,
         resetDownstreamState,
       }}
+      onClearAll={resetAll}
     />
   );
 };
